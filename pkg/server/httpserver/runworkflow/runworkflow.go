@@ -2,7 +2,7 @@ package runworkflow
 
 import (
 	"encoding/json"
-	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/parser"
+	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/workflow"
 	"net/http"
 )
 
@@ -18,9 +18,26 @@ func RunWorkflowHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	parser.Base64ToWorkflow(payload.Workflow)
+	wf := workflow.New(payload.Workflow)
 
+	response, err := json.Marshal(struct {
+		Workflow string `json:"workflow"`
+	}{
+		Workflow: wf.Name,
+	})
+
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
+	_, err = w.Write(response)
+	if err != nil {
+		return
+	}
+
 	return
 
 }

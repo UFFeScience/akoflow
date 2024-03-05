@@ -1,11 +1,7 @@
 package parser
 
-import "encoding/base64"
+import "github.com/ovvesley/scientific-workflow-k8s/pkg/server/workflow"
 
-func Base64ToWorkflow(workflowBase64 string) string {
-	byteWorkflow, _ := base64.StdEncoding.DecodeString(workflowBase64)
+func WorkflowToJobsK8s(workflow workflow.Workflow) string {
 
-	stringWorkflow := string(byteWorkflow)
-
-	return stringWorkflow
 }

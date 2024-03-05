@@ -1,0 +1,23 @@
+name: wf_hello_world
+spec:
+  memoryLimit: 1Gi
+  cpuLimit: 1
+  tries: 1
+  image: "alpine:3.7"
+  activities:
+
+    - name: "Echo Hello World"
+      run: |
+        echo "Hello World"
+        sleep 5
+        echo "Hello World Again"
+        sleep 5
+        echo "Hello World One More Time"
+
+    - name: "Echo Goodbye"
+      run: |
+        echo "Goodbye"
+        sleep 5
+        echo "Goodbye Again"
+        sleep 5
+        echo "Goodbye One More Time"

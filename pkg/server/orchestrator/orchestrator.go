@@ -26,6 +26,11 @@ func handleOrchestrator() {
 	// If there are no jobs to be executed, it will do nothing
 	// and wait for the next TIME_TO_UPDATE_SECONDS
 	println("Orchestrator running awaiting jobs")
+
+	/// mark workflow as finished in database if all act jobs are finished
+
+	/// deploy workflow that exists in the database and is not running
+
 }
 
 func handleMonitoring() {
@@ -41,4 +46,8 @@ func handleMonitoring() {
 	// If there are no jobs to be executed, it will do nothing
 	// and wait for the next TIME_TO_UPDATE_SECONDS
 	println("Monitoring jobs")
+
+	/// get metrics from k8s and update the database
+	/// get logs and update the database
+
 }

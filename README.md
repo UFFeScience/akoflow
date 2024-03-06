@@ -11,3 +11,13 @@ Workflow Científico em núvem com Kubernetes
 
 ### Objetivos Específicos
 ...
+
+---
+### to do
+
+- nova versão do arquivo de workflow, CPU e Mémoria por Atividades.
+- mecanismo de atividades sequencial
+- v1 do client, recebendo o arquivo de workflow e enviando para o server (k8s)
+- mecanismo de compartilhamento de dados entre atividades
+- proveniencia e monitoramento
+- mecanismo de atividades paralelas

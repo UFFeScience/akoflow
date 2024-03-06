@@ -6,17 +6,21 @@ import (
 )
 
 type Workflow struct {
+	Name string       `yaml:"name"`
+	Spec WorkflowSpec `yaml:"spec"`
+}
+
+type WorkflowSpec struct {
+	MemoryLimit string               `yaml:"memoryLimit"`
+	CPULimit    int                  `yaml:"cpuLimit"`
+	Tries       int                  `yaml:"tries"`
+	Image       string               `yaml:"image"`
+	Activities  []WorkflowActivities `yaml:"activities"`
+}
+
+type WorkflowActivities struct {
 	Name string `yaml:"name"`
-	Spec struct {
-		MemoryLimit string `yaml:"memoryLimit"`
-		CPULimit    int    `yaml:"cpuLimit"`
-		Tries       int    `yaml:"tries"`
-		Image       string `yaml:"image"`
-		Activities  []struct {
-			Name string `yaml:"name"`
-			Run  string `yaml:"run"`
-		} `yaml:"activities"`
-	} `yaml:"spec"`
+	Run  string `yaml:"run"`
 }
 
 func New(workflowBase64 string) Workflow {

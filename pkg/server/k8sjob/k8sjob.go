@@ -1,6 +1,9 @@
 package k8sjob
 
-import "gopkg.in/yaml.v3"
+import (
+	"encoding/base64"
+	"gopkg.in/yaml.v3"
+)
 
 type K8sJob struct {
 	ApiVersion string         `json:"apiVersion"`
@@ -36,6 +39,11 @@ func (k *K8sJob) ToYaml() string {
 	workflowStringByte, _ := yaml.Marshal(k)
 	workflowStringYaml := string(workflowStringByte)
 	return workflowStringYaml
+}
+
+func (k *K8sJob) GetBase64Jobs() string {
+	y, _ := yaml.Marshal(k)
+	return base64.StdEncoding.EncodeToString(y)
 }
 
 // docker run --rm alpine:latest bin/sh -c 'echo ZWNobyAiSGVsbG8gV29ybGQiCnNsZWVwIDUKZWNobyAiSGVsbG8gV29ybGQgQWdhaW4iCnNsZWVwIDUKZWNobyAiSGVsbG8gV29ybGQgT25lIE1vcmUgVGltZSI=| base64 -d| sh'

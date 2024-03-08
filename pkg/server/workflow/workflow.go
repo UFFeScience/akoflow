@@ -38,14 +38,20 @@ func New(workflowBase64 string) Workflow {
 	return yamlWorkflow
 }
 
-func (w Workflow) ToBase64() string {
-	return ""
-}
-
 func (w Workflow) ToYaml() string {
 	return ""
 }
 
 func (w Workflow) Validate() bool {
 	return true
+}
+
+func (w Workflow) GetBase64Workflow() string {
+	y, _ := yaml.Marshal(w)
+	return base64.StdEncoding.EncodeToString(y)
+}
+
+func (wa WorkflowActivities) GetBase64Activities() string {
+	y, _ := yaml.Marshal(wa)
+	return base64.StdEncoding.EncodeToString(y)
 }

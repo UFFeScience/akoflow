@@ -25,6 +25,7 @@ type WorkflowActivities struct {
 	Name             string `yaml:"name"`
 	Run              string `yaml:"run"`
 	DependOnActivity *int
+	WorkflowId       int
 }
 
 type WorkflowDatabase struct {
@@ -126,5 +127,6 @@ func DatabaseToWorkflowActivities(params ParamsDatabaseToWorkflowActivities) Wor
 		Status:           params.WorkflowActivityDatabase.Status,
 		Run:              wfa.Run,
 		DependOnActivity: params.WorkflowActivityDatabase.DependOnActivity,
+		WorkflowId:       params.WorkflowActivityDatabase.WorkflowId,
 	}
 }

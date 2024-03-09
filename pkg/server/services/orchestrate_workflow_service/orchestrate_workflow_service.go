@@ -6,6 +6,7 @@ import (
 	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/entities/workflow"
 	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/repository/activities_repository"
 	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/repository/workflow_repository"
+	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/services/get_workflow_by_status_service"
 )
 
 // Situação 1: Nenhuma atividade está rodando
@@ -18,18 +19,20 @@ var SITUATION_SOME_ACTIVITIES_RUNNING = "SITUATION_SOME_ACTIVITIES_RUNNING"
 var SITUATION_ALL_ACTIVITIES_FINISHED = "SITUATION_ALL_ACTIVITIES_FINISHED"
 
 type OrchestrateWorflowService struct {
-	namespace          string
-	workflowRepository *workflow_repository.WorkflowRepository
-	activityRepository *activities_repository.ActivityRepository
-	channelManager     *channel.Manager
+	namespace           string
+	workflowRepository  *workflow_repository.WorkflowRepository
+	activityRepository  *activities_repository.ActivityRepository
+	channelManager      *channel.Manager
+	getWorkflowByStatus *get_workflow_by_status_service.GetWorkflowByStatusService
 }
 
 func New() *OrchestrateWorflowService {
 	return &OrchestrateWorflowService{
-		namespace:          "k8science-cluster-manager",
-		workflowRepository: workflow_repository.New(),
-		activityRepository: activities_repository.New(),
-		channelManager:     channel.GetInstance(),
+		namespace:           "k8science-cluster-manager",
+		workflowRepository:  workflow_repository.New(),
+		activityRepository:  activities_repository.New(),
+		channelManager:      channel.GetInstance(),
+		getWorkflowByStatus: get_workflow_by_status_service.New(),
 	}
 }
 
@@ -56,9 +59,9 @@ func (o *OrchestrateWorflowService) getNotDependentActivities(wf workflow.Workfl
 }
 
 func (o *OrchestrateWorflowService) handleSomeActivitiesRunningOrFinished(wf workflow.Workflow) {
-	wfsFinished := o.getWorkflowsByStatus(wf, activities_repository.StatusFinished)
-	wfsRunning := o.getWorkflowsByStatus(wf, activities_repository.StatusRunning)
-	wfsNotStarted := o.getWorkflowsByStatus(wf, activities_repository.StatusCreated)
+	wfsFinished := o.getWorkflowByStatus.GetActivitiesByStatus(wf, activities_repository.StatusFinished)
+	wfsRunning := o.getWorkflowByStatus.GetActivitiesByStatus(wf, activities_repository.StatusRunning)
+	wfsNotStarted := o.getWorkflowByStatus.GetActivitiesByStatus(wf, activities_repository.StatusCreated)
 
 	println("wfsFinished: ", len(wfsFinished))
 	println("wfsRunning: ", len(wfsRunning))
@@ -102,15 +105,6 @@ func (o *OrchestrateWorflowService) isDependentOnFinished(wfaPending workflow.Wo
 	return false
 }
 
-func (o *OrchestrateWorflowService) getWorkflowsByStatus(wfs workflow.Workflow, status int) []workflow.WorkflowActivities {
-	var wfsSelected []workflow.WorkflowActivities
-	for _, activity := range wfs.Spec.Activities {
-		if activity.Status == status {
-			wfsSelected = append(wfsSelected, activity)
-		}
-	}
-	return wfsSelected
-}
 func (o *OrchestrateWorflowService) getMapSituationAction() map[string]func(workflows workflow.Workflow) {
 	mapSituationAction := map[string]func(workflows workflow.Workflow){
 		SITUATION_ALL_ACTIVITIES_CREATED:  o.handleAllActivitiesCreated,

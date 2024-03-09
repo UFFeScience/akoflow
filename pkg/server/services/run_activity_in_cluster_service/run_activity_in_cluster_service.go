@@ -38,5 +38,6 @@ func (r *RunActivityInClusterService) Run(activityID int) {
 
 	//time.Sleep(5 * time.Second)
 	var _ = r.activityRepository.UpdateStatus(activity.ID, activities_repository.StatusRunning)
+	var _ = r.workflowRepository.UpdateStatus(activity.WorkflowId, workflow_repository.StatusRunning)
 
 }

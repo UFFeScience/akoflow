@@ -20,9 +20,11 @@ type WorkflowSpec struct {
 }
 
 type WorkflowActivities struct {
-	ID   int
-	Name string `yaml:"name"`
-	Run  string `yaml:"run"`
+	ID               int
+	Status           int
+	Name             string `yaml:"name"`
+	Run              string `yaml:"run"`
+	DependOnActivity *int
 }
 
 type WorkflowDatabase struct {
@@ -119,8 +121,10 @@ func DatabaseToWorkflowActivities(params ParamsDatabaseToWorkflowActivities) Wor
 	}
 
 	return WorkflowActivities{
-		ID:   params.WorkflowActivityDatabase.ID,
-		Name: params.WorkflowActivityDatabase.Name,
-		Run:  wfa.Run,
+		ID:               params.WorkflowActivityDatabase.ID,
+		Name:             params.WorkflowActivityDatabase.Name,
+		Status:           params.WorkflowActivityDatabase.Status,
+		Run:              wfa.Run,
+		DependOnActivity: params.WorkflowActivityDatabase.DependOnActivity,
 	}
 }

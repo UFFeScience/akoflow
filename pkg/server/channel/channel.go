@@ -14,7 +14,7 @@ type Manager struct {
 type DataChannel struct {
 	Namespace string
 	Job       interface{}
-	Cont      int
+	Id        int
 }
 
 var singleInstance *Manager

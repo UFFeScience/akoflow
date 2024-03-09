@@ -88,7 +88,7 @@ func (w *WorkflowRepository) GetPendingWorkflows(namespace string) ([]workflow.W
 	database := connector.Database{}
 	c := database.Connect()
 
-	rows, err := c.Query("SELECT * FROM "+w.tableName+" WHERE namespace = ? AND status = ?", namespace, StatusCreated)
+	rows, err := c.Query("SELECT * FROM "+w.tableName+" WHERE namespace = ? AND status IN (?, ?)", namespace, StatusRunning, StatusCreated)
 	if err != nil {
 		return nil, err
 	}

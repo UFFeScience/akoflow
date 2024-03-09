@@ -71,7 +71,7 @@ func (w *ActivityRepository) GetActivitiesByWorkflowIds(ids []int) (ResultGetAct
 	database := connector.Database{}
 	c := database.Connect()
 
-	var mapWfIdToActivities = make(map[int][]workflow.WorkflowActivities)
+	var mapWfIdToActivities = make(ResultGetActivitiesByWorkflowIds)
 
 	for _, id := range ids {
 		rows, err := c.Query("SELECT * FROM "+w.tableName+" WHERE workflow_id = ?", id)

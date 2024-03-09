@@ -21,6 +21,15 @@ func New() *GetPendingWorkflowService {
 }
 
 func (g *GetPendingWorkflowService) GetPendingWorkflows() ([]workflow.Workflow, error) {
+	workflows, err := g.retriveWorkflowsOnDatabase()
+	if err != nil {
+		return nil, err
+	}
+
+	return workflows, nil
+}
+
+func (g *GetPendingWorkflowService) retriveWorkflowsOnDatabase() ([]workflow.Workflow, error) {
 	workflows, err := g.workflowRepository.GetPendingWorkflows(g.namespace)
 	if err != nil {
 		return nil, err
@@ -34,7 +43,6 @@ func (g *GetPendingWorkflowService) GetPendingWorkflows() ([]workflow.Workflow, 
 	}
 
 	workflows = hydrateWorkflows(workflows, mapWfActivities)
-
 	return workflows, nil
 }
 

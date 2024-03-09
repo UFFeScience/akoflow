@@ -2,8 +2,8 @@ package runworkflow
 
 import (
 	"encoding/json"
+	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/entities/workflow"
 	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/manager"
-	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/workflow"
 	"net/http"
 )
 
@@ -19,7 +19,7 @@ func RunWorkflowHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	wf := workflow.New(payload.Workflow)
+	wf := workflow.New(workflow.WorkflowNewParams{WorkflowBase64: payload.Workflow})
 
 	manager.DeployWorkflow(wf)
 

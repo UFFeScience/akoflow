@@ -1,9 +1,9 @@
 package create_workflow_in_database_service
 
 import (
+	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/entities/workflow"
 	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/repository/activities_repository"
 	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/repository/workflow_repository"
-	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/workflow"
 )
 
 type CreateWorkflowInDatabaseService struct {

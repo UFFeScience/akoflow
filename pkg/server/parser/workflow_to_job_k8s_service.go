@@ -2,8 +2,8 @@ package parser
 
 import (
 	"encoding/base64"
+	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/entities/workflow"
 	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/k8sjob"
-	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/workflow"
 	"math/rand"
 	"strconv"
 	"strings"

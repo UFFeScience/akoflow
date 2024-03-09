@@ -23,6 +23,14 @@ type WorkflowActivities struct {
 	Run  string `yaml:"run"`
 }
 
+type WorkflowDatabase struct {
+	ID          int
+	Namespace   string
+	Name        string
+	RawWorkflow string
+	Status      int
+}
+
 func New(workflowBase64 string) Workflow {
 	byteWorkflow, _ := base64.StdEncoding.DecodeString(workflowBase64)
 
@@ -54,4 +62,8 @@ func (w Workflow) GetBase64Workflow() string {
 func (wa WorkflowActivities) GetBase64Activities() string {
 	y, _ := yaml.Marshal(wa)
 	return base64.StdEncoding.EncodeToString(y)
+}
+
+func DatabaseToWorkflow(wDatabase WorkflowDatabase) Workflow {
+	return New(wDatabase.RawWorkflow)
 }

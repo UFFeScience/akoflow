@@ -2,7 +2,7 @@ package manager
 
 import (
 	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/parser"
-	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/repository/workflow_repository"
+	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/services/create_workflow_in_database_service"
 	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/workflow"
 )
 
@@ -13,9 +13,10 @@ var cont = 0
 func DeployWorkflow(workflow workflow.Workflow) {
 	jobs := parser.WorkflowToJobK8sService(workflow)
 
-	workflowRepository := workflow_repository.New()
+	createWorkflowInDatabaseService := create_workflow_in_database_service.New()
 
-	err := workflowRepository.Create(namespace, workflow)
+	err := createWorkflowInDatabaseService.Create(workflow)
+
 	if err != nil {
 		return
 	}

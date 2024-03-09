@@ -1,6 +1,7 @@
 package orchestrate_workflow_service
 
 import (
+	"errors"
 	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/channel"
 	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/entities/workflow"
 	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/repository/activities_repository"
@@ -54,36 +55,90 @@ func (o *OrchestrateWorflowService) getNotDependentActivities(wf workflow.Workfl
 	return notDependentActivities
 }
 
-func (o *OrchestrateWorflowService) handleSomeActivitiesRunning(workflow workflow.Workflow) {
-	println("handleSomeActivitiesRunning")
+func (o *OrchestrateWorflowService) handleSomeActivitiesRunningOrFinished(wf workflow.Workflow) {
+	wfsFinished := o.getWorkflowsByStatus(wf, activities_repository.StatusFinished)
+	wfsRunning := o.getWorkflowsByStatus(wf, activities_repository.StatusRunning)
+	wfsNotStarted := o.getWorkflowsByStatus(wf, activities_repository.StatusCreated)
+
+	println("wfsFinished: ", len(wfsFinished))
+	println("wfsRunning: ", len(wfsRunning))
+	println("wfsNotStarted: ", len(wfsNotStarted))
+
+	wfNextToRun, err := o.nextToRun(wfsNotStarted, wfsFinished)
+
+	if err != nil {
+		return
+	}
+
+	o.dispatchToWorker([]workflow.WorkflowActivities{wfNextToRun})
+
 }
 
-func (o *OrchestrateWorflowService) handleAllActivitiesFinished(workflow workflow.Workflow) {
-	println("handleAllActivitiesFinished")
+func (o *OrchestrateWorflowService) nextToRun(wfsPending []workflow.WorkflowActivities, wfsFinished []workflow.WorkflowActivities) (workflow.WorkflowActivities, error) {
+	var wfNextToRun workflow.WorkflowActivities
+	for _, wfPending := range wfsPending {
+		if o.isDependentOnFinished(wfPending, wfsFinished) {
+			wfNextToRun = wfPending
+		}
+	}
+
+	if wfNextToRun.ID == 0 {
+		return wfNextToRun, errors.New("No activity to run")
+	}
+
+	return wfNextToRun, nil
+}
+
+func (o *OrchestrateWorflowService) isDependentOnFinished(wfaPending workflow.WorkflowActivities, wfasFinished []workflow.WorkflowActivities) bool {
+	for _, wfaFinished := range wfasFinished {
+		if wfaPending.DependOnActivity == nil {
+			return true
+		}
+
+		if *wfaPending.DependOnActivity == wfaFinished.ID {
+			return true
+		}
+	}
+	return false
+}
+
+func (o *OrchestrateWorflowService) getWorkflowsByStatus(wfs workflow.Workflow, status int) []workflow.WorkflowActivities {
+	var wfsSelected []workflow.WorkflowActivities
+	for _, activity := range wfs.Spec.Activities {
+		if activity.Status == status {
+			wfsSelected = append(wfsSelected, activity)
+		}
+	}
+	return wfsSelected
+}
+func (o *OrchestrateWorflowService) getMapSituationAction() map[string]func(workflows workflow.Workflow) {
+	mapSituationAction := map[string]func(workflows workflow.Workflow){
+		SITUATION_ALL_ACTIVITIES_CREATED:  o.handleAllActivitiesCreated,
+		SITUATION_SOME_ACTIVITIES_RUNNING: o.handleSomeActivitiesRunningOrFinished,
+		SITUATION_ALL_ACTIVITIES_FINISHED: o.handleSomeActivitiesRunningOrFinished,
+	}
+	return mapSituationAction
 }
 
 func (o *OrchestrateWorflowService) iterateWorkflows(workflows []workflow.Workflow) {
 
-	// map situation to function
-	mapSituationAction := map[string]func(workflows workflow.Workflow){
-		SITUATION_ALL_ACTIVITIES_CREATED:  o.handleAllActivitiesCreated,
-		SITUATION_SOME_ACTIVITIES_RUNNING: o.handleSomeActivitiesRunning,
-	}
-
 	for _, wf := range workflows {
 		situation := o.getSituation(wf)
-		mapSituationAction[situation](wf)
+		o.getMapSituationAction()[situation](wf)
 	}
 }
 
 func (d *OrchestrateWorflowService) getSituation(wf workflow.Workflow) string {
 
 	for _, activity := range wf.Spec.Activities {
-		if activity.Status == activities_repository.StatusCreated {
-			return SITUATION_ALL_ACTIVITIES_CREATED
+		if activity.Status == activities_repository.StatusRunning {
+			return SITUATION_SOME_ACTIVITIES_RUNNING
+		}
+		if activity.Status == activities_repository.StatusFinished {
+			return SITUATION_ALL_ACTIVITIES_FINISHED
 		}
 	}
-	return SITUATION_SOME_ACTIVITIES_RUNNING
+	return SITUATION_ALL_ACTIVITIES_CREATED
 }
 
 func (d *OrchestrateWorflowService) Orchestrate(workflows []workflow.Workflow) {

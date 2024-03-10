@@ -43,6 +43,7 @@ func (r *RunActivityInClusterService) Run(activityID int) {
 
 	k8sJob := activity.MakeResourceK8s(wf)
 	r.connector.ApplyJob(r.namespace, k8sJob)
+	println("Job created: ", k8sJob.ToYaml())
 
 	var _ = r.activityRepository.UpdateStatus(activity.ID, activities_repository.StatusRunning)
 	var _ = r.workflowRepository.UpdateStatus(activity.WorkflowId, workflow_repository.StatusRunning)

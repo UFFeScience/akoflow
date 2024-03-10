@@ -107,3 +107,78 @@ func (c *Connector) GetJob(namespace string, jobName string) (ResponseGetJob, er
 
 	return result, nil
 }
+
+func (c *Connector) GetPodByJob(namespace string, jobName string) (ResponseGetJobByPod, error) {
+	token := os.Getenv("K8S_API_SERVER_TOKEN")
+	host := os.Getenv("K8S_API_SERVER_HOST")
+
+	req, _ := http.NewRequest("GET", "https://"+host+"/api/v1/namespaces/"+namespace+"/pods?labelSelector=job-name="+jobName, nil)
+	req.Header.Set("Authorization", "Bearer "+token)
+
+	resp, err := c.client.Do(req)
+
+	if err != nil {
+		return ResponseGetJobByPod{}, err
+	}
+
+	defer resp.Body.Close()
+
+	var result ResponseGetJobByPod
+	err = json.NewDecoder(resp.Body).Decode(&result)
+
+	if err != nil {
+		return ResponseGetJobByPod{}, err
+	}
+
+	return result, nil
+}
+
+func (c *Connector) GetPodMetrics(namespace string, podName string) (ResponseGetPodMetrics, error) {
+	token := os.Getenv("K8S_API_SERVER_TOKEN")
+	host := os.Getenv("K8S_API_SERVER_HOST")
+
+	req, _ := http.NewRequest("GET", "https://"+host+"/apis/metrics.k8s.io/v1beta1/namespaces/"+namespace+"/pods/"+podName, nil)
+	req.Header.Set("Authorization", "Bearer "+token)
+
+	resp, err := c.client.Do(req)
+
+	if err != nil {
+		return ResponseGetPodMetrics{}, err
+	}
+
+	defer resp.Body.Close()
+
+	var result ResponseGetPodMetrics
+
+	err = json.NewDecoder(resp.Body).Decode(&result)
+
+	if err != nil {
+		return ResponseGetPodMetrics{}, err
+	}
+
+	return result, nil
+
+}
+
+func (c *Connector) GetPodLogs(namespace string, podName string) (string, error) {
+	token := os.Getenv("K8S_API_SERVER_TOKEN")
+	host := os.Getenv("K8S_API_SERVER_HOST")
+
+	req, _ := http.NewRequest("GET", "https://"+host+"/api/v1/namespaces/"+namespace+"/pods/"+podName+"/log", nil)
+
+	req.Header.Set("Authorization", "Bearer "+token)
+
+	resp, err := c.client.Do(req)
+
+	if err != nil {
+		return "", err
+	}
+
+	defer resp.Body.Close()
+
+	buf := new(bytes.Buffer)
+
+	buf.ReadFrom(resp.Body)
+
+	return buf.String(), nil
+}

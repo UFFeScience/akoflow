@@ -2,7 +2,10 @@ package workflow
 
 import (
 	"encoding/base64"
+	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/k8sjob"
 	"gopkg.in/yaml.v3"
+	"math/rand"
+	"strconv"
 )
 
 type Workflow struct {
@@ -129,4 +132,57 @@ func DatabaseToWorkflowActivities(params ParamsDatabaseToWorkflowActivities) Wor
 		DependOnActivity: params.WorkflowActivityDatabase.DependOnActivity,
 		WorkflowId:       params.WorkflowActivityDatabase.WorkflowId,
 	}
+}
+
+func (w Workflow) MakeResourcesK8s() []k8sjob.K8sJob {
+	k8sjobs := make([]k8sjob.K8sJob, 0)
+	for _, activity := range w.Spec.Activities {
+		k8sJob := makeJobK8s(w, activity)
+		k8sjobs = append(k8sjobs, k8sJob)
+	}
+	return k8sjobs
+}
+
+func (wa WorkflowActivities) MakeResourceK8s(workflow Workflow) k8sjob.K8sJob {
+	return makeJobK8s(workflow, wa)
+}
+
+func makeJobK8s(workflow Workflow, activity WorkflowActivities) k8sjob.K8sJob {
+
+	firstContainer := makeContainer(workflow, activity)
+
+	k8sJob := k8sjob.K8sJob{
+		ApiVersion: "batch/v1",
+		Kind:       "Job",
+		Metadata: k8sjob.K8sJobMetadata{
+			//replace _ to - and add a random number
+			Name: activity.GetName(),
+		},
+		Spec: k8sjob.K8sJobSpec{
+			Template: k8sjob.K8sJobTemplate{
+				Spec: k8sjob.K8sJobSpecTemplate{
+					Containers:    []k8sjob.K8sJobContainer{firstContainer},
+					RestartPolicy: "Never",
+				},
+			},
+		},
+	}
+
+	return k8sJob
+}
+
+func makeContainer(workflow Workflow, activity WorkflowActivities) k8sjob.K8sJobContainer {
+	command := base64.StdEncoding.EncodeToString([]byte(activity.Run))
+
+	container := k8sjob.K8sJobContainer{
+		Name:    "activity-0" + strconv.Itoa(rand.Intn(100)),
+		Image:   workflow.Spec.Image,
+		Command: []string{"/bin/sh", "-c", "echo " + command + "| base64 -d| sh"},
+	}
+
+	return container
+}
+
+func (wa WorkflowActivities) GetName() string {
+	return "activity-" + strconv.Itoa(wa.ID)
 }

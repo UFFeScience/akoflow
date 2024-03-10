@@ -12,6 +12,17 @@ Workflow Científico em núvem com Kubernetes
 ### Objetivos Específicos
 ...
 
+
+### instalar a api de servidor para o k8s
+
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+
+### for development
+
+kubectl edit deployment.apps/metrics-server -n kube-system
+
+--kubelet-insecure-tls=true
+
 ---
 ### to do
 

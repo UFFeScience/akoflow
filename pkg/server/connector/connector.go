@@ -82,3 +82,28 @@ func (c *Connector) ApplyJob(namespace string, job k8sjob.K8sJob) interface{} {
 	return result
 
 }
+
+func (c *Connector) GetJob(namespace string, jobName string) (ResponseGetJob, error) {
+	token := os.Getenv("K8S_API_SERVER_TOKEN")
+	host := os.Getenv("K8S_API_SERVER_HOST")
+
+	req, _ := http.NewRequest("GET", "https://"+host+"/apis/batch/v1/namespaces/"+namespace+"/jobs/"+jobName, nil)
+	req.Header.Set("Authorization", "Bearer "+token)
+
+	resp, err := c.client.Do(req)
+
+	if err != nil {
+		return ResponseGetJob{}, err
+	}
+
+	defer resp.Body.Close()
+
+	var result ResponseGetJob
+	err = json.NewDecoder(resp.Body).Decode(&result)
+
+	if err != nil {
+		return ResponseGetJob{}, err
+	}
+
+	return result, nil
+}

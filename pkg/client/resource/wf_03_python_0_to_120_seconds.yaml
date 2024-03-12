@@ -1,0 +1,21 @@
+name: wf-03-python-0-to-120-seconds
+spec:
+  image: "python:3.7-alpine"
+  activities:
+    - name: "Echo 0 to 100000 in Python"
+      memoryLimit: 1Gi
+      cpuLimit: 1
+      run: |
+         echo "import time" >> for_loop.py
+         echo "for i in range(120):" >> for_loop.py
+         echo "    time.sleep(1)" >> for_loop.py
+         echo "    print(i, 'Hello World')" >> for_loop.py
+        
+         cat for_loop.py
+        
+         python for_loop.py
+         echo "Done"
+         sleep 10
+        
+        
+

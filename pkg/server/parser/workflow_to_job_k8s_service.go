@@ -35,6 +35,7 @@ func makeJobK8s(workflow workflow.Workflow, activity workflow.WorkflowActivities
 				Spec: k8sjob.K8sJobSpecTemplate{
 					Containers:    []k8sjob.K8sJobContainer{firstContainer},
 					RestartPolicy: "Never",
+					BackoffLimit:  1,
 				},
 			},
 		},

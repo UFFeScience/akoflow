@@ -1,0 +1,17 @@
+name: wf-02-python-0-to-100000
+spec:
+  image: "python:3.7-alpine"
+  activities:
+    - name: "Echo 0 to 100000 in Python"
+      memoryLimit: 1Gi
+      cpuLimit: 1
+      run: |
+         echo "for i in range(100000):" > for_loop.py
+         echo "    print(i, 'Hello World')" >> for_loop.py
+        
+         python for_loop.py
+         echo "Done"
+         sleep 10
+        
+        
+

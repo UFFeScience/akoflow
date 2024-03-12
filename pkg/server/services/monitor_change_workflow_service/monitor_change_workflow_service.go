@@ -86,6 +86,12 @@ func (m *MonitorChangeWorkflowService) handleVerifyActivityWasFinished(activity 
 		return activities_repository.StatusFinished
 	}
 
+	if jobResponse.Metadata.Name == "" {
+		println("Activity not send to k8s yet. Go back to created status")
+		var _ = m.activityRepository.UpdateStatus(activity.ID, activities_repository.StatusCreated)
+		return activities_repository.StatusCreated
+	}
+
 	return activities_repository.StatusFinished
 
 }

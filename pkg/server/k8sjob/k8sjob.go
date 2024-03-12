@@ -27,6 +27,7 @@ type K8sJobTemplate struct {
 type K8sJobSpecTemplate struct {
 	Containers    []K8sJobContainer `json:"containers"`
 	RestartPolicy string            `json:"restartPolicy"`
+	BackoffLimit  int               `json:"backoffLimit"`
 }
 
 type K8sJobContainer struct {

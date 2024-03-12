@@ -1,0 +1,12 @@
+name: wf-loop-0-to-100000
+spec:
+  image: "alpine:3.7"
+  activities:
+    - name: "Echo 0 to 100000"
+      memoryLimit: 1Gi
+      cpuLimit: 1
+      run: |
+        for i in $(seq 0 100000); do
+          echo $i
+        done
+

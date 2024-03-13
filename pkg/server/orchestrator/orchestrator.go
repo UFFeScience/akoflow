@@ -7,7 +7,7 @@ import (
 	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/services/orchestrate_workflow_service"
 )
 
-const TimeToUpdateSeconds = 5
+const TimeToUpdateSeconds = 1
 
 func StartOrchestrator() {
 

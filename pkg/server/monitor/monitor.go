@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-const TimeToUpdateSeconds = 5
+const TimeToUpdateSeconds = 1
 
 func StartMonitor() {
 	for {

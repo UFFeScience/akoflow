@@ -1,0 +1,20 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: job-0-workflow-00
+  namespace: k8science-cluster-manager
+spec:
+  template:
+    spec:
+      containers:
+        - name: job-workflow-00
+          image: alpine:latest
+          command: ["sh", "-c", "for i in 1 2 3 4 5; do echo $i >> /data/out.txt; done"]
+          volumeMounts:
+            - name: pvc-workflow-00
+              mountPath: /data
+      restartPolicy: Never
+      volumes:
+          - name: pvc-workflow-00
+            persistentVolumeClaim:
+                claimName: pvc-workflow-00

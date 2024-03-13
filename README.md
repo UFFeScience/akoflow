@@ -27,8 +27,11 @@ kubectl edit deployment.apps/metrics-server -n kube-system
 ### to do
 
 - nova versão do arquivo de workflow, CPU e Mémoria por Atividades.
-- mecanismo de atividades sequencial
-- v1 do client, recebendo o arquivo de workflow e enviando para o server (k8s)
+- ~~mecanismo de atividades sequencial~~
+- mecanismo de atividades sequencial com transferecia de dados entre atividades
+- ~~v1 do client, recebendo o arquivo de workflow e enviando para o server (k8s)~~
 - mecanismo de compartilhamento de dados entre atividades
-- proveniencia e monitoramento
+- ~~estrutura proveniencia e monitoramento~~
 - mecanismo de atividades paralelas
+- tratamento de unhappy path do sistema
+- mecanismo de prebuild das imagens (reaproveitamento scripts de imagem)

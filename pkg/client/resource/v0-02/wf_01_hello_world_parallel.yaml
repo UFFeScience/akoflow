@@ -1,0 +1,41 @@
+name: wf-hello-world
+spec:
+  image: "alpine:3.7"
+  namespace: "k8science-cluster-manager"
+  storageClassName: "hostpath"
+  storageSize: "32Mi"
+  mountPath: "/data"
+  activities:
+    - name: "Echo Hello World"
+      memoryLimit: 1Gi
+      cpuLimit: 1
+      run: |
+        echo "Hello World" >> /data/output.txt
+        sleep 5
+        echo "Hello World Again" >> /data/output.txt
+        sleep 5
+        echo "Hello World One More Time" >> /data/output.txt
+
+    - name: "Echo Good Afternoon"
+      memoryLimit: 1Gi
+      cpuLimit: 1
+      run: |
+        echo "Good Afternoon" >> /data/output.txt
+        sleep 5
+        echo "Good Afternoon Again" >> /data/output.txt
+        sleep 5
+        echo "Good Afternoon One More Time" >> /data/output.txt
+
+    - name: "Echo Goodbye"
+      memoryLimit: 1Gi
+      cpuLimit: 1
+      run: |
+        echo "Goodbye" >> /data/output.txt
+        sleep 5
+        echo "Goodbye Again" >> /data/output.txt
+        sleep 5
+        echo "Goodbye One More Time" >> /data/output.txt
+
+      dependsOn:
+        - "Echo Hello World"
+        - "Echo Good Afternoon"

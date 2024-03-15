@@ -28,12 +28,26 @@ type K8sJobSpecTemplate struct {
 	Containers    []K8sJobContainer `json:"containers"`
 	RestartPolicy string            `json:"restartPolicy"`
 	BackoffLimit  int               `json:"backoffLimit"`
+	Volumes       []K8sJobVolume    `json:"volumes"`
 }
 
 type K8sJobContainer struct {
-	Name    string   `json:"name"`
-	Image   string   `json:"image"`
-	Command []string `json:"command"`
+	Name         string              `json:"name"`
+	Image        string              `json:"image"`
+	Command      []string            `json:"command"`
+	VolumeMounts []K8sJobVolumeMount `json:"volumeMounts"`
+}
+
+type K8sJobVolume struct {
+	Name                  string `json:"name"`
+	PersistentVolumeClaim struct {
+		ClaimName string `json:"claimName"`
+	} `json:"persistentVolumeClaim"`
+}
+
+type K8sJobVolumeMount struct {
+	Name      string `json:"name"`
+	MountPath string `json:"mountPath"`
 }
 
 func (k *K8sJob) ToYaml() string {

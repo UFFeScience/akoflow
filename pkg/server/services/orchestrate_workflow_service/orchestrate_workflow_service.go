@@ -43,15 +43,15 @@ func (o *OrchestrateWorflowService) handleAllActivitiesCreated(workflow workflow
 
 func (o *OrchestrateWorflowService) dispatchToWorker(activities []workflow.WorkflowActivities) {
 	for _, activity := range activities {
-		println("Dispatching to worker activity: ", activity.Name, " with id: ", activity.ID)
-		o.channelManager.WorfklowChannel <- channel.DataChannel{Namespace: o.namespace, Job: activity, Id: activity.ID}
+		println("Dispatching to worker activity: ", activity.Name, " with id: ", activity.Id)
+		o.channelManager.WorfklowChannel <- channel.DataChannel{Namespace: o.namespace, Job: activity, Id: activity.Id}
 	}
 }
 
 func (o *OrchestrateWorflowService) getNotDependentActivities(wf workflow.Workflow) []workflow.WorkflowActivities {
 	var notDependentActivities []workflow.WorkflowActivities
 	for _, activity := range wf.Spec.Activities {
-		if activity.DependOnActivity == nil {
+		if len(activity.DependsOn) == 0 {
 			notDependentActivities = append(notDependentActivities, activity)
 		}
 	}
@@ -85,7 +85,7 @@ func (o *OrchestrateWorflowService) nextToRun(wfsPending []workflow.WorkflowActi
 		}
 	}
 
-	if wfNextToRun.ID == 0 {
+	if wfNextToRun.Id == 0 {
 		return wfNextToRun, errors.New("No activity to run")
 	}
 
@@ -93,15 +93,25 @@ func (o *OrchestrateWorflowService) nextToRun(wfsPending []workflow.WorkflowActi
 }
 
 func (o *OrchestrateWorflowService) isDependentOnFinished(wfaPending workflow.WorkflowActivities, wfasFinished []workflow.WorkflowActivities) bool {
+
+	mapNameCompleted := make(map[string]bool)
+
 	for _, wfaFinished := range wfasFinished {
-		if wfaPending.DependOnActivity == nil {
+		if wfaPending.DependsOn == nil {
 			return true
 		}
 
-		if *wfaPending.DependOnActivity == wfaFinished.ID {
-			return true
+		for _, dependOn := range wfaPending.DependsOn {
+			if dependOn == wfaFinished.Name {
+				mapNameCompleted[wfaFinished.Name] = true
+			}
 		}
 	}
+
+	if len(wfaPending.DependsOn) == len(mapNameCompleted) {
+		return true
+	}
+
 	return false
 }
 

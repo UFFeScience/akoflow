@@ -15,20 +15,28 @@ type Workflow struct {
 }
 
 type WorkflowSpec struct {
-	MemoryLimit string               `yaml:"memoryLimit"`
-	CPULimit    int                  `yaml:"cpuLimit"`
-	Tries       int                  `yaml:"tries"`
-	Image       string               `yaml:"image"`
-	Activities  []WorkflowActivities `yaml:"activities"`
+	Image            string               `yaml:"image"`
+	Namespace        string               `yaml:"namespace"`
+	StorageClassName string               `yaml:"storageClassName"`
+	StorageSize      string               `yaml:"storageSize"`
+	MountPath        string               `yaml:"mountPath"`
+	Activities       []WorkflowActivities `yaml:"activities"`
+}
+
+type WorkflowActivitiesDependsOn struct {
+	Name string `yaml:"name"`
+	Id   int    `yaml:"id"`
 }
 
 type WorkflowActivities struct {
-	ID               int
-	Status           int
-	Name             string `yaml:"name"`
-	Run              string `yaml:"run"`
-	DependOnActivity *int
-	WorkflowId       int
+	Id          int
+	WorkflowId  int
+	Status      int
+	Name        string   `yaml:"name"`
+	Run         string   `yaml:"run"`
+	MemoryLimit string   `yaml:"memoryLimit"`
+	CpuLimit    string   `yaml:"cpuLimit"`
+	DependsOn   []string `yaml:"dependsOn"`
 }
 
 type WorkflowDatabase struct {
@@ -46,7 +54,7 @@ type WorkflowNewParams struct {
 }
 
 type WorkflowActivityDatabase struct {
-	ID                int
+	Id                int
 	WorkflowId        int
 	Namespace         string
 	Name              string
@@ -64,6 +72,9 @@ func New(params WorkflowNewParams) Workflow {
 
 	yamlWorkflow := Workflow{}
 	err := yaml.Unmarshal([]byte(stringWorkflow), &yamlWorkflow)
+
+	interfaceWorkflow := map[string]interface{}{}
+	err = yaml.Unmarshal([]byte(stringWorkflow), &interfaceWorkflow)
 
 	if params.Id != nil {
 		yamlWorkflow.Id = *params.Id
@@ -125,12 +136,14 @@ func DatabaseToWorkflowActivities(params ParamsDatabaseToWorkflowActivities) Wor
 	}
 
 	return WorkflowActivities{
-		ID:               params.WorkflowActivityDatabase.ID,
-		Name:             params.WorkflowActivityDatabase.Name,
-		Status:           params.WorkflowActivityDatabase.Status,
-		Run:              wfa.Run,
-		DependOnActivity: params.WorkflowActivityDatabase.DependOnActivity,
-		WorkflowId:       params.WorkflowActivityDatabase.WorkflowId,
+		Id:          params.WorkflowActivityDatabase.Id,
+		Name:        params.WorkflowActivityDatabase.Name,
+		Status:      params.WorkflowActivityDatabase.Status,
+		Run:         wfa.Run,
+		WorkflowId:  params.WorkflowActivityDatabase.WorkflowId,
+		MemoryLimit: wfa.MemoryLimit,
+		CpuLimit:    wfa.CpuLimit,
+		DependsOn:   wfa.DependsOn,
 	}
 }
 
@@ -150,6 +163,7 @@ func (wa WorkflowActivities) MakeResourceK8s(workflow Workflow) k8sjob.K8sJob {
 func makeJobK8s(workflow Workflow, activity WorkflowActivities) k8sjob.K8sJob {
 
 	firstContainer := makeContainer(workflow, activity)
+	firstVolume := makeVolume(workflow)
 
 	k8sJob := k8sjob.K8sJob{
 		ApiVersion: "batch/v1",
@@ -163,12 +177,25 @@ func makeJobK8s(workflow Workflow, activity WorkflowActivities) k8sjob.K8sJob {
 				Spec: k8sjob.K8sJobSpecTemplate{
 					Containers:    []k8sjob.K8sJobContainer{firstContainer},
 					RestartPolicy: "Never",
+					Volumes:       []k8sjob.K8sJobVolume{firstVolume},
 				},
 			},
 		},
 	}
 
 	return k8sJob
+}
+
+func makeVolume(workflow Workflow) k8sjob.K8sJobVolume {
+	volume := k8sjob.K8sJobVolume{
+		Name: workflow.GetVolumeName(),
+		PersistentVolumeClaim: struct {
+			ClaimName string `json:"claimName"`
+		}{
+			ClaimName: workflow.GetVolumeName(),
+		},
+	}
+	return volume
 }
 
 func makeContainer(workflow Workflow, activity WorkflowActivities) k8sjob.K8sJobContainer {
@@ -178,11 +205,21 @@ func makeContainer(workflow Workflow, activity WorkflowActivities) k8sjob.K8sJob
 		Name:    "activity-0" + strconv.Itoa(rand.Intn(100)),
 		Image:   workflow.Spec.Image,
 		Command: []string{"/bin/sh", "-c", "echo " + command + "| base64 -d| sh"},
+		VolumeMounts: []k8sjob.K8sJobVolumeMount{
+			{
+				Name:      workflow.GetVolumeName(),
+				MountPath: workflow.Spec.MountPath,
+			},
+		},
 	}
 
 	return container
 }
 
 func (wa WorkflowActivities) GetName() string {
-	return "activity-" + strconv.Itoa(wa.ID)
+	return "activity-" + strconv.Itoa(wa.Id)
+}
+
+func (w Workflow) GetVolumeName() string {
+	return "pvc-" + strconv.Itoa(w.Id) + "-" + w.Name
 }

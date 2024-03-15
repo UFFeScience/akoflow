@@ -69,9 +69,9 @@ func (m *MonitorChangeWorkflowService) handleVerifyWorkflowActivitiesWasFinished
 
 // [TODO] Verificação de Status das atividades muito simplista. Deve ser melhorada.
 func (m *MonitorChangeWorkflowService) handleVerifyActivityWasFinished(activity workflow.WorkflowActivities, wf workflow.Workflow) int {
-	println("Verifying activity: ", activity.Name, " with id: ", activity.ID)
+	println("Verifying activity: ", activity.Name, " with id: ", activity.Id)
 
-	wfaDatabase, _ := m.activityRepository.Find(activity.ID)
+	wfaDatabase, _ := m.activityRepository.Find(activity.Id)
 
 	println("Activity status Database: ", wfaDatabase.Status)
 
@@ -82,13 +82,13 @@ func (m *MonitorChangeWorkflowService) handleVerifyActivityWasFinished(activity 
 	}
 
 	if jobResponse.Status.Succeeded == 1 {
-		var _ = m.activityRepository.UpdateStatus(activity.ID, activities_repository.StatusFinished)
+		var _ = m.activityRepository.UpdateStatus(activity.Id, activities_repository.StatusFinished)
 		return activities_repository.StatusFinished
 	}
 
 	if jobResponse.Metadata.Name == "" {
 		println("Activity not send to k8s yet. Go back to created status")
-		var _ = m.activityRepository.UpdateStatus(activity.ID, activities_repository.StatusCreated)
+		var _ = m.activityRepository.UpdateStatus(activity.Id, activities_repository.StatusCreated)
 		return activities_repository.StatusCreated
 	}
 

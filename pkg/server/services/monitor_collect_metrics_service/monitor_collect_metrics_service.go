@@ -55,7 +55,7 @@ func (m *MonitorCollectMetricsService) handleCollectMetricsByWorkflow(wf workflo
 }
 
 func (m *MonitorCollectMetricsService) handleCollectMetricsByActivity(wfa workflow.WorkflowActivities) {
-	println("Activity: ", wfa.WorkflowId, wfa.ID)
+	println("Activity: ", wfa.WorkflowId, wfa.Id)
 
 	nameJob := wfa.GetName()
 
@@ -79,7 +79,7 @@ func (m *MonitorCollectMetricsService) retrieveSaveMetricsInDatabase(wfa workflo
 
 	metricsResponse, err := m.connector.GetPodMetrics(m.namespace, podName)
 	metricsByPod, err := metricsResponse.GetMetrics()
-	metricsByPod.ActivityId = &wfa.ID
+	metricsByPod.ActivityId = &wfa.Id
 
 	if err != nil {
 		return
@@ -87,7 +87,7 @@ func (m *MonitorCollectMetricsService) retrieveSaveMetricsInDatabase(wfa workflo
 
 	_ = m.metricsRepository.Create(metrics_repository.ParamsMetricsCreate{
 		MetricsDatabase: metrics_repository.MetricsDatabase{
-			ActivityId: wfa.ID,
+			ActivityId: wfa.Id,
 			Cpu:        metricsByPod.Cpu,
 			Memory:     metricsByPod.Memory,
 			Window:     metricsByPod.Window,
@@ -104,7 +104,7 @@ func (m *MonitorCollectMetricsService) retrieveSaveLogsInDatabase(wfa workflow.W
 
 	_ = m.logsRepository.CreateOrUpdate(logs_repository.ParamsLogsCreate{
 		LogsDatabase: logs_repository.LogsDatabase{
-			ActivityId: wfa.ID,
+			ActivityId: wfa.Id,
 			Logs:       logs,
 		},
 	})

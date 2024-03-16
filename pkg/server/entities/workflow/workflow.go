@@ -211,6 +211,12 @@ func makeContainer(workflow Workflow, activity WorkflowActivities) k8sjob.K8sJob
 				MountPath: workflow.Spec.MountPath,
 			},
 		},
+		Resources: k8sjob.K8sJobResources{
+			Limits: k8sjob.K8sJobResourcesLimits{
+				Cpu:    activity.CpuLimit,
+				Memory: activity.MemoryLimit,
+			},
+		},
 	}
 
 	return container

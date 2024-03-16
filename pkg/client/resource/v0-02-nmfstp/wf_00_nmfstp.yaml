@@ -1,0 +1,36 @@
+name: wf-00-nmfstp
+spec:
+  image: "ovvesley/k8science-nmfstp:latest"
+  namespace: "k8science-cluster-manager"
+  storageClassName: "hostpath"
+  storageSize: "64Mi"
+  mountPath: "/NMFSt.P/data/out"
+  activities:
+    - name: "Constructor.ipynb"
+      memoryLimit: 1Gi
+      cpuLimit: 1
+      run: |
+        echo "Running Constructor.ipynb"
+        sed -i 's/full_dataset_plasmodium/testset/g' code/Constructor.ipynb
+
+        mkdir -p /NMFSt.P/data/out/Subtrees || true
+        mkdir -p /NMFSt.P/data/out/tmp || true
+        mkdir -p /NMFSt.P/data/out/Trees || true
+        touch /NMFSt.P/data/out/Subtrees/file.gitkeep || true
+        touch /NMFSt.P/data/out/tmp/file.gitkeep || true
+        touch /NMFSt.P/data/out/Trees/file.gitkeep || true
+
+        cd code
+        ipython --TerminalIPythonApp.file_to_run=Constructor.ipynb
+        echo "Done running Constructor.ipynb"
+    - name: "sub_find.ipynb"
+      memoryLimit: 1Gi
+      cpuLimit: 1
+      run: |
+        echo "Running sub_find.ipynb"
+        cd code
+
+        ipython --TerminalIPythonApp.file_to_run=sub_find.ipynb
+        echo "Done running sub_find.ipynb"
+      dependsOn:
+          - "Constructor.ipynb"

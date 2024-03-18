@@ -147,6 +147,10 @@ func (c *Connector) GetPodMetrics(namespace string, podName string) (ResponseGet
 		return ResponseGetPodMetrics{}, err
 	}
 
+	if resp.StatusCode != 200 {
+		return ResponseGetPodMetrics{}, fmt.Errorf("Metric server not found: %d", resp.StatusCode)
+	}
+
 	defer resp.Body.Close()
 
 	var result ResponseGetPodMetrics

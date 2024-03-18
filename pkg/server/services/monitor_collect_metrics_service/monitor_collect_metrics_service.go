@@ -82,6 +82,7 @@ func (m *MonitorCollectMetricsService) retrieveSaveMetricsInDatabase(wfa workflo
 	metricsByPod.ActivityId = &wfa.Id
 
 	if err != nil {
+		println("Error getting metrics")
 		return
 	}
 

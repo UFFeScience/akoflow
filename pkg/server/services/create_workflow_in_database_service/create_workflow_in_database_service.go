@@ -9,9 +9,9 @@ import (
 
 type CreateWorkflowInDatabaseService struct {
 	namespace          string
-	workflowRepository *workflow_repository.WorkflowRepository
-	activityRepository *activities_repository.ActivityRepository
-	storageRepository  *storages_repository.StorageRepository
+	workflowRepository workflow_repository.IWorkflowRepository
+	activityRepository activities_repository.IActivityRepository
+	storageRepository  storages_repository.IStorageRepository
 }
 
 func New() *CreateWorkflowInDatabaseService {

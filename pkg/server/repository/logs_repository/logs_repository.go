@@ -19,7 +19,7 @@ type LogsDatabase struct {
 	CreatedAt  string
 }
 
-func New() *LogsRepository {
+func New() ILogsRepository {
 
 	database := connector.Database{}
 	c := database.Connect()
@@ -38,29 +38,6 @@ func New() *LogsRepository {
 	}
 }
 
-type ParamsLogsCreate struct {
-	LogsDatabase LogsDatabase
-}
-
-func (l *LogsRepository) CreateOrUpdate(params ParamsLogsCreate) error {
-
-	database := connector.Database{}
-	c := database.Connect()
-
-	_, err := c.Exec(
-		"INSERT INTO "+l.tableName+" (activity_id, logs) VALUES (?, ?)",
-		params.LogsDatabase.ActivityId, params.LogsDatabase.Logs)
-
-	if err != nil {
-		return err
-	}
-
-	err = c.Close()
-
-	if err != nil {
-		return err
-	}
-
-	return nil
-
+type ILogsRepository interface {
+	Create(params ParamsLogsCreate) error
 }

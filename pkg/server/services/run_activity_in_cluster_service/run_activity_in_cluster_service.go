@@ -10,13 +10,31 @@ import (
 
 type RunActivityInClusterService struct {
 	namespace          string
-	workflowRepository *workflow_repository.WorkflowRepository
-	activityRepository *activities_repository.ActivityRepository
+	workflowRepository workflow_repository.IWorkflowRepository
+	activityRepository activities_repository.IActivityRepository
 	channelManager     *channel.Manager
 	connector          *connector.Connector
 }
 
-func New() *RunActivityInClusterService {
+type ParamsNewRunActivityInClusterService struct {
+	Namespace          string
+	WorkflowRepository workflow_repository.IWorkflowRepository
+	ActivityRepository activities_repository.IActivityRepository
+	ChannelManager     *channel.Manager
+	Connector          *connector.Connector
+}
+
+func New(params ...ParamsNewRunActivityInClusterService) *RunActivityInClusterService {
+	if len(params) > 0 {
+		return &RunActivityInClusterService{
+			namespace:          params[0].Namespace,
+			workflowRepository: params[0].WorkflowRepository,
+			activityRepository: params[0].ActivityRepository,
+			channelManager:     params[0].ChannelManager,
+			connector:          params[0].Connector,
+		}
+	}
+
 	return &RunActivityInClusterService{
 		namespace:          "k8science-cluster-manager",
 		workflowRepository: workflow_repository.New(),

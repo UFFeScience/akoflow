@@ -12,6 +12,7 @@ func StartMonitor() {
 	for {
 		handleMonitor()
 		time.Sleep(TimeToUpdateSeconds * time.Second)
+		println("Monitor is Listening...")
 
 	}
 }

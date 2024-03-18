@@ -20,8 +20,8 @@ var SITUATION_ALL_ACTIVITIES_FINISHED = "SITUATION_ALL_ACTIVITIES_FINISHED"
 
 type OrchestrateWorflowService struct {
 	namespace           string
-	workflowRepository  *workflow_repository.WorkflowRepository
-	activityRepository  *activities_repository.ActivityRepository
+	workflowRepository  workflow_repository.IWorkflowRepository
+	activityRepository  activities_repository.IActivityRepository
 	channelManager      *channel.Manager
 	getWorkflowByStatus *get_workflow_by_status_service.GetWorkflowByStatusService
 }

@@ -12,8 +12,8 @@ import (
 
 type MonitorChangeWorkflowService struct {
 	namespace                 string
-	workflowRepository        *workflow_repository.WorkflowRepository
-	activityRepository        *activities_repository.ActivityRepository
+	workflowRepository        workflow_repository.IWorkflowRepository
+	activityRepository        activities_repository.IActivityRepository
 	channelManager            *channel.Manager
 	getPendingWorkflowService *get_pending_workflow_service.GetPendingWorkflowService
 	getWorkflowByStatus       *get_workflow_by_status_service.GetWorkflowByStatusService

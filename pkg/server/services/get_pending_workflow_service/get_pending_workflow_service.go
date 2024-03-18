@@ -8,8 +8,8 @@ import (
 
 type GetPendingWorkflowService struct {
 	namespace          string
-	workflowRepository *workflow_repository.WorkflowRepository
-	activityRepository *activities_repository.ActivityRepository
+	workflowRepository workflow_repository.IWorkflowRepository
+	activityRepository activities_repository.IActivityRepository
 }
 
 func New() *GetPendingWorkflowService {

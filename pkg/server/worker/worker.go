@@ -11,7 +11,7 @@ func StartWorker() {
 		managerChannel := channel.GetInstance()
 		result := <-managerChannel.WorfklowChannel
 		handleWorker(result)
-
+		println("Worker is Listening...")
 	}
 }
 

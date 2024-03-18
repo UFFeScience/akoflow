@@ -14,6 +14,7 @@ func StartOrchestrator() {
 	for {
 		handleOrchestrator()
 		time.Sleep(TimeToUpdateSeconds * time.Second)
+		println("Orchestrator is Listening...")
 	}
 
 }

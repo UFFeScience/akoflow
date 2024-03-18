@@ -13,10 +13,10 @@ import (
 
 type MonitorCollectMetricsService struct {
 	namespace                 string
-	workflowRepository        *workflow_repository.WorkflowRepository
-	activityRepository        *activities_repository.ActivityRepository
-	metricsRepository         *metrics_repository.MetricsRepository
-	logsRepository            *logs_repository.LogsRepository
+	workflowRepository        workflow_repository.IWorkflowRepository
+	activityRepository        activities_repository.IActivityRepository
+	metricsRepository         metrics_repository.IMetricsRepository
+	logsRepository            logs_repository.ILogsRepository
 	getPendingWorkflowService *get_pending_workflow_service.GetPendingWorkflowService
 	getWorkflowByStatus       *get_workflow_by_status_service.GetWorkflowByStatusService
 	connector                 *connector.Connector
@@ -103,7 +103,7 @@ func (m *MonitorCollectMetricsService) retrieveSaveLogsInDatabase(wfa workflow.W
 		return
 	}
 
-	_ = m.logsRepository.CreateOrUpdate(logs_repository.ParamsLogsCreate{
+	_ = m.logsRepository.Create(logs_repository.ParamsLogsCreate{
 		LogsDatabase: logs_repository.LogsDatabase{
 			ActivityId: wfa.Id,
 			Logs:       logs,

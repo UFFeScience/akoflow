@@ -150,78 +150,79 @@ func (c *ConnectorPvcK8s) CreatePersistentVolumeClain(name string, namespace str
 
 }
 
-type ResponseGetPersistentVolumeClain struct {
-	Kind       string `json:"kind"`
-	ApiVersion string `json:"apiVersion"`
-	Metadata   struct {
-		Name              string    `json:"name"`
-		Namespace         string    `json:"namespace"`
-		Uid               string    `json:"uid"`
-		ResourceVersion   string    `json:"resourceVersion"`
-		CreationTimestamp time.Time `json:"creationTimestamp"`
-		Annotations       struct {
-			PvKubernetesIoBindCompleted              string `json:"pv.kubernetes.io/bind-completed"`
-			PvKubernetesIoBoundByController          string `json:"pv.kubernetes.io/bound-by-controller"`
-			VolumeBetaKubernetesIoStorageProvisioner string `json:"volume.beta.kubernetes.io/storage-provisioner"`
-			VolumeKubernetesIoStorageProvisioner     string `json:"volume.kubernetes.io/storage-provisioner"`
-		} `json:"annotations"`
-		Finalizers    []string `json:"finalizers"`
-		ManagedFields []struct {
-			Manager    string    `json:"manager"`
-			Operation  string    `json:"operation"`
-			ApiVersion string    `json:"apiVersion"`
-			Time       time.Time `json:"time"`
-			FieldsType string    `json:"fieldsType"`
-			FieldsV1   struct {
-				FSpec struct {
-					FAccessModes struct {
-					} `json:"f:accessModes,omitempty"`
-					FResources struct {
-						FRequests struct {
-							Field1 struct {
-							} `json:"."`
-							FStorage struct {
-							} `json:"f:storage"`
-						} `json:"f:requests"`
-					} `json:"f:resources,omitempty"`
-					FStorageClassName struct {
-					} `json:"f:storageClassName,omitempty"`
-					FVolumeMode struct {
-					} `json:"f:volumeMode,omitempty"`
-					FVolumeName struct {
-					} `json:"f:volumeName,omitempty"`
-				} `json:"f:spec,omitempty"`
-				FMetadata struct {
-					FAnnotations struct {
-						Field1 struct {
-						} `json:"."`
-						FPvKubernetesIoBindCompleted struct {
-						} `json:"f:pv.kubernetes.io/bind-completed"`
-						FPvKubernetesIoBoundByController struct {
-						} `json:"f:pv.kubernetes.io/bound-by-controller"`
-						FVolumeBetaKubernetesIoStorageProvisioner struct {
-						} `json:"f:volume.beta.kubernetes.io/storage-provisioner"`
-						FVolumeKubernetesIoStorageProvisioner struct {
-						} `json:"f:volume.kubernetes.io/storage-provisioner"`
-					} `json:"f:annotations"`
-				} `json:"f:metadata,omitempty"`
-				FStatus struct {
-					FAccessModes struct {
-					} `json:"f:accessModes"`
-					FCapacity struct {
+type ResponseGetPersistentVolumeClainMetadata struct {
+	Name              string    `json:"name"`
+	Namespace         string    `json:"namespace"`
+	Uid               string    `json:"uid"`
+	ResourceVersion   string    `json:"resourceVersion"`
+	CreationTimestamp time.Time `json:"creationTimestamp"`
+	Annotations       struct {
+		PvKubernetesIoBindCompleted              string `json:"pv.kubernetes.io/bind-completed"`
+		PvKubernetesIoBoundByController          string `json:"pv.kubernetes.io/bound-by-controller"`
+		VolumeBetaKubernetesIoStorageProvisioner string `json:"volume.beta.kubernetes.io/storage-provisioner"`
+		VolumeKubernetesIoStorageProvisioner     string `json:"volume.kubernetes.io/storage-provisioner"`
+	} `json:"annotations"`
+	Finalizers    []string `json:"finalizers"`
+	ManagedFields []struct {
+		Manager    string    `json:"manager"`
+		Operation  string    `json:"operation"`
+		ApiVersion string    `json:"apiVersion"`
+		Time       time.Time `json:"time"`
+		FieldsType string    `json:"fieldsType"`
+		FieldsV1   struct {
+			FSpec struct {
+				FAccessModes struct {
+				} `json:"f:accessModes,omitempty"`
+				FResources struct {
+					FRequests struct {
 						Field1 struct {
 						} `json:"."`
 						FStorage struct {
 						} `json:"f:storage"`
-					} `json:"f:capacity"`
-					FPhase struct {
-					} `json:"f:phase"`
-				} `json:"f:status,omitempty"`
-			} `json:"fieldsV1"`
-			Subresource string `json:"subresource,omitempty"`
-		} `json:"managedFields"`
-	} `json:"metadata"`
-	Spec struct {
+					} `json:"f:requests"`
+				} `json:"f:resources,omitempty"`
+				FStorageClassName struct {
+				} `json:"f:storageClassName,omitempty"`
+				FVolumeMode struct {
+				} `json:"f:volumeMode,omitempty"`
+				FVolumeName struct {
+				} `json:"f:volumeName,omitempty"`
+			} `json:"f:spec,omitempty"`
+			FMetadata struct {
+				FAnnotations struct {
+					Field1 struct {
+					} `json:"."`
+					FPvKubernetesIoBindCompleted struct {
+					} `json:"f:pv.kubernetes.io/bind-completed"`
+					FPvKubernetesIoBoundByController struct {
+					} `json:"f:pv.kubernetes.io/bound-by-controller"`
+					FVolumeBetaKubernetesIoStorageProvisioner struct {
+					} `json:"f:volume.beta.kubernetes.io/storage-provisioner"`
+					FVolumeKubernetesIoStorageProvisioner struct {
+					} `json:"f:volume.kubernetes.io/storage-provisioner"`
+				} `json:"f:annotations"`
+			} `json:"f:metadata,omitempty"`
+			FStatus struct {
+				FAccessModes struct {
+				} `json:"f:accessModes"`
+				FCapacity struct {
+					Field1 struct {
+					} `json:"."`
+					FStorage struct {
+					} `json:"f:storage"`
+				} `json:"f:capacity"`
+				FPhase struct {
+				} `json:"f:phase"`
+			} `json:"f:status,omitempty"`
+		} `json:"fieldsV1"`
+		Subresource string `json:"subresource,omitempty"`
+	} `json:"managedFields"`
+}
+type ResponseGetPersistentVolumeClain struct {
+	Kind       string                                   `json:"kind"`
+	ApiVersion string                                   `json:"apiVersion"`
+	Metadata   ResponseGetPersistentVolumeClainMetadata `json:"metadata"`
+	Spec       struct {
 		AccessModes []string `json:"accessModes"`
 		Resources   struct {
 			Requests struct {

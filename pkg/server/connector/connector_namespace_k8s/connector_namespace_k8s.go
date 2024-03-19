@@ -39,45 +39,46 @@ func (c ConnectorNamespaceK8s) ListNamespaces() {
 	panic("implement me")
 }
 
+type ResponseGetNamespaceMetadata struct {
+	Name              string    `json:"name"`
+	Uid               string    `json:"uid"`
+	ResourceVersion   string    `json:"resourceVersion"`
+	CreationTimestamp time.Time `json:"creationTimestamp"`
+	Labels            struct {
+		KubernetesIoMetadataName string `json:"kubernetes.io/metadata.name"`
+	} `json:"labels"`
+	Annotations struct {
+		KubectlKubernetesIoLastAppliedConfiguration string `json:"kubectl.kubernetes.io/last-applied-configuration"`
+	} `json:"annotations"`
+	ManagedFields []struct {
+		Manager    string    `json:"manager"`
+		Operation  string    `json:"operation"`
+		ApiVersion string    `json:"apiVersion"`
+		Time       time.Time `json:"time"`
+		FieldsType string    `json:"fieldsType"`
+		FieldsV1   struct {
+			FMetadata struct {
+				FAnnotations struct {
+					Field1 struct {
+					} `json:"."`
+					FKubectlKubernetesIoLastAppliedConfiguration struct {
+					} `json:"f:kubectl.kubernetes.io/last-applied-configuration"`
+				} `json:"f:annotations"`
+				FLabels struct {
+					Field1 struct {
+					} `json:"."`
+					FKubernetesIoMetadataName struct {
+					} `json:"f:kubernetes.io/metadata.name"`
+				} `json:"f:labels"`
+			} `json:"f:metadata"`
+		} `json:"fieldsV1"`
+	} `json:"managedFields"`
+}
 type ResponseGetNamespace struct {
-	Kind       string `json:"kind"`
-	ApiVersion string `json:"apiVersion"`
-	Metadata   struct {
-		Name              string    `json:"name"`
-		Uid               string    `json:"uid"`
-		ResourceVersion   string    `json:"resourceVersion"`
-		CreationTimestamp time.Time `json:"creationTimestamp"`
-		Labels            struct {
-			KubernetesIoMetadataName string `json:"kubernetes.io/metadata.name"`
-		} `json:"labels"`
-		Annotations struct {
-			KubectlKubernetesIoLastAppliedConfiguration string `json:"kubectl.kubernetes.io/last-applied-configuration"`
-		} `json:"annotations"`
-		ManagedFields []struct {
-			Manager    string    `json:"manager"`
-			Operation  string    `json:"operation"`
-			ApiVersion string    `json:"apiVersion"`
-			Time       time.Time `json:"time"`
-			FieldsType string    `json:"fieldsType"`
-			FieldsV1   struct {
-				FMetadata struct {
-					FAnnotations struct {
-						Field1 struct {
-						} `json:"."`
-						FKubectlKubernetesIoLastAppliedConfiguration struct {
-						} `json:"f:kubectl.kubernetes.io/last-applied-configuration"`
-					} `json:"f:annotations"`
-					FLabels struct {
-						Field1 struct {
-						} `json:"."`
-						FKubernetesIoMetadataName struct {
-						} `json:"f:kubernetes.io/metadata.name"`
-					} `json:"f:labels"`
-				} `json:"f:metadata"`
-			} `json:"fieldsV1"`
-		} `json:"managedFields"`
-	} `json:"metadata"`
-	Spec struct {
+	Kind       string                       `json:"kind"`
+	ApiVersion string                       `json:"apiVersion"`
+	Metadata   ResponseGetNamespaceMetadata `json:"metadata"`
+	Spec       struct {
 		Finalizers []string `json:"finalizers"`
 	} `json:"spec"`
 	Status struct {

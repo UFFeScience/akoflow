@@ -89,7 +89,7 @@ func (r *RunActivityInClusterService) handleResourceToRunJob(id int) bool {
 		return false
 	}
 
-	namespace := r.handleGetOrCreateNamespace(r.namespace)
+	namespace := r.handleGetOrCreateNamespace(wf.Spec.Namespace)
 
 	persistent := r.handleGetOrCreatePersistentVolumeClain(wf, namespace)
 

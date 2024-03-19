@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/scientific-workflow-k8s.iml" filepath="$PROJECT_DIR$/.idea/scientific-workflow-k8s.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/scik8sflow.iml" filepath="$PROJECT_DIR$/.idea/scik8sflow.iml" />
     </modules>
   </component>
 </project>

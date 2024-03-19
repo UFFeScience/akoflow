@@ -1,7 +1,6 @@
 package storages_repository
 
 import (
-	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/connector"
 	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/repository"
 )
 
@@ -30,7 +29,7 @@ var StatusCreatedSuccess = 3
 
 func New() IStorageRepository {
 
-	database := connector.Database{}
+	database := repository.Database{}
 	c := database.Connect()
 	err := repository.CreateOrVerifyTable(c, TableName, Columns)
 	if err != nil {

@@ -12,7 +12,6 @@ func main() {
 	go worker.StartWorker()
 	go orchestrator.StartOrchestrator()
 	go monitor.StartMonitor()
-	// go garbagecollector.StartGarbageCollector()
 
 	httpserver.StartServer()
 

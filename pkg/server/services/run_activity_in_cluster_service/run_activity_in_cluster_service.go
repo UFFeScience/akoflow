@@ -1,27 +1,24 @@
 package run_activity_in_cluster_service
 
 import (
-	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/channel"
 	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/connector"
 	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/entities/workflow"
-	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/repository/activities_repository"
+	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/repository/activity_repository"
 	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/repository/workflow_repository"
 )
 
 type RunActivityInClusterService struct {
 	namespace          string
 	workflowRepository workflow_repository.IWorkflowRepository
-	activityRepository activities_repository.IActivityRepository
-	channelManager     *channel.Manager
-	connector          *connector.Connector
+	activityRepository activity_repository.IActivityRepository
+	connector          connector.IConnector
 }
 
 type ParamsNewRunActivityInClusterService struct {
 	Namespace          string
 	WorkflowRepository workflow_repository.IWorkflowRepository
-	ActivityRepository activities_repository.IActivityRepository
-	ChannelManager     *channel.Manager
-	Connector          *connector.Connector
+	ActivityRepository activity_repository.IActivityRepository
+	Connector          connector.IConnector
 }
 
 func New(params ...ParamsNewRunActivityInClusterService) *RunActivityInClusterService {
@@ -30,7 +27,6 @@ func New(params ...ParamsNewRunActivityInClusterService) *RunActivityInClusterSe
 			namespace:          params[0].Namespace,
 			workflowRepository: params[0].WorkflowRepository,
 			activityRepository: params[0].ActivityRepository,
-			channelManager:     params[0].ChannelManager,
 			connector:          params[0].Connector,
 		}
 	}
@@ -38,8 +34,7 @@ func New(params ...ParamsNewRunActivityInClusterService) *RunActivityInClusterSe
 	return &RunActivityInClusterService{
 		namespace:          "k8science-cluster-manager",
 		workflowRepository: workflow_repository.New(),
-		activityRepository: activities_repository.New(),
-		channelManager:     channel.GetInstance(),
+		activityRepository: activity_repository.New(),
 		connector:          connector.New(),
 	}
 }
@@ -61,7 +56,7 @@ func (r *RunActivityInClusterService) handleApplyJob(activityID int) {
 		println("Activity not found")
 		return
 	}
-	if activity.Status != activities_repository.StatusCreated {
+	if activity.Status != activity_repository.StatusCreated {
 		println("Activity already running")
 		return
 	}
@@ -69,9 +64,9 @@ func (r *RunActivityInClusterService) handleApplyJob(activityID int) {
 	println("Running activity: ", activity.Name)
 
 	k8sJob := activity.MakeResourceK8s(wf)
-	r.connector.ApplyJob(r.namespace, k8sJob)
+	r.connector.Job().ApplyJob(r.namespace, k8sJob)
 
-	podCreated, _ := r.connector.GetPodByJob(r.namespace, activity.GetName())
+	podCreated, _ := r.connector.Pod().GetPodByJob(r.namespace, activity.GetName())
 	namePod, err := podCreated.GetPodName()
 
 	if err != nil {
@@ -81,7 +76,7 @@ func (r *RunActivityInClusterService) handleApplyJob(activityID int) {
 
 	println("Pod created: ", namePod)
 
-	var _ = r.activityRepository.UpdateStatus(activity.Id, activities_repository.StatusRunning)
+	var _ = r.activityRepository.UpdateStatus(activity.Id, activity_repository.StatusRunning)
 	var _ = r.workflowRepository.UpdateStatus(activity.WorkflowId, workflow_repository.StatusRunning)
 }
 
@@ -103,7 +98,7 @@ func (r *RunActivityInClusterService) handleResourceToRunJob(id int) bool {
 }
 
 func (r *RunActivityInClusterService) handleGetOrCreateNamespace(namespace string) string {
-	response, err := r.connector.GetNamespace(namespace)
+	response, err := r.connector.Namespace().GetNamespace(namespace)
 
 	if err != nil {
 		println("Namespace not found")
@@ -114,7 +109,7 @@ func (r *RunActivityInClusterService) handleGetOrCreateNamespace(namespace strin
 }
 
 func (r *RunActivityInClusterService) handleCreateNamespace(namespace string) string {
-	ns, err := r.connector.CreateNamespace(namespace)
+	ns, err := r.connector.Namespace().CreateNamespace(namespace)
 
 	if err != nil {
 		println("Error creating namespace")
@@ -127,7 +122,7 @@ func (r *RunActivityInClusterService) handleCreateNamespace(namespace string) st
 
 func (r *RunActivityInClusterService) handleGetOrCreatePersistentVolumeClain(wf workflow.Workflow, namespace string) string {
 
-	pvc, err := r.connector.GetPersistentVolumeClain(wf.GetVolumeName(), namespace)
+	pvc, err := r.connector.PersistentVolumeClain().GetPersistentVolumeClain(wf.GetVolumeName(), namespace)
 
 	if err != nil {
 		println("Persistent volume not found")
@@ -138,7 +133,7 @@ func (r *RunActivityInClusterService) handleGetOrCreatePersistentVolumeClain(wf 
 }
 
 func (r *RunActivityInClusterService) handleCreatePersistentVolumeClain(wf workflow.Workflow, namespace string) string {
-	pv, err := r.connector.CreatePersistentVolumeClain(wf.GetVolumeName(), namespace, wf.Spec.StorageSize, wf.Spec.StorageClassName)
+	pv, err := r.connector.PersistentVolumeClain().CreatePersistentVolumeClain(wf.GetVolumeName(), namespace, wf.Spec.StorageSize, wf.Spec.StorageClassName)
 
 	if err != nil {
 		println("Error creating persistent volume")

@@ -2,7 +2,7 @@ package create_workflow_in_database_service
 
 import (
 	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/entities/workflow"
-	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/repository/activities_repository"
+	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/repository/activity_repository"
 	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/repository/storages_repository"
 	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/repository/workflow_repository"
 )
@@ -10,7 +10,7 @@ import (
 type CreateWorkflowInDatabaseService struct {
 	namespace          string
 	workflowRepository workflow_repository.IWorkflowRepository
-	activityRepository activities_repository.IActivityRepository
+	activityRepository activity_repository.IActivityRepository
 	storageRepository  storages_repository.IStorageRepository
 }
 
@@ -18,7 +18,7 @@ func New() *CreateWorkflowInDatabaseService {
 	return &CreateWorkflowInDatabaseService{
 		namespace:          "k8science-cluster-manager",
 		workflowRepository: workflow_repository.New(),
-		activityRepository: activities_repository.New(),
+		activityRepository: activity_repository.New(),
 		storageRepository:  storages_repository.New(),
 	}
 }

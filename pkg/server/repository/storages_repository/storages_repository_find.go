@@ -1,9 +1,9 @@
 package storages_repository
 
-import "github.com/ovvesley/scientific-workflow-k8s/pkg/server/connector"
+import "github.com/ovvesley/scientific-workflow-k8s/pkg/server/repository"
 
 func (s *StorageRepository) Find(id int) (StorageDatabase, error) {
-	database := connector.Database{}
+	database := repository.Database{}
 	c := database.Connect()
 
 	rows, err := c.Query("SELECT * FROM "+s.tableName+" WHERE ID = ?", id)

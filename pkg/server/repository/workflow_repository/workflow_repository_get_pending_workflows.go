@@ -1,13 +1,13 @@
 package workflow_repository
 
 import (
-	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/connector"
 	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/entities/workflow"
+	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/repository"
 )
 
 func (w *WorkflowRepository) GetPendingWorkflows(namespace string) ([]workflow.Workflow, error) {
 
-	database := connector.Database{}
+	database := repository.Database{}
 	c := database.Connect()
 
 	rows, err := c.Query("SELECT * FROM "+w.tableName+" WHERE namespace = ? AND status IN (?, ?)", namespace, StatusRunning, StatusCreated)

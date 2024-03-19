@@ -1,7 +1,6 @@
-package activities_repository
+package activity_repository
 
 import (
-	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/connector"
 	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/entities/workflow"
 	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/repository"
 )
@@ -23,7 +22,7 @@ var ColumnsActivitiesDependencies = "(id INTEGER PRIMARY KEY AUTOINCREMENT, work
 
 func New() IActivityRepository {
 
-	database := connector.Database{}
+	database := repository.Database{}
 	c := database.Connect()
 	err := repository.CreateOrVerifyTable(c, TableNameActivities, ColumnsActivities)
 	if err != nil {

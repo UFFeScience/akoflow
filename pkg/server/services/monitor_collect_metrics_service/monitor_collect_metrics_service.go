@@ -3,7 +3,7 @@ package monitor_collect_metrics_service
 import (
 	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/connector"
 	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/entities/workflow"
-	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/repository/activities_repository"
+	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/repository/activity_repository"
 	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/repository/logs_repository"
 	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/repository/metrics_repository"
 	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/repository/workflow_repository"
@@ -14,19 +14,19 @@ import (
 type MonitorCollectMetricsService struct {
 	namespace                 string
 	workflowRepository        workflow_repository.IWorkflowRepository
-	activityRepository        activities_repository.IActivityRepository
+	activityRepository        activity_repository.IActivityRepository
 	metricsRepository         metrics_repository.IMetricsRepository
 	logsRepository            logs_repository.ILogsRepository
 	getPendingWorkflowService *get_pending_workflow_service.GetPendingWorkflowService
 	getWorkflowByStatus       *get_workflow_by_status_service.GetWorkflowByStatusService
-	connector                 *connector.Connector
+	connector                 connector.IConnector
 }
 
 func New() *MonitorCollectMetricsService {
 	return &MonitorCollectMetricsService{
 		namespace:                 "k8science-cluster-manager",
 		workflowRepository:        workflow_repository.New(),
-		activityRepository:        activities_repository.New(),
+		activityRepository:        activity_repository.New(),
 		metricsRepository:         metrics_repository.New(),
 		logsRepository:            logs_repository.New(),
 		getPendingWorkflowService: get_pending_workflow_service.New(),
@@ -44,7 +44,7 @@ func (m *MonitorCollectMetricsService) CollectMetrics() {
 }
 
 func (m *MonitorCollectMetricsService) handleCollectMetricsByWorkflow(wf workflow.Workflow) {
-	wfaRunning := m.getWorkflowByStatus.GetActivitiesByStatus(wf, activities_repository.StatusRunning)
+	wfaRunning := m.getWorkflowByStatus.GetActivitiesByStatus(wf, activity_repository.StatusRunning)
 
 	println("Workflow: ", wf.Id)
 	println("Running: ", len(wfaRunning))
@@ -59,7 +59,7 @@ func (m *MonitorCollectMetricsService) handleCollectMetricsByActivity(wfa workfl
 
 	nameJob := wfa.GetName()
 
-	job, err := m.connector.GetPodByJob(m.namespace, nameJob)
+	job, err := m.connector.Pod().GetPodByJob(m.namespace, nameJob)
 	if err != nil {
 		return
 	}
@@ -77,7 +77,7 @@ func (m *MonitorCollectMetricsService) handleCollectMetricsByActivity(wfa workfl
 
 func (m *MonitorCollectMetricsService) retrieveSaveMetricsInDatabase(wfa workflow.WorkflowActivities, podName string) {
 
-	metricsResponse, err := m.connector.GetPodMetrics(m.namespace, podName)
+	metricsResponse, err := m.connector.Metrics().GetPodMetrics(m.namespace, podName)
 	metricsByPod, err := metricsResponse.GetMetrics()
 	metricsByPod.ActivityId = &wfa.Id
 
@@ -98,7 +98,7 @@ func (m *MonitorCollectMetricsService) retrieveSaveMetricsInDatabase(wfa workflo
 }
 
 func (m *MonitorCollectMetricsService) retrieveSaveLogsInDatabase(wfa workflow.WorkflowActivities, podName string) {
-	logs, err := m.connector.GetPodLogs(m.namespace, podName)
+	logs, err := m.connector.Pod().GetPodLogs(m.namespace, podName)
 	if err != nil {
 		return
 	}

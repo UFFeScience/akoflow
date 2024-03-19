@@ -1,8 +1,8 @@
-package activities_repository
+package activity_repository
 
 import (
-	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/connector"
 	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/entities/workflow"
+	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/repository"
 )
 
 func (w *ActivityRepository) Create(namespace string, workflowId int, image string, activities []workflow.WorkflowActivities) error {
@@ -25,7 +25,7 @@ func (w *ActivityRepository) Create(namespace string, workflowId int, image stri
 }
 
 func (w *ActivityRepository) createActivity(namespace string, workflowId int, image string, activities []workflow.WorkflowActivities) error {
-	database := connector.Database{}
+	database := repository.Database{}
 	c := database.Connect()
 
 	for _, activity := range activities {
@@ -55,7 +55,7 @@ func (w *ActivityRepository) createActivity(namespace string, workflowId int, im
 
 func (w *ActivityRepository) createActivityDependency(workflowId int, activitiesYaml []workflow.WorkflowActivities) error {
 
-	database := connector.Database{}
+	database := repository.Database{}
 	c := database.Connect()
 
 	activitiesDatabase, err := w.GetByWorkflowId(workflowId)

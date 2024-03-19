@@ -1,12 +1,12 @@
-package activities_repository
+package activity_repository
 
 import (
-	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/connector"
 	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/entities/workflow"
+	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/repository"
 )
 
 func (w *ActivityRepository) Find(id int) (workflow.WorkflowActivities, error) {
-	database := connector.Database{}
+	database := repository.Database{}
 	c := database.Connect()
 
 	rows, err := c.Query("SELECT * FROM "+w.tableNameActivity+" WHERE ID = ?", id)

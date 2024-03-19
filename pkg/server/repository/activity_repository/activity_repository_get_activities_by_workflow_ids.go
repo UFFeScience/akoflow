@@ -1,14 +1,14 @@
-package activities_repository
+package activity_repository
 
 import (
-	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/connector"
 	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/entities/workflow"
+	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/repository"
 )
 
 type ResultGetActivitiesByWorkflowIds map[int][]workflow.WorkflowActivities
 
 func (w *ActivityRepository) GetActivitiesByWorkflowIds(ids []int) (ResultGetActivitiesByWorkflowIds, error) {
-	database := connector.Database{}
+	database := repository.Database{}
 	c := database.Connect()
 
 	var mapWfIdToActivities = make(ResultGetActivitiesByWorkflowIds)

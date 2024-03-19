@@ -1,13 +1,13 @@
 package workflow_repository
 
 import (
-	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/connector"
 	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/entities/workflow"
+	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/repository"
 )
 
 func (w *WorkflowRepository) Create(namespace string, workflow workflow.Workflow) (int, error) {
 
-	database := connector.Database{}
+	database := repository.Database{}
 	c := database.Connect()
 
 	rawWorkflow := workflow.GetBase64Workflow()

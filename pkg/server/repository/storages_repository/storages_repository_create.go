@@ -1,6 +1,6 @@
 package storages_repository
 
-import "github.com/ovvesley/scientific-workflow-k8s/pkg/server/connector"
+import "github.com/ovvesley/scientific-workflow-k8s/pkg/server/repository"
 
 type ParamsStorageCreate struct {
 	WorkflowId       int
@@ -13,7 +13,7 @@ type ParamsStorageCreate struct {
 
 func (s *StorageRepository) Create(params ParamsStorageCreate) error {
 
-	database := connector.Database{}
+	database := repository.Database{}
 	c := database.Connect()
 
 	_, err := c.Exec(

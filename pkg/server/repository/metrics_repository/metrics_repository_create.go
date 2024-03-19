@@ -1,6 +1,6 @@
 package metrics_repository
 
-import "github.com/ovvesley/scientific-workflow-k8s/pkg/server/connector"
+import "github.com/ovvesley/scientific-workflow-k8s/pkg/server/repository"
 
 type ParamsMetricsCreate struct {
 	MetricsDatabase MetricsDatabase
@@ -8,7 +8,7 @@ type ParamsMetricsCreate struct {
 
 func (m *MetricsRepository) Create(params ParamsMetricsCreate) error {
 
-	database := connector.Database{}
+	database := repository.Database{}
 	c := database.Connect()
 
 	_, err := c.Exec(

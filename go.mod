@@ -1,4 +1,4 @@
-module github.com/ovvesley/scientific-workflow-k8s
+module github.com/ovvesley/scik8sflow
 
 go 1.22.0
 

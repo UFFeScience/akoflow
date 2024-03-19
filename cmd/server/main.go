@@ -1,10 +1,10 @@
 package main
 
 import (
-	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/httpserver"
-	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/monitor"
-	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/orchestrator"
-	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/worker"
+	"github.com/ovvesley/scik8sflow/pkg/server/httpserver"
+	"github.com/ovvesley/scik8sflow/pkg/server/monitor"
+	"github.com/ovvesley/scik8sflow/pkg/server/orchestrator"
+	"github.com/ovvesley/scik8sflow/pkg/server/worker"
 )
 
 func main() {

@@ -1,8 +1,8 @@
 package worker
 
 import (
-	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/channel"
-	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/services/run_activity_in_cluster_service"
+	"github.com/ovvesley/scik8sflow/pkg/server/channel"
+	"github.com/ovvesley/scik8sflow/pkg/server/services/run_activity_in_cluster_service"
 )
 
 func StartWorker() {

@@ -2,12 +2,12 @@ package connector
 
 import (
 	"crypto/tls"
-	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/connector/connector_deployment_k8s"
-	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/connector/connector_job_k8s"
-	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/connector/connector_metrics_k8s"
-	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/connector/connector_namespace_k8s"
-	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/connector/connector_pod_k8s"
-	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/connector/connector_pvc_k8s"
+	"github.com/ovvesley/scik8sflow/pkg/server/connector/connector_deployment_k8s"
+	"github.com/ovvesley/scik8sflow/pkg/server/connector/connector_job_k8s"
+	"github.com/ovvesley/scik8sflow/pkg/server/connector/connector_metrics_k8s"
+	"github.com/ovvesley/scik8sflow/pkg/server/connector/connector_namespace_k8s"
+	"github.com/ovvesley/scik8sflow/pkg/server/connector/connector_pod_k8s"
+	"github.com/ovvesley/scik8sflow/pkg/server/connector/connector_pvc_k8s"
 	"net/http"
 )
 

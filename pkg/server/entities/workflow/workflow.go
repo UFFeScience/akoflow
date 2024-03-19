@@ -2,7 +2,7 @@ package workflow
 
 import (
 	"encoding/base64"
-	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/k8sjob"
+	"github.com/ovvesley/scik8sflow/pkg/server/k8sjob"
 	"gopkg.in/yaml.v3"
 	"math/rand"
 	"strconv"

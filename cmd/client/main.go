@@ -2,7 +2,7 @@ package main
 
 import (
 	"flag"
-	"github.com/ovvesley/scientific-workflow-k8s/pkg/client/services/dispatch_to_server_run_workflow_service"
+	"github.com/ovvesley/scik8sflow/pkg/client/services/dispatch_to_server_run_workflow_service"
 	"os"
 	"strconv"
 )

@@ -1,10 +1,10 @@
 package run_activity_in_cluster_service
 
 import (
-	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/connector"
-	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/entities/workflow"
-	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/repository/activity_repository"
-	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/repository/workflow_repository"
+	"github.com/ovvesley/scik8sflow/pkg/server/connector"
+	"github.com/ovvesley/scik8sflow/pkg/server/entities/workflow"
+	"github.com/ovvesley/scik8sflow/pkg/server/repository/activity_repository"
+	"github.com/ovvesley/scik8sflow/pkg/server/repository/workflow_repository"
 )
 
 type RunActivityInClusterService struct {

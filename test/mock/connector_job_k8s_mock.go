@@ -12,8 +12,8 @@ package mock
 import (
 	reflect "reflect"
 
-	connector_job_k8s "github.com/ovvesley/scientific-workflow-k8s/pkg/server/connector/connector_job_k8s"
-	k8sjob "github.com/ovvesley/scientific-workflow-k8s/pkg/server/k8sjob"
+	connector_job_k8s "github.com/ovvesley/scik8sflow/pkg/server/connector/connector_job_k8s"
+	k8sjob "github.com/ovvesley/scik8sflow/pkg/server/k8sjob"
 	gomock "go.uber.org/mock/gomock"
 )
 

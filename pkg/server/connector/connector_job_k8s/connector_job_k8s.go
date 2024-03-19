@@ -5,7 +5,7 @@ import (
 	"crypto/tls"
 	"encoding/json"
 	"fmt"
-	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/k8sjob"
+	"github.com/ovvesley/scik8sflow/pkg/server/k8sjob"
 	"net/http"
 	"os"
 	"time"

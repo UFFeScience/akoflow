@@ -1,6 +1,6 @@
 package storages_repository
 
-import "github.com/ovvesley/scientific-workflow-k8s/pkg/server/repository"
+import "github.com/ovvesley/scik8sflow/pkg/server/repository"
 
 func (s *StorageRepository) Find(id int) (StorageDatabase, error) {
 	database := repository.Database{}

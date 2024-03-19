@@ -12,7 +12,7 @@ package mock
 import (
 	reflect "reflect"
 
-	workflow "github.com/ovvesley/scientific-workflow-k8s/pkg/server/entities/workflow"
+	workflow "github.com/ovvesley/scik8sflow/pkg/server/entities/workflow"
 	gomock "go.uber.org/mock/gomock"
 )
 

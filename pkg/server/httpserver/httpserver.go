@@ -1,7 +1,7 @@
 package httpserver
 
 import (
-	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/httpserver/runworkflow"
+	"github.com/ovvesley/scik8sflow/pkg/server/httpserver/runworkflow"
 	"net/http"
 )
 

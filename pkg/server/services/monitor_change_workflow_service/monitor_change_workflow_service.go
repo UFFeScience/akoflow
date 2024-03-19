@@ -1,13 +1,13 @@
 package monitor_change_workflow_service
 
 import (
-	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/channel"
-	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/connector"
-	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/entities/workflow"
-	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/repository/activity_repository"
-	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/repository/workflow_repository"
-	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/services/get_pending_workflow_service"
-	"github.com/ovvesley/scientific-workflow-k8s/pkg/server/services/get_workflow_by_status_service"
+	"github.com/ovvesley/scik8sflow/pkg/server/channel"
+	"github.com/ovvesley/scik8sflow/pkg/server/connector"
+	"github.com/ovvesley/scik8sflow/pkg/server/entities/workflow"
+	"github.com/ovvesley/scik8sflow/pkg/server/repository/activity_repository"
+	"github.com/ovvesley/scik8sflow/pkg/server/repository/workflow_repository"
+	"github.com/ovvesley/scik8sflow/pkg/server/services/get_pending_workflow_service"
+	"github.com/ovvesley/scik8sflow/pkg/server/services/get_workflow_by_status_service"
 )
 
 type MonitorChangeWorkflowService struct {

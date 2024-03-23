@@ -111,36 +111,38 @@ func (c *ConnectorNamespaceK8s) GetNamespace(namespace string) (ResponseGetNames
 	return result, nil
 }
 
+type ResponseCreateNamespaceMetadata struct {
+	Name              string    `json:"name"`
+	Uid               string    `json:"uid"`
+	ResourceVersion   string    `json:"resourceVersion"`
+	CreationTimestamp time.Time `json:"creationTimestamp"`
+	Labels            struct {
+		KubernetesIoMetadataName string `json:"kubernetes.io/metadata.name"`
+	} `json:"labels"`
+	ManagedFields []struct {
+		Manager    string    `json:"manager"`
+		Operation  string    `json:"operation"`
+		ApiVersion string    `json:"apiVersion"`
+		Time       time.Time `json:"time"`
+		FieldsType string    `json:"fieldsType"`
+		FieldsV1   struct {
+			FMetadata struct {
+				FLabels struct {
+					Field1 struct {
+					} `json:"."`
+					FKubernetesIoMetadataName struct {
+					} `json:"f:kubernetes.io/metadata.name"`
+				} `json:"f:labels"`
+			} `json:"f:metadata"`
+		} `json:"fieldsV1"`
+	} `json:"managedFields"`
+}
+
 type ResponseCreateNamespace struct {
-	Kind       string `json:"kind"`
-	ApiVersion string `json:"apiVersion"`
-	Metadata   struct {
-		Name              string    `json:"name"`
-		Uid               string    `json:"uid"`
-		ResourceVersion   string    `json:"resourceVersion"`
-		CreationTimestamp time.Time `json:"creationTimestamp"`
-		Labels            struct {
-			KubernetesIoMetadataName string `json:"kubernetes.io/metadata.name"`
-		} `json:"labels"`
-		ManagedFields []struct {
-			Manager    string    `json:"manager"`
-			Operation  string    `json:"operation"`
-			ApiVersion string    `json:"apiVersion"`
-			Time       time.Time `json:"time"`
-			FieldsType string    `json:"fieldsType"`
-			FieldsV1   struct {
-				FMetadata struct {
-					FLabels struct {
-						Field1 struct {
-						} `json:"."`
-						FKubernetesIoMetadataName struct {
-						} `json:"f:kubernetes.io/metadata.name"`
-					} `json:"f:labels"`
-				} `json:"f:metadata"`
-			} `json:"fieldsV1"`
-		} `json:"managedFields"`
-	} `json:"metadata"`
-	Spec struct {
+	Kind       string                          `json:"kind"`
+	ApiVersion string                          `json:"apiVersion"`
+	Metadata   ResponseCreateNamespaceMetadata `json:"metadata"`
+	Spec       struct {
 		Finalizers []string `json:"finalizers"`
 	} `json:"spec"`
 	Status struct {

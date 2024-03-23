@@ -28,11 +28,11 @@ func main() {
 
 	dispatchToServerRunWorkflowService := dispatch_to_server_run_workflow_service.New()
 
-	dispatchToServerRunWorkflowService.SetHost(*host)
-	dispatchToServerRunWorkflowService.SetPort(*port)
-	dispatchToServerRunWorkflowService.SetFile(*fileYaml)
-
-	dispatchToServerRunWorkflowService.Run()
+	dispatchToServerRunWorkflowService.
+		SetHost(*host).
+		SetPort(*port).
+		SetFile(*fileYaml).
+		Run()
 
 }
 

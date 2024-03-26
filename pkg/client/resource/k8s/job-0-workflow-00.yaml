@@ -2,7 +2,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: job-0-workflow-00
-  namespace: k8science-cluster-manager
+  namespace: scik8sflow
 spec:
   template:
     spec:

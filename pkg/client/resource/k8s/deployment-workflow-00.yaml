@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: deployment-workflow-00
-  namespace: k8science-cluster-manager
+  namespace: scik8sflow
 spec:
     replicas: 1
     selector:

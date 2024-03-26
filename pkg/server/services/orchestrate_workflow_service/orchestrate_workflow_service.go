@@ -2,6 +2,7 @@ package orchestrate_workflow_service
 
 import (
 	"errors"
+
 	"github.com/ovvesley/scik8sflow/pkg/server/channel"
 	"github.com/ovvesley/scik8sflow/pkg/server/entities/workflow"
 	"github.com/ovvesley/scik8sflow/pkg/server/repository/activity_repository"
@@ -28,7 +29,7 @@ type OrchestrateWorflowService struct {
 
 func New() *OrchestrateWorflowService {
 	return &OrchestrateWorflowService{
-		namespace:           "k8science-cluster-manager",
+		namespace:           "scik8sflow",
 		workflowRepository:  workflow_repository.New(),
 		activityRepository:  activity_repository.New(),
 		channelManager:      channel.GetInstance(),

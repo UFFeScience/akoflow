@@ -14,7 +14,7 @@ type GetPendingWorkflowService struct {
 
 func New() *GetPendingWorkflowService {
 	return &GetPendingWorkflowService{
-		namespace:          "k8science-cluster-manager",
+		namespace:          "scik8sflow",
 		workflowRepository: workflow_repository.New(),
 		activityRepository: activity_repository.New(),
 	}

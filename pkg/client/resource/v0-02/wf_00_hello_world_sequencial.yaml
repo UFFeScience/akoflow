@@ -1,7 +1,7 @@
 name: wf-hello-world
 spec:
   image: "alpine:3.7"
-  namespace: "k8science-cluster-manager"
+  namespace: "scik8sflow"
   storageClassName: "hostpath"
   storageSize: "32Mi"
   mountPath: "/data"

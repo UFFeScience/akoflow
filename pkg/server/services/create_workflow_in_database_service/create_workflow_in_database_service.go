@@ -16,7 +16,7 @@ type CreateWorkflowInDatabaseService struct {
 
 func New() *CreateWorkflowInDatabaseService {
 	return &CreateWorkflowInDatabaseService{
-		namespace:          "k8science-cluster-manager",
+		namespace:          "scik8sflow",
 		workflowRepository: workflow_repository.New(),
 		activityRepository: activity_repository.New(),
 		storageRepository:  storages_repository.New(),

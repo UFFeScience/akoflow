@@ -24,7 +24,7 @@ type MonitorCollectMetricsService struct {
 
 func New() *MonitorCollectMetricsService {
 	return &MonitorCollectMetricsService{
-		namespace:                 "k8science-cluster-manager",
+		namespace:                 "scik8sflow",
 		workflowRepository:        workflow_repository.New(),
 		activityRepository:        activity_repository.New(),
 		metricsRepository:         metrics_repository.New(),

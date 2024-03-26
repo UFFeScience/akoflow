@@ -5,7 +5,7 @@ import (
 	"github.com/ovvesley/scik8sflow/pkg/server/services/create_workflow_in_database_service"
 )
 
-var namespace = "k8science-cluster-manager"
+var namespace = "scik8sflow"
 
 var cont = 0
 

@@ -24,11 +24,13 @@ func New() IWorkflowRepository {
 	err := repository.CreateOrVerifyTable(c, TableName, Columns)
 
 	if err != nil {
+		println("Error creating table", err.Error())
 		return nil
 	}
 
 	err = c.Close()
 	if err != nil {
+		println("Error closing connection", err.Error())
 		return nil
 	}
 

@@ -32,7 +32,7 @@ func New(params ...ParamsNewRunActivityInClusterService) *RunActivityInClusterSe
 	}
 
 	return &RunActivityInClusterService{
-		namespace:          "k8science-cluster-manager",
+		namespace:          "scik8sflow",
 		workflowRepository: workflow_repository.New(),
 		activityRepository: activity_repository.New(),
 		connector:          connector.New(),

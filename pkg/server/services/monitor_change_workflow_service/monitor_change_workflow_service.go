@@ -22,7 +22,7 @@ type MonitorChangeWorkflowService struct {
 
 func New() *MonitorChangeWorkflowService {
 	return &MonitorChangeWorkflowService{
-		namespace:                 "k8science-cluster-manager",
+		namespace:                 "scik8sflow",
 		workflowRepository:        workflow_repository.New(),
 		activityRepository:        activity_repository.New(),
 		channelManager:            channel.GetInstance(),

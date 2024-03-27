@@ -7,3 +7,8 @@ dev-deploy-server:
 dev-log:
 	kubectl logs $$(kubectl get pods | grep scik8sflow-server-deployment |grep Running |  awk '{print $$1}')
 
+build-amd64:
+	docker buildx build -t ovvesley/uff-tcc-scientific-workflow-k8s:server -f server.Dockerfile . --platform=linux/amd64 --push
+
+build-arm64:
+	docker buildx build -t ovvesley/uff-tcc-scientific-workflow-k8s:server -f server.Dockerfile . --platform=linux/arm64 --push

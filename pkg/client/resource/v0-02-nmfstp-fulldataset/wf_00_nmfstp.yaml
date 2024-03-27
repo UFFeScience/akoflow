@@ -8,7 +8,7 @@ spec:
   activities:
     - name: "Constructor.ipynb"
       memoryLimit: 1Gi
-      cpuLimit: 1
+      cpuLimit: 3
       run: |
         echo "Running Constructor.ipynb"
         sed -i 's/full_dataset_plasmodium/testset/g' code/Constructor.ipynb
@@ -25,7 +25,7 @@ spec:
         echo "Done running Constructor.ipynb"
     - name: "sub_find.ipynb"
       memoryLimit: 1Gi
-      cpuLimit: 1
+      cpuLimit: 3
       run: |
         echo "Running sub_find.ipynb"
         cd code

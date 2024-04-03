@@ -1,0 +1,87 @@
+name: wf-hello-world-gcp
+spec:
+  image: "alpine:3.7"
+  namespace: "scik8sflow"
+  storageClassName: "standard-rwo"
+  storageSize: "32Mi"
+  mountPath: "/data"
+  activities:
+    - name: "A"
+      memoryLimit: 500Mi
+      cpuLimit: 0.5
+      run: |
+        echo "Hello World" >> /data/A/output.txt
+        sleep 5
+        echo "Hello World Again" >> /data/A/output.txt
+        sleep 5
+        echo "Hello World One More Time" >> /data/A/output.txt
+
+    - name: "B"
+      memoryLimit: 500Mi
+      cpuLimit: 0.5
+      run: |
+        echo "Good Afternoon" >> /data/B/output.txt
+        sleep 5
+        echo "Good Afternoon Again" >> /data/B/output.txt
+        sleep 5
+        echo "Good Afternoon One More Time" >> /data/B/output.txt
+
+    - name: "C"
+      memoryLimit: 500Mi
+      cpuLimit: 0.5
+      run: |
+        echo "Goodbye" >> /data/C/output.txt
+        sleep 5
+        echo "Goodbye Again" >> /data/C/output.txt
+        sleep 5
+        echo "Goodbye One More Time" >> /data/C/output.txt
+
+    - name: "D"
+      memoryLimit: 500Mi
+      cpuLimit: 0.5
+      run: |
+        echo "Goodbye" >> /data/D/output.txt
+        sleep 5
+        echo "Goodbye Again" >> /data/D/output.txt
+        sleep 5
+        echo "Goodbye One More Time" >> /data/D/output.txt
+      dependsOn:
+        - "A"
+        - "B"
+        - "C"
+
+    - name: "E"
+      memoryLimit: 500Mi
+      cpuLimit: 0.5
+      run: |
+          echo "Goodbye" >> /data/E/output.txt
+          sleep 5
+          echo "Goodbye Again" >> /data/E/output.txt
+          sleep 5
+          echo "Goodbye One More Time" >> /data/E/output.txt
+      dependsOn:
+          - "C"
+    - name: "F"
+      memoryLimit: 500Mi
+      cpuLimit: 0.5
+      run: |
+          echo "Goodbye" >> /data/F/output.txt
+          sleep 5
+          echo "Goodbye Again" >> /data/F/output.txt
+          sleep 5
+          echo "Goodbye One More Time" >> /data/F/output.txt
+      dependsOn:
+          - "D"
+          - "E"
+
+    - name: "G"
+      memoryLimit: 500Mi
+      cpuLimit: 0.5
+      run: |
+          echo "Goodbye" >> /data/G/output.txt
+          sleep 5
+          echo "Goodbye Again" >> /data/G/output.txt
+          sleep 5
+          echo "Goodbye One More Time" >> /data/G/output.txt
+      dependsOn:
+          - "F"

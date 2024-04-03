@@ -1,0 +1,44 @@
+name: wf-hello-world-gcp
+spec:
+  image: "alpine:3.7"
+  namespace: "scik8sflow"
+  storageClassName: "standard-rwo"
+  storageSize: "32Mi"
+  mountPath: "/data"
+  activities:
+    - name: "A"
+      memoryLimit: 500Mi
+      cpuLimit: 0.5
+      run: |
+        echo "Hello World" >> /data/A/output.txt
+        sleep 5
+        echo "Hello World Again" >> /data/A/output.txt
+        sleep 5
+        echo "Hello World One More Time" >> /data/A/output.txt
+
+    - name: "B"
+      memoryLimit: 500Mi
+      cpuLimit: 0.5
+      run: |
+        echo "Good Afternoon" >> /data/B/output.txt
+        sleep 5
+        echo "Good Afternoon Again" >> /data/B/output.txt
+        sleep 5
+        echo "Good Afternoon One More Time" >> /data/B/output.txt
+
+      dependsOn:
+        - "A"
+
+    - name: "C"
+      memoryLimit: 500Mi
+      cpuLimit: 0.5
+      run: |
+        echo "Goodbye" >> /data/C/output.txt
+        sleep 5
+        echo "Goodbye Again" >> /data/C/output.txt
+        sleep 5
+        echo "Goodbye One More Time" >> /data/C/output.txt
+
+      dependsOn:
+        - "A"
+        - "B"

@@ -1,6 +1,6 @@
 name: wf-00-nmfstp-gcp-fulldataset
 spec:
-  image: "ovvesley/k8science-nmfstp:latest"
+  image: "ovvesley/scik8sflow-nmfstp-wf:latest"
   namespace: "scik8sflow"
   storageClassName: "standard-rwo"
   storageSize: 4Gi
@@ -11,7 +11,6 @@ spec:
       cpuLimit: 3
       run: |
         echo "Running Constructor.ipynb"
-        sed -i 's/full_dataset_plasmodium/testset/g' code/Constructor.ipynb
 
         mkdir -p /NMFSt.P/data/out/Subtrees || true
         mkdir -p /NMFSt.P/data/out/tmp || true

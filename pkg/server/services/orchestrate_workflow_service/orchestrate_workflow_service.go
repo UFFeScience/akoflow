@@ -4,14 +4,11 @@ import (
 	"github.com/ovvesley/scik8sflow/pkg/server/channel"
 	"github.com/ovvesley/scik8sflow/pkg/server/entities/workflow"
 	"github.com/ovvesley/scik8sflow/pkg/server/repository/activity_repository"
-	"github.com/ovvesley/scik8sflow/pkg/server/repository/workflow_repository"
 	"github.com/ovvesley/scik8sflow/pkg/server/services/get_workflow_by_status_service"
 )
 
 type OrchestrateWorflowService struct {
 	namespace           string
-	workflowRepository  workflow_repository.IWorkflowRepository
-	activityRepository  activity_repository.IActivityRepository
 	channelManager      *channel.Manager
 	getWorkflowByStatus *get_workflow_by_status_service.GetWorkflowByStatusService
 }
@@ -19,8 +16,6 @@ type OrchestrateWorflowService struct {
 func New() *OrchestrateWorflowService {
 	return &OrchestrateWorflowService{
 		namespace:           "scik8sflow",
-		workflowRepository:  workflow_repository.New(),
-		activityRepository:  activity_repository.New(),
 		channelManager:      channel.GetInstance(),
 		getWorkflowByStatus: get_workflow_by_status_service.New(),
 	}
@@ -33,7 +28,7 @@ func (o *OrchestrateWorflowService) dispatchToWorker(activities []workflow.Workf
 	}
 }
 
-func (o *OrchestrateWorflowService) handleDispatchToWorker(wf workflow.Workflow) {
+func (o *OrchestrateWorflowService) handleDispatchToWorker(wf workflow.Workflow) []workflow.WorkflowActivities {
 	wfsFinished := o.getWorkflowByStatus.GetActivitiesByStatus(wf, activity_repository.StatusFinished)
 	wfsRunning := o.getWorkflowByStatus.GetActivitiesByStatus(wf, activity_repository.StatusRunning)
 	wfsNotStarted := o.getWorkflowByStatus.GetActivitiesByStatus(wf, activity_repository.StatusCreated)
@@ -42,19 +37,17 @@ func (o *OrchestrateWorflowService) handleDispatchToWorker(wf workflow.Workflow)
 	println("wfsRunning: ", len(wfsRunning))
 	println("wfsNotStarted: ", len(wfsNotStarted))
 
-	wfNextToRun, err := o.nextToRun(wfsNotStarted, wfsFinished)
-
-	if err != nil {
-		return
-	}
+	wfNextToRun := o.nextToRun(wfsNotStarted, wfsFinished)
 
 	for _, wfNextToRun := range wfNextToRun {
 		o.dispatchToWorker([]workflow.WorkflowActivities{wfNextToRun})
 	}
 
+	return wfNextToRun
+
 }
 
-func (o *OrchestrateWorflowService) nextToRun(wfsPending []workflow.WorkflowActivities, wfsFinished []workflow.WorkflowActivities) ([]workflow.WorkflowActivities, error) {
+func (o *OrchestrateWorflowService) nextToRun(wfsPending []workflow.WorkflowActivities, wfsFinished []workflow.WorkflowActivities) []workflow.WorkflowActivities {
 
 	wfsNextToRun := make([]workflow.WorkflowActivities, 0)
 	for _, wfPending := range wfsPending {
@@ -65,7 +58,7 @@ func (o *OrchestrateWorflowService) nextToRun(wfsPending []workflow.WorkflowActi
 		}
 	}
 
-	return wfsNextToRun, nil
+	return wfsNextToRun
 }
 
 func (o *OrchestrateWorflowService) isDependentOnFinished(wfaPending workflow.WorkflowActivities, wfasFinished []workflow.WorkflowActivities) bool {
@@ -91,13 +84,16 @@ func (o *OrchestrateWorflowService) isDependentOnFinished(wfaPending workflow.Wo
 	return false
 }
 
-func (o *OrchestrateWorflowService) iterateWorkflows(workflows []workflow.Workflow) {
+func (o *OrchestrateWorflowService) iterateWorkflows(workflows []workflow.Workflow) map[int][]workflow.WorkflowActivities {
 
+	mapWfWfs := make(map[int][]workflow.WorkflowActivities)
 	for _, wf := range workflows {
-		o.handleDispatchToWorker(wf)
+		mapWfWfs[wf.Id] = o.handleDispatchToWorker(wf)
 	}
+
+	return mapWfWfs
 }
 
-func (d *OrchestrateWorflowService) Orchestrate(workflows []workflow.Workflow) {
-	d.iterateWorkflows(workflows)
+func (d *OrchestrateWorflowService) Orchestrate(workflows []workflow.Workflow) map[int][]workflow.WorkflowActivities {
+	return d.iterateWorkflows(workflows)
 }

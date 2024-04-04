@@ -2,7 +2,7 @@ name: wf-hello-world-gcp
 spec:
   image: "alpine:3.7"
   namespace: "scik8sflow"
-  storageClassName: "standard-rwo"
+  storageClassName: "hostpath"
   storageSize: "32Mi"
   mountPath: "/data"
   activities:

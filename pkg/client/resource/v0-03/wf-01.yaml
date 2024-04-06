@@ -4,84 +4,94 @@ spec:
   namespace: "scik8sflow"
   storageClassName: "hostpath"
   storageSize: "32Mi"
+  storageAccessModes: "ReadWriteOnce"
   mountPath: "/data"
   activities:
-    - name: "A"
+    - name: "a"
       memoryLimit: 500Mi
       cpuLimit: 0.5
+      nodeName: "node-0"
       run: |
-        echo "Hello World" >> /data/A/output.txt
+        echo "Hello World" >> /data/a/output.txt
         sleep 5
-        echo "Hello World Again" >> /data/A/output.txt
+        echo "Hello World Again" >> /data/a/output.txt
         sleep 5
-        echo "Hello World One More Time" >> /data/A/output.txt
+        echo "Hello World One More Time" >> /data/a/output.txt
 
-    - name: "B"
+    - name: "b"
       memoryLimit: 500Mi
       cpuLimit: 0.5
+      nodeName: "node-0"
       run: |
-        echo "Good Afternoon" >> /data/B/output.txt
+        echo "Good Afternoon" >> /data/b/output.txt
         sleep 5
-        echo "Good Afternoon Again" >> /data/B/output.txt
+        echo "Good Afternoon Again" >> /data/b/output.txt
         sleep 5
-        echo "Good Afternoon One More Time" >> /data/B/output.txt
+        echo "Good Afternoon One More Time" >> /data/b/output.txt
 
-    - name: "C"
+    - name: "c"
       memoryLimit: 500Mi
       cpuLimit: 0.5
-      run: |
-        echo "Goodbye" >> /data/C/output.txt
+      nodeName: "node-0"
+      run: |        
+        echo "Goodbye" >> /data/c/output.txt
         sleep 5
-        echo "Goodbye Again" >> /data/C/output.txt
+        echo "Goodbye Again" >> /data/c/output.txt
         sleep 5
-        echo "Goodbye One More Time" >> /data/C/output.txt
+        echo "Goodbye One More Time" >> /data/c/output.txt
 
-    - name: "D"
+    - name: "d"
       memoryLimit: 500Mi
       cpuLimit: 0.5
+      nodeName: "node-0"
       run: |
-        echo "Goodbye" >> /data/D/output.txt
+        echo "Goodbye" >> /data/d/output.txt
         sleep 5
-        echo "Goodbye Again" >> /data/D/output.txt
+        echo "Goodbye Again" >> /data/d/output.txt
         sleep 5
-        echo "Goodbye One More Time" >> /data/D/output.txt
+        echo "Goodbye One More Time" >> /data/d/output.txt
       dependsOn:
-        - "A"
-        - "B"
-        - "C"
+        - "a"
+        - "b"
+        - "c"
 
-    - name: "E"
+    - name: "e"
       memoryLimit: 500Mi
       cpuLimit: 0.5
+      nodeName: "node-0"
       run: |
-          echo "Goodbye" >> /data/E/output.txt
-          sleep 5
-          echo "Goodbye Again" >> /data/E/output.txt
-          sleep 5
-          echo "Goodbye One More Time" >> /data/E/output.txt
+        echo "Goodbye" >> /data/e/output.txt
+        sleep 5
+        echo "Goodbye Again" >> /data/e/output.txt
+        sleep 5
+        echo "Goodbye One More Time" >> /data/e/output.txt
       dependsOn:
-          - "C"
-    - name: "F"
+        - "c"
+    - name: "f"
       memoryLimit: 500Mi
       cpuLimit: 0.5
+      nodeName: "node-0"
       run: |
-          echo "Goodbye" >> /data/F/output.txt
-          sleep 5
-          echo "Goodbye Again" >> /data/F/output.txt
-          sleep 5
-          echo "Goodbye One More Time" >> /data/F/output.txt
+        echo "Goodbye" >> /data/f/output.txt
+        sleep 5
+        echo "Goodbye Again" >> /data/f/output.txt
+        sleep 5
+        echo "Goodbye One More Time" >> /data/f/output.txt
       dependsOn:
-          - "D"
-          - "E"
+        - "d"
+        - "e"
 
-    - name: "G"
+    - name: "g"
       memoryLimit: 500Mi
       cpuLimit: 0.5
+      nodeName: "node-0"
       run: |
-          echo "Goodbye" >> /data/G/output.txt
-          sleep 5
-          echo "Goodbye Again" >> /data/G/output.txt
-          sleep 5
-          echo "Goodbye One More Time" >> /data/G/output.txt
+        echo "Goodbye" >> /data/g/output.txt
+        sleep 5
+        echo "Goodbye Again" >> /data/g/output.txt
+        sleep 5
+        echo "Goodbye One More Time" >> /data/g/output.txt
+        sleep 300
+
       dependsOn:
-          - "F"
+        - "f"

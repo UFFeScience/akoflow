@@ -1,4 +1,4 @@
-package k8sjob
+package k8s_job_entity
 
 import (
 	"encoding/base64"

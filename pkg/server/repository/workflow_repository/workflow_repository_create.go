@@ -1,20 +1,16 @@
 package workflow_repository
 
 import (
-	"github.com/ovvesley/scik8sflow/pkg/server/entities/workflow"
+	"github.com/ovvesley/scik8sflow/pkg/server/entities/workflow_entity"
 	"github.com/ovvesley/scik8sflow/pkg/server/repository"
 )
 
-func (w *WorkflowRepository) Create(namespace string, workflow workflow.Workflow) (int, error) {
+func (w *WorkflowRepository) Create(namespace string, workflow workflow_entity.Workflow) (int, error) {
 
 	database := repository.Database{}
 	c := database.Connect()
 
 	rawWorkflow := workflow.GetBase64Workflow()
-
-	resources := workflow.MakeResourcesK8s()
-
-	println("Resources: ", resources)
 
 	result, err := c.Exec("INSERT INTO "+w.tableName+" (namespace, name, raw_workflow, status) VALUES (?, ?, ?, ?)", namespace, workflow.Name, rawWorkflow, StatusCreated)
 

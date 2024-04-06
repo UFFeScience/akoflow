@@ -2,7 +2,8 @@ package monitor_collect_metrics_service
 
 import (
 	"github.com/ovvesley/scik8sflow/pkg/server/connector"
-	"github.com/ovvesley/scik8sflow/pkg/server/entities/workflow"
+	"github.com/ovvesley/scik8sflow/pkg/server/entities/workflow_activity_entity"
+	"github.com/ovvesley/scik8sflow/pkg/server/entities/workflow_entity"
 	"github.com/ovvesley/scik8sflow/pkg/server/repository/activity_repository"
 	"github.com/ovvesley/scik8sflow/pkg/server/repository/logs_repository"
 	"github.com/ovvesley/scik8sflow/pkg/server/repository/metrics_repository"
@@ -43,7 +44,7 @@ func (m *MonitorCollectMetricsService) CollectMetrics() {
 	}
 }
 
-func (m *MonitorCollectMetricsService) handleCollectMetricsByWorkflow(wf workflow.Workflow) {
+func (m *MonitorCollectMetricsService) handleCollectMetricsByWorkflow(wf workflow_entity.Workflow) {
 	wfaRunning := m.getWorkflowByStatus.GetActivitiesByStatus(wf, activity_repository.StatusRunning)
 
 	println("Workflow: ", wf.Id)
@@ -54,7 +55,7 @@ func (m *MonitorCollectMetricsService) handleCollectMetricsByWorkflow(wf workflo
 	}
 }
 
-func (m *MonitorCollectMetricsService) handleCollectMetricsByActivity(wfa workflow.WorkflowActivities) {
+func (m *MonitorCollectMetricsService) handleCollectMetricsByActivity(wfa workflow_activity_entity.WorkflowActivities) {
 	println("Activity: ", wfa.WorkflowId, wfa.Id)
 
 	nameJob := wfa.GetName()
@@ -75,7 +76,7 @@ func (m *MonitorCollectMetricsService) handleCollectMetricsByActivity(wfa workfl
 
 }
 
-func (m *MonitorCollectMetricsService) retrieveSaveMetricsInDatabase(wfa workflow.WorkflowActivities, podName string) {
+func (m *MonitorCollectMetricsService) retrieveSaveMetricsInDatabase(wfa workflow_activity_entity.WorkflowActivities, podName string) {
 
 	metricsResponse, err := m.connector.Metrics().GetPodMetrics(m.namespace, podName)
 	metricsByPod, err := metricsResponse.GetMetrics()
@@ -97,7 +98,7 @@ func (m *MonitorCollectMetricsService) retrieveSaveMetricsInDatabase(wfa workflo
 	})
 }
 
-func (m *MonitorCollectMetricsService) retrieveSaveLogsInDatabase(wfa workflow.WorkflowActivities, podName string) {
+func (m *MonitorCollectMetricsService) retrieveSaveLogsInDatabase(wfa workflow_activity_entity.WorkflowActivities, podName string) {
 	logs, err := m.connector.Pod().GetPodLogs(m.namespace, podName)
 	if err != nil {
 		return

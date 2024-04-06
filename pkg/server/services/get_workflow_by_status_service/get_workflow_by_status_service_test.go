@@ -1,7 +1,7 @@
 package get_workflow_by_status_service
 
 import (
-	"github.com/ovvesley/scik8sflow/pkg/server/entities/workflow"
+	"github.com/ovvesley/scik8sflow/pkg/server/entities/workflow_entity"
 	"github.com/ovvesley/scik8sflow/pkg/server/repository/activity_repository"
 	"testing"
 )

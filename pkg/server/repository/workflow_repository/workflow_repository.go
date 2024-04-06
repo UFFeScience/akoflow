@@ -1,7 +1,7 @@
 package workflow_repository
 
 import (
-	"github.com/ovvesley/scik8sflow/pkg/server/entities/workflow"
+	"github.com/ovvesley/scik8sflow/pkg/server/entities/workflow_entity"
 	"github.com/ovvesley/scik8sflow/pkg/server/repository"
 )
 
@@ -38,8 +38,8 @@ func New() IWorkflowRepository {
 }
 
 type IWorkflowRepository interface {
-	Create(namespace string, workflow workflow.Workflow) (int, error)
-	Find(workflowId int) (workflow.Workflow, error)
-	GetPendingWorkflows(namespace string) ([]workflow.Workflow, error)
+	Create(namespace string, workflow workflow_entity.Workflow) (int, error)
+	Find(workflowId int) (workflow_entity.Workflow, error)
+	GetPendingWorkflows(namespace string) ([]workflow_entity.Workflow, error)
 	UpdateStatus(id int, status int) error
 }

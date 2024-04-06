@@ -1,7 +1,7 @@
 package get_pending_workflow_service
 
 import (
-	"github.com/ovvesley/scik8sflow/pkg/server/entities/workflow"
+	"github.com/ovvesley/scik8sflow/pkg/server/entities/workflow_entity"
 	"github.com/ovvesley/scik8sflow/pkg/server/repository/activity_repository"
 	"github.com/ovvesley/scik8sflow/pkg/server/repository/workflow_repository"
 )
@@ -20,7 +20,7 @@ func New() *GetPendingWorkflowService {
 	}
 }
 
-func (g *GetPendingWorkflowService) GetPendingWorkflows() ([]workflow.Workflow, error) {
+func (g *GetPendingWorkflowService) GetPendingWorkflows() ([]workflow_entity.Workflow, error) {
 	workflows, err := g.retriveWorkflowsOnDatabase()
 	if err != nil {
 		return nil, err
@@ -29,7 +29,7 @@ func (g *GetPendingWorkflowService) GetPendingWorkflows() ([]workflow.Workflow, 
 	return workflows, nil
 }
 
-func (g *GetPendingWorkflowService) retriveWorkflowsOnDatabase() ([]workflow.Workflow, error) {
+func (g *GetPendingWorkflowService) retriveWorkflowsOnDatabase() ([]workflow_entity.Workflow, error) {
 	workflows, err := g.workflowRepository.GetPendingWorkflows(g.namespace)
 	if err != nil {
 		return nil, err
@@ -46,8 +46,8 @@ func (g *GetPendingWorkflowService) retriveWorkflowsOnDatabase() ([]workflow.Wor
 	return workflows, nil
 }
 
-func hydrateWorkflows(workflows []workflow.Workflow, mapWfActivities activity_repository.ResultGetActivitiesByWorkflowIds) []workflow.Workflow {
-	var workflowsToReturn []workflow.Workflow
+func hydrateWorkflows(workflows []workflow_entity.Workflow, mapWfActivities activity_repository.ResultGetActivitiesByWorkflowIds) []workflow_entity.Workflow {
+	var workflowsToReturn []workflow_entity.Workflow
 	for _, wf := range workflows {
 		if mapWfActivities[wf.Id] == nil {
 			continue
@@ -58,7 +58,7 @@ func hydrateWorkflows(workflows []workflow.Workflow, mapWfActivities activity_re
 	return workflowsToReturn
 }
 
-func getIds(workflows []workflow.Workflow) []int {
+func getIds(workflows []workflow_entity.Workflow) []int {
 	var ids []int
 	for _, wf := range workflows {
 		ids = append(ids, wf.Id)

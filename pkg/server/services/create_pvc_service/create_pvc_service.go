@@ -2,7 +2,8 @@ package create_pvc_service
 
 import (
 	"github.com/ovvesley/scik8sflow/pkg/server/connector"
-	"github.com/ovvesley/scik8sflow/pkg/server/entities/workflow"
+	"github.com/ovvesley/scik8sflow/pkg/server/entities/workflow_activity_entity"
+	"github.com/ovvesley/scik8sflow/pkg/server/entities/workflow_entity"
 )
 
 type CreatePVCService struct {
@@ -25,7 +26,7 @@ func New(params ...ParamsNewCreatePVCService) CreatePVCService {
 	}
 }
 
-func (c *CreatePVCService) GetOrCreatePersistentVolumeClainByActivity(wf workflow.Workflow, wfa workflow.WorkflowActivities, namespace string) (string, error) {
+func (c *CreatePVCService) GetOrCreatePersistentVolumeClainByActivity(wf workflow_entity.Workflow, wfa workflow_activity_entity.WorkflowActivities, namespace string) (string, error) {
 	pvc, err := c.connector.PersistentVolumeClain().GetPersistentVolumeClain(wfa.GetVolumeName(), namespace)
 
 	if err != nil {
@@ -36,7 +37,7 @@ func (c *CreatePVCService) GetOrCreatePersistentVolumeClainByActivity(wf workflo
 	return pvc.Metadata.Name, nil
 }
 
-func (c *CreatePVCService) handleCreatePersistentVolumeClain(wf workflow.Workflow, wfa workflow.WorkflowActivities, namespace string) (string, error) {
+func (c *CreatePVCService) handleCreatePersistentVolumeClain(wf workflow_entity.Workflow, wfa workflow_activity_entity.WorkflowActivities, namespace string) (string, error) {
 
 	pv, err := c.connector.PersistentVolumeClain().CreatePersistentVolumeClain(wfa.GetVolumeName(), namespace, wf.Spec.StorageSize, wf.Spec.StorageClassName)
 

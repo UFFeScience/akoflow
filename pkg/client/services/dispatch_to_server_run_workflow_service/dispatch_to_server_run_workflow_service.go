@@ -118,7 +118,7 @@ func (d *DispatchToServerRunWorkflowService) sendToServer(base64FileContent stri
 
 	payloadJson, _ := json.Marshal(payload)
 
-	req, _ := http.NewRequest("POST", "http://"+d.GetHost()+":"+d.GetPort()+"/runworkflow", bytes.NewBuffer(payloadJson))
+	req, _ := http.NewRequest("POST", "http://"+d.GetHost()+":"+d.GetPort()+"/scik8sflow-server/workflow/run", bytes.NewBuffer(payloadJson))
 
 	req.Header.Set("Content-Type", "application/json")
 

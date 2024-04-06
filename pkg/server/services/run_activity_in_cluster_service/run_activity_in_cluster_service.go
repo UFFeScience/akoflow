@@ -1,41 +1,50 @@
 package run_activity_in_cluster_service
 
 import (
-	"github.com/ovvesley/scik8sflow/pkg/server/connector"
-	"github.com/ovvesley/scik8sflow/pkg/server/entities/workflow"
 	"github.com/ovvesley/scik8sflow/pkg/server/repository/activity_repository"
 	"github.com/ovvesley/scik8sflow/pkg/server/repository/workflow_repository"
+	"github.com/ovvesley/scik8sflow/pkg/server/services/apply_job_service"
+	"github.com/ovvesley/scik8sflow/pkg/server/services/create_namespace_service"
+	"github.com/ovvesley/scik8sflow/pkg/server/services/create_pvc_service"
 )
 
 type RunActivityInClusterService struct {
-	namespace          string
-	workflowRepository workflow_repository.IWorkflowRepository
-	activityRepository activity_repository.IActivityRepository
-	connector          connector.IConnector
+	namespace              string
+	workflowRepository     workflow_repository.IWorkflowRepository
+	activityRepository     activity_repository.IActivityRepository
+	createPVCService       create_pvc_service.CreatePVCService
+	createNamespaceService create_namespace_service.CreateNamespaceService
+	applyJobService        apply_job_service.ApplyJobService
 }
 
 type ParamsNewRunActivityInClusterService struct {
-	Namespace          string
-	WorkflowRepository workflow_repository.IWorkflowRepository
-	ActivityRepository activity_repository.IActivityRepository
-	Connector          connector.IConnector
+	Namespace              string
+	WorkflowRepository     workflow_repository.IWorkflowRepository
+	ActivityRepository     activity_repository.IActivityRepository
+	CreatePVCService       create_pvc_service.CreatePVCService
+	CreateNamespaceService create_namespace_service.CreateNamespaceService
+	ApplyJobService        apply_job_service.ApplyJobService
 }
 
 func New(params ...ParamsNewRunActivityInClusterService) *RunActivityInClusterService {
 	if len(params) > 0 {
 		return &RunActivityInClusterService{
-			namespace:          params[0].Namespace,
-			workflowRepository: params[0].WorkflowRepository,
-			activityRepository: params[0].ActivityRepository,
-			connector:          params[0].Connector,
+			namespace:              params[0].Namespace,
+			workflowRepository:     params[0].WorkflowRepository,
+			activityRepository:     params[0].ActivityRepository,
+			createPVCService:       params[0].CreatePVCService,
+			createNamespaceService: params[0].CreateNamespaceService,
+			applyJobService:        params[0].ApplyJobService,
 		}
 	}
 
 	return &RunActivityInClusterService{
-		namespace:          "scik8sflow",
-		workflowRepository: workflow_repository.New(),
-		activityRepository: activity_repository.New(),
-		connector:          connector.New(),
+		namespace:              "scik8sflow",
+		workflowRepository:     workflow_repository.New(),
+		activityRepository:     activity_repository.New(),
+		createPVCService:       create_pvc_service.New(),
+		createNamespaceService: create_namespace_service.New(),
+		applyJobService:        apply_job_service.New(),
 	}
 }
 
@@ -43,107 +52,32 @@ func (r *RunActivityInClusterService) Run(activityID int) {
 	resourceOk := r.handleResourceToRunJob(activityID)
 
 	if resourceOk {
-		r.handleApplyJob(activityID)
+		r.applyJobService.ApplyJob(activityID)
 	}
 
-}
-
-func (r *RunActivityInClusterService) handleApplyJob(activityID int) {
-	activity, err := r.activityRepository.Find(activityID)
-	wf, _ := r.workflowRepository.Find(activity.WorkflowId)
-
-	if err != nil {
-		println("Activity not found")
-		return
-	}
-	if activity.Status != activity_repository.StatusCreated {
-		println("Activity already running")
-		return
-	}
-
-	println("Running activity: ", activity.Name)
-
-	k8sJob := activity.MakeResourceK8s(wf)
-	r.connector.Job().ApplyJob(r.namespace, k8sJob)
-
-	podCreated, _ := r.connector.Pod().GetPodByJob(r.namespace, activity.GetName())
-	namePod, err := podCreated.GetPodName()
-
-	if err != nil {
-		println("Error getting pod name")
-		return
-	}
-
-	println("Pod created: ", namePod)
-
-	var _ = r.activityRepository.UpdateStatus(activity.Id, activity_repository.StatusRunning)
-	var _ = r.workflowRepository.UpdateStatus(activity.WorkflowId, workflow_repository.StatusRunning)
 }
 
 func (r *RunActivityInClusterService) handleResourceToRunJob(id int) bool {
-	activity, err := r.activityRepository.Find(id)
-	wf, _ := r.workflowRepository.Find(activity.WorkflowId)
+	wfa, err := r.activityRepository.Find(id)
+	wf, _ := r.workflowRepository.Find(wfa.WorkflowId)
 
 	if err != nil {
 		println("Activity not found")
 		return false
 	}
 
-	namespace := r.handleGetOrCreateNamespace(wf.Spec.Namespace)
+	namespace, errNamespace := r.createNamespaceService.GetOrCreateNamespace(r.namespace)
 
-	persistent := r.handleGetOrCreatePersistentVolumeClain(wf, namespace)
+	pvc, errPvc := r.createPVCService.GetOrCreatePersistentVolumeClainByActivity(wf, wfa, namespace)
 
-	return namespace != "" && persistent != ""
-
-}
-
-func (r *RunActivityInClusterService) handleGetOrCreateNamespace(namespace string) string {
-	response, err := r.connector.Namespace().GetNamespace(namespace)
-
-	if err != nil {
-		println("Namespace not found")
-		return r.handleCreateNamespace(namespace)
+	if errNamespace != nil || errPvc != nil {
+		println("Error creating namespace or pvc")
+		return false
 	}
 
-	return response.Metadata.Name
-}
+	println("Namespace created: ", namespace)
+	println("PVC created: ", pvc)
 
-func (r *RunActivityInClusterService) handleCreateNamespace(namespace string) string {
-	ns, err := r.connector.Namespace().CreateNamespace(namespace)
+	return true
 
-	if err != nil {
-		println("Error creating namespace")
-		return ""
-	}
-
-	return ns.Metadata.Name
-
-}
-
-func (r *RunActivityInClusterService) handleGetOrCreatePersistentVolumeClain(wf workflow.Workflow, namespace string) string {
-
-	pvc, err := r.connector.PersistentVolumeClain().GetPersistentVolumeClain(wf.GetVolumeName(), namespace)
-
-	if err != nil {
-		println("Persistent volume not found")
-		return r.handleCreatePersistentVolumeClain(wf, namespace)
-	}
-
-	return pvc.Metadata.Name
-}
-
-func (r *RunActivityInClusterService) handleCreatePersistentVolumeClain(wf workflow.Workflow, namespace string) string {
-	pv, err := r.connector.PersistentVolumeClain().CreatePersistentVolumeClain(wf.GetVolumeName(), namespace, wf.Spec.StorageSize, wf.Spec.StorageClassName)
-
-	if err != nil {
-		println("Error creating persistent volume")
-		return ""
-	}
-
-	if pv.Metadata.Name == "" {
-		println("Error creating persistent volume")
-		return ""
-	}
-
-	return pv.Metadata.Name
 }

@@ -1,17 +1,17 @@
-package runworkflow
+package workflow_handler
 
 import (
 	"encoding/json"
-	"github.com/ovvesley/scik8sflow/pkg/server/entities/workflow"
-	"github.com/ovvesley/scik8sflow/pkg/server/manager"
+	"github.com/ovvesley/scik8sflow/pkg/server/entities/workflow_entity"
+	"github.com/ovvesley/scik8sflow/pkg/server/services/create_workflow_in_database_service"
 	"net/http"
 )
 
 type RequestPostRunWorkflow struct {
-	Workflow string `json:"workflow"`
+	Workflow string `json:"workflow_entity"`
 }
 
-func RunWorkflowHandler(w http.ResponseWriter, r *http.Request) {
+func Run(w http.ResponseWriter, r *http.Request) {
 	payload := RequestPostRunWorkflow{}
 	err := json.NewDecoder(r.Body).Decode(&payload)
 	if err != nil {
@@ -19,12 +19,13 @@ func RunWorkflowHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	wf := workflow.New(workflow.WorkflowNewParams{WorkflowBase64: payload.Workflow})
+	wf := workflow_entity.New(workflow_entity.WorkflowNewParams{WorkflowBase64: payload.Workflow})
 
-	manager.DeployWorkflow(wf)
+	create_workflow_service := create_workflow_in_database_service.New()
+	_ = create_workflow_service.Create(wf)
 
 	response, err := json.Marshal(struct {
-		Workflow string `json:"workflow"`
+		Workflow string `json:"workflow_entity"`
 		Message  string `json:"message"`
 	}{
 		Workflow: wf.Name,

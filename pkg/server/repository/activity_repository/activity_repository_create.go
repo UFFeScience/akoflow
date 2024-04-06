@@ -1,11 +1,11 @@
 package activity_repository
 
 import (
-	"github.com/ovvesley/scik8sflow/pkg/server/entities/workflow"
+	"github.com/ovvesley/scik8sflow/pkg/server/entities/workflow_activity_entity"
 	"github.com/ovvesley/scik8sflow/pkg/server/repository"
 )
 
-func (w *ActivityRepository) Create(namespace string, workflowId int, image string, activities []workflow.WorkflowActivities) error {
+func (w *ActivityRepository) Create(namespace string, workflowId int, image string, activities []workflow_activity_entity.WorkflowActivities) error {
 	err := w.createActivity(namespace, workflowId, image, activities)
 
 	if err != nil {
@@ -24,7 +24,7 @@ func (w *ActivityRepository) Create(namespace string, workflowId int, image stri
 
 }
 
-func (w *ActivityRepository) createActivity(namespace string, workflowId int, image string, activities []workflow.WorkflowActivities) error {
+func (w *ActivityRepository) createActivity(namespace string, workflowId int, image string, activities []workflow_activity_entity.WorkflowActivities) error {
 	database := repository.Database{}
 	c := database.Connect()
 
@@ -53,7 +53,7 @@ func (w *ActivityRepository) createActivity(namespace string, workflowId int, im
 	return nil
 }
 
-func (w *ActivityRepository) createActivityDependency(workflowId int, activitiesYaml []workflow.WorkflowActivities) error {
+func (w *ActivityRepository) createActivityDependency(workflowId int, activitiesYaml []workflow_activity_entity.WorkflowActivities) error {
 
 	database := repository.Database{}
 	c := database.Connect()
@@ -61,7 +61,7 @@ func (w *ActivityRepository) createActivityDependency(workflowId int, activities
 	activitiesDatabase, err := w.GetByWorkflowId(workflowId)
 
 	if err != nil {
-		println("Error getting activities by workflow id" + err.Error())
+		println("Error getting activities by workflow_entity id" + err.Error())
 		return err
 	}
 	mapActivityNameToId := w.createMapActivityNameToId(activitiesDatabase)
@@ -103,7 +103,7 @@ func (w *ActivityRepository) createActivityDependency(workflowId int, activities
 	return nil
 }
 
-func (w *ActivityRepository) createMapActivityNameToId(activities []workflow.WorkflowActivities) map[string]int {
+func (w *ActivityRepository) createMapActivityNameToId(activities []workflow_activity_entity.WorkflowActivities) map[string]int {
 	var mapActivityNameToId = make(map[string]int)
 	for _, activity := range activities {
 		mapActivityNameToId[activity.Name] = activity.Id

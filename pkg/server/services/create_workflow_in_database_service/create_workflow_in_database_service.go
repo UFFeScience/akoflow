@@ -1,7 +1,7 @@
 package create_workflow_in_database_service
 
 import (
-	"github.com/ovvesley/scik8sflow/pkg/server/entities/workflow"
+	"github.com/ovvesley/scik8sflow/pkg/server/entities/workflow_entity"
 	"github.com/ovvesley/scik8sflow/pkg/server/repository/activity_repository"
 	"github.com/ovvesley/scik8sflow/pkg/server/repository/storages_repository"
 	"github.com/ovvesley/scik8sflow/pkg/server/repository/workflow_repository"
@@ -23,7 +23,7 @@ func New() *CreateWorkflowInDatabaseService {
 	}
 }
 
-func (c *CreateWorkflowInDatabaseService) Create(workflow workflow.Workflow) error {
+func (c *CreateWorkflowInDatabaseService) Create(workflow workflow_entity.Workflow) error {
 	workflowId, err := c.workflowRepository.Create(c.namespace, workflow)
 	if err != nil {
 		return err

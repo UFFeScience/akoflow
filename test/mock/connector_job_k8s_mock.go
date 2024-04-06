@@ -10,10 +10,10 @@
 package mock
 
 import (
+	k8sjob "github.com/ovvesley/scik8sflow/pkg/server/entities/k8s_job_entity"
 	reflect "reflect"
 
 	connector_job_k8s "github.com/ovvesley/scik8sflow/pkg/server/connector/connector_job_k8s"
-	k8sjob "github.com/ovvesley/scik8sflow/pkg/server/k8sjob"
 	gomock "go.uber.org/mock/gomock"
 )
 

@@ -1,11 +1,11 @@
 package workflow_repository
 
 import (
-	"github.com/ovvesley/scik8sflow/pkg/server/entities/workflow"
+	"github.com/ovvesley/scik8sflow/pkg/server/entities/workflow_entity"
 	"github.com/ovvesley/scik8sflow/pkg/server/repository"
 )
 
-func (w *WorkflowRepository) GetPendingWorkflows(namespace string) ([]workflow.Workflow, error) {
+func (w *WorkflowRepository) GetPendingWorkflows(namespace string) ([]workflow_entity.Workflow, error) {
 
 	database := repository.Database{}
 	c := database.Connect()
@@ -15,16 +15,16 @@ func (w *WorkflowRepository) GetPendingWorkflows(namespace string) ([]workflow.W
 		return nil, err
 	}
 
-	var workflows []workflow.Workflow
+	var workflows []workflow_entity.Workflow
 
 	for rows.Next() {
-		result := workflow.WorkflowDatabase{}
+		result := workflow_entity.WorkflowDatabase{}
 		err = rows.Scan(&result.ID, &result.Namespace, &result.Name, &result.RawWorkflow, &result.Status)
 		if err != nil {
 			return nil, err
 		}
 
-		wf := workflow.DatabaseToWorkflow(workflow.ParamsDatabaseToWorkflow{WorkflowDatabase: result})
+		wf := workflow_entity.DatabaseToWorkflow(workflow_entity.ParamsDatabaseToWorkflow{WorkflowDatabase: result})
 		workflows = append(workflows, wf)
 	}
 

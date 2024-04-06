@@ -5,7 +5,7 @@ import (
 	"crypto/tls"
 	"encoding/json"
 	"fmt"
-	"github.com/ovvesley/scik8sflow/pkg/server/k8sjob"
+	"github.com/ovvesley/scik8sflow/pkg/server/entities/k8s_job_entity"
 	"net/http"
 	"os"
 	"time"
@@ -17,7 +17,7 @@ type ConnectorJobK8s struct {
 
 type IConnectorJob interface {
 	ListJobs()
-	ApplyJob(namespace string, job k8sjob.K8sJob) interface{}
+	ApplyJob(namespace string, job k8s_job_entity.K8sJob) interface{}
 	GetJob(namespace string, jobName string) (ResponseGetJob, error)
 }
 
@@ -41,7 +41,7 @@ func (c ConnectorJobK8s) ListJobs() {
 	panic("implement me")
 }
 
-func (c *ConnectorJobK8s) ApplyJob(namespace string, job k8sjob.K8sJob) interface{} {
+func (c *ConnectorJobK8s) ApplyJob(namespace string, job k8s_job_entity.K8sJob) interface{} {
 	token := os.Getenv("K8S_API_SERVER_TOKEN")
 	host := os.Getenv("K8S_API_SERVER_HOST")
 

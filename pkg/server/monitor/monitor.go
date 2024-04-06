@@ -2,7 +2,6 @@ package monitor
 
 import (
 	"github.com/ovvesley/scik8sflow/pkg/server/services/monitor_change_workflow_service"
-	"github.com/ovvesley/scik8sflow/pkg/server/services/monitor_collect_metrics_service"
 	"time"
 )
 
@@ -21,6 +20,6 @@ func handleMonitor() {
 	monitorChangeWorkflowService := monitor_change_workflow_service.New()
 	monitorChangeWorkflowService.MonitorChangeWorkflow()
 
-	monitorCollectMetricsService := monitor_collect_metrics_service.New()
-	monitorCollectMetricsService.CollectMetrics()
+	//monitorCollectMetricsService := monitor_collect_metrics_service.New()
+	//monitorCollectMetricsService.CollectMetrics()
 }

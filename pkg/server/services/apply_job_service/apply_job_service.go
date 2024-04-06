@@ -2,9 +2,12 @@ package apply_job_service
 
 import (
 	"github.com/ovvesley/scik8sflow/pkg/server/connector"
+	"github.com/ovvesley/scik8sflow/pkg/server/entities/workflow_activity_entity"
+	"github.com/ovvesley/scik8sflow/pkg/server/entities/workflow_entity"
 	"github.com/ovvesley/scik8sflow/pkg/server/repository/activity_repository"
 	"github.com/ovvesley/scik8sflow/pkg/server/repository/workflow_repository"
 	"github.com/ovvesley/scik8sflow/pkg/server/services/get_activity_dependencies_service"
+	"github.com/ovvesley/scik8sflow/pkg/server/services/make_k8s_job_service"
 )
 
 type ApplyJobService struct {
@@ -12,7 +15,8 @@ type ApplyJobService struct {
 	workflowRepository             workflow_repository.IWorkflowRepository
 	connector                      connector.IConnector
 	namespace                      string
-	GetActivityDependenciesService get_activity_dependencies_service.GetActivityDependenciesService
+	getActivityDependenciesService get_activity_dependencies_service.GetActivityDependenciesService
+	makeK8sJobService              make_k8s_job_service.MakeK8sJobService
 }
 
 type ParamsNewApplyJobService struct {
@@ -29,7 +33,7 @@ func New(params ...ParamsNewApplyJobService) ApplyJobService {
 			workflowRepository:             params[0].WorkflowRepository,
 			connector:                      connector.New(),
 			namespace:                      params[0].Namespace,
-			GetActivityDependenciesService: params[0].GetActivityDependenciesService,
+			getActivityDependenciesService: params[0].GetActivityDependenciesService,
 		}
 	}
 	return ApplyJobService{
@@ -37,7 +41,8 @@ func New(params ...ParamsNewApplyJobService) ApplyJobService {
 		workflowRepository:             workflow_repository.New(),
 		connector:                      connector.New(),
 		namespace:                      "scik8sflow",
-		GetActivityDependenciesService: get_activity_dependencies_service.New(),
+		getActivityDependenciesService: get_activity_dependencies_service.New(),
+		makeK8sJobService:              make_k8s_job_service.New(),
 	}
 }
 
@@ -60,8 +65,7 @@ func (a *ApplyJobService) handleApplyJob(activityID int) {
 
 	println("Running activity: ", activity.Name)
 
-	activities := a.GetActivityDependenciesService.GetActivityDependencies(wf.Id)
-	println("Activities: ", len(activities))
+	a.runK8sJob(wf, activity)
 
 	if err != nil {
 		println("Error getting pod name")
@@ -72,4 +76,34 @@ func (a *ApplyJobService) handleApplyJob(activityID int) {
 
 	var _ = a.activityRepository.UpdateStatus(activity.Id, activity_repository.StatusRunning)
 	var _ = a.workflowRepository.UpdateStatus(activity.WorkflowId, workflow_repository.StatusRunning)
+}
+
+func (a *ApplyJobService) runK8sJob(wf workflow_entity.Workflow, wfa workflow_activity_entity.WorkflowActivities) {
+
+	mapWfaDependencies := a.getActivityDependenciesService.GetActivityDependencies(wf.Id)
+	dependencies := mapWfaDependencies[wfa.Id]
+
+	println("Dependencies: ", mapWfaDependencies[wfa.Id])
+
+	job, _ := a.makeK8sJobService.
+		SetNamespace(a.namespace).
+		SetIdWorkflow(wf.Id).
+		SetIdWorkflowActivity(wfa.Id).
+		SetDependencies(dependencies).
+		MakeK8sJob()
+
+	println("Job: ", job.Metadata.Name)
+
+	a.connector.Job().ApplyJob(a.namespace, job)
+
+	podCreated, _ := a.connector.Pod().GetPodByJob(a.namespace, job.Metadata.Name)
+	namePod, err := podCreated.GetPodName()
+
+	if err != nil {
+		println("Error getting pod name")
+		return
+	}
+
+	println("Pod created: ", namePod)
+
 }

@@ -1,7 +1,7 @@
 package activity_repository
 
 import (
-	"github.com/ovvesley/scik8sflow/pkg/server/entities/workflow"
+	"github.com/ovvesley/scik8sflow/pkg/server/entities/workflow_activity_entity"
 	"github.com/ovvesley/scik8sflow/pkg/server/repository"
 )
 
@@ -48,9 +48,10 @@ func New() IActivityRepository {
 }
 
 type IActivityRepository interface {
-	Create(namespace string, workflowId int, image string, activities []workflow.WorkflowActivities) error
+	Create(namespace string, workflowId int, image string, activities []workflow_activity_entity.WorkflowActivities) error
 	GetActivitiesByWorkflowIds(ids []int) (ResultGetActivitiesByWorkflowIds, error)
 	UpdateStatus(id int, status int) error
-	Find(id int) (workflow.WorkflowActivities, error)
-	GetByWorkflowId(id int) ([]workflow.WorkflowActivities, error)
+	Find(id int) (workflow_activity_entity.WorkflowActivities, error)
+	GetByWorkflowId(id int) ([]workflow_activity_entity.WorkflowActivities, error)
+	GetWfaDependencies(workflowId int) ([]workflow_activity_entity.WorkflowActivityDependencyDatabase, error)
 }

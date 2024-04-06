@@ -3,7 +3,8 @@ package monitor_change_workflow_service
 import (
 	"github.com/ovvesley/scik8sflow/pkg/server/channel"
 	"github.com/ovvesley/scik8sflow/pkg/server/connector"
-	"github.com/ovvesley/scik8sflow/pkg/server/entities/workflow"
+	"github.com/ovvesley/scik8sflow/pkg/server/entities/workflow_activity_entity"
+	"github.com/ovvesley/scik8sflow/pkg/server/entities/workflow_entity"
 	"github.com/ovvesley/scik8sflow/pkg/server/repository/activity_repository"
 	"github.com/ovvesley/scik8sflow/pkg/server/repository/workflow_repository"
 	"github.com/ovvesley/scik8sflow/pkg/server/services/get_pending_workflow_service"
@@ -40,7 +41,7 @@ func (m *MonitorChangeWorkflowService) MonitorChangeWorkflow() {
 
 }
 
-func (m *MonitorChangeWorkflowService) handleVerifyWorkflowWasFinished(wfs []workflow.Workflow) {
+func (m *MonitorChangeWorkflowService) handleVerifyWorkflowWasFinished(wfs []workflow_entity.Workflow) {
 	for _, wf := range wfs {
 		wfaRunning := m.getWorkflowByStatus.GetActivitiesByStatus(wf, activity_repository.StatusRunning)
 		wfaCreated := m.getWorkflowByStatus.GetActivitiesByStatus(wf, activity_repository.StatusCreated)
@@ -59,7 +60,7 @@ func (m *MonitorChangeWorkflowService) handleVerifyWorkflowWasFinished(wfs []wor
 	}
 }
 
-func (m *MonitorChangeWorkflowService) handleVerifyWorkflowActivitiesWasFinished(wfs []workflow.Workflow) {
+func (m *MonitorChangeWorkflowService) handleVerifyWorkflowActivitiesWasFinished(wfs []workflow_entity.Workflow) {
 	for _, wf := range wfs {
 		for _, activity := range wf.Spec.Activities {
 			m.handleVerifyActivityWasFinished(activity, wf)
@@ -68,14 +69,14 @@ func (m *MonitorChangeWorkflowService) handleVerifyWorkflowActivitiesWasFinished
 }
 
 // [TODO] Verificação de Status das atividades muito simplista. Deve ser melhorada.
-func (m *MonitorChangeWorkflowService) handleVerifyActivityWasFinished(activity workflow.WorkflowActivities, wf workflow.Workflow) int {
+func (m *MonitorChangeWorkflowService) handleVerifyActivityWasFinished(activity workflow_activity_entity.WorkflowActivities, wf workflow_entity.Workflow) int {
 	println("Verifying activity: ", activity.Name, " with id: ", activity.Id)
 
 	wfaDatabase, _ := m.activityRepository.Find(activity.Id)
 
 	println("Activity status Database: ", wfaDatabase.Status)
 
-	jobResponse, _ := m.connector.Job().GetJob(m.namespace, activity.GetName())
+	jobResponse, _ := m.connector.Job().GetJob(m.namespace, activity.GetNameJob())
 
 	if jobResponse.Status.Active == 1 {
 		return activity_repository.StatusRunning

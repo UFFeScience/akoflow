@@ -2,7 +2,7 @@ package config
 
 import "os"
 
-const PORT_SERVER = "8081"
+const PORT_SERVER = ":8080"
 
 func SetupEnv() {
 

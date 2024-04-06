@@ -59,6 +59,13 @@ func (c *ConnectorJobK8s) ApplyJob(namespace string, job k8sjob.K8sJob) interfac
 		return nil
 	}
 
+	if resp.StatusCode != 201 {
+		body := new(bytes.Buffer)
+		body.ReadFrom(resp.Body)
+		println("Error creating job: ", body.String())
+		return nil
+	}
+
 	defer resp.Body.Close()
 
 	var result interface{}

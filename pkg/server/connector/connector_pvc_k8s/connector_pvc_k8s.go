@@ -137,6 +137,15 @@ func (c *ConnectorPvcK8s) CreatePersistentVolumeClain(name string, namespace str
 		return ResponseCreatePersistentVolumeClain{}, err
 	}
 
+	if resp.StatusCode != 201 {
+		//body, _ := ioutil.ReadAll(resp.Body) // deprecated
+
+		body := new(bytes.Buffer)
+		body.ReadFrom(resp.Body)
+		println("Error creating pvc: ", body.String())
+		return ResponseCreatePersistentVolumeClain{}, fmt.Errorf("error creating pvc: %s", resp.Status)
+	}
+
 	defer resp.Body.Close()
 
 	var result ResponseCreatePersistentVolumeClain

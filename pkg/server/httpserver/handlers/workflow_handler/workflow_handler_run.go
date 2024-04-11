@@ -8,7 +8,7 @@ import (
 )
 
 type RequestPostRunWorkflow struct {
-	Workflow string `json:"workflow_entity"`
+	Workflow string `json:"workflow"`
 }
 
 func Run(w http.ResponseWriter, r *http.Request) {

@@ -10,6 +10,7 @@ spec:
     - name: "a"
       memoryLimit: 500Mi
       cpuLimit: 0.5
+      nodeSelector: "kubernetes.io/hostname=docker-desktop"
       run: |
         echo "Hello World" >> /data/a/output.txt
         sleep 5
@@ -20,6 +21,7 @@ spec:
     - name: "b"
       memoryLimit: 500Mi
       cpuLimit: 0.5
+      nodeSelector: "kubernetes.io/hostname=docker-desktop"
       run: |
         echo "Good Afternoon" >> /data/b/output.txt
         sleep 5
@@ -30,7 +32,8 @@ spec:
     - name: "c"
       memoryLimit: 500Mi
       cpuLimit: 0.5
-      run: |        
+      nodeSelector: "kubernetes.io/hostname=docker-desktop"
+      run: |
         echo "Goodbye" >> /data/c/output.txt
         sleep 5
         echo "Goodbye Again" >> /data/c/output.txt
@@ -40,6 +43,7 @@ spec:
     - name: "d"
       memoryLimit: 500Mi
       cpuLimit: 0.5
+      nodeSelector: "kubernetes.io/hostname=docker-desktop"
       run: |
         echo "Goodbye" >> /data/d/output.txt
         sleep 5
@@ -54,6 +58,7 @@ spec:
     - name: "e"
       memoryLimit: 500Mi
       cpuLimit: 0.5
+      nodeSelector: "kubernetes.io/hostname=docker-desktop"
       run: |
         echo "Goodbye" >> /data/e/output.txt
         sleep 5
@@ -65,6 +70,7 @@ spec:
     - name: "f"
       memoryLimit: 500Mi
       cpuLimit: 0.5
+      nodeSelector: "kubernetes.io/hostname=docker-desktop"
       run: |
         echo "Goodbye" >> /data/f/output.txt
         sleep 5
@@ -78,6 +84,7 @@ spec:
     - name: "g"
       memoryLimit: 500Mi
       cpuLimit: 0.5
+      nodeSelector: "kubernetes.io/hostname=docker-desktop"
       run: |
         echo "Goodbye" >> /data/g/output.txt
         sleep 5

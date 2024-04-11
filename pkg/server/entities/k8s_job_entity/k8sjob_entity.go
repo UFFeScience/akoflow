@@ -29,6 +29,7 @@ type K8sJobSpecTemplate struct {
 	RestartPolicy string            `json:"restartPolicy"`
 	BackoffLimit  int               `json:"backoffLimit"`
 	Volumes       []K8sJobVolume    `json:"volumes"`
+	NodeSelector  map[string]string `json:"nodeSelector"`
 }
 
 type K8sJobContainer struct {

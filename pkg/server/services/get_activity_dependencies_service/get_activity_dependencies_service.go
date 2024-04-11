@@ -19,7 +19,22 @@ func New() GetActivityDependenciesService {
 	}
 }
 
-// GetActivityDependencies returns the dependencies of an activity. It uses the workflow_entity and activity repositories to get the necessary data.
+// GetActivityDependencies recupera todas as dependências de atividades para um dado fluxo de trabalho.
+// Este método organiza e retorna um mapeamento onde cada chave é o ID de uma atividade e o valor é uma lista
+// de atividades das quais ela depende, incluindo dependências diretas e indiretas.
+//
+// Parâmetros:
+// - workflowId: O identificador inteiro do fluxo de trabalho cujas dependências de atividades estão sendo solicitadas.
+//
+// Retorna:
+// - Um mapa (MapActivityDependencies) representando as dependências entre as atividades do fluxo de trabalho.
+//
+//	O processo envolve várias etapas:
+//	1. Recuperar o fluxo de trabalho e suas atividades associadas usando os respectivos repositórios.
+//	2. Mapear cada atividade pelo seu ID para facilitar o acesso durante o processamento de dependências.
+//	3. Inicializar estruturas de dados para armazenar as dependências processadas e evitar duplicatas.
+//	4. Preencher recursivamente as dependências de cada atividade usando fillActivityDependencies.
+//	5. Converter o conjunto de dependências de cada atividade em uma lista e associá-la no mapa de retorno.
 func (g *GetActivityDependenciesService) GetActivityDependencies(workflowId int) workflow_activity_entity.MapActivityDependencies {
 	wf, _ := g.workflowRepository.Find(workflowId)
 	wfa, _ := g.activityRepository.GetActivitiesByWorkflowIds([]int{workflowId})
@@ -44,7 +59,23 @@ func (g *GetActivityDependenciesService) GetActivityDependencies(workflowId int)
 	return activityDependencies
 }
 
-// fillActivityDependencies is a recursive function that fills the dependencies of an activity and its dependencies. Critical to the GetActivityDependencies function.
+// fillActivityDependencies é uma função recursiva que preenche as dependências de uma atividade específica.
+// Este método é crítico para a funcionalidade do GetActivityDependencies, permitindo a resolução de dependências
+// tanto diretas quanto indiretas de uma atividade.
+//
+// Parâmetros:
+// - dependWfa: O ID da atividade cujas dependências estão sendo preenchidas.
+// - mapWfa: Um mapa de todas as atividades disponíveis, facilitando o acesso durante a recursão.
+// - wfaDependencies: Uma lista de todas as dependências conhecidas entre atividades no fluxo de trabalho.
+//
+// Retorna:
+// - Uma lista de atividades que representam todas as dependências diretas e indiretas da atividade especificada.
+//
+// O método funciona seguindo estes passos:
+//  1. Verificar se a atividade especificada está presente no mapa de atividades; se sim, adicioná-la ao conjunto de dependências.
+//  2. Iterar sobre todas as dependências conhecidas, e para cada uma que corresponda à atividade em questão,
+//     chamar fillActivityDependencies recursivamente para resolver suas dependências.
+//  3. Converter o conjunto de dependências coletadas em uma lista para ser retornada.
 func (g *GetActivityDependenciesService) fillActivityDependencies(dependWfa int, mapWfa map[int]workflow_activity_entity.WorkflowActivities, wfaDependencies []workflow_activity_entity.WorkflowActivityDependencyDatabase) []workflow_activity_entity.WorkflowActivities {
 	setDependencies := make(map[int]workflow_activity_entity.WorkflowActivities)
 
@@ -61,6 +92,30 @@ func (g *GetActivityDependenciesService) fillActivityDependencies(dependWfa int,
 	return g.setDependenciesToArray(setDependencies)
 }
 
+// setDependenciesToArray converte um mapa de dependências de atividades em uma lista ordenada.
+// Este método é utilizado para transformar o conjunto de dependências, armazenadas como um mapa para evitar duplicatas,
+// em uma lista ordenada de atividades por seu ID. Isso facilita a manipulação subsequente das dependências,
+// como iterá-las em ordem ou apresentá-las de forma sequencial.
+//
+// Parâmetros:
+//   - setDependencies: Um mapa onde cada chave é o ID de uma atividade e o valor é o objeto da atividade correspondente.
+//     Este mapa representa o conjunto de todas as dependências de uma atividade específica.
+//
+// Retorna:
+// - Uma lista de objetos WorkflowActivities representando as dependências da atividade, ordenadas pelo ID da atividade.
+//
+// O método executa os seguintes passos:
+//  1. Inicializa uma lista vazia `dependencies` para coletar os objetos de atividade do mapa.
+//  2. Itera sobre o mapa de dependências, adicionando cada objeto de atividade à lista `dependencies`.
+//  3. Inicializa uma nova lista `sorted` para armazenar as atividades ordenadas.
+//  4. Realiza uma ordenação simples das atividades na lista `dependencies` com base em seus IDs,
+//     utilizando um algoritmo de ordenação por seleção.
+//     - Durante a ordenação, as atividades são comparadas pelos seus IDs, e a ordem na lista é ajustada conforme necessário.
+//  5. A cada iteração do processo de ordenação, a atividade correntemente ordenada é adicionada à lista `sorted`.
+//  6. Retorna a lista `sorted` contendo todas as dependências ordenadas por ID.
+//
+// Nota: Este método assume que todos os IDs de atividade são únicos e utiliza uma ordenação simples, que é eficaz para
+// conjuntos de dados pequenos a moderados.
 func (g *GetActivityDependenciesService) setDependenciesToArray(setDependencies map[int]workflow_activity_entity.WorkflowActivities) []workflow_activity_entity.WorkflowActivities {
 	dependencies := make([]workflow_activity_entity.WorkflowActivities, 0)
 	for _, dep := range setDependencies {

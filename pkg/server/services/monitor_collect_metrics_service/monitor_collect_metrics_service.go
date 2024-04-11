@@ -72,8 +72,7 @@ func (m *MonitorCollectMetricsService) handleCollectMetricsByActivity(wfa workfl
 	}
 
 	m.retrieveSaveMetricsInDatabase(wfa, podName)
-	m.retrieveSaveLogsInDatabase(wfa, podName)
-
+	//m.retrieveSaveLogsInDatabase(wfa, podName) [TODO] disabled temporarily because to be refactored
 }
 
 func (m *MonitorCollectMetricsService) retrieveSaveMetricsInDatabase(wfa workflow_activity_entity.WorkflowActivities, podName string) {
@@ -98,6 +97,7 @@ func (m *MonitorCollectMetricsService) retrieveSaveMetricsInDatabase(wfa workflo
 	})
 }
 
+// [TODO]disabled temporarily because to be refactored
 func (m *MonitorCollectMetricsService) retrieveSaveLogsInDatabase(wfa workflow_activity_entity.WorkflowActivities, podName string) {
 	logs, err := m.connector.Pod().GetPodLogs(m.namespace, podName)
 	if err != nil {

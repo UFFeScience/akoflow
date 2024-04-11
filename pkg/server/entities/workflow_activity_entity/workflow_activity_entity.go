@@ -4,17 +4,19 @@ import (
 	"encoding/base64"
 	"gopkg.in/yaml.v3"
 	"strconv"
+	"strings"
 )
 
 type WorkflowActivities struct {
-	Id          int
-	WorkflowId  int
-	Status      int
-	Name        string   `yaml:"name"`
-	Run         string   `yaml:"run"`
-	MemoryLimit string   `yaml:"memoryLimit"`
-	CpuLimit    string   `yaml:"cpuLimit"`
-	DependsOn   []string `yaml:"dependsOn"`
+	Id           int
+	WorkflowId   int
+	Status       int
+	Name         string   `yaml:"name"`
+	Run          string   `yaml:"run"`
+	MemoryLimit  string   `yaml:"memoryLimit"`
+	CpuLimit     string   `yaml:"cpuLimit"`
+	DependsOn    []string `yaml:"dependsOn"`
+	NodeSelector string   `yaml:"nodeSelector"`
 }
 
 type WorkflowActivityDatabase struct {
@@ -55,9 +57,19 @@ func (wfa WorkflowActivities) GetVolumeName() string {
 	return "pvc-" + strconv.Itoa(wfa.Id) + "-" + "wfa"
 }
 
-// get id
 func (wfa WorkflowActivities) GetId() int {
 	return wfa.Id
+}
+
+func (wfa WorkflowActivities) GetNodeSelector() map[string]string {
+	wfaNodeSelector := wfa.NodeSelector
+
+	if wfaNodeSelector == "" {
+		return nil
+	}
+
+	split := strings.Split(wfaNodeSelector, "=")
+	return map[string]string{split[0]: split[1]}
 }
 
 type ParamsDatabaseToWorkflowActivities struct {
@@ -80,18 +92,14 @@ func DatabaseToWorkflowActivities(params ParamsDatabaseToWorkflowActivities) Wor
 	}
 
 	return WorkflowActivities{
-		Id:          params.WorkflowActivityDatabase.Id,
-		Name:        params.WorkflowActivityDatabase.Name,
-		Status:      params.WorkflowActivityDatabase.Status,
-		Run:         wfa.Run,
-		WorkflowId:  params.WorkflowActivityDatabase.WorkflowId,
-		MemoryLimit: wfa.MemoryLimit,
-		CpuLimit:    wfa.CpuLimit,
-		DependsOn:   wfa.DependsOn,
+		Id:           params.WorkflowActivityDatabase.Id,
+		Name:         params.WorkflowActivityDatabase.Name,
+		Status:       params.WorkflowActivityDatabase.Status,
+		Run:          wfa.Run,
+		WorkflowId:   params.WorkflowActivityDatabase.WorkflowId,
+		MemoryLimit:  wfa.MemoryLimit,
+		CpuLimit:     wfa.CpuLimit,
+		DependsOn:    wfa.DependsOn,
+		NodeSelector: wfa.NodeSelector,
 	}
 }
-
-//
-//func (wa WorkflowActivities) MakeResourceK8s(workflow workflow_entity.Workflow) k8sjob.K8sJob {
-//	return makeJobK8s(workflow, wa)
-//}

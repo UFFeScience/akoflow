@@ -1,0 +1,14 @@
+name: wf-montage-gcp
+spec:
+  image: "alpine:3.7"
+  namespace: "scik8sflow"
+  storageClassName: "hostpath"
+  storageSize: "32Mi"
+  storageAccessModes: "ReadWriteOnce"
+  mountPath: "/data"
+  activities:
+    - name: "a"
+      memoryLimit: 500Mi
+      cpuLimit: 0.5
+      nodeSelector: "kubernetes.io/hostname=docker-desktop"
+      run: |

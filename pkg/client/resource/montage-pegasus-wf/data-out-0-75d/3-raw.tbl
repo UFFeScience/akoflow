@@ -1,0 +1,12 @@
+\datatype=fitshdr
+| cntr|  ctype1|  ctype2|naxis1|naxis2|    crval1|    crval2|    crpix1|    crpix2|     cdelt1|     cdelt2|  crota2|equinox|                           file|
+|  int|    char|    char|   int|   int|    double|    double|    double|    double|     double|     double|  double|    int|                           char|
+     1 RA---TAN DEC--TAN   2559   2559  56.700000  24.000000    1279.02    1279.02 -0.00027778  0.00027778  0.00000    2000 poss2ukstu_ir_001_001.fits
+     2 RA---TAN DEC--TAN   2559   2559  56.700000  24.000000    1279.02    1279.02 -0.00027778  0.00027778  0.00000    2000 poss2ukstu_ir_001_002.fits
+     3 RA---TAN DEC--TAN   2559   2559  56.700000  24.000000    1279.02    1279.02 -0.00027778  0.00027778  0.00000    2000 poss2ukstu_ir_001_003.fits
+     4 RA---TAN DEC--TAN   2559   2559  56.700000  24.000000    1279.02    1279.02 -0.00027778  0.00027778  0.00000    2000 poss2ukstu_ir_002_001.fits
+     5 RA---TAN DEC--TAN   2559   2559  56.700000  24.000000    1279.02    1279.02 -0.00027778  0.00027778  0.00000    2000 poss2ukstu_ir_002_002.fits
+     6 RA---TAN DEC--TAN   2559   2559  56.700000  24.000000    1279.02    1279.02 -0.00027778  0.00027778  0.00000    2000 poss2ukstu_ir_002_003.fits
+     7 RA---TAN DEC--TAN   2559   2559  56.700000  24.000000    1279.02    1279.02 -0.00027778  0.00027778  0.00000    2000 poss2ukstu_ir_003_001.fits
+     8 RA---TAN DEC--TAN   2559   2559  56.700000  24.000000    1279.02    1279.02 -0.00027778  0.00027778  0.00000    2000 poss2ukstu_ir_003_002.fits
+     9 RA---TAN DEC--TAN   2559   2559  56.700000  24.000000    1279.02    1279.02 -0.00027778  0.00027778  0.00000    2000 poss2ukstu_ir_003_003.fits

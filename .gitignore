@@ -1,3 +1,7 @@
 db.sqlite
 storage/database.sqlite
 storage/*
+*/.DS_Store
+.DS_Store
+*.fits
+

@@ -1,0 +1,457 @@
+name: wf-montage-050d
+spec:
+  image: ovvesley/scik8sflow-wf-montage:050d # amd64 only
+  namespace: scik8sflow
+  storageClassName: hostpath
+  storageSize: 1Gi
+  mountPath: /data
+  activities:
+    - name: mprojectid0000001
+      run: mProject -X poss2ukstu_blue_001_001.fits pposs2ukstu_blue_001_001.fits region-oversized.hdr
+      memoryLimit: 256Mi
+      cpuLimit: 500m
+
+    - name: mprojectid0000002
+      run: mProject -X poss2ukstu_blue_001_002.fits pposs2ukstu_blue_001_002.fits region-oversized.hdr
+      memoryLimit: 256Mi
+      cpuLimit: 500m
+
+    - name: mprojectid0000003
+      run: mProject -X poss2ukstu_blue_002_001.fits pposs2ukstu_blue_002_001.fits region-oversized.hdr
+      memoryLimit: 256Mi
+      cpuLimit: 500m
+
+    - name: mprojectid0000004
+      run: mProject -X poss2ukstu_blue_002_002.fits pposs2ukstu_blue_002_002.fits region-oversized.hdr
+      memoryLimit: 256Mi
+      cpuLimit: 500m
+
+    - name: mdifffitid0000005
+      run: mDiffFit -d -s 1-fit.000001.000002.txt pposs2ukstu_blue_001_001.fits pposs2ukstu_blue_001_002.fits 1-diff.000001.000002.fits region-oversized.hdr
+      memoryLimit: 256Mi
+      cpuLimit: 500m
+      dependsOn:
+        - mprojectid0000001
+        - mprojectid0000002
+
+    - name: mdifffitid0000006
+      run: mDiffFit -d -s 1-fit.000001.000003.txt pposs2ukstu_blue_001_001.fits pposs2ukstu_blue_002_001.fits 1-diff.000001.000003.fits region-oversized.hdr
+      memoryLimit: 256Mi
+      cpuLimit: 500m
+      dependsOn:
+        - mprojectid0000001
+        - mprojectid0000003
+
+    - name: mdifffitid0000007
+      run: mDiffFit -d -s 1-fit.000001.000004.txt pposs2ukstu_blue_001_001.fits pposs2ukstu_blue_002_002.fits 1-diff.000001.000004.fits region-oversized.hdr
+      memoryLimit: 256Mi
+      cpuLimit: 500m
+      dependsOn:
+        - mprojectid0000001
+        - mprojectid0000004
+
+    - name: mdifffitid0000008
+      run: mDiffFit -d -s 1-fit.000002.000003.txt pposs2ukstu_blue_001_002.fits pposs2ukstu_blue_002_001.fits 1-diff.000002.000003.fits region-oversized.hdr
+      memoryLimit: 256Mi
+      cpuLimit: 500m
+      dependsOn:
+        - mprojectid0000002
+        - mprojectid0000003
+
+    - name: mdifffitid0000009
+      run: mDiffFit -d -s 1-fit.000002.000004.txt pposs2ukstu_blue_001_002.fits pposs2ukstu_blue_002_002.fits 1-diff.000002.000004.fits region-oversized.hdr
+      memoryLimit: 256Mi
+      cpuLimit: 500m
+      dependsOn:
+        - mprojectid0000002
+        - mprojectid0000004
+
+    - name: mdifffitid0000010
+      run: mDiffFit -d -s 1-fit.000003.000004.txt pposs2ukstu_blue_002_001.fits pposs2ukstu_blue_002_002.fits 1-diff.000003.000004.fits region-oversized.hdr
+      memoryLimit: 256Mi
+      cpuLimit: 500m
+      dependsOn:
+        - mprojectid0000003
+        - mprojectid0000004
+
+    - name: mconcatfitid0000011
+      run: mConcatFit 1-stat.tbl 1-fits.tbl .
+      memoryLimit: 256Mi
+      cpuLimit: 500m
+      dependsOn:
+        - mdifffitid0000005
+        - mdifffitid0000006
+        - mdifffitid0000007
+        - mdifffitid0000008
+        - mdifffitid0000009
+        - mdifffitid0000010
+
+    - name: mbgmodelid0000012
+      run: mBgModel -i 100000 1-images.tbl 1-fits.tbl 1-corrections.tbl
+      memoryLimit: 256Mi
+      cpuLimit: 500m
+      dependsOn:
+        - mconcatfitid0000011
+
+    - name: mbackgroundid0000013
+      run: mBackground -t pposs2ukstu_blue_001_001.fits cposs2ukstu_blue_001_001.fits 1-projected.tbl 1-corrections.tbl
+      memoryLimit: 256Mi
+      cpuLimit: 500m
+      dependsOn:
+        - mprojectid0000001
+        - mbgmodelid0000012
+
+    - name: mbackgroundid0000014
+      run: mBackground -t pposs2ukstu_blue_001_002.fits cposs2ukstu_blue_001_002.fits 1-projected.tbl 1-corrections.tbl
+      memoryLimit: 256Mi
+      cpuLimit: 500m
+      dependsOn:
+        - mprojectid0000002
+        - mbgmodelid0000012
+
+    - name: mbackgroundid0000015
+      run: mBackground -t pposs2ukstu_blue_002_001.fits cposs2ukstu_blue_002_001.fits 1-projected.tbl 1-corrections.tbl
+      memoryLimit: 256Mi
+      cpuLimit: 500m
+      dependsOn:
+        - mprojectid0000003
+        - mbgmodelid0000012
+
+    - name: mbackgroundid0000016
+      run: mBackground -t pposs2ukstu_blue_002_002.fits cposs2ukstu_blue_002_002.fits 1-projected.tbl 1-corrections.tbl
+      memoryLimit: 256Mi
+      cpuLimit: 500m
+      dependsOn:
+        - mprojectid0000004
+        - mbgmodelid0000012
+
+    - name: mimgtblid0000017
+      run: mImgtbl . -t 1-corrected.tbl 1-updated-corrected.tbl
+      memoryLimit: 256Mi
+      cpuLimit: 500m
+      dependsOn:
+        - mbackgroundid0000013
+        - mbackgroundid0000014
+        - mbackgroundid0000015
+        - mbackgroundid0000016
+
+    - name: maddid0000018
+      run: mAdd -e 1-updated-corrected.tbl region.hdr 1-mosaic.fits
+      memoryLimit: 256Mi
+      cpuLimit: 500m
+      dependsOn:
+        - mbackgroundid0000013
+        - mbackgroundid0000014
+        - mbackgroundid0000015
+        - mbackgroundid0000016
+        - mimgtblid0000017
+
+    - name: mviewerid0000019
+      run: mViewer -ct 1 -gray 1-mosaic.fits -1s max gaussian -png 1-mosaic.png
+      memoryLimit: 256Mi
+      cpuLimit: 500m
+      dependsOn:
+        - maddid0000018
+
+    - name: mprojectid0000020
+      run: mProject -X poss2ukstu_red_001_001.fits pposs2ukstu_red_001_001.fits region-oversized.hdr
+      memoryLimit: 256Mi
+      cpuLimit: 500m
+
+    - name: mprojectid0000021
+      run: mProject -X poss2ukstu_red_001_002.fits pposs2ukstu_red_001_002.fits region-oversized.hdr
+      memoryLimit: 256Mi
+      cpuLimit: 500m
+
+    - name: mprojectid0000022
+      run: mProject -X poss2ukstu_red_002_001.fits pposs2ukstu_red_002_001.fits region-oversized.hdr
+      memoryLimit: 256Mi
+      cpuLimit: 500m
+
+    - name: mprojectid0000023
+      run: mProject -X poss2ukstu_red_002_002.fits pposs2ukstu_red_002_002.fits region-oversized.hdr
+      memoryLimit: 256Mi
+      cpuLimit: 500m
+
+    - name: mdifffitid0000024
+      run: mDiffFit -d -s 2-fit.000001.000002.txt pposs2ukstu_red_001_001.fits pposs2ukstu_red_001_002.fits 2-diff.000001.000002.fits region-oversized.hdr
+      memoryLimit: 256Mi
+      cpuLimit: 500m
+      dependsOn:
+        - mprojectid0000020
+        - mprojectid0000021
+
+    - name: mdifffitid0000025
+      run: mDiffFit -d -s 2-fit.000001.000003.txt pposs2ukstu_red_001_001.fits pposs2ukstu_red_002_001.fits 2-diff.000001.000003.fits region-oversized.hdr
+      memoryLimit: 256Mi
+      cpuLimit: 500m
+      dependsOn:
+        - mprojectid0000020
+        - mprojectid0000022
+
+    - name: mdifffitid0000026
+      run: mDiffFit -d -s 2-fit.000001.000004.txt pposs2ukstu_red_001_001.fits pposs2ukstu_red_002_002.fits 2-diff.000001.000004.fits region-oversized.hdr
+      memoryLimit: 256Mi
+      cpuLimit: 500m
+      dependsOn:
+        - mprojectid0000020
+        - mprojectid0000023
+
+    - name: mdifffitid0000027
+      run: mDiffFit -d -s 2-fit.000002.000003.txt pposs2ukstu_red_001_002.fits pposs2ukstu_red_002_001.fits 2-diff.000002.000003.fits region-oversized.hdr
+      memoryLimit: 256Mi
+      cpuLimit: 500m
+      dependsOn:
+        - mprojectid0000021
+        - mprojectid0000022
+
+    - name: mdifffitid0000028
+      run: mDiffFit -d -s 2-fit.000002.000004.txt pposs2ukstu_red_001_002.fits pposs2ukstu_red_002_002.fits 2-diff.000002.000004.fits region-oversized.hdr
+      memoryLimit: 256Mi
+      cpuLimit: 500m
+      dependsOn:
+        - mprojectid0000021
+        - mprojectid0000023
+
+    - name: mdifffitid0000029
+      run: mDiffFit -d -s 2-fit.000003.000004.txt pposs2ukstu_red_002_001.fits pposs2ukstu_red_002_002.fits 2-diff.000003.000004.fits region-oversized.hdr
+      memoryLimit: 256Mi
+      cpuLimit: 500m
+      dependsOn:
+        - mprojectid0000022
+        - mprojectid0000023
+
+    - name: mconcatfitid0000030
+      run: mConcatFit 2-stat.tbl 2-fits.tbl .
+      memoryLimit: 256Mi
+      cpuLimit: 500m
+      dependsOn:
+        - mdifffitid0000024
+        - mdifffitid0000025
+        - mdifffitid0000026
+        - mdifffitid0000027
+        - mdifffitid0000028
+        - mdifffitid0000029
+
+    - name: mbgmodelid0000031
+      run: mBgModel -i 100000 2-images.tbl 2-fits.tbl 2-corrections.tbl
+      memoryLimit: 256Mi
+      cpuLimit: 500m
+      dependsOn:
+        - mconcatfitid0000030
+
+    - name: mbackgroundid0000032
+      run: mBackground -t pposs2ukstu_red_001_001.fits cposs2ukstu_red_001_001.fits 2-projected.tbl 2-corrections.tbl
+      memoryLimit: 256Mi
+      cpuLimit: 500m
+      dependsOn:
+        - mprojectid0000020
+        - mbgmodelid0000031
+
+    - name: mbackgroundid0000033
+      run: mBackground -t pposs2ukstu_red_001_002.fits cposs2ukstu_red_001_002.fits 2-projected.tbl 2-corrections.tbl
+      memoryLimit: 256Mi
+      cpuLimit: 500m
+      dependsOn:
+        - mprojectid0000021
+        - mbgmodelid0000031
+
+    - name: mbackgroundid0000034
+      run: mBackground -t pposs2ukstu_red_002_001.fits cposs2ukstu_red_002_001.fits 2-projected.tbl 2-corrections.tbl
+      memoryLimit: 256Mi
+      cpuLimit: 500m
+      dependsOn:
+        - mprojectid0000022
+        - mbgmodelid0000031
+
+    - name: mbackgroundid0000035
+      run: mBackground -t pposs2ukstu_red_002_002.fits cposs2ukstu_red_002_002.fits 2-projected.tbl 2-corrections.tbl
+      memoryLimit: 256Mi
+      cpuLimit: 500m
+      dependsOn:
+        - mprojectid0000023
+        - mbgmodelid0000031
+
+    - name: mimgtblid0000036
+      run: mImgtbl . -t 2-corrected.tbl 2-updated-corrected.tbl
+      memoryLimit: 256Mi
+      cpuLimit: 500m
+      dependsOn:
+        - mbackgroundid0000032
+        - mbackgroundid0000033
+        - mbackgroundid0000034
+        - mbackgroundid0000035
+
+    - name: maddid0000037
+      run: mAdd -e 2-updated-corrected.tbl region.hdr 2-mosaic.fits
+      memoryLimit: 256Mi
+      cpuLimit: 500m
+      dependsOn:
+        - mbackgroundid0000032
+        - mbackgroundid0000033
+        - mbackgroundid0000034
+        - mbackgroundid0000035
+        - mimgtblid0000036
+
+    - name: mviewerid0000038
+      run: mViewer -ct 1 -gray 2-mosaic.fits -1s max gaussian -png 2-mosaic.png
+      memoryLimit: 256Mi
+      cpuLimit: 500m
+      dependsOn:
+        - maddid0000037
+
+    - name: mprojectid0000039
+      run: mProject -X poss2ukstu_ir_001_001.fits pposs2ukstu_ir_001_001.fits region-oversized.hdr
+      memoryLimit: 256Mi
+      cpuLimit: 500m
+
+    - name: mprojectid0000040
+      run: mProject -X poss2ukstu_ir_001_002.fits pposs2ukstu_ir_001_002.fits region-oversized.hdr
+      memoryLimit: 256Mi
+      cpuLimit: 500m
+
+    - name: mprojectid0000041
+      run: mProject -X poss2ukstu_ir_002_001.fits pposs2ukstu_ir_002_001.fits region-oversized.hdr
+      memoryLimit: 256Mi
+      cpuLimit: 500m
+
+    - name: mprojectid0000042
+      run: mProject -X poss2ukstu_ir_002_002.fits pposs2ukstu_ir_002_002.fits region-oversized.hdr
+      memoryLimit: 256Mi
+      cpuLimit: 500m
+
+    - name: mdifffitid0000043
+      run: mDiffFit -d -s 3-fit.000001.000002.txt pposs2ukstu_ir_001_001.fits pposs2ukstu_ir_001_002.fits 3-diff.000001.000002.fits region-oversized.hdr
+      memoryLimit: 256Mi
+      cpuLimit: 500m
+      dependsOn:
+        - mprojectid0000039
+        - mprojectid0000040
+
+    - name: mdifffitid0000044
+      run: mDiffFit -d -s 3-fit.000001.000003.txt pposs2ukstu_ir_001_001.fits pposs2ukstu_ir_002_001.fits 3-diff.000001.000003.fits region-oversized.hdr
+      memoryLimit: 256Mi
+      cpuLimit: 500m
+      dependsOn:
+        - mprojectid0000039
+        - mprojectid0000041
+
+    - name: mdifffitid0000045
+      run: mDiffFit -d -s 3-fit.000001.000004.txt pposs2ukstu_ir_001_001.fits pposs2ukstu_ir_002_002.fits 3-diff.000001.000004.fits region-oversized.hdr
+      memoryLimit: 256Mi
+      cpuLimit: 500m
+      dependsOn:
+        - mprojectid0000039
+        - mprojectid0000042
+
+    - name: mdifffitid0000046
+      run: mDiffFit -d -s 3-fit.000002.000003.txt pposs2ukstu_ir_001_002.fits pposs2ukstu_ir_002_001.fits 3-diff.000002.000003.fits region-oversized.hdr
+      memoryLimit: 256Mi
+      cpuLimit: 500m
+      dependsOn:
+        - mprojectid0000040
+        - mprojectid0000041
+
+    - name: mdifffitid0000047
+      run: mDiffFit -d -s 3-fit.000002.000004.txt pposs2ukstu_ir_001_002.fits pposs2ukstu_ir_002_002.fits 3-diff.000002.000004.fits region-oversized.hdr
+      memoryLimit: 256Mi
+      cpuLimit: 500m
+      dependsOn:
+        - mprojectid0000040
+        - mprojectid0000042
+
+    - name: mdifffitid0000048
+      run: mDiffFit -d -s 3-fit.000003.000004.txt pposs2ukstu_ir_002_001.fits pposs2ukstu_ir_002_002.fits 3-diff.000003.000004.fits region-oversized.hdr
+      memoryLimit: 256Mi
+      cpuLimit: 500m
+      dependsOn:
+        - mprojectid0000041
+        - mprojectid0000042
+
+    - name: mconcatfitid0000049
+      run: mConcatFit 3-stat.tbl 3-fits.tbl .
+      memoryLimit: 256Mi
+      cpuLimit: 500m
+      dependsOn:
+        - mdifffitid0000043
+        - mdifffitid0000044
+        - mdifffitid0000045
+        - mdifffitid0000046
+        - mdifffitid0000047
+        - mdifffitid0000048
+
+    - name: mbgmodelid0000050
+      run: mBgModel -i 100000 3-images.tbl 3-fits.tbl 3-corrections.tbl
+      memoryLimit: 256Mi
+      cpuLimit: 500m
+      dependsOn:
+        - mconcatfitid0000049
+
+    - name: mbackgroundid0000051
+      run: mBackground -t pposs2ukstu_ir_001_001.fits cposs2ukstu_ir_001_001.fits 3-projected.tbl 3-corrections.tbl
+      memoryLimit: 256Mi
+      cpuLimit: 500m
+      dependsOn:
+        - mprojectid0000039
+        - mbgmodelid0000050
+
+    - name: mbackgroundid0000052
+      run: mBackground -t pposs2ukstu_ir_001_002.fits cposs2ukstu_ir_001_002.fits 3-projected.tbl 3-corrections.tbl
+      memoryLimit: 256Mi
+      cpuLimit: 500m
+      dependsOn:
+        - mprojectid0000040
+        - mbgmodelid0000050
+
+    - name: mbackgroundid0000053
+      run: mBackground -t pposs2ukstu_ir_002_001.fits cposs2ukstu_ir_002_001.fits 3-projected.tbl 3-corrections.tbl
+      memoryLimit: 256Mi
+      cpuLimit: 500m
+      dependsOn:
+        - mprojectid0000041
+        - mbgmodelid0000050
+
+    - name: mbackgroundid0000054
+      run: mBackground -t pposs2ukstu_ir_002_002.fits cposs2ukstu_ir_002_002.fits 3-projected.tbl 3-corrections.tbl
+      memoryLimit: 256Mi
+      cpuLimit: 500m
+      dependsOn:
+        - mprojectid0000042
+        - mbgmodelid0000050
+
+    - name: mimgtblid0000055
+      run: mImgtbl . -t 3-corrected.tbl 3-updated-corrected.tbl
+      memoryLimit: 256Mi
+      cpuLimit: 500m
+      dependsOn:
+        - mbackgroundid0000051
+        - mbackgroundid0000052
+        - mbackgroundid0000053
+        - mbackgroundid0000054
+
+    - name: maddid0000056
+      run: mAdd -e 3-updated-corrected.tbl region.hdr 3-mosaic.fits
+      memoryLimit: 256Mi
+      cpuLimit: 500m
+      dependsOn:
+        - mbackgroundid0000051
+        - mbackgroundid0000052
+        - mbackgroundid0000053
+        - mbackgroundid0000054
+        - mimgtblid0000055
+
+    - name: mviewerid0000057
+      run: mViewer -ct 1 -gray 3-mosaic.fits -1s max gaussian -png 3-mosaic.png
+      memoryLimit: 256Mi
+      cpuLimit: 500m
+      dependsOn:
+        - maddid0000056
+
+    - name: mviewerid0000058
+      run: mViewer -red 3-mosaic.fits -0.5s max gaussian-log -green 2-mosaic.fits -0.5s max gaussian-log -blue 1-mosaic.fits -0.5s max gaussian-log -png mosaic-color.png
+      memoryLimit: 256Mi
+      cpuLimit: 500m
+      dependsOn:
+        - maddid0000018
+        - maddid0000037
+        - maddid0000056

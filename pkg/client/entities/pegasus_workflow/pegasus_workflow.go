@@ -1,4 +1,4 @@
-package entities
+package pegasus_workflow
 
 type PegasusWorkflow struct {
 	XPegasus struct {

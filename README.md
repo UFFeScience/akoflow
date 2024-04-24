@@ -32,9 +32,9 @@ kubectl edit deployment.apps/metrics-server -n kube-system
 - ~~v1 do client, recebendo o arquivo de workflow e enviando para o server (k8s)~~
 - ~~mecanismo de compartilhamento de dados entre atividades~~
 - ~~estrutura proveniencia e monitoramento~~
-- mecanismo de atividades paralelas
+- ~~mecanismo de atividades paralelas~~
 - tratamento de unhappy path do sistema
 - mecanismo de prebuild das imagens (reaproveitamento scripts de imagem)
 - implementar o garbage collector
-- rodar workflow do https://github.com/UFFeScience/NMFSt.P.git
+- ~~rodar workflow do https://github.com/UFFeScience/NMFSt.P.git~~
 

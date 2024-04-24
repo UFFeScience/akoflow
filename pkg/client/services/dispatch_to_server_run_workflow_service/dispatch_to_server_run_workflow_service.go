@@ -5,8 +5,8 @@ import (
 	"crypto/tls"
 	"encoding/base64"
 	"encoding/json"
+	"github.com/ovvesley/scik8sflow/pkg/client/utils"
 	"net/http"
-	"os"
 )
 
 type DispatchToServerRunWorkflowService struct {
@@ -77,30 +77,7 @@ func (d *DispatchToServerRunWorkflowService) getBase64FileContent(filePath strin
 }
 
 func (d *DispatchToServerRunWorkflowService) getFileContent(filePath string) string {
-	// read file
-	file, err := os.Open(filePath)
-	if err != nil {
-		panic(err)
-		return ""
-	}
-
-	defer file.Close()
-
-	stat, err := file.Stat()
-	if err != nil {
-		panic(err)
-		return ""
-	}
-
-	bs := make([]byte, stat.Size())
-	_, err = file.Read(bs)
-	if err != nil {
-		panic(err)
-		return ""
-	}
-
-	return string(bs)
-
+	return utils.ReadFile(filePath)
 }
 
 func (d *DispatchToServerRunWorkflowService) sendToServer(base64FileContent string) {

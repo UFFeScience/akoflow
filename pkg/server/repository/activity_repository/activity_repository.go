@@ -13,6 +13,7 @@ type ActivityRepository struct {
 var StatusCreated = 0
 var StatusRunning = 1
 var StatusFinished = 2
+var StatusError = 3
 
 var TableNameActivities = "activities"
 var ColumnsActivities = "(id INTEGER PRIMARY KEY AUTOINCREMENT, workflow_id INTEGER, namespace TEXT, name TEXT, image TEXT, resource_k8s_base64 TEXT, status INTEGER)"

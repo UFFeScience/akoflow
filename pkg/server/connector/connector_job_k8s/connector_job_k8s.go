@@ -222,6 +222,7 @@ type ResponseGetJob struct {
 		} `json:"uncountedTerminatedPods"`
 		Ready  int `json:"ready"`
 		Active int `json:"active"`
+		Failed int `json:"failed"`
 	} `json:"status"`
 }
 

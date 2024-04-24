@@ -121,6 +121,7 @@ func (m *MakeK8sJobService) MakeK8sJob() (k8s_job_entity.K8sJob, error) {
 			Name: activity.GetNameJob(),
 		},
 		Spec: k8s_job_entity.K8sJobSpec{
+			BackoffLimit: 0,
 			Template: k8s_job_entity.K8sJobTemplate{
 				Spec: k8s_job_entity.K8sJobSpecTemplate{
 					Containers:    []k8s_job_entity.K8sJobContainer{container},

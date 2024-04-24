@@ -17,7 +17,8 @@ type K8sJobMetadata struct {
 }
 
 type K8sJobSpec struct {
-	Template K8sJobTemplate `json:"template"`
+	Template     K8sJobTemplate `json:"template"`
+	BackoffLimit int            `json:"backoffLimit"`
 }
 
 type K8sJobTemplate struct {

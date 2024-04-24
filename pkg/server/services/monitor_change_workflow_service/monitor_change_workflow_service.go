@@ -76,6 +76,14 @@ func (m *MonitorChangeWorkflowService) handleVerifyActivityWasFinished(activity 
 
 	println("Activity status Database: ", wfaDatabase.Status)
 
+	if wfaDatabase.Status == activity_repository.StatusFinished {
+		return activity_repository.StatusFinished
+	}
+
+	if wfaDatabase.Status == activity_repository.StatusCreated {
+		return activity_repository.StatusCreated
+	}
+
 	jobResponse, _ := m.connector.Job().GetJob(m.namespace, activity.GetNameJob())
 
 	if jobResponse.Status.Active == 1 {
@@ -91,6 +99,14 @@ func (m *MonitorChangeWorkflowService) handleVerifyActivityWasFinished(activity 
 		println("Activity not send to k8s yet. Go back to created status")
 		var _ = m.activityRepository.UpdateStatus(activity.Id, activity_repository.StatusCreated)
 		return activity_repository.StatusCreated
+	}
+
+	// temporary solution to handle failed activities in k8s. Failed activities will be marked as finished.
+	// [TODO] Implement a better solution to handle failed activities.
+	if jobResponse.Status.Failed >= 1 {
+		println("Activity failed: ", activity.Name)
+		var _ = m.activityRepository.UpdateStatus(activity.Id, activity_repository.StatusFinished)
+		return activity_repository.StatusFinished
 	}
 
 	return activity_repository.StatusFinished

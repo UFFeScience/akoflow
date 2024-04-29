@@ -39,6 +39,12 @@ type K8sJobContainer struct {
 	Command      []string            `json:"command"`
 	VolumeMounts []K8sJobVolumeMount `json:"volumeMounts"`
 	Resources    K8sJobResources     `json:"resources"`
+	Env          []K8sJobEnv         `json:"env"`
+}
+
+type K8sJobEnv struct {
+	Name  string `json:"name"`
+	Value string `json:"value"`
 }
 
 type K8sJobResources struct {

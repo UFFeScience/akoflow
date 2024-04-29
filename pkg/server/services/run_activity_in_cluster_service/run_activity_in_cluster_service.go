@@ -6,6 +6,7 @@ import (
 	"github.com/ovvesley/scik8sflow/pkg/server/services/apply_job_service"
 	"github.com/ovvesley/scik8sflow/pkg/server/services/create_namespace_service"
 	"github.com/ovvesley/scik8sflow/pkg/server/services/create_pvc_service"
+	"github.com/ovvesley/scik8sflow/pkg/server/services/run_preactivity_service"
 )
 
 type RunActivityInClusterService struct {
@@ -15,6 +16,7 @@ type RunActivityInClusterService struct {
 	createPVCService       create_pvc_service.CreatePVCService
 	createNamespaceService create_namespace_service.CreateNamespaceService
 	applyJobService        apply_job_service.ApplyJobService
+	runPreactivityService  run_preactivity_service.RunPreactivityService
 }
 
 type ParamsNewRunActivityInClusterService struct {
@@ -24,6 +26,7 @@ type ParamsNewRunActivityInClusterService struct {
 	CreatePVCService       create_pvc_service.CreatePVCService
 	CreateNamespaceService create_namespace_service.CreateNamespaceService
 	ApplyJobService        apply_job_service.ApplyJobService
+	RunPreactivityService  run_preactivity_service.RunPreactivityService
 }
 
 func New(params ...ParamsNewRunActivityInClusterService) *RunActivityInClusterService {
@@ -35,6 +38,7 @@ func New(params ...ParamsNewRunActivityInClusterService) *RunActivityInClusterSe
 			createPVCService:       params[0].CreatePVCService,
 			createNamespaceService: params[0].CreateNamespaceService,
 			applyJobService:        params[0].ApplyJobService,
+			runPreactivityService:  params[0].RunPreactivityService,
 		}
 	}
 
@@ -45,6 +49,7 @@ func New(params ...ParamsNewRunActivityInClusterService) *RunActivityInClusterSe
 		createPVCService:       create_pvc_service.New(),
 		createNamespaceService: create_namespace_service.New(),
 		applyJobService:        apply_job_service.New(),
+		runPreactivityService:  run_preactivity_service.New(),
 	}
 }
 
@@ -70,8 +75,15 @@ func (r *RunActivityInClusterService) handleResourceToRunJob(id int) bool {
 
 	pvc, errPvc := r.createPVCService.GetOrCreatePersistentVolumeClainByActivity(wf, wfa, namespace)
 
+	preactivity, _ := r.runPreactivityService.Run(wfa.Id)
+
 	if errNamespace != nil || errPvc != nil {
 		println("Error creating namespace or pvc")
+		return false
+	}
+
+	if !preactivity {
+		println("Preactivity not finished")
 		return false
 	}
 

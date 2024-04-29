@@ -12,6 +12,8 @@ type Database struct {
 
 const File = "storage/database.db"
 
+var CREATED_TABLES = []string{}
+
 func (d *Database) Connect() *sql.DB {
 
 	createDirectoryIfNotExists("storage")
@@ -36,10 +38,16 @@ func createDirectoryIfNotExists(path string) {
 }
 
 func CreateOrVerifyTable(c *sql.DB, tableName string, columns string) (err error) {
+
+	if tableExists(tableName) {
+		return nil
+	}
+
 	exec, err := c.Exec("CREATE TABLE IF NOT EXISTS " + tableName + columns)
 	if err != nil {
 		return
 	}
+
 	_, err = exec.RowsAffected()
 	if err != nil {
 		return
@@ -48,5 +56,16 @@ func CreateOrVerifyTable(c *sql.DB, tableName string, columns string) (err error
 	if err != nil {
 		return
 	}
+
+	CREATED_TABLES = append(CREATED_TABLES, tableName)
 	return nil
+}
+
+func tableExists(tableName string) bool {
+	for _, t := range CREATED_TABLES {
+		if t == tableName {
+			return true
+		}
+	}
+	return false
 }

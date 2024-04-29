@@ -26,7 +26,7 @@ RUN curl -O http://montage.ipac.caltech.edu/download/Montage_v6.0.tar.gz && \
 
 ENV PATH="/Montage/bin:${PATH}"
 
-WORKDIR /data
+WORKDIR /scik8sflow-wfa-shared
 
 #
 RUN curl https://ovvesley.com/uff.scik8sflow/data-out-0-50d.zip -o data-out-0-50d.zip && \

@@ -24,6 +24,14 @@ kubectl edit deployment.apps/metrics-server -n kube-system
 --kubelet-insecure-tls=true
 
 ---
+
+### gerar token do service account scik8sflow-server-sa 
+
+```bash
+kubectl create token scik8sflow-server-sa -n scik8sflow
+```
+
+
 ### to do
 
 - ~~nova versão do arquivo de workflow, CPU e Mémoria por Atividades.~~

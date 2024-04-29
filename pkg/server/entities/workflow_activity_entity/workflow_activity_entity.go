@@ -37,6 +37,25 @@ type WorkflowActivityDependencyDatabase struct {
 	DependsOnId int
 }
 
+type WorkflowPreActivityDatabase struct {
+	Id                int
+	ActivityId        int
+	WorkflowId        int
+	Namespace         string
+	Name              string
+	ResourceK8sBase64 *string
+	Status            int
+	Log               *string
+}
+
+func (wa WorkflowPreActivityDatabase) GetPreActivityName() string {
+	return "preactivity-" + strconv.Itoa(wa.ActivityId)
+}
+
+func (wa WorkflowActivities) GetPreActivityName() string {
+	return "preactivity-" + strconv.Itoa(wa.Id)
+}
+
 type MapActivityDependencies map[int][]WorkflowActivities
 
 func (wa WorkflowActivities) GetBase64Activities() string {
@@ -70,6 +89,10 @@ func (wfa WorkflowActivities) GetNodeSelector() map[string]string {
 
 	split := strings.Split(wfaNodeSelector, "=")
 	return map[string]string{split[0]: split[1]}
+}
+
+func (wfa WorkflowActivities) HasDependencies() bool {
+	return len(wfa.DependsOn) > 0
 }
 
 type ParamsDatabaseToWorkflowActivities struct {

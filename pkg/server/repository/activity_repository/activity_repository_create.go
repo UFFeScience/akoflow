@@ -13,6 +13,8 @@ func (w *ActivityRepository) Create(namespace string, workflowId int, image stri
 		return err
 	}
 
+	err = w.createPreactivity(namespace, workflowId, image, activities)
+
 	err = w.createActivityDependency(workflowId, activities)
 
 	if err != nil {
@@ -22,6 +24,51 @@ func (w *ActivityRepository) Create(namespace string, workflowId int, image stri
 
 	return nil
 
+}
+
+// createPreactivity creates preactivity
+// if activity has depends_on, it will create preactivity
+// this preactivity will be executed before the activity
+// is responsible for garanted that all data needed by activity is available before running it
+func (w *ActivityRepository) createPreactivity(namespace string, workflowId int, image string, activities []workflow_activity_entity.WorkflowActivities) error {
+	database := repository.Database{}
+	c := database.Connect()
+
+	activitiesDatabase, err := w.GetByWorkflowId(workflowId)
+
+	if err != nil {
+		println("Error getting activities by workflow_entity id" + err.Error())
+		return err
+	}
+	mapActivityNameToId := w.createMapActivityNameToId(activitiesDatabase)
+
+	for _, activity := range activities {
+		if activity.DependsOn == nil {
+			continue
+		}
+		activityId := mapActivityNameToId[activity.Name]
+
+		result, err := c.Exec(
+			"INSERT INTO "+w.tableNamePreActivity+" (activity_id, workflow_id, namespace, name, resource_k8s_base64, status, log) VALUES (?, ?, ?, ?, ?, ?, ?)",
+			activityId, workflowId, namespace, "preactivity-"+activity.Name, nil, StatusCreated, nil)
+
+		if err != nil {
+			return err
+		}
+
+		preActivityId, _ := result.LastInsertId()
+
+		println("Preactivity created with id: ", preActivityId)
+
+	}
+
+	err = c.Close()
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (w *ActivityRepository) createActivity(namespace string, workflowId int, image string, activities []workflow_activity_entity.WorkflowActivities) error {

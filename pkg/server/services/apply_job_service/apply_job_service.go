@@ -90,7 +90,7 @@ func (a *ApplyJobService) runK8sJob(wf workflow_entity.Workflow, wfa workflow_ac
 		SetIdWorkflow(wf.Id).
 		SetIdWorkflowActivity(wfa.Id).
 		SetDependencies(dependencies).
-		MakeK8sJob()
+		MakeK8sActivityJob()
 
 	println("Job: ", job.Metadata.Name)
 

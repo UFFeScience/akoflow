@@ -8,6 +8,7 @@ import (
 type ActivityRepository struct {
 	tableNameActivity             string
 	tableNameActivityDependencies string
+	tableNamePreActivity          string
 }
 
 var StatusCreated = 0
@@ -21,6 +22,9 @@ var ColumnsActivities = "(id INTEGER PRIMARY KEY AUTOINCREMENT, workflow_id INTE
 var TableNameActivitiesDependencies = "activities_dependencies"
 var ColumnsActivitiesDependencies = "(id INTEGER PRIMARY KEY AUTOINCREMENT, workflow_id INTEGER, activity_id INTEGER, depend_on_activity INTEGER)"
 
+var TableNamePreActivities = "pre_activities"
+var ColumnsPreActivities = "(id INTEGER PRIMARY KEY AUTOINCREMENT, activity_id INTEGER, workflow_id INTEGER, namespace TEXT, name TEXT, resource_k8s_base64 TXT, status INTEGER, log TEXT)"
+
 func New() IActivityRepository {
 
 	database := repository.Database{}
@@ -32,6 +36,9 @@ func New() IActivityRepository {
 
 	c = database.Connect()
 	err = repository.CreateOrVerifyTable(c, TableNameActivitiesDependencies, ColumnsActivitiesDependencies)
+
+	c = database.Connect()
+	err = repository.CreateOrVerifyTable(c, TableNamePreActivities, ColumnsPreActivities)
 
 	if err != nil {
 		return nil
@@ -45,6 +52,7 @@ func New() IActivityRepository {
 	return &ActivityRepository{
 		tableNameActivity:             TableNameActivities,
 		tableNameActivityDependencies: TableNameActivitiesDependencies,
+		tableNamePreActivity:          TableNamePreActivities,
 	}
 }
 
@@ -55,4 +63,6 @@ type IActivityRepository interface {
 	Find(id int) (workflow_activity_entity.WorkflowActivities, error)
 	GetByWorkflowId(id int) ([]workflow_activity_entity.WorkflowActivities, error)
 	GetWfaDependencies(workflowId int) ([]workflow_activity_entity.WorkflowActivityDependencyDatabase, error)
+	FindPreActivity(id int) (workflow_activity_entity.WorkflowPreActivityDatabase, error)
+	UpdatePreActivity(id int, preactivity workflow_activity_entity.WorkflowPreActivityDatabase) error
 }

@@ -18,6 +18,8 @@ type ParamsNewMakeK8sJobService struct {
 	ActivityRepository activity_repository.IActivityRepository
 }
 
+var ImagePreActivity = "ovvesley/scik8sflow-preactivity:latest"
+
 // New creates a new MakeK8sJobService.
 func New(params ...ParamsNewMakeK8sJobService) MakeK8sJobService {
 	if len(params) > 0 {
@@ -83,7 +85,7 @@ func (m *MakeK8sJobService) getIdWorkflowActivity() int {
 	return m.idWorkflowActivity
 }
 
-// MakeK8sJob creates a k8s job that will be used to run the activity.
+// MakeK8sActivityJob creates a k8s job that will be used to run the activity.
 //
 //	The k8s job will run the command that is defined in the activity.
 //	The command is encoded in base64 and decoded in the container.
@@ -103,7 +105,7 @@ func (m *MakeK8sJobService) getIdWorkflowActivity() int {
 // - obs.1: the node selector is defined in the activity.
 //
 //	The k8s job will use the resources that are defined in the activity.
-func (m *MakeK8sJobService) MakeK8sJob() (k8s_job_entity.K8sJob, error) {
+func (m *MakeK8sJobService) MakeK8sActivityJob() (k8s_job_entity.K8sJob, error) {
 	if !m.isValidate() {
 		return k8s_job_entity.K8sJob{}, errors.New("invalid parameters to make k8s job:: namespace, persistentVolumeClaim, dependencies, idWorkflow, idWorkflowActivity are required")
 	}
@@ -111,8 +113,8 @@ func (m *MakeK8sJobService) MakeK8sJob() (k8s_job_entity.K8sJob, error) {
 	workflow, _ := m.workflowRepository.Find(m.getIdWorkflow())
 	activity, _ := m.activityRepository.Find(m.getIdWorkflowActivity())
 
-	container := m.makeContainer(workflow, activity)
-	volumes := m.makeVolumes(workflow, activity)
+	container := m.makeContainerActivity(workflow, activity)
+	volumes := m.makeVolumesActivity(workflow, activity)
 
 	k8sJob := k8s_job_entity.K8sJob{
 		ApiVersion: "batch/v1",
@@ -141,6 +143,122 @@ func (m *MakeK8sJobService) MakeK8sJob() (k8s_job_entity.K8sJob, error) {
 
 }
 
+func (m *MakeK8sJobService) MakeK8sPreActivityJob() (k8s_job_entity.K8sJob, error) {
+	if !m.isValidate() {
+		return k8s_job_entity.K8sJob{}, errors.New("invalid parameters to make k8s job:: namespace, persistentVolumeClaim, dependencies, idWorkflow, idWorkflowActivity are required")
+	}
+
+	workflow, _ := m.workflowRepository.Find(m.getIdWorkflow())
+	activity, _ := m.activityRepository.Find(m.getIdWorkflowActivity())
+	preActivity, _ := m.activityRepository.FindPreActivity(m.getIdWorkflowActivity())
+
+	volumes := m.makeVolumesPreActivity(workflow, activity)
+	container := m.makeContainerPreActivity(workflow, activity)
+
+	k8sJob := k8s_job_entity.K8sJob{
+		ApiVersion: "batch/v1",
+		Kind:       "Job",
+		Metadata: k8s_job_entity.K8sJobMetadata{
+			Name: activity.GetPreActivityName(),
+		},
+		Spec: k8s_job_entity.K8sJobSpec{
+			BackoffLimit: 0,
+			Template: k8s_job_entity.K8sJobTemplate{
+				Spec: k8s_job_entity.K8sJobSpecTemplate{
+					Containers:    []k8s_job_entity.K8sJobContainer{container},
+					RestartPolicy: "Never",
+					Volumes:       volumes,
+				},
+			},
+		},
+	}
+
+	nodeSelector := m.makeNodeSelector(workflow, activity)
+	if nodeSelector != nil {
+		k8sJob.Spec.Template.Spec.NodeSelector = nodeSelector
+	}
+
+	println("Running pre activity: ", preActivity.Name)
+	println("Workflow: ", workflow.Name)
+	println("Activity: ", activity.Name)
+
+	return k8sJob, nil
+
+}
+
+func (m *MakeK8sJobService) makeVolumesPreActivity(wf workflow_entity.Workflow, wfa workflow_activity_entity.WorkflowActivities) []k8s_job_entity.K8sJobVolume {
+	volumes := make([]k8s_job_entity.K8sJobVolume, 0)
+
+	dependencies := m.getDependencies()
+
+	for _, dependency := range dependencies {
+		volume := k8s_job_entity.K8sJobVolume{
+			Name: dependency.GetVolumeName(),
+			PersistentVolumeClaim: struct {
+				ClaimName string `json:"claimName"`
+			}{
+				ClaimName: dependency.GetVolumeName(),
+			},
+		}
+		volumes = append(volumes, volume)
+	}
+
+	firstVolume := m.makeVolumeThatWillBeUsedByCurrentActivity(wf, wfa)
+
+	volumes = append([]k8s_job_entity.K8sJobVolume{firstVolume}, volumes...)
+
+	return volumes
+
+}
+
+func (m *MakeK8sJobService) makeContainerPreActivity(workflow workflow_entity.Workflow, activity workflow_activity_entity.WorkflowActivities) k8s_job_entity.K8sJobContainer {
+
+	volumeMounts := m.makeJobVolumeMounts(workflow, activity)
+
+	firstVolumeMount := volumeMounts[0]
+
+	container := k8s_job_entity.K8sJobContainer{
+		Name:  "preactivity-0" + strconv.Itoa(rand.Intn(100)),
+		Image: ImagePreActivity,
+		Env: []k8s_job_entity.K8sJobEnv{
+			{
+				Name:  "WORKFLOW_NAME",
+				Value: workflow.Name,
+			},
+			{
+				Name:  "ACTIVITY_NAME",
+				Value: activity.Name,
+			},
+			{
+				Name:  "WORKFLOW_ID",
+				Value: strconv.Itoa(workflow.Id),
+			},
+			{
+				Name:  "ACTIVITY_ID",
+				Value: strconv.Itoa(activity.Id),
+			},
+			{
+				Name:  "OUTPUT_DIR",
+				Value: firstVolumeMount.MountPath,
+			},
+			{
+				Name:  "MOUNT_PATH",
+				Value: workflow.Spec.MountPath,
+			},
+		},
+
+		VolumeMounts: volumeMounts,
+		Resources: k8s_job_entity.K8sJobResources{
+			Limits: k8s_job_entity.K8sJobResourcesLimits{
+				Cpu:    activity.CpuLimit,
+				Memory: activity.MemoryLimit,
+			},
+		},
+	}
+
+	return container
+}
+
 // makeNodeSelector creates a node selector that will be used by the activity.
 //   - The node selector is used to select the node that will run the activity.
 //   - The node selector is defined in the activity.
@@ -157,16 +275,16 @@ func (m *MakeK8sJobService) makeNodeSelector(_ workflow_entity.Workflow, wfa wor
 //	- idWorkflow
 //	- idWorkflowActivity
 //
-// The parameters should be set before calling the MakeK8sJob method.
+// The parameters should be set before calling the MakeK8sActivityJob method.
 func (m *MakeK8sJobService) isValidate() bool {
 	return m.namespace != "" && m.dependencies != nil && m.idWorkflow != 0 && m.idWorkflowActivity != 0
 }
 
-// makeVolumes creates a list of volumes that will be used by the activity.
+// makeVolumesActivity creates a list of volumes that will be used by the activity.
 //
 //	The first volume in the list is the volume that will be used by the current activity.
 //	The other volumes are the dependencies of the current activity.
-func (m *MakeK8sJobService) makeVolumes(wf workflow_entity.Workflow, wfa workflow_activity_entity.WorkflowActivities) []k8s_job_entity.K8sJobVolume {
+func (m *MakeK8sJobService) makeVolumesActivity(wf workflow_entity.Workflow, wfa workflow_activity_entity.WorkflowActivities) []k8s_job_entity.K8sJobVolume {
 	volumes := make([]k8s_job_entity.K8sJobVolume, 0)
 
 	dependencies := m.getDependencies()
@@ -206,14 +324,14 @@ func (m *MakeK8sJobService) makeVolumeThatWillBeUsedByCurrentActivity(_ workflow
 	return firstVolume
 }
 
-// makeContainer creates a container that will be used by the activity.
+// makeContainerActivity creates a container that will be used by the activity.
 //
 //	The container will run the command that is defined in the activity.
 //	  - obs.1: the command is encoded in base64.
 //	  - obs.2: the command is decoded and executed in the container.
 //	  - obs.3: kubernetes accept multiple containers in a pod, but we are using only one container to run activities.
-func (m *MakeK8sJobService) makeContainer(workflow workflow_entity.Workflow, activity workflow_activity_entity.WorkflowActivities) k8s_job_entity.K8sJobContainer {
-	command := base64.StdEncoding.EncodeToString([]byte(activity.Run))
+func (m *MakeK8sJobService) makeContainerActivity(workflow workflow_entity.Workflow, activity workflow_activity_entity.WorkflowActivities) k8s_job_entity.K8sJobContainer {
+	command := m.makeContainerCommandActivity(workflow, activity)
 
 	container := k8s_job_entity.K8sJobContainer{
 		Name:         "activity-0" + strconv.Itoa(rand.Intn(100)),
@@ -229,6 +347,21 @@ func (m *MakeK8sJobService) makeContainer(workflow workflow_entity.Workflow, act
 	}
 
 	return container
+}
+
+// makeContainerCommandActivity creates the command that will be used by the container.
+//
+//	The command is defined in the activity.
+func (m *MakeK8sJobService) makeContainerCommandActivity(wf workflow_entity.Workflow, wfa workflow_activity_entity.WorkflowActivities) string {
+
+	command := "mkdir -p " + wf.Spec.MountPath + "/" + wfa.GetName() + "; \n"
+	command += "mv -fvu /scik8sflow-wfa-shared/* " + wf.Spec.MountPath + "/" + wfa.GetName() + "; \n"
+	command += "cd " + wf.Spec.MountPath + "/" + wfa.GetName() + "; \n"
+	command += "ls -la; \n"
+	command += wfa.Run
+
+	return base64.StdEncoding.EncodeToString([]byte(command))
+
 }
 
 // makeJobVolumeMountPath creates the path where the volume will be mounted in the container.

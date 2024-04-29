@@ -37,6 +37,7 @@ func (m *MonitorChangeWorkflowService) MonitorChangeWorkflow() {
 	wfsPending, _ := m.getPendingWorkflowService.GetPendingWorkflows()
 
 	m.handleVerifyWorkflowWasFinished(wfsPending)
+	m.handleVerifyWorkflowPreActivitiesWasFinished(wfsPending)
 	m.handleVerifyWorkflowActivitiesWasFinished(wfsPending)
 
 }
@@ -58,6 +59,58 @@ func (m *MonitorChangeWorkflowService) handleVerifyWorkflowWasFinished(wfs []wor
 		}
 
 	}
+}
+
+func (m *MonitorChangeWorkflowService) handleVerifyWorkflowPreActivitiesWasFinished(wfs []workflow_entity.Workflow) {
+	for _, wf := range wfs {
+		for _, activity := range wf.Spec.Activities {
+			if activity.HasDependencies() && activity.Status == activity_repository.StatusCreated {
+				m.handleVerifyPreActivityWasFinished(activity, wf)
+			}
+		}
+	}
+}
+
+func (m *MonitorChangeWorkflowService) handleVerifyPreActivityWasFinished(activity workflow_activity_entity.WorkflowActivities, wf workflow_entity.Workflow) int {
+	jobResponse, err := m.connector.Job().GetJob(m.namespace, activity.GetPreActivityName())
+
+	if err != nil {
+		println("Error getting preactivity job")
+		return activity_repository.StatusCreated
+
+	}
+	preactivity, _ := m.activityRepository.FindPreActivity(activity.Id)
+
+	if jobResponse.Status.Active == 1 {
+		return activity_repository.StatusRunning
+	}
+
+	if jobResponse.Status.Succeeded == 1 {
+		preactivity.Status = activity_repository.StatusFinished
+		m.activityRepository.UpdatePreActivity(activity.Id, preactivity)
+		return activity_repository.StatusFinished
+	}
+
+	if jobResponse.Metadata.Name == "" {
+		println("PreActivity not send to k8s yet. Go back to created status")
+		preactivity.Status = activity_repository.StatusCreated
+		m.activityRepository.UpdatePreActivity(activity.Id, preactivity)
+		return activity_repository.StatusCreated
+	}
+
+	// temporary solution to handle failed preactivitu=y in k8s. Failed activities will be marked as finished.
+	// [TODO] Implement a better solution to handle failed activities.
+	if jobResponse.Status.Failed >= 1 {
+		println("PreActivity failed: ", activity.Name)
+		preactivity.Status = activity_repository.StatusFinished
+		errorMessage := "Preactivity failed"
+		preactivity.Log = &errorMessage
+		m.activityRepository.UpdatePreActivity(activity.Id, preactivity)
+		return activity_repository.StatusFinished
+
+	}
+
+	return activity_repository.StatusFinished
 }
 
 func (m *MonitorChangeWorkflowService) handleVerifyWorkflowActivitiesWasFinished(wfs []workflow_entity.Workflow) {

@@ -359,8 +359,18 @@ func (m *MakeK8sJobService) makeContainerCommandActivity(wf workflow_entity.Work
 	command += "mv -fvu /scik8sflow-wfa-shared/* " + wf.Spec.MountPath + "/" + wfa.GetName() + "; \n"
 	command += "cd " + wf.Spec.MountPath + "/" + wfa.GetName() + "; \n"
 	command += "echo CURRENT_DIR: $(pwd); \n"
-	command += "ls -la; \n"
+	command += "ls -lA; \n"
+
+	command += "echo '##START INPUT FILES LIST##:' > " + wfa.GetName() + "_file_list.txt; \n"
+	command += "ls -lA >>" + wfa.GetName() + "_file_list.txt; \n"
+	command += "echo '##END INPUT FILES LIST##' >> " + wfa.GetName() + "_file_list.txt; \n"
+
 	command += wfa.Run
+
+	command += "\n"
+	command += "echo '##START OUTPUT FILES LIST##:' >> " + wfa.GetName() + "_file_list.txt; \n"
+	command += "ls -lA >>" + wfa.GetName() + "_file_list.txt; \n"
+	command += "echo '##END OUTPUT FILES LIST##' >> " + wfa.GetName() + "_file_list.txt; \n"
 
 	return base64.StdEncoding.EncodeToString([]byte(command))
 

@@ -36,18 +36,19 @@ mount | grep "^/dev" | awk '{print $3}' | grep $MOUNT_PATH | while read line; do
   # list all files with name, size, date and checksum
   echo ">> scik8sflow - preactivity - list all files with name, size, date and checksum"
 
-  echo ">> scik8sflow - preactivity -  $line" >> preactivity.log
-  echo "" >> preactivity.log
+  echo ">> scik8sflow - preactivity -  $line" >> $line/preactivity.log
+  echo "" >> $line/preactivity.log
 
 
-  find $line -type f -exec ls -lah {} \; -exec md5sum {} \; >> preactivity.log
+  find $line -type f -exec ls -lah {} \; -exec md5sum {} \; >> $line/preactivity.log
 
-  rsync --progress -avzcr $line $OUTPUT_DIR
+  rsync --progress -avr $line/ $OUTPUT_DIR
 
 done
 
-curl -X POST -H "Content-Type: application/txt" -d @preactivity.log $SCIK8SFLOW_API_URL/activities/$ACTIVITY_ID/preactivity || true
+curl -X POST -H "Content-Type: application/txt" -d @$OUTPUT_DIR/preactivity.log $SCIK8SFLOW_API_URL/activities/$ACTIVITY_ID/preactivity || true
 
+cat $OUTPUT_DIR/preactivity.log || true
 
 echo ">> scik8sflow - preactivity - done"
 

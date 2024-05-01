@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"crypto/tls"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/ovvesley/scik8sflow/pkg/server/entities/k8s_job_entity"
 	"net/http"
@@ -20,6 +21,8 @@ type IConnectorJob interface {
 	ApplyJob(namespace string, job k8s_job_entity.K8sJob) interface{}
 	GetJob(namespace string, jobName string) (ResponseGetJob, error)
 }
+
+var ErrJobNotFound = errors.New("job not found")
 
 func New() IConnectorJob {
 	return &ConnectorJobK8s{
@@ -226,6 +229,22 @@ type ResponseGetJob struct {
 	} `json:"status"`
 }
 
+type ResponseGetJob404 struct {
+	Kind       string `json:"kind"`
+	ApiVersion string `json:"apiVersion"`
+	Metadata   struct {
+	} `json:"metadata"`
+	Status  string `json:"status"`
+	Message string `json:"message"`
+	Reason  string `json:"reason"`
+	Details struct {
+		Name  string `json:"name"`
+		Group string `json:"group"`
+		Kind  string `json:"kind"`
+	} `json:"details"`
+	Code int `json:"code"`
+}
+
 func (c *ConnectorJobK8s) GetJob(namespace string, jobName string) (ResponseGetJob, error) {
 	token := os.Getenv("K8S_API_SERVER_TOKEN")
 	host := os.Getenv("K8S_API_SERVER_HOST")
@@ -234,6 +253,10 @@ func (c *ConnectorJobK8s) GetJob(namespace string, jobName string) (ResponseGetJ
 	req.Header.Set("Authorization", "Bearer "+token)
 
 	resp, err := c.client.Do(req)
+
+	if resp.StatusCode == 404 {
+		return ResponseGetJob{}, ErrJobNotFound
+	}
 
 	if err != nil {
 		return ResponseGetJob{}, err

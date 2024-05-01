@@ -1,8 +1,10 @@
 package monitor_change_workflow_service
 
 import (
+	"errors"
 	"github.com/ovvesley/scik8sflow/pkg/server/channel"
 	"github.com/ovvesley/scik8sflow/pkg/server/connector"
+	"github.com/ovvesley/scik8sflow/pkg/server/connector/connector_job_k8s"
 	"github.com/ovvesley/scik8sflow/pkg/server/entities/workflow_activity_entity"
 	"github.com/ovvesley/scik8sflow/pkg/server/entities/workflow_entity"
 	"github.com/ovvesley/scik8sflow/pkg/server/repository/activity_repository"
@@ -72,14 +74,22 @@ func (m *MonitorChangeWorkflowService) handleVerifyWorkflowPreActivitiesWasFinis
 }
 
 func (m *MonitorChangeWorkflowService) handleVerifyPreActivityWasFinished(activity workflow_activity_entity.WorkflowActivities, wf workflow_entity.Workflow) int {
+	preactivity, _ := m.activityRepository.FindPreActivity(activity.Id)
+
 	jobResponse, err := m.connector.Job().GetJob(m.namespace, activity.GetPreActivityName())
 
-	if err != nil {
-		println("Error getting preactivity job")
+	if errors.Is(err, connector_job_k8s.ErrJobNotFound) {
+		println("Job not found")
+
+		preactivity.Status = activity_repository.StatusCreated
+		m.activityRepository.UpdatePreActivity(activity.Id, preactivity)
 		return activity_repository.StatusCreated
 
 	}
-	preactivity, _ := m.activityRepository.FindPreActivity(activity.Id)
+	if err != nil {
+		println("Error getting preactivity job, change status to created")
+		return activity_repository.StatusCreated
+	}
 
 	if jobResponse.Status.Active == 1 {
 		return activity_repository.StatusRunning

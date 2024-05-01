@@ -355,8 +355,10 @@ func (m *MakeK8sJobService) makeContainerActivity(workflow workflow_entity.Workf
 func (m *MakeK8sJobService) makeContainerCommandActivity(wf workflow_entity.Workflow, wfa workflow_activity_entity.WorkflowActivities) string {
 
 	command := "mkdir -p " + wf.Spec.MountPath + "/" + wfa.GetName() + "; \n"
+	command += "echo CURRENT_DIR: $(pwd); \n"
 	command += "mv -fvu /scik8sflow-wfa-shared/* " + wf.Spec.MountPath + "/" + wfa.GetName() + "; \n"
 	command += "cd " + wf.Spec.MountPath + "/" + wfa.GetName() + "; \n"
+	command += "echo CURRENT_DIR: $(pwd); \n"
 	command += "ls -la; \n"
 	command += wfa.Run
 

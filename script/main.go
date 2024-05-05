@@ -2,7 +2,8 @@ package main
 
 import (
 	"flag"
-	"github.com/ovvesley/scik8sflow/script/parser_pegasus_workflow"
+
+	"github.com/ovvesley/akoflow/script/parser_pegasus_workflow"
 )
 
 func main() {

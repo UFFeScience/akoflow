@@ -1,7 +1,7 @@
 package storages_repository
 
 import (
-	"github.com/ovvesley/scik8sflow/pkg/server/repository"
+	"github.com/ovvesley/akoflow/pkg/server/repository"
 )
 
 type StorageRepository struct {

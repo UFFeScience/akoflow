@@ -2,7 +2,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: job-0-workflow-00
-  namespace: scik8sflow
+  namespace: akoflow
 spec:
   template:
     spec:

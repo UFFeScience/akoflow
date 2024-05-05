@@ -2,12 +2,13 @@ package parser
 
 import (
 	"encoding/base64"
-	"github.com/ovvesley/scik8sflow/pkg/server/entities/k8s_job_entity"
-	"github.com/ovvesley/scik8sflow/pkg/server/entities/workflow_entity"
-	"gopkg.in/yaml.v3"
 	"math/rand"
 	"strconv"
 	"strings"
+
+	"github.com/ovvesley/akoflow/pkg/server/entities/k8s_job_entity"
+	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
+	"gopkg.in/yaml.v3"
 )
 
 func WorkflowToJobK8sService(workflow workflow_entity.Workflow) []k8s_job_entity.K8sJob {

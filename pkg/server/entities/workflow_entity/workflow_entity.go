@@ -2,9 +2,10 @@ package workflow_entity
 
 import (
 	"encoding/base64"
-	"github.com/ovvesley/scik8sflow/pkg/server/entities/workflow_activity_entity"
-	"gopkg.in/yaml.v3"
 	"strconv"
+
+	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
+	"gopkg.in/yaml.v3"
 )
 
 type Workflow struct {

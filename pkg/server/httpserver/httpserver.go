@@ -1,26 +1,27 @@
 package httpserver
 
 import (
-	"github.com/ovvesley/scik8sflow/pkg/server/config"
-	"github.com/ovvesley/scik8sflow/pkg/server/httpserver/handlers/workflow_handler"
 	"net/http"
+
+	"github.com/ovvesley/akoflow/pkg/server/config"
+	"github.com/ovvesley/akoflow/pkg/server/httpserver/handlers/workflow_handler"
 )
 
 func StartServer() {
 
 	//
-	http.HandleFunc("POST /scik8sflow-server/workflow/run", workflow_handler.Run)
+	http.HandleFunc("POST /akoflow-server/workflow/run", workflow_handler.Run)
 
-	//http.HandleFunc("GET /scik8sflow-admin/", ...) // Home page
+	//http.HandleFunc("GET /akoflow-admin/", ...) // Home page
 
-	//http.HandleFunc("GET /scik8sflow-admin/api/workflows", ...)
-	//http.HandleFunc("GET /scik8sflow-admin/api/workflows/{workflowId}", ...)
+	//http.HandleFunc("GET /akoflow-admin/api/workflows", ...)
+	//http.HandleFunc("GET /akoflow-admin/api/workflows/{workflowId}", ...)
 
-	//http.HandleFunc("GET /scik8sflow-admin/api/activities", ...)
-	//http.HandleFunc("GET /scik8sflow-admin/api/activities/{activityId}", ...)
+	//http.HandleFunc("GET /akoflow-admin/api/activities", ...)
+	//http.HandleFunc("GET /akoflow-admin/api/activities/{activityId}", ...)
 
-	//http.HandleFunc("GET /scik8sflow-admin/api/activities/{activityId}/logs", ...)
-	//http.HandleFunc("GET /scik8sflow-admin/api/activities/{activityId}/metrics", ...)
+	//http.HandleFunc("GET /akoflow-admin/api/activities/{activityId}/logs", ...)
+	//http.HandleFunc("GET /akoflow-admin/api/activities/{activityId}/metrics", ...)
 
 	err := http.ListenAndServe(config.PORT_SERVER, nil)
 	if err != nil {

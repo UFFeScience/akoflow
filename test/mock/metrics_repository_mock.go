@@ -12,7 +12,7 @@ package mock
 import (
 	reflect "reflect"
 
-	metrics_repository "github.com/ovvesley/scik8sflow/pkg/server/repository/metrics_repository"
+	metrics_repository "github.com/ovvesley/akoflow/pkg/server/repository/metrics_repository"
 	gomock "go.uber.org/mock/gomock"
 )
 

@@ -1,7 +1,7 @@
 name: wf-preactivity-example
 spec:
   image: "alpine:3.7"
-  namespace: "scik8sflow"
+  namespace: "akoflow"
   storageClassName: "hostpath"
   storageSize: "32Mi"
   storageAccessModes: "ReadWriteOnce"
@@ -24,7 +24,7 @@ spec:
           ls -la
           echo "Hello from b"
           echo "Hello from b" > b.txt
-        
+
 
     - name: "c"
       memoryLimit: 500Mi
@@ -33,7 +33,7 @@ spec:
       run: |
           echo "Hello from c"
           echo "Hello from c" > c.txt
-          
+
     - name: "d"
       memoryLimit: 500Mi
       cpuLimit: 0.5

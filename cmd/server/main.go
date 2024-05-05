@@ -1,11 +1,11 @@
 package main
 
 import (
-	"github.com/ovvesley/scik8sflow/pkg/server/config"
-	"github.com/ovvesley/scik8sflow/pkg/server/httpserver"
-	"github.com/ovvesley/scik8sflow/pkg/server/monitor"
-	"github.com/ovvesley/scik8sflow/pkg/server/orchestrator"
-	"github.com/ovvesley/scik8sflow/pkg/server/worker"
+	"github.com/ovvesley/akoflow/pkg/server/config"
+	"github.com/ovvesley/akoflow/pkg/server/httpserver"
+	"github.com/ovvesley/akoflow/pkg/server/monitor"
+	"github.com/ovvesley/akoflow/pkg/server/orchestrator"
+	"github.com/ovvesley/akoflow/pkg/server/worker"
 )
 
 func main() {

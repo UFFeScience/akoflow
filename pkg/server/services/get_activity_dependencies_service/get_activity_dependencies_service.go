@@ -1,9 +1,9 @@
 package get_activity_dependencies_service
 
 import (
-	"github.com/ovvesley/scik8sflow/pkg/server/entities/workflow_activity_entity"
-	"github.com/ovvesley/scik8sflow/pkg/server/repository/activity_repository"
-	"github.com/ovvesley/scik8sflow/pkg/server/repository/workflow_repository"
+	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
+	"github.com/ovvesley/akoflow/pkg/server/repository/activity_repository"
+	"github.com/ovvesley/akoflow/pkg/server/repository/workflow_repository"
 )
 
 // GetActivityDependenciesService is a service that returns the dependencies of an activity.

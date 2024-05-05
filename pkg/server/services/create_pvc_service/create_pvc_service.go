@@ -1,9 +1,9 @@
 package create_pvc_service
 
 import (
-	"github.com/ovvesley/scik8sflow/pkg/server/connector"
-	"github.com/ovvesley/scik8sflow/pkg/server/entities/workflow_activity_entity"
-	"github.com/ovvesley/scik8sflow/pkg/server/entities/workflow_entity"
+	"github.com/ovvesley/akoflow/pkg/server/connector"
+	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
+	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
 )
 
 type CreatePVCService struct {

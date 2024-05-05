@@ -1,8 +1,8 @@
 package activity_repository
 
 import (
-	"github.com/ovvesley/scik8sflow/pkg/server/entities/workflow_activity_entity"
-	"github.com/ovvesley/scik8sflow/pkg/server/repository"
+	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
+	"github.com/ovvesley/akoflow/pkg/server/repository"
 )
 
 func (w *ActivityRepository) GetWfaDependencies(workflowId int) ([]workflow_activity_entity.WorkflowActivityDependencyDatabase, error) {

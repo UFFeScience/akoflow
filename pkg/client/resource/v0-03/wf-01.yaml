@@ -1,7 +1,7 @@
 name: wf-hello-world-gcp
 spec:
   image: "alpine:3.7"
-  namespace: "scik8sflow"
+  namespace: "akoflow"
   storageClassName: "hostpath"
   storageSize: "32Mi"
   storageAccessModes: "ReadWriteOnce"
@@ -30,7 +30,7 @@ spec:
     - name: "c"
       memoryLimit: 500Mi
       cpuLimit: 0.5
-      run: |        
+      run: |
         echo "Goodbye" >> /data/c/output.txt
         sleep 5
         echo "Goodbye Again" >> /data/c/output.txt

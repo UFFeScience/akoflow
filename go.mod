@@ -1,4 +1,4 @@
-module github.com/ovvesley/scik8sflow
+module github.com/ovvesley/akoflow
 
 go 1.22.0
 

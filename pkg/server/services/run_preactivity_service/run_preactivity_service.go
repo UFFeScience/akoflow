@@ -1,13 +1,13 @@
 package run_preactivity_service
 
 import (
-	"github.com/ovvesley/scik8sflow/pkg/server/connector"
-	"github.com/ovvesley/scik8sflow/pkg/server/entities/workflow_activity_entity"
-	"github.com/ovvesley/scik8sflow/pkg/server/entities/workflow_entity"
-	"github.com/ovvesley/scik8sflow/pkg/server/repository/activity_repository"
-	"github.com/ovvesley/scik8sflow/pkg/server/repository/workflow_repository"
-	"github.com/ovvesley/scik8sflow/pkg/server/services/get_activity_dependencies_service"
-	"github.com/ovvesley/scik8sflow/pkg/server/services/make_k8s_job_service"
+	"github.com/ovvesley/akoflow/pkg/server/connector"
+	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
+	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
+	"github.com/ovvesley/akoflow/pkg/server/repository/activity_repository"
+	"github.com/ovvesley/akoflow/pkg/server/repository/workflow_repository"
+	"github.com/ovvesley/akoflow/pkg/server/services/get_activity_dependencies_service"
+	"github.com/ovvesley/akoflow/pkg/server/services/make_k8s_job_service"
 )
 
 type RunPreactivityService struct {
@@ -34,7 +34,7 @@ func New(params ...ParamsNewRunPreactivityService) RunPreactivityService {
 		}
 	}
 	return RunPreactivityService{
-		namespace:                      "scik8sflow",
+		namespace:                      "akoflow",
 		workflowRepository:             workflow_repository.New(),
 		activityRepository:             activity_repository.New(),
 		makeK8sJobService:              make_k8s_job_service.New(),

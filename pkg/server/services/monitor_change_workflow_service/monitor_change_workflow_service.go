@@ -2,15 +2,16 @@ package monitor_change_workflow_service
 
 import (
 	"errors"
-	"github.com/ovvesley/scik8sflow/pkg/server/channel"
-	"github.com/ovvesley/scik8sflow/pkg/server/connector"
-	"github.com/ovvesley/scik8sflow/pkg/server/connector/connector_job_k8s"
-	"github.com/ovvesley/scik8sflow/pkg/server/entities/workflow_activity_entity"
-	"github.com/ovvesley/scik8sflow/pkg/server/entities/workflow_entity"
-	"github.com/ovvesley/scik8sflow/pkg/server/repository/activity_repository"
-	"github.com/ovvesley/scik8sflow/pkg/server/repository/workflow_repository"
-	"github.com/ovvesley/scik8sflow/pkg/server/services/get_pending_workflow_service"
-	"github.com/ovvesley/scik8sflow/pkg/server/services/get_workflow_by_status_service"
+
+	"github.com/ovvesley/akoflow/pkg/server/channel"
+	"github.com/ovvesley/akoflow/pkg/server/connector"
+	"github.com/ovvesley/akoflow/pkg/server/connector/connector_job_k8s"
+	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
+	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
+	"github.com/ovvesley/akoflow/pkg/server/repository/activity_repository"
+	"github.com/ovvesley/akoflow/pkg/server/repository/workflow_repository"
+	"github.com/ovvesley/akoflow/pkg/server/services/get_pending_workflow_service"
+	"github.com/ovvesley/akoflow/pkg/server/services/get_workflow_by_status_service"
 )
 
 type MonitorChangeWorkflowService struct {
@@ -25,7 +26,7 @@ type MonitorChangeWorkflowService struct {
 
 func New() *MonitorChangeWorkflowService {
 	return &MonitorChangeWorkflowService{
-		namespace:                 "scik8sflow",
+		namespace:                 "akoflow",
 		workflowRepository:        workflow_repository.New(),
 		activityRepository:        activity_repository.New(),
 		channelManager:            channel.GetInstance(),

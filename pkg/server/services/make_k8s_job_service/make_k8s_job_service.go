@@ -6,11 +6,11 @@ import (
 	"math/rand"
 	"strconv"
 
-	"github.com/ovvesley/scik8sflow/pkg/server/entities/k8s_job_entity"
-	"github.com/ovvesley/scik8sflow/pkg/server/entities/workflow_activity_entity"
-	"github.com/ovvesley/scik8sflow/pkg/server/entities/workflow_entity"
-	"github.com/ovvesley/scik8sflow/pkg/server/repository/activity_repository"
-	"github.com/ovvesley/scik8sflow/pkg/server/repository/workflow_repository"
+	"github.com/ovvesley/akoflow/pkg/server/entities/k8s_job_entity"
+	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
+	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
+	"github.com/ovvesley/akoflow/pkg/server/repository/activity_repository"
+	"github.com/ovvesley/akoflow/pkg/server/repository/workflow_repository"
 )
 
 type ParamsNewMakeK8sJobService struct {
@@ -18,7 +18,7 @@ type ParamsNewMakeK8sJobService struct {
 	ActivityRepository activity_repository.IActivityRepository
 }
 
-var ImagePreActivity = "ovvesley/scik8sflow-preactivity:latest"
+var ImagePreActivity = "ovvesley/akoflow-preactivity:latest"
 
 // New creates a new MakeK8sJobService.
 func New(params ...ParamsNewMakeK8sJobService) MakeK8sJobService {
@@ -356,7 +356,7 @@ func (m *MakeK8sJobService) makeContainerCommandActivity(wf workflow_entity.Work
 
 	command := "mkdir -p " + wf.Spec.MountPath + "/" + wfa.GetName() + "; \n"
 	command += "echo CURRENT_DIR: $(pwd); \n"
-	command += "mv -fvu /scik8sflow-wfa-shared/* " + wf.Spec.MountPath + "/" + wfa.GetName() + "; \n"
+	command += "mv -fvu /akoflow-wfa-shared/* " + wf.Spec.MountPath + "/" + wfa.GetName() + "; \n"
 	command += "cd " + wf.Spec.MountPath + "/" + wfa.GetName() + "; \n"
 	command += "echo CURRENT_DIR: $(pwd); \n"
 	command += "ls -lA; \n"

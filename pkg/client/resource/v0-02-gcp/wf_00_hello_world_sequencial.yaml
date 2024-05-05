@@ -1,7 +1,7 @@
 name: wf-hello-world-gcp
 spec:
   image: "alpine:3.7"
-  namespace: "scik8sflow"
+  namespace: "akoflow"
   storageClassName: "standard-rwo"
   storageSize: "32Mi"
   mountPath: "/data"

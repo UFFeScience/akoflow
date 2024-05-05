@@ -1,6 +1,6 @@
 package storages_repository
 
-import "github.com/ovvesley/scik8sflow/pkg/server/repository"
+import "github.com/ovvesley/akoflow/pkg/server/repository"
 
 type ParamsStorageUpdate struct {
 	Status int

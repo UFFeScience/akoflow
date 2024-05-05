@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: deployment-workflow-00
-  namespace: scik8sflow
+  namespace: akoflow
 spec:
     replicas: 1
     selector:

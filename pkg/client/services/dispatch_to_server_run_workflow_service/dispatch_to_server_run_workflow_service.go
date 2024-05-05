@@ -5,8 +5,9 @@ import (
 	"crypto/tls"
 	"encoding/base64"
 	"encoding/json"
-	"github.com/ovvesley/scik8sflow/pkg/client/utils"
 	"net/http"
+
+	"github.com/ovvesley/akoflow/pkg/client/utils"
 )
 
 type DispatchToServerRunWorkflowService struct {
@@ -95,7 +96,7 @@ func (d *DispatchToServerRunWorkflowService) sendToServer(base64FileContent stri
 
 	payloadJson, _ := json.Marshal(payload)
 
-	req, _ := http.NewRequest("POST", "http://"+d.GetHost()+":"+d.GetPort()+"/scik8sflow-server/workflow/run", bytes.NewBuffer(payloadJson))
+	req, _ := http.NewRequest("POST", "http://"+d.GetHost()+":"+d.GetPort()+"/akoflow-server/workflow/run", bytes.NewBuffer(payloadJson))
 
 	req.Header.Set("Content-Type", "application/json")
 

@@ -1,9 +1,9 @@
 package get_pending_workflow_service
 
 import (
-	"github.com/ovvesley/scik8sflow/pkg/server/entities/workflow_entity"
-	"github.com/ovvesley/scik8sflow/pkg/server/repository/activity_repository"
-	"github.com/ovvesley/scik8sflow/pkg/server/repository/workflow_repository"
+	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
+	"github.com/ovvesley/akoflow/pkg/server/repository/activity_repository"
+	"github.com/ovvesley/akoflow/pkg/server/repository/workflow_repository"
 )
 
 type GetPendingWorkflowService struct {
@@ -14,7 +14,7 @@ type GetPendingWorkflowService struct {
 
 func New() *GetPendingWorkflowService {
 	return &GetPendingWorkflowService{
-		namespace:          "scik8sflow",
+		namespace:          "akoflow",
 		workflowRepository: workflow_repository.New(),
 		activityRepository: activity_repository.New(),
 	}

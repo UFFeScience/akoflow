@@ -1,12 +1,12 @@
 package run_activity_in_cluster_service
 
 import (
-	"github.com/ovvesley/scik8sflow/pkg/server/repository/activity_repository"
-	"github.com/ovvesley/scik8sflow/pkg/server/repository/workflow_repository"
-	"github.com/ovvesley/scik8sflow/pkg/server/services/apply_job_service"
-	"github.com/ovvesley/scik8sflow/pkg/server/services/create_namespace_service"
-	"github.com/ovvesley/scik8sflow/pkg/server/services/create_pvc_service"
-	"github.com/ovvesley/scik8sflow/pkg/server/services/run_preactivity_service"
+	"github.com/ovvesley/akoflow/pkg/server/repository/activity_repository"
+	"github.com/ovvesley/akoflow/pkg/server/repository/workflow_repository"
+	"github.com/ovvesley/akoflow/pkg/server/services/apply_job_service"
+	"github.com/ovvesley/akoflow/pkg/server/services/create_namespace_service"
+	"github.com/ovvesley/akoflow/pkg/server/services/create_pvc_service"
+	"github.com/ovvesley/akoflow/pkg/server/services/run_preactivity_service"
 )
 
 type RunActivityInClusterService struct {
@@ -43,7 +43,7 @@ func New(params ...ParamsNewRunActivityInClusterService) *RunActivityInClusterSe
 	}
 
 	return &RunActivityInClusterService{
-		namespace:              "scik8sflow",
+		namespace:              "akoflow",
 		workflowRepository:     workflow_repository.New(),
 		activityRepository:     activity_repository.New(),
 		createPVCService:       create_pvc_service.New(),

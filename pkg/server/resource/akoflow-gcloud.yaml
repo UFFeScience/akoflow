@@ -1,19 +1,19 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: scik8sflow
+  name: akoflow
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  namespace: scik8sflow
-  name: scik8sflow-server-sa
+  namespace: akoflow
+  name: akoflow-server-sa
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  namespace: scik8sflow
-  name: scik8sflow-server-cr
+  namespace: akoflow
+  name: akoflow-server-cr
 rules:
   - apiGroups:
       - "*"
@@ -24,16 +24,16 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: scik8sflow-server-crb
-  namespace: scik8sflow
+  name: akoflow-server-crb
+  namespace: akoflow
 subjects:
-  - namespace: scik8sflow
+  - namespace: akoflow
     kind: ServiceAccount
-    name: scik8sflow-server-sa
+    name: akoflow-server-sa
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: scik8sflow-server-cr
+  name: akoflow-server-cr
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -89,8 +89,8 @@ rules:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: scik8sflow-server-pvc
-  namespace: scik8sflow
+  name: akoflow-server-pvc
+  namespace: akoflow
 spec:
   accessModes:
     - ReadWriteOnce
@@ -101,46 +101,46 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: scik8sflow-server-deployment
-  namespace: scik8sflow
+  name: akoflow-server-deployment
+  namespace: akoflow
   labels:
-    app: scik8sflow-server
+    app: akoflow-server
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: scik8sflow-server
+      app: akoflow-server
   template:
     metadata:
       labels:
-        app: scik8sflow-server
+        app: akoflow-server
     spec:
-      serviceAccountName: scik8sflow-server-sa
+      serviceAccountName: akoflow-server-sa
       containers:
-        - name: scik8sflow-server
+        - name: akoflow-server
           image: docker.io/ovvesley/uff-tcc-scientific-workflow-k8s:server
           ports:
             - containerPort: 8080
           volumeMounts:
-            - name: scik8sflow-server-pvc
+            - name: akoflow-server-pvc
               mountPath: /storage
       volumes:
-        - name: scik8sflow-server-pvc
+        - name: akoflow-server-pvc
           persistentVolumeClaim:
-            claimName: scik8sflow-server-pvc
+            claimName: akoflow-server-pvc
 
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: scik8sflow-server-service
-  namespace: scik8sflow
+  name: akoflow-server-service
+  namespace: akoflow
   labels:
-    app: scik8sflow-server
+    app: akoflow-server
 spec:
   type: LoadBalancer
   selector:
-    app: scik8sflow-server
+    app: akoflow-server
   ports:
     - protocol: TCP
       port: 8080

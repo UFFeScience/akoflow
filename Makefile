@@ -2,10 +2,10 @@ dev-deploy-server:
 	echo "Deploying to dev server"
 	echo "Build Server Image"
 	docker buildx build -t ovvesley/uff-tcc-scientific-workflow-k8s:server -f server.Dockerfile . --push --platform linux/amd64
-	kubectl apply -f pkg/server/resource/scik8sflow.yaml
+	kubectl apply -f pkg/server/resource/akoflow.yaml
 
 dev-log:
-	kubectl logs $$(kubectl get pods | grep scik8sflow-server-deployment |grep Running |  awk '{print $$1}')
+	kubectl logs $$(kubectl get pods | grep akoflow-server-deployment |grep Running |  awk '{print $$1}')
 
 build-amd64:
 	docker buildx build -t ovvesley/uff-tcc-scientific-workflow-k8s:server -f server.Dockerfile . --platform=linux/amd64 --push

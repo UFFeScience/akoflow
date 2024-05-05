@@ -1,7 +1,7 @@
 name: wf-montage-050d
 spec:
-  image: ovvesley/scik8sflow-wf-montage:050d # amd64 only
-  namespace: scik8sflow
+  image: ovvesley/akoflow-wf-montage:050d # amd64 only
+  namespace: akoflow
   storageClassName: hostpath
   storageSize: 1Gi
   mountPath: /data

@@ -3,8 +3,8 @@ package orchestrator
 import (
 	"time"
 
-	"github.com/ovvesley/scik8sflow/pkg/server/services/get_pending_workflow_service"
-	"github.com/ovvesley/scik8sflow/pkg/server/services/orchestrate_workflow_service"
+	"github.com/ovvesley/akoflow/pkg/server/services/get_pending_workflow_service"
+	"github.com/ovvesley/akoflow/pkg/server/services/orchestrate_workflow_service"
 )
 
 const TimeToUpdateSeconds = 1

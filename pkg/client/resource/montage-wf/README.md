@@ -1,6 +1,6 @@
 # Pegasus Workflow
 
-Aqui você encontra o workflow do pegasus do projeto Montage. O workflow foi gerado a partir do Python Generator DAX. Presente em https://github.com/pegasus-isi/montage-workflow-v3?tab=readme-ov-file. Ele está presente nesse repositório, pois a partir dele será gerado o workflow no scik8sflow.
+Aqui você encontra o workflow do pegasus do projeto Montage. O workflow foi gerado a partir do Python Generator DAX. Presente em https://github.com/pegasus-isi/montage-workflow-v3?tab=readme-ov-file. Ele está presente nesse repositório, pois a partir dele será gerado o workflow no akoflow.
 
 
 Nas pastas desse repositório possui os arquivos que são necessarias para encaminhar para o Pegasus separado em degrees para a projeção da imagem no montage.

@@ -7,36 +7,36 @@ echo " \/\_____\  \ \_____\  \ \_\  \ \_\ \_\  \/\_____\  \ \_\    \ \_____\  \ 
 echo "  \/_____/   \/_____/   \/_/   \/_/\/_/   \/_____/   \/_/     \/_____/   \/_____/   \/_/   \/_/ ";
 echo "                                                                                                ";
 echo ' ______     ______     ______     ______     ______     ______     ______     ______     ______'
-echo 'scik8sflow - a workflow tools for run activities in k8s cluster'
-echo '> scik8sflow - preactivity'
+echo 'akoflow - a workflow tools for run activities in k8s cluster'
+echo '> akoflow - preactivity'
 echo ' ______     ______     ______     ______     ______     ______     ______     ______     ______'
 
 echo 'ENVIRONMENT VARIABLES'
-echo "SCIK8SFLOW_API_URL=$SCIK8SFLOW_API_URL"
+echo "akoflow_API_URL=$akoflow_API_URL"
 echo "ACTIVITY_ID=$ACTIVITY_ID"
 echo "OUTPUT_DIR=$OUTPUT_DIR"
 echo "WORKFLOW_ID=$WORKFLOW_ID"
 echo "MOUNT_PATH=$MOUNT_PATH"
 
 #list all mounted volumes
-echo ">> scik8sflow - preactivity - list all mounted volumes"
+echo ">> akoflow - preactivity - list all mounted volumes"
 
-echo "> scik8sflow - PREACTIVITY - #ACTIVITY_ID=$ACTIVITY_ID" > preactivity.log
+echo "> akoflow - PREACTIVITY - #ACTIVITY_ID=$ACTIVITY_ID" > preactivity.log
 
 mount | grep "^/dev" | awk '{print $3}' | grep $MOUNT_PATH | while read line; do
 
   if [ "$line" = "$OUTPUT_DIR" ]; then
-    echo ">> scik8sflow - preactivity (OUTPUT_DIR) -  $line"
+    echo ">> akoflow - preactivity (OUTPUT_DIR) -  $line"
   fi
 
   if [ "$line" != "$OUTPUT_DIR" ]; then
-      echo ">> scik8sflow - preactivity -  $line"
+      echo ">> akoflow - preactivity -  $line"
   fi
 
   # list all files with name, size, date and checksum
-  echo ">> scik8sflow - preactivity - list all files with name, size, date and checksum"
+  echo ">> akoflow - preactivity - list all files with name, size, date and checksum"
 
-  echo ">> scik8sflow - preactivity -  $line" >> $line/preactivity.log
+  echo ">> akoflow - preactivity -  $line" >> $line/preactivity.log
   echo "" >> $line/preactivity.log
 
 
@@ -46,11 +46,11 @@ mount | grep "^/dev" | awk '{print $3}' | grep $MOUNT_PATH | while read line; do
 
 done
 
-curl -X POST -H "Content-Type: application/txt" -d @$OUTPUT_DIR/preactivity.log $SCIK8SFLOW_API_URL/activities/$ACTIVITY_ID/preactivity || true
+curl -X POST -H "Content-Type: application/txt" -d @$OUTPUT_DIR/preactivity.log $akoflow_API_URL/activities/$ACTIVITY_ID/preactivity || true
 
 cat $OUTPUT_DIR/preactivity.log || true
 
-echo ">> scik8sflow - preactivity - done"
+echo ">> akoflow - preactivity - done"
 
 
 

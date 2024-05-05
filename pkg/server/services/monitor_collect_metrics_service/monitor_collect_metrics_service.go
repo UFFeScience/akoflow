@@ -1,15 +1,15 @@
 package monitor_collect_metrics_service
 
 import (
-	"github.com/ovvesley/scik8sflow/pkg/server/connector"
-	"github.com/ovvesley/scik8sflow/pkg/server/entities/workflow_activity_entity"
-	"github.com/ovvesley/scik8sflow/pkg/server/entities/workflow_entity"
-	"github.com/ovvesley/scik8sflow/pkg/server/repository/activity_repository"
-	"github.com/ovvesley/scik8sflow/pkg/server/repository/logs_repository"
-	"github.com/ovvesley/scik8sflow/pkg/server/repository/metrics_repository"
-	"github.com/ovvesley/scik8sflow/pkg/server/repository/workflow_repository"
-	"github.com/ovvesley/scik8sflow/pkg/server/services/get_pending_workflow_service"
-	"github.com/ovvesley/scik8sflow/pkg/server/services/get_workflow_by_status_service"
+	"github.com/ovvesley/akoflow/pkg/server/connector"
+	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
+	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
+	"github.com/ovvesley/akoflow/pkg/server/repository/activity_repository"
+	"github.com/ovvesley/akoflow/pkg/server/repository/logs_repository"
+	"github.com/ovvesley/akoflow/pkg/server/repository/metrics_repository"
+	"github.com/ovvesley/akoflow/pkg/server/repository/workflow_repository"
+	"github.com/ovvesley/akoflow/pkg/server/services/get_pending_workflow_service"
+	"github.com/ovvesley/akoflow/pkg/server/services/get_workflow_by_status_service"
 )
 
 type MonitorCollectMetricsService struct {
@@ -25,7 +25,7 @@ type MonitorCollectMetricsService struct {
 
 func New() *MonitorCollectMetricsService {
 	return &MonitorCollectMetricsService{
-		namespace:                 "scik8sflow",
+		namespace:                 "akoflow",
 		workflowRepository:        workflow_repository.New(),
 		activityRepository:        activity_repository.New(),
 		metricsRepository:         metrics_repository.New(),

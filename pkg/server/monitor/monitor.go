@@ -1,9 +1,10 @@
 package monitor
 
 import (
-	"github.com/ovvesley/scik8sflow/pkg/server/services/monitor_change_workflow_service"
-	"github.com/ovvesley/scik8sflow/pkg/server/services/monitor_collect_metrics_service"
 	"time"
+
+	"github.com/ovvesley/akoflow/pkg/server/services/monitor_change_workflow_service"
+	"github.com/ovvesley/akoflow/pkg/server/services/monitor_collect_metrics_service"
 )
 
 const TimeToUpdateSeconds = 1

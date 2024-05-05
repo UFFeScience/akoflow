@@ -12,7 +12,7 @@ package mock
 import (
 	reflect "reflect"
 
-	connector_metrics_k8s "github.com/ovvesley/scik8sflow/pkg/server/connector/connector_metrics_k8s"
+	connector_metrics_k8s "github.com/ovvesley/akoflow/pkg/server/connector/connector_metrics_k8s"
 	gomock "go.uber.org/mock/gomock"
 )
 

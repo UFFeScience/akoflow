@@ -2,7 +2,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: pvc-workflow-00
-  namespace: scik8sflow
+  namespace: akoflow
 spec:
   accessModes:
     - ReadWriteOnce

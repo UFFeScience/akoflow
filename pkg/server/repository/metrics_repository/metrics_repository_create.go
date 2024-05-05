@@ -1,6 +1,6 @@
 package metrics_repository
 
-import "github.com/ovvesley/scik8sflow/pkg/server/repository"
+import "github.com/ovvesley/akoflow/pkg/server/repository"
 
 type ParamsMetricsCreate struct {
 	MetricsDatabase MetricsDatabase

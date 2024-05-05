@@ -2,16 +2,18 @@ package parser_pegasus_workflow
 
 import (
 	"crypto/tls"
-	"github.com/ovvesley/scik8sflow/pkg/server/entities/workflow_activity_entity"
-	workflow "github.com/ovvesley/scik8sflow/pkg/server/entities/workflow_entity"
 	"strings"
 
-	"github.com/ovvesley/scik8sflow/pkg/client/entities/pegasus_workflow"
-	"github.com/ovvesley/scik8sflow/pkg/client/utils"
-	"gopkg.in/yaml.v3"
+	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
+	workflow "github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
+
 	"io"
 	"net/http"
 	"os"
+
+	"github.com/ovvesley/akoflow/pkg/client/entities/pegasus_workflow"
+	"github.com/ovvesley/akoflow/pkg/client/utils"
+	"gopkg.in/yaml.v3"
 )
 
 type ParserPegasusWorkflowService struct {
@@ -98,11 +100,11 @@ func (p *ParserPegasusWorkflowService) makeWorkflow(yamlWorkflow pegasus_workflo
 
 	workflow := workflow.Workflow{}
 	workflow.Name = "wf-montage"
-	workflow.Spec.Namespace = "scik8sflow"
+	workflow.Spec.Namespace = "akoflow"
 	workflow.Spec.MountPath = "/data"
 	workflow.Spec.StorageClassName = "hostpath"
 	workflow.Spec.StorageSize = "1Gi"
-	workflow.Spec.Image = "ovvesley/scik8sflow-wf-montage:latest"
+	workflow.Spec.Image = "ovvesley/akoflow-wf-montage:latest"
 
 	workflow.Spec.Activities = actvities
 	return workflow

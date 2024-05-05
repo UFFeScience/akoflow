@@ -2,9 +2,10 @@ package workflow_handler
 
 import (
 	"encoding/json"
-	"github.com/ovvesley/scik8sflow/pkg/server/entities/workflow_entity"
-	"github.com/ovvesley/scik8sflow/pkg/server/services/create_workflow_in_database_service"
 	"net/http"
+
+	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
+	"github.com/ovvesley/akoflow/pkg/server/services/create_workflow_in_database_service"
 )
 
 type RequestPostRunWorkflow struct {

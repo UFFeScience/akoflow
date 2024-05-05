@@ -6,10 +6,11 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/ovvesley/scik8sflow/pkg/server/entities/k8s_job_entity"
 	"net/http"
 	"os"
 	"time"
+
+	"github.com/ovvesley/akoflow/pkg/server/entities/k8s_job_entity"
 )
 
 type ConnectorJobK8s struct {

@@ -1,6 +1,6 @@
 package create_namespace_service
 
-import "github.com/ovvesley/scik8sflow/pkg/server/connector"
+import "github.com/ovvesley/akoflow/pkg/server/connector"
 
 type CreateNamespaceService struct {
 	connector connector.IConnector

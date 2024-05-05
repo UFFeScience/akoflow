@@ -1,7 +1,7 @@
 name: wf-00-nmfstp-gcp-fulldataset
 spec:
-  image: "ovvesley/scik8sflow-nmfstp-wf:latest"
-  namespace: "scik8sflow"
+  image: "ovvesley/akoflow-nmfstp-wf:latest"
+  namespace: "akoflow"
   storageClassName: "standard-rwo"
   storageSize: 4Gi
   mountPath: "/NMFSt.P/data/out"

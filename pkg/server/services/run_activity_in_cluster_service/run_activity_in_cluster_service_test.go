@@ -3,11 +3,11 @@ package run_activity_in_cluster_service
 //
 //import (
 //	"errors"
-//	"github.com/ovvesley/scik8sflow/pkg/server/connector/connector_namespace_k8s"
-//	"github.com/ovvesley/scik8sflow/pkg/server/connector/connector_pod_k8s"
-//	"github.com/ovvesley/scik8sflow/pkg/server/connector/connector_pvc_k8s"
-//	"github.com/ovvesley/scik8sflow/pkg/server/entities/workflow_entity"
-//	"github.com/ovvesley/scik8sflow/test/mock"
+//	"github.com/ovvesley/akoflow/pkg/server/connector/connector_namespace_k8s"
+//	"github.com/ovvesley/akoflow/pkg/server/connector/connector_pod_k8s"
+//	"github.com/ovvesley/akoflow/pkg/server/connector/connector_pvc_k8s"
+//	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
+//	"github.com/ovvesley/akoflow/test/mock"
 //	"go.uber.org/mock/gomock"
 //	"testing"
 //)

@@ -25,10 +25,10 @@ kubectl edit deployment.apps/metrics-server -n kube-system
 
 ---
 
-### gerar token do service account scik8sflow-server-sa 
+### gerar token do service account akoflow-server-sa
 
 ```bash
-kubectl create token scik8sflow-server-sa -n scik8sflow
+kubectl create token akoflow-server-sa -n akoflow
 ```
 
 

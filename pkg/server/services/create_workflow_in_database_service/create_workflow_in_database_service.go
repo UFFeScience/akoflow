@@ -1,10 +1,10 @@
 package create_workflow_in_database_service
 
 import (
-	"github.com/ovvesley/scik8sflow/pkg/server/entities/workflow_entity"
-	"github.com/ovvesley/scik8sflow/pkg/server/repository/activity_repository"
-	"github.com/ovvesley/scik8sflow/pkg/server/repository/storages_repository"
-	"github.com/ovvesley/scik8sflow/pkg/server/repository/workflow_repository"
+	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
+	"github.com/ovvesley/akoflow/pkg/server/repository/activity_repository"
+	"github.com/ovvesley/akoflow/pkg/server/repository/storages_repository"
+	"github.com/ovvesley/akoflow/pkg/server/repository/workflow_repository"
 )
 
 type CreateWorkflowInDatabaseService struct {
@@ -16,7 +16,7 @@ type CreateWorkflowInDatabaseService struct {
 
 func New() *CreateWorkflowInDatabaseService {
 	return &CreateWorkflowInDatabaseService{
-		namespace:          "scik8sflow",
+		namespace:          "akoflow",
 		workflowRepository: workflow_repository.New(),
 		activityRepository: activity_repository.New(),
 		storageRepository:  storages_repository.New(),

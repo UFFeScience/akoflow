@@ -15,7 +15,7 @@ A especificação abaixo detalha a configuração de um workflow denominado `wf-
 name: wf-hello-world-gcp
 spec:
   image: "alpine:3.7"
-  namespace: "scik8sflow"
+  namespace: "akoflow"
   storageClassName: "hostpath"
   storageSize: "32Mi"
   storageAccessModes: "ReadWriteOnce"
@@ -41,7 +41,7 @@ Dentro de `spec`, temos:
   - Exemplo: `alpine:3.7`
 - **namespace**: Namespace do Kubernetes onde o workflow será executado.
   - Tipo: String
-  - Exemplo: `scik8sflow`
+  - Exemplo: `akoflow`
 - **storageClassName**: Classe de armazenamento a ser utilizada para o volume persistente.
   - Tipo: String
   - Exemplo: `hostpath`
@@ -109,7 +109,7 @@ Este exemplo define uma atividade chamada `a`, que executa um script que escreve
 | `name`                            | Identificador único do workflow.                                          | Obrigatório          | N/A                      | `wf-hello-world-gcp`                       |
 | `spec`                            | Contém as especificações do workflow.                                     | Obrigatório          | N/A                      |                                            |
 | → `image`                         | Imagem do Docker a ser usada pelas atividades.                            | Obrigatório          | N/A                      | `alpine:3.7`                               |
-| → `namespace`                     | Namespace do Kubernetes onde o workflow será executado.                   | Obrigatório          | `scik`                   | `scik8sflow`                               |
+| → `namespace`                     | Namespace do Kubernetes onde o workflow será executado.                   | Obrigatório          | `scik`                   | `akoflow`                               |
 | → `storageClassName`              | Nome da classe de armazenamento para o volume persistente.                | Opcional             | Dependente do cluster    | `hostpath`                                 |
 | → `storageSize`                   | Tamanho do volume de armazenamento.                                       | Obrigatório          | N/A                      | `32Mi`                                     |
 | → `storageAccessModes`            | Modo de acesso ao volume.                                                 | Obrigatório          | N/A                      | `ReadWriteOnce`                            |

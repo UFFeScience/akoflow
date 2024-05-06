@@ -26,7 +26,7 @@ Aqui está um exemplo de atividade com um seletor de nó, que especifica em qual
 name: wf-hello-world-gcp
 spec:
   image: "alpine:3.7"
-  namespace: "scik8sflow"
+  namespace: "akoflow"
   storageClassName: "hostpath"
   storageSize: "32Mi"
   storageAccessModes: "ReadWriteOnce"

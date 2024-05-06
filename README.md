@@ -1,48 +1,27 @@
-# uff-tcc-scientific-workflow-k8s
-
-Repositório para os artefatos de código e documentação desenvolvidos para o Trabalho de Conclusão de Curso (TCC) do curso de Sistemas de Informação
+# AkôFlow - Workflow Científico em núvem com Kubernetes
 
 
-## Tema
-Workflow Científico em núvem com Kubernetes
-
-## Objetivo
-...
-
-### Objetivos Específicos
-...
-
-
-### instalar a api de servidor para o k8s
-
-kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
-
-### for development
-
-kubectl edit deployment.apps/metrics-server -n kube-system
-
---kubelet-insecure-tls=true
-
----
-
-### gerar token do service account akoflow-server-sa
-
-```bash
-kubectl create token akoflow-server-sa -n akoflow
+```sh
+ █████╗ ██╗  ██╗ ██████╗ ███████╗██╗      ██████╗ ██╗    ██╗
+██╔══██╗██║ ██╔╝██╔═══██╗██╔════╝██║     ██╔═══██╗██║    ██║
+███████║█████╔╝ ██║   ██║█████╗  ██║     ██║   ██║██║ █╗ ██║
+██╔══██║██╔═██╗ ██║   ██║██╔══╝  ██║     ██║   ██║██║███╗██║
+██║  ██║██║  ██╗╚██████╔╝██║     ███████╗╚██████╔╝╚███╔███╔╝
+╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝ ╚═╝     ╚══════╝ ╚═════╝  ╚══╝╚══╝
 ```
 
+## Descrição
+Repositório para os artefatos de código e documentação desenvolvidos para o Trabalho de Conclusão de Curso (TCC) do curso de Sistemas de Informação do Instituto de Computação da Universidade Federal Fluminense (IC/UFF). O trabalho tem como título "AkôFlow - Workflow Científico em núvem com Kubernetes".
 
-### to do
+## Autores
+1. Wesley Ferreira - @ovvesley
 
-- ~~nova versão do arquivo de workflow, CPU e Mémoria por Atividades.~~
-- ~~mecanismo de atividades sequencial~~
-- ~~mecanismo de atividades sequencial com transferecia de dados entre atividades~~
-- ~~v1 do client, recebendo o arquivo de workflow e enviando para o server (k8s)~~
-- ~~mecanismo de compartilhamento de dados entre atividades~~
-- ~~estrutura proveniencia e monitoramento~~
-- ~~mecanismo de atividades paralelas~~
-- tratamento de unhappy path do sistema
-- mecanismo de prebuild das imagens (reaproveitamento scripts de imagem)
-- implementar o garbage collector
-- ~~rodar workflow do https://github.com/UFFeScience/NMFSt.P.git~~
 
+## Workflow Científico em núvem com Kubernetes
+
+### AkôFlow - Ferramenta para execução de Workflow Científico em Kubernetes
+
+O AkôFlow é uma ferramenta para execução de workflows científicos em Kubernetes. Ele utiliza a API do Kubernetes para criar e gerenciar recursos de execução de workflows, como pods e jobs. O AkôFlow é uma ferramenta de linha de comando que permite a execução de workflows científicos de forma distribuída e paralela em um cluster Kubernetes.
+
+### Documentação
+O AkôFlow possui uma documentação completa que descreve como instalar, configurar e utilizar a ferramenta. A documentação está disponível em [https://ovvesley.github.io/akoflow-docs/](https://ovvesley.github.io/akoflow-docs/).

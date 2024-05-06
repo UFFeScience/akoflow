@@ -42,13 +42,13 @@ Você precisará configurar as variáveis de ambiente.
 As variáveis de ambiente necessárias para a execução do servidor do akoflow são:
 
 - `K8S_API_SERVER_TOKEN` - Token de acesso para o servidor do akoflow.
-- `K8S_API_SERVICE_HOST` - Host do servidor do Kubernetes com a porta. Por padrão, o host é `localhost:6443`, em ambiente com docker desktop.
+- `K8S_API_SERVER_HOST` - Host do servidor do Kubernetes com a porta. Por padrão, o host é `localhost:6443`, em ambiente com docker desktop.
 
 Exemplo (Linux):
 
 ```bash
 export K8S_API_SERVER_TOKEN=...
-export K8S_API_SERVICE_HOST=localhost:6443
+export K8S_API_SERVER_HOST=localhost:6443
 
 ```
 

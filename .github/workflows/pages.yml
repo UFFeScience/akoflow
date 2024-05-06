@@ -1,4 +1,4 @@
-name: Deploy AkôFlow Documentation to GitHub Pages on push to main
+name: Deploy AkôFlow Documentation to GitHub Pages on push to main branch
 
 on:
   push:

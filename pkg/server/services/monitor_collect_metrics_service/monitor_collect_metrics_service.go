@@ -58,7 +58,7 @@ func (m *MonitorCollectMetricsService) handleCollectMetricsByWorkflow(wf workflo
 func (m *MonitorCollectMetricsService) handleCollectMetricsByActivity(wfa workflow_activity_entity.WorkflowActivities) {
 	println("Activity: ", wfa.WorkflowId, wfa.Id)
 
-	nameJob := wfa.GetName()
+	nameJob := wfa.GetNameJob()
 
 	job, err := m.connector.Pod().GetPodByJob(m.namespace, nameJob)
 	if err != nil {

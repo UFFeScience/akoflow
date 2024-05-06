@@ -1,5 +1,5 @@
 ---
-title: 2 - Como Funciona
+title: 2.2 - Como Funciona
 layout: page
 ---
 

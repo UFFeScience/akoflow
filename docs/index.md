@@ -80,4 +80,4 @@ Para mais informações, acesse o guia de uso [aqui](3-workflow-file).
 
 O akoflow utiliza a API do Kubernetes para criar e gerenciar recursos de execução de workflows, como pods, jobs, persistent volumes. Ele permite a execução de workflows científicos de forma distribuída e paralela em um cluster Kubernetes.
 
-Para mais informações, acesse o como funciona [aqui](2-how-it-work).
+Para mais informações, acesse o como funciona [aqui](2-2-how-it-work).

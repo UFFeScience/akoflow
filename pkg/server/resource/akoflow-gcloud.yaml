@@ -96,7 +96,7 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 16Gi
+      storage: 64Gi
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -118,7 +118,7 @@ spec:
       serviceAccountName: akoflow-server-sa
       containers:
         - name: akoflow-server
-          image: docker.io/ovvesley/uff-tcc-scientific-workflow-k8s:server
+          image: docker.io/ovvesley/akoflow-server:latest
           ports:
             - containerPort: 8080
           volumeMounts:

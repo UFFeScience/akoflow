@@ -124,6 +124,7 @@ spec:
           volumeMounts:
             - name: akoflow-server-pvc
               mountPath: /storage
+          imagePullPolicy: Always
       volumes:
         - name: akoflow-server-pvc
           persistentVolumeClaim:

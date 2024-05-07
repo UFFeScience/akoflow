@@ -19,4 +19,4 @@ jobs:
       - name: Push Docker image Server
         run: docker push ovvesley/akoflow-server:latest && docker push ovvesley/akoflow-server:$(git rev-parse --short $GITHUB_SHA)
       - name: Push Docker image Preactivity
-        run: docker push ovvesley/akoflow-preactivity:latest && docker push ovvesley/akoflow-server:$(git rev-parse --short $GITHUB_SHA)
+        run: docker push ovvesley/akoflow-preactivity:latest && docker push ovvesley/akoflow-preactivity:$(git rev-parse --short $GITHUB_SHA)

@@ -13,7 +13,7 @@ jobs:
       - name: Build Docker image Server
         run: docker build . -t ovvesley/akoflow-server:latest -t ovvesley/akoflow-server:$(git rev-parse --short $GITHUB_SHA) -f server.Dockerfile 
       - name: Build Docker image Preactivity
-        run: docker build  pkg/server/preactivity -t ovvesley/akoflow-preactivity:latest -t ovvesley/akoflow-server:$(git rev-parse --short $GITHUB_SHA) -f preactivity.Dockerfile
+        run: docker build  pkg/server/preactivity -t ovvesley/akoflow-preactivity:latest -t ovvesley/akoflow-preactivity:$(git rev-parse --short $GITHUB_SHA) -f preactivity.Dockerfile
       - name: Login to Docker Hub
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
       - name: Push Docker image Server

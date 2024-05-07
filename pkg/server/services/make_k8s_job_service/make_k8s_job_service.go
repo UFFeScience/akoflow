@@ -213,7 +213,7 @@ func (m *MakeK8sJobService) makeVolumesPreActivity(wf workflow_entity.Workflow, 
 
 func (m *MakeK8sJobService) makeContainerPreActivity(workflow workflow_entity.Workflow, activity workflow_activity_entity.WorkflowActivities) k8s_job_entity.K8sJobContainer {
 
-	volumeMounts := m.makeJobVolumeMounts(workflow, activity)
+	volumeMounts := m.makeJobVolumeMountsPreactivity(workflow, activity)
 
 	firstVolumeMount := volumeMounts[0]
 
@@ -287,19 +287,19 @@ func (m *MakeK8sJobService) isValidate() bool {
 func (m *MakeK8sJobService) makeVolumesActivity(wf workflow_entity.Workflow, wfa workflow_activity_entity.WorkflowActivities) []k8s_job_entity.K8sJobVolume {
 	volumes := make([]k8s_job_entity.K8sJobVolume, 0)
 
-	dependencies := m.getDependencies()
-
-	for _, dependency := range dependencies {
-		volume := k8s_job_entity.K8sJobVolume{
-			Name: dependency.GetVolumeName(),
-			PersistentVolumeClaim: struct {
-				ClaimName string `json:"claimName"`
-			}{
-				ClaimName: dependency.GetVolumeName(),
-			},
-		}
-		volumes = append(volumes, volume)
-	}
+	//dependencies := m.getDependencies()
+	//
+	//for _, dependency := range dependencies {
+	//	volume := k8s_job_entity.K8sJobVolume{
+	//		Name: dependency.GetVolumeName(),
+	//		PersistentVolumeClaim: struct {
+	//			ClaimName string `json:"claimName"`
+	//		}{
+	//			ClaimName: dependency.GetVolumeName(),
+	//		},
+	//	}
+	//	volumes = append(volumes, volume)
+	//}
 
 	firstVolume := m.makeVolumeThatWillBeUsedByCurrentActivity(wf, wfa)
 
@@ -386,12 +386,12 @@ func (m *MakeK8sJobService) makeJobVolumeMountPath(wf workflow_entity.Workflow, 
 	return wf.Spec.MountPath + "/" + wfa.GetName()
 }
 
-// makeJobVolumeMounts creates a list of volume mounts that will be used by the container.
+// makeJobVolumeMountsPreactivity creates a list of volume mounts that will be used by the container.
 //
 //   - The first volume mount in the list is the volume mount that will be used by the current activity.
 //
 //   - The other volume mounts are the dependencies of the current activity.
-func (m *MakeK8sJobService) makeJobVolumeMounts(wf workflow_entity.Workflow, wfa workflow_activity_entity.WorkflowActivities) []k8s_job_entity.K8sJobVolumeMount {
+func (m *MakeK8sJobService) makeJobVolumeMountsPreactivity(wf workflow_entity.Workflow, wfa workflow_activity_entity.WorkflowActivities) []k8s_job_entity.K8sJobVolumeMount {
 	dependencies := m.getDependencies()
 
 	volumesMounts := make([]k8s_job_entity.K8sJobVolumeMount, 0)
@@ -403,6 +403,20 @@ func (m *MakeK8sJobService) makeJobVolumeMounts(wf workflow_entity.Workflow, wfa
 		}
 		volumesMounts = append(volumesMounts, volumeMount)
 	}
+
+	firstVolumeMount := k8s_job_entity.K8sJobVolumeMount{
+		Name:      wfa.GetVolumeName(),
+		MountPath: m.makeJobVolumeMountPath(wf, wfa),
+	}
+
+	volumesMounts = append([]k8s_job_entity.K8sJobVolumeMount{firstVolumeMount}, volumesMounts...)
+
+	return volumesMounts
+}
+
+func (m *MakeK8sJobService) makeJobVolumeMounts(wf workflow_entity.Workflow, wfa workflow_activity_entity.WorkflowActivities) []k8s_job_entity.K8sJobVolumeMount {
+
+	volumesMounts := make([]k8s_job_entity.K8sJobVolumeMount, 0)
 
 	firstVolumeMount := k8s_job_entity.K8sJobVolumeMount{
 		Name:      wfa.GetVolumeName(),

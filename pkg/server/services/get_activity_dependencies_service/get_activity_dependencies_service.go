@@ -59,6 +59,27 @@ func (g *GetActivityDependenciesService) GetActivityDependencies(workflowId int)
 	return activityDependencies
 }
 
+func (g *GetActivityDependenciesService) GetActivityDependenciesByActivity(workflowId, activityId int) workflow_activity_entity.MapActivityDependencies {
+	wfaDependencies, _ := g.activityRepository.GetWfaDependencies(workflowId)
+	mapWfa := make(map[int]workflow_activity_entity.WorkflowActivities)
+
+	wfa, _ := g.activityRepository.GetActivitiesByWorkflowIds([]int{workflowId})
+
+	for _, w := range wfa[workflowId] {
+		mapWfa[w.Id] = w
+	}
+
+	returns := make(workflow_activity_entity.MapActivityDependencies)
+	for _, wfaDep := range wfaDependencies {
+		if wfaDep.ActivityId == activityId {
+			returns[wfaDep.ActivityId] = append(returns[wfaDep.ActivityId], mapWfa[wfaDep.DependsOnId])
+		}
+	}
+
+	return returns
+
+}
+
 // fillActivityDependencies é uma função recursiva que preenche as dependências de uma atividade específica.
 // Este método é crítico para a funcionalidade do GetActivityDependencies, permitindo a resolução de dependências
 // tanto diretas quanto indiretas de uma atividade.

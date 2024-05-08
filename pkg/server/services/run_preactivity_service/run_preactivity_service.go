@@ -75,7 +75,7 @@ func (r *RunPreactivityService) runJobPreActivity(wf workflow_entity.Workflow, w
 
 	wfpreActivity.Status = activity_repository.StatusRunning
 
-	mapWfaDependencies := r.getActivityDependenciesService.GetActivityDependencies(wf.Id)
+	mapWfaDependencies := r.getActivityDependenciesService.GetActivityDependenciesByActivity(wfa.WorkflowId, wfa.Id)
 	dependencies := mapWfaDependencies[wfa.Id]
 
 	job, _ := r.makeK8sJobService.

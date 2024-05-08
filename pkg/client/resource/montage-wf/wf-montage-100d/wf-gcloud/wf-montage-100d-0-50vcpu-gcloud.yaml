@@ -1,6 +1,6 @@
 name: wf-montage-100d-0-50vcpu-gcloud
 spec:
-    image: ovvesley/akoflow-wf-montage:latest
+    image: ovvesley/akoflow-wf-montage:100d
     namespace: akoflow
     storageClassName: standard-rwo
     storageSize: 2Gi

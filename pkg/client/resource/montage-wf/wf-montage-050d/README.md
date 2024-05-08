@@ -18,4 +18,4 @@ A imagem ![mosaic-color](mosaic-color.png) é a imagem resultante da execução 
 # Pacote do Experimento Preliminar do Montage em 50d no akoflow. GKE 1 NODE, 16vCPU, 16GB RAM (e2-highcpu-16)
 
 
-Duração da execução do workflow Montage em 50d no akoflow com 1 nó GKE, 16vCPU e 16GB de RAM (e2-highcpu-16). Disponível em [wf-montage-050d_1vcpu_job_durations](wf-montage-050d_1vcpu_job_durations-gcloud.txt).
+Duração da execução do workflow Montage em 50d no akoflow com 1 nó GKE, 16vCPU e 16GB de RAM (e2-highcpu-16). Disponível em [wf-montage-050d_1vcpu_job_durations](wf-gcloud/wf-montage-050d_1vcpu_job_durations-gcloud.txt).

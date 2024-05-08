@@ -123,7 +123,7 @@ spec:
             - containerPort: 8080
           volumeMounts:
             - name: akoflow-server-pvc
-              mountPath: /storage
+              mountPath: /app/storage
           imagePullPolicy: Always
       volumes:
         - name: akoflow-server-pvc

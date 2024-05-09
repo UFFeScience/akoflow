@@ -20,8 +20,10 @@ echo "MOUNT_PATH=$MOUNT_PATH"
 
 #list all mounted volumes
 echo ">> akoflow - preactivity - list all mounted volumes"
+echo mount | grep "^/dev" | awk '{print $3}' | grep $MOUNT_PATH
+echo ' ______     ______     ______     ______     ______     ______     ______     ______     ______'
 
-echo "> akoflow - PREACTIVITY - #ACTIVITY_ID=$ACTIVITY_ID" > preactivity.log
+echo ">> akoflow - preactivity - copy files from mounted volumes to OUTPUT_DIR"
 
 mount | grep "^/dev" | awk '{print $3}' | grep $MOUNT_PATH | while read line; do
 
@@ -33,24 +35,8 @@ mount | grep "^/dev" | awk '{print $3}' | grep $MOUNT_PATH | while read line; do
       echo ">> akoflow - preactivity -  $line"
   fi
 
-  # list all files with name, size, date and checksum
-  echo ">> akoflow - preactivity - list all files with name, size, date and checksum"
-
-  echo ">> akoflow - preactivity -  $line" >> $line/preactivity.log
-  echo "" >> $line/preactivity.log
-
-
-  find $line -type f -exec ls -lah {} \; -exec md5sum {} \; >> $line/preactivity.log
-
   rsync --progress -avr $line/ $OUTPUT_DIR
 
 done
 
-curl -X POST -H "Content-Type: application/txt" -d @$OUTPUT_DIR/preactivity.log $akoflow_API_URL/activities/$ACTIVITY_ID/preactivity || true
-
-cat $OUTPUT_DIR/preactivity.log || true
-
 echo ">> akoflow - preactivity - done"
-
-
-

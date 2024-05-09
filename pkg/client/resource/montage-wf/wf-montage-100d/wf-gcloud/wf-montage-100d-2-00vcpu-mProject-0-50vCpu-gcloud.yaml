@@ -3,7 +3,7 @@ spec:
     image: ovvesley/akoflow-wf-montage:100d
     namespace: akoflow
     storageClassName: standard-rwo
-    storageSize: 2Gi
+    storageSize: 8Gi
     mountPath: /data
     activities:
         - name: mprojectid0000001

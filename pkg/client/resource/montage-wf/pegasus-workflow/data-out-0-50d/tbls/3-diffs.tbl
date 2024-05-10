@@ -1,0 +1,8 @@
+| cntr1 | cntr2 |                      plus |                     minus |         diff             |
+| int   | int   |                      char |                      char |         char             |
+       1       2 poss2ukstu_ir_001_001.fits  poss2ukstu_ir_001_002.fits  diff.000001.000002.fits
+       1       3 poss2ukstu_ir_001_001.fits  poss2ukstu_ir_002_001.fits  diff.000001.000003.fits
+       1       4 poss2ukstu_ir_001_001.fits  poss2ukstu_ir_002_002.fits  diff.000001.000004.fits
+       2       3 poss2ukstu_ir_001_002.fits  poss2ukstu_ir_002_001.fits  diff.000002.000003.fits
+       2       4 poss2ukstu_ir_001_002.fits  poss2ukstu_ir_002_002.fits  diff.000002.000004.fits
+       3       4 poss2ukstu_ir_002_001.fits  poss2ukstu_ir_002_002.fits  diff.000003.000004.fits

@@ -3,7 +3,7 @@ spec:
     image: ovvesley/akoflow-wf-montage:100d
     namespace: akoflow
     storageClassName: standard-rwo
-    storageSize: 8Gi
+    storageSize: 32Gi
     mountPath: /data
     activities:
         - name: mprojectid0000001
@@ -105,7 +105,7 @@ spec:
         - name: mdifffitid0000017
           run: mDiffFit -d -s 1-fit.000001.000002.txt pposs2ukstu_blue_001_001.fits pposs2ukstu_blue_001_002.fits 1-diff.000001.000002.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000001
             - mprojectid0000002
@@ -113,7 +113,7 @@ spec:
         - name: mdifffitid0000018
           run: mDiffFit -d -s 1-fit.000001.000003.txt pposs2ukstu_blue_001_001.fits pposs2ukstu_blue_001_003.fits 1-diff.000001.000003.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000001
             - mprojectid0000003
@@ -121,7 +121,7 @@ spec:
         - name: mdifffitid0000019
           run: mDiffFit -d -s 1-fit.000001.000004.txt pposs2ukstu_blue_001_001.fits pposs2ukstu_blue_001_004.fits 1-diff.000001.000004.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000001
             - mprojectid0000004
@@ -129,7 +129,7 @@ spec:
         - name: mdifffitid0000020
           run: mDiffFit -d -s 1-fit.000001.000005.txt pposs2ukstu_blue_001_001.fits pposs2ukstu_blue_002_001.fits 1-diff.000001.000005.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000001
             - mprojectid0000005
@@ -137,7 +137,7 @@ spec:
         - name: mdifffitid0000021
           run: mDiffFit -d -s 1-fit.000001.000006.txt pposs2ukstu_blue_001_001.fits pposs2ukstu_blue_002_002.fits 1-diff.000001.000006.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000001
             - mprojectid0000006
@@ -145,7 +145,7 @@ spec:
         - name: mdifffitid0000022
           run: mDiffFit -d -s 1-fit.000001.000007.txt pposs2ukstu_blue_001_001.fits pposs2ukstu_blue_002_003.fits 1-diff.000001.000007.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000001
             - mprojectid0000007
@@ -153,7 +153,7 @@ spec:
         - name: mdifffitid0000023
           run: mDiffFit -d -s 1-fit.000001.000008.txt pposs2ukstu_blue_001_001.fits pposs2ukstu_blue_002_004.fits 1-diff.000001.000008.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000001
             - mprojectid0000008
@@ -161,7 +161,7 @@ spec:
         - name: mdifffitid0000024
           run: mDiffFit -d -s 1-fit.000001.000009.txt pposs2ukstu_blue_001_001.fits pposs2ukstu_blue_003_001.fits 1-diff.000001.000009.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000001
             - mprojectid0000009
@@ -169,7 +169,7 @@ spec:
         - name: mdifffitid0000025
           run: mDiffFit -d -s 1-fit.000001.000010.txt pposs2ukstu_blue_001_001.fits pposs2ukstu_blue_003_002.fits 1-diff.000001.000010.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000001
             - mprojectid0000010
@@ -177,7 +177,7 @@ spec:
         - name: mdifffitid0000026
           run: mDiffFit -d -s 1-fit.000001.000011.txt pposs2ukstu_blue_001_001.fits pposs2ukstu_blue_003_003.fits 1-diff.000001.000011.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000001
             - mprojectid0000011
@@ -185,7 +185,7 @@ spec:
         - name: mdifffitid0000027
           run: mDiffFit -d -s 1-fit.000001.000012.txt pposs2ukstu_blue_001_001.fits pposs2ukstu_blue_003_004.fits 1-diff.000001.000012.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000001
             - mprojectid0000012
@@ -193,7 +193,7 @@ spec:
         - name: mdifffitid0000028
           run: mDiffFit -d -s 1-fit.000001.000013.txt pposs2ukstu_blue_001_001.fits pposs2ukstu_blue_004_001.fits 1-diff.000001.000013.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000001
             - mprojectid0000013
@@ -201,7 +201,7 @@ spec:
         - name: mdifffitid0000029
           run: mDiffFit -d -s 1-fit.000001.000014.txt pposs2ukstu_blue_001_001.fits pposs2ukstu_blue_004_002.fits 1-diff.000001.000014.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000001
             - mprojectid0000014
@@ -209,7 +209,7 @@ spec:
         - name: mdifffitid0000030
           run: mDiffFit -d -s 1-fit.000001.000015.txt pposs2ukstu_blue_001_001.fits pposs2ukstu_blue_004_003.fits 1-diff.000001.000015.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000001
             - mprojectid0000015
@@ -217,7 +217,7 @@ spec:
         - name: mdifffitid0000031
           run: mDiffFit -d -s 1-fit.000001.000016.txt pposs2ukstu_blue_001_001.fits pposs2ukstu_blue_004_004.fits 1-diff.000001.000016.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000001
             - mprojectid0000016
@@ -225,7 +225,7 @@ spec:
         - name: mdifffitid0000032
           run: mDiffFit -d -s 1-fit.000002.000003.txt pposs2ukstu_blue_001_002.fits pposs2ukstu_blue_001_003.fits 1-diff.000002.000003.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000002
             - mprojectid0000003
@@ -233,7 +233,7 @@ spec:
         - name: mdifffitid0000033
           run: mDiffFit -d -s 1-fit.000002.000004.txt pposs2ukstu_blue_001_002.fits pposs2ukstu_blue_001_004.fits 1-diff.000002.000004.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000002
             - mprojectid0000004
@@ -241,7 +241,7 @@ spec:
         - name: mdifffitid0000034
           run: mDiffFit -d -s 1-fit.000002.000005.txt pposs2ukstu_blue_001_002.fits pposs2ukstu_blue_002_001.fits 1-diff.000002.000005.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000002
             - mprojectid0000005
@@ -249,7 +249,7 @@ spec:
         - name: mdifffitid0000035
           run: mDiffFit -d -s 1-fit.000002.000006.txt pposs2ukstu_blue_001_002.fits pposs2ukstu_blue_002_002.fits 1-diff.000002.000006.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000002
             - mprojectid0000006
@@ -257,7 +257,7 @@ spec:
         - name: mdifffitid0000036
           run: mDiffFit -d -s 1-fit.000002.000007.txt pposs2ukstu_blue_001_002.fits pposs2ukstu_blue_002_003.fits 1-diff.000002.000007.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000002
             - mprojectid0000007
@@ -265,7 +265,7 @@ spec:
         - name: mdifffitid0000037
           run: mDiffFit -d -s 1-fit.000002.000008.txt pposs2ukstu_blue_001_002.fits pposs2ukstu_blue_002_004.fits 1-diff.000002.000008.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000002
             - mprojectid0000008
@@ -273,7 +273,7 @@ spec:
         - name: mdifffitid0000038
           run: mDiffFit -d -s 1-fit.000002.000009.txt pposs2ukstu_blue_001_002.fits pposs2ukstu_blue_003_001.fits 1-diff.000002.000009.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000002
             - mprojectid0000009
@@ -281,7 +281,7 @@ spec:
         - name: mdifffitid0000039
           run: mDiffFit -d -s 1-fit.000002.000010.txt pposs2ukstu_blue_001_002.fits pposs2ukstu_blue_003_002.fits 1-diff.000002.000010.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000002
             - mprojectid0000010
@@ -289,7 +289,7 @@ spec:
         - name: mdifffitid0000040
           run: mDiffFit -d -s 1-fit.000002.000011.txt pposs2ukstu_blue_001_002.fits pposs2ukstu_blue_003_003.fits 1-diff.000002.000011.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000002
             - mprojectid0000011
@@ -297,7 +297,7 @@ spec:
         - name: mdifffitid0000041
           run: mDiffFit -d -s 1-fit.000002.000012.txt pposs2ukstu_blue_001_002.fits pposs2ukstu_blue_003_004.fits 1-diff.000002.000012.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000002
             - mprojectid0000012
@@ -305,7 +305,7 @@ spec:
         - name: mdifffitid0000042
           run: mDiffFit -d -s 1-fit.000002.000013.txt pposs2ukstu_blue_001_002.fits pposs2ukstu_blue_004_001.fits 1-diff.000002.000013.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000002
             - mprojectid0000013
@@ -313,7 +313,7 @@ spec:
         - name: mdifffitid0000043
           run: mDiffFit -d -s 1-fit.000002.000014.txt pposs2ukstu_blue_001_002.fits pposs2ukstu_blue_004_002.fits 1-diff.000002.000014.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000002
             - mprojectid0000014
@@ -321,7 +321,7 @@ spec:
         - name: mdifffitid0000044
           run: mDiffFit -d -s 1-fit.000002.000015.txt pposs2ukstu_blue_001_002.fits pposs2ukstu_blue_004_003.fits 1-diff.000002.000015.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000002
             - mprojectid0000015
@@ -329,7 +329,7 @@ spec:
         - name: mdifffitid0000045
           run: mDiffFit -d -s 1-fit.000002.000016.txt pposs2ukstu_blue_001_002.fits pposs2ukstu_blue_004_004.fits 1-diff.000002.000016.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000002
             - mprojectid0000016
@@ -337,7 +337,7 @@ spec:
         - name: mdifffitid0000046
           run: mDiffFit -d -s 1-fit.000003.000004.txt pposs2ukstu_blue_001_003.fits pposs2ukstu_blue_001_004.fits 1-diff.000003.000004.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000003
             - mprojectid0000004
@@ -345,7 +345,7 @@ spec:
         - name: mdifffitid0000047
           run: mDiffFit -d -s 1-fit.000003.000005.txt pposs2ukstu_blue_001_003.fits pposs2ukstu_blue_002_001.fits 1-diff.000003.000005.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000003
             - mprojectid0000005
@@ -353,7 +353,7 @@ spec:
         - name: mdifffitid0000048
           run: mDiffFit -d -s 1-fit.000003.000006.txt pposs2ukstu_blue_001_003.fits pposs2ukstu_blue_002_002.fits 1-diff.000003.000006.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000003
             - mprojectid0000006
@@ -361,7 +361,7 @@ spec:
         - name: mdifffitid0000049
           run: mDiffFit -d -s 1-fit.000003.000007.txt pposs2ukstu_blue_001_003.fits pposs2ukstu_blue_002_003.fits 1-diff.000003.000007.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000003
             - mprojectid0000007
@@ -369,7 +369,7 @@ spec:
         - name: mdifffitid0000050
           run: mDiffFit -d -s 1-fit.000003.000008.txt pposs2ukstu_blue_001_003.fits pposs2ukstu_blue_002_004.fits 1-diff.000003.000008.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000003
             - mprojectid0000008
@@ -377,7 +377,7 @@ spec:
         - name: mdifffitid0000051
           run: mDiffFit -d -s 1-fit.000003.000009.txt pposs2ukstu_blue_001_003.fits pposs2ukstu_blue_003_001.fits 1-diff.000003.000009.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000003
             - mprojectid0000009
@@ -385,7 +385,7 @@ spec:
         - name: mdifffitid0000052
           run: mDiffFit -d -s 1-fit.000003.000010.txt pposs2ukstu_blue_001_003.fits pposs2ukstu_blue_003_002.fits 1-diff.000003.000010.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000003
             - mprojectid0000010
@@ -393,7 +393,7 @@ spec:
         - name: mdifffitid0000053
           run: mDiffFit -d -s 1-fit.000003.000011.txt pposs2ukstu_blue_001_003.fits pposs2ukstu_blue_003_003.fits 1-diff.000003.000011.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000003
             - mprojectid0000011
@@ -401,7 +401,7 @@ spec:
         - name: mdifffitid0000054
           run: mDiffFit -d -s 1-fit.000003.000012.txt pposs2ukstu_blue_001_003.fits pposs2ukstu_blue_003_004.fits 1-diff.000003.000012.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000003
             - mprojectid0000012
@@ -409,7 +409,7 @@ spec:
         - name: mdifffitid0000055
           run: mDiffFit -d -s 1-fit.000003.000013.txt pposs2ukstu_blue_001_003.fits pposs2ukstu_blue_004_001.fits 1-diff.000003.000013.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000003
             - mprojectid0000013
@@ -417,7 +417,7 @@ spec:
         - name: mdifffitid0000056
           run: mDiffFit -d -s 1-fit.000003.000014.txt pposs2ukstu_blue_001_003.fits pposs2ukstu_blue_004_002.fits 1-diff.000003.000014.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000003
             - mprojectid0000014
@@ -425,7 +425,7 @@ spec:
         - name: mdifffitid0000057
           run: mDiffFit -d -s 1-fit.000003.000015.txt pposs2ukstu_blue_001_003.fits pposs2ukstu_blue_004_003.fits 1-diff.000003.000015.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000003
             - mprojectid0000015
@@ -433,7 +433,7 @@ spec:
         - name: mdifffitid0000058
           run: mDiffFit -d -s 1-fit.000003.000016.txt pposs2ukstu_blue_001_003.fits pposs2ukstu_blue_004_004.fits 1-diff.000003.000016.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000003
             - mprojectid0000016
@@ -441,7 +441,7 @@ spec:
         - name: mdifffitid0000059
           run: mDiffFit -d -s 1-fit.000004.000005.txt pposs2ukstu_blue_001_004.fits pposs2ukstu_blue_002_001.fits 1-diff.000004.000005.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000004
             - mprojectid0000005
@@ -449,7 +449,7 @@ spec:
         - name: mdifffitid0000060
           run: mDiffFit -d -s 1-fit.000004.000006.txt pposs2ukstu_blue_001_004.fits pposs2ukstu_blue_002_002.fits 1-diff.000004.000006.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000004
             - mprojectid0000006
@@ -457,7 +457,7 @@ spec:
         - name: mdifffitid0000061
           run: mDiffFit -d -s 1-fit.000004.000007.txt pposs2ukstu_blue_001_004.fits pposs2ukstu_blue_002_003.fits 1-diff.000004.000007.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000004
             - mprojectid0000007
@@ -465,7 +465,7 @@ spec:
         - name: mdifffitid0000062
           run: mDiffFit -d -s 1-fit.000004.000008.txt pposs2ukstu_blue_001_004.fits pposs2ukstu_blue_002_004.fits 1-diff.000004.000008.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000004
             - mprojectid0000008
@@ -473,7 +473,7 @@ spec:
         - name: mdifffitid0000063
           run: mDiffFit -d -s 1-fit.000004.000009.txt pposs2ukstu_blue_001_004.fits pposs2ukstu_blue_003_001.fits 1-diff.000004.000009.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000004
             - mprojectid0000009
@@ -481,7 +481,7 @@ spec:
         - name: mdifffitid0000064
           run: mDiffFit -d -s 1-fit.000004.000010.txt pposs2ukstu_blue_001_004.fits pposs2ukstu_blue_003_002.fits 1-diff.000004.000010.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000004
             - mprojectid0000010
@@ -489,7 +489,7 @@ spec:
         - name: mdifffitid0000065
           run: mDiffFit -d -s 1-fit.000004.000011.txt pposs2ukstu_blue_001_004.fits pposs2ukstu_blue_003_003.fits 1-diff.000004.000011.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000004
             - mprojectid0000011
@@ -497,7 +497,7 @@ spec:
         - name: mdifffitid0000066
           run: mDiffFit -d -s 1-fit.000004.000012.txt pposs2ukstu_blue_001_004.fits pposs2ukstu_blue_003_004.fits 1-diff.000004.000012.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000004
             - mprojectid0000012
@@ -505,7 +505,7 @@ spec:
         - name: mdifffitid0000067
           run: mDiffFit -d -s 1-fit.000004.000013.txt pposs2ukstu_blue_001_004.fits pposs2ukstu_blue_004_001.fits 1-diff.000004.000013.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000004
             - mprojectid0000013
@@ -513,7 +513,7 @@ spec:
         - name: mdifffitid0000068
           run: mDiffFit -d -s 1-fit.000004.000014.txt pposs2ukstu_blue_001_004.fits pposs2ukstu_blue_004_002.fits 1-diff.000004.000014.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000004
             - mprojectid0000014
@@ -521,7 +521,7 @@ spec:
         - name: mdifffitid0000069
           run: mDiffFit -d -s 1-fit.000004.000015.txt pposs2ukstu_blue_001_004.fits pposs2ukstu_blue_004_003.fits 1-diff.000004.000015.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000004
             - mprojectid0000015
@@ -529,7 +529,7 @@ spec:
         - name: mdifffitid0000070
           run: mDiffFit -d -s 1-fit.000004.000016.txt pposs2ukstu_blue_001_004.fits pposs2ukstu_blue_004_004.fits 1-diff.000004.000016.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000004
             - mprojectid0000016
@@ -537,7 +537,7 @@ spec:
         - name: mdifffitid0000071
           run: mDiffFit -d -s 1-fit.000005.000006.txt pposs2ukstu_blue_002_001.fits pposs2ukstu_blue_002_002.fits 1-diff.000005.000006.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000005
             - mprojectid0000006
@@ -545,7 +545,7 @@ spec:
         - name: mdifffitid0000072
           run: mDiffFit -d -s 1-fit.000005.000007.txt pposs2ukstu_blue_002_001.fits pposs2ukstu_blue_002_003.fits 1-diff.000005.000007.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000005
             - mprojectid0000007
@@ -553,7 +553,7 @@ spec:
         - name: mdifffitid0000073
           run: mDiffFit -d -s 1-fit.000005.000008.txt pposs2ukstu_blue_002_001.fits pposs2ukstu_blue_002_004.fits 1-diff.000005.000008.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000005
             - mprojectid0000008
@@ -561,7 +561,7 @@ spec:
         - name: mdifffitid0000074
           run: mDiffFit -d -s 1-fit.000005.000009.txt pposs2ukstu_blue_002_001.fits pposs2ukstu_blue_003_001.fits 1-diff.000005.000009.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000005
             - mprojectid0000009
@@ -569,7 +569,7 @@ spec:
         - name: mdifffitid0000075
           run: mDiffFit -d -s 1-fit.000005.000010.txt pposs2ukstu_blue_002_001.fits pposs2ukstu_blue_003_002.fits 1-diff.000005.000010.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000005
             - mprojectid0000010
@@ -577,7 +577,7 @@ spec:
         - name: mdifffitid0000076
           run: mDiffFit -d -s 1-fit.000005.000011.txt pposs2ukstu_blue_002_001.fits pposs2ukstu_blue_003_003.fits 1-diff.000005.000011.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000005
             - mprojectid0000011
@@ -585,7 +585,7 @@ spec:
         - name: mdifffitid0000077
           run: mDiffFit -d -s 1-fit.000005.000012.txt pposs2ukstu_blue_002_001.fits pposs2ukstu_blue_003_004.fits 1-diff.000005.000012.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000005
             - mprojectid0000012
@@ -593,7 +593,7 @@ spec:
         - name: mdifffitid0000078
           run: mDiffFit -d -s 1-fit.000005.000013.txt pposs2ukstu_blue_002_001.fits pposs2ukstu_blue_004_001.fits 1-diff.000005.000013.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000005
             - mprojectid0000013
@@ -601,7 +601,7 @@ spec:
         - name: mdifffitid0000079
           run: mDiffFit -d -s 1-fit.000005.000014.txt pposs2ukstu_blue_002_001.fits pposs2ukstu_blue_004_002.fits 1-diff.000005.000014.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000005
             - mprojectid0000014
@@ -609,7 +609,7 @@ spec:
         - name: mdifffitid0000080
           run: mDiffFit -d -s 1-fit.000005.000015.txt pposs2ukstu_blue_002_001.fits pposs2ukstu_blue_004_003.fits 1-diff.000005.000015.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000005
             - mprojectid0000015
@@ -617,7 +617,7 @@ spec:
         - name: mdifffitid0000081
           run: mDiffFit -d -s 1-fit.000005.000016.txt pposs2ukstu_blue_002_001.fits pposs2ukstu_blue_004_004.fits 1-diff.000005.000016.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000005
             - mprojectid0000016
@@ -625,7 +625,7 @@ spec:
         - name: mdifffitid0000082
           run: mDiffFit -d -s 1-fit.000006.000007.txt pposs2ukstu_blue_002_002.fits pposs2ukstu_blue_002_003.fits 1-diff.000006.000007.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000006
             - mprojectid0000007
@@ -633,7 +633,7 @@ spec:
         - name: mdifffitid0000083
           run: mDiffFit -d -s 1-fit.000006.000008.txt pposs2ukstu_blue_002_002.fits pposs2ukstu_blue_002_004.fits 1-diff.000006.000008.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000006
             - mprojectid0000008
@@ -641,7 +641,7 @@ spec:
         - name: mdifffitid0000084
           run: mDiffFit -d -s 1-fit.000006.000009.txt pposs2ukstu_blue_002_002.fits pposs2ukstu_blue_003_001.fits 1-diff.000006.000009.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000006
             - mprojectid0000009
@@ -649,7 +649,7 @@ spec:
         - name: mdifffitid0000085
           run: mDiffFit -d -s 1-fit.000006.000010.txt pposs2ukstu_blue_002_002.fits pposs2ukstu_blue_003_002.fits 1-diff.000006.000010.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000006
             - mprojectid0000010
@@ -657,7 +657,7 @@ spec:
         - name: mdifffitid0000086
           run: mDiffFit -d -s 1-fit.000006.000011.txt pposs2ukstu_blue_002_002.fits pposs2ukstu_blue_003_003.fits 1-diff.000006.000011.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000006
             - mprojectid0000011
@@ -665,7 +665,7 @@ spec:
         - name: mdifffitid0000087
           run: mDiffFit -d -s 1-fit.000006.000012.txt pposs2ukstu_blue_002_002.fits pposs2ukstu_blue_003_004.fits 1-diff.000006.000012.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000006
             - mprojectid0000012
@@ -673,7 +673,7 @@ spec:
         - name: mdifffitid0000088
           run: mDiffFit -d -s 1-fit.000006.000013.txt pposs2ukstu_blue_002_002.fits pposs2ukstu_blue_004_001.fits 1-diff.000006.000013.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000006
             - mprojectid0000013
@@ -681,7 +681,7 @@ spec:
         - name: mdifffitid0000089
           run: mDiffFit -d -s 1-fit.000006.000014.txt pposs2ukstu_blue_002_002.fits pposs2ukstu_blue_004_002.fits 1-diff.000006.000014.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000006
             - mprojectid0000014
@@ -689,7 +689,7 @@ spec:
         - name: mdifffitid0000090
           run: mDiffFit -d -s 1-fit.000006.000015.txt pposs2ukstu_blue_002_002.fits pposs2ukstu_blue_004_003.fits 1-diff.000006.000015.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000006
             - mprojectid0000015
@@ -697,7 +697,7 @@ spec:
         - name: mdifffitid0000091
           run: mDiffFit -d -s 1-fit.000006.000016.txt pposs2ukstu_blue_002_002.fits pposs2ukstu_blue_004_004.fits 1-diff.000006.000016.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000006
             - mprojectid0000016
@@ -705,7 +705,7 @@ spec:
         - name: mdifffitid0000092
           run: mDiffFit -d -s 1-fit.000007.000008.txt pposs2ukstu_blue_002_003.fits pposs2ukstu_blue_002_004.fits 1-diff.000007.000008.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000007
             - mprojectid0000008
@@ -713,7 +713,7 @@ spec:
         - name: mdifffitid0000093
           run: mDiffFit -d -s 1-fit.000007.000009.txt pposs2ukstu_blue_002_003.fits pposs2ukstu_blue_003_001.fits 1-diff.000007.000009.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000007
             - mprojectid0000009
@@ -721,7 +721,7 @@ spec:
         - name: mdifffitid0000094
           run: mDiffFit -d -s 1-fit.000007.000010.txt pposs2ukstu_blue_002_003.fits pposs2ukstu_blue_003_002.fits 1-diff.000007.000010.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000007
             - mprojectid0000010
@@ -729,7 +729,7 @@ spec:
         - name: mdifffitid0000095
           run: mDiffFit -d -s 1-fit.000007.000011.txt pposs2ukstu_blue_002_003.fits pposs2ukstu_blue_003_003.fits 1-diff.000007.000011.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000007
             - mprojectid0000011
@@ -737,7 +737,7 @@ spec:
         - name: mdifffitid0000096
           run: mDiffFit -d -s 1-fit.000007.000012.txt pposs2ukstu_blue_002_003.fits pposs2ukstu_blue_003_004.fits 1-diff.000007.000012.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000007
             - mprojectid0000012
@@ -745,7 +745,7 @@ spec:
         - name: mdifffitid0000097
           run: mDiffFit -d -s 1-fit.000007.000013.txt pposs2ukstu_blue_002_003.fits pposs2ukstu_blue_004_001.fits 1-diff.000007.000013.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000007
             - mprojectid0000013
@@ -753,7 +753,7 @@ spec:
         - name: mdifffitid0000098
           run: mDiffFit -d -s 1-fit.000007.000014.txt pposs2ukstu_blue_002_003.fits pposs2ukstu_blue_004_002.fits 1-diff.000007.000014.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000007
             - mprojectid0000014
@@ -761,7 +761,7 @@ spec:
         - name: mdifffitid0000099
           run: mDiffFit -d -s 1-fit.000007.000015.txt pposs2ukstu_blue_002_003.fits pposs2ukstu_blue_004_003.fits 1-diff.000007.000015.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000007
             - mprojectid0000015
@@ -769,7 +769,7 @@ spec:
         - name: mdifffitid0000100
           run: mDiffFit -d -s 1-fit.000007.000016.txt pposs2ukstu_blue_002_003.fits pposs2ukstu_blue_004_004.fits 1-diff.000007.000016.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000007
             - mprojectid0000016
@@ -777,7 +777,7 @@ spec:
         - name: mdifffitid0000101
           run: mDiffFit -d -s 1-fit.000008.000009.txt pposs2ukstu_blue_002_004.fits pposs2ukstu_blue_003_001.fits 1-diff.000008.000009.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000008
             - mprojectid0000009
@@ -785,7 +785,7 @@ spec:
         - name: mdifffitid0000102
           run: mDiffFit -d -s 1-fit.000008.000010.txt pposs2ukstu_blue_002_004.fits pposs2ukstu_blue_003_002.fits 1-diff.000008.000010.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000008
             - mprojectid0000010
@@ -793,7 +793,7 @@ spec:
         - name: mdifffitid0000103
           run: mDiffFit -d -s 1-fit.000008.000011.txt pposs2ukstu_blue_002_004.fits pposs2ukstu_blue_003_003.fits 1-diff.000008.000011.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000008
             - mprojectid0000011
@@ -801,7 +801,7 @@ spec:
         - name: mdifffitid0000104
           run: mDiffFit -d -s 1-fit.000008.000012.txt pposs2ukstu_blue_002_004.fits pposs2ukstu_blue_003_004.fits 1-diff.000008.000012.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000008
             - mprojectid0000012
@@ -809,7 +809,7 @@ spec:
         - name: mdifffitid0000105
           run: mDiffFit -d -s 1-fit.000008.000013.txt pposs2ukstu_blue_002_004.fits pposs2ukstu_blue_004_001.fits 1-diff.000008.000013.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000008
             - mprojectid0000013
@@ -817,7 +817,7 @@ spec:
         - name: mdifffitid0000106
           run: mDiffFit -d -s 1-fit.000008.000014.txt pposs2ukstu_blue_002_004.fits pposs2ukstu_blue_004_002.fits 1-diff.000008.000014.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000008
             - mprojectid0000014
@@ -825,7 +825,7 @@ spec:
         - name: mdifffitid0000107
           run: mDiffFit -d -s 1-fit.000008.000015.txt pposs2ukstu_blue_002_004.fits pposs2ukstu_blue_004_003.fits 1-diff.000008.000015.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000008
             - mprojectid0000015
@@ -833,7 +833,7 @@ spec:
         - name: mdifffitid0000108
           run: mDiffFit -d -s 1-fit.000008.000016.txt pposs2ukstu_blue_002_004.fits pposs2ukstu_blue_004_004.fits 1-diff.000008.000016.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000008
             - mprojectid0000016
@@ -841,7 +841,7 @@ spec:
         - name: mdifffitid0000109
           run: mDiffFit -d -s 1-fit.000009.000010.txt pposs2ukstu_blue_003_001.fits pposs2ukstu_blue_003_002.fits 1-diff.000009.000010.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000009
             - mprojectid0000010
@@ -849,7 +849,7 @@ spec:
         - name: mdifffitid0000110
           run: mDiffFit -d -s 1-fit.000009.000011.txt pposs2ukstu_blue_003_001.fits pposs2ukstu_blue_003_003.fits 1-diff.000009.000011.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000009
             - mprojectid0000011
@@ -857,7 +857,7 @@ spec:
         - name: mdifffitid0000111
           run: mDiffFit -d -s 1-fit.000009.000012.txt pposs2ukstu_blue_003_001.fits pposs2ukstu_blue_003_004.fits 1-diff.000009.000012.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000009
             - mprojectid0000012
@@ -865,7 +865,7 @@ spec:
         - name: mdifffitid0000112
           run: mDiffFit -d -s 1-fit.000009.000013.txt pposs2ukstu_blue_003_001.fits pposs2ukstu_blue_004_001.fits 1-diff.000009.000013.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000009
             - mprojectid0000013
@@ -873,7 +873,7 @@ spec:
         - name: mdifffitid0000113
           run: mDiffFit -d -s 1-fit.000009.000014.txt pposs2ukstu_blue_003_001.fits pposs2ukstu_blue_004_002.fits 1-diff.000009.000014.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000009
             - mprojectid0000014
@@ -881,7 +881,7 @@ spec:
         - name: mdifffitid0000114
           run: mDiffFit -d -s 1-fit.000009.000015.txt pposs2ukstu_blue_003_001.fits pposs2ukstu_blue_004_003.fits 1-diff.000009.000015.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000009
             - mprojectid0000015
@@ -889,7 +889,7 @@ spec:
         - name: mdifffitid0000115
           run: mDiffFit -d -s 1-fit.000009.000016.txt pposs2ukstu_blue_003_001.fits pposs2ukstu_blue_004_004.fits 1-diff.000009.000016.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000009
             - mprojectid0000016
@@ -897,7 +897,7 @@ spec:
         - name: mdifffitid0000116
           run: mDiffFit -d -s 1-fit.000010.000011.txt pposs2ukstu_blue_003_002.fits pposs2ukstu_blue_003_003.fits 1-diff.000010.000011.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000010
             - mprojectid0000011
@@ -905,7 +905,7 @@ spec:
         - name: mdifffitid0000117
           run: mDiffFit -d -s 1-fit.000010.000012.txt pposs2ukstu_blue_003_002.fits pposs2ukstu_blue_003_004.fits 1-diff.000010.000012.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000010
             - mprojectid0000012
@@ -913,7 +913,7 @@ spec:
         - name: mdifffitid0000118
           run: mDiffFit -d -s 1-fit.000010.000013.txt pposs2ukstu_blue_003_002.fits pposs2ukstu_blue_004_001.fits 1-diff.000010.000013.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000010
             - mprojectid0000013
@@ -921,7 +921,7 @@ spec:
         - name: mdifffitid0000119
           run: mDiffFit -d -s 1-fit.000010.000014.txt pposs2ukstu_blue_003_002.fits pposs2ukstu_blue_004_002.fits 1-diff.000010.000014.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000010
             - mprojectid0000014
@@ -929,7 +929,7 @@ spec:
         - name: mdifffitid0000120
           run: mDiffFit -d -s 1-fit.000010.000015.txt pposs2ukstu_blue_003_002.fits pposs2ukstu_blue_004_003.fits 1-diff.000010.000015.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000010
             - mprojectid0000015
@@ -937,7 +937,7 @@ spec:
         - name: mdifffitid0000121
           run: mDiffFit -d -s 1-fit.000010.000016.txt pposs2ukstu_blue_003_002.fits pposs2ukstu_blue_004_004.fits 1-diff.000010.000016.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000010
             - mprojectid0000016
@@ -945,7 +945,7 @@ spec:
         - name: mdifffitid0000122
           run: mDiffFit -d -s 1-fit.000011.000012.txt pposs2ukstu_blue_003_003.fits pposs2ukstu_blue_003_004.fits 1-diff.000011.000012.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000011
             - mprojectid0000012
@@ -953,7 +953,7 @@ spec:
         - name: mdifffitid0000123
           run: mDiffFit -d -s 1-fit.000011.000013.txt pposs2ukstu_blue_003_003.fits pposs2ukstu_blue_004_001.fits 1-diff.000011.000013.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000011
             - mprojectid0000013
@@ -961,7 +961,7 @@ spec:
         - name: mdifffitid0000124
           run: mDiffFit -d -s 1-fit.000011.000014.txt pposs2ukstu_blue_003_003.fits pposs2ukstu_blue_004_002.fits 1-diff.000011.000014.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000011
             - mprojectid0000014
@@ -969,7 +969,7 @@ spec:
         - name: mdifffitid0000125
           run: mDiffFit -d -s 1-fit.000011.000015.txt pposs2ukstu_blue_003_003.fits pposs2ukstu_blue_004_003.fits 1-diff.000011.000015.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000011
             - mprojectid0000015
@@ -977,7 +977,7 @@ spec:
         - name: mdifffitid0000126
           run: mDiffFit -d -s 1-fit.000011.000016.txt pposs2ukstu_blue_003_003.fits pposs2ukstu_blue_004_004.fits 1-diff.000011.000016.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000011
             - mprojectid0000016
@@ -985,7 +985,7 @@ spec:
         - name: mdifffitid0000127
           run: mDiffFit -d -s 1-fit.000012.000013.txt pposs2ukstu_blue_003_004.fits pposs2ukstu_blue_004_001.fits 1-diff.000012.000013.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000012
             - mprojectid0000013
@@ -993,7 +993,7 @@ spec:
         - name: mdifffitid0000128
           run: mDiffFit -d -s 1-fit.000012.000014.txt pposs2ukstu_blue_003_004.fits pposs2ukstu_blue_004_002.fits 1-diff.000012.000014.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000012
             - mprojectid0000014
@@ -1001,7 +1001,7 @@ spec:
         - name: mdifffitid0000129
           run: mDiffFit -d -s 1-fit.000012.000015.txt pposs2ukstu_blue_003_004.fits pposs2ukstu_blue_004_003.fits 1-diff.000012.000015.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000012
             - mprojectid0000015
@@ -1009,7 +1009,7 @@ spec:
         - name: mdifffitid0000130
           run: mDiffFit -d -s 1-fit.000012.000016.txt pposs2ukstu_blue_003_004.fits pposs2ukstu_blue_004_004.fits 1-diff.000012.000016.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000012
             - mprojectid0000016
@@ -1017,7 +1017,7 @@ spec:
         - name: mdifffitid0000131
           run: mDiffFit -d -s 1-fit.000013.000014.txt pposs2ukstu_blue_004_001.fits pposs2ukstu_blue_004_002.fits 1-diff.000013.000014.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000013
             - mprojectid0000014
@@ -1025,7 +1025,7 @@ spec:
         - name: mdifffitid0000132
           run: mDiffFit -d -s 1-fit.000013.000015.txt pposs2ukstu_blue_004_001.fits pposs2ukstu_blue_004_003.fits 1-diff.000013.000015.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000013
             - mprojectid0000015
@@ -1033,7 +1033,7 @@ spec:
         - name: mdifffitid0000133
           run: mDiffFit -d -s 1-fit.000013.000016.txt pposs2ukstu_blue_004_001.fits pposs2ukstu_blue_004_004.fits 1-diff.000013.000016.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000013
             - mprojectid0000016
@@ -1041,7 +1041,7 @@ spec:
         - name: mdifffitid0000134
           run: mDiffFit -d -s 1-fit.000014.000015.txt pposs2ukstu_blue_004_002.fits pposs2ukstu_blue_004_003.fits 1-diff.000014.000015.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000014
             - mprojectid0000015
@@ -1049,7 +1049,7 @@ spec:
         - name: mdifffitid0000135
           run: mDiffFit -d -s 1-fit.000014.000016.txt pposs2ukstu_blue_004_002.fits pposs2ukstu_blue_004_004.fits 1-diff.000014.000016.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000014
             - mprojectid0000016
@@ -1057,7 +1057,7 @@ spec:
         - name: mdifffitid0000136
           run: mDiffFit -d -s 1-fit.000015.000016.txt pposs2ukstu_blue_004_003.fits pposs2ukstu_blue_004_004.fits 1-diff.000015.000016.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000015
             - mprojectid0000016
@@ -1065,7 +1065,7 @@ spec:
         - name: mconcatfitid0000137
           run: mConcatFit 1-stat.tbl 1-fits.tbl .
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mdifffitid0000017
             - mdifffitid0000018
@@ -1191,14 +1191,14 @@ spec:
         - name: mbgmodelid0000138
           run: mBgModel -i 100000 1-images.tbl 1-fits.tbl 1-corrections.tbl
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mconcatfitid0000137
 
         - name: mbackgroundid0000139
           run: mBackground -t pposs2ukstu_blue_001_001.fits cposs2ukstu_blue_001_001.fits 1-projected.tbl 1-corrections.tbl
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000001
             - mbgmodelid0000138
@@ -1206,7 +1206,7 @@ spec:
         - name: mbackgroundid0000140
           run: mBackground -t pposs2ukstu_blue_001_002.fits cposs2ukstu_blue_001_002.fits 1-projected.tbl 1-corrections.tbl
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000002
             - mbgmodelid0000138
@@ -1214,7 +1214,7 @@ spec:
         - name: mbackgroundid0000141
           run: mBackground -t pposs2ukstu_blue_001_003.fits cposs2ukstu_blue_001_003.fits 1-projected.tbl 1-corrections.tbl
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000003
             - mbgmodelid0000138
@@ -1222,7 +1222,7 @@ spec:
         - name: mbackgroundid0000142
           run: mBackground -t pposs2ukstu_blue_001_004.fits cposs2ukstu_blue_001_004.fits 1-projected.tbl 1-corrections.tbl
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000004
             - mbgmodelid0000138
@@ -1230,7 +1230,7 @@ spec:
         - name: mbackgroundid0000143
           run: mBackground -t pposs2ukstu_blue_002_001.fits cposs2ukstu_blue_002_001.fits 1-projected.tbl 1-corrections.tbl
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000005
             - mbgmodelid0000138
@@ -1238,7 +1238,7 @@ spec:
         - name: mbackgroundid0000144
           run: mBackground -t pposs2ukstu_blue_002_002.fits cposs2ukstu_blue_002_002.fits 1-projected.tbl 1-corrections.tbl
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000006
             - mbgmodelid0000138
@@ -1246,7 +1246,7 @@ spec:
         - name: mbackgroundid0000145
           run: mBackground -t pposs2ukstu_blue_002_003.fits cposs2ukstu_blue_002_003.fits 1-projected.tbl 1-corrections.tbl
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000007
             - mbgmodelid0000138
@@ -1254,7 +1254,7 @@ spec:
         - name: mbackgroundid0000146
           run: mBackground -t pposs2ukstu_blue_002_004.fits cposs2ukstu_blue_002_004.fits 1-projected.tbl 1-corrections.tbl
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000008
             - mbgmodelid0000138
@@ -1262,7 +1262,7 @@ spec:
         - name: mbackgroundid0000147
           run: mBackground -t pposs2ukstu_blue_003_001.fits cposs2ukstu_blue_003_001.fits 1-projected.tbl 1-corrections.tbl
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000009
             - mbgmodelid0000138
@@ -1270,7 +1270,7 @@ spec:
         - name: mbackgroundid0000148
           run: mBackground -t pposs2ukstu_blue_003_002.fits cposs2ukstu_blue_003_002.fits 1-projected.tbl 1-corrections.tbl
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000010
             - mbgmodelid0000138
@@ -1278,7 +1278,7 @@ spec:
         - name: mbackgroundid0000149
           run: mBackground -t pposs2ukstu_blue_003_003.fits cposs2ukstu_blue_003_003.fits 1-projected.tbl 1-corrections.tbl
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000011
             - mbgmodelid0000138
@@ -1286,7 +1286,7 @@ spec:
         - name: mbackgroundid0000150
           run: mBackground -t pposs2ukstu_blue_003_004.fits cposs2ukstu_blue_003_004.fits 1-projected.tbl 1-corrections.tbl
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000012
             - mbgmodelid0000138
@@ -1294,7 +1294,7 @@ spec:
         - name: mbackgroundid0000151
           run: mBackground -t pposs2ukstu_blue_004_001.fits cposs2ukstu_blue_004_001.fits 1-projected.tbl 1-corrections.tbl
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000013
             - mbgmodelid0000138
@@ -1302,7 +1302,7 @@ spec:
         - name: mbackgroundid0000152
           run: mBackground -t pposs2ukstu_blue_004_002.fits cposs2ukstu_blue_004_002.fits 1-projected.tbl 1-corrections.tbl
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000014
             - mbgmodelid0000138
@@ -1310,7 +1310,7 @@ spec:
         - name: mbackgroundid0000153
           run: mBackground -t pposs2ukstu_blue_004_003.fits cposs2ukstu_blue_004_003.fits 1-projected.tbl 1-corrections.tbl
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000015
             - mbgmodelid0000138
@@ -1318,7 +1318,7 @@ spec:
         - name: mbackgroundid0000154
           run: mBackground -t pposs2ukstu_blue_004_004.fits cposs2ukstu_blue_004_004.fits 1-projected.tbl 1-corrections.tbl
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000016
             - mbgmodelid0000138
@@ -1326,7 +1326,7 @@ spec:
         - name: mimgtblid0000155
           run: mImgtbl . -t 1-corrected.tbl 1-updated-corrected.tbl
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mbackgroundid0000139
             - mbackgroundid0000140
@@ -1348,7 +1348,7 @@ spec:
         - name: maddid0000156
           run: mAdd -e 1-updated-corrected.tbl region.hdr 1-mosaic.fits
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mbackgroundid0000139
             - mbackgroundid0000140
@@ -1371,7 +1371,7 @@ spec:
         - name: mviewerid0000157
           run: mViewer -ct 1 -gray 1-mosaic.fits -1s max gaussian -png 1-mosaic.png
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - maddid0000156
 
@@ -1474,7 +1474,7 @@ spec:
         - name: mdifffitid0000174
           run: mDiffFit -d -s 2-fit.000001.000002.txt pposs2ukstu_red_001_001.fits pposs2ukstu_red_001_002.fits 2-diff.000001.000002.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000158
             - mprojectid0000159
@@ -1482,7 +1482,7 @@ spec:
         - name: mdifffitid0000175
           run: mDiffFit -d -s 2-fit.000001.000003.txt pposs2ukstu_red_001_001.fits pposs2ukstu_red_001_003.fits 2-diff.000001.000003.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000158
             - mprojectid0000160
@@ -1490,7 +1490,7 @@ spec:
         - name: mdifffitid0000176
           run: mDiffFit -d -s 2-fit.000001.000004.txt pposs2ukstu_red_001_001.fits pposs2ukstu_red_001_004.fits 2-diff.000001.000004.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000158
             - mprojectid0000161
@@ -1498,7 +1498,7 @@ spec:
         - name: mdifffitid0000177
           run: mDiffFit -d -s 2-fit.000001.000005.txt pposs2ukstu_red_001_001.fits pposs2ukstu_red_002_001.fits 2-diff.000001.000005.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000158
             - mprojectid0000162
@@ -1506,7 +1506,7 @@ spec:
         - name: mdifffitid0000178
           run: mDiffFit -d -s 2-fit.000001.000006.txt pposs2ukstu_red_001_001.fits pposs2ukstu_red_002_002.fits 2-diff.000001.000006.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000158
             - mprojectid0000163
@@ -1514,7 +1514,7 @@ spec:
         - name: mdifffitid0000179
           run: mDiffFit -d -s 2-fit.000001.000007.txt pposs2ukstu_red_001_001.fits pposs2ukstu_red_002_003.fits 2-diff.000001.000007.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000158
             - mprojectid0000164
@@ -1522,7 +1522,7 @@ spec:
         - name: mdifffitid0000180
           run: mDiffFit -d -s 2-fit.000001.000008.txt pposs2ukstu_red_001_001.fits pposs2ukstu_red_002_004.fits 2-diff.000001.000008.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000158
             - mprojectid0000165
@@ -1530,7 +1530,7 @@ spec:
         - name: mdifffitid0000181
           run: mDiffFit -d -s 2-fit.000001.000009.txt pposs2ukstu_red_001_001.fits pposs2ukstu_red_003_001.fits 2-diff.000001.000009.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000158
             - mprojectid0000166
@@ -1538,7 +1538,7 @@ spec:
         - name: mdifffitid0000182
           run: mDiffFit -d -s 2-fit.000001.000010.txt pposs2ukstu_red_001_001.fits pposs2ukstu_red_003_002.fits 2-diff.000001.000010.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000158
             - mprojectid0000167
@@ -1546,7 +1546,7 @@ spec:
         - name: mdifffitid0000183
           run: mDiffFit -d -s 2-fit.000001.000011.txt pposs2ukstu_red_001_001.fits pposs2ukstu_red_003_003.fits 2-diff.000001.000011.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000158
             - mprojectid0000168
@@ -1554,7 +1554,7 @@ spec:
         - name: mdifffitid0000184
           run: mDiffFit -d -s 2-fit.000001.000012.txt pposs2ukstu_red_001_001.fits pposs2ukstu_red_003_004.fits 2-diff.000001.000012.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000158
             - mprojectid0000169
@@ -1562,7 +1562,7 @@ spec:
         - name: mdifffitid0000185
           run: mDiffFit -d -s 2-fit.000001.000013.txt pposs2ukstu_red_001_001.fits pposs2ukstu_red_004_001.fits 2-diff.000001.000013.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000158
             - mprojectid0000170
@@ -1570,7 +1570,7 @@ spec:
         - name: mdifffitid0000186
           run: mDiffFit -d -s 2-fit.000001.000014.txt pposs2ukstu_red_001_001.fits pposs2ukstu_red_004_002.fits 2-diff.000001.000014.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000158
             - mprojectid0000171
@@ -1578,7 +1578,7 @@ spec:
         - name: mdifffitid0000187
           run: mDiffFit -d -s 2-fit.000001.000015.txt pposs2ukstu_red_001_001.fits pposs2ukstu_red_004_003.fits 2-diff.000001.000015.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000158
             - mprojectid0000172
@@ -1586,7 +1586,7 @@ spec:
         - name: mdifffitid0000188
           run: mDiffFit -d -s 2-fit.000001.000016.txt pposs2ukstu_red_001_001.fits pposs2ukstu_red_004_004.fits 2-diff.000001.000016.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000158
             - mprojectid0000173
@@ -1594,7 +1594,7 @@ spec:
         - name: mdifffitid0000189
           run: mDiffFit -d -s 2-fit.000002.000003.txt pposs2ukstu_red_001_002.fits pposs2ukstu_red_001_003.fits 2-diff.000002.000003.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000159
             - mprojectid0000160
@@ -1602,7 +1602,7 @@ spec:
         - name: mdifffitid0000190
           run: mDiffFit -d -s 2-fit.000002.000004.txt pposs2ukstu_red_001_002.fits pposs2ukstu_red_001_004.fits 2-diff.000002.000004.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000159
             - mprojectid0000161
@@ -1610,7 +1610,7 @@ spec:
         - name: mdifffitid0000191
           run: mDiffFit -d -s 2-fit.000002.000005.txt pposs2ukstu_red_001_002.fits pposs2ukstu_red_002_001.fits 2-diff.000002.000005.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000159
             - mprojectid0000162
@@ -1618,7 +1618,7 @@ spec:
         - name: mdifffitid0000192
           run: mDiffFit -d -s 2-fit.000002.000006.txt pposs2ukstu_red_001_002.fits pposs2ukstu_red_002_002.fits 2-diff.000002.000006.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000159
             - mprojectid0000163
@@ -1626,7 +1626,7 @@ spec:
         - name: mdifffitid0000193
           run: mDiffFit -d -s 2-fit.000002.000007.txt pposs2ukstu_red_001_002.fits pposs2ukstu_red_002_003.fits 2-diff.000002.000007.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000159
             - mprojectid0000164
@@ -1634,7 +1634,7 @@ spec:
         - name: mdifffitid0000194
           run: mDiffFit -d -s 2-fit.000002.000008.txt pposs2ukstu_red_001_002.fits pposs2ukstu_red_002_004.fits 2-diff.000002.000008.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000159
             - mprojectid0000165
@@ -1642,7 +1642,7 @@ spec:
         - name: mdifffitid0000195
           run: mDiffFit -d -s 2-fit.000002.000009.txt pposs2ukstu_red_001_002.fits pposs2ukstu_red_003_001.fits 2-diff.000002.000009.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000159
             - mprojectid0000166
@@ -1650,7 +1650,7 @@ spec:
         - name: mdifffitid0000196
           run: mDiffFit -d -s 2-fit.000002.000010.txt pposs2ukstu_red_001_002.fits pposs2ukstu_red_003_002.fits 2-diff.000002.000010.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000159
             - mprojectid0000167
@@ -1658,7 +1658,7 @@ spec:
         - name: mdifffitid0000197
           run: mDiffFit -d -s 2-fit.000002.000011.txt pposs2ukstu_red_001_002.fits pposs2ukstu_red_003_003.fits 2-diff.000002.000011.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000159
             - mprojectid0000168
@@ -1666,7 +1666,7 @@ spec:
         - name: mdifffitid0000198
           run: mDiffFit -d -s 2-fit.000002.000012.txt pposs2ukstu_red_001_002.fits pposs2ukstu_red_003_004.fits 2-diff.000002.000012.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000159
             - mprojectid0000169
@@ -1674,7 +1674,7 @@ spec:
         - name: mdifffitid0000199
           run: mDiffFit -d -s 2-fit.000002.000013.txt pposs2ukstu_red_001_002.fits pposs2ukstu_red_004_001.fits 2-diff.000002.000013.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000159
             - mprojectid0000170
@@ -1682,7 +1682,7 @@ spec:
         - name: mdifffitid0000200
           run: mDiffFit -d -s 2-fit.000002.000014.txt pposs2ukstu_red_001_002.fits pposs2ukstu_red_004_002.fits 2-diff.000002.000014.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000159
             - mprojectid0000171
@@ -1690,7 +1690,7 @@ spec:
         - name: mdifffitid0000201
           run: mDiffFit -d -s 2-fit.000002.000015.txt pposs2ukstu_red_001_002.fits pposs2ukstu_red_004_003.fits 2-diff.000002.000015.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000159
             - mprojectid0000172
@@ -1698,7 +1698,7 @@ spec:
         - name: mdifffitid0000202
           run: mDiffFit -d -s 2-fit.000002.000016.txt pposs2ukstu_red_001_002.fits pposs2ukstu_red_004_004.fits 2-diff.000002.000016.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000159
             - mprojectid0000173
@@ -1706,7 +1706,7 @@ spec:
         - name: mdifffitid0000203
           run: mDiffFit -d -s 2-fit.000003.000004.txt pposs2ukstu_red_001_003.fits pposs2ukstu_red_001_004.fits 2-diff.000003.000004.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000160
             - mprojectid0000161
@@ -1714,7 +1714,7 @@ spec:
         - name: mdifffitid0000204
           run: mDiffFit -d -s 2-fit.000003.000005.txt pposs2ukstu_red_001_003.fits pposs2ukstu_red_002_001.fits 2-diff.000003.000005.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000160
             - mprojectid0000162
@@ -1722,7 +1722,7 @@ spec:
         - name: mdifffitid0000205
           run: mDiffFit -d -s 2-fit.000003.000006.txt pposs2ukstu_red_001_003.fits pposs2ukstu_red_002_002.fits 2-diff.000003.000006.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000160
             - mprojectid0000163
@@ -1730,7 +1730,7 @@ spec:
         - name: mdifffitid0000206
           run: mDiffFit -d -s 2-fit.000003.000007.txt pposs2ukstu_red_001_003.fits pposs2ukstu_red_002_003.fits 2-diff.000003.000007.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000160
             - mprojectid0000164
@@ -1738,7 +1738,7 @@ spec:
         - name: mdifffitid0000207
           run: mDiffFit -d -s 2-fit.000003.000008.txt pposs2ukstu_red_001_003.fits pposs2ukstu_red_002_004.fits 2-diff.000003.000008.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000160
             - mprojectid0000165
@@ -1746,7 +1746,7 @@ spec:
         - name: mdifffitid0000208
           run: mDiffFit -d -s 2-fit.000003.000009.txt pposs2ukstu_red_001_003.fits pposs2ukstu_red_003_001.fits 2-diff.000003.000009.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000160
             - mprojectid0000166
@@ -1754,7 +1754,7 @@ spec:
         - name: mdifffitid0000209
           run: mDiffFit -d -s 2-fit.000003.000010.txt pposs2ukstu_red_001_003.fits pposs2ukstu_red_003_002.fits 2-diff.000003.000010.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000160
             - mprojectid0000167
@@ -1762,7 +1762,7 @@ spec:
         - name: mdifffitid0000210
           run: mDiffFit -d -s 2-fit.000003.000011.txt pposs2ukstu_red_001_003.fits pposs2ukstu_red_003_003.fits 2-diff.000003.000011.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000160
             - mprojectid0000168
@@ -1770,7 +1770,7 @@ spec:
         - name: mdifffitid0000211
           run: mDiffFit -d -s 2-fit.000003.000012.txt pposs2ukstu_red_001_003.fits pposs2ukstu_red_003_004.fits 2-diff.000003.000012.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000160
             - mprojectid0000169
@@ -1778,7 +1778,7 @@ spec:
         - name: mdifffitid0000212
           run: mDiffFit -d -s 2-fit.000003.000013.txt pposs2ukstu_red_001_003.fits pposs2ukstu_red_004_001.fits 2-diff.000003.000013.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000160
             - mprojectid0000170
@@ -1786,7 +1786,7 @@ spec:
         - name: mdifffitid0000213
           run: mDiffFit -d -s 2-fit.000003.000014.txt pposs2ukstu_red_001_003.fits pposs2ukstu_red_004_002.fits 2-diff.000003.000014.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000160
             - mprojectid0000171
@@ -1794,7 +1794,7 @@ spec:
         - name: mdifffitid0000214
           run: mDiffFit -d -s 2-fit.000003.000015.txt pposs2ukstu_red_001_003.fits pposs2ukstu_red_004_003.fits 2-diff.000003.000015.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000160
             - mprojectid0000172
@@ -1802,7 +1802,7 @@ spec:
         - name: mdifffitid0000215
           run: mDiffFit -d -s 2-fit.000003.000016.txt pposs2ukstu_red_001_003.fits pposs2ukstu_red_004_004.fits 2-diff.000003.000016.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000160
             - mprojectid0000173
@@ -1810,7 +1810,7 @@ spec:
         - name: mdifffitid0000216
           run: mDiffFit -d -s 2-fit.000004.000005.txt pposs2ukstu_red_001_004.fits pposs2ukstu_red_002_001.fits 2-diff.000004.000005.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000161
             - mprojectid0000162
@@ -1818,7 +1818,7 @@ spec:
         - name: mdifffitid0000217
           run: mDiffFit -d -s 2-fit.000004.000006.txt pposs2ukstu_red_001_004.fits pposs2ukstu_red_002_002.fits 2-diff.000004.000006.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000161
             - mprojectid0000163
@@ -1826,7 +1826,7 @@ spec:
         - name: mdifffitid0000218
           run: mDiffFit -d -s 2-fit.000004.000007.txt pposs2ukstu_red_001_004.fits pposs2ukstu_red_002_003.fits 2-diff.000004.000007.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000161
             - mprojectid0000164
@@ -1834,7 +1834,7 @@ spec:
         - name: mdifffitid0000219
           run: mDiffFit -d -s 2-fit.000004.000008.txt pposs2ukstu_red_001_004.fits pposs2ukstu_red_002_004.fits 2-diff.000004.000008.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000161
             - mprojectid0000165
@@ -1842,7 +1842,7 @@ spec:
         - name: mdifffitid0000220
           run: mDiffFit -d -s 2-fit.000004.000009.txt pposs2ukstu_red_001_004.fits pposs2ukstu_red_003_001.fits 2-diff.000004.000009.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000161
             - mprojectid0000166
@@ -1850,7 +1850,7 @@ spec:
         - name: mdifffitid0000221
           run: mDiffFit -d -s 2-fit.000004.000010.txt pposs2ukstu_red_001_004.fits pposs2ukstu_red_003_002.fits 2-diff.000004.000010.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000161
             - mprojectid0000167
@@ -1858,7 +1858,7 @@ spec:
         - name: mdifffitid0000222
           run: mDiffFit -d -s 2-fit.000004.000011.txt pposs2ukstu_red_001_004.fits pposs2ukstu_red_003_003.fits 2-diff.000004.000011.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000161
             - mprojectid0000168
@@ -1866,7 +1866,7 @@ spec:
         - name: mdifffitid0000223
           run: mDiffFit -d -s 2-fit.000004.000012.txt pposs2ukstu_red_001_004.fits pposs2ukstu_red_003_004.fits 2-diff.000004.000012.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000161
             - mprojectid0000169
@@ -1874,7 +1874,7 @@ spec:
         - name: mdifffitid0000224
           run: mDiffFit -d -s 2-fit.000004.000013.txt pposs2ukstu_red_001_004.fits pposs2ukstu_red_004_001.fits 2-diff.000004.000013.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000161
             - mprojectid0000170
@@ -1882,7 +1882,7 @@ spec:
         - name: mdifffitid0000225
           run: mDiffFit -d -s 2-fit.000004.000014.txt pposs2ukstu_red_001_004.fits pposs2ukstu_red_004_002.fits 2-diff.000004.000014.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000161
             - mprojectid0000171
@@ -1890,7 +1890,7 @@ spec:
         - name: mdifffitid0000226
           run: mDiffFit -d -s 2-fit.000004.000015.txt pposs2ukstu_red_001_004.fits pposs2ukstu_red_004_003.fits 2-diff.000004.000015.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000161
             - mprojectid0000172
@@ -1898,7 +1898,7 @@ spec:
         - name: mdifffitid0000227
           run: mDiffFit -d -s 2-fit.000004.000016.txt pposs2ukstu_red_001_004.fits pposs2ukstu_red_004_004.fits 2-diff.000004.000016.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000161
             - mprojectid0000173
@@ -1906,7 +1906,7 @@ spec:
         - name: mdifffitid0000228
           run: mDiffFit -d -s 2-fit.000005.000006.txt pposs2ukstu_red_002_001.fits pposs2ukstu_red_002_002.fits 2-diff.000005.000006.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000162
             - mprojectid0000163
@@ -1914,7 +1914,7 @@ spec:
         - name: mdifffitid0000229
           run: mDiffFit -d -s 2-fit.000005.000007.txt pposs2ukstu_red_002_001.fits pposs2ukstu_red_002_003.fits 2-diff.000005.000007.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000162
             - mprojectid0000164
@@ -1922,7 +1922,7 @@ spec:
         - name: mdifffitid0000230
           run: mDiffFit -d -s 2-fit.000005.000008.txt pposs2ukstu_red_002_001.fits pposs2ukstu_red_002_004.fits 2-diff.000005.000008.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000162
             - mprojectid0000165
@@ -1930,7 +1930,7 @@ spec:
         - name: mdifffitid0000231
           run: mDiffFit -d -s 2-fit.000005.000009.txt pposs2ukstu_red_002_001.fits pposs2ukstu_red_003_001.fits 2-diff.000005.000009.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000162
             - mprojectid0000166
@@ -1938,7 +1938,7 @@ spec:
         - name: mdifffitid0000232
           run: mDiffFit -d -s 2-fit.000005.000010.txt pposs2ukstu_red_002_001.fits pposs2ukstu_red_003_002.fits 2-diff.000005.000010.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000162
             - mprojectid0000167
@@ -1946,7 +1946,7 @@ spec:
         - name: mdifffitid0000233
           run: mDiffFit -d -s 2-fit.000005.000011.txt pposs2ukstu_red_002_001.fits pposs2ukstu_red_003_003.fits 2-diff.000005.000011.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000162
             - mprojectid0000168
@@ -1954,7 +1954,7 @@ spec:
         - name: mdifffitid0000234
           run: mDiffFit -d -s 2-fit.000005.000012.txt pposs2ukstu_red_002_001.fits pposs2ukstu_red_003_004.fits 2-diff.000005.000012.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000162
             - mprojectid0000169
@@ -1962,7 +1962,7 @@ spec:
         - name: mdifffitid0000235
           run: mDiffFit -d -s 2-fit.000005.000013.txt pposs2ukstu_red_002_001.fits pposs2ukstu_red_004_001.fits 2-diff.000005.000013.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000162
             - mprojectid0000170
@@ -1970,7 +1970,7 @@ spec:
         - name: mdifffitid0000236
           run: mDiffFit -d -s 2-fit.000005.000014.txt pposs2ukstu_red_002_001.fits pposs2ukstu_red_004_002.fits 2-diff.000005.000014.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000162
             - mprojectid0000171
@@ -1978,7 +1978,7 @@ spec:
         - name: mdifffitid0000237
           run: mDiffFit -d -s 2-fit.000005.000015.txt pposs2ukstu_red_002_001.fits pposs2ukstu_red_004_003.fits 2-diff.000005.000015.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000162
             - mprojectid0000172
@@ -1986,7 +1986,7 @@ spec:
         - name: mdifffitid0000238
           run: mDiffFit -d -s 2-fit.000005.000016.txt pposs2ukstu_red_002_001.fits pposs2ukstu_red_004_004.fits 2-diff.000005.000016.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000162
             - mprojectid0000173
@@ -1994,7 +1994,7 @@ spec:
         - name: mdifffitid0000239
           run: mDiffFit -d -s 2-fit.000006.000007.txt pposs2ukstu_red_002_002.fits pposs2ukstu_red_002_003.fits 2-diff.000006.000007.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000163
             - mprojectid0000164
@@ -2002,7 +2002,7 @@ spec:
         - name: mdifffitid0000240
           run: mDiffFit -d -s 2-fit.000006.000008.txt pposs2ukstu_red_002_002.fits pposs2ukstu_red_002_004.fits 2-diff.000006.000008.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000163
             - mprojectid0000165
@@ -2010,7 +2010,7 @@ spec:
         - name: mdifffitid0000241
           run: mDiffFit -d -s 2-fit.000006.000009.txt pposs2ukstu_red_002_002.fits pposs2ukstu_red_003_001.fits 2-diff.000006.000009.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000163
             - mprojectid0000166
@@ -2018,7 +2018,7 @@ spec:
         - name: mdifffitid0000242
           run: mDiffFit -d -s 2-fit.000006.000010.txt pposs2ukstu_red_002_002.fits pposs2ukstu_red_003_002.fits 2-diff.000006.000010.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000163
             - mprojectid0000167
@@ -2026,7 +2026,7 @@ spec:
         - name: mdifffitid0000243
           run: mDiffFit -d -s 2-fit.000006.000011.txt pposs2ukstu_red_002_002.fits pposs2ukstu_red_003_003.fits 2-diff.000006.000011.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000163
             - mprojectid0000168
@@ -2034,7 +2034,7 @@ spec:
         - name: mdifffitid0000244
           run: mDiffFit -d -s 2-fit.000006.000012.txt pposs2ukstu_red_002_002.fits pposs2ukstu_red_003_004.fits 2-diff.000006.000012.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000163
             - mprojectid0000169
@@ -2042,7 +2042,7 @@ spec:
         - name: mdifffitid0000245
           run: mDiffFit -d -s 2-fit.000006.000013.txt pposs2ukstu_red_002_002.fits pposs2ukstu_red_004_001.fits 2-diff.000006.000013.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000163
             - mprojectid0000170
@@ -2050,7 +2050,7 @@ spec:
         - name: mdifffitid0000246
           run: mDiffFit -d -s 2-fit.000006.000014.txt pposs2ukstu_red_002_002.fits pposs2ukstu_red_004_002.fits 2-diff.000006.000014.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000163
             - mprojectid0000171
@@ -2058,7 +2058,7 @@ spec:
         - name: mdifffitid0000247
           run: mDiffFit -d -s 2-fit.000006.000015.txt pposs2ukstu_red_002_002.fits pposs2ukstu_red_004_003.fits 2-diff.000006.000015.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000163
             - mprojectid0000172
@@ -2066,7 +2066,7 @@ spec:
         - name: mdifffitid0000248
           run: mDiffFit -d -s 2-fit.000006.000016.txt pposs2ukstu_red_002_002.fits pposs2ukstu_red_004_004.fits 2-diff.000006.000016.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000163
             - mprojectid0000173
@@ -2074,7 +2074,7 @@ spec:
         - name: mdifffitid0000249
           run: mDiffFit -d -s 2-fit.000007.000008.txt pposs2ukstu_red_002_003.fits pposs2ukstu_red_002_004.fits 2-diff.000007.000008.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000164
             - mprojectid0000165
@@ -2082,7 +2082,7 @@ spec:
         - name: mdifffitid0000250
           run: mDiffFit -d -s 2-fit.000007.000009.txt pposs2ukstu_red_002_003.fits pposs2ukstu_red_003_001.fits 2-diff.000007.000009.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000164
             - mprojectid0000166
@@ -2090,7 +2090,7 @@ spec:
         - name: mdifffitid0000251
           run: mDiffFit -d -s 2-fit.000007.000010.txt pposs2ukstu_red_002_003.fits pposs2ukstu_red_003_002.fits 2-diff.000007.000010.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000164
             - mprojectid0000167
@@ -2098,7 +2098,7 @@ spec:
         - name: mdifffitid0000252
           run: mDiffFit -d -s 2-fit.000007.000011.txt pposs2ukstu_red_002_003.fits pposs2ukstu_red_003_003.fits 2-diff.000007.000011.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000164
             - mprojectid0000168
@@ -2106,7 +2106,7 @@ spec:
         - name: mdifffitid0000253
           run: mDiffFit -d -s 2-fit.000007.000012.txt pposs2ukstu_red_002_003.fits pposs2ukstu_red_003_004.fits 2-diff.000007.000012.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000164
             - mprojectid0000169
@@ -2114,7 +2114,7 @@ spec:
         - name: mdifffitid0000254
           run: mDiffFit -d -s 2-fit.000007.000013.txt pposs2ukstu_red_002_003.fits pposs2ukstu_red_004_001.fits 2-diff.000007.000013.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000164
             - mprojectid0000170
@@ -2122,7 +2122,7 @@ spec:
         - name: mdifffitid0000255
           run: mDiffFit -d -s 2-fit.000007.000014.txt pposs2ukstu_red_002_003.fits pposs2ukstu_red_004_002.fits 2-diff.000007.000014.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000164
             - mprojectid0000171
@@ -2130,7 +2130,7 @@ spec:
         - name: mdifffitid0000256
           run: mDiffFit -d -s 2-fit.000007.000015.txt pposs2ukstu_red_002_003.fits pposs2ukstu_red_004_003.fits 2-diff.000007.000015.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000164
             - mprojectid0000172
@@ -2138,7 +2138,7 @@ spec:
         - name: mdifffitid0000257
           run: mDiffFit -d -s 2-fit.000007.000016.txt pposs2ukstu_red_002_003.fits pposs2ukstu_red_004_004.fits 2-diff.000007.000016.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000164
             - mprojectid0000173
@@ -2146,7 +2146,7 @@ spec:
         - name: mdifffitid0000258
           run: mDiffFit -d -s 2-fit.000008.000009.txt pposs2ukstu_red_002_004.fits pposs2ukstu_red_003_001.fits 2-diff.000008.000009.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000165
             - mprojectid0000166
@@ -2154,7 +2154,7 @@ spec:
         - name: mdifffitid0000259
           run: mDiffFit -d -s 2-fit.000008.000010.txt pposs2ukstu_red_002_004.fits pposs2ukstu_red_003_002.fits 2-diff.000008.000010.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000165
             - mprojectid0000167
@@ -2162,7 +2162,7 @@ spec:
         - name: mdifffitid0000260
           run: mDiffFit -d -s 2-fit.000008.000011.txt pposs2ukstu_red_002_004.fits pposs2ukstu_red_003_003.fits 2-diff.000008.000011.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000165
             - mprojectid0000168
@@ -2170,7 +2170,7 @@ spec:
         - name: mdifffitid0000261
           run: mDiffFit -d -s 2-fit.000008.000012.txt pposs2ukstu_red_002_004.fits pposs2ukstu_red_003_004.fits 2-diff.000008.000012.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000165
             - mprojectid0000169
@@ -2178,7 +2178,7 @@ spec:
         - name: mdifffitid0000262
           run: mDiffFit -d -s 2-fit.000008.000013.txt pposs2ukstu_red_002_004.fits pposs2ukstu_red_004_001.fits 2-diff.000008.000013.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000165
             - mprojectid0000170
@@ -2186,7 +2186,7 @@ spec:
         - name: mdifffitid0000263
           run: mDiffFit -d -s 2-fit.000008.000014.txt pposs2ukstu_red_002_004.fits pposs2ukstu_red_004_002.fits 2-diff.000008.000014.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000165
             - mprojectid0000171
@@ -2194,7 +2194,7 @@ spec:
         - name: mdifffitid0000264
           run: mDiffFit -d -s 2-fit.000008.000015.txt pposs2ukstu_red_002_004.fits pposs2ukstu_red_004_003.fits 2-diff.000008.000015.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000165
             - mprojectid0000172
@@ -2202,7 +2202,7 @@ spec:
         - name: mdifffitid0000265
           run: mDiffFit -d -s 2-fit.000008.000016.txt pposs2ukstu_red_002_004.fits pposs2ukstu_red_004_004.fits 2-diff.000008.000016.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000165
             - mprojectid0000173
@@ -2210,7 +2210,7 @@ spec:
         - name: mdifffitid0000266
           run: mDiffFit -d -s 2-fit.000009.000010.txt pposs2ukstu_red_003_001.fits pposs2ukstu_red_003_002.fits 2-diff.000009.000010.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000166
             - mprojectid0000167
@@ -2218,7 +2218,7 @@ spec:
         - name: mdifffitid0000267
           run: mDiffFit -d -s 2-fit.000009.000011.txt pposs2ukstu_red_003_001.fits pposs2ukstu_red_003_003.fits 2-diff.000009.000011.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000166
             - mprojectid0000168
@@ -2226,7 +2226,7 @@ spec:
         - name: mdifffitid0000268
           run: mDiffFit -d -s 2-fit.000009.000012.txt pposs2ukstu_red_003_001.fits pposs2ukstu_red_003_004.fits 2-diff.000009.000012.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000166
             - mprojectid0000169
@@ -2234,7 +2234,7 @@ spec:
         - name: mdifffitid0000269
           run: mDiffFit -d -s 2-fit.000009.000013.txt pposs2ukstu_red_003_001.fits pposs2ukstu_red_004_001.fits 2-diff.000009.000013.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000166
             - mprojectid0000170
@@ -2242,7 +2242,7 @@ spec:
         - name: mdifffitid0000270
           run: mDiffFit -d -s 2-fit.000009.000014.txt pposs2ukstu_red_003_001.fits pposs2ukstu_red_004_002.fits 2-diff.000009.000014.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000166
             - mprojectid0000171
@@ -2250,7 +2250,7 @@ spec:
         - name: mdifffitid0000271
           run: mDiffFit -d -s 2-fit.000009.000015.txt pposs2ukstu_red_003_001.fits pposs2ukstu_red_004_003.fits 2-diff.000009.000015.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000166
             - mprojectid0000172
@@ -2258,7 +2258,7 @@ spec:
         - name: mdifffitid0000272
           run: mDiffFit -d -s 2-fit.000009.000016.txt pposs2ukstu_red_003_001.fits pposs2ukstu_red_004_004.fits 2-diff.000009.000016.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000166
             - mprojectid0000173
@@ -2266,7 +2266,7 @@ spec:
         - name: mdifffitid0000273
           run: mDiffFit -d -s 2-fit.000010.000011.txt pposs2ukstu_red_003_002.fits pposs2ukstu_red_003_003.fits 2-diff.000010.000011.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000167
             - mprojectid0000168
@@ -2274,7 +2274,7 @@ spec:
         - name: mdifffitid0000274
           run: mDiffFit -d -s 2-fit.000010.000012.txt pposs2ukstu_red_003_002.fits pposs2ukstu_red_003_004.fits 2-diff.000010.000012.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000167
             - mprojectid0000169
@@ -2282,7 +2282,7 @@ spec:
         - name: mdifffitid0000275
           run: mDiffFit -d -s 2-fit.000010.000013.txt pposs2ukstu_red_003_002.fits pposs2ukstu_red_004_001.fits 2-diff.000010.000013.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000167
             - mprojectid0000170
@@ -2290,7 +2290,7 @@ spec:
         - name: mdifffitid0000276
           run: mDiffFit -d -s 2-fit.000010.000014.txt pposs2ukstu_red_003_002.fits pposs2ukstu_red_004_002.fits 2-diff.000010.000014.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000167
             - mprojectid0000171
@@ -2298,7 +2298,7 @@ spec:
         - name: mdifffitid0000277
           run: mDiffFit -d -s 2-fit.000010.000015.txt pposs2ukstu_red_003_002.fits pposs2ukstu_red_004_003.fits 2-diff.000010.000015.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000167
             - mprojectid0000172
@@ -2306,7 +2306,7 @@ spec:
         - name: mdifffitid0000278
           run: mDiffFit -d -s 2-fit.000010.000016.txt pposs2ukstu_red_003_002.fits pposs2ukstu_red_004_004.fits 2-diff.000010.000016.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000167
             - mprojectid0000173
@@ -2314,7 +2314,7 @@ spec:
         - name: mdifffitid0000279
           run: mDiffFit -d -s 2-fit.000011.000012.txt pposs2ukstu_red_003_003.fits pposs2ukstu_red_003_004.fits 2-diff.000011.000012.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000168
             - mprojectid0000169
@@ -2322,7 +2322,7 @@ spec:
         - name: mdifffitid0000280
           run: mDiffFit -d -s 2-fit.000011.000013.txt pposs2ukstu_red_003_003.fits pposs2ukstu_red_004_001.fits 2-diff.000011.000013.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000168
             - mprojectid0000170
@@ -2330,7 +2330,7 @@ spec:
         - name: mdifffitid0000281
           run: mDiffFit -d -s 2-fit.000011.000014.txt pposs2ukstu_red_003_003.fits pposs2ukstu_red_004_002.fits 2-diff.000011.000014.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000168
             - mprojectid0000171
@@ -2338,7 +2338,7 @@ spec:
         - name: mdifffitid0000282
           run: mDiffFit -d -s 2-fit.000011.000015.txt pposs2ukstu_red_003_003.fits pposs2ukstu_red_004_003.fits 2-diff.000011.000015.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000168
             - mprojectid0000172
@@ -2346,7 +2346,7 @@ spec:
         - name: mdifffitid0000283
           run: mDiffFit -d -s 2-fit.000011.000016.txt pposs2ukstu_red_003_003.fits pposs2ukstu_red_004_004.fits 2-diff.000011.000016.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000168
             - mprojectid0000173
@@ -2354,7 +2354,7 @@ spec:
         - name: mdifffitid0000284
           run: mDiffFit -d -s 2-fit.000012.000013.txt pposs2ukstu_red_003_004.fits pposs2ukstu_red_004_001.fits 2-diff.000012.000013.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000169
             - mprojectid0000170
@@ -2362,7 +2362,7 @@ spec:
         - name: mdifffitid0000285
           run: mDiffFit -d -s 2-fit.000012.000014.txt pposs2ukstu_red_003_004.fits pposs2ukstu_red_004_002.fits 2-diff.000012.000014.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000169
             - mprojectid0000171
@@ -2370,7 +2370,7 @@ spec:
         - name: mdifffitid0000286
           run: mDiffFit -d -s 2-fit.000012.000015.txt pposs2ukstu_red_003_004.fits pposs2ukstu_red_004_003.fits 2-diff.000012.000015.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000169
             - mprojectid0000172
@@ -2378,7 +2378,7 @@ spec:
         - name: mdifffitid0000287
           run: mDiffFit -d -s 2-fit.000012.000016.txt pposs2ukstu_red_003_004.fits pposs2ukstu_red_004_004.fits 2-diff.000012.000016.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000169
             - mprojectid0000173
@@ -2386,7 +2386,7 @@ spec:
         - name: mdifffitid0000288
           run: mDiffFit -d -s 2-fit.000013.000014.txt pposs2ukstu_red_004_001.fits pposs2ukstu_red_004_002.fits 2-diff.000013.000014.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000170
             - mprojectid0000171
@@ -2394,7 +2394,7 @@ spec:
         - name: mdifffitid0000289
           run: mDiffFit -d -s 2-fit.000013.000015.txt pposs2ukstu_red_004_001.fits pposs2ukstu_red_004_003.fits 2-diff.000013.000015.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000170
             - mprojectid0000172
@@ -2402,7 +2402,7 @@ spec:
         - name: mdifffitid0000290
           run: mDiffFit -d -s 2-fit.000013.000016.txt pposs2ukstu_red_004_001.fits pposs2ukstu_red_004_004.fits 2-diff.000013.000016.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000170
             - mprojectid0000173
@@ -2410,7 +2410,7 @@ spec:
         - name: mdifffitid0000291
           run: mDiffFit -d -s 2-fit.000014.000015.txt pposs2ukstu_red_004_002.fits pposs2ukstu_red_004_003.fits 2-diff.000014.000015.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000171
             - mprojectid0000172
@@ -2418,7 +2418,7 @@ spec:
         - name: mdifffitid0000292
           run: mDiffFit -d -s 2-fit.000014.000016.txt pposs2ukstu_red_004_002.fits pposs2ukstu_red_004_004.fits 2-diff.000014.000016.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000171
             - mprojectid0000173
@@ -2426,7 +2426,7 @@ spec:
         - name: mdifffitid0000293
           run: mDiffFit -d -s 2-fit.000015.000016.txt pposs2ukstu_red_004_003.fits pposs2ukstu_red_004_004.fits 2-diff.000015.000016.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000172
             - mprojectid0000173
@@ -2434,7 +2434,7 @@ spec:
         - name: mconcatfitid0000294
           run: mConcatFit 2-stat.tbl 2-fits.tbl .
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mdifffitid0000174
             - mdifffitid0000175
@@ -2560,14 +2560,14 @@ spec:
         - name: mbgmodelid0000295
           run: mBgModel -i 100000 2-images.tbl 2-fits.tbl 2-corrections.tbl
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mconcatfitid0000294
 
         - name: mbackgroundid0000296
           run: mBackground -t pposs2ukstu_red_001_001.fits cposs2ukstu_red_001_001.fits 2-projected.tbl 2-corrections.tbl
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000158
             - mbgmodelid0000295
@@ -2575,7 +2575,7 @@ spec:
         - name: mbackgroundid0000297
           run: mBackground -t pposs2ukstu_red_001_002.fits cposs2ukstu_red_001_002.fits 2-projected.tbl 2-corrections.tbl
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000159
             - mbgmodelid0000295
@@ -2583,7 +2583,7 @@ spec:
         - name: mbackgroundid0000298
           run: mBackground -t pposs2ukstu_red_001_003.fits cposs2ukstu_red_001_003.fits 2-projected.tbl 2-corrections.tbl
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000160
             - mbgmodelid0000295
@@ -2591,7 +2591,7 @@ spec:
         - name: mbackgroundid0000299
           run: mBackground -t pposs2ukstu_red_001_004.fits cposs2ukstu_red_001_004.fits 2-projected.tbl 2-corrections.tbl
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000161
             - mbgmodelid0000295
@@ -2599,7 +2599,7 @@ spec:
         - name: mbackgroundid0000300
           run: mBackground -t pposs2ukstu_red_002_001.fits cposs2ukstu_red_002_001.fits 2-projected.tbl 2-corrections.tbl
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000162
             - mbgmodelid0000295
@@ -2607,7 +2607,7 @@ spec:
         - name: mbackgroundid0000301
           run: mBackground -t pposs2ukstu_red_002_002.fits cposs2ukstu_red_002_002.fits 2-projected.tbl 2-corrections.tbl
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000163
             - mbgmodelid0000295
@@ -2615,7 +2615,7 @@ spec:
         - name: mbackgroundid0000302
           run: mBackground -t pposs2ukstu_red_002_003.fits cposs2ukstu_red_002_003.fits 2-projected.tbl 2-corrections.tbl
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000164
             - mbgmodelid0000295
@@ -2623,7 +2623,7 @@ spec:
         - name: mbackgroundid0000303
           run: mBackground -t pposs2ukstu_red_002_004.fits cposs2ukstu_red_002_004.fits 2-projected.tbl 2-corrections.tbl
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000165
             - mbgmodelid0000295
@@ -2631,7 +2631,7 @@ spec:
         - name: mbackgroundid0000304
           run: mBackground -t pposs2ukstu_red_003_001.fits cposs2ukstu_red_003_001.fits 2-projected.tbl 2-corrections.tbl
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000166
             - mbgmodelid0000295
@@ -2639,7 +2639,7 @@ spec:
         - name: mbackgroundid0000305
           run: mBackground -t pposs2ukstu_red_003_002.fits cposs2ukstu_red_003_002.fits 2-projected.tbl 2-corrections.tbl
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000167
             - mbgmodelid0000295
@@ -2647,7 +2647,7 @@ spec:
         - name: mbackgroundid0000306
           run: mBackground -t pposs2ukstu_red_003_003.fits cposs2ukstu_red_003_003.fits 2-projected.tbl 2-corrections.tbl
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000168
             - mbgmodelid0000295
@@ -2655,7 +2655,7 @@ spec:
         - name: mbackgroundid0000307
           run: mBackground -t pposs2ukstu_red_003_004.fits cposs2ukstu_red_003_004.fits 2-projected.tbl 2-corrections.tbl
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000169
             - mbgmodelid0000295
@@ -2663,7 +2663,7 @@ spec:
         - name: mbackgroundid0000308
           run: mBackground -t pposs2ukstu_red_004_001.fits cposs2ukstu_red_004_001.fits 2-projected.tbl 2-corrections.tbl
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000170
             - mbgmodelid0000295
@@ -2671,7 +2671,7 @@ spec:
         - name: mbackgroundid0000309
           run: mBackground -t pposs2ukstu_red_004_002.fits cposs2ukstu_red_004_002.fits 2-projected.tbl 2-corrections.tbl
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000171
             - mbgmodelid0000295
@@ -2679,7 +2679,7 @@ spec:
         - name: mbackgroundid0000310
           run: mBackground -t pposs2ukstu_red_004_003.fits cposs2ukstu_red_004_003.fits 2-projected.tbl 2-corrections.tbl
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000172
             - mbgmodelid0000295
@@ -2687,7 +2687,7 @@ spec:
         - name: mbackgroundid0000311
           run: mBackground -t pposs2ukstu_red_004_004.fits cposs2ukstu_red_004_004.fits 2-projected.tbl 2-corrections.tbl
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000173
             - mbgmodelid0000295
@@ -2695,7 +2695,7 @@ spec:
         - name: mimgtblid0000312
           run: mImgtbl . -t 2-corrected.tbl 2-updated-corrected.tbl
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mbackgroundid0000296
             - mbackgroundid0000297
@@ -2717,7 +2717,7 @@ spec:
         - name: maddid0000313
           run: mAdd -e 2-updated-corrected.tbl region.hdr 2-mosaic.fits
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mbackgroundid0000296
             - mbackgroundid0000297
@@ -2740,7 +2740,7 @@ spec:
         - name: mviewerid0000314
           run: mViewer -ct 1 -gray 2-mosaic.fits -1s max gaussian -png 2-mosaic.png
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - maddid0000313
 
@@ -2843,7 +2843,7 @@ spec:
         - name: mdifffitid0000331
           run: mDiffFit -d -s 3-fit.000001.000002.txt pposs2ukstu_ir_001_001.fits pposs2ukstu_ir_001_002.fits 3-diff.000001.000002.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000315
             - mprojectid0000316
@@ -2851,7 +2851,7 @@ spec:
         - name: mdifffitid0000332
           run: mDiffFit -d -s 3-fit.000001.000003.txt pposs2ukstu_ir_001_001.fits pposs2ukstu_ir_001_003.fits 3-diff.000001.000003.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000315
             - mprojectid0000317
@@ -2859,7 +2859,7 @@ spec:
         - name: mdifffitid0000333
           run: mDiffFit -d -s 3-fit.000001.000004.txt pposs2ukstu_ir_001_001.fits pposs2ukstu_ir_001_004.fits 3-diff.000001.000004.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000315
             - mprojectid0000318
@@ -2867,7 +2867,7 @@ spec:
         - name: mdifffitid0000334
           run: mDiffFit -d -s 3-fit.000001.000005.txt pposs2ukstu_ir_001_001.fits pposs2ukstu_ir_002_001.fits 3-diff.000001.000005.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000315
             - mprojectid0000319
@@ -2875,7 +2875,7 @@ spec:
         - name: mdifffitid0000335
           run: mDiffFit -d -s 3-fit.000001.000006.txt pposs2ukstu_ir_001_001.fits pposs2ukstu_ir_002_002.fits 3-diff.000001.000006.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000315
             - mprojectid0000320
@@ -2883,7 +2883,7 @@ spec:
         - name: mdifffitid0000336
           run: mDiffFit -d -s 3-fit.000001.000007.txt pposs2ukstu_ir_001_001.fits pposs2ukstu_ir_002_003.fits 3-diff.000001.000007.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000315
             - mprojectid0000321
@@ -2891,7 +2891,7 @@ spec:
         - name: mdifffitid0000337
           run: mDiffFit -d -s 3-fit.000001.000008.txt pposs2ukstu_ir_001_001.fits pposs2ukstu_ir_002_004.fits 3-diff.000001.000008.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000315
             - mprojectid0000322
@@ -2899,7 +2899,7 @@ spec:
         - name: mdifffitid0000338
           run: mDiffFit -d -s 3-fit.000001.000009.txt pposs2ukstu_ir_001_001.fits pposs2ukstu_ir_003_001.fits 3-diff.000001.000009.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000315
             - mprojectid0000323
@@ -2907,7 +2907,7 @@ spec:
         - name: mdifffitid0000339
           run: mDiffFit -d -s 3-fit.000001.000010.txt pposs2ukstu_ir_001_001.fits pposs2ukstu_ir_003_002.fits 3-diff.000001.000010.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000315
             - mprojectid0000324
@@ -2915,7 +2915,7 @@ spec:
         - name: mdifffitid0000340
           run: mDiffFit -d -s 3-fit.000001.000011.txt pposs2ukstu_ir_001_001.fits pposs2ukstu_ir_003_003.fits 3-diff.000001.000011.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000315
             - mprojectid0000325
@@ -2923,7 +2923,7 @@ spec:
         - name: mdifffitid0000341
           run: mDiffFit -d -s 3-fit.000001.000012.txt pposs2ukstu_ir_001_001.fits pposs2ukstu_ir_003_004.fits 3-diff.000001.000012.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000315
             - mprojectid0000326
@@ -2931,7 +2931,7 @@ spec:
         - name: mdifffitid0000342
           run: mDiffFit -d -s 3-fit.000001.000013.txt pposs2ukstu_ir_001_001.fits pposs2ukstu_ir_004_001.fits 3-diff.000001.000013.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000315
             - mprojectid0000327
@@ -2939,7 +2939,7 @@ spec:
         - name: mdifffitid0000343
           run: mDiffFit -d -s 3-fit.000001.000014.txt pposs2ukstu_ir_001_001.fits pposs2ukstu_ir_004_002.fits 3-diff.000001.000014.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000315
             - mprojectid0000328
@@ -2947,7 +2947,7 @@ spec:
         - name: mdifffitid0000344
           run: mDiffFit -d -s 3-fit.000001.000015.txt pposs2ukstu_ir_001_001.fits pposs2ukstu_ir_004_003.fits 3-diff.000001.000015.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000315
             - mprojectid0000329
@@ -2955,7 +2955,7 @@ spec:
         - name: mdifffitid0000345
           run: mDiffFit -d -s 3-fit.000001.000016.txt pposs2ukstu_ir_001_001.fits pposs2ukstu_ir_004_004.fits 3-diff.000001.000016.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000315
             - mprojectid0000330
@@ -2963,7 +2963,7 @@ spec:
         - name: mdifffitid0000346
           run: mDiffFit -d -s 3-fit.000002.000003.txt pposs2ukstu_ir_001_002.fits pposs2ukstu_ir_001_003.fits 3-diff.000002.000003.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000316
             - mprojectid0000317
@@ -2971,7 +2971,7 @@ spec:
         - name: mdifffitid0000347
           run: mDiffFit -d -s 3-fit.000002.000004.txt pposs2ukstu_ir_001_002.fits pposs2ukstu_ir_001_004.fits 3-diff.000002.000004.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000316
             - mprojectid0000318
@@ -2979,7 +2979,7 @@ spec:
         - name: mdifffitid0000348
           run: mDiffFit -d -s 3-fit.000002.000005.txt pposs2ukstu_ir_001_002.fits pposs2ukstu_ir_002_001.fits 3-diff.000002.000005.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000316
             - mprojectid0000319
@@ -2987,7 +2987,7 @@ spec:
         - name: mdifffitid0000349
           run: mDiffFit -d -s 3-fit.000002.000006.txt pposs2ukstu_ir_001_002.fits pposs2ukstu_ir_002_002.fits 3-diff.000002.000006.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000316
             - mprojectid0000320
@@ -2995,7 +2995,7 @@ spec:
         - name: mdifffitid0000350
           run: mDiffFit -d -s 3-fit.000002.000007.txt pposs2ukstu_ir_001_002.fits pposs2ukstu_ir_002_003.fits 3-diff.000002.000007.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000316
             - mprojectid0000321
@@ -3003,7 +3003,7 @@ spec:
         - name: mdifffitid0000351
           run: mDiffFit -d -s 3-fit.000002.000008.txt pposs2ukstu_ir_001_002.fits pposs2ukstu_ir_002_004.fits 3-diff.000002.000008.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000316
             - mprojectid0000322
@@ -3011,7 +3011,7 @@ spec:
         - name: mdifffitid0000352
           run: mDiffFit -d -s 3-fit.000002.000009.txt pposs2ukstu_ir_001_002.fits pposs2ukstu_ir_003_001.fits 3-diff.000002.000009.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000316
             - mprojectid0000323
@@ -3019,7 +3019,7 @@ spec:
         - name: mdifffitid0000353
           run: mDiffFit -d -s 3-fit.000002.000010.txt pposs2ukstu_ir_001_002.fits pposs2ukstu_ir_003_002.fits 3-diff.000002.000010.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000316
             - mprojectid0000324
@@ -3027,7 +3027,7 @@ spec:
         - name: mdifffitid0000354
           run: mDiffFit -d -s 3-fit.000002.000011.txt pposs2ukstu_ir_001_002.fits pposs2ukstu_ir_003_003.fits 3-diff.000002.000011.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000316
             - mprojectid0000325
@@ -3035,7 +3035,7 @@ spec:
         - name: mdifffitid0000355
           run: mDiffFit -d -s 3-fit.000002.000012.txt pposs2ukstu_ir_001_002.fits pposs2ukstu_ir_003_004.fits 3-diff.000002.000012.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000316
             - mprojectid0000326
@@ -3043,7 +3043,7 @@ spec:
         - name: mdifffitid0000356
           run: mDiffFit -d -s 3-fit.000002.000013.txt pposs2ukstu_ir_001_002.fits pposs2ukstu_ir_004_001.fits 3-diff.000002.000013.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000316
             - mprojectid0000327
@@ -3051,7 +3051,7 @@ spec:
         - name: mdifffitid0000357
           run: mDiffFit -d -s 3-fit.000002.000014.txt pposs2ukstu_ir_001_002.fits pposs2ukstu_ir_004_002.fits 3-diff.000002.000014.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000316
             - mprojectid0000328
@@ -3059,7 +3059,7 @@ spec:
         - name: mdifffitid0000358
           run: mDiffFit -d -s 3-fit.000002.000015.txt pposs2ukstu_ir_001_002.fits pposs2ukstu_ir_004_003.fits 3-diff.000002.000015.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000316
             - mprojectid0000329
@@ -3067,7 +3067,7 @@ spec:
         - name: mdifffitid0000359
           run: mDiffFit -d -s 3-fit.000002.000016.txt pposs2ukstu_ir_001_002.fits pposs2ukstu_ir_004_004.fits 3-diff.000002.000016.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000316
             - mprojectid0000330
@@ -3075,7 +3075,7 @@ spec:
         - name: mdifffitid0000360
           run: mDiffFit -d -s 3-fit.000003.000004.txt pposs2ukstu_ir_001_003.fits pposs2ukstu_ir_001_004.fits 3-diff.000003.000004.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000317
             - mprojectid0000318
@@ -3083,7 +3083,7 @@ spec:
         - name: mdifffitid0000361
           run: mDiffFit -d -s 3-fit.000003.000005.txt pposs2ukstu_ir_001_003.fits pposs2ukstu_ir_002_001.fits 3-diff.000003.000005.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000317
             - mprojectid0000319
@@ -3091,7 +3091,7 @@ spec:
         - name: mdifffitid0000362
           run: mDiffFit -d -s 3-fit.000003.000006.txt pposs2ukstu_ir_001_003.fits pposs2ukstu_ir_002_002.fits 3-diff.000003.000006.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000317
             - mprojectid0000320
@@ -3099,7 +3099,7 @@ spec:
         - name: mdifffitid0000363
           run: mDiffFit -d -s 3-fit.000003.000007.txt pposs2ukstu_ir_001_003.fits pposs2ukstu_ir_002_003.fits 3-diff.000003.000007.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000317
             - mprojectid0000321
@@ -3107,7 +3107,7 @@ spec:
         - name: mdifffitid0000364
           run: mDiffFit -d -s 3-fit.000003.000008.txt pposs2ukstu_ir_001_003.fits pposs2ukstu_ir_002_004.fits 3-diff.000003.000008.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000317
             - mprojectid0000322
@@ -3115,7 +3115,7 @@ spec:
         - name: mdifffitid0000365
           run: mDiffFit -d -s 3-fit.000003.000009.txt pposs2ukstu_ir_001_003.fits pposs2ukstu_ir_003_001.fits 3-diff.000003.000009.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000317
             - mprojectid0000323
@@ -3123,7 +3123,7 @@ spec:
         - name: mdifffitid0000366
           run: mDiffFit -d -s 3-fit.000003.000010.txt pposs2ukstu_ir_001_003.fits pposs2ukstu_ir_003_002.fits 3-diff.000003.000010.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000317
             - mprojectid0000324
@@ -3131,7 +3131,7 @@ spec:
         - name: mdifffitid0000367
           run: mDiffFit -d -s 3-fit.000003.000011.txt pposs2ukstu_ir_001_003.fits pposs2ukstu_ir_003_003.fits 3-diff.000003.000011.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000317
             - mprojectid0000325
@@ -3139,7 +3139,7 @@ spec:
         - name: mdifffitid0000368
           run: mDiffFit -d -s 3-fit.000003.000012.txt pposs2ukstu_ir_001_003.fits pposs2ukstu_ir_003_004.fits 3-diff.000003.000012.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000317
             - mprojectid0000326
@@ -3147,7 +3147,7 @@ spec:
         - name: mdifffitid0000369
           run: mDiffFit -d -s 3-fit.000003.000013.txt pposs2ukstu_ir_001_003.fits pposs2ukstu_ir_004_001.fits 3-diff.000003.000013.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000317
             - mprojectid0000327
@@ -3155,7 +3155,7 @@ spec:
         - name: mdifffitid0000370
           run: mDiffFit -d -s 3-fit.000003.000014.txt pposs2ukstu_ir_001_003.fits pposs2ukstu_ir_004_002.fits 3-diff.000003.000014.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000317
             - mprojectid0000328
@@ -3163,7 +3163,7 @@ spec:
         - name: mdifffitid0000371
           run: mDiffFit -d -s 3-fit.000003.000015.txt pposs2ukstu_ir_001_003.fits pposs2ukstu_ir_004_003.fits 3-diff.000003.000015.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000317
             - mprojectid0000329
@@ -3171,7 +3171,7 @@ spec:
         - name: mdifffitid0000372
           run: mDiffFit -d -s 3-fit.000003.000016.txt pposs2ukstu_ir_001_003.fits pposs2ukstu_ir_004_004.fits 3-diff.000003.000016.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000317
             - mprojectid0000330
@@ -3179,7 +3179,7 @@ spec:
         - name: mdifffitid0000373
           run: mDiffFit -d -s 3-fit.000004.000005.txt pposs2ukstu_ir_001_004.fits pposs2ukstu_ir_002_001.fits 3-diff.000004.000005.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000318
             - mprojectid0000319
@@ -3187,7 +3187,7 @@ spec:
         - name: mdifffitid0000374
           run: mDiffFit -d -s 3-fit.000004.000006.txt pposs2ukstu_ir_001_004.fits pposs2ukstu_ir_002_002.fits 3-diff.000004.000006.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000318
             - mprojectid0000320
@@ -3195,7 +3195,7 @@ spec:
         - name: mdifffitid0000375
           run: mDiffFit -d -s 3-fit.000004.000007.txt pposs2ukstu_ir_001_004.fits pposs2ukstu_ir_002_003.fits 3-diff.000004.000007.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000318
             - mprojectid0000321
@@ -3203,7 +3203,7 @@ spec:
         - name: mdifffitid0000376
           run: mDiffFit -d -s 3-fit.000004.000008.txt pposs2ukstu_ir_001_004.fits pposs2ukstu_ir_002_004.fits 3-diff.000004.000008.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000318
             - mprojectid0000322
@@ -3211,7 +3211,7 @@ spec:
         - name: mdifffitid0000377
           run: mDiffFit -d -s 3-fit.000004.000009.txt pposs2ukstu_ir_001_004.fits pposs2ukstu_ir_003_001.fits 3-diff.000004.000009.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000318
             - mprojectid0000323
@@ -3219,7 +3219,7 @@ spec:
         - name: mdifffitid0000378
           run: mDiffFit -d -s 3-fit.000004.000010.txt pposs2ukstu_ir_001_004.fits pposs2ukstu_ir_003_002.fits 3-diff.000004.000010.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000318
             - mprojectid0000324
@@ -3227,7 +3227,7 @@ spec:
         - name: mdifffitid0000379
           run: mDiffFit -d -s 3-fit.000004.000011.txt pposs2ukstu_ir_001_004.fits pposs2ukstu_ir_003_003.fits 3-diff.000004.000011.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000318
             - mprojectid0000325
@@ -3235,7 +3235,7 @@ spec:
         - name: mdifffitid0000380
           run: mDiffFit -d -s 3-fit.000004.000012.txt pposs2ukstu_ir_001_004.fits pposs2ukstu_ir_003_004.fits 3-diff.000004.000012.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000318
             - mprojectid0000326
@@ -3243,7 +3243,7 @@ spec:
         - name: mdifffitid0000381
           run: mDiffFit -d -s 3-fit.000004.000013.txt pposs2ukstu_ir_001_004.fits pposs2ukstu_ir_004_001.fits 3-diff.000004.000013.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000318
             - mprojectid0000327
@@ -3251,7 +3251,7 @@ spec:
         - name: mdifffitid0000382
           run: mDiffFit -d -s 3-fit.000004.000014.txt pposs2ukstu_ir_001_004.fits pposs2ukstu_ir_004_002.fits 3-diff.000004.000014.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000318
             - mprojectid0000328
@@ -3259,7 +3259,7 @@ spec:
         - name: mdifffitid0000383
           run: mDiffFit -d -s 3-fit.000004.000015.txt pposs2ukstu_ir_001_004.fits pposs2ukstu_ir_004_003.fits 3-diff.000004.000015.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000318
             - mprojectid0000329
@@ -3267,7 +3267,7 @@ spec:
         - name: mdifffitid0000384
           run: mDiffFit -d -s 3-fit.000004.000016.txt pposs2ukstu_ir_001_004.fits pposs2ukstu_ir_004_004.fits 3-diff.000004.000016.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000318
             - mprojectid0000330
@@ -3275,7 +3275,7 @@ spec:
         - name: mdifffitid0000385
           run: mDiffFit -d -s 3-fit.000005.000006.txt pposs2ukstu_ir_002_001.fits pposs2ukstu_ir_002_002.fits 3-diff.000005.000006.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000319
             - mprojectid0000320
@@ -3283,7 +3283,7 @@ spec:
         - name: mdifffitid0000386
           run: mDiffFit -d -s 3-fit.000005.000007.txt pposs2ukstu_ir_002_001.fits pposs2ukstu_ir_002_003.fits 3-diff.000005.000007.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000319
             - mprojectid0000321
@@ -3291,7 +3291,7 @@ spec:
         - name: mdifffitid0000387
           run: mDiffFit -d -s 3-fit.000005.000008.txt pposs2ukstu_ir_002_001.fits pposs2ukstu_ir_002_004.fits 3-diff.000005.000008.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000319
             - mprojectid0000322
@@ -3299,7 +3299,7 @@ spec:
         - name: mdifffitid0000388
           run: mDiffFit -d -s 3-fit.000005.000009.txt pposs2ukstu_ir_002_001.fits pposs2ukstu_ir_003_001.fits 3-diff.000005.000009.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000319
             - mprojectid0000323
@@ -3307,7 +3307,7 @@ spec:
         - name: mdifffitid0000389
           run: mDiffFit -d -s 3-fit.000005.000010.txt pposs2ukstu_ir_002_001.fits pposs2ukstu_ir_003_002.fits 3-diff.000005.000010.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000319
             - mprojectid0000324
@@ -3315,7 +3315,7 @@ spec:
         - name: mdifffitid0000390
           run: mDiffFit -d -s 3-fit.000005.000011.txt pposs2ukstu_ir_002_001.fits pposs2ukstu_ir_003_003.fits 3-diff.000005.000011.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000319
             - mprojectid0000325
@@ -3323,7 +3323,7 @@ spec:
         - name: mdifffitid0000391
           run: mDiffFit -d -s 3-fit.000005.000012.txt pposs2ukstu_ir_002_001.fits pposs2ukstu_ir_003_004.fits 3-diff.000005.000012.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000319
             - mprojectid0000326
@@ -3331,7 +3331,7 @@ spec:
         - name: mdifffitid0000392
           run: mDiffFit -d -s 3-fit.000005.000013.txt pposs2ukstu_ir_002_001.fits pposs2ukstu_ir_004_001.fits 3-diff.000005.000013.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000319
             - mprojectid0000327
@@ -3339,7 +3339,7 @@ spec:
         - name: mdifffitid0000393
           run: mDiffFit -d -s 3-fit.000005.000014.txt pposs2ukstu_ir_002_001.fits pposs2ukstu_ir_004_002.fits 3-diff.000005.000014.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000319
             - mprojectid0000328
@@ -3347,7 +3347,7 @@ spec:
         - name: mdifffitid0000394
           run: mDiffFit -d -s 3-fit.000005.000015.txt pposs2ukstu_ir_002_001.fits pposs2ukstu_ir_004_003.fits 3-diff.000005.000015.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000319
             - mprojectid0000329
@@ -3355,7 +3355,7 @@ spec:
         - name: mdifffitid0000395
           run: mDiffFit -d -s 3-fit.000005.000016.txt pposs2ukstu_ir_002_001.fits pposs2ukstu_ir_004_004.fits 3-diff.000005.000016.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000319
             - mprojectid0000330
@@ -3363,7 +3363,7 @@ spec:
         - name: mdifffitid0000396
           run: mDiffFit -d -s 3-fit.000006.000007.txt pposs2ukstu_ir_002_002.fits pposs2ukstu_ir_002_003.fits 3-diff.000006.000007.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000320
             - mprojectid0000321
@@ -3371,7 +3371,7 @@ spec:
         - name: mdifffitid0000397
           run: mDiffFit -d -s 3-fit.000006.000008.txt pposs2ukstu_ir_002_002.fits pposs2ukstu_ir_002_004.fits 3-diff.000006.000008.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000320
             - mprojectid0000322
@@ -3379,7 +3379,7 @@ spec:
         - name: mdifffitid0000398
           run: mDiffFit -d -s 3-fit.000006.000009.txt pposs2ukstu_ir_002_002.fits pposs2ukstu_ir_003_001.fits 3-diff.000006.000009.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000320
             - mprojectid0000323
@@ -3387,7 +3387,7 @@ spec:
         - name: mdifffitid0000399
           run: mDiffFit -d -s 3-fit.000006.000010.txt pposs2ukstu_ir_002_002.fits pposs2ukstu_ir_003_002.fits 3-diff.000006.000010.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000320
             - mprojectid0000324
@@ -3395,7 +3395,7 @@ spec:
         - name: mdifffitid0000400
           run: mDiffFit -d -s 3-fit.000006.000011.txt pposs2ukstu_ir_002_002.fits pposs2ukstu_ir_003_003.fits 3-diff.000006.000011.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000320
             - mprojectid0000325
@@ -3403,7 +3403,7 @@ spec:
         - name: mdifffitid0000401
           run: mDiffFit -d -s 3-fit.000006.000012.txt pposs2ukstu_ir_002_002.fits pposs2ukstu_ir_003_004.fits 3-diff.000006.000012.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000320
             - mprojectid0000326
@@ -3411,7 +3411,7 @@ spec:
         - name: mdifffitid0000402
           run: mDiffFit -d -s 3-fit.000006.000013.txt pposs2ukstu_ir_002_002.fits pposs2ukstu_ir_004_001.fits 3-diff.000006.000013.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000320
             - mprojectid0000327
@@ -3419,7 +3419,7 @@ spec:
         - name: mdifffitid0000403
           run: mDiffFit -d -s 3-fit.000006.000014.txt pposs2ukstu_ir_002_002.fits pposs2ukstu_ir_004_002.fits 3-diff.000006.000014.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000320
             - mprojectid0000328
@@ -3427,7 +3427,7 @@ spec:
         - name: mdifffitid0000404
           run: mDiffFit -d -s 3-fit.000006.000015.txt pposs2ukstu_ir_002_002.fits pposs2ukstu_ir_004_003.fits 3-diff.000006.000015.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000320
             - mprojectid0000329
@@ -3435,7 +3435,7 @@ spec:
         - name: mdifffitid0000405
           run: mDiffFit -d -s 3-fit.000006.000016.txt pposs2ukstu_ir_002_002.fits pposs2ukstu_ir_004_004.fits 3-diff.000006.000016.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000320
             - mprojectid0000330
@@ -3443,7 +3443,7 @@ spec:
         - name: mdifffitid0000406
           run: mDiffFit -d -s 3-fit.000007.000008.txt pposs2ukstu_ir_002_003.fits pposs2ukstu_ir_002_004.fits 3-diff.000007.000008.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000321
             - mprojectid0000322
@@ -3451,7 +3451,7 @@ spec:
         - name: mdifffitid0000407
           run: mDiffFit -d -s 3-fit.000007.000009.txt pposs2ukstu_ir_002_003.fits pposs2ukstu_ir_003_001.fits 3-diff.000007.000009.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000321
             - mprojectid0000323
@@ -3459,7 +3459,7 @@ spec:
         - name: mdifffitid0000408
           run: mDiffFit -d -s 3-fit.000007.000010.txt pposs2ukstu_ir_002_003.fits pposs2ukstu_ir_003_002.fits 3-diff.000007.000010.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000321
             - mprojectid0000324
@@ -3467,7 +3467,7 @@ spec:
         - name: mdifffitid0000409
           run: mDiffFit -d -s 3-fit.000007.000011.txt pposs2ukstu_ir_002_003.fits pposs2ukstu_ir_003_003.fits 3-diff.000007.000011.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000321
             - mprojectid0000325
@@ -3475,7 +3475,7 @@ spec:
         - name: mdifffitid0000410
           run: mDiffFit -d -s 3-fit.000007.000012.txt pposs2ukstu_ir_002_003.fits pposs2ukstu_ir_003_004.fits 3-diff.000007.000012.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000321
             - mprojectid0000326
@@ -3483,7 +3483,7 @@ spec:
         - name: mdifffitid0000411
           run: mDiffFit -d -s 3-fit.000007.000013.txt pposs2ukstu_ir_002_003.fits pposs2ukstu_ir_004_001.fits 3-diff.000007.000013.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000321
             - mprojectid0000327
@@ -3491,7 +3491,7 @@ spec:
         - name: mdifffitid0000412
           run: mDiffFit -d -s 3-fit.000007.000014.txt pposs2ukstu_ir_002_003.fits pposs2ukstu_ir_004_002.fits 3-diff.000007.000014.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000321
             - mprojectid0000328
@@ -3499,7 +3499,7 @@ spec:
         - name: mdifffitid0000413
           run: mDiffFit -d -s 3-fit.000007.000015.txt pposs2ukstu_ir_002_003.fits pposs2ukstu_ir_004_003.fits 3-diff.000007.000015.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000321
             - mprojectid0000329
@@ -3507,7 +3507,7 @@ spec:
         - name: mdifffitid0000414
           run: mDiffFit -d -s 3-fit.000007.000016.txt pposs2ukstu_ir_002_003.fits pposs2ukstu_ir_004_004.fits 3-diff.000007.000016.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000321
             - mprojectid0000330
@@ -3515,7 +3515,7 @@ spec:
         - name: mdifffitid0000415
           run: mDiffFit -d -s 3-fit.000008.000009.txt pposs2ukstu_ir_002_004.fits pposs2ukstu_ir_003_001.fits 3-diff.000008.000009.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000322
             - mprojectid0000323
@@ -3523,7 +3523,7 @@ spec:
         - name: mdifffitid0000416
           run: mDiffFit -d -s 3-fit.000008.000010.txt pposs2ukstu_ir_002_004.fits pposs2ukstu_ir_003_002.fits 3-diff.000008.000010.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000322
             - mprojectid0000324
@@ -3531,7 +3531,7 @@ spec:
         - name: mdifffitid0000417
           run: mDiffFit -d -s 3-fit.000008.000011.txt pposs2ukstu_ir_002_004.fits pposs2ukstu_ir_003_003.fits 3-diff.000008.000011.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000322
             - mprojectid0000325
@@ -3539,7 +3539,7 @@ spec:
         - name: mdifffitid0000418
           run: mDiffFit -d -s 3-fit.000008.000012.txt pposs2ukstu_ir_002_004.fits pposs2ukstu_ir_003_004.fits 3-diff.000008.000012.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000322
             - mprojectid0000326
@@ -3547,7 +3547,7 @@ spec:
         - name: mdifffitid0000419
           run: mDiffFit -d -s 3-fit.000008.000013.txt pposs2ukstu_ir_002_004.fits pposs2ukstu_ir_004_001.fits 3-diff.000008.000013.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000322
             - mprojectid0000327
@@ -3555,7 +3555,7 @@ spec:
         - name: mdifffitid0000420
           run: mDiffFit -d -s 3-fit.000008.000014.txt pposs2ukstu_ir_002_004.fits pposs2ukstu_ir_004_002.fits 3-diff.000008.000014.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000322
             - mprojectid0000328
@@ -3563,7 +3563,7 @@ spec:
         - name: mdifffitid0000421
           run: mDiffFit -d -s 3-fit.000008.000015.txt pposs2ukstu_ir_002_004.fits pposs2ukstu_ir_004_003.fits 3-diff.000008.000015.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000322
             - mprojectid0000329
@@ -3571,7 +3571,7 @@ spec:
         - name: mdifffitid0000422
           run: mDiffFit -d -s 3-fit.000008.000016.txt pposs2ukstu_ir_002_004.fits pposs2ukstu_ir_004_004.fits 3-diff.000008.000016.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000322
             - mprojectid0000330
@@ -3579,7 +3579,7 @@ spec:
         - name: mdifffitid0000423
           run: mDiffFit -d -s 3-fit.000009.000010.txt pposs2ukstu_ir_003_001.fits pposs2ukstu_ir_003_002.fits 3-diff.000009.000010.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000323
             - mprojectid0000324
@@ -3587,7 +3587,7 @@ spec:
         - name: mdifffitid0000424
           run: mDiffFit -d -s 3-fit.000009.000011.txt pposs2ukstu_ir_003_001.fits pposs2ukstu_ir_003_003.fits 3-diff.000009.000011.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000323
             - mprojectid0000325
@@ -3595,7 +3595,7 @@ spec:
         - name: mdifffitid0000425
           run: mDiffFit -d -s 3-fit.000009.000012.txt pposs2ukstu_ir_003_001.fits pposs2ukstu_ir_003_004.fits 3-diff.000009.000012.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000323
             - mprojectid0000326
@@ -3603,7 +3603,7 @@ spec:
         - name: mdifffitid0000426
           run: mDiffFit -d -s 3-fit.000009.000013.txt pposs2ukstu_ir_003_001.fits pposs2ukstu_ir_004_001.fits 3-diff.000009.000013.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000323
             - mprojectid0000327
@@ -3611,7 +3611,7 @@ spec:
         - name: mdifffitid0000427
           run: mDiffFit -d -s 3-fit.000009.000014.txt pposs2ukstu_ir_003_001.fits pposs2ukstu_ir_004_002.fits 3-diff.000009.000014.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000323
             - mprojectid0000328
@@ -3619,7 +3619,7 @@ spec:
         - name: mdifffitid0000428
           run: mDiffFit -d -s 3-fit.000009.000015.txt pposs2ukstu_ir_003_001.fits pposs2ukstu_ir_004_003.fits 3-diff.000009.000015.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000323
             - mprojectid0000329
@@ -3627,7 +3627,7 @@ spec:
         - name: mdifffitid0000429
           run: mDiffFit -d -s 3-fit.000009.000016.txt pposs2ukstu_ir_003_001.fits pposs2ukstu_ir_004_004.fits 3-diff.000009.000016.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000323
             - mprojectid0000330
@@ -3635,7 +3635,7 @@ spec:
         - name: mdifffitid0000430
           run: mDiffFit -d -s 3-fit.000010.000011.txt pposs2ukstu_ir_003_002.fits pposs2ukstu_ir_003_003.fits 3-diff.000010.000011.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000324
             - mprojectid0000325
@@ -3643,7 +3643,7 @@ spec:
         - name: mdifffitid0000431
           run: mDiffFit -d -s 3-fit.000010.000012.txt pposs2ukstu_ir_003_002.fits pposs2ukstu_ir_003_004.fits 3-diff.000010.000012.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000324
             - mprojectid0000326
@@ -3651,7 +3651,7 @@ spec:
         - name: mdifffitid0000432
           run: mDiffFit -d -s 3-fit.000010.000013.txt pposs2ukstu_ir_003_002.fits pposs2ukstu_ir_004_001.fits 3-diff.000010.000013.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000324
             - mprojectid0000327
@@ -3659,7 +3659,7 @@ spec:
         - name: mdifffitid0000433
           run: mDiffFit -d -s 3-fit.000010.000014.txt pposs2ukstu_ir_003_002.fits pposs2ukstu_ir_004_002.fits 3-diff.000010.000014.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000324
             - mprojectid0000328
@@ -3667,7 +3667,7 @@ spec:
         - name: mdifffitid0000434
           run: mDiffFit -d -s 3-fit.000010.000015.txt pposs2ukstu_ir_003_002.fits pposs2ukstu_ir_004_003.fits 3-diff.000010.000015.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000324
             - mprojectid0000329
@@ -3675,7 +3675,7 @@ spec:
         - name: mdifffitid0000435
           run: mDiffFit -d -s 3-fit.000010.000016.txt pposs2ukstu_ir_003_002.fits pposs2ukstu_ir_004_004.fits 3-diff.000010.000016.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000324
             - mprojectid0000330
@@ -3683,7 +3683,7 @@ spec:
         - name: mdifffitid0000436
           run: mDiffFit -d -s 3-fit.000011.000012.txt pposs2ukstu_ir_003_003.fits pposs2ukstu_ir_003_004.fits 3-diff.000011.000012.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000325
             - mprojectid0000326
@@ -3691,7 +3691,7 @@ spec:
         - name: mdifffitid0000437
           run: mDiffFit -d -s 3-fit.000011.000013.txt pposs2ukstu_ir_003_003.fits pposs2ukstu_ir_004_001.fits 3-diff.000011.000013.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000325
             - mprojectid0000327
@@ -3699,7 +3699,7 @@ spec:
         - name: mdifffitid0000438
           run: mDiffFit -d -s 3-fit.000011.000014.txt pposs2ukstu_ir_003_003.fits pposs2ukstu_ir_004_002.fits 3-diff.000011.000014.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000325
             - mprojectid0000328
@@ -3707,7 +3707,7 @@ spec:
         - name: mdifffitid0000439
           run: mDiffFit -d -s 3-fit.000011.000015.txt pposs2ukstu_ir_003_003.fits pposs2ukstu_ir_004_003.fits 3-diff.000011.000015.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000325
             - mprojectid0000329
@@ -3715,7 +3715,7 @@ spec:
         - name: mdifffitid0000440
           run: mDiffFit -d -s 3-fit.000011.000016.txt pposs2ukstu_ir_003_003.fits pposs2ukstu_ir_004_004.fits 3-diff.000011.000016.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000325
             - mprojectid0000330
@@ -3723,7 +3723,7 @@ spec:
         - name: mdifffitid0000441
           run: mDiffFit -d -s 3-fit.000012.000013.txt pposs2ukstu_ir_003_004.fits pposs2ukstu_ir_004_001.fits 3-diff.000012.000013.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000326
             - mprojectid0000327
@@ -3731,7 +3731,7 @@ spec:
         - name: mdifffitid0000442
           run: mDiffFit -d -s 3-fit.000012.000014.txt pposs2ukstu_ir_003_004.fits pposs2ukstu_ir_004_002.fits 3-diff.000012.000014.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000326
             - mprojectid0000328
@@ -3739,7 +3739,7 @@ spec:
         - name: mdifffitid0000443
           run: mDiffFit -d -s 3-fit.000012.000015.txt pposs2ukstu_ir_003_004.fits pposs2ukstu_ir_004_003.fits 3-diff.000012.000015.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000326
             - mprojectid0000329
@@ -3747,7 +3747,7 @@ spec:
         - name: mdifffitid0000444
           run: mDiffFit -d -s 3-fit.000012.000016.txt pposs2ukstu_ir_003_004.fits pposs2ukstu_ir_004_004.fits 3-diff.000012.000016.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000326
             - mprojectid0000330
@@ -3755,7 +3755,7 @@ spec:
         - name: mdifffitid0000445
           run: mDiffFit -d -s 3-fit.000013.000014.txt pposs2ukstu_ir_004_001.fits pposs2ukstu_ir_004_002.fits 3-diff.000013.000014.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000327
             - mprojectid0000328
@@ -3763,7 +3763,7 @@ spec:
         - name: mdifffitid0000446
           run: mDiffFit -d -s 3-fit.000013.000015.txt pposs2ukstu_ir_004_001.fits pposs2ukstu_ir_004_003.fits 3-diff.000013.000015.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000327
             - mprojectid0000329
@@ -3771,7 +3771,7 @@ spec:
         - name: mdifffitid0000447
           run: mDiffFit -d -s 3-fit.000013.000016.txt pposs2ukstu_ir_004_001.fits pposs2ukstu_ir_004_004.fits 3-diff.000013.000016.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000327
             - mprojectid0000330
@@ -3779,7 +3779,7 @@ spec:
         - name: mdifffitid0000448
           run: mDiffFit -d -s 3-fit.000014.000015.txt pposs2ukstu_ir_004_002.fits pposs2ukstu_ir_004_003.fits 3-diff.000014.000015.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000328
             - mprojectid0000329
@@ -3787,7 +3787,7 @@ spec:
         - name: mdifffitid0000449
           run: mDiffFit -d -s 3-fit.000014.000016.txt pposs2ukstu_ir_004_002.fits pposs2ukstu_ir_004_004.fits 3-diff.000014.000016.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000328
             - mprojectid0000330
@@ -3795,7 +3795,7 @@ spec:
         - name: mdifffitid0000450
           run: mDiffFit -d -s 3-fit.000015.000016.txt pposs2ukstu_ir_004_003.fits pposs2ukstu_ir_004_004.fits 3-diff.000015.000016.fits region-oversized.hdr
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000329
             - mprojectid0000330
@@ -3803,7 +3803,7 @@ spec:
         - name: mconcatfitid0000451
           run: mConcatFit 3-stat.tbl 3-fits.tbl .
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mdifffitid0000331
             - mdifffitid0000332
@@ -3929,14 +3929,14 @@ spec:
         - name: mbgmodelid0000452
           run: mBgModel -i 100000 3-images.tbl 3-fits.tbl 3-corrections.tbl
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mconcatfitid0000451
 
         - name: mbackgroundid0000453
           run: mBackground -t pposs2ukstu_ir_001_001.fits cposs2ukstu_ir_001_001.fits 3-projected.tbl 3-corrections.tbl
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000315
             - mbgmodelid0000452
@@ -3944,7 +3944,7 @@ spec:
         - name: mbackgroundid0000454
           run: mBackground -t pposs2ukstu_ir_001_002.fits cposs2ukstu_ir_001_002.fits 3-projected.tbl 3-corrections.tbl
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000316
             - mbgmodelid0000452
@@ -3952,7 +3952,7 @@ spec:
         - name: mbackgroundid0000455
           run: mBackground -t pposs2ukstu_ir_001_003.fits cposs2ukstu_ir_001_003.fits 3-projected.tbl 3-corrections.tbl
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000317
             - mbgmodelid0000452
@@ -3960,7 +3960,7 @@ spec:
         - name: mbackgroundid0000456
           run: mBackground -t pposs2ukstu_ir_001_004.fits cposs2ukstu_ir_001_004.fits 3-projected.tbl 3-corrections.tbl
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000318
             - mbgmodelid0000452
@@ -3968,7 +3968,7 @@ spec:
         - name: mbackgroundid0000457
           run: mBackground -t pposs2ukstu_ir_002_001.fits cposs2ukstu_ir_002_001.fits 3-projected.tbl 3-corrections.tbl
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000319
             - mbgmodelid0000452
@@ -3976,7 +3976,7 @@ spec:
         - name: mbackgroundid0000458
           run: mBackground -t pposs2ukstu_ir_002_002.fits cposs2ukstu_ir_002_002.fits 3-projected.tbl 3-corrections.tbl
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000320
             - mbgmodelid0000452
@@ -3984,7 +3984,7 @@ spec:
         - name: mbackgroundid0000459
           run: mBackground -t pposs2ukstu_ir_002_003.fits cposs2ukstu_ir_002_003.fits 3-projected.tbl 3-corrections.tbl
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000321
             - mbgmodelid0000452
@@ -3992,7 +3992,7 @@ spec:
         - name: mbackgroundid0000460
           run: mBackground -t pposs2ukstu_ir_002_004.fits cposs2ukstu_ir_002_004.fits 3-projected.tbl 3-corrections.tbl
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000322
             - mbgmodelid0000452
@@ -4000,7 +4000,7 @@ spec:
         - name: mbackgroundid0000461
           run: mBackground -t pposs2ukstu_ir_003_001.fits cposs2ukstu_ir_003_001.fits 3-projected.tbl 3-corrections.tbl
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000323
             - mbgmodelid0000452
@@ -4008,7 +4008,7 @@ spec:
         - name: mbackgroundid0000462
           run: mBackground -t pposs2ukstu_ir_003_002.fits cposs2ukstu_ir_003_002.fits 3-projected.tbl 3-corrections.tbl
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000324
             - mbgmodelid0000452
@@ -4016,7 +4016,7 @@ spec:
         - name: mbackgroundid0000463
           run: mBackground -t pposs2ukstu_ir_003_003.fits cposs2ukstu_ir_003_003.fits 3-projected.tbl 3-corrections.tbl
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000325
             - mbgmodelid0000452
@@ -4024,7 +4024,7 @@ spec:
         - name: mbackgroundid0000464
           run: mBackground -t pposs2ukstu_ir_003_004.fits cposs2ukstu_ir_003_004.fits 3-projected.tbl 3-corrections.tbl
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000326
             - mbgmodelid0000452
@@ -4032,7 +4032,7 @@ spec:
         - name: mbackgroundid0000465
           run: mBackground -t pposs2ukstu_ir_004_001.fits cposs2ukstu_ir_004_001.fits 3-projected.tbl 3-corrections.tbl
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000327
             - mbgmodelid0000452
@@ -4040,7 +4040,7 @@ spec:
         - name: mbackgroundid0000466
           run: mBackground -t pposs2ukstu_ir_004_002.fits cposs2ukstu_ir_004_002.fits 3-projected.tbl 3-corrections.tbl
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000328
             - mbgmodelid0000452
@@ -4048,7 +4048,7 @@ spec:
         - name: mbackgroundid0000467
           run: mBackground -t pposs2ukstu_ir_004_003.fits cposs2ukstu_ir_004_003.fits 3-projected.tbl 3-corrections.tbl
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000329
             - mbgmodelid0000452
@@ -4056,7 +4056,7 @@ spec:
         - name: mbackgroundid0000468
           run: mBackground -t pposs2ukstu_ir_004_004.fits cposs2ukstu_ir_004_004.fits 3-projected.tbl 3-corrections.tbl
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mprojectid0000330
             - mbgmodelid0000452
@@ -4064,7 +4064,7 @@ spec:
         - name: mimgtblid0000469
           run: mImgtbl . -t 3-corrected.tbl 3-updated-corrected.tbl
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mbackgroundid0000453
             - mbackgroundid0000454
@@ -4086,7 +4086,7 @@ spec:
         - name: maddid0000470
           run: mAdd -e 3-updated-corrected.tbl region.hdr 3-mosaic.fits
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - mbackgroundid0000453
             - mbackgroundid0000454
@@ -4109,14 +4109,14 @@ spec:
         - name: mviewerid0000471
           run: mViewer -ct 1 -gray 3-mosaic.fits -1s max gaussian -png 3-mosaic.png
           memoryLimit: 256Mi
-          cpuLimit: 1000m
+          cpuLimit: 500m
           dependsOn:
             - maddid0000470
 
         - name: mviewerid0000472
           run: mViewer -red 3-mosaic.fits -0.5s max gaussian-log -green 2-mosaic.fits -0.5s max gaussian-log -blue 1-mosaic.fits -0.5s max gaussian-log -png mosaic-color.png
-          memoryLimit: 256Mi
-          cpuLimit: 1000m
+          memoryLimit: 512Mi
+          cpuLimit: 500m
           dependsOn:
             - maddid0000156
             - maddid0000313

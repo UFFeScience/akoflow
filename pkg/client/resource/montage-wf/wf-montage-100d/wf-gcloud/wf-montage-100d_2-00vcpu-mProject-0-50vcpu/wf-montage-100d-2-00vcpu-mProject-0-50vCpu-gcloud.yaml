@@ -3,7 +3,7 @@ spec:
     image: ovvesley/akoflow-wf-montage:100d
     namespace: akoflow
     storageClassName: standard-rwo
-    storageSize: 8Gi
+    storageSize: 32Gi
     mountPath: /data
     activities:
         - name: mprojectid0000001
@@ -4115,7 +4115,7 @@ spec:
 
         - name: mviewerid0000472
           run: mViewer -red 3-mosaic.fits -0.5s max gaussian-log -green 2-mosaic.fits -0.5s max gaussian-log -blue 1-mosaic.fits -0.5s max gaussian-log -png mosaic-color.png
-          memoryLimit: 256Mi
+          memoryLimit: 512Mi
           cpuLimit: 1000m
           dependsOn:
             - maddid0000156

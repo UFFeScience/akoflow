@@ -67,11 +67,6 @@ func (a *ApplyJobService) handleApplyJob(activityID int) {
 
 	a.runK8sJob(wf, activity)
 
-	if err != nil {
-		println("Error getting pod name")
-		return
-	}
-
 	//println("Pod created: ", namePod)
 
 	var _ = a.activityRepository.UpdateStatus(activity.Id, activity_repository.StatusRunning)

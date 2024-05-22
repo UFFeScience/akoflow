@@ -255,6 +255,10 @@ func (c *ConnectorJobK8s) GetJob(namespace string, jobName string) (ResponseGetJ
 
 	resp, err := c.client.Do(req)
 
+	if resp == nil {
+		return ResponseGetJob{}, errors.New("Error getting job")
+	}
+
 	if resp.StatusCode == 404 {
 		return ResponseGetJob{}, ErrJobNotFound
 	}

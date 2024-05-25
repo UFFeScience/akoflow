@@ -17,6 +17,7 @@ type WorkflowActivities struct {
 	CpuLimit     string   `yaml:"cpuLimit"`
 	DependsOn    []string `yaml:"dependsOn"`
 	NodeSelector string   `yaml:"nodeSelector"`
+	KeepDisk     bool     `yaml:"keepDisk"`
 }
 
 type WorkflowActivityDatabase struct {
@@ -124,5 +125,6 @@ func DatabaseToWorkflowActivities(params ParamsDatabaseToWorkflowActivities) Wor
 		CpuLimit:     wfa.CpuLimit,
 		DependsOn:    wfa.DependsOn,
 		NodeSelector: wfa.NodeSelector,
+		KeepDisk:     wfa.KeepDisk,
 	}
 }

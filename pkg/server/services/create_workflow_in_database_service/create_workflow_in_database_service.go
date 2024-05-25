@@ -5,21 +5,24 @@ import (
 	"github.com/ovvesley/akoflow/pkg/server/repository/activity_repository"
 	"github.com/ovvesley/akoflow/pkg/server/repository/storages_repository"
 	"github.com/ovvesley/akoflow/pkg/server/repository/workflow_repository"
+	"github.com/ovvesley/akoflow/pkg/server/services/create_storage_in_database_service"
 )
 
 type CreateWorkflowInDatabaseService struct {
-	namespace          string
-	workflowRepository workflow_repository.IWorkflowRepository
-	activityRepository activity_repository.IActivityRepository
-	storageRepository  storages_repository.IStorageRepository
+	namespace                      string
+	workflowRepository             workflow_repository.IWorkflowRepository
+	activityRepository             activity_repository.IActivityRepository
+	storageRepository              storages_repository.IStorageRepository
+	createStorageInDatabaseService create_storage_in_database_service.CreateStorageInDatabaseService
 }
 
 func New() *CreateWorkflowInDatabaseService {
 	return &CreateWorkflowInDatabaseService{
-		namespace:          "akoflow",
-		workflowRepository: workflow_repository.New(),
-		activityRepository: activity_repository.New(),
-		storageRepository:  storages_repository.New(),
+		namespace:                      "akoflow",
+		workflowRepository:             workflow_repository.New(),
+		activityRepository:             activity_repository.New(),
+		storageRepository:              storages_repository.New(),
+		createStorageInDatabaseService: create_storage_in_database_service.New(),
 	}
 }
 
@@ -34,15 +37,7 @@ func (c *CreateWorkflowInDatabaseService) Create(workflow workflow_entity.Workfl
 		return err
 	}
 
-	err = c.storageRepository.Create(storages_repository.ParamsStorageCreate{
-		WorkflowId:       workflowId,
-		Namespace:        c.namespace,
-		Status:           storages_repository.StatusCreated,
-		StorageMountPath: workflow.Spec.MountPath,
-		StorageClass:     workflow.Spec.StorageClassName,
-		StorageSize:      workflow.Spec.StorageSize,
-	})
-
+	err = c.createStorageInDatabaseService.CreateByWorkflow(workflowId)
 	if err != nil {
 		return err
 	}

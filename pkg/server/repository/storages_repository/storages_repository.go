@@ -9,7 +9,7 @@ type StorageRepository struct {
 }
 
 var TableName = "storages"
-var Columns = "(id INTEGER PRIMARY KEY AUTOINCREMENT, workflow_id INTEGER, namespace TEXT, status INTEGER, storage_mount_path TEXT, storage_class TEXT, storage_size TEXT,  created_at DATETIME DEFAULT CURRENT_TIMESTAMP)"
+var Columns = "(id INTEGER PRIMARY KEY AUTOINCREMENT, workflow_id INTEGER, activity_id INTEGER, namespace TEXT, status INTEGER, storage_mount_path TEXT, storage_class TEXT, storage_size TEXT, initial_file_list TEXT, end_file_list TEXT, initial_disk_spec TEXT, end_disk_spec TEXT, keep_storage_after_finish INTEGER, detached DATETIME,  created_at DATETIME DEFAULT CURRENT_TIMESTAMP)"
 
 type StorageDatabase struct {
 	Id               int
@@ -20,6 +20,7 @@ type StorageDatabase struct {
 	StorageClass     string
 	StorageSize      string
 	CreatedAt        string
+	ActivityId       int
 }
 
 var StatusCreated = 0

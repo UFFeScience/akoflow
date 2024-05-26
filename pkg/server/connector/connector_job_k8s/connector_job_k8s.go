@@ -21,6 +21,7 @@ type IConnectorJob interface {
 	ListJobs()
 	ApplyJob(namespace string, job k8s_job_entity.K8sJob) interface{}
 	GetJob(namespace string, jobName string) (ResponseGetJob, error)
+	DeleteJob(jobName string, namespace string) error
 }
 
 var ErrJobNotFound = errors.New("job not found")
@@ -277,4 +278,24 @@ func (c *ConnectorJobK8s) GetJob(namespace string, jobName string) (ResponseGetJ
 	}
 
 	return result, nil
+}
+
+func (c *ConnectorJobK8s) DeleteJob(jobName string, namespace string) error {
+	token := os.Getenv("K8S_API_SERVER_TOKEN")
+	host := os.Getenv("K8S_API_SERVER_HOST")
+
+	req, _ := http.NewRequest("DELETE", "https://"+host+"/apis/batch/v1/namespaces/"+namespace+"/jobs/"+jobName, nil)
+	req.Header.Set("Authorization", "Bearer "+token)
+
+	resp, err := c.client.Do(req)
+
+	if err != nil {
+		return err
+	}
+
+	if resp.StatusCode != 200 {
+		return errors.New("Error deleting job")
+	}
+
+	return nil
 }

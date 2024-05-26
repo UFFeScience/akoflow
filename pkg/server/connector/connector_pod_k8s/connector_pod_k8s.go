@@ -18,6 +18,7 @@ type IConnectorPod interface {
 	ListPods()
 	GetPodByJob(namespace string, jobName string) (ResponseGetJobByPod, error)
 	GetPodLogs(namespace string, podName string) (string, error)
+	DeletePod(namespace string, podName string) error
 }
 
 func New() IConnectorPod {
@@ -352,4 +353,24 @@ func (c *ConnectorPodK8s) GetPodLogs(namespace string, podName string) (string, 
 	buf.ReadFrom(resp.Body)
 
 	return buf.String(), nil
+}
+
+func (c *ConnectorPodK8s) DeletePod(namespace string, podName string) error {
+	token := os.Getenv("K8S_API_SERVER_TOKEN")
+	host := os.Getenv("K8S_API_SERVER_HOST")
+
+	req, _ := http.NewRequest("DELETE", "https://"+host+"/api/v1/namespaces/"+namespace+"/pods/"+podName, nil)
+	req.Header.Set("Authorization", "Bearer "+token)
+
+	resp, err := c.client.Do(req)
+
+	if err != nil {
+		return err
+	}
+
+	if resp.StatusCode != 200 {
+		return errors.New("Error deleting pod")
+	}
+
+	return nil
 }

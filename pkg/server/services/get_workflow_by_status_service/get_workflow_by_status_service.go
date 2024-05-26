@@ -21,3 +21,13 @@ func (o *GetWorkflowByStatusService) GetActivitiesByStatus(wfs workflow_entity.W
 	}
 	return wfsSelected
 }
+
+func (o *GetWorkflowByStatusService) GetActivitiesByStatuses(wfas []workflow_activity_entity.WorkflowActivities, status int) []workflow_activity_entity.WorkflowActivities {
+	var wfsSelected []workflow_activity_entity.WorkflowActivities
+	for _, activity := range wfas {
+		if activity.Status == status {
+			wfsSelected = append(wfsSelected, activity)
+		}
+	}
+	return wfsSelected
+}

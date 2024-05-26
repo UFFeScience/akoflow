@@ -9,7 +9,7 @@ func (w *ActivityRepository) GetByWorkflowId(id int) ([]workflow_activity_entity
 	database := repository.Database{}
 	c := database.Connect()
 
-	rows, err := c.Query("SELECT * FROM "+w.tableNameActivity+" WHERE workflow_id = ?", id)
+	rows, err := c.Query("SELECT id, workflow_id, namespace, name, image, resource_k8s_base64, status FROM "+w.tableNameActivity+" WHERE workflow_id = ?", id)
 	if err != nil {
 		return []workflow_activity_entity.WorkflowActivities{}, err
 	}

@@ -72,15 +72,19 @@ func (w *ActivityRepository) createPreactivity(namespace string, workflowId int,
 }
 
 func (w *ActivityRepository) createActivity(namespace string, workflowId int, image string, activities []workflow_activity_entity.WorkflowActivities) error {
-	database := repository.Database{}
-	c := database.Connect()
 
 	for _, activity := range activities {
+
+		database := repository.Database{}
+		c := database.Connect()
+
 		rawActivity := activity.GetBase64Activities()
 
 		result, err := c.Exec(
-			"INSERT INTO "+w.tableNameActivity+" (workflow_id, namespace, name, image, resource_k8s_base64, status) VALUES (?, ?, ?, ?, ?, ?)",
+			"INSERT INTO "+w.tableNameActivity+" (workflow_id, namespace, name, image, resource_k8s_base64, status, created_at) VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)",
 			workflowId, namespace, activity.Name, image, rawActivity, StatusCreated)
+
+		err = c.Close()
 
 		if err != nil {
 			return err
@@ -92,11 +96,6 @@ func (w *ActivityRepository) createActivity(namespace string, workflowId int, im
 
 	}
 
-	err := c.Close()
-
-	if err != nil {
-		return err
-	}
 	return nil
 }
 

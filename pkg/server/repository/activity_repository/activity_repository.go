@@ -14,10 +14,10 @@ type ActivityRepository struct {
 var StatusCreated = 0
 var StatusRunning = 1
 var StatusFinished = 2
-var StatusError = 3
+var StatusCompleted = 3
 
 var TableNameActivities = "activities"
-var ColumnsActivities = "(id INTEGER PRIMARY KEY AUTOINCREMENT, workflow_id INTEGER, namespace TEXT, name TEXT, image TEXT, resource_k8s_base64 TEXT, status INTEGER)"
+var ColumnsActivities = "(id INTEGER PRIMARY KEY AUTOINCREMENT, workflow_id INTEGER, namespace TEXT, name TEXT, image TEXT, resource_k8s_base64 TEXT, status INTEGER, created_at TEXT, started_at TEXT, finished_at TEXT)"
 
 var TableNameActivitiesDependencies = "activities_dependencies"
 var ColumnsActivitiesDependencies = "(id INTEGER PRIMARY KEY AUTOINCREMENT, workflow_id INTEGER, activity_id INTEGER, depend_on_activity INTEGER)"
@@ -33,9 +33,12 @@ func New() IActivityRepository {
 	if err != nil {
 		return nil
 	}
+	c.Close()
 
 	c = database.Connect()
 	err = repository.CreateOrVerifyTable(c, TableNameActivitiesDependencies, ColumnsActivitiesDependencies)
+
+	c.Close()
 
 	c = database.Connect()
 	err = repository.CreateOrVerifyTable(c, TableNamePreActivities, ColumnsPreActivities)
@@ -65,4 +68,5 @@ type IActivityRepository interface {
 	GetWfaDependencies(workflowId int) ([]workflow_activity_entity.WorkflowActivityDependencyDatabase, error)
 	FindPreActivity(id int) (workflow_activity_entity.WorkflowPreActivityDatabase, error)
 	UpdatePreActivity(id int, preactivity workflow_activity_entity.WorkflowPreActivityDatabase) error
+	GetPreactivitiesCompleted() ([]workflow_activity_entity.WorkflowPreActivityDatabase, error)
 }

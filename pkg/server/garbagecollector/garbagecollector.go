@@ -1,6 +1,7 @@
 package garbagecollector
 
 import (
+	"github.com/ovvesley/akoflow/pkg/server/services/garbage_collector_remove_storage_service"
 	"time"
 )
 
@@ -17,7 +18,7 @@ func StartGarbageCollector() {
 
 func handleGarbageCollector() {
 
-	//	garbageCollectorRemoveStorageService := garbage_collector_remove_storage_service.New()
-	// 	garbageCollectorRemoveStorageService.RemoveStorage()
+	garbageCollectorRemoveStorageService := garbage_collector_remove_storage_service.New()
+	garbageCollectorRemoveStorageService.RemoveStorages()
 
 }

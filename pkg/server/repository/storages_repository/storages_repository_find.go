@@ -26,3 +26,48 @@ func (s *StorageRepository) Find(id int) (StorageDatabase, error) {
 
 	return storageDatabase, nil
 }
+
+func (s *StorageRepository) GetCreatedStorages(namespace string) []StorageDatabase {
+	database := repository.Database{}
+	c := database.Connect()
+
+	rows, err := c.Query("SELECT * FROM "+s.tableName+" WHERE namespace = ? AND status = ? AND keep_storage_after_finish = 0", namespace, StatusCreated)
+	if err != nil {
+		return nil
+	}
+
+	var storages []StorageDatabase
+
+	for rows.Next() {
+		result := StorageDatabase{}
+		err = rows.Scan(
+			&result.Id,
+			&result.WorkflowId,
+			&result.ActivityId,
+			&result.PvcName,
+			&result.Namespace,
+			&result.Status,
+			&result.StorageMountPath,
+			&result.StorageClass,
+			&result.StorageSize,
+			&result.InitialFileList,
+			&result.EndFileList,
+			&result.InitialDiskSpec,
+			&result.EndDiskSpec,
+			&result.KeepStorageAfterFinish,
+			&result.Detached,
+			&result.CreatedAt)
+		if err != nil {
+			return nil
+		}
+
+		storages = append(storages, result)
+	}
+
+	err = c.Close()
+	if err != nil {
+		return nil
+	}
+
+	return storages
+}

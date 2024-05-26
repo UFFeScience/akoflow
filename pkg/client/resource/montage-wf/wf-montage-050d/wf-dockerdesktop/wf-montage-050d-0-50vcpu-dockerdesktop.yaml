@@ -10,6 +10,7 @@ spec:
       run: mProject -X poss2ukstu_blue_001_001.fits pposs2ukstu_blue_001_001.fits region-oversized.hdr
       memoryLimit: 256Mi
       cpuLimit: 500m
+      keepDisk: true
 
     - name: mprojectid0000002
       run: mProject -X poss2ukstu_blue_001_002.fits pposs2ukstu_blue_001_002.fits region-oversized.hdr

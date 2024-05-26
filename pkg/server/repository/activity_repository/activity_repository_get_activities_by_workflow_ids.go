@@ -8,13 +8,13 @@ import (
 type ResultGetActivitiesByWorkflowIds map[int][]workflow_activity_entity.WorkflowActivities
 
 func (w *ActivityRepository) GetActivitiesByWorkflowIds(ids []int) (ResultGetActivitiesByWorkflowIds, error) {
-	database := repository.Database{}
-	c := database.Connect()
 
 	var mapWfIdToActivities = make(ResultGetActivitiesByWorkflowIds)
 
 	for _, id := range ids {
-		rows, err := c.Query("SELECT * FROM "+w.tableNameActivity+" WHERE workflow_id = ?", id)
+		database := repository.Database{}
+		c := database.Connect()
+		rows, err := c.Query("SELECT id, workflow_id, namespace, name, image, resource_k8s_base64, status FROM "+w.tableNameActivity+" WHERE workflow_id = ?", id)
 		if err != nil {
 			return nil, err
 		}
@@ -34,11 +34,10 @@ func (w *ActivityRepository) GetActivitiesByWorkflowIds(ids []int) (ResultGetAct
 
 			mapWfIdToActivities[id] = append(mapWfIdToActivities[id], activity)
 		}
-	}
-
-	err := c.Close()
-	if err != nil {
-		return nil, err
+		err = c.Close()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	return mapWfIdToActivities, nil

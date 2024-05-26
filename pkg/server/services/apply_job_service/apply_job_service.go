@@ -67,8 +67,6 @@ func (a *ApplyJobService) handleApplyJob(activityID int) {
 
 	a.runK8sJob(wf, activity)
 
-	//println("Pod created: ", namePod)
-
 	var _ = a.activityRepository.UpdateStatus(activity.Id, activity_repository.StatusRunning)
 	var _ = a.workflowRepository.UpdateStatus(activity.WorkflowId, workflow_repository.StatusRunning)
 }

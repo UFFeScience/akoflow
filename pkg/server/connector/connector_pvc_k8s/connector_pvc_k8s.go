@@ -34,6 +34,7 @@ type IConnectorPvc interface {
 	ListPvcs()
 	CreatePersistentVolumeClain(name string, namespace string, storageSize string, storageClassName string) (ResponseCreatePersistentVolumeClain, error)
 	GetPersistentVolumeClain(name string, namespace string) (ResponseGetPersistentVolumeClain, error)
+	DeletePersistentVolumeClaim(name string, namespace string) error
 }
 
 func (c ConnectorPvcK8s) ListPvcs() {
@@ -275,4 +276,26 @@ func (c *ConnectorPvcK8s) GetPersistentVolumeClain(name string, namespace string
 
 	return result, nil
 
+}
+
+func (c *ConnectorPvcK8s) DeletePersistentVolumeClaim(name string, namespace string) error {
+	token := os.Getenv("K8S_API_SERVER_TOKEN")
+	host := os.Getenv("K8S_API_SERVER_HOST")
+
+	req, _ := http.NewRequest("DELETE", "https://"+host+"/api/v1/namespaces/"+namespace+"/persistentvolumeclaims/"+name, nil)
+	req.Header.Set("Authorization", "Bearer "+token)
+
+	resp, err := c.client.Do(req)
+
+	if err != nil {
+		return err
+	}
+
+	if resp.StatusCode != 204 {
+		return fmt.Errorf("error deleting pvc: %s", resp.Status)
+	}
+
+	defer resp.Body.Close()
+
+	return nil
 }

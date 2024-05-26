@@ -23,7 +23,11 @@ func (w *ActivityRepository) GetWfaDependencies(workflowId int) ([]workflow_acti
 			return nil, err
 		}
 		wfaDependenciesDatabase = append(wfaDependenciesDatabase, wfaDependencyDatabase)
+	}
 
+	err = c.Close()
+	if err != nil {
+		return nil, err
 	}
 
 	return wfaDependenciesDatabase, nil

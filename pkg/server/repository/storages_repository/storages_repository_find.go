@@ -31,7 +31,7 @@ func (s *StorageRepository) GetCreatedStorages(namespace string) []StorageDataba
 	database := repository.Database{}
 	c := database.Connect()
 
-	rows, err := c.Query("SELECT * FROM "+s.tableName+" WHERE namespace = ? AND status = ? AND keep_storage_after_finish = 0", namespace, StatusCreated)
+	rows, err := c.Query("SELECT * FROM "+s.tableName+" WHERE namespace = ? AND status = ?", namespace, StatusCreated)
 	if err != nil {
 		return nil
 	}

@@ -1,6 +1,6 @@
 name: wf-preactivity-example
 spec:
-  image: "alpine:3.7"
+  image: "alpine:latest"
   namespace: "akoflow"
   storageClassName: "hostpath"
   storageSize: "32Mi"

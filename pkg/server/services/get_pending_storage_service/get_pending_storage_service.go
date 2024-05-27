@@ -83,8 +83,12 @@ func (g *GetPendingStorageService) GetPendingStorages() ([]workflow_activity_ent
 func (g *GetPendingStorageService) handleWorkflowActivities(wfId int, activities []workflow_activity_entity.WorkflowActivities, storages []storages_repository.StorageDatabase) []workflow_activity_entity.WorkflowActivities {
 
 	wfaFinisheds := g.getWorkflowByStatusService.GetActivitiesByStatuses(activities, activity_repository.StatusFinished)
+	wfaRunning := g.getWorkflowByStatusService.GetActivitiesByStatuses(activities, activity_repository.StatusRunning)
+
+	wfaStarted := append(wfaFinisheds, wfaRunning...)
+
 	mapWfaToBeDeleted := make(map[int]workflow_activity_entity.WorkflowActivities)
-	for _, activity := range wfaFinisheds {
+	for _, activity := range wfaStarted {
 		mapWfaToBeDeleted[activity.Id] = activity
 	}
 
@@ -100,15 +104,15 @@ func (g *GetPendingStorageService) handleWorkflowActivities(wfId int, activities
 	}
 
 	for _, wfaFinished := range wfaFinisheds {
-		activitiesShouldComplete := workflowThatNeedByActivity[wfaFinished.Id]
-		activitiesCompleted := make([]workflow_activity_entity.WorkflowActivities, 0)
-		for _, activityShouldComplete := range activitiesShouldComplete {
-			if _, ok := mapWfaToBeDeleted[activityShouldComplete]; ok {
-				activitiesCompleted = append(activitiesCompleted, mapWfaToBeDeleted[activityShouldComplete])
+		activitiesShouldStarted := workflowThatNeedByActivity[wfaFinished.Id]
+		activitiesStarted := make([]workflow_activity_entity.WorkflowActivities, 0)
+		for _, activityShouldStarted := range activitiesShouldStarted {
+			if _, ok := mapWfaToBeDeleted[activityShouldStarted]; ok {
+				activitiesStarted = append(activitiesStarted, mapWfaToBeDeleted[activityShouldStarted])
 			}
 		}
 
-		if len(activitiesCompleted) == len(activitiesShouldComplete) {
+		if len(activitiesStarted) == len(activitiesShouldStarted) {
 			activitiesToDelete = append(activitiesToDelete, wfaFinished)
 		}
 

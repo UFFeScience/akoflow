@@ -354,26 +354,40 @@ func (m *MakeK8sJobService) makeContainerActivity(workflow workflow_entity.Workf
 //	The command is defined in the activity.
 func (m *MakeK8sJobService) makeContainerCommandActivity(wf workflow_entity.Workflow, wfa workflow_activity_entity.WorkflowActivities) string {
 
+	command := m.setupCommandWorkdir(wf, wfa)
+
+	command = m.addCommandToMonitorFilesStorage(command, "initial-file-list")
+	command = m.addCommandToMonitorDiskSpecStorage(command, "initial-disk-spec")
+
+	command += wfa.Run
+
+	command = m.addCommandToMonitorFilesStorage(command, "end-file-list")
+	command = m.addCommandToMonitorDiskSpecStorage(command, "end-disk-spec")
+
+	return base64.StdEncoding.EncodeToString([]byte(command))
+
+}
+
+func (m *MakeK8sJobService) setupCommandWorkdir(wf workflow_entity.Workflow, wfa workflow_activity_entity.WorkflowActivities) string {
 	command := "mkdir -p " + wf.Spec.MountPath + "/" + wfa.GetName() + "; \n"
 	command += "echo CURRENT_DIR: $(pwd); \n"
 	command += "mv -fvu /akoflow-wfa-shared/* " + wf.Spec.MountPath + "/" + wfa.GetName() + "; \n"
 	command += "cd " + wf.Spec.MountPath + "/" + wfa.GetName() + "; \n"
-	command += "echo CURRENT_DIR: $(pwd); \n"
-	command += "ls -lA; \n"
+	return command
+}
 
-	command += "echo '##START INPUT FILES LIST##:' > " + wfa.GetName() + "_file_list.txt; \n"
-	command += "ls -lA >>" + wfa.GetName() + "_file_list.txt; \n"
-	command += "echo '##END INPUT FILES LIST##' >> " + wfa.GetName() + "_file_list.txt; \n"
+func (m *MakeK8sJobService) addCommandToMonitorFilesStorage(command string, path string) string {
+	pathUrl := "https://e3c9206b-ff02-4782-b1a2-2f8eb67fdcce.mock.pstmn.io/internal/storage/" + path
+	command += "wget --header=\"Content-Type: text/plain\" -O -  --post-data=\"$(ls -lA)\" '" + pathUrl + "' | true; \n"
 
-	command += wfa.Run
+	return command
+}
 
-	command += "\n"
-	command += "echo '##START OUTPUT FILES LIST##:' >> " + wfa.GetName() + "_file_list.txt; \n"
-	command += "ls -lA >>" + wfa.GetName() + "_file_list.txt; \n"
-	command += "echo '##END OUTPUT FILES LIST##' >> " + wfa.GetName() + "_file_list.txt; \n"
+func (m *MakeK8sJobService) addCommandToMonitorDiskSpecStorage(command string, path string) string {
+	pathUrl := "https://e3c9206b-ff02-4782-b1a2-2f8eb67fdcce.mock.pstmn.io/internal/storage/" + path
+	command += "wget --header=\"Content-Type: text/plain\" -O - --post-data=\"$(df -h)\" '" + pathUrl + "' | true; \n"
 
-	return base64.StdEncoding.EncodeToString([]byte(command))
-
+	return command
 }
 
 // makeJobVolumeMountPath creates the path where the volume will be mounted in the container.

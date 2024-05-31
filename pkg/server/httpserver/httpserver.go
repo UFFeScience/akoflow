@@ -1,6 +1,7 @@
 package httpserver
 
 import (
+	"github.com/ovvesley/akoflow/pkg/server/httpserver/handlers/internal_storage_handler"
 	"net/http"
 
 	"github.com/ovvesley/akoflow/pkg/server/config"
@@ -9,8 +10,13 @@ import (
 
 func StartServer() {
 
-	//
-	http.HandleFunc("POST /akoflow-server/workflow/run", workflow_handler.Run)
+	http.HandleFunc("GET /akoflow-server/healtcheck", func(w http.ResponseWriter, r *http.Request) { _, _ = w.Write([]byte("ok")) })
+	http.HandleFunc("POST /akoflow-server/workflow/run", workflow_handler.New().Run)
+
+	http.HandleFunc("POST /akoflow-server/internal/storage/initial-file-list", internal_storage_handler.New().InitialFileListHandler)
+	http.HandleFunc("POST /akoflow-server/internal/storage/end-file-list", internal_storage_handler.New().EndFileListHandler)
+	http.HandleFunc("POST /akoflow-server/internal/storage/initial-disk-spec", internal_storage_handler.New().InitialDiskSpecHandler)
+	http.HandleFunc("POST /akoflow-server/internal/storage/end-disk-spec", internal_storage_handler.New().EndDiskSpecHandler)
 
 	//http.HandleFunc("GET /akoflow-admin/", ...) // Home page
 

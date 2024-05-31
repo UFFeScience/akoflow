@@ -17,11 +17,4 @@ spec:
                 - name: deployment-workflow-00
                   image: alpine:latest
                   command: ["sh", "-c", "while true; do echo $(date) >> /data/out.txt; sleep 1; done"]
-                  volumeMounts:
-                      - name: pvc-workflow-00
-                        mountPath: /data
             restartPolicy: Always
-            volumes:
-                - name: pvc-workflow-00
-                  persistentVolumeClaim:
-                    claimName: pvc-workflow-00

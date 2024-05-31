@@ -3,6 +3,7 @@ package storages_repository
 import (
 	"github.com/ovvesley/akoflow/pkg/server/repository"
 	"strconv"
+	"time"
 )
 
 type ParamsStorageUpdate struct {
@@ -34,4 +35,104 @@ func (s *StorageRepository) Update(params ParamsStorageUpdate) error {
 
 	return nil
 
+}
+
+func (s *StorageRepository) UpdateInitialFileListDisk(activityId int, fileDisk string) error {
+
+	database := repository.Database{}
+	c := database.Connect()
+
+	_, err := c.Exec("UPDATE " + s.tableName + " SET initial_file_list = '" + fileDisk + "' WHERE activity_id = " + strconv.Itoa(activityId))
+
+	if err != nil {
+		return err
+	}
+
+	err = c.Close()
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s *StorageRepository) UpdateEndFileListDisk(activityId int, fileDisk string) error {
+
+	database := repository.Database{}
+	c := database.Connect()
+
+	_, err := c.Exec("UPDATE " + s.tableName + " SET end_file_list = '" + fileDisk + "' WHERE activity_id = " + strconv.Itoa(activityId))
+
+	if err != nil {
+		return err
+	}
+
+	err = c.Close()
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s *StorageRepository) UpdateInitialDiskSpec(activityId int, fileSpec string) error {
+
+	database := repository.Database{}
+	c := database.Connect()
+
+	_, err := c.Exec("UPDATE " + s.tableName + " SET initial_disk_spec = '" + fileSpec + "' WHERE activity_id = " + strconv.Itoa(activityId))
+
+	if err != nil {
+		return err
+	}
+
+	err = c.Close()
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s *StorageRepository) UpdateEndDiskSpec(activityId int, fileSpec string) error {
+
+	database := repository.Database{}
+	c := database.Connect()
+
+	_, err := c.Exec("UPDATE " + s.tableName + " SET end_disk_spec = '" + fileSpec + "' WHERE activity_id = " + strconv.Itoa(activityId))
+	if err != nil {
+		return err
+	}
+
+	err = c.Close()
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s *StorageRepository) UpdateDetached(activityId int) error {
+
+	database := repository.Database{}
+	c := database.Connect()
+
+	now := time.Now()
+
+	_, err := c.Exec("UPDATE " + s.tableName + " SET detached = '" + now.Format("2006-01-02 15:04:05") + "' WHERE activity_id = " + strconv.Itoa(activityId))
+	if err != nil {
+		return err
+	}
+
+	err = c.Close()
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

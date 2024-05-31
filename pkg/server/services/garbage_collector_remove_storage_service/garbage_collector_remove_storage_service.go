@@ -81,6 +81,8 @@ func (c *GarbageCollectorRemoveStorageService) removeResource(activity workflow_
 		Status:     storages_repository.StatusCompleted,
 		ActivityId: activity.Id,
 	})
+
+	_ = c.storageRepository.UpdateDetached(activity.Id)
 }
 
 func (c *GarbageCollectorRemoveStorageService) handleKeepDisk(activity workflow_activity_entity.WorkflowActivities) {

@@ -12,7 +12,17 @@ type RequestPostRunWorkflow struct {
 	Workflow string `json:"workflow"`
 }
 
-func Run(w http.ResponseWriter, r *http.Request) {
+type WorkflowHandler struct {
+	create_workflow_service *create_workflow_in_database_service.CreateWorkflowInDatabaseService
+}
+
+func New() *WorkflowHandler {
+	return &WorkflowHandler{
+		create_workflow_service: create_workflow_in_database_service.New(),
+	}
+}
+
+func (h *WorkflowHandler) Run(w http.ResponseWriter, r *http.Request) {
 	payload := RequestPostRunWorkflow{}
 	err := json.NewDecoder(r.Body).Decode(&payload)
 	if err != nil {
@@ -22,8 +32,7 @@ func Run(w http.ResponseWriter, r *http.Request) {
 
 	wf := workflow_entity.New(workflow_entity.WorkflowNewParams{WorkflowBase64: payload.Workflow})
 
-	create_workflow_service := create_workflow_in_database_service.New()
-	_ = create_workflow_service.Create(wf)
+	_ = h.create_workflow_service.Create(wf)
 
 	response, err := json.Marshal(struct {
 		Workflow string `json:"workflow_entity"`
@@ -46,5 +55,4 @@ func Run(w http.ResponseWriter, r *http.Request) {
 	}
 
 	return
-
 }

@@ -4,6 +4,7 @@ import (
 	"encoding/base64"
 	"errors"
 	"math/rand"
+	"os"
 	"strconv"
 
 	"github.com/ovvesley/akoflow/pkg/server/entities/k8s_job_entity"
@@ -333,6 +334,34 @@ func (m *MakeK8sJobService) makeVolumeThatWillBeUsedByCurrentActivity(_ workflow
 func (m *MakeK8sJobService) makeContainerActivity(workflow workflow_entity.Workflow, activity workflow_activity_entity.WorkflowActivities) k8s_job_entity.K8sJobContainer {
 	command := m.makeContainerCommandActivity(workflow, activity)
 
+	envs := make([]k8s_job_entity.K8sJobEnv, 0)
+	if os.Getenv("ENV") == "DEVELOPMENT" {
+		envs = append(envs, k8s_job_entity.K8sJobEnv{
+			Name:  "AKOFLOW_SERVER_SERVICE_SERVICE_HOST",
+			Value: os.Getenv("AKOFLOW_SERVER_SERVICE_SERVICE_HOST"),
+		})
+	}
+
+	envs = append(envs, k8s_job_entity.K8sJobEnv{
+		Name:  "WORKFLOW_NAME",
+		Value: workflow.Name,
+	})
+
+	envs = append(envs, k8s_job_entity.K8sJobEnv{
+		Name:  "ACTIVITY_NAME",
+		Value: activity.Name,
+	})
+
+	envs = append(envs, k8s_job_entity.K8sJobEnv{
+		Name:  "WORKFLOW_ID",
+		Value: strconv.Itoa(workflow.Id),
+	})
+
+	envs = append(envs, k8s_job_entity.K8sJobEnv{
+		Name:  "ACTIVITY_ID",
+		Value: strconv.Itoa(activity.Id),
+	})
+
 	container := k8s_job_entity.K8sJobContainer{
 		Name:         "activity-0" + strconv.Itoa(rand.Intn(100)),
 		Image:        workflow.Spec.Image,
@@ -344,6 +373,7 @@ func (m *MakeK8sJobService) makeContainerActivity(workflow workflow_entity.Workf
 				Memory: activity.MemoryLimit,
 			},
 		},
+		Env: envs,
 	}
 
 	return container
@@ -373,19 +403,30 @@ func (m *MakeK8sJobService) setupCommandWorkdir(wf workflow_entity.Workflow, wfa
 	command += "echo CURRENT_DIR: $(pwd); \n"
 	command += "mv -fvu /akoflow-wfa-shared/* " + wf.Spec.MountPath + "/" + wfa.GetName() + "; \n"
 	command += "cd " + wf.Spec.MountPath + "/" + wfa.GetName() + "; \n"
+
+	command += "printenv; \n"
 	return command
+}
+func (m *MakeK8sJobService) getPortAkoFlowServer() string {
+	port := os.Getenv("AKOFLOW_SERVER_SERVICE_SERVICE_PORT")
+	if port == "" {
+		port = "8080"
+	}
+	return port
 }
 
 func (m *MakeK8sJobService) addCommandToMonitorFilesStorage(command string, path string) string {
-	pathUrl := "https://e3c9206b-ff02-4782-b1a2-2f8eb67fdcce.mock.pstmn.io/internal/storage/" + path
-	command += "wget --header=\"Content-Type: text/plain\" -O -  --post-data=\"$(ls -lA)\" '" + pathUrl + "' | true; \n"
+	port := m.getPortAkoFlowServer()
+	pathUrl := "http://$AKOFLOW_SERVER_SERVICE_SERVICE_HOST:" + port + "/akoflow-server/internal/storage/" + path + "?workflowId=" + strconv.Itoa(m.getIdWorkflow()) + "&activityId=" + strconv.Itoa(m.getIdWorkflowActivity())
+	command += "wget --header=\"Content-Type: text/plain\" -O -  --post-data=\"$(ls -lAR)\" \"" + pathUrl + "\" | true; \n"
 
 	return command
 }
 
 func (m *MakeK8sJobService) addCommandToMonitorDiskSpecStorage(command string, path string) string {
-	pathUrl := "https://e3c9206b-ff02-4782-b1a2-2f8eb67fdcce.mock.pstmn.io/internal/storage/" + path
-	command += "wget --header=\"Content-Type: text/plain\" -O - --post-data=\"$(df -h)\" '" + pathUrl + "' | true; \n"
+	port := m.getPortAkoFlowServer()
+	pathUrl := "http://$AKOFLOW_SERVER_SERVICE_SERVICE_HOST:" + port + "/akoflow-server/internal/storage/" + path + "?workflowId=" + strconv.Itoa(m.getIdWorkflow()) + "&activityId=" + strconv.Itoa(m.getIdWorkflowActivity())
+	command += "wget --header=\"Content-Type: text/plain\" -O - --post-data=\"$(df -h)\" \"" + pathUrl + "\" | true; \n"
 
 	return command
 }

@@ -239,24 +239,62 @@ spec:
   versionPriority: 100
 ---
 apiVersion: v1
-kind: Service
+kind: PersistentVolumeClaim
 metadata:
-  name: host-service
+  name: akoflow-server-pvc
   namespace: akoflow
 spec:
-  ports:
-    - port: 8080  # Porta exposta pelo serviço
-      targetPort: 8080  # Porta no host
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: akoflow-server-deployment
+  namespace: akoflow
+  labels:
+    app: akoflow-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: akoflow-server
+  template:
+    metadata:
+      labels:
+        app: akoflow-server
+    spec:
+      serviceAccountName: akoflow-server-sa
+      containers:
+        - name: akoflow-server
+          image: docker.io/ovvesley/akoflow-server:latest
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: akoflow-server-pvc
+              mountPath: /app/storage
+          imagePullPolicy: Always
+      volumes:
+        - name: akoflow-server-pvc
+          persistentVolumeClaim:
+            claimName: akoflow-server-pvc
 
 ---
 apiVersion: v1
-kind: Endpoints
+kind: Service
 metadata:
-  name: host-service
+  name: akoflow-server-service
   namespace: akoflow
-
-subsets:
-  - addresses:
-      - ip: "
-    ports:
-      - port: 8080
+  labels:
+    app: akoflow-server
+spec:
+  type: LoadBalancer
+  selector:
+    app: akoflow-server
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080

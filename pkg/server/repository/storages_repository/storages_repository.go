@@ -58,4 +58,9 @@ type IStorageRepository interface {
 	Update(params ParamsStorageUpdate) error
 	Find(id int) (StorageDatabase, error)
 	GetCreatedStorages(namespace string) []StorageDatabase
+	UpdateInitialFileListDisk(activityId int, fileDisk string) error
+	UpdateEndFileListDisk(activityId int, fileDisk string) error
+	UpdateInitialDiskSpec(activityId int, fileSpec string) error
+	UpdateEndDiskSpec(activityId int, fileSpec string) error
+	UpdateDetached(activityId int) error
 }

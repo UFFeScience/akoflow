@@ -2,6 +2,7 @@ package httpserver
 
 import (
 	"github.com/ovvesley/akoflow/pkg/server/httpserver/handlers/internal_storage_handler"
+	"github.com/ovvesley/akoflow/pkg/server/httpserver/handlers/storage_databasedump_handler"
 	"net/http"
 
 	"github.com/ovvesley/akoflow/pkg/server/config"
@@ -17,6 +18,8 @@ func StartServer() {
 	http.HandleFunc("POST /akoflow-server/internal/storage/end-file-list", internal_storage_handler.New().EndFileListHandler)
 	http.HandleFunc("POST /akoflow-server/internal/storage/initial-disk-spec", internal_storage_handler.New().InitialDiskSpecHandler)
 	http.HandleFunc("POST /akoflow-server/internal/storage/end-disk-spec", internal_storage_handler.New().EndDiskSpecHandler)
+
+	http.HandleFunc("GET /akoflow-server/database-dump", storage_databasedump_handler.New().DatabaseDumpHandler)
 
 	//http.HandleFunc("GET /akoflow-admin/", ...) // Home page
 

@@ -1,0 +1,588 @@
+name: wf-montage-050d
+spec:
+  activities:
+  - cpuLimit: 250m
+    memoryLimit: 256Mi
+    name: mprojectid0000001
+    run: mProject -X poss2ukstu_blue_001_001.fits pposs2ukstu_blue_001_001.fits region-oversized.hdr
+  - cpuLimit: 1000m
+    memoryLimit: 256Mi
+    name: mprojectid0000002
+    run: mProject -X poss2ukstu_blue_001_002.fits pposs2ukstu_blue_001_002.fits region-oversized.hdr
+  - cpuLimit: 750m
+    memoryLimit: 256Mi
+    name: mprojectid0000003
+    run: mProject -X poss2ukstu_blue_002_001.fits pposs2ukstu_blue_002_001.fits region-oversized.hdr
+  - cpuLimit: 500m
+    memoryLimit: 256Mi
+    name: mprojectid0000004
+    run: mProject -X poss2ukstu_blue_002_002.fits pposs2ukstu_blue_002_002.fits region-oversized.hdr
+  - cpuLimit: 250m
+    dependsOn:
+    - mprojectid0000001
+    - mprojectid0000002
+    memoryLimit: 256Mi
+    name: mdifffitid0000005
+    run: mDiffFit -d -s 1-fit.000001.000002.txt pposs2ukstu_blue_001_001.fits pposs2ukstu_blue_001_002.fits
+      1-diff.000001.000002.fits region-oversized.hdr
+  - cpuLimit: 750m
+    dependsOn:
+    - mprojectid0000001
+    - mprojectid0000003
+    memoryLimit: 256Mi
+    name: mdifffitid0000006
+    run: mDiffFit -d -s 1-fit.000001.000003.txt pposs2ukstu_blue_001_001.fits pposs2ukstu_blue_002_001.fits
+      1-diff.000001.000003.fits region-oversized.hdr
+  - cpuLimit: 500m
+    dependsOn:
+    - mprojectid0000001
+    - mprojectid0000004
+    memoryLimit: 256Mi
+    name: mdifffitid0000007
+    run: mDiffFit -d -s 1-fit.000001.000004.txt pposs2ukstu_blue_001_001.fits pposs2ukstu_blue_002_002.fits
+      1-diff.000001.000004.fits region-oversized.hdr
+  - cpuLimit: 750m
+    dependsOn:
+    - mprojectid0000002
+    - mprojectid0000003
+    memoryLimit: 256Mi
+    name: mdifffitid0000008
+    run: mDiffFit -d -s 1-fit.000002.000003.txt pposs2ukstu_blue_001_002.fits pposs2ukstu_blue_002_001.fits
+      1-diff.000002.000003.fits region-oversized.hdr
+  - cpuLimit: 750m
+    dependsOn:
+    - mprojectid0000002
+    - mprojectid0000004
+    memoryLimit: 256Mi
+    name: mdifffitid0000009
+    run: mDiffFit -d -s 1-fit.000002.000004.txt pposs2ukstu_blue_001_002.fits pposs2ukstu_blue_002_002.fits
+      1-diff.000002.000004.fits region-oversized.hdr
+  - cpuLimit: 250m
+    dependsOn:
+    - mprojectid0000003
+    - mprojectid0000004
+    memoryLimit: 256Mi
+    name: mdifffitid0000010
+    run: mDiffFit -d -s 1-fit.000003.000004.txt pposs2ukstu_blue_002_001.fits pposs2ukstu_blue_002_002.fits
+      1-diff.000003.000004.fits region-oversized.hdr
+  - cpuLimit: 250m
+    dependsOn:
+    - mdifffitid0000005
+    - mdifffitid0000006
+    - mdifffitid0000007
+    - mdifffitid0000008
+    - mdifffitid0000009
+    - mdifffitid0000010
+    memoryLimit: 256Mi
+    name: mconcatfitid0000011
+    run: mConcatFit 1-stat.tbl 1-fits.tbl .
+  - cpuLimit: 250m
+    dependsOn:
+    - mconcatfitid0000011
+    memoryLimit: 256Mi
+    name: mbgmodelid0000012
+    run: mBgModel -i 100000 1-images.tbl 1-fits.tbl 1-corrections.tbl
+  - cpuLimit: 500m
+    dependsOn:
+    - mprojectid0000001
+    - mbgmodelid0000012
+    memoryLimit: 256Mi
+    name: mbackgroundid0000013
+    run: mBackground -t pposs2ukstu_blue_001_001.fits cposs2ukstu_blue_001_001.fits
+      1-projected.tbl 1-corrections.tbl
+  - cpuLimit: 750m
+    dependsOn:
+    - mprojectid0000002
+    - mbgmodelid0000012
+    memoryLimit: 256Mi
+    name: mbackgroundid0000014
+    run: mBackground -t pposs2ukstu_blue_001_002.fits cposs2ukstu_blue_001_002.fits
+      1-projected.tbl 1-corrections.tbl
+  - cpuLimit: 250m
+    dependsOn:
+    - mprojectid0000003
+    - mbgmodelid0000012
+    memoryLimit: 256Mi
+    name: mbackgroundid0000015
+    run: mBackground -t pposs2ukstu_blue_002_001.fits cposs2ukstu_blue_002_001.fits
+      1-projected.tbl 1-corrections.tbl
+  - cpuLimit: 1000m
+    dependsOn:
+    - mprojectid0000004
+    - mbgmodelid0000012
+    memoryLimit: 256Mi
+    name: mbackgroundid0000016
+    run: mBackground -t pposs2ukstu_blue_002_002.fits cposs2ukstu_blue_002_002.fits
+      1-projected.tbl 1-corrections.tbl
+  - cpuLimit: 250m
+    dependsOn:
+    - mbackgroundid0000013
+    - mbackgroundid0000014
+    - mbackgroundid0000015
+    - mbackgroundid0000016
+    memoryLimit: 256Mi
+    name: mimgtblid0000017
+    run: mImgtbl . -t 1-corrected.tbl 1-updated-corrected.tbl
+  - cpuLimit: 750m
+    dependsOn:
+    - mbackgroundid0000013
+    - mbackgroundid0000014
+    - mbackgroundid0000015
+    - mbackgroundid0000016
+    - mimgtblid0000017
+    memoryLimit: 256Mi
+    name: maddid0000018
+    run: mAdd -e 1-updated-corrected.tbl region.hdr 1-mosaic.fits
+  - cpuLimit: 750m
+    dependsOn:
+    - maddid0000018
+    memoryLimit: 256Mi
+    name: mviewerid0000019
+    run: mViewer -ct 1 -gray 1-mosaic.fits -1s max gaussian -png 1-mosaic.png
+  - cpuLimit: 500m
+    memoryLimit: 256Mi
+    name: mprojectid0000020
+    run: mProject -X poss2ukstu_red_001_001.fits pposs2ukstu_red_001_001.fits region-oversized.hdr
+  - cpuLimit: 750m
+    memoryLimit: 256Mi
+    name: mprojectid0000021
+    run: mProject -X poss2ukstu_red_001_002.fits pposs2ukstu_red_001_002.fits region-oversized.hdr
+  - cpuLimit: 250m
+    memoryLimit: 256Mi
+    name: mprojectid0000022
+    run: mProject -X poss2ukstu_red_002_001.fits pposs2ukstu_red_002_001.fits region-oversized.hdr
+  - cpuLimit: 250m
+    memoryLimit: 256Mi
+    name: mprojectid0000023
+    run: mProject -X poss2ukstu_red_002_002.fits pposs2ukstu_red_002_002.fits region-oversized.hdr
+  - cpuLimit: 1000m
+    dependsOn:
+    - mprojectid0000020
+    - mprojectid0000021
+    memoryLimit: 256Mi
+    name: mdifffitid0000024
+    run: mDiffFit -d -s 2-fit.000001.000002.txt pposs2ukstu_red_001_001.fits pposs2ukstu_red_001_002.fits
+      2-diff.000001.000002.fits region-oversized.hdr
+  - cpuLimit: 1000m
+    dependsOn:
+    - mprojectid0000020
+    - mprojectid0000022
+    memoryLimit: 256Mi
+    name: mdifffitid0000025
+    run: mDiffFit -d -s 2-fit.000001.000003.txt pposs2ukstu_red_001_001.fits pposs2ukstu_red_002_001.fits
+      2-diff.000001.000003.fits region-oversized.hdr
+  - cpuLimit: 1000m
+    dependsOn:
+    - mprojectid0000020
+    - mprojectid0000023
+    memoryLimit: 256Mi
+    name: mdifffitid0000026
+    run: mDiffFit -d -s 2-fit.000001.000004.txt pposs2ukstu_red_001_001.fits pposs2ukstu_red_002_002.fits
+      2-diff.000001.000004.fits region-oversized.hdr
+  - cpuLimit: 1000m
+    dependsOn:
+    - mprojectid0000021
+    - mprojectid0000022
+    memoryLimit: 256Mi
+    name: mdifffitid0000027
+    run: mDiffFit -d -s 2-fit.000002.000003.txt pposs2ukstu_red_001_002.fits pposs2ukstu_red_002_001.fits
+      2-diff.000002.000003.fits region-oversized.hdr
+  - cpuLimit: 1000m
+    dependsOn:
+    - mprojectid0000021
+    - mprojectid0000023
+    memoryLimit: 256Mi
+    name: mdifffitid0000028
+    run: mDiffFit -d -s 2-fit.000002.000004.txt pposs2ukstu_red_001_002.fits pposs2ukstu_red_002_002.fits
+      2-diff.000002.000004.fits region-oversized.hdr
+  - cpuLimit: 1000m
+    dependsOn:
+    - mprojectid0000022
+    - mprojectid0000023
+    memoryLimit: 256Mi
+    name: mdifffitid0000029
+    run: mDiffFit -d -s 2-fit.000003.000004.txt pposs2ukstu_red_002_001.fits pposs2ukstu_red_002_002.fits
+      2-diff.000003.000004.fits region-oversized.hdr
+  - cpuLimit: 1000m
+    dependsOn:
+    - mdifffitid0000024
+    - mdifffitid0000025
+    - mdifffitid0000026
+    - mdifffitid0000027
+    - mdifffitid0000028
+    - mdifffitid0000029
+    memoryLimit: 256Mi
+    name: mconcatfitid0000030
+    run: mConcatFit 2-stat.tbl 2-fits.tbl .
+  - cpuLimit: 1000m
+    dependsOn:
+    - mconcatfitid0000030
+    memoryLimit: 256Mi
+    name: mbgmodelid0000031
+    run: mBgModel -i 100000 2-images.tbl 2-fits.tbl 2-corrections.tbl
+  - cpuLimit: 1000m
+    dependsOn:
+    - mprojectid0000020
+    - mbgmodelid0000031
+    memoryLimit: 256Mi
+    name: mbackgroundid0000032
+    run: mBackground -t pposs2ukstu_red_001_001.fits cposs2ukstu_red_001_001.fits
+      2-projected.tbl 2-corrections.tbl
+  - cpuLimit: 1000m
+    dependsOn:
+    - mprojectid0000021
+    - mbgmodelid0000031
+    memoryLimit: 256Mi
+    name: mbackgroundid0000033
+    run: mBackground -t pposs2ukstu_red_001_002.fits cposs2ukstu_red_001_002.fits
+      2-projected.tbl 2-corrections.tbl
+  - cpuLimit: 1000m
+    dependsOn:
+    - mprojectid0000022
+    - mbgmodelid0000031
+    memoryLimit: 256Mi
+    name: mbackgroundid0000034
+    run: mBackground -t pposs2ukstu_red_002_001.fits cposs2ukstu_red_002_001.fits
+      2-projected.tbl 2-corrections.tbl
+  - cpuLimit: 1000m
+    dependsOn:
+    - mprojectid0000023
+    - mbgmodelid0000031
+    memoryLimit: 256Mi
+    name: mbackgroundid0000035
+    run: mBackground -t pposs2ukstu_red_002_002.fits cposs2ukstu_red_002_002.fits
+      2-projected.tbl 2-corrections.tbl
+  - cpuLimit: 500m
+    dependsOn:
+    - mbackgroundid0000032
+    - mbackgroundid0000033
+    - mbackgroundid0000034
+    - mbackgroundid0000035
+    memoryLimit: 256Mi
+    name: mimgtblid0000036
+    run: mImgtbl . -t 2-corrected.tbl 2-updated-corrected.tbl
+  - cpuLimit: 250m
+    dependsOn:
+    - mbackgroundid0000032
+    - mbackgroundid0000033
+    - mbackgroundid0000034
+    - mbackgroundid0000035
+    - mimgtblid0000036
+    memoryLimit: 256Mi
+    name: maddid0000037
+    run: mAdd -e 2-updated-corrected.tbl region.hdr 2-mosaic.fits
+  - cpuLimit: 1000m
+    dependsOn:
+    - maddid0000037
+    memoryLimit: 256Mi
+    name: mviewerid0000038
+    run: mViewer -ct 1 -gray 2-mosaic.fits -1s max gaussian -png 2-mosaic.png
+  - cpuLimit: 250m
+    memoryLimit: 256Mi
+    name: mprojectid0000039
+    run: mProject -X poss2ukstu_ir_001_001.fits pposs2ukstu_ir_001_001.fits region-oversized.hdr
+  - cpuLimit: 250m
+    memoryLimit: 256Mi
+    name: mprojectid0000040
+    run: mProject -X poss2ukstu_ir_001_002.fits pposs2ukstu_ir_001_002.fits region-oversized.hdr
+  - cpuLimit: 500m
+    memoryLimit: 256Mi
+    name: mprojectid0000041
+    run: mProject -X poss2ukstu_ir_002_001.fits pposs2ukstu_ir_002_001.fits region-oversized.hdr
+  - cpuLimit: 250m
+    memoryLimit: 256Mi
+    name: mprojectid0000042
+    run: mProject -X poss2ukstu_ir_002_002.fits pposs2ukstu_ir_002_002.fits region-oversized.hdr
+  - cpuLimit: 1000m
+    dependsOn:
+    - mprojectid0000039
+    - mprojectid0000040
+    memoryLimit: 256Mi
+    name: mdifffitid0000043
+    run: mDiffFit -d -s 3-fit.000001.000002.txt pposs2ukstu_ir_001_001.fits pposs2ukstu_ir_001_002.fits
+      3-diff.000001.000002.fits region-oversized.hdr
+  - cpuLimit: 1000m
+    dependsOn:
+    - mprojectid0000039
+    - mprojectid0000041
+    memoryLimit: 256Mi
+    name: mdifffitid0000044
+    run: mDiffFit -d -s 3-fit.000001.000003.txt pposs2ukstu_ir_001_001.fits pposs2ukstu_ir_002_001.fits
+      3-diff.000001.000003.fits region-oversized.hdr
+  - cpuLimit: 1000m
+    dependsOn:
+    - mprojectid0000039
+    - mprojectid0000042
+    memoryLimit: 256Mi
+    name: mdifffitid0000045
+    run: mDiffFit -d -s 3-fit.000001.000004.txt pposs2ukstu_ir_001_001.fits pposs2ukstu_ir_002_002.fits
+      3-diff.000001.000004.fits region-oversized.hdr
+  - cpuLimit: 1000m
+    dependsOn:
+    - mprojectid0000040
+    - mprojectid0000041
+    memoryLimit: 256Mi
+    name: mdifffitid0000046
+    run: mDiffFit -d -s 3-fit.000002.000003.txt pposs2ukstu_ir_001_002.fits pposs2ukstu_ir_002_001.fits
+      3-diff.000002.000003.fits region-oversized.hdr
+  - cpuLimit: 1000m
+    dependsOn:
+    - mprojectid0000040
+    - mprojectid0000042
+    memoryLimit: 256Mi
+    name: mdifffitid0000047
+    run: mDiffFit -d -s 3-fit.000002.000004.txt pposs2ukstu_ir_001_002.fits pposs2ukstu_ir_002_002.fits
+      3-diff.000002.000004.fits region-oversized.hdr
+  - cpuLimit: 1000m
+    dependsOn:
+    - mprojectid0000041
+    - mprojectid0000042
+    memoryLimit: 256Mi
+    name: mdifffitid0000048
+    run: mDiffFit -d -s 3-fit.000003.000004.txt pposs2ukstu_ir_002_001.fits pposs2ukstu_ir_002_002.fits
+      3-diff.000003.000004.fits region-oversized.hdr
+  - cpuLimit: 1000m
+    dependsOn:
+    - mdifffitid0000043
+    - mdifffitid0000044
+    - mdifffitid0000045
+    - mdifffitid0000046
+    - mdifffitid0000047
+    - mdifffitid0000048
+    memoryLimit: 256Mi
+    name: mconcatfitid0000049
+    run: mConcatFit 3-stat.tbl 3-fits.tbl .
+  - cpuLimit: 1000m
+    dependsOn:
+    - mconcatfitid0000049
+    memoryLimit: 256Mi
+    name: mbgmodelid0000050
+    run: mBgModel -i 100000 3-images.tbl 3-fits.tbl 3-corrections.tbl
+  - cpuLimit: 1000m
+    dependsOn:
+    - mprojectid0000039
+    - mbgmodelid0000050
+    memoryLimit: 256Mi
+    name: mbackgroundid0000051
+    run: mBackground -t pposs2ukstu_ir_001_001.fits cposs2ukstu_ir_001_001.fits 3-projected.tbl
+      3-corrections.tbl
+  - cpuLimit: 1000m
+    dependsOn:
+    - mprojectid0000040
+    - mbgmodelid0000050
+    memoryLimit: 256Mi
+    name: mbackgroundid0000052
+    run: mBackground -t pposs2ukstu_ir_001_002.fits cposs2ukstu_ir_001_002.fits 3-projected.tbl
+      3-corrections.tbl
+  - cpuLimit: 1000m
+    dependsOn:
+    - mprojectid0000041
+    - mbgmodelid0000050
+    memoryLimit: 256Mi
+    name: mbackgroundid0000053
+    run: mBackground -t pposs2ukstu_ir_002_001.fits cposs2ukstu_ir_002_001.fits 3-projected.tbl
+      3-corrections.tbl
+  - cpuLimit: 1000m
+    dependsOn:
+    - mprojectid0000042
+    - mbgmodelid0000050
+    memoryLimit: 256Mi
+    name: mbackgroundid0000054
+    run: mBackground -t pposs2ukstu_ir_002_002.fits cposs2ukstu_ir_002_002.fits 3-projected.tbl
+      3-corrections.tbl
+  - cpuLimit: 750m
+    dependsOn:
+    - mbackgroundid0000051
+    - mbackgroundid0000052
+    - mbackgroundid0000053
+    - mbackgroundid0000054
+    memoryLimit: 256Mi
+    name: mimgtblid0000055
+    run: mImgtbl . -t 3-corrected.tbl 3-updated-corrected.tbl
+  - cpuLimit: 500m
+    dependsOn:
+    - mbackgroundid0000051
+    - mbackgroundid0000052
+    - mbackgroundid0000053
+    - mbackgroundid0000054
+    - mimgtblid0000055
+    memoryLimit: 256Mi
+    name: maddid0000056
+    run: mAdd -e 3-updated-corrected.tbl region.hdr 3-mosaic.fits
+  - cpuLimit: 500m
+    dependsOn:
+    - maddid0000056
+    memoryLimit: 256Mi
+    name: mviewerid0000057
+    run: mViewer -ct 1 -gray 3-mosaic.fits -1s max gaussian -png 3-mosaic.png
+  - cpuLimit: 250m
+    dependsOn:
+    - maddid0000018
+    - maddid0000037
+    - maddid0000056
+    memoryLimit: 256Mi
+    name: mviewerid0000058
+    run: mViewer -red 3-mosaic.fits -0.5s max gaussian-log -green 2-mosaic.fits -0.5s
+      max gaussian-log -blue 1-mosaic.fits -0.5s max gaussian-log -png mosaic-color.png
+
+  - cpuLimit: 1000m
+    dependsOn:
+    - mviewerid0000019
+    - mviewerid0000038
+    - mviewerid0000057
+    - mviewerid0000058
+    memoryLimit: 512Mi
+    name: grasp-send-bucket
+    run: |
+      apt-get install apt-transport-https ca-certificates gnupg curl -y
+      curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg
+      echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+      apt-get update && apt-get install google-cloud-cli -y
+      
+      echo ewogICJ0eXBlIjogInNlcnZpY2VfYWNjb3VudCIsCiAgInByb2plY3RfaWQiOiAicGh5bG8tdHJlZS1taW5pbmciLAogICJwcml2YXRlX2tleV9pZCI6ICJkYjU5ZjE5NWMyZDc4MWNiNjg3YmI3NTNiNzFhMTc1ODFkNDZmYzA4IiwKICAicHJpdmF0ZV9rZXkiOiAiLS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tXG5NSUlFdkFJQkFEQU5CZ2txaGtpRzl3MEJBUUVGQUFTQ0JLWXdnZ1NpQWdFQUFvSUJBUUN2ZVliRDI1dHR6Z2lEXG5qRUxHMHd4SXF3N2x4S0h5WDZneEFmVmdteWo4ZlRnLzJ5Tm5iL0xYcktDbkdvT0RpamVlSTUrenFCL1lUd3Q1XG5mdkVITVl3djVqOUR5MVM3OGloSWt0UGgrYVlxeDJtNjg4U3AxRGMvNlFXc1Y0NFI5ZUZIUlBPWkFWRk4ydzJkXG5icG1JWCtCRXc4ckI2enRsd2tNSFpwM3ZIZVMxNGV5bHJqZnpGeGJycFZvY3lxYnVPMEtzV2gxUnVtMW0rU1AyXG5odVdERDJxVlByT0VrU21PYVNKb2Y1Vng0UXdWUXdVNkxHdHlBeDZ3YWt1cXZDODRucEZQMmdRSTJxMGZoOUtyXG5uUTErQjF5RGtqWDZVUUNDWXNnczJRY1VKMjcyak1Gbk1SSEpNSlE5cTV3RFRqaFRXUG1GTWgxMkFtdTlPWlVDXG45MkN6bXo5YkFnTUJBQUVDZ2dFQUwrNWNvdlJDTFFpNTU2RHcvcGxZZ2lNRGt6eVdWZnZPRi9EbWcwaHV0aVZJXG5MNTBldXhybnRRVG83eXc5WHpscWZzNVJTY1F6U3FVd3g3T21oK1gvV25na3NOS0NKMEo2d1hRbDMxU1BrS0RlXG4zeHZHRFBPMFVjZEhidStObFpkWnZWdDJ4TVVJM2VEbmc2aloxRmdJRFJDRU9sc1VZdlBnMWswdjk4aHRHRWNWXG5UTmpiY09Pd0VQOGEyRm1NZGhyMjhEbTQ3TFVGNkFyeHc2OWhUN2plTGo1c3dCbWxpSmh1RUFZQzlsUXk0dzVuXG5mb3pieXVJVkdzSlVTK1lFUk82TE5WZzA0K0Q1T2hzY1dha1ZwSy93RnJhM0M0TEthWW15VnFQQWN0aVZJWWhtXG5oQlEwbnhCZHYwaWVzTnFxYy9WSE5MREUwK09jUFRYUVhtTENtSFUrZlFLQmdRRG81cFRCZmFsemkzZjlMWEFyXG5yV2pXM2ZTUDB6WFo2Zk8zaE1yVEdMRUZwMU1iWVFKUGVoMFJFdzRJTkszckFNSzFXZ3NSR3BqQ3JvK2owNTZOXG5iRVlIckF0eDNkNTVZZExvVlJzcmRCU0tLK2p0SnFtR1ZCZklKQmlncW1YSU9KWC9tWGordUt4dXpJZHd5a2dtXG5OcU52S3dXWHpWQ1FBTVM5YjAzZ0drZk1uUUtCZ1FEQTRPSFF3V3RPenFPSHR5c2JUeUZ4NXhXTDZqNSt1UjcrXG40UnJPTlRuQUxBYVgrekpHbS9zSUk2UWVVQUo3cWEzOHJRMFR1cm9YaGtjSnhFY05DNTc0LzlGQmorSldrMndwXG5qbk9tVHh5VE9hQThXS3dsd05YbkJtWFpJVkVpc0pYWllxZkU0VVNCTXVaOXdpR3dEeVJQUVljRDZKR1lPZVpDXG5ELzBXd2dxdVZ3S0JnQ2gxamhnQzlZSCtFNDBtN0pxWjJHR2pVMDM4K2hqdUhJbWdCd0FmQlBtZmRMK0gzYmZpXG4xZFBXaEpTR1drUTk4SlZDbkRPUGRFUTF3UHhMMGZwdGVjanhhVmVSbklsbnBoVDRXK3p6a0hIa2FPVngxdmRmXG4rbldwVjZIcG1CN3RQWm1XbHI5aFk0c24rc3RzU0paaTNZZDlhTTVUTzVDWW9aVHJGaE05WFlXOUFvR0FMMERwXG5FZlBSRG1XaHVzWXRVV3Q1amlaSEtSZ2laM21ERm42ZnlwVlBxTDBnZ0d1U1RhbzVQaTA5TUEvNkM4SHVWbEV2XG5PdjRzU1Vja2NFZ2VBQnd3dm1BdUxCbk1JZG5NVGdJUVkxWk9jZU5VVm5TQytGemVDdE9PY0R1eFhRWldNQVB6XG5obENLTC8wQWF4NzhrZDJqejZjR0pQYjlkSVg2MjRSL1JPd1ZJZEVDZ1lCT05UQTlZVVF4dGdvUklNbWtDbHFnXG50SndKYnh5Umc1QzJFZEoreTVOZTR0R1RrdWl2b3JibmJjUWRWTkZQS3ZNaEQ2WEdNSFkrbC80aTdtL0RwWW4wXG5DSE4wdFdNUTY1bzIxbGdLVzd4ampVc01OOVFuZzRoMklYK0lNS2x2b3BQNHlERGZoTUNoRzRyNnRlK2wyL0RYXG5SVFROSWdzdm1LZmFBaVUvK3ErUGl3PT1cbi0tLS0tRU5EIFBSSVZBVEUgS0VZLS0tLS1cbiIsCiAgImNsaWVudF9lbWFpbCI6ICJha29mbG93LWdyYXNwQHBoeWxvLXRyZWUtbWluaW5nLmlhbS5nc2VydmljZWFjY291bnQuY29tIiwKICAiY2xpZW50X2lkIjogIjExNDUwMDkzMDkwNTQ0MDQzODgzNSIsCiAgImF1dGhfdXJpIjogImh0dHBzOi8vYWNjb3VudHMuZ29vZ2xlLmNvbS9vL29hdXRoMi9hdXRoIiwKICAidG9rZW5fdXJpIjogImh0dHBzOi8vb2F1dGgyLmdvb2dsZWFwaXMuY29tL3Rva2VuIiwKICAiYXV0aF9wcm92aWRlcl94NTA5X2NlcnRfdXJsIjogImh0dHBzOi8vd3d3Lmdvb2dsZWFwaXMuY29tL29hdXRoMi92MS9jZXJ0cyIsCiAgImNsaWVudF94NTA5X2NlcnRfdXJsIjogImh0dHBzOi8vd3d3Lmdvb2dsZWFwaXMuY29tL3JvYm90L3YxL21ldGFkYXRhL3g1MDkvYWtvZmxvdy1ncmFzcCU0MHBoeWxvLXRyZWUtbWluaW5nLmlhbS5nc2VydmljZWFjY291bnQuY29tIiwKICAidW5pdmVyc2VfZG9tYWluIjogImdvb2dsZWFwaXMuY29tIgp9 | base64 -d > /tmp/keyfile.json
+      gcloud auth activate-service-account --key-file=/tmp/keyfile.json
+
+      echo "Sending files to bucket 1"
+
+      gsutil cp pposs2ukstu_blue_001_001.fits gs://akoflow-bucket-1/01/
+      gsutil cp pposs2ukstu_blue_001_001_area.fits gs://akoflow-bucket-1/01/
+      gsutil cp pposs2ukstu_blue_002_002.fits gs://akoflow-bucket-1/01/
+      gsutil cp 1-fit.000002.000003.txt gs://akoflow-bucket-1/01/
+      gsutil cp 1-diff.000002.000003.fits gs://akoflow-bucket-1/01/
+      gsutil cp 1-diff.000002.000003_area.fits gs://akoflow-bucket-1/01/
+      gsutil cp 1-diff.000002.000004.fits gs://akoflow-bucket-1/01/
+      gsutil cp 1-updated-corrected.tbl gs://akoflow-bucket-1/01/
+      gsutil cp pposs2ukstu_red_001_001_area.fits gs://akoflow-bucket-1/01/
+      gsutil cp pposs2ukstu_red_001_002.fits gs://akoflow-bucket-1/01/
+      gsutil cp pposs2ukstu_red_002_002.fits gs://akoflow-bucket-1/01/
+      gsutil cp 2-fits.tbl gs://akoflow-bucket-1/01/
+      gsutil cp cposs2ukstu_red_002_001.fits gs://akoflow-bucket-1/01/
+      gsutil cp cposs2ukstu_red_002_001_area.fits gs://akoflow-bucket-1/01/
+      gsutil cp pposs2ukstu_ir_001_001_area.fits gs://akoflow-bucket-1/01/
+      gsutil cp 3-fit.000001.000002.txt gs://akoflow-bucket-1/01/
+      gsutil cp 3-fit.000001.000004.txt gs://akoflow-bucket-1/01/
+      gsutil cp 3-fit.000002.000003.txt gs://akoflow-bucket-1/01/
+      gsutil cp 3-diff.000002.000003.fits gs://akoflow-bucket-1/01/
+      gsutil cp 3-diff.000002.000003_area.fits gs://akoflow-bucket-1/01/
+      gsutil cp 3-fit.000002.000004.txt gs://akoflow-bucket-1/01/
+      gsutil cp 3-diff.000002.000004.fits gs://akoflow-bucket-1/01/
+      gsutil cp 3-diff.000002.000004_area.fits gs://akoflow-bucket-1/01/
+      gsutil cp 3-fit.000003.000004.txt gs://akoflow-bucket-1/01/
+      gsutil cp 3-diff.000003.000004.fits gs://akoflow-bucket-1/01/
+      gsutil cp 3-diff.000003.000004_area.fits gs://akoflow-bucket-1/01/
+      gsutil cp 3-corrections.tbl gs://akoflow-bucket-1/01/
+      gsutil cp 3-updated-corrected.tbl gs://akoflow-bucket-1/01/
+      gsutil cp 3-mosaic.fits gs://akoflow-bucket-1/01/
+      gsutil cp 3-mosaic_area.fits gs://akoflow-bucket-1/01/
+
+      echo "Files sent to bucket 1"
+
+      echo "Sending files to bucket 2"
+      gsutil cp pposs2ukstu_blue_001_002_area.fits gs://akoflow-bucket-2/01/
+      gsutil cp 1-fit.000001.000003.txt gs://akoflow-bucket-2/01/
+      gsutil cp 1-diff.000001.000003.fits gs://akoflow-bucket-2/01/
+      gsutil cp 1-diff.000001.000003_area.fits gs://akoflow-bucket-2/01/
+      gsutil cp 1-diff.000001.000004.fits gs://akoflow-bucket-2/01/
+      gsutil cp 1-fit.000003.000004.txt gs://akoflow-bucket-2/01/
+      gsutil cp 1-diff.000003.000004.fits gs://akoflow-bucket-2/01/
+      gsutil cp 1-diff.000003.000004_area.fits gs://akoflow-bucket-2/01/
+      gsutil cp cposs2ukstu_blue_001_001_area.fits gs://akoflow-bucket-2/01/
+      gsutil cp cposs2ukstu_blue_002_001.fits gs://akoflow-bucket-2/01/
+      gsutil cp cposs2ukstu_blue_002_001_area.fits gs://akoflow-bucket-2/01/
+      gsutil cp cposs2ukstu_blue_002_002.fits gs://akoflow-bucket-2/01/
+      gsutil cp cposs2ukstu_blue_002_002_area.fits gs://akoflow-bucket-2/01/
+      gsutil cp 1-mosaic.png gs://akoflow-bucket-2/01/
+      gsutil cp pposs2ukstu_red_001_001.fits gs://akoflow-bucket-2/01/
+      gsutil cp pposs2ukstu_red_001_002_area.fits gs://akoflow-bucket-2/01/
+      gsutil cp pposs2ukstu_red_002_001_area.fits gs://akoflow-bucket-2/01/
+      gsutil cp cposs2ukstu_red_002_002.fits gs://akoflow-bucket-2/01/
+      gsutil cp cposs2ukstu_red_002_002_area.fits gs://akoflow-bucket-2/01/
+      gsutil cp 2-mosaic.png gs://akoflow-bucket-2/01/
+      gsutil cp pposs2ukstu_ir_001_001.fits gs://akoflow-bucket-2/01/
+      gsutil cp pposs2ukstu_ir_001_002_area.fits gs://akoflow-bucket-2/01/
+      gsutil cp pposs2ukstu_ir_002_001.fits gs://akoflow-bucket-2/01/
+      gsutil cp pposs2ukstu_ir_002_001_area.fits gs://akoflow-bucket-2/01/
+      gsutil cp 3-fits.tbl gs://akoflow-bucket-2/01/
+      gsutil cp cposs2ukstu_ir_002_002.fits gs://akoflow-bucket-2/01/
+      gsutil cp cposs2ukstu_ir_002_002_area.fits gs://akoflow-bucket-2/01/
+
+      echo "Files sent to bucket 2"
+
+      echo "Sending files to bucket 3"
+
+      gsutil cp pposs2ukstu_blue_002_001.fits gs://akoflow-bucket-3/01/
+      gsutil cp pposs2ukstu_blue_002_002_area.fits gs://akoflow-bucket-3/01/
+      gsutil cp 1-diff.000001.000002_area.fits gs://akoflow-bucket-3/01/
+      gsutil cp 1-fits.tbl gs://akoflow-bucket-3/01/
+      gsutil cp cposs2ukstu_blue_001_001.fits gs://akoflow-bucket-3/01/
+      gsutil cp cposs2ukstu_blue_001_002.fits gs://akoflow-bucket-3/01/
+      gsutil cp cposs2ukstu_blue_001_002_area.fits gs://akoflow-bucket-3/01/
+      gsutil cp pposs2ukstu_red_002_001.fits gs://akoflow-bucket-3/01/
+      gsutil cp pposs2ukstu_red_002_002_area.fits gs://akoflow-bucket-3/01/
+      gsutil cp 2-diff.000001.000002.fits gs://akoflow-bucket-3/01/
+      gsutil cp 2-fit.000003.000004.txt gs://akoflow-bucket-3/01/
+      gsutil cp cposs2ukstu_red_001_001.fits gs://akoflow-bucket-3/01/
+      gsutil cp cposs2ukstu_red_001_001_area.fits gs://akoflow-bucket-3/01/
+      gsutil cp cposs2ukstu_red_001_002.fits gs://akoflow-bucket-3/01/
+      gsutil cp cposs2ukstu_red_001_002_area.fits gs://akoflow-bucket-3/01/
+      gsutil cp pposs2ukstu_ir_001_002.fits gs://akoflow-bucket-3/01/
+      gsutil cp pposs2ukstu_ir_002_002.fits gs://akoflow-bucket-3/01/
+      gsutil cp 3-fit.000001.000003.txt gs://akoflow-bucket-3/01/
+      gsutil cp 3-diff.000001.000003.fits gs://akoflow-bucket-3/01/
+      gsutil cp 3-diff.000001.000004_area.fits gs://akoflow-bucket-3/01/
+      gsutil cp cposs2ukstu_ir_001_001.fits gs://akoflow-bucket-3/01/
+      gsutil cp cposs2ukstu_ir_002_001.fits gs://akoflow-bucket-3/01/
+      gsutil cp mosaic-color.png gs://akoflow-bucket-3/01/
+
+      echo "Files sent to bucket 3"
+
+      echo "Sending files to bucket 4"
+
+      gsutil cp pposs2ukstu_blue_002_001_area.fits gs://akoflow-bucket-4/01/
+      gsutil cp 1-fit.000001.000002.txt gs://akoflow-bucket-4/01/
+      gsutil cp 1-diff.000001.000002.fits gs://akoflow-bucket-4/01/
+      gsutil cp 1-fit.000001.000004.txt gs://akoflow-bucket-4/01/
+      gsutil cp 1-diff.000001.000004_area.fits gs://akoflow-bucket-4/01/
+      gsutil cp 1-fit.000002.000004.txt gs://akoflow-bucket-4/01/
+      gsutil cp 1-diff.000002.000004_area.fits gs://akoflow-bucket-4/01/
+      gsutil cp 1-corrections.tbl gs://akoflow-bucket-4/01/
+      gsutil cp 1-mosaic.fits gs://akoflow-bucket-4/01/
+      gsutil cp 1-mosaic_area.fits gs://akoflow-bucket-4/01/
+      gsutil cp 2-fit.000001.000002.txt gs://akoflow-bucket-4/01/
+      gsutil cp 2-diff.000001.000002_area.fits gs://akoflow-bucket-4/01/
+      gsutil cp 2-fit.000001.000003.txt gs://akoflow-bucket-4/01/
+      gsutil cp 2-diff.000001.000003.fits gs://akoflow-bucket-4/01/
+      gsutil cp 2-diff.000001.000003_area.fits gs://akoflow-bucket-4/01/
+      gsutil cp 2-fit.000001.000004.txt gs://akoflow-bucket-4/01/
+      gsutil cp 2-diff.000001.000004.fits gs://akoflow-bucket-4/01/
+      gsutil cp 2-diff.000001.000004_area.fits gs://akoflow-bucket-4/01/
+      gsutil cp 2-fit.000002.000003.txt gs://akoflow-bucket-4/01/
+      gsutil cp 2-diff.000002.000003.fits gs://akoflow-bucket-4/01/
+      gsutil cp 2-diff.000002.000003_area.fits gs://akoflow-bucket-4/01/
+      gsutil cp 2-fit.000002.000004.txt gs://akoflow-bucket-4/01/
+      gsutil cp 2-diff.000002.000004.fits gs://akoflow-bucket-4/01/
+      gsutil cp 2-diff.000002.000004_area.fits gs://akoflow-bucket-4/01/
+      gsutil cp 2-diff.000003.000004.fits gs://akoflow-bucket-4/01/
+      gsutil cp 2-diff.000003.000004_area.fits gs://akoflow-bucket-4/01/
+      gsutil cp 2-corrections.tbl gs://akoflow-bucket-4/01/
+      gsutil cp 2-updated-corrected.tbl gs://akoflow-bucket-4/01/
+      gsutil cp 2-mosaic.fits gs://akoflow-bucket-4/01/
+      gsutil cp 2-mosaic_area.fits gs://akoflow-bucket-4/01/
+      gsutil cp pposs2ukstu_ir_002_002_area.fits gs://akoflow-bucket-4/01/
+      gsutil cp 3-diff.000001.000002.fits gs://akoflow-bucket-4/01/
+      gsutil cp 3-diff.000001.000002_area.fits gs://akoflow-bucket-4/01/
+      gsutil cp 3-diff.000001.000003_area.fits gs://akoflow-bucket-4/01/
+      gsutil cp 3-diff.000001.000004.fits gs://akoflow-bucket-4/01/
+      gsutil cp cposs2ukstu_ir_001_001_area.fits gs://akoflow-bucket-4/01/
+      gsutil cp cposs2ukstu_ir_001_002.fits gs://akoflow-bucket-4/01/
+      gsutil cp cposs2ukstu_ir_001_002_area.fits gs://akoflow-bucket-4/01/
+      gsutil cp cposs2ukstu_ir_002_001_area.fits gs://akoflow-bucket-4/01/
+      gsutil cp 3-mosaic.png gs://akoflow-bucket-4/01/
+
+      echo "Files sent to bucket 4"
+
+  image: ovvesley/akoflow-wf-montage:050d
+  mountPath: /data
+  namespace: akoflow
+  storageClassName: standard-rwo
+  storageSize: 2Gi

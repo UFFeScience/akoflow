@@ -1,7 +1,7 @@
 name: wf-montage-050d
 spec:
   activities:
-  - cpuLimit: 250m
+  - cpuLimit: 1000m
     memoryLimit: 256Mi
     name: mprojectid0000001
     run: mProject -X poss2ukstu_blue_001_001.fits pposs2ukstu_blue_001_001.fits region-oversized.hdr
@@ -9,15 +9,15 @@ spec:
     memoryLimit: 256Mi
     name: mprojectid0000002
     run: mProject -X poss2ukstu_blue_001_002.fits pposs2ukstu_blue_001_002.fits region-oversized.hdr
-  - cpuLimit: 750m
+  - cpuLimit: 1000m
     memoryLimit: 256Mi
     name: mprojectid0000003
     run: mProject -X poss2ukstu_blue_002_001.fits pposs2ukstu_blue_002_001.fits region-oversized.hdr
-  - cpuLimit: 500m
+  - cpuLimit: 1000m
     memoryLimit: 256Mi
     name: mprojectid0000004
     run: mProject -X poss2ukstu_blue_002_002.fits pposs2ukstu_blue_002_002.fits region-oversized.hdr
-  - cpuLimit: 250m
+  - cpuLimit: 1000m
     dependsOn:
     - mprojectid0000001
     - mprojectid0000002
@@ -25,7 +25,7 @@ spec:
     name: mdifffitid0000005
     run: mDiffFit -d -s 1-fit.000001.000002.txt pposs2ukstu_blue_001_001.fits pposs2ukstu_blue_001_002.fits
       1-diff.000001.000002.fits region-oversized.hdr
-  - cpuLimit: 750m
+  - cpuLimit: 1000m
     dependsOn:
     - mprojectid0000001
     - mprojectid0000003
@@ -33,7 +33,7 @@ spec:
     name: mdifffitid0000006
     run: mDiffFit -d -s 1-fit.000001.000003.txt pposs2ukstu_blue_001_001.fits pposs2ukstu_blue_002_001.fits
       1-diff.000001.000003.fits region-oversized.hdr
-  - cpuLimit: 500m
+  - cpuLimit: 1000m
     dependsOn:
     - mprojectid0000001
     - mprojectid0000004
@@ -41,7 +41,7 @@ spec:
     name: mdifffitid0000007
     run: mDiffFit -d -s 1-fit.000001.000004.txt pposs2ukstu_blue_001_001.fits pposs2ukstu_blue_002_002.fits
       1-diff.000001.000004.fits region-oversized.hdr
-  - cpuLimit: 750m
+  - cpuLimit: 1000m
     dependsOn:
     - mprojectid0000002
     - mprojectid0000003
@@ -49,7 +49,7 @@ spec:
     name: mdifffitid0000008
     run: mDiffFit -d -s 1-fit.000002.000003.txt pposs2ukstu_blue_001_002.fits pposs2ukstu_blue_002_001.fits
       1-diff.000002.000003.fits region-oversized.hdr
-  - cpuLimit: 750m
+  - cpuLimit: 1000m
     dependsOn:
     - mprojectid0000002
     - mprojectid0000004
@@ -57,7 +57,7 @@ spec:
     name: mdifffitid0000009
     run: mDiffFit -d -s 1-fit.000002.000004.txt pposs2ukstu_blue_001_002.fits pposs2ukstu_blue_002_002.fits
       1-diff.000002.000004.fits region-oversized.hdr
-  - cpuLimit: 250m
+  - cpuLimit: 1000m
     dependsOn:
     - mprojectid0000003
     - mprojectid0000004
@@ -65,7 +65,7 @@ spec:
     name: mdifffitid0000010
     run: mDiffFit -d -s 1-fit.000003.000004.txt pposs2ukstu_blue_002_001.fits pposs2ukstu_blue_002_002.fits
       1-diff.000003.000004.fits region-oversized.hdr
-  - cpuLimit: 250m
+  - cpuLimit: 1000m
     dependsOn:
     - mdifffitid0000005
     - mdifffitid0000006
@@ -76,13 +76,13 @@ spec:
     memoryLimit: 256Mi
     name: mconcatfitid0000011
     run: mConcatFit 1-stat.tbl 1-fits.tbl .
-  - cpuLimit: 250m
+  - cpuLimit: 1000m
     dependsOn:
     - mconcatfitid0000011
     memoryLimit: 256Mi
     name: mbgmodelid0000012
     run: mBgModel -i 100000 1-images.tbl 1-fits.tbl 1-corrections.tbl
-  - cpuLimit: 500m
+  - cpuLimit: 1000m
     dependsOn:
     - mprojectid0000001
     - mbgmodelid0000012
@@ -90,7 +90,7 @@ spec:
     name: mbackgroundid0000013
     run: mBackground -t pposs2ukstu_blue_001_001.fits cposs2ukstu_blue_001_001.fits
       1-projected.tbl 1-corrections.tbl
-  - cpuLimit: 750m
+  - cpuLimit: 1000m
     dependsOn:
     - mprojectid0000002
     - mbgmodelid0000012
@@ -98,7 +98,7 @@ spec:
     name: mbackgroundid0000014
     run: mBackground -t pposs2ukstu_blue_001_002.fits cposs2ukstu_blue_001_002.fits
       1-projected.tbl 1-corrections.tbl
-  - cpuLimit: 250m
+  - cpuLimit: 1000m
     dependsOn:
     - mprojectid0000003
     - mbgmodelid0000012
@@ -114,7 +114,7 @@ spec:
     name: mbackgroundid0000016
     run: mBackground -t pposs2ukstu_blue_002_002.fits cposs2ukstu_blue_002_002.fits
       1-projected.tbl 1-corrections.tbl
-  - cpuLimit: 250m
+  - cpuLimit: 1000m
     dependsOn:
     - mbackgroundid0000013
     - mbackgroundid0000014
@@ -123,7 +123,7 @@ spec:
     memoryLimit: 256Mi
     name: mimgtblid0000017
     run: mImgtbl . -t 1-corrected.tbl 1-updated-corrected.tbl
-  - cpuLimit: 750m
+  - cpuLimit: 1000m
     dependsOn:
     - mbackgroundid0000013
     - mbackgroundid0000014
@@ -133,25 +133,25 @@ spec:
     memoryLimit: 256Mi
     name: maddid0000018
     run: mAdd -e 1-updated-corrected.tbl region.hdr 1-mosaic.fits
-  - cpuLimit: 750m
+  - cpuLimit: 1000m
     dependsOn:
     - maddid0000018
     memoryLimit: 256Mi
     name: mviewerid0000019
     run: mViewer -ct 1 -gray 1-mosaic.fits -1s max gaussian -png 1-mosaic.png
-  - cpuLimit: 500m
+  - cpuLimit: 1000m
     memoryLimit: 256Mi
     name: mprojectid0000020
     run: mProject -X poss2ukstu_red_001_001.fits pposs2ukstu_red_001_001.fits region-oversized.hdr
-  - cpuLimit: 750m
+  - cpuLimit: 1000m
     memoryLimit: 256Mi
     name: mprojectid0000021
     run: mProject -X poss2ukstu_red_001_002.fits pposs2ukstu_red_001_002.fits region-oversized.hdr
-  - cpuLimit: 250m
+  - cpuLimit: 1000m
     memoryLimit: 256Mi
     name: mprojectid0000022
     run: mProject -X poss2ukstu_red_002_001.fits pposs2ukstu_red_002_001.fits region-oversized.hdr
-  - cpuLimit: 250m
+  - cpuLimit: 1000m
     memoryLimit: 256Mi
     name: mprojectid0000023
     run: mProject -X poss2ukstu_red_002_002.fits pposs2ukstu_red_002_002.fits region-oversized.hdr
@@ -252,7 +252,7 @@ spec:
     name: mbackgroundid0000035
     run: mBackground -t pposs2ukstu_red_002_002.fits cposs2ukstu_red_002_002.fits
       2-projected.tbl 2-corrections.tbl
-  - cpuLimit: 500m
+  - cpuLimit: 1000m
     dependsOn:
     - mbackgroundid0000032
     - mbackgroundid0000033
@@ -261,7 +261,7 @@ spec:
     memoryLimit: 256Mi
     name: mimgtblid0000036
     run: mImgtbl . -t 2-corrected.tbl 2-updated-corrected.tbl
-  - cpuLimit: 250m
+  - cpuLimit: 1000m
     dependsOn:
     - mbackgroundid0000032
     - mbackgroundid0000033
@@ -277,19 +277,19 @@ spec:
     memoryLimit: 256Mi
     name: mviewerid0000038
     run: mViewer -ct 1 -gray 2-mosaic.fits -1s max gaussian -png 2-mosaic.png
-  - cpuLimit: 250m
+  - cpuLimit: 1000m
     memoryLimit: 256Mi
     name: mprojectid0000039
     run: mProject -X poss2ukstu_ir_001_001.fits pposs2ukstu_ir_001_001.fits region-oversized.hdr
-  - cpuLimit: 250m
+  - cpuLimit: 1000m
     memoryLimit: 256Mi
     name: mprojectid0000040
     run: mProject -X poss2ukstu_ir_001_002.fits pposs2ukstu_ir_001_002.fits region-oversized.hdr
-  - cpuLimit: 500m
+  - cpuLimit: 1000m
     memoryLimit: 256Mi
     name: mprojectid0000041
     run: mProject -X poss2ukstu_ir_002_001.fits pposs2ukstu_ir_002_001.fits region-oversized.hdr
-  - cpuLimit: 250m
+  - cpuLimit: 1000m
     memoryLimit: 256Mi
     name: mprojectid0000042
     run: mProject -X poss2ukstu_ir_002_002.fits pposs2ukstu_ir_002_002.fits region-oversized.hdr
@@ -390,7 +390,7 @@ spec:
     name: mbackgroundid0000054
     run: mBackground -t pposs2ukstu_ir_002_002.fits cposs2ukstu_ir_002_002.fits 3-projected.tbl
       3-corrections.tbl
-  - cpuLimit: 750m
+  - cpuLimit: 1000m
     dependsOn:
     - mbackgroundid0000051
     - mbackgroundid0000052
@@ -399,7 +399,7 @@ spec:
     memoryLimit: 256Mi
     name: mimgtblid0000055
     run: mImgtbl . -t 3-corrected.tbl 3-updated-corrected.tbl
-  - cpuLimit: 500m
+  - cpuLimit: 1000m
     dependsOn:
     - mbackgroundid0000051
     - mbackgroundid0000052
@@ -409,13 +409,13 @@ spec:
     memoryLimit: 256Mi
     name: maddid0000056
     run: mAdd -e 3-updated-corrected.tbl region.hdr 3-mosaic.fits
-  - cpuLimit: 500m
+  - cpuLimit: 1000m
     dependsOn:
     - maddid0000056
     memoryLimit: 256Mi
     name: mviewerid0000057
     run: mViewer -ct 1 -gray 3-mosaic.fits -1s max gaussian -png 3-mosaic.png
-  - cpuLimit: 250m
+  - cpuLimit: 1000m
     dependsOn:
     - maddid0000018
     - maddid0000037
@@ -444,140 +444,142 @@ spec:
 
       echo "Sending files to bucket 1"
 
-      gsutil cp pposs2ukstu_blue_001_001.fits gs://akoflow-bucket-1/01/
-      gsutil cp pposs2ukstu_blue_001_001_area.fits gs://akoflow-bucket-1/01/
-      gsutil cp pposs2ukstu_blue_002_002.fits gs://akoflow-bucket-1/01/
-      gsutil cp 1-fit.000002.000003.txt gs://akoflow-bucket-1/01/
-      gsutil cp 1-diff.000002.000003.fits gs://akoflow-bucket-1/01/
-      gsutil cp 1-diff.000002.000003_area.fits gs://akoflow-bucket-1/01/
-      gsutil cp 1-diff.000002.000004.fits gs://akoflow-bucket-1/01/
-      gsutil cp 1-updated-corrected.tbl gs://akoflow-bucket-1/01/
-      gsutil cp pposs2ukstu_red_001_001_area.fits gs://akoflow-bucket-1/01/
-      gsutil cp pposs2ukstu_red_001_002.fits gs://akoflow-bucket-1/01/
-      gsutil cp pposs2ukstu_red_002_002.fits gs://akoflow-bucket-1/01/
-      gsutil cp 2-fits.tbl gs://akoflow-bucket-1/01/
-      gsutil cp cposs2ukstu_red_002_001.fits gs://akoflow-bucket-1/01/
-      gsutil cp cposs2ukstu_red_002_001_area.fits gs://akoflow-bucket-1/01/
-      gsutil cp pposs2ukstu_ir_001_001_area.fits gs://akoflow-bucket-1/01/
-      gsutil cp 3-fit.000001.000002.txt gs://akoflow-bucket-1/01/
-      gsutil cp 3-fit.000001.000004.txt gs://akoflow-bucket-1/01/
-      gsutil cp 3-fit.000002.000003.txt gs://akoflow-bucket-1/01/
-      gsutil cp 3-diff.000002.000003.fits gs://akoflow-bucket-1/01/
-      gsutil cp 3-diff.000002.000003_area.fits gs://akoflow-bucket-1/01/
-      gsutil cp 3-fit.000002.000004.txt gs://akoflow-bucket-1/01/
-      gsutil cp 3-diff.000002.000004.fits gs://akoflow-bucket-1/01/
-      gsutil cp 3-diff.000002.000004_area.fits gs://akoflow-bucket-1/01/
-      gsutil cp 3-fit.000003.000004.txt gs://akoflow-bucket-1/01/
-      gsutil cp 3-diff.000003.000004.fits gs://akoflow-bucket-1/01/
-      gsutil cp 3-diff.000003.000004_area.fits gs://akoflow-bucket-1/01/
-      gsutil cp 3-corrections.tbl gs://akoflow-bucket-1/01/
-      gsutil cp 3-updated-corrected.tbl gs://akoflow-bucket-1/01/
-      gsutil cp 3-mosaic.fits gs://akoflow-bucket-1/01/
-      gsutil cp 3-mosaic_area.fits gs://akoflow-bucket-1/01/
+      gsutil cp pposs2ukstu_blue_001_001.fits gs://akoflow-bucket-1/02/
+      gsutil cp pposs2ukstu_blue_002_001_area.fits gs://akoflow-bucket-1/02/
+      gsutil cp 1-fit.000002.000004.txt gs://akoflow-bucket-1/02/
+      gsutil cp 1-fits.tbl gs://akoflow-bucket-1/02/
+      gsutil cp cposs2ukstu_blue_001_001.fits gs://akoflow-bucket-1/02/
+      gsutil cp cposs2ukstu_blue_001_002.fits gs://akoflow-bucket-1/02/
+      gsutil cp 2-fit.000001.000002.txt gs://akoflow-bucket-1/02/
+      gsutil cp 2-diff.000001.000002.fits gs://akoflow-bucket-1/02/
+      gsutil cp 2-diff.000001.000002_area.fits gs://akoflow-bucket-1/02/
+      gsutil cp 2-diff.000001.000003.fits gs://akoflow-bucket-1/02/
+      gsutil cp 2-diff.000001.000003_area.fits gs://akoflow-bucket-1/02/
+      gsutil cp 2-fit.000001.000004.txt gs://akoflow-bucket-1/02/
+      gsutil cp 2-diff.000001.000004.fits gs://akoflow-bucket-1/02/
+      gsutil cp 2-diff.000002.000003.fits gs://akoflow-bucket-1/02/
+      gsutil cp 2-diff.000002.000004_area.fits gs://akoflow-bucket-1/02/
+      gsutil cp 2-fit.000003.000004.txt gs://akoflow-bucket-1/02/
+      gsutil cp 2-diff.000003.000004_area.fits gs://akoflow-bucket-1/02/
+      gsutil cp cposs2ukstu_red_002_002.fits gs://akoflow-bucket-1/02/
+      gsutil cp 2-updated-corrected.tbl gs://akoflow-bucket-1/02/
+      gsutil cp 2-mosaic_area.fits gs://akoflow-bucket-1/02/
+      gsutil cp pposs2ukstu_ir_001_001.fits gs://akoflow-bucket-1/02/
+      gsutil cp 3-fit.000002.000003.txt gs://akoflow-bucket-1/02/
+      gsutil cp 3-diff.000002.000003.fits gs://akoflow-bucket-1/02/
+      gsutil cp 3-fit.000002.000004.txt gs://akoflow-bucket-1/02/
+      gsutil cp 3-diff.000002.000004_area.fits gs://akoflow-bucket-1/02/
+      gsutil cp 3-fit.000003.000004.txt gs://akoflow-bucket-1/02/
+      gsutil cp 3-diff.000003.000004.fits gs://akoflow-bucket-1/02/
+      gsutil cp 3-diff.000003.000004_area.fits gs://akoflow-bucket-1/02/
+      gsutil cp cposs2ukstu_ir_001_002.fits gs://akoflow-bucket-1/02/
+      gsutil cp cposs2ukstu_ir_002_001.fits gs://akoflow-bucket-1/02/
+      gsutil cp cposs2ukstu_ir_002_001_area.fits gs://akoflow-bucket-1/02/
+      gsutil cp cposs2ukstu_ir_002_002.fits gs://akoflow-bucket-1/02/
+      gsutil cp 3-mosaic.png gs://akoflow-bucket-1/02/
+      gsutil cp mosaic-color.png gs://akoflow-bucket-1/02/
+
 
       echo "Files sent to bucket 1"
 
       echo "Sending files to bucket 2"
-      gsutil cp pposs2ukstu_blue_001_002_area.fits gs://akoflow-bucket-2/01/
-      gsutil cp 1-fit.000001.000003.txt gs://akoflow-bucket-2/01/
-      gsutil cp 1-diff.000001.000003.fits gs://akoflow-bucket-2/01/
-      gsutil cp 1-diff.000001.000003_area.fits gs://akoflow-bucket-2/01/
-      gsutil cp 1-diff.000001.000004.fits gs://akoflow-bucket-2/01/
-      gsutil cp 1-fit.000003.000004.txt gs://akoflow-bucket-2/01/
-      gsutil cp 1-diff.000003.000004.fits gs://akoflow-bucket-2/01/
-      gsutil cp 1-diff.000003.000004_area.fits gs://akoflow-bucket-2/01/
-      gsutil cp cposs2ukstu_blue_001_001_area.fits gs://akoflow-bucket-2/01/
-      gsutil cp cposs2ukstu_blue_002_001.fits gs://akoflow-bucket-2/01/
-      gsutil cp cposs2ukstu_blue_002_001_area.fits gs://akoflow-bucket-2/01/
-      gsutil cp cposs2ukstu_blue_002_002.fits gs://akoflow-bucket-2/01/
-      gsutil cp cposs2ukstu_blue_002_002_area.fits gs://akoflow-bucket-2/01/
-      gsutil cp 1-mosaic.png gs://akoflow-bucket-2/01/
-      gsutil cp pposs2ukstu_red_001_001.fits gs://akoflow-bucket-2/01/
-      gsutil cp pposs2ukstu_red_001_002_area.fits gs://akoflow-bucket-2/01/
-      gsutil cp pposs2ukstu_red_002_001_area.fits gs://akoflow-bucket-2/01/
-      gsutil cp cposs2ukstu_red_002_002.fits gs://akoflow-bucket-2/01/
-      gsutil cp cposs2ukstu_red_002_002_area.fits gs://akoflow-bucket-2/01/
-      gsutil cp 2-mosaic.png gs://akoflow-bucket-2/01/
-      gsutil cp pposs2ukstu_ir_001_001.fits gs://akoflow-bucket-2/01/
-      gsutil cp pposs2ukstu_ir_001_002_area.fits gs://akoflow-bucket-2/01/
-      gsutil cp pposs2ukstu_ir_002_001.fits gs://akoflow-bucket-2/01/
-      gsutil cp pposs2ukstu_ir_002_001_area.fits gs://akoflow-bucket-2/01/
-      gsutil cp 3-fits.tbl gs://akoflow-bucket-2/01/
-      gsutil cp cposs2ukstu_ir_002_002.fits gs://akoflow-bucket-2/01/
-      gsutil cp cposs2ukstu_ir_002_002_area.fits gs://akoflow-bucket-2/01/
+      gsutil cp pposs2ukstu_blue_001_001_area.fits gs://akoflow-bucket-2/02/
+      gsutil cp pposs2ukstu_blue_001_002_area.fits gs://akoflow-bucket-2/02/
+      gsutil cp pposs2ukstu_blue_002_002_area.fits gs://akoflow-bucket-2/02/
+      gsutil cp 1-diff.000002.000003.fits gs://akoflow-bucket-2/02/
+      gsutil cp 1-diff.000002.000004.fits gs://akoflow-bucket-2/02/
+      gsutil cp 1-diff.000003.000004.fits gs://akoflow-bucket-2/02/
+      gsutil cp 1-corrections.tbl gs://akoflow-bucket-2/02/
+      gsutil cp 1-updated-corrected.tbl gs://akoflow-bucket-2/02/
+      gsutil cp 1-mosaic.fits gs://akoflow-bucket-2/02/
+      gsutil cp 1-mosaic_area.fits gs://akoflow-bucket-2/02/
+      gsutil cp pposs2ukstu_red_001_001_area.fits gs://akoflow-bucket-2/02/
+      gsutil cp 2-fit.000001.000003.txt gs://akoflow-bucket-2/02/
+      gsutil cp 2-fit.000002.000003.txt gs://akoflow-bucket-2/02/
+      gsutil cp 2-diff.000002.000003_area.fits gs://akoflow-bucket-2/02/
+      gsutil cp 2-fit.000002.000004.txt gs://akoflow-bucket-2/02/
+      gsutil cp 2-diff.000002.000004.fits gs://akoflow-bucket-2/02/
+      gsutil cp 2-diff.000003.000004.fits gs://akoflow-bucket-2/02/
+      gsutil cp cposs2ukstu_red_001_002.fits gs://akoflow-bucket-2/02/
+      gsutil cp cposs2ukstu_red_001_002_area.fits gs://akoflow-bucket-2/02/
+      gsutil cp cposs2ukstu_red_002_001.fits gs://akoflow-bucket-2/02/
+      gsutil cp cposs2ukstu_red_002_001_area.fits gs://akoflow-bucket-2/02/
+      gsutil cp cposs2ukstu_red_002_002_area.fits gs://akoflow-bucket-2/02/
+      gsutil cp pposs2ukstu_ir_001_001_area.fits gs://akoflow-bucket-2/02/
+      gsutil cp pposs2ukstu_ir_002_001.fits gs://akoflow-bucket-2/02/
+      gsutil cp pposs2ukstu_ir_002_001_area.fits gs://akoflow-bucket-2/02/
+      gsutil cp 3-diff.000001.000004.fits gs://akoflow-bucket-2/02/
+      gsutil cp 3-diff.000002.000003_area.fits gs://akoflow-bucket-2/02/
+      gsutil cp 3-diff.000002.000004.fits gs://akoflow-bucket-2/02/
+      gsutil cp 3-fits.tbl gs://akoflow-bucket-2/02/
+      gsutil cp cposs2ukstu_ir_001_002_area.fits gs://akoflow-bucket-2/02/
+      gsutil cp 3-updated-corrected.tbl gs://akoflow-bucket-2/02/
+
 
       echo "Files sent to bucket 2"
 
       echo "Sending files to bucket 3"
 
-      gsutil cp pposs2ukstu_blue_002_001.fits gs://akoflow-bucket-3/01/
-      gsutil cp pposs2ukstu_blue_002_002_area.fits gs://akoflow-bucket-3/01/
-      gsutil cp 1-diff.000001.000002_area.fits gs://akoflow-bucket-3/01/
-      gsutil cp 1-fits.tbl gs://akoflow-bucket-3/01/
-      gsutil cp cposs2ukstu_blue_001_001.fits gs://akoflow-bucket-3/01/
-      gsutil cp cposs2ukstu_blue_001_002.fits gs://akoflow-bucket-3/01/
-      gsutil cp cposs2ukstu_blue_001_002_area.fits gs://akoflow-bucket-3/01/
-      gsutil cp pposs2ukstu_red_002_001.fits gs://akoflow-bucket-3/01/
-      gsutil cp pposs2ukstu_red_002_002_area.fits gs://akoflow-bucket-3/01/
-      gsutil cp 2-diff.000001.000002.fits gs://akoflow-bucket-3/01/
-      gsutil cp 2-fit.000003.000004.txt gs://akoflow-bucket-3/01/
-      gsutil cp cposs2ukstu_red_001_001.fits gs://akoflow-bucket-3/01/
-      gsutil cp cposs2ukstu_red_001_001_area.fits gs://akoflow-bucket-3/01/
-      gsutil cp cposs2ukstu_red_001_002.fits gs://akoflow-bucket-3/01/
-      gsutil cp cposs2ukstu_red_001_002_area.fits gs://akoflow-bucket-3/01/
-      gsutil cp pposs2ukstu_ir_001_002.fits gs://akoflow-bucket-3/01/
-      gsutil cp pposs2ukstu_ir_002_002.fits gs://akoflow-bucket-3/01/
-      gsutil cp 3-fit.000001.000003.txt gs://akoflow-bucket-3/01/
-      gsutil cp 3-diff.000001.000003.fits gs://akoflow-bucket-3/01/
-      gsutil cp 3-diff.000001.000004_area.fits gs://akoflow-bucket-3/01/
-      gsutil cp cposs2ukstu_ir_001_001.fits gs://akoflow-bucket-3/01/
-      gsutil cp cposs2ukstu_ir_002_001.fits gs://akoflow-bucket-3/01/
-      gsutil cp mosaic-color.png gs://akoflow-bucket-3/01/
+      gsutil cp pposs2ukstu_blue_002_001.fits gs://akoflow-bucket-3/02/
+      gsutil cp 1-fit.000001.000002.txt gs://akoflow-bucket-3/02/
+      gsutil cp 1-diff.000001.000002.fits gs://akoflow-bucket-3/02/
+      gsutil cp 1-diff.000001.000002_area.fits gs://akoflow-bucket-3/02/
+      gsutil cp 1-diff.000001.000004.fits gs://akoflow-bucket-3/02/
+      gsutil cp 1-diff.000001.000004_area.fits gs://akoflow-bucket-3/02/
+      gsutil cp 1-fit.000002.000003.txt gs://akoflow-bucket-3/02/
+      gsutil cp 1-diff.000002.000003_area.fits gs://akoflow-bucket-3/02/
+      gsutil cp 1-diff.000002.000004_area.fits gs://akoflow-bucket-3/02/
+      gsutil cp 1-fit.000003.000004.txt gs://akoflow-bucket-3/02/
+      gsutil cp cposs2ukstu_blue_001_002_area.fits gs://akoflow-bucket-3/02/
+      gsutil cp cposs2ukstu_blue_002_002.fits gs://akoflow-bucket-3/02/
+      gsutil cp 1-mosaic.png gs://akoflow-bucket-3/02/
+      gsutil cp pposs2ukstu_red_001_002_area.fits gs://akoflow-bucket-3/02/
+      gsutil cp pposs2ukstu_red_002_001.fits gs://akoflow-bucket-3/02/
+      gsutil cp pposs2ukstu_red_002_001_area.fits gs://akoflow-bucket-3/02/
+      gsutil cp pposs2ukstu_red_002_002.fits gs://akoflow-bucket-3/02/
+      gsutil cp 2-fits.tbl gs://akoflow-bucket-3/02/
+      gsutil cp cposs2ukstu_red_001_001.fits gs://akoflow-bucket-3/02/
+      gsutil cp 2-mosaic.fits gs://akoflow-bucket-3/02/
+      gsutil cp pposs2ukstu_ir_001_002_area.fits gs://akoflow-bucket-3/02/
+      gsutil cp pposs2ukstu_ir_002_002_area.fits gs://akoflow-bucket-3/02/
+      gsutil cp 3-diff.000001.000002_area.fits gs://akoflow-bucket-3/02/
+      gsutil cp 3-fit.000001.000003.txt gs://akoflow-bucket-3/02/
+      gsutil cp 3-diff.000001.000003_area.fits gs://akoflow-bucket-3/02/
+      gsutil cp 3-diff.000001.000004_area.fits gs://akoflow-bucket-3/02/
+      gsutil cp cposs2ukstu_ir_001_001_area.fits gs://akoflow-bucket-3/02/
+      gsutil cp 3-mosaic_area.fits gs://akoflow-bucket-3/02/
+
 
       echo "Files sent to bucket 3"
 
       echo "Sending files to bucket 4"
 
-      gsutil cp pposs2ukstu_blue_002_001_area.fits gs://akoflow-bucket-4/01/
-      gsutil cp 1-fit.000001.000002.txt gs://akoflow-bucket-4/01/
-      gsutil cp 1-diff.000001.000002.fits gs://akoflow-bucket-4/01/
-      gsutil cp 1-fit.000001.000004.txt gs://akoflow-bucket-4/01/
-      gsutil cp 1-diff.000001.000004_area.fits gs://akoflow-bucket-4/01/
-      gsutil cp 1-fit.000002.000004.txt gs://akoflow-bucket-4/01/
-      gsutil cp 1-diff.000002.000004_area.fits gs://akoflow-bucket-4/01/
-      gsutil cp 1-corrections.tbl gs://akoflow-bucket-4/01/
-      gsutil cp 1-mosaic.fits gs://akoflow-bucket-4/01/
-      gsutil cp 1-mosaic_area.fits gs://akoflow-bucket-4/01/
-      gsutil cp 2-fit.000001.000002.txt gs://akoflow-bucket-4/01/
-      gsutil cp 2-diff.000001.000002_area.fits gs://akoflow-bucket-4/01/
-      gsutil cp 2-fit.000001.000003.txt gs://akoflow-bucket-4/01/
-      gsutil cp 2-diff.000001.000003.fits gs://akoflow-bucket-4/01/
-      gsutil cp 2-diff.000001.000003_area.fits gs://akoflow-bucket-4/01/
-      gsutil cp 2-fit.000001.000004.txt gs://akoflow-bucket-4/01/
-      gsutil cp 2-diff.000001.000004.fits gs://akoflow-bucket-4/01/
-      gsutil cp 2-diff.000001.000004_area.fits gs://akoflow-bucket-4/01/
-      gsutil cp 2-fit.000002.000003.txt gs://akoflow-bucket-4/01/
-      gsutil cp 2-diff.000002.000003.fits gs://akoflow-bucket-4/01/
-      gsutil cp 2-diff.000002.000003_area.fits gs://akoflow-bucket-4/01/
-      gsutil cp 2-fit.000002.000004.txt gs://akoflow-bucket-4/01/
-      gsutil cp 2-diff.000002.000004.fits gs://akoflow-bucket-4/01/
-      gsutil cp 2-diff.000002.000004_area.fits gs://akoflow-bucket-4/01/
-      gsutil cp 2-diff.000003.000004.fits gs://akoflow-bucket-4/01/
-      gsutil cp 2-diff.000003.000004_area.fits gs://akoflow-bucket-4/01/
-      gsutil cp 2-corrections.tbl gs://akoflow-bucket-4/01/
-      gsutil cp 2-updated-corrected.tbl gs://akoflow-bucket-4/01/
-      gsutil cp 2-mosaic.fits gs://akoflow-bucket-4/01/
-      gsutil cp 2-mosaic_area.fits gs://akoflow-bucket-4/01/
-      gsutil cp pposs2ukstu_ir_002_002_area.fits gs://akoflow-bucket-4/01/
-      gsutil cp 3-diff.000001.000002.fits gs://akoflow-bucket-4/01/
-      gsutil cp 3-diff.000001.000002_area.fits gs://akoflow-bucket-4/01/
-      gsutil cp 3-diff.000001.000003_area.fits gs://akoflow-bucket-4/01/
-      gsutil cp 3-diff.000001.000004.fits gs://akoflow-bucket-4/01/
-      gsutil cp cposs2ukstu_ir_001_001_area.fits gs://akoflow-bucket-4/01/
-      gsutil cp cposs2ukstu_ir_001_002.fits gs://akoflow-bucket-4/01/
-      gsutil cp cposs2ukstu_ir_001_002_area.fits gs://akoflow-bucket-4/01/
-      gsutil cp cposs2ukstu_ir_002_001_area.fits gs://akoflow-bucket-4/01/
-      gsutil cp 3-mosaic.png gs://akoflow-bucket-4/01/
+      gsutil cp pposs2ukstu_blue_001_002.fits gs://akoflow-bucket-4/02/
+      gsutil cp pposs2ukstu_blue_002_002.fits gs://akoflow-bucket-4/02/
+      gsutil cp 1-fit.000001.000003.txt gs://akoflow-bucket-4/02/
+      gsutil cp 1-diff.000001.000003.fits gs://akoflow-bucket-4/02/
+      gsutil cp 1-diff.000001.000003_area.fits gs://akoflow-bucket-4/02/
+      gsutil cp 1-diff.000003.000004_area.fits gs://akoflow-bucket-4/02/
+      gsutil cp cposs2ukstu_blue_001_001_area.fits gs://akoflow-bucket-4/02/
+      gsutil cp cposs2ukstu_blue_002_001.fits gs://akoflow-bucket-4/02/
+      gsutil cp cposs2ukstu_blue_002_001_area.fits gs://akoflow-bucket-4/02/
+      gsutil cp pposs2ukstu_red_001_001.fits gs://akoflow-bucket-4/02/
+      gsutil cp pposs2ukstu_red_001_002.fits gs://akoflow-bucket-4/02/
+      gsutil cp pposs2ukstu_red_002_002_area.fits gs://akoflow-bucket-4/02/
+      gsutil cp 2-corrections.tbl gs://akoflow-bucket-4/02/
+      gsutil cp cposs2ukstu_red_001_001_area.fits gs://akoflow-bucket-4/02/
+      gsutil cp 2-mosaic.png gs://akoflow-bucket-4/02/
+      gsutil cp pposs2ukstu_ir_001_002.fits gs://akoflow-bucket-4/02/
+      gsutil cp pposs2ukstu_ir_002_002.fits gs://akoflow-bucket-4/02/
+      gsutil cp 3-fit.000001.000002.txt gs://akoflow-bucket-4/02/
+      gsutil cp 3-diff.000001.000002.fits gs://akoflow-bucket-4/02/
+      gsutil cp 3-diff.000001.000003.fits gs://akoflow-bucket-4/02/
+      gsutil cp 3-fit.000001.000004.txt gs://akoflow-bucket-4/02/
+      gsutil cp 3-corrections.tbl gs://akoflow-bucket-4/02/
+      gsutil cp cposs2ukstu_ir_001_001.fits gs://akoflow-bucket-4/02/
+      gsutil cp cposs2ukstu_ir_002_002_area.fits gs://akoflow-bucket-4/02/
+      gsutil cp 3-mosaic.fits gs://akoflow-bucket-4/02/
+
 
       echo "Files sent to bucket 4"
 

@@ -418,7 +418,7 @@ func (m *MakeK8sJobService) getPortAkoFlowServer() string {
 func (m *MakeK8sJobService) addCommandToMonitorFilesStorage(command string, path string) string {
 	port := m.getPortAkoFlowServer()
 	pathUrl := "http://$AKOFLOW_SERVER_SERVICE_SERVICE_HOST:" + port + "/akoflow-server/internal/storage/" + path + "?workflowId=" + strconv.Itoa(m.getIdWorkflow()) + "&activityId=" + strconv.Itoa(m.getIdWorkflowActivity())
-	command += "\nwget --header=\"Content-Type: text/plain\" -O -  --post-data=\"$(ls -lAR)\" \"" + pathUrl + "\" | true; \n"
+	command += "\nwget --header=\"Content-Type: text/plain\" -O -  --post-data=\"$(ls -laR --full-time)\" \"" + pathUrl + "\" | true; \n"
 
 	return command
 }

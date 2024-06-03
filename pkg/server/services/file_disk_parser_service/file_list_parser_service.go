@@ -43,7 +43,7 @@ func (s *FileListParserService) parseFileList(input string) []FileDisk {
 			filesTrim = append(filesTrim, strings.TrimSpace(file))
 		}
 
-		if len(filesTrim) != 8 {
+		if len(filesTrim) != 9 {
 			continue
 		}
 
@@ -52,8 +52,8 @@ func (s *FileListParserService) parseFileList(input string) []FileDisk {
 			Owner:        strings.TrimSpace(filesTrim[2]),
 			Group:        strings.TrimSpace(filesTrim[3]),
 			Size:         strings.TrimSpace(filesTrim[4]),
-			LastModified: strings.TrimSpace(filesTrim[5] + " " + filesTrim[6]),
-			Name:         strings.TrimSpace(filesTrim[7]),
+			LastModified: strings.TrimSpace(filesTrim[5]+" "+filesTrim[6]) + " " + filesTrim[7],
+			Name:         strings.TrimSpace(filesTrim[8]),
 			Path:         lastPath,
 		}
 

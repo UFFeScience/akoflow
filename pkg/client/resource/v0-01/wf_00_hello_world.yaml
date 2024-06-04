@@ -1,8 +1,13 @@
 name: wf-hello-world
 spec:
-  image: "alpine:3.7"
+  image: "alpine:latest"
+  namespace: "akoflow"
+  storageClassName: "hostpath"
+  storageSize: "32Mi"
+  storageAccessModes: "ReadWriteOnce"
+  mountPath: "/data"
   activities:
-    - name: "Echo Hello World"
+    - name: "echo-hello-world"
       memoryLimit: 1Gi
       cpuLimit: 1
       run: |
@@ -11,9 +16,9 @@ spec:
         echo "Hello World Again"
         sleep 5
         echo "Hello World One More Time"
-
-    - name: "Echo Goodbye"
+    - name: "echo-goodbye"
       cpuLimit: 1
+      memoryLimit: 1Gi
       run: |
         echo "Goodbye"
         sleep 5

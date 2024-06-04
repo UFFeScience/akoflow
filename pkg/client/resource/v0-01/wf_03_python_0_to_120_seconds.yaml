@@ -1,8 +1,13 @@
 name: wf-03-python-0-to-120-seconds
 spec:
   image: "python:3.7-alpine"
+  namespace: "akoflow"
+  storageClassName: "hostpath"
+  storageSize: "32Mi"
+  storageAccessModes: "ReadWriteOnce"
+  mountPath: "/data"
   activities:
-    - name: "Echo 0 to 100000 in Python"
+    - name: "echo-0-to-120-seconds-in-python"
       memoryLimit: 1Gi
       cpuLimit: 1
       run: |

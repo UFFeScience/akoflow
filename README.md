@@ -1,4 +1,4 @@
-# AkôFlow - Workflow Científico em núvem com Kubernetes
+# AkôFlow - Middleware de WorkFlow Científico em núvem com Kubernetes
 
 
 ```sh
@@ -14,8 +14,8 @@
 Repositório para os artefatos de código e documentação desenvolvidos para o Trabalho de Conclusão de Curso (TCC) do curso de Sistemas de Informação do Instituto de Computação da Universidade Federal Fluminense (IC/UFF). O trabalho tem como título "AkôFlow - Workflow Científico em núvem com Kubernetes".
 
 ## Autores
-1. Wesley Ferreira - @ovvesley
-
+1. Wesley Ferreira - @ovvesley 
+2. Daniel de Oliveira - @danielcmo (orientador)
 
 ## Workflow Científico em núvem com Kubernetes
 

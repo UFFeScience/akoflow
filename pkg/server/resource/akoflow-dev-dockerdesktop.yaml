@@ -248,15 +248,3 @@ spec:
     - port: 8080  # Porta exposta pelo serviço
       targetPort: 8080  # Porta no host
 
----
-apiVersion: v1
-kind: Endpoints
-metadata:
-  name: host-service
-  namespace: akoflow
-
-subsets:
-  - addresses:
-      - ip: "
-    ports:
-      - port: 8080

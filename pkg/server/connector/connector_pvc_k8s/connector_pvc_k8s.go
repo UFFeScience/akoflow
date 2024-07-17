@@ -31,15 +31,39 @@ func newClient() *http.Client {
 }
 
 type IConnectorPvc interface {
-	ListPvcs()
+	ListPvcs(namespace string) ([]ResponseGetPersistentVolumeClain, error)
 	CreatePersistentVolumeClain(name string, namespace string, storageSize string, storageClassName string) (ResponseCreatePersistentVolumeClain, error)
 	GetPersistentVolumeClain(name string, namespace string) (ResponseGetPersistentVolumeClain, error)
 	DeletePersistentVolumeClaim(name string, namespace string) error
+	CreatePVC(pvc PersistentVolumeClaim) (ResponseCreatePersistentVolumeClain, error)
 }
 
-func (c ConnectorPvcK8s) ListPvcs() {
-	//TODO implement me
-	panic("implement me")
+func (c *ConnectorPvcK8s) ListPvcs(namespace string) ([]ResponseGetPersistentVolumeClain, error) {
+	token := os.Getenv("K8S_API_SERVER_TOKEN")
+	host := os.Getenv("K8S_API_SERVER_HOST")
+
+	req, _ := http.NewRequest("GET", "https://"+host+"/api/v1/namespaces/"+namespace+"/persistentvolumeclaims", nil)
+	req.Header.Set("Authorization", "Bearer "+token)
+
+	resp, err := c.client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		body := new(bytes.Buffer)
+		body.ReadFrom(resp.Body)
+		return nil, fmt.Errorf("error listing pvcs: %s", body.String())
+	}
+
+	var pvcs []ResponseGetPersistentVolumeClain
+	err = json.NewDecoder(resp.Body).Decode(&pvcs)
+	if err != nil {
+		return nil, err
+	}
+
+	return pvcs, nil
 }
 
 type PersistentVolumeClaim struct {
@@ -298,4 +322,42 @@ func (c *ConnectorPvcK8s) DeletePersistentVolumeClaim(name string, namespace str
 	defer resp.Body.Close()
 
 	return nil
+}
+
+func (c *ConnectorPvcK8s) CreatePVC(pvc PersistentVolumeClaim) (ResponseCreatePersistentVolumeClain, error) {
+	token := os.Getenv("K8S_API_SERVER_TOKEN")
+	host := os.Getenv("K8S_API_SERVER_HOST")
+
+	body, err := json.Marshal(&pvc)
+	if err != nil {
+		return ResponseCreatePersistentVolumeClain{}, fmt.Errorf("error marshaling payload: %v", err)
+	}
+
+	req, err := http.NewRequest("POST", fmt.Sprintf("https://%s/api/v1/namespaces/%s/persistentvolumeclaims", host, pvc.Metadata.Namespace), bytes.NewBuffer(body))
+	if err != nil {
+		return ResponseCreatePersistentVolumeClain{}, fmt.Errorf("error creating HTTP request: %v", err)
+	}
+
+	req.Header.Set("Authorization", "Bearer "+token)
+	req.Header.Set("Content-Type", "application/json")
+
+	resp, err := c.client.Do(req)
+	if err != nil {
+		return ResponseCreatePersistentVolumeClain{}, fmt.Errorf("error making HTTP request: %v", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusCreated {
+		body := new(bytes.Buffer)
+		body.ReadFrom(resp.Body)
+		return ResponseCreatePersistentVolumeClain{}, fmt.Errorf("error creating pvc: %s", body.String())
+	}
+
+	var result ResponseCreatePersistentVolumeClain
+	err = json.NewDecoder(resp.Body).Decode(&result)
+	if err != nil {
+		return ResponseCreatePersistentVolumeClain{}, fmt.Errorf("error decoding response: %v", err)
+	}
+
+	return result, nil
 }

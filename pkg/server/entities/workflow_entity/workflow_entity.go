@@ -19,8 +19,13 @@ type WorkflowSpec struct {
 	Namespace        string                                        `yaml:"namespace"`
 	StorageClassName string                                        `yaml:"storageClassName"`
 	StorageSize      string                                        `yaml:"storageSize"`
+	StoragePolicy    WorkflowSpecStoragePolicy                     `yaml:"storagePolicy"`
 	MountPath        string                                        `yaml:"mountPath"`
 	Activities       []workflow_activity_entity.WorkflowActivities `yaml:"activities"`
+}
+
+type WorkflowSpecStoragePolicy struct {
+	Type string `yaml:"type"` // "distributed" or "standalone"
 }
 
 type WorkflowDatabase struct {
@@ -86,4 +91,12 @@ func DatabaseToWorkflow(params ParamsDatabaseToWorkflow) Workflow {
 
 func (w Workflow) GetVolumeName() string {
 	return "pvc-" + strconv.Itoa(w.Id) + "-" + w.Name
+}
+
+func (w Workflow) IsStoragePolicyDistributed() bool {
+	return w.Spec.StoragePolicy.Type == "distributed"
+}
+
+func (w Workflow) IsStoragePolicyStandalone() bool {
+	return w.Spec.StoragePolicy.Type == "standalone" || w.Spec.StoragePolicy.Type == ""
 }

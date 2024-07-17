@@ -71,6 +71,7 @@ func (m *MonitorChangeWorkflowService) handleVerifyWorkflowPreActivitiesWasFinis
 	for _, wf := range wfs {
 		for _, activity := range wf.Spec.Activities {
 			if activity.HasDependencies() && activity.Status == activity_repository.StatusCreated {
+				// [TODO] if distributed not sync activity
 				m.handleVerifyPreActivityWasFinished(activity, wf)
 			}
 		}

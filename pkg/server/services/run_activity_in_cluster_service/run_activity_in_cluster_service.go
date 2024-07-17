@@ -1,10 +1,13 @@
 package run_activity_in_cluster_service
 
 import (
+	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
+	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
 	"github.com/ovvesley/akoflow/pkg/server/repository/activity_repository"
 	"github.com/ovvesley/akoflow/pkg/server/repository/workflow_repository"
 	"github.com/ovvesley/akoflow/pkg/server/services/apply_job_service"
 	"github.com/ovvesley/akoflow/pkg/server/services/create_namespace_service"
+	"github.com/ovvesley/akoflow/pkg/server/services/create_nfs_service"
 	"github.com/ovvesley/akoflow/pkg/server/services/create_pvc_service"
 	"github.com/ovvesley/akoflow/pkg/server/services/run_preactivity_service"
 )
@@ -27,6 +30,7 @@ type ParamsNewRunActivityInClusterService struct {
 	CreateNamespaceService create_namespace_service.CreateNamespaceService
 	ApplyJobService        apply_job_service.ApplyJobService
 	RunPreactivityService  run_preactivity_service.RunPreactivityService
+	CreateNfsService       create_nfs_service.CreateNfsService
 }
 
 func New(params ...ParamsNewRunActivityInClusterService) *RunActivityInClusterService {
@@ -67,10 +71,25 @@ func (r *RunActivityInClusterService) handleResourceToRunJob(id int) bool {
 	wf, _ := r.workflowRepository.Find(wfa.WorkflowId)
 
 	if err != nil {
-		println("Activity not found")
 		return false
 	}
 
+	if wf.IsStoragePolicyDistributed() {
+		return r.handleResourceToRunJobDistributed(wfa, wf)
+	}
+
+	if wf.IsStoragePolicyStandalone() {
+		return r.handleResourceToRunJobStandalone(wfa, wf)
+	}
+
+	// [TODO] if not distributed or standalone add log to debug this error
+
+	print("Error: Storage policy not found. Not distributed or standalone")
+	return false
+
+}
+
+func (r *RunActivityInClusterService) handleResourceToRunJobStandalone(wfa workflow_activity_entity.WorkflowActivities, wf workflow_entity.Workflow) bool {
 	namespace, errNamespace := r.createNamespaceService.GetOrCreateNamespace(r.namespace)
 
 	pvc, errPvc := r.createPVCService.GetOrCreatePersistentVolumeClainByActivity(wf, wfa, namespace)
@@ -91,5 +110,9 @@ func (r *RunActivityInClusterService) handleResourceToRunJob(id int) bool {
 	println("PVC created: ", pvc)
 
 	return true
+}
 
+func (r *RunActivityInClusterService) handleResourceToRunJobDistributed(wfa workflow_activity_entity.WorkflowActivities, wf workflow_entity.Workflow) bool {
+
+	return true
 }

@@ -78,5 +78,3 @@ func (k *K8sJob) GetBase64Jobs() string {
 	y, _ := yaml.Marshal(k)
 	return base64.StdEncoding.EncodeToString(y)
 }
-
-// docker run --rm alpine:latest bin/sh -c 'echo ZWNobyAiSGVsbG8gV29ybGQiCnNsZWVwIDUKZWNobyAiSGVsbG8gV29ybGQgQWdhaW4iCnNsZWVwIDUKZWNobyAiSGVsbG8gV29ybGQgT25lIE1vcmUgVGltZSI=| base64 -d| sh'

@@ -36,7 +36,7 @@ type IConnectorPvc interface {
 	CreatePersistentVolumeClain(name string, namespace string, storageSize string, storageClassName string) (ResponseCreatePersistentVolumeClain, error)
 	GetPersistentVolumeClain(name string, namespace string) (ResponseGetPersistentVolumeClain, error)
 	DeletePersistentVolumeClaim(name string, namespace string) error
-	CreatePvc(pvc nfs_server_entity.PersistentVolumeClaim) (ResponseCreatePvc, error)
+	CreatePvc(pvc nfs_server_entity.PersistentVolumeClaim) ResponseCreatePvc
 }
 
 func (c *ConnectorPvcK8s) ListPvcs(namespace string) ([]ResponseGetPersistentVolumeClain, error) {
@@ -331,18 +331,24 @@ type ResponseCreatePvc struct {
 	Data    interface{} `json:"data,omitempty"`
 }
 
-func (c *ConnectorPvcK8s) CreatePvc(pvc nfs_server_entity.PersistentVolumeClaim) (ResponseCreatePvc, error) {
+func (c *ConnectorPvcK8s) CreatePvc(pvc nfs_server_entity.PersistentVolumeClaim) ResponseCreatePvc {
 	token := os.Getenv("K8S_API_SERVER_TOKEN")
 	host := os.Getenv("K8S_API_SERVER_HOST")
 
 	body, err := json.Marshal(&pvc)
 	if err != nil {
-		return ResponseCreatePvc{}, fmt.Errorf("error marshaling payload: %v", err)
+		return ResponseCreatePvc{
+			Success: false,
+			Message: fmt.Sprintf("Error marshaling pvc: %s", err.Error()),
+		}
 	}
 
 	req, err := http.NewRequest("POST", fmt.Sprintf("https://%s/api/v1/namespaces/%s/persistentvolumeclaims", host, pvc.Metadata.Namespace), bytes.NewBuffer(body))
 	if err != nil {
-		return ResponseCreatePvc{}, fmt.Errorf("error creating HTTP request: %v", err)
+		return ResponseCreatePvc{
+			Success: false,
+			Message: fmt.Sprintf("Error creating HTTP request: %s", err.Error()),
+		}
 	}
 
 	req.Header.Set("Authorization", "Bearer "+token)
@@ -350,25 +356,36 @@ func (c *ConnectorPvcK8s) CreatePvc(pvc nfs_server_entity.PersistentVolumeClaim)
 
 	resp, err := c.client.Do(req)
 	if err != nil {
-		return ResponseCreatePvc{}, fmt.Errorf("error making HTTP request: %v", err)
+		return ResponseCreatePvc{
+			Success: false,
+			Message: fmt.Sprintf("Error making HTTP request: %s", err.Error()),
+		}
+
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusCreated {
 		body := new(bytes.Buffer)
 		body.ReadFrom(resp.Body)
-		return ResponseCreatePvc{}, fmt.Errorf("error creating pvc: %s", body.String())
+		println("Error creating pvc: ", body.String())
+		return ResponseCreatePvc{
+			Success: false,
+			Message: fmt.Sprintf("Error creating pvc: %s", body.String()),
+		}
 	}
 
 	var result nfs_server_entity.PersistentVolumeClaim
 	err = json.NewDecoder(resp.Body).Decode(&result)
 	if err != nil {
-		return ResponseCreatePvc{}, fmt.Errorf("error decoding response: %v", err)
+		return ResponseCreatePvc{
+			Success: false,
+			Message: fmt.Sprintf("Error decoding response: %s", err.Error()),
+		}
 	}
 
 	return ResponseCreatePvc{
 		Success: true,
-		Message: "PersistentVolumeClaim created successfully",
+		Message: "PVC created",
 		Data:    result,
-	}, nil
+	}
 }

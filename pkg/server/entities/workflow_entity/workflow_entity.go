@@ -14,6 +14,9 @@ type Workflow struct {
 	Id   int
 }
 
+const MODE_DISTRIBUTED = "distributed"
+const MODE_STANDALONE = "standalone"
+
 type WorkflowSpec struct {
 	Image            string                                        `yaml:"image"`
 	Namespace        string                                        `yaml:"namespace"`
@@ -94,9 +97,21 @@ func (w Workflow) GetVolumeName() string {
 }
 
 func (w Workflow) IsStoragePolicyDistributed() bool {
-	return w.Spec.StoragePolicy.Type == "distributed"
+	return w.Spec.StoragePolicy.Type == MODE_DISTRIBUTED
 }
 
 func (w Workflow) IsStoragePolicyStandalone() bool {
-	return w.Spec.StoragePolicy.Type == "standalone" || w.Spec.StoragePolicy.Type == ""
+	return w.Spec.StoragePolicy.Type == MODE_STANDALONE || w.Spec.StoragePolicy.Type == ""
+}
+
+func (w Workflow) GetMode() string {
+	if w.IsStoragePolicyDistributed() {
+		return MODE_DISTRIBUTED
+	}
+
+	if w.IsStoragePolicyStandalone() {
+		return MODE_STANDALONE
+	}
+
+	return ""
 }

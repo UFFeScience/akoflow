@@ -1,6 +1,7 @@
 package run_preactivity_service
 
 import (
+	"github.com/ovvesley/akoflow/pkg/server/config"
 	"github.com/ovvesley/akoflow/pkg/server/connector"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
@@ -19,27 +20,11 @@ type RunPreactivityService struct {
 	connector                      connector.IConnector
 }
 
-type ParamsNewRunPreactivityService struct {
-	Namespace          string
-	WorkflowRepository workflow_repository.IWorkflowRepository
-	ActivityRepository activity_repository.IActivityRepository
-}
-
-func New(params ...ParamsNewRunPreactivityService) RunPreactivityService {
-	if len(params) > 0 {
-		return RunPreactivityService{
-			namespace:          params[0].Namespace,
-			workflowRepository: params[0].WorkflowRepository,
-			activityRepository: params[0].ActivityRepository,
-		}
-	}
+func New() RunPreactivityService {
 	return RunPreactivityService{
-		namespace:                      "akoflow",
-		workflowRepository:             workflow_repository.New(),
-		activityRepository:             activity_repository.New(),
-		makeK8sJobService:              make_k8s_job_service.New(),
-		getActivityDependenciesService: get_activity_dependencies_service.New(),
-		connector:                      connector.New(),
+		namespace:          config.App().DefaultNamespace,
+		workflowRepository: config.App().Repository.WorkflowRepository,
+		activityRepository: config.App().Repository.ActivityRepository,
 	}
 }
 

@@ -1,6 +1,7 @@
 package get_pending_workflow_service
 
 import (
+	"github.com/ovvesley/akoflow/pkg/server/config"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
 	"github.com/ovvesley/akoflow/pkg/server/repository/activity_repository"
 	"github.com/ovvesley/akoflow/pkg/server/repository/workflow_repository"
@@ -12,11 +13,11 @@ type GetPendingWorkflowService struct {
 	activityRepository activity_repository.IActivityRepository
 }
 
-func New() *GetPendingWorkflowService {
-	return &GetPendingWorkflowService{
-		namespace:          "akoflow",
-		workflowRepository: workflow_repository.New(),
-		activityRepository: activity_repository.New(),
+func New() GetPendingWorkflowService {
+	return GetPendingWorkflowService{
+		namespace:          config.App().DefaultNamespace,
+		workflowRepository: config.App().Repository.WorkflowRepository,
+		activityRepository: config.App().Repository.ActivityRepository,
 	}
 }
 

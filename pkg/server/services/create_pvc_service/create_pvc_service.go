@@ -1,7 +1,10 @@
 package create_pvc_service
 
 import (
+	"fmt"
+	"github.com/ovvesley/akoflow/pkg/server/config"
 	"github.com/ovvesley/akoflow/pkg/server/connector"
+	"github.com/ovvesley/akoflow/pkg/server/connector/connector_pvc_k8s"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
 	"github.com/ovvesley/akoflow/pkg/server/repository/storages_repository"
@@ -11,28 +14,25 @@ type CreatePVCService struct {
 	connector         connector.IConnector
 	storageRepository storages_repository.IStorageRepository
 }
-type ParamsNewCreatePVCService struct {
-	Connector         connector.IConnector
-	storageRepository storages_repository.IStorageRepository
-}
 
-func New(params ...ParamsNewCreatePVCService) CreatePVCService {
-
-	if len(params) > 0 {
-		return CreatePVCService{
-			connector:         params[0].Connector,
-			storageRepository: params[0].storageRepository,
-		}
-	}
-
+func New() CreatePVCService {
 	return CreatePVCService{
-		connector:         connector.New(),
-		storageRepository: storages_repository.New(),
+		connector:         config.App().Connector.K8sConnector,
+		storageRepository: config.App().Repository.StoragesRepository,
 	}
 }
 
 func (c *CreatePVCService) GetOrCreatePersistentVolumeClainByActivity(wf workflow_entity.Workflow, wfa workflow_activity_entity.WorkflowActivities, namespace string) (string, error) {
-	pvc, err := c.connector.PersistentVolumeClain().GetPersistentVolumeClain(wfa.GetVolumeName(), namespace)
+
+	var err error
+	var pvc connector_pvc_k8s.ResponseGetPersistentVolumeClain
+
+	if wf.IsStoragePolicyStandalone() {
+		pvc, err = c.connector.PersistentVolumeClain().GetPersistentVolumeClain(wfa.GetVolumeName(), namespace)
+	} else {
+		pvc, err = c.connector.PersistentVolumeClain().GetPersistentVolumeClain("wf-volume-"+fmt.Sprintf("%d", wf.Id), namespace)
+
+	}
 
 	if err != nil {
 		println("Persistent volume not found")
@@ -50,7 +50,14 @@ func (c *CreatePVCService) GetOrCreatePersistentVolumeClainByActivity(wf workflo
 
 func (c *CreatePVCService) handleCreatePersistentVolumeClain(wf workflow_entity.Workflow, wfa workflow_activity_entity.WorkflowActivities, namespace string) (string, error) {
 
-	pv, err := c.connector.PersistentVolumeClain().CreatePersistentVolumeClain(wfa.GetVolumeName(), namespace, wf.Spec.StorageSize, wf.Spec.StorageClassName)
+	var pv connector_pvc_k8s.ResponseCreatePersistentVolumeClain
+	var err error
+
+	if wf.IsStoragePolicyStandalone() {
+		pv, err = c.connector.PersistentVolumeClain().CreatePersistentVolumeClain(wfa.GetVolumeName(), namespace, wf.Spec.StorageSize, wf.Spec.StorageClassName)
+	} else {
+		pv, err = c.connector.PersistentVolumeClain().CreatePersistentVolumeClain("wf-volume-"+fmt.Sprintf("%d", wf.Id), namespace, wf.Spec.StorageSize, "akoflow-nfs-"+fmt.Sprintf("%d", wf.Id))
+	}
 
 	if err != nil {
 		println("Error creating persistent volume")

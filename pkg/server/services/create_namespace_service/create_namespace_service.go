@@ -1,6 +1,9 @@
 package create_namespace_service
 
-import "github.com/ovvesley/akoflow/pkg/server/connector"
+import (
+	"github.com/ovvesley/akoflow/pkg/server/config"
+	"github.com/ovvesley/akoflow/pkg/server/connector"
+)
 
 type CreateNamespaceService struct {
 	connector connector.IConnector
@@ -10,14 +13,9 @@ type ParamsNewCreateNamespaceService struct {
 	Connector connector.IConnector
 }
 
-func New(params ...ParamsNewCreateNamespaceService) CreateNamespaceService {
-	if len(params) > 0 {
-		return CreateNamespaceService{
-			connector: params[0].Connector,
-		}
-	}
+func New() CreateNamespaceService {
 	return CreateNamespaceService{
-		connector: connector.New(),
+		connector: config.App().Connector.K8sConnector,
 	}
 }
 

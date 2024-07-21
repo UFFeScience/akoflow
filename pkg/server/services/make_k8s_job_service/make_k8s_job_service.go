@@ -3,6 +3,7 @@ package make_k8s_job_service
 import (
 	"encoding/base64"
 	"errors"
+	"fmt"
 	"math/rand"
 	"os"
 	"strconv"
@@ -192,13 +193,13 @@ func (m *MakeK8sJobService) makeVolumesPreActivity(wf workflow_entity.Workflow, 
 
 	dependencies := m.getDependencies()
 
-	for _, dependency := range dependencies {
+	for _, _ = range dependencies {
 		volume := k8s_job_entity.K8sJobVolume{
-			Name: dependency.GetVolumeName(),
+			Name: "wf-volume-" + fmt.Sprintf("%d", wf.Id),
 			PersistentVolumeClaim: struct {
 				ClaimName string `json:"claimName"`
 			}{
-				ClaimName: dependency.GetVolumeName(),
+				ClaimName: "wf-volume-" + fmt.Sprintf("%d", wf.Id),
 			},
 		}
 		volumes = append(volumes, volume)
@@ -312,13 +313,13 @@ func (m *MakeK8sJobService) makeVolumesActivity(wf workflow_entity.Workflow, wfa
 // makeVolumeThatWillBeUsedByCurrentActivity creates a volume that will be used by the current activity.
 //
 // This volume is the first volume in the list of volumes that will be used by the activity.
-func (m *MakeK8sJobService) makeVolumeThatWillBeUsedByCurrentActivity(_ workflow_entity.Workflow, wfa workflow_activity_entity.WorkflowActivities) k8s_job_entity.K8sJobVolume {
+func (m *MakeK8sJobService) makeVolumeThatWillBeUsedByCurrentActivity(wf workflow_entity.Workflow, wfa workflow_activity_entity.WorkflowActivities) k8s_job_entity.K8sJobVolume {
 	firstVolume := k8s_job_entity.K8sJobVolume{
-		Name: wfa.GetVolumeName(),
+		Name: "wf-volume-" + fmt.Sprintf("%d", wf.Id),
 		PersistentVolumeClaim: struct {
 			ClaimName string `json:"claimName"`
 		}{
-			ClaimName: wfa.GetVolumeName(),
+			ClaimName: "wf-volume-" + fmt.Sprintf("%d", wf.Id),
 		},
 	}
 
@@ -474,8 +475,8 @@ func (m *MakeK8sJobService) makeJobVolumeMounts(wf workflow_entity.Workflow, wfa
 	volumesMounts := make([]k8s_job_entity.K8sJobVolumeMount, 0)
 
 	firstVolumeMount := k8s_job_entity.K8sJobVolumeMount{
-		Name:      wfa.GetVolumeName(),
-		MountPath: m.makeJobVolumeMountPath(wf, wfa),
+		Name:      "wf-volume-" + fmt.Sprintf("%d", wf.Id),
+		MountPath: wf.Spec.MountPath,
 	}
 
 	volumesMounts = append([]k8s_job_entity.K8sJobVolumeMount{firstVolumeMount}, volumesMounts...)

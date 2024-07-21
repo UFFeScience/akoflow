@@ -8,10 +8,16 @@ import (
 )
 
 type CreateNfsService struct {
+	workflowId int
 }
 
 func New() CreateNfsService {
 	return CreateNfsService{}
+}
+
+func (c *CreateNfsService) SetWorkflowId(workflowId int) *CreateNfsService {
+	c.workflowId = workflowId
+	return c
 }
 
 func (c *CreateNfsService) CreateServiceAccount() nfs_server_entity.ServiceAccount {
@@ -20,7 +26,7 @@ func (c *CreateNfsService) CreateServiceAccount() nfs_server_entity.ServiceAccou
 		Kind:       "ServiceAccount",
 		Metadata: nfs_server_entity.Metadata{
 			Namespace: "akoflow",
-			Name:      "nfs-provisioner",
+			Name:      "nfs-provisioner-" + fmt.Sprint(c.workflowId) + "-service-account",
 		},
 	}
 
@@ -33,9 +39,9 @@ func (c *CreateNfsService) CreateService() nfs_server_entity.Service {
 		Kind:       "Service",
 		Metadata: nfs_server_entity.Metadata{
 			Namespace: "akoflow",
-			Name:      "nfs-provisioner",
+			Name:      "nfs-provisioner-" + fmt.Sprint(c.workflowId),
 			Labels: map[string]string{
-				"app": "nfs-provisioner",
+				"app": "nfs-provisioner-" + fmt.Sprint(c.workflowId),
 			},
 		},
 		Spec: nfs_server_entity.ServiceSpec{
@@ -54,7 +60,7 @@ func (c *CreateNfsService) CreateService() nfs_server_entity.Service {
 				{Name: "statd-udp", Port: 662, Protocol: "UDP"},
 			},
 			Selector: map[string]string{
-				"app": "nfs-provisioner",
+				"app": "nfs-provisioner-" + fmt.Sprint(c.workflowId),
 			},
 		},
 	}
@@ -68,7 +74,7 @@ func (c *CreateNfsService) CreatePersistentVolumeClaim() nfs_server_entity.Persi
 		Kind:       "PersistentVolumeClaim",
 		Metadata: nfs_server_entity.Metadata{
 			Namespace: "akoflow",
-			Name:      "workflow-x-volume",
+			Name:      "workflow-" + fmt.Sprint(c.workflowId) + "-volume",
 		},
 		Spec: nfs_server_entity.PersistentVolumeClaimSpec{
 			AccessModes: []string{"ReadWriteOnce"},
@@ -90,12 +96,12 @@ func (c *CreateNfsService) CreateDeployment() nfs_server_entity.Deployment {
 		Kind:       "Deployment",
 		Metadata: nfs_server_entity.Metadata{
 			Namespace: "akoflow",
-			Name:      "nfs-provisioner",
+			Name:      "nfs-provisioner-" + fmt.Sprint(c.workflowId),
 		},
 		Spec: nfs_server_entity.DeploymentSpec{
 			Selector: nfs_server_entity.DeploymentSelector{
 				MatchLabels: map[string]string{
-					"app": "nfs-provisioner",
+					"app": "nfs-provisioner-" + fmt.Sprint(c.workflowId),
 				},
 			},
 			Replicas: 1,
@@ -105,14 +111,14 @@ func (c *CreateNfsService) CreateDeployment() nfs_server_entity.Deployment {
 			Template: nfs_server_entity.PodTemplate{
 				Metadata: nfs_server_entity.Metadata{
 					Labels: map[string]string{
-						"app": "nfs-provisioner",
+						"app": "nfs-provisioner-" + fmt.Sprint(c.workflowId),
 					},
 				},
 				Spec: nfs_server_entity.PodSpec{
-					ServiceAccountName: "nfs-provisioner",
+					ServiceAccountName: "nfs-provisioner-" + fmt.Sprint(c.workflowId) + "-service-account",
 					Containers: []nfs_server_entity.Container{
 						{
-							Name:  "nfs-provisioner",
+							Name:  "nfs-provisioner-" + fmt.Sprint(c.workflowId) + "-server",
 							Image: "registry.k8s.io/sig-storage/nfs-provisioner:v4.0.8",
 							Ports: []nfs_server_entity.ContainerPort{
 								{Name: "nfs", ContainerPort: 2049},
@@ -133,7 +139,7 @@ func (c *CreateNfsService) CreateDeployment() nfs_server_entity.Deployment {
 									Add: []string{"DAC_READ_SEARCH", "SYS_RESOURCE"},
 								},
 							},
-							Args: []string{"-provisioner=akoflow.ovvesley/nfs"},
+							Args: []string{"-provisioner=akoflow.ovvesley/nfs-" + fmt.Sprint(c.workflowId)},
 							Env: []nfs_server_entity.EnvVar{
 								{
 									Name: "POD_IP",
@@ -145,7 +151,7 @@ func (c *CreateNfsService) CreateDeployment() nfs_server_entity.Deployment {
 								},
 								{
 									Name:  "SERVICE_NAME",
-									Value: "nfs-provisioner",
+									Value: "nfs-provisioner-" + fmt.Sprint(c.workflowId),
 								},
 								{
 									Name: "POD_NAMESPACE",
@@ -159,7 +165,7 @@ func (c *CreateNfsService) CreateDeployment() nfs_server_entity.Deployment {
 							ImagePullPolicy: "IfNotPresent",
 							VolumeMounts: []nfs_server_entity.VolumeMount{
 								{
-									Name:      "workflow-x-volume",
+									Name:      "workflow-" + fmt.Sprint(c.workflowId) + "-volume",
 									MountPath: "/export",
 								},
 							},
@@ -167,7 +173,7 @@ func (c *CreateNfsService) CreateDeployment() nfs_server_entity.Deployment {
 					},
 					Volumes: []nfs_server_entity.Volume{
 						{
-							Name: "workflow-x-volume",
+							Name: "workflow-" + fmt.Sprint(c.workflowId) + "-volume",
 						},
 					},
 				},
@@ -184,7 +190,7 @@ func (c *CreateNfsService) CreateClusterRole() nfs_server_entity.ClusterRole {
 		Kind:       "ClusterRole",
 		Metadata: nfs_server_entity.Metadata{
 			Namespace: "akoflow",
-			Name:      "nfs-provisioner-runner",
+			Name:      "nfs-provisioner-runner-" + fmt.Sprint(c.workflowId),
 		},
 		Rules: []nfs_server_entity.PolicyRule{
 			{
@@ -215,7 +221,7 @@ func (c *CreateNfsService) CreateClusterRole() nfs_server_entity.ClusterRole {
 			{
 				APIGroups:     []string{"extensions"},
 				Resources:     []string{"podsecuritypolicies"},
-				ResourceNames: []string{"nfs-provisioner"},
+				ResourceNames: []string{"nfs-provisioner-" + fmt.Sprint(c.workflowId)},
 				Verbs:         []string{"use"},
 			},
 		},
@@ -230,18 +236,18 @@ func (c *CreateNfsService) CreateClusterRoleBinding() nfs_server_entity.ClusterR
 		Kind:       "ClusterRoleBinding",
 		Metadata: nfs_server_entity.Metadata{
 			Namespace: "akoflow",
-			Name:      "run-nfs-provisioner",
+			Name:      "run-nfs-provisioner-" + fmt.Sprint(c.workflowId),
 		},
 		Subjects: []nfs_server_entity.Subject{
 			{
 				Kind:      "ServiceAccount",
-				Name:      "nfs-provisioner",
+				Name:      "nfs-provisioner-" + fmt.Sprint(c.workflowId) + "-service-account",
 				Namespace: "akoflow",
 			},
 		},
 		RoleRef: nfs_server_entity.RoleRef{
 			Kind:     "ClusterRole",
-			Name:     "nfs-provisioner-runner",
+			Name:     "nfs-provisioner-runner-" + fmt.Sprint(c.workflowId),
 			APIGroup: "rbac.authorization.k8s.io",
 		},
 	}
@@ -255,7 +261,7 @@ func (c *CreateNfsService) CreateRole() nfs_server_entity.Role {
 		Kind:       "Role",
 		Metadata: nfs_server_entity.Metadata{
 			Namespace: "akoflow",
-			Name:      "leader-locking-nfs-provisioner",
+			Name:      "leader-locking-nfs-provisioner-" + fmt.Sprint(c.workflowId),
 		},
 		Rules: []nfs_server_entity.PolicyRule{
 			{
@@ -275,18 +281,18 @@ func (c *CreateNfsService) CreateRoleBinding() nfs_server_entity.RoleBinding {
 		Kind:       "RoleBinding",
 		Metadata: nfs_server_entity.Metadata{
 			Namespace: "akoflow",
-			Name:      "leader-locking-nfs-provisioner",
+			Name:      "leader-locking-nfs-provisioner-" + fmt.Sprint(c.workflowId),
 		},
 		Subjects: []nfs_server_entity.Subject{
 			{
 				Kind:      "ServiceAccount",
-				Name:      "nfs-provisioner",
+				Name:      "nfs-provisioner-" + fmt.Sprint(c.workflowId) + "-service-account",
 				Namespace: "akoflow",
 			},
 		},
 		RoleRef: nfs_server_entity.RoleRef{
 			Kind:     "Role",
-			Name:     "leader-locking-nfs-provisioner",
+			Name:     "leader-locking-nfs-provisioner-" + fmt.Sprint(c.workflowId),
 			APIGroup: "rbac.authorization.k8s.io",
 		},
 	}
@@ -300,89 +306,105 @@ func (c *CreateNfsService) CreateStorageClass() nfs_server_entity.StorageClass {
 		Kind:       "StorageClass",
 		Metadata: nfs_server_entity.Metadata{
 			Namespace: "akoflow",
-			Name:      "akoflow-nfs",
+			Name:      "akoflow-nfs-" + fmt.Sprint(c.workflowId),
 		},
-		Provisioner:  "akoflow.ovvesley/nfs",
+		Provisioner:  "akoflow.ovvesley/nfs-" + fmt.Sprint(c.workflowId),
 		MountOptions: []string{"vers=4.1"},
 	}
 
 	return storageClass
 }
 
-func (c *CreateNfsService) Create() {
+func (c *CreateNfsService) Create() bool {
 	// Initialize connector
 	conn := connector.New()
 
 	// ServiceAccount
 	serviceAccount := c.CreateServiceAccount()
 	resultServiceAccount := conn.ServiceAccount().CreateServiceAccount(serviceAccount)
-	//if !resultServiceAccount.Success {
-	//	log.Fatalf("Failed to create ServiceAccount: %s", resultServiceAccount.Message)
-	//}
+	if !resultServiceAccount.Success {
+		log.Printf("Failed to create ServiceAccount: %s", resultServiceAccount.Message)
+		return false
+
+	}
 	fmt.Println(resultServiceAccount.Message)
 
 	// Service
 	service := c.CreateService()
 	resultService := conn.Service().CreateService(service)
-	//if !resultService.Success {
-	//	log.Fatalf("Failed to create Service: %s", resultService.Message)
-	//}
+	if !resultService.Success {
+		log.Printf("Failed to create Service: %s", resultService.Message)
+		return false
+	}
 	fmt.Println(resultService.Message)
 
 	// PersistentVolumeClaim
 	pvc := c.CreatePersistentVolumeClaim()
 	resultPvc := conn.PersistentVolumeClain().CreatePvc(pvc)
-	//if !resultPvc.Success {
-	//	log.Fatalf("Failed to create PersistentVolumeClaim: %s", resultPvc.Message)
-	//}
+	if !resultPvc.Success {
+		log.Printf("Failed to create PersistentVolumeClaim: %s", resultPvc.Message)
+		return false
+
+	}
 	fmt.Println(resultPvc.Message)
 
 	// Deployment
 	deployment := c.CreateDeployment()
 	resultDeployment := conn.Deployment().CreateDeployment(deployment)
-	//if !resultDeployment.Success {
-	//	log.Fatalf("Failed to create Deployment: %s", resultDeployment.Message)
-	//}
+	if !resultDeployment.Success {
+		log.Printf("Failed to create Deployment: %s", resultDeployment.Message)
+		return false
+
+	}
 	fmt.Println(resultDeployment.Message)
 
 	// ClusterRole
 	clusterRole := c.CreateClusterRole()
 	resultClusterRole := conn.ClusterRole().CreateClusterRole(clusterRole)
-	//if !resultClusterRole.Success {
-	//	log.Fatalf("Failed to create ClusterRole: %s", resultClusterRole.Message)
-	//}
+	if !resultClusterRole.Success {
+		log.Printf("Failed to create ClusterRole: %s", resultClusterRole.Message)
+		return false
+
+	}
 	fmt.Println(resultClusterRole.Message)
 
 	// ClusterRoleBinding
 	clusterRoleBinding := c.CreateClusterRoleBinding()
 	resultClusterRoleBinding := conn.ClusterRoleBinding().CreateClusterRoleBinding(clusterRoleBinding)
-	//if !resultClusterRoleBinding.Success {
-	//	log.Fatalf("Failed to create ClusterRoleBinding: %s", resultClusterRoleBinding.Message)
-	//}
+	if !resultClusterRoleBinding.Success {
+		log.Fatalf("Failed to create ClusterRoleBinding: %s", resultClusterRoleBinding.Message)
+	}
 	fmt.Println(resultClusterRoleBinding.Message)
 
 	// Role
 	role := c.CreateRole()
 	resultRole := conn.Role().CreateRole(role)
-	//if !resultRole.Success {
-	//	log.Fatalf("Failed to create Role: %s", resultRole.Message)
-	//}
+	if !resultRole.Success {
+		log.Printf("Failed to create Role: %s", resultRole.Message)
+		return false
+
+	}
 	fmt.Println(resultRole.Message)
 
 	// RoleBinding
 	roleBinding := c.CreateRoleBinding()
 	resultRoleBinding := conn.RoleBinding().CreateRoleBinding(roleBinding)
-	//if !resultRoleBinding.Success {
-	//	log.Fatalf("Failed to create RoleBinding: %s", resultRoleBinding.Message)
-	//}
+	if !resultRoleBinding.Success {
+		log.Printf("Failed to create RoleBinding: %s", resultRoleBinding.Message)
+		return false
+
+	}
 	fmt.Println(resultRoleBinding.Message)
 
 	// StorageClass
 	storageClass := c.CreateStorageClass()
 	resultStorageClass := conn.StorageClass().CreateStorageClass(storageClass)
 	if !resultStorageClass.Success {
-		log.Fatalf("Failed to create StorageClass: %s", resultStorageClass.Message)
+		log.Printf("Failed to create StorageClass: %s", resultStorageClass.Message)
+		return false
 	}
 	fmt.Println(resultStorageClass.Message)
+
+	return true
 
 }

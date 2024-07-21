@@ -19,7 +19,7 @@ type GarbageCollectorRemoveStorageService struct {
 	activityRepository            activity_repository.IActivityRepository
 	storageRepository             storages_repository.IStorageRepository
 	getActivityDependeciesService get_activity_dependencies_service.GetActivityDependenciesService
-	getPendingWorkflowService     *get_pending_workflow_service.GetPendingWorkflowService
+	getPendingWorkflowService     get_pending_workflow_service.GetPendingWorkflowService
 	getWorkflowByStatusService    *get_workflow_by_status_service.GetWorkflowByStatusService
 	getPendingStorageService      get_pending_storage_service.GetPendingStorageService
 	connector                     connector.IConnector

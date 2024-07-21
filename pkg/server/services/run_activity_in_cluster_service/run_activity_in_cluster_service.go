@@ -20,6 +20,7 @@ type RunActivityInClusterService struct {
 	createNamespaceService create_namespace_service.CreateNamespaceService
 	applyJobService        apply_job_service.ApplyJobService
 	runPreactivityService  run_preactivity_service.RunPreactivityService
+	createNfsService       create_nfs_service.CreateNfsService
 }
 
 type ParamsNewRunActivityInClusterService struct {
@@ -43,6 +44,7 @@ func New(params ...ParamsNewRunActivityInClusterService) *RunActivityInClusterSe
 			createNamespaceService: params[0].CreateNamespaceService,
 			applyJobService:        params[0].ApplyJobService,
 			runPreactivityService:  params[0].RunPreactivityService,
+			createNfsService:       params[0].CreateNfsService,
 		}
 	}
 
@@ -54,6 +56,7 @@ func New(params ...ParamsNewRunActivityInClusterService) *RunActivityInClusterSe
 		createNamespaceService: create_namespace_service.New(),
 		applyJobService:        apply_job_service.New(),
 		runPreactivityService:  run_preactivity_service.New(),
+		createNfsService:       create_nfs_service.New(),
 	}
 }
 
@@ -113,6 +116,8 @@ func (r *RunActivityInClusterService) handleResourceToRunJobStandalone(wfa workf
 }
 
 func (r *RunActivityInClusterService) handleResourceToRunJobDistributed(wfa workflow_activity_entity.WorkflowActivities, wf workflow_entity.Workflow) bool {
+
+	r.createNfsService.Create()
 
 	return true
 }

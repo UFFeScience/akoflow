@@ -10,8 +10,8 @@ import (
 type CreateNfsService struct {
 }
 
-func New() *CreateNfsService {
-	return &CreateNfsService{}
+func New() CreateNfsService {
+	return CreateNfsService{}
 }
 
 func (c *CreateNfsService) CreateServiceAccount() nfs_server_entity.ServiceAccount {
@@ -316,65 +316,65 @@ func (c *CreateNfsService) Create() {
 	// ServiceAccount
 	serviceAccount := c.CreateServiceAccount()
 	resultServiceAccount := conn.ServiceAccount().CreateServiceAccount(serviceAccount)
-	if !resultServiceAccount.Success {
-		log.Fatalf("Failed to create ServiceAccount: %s", resultServiceAccount.Message)
-	}
+	//if !resultServiceAccount.Success {
+	//	log.Fatalf("Failed to create ServiceAccount: %s", resultServiceAccount.Message)
+	//}
 	fmt.Println(resultServiceAccount.Message)
 
 	// Service
 	service := c.CreateService()
 	resultService := conn.Service().CreateService(service)
-	if !resultService.Success {
-		log.Fatalf("Failed to create Service: %s", resultService.Message)
-	}
+	//if !resultService.Success {
+	//	log.Fatalf("Failed to create Service: %s", resultService.Message)
+	//}
 	fmt.Println(resultService.Message)
 
 	// PersistentVolumeClaim
 	pvc := c.CreatePersistentVolumeClaim()
-	resultPvc, _ := conn.PersistentVolumeClain().CreatePvc(pvc)
-	if !resultPvc.Success {
-		log.Fatalf("Failed to create PersistentVolumeClaim: %s", resultPvc.Message)
-	}
+	resultPvc := conn.PersistentVolumeClain().CreatePvc(pvc)
+	//if !resultPvc.Success {
+	//	log.Fatalf("Failed to create PersistentVolumeClaim: %s", resultPvc.Message)
+	//}
 	fmt.Println(resultPvc.Message)
 
 	// Deployment
 	deployment := c.CreateDeployment()
 	resultDeployment := conn.Deployment().CreateDeployment(deployment)
-	if !resultDeployment.Success {
-		log.Fatalf("Failed to create Deployment: %s", resultDeployment.Message)
-	}
+	//if !resultDeployment.Success {
+	//	log.Fatalf("Failed to create Deployment: %s", resultDeployment.Message)
+	//}
 	fmt.Println(resultDeployment.Message)
 
 	// ClusterRole
 	clusterRole := c.CreateClusterRole()
 	resultClusterRole := conn.ClusterRole().CreateClusterRole(clusterRole)
-	if !resultClusterRole.Success {
-		log.Fatalf("Failed to create ClusterRole: %s", resultClusterRole.Message)
-	}
+	//if !resultClusterRole.Success {
+	//	log.Fatalf("Failed to create ClusterRole: %s", resultClusterRole.Message)
+	//}
 	fmt.Println(resultClusterRole.Message)
 
 	// ClusterRoleBinding
 	clusterRoleBinding := c.CreateClusterRoleBinding()
 	resultClusterRoleBinding := conn.ClusterRoleBinding().CreateClusterRoleBinding(clusterRoleBinding)
-	if !resultClusterRoleBinding.Success {
-		log.Fatalf("Failed to create ClusterRoleBinding: %s", resultClusterRoleBinding.Message)
-	}
+	//if !resultClusterRoleBinding.Success {
+	//	log.Fatalf("Failed to create ClusterRoleBinding: %s", resultClusterRoleBinding.Message)
+	//}
 	fmt.Println(resultClusterRoleBinding.Message)
 
 	// Role
 	role := c.CreateRole()
 	resultRole := conn.Role().CreateRole(role)
-	if !resultRole.Success {
-		log.Fatalf("Failed to create Role: %s", resultRole.Message)
-	}
+	//if !resultRole.Success {
+	//	log.Fatalf("Failed to create Role: %s", resultRole.Message)
+	//}
 	fmt.Println(resultRole.Message)
 
 	// RoleBinding
 	roleBinding := c.CreateRoleBinding()
 	resultRoleBinding := conn.RoleBinding().CreateRoleBinding(roleBinding)
-	if !resultRoleBinding.Success {
-		log.Fatalf("Failed to create RoleBinding: %s", resultRoleBinding.Message)
-	}
+	//if !resultRoleBinding.Success {
+	//	log.Fatalf("Failed to create RoleBinding: %s", resultRoleBinding.Message)
+	//}
 	fmt.Println(resultRoleBinding.Message)
 
 	// StorageClass

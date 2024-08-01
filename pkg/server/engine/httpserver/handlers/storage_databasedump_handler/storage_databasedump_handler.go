@@ -21,7 +21,7 @@ func (h *StorageDatabaseDumpHandler) DatabaseDumpHandler(w http.ResponseWriter, 
 	}
 
 	w.Header().Set("Content-Disposition", "attachment; filename=database.db")
-	w.Header().Set("Content-Type", "application/octet-stream")
+	w.Header().Set("Content-Type", "engine/octet-stream")
 	w.Header().Set("Content-Length", "0")
 	
 	http.ServeFile(w, r, PATH)

@@ -18,21 +18,23 @@ type MonitorCollectMetricsService struct {
 	activityRepository        activity_repository.IActivityRepository
 	metricsRepository         metrics_repository.IMetricsRepository
 	logsRepository            logs_repository.ILogsRepository
-	getPendingWorkflowService *get_pending_workflow_service.GetPendingWorkflowService
-	getWorkflowByStatus       *get_workflow_by_status_service.GetWorkflowByStatusService
+	getPendingWorkflowService get_pending_workflow_service.GetPendingWorkflowService
+	getWorkflowByStatus       get_workflow_by_status_service.GetWorkflowByStatusService
 	connector                 connector.IConnector
 }
 
 func New() *MonitorCollectMetricsService {
 	return &MonitorCollectMetricsService{
-		namespace:                 "akoflow",
-		workflowRepository:        workflow_repository.New(),
-		activityRepository:        activity_repository.New(),
-		metricsRepository:         metrics_repository.New(),
-		logsRepository:            logs_repository.New(),
+		namespace:          "akoflow",
+		workflowRepository: workflow_repository.New(),
+		activityRepository: activity_repository.New(),
+		metricsRepository:  metrics_repository.New(),
+		logsRepository:     logs_repository.New(),
+
 		getPendingWorkflowService: get_pending_workflow_service.New(),
 		getWorkflowByStatus:       get_workflow_by_status_service.New(),
-		connector:                 connector.New(),
+
+		connector: connector.New(),
 	}
 }
 

@@ -6,6 +6,15 @@ import (
 
 const PORT_SERVER = ":8080"
 
+func GetVersion() string {
+
+	versionEnv := os.Getenv("AKOFLOW_SERVER_VERSION")
+	if versionEnv != "" {
+		return versionEnv
+	}
+	return "dev-env"
+}
+
 func SetupEnv() {
 
 	tokenFile, err := os.ReadFile("/var/run/secrets/kubernetes.io/serviceaccount/token")

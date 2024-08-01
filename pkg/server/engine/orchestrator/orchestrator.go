@@ -1,7 +1,6 @@
 package orchestrator
 
 import (
-	"github.com/ovvesley/akoflow/pkg/server/config"
 	"time"
 
 	"github.com/ovvesley/akoflow/pkg/server/services/get_pending_workflow_service"
@@ -10,17 +9,17 @@ import (
 
 const TimeToUpdateSeconds = 1
 
-func StartOrchestrator(app config.AppContainer) {
+func StartOrchestrator() {
 
 	for {
-		handleOrchestrator(app)
+		handleOrchestrator()
 		time.Sleep(TimeToUpdateSeconds * time.Second)
 		println("Orchestrator is Listening...")
 	}
 
 }
 
-func handleOrchestrator(app config.AppContainer) {
+func handleOrchestrator() {
 	getPendingWorkflowService := get_pending_workflow_service.New()
 	workflows, _ := getPendingWorkflowService.GetPendingWorkflows()
 

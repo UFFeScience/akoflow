@@ -1,6 +1,7 @@
 package get_pending_storage_service
 
 import (
+	"github.com/ovvesley/akoflow/pkg/server/config"
 	"github.com/ovvesley/akoflow/pkg/server/connector"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
 	"github.com/ovvesley/akoflow/pkg/server/repository/activity_repository"
@@ -23,13 +24,15 @@ type GetPendingStorageService struct {
 
 func New() GetPendingStorageService {
 	return GetPendingStorageService{
-		namespace:                  "akoflow",
-		workflowRepository:         workflow_repository.New(),
-		activityRepository:         activity_repository.New(),
-		storageRepository:          storages_repository.New(),
-		getWorkflowByStatusService: *get_workflow_by_status_service.New(),
+		namespace:          "akoflow",
+		workflowRepository: config.App().Repository.WorkflowRepository,
+		activityRepository: config.App().Repository.ActivityRepository,
+		storageRepository:  config.App().Repository.StoragesRepository,
+
+		getWorkflowByStatusService: get_workflow_by_status_service.New(),
 		getActivityDependencies:    get_activity_dependencies_service.New(),
-		connector:                  connector.New(),
+
+		connector: connector.New(),
 	}
 }
 

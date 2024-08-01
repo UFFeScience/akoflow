@@ -1,6 +1,7 @@
 package internal_storage_handler
 
 import (
+	"github.com/ovvesley/akoflow/pkg/server/config"
 	"github.com/ovvesley/akoflow/pkg/server/repository/storages_repository"
 	"github.com/ovvesley/akoflow/pkg/server/services/file_disk_parser_service"
 	"github.com/ovvesley/akoflow/pkg/server/services/file_spec_parser_service"
@@ -10,8 +11,8 @@ import (
 )
 
 type InternalStorageHandler struct {
-	fileSpecParserService *file_spec_parser_service.FileSpecParserService
-	fileListParserService *file_list_parser_service.FileListParserService
+	fileSpecParserService file_spec_parser_service.FileSpecParserService
+	fileListParserService file_list_parser_service.FileListParserService
 	storageRepository     storages_repository.IStorageRepository
 }
 
@@ -27,7 +28,7 @@ func New() *InternalStorageHandler {
 	return &InternalStorageHandler{
 		fileSpecParserService: file_spec_parser_service.New(),
 		fileListParserService: file_list_parser_service.New(),
-		storageRepository:     storages_repository.New(),
+		storageRepository:     config.App().Repository.StoragesRepository,
 	}
 }
 

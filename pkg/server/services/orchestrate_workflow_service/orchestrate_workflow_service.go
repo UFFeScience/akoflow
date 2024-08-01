@@ -1,7 +1,7 @@
 package orchestrate_workflow_service
 
 import (
-	"github.com/ovvesley/akoflow/pkg/server/channel"
+	"github.com/ovvesley/akoflow/pkg/server/engine/channel"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
 	"github.com/ovvesley/akoflow/pkg/server/repository/activity_repository"
@@ -11,7 +11,7 @@ import (
 type OrchestrateWorflowService struct {
 	namespace           string
 	channelManager      *channel.Manager
-	getWorkflowByStatus *get_workflow_by_status_service.GetWorkflowByStatusService
+	getWorkflowByStatus get_workflow_by_status_service.GetWorkflowByStatusService
 }
 
 func New() *OrchestrateWorflowService {

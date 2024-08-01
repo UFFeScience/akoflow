@@ -1,12 +1,11 @@
 package worker
 
 import (
-	"github.com/ovvesley/akoflow/pkg/server/channel"
-	"github.com/ovvesley/akoflow/pkg/server/config"
+	"github.com/ovvesley/akoflow/pkg/server/engine/channel"
 	"github.com/ovvesley/akoflow/pkg/server/services/run_activity_in_cluster_service"
 )
 
-func StartWorker(app config.AppContainer) {
+func StartWorker() {
 
 	for {
 		managerChannel := channel.GetInstance()

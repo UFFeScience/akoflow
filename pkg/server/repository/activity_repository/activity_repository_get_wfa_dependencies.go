@@ -9,7 +9,7 @@ func (w *ActivityRepository) GetWfaDependencies(workflowId int) ([]workflow_acti
 	database := repository.Database{}
 	c := database.Connect()
 
-	rows, err := c.Query("SELECT * FROM "+w.tableNameActivityDependencies+" WHERE workflow_id = ?", workflowId)
+	rows, err := c.Query("SELECT id, workflow_id, activity_id, depend_on_activity FROM "+w.tableNameActivityDependencies+" WHERE workflow_id = ?", workflowId)
 	if err != nil {
 		return nil, err
 	}

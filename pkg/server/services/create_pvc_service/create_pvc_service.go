@@ -1,7 +1,6 @@
 package create_pvc_service
 
 import (
-	"fmt"
 	"github.com/ovvesley/akoflow/pkg/server/config"
 	"github.com/ovvesley/akoflow/pkg/server/connector"
 	"github.com/ovvesley/akoflow/pkg/server/connector/connector_pvc_k8s"
@@ -30,8 +29,7 @@ func (c *CreatePVCService) GetOrCreatePersistentVolumeClainByActivity(wf workflo
 	if wf.IsStoragePolicyStandalone() {
 		pvc, err = c.connector.PersistentVolumeClain().GetPersistentVolumeClain(wfa.GetVolumeName(), namespace)
 	} else {
-		pvc, err = c.connector.PersistentVolumeClain().GetPersistentVolumeClain("wf-volume-"+fmt.Sprintf("%d", wf.Id), namespace)
-
+		pvc, err = c.connector.PersistentVolumeClain().GetPersistentVolumeClain(wf.MakeVolumeNameDistributed(), namespace)
 	}
 
 	if err != nil {
@@ -56,7 +54,7 @@ func (c *CreatePVCService) handleCreatePersistentVolumeClain(wf workflow_entity.
 	if wf.IsStoragePolicyStandalone() {
 		pv, err = c.connector.PersistentVolumeClain().CreatePersistentVolumeClain(wfa.GetVolumeName(), namespace, wf.Spec.StorageSize, wf.Spec.StorageClassName)
 	} else {
-		pv, err = c.connector.PersistentVolumeClain().CreatePersistentVolumeClain("wf-volume-"+fmt.Sprintf("%d", wf.Id), namespace, wf.Spec.StorageSize, "akoflow-nfs-"+fmt.Sprintf("%d", wf.Id))
+		pv, err = c.connector.PersistentVolumeClain().CreatePersistentVolumeClain(wf.MakeVolumeNameDistributed(), namespace, wf.Spec.StorageSize, wf.MakeStorageClassNameDistributed())
 	}
 
 	if err != nil {

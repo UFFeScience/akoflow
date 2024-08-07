@@ -2,8 +2,7 @@ package workflow_entity
 
 import (
 	"encoding/base64"
-	"strconv"
-
+	"fmt"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
 	"gopkg.in/yaml.v3"
 )
@@ -92,10 +91,6 @@ func DatabaseToWorkflow(params ParamsDatabaseToWorkflow) Workflow {
 	})
 }
 
-func (w Workflow) GetVolumeName() string {
-	return "pvc-" + strconv.Itoa(w.Id) + "-" + w.Name
-}
-
 func (w Workflow) IsStoragePolicyDistributed() bool {
 	return w.Spec.StoragePolicy.Type == MODE_DISTRIBUTED
 }
@@ -114,4 +109,20 @@ func (w Workflow) GetMode() string {
 	}
 
 	return ""
+}
+
+func (w Workflow) GetId() int {
+	return w.Id
+}
+
+func (w Workflow) MakeVolumeNameDistributed() string {
+	return "wf-volume-" + fmt.Sprintf("%d", w.Id)
+}
+
+func (w Workflow) GetNamespace() string {
+	return w.Spec.Namespace
+}
+
+func (w Workflow) MakeStorageClassNameDistributed() string {
+	return "akoflow-nfs-" + fmt.Sprintf("%d", w.Id)
 }

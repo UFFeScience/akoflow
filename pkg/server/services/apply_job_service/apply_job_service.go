@@ -1,6 +1,7 @@
 package apply_job_service
 
 import (
+	"github.com/ovvesley/akoflow/pkg/server/config"
 	"github.com/ovvesley/akoflow/pkg/server/connector"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
@@ -19,28 +20,13 @@ type ApplyJobService struct {
 	makeK8sJobService              make_k8s_job_service.MakeK8sJobService
 }
 
-type ParamsNewApplyJobService struct {
-	ActivityRepository             activity_repository.IActivityRepository
-	WorkflowRepository             workflow_repository.IWorkflowRepository
-	Namespace                      string
-	GetActivityDependenciesService get_activity_dependencies_service.GetActivityDependenciesService
-}
-
-func New(params ...ParamsNewApplyJobService) ApplyJobService {
-	if len(params) > 0 {
-		return ApplyJobService{
-			activityRepository:             params[0].ActivityRepository,
-			workflowRepository:             params[0].WorkflowRepository,
-			connector:                      connector.New(),
-			namespace:                      params[0].Namespace,
-			getActivityDependenciesService: params[0].GetActivityDependenciesService,
-		}
-	}
+func New() ApplyJobService {
 	return ApplyJobService{
-		activityRepository:             activity_repository.New(),
-		workflowRepository:             workflow_repository.New(),
-		connector:                      connector.New(),
-		namespace:                      "akoflow",
+		activityRepository: config.App().Repository.ActivityRepository,
+		workflowRepository: config.App().Repository.WorkflowRepository,
+		connector:          config.App().Connector.K8sConnector,
+		namespace:          config.App().DefaultNamespace,
+
 		getActivityDependenciesService: get_activity_dependencies_service.New(),
 		makeK8sJobService:              make_k8s_job_service.New(),
 	}

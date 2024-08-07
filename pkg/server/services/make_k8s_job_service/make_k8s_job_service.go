@@ -4,6 +4,7 @@ import (
 	"encoding/base64"
 	"errors"
 	"fmt"
+	"github.com/ovvesley/akoflow/pkg/server/config"
 	"math/rand"
 	"os"
 	"strconv"
@@ -22,17 +23,10 @@ type ParamsNewMakeK8sJobService struct {
 
 var ImagePreActivity = "ovvesley/akoflow-preactivity:latest"
 
-// New creates a new MakeK8sJobService.
-func New(params ...ParamsNewMakeK8sJobService) MakeK8sJobService {
-	if len(params) > 0 {
-		return MakeK8sJobService{
-			workflowRepository: params[0].WorkflowRepository,
-			activityRepository: params[0].ActivityRepository,
-		}
-	}
+func New() MakeK8sJobService {
 	return MakeK8sJobService{
-		workflowRepository: workflow_repository.New(),
-		activityRepository: activity_repository.New(),
+		workflowRepository: config.App().Repository.WorkflowRepository,
+		activityRepository: config.App().Repository.ActivityRepository,
 	}
 
 }

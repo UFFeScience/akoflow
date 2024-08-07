@@ -4,6 +4,7 @@ import (
 	"github.com/ovvesley/akoflow/pkg/server/config"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
+	"github.com/ovvesley/akoflow/pkg/server/services/apply_job_service"
 	"github.com/ovvesley/akoflow/pkg/server/services/create_namespace_service"
 	"github.com/ovvesley/akoflow/pkg/server/services/create_pvc_service"
 	"github.com/ovvesley/akoflow/pkg/server/services/run_preactivity_service"
@@ -16,8 +17,10 @@ type WorkerRunActivityStandaloneService struct {
 	createPvcService       create_pvc_service.CreatePVCService
 	runPreActivityService  run_preactivity_service.RunPreactivityService
 
-	Workflow         workflow_entity.Workflow
+	Workflow workflow_entity.Workflow
+
 	WorkflowActivity workflow_activity_entity.WorkflowActivities
+	applyJobService  apply_job_service.ApplyJobService
 }
 
 func (r *WorkerRunActivityStandaloneService) SetWorkflow(workflow workflow_entity.Workflow) IWorkerRunActivityService {
@@ -45,10 +48,12 @@ func NewWorkerRunActivityStandaloneService() *WorkerRunActivityStandaloneService
 		createNamespaceService: create_namespace_service.New(),
 		createPvcService:       create_pvc_service.New(),
 		runPreActivityService:  run_preactivity_service.New(),
+		applyJobService:        apply_job_service.New(),
 	}
 }
 
 func (r *WorkerRunActivityStandaloneService) ApplyJob(activityID int) bool {
+	r.applyJobService.ApplyJob(activityID)
 	return true
 }
 

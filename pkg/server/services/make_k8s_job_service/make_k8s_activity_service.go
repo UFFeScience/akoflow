@@ -157,7 +157,7 @@ func (m *MakeK8sJobService) makeNodeSelector(_ workflow_entity.Workflow, wfa wor
 //	- idWorkflow
 //	- idWorkflowActivity
 //
-// The parameters should be set before calling the MakeK8sActivityJob method.
+// The parameters should be set before calling the MakeK8sJob method.
 func (m *MakeK8sJobService) isValidate() bool {
 	return m.namespace != "" && m.dependencies != nil && m.idWorkflow != 0 && m.idWorkflowActivity != 0
 }

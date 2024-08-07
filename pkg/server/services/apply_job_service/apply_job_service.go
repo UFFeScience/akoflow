@@ -32,7 +32,7 @@ func New() ApplyJobService {
 	}
 }
 
-func (a *ApplyJobService) ApplyJob(activityID int) {
+func (a *ApplyJobService) ApplyStandaloneJob(activityID int) {
 	activity, err := a.activityRepository.Find(activityID)
 	wf, _ := a.workflowRepository.Find(activity.WorkflowId)
 
@@ -53,6 +53,10 @@ func (a *ApplyJobService) ApplyJob(activityID int) {
 	var _ = a.workflowRepository.UpdateStatus(activity.WorkflowId, workflow_repository.StatusRunning)
 }
 
+func (a *ApplyJobService) ApplyDistributedJob(activityID int) {
+
+}
+
 func (a *ApplyJobService) runK8sJob(wf workflow_entity.Workflow, wfa workflow_activity_entity.WorkflowActivities) {
 
 	mapWfaDependencies := a.getActivityDependenciesService.GetActivityDependencies(wf.Id)
@@ -65,7 +69,7 @@ func (a *ApplyJobService) runK8sJob(wf workflow_entity.Workflow, wfa workflow_ac
 		SetWorkflow(wf).
 		SetIdWorkflowActivity(wfa.Id).
 		SetDependencies(dependencies).
-		MakeK8sActivityJob()
+		MakeK8sJob()
 
 	println("Job: ", job.Metadata.Name)
 

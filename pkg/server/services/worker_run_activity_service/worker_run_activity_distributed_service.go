@@ -4,6 +4,7 @@ import (
 	"github.com/ovvesley/akoflow/pkg/server/config"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
+	"github.com/ovvesley/akoflow/pkg/server/services/apply_job_service"
 	"github.com/ovvesley/akoflow/pkg/server/services/create_nfs_service"
 	"github.com/ovvesley/akoflow/pkg/server/services/create_pvc_service"
 )
@@ -16,6 +17,8 @@ type WorkerRunActivityDistributedService struct {
 
 	Workflow         workflow_entity.Workflow
 	WorkflowActivity workflow_activity_entity.WorkflowActivities
+
+	applyJobService ApplyJobService
 }
 
 func (r *WorkerRunActivityDistributedService) SetWorkflow(workflow workflow_entity.Workflow) IWorkerRunActivityService {
@@ -41,10 +44,12 @@ func NewWorkerRunActivityDistributedService() *WorkerRunActivityDistributedServi
 		namespace:        config.App().DefaultNamespace,
 		createPvcService: create_pvc_service.New(),
 		createNfsService: create_nfs_service.New(),
+		applyJobService:  apply_job_service.New(),
 	}
 }
 
 func (r *WorkerRunActivityDistributedService) ApplyJob(activityID int) bool {
+	r.applyJobService.ApplyDistributedJob(activityID)
 	return true
 }
 

@@ -12,12 +12,18 @@ import (
 
 var ImagePreActivity = "ovvesley/akoflow-preactivity:latest"
 
+var MODE_STANDALONE = "standalone"
+var MODE_DISTRIBUTED = "distributed"
+var MODE_PREACTIVITY = "preactivity"
+
 type MakeK8sJobService struct {
 	namespace          string
 	dependencies       []workflow_activity_entity.WorkflowActivities
 	idWorkflow         int
 	idWorkflowActivity int
 	workflow           workflow_entity.Workflow
+
+	mode string
 
 	workflowRepository workflow_repository.IWorkflowRepository
 	activityRepository activity_repository.IActivityRepository
@@ -40,7 +46,24 @@ func New() MakeK8sJobService {
 		makeK8sActivityDistributedService: newMakeK8sActivityDistributedService(),
 		makeK8sActivityStandaloneService:  newMakeK8sActivityStandaloneService(),
 		makeK8sActivityPreactivityService: newMakeK8sActivityPreactivityService(),
+
+		mode: MODE_STANDALONE,
 	}
+}
+
+func (m *MakeK8sJobService) UsePreactivityMode() *MakeK8sJobService {
+	m.mode = MODE_PREACTIVITY
+	return m
+}
+
+func (m *MakeK8sJobService) UseDistributedMode() *MakeK8sJobService {
+	m.mode = MODE_DISTRIBUTED
+	return m
+}
+
+func (m *MakeK8sJobService) UseStandaloneMode() *MakeK8sJobService {
+	m.mode = MODE_STANDALONE
+	return m
 }
 
 // SetNamespace sets the namespace where the k8s job will be created.
@@ -89,8 +112,14 @@ func (m *MakeK8sJobService) getIdWorkflowActivity() int {
 	return m.idWorkflowActivity
 }
 
-func (m *MakeK8sJobService) MakeK8sActivityJob() (k8s_job_entity.K8sJob, error) {
-	// Check if the parameters are valid to make a k8s job.
+func (m *MakeK8sJobService) MakeK8sJob() (k8s_job_entity.K8sJob, error) {
+
+	mapMode := map[string]func() (k8s_job_entity.K8sJob, error){
+		MODE_STANDALONE:  m.makeK8sActivityStandaloneJob,
+		MODE_DISTRIBUTED: m.makeK8sActivityDistributedJob,
+		MODE_PREACTIVITY: m.makeK8sActivityPreActivityJob,
+	}
+	return mapMode[m.mode]()
 }
 
 func (m *MakeK8sJobService) makeK8sActivityStandaloneJob() (k8s_job_entity.K8sJob, error) {

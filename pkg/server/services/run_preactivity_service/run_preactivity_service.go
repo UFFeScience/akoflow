@@ -75,7 +75,8 @@ func (r *RunPreactivityService) runJobPreActivity(wf workflow_entity.Workflow, w
 		SetIdWorkflow(wf.Id).
 		SetIdWorkflowActivity(wfa.Id).
 		SetDependencies(dependencies).
-		MakeK8sPreActivityJob()
+		UsePreactivityMode().
+		MakeK8sJob()
 
 	r.connector.Job().ApplyJob(r.namespace, job)
 

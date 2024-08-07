@@ -53,7 +53,7 @@ func NewWorkerRunActivityStandaloneService() *WorkerRunActivityStandaloneService
 }
 
 func (r *WorkerRunActivityStandaloneService) ApplyJob(activityID int) bool {
-	r.applyJobService.ApplyJob(activityID)
+	r.applyJobService.ApplyStandaloneJob(activityID)
 	return true
 }
 

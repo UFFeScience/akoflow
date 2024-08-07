@@ -3,7 +3,6 @@ package make_k8s_job_service
 import (
 	"encoding/base64"
 	"errors"
-	"fmt"
 	"github.com/ovvesley/akoflow/pkg/server/config"
 	"math/rand"
 	"os"
@@ -16,13 +15,9 @@ import (
 	"github.com/ovvesley/akoflow/pkg/server/repository/workflow_repository"
 )
 
-type ParamsNewMakeK8sJobService struct {
-	WorkflowRepository workflow_repository.IWorkflowRepository
-	ActivityRepository activity_repository.IActivityRepository
-}
-
 var ImagePreActivity = "ovvesley/akoflow-preactivity:latest"
 
+// New creates a new MakeK8sJobService.
 func New() MakeK8sJobService {
 	return MakeK8sJobService{
 		workflowRepository: config.App().Repository.WorkflowRepository,
@@ -187,13 +182,13 @@ func (m *MakeK8sJobService) makeVolumesPreActivity(wf workflow_entity.Workflow, 
 
 	dependencies := m.getDependencies()
 
-	for _, _ = range dependencies {
+	for _, dependency := range dependencies {
 		volume := k8s_job_entity.K8sJobVolume{
-			Name: "wf-volume-" + fmt.Sprintf("%d", wf.Id),
+			Name: dependency.GetVolumeName(),
 			PersistentVolumeClaim: struct {
 				ClaimName string `json:"claimName"`
 			}{
-				ClaimName: "wf-volume-" + fmt.Sprintf("%d", wf.Id),
+				ClaimName: dependency.GetVolumeName(),
 			},
 		}
 		volumes = append(volumes, volume)
@@ -307,13 +302,13 @@ func (m *MakeK8sJobService) makeVolumesActivity(wf workflow_entity.Workflow, wfa
 // makeVolumeThatWillBeUsedByCurrentActivity creates a volume that will be used by the current activity.
 //
 // This volume is the first volume in the list of volumes that will be used by the activity.
-func (m *MakeK8sJobService) makeVolumeThatWillBeUsedByCurrentActivity(wf workflow_entity.Workflow, wfa workflow_activity_entity.WorkflowActivities) k8s_job_entity.K8sJobVolume {
+func (m *MakeK8sJobService) makeVolumeThatWillBeUsedByCurrentActivity(_ workflow_entity.Workflow, wfa workflow_activity_entity.WorkflowActivities) k8s_job_entity.K8sJobVolume {
 	firstVolume := k8s_job_entity.K8sJobVolume{
-		Name: "wf-volume-" + fmt.Sprintf("%d", wf.Id),
+		Name: wfa.GetVolumeName(),
 		PersistentVolumeClaim: struct {
 			ClaimName string `json:"claimName"`
 		}{
-			ClaimName: "wf-volume-" + fmt.Sprintf("%d", wf.Id),
+			ClaimName: wfa.GetVolumeName(),
 		},
 	}
 
@@ -412,7 +407,7 @@ func (m *MakeK8sJobService) getPortAkoFlowServer() string {
 
 func (m *MakeK8sJobService) addCommandToMonitorFilesStorage(command string, path string) string {
 	port := m.getPortAkoFlowServer()
-	pathUrl := "http://$AKOFLOW_SERVER_SERVICE_SERVICE_HOST:" + port + "/akoflow-server/engine/storage/" + path + "?workflowId=" + strconv.Itoa(m.getIdWorkflow()) + "&activityId=" + strconv.Itoa(m.getIdWorkflowActivity())
+	pathUrl := "http://$AKOFLOW_SERVER_SERVICE_SERVICE_HOST:" + port + "/akoflow-server/internal/storage/" + path + "?workflowId=" + strconv.Itoa(m.getIdWorkflow()) + "&activityId=" + strconv.Itoa(m.getIdWorkflowActivity())
 	command += "\nwget --header=\"Content-Type: text/plain\" -O -  --post-data=\"$(ls -laR --full-time)\" \"" + pathUrl + "\" | true; \n"
 
 	return command
@@ -420,7 +415,7 @@ func (m *MakeK8sJobService) addCommandToMonitorFilesStorage(command string, path
 
 func (m *MakeK8sJobService) addCommandToMonitorDiskSpecStorage(command string, path string) string {
 	port := m.getPortAkoFlowServer()
-	pathUrl := "http://$AKOFLOW_SERVER_SERVICE_SERVICE_HOST:" + port + "/akoflow-server/engine/storage/" + path + "?workflowId=" + strconv.Itoa(m.getIdWorkflow()) + "&activityId=" + strconv.Itoa(m.getIdWorkflowActivity())
+	pathUrl := "http://$AKOFLOW_SERVER_SERVICE_SERVICE_HOST:" + port + "/akoflow-server/internal/storage/" + path + "?workflowId=" + strconv.Itoa(m.getIdWorkflow()) + "&activityId=" + strconv.Itoa(m.getIdWorkflowActivity())
 	command += "\nwget --header=\"Content-Type: text/plain\" -O - --post-data=\"$(df -h)\" \"" + pathUrl + "\" | true; \n"
 
 	return command
@@ -469,8 +464,8 @@ func (m *MakeK8sJobService) makeJobVolumeMounts(wf workflow_entity.Workflow, wfa
 	volumesMounts := make([]k8s_job_entity.K8sJobVolumeMount, 0)
 
 	firstVolumeMount := k8s_job_entity.K8sJobVolumeMount{
-		Name:      "wf-volume-" + fmt.Sprintf("%d", wf.Id),
-		MountPath: wf.Spec.MountPath,
+		Name:      wfa.GetVolumeName(),
+		MountPath: m.makeJobVolumeMountPath(wf, wfa),
 	}
 
 	volumesMounts = append([]k8s_job_entity.K8sJobVolumeMount{firstVolumeMount}, volumesMounts...)

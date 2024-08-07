@@ -12,12 +12,14 @@ import (
 )
 
 type RunPreactivityService struct {
-	namespace                      string
-	workflowRepository             workflow_repository.IWorkflowRepository
-	activityRepository             activity_repository.IActivityRepository
+	namespace          string
+	workflowRepository workflow_repository.IWorkflowRepository
+	activityRepository activity_repository.IActivityRepository
+
+	connector connector.IConnector
+
 	makeK8sJobService              make_k8s_job_service.MakeK8sJobService
 	getActivityDependenciesService get_activity_dependencies_service.GetActivityDependenciesService
-	connector                      connector.IConnector
 }
 
 func New() RunPreactivityService {
@@ -25,6 +27,11 @@ func New() RunPreactivityService {
 		namespace:          config.App().DefaultNamespace,
 		workflowRepository: config.App().Repository.WorkflowRepository,
 		activityRepository: config.App().Repository.ActivityRepository,
+
+		connector: config.App().Connector.K8sConnector,
+
+		makeK8sJobService:              make_k8s_job_service.New(),
+		getActivityDependenciesService: get_activity_dependencies_service.New(),
 	}
 }
 

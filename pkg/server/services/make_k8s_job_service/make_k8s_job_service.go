@@ -1,7 +1,6 @@
 package make_k8s_job_service
 
 import (
-	"errors"
 	"github.com/ovvesley/akoflow/pkg/server/config"
 	"github.com/ovvesley/akoflow/pkg/server/entities/k8s_job_entity"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
@@ -15,6 +14,10 @@ var ImagePreActivity = "ovvesley/akoflow-preactivity:latest"
 var MODE_STANDALONE = "standalone"
 var MODE_DISTRIBUTED = "distributed"
 var MODE_PREACTIVITY = "preactivity"
+
+type IMakeK8sJobService interface {
+	Handle(service MakeK8sJobService) (k8s_job_entity.K8sJob, error)
+}
 
 type MakeK8sJobService struct {
 	namespace          string
@@ -51,16 +54,31 @@ func New() MakeK8sJobService {
 	}
 }
 
+func (m *MakeK8sJobService) GetNamespace() string {
+	return m.namespace
+}
+
+func (m *MakeK8sJobService) GetMode() string {
+	return m.mode
+}
+
+func (m *MakeK8sJobService) GetWorkflow() workflow_entity.Workflow {
+	return m.workflow
+}
+
+// UsePreactivityMode sets the mode of the k8s job to preactivity.
 func (m *MakeK8sJobService) UsePreactivityMode() *MakeK8sJobService {
 	m.mode = MODE_PREACTIVITY
 	return m
 }
 
+// UseDistributedMode sets the mode of the k8s job to distributed.
 func (m *MakeK8sJobService) UseDistributedMode() *MakeK8sJobService {
 	m.mode = MODE_DISTRIBUTED
 	return m
 }
 
+// UseStandaloneMode sets the mode of the k8s job to standalone.
 func (m *MakeK8sJobService) UseStandaloneMode() *MakeK8sJobService {
 	m.mode = MODE_STANDALONE
 	return m
@@ -97,112 +115,32 @@ func (m *MakeK8sJobService) SetIdWorkflowActivity(idWorkflowActivity int) *MakeK
 	return m
 }
 
-// getDependencies returns the dependencies of the activity.
-func (m *MakeK8sJobService) getDependencies() []workflow_activity_entity.WorkflowActivities {
+// GetDependencies returns the dependencies of the activity.
+func (m *MakeK8sJobService) GetDependencies() []workflow_activity_entity.WorkflowActivities {
 	return m.dependencies
 }
 
-// getIdWorkflow returns the id of the workflow that will be used to make the k8s job.
-func (m *MakeK8sJobService) getIdWorkflow() int {
+// GetIdWorkflow returns the id of the workflow that will be used to make the k8s job.
+func (m *MakeK8sJobService) GetIdWorkflow() int {
 	return m.idWorkflow
 }
 
-// getIdWorkflowActivity returns the id of the activity that will be used to make the k8s job.
-func (m *MakeK8sJobService) getIdWorkflowActivity() int {
+// GetIdWorkflowActivity returns the id of the activity that will be used to make the k8s job.
+func (m *MakeK8sJobService) GetIdWorkflowActivity() int {
 	return m.idWorkflowActivity
 }
 
 func (m *MakeK8sJobService) MakeK8sJob() (k8s_job_entity.K8sJob, error) {
 
-	mapMode := map[string]func() (k8s_job_entity.K8sJob, error){
-		MODE_STANDALONE:  m.makeK8sActivityStandaloneJob,
-		MODE_DISTRIBUTED: m.makeK8sActivityDistributedJob,
-		MODE_PREACTIVITY: m.makeK8sActivityPreActivityJob,
-	}
-	return mapMode[m.mode]()
-}
+	m.makeK8sActivityService.
+		SetWorkflow(m.workflow).
+		SetIdWorkflowActivity(m.idWorkflowActivity)
 
-func (m *MakeK8sJobService) makeK8sActivityStandaloneJob() (k8s_job_entity.K8sJob, error) {
-	if !m.isValidate() {
-		return k8s_job_entity.K8sJob{}, errors.New("invalid parameters to make k8s job:: namespace, persistentVolumeClaim, dependencies, idWorkflow, idWorkflowActivity are required")
+	mapMode := map[string]func(service MakeK8sJobService) (k8s_job_entity.K8sJob, error){
+		MODE_STANDALONE:  m.makeK8sActivityStandaloneService.Handle,
+		MODE_DISTRIBUTED: m.makeK8sActivityDistributedService.Handle,
+		MODE_PREACTIVITY: m.makeK8sActivityPreactivityService.Handle,
 	}
 
-	workflow, _ := m.workflowRepository.Find(m.getIdWorkflow())
-	activity, _ := m.activityRepository.Find(m.getIdWorkflowActivity())
-
-	container := m.makeContainerActivity(workflow, activity)
-	volumes := m.makeVolumesActivity(workflow, activity)
-
-	k8sJob := k8s_job_entity.K8sJob{
-		ApiVersion: "batch/v1",
-		Kind:       "Job",
-		Metadata: k8s_job_entity.K8sJobMetadata{
-			Name: activity.GetNameJob(),
-		},
-		Spec: k8s_job_entity.K8sJobSpec{
-			BackoffLimit: 0,
-			Template: k8s_job_entity.K8sJobTemplate{
-				Spec: k8s_job_entity.K8sJobSpecTemplate{
-					Containers:    []k8s_job_entity.K8sJobContainer{container},
-					RestartPolicy: "Never",
-					Volumes:       volumes,
-				},
-			},
-		},
-	}
-
-	nodeSelector := m.makeNodeSelector(workflow, activity)
-	if nodeSelector != nil {
-		k8sJob.Spec.Template.Spec.NodeSelector = nodeSelector
-	}
-
-	return k8sJob, nil
-
-}
-
-func (m *MakeK8sJobService) makeK8sActivityPreActivityJob() (k8s_job_entity.K8sJob, error) {
-	if !m.isValidate() {
-		return k8s_job_entity.K8sJob{}, errors.New("invalid parameters to make k8s job:: namespace, persistentVolumeClaim, dependencies, idWorkflow, idWorkflowActivity are required")
-	}
-
-	workflow, _ := m.workflowRepository.Find(m.getIdWorkflow())
-	activity, _ := m.activityRepository.Find(m.getIdWorkflowActivity())
-	preActivity, _ := m.activityRepository.FindPreActivity(m.getIdWorkflowActivity())
-
-	volumes := m.makeVolumesPreActivity(workflow, activity)
-	container := m.makeContainerPreActivity(workflow, activity)
-
-	k8sJob := k8s_job_entity.K8sJob{
-		ApiVersion: "batch/v1",
-		Kind:       "Job",
-		Metadata: k8s_job_entity.K8sJobMetadata{
-			Name: activity.GetPreActivityName(),
-		},
-		Spec: k8s_job_entity.K8sJobSpec{
-			BackoffLimit: 0,
-			Template: k8s_job_entity.K8sJobTemplate{
-				Spec: k8s_job_entity.K8sJobSpecTemplate{
-					Containers:    []k8s_job_entity.K8sJobContainer{container},
-					RestartPolicy: "Never",
-					Volumes:       volumes,
-				},
-			},
-		},
-	}
-
-	nodeSelector := m.makeNodeSelector(workflow, activity)
-	if nodeSelector != nil {
-		k8sJob.Spec.Template.Spec.NodeSelector = nodeSelector
-	}
-
-	println("Running pre activity: ", preActivity.Name)
-	println("Workflow: ", workflow.Name)
-	println("Activity: ", activity.Name)
-
-	return k8sJob, nil
-
-}
-
-func (m *MakeK8sJobService) makeK8sActivityDistributedJob() (k8s_job_entity.K8sJob, error) {
-
+	return mapMode[m.mode](*m)
 }

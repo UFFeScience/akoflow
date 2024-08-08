@@ -18,7 +18,7 @@ type WorkerRunActivityDistributedService struct {
 	Workflow         workflow_entity.Workflow
 	WorkflowActivity workflow_activity_entity.WorkflowActivities
 
-	applyJobService ApplyJobService
+	applyJobService apply_job_service.ApplyJobService
 }
 
 func (r *WorkerRunActivityDistributedService) SetWorkflow(workflow workflow_entity.Workflow) IWorkerRunActivityService {
@@ -49,7 +49,7 @@ func NewWorkerRunActivityDistributedService() *WorkerRunActivityDistributedServi
 }
 
 func (r *WorkerRunActivityDistributedService) ApplyJob(activityID int) bool {
-	r.applyJobService.ApplyDistributedJob(activityID)
+	r.applyJobService.ApplyJobDistributed(activityID)
 	return true
 }
 
@@ -60,7 +60,12 @@ func (r *WorkerRunActivityDistributedService) HandleResourceToRunJob(activityID 
 		return false
 	}
 
-	r.createPvcService.GetOrCreatePersistentVolumeClainByActivity(r.GetWorkflow(), r.GetWorkflowActivity(), r.namespace)
+	_, err := r.createPvcService.GetOrCreatePersistentVolumeClainByActivity(r.GetWorkflow(), r.GetWorkflowActivity(), r.namespace)
+
+	if err != nil {
+		println("Error creating pvc")
+		return false
+	}
 
 	return true
 }

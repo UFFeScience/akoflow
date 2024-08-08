@@ -11,15 +11,36 @@ import (
 )
 
 type MakeK8sActivityService struct {
+	Workflow           workflow_entity.Workflow
+	IdWorkflowActivity int
 }
 
 func newMakeK8sActivityService() MakeK8sActivityService {
 	return MakeK8sActivityService{}
 }
 
-// makeContainerCommandActivity creates the command that will be used by the container.
-//
-//	The command is defined in the activity.
+func (m *MakeK8sActivityService) SetIdWorkflowActivity(idWorkflowActivity int) *MakeK8sActivityService {
+	m.IdWorkflowActivity = idWorkflowActivity
+	return m
+}
+
+func (m *MakeK8sActivityService) getIdWorkflowActivity() int {
+	return m.IdWorkflowActivity
+}
+
+func (m *MakeK8sActivityService) SetWorkflow(workflow workflow_entity.Workflow) *MakeK8sActivityService {
+	m.Workflow = workflow
+	return m
+}
+
+func (m *MakeK8sActivityService) getIdWorkflow() int {
+	return m.Workflow.Id
+}
+
+func (m *MakeK8sActivityService) GetWorkflow() workflow_entity.Workflow {
+	return m.Workflow
+}
+
 func (m *MakeK8sActivityService) makeContainerCommandActivity(wf workflow_entity.Workflow, wfa workflow_activity_entity.WorkflowActivities) string {
 
 	command := m.setupCommandWorkdir(wf, wfa)
@@ -93,7 +114,7 @@ func (m *MakeK8sActivityService) makeJobVolumeMounts(wf workflow_entity.Workflow
 	return volumesMounts
 }
 
-func (m *MakeK8sJobService) makeContainerActivity(workflow workflow_entity.Workflow, activity workflow_activity_entity.WorkflowActivities) k8s_job_entity.K8sJobContainer {
+func (m *MakeK8sActivityService) makeContainerActivity(workflow workflow_entity.Workflow, activity workflow_activity_entity.WorkflowActivities) k8s_job_entity.K8sJobContainer {
 	command := m.makeContainerCommandActivity(workflow, activity)
 
 	envs := make([]k8s_job_entity.K8sJobEnv, 0)
@@ -141,32 +162,19 @@ func (m *MakeK8sJobService) makeContainerActivity(workflow workflow_entity.Workf
 	return container
 }
 
-// makeNodeSelector creates a node selector that will be used by the activity.
+// MakeNodeSelector creates a node selector that will be used by the activity.
 //   - The node selector is used to select the node that will run the activity.
 //   - The node selector is defined in the activity.
-func (m *MakeK8sJobService) makeNodeSelector(_ workflow_entity.Workflow, wfa workflow_activity_entity.WorkflowActivities) map[string]string {
+func (m *MakeK8sActivityService) MakeNodeSelector(_ workflow_entity.Workflow, wfa workflow_activity_entity.WorkflowActivities) map[string]string {
 	nodeSelector := wfa.GetNodeSelector()
 	return nodeSelector
-}
-
-// isValidate checks if the parameters are valid to make a k8s job.
-//
-//	The parameters are:
-//	- namespace
-//	- dependencies
-//	- idWorkflow
-//	- idWorkflowActivity
-//
-// The parameters should be set before calling the MakeK8sJob method.
-func (m *MakeK8sJobService) isValidate() bool {
-	return m.namespace != "" && m.dependencies != nil && m.idWorkflow != 0 && m.idWorkflowActivity != 0
 }
 
 // makeVolumesActivity creates a list of volumes that will be used by the activity.
 //
 //	The first volume in the list is the volume that will be used by the current activity.
 //	The other volumes are the dependencies of the current activity.
-func (m *MakeK8sJobService) makeVolumesActivity(wf workflow_entity.Workflow, wfa workflow_activity_entity.WorkflowActivities) []k8s_job_entity.K8sJobVolume {
+func (m *MakeK8sActivityService) makeVolumesActivity(wf workflow_entity.Workflow, wfa workflow_activity_entity.WorkflowActivities) []k8s_job_entity.K8sJobVolume {
 	volumes := make([]k8s_job_entity.K8sJobVolume, 0)
 
 	firstVolume := m.makeVolumeThatWillBeUsedByCurrentActivity(wf, wfa)
@@ -174,4 +182,17 @@ func (m *MakeK8sJobService) makeVolumesActivity(wf workflow_entity.Workflow, wfa
 	volumes = append([]k8s_job_entity.K8sJobVolume{firstVolume}, volumes...)
 
 	return volumes
+}
+
+func (m *MakeK8sActivityService) makeVolumeThatWillBeUsedByCurrentActivity(_ workflow_entity.Workflow, wfa workflow_activity_entity.WorkflowActivities) k8s_job_entity.K8sJobVolume {
+	firstVolume := k8s_job_entity.K8sJobVolume{
+		Name: wfa.GetVolumeName(),
+		PersistentVolumeClaim: struct {
+			ClaimName string `json:"claimName"`
+		}{
+			ClaimName: wfa.GetVolumeName(),
+		},
+	}
+
+	return firstVolume
 }

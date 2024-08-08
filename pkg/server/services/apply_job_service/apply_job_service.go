@@ -1,88 +1,22 @@
 package apply_job_service
 
-import (
-	"github.com/ovvesley/akoflow/pkg/server/config"
-	"github.com/ovvesley/akoflow/pkg/server/connector"
-	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
-	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
-	"github.com/ovvesley/akoflow/pkg/server/repository/activity_repository"
-	"github.com/ovvesley/akoflow/pkg/server/repository/workflow_repository"
-	"github.com/ovvesley/akoflow/pkg/server/services/get_activity_dependencies_service"
-	"github.com/ovvesley/akoflow/pkg/server/services/make_k8s_job_service"
-)
-
 type ApplyJobService struct {
-	activityRepository             activity_repository.IActivityRepository
-	workflowRepository             workflow_repository.IWorkflowRepository
-	connector                      connector.IConnector
-	namespace                      string
-	getActivityDependenciesService get_activity_dependencies_service.GetActivityDependenciesService
-	makeK8sJobService              make_k8s_job_service.MakeK8sJobService
+	applyJobStandaloneService  ApplyJobStandaloneService
+	applyJobDistributedService ApplyJobDistributedService
 }
 
 func New() ApplyJobService {
 	return ApplyJobService{
-		activityRepository: config.App().Repository.ActivityRepository,
-		workflowRepository: config.App().Repository.WorkflowRepository,
-		connector:          config.App().Connector.K8sConnector,
-		namespace:          config.App().DefaultNamespace,
 
-		getActivityDependenciesService: get_activity_dependencies_service.New(),
-		makeK8sJobService:              make_k8s_job_service.New(),
+		applyJobStandaloneService:  newApplyJobStandaloneService(),
+		applyJobDistributedService: newApplyJobDistributedService(),
 	}
 }
 
-func (a *ApplyJobService) ApplyStandaloneJob(activityID int) {
-	activity, err := a.activityRepository.Find(activityID)
-	wf, _ := a.workflowRepository.Find(activity.WorkflowId)
-
-	if err != nil {
-		println("Activity not found")
-		return
-	}
-	if activity.Status != activity_repository.StatusCreated {
-		println("Activity already running")
-		return
-	}
-
-	println("Running activity: ", activity.Name)
-
-	a.runK8sJob(wf, activity)
-
-	var _ = a.activityRepository.UpdateStatus(activity.Id, activity_repository.StatusRunning)
-	var _ = a.workflowRepository.UpdateStatus(activity.WorkflowId, workflow_repository.StatusRunning)
+func (a *ApplyJobService) ApplyJobStandalone(activityID int) {
+	a.applyJobStandaloneService.ApplyStandaloneJob(activityID)
 }
 
-func (a *ApplyJobService) ApplyDistributedJob(activityID int) {
-
-}
-
-func (a *ApplyJobService) runK8sJob(wf workflow_entity.Workflow, wfa workflow_activity_entity.WorkflowActivities) {
-
-	mapWfaDependencies := a.getActivityDependenciesService.GetActivityDependencies(wf.Id)
-	dependencies := mapWfaDependencies[wfa.Id]
-
-	println("Dependencies: ", mapWfaDependencies[wfa.Id])
-
-	job, _ := a.makeK8sJobService.
-		SetNamespace(a.namespace).
-		SetWorkflow(wf).
-		SetIdWorkflowActivity(wfa.Id).
-		SetDependencies(dependencies).
-		MakeK8sJob()
-
-	println("Job: ", job.Metadata.Name)
-
-	a.connector.Job().ApplyJob(a.namespace, job)
-
-	podCreated, _ := a.connector.Pod().GetPodByJob(a.namespace, job.Metadata.Name)
-	namePod, err := podCreated.GetPodName()
-
-	if err != nil {
-		println("Error getting pod name")
-		return
-	}
-
-	println("Pod created: ", namePod)
-
+func (a *ApplyJobService) ApplyJobDistributed(activityID int) {
+	a.applyJobDistributedService.ApplyDistributedJob(activityID)
 }

@@ -3,6 +3,7 @@ package httpserver
 import (
 	"github.com/ovvesley/akoflow/pkg/server/config"
 	"github.com/ovvesley/akoflow/pkg/server/config/http_config"
+	"github.com/ovvesley/akoflow/pkg/server/engine/httpserver/handlers/akoflow_admin_handler"
 	"github.com/ovvesley/akoflow/pkg/server/engine/httpserver/handlers/internal_storage_handler"
 	"github.com/ovvesley/akoflow/pkg/server/engine/httpserver/handlers/storage_databasedump_handler"
 	"github.com/ovvesley/akoflow/pkg/server/engine/httpserver/handlers/workflow_handler"
@@ -27,16 +28,16 @@ func StartServer() {
 
 	http.HandleFunc("GET /akoflow-server/database-dump", http_config.KernelHandler(storage_databasedump_handler.New().DatabaseDumpHandler))
 
-	//http.HandleFunc("GET /akoflow-admin/", ...) // Home page
+	http.HandleFunc("GET /akoflow-admin/", http_config.KernelHandler(akoflow_admin_handler.New().Home))
 
-	//http.HandleFunc("GET /akoflow-admin/api/workflows", ...)
-	//http.HandleFunc("GET /akoflow-admin/api/workflows/{workflowId}", ...)
+	//http.HandleFunc("GET /akoflow_admin_handler/api/workflows", ...)
+	//http.HandleFunc("GET /akoflow_admin_handler/api/workflows/{workflowId}", ...)
 
-	//http.HandleFunc("GET /akoflow-admin/api/activities", ...)
-	//http.HandleFunc("GET /akoflow-admin/api/activities/{activityId}", ...)
+	//http.HandleFunc("GET /akoflow_admin_handler/api/activities", ...)
+	//http.HandleFunc("GET /akoflow_admin_handler/api/activities/{activityId}", ...)
 
-	//http.HandleFunc("GET /akoflow-admin/api/activities/{activityId}/logs", ...)
-	//http.HandleFunc("GET /akoflow-admin/api/activities/{activityId}/metrics", ...)
+	//http.HandleFunc("GET /akoflow_admin_handler/api/activities/{activityId}/logs", ...)
+	//http.HandleFunc("GET /akoflow_admin_handler/api/activities/{activityId}/metrics", ...)
 
 	err := http.ListenAndServe(config.PORT_SERVER, nil)
 	if err != nil {

@@ -5,6 +5,7 @@ import (
 	"github.com/ovvesley/akoflow/pkg/server/config/http_config"
 	"github.com/ovvesley/akoflow/pkg/server/engine/httpserver/handlers/akoflow_admin_handler"
 	"github.com/ovvesley/akoflow/pkg/server/engine/httpserver/handlers/internal_storage_handler"
+	"github.com/ovvesley/akoflow/pkg/server/engine/httpserver/handlers/public_static_handler"
 	"github.com/ovvesley/akoflow/pkg/server/engine/httpserver/handlers/storage_databasedump_handler"
 	"github.com/ovvesley/akoflow/pkg/server/engine/httpserver/handlers/workflow_handler"
 
@@ -18,17 +19,20 @@ func HealthCheck(w http.ResponseWriter, r *http.Request) {
 }
 func StartServer() {
 
-	http.HandleFunc("GET /akoflow-server/healtcheck", http_config.KernelHandler(HealthCheck, "hello"))
-	http.HandleFunc("POST /akoflow-server/workflow/run", http_config.KernelHandler(workflow_handler.New().Run))
+	http.HandleFunc("GET /", http_config.KernelHandler(public_static_handler.New().Static))
 
-	http.HandleFunc("POST /akoflow-server/internal/storage/initial-file-list", http_config.KernelHandler(internal_storage_handler.New().InitialFileListHandler))
-	http.HandleFunc("POST /akoflow-server/internal/storage/end-file-list", http_config.KernelHandler(internal_storage_handler.New().EndFileListHandler))
-	http.HandleFunc("POST /akoflow-server/internal/storage/initial-disk-spec", http_config.KernelHandler(internal_storage_handler.New().InitialDiskSpecHandler))
-	http.HandleFunc("POST /akoflow-server/internal/storage/end-disk-spec", http_config.KernelHandler(internal_storage_handler.New().EndDiskSpecHandler))
+	http.HandleFunc("GET /akoflow-server/healtcheck/", http_config.KernelHandler(HealthCheck, "hello"))
+	http.HandleFunc("POST /akoflow-server/workflow/run/", http_config.KernelHandler(workflow_handler.New().Run))
 
-	http.HandleFunc("GET /akoflow-server/database-dump", http_config.KernelHandler(storage_databasedump_handler.New().DatabaseDumpHandler))
+	http.HandleFunc("POST /akoflow-server/internal/storage/initial-file-list/", http_config.KernelHandler(internal_storage_handler.New().InitialFileListHandler))
+	http.HandleFunc("POST /akoflow-server/internal/storage/end-file-list/", http_config.KernelHandler(internal_storage_handler.New().EndFileListHandler))
+	http.HandleFunc("POST /akoflow-server/internal/storage/initial-disk-spec/", http_config.KernelHandler(internal_storage_handler.New().InitialDiskSpecHandler))
+	http.HandleFunc("POST /akoflow-server/internal/storage/end-disk-spec/", http_config.KernelHandler(internal_storage_handler.New().EndDiskSpecHandler))
+
+	http.HandleFunc("GET /akoflow-server/database-dump/", http_config.KernelHandler(storage_databasedump_handler.New().DatabaseDumpHandler))
 
 	http.HandleFunc("GET /akoflow-admin/", http_config.KernelHandler(akoflow_admin_handler.New().Home))
+	http.HandleFunc("GET /akoflow-admin/{workflowId}", http_config.KernelHandler(akoflow_admin_handler.New().WorkflowDetail))
 
 	//http.HandleFunc("GET /akoflow_admin_handler/api/workflows", ...)
 	//http.HandleFunc("GET /akoflow_admin_handler/api/workflows/{workflowId}", ...)

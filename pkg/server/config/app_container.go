@@ -1,6 +1,7 @@
 package config
 
 import (
+	"github.com/ovvesley/akoflow/pkg/server/config/http_render_view"
 	"github.com/ovvesley/akoflow/pkg/server/connector"
 	"github.com/ovvesley/akoflow/pkg/server/repository/activity_repository"
 	"github.com/ovvesley/akoflow/pkg/server/repository/logs_repository"
@@ -15,6 +16,7 @@ type AppContainer struct {
 	Repository       appContainerRepository
 	Connector        appContainerConnector
 	DefaultNamespace string
+	TemplateRenderer appContainerTemplateRenderer
 }
 
 type appContainerRepository struct {
@@ -29,6 +31,10 @@ type appContainerConnector struct {
 	K8sConnector connector.IConnector
 }
 
+type appContainerTemplateRenderer struct {
+	RenderViewProvider http_render_view.HttpRenderViewProvider
+}
+
 func MakeAppContainer() AppContainer {
 
 	// Create the repository instances
@@ -41,6 +47,8 @@ func MakeAppContainer() AppContainer {
 	// create the Connector instances
 	k8sConnector := connector.New()
 
+	renderViewprovider := http_render_view.New()
+
 	return AppContainer{
 		DefaultNamespace: DEFAULT_NAMESPACE,
 		Repository: appContainerRepository{
@@ -52,6 +60,9 @@ func MakeAppContainer() AppContainer {
 		},
 		Connector: appContainerConnector{
 			K8sConnector: k8sConnector,
+		},
+		TemplateRenderer: appContainerTemplateRenderer{
+			RenderViewProvider: renderViewprovider,
 		},
 	}
 }

@@ -1,27 +1,35 @@
 package akoflow_admin_handler
 
 import (
-	"html/template"
+	"github.com/ovvesley/akoflow/pkg/server/config"
+	"github.com/ovvesley/akoflow/pkg/server/config/http_render_view"
 	"net/http"
 )
 
-const PATH_TEMPLATE = "pkg/server/engine/httpserver/handlers/akoflow_admin_handler/akoflow_admin_handler_tmpl/"
-
-func GetTemplate(name string) *template.Template {
-	return template.Must(template.ParseFiles(PATH_TEMPLATE + name))
-}
-
 type AkoflowAdminHandler struct {
-	homeTemplate *template.Template
+	renderViewProvider http_render_view.HttpRenderViewProvider
 }
 
 func New() *AkoflowAdminHandler {
-	return &AkoflowAdminHandler{}
+	return &AkoflowAdminHandler{
+		renderViewProvider: config.App().TemplateRenderer.RenderViewProvider,
+	}
 }
 
 func (h *AkoflowAdminHandler) Home(w http.ResponseWriter, r *http.Request) {
-	h.homeTemplate = template.Must(template.ParseFiles(PATH_TEMPLATE + "home.tmpl.html"))
-	err := h.homeTemplate.Execute(w, nil)
+	homeTemplate := h.renderViewProvider.TemplateInstance("home.tmpl.html")
+	err := homeTemplate.Execute(w, map[string]interface{}{})
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+}
+
+func (h *AkoflowAdminHandler) WorkflowDetail(w http.ResponseWriter, r *http.Request) {
+	workflowDetailTemplate := h.renderViewProvider.TemplateInstance("workflow_detail.tmpl.html")
+	err := workflowDetailTemplate.Execute(w, map[string]interface{}{})
+
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

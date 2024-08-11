@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{{ template "head" }}
+
+<body class="bg-gray-900 text-white">
+
+<div class="flex min-h-screen">
+    <!-- Sidebar -->
+    {{ template "sidebar" }}
+
+    <!-- Main Content -->
+    <div class="flex-1 p-8">
+
+        {{ template "header" dict "title" "Workflow Detail" }}
+
+        <!-- Graph Panel -->
+        <div class="w-full bg-gray-800 p-6 rounded-lg mb-8">
+            <h2 class="text-2xl font-bold mb-4 text-center">Activity Relationship Graph</h2>
+            <div class="bg-gray-700 p-6 rounded-lg flex items-center justify-center">
+                <!-- Graph Visualization Placeholder -->
+                <div class="w-full h-96 flex items-center justify-center text-gray-400">
+                    [Graph Visualization Here]
+                </div>
+            </div>
+        </div>
+
+        <!-- Activity List -->
+        <div>
+            <h2 class="text-2xl font-bold mb-4">Activities</h2>
+            <div class="space-y-4">
+                <!-- Activity Item -->
+                <div class="bg-gray-800 p-4 rounded-lg">
+                    <h3 class="text-lg font-semibold">Activity 1: Data Ingestion</h3>
+                    <p class="text-gray-500">Status: Completed</p>
+                </div>
+                <div class="bg-gray-800 p-4 rounded-lg">
+                    <h3 class="text-lg font-semibold">Activity 2: Data Cleaning</h3>
+                    <p class="text-gray-500">Status: In Progress</p>
+                </div>
+                <div class="bg-gray-800 p-4 rounded-lg">
+                    <h3 class="text-lg font-semibold">Activity 3: Feature Engineering</h3>
+                    <p class="text-gray-500">Status: Not Started</p>
+                </div>
+                <!-- Add more activity items as needed -->
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+
+</html>

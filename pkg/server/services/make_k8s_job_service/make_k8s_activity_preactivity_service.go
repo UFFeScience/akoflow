@@ -20,7 +20,7 @@ func newMakeK8sActivityPreactivityService() MakeK8sActivityPreactivityService {
 }
 
 func (m *MakeK8sActivityPreactivityService) getDependencies() []workflow_activity_entity.WorkflowActivities {
-	return []workflow_activity_entity.WorkflowActivities{}
+	return m.service.GetDependencies()
 }
 
 func (m *MakeK8sActivityPreactivityService) isValidate() bool {

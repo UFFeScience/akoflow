@@ -21,6 +21,7 @@ type IConnectorDeployment interface {
 	CreateDeployment(deployment nfs_server_entity.Deployment) ResultCreateDeployment
 	UpdateDeployment(deployment nfs_server_entity.Deployment) ResultUpdateDeployment
 	DeleteDeployment(namespace, name string) ResultDeleteDeployment
+	GetDeployment(namespace, deploymentName string) ResultGetDeployment
 }
 
 func New() IConnectorDeployment {
@@ -60,6 +61,12 @@ type ResultUpdateDeployment struct {
 type ResultDeleteDeployment struct {
 	Success bool   `json:"success"`
 	Message string `json:"message"`
+}
+
+type ResultGetDeployment struct {
+	Success bool        `json:"success"`
+	Message string      `json:"message"`
+	Data    interface{} `json:"data,omitempty"`
 }
 
 func (c *ConnectorDeploymentK8s) ListDeployments(namespace string) ResultListDeployment {
@@ -111,6 +118,60 @@ func (c *ConnectorDeploymentK8s) ListDeployments(namespace string) ResultListDep
 	return ResultListDeployment{
 		Success: true,
 		Message: "Deployments listed successfully",
+		Data:    result,
+	}
+}
+
+func (c *ConnectorDeploymentK8s) GetDeployment(namespace, deploymentName string) ResultGetDeployment {
+	token := os.Getenv("K8S_API_SERVER_TOKEN")
+	host := os.Getenv("K8S_API_SERVER_HOST")
+
+	url := fmt.Sprintf("https://%s/apis/apps/v1/namespaces/%s/deployments/%s", host, namespace, deploymentName)
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		log.Printf("Error creating HTTP request: %s", err.Error())
+		return ResultGetDeployment{
+			Success: false,
+			Message: fmt.Sprintf("Error creating HTTP request: %s", err.Error()),
+		}
+	}
+
+	req.Header.Set("Authorization", "Bearer "+token)
+	req.Header.Set("Content-Type", "application/json")
+
+	resp, err := c.client.Do(req)
+	if err != nil {
+		log.Printf("Error making HTTP request: %s", err.Error())
+		return ResultGetDeployment{
+			Success: false,
+			Message: fmt.Sprintf("Error making HTTP request: %s", err.Error()),
+		}
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		body := new(bytes.Buffer)
+		body.ReadFrom(resp.Body)
+		log.Printf("Error getting Deployment: %s", body.String())
+		return ResultGetDeployment{
+			Success: false,
+			Message: fmt.Sprintf("Error getting Deployment: %s", body.String()),
+		}
+	}
+
+	var result interface{}
+	err = json.NewDecoder(resp.Body).Decode(&result)
+	if err != nil {
+		log.Printf("Error decoding response: %s", err.Error())
+		return ResultGetDeployment{
+			Success: false,
+			Message: fmt.Sprintf("Error decoding response: %s", err.Error()),
+		}
+	}
+
+	return ResultGetDeployment{
+		Success: true,
+		Message: "Deployment retrieved successfully",
 		Data:    result,
 	}
 }

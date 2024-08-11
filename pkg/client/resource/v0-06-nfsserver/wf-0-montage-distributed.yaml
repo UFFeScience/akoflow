@@ -11,34 +11,34 @@ spec:
     - name: "a"
       memoryLimit: 500Mi
       cpuLimit: 0.5
+      nodeSelector: "kubernetes.io/hostname=docker-desktop"
       run: |
         ls -la
         echo "Hello from a"
-        echo "Hello from a" >> a.txt
-        echo "Hello from a" >> /data/a.txt
+        echo "Hello from a" > a.txt
 
     - name: "b"
       memoryLimit: 500Mi
       cpuLimit: 0.5
+      nodeSelector: "kubernetes.io/hostname=docker-desktop"
       run: |
         ls -la
         echo "Hello from b"
-        echo "Hello from b" >> b.txt
-        echo "Hello from b" >> /data/a.txt
-        
+        echo "Hello from b" > b.txt
 
 
     - name: "c"
       memoryLimit: 500Mi
       cpuLimit: 0.5
+      nodeSelector: "kubernetes.io/hostname=docker-desktop"
       run: |
         echo "Hello from c"
         echo "Hello from c" > c.txt
-        
 
     - name: "d"
       memoryLimit: 500Mi
       cpuLimit: 0.5
+      nodeSelector: "kubernetes.io/hostname=docker-desktop"
       run: |
         ls -la
         sleep 300

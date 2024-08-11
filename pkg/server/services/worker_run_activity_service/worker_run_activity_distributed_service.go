@@ -54,18 +54,17 @@ func (r *WorkerRunActivityDistributedService) ApplyJob(activityID int) bool {
 }
 
 func (r *WorkerRunActivityDistributedService) HandleResourceToRunJob(activityID int) bool {
+	wf := r.GetWorkflow()
+	_ = r.GetWorkflowActivity()
 
-	if !r.createNfsService.SetWorkflowId(r.GetWorkflow().Id).Create() {
-		println("Error creating nfs")
-		return false
+	r.createNfsService.
+		SetNamespace(wf.Spec.Namespace).
+		SetWorkflow(wf)
+
+	if r.createNfsService.NfsServerIsCreated() {
+		return true
 	}
 
-	_, err := r.createPvcService.GetOrCreatePersistentVolumeClainByActivity(r.GetWorkflow(), r.GetWorkflowActivity(), r.namespace)
+	return r.createNfsService.Create()
 
-	if err != nil {
-		println("Error creating pvc")
-		return false
-	}
-
-	return true
 }

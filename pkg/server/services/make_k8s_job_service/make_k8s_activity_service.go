@@ -58,10 +58,17 @@ func (m *MakeK8sActivityService) makeContainerCommandActivity(wf workflow_entity
 }
 
 func (m *MakeK8sActivityService) setupCommandWorkdir(wf workflow_entity.Workflow, wfa workflow_activity_entity.WorkflowActivities) string {
-	command := "mkdir -p " + wf.Spec.MountPath + "/" + wfa.GetName() + "; \n"
+
+	workdir := wf.Spec.MountPath + "/" + wfa.GetName()
+
+	if wf.IsStoragePolicyDistributed() {
+		workdir = wf.Spec.MountPath
+	}
+
+	command := "mkdir -p " + workdir + "; \n"
 	command += "echo CURRENT_DIR: $(pwd); \n"
-	command += "mv -fvu /akoflow-wfa-shared/* " + wf.Spec.MountPath + "/" + wfa.GetName() + "; \n"
-	command += "cd " + wf.Spec.MountPath + "/" + wfa.GetName() + "; \n"
+	command += "mv -fvu /akoflow-wfa-shared/* " + workdir + "; \n"
+	command += "cd " + workdir + "; \n"
 
 	command += "printenv; \n"
 	return command
@@ -97,6 +104,11 @@ func (m *MakeK8sActivityService) addCommandToMonitorDiskSpecStorage(command stri
 //
 // the name of the activity should be lower case and without spaces, because it will be used as a directory name.
 func (m *MakeK8sActivityService) makeJobVolumeMountPath(wf workflow_entity.Workflow, wfa workflow_activity_entity.WorkflowActivities) string {
+
+	if wf.IsStoragePolicyDistributed() {
+		return wf.Spec.MountPath
+	}
+
 	return wf.Spec.MountPath + "/" + wfa.GetName()
 }
 
@@ -104,8 +116,14 @@ func (m *MakeK8sActivityService) makeJobVolumeMounts(wf workflow_entity.Workflow
 
 	volumesMounts := make([]k8s_job_entity.K8sJobVolumeMount, 0)
 
+	volumeName := wfa.GetVolumeName()
+
+	if wf.IsStoragePolicyDistributed() {
+		volumeName = wf.MakeWorkflowPersistentVolumeClaimName()
+	}
+
 	firstVolumeMount := k8s_job_entity.K8sJobVolumeMount{
-		Name:      wfa.GetVolumeName(),
+		Name:      volumeName,
 		MountPath: m.makeJobVolumeMountPath(wf, wfa),
 	}
 
@@ -184,13 +202,19 @@ func (m *MakeK8sActivityService) makeVolumesActivity(wf workflow_entity.Workflow
 	return volumes
 }
 
-func (m *MakeK8sActivityService) makeVolumeThatWillBeUsedByCurrentActivity(_ workflow_entity.Workflow, wfa workflow_activity_entity.WorkflowActivities) k8s_job_entity.K8sJobVolume {
+func (m *MakeK8sActivityService) makeVolumeThatWillBeUsedByCurrentActivity(wf workflow_entity.Workflow, wfa workflow_activity_entity.WorkflowActivities) k8s_job_entity.K8sJobVolume {
+	volumeName := wfa.GetVolumeName()
+
+	if wf.IsStoragePolicyDistributed() {
+		volumeName = wf.MakeWorkflowPersistentVolumeClaimName()
+	}
+
 	firstVolume := k8s_job_entity.K8sJobVolume{
-		Name: wfa.GetVolumeName(),
+		Name: volumeName,
 		PersistentVolumeClaim: struct {
 			ClaimName string `json:"claimName"`
 		}{
-			ClaimName: wfa.GetVolumeName(),
+			ClaimName: volumeName,
 		},
 	}
 

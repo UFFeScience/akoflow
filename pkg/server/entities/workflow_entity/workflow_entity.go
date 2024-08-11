@@ -123,6 +123,27 @@ func (w Workflow) GetNamespace() string {
 	return w.Spec.Namespace
 }
 
+func (w Workflow) GetStorageClassName() string {
+	return w.Spec.StorageClassName
+}
+
+func (w Workflow) GetStorageSize() string {
+	return w.Spec.StorageSize
+}
+
+func (w Workflow) GetStoragePolicyType() string {
+	return w.Spec.StoragePolicy.Type
+}
+
+func (w Workflow) GetMountPath() string {
+	return w.Spec.MountPath
+
+}
+
 func (w Workflow) MakeStorageClassNameDistributed() string {
 	return "akoflow-nfs-" + fmt.Sprintf("%d", w.Id)
+}
+
+func (w Workflow) MakeWorkflowPersistentVolumeClaimName() string {
+	return "wf-pvc-" + fmt.Sprintf("%d", w.Id) + "-nfs"
 }

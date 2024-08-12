@@ -32,7 +32,7 @@ func StartServer() {
 	http.HandleFunc("GET /akoflow-server/database-dump/", http_config.KernelHandler(storage_databasedump_handler.New().DatabaseDumpHandler))
 
 	http.HandleFunc("GET /akoflow-admin/", http_config.KernelHandler(akoflow_admin_handler.New().Home))
-	http.HandleFunc("GET /akoflow-admin/{workflowId}", http_config.KernelHandler(akoflow_admin_handler.New().WorkflowDetail))
+	http.HandleFunc("GET /akoflow-admin/workflows/{namespace}/{workflowId}/", http_config.KernelHandler(akoflow_admin_handler.New().WorkflowDetail))
 
 	//http.HandleFunc("GET /akoflow_admin_handler/api/workflows", ...)
 	//http.HandleFunc("GET /akoflow_admin_handler/api/workflows/{workflowId}", ...)

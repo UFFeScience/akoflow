@@ -3,55 +3,55 @@
 
 {{ template "head" }}
 
-<body class="bg-gray-900 text-white">
+<body class="bg-gray-100 text-black dark:bg-gray-900 dark:text-white">
 
 <div class="flex min-h-screen">
 
     {{ template "sidebar" }}
 
     <!-- Main Content -->
-    <div class="flex-1 p-8">
+    <div class="flex-1 p-8 bg-white dark:bg-gray-800 ml-64">
 
         {{ template "header" dict "title" "Home" }}
 
         <!-- Workflows List -->
         <div class="space-y-4">
             <!-- Workflow Item -->
-            <div class="bg-gray-800 p-4 rounded-lg flex justify-between items-center">
+            <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg flex justify-between items-center">
                 <div>
-                    <h2 class="text-lg font-semibold">MyApp / data-processing</h2>
-                    <p class="text-gray-500">Deployed from GitHub • Deployed 5m ago</p>
+                    <h2 class="text-lg font-semibold text-black dark:text-white">MyApp / data-processing</h2>
+                    <p class="text-gray-700 dark:text-gray-500">Deployed from GitHub • Deployed 5m ago</p>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <span class="text-green-400">🟢</span>
-                    <span class="text-gray-500">Production</span>
-                    <button class="bg-gray-700 p-2 rounded text-white">Preview</button>
+                    <span class="text-green-500 dark:text-green-400">🟢</span>
+                    <span class="text-gray-700 dark:text-gray-500">Production</span>
+                    <button class="bg-gray-300 dark:bg-gray-700 p-2 rounded text-black dark:text-white">Preview</button>
                 </div>
             </div>
 
             <!-- Repeat for more workflows -->
-            <div class="bg-gray-800 p-4 rounded-lg flex justify-between items-center">
+            <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg flex justify-between items-center">
                 <div>
-                    <h2 class="text-lg font-semibold">MyApp / ml-training</h2>
-                    <p class="text-gray-500">Deployed from GitHub • Deployed 15m ago</p>
+                    <h2 class="text-lg font-semibold text-black dark:text-white">MyApp / ml-training</h2>
+                    <p class="text-gray-700 dark:text-gray-500">Deployed from GitHub • Deployed 15m ago</p>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <span class="text-green-400">🟢</span>
-                    <span class="text-gray-500">Production</span>
-                    <button class="bg-gray-700 p-2 rounded text-white">Preview</button>
+                    <span class="text-green-500 dark:text-green-400">🟢</span>
+                    <span class="text-gray-700 dark:text-gray-500">Production</span>
+                    <button class="bg-gray-300 dark:bg-gray-700 p-2 rounded text-black dark:text-white">Preview</button>
                 </div>
             </div>
 
             <!-- Example failed workflow -->
-            <div class="bg-gray-800 p-4 rounded-lg flex justify-between items-center">
+            <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg flex justify-between items-center">
                 <div>
-                    <h2 class="text-lg font-semibold">MyApp / data-cleanup</h2>
-                    <p class="text-gray-500">Failed to deploy • 2m ago</p>
+                    <h2 class="text-lg font-semibold text-black dark:text-white">MyApp / data-cleanup</h2>
+                    <p class="text-gray-700 dark:text-gray-500">Failed to deploy • 2m ago</p>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <span class="text-red-400">🔴</span>
-                    <span class="text-gray-500">Error</span>
-                    <button class="bg-gray-700 p-2 rounded text-white">Retry</button>
+                    <span class="text-red-500 dark:text-red-400">🔴</span>
+                    <span class="text-gray-700 dark:text-gray-500">Error</span>
+                    <button class="bg-gray-300 dark:bg-gray-700 p-2 rounded text-black dark:text-white">Retry</button>
                 </div>
             </div>
 

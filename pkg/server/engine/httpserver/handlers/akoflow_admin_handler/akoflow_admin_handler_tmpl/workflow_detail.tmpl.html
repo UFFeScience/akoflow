@@ -3,50 +3,370 @@
 
 {{ template "head" }}
 
-<body class="bg-gray-900 text-white">
+<style>
+    #graphView {
+        width: 100%;
+        height:480px;
+    }
+</style>
 
-<div class="flex min-h-screen">
-    <!-- Sidebar -->
-    {{ template "sidebar" }}
+<body class="bg-gray-100 text-black dark:bg-gray-900 dark:text-white">
 
-    <!-- Main Content -->
-    <div class="flex-1 p-8">
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        {{ template "sidebar" }}
 
-        {{ template "header" dict "title" "Workflow Detail" }}
+        <!-- Main Content -->
+        <div class="flex-1 p-8 bg-white dark:bg-gray-800 ml-64">
 
-        <!-- Graph Panel -->
-        <div class="w-full bg-gray-800 p-6 rounded-lg mb-8">
-            <h2 class="text-2xl font-bold mb-4 text-center">Activity Relationship Graph</h2>
-            <div class="bg-gray-700 p-6 rounded-lg flex items-center justify-center">
-                <!-- Graph Visualization Placeholder -->
-                <div class="w-full h-96 flex items-center justify-center text-gray-400">
-                    [Graph Visualization Here]
+            {{ template "header" dict "title" "Workflow Detail" }}
+
+            <div
+                class="bg-gray-100 dark:bg-gray-700 rounded-lg p-4 flex justify-between items-center space-x-6 mb-8">
+                <div class="text-sm text-gray-500 dark:text-gray-400">
+                    <p>Workflow Details</p>
+                    <div class="mt-2">
+                        <p class="text-gray-900 dark:text-white">Type: <span class="font-medium">Distributed</span></p>
+                        <p class="text-gray-900 dark:text-white">Disk Type: <span class="font-medium">SSD</span></p>
+                        <p class="text-gray-900 dark:text-white">Activities: <span class="font-medium">15</span></p>
+                    </div>
+                </div>
+
+                <div class="text-sm text-gray-500 dark:text-gray-400">
+                    <p class="font-semibold text-gray-900 dark:text-white">Execution Time</p>
+                    <p class="mt-1">7m 42s</p>
+                </div>
+
+                <div class="text-sm text-gray-500 dark:text-gray-400">
+                    <p class="font-semibold text-gray-900 dark:text-white">Start Date</p>
+                    <p class="mt-1">2024-08-11 14:32</p>
+                </div>
+
+                <div class="text-sm text-gray-500 dark:text-gray-400">
+                    <p class="font-semibold text-gray-900 dark:text-white">End Date</p>
+                    <p class="mt-1">2024-08-11 14:40</p>
+                </div>
+
+                <div class="text-sm text-gray-500 dark:text-gray-400">
+                    <p class="font-semibold text-gray-900 dark:text-white">Longest Activity</p>
+                    <p class="mt-1">Data Cleaning - 3m 20s</p>
+                </div>
+
+                <div class="text-sm text-gray-500 dark:text-gray-400">
+                    <p class="font-semibold text-gray-900 dark:text-white">Disk Usage</p>
+                    <p class="mt-1">1.2 GB</p>
+                </div>
+
+                <div class="text-sm text-gray-500 dark:text-gray-400">
+                    <p class="font-semibold text-gray-900 dark:text-white">Workflow Type</p>
+                    <p class="mt-1">Standalone</p>
                 </div>
             </div>
-        </div>
 
-        <!-- Activity List -->
-        <div>
-            <h2 class="text-2xl font-bold mb-4">Activities</h2>
-            <div class="space-y-4">
-                <!-- Activity Item -->
-                <div class="bg-gray-800 p-4 rounded-lg">
-                    <h3 class="text-lg font-semibold">Activity 1: Data Ingestion</h3>
-                    <p class="text-gray-500">Status: Completed</p>
+
+            <!-- Graph Panel -->
+            <div class="w-full p-6 rounded-lg mb-8 bg-gray-100 dark:bg-gray-700">
+                <p class="text-gray-900 dark:text-white"><span class="font-medium">wf-montage-050d.yaml</span></p>
+                <p class="text-gray-500 dark:text-gray-400">Workflow ID: <span class="font-medium">#001</span></p>
+                
+
+                <div class="p-6 rounded-lg flex items-center justify-center bg-gray-50 dark:bg-gray-800 mt-4">
+                    <!-- Graph Visualization Placeholder -->
+                    <div id="graphView"
+                        class="w-full h-96 flex items-center justify-center text-gray-600 dark:text-gray-400">
+                        [Graph Visualization Here]
+                    </div>
                 </div>
-                <div class="bg-gray-800 p-4 rounded-lg">
-                    <h3 class="text-lg font-semibold">Activity 2: Data Cleaning</h3>
-                    <p class="text-gray-500">Status: In Progress</p>
+            </div>
+
+            <!-- Activity List -->
+            <div>
+                <h2 class="text-2xl font-bold mb-4 dark:text-white light:text-black">Activities</h2>
+                <div class="space-y-4">
+                    <!-- Activity Item -->
+                    <div class="p-4 rounded-lg bg-gray-50 dark:bg-gray-700">
+                        <h3 class="text-lg font-semibold dark:text-white light:text-black">Activity 1: Data Ingestion
+                        </h3>
+                        <p class="text-gray-700 dark:text-gray-500">Status: Completed</p>
+                    </div>
+                    <div class="p-4 rounded-lg bg-gray-50 dark:bg-gray-700">
+                        <h3 class="text-lg font-semibold dark:text-white light:text-black">Activity 2: Data Cleaning
+                        </h3>
+                        <p class="text-gray-700 dark:text-gray-500">Status: In Progress</p>
+                    </div>
+                    <div class="p-4 rounded-lg bg-gray-50 dark:bg-gray-700">
+                        <h3 class="text-lg font-semibold dark:text-white light:text-black">Activity 3: Feature
+                            Engineering</h3>
+                        <p class="text-gray-700 dark:text-gray-500">Status: Not Started</p>
+                    </div>
+                    <!-- Add more activity items as needed -->
                 </div>
-                <div class="bg-gray-800 p-4 rounded-lg">
-                    <h3 class="text-lg font-semibold">Activity 3: Feature Engineering</h3>
-                    <p class="text-gray-500">Status: Not Started</p>
-                </div>
-                <!-- Add more activity items as needed -->
             </div>
         </div>
     </div>
-</div>
+
+
+    <script type="text/javascript">
+        // create an array with nodes
+
+        const makeComponent = (name = "name", duration = 1000, status = "success") => `
+        data:image/svg+xml;charset=utf-8,${encodeURIComponent(
+            `
+                <svg xmlns="http://www.w3.org/2000/svg" width="300" height="60">
+                  <rect x="0" y="0" rx="8" ry="8" width="300" height="60" style="fill:#ffffff;stroke:#e0e0e0;stroke-width:1;" />
+                  <circle cx="20" cy="30" r="6" fill="${status === "success" ? "#00ff00" : "#ff0000"}" />
+                  <text x="40" y="35" font-family="Arial" font-size="16" fill="#000000">${name}</text>
+                  <text x="240" y="35" font-family="Arial" font-size="16" fill="#757575">${duration}ms</text>
+                </svg>
+                `
+        )
+            }
+
+    `
+
+        var nodes = new vis.DataSet([
+            { id: "mprojectid0000001", label: "mprojectid0000001", image: makeComponent("mprojectid0000001"), shape: "image" },
+            { id: "mprojectid0000002", label: "mprojectid0000002", image: makeComponent("mprojectid0000002"), shape: "image" },
+            { id: "mprojectid0000003", label: "mprojectid0000003", image: makeComponent("mprojectid0000003"), shape: "image" },
+            { id: "mprojectid0000004", label: "mprojectid0000004", image: makeComponent("mprojectid0000004"), shape: "image" },
+            { id: "mdifffitid0000005", label: "mdifffitid0000005", image: makeComponent("mdifffitid0000005"), shape: "image" },
+            { id: "mdifffitid0000006", label: "mdifffitid0000006", image: makeComponent("mdifffitid0000006"), shape: "image" },
+            { id: "mdifffitid0000007", label: "mdifffitid0000007", image: makeComponent("mdifffitid0000007"), shape: "image" },
+            { id: "mdifffitid0000008", label: "mdifffitid0000008", image: makeComponent("mdifffitid0000008"), shape: "image" },
+            { id: "mdifffitid0000009", label: "mdifffitid0000009", image: makeComponent("mdifffitid0000009"), shape: "image" },
+            { id: "mdifffitid0000010", label: "mdifffitid0000010", image: makeComponent("mdifffitid0000010"), shape: "image" },
+            { id: "mconcatfitid0000011", label: "mconcatfitid0000011", image: makeComponent("mconcatfitid0000011"), shape: "image" },
+            { id: "mbgmodelid0000012", label: "mbgmodelid0000012", image: makeComponent("mbgmodelid0000012"), shape: "image" },
+            { id: "mbackgroundid0000013", label: "mbackgroundid0000013", image: makeComponent("mbackgroundid0000013"), shape: "image" },
+            { id: "mbackgroundid0000014", label: "mbackgroundid0000014", image: makeComponent("mbackgroundid0000014"), shape: "image" },
+            { id: "mbackgroundid0000015", label: "mbackgroundid0000015", image: makeComponent("mbackgroundid0000015"), shape: "image" },
+            { id: "mbackgroundid0000016", label: "mbackgroundid0000016", image: makeComponent("mbackgroundid0000016"), shape: "image" },
+            { id: "mimgtblid0000017", label: "mimgtblid0000017", image: makeComponent("mimgtblid0000017"), shape: "image" },
+            { id: "maddid0000018", label: "maddid0000018", image: makeComponent("maddid0000018"), shape: "image" },
+            { id: "mviewerid0000019", label: "mviewerid0000019", image: makeComponent("mviewerid0000019"), shape: "image" },
+            { id: "mprojectid0000020", label: "mprojectid0000020", image: makeComponent("mprojectid0000020"), shape: "image" },
+            { id: "mprojectid0000021", label: "mprojectid0000021", image: makeComponent("mprojectid0000021"), shape: "image" },
+            { id: "mprojectid0000022", label: "mprojectid0000022", image: makeComponent("mprojectid0000022"), shape: "image" },
+            { id: "mprojectid0000023", label: "mprojectid0000023", image: makeComponent("mprojectid0000023"), shape: "image" },
+            { id: "mdifffitid0000024", label: "mdifffitid0000024", image: makeComponent("mdifffitid0000024"), shape: "image" },
+            { id: "mdifffitid0000025", label: "mdifffitid0000025", image: makeComponent("mdifffitid0000025"), shape: "image" },
+            { id: "mdifffitid0000026", label: "mdifffitid0000026", image: makeComponent("mdifffitid0000026"), shape: "image" },
+            { id: "mdifffitid0000027", label: "mdifffitid0000027", image: makeComponent("mdifffitid0000027"), shape: "image" },
+            { id: "mdifffitid0000028", label: "mdifffitid0000028", image: makeComponent("mdifffitid0000028"), shape: "image" },
+            { id: "mdifffitid0000029", label: "mdifffitid0000029", image: makeComponent("mdifffitid0000029"), shape: "image" },
+            { id: "mconcatfitid0000030", label: "mconcatfitid0000030", image: makeComponent("mconcatfitid0000030"), shape: "image" },
+            { id: "mbgmodelid0000031", label: "mbgmodelid0000031", image: makeComponent("mbgmodelid0000031"), shape: "image" },
+            { id: "mbackgroundid0000032", label: "mbackgroundid0000032", image: makeComponent("mbackgroundid0000032"), shape: "image" },
+            { id: "mbackgroundid0000033", label: "mbackgroundid0000033", image: makeComponent("mbackgroundid0000033"), shape: "image" },
+            { id: "mbackgroundid0000034", label: "mbackgroundid0000034", image: makeComponent("mbackgroundid0000034"), shape: "image" },
+            { id: "mbackgroundid0000035", label: "mbackgroundid0000035", image: makeComponent("mbackgroundid0000035"), shape: "image" },
+            { id: "mimgtblid0000036", label: "mimgtblid0000036", image: makeComponent("mimgtblid0000036"), shape: "image" },
+            { id: "maddid0000037", label: "maddid0000037", image: makeComponent("maddid0000037"), shape: "image" },
+            { id: "mviewerid0000038", label: "mviewerid0000038", image: makeComponent("mviewerid0000038"), shape: "image" },
+            { id: "mprojectid0000039", label: "mprojectid0000039", image: makeComponent("mprojectid0000039"), shape: "image" },
+            { id: "mprojectid0000040", label: "mprojectid0000040", image: makeComponent("mprojectid0000040"), shape: "image" },
+            { id: "mprojectid0000041", label: "mprojectid0000041", image: makeComponent("mprojectid0000041"), shape: "image" },
+            { id: "mprojectid0000042", label: "mprojectid0000042", image: makeComponent("mprojectid0000042"), shape: "image" },
+            { id: "mdifffitid0000043", label: "mdifffitid0000043", image: makeComponent("mdifffitid0000043"), shape: "image" },
+            { id: "mdifffitid0000044", label: "mdifffitid0000044", image: makeComponent("mdifffitid0000044"), shape: "image" },
+            { id: "mdifffitid0000045", label: "mdifffitid0000045", image: makeComponent("mdifffitid0000045"), shape: "image" },
+            { id: "mdifffitid0000046", label: "mdifffitid0000046", image: makeComponent("mdifffitid0000046"), shape: "image" },
+            { id: "mdifffitid0000047", label: "mdifffitid0000047", image: makeComponent("mdifffitid0000047"), shape: "image" },
+            { id: "mdifffitid0000048", label: "mdifffitid0000048", image: makeComponent("mdifffitid0000048"), shape: "image" },
+            { id: "mconcatfitid0000049", label: "mconcatfitid0000049", image: makeComponent("mconcatfitid0000049"), shape: "image" },
+            { id: "mbgmodelid0000050", label: "mbgmodelid0000050", image: makeComponent("mbgmodelid0000050"), shape: "image" },
+            { id: "mbackgroundid0000051", label: "mbackgroundid0000051", image: makeComponent("mbackgroundid0000051"), shape: "image" },
+            { id: "mbackgroundid0000052", label: "mbackgroundid0000052", image: makeComponent("mbackgroundid0000052"), shape: "image" },
+            { id: "mbackgroundid0000053", label: "mbackgroundid0000053", image: makeComponent("mbackgroundid0000053"), shape: "image" },
+            { id: "mbackgroundid0000054", label: "mbackgroundid0000054", image: makeComponent("mbackgroundid0000054"), shape: "image" },
+            { id: "mimgtblid0000055", label: "mimgtblid0000055", image: makeComponent("mimgtblid0000055"), shape: "image" },
+            { id: "maddid0000056", label: "maddid0000056", image: makeComponent("maddid0000056"), shape: "image" },
+            { id: "mviewerid0000057", label: "mviewerid0000057", image: makeComponent("mviewerid0000057"), shape: "image" },
+            { id: "mviewerid0000058", label: "mviewerid0000058", image: makeComponent("mviewerid0000058"), shape: "image" }
+        ]);
+
+
+        // create an array with edges
+        var edges = new vis.DataSet([
+            { from: "mdifffitid0000005", to: "mprojectid0000001", arrows: "to" },
+            { from: "mdifffitid0000005", to: "mprojectid0000002", arrows: "to" },
+            { from: "mdifffitid0000006", to: "mprojectid0000001", arrows: "to" },
+            { from: "mdifffitid0000006", to: "mprojectid0000003", arrows: "to" },
+            { from: "mdifffitid0000007", to: "mprojectid0000001", arrows: "to" },
+            { from: "mdifffitid0000007", to: "mprojectid0000004", arrows: "to" },
+            { from: "mdifffitid0000008", to: "mprojectid0000002", arrows: "to" },
+            { from: "mdifffitid0000008", to: "mprojectid0000003", arrows: "to" },
+            { from: "mdifffitid0000009", to: "mprojectid0000002", arrows: "to" },
+            { from: "mdifffitid0000009", to: "mprojectid0000004", arrows: "to" },
+            { from: "mdifffitid0000010", to: "mprojectid0000003", arrows: "to" },
+            { from: "mdifffitid0000010", to: "mprojectid0000004", arrows: "to" },
+            { from: "mconcatfitid0000011", to: "mdifffitid0000005", arrows: "to" },
+            { from: "mconcatfitid0000011", to: "mdifffitid0000006", arrows: "to" },
+            { from: "mconcatfitid0000011", to: "mdifffitid0000007", arrows: "to" },
+            { from: "mconcatfitid0000011", to: "mdifffitid0000008", arrows: "to" },
+            { from: "mconcatfitid0000011", to: "mdifffitid0000009", arrows: "to" },
+            { from: "mconcatfitid0000011", to: "mdifffitid0000010", arrows: "to" },
+            { from: "mbgmodelid0000012", to: "mconcatfitid0000011", arrows: "to" },
+            { from: "mbackgroundid0000013", to: "mbgmodelid0000012", arrows: "to" },
+            { from: "mbackgroundid0000013", to: "mprojectid0000001", arrows: "to" },
+            { from: "mbackgroundid0000014", to: "mbgmodelid0000012", arrows: "to" },
+            { from: "mbackgroundid0000014", to: "mprojectid0000002", arrows: "to" },
+            { from: "mbackgroundid0000015", to: "mbgmodelid0000012", arrows: "to" },
+            { from: "mbackgroundid0000015", to: "mprojectid0000003", arrows: "to" },
+            { from: "mbackgroundid0000016", to: "mbgmodelid0000012", arrows: "to" },
+            { from: "mbackgroundid0000016", to: "mprojectid0000004", arrows: "to" },
+            { from: "mimgtblid0000017", to: "mbackgroundid0000013", arrows: "to" },
+            { from: "mimgtblid0000017", to: "mbackgroundid0000014", arrows: "to" },
+            { from: "mimgtblid0000017", to: "mbackgroundid0000015", arrows: "to" },
+            { from: "mimgtblid0000017", to: "mbackgroundid0000016", arrows: "to" },
+            { from: "maddid0000018", to: "mimgtblid0000017", arrows: "to" },
+            { from: "mviewerid0000019", to: "maddid0000018", arrows: "to" },
+            { from: "mdifffitid0000024", to: "mprojectid0000020", arrows: "to" },
+            { from: "mdifffitid0000024", to: "mprojectid0000021", arrows: "to" },
+            { from: "mdifffitid0000025", to: "mprojectid0000020", arrows: "to" },
+            { from: "mdifffitid0000025", to: "mprojectid0000022", arrows: "to" },
+            { from: "mdifffitid0000026", to: "mprojectid0000020", arrows: "to" },
+            { from: "mdifffitid0000026", to: "mprojectid0000023", arrows: "to" },
+            { from: "mdifffitid0000027", to: "mprojectid0000021", arrows: "to" },
+            { from: "mdifffitid0000027", to: "mprojectid0000022", arrows: "to" },
+            { from: "mdifffitid0000028", to: "mprojectid0000021", arrows: "to" },
+            { from: "mdifffitid0000028", to: "mprojectid0000023", arrows: "to" },
+            { from: "mdifffitid0000029", to: "mprojectid0000022", arrows: "to" },
+            { from: "mdifffitid0000029", to: "mprojectid0000023", arrows: "to" },
+            { from: "mconcatfitid0000030", to: "mdifffitid0000024", arrows: "to" },
+            { from: "mconcatfitid0000030", to: "mdifffitid0000025", arrows: "to" },
+            { from: "mconcatfitid0000030", to: "mdifffitid0000026", arrows: "to" },
+            { from: "mconcatfitid0000030", to: "mdifffitid0000027", arrows: "to" },
+            { from: "mconcatfitid0000030", to: "mdifffitid0000028", arrows: "to" },
+            { from: "mconcatfitid0000030", to: "mdifffitid0000029", arrows: "to" },
+            { from: "mbgmodelid0000031", to: "mconcatfitid0000030", arrows: "to" },
+            { from: "mbackgroundid0000032", to: "mbgmodelid0000031", arrows: "to" },
+            { from: "mbackgroundid0000032", to: "mprojectid0000020", arrows: "to" },
+            { from: "mbackgroundid0000033", to: "mbgmodelid0000031", arrows: "to" },
+            { from: "mbackgroundid0000033", to: "mprojectid0000021", arrows: "to" },
+            { from: "mbackgroundid0000034", to: "mbgmodelid0000031", arrows: "to" },
+            { from: "mbackgroundid0000034", to: "mprojectid0000022", arrows: "to" },
+            { from: "mbackgroundid0000035", to: "mbgmodelid0000031", arrows: "to" },
+            { from: "mbackgroundid0000035", to: "mprojectid0000023", arrows: "to" },
+            { from: "mimgtblid0000036", to: "mbackgroundid0000032", arrows: "to" },
+            { from: "mimgtblid0000036", to: "mbackgroundid0000033", arrows: "to" },
+            { from: "mimgtblid0000036", to: "mbackgroundid0000034", arrows: "to" },
+            { from: "mimgtblid0000036", to: "mbackgroundid0000035", arrows: "to" },
+            { from: "maddid0000037", to: "mimgtblid0000036", arrows: "to" },
+            { from: "mviewerid0000038", to: "maddid0000037", arrows: "to" },
+            { from: "mdifffitid0000043", to: "mprojectid0000039", arrows: "to" },
+            { from: "mdifffitid0000043", to: "mprojectid0000040", arrows: "to" },
+            { from: "mdifffitid0000044", to: "mprojectid0000039", arrows: "to" },
+            { from: "mdifffitid0000044", to: "mprojectid0000041", arrows: "to" },
+            { from: "mdifffitid0000045", to: "mprojectid0000039", arrows: "to" },
+            { from: "mdifffitid0000045", to: "mprojectid0000042", arrows: "to" },
+            { from: "mdifffitid0000046", to: "mprojectid0000040", arrows: "to" },
+            { from: "mdifffitid0000046", to: "mprojectid0000041", arrows: "to" },
+            { from: "mdifffitid0000047", to: "mprojectid0000040", arrows: "to" },
+            { from: "mdifffitid0000047", to: "mprojectid0000042", arrows: "to" },
+            { from: "mdifffitid0000048", to: "mprojectid0000041", arrows: "to" },
+            { from: "mdifffitid0000048", to: "mprojectid0000042", arrows: "to" },
+            { from: "mconcatfitid0000049", to: "mdifffitid0000043", arrows: "to" },
+            { from: "mconcatfitid0000049", to: "mdifffitid0000044", arrows: "to" },
+            { from: "mconcatfitid0000049", to: "mdifffitid0000045", arrows: "to" },
+            { from: "mconcatfitid0000049", to: "mdifffitid0000046", arrows: "to" },
+            { from: "mconcatfitid0000049", to: "mdifffitid0000047", arrows: "to" },
+            { from: "mconcatfitid0000049", to: "mdifffitid0000048", arrows: "to" },
+            { from: "mbgmodelid0000050", to: "mconcatfitid0000049", arrows: "to" },
+            { from: "mbackgroundid0000051", to: "mbgmodelid0000050", arrows: "to" },
+            { from: "mbackgroundid0000051", to: "mprojectid0000039", arrows: "to" },
+            { from: "mbackgroundid0000052", to: "mbgmodelid0000050", arrows: "to" },
+            { from: "mbackgroundid0000052", to: "mprojectid0000040", arrows: "to" },
+            { from: "mbackgroundid0000053", to: "mbgmodelid0000050", arrows: "to" },
+            { from: "mbackgroundid0000053", to: "mprojectid0000041", arrows: "to" },
+            { from: "mbackgroundid0000054", to: "mbgmodelid0000050", arrows: "to" },
+            { from: "mbackgroundid0000054", to: "mprojectid0000042", arrows: "to" },
+            { from: "mimgtblid0000055", to: "mbackgroundid0000051", arrows: "to" },
+            { from: "mimgtblid0000055", to: "mbackgroundid0000052", arrows: "to" },
+            { from: "mimgtblid0000055", to: "mbackgroundid0000053", arrows: "to" },
+            { from: "mimgtblid0000055", to: "mbackgroundid0000054", arrows: "to" },
+            { from: "maddid0000056", to: "mimgtblid0000055", arrows: "to" },
+            { from: "mviewerid0000057", to: "maddid0000056", arrows: "to" },
+            { from: "mviewerid0000058", to: "maddid0000056", arrows: "to" },
+        ]);
+
+        // create a network
+        var container = document.getElementById("graphView");
+        var data = {
+            nodes: nodes,
+            edges: edges,
+        };
+
+        var options = {
+            layout: {
+                hierarchical: {
+                    direction: "RL", // Right -> Left
+                    sortMethod: "directed", // Order nodes based on the direction of edges
+                    nodeSpacing: 100, // Aumenta o espaçamento entre os nós
+                    levelSeparation: 500, // Aumenta a separação entre os níveis hierárquicos
+                    treeSpacing: 100, // Aumenta o espaçamento entre árvores independentes
+
+                },
+            },
+            edges: {
+                smooth: true,
+            },
+            physics: {
+                enabled: false, // Ativa a física para posicionar os nós
+            },
+            nodes: {
+                font: {
+                    color: '#2c3e50',
+                },
+            },
+        };
+
+
+        // handle click events
+
+
+
+        var network = new vis.Network(container, data, options);
+
+        network.on("click", function (params) {
+            params.event = "[original event]";
+            console.log(params);
+            if (params.nodes.length > 0) {
+                console.log("Node Selected: ", nodes.get(params.nodes[0]));
+            }
+
+            focusById(params.nodes[0]);
+
+        });
+
+
+        function focusById(nodeId) {
+            var options = {
+                // position: {x:positionx,y:positiony}, // this is not relevant when focusing on nodes
+                scale: 1,
+                offset: { x: 0, y: 0 },
+                animation: {
+                    duration: 1000,
+                    easingFunction: "easeInOutQuad",
+                },
+            };
+            network.focus(nodeId, options);
+        }
+   
+        
+
+        window.onload = function () {
+            setTimeout(() => {
+                focusById("mprojectid0000001");
+            }, 1000);
+        }
+   </script>
+
+
+
+
+
+
 
 </body>
 

@@ -1,22 +1,43 @@
 {{ define "sidebar" }}
-<aside class="w-64 bg-gray-800">
+<aside class="w-64 bg-gray-100 dark:bg-gray-700 fixed h-full">
     <div class="p-4">
-        <div class="text-2xl font-bold mb-8">AkôFlow Admin</div>
+        <div class="text-2xl font-bold mb-8 dark:text-white text-black">AkôFlow Admin</div>
         <nav class="space-y-4">
-            <a href="#" class="flex items-center text-gray-400 hover:text-white">
+            <a href="#" class="flex items-center text-gray-700 dark:text-gray-400 hover:text-black dark:hover:text-white">
                 <span class="mr-4">📁</span>
                 Workflows
             </a>
-            <a href="#" class="flex items-center text-gray-400 hover:text-white">
+            <a href="#" class="flex items-center text-gray-700 dark:text-gray-400 hover:text-black dark:hover:text-white">
                 <span class="mr-4">📊</span>
                 Activity
             </a>
-
-            <a href="#" class="flex items-center text-gray-400 hover:text-white">
+            <a href="#" class="flex items-center text-gray-700 dark:text-gray-400 hover:text-black dark:hover:text-white">
                 <span class="mr-4">⚙️</span>
                 Settings
             </a>
         </nav>
     </div>
+
+    <!-- Botão de Alternância de Tema -->
+    <div class="absolute bottom-4 left-4 cursor-pointer" onclick="toggleTheme()">
+        <svg id="theme-icon" xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-gray-700 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path id="theme-icon-path" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m8.485-10.485h-1m-14.97 0h-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+    </div>
 </aside>
+
+
+<script>
+    function toggleTheme() {
+        const body = document.body;
+        if (body.classList.contains('dark')) {
+            body.classList.remove('dark');
+            body.classList.add('light');
+        } else {
+            body.classList.remove('light');
+            body.classList.add('dark');
+        }
+    }
+
+</script>
 {{ end }}

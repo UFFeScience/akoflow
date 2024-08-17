@@ -39,7 +39,8 @@ type appContainerTemplateRenderer struct {
 }
 
 type appContainerHttpHelper struct {
-	WriteJson func(w http.ResponseWriter, data interface{})
+	WriteJson   func(w http.ResponseWriter, data interface{})
+	GetUrlParam func(r *http.Request, key string) string
 }
 
 func MakeAppContainer() AppContainer {
@@ -72,7 +73,8 @@ func MakeAppContainer() AppContainer {
 			RenderViewProvider: renderViewprovider,
 		},
 		HttpHelper: appContainerHttpHelper{
-			WriteJson: http_helper.WriteJson,
+			WriteJson:   http_helper.WriteJson,
+			GetUrlParam: http_helper.GetUrlPathParam,
 		},
 	}
 }

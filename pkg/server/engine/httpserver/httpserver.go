@@ -39,7 +39,7 @@ func StartServer() {
 	//http.HandleFunc("POST /akoflow-api/workflows/", http_config.KernelHandler(workflow_api_handler.New().CreateWorkflow))
 	//http.HandleFunc("POST /akoflow-api/validate-workflow/", http_config.KernelHandler(workflow_api_handler.New().ValidateWorkflow))
 	//
-	//http.HandleFunc("GET /akoflow-api/workflows/{workflowId}/", http_config.KernelHandler(workflow_api_handler.New().GetWorkflow))
+	http.HandleFunc("GET /akoflow-api/workflows/{workflowId}/", http_config.KernelHandler(workflow_api_handler.New().GetWorkflow))
 	//http.HandleFunc("GET /akoflow-api/workflows/{workflowId}/activities/", http_config.KernelHandler(workflow_api_handler.New().ListAllActivities))
 	//http.HandleFunc("GET /akoflow-api/workflows/{workflowId}/activities/{activityId}/", http_config.KernelHandler(workflow_api_handler.New().GetActivity))
 	//http.HandleFunc("GET /akoflow-api/workflows/{workflowId}/activities/{activityId}/logs/", http_config.KernelHandler(workflow_api_handler.New().ListAllLogs))

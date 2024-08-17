@@ -1,6 +1,7 @@
 package config
 
 import (
+	"github.com/ovvesley/akoflow/pkg/server/config/http_helper"
 	"github.com/ovvesley/akoflow/pkg/server/config/http_render_view"
 	"github.com/ovvesley/akoflow/pkg/server/connector"
 	"github.com/ovvesley/akoflow/pkg/server/repository/activity_repository"
@@ -8,6 +9,7 @@ import (
 	"github.com/ovvesley/akoflow/pkg/server/repository/metrics_repository"
 	"github.com/ovvesley/akoflow/pkg/server/repository/storages_repository"
 	"github.com/ovvesley/akoflow/pkg/server/repository/workflow_repository"
+	"net/http"
 )
 
 const DEFAULT_NAMESPACE = "akoflow"
@@ -17,6 +19,7 @@ type AppContainer struct {
 	Connector        appContainerConnector
 	DefaultNamespace string
 	TemplateRenderer appContainerTemplateRenderer
+	HttpHelper       appContainerHttpHelper
 }
 
 type appContainerRepository struct {
@@ -33,6 +36,10 @@ type appContainerConnector struct {
 
 type appContainerTemplateRenderer struct {
 	RenderViewProvider http_render_view.HttpRenderViewProvider
+}
+
+type appContainerHttpHelper struct {
+	WriteJson func(w http.ResponseWriter, data interface{})
 }
 
 func MakeAppContainer() AppContainer {
@@ -63,6 +70,9 @@ func MakeAppContainer() AppContainer {
 		},
 		TemplateRenderer: appContainerTemplateRenderer{
 			RenderViewProvider: renderViewprovider,
+		},
+		HttpHelper: appContainerHttpHelper{
+			WriteJson: http_helper.WriteJson,
 		},
 	}
 }

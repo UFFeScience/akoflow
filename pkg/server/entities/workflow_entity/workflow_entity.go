@@ -8,9 +8,10 @@ import (
 )
 
 type Workflow struct {
-	Name string       `yaml:"name"`
-	Spec WorkflowSpec `yaml:"spec"`
-	Id   int
+	Name   string       `yaml:"name"`
+	Spec   WorkflowSpec `yaml:"spec"`
+	Id     int
+	Status int `yaml:"status"`
 }
 
 const MODE_DISTRIBUTED = "distributed"
@@ -41,6 +42,7 @@ type WorkflowDatabase struct {
 type WorkflowNewParams struct {
 	WorkflowBase64 string
 	Id             *int
+	Status         *int
 	Activities     []workflow_activity_entity.WorkflowActivityDatabase
 }
 
@@ -58,6 +60,10 @@ func New(params WorkflowNewParams) Workflow {
 
 	if params.Id != nil {
 		yamlWorkflow.Id = *params.Id
+	}
+
+	if params.Status != nil {
+		yamlWorkflow.Status = *params.Status
 	}
 
 	if err != nil {
@@ -88,6 +94,7 @@ func DatabaseToWorkflow(params ParamsDatabaseToWorkflow) Workflow {
 	return New(WorkflowNewParams{
 		WorkflowBase64: params.WorkflowDatabase.RawWorkflow,
 		Id:             &params.WorkflowDatabase.ID,
+		Status:         &params.WorkflowDatabase.Status,
 	})
 }
 

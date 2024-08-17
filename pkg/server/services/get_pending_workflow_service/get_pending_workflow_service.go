@@ -5,6 +5,7 @@ import (
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
 	"github.com/ovvesley/akoflow/pkg/server/repository/activity_repository"
 	"github.com/ovvesley/akoflow/pkg/server/repository/workflow_repository"
+	"github.com/ovvesley/akoflow/pkg/server/utils"
 )
 
 type GetPendingWorkflowService struct {
@@ -36,33 +37,13 @@ func (g *GetPendingWorkflowService) retriveWorkflowsOnDatabase() ([]workflow_ent
 		return nil, err
 	}
 
-	ids := getIds(workflows)
+	ids := utils.GetIds(workflows)
 	mapWfActivities, err := g.activityRepository.GetActivitiesByWorkflowIds(ids)
 
 	if err != nil {
 		return nil, err
 	}
 
-	workflows = hydrateWorkflows(workflows, mapWfActivities)
+	workflows = utils.HydrateWorkflows(workflows, mapWfActivities)
 	return workflows, nil
-}
-
-func hydrateWorkflows(workflows []workflow_entity.Workflow, mapWfActivities activity_repository.ResultGetActivitiesByWorkflowIds) []workflow_entity.Workflow {
-	var workflowsToReturn []workflow_entity.Workflow
-	for _, wf := range workflows {
-		if mapWfActivities[wf.Id] == nil {
-			continue
-		}
-		wf.Spec.Activities = mapWfActivities[wf.Id]
-		workflowsToReturn = append(workflowsToReturn, wf)
-	}
-	return workflowsToReturn
-}
-
-func getIds(workflows []workflow_entity.Workflow) []int {
-	var ids []int
-	for _, wf := range workflows {
-		ids = append(ids, wf.Id)
-	}
-	return ids
 }

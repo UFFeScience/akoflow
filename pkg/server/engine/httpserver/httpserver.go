@@ -7,6 +7,7 @@ import (
 	"github.com/ovvesley/akoflow/pkg/server/engine/httpserver/handlers/internal_storage_handler"
 	"github.com/ovvesley/akoflow/pkg/server/engine/httpserver/handlers/public_static_handler"
 	"github.com/ovvesley/akoflow/pkg/server/engine/httpserver/handlers/storage_databasedump_handler"
+	"github.com/ovvesley/akoflow/pkg/server/engine/httpserver/handlers/workflow_api_handler"
 	"github.com/ovvesley/akoflow/pkg/server/engine/httpserver/handlers/workflow_handler"
 
 	"net/http"
@@ -34,14 +35,24 @@ func StartServer() {
 	http.HandleFunc("GET /akoflow-admin/", http_config.KernelHandler(akoflow_admin_handler.New().Home))
 	http.HandleFunc("GET /akoflow-admin/workflows/{namespace}/{workflowId}/", http_config.KernelHandler(akoflow_admin_handler.New().WorkflowDetail))
 
-	//http.HandleFunc("GET /akoflow_admin_handler/api/workflows", ...)
-	//http.HandleFunc("GET /akoflow_admin_handler/api/workflows/{workflowId}", ...)
-
-	//http.HandleFunc("GET /akoflow_admin_handler/api/activities", ...)
-	//http.HandleFunc("GET /akoflow_admin_handler/api/activities/{activityId}", ...)
-
-	//http.HandleFunc("GET /akoflow_admin_handler/api/activities/{activityId}/logs", ...)
-	//http.HandleFunc("GET /akoflow_admin_handler/api/activities/{activityId}/metrics", ...)
+	http.HandleFunc("GET /akoflow-api/workflows/", http_config.KernelHandler(workflow_api_handler.New().ListAllWorkflows))
+	//http.HandleFunc("POST /akoflow-api/workflows/", http_config.KernelHandler(workflow_api_handler.New().CreateWorkflow))
+	//http.HandleFunc("POST /akoflow-api/validate-workflow/", http_config.KernelHandler(workflow_api_handler.New().ValidateWorkflow))
+	//
+	//http.HandleFunc("GET /akoflow-api/workflows/{workflowId}/", http_config.KernelHandler(workflow_api_handler.New().GetWorkflow))
+	//http.HandleFunc("GET /akoflow-api/workflows/{workflowId}/activities/", http_config.KernelHandler(workflow_api_handler.New().ListAllActivities))
+	//http.HandleFunc("GET /akoflow-api/workflows/{workflowId}/activities/{activityId}/", http_config.KernelHandler(workflow_api_handler.New().GetActivity))
+	//http.HandleFunc("GET /akoflow-api/workflows/{workflowId}/activities/{activityId}/logs/", http_config.KernelHandler(workflow_api_handler.New().ListAllLogs))
+	//http.HandleFunc("GET /akoflow-api/workflows/{workflowId}/activities/{activityId}/metrics-cpu/", http_config.KernelHandler(workflow_api_handler.New().ListAllMetricsCPU))
+	//http.HandleFunc("GET /akoflow-api/workflows/{workflowId}/activities/{activityId}/metrics-memory/", http_config.KernelHandler(workflow_api_handler.New().ListAllMetricsMemory))
+	//
+	//http.HandleFunc("GET /akoflow-api/workflows/{workflowId}/metrics-cpu/", http_config.KernelHandler(workflow_api_handler.New().ListAllMetricsCPU))
+	//http.HandleFunc("GET /akoflow-api/workflows/{workflowId}/metrics-memory/", http_config.KernelHandler(workflow_api_handler.New().ListAllMetricsMemory))
+	//http.HandleFunc("GET /akoflow-api/workflows/{workflowId}/metrics-timeline/", http_config.KernelHandler(workflow_api_handler.New().ListAllMetricsTimeline))
+	//
+	//http.HandleFunc("GET /akoflow-api/workflows/{workflowId}/storages/", http_config.KernelHandler(workflow_api_handler.New().GetStorages))
+	//http.HandleFunc("GET /akoflow-api/workflows/{workflowId}/storages/{storageId}/", http_config.KernelHandler(workflow_api_handler.New().GetStorage))
+	//http.HandleFunc("GET /akoflow-api/workflows/{workflowId}/storages/{storageId}/download-file/", http_config.KernelHandler(workflow_api_handler.New().DownloadFile))
 
 	err := http.ListenAndServe(config.PORT_SERVER, nil)
 	if err != nil {

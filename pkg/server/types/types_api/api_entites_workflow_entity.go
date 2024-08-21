@@ -19,7 +19,7 @@ type ApiWorkflowSpecType struct {
 	StartExecution   string                           `yaml:"startExecution" json:"startExecution"`
 	EndExecution     string                           `yaml:"endExecution" json:"endExecution"`
 	ExecutionTime    string                           `yaml:"executionTime" json:"executionTime"`
-	LongestActivity  string                           `yaml:"longestActivity" json:"longestActivity"`
+	LongestActivity  ApiWorkflowActivityType          `yaml:"longestActivity" json:"longestActivity"`
 	DiskUsage        string                           `yaml:"diskUsage" json:"diskUsage"`
 }
 

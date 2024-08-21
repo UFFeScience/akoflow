@@ -1,8 +1,19 @@
 package config
 
-import "os"
+import (
+	"os"
+)
 
 const PORT_SERVER = ":8080"
+
+func GetVersion() string {
+
+	versionEnv := os.Getenv("AKOFLOW_SERVER_VERSION")
+	if versionEnv != "" {
+		return versionEnv
+	}
+	return "dev-env"
+}
 
 func SetupEnv() {
 

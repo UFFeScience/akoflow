@@ -8,8 +8,8 @@ import (
 type GetWorkflowByStatusService struct {
 }
 
-func New() *GetWorkflowByStatusService {
-	return &GetWorkflowByStatusService{}
+func New() GetWorkflowByStatusService {
+	return GetWorkflowByStatusService{}
 }
 
 func (o *GetWorkflowByStatusService) GetActivitiesByStatus(wfs workflow_entity.Workflow, status int) []workflow_activity_entity.WorkflowActivities {

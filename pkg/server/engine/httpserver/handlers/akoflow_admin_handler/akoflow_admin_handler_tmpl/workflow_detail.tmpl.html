@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{{ template "head" }}
+
+<style>
+    #graphView {
+        width: 100%;
+        height: 480px;
+    }
+</style>
+
+<body class="bg-gray-100 text-black dark:bg-gray-900 dark:text-white">
+
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        {{ template "sidebar" }}
+
+        <!-- Main Content -->
+        <div class="flex-1 p-8 bg-white dark:bg-gray-800 ml-64">
+
+            {{ template "header" dict "title" "Workflow Detail" }}
+
+            <div class="bg-gray-100 dark:bg-gray-700 rounded-lg p-4 flex justify-between items-center space-x-6 mb-8">
+                <div class="text-sm text-gray-500 dark:text-gray-400">
+                    <p>Workflow Details</p>
+                    <div class="mt-2">
+                        <p class="text-gray-900 dark:text-white">Type: <span id="workflow-type"
+                                class="font-medium">N/A</span></p>
+                        <p class="text-gray-900 dark:text-white">Disk Type: <span id="disk-type"
+                                class="font-medium">N/A</span></p>
+                        <p class="text-gray-900 dark:text-white">Activities: <span id="activities-count"
+                                class="font-medium">N/A</span></p>
+                    </div>
+                </div>
+
+                <div class="text-sm text-gray-500 dark:text-gray-400">
+                    <p class="font-semibold text-gray-900 dark:text-white">Execution Time</p>
+                    <p class="mt-1" id="execution-time">N/A</p>
+                </div>
+
+                <div class="text-sm text-gray-500 dark:text-gray-400">
+                    <p class="font-semibold text-gray-900 dark:text-white">Start Date</p>
+                    <p class="mt-1" id="start-date">N/A</p>
+                </div>
+
+                <div class="text-sm text-gray-500 dark:text-gray-400">
+                    <p class="font-semibold text-gray-900 dark:text-white">End Date</p>
+                    <p class="mt-1" id="end-date">N/A</p>
+                </div>
+
+                <div class="text-sm text-gray-500 dark:text-gray-400">
+                    <p class="font-semibold text-gray-900 dark:text-white">Longest Activity</p>
+                    <p class="mt-1" id="longest-activity">N/A</p>
+                </div>
+
+                <div class="text-sm text-gray-500 dark:text-gray-400">
+                    <p class="font-semibold text-gray-900 dark:text-white">Disk Usage</p>
+                    <p class="mt-1" id="disk-usage">N/A</p>
+                </div>
+
+                <div class="text-sm text-gray-500 dark:text-gray-400">
+                    <p class="font-semibold text-gray-900 dark:text-white">Mount Path</p>
+                    <p class="mt-1" id="mount-path">N/A</p>
+                </div>
+            </div>
+
+
+
+            <!-- Graph Panel -->
+            <div class="w-full p-6 rounded-lg mb-8 bg-gray-100 dark:bg-gray-700">
+                <p class="text-gray-900 dark:text-white"><span class="font-medium">wf-montage-050d.yaml</span></p>
+                <p class="text-gray-500 dark:text-gray-400">Workflow ID: <span class="font-medium">#001</span></p>
+
+
+                <div class="p-6 rounded-lg flex items-center justify-center bg-gray-50 dark:bg-gray-800 mt-4">
+                    <!-- Graph Visualization Placeholder -->
+                    <div id="graphView"
+                        class="w-full h-96 flex items-center justify-center text-gray-600 dark:text-gray-400">
+                        [Graph Visualization Here]
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity List -->
+            <div>
+                <h2 class="text-2xl font-bold mb-4 dark:text-white light:text-black">Activities</h2>
+                <div class="space-y-4" id="activityList">
+                    <!-- Activity Item -->
+
+                    <!-- Add more activity items as needed -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        async function getWorkflowByPage() {
+
+            const workflowId = window.location.pathname.split("/").filter(Boolean).pop();
+            const response = await fetch(BASE_URL_API + "workflows/" + workflowId);
+            const { data } = await response.json();
+            return data;
+        }
+
+        async function loadingPage() {
+            let workflow = await getWorkflowByPage();
+            let workflowDag = parseWorkflowToDag(workflow);
+
+
+            handleRenderDetail(workflow);
+            handleRenderActivityList(workflow);
+            handleRenderGraph(workflow, workflowDag);
+
+        }
+
+        function handleRenderDetail(workflow) {
+            document.getElementById("workflow-type").innerText = workflow.spec.storagePolicy.type || "N/A";
+
+            document.getElementById("disk-type").innerText = workflow.spec.storageClassName || "N/A";
+
+            document.getElementById("activities-count").innerText = workflow.spec.activities.length || "N/A";
+
+            document.getElementById("execution-time").innerText = formatExecutionTime(workflow.spec.executionTime) || "N/A";
+
+            document.getElementById("start-date").innerText = workflow.spec.startExecution || "N/A";
+
+            document.getElementById("end-date").innerText = workflow.spec.endExecution || "N/A";
+
+            document.getElementById("longest-activity").innerText = `${workflow.spec.longestActivity.name || "N/A"} (${workflow.spec.longestActivity.executionTime || "N/A"} ms)`;
+
+            document.getElementById("disk-usage").innerText = `${workflow.spec.diskUsage || "N/A"} MiB`;
+
+            document.getElementById("mount-path").innerText = workflow.spec.mountPath || "N/A";
+
+        }
+
+        function formatExecutionTime(seconds) {
+            const min = Math.floor(seconds / 60);
+            const sec = seconds % 60;
+            return `${min}m ${sec}s`;
+        }
+
+        function getActivityDuration(activities, activityName) {
+            const activity = activities.find(act => act.name === activityName);
+            if (activity) {
+                const start = new Date(activity.startedAt).getTime();
+                const end = new Date(activity.finishedAt).getTime();
+                const durationSec = (end - start) / 1000;
+                return formatExecutionTime(durationSec);
+            }
+            return "N/A";
+        }
+
+
+
+
+
+        function handleRenderActivityList(workflow) {
+            let container = document.getElementById("activityList");
+
+            workflow.spec.activities.forEach(activity => {
+                container.innerHTML += makeActivityItemList(activity);
+            });
+        }
+
+        function handleRenderGraph(workflow, workflowDag) {
+            let container = document.getElementById("graphView");
+
+            let nodes = new vis.DataSet(workflowDag.nodes);
+            let edges = new vis.DataSet(workflowDag.edges);
+
+            let data = {
+                nodes: nodes,
+                edges: edges,
+            };
+
+            let options = {
+                layout: {
+                    hierarchical: {
+                        direction: "RL", // Right -> Left
+                        sortMethod: "directed", // Order nodes based on the direction of edges
+                        nodeSpacing: 100, // Aumenta o espaçamento entre os nós
+                        levelSeparation: 500, // Aumenta a separação entre os níveis hierárquicos
+                        treeSpacing: 100, // Aumenta o espaçamento entre árvores independentes
+
+                    },
+                },
+                edges: {
+                    smooth: true,
+                },
+                physics: {
+                    enabled: false, // Ativa a física para posicionar os nós
+                },
+                nodes: {
+                    font: {
+                        color: '#2c3e50',
+                    },
+                    shape: "box",
+                },
+            };
+
+            let network = new vis.Network(container, data, options);
+
+            network.on("click", function (params) {
+                params.event = "[original event]";
+                console.log(params);
+                if (params.nodes.length > 0) {
+                    console.log("Node Selected: ", nodes.get(params.nodes[0]));
+                }
+
+                focusById(params.nodes[0]);
+
+            })
+
+
+            function focusById(nodeId) {
+                console.log("Focus Node: ", nodeId);
+                var options = {
+                    scale: 1,
+                    offset: { x: 0, y: 0 },
+                    animation: {
+                        duration: 1000,
+                        easingFunction: "easeInOutQuad",
+                    },
+                };
+                network.focus(nodeId, options);
+            }
+        }
+
+        function parseWorkflowToDag(workflow) {
+            let nodes = [];
+            let edges = [];
+
+            workflow.spec.activities.forEach(activity => {
+                nodes.push({
+                    id: activity.name,
+                    label: activity.name,
+                    image: makeComponent(activity.name, activity.executionTime, WORKFLOW_ACTIVITY_STATUS[activity.status]),
+                    shape: "image"
+                });
+
+                activity.dependsOn.forEach(dep => {
+                    edges.push({
+                        from: activity.name,
+                        to: dep,
+                        arrows: "to"
+                    });
+                });
+
+            });
+
+            return { nodes, edges };
+        }
+
+
+        const makeComponent = (name = "name", duration = 1000, status) => `
+            data:image/svg+xml;charset=utf-8,${encodeURIComponent(
+            `
+                    <svg xmlns="http://www.w3.org/2000/svg" width="300" height="60">
+                    <rect x="0" y="0" rx="8" ry="8" width="300" height="60" style="fill:#ffffff;stroke:#e0e0e0;stroke-width:1;" />
+                    <circle cx="20" cy="30" r="6" fill="${status.colorHex}" />
+                    <text x="40" y="35" font-family="Arial" font-size="16" fill="#000000">${name}</text>
+                    <text x="240" y="35" font-family="Arial" font-size="16" fill="#757575">${duration}ms</text>
+                    </svg>
+                `
+        )}
+        `
+
+
+        const makeActivityItemList = (activity) => {
+
+            console.log("Activity: ", activity);
+
+            return `
+    <div class="flex flex-col bg-gray-100 dark:bg-gray-700 rounded-lg p-4">
+        <!-- Activity Title -->
+        <div class="flex justify-between items-center cursor-pointer" onclick="toggleCollapse(${activity.id})">
+            <div class="flex items-center space-x-4">
+                <div class="flex items-center justify-center w-12 h-12 bg-gray-200 dark:bg-gray-600 rounded-lg">
+                    <span class="text-2xl">${WORKFLOW_ACTIVITY_STATUS[activity.status].icon}</span>
+                </div>
+                <div>
+                    <p class="font-semibold">ID: ${activity.id}</p>
+                    <p class="text-gray-500 dark:text-gray-400">${activity.name || 'N/A'}</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-4">
+                <p class="text-gray-500 dark:text-gray-400">${activity.executionTime ? activity.executionTime + 'ms' : 'No duration'}</p>
+                <p class="text-gray-500 dark:text-gray-400">${WORKFLOW_ACTIVITY_STATUS[activity.status].text || 'N/A'}</p>
+            </div>
+        </div>
+
+        <!-- Collapsible Section -->
+        <div id="collapse-${activity.id}" class="hidden mt-4">
+            <div class="border-t border-gray-300 dark:border-gray-600 mt-2 pt-2">
+                <!-- Run Section -->
+                <p class="font-semibold text-gray-700 dark:text-gray-300">Run Command:</p>
+                <pre class="bg-gray-200 dark:bg-gray-800 text-green-500 p-2 rounded-md overflow-auto" style="max-height: 150px;">
+                    <code class="block whitespace-pre-wrap">${activity.run || 'No run command provided'}</code>
+                </pre>
+
+                <!-- Execution Details -->
+
+                <p class="font-semibold text-gray-700 dark:text-gray-300 mt-4">Execution Details:</p>
+                <p class="text-gray-500 dark:text-gray-400">Started At: ${activity.startedAt || 'Not started'}</p>
+                <p class="text-gray-500 dark:text-gray-400">Finished At: ${activity.finishedAt || 'Not finished'}</p>
+                <p class="text-gray-500 dark:text-gray-400">Duration: ${activity.executionTime || 'N/A'} ms</p>
+
+
+                <!-- Resource Limits -->
+                <p class="font-semibold text-gray-700 dark:text-gray-300 mt-4">Resources:</p>
+                <p class="text-gray-500 dark:text-gray-400">Memory Limit: ${activity.memoryLimit || 'Not set'}</p>
+                <p class="text-gray-500 dark:text-gray-400">CPU Limit: ${activity.cpuLimit || 'Not set'}</p>
+
+                <!-- Dependencies -->
+                <p class="font-semibold text-gray-700 dark:text-gray-300 mt-4">Dependencies:</p>
+                <p class="text-gray-500 dark:text-gray-400">${activity.dependsOn.length ? activity.dependsOn.join(', ') : 'No dependencies'}</p>
+            </div>
+        </div>
+    </div>
+`;
+        }
+
+        // Function to toggle collapse visibility
+        const toggleCollapse = (id) => {
+            const collapseElement = document.getElementById(`collapse-${id}`);
+            collapseElement.classList.toggle('hidden');
+        }
+
+
+        loadingPage();
+    </script>
+
+
+
+
+
+
+
+
+</body>
+
+</html>

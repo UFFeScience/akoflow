@@ -42,4 +42,5 @@ type IWorkflowRepository interface {
 	Find(workflowId int) (workflow_entity.Workflow, error)
 	GetPendingWorkflows(namespace string) ([]workflow_entity.Workflow, error)
 	UpdateStatus(id int, status int) error
+	ListAllWorkflows(params *ListAllWorkflowParams) ([]workflow_entity.Workflow, error)
 }

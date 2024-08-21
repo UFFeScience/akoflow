@@ -1,6 +1,7 @@
 package garbage_collector_remove_storage_service
 
 import (
+	"github.com/ovvesley/akoflow/pkg/server/config"
 	"github.com/ovvesley/akoflow/pkg/server/connector"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
 	"github.com/ovvesley/akoflow/pkg/server/repository/activity_repository"
@@ -14,28 +15,31 @@ import (
 )
 
 type GarbageCollectorRemoveStorageService struct {
-	namespace                     string
-	workflowRepository            workflow_repository.IWorkflowRepository
-	activityRepository            activity_repository.IActivityRepository
-	storageRepository             storages_repository.IStorageRepository
+	namespace          string
+	workflowRepository workflow_repository.IWorkflowRepository
+	activityRepository activity_repository.IActivityRepository
+	storageRepository  storages_repository.IStorageRepository
+
 	getActivityDependeciesService get_activity_dependencies_service.GetActivityDependenciesService
-	getPendingWorkflowService     *get_pending_workflow_service.GetPendingWorkflowService
-	getWorkflowByStatusService    *get_workflow_by_status_service.GetWorkflowByStatusService
+	getPendingWorkflowService     get_pending_workflow_service.GetPendingWorkflowService
+	getWorkflowByStatusService    get_workflow_by_status_service.GetWorkflowByStatusService
 	getPendingStorageService      get_pending_storage_service.GetPendingStorageService
 	connector                     connector.IConnector
 }
 
 func New() GarbageCollectorRemoveStorageService {
 	return GarbageCollectorRemoveStorageService{
-		namespace:                     "akoflow",
-		workflowRepository:            workflow_repository.New(),
-		activityRepository:            activity_repository.New(),
-		storageRepository:             storages_repository.New(),
+		namespace:          "akoflow",
+		workflowRepository: config.App().Repository.WorkflowRepository,
+		activityRepository: config.App().Repository.ActivityRepository,
+		storageRepository:  config.App().Repository.StoragesRepository,
+
+		connector: config.App().Connector.K8sConnector,
+
 		getActivityDependeciesService: get_activity_dependencies_service.New(),
 		getPendingWorkflowService:     get_pending_workflow_service.New(),
 		getWorkflowByStatusService:    get_workflow_by_status_service.New(),
 		getPendingStorageService:      get_pending_storage_service.New(),
-		connector:                     connector.New(),
 	}
 }
 

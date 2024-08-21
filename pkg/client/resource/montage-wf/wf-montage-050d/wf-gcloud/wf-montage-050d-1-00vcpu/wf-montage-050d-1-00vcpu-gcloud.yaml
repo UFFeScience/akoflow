@@ -2,7 +2,8 @@ name: wf-montage-050d
 spec:
   image: ovvesley/akoflow-wf-montage:050d # amd64 only
   namespace: akoflow
-  storageClassName: standard-rwo
+  storageClassName: akoflow-nfs
+  nfsServer: true
   storageSize: 2Gi
   mountPath: /data
   activities:

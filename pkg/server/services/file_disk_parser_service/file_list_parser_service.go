@@ -8,8 +8,8 @@ import (
 type FileListParserService struct {
 }
 
-func New() *FileListParserService {
-	return &FileListParserService{}
+func New() FileListParserService {
+	return FileListParserService{}
 }
 
 type FileDisk struct {

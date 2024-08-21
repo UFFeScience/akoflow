@@ -1,0 +1,55 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: nfs
+spec:
+  storageClassName: akoflow-nfs
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 16Mi
+---
+kind: Pod
+apiVersion: v1
+metadata:
+  name: write-pod
+spec:
+  containers:
+  - name: write-pod
+    image: busybox:stable
+    command:
+      - "/bin/sh"
+    args:
+      - "-c"
+      - "mkdir -p /mnt/nfs && while true; do date >> /mnt/nfs/out.txt; sleep 5; done"
+    volumeMounts:
+      - name: nfs-pvc
+        mountPath: "/mnt"
+  restartPolicy: "Never"
+  volumes:
+    - name: nfs-pvc
+      persistentVolumeClaim:
+        claimName: nfs
+---
+kind: Pod
+apiVersion: v1
+metadata:
+  name: write-pod-2
+spec:
+  containers:
+  - name: write-pod
+    image: busybox:stable
+    command:
+      - "/bin/sh"
+    args:
+      - "-c"
+      - "mkdir -p /mnt/nfs && while true; do date >> /mnt/nfs/out2.txt; sleep 5; done"
+    volumeMounts:
+      - name: nfs-pvc
+        mountPath: "/mnt"
+  restartPolicy: "Never"
+  volumes:
+    - name: nfs-pvc
+      persistentVolumeClaim:
+        claimName: nfs

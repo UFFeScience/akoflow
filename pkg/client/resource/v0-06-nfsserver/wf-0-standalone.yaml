@@ -1,0 +1,51 @@
+name: wf-preactivity-example
+spec:
+  image: "alpine:latest"
+  namespace: "akoflow"
+  storageClassName: "hostpath"
+  storageSize: "32Mi"
+  storagePolicy: # distributed (more than one node) or standalone (one node)
+    type: standalone
+  mountPath: "/data"
+  activities:
+    - name: "a"
+      memoryLimit: 500Mi
+      cpuLimit: 0.5
+      nodeSelector: "kubernetes.io/hostname=docker-desktop"
+      run: |
+        ls -la
+        echo "Hello from a"
+        echo "Hello from a" > a.txt
+
+    - name: "b"
+      memoryLimit: 500Mi
+      cpuLimit: 0.5
+      nodeSelector: "kubernetes.io/hostname=docker-desktop"
+      run: |
+        ls -la
+        echo "Hello from b"
+        echo "Hello from b" > b.txt
+
+
+    - name: "c"
+      memoryLimit: 500Mi
+      cpuLimit: 0.5
+      nodeSelector: "kubernetes.io/hostname=docker-desktop"
+      run: |
+        echo "Hello from c"
+        echo "Hello from c" > c.txt
+
+    - name: "d"
+      memoryLimit: 500Mi
+      cpuLimit: 0.5
+      nodeSelector: "kubernetes.io/hostname=docker-desktop"
+      run: |
+        ls -la
+        sleep 300
+        cat a.txt b.txt c.txt > d.txt
+        cat d.txt
+
+      dependsOn:
+        - "a"
+        - "b"
+        - "c"

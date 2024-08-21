@@ -18,6 +18,9 @@ type WorkflowActivities struct {
 	DependsOn    []string `yaml:"dependsOn"`
 	NodeSelector string   `yaml:"nodeSelector"`
 	KeepDisk     bool     `yaml:"keepDisk"`
+	CreatedAt    string   `yaml:"createdAt"`
+	StartedAt    string   `yaml:"startedAt"`
+	FinishedAt   string   `yaml:"finishedAt"`
 }
 
 type WorkflowActivityDatabase struct {
@@ -29,6 +32,9 @@ type WorkflowActivityDatabase struct {
 	ResourceK8sBase64 string
 	Status            int
 	DependOnActivity  *int
+	CreatedAt         string
+	StartedAt         string
+	FinishedAt        string
 }
 
 type WorkflowActivityDependencyDatabase struct {
@@ -126,5 +132,8 @@ func DatabaseToWorkflowActivities(params ParamsDatabaseToWorkflowActivities) Wor
 		DependsOn:    wfa.DependsOn,
 		NodeSelector: wfa.NodeSelector,
 		KeepDisk:     wfa.KeepDisk,
+		CreatedAt:    params.WorkflowActivityDatabase.CreatedAt,
+		StartedAt:    params.WorkflowActivityDatabase.StartedAt,
+		FinishedAt:   params.WorkflowActivityDatabase.FinishedAt,
 	}
 }

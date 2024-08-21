@@ -6,7 +6,7 @@ func (s *StorageRepository) Find(id int) (StorageDatabase, error) {
 	database := repository.Database{}
 	c := database.Connect()
 
-	rows, err := c.Query("SELECT * FROM "+s.tableName+" WHERE ID = ?", id)
+	rows, err := c.Query("SELECT id, workflow_id, activity_id, pvc_name, namespace, status, storage_mount_path, storage_class, storage_size, initial_file_list, end_file_list, initial_disk_spec, end_disk_spec, keep_storage_after_finish, detached, created_at FROM "+s.tableName+" WHERE id = ?", id)
 	if err != nil {
 		return StorageDatabase{}, err
 	}
@@ -31,7 +31,7 @@ func (s *StorageRepository) GetCreatedStorages(namespace string) []StorageDataba
 	database := repository.Database{}
 	c := database.Connect()
 
-	rows, err := c.Query("SELECT * FROM "+s.tableName+" WHERE namespace = ? AND status = ?", namespace, StatusCreated)
+	rows, err := c.Query("SELECT id, workflow_id, activity_id, pvc_name, namespace, status, storage_mount_path, storage_class, storage_size, initial_file_list, end_file_list, initial_disk_spec, end_disk_spec, keep_storage_after_finish, detached, created_at FROM "+s.tableName+" WHERE namespace = ? AND status = ?", namespace, StatusCreated)
 	if err != nil {
 		return nil
 	}

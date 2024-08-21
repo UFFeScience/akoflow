@@ -10,7 +10,7 @@ func (w *WorkflowRepository) Find(workflowId int) (workflow_entity.Workflow, err
 	database := repository.Database{}
 	c := database.Connect()
 
-	row := c.QueryRow("SELECT * FROM "+w.tableName+" WHERE ID = ?", workflowId)
+	row := c.QueryRow("SELECT id, namespace, name, raw_workflow, status FROM "+w.tableName+" WHERE id = ?", workflowId)
 
 	result := workflow_entity.WorkflowDatabase{}
 	err := row.Scan(&result.ID, &result.Namespace, &result.Name, &result.RawWorkflow, &result.Status)

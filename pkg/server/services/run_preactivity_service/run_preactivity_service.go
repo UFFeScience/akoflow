@@ -1,6 +1,7 @@
 package run_preactivity_service
 
 import (
+	"github.com/ovvesley/akoflow/pkg/server/config"
 	"github.com/ovvesley/akoflow/pkg/server/connector"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
@@ -11,35 +12,26 @@ import (
 )
 
 type RunPreactivityService struct {
-	namespace                      string
-	workflowRepository             workflow_repository.IWorkflowRepository
-	activityRepository             activity_repository.IActivityRepository
+	namespace          string
+	workflowRepository workflow_repository.IWorkflowRepository
+	activityRepository activity_repository.IActivityRepository
+
+	connector connector.IConnector
+
 	makeK8sJobService              make_k8s_job_service.MakeK8sJobService
 	getActivityDependenciesService get_activity_dependencies_service.GetActivityDependenciesService
-	connector                      connector.IConnector
 }
 
-type ParamsNewRunPreactivityService struct {
-	Namespace          string
-	WorkflowRepository workflow_repository.IWorkflowRepository
-	ActivityRepository activity_repository.IActivityRepository
-}
-
-func New(params ...ParamsNewRunPreactivityService) RunPreactivityService {
-	if len(params) > 0 {
-		return RunPreactivityService{
-			namespace:          params[0].Namespace,
-			workflowRepository: params[0].WorkflowRepository,
-			activityRepository: params[0].ActivityRepository,
-		}
-	}
+func New() RunPreactivityService {
 	return RunPreactivityService{
-		namespace:                      "akoflow",
-		workflowRepository:             workflow_repository.New(),
-		activityRepository:             activity_repository.New(),
+		namespace:          config.App().DefaultNamespace,
+		workflowRepository: config.App().Repository.WorkflowRepository,
+		activityRepository: config.App().Repository.ActivityRepository,
+
+		connector: config.App().Connector.K8sConnector,
+
 		makeK8sJobService:              make_k8s_job_service.New(),
 		getActivityDependenciesService: get_activity_dependencies_service.New(),
-		connector:                      connector.New(),
 	}
 }
 
@@ -83,7 +75,8 @@ func (r *RunPreactivityService) runJobPreActivity(wf workflow_entity.Workflow, w
 		SetIdWorkflow(wf.Id).
 		SetIdWorkflowActivity(wfa.Id).
 		SetDependencies(dependencies).
-		MakeK8sPreActivityJob()
+		UsePreactivityMode().
+		MakeK8sJob()
 
 	r.connector.Job().ApplyJob(r.namespace, job)
 

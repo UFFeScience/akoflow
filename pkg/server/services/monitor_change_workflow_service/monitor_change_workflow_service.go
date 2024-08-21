@@ -2,9 +2,10 @@ package monitor_change_workflow_service
 
 import (
 	"errors"
+	"github.com/ovvesley/akoflow/pkg/server/config"
+	"github.com/ovvesley/akoflow/pkg/server/engine/channel"
 	"github.com/ovvesley/akoflow/pkg/server/repository/logs_repository"
 
-	"github.com/ovvesley/akoflow/pkg/server/channel"
 	"github.com/ovvesley/akoflow/pkg/server/connector"
 	"github.com/ovvesley/akoflow/pkg/server/connector/connector_job_k8s"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
@@ -20,22 +21,24 @@ type MonitorChangeWorkflowService struct {
 	workflowRepository        workflow_repository.IWorkflowRepository
 	activityRepository        activity_repository.IActivityRepository
 	logsRepository            logs_repository.ILogsRepository
-	channelManager            *channel.Manager
-	getPendingWorkflowService *get_pending_workflow_service.GetPendingWorkflowService
-	getWorkflowByStatus       *get_workflow_by_status_service.GetWorkflowByStatusService
 	connector                 connector.IConnector
+	getPendingWorkflowService get_pending_workflow_service.GetPendingWorkflowService
+	getWorkflowByStatus       get_workflow_by_status_service.GetWorkflowByStatusService
+	channelManager            *channel.Manager
 }
 
 func New() *MonitorChangeWorkflowService {
 	return &MonitorChangeWorkflowService{
-		namespace:                 "akoflow",
-		workflowRepository:        workflow_repository.New(),
-		activityRepository:        activity_repository.New(),
-		channelManager:            channel.GetInstance(),
+		namespace:          "akoflow",
+		workflowRepository: config.App().Repository.WorkflowRepository,
+		activityRepository: config.App().Repository.ActivityRepository,
+		logsRepository:     config.App().Repository.LogsRepository,
+		connector:          config.App().Connector.K8sConnector,
+
 		getPendingWorkflowService: get_pending_workflow_service.New(),
-		logsRepository:            logs_repository.New(),
 		getWorkflowByStatus:       get_workflow_by_status_service.New(),
-		connector:                 connector.New(),
+
+		channelManager: channel.GetInstance(),
 	}
 }
 
@@ -71,6 +74,7 @@ func (m *MonitorChangeWorkflowService) handleVerifyWorkflowPreActivitiesWasFinis
 	for _, wf := range wfs {
 		for _, activity := range wf.Spec.Activities {
 			if activity.HasDependencies() && activity.Status == activity_repository.StatusCreated {
+				// [TODO] if distributed not sync activity
 				m.handleVerifyPreActivityWasFinished(activity, wf)
 			}
 		}

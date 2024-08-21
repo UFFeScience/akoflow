@@ -9,8 +9,8 @@ import (
 type FileSpecParserService struct {
 }
 
-func New() *FileSpecParserService {
-	return &FileSpecParserService{}
+func New() FileSpecParserService {
+	return FileSpecParserService{}
 }
 
 type DiskSpec struct {

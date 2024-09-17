@@ -96,14 +96,15 @@ func (d *DispatchToServerRunWorkflowService) sendToServer(base64FileContent stri
 
 	payloadJson, _ := json.Marshal(payload)
 
-	req, _ := http.NewRequest("POST", "http://"+d.GetHost()+":"+d.GetPort()+"/akoflow-server/workflow/run", bytes.NewBuffer(payloadJson))
+	req, _ := http.NewRequest("POST", "http://"+d.GetHost()+":"+d.GetPort()+"/akoflow-server/workflow/run/", bytes.NewBuffer(payloadJson))
 
 	req.Header.Set("Content-Type", "application/json")
 
 	resp, err := client.Do(req)
 
 	if err != nil {
-		println("error:", err)
+		messageError := "error: " + err.Error()
+		println(messageError)
 	}
 
 	defer resp.Body.Close()

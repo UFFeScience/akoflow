@@ -432,10 +432,10 @@
                 return {
                     label: activity.name,
                     data: [{
-                        x: new Date(activity.startedAt).getTime() - new Date(workflowObject.spec.startExecution).getTime(),
+                        x: (new Date(activity.startedAt).getTime() - new Date(workflowObject.spec.startExecution).getTime()) / 1000,
                         y: activity.name
                     }, {
-                        x: new Date(activity.finishedAt).getTime() - new Date(workflowObject.spec.startExecution).getTime(),
+                        x: (new Date(activity.finishedAt).getTime() - new Date(workflowObject.spec.startExecution).getTime()) / 1000,
                         y: activity.name
                     }],
                     borderColor: colorArray[index],

@@ -356,7 +356,6 @@ func (c *CreateNfsService) Create() bool {
 	resultServiceAccount := conn.ServiceAccount().CreateServiceAccount(serviceAccount)
 	if !resultServiceAccount.Success {
 		log.Printf("Failed to create ServiceAccount: %s", resultServiceAccount.Message)
-		return false
 
 	}
 	fmt.Println(resultServiceAccount.Message)
@@ -366,7 +365,7 @@ func (c *CreateNfsService) Create() bool {
 	resultService := conn.Service().CreateService(service)
 	if !resultService.Success {
 		log.Printf("Failed to create Service: %s", resultService.Message)
-		return false
+
 	}
 	fmt.Println(resultService.Message)
 
@@ -375,7 +374,6 @@ func (c *CreateNfsService) Create() bool {
 	resultPvc := conn.PersistentVolumeClain().CreatePvc(pvc)
 	if !resultPvc.Success {
 		log.Printf("Failed to create PersistentVolumeClaim: %s", resultPvc.Message)
-		return false
 
 	}
 	fmt.Println(resultPvc.Message)
@@ -385,7 +383,6 @@ func (c *CreateNfsService) Create() bool {
 	resultDeployment := conn.Deployment().CreateDeployment(deployment)
 	if !resultDeployment.Success {
 		log.Printf("Failed to create Deployment: %s", resultDeployment.Message)
-		return false
 
 	}
 	fmt.Println(resultDeployment.Message)
@@ -395,7 +392,6 @@ func (c *CreateNfsService) Create() bool {
 	resultClusterRole := conn.ClusterRole().CreateClusterRole(clusterRole)
 	if !resultClusterRole.Success {
 		log.Printf("Failed to create ClusterRole: %s", resultClusterRole.Message)
-		return false
 
 	}
 	fmt.Println(resultClusterRole.Message)
@@ -404,7 +400,7 @@ func (c *CreateNfsService) Create() bool {
 	clusterRoleBinding := c.createClusterRoleBinding()
 	resultClusterRoleBinding := conn.ClusterRoleBinding().CreateClusterRoleBinding(clusterRoleBinding)
 	if !resultClusterRoleBinding.Success {
-		log.Fatalf("Failed to create ClusterRoleBinding: %s", resultClusterRoleBinding.Message)
+		log.Printf("Failed to create ClusterRoleBinding: %s", resultClusterRoleBinding.Message)
 	}
 	fmt.Println(resultClusterRoleBinding.Message)
 
@@ -413,7 +409,6 @@ func (c *CreateNfsService) Create() bool {
 	resultRole := conn.Role().CreateRole(role)
 	if !resultRole.Success {
 		log.Printf("Failed to create Role: %s", resultRole.Message)
-		return false
 
 	}
 	fmt.Println(resultRole.Message)
@@ -423,7 +418,6 @@ func (c *CreateNfsService) Create() bool {
 	resultRoleBinding := conn.RoleBinding().CreateRoleBinding(roleBinding)
 	if !resultRoleBinding.Success {
 		log.Printf("Failed to create RoleBinding: %s", resultRoleBinding.Message)
-		return false
 
 	}
 	fmt.Println(resultRoleBinding.Message)
@@ -433,7 +427,6 @@ func (c *CreateNfsService) Create() bool {
 	resultStorageClass := conn.StorageClass().CreateStorageClass(storageClass)
 	if !resultStorageClass.Success {
 		log.Printf("Failed to create StorageClass: %s", resultStorageClass.Message)
-		return false
 	}
 	fmt.Println(resultStorageClass.Message)
 

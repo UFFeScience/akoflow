@@ -32,9 +32,9 @@ type WorkflowActivityDatabase struct {
 	ResourceK8sBase64 string
 	Status            int
 	DependOnActivity  *int
-	CreatedAt         string
-	StartedAt         string
-	FinishedAt        string
+	CreatedAt         *string
+	StartedAt         *string
+	FinishedAt        *string
 }
 
 type WorkflowActivityDependencyDatabase struct {
@@ -121,6 +121,21 @@ func DatabaseToWorkflowActivities(params ParamsDatabaseToWorkflowActivities) Wor
 		return WorkflowActivities{}
 	}
 
+	createdAt := ""
+	if params.WorkflowActivityDatabase.CreatedAt != nil {
+		createdAt = *params.WorkflowActivityDatabase.CreatedAt
+	}
+
+	startedAt := ""
+	if params.WorkflowActivityDatabase.StartedAt != nil {
+		startedAt = *params.WorkflowActivityDatabase.StartedAt
+	}
+
+	finishedAt := ""
+	if params.WorkflowActivityDatabase.FinishedAt != nil {
+		finishedAt = *params.WorkflowActivityDatabase.FinishedAt
+	}
+
 	return WorkflowActivities{
 		Id:           params.WorkflowActivityDatabase.Id,
 		Name:         params.WorkflowActivityDatabase.Name,
@@ -132,8 +147,8 @@ func DatabaseToWorkflowActivities(params ParamsDatabaseToWorkflowActivities) Wor
 		DependsOn:    wfa.DependsOn,
 		NodeSelector: wfa.NodeSelector,
 		KeepDisk:     wfa.KeepDisk,
-		CreatedAt:    params.WorkflowActivityDatabase.CreatedAt,
-		StartedAt:    params.WorkflowActivityDatabase.StartedAt,
-		FinishedAt:   params.WorkflowActivityDatabase.FinishedAt,
+		CreatedAt:    createdAt,
+		StartedAt:    startedAt,
+		FinishedAt:   finishedAt,
 	}
 }

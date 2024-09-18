@@ -91,8 +91,49 @@
                     <!-- Add more activity items as needed -->
                 </div>
             </div>
+
+            
+            <div class="w-full p-6 rounded-lg bg-gray-100 dark:bg-gray-700 mt-8">
+                <p class="text-gray-900 dark:text-white">Timeline of Activities</p>
+
+                <div>
+                    <button id="downloadBtn"
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">Download
+                        Chart</button>
+
+                </div>
+
+                <div class="flex items
+                    -center justify-between mt-4">
+                    <div class="w-full h-96">
+
+                        <div class="flex items-center justify-between" style="height: 100%;">
+
+                            <canvas id="timelineChart"></canvas>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
         </div>
     </div>
+
+
+
+
+
+
+    <script>
+
+
+    </script>
 
 
     <script>
@@ -112,6 +153,7 @@
             handleRenderDetail(workflow);
             handleRenderActivityList(workflow);
             handleRenderGraph(workflow, workflowDag);
+            handleChartTimeline(workflow);
 
         }
 
@@ -254,6 +296,189 @@
             return { nodes, edges };
         }
 
+        function handleChartTimeline(workflow) {
+
+            const data = generateChartData(workflow);
+
+            const totalItems = data.datasets.length;
+
+
+            console.log("Data: ", data);
+
+            const options = {
+                scales: {
+                    x: {
+                        type: 'linear',
+                        position: 'bottom',
+                        title: {
+                            display: true,
+                            text: 'Segundos'
+                        },
+                        ticks: {
+                            stepSize: 1,
+                            max: 2
+                        }
+                    },
+                    y: {
+                        type: 'category',
+                        title: {
+                            display: true,
+                            text: 'Atividades'
+                        },
+                        ticks: {
+                            font: {
+                                size: 14
+                            },
+                            padding: 1
+                        }
+                    }
+                },
+                plugins: {
+                    annotation: {
+                        annotations: {
+                            startLine: {
+                                type: 'line',
+                                xMin: 0,
+                                xMax: 0,
+                                borderColor: 'gray',
+                                borderWidth: 2,
+                                label: {
+                                    content: 'Início',
+                                    enabled: true,
+                                    position: 'start'
+                                }
+                            },
+                            endLine: {
+                                type: 'line',
+                                xMin: 4358,
+                                xMax: 4358,
+                                borderColor: 'gray',
+                                borderWidth: 2,
+                                label: {
+                                    content: 'Fim',
+                                    enabled: true,
+                                    position: 'end'
+                                }
+                            },
+                            durationLine: {
+                                type: 'line',
+                                xMin: 0,
+                                xMax: 4358,
+                                borderColor: 'black',
+                                borderWidth: 2,
+                                borderDash: [5, 5],
+                                label: {
+                                    content: 'Tempo Total do Workflow: 4358 Segundos',
+                                    enabled: true,
+                                    position: 'center',
+                                    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+                                    color: 'black'
+                                }
+                            }
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: 'Timeline of Activities',
+                        padding: {
+                            top: 10,
+                            bottom: 30
+                        }
+                    }
+                },
+                elements: {
+                    line: {
+                        tension: 0
+                    }
+                },
+                maintainAspectRatio: false,
+                responsive: true,
+                backgroundColor: 'white'
+            };
+
+            document.getElementById('timelineChart').style.backgroundColor = 'white';
+            document.getElementById('timelineChart').style.border = '1px solid #e0e0e0';
+            document.getElementById('timelineChart').style.borderRadius = '8px';
+            document.getElementById('timelineChart').style.padding = '8px';
+            document.getElementById('timelineChart').style.margin = '8px';
+            document.getElementById('timelineChart').style.width = '100%';
+            document.getElementById('timelineChart').parentElement.style.height = totalItems < 20 ? '1000px' : totalItems * 50 + 'px';
+            document.getElementById('timelineChart').parentElement.parentElement.style.height = totalItems < 20 ? '1000px' : totalItems * 50 + 'px';
+
+            const ctx = document.getElementById('timelineChart').getContext('2d');
+
+
+
+            const chart = new Chart(ctx, {
+                type: 'line',
+                data: data,
+                options: options
+            });
+
+            document.getElementById('downloadBtn').addEventListener('click', function () {
+                const link = document.createElement('a');
+                link.download = 'timeline_chart.png';
+                link.href = chart.toBase64Image();
+                link.click();
+            });
+        }
+
+        function generateChartData(workflowObject) {
+            const activities = workflowObject.spec.activities;
+            const colorArray = generateRandomColors(activities.length);
+
+
+            const datasets = activities.map((activity, index) => {
+                return {
+                    label: activity.name,
+                    data: [{
+                        x: (new Date(activity.startedAt).getTime() - new Date(workflowObject.spec.startExecution).getTime()) / 1000,
+                        y: activity.name
+                    }, {
+                        x: (new Date(activity.finishedAt).getTime() - new Date(workflowObject.spec.startExecution).getTime()) / 1000,
+                        y: activity.name
+                    }],
+                    borderColor: colorArray[index],
+                    backgroundColor: colorArray[index],
+                    fill: false,
+                    tension: 0.4
+                };
+            }).filter(dataset => dataset.data[0].x && dataset.data[1].x);
+
+           
+            return { datasets };
+        }
+
+        function generateRandomColors(numColors) {
+            const colors = [];
+            for (let i = 0; i < numColors; i++) {
+                let color = getRandomColor();
+                // Ensure color is not light
+                while (isLightColor(color)) {
+                    color = getRandomColor();
+                }
+                colors.push(color);
+            }
+            return colors;
+        }
+
+        function getRandomColor() {
+            let letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        function isLightColor(hexColor) {
+            const r = parseInt(hexColor.substr(1, 2), 16);
+            const g = parseInt(hexColor.substr(3, 2), 16);
+            const b = parseInt(hexColor.substr(5, 2), 16);
+            const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+            return brightness > 200;
+        }
+
 
         const makeComponent = (name = "name", duration = 1000, status) => `
             data:image/svg+xml;charset=utf-8,${encodeURIComponent(
@@ -330,8 +555,12 @@
         }
 
 
+
+
         loadingPage();
     </script>
+
+
 
 
 

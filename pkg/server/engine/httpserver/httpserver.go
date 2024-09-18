@@ -22,7 +22,7 @@ func StartServer() {
 
 	http.HandleFunc("GET /", http_config.KernelHandler(public_static_handler.New().Static))
 
-	http.HandleFunc("GET /akoflow-server/healtcheck/", http_config.KernelHandler(HealthCheck, "hello"))
+	http.HandleFunc("GET /akoflow-server/check-service/", http_config.KernelHandler(HealthCheck, "hello"))
 	http.HandleFunc("POST /akoflow-server/workflow/run/", http_config.KernelHandler(workflow_handler.New().Run))
 
 	http.HandleFunc("POST /akoflow-server/internal/storage/initial-file-list/", http_config.KernelHandler(internal_storage_handler.New().InitialFileListHandler))

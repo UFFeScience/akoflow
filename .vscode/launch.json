@@ -1,0 +1,17 @@
+{
+    "configurations": [
+        {
+            "name": "Launch AkoFlow Server",
+            "type": "go",
+            "request": "launch",
+            "mode": "debug",
+            "program": "cmd/server/main.go",
+            "cwd": "/app/",
+            "env": {
+                "K8S_API_SERVER_HOST": "localhost",
+                "K8S_API_SERVER_TOKEN": "dummy",
+                "KUBERNETES_SERVICE_HOST": "localhost",
+            }
+        }
+    ]
+}

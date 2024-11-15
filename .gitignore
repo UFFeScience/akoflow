@@ -3,5 +3,4 @@ storage/database.sqlite
 storage/*
 */.DS_Store
 .DS_Store
-*.fits
-
+__debug**

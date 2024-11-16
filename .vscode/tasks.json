@@ -1,0 +1,33 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build all binaries",
+            "type": "shell",
+            "command": "sh",
+            "args": [
+                "-c",
+                "mkdir -p releases/bin && \
+                GOOS=linux GOARCH=amd64 go build -o releases/bin/akoflow-server_${input:version}_linux_amd64 cmd/server/main.go && \
+                GOOS=linux GOARCH=arm64 go build -o releases/bin/akoflow-server_${input:version}_linux_arm64 cmd/server/main.go && \
+                GOOS=windows GOARCH=amd64 go build -o releases/bin/akoflow-server_${input:version}_windows_amd64.exe cmd/server/main.go && \
+                GOOS=darwin GOARCH=amd64 go build -o releases/bin/akoflow-server_${input:version}_darwin_amd64 cmd/server/main.go && \
+                GOOS=darwin GOARCH=arm64 go build -o releases/bin/akoflow-server_${input:version}_darwin_arm64 cmd/server/main.go && \
+                GOOS=linux GOARCH=amd64 go build -o releases/bin/akoflow-client_${input:version}_linux_amd64 cmd/client/main.go && \
+                GOOS=linux GOARCH=arm64 go build -o releases/bin/akoflow-client_${input:version}_linux_arm64 cmd/client/main.go && \
+                GOOS=windows GOARCH=amd64 go build -o releases/bin/akoflow-client_${input:version}_windows_amd64.exe cmd/client/main.go && \
+                GOOS=darwin GOARCH=amd64 go build -o releases/bin/akoflow-client_${input:version}_darwin_amd64 cmd/client/main.go && \
+                GOOS=darwin GOARCH=arm64 go build -o releases/bin/akoflow-client_${input:version}_darwin_arm64 cmd/client/main.go"
+            ],
+            "problemMatcher": []
+        }
+    ],
+    "inputs": [
+        {
+            "id": "version",
+            "type": "promptString",
+            "description": "Enter the version for the build",
+            "default": "1.0.0"
+        }
+    ]
+}

@@ -24,4 +24,4 @@ Repositório para os artefatos de código e documentação desenvolvidos para o 
 O AkôFlow é uma ferramenta para execução de workflows científicos em Kubernetes. Ele utiliza a API do Kubernetes para criar e gerenciar recursos de execução de workflows, como pods e jobs. O AkôFlow é uma ferramenta de linha de comando que permite a execução de workflows científicos de forma distribuída e paralela em um cluster Kubernetes.
 
 ### Documentação
-O AkôFlow possui uma documentação completa que descreve como instalar, configurar e utilizar a ferramenta. A documentação está disponível em [https://ovvesley.github.io/akoflow/](https://ovvesley.github.io/akoflow/).
+O AkôFlow possui uma documentação completa que descreve como instalar, configurar e utilizar a ferramenta. A documentação está disponível em [https://akoflow.com/docs](https://akoflow.com/docs).

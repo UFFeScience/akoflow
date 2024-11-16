@@ -4,3 +4,4 @@ storage/*
 */.DS_Store
 .DS_Store
 __debug**
+releases/bin/*

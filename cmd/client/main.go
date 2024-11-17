@@ -2,10 +2,9 @@ package main
 
 import (
 	"flag"
-	"os"
-	"strconv"
 
 	"github.com/ovvesley/akoflow/pkg/client/services/dispatch_to_server_run_workflow_service"
+	"github.com/ovvesley/akoflow/pkg/client/services/flag_validator_service"
 )
 
 func main() {
@@ -15,15 +14,17 @@ func main() {
 
 	flag.Parse()
 
-	if !validateFile(*fileYaml) {
+	flagValidatorService := flag_validator_service.New()
+
+	if !flagValidatorService.ValidateFile(*fileYaml) {
 		panic("Invalid file")
 	}
 
-	if !validateHost(*host) {
+	if !flagValidatorService.ValidateHost(*host) {
 		panic("Invalid host")
 	}
 
-	if !validatePort(*port) {
+	if !flagValidatorService.ValidatePort(*port) {
 		panic("Invalid port")
 	}
 
@@ -34,35 +35,5 @@ func main() {
 		SetPort(*port).
 		SetFile(*fileYaml).
 		Run()
-
-}
-
-func validateFile(file string) bool {
-	if file == "" {
-		return false
-	}
-
-	if _, err := os.Stat(file); os.IsNotExist(err) {
-		return false
-	}
-
-	return true
-}
-
-func validateHost(host string) bool {
-	return host != ""
-}
-
-func validatePort(port string) bool {
-	if port == "" {
-		return false
-	}
-
-	portNumber, err := strconv.Atoi(port)
-	if err != nil {
-		return false
-	}
-
-	return portNumber > 0 && portNumber < 65535
 
 }

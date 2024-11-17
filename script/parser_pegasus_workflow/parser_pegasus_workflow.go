@@ -12,7 +12,7 @@ import (
 	"os"
 
 	"github.com/ovvesley/akoflow/pkg/client/entities/pegasus_workflow"
-	"github.com/ovvesley/akoflow/pkg/client/utils"
+	"github.com/ovvesley/akoflow/pkg/client/utils/utils_read_file"
 	"gopkg.in/yaml.v3"
 )
 
@@ -44,7 +44,7 @@ func (p *ParserPegasusWorkflowService) GetOutputFile() string {
 }
 
 func (p *ParserPegasusWorkflowService) Parser() {
-	textInputFile := utils.ReadFile(p.inputFile)
+	textInputFile := utils_read_file.New().ReadFile(p.inputFile)
 	yamlWorkflow := pegasus_workflow.PegasusWorkflow{}
 	err := yaml.Unmarshal([]byte(textInputFile), &yamlWorkflow)
 

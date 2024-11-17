@@ -1,13 +1,19 @@
-package utils
+package utils_read_file
 
 import "os"
 
-func ReadFile(filePath string) string {
+type UtilsReadFile struct {
+}
+
+func New() *UtilsReadFile {
+	return &UtilsReadFile{}
+}
+
+func (u *UtilsReadFile) ReadFile(filePath string) string {
 	// read file
 	file, err := os.Open(filePath)
 	if err != nil {
 		panic(err)
-		return ""
 	}
 
 	defer file.Close()
@@ -15,14 +21,12 @@ func ReadFile(filePath string) string {
 	stat, err := file.Stat()
 	if err != nil {
 		panic(err)
-		return ""
 	}
 
 	bs := make([]byte, stat.Size())
 	_, err = file.Read(bs)
 	if err != nil {
 		panic(err)
-		return ""
 	}
 
 	return string(bs)

@@ -7,7 +7,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/ovvesley/akoflow/pkg/client/utils"
+	"github.com/ovvesley/akoflow/pkg/client/utils/utils_read_file"
 )
 
 type DispatchToServerRunWorkflowService struct {
@@ -78,7 +78,7 @@ func (d *DispatchToServerRunWorkflowService) getBase64FileContent(filePath strin
 }
 
 func (d *DispatchToServerRunWorkflowService) getFileContent(filePath string) string {
-	return utils.ReadFile(filePath)
+	return utils_read_file.New().ReadFile(filePath)
 }
 
 func (d *DispatchToServerRunWorkflowService) sendToServer(base64FileContent string) {

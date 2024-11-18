@@ -1,6 +1,8 @@
 package config
 
 import (
+	"net/http"
+
 	"github.com/ovvesley/akoflow/pkg/server/config/http_helper"
 	"github.com/ovvesley/akoflow/pkg/server/config/http_render_view"
 	"github.com/ovvesley/akoflow/pkg/server/connector"
@@ -9,20 +11,19 @@ import (
 	"github.com/ovvesley/akoflow/pkg/server/repository/metrics_repository"
 	"github.com/ovvesley/akoflow/pkg/server/repository/storages_repository"
 	"github.com/ovvesley/akoflow/pkg/server/repository/workflow_repository"
-	"net/http"
 )
 
 const DEFAULT_NAMESPACE = "akoflow"
 
 type AppContainer struct {
-	Repository       appContainerRepository
-	Connector        appContainerConnector
+	Repository       AppContainerRepository
+	Connector        AppContainerConnector
 	DefaultNamespace string
-	TemplateRenderer appContainerTemplateRenderer
-	HttpHelper       appContainerHttpHelper
+	TemplateRenderer AppContainerTemplateRenderer
+	HttpHelper       AppContainerHttpHelper
 }
 
-type appContainerRepository struct {
+type AppContainerRepository struct {
 	WorkflowRepository workflow_repository.IWorkflowRepository
 	ActivityRepository activity_repository.IActivityRepository
 	LogsRepository     logs_repository.ILogsRepository
@@ -30,15 +31,15 @@ type appContainerRepository struct {
 	StoragesRepository storages_repository.IStorageRepository
 }
 
-type appContainerConnector struct {
+type AppContainerConnector struct {
 	K8sConnector connector.IConnector
 }
 
-type appContainerTemplateRenderer struct {
+type AppContainerTemplateRenderer struct {
 	RenderViewProvider http_render_view.HttpRenderViewProvider
 }
 
-type appContainerHttpHelper struct {
+type AppContainerHttpHelper struct {
 	WriteJson   func(w http.ResponseWriter, data interface{})
 	GetUrlParam func(r *http.Request, key string) string
 }
@@ -59,20 +60,20 @@ func MakeAppContainer() AppContainer {
 
 	return AppContainer{
 		DefaultNamespace: DEFAULT_NAMESPACE,
-		Repository: appContainerRepository{
+		Repository: AppContainerRepository{
 			WorkflowRepository: workflowRepository,
 			ActivityRepository: activityRepository,
 			LogsRepository:     logsRepository,
 			MetricsRepository:  metricsRepository,
 			StoragesRepository: storagesRepository,
 		},
-		Connector: appContainerConnector{
+		Connector: AppContainerConnector{
 			K8sConnector: k8sConnector,
 		},
-		TemplateRenderer: appContainerTemplateRenderer{
+		TemplateRenderer: AppContainerTemplateRenderer{
 			RenderViewProvider: renderViewprovider,
 		},
-		HttpHelper: appContainerHttpHelper{
+		HttpHelper: AppContainerHttpHelper{
 			WriteJson:   http_helper.WriteJson,
 			GetUrlParam: http_helper.GetUrlPathParam,
 		},
@@ -87,4 +88,8 @@ func App() AppContainer {
 		appContainer = MakeAppContainer()
 	}
 	return appContainer
+}
+
+func SetAppContainer(container AppContainer) {
+	appContainer = container
 }

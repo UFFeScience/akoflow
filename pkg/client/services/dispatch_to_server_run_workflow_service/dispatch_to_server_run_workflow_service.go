@@ -1,32 +1,23 @@
 package dispatch_to_server_run_workflow_service
 
 import (
-	"bytes"
-	"crypto/tls"
 	"encoding/base64"
-	"encoding/json"
-	"net/http"
 
+	"github.com/ovvesley/akoflow/pkg/client/connector/server_connector"
 	"github.com/ovvesley/akoflow/pkg/client/utils/utils_read_file"
 )
 
 type DispatchToServerRunWorkflowService struct {
-	host string
-	port string
-	file string
+	host            string
+	port            string
+	file            string
+	serverConnector server_connector.IServerConnector
 }
 
-type RequestPostRunWorkflow struct {
-	Workflow string `json:"workflow"`
-}
-
-type ResponsePostRunWorkflow struct {
-	Workflow string `json:"workflow"`
-	Message  string `json:"message"`
-}
-
-func New() *DispatchToServerRunWorkflowService {
-	return &DispatchToServerRunWorkflowService{}
+func New(serverConnector server_connector.IServerConnector) *DispatchToServerRunWorkflowService {
+	return &DispatchToServerRunWorkflowService{
+		serverConnector: serverConnector,
+	}
 }
 
 func (d *DispatchToServerRunWorkflowService) SetHost(host string) *DispatchToServerRunWorkflowService {
@@ -62,8 +53,6 @@ func (d *DispatchToServerRunWorkflowService) Run() {
 	println("port:", d.port)
 	println("file:", d.file)
 
-	// read file
-
 	base64FileContent := d.getBase64FileContent(d.GetFile())
 
 	d.sendToServer(base64FileContent)
@@ -82,41 +71,5 @@ func (d *DispatchToServerRunWorkflowService) getFileContent(filePath string) str
 }
 
 func (d *DispatchToServerRunWorkflowService) sendToServer(base64FileContent string) {
-	client := &http.Client{
-		Transport: &http.Transport{
-			TLSClientConfig: &tls.Config{
-				InsecureSkipVerify: true,
-			},
-		},
-	}
-
-	payload := RequestPostRunWorkflow{
-		Workflow: base64FileContent,
-	}
-
-	payloadJson, _ := json.Marshal(payload)
-
-	req, _ := http.NewRequest("POST", "http://"+d.GetHost()+":"+d.GetPort()+"/akoflow-server/workflow/run/", bytes.NewBuffer(payloadJson))
-
-	req.Header.Set("Content-Type", "application/json")
-
-	resp, err := client.Do(req)
-
-	if err != nil {
-		messageError := "error: " + err.Error()
-		println(messageError)
-	}
-
-	defer resp.Body.Close()
-
-	var result ResponsePostRunWorkflow
-	err = json.NewDecoder(resp.Body).Decode(&result)
-
-	if err != nil {
-		println("error:", err)
-	}
-
-	println("workflow:", result.Workflow)
-	println("message:", result.Message)
-
+	d.serverConnector.Workflow().Run(d.host, d.port, base64FileContent)
 }

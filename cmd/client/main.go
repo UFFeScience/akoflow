@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 
+	"github.com/ovvesley/akoflow/pkg/client/connector/server_connector"
 	"github.com/ovvesley/akoflow/pkg/client/services/dispatch_to_server_run_workflow_service"
 	"github.com/ovvesley/akoflow/pkg/client/services/flag_validator_service"
 )
@@ -28,7 +29,7 @@ func main() {
 		panic("Invalid port")
 	}
 
-	dispatchToServerRunWorkflowService := dispatch_to_server_run_workflow_service.New()
+	dispatchToServerRunWorkflowService := dispatch_to_server_run_workflow_service.New(server_connector.New())
 
 	dispatchToServerRunWorkflowService.
 		SetHost(*host).

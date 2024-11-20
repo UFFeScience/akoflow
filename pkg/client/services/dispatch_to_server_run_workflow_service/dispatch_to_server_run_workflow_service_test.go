@@ -3,7 +3,7 @@ package dispatch_to_server_run_workflow_service
 import (
 	"testing"
 
-	"github.com/ovvesley/akoflow/pkg/client/utils/utils_create_file"
+	"github.com/ovvesley/akoflow/pkg/shared/utils/utils_create_file"
 	"github.com/ovvesley/akoflow/tests/mocks/pkg/client/connector/server_connector"
 	"github.com/ovvesley/akoflow/tests/mocks/pkg/client/connector/server_connector/server_connector_workflow"
 	"github.com/stretchr/testify/assert"

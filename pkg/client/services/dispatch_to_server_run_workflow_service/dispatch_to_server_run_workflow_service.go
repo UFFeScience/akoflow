@@ -4,7 +4,7 @@ import (
 	"encoding/base64"
 
 	"github.com/ovvesley/akoflow/pkg/client/connector/server_connector"
-	"github.com/ovvesley/akoflow/pkg/client/utils/utils_read_file"
+	"github.com/ovvesley/akoflow/pkg/shared/utils/utils_read_file"
 )
 
 type DispatchToServerRunWorkflowService struct {

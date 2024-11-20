@@ -1,6 +1,7 @@
 package worker
 
 import (
+	"github.com/ovvesley/akoflow/pkg/server/config"
 	"github.com/ovvesley/akoflow/pkg/server/engine/channel"
 	"github.com/ovvesley/akoflow/pkg/server/services/run_activity_in_cluster_service"
 )
@@ -16,6 +17,7 @@ func New() *Worker {
 
 func (w *Worker) StartWorker() {
 	for {
+
 		managerChannel := channel.GetInstance()
 		result := <-managerChannel.WorfklowChannel
 
@@ -26,6 +28,6 @@ func (w *Worker) StartWorker() {
 		runActivityInClusterService := run_activity_in_cluster_service.New()
 		runActivityInClusterService.Run(result.Id)
 
-		println("Worker is Listening...")
+		config.App().Logger.Info("Worker: Activity finished", result.Id)
 	}
 }

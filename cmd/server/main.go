@@ -13,7 +13,7 @@ func main() {
 
 	config.SetupEnv()
 
-	config.App()
+	config.App().Logger.Info("Starting Akoflow Server")
 
 	go worker.New().StartWorker()
 	go orchestrator.StartOrchestrator()

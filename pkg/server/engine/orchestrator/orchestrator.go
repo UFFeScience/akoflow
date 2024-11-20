@@ -3,6 +3,7 @@ package orchestrator
 import (
 	"time"
 
+	"github.com/ovvesley/akoflow/pkg/server/config"
 	"github.com/ovvesley/akoflow/pkg/server/services/get_pending_workflow_service"
 	"github.com/ovvesley/akoflow/pkg/server/services/orchestrate_workflow_service"
 )
@@ -14,7 +15,7 @@ func StartOrchestrator() {
 	for {
 		handleOrchestrator()
 		time.Sleep(TimeToUpdateSeconds * time.Second)
-		println("Orchestrator is Listening...")
+		config.App().Logger.Info("Orchestrator is running")
 	}
 
 }

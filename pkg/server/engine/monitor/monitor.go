@@ -3,6 +3,7 @@ package monitor
 import (
 	"time"
 
+	"github.com/ovvesley/akoflow/pkg/server/config"
 	"github.com/ovvesley/akoflow/pkg/server/services/monitor_change_workflow_service"
 	"github.com/ovvesley/akoflow/pkg/server/services/monitor_collect_metrics_service"
 )
@@ -13,7 +14,7 @@ func StartMonitor() {
 	for {
 		handleMonitor()
 		time.Sleep(TimeToUpdateSeconds * time.Second)
-		println("Monitor is Listening...")
+		config.App().Logger.Info("Monitor is running")
 
 	}
 }

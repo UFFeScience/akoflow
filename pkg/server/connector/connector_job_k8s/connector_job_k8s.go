@@ -141,7 +141,7 @@ type ResponseGetJob struct {
 									} `json:"f:terminationMessagePath"`
 									FTerminationMessagePolicy struct {
 									} `json:"f:terminationMessagePolicy"`
-								} `json:"k:{"name":"activity-077"}"`
+								}
 							} `json:"f:containers"`
 							FDnsPolicy struct {
 							} `json:"f:dnsPolicy"`
@@ -257,7 +257,7 @@ func (c *ConnectorJobK8s) GetJob(namespace string, jobName string) (ResponseGetJ
 	resp, err := c.client.Do(req)
 
 	if resp == nil {
-		return ResponseGetJob{}, errors.New("Error getting job")
+		return ResponseGetJob{}, errors.New("error getting job")
 	}
 
 	if resp.StatusCode == 404 {
@@ -294,7 +294,7 @@ func (c *ConnectorJobK8s) DeleteJob(jobName string, namespace string) error {
 	}
 
 	if resp.StatusCode != 200 {
-		return errors.New("Error deleting job")
+		return errors.New("error deleting job")
 	}
 
 	return nil

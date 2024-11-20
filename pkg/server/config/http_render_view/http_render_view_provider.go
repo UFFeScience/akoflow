@@ -2,8 +2,9 @@ package http_render_view
 
 import (
 	"fmt"
-	"github.com/ovvesley/akoflow/pkg/server/services/manipulation_files_service"
 	"html/template"
+
+	"github.com/ovvesley/akoflow/pkg/server/services/manipulation_files_service"
 )
 
 const PATH_TEMPLATE = "pkg/server/engine/httpserver/handlers/akoflow_admin_handler/akoflow_admin_handler_tmpl/"

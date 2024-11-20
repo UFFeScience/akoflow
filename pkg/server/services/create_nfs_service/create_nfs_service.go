@@ -2,11 +2,12 @@ package create_nfs_service
 
 import (
 	"fmt"
+	"log"
+
 	"github.com/ovvesley/akoflow/pkg/server/config"
 	"github.com/ovvesley/akoflow/pkg/server/connector"
 	"github.com/ovvesley/akoflow/pkg/server/entities/nfs_server_entity"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
-	"log"
 )
 
 type CreateNfsService struct {
@@ -358,7 +359,7 @@ func (c *CreateNfsService) Create() bool {
 		log.Printf("Failed to create ServiceAccount: %s", resultServiceAccount.Message)
 
 	}
-	fmt.Println(resultServiceAccount.Message)
+	config.App().Logger.Info(resultServiceAccount.Message)
 
 	// Service
 	service := c.createService()
@@ -367,7 +368,7 @@ func (c *CreateNfsService) Create() bool {
 		log.Printf("Failed to create Service: %s", resultService.Message)
 
 	}
-	fmt.Println(resultService.Message)
+	config.App().Logger.Info(resultService.Message)
 
 	// PersistentVolumeClaim
 	pvc := c.createPersistentVolumeClaim()
@@ -376,7 +377,7 @@ func (c *CreateNfsService) Create() bool {
 		log.Printf("Failed to create PersistentVolumeClaim: %s", resultPvc.Message)
 
 	}
-	fmt.Println(resultPvc.Message)
+	config.App().Logger.Info(resultPvc.Message)
 
 	// Deployment
 	deployment := c.createDeployment()
@@ -385,7 +386,7 @@ func (c *CreateNfsService) Create() bool {
 		log.Printf("Failed to create Deployment: %s", resultDeployment.Message)
 
 	}
-	fmt.Println(resultDeployment.Message)
+	config.App().Logger.Info(resultDeployment.Message)
 
 	// ClusterRole
 	clusterRole := c.createClusterRole()
@@ -394,7 +395,7 @@ func (c *CreateNfsService) Create() bool {
 		log.Printf("Failed to create ClusterRole: %s", resultClusterRole.Message)
 
 	}
-	fmt.Println(resultClusterRole.Message)
+	config.App().Logger.Info(resultClusterRole.Message)
 
 	// ClusterRoleBinding
 	clusterRoleBinding := c.createClusterRoleBinding()
@@ -402,7 +403,7 @@ func (c *CreateNfsService) Create() bool {
 	if !resultClusterRoleBinding.Success {
 		log.Printf("Failed to create ClusterRoleBinding: %s", resultClusterRoleBinding.Message)
 	}
-	fmt.Println(resultClusterRoleBinding.Message)
+	config.App().Logger.Info(resultClusterRoleBinding.Message)
 
 	// Role
 	role := c.createRole()
@@ -411,7 +412,7 @@ func (c *CreateNfsService) Create() bool {
 		log.Printf("Failed to create Role: %s", resultRole.Message)
 
 	}
-	fmt.Println(resultRole.Message)
+	config.App().Logger.Info(resultRole.Message)
 
 	// RoleBinding
 	roleBinding := c.createRoleBinding()
@@ -420,7 +421,7 @@ func (c *CreateNfsService) Create() bool {
 		log.Printf("Failed to create RoleBinding: %s", resultRoleBinding.Message)
 
 	}
-	fmt.Println(resultRoleBinding.Message)
+	config.App().Logger.Info(resultRoleBinding.Message)
 
 	// StorageClass
 	storageClass := c.createStorageClass()
@@ -428,7 +429,7 @@ func (c *CreateNfsService) Create() bool {
 	if !resultStorageClass.Success {
 		log.Printf("Failed to create StorageClass: %s", resultStorageClass.Message)
 	}
-	fmt.Println(resultStorageClass.Message)
+	config.App().Logger.Info(resultStorageClass.Message)
 
 	return true
 

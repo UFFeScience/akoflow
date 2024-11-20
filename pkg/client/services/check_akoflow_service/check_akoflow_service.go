@@ -6,6 +6,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+
+	"github.com/ovvesley/akoflow/pkg/server/config"
 )
 
 type CheckAkoflowService struct {
@@ -74,20 +76,20 @@ func (c *CheckAkoflowService) checkService(client *http.Client, serviceName stri
 
 	payloadJson, err := json.Marshal(payload)
 	if err != nil {
-		fmt.Printf("Service %s Failed: %v\n", serviceName, err)
+		config.App().Logger.Infof("Service %s Failed: %v\n", serviceName, err)
 		return
 	}
 
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(payloadJson))
 	if err != nil {
-		fmt.Printf("Service %s Failed: %v\n", serviceName, err)
+		config.App().Logger.Infof("Service %s Failed: %v\n", serviceName, err)
 		return
 	}
 	req.Header.Set("Content-Type", "application/json")
 
 	resp, err := client.Do(req)
 	if err != nil {
-		fmt.Printf("Service %s Failed: %v\n", serviceName, err)
+		config.App().Logger.Infof("Service %s Failed: %v\n", serviceName, err)
 		return
 	}
 	defer resp.Body.Close()
@@ -95,13 +97,13 @@ func (c *CheckAkoflowService) checkService(client *http.Client, serviceName stri
 	var result ServiceStatusResponse
 	err = json.NewDecoder(resp.Body).Decode(&result)
 	if err != nil {
-		fmt.Printf("Service %s Failed: %v\n", serviceName, err)
+		config.App().Logger.Infof("Service %s Failed: %v\n", serviceName, err)
 		return
 	}
 
 	if result.Status == "OK" {
-		fmt.Printf("Service %s OK\n", serviceName)
+		config.App().Logger.Infof("Service %s OK\n", serviceName)
 	} else {
-		fmt.Printf("Service %s Failed: %s\n", serviceName, result.Message)
+		config.App().Logger.Infof("Service %s Failed: %s\n", serviceName, result.Message)
 	}
 }

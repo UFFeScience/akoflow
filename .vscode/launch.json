@@ -1,5 +1,6 @@
 {
     "configurations": [
+
         {
             "name": "Launch AkoFlow Server",
             "type": "go",
@@ -21,6 +22,16 @@
             "program": "cmd/client/main.go",
             "cwd": "/app/",
             "args": ["run", "-host", "localhost", "-port", "8080", "-file", "test.yaml"],
+        },
+
+        {
+            "name": "Launch AkoFlow Client Install",
+            "type": "go",
+            "request": "launch",
+            "mode":  "debug",
+            "program": "cmd/client/main.go",
+            "cwd": "/app/",
+            "args": ["install", "--instance", "local"],
         }
     ]
 }

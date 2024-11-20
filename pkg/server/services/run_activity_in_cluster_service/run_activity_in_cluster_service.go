@@ -27,7 +27,7 @@ func (r *RunActivityInClusterService) Run(activityID int) {
 	wf, _ := r.workflowRepository.Find(wfa.WorkflowId)
 
 	if err != nil {
-		println("Activity not found")
+		config.App().Logger.Infof("WORKER: Activity not found %d", activityID)
 		return
 	}
 

@@ -9,10 +9,13 @@ import (
 var FLAG_ID_WORKER_STOP_LISTENING = -1
 
 type Worker struct {
+	State WorkerState
 }
 
 func New() *Worker {
-	return &Worker{}
+	return &Worker{
+		State: WorkerState{},
+	}
 }
 
 func (w *Worker) StartWorker() {

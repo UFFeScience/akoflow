@@ -5,3 +5,4 @@ storage/*
 .DS_Store
 __debug**
 releases/bin/*
+**akoflow.log**

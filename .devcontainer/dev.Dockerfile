@@ -6,7 +6,7 @@ RUN apk add --no-cache gcc libc-dev sqlite git curl graphviz
 COPY go.mod go.sum ./
 RUN go mod download
 
-RUN go install golang.org/x/tools/gopls@latest && \ 
+RUN go install golang.org/x/tools/gopls@v0.16.2 && \ 
     go install honnef.co/go/tools/cmd/staticcheck@latest
 
 COPY . .

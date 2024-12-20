@@ -31,7 +31,7 @@
             "mode":  "debug",
             "program": "cmd/client/main.go",
             "cwd": "/app/",
-            "args": ["install", "--instance", "local"],
+            "args": ["install", "--hosts", "root:root@172.17.0.3:22,root:root@172.17.0.4:22"],
         }
     ]
 }

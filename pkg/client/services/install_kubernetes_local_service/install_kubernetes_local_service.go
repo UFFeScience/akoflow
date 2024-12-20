@@ -41,3 +41,31 @@ func (i *InstallKubernetesLocalService) installDocker() error {
 	}
 	return nil
 }
+
+func (i *InstallKubernetesLocalService) verifyKubectl() bool {
+	if _, err := exec.LookPath("kubectl"); err != nil {
+		return false
+	}
+	return true
+}
+
+// sudo mkdir -p /etc/containerd
+// containerd config default | sudo tee /etc/containerd/config.toml
+// sudo sed -i 's#sandbox_image = .*#sandbox_image = "registry.k8s.io/pause:3.9"#' /etc/containerd/config.toml
+
+// # Reiniciar os serviços
+// sudo systemctl restart containerd
+// sudo systemctl restart docker
+
+// sudo apt-get update
+// sudo apt-get install -y apt-transport-https ca-certificates curl gpg
+
+// curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.31/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+
+// echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.31/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
+
+// sudo apt-get update
+// sudo apt-get install -y kubelet kubeadm kubectl
+// sudo apt-mark hold kubelet kubeadm kubectl
+
+// sudo systemctl enable --now kubelet

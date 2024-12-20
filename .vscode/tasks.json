@@ -20,7 +20,19 @@
                 GOOS=darwin GOARCH=arm64 go build -o releases/bin/akoflow-client_${input:version}_darwin_arm64 cmd/client/main.go"
             ],
             "problemMatcher": []
+        },
+
+        {
+            "label": "Build Client Binary send to VM",
+            "type": "shell",
+            "command": "sh",
+            "args": [
+                "-c",
+                "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o /tmp/akoflow-client_linux_amd64 cmd/client/main.go && \
+                sshpass -p '1334' scp /tmp/akoflow-client_linux_amd64 ubuntu@192.168.1.8:/home/ubuntu/akoflow-client_linux_amd64"
+            ],
         }
+
     ],
     "inputs": [
         {

@@ -4,7 +4,9 @@ import (
 	"flag"
 	"os"
 
-	"github.com/ovvesley/akoflow/pkg/client/services/install_kubernetes_local_service"
+	"github.com/ovvesley/akoflow/pkg/client/services/install_akoflow_local_service"
+	"github.com/ovvesley/akoflow/pkg/client/services/ssh_connection_service"
+	"github.com/ovvesley/akoflow/pkg/shared/utils/utils_parser_params_ssh_client"
 )
 
 type InstallCliService struct {
@@ -15,19 +17,24 @@ func New() *InstallCliService {
 }
 
 func (i *InstallCliService) Run() {
-	// Install the CLI service
 
-	// akoflow install --enviroment=local
+	hostsStr := flag.String("hosts", "<host1>,<host2>", "Hosts to install the CLI service")
 
-	instance := flag.String("instance", "local", "instance")
 	flag.CommandLine.Parse(os.Args[2:])
 
-	println("Installing CLI service on", *instance)
+	hosts := utils_parser_params_ssh_client.
+		New().
+		Parse(*hostsStr)
 
-	install_kubernetes_local_service := install_kubernetes_local_service.New()
+	sshConnectionService := ssh_connection_service.New()
+	for _, host := range hosts {
+		sshConnectionService.AddHost(host)
+	}
 
-	install_kubernetes_local_service.Install()
+	install_akoflow_local_service := install_akoflow_local_service.New()
 
-	// Install the CLI service
+	install_akoflow_local_service.
+		SetSSHConnectionService(sshConnectionService).
+		Install()
 
 }

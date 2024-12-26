@@ -198,6 +198,19 @@ subjects:
     namespace: kube-system
 ---
 apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: akoflow-server-pvc
+  namespace: akoflow
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 64Gi
+  storageClassName: manual
+---
+apiVersion: v1
 kind: Service
 metadata:
   labels:

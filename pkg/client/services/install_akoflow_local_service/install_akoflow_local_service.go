@@ -1,18 +1,34 @@
 package install_akoflow_local_service
 
 import (
+	"fmt"
+	"regexp"
+
+	ssh_client_entity "github.com/ovvesley/akoflow/pkg/client/entities/ssh_client"
 	"github.com/ovvesley/akoflow/pkg/client/services/install_kubernetes_local_service"
 	"github.com/ovvesley/akoflow/pkg/client/services/ssh_connection_service"
 )
 
 const (
-	addKubernetesRepoCommand      = "echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.31/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list"
-	addKubernetesKeyringCommand   = "sudo mkdir -p /etc/apt/keyrings && curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.31/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg"
-	installPackagesCommand        = "sudo apt update && sudo apt install -y uidmap apt-transport-https ca-certificates curl gpg kubelet kubeadm kubectl"
-	installDockerCommand          = "curl -fsSL https://get.docker.com -o get-docker.sh && sh get-docker.sh && dockerd-rootless-setuptool.sh install"
-	holdKubernetesPackagesCommand = "sudo apt-mark hold kubelet kubeadm kubectl"
-	configureContainerdCommand    = "sudo mkdir -p /etc/containerd && containerd config default | sudo tee /etc/containerd/config.toml && sudo systemctl restart containerd"
+	commonBuildAddKubernetesRepoCommand      = "echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.31/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list"
+	commonBuildAddKubernetesKeyringCommand   = "sudo mkdir -p /etc/apt/keyrings && curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.31/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg"
+	commonBuildInstallPackagesCommand        = "sudo apt update && sudo apt install -y uidmap apt-transport-https ca-certificates curl gpg kubelet kubeadm kubectl"
+	commonBuildInstallDockerCommand          = "curl -fsSL https://get.docker.com -o get-docker.sh && sh get-docker.sh && dockerd-rootless-setuptool.sh install"
+	commonBuildHoldKubernetesPackagesCommand = "sudo apt-mark hold kubelet kubeadm kubectl"
+	commonBuildConfigureContainerdCommand    = "sudo mkdir -p /etc/containerd && containerd config default | sudo tee /etc/containerd/config.toml && sudo systemctl restart containerd"
 )
+
+const (
+	mainBuildInitializeKubernetes = "sudo kubeadm init"
+	mainBuildCopyKubeConfig       = "mkdir -p $HOME/.kube && sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config && sudo chown $(id -u):$(id -g) $HOME/.kube/config"
+	mainBuildInstallCalico        = "kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml"
+)
+
+type MainHostDTO struct {
+	IPAddress string
+	Token     string
+	CertHash  string
+}
 
 type InstallAkoflowLocalService struct {
 	installKubernetesService *install_kubernetes_local_service.InstallKubernetesLocalService
@@ -36,17 +52,58 @@ func (i *InstallAkoflowLocalService) Install() {
 	i.sshConnectionService.EstablishConnectionWithHosts()
 
 	i.sshConnectionService.ExecuteCommandsInMultipleHost([]string{
-		addKubernetesRepoCommand,
-		addKubernetesKeyringCommand,
-		installPackagesCommand,
-		installDockerCommand,
-		holdKubernetesPackagesCommand,
-		configureContainerdCommand,
+		commonBuildAddKubernetesRepoCommand,
+		commonBuildAddKubernetesKeyringCommand,
+		commonBuildInstallPackagesCommand,
+		commonBuildInstallDockerCommand,
+		commonBuildHoldKubernetesPackagesCommand,
+		commonBuildConfigureContainerdCommand,
 	})
 
 	mainHost := i.sshConnectionService.GetMainNode()
+	workers := i.sshConnectionService.GetWorkerNodes()
 
-	i.sshConnectionService.ExecuteCommandsOnHost(mainHost, []string{"echo hello world >> test.txt"})
+	mainHostDTO := i.handleKubernetesInitializationInMainHost(mainHost)
+	i.handleKubernetesJoiningInWorkerNodes(workers, mainHostDTO)
 
 	i.sshConnectionService.CloseConnections()
+}
+
+func (i *InstallAkoflowLocalService) handleKubernetesInitializationInMainHost(mainHost ssh_client_entity.SSHClient) MainHostDTO {
+	output := i.sshConnectionService.ExecuteCommandsOnHost(mainHost, []string{
+		mainBuildInitializeKubernetes,
+		mainBuildCopyKubeConfig,
+		mainBuildInstallCalico,
+	})
+
+	ipAddress := ""
+	token := ""
+	certHash := ""
+
+	var re = regexp.MustCompile(`(?m)kubeadm\sjoin\s(.*?.)\s*--token\s(.*?)\\\s*?--discovery-token-ca-cert-hash\s(.*?)$`)
+	matches := re.FindStringSubmatch(output)
+
+	if len(matches) > 3 {
+		ipAddress = matches[1]
+		token = matches[2]
+		certHash = matches[3]
+	}
+
+	mainHostDTO := MainHostDTO{
+		IPAddress: ipAddress,
+		Token:     token,
+		CertHash:  certHash,
+	}
+
+	return mainHostDTO
+}
+
+func (i *InstallAkoflowLocalService) handleKubernetesJoiningInWorkerNodes(workers []ssh_client_entity.SSHClient, mainHostDTO MainHostDTO) {
+
+	for _, worker := range workers {
+		i.sshConnectionService.ExecuteCommandsOnHost(worker, []string{
+			fmt.Sprintf("sudo kubeadm join %s --token %s --discovery-token-ca-cert-hash %s", mainHostDTO.IPAddress, mainHostDTO.Token, mainHostDTO.CertHash),
+		})
+	}
+
 }

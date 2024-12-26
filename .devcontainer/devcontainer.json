@@ -6,6 +6,9 @@
   },
   "workspaceFolder": "/app",
   "workspaceMount": "source=${localWorkspaceFolder},target=/app,type=bind",
+  "mounts": [
+    "source=${localEnv:HOME}/.ssh,target=/root/.ssh,type=bind"
+  ],
   "appPort": ["8080:8080"],
   "postCreateCommand": "go mod tidy",
   "customizations": {

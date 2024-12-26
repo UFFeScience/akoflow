@@ -8,10 +8,16 @@ import (
 )
 
 type UtilsParserParamsSSHClient struct {
+	IdentityFile string
 }
 
 func New() *UtilsParserParamsSSHClient {
 	return &UtilsParserParamsSSHClient{}
+}
+
+func (u *UtilsParserParamsSSHClient) SetIdentityFile(identityFile string) *UtilsParserParamsSSHClient {
+	u.IdentityFile = identityFile
+	return u
 }
 
 func (u *UtilsParserParamsSSHClient) Parse(args string) []ssh_client_entity.SSHClient {
@@ -35,12 +41,14 @@ func (u *UtilsParserParamsSSHClient) Parse(args string) []ssh_client_entity.SSHC
 			continue
 		}
 		client := ssh_client_entity.SSHClient{
-			Username: userInfo[0],
-			Password: userInfo[1],
-			Host:     hostInfo[0],
-			Port:     port,
+			Username:     userInfo[0],
+			Password:     userInfo[1],
+			Host:         hostInfo[0],
+			Port:         port,
+			IdentityFile: u.IdentityFile,
 		}
 		clients = append(clients, client)
+
 	}
 	return clients
 }

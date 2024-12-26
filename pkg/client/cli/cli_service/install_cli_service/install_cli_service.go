@@ -19,11 +19,13 @@ func New() *InstallCliService {
 func (i *InstallCliService) Run() {
 
 	hostsStr := flag.String("hosts", "<host1>,<host2>", "Hosts to install the CLI service")
+	identityFile := flag.String("identity", "~/.ssh/id_rsa", "Identity file")
 
 	flag.CommandLine.Parse(os.Args[2:])
 
 	hosts := utils_parser_params_ssh_client.
 		New().
+		SetIdentityFile(*identityFile).
 		Parse(*hostsStr)
 
 	sshConnectionService := ssh_connection_service.New()

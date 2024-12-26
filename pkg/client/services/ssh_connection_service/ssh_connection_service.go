@@ -28,7 +28,7 @@ func (s *SSHConnectionService) connect(client ssh_client_entity.SSHClient) (*ssh
 	if client.Password != "" {
 		authMethods = append(authMethods, ssh.Password(client.Password))
 	} else {
-		key, err := os.ReadFile("/root/.ssh/id_rsa")
+		key, err := os.ReadFile(client.IdentityFile)
 		if err != nil {
 			return nil, fmt.Errorf("failed to read SSH key: %v", err)
 		}
@@ -82,6 +82,17 @@ func (s *SSHConnectionService) GetMainNode() ssh_client_entity.SSHClient {
 	return s.hosts[0]
 }
 
+func (s *SSHConnectionService) GetAllHosts() []ssh_client_entity.SSHClient {
+	return s.hosts
+}
+
+func (s *SSHConnectionService) GetWorkerNodes() []ssh_client_entity.SSHClient {
+	if len(s.hosts) <= 1 {
+		return []ssh_client_entity.SSHClient{}
+	}
+	return s.hosts[1:]
+}
+
 func (s *SSHConnectionService) establishConnection(client ssh_client_entity.SSHClient, results chan<- string) {
 	connection, err := s.connect(client)
 	if err != nil {
@@ -113,11 +124,12 @@ func (s *SSHConnectionService) ExecuteCommandsInMultipleHost(commands []string) 
 	wg.Wait()
 }
 
-func (s *SSHConnectionService) ExecuteCommandsOnHost(client ssh_client_entity.SSHClient, commands []string) {
+func (s *SSHConnectionService) ExecuteCommandsOnHost(client ssh_client_entity.SSHClient, commands []string) string {
 	connection, err := s.connect(client)
+	response := ""
 	if err != nil {
 		fmt.Printf("Failed to connect to %s: %v\n", client.Host, err)
-		return
+		return ""
 	}
 	defer connection.Close()
 
@@ -125,7 +137,7 @@ func (s *SSHConnectionService) ExecuteCommandsOnHost(client ssh_client_entity.SS
 		session, err := connection.NewSession()
 		if err != nil {
 			fmt.Printf("Failed to create session for command '%s' on host %s: %v\n", cmd, client.Host, err)
-			return
+			return ""
 		}
 		defer session.Close()
 
@@ -135,10 +147,13 @@ func (s *SSHConnectionService) ExecuteCommandsOnHost(client ssh_client_entity.SS
 		err = session.Run(cmd)
 		if err != nil {
 			fmt.Printf("Failed to execute command '%s' on host %s: %v\n", cmd, client.Host, err)
-			return
+			return ""
 		}
 
 		out := stdoutBuf.String()
 		fmt.Printf("Output of command '%s' on host %s: %s\n", cmd, client.Host, out)
+
+		response += out
 	}
+	return response
 }

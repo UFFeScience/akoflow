@@ -143,12 +143,12 @@ metadata:
   labels:
     app: akoflow-server
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   selector:
     app: akoflow-server
   ports:
     - protocol: TCP
-      port: 8080
+      port: 30080
       targetPort: 8080
 ---
 apiVersion: rbac.authorization.k8s.io/v1

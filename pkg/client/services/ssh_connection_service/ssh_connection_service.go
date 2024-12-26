@@ -3,6 +3,7 @@ package ssh_connection_service
 import (
 	"bytes"
 	"fmt"
+	"os"
 	"sync"
 
 	ssh_client_entity "github.com/ovvesley/akoflow/pkg/client/entities/ssh_client"
@@ -23,11 +24,24 @@ func New() *SSHConnectionService {
 }
 
 func (s *SSHConnectionService) connect(client ssh_client_entity.SSHClient) (*ssh.Client, error) {
+	var authMethods []ssh.AuthMethod
+	if client.Password != "" {
+		authMethods = append(authMethods, ssh.Password(client.Password))
+	} else {
+		key, err := os.ReadFile("/root/.ssh/id_rsa")
+		if err != nil {
+			return nil, fmt.Errorf("failed to read SSH key: %v", err)
+		}
+		signer, err := ssh.ParsePrivateKey(key)
+		if err != nil {
+			return nil, fmt.Errorf("failed to parse SSH key: %v", err)
+		}
+		authMethods = append(authMethods, ssh.PublicKeys(signer))
+	}
+
 	config := &ssh.ClientConfig{
-		User: client.Username,
-		Auth: []ssh.AuthMethod{
-			ssh.Password(client.Password),
-		},
+		User:            client.Username,
+		Auth:            authMethods,
 		HostKeyCallback: ssh.InsecureIgnoreHostKey(),
 	}
 
@@ -64,6 +78,10 @@ func (s *SSHConnectionService) EstablishConnectionWithHosts() {
 	}
 }
 
+func (s *SSHConnectionService) GetMainNode() ssh_client_entity.SSHClient {
+	return s.hosts[0]
+}
+
 func (s *SSHConnectionService) establishConnection(client ssh_client_entity.SSHClient, results chan<- string) {
 	connection, err := s.connect(client)
 	if err != nil {
@@ -81,21 +99,21 @@ func (s *SSHConnectionService) CloseConnections() {
 	}
 }
 
-func (s *SSHConnectionService) ExecuteCommands(commands []string) {
+func (s *SSHConnectionService) ExecuteCommandsInMultipleHost(commands []string) {
 	var wg sync.WaitGroup
 
 	for _, client := range s.hosts {
 		wg.Add(1)
 		go func(sshClient ssh_client_entity.SSHClient) {
 			defer wg.Done()
-			s.executeCommandsOnHost(sshClient, commands)
+			s.ExecuteCommandsOnHost(sshClient, commands)
 		}(client)
 	}
 
 	wg.Wait()
 }
 
-func (s *SSHConnectionService) executeCommandsOnHost(client ssh_client_entity.SSHClient, commands []string) {
+func (s *SSHConnectionService) ExecuteCommandsOnHost(client ssh_client_entity.SSHClient, commands []string) {
 	connection, err := s.connect(client)
 	if err != nil {
 		fmt.Printf("Failed to connect to %s: %v\n", client.Host, err)

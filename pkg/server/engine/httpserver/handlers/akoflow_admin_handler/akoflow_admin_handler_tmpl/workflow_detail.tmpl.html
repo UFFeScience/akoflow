@@ -69,8 +69,8 @@
 
             <!-- Graph Panel -->
             <div class="w-full p-6 rounded-lg mb-8 bg-gray-100 dark:bg-gray-700">
-                <p class="text-gray-900 dark:text-white"><span class="font-medium">wf-montage-050d.yaml</span></p>
-                <p class="text-gray-500 dark:text-gray-400">Workflow ID: <span class="font-medium">#001</span></p>
+                <p class="text-gray-900 dark:text-white"><span class="font-medium" id="nameworkflowgp"></span></p>
+                <p class="text-gray-500 dark:text-gray-400">Workflow ID: <span class="font-medium" id="workflowidgp">#001</span></p>
 
 
                 <div class="p-6 rounded-lg flex items-center justify-center bg-gray-50 dark:bg-gray-800 mt-4">
@@ -209,9 +209,16 @@
 
         function handleRenderGraph(workflow, workflowDag) {
             let container = document.getElementById("graphView");
+            let workflowNameGp = document.getElementById("nameworkflowgp");
+            let workflowIdGp = document.getElementById("workflowidgp");
+            
+            workflowNameGp.innerText = workflow.name;
+            workflowIdGp.innerText = `#${workflow.id}`;
 
             let nodes = new vis.DataSet(workflowDag.nodes);
             let edges = new vis.DataSet(workflowDag.edges);
+
+            
 
             let data = {
                 nodes: nodes,

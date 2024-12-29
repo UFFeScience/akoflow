@@ -1,0 +1,45 @@
+name: akf-wf-gawa-distributed
+spec:
+  image: "ovvesley/akoflow-wf-gawa:latest"
+  namespace: "akoflow"
+  storageClassName: "hostpath"
+  storageSize: "10Gi"
+  storagePolicy:
+    type: distributed
+  mountPath: "/data-akoflow"
+  activities:
+    - name: gawastep01
+      run: |
+        cp -R /data/* /data-akoflow
+        export GAWA_ROOT=/data-akoflow
+
+        conda run --no-capture-output -n gawa python -W ignore gawa_main.py gawa.cfg STEP_1
+      memoryLimit: 1Gi
+      cpuLimit: 1
+
+    - name: gawastep02
+      run: |
+        export GAWA_ROOT=/data-akoflow
+        conda run --no-capture-output -n gawa python -W ignore gawa_main.py gawa.cfg STEP_2
+      memoryLimit: 1Gi
+      cpuLimit: 14
+      dependsOn:
+        - "gawastep01"
+
+    - name: gawastep03
+      run: |
+        export GAWA_ROOT=/data-akoflow
+        conda run --no-capture-output -n gawa python -W ignore gawa_main.py gawa.cfg STEP_3
+      memoryLimit: 4Gi
+      cpuLimit: 14
+      dependsOn:
+        - "gawastep02"
+        
+    - name: gawastep04
+      run: |
+        export GAWA_ROOT=/data-akoflow
+        conda run --no-capture-output -n gawa python -W ignore gawa_main.py gawa.cfg STEP_4
+      memoryLimit: 1Gi
+      cpuLimit: 1
+      dependsOn:
+        - "gawastep03"

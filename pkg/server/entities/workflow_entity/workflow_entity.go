@@ -3,6 +3,7 @@ package workflow_entity
 import (
 	"encoding/base64"
 	"fmt"
+
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
 	"gopkg.in/yaml.v3"
 )
@@ -144,7 +145,10 @@ func (w Workflow) GetStoragePolicyType() string {
 
 func (w Workflow) GetMountPath() string {
 	return w.Spec.MountPath
+}
 
+func (w Workflow) GetRuntimeId() string {
+	return "k8s"
 }
 
 func (w Workflow) MakeStorageClassNameDistributed() string {

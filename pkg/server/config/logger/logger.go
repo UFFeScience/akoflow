@@ -11,6 +11,12 @@ type Logger struct {
 	logger *log.Logger
 }
 
+func NewStdLogger() *Logger {
+	return &Logger{
+		logger: log.New(os.Stdout, "", log.Ldate|log.Ltime|log.Lshortfile),
+	}
+}
+
 func NewLogger(filePath string) (*Logger, error) {
 
 	file, err := os.OpenFile(filePath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)

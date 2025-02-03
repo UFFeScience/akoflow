@@ -6,6 +6,7 @@ import (
 	"github.com/ovvesley/akoflow/pkg/server/config/http_helper"
 	"github.com/ovvesley/akoflow/pkg/server/config/http_render_view"
 	"github.com/ovvesley/akoflow/pkg/server/config/logger"
+	"github.com/ovvesley/akoflow/pkg/server/config/workflow_runtime"
 	"github.com/ovvesley/akoflow/pkg/server/connector"
 	"github.com/ovvesley/akoflow/pkg/server/repository/activity_repository"
 	"github.com/ovvesley/akoflow/pkg/server/repository/logs_repository"
@@ -24,6 +25,7 @@ type AppContainer struct {
 	TemplateRenderer AppContainerTemplateRenderer
 	HttpHelper       AppContainerHttpHelper
 	Logger           *logger.Logger
+	WorkflowRuntime  *workflow_runtime.WorkflowRuntime
 }
 
 type AppContainerRepository struct {
@@ -63,6 +65,8 @@ func MakeAppContainer() AppContainer {
 
 	logger, _ := logger.NewLogger(LOG_FILE_PATH)
 
+	workflowRuntime := workflow_runtime.New()
+
 	return AppContainer{
 		DefaultNamespace: DEFAULT_NAMESPACE,
 		Repository: AppContainerRepository{
@@ -82,7 +86,8 @@ func MakeAppContainer() AppContainer {
 			WriteJson:   http_helper.WriteJson,
 			GetUrlParam: http_helper.GetUrlPathParam,
 		},
-		Logger: logger,
+		Logger:          logger,
+		WorkflowRuntime: &workflowRuntime,
 	}
 }
 
@@ -93,6 +98,7 @@ func App() AppContainer {
 	if appContainer.DefaultNamespace == "" {
 		appContainer = MakeAppContainer()
 	}
+
 	return appContainer
 }
 

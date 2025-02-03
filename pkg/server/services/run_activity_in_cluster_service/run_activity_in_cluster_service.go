@@ -4,7 +4,6 @@ import (
 	"github.com/ovvesley/akoflow/pkg/server/config"
 	"github.com/ovvesley/akoflow/pkg/server/repository/activity_repository"
 	"github.com/ovvesley/akoflow/pkg/server/repository/workflow_repository"
-	"github.com/ovvesley/akoflow/pkg/server/services/worker_run_activity_service"
 )
 
 type RunActivityInClusterService struct {
@@ -31,13 +30,9 @@ func (r *RunActivityInClusterService) Run(activityID int) {
 		return
 	}
 
-	modeService := worker_run_activity_service.
-		ModeRunActivityService(wf.GetMode()).
-		SetWorkflow(wf).
-		SetWorkflowActivity(wfa)
+	runtimeId := "k8s"
+	runtime := config.App().WorkflowRuntime.
+		GetRuntimeInstance(runtimeId).
+		ApplyJob(wf, wfa)
 
-	resourceOk := modeService.HandleResourceToRunJob(activityID)
-	if resourceOk {
-		modeService.ApplyJob(activityID)
-	}
 }

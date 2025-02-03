@@ -1,13 +1,14 @@
-package make_k8s_job_service
+package kubernetes_runtime_service
 
 import (
 	"encoding/base64"
-	"github.com/ovvesley/akoflow/pkg/server/entities/k8s_job_entity"
-	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
-	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
 	"math/rand"
 	"os"
 	"strconv"
+
+	"github.com/ovvesley/akoflow/pkg/server/entities/k8s_job_entity"
+	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
+	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
 )
 
 type MakeK8sActivityService struct {

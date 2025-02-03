@@ -1,21 +1,21 @@
-package apply_job_service
+package kubernetes_runtime_service
 
 import (
 	"fmt"
+
 	"github.com/ovvesley/akoflow/pkg/server/config"
 	"github.com/ovvesley/akoflow/pkg/server/connector"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
 	"github.com/ovvesley/akoflow/pkg/server/repository/activity_repository"
 	"github.com/ovvesley/akoflow/pkg/server/repository/workflow_repository"
-	"github.com/ovvesley/akoflow/pkg/server/services/make_k8s_job_service"
 )
 
 type ApplyJobDistributedService struct {
 	activityRepository activity_repository.IActivityRepository
 	workflowRepository workflow_repository.IWorkflowRepository
 
-	makeK8sJobService make_k8s_job_service.MakeK8sJobService
+	makeK8sJobService MakeK8sJobService
 	connector         connector.IConnector
 
 	namespace string
@@ -26,7 +26,7 @@ func newApplyJobDistributedService() ApplyJobDistributedService {
 		activityRepository: config.App().Repository.ActivityRepository,
 		workflowRepository: config.App().Repository.WorkflowRepository,
 
-		makeK8sJobService: make_k8s_job_service.New(),
+		makeK8sJobService: NewMakeK8sJobService(),
 		connector:         config.App().Connector.K8sConnector,
 
 		namespace: config.App().DefaultNamespace,

@@ -1,4 +1,4 @@
-package worker_run_activity_service
+package kubernetes_runtime_service
 
 import (
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"

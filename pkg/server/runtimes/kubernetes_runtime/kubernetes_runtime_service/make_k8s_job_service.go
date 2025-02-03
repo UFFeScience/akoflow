@@ -1,4 +1,4 @@
-package make_k8s_job_service
+package kubernetes_runtime_service
 
 import (
 	"github.com/ovvesley/akoflow/pkg/server/config"
@@ -39,7 +39,7 @@ type MakeK8sJobService struct {
 }
 
 // New creates a new MakeK8sJobService.
-func New() MakeK8sJobService {
+func NewMakeK8sJobService() MakeK8sJobService {
 	return MakeK8sJobService{
 		workflowRepository: config.App().Repository.WorkflowRepository,
 		activityRepository: config.App().Repository.ActivityRepository,

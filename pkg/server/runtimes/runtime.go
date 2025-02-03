@@ -3,7 +3,7 @@ package runtimes
 import (
 	"fmt"
 
-	"github.com/ovvesley/akoflow/pkg/server/config/logger"
+	"github.com/ovvesley/akoflow/pkg/server/config"
 	"github.com/ovvesley/akoflow/pkg/server/runtimes/docker_runtime"
 	"github.com/ovvesley/akoflow/pkg/server/runtimes/kubernetes_runtime"
 	"github.com/ovvesley/akoflow/pkg/server/runtimes/sdumont_runtime"
@@ -37,7 +37,7 @@ func GetRuntimeInstance(runtime string) IRuntime {
 		RUNTIME_SINGULARITY_SDUMONT: sdumont_runtime.NewSdumontRuntime(),
 	}
 	if modeMap[runtime] == nil {
-		logger.NewStdLogger().Error(fmt.Sprintf("Runtime not found: %s", runtime))
+		config.App().Logger.Error(fmt.Sprintf("Runtime not found: %s", runtime))
 	}
 	return modeMap[runtime]
 }

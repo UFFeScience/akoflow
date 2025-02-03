@@ -4,6 +4,7 @@ import (
 	"github.com/ovvesley/akoflow/pkg/server/config"
 	"github.com/ovvesley/akoflow/pkg/server/repository/activity_repository"
 	"github.com/ovvesley/akoflow/pkg/server/repository/workflow_repository"
+	"github.com/ovvesley/akoflow/pkg/server/runtimes"
 )
 
 type RunActivityInClusterService struct {
@@ -31,8 +32,14 @@ func (r *RunActivityInClusterService) Run(activityID int) {
 	}
 
 	runtimeId := "k8s"
-	runtime := config.App().WorkflowRuntime.
+
+	workflowId := wf.GetId()
+	workflowActivityId := wfa.GetId()
+
+	runtimes.
 		GetRuntimeInstance(runtimeId).
-		ApplyJob(wf, wfa)
+		ApplyJob(workflowId, workflowActivityId)
+
+	config.App().Logger.Infof("WORKER: Activity %d started", activityID)
 
 }

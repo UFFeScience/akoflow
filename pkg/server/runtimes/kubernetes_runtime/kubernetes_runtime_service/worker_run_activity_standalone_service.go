@@ -1,26 +1,22 @@
-package worker_run_activity_service
+package kubernetes_runtime_service
 
 import (
 	"github.com/ovvesley/akoflow/pkg/server/config"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
-	"github.com/ovvesley/akoflow/pkg/server/services/apply_job_service"
-	"github.com/ovvesley/akoflow/pkg/server/services/create_namespace_service"
-	"github.com/ovvesley/akoflow/pkg/server/services/create_pvc_service"
-	"github.com/ovvesley/akoflow/pkg/server/services/run_preactivity_service"
 )
 
 type WorkerRunActivityStandaloneService struct {
 	namespace string
 
-	createNamespaceService create_namespace_service.CreateNamespaceService
-	createPvcService       create_pvc_service.CreatePVCService
-	runPreActivityService  run_preactivity_service.RunPreactivityService
+	createNamespaceService CreateNamespaceService
+	createPvcService       CreatePVCService
+	runPreActivityService  RunPreactivityService
 
 	Workflow workflow_entity.Workflow
 
 	WorkflowActivity workflow_activity_entity.WorkflowActivities
-	applyJobService  apply_job_service.ApplyJobService
+	applyJobService  ApplyJobService
 }
 
 func (r *WorkerRunActivityStandaloneService) SetWorkflow(workflow workflow_entity.Workflow) IWorkerRunActivityService {
@@ -45,10 +41,10 @@ func (r *WorkerRunActivityStandaloneService) GetWorkflowActivity() workflow_acti
 func NewWorkerRunActivityStandaloneService() *WorkerRunActivityStandaloneService {
 	return &WorkerRunActivityStandaloneService{
 		namespace:              config.App().DefaultNamespace,
-		createNamespaceService: create_namespace_service.New(),
-		createPvcService:       create_pvc_service.New(),
-		runPreActivityService:  run_preactivity_service.New(),
-		applyJobService:        apply_job_service.New(),
+		createNamespaceService: NewCreateNamespaceService(),
+		createPvcService:       NewCreatePVCService(),
+		runPreActivityService:  NewRunPreactivityService(),
+		applyJobService:        NewApplyJobService(),
 	}
 }
 

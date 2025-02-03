@@ -1,4 +1,4 @@
-package apply_job_service
+package kubernetes_runtime_service
 
 import (
 	"github.com/ovvesley/akoflow/pkg/server/config"
@@ -8,7 +8,6 @@ import (
 	"github.com/ovvesley/akoflow/pkg/server/repository/activity_repository"
 	"github.com/ovvesley/akoflow/pkg/server/repository/workflow_repository"
 	"github.com/ovvesley/akoflow/pkg/server/services/get_activity_dependencies_service"
-	"github.com/ovvesley/akoflow/pkg/server/services/make_k8s_job_service"
 )
 
 type ApplyJobStandaloneService struct {
@@ -18,7 +17,7 @@ type ApplyJobStandaloneService struct {
 	workflowRepository workflow_repository.IWorkflowRepository
 	connector          connector.IConnector
 
-	makeK8sJobService              make_k8s_job_service.MakeK8sJobService
+	makeK8sJobService              MakeK8sJobService
 	getActivityDependenciesService get_activity_dependencies_service.GetActivityDependenciesService
 }
 
@@ -31,7 +30,7 @@ func newApplyJobStandaloneService() ApplyJobStandaloneService {
 
 		connector: config.App().Connector.K8sConnector,
 
-		makeK8sJobService:              make_k8s_job_service.New(),
+		makeK8sJobService:              NewMakeK8sJobService(),
 		getActivityDependenciesService: get_activity_dependencies_service.New(),
 	}
 }

@@ -1,24 +1,21 @@
-package worker_run_activity_service
+package kubernetes_runtime_service
 
 import (
 	"github.com/ovvesley/akoflow/pkg/server/config"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
-	"github.com/ovvesley/akoflow/pkg/server/services/apply_job_service"
-	"github.com/ovvesley/akoflow/pkg/server/services/create_nfs_service"
-	"github.com/ovvesley/akoflow/pkg/server/services/create_pvc_service"
 )
 
 type WorkerRunActivityDistributedService struct {
 	namespace string
 
-	createPvcService create_pvc_service.CreatePVCService
-	createNfsService create_nfs_service.CreateNfsService
+	createPvcService CreatePVCService
+	createNfsService CreateNfsService
 
 	Workflow         workflow_entity.Workflow
 	WorkflowActivity workflow_activity_entity.WorkflowActivities
 
-	applyJobService apply_job_service.ApplyJobService
+	applyJobService ApplyJobService
 }
 
 func (r *WorkerRunActivityDistributedService) SetWorkflow(workflow workflow_entity.Workflow) IWorkerRunActivityService {
@@ -42,9 +39,9 @@ func (r *WorkerRunActivityDistributedService) GetWorkflowActivity() workflow_act
 func NewWorkerRunActivityDistributedService() *WorkerRunActivityDistributedService {
 	return &WorkerRunActivityDistributedService{
 		namespace:        config.App().DefaultNamespace,
-		createPvcService: create_pvc_service.New(),
-		createNfsService: create_nfs_service.New(),
-		applyJobService:  apply_job_service.New(),
+		createPvcService: NewCreatePVCService(),
+		createNfsService: NewCreateNfsService(),
+		applyJobService:  NewApplyJobService(),
 	}
 }
 

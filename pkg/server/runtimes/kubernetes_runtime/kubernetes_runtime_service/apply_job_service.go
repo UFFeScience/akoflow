@@ -1,11 +1,11 @@
-package apply_job_service
+package kubernetes_runtime_service
 
 type ApplyJobService struct {
 	applyJobStandaloneService  ApplyJobStandaloneService
 	applyJobDistributedService ApplyJobDistributedService
 }
 
-func New() ApplyJobService {
+func NewApplyJobService() ApplyJobService {
 	return ApplyJobService{
 
 		applyJobStandaloneService:  newApplyJobStandaloneService(),

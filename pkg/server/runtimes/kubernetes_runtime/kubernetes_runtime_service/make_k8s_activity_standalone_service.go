@@ -1,23 +1,30 @@
-package make_k8s_job_service
+package kubernetes_runtime_service
 
 import (
 	"errors"
+
 	"github.com/ovvesley/akoflow/pkg/server/entities/k8s_job_entity"
 )
 
-type MakeK8sActivityDistributedService struct {
+type MakeK8sActivityStandaloneService struct {
 	service *MakeK8sJobService
 }
 
-func newMakeK8sActivityDistributedService() MakeK8sActivityDistributedService {
-	return MakeK8sActivityDistributedService{}
+func newMakeK8sActivityStandaloneService() MakeK8sActivityStandaloneService {
+	return MakeK8sActivityStandaloneService{}
+}
+func (m *MakeK8sActivityStandaloneService) isValidate() bool {
+	return m.service.GetNamespace() != "" &&
+		m.service.GetDependencies() != nil &&
+		m.service.GetIdWorkflow() != 0 &&
+		m.service.GetIdWorkflowActivity() != 0
 }
 
-func (m *MakeK8sActivityDistributedService) Handle(service MakeK8sJobService) (k8s_job_entity.K8sJob, error) {
+func (m *MakeK8sActivityStandaloneService) Handle(service MakeK8sJobService) (k8s_job_entity.K8sJob, error) {
 	m.SetMakeK8sJobService(service)
 
 	if !m.isValidate() {
-		return k8s_job_entity.K8sJob{}, errors.New("invalid parameters to make k8s job:: namespace, idWorkflow, idWorkflowActivity are required")
+		return k8s_job_entity.K8sJob{}, errors.New("invalid parameters to make k8s job:: namespace, persistentVolumeClaim, dependencies, idWorkflow, idWorkflowActivity are required")
 	}
 
 	workflow, _ := m.service.workflowRepository.Find(m.service.GetIdWorkflow())
@@ -53,13 +60,7 @@ func (m *MakeK8sActivityDistributedService) Handle(service MakeK8sJobService) (k
 
 }
 
-func (m *MakeK8sActivityDistributedService) isValidate() bool {
-	return m.service.GetNamespace() != "" &&
-		m.service.GetIdWorkflow() != 0 &&
-		m.service.GetIdWorkflowActivity() != 0
-}
-
-func (m *MakeK8sActivityDistributedService) SetMakeK8sJobService(service MakeK8sJobService) *MakeK8sActivityDistributedService {
+func (m *MakeK8sActivityStandaloneService) SetMakeK8sJobService(service MakeK8sJobService) *MakeK8sActivityStandaloneService {
 	m.service = &service
 	return m
 }

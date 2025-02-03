@@ -1,4 +1,4 @@
-package create_nfs_service
+package kubernetes_runtime_service
 
 import (
 	"fmt"
@@ -19,7 +19,7 @@ type CreateNfsService struct {
 
 const PREFIX_NFS_PROVISIONER = "nfs-provisioner-"
 
-func New() CreateNfsService {
+func NewCreateNfsService() CreateNfsService {
 	return CreateNfsService{
 		connector: config.App().Connector.K8sConnector,
 		namespace: config.App().DefaultNamespace,

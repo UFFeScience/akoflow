@@ -1,4 +1,4 @@
-package create_namespace_service
+package kubernetes_runtime_service
 
 import (
 	"github.com/ovvesley/akoflow/pkg/server/config"
@@ -13,7 +13,7 @@ type ParamsNewCreateNamespaceService struct {
 	Connector connector.IConnector
 }
 
-func New() CreateNamespaceService {
+func NewCreateNamespaceService() CreateNamespaceService {
 	return CreateNamespaceService{
 		connector: config.App().Connector.K8sConnector,
 	}

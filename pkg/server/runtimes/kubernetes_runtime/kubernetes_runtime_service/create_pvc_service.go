@@ -1,4 +1,4 @@
-package create_pvc_service
+package kubernetes_runtime_service
 
 import (
 	"github.com/ovvesley/akoflow/pkg/server/config"
@@ -14,7 +14,7 @@ type CreatePVCService struct {
 	storageRepository storages_repository.IStorageRepository
 }
 
-func New() CreatePVCService {
+func NewCreatePVCService() CreatePVCService {
 	return CreatePVCService{
 		connector:         config.App().Connector.K8sConnector,
 		storageRepository: config.App().Repository.StoragesRepository,

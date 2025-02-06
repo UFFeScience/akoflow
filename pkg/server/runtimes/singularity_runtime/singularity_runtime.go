@@ -1,5 +1,10 @@
 package singularity_runtime
 
+import (
+	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
+	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
+)
+
 type SingularityRuntime struct {
 }
 
@@ -27,12 +32,16 @@ func (s *SingularityRuntime) GetMetrics(workflowID int, activityID int) string {
 	return ""
 }
 
-func (s *SingularityRuntime) GetLogs(workflowID int, activityID int) string {
+func (s *SingularityRuntime) GetLogs(workflow workflow_entity.Workflow, workflowActivity workflow_activity_entity.WorkflowActivities) string {
 	return ""
 }
 
 func (s *SingularityRuntime) GetStatus(workflowID int, activityID int) string {
 	return ""
+}
+
+func (s *SingularityRuntime) VerifyActivitiesWasFinished(workflow workflow_entity.Workflow) bool {
+	return true
 }
 
 func NewSingularityRuntime() *SingularityRuntime {

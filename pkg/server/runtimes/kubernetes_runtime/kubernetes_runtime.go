@@ -2,11 +2,14 @@ package kubernetes_runtime
 
 import (
 	"github.com/ovvesley/akoflow/pkg/server/config"
+	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
+	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
 	"github.com/ovvesley/akoflow/pkg/server/runtimes/kubernetes_runtime/kubernetes_runtime_service"
 )
 
 type KubernetesRuntime struct {
-	namespace                string
+	namespace string
+
 	kubernetesRuntimeService *kubernetes_runtime_service.KubernetesRuntimeService
 }
 
@@ -38,12 +41,18 @@ func (k *KubernetesRuntime) GetMetrics(workflowID int, activityID int) string {
 	return ""
 }
 
-func (k *KubernetesRuntime) GetLogs(workflowID int, activityID int) string {
+func (k *KubernetesRuntime) GetLogs(workflow workflow_entity.Workflow, workflowActivity workflow_activity_entity.WorkflowActivities) string {
+	k.kubernetesRuntimeService.GetLogs(workflow, workflowActivity)
 	return ""
 }
 
 func (k *KubernetesRuntime) GetStatus(workflowID int, activityID int) string {
 	return ""
+}
+
+func (k *KubernetesRuntime) VerifyActivitiesWasFinished(workflow workflow_entity.Workflow) bool {
+	k.kubernetesRuntimeService.VerifyActivitiesWasFinished(workflow)
+	return true
 }
 
 func NewKubernetesRuntime() *KubernetesRuntime {

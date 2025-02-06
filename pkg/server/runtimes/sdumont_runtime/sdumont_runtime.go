@@ -1,5 +1,10 @@
 package sdumont_runtime
 
+import (
+	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
+	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
+)
+
 type SdumontRuntime struct {
 }
 
@@ -27,12 +32,16 @@ func (s *SdumontRuntime) GetMetrics(workflowID int, activityID int) string {
 	return ""
 }
 
-func (s *SdumontRuntime) GetLogs(workflowID int, activityID int) string {
+func (s *SdumontRuntime) GetLogs(workflow workflow_entity.Workflow, workflowActivity workflow_activity_entity.WorkflowActivities) string {
 	return ""
 }
 
 func (s *SdumontRuntime) GetStatus(workflowID int, activityID int) string {
 	return ""
+}
+
+func (s *SdumontRuntime) VerifyActivitiesWasFinished(workflow workflow_entity.Workflow) bool {
+	return true
 }
 
 func NewSdumontRuntime() *SdumontRuntime {

@@ -4,6 +4,8 @@ import (
 	"fmt"
 
 	"github.com/ovvesley/akoflow/pkg/server/config"
+	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
+	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
 	"github.com/ovvesley/akoflow/pkg/server/runtimes/docker_runtime"
 	"github.com/ovvesley/akoflow/pkg/server/runtimes/kubernetes_runtime"
 	"github.com/ovvesley/akoflow/pkg/server/runtimes/sdumont_runtime"
@@ -23,9 +25,11 @@ type IRuntime interface {
 	DeleteJob(workflowID int, activityID int) bool
 
 	GetMetrics(workflowID int, activityID int) string
-	GetLogs(workflowID int, activityID int) string
+	GetLogs(workflow workflow_entity.Workflow, workflowActivity workflow_activity_entity.WorkflowActivities) string
 
 	GetStatus(workflowID int, activityID int) string
+
+	VerifyActivitiesWasFinished(workflow workflow_entity.Workflow) bool
 }
 
 func GetRuntimeInstance(runtime string) IRuntime {

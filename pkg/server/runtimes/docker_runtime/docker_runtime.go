@@ -1,5 +1,10 @@
 package docker_runtime
 
+import (
+	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
+	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
+)
+
 type DockerRuntime struct {
 }
 
@@ -27,12 +32,16 @@ func (d *DockerRuntime) GetMetrics(workflowID int, activityID int) string {
 	return ""
 }
 
-func (d *DockerRuntime) GetLogs(workflowID int, activityID int) string {
+func (d *DockerRuntime) GetLogs(workflow workflow_entity.Workflow, workflowActivity workflow_activity_entity.WorkflowActivities) string {
 	return ""
 }
 
 func (d *DockerRuntime) GetStatus(workflowID int, activityID int) string {
 	return ""
+}
+
+func (k *DockerRuntime) VerifyActivitiesWasFinished(workflow workflow_entity.Workflow) bool {
+	return true
 }
 
 func NewDockerRuntime() *DockerRuntime {

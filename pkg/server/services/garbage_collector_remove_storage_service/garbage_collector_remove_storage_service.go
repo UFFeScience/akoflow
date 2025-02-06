@@ -1,6 +1,9 @@
 package garbage_collector_remove_storage_service
 
 import (
+	"fmt"
+	"strconv"
+
 	"github.com/ovvesley/akoflow/pkg/server/config"
 	"github.com/ovvesley/akoflow/pkg/server/connector"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
@@ -11,7 +14,6 @@ import (
 	"github.com/ovvesley/akoflow/pkg/server/services/get_pending_storage_service"
 	"github.com/ovvesley/akoflow/pkg/server/services/get_pending_workflow_service"
 	"github.com/ovvesley/akoflow/pkg/server/services/get_workflow_by_status_service"
-	"strconv"
 )
 
 type GarbageCollectorRemoveStorageService struct {
@@ -46,6 +48,10 @@ func New() GarbageCollectorRemoveStorageService {
 type MapActivitiesKeepDisk map[int]bool
 
 func (c *GarbageCollectorRemoveStorageService) RemoveStorages() {
+	fmt.Printf("Garbage Collector Disabled")
+}
+
+func (c *GarbageCollectorRemoveStorageService) RemoveStoragesDeprecated() {
 	wfaFinished, _ := c.getPendingStorageService.GetPendingStorages()
 
 	wfaPreactivities, _ := c.activityRepository.GetPreactivitiesCompleted()

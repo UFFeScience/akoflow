@@ -12,7 +12,14 @@ func (w *WorkflowRepository) Create(namespace string, workflow workflow_entity.W
 
 	rawWorkflow := workflow.GetBase64Workflow()
 
-	result, err := c.Exec("INSERT INTO "+w.tableName+" (namespace, name, raw_workflow, status) VALUES (?, ?, ?, ?)", namespace, workflow.Name, rawWorkflow, StatusCreated)
+	result, err := c.Exec(
+		"INSERT INTO "+w.tableName+" (namespace, runtime, name, raw_workflow, status) VALUES (?, ?, ?, ?, ?)",
+		namespace,
+		workflow.Spec.Runtime,
+		workflow.Name,
+		rawWorkflow,
+		StatusCreated,
+	)
 
 	if err != nil {
 		return 0, err

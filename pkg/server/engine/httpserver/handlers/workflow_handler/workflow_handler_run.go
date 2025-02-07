@@ -22,7 +22,7 @@ func New() *WorkflowHandler {
 	}
 }
 
-func (h *WorkflowHandler) Run(w http.ResponseWriter, r *http.Request) {
+func (h *WorkflowHandler) Create(w http.ResponseWriter, r *http.Request) {
 	payload := RequestPostRunWorkflow{}
 	err := json.NewDecoder(r.Body).Decode(&payload)
 	if err != nil {

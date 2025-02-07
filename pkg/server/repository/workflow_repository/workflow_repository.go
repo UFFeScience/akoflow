@@ -10,7 +10,7 @@ type WorkflowRepository struct {
 }
 
 var TableName = "workflows"
-var Columns = "(id INTEGER PRIMARY KEY AUTOINCREMENT, namespace TEXT, name TEXT, raw_workflow TEXT, status INTEGER)"
+var Columns = "(id INTEGER PRIMARY KEY AUTOINCREMENT, namespace TEXT, runtime TEXT, name TEXT, raw_workflow TEXT, status INTEGER)"
 
 var StatusCreated = 0
 var StatusRunning = 1

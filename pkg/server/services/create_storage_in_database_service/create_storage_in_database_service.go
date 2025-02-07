@@ -42,8 +42,8 @@ func (c *CreateStorageInDatabaseService) CreateByWorkflow(wfId int) error {
 		Status:                storages_repository.StatusCreated,
 		MapActivitiesKeepDisk: mapActivitiesKeepDisk,
 		StorageMountPath:      workflow.Spec.MountPath,
-		StorageClass:          workflow.Spec.StorageClassName,
-		StorageSize:           workflow.Spec.StorageSize,
+		StorageClass:          workflow.Spec.StoragePolicy.StorageClassName,
+		StorageSize:           workflow.Spec.StoragePolicy.StorageSize,
 	})
 
 	return nil

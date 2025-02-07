@@ -52,9 +52,23 @@ func (c *CreatePVCService) handleCreatePersistentVolumeClain(wf workflow_entity.
 	var err error
 
 	if wf.IsStoragePolicyStandalone() {
-		pv, err = c.connector.PersistentVolumeClain().CreatePersistentVolumeClain(wfa.GetVolumeName(), namespace, wf.Spec.StorageSize, wf.Spec.StorageClassName)
+		pv, err = c.connector.
+			PersistentVolumeClain().
+			CreatePersistentVolumeClain(
+				wfa.GetVolumeName(),
+				namespace,
+				wf.Spec.StoragePolicy.StorageSize,
+				wf.Spec.StoragePolicy.StorageClassName,
+			)
 	} else {
-		pv, err = c.connector.PersistentVolumeClain().CreatePersistentVolumeClain(wf.MakeVolumeNameDistributed(), namespace, wf.Spec.StorageSize, wf.MakeStorageClassNameDistributed())
+		pv, err = c.connector.
+			PersistentVolumeClain().
+			CreatePersistentVolumeClain(
+				wf.MakeVolumeNameDistributed(),
+				namespace,
+				wf.Spec.StoragePolicy.StorageSize,
+				wf.MakeStorageClassNameDistributed(),
+			)
 	}
 
 	if err != nil {

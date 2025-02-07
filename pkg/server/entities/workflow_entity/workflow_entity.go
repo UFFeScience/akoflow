@@ -19,17 +19,18 @@ const MODE_DISTRIBUTED = "distributed"
 const MODE_STANDALONE = "standalone"
 
 type WorkflowSpec struct {
-	Image            string                                        `yaml:"image"`
-	Namespace        string                                        `yaml:"namespace"`
-	StorageClassName string                                        `yaml:"storageClassName"`
-	StorageSize      string                                        `yaml:"storageSize"`
-	StoragePolicy    WorkflowSpecStoragePolicy                     `yaml:"storagePolicy"`
-	MountPath        string                                        `yaml:"mountPath"`
-	Activities       []workflow_activity_entity.WorkflowActivities `yaml:"activities"`
+	Runtime       string                                        `yaml:"runtime"`
+	Image         string                                        `yaml:"image"`
+	StoragePolicy WorkflowSpecStoragePolicy                     `yaml:"storagePolicy"`
+	MountPath     string                                        `yaml:"mountPath"`
+	Activities    []workflow_activity_entity.WorkflowActivities `yaml:"activities"`
+	Namespace     string                                        `yaml:"namespace"`
 }
 
 type WorkflowSpecStoragePolicy struct {
-	Type string `yaml:"type"` // "distributed" or "standalone"
+	Type             string `yaml:"type"` // "distributed", "standalone" or "default"
+	StorageClassName string `yaml:"storageClassName"`
+	StorageSize      string `yaml:"storageSize"`
 }
 
 type WorkflowDatabase struct {
@@ -132,11 +133,11 @@ func (w Workflow) GetNamespace() string {
 }
 
 func (w Workflow) GetStorageClassName() string {
-	return w.Spec.StorageClassName
+	return w.Spec.StoragePolicy.StorageClassName
 }
 
 func (w Workflow) GetStorageSize() string {
-	return w.Spec.StorageSize
+	return w.Spec.StoragePolicy.StorageSize
 }
 
 func (w Workflow) GetStoragePolicyType() string {

@@ -2,9 +2,10 @@ package workflow_activity_entity
 
 import (
 	"encoding/base64"
-	"gopkg.in/yaml.v3"
 	"strconv"
 	"strings"
+
+	"gopkg.in/yaml.v3"
 )
 
 type WorkflowActivities struct {
@@ -13,6 +14,7 @@ type WorkflowActivities struct {
 	Status       int
 	Name         string   `yaml:"name"`
 	Run          string   `yaml:"run"`
+	Image        string   `yaml:"image"`
 	MemoryLimit  string   `yaml:"memoryLimit"`
 	CpuLimit     string   `yaml:"cpuLimit"`
 	DependsOn    []string `yaml:"dependsOn"`

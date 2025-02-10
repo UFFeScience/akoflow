@@ -5,7 +5,7 @@ import (
 	"log"
 
 	"github.com/ovvesley/akoflow/pkg/server/config"
-	"github.com/ovvesley/akoflow/pkg/server/connector"
+	"github.com/ovvesley/akoflow/pkg/server/connector/connector_k8s"
 	"github.com/ovvesley/akoflow/pkg/server/entities/nfs_server_entity"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
 )
@@ -13,7 +13,7 @@ import (
 type CreateNfsService struct {
 	workflow workflow_entity.Workflow
 
-	connector connector.IConnector
+	connector connector_k8s.IConnector
 	namespace string
 }
 

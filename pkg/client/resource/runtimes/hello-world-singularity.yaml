@@ -1,48 +1,22 @@
 name: akf-wf-singularity
 spec:
   runtime: "singularity"
-  image: "/path/to/image/singularity.sif"
+  image: "/home/ovvesley/Workspace/singularity/sifs/ubuntu-minimal.sif"
   storagePolicy:
     type: default
 
   mountPath: "/data-akoflow"
   activities:
-    - name: gawastep01
-      image: "/path/to/image/singularity.sif"
+    - name: step01
+      image: "/home/ovvesley/Workspace/singularity/sifs/ubuntu-minimal.sif"
       run: |
-        cp -R /data/* /data-akoflow
-        export GAWA_ROOT=/data-akoflow
-
-        conda run --no-capture-output -n gawa python -W ignore gawa_main.py gawa.cfg STEP_1
-      memoryLimit: 1Gi
+        echo "Hello World" > hello.txt
+      memoryLimit: 1G
       cpuLimit: 1
 
-    - name: gawastep02
-      image: "/path/to/image/singularity.sif"
+    - name: step02
+      image: "/home/ovvesley/Workspace/singularity/sifs/ubuntu-minimal.sif"
       run: |
-        export GAWA_ROOT=/data-akoflow
-        conda run --no-capture-output -n gawa python -W ignore gawa_main.py gawa.cfg STEP_2
-      memoryLimit: 1Gi
-      cpuLimit: 14
-      dependsOn:
-        - "gawastep01"
-
-    - name: gawastep03
-      image: "/path/to/image/singularity.sif"
-      run: |
-        export GAWA_ROOT=/data-akoflow
-        conda run --no-capture-output -n gawa python -W ignore gawa_main.py gawa.cfg STEP_3
-      memoryLimit: 4Gi
-      cpuLimit: 14
-      dependsOn:
-        - "gawastep02"
-        
-    - name: gawastep04
-      image: "/path/to/image/singularity.sif"
-      run: |
-        export GAWA_ROOT=/data-akoflow
-        conda run --no-capture-output -n gawa python -W ignore gawa_main.py gawa.cfg STEP_4
-      memoryLimit: 1Gi
+        echo "Hello World" > hello.txt
+      memoryLimit: 1G
       cpuLimit: 1
-      dependsOn:
-        - "gawastep03"

@@ -2,15 +2,16 @@ package kubernetes_runtime_service
 
 import (
 	"github.com/ovvesley/akoflow/pkg/server/config"
-	"github.com/ovvesley/akoflow/pkg/server/connector"
-	"github.com/ovvesley/akoflow/pkg/server/connector/connector_pvc_k8s"
+	"github.com/ovvesley/akoflow/pkg/server/connector/connector_k8s"
+	"github.com/ovvesley/akoflow/pkg/server/connector/connector_k8s/connector_pvc_k8s"
+
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
 	"github.com/ovvesley/akoflow/pkg/server/repository/storages_repository"
 )
 
 type CreatePVCService struct {
-	connector         connector.IConnector
+	connector         connector_k8s.IConnector
 	storageRepository storages_repository.IStorageRepository
 }
 

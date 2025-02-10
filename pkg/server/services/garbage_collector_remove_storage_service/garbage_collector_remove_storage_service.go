@@ -5,7 +5,7 @@ import (
 	"strconv"
 
 	"github.com/ovvesley/akoflow/pkg/server/config"
-	"github.com/ovvesley/akoflow/pkg/server/connector"
+	"github.com/ovvesley/akoflow/pkg/server/connector/connector_k8s"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
 	"github.com/ovvesley/akoflow/pkg/server/repository/activity_repository"
 	"github.com/ovvesley/akoflow/pkg/server/repository/storages_repository"
@@ -26,7 +26,7 @@ type GarbageCollectorRemoveStorageService struct {
 	getPendingWorkflowService     get_pending_workflow_service.GetPendingWorkflowService
 	getWorkflowByStatusService    get_workflow_by_status_service.GetWorkflowByStatusService
 	getPendingStorageService      get_pending_storage_service.GetPendingStorageService
-	connector                     connector.IConnector
+	connector                     connector_k8s.IConnector
 }
 
 func New() GarbageCollectorRemoveStorageService {

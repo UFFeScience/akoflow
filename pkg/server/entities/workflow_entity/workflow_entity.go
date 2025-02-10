@@ -149,7 +149,7 @@ func (w Workflow) GetMountPath() string {
 }
 
 func (w Workflow) GetRuntimeId() string {
-	return "k8s"
+	return w.Spec.Runtime
 }
 
 func (w Workflow) MakeStorageClassNameDistributed() string {

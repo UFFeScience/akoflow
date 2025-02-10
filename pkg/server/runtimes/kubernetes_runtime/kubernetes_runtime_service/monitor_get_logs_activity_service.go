@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/ovvesley/akoflow/pkg/server/config"
-	"github.com/ovvesley/akoflow/pkg/server/connector"
+	"github.com/ovvesley/akoflow/pkg/server/connector/connector_k8s"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
 	"github.com/ovvesley/akoflow/pkg/server/repository/logs_repository"
@@ -15,7 +15,7 @@ type MonitorGetLogsActivityService struct {
 	namespace         string
 	logsRepository    logs_repository.ILogsRepository
 	metricsRepository metrics_repository.IMetricsRepository
-	connector         connector.IConnector
+	connector         connector_k8s.IConnector
 }
 
 func NewMonitorGetLogsActivityService() *MonitorGetLogsActivityService {

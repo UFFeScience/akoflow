@@ -2,7 +2,7 @@ package get_pending_storage_service
 
 import (
 	"github.com/ovvesley/akoflow/pkg/server/config"
-	"github.com/ovvesley/akoflow/pkg/server/connector"
+	"github.com/ovvesley/akoflow/pkg/server/connector/connector_k8s"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
 	"github.com/ovvesley/akoflow/pkg/server/repository/activity_repository"
 	"github.com/ovvesley/akoflow/pkg/server/repository/storages_repository"
@@ -19,7 +19,7 @@ type GetPendingStorageService struct {
 	getWorkflowByStatusService get_workflow_by_status_service.GetWorkflowByStatusService
 	getActivityDependencies    get_activity_dependencies_service.GetActivityDependenciesService
 
-	connector connector.IConnector
+	connector connector_k8s.IConnector
 }
 
 func New() GetPendingStorageService {
@@ -32,7 +32,7 @@ func New() GetPendingStorageService {
 		getWorkflowByStatusService: get_workflow_by_status_service.New(),
 		getActivityDependencies:    get_activity_dependencies_service.New(),
 
-		connector: connector.New(),
+		connector: connector_k8s.New(),
 	}
 }
 

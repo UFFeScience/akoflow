@@ -2,15 +2,15 @@ package kubernetes_runtime_service
 
 import (
 	"github.com/ovvesley/akoflow/pkg/server/config"
-	"github.com/ovvesley/akoflow/pkg/server/connector"
+	"github.com/ovvesley/akoflow/pkg/server/connector/connector_k8s"
 )
 
 type CreateNamespaceService struct {
-	connector connector.IConnector
+	connector connector_k8s.IConnector
 }
 
 type ParamsNewCreateNamespaceService struct {
-	Connector connector.IConnector
+	Connector connector_k8s.IConnector
 }
 
 func NewCreateNamespaceService() CreateNamespaceService {

@@ -1,23 +1,22 @@
-package connector
+package connector_k8s
 
 import (
 	"crypto/tls"
 	"net/http"
 
-	"github.com/ovvesley/akoflow/pkg/server/connector/connector_cluster_role"
-	"github.com/ovvesley/akoflow/pkg/server/connector/connector_cluster_role_binding"
-	"github.com/ovvesley/akoflow/pkg/server/connector/connector_deployment_k8s"
-	"github.com/ovvesley/akoflow/pkg/server/connector/connector_job_k8s"
-
-	"github.com/ovvesley/akoflow/pkg/server/connector/connector_metrics_k8s"
-	"github.com/ovvesley/akoflow/pkg/server/connector/connector_namespace_k8s"
-	"github.com/ovvesley/akoflow/pkg/server/connector/connector_pod_k8s"
-	"github.com/ovvesley/akoflow/pkg/server/connector/connector_pvc_k8s"
-	"github.com/ovvesley/akoflow/pkg/server/connector/connector_role"
-	"github.com/ovvesley/akoflow/pkg/server/connector/connector_role_binding"
-	"github.com/ovvesley/akoflow/pkg/server/connector/connector_service"
-	"github.com/ovvesley/akoflow/pkg/server/connector/connector_service_account"
-	"github.com/ovvesley/akoflow/pkg/server/connector/connector_storage_class"
+	"github.com/ovvesley/akoflow/pkg/server/connector/connector_k8s/connector_cluster_role"
+	"github.com/ovvesley/akoflow/pkg/server/connector/connector_k8s/connector_cluster_role_binding"
+	"github.com/ovvesley/akoflow/pkg/server/connector/connector_k8s/connector_deployment_k8s"
+	"github.com/ovvesley/akoflow/pkg/server/connector/connector_k8s/connector_job_k8s"
+	"github.com/ovvesley/akoflow/pkg/server/connector/connector_k8s/connector_metrics_k8s"
+	"github.com/ovvesley/akoflow/pkg/server/connector/connector_k8s/connector_namespace_k8s"
+	"github.com/ovvesley/akoflow/pkg/server/connector/connector_k8s/connector_pod_k8s"
+	"github.com/ovvesley/akoflow/pkg/server/connector/connector_k8s/connector_pvc_k8s"
+	"github.com/ovvesley/akoflow/pkg/server/connector/connector_k8s/connector_role"
+	"github.com/ovvesley/akoflow/pkg/server/connector/connector_k8s/connector_role_binding"
+	"github.com/ovvesley/akoflow/pkg/server/connector/connector_k8s/connector_service"
+	"github.com/ovvesley/akoflow/pkg/server/connector/connector_k8s/connector_service_account"
+	"github.com/ovvesley/akoflow/pkg/server/connector/connector_k8s/connector_storage_class"
 )
 
 type Connector struct {

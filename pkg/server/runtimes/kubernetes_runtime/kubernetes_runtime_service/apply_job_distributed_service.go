@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/ovvesley/akoflow/pkg/server/config"
-	"github.com/ovvesley/akoflow/pkg/server/connector"
+	"github.com/ovvesley/akoflow/pkg/server/connector/connector_k8s"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
 	"github.com/ovvesley/akoflow/pkg/server/repository/activity_repository"
@@ -16,7 +16,7 @@ type ApplyJobDistributedService struct {
 	workflowRepository workflow_repository.IWorkflowRepository
 
 	makeK8sJobService MakeK8sJobService
-	connector         connector.IConnector
+	connector         connector_k8s.IConnector
 
 	namespace string
 }

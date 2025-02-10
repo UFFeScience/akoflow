@@ -3,13 +3,17 @@ package singularity_runtime
 import (
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
+	"github.com/ovvesley/akoflow/pkg/server/runtimes/singularity_runtime/singularity_runtime_service"
 )
 
 type SingularityRuntime struct {
+	SingularityRuntimeService singularity_runtime_service.SingularityRuntimeService
 }
 
-func New() *SingularityRuntime {
-	return &SingularityRuntime{}
+func NewSingularityRuntime() *SingularityRuntime {
+	return &SingularityRuntime{
+		SingularityRuntimeService: singularity_runtime_service.NewSingularityRuntimeService(),
+	}
 }
 
 func (s *SingularityRuntime) StartConnection() error {
@@ -21,6 +25,7 @@ func (s *SingularityRuntime) StopConnection() error {
 }
 
 func (s *SingularityRuntime) ApplyJob(workflowID int, activityID int) bool {
+	s.SingularityRuntimeService.ApplyJob(workflowID, activityID)
 	return true
 }
 
@@ -42,8 +47,4 @@ func (s *SingularityRuntime) GetStatus(workflowID int, activityID int) string {
 
 func (s *SingularityRuntime) VerifyActivitiesWasFinished(workflow workflow_entity.Workflow) bool {
 	return true
-}
-
-func NewSingularityRuntime() *SingularityRuntime {
-	return &SingularityRuntime{}
 }

@@ -22,7 +22,7 @@ func (d *Database) Connect() *sql.DB {
 		panic(err)
 	}
 
-	dbPath := filepath.Join(projectPath, File)
+	dbPath := filepath.Join(projectPath, "..", "..", File)
 
 	createDirectoryIfNotExists(filepath.Dir(dbPath))
 

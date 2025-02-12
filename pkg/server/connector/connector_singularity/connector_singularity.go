@@ -3,6 +3,7 @@ package connector_singularity
 import (
 	"fmt"
 	"os/exec"
+	"syscall"
 )
 
 type ConnectorSingularity struct {
@@ -24,19 +25,17 @@ func executeCommand(command string, args ...string) (string, error) {
 	fmt.Printf("Executing command: %s %v\n", command, args)
 
 	shell := getAvailableShell()
-
 	fullCommand := append([]string{"-c", command}, args...)
 	cmd := exec.Command(shell, fullCommand...)
-	output, err := cmd.CombinedOutput()
-
-	fmt.Printf("Command output: %s\n", output)
-
-	if err != nil {
-		fmt.Printf("Error executing command: %v\n", err)
-		return "", err
+	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
+	if err := cmd.Start(); err != nil {
+		return "", fmt.Errorf("failed to start command: %w", err)
 	}
 
-	return string(output), nil
+	pid := cmd.Process.Pid
+	fmt.Printf("Started process with PID: %d\n", pid)
+
+	return fmt.Sprintf("%d", pid), nil
 }
 
 func getAvailableShell() string {

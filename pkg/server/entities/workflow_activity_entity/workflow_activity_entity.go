@@ -12,6 +12,7 @@ type WorkflowActivities struct {
 	Id           int
 	WorkflowId   int
 	Status       int
+	ProcId       string   `yaml:"procId"`
 	Name         string   `yaml:"name"`
 	Run          string   `yaml:"run"`
 	Image        string   `yaml:"image"`
@@ -33,6 +34,7 @@ type WorkflowActivityDatabase struct {
 	Image             string
 	ResourceK8sBase64 string
 	Status            int
+	ProcId            *string
 	DependOnActivity  *int
 	CreatedAt         *string
 	StartedAt         *string
@@ -138,10 +140,16 @@ func DatabaseToWorkflowActivities(params ParamsDatabaseToWorkflowActivities) Wor
 		finishedAt = *params.WorkflowActivityDatabase.FinishedAt
 	}
 
+	procId := ""
+	if params.WorkflowActivityDatabase.ProcId != nil {
+		procId = *params.WorkflowActivityDatabase.ProcId
+	}
+
 	return WorkflowActivities{
 		Id:           params.WorkflowActivityDatabase.Id,
 		Name:         params.WorkflowActivityDatabase.Name,
 		Status:       params.WorkflowActivityDatabase.Status,
+		ProcId:       procId,
 		Run:          wfa.Run,
 		WorkflowId:   params.WorkflowActivityDatabase.WorkflowId,
 		MemoryLimit:  wfa.MemoryLimit,

@@ -23,5 +23,6 @@
       ]
     }
   },
-  "remoteUser": "root"
+  "remoteUser": "root",
+  "runArgs": ["--privileged"]
 }

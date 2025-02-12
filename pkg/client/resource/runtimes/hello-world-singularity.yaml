@@ -10,13 +10,19 @@ spec:
     - name: step01
       image: "/home/ovvesley/Workspace/singularity/sifs/ubuntu-minimal.sif"
       run: |
-        echo "Hello World" > hello.txt
+        for i in $(seq 1 300); do
+          echo "now is $(date)" >> step01.txt
+          sleep 1
+        done   
       memoryLimit: 1G
       cpuLimit: 1
 
     - name: step02
       image: "/home/ovvesley/Workspace/singularity/sifs/ubuntu-minimal.sif"
       run: |
-        echo "Hello World" > hello.txt
+        for i in $(seq 1 300); do
+          echo "now is $(date)" >> step02.txt
+          sleep 1
+        done 
       memoryLimit: 1G
       cpuLimit: 1

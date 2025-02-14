@@ -3,6 +3,7 @@ package singularity_runtime_service
 import (
 	"encoding/base64"
 	"fmt"
+	"strconv"
 
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
@@ -38,5 +39,20 @@ func (s *MakeSingularityActivityService) makeContainerCommandActivity(wf workflo
 		imageSifPath,
 		commandFinal,
 	)
+
+	strOutFile := fmt.Sprintf("%s/akoflow_out%s_%s.out",
+		mountPath,
+		strconv.Itoa(wfa.WorkflowId),
+		strconv.Itoa(wfa.Id),
+	)
+
+	strErrFile := fmt.Sprintf("%s/akoflow_err%s_%s.err",
+		mountPath,
+		strconv.Itoa(wfa.WorkflowId),
+		strconv.Itoa(wfa.Id),
+	)
+
+	entryPoint = fmt.Sprintf("%s > %s 2> %s", entryPoint, strOutFile, strErrFile)
+
 	return entryPoint
 }

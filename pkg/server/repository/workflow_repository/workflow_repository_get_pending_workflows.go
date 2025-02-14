@@ -10,7 +10,7 @@ func (w *WorkflowRepository) GetPendingWorkflows(namespace string) ([]workflow_e
 	database := repository.Database{}
 	c := database.Connect()
 
-	rows, err := c.Query("SELECT id, namespace, name, raw_workflow, status FROM "+w.tableName+" WHERE namespace = ? AND status IN (?, ?)", namespace, StatusRunning, StatusCreated)
+	rows, err := c.Query("SELECT id, namespace, runtime, name, raw_workflow, status FROM "+w.tableName+" WHERE namespace = ? AND status IN (?, ?)", namespace, StatusRunning, StatusCreated)
 	if err != nil {
 		return nil, err
 	}
@@ -19,7 +19,7 @@ func (w *WorkflowRepository) GetPendingWorkflows(namespace string) ([]workflow_e
 
 	for rows.Next() {
 		result := workflow_entity.WorkflowDatabase{}
-		err = rows.Scan(&result.ID, &result.Namespace, &result.Name, &result.RawWorkflow, &result.Status)
+		err = rows.Scan(&result.ID, &result.Namespace, &result.Runtime, &result.Name, &result.RawWorkflow, &result.Status)
 		if err != nil {
 			return nil, err
 		}

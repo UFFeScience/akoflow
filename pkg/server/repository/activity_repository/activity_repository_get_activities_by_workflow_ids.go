@@ -14,14 +14,14 @@ func (w *ActivityRepository) GetActivitiesByWorkflowIds(ids []int) (ResultGetAct
 	for _, id := range ids {
 		database := repository.Database{}
 		c := database.Connect()
-		rows, err := c.Query("SELECT id, workflow_id, namespace, name, image, resource_k8s_base64, status, created_at, started_at, finished_at FROM activities WHERE workflow_id = ?", id)
+		rows, err := c.Query("SELECT id, workflow_id, namespace, name, image, resource_k8s_base64, status, proc_id, created_at, started_at, finished_at FROM activities WHERE workflow_id = ?", id)
 		if err != nil {
 			return nil, err
 		}
 
 		for rows.Next() {
 			var wfaDatabase workflow_activity_entity.WorkflowActivityDatabase
-			err = rows.Scan(&wfaDatabase.Id, &wfaDatabase.WorkflowId, &wfaDatabase.Namespace, &wfaDatabase.Name, &wfaDatabase.Image, &wfaDatabase.ResourceK8sBase64, &wfaDatabase.Status, &wfaDatabase.CreatedAt, &wfaDatabase.StartedAt, &wfaDatabase.FinishedAt)
+			err = rows.Scan(&wfaDatabase.Id, &wfaDatabase.WorkflowId, &wfaDatabase.Namespace, &wfaDatabase.Name, &wfaDatabase.Image, &wfaDatabase.ResourceK8sBase64, &wfaDatabase.Status, &wfaDatabase.ProcId, &wfaDatabase.CreatedAt, &wfaDatabase.StartedAt, &wfaDatabase.FinishedAt)
 			if err != nil {
 				return nil, err
 			}

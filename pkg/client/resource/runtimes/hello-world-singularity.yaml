@@ -10,19 +10,13 @@ spec:
     - name: step01
       image: "/home/ovvesley/Workspace/singularity/sifs/ubuntu-minimal.sif"
       run: |
-        for i in $(seq 1 300); do
-          echo "now is $(date)" >> step01.txt
-          sleep 1
-        done   
+        stress --cpu 1 --timeout 300s --vm 1 --vm-bytes 100M 
       memoryLimit: 1G
       cpuLimit: 1
 
     - name: step02
       image: "/home/ovvesley/Workspace/singularity/sifs/ubuntu-minimal.sif"
       run: |
-        for i in $(seq 1 300); do
-          echo "now is $(date)" >> step02.txt
-          sleep 1
-        done 
+        stress --cpu 1 --timeout 300s --vm 1 --vm-bytes 100M
       memoryLimit: 1G
       cpuLimit: 1

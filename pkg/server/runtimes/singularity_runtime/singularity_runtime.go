@@ -46,5 +46,6 @@ func (s *SingularityRuntime) GetStatus(workflowID int, activityID int) string {
 }
 
 func (s *SingularityRuntime) VerifyActivitiesWasFinished(workflow workflow_entity.Workflow) bool {
+	s.SingularityRuntimeService.VerifyActivitiesWasFinished(workflow)
 	return true
 }

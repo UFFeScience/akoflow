@@ -1,6 +1,7 @@
 package monitor_change_workflow_service
 
 import (
+	"github.com/ovvesley/akoflow/pkg/server/config"
 	"github.com/ovvesley/akoflow/pkg/server/runtimes"
 
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
@@ -19,7 +20,8 @@ type MonitorChangeWorkflowService struct {
 
 func New() *MonitorChangeWorkflowService {
 	return &MonitorChangeWorkflowService{
-		namespace: "akoflow",
+		namespace:          "akoflow",
+		workflowRepository: config.App().Repository.WorkflowRepository,
 
 		getPendingWorkflowService: get_pending_workflow_service.New(),
 		getWorkflowByStatus:       get_workflow_by_status_service.New(),

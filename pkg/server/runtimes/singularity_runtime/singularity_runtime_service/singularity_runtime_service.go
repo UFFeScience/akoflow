@@ -5,6 +5,7 @@ import (
 
 	"github.com/ovvesley/akoflow/pkg/server/config"
 	"github.com/ovvesley/akoflow/pkg/server/connector/connector_singularity"
+	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
 	"github.com/ovvesley/akoflow/pkg/server/repository/activity_repository"
 	"github.com/ovvesley/akoflow/pkg/server/repository/workflow_repository"
 )
@@ -35,8 +36,6 @@ func (s *SingularityRuntimeService) ApplyJob(workflowID int, activityID int) {
 		return
 	}
 
-	// runtimeId := wf.GetRuntimeId()
-
 	singularitySystemCall := s.makeSingularityActivity.Handle(wf, wfa)
 
 	pid, _ := s.singularityConnector.RunCommand(singularitySystemCall)
@@ -60,4 +59,10 @@ func (s *SingularityRuntimeService) ApplyJob(workflowID int, activityID int) {
 
 	config.App().Logger.Infof("WORKER: Running singularity command %s", singularitySystemCall)
 
+}
+
+func (s *SingularityRuntimeService) VerifyActivitiesWasFinished(workflow workflow_entity.Workflow) {
+	for _, activity := range workflow.Spec.Activities {
+		println("VerifyActivitiesWasFinished" + activity.Name)
+	}
 }

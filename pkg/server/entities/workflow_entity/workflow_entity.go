@@ -36,6 +36,7 @@ type WorkflowSpecStoragePolicy struct {
 type WorkflowDatabase struct {
 	ID          int
 	Namespace   string
+	Runtime     string
 	Name        string
 	RawWorkflow string
 	Status      int
@@ -45,6 +46,7 @@ type WorkflowNewParams struct {
 	WorkflowBase64 string
 	Id             *int
 	Status         *int
+	Runtime        string
 	Activities     []workflow_activity_entity.WorkflowActivityDatabase
 }
 

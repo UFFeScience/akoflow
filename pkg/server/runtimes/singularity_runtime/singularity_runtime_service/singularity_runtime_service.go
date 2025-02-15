@@ -1,7 +1,9 @@
 package singularity_runtime_service
 
 import (
+	"encoding/base64"
 	"fmt"
+	"regexp"
 
 	"github.com/ovvesley/akoflow/pkg/server/config"
 	"github.com/ovvesley/akoflow/pkg/server/connector/connector_singularity"
@@ -63,6 +65,51 @@ func (s *SingularityRuntimeService) ApplyJob(workflowID int, activityID int) {
 
 func (s *SingularityRuntimeService) VerifyActivitiesWasFinished(workflow workflow_entity.Workflow) {
 	for _, activity := range workflow.Spec.Activities {
-		println("VerifyActivitiesWasFinished" + activity.Name)
+		if activity.Status != activity_repository.StatusRunning {
+			continue
+		}
+
+		pid := activity.ProcId
+
+		akfMonitorBashScript, err := NewAkfMonitorSingularity().
+			SetPid(pid).
+			GetScript()
+
+		if err != nil {
+			config.App().Logger.Infof("WORKER: Error creating akf monitor script %s", pid)
+			return
+		}
+
+		commandBase64 := base64.StdEncoding.EncodeToString([]byte(akfMonitorBashScript))
+		commandFinal := "echo " + commandBase64 + " | base64 -d | sh"
+
+		outputCommand, _ := s.singularityConnector.RunCommandWithOutput(commandFinal)
+
+		totalCPU, totalMEM, err := s.ExtractMetrics(outputCommand)
+
+		if err != nil {
+			config.App().Logger.Infof("WORKER: Error extracting metrics %s", outputCommand)
+			return
+		}
+
+		fmt.Println("Total CPU: ", totalCPU)
+		fmt.Println("Total MEM: ", totalMEM)
+
+		fmt.Println("Metrics: ", outputCommand)
+
 	}
+}
+
+func (s *SingularityRuntimeService) ExtractMetrics(metrics string) (string, string, error) {
+	re := regexp.MustCompile(`TOTAL_CPU=\((.*?)%\).*?TOTAL_MEM=\((.*?)%`)
+	matches := re.FindStringSubmatch(metrics)
+
+	if len(matches) < 3 {
+		return "", "", fmt.Errorf("could not find metrics in the provided string")
+	}
+
+	totalCPU := matches[1]
+	totalMEM := matches[2]
+
+	return totalCPU, totalMEM, nil
 }

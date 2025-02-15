@@ -1,11 +1,14 @@
 #!/bin/bash
 
-if [ -z "$1" ]; then
-    echo "Uso: $0 <PID do processo pai>"
-    exit 1
+
+
+PARENT_PID=##PARENT_PID##
+
+if [ -z "$PARENT_PID" ]; then
+    echo "PARENT_PID is required"
+    exit 0
 fi
 
-PARENT_PID=$1
 
 get_children() {
     local pids=("$@")
@@ -44,8 +47,8 @@ etime_to_seconds() {
 CHILDREN_PIDS=$(get_children $PARENT_PID)
 
 if [ -z "$CHILDREN_PIDS" ]; then
-    echo "Nenhum processo filho encontrado para o PID $PARENT_PID"
-    exit 1
+    echo "Anyone child process found for PID=($PARENT_PID). #NO_PROCESS_FOUND"
+    exit 0
 fi
 
 CHILDREN_PIDS=$(echo "$CHILDREN_PIDS" | tr '\n' ' ')
@@ -56,7 +59,6 @@ total_cpu=0
 total_mem=0
 
 
-echo "PID     USER      %CPU  %MEM  COMMAND       ELAPSED  SECONDS"
 while read -r pid user cpu mem command etime; do
     if [[ "$pid" == "PID" ]]; then
         continue
@@ -75,7 +77,7 @@ while read -r pid user cpu mem command etime; do
         total_mem=$(echo "$total_mem + $mem" | bc -l)
     fi
 
-    echo "PID=($pid) USER=($user) CPU=($cpu) MEM=($mem) ETIME=($etime)  SECONDS=($seconds)"
+    echo "PID=($pid); USER=($user); CPU=($cpu); MEM=($mem); ETIME=($etime); SECONDS=($seconds); COMMAND=($command)"
 
 done < <(echo "$CHILDREN_PIDS" | xargs ps -o pid,user,%cpu,%mem,comm,etime --no-headers -p)
 

@@ -4,12 +4,17 @@ import (
 	"bufio"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
+
+	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
+	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
 )
 
 type AkfMonitorSingularity struct {
-	FilePath string
-	Pid      string
+	FilePath         string
+	Workflow         workflow_entity.Workflow
+	WorkflowActivity workflow_activity_entity.WorkflowActivities
 }
 
 func NewAkfMonitorSingularity() *AkfMonitorSingularity {
@@ -50,13 +55,22 @@ func (ams *AkfMonitorSingularity) ReadFileAsString() (string, error) {
 	return strings.Join(lines, "\n"), nil
 }
 
-func (ams *AkfMonitorSingularity) SetPid(pid string) *AkfMonitorSingularity {
-	ams.Pid = pid
+func (ams *AkfMonitorSingularity) SetWorkflow(workflow workflow_entity.Workflow) *AkfMonitorSingularity {
+	ams.Workflow = workflow
 	return ams
 }
 
-func (ams *AkfMonitorSingularity) GetPid() string {
-	return ams.Pid
+func (ams *AkfMonitorSingularity) SetWorkflowActivity(workflowActivity workflow_activity_entity.WorkflowActivities) *AkfMonitorSingularity {
+	ams.WorkflowActivity = workflowActivity
+	return ams
+}
+
+func (ams *AkfMonitorSingularity) GetWorkflow() workflow_entity.Workflow {
+	return ams.Workflow
+}
+
+func (ams *AkfMonitorSingularity) GetWorkflowActivity() workflow_activity_entity.WorkflowActivities {
+	return ams.WorkflowActivity
 }
 
 func (ams *AkfMonitorSingularity) GetScript() (string, error) {
@@ -66,12 +80,15 @@ func (ams *AkfMonitorSingularity) GetScript() (string, error) {
 		return "", err
 	}
 
-	if ams.GetPid() == "" {
+	if ams.GetWorkflowActivity().GetProcId() == "" {
 
 		return "", nil
 	}
 
-	script = strings.ReplaceAll(script, "##PARENT_PID##", ams.GetPid())
+	script = strings.ReplaceAll(script, "##PARENT_PID##", ams.GetWorkflowActivity().GetProcId())
+	script = strings.ReplaceAll(script, "##WORKFLOW_ID##", strconv.Itoa(ams.GetWorkflow().GetId()))
+	script = strings.ReplaceAll(script, "##WORKFLOW_ACTIVITY_ID##", strconv.Itoa(ams.GetWorkflowActivity().GetId()))
+	script = strings.ReplaceAll(script, "##WORKFLOW_PATH_DATA_DIR##", ams.GetWorkflow().GetMountPath())
 
 	if err != nil {
 		return "", err

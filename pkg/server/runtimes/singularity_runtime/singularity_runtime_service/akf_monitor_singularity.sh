@@ -3,6 +3,10 @@
 
 
 PARENT_PID=##PARENT_PID##
+WORKFLOW_ID=##WORKFLOW_ID##
+WORKFLOW_ACTIVITY_ID=##WORKFLOW_ACTIVITY_ID##
+WORKFLOW_PATH_DATA_DIR=##WORKFLOW_PATH_DATA_DIR##
+
 
 if [ -z "$PARENT_PID" ]; then
     echo "PARENT_PID is required"
@@ -90,3 +94,14 @@ echo "TOTAL_CPU=(${total_cpu}%)"
 echo "TOTAL_MEM=(${total_mem}%)"
 echo "PIDS=($CHILDENS_PIDS_IMPLODED)"
 echo "PIDS_COUNT=($CHILDENS_COUNT)"
+
+echo "---------------------------"
+
+
+echo "##START_LOG_ERROR##"
+tail -n 20 $WORKFLOW_PATH_DATA_DIR/akoflow_err$WORKFLOW_ID\_$WORKFLOW_ACTIVITY_ID.err
+echo "##END_LOG_ERROR##"
+
+echo "##START_LOG_OUTPUT##"
+tail -n 20 $WORKFLOW_PATH_DATA_DIR/akoflow_out$WORKFLOW_ID\_$WORKFLOW_ACTIVITY_ID.out
+echo "##END_LOG_OUTPUT##"

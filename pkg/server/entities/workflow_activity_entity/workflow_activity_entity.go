@@ -91,6 +91,10 @@ func (wfa WorkflowActivities) GetId() int {
 	return wfa.Id
 }
 
+func (wfa WorkflowActivities) GetProcId() string {
+	return wfa.ProcId
+}
+
 func (wfa WorkflowActivities) GetNodeSelector() map[string]string {
 	wfaNodeSelector := wfa.NodeSelector
 

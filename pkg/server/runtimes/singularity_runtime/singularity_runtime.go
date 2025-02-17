@@ -1,6 +1,8 @@
 package singularity_runtime
 
 import (
+	"fmt"
+
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
 	"github.com/ovvesley/akoflow/pkg/server/runtimes/singularity_runtime/singularity_runtime_service"
@@ -38,6 +40,7 @@ func (s *SingularityRuntime) GetMetrics(workflowID int, activityID int) string {
 }
 
 func (s *SingularityRuntime) GetLogs(workflow workflow_entity.Workflow, workflowActivity workflow_activity_entity.WorkflowActivities) string {
+	fmt.Println("[MonitorGetLogsActivityService] GetLogs - All implemented in one call")
 	return ""
 }
 

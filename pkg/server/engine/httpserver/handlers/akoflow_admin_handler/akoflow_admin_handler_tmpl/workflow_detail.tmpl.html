@@ -450,7 +450,7 @@
                     fill: false,
                     tension: 0.4
                 };
-            }).filter(dataset => dataset.data[0].x && dataset.data[1].x);
+            }).filter(dataset => dataset.data[0].x >= 0 && dataset.data[1].x >= 0);
 
            
             return { datasets };

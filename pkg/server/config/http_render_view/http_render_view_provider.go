@@ -3,11 +3,17 @@ package http_render_view
 import (
 	"fmt"
 	"html/template"
+	"path/filepath"
 
 	"github.com/ovvesley/akoflow/pkg/server/services/manipulation_files_service"
+	"github.com/ovvesley/akoflow/pkg/shared/utils/utils_read_file"
 )
 
 const PATH_TEMPLATE = "pkg/server/engine/httpserver/handlers/akoflow_admin_handler/akoflow_admin_handler_tmpl/"
+
+func getPathTemplate() string {
+	return filepath.Join(utils_read_file.New().GetRootProjectPath(), PATH_TEMPLATE) + "/"
+}
 
 type HttpRenderViewProvider struct {
 	manipulationFilesService *manipulation_files_service.ManipulationFilesService
@@ -20,8 +26,11 @@ func New() HttpRenderViewProvider {
 }
 
 func (p *HttpRenderViewProvider) makeTemplateInstance(path string) *template.Template {
-	allTemplateFiles := manipulation_files_service.New().ListAllFilesInDir(PATH_TEMPLATE + "common/")
-	allTemplateFiles = append([]string{PATH_TEMPLATE + path}, allTemplateFiles...)
+
+	tmplFolder := getPathTemplate()
+
+	allTemplateFiles := manipulation_files_service.New().ListAllFilesInDir(tmplFolder + "common/")
+	allTemplateFiles = append([]string{tmplFolder + path}, allTemplateFiles...)
 
 	tmpl := template.New(path).Funcs(template.FuncMap{
 		"dict": dict,

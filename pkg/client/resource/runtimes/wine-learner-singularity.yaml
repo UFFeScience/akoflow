@@ -1,0 +1,16 @@
+name: akf-wine-singularity
+spec:
+  runtime: "singularity"
+  image: "/data-akoflow/sifs/learner_wine.sif"
+  storagePolicy:
+    type: default
+
+  mountPath: "/data-akoflow/montage050d"
+  activities:
+    - name: wine001
+      run: |
+        echo "Running wine001"
+        conda run -n tutorial mlflow run .  --env-manager=local
+      memoryLimit: 1024M
+      cpuLimit: 1
+      keepDisk: true

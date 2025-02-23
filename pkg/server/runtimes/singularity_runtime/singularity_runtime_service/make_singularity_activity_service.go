@@ -56,3 +56,22 @@ func (s *MakeSingularityActivityService) makeContainerCommandActivity(wf workflo
 
 	return entryPoint
 }
+
+func (s *MakeSingularityActivityService) MakeContainerCommandActivityToSDumont(wf workflow_entity.Workflow, wfa workflow_activity_entity.WorkflowActivities) string {
+
+	mountPath := wf.GetMountPath()
+	imageSifPath := wf.Spec.Image
+	command := wfa.Run
+	commandBase64 := base64.StdEncoding.EncodeToString([]byte(command))
+	commandFinal := "echo " + commandBase64 + " | base64 -d | sh"
+
+	entryPoint := fmt.Sprintf("singularity exec --bind %s:%s --pwd %s %s bash -c '%s'",
+		mountPath,
+		mountPath,
+		mountPath,
+		imageSifPath,
+		commandFinal,
+	)
+
+	return entryPoint
+}

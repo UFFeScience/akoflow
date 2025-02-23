@@ -220,7 +220,7 @@ func main() {
 	}
 
 	verifyDependencies()
-	disconnectVPN()
+	// disconnectVPN()
 	connectVPN(*gateway, *group, *groupPassword, *username, *password)
 
 	if !waitForVPN(10) { // Aguarda até 10 segundos para a VPN se conectar
@@ -232,5 +232,5 @@ func main() {
 	// Conectar via SSH e listar arquivos
 	connectAndListSSH(*username, *hostCluster, *password)
 
-	disconnectVPN()
+	// disconnectVPN()
 }

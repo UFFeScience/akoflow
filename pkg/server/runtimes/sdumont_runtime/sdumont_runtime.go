@@ -3,13 +3,17 @@ package sdumont_runtime
 import (
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
+	"github.com/ovvesley/akoflow/pkg/server/runtimes/sdumont_runtime/sdumont_runtime_service.go"
 )
 
-type SdumontRuntime struct {
+func NewSdumontRuntime() *SdumontRuntime {
+	return &SdumontRuntime{
+		sDumontRuntimeService: sdumont_runtime_service.New(),
+	}
 }
 
-func New() *SdumontRuntime {
-	return &SdumontRuntime{}
+type SdumontRuntime struct {
+	sDumontRuntimeService *sdumont_runtime_service.SDumontRuntimeService
 }
 
 func (s *SdumontRuntime) StartConnection() error {
@@ -21,6 +25,7 @@ func (s *SdumontRuntime) StopConnection() error {
 }
 
 func (s *SdumontRuntime) ApplyJob(workflowID int, activityID int) bool {
+	s.sDumontRuntimeService.ApplyJob(workflowID, activityID)
 	return true
 }
 
@@ -42,8 +47,4 @@ func (s *SdumontRuntime) GetStatus(workflowID int, activityID int) string {
 
 func (s *SdumontRuntime) VerifyActivitiesWasFinished(workflow workflow_entity.Workflow) bool {
 	return true
-}
-
-func NewSdumontRuntime() *SdumontRuntime {
-	return &SdumontRuntime{}
 }

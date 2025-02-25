@@ -2,6 +2,8 @@ package sdumont_runtime_service
 
 import (
 	"fmt"
+	"regexp"
+	"strings"
 
 	"github.com/ovvesley/akoflow/pkg/server/config"
 	"github.com/ovvesley/akoflow/pkg/server/connector/connector_sdumont"
@@ -61,6 +63,41 @@ func (s *SDumontRuntimeService) ApplyJob(workflowID int, activityID int) string 
 
 	output, _ := s.connectorSDumont.RunCommandWithOutputRemote(sBatchSDumontSystemCall)
 
+	pid, err := s.extractJobID(output)
+
+	fmt.Println("PID: ", pid)
+
+	err = s.workflowRepository.UpdateStatus(wfa.WorkflowId, workflow_repository.StatusRunning)
+
+	if err != nil {
+		config.App().Logger.Infof("WORKER: Error updating workflow status %d", wfa.WorkflowId)
+		return ""
+	}
+
+	_ = s.activityRepository.UpdateStatus(wfa.Id, activity_repository.StatusRunning)
+	err = s.activityRepository.UpdateProcID(wfa.Id, pid)
+
+	if err != nil {
+		config.App().Logger.Infof("WORKER: Error updating activity status %d", activityID)
+		return ""
+	}
+
+	config.App().Logger.Infof("WORKER: Running singularity command %s", singularitySystemCall)
+
 	return output
 
+}
+
+func (s *SDumontRuntimeService) extractJobID(outputCommand string) (string, error) {
+	reOutput := regexp.MustCompile(`(?m)(\d+)`)
+
+	matchOutput := reOutput.FindStringSubmatch(outputCommand)
+
+	var logsOutput string
+
+	if len(matchOutput) > 1 {
+		logsOutput = strings.TrimSpace(matchOutput[1])
+	}
+
+	return logsOutput, nil
 }

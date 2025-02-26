@@ -2,11 +2,14 @@ package sdumont_runtime_service
 
 import (
 	"fmt"
+	"os"
 	"regexp"
 	"strings"
 
 	"github.com/ovvesley/akoflow/pkg/server/config"
 	"github.com/ovvesley/akoflow/pkg/server/connector/connector_sdumont"
+	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
+	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
 	"github.com/ovvesley/akoflow/pkg/server/repository/activity_repository"
 	"github.com/ovvesley/akoflow/pkg/server/repository/workflow_repository"
 	"github.com/ovvesley/akoflow/pkg/server/runtimes/singularity_runtime/singularity_runtime_service"
@@ -40,6 +43,16 @@ func (s *SDumontRuntimeService) ApplyJob(workflowID int, activityID int) string 
 	if err != nil {
 		config.App().Logger.Infof("WORKER: Activity not found %d", activityID)
 		return ""
+	}
+
+	if wfa.Status == activity_repository.StatusRunning {
+		config.App().Logger.Infof("WORKER: Activity already running %d", activityID)
+		return ""
+	}
+
+	if wf.Status == activity_repository.StatusCreated {
+		config.App().Logger.Infof("WORKER: Initial activity. Setup Data and Environment.")
+		s.applyWorkflowInRuntime(wf, wfa)
 	}
 
 	singularitySystemCall := s.makeSingularityActivity.MakeContainerCommandActivityToSDumont(wf, wfa)
@@ -85,6 +98,43 @@ func (s *SDumontRuntimeService) ApplyJob(workflowID int, activityID int) string 
 	config.App().Logger.Infof("WORKER: Running singularity command %s", singularitySystemCall)
 
 	return output
+
+}
+
+func (s *SDumontRuntimeService) applyWorkflowInRuntime(wf workflow_entity.Workflow, wfa workflow_activity_entity.WorkflowActivities) {
+	config.App().Logger.Infof("WORKER: Apply workflow in SDumont Runtime")
+
+	_ = s.workflowRepository.UpdateStatus(wfa.WorkflowId, workflow_repository.StatusRunning)
+	_ = s.activityRepository.UpdateStatus(wfa.Id, activity_repository.StatusRunning)
+
+	volumes := wf.GetVolumes()
+
+	commands := []string{}
+
+	// TODO: Refactor this to a better way disacopling the commands in a make service
+	for _, volume := range volumes {
+		command1 := fmt.Sprintf("sshpass -p '%s' ssh -o StrictHostKeyChecking=no %s@%s 'mkdir -p %s'",
+			os.Getenv("SDUMONT_PASSWORD"),
+			os.Getenv("SDUMONT_USER"),
+			os.Getenv("SDUMONT_HOST_CLUSTER"),
+			volume.GetRemotePath(),
+		)
+
+		command2 := fmt.Sprintf("sshpass -p '%s' rsync -ah --progress %s %s@%s:%s",
+			os.Getenv("SDUMONT_PASSWORD"),
+			volume.GetLocalPath(),
+			os.Getenv("SDUMONT_USER"),
+			os.Getenv("SDUMONT_HOST_CLUSTER"),
+			volume.GetRemotePath(),
+		)
+
+		fullCommands := fmt.Sprintf("%s && %s", command1, command2)
+
+		commands = append(commands, fullCommands)
+
+	}
+
+	s.connectorSDumont.ExecuteMultiplesCommand(commands)
 
 }
 

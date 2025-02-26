@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"sync"
 	"syscall"
 )
 
@@ -19,6 +20,7 @@ type IConnectorSDumont interface {
 	RunCommandWithOutput(command string, args ...string) (string, error)
 	RunCommandWithOutputRemote(command string, args ...string) (string, error)
 	IsVPNConnected() (bool, error)
+	ExecuteMultiplesCommand(commands []string)
 }
 
 func (c *ConnectorSDumont) RunCommandWithOutputRemote(command string, args ...string) (string, error) {
@@ -41,6 +43,42 @@ func (c *ConnectorSDumont) RunCommandWithOutputRemote(command string, args ...st
 	}
 
 	return string(output), nil
+}
+
+func (s *ConnectorSDumont) ExecuteMultiplesCommand(commands []string) {
+	var wg sync.WaitGroup
+
+	responses := make(chan string, len(commands)) // Create a channel to receive the responses
+
+	for _, command := range commands {
+		wg.Add(1)
+		go func(command string) {
+			defer wg.Done()
+
+			shell := getAvailableShell()
+
+			fullCommand := append([]string{"-c", command})
+			cmd := exec.Command(shell, fullCommand...)
+			output, err := cmd.CombinedOutput()
+
+			if err != nil {
+				fmt.Printf("failed to execute command: %s\n", err)
+			}
+
+			fmt.Printf("Output: %s\n", output)
+
+			responses <- string(output)
+
+		}(command)
+	}
+
+	wg.Wait()
+
+	close(responses)
+
+	for response := range responses {
+		fmt.Printf("Response: %s\n", response)
+	}
 }
 
 func (c *ConnectorSDumont) RunCommand(command string, args ...string) (string, error) {

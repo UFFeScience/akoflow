@@ -3,6 +3,7 @@ package workflow_entity
 import (
 	"encoding/base64"
 	"fmt"
+	"strings"
 
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
 	"gopkg.in/yaml.v3"
@@ -22,6 +23,7 @@ type WorkflowSpec struct {
 	Runtime       string                                        `yaml:"runtime"`
 	Image         string                                        `yaml:"image"`
 	StoragePolicy WorkflowSpecStoragePolicy                     `yaml:"storagePolicy"`
+	Volumes       []string                                      `yaml:"volumes"`
 	MountPath     string                                        `yaml:"mountPath"`
 	Activities    []workflow_activity_entity.WorkflowActivities `yaml:"activities"`
 	Namespace     string                                        `yaml:"namespace"`
@@ -160,4 +162,31 @@ func (w Workflow) MakeStorageClassNameDistributed() string {
 
 func (w Workflow) MakeWorkflowPersistentVolumeClaimName() string {
 	return "wf-pvc-" + fmt.Sprintf("%d", w.Id) + "-nfs"
+}
+
+type WorkflowVolumes struct {
+	localPath  string
+	remotePath string
+}
+
+func (w WorkflowVolumes) GetLocalPath() string {
+	return w.localPath
+}
+
+func (w WorkflowVolumes) GetRemotePath() string {
+	return w.remotePath
+}
+
+func (w Workflow) GetVolumes() []WorkflowVolumes {
+	volumes := []WorkflowVolumes{}
+
+	for _, volume := range w.Spec.Volumes {
+		volumeSplit := strings.Split(volume, ":")
+		volumes = append(volumes, WorkflowVolumes{
+			localPath:  volumeSplit[0],
+			remotePath: volumeSplit[1],
+		})
+	}
+
+	return volumes
 }

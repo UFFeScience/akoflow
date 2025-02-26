@@ -2,15 +2,15 @@ name: akf-wine-sdumont
 spec:
   runtime: "sdumont"
 
-  image: "/scratch/aidexl/wesley.ferreira/akf-wine/sifs/learner_wine.sif"
+  image: "/scratch/aidexl/wesley.ferreira/akoflow_akf-wine-sdumont_005/sifs/learner_wine.sif"
   storagePolicy:
     type: default
 
-  # workflowVolume:
-  #   - /data-workflow/akf-wine/sifs/:/scratch/aidexl/wesley.ferreira/akf-wine/sifs
-  #   - /data-workflow/akf-wine/akf-wine-sdumont:/scratch/aidexl/wesley.ferreira/akf-wine
+  volumes:
+    - /data-akoflow/sifs/:/scratch/aidexl/wesley.ferreira/akoflow_akf-wine-sdumont_005/sifs
+    - /data-akoflow/akf-wine-singularity/:/scratch/aidexl/wesley.ferreira/akoflow_akf-wine-sdumont_005/akf-wine-sdumont
 
-  mountPath: "/scratch/aidexl/wesley.ferreira/akf-wine/akf-wine-singularity"
+  mountPath: "/scratch/aidexl/wesley.ferreira/akoflow_akf-wine-sdumont_005/akf-wine-sdumont"
 
   activities:
     - name: wine001

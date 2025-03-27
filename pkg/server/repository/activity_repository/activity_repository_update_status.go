@@ -35,3 +35,21 @@ func (w *ActivityRepository) UpdateStatus(id int, status int) error {
 
 	return nil
 }
+
+func (w *ActivityRepository) UpdateProcID(id int, pid string) error {
+	database := repository.Database{}
+	c := database.Connect()
+
+	_, err := c.Exec("UPDATE "+w.tableNameActivity+" SET proc_id = ? WHERE ID = ?", pid, id)
+	if err != nil {
+		return err
+	}
+
+	err = c.Close()
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

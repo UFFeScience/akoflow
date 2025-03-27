@@ -33,17 +33,21 @@
     function makeWorkflowListHtml(workflows) {
         let workflowList = workflows.map((workflow) => {
             let status = WORKFLOW_STATUS[workflow.status];
+
+            let namespace = workflow.spec.namespace === "" ? "akoflow" : workflow.spec.namespace;
+
+            console.log(workflow)
             return `
                 <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg flex justify-between items-center" id="${workflow.id}">
                     <div>
-                        <h2 class="text-lg font-semibold text-black dark:text-white">${workflow.spec.namespace} / ${workflow.name}</h2>
+                        <h2 class="text-lg font-semibold text-black dark:text-white">${namespace} / ${workflow.name}</h2>
                         <p class="text-gray-700 dark:text-gray-500">${status.text}  • ${status.text}  Total Activities: ${workflow.spec.activities.length}</p>
                     </div>
                     <div class="flex items
                     -center space-x-4">
                         <span class="${status.color}">${status.icon}</span>
                         <span class="text-gray-700 dark:text-gray-500">${status.text}</span>
-                        <a href="/akoflow-admin/workflows/${workflow.spec.namespace}/${workflow.id}" class="bg-gray-300 dark:bg-gray-700 p-2 rounded text-black dark:text-white">More</a>
+                        <a href="/akoflow-admin/workflows/${namespace}/${workflow.id}" class="bg-gray-300 dark:bg-gray-700 p-2 rounded text-black dark:text-white">More</a>
                     </div>
                 </div>
             `;

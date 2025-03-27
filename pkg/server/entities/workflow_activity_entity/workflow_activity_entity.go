@@ -2,17 +2,20 @@ package workflow_activity_entity
 
 import (
 	"encoding/base64"
-	"gopkg.in/yaml.v3"
 	"strconv"
 	"strings"
+
+	"gopkg.in/yaml.v3"
 )
 
 type WorkflowActivities struct {
 	Id           int
 	WorkflowId   int
 	Status       int
+	ProcId       string   `yaml:"procId"`
 	Name         string   `yaml:"name"`
 	Run          string   `yaml:"run"`
+	Image        string   `yaml:"image"`
 	MemoryLimit  string   `yaml:"memoryLimit"`
 	CpuLimit     string   `yaml:"cpuLimit"`
 	DependsOn    []string `yaml:"dependsOn"`
@@ -31,6 +34,7 @@ type WorkflowActivityDatabase struct {
 	Image             string
 	ResourceK8sBase64 string
 	Status            int
+	ProcId            *string
 	DependOnActivity  *int
 	CreatedAt         *string
 	StartedAt         *string
@@ -87,6 +91,10 @@ func (wfa WorkflowActivities) GetId() int {
 	return wfa.Id
 }
 
+func (wfa WorkflowActivities) GetProcId() string {
+	return wfa.ProcId
+}
+
 func (wfa WorkflowActivities) GetNodeSelector() map[string]string {
 	wfaNodeSelector := wfa.NodeSelector
 
@@ -136,10 +144,16 @@ func DatabaseToWorkflowActivities(params ParamsDatabaseToWorkflowActivities) Wor
 		finishedAt = *params.WorkflowActivityDatabase.FinishedAt
 	}
 
+	procId := ""
+	if params.WorkflowActivityDatabase.ProcId != nil {
+		procId = *params.WorkflowActivityDatabase.ProcId
+	}
+
 	return WorkflowActivities{
 		Id:           params.WorkflowActivityDatabase.Id,
 		Name:         params.WorkflowActivityDatabase.Name,
 		Status:       params.WorkflowActivityDatabase.Status,
+		ProcId:       procId,
 		Run:          wfa.Run,
 		WorkflowId:   params.WorkflowActivityDatabase.WorkflowId,
 		MemoryLimit:  wfa.MemoryLimit,

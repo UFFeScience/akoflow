@@ -2,6 +2,10 @@ package find_workflow_api_service
 
 import (
 	"fmt"
+	"strconv"
+	"strings"
+	"time"
+
 	"github.com/ovvesley/akoflow/pkg/server/config"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
 	"github.com/ovvesley/akoflow/pkg/server/mapper/mapper_engine_api"
@@ -9,9 +13,6 @@ import (
 	"github.com/ovvesley/akoflow/pkg/server/repository/workflow_repository"
 	"github.com/ovvesley/akoflow/pkg/server/types/types_api"
 	"github.com/ovvesley/akoflow/pkg/server/utils"
-	"strconv"
-	"strings"
-	"time"
 )
 
 type FindWorkflowApiService struct {
@@ -62,7 +63,7 @@ func calculateWorkflowMetrics(wfApi types_api.ApiWorkflowType, wfEngine workflow
 	wfTotalDiskUsage := 0
 
 	if !wfEngine.IsStoragePolicyStandalone() {
-		wfTotalDiskUsage = parseDiskUsage(wfEngine.Spec.StorageSize)
+		wfTotalDiskUsage = parseDiskUsage(wfEngine.Spec.StoragePolicy.StorageSize)
 	}
 
 	totalDuration := 0
@@ -97,7 +98,7 @@ func calculateWorkflowMetrics(wfApi types_api.ApiWorkflowType, wfEngine workflow
 			wfApi.Spec.LongestActivity = wfApi.Spec.Activities[index]
 		}
 		if wfEngine.IsStoragePolicyStandalone() {
-			wfTotalDiskUsage += parseDiskUsage(wfEngine.Spec.StorageSize)
+			wfTotalDiskUsage += parseDiskUsage(wfEngine.Spec.StoragePolicy.StorageSize)
 		}
 
 	}

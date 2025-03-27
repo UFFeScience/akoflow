@@ -7,7 +7,6 @@
             "request": "launch",
             "mode": "debug",
             "program": "cmd/server/main.go",
-            "cwd": "/app/",
             "env": {
                 "K8S_API_SERVER_HOST": "localhost",
                 "K8S_API_SERVER_TOKEN": "dummy",
@@ -20,7 +19,6 @@
             "request": "launch",
             "mode":  "debug",
             "program": "cmd/client/main.go",
-            "cwd": "/app/",
             "args": ["run", "-host", "localhost", "-port", "8080", "-file", "test.yaml"],
         },
 
@@ -30,7 +28,6 @@
             "request": "launch",
             "mode":  "debug",
             "program": "cmd/client/main.go",
-            "cwd": "/app/",
             "args": ["install", "--hosts", "root:root@172.17.0.3:22,root:root@172.17.0.4:22"],
         }
     ]

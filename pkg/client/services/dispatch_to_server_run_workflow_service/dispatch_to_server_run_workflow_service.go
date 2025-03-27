@@ -71,5 +71,5 @@ func (d *DispatchToServerRunWorkflowService) getFileContent(filePath string) str
 }
 
 func (d *DispatchToServerRunWorkflowService) sendToServer(base64FileContent string) {
-	d.serverConnector.Workflow().Run(d.host, d.port, base64FileContent)
+	d.serverConnector.Workflow().Create(d.host, d.port, base64FileContent)
 }

@@ -3,6 +3,8 @@ package workflow_entity
 import (
 	"encoding/base64"
 	"fmt"
+	"strings"
+
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
 	"gopkg.in/yaml.v3"
 )
@@ -18,22 +20,25 @@ const MODE_DISTRIBUTED = "distributed"
 const MODE_STANDALONE = "standalone"
 
 type WorkflowSpec struct {
-	Image            string                                        `yaml:"image"`
-	Namespace        string                                        `yaml:"namespace"`
-	StorageClassName string                                        `yaml:"storageClassName"`
-	StorageSize      string                                        `yaml:"storageSize"`
-	StoragePolicy    WorkflowSpecStoragePolicy                     `yaml:"storagePolicy"`
-	MountPath        string                                        `yaml:"mountPath"`
-	Activities       []workflow_activity_entity.WorkflowActivities `yaml:"activities"`
+	Runtime       string                                        `yaml:"runtime"`
+	Image         string                                        `yaml:"image"`
+	StoragePolicy WorkflowSpecStoragePolicy                     `yaml:"storagePolicy"`
+	Volumes       []string                                      `yaml:"volumes"`
+	MountPath     string                                        `yaml:"mountPath"`
+	Activities    []workflow_activity_entity.WorkflowActivities `yaml:"activities"`
+	Namespace     string                                        `yaml:"namespace"`
 }
 
 type WorkflowSpecStoragePolicy struct {
-	Type string `yaml:"type"` // "distributed" or "standalone"
+	Type             string `yaml:"type"` // "distributed", "standalone" or "default"
+	StorageClassName string `yaml:"storageClassName"`
+	StorageSize      string `yaml:"storageSize"`
 }
 
 type WorkflowDatabase struct {
 	ID          int
 	Namespace   string
+	Runtime     string
 	Name        string
 	RawWorkflow string
 	Status      int
@@ -43,6 +48,7 @@ type WorkflowNewParams struct {
 	WorkflowBase64 string
 	Id             *int
 	Status         *int
+	Runtime        string
 	Activities     []workflow_activity_entity.WorkflowActivityDatabase
 }
 
@@ -131,11 +137,11 @@ func (w Workflow) GetNamespace() string {
 }
 
 func (w Workflow) GetStorageClassName() string {
-	return w.Spec.StorageClassName
+	return w.Spec.StoragePolicy.StorageClassName
 }
 
 func (w Workflow) GetStorageSize() string {
-	return w.Spec.StorageSize
+	return w.Spec.StoragePolicy.StorageSize
 }
 
 func (w Workflow) GetStoragePolicyType() string {
@@ -144,7 +150,10 @@ func (w Workflow) GetStoragePolicyType() string {
 
 func (w Workflow) GetMountPath() string {
 	return w.Spec.MountPath
+}
 
+func (w Workflow) GetRuntimeId() string {
+	return w.Spec.Runtime
 }
 
 func (w Workflow) MakeStorageClassNameDistributed() string {
@@ -153,4 +162,31 @@ func (w Workflow) MakeStorageClassNameDistributed() string {
 
 func (w Workflow) MakeWorkflowPersistentVolumeClaimName() string {
 	return "wf-pvc-" + fmt.Sprintf("%d", w.Id) + "-nfs"
+}
+
+type WorkflowVolumes struct {
+	localPath  string
+	remotePath string
+}
+
+func (w WorkflowVolumes) GetLocalPath() string {
+	return w.localPath
+}
+
+func (w WorkflowVolumes) GetRemotePath() string {
+	return w.remotePath
+}
+
+func (w Workflow) GetVolumes() []WorkflowVolumes {
+	volumes := []WorkflowVolumes{}
+
+	for _, volume := range w.Spec.Volumes {
+		volumeSplit := strings.Split(volume, ":")
+		volumes = append(volumes, WorkflowVolumes{
+			localPath:  volumeSplit[0],
+			remotePath: volumeSplit[1],
+		})
+	}
+
+	return volumes
 }

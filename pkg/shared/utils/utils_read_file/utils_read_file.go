@@ -31,3 +31,19 @@ func (u *UtilsReadFile) ReadFile(filePath string) string {
 
 	return string(bs)
 }
+
+func (u *UtilsReadFile) GetRootProjectPath() string {
+	// get root project path
+	rootPath, err := os.Getwd()
+	if err != nil {
+		panic(err)
+	}
+
+	// remove /cmd/server/main from the path
+	const cmdServerMain = "/cmd/server"
+	if len(rootPath) > len(cmdServerMain) && rootPath[len(rootPath)-len(cmdServerMain):] == cmdServerMain {
+		rootPath = rootPath[:len(rootPath)-len(cmdServerMain)]
+	}
+
+	return rootPath
+}

@@ -7,7 +7,7 @@ import (
 )
 
 type IWorkflow interface {
-	Run(host string, port string, base64FileContent string)
+	Create(host string, port string, base64FileContent string)
 }
 
 type Workflow struct {
@@ -29,7 +29,7 @@ type ResponsePostRunWorkflowConnector struct {
 	Message  string `json:"message"`
 }
 
-func (w *Workflow) Run(host string, port string, base64FileContent string) {
+func (w *Workflow) Create(host string, port string, base64FileContent string) {
 
 	payload := ResponsePostRunWorkflowConnector{
 		Workflow: base64FileContent,
@@ -37,7 +37,7 @@ func (w *Workflow) Run(host string, port string, base64FileContent string) {
 
 	payloadJson, _ := json.Marshal(payload)
 
-	req, _ := http.NewRequest("POST", "http://"+host+":"+port+"/akoflow-server/workflow/run/", bytes.NewBuffer(payloadJson))
+	req, _ := http.NewRequest("POST", "http://"+host+":"+port+"/akoflow-server/workflow/", bytes.NewBuffer(payloadJson))
 
 	req.Header.Set("Content-Type", "application/json")
 

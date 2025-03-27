@@ -78,11 +78,7 @@ func (o *OrchestrateWorflowService) isDependentOnFinished(wfaPending workflow_ac
 		}
 	}
 
-	if len(wfaPending.DependsOn) == len(mapNameCompleted) {
-		return true
-	}
-
-	return false
+	return len(wfaPending.DependsOn) == len(mapNameCompleted)
 }
 
 func (o *OrchestrateWorflowService) iterateWorkflows(workflows []workflow_entity.Workflow) map[int][]workflow_activity_entity.WorkflowActivities {

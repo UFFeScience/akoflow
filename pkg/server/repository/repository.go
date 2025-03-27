@@ -2,8 +2,10 @@ package repository
 
 import (
 	"database/sql"
-	_ "github.com/mattn/go-sqlite3"
 	"os"
+	"path/filepath"
+
+	_ "github.com/mattn/go-sqlite3"
 )
 
 type Database struct {
@@ -15,11 +17,16 @@ const File = "storage/database.db"
 var CREATED_TABLES = []string{}
 
 func (d *Database) Connect() *sql.DB {
+	projectPath, err := os.Getwd()
+	if err != nil {
+		panic(err)
+	}
 
-	createDirectoryIfNotExists("storage")
+	dbPath := filepath.Join(projectPath, "..", "..", File)
 
-	db, err := sql.Open("sqlite3", File)
+	createDirectoryIfNotExists(filepath.Dir(dbPath))
 
+	db, err := sql.Open("sqlite3", dbPath)
 	if err != nil {
 		panic(err)
 	}

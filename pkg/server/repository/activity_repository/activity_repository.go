@@ -17,7 +17,7 @@ var StatusFinished = 2
 var StatusCompleted = 3
 
 var TableNameActivities = "activities"
-var ColumnsActivities = "(id INTEGER PRIMARY KEY AUTOINCREMENT, workflow_id INTEGER, namespace TEXT, name TEXT, image TEXT, resource_k8s_base64 TEXT, status INTEGER, created_at TEXT, started_at TEXT, finished_at TEXT)"
+var ColumnsActivities = "(id INTEGER PRIMARY KEY AUTOINCREMENT, workflow_id INTEGER, namespace TEXT, name TEXT, image TEXT, resource_k8s_base64 TEXT, status INTEGER, proc_id TEXT, created_at TEXT, started_at TEXT, finished_at TEXT)"
 
 var TableNameActivitiesDependencies = "activities_dependencies"
 var ColumnsActivitiesDependencies = "(id INTEGER PRIMARY KEY AUTOINCREMENT, workflow_id INTEGER, activity_id INTEGER, depend_on_activity INTEGER)"
@@ -63,6 +63,7 @@ type IActivityRepository interface {
 	Create(namespace string, workflowId int, image string, activities []workflow_activity_entity.WorkflowActivities) error
 	GetActivitiesByWorkflowIds(ids []int) (ResultGetActivitiesByWorkflowIds, error)
 	UpdateStatus(id int, status int) error
+	UpdateProcID(id int, pid string) error
 	Find(id int) (workflow_activity_entity.WorkflowActivities, error)
 	GetByWorkflowId(id int) ([]workflow_activity_entity.WorkflowActivities, error)
 	GetWfaDependencies(workflowId int) ([]workflow_activity_entity.WorkflowActivityDependencyDatabase, error)

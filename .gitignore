@@ -6,3 +6,6 @@ storage/*
 __debug**
 releases/bin/*
 **akoflow.log**
+*.db
+*.sif
+.env

@@ -1,0 +1,36 @@
+name: akf-wf-singularity
+spec:
+  runtime: "singularity"
+  image: "/home/ovvesley/Workspace/singularity/sifs/ubuntu-minimal.sif"
+  storagePolicy:
+    type: default
+
+  mountPath: "/data-akoflow"
+  activities:
+    - name: step01
+      image: "/home/ovvesley/Workspace/singularity/sifs/ubuntu-minimal.sif"
+      run: |
+        stress --cpu 1 --timeout 300s --vm 1 --vm-bytes 100M 
+      memoryLimit: 1G
+      cpuLimit: 1
+
+    - name: step02
+      image: "/home/ovvesley/Workspace/singularity/sifs/ubuntu-minimal.sif"
+      run: |
+        stress --cpu 1 --timeout 300s --vm 1 --vm-bytes 100M
+      memoryLimit: 1G
+      cpuLimit: 1
+
+    - name: step03
+      image: "/home/ovvesley/Workspace/singularity/sifs/ubuntu-minimal.sif"
+      run: |
+        stress --cpu 2 --timeout 300s --vm 1 --vm-bytes 100M
+      memoryLimit: 1G
+      cpuLimit: 1
+
+    - name: step04
+      image: "/home/ovvesley/Workspace/singularity/sifs/ubuntu-minimal.sif"
+      run: |
+        stress --cpu 2 --timeout 300s --vm 1 --vm-bytes 100M
+      memoryLimit: 1G
+      cpuLimit: 1

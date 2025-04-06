@@ -56,5 +56,8 @@ func (k *KubernetesRuntime) VerifyActivitiesWasFinished(workflow workflow_entity
 }
 
 func NewKubernetesRuntime() *KubernetesRuntime {
-	return &KubernetesRuntime{}
+	return &KubernetesRuntime{
+		namespace:                config.App().DefaultNamespace,
+		kubernetesRuntimeService: kubernetes_runtime_service.New(),
+	}
 }

@@ -106,9 +106,9 @@ jobs:
       
       - name: Create checksums
         run: |
-          cd releases
-          sha256sum *.tar.gz *.zip > akoflow_${{ steps.get_version.outputs.VERSION }}_checksums.txt
-          cd ..
+          cd releases/bin
+          sha256sum * > ../akoflow_${{ steps.get_version.outputs.VERSION }}_checksums.txt
+          cd ../..
       
       - name: Create Release
         id: create_release
@@ -124,23 +124,34 @@ jobs:
             
             ## Installation
             
-            ### Binary Installation
-            Download the appropriate archive for your platform, extract it, and add the binaries to your PATH.
+            ### Client Binaries
+            - Linux (AMD64): `akoflow-client_${{ steps.get_version.outputs.VERSION }}_linux_amd64`
+            - Linux (ARM64): `akoflow-client_${{ steps.get_version.outputs.VERSION }}_linux_arm64`
+            - Windows (AMD64): `akoflow-client_${{ steps.get_version.outputs.VERSION }}_windows_amd64.exe`
+            - macOS (AMD64): `akoflow-client_${{ steps.get_version.outputs.VERSION }}_darwin_amd64`
+            - macOS (ARM64): `akoflow-client_${{ steps.get_version.outputs.VERSION }}_darwin_arm64`
+            
+            ### Server Binaries
+            - Linux (AMD64): `akoflow-server_${{ steps.get_version.outputs.VERSION }}_linux_amd64`
+            - Linux (ARM64): `akoflow-server_${{ steps.get_version.outputs.VERSION }}_linux_arm64`
+            - Windows (AMD64): `akoflow-server_${{ steps.get_version.outputs.VERSION }}_windows_amd64.exe`
+            - macOS (AMD64): `akoflow-server_${{ steps.get_version.outputs.VERSION }}_darwin_amd64`
+            - macOS (ARM64): `akoflow-server_${{ steps.get_version.outputs.VERSION }}_darwin_arm64`
+            
+            Download the appropriate binary for your platform, make it executable, and add it to your PATH.
 
             ### Download Client 
             For more information, visit [AkôFlow Client documentation](https://akoflow.com/docs/).
 
-
             ### Download Server
-            For more information, visit [AkôFlow Server documentation](https://akoflow.com/docs).
+            For more information, visit [AkôFlow Server documentation](https://akoflow.com/docs/).
 
             ## Documentation
-            For more information, visit [AkôFlow documentation](https://akoflow.com/docs).
+            For more information, visit [AkôFlow documentation](https://akoflow.com/docs/).
           draft: false
           prerelease: false
           files: |
-            releases/*.tar.gz
-            releases/*.zip
+            releases/bin/*
             releases/*_checksums.txt
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

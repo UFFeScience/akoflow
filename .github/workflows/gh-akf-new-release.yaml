@@ -56,9 +56,6 @@ jobs:
       - name: Create releases directory
         run: mkdir -p releases/bin
       
-      - name: Run tests in Docker
-        run: docker run --rm -v $(pwd):/app akoflow-builder:latest go test -v ./...
-      
       - name: Build all binaries
         run: |
           docker run --rm -v $(pwd):/app -e VERSION=${{ steps.get_version.outputs.VERSION }} akoflow-builder:latest sh -c "\

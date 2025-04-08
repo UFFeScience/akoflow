@@ -1,0 +1,150 @@
+name: Create Release on Tag
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      
+      - name: Get tag name (without v prefix)
+        id: get_version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+      
+      - name: Get tag name (with v prefix)
+        id: get_tag
+        run: echo "TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+      
+      - name: Get previous tag
+        id: previous_tag
+        run: |
+          PREVIOUS_TAG=$(git describe --tags --abbrev=0 ${{ steps.get_tag.outputs.TAG }}^ 2>/dev/null || echo "")
+          echo "PREVIOUS_TAG=$PREVIOUS_TAG" >> $GITHUB_OUTPUT
+      
+      - name: Generate changelog
+        id: changelog
+        run: |
+          if [ -n "${{ steps.previous_tag.outputs.PREVIOUS_TAG }}" ]; then
+            echo "CHANGELOG<<EOF" >> $GITHUB_OUTPUT
+            git log --pretty=format:"- %s (%h)" ${{ steps.previous_tag.outputs.PREVIOUS_TAG }}..${{ steps.get_tag.outputs.TAG }} >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+          else
+            echo "CHANGELOG<<EOF" >> $GITHUB_OUTPUT
+            git log --pretty=format:"- %s (%h)" ${{ steps.get_tag.outputs.TAG }} >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Build Docker image for building
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: .devcontainer/dev.Dockerfile
+          load: true
+          tags: akoflow-builder:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      
+      - name: Create releases directory
+        run: mkdir -p releases/bin
+      
+      - name: Run tests in Docker
+        run: docker run --rm -v $(pwd):/app akoflow-builder:latest go test -v ./...
+      
+      - name: Build all binaries
+        run: |
+          docker run --rm -v $(pwd):/app -e VERSION=${{ steps.get_version.outputs.VERSION }} akoflow-builder:latest sh -c "\
+          mkdir -p /app/releases/bin && \
+          GOOS=linux GOARCH=amd64 go build -o /app/releases/bin/akoflow-server_\${VERSION}_linux_amd64 /app/cmd/server/main.go && \
+          GOOS=linux GOARCH=arm64 go build -o /app/releases/bin/akoflow-server_\${VERSION}_linux_arm64 /app/cmd/server/main.go && \
+          GOOS=windows GOARCH=amd64 go build -o /app/releases/bin/akoflow-server_\${VERSION}_windows_amd64.exe /app/cmd/server/main.go && \
+          GOOS=darwin GOARCH=amd64 go build -o /app/releases/bin/akoflow-server_\${VERSION}_darwin_amd64 /app/cmd/server/main.go && \
+          GOOS=darwin GOARCH=arm64 go build -o /app/releases/bin/akoflow-server_\${VERSION}_darwin_arm64 /app/cmd/server/main.go && \
+          GOOS=linux GOARCH=amd64 go build -o /app/releases/bin/akoflow-client_\${VERSION}_linux_amd64 /app/cmd/client/main.go && \
+          GOOS=linux GOARCH=arm64 go build -o /app/releases/bin/akoflow-client_\${VERSION}_linux_arm64 /app/cmd/client/main.go && \
+          GOOS=windows GOARCH=amd64 go build -o /app/releases/bin/akoflow-client_\${VERSION}_windows_amd64.exe /app/cmd/client/main.go && \
+          GOOS=darwin GOARCH=amd64 go build -o /app/releases/bin/akoflow-client_\${VERSION}_darwin_amd64 /app/cmd/client/main.go && \
+          GOOS=darwin GOARCH=arm64 go build -o /app/releases/bin/akoflow-client_\${VERSION}_darwin_arm64 /app/cmd/client/main.go"
+      
+      - name: Create platform archives
+        run: |
+          cd releases/bin
+          
+          # Linux AMD64
+          tar -czf ../akoflow_${{ steps.get_version.outputs.VERSION }}_linux_amd64.tar.gz *_linux_amd64
+          
+          # Linux ARM64
+          tar -czf ../akoflow_${{ steps.get_version.outputs.VERSION }}_linux_arm64.tar.gz *_linux_arm64
+          
+          # Windows AMD64
+          zip -r ../akoflow_${{ steps.get_version.outputs.VERSION }}_windows_amd64.zip *_windows_amd64.exe
+          
+          # macOS AMD64
+          tar -czf ../akoflow_${{ steps.get_version.outputs.VERSION }}_darwin_amd64.tar.gz *_darwin_amd64
+          
+          # macOS ARM64
+          tar -czf ../akoflow_${{ steps.get_version.outputs.VERSION }}_darwin_arm64.tar.gz *_darwin_arm64
+          
+          cd ../..
+      
+      - name: Create Docker image for release
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: .devcontainer/dev.Dockerfile
+          push: false
+          tags: akoflow:${{ steps.get_tag.outputs.TAG }}
+          outputs: type=docker,dest=releases/akoflow-docker-${{ steps.get_version.outputs.VERSION }}.tar
+      
+      - name: Compress Docker image
+        run: gzip -9 releases/akoflow-docker-${{ steps.get_version.outputs.VERSION }}.tar
+      
+      - name: Create checksums
+        run: |
+          cd releases
+          sha256sum *.tar.gz *.zip > akoflow_${{ steps.get_version.outputs.VERSION }}_checksums.txt
+          cd ..
+      
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.get_tag.outputs.TAG }}
+          name: AkôFlow ${{ steps.get_tag.outputs.TAG }}
+          body: |
+            # AkôFlow Release ${{ steps.get_tag.outputs.TAG }}
+            
+            ## Changes
+            ${{ steps.changelog.outputs.CHANGELOG }}
+            
+            ## Installation
+            
+            ### Binary Installation
+            Download the appropriate archive for your platform, extract it, and add the binaries to your PATH.
+
+            ### Download Client 
+            For more information, visit [AkôFlow Client documentation](https://akoflow.com/docs/).
+
+
+            ### Download Server
+            For more information, visit [AkôFlow Server documentation](https://akoflow.com/docs).
+
+            ## Documentation
+            For more information, visit [AkôFlow documentation](https://akoflow.com/docs).
+          draft: false
+          prerelease: false
+          files: |
+            releases/*.tar.gz
+            releases/*.zip
+            releases/*_checksums.txt
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

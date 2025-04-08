@@ -120,7 +120,7 @@ func executeCommand(command string, args ...string) (string, error) {
 	shell := getAvailableShell()
 	fullCommand := append([]string{"-c", command}, args...)
 	cmd := exec.Command(shell, fullCommand...)
-	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
+	cmd.SysProcAttr = &syscall.SysProcAttr{}
 	if err := cmd.Start(); err != nil {
 		return "", fmt.Errorf("failed to start command: %w", err)
 	}

@@ -91,19 +91,7 @@ jobs:
           tar -czf ../akoflow_${{ steps.get_version.outputs.VERSION }}_darwin_arm64.tar.gz *_darwin_arm64
           
           cd ../..
-      
-      - name: Create Docker image for release
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          file: .devcontainer/dev.Dockerfile
-          push: false
-          tags: akoflow:${{ steps.get_tag.outputs.TAG }}
-          outputs: type=docker,dest=releases/akoflow-docker-${{ steps.get_version.outputs.VERSION }}.tar
-      
-      - name: Compress Docker image
-        run: gzip -9 releases/akoflow-docker-${{ steps.get_version.outputs.VERSION }}.tar
-      
+          
       - name: Create checksums
         run: |
           cd releases/bin

@@ -42,8 +42,7 @@ jobs:
             echo "CHANGELOG<<EOF" >> $GITHUB_OUTPUT
             git log --pretty=format:"- %s (%h)" ${{ steps.get_tag.outputs.TAG }} >> $GITHUB_OUTPUT
             echo "EOF" >> $GITHUB_OUTPUT
-          fi
-      
+          fi || echo "CHANGELOG<<EOF" >> $GITHUB_OUTPUT && echo "No changes available." >> $GITHUB_OUTPUT && echo "EOF" >> $GITHUB_OUTPUT
       - name: Build Docker image for building
         uses: docker/build-push-action@v4
         with:

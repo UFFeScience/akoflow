@@ -1,30 +1,32 @@
 package logs_repository
 
-import "github.com/ovvesley/akoflow/pkg/server/repository"
+import (
+	"fmt"
+	"strings"
+
+	"github.com/ovvesley/akoflow/pkg/server/repository"
+)
 
 type ParamsLogsCreate struct {
 	LogsDatabase LogsDatabase
 }
 
 func (l *LogsRepository) Create(params ParamsLogsCreate) error {
+	db := repository.GetInstance()
 
-	database := repository.Database{}
-	c := database.Connect()
+	ld := params.LogsDatabase
 
-	_, err := c.Exec(
-		"INSERT INTO "+l.tableName+" (activity_id, logs) VALUES (?, ?)",
-		params.LogsDatabase.ActivityId, params.LogsDatabase.Logs)
+	query := fmt.Sprintf(
+		"INSERT INTO %s (activity_id, logs) VALUES (%d, '%s')",
+		l.tableName,
+		ld.ActivityId,
+		escape(ld.Logs),
+	)
 
-	if err != nil {
-		return err
-	}
-
-	err = c.Close()
-
-	if err != nil {
-		return err
-	}
-
-	return nil
-
+	_, err := db.Exec(query)
+	return err
+}
+func escape(s string) string {
+	// Substitui aspas simples por duas aspas simples (padrão SQL)
+	return strings.ReplaceAll(s, "'", "''")
 }

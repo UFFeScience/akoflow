@@ -6,7 +6,7 @@ import (
 	"github.com/ovvesley/akoflow/pkg/server/repository/activity_repository"
 	"github.com/ovvesley/akoflow/pkg/server/repository/workflow_repository"
 	"github.com/ovvesley/akoflow/pkg/server/types/types_api"
-	"github.com/ovvesley/akoflow/pkg/server/utils"
+	"github.com/ovvesley/akoflow/pkg/server/utils/utils_workflow"
 )
 
 type ListWorkflowsApiService struct {
@@ -28,14 +28,14 @@ func (h *ListWorkflowsApiService) ListAllWorkflows() ([]types_api.ApiWorkflowTyp
 		return nil, err
 	}
 
-	ids := utils.GetIds(workflowsEngine)
+	ids := utils_workflow.GetIds(workflowsEngine)
 	mapWfActivities, err := h.activityRepository.GetActivitiesByWorkflowIds(ids)
 
 	if err != nil {
 		return nil, err
 	}
 
-	workflowsEngine = utils.HydrateWorkflows(workflowsEngine, mapWfActivities)
+	workflowsEngine = utils_workflow.HydrateWorkflows(workflowsEngine, mapWfActivities)
 
 	workflowApi := mapper_engine_api.MapEngineWorkflowEntityToApiWorkflowEntityList(workflowsEngine)
 

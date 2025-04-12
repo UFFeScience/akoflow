@@ -12,7 +12,7 @@ import (
 	"github.com/ovvesley/akoflow/pkg/server/repository/activity_repository"
 	"github.com/ovvesley/akoflow/pkg/server/repository/workflow_repository"
 	"github.com/ovvesley/akoflow/pkg/server/types/types_api"
-	"github.com/ovvesley/akoflow/pkg/server/utils"
+	"github.com/ovvesley/akoflow/pkg/server/utils/utils_workflow"
 )
 
 type FindWorkflowApiService struct {
@@ -36,7 +36,7 @@ func (h *FindWorkflowApiService) FindWorkflowById(id int) (types_api.ApiWorkflow
 		return types_api.ApiWorkflowType{}, err
 	}
 
-	wf = utils.HydrateWorkflow(wf, wfas)
+	wf = utils_workflow.HydrateWorkflow(wf, wfas)
 
 	wfApi := mapper_engine_api.MapEngineWorkflowEntityToApiWorkflowEntity(wf)
 

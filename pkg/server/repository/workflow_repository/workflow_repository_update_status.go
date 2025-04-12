@@ -1,20 +1,16 @@
 package workflow_repository
 
-import "github.com/ovvesley/akoflow/pkg/server/repository"
+import (
+	"fmt"
+
+	"github.com/ovvesley/akoflow/pkg/server/repository"
+)
 
 func (w *WorkflowRepository) UpdateStatus(id int, status int) error {
-	database := repository.Database{}
-	c := database.Connect()
+	db := repository.GetInstance()
 
-	_, err := c.Exec("UPDATE "+w.tableName+" SET status = ? WHERE ID = ?", status, id)
-	if err != nil {
-		return err
-	}
+	query := fmt.Sprintf("UPDATE %s SET status = %d WHERE id = %d", w.tableName, status, id)
 
-	err = c.Close()
-	if err != nil {
-		return err
-	}
-
-	return nil
+	_, err := db.Exec(query)
+	return err
 }

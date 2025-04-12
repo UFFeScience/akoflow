@@ -1,6 +1,7 @@
 package storages_repository
 
 import (
+	"github.com/ovvesley/akoflow/pkg/server/model"
 	"github.com/ovvesley/akoflow/pkg/server/repository"
 )
 
@@ -35,21 +36,16 @@ var StatusCreated = 2
 var StatusCompleted = 3
 
 func New() IStorageRepository {
+	db := repository.GetInstance()
 
-	database := repository.Database{}
-	c := database.Connect()
-	err := repository.CreateOrVerifyTable(c, TableName, Columns)
+	err := db.CreateOrVerifyTable(model.Storage{})
 	if err != nil {
-		return nil
-	}
-
-	err = c.Close()
-	if err != nil {
+		println("Error creating table:", err.Error())
 		return nil
 	}
 
 	return &StorageRepository{
-		tableName: TableName,
+		tableName: model.Storage{}.TableName(),
 	}
 }
 

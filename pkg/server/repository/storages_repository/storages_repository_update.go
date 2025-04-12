@@ -1,9 +1,10 @@
 package storages_repository
 
 import (
-	"github.com/ovvesley/akoflow/pkg/server/repository"
-	"strconv"
+	"fmt"
 	"time"
+
+	"github.com/ovvesley/akoflow/pkg/server/repository"
 )
 
 type ParamsStorageUpdate struct {
@@ -13,126 +14,92 @@ type ParamsStorageUpdate struct {
 }
 
 func (s *StorageRepository) Update(params ParamsStorageUpdate) error {
-
-	database := repository.Database{}
-	c := database.Connect()
-
 	if !(params.Status > 0 && params.PvcName != "" && params.ActivityId > 0) {
 		return nil
 	}
 
-	_, err := c.Exec("UPDATE " + s.tableName + " SET status = " + strconv.Itoa(params.Status) + ", pvc_name = '" + params.PvcName + "' WHERE activity_id = " + strconv.Itoa(params.ActivityId))
+	db := repository.GetInstance()
 
-	if err != nil {
-		return err
-	}
+	query := fmt.Sprintf(
+		"UPDATE %s SET status = %d, pvc_name = '%s' WHERE activity_id = %d",
+		s.tableName,
+		params.Status,
+		params.PvcName,
+		params.ActivityId,
+	)
 
-	err = c.Close()
-
-	if err != nil {
-		return err
-	}
-
-	return nil
-
+	_, err := db.Exec(query)
+	return err
 }
 
 func (s *StorageRepository) UpdateInitialFileListDisk(activityId int, fileDisk string) error {
+	db := repository.GetInstance()
 
-	database := repository.Database{}
-	c := database.Connect()
+	query := fmt.Sprintf(
+		"UPDATE %s SET initial_file_list = '%s' WHERE activity_id = %d",
+		s.tableName,
+		fileDisk,
+		activityId,
+	)
 
-	_, err := c.Exec("UPDATE " + s.tableName + " SET initial_file_list = '" + fileDisk + "' WHERE activity_id = " + strconv.Itoa(activityId))
-
-	if err != nil {
-		return err
-	}
-
-	err = c.Close()
-
-	if err != nil {
-		return err
-	}
-
-	return nil
+	_, err := db.Exec(query)
+	return err
 }
 
 func (s *StorageRepository) UpdateEndFileListDisk(activityId int, fileDisk string) error {
+	db := repository.GetInstance()
 
-	database := repository.Database{}
-	c := database.Connect()
+	query := fmt.Sprintf(
+		"UPDATE %s SET end_file_list = '%s' WHERE activity_id = %d",
+		s.tableName,
+		fileDisk,
+		activityId,
+	)
 
-	_, err := c.Exec("UPDATE " + s.tableName + " SET end_file_list = '" + fileDisk + "' WHERE activity_id = " + strconv.Itoa(activityId))
-
-	if err != nil {
-		return err
-	}
-
-	err = c.Close()
-
-	if err != nil {
-		return err
-	}
-
-	return nil
+	_, err := db.Exec(query)
+	return err
 }
 
 func (s *StorageRepository) UpdateInitialDiskSpec(activityId int, fileSpec string) error {
+	db := repository.GetInstance()
 
-	database := repository.Database{}
-	c := database.Connect()
+	query := fmt.Sprintf(
+		"UPDATE %s SET initial_disk_spec = '%s' WHERE activity_id = %d",
+		s.tableName,
+		fileSpec,
+		activityId,
+	)
 
-	_, err := c.Exec("UPDATE " + s.tableName + " SET initial_disk_spec = '" + fileSpec + "' WHERE activity_id = " + strconv.Itoa(activityId))
-
-	if err != nil {
-		return err
-	}
-
-	err = c.Close()
-
-	if err != nil {
-		return err
-	}
-
-	return nil
+	_, err := db.Exec(query)
+	return err
 }
 
 func (s *StorageRepository) UpdateEndDiskSpec(activityId int, fileSpec string) error {
+	db := repository.GetInstance()
 
-	database := repository.Database{}
-	c := database.Connect()
+	query := fmt.Sprintf(
+		"UPDATE %s SET end_disk_spec = '%s' WHERE activity_id = %d",
+		s.tableName,
+		fileSpec,
+		activityId,
+	)
 
-	_, err := c.Exec("UPDATE " + s.tableName + " SET end_disk_spec = '" + fileSpec + "' WHERE activity_id = " + strconv.Itoa(activityId))
-	if err != nil {
-		return err
-	}
-
-	err = c.Close()
-
-	if err != nil {
-		return err
-	}
-
-	return nil
+	_, err := db.Exec(query)
+	return err
 }
 
 func (s *StorageRepository) UpdateDetached(activityId int) error {
+	db := repository.GetInstance()
 
-	database := repository.Database{}
-	c := database.Connect()
+	now := time.Now().Format("2006-01-02 15:04:05")
 
-	now := time.Now()
+	query := fmt.Sprintf(
+		"UPDATE %s SET detached = '%s' WHERE activity_id = %d",
+		s.tableName,
+		now,
+		activityId,
+	)
 
-	_, err := c.Exec("UPDATE " + s.tableName + " SET detached = '" + now.Format("2006-01-02 15:04:05") + "' WHERE activity_id = " + strconv.Itoa(activityId))
-	if err != nil {
-		return err
-	}
-
-	err = c.Close()
-
-	if err != nil {
-		return err
-	}
-
-	return nil
+	_, err := db.Exec(query)
+	return err
 }

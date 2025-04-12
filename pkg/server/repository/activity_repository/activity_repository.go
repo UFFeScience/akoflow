@@ -2,6 +2,7 @@ package activity_repository
 
 import (
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
+	"github.com/ovvesley/akoflow/pkg/server/model"
 	"github.com/ovvesley/akoflow/pkg/server/repository"
 )
 
@@ -26,36 +27,27 @@ var TableNamePreActivities = "pre_activities"
 var ColumnsPreActivities = "(id INTEGER PRIMARY KEY AUTOINCREMENT, activity_id INTEGER, workflow_id INTEGER, namespace TEXT, name TEXT, resource_k8s_base64 TXT, status INTEGER, log TEXT)"
 
 func New() IActivityRepository {
+	db := repository.GetInstance()
 
-	database := repository.Database{}
-	c := database.Connect()
-	err := repository.CreateOrVerifyTable(c, TableNameActivities, ColumnsActivities)
-	if err != nil {
-		return nil
-	}
-	c.Close()
-
-	c = database.Connect()
-	err = repository.CreateOrVerifyTable(c, TableNameActivitiesDependencies, ColumnsActivitiesDependencies)
-
-	c.Close()
-
-	c = database.Connect()
-	err = repository.CreateOrVerifyTable(c, TableNamePreActivities, ColumnsPreActivities)
-
-	if err != nil {
+	if err := db.CreateOrVerifyTable(model.Activity{}); err != nil {
+		println("Error creating activities table:", err.Error())
 		return nil
 	}
 
-	err = c.Close()
-	if err != nil {
+	if err := db.CreateOrVerifyTable(model.ActivityDependency{}); err != nil {
+		println("Error creating activities_dependencies table:", err.Error())
+		return nil
+	}
+
+	if err := db.CreateOrVerifyTable(model.PreActivity{}); err != nil {
+		println("Error creating pre_activities table:", err.Error())
 		return nil
 	}
 
 	return &ActivityRepository{
-		tableNameActivity:             TableNameActivities,
-		tableNameActivityDependencies: TableNameActivitiesDependencies,
-		tableNamePreActivity:          TableNamePreActivities,
+		tableNameActivity:             model.Activity{}.TableName(),
+		tableNameActivityDependencies: model.ActivityDependency{}.TableName(),
+		tableNamePreActivity:          model.PreActivity{}.TableName(),
 	}
 }
 

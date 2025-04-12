@@ -1,27 +1,24 @@
 package activity_repository
 
 import (
+	"fmt"
+
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
 	"github.com/ovvesley/akoflow/pkg/server/repository"
 )
 
 func (w *ActivityRepository) UpdatePreActivity(id int, preactivity workflow_activity_entity.WorkflowPreActivityDatabase) error {
-	database := repository.Database{}
-	c := database.Connect()
+	db := repository.GetInstance()
 
-	_, err := c.Exec(
-		"UPDATE "+w.tableNamePreActivity+" SET status = ?, log = ?, resource_k8s_base64 = ? WHERE activity_id = ?",
-		preactivity.Status, preactivity.Log, preactivity.ResourceK8sBase64, id)
+	query := fmt.Sprintf(
+		"UPDATE %s SET status = %d, log = '%s', resource_k8s_base64 = '%s' WHERE activity_id = %d",
+		w.tableNamePreActivity,
+		preactivity.Status,
+		preactivity.Log,
+		preactivity.ResourceK8sBase64,
+		id,
+	)
 
-	if err != nil {
-		return err
-	}
-
-	err = c.Close()
-
-	if err != nil {
-		return err
-	}
-
-	return nil
+	_, err := db.Exec(query)
+	return err
 }

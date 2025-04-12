@@ -1,55 +1,52 @@
 package activity_repository
 
-import "github.com/ovvesley/akoflow/pkg/server/repository"
+import (
+	"fmt"
+	"strings"
+
+	"github.com/ovvesley/akoflow/pkg/server/repository"
+)
 
 func (w *ActivityRepository) UpdateStatus(id int, status int) error {
-	database := repository.Database{}
-	c := database.Connect()
+	db := repository.GetInstance()
 
-	if status == StatusFinished {
-		_, err := c.Exec("UPDATE "+w.tableNameActivity+" SET status = ?, finished_at = CURRENT_TIMESTAMP WHERE ID = ?", status, id)
-		if err != nil {
-			return err
-		}
+	var query string
+
+	switch status {
+	case StatusFinished:
+		query = fmt.Sprintf(
+			"UPDATE %s SET status = %d, finished_at = CURRENT_TIMESTAMP WHERE id = %d",
+			w.tableNameActivity, status, id)
+	case StatusRunning:
+		query = fmt.Sprintf(
+			"UPDATE %s SET status = %d, started_at = CURRENT_TIMESTAMP WHERE id = %d",
+			w.tableNameActivity, status, id)
+	case StatusCreated:
+		query = fmt.Sprintf(
+			"UPDATE %s SET status = %d WHERE id = %d",
+			w.tableNameActivity, status, id)
+	default:
+		return fmt.Errorf("invalid status value: %d", status)
 	}
 
-	if status == StatusRunning {
-		_, err := c.Exec("UPDATE "+w.tableNameActivity+" SET status = ?, started_at = CURRENT_TIMESTAMP WHERE ID = ?", status, id)
-		if err != nil {
-			return err
-		}
-	}
-
-	if status == StatusCreated {
-		_, err := c.Exec("UPDATE "+w.tableNameActivity+" SET status = ? WHERE ID = ?", status, id)
-		if err != nil {
-			return err
-		}
-	}
-
-	err := c.Close()
-
-	if err != nil {
-		return err
-	}
-
-	return nil
+	_, err := db.Exec(query)
+	return err
 }
 
 func (w *ActivityRepository) UpdateProcID(id int, pid string) error {
-	database := repository.Database{}
-	c := database.Connect()
+	db := repository.GetInstance()
 
-	_, err := c.Exec("UPDATE "+w.tableNameActivity+" SET proc_id = ? WHERE ID = ?", pid, id)
-	if err != nil {
-		return err
-	}
+	query := fmt.Sprintf(
+		"UPDATE %s SET proc_id = '%s' WHERE id = %d",
+		w.tableNameActivity,
+		escape(pid),
+		id,
+	)
 
-	err = c.Close()
+	_, err := db.Exec(query)
+	return err
+}
 
-	if err != nil {
-		return err
-	}
-
-	return nil
+func escape(s string) string {
+	return strings.ReplaceAll(s, "'", "''")
 }

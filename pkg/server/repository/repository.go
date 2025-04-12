@@ -5,21 +5,23 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
+	"os"
 	"reflect"
 	"strings"
+
+	"github.com/ovvesley/akoflow/pkg/server/model"
 )
 
 type RqliteDatabase struct {
-	BaseURL string // Ex: "http://localhost:4001"
+	BaseURL string
 }
 
 var CREATED_TABLES = []string{}
 
 func GetInstance() *RqliteDatabase {
 	return &RqliteDatabase{
-		BaseURL: "http://localhost:4001", // Ou variável de ambiente/config
+		BaseURL: fmt.Sprintf("http://%s:%s", os.Getenv("DATABASE_HOST"), os.Getenv("DATABASE_HTTP_PORT")),
 	}
 }
 
@@ -59,7 +61,7 @@ func (r *RqliteDatabase) Exec(statement string) (map[string]any, error) {
 }
 
 func (r *RqliteDatabase) Query(statement string) (map[string]any, error) {
-	body := []string{statement} // mesma estrutura: array direto de strings
+	body := []string{statement}
 
 	data, err := json.Marshal(body)
 	if err != nil {
@@ -90,14 +92,14 @@ func (r *RqliteDatabase) Query(statement string) (map[string]any, error) {
 	return result, nil
 }
 
-func (r *RqliteDatabase) CreateOrVerifyTable(model any) error {
-	tableName := getTableName(model)
+func (r *RqliteDatabase) CreateOrVerifyTable(m model.Model) error {
+	tableName := getTableName(m)
 
 	if tableExists(tableName) {
 		return nil
 	}
 
-	stmt := GenerateCreateTableSQL(tableName, model)
+	stmt := GenerateCreateTableSQL(tableName, m)
 	_, err := r.Exec(stmt)
 	if err == nil {
 		CREATED_TABLES = append(CREATED_TABLES, tableName)
@@ -118,30 +120,8 @@ func tableExists(tableName string) bool {
 	return false
 }
 
-func getTableName(model any) string {
-	if tableNamer, ok := model.(interface{ TableName() string }); ok {
-		return tableNamer.TableName()
-	}
-
-	t := reflect.TypeOf(model)
-	if t.Kind() == reflect.Ptr {
-		t = t.Elem()
-	}
-	return t.Name()
-}
-
-func parseResponse(resp *http.Response) (map[string]any, error) {
-	bodyBytes, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	var result map[string]any
-	if err := json.Unmarshal(bodyBytes, &result); err != nil {
-		return nil, err
-	}
-
-	return result, nil
+func getTableName(model model.Model) string {
+	return model.TableName()
 }
 
 func GenerateCreateTableSQL(tableName string, model any) string {

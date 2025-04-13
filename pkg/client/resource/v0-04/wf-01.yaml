@@ -1,10 +1,12 @@
 name: wf-hello-world-gcp
 spec:
-  image: "alpine:3.7"
+  runtime: "k8s"
   namespace: "akoflow"
-  storageClassName: "hostpath"
-  storageSize: "32Mi"
-  storageAccessModes: "ReadWriteOnce"
+  image: "alpine:3.7"
+  storagePolicy:
+    storageClassName: "hostpath"
+    storageSize: "32Mi"
+    type: distributed
   mountPath: "/data"
   activities:
     - name: "a"

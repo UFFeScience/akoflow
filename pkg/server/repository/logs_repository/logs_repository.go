@@ -1,6 +1,7 @@
 package logs_repository
 
 import (
+	"github.com/ovvesley/akoflow/pkg/server/model"
 	"github.com/ovvesley/akoflow/pkg/server/repository"
 )
 
@@ -19,21 +20,16 @@ type LogsDatabase struct {
 }
 
 func New() ILogsRepository {
+	db := repository.GetInstance()
 
-	database := repository.Database{}
-	c := database.Connect()
-	err := repository.CreateOrVerifyTable(c, TableName, Columns)
+	err := db.CreateOrVerifyTable(model.Logs{})
 	if err != nil {
-		return nil
-	}
-
-	err = c.Close()
-	if err != nil {
+		println("Error creating table:", err.Error())
 		return nil
 	}
 
 	return &LogsRepository{
-		tableName: TableName,
+		tableName: model.Logs{}.TableName(),
 	}
 }
 

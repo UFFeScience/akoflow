@@ -5,7 +5,7 @@ import (
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
 	"github.com/ovvesley/akoflow/pkg/server/repository/activity_repository"
 	"github.com/ovvesley/akoflow/pkg/server/repository/workflow_repository"
-	"github.com/ovvesley/akoflow/pkg/server/utils"
+	"github.com/ovvesley/akoflow/pkg/server/utils/utils_workflow"
 )
 
 type GetPendingWorkflowService struct {
@@ -37,13 +37,13 @@ func (g *GetPendingWorkflowService) retriveWorkflowsOnDatabase() ([]workflow_ent
 		return nil, err
 	}
 
-	ids := utils.GetIds(workflows)
+	ids := utils_workflow.GetIds(workflows)
 	mapWfActivities, err := g.activityRepository.GetActivitiesByWorkflowIds(ids)
 
 	if err != nil {
 		return nil, err
 	}
 
-	workflows = utils.HydrateWorkflows(workflows, mapWfActivities)
+	workflows = utils_workflow.HydrateWorkflows(workflows, mapWfActivities)
 	return workflows, nil
 }

@@ -1,28 +1,30 @@
 package metrics_repository
 
-import "github.com/ovvesley/akoflow/pkg/server/repository"
+import (
+	"fmt"
+
+	"github.com/ovvesley/akoflow/pkg/server/repository"
+)
 
 type ParamsMetricsCreate struct {
 	MetricsDatabase MetricsDatabase
 }
 
 func (m *MetricsRepository) Create(params ParamsMetricsCreate) error {
+	db := repository.GetInstance()
 
-	database := repository.Database{}
-	c := database.Connect()
+	md := params.MetricsDatabase
 
-	_, err := c.Exec(
-		"INSERT INTO "+m.tableName+" (activity_id, cpu, memory, window, timestamp) VALUES (?, ?, ?, ?, ?)",
-		params.MetricsDatabase.ActivityId, params.MetricsDatabase.Cpu, params.MetricsDatabase.Memory, params.MetricsDatabase.Window, params.MetricsDatabase.Timestamp)
+	query := fmt.Sprintf(
+		"INSERT INTO %s (activity_id, cpu, memory, window, timestamp) VALUES (%d, '%s', '%s', '%s', '%s')",
+		m.tableName,
+		md.ActivityId,
+		md.Cpu,
+		md.Memory,
+		md.Window,
+		md.Timestamp,
+	)
 
-	if err != nil {
-		return err
-	}
-
-	err = c.Close()
-	if err != nil {
-		return err
-	}
-
-	return nil
+	_, err := db.Exec(query)
+	return err
 }

@@ -2,6 +2,7 @@ package workflow_repository
 
 import (
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
+	"github.com/ovvesley/akoflow/pkg/server/model"
 	"github.com/ovvesley/akoflow/pkg/server/repository"
 )
 
@@ -17,24 +18,17 @@ var StatusRunning = 1
 var StatusFinished = 2
 
 func New() IWorkflowRepository {
+	db := repository.GetInstance()
 
-	database := repository.Database{}
-	c := database.Connect()
-
-	err := repository.CreateOrVerifyTable(c, TableName, Columns)
-
+	err := db.CreateOrVerifyTable(model.Workflow{})
 	if err != nil {
-		println("Error creating table", err.Error())
+		println("Error creating table:", err.Error())
 		return nil
 	}
 
-	err = c.Close()
-	if err != nil {
-		println("Error closing connection", err.Error())
-		return nil
+	return &WorkflowRepository{
+		tableName: model.Workflow{}.TableName(),
 	}
-
-	return &WorkflowRepository{tableName: TableName}
 }
 
 type IWorkflowRepository interface {

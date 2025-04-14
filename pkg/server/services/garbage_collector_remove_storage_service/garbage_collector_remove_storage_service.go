@@ -48,7 +48,7 @@ func New() GarbageCollectorRemoveStorageService {
 type MapActivitiesKeepDisk map[int]bool
 
 func (c *GarbageCollectorRemoveStorageService) RemoveStorages() {
-	fmt.Printf("Garbage Collector Disabled")
+	fmt.Println("Garbage Collector Disabled")
 }
 
 func (c *GarbageCollectorRemoveStorageService) RemoveStoragesDeprecated() {

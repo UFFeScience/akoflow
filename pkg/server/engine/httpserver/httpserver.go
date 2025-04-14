@@ -1,6 +1,8 @@
 package httpserver
 
 import (
+	"os"
+
 	"github.com/ovvesley/akoflow/pkg/server/config"
 	"github.com/ovvesley/akoflow/pkg/server/config/http_config"
 	"github.com/ovvesley/akoflow/pkg/server/engine/httpserver/handlers/akoflow_admin_handler"
@@ -54,7 +56,12 @@ func StartServer() {
 	//http.HandleFunc("GET /akoflow-api/workflows/{workflowId}/storages/{storageId}/", http_config.KernelHandler(workflow_api_handler.New().GetStorage))
 	//http.HandleFunc("GET /akoflow-api/workflows/{workflowId}/storages/{storageId}/download-file/", http_config.KernelHandler(workflow_api_handler.New().DownloadFile))
 
-	err := http.ListenAndServe(config.PORT_SERVER, nil)
+	httpPort := os.Getenv("AKOFLOW_PORT")
+	if httpPort == "" {
+		config.App().Logger.Error("AKOFLOW_PORT. Please set the environment variable.")
+		panic("AKOFLOW_PORT. Please set the environment variable.")
+	}
+	err := http.ListenAndServe(":"+httpPort, nil)
 	if err != nil {
 		println("Error starting server", err)
 		panic(err)

@@ -1,6 +1,8 @@
 package storages_repository
 
 import (
+	"fmt"
+
 	"github.com/ovvesley/akoflow/pkg/server/repository"
 )
 
@@ -15,13 +17,22 @@ type ParamsStorageCreate struct {
 }
 
 func (s *StorageRepository) Create(params ParamsStorageCreate) error {
-
-	database := repository.Database{}
-	c := database.Connect()
+	db := repository.GetInstance()
 
 	for activityId, keepDisk := range params.MapActivitiesKeepDisk {
-		_, err := c.Exec(
-			"INSERT INTO "+s.tableName+" (workflow_id, activity_id, namespace, status, storage_mount_path, storage_class, storage_size, initial_file_list, end_file_list, initial_disk_spec, end_disk_spec, keep_storage_after_finish) VALUES (?, ? , ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+		query := fmt.Sprintf(`
+			INSERT INTO %s (
+				workflow_id, activity_id, namespace, status,
+				storage_mount_path, storage_class, storage_size,
+				initial_file_list, end_file_list,
+				initial_disk_spec, end_disk_spec, keep_storage_after_finish
+			) VALUES (
+				%d, %d, '%s', %d,
+				'%s', '%s', '%s',
+				'{}', '{}',
+				'{}', '{}', %t
+			)`,
+			s.tableName,
 			params.WorkflowId,
 			activityId,
 			params.Namespace,
@@ -29,21 +40,13 @@ func (s *StorageRepository) Create(params ParamsStorageCreate) error {
 			params.StorageMountPath,
 			params.StorageClass,
 			params.StorageSize,
-			"{}", // initial_file_list
-			"{}", // end_file_list
-			"{}", // initial_disk_spec
-			"{}", // end_disk_spec
 			keepDisk,
 		)
 
+		_, err := db.Exec(query)
 		if err != nil {
 			return err
 		}
-	}
-	err := c.Close()
-
-	if err != nil {
-		return err
 	}
 
 	return nil

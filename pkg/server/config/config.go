@@ -1,13 +1,13 @@
 package config
 
 import (
+	"fmt"
 	"os"
 	"strings"
 
+	"github.com/ovvesley/akoflow/pkg/server/config/database_config"
 	"github.com/ovvesley/akoflow/pkg/shared/utils/utils_read_file"
 )
-
-const PORT_SERVER = ":8080"
 
 func GetVersion() string {
 
@@ -49,6 +49,19 @@ func SetupEnv() {
 	println("K8S_API_SERVER_TOKEN: ", os.Getenv("K8S_API_SERVER_TOKEN"))
 	println("AKOFLOW_SERVER_VERSION: ", os.Getenv("AKOFLOW_VERSION"))
 
+}
+
+func SetupDatabase() {
+
+	cfg := database_config.Load()
+	joinURL := cfg.JoinURL
+	if joinURL == "" {
+		fmt.Println("Iniciando rqlited como LÍDER")
+		database_config.StartRaftLeader(cfg)
+	} else {
+		fmt.Println("Iniciando rqlited como WORKER (seguindo líder)")
+		database_config.StartRaftFollower(cfg)
+	}
 }
 
 func loadDotEnv() {

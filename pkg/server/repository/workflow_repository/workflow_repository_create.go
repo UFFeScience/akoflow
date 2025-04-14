@@ -1,19 +1,20 @@
 package workflow_repository
 
 import (
+	"fmt"
+
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
 	"github.com/ovvesley/akoflow/pkg/server/repository"
 )
 
 func (w *WorkflowRepository) Create(namespace string, workflow workflow_entity.Workflow) (int, error) {
-
-	database := repository.Database{}
-	c := database.Connect()
+	db := repository.GetInstance()
 
 	rawWorkflow := workflow.GetBase64Workflow()
 
-	result, err := c.Exec(
-		"INSERT INTO "+w.tableName+" (namespace, runtime, name, raw_workflow, status) VALUES (?, ?, ?, ?, ?)",
+	query := fmt.Sprintf(
+		"INSERT INTO %s (namespace, runtime, name, raw_workflow, status) VALUES ('%s', '%s', '%s', '%s', %d)",
+		w.tableName,
 		namespace,
 		workflow.Spec.Runtime,
 		workflow.Name,
@@ -21,15 +22,22 @@ func (w *WorkflowRepository) Create(namespace string, workflow workflow_entity.W
 		StatusCreated,
 	)
 
-	if err != nil {
-		return 0, err
-	}
-	workflowId, _ := result.LastInsertId()
-
-	err = c.Close()
+	resp, err := db.Exec(query)
 	if err != nil {
 		return 0, err
 	}
 
-	return int(workflowId), nil
+	// Pega o last_insert_id do rqlite
+	results, ok := resp["results"].([]interface{})
+	if !ok || len(results) == 0 {
+		return 0, fmt.Errorf("invalid response from rqlite")
+	}
+	if len(results) > 0 {
+		res := results[0].(map[string]interface{})
+		if lastID, ok := res["last_insert_id"].(float64); ok {
+			return int(lastID), nil
+		}
+	}
+
+	return 0, nil
 }

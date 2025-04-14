@@ -1,45 +1,71 @@
 package activity_repository
 
 import (
+	"fmt"
+
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
 	"github.com/ovvesley/akoflow/pkg/server/repository"
 )
 
 func (w *ActivityRepository) Create(namespace string, workflowId int, image string, activities []workflow_activity_entity.WorkflowActivities) error {
-	err := w.createActivity(namespace, workflowId, image, activities)
-
-	if err != nil {
-		println("Error creating activity" + err.Error())
+	if err := w.createActivity(namespace, workflowId, image, activities); err != nil {
+		println("Error creating activity: " + err.Error())
 		return err
 	}
 
-	err = w.createPreactivity(namespace, workflowId, image, activities)
+	if err := w.createPreactivity(namespace, workflowId, image, activities); err != nil {
+		println("Error creating preactivity: " + err.Error())
+		return err
+	}
 
-	err = w.createActivityDependency(workflowId, activities)
-
-	if err != nil {
-		println("Error creating activity dependency" + err.Error())
+	if err := w.createActivityDependency(workflowId, activities); err != nil {
+		println("Error creating activity dependency: " + err.Error())
 		return err
 	}
 
 	return nil
-
 }
 
-// createPreactivity creates preactivity
-// if activity has depends_on, it will create preactivity
-// this preactivity will be executed before the activity
-// is responsible for garanted that all data needed by activity is available before running it
+func (w *ActivityRepository) createActivity(namespace string, workflowId int, image string, activities []workflow_activity_entity.WorkflowActivities) error {
+	db := repository.GetInstance()
+
+	for _, activity := range activities {
+		rawActivity := activity.GetBase64Activities()
+
+		query := fmt.Sprintf(
+			"INSERT INTO %s (workflow_id, namespace, name, image, resource_k8s_base64, status, created_at) VALUES (%d, '%s', '%s', '%s', '%s', %d, CURRENT_TIMESTAMP)",
+			w.tableNameActivity,
+			workflowId,
+			namespace,
+			activity.Name,
+			image,
+			rawActivity,
+			StatusCreated,
+		)
+
+		resp, err := db.Exec(query)
+		if err != nil {
+			return err
+		}
+
+		if len(resp["results"].([]interface{})) > 0 {
+			id := int(resp["results"].([]interface{})[0].(map[string]interface{})["last_insert_id"].(float64))
+			println("Activity created with id:", id)
+		}
+	}
+
+	return nil
+}
+
 func (w *ActivityRepository) createPreactivity(namespace string, workflowId int, image string, activities []workflow_activity_entity.WorkflowActivities) error {
-	database := repository.Database{}
-	c := database.Connect()
+	db := repository.GetInstance()
 
 	activitiesDatabase, err := w.GetByWorkflowId(workflowId)
-
 	if err != nil {
-		println("Error getting activities by workflow_entity id" + err.Error())
+		println("Error getting activities by workflow id: " + err.Error())
 		return err
 	}
+
 	mapActivityNameToId := w.createMapActivityNameToId(activitiesDatabase)
 
 	for _, activity := range activities {
@@ -48,68 +74,39 @@ func (w *ActivityRepository) createPreactivity(namespace string, workflowId int,
 		}
 		activityId := mapActivityNameToId[activity.Name]
 
-		result, err := c.Exec(
-			"INSERT INTO "+w.tableNamePreActivity+" (activity_id, workflow_id, namespace, name, resource_k8s_base64, status, log) VALUES (?, ?, ?, ?, ?, ?, ?)",
-			activityId, workflowId, namespace, "preactivity-"+activity.Name, nil, StatusCreated, nil)
+		query := fmt.Sprintf(
+			"INSERT INTO %s (activity_id, workflow_id, namespace, name, resource_k8s_base64, status, log) VALUES (%d, %d, '%s', '%s', NULL, %d, NULL)",
+			w.tableNamePreActivity,
+			activityId,
+			workflowId,
+			namespace,
+			"preactivity-"+activity.Name,
+			StatusCreated,
+		)
 
+		resp, err := db.Exec(query)
 		if err != nil {
 			return err
 		}
 
-		preActivityId, _ := result.LastInsertId()
-
-		println("Preactivity created with id: ", preActivityId)
-
-	}
-
-	err = c.Close()
-
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (w *ActivityRepository) createActivity(namespace string, workflowId int, image string, activities []workflow_activity_entity.WorkflowActivities) error {
-
-	for _, activity := range activities {
-
-		database := repository.Database{}
-		c := database.Connect()
-
-		rawActivity := activity.GetBase64Activities()
-
-		result, err := c.Exec(
-			"INSERT INTO "+w.tableNameActivity+" (workflow_id, namespace, name, image, resource_k8s_base64, status, created_at) VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)",
-			workflowId, namespace, activity.Name, image, rawActivity, StatusCreated)
-
-		err = c.Close()
-
-		if err != nil {
-			return err
+		if len(resp["results"].([]interface{})) > 0 {
+			id := int(resp["results"].([]interface{})[0].(map[string]interface{})["last_insert_id"].(float64))
+			println("Preactivity created with id:", id)
 		}
-
-		activityId, _ := result.LastInsertId()
-
-		println("Activity created with id: ", activityId)
-
 	}
 
 	return nil
 }
 
 func (w *ActivityRepository) createActivityDependency(workflowId int, activitiesYaml []workflow_activity_entity.WorkflowActivities) error {
-
-	database := repository.Database{}
-	c := database.Connect()
+	db := repository.GetInstance()
 
 	activitiesDatabase, err := w.GetByWorkflowId(workflowId)
-
 	if err != nil {
-		println("Error getting activities by workflow_entity id" + err.Error())
+		println("Error getting activities by workflow id: " + err.Error())
 		return err
 	}
+
 	mapActivityNameToId := w.createMapActivityNameToId(activitiesDatabase)
 
 	for _, activity := range activitiesYaml {
@@ -118,41 +115,42 @@ func (w *ActivityRepository) createActivityDependency(workflowId int, activities
 		}
 
 		for _, dependOnActivity := range activity.DependsOn {
-			activityDependency := mapActivityNameToId[dependOnActivity]
-			if activityDependency == 0 {
+			dependencyId := mapActivityNameToId[dependOnActivity]
+			if dependencyId == 0 {
 				println("Activity dependency not found")
 				continue
 			}
 
-			idActivity := mapActivityNameToId[activity.Name]
+			activityId := mapActivityNameToId[activity.Name]
 
-			result, err := c.Exec("INSERT INTO "+w.tableNameActivityDependencies+" (workflow_id, activity_id, depend_on_activity) VALUES (?, ?, ?)", workflowId, idActivity, activityDependency)
+			query := fmt.Sprintf(
+				"INSERT INTO %s (workflow_id, activity_id, depend_on_activity) VALUES (%d, %d, %d)",
+				w.tableNameActivityDependencies,
+				workflowId,
+				activityId,
+				dependencyId,
+			)
 
+			resp, err := db.Exec(query)
 			if err != nil {
-				println("Error creating activity dependency" + err.Error())
+				println("Error creating activity dependency: " + err.Error())
 				return err
 			}
 
-			activityId, _ := result.LastInsertId()
-
-			println("Activity dependency created with id: ", activityId)
-
+			if len(resp["results"].([]interface{})) > 0 {
+				id := int(resp["results"].([]interface{})[0].(map[string]interface{})["last_insert_id"].(float64))
+				println("Activity dependency created with id:", id)
+			}
 		}
-	}
-
-	err = c.Close()
-
-	if err != nil {
-		return err
 	}
 
 	return nil
 }
 
 func (w *ActivityRepository) createMapActivityNameToId(activities []workflow_activity_entity.WorkflowActivities) map[string]int {
-	var mapActivityNameToId = make(map[string]int)
+	m := make(map[string]int)
 	for _, activity := range activities {
-		mapActivityNameToId[activity.Name] = activity.Id
+		m[activity.Name] = activity.Id
 	}
-	return mapActivityNameToId
+	return m
 }

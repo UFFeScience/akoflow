@@ -46,5 +46,6 @@ func (s *SdumontRuntime) GetStatus(workflowID int, activityID int) string {
 }
 
 func (s *SdumontRuntime) VerifyActivitiesWasFinished(workflow workflow_entity.Workflow) bool {
+	s.sDumontRuntimeService.VerifyActivitiesWasFinished(workflow)
 	return true
 }

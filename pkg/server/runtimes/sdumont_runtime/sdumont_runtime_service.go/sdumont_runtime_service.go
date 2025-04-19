@@ -104,15 +104,22 @@ func (s *SDumontRuntimeService) ApplyJob(workflowID int, activityID int) string 
 func (s *SDumontRuntimeService) applyWorkflowInRuntime(wf workflow_entity.Workflow, wfa workflow_activity_entity.WorkflowActivities) {
 	config.App().Logger.Infof("WORKER: Apply workflow in SDumont Runtime")
 
+	s.updateWorkflowAndActivityStatus(wfa)
+
+	s.syncWorkflowVolumes(wf)
+}
+
+func (s *SDumontRuntimeService) updateWorkflowAndActivityStatus(wfa workflow_activity_entity.WorkflowActivities) {
 	_ = s.workflowRepository.UpdateStatus(wfa.WorkflowId, workflow_repository.StatusRunning)
 	_ = s.activityRepository.UpdateStatus(wfa.Id, activity_repository.StatusRunning)
+}
 
+func (s *SDumontRuntimeService) syncWorkflowVolumes(wf workflow_entity.Workflow) {
 	volumes := wf.GetVolumes()
-
 	commands := []string{}
 
-	// TODO: Refactor this to a better way disacopling the commands in a make service
 	for _, volume := range volumes {
+		// Sync local to remote
 		command1 := fmt.Sprintf("sshpass -p '%s' ssh -o StrictHostKeyChecking=no %s@%s 'mkdir -p %s'",
 			os.Getenv("SDUMONT_PASSWORD"),
 			os.Getenv("SDUMONT_USER"),
@@ -128,14 +135,21 @@ func (s *SDumontRuntimeService) applyWorkflowInRuntime(wf workflow_entity.Workfl
 			volume.GetRemotePath(),
 		)
 
-		fullCommands := fmt.Sprintf("%s && %s", command1, command2)
+		// Sync remote to local
+		command3 := fmt.Sprintf("sshpass -p '%s' rsync -ah --progress %s@%s:%s %s",
+			os.Getenv("SDUMONT_PASSWORD"),
+			os.Getenv("SDUMONT_USER"),
+			os.Getenv("SDUMONT_HOST_CLUSTER"),
+			volume.GetRemotePath(),
+			volume.GetLocalPath(),
+		)
+
+		fullCommands := fmt.Sprintf("%s && %s && %s", command1, command2, command3)
 
 		commands = append(commands, fullCommands)
-
 	}
 
 	s.connectorSDumont.ExecuteMultiplesCommand(commands)
-
 }
 
 func (s *SDumontRuntimeService) extractJobID(outputCommand string) (string, error) {
@@ -150,4 +164,103 @@ func (s *SDumontRuntimeService) extractJobID(outputCommand string) (string, erro
 	}
 
 	return logsOutput, nil
+}
+
+func (s *SDumontRuntimeService) VerifyActivitiesWasFinished(workflow workflow_entity.Workflow) bool {
+	config.App().Logger.Infof("WORKER: Verify activities was finished in SDumont Runtime")
+
+	for _, activity := range workflow.Spec.Activities {
+		s.handleVerifyActivityWasFinished(activity, workflow)
+	}
+	return true
+}
+
+func (s *SDumontRuntimeService) handleVerifyActivityWasFinished(activity workflow_activity_entity.WorkflowActivities, wf workflow_entity.Workflow) int {
+	println("Verifying activity: ", activity.Name, " with id: ", activity.Id)
+
+	wfaDatabase, _ := s.activityRepository.Find(activity.Id)
+
+	if wfaDatabase.Status == activity_repository.StatusFinished {
+		return activity_repository.StatusFinished
+	}
+
+	if wfaDatabase.Status == activity_repository.StatusCreated {
+		return activity_repository.StatusCreated
+	}
+
+	command := fmt.Sprintf(" sacct -j %s  --format=JobID,JobName,Partition,Account,AllocCPUs,State,ExitCode --noheader | grep akoflow", wfaDatabase.GetProcId())
+
+	output, _ := s.connectorSDumont.RunCommandWithOutputRemote(command)
+
+	saactResponse, err := s.extractSacctJobID(output)
+
+	if err != nil {
+		config.App().Logger.Infof("WORKER: Error extracting job ID %s", strings.TrimSpace(wfaDatabase.GetProcId()))
+		_ = s.activityRepository.UpdateStatus(activity.Id, activity_repository.StatusCreated)
+		return activity_repository.StatusCreated
+	}
+
+	if saactResponse.State == "COMPLETED" {
+		config.App().Logger.Infof("WORKER: Activity %d finished", activity.Id)
+		_ = s.activityRepository.UpdateStatus(activity.Id, activity_repository.StatusFinished)
+		_ = s.workflowRepository.UpdateStatus(wf.GetId(), workflow_repository.StatusFinished)
+		s.syncWorkflowVolumes(wf)
+		return activity_repository.StatusFinished
+	}
+
+	if saactResponse.State == "FAILED" {
+		config.App().Logger.Infof("WORKER: Activity %d failed", activity.Id)
+		_ = s.activityRepository.UpdateStatus(activity.Id, activity_repository.StatusFinished)
+		_ = s.workflowRepository.UpdateStatus(wf.GetId(), workflow_repository.StatusFinished)
+		s.syncWorkflowVolumes(wf)
+		return activity_repository.StatusFinished
+	}
+
+	if saactResponse.State == "RUNNING" {
+		config.App().Logger.Infof("WORKER: Activity %d running", activity.Id)
+		_ = s.activityRepository.UpdateStatus(activity.Id, activity_repository.StatusRunning)
+		return activity_repository.StatusRunning
+	}
+
+	if saactResponse.State == "PENDING" {
+		config.App().Logger.Infof("WORKER: Activity %d pending", activity.Id)
+		_ = s.activityRepository.UpdateStatus(activity.Id, activity_repository.StatusRunning)
+		return activity_repository.StatusRunning
+	}
+
+	return activity_repository.StatusRunning
+
+}
+
+type SaactResponse struct {
+	JobID     string `json:"JobID"`
+	JobName   string `json:"JobName"`
+	Partition string `json:"Partition"`
+	Account   string `json:"Account"`
+	AllocCPUs string `json:"AllocCPUs"`
+	State     string `json:"State"`
+	ExitCode  string `json:"ExitCode"`
+}
+
+func (s *SDumontRuntimeService) extractSacctJobID(outputCommand string) (SaactResponse, error) {
+	reOutput := regexp.MustCompile(`(?m)(\d+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\d+)\s+(\S+)\s+(\d+:\d+)`)
+	match := reOutput.FindStringSubmatch(outputCommand)
+
+	if len(match) == 0 {
+		return SaactResponse{}, fmt.Errorf("no match found")
+	}
+
+	if len(match) < 8 {
+		return SaactResponse{}, fmt.Errorf("invalid output format")
+	}
+
+	return SaactResponse{
+		JobID:     match[1],
+		JobName:   match[2],
+		Partition: match[3],
+		Account:   match[4],
+		AllocCPUs: match[5],
+		State:     match[6],
+		ExitCode:  match[7],
+	}, nil
 }

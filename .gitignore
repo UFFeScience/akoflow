@@ -9,3 +9,4 @@ releases/bin/*
 *.db
 *.sif
 .env
+resources/

@@ -196,8 +196,7 @@ func (s *SDumontRuntimeService) handleVerifyActivityWasFinished(activity workflo
 
 	if err != nil {
 		config.App().Logger.Infof("WORKER: Error extracting job ID %s", strings.TrimSpace(wfaDatabase.GetProcId()))
-		_ = s.activityRepository.UpdateStatus(activity.Id, activity_repository.StatusCreated)
-		return activity_repository.StatusCreated
+		return activity_repository.StatusRunning
 	}
 
 	if saactResponse.State == "COMPLETED" {
@@ -210,6 +209,14 @@ func (s *SDumontRuntimeService) handleVerifyActivityWasFinished(activity workflo
 
 	if saactResponse.State == "FAILED" {
 		config.App().Logger.Infof("WORKER: Activity %d failed", activity.Id)
+		_ = s.activityRepository.UpdateStatus(activity.Id, activity_repository.StatusFinished)
+		_ = s.workflowRepository.UpdateStatus(wf.GetId(), workflow_repository.StatusFinished)
+		s.syncWorkflowVolumes(wf)
+		return activity_repository.StatusFinished
+	}
+
+	if saactResponse.State == "CANCELLED+" || saactResponse.State == "CANCELLED" {
+		config.App().Logger.Infof("WORKER: Activity %d cancelled", activity.Id)
 		_ = s.activityRepository.UpdateStatus(activity.Id, activity_repository.StatusFinished)
 		_ = s.workflowRepository.UpdateStatus(wf.GetId(), workflow_repository.StatusFinished)
 		s.syncWorkflowVolumes(wf)

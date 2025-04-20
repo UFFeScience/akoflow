@@ -49,7 +49,7 @@ func (m MakeSBatchSDumontActivityService) Handle(workflow workflow_entity.Workfl
 		activity.GetId(),
 	)
 
-	time := "02:00:00"
+	time := "48:00:00" // 48 hours
 	partition := os.Getenv("SDUMONT_QUEUE")
 	ntasks := 1
 	nodes := 1

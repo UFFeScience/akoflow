@@ -1,9 +1,10 @@
 package storages_repository
 
 import (
-	"github.com/ovvesley/akoflow/pkg/server/repository"
 	"strconv"
 	"time"
+
+	"github.com/ovvesley/akoflow/pkg/server/database/repository"
 )
 
 type ParamsStorageUpdate struct {

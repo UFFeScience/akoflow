@@ -2,9 +2,9 @@ package get_pending_workflow_service
 
 import (
 	"github.com/ovvesley/akoflow/pkg/server/config"
+	"github.com/ovvesley/akoflow/pkg/server/database/repository/activity_repository"
+	"github.com/ovvesley/akoflow/pkg/server/database/repository/workflow_repository"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
-	"github.com/ovvesley/akoflow/pkg/server/repository/activity_repository"
-	"github.com/ovvesley/akoflow/pkg/server/repository/workflow_repository"
 	"github.com/ovvesley/akoflow/pkg/server/utils"
 )
 

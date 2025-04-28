@@ -9,11 +9,11 @@ import (
 	"github.com/ovvesley/akoflow/pkg/server/connector/connector_k8s"
 	"github.com/ovvesley/akoflow/pkg/server/connector/connector_sdumont"
 	"github.com/ovvesley/akoflow/pkg/server/connector/connector_singularity"
-	"github.com/ovvesley/akoflow/pkg/server/repository/activity_repository"
-	"github.com/ovvesley/akoflow/pkg/server/repository/logs_repository"
-	"github.com/ovvesley/akoflow/pkg/server/repository/metrics_repository"
-	"github.com/ovvesley/akoflow/pkg/server/repository/storages_repository"
-	"github.com/ovvesley/akoflow/pkg/server/repository/workflow_repository"
+	"github.com/ovvesley/akoflow/pkg/server/database/repository/activity_repository"
+	"github.com/ovvesley/akoflow/pkg/server/database/repository/logs_repository"
+	"github.com/ovvesley/akoflow/pkg/server/database/repository/metrics_repository"
+	"github.com/ovvesley/akoflow/pkg/server/database/repository/storages_repository"
+	"github.com/ovvesley/akoflow/pkg/server/database/repository/workflow_repository"
 )
 
 const DEFAULT_NAMESPACE = "akoflow"

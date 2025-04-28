@@ -2,9 +2,9 @@ package list_workflows_api_service
 
 import (
 	"github.com/ovvesley/akoflow/pkg/server/config"
+	"github.com/ovvesley/akoflow/pkg/server/database/repository/activity_repository"
+	"github.com/ovvesley/akoflow/pkg/server/database/repository/workflow_repository"
 	"github.com/ovvesley/akoflow/pkg/server/mapper/mapper_engine_api"
-	"github.com/ovvesley/akoflow/pkg/server/repository/activity_repository"
-	"github.com/ovvesley/akoflow/pkg/server/repository/workflow_repository"
 	"github.com/ovvesley/akoflow/pkg/server/types/types_api"
 	"github.com/ovvesley/akoflow/pkg/server/utils"
 )

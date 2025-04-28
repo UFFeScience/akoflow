@@ -1,8 +1,8 @@
 package activity_repository
 
 import (
+	"github.com/ovvesley/akoflow/pkg/server/database/repository"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
-	"github.com/ovvesley/akoflow/pkg/server/repository"
 )
 
 func (w *ActivityRepository) FindPreActivity(activityID int) (workflow_activity_entity.WorkflowPreActivityDatabase, error) {

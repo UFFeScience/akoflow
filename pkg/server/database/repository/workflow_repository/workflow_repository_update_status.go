@@ -1,6 +1,6 @@
 package workflow_repository
 
-import "github.com/ovvesley/akoflow/pkg/server/repository"
+import "github.com/ovvesley/akoflow/pkg/server/database/repository"
 
 func (w *WorkflowRepository) UpdateStatus(id int, status int) error {
 	database := repository.Database{}

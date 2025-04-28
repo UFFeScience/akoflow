@@ -1,6 +1,6 @@
 package logs_repository
 
-import "github.com/ovvesley/akoflow/pkg/server/repository"
+import "github.com/ovvesley/akoflow/pkg/server/database/repository"
 
 type ParamsLogsCreate struct {
 	LogsDatabase LogsDatabase

@@ -1,8 +1,8 @@
 package workflow_repository
 
 import (
+	"github.com/ovvesley/akoflow/pkg/server/database/repository"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
-	"github.com/ovvesley/akoflow/pkg/server/repository"
 )
 
 func (w *WorkflowRepository) Create(namespace string, workflow workflow_entity.Workflow) (int, error) {

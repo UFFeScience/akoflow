@@ -1,6 +1,6 @@
 package activity_repository
 
-import "github.com/ovvesley/akoflow/pkg/server/repository"
+import "github.com/ovvesley/akoflow/pkg/server/database/repository"
 
 func (w *ActivityRepository) UpdateStatus(id int, status int) error {
 	database := repository.Database{}

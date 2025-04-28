@@ -1,13 +1,14 @@
 package internal_storage_handler
 
 import (
-	"github.com/ovvesley/akoflow/pkg/server/config"
-	"github.com/ovvesley/akoflow/pkg/server/repository/storages_repository"
-	"github.com/ovvesley/akoflow/pkg/server/services/file_disk_parser_service"
-	"github.com/ovvesley/akoflow/pkg/server/services/file_spec_parser_service"
 	"io/ioutil"
 	"net/http"
 	"strconv"
+
+	"github.com/ovvesley/akoflow/pkg/server/config"
+	"github.com/ovvesley/akoflow/pkg/server/database/repository/storages_repository"
+	file_list_parser_service "github.com/ovvesley/akoflow/pkg/server/services/file_disk_parser_service"
+	"github.com/ovvesley/akoflow/pkg/server/services/file_spec_parser_service"
 )
 
 type InternalStorageHandler struct {

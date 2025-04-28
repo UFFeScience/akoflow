@@ -2,8 +2,8 @@ package run_activity_in_cluster_service
 
 import (
 	"github.com/ovvesley/akoflow/pkg/server/config"
-	"github.com/ovvesley/akoflow/pkg/server/repository/activity_repository"
-	"github.com/ovvesley/akoflow/pkg/server/repository/workflow_repository"
+	"github.com/ovvesley/akoflow/pkg/server/database/repository/activity_repository"
+	"github.com/ovvesley/akoflow/pkg/server/database/repository/workflow_repository"
 	"github.com/ovvesley/akoflow/pkg/server/runtimes"
 )
 

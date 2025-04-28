@@ -2,9 +2,10 @@ package utils
 
 import (
 	"fmt"
-	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
-	"github.com/ovvesley/akoflow/pkg/server/repository/activity_repository"
 	"time"
+
+	"github.com/ovvesley/akoflow/pkg/server/database/repository/activity_repository"
+	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
 )
 
 func GetIds(workflows []workflow_entity.Workflow) []int {

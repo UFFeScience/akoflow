@@ -1,7 +1,7 @@
 package logs_repository
 
 import (
-	"github.com/ovvesley/akoflow/pkg/server/repository"
+	"github.com/ovvesley/akoflow/pkg/server/database/repository"
 )
 
 type LogsRepository struct {

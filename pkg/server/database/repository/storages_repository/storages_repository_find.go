@@ -1,6 +1,6 @@
 package storages_repository
 
-import "github.com/ovvesley/akoflow/pkg/server/repository"
+import "github.com/ovvesley/akoflow/pkg/server/database/repository"
 
 func (s *StorageRepository) Find(id int) (StorageDatabase, error) {
 	database := repository.Database{}

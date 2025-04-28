@@ -10,9 +10,9 @@ import (
 	"github.com/ovvesley/akoflow/pkg/server/connector/connector_sdumont"
 	"github.com/ovvesley/akoflow/pkg/server/connector/connector_singularity"
 	"github.com/ovvesley/akoflow/pkg/server/database/repository/activity_repository"
-	"github.com/ovvesley/akoflow/pkg/server/database/repository/instance_repository"
 	"github.com/ovvesley/akoflow/pkg/server/database/repository/logs_repository"
 	"github.com/ovvesley/akoflow/pkg/server/database/repository/metrics_repository"
+	"github.com/ovvesley/akoflow/pkg/server/database/repository/runtime_repository"
 	"github.com/ovvesley/akoflow/pkg/server/database/repository/storages_repository"
 	"github.com/ovvesley/akoflow/pkg/server/database/repository/workflow_repository"
 )
@@ -35,7 +35,7 @@ type AppContainerRepository struct {
 	LogsRepository     logs_repository.ILogsRepository
 	MetricsRepository  metrics_repository.IMetricsRepository
 	StoragesRepository storages_repository.IStorageRepository
-	InstanceRepository instance_repository.IInstanceRepository
+	RuntimeRepository  runtime_repository.IRuntimeRepository
 }
 
 type AppContainerConnector struct {
@@ -61,7 +61,7 @@ func MakeAppContainer() AppContainer {
 	logsRepository := logs_repository.New()
 	metricsRepository := metrics_repository.New()
 	storagesRepository := storages_repository.New()
-	instanceRepository := instance_repository.New()
+	runtimeRepository := runtime_repository.New()
 
 	// create the Connector instances
 	k8sConnector := connector_k8s.New()
@@ -80,7 +80,7 @@ func MakeAppContainer() AppContainer {
 			LogsRepository:     logsRepository,
 			MetricsRepository:  metricsRepository,
 			StoragesRepository: storagesRepository,
-			InstanceRepository: instanceRepository,
+			RuntimeRepository:  runtimeRepository,
 		},
 		Connector: AppContainerConnector{
 			K8sConnector:         k8sConnector,

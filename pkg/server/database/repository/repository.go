@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 
 	_ "github.com/mattn/go-sqlite3"
+	"github.com/ovvesley/akoflow/pkg/server/database/model"
 )
 
 type Database struct {
@@ -44,22 +45,29 @@ func createDirectoryIfNotExists(path string) {
 
 }
 
-func CreateOrVerifyTable(c *sql.DB, tableName string, columns string) (err error) {
+func CreateOrVerifyTable(c *sql.DB, m model.Model) (err error) {
+	tableName := m.TableName()
+	columns := m.GetColumns()
 
 	if tableExists(tableName) {
 		return nil
 	}
 
-	exec, err := c.Exec("CREATE TABLE IF NOT EXISTS " + tableName + columns)
+	columnDefinitions := ""
+	for i, col := range columns {
+		if i > 0 {
+			columnDefinitions += ", "
+		}
+		columnDefinitions += col
+	}
+
+	query := "CREATE TABLE IF NOT EXISTS " + tableName + " (" + columnDefinitions + ")"
+	exec, err := c.Exec(query)
 	if err != nil {
 		return
 	}
 
 	_, err = exec.RowsAffected()
-	if err != nil {
-		return
-	}
-	err = c.Close()
 	if err != nil {
 		return
 	}

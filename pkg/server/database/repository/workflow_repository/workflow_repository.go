@@ -1,6 +1,7 @@
 package workflow_repository
 
 import (
+	"github.com/ovvesley/akoflow/pkg/server/database/model"
 	"github.com/ovvesley/akoflow/pkg/server/database/repository"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
 )
@@ -21,7 +22,7 @@ func New() IWorkflowRepository {
 	database := repository.Database{}
 	c := database.Connect()
 
-	err := repository.CreateOrVerifyTable(c, TableName, Columns)
+	err := repository.CreateOrVerifyTable(c, model.Workflow{})
 
 	if err != nil {
 		println("Error creating table", err.Error())

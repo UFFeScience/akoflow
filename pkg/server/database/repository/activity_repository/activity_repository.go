@@ -1,6 +1,7 @@
 package activity_repository
 
 import (
+	"github.com/ovvesley/akoflow/pkg/server/database/model"
 	"github.com/ovvesley/akoflow/pkg/server/database/repository"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
 )
@@ -29,19 +30,22 @@ func New() IActivityRepository {
 
 	database := repository.Database{}
 	c := database.Connect()
-	err := repository.CreateOrVerifyTable(c, TableNameActivities, ColumnsActivities)
+	err := repository.CreateOrVerifyTable(c, model.Activity{})
 	if err != nil {
 		return nil
 	}
 	c.Close()
 
 	c = database.Connect()
-	err = repository.CreateOrVerifyTable(c, TableNameActivitiesDependencies, ColumnsActivitiesDependencies)
+	err = repository.CreateOrVerifyTable(c, model.ActivityDependency{})
+	if err != nil {
+		return nil
+	}
 
 	c.Close()
 
 	c = database.Connect()
-	err = repository.CreateOrVerifyTable(c, TableNamePreActivities, ColumnsPreActivities)
+	err = repository.CreateOrVerifyTable(c, model.PreActivity{})
 
 	if err != nil {
 		return nil

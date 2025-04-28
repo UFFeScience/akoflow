@@ -1,6 +1,7 @@
 package metrics_repository
 
 import (
+	"github.com/ovvesley/akoflow/pkg/server/database/model"
 	"github.com/ovvesley/akoflow/pkg/server/database/repository"
 )
 
@@ -25,7 +26,7 @@ func New() *MetricsRepository {
 
 	database := repository.Database{}
 	c := database.Connect()
-	err := repository.CreateOrVerifyTable(c, TableName, Columns)
+	err := repository.CreateOrVerifyTable(c, model.Metrics{})
 	if err != nil {
 		return nil
 	}

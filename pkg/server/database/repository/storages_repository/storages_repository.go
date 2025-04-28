@@ -1,6 +1,7 @@
 package storages_repository
 
 import (
+	"github.com/ovvesley/akoflow/pkg/server/database/model"
 	"github.com/ovvesley/akoflow/pkg/server/database/repository"
 )
 
@@ -38,7 +39,7 @@ func New() IStorageRepository {
 
 	database := repository.Database{}
 	c := database.Connect()
-	err := repository.CreateOrVerifyTable(c, TableName, Columns)
+	err := repository.CreateOrVerifyTable(c, model.Storage{})
 	if err != nil {
 		return nil
 	}

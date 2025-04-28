@@ -2,6 +2,8 @@ package config
 
 import (
 	"net/http"
+	"os"
+	"strings"
 
 	"github.com/ovvesley/akoflow/pkg/server/config/http_helper"
 	"github.com/ovvesley/akoflow/pkg/server/config/http_render_view"
@@ -27,6 +29,11 @@ type AppContainer struct {
 	TemplateRenderer AppContainerTemplateRenderer
 	HttpHelper       AppContainerHttpHelper
 	Logger           *logger.Logger
+	EnvVars          EnvVars
+}
+type EnvVars struct {
+	EnvVars         map[string]string
+	EnvVarByRuntime map[string]map[string]string
 }
 
 type AppContainerRepository struct {
@@ -53,6 +60,34 @@ type AppContainerHttpHelper struct {
 	GetUrlParam func(r *http.Request, key string) string
 }
 
+// GetEnvVars returns the environment variables as a map
+func GetEnvVars() (map[string]string, map[string]map[string]string) {
+	envVars := make(map[string]string)
+	envVarByRuntime := make(map[string]map[string]string)
+
+	runtimes_avaibles := []string{"k8s", "singularity", "sdumont"}
+
+	for _, v := range os.Environ() {
+		splitted := strings.Split(v, "=")
+		for _, runtime := range runtimes_avaibles {
+
+			envVar := os.Getenv(splitted[0])
+			envVars[splitted[0]] = envVar
+
+			if strings.Contains(strings.ToLower(splitted[0]), runtime) {
+				if envVarByRuntime[runtime] == nil {
+					envVarByRuntime[runtime] = make(map[string]string)
+					envVarByRuntime[runtime][splitted[0]] = envVar
+				} else {
+					envVarByRuntime[runtime][splitted[0]] = envVar
+				}
+
+			}
+		}
+	}
+	return envVars, envVarByRuntime
+}
+
 func MakeAppContainer() AppContainer {
 
 	// Create the repository instances
@@ -72,7 +107,9 @@ func MakeAppContainer() AppContainer {
 
 	logger, _ := logger.NewLogger(LOG_FILE_PATH)
 
-	return AppContainer{
+	envVars, envVarByRuntime := GetEnvVars()
+
+	appContainer := AppContainer{
 		DefaultNamespace: DEFAULT_NAMESPACE,
 		Repository: AppContainerRepository{
 			WorkflowRepository: workflowRepository,
@@ -95,7 +132,12 @@ func MakeAppContainer() AppContainer {
 			GetUrlParam: http_helper.GetUrlPathParam,
 		},
 		Logger: logger,
+		EnvVars: EnvVars{
+			EnvVars:         envVars,
+			EnvVarByRuntime: envVarByRuntime,
+		},
 	}
+	return appContainer
 }
 
 // singleton appContainer

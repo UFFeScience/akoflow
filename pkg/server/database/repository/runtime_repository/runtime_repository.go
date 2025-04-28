@@ -84,18 +84,11 @@ func (r *RuntimeRepository) CreateOrUpdate(name string, status int, metadata map
 	if count == 0 {
 		_, err = c.Exec("INSERT INTO "+r.tableName+" (name, status, metadata, created_at, updated_at) VALUES (?, ?, ?, datetime('now'), datetime('now'))", name, status, metadataString)
 	} else {
-		_, err = c.Exec("UPDATE "+r.tableName+" SET status = ?, metadata = ?, created_at = datetime('now'), updated_at = datetime('now') WHERE name = ?", status, metadataString, name)
+		_, err = c.Exec("UPDATE "+r.tableName+" SET status = ?, metadata = ?, updated_at = datetime('now') WHERE name = ?", status, metadataString, name)
 	}
 
 	if err != nil {
 		return
 	}
-
-	println("RuntimeRepository: CreateOrUpdate", name, status, metadataString)
-	if err != nil {
-		println("Error creating or updating runtime:", err)
-		return
-	}
-	println("RuntimeRepository: CreateOrUpdate", name, status, metadataString)
 
 }

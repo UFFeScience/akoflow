@@ -18,14 +18,16 @@ func New() *HealthCheck {
 
 func (w *HealthCheck) StartHealthCheck() {
 
-	config.App().Logger.Info("Healthcheck is running")
+	for {
+		config.App().Logger.Info("Healthcheck is running")
 
-	envVarRuntimes := config.App().EnvVars.EnvVarByRuntime
+		envVarRuntimes := config.App().EnvVars.EnvVarByRuntime
 
-	for runtime, envVars := range envVarRuntimes {
-		config.App().Repository.RuntimeRepository.CreateOrUpdate(runtime, 1, envVars)
+		for runtime, envVars := range envVarRuntimes {
+			config.App().Repository.RuntimeRepository.CreateOrUpdate(runtime, 1, envVars)
+		}
+
+		time.Sleep(5 * time.Second)
 	}
-
-	time.Sleep(5 * time.Second)
 
 }

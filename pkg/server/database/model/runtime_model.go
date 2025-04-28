@@ -3,8 +3,7 @@ package model
 import "github.com/ovvesley/akoflow/pkg/server/database"
 
 type Runtime struct {
-	ID        int    `db:"id" sql:"PRIMARY KEY AUTOINCREMENT"`
-	Name      string `db:"name"`
+	Name      string `db:"name" sql:"PRIMARY KEY AUTOINCREMENT"`
 	Status    int    `db:"status"`
 	Metadata  string `db:"metadata"`
 	CreatedAt string `db:"created_at"`

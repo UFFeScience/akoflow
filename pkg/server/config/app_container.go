@@ -75,6 +75,12 @@ func GetEnvVars() (map[string]string, map[string]map[string]string) {
 			envVars[splitted[0]] = envVar
 
 			if strings.Contains(strings.ToLower(splitted[0]), runtime) {
+
+				currentRuntime := strings.ToLower(splitted[0])
+				stringRuntimeSplitted := strings.Split(currentRuntime, "_")
+				runtime := stringRuntimeSplitted[0]
+				runtime = strings.ToLower(runtime)
+
 				if envVarByRuntime[runtime] == nil {
 					envVarByRuntime[runtime] = make(map[string]string)
 					envVarByRuntime[runtime][splitted[0]] = envVar

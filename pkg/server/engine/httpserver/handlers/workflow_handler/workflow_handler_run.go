@@ -32,14 +32,20 @@ func (h *WorkflowHandler) Create(w http.ResponseWriter, r *http.Request) {
 
 	wf := workflow_entity.New(workflow_entity.WorkflowNewParams{WorkflowBase64: payload.Workflow})
 
-	_ = h.create_workflow_service.Create(wf)
+	wfId, err := h.create_workflow_service.Create(wf)
+
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+	}
 
 	response, err := json.Marshal(struct {
-		Workflow string `json:"workflow_entity"`
-		Message  string `json:"message"`
+		Workflow   string `json:"workflow_entity"`
+		WorkflowId int    `json:"workflow_id"`
+		Message    string `json:"message"`
 	}{
-		Workflow: wf.Name,
-		Message:  "Workflow has been deployed successfully.",
+		Workflow:   wf.Name,
+		WorkflowId: wfId,
+		Message:    "Workflow has been deployed successfully.",
 	})
 
 	if err != nil {
@@ -54,5 +60,4 @@ func (h *WorkflowHandler) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	return
 }

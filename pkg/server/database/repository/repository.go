@@ -55,12 +55,15 @@ func CreateOrVerifyTable(c *sql.DB, m model.Model) (err error) {
 
 	columnDefinitions := ""
 	for i, col := range columns {
+		if m.GetPrimaryKey() == col {
+			columnDefinitions += col + " INTEGER PRIMARY KEY AUTOINCREMENT"
+			continue
+		}
 		if i > 0 {
 			columnDefinitions += ", "
 		}
 		columnDefinitions += col
 	}
-
 	query := "CREATE TABLE IF NOT EXISTS " + tableName + " (" + columnDefinitions + ")"
 	exec, err := c.Exec(query)
 	if err != nil {

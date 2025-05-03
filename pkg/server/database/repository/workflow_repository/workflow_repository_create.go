@@ -21,6 +21,8 @@ func (w *WorkflowRepository) Create(namespace string, workflow workflow_entity.W
 		StatusCreated,
 	)
 
+	defer c.Close()
+
 	if err != nil {
 		return 0, err
 	}

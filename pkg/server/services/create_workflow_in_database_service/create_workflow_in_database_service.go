@@ -26,22 +26,22 @@ func New() *CreateWorkflowInDatabaseService {
 	}
 }
 
-func (c *CreateWorkflowInDatabaseService) Create(workflow workflow_entity.Workflow) error {
+func (c *CreateWorkflowInDatabaseService) Create(workflow workflow_entity.Workflow) (int, error) {
 	workflowId, err := c.workflowRepository.Create(c.namespace, workflow)
 	if err != nil {
-		return err
+		return 0, err
 	}
 
 	err = c.activityRepository.Create(c.namespace, workflowId, workflow.Spec.Image, workflow.Spec.Activities)
 	if err != nil {
-		return err
+		return 0, err
 	}
 
 	err = c.createStorageInDatabaseService.CreateByWorkflow(workflowId)
 	if err != nil {
-		return err
+		return 0, err
 	}
 
-	return nil
+	return workflowId, nil
 
 }

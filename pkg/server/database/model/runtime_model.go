@@ -3,7 +3,7 @@ package model
 import "github.com/ovvesley/akoflow/pkg/server/database"
 
 type Runtime struct {
-	Name      string `db:"name" sql:"PRIMARY KEY AUTOINCREMENT"`
+	Name      string `db:"name" sql:"TEXT PRIMARY KEY"`
 	Status    int    `db:"status"`
 	Metadata  string `db:"metadata"`
 	CreatedAt string `db:"created_at"`
@@ -21,4 +21,12 @@ func (r Runtime) GetColumns() []string {
 
 func (r Runtime) GetPrimaryKey() string {
 	return database.GenericGetPrimaryKey(r)
+}
+
+func (r Runtime) GetClausulePrimaryKey() string {
+	return database.GenericGetClausulePrimaryKey(r)
+}
+
+func (r Runtime) GetColumnType(column string) string {
+	return database.GenericGetColumnType(r, column)
 }

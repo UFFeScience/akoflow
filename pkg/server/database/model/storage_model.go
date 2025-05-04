@@ -3,7 +3,7 @@ package model
 import "github.com/ovvesley/akoflow/pkg/server/database"
 
 type Storage struct {
-	ID                     int     `db:"id" sql:"PRIMARY KEY AUTOINCREMENT"`
+	ID                     int     `db:"id" sql:"INTEGER PRIMARY KEY AUTOINCREMENT"`
 	WorkflowID             int     `db:"workflow_id"`
 	ActivityID             int     `db:"activity_id"`
 	PvcName                *string `db:"pvc_name"`
@@ -31,4 +31,12 @@ func (s Storage) GetColumns() []string {
 
 func (s Storage) GetPrimaryKey() string {
 	return database.GenericGetPrimaryKey(s)
+}
+
+func (s Storage) GetClausulePrimaryKey() string {
+	return database.GenericGetClausulePrimaryKey(s)
+}
+
+func (s Storage) GetColumnType(column string) string {
+	return database.GenericGetColumnType(s, column)
 }

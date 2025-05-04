@@ -3,7 +3,7 @@ package model
 import "github.com/ovvesley/akoflow/pkg/server/database"
 
 type PreActivity struct {
-	ID                int    `db:"id" sql:"PRIMARY KEY AUTOINCREMENT"`
+	ID                int    `db:"id" sql:"INTEGER PRIMARY KEY AUTOINCREMENT"`
 	ActivityID        int    `db:"activity_id"`
 	WorkflowID        int    `db:"workflow_id"`
 	Namespace         string `db:"namespace"`
@@ -23,4 +23,11 @@ func (p PreActivity) GetColumns() []string {
 
 func (p PreActivity) GetPrimaryKey() string {
 	return database.GenericGetPrimaryKey(p)
+}
+
+func (p PreActivity) GetClausulePrimaryKey() string {
+	return database.GenericGetClausulePrimaryKey(p)
+}
+func (p PreActivity) GetColumnType(column string) string {
+	return database.GenericGetColumnType(p, column)
 }

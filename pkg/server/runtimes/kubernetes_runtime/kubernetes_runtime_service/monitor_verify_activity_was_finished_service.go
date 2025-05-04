@@ -8,15 +8,19 @@ import (
 	"github.com/ovvesley/akoflow/pkg/server/connector/connector_k8s/connector_job_k8s"
 	"github.com/ovvesley/akoflow/pkg/server/database/repository/activity_repository"
 	"github.com/ovvesley/akoflow/pkg/server/database/repository/logs_repository"
+	"github.com/ovvesley/akoflow/pkg/server/database/repository/runtime_repository"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
 )
 
 type MonitorVerifyActivityWasFinishedService struct {
-	namespace          string
+	namespace string
+
 	activityRepository activity_repository.IActivityRepository
+	runtimeRepository  runtime_repository.IRuntimeRepository
 	logsRepository     logs_repository.ILogsRepository
-	connector          connector_k8s.IConnector
+
+	connector connector_k8s.IConnector
 }
 
 func NewMonitorVerifyActivityWasFinishedService() *MonitorVerifyActivityWasFinishedService {
@@ -43,7 +47,12 @@ func (m *MonitorVerifyActivityWasFinishedService) VerifyActivities(wf workflow_e
 func (m *MonitorVerifyActivityWasFinishedService) handleVerifyPreActivityWasFinished(activity workflow_activity_entity.WorkflowActivities, wf workflow_entity.Workflow) int {
 	preactivity, _ := m.activityRepository.FindPreActivity(activity.Id)
 
-	jobResponse, err := m.connector.Job().GetJob(m.namespace, activity.GetPreActivityName())
+	runtime, err := m.runtimeRepository.GetByName(wf.GetRuntimeId())
+	if err != nil {
+		return activity_repository.StatusCreated
+	}
+
+	jobResponse, err := m.connector.Job(runtime).GetJob(m.namespace, activity.GetPreActivityName())
 
 	if errors.Is(err, connector_job_k8s.ErrJobNotFound) {
 		println("Job not found")
@@ -106,7 +115,12 @@ func (m *MonitorVerifyActivityWasFinishedService) handleVerifyActivityWasFinishe
 		return activity_repository.StatusCreated
 	}
 
-	jobResponse, _ := m.connector.Job().GetJob(m.namespace, activity.GetNameJob())
+	runtime, err := m.runtimeRepository.GetByName(wf.GetRuntimeId())
+	if err != nil {
+		return activity_repository.StatusCreated
+	}
+
+	jobResponse, _ := m.connector.Job(runtime).GetJob(m.namespace, activity.GetNameJob())
 
 	if jobResponse.Status.Active == 1 {
 		return activity_repository.StatusRunning
@@ -114,7 +128,7 @@ func (m *MonitorVerifyActivityWasFinishedService) handleVerifyActivityWasFinishe
 
 	if jobResponse.Status.Succeeded == 1 {
 		var _ = m.activityRepository.UpdateStatus(activity.Id, activity_repository.StatusFinished)
-		m.monitorHandleLogs(activity)
+		m.monitorHandleLogs(wf, activity)
 		return activity_repository.StatusFinished
 	}
 
@@ -129,7 +143,7 @@ func (m *MonitorVerifyActivityWasFinishedService) handleVerifyActivityWasFinishe
 	if jobResponse.Status.Failed >= 1 {
 		println("Activity failed: ", activity.Name)
 		var _ = m.activityRepository.UpdateStatus(activity.Id, activity_repository.StatusFinished)
-		m.monitorHandleLogs(activity)
+		m.monitorHandleLogs(wf, activity)
 
 		return activity_repository.StatusFinished
 	}
@@ -138,11 +152,18 @@ func (m *MonitorVerifyActivityWasFinishedService) handleVerifyActivityWasFinishe
 
 }
 
-func (m *MonitorVerifyActivityWasFinishedService) monitorHandleLogs(activity workflow_activity_entity.WorkflowActivities) {
-	podJob, _ := m.connector.Pod().GetPodByJob(m.namespace, activity.GetNameJob())
+func (m *MonitorVerifyActivityWasFinishedService) monitorHandleLogs(wf workflow_entity.Workflow, activity workflow_activity_entity.WorkflowActivities) {
+
+	runtime, err := m.runtimeRepository.GetByName(wf.GetRuntimeId())
+	if err != nil {
+		println("Runtime not found")
+		return
+	}
+
+	podJob, _ := m.connector.Pod(runtime).GetPodByJob(m.namespace, activity.GetNameJob())
 	podName, _ := podJob.GetPodName()
 
-	logs, _ := m.connector.Pod().GetPodLogs(m.namespace, podName)
+	logs, _ := m.connector.Pod(runtime).GetPodLogs(m.namespace, podName)
 
 	_ = m.logsRepository.Create(logs_repository.ParamsLogsCreate{
 		LogsDatabase: logs_repository.LogsDatabase{

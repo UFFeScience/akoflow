@@ -10,6 +10,7 @@ import (
 	"os"
 
 	"github.com/ovvesley/akoflow/pkg/server/entities/nfs_server_entity"
+	"github.com/ovvesley/akoflow/pkg/server/entities/runtime_entity"
 )
 
 type ConnectorDeploymentK8s struct {
@@ -24,7 +25,7 @@ type IConnectorDeployment interface {
 	GetDeployment(namespace, deploymentName string) ResultGetDeployment
 }
 
-func New() IConnectorDeployment {
+func New(*runtime_entity.Runtime) IConnectorDeployment {
 	return &ConnectorDeploymentK8s{
 		client: newClient(),
 	}

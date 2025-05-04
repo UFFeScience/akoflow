@@ -10,6 +10,7 @@ import (
 	"os"
 
 	"github.com/ovvesley/akoflow/pkg/server/entities/nfs_server_entity"
+	"github.com/ovvesley/akoflow/pkg/server/entities/runtime_entity"
 )
 
 type ConnectorRoleBinding struct {
@@ -20,7 +21,7 @@ type IConnectorRoleBinding interface {
 	CreateRoleBinding(roleBinding nfs_server_entity.RoleBinding) ResultCreateRoleBinding
 }
 
-func New() IConnectorRoleBinding {
+func New(*runtime_entity.Runtime) IConnectorRoleBinding {
 	return &ConnectorRoleBinding{
 		client: newClient(),
 	}

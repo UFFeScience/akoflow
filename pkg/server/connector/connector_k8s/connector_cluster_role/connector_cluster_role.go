@@ -10,6 +10,7 @@ import (
 	"os"
 
 	"github.com/ovvesley/akoflow/pkg/server/entities/nfs_server_entity"
+	"github.com/ovvesley/akoflow/pkg/server/entities/runtime_entity"
 )
 
 type ConnectorClusterRole struct {
@@ -20,7 +21,7 @@ type IConnectorClusterRole interface {
 	CreateClusterRole(clusterRole nfs_server_entity.ClusterRole) ResultCreateClusterRole
 }
 
-func New() IConnectorClusterRole {
+func New(*runtime_entity.Runtime) IConnectorClusterRole {
 	return &ConnectorClusterRole{
 		client: newClient(),
 	}

@@ -10,6 +10,7 @@ import (
 	"os"
 
 	"github.com/ovvesley/akoflow/pkg/server/entities/nfs_server_entity"
+	"github.com/ovvesley/akoflow/pkg/server/entities/runtime_entity"
 )
 
 type ConnectorStorageClass struct {
@@ -23,7 +24,7 @@ type IConnectorStorageClass interface {
 	DeleteStorageClass(name string) ResultDeleteStorageClass
 }
 
-func New() IConnectorStorageClass {
+func New(*runtime_entity.Runtime) IConnectorStorageClass {
 	return &ConnectorStorageClass{
 		client: newClient(),
 	}

@@ -7,6 +7,8 @@ import (
 	"net/http"
 	"os"
 	"time"
+
+	"github.com/ovvesley/akoflow/pkg/server/entities/runtime_entity"
 )
 
 type ConnectorNamespaceK8s struct {
@@ -19,7 +21,7 @@ type IConnectorNamespace interface {
 	CreateNamespace(namespace string) (ResponseCreateNamespace, error)
 }
 
-func New() IConnectorNamespace {
+func New(*runtime_entity.Runtime) IConnectorNamespace {
 	return &ConnectorNamespaceK8s{
 		client: newClient(),
 	}

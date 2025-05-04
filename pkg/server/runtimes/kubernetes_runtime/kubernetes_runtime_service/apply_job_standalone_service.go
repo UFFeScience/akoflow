@@ -4,6 +4,7 @@ import (
 	"github.com/ovvesley/akoflow/pkg/server/config"
 	"github.com/ovvesley/akoflow/pkg/server/connector/connector_k8s"
 	"github.com/ovvesley/akoflow/pkg/server/database/repository/activity_repository"
+	"github.com/ovvesley/akoflow/pkg/server/database/repository/runtime_repository"
 	"github.com/ovvesley/akoflow/pkg/server/database/repository/workflow_repository"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
@@ -15,7 +16,9 @@ type ApplyJobStandaloneService struct {
 
 	activityRepository activity_repository.IActivityRepository
 	workflowRepository workflow_repository.IWorkflowRepository
-	connector          connector_k8s.IConnector
+	runtimeRepository  runtime_repository.IRuntimeRepository
+
+	connector connector_k8s.IConnector
 
 	makeK8sJobService              MakeK8sJobService
 	getActivityDependenciesService get_activity_dependencies_service.GetActivityDependenciesService
@@ -27,6 +30,7 @@ func newApplyJobStandaloneService() ApplyJobStandaloneService {
 
 		activityRepository: config.App().Repository.ActivityRepository,
 		workflowRepository: config.App().Repository.WorkflowRepository,
+		runtimeRepository:  config.App().Repository.RuntimeRepository,
 
 		connector: config.App().Connector.K8sConnector,
 
@@ -73,9 +77,14 @@ func (a *ApplyJobStandaloneService) runK8sJob(wf workflow_entity.Workflow, wfa w
 
 	println("Job: ", job.Metadata.Name)
 
-	a.connector.Job().ApplyJob(a.namespace, job)
+	runtime, err := a.runtimeRepository.GetByName(wf.GetRuntimeId())
+	if err != nil {
+		return "", err
+	}
 
-	podCreated, _ := a.connector.Pod().GetPodByJob(a.namespace, job.Metadata.Name)
+	a.connector.Job(runtime).ApplyJob(a.namespace, job)
+
+	podCreated, _ := a.connector.Pod(runtime).GetPodByJob(a.namespace, job.Metadata.Name)
 	namePod, err := podCreated.GetPodName()
 
 	if err != nil {

@@ -10,6 +10,7 @@ import (
 	"os"
 
 	"github.com/ovvesley/akoflow/pkg/server/entities/nfs_server_entity"
+	"github.com/ovvesley/akoflow/pkg/server/entities/runtime_entity"
 )
 
 type ConnectorRole struct {
@@ -20,7 +21,7 @@ type IConnectorRole interface {
 	CreateRole(role nfs_server_entity.Role) ResultCreateRole
 }
 
-func New() IConnectorRole {
+func New(*runtime_entity.Runtime) IConnectorRole {
 	return &ConnectorRole{
 		client: newClient(),
 	}

@@ -8,6 +8,8 @@ import (
 	"net/http"
 	"os"
 	"time"
+
+	"github.com/ovvesley/akoflow/pkg/server/entities/runtime_entity"
 )
 
 type ConnectorPodK8s struct {
@@ -21,7 +23,7 @@ type IConnectorPod interface {
 	DeletePod(namespace string, podName string) error
 }
 
-func New() IConnectorPod {
+func New(*runtime_entity.Runtime) IConnectorPod {
 	return &ConnectorPodK8s{
 		client: newClient(),
 	}

@@ -10,6 +10,7 @@ import (
 	"os"
 
 	"github.com/ovvesley/akoflow/pkg/server/entities/nfs_server_entity"
+	"github.com/ovvesley/akoflow/pkg/server/entities/runtime_entity"
 )
 
 type ConnectorService struct {
@@ -23,7 +24,7 @@ type IConnectorService interface {
 	DeleteService(namespace, name string) ResultDeleteService
 }
 
-func New() IConnectorService {
+func New(*runtime_entity.Runtime) IConnectorService {
 	return &ConnectorService{
 		client: newClient(),
 	}

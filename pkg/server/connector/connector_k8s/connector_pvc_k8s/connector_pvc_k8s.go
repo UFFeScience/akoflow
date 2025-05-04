@@ -10,13 +10,14 @@ import (
 	"time"
 
 	"github.com/ovvesley/akoflow/pkg/server/entities/nfs_server_entity"
+	"github.com/ovvesley/akoflow/pkg/server/entities/runtime_entity"
 )
 
 type ConnectorPvcK8s struct {
 	client *http.Client
 }
 
-func New() IConnectorPvc {
+func New(*runtime_entity.Runtime) IConnectorPvc {
 	return &ConnectorPvcK8s{
 		client: newClient(),
 	}

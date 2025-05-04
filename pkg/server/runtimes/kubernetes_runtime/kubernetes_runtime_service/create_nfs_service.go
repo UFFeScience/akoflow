@@ -6,6 +6,7 @@ import (
 
 	"github.com/ovvesley/akoflow/pkg/server/config"
 	"github.com/ovvesley/akoflow/pkg/server/connector/connector_k8s"
+	"github.com/ovvesley/akoflow/pkg/server/database/repository/runtime_repository"
 	"github.com/ovvesley/akoflow/pkg/server/entities/nfs_server_entity"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
 )
@@ -15,6 +16,8 @@ type CreateNfsService struct {
 
 	connector connector_k8s.IConnector
 	namespace string
+
+	runtimeRepository runtime_repository.IRuntimeRepository
 }
 
 const PREFIX_NFS_PROVISIONER = "nfs-provisioner-"
@@ -23,6 +26,8 @@ func NewCreateNfsService() CreateNfsService {
 	return CreateNfsService{
 		connector: config.App().Connector.K8sConnector,
 		namespace: config.App().DefaultNamespace,
+
+		runtimeRepository: config.App().Repository.RuntimeRepository,
 	}
 }
 
@@ -352,9 +357,14 @@ func (c *CreateNfsService) Create() bool {
 	// Initialize connector
 	conn := c.connector
 
+	runtime, err := c.runtimeRepository.GetByName(c.GetWorkflow().GetRuntimeId())
+	if err != nil {
+		return false
+	}
+
 	// ServiceAccount
 	serviceAccount := c.createServiceAccount()
-	resultServiceAccount := conn.ServiceAccount().CreateServiceAccount(serviceAccount)
+	resultServiceAccount := conn.ServiceAccount(runtime).CreateServiceAccount(serviceAccount)
 	if !resultServiceAccount.Success {
 		log.Printf("Failed to create ServiceAccount: %s", resultServiceAccount.Message)
 
@@ -363,7 +373,7 @@ func (c *CreateNfsService) Create() bool {
 
 	// Service
 	service := c.createService()
-	resultService := conn.Service().CreateService(service)
+	resultService := conn.Service(runtime).CreateService(service)
 	if !resultService.Success {
 		log.Printf("Failed to create Service: %s", resultService.Message)
 
@@ -372,7 +382,7 @@ func (c *CreateNfsService) Create() bool {
 
 	// PersistentVolumeClaim
 	pvc := c.createPersistentVolumeClaim()
-	resultPvc := conn.PersistentVolumeClain().CreatePvc(pvc)
+	resultPvc := conn.PersistentVolumeClain(runtime).CreatePvc(pvc)
 	if !resultPvc.Success {
 		log.Printf("Failed to create PersistentVolumeClaim: %s", resultPvc.Message)
 
@@ -381,7 +391,7 @@ func (c *CreateNfsService) Create() bool {
 
 	// Deployment
 	deployment := c.createDeployment()
-	resultDeployment := conn.Deployment().CreateDeployment(deployment)
+	resultDeployment := conn.Deployment(runtime).CreateDeployment(deployment)
 	if !resultDeployment.Success {
 		log.Printf("Failed to create Deployment: %s", resultDeployment.Message)
 
@@ -390,7 +400,7 @@ func (c *CreateNfsService) Create() bool {
 
 	// ClusterRole
 	clusterRole := c.createClusterRole()
-	resultClusterRole := conn.ClusterRole().CreateClusterRole(clusterRole)
+	resultClusterRole := conn.ClusterRole(runtime).CreateClusterRole(clusterRole)
 	if !resultClusterRole.Success {
 		log.Printf("Failed to create ClusterRole: %s", resultClusterRole.Message)
 
@@ -399,7 +409,7 @@ func (c *CreateNfsService) Create() bool {
 
 	// ClusterRoleBinding
 	clusterRoleBinding := c.createClusterRoleBinding()
-	resultClusterRoleBinding := conn.ClusterRoleBinding().CreateClusterRoleBinding(clusterRoleBinding)
+	resultClusterRoleBinding := conn.ClusterRoleBinding(runtime).CreateClusterRoleBinding(clusterRoleBinding)
 	if !resultClusterRoleBinding.Success {
 		log.Printf("Failed to create ClusterRoleBinding: %s", resultClusterRoleBinding.Message)
 	}
@@ -407,7 +417,7 @@ func (c *CreateNfsService) Create() bool {
 
 	// Role
 	role := c.createRole()
-	resultRole := conn.Role().CreateRole(role)
+	resultRole := conn.Role(runtime).CreateRole(role)
 	if !resultRole.Success {
 		log.Printf("Failed to create Role: %s", resultRole.Message)
 
@@ -416,7 +426,7 @@ func (c *CreateNfsService) Create() bool {
 
 	// RoleBinding
 	roleBinding := c.createRoleBinding()
-	resultRoleBinding := conn.RoleBinding().CreateRoleBinding(roleBinding)
+	resultRoleBinding := conn.RoleBinding(runtime).CreateRoleBinding(roleBinding)
 	if !resultRoleBinding.Success {
 		log.Printf("Failed to create RoleBinding: %s", resultRoleBinding.Message)
 
@@ -425,7 +435,7 @@ func (c *CreateNfsService) Create() bool {
 
 	// StorageClass
 	storageClass := c.createStorageClass()
-	resultStorageClass := conn.StorageClass().CreateStorageClass(storageClass)
+	resultStorageClass := conn.StorageClass(runtime).CreateStorageClass(storageClass)
 	if !resultStorageClass.Success {
 		log.Printf("Failed to create StorageClass: %s", resultStorageClass.Message)
 	}
@@ -438,8 +448,13 @@ func (c *CreateNfsService) Create() bool {
 func (c *CreateNfsService) NfsServerIsCreated() bool {
 	conn := config.App().Connector.K8sConnector
 
+	runtime, err := c.runtimeRepository.GetByName(c.GetWorkflow().GetRuntimeId())
+	if err != nil {
+		return false
+	}
+
 	deploymentName := makeNfsProvisionerName(c.GetWorkflow().GetId())
-	deployments := conn.Deployment().GetDeployment(c.GetNamespace(), deploymentName)
+	deployments := conn.Deployment(runtime).GetDeployment(c.GetNamespace(), deploymentName)
 
 	if !deployments.Success {
 		log.Printf("Failed to get Deployment: %s", deployments.Message)

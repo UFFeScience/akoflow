@@ -8,6 +8,8 @@ import (
 	"net/http"
 	"os"
 	"time"
+
+	"github.com/ovvesley/akoflow/pkg/server/entities/runtime_entity"
 )
 
 type ConnectorMetricsK8s struct {
@@ -19,7 +21,7 @@ type IConnectorMetrics interface {
 	GetPodMetrics(namespace string, podName string) (ResponseGetPodMetrics, error)
 }
 
-func New() IConnectorMetrics {
+func New(*runtime_entity.Runtime) IConnectorMetrics {
 	return &ConnectorMetricsK8s{
 		client: newClient(),
 	}

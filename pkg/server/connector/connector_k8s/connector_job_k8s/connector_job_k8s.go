@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/ovvesley/akoflow/pkg/server/entities/k8s_job_entity"
+	"github.com/ovvesley/akoflow/pkg/server/entities/runtime_entity"
 )
 
 type ConnectorJobK8s struct {
@@ -26,7 +27,7 @@ type IConnectorJob interface {
 
 var ErrJobNotFound = errors.New("job not found")
 
-func New() IConnectorJob {
+func New(*runtime_entity.Runtime) IConnectorJob {
 	return &ConnectorJobK8s{
 		client: newClient(),
 	}

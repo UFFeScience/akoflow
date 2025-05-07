@@ -21,7 +21,8 @@ import (
 )
 
 type Connector struct {
-	client *http.Client
+	client  *http.Client
+	runtime *runtime_entity.Runtime
 }
 
 type IConnector interface {

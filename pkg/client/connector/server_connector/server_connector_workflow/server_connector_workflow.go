@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"encoding/json"
 	"net/http"
+
+	"github.com/ovvesley/akoflow/pkg/server/entities/runtime_entity"
 )
 
 type IWorkflow interface {
@@ -11,7 +13,8 @@ type IWorkflow interface {
 }
 
 type Workflow struct {
-	client *http.Client
+	client  *http.Client
+	runtime *runtime_entity.Runtime
 }
 
 func New() *Workflow {

@@ -149,7 +149,7 @@ func (r *RuntimeRepository) GetByName(name string) (*runtime_entity.Runtime, err
 
 	var runtime model.Runtime
 	runtimeMetadata := "{}"
-	err := c.QueryRow("SELECT * FROM "+r.tableName+" WHERE name = ?", name).Scan(&runtime.Name, &runtime.Status, &runtimeMetadata, &runtime.CreatedAt, &runtime.UpdatedAt)
+	err := c.QueryRow("SELECT name, status, metadata, created_at, updated_at FROM "+r.tableName+" WHERE name = ?", name).Scan(&runtime.Name, &runtime.Status, &runtimeMetadata, &runtime.CreatedAt, &runtime.UpdatedAt)
 	if err != nil {
 		return nil, err
 	}

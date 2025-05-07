@@ -2,6 +2,7 @@ package runtimes
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/ovvesley/akoflow/pkg/server/config"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
@@ -32,7 +33,20 @@ type IRuntime interface {
 	VerifyActivitiesWasFinished(workflow workflow_entity.Workflow) bool
 }
 
+func normalizeRuntime(runtime string) string {
+	// if runtime start with k8s or k8s://, set it to k8s
+
+	if strings.HasPrefix(runtime, "k8s") {
+		return RUNTIME_K8S
+	}
+
+	return runtime
+
+}
+
 func GetRuntimeInstance(runtime string) IRuntime {
+
+	runtime = normalizeRuntime(runtime)
 
 	modeMap := map[string]IRuntime{
 		RUNTIME_DOCKER:              docker_runtime.NewDockerRuntime(),

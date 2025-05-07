@@ -16,8 +16,7 @@ func New() *PublicStaticHandler {
 }
 
 func (h *PublicStaticHandler) Static(w http.ResponseWriter, r *http.Request) {
-
-	pathFile := r.URL.Path
-	http.ServeFile(w, r, STATIC_PATH+pathFile)
+	w.Header().Set("Location", "/akoflow-admin/")
+	w.WriteHeader(http.StatusFound)
 
 }

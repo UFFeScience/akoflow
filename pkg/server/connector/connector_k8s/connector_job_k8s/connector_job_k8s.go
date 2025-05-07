@@ -7,7 +7,6 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
-	"os"
 	"time"
 
 	"github.com/ovvesley/akoflow/pkg/server/entities/k8s_job_entity"
@@ -15,7 +14,8 @@ import (
 )
 
 type ConnectorJobK8s struct {
-	client *http.Client
+	client  *http.Client
+	runtime *runtime_entity.Runtime
 }
 
 type IConnectorJob interface {
@@ -27,9 +27,10 @@ type IConnectorJob interface {
 
 var ErrJobNotFound = errors.New("job not found")
 
-func New(*runtime_entity.Runtime) IConnectorJob {
+func New(runtime *runtime_entity.Runtime) IConnectorJob {
 	return &ConnectorJobK8s{
-		client: newClient(),
+		client:  newClient(),
+		runtime: runtime,
 	}
 }
 func newClient() *http.Client {
@@ -48,8 +49,8 @@ func (c ConnectorJobK8s) ListJobs() {
 }
 
 func (c *ConnectorJobK8s) ApplyJob(namespace string, job k8s_job_entity.K8sJob) interface{} {
-	token := os.Getenv("K8S_API_SERVER_TOKEN")
-	host := os.Getenv("K8S_API_SERVER_HOST")
+	token := c.runtime.GetMetadataApiServerToken()
+	host := c.runtime.GetMetadataApiServerHost()
 
 	body, _ := json.Marshal(&job)
 	fmt.Println(string(body))
@@ -249,8 +250,8 @@ type ResponseGetJob404 struct {
 }
 
 func (c *ConnectorJobK8s) GetJob(namespace string, jobName string) (ResponseGetJob, error) {
-	token := os.Getenv("K8S_API_SERVER_TOKEN")
-	host := os.Getenv("K8S_API_SERVER_HOST")
+	token := c.runtime.GetMetadataApiServerToken()
+	host := c.runtime.GetMetadataApiServerHost()
 
 	req, _ := http.NewRequest("GET", "https://"+host+"/apis/batch/v1/namespaces/"+namespace+"/jobs/"+jobName, nil)
 	req.Header.Set("Authorization", "Bearer "+token)
@@ -282,8 +283,8 @@ func (c *ConnectorJobK8s) GetJob(namespace string, jobName string) (ResponseGetJ
 }
 
 func (c *ConnectorJobK8s) DeleteJob(jobName string, namespace string) error {
-	token := os.Getenv("K8S_API_SERVER_TOKEN")
-	host := os.Getenv("K8S_API_SERVER_HOST")
+	token := c.runtime.GetMetadataApiServerToken()
+	host := c.runtime.GetMetadataApiServerHost()
 
 	req, _ := http.NewRequest("DELETE", "https://"+host+"/apis/batch/v1/namespaces/"+namespace+"/jobs/"+jobName, nil)
 	req.Header.Set("Authorization", "Bearer "+token)

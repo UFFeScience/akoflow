@@ -6,14 +6,14 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
-	"os"
 	"time"
 
 	"github.com/ovvesley/akoflow/pkg/server/entities/runtime_entity"
 )
 
 type ConnectorMetricsK8s struct {
-	client *http.Client
+	client  *http.Client
+	runtime *runtime_entity.Runtime
 }
 
 type IConnectorMetrics interface {
@@ -21,9 +21,10 @@ type IConnectorMetrics interface {
 	GetPodMetrics(namespace string, podName string) (ResponseGetPodMetrics, error)
 }
 
-func New(*runtime_entity.Runtime) IConnectorMetrics {
+func New(runtime *runtime_entity.Runtime) IConnectorMetrics {
 	return &ConnectorMetricsK8s{
-		client: newClient(),
+		client:  newClient(),
+		runtime: runtime,
 	}
 }
 
@@ -90,8 +91,8 @@ func (c ResponseGetPodMetrics) GetMetrics() (Metrics, error) {
 }
 
 func (c *ConnectorMetricsK8s) GetPodMetrics(namespace string, podName string) (ResponseGetPodMetrics, error) {
-	token := os.Getenv("K8S_API_SERVER_TOKEN")
-	host := os.Getenv("K8S_API_SERVER_HOST")
+	token := c.runtime.GetMetadataApiServerToken()
+	host := c.runtime.GetMetadataApiServerHost()
 
 	req, _ := http.NewRequest("GET", "https://"+host+"/apis/metrics.k8s.io/v1beta1/namespaces/"+namespace+"/pods/"+podName, nil)
 	req.Header.Set("Authorization", "Bearer "+token)

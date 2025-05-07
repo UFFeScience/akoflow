@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"os"
 	"time"
 
 	"github.com/ovvesley/akoflow/pkg/server/entities/nfs_server_entity"
@@ -14,12 +13,14 @@ import (
 )
 
 type ConnectorPvcK8s struct {
-	client *http.Client
+	client  *http.Client
+	runtime *runtime_entity.Runtime
 }
 
-func New(*runtime_entity.Runtime) IConnectorPvc {
+func New(runtime *runtime_entity.Runtime) IConnectorPvc {
 	return &ConnectorPvcK8s{
-		client: newClient(),
+		client:  newClient(),
+		runtime: runtime,
 	}
 }
 
@@ -42,8 +43,8 @@ type IConnectorPvc interface {
 }
 
 func (c *ConnectorPvcK8s) ListPvcs(namespace string) ([]ResponseGetPersistentVolumeClain, error) {
-	token := os.Getenv("K8S_API_SERVER_TOKEN")
-	host := os.Getenv("K8S_API_SERVER_HOST")
+	token := c.runtime.GetMetadataApiServerToken()
+	host := c.runtime.GetMetadataApiServerHost()
 
 	req, _ := http.NewRequest("GET", "https://"+host+"/api/v1/namespaces/"+namespace+"/persistentvolumeclaims", nil)
 	req.Header.Set("Authorization", "Bearer "+token)
@@ -139,8 +140,8 @@ type ResponseCreatePersistentVolumeClain struct {
 }
 
 func (c *ConnectorPvcK8s) CreatePersistentVolumeClain(name string, namespace string, storageSize string, storageClassName string) (ResponseCreatePersistentVolumeClain, error) {
-	token := os.Getenv("K8S_API_SERVER_TOKEN")
-	host := os.Getenv("K8S_API_SERVER_HOST")
+	token := c.runtime.GetMetadataApiServerToken()
+	host := c.runtime.GetMetadataApiServerHost()
 
 	payload := PersistentVolumeClaim{}
 
@@ -280,8 +281,8 @@ type ResponseGetPersistentVolumeClain struct {
 }
 
 func (c *ConnectorPvcK8s) GetPersistentVolumeClain(name string, namespace string) (ResponseGetPersistentVolumeClain, error) {
-	token := os.Getenv("K8S_API_SERVER_TOKEN")
-	host := os.Getenv("K8S_API_SERVER_HOST")
+	token := c.runtime.GetMetadataApiServerToken()
+	host := c.runtime.GetMetadataApiServerHost()
 
 	req, _ := http.NewRequest("GET", "https://"+host+"/api/v1/namespaces/"+namespace+"/persistentvolumeclaims/"+name, nil)
 	req.Header.Set("Authorization", "Bearer "+token)
@@ -306,8 +307,8 @@ func (c *ConnectorPvcK8s) GetPersistentVolumeClain(name string, namespace string
 }
 
 func (c *ConnectorPvcK8s) DeletePersistentVolumeClaim(name string, namespace string) error {
-	token := os.Getenv("K8S_API_SERVER_TOKEN")
-	host := os.Getenv("K8S_API_SERVER_HOST")
+	token := c.runtime.GetMetadataApiServerToken()
+	host := c.runtime.GetMetadataApiServerHost()
 
 	req, _ := http.NewRequest("DELETE", "https://"+host+"/api/v1/namespaces/"+namespace+"/persistentvolumeclaims/"+name, nil)
 	req.Header.Set("Authorization", "Bearer "+token)
@@ -334,8 +335,8 @@ type ResponseCreatePvc struct {
 }
 
 func (c *ConnectorPvcK8s) CreatePvc(pvc nfs_server_entity.PersistentVolumeClaim) ResponseCreatePvc {
-	token := os.Getenv("K8S_API_SERVER_TOKEN")
-	host := os.Getenv("K8S_API_SERVER_HOST")
+	token := c.runtime.GetMetadataApiServerToken()
+	host := c.runtime.GetMetadataApiServerHost()
 
 	body, err := json.Marshal(&pvc)
 	if err != nil {

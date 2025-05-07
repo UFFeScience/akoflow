@@ -7,14 +7,14 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 
 	"github.com/ovvesley/akoflow/pkg/server/entities/nfs_server_entity"
 	"github.com/ovvesley/akoflow/pkg/server/entities/runtime_entity"
 )
 
 type ConnectorStorageClass struct {
-	client *http.Client
+	client  *http.Client
+	runtime *runtime_entity.Runtime
 }
 
 type IConnectorStorageClass interface {
@@ -24,9 +24,10 @@ type IConnectorStorageClass interface {
 	DeleteStorageClass(name string) ResultDeleteStorageClass
 }
 
-func New(*runtime_entity.Runtime) IConnectorStorageClass {
+func New(runtime *runtime_entity.Runtime) IConnectorStorageClass {
 	return &ConnectorStorageClass{
-		client: newClient(),
+		client:  newClient(),
+		runtime: runtime,
 	}
 }
 
@@ -64,8 +65,8 @@ type ResultDeleteStorageClass struct {
 }
 
 func (c *ConnectorStorageClass) CreateStorageClass(storageClass nfs_server_entity.StorageClass) ResultCreateStorageClass {
-	token := os.Getenv("K8S_API_SERVER_TOKEN")
-	host := os.Getenv("K8S_API_SERVER_HOST")
+	token := c.runtime.GetMetadataApiServerToken()
+	host := c.runtime.GetMetadataApiServerHost()
 
 	body, err := json.Marshal(&storageClass)
 	if err != nil {
@@ -126,8 +127,8 @@ func (c *ConnectorStorageClass) CreateStorageClass(storageClass nfs_server_entit
 }
 
 func (c *ConnectorStorageClass) ListStorageClass() ResultListStorageClass {
-	token := os.Getenv("K8S_API_SERVER_TOKEN")
-	host := os.Getenv("K8S_API_SERVER_HOST")
+	token := c.runtime.GetMetadataApiServerToken()
+	host := c.runtime.GetMetadataApiServerHost()
 
 	req, err := http.NewRequest("GET", "https://"+host+"/apis/storage.k8s.io/v1/storageclasses", nil)
 	if err != nil {
@@ -179,8 +180,8 @@ func (c *ConnectorStorageClass) ListStorageClass() ResultListStorageClass {
 }
 
 func (c *ConnectorStorageClass) UpdateStorageClass(storageClass nfs_server_entity.StorageClass) ResultUpdateStorageClass {
-	token := os.Getenv("K8S_API_SERVER_TOKEN")
-	host := os.Getenv("K8S_API_SERVER_HOST")
+	token := c.runtime.GetMetadataApiServerToken()
+	host := c.runtime.GetMetadataApiServerHost()
 
 	body, err := json.Marshal(&storageClass)
 	if err != nil {
@@ -241,8 +242,8 @@ func (c *ConnectorStorageClass) UpdateStorageClass(storageClass nfs_server_entit
 }
 
 func (c *ConnectorStorageClass) DeleteStorageClass(name string) ResultDeleteStorageClass {
-	token := os.Getenv("K8S_API_SERVER_TOKEN")
-	host := os.Getenv("K8S_API_SERVER_HOST")
+	token := c.runtime.GetMetadataApiServerToken()
+	host := c.runtime.GetMetadataApiServerHost()
 
 	req, err := http.NewRequest("DELETE", "https://"+host+"/apis/storage.k8s.io/v1/storageclasses/"+name, nil)
 	if err != nil {

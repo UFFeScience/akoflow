@@ -7,14 +7,14 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 
 	"github.com/ovvesley/akoflow/pkg/server/entities/nfs_server_entity"
 	"github.com/ovvesley/akoflow/pkg/server/entities/runtime_entity"
 )
 
 type ConnectorDeploymentK8s struct {
-	client *http.Client
+	client  *http.Client
+	runtime *runtime_entity.Runtime
 }
 
 type IConnectorDeployment interface {
@@ -25,9 +25,10 @@ type IConnectorDeployment interface {
 	GetDeployment(namespace, deploymentName string) ResultGetDeployment
 }
 
-func New(*runtime_entity.Runtime) IConnectorDeployment {
+func New(runtime *runtime_entity.Runtime) IConnectorDeployment {
 	return &ConnectorDeploymentK8s{
-		client: newClient(),
+		client:  newClient(),
+		runtime: runtime,
 	}
 }
 
@@ -71,8 +72,8 @@ type ResultGetDeployment struct {
 }
 
 func (c *ConnectorDeploymentK8s) ListDeployments(namespace string) ResultListDeployment {
-	token := os.Getenv("K8S_API_SERVER_TOKEN")
-	host := os.Getenv("K8S_API_SERVER_HOST")
+	token := c.runtime.GetMetadataApiServerToken()
+	host := c.runtime.GetMetadataApiServerHost()
 
 	req, err := http.NewRequest("GET", "https://"+host+"/apis/apps/v1/namespaces/"+namespace+"/deployments", nil)
 	if err != nil {
@@ -124,8 +125,8 @@ func (c *ConnectorDeploymentK8s) ListDeployments(namespace string) ResultListDep
 }
 
 func (c *ConnectorDeploymentK8s) GetDeployment(namespace, deploymentName string) ResultGetDeployment {
-	token := os.Getenv("K8S_API_SERVER_TOKEN")
-	host := os.Getenv("K8S_API_SERVER_HOST")
+	token := c.runtime.GetMetadataApiServerToken()
+	host := c.runtime.GetMetadataApiServerHost()
 
 	url := fmt.Sprintf("https://%s/apis/apps/v1/namespaces/%s/deployments/%s", host, namespace, deploymentName)
 	req, err := http.NewRequest("GET", url, nil)
@@ -178,8 +179,8 @@ func (c *ConnectorDeploymentK8s) GetDeployment(namespace, deploymentName string)
 }
 
 func (c *ConnectorDeploymentK8s) CreateDeployment(deployment nfs_server_entity.Deployment) ResultCreateDeployment {
-	token := os.Getenv("K8S_API_SERVER_TOKEN")
-	host := os.Getenv("K8S_API_SERVER_HOST")
+	token := c.runtime.GetMetadataApiServerToken()
+	host := c.runtime.GetMetadataApiServerHost()
 
 	body, err := json.Marshal(&deployment)
 	if err != nil {
@@ -240,8 +241,8 @@ func (c *ConnectorDeploymentK8s) CreateDeployment(deployment nfs_server_entity.D
 }
 
 func (c *ConnectorDeploymentK8s) UpdateDeployment(deployment nfs_server_entity.Deployment) ResultUpdateDeployment {
-	token := os.Getenv("K8S_API_SERVER_TOKEN")
-	host := os.Getenv("K8S_API_SERVER_HOST")
+	token := c.runtime.GetMetadataApiServerToken()
+	host := c.runtime.GetMetadataApiServerHost()
 
 	body, err := json.Marshal(&deployment)
 	if err != nil {
@@ -302,8 +303,8 @@ func (c *ConnectorDeploymentK8s) UpdateDeployment(deployment nfs_server_entity.D
 }
 
 func (c *ConnectorDeploymentK8s) DeleteDeployment(namespace, name string) ResultDeleteDeployment {
-	token := os.Getenv("K8S_API_SERVER_TOKEN")
-	host := os.Getenv("K8S_API_SERVER_HOST")
+	token := c.runtime.GetMetadataApiServerToken()
+	host := c.runtime.GetMetadataApiServerHost()
 
 	req, err := http.NewRequest("DELETE", "https://"+host+"/apis/apps/v1/namespaces/"+namespace+"/deployments/"+name, nil)
 	if err != nil {

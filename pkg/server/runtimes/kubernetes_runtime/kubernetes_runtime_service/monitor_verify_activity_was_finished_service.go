@@ -25,10 +25,13 @@ type MonitorVerifyActivityWasFinishedService struct {
 
 func NewMonitorVerifyActivityWasFinishedService() *MonitorVerifyActivityWasFinishedService {
 	return &MonitorVerifyActivityWasFinishedService{
-		namespace:          "akoflow",
+		namespace: "akoflow",
+
 		activityRepository: config.App().Repository.ActivityRepository,
+		runtimeRepository:  config.App().Repository.RuntimeRepository,
 		logsRepository:     config.App().Repository.LogsRepository,
-		connector:          config.App().Connector.K8sConnector,
+
+		connector: config.App().Connector.K8sConnector,
 	}
 }
 

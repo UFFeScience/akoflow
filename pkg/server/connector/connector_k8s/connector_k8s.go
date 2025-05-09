@@ -7,6 +7,7 @@ import (
 	"github.com/ovvesley/akoflow/pkg/server/connector/connector_k8s/connector_cluster_role"
 	"github.com/ovvesley/akoflow/pkg/server/connector/connector_k8s/connector_cluster_role_binding"
 	"github.com/ovvesley/akoflow/pkg/server/connector/connector_k8s/connector_deployment_k8s"
+	"github.com/ovvesley/akoflow/pkg/server/connector/connector_k8s/connector_healthz"
 	"github.com/ovvesley/akoflow/pkg/server/connector/connector_k8s/connector_job_k8s"
 	"github.com/ovvesley/akoflow/pkg/server/connector/connector_k8s/connector_metrics_k8s"
 	"github.com/ovvesley/akoflow/pkg/server/connector/connector_k8s/connector_namespace_k8s"
@@ -77,6 +78,10 @@ type IConnector interface {
 	// StorageClass connects to the Kubernetes API to manage storage classes.
 	// API Endpoint: /apis/storage.k8s.io/v1/storageclasses
 	StorageClass(*runtime_entity.Runtime) connector_storage_class.IConnectorStorageClass
+
+	// HealthCheck checks the health of the Kubernetes API.
+	// API Endpoint: /healthz
+	Healthz(*runtime_entity.Runtime) connector_healthz.IConnectorHealthz
 }
 
 func NewClient() *http.Client {
@@ -144,4 +149,8 @@ func (c *Connector) ServiceAccount(r *runtime_entity.Runtime) connector_service_
 
 func (c *Connector) StorageClass(r *runtime_entity.Runtime) connector_storage_class.IConnectorStorageClass {
 	return connector_storage_class.New(r)
+}
+
+func (c *Connector) Healthz(r *runtime_entity.Runtime) connector_healthz.IConnectorHealthz {
+	return connector_healthz.New(r)
 }

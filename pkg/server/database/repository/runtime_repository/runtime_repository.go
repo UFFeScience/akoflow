@@ -12,11 +12,16 @@ type RuntimeRepository struct {
 	tableName string
 }
 
+const STATUS_READY = 1
+const STATUS_NOT_READY = 0
+
 type IRuntimeRepository interface {
 	CreateOrUpdate(name string, status int, metadata map[string]string)
 
 	GetAll() ([]runtime_entity.Runtime, error)
 	GetByName(name string) (*runtime_entity.Runtime, error)
+
+	UpdateStatus(runtime *runtime_entity.Runtime, status int) error
 }
 
 func New() IRuntimeRepository {
@@ -161,4 +166,22 @@ func (r *RuntimeRepository) GetByName(name string) (*runtime_entity.Runtime, err
 	}
 	runtimeEntity := runtime_entity.NewRuntime(runtime.Name, runtime.Status, metadata, runtime.CreatedAt, runtime.UpdatedAt)
 	return runtimeEntity, nil
+}
+
+func (r *RuntimeRepository) UpdateStatus(runtime *runtime_entity.Runtime, status int) error {
+	database := repository.Database{}
+	c := database.Connect()
+
+	if c == nil {
+		return nil
+	}
+
+	defer c.Close()
+
+	_, err := c.Exec("UPDATE "+r.tableName+" SET status = ?, updated_at = datetime('now') WHERE name = ?", status, runtime.GetName())
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

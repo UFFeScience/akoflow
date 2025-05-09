@@ -51,3 +51,7 @@ func (k *KubernetesRuntimeService) VerifyActivitiesWasFinished(workflow workflow
 func (k *KubernetesRuntimeService) GetLogs(wf workflow_entity.Workflow, wfa workflow_activity_entity.WorkflowActivities) {
 	NewMonitorGetLogsActivityService().GetLogs(wf, wfa)
 }
+
+func (k *KubernetesRuntimeService) HealthCheck(runtime string) bool {
+	return NewHealthCheckRuntimeK8sService().HealthCheck(runtime)
+}

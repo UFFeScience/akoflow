@@ -31,6 +31,8 @@ type IRuntime interface {
 	GetStatus(workflowID int, activityID int) string
 
 	VerifyActivitiesWasFinished(workflow workflow_entity.Workflow) bool
+
+	HealthCheck() bool
 }
 
 func normalizeRuntime(runtime string) string {
@@ -44,18 +46,18 @@ func normalizeRuntime(runtime string) string {
 
 }
 
-func GetRuntimeInstance(runtime string) IRuntime {
+func GetRuntimeInstance(runtimeName string) IRuntime {
 
-	runtime = normalizeRuntime(runtime)
+	runtime := normalizeRuntime(runtimeName)
 
 	modeMap := map[string]IRuntime{
 		RUNTIME_DOCKER:              docker_runtime.NewDockerRuntime(),
-		RUNTIME_K8S:                 kubernetes_runtime.NewKubernetesRuntime(),
+		RUNTIME_K8S:                 kubernetes_runtime.NewKubernetesRuntime().SetRuntimeName(runtimeName),
 		RUNTIME_SINGULARITY:         singularity_runtime.NewSingularityRuntime(),
 		RUNTIME_SINGULARITY_SDUMONT: sdumont_runtime.NewSdumontRuntime(),
 	}
 	if modeMap[runtime] == nil {
-		config.App().Logger.Error(fmt.Sprintf("Runtime not found: %s", runtime))
+		config.App().Logger.Error(fmt.Sprintf("Runtime not found: %s", runtimeName))
 	}
 	return modeMap[runtime]
 }

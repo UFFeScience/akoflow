@@ -1,40 +1,61 @@
 {{ define "sidebar" }}
-<aside class="w-64 bg-gray-100 dark:bg-gray-700 fixed h-full">
-    <div class="p-4">
-        <div class="text-2xl font-bold mb-8 dark:text-white text-black">AkôFlow Admin</div>
+<aside class="w-64 bg-white dark:bg-gray-800 fixed h-full shadow-md border-r border-gray-200 dark:border-gray-700 flex flex-col justify-between">
+    <div class="p-6">
+        <div class="flex flex-col items-center text-center mb-10">
+            <img src="https://akoflow.com/wp-content/uploads/2024/12/icon_akoflow.png" alt="AkôFlow Logo" class="h-10 w-10 mb-3">
+            <div class="text-2xl font-bold text-gray-900 dark:text-white tracking-tight">AkôFlow Admin</div>
+        </div>
+
         <nav class="space-y-4">
-            <a href="/akoflow-admin" class="flex items-center text-gray-700 dark:text-gray-400 hover:text-black dark:hover:text-white">
-                <span class="mr-4">📁</span>
-                Workflows
+            <a href="/akoflow-admin" class="flex items-center text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors">
+                <span class="text-xl mr-3">📁</span>
+                <span class="text-base">Workflows</span>
             </a>
-           
-            <a href="/akoflow-admin/settings" class="flex items-center text-gray-700 dark:text-gray-400 hover:text-black dark:hover:text-white">
-                <span class="mr-4">⚙️</span>
-                Settings
+            
+            <a href="/akoflow-admin/settings" class="flex items-center text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors">
+                <span class="text-xl mr-3">⚙️</span>
+                <span class="text-base">Settings</span>
+            </a>
+            <a href="/akoflow-admin/documentations" class="flex items-center text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors">
+                <span class="text-xl mr-3">📚</span>
+                <span class="text-base">Documentations</span>
+            </a>
+
+            <a href="/akoflow-admin/runtimes" class="flex items-center text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors">
+                <span class="text-xl mr-3">⏱️</span>
+                <span class="text-base">Runtimes</span>
             </a>
         </nav>
     </div>
 
-    <!-- Botão de Alternância de Tema -->
-    <div class="absolute bottom-4 left-4 cursor-pointer" onclick="toggleTheme()">
-        <svg id="theme-icon" xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-gray-700 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path id="theme-icon-path" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m8.485-10.485h-1m-14.97 0h-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
+    <!-- Tema -->
+    <div class="p-6">
+        <button onclick="toggleTheme()" class="flex items-center space-x-2 text-gray-500 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors">
+            <svg id="theme-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path id="theme-icon-path" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M12 3v1m0 16v1m8.485-10.485h-1m-14.97 0h-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span class="text-sm">Alternar tema</span>
+        </button>
     </div>
 </aside>
-
 
 <script>
     function toggleTheme() {
         const body = document.body;
-        if (body.classList.contains('dark')) {
-            body.classList.remove('dark');
-            body.classList.add('light');
+        const html = document.documentElement;
+        const iconPath = document.getElementById("theme-icon-path");
+
+        const isDark = body.classList.contains("dark");
+        body.classList.toggle("dark", !isDark);
+        html.classList.toggle("dark", !isDark);
+
+        // Atualiza o ícone
+        if (!isDark) {
+            iconPath.setAttribute("d", "M21 12.79A9 9 0 1111.21 3a7 7 0 109.79 9.79z"); // Lua
         } else {
-            body.classList.remove('light');
-            body.classList.add('dark');
+            iconPath.setAttribute("d", "M12 3v1m0 16v1m8.485-10.485h-1m-14.97 0h-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"); // Sol
         }
     }
-
 </script>
 {{ end }}

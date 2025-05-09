@@ -1,74 +1,266 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class=""> <!-- Add 'dark' class here if you want to default to dark mode via JS/OS preference -->
 
 {{ template "head" }}
 
-<body class="bg-gray-100 text-black dark:bg-gray-900 dark:text-white">
+<body class="bg-slate-100 text-slate-800 dark:bg-slate-900 dark:text-slate-100 antialiased">
 
     <div class="flex min-h-screen">
 
         {{ template "sidebar" }}
 
         <!-- Main Content -->
-        <div class="flex-1 p-8 bg-white dark:bg-gray-800 ml-64">
+        <div class="flex-1 p-6 md:p-8 bg-slate-50 dark:bg-slate-800 ml-0 md:ml-64">
 
             {{ template "header" dict "title" "Home" }}
 
-            <!-- Workflows List -->
-            <div class="space-y-4" id="workflows-list">
+            <!-- Stats Overview Section -->
+            <div class="mb-8">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Card: Workflows em Execução -->
+                    <div class="bg-white dark:bg-slate-700 p-6 rounded-xl shadow-lg">
+                        <div class="flex items-center space-x-4">
+                            <div class="flex-shrink-0 w-12 h-12 bg-sky-100 dark:bg-sky-800/50 rounded-full flex items-center justify-center">
+                                <svg class="w-6 h-6 text-sky-600 dark:text-sky-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="text-3xl font-bold text-slate-800 dark:text-slate-100" id="stat-executing-count">0</p>
+                                <p class="text-sm text-slate-500 dark:text-slate-400">Workflows Running</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card: Workflows Concluídos -->
+                    <div class="bg-white dark:bg-slate-700 p-6 rounded-xl shadow-lg">
+                        <div class="flex items-center space-x-4">
+                            <div class="flex-shrink-0 w-12 h-12 bg-emerald-100 dark:bg-emerald-800/50 rounded-full flex items-center justify-center">
+                                 <svg class="w-6 h-6 text-emerald-600 dark:text-emerald-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="text-3xl font-bold text-slate-800 dark:text-slate-100" id="stat-completed-count">0</p>
+                                <p class="text-sm text-slate-500 dark:text-slate-400">Workflows Completed</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card: Total de Atividades -->
+                    <div class="bg-white dark:bg-slate-700 p-6 rounded-xl shadow-lg">
+                        <div class="flex items-center space-x-4">
+                            <div class="flex-shrink-0 w-12 h-12 bg-amber-100 dark:bg-amber-800/50 rounded-full flex items-center justify-center">
+                                <svg class="w-6 h-6 text-amber-600 dark:text-amber-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="text-3xl font-bold text-slate-800 dark:text-slate-100" id="stat-total-activities">0</p>
+                                <p class="text-sm text-slate-500 dark:text-slate-400">Total Activities</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
+            
+            <hr class="dark:border-slate-700 my-8">
+
+
+            <!-- Workflows List Section -->
+            <div>
+                <h2 class="text-2xl font-semibold text-slate-800 dark:text-slate-100 mb-6">My Workflows</h2>
+                <p class="text-sm text-slate-500 dark:text-slate-400 mb-4">
+                    Here you can view and manage your workflows. Click on "More Info" for detailed information about each workflow.
+                    
+                </p>
+                
+                <!-- Container for workflows or "no workflows" message -->
+                <div id="workflows-container">
+                    <!-- "No workflows" message (initially hidden) -->
+                    <div id="no-workflows-message" class="hidden text-center py-12 bg-white dark:bg-slate-700 rounded-xl shadow">
+                        <svg class="mx-auto h-12 w-12 text-slate-400 dark:text-slate-500" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                        </svg>
+                        <h3 class="mt-2 text-lg font-semibold text-slate-700 dark:text-slate-200">Nenhum workflow encontrado</h3>
+                        <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">
+                            Quando workflows forem criados, eles aparecerão aqui.
+                        </p>
+                        <!-- Optional: Add a "Create Workflow" button here -->
+                        <!-- 
+                        <div class="mt-6">
+                          <button type="button" class="inline-flex items-center rounded-md bg-sky-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-sky-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600">
+                            <svg class="-ml-0.5 mr-1.5 h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                              <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
+                            </svg>
+                            Criar Workflow
+                          </button>
+                        </div>
+                        -->
+                    </div>
+
+                    <!-- Actual list of workflows (populated by JS) -->
+                    <div class="space-y-5" id="workflows-list">
+                        <!-- Itens inseridos via JS -->
+                        <p class="text-center text-slate-500 dark:text-slate-400 py-8">Carregando workflows...</p>
+                    </div>
+                </div>
+            </div>
+        </div> <!-- /Main Content -->
     </div>
 
 </body>
 
 <script>
+    
+
+   
 
     async function getWorkflows() {
-        const response = await fetch(BASE_URL_API + "workflows");
-        const data = await response.json();
-        return data;
+        try {
+            const response = await fetch(BASE_URL_API + "workflows");
+            if (!response.ok) {
+                console.error("Failed to fetch workflows:", response.status, await response.text());
+                return { data: [] }; // Return empty data on error to prevent script breakage
+            }
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error("Error fetching workflows:", error);
+            return { data: [] }; // Return empty data on network error
+        }
     }
 
     function makeWorkflowListHtml(workflows) {
+        if (!workflows || workflows.length === 0) {
+            return "";
+        }
+
         let workflowList = workflows.map((workflow) => {
-            let status = WORKFLOW_STATUS[workflow.status];
+            // Ensure workflow.status exists and WORKFLOW_STATUS has an entry for it
+            const statusKey = workflow.status || 'unknown'; // default to 'unknown' if status is missing
+            let status = WORKFLOW_STATUS[statusKey] || { 
+                text: statusKey.charAt(0).toUpperCase() + statusKey.slice(1), // Capitalize if unknown
+                icon: '❓', 
+                color: 'text-slate-500 dark:text-slate-400',
+                badgeClasses: 'bg-slate-100 text-slate-700 dark:bg-slate-600 dark:text-slate-200'
+            };
+            
+            let namespace = workflow.spec?.namespace === "" || !workflow.spec?.namespace ? "akoflow" : workflow.spec.namespace;
+            const activityCount = workflow.spec?.activities?.length || 0;
 
-            let namespace = workflow.spec.namespace === "" ? "akoflow" : workflow.spec.namespace;
-
-            console.log(workflow)
             return `
-                <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg flex justify-between items-center" id="${workflow.id}">
-                    <div>
-                        <h2 class="text-lg font-semibold text-black dark:text-white">${namespace} / ${workflow.name}</h2>
-                        <p class="text-gray-700 dark:text-gray-500">${status.text}  • ${status.text}  Total Activities: ${workflow.spec.activities.length}</p>
-                    </div>
-                    <div class="flex items
-                    -center space-x-4">
-                        <span class="${status.color}">${status.icon}</span>
-                        <span class="text-gray-700 dark:text-gray-500">${status.text}</span>
-                        <a href="/akoflow-admin/workflows/${namespace}/${workflow.id}" class="bg-gray-300 dark:bg-gray-700 p-2 rounded text-black dark:text-white">More</a>
+                <div class="bg-white dark:bg-slate-700/80 border border-slate-200 dark:border-slate-700 p-5 rounded-xl shadow-sm transition-all hover:shadow-lg hover:border-slate-300 dark:hover:border-slate-600" id="${workflow.id}">
+                    <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+                        <div class="flex-grow min-w-0">
+                            <h2 class="text-lg font-semibold text-sky-700 dark:text-sky-400 truncate" title="${namespace} / ${workflow.name}">
+                                ${namespace} / ${workflow.name}
+                            </h2>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                                ID: ${workflow.id} • Total Activity: ${activityCount}
+                            </p>
+                        </div>
+                        <div class="flex items-center space-x-3 flex-shrink-0">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${status.badgeClasses}">
+                                <span class="mr-1.5 ${status.color}">${status.icon}</span>
+                                ${status.text}
+                            </span>
+                            <a href="/akoflow-admin/workflows/${namespace}/${workflow.id}" 
+                               class="bg-sky-600 hover:bg-sky-700 text-white px-4 py-2 text-xs sm:text-sm font-semibold rounded-lg transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-opacity-50 whitespace-nowrap">
+                                More Info
+                            </a>
+                        </div>
                     </div>
                 </div>
             `;
         });
 
         return workflowList.join("");
-
     }
-
 
     async function loadingPage() {
-        let workflows = await getWorkflows();
-        console.log(workflows);
+        const workflowsListEl = document.getElementById("workflows-list");
+        const noWorkflowsMessageEl = document.getElementById("no-workflows-message");
 
-        workflowListHtml = makeWorkflowListHtml(workflows.data);
-        document.getElementById("workflows-list").innerHTML = workflowListHtml;
+        // Initial loading message for the list
+        workflowsListEl.innerHTML = '<p class="text-center text-slate-500 dark:text-slate-400 py-8">Carregando workflows...</p>';
+        if (noWorkflowsMessageEl) noWorkflowsMessageEl.classList.add('hidden');
 
+        const statExecutingCountEl = document.getElementById("stat-executing-count");
+        const statCompletedCountEl = document.getElementById("stat-completed-count");
+        const statTotalActivitiesEl = document.getElementById("stat-total-activities");
+
+        // Initialize stats on UI
+        if (statExecutingCountEl) statExecutingCountEl.textContent = "0";
+        if (statCompletedCountEl) statCompletedCountEl.textContent = "0";
+        if (statTotalActivitiesEl) statTotalActivitiesEl.textContent = "0";
+
+        const response = await getWorkflows();
+        const workflowsData = response.data;
+
+        if (!workflowsData || workflowsData.length === 0) {
+            workflowsListEl.innerHTML = ""; // Clear loading message
+            if (noWorkflowsMessageEl) noWorkflowsMessageEl.classList.remove('hidden');
+            // Stats remain 0, which is correct.
+            return;
+        }
+
+        // If workflows exist, ensure "no workflows" message is hidden and list is visible
+        if (noWorkflowsMessageEl) noWorkflowsMessageEl.classList.add('hidden');
+        workflowsListEl.classList.remove('hidden'); // In case it was hidden
+
+        let executingCount = 0;
+        let completedCount = 0;
+        let totalActivities = 0;
+
+        // Define which status texts map to categories (ADJUST THESE TO MATCH YOUR `WORKFLOW_STATUS` object's text values)
+        const executingStatusTexts = ["Running", ]; // Example texts from WORKFLOW_STATUS
+        const completedStatusTexts = ["success", "Completed"]; // Example texts
+
+        workflowsData.forEach(workflow => {
+            totalActivities += workflow.spec?.activities?.length || 0;
+            
+            const statusKey = workflow.status || 'unknown';
+            let statusObj = WORKFLOW_STATUS[statusKey] || {};
+            let statusText = statusObj.text;
+
+            if (statusText) {
+                if (executingStatusTexts.includes(statusText)) {
+                    executingCount++;
+                } else if (completedStatusTexts.includes(statusText)) {
+                    completedCount++;
+                }
+            }
+        });
+
+        console.log("Total Workflows:", workflowsData.length);
+        console.log("Executing Workflows:", executingCount);
+        console.log("Completed Workflows:", completedCount);
+        console.log("Total Activities:", totalActivities);
+
+
+        if (statExecutingCountEl) statExecutingCountEl.textContent = executingCount.toString();
+        if (statCompletedCountEl) statCompletedCountEl.textContent = completedCount.toString();
+        if (statTotalActivitiesEl) statTotalActivitiesEl.textContent = totalActivities.toString();
+
+        const workflowListHtml = makeWorkflowListHtml(workflowsData);
+        workflowsListEl.innerHTML = workflowListHtml;
     }
 
-    (loadingPage());
-
+ 
+    document.addEventListener('DOMContentLoaded', () => {
+        if (typeof BASE_URL_API !== 'undefined' && typeof WORKFLOW_STATUS !== 'undefined') {
+            loadingPage();
+        } else {
+            console.error("BASE_URL_API or WORKFLOW_STATUS is not defined. Page will not load correctly.");
+            const workflowsListEl = document.getElementById("workflows-list");
+            if (workflowsListEl) {
+                 workflowsListEl.innerHTML = '<p class="text-center text-red-500 dark:text-red-400 py-8">Erro de configuração: Não foi possível carregar os workflows.</p>';
+            }
+            const noWorkflowsMessageEl = document.getElementById("no-workflows-message");
+            if (noWorkflowsMessageEl) noWorkflowsMessageEl.classList.remove('hidden');
+        }
+    });
 </script>
 
 </html>

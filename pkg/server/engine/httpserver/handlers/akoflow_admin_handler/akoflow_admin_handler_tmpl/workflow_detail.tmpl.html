@@ -184,7 +184,7 @@
         document.getElementById("execution-time").innerText = formatExecutionTime(workflow.spec.executionTime) || "N/A";
         document.getElementById("start-date").innerText = workflow.spec.startExecution ? new Date(workflow.spec.startExecution).toLocaleString() : "N/A";
         document.getElementById("end-date").innerText = workflow.spec.endExecution ? new Date(workflow.spec.endExecution).toLocaleString() : "N/A";
-        document.getElementById("longest-activity").innerText = workflow.spec.longestActivity?.name ? `${workflow.spec.longestActivity.name} (${workflow.spec.longestActivity.executionTime || "0"} ms)` : "N/A";
+        document.getElementById("longest-activity").innerText = workflow.spec.longestActivity?.name ? `${workflow.spec.longestActivity.name} (${workflow.spec.longestActivity.executionTime || "0"} s)` : "N/A";
         document.getElementById("disk-usage").innerText = `${workflow.spec.diskUsage || "0"} MiB`;
         document.getElementById("mount-path").innerText = workflow.spec.mountPath || "N/A";
     }
@@ -344,7 +344,7 @@
             nodes.push({
                 id: activity.name,
                 label: '', // Label is part of the SVG, so an empty string here
-                title: `Activity: ${activity.name}\nStatus: ${WORKFLOW_ACTIVITY_STATUS[activity.status]?.text || 'Unknown'}\nDuration: ${activity.executionTime || 0}ms`, // Tooltip
+                title: `Activity: ${activity.name}\nStatus: ${WORKFLOW_ACTIVITY_STATUS[activity.status]?.text || 'Unknown'}\nDuration: ${activity.executionTime || 0}s`, // Tooltip
                 image: makeComponent(activity.name, activity.executionTime, WORKFLOW_ACTIVITY_STATUS[activity.status], isDarkMode),
                 shape: "image"
             });
@@ -379,7 +379,7 @@
 
         const totalItems = data.datasets.length;
         const isDarkMode = document.documentElement.classList.contains('dark');
-        const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+        const gridColor = isDarkMode ? 'rgba(255, 255, 255, 1)' : 'rgba(0, 0, 0, 1)';
         const textColor = isDarkMode ? '#cbd5e1' : '#475569'; // slate-300 / slate-600
         const titleColor = isDarkMode ? '#f1f5f9' : '#1e293b'; // slate-100 / slate-800
 
@@ -533,7 +533,7 @@
                     end: relativeFinishSec
                 }],
                 backgroundColor: WORKFLOW_ACTIVITY_STATUS[activity.status]?.colorHex || colorArray[index],
-                borderColor: WORKFLOW_ACTIVITY_STATUS[activity.status]?.colorHex ? chroma(WORKFLOW_ACTIVITY_STATUS[activity.status].colorHex).darken().hex() : chroma(colorArray[index]).darken().hex(),
+                borderColor: WORKFLOW_ACTIVITY_STATUS[activity.status]?.colorHex || colorArray[index],
             };
         }).filter(dataset => dataset !== null); // Remove nulls
 
@@ -549,6 +549,7 @@
         };
     }
 
+    
 
     function generateRandomColors(numColors) {
         const colors = [];
@@ -559,12 +560,7 @@
         ];
         for (let i = 0; i < numColors; i++) {
             let color = baseColors[i % baseColors.length];
-            // If more colors are needed than in palette, start slightly desaturating/lightening for variety
-            if (i >= baseColors.length) {
-                try { // Requires chroma.js
-                    color = chroma(color).desaturate((i - baseColors.length) * 0.1).brighten((i - baseColors.length) * 0.05).hex();
-                } catch (e) { /* chroma not available, stick to base */ }
-            }
+            
             colors.push(color);
         }
         return colors;
@@ -589,7 +585,7 @@
                 <circle cx="20" cy="30" r="6" fill="${statusColor}" />
                 <text x="35" y="27" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="600" fill="${textColorPrimary}">${displayName}</text>
                 <text x="35" y="45" font-family="Inter, system-ui, sans-serif" font-size="11" fill="${textColorSecondary}">${status?.text || 'Unknown'}</text>
-                <text x="245" y="35" font-family="Inter, system-ui, sans-serif" text-anchor="end" font-size="12" font-weight="500" fill="${textColorPrimary}">${safeDuration}ms</text>
+                <text x="245" y="35" font-family="Inter, system-ui, sans-serif" text-anchor="end" font-size="12" font-weight="500" fill="${textColorPrimary}">${safeDuration}s</text>
             </svg>`)}`;
     }
 
@@ -611,7 +607,7 @@
                         </div>
                     </div>
                     <div class="flex items-center space-x-3 text-xs sm:text-sm ml-2 flex-shrink-0">
-                        <p class="text-slate-500 dark:text-slate-400 hidden sm:block">${activity.executionTime ? activity.executionTime + 'ms' : 'No duration'}</p>
+                        <p class="text-slate-500 dark:text-slate-400 hidden sm:block">${activity.executionTime ? activity.executionTime + 's' : 'No duration'}</p>
                         <span class="px-2.5 py-1 rounded-full font-medium ${statusInfo.colorClasses || 'bg-slate-100 text-slate-600 dark:bg-slate-600 dark:text-slate-300'}">
                             ${statusInfo.text || 'N/A'}
                         </span>
@@ -639,7 +635,7 @@
                             </div>
                             <div>
                                 <p class="font-medium text-slate-500 dark:text-slate-400">Duration:</p>
-                                <p class="text-slate-700 dark:text-slate-300">${activity.executionTime || '0'} ms</p>
+                                <p class="text-slate-700 dark:text-slate-300">${activity.executionTime || '0'} m</p>
                             </div>
                              <div> <!-- Placeholder for status if not shown above --> </div>
                         </div>

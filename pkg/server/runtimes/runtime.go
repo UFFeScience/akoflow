@@ -2,6 +2,7 @@ package runtimes
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/ovvesley/akoflow/pkg/server/config"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
@@ -30,18 +31,33 @@ type IRuntime interface {
 	GetStatus(workflowID int, activityID int) string
 
 	VerifyActivitiesWasFinished(workflow workflow_entity.Workflow) bool
+
+	HealthCheck() bool
 }
 
-func GetRuntimeInstance(runtime string) IRuntime {
+func normalizeRuntime(runtime string) string {
+	// if runtime start with k8s or k8s://, set it to k8s
+
+	if strings.HasPrefix(runtime, "k8s") {
+		return RUNTIME_K8S
+	}
+
+	return runtime
+
+}
+
+func GetRuntimeInstance(runtimeName string) IRuntime {
+
+	runtime := normalizeRuntime(runtimeName)
 
 	modeMap := map[string]IRuntime{
 		RUNTIME_DOCKER:              docker_runtime.NewDockerRuntime(),
-		RUNTIME_K8S:                 kubernetes_runtime.NewKubernetesRuntime(),
+		RUNTIME_K8S:                 kubernetes_runtime.NewKubernetesRuntime().SetRuntimeName(runtimeName),
 		RUNTIME_SINGULARITY:         singularity_runtime.NewSingularityRuntime(),
 		RUNTIME_SINGULARITY_SDUMONT: sdumont_runtime.NewSdumontRuntime(),
 	}
 	if modeMap[runtime] == nil {
-		config.App().Logger.Error(fmt.Sprintf("Runtime not found: %s", runtime))
+		config.App().Logger.Error(fmt.Sprintf("Runtime not found: %s", runtimeName))
 	}
 	return modeMap[runtime]
 }

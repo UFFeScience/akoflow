@@ -6,6 +6,7 @@ import (
 	"github.com/ovvesley/akoflow/pkg/server/config"
 	"github.com/ovvesley/akoflow/pkg/server/connector/connector_k8s"
 	"github.com/ovvesley/akoflow/pkg/server/database/repository/activity_repository"
+	"github.com/ovvesley/akoflow/pkg/server/database/repository/runtime_repository"
 	"github.com/ovvesley/akoflow/pkg/server/database/repository/workflow_repository"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
@@ -14,6 +15,7 @@ import (
 type ApplyJobDistributedService struct {
 	activityRepository activity_repository.IActivityRepository
 	workflowRepository workflow_repository.IWorkflowRepository
+	runtimeRepository  runtime_repository.IRuntimeRepository
 
 	makeK8sJobService MakeK8sJobService
 	connector         connector_k8s.IConnector
@@ -25,6 +27,8 @@ func newApplyJobDistributedService() ApplyJobDistributedService {
 	return ApplyJobDistributedService{
 		activityRepository: config.App().Repository.ActivityRepository,
 		workflowRepository: config.App().Repository.WorkflowRepository,
+
+		runtimeRepository: config.App().Repository.RuntimeRepository,
 
 		makeK8sJobService: NewMakeK8sJobService(),
 		connector:         config.App().Connector.K8sConnector,
@@ -72,13 +76,17 @@ func (a *ApplyJobDistributedService) runK8sJob(wf workflow_entity.Workflow, wfa 
 		SetIdWorkflowActivity(wfa.Id).
 		MakeK8sJob()
 
+	runtime, err := a.runtimeRepository.GetByName(wfa.GetRuntimeId())
 	if err != nil {
 		return "", err
 	}
 
-	a.connector.Job().ApplyJob(a.namespace, job)
+	a.connector.Job(runtime).
+		ApplyJob(a.namespace, job)
 
-	podCreated, _ := a.connector.Pod().GetPodByJob(a.namespace, job.Metadata.Name)
+	podCreated, _ := a.connector.Pod(runtime).
+		GetPodByJob(a.namespace, job.Metadata.Name)
+
 	namePod, err := podCreated.GetPodName()
 
 	if err != nil {

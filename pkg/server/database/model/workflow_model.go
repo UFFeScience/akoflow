@@ -5,7 +5,7 @@ import (
 )
 
 type Workflow struct {
-	ID          int    `db:"id" sql:"PRIMARY KEY AUTOINCREMENT"`
+	ID          int    `db:"id" sql:"INTEGER PRIMARY KEY AUTOINCREMENT"`
 	Namespace   string `db:"namespace"`
 	Name        string `db:"name"`
 	RawWorkflow string `db:"raw_workflow"`
@@ -26,4 +26,12 @@ func (w Workflow) GetColumns() []string {
 
 func (w Workflow) GetPrimaryKey() string {
 	return database.GenericGetPrimaryKey(w)
+}
+
+func (w Workflow) GetClausulePrimaryKey() string {
+	return database.GenericGetClausulePrimaryKey(w)
+}
+
+func (w Workflow) GetColumnType(column string) string {
+	return database.GenericGetColumnType(w, column)
 }

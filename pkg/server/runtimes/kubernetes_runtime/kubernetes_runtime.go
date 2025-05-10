@@ -11,6 +11,8 @@ type KubernetesRuntime struct {
 	namespace string
 
 	kubernetesRuntimeService *kubernetes_runtime_service.KubernetesRuntimeService
+
+	runtimeName string
 }
 
 func New() *KubernetesRuntime {
@@ -18,6 +20,15 @@ func New() *KubernetesRuntime {
 		namespace:                config.App().DefaultNamespace,
 		kubernetesRuntimeService: kubernetes_runtime_service.New(),
 	}
+}
+
+func (k *KubernetesRuntime) SetRuntimeName(name string) *KubernetesRuntime {
+	k.runtimeName = name
+	return k
+}
+
+func (k *KubernetesRuntime) GetRuntimeName() string {
+	return k.runtimeName
 }
 
 func (k *KubernetesRuntime) StartConnection() error {
@@ -53,6 +64,10 @@ func (k *KubernetesRuntime) GetStatus(workflowID int, activityID int) string {
 func (k *KubernetesRuntime) VerifyActivitiesWasFinished(workflow workflow_entity.Workflow) bool {
 	k.kubernetesRuntimeService.VerifyActivitiesWasFinished(workflow)
 	return true
+}
+
+func (k *KubernetesRuntime) HealthCheck() bool {
+	return k.kubernetesRuntimeService.HealthCheck(k.runtimeName)
 }
 
 func NewKubernetesRuntime() *KubernetesRuntime {

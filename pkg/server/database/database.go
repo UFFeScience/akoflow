@@ -36,3 +36,37 @@ func GenericGetPrimaryKey(obj any) string {
 	}
 	return ""
 }
+
+// GenericGetClausulePrimaryKey retorna a cláusula da chave primária baseada no tag `sql`.
+func GenericGetClausulePrimaryKey(obj any) string {
+	typ := reflect.TypeOf(obj)
+	if typ.Kind() == reflect.Ptr {
+		typ = typ.Elem()
+	}
+
+	for i := 0; i < typ.NumField(); i++ {
+		field := typ.Field(i)
+		if sqlTag, ok := field.Tag.Lookup("sql"); ok && (sqlTag == "PRIMARY KEY" || sqlTag == "PRIMARY KEY AUTOINCREMENT") {
+			return sqlTag
+		}
+	}
+	return ""
+}
+
+// GenericGetColumnType retorna o tipo da coluna baseado no tag `sql`.
+func GenericGetColumnType(obj any, column string) string {
+	typ := reflect.TypeOf(obj)
+	if typ.Kind() == reflect.Ptr {
+		typ = typ.Elem()
+	}
+
+	for i := 0; i < typ.NumField(); i++ {
+		field := typ.Field(i)
+		if dbTag, ok := field.Tag.Lookup("db"); ok && dbTag == column {
+			if sqlTag, ok := field.Tag.Lookup("sql"); ok {
+				return sqlTag
+			}
+		}
+	}
+	return "TEXT" // Default type if not found
+}

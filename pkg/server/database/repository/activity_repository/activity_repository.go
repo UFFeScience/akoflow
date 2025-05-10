@@ -4,6 +4,7 @@ import (
 	"github.com/ovvesley/akoflow/pkg/server/database/model"
 	"github.com/ovvesley/akoflow/pkg/server/database/repository"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
+	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
 )
 
 type ActivityRepository struct {
@@ -64,7 +65,7 @@ func New() IActivityRepository {
 }
 
 type IActivityRepository interface {
-	Create(namespace string, workflowId int, image string, activities []workflow_activity_entity.WorkflowActivities) error
+	Create(namespace string, workflow workflow_entity.Workflow, activities []workflow_activity_entity.WorkflowActivities) error
 	GetActivitiesByWorkflowIds(ids []int) (ResultGetActivitiesByWorkflowIds, error)
 	UpdateStatus(id int, status int) error
 	UpdateProcID(id int, pid string) error

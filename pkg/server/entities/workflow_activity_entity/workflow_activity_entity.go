@@ -16,6 +16,7 @@ type WorkflowActivities struct {
 	Name         string   `yaml:"name"`
 	Run          string   `yaml:"run"`
 	Image        string   `yaml:"image"`
+	Runtime      string   `yaml:"runtime"`
 	MemoryLimit  string   `yaml:"memoryLimit"`
 	CpuLimit     string   `yaml:"cpuLimit"`
 	DependsOn    []string `yaml:"dependsOn"`
@@ -32,6 +33,7 @@ type WorkflowActivityDatabase struct {
 	Namespace         string
 	Name              string
 	Image             string
+	Runtime           string
 	ResourceK8sBase64 string
 	Status            int
 	ProcId            *string
@@ -149,12 +151,21 @@ func DatabaseToWorkflowActivities(params ParamsDatabaseToWorkflowActivities) Wor
 		procId = *params.WorkflowActivityDatabase.ProcId
 	}
 
+	runtime := ""
+	if params.WorkflowActivityDatabase.Runtime != "" {
+		runtime = params.WorkflowActivityDatabase.Runtime
+	} else {
+		runtime = wfa.Runtime
+	}
+
 	return WorkflowActivities{
 		Id:           params.WorkflowActivityDatabase.Id,
 		Name:         params.WorkflowActivityDatabase.Name,
 		Status:       params.WorkflowActivityDatabase.Status,
 		ProcId:       procId,
 		Run:          wfa.Run,
+		Image:        params.WorkflowActivityDatabase.Image,
+		Runtime:      runtime,
 		WorkflowId:   params.WorkflowActivityDatabase.WorkflowId,
 		MemoryLimit:  wfa.MemoryLimit,
 		CpuLimit:     wfa.CpuLimit,
@@ -165,4 +176,12 @@ func DatabaseToWorkflowActivities(params ParamsDatabaseToWorkflowActivities) Wor
 		StartedAt:    startedAt,
 		FinishedAt:   finishedAt,
 	}
+}
+
+func (wfa WorkflowActivities) GetRuntimeId() string {
+	if wfa.Runtime != "" {
+		return wfa.Runtime
+	}
+
+	panic("Runtime not set")
 }

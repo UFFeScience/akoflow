@@ -166,7 +166,7 @@ func (m *MakeK8sActivityService) makeContainerActivity(workflow workflow_entity.
 
 	container := k8s_job_entity.K8sJobContainer{
 		Name:         "activity-0" + strconv.Itoa(rand.Intn(100)),
-		Image:        workflow.Spec.Image,
+		Image:        activity.Image,
 		Command:      []string{"/bin/sh", "-c", "echo " + command + "| base64 -d| sh"},
 		VolumeMounts: m.makeJobVolumeMounts(workflow, activity),
 		Resources: k8s_job_entity.K8sJobResources{

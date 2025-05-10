@@ -152,8 +152,26 @@ func (w Workflow) GetMountPath() string {
 	return w.Spec.MountPath
 }
 
-func (w Workflow) GetRuntimeId() string {
-	return w.Spec.Runtime
+func (w Workflow) GetRuntimeId() []string {
+	if w.Spec.Runtime != "" {
+		return []string{w.Spec.Runtime}
+	}
+
+	runtimes := map[string]bool{}
+	runtimes_workflows := []string{}
+
+	for _, activity := range w.Spec.Activities {
+		if activity.Runtime != "" {
+			runtimes[activity.Runtime] = true
+		}
+	}
+
+	for runtime := range runtimes {
+		runtimes_workflows = append(runtimes_workflows, runtime)
+	}
+
+	return runtimes_workflows
+
 }
 
 func (w Workflow) MakeStorageClassNameDistributed() string {

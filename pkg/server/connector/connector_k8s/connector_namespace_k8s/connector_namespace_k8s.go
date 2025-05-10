@@ -5,12 +5,14 @@ import (
 	"crypto/tls"
 	"encoding/json"
 	"net/http"
-	"os"
 	"time"
+
+	"github.com/ovvesley/akoflow/pkg/server/entities/runtime_entity"
 )
 
 type ConnectorNamespaceK8s struct {
-	client *http.Client
+	client  *http.Client
+	runtime *runtime_entity.Runtime
 }
 
 type IConnectorNamespace interface {
@@ -19,9 +21,10 @@ type IConnectorNamespace interface {
 	CreateNamespace(namespace string) (ResponseCreateNamespace, error)
 }
 
-func New() IConnectorNamespace {
+func New(runtime *runtime_entity.Runtime) IConnectorNamespace {
 	return &ConnectorNamespaceK8s{
-		client: newClient(),
+		client:  newClient(),
+		runtime: runtime,
 	}
 }
 func newClient() *http.Client {
@@ -87,8 +90,8 @@ type ResponseGetNamespace struct {
 }
 
 func (c *ConnectorNamespaceK8s) GetNamespace(namespace string) (ResponseGetNamespace, error) {
-	token := os.Getenv("K8S_API_SERVER_TOKEN")
-	host := os.Getenv("K8S_API_SERVER_HOST")
+	token := c.runtime.GetMetadataApiServerToken()
+	host := c.runtime.GetMetadataApiServerHost()
 
 	req, _ := http.NewRequest("GET", "https://"+host+"/api/v1/namespaces/"+namespace, nil)
 	req.Header.Set("Authorization", "Bearer "+token)
@@ -151,8 +154,8 @@ type ResponseCreateNamespace struct {
 }
 
 func (c *ConnectorNamespaceK8s) CreateNamespace(namespace string) (ResponseCreateNamespace, error) {
-	token := os.Getenv("K8S_API_SERVER_TOKEN")
-	host := os.Getenv("K8S_API_SERVER_HOST")
+	token := c.runtime.GetMetadataApiServerToken()
+	host := c.runtime.GetMetadataApiServerHost()
 
 	body := []byte(`{"apiVersion": "v1", "kind": "Namespace", "metadata": {"name": "` + namespace + `"}}`)
 

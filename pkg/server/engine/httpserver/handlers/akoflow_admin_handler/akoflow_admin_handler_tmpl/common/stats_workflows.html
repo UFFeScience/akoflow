@@ -1,0 +1,116 @@
+{{ define "stats_workflows"}}
+
+<div class="mb-8">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Card: Workflows em Execução -->
+        <div class="bg-white dark:bg-slate-700 p-6 rounded-xl shadow-lg">
+            <div class="flex items-center space-x-4">
+                <div
+                    class="flex-shrink-0 w-12 h-12 bg-sky-100 dark:bg-sky-800/50 rounded-full flex items-center justify-center">
+                    <svg class="w-6 h-6 text-sky-600 dark:text-sky-400" xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-3xl font-bold text-slate-800 dark:text-slate-100" id="stat-executing-count">0</p>
+                    <p class="text-sm text-slate-500 dark:text-slate-400">Workflows Running</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card: Workflows Concluídos -->
+        <div class="bg-white dark:bg-slate-700 p-6 rounded-xl shadow-lg">
+            <div class="flex items-center space-x-4">
+                <div
+                    class="flex-shrink-0 w-12 h-12 bg-emerald-100 dark:bg-emerald-800/50 rounded-full flex items-center justify-center">
+                    <svg class="w-6 h-6 text-emerald-600 dark:text-emerald-400" xmlns="http://www.w3.org/2000/svg"
+                        fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-3xl font-bold text-slate-800 dark:text-slate-100" id="stat-completed-count">0</p>
+                    <p class="text-sm text-slate-500 dark:text-slate-400">Workflows Completed</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card: Total de Atividades -->
+        <div class="bg-white dark:bg-slate-700 p-6 rounded-xl shadow-lg">
+            <div class="flex items-center space-x-4">
+                <div
+                    class="flex-shrink-0 w-12 h-12 bg-amber-100 dark:bg-amber-800/50 rounded-full flex items-center justify-center">
+                    <svg class="w-6 h-6 text-amber-600 dark:text-amber-400" xmlns="http://www.w3.org/2000/svg"
+                        fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z" />
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-3xl font-bold text-slate-800 dark:text-slate-100" id="stat-total-activities">0</p>
+                    <p class="text-sm text-slate-500 dark:text-slate-400">Total Activities</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function stats_workflows_renderStats(workflowsData){
+       
+
+        const statExecutingCountEl = document.getElementById("stat-executing-count");
+        const statCompletedCountEl = document.getElementById("stat-completed-count");
+        const statTotalActivitiesEl = document.getElementById("stat-total-activities");
+
+        if (statExecutingCountEl) statExecutingCountEl.textContent = "0";
+        if (statCompletedCountEl) statCompletedCountEl.textContent = "0";
+        if (statTotalActivitiesEl) statTotalActivitiesEl.textContent = "0";
+
+
+        if (!workflowsData || workflowsData.length === 0) {
+            workflowsListEl.innerHTML = ""; // Clear loading message
+            if (noWorkflowsMessageEl) noWorkflowsMessageEl.classList.remove('hidden');
+            return;
+        }
+
+
+        let executingCount = 0;
+        let completedCount = 0;
+        let totalActivities = 0;
+
+        const executingStatusTexts = ["Running",]; 
+        const completedStatusTexts = ["success", "Completed"];
+
+        workflowsData.forEach(workflow => {
+            totalActivities += workflow.spec?.activities?.length || 0;
+
+            const statusKey = workflow.status || 'unknown';
+            let statusObj = WORKFLOW_STATUS[statusKey] || {};
+            let statusText = statusObj.text;
+
+            if (statusText) {
+                if (executingStatusTexts.includes(statusText)) {
+                    executingCount++;
+                } else if (completedStatusTexts.includes(statusText)) {
+                    completedCount++;
+                }
+            }
+        });
+
+        console.log("Total Workflows:", workflowsData.length);
+        console.log("Executing Workflows:", executingCount);
+        console.log("Completed Workflows:", completedCount);
+        console.log("Total Activities:", totalActivities);
+
+
+        if (statExecutingCountEl) statExecutingCountEl.textContent = executingCount.toString();
+        if (statCompletedCountEl) statCompletedCountEl.textContent = completedCount.toString();
+        if (statTotalActivitiesEl) statTotalActivitiesEl.textContent = totalActivities.toString();
+    }
+</script>
+
+{{ end }}

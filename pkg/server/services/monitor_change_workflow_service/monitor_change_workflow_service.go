@@ -37,9 +37,12 @@ func (m *MonitorChangeWorkflowService) MonitorChangeWorkflow() {
 func (m *MonitorChangeWorkflowService) handleVerifyWorkflowActivities(wfs []workflow_entity.Workflow) {
 
 	for _, wf := range wfs {
-		runtimes.
-			GetRuntimeInstance(wf.GetRuntimeId()).
-			VerifyActivitiesWasFinished(wf)
+		runtimesByWorkflow := wf.GetRuntimeId()
+		for _, runtime := range runtimesByWorkflow {
+			runtimes.
+				GetRuntimeInstance(runtime).
+				VerifyActivitiesWasFinished(wf)
+		}
 	}
 }
 

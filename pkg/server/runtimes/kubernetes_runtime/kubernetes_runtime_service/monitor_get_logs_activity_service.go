@@ -7,6 +7,7 @@ import (
 	"github.com/ovvesley/akoflow/pkg/server/connector/connector_k8s"
 	"github.com/ovvesley/akoflow/pkg/server/database/repository/logs_repository"
 	"github.com/ovvesley/akoflow/pkg/server/database/repository/metrics_repository"
+	"github.com/ovvesley/akoflow/pkg/server/database/repository/runtime_repository"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
 )
@@ -15,7 +16,10 @@ type MonitorGetLogsActivityService struct {
 	namespace         string
 	logsRepository    logs_repository.ILogsRepository
 	metricsRepository metrics_repository.IMetricsRepository
-	connector         connector_k8s.IConnector
+
+	runtimeRepository runtime_repository.IRuntimeRepository
+
+	connector connector_k8s.IConnector
 }
 
 func NewMonitorGetLogsActivityService() *MonitorGetLogsActivityService {
@@ -23,20 +27,28 @@ func NewMonitorGetLogsActivityService() *MonitorGetLogsActivityService {
 		namespace:         "akoflow",
 		logsRepository:    config.App().Repository.LogsRepository,
 		metricsRepository: config.App().Repository.MetricsRepository,
-		connector:         config.App().Connector.K8sConnector,
+
+		runtimeRepository: config.App().Repository.RuntimeRepository,
+
+		connector: config.App().Connector.K8sConnector,
 	}
 }
 
 func (m *MonitorGetLogsActivityService) GetLogs(wf workflow_entity.Workflow, wfa workflow_activity_entity.WorkflowActivities) {
-	m.handleGetLogsByActivity(wfa)
+	m.handleGetLogsByActivity(wf, wfa)
 }
 
-func (m *MonitorGetLogsActivityService) handleGetLogsByActivity(wfa workflow_activity_entity.WorkflowActivities) {
+func (m *MonitorGetLogsActivityService) handleGetLogsByActivity(wf workflow_entity.Workflow, wfa workflow_activity_entity.WorkflowActivities) {
 	fmt.Println("Activity: ", wfa.WorkflowId, wfa.Id)
 
 	nameJob := wfa.GetNameJob()
 
-	job, err := m.connector.Pod().GetPodByJob(m.namespace, nameJob)
+	runtime, err := m.runtimeRepository.GetByName(wfa.GetRuntimeId())
+	if err != nil {
+		return
+	}
+
+	job, err := m.connector.Pod(runtime).GetPodByJob(m.namespace, nameJob)
 	if err != nil {
 		return
 	}
@@ -46,11 +58,17 @@ func (m *MonitorGetLogsActivityService) handleGetLogsByActivity(wfa workflow_act
 		return
 	}
 
-	m.retrieveSaveLogsInDatabase(wfa, podName)
+	m.retrieveSaveLogsInDatabase(wf, wfa, podName)
 }
 
-func (m *MonitorGetLogsActivityService) retrieveSaveLogsInDatabase(wfa workflow_activity_entity.WorkflowActivities, podName string) {
-	logs, err := m.connector.Pod().GetPodLogs(m.namespace, podName)
+func (m *MonitorGetLogsActivityService) retrieveSaveLogsInDatabase(wf workflow_entity.Workflow, wfa workflow_activity_entity.WorkflowActivities, podName string) {
+
+	runtime, err := m.runtimeRepository.GetByName(wfa.GetRuntimeId())
+	if err != nil {
+		return
+	}
+
+	logs, err := m.connector.Pod(runtime).GetPodLogs(m.namespace, podName)
 	if err != nil {
 		return
 	}

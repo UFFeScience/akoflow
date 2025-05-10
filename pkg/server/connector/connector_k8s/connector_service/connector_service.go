@@ -7,13 +7,14 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 
 	"github.com/ovvesley/akoflow/pkg/server/entities/nfs_server_entity"
+	"github.com/ovvesley/akoflow/pkg/server/entities/runtime_entity"
 )
 
 type ConnectorService struct {
-	client *http.Client
+	client  *http.Client
+	runtime *runtime_entity.Runtime
 }
 
 type IConnectorService interface {
@@ -23,9 +24,10 @@ type IConnectorService interface {
 	DeleteService(namespace, name string) ResultDeleteService
 }
 
-func New() IConnectorService {
+func New(runtime *runtime_entity.Runtime) IConnectorService {
 	return &ConnectorService{
-		client: newClient(),
+		client:  newClient(),
+		runtime: runtime,
 	}
 }
 
@@ -63,8 +65,8 @@ type ResultDeleteService struct {
 }
 
 func (c *ConnectorService) CreateService(service nfs_server_entity.Service) ResultCreateService {
-	token := os.Getenv("K8S_API_SERVER_TOKEN")
-	host := os.Getenv("K8S_API_SERVER_HOST")
+	token := c.runtime.GetMetadataApiServerToken()
+	host := c.runtime.GetMetadataApiServerHost()
 
 	body, err := json.Marshal(&service)
 	if err != nil {
@@ -125,8 +127,8 @@ func (c *ConnectorService) CreateService(service nfs_server_entity.Service) Resu
 }
 
 func (c *ConnectorService) ListService(namespace string) ResultListService {
-	token := os.Getenv("K8S_API_SERVER_TOKEN")
-	host := os.Getenv("K8S_API_SERVER_HOST")
+	token := c.runtime.GetMetadataApiServerToken()
+	host := c.runtime.GetMetadataApiServerHost()
 
 	req, err := http.NewRequest("GET", "https://"+host+"/api/v1/namespaces/"+namespace+"/services", nil)
 	if err != nil {
@@ -178,8 +180,8 @@ func (c *ConnectorService) ListService(namespace string) ResultListService {
 }
 
 func (c *ConnectorService) UpdateService(service nfs_server_entity.Service) ResultUpdateService {
-	token := os.Getenv("K8S_API_SERVER_TOKEN")
-	host := os.Getenv("K8S_API_SERVER_HOST")
+	token := c.runtime.GetMetadataApiServerToken()
+	host := c.runtime.GetMetadataApiServerHost()
 
 	body, err := json.Marshal(&service)
 	if err != nil {
@@ -240,8 +242,8 @@ func (c *ConnectorService) UpdateService(service nfs_server_entity.Service) Resu
 }
 
 func (c *ConnectorService) DeleteService(namespace, name string) ResultDeleteService {
-	token := os.Getenv("K8S_API_SERVER_TOKEN")
-	host := os.Getenv("K8S_API_SERVER_HOST")
+	token := c.runtime.GetMetadataApiServerToken()
+	host := c.runtime.GetMetadataApiServerHost()
 
 	req, err := http.NewRequest("DELETE", "https://"+host+"/api/v1/namespaces/"+namespace+"/services/"+name, nil)
 	if err != nil {

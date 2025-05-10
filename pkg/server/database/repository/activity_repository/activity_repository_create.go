@@ -3,10 +3,14 @@ package activity_repository
 import (
 	"github.com/ovvesley/akoflow/pkg/server/database/repository"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
+	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
 )
 
-func (w *ActivityRepository) Create(namespace string, workflowId int, image string, activities []workflow_activity_entity.WorkflowActivities) error {
-	err := w.createActivity(namespace, workflowId, image, activities)
+func (w *ActivityRepository) Create(namespace string, workflow workflow_entity.Workflow, activities []workflow_activity_entity.WorkflowActivities) error {
+	workflowId := workflow.Id
+	image := workflow.Spec.Image
+
+	err := w.createActivity(namespace, workflow, activities)
 
 	if err != nil {
 		println("Error creating activity" + err.Error())
@@ -71,7 +75,12 @@ func (w *ActivityRepository) createPreactivity(namespace string, workflowId int,
 	return nil
 }
 
-func (w *ActivityRepository) createActivity(namespace string, workflowId int, image string, activities []workflow_activity_entity.WorkflowActivities) error {
+func (w *ActivityRepository) createActivity(namespace string, workflow workflow_entity.Workflow, activities []workflow_activity_entity.WorkflowActivities) error {
+
+	workflowId := workflow.Id
+	image := workflow.Spec.Image
+
+	runtime := workflow.GetRuntimeId()[0]
 
 	for _, activity := range activities {
 
@@ -80,9 +89,21 @@ func (w *ActivityRepository) createActivity(namespace string, workflowId int, im
 
 		rawActivity := activity.GetBase64Activities()
 
+		if activity.Image != "" {
+			image = activity.Image
+		}
+
+		if activity.Runtime != "" {
+			runtime = activity.Runtime
+		}
+
 		result, err := c.Exec(
-			"INSERT INTO "+w.tableNameActivity+" (workflow_id, namespace, name, image, resource_k8s_base64, status, created_at) VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)",
-			workflowId, namespace, activity.Name, image, rawActivity, StatusCreated)
+			"INSERT INTO "+w.tableNameActivity+" (workflow_id, namespace, name, image, runtime, resource_k8s_base64, status, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)",
+			workflowId, namespace, activity.Name, image, runtime, rawActivity, StatusCreated)
+
+		if err != nil {
+			println("Error creating activity" + err.Error())
+		}
 
 		err = c.Close()
 

@@ -1,0 +1,13 @@
+{{define "connector.js"}}
+{{template "connector_workflows.js"}}
+{{template "connector_runtimes.js"}}
+
+<script>
+
+    const connector = {
+        workflows: connectorWorkflows,
+        runtimes: connectorRuntimes,
+        activity: () => {}
+    }
+</script>
+{{end}}

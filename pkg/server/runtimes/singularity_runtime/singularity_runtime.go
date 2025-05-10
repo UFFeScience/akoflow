@@ -52,3 +52,7 @@ func (s *SingularityRuntime) VerifyActivitiesWasFinished(workflow workflow_entit
 	s.SingularityRuntimeService.VerifyActivitiesWasFinished(workflow)
 	return true
 }
+
+func (s *SingularityRuntime) HealthCheck() bool {
+	return true
+}

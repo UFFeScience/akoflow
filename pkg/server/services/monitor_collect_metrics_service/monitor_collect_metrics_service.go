@@ -34,8 +34,8 @@ func (m *MonitorCollectMetricsService) handleCollectMetricsByWorkflow(wf workflo
 	println("Workflow: ", wf.Id)
 	println("Running: ", len(wfaRunning))
 
-	runtimeService := runtimes.GetRuntimeInstance(wf.GetRuntimeId())
 	for _, a := range wfaRunning {
+		runtimeService := runtimes.GetRuntimeInstance(a.GetRuntimeId())
 		runtimeService.GetLogs(wf, a)
 	}
 }

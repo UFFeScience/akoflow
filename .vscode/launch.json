@@ -10,7 +10,6 @@
             "env": {
                 "K8S_API_SERVER_HOST": "localhost",
                 "K8S_API_SERVER_TOKEN": "dummy",
-                "KUBERNETES_SERVICE_HOST": "localhost",
             }
         },
         {

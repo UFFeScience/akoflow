@@ -31,8 +31,12 @@ func (c *CreateWorkflowInDatabaseService) Create(workflow workflow_entity.Workfl
 	if err != nil {
 		return 0, err
 	}
+	workflowDb, err := c.workflowRepository.Find(workflowId)
+	if err != nil {
+		return 0, err
+	}
 
-	err = c.activityRepository.Create(c.namespace, workflowId, workflow.Spec.Image, workflow.Spec.Activities)
+	err = c.activityRepository.Create(c.namespace, workflowDb, workflow.Spec.Activities)
 	if err != nil {
 		return 0, err
 	}

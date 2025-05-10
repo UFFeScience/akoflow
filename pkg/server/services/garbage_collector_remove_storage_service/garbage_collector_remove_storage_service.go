@@ -7,6 +7,7 @@ import (
 	"github.com/ovvesley/akoflow/pkg/server/config"
 	"github.com/ovvesley/akoflow/pkg/server/connector/connector_k8s"
 	"github.com/ovvesley/akoflow/pkg/server/database/repository/activity_repository"
+	"github.com/ovvesley/akoflow/pkg/server/database/repository/runtime_repository"
 	"github.com/ovvesley/akoflow/pkg/server/database/repository/storages_repository"
 	"github.com/ovvesley/akoflow/pkg/server/database/repository/workflow_repository"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
@@ -21,6 +22,7 @@ type GarbageCollectorRemoveStorageService struct {
 	workflowRepository workflow_repository.IWorkflowRepository
 	activityRepository activity_repository.IActivityRepository
 	storageRepository  storages_repository.IStorageRepository
+	runtimeRepository  runtime_repository.IRuntimeRepository
 
 	getActivityDependeciesService get_activity_dependencies_service.GetActivityDependenciesService
 	getPendingWorkflowService     get_pending_workflow_service.GetPendingWorkflowService
@@ -35,6 +37,7 @@ func New() GarbageCollectorRemoveStorageService {
 		workflowRepository: config.App().Repository.WorkflowRepository,
 		activityRepository: config.App().Repository.ActivityRepository,
 		storageRepository:  config.App().Repository.StoragesRepository,
+		runtimeRepository:  config.App().Repository.RuntimeRepository,
 
 		connector: config.App().Connector.K8sConnector,
 
@@ -65,11 +68,18 @@ func (c *GarbageCollectorRemoveStorageService) RemoveStoragesDeprecated() {
 	}
 
 	for _, preactivity := range wfaPreactivities {
+		wfa, _ := c.activityRepository.Find(preactivity.ActivityId)
 
-		podJob, _ := c.connector.Pod().GetPodByJob(c.namespace, "preactivity-"+strconv.Itoa(preactivity.ActivityId))
+		runtime, _ := c.runtimeRepository.GetByName(wfa.GetRuntimeId())
+		if runtime == nil {
+			println("Runtime not found")
+			return
+		}
+
+		podJob, _ := c.connector.Pod(runtime).GetPodByJob(c.namespace, "preactivity-"+strconv.Itoa(preactivity.ActivityId))
 		podNameJob, _ := podJob.GetPodName()
 
-		_ = c.connector.Pod().DeletePod(c.namespace, podNameJob)
+		_ = c.connector.Pod(runtime).DeletePod(c.namespace, podNameJob)
 
 		preactivity.Status = activity_repository.StatusCompleted
 		_ = c.activityRepository.UpdatePreActivity(preactivity.ActivityId, preactivity)
@@ -79,12 +89,19 @@ func (c *GarbageCollectorRemoveStorageService) RemoveStoragesDeprecated() {
 }
 
 func (c *GarbageCollectorRemoveStorageService) removeResource(activity workflow_activity_entity.WorkflowActivities) {
-	_ = c.connector.PersistentVolumeClain().DeletePersistentVolumeClaim(activity.GetVolumeName(), c.namespace)
 
-	podJob, _ := c.connector.Pod().GetPodByJob(c.namespace, activity.GetNameJob())
+	runtime, _ := c.runtimeRepository.GetByName(activity.GetRuntimeId())
+	if runtime == nil {
+		println("Runtime not found")
+		return
+	}
+
+	_ = c.connector.PersistentVolumeClain(runtime).DeletePersistentVolumeClaim(activity.GetVolumeName(), c.namespace)
+
+	podJob, _ := c.connector.Pod(runtime).GetPodByJob(c.namespace, activity.GetNameJob())
 	podNameJob, _ := podJob.GetPodName()
 
-	_ = c.connector.Pod().DeletePod(c.namespace, podNameJob)
+	_ = c.connector.Pod(runtime).DeletePod(c.namespace, podNameJob)
 
 	_ = c.storageRepository.Update(storages_repository.ParamsStorageUpdate{
 		PvcName:    activity.GetVolumeName(),

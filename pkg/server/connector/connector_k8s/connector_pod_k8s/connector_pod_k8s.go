@@ -6,12 +6,14 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
-	"os"
 	"time"
+
+	"github.com/ovvesley/akoflow/pkg/server/entities/runtime_entity"
 )
 
 type ConnectorPodK8s struct {
-	client *http.Client
+	client  *http.Client
+	runtime *runtime_entity.Runtime
 }
 
 type IConnectorPod interface {
@@ -21,9 +23,10 @@ type IConnectorPod interface {
 	DeletePod(namespace string, podName string) error
 }
 
-func New() IConnectorPod {
+func New(runtime *runtime_entity.Runtime) IConnectorPod {
 	return &ConnectorPodK8s{
-		client: newClient(),
+		client:  newClient(),
+		runtime: runtime,
 	}
 }
 
@@ -300,8 +303,8 @@ type ResponseGetJobByPod struct {
 }
 
 func (c *ConnectorPodK8s) GetPodByJob(namespace string, jobName string) (ResponseGetJobByPod, error) {
-	token := os.Getenv("K8S_API_SERVER_TOKEN")
-	host := os.Getenv("K8S_API_SERVER_HOST")
+	token := c.runtime.GetMetadataApiServerToken()
+	host := c.runtime.GetMetadataApiServerHost()
 
 	req, _ := http.NewRequest("GET", "https://"+host+"/api/v1/namespaces/"+namespace+"/pods?labelSelector=job-name="+jobName, nil)
 	req.Header.Set("Authorization", "Bearer "+token)
@@ -333,8 +336,8 @@ func (c ResponseGetJobByPod) GetPodName() (string, error) {
 }
 
 func (c *ConnectorPodK8s) GetPodLogs(namespace string, podName string) (string, error) {
-	token := os.Getenv("K8S_API_SERVER_TOKEN")
-	host := os.Getenv("K8S_API_SERVER_HOST")
+	token := c.runtime.GetMetadataApiServerToken()
+	host := c.runtime.GetMetadataApiServerHost()
 
 	req, _ := http.NewRequest("GET", "https://"+host+"/api/v1/namespaces/"+namespace+"/pods/"+podName+"/log", nil)
 
@@ -356,8 +359,8 @@ func (c *ConnectorPodK8s) GetPodLogs(namespace string, podName string) (string, 
 }
 
 func (c *ConnectorPodK8s) DeletePod(namespace string, podName string) error {
-	token := os.Getenv("K8S_API_SERVER_TOKEN")
-	host := os.Getenv("K8S_API_SERVER_HOST")
+	token := c.runtime.GetMetadataApiServerToken()
+	host := c.runtime.GetMetadataApiServerHost()
 
 	req, _ := http.NewRequest("DELETE", "https://"+host+"/api/v1/namespaces/"+namespace+"/pods/"+podName, nil)
 	req.Header.Set("Authorization", "Bearer "+token)

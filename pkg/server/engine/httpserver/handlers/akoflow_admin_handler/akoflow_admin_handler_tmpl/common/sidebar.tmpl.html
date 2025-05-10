@@ -1,40 +1,101 @@
 {{ define "sidebar" }}
-<aside class="w-64 bg-gray-100 dark:bg-gray-700 fixed h-full">
-    <div class="p-4">
-        <div class="text-2xl font-bold mb-8 dark:text-white text-black">AkôFlow Admin</div>
-        <nav class="space-y-4">
-            <a href="/akoflow-admin" class="flex items-center text-gray-700 dark:text-gray-400 hover:text-black dark:hover:text-white">
-                <span class="mr-4">📁</span>
-                Workflows
-            </a>
-           
-            <a href="/akoflow-admin/settings" class="flex items-center text-gray-700 dark:text-gray-400 hover:text-black dark:hover:text-white">
-                <span class="mr-4">⚙️</span>
-                Settings
-            </a>
-        </nav>
+<aside
+    class="w-64 bg-white dark:bg-gray-800 fixed h-full shadow-md border-r border-gray-200 dark:border-gray-700 flex flex-col justify-between">
+    <div class="p-6">
+        <div class="flex flex-col items-center text-center mb-10">
+            <img src="https://akoflow.com/wp-content/uploads/2024/12/icon_akoflow.png" alt="AkôFlow Logo"
+                class="h-10 w-10 mb-3">
+            <div class="text-2xl font-bold text-gray-900 dark:text-white tracking-tight">AkôFlow Admin</div>
+        </div>
+        <nav id="sidebarNav" class="space-y-4"></nav>
     </div>
+    <div class="p-6 space-y-6">
+        <div id="sidebarFooterNav" class="space-y-4"></div>
 
-    <!-- Botão de Alternância de Tema -->
-    <div class="absolute bottom-4 left-4 cursor-pointer" onclick="toggleTheme()">
-        <svg id="theme-icon" xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-gray-700 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path id="theme-icon-path" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m8.485-10.485h-1m-14.97 0h-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
+        <button onclick="toggleTheme()"
+            class="flex items-center space-x-2 text-gray-500 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors">
+            <svg id="theme-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path id="theme-icon-path" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M12 3v1m0 16v1m8.485-10.485h-1m-14.97 0h-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span class="text-sm">Alternar tema</span>
+        </button>
     </div>
 </aside>
-
-
 <script>
-    function toggleTheme() {
-        const body = document.body;
-        if (body.classList.contains('dark')) {
-            body.classList.remove('dark');
-            body.classList.add('light');
+    const menuTop = [
+        { label: "Workflows", icon: "fa-project-diagram", url: "/akoflow-admin" },
+        // { label: "API Reference (comming soon)", icon: "fa-code", url: "/akoflow-admin/documentations/api" },
+        { label: "Runtimes", icon: "fa-cogs", url: "/akoflow-admin/runtimes" },
+        // { label: "Settings (comming soon)", icon: "fa-cog", url: "/akoflow-admin/settings" },
+    ];
+
+    const menuBottom = [
+        { label: "Documentation", icon: "fa-book", url: "/akoflow-admin/documentation" },
+        { label: "Changelog", icon: "fa-clipboard-list", url: "/akoflow-admin/changelog" },
+    ];
+
+    function createMenu(items, container, indent = 0) {
+        items.forEach(item => {
+            const link = document.createElement("a");
+            link.href = item.url || "#";
+            link.className = `flex items-center text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors${indent ? " ml-" + indent : ""}`;
+            link.innerHTML = `
+            <i class="fa ${item.icon} h-5 w-5 mr-3"></i>
+            <span class="text-base">${item.label}</span>
+            ${item.submenu ? '<i class="fa fa-chevron-right ml-auto h-4 w-4 transition-transform" data-toggle></i>' : ''}
+        `;
+            container.appendChild(link);
+
+            if (item.submenu) {
+                const sub = document.createElement("div");
+                sub.className = "space-y-2 hidden";
+                container.appendChild(sub);
+                createMenu(item.submenu, sub, 4);
+                link.addEventListener("click", e => {
+                    e.preventDefault();
+                    sub.classList.toggle("hidden");
+                    link.querySelector("[data-toggle]").classList.toggle("rotate-90");
+                });
+            }
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        createMenu(menuTop, document.getElementById("sidebarNav"));
+        createMenu(menuBottom, document.getElementById("sidebarFooterNav"));
+    });
+    function applySavedTheme() {
+        const html = document.documentElement;
+        const savedTheme = localStorage.getItem("theme");
+
+        if (savedTheme === "dark") {
+            html.classList.add("dark");
+            updateThemeIcon(true);
         } else {
-            body.classList.remove('light');
-            body.classList.add('dark');
+            html.classList.remove("dark");
+            updateThemeIcon(false);
         }
     }
 
+    function toggleTheme() {
+        const html = document.documentElement;
+        const isDark = html.classList.toggle("dark");
+
+        localStorage.setItem("theme", isDark ? "dark" : "light");
+        updateThemeIcon(isDark);
+    }
+
+    function updateThemeIcon(isDark) {
+        const path = document.getElementById("theme-icon-path");
+        if (!path) return;
+
+        path.setAttribute("d", isDark
+            ? "M21.75 15.5a9 9 0 01-11.25-11.25 9 9 0 1011.25 11.25z"
+            : "M12 4V2m0 20v-2m8.49-8H22m-20 0h1.51M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42M12 6a6 6 0 100 12 6 6 0 000-12z"
+        );
+    }
+    document.addEventListener("DOMContentLoaded", applySavedTheme);
 </script>
 {{ end }}

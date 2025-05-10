@@ -44,6 +44,10 @@ func (k *DockerRuntime) VerifyActivitiesWasFinished(workflow workflow_entity.Wor
 	return true
 }
 
+func (d *DockerRuntime) HealthCheck() bool {
+	return true
+}
+
 func NewDockerRuntime() *DockerRuntime {
 	return &DockerRuntime{}
 }

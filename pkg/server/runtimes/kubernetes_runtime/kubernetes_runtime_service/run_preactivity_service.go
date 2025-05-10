@@ -4,6 +4,7 @@ import (
 	"github.com/ovvesley/akoflow/pkg/server/config"
 	"github.com/ovvesley/akoflow/pkg/server/connector/connector_k8s"
 	"github.com/ovvesley/akoflow/pkg/server/database/repository/activity_repository"
+	"github.com/ovvesley/akoflow/pkg/server/database/repository/runtime_repository"
 	"github.com/ovvesley/akoflow/pkg/server/database/repository/workflow_repository"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
@@ -14,6 +15,7 @@ type RunPreactivityService struct {
 	namespace          string
 	workflowRepository workflow_repository.IWorkflowRepository
 	activityRepository activity_repository.IActivityRepository
+	runtimeRepository  runtime_repository.IRuntimeRepository
 
 	connector connector_k8s.IConnector
 
@@ -26,6 +28,7 @@ func NewRunPreactivityService() RunPreactivityService {
 		namespace:          config.App().DefaultNamespace,
 		workflowRepository: config.App().Repository.WorkflowRepository,
 		activityRepository: config.App().Repository.ActivityRepository,
+		runtimeRepository:  config.App().Repository.RuntimeRepository,
 
 		connector: config.App().Connector.K8sConnector,
 
@@ -66,6 +69,13 @@ func (r *RunPreactivityService) runJobPreActivity(wf workflow_entity.Workflow, w
 
 	wfpreActivity.Status = activity_repository.StatusRunning
 
+	runtime, err := r.runtimeRepository.GetByName(wfa.GetRuntimeId())
+	if err != nil {
+		println("Error getting runtime")
+		return
+
+	}
+
 	mapWfaDependencies := r.getActivityDependenciesService.GetActivityDependenciesByActivity(wfa.WorkflowId, wfa.Id)
 	dependencies := mapWfaDependencies[wfa.Id]
 
@@ -77,7 +87,7 @@ func (r *RunPreactivityService) runJobPreActivity(wf workflow_entity.Workflow, w
 		UsePreactivityMode().
 		MakeK8sJob()
 
-	r.connector.Job().ApplyJob(r.namespace, job)
+	r.connector.Job(runtime).ApplyJob(r.namespace, job)
 
 	resourceJobK8sBase64 := job.GetBase64Jobs()
 	wfpreActivity.ResourceK8sBase64 = &resourceJobK8sBase64

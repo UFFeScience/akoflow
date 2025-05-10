@@ -5,7 +5,7 @@ import (
 )
 
 type Metrics struct {
-	ID         int    `db:"id" sql:"PRIMARY KEY AUTOINCREMENT"`
+	ID         int    `db:"id" sql:"INTEGER PRIMARY KEY AUTOINCREMENT"`
 	ActivityID int    `db:"activity_id"`
 	Cpu        string `db:"cpu"`
 	Memory     string `db:"memory"`
@@ -24,4 +24,12 @@ func (m Metrics) GetColumns() []string {
 
 func (m Metrics) GetPrimaryKey() string {
 	return database.GenericGetPrimaryKey(m)
+}
+
+func (m Metrics) GetClausulePrimaryKey() string {
+	return database.GenericGetClausulePrimaryKey(m)
+}
+
+func (m Metrics) GetColumnType(column string) string {
+	return database.GenericGetColumnType(m, column)
 }

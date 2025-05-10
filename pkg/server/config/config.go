@@ -18,6 +18,7 @@ func GetVersion() string {
 	return "dev-env"
 }
 
+// depreacated to be removed in the future. This item exists to garanted that read service account key file
 func SetupEnv() {
 
 	tokenFile, err := os.ReadFile("/var/run/secrets/kubernetes.io/serviceaccount/token")
@@ -29,7 +30,7 @@ func SetupEnv() {
 
 	tokenData := ""
 
-	if tokenEnv == "" {
+	if tokenEnv == "" && tokenFile != nil {
 		if err != nil {
 			println("Error reading token file", err)
 			panic(err)
@@ -45,9 +46,6 @@ func SetupEnv() {
 	}
 
 	os.Setenv("K8S_API_SERVER_TOKEN", tokenData)
-	println("K8S_API_SERVER_HOST: ", os.Getenv("K8S_API_SERVER_HOST"))
-	println("K8S_API_SERVER_TOKEN: ", os.Getenv("K8S_API_SERVER_TOKEN"))
-	println("AKOFLOW_SERVER_VERSION: ", os.Getenv("AKOFLOW_VERSION"))
 
 }
 

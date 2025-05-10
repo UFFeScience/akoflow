@@ -9,14 +9,14 @@ func (w *ActivityRepository) Find(id int) (workflow_activity_entity.WorkflowActi
 	database := repository.Database{}
 	c := database.Connect()
 
-	rows, err := c.Query("SELECT id, workflow_id, namespace, name, image, resource_k8s_base64, status, proc_id FROM "+w.tableNameActivity+" WHERE id = ?", id)
+	rows, err := c.Query("SELECT id, workflow_id, namespace, name, image, runtime, resource_k8s_base64, status, proc_id FROM "+w.tableNameActivity+" WHERE id = ?", id)
 	if err != nil {
 		return workflow_activity_entity.WorkflowActivities{}, err
 	}
 
 	var wfaDatabase workflow_activity_entity.WorkflowActivityDatabase
 	for rows.Next() {
-		err = rows.Scan(&wfaDatabase.Id, &wfaDatabase.WorkflowId, &wfaDatabase.Namespace, &wfaDatabase.Name, &wfaDatabase.Image, &wfaDatabase.ResourceK8sBase64, &wfaDatabase.Status, &wfaDatabase.ProcId)
+		err = rows.Scan(&wfaDatabase.Id, &wfaDatabase.WorkflowId, &wfaDatabase.Namespace, &wfaDatabase.Name, &wfaDatabase.Image, &wfaDatabase.Runtime, &wfaDatabase.ResourceK8sBase64, &wfaDatabase.Status, &wfaDatabase.ProcId)
 		if err != nil {
 			return workflow_activity_entity.WorkflowActivities{}, err
 		}

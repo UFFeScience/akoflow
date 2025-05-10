@@ -7,22 +7,24 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 
 	"github.com/ovvesley/akoflow/pkg/server/entities/nfs_server_entity"
+	"github.com/ovvesley/akoflow/pkg/server/entities/runtime_entity"
 )
 
 type ConnectorClusterRole struct {
-	client *http.Client
+	client  *http.Client
+	runtime *runtime_entity.Runtime
 }
 
 type IConnectorClusterRole interface {
 	CreateClusterRole(clusterRole nfs_server_entity.ClusterRole) ResultCreateClusterRole
 }
 
-func New() IConnectorClusterRole {
+func New(runtime *runtime_entity.Runtime) IConnectorClusterRole {
 	return &ConnectorClusterRole{
-		client: newClient(),
+		client:  newClient(),
+		runtime: runtime,
 	}
 }
 
@@ -43,8 +45,8 @@ type ResultCreateClusterRole struct {
 }
 
 func (c *ConnectorClusterRole) CreateClusterRole(clusterRole nfs_server_entity.ClusterRole) ResultCreateClusterRole {
-	token := os.Getenv("K8S_API_SERVER_TOKEN")
-	host := os.Getenv("K8S_API_SERVER_HOST")
+	token := c.runtime.GetMetadataApiServerToken()
+	host := c.runtime.GetMetadataApiServerHost()
 
 	body, err := json.Marshal(&clusterRole)
 	if err != nil {

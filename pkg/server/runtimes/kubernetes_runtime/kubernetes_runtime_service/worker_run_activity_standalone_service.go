@@ -54,7 +54,7 @@ func (r *WorkerRunActivityStandaloneService) ApplyJob(activityID int) bool {
 }
 
 func (r *WorkerRunActivityStandaloneService) HandleResourceToRunJob(activityID int) bool {
-	namespace, errNamespace := r.createNamespaceService.GetOrCreateNamespace(r.namespace)
+	namespace, errNamespace := r.createNamespaceService.GetOrCreateNamespace(r.GetWorkflow(), r.GetWorkflowActivity(), r.namespace)
 
 	pvc, errPvc := r.createPvcService.GetOrCreatePersistentVolumeClainByActivity(r.GetWorkflow(), r.GetWorkflowActivity(), namespace)
 	preactivity, _ := r.runPreActivityService.Run(r.GetWorkflowActivity().Id)

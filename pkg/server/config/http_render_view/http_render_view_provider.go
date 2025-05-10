@@ -28,9 +28,18 @@ func New() HttpRenderViewProvider {
 func (p *HttpRenderViewProvider) makeTemplateInstance(path string) *template.Template {
 
 	tmplFolder := getPathTemplate()
+	directories := []string{
+		"common/",
+		"scripts/",
+	}
 
-	allTemplateFiles := manipulation_files_service.New().ListAllFilesInDir(tmplFolder + "common/")
-	allTemplateFiles = append([]string{tmplFolder + path}, allTemplateFiles...)
+	allTemplateFiles := []string{}
+	for _, dir := range directories {
+		files := manipulation_files_service.New().ListAllFilesInDir(tmplFolder + dir)
+		allTemplateFiles = append(files, allTemplateFiles...)
+	}
+
+	allTemplateFiles = append(allTemplateFiles, tmplFolder+path)
 
 	tmpl := template.New(path).Funcs(template.FuncMap{
 		"dict": dict,

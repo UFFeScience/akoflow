@@ -1,576 +1,589 @@
-<!DOCTYPE html>
-<html lang="en">
-
-{{ template "head" }}
-
+{{template "base.html" .}}
+{{define "title"}}AkôFlow Admin {{end}}
+{{define "content"}}
 <style>
     /* Keep specific height for graphView if Tailwind's h-xx isn't precise enough or for dynamic reasons */
     #graphView {
         width: 100%;
-        height: 480px; /* You can also use Tailwind: h-[480px] if preferred */
+        height: 480px;
+        /* You can also use Tailwind: h-[480px] if preferred */
     }
+
     /* Custom scrollbar for pre elements (optional, but nice for code blocks) */
     pre::-webkit-scrollbar {
         width: 8px;
         height: 8px;
     }
+
     pre::-webkit-scrollbar-track {
         background: transparent;
     }
+
     pre::-webkit-scrollbar-thumb {
-        background-color: #cbd5e1; /* coolGray-300 */
+        background-color: #cbd5e1;
+        /* coolGray-300 */
         border-radius: 20px;
         border: 2px solid transparent;
         background-clip: content-box;
     }
+
     .dark pre::-webkit-scrollbar-thumb {
-        background-color: #4b5563; /* gray-600 */
+        background-color: #4b5563;
+        /* gray-600 */
     }
 </style>
 
-<body class="bg-slate-100 text-slate-800 dark:bg-slate-900 dark:text-slate-100 antialiased">
+{{ template "header" dict "title" "Workflow Detail" }}
 
-    <div class="flex min-h-screen">
-        <!-- Sidebar -->
-        {{ template "sidebar" }}
+<div>
+    <!-- Workflow Summary Cards -->
+    <div class="mb-8 p-6 bg-white dark:bg-slate-700 rounded-xl shadow-lg">
+        <h2 class="text-xl font-semibold text-slate-700 dark:text-slate-200 mb-6">Workflow Overview</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
 
-        <!-- Main Content -->
-        <div class="flex-1 p-6 md:p-8 bg-slate-50 dark:bg-slate-800 ml-0 md:ml-64">
-
-            {{ template "header" dict "title" "Workflow Detail" }}
-
-            <!-- Workflow Summary Cards -->
-            <div class="mb-8 p-6 bg-white dark:bg-slate-700 rounded-xl shadow-lg">
-                <h2 class="text-xl font-semibold text-slate-700 dark:text-slate-200 mb-6">Workflow Overview</h2>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                    
-                    <div class="bg-slate-50 dark:bg-slate-600 p-4 rounded-lg shadow">
-                        <p class="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">Workflow Details</p>
-                        <div class="mt-2 space-y-1">
-                            <p class="text-sm text-slate-600 dark:text-slate-300">Type: <span id="workflow-type" class="font-semibold text-slate-700 dark:text-slate-100">N/A</span></p>
-                            <p class="text-sm text-slate-600 dark:text-slate-300">Disk Type: <span id="disk-type" class="font-semibold text-slate-700 dark:text-slate-100">N/A</span></p>
-                            <p class="text-sm text-slate-600 dark:text-slate-300">Activities: <span id="activities-count" class="font-semibold text-slate-700 dark:text-slate-100">N/A</span></p>
-                        </div>
-                    </div>
-
-                    <div class="bg-slate-50 dark:bg-slate-600 p-4 rounded-lg shadow">
-                        <p class="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">Execution Time</p>
-                        <p class="mt-2 text-lg font-semibold text-sky-600 dark:text-sky-400" id="execution-time">N/A</p>
-                    </div>
-
-                    <div class="bg-slate-50 dark:bg-slate-600 p-4 rounded-lg shadow">
-                        <p class="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">Start Date</p>
-                        <p class="mt-2 text-sm font-medium text-slate-700 dark:text-slate-100" id="start-date">N/A</p>
-                    </div>
-
-                    <div class="bg-slate-50 dark:bg-slate-600 p-4 rounded-lg shadow">
-                        <p class="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">End Date</p>
-                        <p class="mt-2 text-sm font-medium text-slate-700 dark:text-slate-100" id="end-date">N/A</p>
-                    </div>
-
-                    <div class="bg-slate-50 dark:bg-slate-600 p-4 rounded-lg shadow">
-                        <p class="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">Longest Activity</p>
-                        <p class="mt-2 text-sm font-medium text-slate-700 dark:text-slate-100" id="longest-activity">N/A</p>
-                    </div>
-
-                    <div class="bg-slate-50 dark:bg-slate-600 p-4 rounded-lg shadow">
-                        <p class="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">Disk Usage</p>
-                        <p class="mt-2 text-sm font-medium text-slate-700 dark:text-slate-100" id="disk-usage">N/A</p>
-                    </div>
-
-                    <div class="bg-slate-50 dark:bg-slate-600 p-4 rounded-lg shadow">
-                        <p class="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">Mount Path</p>
-                        <p class="mt-2 text-sm font-medium text-slate-700 dark:text-slate-100 break-all" id="mount-path">N/A</p>
-                    </div>
+            <div class="bg-slate-50 dark:bg-slate-600 p-4 rounded-lg shadow">
+                <p class="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">Workflow
+                    Details</p>
+                <div class="mt-2 space-y-1">
+                    <p class="text-sm text-slate-600 dark:text-slate-300">Type: <span id="workflow-type"
+                            class="font-semibold text-slate-700 dark:text-slate-100">N/A</span></p>
+                    <p class="text-sm text-slate-600 dark:text-slate-300">Disk Type: <span id="disk-type"
+                            class="font-semibold text-slate-700 dark:text-slate-100">N/A</span></p>
+                    <p class="text-sm text-slate-600 dark:text-slate-300">Activities: <span id="activities-count"
+                            class="font-semibold text-slate-700 dark:text-slate-100">N/A</span></p>
                 </div>
             </div>
 
-            <!-- Graph Panel -->
-            <div class="w-full p-6 bg-white dark:bg-slate-700 rounded-xl shadow-lg mb-8">
-                <div class="flex flex-col sm:flex-row justify-between sm:items-center mb-4">
-                    <div>
-                        <h3 class="text-xl font-semibold text-slate-800 dark:text-slate-100" id="nameworkflowgp">Workflow Name</h3>
-                        <p class="text-sm text-slate-500 dark:text-slate-400">ID: <span class="font-medium" id="workflowidgp">#000</span></p>
-                    </div>
-                    <!-- Add any graph controls here if needed -->
-                </div>
-                <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800 mt-4 border border-slate-200 dark:border-slate-600">
-                    <div id="graphView" class="flex items-center justify-center text-slate-500 dark:text-slate-400">
-                        <!-- Graph Visualization Here -->
-                        <p>Loading Graph...</p>
-                    </div>
-                </div>
+            <div class="bg-slate-50 dark:bg-slate-600 p-4 rounded-lg shadow">
+                <p class="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">
+                    Execution
+                    Time</p>
+                <p class="mt-2 text-lg font-semibold text-sky-600 dark:text-sky-400" id="execution-time">N/A</p>
             </div>
 
-            <!-- Activity List -->
-            <div class="mb-8">
-                <h2 class="text-2xl font-semibold mb-6 text-slate-800 dark:text-slate-100">Activities</h2>
-                <div class="space-y-4" id="activityList">
-                    <!-- Activity Items will be injected here by JavaScript -->
-                    <div class="text-center p-4 text-slate-500 dark:text-slate-400">Loading activities...</div>
-                </div>
-            </div>
-            
-            <!-- Timeline Chart Panel -->
-            <div class="w-full p-6 bg-white dark:bg-slate-700 rounded-xl shadow-lg mt-8">
-                <div class="flex flex-col sm:flex-row justify-between sm:items-center mb-4">
-                    <h3 class="text-xl font-semibold text-slate-800 dark:text-slate-100">Timeline of Activities</h3>
-                    <button id="downloadBtn"
-                        class="mt-3 sm:mt-0 bg-sky-600 hover:bg-sky-700 text-white font-semibold py-2 px-4 rounded-lg text-sm transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-opacity-50">
-                        Download Chart
-                    </button>
-                </div>
-                <div class="mt-6 bg-slate-50 dark:bg-slate-800 p-2 sm:p-4 rounded-md border border-slate-200 dark:border-slate-600">
-                    <div class="w-full h-auto min-h-[400px]"> <!-- Parent div will be sized by JS for chart height -->
-                        <canvas id="timelineChart"></canvas>
-                    </div>
-                </div>
+            <div class="bg-slate-50 dark:bg-slate-600 p-4 rounded-lg shadow">
+                <p class="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">Start
+                    Date
+                </p>
+                <p class="mt-2 text-sm font-medium text-slate-700 dark:text-slate-100" id="start-date">N/A</p>
             </div>
 
-        </div> <!-- /Main Content -->
-    </div> <!-- /flex min-h-screen -->
+            <div class="bg-slate-50 dark:bg-slate-600 p-4 rounded-lg shadow">
+                <p class="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">End Date
+                </p>
+                <p class="mt-2 text-sm font-medium text-slate-700 dark:text-slate-100" id="end-date">N/A</p>
+            </div>
 
-    <script>
-        // Constants (assuming these are defined globally or you'll move them here)
-        // const BASE_URL_API = "..."; 
-        // const WORKFLOW_ACTIVITY_STATUS = { ... };
+            <div class="bg-slate-50 dark:bg-slate-600 p-4 rounded-lg shadow">
+                <p class="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">Longest
+                    Activity</p>
+                <p class="mt-2 text-sm font-medium text-slate-700 dark:text-slate-100" id="longest-activity">N/A</p>
+            </div>
 
-        async function getWorkflowByPage() {
-            const workflowId = window.location.pathname.split("/").filter(Boolean).pop();
-            const response = await fetch(BASE_URL_API + "workflows/" + workflowId);
-            if (!response.ok) {
-                console.error("Failed to fetch workflow:", response.status);
-                // Display error message to user
-                document.getElementById("nameworkflowgp").innerText = "Error loading workflow";
-                document.getElementById("activityList").innerHTML = `<div class="text-center p-4 text-red-500">Failed to load activities.</div>`;
-                return null;
-            }
-            const { data } = await response.json();
-            return data;
+            <div class="bg-slate-50 dark:bg-slate-600 p-4 rounded-lg shadow">
+                <p class="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">Disk
+                    Usage
+                </p>
+                <p class="mt-2 text-sm font-medium text-slate-700 dark:text-slate-100" id="disk-usage">N/A</p>
+            </div>
+
+            <div class="bg-slate-50 dark:bg-slate-600 p-4 rounded-lg shadow">
+                <p class="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">Mount
+                    Path
+                </p>
+                <p class="mt-2 text-sm font-medium text-slate-700 dark:text-slate-100 break-all" id="mount-path">N/A</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Graph Panel -->
+    <div class="w-full p-6 bg-white dark:bg-slate-700 rounded-xl shadow-lg mb-8">
+        <div class="flex flex-col sm:flex-row justify-between sm:items-center mb-4">
+            <div>
+                <h3 class="text-xl font-semibold text-slate-800 dark:text-slate-100" id="nameworkflowgp">Workflow Name
+                </h3>
+                <p class="text-sm text-slate-500 dark:text-slate-400">ID: <span class="font-medium"
+                        id="workflowidgp">#000</span></p>
+            </div>
+            <!-- Add any graph controls here if needed -->
+        </div>
+        <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800 mt-4 border border-slate-200 dark:border-slate-600">
+            <div id="graphView" class="flex items-center justify-center text-slate-500 dark:text-slate-400">
+                <!-- Graph Visualization Here -->
+                <p>Loading Graph...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Activity List -->
+    <div class="mb-8">
+        <h2 class="text-2xl font-semibold mb-6 text-slate-800 dark:text-slate-100">Activities</h2>
+        <div class="space-y-4" id="activityList">
+            <!-- Activity Items will be injected here by JavaScript -->
+            <div class="text-center p-4 text-slate-500 dark:text-slate-400">Loading activities...</div>
+        </div>
+    </div>
+
+    <!-- Timeline Chart Panel -->
+    <div class="w-full p-6 bg-white dark:bg-slate-700 rounded-xl shadow-lg mt-8">
+        <div class="flex flex-col sm:flex-row justify-between sm:items-center mb-4">
+            <h3 class="text-xl font-semibold text-slate-800 dark:text-slate-100">Timeline of Activities</h3>
+            <button id="downloadBtn"
+                class="mt-3 sm:mt-0 bg-sky-600 hover:bg-sky-700 text-white font-semibold py-2 px-4 rounded-lg text-sm transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-opacity-50">
+                Download Chart
+            </button>
+        </div>
+        <div
+            class="mt-6 bg-slate-50 dark:bg-slate-800 p-2 sm:p-4 rounded-md border border-slate-200 dark:border-slate-600">
+            <div class="w-full h-auto min-h-[400px]"> <!-- Parent div will be sized by JS for chart height -->
+                <canvas id="timelineChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    // Constants (assuming these are defined globally or you'll move them here)
+    // const BASE_URL_API = "..."; 
+    // const WORKFLOW_ACTIVITY_STATUS = { ... };
+
+    async function getWorkflowByPage() {
+        const workflowId = window.location.pathname.split("/").filter(Boolean).pop();
+        const response = await fetch(BASE_URL_API + "workflows/" + workflowId);
+        if (!response.ok) {
+            console.error("Failed to fetch workflow:", response.status);
+            // Display error message to user
+            document.getElementById("nameworkflowgp").innerText = "Error loading workflow";
+            document.getElementById("activityList").innerHTML = `<div class="text-center p-4 text-red-500">Failed to load activities.</div>`;
+            return null;
+        }
+        const { data } = await response.json();
+        return data;
+    }
+
+    async function loadingPage() {
+        const activityListContainer = document.getElementById("activityList");
+        activityListContainer.innerHTML = `<div class="text-center p-4 text-slate-500 dark:text-slate-400">Loading activities...</div>`;
+
+        let workflow = await getWorkflowByPage();
+        if (!workflow) return;
+
+        let workflowDag = parseWorkflowToDag(workflow);
+
+        handleRenderDetail(workflow);
+        handleRenderActivityList(workflow); // Call this before clearing, or clear inside
+        handleRenderGraph(workflow, workflowDag);
+        handleChartTimeline(workflow);
+    }
+
+    function handleRenderDetail(workflow) {
+        document.getElementById("workflow-type").innerText = workflow.spec.storagePolicy?.type || "N/A";
+        document.getElementById("disk-type").innerText = workflow.spec.storageClassName || "N/A";
+        document.getElementById("activities-count").innerText = workflow.spec.activities?.length || "0";
+        document.getElementById("execution-time").innerText = formatExecutionTime(workflow.spec.executionTime) || "N/A";
+        document.getElementById("start-date").innerText = workflow.spec.startExecution ? new Date(workflow.spec.startExecution).toLocaleString() : "N/A";
+        document.getElementById("end-date").innerText = workflow.spec.endExecution ? new Date(workflow.spec.endExecution).toLocaleString() : "N/A";
+        document.getElementById("longest-activity").innerText = workflow.spec.longestActivity?.name ? `${workflow.spec.longestActivity.name} (${workflow.spec.longestActivity.executionTime || "0"} ms)` : "N/A";
+        document.getElementById("disk-usage").innerText = `${workflow.spec.diskUsage || "0"} MiB`;
+        document.getElementById("mount-path").innerText = workflow.spec.mountPath || "N/A";
+    }
+
+    function formatExecutionTime(totalSeconds) {
+        if (isNaN(totalSeconds) || totalSeconds === null) return "N/A";
+        const hours = Math.floor(totalSeconds / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const seconds = Math.floor(totalSeconds % 60);
+
+        let parts = [];
+        if (hours > 0) parts.push(`${hours}h`);
+        if (minutes > 0) parts.push(`${minutes}m`);
+        if (seconds > 0 || parts.length === 0) parts.push(`${seconds}s`); // Show seconds if it's the only unit or non-zero
+
+        return parts.join(' ') || "0s";
+    }
+
+    // getActivityDuration seems unused, but kept it if needed later
+    function getActivityDuration(activities, activityName) {
+        const activity = activities.find(act => act.name === activityName);
+        if (activity && activity.startedAt && activity.finishedAt) {
+            const start = new Date(activity.startedAt).getTime();
+            const end = new Date(activity.finishedAt).getTime();
+            const durationSec = (end - start) / 1000;
+            return formatExecutionTime(durationSec);
+        }
+        return "N/A";
+    }
+
+    function handleRenderActivityList(workflow) {
+        let container = document.getElementById("activityList");
+        container.innerHTML = ""; // Clear previous content or loading message
+
+        if (!workflow.spec.activities || workflow.spec.activities.length === 0) {
+            container.innerHTML = `<div class="text-center p-4 text-slate-500 dark:text-slate-400">No activities found for this workflow.</div>`;
+            return;
         }
 
-        async function loadingPage() {
-            const activityListContainer = document.getElementById("activityList");
-            activityListContainer.innerHTML = `<div class="text-center p-4 text-slate-500 dark:text-slate-400">Loading activities...</div>`;
+        workflow.spec.activities.forEach(activity => {
+            // Ensure activity.id is unique and suitable for DOM id
+            // If activity.id is not present or not unique, generate one or use index
+            const activityDomId = `act-${activity.id || activity.name.replace(/\s+/g, '-')}`;
+            container.innerHTML += makeActivityItemList(activity, activityDomId);
+        });
+    }
 
-            let workflow = await getWorkflowByPage();
-            if (!workflow) return;
+    function handleRenderGraph(workflow, workflowDag) {
+        let container = document.getElementById("graphView");
+        container.innerHTML = ""; // Clear "Loading Graph..."
+        let workflowNameGp = document.getElementById("nameworkflowgp");
+        let workflowIdGp = document.getElementById("workflowidgp");
 
-            let workflowDag = parseWorkflowToDag(workflow);
+        workflowNameGp.innerText = workflow.name || "Unnamed Workflow";
+        workflowIdGp.innerText = `#${workflow.id || 'N/A'}`;
 
-            handleRenderDetail(workflow);
-            handleRenderActivityList(workflow); // Call this before clearing, or clear inside
-            handleRenderGraph(workflow, workflowDag);
-            handleChartTimeline(workflow);
-        }
+        let nodes = new vis.DataSet(workflowDag.nodes);
+        let edges = new vis.DataSet(workflowDag.edges);
 
-        function handleRenderDetail(workflow) {
-            document.getElementById("workflow-type").innerText = workflow.spec.storagePolicy?.type || "N/A";
-            document.getElementById("disk-type").innerText = workflow.spec.storageClassName || "N/A";
-            document.getElementById("activities-count").innerText = workflow.spec.activities?.length || "0";
-            document.getElementById("execution-time").innerText = formatExecutionTime(workflow.spec.executionTime) || "N/A";
-            document.getElementById("start-date").innerText = workflow.spec.startExecution ? new Date(workflow.spec.startExecution).toLocaleString() : "N/A";
-            document.getElementById("end-date").innerText = workflow.spec.endExecution ? new Date(workflow.spec.endExecution).toLocaleString() : "N/A";
-            document.getElementById("longest-activity").innerText = workflow.spec.longestActivity?.name ? `${workflow.spec.longestActivity.name} (${workflow.spec.longestActivity.executionTime || "0"} ms)` : "N/A";
-            document.getElementById("disk-usage").innerText = `${workflow.spec.diskUsage || "0"} MiB`;
-            document.getElementById("mount-path").innerText = workflow.spec.mountPath || "N/A";
-        }
+        let data = {
+            nodes: nodes,
+            edges: edges,
+        };
 
-        function formatExecutionTime(totalSeconds) {
-            if (isNaN(totalSeconds) || totalSeconds === null) return "N/A";
-            const hours = Math.floor(totalSeconds / 3600);
-            const minutes = Math.floor((totalSeconds % 3600) / 60);
-            const seconds = Math.floor(totalSeconds % 60);
-            
-            let parts = [];
-            if (hours > 0) parts.push(`${hours}h`);
-            if (minutes > 0) parts.push(`${minutes}m`);
-            if (seconds > 0 || parts.length === 0) parts.push(`${seconds}s`); // Show seconds if it's the only unit or non-zero
-            
-            return parts.join(' ') || "0s";
-        }
-        
-        // getActivityDuration seems unused, but kept it if needed later
-        function getActivityDuration(activities, activityName) {
-            const activity = activities.find(act => act.name === activityName);
-            if (activity && activity.startedAt && activity.finishedAt) {
-                const start = new Date(activity.startedAt).getTime();
-                const end = new Date(activity.finishedAt).getTime();
-                const durationSec = (end - start) / 1000;
-                return formatExecutionTime(durationSec);
-            }
-            return "N/A";
-        }
+        // Determine text color based on dark mode for vis.js nodes
+        const isDarkMode = document.documentElement.classList.contains('dark');
+        const nodeFontColor = isDarkMode ? '#e2e8f0' : '#334155'; // slate-200 / slate-700
 
-        function handleRenderActivityList(workflow) {
-            let container = document.getElementById("activityList");
-            container.innerHTML = ""; // Clear previous content or loading message
-
-            if (!workflow.spec.activities || workflow.spec.activities.length === 0) {
-                container.innerHTML = `<div class="text-center p-4 text-slate-500 dark:text-slate-400">No activities found for this workflow.</div>`;
-                return;
-            }
-
-            workflow.spec.activities.forEach(activity => {
-                // Ensure activity.id is unique and suitable for DOM id
-                // If activity.id is not present or not unique, generate one or use index
-                const activityDomId = `act-${activity.id || activity.name.replace(/\s+/g, '-')}`;
-                container.innerHTML += makeActivityItemList(activity, activityDomId);
-            });
-        }
-
-        function handleRenderGraph(workflow, workflowDag) {
-            let container = document.getElementById("graphView");
-            container.innerHTML = ""; // Clear "Loading Graph..."
-            let workflowNameGp = document.getElementById("nameworkflowgp");
-            let workflowIdGp = document.getElementById("workflowidgp");
-            
-            workflowNameGp.innerText = workflow.name || "Unnamed Workflow";
-            workflowIdGp.innerText = `#${workflow.id || 'N/A'}`;
-
-            let nodes = new vis.DataSet(workflowDag.nodes);
-            let edges = new vis.DataSet(workflowDag.edges);
-
-            let data = {
-                nodes: nodes,
-                edges: edges,
-            };
-
-            // Determine text color based on dark mode for vis.js nodes
-            const isDarkMode = document.documentElement.classList.contains('dark');
-            const nodeFontColor = isDarkMode ? '#e2e8f0' : '#334155'; // slate-200 / slate-700
-
-            let options = {
-                layout: {
-                    hierarchical: {
-                        direction: "RL",
-                        sortMethod: "directed",
-                        nodeSpacing: 120,
-                        levelSeparation: 250, // Reduced for potentially denser graphs
-                        treeSpacing: 150,
-                    },
+        let options = {
+            layout: {
+                hierarchical: {
+                    direction: "RL",
+                    sortMethod: "directed",
+                    nodeSpacing: 120,
+                    levelSeparation: 250, // Reduced for potentially denser graphs
+                    treeSpacing: 150,
                 },
-                edges: {
-                    smooth: {
-                        enabled: true,
-                        type: "cubicBezier",
-                        forceDirection: "horizontal",
-                        roundness: 0.4
-                    },
-                    arrows: {
-                        to: { enabled: true, scaleFactor: 0.7 }
-                    },
-                    color: {
-                        color: isDarkMode ? '#64748b' : '#94a3b8', // slate-500 / slate-400
-                        highlight: isDarkMode ? '#38bdf8' : '#0ea5e9', // sky-400 / sky-500
-                        hover: isDarkMode ? '#7dd3fc' : '#38bdf8' // sky-300 / sky-400
-                    }
+            },
+            edges: {
+                smooth: {
+                    enabled: true,
+                    type: "cubicBezier",
+                    forceDirection: "horizontal",
+                    roundness: 0.4
                 },
-                physics: {
-                    enabled: false,
+                arrows: {
+                    to: { enabled: true, scaleFactor: 0.7 }
                 },
-                nodes: {
-                    font: {
-                        color: nodeFontColor,
-                        size: 14, // px
-                    },
-                    shape: "image", // Shape is image because we use SVG
-                    // Image padding and background handled within the SVG for more control
-                },
-                interaction: {
-                    hover: true,
-                    tooltipDelay: 200
+                color: {
+                    color: isDarkMode ? '#64748b' : '#94a3b8', // slate-500 / slate-400
+                    highlight: isDarkMode ? '#38bdf8' : '#0ea5e9', // sky-400 / sky-500
+                    hover: isDarkMode ? '#7dd3fc' : '#38bdf8' // sky-300 / sky-400
                 }
-            };
+            },
+            physics: {
+                enabled: false,
+            },
+            nodes: {
+                font: {
+                    color: nodeFontColor,
+                    size: 14, // px
+                },
+                shape: "image", // Shape is image because we use SVG
+                // Image padding and background handled within the SVG for more control
+            },
+            interaction: {
+                hover: true,
+                tooltipDelay: 200
+            }
+        };
 
-            let network = new vis.Network(container, data, options);
+        let network = new vis.Network(container, data, options);
 
-            network.on("click", function (params) {
-                if (params.nodes.length > 0) {
-                    const nodeId = params.nodes[0];
-                    // console.log("Node Selected: ", nodes.get(nodeId));
-                    focusById(nodeId, network, nodes); // Pass network and nodes
-                    
-                    // Scroll to activity item if it exists
-                    const activityElementId = `act-${nodeId.replace(/\s+/g, '-')}`; // Match ID generation
-                    const activityElement = document.getElementById(activityElementId);
-                    if (activityElement) {
-                        activityElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        // Optionally, expand it if it's collapsible
-                        const collapseId = `collapse-${activityElementId}`;
-                        const collapseElement = document.getElementById(collapseId);
-                        if (collapseElement && collapseElement.classList.contains('max-h-0')) { // Check if using max-h for collapse
-                             toggleCollapse(activityElementId); // Ensure this function correctly handles the class
-                        } else if (collapseElement && collapseElement.classList.contains('hidden')) {
-                            toggleCollapse(activityElementId);
-                        }
+        network.on("click", function (params) {
+            if (params.nodes.length > 0) {
+                const nodeId = params.nodes[0];
+                // console.log("Node Selected: ", nodes.get(nodeId));
+                focusById(nodeId, network, nodes); // Pass network and nodes
+
+                // Scroll to activity item if it exists
+                const activityElementId = `act-${nodeId.replace(/\s+/g, '-')}`; // Match ID generation
+                const activityElement = document.getElementById(activityElementId);
+                if (activityElement) {
+                    activityElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    // Optionally, expand it if it's collapsible
+                    const collapseId = `collapse-${activityElementId}`;
+                    const collapseElement = document.getElementById(collapseId);
+                    if (collapseElement && collapseElement.classList.contains('max-h-0')) { // Check if using max-h for collapse
+                        toggleCollapse(activityElementId); // Ensure this function correctly handles the class
+                    } else if (collapseElement && collapseElement.classList.contains('hidden')) {
+                        toggleCollapse(activityElementId);
                     }
                 }
+            }
+        });
+
+        function focusById(nodeId, networkInstance) { // Removed nodes from params, as it's available in outer scope
+            // console.log("Focus Node: ", nodeId);
+            var options = {
+                scale: 1.2, // Slightly zoom in
+                offset: { x: 0, y: 0 },
+                animation: {
+                    duration: 800,
+                    easingFunction: "easeInOutQuad",
+                },
+            };
+            networkInstance.focus(nodeId, options);
+        }
+    }
+
+    function parseWorkflowToDag(workflow) {
+        let nodes = [];
+        let edges = [];
+        const isDarkMode = document.documentElement.classList.contains('dark');
+
+        workflow.spec.activities.forEach(activity => {
+            nodes.push({
+                id: activity.name,
+                label: '', // Label is part of the SVG, so an empty string here
+                title: `Activity: ${activity.name}\nStatus: ${WORKFLOW_ACTIVITY_STATUS[activity.status]?.text || 'Unknown'}\nDuration: ${activity.executionTime || 0}ms`, // Tooltip
+                image: makeComponent(activity.name, activity.executionTime, WORKFLOW_ACTIVITY_STATUS[activity.status], isDarkMode),
+                shape: "image"
             });
 
-            function focusById(nodeId, networkInstance) { // Removed nodes from params, as it's available in outer scope
-                // console.log("Focus Node: ", nodeId);
-                var options = {
-                    scale: 1.2, // Slightly zoom in
-                    offset: { x: 0, y: 0 },
-                    animation: {
-                        duration: 800,
-                        easingFunction: "easeInOutQuad",
-                    },
-                };
-                networkInstance.focus(nodeId, options);
-            }
-        }
-
-        function parseWorkflowToDag(workflow) {
-            let nodes = [];
-            let edges = [];
-            const isDarkMode = document.documentElement.classList.contains('dark');
-
-            workflow.spec.activities.forEach(activity => {
-                nodes.push({
-                    id: activity.name,
-                    label: '', // Label is part of the SVG, so an empty string here
-                    title: `Activity: ${activity.name}\nStatus: ${WORKFLOW_ACTIVITY_STATUS[activity.status]?.text || 'Unknown'}\nDuration: ${activity.executionTime || 0}ms`, // Tooltip
-                    image: makeComponent(activity.name, activity.executionTime, WORKFLOW_ACTIVITY_STATUS[activity.status], isDarkMode),
-                    shape: "image"
-                });
-
-                if (activity.dependsOn && Array.isArray(activity.dependsOn)) {
-                    activity.dependsOn.forEach(dep => {
-                        edges.push({
-                            from: activity.name,
-                            to: dep,
-                        });
+            if (activity.dependsOn && Array.isArray(activity.dependsOn)) {
+                activity.dependsOn.forEach(dep => {
+                    edges.push({
+                        from: activity.name,
+                        to: dep,
                     });
-                }
-            });
-            return { nodes, edges };
-        }
-        
-        let timelineChartInstance = null; // To keep track of the chart
-
-        function handleChartTimeline(workflow) {
-            const data = generateChartData(workflow);
-            if (!data || !data.datasets || data.datasets.length === 0) {
-                console.warn("No data to render timeline chart.");
-                // Optionally display a message on the canvas
-                const canvas = document.getElementById('timelineChart');
-                const ctx = canvas.getContext('2d');
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                ctx.fillStyle = document.documentElement.classList.contains('dark') ? '#94a3b8' : '#64748b';
-                ctx.textAlign = 'center';
-                ctx.fillText('No activity data available for timeline.', canvas.width / 2, canvas.height / 2);
-                return;
+                });
             }
+        });
+        return { nodes, edges };
+    }
 
-            const totalItems = data.datasets.length;
-            const isDarkMode = document.documentElement.classList.contains('dark');
-            const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
-            const textColor = isDarkMode ? '#cbd5e1' : '#475569'; // slate-300 / slate-600
-            const titleColor = isDarkMode ? '#f1f5f9' : '#1e293b'; // slate-100 / slate-800
+    let timelineChartInstance = null; // To keep track of the chart
 
-            const options = {
-                indexAxis: 'y', // Makes it a horizontal bar chart
-                scales: {
-                    x: {
-                        type: 'linear',
-                        position: 'bottom',
-                        title: {
-                            display: true,
-                            text: 'Time (seconds from workflow start)',
-                            color: textColor,
-                            font: { weight: 'bold' }
-                        },
-                        ticks: {
-                            color: textColor,
-                            stepSize: calculateStepSize(workflow.spec.executionTime),
-                        },
-                        grid: {
-                            color: gridColor,
-                        }
+    function handleChartTimeline(workflow) {
+        const data = generateChartData(workflow);
+        if (!data || !data.datasets || data.datasets.length === 0) {
+            console.warn("No data to render timeline chart.");
+            // Optionally display a message on the canvas
+            const canvas = document.getElementById('timelineChart');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = document.documentElement.classList.contains('dark') ? '#94a3b8' : '#64748b';
+            ctx.textAlign = 'center';
+            ctx.fillText('No activity data available for timeline.', canvas.width / 2, canvas.height / 2);
+            return;
+        }
+
+        const totalItems = data.datasets.length;
+        const isDarkMode = document.documentElement.classList.contains('dark');
+        const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+        const textColor = isDarkMode ? '#cbd5e1' : '#475569'; // slate-300 / slate-600
+        const titleColor = isDarkMode ? '#f1f5f9' : '#1e293b'; // slate-100 / slate-800
+
+        const options = {
+            indexAxis: 'y', // Makes it a horizontal bar chart
+            scales: {
+                x: {
+                    type: 'linear',
+                    position: 'bottom',
+                    title: {
+                        display: true,
+                        text: 'Time (seconds from workflow start)',
+                        color: textColor,
+                        font: { weight: 'bold' }
                     },
-                    y: {
-                        type: 'category',
-                        title: {
-                            display: true,
-                            text: 'Activities',
-                            color: textColor,
-                            font: { weight: 'bold' }
-                        },
-                        ticks: {
-                            color: textColor,
-                            font: { size: 10 }, // Smaller font for y-axis labels if many items
-                            padding: 5
-                        },
-                        grid: {
-                            display: false // Less clutter
-                        }
+                    ticks: {
+                        color: textColor,
+                        stepSize: calculateStepSize(workflow.spec.executionTime),
+                    },
+                    grid: {
+                        color: gridColor,
                     }
                 },
-                plugins: {
-                    legend: {
-                        display: false // Legend can be too noisy for many items
+                y: {
+                    type: 'category',
+                    title: {
+                        display: true,
+                        text: 'Activities',
+                        color: textColor,
+                        font: { weight: 'bold' }
                     },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                let label = context.dataset.label || '';
-                                if (label) {
-                                    label += ': ';
-                                }
-                                const start = context.dataset.data[context.dataIndex].start;
-                                const end = context.dataset.data[context.dataIndex].end;
-                                label += `Duration ${formatExecutionTime(end - start)} (from ${formatExecutionTime(start)} to ${formatExecutionTime(end)})`;
-                                return label;
+                    ticks: {
+                        color: textColor,
+                        font: { size: 10 }, // Smaller font for y-axis labels if many items
+                        padding: 5
+                    },
+                    grid: {
+                        display: false // Less clutter
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false // Legend can be too noisy for many items
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function (context) {
+                            let label = context.dataset.label || '';
+                            if (label) {
+                                label += ': ';
                             }
+                            const start = context.dataset.data[context.dataIndex].start;
+                            const end = context.dataset.data[context.dataIndex].end;
+                            label += `Duration ${formatExecutionTime(end - start)} (from ${formatExecutionTime(start)} to ${formatExecutionTime(end)})`;
+                            return label;
                         }
-                    },
-                    // Annotation plugin setup removed for brevity, as it requires explicit import and setup.
-                    // If you need annotations, ensure Chart.js annotation plugin is included and configured.
-                    title: { // Using Chart.js native title, not the H3 above canvas
-                        display: false, // Set to false because we have an H3 title already
-                        text: 'Timeline of Activities',
-                        color: titleColor,
-                        padding: { top: 10, bottom: 20 },
-                        font: { size: 18, weight: 'bold' }
                     }
                 },
-                elements: {
-                    bar: { // For horizontal bar chart
-                        borderWidth: 1,
-                        borderRadius: 4,
-                    }
-                },
-                maintainAspectRatio: false,
-                responsive: true,
-            };
+                // Annotation plugin setup removed for brevity, as it requires explicit import and setup.
+                // If you need annotations, ensure Chart.js annotation plugin is included and configured.
+                title: { // Using Chart.js native title, not the H3 above canvas
+                    display: false, // Set to false because we have an H3 title already
+                    text: 'Timeline of Activities',
+                    color: titleColor,
+                    padding: { top: 10, bottom: 20 },
+                    font: { size: 18, weight: 'bold' }
+                }
+            },
+            elements: {
+                bar: { // For horizontal bar chart
+                    borderWidth: 1,
+                    borderRadius: 4,
+                }
+            },
+            maintainAspectRatio: false,
+            responsive: true,
+        };
 
-            const canvasContainer = document.getElementById('timelineChart').parentElement;
-            // Dynamically adjust height based on number of activities
-            const baseHeight = 150; // min height
-            const heightPerItem = 30; // px per activity
-            const calculatedHeight = Math.max(baseHeight, totalItems * heightPerItem);
-            canvasContainer.style.height = `${Math.min(calculatedHeight, 1500)}px`; // Max height of 1500px
+        const canvasContainer = document.getElementById('timelineChart').parentElement;
+        // Dynamically adjust height based on number of activities
+        const baseHeight = 150; // min height
+        const heightPerItem = 30; // px per activity
+        const calculatedHeight = Math.max(baseHeight, totalItems * heightPerItem);
+        canvasContainer.style.height = `${Math.min(calculatedHeight, 1500)}px`; // Max height of 1500px
 
 
-            const ctx = document.getElementById('timelineChart').getContext('2d');
-            
-            if(timelineChartInstance) {
-                timelineChartInstance.destroy(); // Destroy previous instance before creating new one
+        const ctx = document.getElementById('timelineChart').getContext('2d');
+
+        if (timelineChartInstance) {
+            timelineChartInstance.destroy(); // Destroy previous instance before creating new one
+        }
+
+        timelineChartInstance = new Chart(ctx, {
+            type: 'bar', // Changed to 'bar' for GANTT-like chart
+            data: data,
+            options: options
+        });
+
+        document.getElementById('downloadBtn').onclick = function () { // Use .onclick to avoid multiple listeners
+            if (timelineChartInstance) {
+                const link = document.createElement('a');
+                link.download = `${workflow.name || 'workflow'}_timeline_chart.png`;
+                link.href = timelineChartInstance.toBase64Image('image/png', 1.0); // Opaque background
+                link.click();
+            }
+        };
+    }
+
+    function calculateStepSize(totalDurationSeconds) {
+        if (!totalDurationSeconds || totalDurationSeconds <= 0) return 1;
+        if (totalDurationSeconds <= 10) return 1;
+        if (totalDurationSeconds <= 60) return 5; // 5 seconds
+        if (totalDurationSeconds <= 300) return 30; // 30 seconds
+        if (totalDurationSeconds <= 600) return 60; // 1 minute
+        if (totalDurationSeconds <= 1800) return 300; // 5 minutes
+        if (totalDurationSeconds <= 3600) return 600; // 10 minutes
+        return 1800; // 30 minutes
+    }
+
+    function generateChartData(workflowObject) {
+        if (!workflowObject || !workflowObject.spec || !workflowObject.spec.activities) {
+            return { datasets: [] };
+        }
+        const activities = workflowObject.spec.activities;
+        const colorArray = generateRandomColors(activities.length);
+        const workflowStartTime = new Date(workflowObject.spec.startExecution).getTime();
+
+        const datasets = activities.map((activity, index) => {
+            if (!activity.startedAt || !activity.finishedAt) {
+                return null; // Skip activities without start/end times
+            }
+            const startMs = new Date(activity.startedAt).getTime();
+            const finishMs = new Date(activity.finishedAt).getTime();
+
+            // Times relative to workflow start in seconds
+            const relativeStartSec = (startMs - workflowStartTime) / 1000;
+            const relativeFinishSec = (finishMs - workflowStartTime) / 1000;
+
+            if (relativeStartSec < 0 || relativeFinishSec < 0 || relativeFinishSec < relativeStartSec) {
+                return null; // Skip invalid data
             }
 
-            timelineChartInstance = new Chart(ctx, {
-                type: 'bar', // Changed to 'bar' for GANTT-like chart
-                data: data,
-                options: options
-            });
-
-            document.getElementById('downloadBtn').onclick = function () { // Use .onclick to avoid multiple listeners
-                if (timelineChartInstance) {
-                    const link = document.createElement('a');
-                    link.download = `${workflow.name || 'workflow'}_timeline_chart.png`;
-                    link.href = timelineChartInstance.toBase64Image('image/png', 1.0); // Opaque background
-                    link.click();
-                }
+            return {
+                label: activity.name,
+                data: [{
+                    x: [relativeStartSec, relativeFinishSec], // [start, end] for GANTT
+                    y: activity.name,
+                    // Store original times for tooltip if needed
+                    start: relativeStartSec,
+                    end: relativeFinishSec
+                }],
+                backgroundColor: WORKFLOW_ACTIVITY_STATUS[activity.status]?.colorHex || colorArray[index],
+                borderColor: WORKFLOW_ACTIVITY_STATUS[activity.status]?.colorHex ? chroma(WORKFLOW_ACTIVITY_STATUS[activity.status].colorHex).darken().hex() : chroma(colorArray[index]).darken().hex(),
             };
-        }
+        }).filter(dataset => dataset !== null); // Remove nulls
 
-        function calculateStepSize(totalDurationSeconds) {
-            if (!totalDurationSeconds || totalDurationSeconds <= 0) return 1;
-            if (totalDurationSeconds <= 10) return 1;
-            if (totalDurationSeconds <= 60) return 5; // 5 seconds
-            if (totalDurationSeconds <= 300) return 30; // 30 seconds
-            if (totalDurationSeconds <= 600) return 60; // 1 minute
-            if (totalDurationSeconds <= 1800) return 300; // 5 minutes
-            if (totalDurationSeconds <= 3600) return 600; // 10 minutes
-            return 1800; // 30 minutes
-        }
+        // Extract unique Y-axis labels (activity names) in their original order
+        const yLabels = activities
+            .filter(act => act.startedAt && act.finishedAt) // only those that will be in dataset
+            .map(act => act.name);
 
-        function generateChartData(workflowObject) {
-            if (!workflowObject || !workflowObject.spec || !workflowObject.spec.activities) {
-                return { datasets: [] };
+
+        return {
+            labels: yLabels, // Use activity names for Y-axis
+            datasets
+        };
+    }
+
+
+    function generateRandomColors(numColors) {
+        const colors = [];
+        // Using a predefined palette for better aesthetics than pure random
+        const baseColors = [
+            '#4ade80', '#60a5fa', '#facc15', '#fb923c', '#f472b6',
+            '#818cf8', '#2dd4bf', '#a78bfa', '#e879f9', '#fb7185'
+        ];
+        for (let i = 0; i < numColors; i++) {
+            let color = baseColors[i % baseColors.length];
+            // If more colors are needed than in palette, start slightly desaturating/lightening for variety
+            if (i >= baseColors.length) {
+                try { // Requires chroma.js
+                    color = chroma(color).desaturate((i - baseColors.length) * 0.1).brighten((i - baseColors.length) * 0.05).hex();
+                } catch (e) { /* chroma not available, stick to base */ }
             }
-            const activities = workflowObject.spec.activities;
-            const colorArray = generateRandomColors(activities.length);
-            const workflowStartTime = new Date(workflowObject.spec.startExecution).getTime();
-
-            const datasets = activities.map((activity, index) => {
-                if (!activity.startedAt || !activity.finishedAt) {
-                    return null; // Skip activities without start/end times
-                }
-                const startMs = new Date(activity.startedAt).getTime();
-                const finishMs = new Date(activity.finishedAt).getTime();
-
-                // Times relative to workflow start in seconds
-                const relativeStartSec = (startMs - workflowStartTime) / 1000;
-                const relativeFinishSec = (finishMs - workflowStartTime) / 1000;
-                
-                if (relativeStartSec < 0 || relativeFinishSec < 0 || relativeFinishSec < relativeStartSec) {
-                    return null; // Skip invalid data
-                }
-
-                return {
-                    label: activity.name,
-                    data: [{ 
-                        x: [relativeStartSec, relativeFinishSec], // [start, end] for GANTT
-                        y: activity.name,
-                        // Store original times for tooltip if needed
-                        start: relativeStartSec, 
-                        end: relativeFinishSec
-                    }],
-                    backgroundColor: WORKFLOW_ACTIVITY_STATUS[activity.status]?.colorHex || colorArray[index],
-                    borderColor: WORKFLOW_ACTIVITY_STATUS[activity.status]?.colorHex ? chroma(WORKFLOW_ACTIVITY_STATUS[activity.status].colorHex).darken().hex() : chroma(colorArray[index]).darken().hex(),
-                };
-            }).filter(dataset => dataset !== null); // Remove nulls
-
-            // Extract unique Y-axis labels (activity names) in their original order
-            const yLabels = activities
-                                .filter(act => act.startedAt && act.finishedAt) // only those that will be in dataset
-                                .map(act => act.name);
-
-
-            return { 
-                labels: yLabels, // Use activity names for Y-axis
-                datasets 
-            };
+            colors.push(color);
         }
-
-
-        function generateRandomColors(numColors) {
-            const colors = [];
-            // Using a predefined palette for better aesthetics than pure random
-            const baseColors = [
-                '#4ade80', '#60a5fa', '#facc15', '#fb923c', '#f472b6', 
-                '#818cf8', '#2dd4bf', '#a78bfa', '#e879f9', '#fb7185'
-            ];
-            for (let i = 0; i < numColors; i++) {
-                let color = baseColors[i % baseColors.length];
-                // If more colors are needed than in palette, start slightly desaturating/lightening for variety
-                if (i >= baseColors.length) {
-                    try { // Requires chroma.js
-                         color = chroma(color).desaturate( (i-baseColors.length) * 0.1).brighten( (i-baseColors.length) * 0.05).hex();
-                    } catch(e) { /* chroma not available, stick to base */ }
-                }
-                colors.push(color);
-            }
-            return colors;
-        }
+        return colors;
+    }
 
 
 
-        const makeComponent = (name = "Activity", duration = 0, status, isDarkMode) => {
-            const bgColor = isDarkMode ? "#334155" : "#ffffff"; // slate-700 : white
-            const strokeColor = isDarkMode ? "#475569" : "#e2e8f0"; // slate-600 : slate-200
-            const textColorPrimary = isDarkMode ? "#f1f5f9" : "#1e293b"; // slate-100 : slate-800
-            const textColorSecondary = isDarkMode ? "#94a3b8" : "#64748b"; // slate-400 : slate-500
-            const statusColor = status?.colorHex || (isDarkMode ? "#64748b" : "#94a3b8");
+    const makeComponent = (name = "Activity", duration = 0, status, isDarkMode) => {
+        const bgColor = isDarkMode ? "#334155" : "#ffffff"; // slate-700 : white
+        const strokeColor = isDarkMode ? "#475569" : "#e2e8f0"; // slate-600 : slate-200
+        const textColorPrimary = isDarkMode ? "#f1f5f9" : "#1e293b"; // slate-100 : slate-800
+        const textColorSecondary = isDarkMode ? "#94a3b8" : "#64748b"; // slate-400 : slate-500
+        const statusColor = status?.colorHex || (isDarkMode ? "#64748b" : "#94a3b8");
 
-            // Truncate name if too long for the SVG
-            const displayName = name.length > 25 ? name.substring(0, 22) + "..." : name;
-            const safeDuration = duration || 0;
+        // Truncate name if too long for the SVG
+        const displayName = name.length > 25 ? name.substring(0, 22) + "..." : name;
+        const safeDuration = duration || 0;
 
-            return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(
+        return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(
             `<svg xmlns="http://www.w3.org/2000/svg" width="260" height="60" viewBox="0 0 260 60">
                 <rect x="0.5" y="0.5" rx="8" ry="8" width="259" height="59" style="fill:${bgColor};stroke:${strokeColor};stroke-width:1;" />
                 <circle cx="20" cy="30" r="6" fill="${statusColor}" />
@@ -578,14 +591,14 @@
                 <text x="35" y="45" font-family="Inter, system-ui, sans-serif" font-size="11" fill="${textColorSecondary}">${status?.text || 'Unknown'}</text>
                 <text x="245" y="35" font-family="Inter, system-ui, sans-serif" text-anchor="end" font-size="12" font-weight="500" fill="${textColorPrimary}">${safeDuration}ms</text>
             </svg>`)}`;
-        }
+    }
 
 
-        const makeActivityItemList = (activity, activityDomId) => {
-            const statusInfo = WORKFLOW_ACTIVITY_STATUS[activity.status] || { icon: '❓', text: 'Unknown', colorClasses: 'bg-slate-100 text-slate-500 dark:bg-slate-600 dark:text-slate-300' };
-            // Generate a unique ID for the collapsible element if activity.id is not reliable
-            
-            return `
+    const makeActivityItemList = (activity, activityDomId) => {
+        const statusInfo = WORKFLOW_ACTIVITY_STATUS[activity.status] || { icon: '❓', text: 'Unknown', colorClasses: 'bg-slate-100 text-slate-500 dark:bg-slate-600 dark:text-slate-300' };
+        // Generate a unique ID for the collapsible element if activity.id is not reliable
+
+        return `
             <div id="${activityDomId}" class="bg-white dark:bg-slate-700 rounded-xl shadow-lg transition-all duration-300 ease-in-out overflow-hidden">
                 <div class="flex justify-between items-center p-4 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-600/50" onclick="toggleCollapse('${activityDomId}')">
                     <div class="flex items-center space-x-3 min-w-0">
@@ -652,29 +665,28 @@
                     </div>
                 </div>
             </div>`;
-        }
+    }
 
-        // Function to toggle collapse visibility using max-height for smooth animation
-        const toggleCollapse = (activityDomId) => {
-            const collapseElement = document.getElementById(`collapse-${activityDomId}`);
-            const iconElement = document.querySelector(`#${activityDomId} svg`); // Find the arrow icon within the specific activity item
+    // Function to toggle collapse visibility using max-height for smooth animation
+    const toggleCollapse = (activityDomId) => {
+        const collapseElement = document.getElementById(`collapse-${activityDomId}`);
+        const iconElement = document.querySelector(`#${activityDomId} svg`); // Find the arrow icon within the specific activity item
 
-            if (collapseElement) {
-                if (collapseElement.style.maxHeight && collapseElement.style.maxHeight !== '0px') {
-                    collapseElement.style.maxHeight = '0px';
-                    if (iconElement) iconElement.classList.remove('rotate-180');
-                } else {
-                    // Set max-height to scrollHeight for full expansion
-                    collapseElement.style.maxHeight = collapseElement.scrollHeight + "px";
-                    if (iconElement) iconElement.classList.add('rotate-180');
-                }
+        if (collapseElement) {
+            if (collapseElement.style.maxHeight && collapseElement.style.maxHeight !== '0px') {
+                collapseElement.style.maxHeight = '0px';
+                if (iconElement) iconElement.classList.remove('rotate-180');
+            } else {
+                // Set max-height to scrollHeight for full expansion
+                collapseElement.style.maxHeight = collapseElement.scrollHeight + "px";
+                if (iconElement) iconElement.classList.add('rotate-180');
             }
         }
-     
+    }
 
 
-        document.addEventListener('DOMContentLoaded', loadingPage);
-    </script>
 
-</body>
-</html>
+    document.addEventListener('DOMContentLoaded', loadingPage);
+</script>
+
+{{ end }}

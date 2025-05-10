@@ -8,6 +8,7 @@ type Activity struct {
 	Namespace         string `db:"namespace"`
 	Name              string `db:"name"`
 	Image             string `db:"image"`
+	Runtime           string `db:"runtime"`
 	ResourceK8sBase64 string `db:"resource_k8s_base64"`
 	Status            int    `db:"status"`
 	ProcID            string `db:"proc_id"`

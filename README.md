@@ -1,7 +1,4 @@
-# AkôFlow - Middleware de WorkFlow Científico em nuvem com Kubernetes
-
-
-```sh
+```
  █████╗ ██╗  ██╗ ██████╗ ███████╗██╗      ██████╗ ██╗    ██╗
 ██╔══██╗██║ ██╔╝██╔═══██╗██╔════╝██║     ██╔═══██╗██║    ██║
 ███████║█████╔╝ ██║   ██║█████╗  ██║     ██║   ██║██║ █╗ ██║
@@ -10,18 +7,36 @@
 ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝ ╚═╝     ╚══════╝ ╚═════╝  ╚══╝╚══╝
 ```
 
-## Descrição
-Repositório para os artefatos de código e documentação desenvolvidos para o Trabalho de Conclusão de Curso (TCC) do curso de Sistemas de Informação do Instituto de Computação da Universidade Federal Fluminense (IC/UFF). O trabalho tem como título "AkôFlow - Workflow Científico em nuvem com Kubernetes".
+# AkôFlow - Open Source Middleware for Containerized Scientific Workflows
 
-## Autores
-1. Wesley Ferreira - @ovvesley 
-2. Daniel de Oliveira - @danielcmo (orientador)
+AkôFlow is an open-source middleware for orchestrating and executing container-based scientific workflows across heterogeneous environments. It was originally developed within the e-Science Research Group at the Institute of Computing, Fluminense Federal University (UFF).
 
-## Workflow Científico em nuvem com Kubernetes
+Although initially focused on Kubernetes-based workloads, AkôFlow has evolved to support general containerized execution across multiple infrastructures.
 
-### AkôFlow - Ferramenta para execução de Workflow Científico em Kubernetes
+## Supported Environments
 
-O AkôFlow é uma ferramenta para execução de workflows científicos em Kubernetes. Ele utiliza a API do Kubernetes para criar e gerenciar recursos de execução de workflows, como pods e jobs. O AkôFlow é uma ferramenta de linha de comando que permite a execução de workflows científicos de forma distribuída e paralela em um cluster Kubernetes.
+* Kubernetes (public cloud providers: AWS, GCP, Azure, etc.)
+* Singularity (for local or HPC isolated execution)
+* SDumont supercomputer (LNCC - Brazil)
 
-### Documentação
-O AkôFlow possui uma documentação completa que descreve como instalar, configurar e utilizar a ferramenta. A documentação está disponível em [https://akoflow.com/docs](https://akoflow.com/docs).
+⸻
+
+## Maintainers
+* [D.Sc. Daniel de Oliveira — Research Advisor](http://profs.ic.uff.br/~danielcmo/)
+* [Wesley Ferreira - @ovvesley — Core Maintainer](https://github.com/ovvesley)
+* Raphael Garcia — Maintainer
+
+⸻
+
+## Academic Context
+
+AkôFlow originated as a final undergraduate project and has since expanded with broader contributions and integrations. It continues to serve both academic and industrial workflow execution scenarios.
+
+⸻
+
+## Documentation
+
+Full documentation is available at:
+📘 https://akoflow.com/docs
+
+⸻

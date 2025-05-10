@@ -50,7 +50,7 @@ func (m *MonitorVerifyActivityWasFinishedService) VerifyActivities(wf workflow_e
 func (m *MonitorVerifyActivityWasFinishedService) handleVerifyPreActivityWasFinished(activity workflow_activity_entity.WorkflowActivities, wf workflow_entity.Workflow) int {
 	preactivity, _ := m.activityRepository.FindPreActivity(activity.Id)
 
-	runtime, err := m.runtimeRepository.GetByName(wf.GetRuntimeId())
+	runtime, err := m.runtimeRepository.GetByName(activity.GetRuntimeId())
 	if err != nil {
 		return activity_repository.StatusCreated
 	}
@@ -118,7 +118,7 @@ func (m *MonitorVerifyActivityWasFinishedService) handleVerifyActivityWasFinishe
 		return activity_repository.StatusCreated
 	}
 
-	runtime, err := m.runtimeRepository.GetByName(wf.GetRuntimeId())
+	runtime, err := m.runtimeRepository.GetByName(activity.GetRuntimeId())
 	if err != nil {
 		return activity_repository.StatusCreated
 	}
@@ -157,7 +157,7 @@ func (m *MonitorVerifyActivityWasFinishedService) handleVerifyActivityWasFinishe
 
 func (m *MonitorVerifyActivityWasFinishedService) monitorHandleLogs(wf workflow_entity.Workflow, activity workflow_activity_entity.WorkflowActivities) {
 
-	runtime, err := m.runtimeRepository.GetByName(wf.GetRuntimeId())
+	runtime, err := m.runtimeRepository.GetByName(activity.GetRuntimeId())
 	if err != nil {
 		println("Runtime not found")
 		return

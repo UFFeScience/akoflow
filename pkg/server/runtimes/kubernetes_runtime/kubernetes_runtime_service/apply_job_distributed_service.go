@@ -76,7 +76,7 @@ func (a *ApplyJobDistributedService) runK8sJob(wf workflow_entity.Workflow, wfa 
 		SetIdWorkflowActivity(wfa.Id).
 		MakeK8sJob()
 
-	runtime, err := a.runtimeRepository.GetByName(wf.GetRuntimeId())
+	runtime, err := a.runtimeRepository.GetByName(wfa.GetRuntimeId())
 	if err != nil {
 		return "", err
 	}

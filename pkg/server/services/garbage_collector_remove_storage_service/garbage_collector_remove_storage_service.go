@@ -68,8 +68,9 @@ func (c *GarbageCollectorRemoveStorageService) RemoveStoragesDeprecated() {
 	}
 
 	for _, preactivity := range wfaPreactivities {
-		wf, _ := c.workflowRepository.Find(preactivity.WorkflowId)
-		runtime, _ := c.runtimeRepository.GetByName(wf.GetRuntimeId())
+		wfa, _ := c.activityRepository.Find(preactivity.ActivityId)
+
+		runtime, _ := c.runtimeRepository.GetByName(wfa.GetRuntimeId())
 		if runtime == nil {
 			println("Runtime not found")
 			return
@@ -89,8 +90,7 @@ func (c *GarbageCollectorRemoveStorageService) RemoveStoragesDeprecated() {
 
 func (c *GarbageCollectorRemoveStorageService) removeResource(activity workflow_activity_entity.WorkflowActivities) {
 
-	workflow, _ := c.workflowRepository.Find(activity.WorkflowId)
-	runtime, _ := c.runtimeRepository.GetByName(workflow.GetRuntimeId())
+	runtime, _ := c.runtimeRepository.GetByName(activity.GetRuntimeId())
 	if runtime == nil {
 		println("Runtime not found")
 		return

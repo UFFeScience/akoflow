@@ -293,10 +293,13 @@
             interaction: {
                 hover: true,
                 tooltipDelay: 200
-            }
+            },
+            
         };
 
         let network = new vis.Network(container, data, options);
+
+        
 
         network.on("click", function (params) {
             if (params.nodes.length > 0) {
@@ -321,6 +324,8 @@
             }
         });
 
+        
+
         function focusById(nodeId, networkInstance) { // Removed nodes from params, as it's available in outer scope
             // console.log("Focus Node: ", nodeId);
             var options = {
@@ -343,8 +348,13 @@
         workflow.spec.activities.forEach(activity => {
             nodes.push({
                 id: activity.name,
-                label: '', // Label is part of the SVG, so an empty string here
-                title: `Activity: ${activity.name}\nStatus: ${WORKFLOW_ACTIVITY_STATUS[activity.status]?.text || 'Unknown'}\nDuration: ${activity.executionTime || 0}s`, // Tooltip
+                label: "Runtime: " + activity.runtime,
+                
+                font: {
+                    color: isDarkMode ? '#e2e8f0' : '#334155', // slate-200 / slate-700
+                    size: 14,
+                },
+                title: `Activity: ${activity.name}\nStatus: ${WORKFLOW_ACTIVITY_STATUS[activity.status]?.text || 'Unknown'}\nDuration: ${activity.executionTime || 0}s \n Runtime: ${activity.runtime}`, // Tooltip
                 image: makeComponent(activity.name, activity.executionTime, WORKFLOW_ACTIVITY_STATUS[activity.status], isDarkMode),
                 shape: "image"
             });
@@ -549,7 +559,7 @@
         };
     }
 
-    
+
 
     function generateRandomColors(numColors) {
         const colors = [];
@@ -560,7 +570,7 @@
         ];
         for (let i = 0; i < numColors; i++) {
             let color = baseColors[i % baseColors.length];
-            
+
             colors.push(color);
         }
         return colors;
@@ -673,7 +683,6 @@
                 collapseElement.style.maxHeight = '0px';
                 if (iconElement) iconElement.classList.remove('rotate-180');
             } else {
-                // Set max-height to scrollHeight for full expansion
                 collapseElement.style.maxHeight = collapseElement.scrollHeight + "px";
                 if (iconElement) iconElement.classList.add('rotate-180');
             }

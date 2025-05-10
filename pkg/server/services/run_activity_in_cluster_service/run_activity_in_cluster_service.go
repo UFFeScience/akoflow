@@ -31,7 +31,7 @@ func (r *RunActivityInClusterService) Run(activityID int) {
 		return
 	}
 
-	runtimeId := wf.GetRuntimeId()
+	runtimeId := wfa.GetRuntimeId()
 
 	workflowId := wf.GetId()
 	workflowActivityId := wfa.GetId()

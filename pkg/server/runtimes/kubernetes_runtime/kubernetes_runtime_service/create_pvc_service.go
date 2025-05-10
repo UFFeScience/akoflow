@@ -32,7 +32,8 @@ func (c *CreatePVCService) GetOrCreatePersistentVolumeClainByActivity(wf workflo
 	var err error
 	var pvc connector_pvc_k8s.ResponseGetPersistentVolumeClain
 
-	runtime, err := c.runtimeRepository.GetByName(wf.GetRuntimeId())
+	runtime, err := c.runtimeRepository.GetByName(wfa.GetRuntimeId())
+
 	if err != nil {
 		println("Runtime not found")
 		return "", err
@@ -63,7 +64,7 @@ func (c *CreatePVCService) handleCreatePersistentVolumeClain(wf workflow_entity.
 	var pv connector_pvc_k8s.ResponseCreatePersistentVolumeClain
 	var err error
 
-	runtime, err := c.runtimeRepository.GetByName(wf.GetRuntimeId())
+	runtime, err := c.runtimeRepository.GetByName(wfa.GetRuntimeId())
 	if err != nil {
 		println("Runtime not found")
 		return "", err

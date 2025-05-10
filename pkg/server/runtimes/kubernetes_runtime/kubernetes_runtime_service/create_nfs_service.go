@@ -8,11 +8,13 @@ import (
 	"github.com/ovvesley/akoflow/pkg/server/connector/connector_k8s"
 	"github.com/ovvesley/akoflow/pkg/server/database/repository/runtime_repository"
 	"github.com/ovvesley/akoflow/pkg/server/entities/nfs_server_entity"
+	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
 )
 
 type CreateNfsService struct {
-	workflow workflow_entity.Workflow
+	workflow         workflow_entity.Workflow
+	workflowActivity workflow_activity_entity.WorkflowActivities
 
 	connector connector_k8s.IConnector
 	namespace string
@@ -36,14 +38,22 @@ func (c *CreateNfsService) SetWorkflow(workflow workflow_entity.Workflow) *Creat
 	return c
 }
 
+func (c *CreateNfsService) SetActivity(workflowActivity workflow_activity_entity.WorkflowActivities) *CreateNfsService {
+	c.workflowActivity = workflowActivity
+	return c
+}
+
 func (c *CreateNfsService) SetNamespace(namespace string) *CreateNfsService {
 	c.namespace = namespace
 	return c
-
 }
 
 func (c *CreateNfsService) GetWorkflow() workflow_entity.Workflow {
 	return c.workflow
+}
+
+func (c *CreateNfsService) GetWorkflowActivity() workflow_activity_entity.WorkflowActivities {
+	return c.workflowActivity
 }
 
 func (c *CreateNfsService) GetWorkflowIdString() string {
@@ -357,7 +367,7 @@ func (c *CreateNfsService) Create() bool {
 	// Initialize connector
 	conn := c.connector
 
-	runtime, err := c.runtimeRepository.GetByName(c.GetWorkflow().GetRuntimeId())
+	runtime, err := c.runtimeRepository.GetByName(c.GetWorkflowActivity().GetRuntimeId())
 	if err != nil {
 		return false
 	}
@@ -448,7 +458,7 @@ func (c *CreateNfsService) Create() bool {
 func (c *CreateNfsService) NfsServerIsCreated() bool {
 	conn := config.App().Connector.K8sConnector
 
-	runtime, err := c.runtimeRepository.GetByName(c.GetWorkflow().GetRuntimeId())
+	runtime, err := c.runtimeRepository.GetByName(c.GetWorkflowActivity().GetRuntimeId())
 	if err != nil {
 		return false
 	}

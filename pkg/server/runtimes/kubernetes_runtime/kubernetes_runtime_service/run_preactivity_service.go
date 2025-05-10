@@ -69,7 +69,7 @@ func (r *RunPreactivityService) runJobPreActivity(wf workflow_entity.Workflow, w
 
 	wfpreActivity.Status = activity_repository.StatusRunning
 
-	runtime, err := r.runtimeRepository.GetByName(wf.GetRuntimeId())
+	runtime, err := r.runtimeRepository.GetByName(wfa.GetRuntimeId())
 	if err != nil {
 		println("Error getting runtime")
 		return

@@ -43,7 +43,7 @@ func (m *MonitorGetLogsActivityService) handleGetLogsByActivity(wf workflow_enti
 
 	nameJob := wfa.GetNameJob()
 
-	runtime, err := m.runtimeRepository.GetByName(wf.GetRuntimeId())
+	runtime, err := m.runtimeRepository.GetByName(wfa.GetRuntimeId())
 	if err != nil {
 		return
 	}
@@ -63,7 +63,7 @@ func (m *MonitorGetLogsActivityService) handleGetLogsByActivity(wf workflow_enti
 
 func (m *MonitorGetLogsActivityService) retrieveSaveLogsInDatabase(wf workflow_entity.Workflow, wfa workflow_activity_entity.WorkflowActivities, podName string) {
 
-	runtime, err := m.runtimeRepository.GetByName(wf.GetRuntimeId())
+	runtime, err := m.runtimeRepository.GetByName(wfa.GetRuntimeId())
 	if err != nil {
 		return
 	}

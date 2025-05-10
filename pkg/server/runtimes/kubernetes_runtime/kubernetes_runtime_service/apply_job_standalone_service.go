@@ -77,7 +77,7 @@ func (a *ApplyJobStandaloneService) runK8sJob(wf workflow_entity.Workflow, wfa w
 
 	println("Job: ", job.Metadata.Name)
 
-	runtime, err := a.runtimeRepository.GetByName(wf.GetRuntimeId())
+	runtime, err := a.runtimeRepository.GetByName(wfa.GetRuntimeId())
 	if err != nil {
 		return "", err
 	}

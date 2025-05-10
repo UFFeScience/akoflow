@@ -52,10 +52,11 @@ func (r *WorkerRunActivityDistributedService) ApplyJob(activityID int) bool {
 
 func (r *WorkerRunActivityDistributedService) HandleResourceToRunJob(activityID int) bool {
 	wf := r.GetWorkflow()
-	_ = r.GetWorkflowActivity()
+	wfa := r.GetWorkflowActivity()
 
 	r.createNfsService.
 		SetNamespace(wf.Spec.Namespace).
+		SetActivity(wfa).
 		SetWorkflow(wf)
 
 	if r.createNfsService.NfsServerIsCreated() {

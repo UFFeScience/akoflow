@@ -4,6 +4,7 @@ import (
 	"github.com/ovvesley/akoflow/pkg/server/config"
 	"github.com/ovvesley/akoflow/pkg/server/connector/connector_k8s"
 	"github.com/ovvesley/akoflow/pkg/server/database/repository/runtime_repository"
+	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
 )
 
@@ -25,13 +26,13 @@ func NewCreateNamespaceService() CreateNamespaceService {
 	}
 }
 
-func (r *CreateNamespaceService) GetOrCreateNamespace(wf workflow_entity.Workflow, namespace string) (string, error) {
-	return r.handleGetOrCreateNamespace(wf, namespace)
+func (r *CreateNamespaceService) GetOrCreateNamespace(wf workflow_entity.Workflow, wfa workflow_activity_entity.WorkflowActivities, namespace string) (string, error) {
+	return r.handleGetOrCreateNamespace(wf, wfa, namespace)
 }
 
-func (r *CreateNamespaceService) handleGetOrCreateNamespace(wf workflow_entity.Workflow, namespace string) (string, error) {
+func (r *CreateNamespaceService) handleGetOrCreateNamespace(wf workflow_entity.Workflow, wfa workflow_activity_entity.WorkflowActivities, namespace string) (string, error) {
 
-	runtime, err := r.runtimeRepository.GetByName(wf.GetRuntimeId())
+	runtime, err := r.runtimeRepository.GetByName(wfa.GetRuntimeId())
 	if err != nil {
 		return "", err
 	}
@@ -40,15 +41,15 @@ func (r *CreateNamespaceService) handleGetOrCreateNamespace(wf workflow_entity.W
 
 	if err != nil {
 		println("Namespace not found")
-		return r.handleCreateNamespace(wf, namespace)
+		return r.handleCreateNamespace(wf, wfa, namespace)
 	}
 
 	return response.Metadata.Name, nil
 }
 
-func (r *CreateNamespaceService) handleCreateNamespace(wf workflow_entity.Workflow, namespace string) (string, error) {
+func (r *CreateNamespaceService) handleCreateNamespace(wf workflow_entity.Workflow, wfa workflow_activity_entity.WorkflowActivities, namespace string) (string, error) {
 
-	runtime, err := r.runtimeRepository.GetByName(wf.GetRuntimeId())
+	runtime, err := r.runtimeRepository.GetByName(wfa.GetRuntimeId())
 	if err != nil {
 		return "", err
 	}

@@ -6,6 +6,7 @@ import (
 	"github.com/ovvesley/akoflow/pkg/server/engine/httpserver/handlers/akoflow_admin_handler"
 	"github.com/ovvesley/akoflow/pkg/server/engine/httpserver/handlers/internal_storage_handler"
 	"github.com/ovvesley/akoflow/pkg/server/engine/httpserver/handlers/public_static_handler"
+	"github.com/ovvesley/akoflow/pkg/server/engine/httpserver/handlers/runtime_api_handler"
 	"github.com/ovvesley/akoflow/pkg/server/engine/httpserver/handlers/storage_databasedump_handler"
 	"github.com/ovvesley/akoflow/pkg/server/engine/httpserver/handlers/workflow_api_handler"
 	"github.com/ovvesley/akoflow/pkg/server/engine/httpserver/handlers/workflow_handler"
@@ -33,6 +34,7 @@ func StartServer() {
 	http.HandleFunc("GET /akoflow-server/database-dump/", http_config.KernelHandler(storage_databasedump_handler.New().DatabaseDumpHandler))
 
 	http.HandleFunc("GET /akoflow-admin/", http_config.KernelHandler(akoflow_admin_handler.New().Home))
+	http.HandleFunc("GET /akoflow-admin/runtimes", http_config.KernelHandler(akoflow_admin_handler.New().Runtime))
 	http.HandleFunc("GET /akoflow-admin/workflows/{namespace}/{workflowId}/", http_config.KernelHandler(akoflow_admin_handler.New().WorkflowDetail))
 
 	http.HandleFunc("GET /akoflow-api/workflows/", http_config.KernelHandler(workflow_api_handler.New().ListAllWorkflows))
@@ -40,6 +42,8 @@ func StartServer() {
 	//http.HandleFunc("POST /akoflow-api/validate-workflow/", http_config.KernelHandler(workflow_api_handler.New().ValidateWorkflow))
 	//
 	http.HandleFunc("GET /akoflow-api/workflows/{workflowId}/", http_config.KernelHandler(workflow_api_handler.New().GetWorkflow))
+	http.HandleFunc("GET /akoflow-api/runtimes/", http_config.KernelHandler(runtime_api_handler.New().ListAllRuntimes))
+
 	//http.HandleFunc("GET /akoflow-api/workflows/{workflowId}/activities/", http_config.KernelHandler(workflow_api_handler.New().ListAllActivities))
 	//http.HandleFunc("GET /akoflow-api/workflows/{workflowId}/activities/{activityId}/", http_config.KernelHandler(workflow_api_handler.New().GetActivity))
 	//http.HandleFunc("GET /akoflow-api/workflows/{workflowId}/activities/{activityId}/logs/", http_config.KernelHandler(workflow_api_handler.New().ListAllLogs))

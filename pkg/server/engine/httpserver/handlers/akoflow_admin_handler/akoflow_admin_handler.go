@@ -1,9 +1,10 @@
 package akoflow_admin_handler
 
 import (
+	"net/http"
+
 	"github.com/ovvesley/akoflow/pkg/server/config"
 	"github.com/ovvesley/akoflow/pkg/server/config/http_render_view"
-	"net/http"
 )
 
 type AkoflowAdminHandler struct {
@@ -35,4 +36,13 @@ func (h *AkoflowAdminHandler) WorkflowDetail(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
+}
+
+func (h *AkoflowAdminHandler) Runtime(w http.ResponseWriter, r *http.Request) {
+	runtimeTemplate := h.renderViewProvider.TemplateInstance("runtimes.tmpl.html")
+	err := runtimeTemplate.Execute(w, map[string]interface{}{})
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }

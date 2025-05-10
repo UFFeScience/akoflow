@@ -1,0 +1,22 @@
+{{define "connector_runtimes.js"}}
+<script>
+    function connectorRuntimes() {
+        return {
+            getRuntimes: async () => {
+                try {
+                    const response = await fetch(BASE_URL_API + "runtimes");
+                    if (!response.ok) {
+                        console.error("Failed to fetch runtimes:", response.status, await response.text());
+                        return { data: [] };
+                    }
+                    const data = await response.json();
+                    return data;
+                } catch (error) {
+                    console.error("Error fetching runtimes:", error);
+                    return { data: [] };
+                }
+            },
+        };
+    }
+</script>
+{{end}}

@@ -3,41 +3,41 @@ package runtime_entity
 import "strings"
 
 type Runtime struct {
-	name      string
-	status    int
-	metadata  map[string]string
-	createdAt string
-	updatedAt string
+	Name      string
+	Status    int
+	Metadata  map[string]string
+	CreatedAt string
+	UpdatedAt string
 }
 
 func NewRuntime(name string, status int, metadata map[string]string, createdAt string, updatedAt string) *Runtime {
 	return &Runtime{
-		name:      name,
-		status:    status,
-		metadata:  metadata,
-		createdAt: createdAt,
-		updatedAt: updatedAt,
+		Name:      name,
+		Status:    status,
+		Metadata:  metadata,
+		CreatedAt: createdAt,
+		UpdatedAt: updatedAt,
 	}
 }
 func (r *Runtime) GetName() string {
-	return r.name
+	return r.Name
 }
 
 func (r *Runtime) GetStatus() int {
-	return r.status
+	return r.Status
 }
 
 func (r *Runtime) GetMetadata() map[string]string {
-	return r.metadata
+	return r.Metadata
 }
 
 // GetMetadataApiServerToken returns the API server token from the metadata map.
 // It converts the key to uppercase to ensure consistency in key retrieval.
 // If the key is not found, it returns an empty string.
 func (r *Runtime) GetMetadataApiServerToken() string {
-	key := r.name + "_API_SERVER_TOKEN"
+	key := r.Name + "_API_SERVER_TOKEN"
 	key = strings.ToUpper(key)
-	if token, ok := r.metadata[key]; ok {
+	if token, ok := r.Metadata[key]; ok {
 		return token
 	}
 	return ""
@@ -47,18 +47,18 @@ func (r *Runtime) GetMetadataApiServerToken() string {
 // It converts the key to uppercase to ensure consistency in key retrieval.
 // If the key is not found, it returns an empty string.
 func (r *Runtime) GetMetadataApiServerHost() string {
-	key := r.name + "_API_SERVER_HOST"
+	key := r.Name + "_API_SERVER_HOST"
 	key = strings.ToUpper(key)
-	if url, ok := r.metadata[key]; ok {
+	if url, ok := r.Metadata[key]; ok {
 		return url
 	}
 	return ""
 }
 
 func (r *Runtime) GetCreatedAt() string {
-	return r.createdAt
+	return r.CreatedAt
 }
 
 func (r *Runtime) GetUpdatedAt() string {
-	return r.updatedAt
+	return r.UpdatedAt
 }

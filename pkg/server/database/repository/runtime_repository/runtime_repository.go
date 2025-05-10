@@ -112,7 +112,7 @@ func (r *RuntimeRepository) GetAll() ([]runtime_entity.Runtime, error) {
 
 	defer c.Close()
 
-	rows, err := c.Query("SELECT * FROM " + r.tableName)
+	rows, err := c.Query("SELECT name, status, metadata, created_at, updated_at FROM " + r.tableName)
 	if err != nil {
 		return nil, err
 	}

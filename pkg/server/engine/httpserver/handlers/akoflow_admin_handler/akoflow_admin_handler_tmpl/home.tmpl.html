@@ -14,8 +14,6 @@
 </div>
 
 <script>
-
-    
     async function loadingPage() {
       
         const response = await connector.workflows().getWorkflows();
@@ -24,8 +22,6 @@
         workflow_list_renderListWorkflows(workflowsData);
         stats_workflows_renderStats(workflowsData);
     }
-
-
     document.addEventListener('DOMContentLoaded', () => {
             loadingPage();
     });

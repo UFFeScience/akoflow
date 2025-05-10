@@ -1,0 +1,100 @@
+{{template "base.html" .}}
+{{define "title"}}AkôFlow Runtimes{{end}}
+{{define "content"}}
+
+<div>
+    {{ template "header" dict "title" "Runtimes" }}
+
+    <div id="runtimes-list" class="mt-8 space-y-6">
+    </div>
+</div>
+
+<script>
+    async function fetchRuntimes() {
+        const response = await connector.runtimes().getRuntimes();
+        if (!response || !response.data) {
+            console.error("Failed to fetch runtimes");
+            return;
+        }
+        renderRuntimes(response.data);
+    }
+
+    function isSensitiveKey(key) {
+        return /token|pass|secret/i.test(key);
+    }
+
+    function renderMetadata(metadata, runtimeId) {
+        if (!metadata || typeof metadata !== "object") return "";
+
+        return Object.entries(metadata).map(([key, value], idx) => {
+            const sensitive = isSensitiveKey(key);
+            const fieldId = `runtime-${runtimeId}-key-${idx}`;
+            const displayedValue = sensitive ? "••••••••" : value;
+
+            return `
+                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center py-1 border-b border-dashed border-slate-200 dark:border-slate-700">
+                    <span class="font-medium text-slate-700 dark:text-slate-200">${key}</span>
+                    <div class="flex items-center gap-2 mt-1 sm:mt-0 text-slate-600 dark:text-slate-300">
+                        <span id="${fieldId}" class="break-all text-sm">${displayedValue}</span>
+                        ${sensitive ? `
+                            <button onclick="toggleSensitive('${fieldId}', '${value}')" 
+                                class="text-xs text-blue-600 dark:text-blue-400 hover:underline">mostrar</button>
+                        ` : ""}
+                    </div>
+                </div>
+            `;
+        }).join("");
+    }
+
+    function toggleSensitive(id, realValue) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        const isHidden = el.innerText === "••••••••";
+        el.innerText = isHidden ? realValue : "••••••••";
+
+        const btn = el.nextElementSibling;
+        if (btn) btn.innerText = isHidden ? "hide" : "show";
+    }
+
+    function renderRuntimes(runtimes) {
+        const container = document.getElementById("runtimes-list");
+        container.innerHTML = "";
+
+        runtimes.forEach((runtime, index) => {
+            const statusColor = runtime.status === 1 ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800";
+            const statusText = runtime.status === 1 ? "Online" : "Offline";
+            const metadataHTML = renderMetadata(runtime.metadata, index);
+
+            const card = `
+                <div class="transition hover:shadow-lg bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <div>
+                            <h2 class="text-xl font-semibold text-slate-800 dark:text-white">${runtime.name}</h2>
+                            <p class="text-sm text-slate-500 dark:text-slate-400">
+                                Execution Runtime: ${runtime.name}
+                            </p>
+                        </div>
+                        <span class="inline-block px-3 py-1 text-xs font-semibold rounded-full ${statusColor}">
+                            ${statusText}
+                        </span>
+                    </div>
+
+                    <div class="divide-y divide-slate-100 dark:divide-slate-700 mb-4">
+                        ${metadataHTML}
+                    </div>
+
+                    <div class="text-xs text-slate-500 dark:text-slate-400 mt-4">
+                        <p><strong>Criado:</strong> ${new Date(runtime.createdAt).toLocaleString()}</p>
+                        <p><strong>Atualizado:</strong> ${new Date(runtime.updatedAt).toLocaleString()}</p>
+                    </div>
+                </div>
+            `;
+
+            container.insertAdjacentHTML("beforeend", card);
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", fetchRuntimes);
+</script>
+
+{{end}}

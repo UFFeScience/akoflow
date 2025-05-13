@@ -23,7 +23,7 @@ Although initially focused on Kubernetes-based workloads, AkôFlow has evolved t
 
 ## Maintainers
 * [D.Sc. Daniel de Oliveira — Research Advisor](http://profs.ic.uff.br/~danielcmo/)
-* [Wesley Ferreira - @ovvesley — Core Maintainer](https://github.com/ovvesley)
+* [Wesley Ferreira - @ovvesley — Maintainer](https://github.com/ovvesley)
 * Raphael Garcia — Maintainer
 
 ⸻

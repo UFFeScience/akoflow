@@ -14,12 +14,12 @@ func New() FileSpecParserService {
 }
 
 type DiskSpec struct {
-	Device         string
-	MountPoint     string
 	FileSystem     string
+	Size           string
 	Used           string
 	Available      string
 	UsedPercentage string
+	MountedOn      string
 }
 
 func (s *FileSpecParserService) Parse(rawText string) string {
@@ -55,20 +55,20 @@ func (s *FileSpecParserService) parseLine(line string) *DiskSpec {
 	}
 
 	// trim spaces
-	device := strings.TrimSpace(matches[0])
-	mountPoint := strings.TrimSpace(matches[1])
-	fileSystem := strings.TrimSpace(matches[2])
-	used := strings.TrimSpace(matches[3])
-	available := strings.TrimSpace(matches[4])
-	usedPercentage := strings.TrimSpace(matches[5])
+	fileSystem := strings.TrimSpace(matches[0])
+	size := strings.TrimSpace(matches[1])
+	used := strings.TrimSpace(matches[2])
+	available := strings.TrimSpace(matches[3])
+	usedPercentage := strings.TrimSpace(matches[4])
+	mountPoint := strings.TrimSpace(matches[5])
 
 	// parse line
 	return &DiskSpec{
-		Device:         device,
-		MountPoint:     mountPoint,
 		FileSystem:     fileSystem,
+		Size:           size,
 		Used:           used,
 		Available:      available,
 		UsedPercentage: usedPercentage,
+		MountedOn:      mountPoint,
 	}
 }

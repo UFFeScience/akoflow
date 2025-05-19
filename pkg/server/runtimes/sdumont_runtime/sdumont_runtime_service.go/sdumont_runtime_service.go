@@ -2,7 +2,6 @@ package sdumont_runtime_service
 
 import (
 	"fmt"
-	"os"
 	"regexp"
 	"strings"
 
@@ -121,28 +120,34 @@ func (s *SDumontRuntimeService) syncWorkflowVolumes(wf workflow_entity.Workflow)
 	volumes := wf.GetVolumes()
 	commands := []string{}
 
+	runtime, err := s.runtimeRepository.GetByName(wf.GetRuntimeId()[0])
+	if err != nil {
+		config.App().Logger.Infof("WORKER: Error getting runtime from database.")
+		return
+	}
+
 	for _, volume := range volumes {
 		// Sync local to remote
 		command1 := fmt.Sprintf("sshpass -p '%s' ssh -o StrictHostKeyChecking=no %s@%s 'mkdir -p %s'",
-			os.Getenv("SDUMONT_PASSWORD"),
-			os.Getenv("SDUMONT_USER"),
-			os.Getenv("SDUMONT_HOST_CLUSTER"),
+			runtime.GetCurrentRuntimeMetadata("PASSWORD"),
+			runtime.GetCurrentRuntimeMetadata("USER"),
+			runtime.GetCurrentRuntimeMetadata("HOST_CLUSTER"),
 			volume.GetRemotePath(),
 		)
 
 		command2 := fmt.Sprintf("sshpass -p '%s' rsync -ah --progress %s %s@%s:%s",
-			os.Getenv("SDUMONT_PASSWORD"),
+			runtime.GetCurrentRuntimeMetadata("PASSWORD"),
 			volume.GetLocalPath(),
-			os.Getenv("SDUMONT_USER"),
-			os.Getenv("SDUMONT_HOST_CLUSTER"),
+			runtime.GetCurrentRuntimeMetadata("USER"),
+			runtime.GetCurrentRuntimeMetadata("HOST_CLUSTER"),
 			volume.GetRemotePath(),
 		)
 
 		// Sync remote to local
 		command3 := fmt.Sprintf("sshpass -p '%s' rsync -ah --progress %s@%s:%s %s",
-			os.Getenv("SDUMONT_PASSWORD"),
-			os.Getenv("SDUMONT_USER"),
-			os.Getenv("SDUMONT_HOST_CLUSTER"),
+			runtime.GetCurrentRuntimeMetadata("PASSWORD"),
+			runtime.GetCurrentRuntimeMetadata("USER"),
+			runtime.GetCurrentRuntimeMetadata("HOST_CLUSTER"),
 			volume.GetRemotePath(),
 			volume.GetLocalPath(),
 		)

@@ -14,6 +14,7 @@ func NewSdumontRuntime() *SdumontRuntime {
 
 type SdumontRuntime struct {
 	sDumontRuntimeService *sdumont_runtime_service.SDumontRuntimeService
+	runtimeName           string
 }
 
 func (s *SdumontRuntime) StartConnection() error {
@@ -22,6 +23,11 @@ func (s *SdumontRuntime) StartConnection() error {
 
 func (s *SdumontRuntime) StopConnection() error {
 	return nil
+}
+
+func (s *SdumontRuntime) SetRuntimeName(runtimeName string) *SdumontRuntime {
+	s.runtimeName = runtimeName
+	return s
 }
 
 func (s *SdumontRuntime) ApplyJob(workflowID int, activityID int) bool {
@@ -46,7 +52,7 @@ func (s *SdumontRuntime) GetStatus(workflowID int, activityID int) string {
 }
 
 func (s *SdumontRuntime) HealthCheck() bool {
-	// s.sDumontRuntimeService.HealthCheck()
+	s.sDumontRuntimeService.HealthCheck(s.runtimeName)
 	return true
 }
 

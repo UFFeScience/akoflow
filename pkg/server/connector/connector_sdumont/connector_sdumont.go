@@ -2,17 +2,24 @@ package connector_sdumont
 
 import (
 	"fmt"
-	"os"
 	"os/exec"
 	"sync"
 	"syscall"
+
+	"github.com/ovvesley/akoflow/pkg/server/entities/runtime_entity"
 )
 
 type ConnectorSDumont struct {
+	Runtime runtime_entity.Runtime
 }
 
 func New() IConnectorSDumont {
 	return &ConnectorSDumont{}
+}
+
+func (c *ConnectorSDumont) SetRuntime(runtime runtime_entity.Runtime) *ConnectorSDumont {
+	c.Runtime = runtime
+	return c
 }
 
 type IConnectorSDumont interface {
@@ -21,6 +28,7 @@ type IConnectorSDumont interface {
 	RunCommandWithOutputRemote(command string, args ...string) (string, error)
 	IsVPNConnected() (bool, error)
 	ExecuteMultiplesCommand(commands []string)
+	SetRuntime(runtime runtime_entity.Runtime) *ConnectorSDumont
 }
 
 func (c *ConnectorSDumont) RunCommandWithOutputRemote(command string, args ...string) (string, error) {
@@ -28,9 +36,9 @@ func (c *ConnectorSDumont) RunCommandWithOutputRemote(command string, args ...st
 
 	shell := getAvailableShell()
 
-	password := os.Getenv("SDUMONT_PASSWORD")
-	username := os.Getenv("SDUMONT_USER")
-	hostname := os.Getenv("SDUMONT_HOST_CLUSTER")
+	password := c.Runtime.GetCurrentRuntimeMetadata("PASSWORD")
+	username := c.Runtime.GetCurrentRuntimeMetadata("USER")
+	hostname := c.Runtime.GetCurrentRuntimeMetadata("HOST_CLUSTER")
 
 	command = fmt.Sprintf("sshpass -p '%s' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o LogLevel=ERROR -o ConnectTimeout=10 %s@%s '%s'", password, username, hostname, command)
 

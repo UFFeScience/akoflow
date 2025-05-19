@@ -42,6 +42,10 @@ func normalizeRuntime(runtime string) string {
 		return RUNTIME_K8S
 	}
 
+	if strings.HasPrefix(runtime, "sdumont") {
+		return RUNTIME_SINGULARITY_SDUMONT
+	}
+
 	return runtime
 
 }
@@ -54,7 +58,7 @@ func GetRuntimeInstance(runtimeName string) IRuntime {
 		RUNTIME_DOCKER:              docker_runtime.NewDockerRuntime(),
 		RUNTIME_K8S:                 kubernetes_runtime.NewKubernetesRuntime().SetRuntimeName(runtimeName),
 		RUNTIME_SINGULARITY:         singularity_runtime.NewSingularityRuntime(),
-		RUNTIME_SINGULARITY_SDUMONT: sdumont_runtime.NewSdumontRuntime(),
+		RUNTIME_SINGULARITY_SDUMONT: sdumont_runtime.NewSdumontRuntime().SetRuntimeName(runtimeName),
 	}
 	if modeMap[runtime] == nil {
 		config.App().Logger.Error(fmt.Sprintf("Runtime not found: %s", runtimeName))

@@ -31,6 +31,15 @@ func (r *Runtime) GetMetadata() map[string]string {
 	return r.Metadata
 }
 
+func (r *Runtime) GetCurrentRuntimeMetadata(key string) string {
+	key = r.Name + "_" + key
+	key = strings.ToUpper(key)
+	if metadata, ok := r.Metadata[key]; ok {
+		return metadata
+	}
+	return ""
+}
+
 // GetMetadataApiServerToken returns the API server token from the metadata map.
 // It converts the key to uppercase to ensure consistency in key retrieval.
 // If the key is not found, it returns an empty string.

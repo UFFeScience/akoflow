@@ -9,6 +9,7 @@ import (
 	"github.com/ovvesley/akoflow/pkg/server/config"
 	"github.com/ovvesley/akoflow/pkg/server/connector/connector_sdumont"
 	"github.com/ovvesley/akoflow/pkg/server/database/repository/activity_repository"
+	"github.com/ovvesley/akoflow/pkg/server/database/repository/runtime_repository"
 	"github.com/ovvesley/akoflow/pkg/server/database/repository/workflow_repository"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
@@ -21,6 +22,7 @@ type SDumontRuntimeService struct {
 
 	activityRepository activity_repository.IActivityRepository
 	workflowRepository workflow_repository.IWorkflowRepository
+	runtimeRepository  runtime_repository.IRuntimeRepository
 
 	connectorSDumont connector_sdumont.IConnectorSDumont
 }
@@ -31,6 +33,7 @@ func New() *SDumontRuntimeService {
 
 		activityRepository: config.App().Repository.ActivityRepository,
 		workflowRepository: config.App().Repository.WorkflowRepository,
+		runtimeRepository:  config.App().Repository.RuntimeRepository,
 
 		connectorSDumont: config.App().Connector.SDumontConnector,
 	}
@@ -270,4 +273,50 @@ func (s *SDumontRuntimeService) extractSacctJobID(outputCommand string) (SaactRe
 		State:     match[6],
 		ExitCode:  match[7],
 	}, nil
+}
+
+func (s *SDumontRuntimeService) HealthCheck(runtimeName string) bool {
+	config.App().Logger.Infof("WORKER: Health check SDumont Runtime")
+
+	connected, err := s.connectorSDumont.IsVPNConnected()
+	if err != nil {
+		config.App().Logger.Error("WORKER: Error checking VPN connection to SDumont Runtime.")
+		return false
+	}
+	if !connected {
+		config.App().Logger.Error("WORKER: VPN is not connected to SDumont Runtime.")
+		return false
+	}
+
+	runtime, err := s.runtimeRepository.GetByName(runtimeName)
+
+	if err != nil {
+		config.App().Logger.Error("WORKER: Error getting runtime from database.")
+		return false
+	}
+
+	if runtime == nil {
+		config.App().Logger.Error("WORKER: Runtime not found in database.")
+		return false
+	}
+
+	command := fmt.Sprintf("sinfo -p %s", runtime.GetCurrentRuntimeMetadata("QUEUE"))
+	output, err := s.connectorSDumont.SetRuntime(*runtime).RunCommandWithOutputRemote(command)
+
+	if err != nil {
+		runtime.Status = runtime_repository.STATUS_NOT_READY
+		config.App().Logger.Error("WORKER: Error running command in SDumont Runtime.")
+		return false
+	}
+
+	if strings.Contains(output, "No nodes available") {
+		s.runtimeRepository.UpdateStatus(runtime, runtime_repository.STATUS_NOT_READY)
+		config.App().Logger.Error("WORKER: No nodes available in SDumont Runtime.")
+		return false
+	}
+
+	s.runtimeRepository.UpdateStatus(runtime, runtime_repository.STATUS_READY)
+
+	return true
+
 }

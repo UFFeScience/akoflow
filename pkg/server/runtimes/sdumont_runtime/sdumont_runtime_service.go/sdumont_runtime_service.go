@@ -57,8 +57,15 @@ func (s *SDumontRuntimeService) ApplyJob(workflowID int, activityID int) string 
 		s.applyWorkflowInRuntime(wf, wfa)
 	}
 
+	runtime, err := s.runtimeRepository.GetByName(wf.GetRuntimeId()[0])
+	if err != nil {
+		config.App().Logger.Infof("WORKER: Error getting runtime from database.")
+		return ""
+	}
+
 	singularitySystemCall := s.makeSingularityActivity.MakeContainerCommandActivityToSDumont(wf, wfa)
 	sBatchSDumontSystemCall := s.makeSBatchSDumontActivity.
+		SetRuntime(*runtime).
 		SetSingularityCommand(singularitySystemCall).
 		Handle(wf, wfa)
 
@@ -79,6 +86,11 @@ func (s *SDumontRuntimeService) ApplyJob(workflowID int, activityID int) string 
 	output, _ := s.connectorSDumont.RunCommandWithOutputRemote(sBatchSDumontSystemCall)
 
 	pid, err := s.extractJobID(output)
+
+	if err != nil {
+		config.App().Logger.Infof("WORKER: Error extracting job ID %s", strings.TrimSpace(wfa.GetProcId()))
+		return ""
+	}
 
 	fmt.Println("PID: ", pid)
 

@@ -3,8 +3,8 @@ package sdumont_runtime_service
 import (
 	"encoding/base64"
 	"fmt"
-	"os"
 
+	"github.com/ovvesley/akoflow/pkg/server/entities/runtime_entity"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
 )
@@ -17,10 +17,16 @@ func NewMakeSBatchSDumontActivityService() MakeSBatchSDumontActivityService {
 
 type MakeSBatchSDumontActivityService struct {
 	singularityCommand string
+	runtime            runtime_entity.Runtime
 }
 
 func (m MakeSBatchSDumontActivityService) SetSingularityCommand(singularityCommand string) MakeSBatchSDumontActivityService {
 	m.singularityCommand = singularityCommand
+	return m
+}
+
+func (m MakeSBatchSDumontActivityService) SetRuntime(runtime runtime_entity.Runtime) MakeSBatchSDumontActivityService {
+	m.runtime = runtime
 	return m
 }
 
@@ -49,13 +55,44 @@ func (m MakeSBatchSDumontActivityService) Handle(workflow workflow_entity.Workfl
 		activity.GetId(),
 	)
 
-	time := "48:00:00" // 48 hours
-	partition := os.Getenv("SDUMONT_QUEUE")
+	time := m.runtime.GetCurrentRuntimeMetadata("TIME")
+	if time == "" {
+		time = "48:00:00" // 48 hours
+	}
+
+	partition := m.runtime.GetCurrentRuntimeMetadata("QUEUE")
+	if partition == "" {
+		partition = "gdl"
+	}
+
+	ntasksStr := m.runtime.GetCurrentRuntimeMetadata("NTASKS")
 	ntasks := 1
+	if ntasksStr != "" {
+		fmt.Sscanf(ntasksStr, "%d", &ntasks)
+	}
+
+	nodesStr := m.runtime.GetCurrentRuntimeMetadata("NODES")
 	nodes := 1
+	if nodesStr != "" {
+		fmt.Sscanf(nodesStr, "%d", &nodes)
+	}
+
+	gpusStr := m.runtime.GetCurrentRuntimeMetadata("GPUS")
 	gpus := 1
+	if gpusStr != "" {
+		fmt.Sscanf(gpusStr, "%d", &gpus)
+	}
+
+	cpusPerGpuStr := m.runtime.GetCurrentRuntimeMetadata("CPUS_PER_GPU")
 	cpusPerGpu := 1
-	mem := "8G"
+	if cpusPerGpuStr != "" {
+		fmt.Sscanf(cpusPerGpuStr, "%d", &cpusPerGpu)
+	}
+
+	mem := m.runtime.GetCurrentRuntimeMetadata("MEM")
+	if mem == "" {
+		mem = "8G"
+	}
 
 	wrap := fmt.Sprintf("%s", m.GetSingularityCommand())
 

@@ -1,0 +1,25 @@
+name: teste
+spec:
+  runtime: "k8s"
+  namespace: "akoflow"
+  image: "alpine:3.7"
+  storagePolicy:
+    storageClassName: "hostpath"
+    storageSize: "32Mi"
+    type: distributed
+  mountPath: "/data"
+  activities:
+    - name: "a"
+      memoryLimit: 500Mi
+      cpuLimit: 0.5
+      nodeSelector: "kubernetes.io/hostname=docker-desktop"
+      run: |
+        mkdir -p /data/a
+        echo "Hello World" >> /data/output.txt
+        sleep 5
+        echo "Hello World Again" >> /data/a/output.txt
+        sleep 5
+        echo "Hello World One More Time" >> /data/a/output.txt
+        echo "GG"
+        
+

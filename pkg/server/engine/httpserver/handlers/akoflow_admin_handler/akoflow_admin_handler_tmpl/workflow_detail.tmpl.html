@@ -256,7 +256,7 @@
         let options = {
             layout: {
                 hierarchical: {
-                    direction: "RL",
+                    direction: "LR",
                     sortMethod: "directed",
                     nodeSpacing: 120,
                     levelSeparation: 250, // Reduced for potentially denser graphs
@@ -362,8 +362,8 @@
             if (activity.dependsOn && Array.isArray(activity.dependsOn)) {
                 activity.dependsOn.forEach(dep => {
                     edges.push({
-                        from: activity.name,
-                        to: dep,
+                        from: dep,
+                        to: activity.name,
                     });
                 });
             }

@@ -26,26 +26,28 @@
 <script>
     const menuTop = [
         { label: "Workflows", icon: "fa-project-diagram", url: "/akoflow-admin" },
-        // { label: "API Reference (comming soon)", icon: "fa-code", url: "/akoflow-admin/documentations/api" },
         { label: "Runtimes", icon: "fa-cogs", url: "/akoflow-admin/runtimes" },
-        // { label: "Settings (comming soon)", icon: "fa-cog", url: "/akoflow-admin/settings" },
     ];
 
     const menuBottom = [
-        { label: "Documentation", icon: "fa-book", url: "/akoflow-admin/documentation" },
-        { label: "Changelog", icon: "fa-clipboard-list", url: "/akoflow-admin/changelog" },
+        { label: "Documentation", icon: "fa-book", url: "https://akoflow.com/docs" },
+        { label: "Changelog", icon: "fa-clipboard-list", url: "https://github.com/UFFeScience/akoflow/releases/latest" },
+        { label: "Github", icon: "fa-brands fa-github" , url: "https://github.com/UFFeScience/akoflow" },
+    
     ];
 
     function createMenu(items, container, indent = 0) {
         items.forEach(item => {
             const link = document.createElement("a");
             link.href = item.url || "#";
+            link.target = item.url && item.url.startsWith("http") ? "_blank" : "_self";
             link.className = `flex items-center text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors${indent ? " ml-" + indent : ""}`;
             link.innerHTML = `
             <i class="fa ${item.icon} h-5 w-5 mr-3"></i>
             <span class="text-base">${item.label}</span>
             ${item.submenu ? '<i class="fa fa-chevron-right ml-auto h-4 w-4 transition-transform" data-toggle></i>' : ''}
         `;
+           
             container.appendChild(link);
 
             if (item.submenu) {

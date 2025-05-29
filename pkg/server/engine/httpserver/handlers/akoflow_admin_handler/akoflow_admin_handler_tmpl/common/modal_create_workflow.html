@@ -1,0 +1,577 @@
+{{ define "modal_create_workflow" }}
+
+<div id="create-workflow-modal"
+    class="hidden fixed inset-0 bg-black bg-opacity-60 dark:bg-opacity-70 z-50 flex items-center justify-center transition-opacity duration-300 ease-in-out">
+
+    <div class="bg-slate-50 dark:bg-slate-800 rounded-xl shadow-2xl w-full h-full flex flex-col relative">
+
+        <div
+            class="flex justify-between items-center p-4 border-b border-slate-200 dark:border-slate-700 flex-shrink-0">
+            <h3 class="text-lg font-semibold text-slate-800 dark:text-slate-100 flex items-center">
+                <i class="fas fa-project-diagram text-sky-600 dark:text-sky-500 mr-3"></i>
+                Create New Workflow
+            </h3>
+            <button id="close-create-workflow-modal-btn"
+                class="text-slate-400 dark:text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full w-8 h-8 flex items-center justify-center transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                    </path>
+                </svg>
+            </button>
+        </div>
+
+        <div class="border-b border-slate-200 dark:border-slate-700 flex-shrink-0">
+            <nav class="flex space-x-4 px-4" aria-label="Tabs">
+                <button id="tab-btn-upload" type="button"
+                    class="tab-btn active-tab group inline-flex items-center py-3 px-1 border-b-2 font-medium text-sm">
+                    <i class="fas fa-file-upload mr-2"></i>
+                    Upload YAML
+                </button>
+                <button id="tab-btn-editor" type="button"
+                    class="tab-btn inactive-tab group inline-flex items-center py-3 px-1 border-b-2 font-medium text-sm">
+                    <i class="fas fa-edit mr-2"></i>
+                    Visual Editor
+                </button>
+            </nav>
+        </div>
+
+        <div class="flex-grow overflow-hidden">
+            <div id="tab-panel-upload" class="tab-panel w-full h-full p-6">
+                <div id="drop-zone"
+                    class="w-full h-full flex flex-col justify-center items-center border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-lg bg-slate-100 dark:bg-slate-800/30 hover:border-sky-500 dark:hover:border-sky-500 transition-colors cursor-pointer">
+                    <input type="file" id="file-input" class="hidden" accept=".yaml, .yml">
+                    <div class="text-center">
+                        <i class="fas fa-cloud-upload-alt text-5xl text-slate-400 dark:text-slate-500 mb-4"></i>
+                        <h3 class="text-lg font-semibold text-slate-700 dark:text-slate-200">Drag & drop a file here
+                        </h3>
+                        <p class="text-sm text-slate-500 dark:text-slate-400">or click to select a file</p>
+                        <p class="text-xs text-slate-400 dark:text-slate-500 mt-1">Supports .YAML and .YML</p>
+                        <div id="file-info" class="mt-4 text-sm font-medium text-sky-700 dark:text-sky-400"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-panel-editor" class="tab-panel hidden h-full">
+                <div class="flex flex-col md:flex-row h-full overflow-hidden">
+                    <div class="w-full md:w-1/2 p-4 overflow-y-auto space-y-5" id="workflow-form-panel">
+                        <div
+                            class="bg-white dark:bg-slate-900/50 p-4 rounded-lg border border-slate-200 dark:border-slate-700">
+                            <h4 class="font-semibold text-md text-slate-700 dark:text-slate-200 mb-3">Workflow Details
+                            </h4>
+                            <div class="space-y-3">
+                                <div>
+                                    <label for="workflow-name"
+                                        class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Name</label>
+                                    <input type="text" id="workflow-name" placeholder="e.g., my-processing-job"
+                                        class="w-full bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-200 border-slate-300 dark:border-slate-600 rounded-md py-2 px-3 text-sm shadow-sm transition-colors duration-150 focus:border-sky-500 focus:ring-2 focus:ring-sky-500/50">
+                                </div>
+                                <div>
+                                    <label for="workflow-namespace"
+                                        class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Namespace</label>
+                                    <input type="text" id="workflow-namespace" value="akoflow"
+                                        class="w-full bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-200 border-slate-300 dark:border-slate-600 rounded-md py-2 px-3 text-sm shadow-sm transition-colors duration-150 focus:border-sky-500 focus:ring-2 focus:ring-sky-500/50">
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-md text-slate-700 dark:text-slate-200 mb-3">Activities</h4>
+                            <div id="activities-container" class="space-y-3"></div>
+                            <button id="add-activity-btn"
+                                class="fixed bottom-6 left-6 bg-green-600 hover:bg-green-700 text-white px-4 py-2 text-sm font-bold rounded-full shadow-lg transition-all duration-150 flex items-center">
+                                <i class="fas fa-plus mr-2"></i> Add Activity
+                            </button>
+                        </div>
+                    </div>
+                    <div
+                        class="w-full md:w-1/2 p-4 border-t md:border-t-0 md:border-l border-slate-200 dark:border-slate-700 flex flex-col">
+                        <h4 class="font-semibold text-md text-slate-700 dark:text-slate-200 mb-3 flex-shrink-0">Workflow
+                            Graph</h4>
+                        <div id="workflow-graph-container"
+                            class="flex-grow bg-slate-100 dark:bg-slate-900/50 rounded-lg border border-slate-200 dark:border-slate-700 min-h-[250px] md:min-h-0">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div
+            class="flex justify-end items-center p-4 border-t border-slate-200 dark:border-slate-700 flex-shrink-0 space-x-3">
+            <button id="cancel-workflow-btn"
+                class="bg-transparent border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 px-4 py-2 text-sm font-semibold rounded-lg transition-colors duration-150">Cancel</button>
+            <button id="submit-workflow-btn"
+                class="bg-sky-600 hover:bg-sky-700 text-white px-5 py-2 text-sm font-semibold rounded-lg transition-all duration-150 focus:outline-none focus:ring-4 focus:ring-sky-500/50 shadow-sm hover:shadow-md flex items-center">
+                <i class="fas fa-check mr-2"></i>Create Workflow
+            </button>
+        </div>
+
+    </div>
+</div>
+
+<style>
+    .active-tab {
+        border-color: #0ea5e9;
+        /* Cor sky-500 */
+        color: #0ea5e9;
+    }
+
+    .inactive-tab {
+        border-color: transparent;
+        color: #64748b;
+        /* Cor slate-500 */
+    }
+
+    .inactive-tab:hover {
+        border-color: #94a3b8;
+        /* Cor slate-400 */
+        color: #334155;
+        /* Cor slate-700 */
+    }
+
+    .dark .inactive-tab:hover {
+        border-color: #475569;
+        /* Cor slate-600 */
+        color: #cbd5e1;
+        /* Cor slate-300 */
+    }
+
+    .drop-zone-dragover {
+        border-color: #0ea5e9;
+        /* Cor sky-500 */
+        background-color: #f0f9ff;
+        /* Cor sky-50 */
+    }
+
+    .dark .drop-zone-dragover {
+        background-color: #0c4a6e;
+        /* Cor sky-900 */
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+
+        const tabButtons = {
+            upload: document.getElementById('tab-btn-upload'),
+            editor: document.getElementById('tab-btn-editor')
+        };
+        const tabPanels = {
+            upload: document.getElementById('tab-panel-upload'),
+            editor: document.getElementById('tab-panel-editor')
+        };
+
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('file-input');
+        const fileInfo = document.getElementById('file-info');
+
+        const switchTab = (tabName) => {
+            Object.values(tabButtons).forEach(btn => btn.classList.replace('active-tab', 'inactive-tab'));
+            Object.values(tabPanels).forEach(panel => panel.classList.add('hidden'));
+
+            tabButtons[tabName].classList.replace('inactive-tab', 'active-tab');
+            tabPanels[tabName].classList.remove('hidden');
+        };
+
+        tabButtons.upload.addEventListener('click', () => switchTab('upload'));
+        tabButtons.editor.addEventListener('click', () => {
+            switchTab('editor');
+            renderAll(); // Ensure the editor is rendered when switching to it
+        });
+
+        dropZone.addEventListener('click', () => fileInput.click());
+
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('drop-zone-dragover');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('drop-zone-dragover');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('drop-zone-dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFile(files[0]);
+            }
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            const files = e.target.files;
+            if (files.length > 0) {
+                handleFile(files[0]);
+            }
+        });
+
+        const handleFile = (file) => {
+            if (!file.name.endsWith('.yaml') && !file.name.endsWith('.yml')) {
+                fileInfo.textContent = 'Error: Only .yaml or .yml files are accepted.';
+                fileInfo.classList.add('text-red-500');
+                return;
+            }
+            fileInfo.textContent = `Selected: ${file.name}`;
+            fileInfo.classList.remove('text-red-500');
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const data = jsyaml.load(e.target.result);
+
+                    if (!data || !data.spec || !Array.isArray(data.spec.activities)) {
+                        throw new Error("Invalid workflow format. Missing 'spec' or 'spec.activities'.");
+                    }
+
+                    workflowState.name = data.name || '';
+                    workflowState.spec.namespace = data.spec.namespace || 'akoflow';
+                    workflowState.spec.activities = data.spec.activities.map(act => ({
+                        ...act,
+                        id: `act_${Date.now()}_${Math.random()}`
+                    }));
+
+                    document.getElementById('workflow-name').value = workflowState.name;
+                    document.getElementById('workflow-namespace').value = workflowState.spec.namespace;
+                    renderAll(); 
+
+                    switchTab('editor');
+
+                } catch (err) {
+                    console.error("Error parsing YAML:", err);
+                    fileInfo.textContent = `Error: ${err.message}`;
+                    fileInfo.classList.add('text-red-500');
+                }
+            };
+            reader.onerror = () => {
+                fileInfo.textContent = 'Error reading the file.';
+                fileInfo.classList.add('text-red-500');
+            };
+            reader.readAsText(file);
+        };
+
+
+
+        const modal = document.getElementById('create-workflow-modal');
+        const openModalBtn = document.getElementById('open-create-workflow-modal-btn');
+        const closeModalBtn = document.getElementById('close-create-workflow-modal-btn');
+        const cancelBtn = document.getElementById('cancel-workflow-btn');
+        const addActivityBtn = document.getElementById('add-activity-btn');
+        const activitiesContainer = document.getElementById('activities-container');
+        const graphContainer = document.getElementById('workflow-graph-container');
+        const workflowNameInput = document.getElementById('workflow-name');
+        const workflowNamespaceInput = document.getElementById('workflow-namespace');
+
+        let network = null;
+        let workflowState = {
+            name: '',
+            spec: {
+                namespace: 'akoflow',
+                activities: []
+            }
+        };
+
+        let openModal = () => {
+            resetWorkflowState();
+            renderAll();
+            modal.classList.remove('hidden');
+        };
+        const closeModal = () => modal.classList.add('hidden');
+
+        const originalOpenModal = openModal;
+        openModal = () => {
+            originalOpenModal(); 
+            switchTab('upload'); 
+            fileInfo.textContent = ''; 
+            fileInput.value = ''; 
+        };
+
+        function resetWorkflowState() {
+            workflowState = {
+                name: '',
+                spec: {
+                    namespace: 'akoflow',
+                    activities: []
+                }
+            };
+            workflowNameInput.value = '';
+            workflowNamespaceInput.value = 'akoflow';
+            addActivity();
+        }
+
+        function updateWorkflowState() {
+            workflowState.name = workflowNameInput.value.trim();
+            workflowState.spec.namespace = workflowNamespaceInput.value.trim();
+
+            document.querySelectorAll('.activity-card').forEach((card, index) => {
+                const activity = workflowState.spec.activities[index];
+                if (activity) {
+                    activity.name = card.querySelector('.activity-name').value.trim();
+                    activity.image = card.querySelector('.activity-image').value.trim();
+                    activity.run = card.querySelector('.activity-run').value;
+
+                    const dependsOnSelect = card.querySelector('.activity-depends-on');
+                    activity.dependsOn = Array.from(dependsOnSelect.selectedOptions).map(opt => opt.value);
+                }
+            });
+            renderGraph();
+        }
+
+        function addActivity() {
+            const newActivity = {
+                id: `act_${Date.now()}`,
+                name: `activity-${workflowState.spec.activities.length + 1}`,
+                image: 'alpine:3.18',
+                run: 'echo "Hello from new activity"',
+                dependsOn: []
+            };
+            workflowState.spec.activities.push(newActivity);
+            renderAll();
+        }
+
+        function removeActivity(activityId) {
+            const activityToRemove = workflowState.spec.activities.find(a => a.id === activityId);
+            workflowState.spec.activities.forEach(act => {
+                if (act.dependsOn) {
+                    act.dependsOn = act.dependsOn.filter(dep => dep !== activityToRemove.name);
+                }
+            });
+            workflowState.spec.activities = workflowState.spec.activities.filter(a => a.id !== activityId);
+            renderAll();
+        }
+
+        function renderAll() {
+            renderActivityForms();
+            renderGraph();
+            attachFormListeners();
+        }
+
+
+        function createActivityCardHTML(activity, allActivityNames, index) {
+            const otherActivityNames = allActivityNames.filter(name => name !== activity.name);
+
+            const optionsHtml = otherActivityNames.map(name =>
+                `<option value="${name}" ${activity.dependsOn.includes(name) ? 'selected' : ''}>${name}</option>`
+            ).join('');
+
+            const bodyVisibilityClass = index === 0 ? '' : 'hidden';
+            const iconRotationClass = index === 0 ? '' : 'transform -rotate-90';
+            return `
+        <div class="activity-card bg-white dark:bg-slate-900/50 rounded-lg border border-slate-200 dark:border-slate-700 overflow-hidden" id="${activity.id}">
+            <div class="activity-card-header flex justify-between items-center p-3 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-colors">
+            <div class="flex items-center min-w-0">
+                <i class="fas fa-cube text-slate-400 dark:text-slate-500 mr-3"></i>
+                <span class="font-semibold text-sm text-slate-700 dark:text-slate-200 truncate pr-2">${activity.name}</span>
+            </div>
+            <div class="flex items-center">
+                <button class="remove-activity-btn text-red-400 hover:text-red-600 dark:text-red-500 dark:hover:text-red-400 w-7 h-7 rounded-md hover:bg-red-100 dark:hover:bg-red-900/50 flex items-center justify-center transition-colors mr-2">
+                <i class="fas fa-trash-alt fa-sm"></i>
+                </button>
+                <i class="toggle-icon fas fa-chevron-down text-slate-500 transition-transform duration-200 ${iconRotationClass}"></i>
+            </div>
+            </div>
+            <div class="activity-card-body p-4 border-t border-slate-200 dark:border-slate-700 ${bodyVisibilityClass}">
+            <div class="space-y-3">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Activity Name</label>
+                    <input type="text" value="${activity.name}" 
+                       class="activity-name w-full bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-200 border-slate-300 dark:border-slate-600 rounded-md py-2 px-3 text-sm shadow-sm transition-colors duration-150
+                          focus:border-sky-500 focus:ring-2 focus:ring-sky-500/50">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Container Image</label>
+                    <input type="text" value="${activity.image}" 
+                       class="activity-image w-full bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-200 border-slate-300 dark:border-slate-600 rounded-md py-2 px-3 text-sm shadow-sm transition-colors duration-150
+                          focus:border-sky-500 focus:ring-2 focus:ring-sky-500/50">
+                </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Memory Limit</label>
+                    <input type="text" value="${activity.memoryLimit || ''}" 
+                       class="activity-memory-limit w-full bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-200 border-slate-300 dark:border-slate-600 rounded-md py-2 px-3 text-sm shadow-sm transition-colors duration-150
+                          focus:border-sky-500 focus:ring-2 focus:ring-sky-500/50">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">CPU Limit</label>
+                    <input type="text" value="${activity.cpuLimit || ''}" 
+                       class="activity-cpu-limit w-full bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-200 border-slate-300 dark:border-slate-600 rounded-md py-2 px-3 text-sm shadow-sm transition-colors duration-150
+                          focus:border-sky-500 focus:ring-2 focus:ring-sky-500/50">
+                </div>
+                </div>
+                <div>
+                <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Runtime</label>
+                <input type="text" value="${activity.runtime || ''}" 
+                       class="activity-runtime w-full bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-200 border-slate-300 dark:border-slate-600 rounded-md py-2 px-3 text-sm shadow-sm transition-colors duration-150
+                          focus:border-sky-500 focus:ring-2 focus:ring-sky-500/50">
+                </div>
+                <div>
+                <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Run Script</label>
+                <textarea rows="4" class="activity-run w-full bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-200 border-slate-300 dark:border-slate-600 rounded-md py-2 px-3 text-sm shadow-sm font-mono transition-colors duration-150
+                       focus:border-sky-500 focus:ring-2 focus:ring-sky-500/50">${activity.run}</textarea>
+                </div>
+                <div>
+                <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Depends On (Ctrl+Click for multiple)</label>
+                <select multiple 
+                    class="activity-depends-on w-full bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-200 border-slate-300 dark:border-slate-600 rounded-md shadow-sm text-sm
+                           focus:border-sky-500 focus:ring-2 focus:ring-sky-500/50">
+                    ${optionsHtml}
+                </select>
+                </div>
+            </div>
+            </div>
+        </div>
+    `;
+        }
+
+        function renderActivityForms() {
+            if (!activitiesContainer) return;
+
+            activitiesContainer.innerHTML = '';
+            const allActivityNames = workflowState.spec.activities.map(a => a.name);
+
+            workflowState.spec.activities.forEach((activity, index) => {
+
+
+                const cardHTML = createActivityCardHTML(activity, allActivityNames, index);
+
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = cardHTML.trim();
+                const activityCard = tempDiv.firstChild;
+
+                activitiesContainer.appendChild(activityCard);
+
+                const header = activityCard.querySelector('.activity-card-header');
+                const body = activityCard.querySelector('.activity-card-body');
+                const toggleIcon = activityCard.querySelector('.toggle-icon');
+                const removeBtn = activityCard.querySelector('.remove-activity-btn');
+
+                header.addEventListener('click', (e) => {
+                    if (!removeBtn.contains(e.target) && !removeBtn.parentElement.contains(e.target)) {
+                        body.classList.toggle('hidden');
+                        toggleIcon.classList.toggle('-rotate-90');
+                    }
+                });
+
+                removeBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    removeActivity(activity.id);
+                });
+            });
+        }
+
+        function renderGraph() {
+            if (!graphContainer) return;
+
+            const nodes = new vis.DataSet(workflowState.spec.activities.map(act => ({
+                id: act.name,
+                label: act.name,
+                shape: 'box',
+                color: {
+                    background: '#e0f2fe', // sky-100
+                    border: '#0ea5e9' // sky-500
+                },
+                font: { color: '#0369a1' } // sky-800
+            })));
+
+            const edges = [];
+            workflowState.spec.activities.forEach(act => {
+                if (act.dependsOn) {
+                    act.dependsOn.forEach(dep => {
+                        edges.push({ from: dep, to: act.name, arrows: 'to' });
+                    });
+                }
+            });
+
+            const data = { nodes: nodes, edges: new vis.DataSet(edges) };
+            const options = {
+                layout: {
+                    hierarchical: {
+                        direction: 'LR', // Left-to-Right
+                        sortMethod: 'directed',
+                        levelSeparation: 200,
+                    },
+                },
+                physics: {
+                    hierarchicalRepulsion: {
+                        nodeDistance: 150,
+                    },
+                },
+                edges: {
+                    smooth: true,
+                    color: {
+                        color: '#64748b',
+                        highlight: '#0ea5e9',
+                        hover: '#38bdf8'
+                    }
+                },
+                interaction: {
+                    hover: true
+                }
+            };
+
+            if (network) {
+                network.setData(data);
+            } else {
+                network = new vis.Network(graphContainer, data, options);
+                network.on("click", function (params) {
+                    if (params.nodes.length > 0) {
+                        const nodeName = params.nodes[0];
+                        const activity = workflowState.spec.activities.find(a => a.name === nodeName);
+                        if (activity) {
+                            const activityElement = document.getElementById(activity.id);
+                            if (activityElement) {
+                                activityElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                activityElement.classList.add('ring-2', 'ring-sky-500');
+                                setTimeout(() => activityElement.classList.remove('ring-2', 'ring-sky-500'), 2000);
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        function attachFormListeners() {
+            document.querySelectorAll('#workflow-form-panel input, #workflow-form-panel textarea, #workflow-form-panel select').forEach(el => {
+                el.addEventListener('change', updateWorkflowState);
+                if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                    el.addEventListener('keyup', debounce(updateWorkflowState, 300));
+                }
+            });
+        }
+
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+
+        openModalBtn.addEventListener('click', openModal);
+        closeModalBtn.addEventListener('click', closeModal);
+        cancelBtn.addEventListener('click', closeModal);
+        addActivityBtn.addEventListener('click', addActivity);
+
+        document.getElementById('submit-workflow-btn').addEventListener('click', () => {
+            updateWorkflowState();
+
+            const finalWorkflowSpec = JSON.parse(JSON.stringify(workflowState));
+            finalWorkflowSpec.spec.activities.forEach(a => delete a.id);
+
+            console.log("Submitting Workflow:", JSON.stringify(finalWorkflowSpec, null, 2));
+            alert('Workflow data is logged to the console. Implement your submission logic here.');
+
+
+            closeModal();
+        });
+
+    });
+
+</script>
+{{ end }}

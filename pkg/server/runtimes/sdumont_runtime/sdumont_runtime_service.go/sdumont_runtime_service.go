@@ -219,6 +219,7 @@ func (s *SDumontRuntimeService) handleVerifyActivityWasFinished(activity workflo
 		return activity_repository.StatusRunning
 	}
 
+
 	if saactResponse.State == "COMPLETED" {
 		config.App().Logger.Infof("WORKER: Activity %d finished", activity.Id)
 		s.syncWorkflowVolumes(wf)
@@ -226,8 +227,8 @@ func (s *SDumontRuntimeService) handleVerifyActivityWasFinished(activity workflo
 		return activity_repository.StatusFinished
 	}
 
-	if saactResponse.State == "CANCELLED+" || saactResponse.State == "CANCELLED" || saactResponse.State == "DEADLINE" || saactResponse.State == "TIMEOUT" || saactResponse.State == "OUT_OF_MEM+" {
-		config.App().Logger.Infof("WORKER: Activity %d cancelled", activity.Id)
+	if saactResponse.State == "FAILED" || saactResponse.State == "CANCELLED+" || saactResponse.State == "CANCELLED" || saactResponse.State == "DEADLINE" || saactResponse.State == "TIMEOUT" || saactResponse.State == "OUT_OF_MEM+" {
+		config.App().Logger.Infof("WORKER: Activity %d failed", activity.Id)
 		s.syncWorkflowVolumes(wf)
 		_ = s.activityRepository.UpdateStatus(activity.Id, activity_repository.StatusFinished)
 		return activity_repository.StatusFinished

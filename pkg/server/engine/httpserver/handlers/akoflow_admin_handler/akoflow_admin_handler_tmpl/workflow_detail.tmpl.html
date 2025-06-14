@@ -115,6 +115,39 @@
         </div>
     </div>
 
+    <div class="mb-4 flex flex-wrap gap-6">
+        <div>
+            <label class="block mb-1 font-semibold text-slate-700 dark:text-slate-200">Atividades</label>
+            <div id="provenanceActivityFilter" class="flex flex-col gap-1 max-h-40 overflow-y-auto border rounded p-2 bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-600 w-56"></div>
+        </div>
+        <div>
+            <label class="block mb-1 font-semibold text-slate-700 dark:text-slate-200">Arquivos</label>
+            <div id="provenanceFileFilterList" class="flex flex-col gap-1 max-h-40 overflow-y-auto border rounded p-2 bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-600 w-56"></div>
+        </div>
+        <div class="flex flex-col justify-end gap-2">
+            <button id="applyProvenanceFilterBtn" class="bg-sky-600 hover:bg-sky-700 text-white font-semibold py-2 px-4 rounded-lg text-sm transition-colors duration-150">Filtrar</button>
+            <button id="clearProvenanceFilterBtn" class="bg-slate-200 hover:bg-slate-300 dark:bg-slate-600 dark:hover:bg-slate-500 text-slate-700 dark:text-slate-100 font-semibold py-2 px-4 rounded-lg text-sm transition-colors duration-150">Limpar</button>
+        </div>
+    </div>
+    <!-- Provenance File Graph Panel -->
+    <div class="w-full p-6 bg-white dark:bg-slate-700 rounded-xl shadow-lg mb-8">
+        <div class="flex flex-col sm:flex-row justify-between sm:items-center mb-4">
+            <div>
+                <h3 class="text-xl font-semibold text-slate-800 dark:text-slate-100">Provenance File Graph</h3>
+                <p class="text-sm text-slate-500 dark:text-slate-400">Visualização dos arquivos das atividades.</p>
+            </div>
+        </div>
+        <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800 mt-4 border border-slate-200 dark:border-slate-600">
+            <div id="provenanceFileGraphView" class="flex items-center justify-center text-slate-500 dark:text-slate-400" style="height: 480px;">
+                <p>Loading Provenance File Graph...</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="provenanceLegend" class="flex items-center gap-6 mt-4">
+        <!-- Legenda será preenchida por JS -->
+    </div>
+
     <!-- Activity List -->
     <div class="mb-8">
         <h2 class="text-2xl font-semibold mb-6 text-slate-800 dark:text-slate-100">Activities</h2>
@@ -165,7 +198,6 @@
     async function loadingPage() {
         const activityListContainer = document.getElementById("activityList");
         activityListContainer.innerHTML = `<div class="text-center p-4 text-slate-500 dark:text-slate-400">Loading activities...</div>`;
-
         let workflow = await getWorkflowByPage();
         if (!workflow) return;
 
@@ -175,6 +207,8 @@
         handleRenderActivityList(workflow); // Call this before clearing, or clear inside
         handleRenderGraph(workflow, workflowDag);
         handleChartTimeline(workflow);
+        handleRenderProvenanceFileGraph(workflow);
+        window.currentWorkflow = workflow;
     }
 
     function handleRenderDetail(workflow) {
@@ -338,6 +372,207 @@
             };
             networkInstance.focus(nodeId, options);
         }
+    }
+
+    
+     // Função para montar o grafo de proveniência (pode ser igual ou adaptada do parseWorkflowToDag)
+    function parseFileListToGraph(fileList, typeLabel, activityName) {
+        let nodes = [];
+        let edges = [];
+        if (!fileList || !fileList.length) return { nodes, edges };
+
+        // Nó raiz para o tipo (Initial/End) de cada atividade
+        const rootId = `${activityName}-${typeLabel}`;
+        nodes.push({
+            id: rootId,
+            label: typeLabel,
+            shape: "box",
+            color: "#38bdf8"
+        });
+
+        // Mapa para garantir ids únicos por activity+type
+        const nodeIdCount = {};
+
+        fileList.forEach(file => {
+            let baseId = `${activityName}-${typeLabel}-${file.Path}/${file.Name}`;
+            let nodeId = baseId;
+            if (nodeIdCount[baseId] !== undefined) {
+                nodeIdCount[baseId]++;
+                nodeId = baseId + "#" + nodeIdCount[baseId];
+            } else {
+                nodeIdCount[baseId] = 0;
+            }
+
+            nodes.push({
+                id: nodeId,
+                label: file.Name,
+                title: `Path: ${file.Path}\nSize: ${file.Size}\nOwner: ${file.Owner}`,
+                shape: file.Permissions && file.Permissions.startsWith("d") ? "box" : "ellipse"
+            });
+
+            // Liga o nó ao tipo (Initial/End)
+            edges.push({
+                from: rootId,
+                to: nodeId
+            });
+
+            // Liga ao diretório pai, se não for raiz
+            if (file.Path && file.Path !== "./") {
+                edges.push({
+                    from: file.Path,
+                    to: nodeId
+                });
+            }
+        });
+        return { nodes, edges };
+    }
+
+// Função principal para buscar e renderizar o grafo
+    let lastProvenanceGraph = null;
+
+    let allActivities = [];
+    let allFiles = [];
+
+    function fillProvenanceFilters(nodes) {
+        // Activities
+        allActivities = nodes.filter(n => n.type === "activity").map(n => n.label);
+        const activityFilter = document.getElementById("provenanceActivityFilter");
+        activityFilter.innerHTML = allActivities.map(act =>
+            `<label><input type="checkbox" class="activity-filter" value="${act}" checked> ${act}</label>`
+        ).join("");
+
+        // Files
+        allFiles = nodes.filter(n => n.type === "file").map(n => n.label);
+        const fileFilter = document.getElementById("provenanceFileFilterList");
+        fileFilter.innerHTML = allFiles.map(f =>
+            `<label><input type="checkbox" class="file-filter" value="${f}" checked> ${f}</label>`
+        ).join("");
+    }
+
+async function handleRenderProvenanceFileGraph(workflow) {
+    let container = document.getElementById("provenanceFileGraphView");
+    container.innerHTML = "<p>Carregando arquivos de proveniência...</p>";
+
+    try {
+        if (!lastProvenanceGraph) {
+            const response = await fetch(`/akoflow-api/workflows/${workflow.id}/storages/list-files/`);
+            if (!response.ok) {
+                container.innerHTML = "<p>Erro ao buscar arquivos de proveniência.</p>";
+                return;
+            }
+            const result = await response.json();
+            lastProvenanceGraph = result.data || { nodes: [], edges: [] };
+            fillProvenanceFilters(lastProvenanceGraph.nodes);
+        }
+        let { nodes, edges } = lastProvenanceGraph;
+
+        // Pegue filtros marcados
+        const checkedActivities = Array.from(document.querySelectorAll('.activity-filter:checked')).map(cb => cb.value);
+        const checkedFiles = Array.from(document.querySelectorAll('.file-filter:checked')).map(cb => cb.value);
+
+        // Filtra nodes
+        nodes = nodes.filter(n =>
+            (n.type === "activity" && checkedActivities.includes(n.label)) ||
+            (n.type === "file" && checkedFiles.includes(n.label))
+        );
+
+        // Filtra edges: só mostra se ambos os nós estão visíveis
+        const nodeIds = new Set(nodes.map(n => n.id));
+        edges = edges.filter(e => nodeIds.has(e.from) && nodeIds.has(e.to));
+
+        if (!nodes.length) {
+            container.innerHTML = "<p>Nenhum arquivo para exibir.</p>";
+            return;
+        }
+
+        // Personalize os nós conforme o tipo
+        const isDarkMode = document.documentElement.classList.contains('dark');
+        nodes.forEach(node => {
+            if (node.type === "activity") {
+                node.shape = "image";
+                node.image = makeComponent(
+                    node.label,
+                    0,
+                    { text: "Activity", colorHex: "#38bdf8" },
+                    isDarkMode
+                );
+            } else if (node.type === "file") {
+                node.shape = "image";
+                node.image = makeComponent(
+                    node.label,
+                    0,
+                    { text: "File", colorHex: "#facc15" },
+                    isDarkMode
+                );
+            }
+        });
+
+        let data = { nodes: new vis.DataSet(nodes), edges: new vis.DataSet(edges) };
+        let options = {
+            layout: {
+                hierarchical: {
+                    direction: "LR",
+                    sortMethod: "directed",
+                    nodeSpacing: 220,
+                    levelSeparation: 350,
+                    treeSpacing: 250,
+                },
+            },
+            edges: {
+                arrows: { to: { enabled: true, scaleFactor: 0.7 } },
+                color: {
+                    color: '#94a3b8',
+                    highlight: '#0ea5e9',
+                    hover: '#38bdf8'
+                }
+            },
+            physics: { enabled: true, stabilization: false },
+            nodes: {
+                font: { color: '#334155', size: 14 },
+            },
+            interaction: {
+                hover: true,
+                tooltipDelay: 200
+            },
+        };
+
+        new vis.Network(container, data, options);
+
+        renderProvenanceLegend();
+
+    } catch (e) {
+        console.error("Erro ao carregar arquivos de proveniência:", e);
+        container.innerHTML = "<p>Erro ao carregar arquivos de proveniência.</p>";
+    }
+}
+
+
+// Eventos dos botões de filtro
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById("applyProvenanceFilterBtn").onclick = () => {
+        const workflow = window.currentWorkflow;
+        handleRenderProvenanceFileGraph(workflow);
+    };
+    document.getElementById("clearProvenanceFilterBtn").onclick = () => {
+        // Marca todos os checkboxes
+        document.querySelectorAll('.activity-filter, .file-filter').forEach(cb => cb.checked = true);
+        const workflow = window.currentWorkflow;
+        handleRenderProvenanceFileGraph(workflow);
+    };
+});
+
+    function renderProvenanceLegend() {
+        const isDarkMode = document.documentElement.classList.contains('dark');
+        document.getElementById("provenanceLegend").innerHTML = `
+            <div class="flex items-center gap-4 text-lg">
+                <img src="${makeComponent('Activity', 0, { text: "Activity", colorHex: "#38bdf8" }, isDarkMode)}" style="width:60px;height:30px;">
+                <span class="text-slate-700 dark:text-slate-200 font-semibold text-lg">Activity</span>
+            </div>
+            <div class="flex items-center gap-4 text-lg">
+                <img src="${makeComponent('File', 0, { text: "File", colorHex: "#facc15" }, isDarkMode)}" style="width:60px;height:30px;">
+                <span class="text-slate-700 dark:text-slate-200 font-semibold text-lg">Arquivo</span>
+            </div>
+        `;
     }
 
     function parseWorkflowToDag(workflow) {

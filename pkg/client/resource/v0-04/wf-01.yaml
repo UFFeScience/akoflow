@@ -14,44 +14,50 @@ spec:
       cpuLimit: 0.5
       nodeSelector: "kubernetes.io/hostname=docker-desktop"
       run: |
-        echo "Hello World" >> /data/a/output.txt
+        mkdir -p /data/a
+        echo "Hello World" >> /data/a/output1.txt
         sleep 5
-        echo "Hello World Again" >> /data/a/output.txt
+        echo "Hello World Again" >> /data/a/output2.txt
         sleep 5
-        echo "Hello World One More Time" >> /data/a/output.txt
+        echo "Hello World One More Time" >> /data/a/output3.txt
 
     - name: "b"
       memoryLimit: 500Mi
       cpuLimit: 0.5
       nodeSelector: "kubernetes.io/hostname=docker-desktop"
       run: |
-        echo "Good Afternoon" >> /data/b/output.txt
+        mkdir -p /data/b/
+        cd /data
+        echo "Good Afternoon" >> /data/b/output4.txt
         sleep 5
-        echo "Good Afternoon Again" >> /data/b/output.txt
+        echo "Good Afternoon Again" >> /data/b/output5.txt
         sleep 5
-        echo "Good Afternoon One More Time" >> /data/b/output.txt
+        echo "Good Afternoon One More Time" >> /data/b/output6.txt
 
     - name: "c"
       memoryLimit: 500Mi
       cpuLimit: 0.5
       nodeSelector: "kubernetes.io/hostname=docker-desktop"
       run: |
-        echo "Goodbye" >> /data/c/output.txt
+        mkdir -p /data/c/
+        echo "Goodbye" >> /data/c/output7.txt
         sleep 5
-        echo "Goodbye Again" >> /data/c/output.txt
+        echo "Goodbye Again" >> /data/c/output8.txt
         sleep 5
-        echo "Goodbye One More Time" >> /data/c/output.txt
+        echo "Goodbye One More Time" >> /data/c/output9.txt
+      dependsOn:
+        - "a"
 
     - name: "d"
       memoryLimit: 500Mi
       cpuLimit: 0.5
       nodeSelector: "kubernetes.io/hostname=docker-desktop"
       run: |
-        echo "Goodbye" >> /data/d/output.txt
+        echo "Goodbye" >> /data/d/output10.txt
         sleep 5
-        echo "Goodbye Again" >> /data/d/output.txt
+        echo "Goodbye Again" >> /data/d/output11.txt
         sleep 5
-        echo "Goodbye One More Time" >> /data/d/output.txt
+        echo "Goodbye One More Time" >> /data/d/output12.txt
       dependsOn:
         - "a"
         - "b"
@@ -62,11 +68,11 @@ spec:
       cpuLimit: 0.5
       nodeSelector: "kubernetes.io/hostname=docker-desktop"
       run: |
-        echo "Goodbye" >> /data/e/output.txt
+        echo "Goodbye" >> /data/e/output13.txt
         sleep 5
-        echo "Goodbye Again" >> /data/e/output.txt
+        echo "Goodbye Again" >> /data/e/output14.txt
         sleep 5
-        echo "Goodbye One More Time" >> /data/e/output.txt
+        echo "Goodbye One More Time" >> /data/e/output15.txt
       dependsOn:
         - "c"
     - name: "f"

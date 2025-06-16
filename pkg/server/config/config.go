@@ -44,8 +44,9 @@ func SetupEnv() {
 	if hostEnvByKube != "" {
 		os.Setenv("K8S_API_SERVER_HOST", hostEnvByKube)
 	}
-
-	os.Setenv("K8S_API_SERVER_TOKEN", tokenData)
+	if tokenData != "" {
+		os.Setenv("K8S_API_SERVER_TOKEN", tokenData)
+	}
 
 }
 

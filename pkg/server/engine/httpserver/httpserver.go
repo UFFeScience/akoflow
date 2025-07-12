@@ -7,6 +7,7 @@ import (
 	"github.com/ovvesley/akoflow/pkg/server/engine/httpserver/handlers/internal_storage_handler"
 	"github.com/ovvesley/akoflow/pkg/server/engine/httpserver/handlers/public_static_handler"
 	"github.com/ovvesley/akoflow/pkg/server/engine/httpserver/handlers/runtime_api_handler"
+	"github.com/ovvesley/akoflow/pkg/server/engine/httpserver/handlers/schedule_api_handler"
 	"github.com/ovvesley/akoflow/pkg/server/engine/httpserver/handlers/storage_databasedump_handler"
 	"github.com/ovvesley/akoflow/pkg/server/engine/httpserver/handlers/workflow_api_handler"
 	"github.com/ovvesley/akoflow/pkg/server/engine/httpserver/handlers/workflow_handler"
@@ -44,6 +45,10 @@ func StartServer() {
 	//
 	http.HandleFunc("GET /akoflow-api/workflows/{workflowId}/", http_config.KernelHandler(workflow_api_handler.New().GetWorkflow))
 	http.HandleFunc("GET /akoflow-api/runtimes/", http_config.KernelHandler(runtime_api_handler.New().ListAllRuntimes))
+
+	http.HandleFunc("GET /akoflow-api/schedules/", http_config.KernelHandler(schedule_api_handler.New().ListAllSchedules))
+	http.HandleFunc("POST /akoflow-api/schedules/", http_config.KernelHandler(schedule_api_handler.New().CreateSchedule))
+	http.HandleFunc("GET /akoflow-api/schedules/{scheduleId}/", http_config.KernelHandler(schedule_api_handler.New().GetSchedule))
 
 	//http.HandleFunc("GET /akoflow-api/workflows/{workflowId}/activities/", http_config.KernelHandler(workflow_api_handler.New().ListAllActivities))
 	//http.HandleFunc("GET /akoflow-api/workflows/{workflowId}/activities/{activityId}/", http_config.KernelHandler(workflow_api_handler.New().GetActivity))

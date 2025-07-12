@@ -1,10 +1,13 @@
 package schedule_entity
 
 type ScheduleEntity struct {
-	ID   int    `json:"id"`
-	Type string `json:"type"`
-	Code string `json:"code"`
-	Name string `json:"name,omitempty"` // Optional field, not always present
+	ID           int    `json:"id"`
+	Type         string `json:"type"`
+	Code         string `json:"code"`
+	Name         string `json:"name,omitempty"`           // Optional field, not always present
+	PluginSoPath string `json:"plugin_so_path,omitempty"` // Optional field, not always present
+	CreatedAt    string `json:"created_at,omitempty"`     // Optional field, not always present
+	UpdatedAt    string `json:"updated_at,omitempty"`     // Optional field, not always present
 }
 
 func (s ScheduleEntity) GetId() int {

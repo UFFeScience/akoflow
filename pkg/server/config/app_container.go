@@ -115,7 +115,7 @@ func MakeAppContainer() AppContainer {
 	nodeRepository := node_repository.New()
 	nodesMetricsRepository := node_metrics_repository.New()
 	workflowExecutionRepository := workflow_execution_repository.New()
-	scheduleRepository := schedules_repository.New()
+	scheduleRepository := schedule_repository.New()
 
 	// create the Connector instances
 	k8sConnector := connector_k8s.New()

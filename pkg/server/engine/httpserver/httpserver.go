@@ -35,6 +35,7 @@ func StartServer() {
 
 	http.HandleFunc("GET /akoflow-admin/", http_config.KernelHandler(akoflow_admin_handler.New().Home))
 	http.HandleFunc("GET /akoflow-admin/runtimes", http_config.KernelHandler(akoflow_admin_handler.New().Runtime))
+	http.HandleFunc("GET /akoflow-admin/schedules", http_config.KernelHandler(akoflow_admin_handler.New().Schedule))
 	http.HandleFunc("GET /akoflow-admin/workflows/{namespace}/{workflowId}/", http_config.KernelHandler(akoflow_admin_handler.New().WorkflowDetail))
 
 	http.HandleFunc("GET /akoflow-api/workflows/", http_config.KernelHandler(workflow_api_handler.New().ListAllWorkflows))

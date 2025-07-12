@@ -1,0 +1,17 @@
+{{template "base.html" .}}
+{{define "title"}}AkôFlow Runtimes{{end}}
+{{define "content"}}
+
+<div>
+    {{ template "header" dict "title" "Schedules" }}
+
+    <div id="schedules-list" class="mt-8 space-y-6">
+        <h1>Hello World</h1>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", fetchRuntimes);
+</script>
+
+{{end}}

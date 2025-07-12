@@ -91,7 +91,7 @@ func (m *MakeK8sActivityService) addCommandToMonitorFilesStorage(command string,
 
 func (m *MakeK8sActivityService) addCommandToMonitorDiskSpecStorage(command string, path string) string {
 	port := m.getPortAkoFlowServer()
-	command += `df -h > /tmp/du_output.txt; echo "Preparing to start request"; body=$(cat /tmp/du_output.txt); body_length=$(printf %s "$body" | wc -c); echo "Start request"; { echo -ne "POST /akoflow-server/internal/storage/` + path + `/?activityId=$ACTIVITY_ID HTTP/1.1\r\n"; echo -ne "Host: $AKOFLOW_SERVER_SERVICE_SERVICE_HOST\r\n"; echo -ne "Content-Type: text/plain\r\n"; echo -ne "Content-Length: $body_length\r\n"; echo -ne "Connection: close\r\n"; echo -ne "\r\n"; echo -ne "$body"; } | nc $AKOFLOW_SERVER_SERVICE_SERVICE_HOST ` + port + `; echo "End request"; `
+	command += `df -h > /tmp/du_output.txt; echo "Preparing to start request"; body=$(cat /tmp/du_output.txt); body_length=$(printf %s "$body" | wc -c); echo "Start request"; { echo -ne "POST /akoflow-server/internal/storage/` + path + `/?activityId=$ACTIVITY_ID HTTP/1.1\r\n"; echo -ne "Host: host.docker.internal\r\n"; echo -ne "Content-Type: text/plain\r\n"; echo -ne "Content-Length: $body_length\r\n"; echo -ne "Connection: close\r\n"; echo -ne "\r\n"; echo -ne "$body"; } | nc host.docker.internal ` + port + `; echo "End request"; `
 
 	return command
 }

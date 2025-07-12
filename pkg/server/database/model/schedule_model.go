@@ -10,7 +10,7 @@ type ScheduleModel struct {
 }
 
 func (ScheduleModel) TableName() string {
-	return "workflow_executions"
+	return "schedules"
 }
 
 func (w ScheduleModel) GetColumns() []string {

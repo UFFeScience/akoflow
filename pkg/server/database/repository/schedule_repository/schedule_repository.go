@@ -44,7 +44,7 @@ func (r *ScheduleRepository) ListAllSchedules() ([]schedule_entity.ScheduleEntit
 	database := repository.Database{}
 	c := database.Connect()
 
-	rows, err := c.Query("SELECT id, type, code, name FROM " + r.tableName)
+	rows, err := c.Query("SELECT id, type, code, name, plugin_so_path, created_at, updated_at FROM " + r.tableName)
 	if err != nil {
 		return nil, err
 	}
@@ -52,15 +52,29 @@ func (r *ScheduleRepository) ListAllSchedules() ([]schedule_entity.ScheduleEntit
 	var schedules []schedule_entity.ScheduleEntity
 	for rows.Next() {
 		var schedule model.ScheduleModel
-		err = rows.Scan(&schedule.ID, &schedule.Type, &schedule.Code, &schedule.Name)
+
+		var pluginSo *string // Assuming plugin_so_path is a string, adjust if it's a different type
+
+		err = rows.Scan(&schedule.ID, &schedule.Type, &schedule.Code, &schedule.Name, &pluginSo, &schedule.CreatedAt, &schedule.UpdatedAt)
 		if err != nil {
 			return nil, err
 		}
+
+		// If pluginSo is nil, set it to an empty string
+		if pluginSo == nil {
+			schedule.PluginSoPath = ""
+		} else {
+			schedule.PluginSoPath = *pluginSo
+		}
+
 		schedules = append(schedules, schedule_entity.ScheduleEntity{
-			ID:   schedule.ID,
-			Type: schedule.Type,
-			Code: schedule.Code,
-			Name: schedule.Name,
+			ID:           schedule.ID,
+			Type:         schedule.Type,
+			Code:         schedule.Code,
+			Name:         schedule.Name,
+			PluginSoPath: schedule.PluginSoPath, // Uncomment if needed
+			CreatedAt:    schedule.CreatedAt,    // Uncomment if needed
+			UpdatedAt:    schedule.UpdatedAt,    // Uncomment if needed
 		})
 	}
 
@@ -82,7 +96,7 @@ func (r *ScheduleRepository) CreateSchedule(name string, scheduleType string, co
 		Name: name,
 	}
 
-	query := "INSERT INTO " + r.tableName + " (type, code, name) VALUES (?, ?, ?)"
+	query := "INSERT INTO " + r.tableName + " (type, code, name, created_at, updated_at) VALUES (?, ?, ?, datetime('now'), datetime('now'))"
 	result, err := c.Exec(query, schedule.Type, schedule.Code, schedule.Name)
 	if err != nil {
 		return schedule_entity.ScheduleEntity{}, err
@@ -101,10 +115,13 @@ func (r *ScheduleRepository) CreateSchedule(name string, scheduleType string, co
 	}
 
 	return schedule_entity.ScheduleEntity{
-		ID:   schedule.ID,
-		Type: schedule.Type,
-		Code: schedule.Code,
-		Name: schedule.Name,
+		ID:           schedule.ID,
+		Type:         schedule.Type,
+		Code:         schedule.Code,
+		Name:         schedule.Name,
+		PluginSoPath: schedule.PluginSoPath,
+		CreatedAt:    schedule.CreatedAt,
+		UpdatedAt:    schedule.UpdatedAt,
 	}, nil
 }
 
@@ -112,7 +129,7 @@ func (r *ScheduleRepository) GetScheduleByName(name string) (schedule_entity.Sch
 	database := repository.Database{}
 	c := database.Connect()
 
-	query := "SELECT id, type, code, name FROM " + r.tableName + " WHERE name = ?"
+	query := "SELECT id, type, code, plugin_so_path, created_at, updated_at name FROM " + r.tableName + " WHERE name = ?"
 	row := c.QueryRow(query, name)
 
 	var schedule model.ScheduleModel
@@ -127,9 +144,12 @@ func (r *ScheduleRepository) GetScheduleByName(name string) (schedule_entity.Sch
 	}
 
 	return schedule_entity.ScheduleEntity{
-		ID:   schedule.ID,
-		Type: schedule.Type,
-		Code: schedule.Code,
-		Name: schedule.Name,
+		ID:           schedule.ID,
+		Type:         schedule.Type,
+		Code:         schedule.Code,
+		Name:         schedule.Name,
+		PluginSoPath: schedule.PluginSoPath, // Uncomment if needed
+		CreatedAt:    schedule.CreatedAt,    // Uncomment if needed
+		UpdatedAt:    schedule.UpdatedAt,    // Uncomment if needed
 	}, nil
 }

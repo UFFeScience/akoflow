@@ -30,8 +30,8 @@ func (h *ListSchedulesApiService) ListAllSchedules() ([]types_api.ApiScheduleTyp
 			Type:      schedule.Type,
 			Code:      schedule.Code,
 			Name:      schedule.Name,
-			CreatedAt: "",
-			UpdatedAt: "",
+			CreatedAt: schedule.CreatedAt,
+			UpdatedAt: schedule.UpdatedAt,
 		})
 	}
 

@@ -3,10 +3,10 @@ package model
 import "github.com/ovvesley/akoflow/pkg/server/database"
 
 type ScheduleModel struct {
-	ID        int    `db:"id" sql:"INTEGER PRIMARY KEY AUTOINCREMENT"`
-	Type      string `db:"type"`
-	Code      string `db:"code"`
-	Namespace string `db:"namespace"`
+	ID   int    `db:"id" sql:"INTEGER PRIMARY KEY AUTOINCREMENT"`
+	Type string `db:"type"`
+	Code string `db:"code"`
+	Name string `db:"name"`
 }
 
 func (ScheduleModel) TableName() string {

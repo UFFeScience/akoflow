@@ -1,17 +1,106 @@
 {{template "base.html" .}}
 {{define "title"}}AkôFlow Runtimes{{end}}
+
 {{define "content"}}
 
 <div>
     {{ template "header" dict "title" "Schedules" }}
 
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-semibold text-slate-800 dark:text-slate-100">My Schedules</h2>
+        <button id="open-create-schedule-modal-btn"
+            class="bg-sky-600 hover:bg-sky-700 text-white px-5 py-2 text-sm font-semibold rounded-lg transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-opacity-50">
+            <i class="fas fa-plus mr-2"></i>Create New Schedule
+        </button>
+    </div>
+
     <div id="schedules-list" class="mt-8 space-y-6">
-        <h1>Hello World</h1>
+
     </div>
 </div>
 
+<div id="editor-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-50">
+    <div class="bg-white p-6 rounded-lg w-[900px] shadow-lg">
+        <h3 class="text-xl font-bold mb-4">Edit AkoScore Function</h3>
+        
+        <!-- input name group -->
+        <div class="mb-4">
+            <label for="function-name" class="block text-sm font-medium text-gray-700 mb-1">Schedule Name</label>
+            <input type="text" id="function-name" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
+                placeholder="Enter schedule name" />
+        </div>
+
+        <div id="container" class="h-[400px] border border-gray-300"></div>
+
+        <div class="flex justify-end gap-3 mt-6">
+            <button id="close-editor" class="px-4 py-2 rounded border text-gray-700 hover:bg-gray-200">Cancel</button>
+            <button onclick="validateCode()" class="bg-sky-600 hover:bg-sky-700 text-white px-5 py-2 rounded">
+                Validate and Submit
+            </button>
+        </div>
+
+        <pre id="output" class="mt-4 text-sm bg-gray-100 p-3 rounded overflow-x-auto max-h-[200px]"></pre>
+    </div>
+</div>
+
+<script src="https://unpkg.com/monaco-editor@latest/min/vs/loader.js"></script>
 <script>
-    document.addEventListener("DOMContentLoaded", fetchRuntimes);
+    require.config({ paths: { 'vs': 'https://unpkg.com/monaco-editor@latest/min/vs' } });
+</script>
+<script>
+    const fullTemplate = `package main
+
+func AkoScore(name int) int {
+\treturn name * 100
+}
+
+func main() {}
+`;
+
+    const funcHeader = `func AkoScore(name int) int {`;
+
+    let editor;
+
+
+    document.addEventListener("DOMContentLoaded", () => {
+        document.getElementById('open-create-schedule-modal-btn').addEventListener('click', () => {
+            document.getElementById('editor-modal').classList.remove('hidden');
+            document.getElementById('editor-modal').classList.add('flex');
+
+            require(['vs/editor/editor.main'], function () {
+                if (!editor) {
+                    editor = monaco.editor.create(document.getElementById('container'), {
+                        value: fullTemplate,
+                        language: 'go',
+                        theme: 'light',
+                        automaticLayout: true,
+                        minimap: { enabled: false },
+                        fontSize: 18,
+                    });
+                } else {
+                    editor.setValue(fullTemplate);
+                }
+            });
+        });
+
+        document.getElementById('close-editor').addEventListener('click', () => {
+            document.getElementById('editor-modal').classList.add('hidden');
+            document.getElementById('editor-modal').classList.remove('flex');
+        });
+    });
+
+    function validateCode() {
+        const code = editor.getValue();
+        const output = document.getElementById('output');
+
+
+        console.log(code)
+        console.log(output)
+
+        
+
+        
+    }
 </script>
 
 {{end}}

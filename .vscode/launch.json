@@ -6,11 +6,7 @@
             "type": "go",
             "request": "launch",
             "mode": "debug",
-            "program": "cmd/server/main.go",
-            "env": {
-                "K8S_API_SERVER_HOST": "localhost",
-                "K8S_API_SERVER_TOKEN": "dummy",
-            }
+            "program": "cmd/server/main.go"
         },
         {
             "name": "Launch AkoFlow Client Run",

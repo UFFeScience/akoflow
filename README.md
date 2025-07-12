@@ -37,6 +37,6 @@ AkôFlow originated as a final undergraduate project and has since expanded with
 ## Documentation
 
 Full documentation is available at:
-📘 https://akoflow.com/docs
+📘 https://github.com/UFFeScience/akoflow/wiki
 
 ⸻

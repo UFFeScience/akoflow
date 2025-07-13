@@ -9,7 +9,7 @@ import (
 type IScheduleRepository interface {
 	ListAllSchedules() ([]schedule_entity.ScheduleEntity, error)
 	// GetScheduleById(id int) (schedule_entity.ScheduleEntity, error)
-	CreateSchedule(name string, scheduleType string, code string) (schedule_entity.ScheduleEntity, error)
+	CreateSchedule(name string, scheduleType string, code string, soFile string) (schedule_entity.ScheduleEntity, error)
 	GetScheduleByName(name string) (schedule_entity.ScheduleEntity, error)
 	// UpdateSchedule(schedule schedule_entity.ScheduleEntity) (schedule_entity.ScheduleEntity, error)
 	// DeleteSchedule(id int) error
@@ -86,7 +86,7 @@ func (r *ScheduleRepository) ListAllSchedules() ([]schedule_entity.ScheduleEntit
 	return schedules, nil
 }
 
-func (r *ScheduleRepository) CreateSchedule(name string, scheduleType string, code string) (schedule_entity.ScheduleEntity, error) {
+func (r *ScheduleRepository) CreateSchedule(name string, scheduleType string, code string, soFile string) (schedule_entity.ScheduleEntity, error) {
 	database := repository.Database{}
 	c := database.Connect()
 
@@ -96,8 +96,8 @@ func (r *ScheduleRepository) CreateSchedule(name string, scheduleType string, co
 		Name: name,
 	}
 
-	query := "INSERT INTO " + r.tableName + " (type, code, name, created_at, updated_at) VALUES (?, ?, ?, datetime('now'), datetime('now'))"
-	result, err := c.Exec(query, schedule.Type, schedule.Code, schedule.Name)
+	query := "INSERT INTO " + r.tableName + " (type, code, name, plugin_so_path, created_at, updated_at) VALUES (?, ?, ?, ?, datetime('now'), datetime('now'))"
+	result, err := c.Exec(query, schedule.Type, schedule.Code, schedule.Name, soFile)
 	if err != nil {
 		return schedule_entity.ScheduleEntity{}, err
 	}

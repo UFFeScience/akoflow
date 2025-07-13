@@ -9,6 +9,8 @@ import (
 	"os/exec"
 	"path/filepath"
 	"plugin"
+	"runtime"
+	"strings"
 
 	"github.com/ovvesley/akoflow/pkg/server/config"
 	"github.com/ovvesley/akoflow/pkg/server/database/repository/schedule_repository"
@@ -25,7 +27,7 @@ func New() *CreateScheduleApiService {
 	}
 }
 
-func (h *CreateScheduleApiService) ValidateUserCode(userCode string) bool {
+func (h *CreateScheduleApiService) ValidateUserCode(userCode string) (bool, string) {
 	hash := sha256.Sum256([]byte(userCode))
 	hashStr := hex.EncodeToString(hash[:])
 	baseName := "ako_plugin_" + hashStr
@@ -33,25 +35,50 @@ func (h *CreateScheduleApiService) ValidateUserCode(userCode string) bool {
 	goFile := baseName + ".go"
 	soFile := baseName + ".so"
 
-	if _, err := os.Stat(soFile); os.IsNotExist(err) {
-		if err := os.WriteFile(goFile, []byte(userCode), 0644); err != nil {
-			panic(err)
-		}
+	runtimeVersion := runtime.Version()
 
-		cmd := exec.Command("go", "build", "-buildmode=plugin", "-o", soFile, goFile)
-		cmd.Stdout = os.Stdout
-		cmd.Stderr = os.Stderr
-		fmt.Println("Compilando plugin:", soFile)
-		if err := cmd.Run(); err != nil {
-			fmt.Println("Erro ao compilar plugin:", err)
-			return false
-		} else {
-			fmt.Println("Plugin compilado com sucesso:", soFile)
+	cmdVersion := exec.Command("go", "version")
+	output, err := cmdVersion.Output()
+	if err != nil {
+		return false, ""
+	}
+	buildVersion := string(output)
+	buildVersionTrimmed := strings.TrimSpace(buildVersion)
+
+	if !strings.Contains(buildVersionTrimmed, runtimeVersion) {
+		return false, ""
+	}
+
+	if _, err := os.Stat(soFile); os.IsNotExist(err) {
+		if !h.compilePlugin(goFile, soFile, userCode) {
+			return false, soFile
 		}
 	} else {
 		fmt.Println("Usando plugin já compilado:", soFile)
 	}
 
+	return h.executePlugin(soFile), soFile
+}
+
+func (h *CreateScheduleApiService) compilePlugin(goFile, soFile, userCode string) bool {
+	if err := os.WriteFile(goFile, []byte(userCode), 0644); err != nil {
+		panic(err)
+	}
+
+	cmd := exec.Command("go", "build", "-gcflags=all=-N -l", "-buildmode=plugin", "-o", soFile, goFile)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	fmt.Println("Compilando plugin:", soFile)
+	if err := cmd.Run(); err != nil {
+		fmt.Println("Erro ao compilar plugin:", err)
+		return false
+	}
+
+	fmt.Println("Plugin compilado com sucesso:", soFile)
+	return true
+}
+
+func (h *CreateScheduleApiService) executePlugin(soFile string) bool {
 	p, err := plugin.Open(filepath.Clean(soFile))
 	if err != nil {
 		fmt.Println("Erro ao abrir plugin:", err)
@@ -71,18 +98,17 @@ func (h *CreateScheduleApiService) ValidateUserCode(userCode string) bool {
 
 func (h *CreateScheduleApiService) CreateSchedule(name string, scheduleType string, code string) (types_api.ApiScheduleType, error) {
 
-	// convert base64 to string if needed
 	codeDecoded, err := base64.StdEncoding.DecodeString(code)
 	if err != nil {
 		return types_api.ApiScheduleType{}, fmt.Errorf("invalid base64 code: %v", err)
 	}
-	code = string(codeDecoded)
 
-	if !h.ValidateUserCode(code) {
+	isValid, soFile := h.ValidateUserCode(string(codeDecoded))
+	if !isValid {
 		return types_api.ApiScheduleType{}, fmt.Errorf("invalid user code")
 	}
 
-	scheduleEngine, err := h.scheduleRepository.CreateSchedule(name, scheduleType, code)
+	scheduleEngine, err := h.scheduleRepository.CreateSchedule(name, scheduleType, code, soFile)
 	if err != nil {
 		return types_api.ApiScheduleType{}, err
 	}

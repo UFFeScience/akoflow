@@ -68,18 +68,22 @@ func (h *CreateScheduleApiService) compilePlugin(goFile, soFile, userCode string
 	cmd := exec.Command("go", "build", "-gcflags=all=-N -l", "-buildmode=plugin", "-o", soFile, goFile)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
+
 	fmt.Println("Compilando plugin:", soFile)
+
 	if err := cmd.Run(); err != nil {
 		fmt.Println("Erro ao compilar plugin:", err)
 		return false
 	}
 
 	fmt.Println("Plugin compilado com sucesso:", soFile)
+
 	return true
 }
 
 func (h *CreateScheduleApiService) executePlugin(soFile string) bool {
 	p, err := plugin.Open(filepath.Clean(soFile))
+
 	if err != nil {
 		fmt.Println("Erro ao abrir plugin:", err)
 		return false
@@ -91,8 +95,25 @@ func (h *CreateScheduleApiService) executePlugin(soFile string) bool {
 		return false
 	}
 
-	scoreFunc := sym.(func(int) int)
-	fmt.Println("Score:", scoreFunc(23424))
+	akoScoreFunc, ok := sym.(func(any) float64)
+
+	if !ok {
+		fmt.Println("Símbolo 'AkoScore' não é uma função válida")
+		return false
+	}
+
+	input := map[string]any{
+		"time_estimate":   10.0,
+		"memory_required": 512.0,
+		"memory_free":     1024.0,
+		"memory_max":      2048.0,
+		"affinity":        0.8,
+		"alpha":           0.5,
+	}
+
+	result := akoScoreFunc(input)
+
+	fmt.Println("Plugin executado com sucesso:", result)
 	return true
 }
 

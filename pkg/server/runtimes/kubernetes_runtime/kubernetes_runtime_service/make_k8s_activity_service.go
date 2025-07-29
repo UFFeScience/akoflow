@@ -2,9 +2,12 @@ package kubernetes_runtime_service
 
 import (
 	"encoding/base64"
+	"io/ioutil"
+	"log"
 	"math/rand"
 	"os"
 	"strconv"
+	"strings"
 
 	"github.com/ovvesley/akoflow/pkg/server/entities/k8s_job_entity"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
@@ -84,15 +87,39 @@ func (m *MakeK8sActivityService) getPortAkoFlowServer() string {
 
 func (m *MakeK8sActivityService) addCommandToMonitorFilesStorage(command string, path string) string {
 	port := m.getPortAkoFlowServer()
-	command += `ls -lR $ACTIVITY_MOUNT_PATH > /tmp/du_output.txt; echo "Preparing to start request"; body=$(cat /tmp/du_output.txt); body_length=$(printf %s "$body" | wc -c); echo "Start request"; { echo -ne "POST /akoflow-server/internal/storage/` + path + `/?activityId=$ACTIVITY_ID HTTP/1.1\r\n"; echo -ne "Host: $AKOFLOW_SERVER_SERVICE_SERVICE_HOST\r\n"; echo -ne "Content-Type: text/plain\r\n"; echo -ne "Content-Length: $body_length\r\n"; echo -ne "Connection: close\r\n"; echo -ne "\r\n"; echo -ne "$body"; } | nc $AKOFLOW_SERVER_SERVICE_SERVICE_HOST ` + port + `; echo "End request"; `
+	scriptPath := "/app/pkg/server/scripts/monitor_files_storage.sh"
 
+	scriptBytes, err := ioutil.ReadFile(scriptPath)
+	if err != nil {
+		log.Printf("Erro ao ler script monitor_files_storage.sh: %v", err)
+		return command
+	}
+	script := string(scriptBytes)
+
+	script = strings.ReplaceAll(script, "$1", path)
+	script = strings.ReplaceAll(script, "${2:-8080}", port)
+	script = strings.ReplaceAll(script, "$2", port)
+
+	command += script + "; "
 	return command
 }
 
 func (m *MakeK8sActivityService) addCommandToMonitorDiskSpecStorage(command string, path string) string {
 	port := m.getPortAkoFlowServer()
-	command += `df -h > /tmp/du_output.txt; echo "Preparing to start request"; body=$(cat /tmp/du_output.txt); body_length=$(printf %s "$body" | wc -c); echo "Start request"; { echo -ne "POST /akoflow-server/internal/storage/` + path + `/?activityId=$ACTIVITY_ID HTTP/1.1\r\n"; echo -ne "Host: $AKOFLOW_SERVER_SERVICE_SERVICE_HOST\r\n"; echo -ne "Content-Type: text/plain\r\n"; echo -ne "Content-Length: $body_length\r\n"; echo -ne "Connection: close\r\n"; echo -ne "\r\n"; echo -ne "$body"; } | nc $AKOFLOW_SERVER_SERVICE_SERVICE_HOST ` + port + `; echo "End request"; `
+	scriptPath := "/app/pkg/server/scripts/monitor_disk_spec_storage.sh"
 
+	scriptBytes, err := ioutil.ReadFile(scriptPath)
+	if err != nil {
+		log.Printf("Erro ao ler script monitor_disk_spec_storage.sh: %v", err)
+		return command
+	}
+	script := string(scriptBytes)
+
+	script = strings.ReplaceAll(script, "$1", path)
+	script = strings.ReplaceAll(script, "${2:-8080}", port)
+	script = strings.ReplaceAll(script, "$2", port)
+
+	command += script + "; "
 	return command
 }
 

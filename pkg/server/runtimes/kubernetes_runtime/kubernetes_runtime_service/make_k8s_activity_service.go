@@ -2,8 +2,6 @@ package kubernetes_runtime_service
 
 import (
 	"encoding/base64"
-	"io/ioutil"
-	"log"
 	"math/rand"
 	"os"
 	"strconv"
@@ -12,6 +10,7 @@ import (
 	"github.com/ovvesley/akoflow/pkg/server/entities/k8s_job_entity"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
+	"github.com/ovvesley/akoflow/pkg/shared/utils/utils_read_file"
 )
 
 type MakeK8sActivityService struct {
@@ -89,16 +88,11 @@ func (m *MakeK8sActivityService) addCommandToMonitorFilesStorage(command string,
 	port := m.getPortAkoFlowServer()
 	scriptPath := "/app/pkg/server/scripts/monitor_files_storage.sh"
 
-	scriptBytes, err := ioutil.ReadFile(scriptPath)
-	if err != nil {
-		log.Printf("Erro ao ler script monitor_files_storage.sh: %v", err)
-		return command
-	}
-	script := string(scriptBytes)
+	utilsReadFile := utils_read_file.New()
+	script := utilsReadFile.ReadFile(scriptPath)
 
-	script = strings.ReplaceAll(script, "$1", path)
-	script = strings.ReplaceAll(script, "${2:-8080}", port)
-	script = strings.ReplaceAll(script, "$2", port)
+	script = strings.ReplaceAll(script, "#PATH_PARAM#", path)
+	script = strings.ReplaceAll(script, "#PORT#", port)
 
 	command += script + "; "
 	return command
@@ -108,16 +102,11 @@ func (m *MakeK8sActivityService) addCommandToMonitorDiskSpecStorage(command stri
 	port := m.getPortAkoFlowServer()
 	scriptPath := "/app/pkg/server/scripts/monitor_disk_spec_storage.sh"
 
-	scriptBytes, err := ioutil.ReadFile(scriptPath)
-	if err != nil {
-		log.Printf("Erro ao ler script monitor_disk_spec_storage.sh: %v", err)
-		return command
-	}
-	script := string(scriptBytes)
+	utilsReadFile := utils_read_file.New()
+	script := utilsReadFile.ReadFile(scriptPath)
 
-	script = strings.ReplaceAll(script, "$1", path)
-	script = strings.ReplaceAll(script, "${2:-8080}", port)
-	script = strings.ReplaceAll(script, "$2", port)
+	script = strings.ReplaceAll(script, "#PATH_PARAM#", path)
+	script = strings.ReplaceAll(script, "#PORT#", port)
 
 	command += script + "; "
 	return command

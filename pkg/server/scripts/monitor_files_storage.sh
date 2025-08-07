@@ -1,6 +1,6 @@
 #!/bin/bash
-PATH_PARAM="$1"
-PORT="${2:-8080}"
+PATH_PARAM="#PATH_PARAM#"
+PORT="#PORT#"
 
 ls -lR $ACTIVITY_MOUNT_PATH > /tmp/du_output.txt
 echo "Preparing to start request"

@@ -40,6 +40,7 @@ func StartServer() {
 	http.HandleFunc("GET /akoflow-admin/workflows/{namespace}/{workflowId}/", http_config.KernelHandler(akoflow_admin_handler.New().WorkflowDetail))
 
 	http.HandleFunc("GET /akoflow-api/workflows/", http_config.KernelHandler(workflow_api_handler.New().ListAllWorkflows))
+	http.HandleFunc("POST /akoflow-api/workflows/", http_config.KernelHandler(workflow_handler.New().Create))
 	//http.HandleFunc("POST /akoflow-api/workflows/", http_config.KernelHandler(workflow_api_handler.New().CreateWorkflow))
 	//http.HandleFunc("POST /akoflow-api/validate-workflow/", http_config.KernelHandler(workflow_api_handler.New().ValidateWorkflow))
 	//

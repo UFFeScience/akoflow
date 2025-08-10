@@ -1,5 +1,37 @@
 {{ define "modal_create_workflow" }}
 
+<style>
+    .active-tab {
+        border-color: #0ea5e9;
+        color: #0ea5e9;
+    }
+
+    .inactive-tab {
+        border-color: transparent;
+        color: #64748b;
+    }
+
+    .inactive-tab:hover {
+        border-color: #94a3b8;
+        color: #334155;
+    }
+
+    .dark .inactive-tab:hover {
+        border-color: #475569;
+        color: #cbd5e1;
+    }
+
+    .drop-zone-dragover {
+        border-color: #0ea5e9;
+        background-color: #f0f9ff;
+    }
+
+    .dark .drop-zone-dragover {
+        background-color: #0c4a6e;
+    }
+</style>
+
+
 <div id="create-workflow-modal"
     class="hidden fixed inset-0 bg-black bg-opacity-60 dark:bg-opacity-70 z-50 flex items-center justify-center transition-opacity duration-300 ease-in-out">
 
@@ -62,13 +94,31 @@
                                 <div>
                                     <label for="workflow-name"
                                         class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Name</label>
-                                    <input type="text" id="workflow-name" placeholder="e.g., my-processing-job"
+                                    <input type="text" id="workflow-name" value="wf-hello-world-gcp"
                                         class="w-full bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-200 border-slate-300 dark:border-slate-600 rounded-md py-2 px-3 text-sm shadow-sm transition-colors duration-150 focus:border-sky-500 focus:ring-2 focus:ring-sky-500/50">
                                 </div>
                                 <div>
                                     <label for="workflow-namespace"
                                         class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Namespace</label>
                                     <input type="text" id="workflow-namespace" value="akoflow"
+                                        class="w-full bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-200 border-slate-300 dark:border-slate-600 rounded-md py-2 px-3 text-sm shadow-sm transition-colors duration-150 focus:border-sky-500 focus:ring-2 focus:ring-sky-500/50">
+                                </div>
+                                <div>
+                                    <label for="workflow-storage-class"
+                                        class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Storage Class</label>
+                                    <input type="text" id="workflow-storage-class" value="standard"
+                                        class="w-full bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-200 border-slate-300 dark:border-slate-600 rounded-md py-2 px-3 text-sm shadow-sm transition-colors duration-150 focus:border-sky-500 focus:ring-2 focus:ring-sky-500/50">
+                                </div>
+                                <div>
+                                    <label for="workflow-storage-size"
+                                        class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Storage Size</label>
+                                    <input type="text" id="workflow-storage-size" value="32Mi"
+                                        class="w-full bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-200 border-slate-300 dark:border-slate-600 rounded-md py-2 px-3 text-sm shadow-sm transition-colors duration-150 focus:border-sky-500 focus:ring-2 focus:ring-sky-500/50">
+                                </div>
+                                <div>
+                                    <label for="workflow-storage-type"
+                                        class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Storage Type</label>
+                                    <input type="text" id="workflow-storage-type" value="distributed"
                                         class="w-full bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-200 border-slate-300 dark:border-slate-600 rounded-md py-2 px-3 text-sm shadow-sm transition-colors duration-150 focus:border-sky-500 focus:ring-2 focus:ring-sky-500/50">
                                 </div>
                             </div>
@@ -107,49 +157,21 @@
     </div>
 </div>
 
-<style>
-    .active-tab {
-        border-color: #0ea5e9;
-        /* Cor sky-500 */
-        color: #0ea5e9;
-    }
-
-    .inactive-tab {
-        border-color: transparent;
-        color: #64748b;
-        /* Cor slate-500 */
-    }
-
-    .inactive-tab:hover {
-        border-color: #94a3b8;
-        /* Cor slate-400 */
-        color: #334155;
-        /* Cor slate-700 */
-    }
-
-    .dark .inactive-tab:hover {
-        border-color: #475569;
-        /* Cor slate-600 */
-        color: #cbd5e1;
-        /* Cor slate-300 */
-    }
-
-    .drop-zone-dragover {
-        border-color: #0ea5e9;
-        /* Cor sky-500 */
-        background-color: #f0f9ff;
-        /* Cor sky-50 */
-    }
-
-    .dark .drop-zone-dragover {
-        background-color: #0c4a6e;
-        /* Cor sky-900 */
-    }
-</style>
-
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
 
+    async function fetchRuntimes() {
+        const response = await connector.runtimes().getRuntimes();
+        if (!response || !response.data) {
+            console.error("Failed to fetch runtimes");
+            return;
+        }
+
+        return response['data']
+    }
+
+    document.addEventListener('DOMContentLoaded', async function () {
+
+        const runtimes = await fetchRuntimes();
 
         const tabButtons = {
             upload: document.getElementById('tab-btn-upload'),
@@ -175,7 +197,7 @@
         tabButtons.upload.addEventListener('click', () => switchTab('upload'));
         tabButtons.editor.addEventListener('click', () => {
             switchTab('editor');
-            renderAll(); // Ensure the editor is rendered when switching to it
+            renderAll();
         });
 
         dropZone.addEventListener('click', () => fileInput.click());
@@ -232,7 +254,7 @@
 
                     document.getElementById('workflow-name').value = workflowState.name;
                     document.getElementById('workflow-namespace').value = workflowState.spec.namespace;
-                    renderAll(); 
+                    renderAll();
 
                     switchTab('editor');
 
@@ -266,6 +288,7 @@
             name: '',
             spec: {
                 namespace: 'akoflow',
+                runtime: 'default',
                 activities: []
             }
         };
@@ -279,28 +302,38 @@
 
         const originalOpenModal = openModal;
         openModal = () => {
-            originalOpenModal(); 
-            switchTab('upload'); 
-            fileInfo.textContent = ''; 
-            fileInput.value = ''; 
+            originalOpenModal();
+            switchTab('upload');
+            fileInfo.textContent = '';
+            fileInput.value = '';
         };
-
+        
         function resetWorkflowState() {
             workflowState = {
                 name: '',
                 spec: {
                     namespace: 'akoflow',
+                    mountPath: '/data',
+                    storagePolicy: {
+                        storageClassName: 'standard',
+                        storageSize: '32Mi',
+                        type: 'distributed'
+                    },
                     activities: []
                 }
             };
             workflowNameInput.value = '';
             workflowNamespaceInput.value = 'akoflow';
+            
             addActivity();
         }
 
         function updateWorkflowState() {
             workflowState.name = workflowNameInput.value.trim();
             workflowState.spec.namespace = workflowNamespaceInput.value.trim();
+            workflowState.spec.storagePolicy.storageClassName = document.getElementById('workflow-storage-class').value.trim();
+            workflowState.spec.storagePolicy.storageSize = document.getElementById('workflow-storage-size').value.trim();
+            workflowState.spec.storagePolicy.type = document.getElementById('workflow-storage-type').value.trim();
 
             document.querySelectorAll('.activity-card').forEach((card, index) => {
                 const activity = workflowState.spec.activities[index];
@@ -308,6 +341,9 @@
                     activity.name = card.querySelector('.activity-name').value.trim();
                     activity.image = card.querySelector('.activity-image').value.trim();
                     activity.run = card.querySelector('.activity-run').value;
+                    activity.memoryLimit = card.querySelector('.activity-memory-limit').value.trim();
+                    activity.cpuLimit = card.querySelector('.activity-cpu-limit').value.trim();
+                    activity.runtime = card.querySelector('.activity-runtime').value;
 
                     const dependsOnSelect = card.querySelector('.activity-depends-on');
                     activity.dependsOn = Array.from(dependsOnSelect.selectedOptions).map(opt => opt.value);
@@ -319,7 +355,7 @@
         function addActivity() {
             const newActivity = {
                 id: `act_${Date.now()}`,
-                name: `activity-${workflowState.spec.activities.length + 1}`,
+                name: String.fromCharCode(97 + workflowState.spec.activities.length),
                 image: 'alpine:3.18',
                 run: 'echo "Hello from new activity"',
                 dependsOn: []
@@ -401,9 +437,16 @@
                 </div>
                 <div>
                 <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Runtime</label>
-                <input type="text" value="${activity.runtime || ''}" 
-                       class="activity-runtime w-full bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-200 border-slate-300 dark:border-slate-600 rounded-md py-2 px-3 text-sm shadow-sm transition-colors duration-150
+                <select class="activity-runtime w-full bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-200 border-slate-300 dark:border-slate-600 rounded-md py-2 px-3 text-sm shadow-sm transition-colors duration-150
                           focus:border-sky-500 focus:ring-2 focus:ring-sky-500/50">
+                    ${runtimes.map(runtime => `
+                        <option 
+                            ${runtime.status !== 1 ? 'disabled' : ''}
+                            value="${runtime.name}" ${activity.name === runtime ? 'selected' : ''}>
+                            ${runtime.name} (${runtime.status === 1 ? 'Online' : 'Offline'})
+                        </option>
+                    `).join('')}
+                </select>
                 </div>
                 <div>
                 <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Run Script</label>
@@ -564,11 +607,34 @@
             const finalWorkflowSpec = JSON.parse(JSON.stringify(workflowState));
             finalWorkflowSpec.spec.activities.forEach(a => delete a.id);
 
-            console.log("Submitting Workflow:", JSON.stringify(finalWorkflowSpec, null, 2));
-            alert('Workflow data is logged to the console. Implement your submission logic here.');
+            const yamlData = jsyaml.dump(finalWorkflowSpec);
+            console.log("Generated Workflow YAML:", yamlData);
+
+            console.log("Submitting workflow:", btoa(yamlData));
+
+            let payload = {
+                workflow: btoa(yamlData),
+            };
+            
+            connector.workflows().createWorkflow(payload)
+                .then(response => {
+                    if (response && response.data) {
+                        console.log("Workflow created successfully:", response.data);
+                        closeModal();
+                        resetWorkflowState();
+                        alert("Workflow created successfully!");
+                    } else {
+                        console.error("Failed to create workflow:", response);
+                        alert("Failed to create workflow. Check console for details.");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error creating workflow:", error);
+                    alert("Error creating workflow. Check console for details.");
+                });
 
 
-            closeModal();
+            
         });
 
     });

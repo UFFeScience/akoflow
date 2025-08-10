@@ -27,6 +27,21 @@
                 return await response.json();
             },
 
+            createWorkflow: async (workflowData) => {
+                const response = await fetch(BASE_URL_API + "workflows/", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },  
+                    body: JSON.stringify(workflowData)
+                });
+                if (!response.ok) {
+                    throw new Error('Failed to create workflow: ' + response.statusText);
+                }
+                return await response.json();
+            },
+            
+
         };
     }
 

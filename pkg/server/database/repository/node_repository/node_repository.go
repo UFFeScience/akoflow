@@ -16,6 +16,9 @@ const STATUS_NOT_READY = 0
 
 type INodeRepository interface {
 	CreateOrUpdate(runtime string, node model.Node) error
+	GetByName(name string) (*model.Node, error)
+	UpdateNode(node model.Node) error
+	GetNodesByRuntime(runtime string) ([]model.Node, error)
 }
 
 func New() INodeRepository {
@@ -131,4 +134,41 @@ func (nr *NodeRepository) CreateOrUpdate(runtime string, node model.Node) error 
 
 	return nil
 
+}
+
+func (nr *NodeRepository) GetNodesByRuntime(runtime string) ([]model.Node, error) {
+	database := repository.Database{}
+	c := database.Connect()
+	defer c.Close()
+
+	var nodes []model.Node
+	cols := model.Node{}.GetColumns()
+	rows, err := c.Query("SELECT "+strings.Join(cols, ", ")+" FROM "+nr.tableName+" WHERE runtime = ?", runtime)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var node model.Node
+		err = rows.Scan(
+			&node.Name,
+			&node.Runtime,
+			&node.Status,
+			&node.CPUUsage,
+			&node.CPUMax,
+			&node.MemoryUsage,
+			&node.MemoryLimit,
+			&node.NetworkLimit,
+			&node.NetworkUsage,
+			&node.CreatedAt,
+			&node.UpdatedAt,
+		)
+		if err != nil {
+			return nil, err
+		}
+		nodes = append(nodes, node)
+	}
+
+	return nodes, nil
 }

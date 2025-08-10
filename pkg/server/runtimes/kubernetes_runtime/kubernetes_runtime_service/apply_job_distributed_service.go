@@ -38,8 +38,6 @@ func newApplyJobDistributedService() ApplyJobDistributedService {
 }
 
 func (a *ApplyJobDistributedService) ApplyDistributedJob(activityID int) {
-	// do something
-
 	activity, errA := a.activityRepository.Find(activityID)
 	wf, errW := a.workflowRepository.Find(activity.WorkflowId)
 

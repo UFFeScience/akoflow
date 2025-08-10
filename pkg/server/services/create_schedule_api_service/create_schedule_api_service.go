@@ -103,12 +103,13 @@ func (h *CreateScheduleApiService) executePlugin(soFile string) bool {
 	}
 
 	input := map[string]any{
-		"time_estimate":   10.0,
-		"memory_required": 512.0,
-		"memory_free":     1024.0,
-		"memory_max":      2048.0,
-		"affinity":        0.8,
-		"alpha":           0.5,
+		"time_estimate":   2.5,
+		"memory_required": 1024.0,
+		"vcpus_required":  2.0,
+		"memory_free":     2048.0,
+		"memory_max":      4096.0,
+		"vcpus_available": 4.0,
+		"alpha":           0.6,
 	}
 
 	result := akoScoreFunc(input)

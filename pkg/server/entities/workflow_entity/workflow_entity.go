@@ -21,6 +21,7 @@ const MODE_STANDALONE = "standalone"
 
 type WorkflowSpec struct {
 	Runtime       string                                        `yaml:"runtime"`
+	Schedule      string                                        `yaml:"schedule"` // Optional field for scheduling
 	Image         string                                        `yaml:"image"`
 	StoragePolicy WorkflowSpecStoragePolicy                     `yaml:"storagePolicy"`
 	Volumes       []string                                      `yaml:"volumes"`

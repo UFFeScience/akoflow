@@ -129,11 +129,11 @@ func (r *ScheduleRepository) GetScheduleByName(name string) (schedule_entity.Sch
 	database := repository.Database{}
 	c := database.Connect()
 
-	query := "SELECT id, type, code, plugin_so_path, created_at, updated_at name FROM " + r.tableName + " WHERE name = ?"
+	query := "SELECT id, type, code, name, plugin_so_path, created_at, updated_at name FROM " + r.tableName + " WHERE name = ?"
 	row := c.QueryRow(query, name)
 
 	var schedule model.ScheduleModel
-	err := row.Scan(&schedule.ID, &schedule.Type, &schedule.Code, &schedule.Name)
+	err := row.Scan(&schedule.ID, &schedule.Type, &schedule.Code, &schedule.Name, &schedule.PluginSoPath, &schedule.CreatedAt, &schedule.UpdatedAt)
 	if err != nil {
 		return schedule_entity.ScheduleEntity{}, err
 	}

@@ -45,7 +45,12 @@ func (m *MakeK8sActivityDistributedService) Handle(service MakeK8sJobService) (k
 		},
 	}
 
-	nodeSelector := m.service.makeK8sActivityService.MakeNodeSelector(workflow, activity)
+	activitySchedule, _ := m.service.activityRepository.GetActivityScheduleByActivityId(activity.GetId())
+
+	nodeSelector := m.service.
+		makeK8sActivityService.
+		SetActivitySchedule(activitySchedule).
+		MakeNodeSelector(workflow, activity)
 	if nodeSelector != nil {
 		k8sJob.Spec.Template.Spec.NodeSelector = nodeSelector
 	}

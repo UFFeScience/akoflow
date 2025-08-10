@@ -35,3 +35,25 @@ func (n Node) GetClausulePrimaryKey() string {
 func (n Node) GetColumnType(column string) string {
 	return database.GenericGetColumnType(n, column)
 }
+
+func (n Node) GetMemoryFree() float64 {
+	if n.MemoryLimit == 0 {
+		return 0
+	}
+	return n.MemoryLimit - n.MemoryUsage
+}
+
+func (n Node) GetCPUFree() float64 {
+	if n.CPUMax == 0 {
+		return 0
+	}
+	return n.CPUMax - n.CPUUsage
+}
+
+func (n Node) GetMemoryMax() float64 {
+	return n.MemoryLimit
+}
+
+func (n Node) GetCpuAvailable() float64 {
+	return n.CPUMax
+}

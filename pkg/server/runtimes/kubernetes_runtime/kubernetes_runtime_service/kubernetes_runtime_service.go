@@ -52,6 +52,11 @@ func (k *KubernetesRuntimeService) GetLogs(wf workflow_entity.Workflow, wfa work
 	NewMonitorGetLogsActivityService().GetLogs(wf, wfa)
 }
 
+func (k *KubernetesRuntimeService) GetMetrics(workflowID int, activityID int) string {
+	NewMonitorGetMetricsActivityService().GetMetrics(workflowID, activityID)
+	return ""
+}
+
 func (k *KubernetesRuntimeService) HealthCheck(runtime string) bool {
 	helthCheck := NewHealthCheckRuntimeK8sService()
 

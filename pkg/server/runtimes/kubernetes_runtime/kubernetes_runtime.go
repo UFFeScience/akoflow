@@ -49,6 +49,7 @@ func (k *KubernetesRuntime) DeleteJob(workflowID int, activityID int) bool {
 }
 
 func (k *KubernetesRuntime) GetMetrics(workflowID int, activityID int) string {
+	k.kubernetesRuntimeService.GetMetrics(workflowID, activityID)
 	return ""
 }
 

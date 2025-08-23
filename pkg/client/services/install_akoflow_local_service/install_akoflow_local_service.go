@@ -10,20 +10,19 @@ import (
 )
 
 const (
-	commonBuildAddKubernetesRepoCommand      = "echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.31/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list"
-	commonBuildAddKubernetesKeyringCommand   = "sudo mkdir -p /etc/apt/keyrings && curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.31/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg"
-	commonBuildInstallPackagesCommand        = "sudo apt update && sudo apt install -y uidmap apt-transport-https ca-certificates curl gpg kubelet kubeadm kubectl"
-	commonBuildInstallDockerCommand          = "curl -fsSL https://get.docker.com -o get-docker.sh && sh get-docker.sh && dockerd-rootless-setuptool.sh install"
-	commonBuildHoldKubernetesPackagesCommand = "sudo apt-mark hold kubelet kubeadm kubectl"
-	commonBuildConfigureContainerdCommand    = "sudo mkdir -p /etc/containerd && containerd config default | sudo tee /etc/containerd/config.toml && sudo systemctl restart containerd"
+	commonBuildAddKubernetesRepoCommand      = "echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.33/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list"
+	commonBuildAddKubernetesKeyringCommand   = "sudo mkdir -p /etc/apt/keyrings && curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.33/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg"
+	commonBuildInstallPackagesCommand        = "sudo apt update && sudo apt install -y uidmap apt-transport-https ca-certificates curl gpg containerd kubelet kubeadm kubectl"
+	commonBuildHoldKubernetesPackagesCommand = "sudo apt-mark hold kubelet kubeadm kubectl && sudo sysctl -w net.ipv4.ip_forward=1"
+	commonBuildConfigureContainerdCommand    = "sudo mkdir -p /etc/containerd && containerd config default | sudo tee /etc/containerd/config.toml > /dev/null && sudo sed -i 's/SystemdCgroup = false/SystemdCgroup = true/' /etc/containerd/config.toml && sudo systemctl restart containerd"
 )
 
 const (
-	mainBuildInitializeKubernetes = "sudo kubeadm init"
+	mainBuildInitializeKubernetes = "sudo kubeadm init --pod-network-cidr=192.168.0.0/16"
 	mainBuildCopyKubeConfig       = "mkdir -p $HOME/.kube && sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config && sudo chown $(id -u):$(id -g) $HOME/.kube/config"
 	mainBuildInstallCalico        = "kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml"
 
-	mainInstallAkoflowKubeAdmin = "kubectl apply -f https://raw.githubusercontent.com/UFFeScience/akoflow/refs/heads/main/pkg/server/resource/akoflow-kubeadmin.yaml"
+	// mainInstallAkoflowKubeAdmin = "kubectl apply -f https://raw.githubusercontent.com/UFFeScience/akoflow/refs/heads/main/pkg/server/resource/akoflow-kubeadmin.yaml"
 )
 
 type MainHostDTO struct {
@@ -57,7 +56,6 @@ func (i *InstallAkoflowLocalService) Install() {
 		commonBuildAddKubernetesRepoCommand,
 		commonBuildAddKubernetesKeyringCommand,
 		commonBuildInstallPackagesCommand,
-		commonBuildInstallDockerCommand,
 		commonBuildHoldKubernetesPackagesCommand,
 		commonBuildConfigureContainerdCommand,
 	})
@@ -67,10 +65,6 @@ func (i *InstallAkoflowLocalService) Install() {
 
 	mainHostDTO := i.handleKubernetesInitializationInMainHost(mainHost)
 	i.handleKubernetesJoiningInWorkerNodes(workers, mainHostDTO)
-
-	i.sshConnectionService.ExecuteCommandsOnHost(mainHost, []string{
-		mainInstallAkoflowKubeAdmin,
-	})
 
 	i.sshConnectionService.CloseConnections()
 }

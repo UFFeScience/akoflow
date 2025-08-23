@@ -75,14 +75,17 @@ func (a *ApplyJobDistributedService) runK8sJob(wf workflow_entity.Workflow, wfa 
 		MakeK8sJob()
 
 	runtime, err := a.runtimeRepository.GetByName(wfa.GetRuntimeId())
+
 	if err != nil {
 		return "", err
 	}
 
-	a.connector.Job(runtime).
+	a.connector.
+		Job(runtime).
 		ApplyJob(a.namespace, job)
 
-	podCreated, _ := a.connector.Pod(runtime).
+	podCreated, _ := a.connector.
+		Pod(runtime).
 		GetPodByJob(a.namespace, job.Metadata.Name)
 
 	namePod, err := podCreated.GetPodName()

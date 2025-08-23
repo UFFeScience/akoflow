@@ -12,7 +12,7 @@ import (
 const (
 	commonBuildAddKubernetesRepoCommand      = "echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.33/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list"
 	commonBuildAddKubernetesKeyringCommand   = "sudo mkdir -p /etc/apt/keyrings && curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.33/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg"
-	commonBuildInstallPackagesCommand        = "sudo apt update && sudo apt install -y uidmap apt-transport-https ca-certificates curl gpg containerd kubelet kubeadm kubectl"
+	commonBuildInstallPackagesCommand        = "sudo apt update && sudo apt install -y uidmap apt-transport-https ca-certificates curl gpg containerd kubelet kubeadm kubectl nfs-common"
 	commonBuildHoldKubernetesPackagesCommand = "sudo apt-mark hold kubelet kubeadm kubectl && sudo sysctl -w net.ipv4.ip_forward=1"
 	commonBuildConfigureContainerdCommand    = "sudo mkdir -p /etc/containerd && containerd config default | sudo tee /etc/containerd/config.toml > /dev/null && sudo sed -i 's/SystemdCgroup = false/SystemdCgroup = true/' /etc/containerd/config.toml && sudo systemctl restart containerd"
 )

@@ -80,4 +80,5 @@ type IActivityRepository interface {
 	GetActivityScheduleByNodeName(nodeName string) ([]model.ActivitySchedule, error)
 	GetAllRunningActivities() ([]workflow_activity_entity.WorkflowActivities, error)
 	GetActivityScheduleByActivityId(activityId int) (model.ActivitySchedule, error)
+	IsActivityScheduled(workflowId int, activityId int) (bool, error)
 }

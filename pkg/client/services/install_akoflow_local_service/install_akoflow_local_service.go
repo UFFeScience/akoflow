@@ -22,7 +22,7 @@ const (
 	mainBuildCopyKubeConfig       = "mkdir -p $HOME/.kube && sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config && sudo chown $(id -u):$(id -g) $HOME/.kube/config"
 	mainBuildInstallCalico        = "kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml"
 
-	// mainInstallAkoflowKubeAdmin = "kubectl apply -f https://raw.githubusercontent.com/UFFeScience/akoflow/refs/heads/main/pkg/server/resource/akoflow-kubeadmin.yaml"
+	mainInstallAkoflowKubeAdmin = "kubectl apply -f https://raw.githubusercontent.com/UFFeScience/akoflow/refs/heads/AKF-21/pkg/server/resource/akoflow-dev-dockerdesktop.yaml &&  kubectl create token akoflow-server-sa --duration=800h --namespace=akoflow"
 )
 
 type MainHostDTO struct {
@@ -74,6 +74,7 @@ func (i *InstallAkoflowLocalService) handleKubernetesInitializationInMainHost(ma
 		mainBuildInitializeKubernetes,
 		mainBuildCopyKubeConfig,
 		mainBuildInstallCalico,
+		mainInstallAkoflowKubeAdmin,
 	})
 
 	ipAddress := ""

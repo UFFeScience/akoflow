@@ -100,3 +100,17 @@ func (w *ActivityRepository) GetActivityScheduleByActivityId(activityId int) (mo
 	}
 	return activitySchedules[0], nil // Return the first activity schedule found
 }
+
+func (w *ActivityRepository) IsActivityScheduled(workflowId int, activityId int) (bool, error) {
+	database := repository.Database{}
+	c := database.Connect()
+	defer c.Close()
+
+	var count int
+	err := c.QueryRow("SELECT COUNT(*) FROM "+w.tableNameActivitySchedule+" WHERE workflow_id = ? AND activity_id = ?", workflowId, activityId).Scan(&count)
+	if err != nil {
+		return false, err
+	}
+
+	return count > 0, nil
+}

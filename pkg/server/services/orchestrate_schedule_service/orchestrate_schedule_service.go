@@ -60,6 +60,15 @@ func (o *OrchestrateScheduleService) Orchestrate() ([]workflow_activity_entity.W
 	for _, activity := range o.readyToRunActivities {
 		response := make([]ResponseStartSchedule, 0)
 
+		activityIScheduled, err := o.activityRepository.IsActivityScheduled(activity.WorkflowId, activity.Id)
+		if err != nil {
+			config.App().Logger.Error("Error checking if activity is scheduled: " + err.Error())
+			return nil, err
+		}
+		if activityIScheduled {
+			continue
+		}
+
 		nodes, err := o.nodeRepository.GetNodesByRuntime(o.workflow.Spec.Runtime)
 		if err != nil {
 			config.App().Logger.Error("Error getting nodes: " + err.Error())

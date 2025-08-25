@@ -85,18 +85,47 @@ func (n *NodeCurrentMetricsService) GetCurrentMetrics() (*NodeCurrentMetrics, er
 		return nil, fmt.Errorf("error getting activity schedules: %v", err)
 	}
 
+	wfds := []int{}
+	for _, activityScheduled := range activitiesScheduleds {
+		wfds = append(wfds, activityScheduled.WorkflowID)
+	}
+
 	activitiesRunning, err := n.activityRepository.GetAllRunningActivities()
 	if err != nil {
 		return nil, fmt.Errorf("error getting running activities: %v", err)
 	}
 
+	activitiesFinished, err := n.activityRepository.GetActivitiesByWorkflowIds(wfds)
+	if err != nil {
+		return nil, fmt.Errorf("error getting finished activities: %v", err)
+	}
+	_ = activitiesFinished
+	// Map to track activity IDs and their statuses
+
 	activitiesScheduledsMap := make(map[int]map[string]bool)
+
+	for _, activities := range activitiesFinished {
+		for _, activity := range activities {
+			if _, exists := activitiesScheduledsMap[activity.Id]; !exists {
+				activitiesScheduledsMap[activity.Id] = map[string]bool{
+					"activitySchedule": false,
+					"activityPaused":   activity.Status == activity_repository.StatusCreated,
+					"activityRunning":  activity.Status == activity_repository.StatusRunning,
+					"activityFinished": activity.Status == activity_repository.StatusFinished,
+				}
+			} else {
+				activitiesScheduledsMap[activity.Id]["activityFinished"] = activity.Status == activity_repository.StatusFinished
+			}
+		}
+	}
 
 	for _, activityScheduled := range activitiesScheduleds {
 		if _, exists := activitiesScheduledsMap[activityScheduled.ActivityID]; !exists {
 			activitiesScheduledsMap[activityScheduled.ActivityID] = map[string]bool{
 				"activitySchedule": true,
 				"activityRunning":  false,
+				"activityPaused":   false,
+				"activityFinished": false,
 			}
 		} else {
 			activitiesScheduledsMap[activityScheduled.ActivityID]["activitySchedule"] = true
@@ -108,6 +137,8 @@ func (n *NodeCurrentMetricsService) GetCurrentMetrics() (*NodeCurrentMetrics, er
 			activitiesScheduledsMap[activityRunning.Id] = map[string]bool{
 				"activitySchedule": false,
 				"activityRunning":  true,
+				"activityPaused":   false,
+				"activityFinished": false,
 			}
 		} else {
 			activitiesScheduledsMap[activityRunning.Id]["activityRunning"] = true
@@ -125,7 +156,12 @@ func (n *NodeCurrentMetricsService) GetCurrentMetrics() (*NodeCurrentMetrics, er
 
 	for _, activityScheduled := range activitiesScheduleds {
 
-		if activitiesScheduledsMap[activityScheduled.ActivityID]["activityRunning"] || activitiesScheduledsMap[activityScheduled.ActivityID]["activitySchedule"] {
+		if activitiesScheduledsMap[activityScheduled.ActivityID]["activityRunning"] && activitiesScheduledsMap[activityScheduled.ActivityID]["activitySchedule"] {
+			nodeCurrentMetrics.CPUUsage += activityScheduled.CpuRequired
+			nodeCurrentMetrics.MemoryUsage += activityScheduled.MemoryRequired
+		}
+
+		if activitiesScheduledsMap[activityScheduled.ActivityID]["activityPaused"] && activitiesScheduledsMap[activityScheduled.ActivityID]["activitySchedule"] {
 			nodeCurrentMetrics.CPUUsage += activityScheduled.CpuRequired
 			nodeCurrentMetrics.MemoryUsage += activityScheduled.MemoryRequired
 		}

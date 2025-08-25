@@ -174,3 +174,14 @@ func (c *ConnectorMetricsK8s) GetNodeMetrics() ([]k8sNodeMetrics, error) {
 
 	return metrics, nil
 }
+
+func (n k8sNodeMetrics) GetCpuUsage() float64 {
+	var cpuUsage float64
+	fmt.Sscanf(n.CPU, "%f", &cpuUsage)
+	return cpuUsage / 1000000000
+}
+func (n k8sNodeMetrics) GetMemoryUsage() float64 {
+	var memoryUsage float64
+	fmt.Sscanf(n.Memory, "%f", &memoryUsage)
+	return memoryUsage
+}

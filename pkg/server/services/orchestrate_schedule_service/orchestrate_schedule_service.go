@@ -95,6 +95,7 @@ func (o *OrchestrateScheduleService) Orchestrate() ([]workflow_activity_entity.W
 				"vcpus_available": nodeMetrics.GetCpuFree(),
 				"alpha":           0.0,
 				"activity_name":   activity.GetName(),
+				"machine_type":    node.GetInstanceType(),
 			}
 
 			akoScore, _ := o.StartRunSchedule(scheduleName, input)
@@ -108,6 +109,16 @@ func (o *OrchestrateScheduleService) Orchestrate() ([]workflow_activity_entity.W
 		}
 
 		bestNode := o.getBestNode(response)
+
+		if bestNode == nil {
+			config.App().Logger.Info("No suitable node found for activity: " + activity.GetName())
+			continue
+		}
+
+		if bestNode["ako_score"].(float64) == 0 {
+			config.App().Logger.Info("No suitable node found for activity (score 0): " + activity.GetName())
+			continue
+		}
 
 		metadataMap := map[string]any{
 			"cpu":          activity.GetCpuRequired(),

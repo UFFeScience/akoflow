@@ -110,6 +110,8 @@ func (h *CreateScheduleApiService) executePlugin(soFile string) bool {
 		"memory_max":      4096.0,
 		"vcpus_available": 4.0,
 		"alpha":           0.6,
+		"activity_name":   "activity1",
+		"machine_type":    "c7i.large",
 	}
 
 	result := akoScoreFunc(input)

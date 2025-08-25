@@ -125,7 +125,7 @@ func (n *NodeCurrentMetricsService) GetCurrentMetrics() (*NodeCurrentMetrics, er
 
 	for _, activityScheduled := range activitiesScheduleds {
 
-		if activitiesScheduledsMap[activityScheduled.ActivityID]["activityRunning"] && activitiesScheduledsMap[activityScheduled.ActivityID]["activitySchedule"] {
+		if activitiesScheduledsMap[activityScheduled.ActivityID]["activityRunning"] || activitiesScheduledsMap[activityScheduled.ActivityID]["activitySchedule"] {
 			nodeCurrentMetrics.CPUUsage += activityScheduled.CpuRequired
 			nodeCurrentMetrics.MemoryUsage += activityScheduled.MemoryRequired
 		}

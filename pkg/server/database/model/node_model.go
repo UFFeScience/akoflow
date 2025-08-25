@@ -57,3 +57,14 @@ func (n Node) GetMemoryMax() float64 {
 func (n Node) GetCpuAvailable() float64 {
 	return n.CPUMax
 }
+
+func (n Node) GetInstanceType() string {
+	if n.Name == "ip-10-0-25-87" {
+		return "c6i.xlarge"
+	} else if n.Name == "ip-10-0-20-84" {
+		return "c7a.xlarge"
+	} else if n.Name == "ip-10-0-18-106" {
+		return "c7i.large"
+	}
+	return "unknown"
+}

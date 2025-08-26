@@ -1,0 +1,98 @@
+name: wf-schedule-c
+spec:
+  namespace: "akoflow"
+  runtime: "k8s"
+  schedule: "schedule3"
+  storagePolicy:
+    storageClassName: "local-path"
+    storageSize: "32Mi"
+    type: distributed
+  mountPath: "/export"
+  activities:
+    - name: "activity1"
+      memoryLimit: 1543Mi   # matrix≈1342.96 MB
+      cpuLimit: 1.0
+      image: "ovvesley/synthetic:alpha1x86"
+      run: |
+        /home/app/bin/synthetic 18763
+
+    - name: "activity2"
+      memoryLimit: 1040Mi   # matrix≈839.64 MB
+      cpuLimit: 1.0
+      image: "ovvesley/synthetic:alpha1x86"
+      run: |
+        /home/app/bin/synthetic 14836
+
+    - name: "activity3"
+      memoryLimit: 1245Mi   # matrix≈1044.48 MB
+      cpuLimit: 1.0
+      image: "ovvesley/synthetic:alpha1x86"
+      run: |
+        /home/app/bin/synthetic 16547
+
+    - name: "activity4"
+      memoryLimit: 1202Mi   # matrix≈1001.99 MB
+      cpuLimit: 1.0
+      image: "ovvesley/synthetic:alpha1x86"
+      run: |
+        /home/app/bin/synthetic 16207
+      dependsOn:
+        - "activity1"
+        - "activity2"
+
+    - name: "activity5"
+      memoryLimit: 1623Mi   # matrix≈1422.56 MB
+      cpuLimit: 1.0
+      image: "ovvesley/synthetic:alpha1x86"
+      run: |
+        /home/app/bin/synthetic 19311
+      dependsOn:
+        - "activity2"
+        - "activity3"
+
+    - name: "activity6"
+      memoryLimit: 6224Mi   # matrix≈6023.82 MB
+      cpuLimit: 1.0
+      image: "ovvesley/synthetic:alpha1x86"
+      run: |
+        /home/app/bin/synthetic 39738
+      dependsOn:
+        - "activity4"
+        - "activity5"
+
+    - name: "activity7"
+      memoryLimit: 6577Mi   # matrix≈6376.90 MB
+      cpuLimit: 1.0
+      image: "ovvesley/synthetic:alpha1x86"
+      run: |
+        /home/app/bin/synthetic 40886
+      dependsOn:
+        - "activity6"
+
+    - name: "activity8"
+      memoryLimit: 5258Mi   # matrix≈5057.65 MB
+      cpuLimit: 1.0
+      image: "ovvesley/synthetic:alpha1x86"
+      run: |
+        /home/app/bin/synthetic 36412
+      dependsOn:
+        - "activity6"
+
+    - name: "activity9"
+      memoryLimit: 5807Mi   # matrix≈5606.56 MB
+      cpuLimit: 1.0
+      image: "ovvesley/synthetic:alpha1x86"
+      run: |
+        /home/app/bin/synthetic 38337
+      dependsOn:
+        - "activity7"
+        - "activity8"
+
+    - name: "activity10"
+      memoryLimit: 5164Mi   # matrix≈4963.92 MB
+      cpuLimit: 1.0
+      image: "ovvesley/synthetic:alpha1x86"
+      run: |
+        /home/app/bin/synthetic 36073
+      dependsOn:
+        - "activity9"

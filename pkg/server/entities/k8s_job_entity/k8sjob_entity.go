@@ -56,8 +56,8 @@ type K8sJobResources struct {
 }
 
 type K8sJobResourcesLimits struct {
-	Cpu    string `json:"cpu"`
-	Memory string `json:"memory"`
+	Cpu    string `json:"cpu,omitempty"`
+	Memory string `json:"memory,omitempty"`
 }
 
 type K8sJobVolume struct {

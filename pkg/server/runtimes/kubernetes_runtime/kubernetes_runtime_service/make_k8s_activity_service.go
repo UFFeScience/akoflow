@@ -76,7 +76,7 @@ func (m *MakeK8sActivityService) setupCommandWorkdir(wf workflow_entity.Workflow
 
 	command := "mkdir -p " + workdir + "; \n"
 	command += "echo CURRENT_DIR: $(pwd); \n"
-	command += "mv -fvu /akoflow-wfa-shared/* " + workdir + "; \n"
+	command += "mv -fvu /akoflow-wfa-shared/* " + workdir + " || true; \n"
 	command += "cd " + workdir + "; \n"
 
 	command += "printenv; \n"
@@ -187,7 +187,7 @@ func (m *MakeK8sActivityService) makeContainerActivity(workflow workflow_entity.
 		VolumeMounts: m.makeJobVolumeMounts(workflow, activity),
 		Resources: k8s_job_entity.K8sJobResources{
 			Limits: k8s_job_entity.K8sJobResourcesLimits{
-				Cpu:    activity.CpuLimit,
+				// Cpu:    activity.CpuLimit,
 				Memory: activity.MemoryLimit,
 			},
 		},

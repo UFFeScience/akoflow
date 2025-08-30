@@ -103,21 +103,29 @@
                                     <input type="text" id="workflow-namespace" value="akoflow"
                                         class="w-full bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-200 border-slate-300 dark:border-slate-600 rounded-md py-2 px-3 text-sm shadow-sm transition-colors duration-150 focus:border-sky-500 focus:ring-2 focus:ring-sky-500/50">
                                 </div>
+
+                                <div class="workflow-runtimes-container">
+
+                                </div>
+
                                 <div>
                                     <label for="workflow-storage-class"
-                                        class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Storage Class</label>
+                                        class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Storage
+                                        Class</label>
                                     <input type="text" id="workflow-storage-class" value="standard"
                                         class="w-full bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-200 border-slate-300 dark:border-slate-600 rounded-md py-2 px-3 text-sm shadow-sm transition-colors duration-150 focus:border-sky-500 focus:ring-2 focus:ring-sky-500/50">
                                 </div>
                                 <div>
                                     <label for="workflow-storage-size"
-                                        class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Storage Size</label>
+                                        class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Storage
+                                        Size</label>
                                     <input type="text" id="workflow-storage-size" value="32Mi"
                                         class="w-full bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-200 border-slate-300 dark:border-slate-600 rounded-md py-2 px-3 text-sm shadow-sm transition-colors duration-150 focus:border-sky-500 focus:ring-2 focus:ring-sky-500/50">
                                 </div>
                                 <div>
                                     <label for="workflow-storage-type"
-                                        class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Storage Type</label>
+                                        class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Storage
+                                        Type</label>
                                     <input type="text" id="workflow-storage-type" value="distributed"
                                         class="w-full bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-200 border-slate-300 dark:border-slate-600 rounded-md py-2 px-3 text-sm shadow-sm transition-colors duration-150 focus:border-sky-500 focus:ring-2 focus:ring-sky-500/50">
                                 </div>
@@ -227,7 +235,7 @@
             }
         });
 
-        const handleFile = (file) => {
+        const handleFile = async (file) => {
             if (!file.name.endsWith('.yaml') && !file.name.endsWith('.yml')) {
                 fileInfo.textContent = 'Error: Only .yaml or .yml files are accepted.';
                 fileInfo.classList.add('text-red-500');
@@ -235,6 +243,9 @@
             }
             fileInfo.textContent = `Selected: ${file.name}`;
             fileInfo.classList.remove('text-red-500');
+
+            const runtimes = await fetchRuntimes();
+            
 
             const reader = new FileReader();
             reader.onload = (e) => {
@@ -247,13 +258,50 @@
 
                     workflowState.name = data.name || '';
                     workflowState.spec.namespace = data.spec.namespace || 'akoflow';
-                    workflowState.spec.activities = data.spec.activities.map(act => ({
-                        ...act,
-                        id: `act_${Date.now()}_${Math.random()}`
-                    }));
+                    workflowState.spec.image = data.spec.image || 'alpine:3.18';
+
+                    workflowState.spec.activities = data.spec.activities.map(act => {
+
+                        if (!act.image){
+                            act.image = workflowState.spec.image;
+                        }
+
+                        return {
+                            ...act,
+                            id: `act_${Date.now()}_${Math.random()}`
+                        }
+                    });
+
+                    workflowState.spec.storagePolicy = data.spec.storagePolicy || {
+                        storageClassName: 'standard',
+                        storageSize: '32Mi',
+                        type: 'distributed'
+                    };
 
                     document.getElementById('workflow-name').value = workflowState.name;
                     document.getElementById('workflow-namespace').value = workflowState.spec.namespace;
+
+                    const runtimesContainer = runtimes.map(runtime => `
+                        <option 
+                            ${runtime.status !== 1 ? 'disabled' : ''}
+                            value="${runtime.name}" ${workflowState.spec.runtime === runtime.name ? 'selected' : ''}>
+                            ${runtime.name} (${runtime.status === 1 ? 'Online' : 'Offline'})
+                        </option>
+                    `).join('')
+
+                    document.getElementsByClassName('workflow-runtimes-container')[0].innerHTML = `
+                        <div>
+                            <label for="workflow-runtime"
+                                class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Runtime</label>
+                            <select id="workflow-runtime"
+                                class="w-full bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-200 border-slate-300 dark:border-slate-600 rounded-md py-2 px-3 text-sm shadow-sm transition-colors duration-150 focus:border-sky-500 focus:ring-2 focus:ring-sky-500/50">
+                                ${runtimesContainer}
+                            </select>
+                        </div>
+                    `;
+                    
+
+
                     renderAll();
 
                     switchTab('editor');
@@ -282,6 +330,7 @@
         const graphContainer = document.getElementById('workflow-graph-container');
         const workflowNameInput = document.getElementById('workflow-name');
         const workflowNamespaceInput = document.getElementById('workflow-namespace');
+        const workflowRuntimeInput = document.getElementById('workflow-runtime');
 
         let network = null;
         let workflowState = {
@@ -289,7 +338,13 @@
             spec: {
                 namespace: 'akoflow',
                 runtime: 'default',
-                activities: []
+                activities: [],
+                image: 'alpine:3.18',
+                storagePolicy: {
+                    storageClassName: 'standard',
+                    storageSize: '32Mi',
+                    type: 'distributed'
+                }
             }
         };
 
@@ -307,7 +362,7 @@
             fileInfo.textContent = '';
             fileInput.value = '';
         };
-        
+
         function resetWorkflowState() {
             workflowState = {
                 name: '',
@@ -319,18 +374,20 @@
                         storageSize: '32Mi',
                         type: 'distributed'
                     },
-                    activities: []
+                    activities: [],
+                    image: 'alpine:3.18',
                 }
             };
             workflowNameInput.value = '';
             workflowNamespaceInput.value = 'akoflow';
-            
+
             addActivity();
         }
 
         function updateWorkflowState() {
             workflowState.name = workflowNameInput.value.trim();
             workflowState.spec.namespace = workflowNamespaceInput.value.trim();
+            workflowState.spec.runtime =  document.getElementById('workflow-runtime') ? document.getElementById('workflow-runtime').value : '';
             workflowState.spec.storagePolicy.storageClassName = document.getElementById('workflow-storage-class').value.trim();
             workflowState.spec.storagePolicy.storageSize = document.getElementById('workflow-storage-size').value.trim();
             workflowState.spec.storagePolicy.type = document.getElementById('workflow-storage-type').value.trim();
@@ -385,9 +442,14 @@
         function createActivityCardHTML(activity, allActivityNames, index) {
             const otherActivityNames = allActivityNames.filter(name => name !== activity.name);
 
+            console.log("Creating card for activity:", activity);
+
             const optionsHtml = otherActivityNames.map(name =>
-                `<option value="${name}" ${activity.dependsOn.includes(name) ? 'selected' : ''}>${name}</option>`
+                `<option value="${name}" ${activity?.dependsOn?.includes(name) ? 'selected' : ''}>${name}</option>`
             ).join('');
+
+            console.log(workflowState);
+            const image = activity.image || workflowState.spec.image;
 
             const bodyVisibilityClass = index === 0 ? '' : 'hidden';
             const iconRotationClass = index === 0 ? '' : 'transform -rotate-90';
@@ -615,14 +677,17 @@
             let payload = {
                 workflow: btoa(yamlData),
             };
-            
+
             connector.workflows().createWorkflow(payload)
                 .then(response => {
-                    if (response && response.data) {
-                        console.log("Workflow created successfully:", response.data);
+                    if (response && response) {
+                        console.log("Workflow created successfully:", response);
                         closeModal();
                         resetWorkflowState();
                         alert("Workflow created successfully!");
+
+                        window.location.reload();
+                        
                     } else {
                         console.error("Failed to create workflow:", response);
                         alert("Failed to create workflow. Check console for details.");
@@ -634,7 +699,7 @@
                 });
 
 
-            
+
         });
 
     });

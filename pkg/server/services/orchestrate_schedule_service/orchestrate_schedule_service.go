@@ -95,7 +95,7 @@ func (o *OrchestrateScheduleService) Orchestrate() ([]workflow_activity_entity.W
 				"vcpus_available": nodeMetrics.GetCpuFree(),
 				"alpha":           0.0,
 				"activity_name":   activity.GetName(),
-				"machine_type":    node.GetInstanceType(),
+				"machine_type":    node.GetName(),
 			}
 
 			akoScore, _ := o.StartRunSchedule(scheduleName, input)

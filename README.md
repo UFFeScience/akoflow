@@ -21,10 +21,17 @@ Although initially focused on Kubernetes-based workloads, AkôFlow has evolved t
 
 ⸻
 
-## Maintainers
-* [D.Sc. Daniel de Oliveira — Research Advisor](http://profs.ic.uff.br/~danielcmo/)
-* [Wesley Ferreira - @ovvesley — Maintainer](https://github.com/ovvesley)
-* Raphael Garcia — Maintainer
+## Contributors
+* [D.Sc. Daniel de Oliveira — Research Advisor](http://profs.ic.uff.br/~danielcmo/)  
+* [Wesley Ferreira - @ovvesley — Maintainer - IC/UFF](https://github.com/ovvesley)  
+* Liliane Kunstmann - COPPE/UFRJ
+* Debora Pina - COPPE/UFRJ
+* Raphael Garcia — IC/UFF
+* [Yuri Frota — IC/UFF](http://www.ic.uff.br/~yuri/)  
+* [Marcos Bedo — IC/UFF](https://www.professores.uff.br/marcosbedo/)  
+* [Aline Paes — IC/UFF](http://www.ic.uff.br/~alinepaes/)  
+* [Luan Teylo — INRIA/Université de Bordeaux](https://team.inria.fr/)  
+
 
 ⸻
 

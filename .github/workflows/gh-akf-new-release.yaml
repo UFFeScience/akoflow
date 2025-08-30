@@ -129,13 +129,13 @@ jobs:
             Download the appropriate binary for your platform, make it executable, and add it to your PATH.
 
             ### Download Client 
-            For more information, visit [AkôFlow Client documentation](https://akoflow.com/docs/).
+            For more information, visit [AkôFlow Client documentation](https://github.com/UFFeScience/akoflow/wiki/).
 
             ### Download Server
-            For more information, visit [AkôFlow Server documentation](https://akoflow.com/docs/).
+            For more information, visit [AkôFlow Server documentation](https://github.com/UFFeScience/akoflow/wiki/).
 
             ## Documentation
-            For more information, visit [AkôFlow documentation](https://akoflow.com/docs/).
+            For more information, visit [AkôFlow documentation](https://github.com/UFFeScience/akoflow/wiki/).
           draft: false
           prerelease: false
           files: |

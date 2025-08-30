@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/ovvesley/akoflow/pkg/server/database/model"
 	"github.com/ovvesley/akoflow/pkg/server/entities/k8s_job_entity"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
@@ -16,6 +17,13 @@ import (
 type MakeK8sActivityService struct {
 	Workflow           workflow_entity.Workflow
 	IdWorkflowActivity int
+
+	activiySchedule model.ActivitySchedule
+}
+
+func (m *MakeK8sActivityService) SetActivitySchedule(activitySchedule model.ActivitySchedule) *MakeK8sActivityService {
+	m.activiySchedule = activitySchedule
+	return m
 }
 
 func newMakeK8sActivityService() MakeK8sActivityService {
@@ -70,7 +78,7 @@ func (m *MakeK8sActivityService) setupCommandWorkdir(wf workflow_entity.Workflow
 
 	command := "mkdir -p " + workdir + "; \n"
 	command += "echo CURRENT_DIR: $(pwd); \n"
-	command += "mv -fvu /akoflow-wfa-shared/* " + workdir + "; \n"
+	command += "mv -fvu /akoflow-wfa-shared/* " + workdir + " || true; \n"
 	command += "cd " + workdir + "; \n"
 
 	command += "printenv; \n"
@@ -195,7 +203,7 @@ func (m *MakeK8sActivityService) makeContainerActivity(workflow workflow_entity.
 		VolumeMounts: m.makeJobVolumeMounts(workflow, activity),
 		Resources: k8s_job_entity.K8sJobResources{
 			Limits: k8s_job_entity.K8sJobResourcesLimits{
-				Cpu:    activity.CpuLimit,
+				// Cpu:    activity.CpuLimit,
 				Memory: activity.MemoryLimit,
 			},
 		},
@@ -210,6 +218,16 @@ func (m *MakeK8sActivityService) makeContainerActivity(workflow workflow_entity.
 //   - The node selector is defined in the activity.
 func (m *MakeK8sActivityService) MakeNodeSelector(_ workflow_entity.Workflow, wfa workflow_activity_entity.WorkflowActivities) map[string]string {
 	nodeSelector := wfa.GetNodeSelector()
+
+	if len(nodeSelector) > 0 || nodeSelector != nil {
+		return nodeSelector
+	}
+
+	if m.activiySchedule.NodeName != "" {
+		nodeSelector = make(map[string]string)
+		nodeSelector["kubernetes.io/hostname"] = m.activiySchedule.NodeName
+	}
+
 	return nodeSelector
 }
 

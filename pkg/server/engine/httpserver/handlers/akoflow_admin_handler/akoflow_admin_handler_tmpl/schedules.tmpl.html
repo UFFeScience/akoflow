@@ -1,0 +1,200 @@
+{{template "base.html" .}}
+{{define "title"}}AkôFlow Runtimes{{end}}
+
+{{define "content"}}
+
+<div>
+    {{ template "header" dict "title" "Schedules" }}
+
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-semibold text-slate-800 dark:text-slate-100">My Schedules</h2>
+        <button id="open-create-schedule-modal-btn"
+            class="bg-sky-600 hover:bg-sky-700 text-white px-5 py-2 text-sm font-semibold rounded-lg transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-opacity-50">
+            <i class="fas fa-plus mr-2"></i>Create New Schedule
+        </button>
+    </div>
+
+    <div id="schedules-list" class="mt-8 space-y-6">
+
+    </div>
+</div>
+
+<div id="editor-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-50">
+    <div class="bg-white p-6 rounded-lg w-[900px] shadow-lg">
+        <h3 class="text-xl font-bold mb-4">Edit AkoScore Function</h3>
+
+        <!-- input name group -->
+        <div class="mb-4">
+            <label for="scheduleName" class="block text-sm font-medium text-gray-700 mb-1">Schedule Name</label>
+            <input type="text" id="scheduleName"
+                class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
+                placeholder="Enter schedule name" />
+        </div>
+
+        <div id="container" class="h-[400px] border border-gray-300"></div>
+
+        <div class="flex justify-end gap-3 mt-6">
+            <button id="close-editor" class="px-4 py-2 rounded border text-gray-700 hover:bg-gray-200">Cancel</button>
+            <button onclick="validateCode()" class="bg-sky-600 hover:bg-sky-700 text-white px-5 py-2 rounded">
+                Validate and Submit
+            </button>
+        </div>
+
+        <pre id="output" class="mt-4 text-sm bg-gray-100 p-3 rounded overflow-x-auto max-h-[200px]"></pre>
+    </div>
+</div>
+
+<script src="https://unpkg.com/monaco-editor@latest/min/vs/loader.js"></script>
+<script>
+    require.config({ paths: { 'vs': 'https://unpkg.com/monaco-editor@latest/min/vs' } });
+</script>
+
+<script>
+    document.getElementById("scheduleName").addEventListener("input", function () {
+        const scheduleName = this.value;
+        
+        // add mask to the input not allowing special characters and spaces and starter with number and start with a letter lowercase
+        this.value = scheduleName.replace(/[^a-z0-9]/g, '').replace(/^[^a-z]/, '').toLowerCase();
+        // limit the length to 20 characters
+        if (this.value.length > 20) {
+            this.value = this.value.slice(0, 20);
+        }
+        // update the output with the current value
+        document.getElementById('output').textContent = `Schedule Name: ${this.value}`;
+
+    });
+</script>
+
+<script>
+    const fullTemplate = `package main
+
+// AkoScore is a function that calculates the score for a given input.
+// input[TimeEstimate] is the time estimate in seconds.
+// input[Priority] is the priority of the task, where 1 is highest priority and
+func AkoScore(input any) float64 {
+	return 1.0
+}
+
+func main() {}
+`;
+
+    const funcHeader = `func AkoScore(name int) int {`;
+
+    let editor;
+
+
+    document.addEventListener("DOMContentLoaded", () => {
+        document.getElementById('open-create-schedule-modal-btn').addEventListener('click', () => {
+            document.getElementById('editor-modal').classList.remove('hidden');
+            document.getElementById('editor-modal').classList.add('flex');
+
+            require(['vs/editor/editor.main'], function () {
+                if (!editor) {
+                    editor = monaco.editor.create(document.getElementById('container'), {
+                        value: fullTemplate,
+                        language: 'go',
+                        theme: 'light',
+                        automaticLayout: true,
+                        minimap: { enabled: false },
+                        fontSize: 18,
+                    });
+                } else {
+                    editor.setValue(fullTemplate);
+                }
+            });
+
+            // setup schedule name with a default value with incrementing number
+            const scheduleNameInput = document.getElementById('scheduleName');
+            const currentSchedules = document.querySelectorAll('#schedules-list > div');
+            const nextScheduleNumber = currentSchedules.length + 1;
+            scheduleNameInput.value = `schedule${nextScheduleNumber}`;
+            document.getElementById('output').textContent = `Schedule Name: ${scheduleNameInput.value}`;
+            scheduleNameInput.dispatchEvent(new Event('input'));
+            
+
+        });
+
+        document.getElementById('close-editor').addEventListener('click', () => {
+            document.getElementById('editor-modal').classList.add('hidden');
+            document.getElementById('editor-modal').classList.remove('flex');
+        });
+    });
+
+    async function validateCode() {
+        const code = editor.getValue();
+        const output = document.getElementById('output');
+
+        let codeBase64 = btoa(code);
+        
+        const response = await connector.schedules().createSchedule({
+            name: document.getElementById('scheduleName').value,
+            type: 'greedy',
+            code: codeBase64,
+        });
+
+
+        if (response.success) {
+            output.textContent = `Schedule created successfully: ${JSON.stringify(response.data)}`;
+            output.className = 'text-green-600';
+            document.getElementById('editor-modal').classList.add('hidden');
+            document.getElementById('editor-modal').classList.remove('flex');
+            listSchedules(); // Refresh the schedule list
+        } else {
+            output.textContent = `Error creating schedule: ${response.error}`;
+            output.className = 'text-red-600';
+        }
+
+        output.classList.remove('hidden');
+        output.scrollIntoView({ behavior: 'smooth' });
+
+
+
+    }
+</script>
+
+
+<script>
+    async function listSchedules() {
+        const schedulesList = document.getElementById('schedules-list');
+        schedulesList.innerHTML = '<p>Loading schedules...</p>';
+
+        const response = await connector.schedules().getSchedules();
+
+        if (response.data && response.data.length > 0) {
+            schedulesList.innerHTML = '';
+            response.data.forEach(schedule => {
+                const scheduleItem = createScheduleItem(schedule);
+                schedulesList.appendChild(scheduleItem);
+            });
+        } else {
+            schedulesList.innerHTML = '<p class="text-gray-500">No schedules found.</p>';
+        }
+    }
+
+    function createScheduleItem(schedule) {
+        const scheduleItem = document.createElement('div');
+        scheduleItem.className = 'p-4 bg-white rounded shadow mb-4';
+
+        const status = schedule.compiled ? 'Compiled' : 'Awaiting Compilation';
+        const statusClass = schedule.compiled ? 'text-green-600' : 'text-yellow-600';
+
+        scheduleItem.innerHTML = `
+            <div class="flex justify-between items-center">
+            <div>
+                <h3 class="text-lg font-semibold">${schedule.name}</h3>
+                <p class="text-sm text-gray-600">Type: ${schedule.type}</p>
+                <p class="text-sm ${statusClass}">Status: ${status}</p>
+            </div>
+            <span class="text-sm text-gray-500">${new Date(schedule.createdAt).toLocaleString()}</span>
+            </div>
+        `;
+
+        return scheduleItem;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        listSchedules();
+    });
+</script>
+
+{{end}}

@@ -19,6 +19,7 @@ type ConnectorMetricsK8s struct {
 type IConnectorMetrics interface {
 	ListMetrics()
 	GetPodMetrics(namespace string, podName string) (ResponseGetPodMetrics, error)
+	GetNodeMetrics() ([]k8sNodeMetrics, error)
 }
 
 func New(runtime *runtime_entity.Runtime) IConnectorMetrics {
@@ -119,4 +120,68 @@ func (c *ConnectorMetricsK8s) GetPodMetrics(namespace string, podName string) (R
 
 	return result, nil
 
+}
+
+type k8sNodeMetrics struct {
+	Name   string `json:"name"`
+	CPU    string `json:"cpu"`
+	Memory string `json:"memory"`
+}
+
+func (c *ConnectorMetricsK8s) GetNodeMetrics() ([]k8sNodeMetrics, error) {
+	token := c.runtime.GetMetadataApiServerToken()
+	host := c.runtime.GetMetadataApiServerHost()
+
+	req, _ := http.NewRequest("GET", "https://"+host+"/apis/metrics.k8s.io/v1beta1/nodes", nil)
+	req.Header.Set("Authorization", "Bearer "+token)
+
+	resp, err := c.client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != 200 {
+		return nil, fmt.Errorf("metric server request failed: %d", resp.StatusCode)
+	}
+
+	// Estrutura mínima do retorno da API
+	var raw struct {
+		Items []struct {
+			Metadata struct {
+				Name string `json:"name"`
+			} `json:"metadata"`
+			Usage struct {
+				CPU    string `json:"cpu"`
+				Memory string `json:"memory"`
+			} `json:"usage"`
+		} `json:"items"`
+	}
+
+	if err := json.NewDecoder(resp.Body).Decode(&raw); err != nil {
+		return nil, err
+	}
+
+	// Monta lista no formato desejado
+	var metrics []k8sNodeMetrics
+	for _, item := range raw.Items {
+		metrics = append(metrics, k8sNodeMetrics{
+			Name:   item.Metadata.Name,
+			CPU:    item.Usage.CPU,
+			Memory: item.Usage.Memory,
+		})
+	}
+
+	return metrics, nil
+}
+
+func (n k8sNodeMetrics) GetCpuUsage() float64 {
+	var cpuUsage float64
+	fmt.Sscanf(n.CPU, "%f", &cpuUsage)
+	return cpuUsage / 1000000000
+}
+func (n k8sNodeMetrics) GetMemoryUsage() float64 {
+	var memoryUsage float64
+	fmt.Sscanf(n.Memory, "%f", &memoryUsage)
+	return memoryUsage
 }

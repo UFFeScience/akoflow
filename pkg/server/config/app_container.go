@@ -14,8 +14,12 @@ import (
 	"github.com/ovvesley/akoflow/pkg/server/database/repository/activity_repository"
 	"github.com/ovvesley/akoflow/pkg/server/database/repository/logs_repository"
 	"github.com/ovvesley/akoflow/pkg/server/database/repository/metrics_repository"
+	"github.com/ovvesley/akoflow/pkg/server/database/repository/node_metrics_repository"
+	"github.com/ovvesley/akoflow/pkg/server/database/repository/node_repository"
 	"github.com/ovvesley/akoflow/pkg/server/database/repository/runtime_repository"
+	"github.com/ovvesley/akoflow/pkg/server/database/repository/schedule_repository"
 	"github.com/ovvesley/akoflow/pkg/server/database/repository/storages_repository"
+	"github.com/ovvesley/akoflow/pkg/server/database/repository/workflow_execution_repository"
 	"github.com/ovvesley/akoflow/pkg/server/database/repository/workflow_repository"
 )
 
@@ -37,12 +41,16 @@ type EnvVars struct {
 }
 
 type AppContainerRepository struct {
-	WorkflowRepository workflow_repository.IWorkflowRepository
-	ActivityRepository activity_repository.IActivityRepository
-	LogsRepository     logs_repository.ILogsRepository
-	MetricsRepository  metrics_repository.IMetricsRepository
-	StoragesRepository storages_repository.IStorageRepository
-	RuntimeRepository  runtime_repository.IRuntimeRepository
+	WorkflowRepository          workflow_repository.IWorkflowRepository
+	ActivityRepository          activity_repository.IActivityRepository
+	LogsRepository              logs_repository.ILogsRepository
+	MetricsRepository           metrics_repository.IMetricsRepository
+	StoragesRepository          storages_repository.IStorageRepository
+	RuntimeRepository           runtime_repository.IRuntimeRepository
+	NodeRepository              node_repository.INodeRepository
+	NodeMetricsRepository       node_metrics_repository.INodeMetricsRepository
+	WorkflowExecutionRepository workflow_execution_repository.IWorkflowExecutionRepository
+	ScheduleRepository          schedule_repository.IScheduleRepository
 }
 
 type AppContainerConnector struct {
@@ -58,6 +66,7 @@ type AppContainerTemplateRenderer struct {
 type AppContainerHttpHelper struct {
 	WriteJson   func(w http.ResponseWriter, data interface{})
 	GetUrlParam func(r *http.Request, key string) string
+	ReadJson    func(r *http.Request, data interface{}) error
 }
 
 // GetEnvVars returns the environment variables as a map
@@ -103,6 +112,10 @@ func MakeAppContainer() AppContainer {
 	metricsRepository := metrics_repository.New()
 	storagesRepository := storages_repository.New()
 	runtimeRepository := runtime_repository.New()
+	nodeRepository := node_repository.New()
+	nodesMetricsRepository := node_metrics_repository.New()
+	workflowExecutionRepository := workflow_execution_repository.New()
+	scheduleRepository := schedule_repository.New()
 
 	// create the Connector instances
 	k8sConnector := connector_k8s.New()
@@ -118,12 +131,16 @@ func MakeAppContainer() AppContainer {
 	appContainer := AppContainer{
 		DefaultNamespace: DEFAULT_NAMESPACE,
 		Repository: AppContainerRepository{
-			WorkflowRepository: workflowRepository,
-			ActivityRepository: activityRepository,
-			LogsRepository:     logsRepository,
-			MetricsRepository:  metricsRepository,
-			StoragesRepository: storagesRepository,
-			RuntimeRepository:  runtimeRepository,
+			WorkflowRepository:          workflowRepository,
+			ActivityRepository:          activityRepository,
+			LogsRepository:              logsRepository,
+			MetricsRepository:           metricsRepository,
+			StoragesRepository:          storagesRepository,
+			RuntimeRepository:           runtimeRepository,
+			NodeRepository:              nodeRepository,
+			NodeMetricsRepository:       nodesMetricsRepository,
+			WorkflowExecutionRepository: workflowExecutionRepository,
+			ScheduleRepository:          scheduleRepository,
 		},
 		Connector: AppContainerConnector{
 			K8sConnector:         k8sConnector,
@@ -136,6 +153,7 @@ func MakeAppContainer() AppContainer {
 		HttpHelper: AppContainerHttpHelper{
 			WriteJson:   http_helper.WriteJson,
 			GetUrlParam: http_helper.GetUrlPathParam,
+			ReadJson:    http_helper.ReadJson,
 		},
 		Logger: logger,
 		EnvVars: EnvVars{

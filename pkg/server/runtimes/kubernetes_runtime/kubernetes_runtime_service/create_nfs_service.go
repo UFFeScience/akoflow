@@ -127,7 +127,7 @@ func (c *CreateNfsService) createPersistentVolumeClaim() nfs_server_entity.Persi
 					Storage: c.GetWorkflow().GetStorageSize(),
 				},
 			},
-			StorageClassName: c.GetWorkflow().GetStorageClassName(),
+			StorageClassName: c.GetWorkflow().MakeStorageClassNameDistributed(),
 		},
 	}
 
@@ -213,15 +213,15 @@ func (c *CreateNfsService) createDeployment() nfs_server_entity.Deployment {
 							ImagePullPolicy: "IfNotPresent",
 							VolumeMounts: []nfs_server_entity.VolumeMount{
 								{
-									Name:      c.GetWorkflow().MakeWorkflowPersistentVolumeClaimName(),
-									MountPath: c.GetWorkflow().GetMountPath(),
+									Name:      "export-volume",
+									MountPath: "/export",
 								},
 							},
 						},
 					},
 					Volumes: []nfs_server_entity.Volume{
 						{
-							Name: c.GetWorkflow().MakeWorkflowPersistentVolumeClaimName(),
+							Name: "export-volume",
 						},
 					},
 				},
@@ -356,8 +356,9 @@ func (c *CreateNfsService) createStorageClass() nfs_server_entity.StorageClass {
 			Namespace: c.GetNamespace(),
 			Name:      c.GetWorkflow().MakeStorageClassNameDistributed(),
 		},
-		Provisioner:  "akoflow.com/nfs-" + c.GetWorkflowIdString(),
-		MountOptions: []string{"vers=4.1"},
+		Provisioner:       "akoflow.com/nfs-" + c.GetWorkflowIdString(),
+		VolumeBindingMode: "Immediate",
+		MountOptions:      []string{"vers=4.1"},
 	}
 
 	return storageClass

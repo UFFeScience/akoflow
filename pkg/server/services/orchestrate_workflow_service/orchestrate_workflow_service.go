@@ -1,17 +1,29 @@
 package orchestrate_workflow_service
 
 import (
+	"fmt"
+
+	"github.com/ovvesley/akoflow/pkg/server/config"
 	"github.com/ovvesley/akoflow/pkg/server/database/repository/activity_repository"
+	"github.com/ovvesley/akoflow/pkg/server/database/repository/node_repository"
+	"github.com/ovvesley/akoflow/pkg/server/database/repository/schedule_repository"
 	"github.com/ovvesley/akoflow/pkg/server/engine/channel"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
 	"github.com/ovvesley/akoflow/pkg/server/services/get_workflow_by_status_service"
+	"github.com/ovvesley/akoflow/pkg/server/services/orchestrate_schedule_service"
 )
 
 type OrchestrateWorflowService struct {
 	namespace           string
 	channelManager      *channel.Manager
 	getWorkflowByStatus get_workflow_by_status_service.GetWorkflowByStatusService
+	scheduleRepository  schedule_repository.IScheduleRepository
+	// runScheduleService  run_schedule_service.RunScheduleService
+	orchestrateScheduleService orchestrate_schedule_service.OrchestrateScheduleService
+	nodeRepository             node_repository.INodeRepository
+
+	workflowsRunning map[int][]workflow_activity_entity.WorkflowActivities
 }
 
 func New() *OrchestrateWorflowService {
@@ -19,7 +31,16 @@ func New() *OrchestrateWorflowService {
 		namespace:           "akoflow",
 		channelManager:      channel.GetInstance(),
 		getWorkflowByStatus: get_workflow_by_status_service.New(),
+		scheduleRepository:  config.App().Repository.ScheduleRepository,
+		// runScheduleService:  run_schedule_service.New(),
+		orchestrateScheduleService: orchestrate_schedule_service.New(),
+		nodeRepository:             config.App().Repository.NodeRepository,
 	}
+}
+
+func (o *OrchestrateWorflowService) SetWorkflowsRunning(workflowsRunning map[int][]workflow_activity_entity.WorkflowActivities) *OrchestrateWorflowService {
+	o.workflowsRunning = workflowsRunning
+	return o
 }
 
 func (o *OrchestrateWorflowService) dispatchToWorker(activities []workflow_activity_entity.WorkflowActivities) {
@@ -40,12 +61,29 @@ func (o *OrchestrateWorflowService) handleDispatchToWorker(wf workflow_entity.Wo
 
 	wfNextToRun := o.nextToRun(wfsNotStarted, wfsFinished)
 
+	wfNextToRun = o.handleSchedule(wf, wfNextToRun)
+
 	for _, wfNextToRun := range wfNextToRun {
 		o.dispatchToWorker([]workflow_activity_entity.WorkflowActivities{wfNextToRun})
 	}
 
 	return wfNextToRun
 
+}
+
+func (o *OrchestrateWorflowService) handleSchedule(wf workflow_entity.Workflow, wfsNextToRun []workflow_activity_entity.WorkflowActivities) []workflow_activity_entity.WorkflowActivities {
+
+	newWfsNextToRun, err := o.orchestrateScheduleService.
+		SetWorkflow(wf).
+		SetReadyToRunActivities(wfsNextToRun).
+		Orchestrate()
+
+	if err != nil {
+		fmt.Println("Erro ao executar o plugin:", err)
+		return wfsNextToRun
+	}
+
+	return newWfsNextToRun
 }
 
 func (o *OrchestrateWorflowService) nextToRun(wfsPending []workflow_activity_entity.WorkflowActivities, wfsFinished []workflow_activity_entity.WorkflowActivities) []workflow_activity_entity.WorkflowActivities {

@@ -46,3 +46,12 @@ func (h *AkoflowAdminHandler) Runtime(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
+
+func (h *AkoflowAdminHandler) Schedule(w http.ResponseWriter, r *http.Request) {
+	scheduleTemplate := h.renderViewProvider.TemplateInstance("schedules.tmpl.html")
+	err := scheduleTemplate.Execute(w, map[string]interface{}{})
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+}

@@ -11,21 +11,13 @@ type ActivityRepository struct {
 	tableNameActivity             string
 	tableNameActivityDependencies string
 	tableNamePreActivity          string
+	tableNameActivitySchedule     string
 }
 
 var StatusCreated = 0
 var StatusRunning = 1
 var StatusFinished = 2
 var StatusCompleted = 3
-
-var TableNameActivities = "activities"
-var ColumnsActivities = "(id INTEGER PRIMARY KEY AUTOINCREMENT, workflow_id INTEGER, namespace TEXT, name TEXT, image TEXT, resource_k8s_base64 TEXT, status INTEGER, proc_id TEXT, created_at TEXT, started_at TEXT, finished_at TEXT)"
-
-var TableNameActivitiesDependencies = "activities_dependencies"
-var ColumnsActivitiesDependencies = "(id INTEGER PRIMARY KEY AUTOINCREMENT, workflow_id INTEGER, activity_id INTEGER, depend_on_activity INTEGER)"
-
-var TableNamePreActivities = "pre_activities"
-var ColumnsPreActivities = "(id INTEGER PRIMARY KEY AUTOINCREMENT, activity_id INTEGER, workflow_id INTEGER, namespace TEXT, name TEXT, resource_k8s_base64 TXT, status INTEGER, log TEXT)"
 
 func New() IActivityRepository {
 
@@ -51,6 +43,13 @@ func New() IActivityRepository {
 	if err != nil {
 		return nil
 	}
+	c.Close()
+
+	c = database.Connect()
+	err = repository.CreateOrVerifyTable(c, model.ActivitySchedule{})
+	if err != nil {
+		return nil
+	}
 
 	err = c.Close()
 	if err != nil {
@@ -58,9 +57,10 @@ func New() IActivityRepository {
 	}
 
 	return &ActivityRepository{
-		tableNameActivity:             TableNameActivities,
-		tableNameActivityDependencies: TableNameActivitiesDependencies,
-		tableNamePreActivity:          TableNamePreActivities,
+		tableNameActivity:             model.Activity{}.TableName(),
+		tableNameActivityDependencies: model.ActivityDependency{}.TableName(),
+		tableNamePreActivity:          model.PreActivity{}.TableName(),
+		tableNameActivitySchedule:     model.ActivitySchedule{}.TableName(),
 	}
 }
 
@@ -75,4 +75,10 @@ type IActivityRepository interface {
 	FindPreActivity(id int) (workflow_activity_entity.WorkflowPreActivityDatabase, error)
 	UpdatePreActivity(id int, preactivity workflow_activity_entity.WorkflowPreActivityDatabase) error
 	GetPreactivitiesCompleted() ([]workflow_activity_entity.WorkflowPreActivityDatabase, error)
+	UpdateNodeSelector(id int, nodeSelector string) error
+	SetActivitySchedule(workflowId int, activity int, nodeName string, scheduleName string, cpuRequired float64, memoryRequired float64, metadata string) error
+	GetActivityScheduleByNodeName(nodeName string) ([]model.ActivitySchedule, error)
+	GetAllRunningActivities() ([]workflow_activity_entity.WorkflowActivities, error)
+	GetActivityScheduleByActivityId(activityId int) (model.ActivitySchedule, error)
+	IsActivityScheduled(workflowId int, activityId int) (bool, error)
 }

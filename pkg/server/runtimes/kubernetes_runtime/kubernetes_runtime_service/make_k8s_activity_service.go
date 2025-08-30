@@ -5,15 +5,25 @@ import (
 	"math/rand"
 	"os"
 	"strconv"
+	"strings"
 
+	"github.com/ovvesley/akoflow/pkg/server/database/model"
 	"github.com/ovvesley/akoflow/pkg/server/entities/k8s_job_entity"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
+	"github.com/ovvesley/akoflow/pkg/shared/utils/utils_read_file"
 )
 
 type MakeK8sActivityService struct {
 	Workflow           workflow_entity.Workflow
 	IdWorkflowActivity int
+
+	activiySchedule model.ActivitySchedule
+}
+
+func (m *MakeK8sActivityService) SetActivitySchedule(activitySchedule model.ActivitySchedule) *MakeK8sActivityService {
+	m.activiySchedule = activitySchedule
+	return m
 }
 
 func newMakeK8sActivityService() MakeK8sActivityService {
@@ -68,7 +78,7 @@ func (m *MakeK8sActivityService) setupCommandWorkdir(wf workflow_entity.Workflow
 
 	command := "mkdir -p " + workdir + "; \n"
 	command += "echo CURRENT_DIR: $(pwd); \n"
-	command += "mv -fvu /akoflow-wfa-shared/* " + workdir + "; \n"
+	command += "mv -fvu /akoflow-wfa-shared/* " + workdir + " || true; \n"
 	command += "cd " + workdir + "; \n"
 
 	command += "printenv; \n"
@@ -84,15 +94,29 @@ func (m *MakeK8sActivityService) getPortAkoFlowServer() string {
 
 func (m *MakeK8sActivityService) addCommandToMonitorFilesStorage(command string, path string) string {
 	port := m.getPortAkoFlowServer()
-	command += `ls -lR $ACTIVITY_MOUNT_PATH > /tmp/du_output.txt; echo "Preparing to start request"; body=$(cat /tmp/du_output.txt); body_length=$(printf %s "$body" | wc -c); echo "Start request"; { echo -ne "POST /akoflow-server/internal/storage/` + path + `/?activityId=$ACTIVITY_ID HTTP/1.1\r\n"; echo -ne "Host: $AKOFLOW_SERVER_SERVICE_SERVICE_HOST\r\n"; echo -ne "Content-Type: text/plain\r\n"; echo -ne "Content-Length: $body_length\r\n"; echo -ne "Connection: close\r\n"; echo -ne "\r\n"; echo -ne "$body"; } | nc $AKOFLOW_SERVER_SERVICE_SERVICE_HOST ` + port + `; echo "End request"; `
+	scriptPath := "/app/pkg/server/scripts/monitor_files_storage.sh"
 
+	utilsReadFile := utils_read_file.New()
+	script := utilsReadFile.ReadFile(scriptPath)
+
+	script = strings.ReplaceAll(script, "#PATH_PARAM#", path)
+	script = strings.ReplaceAll(script, "#PORT#", port)
+
+	command += script + "; "
 	return command
 }
 
 func (m *MakeK8sActivityService) addCommandToMonitorDiskSpecStorage(command string, path string) string {
 	port := m.getPortAkoFlowServer()
-	command += `df -h > /tmp/du_output.txt; echo "Preparing to start request"; body=$(cat /tmp/du_output.txt); body_length=$(printf %s "$body" | wc -c); echo "Start request"; { echo -ne "POST /akoflow-server/internal/storage/` + path + `/?activityId=$ACTIVITY_ID HTTP/1.1\r\n"; echo -ne "Host: $AKOFLOW_SERVER_SERVICE_SERVICE_HOST\r\n"; echo -ne "Content-Type: text/plain\r\n"; echo -ne "Content-Length: $body_length\r\n"; echo -ne "Connection: close\r\n"; echo -ne "\r\n"; echo -ne "$body"; } | nc $AKOFLOW_SERVER_SERVICE_SERVICE_HOST ` + port + `; echo "End request"; `
+	scriptPath := "/app/pkg/server/scripts/monitor_disk_spec_storage.sh"
 
+	utilsReadFile := utils_read_file.New()
+	script := utilsReadFile.ReadFile(scriptPath)
+
+	script = strings.ReplaceAll(script, "#PATH_PARAM#", path)
+	script = strings.ReplaceAll(script, "#PORT#", port)
+
+	command += script + "; "
 	return command
 }
 
@@ -179,7 +203,7 @@ func (m *MakeK8sActivityService) makeContainerActivity(workflow workflow_entity.
 		VolumeMounts: m.makeJobVolumeMounts(workflow, activity),
 		Resources: k8s_job_entity.K8sJobResources{
 			Limits: k8s_job_entity.K8sJobResourcesLimits{
-				Cpu:    activity.CpuLimit,
+				// Cpu:    activity.CpuLimit,
 				Memory: activity.MemoryLimit,
 			},
 		},
@@ -194,6 +218,16 @@ func (m *MakeK8sActivityService) makeContainerActivity(workflow workflow_entity.
 //   - The node selector is defined in the activity.
 func (m *MakeK8sActivityService) MakeNodeSelector(_ workflow_entity.Workflow, wfa workflow_activity_entity.WorkflowActivities) map[string]string {
 	nodeSelector := wfa.GetNodeSelector()
+
+	if len(nodeSelector) > 0 || nodeSelector != nil {
+		return nodeSelector
+	}
+
+	if m.activiySchedule.NodeName != "" {
+		nodeSelector = make(map[string]string)
+		nodeSelector["kubernetes.io/hostname"] = m.activiySchedule.NodeName
+	}
+
 	return nodeSelector
 }
 

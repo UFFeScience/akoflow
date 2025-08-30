@@ -1,6 +1,8 @@
 name: wf-hello-world-gcp
 spec:
   namespace: "akoflow"
+  runtime: "k8s"
+  schedule: "schedule1"
   storagePolicy:
     storageClassName: "standard"
     storageSize: "32Mi"
@@ -8,96 +10,108 @@ spec:
   mountPath: "/data"
   activities:
     - name: "a"
-      memoryLimit: 500Mi
+      memoryLimit: 500Mi    
       cpuLimit: 0.5
-      runtime: "k8s1"
       image: "alpine:3.18"
       run: |
-        echo "Hello World" >> /data/a/output.txt
+        echo "Hello World" >> output.txt
         sleep 5
-        echo "Hello World Again" >> /data/a/output.txt
+        echo "Hello World Again" >> output.txt
         sleep 5
-        echo "Hello World One More Time" >> /data/a/output.txt
+        echo "Hello World One More Time" >> output.txt
 
     - name: "b"
       memoryLimit: 500Mi
       cpuLimit: 0.5
-      runtime: "k8s2"
+      runtime: "k8s"
       image: "alpine:3.18"
       run: |
-        echo "Good Afternoon" >> /data/b/output.txt
+        echo "Good Afternoon" >> output.txt
         sleep 5
-        echo "Good Afternoon Again" >> /data/b/output.txt
+        echo "Good Afternoon Again" >> output.txt
         sleep 5
-        echo "Good Afternoon One More Time" >> /data/b/output.txt
+        echo "Good Afternoon One More Time" >> output.txt
 
     - name: "c"
       memoryLimit: 500Mi
       cpuLimit: 0.5
-      runtime: "k8s1"
+      runtime: "k8s"
       image: "alpine:3.18"
       run: |
-        echo "Goodbye" >> /data/c/output.txt
+        echo "Goodbye" >> output.txt
         sleep 5
-        echo "Goodbye Again" >> /data/c/output.txt
+        echo "Goodbye Again" >> output.txt
         sleep 5
-        echo "Goodbye One More Time" >> /data/c/output.txt
+        echo "Goodbye One More Time" >> output.txt
 
     - name: "d"
       memoryLimit: 500Mi
       cpuLimit: 0.5
-      runtime: "k8s1"
+      runtime: "k8s"
       image: "alpine:3.18"
       run: |
-        echo "Goodbye" >> /data/d/output.txt
+        echo "Goodbye" >> output.txt
         sleep 5
-        echo "Goodbye Again" >> /data/d/output.txt
+        echo "Goodbye Again" >> output.txt
         sleep 5
-        echo "Goodbye One More Time" >> /data/d/output.txt
-      dependsOn:
-        - "a"
-        - "b"
-        - "c"
+        echo "Goodbye One More Time" >> output.txt
 
     - name: "e"
       memoryLimit: 500Mi
       cpuLimit: 0.5
-      runtime: "k8s2"
+      runtime: "k8s"
       image: "alpine:3.18"
       run: |
-        echo "Goodbye" >> /data/e/output.txt
+        echo "Goodbye" >> output.txt
         sleep 5
-        echo "Goodbye Again" >> /data/e/output.txt
+        echo "Goodbye Again" >> output.txt
         sleep 5
-        echo "Goodbye One More Time" >> /data/e/output.txt
+        echo "Goodbye One More Time" >> output.txt
       dependsOn:
+        - "a"
+        - "b"
         - "c"
+        - "d"
+
     - name: "f"
       memoryLimit: 500Mi
       cpuLimit: 0.5
-      runtime: "k8s2"
+      runtime: "k8s"
       image: "alpine:3.18"
       run: |
-        echo "Goodbye" >> /data/f/output.txt
+        echo "Goodbye" >> output.txt
         sleep 5
-        echo "Goodbye Again" >> /data/f/output.txt
+        echo "Goodbye Again" >> output.txt
         sleep 5
-        echo "Goodbye One More Time" >> /data/f/output.txt
+        echo "Goodbye One More Time" >> output.txt
+      dependsOn:
+        - "c"
+    - name: "g"
+      memoryLimit: 500Mi
+      cpuLimit: 0.5
+      runtime: "k8s"
+      image: "alpine:3.18"
+      run: |
+        echo "Goodbye" >> output.txt
+        sleep 5
+        echo "Goodbye Again" >> output.txt
+        sleep 5
+        echo "Goodbye One More Time" >> output.txt
       dependsOn:
         - "d"
         - "e"
 
-    - name: "g"
+    - name: "h"
       memoryLimit: 500Mi
       cpuLimit: 0.5
-      runtime: "k8s1"
+      runtime: "k8s"
       image: "alpine:3.18"
       run: |
-        echo "Goodbye" >> /data/g/output.txt
+        echo "Goodbye" >> output.txt
         sleep 5
-        echo "Goodbye Again" >> /data/g/output.txt
+        echo "Goodbye Again" >> output.txt
         sleep 5
-        echo "Goodbye One More Time" >> /data/g/output.txt
+        echo "Goodbye One More Time" >> output.txt
         sleep 300
 
       dependsOn:

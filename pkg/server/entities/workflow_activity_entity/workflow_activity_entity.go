@@ -38,6 +38,7 @@ type WorkflowActivityDatabase struct {
 	Status            int
 	ProcId            *string
 	DependOnActivity  *int
+	NodeSelector      *string
 	CreatedAt         *string
 	StartedAt         *string
 	FinishedAt        *string
@@ -178,10 +179,40 @@ func DatabaseToWorkflowActivities(params ParamsDatabaseToWorkflowActivities) Wor
 	}
 }
 
+func (wfa WorkflowActivities) GetMemoryRequired() float64 {
+	if wfa.MemoryLimit == "" {
+		return 0.0
+	}
+
+	memoryRequired, err := strconv.ParseFloat(strings.TrimSuffix(wfa.MemoryLimit, "Mi"), 64)
+	if err != nil {
+		panic("Error parsing memory limit: " + err.Error())
+	}
+
+	return memoryRequired
+}
+
+func (wfa WorkflowActivities) GetCpuRequired() float64 {
+	if wfa.CpuLimit == "" {
+		return 0.0
+	}
+
+	cpuRequired, err := strconv.ParseFloat(strings.TrimSuffix(wfa.CpuLimit, "m"), 64)
+	if err != nil {
+		panic("Error parsing CPU limit: " + err.Error())
+	}
+
+	return cpuRequired
+}
+
 func (wfa WorkflowActivities) GetRuntimeId() string {
 	if wfa.Runtime != "" {
 		return wfa.Runtime
 	}
 
 	panic("Runtime not set")
+}
+
+func (wfa WorkflowActivities) HasNodeSelector() bool {
+	return wfa.NodeSelector != ""
 }

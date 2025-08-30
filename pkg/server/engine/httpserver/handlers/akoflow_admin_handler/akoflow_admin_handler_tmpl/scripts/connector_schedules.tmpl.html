@@ -1,0 +1,43 @@
+{{define "connector_schedules.js"}}
+<script>
+    function connectorSchedules() {
+        return {
+            createSchedule: async (schedule) => {
+                try {
+                    const response = await fetch(BASE_URL_API + "schedules/", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(schedule),
+                    });
+                    if (!response.ok) {
+                        console.error("Failed to create schedule:", response.status, await response.text());
+                        return { success: false, error: await response.text() };
+                    }
+                    const data = await response.json();
+                    return { success: true, data };
+                } catch (error) {
+                    console.error("Error creating schedule:", error);
+                    return { success: false, error: error.message };
+                }
+            },
+            getSchedules: async () => {
+                try {
+                    const response = await fetch(BASE_URL_API + "schedules/");
+                    if (!response.ok) {
+                        console.error("Failed to fetch schedules:", response.status, await response.text());
+                        return { data: [] };    
+                    }
+                    const data = await response.json();
+                    return data;
+                } catch (error) {
+                    console.error("Error fetching schedules:", error);
+                    return { data: [] };
+                }
+            },
+
+        };
+    }
+</script>
+{{end}}

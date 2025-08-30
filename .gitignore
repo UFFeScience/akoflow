@@ -10,3 +10,4 @@ releases/bin/*
 *.sif
 .env
 resources/
+keys/

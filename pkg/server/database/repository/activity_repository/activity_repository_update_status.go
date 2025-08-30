@@ -53,3 +53,21 @@ func (w *ActivityRepository) UpdateProcID(id int, pid string) error {
 
 	return nil
 }
+
+func (w *ActivityRepository) UpdateNodeSelector(id int, nodeSelector string) error {
+	database := repository.Database{}
+	c := database.Connect()
+
+	_, err := c.Exec("UPDATE "+w.tableNameActivity+" SET node_selector = ? WHERE ID = ?", nodeSelector, id)
+	if err != nil {
+		return err
+	}
+
+	err = c.Close()
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

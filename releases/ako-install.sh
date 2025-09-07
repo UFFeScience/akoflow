@@ -86,7 +86,7 @@ echo "🐳 Building Docker image..."
 docker build -t $IMAGE_NAME . --no-cache
 
 echo "🚀 Running container on port $PORT and mounting $AKOSPACE"
-docker run -it --rm \
+docker run --rm \
   -p $PORT:8080 \
   -v "$HOME/akospace/.env:/app/.env" \
   -v "$HOME/akospace/ako.log:/app/ako.log" \

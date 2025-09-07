@@ -1,0 +1,213 @@
+{{ define "create_workflow_modal" }}
+<!--
+  Workflow Builder Modal Component
+  Dependencies: Alpine.js, TailwindCSS, vis-network, js-yaml
+-->
+
+<!-- Load Dependencies -->
+<script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
+
+<!-- Modal Component Root -->
+<div
+  x-data="workflowBuilder()"
+  x-init="init()"
+  @open-workflow-modal.window="open = true"
+>
+  <!-- Overlay & Modal -->
+  <div
+    x-show="open"
+    x-transition.opacity
+    class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+  >
+    <div
+      x-show="open"
+      x-transition.scale
+      class="bg-white w-5/6 h-5/6 rounded-lg shadow-lg overflow-hidden flex flex-col"
+    >
+      <!-- Header -->
+      <div class="flex items-center justify-between bg-blue-600 text-white px-6 py-3">
+        <h2 class="text-2xl font-semibold">Workflow Builder</h2>
+        <button @click="open = false" class="text-3xl leading-none">&times;</button>
+      </div>
+
+      <div class="flex flex-1 overflow-hidden">
+        <!-- Sidebar -->
+        <aside class="w-1/4 bg-gray-50 p-6 flex flex-col space-y-4">
+          <!-- Metadata -->
+          <div>
+            <h3 class="font-bold mb-2">Workflow Metadata</h3>
+            <input
+              x-model="workflow.name"
+              placeholder="Name"
+              class="w-full border p-2 rounded mb-2"
+            />
+            <input
+              x-model="workflow.runtime"
+              placeholder="Default Runtime"
+              class="w-full border p-2 rounded"
+            />
+          </div>
+
+          <!-- Toolbox -->
+          <div class="flex-1 overflow-auto">
+            <h3 class="font-bold mb-2">Toolbox</h3>
+            <div class="space-y-2">
+              <div
+                draggable="true"
+                @dragstart="onDragStart($event,'Activity')"
+                class="cursor-move border rounded p-2 bg-white"
+              >Activity</div>
+              <div
+                draggable="true"
+                @dragstart="onDragStart($event,'Per-Activity Runtime')"
+                class="cursor-move border rounded p-2 bg-white"
+              >Per-Activity Runtime</div>
+            </div>
+          </div>
+
+          <!-- Inspector -->
+          <template x-if="selectedNode">
+            <div>
+              <h3 class="font-bold mb-2">Properties</h3>
+              <input
+                x-model="selectedNode.label"
+                @input="updateNode(selectedNode)"
+                placeholder="Name"
+                class="w-full border p-2 rounded mb-2"
+              />
+              <input
+                x-model="selectedNode.runtime"
+                @input="updateNode(selectedNode)"
+                placeholder="Runtime"
+                class="w-full border p-2 rounded mb-2"
+              />
+              <div>
+                <p class="font-medium">Depends On:</p>
+                <ul class="list-disc list-inside text-sm">
+                  <template x-for="dep in getDependencies(selectedNode.id)">
+                    <li x-text="dep"></li>
+                  </template>
+                </ul>
+              </div>
+            </div>
+          </template>
+
+          <!-- Actions -->
+          <div class="mt-auto space-y-2">
+            <button
+              @click="showYAML = true"
+              class="w-full border p-2 rounded hover:bg-gray-100"
+            >Export YAML</button>
+            <button
+              @click="exportAndCreate()"
+              class="w-full bg-green-600 text-white p-2 rounded hover:bg-green-700"
+            >Create Workflow</button>
+          </div>
+        </aside>
+
+        <!-- Canvas -->
+        <main
+          id="canvas"
+          @dragover.prevent
+          @drop="onDrop($event)"
+          class="w-3/4 bg-white"
+        ></main>
+      </div>
+
+      <!-- YAML Slide-over -->
+      <div
+        x-show="showYAML"
+        x-transition.opacity
+        class="fixed inset-0 bg-black bg-opacity-50 flex justify-end z-60"
+      >
+        <div
+          x-show="showYAML"
+          x-transition.scale
+          class="w-1/3 bg-white h-full p-6 overflow-auto shadow-lg"
+        >
+          <button @click="showYAML = false" class="absolute top-4 right-4 text-2xl">&times;</button>
+          <h3 class="text-xl font-semibold mb-4">Generated YAML</h3>
+          <pre class="whitespace-pre-wrap text-sm" x-text="yamlOutput"></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bridge External Button -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const btn = document.getElementById('btn-open-create');
+    if (btn) {
+      btn.addEventListener('click', () => {
+        window.dispatchEvent(new Event('open-workflow-modal'));
+      });
+    }
+  });
+</script>
+
+<!-- Component Logic -->
+<script>
+  function workflowBuilder() {
+    return {
+      open: false,
+      showYAML: false,
+      workflow: { name: '', runtime: '' },
+      nodes: null,
+      edges: null,
+      network: null,
+      selectedNode: null,
+      yamlOutput: '',
+
+      init() {
+        const container = this.$root.querySelector('#canvas');
+        const data = { nodes: new vis.DataSet(), edges: new vis.DataSet() };
+        this.network = new vis.Network(container, data, { manipulation: false, physics: false });
+        this.nodes = data.nodes;
+        this.edges = data.edges;
+        this.network.on('selectNode', ({ nodes }) => {
+          this.selectedNode = this.nodes.get(nodes[0]);
+        });
+      },
+
+      onDragStart(event, type) {
+        event.dataTransfer.setData('text/plain', type);
+      },
+
+      onDrop(event) {
+        const rect = this.$root.querySelector('#canvas').getBoundingClientRect();
+        const id = Date.now();
+        const label = prompt('Enter node label:');
+        const runtime = this.workflow.runtime;
+        this.nodes.add({ id, label, x: event.clientX - rect.left, y: event.clientY - rect.top, runtime });
+      },
+
+      updateNode(node) {
+        this.nodes.update(node);
+      },
+
+      getDependencies(id) {
+        return this.edges.get().filter(e => e.to === id).map(e => this.nodes.get(e.from).label);
+      },
+
+      exportYAML() {
+        const activities = this.nodes.get().map(n => ({
+          name: n.label,
+          runtime: n.runtime || this.workflow.runtime,
+          dependsOn: this.getDependencies(n.id)
+        }));
+        const doc = { name: this.workflow.name, spec: { runtime: this.workflow.runtime, activities } };
+        this.yamlOutput = jsyaml.dump(doc);
+      },
+
+      exportAndCreate() {
+        this.exportYAML();
+        alert('Workflow created!');
+      }
+    }
+  }
+</script>
+
+{{ end }}

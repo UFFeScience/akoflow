@@ -219,4 +219,6 @@ type StorageClass struct {
 	Metadata     Metadata `yaml:"metadata" json:"metadata"`
 	Provisioner  string   `yaml:"provisioner" json:"provisioner"`
 	MountOptions []string `yaml:"mountOptions" json:"mountOptions"`
+	// VolumeBindingMode is a pointer to a string to allow for nil values
+	VolumeBindingMode string `yaml:"volumeBindingMode,omitempty" json:"volumeBindingMode,omitempty"`
 }

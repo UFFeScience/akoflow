@@ -67,3 +67,19 @@ func GetPatternFromRequest(r *http.Request) string {
 
 	return patternStr
 }
+
+func ReadJson(r *http.Request, data interface{}) error {
+	if r.Body == nil {
+		return fmt.Errorf("request body is empty")
+	}
+
+	decoder := json.NewDecoder(r.Body)
+	decoder.DisallowUnknownFields() // Prevents unknown fields from being included in the JSON
+
+	err := decoder.Decode(data)
+	if err != nil {
+		return fmt.Errorf("error decoding JSON: %w", err)
+	}
+
+	return nil
+}

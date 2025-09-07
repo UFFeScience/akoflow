@@ -11,6 +11,7 @@ import (
 	"github.com/ovvesley/akoflow/pkg/server/connector/connector_k8s/connector_job_k8s"
 	"github.com/ovvesley/akoflow/pkg/server/connector/connector_k8s/connector_metrics_k8s"
 	"github.com/ovvesley/akoflow/pkg/server/connector/connector_k8s/connector_namespace_k8s"
+	"github.com/ovvesley/akoflow/pkg/server/connector/connector_k8s/connector_node_k8s"
 	"github.com/ovvesley/akoflow/pkg/server/connector/connector_k8s/connector_pod_k8s"
 	"github.com/ovvesley/akoflow/pkg/server/connector/connector_k8s/connector_pvc_k8s"
 	"github.com/ovvesley/akoflow/pkg/server/connector/connector_k8s/connector_role"
@@ -82,6 +83,8 @@ type IConnector interface {
 	// HealthCheck checks the health of the Kubernetes API.
 	// API Endpoint: /healthz
 	Healthz(*runtime_entity.Runtime) connector_healthz.IConnectorHealthz
+
+	Nodes(*runtime_entity.Runtime) connector_node_k8s.IConnectorNodeK8s
 }
 
 func NewClient() *http.Client {
@@ -153,4 +156,8 @@ func (c *Connector) StorageClass(r *runtime_entity.Runtime) connector_storage_cl
 
 func (c *Connector) Healthz(r *runtime_entity.Runtime) connector_healthz.IConnectorHealthz {
 	return connector_healthz.New(r)
+}
+
+func (c *Connector) Nodes(r *runtime_entity.Runtime) connector_node_k8s.IConnectorNodeK8s {
+	return connector_node_k8s.New(r)
 }

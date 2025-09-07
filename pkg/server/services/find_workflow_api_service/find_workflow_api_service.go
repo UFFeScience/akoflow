@@ -73,7 +73,7 @@ func calculateWorkflowMetrics(wfApi types_api.ApiWorkflowType, wfEngine workflow
 		timestampWorkflowStart, _ := ParseTimestamp(wfApi.Spec.StartExecution)
 		timestampWorkflowEnd, _ := ParseTimestamp(wfApi.Spec.EndExecution)
 
-		timestampStartExecution, _ := ParseTimestamp(wfa.CreatedAt)
+		timestampStartExecution, _ := ParseTimestamp(wfa.StartedAt)
 		timestampEndExecution, _ := ParseTimestamp(wfa.FinishedAt)
 
 		if timestampStartExecution.Before(timestampWorkflowStart) {

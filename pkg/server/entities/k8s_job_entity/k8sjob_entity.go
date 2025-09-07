@@ -2,6 +2,7 @@ package k8s_job_entity
 
 import (
 	"encoding/base64"
+
 	"gopkg.in/yaml.v3"
 )
 
@@ -19,10 +20,12 @@ type K8sJobMetadata struct {
 type K8sJobSpec struct {
 	Template     K8sJobTemplate `json:"template"`
 	BackoffLimit int            `json:"backoffLimit"`
+	NodeName     string         `json:"nodeName,omitempty"`
 }
 
 type K8sJobTemplate struct {
-	Spec K8sJobSpecTemplate `json:"spec"`
+	Spec     K8sJobSpecTemplate `json:"spec"`
+	NodeName string             `json:"nodeName,omitempty"`
 }
 
 type K8sJobSpecTemplate struct {
@@ -31,6 +34,7 @@ type K8sJobSpecTemplate struct {
 	BackoffLimit  int               `json:"backoffLimit"`
 	Volumes       []K8sJobVolume    `json:"volumes"`
 	NodeSelector  map[string]string `json:"nodeSelector"`
+	NodeName      string            `json:"nodeName,omitempty"`
 }
 
 type K8sJobContainer struct {
@@ -52,8 +56,8 @@ type K8sJobResources struct {
 }
 
 type K8sJobResourcesLimits struct {
-	Cpu    string `json:"cpu"`
-	Memory string `json:"memory"`
+	Cpu    string `json:"cpu,omitempty"`
+	Memory string `json:"memory,omitempty"`
 }
 
 type K8sJobVolume struct {

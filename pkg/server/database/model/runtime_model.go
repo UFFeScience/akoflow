@@ -6,6 +6,7 @@ type Runtime struct {
 	Name      string `db:"name" sql:"TEXT PRIMARY KEY"`
 	Status    int    `db:"status"`
 	Metadata  string `db:"metadata"`
+	MaxNodes  int    `db:"max_nodes"`
 	CreatedAt string `db:"created_at"`
 	UpdatedAt string `db:"updated_at"`
 	DeletedAt string `db:"deleted_at"`

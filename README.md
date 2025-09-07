@@ -13,14 +13,7 @@ AkôFlow is an open-source middleware for orchestrating and executing container-
 
 Although initially focused on Kubernetes-based workloads, AkôFlow has evolved to support general containerized execution across multiple infrastructures.
 
-## Getting Started
-
-Full documentation is available at:
-📘 [Wiki](https://github.com/UFFeScience/akoflow/wiki)
-
-⸻
 ## Software Requirements
-
 
 - **Operating System:** Linux, macOS or WSL2 (Windows Subsystem for Linux)
 - **Docker:** [Install Docker](https://docs.docker.com/get-docker/)
@@ -74,11 +67,6 @@ K8S_API_SERVER_TOKEN=<your-generated-token>
 ## Demonstration video
 
 [AkôFlow Demonstration _(In Portuguese)_](https://www.youtube.com/watch?v=RmrAMWkJij4)
-
-## Maintainers
-* [D.Sc. Daniel de Oliveira — Research Advisor](http://profs.ic.uff.br/~danielcmo/)
-* [Wesley Ferreira - @ovvesley — Maintainer](https://github.com/ovvesley)
-* Raphael Garcia — Maintainer
 
 ⸻
 ## Supported Environments

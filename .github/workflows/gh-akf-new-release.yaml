@@ -60,16 +60,16 @@ jobs:
         run: |
           docker run --rm -v $(pwd):/app -e VERSION=${{ steps.get_version.outputs.VERSION }} akoflow-builder:latest sh -c "\
           mkdir -p /app/releases/bin && \
-          CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -o /app/releases/bin/akoflow-server_${VERSION}_linux_amd64 /app/cmd/server/main.go && \
-          CGO_ENABLED=1 GOOS=linux GOARCH=arm64 CC=aarch64-linux-gnu-gcc go build -o /app/releases/bin/akoflow-server_${VERSION}_linux_arm64 /app/cmd/server/main.go && \
-          CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o /app/releases/bin/akoflow-server_${VERSION}_windows_amd64.exe /app/cmd/server/main.go && \
-          CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o /app/releases/bin/akoflow-server_${VERSION}_darwin_amd64 /app/cmd/server/main.go && \
-          CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 go build -o /app/releases/bin/akoflow-server_${VERSION}_darwin_arm64 /app/cmd/server/main.go && \
-          CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -o /app/releases/bin/akoflow-client_${VERSION}_linux_amd64 /app/cmd/client/main.go && \
-          CGO_ENABLED=1 GOOS=linux GOARCH=arm64 CC=aarch64-linux-gnu-gcc go build -o /app/releases/bin/akoflow-client_${VERSION}_linux_arm64 /app/cmd/client/main.go && \
-          CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o /app/releases/bin/akoflow-client_${VERSION}_windows_amd64.exe /app/cmd/client/main.go && \
-          CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o /app/releases/bin/akoflow-client_${VERSION}_darwin_amd64 /app/cmd/client/main.go && \
-          CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 go build -o /app/releases/bin/akoflow-client_${VERSION}_darwin_arm64 /app/cmd/client/main.go"
+          CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -o /app/releases/bin/akoflow-server_${{ steps.get_version.outputs.VERSION }}_linux_amd64 /app/cmd/server/main.go && \
+          CGO_ENABLED=1 GOOS=linux GOARCH=arm64 CC=aarch64-linux-gnu-gcc go build -o /app/releases/bin/akoflow-server_${{ steps.get_version.outputs.VERSION }}_linux_arm64 /app/cmd/server/main.go && \
+          CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o /app/releases/bin/akoflow-server_${{ steps.get_version.outputs.VERSION }}_windows_amd64.exe /app/cmd/server/main.go && \
+          CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o /app/releases/bin/akoflow-server_${{ steps.get_version.outputs.VERSION }}_darwin_amd64 /app/cmd/server/main.go && \
+          CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 go build -o /app/releases/bin/akoflow-server_${{ steps.get_version.outputs.VERSION }}_darwin_arm64 /app/cmd/server/main.go && \
+          CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -o /app/releases/bin/akoflow-client_${{ steps.get_version.outputs.VERSION }}_linux_amd64 /app/cmd/client/main.go && \
+          CGO_ENABLED=1 GOOS=linux GOARCH=arm64 CC=aarch64-linux-gnu-gcc go build -o /app/releases/bin/akoflow-client_${{ steps.get_version.outputs.VERSION }}_linux_arm64 /app/cmd/client/main.go && \
+          CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o /app/releases/bin/akoflow-client_${{ steps.get_version.outputs.VERSION }}_windows_amd64.exe /app/cmd/client/main.go && \
+          CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o /app/releases/bin/akoflow-client_${{ steps.get_version.outputs.VERSION }}_darwin_amd64 /app/cmd/client/main.go && \
+          CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 go build -o /app/releases/bin/akoflow-client_${{ steps.get_version.outputs.VERSION }}_darwin_arm64 /app/cmd/client/main.go"
           
       - name: Create platform archives
         run: |

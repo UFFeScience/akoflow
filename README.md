@@ -37,32 +37,41 @@ AkôFlow will be available at `http://localhost:8080`.
 ## How to Set Up Kubernetes Runtime for AkôFlow
 
 1. **Access the Web Interface**  
-   Open your browser and go to:
+  Open your browser and go to the AkôFlow web interface at `http://localhost:8080`.
 
 2. **Connect to a Kubernetes Cluster**  
-AkôFlow requires a Kubernetes runtime. You can use:
-- [Kind](https://kind.sigs.k8s.io/)
-- Docker Desktop
-- Any Cloud Provider (e.g., EKS, GKE, AKS)
+  AkôFlow requires a Kubernetes runtime. You can use one of the following options:
+  - [Kind](https://kind.sigs.k8s.io/) (local clusters)
+  - [Docker Desktop](https://www.docker.com/products/docker-desktop/) (enable Kubernetes in settings)
+  - Cloud Providers:
+    - [EKS](https://aws.amazon.com/eks/) (AWS)
+    - [GKE](https://cloud.google.com/kubernetes-engine) (Google Cloud)
+    - [AKS](https://azure.microsoft.com/en-us/services/kubernetes-service/) (Azure)
+  - [Kubeadm](https://kubernetes.io/docs/reference/setup-tools/kubeadm/) (for on-premise clusters)
 
 3. **Apply AkôFlow Resources**  
-Run the following command:
+  Deploy the required AkôFlow resources to your Kubernetes cluster by running the following command:
 
-```bash
-kubectl apply -f https://raw.githubusercontent.com/UFFeScience/akoflow/main/pkg/server/resource/akoflow-dev-dockerdesktop.yaml
-```
-4. **Generate a Service Account Token**
+  ```bash
+  kubectl apply -f https://raw.githubusercontent.com/UFFeScience/akoflow/main/pkg/server/resource/akoflow-dev-dockerdesktop.yaml
+  ```
 
-```bash
-kubectl create token akoflow-server-sa --duration=800h --namespace=akoflow
-```
+4. **Generate a Service Account Token**  
+  Create a token for the AkôFlow service account with the following command:
 
-5. **Set Environment Variables**
+  ```bash
+  kubectl create token akoflow-server-sa --duration=800h --namespace=akoflow
+  ```
 
-```bash
-K8S_API_SERVER_HOST=https://<your-k8s-api-endpoint>
-K8S_API_SERVER_TOKEN=<your-generated-token>
-```
+5. **Set Environment Variables**  
+  Configure the environment variables for AkôFlow to connect to your Kubernetes cluster:
+
+  ```bash
+  export K8S_API_SERVER_HOST=https://<your-k8s-api-endpoint>
+  export K8S_API_SERVER_TOKEN=<your-generated-token>
+  ```
+
+  Replace `<your-k8s-api-endpoint>` with your Kubernetes API server endpoint and `<your-generated-token>` with the token generated in the previous step.
 
 ## Demonstration video
 
@@ -95,5 +104,3 @@ K8S_API_SERVER_TOKEN=<your-generated-token>
 ## Academic Context
 
 AkôFlow originated as a final undergraduate project and has since expanded with broader contributions and integrations. It continues to serve both academic and industrial workflow execution scenarios.
-
-

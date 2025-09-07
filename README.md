@@ -68,14 +68,11 @@ K8S_API_SERVER_TOKEN=<your-generated-token>
 
 [AkôFlow Demonstration _(In Portuguese)_](https://www.youtube.com/watch?v=RmrAMWkJij4)
 
-⸻
 ## Supported Environments
 
 * Kubernetes (public cloud providers: AWS, GCP, Azure, etc.)
 * Singularity (for local or HPC isolated execution)
 * SDumont supercomputer (LNCC - Brazil)
-
-⸻
 
 ## Contributors
 * [D.Sc. Daniel de Oliveira — Research Advisor](http://profs.ic.uff.br/~danielcmo/)  
@@ -98,7 +95,5 @@ K8S_API_SERVER_TOKEN=<your-generated-token>
 ## Academic Context
 
 AkôFlow originated as a final undergraduate project and has since expanded with broader contributions and integrations. It continues to serve both academic and industrial workflow execution scenarios.
-
-⸻
 
 

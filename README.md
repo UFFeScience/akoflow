@@ -13,30 +13,94 @@ AkôFlow is an open-source middleware for orchestrating and executing container-
 
 Although initially focused on Kubernetes-based workloads, AkôFlow has evolved to support general containerized execution across multiple infrastructures.
 
+## Software Requirements
+
+- **Operating System:** Linux, macOS or WSL2 (Windows Subsystem for Linux)
+- **Docker:** [Install Docker](https://docs.docker.com/get-docker/)
+- **kubectl:** [Install kubectl](https://kubernetes.io/docs/tasks/tools/)
+- **Kubernetes Cluster:** One of the following:
+  - [Kind](https://kind.sigs.k8s.io/) (local)
+  - Docker Desktop Kubernetes (enable Kubernetes in settings)
+  - Cloud providers (e.g., EKS, GKE, AKS)
+
+
+## Instalation
+
+Run the following command to install AkôFlow:
+```bash
+curl -fsSL https://akoflow.com/run | bash
+```
+
+AkôFlow will be available at `http://localhost:8080`.
+
+
+## How to Set Up Kubernetes Runtime for AkôFlow
+
+1. **Access the Web Interface**  
+  Open your browser and go to the AkôFlow web interface at `http://localhost:8080`.
+
+2. **Connect to a Kubernetes Cluster**  
+  AkôFlow requires a Kubernetes runtime. You can use one of the following options:
+  - [Kind](https://kind.sigs.k8s.io/) (local clusters)
+  - [Docker Desktop](https://www.docker.com/products/docker-desktop/) (enable Kubernetes in settings)
+  - Cloud Providers:
+    - [EKS](https://aws.amazon.com/eks/) (AWS)
+    - [GKE](https://cloud.google.com/kubernetes-engine) (Google Cloud)
+    - [AKS](https://azure.microsoft.com/en-us/services/kubernetes-service/) (Azure)
+  - [Kubeadm](https://kubernetes.io/docs/reference/setup-tools/kubeadm/) (for on-premise clusters)
+
+3. **Apply AkôFlow Resources**  
+  Deploy the required AkôFlow resources to your Kubernetes cluster by running the following command:
+
+  ```bash
+  kubectl apply -f https://raw.githubusercontent.com/UFFeScience/akoflow/main/pkg/server/resource/akoflow-dev-dockerdesktop.yaml
+  ```
+
+4. **Generate a Service Account Token**  
+  Create a token for the AkôFlow service account with the following command:
+
+  ```bash
+  kubectl create token akoflow-server-sa --duration=800h --namespace=akoflow
+  ```
+
+5. **Set Environment Variables**  
+  Configure the environment variables for AkôFlow to connect to your Kubernetes cluster:
+
+  ```bash
+  export K8S_API_SERVER_HOST=https://<your-k8s-api-endpoint>
+  export K8S_API_SERVER_TOKEN=<your-generated-token>
+  ```
+
+  Replace `<your-k8s-api-endpoint>` with your Kubernetes API server endpoint and `<your-generated-token>` with the token generated in the previous step.
+
+## Demonstration video
+
+[AkôFlow Demonstration _(In Portuguese)_](https://www.youtube.com/watch?v=RmrAMWkJij4)
+
 ## Supported Environments
 
 * Kubernetes (public cloud providers: AWS, GCP, Azure, etc.)
 * Singularity (for local or HPC isolated execution)
 * SDumont supercomputer (LNCC - Brazil)
 
-⸻
+## Contributors
+* [D.Sc. Daniel de Oliveira — Research Advisor](http://profs.ic.uff.br/~danielcmo/)  
+* [Wesley Ferreira - @ovvesley — Maintainer - IC/UFF](https://github.com/ovvesley)  
+* Liliane Kunstmann - COPPE/UFRJ
+* Debora Pina - COPPE/UFRJ
+* Raphael Garcia — IC/UFF
+* [Yuri Frota — IC/UFF](http://www.ic.uff.br/~yuri/)  
+* [Marcos Bedo — IC/UFF](https://www.professores.uff.br/marcosbedo/)  
+* [Aline Paes — IC/UFF](http://www.ic.uff.br/~alinepaes/)  
+* [Luan Teylo — INRIA/Université de Bordeaux](https://team.inria.fr/)  
 
-## Maintainers
-* [D.Sc. Daniel de Oliveira — Research Advisor](http://profs.ic.uff.br/~danielcmo/)
-* [Wesley Ferreira - @ovvesley — Maintainer](https://github.com/ovvesley)
-* Raphael Garcia — Maintainer
+## Publications
 
-⸻
+* Ferreira, W., Kunstmann, L., Paes, A., Bedo, M., & de Oliveira, D. (2024, October). `AkôFlow`: um Middleware para execução de Workflows científicos em múltiplos ambientes conteinerizados. In 39th Simpósio Brasileiro de Banco de Dados (SBBD) (pp. 27-39). SBC. ([DOI:10.5753/sbbd.2024.241126.]( https://doi.org/10.5753/sbbd.2024.241126. ))
+
+
+* Ferreira, W., Kunstmann,  L., Garcia R., Bedo, M., & de Oliveira, D. (2025, October). _Plug and Flow_: Execução de Workflows Científicos em Contêineres com o Middleware `AkôFlow`. In 40th Simpósio Brasileiro de Banco de Dados (SBBD). (_Paper just accepted_)
 
 ## Academic Context
 
 AkôFlow originated as a final undergraduate project and has since expanded with broader contributions and integrations. It continues to serve both academic and industrial workflow execution scenarios.
-
-⸻
-
-## Documentation
-
-Full documentation is available at:
-📘 https://akoflow.com/docs
-
-⸻

@@ -45,6 +45,7 @@ func (c *ConnectorSDumont) RunCommandWithOutputRemote(command string, args ...st
 	fullCommand := append([]string{"-c", command}, args...)
 	cmd := exec.Command(shell, fullCommand...)
 	output, err := cmd.CombinedOutput()
+
 	println(string(output))
 	if err != nil {
 		return "", fmt.Errorf("failed to execute command: %w", err)
@@ -68,6 +69,8 @@ func (s *ConnectorSDumont) ExecuteMultiplesCommand(commands []string) {
 			fullCommand := append([]string{"-c", command})
 			cmd := exec.Command(shell, fullCommand...)
 			output, err := cmd.CombinedOutput()
+
+			fmt.Printf("Executing command: %s %v\n", command, fullCommand)
 
 			if err != nil {
 				fmt.Printf("failed to execute command: %s\n", err)

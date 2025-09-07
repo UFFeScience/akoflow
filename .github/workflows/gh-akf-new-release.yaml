@@ -69,7 +69,7 @@ jobs:
           CGO_ENABLED=1 GOOS=linux GOARCH=arm64 CC=aarch64-linux-gnu-gcc go build -o /app/releases/bin/akoflow-client_${VERSION}_linux_arm64 /app/cmd/client/main.go && \
           CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o /app/releases/bin/akoflow-client_${VERSION}_windows_amd64.exe /app/cmd/client/main.go && \
           CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o /app/releases/bin/akoflow-client_${VERSION}_darwin_amd64 /app/cmd/client/main.go && \
-          CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 go build -o /app/releases/bin/akoflow-client_${VERSION}_darwin_arm64 /app/cmd/client/main.go
+          CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 go build -o /app/releases/bin/akoflow-client_${VERSION}_darwin_arm64 /app/cmd/client/main.go"
           
       - name: Create platform archives
         run: |

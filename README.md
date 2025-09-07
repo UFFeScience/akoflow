@@ -41,9 +41,9 @@ AkôFlow will be available at `http://localhost:8080`.
 
 2. **Connect to a Kubernetes Cluster**  
 AkôFlow requires a Kubernetes runtime. You can use:
-- [Kind](https://kind.sigs.k8s.io/)
-- Docker Desktop
-- Any Cloud Provider (e.g., EKS, GKE, AKS)
+  - [Kind](https://kind.sigs.k8s.io/)
+  - Docker Desktop
+  - Any Cloud Provider (e.g., EKS, GKE, AKS)
 
 3. **Apply AkôFlow Resources**  
 Run the following command:

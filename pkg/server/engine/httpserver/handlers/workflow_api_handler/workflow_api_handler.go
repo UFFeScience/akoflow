@@ -75,3 +75,19 @@ func (h *WorkflowApiHandler) ListStorageFiles(w http.ResponseWriter, r *http.Req
 	w.WriteHeader(http.StatusOK)
 	config.App().HttpHelper.WriteJson(w, graph)
 }
+
+func (h *WorkflowApiHandler) ExportProvenanceDot(w http.ResponseWriter, r *http.Request) {
+	workflowIdStr := config.App().HttpHelper.GetUrlParam(r, "workflowId")
+	workflowId, _ := strconv.Atoi(workflowIdStr)
+
+	graph, err := h.provenanceGraphService.BuildGraph(workflowId)
+	if err != nil {
+		http.Error(w, "Erro ao montar grafo de proveniência", http.StatusInternalServerError)
+		return
+	}
+
+	dot := provenance_graph_service.ExportProvenanceGraphToDot(graph)
+	w.Header().Set("Content-Type", "text/vnd.graphviz")
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(dot))
+}

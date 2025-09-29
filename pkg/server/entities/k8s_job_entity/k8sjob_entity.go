@@ -38,12 +38,20 @@ type K8sJobSpecTemplate struct {
 }
 
 type K8sJobContainer struct {
-	Name         string              `json:"name"`
-	Image        string              `json:"image"`
-	Command      []string            `json:"command"`
-	VolumeMounts []K8sJobVolumeMount `json:"volumeMounts"`
-	Resources    K8sJobResources     `json:"resources"`
-	Env          []K8sJobEnv         `json:"env"`
+	Name            string                `json:"name"`
+	Image           string                `json:"image"`
+	Command         []string              `json:"command"`
+	VolumeMounts    []K8sJobVolumeMount   `json:"volumeMounts"`
+	Resources       K8sJobResources       `json:"resources"`
+	Env             []K8sJobEnv           `json:"env"`
+	SecurityContext K8SJobSecurityContext `json:"securityContext,omitempty"`
+}
+
+type K8SJobSecurityContext struct {
+	Privileged bool `json:"privileged"`
+	RunAsUser  int  `json:"runAsUser"`
+	RunAsGroup int  `json:"runAsGroup"`
+	FsGroup    int  `json:"fsGroup"`
 }
 
 type K8sJobEnv struct {

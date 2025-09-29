@@ -208,6 +208,12 @@ func (m *MakeK8sActivityService) makeContainerActivity(workflow workflow_entity.
 			},
 		},
 		Env: envs,
+		SecurityContext: k8s_job_entity.K8SJobSecurityContext{
+			Privileged: false,
+			RunAsUser:  activity.Id,
+			RunAsGroup: activity.Id,
+			FsGroup:    2000,
+		},
 	}
 
 	return container

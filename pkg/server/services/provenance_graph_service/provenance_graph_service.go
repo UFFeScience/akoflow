@@ -2,6 +2,9 @@ package provenance_graph_service
 
 import (
 	"encoding/json"
+	"fmt"
+	"strconv"
+	"strings"
 
 	"github.com/ovvesley/akoflow/pkg/server/database/repository/activity_repository"
 	"github.com/ovvesley/akoflow/pkg/server/database/repository/storages_repository"
@@ -37,7 +40,6 @@ func New(storageRepo storages_repository.IStorageRepository, activityRepo activi
 func (s *ProvenanceGraphService) BuildGraph(workflowId int) (*ProvenanceGraph, error) {
 	storages := s.storageRepository.FindByWorkflow(workflowId)
 
-	// Mapeia activityId para nome
 	activitiesMap := map[int]string{}
 	for _, storage := range storages {
 		activity, err := s.activityRepository.Find(storage.ActivityId)
@@ -49,34 +51,101 @@ func (s *ProvenanceGraphService) BuildGraph(workflowId int) (*ProvenanceGraph, e
 	nodes := []Node{}
 	edges := []Edge{}
 	fileNodeSet := map[string]bool{}
+	activityNodeSet := map[string]bool{}
 
-	// 1. Nós de atividades
 	for _, storage := range storages {
 		activityName := activitiesMap[storage.ActivityId]
 		if activityName == "" {
-			activityName = "unknown"
+			activityName = fmt.Sprintf("activity_%d", storage.ActivityId)
 		}
-		nodes = append(nodes, Node{
-			Id:    "activity:" + activityName,
-			Label: activityName,
-			Type:  "activity",
-		})
+		actId := "activity:" + activityName
+		if !activityNodeSet[actId] {
+			nodes = append(nodes, Node{Id: actId, Label: activityName, Type: "activity"})
+			activityNodeSet[actId] = true
+		}
 	}
 
-	// 2. Nós de arquivos gerados e edges activity->file
-	for _, storage := range storages {
-		activityName := activitiesMap[storage.ActivityId]
-		if activityName == "" {
-			activityName = "unknown"
+	getOwner := func(f map[string]interface{}) string {
+		if v, ok := f["Owner"]; ok && v != nil {
+			switch t := v.(type) {
+			case string:
+				return t
+			case float64:
+				return fmt.Sprintf("%.0f", t)
+			default:
+				return fmt.Sprintf("%v", t)
+			}
 		}
+		if v, ok := f["owner"]; ok && v != nil {
+			return fmt.Sprintf("%v", v)
+		}
+		if v, ok := f["OwnerId"]; ok && v != nil {
+			return fmt.Sprintf("%v", v)
+		}
+		return ""
+	}
+
+	generatorMap := map[string]string{}
+
+	for _, storage := range storages {
+		var initialFiles []map[string]interface{}
+		_ = json.Unmarshal([]byte(storage.InitialFileList), &initialFiles)
+
+		for _, f := range initialFiles {
+			perm, _ := f["Permissions"].(string)
+			if len(perm) > 0 && perm[0] == 'd' {
+				continue
+			}
+			path, _ := f["Path"].(string)
+			name, _ := f["Name"].(string)
+			key := path + "/" + name
+			fileNodeId := "file:" + key
+			if !fileNodeSet[fileNodeId] {
+				nodes = append(nodes, Node{Id: fileNodeId, Label: name, Type: "file"})
+				fileNodeSet[fileNodeId] = true
+			}
+			owner := getOwner(f)
+			if owner != "" {
+				ownerId, err := strconv.Atoi(owner)
+				var ownerActName string
+				if err == nil {
+					ownerActName = activitiesMap[ownerId]
+				}
+				if ownerActName == "" {
+					ownerActName = "activity_" + owner
+				}
+				actNodeId := "activity:" + ownerActName
+				if !activityNodeSet[actNodeId] {
+					nodes = append(nodes, Node{Id: actNodeId, Label: ownerActName, Type: "activity"})
+					activityNodeSet[actNodeId] = true
+				}
+				if _, exists := generatorMap[key]; !exists {
+					generatorMap[key] = actNodeId
+				}
+			}
+		}
+	}
+
+	for _, storage := range storages {
 		var initialFiles, endFiles []map[string]interface{}
 		_ = json.Unmarshal([]byte(storage.InitialFileList), &initialFiles)
 		_ = json.Unmarshal([]byte(storage.EndFileList), &endFiles)
 
 		initialSet := map[string]bool{}
 		for _, f := range initialFiles {
-			key := f["Path"].(string) + "/" + f["Name"].(string)
-			initialSet[key] = true
+			p, _ := f["Path"].(string)
+			n, _ := f["Name"].(string)
+			initialSet[p+"/"+n] = true
+		}
+
+		actName := activitiesMap[storage.ActivityId]
+		if actName == "" {
+			actName = fmt.Sprintf("activity_%d", storage.ActivityId)
+		}
+		actNodeId := "activity:" + actName
+		if !activityNodeSet[actNodeId] {
+			nodes = append(nodes, Node{Id: actNodeId, Label: actName, Type: "activity"})
+			activityNodeSet[actNodeId] = true
 		}
 
 		for _, f := range endFiles {
@@ -84,27 +153,42 @@ func (s *ProvenanceGraphService) BuildGraph(workflowId int) (*ProvenanceGraph, e
 			if len(perm) > 0 && perm[0] == 'd' {
 				continue
 			}
-			key := f["Path"].(string) + "/" + f["Name"].(string)
-			if initialSet[key] {
-				continue
-			}
+			p, _ := f["Path"].(string)
+			n, _ := f["Name"].(string)
+			key := p + "/" + n
 			fileNodeId := "file:" + key
 			if !fileNodeSet[fileNodeId] {
-				nodes = append(nodes, Node{
-					Id:    fileNodeId,
-					Label: f["Name"].(string),
-					Type:  "file",
-				})
+				nodes = append(nodes, Node{Id: fileNodeId, Label: n, Type: "file"})
 				fileNodeSet[fileNodeId] = true
 			}
-			edges = append(edges, Edge{
-				From: "activity:" + activityName,
-				To:   fileNodeId,
-			})
+			if !initialSet[key] {
+				if _, exists := generatorMap[key]; !exists {
+					generatorMap[key] = actNodeId
+				}
+			}
 		}
 	}
 
-	// 3. Edges file->activity (consumo)
+	edgeSet := map[string]bool{}
+	addEdge := func(from, to string) {
+		k := from + "->" + to
+		if !edgeSet[k] {
+			edgeSet[k] = true
+			edges = append(edges, Edge{From: from, To: to})
+		}
+	}
+
+	for fileKey, actNode := range generatorMap {
+		fileNodeId := "file:" + fileKey
+		if !fileNodeSet[fileNodeId] {
+			parts := strings.Split(fileKey, "/")
+			name := parts[len(parts)-1]
+			nodes = append(nodes, Node{Id: fileNodeId, Label: name, Type: "file"})
+			fileNodeSet[fileNodeId] = true
+		}
+		addEdge(fileNodeId, actNode)
+	}
+
 	for _, storage := range storages {
 		activityName := activitiesMap[storage.ActivityId]
 		if activityName == "" {
@@ -112,21 +196,59 @@ func (s *ProvenanceGraphService) BuildGraph(workflowId int) (*ProvenanceGraph, e
 		}
 		var initialFiles []map[string]interface{}
 		_ = json.Unmarshal([]byte(storage.InitialFileList), &initialFiles)
+		actName := activitiesMap[storage.ActivityId]
+		if actName == "" {
+			actName = fmt.Sprintf("activity_%d", storage.ActivityId)
+		}
+		actNodeId := "activity:" + actName
 		for _, f := range initialFiles {
 			perm, _ := f["Permissions"].(string)
 			if len(perm) > 0 && perm[0] == 'd' {
 				continue
 			}
-			key := f["Path"].(string) + "/" + f["Name"].(string)
+			p, _ := f["Path"].(string)
+			n, _ := f["Name"].(string)
+			key := p + "/" + n
 			fileNodeId := "file:" + key
 			if fileNodeSet[fileNodeId] {
-				edges = append(edges, Edge{
-					From: fileNodeId,
-					To:   "activity:" + activityName,
-				})
+				if generatorMap[key] == actNodeId {
+					continue
+				}
+				addEdge(actNodeId, fileNodeId)
 			}
 		}
 	}
 
 	return &ProvenanceGraph{Nodes: nodes, Edges: edges}, nil
+}
+
+func ExportProvenanceGraphToDot(graph *ProvenanceGraph) string {
+	var b strings.Builder
+	b.WriteString("digraph prov {\n")
+	b.WriteString("  rankdir=LR;\n")
+	for _, node := range graph.Nodes {
+		shape := "ellipse"
+		color := "#facc15"
+		if node.Type == "activity" {
+			shape = "box"
+			color = "#38bdf8"
+		}
+		label := strings.ReplaceAll(node.Label, "\"", "\\\"")
+		b.WriteString(fmt.Sprintf("  \"%s\" [label=\"%s\", shape=%s, style=filled, fillcolor=\"%s\"];\n", node.Id, label, shape, color))
+	}
+	for _, edge := range graph.Edges {
+		label := ""
+		if strings.HasPrefix(edge.From, "file:") && strings.HasPrefix(edge.To, "activity:") {
+			label = "wasGeneratedBy"
+		} else if strings.HasPrefix(edge.From, "activity:") && strings.HasPrefix(edge.To, "file:") {
+			label = "used"
+		}
+		if label != "" {
+			b.WriteString(fmt.Sprintf("  \"%s\" -> \"%s\" [label=\"%s\"];\n", edge.From, edge.To, label))
+		} else {
+			b.WriteString(fmt.Sprintf("  \"%s\" -> \"%s\";\n", edge.From, edge.To))
+		}
+	}
+	b.WriteString("}\n")
+	return b.String()
 }

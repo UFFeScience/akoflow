@@ -102,7 +102,7 @@ func (m *MakeK8sActivityService) addCommandToMonitorFilesStorage(command string,
 	script = strings.ReplaceAll(script, "#PATH_PARAM#", path)
 	script = strings.ReplaceAll(script, "#PORT#", port)
 
-	command += script + "; "
+	command += "\n" + script + "; "
 	return command
 }
 

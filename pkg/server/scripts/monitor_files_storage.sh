@@ -1,4 +1,3 @@
-#!/bin/bash
 PATH_PARAM="#PATH_PARAM#"
 PORT="#PORT#"
 

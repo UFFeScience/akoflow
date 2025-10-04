@@ -55,6 +55,16 @@ func (o *OrchestrateScheduleService) Orchestrate() ([]workflow_activity_entity.W
 
 	scheduleName := o.workflow.Spec.Schedule
 
+	scheduleDB, err := o.scheduleRepository.GetScheduleByName(scheduleName)
+
+	if err != nil {
+		// default schedule
+		println("No schedule found, using default")
+		return o.readyToRunActivities, nil
+	}
+
+	println("Schedule found: ", scheduleDB.Name)
+
 	newReadyToRunActivities := []workflow_activity_entity.WorkflowActivities{}
 
 	for _, activity := range o.readyToRunActivities {

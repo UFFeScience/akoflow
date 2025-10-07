@@ -1,0 +1,96 @@
+// Importa o tema base do Just the Docs
+@import "just-the-docs";
+
+// === AkôFlow Docs — Tema Monocromático ===
+// Tons neutros: branco, preto e cinza
+// -------------------------------------------------
+
+// === Paleta principal ===
+$body-background-color: #ffffff;  // fundo branco
+$body-text-color: #111111;        // texto quase preto
+$heading-color: #000000;          // títulos bem pretos
+$link-color: #000000;             // links pretos
+$link-hover-color: #444444;       // hover em cinza escuro
+$brand-color: #000000;            // botões e destaques
+
+// === Sidebar ===
+$sidebar-color: #000000;          // fundo preto
+$sidebar-text-color: #f5f5f5;     // texto branco/cinza claro
+$sidebar-heading-color: #ffffff;  // título branco
+$sidebar-border-color: #1a1a1a;   // borda sutil
+
+// === Código e blocos ===
+$code-background-color: #f2f2f2;  // fundo claro
+$code-text-color: #000000;        // texto preto
+
+// === Tipografia ===
+body {
+  font-family: "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-weight: 400;
+  color: $body-text-color;
+  background-color: $body-background-color;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  color: $heading-color;
+}
+
+// === Sidebar ===
+.side-bar {
+  background-color: $sidebar-color;
+}
+
+.nav-list a {
+  color: $sidebar-text-color !important;
+}
+
+.nav-list .nav-list-item > a:hover {
+  color: #cccccc !important;
+}
+
+.nav-list .nav-list-item.active > a {
+  color: #ffffff !important;
+  font-weight: 600;
+}
+
+// === Links no conteúdo ===
+.main-content a {
+  color: $link-color;
+  border-bottom: 1px solid #000000;
+
+  &:hover {
+    color: $link-hover-color;
+    border-color: $link-hover-color;
+  }
+}
+
+// === Botões ===
+.btn,
+.btn-primary {
+  background-color: $brand-color;
+  color: #ffffff;
+  border: none;
+  font-weight: 500;
+
+  &:hover {
+    background-color: #222222;
+  }
+}
+
+// === Footer ===
+.site-footer {
+  background: #000000;
+  color: #ffffff;
+  padding: 1rem 0;
+  text-align: center;
+  border-top: 2px solid #111111;
+}
+
+// === Logo (opcional) ===
+.site-logo img {
+  height: 40px;
+  margin-right: 10px;
+  vertical-align: middle;
+  filter: grayscale(100%) brightness(0); // garante preto e branco
+}

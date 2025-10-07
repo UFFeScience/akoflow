@@ -5,6 +5,9 @@ theme: just-the-docs
 
 url: https://uffescience.github.io/akoflow/
 
+sass:
+  style: compressed
+
 just_the_docs:
   custom_css:
     - /assets/css/custom.scss

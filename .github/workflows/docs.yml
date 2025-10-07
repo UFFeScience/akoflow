@@ -3,6 +3,8 @@ name: Deploy AkôFlow Documentation to GitHub Pages on push to main branch
 on:
   push:
     branches: ["main"]
+    paths:
+      - "docs/**" 
 
 permissions:
   contents: read

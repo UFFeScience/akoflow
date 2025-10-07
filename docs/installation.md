@@ -1,5 +1,4 @@
 ---
----
 title: 2 - Installation
 description: Here you will find instructions on how to install AkôFlow in different environments, including local clusters and cloud platforms.
 layout: page

@@ -3,7 +3,7 @@ title: 1 - Home
 layout: home
 ---
 
-# akoflow - Ferramenta para execução de Workflow Científico em Kubernetes
+# AkôFlow - Ferramenta para execução de Workflow Científico em Kubernetes [WIP]
 
 O akoflow é uma ferramenta para execução de workflows científicos em Kubernetes. Ele utiliza a API do Kubernetes para criar e gerenciar recursos de execução de workflows, como pods e jobs. O akoflow é uma ferramenta de linha de comando que permite a execução de workflows científicos de forma distribuída e paralela em um cluster Kubernetes.
 

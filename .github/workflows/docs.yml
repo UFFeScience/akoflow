@@ -44,6 +44,9 @@ jobs:
         env:
           JEKYLL_ENV: production
 
+      - name: List built CSS
+        run: ls -la docs/_site/assets/css
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v4  # produces a Pages-compatible tarball
         with:

@@ -2,12 +2,11 @@ title: AkôFlow
 logo: "/assets/images/icon_akoflow.png"
 description: AkôFlow is an open-source middleware for orchestrating and executing container-based scientific workflows across heterogeneous environments. It was originally developed within the e-Science Research Group at the Institute of Computing, Fluminense Federal University (UFF).
 theme: just-the-docs
-
-url: https://uffescience.github.io/akoflow/
-
 sass:
   style: compressed
 
 just_the_docs:
   custom_css:
-    - /assets/css/custom.scss
+    - assets/css/custom.scss
+
+url: https://uffescience.github.io/akoflow/

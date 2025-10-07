@@ -1,3 +1,14 @@
 ---
 ---
 
+.nav-list a,
+.nav-list .nav-list-item.active > a {
+  color: #000 !important;
+}
+.nav-list a:hover {
+  color: #007acc !important;
+}
+
+a {
+  color: #007acc !important;
+}

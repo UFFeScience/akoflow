@@ -7,4 +7,4 @@ url: https://uffescience.github.io/akoflow/
 
 just_the_docs:
   custom_css:
-    - assets/css/custom.scss
+    - /assets/css/custom.scss

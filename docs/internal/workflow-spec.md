@@ -210,7 +210,3 @@ Each item in the `activities` list includes:
 - Mount paths should be absolute.
 - When using distributed storage, ensure your provisioner supports multiple PVCs.
 - Output files written to the mount path can be used by subsequent steps or stored as workflow artifacts.
-
----
-
-Would you like to extend this into a versioned specification document (e.g., `akoflow-spec-v1.md`) with a formal YAML schema definition and validation rules?

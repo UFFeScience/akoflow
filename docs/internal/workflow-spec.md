@@ -1,4 +1,8 @@
-# AkôFlow Workflow Specification Documentation
+---
+title: Workflow Specification
+description: AkôFlow is an open-source middleware for orchestrating and executing container-based scientific workflows across heterogeneous environments.
+layout: home
+---
 
 This document provides a comprehensive guide to the structure and purpose of each field in an AkôFlow workflow definition file (YAML format). The workflow specification outlines how a workflow operates, including its containers, storage, and activities (steps).
 

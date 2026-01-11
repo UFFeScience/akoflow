@@ -24,6 +24,19 @@ type HPCRuntimeService struct {
 	runtimeRepository  runtime_repository.IRuntimeRepository
 
 	connectorHPCRuntime connector_hpc.IConnectorHPCRuntime
+
+	runtimeName string
+	runtimeType string
+}
+
+func (s *HPCRuntimeService) SetRuntimeName(runtimeName string) *HPCRuntimeService {
+	s.runtimeName = runtimeName
+	return s
+}
+
+func (s *HPCRuntimeService) SetRuntimeType(runtimeType string) *HPCRuntimeService {
+	s.runtimeType = runtimeType
+	return s
 }
 
 func New() *HPCRuntimeService {
@@ -188,7 +201,9 @@ func (s *HPCRuntimeService) VerifyActivitiesWasFinished(workflow workflow_entity
 	config.App().Logger.Infof("WORKER: Verify activities was finished in HPCRuntime")
 
 	for _, activity := range workflow.Spec.Activities {
-		s.handleVerifyActivityWasFinished(activity, workflow)
+		if activity.GetRuntimeId() == s.runtimeName {
+			s.handleVerifyActivityWasFinished(activity, workflow)
+		}
 	}
 	return true
 }
@@ -206,9 +221,15 @@ func (s *HPCRuntimeService) handleVerifyActivityWasFinished(activity workflow_ac
 		return activity_repository.StatusCreated
 	}
 
-	runtime, err := s.runtimeRepository.GetByName(wf.GetRuntimeId()[0])
+	runtime, err := s.runtimeRepository.GetByName(activity.GetRuntimeId())
+
 	if err != nil {
 		config.App().Logger.Infof("WORKER: Error getting runtime from database.")
+		return activity_repository.StatusRunning
+	}
+
+	if wfaDatabase.GetProcId() == "" {
+		config.App().Logger.Infof("WORKER: Activity %d has no process ID", activity.Id)
 		return activity_repository.StatusRunning
 	}
 

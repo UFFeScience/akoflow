@@ -25,6 +25,19 @@ type LocalRuntimeService struct {
 	logsRepository     logs_repository.ILogsRepository
 
 	localConnector connector_local.IConnectorLocal
+
+	runtimeName string
+	runtimeType string
+}
+
+func (s *LocalRuntimeService) SetRuntimeName(name string) *LocalRuntimeService {
+	s.runtimeName = name
+	return s
+}
+
+func (s *LocalRuntimeService) SetRuntimeType(runtimeType string) *LocalRuntimeService {
+	s.runtimeType = runtimeType
+	return s
 }
 
 func NewLocalRuntimeService() LocalRuntimeService {
@@ -75,6 +88,9 @@ func (s *LocalRuntimeService) ApplyJob(workflowID int, activityID int) {
 func (s *LocalRuntimeService) VerifyActivitiesWasFinished(workflow workflow_entity.Workflow) {
 	for _, activity := range workflow.Spec.Activities {
 		if activity.Status != activity_repository.StatusRunning {
+			continue
+		}
+		if activity.GetRuntimeId() != s.runtimeName {
 			continue
 		}
 
@@ -211,16 +227,21 @@ func (s *LocalRuntimeService) ExtractMetrics(metrics string) (string, string, er
 func (s *LocalRuntimeService) makeLocalActivity(wf workflow_entity.Workflow, wfa workflow_activity_entity.WorkflowActivities) string {
 	command := wfa.Run
 	commandBase64 := base64.StdEncoding.EncodeToString([]byte(command))
-	commandFinal := "echo " + commandBase64 + " | base64 -d | sh"
+	commandFinal := "echo " + commandBase64 + " | base64 -d | bash"
+
+	mountPath := wfa.GetMountPath()
+	if mountPath == "" {
+		mountPath = wf.Spec.MountPath
+	}
 
 	strOutFile := fmt.Sprintf("%s/akoflow_out%s_%s.out",
-		wf.GetMountPath(),
+		mountPath,
 		fmt.Sprintf("%d", wfa.WorkflowId),
 		fmt.Sprintf("%d", wfa.Id),
 	)
 
 	strErrFile := fmt.Sprintf("%s/akoflow_err%s_%s.err",
-		wf.GetMountPath(),
+		mountPath,
 		fmt.Sprintf("%d", wfa.WorkflowId),
 		fmt.Sprintf("%d", wfa.Id),
 	)

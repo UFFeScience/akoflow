@@ -14,6 +14,7 @@ func NewHpcRuntime() *HpcRuntime {
 
 type HpcRuntime struct {
 	hpcRuntimeService *hpc_runtime_service.HPCRuntimeService
+	runtimeType       string
 	runtimeName       string
 }
 
@@ -25,8 +26,13 @@ func (h *HpcRuntime) StopConnection() error {
 	return nil
 }
 
-func (h *HpcRuntime) SetRuntimeName(runtimeName string) *HpcRuntime {
-	h.runtimeName = runtimeName
+func (h *HpcRuntime) SetRuntimeType(runtimeType string) *HpcRuntime {
+	h.runtimeType = runtimeType
+	return h
+}
+
+func (h *HpcRuntime) SetRuntimeName(name string) *HpcRuntime {
+	h.runtimeName = name
 	return h
 }
 
@@ -57,6 +63,9 @@ func (h *HpcRuntime) HealthCheck() bool {
 }
 
 func (h *HpcRuntime) VerifyActivitiesWasFinished(workflow workflow_entity.Workflow) bool {
-	h.hpcRuntimeService.VerifyActivitiesWasFinished(workflow)
+	h.hpcRuntimeService.
+		SetRuntimeName(h.runtimeName).
+		SetRuntimeType(h.runtimeType).
+		VerifyActivitiesWasFinished(workflow)
 	return true
 }

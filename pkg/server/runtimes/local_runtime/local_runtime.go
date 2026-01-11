@@ -8,6 +8,18 @@ import (
 
 type LocalRuntime struct {
 	LocalRuntimeService local_runtime_service.LocalRuntimeService
+	runtimeType         string
+	runtimeName         string
+}
+
+func (d *LocalRuntime) SetRuntimeType(runtimeType string) *LocalRuntime {
+	d.runtimeType = runtimeType
+	return d
+}
+
+func (d *LocalRuntime) SetRuntimeName(name string) *LocalRuntime {
+	d.runtimeName = name
+	return d
 }
 
 func (d *LocalRuntime) StartConnection() error {
@@ -42,7 +54,10 @@ func (d *LocalRuntime) GetStatus(workflowID int, activityID int) string {
 }
 
 func (k *LocalRuntime) VerifyActivitiesWasFinished(workflow workflow_entity.Workflow) bool {
-	k.LocalRuntimeService.VerifyActivitiesWasFinished(workflow)
+	k.LocalRuntimeService.
+		SetRuntimeName(k.runtimeName).
+		SetRuntimeType(k.runtimeType).
+		VerifyActivitiesWasFinished(workflow)
 	return true
 }
 

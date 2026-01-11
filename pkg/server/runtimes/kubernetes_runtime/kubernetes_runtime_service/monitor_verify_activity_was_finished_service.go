@@ -16,11 +16,24 @@ import (
 type MonitorVerifyActivityWasFinishedService struct {
 	namespace string
 
+	runtimeName string
+	runtimeType string
+
 	activityRepository activity_repository.IActivityRepository
 	runtimeRepository  runtime_repository.IRuntimeRepository
 	logsRepository     logs_repository.ILogsRepository
 
 	connector connector_k8s.IConnector
+}
+
+func (m *MonitorVerifyActivityWasFinishedService) SetRuntimeName(name string) *MonitorVerifyActivityWasFinishedService {
+	m.runtimeName = name
+	return m
+}
+
+func (m *MonitorVerifyActivityWasFinishedService) SetRuntimeType(runtimeType string) *MonitorVerifyActivityWasFinishedService {
+	m.runtimeType = runtimeType
+	return m
 }
 
 func NewMonitorVerifyActivityWasFinishedService() *MonitorVerifyActivityWasFinishedService {
@@ -51,6 +64,7 @@ func (m *MonitorVerifyActivityWasFinishedService) handleVerifyPreActivityWasFini
 	preactivity, _ := m.activityRepository.FindPreActivity(activity.Id)
 
 	runtime, err := m.runtimeRepository.GetByName(activity.GetRuntimeId())
+
 	if err != nil {
 		return activity_repository.StatusCreated
 	}
@@ -119,6 +133,10 @@ func (m *MonitorVerifyActivityWasFinishedService) handleVerifyActivityWasFinishe
 	}
 
 	runtime, err := m.runtimeRepository.GetByName(activity.GetRuntimeId())
+
+	if runtime.GetName() != m.runtimeName {
+		return activity_repository.StatusRunning
+	}
 	if err != nil {
 		return activity_repository.StatusCreated
 	}

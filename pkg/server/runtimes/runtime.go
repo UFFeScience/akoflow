@@ -57,11 +57,21 @@ func GetRuntimeInstance(runtimeName string) IRuntime {
 	runtime := normalizeRuntime(runtimeName)
 
 	modeMap := map[string]IRuntime{
-		RUNTIME_DOCKER:      docker_runtime.NewDockerRuntime(),
-		RUNTIME_K8S:         kubernetes_runtime.NewKubernetesRuntime().SetRuntimeName(runtimeName),
+		RUNTIME_DOCKER: docker_runtime.NewDockerRuntime(),
+
+		RUNTIME_K8S: kubernetes_runtime.NewKubernetesRuntime().
+			SetRuntimeType(RUNTIME_K8S).
+			SetRuntimeName(runtimeName),
+
 		RUNTIME_SINGULARITY: singularity_runtime.NewSingularityRuntime(),
-		RUNTIME_HPC:         hpc_runtime.NewHpcRuntime().SetRuntimeName(runtimeName),
-		RUNTIME_LOCAL:       local_runtime.NewLocalRuntime(),
+
+		RUNTIME_HPC: hpc_runtime.NewHpcRuntime().
+			SetRuntimeType(RUNTIME_HPC).
+			SetRuntimeName(runtimeName),
+
+		RUNTIME_LOCAL: local_runtime.NewLocalRuntime().
+			SetRuntimeType(RUNTIME_LOCAL).
+			SetRuntimeName(runtimeName),
 	}
 	if modeMap[runtime] == nil {
 		config.App().Logger.Error(fmt.Sprintf("Runtime not found: %s", runtimeName))

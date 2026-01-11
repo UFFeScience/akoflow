@@ -96,10 +96,13 @@ func (w *ActivityRepository) createActivity(namespace string, workflow workflow_
 		if activity.Runtime != "" {
 			runtime = activity.Runtime
 		}
+		if activity.MountPath == "" {
+			activity.MountPath = workflow.Spec.MountPath
+		}
 
 		result, err := c.Exec(
-			"INSERT INTO "+w.tableNameActivity+" (workflow_id, namespace, name, image, runtime, resource_k8s_base64, status, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)",
-			workflowId, namespace, activity.Name, image, runtime, rawActivity, StatusCreated)
+			"INSERT INTO "+w.tableNameActivity+" (workflow_id, namespace, name, image, runtime, resource_k8s_base64, mount_path, status, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)",
+			workflowId, namespace, activity.Name, image, runtime, rawActivity, activity.MountPath, StatusCreated)
 
 		if err != nil {
 			println("Error creating activity" + err.Error())

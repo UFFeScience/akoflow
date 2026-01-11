@@ -74,7 +74,7 @@ func GetEnvVars() (map[string]string, map[string]map[string]string) {
 	envVars := make(map[string]string)
 	envVarByRuntime := make(map[string]map[string]string)
 
-	runtimes_avaibles := []string{"k8s", "singularity", "sdumont"}
+	runtimes_avaibles := []string{"k8s", "singularity", "hpc"}
 
 	for _, v := range os.Environ() {
 		splitted := strings.Split(v, "=")

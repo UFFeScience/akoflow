@@ -16,7 +16,7 @@ import (
 const RUNTIME_K8S = "k8s"
 const RUNTIME_DOCKER = "docker"
 const RUNTIME_SINGULARITY = "singularity"
-const RUNTIME_HPC = "sdumont"
+const RUNTIME_HPC = "hpc"
 
 type IRuntime interface {
 	StartConnection() error
@@ -42,7 +42,7 @@ func normalizeRuntime(runtime string) string {
 		return RUNTIME_K8S
 	}
 
-	if strings.HasPrefix(runtime, "sdumont") {
+	if strings.HasPrefix(runtime, "hpc") {
 		return RUNTIME_HPC
 	}
 

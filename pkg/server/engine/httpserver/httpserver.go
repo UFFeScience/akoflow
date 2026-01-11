@@ -18,8 +18,8 @@ import (
 func HealthCheck(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	_, _ = w.Write([]byte("ok"))
-
 }
+
 func StartServer() {
 
 	http.HandleFunc("GET /", http_config.KernelHandler(public_static_handler.New().Static))

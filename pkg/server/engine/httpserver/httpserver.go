@@ -65,7 +65,8 @@ func StartServer() {
 	//http.HandleFunc("GET /akoflow-api/workflows/{workflowId}/storages/{storageId}/", http_config.KernelHandler(workflow_api_handler.New().GetStorage))
 	//http.HandleFunc("GET /akoflow-api/workflows/{workflowId}/storages/{storageId}/download-file/", http_config.KernelHandler(workflow_api_handler.New().DownloadFile))
 
-	err := http.ListenAndServe(config.PORT_SERVER, nil)
+	handler := AllowCORS(http.DefaultServeMux)
+	err := http.ListenAndServe(config.PORT_SERVER, handler)
 	if err != nil {
 		println("Error starting server", err)
 		panic(err)

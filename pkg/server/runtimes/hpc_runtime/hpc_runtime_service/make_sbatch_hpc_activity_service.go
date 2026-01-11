@@ -8,6 +8,7 @@ import (
 	"github.com/ovvesley/akoflow/pkg/server/entities/runtime_entity"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
+	"github.com/ovvesley/akoflow/pkg/shared/utils/utils_read_file"
 )
 
 func NewMakeSBatchHPCRuntimeActivityService() MakeSBatchHPCRuntimeActivityService {
@@ -34,16 +35,31 @@ func (m MakeSBatchHPCRuntimeActivityService) SetRuntime(runtime runtime_entity.R
 func (m MakeSBatchHPCRuntimeActivityService) GetSingularityCommand() string {
 	return m.singularityCommand
 }
-
-func (m MakeSBatchHPCRuntimeActivityService) Handle(workflow workflow_entity.Workflow, activity workflow_activity_entity.WorkflowActivities) string {
+func (m MakeSBatchHPCRuntimeActivityService) GetTemplateSbatch() string {
 
 	templateSbatchb64 := m.runtime.GetCurrentRuntimeMetadata("SBATCHTEMPLATE")
+
+	if templateSbatchb64 == "" {
+		defaultTemplate := utils_read_file.New().ReadFile(fmt.Sprintf("%s/pkg/server/engine/scripts/default-slurm.sbatch", utils_read_file.New().GetRootProjectPath()))
+		if defaultTemplate == "" {
+			fmt.Println("Error reading default sbatch template")
+			return ""
+		}
+		return string(defaultTemplate)
+	}
+
 	templateSbatchBytes, err := base64.StdEncoding.DecodeString(templateSbatchb64)
 	if err != nil {
 		fmt.Println("Error decoding sbatch template:", err)
 		return ""
 	}
 	templateSbatch := string(templateSbatchBytes)
+	return templateSbatch
+}
+
+func (m MakeSBatchHPCRuntimeActivityService) Handle(workflow workflow_entity.Workflow, activity workflow_activity_entity.WorkflowActivities) string {
+
+	templateSbatch := m.GetTemplateSbatch()
 
 	jobName := fmt.Sprintf("akoflow_%d_%d", workflow.GetId(), activity.GetId())
 

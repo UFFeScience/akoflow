@@ -68,7 +68,7 @@ func (s *MakeSingularityActivityService) MakeContainerCommandActivityToHPC(wf wo
 	entryPoint := fmt.Sprintf("singularity exec --bind %s:%s --pwd %s %s bash -c '%s'",
 		mountPath,
 		mountPath,
-		mountPath,
+		"/akoflow-wfa-shared ",
 		imageSifPath,
 		commandFinal,
 	)

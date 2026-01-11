@@ -83,7 +83,7 @@ func (s *HPCRuntimeService) ApplyJob(workflowID int, activityID int) string {
 		return ""
 	}
 
-	output, _ := s.connectorHPCRuntime.RunCommandWithOutputRemote(sBatchHPCRuntimeSystemCall)
+	output, _ := s.connectorHPCRuntime.SetRuntime(*runtime).RunCommandWithOutputRemote(sBatchHPCRuntimeSystemCall)
 
 	pid, err := s.extractJobID(output)
 
@@ -139,25 +139,22 @@ func (s *HPCRuntimeService) syncWorkflowVolumes(wf workflow_entity.Workflow) {
 	}
 
 	for _, volume := range volumes {
-		// Sync local to remote
-		command1 := fmt.Sprintf("sshpass -p '%s' ssh -o StrictHostKeyChecking=no %s@%s 'mkdir -p %s'",
-			runtime.GetCurrentRuntimeMetadata("PASSWORD"),
-			runtime.GetCurrentRuntimeMetadata("USER"),
-			runtime.GetCurrentRuntimeMetadata("HOST_CLUSTER"),
-			volume.GetRemotePath(),
-		)
+		command1, err := s.connectorHPCRuntime.BuildRemoteCommand(*runtime, fmt.Sprintf("mkdir -p %s", volume.GetRemotePath()))
+		if err != nil {
+			config.App().Logger.Infof("WORKER: Error building remote command.")
+			return
+		}
 
-		command2 := fmt.Sprintf("sshpass -p '%s' rsync -ah --progress %s %s@%s:%s",
-			runtime.GetCurrentRuntimeMetadata("PASSWORD"),
+		var command2, command3 string
+
+		command2 = fmt.Sprintf("rsync -ah --progress %s %s@%s:%s",
 			volume.GetLocalPath(),
 			runtime.GetCurrentRuntimeMetadata("USER"),
 			runtime.GetCurrentRuntimeMetadata("HOST_CLUSTER"),
 			volume.GetRemotePath(),
 		)
 
-		// Sync remote to local
-		command3 := fmt.Sprintf("sshpass -p '%s' rsync -ah --progress %s@%s:%s %s",
-			runtime.GetCurrentRuntimeMetadata("PASSWORD"),
+		command3 = fmt.Sprintf("rsync -ah --progress %s@%s:%s %s",
 			runtime.GetCurrentRuntimeMetadata("USER"),
 			runtime.GetCurrentRuntimeMetadata("HOST_CLUSTER"),
 			volume.GetRemotePath(),
@@ -170,6 +167,7 @@ func (s *HPCRuntimeService) syncWorkflowVolumes(wf workflow_entity.Workflow) {
 	}
 
 	s.connectorHPCRuntime.ExecuteMultiplesCommand(commands)
+
 }
 
 func (s *HPCRuntimeService) extractJobID(outputCommand string) (string, error) {
@@ -208,38 +206,44 @@ func (s *HPCRuntimeService) handleVerifyActivityWasFinished(activity workflow_ac
 		return activity_repository.StatusCreated
 	}
 
-	command := fmt.Sprintf(" sacct -j %s  --format=JobID,JobName,Partition,Account,AllocCPUs,State,ExitCode --noheader | grep akoflow", wfaDatabase.GetProcId())
+	runtime, err := s.runtimeRepository.GetByName(wf.GetRuntimeId()[0])
+	if err != nil {
+		config.App().Logger.Infof("WORKER: Error getting runtime from database.")
+		return activity_repository.StatusRunning
+	}
 
-	output, _ := s.connectorHPCRuntime.RunCommandWithOutputRemote(command)
+	command := fmt.Sprintf("scontrol show job %s", wfaDatabase.GetProcId())
 
-	saactResponse, err := s.extractSacctJobID(output)
+	output, _ := s.connectorHPCRuntime.SetRuntime(*runtime).RunCommandWithOutputRemote(command)
+
+	scontrolResponse, err := s.extractScontrolJob(output)
 
 	if err != nil {
 		config.App().Logger.Infof("WORKER: Error extracting job ID %s", strings.TrimSpace(wfaDatabase.GetProcId()))
 		return activity_repository.StatusRunning
 	}
 
-	if saactResponse.State == "COMPLETED" {
+	if scontrolResponse.State == "COMPLETED" {
 		config.App().Logger.Infof("WORKER: Activity %d finished", activity.Id)
 		s.syncWorkflowVolumes(wf)
 		_ = s.activityRepository.UpdateStatus(activity.Id, activity_repository.StatusFinished)
 		return activity_repository.StatusFinished
 	}
 
-	if saactResponse.State == "FAILED" || saactResponse.State == "CANCELLED+" || saactResponse.State == "CANCELLED" || saactResponse.State == "DEADLINE" || saactResponse.State == "TIMEOUT" || saactResponse.State == "OUT_OF_MEM+" {
+	if scontrolResponse.State == "FAILED" || scontrolResponse.State == "CANCELLED+" || scontrolResponse.State == "CANCELLED" || scontrolResponse.State == "DEADLINE" || scontrolResponse.State == "TIMEOUT" || scontrolResponse.State == "OUT_OF_MEM+" {
 		config.App().Logger.Infof("WORKER: Activity %d failed", activity.Id)
 		s.syncWorkflowVolumes(wf)
 		_ = s.activityRepository.UpdateStatus(activity.Id, activity_repository.StatusFinished)
 		return activity_repository.StatusFinished
 	}
 
-	if saactResponse.State == "RUNNING" {
+	if scontrolResponse.State == "RUNNING" {
 		config.App().Logger.Infof("WORKER: Activity %d running", activity.Id)
 		_ = s.activityRepository.UpdateStatus(activity.Id, activity_repository.StatusRunning)
 		return activity_repository.StatusRunning
 	}
 
-	if saactResponse.State == "PENDING" {
+	if scontrolResponse.State == "PENDING" {
 		config.App().Logger.Infof("WORKER: Activity %d pending", activity.Id)
 		_ = s.activityRepository.UpdateStatus(activity.Id, activity_repository.StatusRunning)
 		return activity_repository.StatusRunning
@@ -259,27 +263,42 @@ type SaactResponse struct {
 	ExitCode  string `json:"ExitCode"`
 }
 
-func (s *HPCRuntimeService) extractSacctJobID(outputCommand string) (SaactResponse, error) {
-	reOutput := regexp.MustCompile(`(?m)(\d+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\d+)\s+(\S+)\s+(\d+:\d+)`)
-	match := reOutput.FindStringSubmatch(outputCommand)
+func extractField(pattern, text string) (string, error) {
+	re := regexp.MustCompile(pattern)
+	match := re.FindStringSubmatch(text)
+	if len(match) < 2 {
+		return "", fmt.Errorf("field not found: %s", pattern)
+	}
+	return match[1], nil
+}
 
-	if len(match) == 0 {
-		return SaactResponse{}, fmt.Errorf("no match found")
+func (s *HPCRuntimeService) extractScontrolJob(output string) (SaactResponse, error) {
+	var err error
+	resp := SaactResponse{}
+
+	if resp.JobID, err = extractField(`JobId=(\d+)`, output); err != nil {
+		return resp, err
+	}
+	if resp.JobName, err = extractField(`JobName=([^\s]+)`, output); err != nil {
+		return resp, err
+	}
+	if resp.Partition, err = extractField(`Partition=([^\s]+)`, output); err != nil {
+		return resp, err
+	}
+	if resp.Account, err = extractField(`Account=([^\s]+|$begin:math:text$null$end:math:text$)`, output); err != nil {
+		return resp, err
+	}
+	if resp.AllocCPUs, err = extractField(`NumCPUs=(\d+)`, output); err != nil {
+		return resp, err
+	}
+	if resp.State, err = extractField(`JobState=([A-Z_]+)`, output); err != nil {
+		return resp, err
+	}
+	if resp.ExitCode, err = extractField(`ExitCode=(\d+:\d+)`, output); err != nil {
+		return resp, err
 	}
 
-	if len(match) < 8 {
-		return SaactResponse{}, fmt.Errorf("invalid output format")
-	}
-
-	return SaactResponse{
-		JobID:     match[1],
-		JobName:   match[2],
-		Partition: match[3],
-		Account:   match[4],
-		AllocCPUs: match[5],
-		State:     match[6],
-		ExitCode:  match[7],
-	}, nil
+	return resp, nil
 }
 
 func (s *HPCRuntimeService) HealthCheck(runtimeName string) bool {

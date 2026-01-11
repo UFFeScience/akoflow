@@ -3,6 +3,7 @@ package hpc_runtime_service
 import (
 	"encoding/base64"
 	"fmt"
+	"strings"
 
 	"github.com/ovvesley/akoflow/pkg/server/entities/runtime_entity"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
@@ -36,83 +37,48 @@ func (m MakeSBatchHPCRuntimeActivityService) GetSingularityCommand() string {
 
 func (m MakeSBatchHPCRuntimeActivityService) Handle(workflow workflow_entity.Workflow, activity workflow_activity_entity.WorkflowActivities) string {
 
-	if m.GetSingularityCommand() == "" {
-		fmt.Println("Singularity command is empty")
+	templateSbatchb64 := m.runtime.GetCurrentRuntimeMetadata("SBATCHTEMPLATE")
+	templateSbatchBytes, err := base64.StdEncoding.DecodeString(templateSbatchb64)
+	if err != nil {
+		fmt.Println("Error decoding sbatch template:", err)
 		return ""
 	}
+	templateSbatch := string(templateSbatchBytes)
 
 	jobName := fmt.Sprintf("akoflow_%d_%d", workflow.GetId(), activity.GetId())
 
-	output := fmt.Sprintf("%s/akoflow_out_%d_%d.out",
-		workflow.GetMountPath(),
-		workflow.GetId(),
-		activity.GetId(),
-	)
-
-	error := fmt.Sprintf("%s/akoflow_err_%d_%d.err",
-		workflow.GetMountPath(),
-		workflow.GetId(),
-		activity.GetId(),
-	)
-
+	output := fmt.Sprintf("%s/akoflow_out_%d_%d.out", m.runtime.GetCurrentRuntimeMetadata("MOUNT_PATH"), workflow.GetId(), activity.GetId())
+	error := fmt.Sprintf("%s/akoflow_err_%d_%d.err", m.runtime.GetCurrentRuntimeMetadata("MOUNT_PATH"), workflow.GetId(), activity.GetId())
 	time := m.runtime.GetCurrentRuntimeMetadata("TIME")
-	if time == "" {
-		time = "48:00:00" // 48 hours
-	}
-
 	partition := m.runtime.GetCurrentRuntimeMetadata("QUEUE")
-	if partition == "" {
-		partition = "gdl"
-	}
-
-	ntasksStr := m.runtime.GetCurrentRuntimeMetadata("NTASKS")
-	ntasks := 1
-	if ntasksStr != "" {
-		fmt.Sscanf(ntasksStr, "%d", &ntasks)
-	}
-
-	nodesStr := m.runtime.GetCurrentRuntimeMetadata("NODES")
-	nodes := 1
-	if nodesStr != "" {
-		fmt.Sscanf(nodesStr, "%d", &nodes)
-	}
-
-	gpusStr := m.runtime.GetCurrentRuntimeMetadata("GPUS")
-	gpus := 1
-	if gpusStr != "" {
-		fmt.Sscanf(gpusStr, "%d", &gpus)
-	}
-
-	cpusPerGpuStr := m.runtime.GetCurrentRuntimeMetadata("CPUS_PER_GPU")
-	cpusPerGpu := 1
-	if cpusPerGpuStr != "" {
-		fmt.Sscanf(cpusPerGpuStr, "%d", &cpusPerGpu)
-	}
-
+	ntasks := m.runtime.GetCurrentRuntimeMetadata("NTASKS")
+	nodes := m.runtime.GetCurrentRuntimeMetadata("NODES")
+	gpus := m.runtime.GetCurrentRuntimeMetadata("GPUS")
+	cpusPerGpu := m.runtime.GetCurrentRuntimeMetadata("CPUS_PER_GPU")
 	mem := m.runtime.GetCurrentRuntimeMetadata("MEM")
-	if mem == "" {
-		mem = "8G"
-	}
+	wrap := m.GetSingularityCommand()
 
-	wrap := fmt.Sprintf("%s", m.GetSingularityCommand())
+	templateSbatch = strings.ReplaceAll(templateSbatch, "#JOB_NAME#", jobName)
+	templateSbatch = strings.ReplaceAll(templateSbatch, "#OUTPUT#", output)
+	templateSbatch = strings.ReplaceAll(templateSbatch, "#ERROR#", error)
+	templateSbatch = strings.ReplaceAll(templateSbatch, "#TIME#", time)
+	templateSbatch = strings.ReplaceAll(templateSbatch, "#PARTITION#", partition)
+	templateSbatch = strings.ReplaceAll(templateSbatch, "#NTASKS#", ntasks)
+	templateSbatch = strings.ReplaceAll(templateSbatch, "#NODES#", nodes)
+	templateSbatch = strings.ReplaceAll(templateSbatch, "#GPUS#", gpus)
+	templateSbatch = strings.ReplaceAll(templateSbatch, "#CPUS_PER_GPU#", cpusPerGpu)
+	templateSbatch = strings.ReplaceAll(templateSbatch, "#MEM#", mem)
+	templateSbatch = strings.ReplaceAll(templateSbatch, "#COMMAND#", wrap)
 
-	command := fmt.Sprintf("sbatch --job-name=%s --output=%s --error=%s --time=%s --partition=%s --ntasks=%d --nodes=%d --gpus=%d --cpus-per-gpu=%d --mem=%s --wrap=\"%s\"",
-		jobName,
-		output,
-		error,
-		time,
-		partition,
-		ntasks,
-		nodes,
-		gpus,
-		cpusPerGpu,
-		mem,
-		wrap,
-	)
+	templateSbatchBase64 := base64.StdEncoding.EncodeToString([]byte(templateSbatch))
 
-	base64ParcialCommand := base64.StdEncoding.EncodeToString([]byte(command))
+	templateSbatch = fmt.Sprintf("echo %s | base64 -d", templateSbatchBase64)
 
-	commandBase64 := fmt.Sprintf("echo %s | base64 -d | bash", base64ParcialCommand)
+	command := templateSbatch + "| sbatch"
 
-	return commandBase64
+	commandBase64 := base64.StdEncoding.EncodeToString([]byte(command))
+
+	command = fmt.Sprintf("echo %s | base64 -d | bash", commandBase64)
+
+	return command
 }

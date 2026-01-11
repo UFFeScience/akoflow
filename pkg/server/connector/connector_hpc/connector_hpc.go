@@ -31,6 +31,7 @@ type IConnectorHPCRuntime interface {
 	IsVPNConnected() (bool, error)
 	ExecuteMultiplesCommand(commands []string)
 	SetRuntime(runtime runtime_entity.Runtime) *ConnectorHPCRuntime
+	BuildRemoteCommand(runtime runtime_entity.Runtime, command string) (string, error)
 }
 
 func (c *ConnectorHPCRuntime) RunCommandWithOutputRemote(command string, args ...string) (string, error) {
@@ -38,7 +39,7 @@ func (c *ConnectorHPCRuntime) RunCommandWithOutputRemote(command string, args ..
 
 	shell := getAvailableShell()
 
-	remoteCommand, err := buildRemoteCommand(c.Runtime, command)
+	remoteCommand, err := c.BuildRemoteCommand(c.Runtime, command)
 	if err != nil {
 		return "", err
 	}
@@ -55,7 +56,7 @@ func (c *ConnectorHPCRuntime) RunCommandWithOutputRemote(command string, args ..
 	return string(output), nil
 }
 
-func buildRemoteCommand(runtime runtime_entity.Runtime, command string) (string, error) {
+func (c ConnectorHPCRuntime) BuildRemoteCommand(runtime runtime_entity.Runtime, command string) (string, error) {
 	username := runtime.GetCurrentRuntimeMetadata("USER")
 	hostname := runtime.GetCurrentRuntimeMetadata("HOST_CLUSTER")
 	sshKeyPrivateKey := runtime.GetCurrentRuntimeMetadata("SSHKEYPRIVK")
@@ -64,36 +65,7 @@ func buildRemoteCommand(runtime runtime_entity.Runtime, command string) (string,
 	password := runtime.GetCurrentRuntimeMetadata("PASSWORD")
 
 	if sshKeyPrivateKey != "" && sshKeyPublicKey != "" && sshConfig != "" {
-		decodedSSHConfig, err := decodeBase64(sshConfig)
-		if err != nil {
-			return "", fmt.Errorf("failed to decode SSH config: %w", err)
-		}
-
-		decodedPrivateKey, err := decodeBase64(sshKeyPrivateKey)
-		if err != nil {
-			return "", fmt.Errorf("failed to decode private SSH key: %w", err)
-		}
-
-		privateKeyFile, err := writeTempSSHKey(decodedPrivateKey)
-		if err != nil {
-			return "", fmt.Errorf("failed to write temporary private SSH key: %w", err)
-		}
-
-		decodedPublicKey, err := decodeBase64(sshKeyPublicKey)
-		if err != nil {
-			return "", fmt.Errorf("failed to decode public SSH key: %w", err)
-		}
-
-		sshConfigFile, err := writeTempSSHKey(decodedSSHConfig)
-		if err != nil {
-			return "", fmt.Errorf("failed to write temporary SSH config: %w", err)
-		}
-
-		publicKeyFile, err := writeTempSSHKey(decodedPublicKey)
-		if err != nil {
-			return "", fmt.Errorf("failed to write temporary public SSH key: %w", err)
-		}
-		return fmt.Sprintf("ssh -i %s -i %s -F %s -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o LogLevel=ERROR -o ConnectTimeout=10 %s@%s '%s'", privateKeyFile, publicKeyFile, sshConfigFile, username, hostname, command), nil
+		return fmt.Sprintf("ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o LogLevel=ERROR -o ConnectTimeout=10 %s@%s '%s'", username, hostname, command), nil
 	} else if password != "" {
 		return fmt.Sprintf("sshpass -p '%s' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o LogLevel=ERROR -o ConnectTimeout=10 %s@%s '%s'", password, username, hostname, command), nil
 	}

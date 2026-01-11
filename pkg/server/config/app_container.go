@@ -10,6 +10,7 @@ import (
 	"github.com/ovvesley/akoflow/pkg/server/config/logger"
 	"github.com/ovvesley/akoflow/pkg/server/connector/connector_hpc"
 	"github.com/ovvesley/akoflow/pkg/server/connector/connector_k8s"
+	"github.com/ovvesley/akoflow/pkg/server/connector/connector_local"
 	"github.com/ovvesley/akoflow/pkg/server/connector/connector_singularity"
 	"github.com/ovvesley/akoflow/pkg/server/database/repository/activity_repository"
 	"github.com/ovvesley/akoflow/pkg/server/database/repository/logs_repository"
@@ -57,6 +58,7 @@ type AppContainerConnector struct {
 	K8sConnector         connector_k8s.IConnector
 	SingularityConnector connector_singularity.IConnectorSingularity
 	HPCRuntimeConnector  connector_hpc.IConnectorHPCRuntime
+	LocalConnector       connector_local.IConnectorLocal
 }
 
 type AppContainerTemplateRenderer struct {
@@ -121,6 +123,7 @@ func MakeAppContainer() AppContainer {
 	k8sConnector := connector_k8s.New()
 	singularityConnector := connector_singularity.New()
 	hpcConnector := connector_hpc.New()
+	localConnector := connector_local.New()
 
 	renderViewprovider := http_render_view.New()
 
@@ -146,6 +149,7 @@ func MakeAppContainer() AppContainer {
 			K8sConnector:         k8sConnector,
 			SingularityConnector: singularityConnector,
 			HPCRuntimeConnector:  hpcConnector,
+			LocalConnector:       localConnector,
 		},
 		TemplateRenderer: AppContainerTemplateRenderer{
 			RenderViewProvider: renderViewprovider,

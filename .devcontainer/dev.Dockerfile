@@ -29,7 +29,7 @@ RUN go mod download
 RUN go install golang.org/x/tools/gopls@v0.16.2 && \
     go install honnef.co/go/tools/cmd/staticcheck@v0.5.0
 
-RUN go install github.com/go-delve/delve/cmd/dlv@v1.22.1
+RUN go install github.com/go-delve/delve/cmd/dlv@v1.23.1
 
 RUN mkdir -p storage && chmod 777 storage
 

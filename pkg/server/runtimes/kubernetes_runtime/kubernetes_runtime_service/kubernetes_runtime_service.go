@@ -12,6 +12,9 @@ type KubernetesRuntimeService struct {
 	namespace          string
 	workflowRepository workflow_repository.IWorkflowRepository
 	activityRepository activity_repository.IActivityRepository
+
+	runtimeName string
+	runtimeType string
 }
 
 func New() *KubernetesRuntimeService {
@@ -20,6 +23,16 @@ func New() *KubernetesRuntimeService {
 		workflowRepository: config.App().Repository.WorkflowRepository,
 		activityRepository: config.App().Repository.ActivityRepository,
 	}
+}
+
+func (k *KubernetesRuntimeService) SetRuntimeName(name string) *KubernetesRuntimeService {
+	k.runtimeName = name
+	return k
+}
+
+func (k *KubernetesRuntimeService) SetRuntimeType(runtimeType string) *KubernetesRuntimeService {
+	k.runtimeType = runtimeType
+	return k
 }
 
 func (k *KubernetesRuntimeService) ApplyJob(activityID int) {
@@ -45,7 +58,10 @@ func (k *KubernetesRuntimeService) ApplyJob(activityID int) {
 }
 
 func (k *KubernetesRuntimeService) VerifyActivitiesWasFinished(workflow workflow_entity.Workflow) {
-	NewMonitorVerifyActivityWasFinishedService().VerifyActivities(workflow)
+	NewMonitorVerifyActivityWasFinishedService().
+		SetRuntimeName(k.runtimeName).
+		SetRuntimeType(k.runtimeType).
+		VerifyActivities(workflow)
 }
 
 func (k *KubernetesRuntimeService) GetLogs(wf workflow_entity.Workflow, wfa workflow_activity_entity.WorkflowActivities) {

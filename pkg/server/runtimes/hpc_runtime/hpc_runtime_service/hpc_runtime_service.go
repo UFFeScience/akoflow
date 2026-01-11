@@ -1,4 +1,4 @@
-package sdumont_runtime_service
+package hpc_runtime_service
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/ovvesley/akoflow/pkg/server/config"
-	"github.com/ovvesley/akoflow/pkg/server/connector/connector_sdumont"
+	"github.com/ovvesley/akoflow/pkg/server/connector/connector_hpc"
 	"github.com/ovvesley/akoflow/pkg/server/database/repository/activity_repository"
 	"github.com/ovvesley/akoflow/pkg/server/database/repository/runtime_repository"
 	"github.com/ovvesley/akoflow/pkg/server/database/repository/workflow_repository"
@@ -15,30 +15,43 @@ import (
 	"github.com/ovvesley/akoflow/pkg/server/runtimes/singularity_runtime/singularity_runtime_service"
 )
 
-type SDumontRuntimeService struct {
-	makeSingularityActivity   singularity_runtime_service.MakeSingularityActivityService
-	makeSBatchSDumontActivity MakeSBatchSDumontActivityService
+type HPCRuntimeService struct {
+	makeSingularityActivity      singularity_runtime_service.MakeSingularityActivityService
+	makeSBatchHPCRuntimeActivity MakeSBatchHPCRuntimeActivityService
 
 	activityRepository activity_repository.IActivityRepository
 	workflowRepository workflow_repository.IWorkflowRepository
 	runtimeRepository  runtime_repository.IRuntimeRepository
 
-	connectorSDumont connector_sdumont.IConnectorSDumont
+	connectorHPCRuntime connector_hpc.IConnectorHPCRuntime
+
+	runtimeName string
+	runtimeType string
 }
 
-func New() *SDumontRuntimeService {
-	return &SDumontRuntimeService{
+func (s *HPCRuntimeService) SetRuntimeName(runtimeName string) *HPCRuntimeService {
+	s.runtimeName = runtimeName
+	return s
+}
+
+func (s *HPCRuntimeService) SetRuntimeType(runtimeType string) *HPCRuntimeService {
+	s.runtimeType = runtimeType
+	return s
+}
+
+func New() *HPCRuntimeService {
+	return &HPCRuntimeService{
 		makeSingularityActivity: singularity_runtime_service.NewMakeSingularityActivityService(),
 
 		activityRepository: config.App().Repository.ActivityRepository,
 		workflowRepository: config.App().Repository.WorkflowRepository,
 		runtimeRepository:  config.App().Repository.RuntimeRepository,
 
-		connectorSDumont: config.App().Connector.SDumontConnector,
+		connectorHPCRuntime: config.App().Connector.HPCRuntimeConnector,
 	}
 }
 
-func (s *SDumontRuntimeService) ApplyJob(workflowID int, activityID int) string {
+func (s *HPCRuntimeService) ApplyJob(workflowID int, activityID int) string {
 	wfa, err := s.activityRepository.Find(activityID)
 	wf, _ := s.workflowRepository.Find(wfa.WorkflowId)
 
@@ -63,27 +76,27 @@ func (s *SDumontRuntimeService) ApplyJob(workflowID int, activityID int) string 
 		return ""
 	}
 
-	singularitySystemCall := s.makeSingularityActivity.MakeContainerCommandActivityToSDumont(wf, wfa)
-	sBatchSDumontSystemCall := s.makeSBatchSDumontActivity.
+	singularitySystemCall := s.makeSingularityActivity.MakeContainerCommandActivityToHPC(wf, wfa)
+	sBatchHPCRuntimeSystemCall := s.makeSBatchHPCRuntimeActivity.
 		SetRuntime(*runtime).
 		SetSingularityCommand(singularitySystemCall).
 		Handle(wf, wfa)
 
-	fmt.Println("PID: ", singularitySystemCall, sBatchSDumontSystemCall)
+	fmt.Println("PID: ", singularitySystemCall, sBatchHPCRuntimeSystemCall)
 
-	connected, err := s.connectorSDumont.IsVPNConnected()
+	connected, err := s.connectorHPCRuntime.IsVPNConnected()
 
 	if err != nil {
-		config.App().Logger.Error("WORKER: Error checking VPN connection to SDumont Runtime.")
+		config.App().Logger.Error("WORKER: Error checking VPN connection to HPCRuntime.")
 		return ""
 	}
 
 	if !connected {
-		config.App().Logger.Error("WORKER: VPN is not connected to SDumont Runtime. Continue to the next activity.")
+		config.App().Logger.Error("WORKER: VPN is not connected to HPCRuntime. Continue to the next activity.")
 		return ""
 	}
 
-	output, _ := s.connectorSDumont.RunCommandWithOutputRemote(sBatchSDumontSystemCall)
+	output, _ := s.connectorHPCRuntime.SetRuntime(*runtime).RunCommandWithOutputRemote(sBatchHPCRuntimeSystemCall)
 
 	pid, err := s.extractJobID(output)
 
@@ -115,20 +128,20 @@ func (s *SDumontRuntimeService) ApplyJob(workflowID int, activityID int) string 
 
 }
 
-func (s *SDumontRuntimeService) applyWorkflowInRuntime(wf workflow_entity.Workflow, wfa workflow_activity_entity.WorkflowActivities) {
-	config.App().Logger.Infof("WORKER: Apply workflow in SDumont Runtime")
+func (s *HPCRuntimeService) applyWorkflowInRuntime(wf workflow_entity.Workflow, wfa workflow_activity_entity.WorkflowActivities) {
+	config.App().Logger.Infof("WORKER: Apply workflow in HPCRuntime")
 
 	s.updateWorkflowAndActivityStatus(wfa)
 
 	s.syncWorkflowVolumes(wf)
 }
 
-func (s *SDumontRuntimeService) updateWorkflowAndActivityStatus(wfa workflow_activity_entity.WorkflowActivities) {
+func (s *HPCRuntimeService) updateWorkflowAndActivityStatus(wfa workflow_activity_entity.WorkflowActivities) {
 	_ = s.workflowRepository.UpdateStatus(wfa.WorkflowId, workflow_repository.StatusRunning)
 	_ = s.activityRepository.UpdateStatus(wfa.Id, activity_repository.StatusRunning)
 }
 
-func (s *SDumontRuntimeService) syncWorkflowVolumes(wf workflow_entity.Workflow) {
+func (s *HPCRuntimeService) syncWorkflowVolumes(wf workflow_entity.Workflow) {
 	volumes := wf.GetVolumes()
 	commands := []string{}
 
@@ -139,25 +152,22 @@ func (s *SDumontRuntimeService) syncWorkflowVolumes(wf workflow_entity.Workflow)
 	}
 
 	for _, volume := range volumes {
-		// Sync local to remote
-		command1 := fmt.Sprintf("sshpass -p '%s' ssh -o StrictHostKeyChecking=no %s@%s 'mkdir -p %s'",
-			runtime.GetCurrentRuntimeMetadata("PASSWORD"),
-			runtime.GetCurrentRuntimeMetadata("USER"),
-			runtime.GetCurrentRuntimeMetadata("HOST_CLUSTER"),
-			volume.GetRemotePath(),
-		)
+		command1, err := s.connectorHPCRuntime.BuildRemoteCommand(*runtime, fmt.Sprintf("mkdir -p %s", volume.GetRemotePath()))
+		if err != nil {
+			config.App().Logger.Infof("WORKER: Error building remote command.")
+			return
+		}
 
-		command2 := fmt.Sprintf("sshpass -p '%s' rsync -ah --progress %s %s@%s:%s",
-			runtime.GetCurrentRuntimeMetadata("PASSWORD"),
+		var command2, command3 string
+
+		command2 = fmt.Sprintf("rsync -ah --progress %s %s@%s:%s",
 			volume.GetLocalPath(),
 			runtime.GetCurrentRuntimeMetadata("USER"),
 			runtime.GetCurrentRuntimeMetadata("HOST_CLUSTER"),
 			volume.GetRemotePath(),
 		)
 
-		// Sync remote to local
-		command3 := fmt.Sprintf("sshpass -p '%s' rsync -ah --progress %s@%s:%s %s",
-			runtime.GetCurrentRuntimeMetadata("PASSWORD"),
+		command3 = fmt.Sprintf("rsync -ah --progress %s@%s:%s %s",
 			runtime.GetCurrentRuntimeMetadata("USER"),
 			runtime.GetCurrentRuntimeMetadata("HOST_CLUSTER"),
 			volume.GetRemotePath(),
@@ -169,10 +179,11 @@ func (s *SDumontRuntimeService) syncWorkflowVolumes(wf workflow_entity.Workflow)
 		commands = append(commands, fullCommands)
 	}
 
-	s.connectorSDumont.ExecuteMultiplesCommand(commands)
+	s.connectorHPCRuntime.ExecuteMultiplesCommand(commands)
+
 }
 
-func (s *SDumontRuntimeService) extractJobID(outputCommand string) (string, error) {
+func (s *HPCRuntimeService) extractJobID(outputCommand string) (string, error) {
 	reOutput := regexp.MustCompile(`(?m)(\d+)`)
 
 	matchOutput := reOutput.FindStringSubmatch(outputCommand)
@@ -186,16 +197,18 @@ func (s *SDumontRuntimeService) extractJobID(outputCommand string) (string, erro
 	return logsOutput, nil
 }
 
-func (s *SDumontRuntimeService) VerifyActivitiesWasFinished(workflow workflow_entity.Workflow) bool {
-	config.App().Logger.Infof("WORKER: Verify activities was finished in SDumont Runtime")
+func (s *HPCRuntimeService) VerifyActivitiesWasFinished(workflow workflow_entity.Workflow) bool {
+	config.App().Logger.Infof("WORKER: Verify activities was finished in HPCRuntime")
 
 	for _, activity := range workflow.Spec.Activities {
-		s.handleVerifyActivityWasFinished(activity, workflow)
+		if activity.GetRuntimeId() == s.runtimeName {
+			s.handleVerifyActivityWasFinished(activity, workflow)
+		}
 	}
 	return true
 }
 
-func (s *SDumontRuntimeService) handleVerifyActivityWasFinished(activity workflow_activity_entity.WorkflowActivities, wf workflow_entity.Workflow) int {
+func (s *HPCRuntimeService) handleVerifyActivityWasFinished(activity workflow_activity_entity.WorkflowActivities, wf workflow_entity.Workflow) int {
 	println("Verifying activity: ", activity.Name, " with id: ", activity.Id)
 
 	wfaDatabase, _ := s.activityRepository.Find(activity.Id)
@@ -208,39 +221,50 @@ func (s *SDumontRuntimeService) handleVerifyActivityWasFinished(activity workflo
 		return activity_repository.StatusCreated
 	}
 
-	command := fmt.Sprintf(" sacct -j %s  --format=JobID,JobName,Partition,Account,AllocCPUs,State,ExitCode --noheader | grep akoflow", wfaDatabase.GetProcId())
+	runtime, err := s.runtimeRepository.GetByName(activity.GetRuntimeId())
 
-	output, _ := s.connectorSDumont.RunCommandWithOutputRemote(command)
+	if err != nil {
+		config.App().Logger.Infof("WORKER: Error getting runtime from database.")
+		return activity_repository.StatusRunning
+	}
 
-	saactResponse, err := s.extractSacctJobID(output)
+	if wfaDatabase.GetProcId() == "" {
+		config.App().Logger.Infof("WORKER: Activity %d has no process ID", activity.Id)
+		return activity_repository.StatusRunning
+	}
+
+	command := fmt.Sprintf("scontrol show job %s", wfaDatabase.GetProcId())
+
+	output, _ := s.connectorHPCRuntime.SetRuntime(*runtime).RunCommandWithOutputRemote(command)
+
+	scontrolResponse, err := s.extractScontrolJob(output)
 
 	if err != nil {
 		config.App().Logger.Infof("WORKER: Error extracting job ID %s", strings.TrimSpace(wfaDatabase.GetProcId()))
 		return activity_repository.StatusRunning
 	}
 
-
-	if saactResponse.State == "COMPLETED" {
+	if scontrolResponse.State == "COMPLETED" {
 		config.App().Logger.Infof("WORKER: Activity %d finished", activity.Id)
 		s.syncWorkflowVolumes(wf)
 		_ = s.activityRepository.UpdateStatus(activity.Id, activity_repository.StatusFinished)
 		return activity_repository.StatusFinished
 	}
 
-	if saactResponse.State == "FAILED" || saactResponse.State == "CANCELLED+" || saactResponse.State == "CANCELLED" || saactResponse.State == "DEADLINE" || saactResponse.State == "TIMEOUT" || saactResponse.State == "OUT_OF_MEM+" {
+	if scontrolResponse.State == "FAILED" || scontrolResponse.State == "CANCELLED+" || scontrolResponse.State == "CANCELLED" || scontrolResponse.State == "DEADLINE" || scontrolResponse.State == "TIMEOUT" || scontrolResponse.State == "OUT_OF_MEM+" {
 		config.App().Logger.Infof("WORKER: Activity %d failed", activity.Id)
 		s.syncWorkflowVolumes(wf)
 		_ = s.activityRepository.UpdateStatus(activity.Id, activity_repository.StatusFinished)
 		return activity_repository.StatusFinished
 	}
 
-	if saactResponse.State == "RUNNING" {
+	if scontrolResponse.State == "RUNNING" {
 		config.App().Logger.Infof("WORKER: Activity %d running", activity.Id)
 		_ = s.activityRepository.UpdateStatus(activity.Id, activity_repository.StatusRunning)
 		return activity_repository.StatusRunning
 	}
 
-	if saactResponse.State == "PENDING" {
+	if scontrolResponse.State == "PENDING" {
 		config.App().Logger.Infof("WORKER: Activity %d pending", activity.Id)
 		_ = s.activityRepository.UpdateStatus(activity.Id, activity_repository.StatusRunning)
 		return activity_repository.StatusRunning
@@ -260,39 +284,54 @@ type SaactResponse struct {
 	ExitCode  string `json:"ExitCode"`
 }
 
-func (s *SDumontRuntimeService) extractSacctJobID(outputCommand string) (SaactResponse, error) {
-	reOutput := regexp.MustCompile(`(?m)(\d+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\d+)\s+(\S+)\s+(\d+:\d+)`)
-	match := reOutput.FindStringSubmatch(outputCommand)
-
-	if len(match) == 0 {
-		return SaactResponse{}, fmt.Errorf("no match found")
+func extractField(pattern, text string) (string, error) {
+	re := regexp.MustCompile(pattern)
+	match := re.FindStringSubmatch(text)
+	if len(match) < 2 {
+		return "", fmt.Errorf("field not found: %s", pattern)
 	}
-
-	if len(match) < 8 {
-		return SaactResponse{}, fmt.Errorf("invalid output format")
-	}
-
-	return SaactResponse{
-		JobID:     match[1],
-		JobName:   match[2],
-		Partition: match[3],
-		Account:   match[4],
-		AllocCPUs: match[5],
-		State:     match[6],
-		ExitCode:  match[7],
-	}, nil
+	return match[1], nil
 }
 
-func (s *SDumontRuntimeService) HealthCheck(runtimeName string) bool {
-	config.App().Logger.Infof("WORKER: Health check SDumont Runtime")
+func (s *HPCRuntimeService) extractScontrolJob(output string) (SaactResponse, error) {
+	var err error
+	resp := SaactResponse{}
 
-	connected, err := s.connectorSDumont.IsVPNConnected()
+	if resp.JobID, err = extractField(`JobId=(\d+)`, output); err != nil {
+		return resp, err
+	}
+	if resp.JobName, err = extractField(`JobName=([^\s]+)`, output); err != nil {
+		return resp, err
+	}
+	if resp.Partition, err = extractField(`Partition=([^\s]+)`, output); err != nil {
+		return resp, err
+	}
+	if resp.Account, err = extractField(`Account=([^\s]+|$begin:math:text$null$end:math:text$)`, output); err != nil {
+		return resp, err
+	}
+	if resp.AllocCPUs, err = extractField(`NumCPUs=(\d+)`, output); err != nil {
+		return resp, err
+	}
+	if resp.State, err = extractField(`JobState=([A-Z_]+)`, output); err != nil {
+		return resp, err
+	}
+	if resp.ExitCode, err = extractField(`ExitCode=(\d+:\d+)`, output); err != nil {
+		return resp, err
+	}
+
+	return resp, nil
+}
+
+func (s *HPCRuntimeService) HealthCheck(runtimeName string) bool {
+	config.App().Logger.Infof("WORKER: Health check HPCRuntime")
+
+	connected, err := s.connectorHPCRuntime.IsVPNConnected()
 	if err != nil {
-		config.App().Logger.Error("WORKER: Error checking VPN connection to SDumont Runtime.")
+		config.App().Logger.Error("WORKER: Error checking VPN connection to HPCRuntime.")
 		return false
 	}
 	if !connected {
-		config.App().Logger.Error("WORKER: VPN is not connected to SDumont Runtime.")
+		config.App().Logger.Error("WORKER: VPN is not connected to HPCRuntime.")
 		return false
 	}
 
@@ -309,17 +348,17 @@ func (s *SDumontRuntimeService) HealthCheck(runtimeName string) bool {
 	}
 
 	command := fmt.Sprintf("sinfo -p %s", runtime.GetCurrentRuntimeMetadata("QUEUE"))
-	output, err := s.connectorSDumont.SetRuntime(*runtime).RunCommandWithOutputRemote(command)
+	output, err := s.connectorHPCRuntime.SetRuntime(*runtime).RunCommandWithOutputRemote(command)
 
 	if err != nil {
 		runtime.Status = runtime_repository.STATUS_NOT_READY
-		config.App().Logger.Error("WORKER: Error running command in SDumont Runtime.")
+		config.App().Logger.Error("WORKER: Error running command in HPCRuntime.")
 		return false
 	}
 
 	if strings.Contains(output, "No nodes available") {
 		s.runtimeRepository.UpdateStatus(runtime, runtime_repository.STATUS_NOT_READY)
-		config.App().Logger.Error("WORKER: No nodes available in SDumont Runtime.")
+		config.App().Logger.Error("WORKER: No nodes available in HPCRuntime.")
 		return false
 	}
 

@@ -57,7 +57,7 @@ func (s *MakeSingularityActivityService) makeContainerCommandActivity(wf workflo
 	return entryPoint
 }
 
-func (s *MakeSingularityActivityService) MakeContainerCommandActivityToSDumont(wf workflow_entity.Workflow, wfa workflow_activity_entity.WorkflowActivities) string {
+func (s *MakeSingularityActivityService) MakeContainerCommandActivityToHPC(wf workflow_entity.Workflow, wfa workflow_activity_entity.WorkflowActivities) string {
 
 	mountPath := wf.GetMountPath()
 	imageSifPath := wf.Spec.Image

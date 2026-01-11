@@ -6,7 +6,9 @@
   },
   "workspaceFolder": "/app",
   "workspaceMount": "source=${localWorkspaceFolder},target=/app,type=bind",
-  "appPort": ["8080:8080"],
+  "appPort": [
+    "8080:8080"
+  ],
   "postCreateCommand": "go mod tidy",
   "customizations": {
     "vscode": {
@@ -14,12 +16,16 @@
         "terminal.integrated.defaultProfile.linux": "sh"
       },
       "extensions": [
-        "golang.go",         
+        "golang.go",
         "ms-vscode-remote.remote-containers",
         "ms-azuretools.vscode-docker"
       ]
     }
   },
   "remoteUser": "root",
-  "runArgs": ["--privileged"]
+  "runArgs": [
+    "--privileged",
+    "-v",
+    "/var/run/docker.sock:/var/run/docker.sock"
+  ]
 }

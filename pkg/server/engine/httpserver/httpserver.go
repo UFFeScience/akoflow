@@ -18,8 +18,8 @@ import (
 func HealthCheck(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	_, _ = w.Write([]byte("ok"))
-
 }
+
 func StartServer() {
 
 	http.HandleFunc("GET /", http_config.KernelHandler(public_static_handler.New().Static))
@@ -65,7 +65,8 @@ func StartServer() {
 	//http.HandleFunc("GET /akoflow-api/workflows/{workflowId}/storages/{storageId}/", http_config.KernelHandler(workflow_api_handler.New().GetStorage))
 	//http.HandleFunc("GET /akoflow-api/workflows/{workflowId}/storages/{storageId}/download-file/", http_config.KernelHandler(workflow_api_handler.New().DownloadFile))
 
-	err := http.ListenAndServe(config.PORT_SERVER, nil)
+	handler := AllowCORS(http.DefaultServeMux)
+	err := http.ListenAndServe(config.PORT_SERVER, handler)
 	if err != nil {
 		println("Error starting server", err)
 		panic(err)

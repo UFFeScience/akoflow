@@ -7,7 +7,7 @@
             "request": "launch",
             "mode": "debug",
             "program": "cmd/server/main.go",
-            "buildFlags": ["-gcflags=all=-N -l"]
+            "buildFlags": ["-gcflags=all=-N"]
         },
         {
             "name": "Launch AkoFlow Client Run",

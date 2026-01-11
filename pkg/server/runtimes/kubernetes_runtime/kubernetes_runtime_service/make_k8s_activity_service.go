@@ -70,10 +70,12 @@ func (m *MakeK8sActivityService) makeContainerCommandActivity(wf workflow_entity
 
 func (m *MakeK8sActivityService) setupCommandWorkdir(wf workflow_entity.Workflow, wfa workflow_activity_entity.WorkflowActivities) string {
 
-	workdir := wf.Spec.MountPath + "/" + wfa.GetName()
+	mountPath := m.makeJobVolumeMountPath(wf, wfa)
+
+	workdir := mountPath + "/" + wfa.GetName()
 
 	if wf.IsStoragePolicyDistributed() {
-		workdir = wf.Spec.MountPath
+		workdir = mountPath
 	}
 
 	command := "mkdir -p " + workdir + "; \n"
@@ -127,6 +129,11 @@ func (m *MakeK8sActivityService) addCommandToMonitorDiskSpecStorage(command stri
 //
 // the name of the activity should be lower case and without spaces, because it will be used as a directory name.
 func (m *MakeK8sActivityService) makeJobVolumeMountPath(wf workflow_entity.Workflow, wfa workflow_activity_entity.WorkflowActivities) string {
+
+	mountPath := wfa.GetMountPath()
+	if mountPath != "" {
+		return mountPath
+	}
 
 	if wf.IsStoragePolicyDistributed() {
 		return wf.Spec.MountPath

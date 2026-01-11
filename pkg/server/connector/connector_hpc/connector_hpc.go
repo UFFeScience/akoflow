@@ -4,7 +4,6 @@ import (
 	"encoding/base64"
 	"fmt"
 	"os/exec"
-	"strings"
 	"sync"
 	"syscall"
 
@@ -56,6 +55,48 @@ func (c *ConnectorHPCRuntime) RunCommandWithOutputRemote(command string, args ..
 	return string(output), nil
 }
 
+func (c *ConnectorHPCRuntime) handleCreateSSHKey(privateKey string, publicKey string, sshConfig string) error {
+	if privateKey == "" || publicKey == "" || sshConfig == "" {
+		return nil
+	}
+
+	privateKeyDecoded, err := decodeBase64(privateKey)
+	if err != nil {
+		return err
+	}
+
+	publicKeyDecoded, err := decodeBase64(publicKey)
+	if err != nil {
+		return err
+	}
+
+	sshConfigDecoded, err := decodeBase64(sshConfig)
+	if err != nil {
+		return err
+	}
+
+	privateKeyFile, err := writeTempSSHKey(privateKeyDecoded, "id_rsa")
+	if err != nil {
+		return err
+	}
+
+	publicKeyFile, err := writeTempSSHKey(publicKeyDecoded, "id_rsa.pub")
+	if err != nil {
+		removeTempSSHKey(privateKeyFile)
+		return err
+	}
+
+	_, err = writeTempSSHKey(sshConfigDecoded, "config")
+
+	if err != nil {
+		removeTempSSHKey(privateKeyFile)
+		removeTempSSHKey(publicKeyFile)
+		return err
+	}
+
+	return nil
+}
+
 func (c ConnectorHPCRuntime) BuildRemoteCommand(runtime runtime_entity.Runtime, command string) (string, error) {
 	username := runtime.GetCurrentRuntimeMetadata("USER")
 	hostname := runtime.GetCurrentRuntimeMetadata("HOST_CLUSTER")
@@ -63,6 +104,9 @@ func (c ConnectorHPCRuntime) BuildRemoteCommand(runtime runtime_entity.Runtime, 
 	sshKeyPublicKey := runtime.GetCurrentRuntimeMetadata("SSHKEYPUBLK")
 	sshConfig := runtime.GetCurrentRuntimeMetadata("SSHCONFIG")
 	password := runtime.GetCurrentRuntimeMetadata("PASSWORD")
+
+	// create .ssh/id_rsa file with the private key
+	c.handleCreateSSHKey(sshKeyPrivateKey, sshKeyPublicKey, sshConfig)
 
 	if sshKeyPrivateKey != "" && sshKeyPublicKey != "" && sshConfig != "" {
 		return fmt.Sprintf("ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o LogLevel=ERROR -o ConnectTimeout=10 %s@%s '%s'", username, hostname, command), nil
@@ -81,32 +125,19 @@ func decodeBase64(encoded string) (string, error) {
 	return string(decoded), nil
 }
 
-func writeTempSSHKey(key string) (string, error) {
-	tmpFile, err := exec.Command("bash", "-c", "mktemp /tmp/akoflow_sshkey_XXXXXX").Output()
+func writeTempSSHKey(key string, filename string) (string, error) {
+	path := "/root/.ssh/"
 
-	if err != nil {
-		return "", fmt.Errorf("failed to create temporary file: %w", err)
+	keyFile := path + filename
+
+	_, err := exec.Command("bash", "-c", fmt.Sprintf("test -f %s", keyFile)).Output()
+	if err == nil {
+		return keyFile, nil
 	}
 
-	keyFile := strings.TrimSpace(string(tmpFile))
-
-	command := fmt.Sprintf("echo '%s' > %s && chmod 600 %s", key, keyFile, keyFile)
-	err = exec.Command("bash", "-c", command).Run()
+	err = exec.Command("bash", "-c", fmt.Sprintf("echo '%s' > %s && chmod 600 %s", key, keyFile, keyFile)).Run()
 	if err != nil {
-		return "", fmt.Errorf("failed to write SSH key to temporary file: %w", err)
-	}
-
-	// Save the key file in the standard SSH directory as well
-	sshDir := "/tmp/.ssh"
-	err = exec.Command("bash", "-c", fmt.Sprintf("mkdir -p %s && chmod 700 %s", sshDir, sshDir)).Run()
-	if err != nil {
-		return "", fmt.Errorf("failed to create SSH directory: %w", err)
-	}
-
-	sshKeyFile := fmt.Sprintf("%s/id_rsa", sshDir)
-	err = exec.Command("bash", "-c", fmt.Sprintf("cp %s %s && chmod 600 %s", keyFile, sshKeyFile, sshKeyFile)).Run()
-	if err != nil {
-		return "", fmt.Errorf("failed to save SSH key in standard directory: %w", err)
+		return "", fmt.Errorf("failed to write SSH key to file: %w", err)
 	}
 
 	return keyFile, nil

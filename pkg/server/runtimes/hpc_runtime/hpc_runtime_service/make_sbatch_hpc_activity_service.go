@@ -1,4 +1,4 @@
-package sdumont_runtime_service
+package hpc_runtime_service
 
 import (
 	"encoding/base64"
@@ -9,32 +9,32 @@ import (
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
 )
 
-func NewMakeSBatchSDumontActivityService() MakeSBatchSDumontActivityService {
-	return MakeSBatchSDumontActivityService{
+func NewMakeSBatchHPCRuntimeActivityService() MakeSBatchHPCRuntimeActivityService {
+	return MakeSBatchHPCRuntimeActivityService{
 		singularityCommand: "",
 	}
 }
 
-type MakeSBatchSDumontActivityService struct {
+type MakeSBatchHPCRuntimeActivityService struct {
 	singularityCommand string
 	runtime            runtime_entity.Runtime
 }
 
-func (m MakeSBatchSDumontActivityService) SetSingularityCommand(singularityCommand string) MakeSBatchSDumontActivityService {
+func (m MakeSBatchHPCRuntimeActivityService) SetSingularityCommand(singularityCommand string) MakeSBatchHPCRuntimeActivityService {
 	m.singularityCommand = singularityCommand
 	return m
 }
 
-func (m MakeSBatchSDumontActivityService) SetRuntime(runtime runtime_entity.Runtime) MakeSBatchSDumontActivityService {
+func (m MakeSBatchHPCRuntimeActivityService) SetRuntime(runtime runtime_entity.Runtime) MakeSBatchHPCRuntimeActivityService {
 	m.runtime = runtime
 	return m
 }
 
-func (m MakeSBatchSDumontActivityService) GetSingularityCommand() string {
+func (m MakeSBatchHPCRuntimeActivityService) GetSingularityCommand() string {
 	return m.singularityCommand
 }
 
-func (m MakeSBatchSDumontActivityService) Handle(workflow workflow_entity.Workflow, activity workflow_activity_entity.WorkflowActivities) string {
+func (m MakeSBatchHPCRuntimeActivityService) Handle(workflow workflow_entity.Workflow, activity workflow_activity_entity.WorkflowActivities) string {
 
 	if m.GetSingularityCommand() == "" {
 		fmt.Println("Singularity command is empty")

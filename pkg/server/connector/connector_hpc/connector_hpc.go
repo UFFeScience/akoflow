@@ -1,4 +1,4 @@
-package connector_sdumont
+package connector_hpc
 
 import (
 	"fmt"
@@ -9,29 +9,29 @@ import (
 	"github.com/ovvesley/akoflow/pkg/server/entities/runtime_entity"
 )
 
-type ConnectorSDumont struct {
+type ConnectorHPCRuntime struct {
 	Runtime runtime_entity.Runtime
 }
 
-func New() IConnectorSDumont {
-	return &ConnectorSDumont{}
+func New() IConnectorHPCRuntime {
+	return &ConnectorHPCRuntime{}
 }
 
-func (c *ConnectorSDumont) SetRuntime(runtime runtime_entity.Runtime) *ConnectorSDumont {
+func (c *ConnectorHPCRuntime) SetRuntime(runtime runtime_entity.Runtime) *ConnectorHPCRuntime {
 	c.Runtime = runtime
 	return c
 }
 
-type IConnectorSDumont interface {
+type IConnectorHPCRuntime interface {
 	RunCommand(command string, args ...string) (string, error)
 	RunCommandWithOutput(command string, args ...string) (string, error)
 	RunCommandWithOutputRemote(command string, args ...string) (string, error)
 	IsVPNConnected() (bool, error)
 	ExecuteMultiplesCommand(commands []string)
-	SetRuntime(runtime runtime_entity.Runtime) *ConnectorSDumont
+	SetRuntime(runtime runtime_entity.Runtime) *ConnectorHPCRuntime
 }
 
-func (c *ConnectorSDumont) RunCommandWithOutputRemote(command string, args ...string) (string, error) {
+func (c *ConnectorHPCRuntime) RunCommandWithOutputRemote(command string, args ...string) (string, error) {
 	fmt.Printf("Executing command: %s %v\n", command, args)
 
 	shell := getAvailableShell()
@@ -54,7 +54,7 @@ func (c *ConnectorSDumont) RunCommandWithOutputRemote(command string, args ...st
 	return string(output), nil
 }
 
-func (s *ConnectorSDumont) ExecuteMultiplesCommand(commands []string) {
+func (s *ConnectorHPCRuntime) ExecuteMultiplesCommand(commands []string) {
 	var wg sync.WaitGroup
 
 	responses := make(chan string, len(commands)) // Create a channel to receive the responses
@@ -92,11 +92,11 @@ func (s *ConnectorSDumont) ExecuteMultiplesCommand(commands []string) {
 	}
 }
 
-func (c *ConnectorSDumont) RunCommand(command string, args ...string) (string, error) {
+func (c *ConnectorHPCRuntime) RunCommand(command string, args ...string) (string, error) {
 	return executeCommand(command, args...)
 }
 
-func (c *ConnectorSDumont) RunCommandWithOutput(command string, args ...string) (string, error) {
+func (c *ConnectorHPCRuntime) RunCommandWithOutput(command string, args ...string) (string, error) {
 	fmt.Printf("Executing command: %s %v\n", command, args)
 
 	shell := getAvailableShell()
@@ -112,7 +112,7 @@ func (c *ConnectorSDumont) RunCommandWithOutput(command string, args ...string) 
 
 }
 
-func (c *ConnectorSDumont) IsVPNConnected() (bool, error) {
+func (c *ConnectorHPCRuntime) IsVPNConnected() (bool, error) {
 	output, err := c.RunCommandWithOutput("ps aux | grep vpnc")
 	if err != nil {
 		return false, err

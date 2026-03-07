@@ -86,6 +86,8 @@ func (m MakeSBatchHPCRuntimeActivityService) Handle(workflow workflow_entity.Wor
 	templateSbatch = strings.ReplaceAll(templateSbatch, "#MEM#", mem)
 	templateSbatch = strings.ReplaceAll(templateSbatch, "#COMMAND#", wrap)
 
+	templateSbatch += "\n\necho AKOFLOW_JOB_FINISHED > " + fmt.Sprintf("%s/akoflow_finished_%d_%d.txt", m.runtime.GetCurrentRuntimeMetadata("MOUNT_PATH"), workflow.GetId(), activity.GetId())
+
 	templateSbatchBase64 := base64.StdEncoding.EncodeToString([]byte(templateSbatch))
 
 	templateSbatch = fmt.Sprintf("echo %s | base64 -d", templateSbatchBase64)

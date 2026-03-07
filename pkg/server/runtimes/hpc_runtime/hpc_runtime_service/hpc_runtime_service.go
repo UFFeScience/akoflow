@@ -233,11 +233,11 @@ func (s *HPCRuntimeService) handleVerifyActivityWasFinished(activity workflow_ac
 		return activity_repository.StatusRunning
 	}
 
-	command := fmt.Sprintf("scontrol show job %s", wfaDatabase.GetProcId())
+	commandVerify := fmt.Sprintf("cat %s/akoflow_finished_%d_%d.txt", runtime.GetCurrentRuntimeMetadata("MOUNT_PATH"), wf.GetId(), activity.Id)
 
-	output, _ := s.connectorHPCRuntime.SetRuntime(*runtime).RunCommandWithOutputRemote(command)
+	output, _ := s.connectorHPCRuntime.SetRuntime(*runtime).RunCommandWithOutputRemote(commandVerify)
 
-	scontrolResponse, err := s.extractScontrolJob(output)
+	scontrolResponse, err := s.extractJobIsFinished(output)
 
 	if err != nil {
 		config.App().Logger.Infof("WORKER: Error extracting job ID %s", strings.TrimSpace(wfaDatabase.GetProcId()))
@@ -293,33 +293,16 @@ func extractField(pattern, text string) (string, error) {
 	return match[1], nil
 }
 
-func (s *HPCRuntimeService) extractScontrolJob(output string) (SaactResponse, error) {
-	var err error
-	resp := SaactResponse{}
-
-	if resp.JobID, err = extractField(`JobId=(\d+)`, output); err != nil {
-		return resp, err
-	}
-	if resp.JobName, err = extractField(`JobName=([^\s]+)`, output); err != nil {
-		return resp, err
-	}
-	if resp.Partition, err = extractField(`Partition=([^\s]+)`, output); err != nil {
-		return resp, err
-	}
-	if resp.Account, err = extractField(`Account=([^\s]+|$begin:math:text$null$end:math:text$)`, output); err != nil {
-		return resp, err
-	}
-	if resp.AllocCPUs, err = extractField(`NumCPUs=(\d+)`, output); err != nil {
-		return resp, err
-	}
-	if resp.State, err = extractField(`JobState=([A-Z_]+)`, output); err != nil {
-		return resp, err
-	}
-	if resp.ExitCode, err = extractField(`ExitCode=(\d+:\d+)`, output); err != nil {
-		return resp, err
+func (s *HPCRuntimeService) extractJobIsFinished(output string) (SaactResponse, error) {
+	// verify if output contains "AKOFLOW_JOB_FINISHED"
+	if !strings.Contains(output, "AKOFLOW_JOB_FINISHED") {
+		return SaactResponse{}, fmt.Errorf("job not finished")
 	}
 
-	return resp, nil
+	return SaactResponse{
+		State: "COMPLETED",
+	}, nil
+
 }
 
 func (s *HPCRuntimeService) HealthCheck(runtimeName string) bool {

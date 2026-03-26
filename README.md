@@ -7,9 +7,9 @@
 ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝ ╚═╝     ╚══════╝ ╚═════╝  ╚══╝╚══╝
 ```
 
-# AkôFlow - Open Source Middleware for Containerized Scientific Workflows
+# AkôFlow - Open Source Engine for Containerized Scientific Dataflows
 
-AkôFlow is an open-source middleware for orchestrating and executing container-based scientific workflows across heterogeneous environments. It was originally developed within the e-Science Research Group at the Institute of Computing, Fluminense Federal University (UFF).
+AkôFlow is an open-source engine for orchestrating and executing container-based scientific dataflows in the computing continuum. It was originally developed within the e-Science Research Group at the Institute of Computing, Fluminense Federal University (UFF).
 
 Although initially focused on Kubernetes-based workloads, AkôFlow has evolved to support general containerized execution across multiple infrastructures.
 

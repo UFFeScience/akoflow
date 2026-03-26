@@ -56,7 +56,7 @@ To view the [full documentation, click here](https://uffescience.github.io/akofl
 * [Aline Paes — IC/UFF](http://www.ic.uff.br/~alinepaes/)  
 * [Luan Teylo — INRIA/Université de Bordeaux](https://team.inria.fr/)  
 
-## Publications
+## Publications (in Portuguese)
 
 * Ferreira, W., Kunstmann, L., Paes, A., Bedo, M., & de Oliveira, D. (2024, October). `AkôFlow`: um Middleware para execução de Workflows científicos em múltiplos ambientes conteinerizados. In 39th Simpósio Brasileiro de Banco de Dados (SBBD) (pp. 27-39). SBC. ([DOI:10.5753/sbbd.2024.241126.]( https://doi.org/10.5753/sbbd.2024.241126. ))
 

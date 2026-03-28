@@ -28,6 +28,10 @@
     }
 </style>
 
+<script src="https://cdn.jsdelivr.net/npm/viz.js@2.1.2/viz.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/viz.js@2.1.2/viz.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/viz.js@2.1.2/full.render.js"></script>
+
 {{ template "header" dict "title" "Workflow Detail" }}
 
 <div>
@@ -106,6 +110,22 @@
         </div>
     </div>
 
+    <div class="mb-4 flex gap-6">
+        <div>
+            <label class="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">Activity Filter</label>
+            <div id="provenanceActivityFilter"></div>
+        </div>
+        <div>
+            <label class="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">File Filter</label>
+            <div id="provenanceFileFilterList"></div>
+        </div>
+        <div class="flex items-end gap-2">
+            <button id="applyProvenanceFilterBtn" class="bg-sky-600 hover:bg-sky-700 text-white font-semibold py-1 px-3 rounded text-xs">Apply</button>
+            <button id="clearProvenanceFilterBtn" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold py-1 px-3 rounded text-xs">Clear</button>
+        </div>
+    </div>
+    <div id="provenanceLegend" class="mb-4"></div>
+
     <div class="mb-8">
         <h2 class="text-2xl font-semibold mb-6 text-slate-800 dark:text-slate-100">Activities</h2>
         <div class="space-y-4" id="activityList">
@@ -151,7 +171,6 @@
     async function loadingPage() {
         const activityListContainer = document.getElementById("activityList");
         activityListContainer.innerHTML = `<div class="text-center p-4 text-slate-500 dark:text-slate-400">Loading activities...</div>`;
-
         let workflow = await getWorkflowByPage();
         if (!workflow) return;
 
@@ -161,6 +180,8 @@
         handleRenderActivityList(workflow); 
         handleRenderGraph(workflow, workflowDag);
         handleChartTimeline(workflow);
+        handleRenderProvenanceFileGraph(workflow);
+        window.currentWorkflow = workflow;
     }
 
     function handleRenderDetail(workflow) {
@@ -315,6 +336,151 @@
             };
             networkInstance.focus(nodeId, options);
         }
+    }
+
+    
+     // Função para montar o grafo de proveniência (pode ser igual ou adaptada do parseWorkflowToDag)
+    function parseFileListToGraph(fileList, typeLabel, activityName) {
+        let nodes = [];
+        let edges = [];
+        if (!fileList || !fileList.length) return { nodes, edges };
+
+        // Nó raiz para o tipo (Initial/End) de cada atividade
+        const rootId = `${activityName}-${typeLabel}`;
+        nodes.push({
+            id: rootId,
+            label: typeLabel,
+            shape: "box",
+            color: "#38bdf8"
+        });
+
+        // Mapa para garantir ids únicos por activity+type
+        const nodeIdCount = {};
+
+        fileList.forEach(file => {
+            let baseId = `${activityName}-${typeLabel}-${file.Path}/${file.Name}`;
+            let nodeId = baseId;
+            if (nodeIdCount[baseId] !== undefined) {
+                nodeIdCount[baseId]++;
+                nodeId = baseId + "#" + nodeIdCount[baseId];
+            } else {
+                nodeIdCount[baseId] = 0;
+            }
+
+            nodes.push({
+                id: nodeId,
+                label: file.Name,
+                title: `Path: ${file.Path}\nSize: ${file.Size}\nOwner: ${file.Owner}`,
+                shape: file.Permissions && file.Permissions.startsWith("d") ? "box" : "ellipse"
+            });
+
+            // Liga o nó ao tipo (Initial/End)
+            edges.push({
+                from: rootId,
+                to: nodeId
+            });
+
+            // Liga ao diretório pai, se não for raiz
+            if (file.Path && file.Path !== "./") {
+                edges.push({
+                    from: file.Path,
+                    to: nodeId
+                });
+            }
+        });
+        return { nodes, edges };
+    }
+
+// Função principal para buscar e renderizar o grafo
+    let lastProvenanceGraph = null;
+
+    let allActivities = [];
+    let allFiles = [];
+
+    function fillProvenanceFilters(nodes) {
+        // Activities
+        allActivities = nodes.filter(n => n.type === "activity").map(n => n.label);
+        const activityFilter = document.getElementById("provenanceActivityFilter");
+        activityFilter.innerHTML = allActivities.map(act =>
+            `<label><input type="checkbox" class="activity-filter" value="${act}" checked> ${act}</label>`
+        ).join("");
+
+        // Files
+        allFiles = nodes.filter(n => n.type === "file").map(n => n.label);
+        const fileFilter = document.getElementById("provenanceFileFilterList");
+        fileFilter.innerHTML = allFiles.map(f =>
+            `<label><input type="checkbox" class="file-filter" value="${f}" checked> ${f}</label>`
+        ).join("");
+    }
+
+async function handleRenderProvenanceFileGraph(workflow) {
+    let container = document.getElementById("provenanceFileGraphView");
+    if (!container) {
+        const graphSection = document.createElement("div");
+        graphSection.id = "provenanceFileGraphView";
+        graphSection.className = "w-full p-6 bg-white dark:bg-slate-700 rounded-xl shadow-lg mb-8";
+        const activitiesSection = document.getElementById("activityList");
+        if (activitiesSection) {
+            activitiesSection.parentNode.insertBefore(graphSection, activitiesSection);
+        } else {
+            document.body.appendChild(graphSection);
+        }
+        container = graphSection;
+    }
+
+    container.innerHTML = `<div class="text-center p-4 text-slate-500 dark:text-slate-400">Carregando grafo de proveniência...</div>`;
+
+    try {
+        const response = await fetch(`/akoflow-api/workflows/${workflow.id}/prov-dot/`);
+        if (!response.ok) {
+            container.innerHTML = `<div class="text-center p-4 text-red-500">Erro ao carregar grafo de proveniência.</div>`;
+            return;
+        }
+        const dot = await response.text();
+
+        // Renderiza SVG usando Viz.js
+        const viz = new Viz();
+        viz.renderSVGElement(dot)
+            .then(function(element) {
+                container.innerHTML = "";
+                container.appendChild(element);
+            })
+            .catch(function(error) {
+                container.innerHTML = `<pre class="bg-slate-100 dark:bg-slate-800 p-4 rounded text-xs overflow-auto">${dot}</pre>`;
+            });
+    } catch (e) {
+        container.innerHTML = `<div class="text-center p-4 text-red-500">Erro ao renderizar grafo de proveniência.</div>`;
+        console.error("Error rendering provenance graph:", e);
+    }
+}
+
+
+// Eventos dos botões de filtro
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById("applyProvenanceFilterBtn").onclick = () => {
+        const workflow = window.currentWorkflow;
+        handleRenderProvenanceFileGraph(workflow);
+    };
+    document.getElementById("clearProvenanceFilterBtn").onclick = () => {
+        // Marca todos os checkboxes
+        document.querySelectorAll('.activity-filter, .file-filter').forEach(cb => cb.checked = true);
+        const workflow = window.currentWorkflow;
+        handleRenderProvenanceFileGraph(workflow);
+    };
+});
+
+    function renderProvenanceLegend() {
+        const isDarkMode = document.documentElement.classList.contains('dark');
+        document.getElementById("provenanceLegend").innerHTML = `
+            <div class="flex items-center gap-4 text-lg">
+                <img src="${makeComponent('Activity', 0, { text: "Activity", colorHex: "#38bdf8" }, isDarkMode)}" style="width:60px;height:30px;">
+                <span class="text-slate-700 dark:text-slate-200 font-semibold text-lg">Activity</span>
+            </div>
+            <div class="flex items-center gap-4 text-lg">
+                <img src="${makeComponent('File', 0, { text: "File", colorHex: "#facc15" }, isDarkMode)}" style="width:60px;height:30px;">
+                <span class="text-slate-700 dark:text-slate-200 font-semibold text-lg">Arquivo</span>
+            </div>
+        `;
     }
 
     function parseWorkflowToDag(workflow) {

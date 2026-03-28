@@ -63,6 +63,8 @@ func StartServer() {
 	//
 	//http.HandleFunc("GET /akoflow-api/workflows/{workflowId}/storages/", http_config.KernelHandler(workflow_api_handler.New().GetStorages))
 	//http.HandleFunc("GET /akoflow-api/workflows/{workflowId}/storages/{storageId}/", http_config.KernelHandler(workflow_api_handler.New().GetStorage))
+	http.HandleFunc("GET /akoflow-api/workflows/{workflowId}/storages/list-files/", http_config.KernelHandler(workflow_api_handler.New().ListStorageFiles))
+	http.HandleFunc("GET /akoflow-api/workflows/{workflowId}/prov-dot/", http_config.KernelHandler(workflow_api_handler.New().ExportProvenanceDot))
 	//http.HandleFunc("GET /akoflow-api/workflows/{workflowId}/storages/{storageId}/download-file/", http_config.KernelHandler(workflow_api_handler.New().DownloadFile))
 
 	handler := AllowCORS(http.DefaultServeMux)

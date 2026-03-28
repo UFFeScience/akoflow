@@ -58,6 +58,7 @@ type IStorageRepository interface {
 	Create(params ParamsStorageCreate) error
 	Update(params ParamsStorageUpdate) error
 	Find(id int) (StorageDatabase, error)
+	FindByWorkflow(workflowId int) []StorageDatabase
 	GetCreatedStorages(namespace string) []StorageDatabase
 	UpdateInitialFileListDisk(activityId int, fileDisk string) error
 	UpdateEndFileListDisk(activityId int, fileDisk string) error

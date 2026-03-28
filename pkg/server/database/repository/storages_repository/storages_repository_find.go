@@ -27,6 +27,50 @@ func (s *StorageRepository) Find(id int) (StorageDatabase, error) {
 	return storageDatabase, nil
 }
 
+func (s *StorageRepository) FindByWorkflow(worflow_id int) []StorageDatabase {
+	database := repository.Database{}
+	c := database.Connect()
+
+	rows, err := c.Query("SELECT id, workflow_id, activity_id, pvc_name, namespace, status, storage_mount_path, storage_class, storage_size, initial_file_list, end_file_list, initial_disk_spec, end_disk_spec, keep_storage_after_finish, detached, created_at FROM "+s.tableName+" WHERE workflow_id = ?", worflow_id)
+	if err != nil {
+		return nil
+	}
+
+	var storages []StorageDatabase
+	for rows.Next() {
+		result := StorageDatabase{}
+		err = rows.Scan(
+			&result.Id,
+			&result.WorkflowId,
+			&result.ActivityId,
+			&result.PvcName,
+			&result.Namespace,
+			&result.Status,
+			&result.StorageMountPath,
+			&result.StorageClass,
+			&result.StorageSize,
+			&result.InitialFileList,
+			&result.EndFileList,
+			&result.InitialDiskSpec,
+			&result.EndDiskSpec,
+			&result.KeepStorageAfterFinish,
+			&result.Detached,
+			&result.CreatedAt)
+		if err != nil {
+			return nil
+		}
+
+		storages = append(storages, result)
+	}
+
+	err = c.Close()
+	if err != nil {
+		return nil
+	}
+
+	return storages
+}
+
 func (s *StorageRepository) GetCreatedStorages(namespace string) []StorageDatabase {
 	database := repository.Database{}
 	c := database.Connect()

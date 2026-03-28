@@ -154,9 +154,6 @@ func (w Workflow) GetMountPath() string {
 }
 
 func (w Workflow) GetRuntimeId() []string {
-	if w.Spec.Runtime != "" {
-		return []string{w.Spec.Runtime}
-	}
 
 	runtimes := map[string]bool{}
 	runtimes_workflows := []string{}
@@ -171,8 +168,32 @@ func (w Workflow) GetRuntimeId() []string {
 		runtimes_workflows = append(runtimes_workflows, runtime)
 	}
 
+	if w.Spec.Runtime != "" {
+		runtimes_workflows = append(runtimes_workflows, w.Spec.Runtime)
+	}
+
+	// remove duplicates
+	runtimes_workflows = removeDuplicates(runtimes_workflows)
+
 	return runtimes_workflows
 
+}
+
+func removeDuplicates(elements []string) []string {
+	encountered := map[string]bool{}
+	result := []string{}
+
+	for v := range elements {
+		if encountered[elements[v]] == true {
+			// Do not add duplicate.
+		} else {
+			// Record this element as an encountered element.
+			encountered[elements[v]] = true
+			// Append to result slice.
+			result = append(result, elements[v])
+		}
+	}
+	return result
 }
 
 func (w Workflow) MakeStorageClassNameDistributed() string {

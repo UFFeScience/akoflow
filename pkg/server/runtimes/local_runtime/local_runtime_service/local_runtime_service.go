@@ -15,7 +15,6 @@ import (
 	"github.com/ovvesley/akoflow/pkg/server/database/repository/workflow_repository"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
-	"github.com/ovvesley/akoflow/pkg/server/runtimes/singularity_runtime/singularity_runtime_service"
 )
 
 type LocalRuntimeService struct {
@@ -96,17 +95,9 @@ func (s *LocalRuntimeService) VerifyActivitiesWasFinished(workflow workflow_enti
 
 		pid := activity.ProcId
 
-		akfMonitorBashScript, err := singularity_runtime_service.NewAkfMonitorSingularity().
-			SetWorkflow(workflow).
-			SetWorkflowActivity(activity).
-			GetScript()
+		script := fmt.Sprintf(`cat %sakoflow_finished_%d_%d.txt`, activity.GetMountPath(), workflow.GetId(), activity.GetId())
 
-		if err != nil {
-			config.App().Logger.Infof("WORKER: Error creating akf monitor script %s", pid)
-			return
-		}
-
-		commandBase64 := base64.StdEncoding.EncodeToString([]byte(akfMonitorBashScript))
+		commandBase64 := base64.StdEncoding.EncodeToString([]byte(script))
 		commandFinal := "echo " + commandBase64 + " | base64 -d | bash"
 
 		outputCommand, _ := s.localConnector.RunCommandWithOutput(commandFinal)
@@ -202,11 +193,7 @@ func (s *LocalRuntimeService) ExtractLogs(outputCommand string) (string, string,
 }
 
 func (s *LocalRuntimeService) ProcessCompleted(outputCommand string) bool {
-	if strings.Contains(outputCommand, "#NO_PROCESS_FOUND") {
-		config.App().Logger.Infof("WORKER: No process found in the output")
-		return true
-	}
-	return false
+	return strings.Contains(outputCommand, "AKOFLOW_JOB_FINISHED")
 }
 
 func (s *LocalRuntimeService) ExtractMetrics(metrics string) (string, string, error) {
@@ -226,6 +213,11 @@ func (s *LocalRuntimeService) ExtractMetrics(metrics string) (string, string, er
 
 func (s *LocalRuntimeService) makeLocalActivity(wf workflow_entity.Workflow, wfa workflow_activity_entity.WorkflowActivities) string {
 	command := wfa.Run
+
+	// add create file when completed command
+
+	command += fmt.Sprintf("\necho AKOFLOW_JOB_FINISHED > %sakoflow_finished_%d_%d.txt", wfa.GetMountPath(), wf.GetId(), wfa.GetId())
+
 	commandBase64 := base64.StdEncoding.EncodeToString([]byte(command))
 	commandFinal := "echo " + commandBase64 + " | base64 -d | bash"
 
@@ -234,13 +226,13 @@ func (s *LocalRuntimeService) makeLocalActivity(wf workflow_entity.Workflow, wfa
 		mountPath = wf.Spec.MountPath
 	}
 
-	strOutFile := fmt.Sprintf("%s/akoflow_out%s_%s.out",
+	strOutFile := fmt.Sprintf("%sakoflow_out%s_%s.out",
 		mountPath,
 		fmt.Sprintf("%d", wfa.WorkflowId),
 		fmt.Sprintf("%d", wfa.Id),
 	)
 
-	strErrFile := fmt.Sprintf("%s/akoflow_err%s_%s.err",
+	strErrFile := fmt.Sprintf("%sakoflow_err%s_%s.err",
 		mountPath,
 		fmt.Sprintf("%d", wfa.WorkflowId),
 		fmt.Sprintf("%d", wfa.Id),

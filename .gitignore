@@ -11,3 +11,4 @@ releases/bin/*
 .env
 resources/
 keys/
+volumes/

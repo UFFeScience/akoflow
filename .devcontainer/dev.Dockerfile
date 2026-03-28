@@ -1,3 +1,5 @@
+FROM docker:26-cli AS dockercli
+
 FROM golang:1.23-bullseye
 
 WORKDIR /app
@@ -18,6 +20,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     rsync \
     pkg-config \
  && rm -rf /var/lib/apt/lists/*
+
+COPY --from=dockercli /usr/local/bin/docker /usr/local/bin/docker
 
 COPY go.mod go.sum ./
 RUN go mod download

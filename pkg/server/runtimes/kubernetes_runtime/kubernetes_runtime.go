@@ -13,6 +13,7 @@ type KubernetesRuntime struct {
 	kubernetesRuntimeService *kubernetes_runtime_service.KubernetesRuntimeService
 
 	runtimeName string
+	runtimeType string
 }
 
 func New() *KubernetesRuntime {
@@ -24,6 +25,11 @@ func New() *KubernetesRuntime {
 
 func (k *KubernetesRuntime) SetRuntimeName(name string) *KubernetesRuntime {
 	k.runtimeName = name
+	return k
+}
+
+func (k *KubernetesRuntime) SetRuntimeType(runtimeType string) *KubernetesRuntime {
+	k.runtimeType = runtimeType
 	return k
 }
 
@@ -63,7 +69,10 @@ func (k *KubernetesRuntime) GetStatus(workflowID int, activityID int) string {
 }
 
 func (k *KubernetesRuntime) VerifyActivitiesWasFinished(workflow workflow_entity.Workflow) bool {
-	k.kubernetesRuntimeService.VerifyActivitiesWasFinished(workflow)
+	k.kubernetesRuntimeService.
+		SetRuntimeName(k.runtimeName).
+		SetRuntimeType(k.runtimeType).
+		VerifyActivitiesWasFinished(workflow)
 	return true
 }
 

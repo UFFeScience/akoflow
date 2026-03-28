@@ -57,7 +57,7 @@ func (s *MakeSingularityActivityService) makeContainerCommandActivity(wf workflo
 	return entryPoint
 }
 
-func (s *MakeSingularityActivityService) MakeContainerCommandActivityToSDumont(wf workflow_entity.Workflow, wfa workflow_activity_entity.WorkflowActivities) string {
+func (s *MakeSingularityActivityService) MakeContainerCommandActivityToHPC(wf workflow_entity.Workflow, wfa workflow_activity_entity.WorkflowActivities) string {
 
 	mountPath := wf.GetMountPath()
 	imageSifPath := wf.Spec.Image
@@ -68,7 +68,7 @@ func (s *MakeSingularityActivityService) MakeContainerCommandActivityToSDumont(w
 	entryPoint := fmt.Sprintf("singularity exec --bind %s:%s --pwd %s %s bash -c '%s'",
 		mountPath,
 		mountPath,
-		mountPath,
+		"/akoflow-wfa-shared ",
 		imageSifPath,
 		commandFinal,
 	)

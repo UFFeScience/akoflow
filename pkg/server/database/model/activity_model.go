@@ -13,6 +13,7 @@ type Activity struct {
 	Status            int    `db:"status"`
 	ProcID            string `db:"proc_id"`
 	NodeSelector      string `db:"node_selector"`
+	MountPath         string `db:"mount_path"`
 	CreatedAt         string `db:"created_at"`
 	StartedAt         string `db:"started_at"`
 	FinishedAt        string `db:"finished_at"`

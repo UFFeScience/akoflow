@@ -8,15 +8,17 @@ import (
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_activity_entity"
 	"github.com/ovvesley/akoflow/pkg/server/entities/workflow_entity"
 	"github.com/ovvesley/akoflow/pkg/server/runtimes/docker_runtime"
+	"github.com/ovvesley/akoflow/pkg/server/runtimes/hpc_runtime"
 	"github.com/ovvesley/akoflow/pkg/server/runtimes/kubernetes_runtime"
-	"github.com/ovvesley/akoflow/pkg/server/runtimes/sdumont_runtime"
+	"github.com/ovvesley/akoflow/pkg/server/runtimes/local_runtime"
 	"github.com/ovvesley/akoflow/pkg/server/runtimes/singularity_runtime"
 )
 
 const RUNTIME_K8S = "k8s"
 const RUNTIME_DOCKER = "docker"
 const RUNTIME_SINGULARITY = "singularity"
-const RUNTIME_SINGULARITY_SDUMONT = "sdumont"
+const RUNTIME_HPC = "hpc"
+const RUNTIME_LOCAL = "local"
 
 type IRuntime interface {
 	StartConnection() error
@@ -42,8 +44,8 @@ func normalizeRuntime(runtime string) string {
 		return RUNTIME_K8S
 	}
 
-	if strings.HasPrefix(runtime, "sdumont") {
-		return RUNTIME_SINGULARITY_SDUMONT
+	if strings.HasPrefix(runtime, "hpc") {
+		return RUNTIME_HPC
 	}
 
 	return runtime
@@ -55,10 +57,21 @@ func GetRuntimeInstance(runtimeName string) IRuntime {
 	runtime := normalizeRuntime(runtimeName)
 
 	modeMap := map[string]IRuntime{
-		RUNTIME_DOCKER:              docker_runtime.NewDockerRuntime(),
-		RUNTIME_K8S:                 kubernetes_runtime.NewKubernetesRuntime().SetRuntimeName(runtimeName),
-		RUNTIME_SINGULARITY:         singularity_runtime.NewSingularityRuntime(),
-		RUNTIME_SINGULARITY_SDUMONT: sdumont_runtime.NewSdumontRuntime().SetRuntimeName(runtimeName),
+		RUNTIME_DOCKER: docker_runtime.NewDockerRuntime(),
+
+		RUNTIME_K8S: kubernetes_runtime.NewKubernetesRuntime().
+			SetRuntimeType(RUNTIME_K8S).
+			SetRuntimeName(runtimeName),
+
+		RUNTIME_SINGULARITY: singularity_runtime.NewSingularityRuntime(),
+
+		RUNTIME_HPC: hpc_runtime.NewHpcRuntime().
+			SetRuntimeType(RUNTIME_HPC).
+			SetRuntimeName(runtimeName),
+
+		RUNTIME_LOCAL: local_runtime.NewLocalRuntime().
+			SetRuntimeType(RUNTIME_LOCAL).
+			SetRuntimeName(runtimeName),
 	}
 	if modeMap[runtime] == nil {
 		config.App().Logger.Error(fmt.Sprintf("Runtime not found: %s", runtimeName))

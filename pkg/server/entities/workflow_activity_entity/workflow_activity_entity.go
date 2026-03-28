@@ -25,6 +25,7 @@ type WorkflowActivities struct {
 	CreatedAt    string   `yaml:"createdAt"`
 	StartedAt    string   `yaml:"startedAt"`
 	FinishedAt   string   `yaml:"finishedAt"`
+	MountPath    string   `yaml:"mountPath"`
 }
 
 type WorkflowActivityDatabase struct {
@@ -39,6 +40,7 @@ type WorkflowActivityDatabase struct {
 	ProcId            *string
 	DependOnActivity  *int
 	NodeSelector      *string
+	MountPath         *string
 	CreatedAt         *string
 	StartedAt         *string
 	FinishedAt        *string
@@ -96,6 +98,14 @@ func (wfa WorkflowActivities) GetId() int {
 
 func (wfa WorkflowActivities) GetProcId() string {
 	return wfa.ProcId
+}
+
+func (wfa WorkflowActivities) GetMountPath() string {
+	if wfa.MountPath != "" {
+		return wfa.MountPath
+	}
+
+	return ""
 }
 
 func (wfa WorkflowActivities) GetNodeSelector() map[string]string {
@@ -172,6 +182,7 @@ func DatabaseToWorkflowActivities(params ParamsDatabaseToWorkflowActivities) Wor
 		CpuLimit:     wfa.CpuLimit,
 		DependsOn:    wfa.DependsOn,
 		NodeSelector: wfa.NodeSelector,
+		MountPath:    wfa.MountPath,
 		KeepDisk:     wfa.KeepDisk,
 		CreatedAt:    createdAt,
 		StartedAt:    startedAt,

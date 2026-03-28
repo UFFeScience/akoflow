@@ -72,8 +72,10 @@ RUN set -eux; \
     chmod +x /usr/local/bin/akoflow-server /usr/local/bin/akoflow; \
     curl -fsSL -o source.zip "https://github.com/UFFeScience/akoflow/archive/refs/tags/v$TAG.zip"; \
     unzip -qq source.zip "akoflow-$TAG/pkg/server/engine/httpserver/handlers/akoflow_admin_handler/*"; \
+    unzip -qq source.zip "akoflow-$TAG/pkg/server/scripts/*"; \
     mkdir -p /app/pkg/server/engine/httpserver/handlers; \
     mv "akoflow-$TAG/pkg/server/engine/httpserver/handlers/akoflow_admin_handler" /app/pkg/server/engine/httpserver/handlers/; \
+    mv "akoflow-$TAG/pkg/server/scripts/" /app/pkg/server/; \
     rm -rf "akoflow-$TAG" source.zip; \
     echo "$TAG" > /app/AKOFLOW_VERSION
 

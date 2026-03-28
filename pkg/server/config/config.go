@@ -61,8 +61,16 @@ func loadDotEnv() {
 		if line != "" {
 			env := strings.Split(line, "=")
 			key := strings.TrimSpace(env[0])
-			value := strings.Trim(strings.TrimSpace(env[1]), "'")
+			value := ""
+
+			if len(env) == 2 {
+				value = strings.TrimSpace(env[1])
+			} else if len(env) > 2 {
+				value = strings.TrimSpace(strings.Join(env[1:], "="))
+			}
+			value = strings.TrimSpace(value)
 			os.Setenv(key, value)
+
 		}
 	}
 

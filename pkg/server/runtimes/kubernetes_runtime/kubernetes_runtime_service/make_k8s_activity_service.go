@@ -52,20 +52,49 @@ func (m *MakeK8sActivityService) GetWorkflow() workflow_entity.Workflow {
 	return m.Workflow
 }
 
+func (m *MakeK8sActivityService) setupFakeUser(wf workflow_entity.Workflow, wfa workflow_activity_entity.WorkflowActivities) string {
+
+	mountPath := m.makeJobVolumeMountPath(wf, wfa)
+
+	uid := 10000 + wfa.Id
+	uidStr := strconv.Itoa(uid)
+
+	username := "akouser_" + strconv.Itoa(wfa.Id)
+
+	command := ""
+
+	command += "echo 'Creating fake user " + username + " (uid=" + uidStr + ")';\n"
+
+	command += "getent group " + username + " || groupadd -g " + uidStr + " " + username + ";\n"
+
+	command += "id -u " + username + " >/dev/null 2>&1 || useradd -u " + uidStr + " -g " + uidStr + " -M -s /bin/sh " + username + ";\n"
+
+	command += "mkdir -p " + mountPath + ";\n"
+
+	command += "chown -R " + username + ":" + username + " " + mountPath + ";\n"
+
+	command += "chmod -R 775 " + mountPath + ";\n"
+
+	command += "echo 'User ready';\n"
+
+	return command
+}
+
 func (m *MakeK8sActivityService) makeContainerCommandActivity(wf workflow_entity.Workflow, wfa workflow_activity_entity.WorkflowActivities) string {
 
 	command := m.setupCommandWorkdir(wf, wfa)
 
+	command += m.setupFakeUser(wf, wfa)
+
 	command = m.addCommandToMonitorFilesStorage(command, "initial-file-list")
 	command = m.addCommandToMonitorDiskSpecStorage(command, "initial-disk-spec")
 
-	command += wfa.Run
+	command += "su -s /bin/sh akouser_" + strconv.Itoa(wfa.Id) + " -c '" + wfa.Run + "';\n"
 
 	command = m.addCommandToMonitorFilesStorage(command, "end-file-list")
 	command = m.addCommandToMonitorDiskSpecStorage(command, "end-disk-spec")
 
 	return base64.StdEncoding.EncodeToString([]byte(command))
-
 }
 
 func (m *MakeK8sActivityService) setupCommandWorkdir(wf workflow_entity.Workflow, wfa workflow_activity_entity.WorkflowActivities) string {
@@ -216,10 +245,8 @@ func (m *MakeK8sActivityService) makeContainerActivity(workflow workflow_entity.
 		},
 		Env: envs,
 		SecurityContext: k8s_job_entity.K8SJobSecurityContext{
-			Privileged: false,
-			RunAsUser:  activity.Id,
-			RunAsGroup: activity.Id,
-			FsGroup:    2000,
+			RunAsUser:  0,
+			RunAsGroup: 0,
 		},
 	}
 

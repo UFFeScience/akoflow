@@ -28,9 +28,7 @@
     }
 </style>
 
-<script src="https://cdn.jsdelivr.net/npm/viz.js@2.1.2/viz.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/viz.js@2.1.2/viz.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/viz.js@2.1.2/full.render.js"></script>
+
 
 {{ template "header" dict "title" "Workflow Detail" }}
 
@@ -110,21 +108,72 @@
         </div>
     </div>
 
-    <div class="mb-4 flex gap-6">
-        <div>
-            <label class="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">Activity Filter</label>
-            <div id="provenanceActivityFilter"></div>
+    <!-- Provenance Graph Section -->
+    <div class="w-full p-6 bg-white dark:bg-slate-700 rounded-xl shadow-lg mb-8">
+        <div class="flex flex-col sm:flex-row justify-between sm:items-center mb-4">
+            <div>
+                <h3 class="text-xl font-semibold text-slate-800 dark:text-slate-100">Provenance Graph</h3>
+                <p class="text-sm text-slate-500 dark:text-slate-400">Who created each file during the workflow execution</p>
+            </div>
+            <div class="flex items-center gap-3 mt-3 sm:mt-0 flex-wrap">
+                <div class="flex items-center gap-1 text-xs text-slate-600 dark:text-slate-300">
+                    <span class="inline-block w-4 h-4 rounded" style="background:#38bdf8"></span> Activity
+                </div>
+                <div class="flex items-center gap-1 text-xs text-slate-600 dark:text-slate-300">
+                    <span class="inline-block w-4 h-4 rounded-full" style="background:#facc15"></span> File (created)
+                </div>
+                <div class="flex items-center gap-1 text-xs text-slate-600 dark:text-slate-300">
+                    <span class="inline-block w-4 h-4 rounded-full border-2 border-dashed" style="background:#d1fae5;border-color:#6ee7b7"></span> Pre-existing entity
+                </div>
+                <!-- Toggle usedBy edges -->
+                <label class="flex items-center gap-2 cursor-pointer select-none text-xs text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-500 rounded px-2 py-1">
+                    <input type="checkbox" id="showUsedByToggle">
+                    Show &ldquo;used&rdquo; edges
+                </label>
+            </div>
         </div>
-        <div>
-            <label class="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">File Filter</label>
-            <div id="provenanceFileFilterList"></div>
+
+        <!-- Filters -->
+        <div class="mb-4 flex flex-wrap gap-6">
+            <div>
+                <label class="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">Filter by Activity</label>
+                <div id="provenanceActivityFilter" class="flex flex-wrap gap-2 text-xs"></div>
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">Created Files</label>
+                <div id="provenanceCreatedFileFilter" class="flex flex-wrap gap-2 text-xs"></div>
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">
+                    Pre-existing Files
+                    <span class="ml-1 font-normal text-slate-400 italic">(hidden by default)</span>
+                </label>
+                <div id="provenancePreExistingFileFilter" class="flex flex-wrap gap-2 text-xs"></div>
+            </div>
+            <div class="flex items-end gap-2">
+                <button id="applyProvenanceFilterBtn" class="bg-sky-600 hover:bg-sky-700 text-white font-semibold py-1 px-3 rounded text-xs">Apply</button>
+                <button id="clearProvenanceFilterBtn" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold py-1 px-3 rounded text-xs">Clear</button>
+            </div>
         </div>
-        <div class="flex items-end gap-2">
-            <button id="applyProvenanceFilterBtn" class="bg-sky-600 hover:bg-sky-700 text-white font-semibold py-1 px-3 rounded text-xs">Apply</button>
-            <button id="clearProvenanceFilterBtn" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold py-1 px-3 rounded text-xs">Clear</button>
+
+        <div id="provenanceLegend" class="mb-2"></div>
+        <div id="provenanceFileGraphView" class="w-full rounded-lg border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-800" style="height:500px;">
+            <div class="flex items-center justify-center h-full text-slate-500 dark:text-slate-400">Loading provenance graph...</div>
         </div>
     </div>
-    <div id="provenanceLegend" class="mb-4"></div>
+
+    <!-- Files Created Table -->
+    <div class="w-full p-6 bg-white dark:bg-slate-700 rounded-xl shadow-lg mb-8">
+        <div class="flex flex-col sm:flex-row justify-between sm:items-center mb-4">
+            <div>
+                <h3 class="text-xl font-semibold text-slate-800 dark:text-slate-100">Files Created per Activity</h3>
+                <p class="text-sm text-slate-500 dark:text-slate-400">Complete list of files generated by each activity</p>
+            </div>
+        </div>
+        <div id="provenanceFilesTable" class="overflow-x-auto">
+            <div class="text-center p-4 text-slate-500 dark:text-slate-400">Loading...</div>
+        </div>
+    </div>
 
     <div class="mb-8">
         <h2 class="text-2xl font-semibold mb-6 text-slate-800 dark:text-slate-100">Activities</h2>
@@ -338,150 +387,255 @@
         }
     }
 
-    
-     // Função para montar o grafo de proveniência (pode ser igual ou adaptada do parseWorkflowToDag)
-    function parseFileListToGraph(fileList, typeLabel, activityName) {
-        let nodes = [];
-        let edges = [];
-        if (!fileList || !fileList.length) return { nodes, edges };
-
-        // Nó raiz para o tipo (Initial/End) de cada atividade
-        const rootId = `${activityName}-${typeLabel}`;
-        nodes.push({
-            id: rootId,
-            label: typeLabel,
-            shape: "box",
-            color: "#38bdf8"
-        });
-
-        // Mapa para garantir ids únicos por activity+type
-        const nodeIdCount = {};
-
-        fileList.forEach(file => {
-            let baseId = `${activityName}-${typeLabel}-${file.Path}/${file.Name}`;
-            let nodeId = baseId;
-            if (nodeIdCount[baseId] !== undefined) {
-                nodeIdCount[baseId]++;
-                nodeId = baseId + "#" + nodeIdCount[baseId];
-            } else {
-                nodeIdCount[baseId] = 0;
-            }
-
-            nodes.push({
-                id: nodeId,
-                label: file.Name,
-                title: `Path: ${file.Path}\nSize: ${file.Size}\nOwner: ${file.Owner}`,
-                shape: file.Permissions && file.Permissions.startsWith("d") ? "box" : "ellipse"
-            });
-
-            // Liga o nó ao tipo (Initial/End)
-            edges.push({
-                from: rootId,
-                to: nodeId
-            });
-
-            // Liga ao diretório pai, se não for raiz
-            if (file.Path && file.Path !== "./") {
-                edges.push({
-                    from: file.Path,
-                    to: nodeId
-                });
-            }
-        });
-        return { nodes, edges };
-    }
-
-// Função principal para buscar e renderizar o grafo
+    // ─── Provenance Graph (interactive vis.Network) ─────────────────────
     let lastProvenanceGraph = null;
-
-    let allActivities = [];
-    let allFiles = [];
+    let provenanceNetwork = null;
 
     function fillProvenanceFilters(nodes) {
-        // Activities
-        allActivities = nodes.filter(n => n.type === "activity").map(n => n.label);
         const activityFilter = document.getElementById("provenanceActivityFilter");
-        activityFilter.innerHTML = allActivities.map(act =>
-            `<label><input type="checkbox" class="activity-filter" value="${act}" checked> ${act}</label>`
+        const createdFileFilter = document.getElementById("provenanceCreatedFileFilter");
+        const preExistingFileFilter = document.getElementById("provenancePreExistingFileFilter");
+
+        const activities = nodes.filter(n => n.type === "activity").map(n => n.label);
+        const createdFiles = nodes.filter(n => n.type === "file").map(n => n.label);
+        const preExistingFiles = nodes.filter(n => n.type === "preExisting").map(n => n.label);
+
+        activityFilter.innerHTML = activities.map(a =>
+            `<label class="flex items-center gap-1 cursor-pointer px-2 py-0.5 rounded bg-sky-100 dark:bg-sky-900 text-sky-800 dark:text-sky-200">
+                <input type="checkbox" class="activity-filter" value="${a}" checked> ${a}
+            </label>`
         ).join("");
 
-        // Files
-        allFiles = nodes.filter(n => n.type === "file").map(n => n.label);
-        const fileFilter = document.getElementById("provenanceFileFilterList");
-        fileFilter.innerHTML = allFiles.map(f =>
-            `<label><input type="checkbox" class="file-filter" value="${f}" checked> ${f}</label>`
-        ).join("");
+        createdFileFilter.innerHTML = createdFiles.length
+            ? createdFiles.map(f =>
+                `<label class="flex items-center gap-1 cursor-pointer px-2 py-0.5 rounded bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200">
+                    <input type="checkbox" class="created-file-filter" value="${f}" checked> ${f}
+                </label>`
+            ).join("")
+            : `<span class="text-slate-400 text-xs italic">None</span>`;
+
+        preExistingFileFilter.innerHTML = preExistingFiles.length
+            ? preExistingFiles.map(f =>
+                `<label class="flex items-center gap-1 cursor-pointer px-2 py-0.5 rounded bg-emerald-100 dark:bg-emerald-900 text-emerald-800 dark:text-emerald-200">
+                    <input type="checkbox" class="preexisting-file-filter" value="${f}"> ${f}
+                </label>`
+            ).join("")
+            : `<span class="text-slate-400 text-xs italic">None</span>`;
     }
 
-async function handleRenderProvenanceFileGraph(workflow) {
-    let container = document.getElementById("provenanceFileGraphView");
-    if (!container) {
-        const graphSection = document.createElement("div");
-        graphSection.id = "provenanceFileGraphView";
-        graphSection.className = "w-full p-6 bg-white dark:bg-slate-700 rounded-xl shadow-lg mb-8";
-        const activitiesSection = document.getElementById("activityList");
-        if (activitiesSection) {
-            activitiesSection.parentNode.insertBefore(graphSection, activitiesSection);
-        } else {
-            document.body.appendChild(graphSection);
+    async function handleRenderProvenanceFileGraph(workflow) {
+        const container = document.getElementById("provenanceFileGraphView");
+        container.innerHTML = `<div class="flex items-center justify-center h-full text-slate-500 dark:text-slate-400">Loading provenance graph...</div>`;
+
+        try {
+            const response = await fetch(`/akoflow-api/workflows/${workflow.id}/storages/list-files/`);
+            if (!response.ok) {
+                container.innerHTML = `<div class="flex items-center justify-center h-full text-red-500">Failed to load provenance graph.</div>`;
+                return;
+            }
+            const { data: { nodes: rawNodes, edges: rawEdges } } = await response.json();
+            lastProvenanceGraph = { nodes: rawNodes, edges: rawEdges };
+
+            fillProvenanceFilters(rawNodes);
+            renderProvenanceNetwork(rawNodes, rawEdges, container);
+            renderProvenanceFilesTable(rawNodes, rawEdges);
+        } catch (e) {
+            container.innerHTML = `<div class="flex items-center justify-center h-full text-red-500">Error rendering provenance graph.</div>`;
+            console.error("Error rendering provenance graph:", e);
         }
-        container = graphSection;
     }
 
-    container.innerHTML = `<div class="text-center p-4 text-slate-500 dark:text-slate-400">Carregando grafo de proveniência...</div>`;
+    function renderProvenanceNetwork(rawNodes, rawEdges, container) {
+        container.innerHTML = "";
 
-    try {
-        const response = await fetch(`/akoflow-api/workflows/${workflow.id}/prov-dot/`);
-        if (!response.ok) {
-            container.innerHTML = `<div class="text-center p-4 text-red-500">Erro ao carregar grafo de proveniência.</div>`;
+        const isDarkMode = document.documentElement.classList.contains('dark');
+        const showUsedBy = document.getElementById("showUsedByToggle")?.checked ?? false;
+
+        // Which nodes are checked in the filters
+        const checkedActivities = new Set(
+            [...document.querySelectorAll('.activity-filter:checked')].map(cb => cb.value)
+        );
+        const checkedCreatedFiles = new Set(
+            [...document.querySelectorAll('.created-file-filter:checked')].map(cb => cb.value)
+        );
+        const checkedPreExistingFiles = new Set(
+            [...document.querySelectorAll('.preexisting-file-filter:checked')].map(cb => cb.value)
+        );
+
+        const visNodes = rawNodes
+            .filter(n => {
+                if (n.type === "activity") return checkedActivities.size === 0 || checkedActivities.has(n.label);
+                if (n.type === "file") return checkedCreatedFiles.has(n.label);
+                if (n.type === "preExisting") return checkedPreExistingFiles.has(n.label);
+                return true;
+            })
+            .map(n => {
+                const isActivity = n.type === "activity";
+                const isPreExisting = n.type === "preExisting";
+                return {
+                    id: n.id,
+                    label: n.label,
+                    shape: isActivity ? "box" : "ellipse",
+                    color: isActivity
+                        ? { background: "#38bdf8", border: "#0ea5e9", highlight: { background: "#7dd3fc", border: "#38bdf8" } }
+                        : isPreExisting
+                            ? { background: "#d1fae5", border: "#6ee7b7", highlight: { background: "#a7f3d0", border: "#34d399" } }
+                            : { background: "#facc15", border: "#ca8a04", highlight: { background: "#fde68a", border: "#facc15" } },
+                    borderWidth: isPreExisting ? 2 : 1,
+                    borderDashes: isPreExisting ? [4, 2] : false,
+                    font: { color: isDarkMode ? "#f1f5f9" : "#1e293b", size: 13, bold: isActivity },
+                    title: isPreExisting ? `${n.id}\n(prov:Entity — pre-existing)` : n.id,
+                    margin: 10,
+                };
+            });
+
+        const visNodeIds = new Set(visNodes.map(n => n.id));
+
+        const visEdges = rawEdges
+            .filter(e => {
+                if (!visNodeIds.has(e.from) || !visNodeIds.has(e.to)) return false;
+                // "used": file → activity. Hide unless toggle is on.
+                if (e.label === "used" && !showUsedBy) return false;
+                return true;
+            })
+            .map(e => ({
+                from: e.from,
+                to: e.to,
+                label: e.label || "",
+                arrows: { to: { enabled: true, scaleFactor: 0.7 } },
+                color: {
+                    color: e.label === "used"
+                        ? (isDarkMode ? "#94a3b8" : "#cbd5e1")
+                        : (isDarkMode ? "#38bdf8" : "#0ea5e9"),
+                    highlight: "#38bdf8",
+                    hover: "#7dd3fc",
+                },
+                dashes: e.label === "used",
+                font: { size: 10, color: isDarkMode ? "#94a3b8" : "#64748b", align: "middle" },
+                smooth: { type: "cubicBezier", forceDirection: "horizontal", roundness: 0.3 },
+            }));
+
+        if (visNodes.length === 0) {
+            container.innerHTML = `<div class="flex items-center justify-center h-full text-slate-500 dark:text-slate-400">No data to display. Run the workflow to collect provenance.</div>`;
             return;
         }
-        const dot = await response.text();
 
-        // Renderiza SVG usando Viz.js
-        const viz = new Viz();
-        viz.renderSVGElement(dot)
-            .then(function(element) {
-                container.innerHTML = "";
-                container.appendChild(element);
-            })
-            .catch(function(error) {
-                container.innerHTML = `<pre class="bg-slate-100 dark:bg-slate-800 p-4 rounded text-xs overflow-auto">${dot}</pre>`;
-            });
-    } catch (e) {
-        container.innerHTML = `<div class="text-center p-4 text-red-500">Erro ao renderizar grafo de proveniência.</div>`;
-        console.error("Error rendering provenance graph:", e);
+        const data = {
+            nodes: new vis.DataSet(visNodes),
+            edges: new vis.DataSet(visEdges),
+        };
+
+        const options = {
+            layout: {
+                hierarchical: {
+                    enabled: true,
+                    direction: "LR",
+                    sortMethod: "directed",
+                    nodeSpacing: 100,
+                    levelSeparation: 200,
+                    treeSpacing: 120,
+                },
+            },
+            physics: { enabled: false },
+            interaction: { hover: true, tooltipDelay: 150, navigationButtons: true, keyboard: false },
+            edges: { smooth: { enabled: true, type: "cubicBezier", forceDirection: "horizontal", roundness: 0.3 } },
+        };
+
+        if (provenanceNetwork) {
+            provenanceNetwork.destroy();
+        }
+        provenanceNetwork = new vis.Network(container, data, options);
+        provenanceNetwork.fit({ animation: { duration: 600, easingFunction: "easeInOutQuad" } });
     }
-}
 
+    // Build the "Files Created per Activity" table
+    function renderProvenanceFilesTable(rawNodes, rawEdges) {
+        const tableContainer = document.getElementById("provenanceFilesTable");
+        if (!tableContainer) return;
 
-// Eventos dos botões de filtro
-document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById("applyProvenanceFilterBtn").onclick = () => {
-        const workflow = window.currentWorkflow;
-        handleRenderProvenanceFileGraph(workflow);
-    };
-    document.getElementById("clearProvenanceFilterBtn").onclick = () => {
-        // Marca todos os checkboxes
-        document.querySelectorAll('.activity-filter, .file-filter').forEach(cb => cb.checked = true);
-        const workflow = window.currentWorkflow;
-        handleRenderProvenanceFileGraph(workflow);
-    };
-});
+        // Map nodeId -> label/type
+        const nodeMap = {};
+        rawNodes.forEach(n => { nodeMap[n.id] = n; });
 
-    function renderProvenanceLegend() {
-        const isDarkMode = document.documentElement.classList.contains('dark');
-        document.getElementById("provenanceLegend").innerHTML = `
-            <div class="flex items-center gap-4 text-lg">
-                <img src="${makeComponent('Activity', 0, { text: "Activity", colorHex: "#38bdf8" }, isDarkMode)}" style="width:60px;height:30px;">
-                <span class="text-slate-700 dark:text-slate-200 font-semibold text-lg">Activity</span>
-            </div>
-            <div class="flex items-center gap-4 text-lg">
-                <img src="${makeComponent('File', 0, { text: "File", colorHex: "#facc15" }, isDarkMode)}" style="width:60px;height:30px;">
-                <span class="text-slate-700 dark:text-slate-200 font-semibold text-lg">Arquivo</span>
-            </div>
-        `;
+        // Group files by creator activity ("created" edges: activity → file)
+        const createdByActivity = {};
+        rawEdges.filter(e => e.label === "wasGeneratedBy").forEach(e => {
+            const actNode = nodeMap[e.from];
+            const fileNode = nodeMap[e.to];
+            const actLabel = actNode ? actNode.label : e.from;
+            const filePath = (e.to || "").replace(/^file:/, "");
+            const fileLabel = fileNode ? fileNode.label : filePath.split("/").pop();
+            if (!createdByActivity[actLabel]) createdByActivity[actLabel] = [];
+            createdByActivity[actLabel].push({ label: fileLabel, path: filePath });
+        });
+
+        // Collect pre-existing files
+        const preExistingFiles = rawNodes
+            .filter(n => n.type === "preExisting")
+            .map(n => ({ label: n.label, path: n.id.replace(/^file:/, "") }));
+
+        const activities = Object.keys(createdByActivity);
+        if (activities.length === 0 && preExistingFiles.length === 0) {
+            tableContainer.innerHTML = `<p class="text-sm text-slate-500 dark:text-slate-400 text-center py-4">No files recorded yet.</p>`;
+            return;
+        }
+
+        const createdRows = activities.flatMap(act =>
+            createdByActivity[act].map((f, i) =>
+                `<tr class="border-b border-slate-100 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-600/40">
+                    ${i === 0
+                        ? `<td class="px-4 py-2 text-xs font-semibold text-sky-700 dark:text-sky-300 align-top" rowspan="${createdByActivity[act].length}">${act}</td>`
+                        : ""}
+                    <td class="px-4 py-2 text-xs text-slate-700 dark:text-slate-300 font-medium">${f.label}</td>
+                    <td class="px-4 py-2 text-xs text-slate-500 dark:text-slate-400 break-all">${f.path}</td>
+                </tr>`
+            )
+        ).join("");
+
+        const preExistingRows = preExistingFiles.map(f =>
+            `<tr class="border-b border-slate-100 dark:border-slate-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20">
+                <td class="px-4 py-2 text-xs font-semibold text-emerald-700 dark:text-emerald-300 align-top">Pre-existing<br><span class="font-normal text-slate-400 text-xs italic">prov:Entity</span></td>
+                <td class="px-4 py-2 text-xs text-slate-700 dark:text-slate-300 font-medium">${f.label}</td>
+                <td class="px-4 py-2 text-xs text-slate-500 dark:text-slate-400 break-all">${f.path}</td>
+            </tr>`
+        ).join("");
+
+        tableContainer.innerHTML = `
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-slate-100 dark:bg-slate-600">
+                        <th class="px-4 py-2 text-xs font-semibold text-slate-600 dark:text-slate-200 uppercase tracking-wider">Activity / Origin</th>
+                        <th class="px-4 py-2 text-xs font-semibold text-slate-600 dark:text-slate-200 uppercase tracking-wider">File Name</th>
+                        <th class="px-4 py-2 text-xs font-semibold text-slate-600 dark:text-slate-200 uppercase tracking-wider">Path</th>
+                    </tr>
+                </thead>
+                <tbody>${createdRows}${preExistingRows}</tbody>
+            </table>`;
     }
+
+    // Filter buttons + usedBy toggle
+    document.addEventListener('DOMContentLoaded', () => {
+        const rerender = () => {
+            if (lastProvenanceGraph) {
+                renderProvenanceNetwork(
+                    lastProvenanceGraph.nodes,
+                    lastProvenanceGraph.edges,
+                    document.getElementById("provenanceFileGraphView")
+                );
+            }
+        };
+
+        document.getElementById("showUsedByToggle").onchange = rerender;
+
+        document.getElementById("applyProvenanceFilterBtn").onclick = rerender;
+
+        document.getElementById("clearProvenanceFilterBtn").onclick = () => {
+            // Check all activities and created files; keep pre-existing hidden
+            document.querySelectorAll('.activity-filter, .created-file-filter').forEach(cb => cb.checked = true);
+            document.querySelectorAll('.preexisting-file-filter').forEach(cb => cb.checked = false);
+            rerender();
+        };
+    });
 
     function parseWorkflowToDag(workflow) {
         let nodes = [];

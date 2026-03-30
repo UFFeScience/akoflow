@@ -23,8 +23,7 @@ Although initially focused on Kubernetes-based workloads, AkôFlow has evolved t
   - Docker Desktop Kubernetes (enable Kubernetes in settings)
   - Cloud providers (e.g., EKS, GKE, AKS)
 
-
-## Instalation
+## Instalation Workflow Engine
 
 Run the following command to install AkôFlow:
 ```bash
@@ -34,6 +33,8 @@ curl -fsSL https://akoflow.com/run | bash
 AkôFlow will be available at `http://localhost:8080`.
 
 To view the [full documentation, click here](https://uffescience.github.io/akoflow/). 
+
+To see deployment Control Plane (https://github.com/UFFeScience/akoflow-deployment-control-plane)
 
 ## Demonstration video
 

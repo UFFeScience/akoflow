@@ -115,7 +115,7 @@ export default function Home(): React.JSX.Element {
       <main className={styles.page}>
         <BackgroundGraph />
 
-        <img src="/img/icon_akoflow.png" alt="AkôFlow" className={styles.logo} />
+        <img src="/akoflow/img/icon_akoflow.png" alt="AkôFlow" className={styles.logo} />
 
         <p className={styles.eyebrow}>
           Open Source &middot;{' '}

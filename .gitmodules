@@ -1,12 +1,16 @@
 [submodule "akoflow-workflow-engine"]
 	path = akoflow-workflow-engine
 	url = https://github.com/UFFeScience/akoflow-workflow-engine
+    branch = main
 [submodule "akoflow-desktop"]
 	path = akoflow-desktop
 	url = https://github.com/UFFeScience/akoflow-desktop
+    branch = main
 [submodule "akoflow-deployment-control-plane"]
 	path = akoflow-deployment-control-plane
 	url = https://github.com/UFFeScience/akoflow-deployment-control-plane
+    branch = main
 [submodule "akoflow-deployment-control-plane-ui"]
 	path = akoflow-deployment-control-plane-ui
 	url = https://github.com/UFFeScience/akoflow-deployment-control-plane-ui
+    branch = main

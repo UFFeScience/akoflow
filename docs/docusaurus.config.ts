@@ -7,8 +7,8 @@ const config: Config = {
   tagline: 'Open Source Engine for Containerized Scientific Workflows',
   favicon: 'img/favicon.ico',
 
-  url: 'https://akoflow.com',
-  baseUrl: '/',
+  url: 'https://uffescience.github.io',
+  baseUrl: '/akoflow/',
 
   organizationName: 'UFFeScience',
   projectName: 'akoflow',

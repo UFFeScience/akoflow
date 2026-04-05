@@ -15,37 +15,6 @@ Although initially focused on Kubernetes-based workloads, AkôFlow has evolved t
 
 ## Software Requirements
 
-- **Operating System:** Linux, macOS or WSL2 (Windows Subsystem for Linux)
-- **Docker:** [Install Docker](https://docs.docker.com/get-docker/)
-- **kubectl:** [Install kubectl](https://kubernetes.io/docs/tasks/tools/)
-- **Kubernetes Cluster:** One of the following:
-  - [Kind](https://kind.sigs.k8s.io/) (local)
-  - Docker Desktop Kubernetes (enable Kubernetes in settings)
-  - Cloud providers (e.g., EKS, GKE, AKS)
-
-## Instalation Workflow Engine
-
-Run the following command to install AkôFlow:
-```bash
-curl -fsSL https://akoflow.com/run | bash
-```
-
-AkôFlow will be available at `http://localhost:8080`.
-
-To view the [full documentation, click here](https://uffescience.github.io/akoflow/). 
-
-To see deployment Control Plane (https://github.com/UFFeScience/akoflow-deployment-control-plane)
-
-## Demonstration video
-
-[AkôFlow Demonstration _(In Portuguese)_](https://www.youtube.com/watch?v=RmrAMWkJij4)
-
-## Supported Environments
-
-* Kubernetes (public cloud providers: AWS, GCP, Azure, etc.)
-* Singularity (for local or HPC isolated execution)
-* SDumont supercomputer (LNCC - Brazil)
-
 ## Contributors
 * [D.Sc. Daniel de Oliveira — Research Advisor](http://profs.ic.uff.br/~danielcmo/)  
 * [Wesley Ferreira - @ovvesley — Maintainer - IC/UFF](https://github.com/ovvesley)  

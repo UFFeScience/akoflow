@@ -1,0 +1,300 @@
+/* ── Page layout ── */
+.page {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 5rem 1.5rem 6rem;
+  text-align: center;
+}
+
+/* ── Logo ── */
+.logo {
+  width: 82px;
+  height: 82px;
+  object-fit: contain;
+  margin-bottom: 2rem;
+  border-radius: 18px;
+  filter: none;
+  transition: filter 0.2s ease;
+}
+
+[data-theme='dark'] .logo {
+  filter: invert(1) brightness(1.05);
+}
+
+/* ── Eyebrow ── */
+.eyebrow {
+  font-size: 0.825rem;
+  color: var(--ifm-color-emphasis-600);
+  margin-bottom: 1.5rem;
+  font-weight: 400;
+}
+
+.eyebrow a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ── Headline ── */
+.headline {
+  font-size: clamp(2.25rem, 5.5vw, 3.75rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+  margin: 0 0 1rem;
+  color: var(--ifm-heading-color);
+  max-width: 680px;
+}
+
+/* ── Subheadline ── */
+.subheadline {
+  font-size: clamp(0.95rem, 2vw, 1.1rem);
+  color: var(--ifm-color-emphasis-700);
+  max-width: 500px;
+  margin: 0 auto 3.5rem;
+  line-height: 1.65;
+  font-weight: 400;
+}
+
+[data-theme='dark'] .subheadline {
+  color: var(--ifm-color-emphasis-500);
+}
+
+/* ── Platform section ── */
+.platformSection {
+  width: 100%;
+  max-width: 560px;
+  margin-bottom: 3rem;
+}
+
+.platformTabs {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+}
+
+.tabBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 1rem;
+  background: transparent;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--ifm-color-emphasis-700);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: var(--ifm-font-family-base);
+}
+
+.tabBtn:hover {
+  border-color: var(--ifm-color-emphasis-500);
+  color: var(--ifm-font-color-base);
+}
+
+.tabBtnActive {
+  background: var(--ifm-font-color-base);
+  border-color: var(--ifm-font-color-base);
+  color: var(--ifm-background-color) !important;
+}
+
+[data-theme='dark'] .tabBtnActive {
+  background: #e5e5e5;
+  border-color: #e5e5e5;
+  color: #0f0f0f !important;
+}
+
+.tabRecommended {
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.1rem 0.4rem;
+  border-radius: 999px;
+  background: #16a34a;
+  color: #fff;
+}
+
+/* ── Install card ── */
+.installCard {
+  background: var(--ifm-background-surface-color);
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 12px;
+  padding: 1.4rem;
+  text-align: left;
+}
+
+[data-theme='dark'] .installCard {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.07);
+}
+
+.installCardHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.65rem;
+}
+
+.installCardTitle {
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: var(--ifm-heading-color);
+  flex: 1;
+}
+
+.installCardBadge {
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  background: rgba(22, 163, 74, 0.1);
+  color: #16a34a;
+  border: 1px solid rgba(22, 163, 74, 0.2);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.installCardDesc {
+  font-size: 0.825rem;
+  color: var(--ifm-color-emphasis-600);
+  margin-bottom: 1rem;
+  line-height: 1.55;
+}
+
+/* ── Command row ── */
+.cmdRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: var(--ifm-background-color);
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 7px;
+  padding: 0.6rem 0.9rem;
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.8rem;
+}
+
+[data-theme='dark'] .cmdRow {
+  background: rgba(0, 0, 0, 0.3);
+  border-color: rgba(255, 255, 255, 0.06);
+}
+
+.cmdText {
+  flex: 1;
+  color: var(--ifm-font-color-base);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.copyBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 2px;
+  display: flex;
+  color: var(--ifm-color-emphasis-500);
+  transition: color 0.15s;
+  flex-shrink: 0;
+}
+
+.copyBtn:hover { color: var(--ifm-font-color-base); }
+.copyBtn svg { width: 14px; height: 14px; }
+.copied { color: #16a34a !important; }
+
+/* ── Download button ── */
+.downloadBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  width: 100%;
+  justify-content: center;
+  padding: 0.65rem 1rem;
+  background: var(--ifm-font-color-base);
+  color: var(--ifm-background-color) !important;
+  border-radius: 7px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none !important;
+  transition: opacity 0.15s;
+  margin-bottom: 0.75rem;
+}
+
+.downloadBtn:hover { opacity: 0.8; }
+
+.docsLink {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--ifm-color-emphasis-600);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-align: center;
+}
+
+.docsLink:hover { color: var(--ifm-font-color-base); }
+
+/* ── Hint ── */
+.hint {
+  font-size: 0.8rem;
+  color: var(--ifm-color-emphasis-500);
+  margin-top: 0.85rem;
+}
+
+.hint a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.hint a:hover { color: var(--ifm-font-color-base); }
+
+/* ── Divider ── */
+.divider {
+  width: 100%;
+  max-width: 360px;
+  height: 1px;
+  background: var(--ifm-color-emphasis-200);
+  margin: 2.5rem 0;
+}
+
+/* ── CTA buttons ── */
+.actions {
+  display: flex;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.btnPrimary {
+  padding: 0.55rem 1.3rem;
+  background: var(--ifm-font-color-base);
+  color: var(--ifm-background-color) !important;
+  border-radius: 7px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none !important;
+  transition: opacity 0.15s;
+}
+
+.btnPrimary:hover { opacity: 0.8; }
+
+.btnGhost {
+  padding: 0.55rem 1.3rem;
+  background: transparent;
+  color: var(--ifm-font-color-base) !important;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 7px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none !important;
+  transition: border-color 0.15s;
+}
+
+.btnGhost:hover { border-color: var(--ifm-color-emphasis-600); }

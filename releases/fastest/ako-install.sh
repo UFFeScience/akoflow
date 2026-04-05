@@ -188,80 +188,13 @@ install_cli_binary() {
   mkdir -p "$(dirname "$FALLBACK_INSTALL_PATH")"
   if cp "$SCRIPT_PATH" "$FALLBACK_INSTALL_PATH" && chmod +x "$FALLBACK_INSTALL_PATH" 2>/dev/null; then
     ok "CLI installed at ${FALLBACK_INSTALL_PATH}  (current user)"
-    # Ensure ~/.local/bin is in user's PATH by adding to shell rc and sourcing it
+    # If user-local install used, inform the user how to add it to PATH
     if [[ ":$PATH:" != *":$HOME/.local/bin:"* ]]; then
-      # Determine rc file
-      RC_FILES=()
-      case "$(basename "${SHELL:-/bin/sh}")" in
-        zsh)
-          RC_FILES+=("$HOME/.zshrc")
-          ;;
-        bash)
-          RC_FILES+=("$HOME/.bashrc" "$HOME/.profile")
-          ;;
-        *)
-      if [[ "$SILENT" == true ]]; then
-        # In silent mode, prefer system install if possible, else user-local
-        if [[ "$CAN_SUDO" == true ]]; then
-          if sudo cp "$SCRIPT_PATH" "$INSTALL_PATH" && sudo chmod +x "$INSTALL_PATH" 2>/dev/null; then
-            ok "CLI installed at ${INSTALL_PATH}  (system-wide)"
-            dim "Available to all users as: akoflow"
-            return 0
-          fi
-        fi
-        # fallback to user-local in silent mode
-        if cp "$SCRIPT_PATH" "$FALLBACK_INSTALL_PATH" && chmod +x "$FALLBACK_INSTALL_PATH" 2>/dev/null; then
-          ok "CLI installed at ${FALLBACK_INSTALL_PATH}  (current user)"
-          return 0
-        fi
-      else
-        if [[ "$CAN_SUDO" == true ]]; then
-          if sudo cp "$SCRIPT_PATH" "$INSTALL_PATH" && sudo chmod +x "$INSTALL_PATH" 2>/dev/null; then
-            ok "CLI installed at ${INSTALL_PATH}  (system-wide)"
-            dim "Available to all users as: akoflow"
-            return 0
-          fi
-        fi
-      fi
-          RC_FILES+=("$HOME/.profile" "$HOME/.bashrc" "$HOME/.zshrc")
-          ;;
-      esac
-
       EXPORT_LINE='export PATH="$HOME/.local/bin:$PATH"'
-      ADDED=false
-      for rc in "${RC_FILES[@]}"; do
-        if [[ -f "$rc" ]]; then
-          if ! grep -Fq "$EXPORT_LINE" "$rc" 2>/dev/null; then
-            printf "\n# added by akoflow installer\n%s\n" "$EXPORT_LINE" >>"$rc"
-            ADDED=true
-          fi
-        else
-          # create rc if not exists and add export
-          printf "%s\n" "# created by akoflow installer" >"$rc"
-          printf "%s\n" "$EXPORT_LINE" >>"$rc"
-          ADDED=true
-        fi
-        if [[ "$ADDED" == true ]]; then
-          # try to source the rc (only if interactive shell supports it)
-          if [[ -n "${ZSH_VERSION:-}" ]]; then
-            # zsh: source
-            source "$rc" 2>/dev/null || true
-          elif [[ -n "${BASH_VERSION:-}" ]]; then
-            # bash: source
-            source "$rc" 2>/dev/null || true
-          else
-            # fallback to dot
-            . "$rc" 2>/dev/null || true
-          fi
-          ok "Updated PATH in $rc and sourced it"
-          break
-        fi
-      done
-
-      if [[ "$ADDED" == false ]]; then
-        warn "~/.local/bin is not in your PATH. Add this to your shell rc manually:"
-        dim "$EXPORT_LINE"
-      fi
+      warn "akoflow was installed to $FALLBACK_INSTALL_PATH but ~/.local/bin is not in your PATH."
+      dim "Add the following line to your shell rc (e.g. ~/.zshrc or ~/.bashrc):"
+      dim "$EXPORT_LINE"
+      dim "Then reload your shell, for example: source ~/.zshrc"
     fi
   else
     warn "Could not install CLI binary."

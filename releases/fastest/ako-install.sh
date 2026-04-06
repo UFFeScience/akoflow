@@ -145,8 +145,32 @@ install_cli_binary() {
     SCRIPT_PATH="$(realpath "$0" 2>/dev/null || readlink -f "$0")"
   fi
 
+  # When piped via curl | bash, no file exists on disk — download directly
   if [[ -z "$SCRIPT_PATH" ]]; then
-    warn "Could not resolve script path — skipping CLI install."
+    local DEST
+    if [[ "$SYSTEM" == true ]]; then
+      DEST="$INSTALL_PATH"
+    else
+      DEST="$FALLBACK_INSTALL_PATH"
+    fi
+    mkdir -p "$(dirname "$DEST")"
+    if command -v curl &>/dev/null; then
+      curl -fsSL https://akoflow.com/run -o "$DEST" 2>/dev/null
+    elif command -v wget &>/dev/null; then
+      wget -qO "$DEST" https://akoflow.com/run 2>/dev/null
+    else
+      warn "Could not install CLI — curl and wget not found."
+      return 0
+    fi
+    chmod +x "$DEST"
+    warn "CLI installed at $DEST"
+    if [[ "$SYSTEM" != true ]]; then
+      dim "To use 'akoflow' from any terminal, add this to your ~/.bashrc or ~/.zshrc:"
+      printf "\n"
+      printf "    export PATH=\"\$HOME/.local/bin:\$PATH\"\n"
+      printf "\n"
+      dim "To install system-wide (all users): sudo akoflow install-cli"
+    fi
     return 0
   fi
 

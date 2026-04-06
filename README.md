@@ -13,8 +13,9 @@ AkôFlow is an open-source engine for orchestrating and executing container-base
 
 Although initially focused on Kubernetes-based workloads, AkôFlow has evolved to support general containerized execution across multiple infrastructures.
 
-To learn more about AkôFlow, please visit our project page: [https://akoflow.com/](https://akoflow.com)
-To see our documentation, please visit: [https://uffescience.github.io/akoflow/](https://uffescience.github.io/akoflow/)
+* To learn more about AkôFlow, please visit our project page: [https://akoflow.com/](https://akoflow.com)
+
+* To see our documentation, please visit: [https://uffescience.github.io/akoflow/](https://uffescience.github.io/akoflow/)
 
 ## Contributors
 * [D.Sc. Daniel de Oliveira — Research Advisor](http://profs.ic.uff.br/~danielcmo/)  

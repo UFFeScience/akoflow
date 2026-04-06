@@ -218,7 +218,9 @@ jobs:
           tags: |
             ${{ env.DOCKER_ORG }}/akoflow-workflow-engine:${{ needs.prepare.outputs.tag }}
             ${{ env.DOCKER_ORG }}/akoflow-workflow-engine:latest
-          cache-from: type=gha,scope=docker-engine
+          cache-from: |
+            type=registry,ref=${{ env.DOCKER_ORG }}/akoflow-workflow-engine:latest
+            type=gha,scope=docker-engine
           cache-to: type=gha,scope=docker-engine,mode=max
 
   # ──────────────────────────────────────────────────────────────
@@ -250,7 +252,9 @@ jobs:
           tags: |
             ${{ env.DOCKER_ORG }}/akoflow-deployment-control-plane:${{ needs.prepare.outputs.tag }}
             ${{ env.DOCKER_ORG }}/akoflow-deployment-control-plane:latest
-          cache-from: type=gha,scope=docker-cp-api
+          cache-from: |
+            type=registry,ref=${{ env.DOCKER_ORG }}/akoflow-deployment-control-plane:latest
+            type=gha,scope=docker-cp-api
           cache-to: type=gha,scope=docker-cp-api,mode=max
 
       - name: Build and push — UI (Next.js)
@@ -265,7 +269,9 @@ jobs:
           tags: |
             ${{ env.DOCKER_ORG }}/akoflow-deployment-control-plane-ui:${{ needs.prepare.outputs.tag }}
             ${{ env.DOCKER_ORG }}/akoflow-deployment-control-plane-ui:latest
-          cache-from: type=gha,scope=docker-cp-ui
+          cache-from: |
+            type=registry,ref=${{ env.DOCKER_ORG }}/akoflow-deployment-control-plane-ui:latest
+            type=gha,scope=docker-cp-ui
           cache-to: type=gha,scope=docker-cp-ui,mode=max
 
   # ──────────────────────────────────────────────────────────────
@@ -307,7 +313,9 @@ jobs:
           tags: |
             ${{ env.DOCKER_ORG }}/akoflow:${{ needs.prepare.outputs.tag }}
             ${{ env.DOCKER_ORG }}/akoflow:latest
-          cache-from: type=gha,scope=docker-standalone
+          cache-from: |
+            type=registry,ref=${{ env.DOCKER_ORG }}/akoflow:latest
+            type=gha,scope=docker-standalone
           cache-to: type=gha,scope=docker-standalone,mode=max
 
   # ──────────────────────────────────────────────────────────────

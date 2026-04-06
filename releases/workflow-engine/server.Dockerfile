@@ -4,7 +4,7 @@ WORKDIR /build
 
 RUN apt-get update && apt-get install -y git
 
-RUN git clone https://github.com/UFFeScience/akoflow.git .
+RUN git clone https://github.com/UFFeScience/akoflow-workflow-engine.git .
 
 RUN git checkout main
 

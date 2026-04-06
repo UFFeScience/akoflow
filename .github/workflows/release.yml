@@ -344,6 +344,7 @@ jobs:
         with:
           path: ./dist
           merge-multiple: true
+          pattern: "{workflow-engine,desktop-mac,desktop-win,desktop-linux}"
 
       - name: Generate release notes
         run: |

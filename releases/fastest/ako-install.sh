@@ -131,12 +131,11 @@ container_exists() {
 }
 
 # ── CLI binary install ────────────────────────────────────────────────────────
-# install_cli_binary [--silent]
-#   Without --silent: interactive prompt asking where to install.
-#   With    --silent: auto-installs to best available path, no prompt.
+# Default: always installs to ~/.local/bin and informs the user.
+# install-cli command: installs to /usr/local/bin (system-wide) if possible.
 install_cli_binary() {
-  local SILENT=false
-  [[ "${1:-}" == "--silent" ]] && SILENT=true
+  local SYSTEM=false
+  [[ "${1:-}" == "--system" ]] && SYSTEM=true
 
   # Resolve script path
   local SCRIPT_PATH=""
@@ -148,59 +147,42 @@ install_cli_binary() {
 
   if [[ -z "$SCRIPT_PATH" ]]; then
     warn "Could not resolve script path — skipping CLI install."
-    dim "To install later: akoflow install-cli"
     return 0
   fi
 
-  local CAN_SUDO=false
-  if sudo -n true 2>/dev/null || [[ -w "$(dirname "$INSTALL_PATH")" ]]; then
-    CAN_SUDO=true
-  fi
-
-  if [[ "$SILENT" == false ]]; then
-    printf "\n"
-    printf "\n"
-    printf "  Install akoflow CLI to the system path (/usr/local/bin) if writable, otherwise to your user path (~/.local/bin)? [Y/n] "
-    local CONFIRM
-    read -r CONFIRM </dev/tty
-    CONFIRM="${CONFIRM:-y}"
-    if [[ ! "$CONFIRM" =~ ^[Yy]$ ]]; then
-      dim "Skipped. Run 'akoflow install-cli' anytime to install later."
-      return 0
-    fi
-  fi
-
-  # Attempt system-wide install
-  if [[ "$CAN_SUDO" == true ]]; then
-      # If akoflow is already available, skip install
-      if command -v akoflow &>/dev/null; then
-        ok "akoflow CLI already installed and available in PATH"
-        return 0
-      fi
+  if [[ "$SYSTEM" == true ]]; then
+    # System-wide: requires sudo
     if sudo cp "$SCRIPT_PATH" "$INSTALL_PATH" && sudo chmod +x "$INSTALL_PATH" 2>/dev/null; then
-      ok "CLI installed at ${INSTALL_PATH}  (system-wide)"
-      dim "Available to all users as: akoflow"
-      return 0
+      ok "CLI installed at $INSTALL_PATH"
+      dim "Available system-wide as: akoflow"
+    else
+      warn "sudo required for system-wide install. Try: sudo akoflow install-cli"
+      dim "Falling back to user install..."
+      install_cli_binary
     fi
+    return 0
   fi
 
-  # Fallback: user-local install
+  # Default: user-local install (~/.local/bin)
   mkdir -p "$(dirname "$FALLBACK_INSTALL_PATH")"
   if cp "$SCRIPT_PATH" "$FALLBACK_INSTALL_PATH" && chmod +x "$FALLBACK_INSTALL_PATH" 2>/dev/null; then
-    ok "CLI installed at ${FALLBACK_INSTALL_PATH}  (current user)"
-    # If user-local install used, inform the user how to add it to PATH
-    if [[ ":$PATH:" != *":$HOME/.local/bin:"* ]]; then
-      EXPORT_LINE='export PATH="$HOME/.local/bin:$PATH"'
-      warn "akoflow was installed to $FALLBACK_INSTALL_PATH but ~/.local/bin is not in your PATH."
-      dim "Add the following line to your shell rc (e.g. ~/.zshrc or ~/.bashrc):"
-      dim "$EXPORT_LINE"
-      dim "Then reload your shell, for example: source ~/.zshrc"
-    fi
+    warn "CLI installed at $FALLBACK_INSTALL_PATH"
+    dim "To use 'akoflow' from any terminal, add this to your ~/.bashrc or ~/.zshrc:"
+    printf "\n"
+    printf "    export PATH=\"\$HOME/.local/bin:\$PATH\"\n"
+    printf "\n"
+    dim "To install system-wide (all users): sudo akoflow install-cli"
   else
-    warn "Could not install CLI binary."
-    dim "To install manually, copy this script to /usr/local/bin/akoflow and chmod +x it."
+    warn "Could not write to $FALLBACK_INSTALL_PATH — skipping CLI install."
   fi
 }
+
+# =============================================================================
+# AUTO CLI INSTALL — runs on every execution if akoflow is not in PATH
+# =============================================================================
+if ! command -v akoflow &>/dev/null; then
+  install_cli_binary
+fi
 
 # =============================================================================
 # HELP
@@ -244,7 +226,7 @@ fi
 # =============================================================================
 if [[ "${1:-}" == "install-cli" || "${1:-}" == "--install" ]]; then
   banner
-  install_cli_binary "${@:2}"
+  install_cli_binary --system
   printf "\n"
   dim "Run 'akoflow --help' to see all available commands."
   printf "\n"
@@ -532,14 +514,6 @@ EOF
 fi
 spin_stop
 ok "Container started"
-
-# Install CLI binary — ask if TTY, silent if piped (curl | bash)
-if [ -t 0 ]; then
-  install_cli_binary
-else
-  # Running via pipe (curl | bash) — install silently to best available path
-  install_cli_binary --silent
-fi
 
 # ── Summary ───────────────────────────────────────────────────────────────────
 printf "\n"

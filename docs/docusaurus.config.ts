@@ -73,7 +73,10 @@ const config: Config = {
           title: 'Docs',
           items: [
             { label: 'Getting Started', to: '/docs/getting-started' },
+            { label: 'Modules', to: '/docs/modules' },
+            { label: 'CLI Reference', to: '/docs/cli' },
             { label: 'Installation', to: '/docs/installation' },
+            { label: 'Downloads', to: '/docs/downloads' },
             { label: 'User Guide', to: '/docs/user-guide' },
           ],
         },
@@ -90,6 +93,14 @@ const config: Config = {
             {
               label: 'GitHub',
               href: 'https://github.com/UFFeScience/akoflow',
+            },
+            {
+              label: 'Releases',
+              href: 'https://github.com/UFFeScience/akoflow/releases',
+            },
+            {
+              label: 'Docker Hub',
+              href: 'https://hub.docker.com/u/akoflow',
             },
             {
               label: 'IC/UFF',

@@ -6,19 +6,25 @@ const sidebars: SidebarsConfig = {
       type: 'category',
       label: 'Overview',
       collapsed: false,
-      items: ['getting-started'],
+      items: ['getting-started', 'modules', 'concepts'],
     },
     {
       type: 'category',
       label: 'Setup',
       collapsed: false,
-      items: ['installation'],
+      items: ['cli', 'installation', 'downloads'],
     },
     {
       type: 'category',
       label: 'Usage',
       collapsed: false,
-      items: ['user-guide'],
+      items: ['user-guide', 'examples'],
+    },
+    {
+      type: 'category',
+      label: 'Internals',
+      collapsed: true,
+      items: ['engine', 'runtimes'],
     },
     {
       type: 'category',

@@ -1,0 +1,581 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+
+env:
+  DOCKER_ORG: akoflow
+
+jobs:
+  # ──────────────────────────────────────────────────────────────
+  # JOB 1 — Extract version metadata
+  # ──────────────────────────────────────────────────────────────
+  prepare:
+    name: Prepare
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.meta.outputs.version }}
+      tag: ${{ steps.meta.outputs.tag }}
+    steps:
+      - name: Extract version metadata
+        id: meta
+        run: |
+          TAG="${GITHUB_REF#refs/tags/}"
+          VERSION="${TAG#v}"
+          echo "tag=$TAG"     >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Release: $TAG (version $VERSION)"
+
+  # ──────────────────────────────────────────────────────────────
+  # JOB 2 — Build Workflow Engine Go binaries (all platforms)
+  # ──────────────────────────────────────────────────────────────
+  build-workflow-engine:
+    name: Build Workflow Engine
+    runs-on: ubuntu-latest
+    needs: prepare
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build cross-compiler image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./akoflow-workflow-engine
+          file: ./akoflow-workflow-engine/.devcontainer/dev.Dockerfile
+          load: true
+          tags: akoflow-builder:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build binaries for all platforms
+        run: |
+          VERSION=${{ needs.prepare.outputs.version }}
+          mkdir -p releases/bin
+
+          docker run --rm \
+            -v "$(pwd)/akoflow-workflow-engine:/app" \
+            -v "$(pwd)/releases/bin:/releases/bin" \
+            akoflow-builder:latest sh -c "
+              set -e
+              cd /app
+
+              echo '→ server linux/amd64'
+              CGO_ENABLED=1 GOOS=linux GOARCH=amd64 \
+                go build -ldflags \"-X main.Version=${VERSION}\" \
+                -o /releases/bin/akoflow-server_${VERSION}_linux_amd64 ./cmd/server/main.go
+
+              echo '→ server linux/arm64'
+              CGO_ENABLED=1 GOOS=linux GOARCH=arm64 CC=aarch64-linux-gnu-gcc \
+                go build -ldflags \"-X main.Version=${VERSION}\" \
+                -o /releases/bin/akoflow-server_${VERSION}_linux_arm64 ./cmd/server/main.go
+
+              echo '→ server windows/amd64'
+              CGO_ENABLED=0 GOOS=windows GOARCH=amd64 \
+                go build -ldflags \"-X main.Version=${VERSION}\" \
+                -o /releases/bin/akoflow-server_${VERSION}_windows_amd64.exe ./cmd/server/main.go
+
+              echo '→ server darwin/amd64'
+              CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 \
+                go build -ldflags \"-X main.Version=${VERSION}\" \
+                -o /releases/bin/akoflow-server_${VERSION}_darwin_amd64 ./cmd/server/main.go
+
+              echo '→ server darwin/arm64'
+              CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 \
+                go build -ldflags \"-X main.Version=${VERSION}\" \
+                -o /releases/bin/akoflow-server_${VERSION}_darwin_arm64 ./cmd/server/main.go
+
+              echo '→ client linux/amd64'
+              CGO_ENABLED=1 GOOS=linux GOARCH=amd64 \
+                go build -ldflags \"-X main.Version=${VERSION}\" \
+                -o /releases/bin/akoflow-client_${VERSION}_linux_amd64 ./cmd/client/main.go
+
+              echo '→ client linux/arm64'
+              CGO_ENABLED=1 GOOS=linux GOARCH=arm64 CC=aarch64-linux-gnu-gcc \
+                go build -ldflags \"-X main.Version=${VERSION}\" \
+                -o /releases/bin/akoflow-client_${VERSION}_linux_arm64 ./cmd/client/main.go
+
+              echo '→ client windows/amd64'
+              CGO_ENABLED=0 GOOS=windows GOARCH=amd64 \
+                go build -ldflags \"-X main.Version=${VERSION}\" \
+                -o /releases/bin/akoflow-client_${VERSION}_windows_amd64.exe ./cmd/client/main.go
+
+              echo '→ client darwin/amd64'
+              CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 \
+                go build -ldflags \"-X main.Version=${VERSION}\" \
+                -o /releases/bin/akoflow-client_${VERSION}_darwin_amd64 ./cmd/client/main.go
+
+              echo '→ client darwin/arm64'
+              CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 \
+                go build -ldflags \"-X main.Version=${VERSION}\" \
+                -o /releases/bin/akoflow-client_${VERSION}_darwin_arm64 ./cmd/client/main.go
+            "
+
+      - name: Package archives
+        run: |
+          VERSION=${{ needs.prepare.outputs.version }}
+          cd releases/bin
+
+          tar -czf ../akoflow-engine_${VERSION}_linux_amd64.tar.gz   *_linux_amd64
+          tar -czf ../akoflow-engine_${VERSION}_linux_arm64.tar.gz   *_linux_arm64
+          zip   -r ../akoflow-engine_${VERSION}_windows_amd64.zip    *_windows_amd64.exe
+          tar -czf ../akoflow-engine_${VERSION}_darwin_amd64.tar.gz  *_darwin_amd64
+          tar -czf ../akoflow-engine_${VERSION}_darwin_arm64.tar.gz  *_darwin_arm64
+
+          sha256sum * > ../akoflow-engine_${VERSION}_checksums.txt
+          cd ../..
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: workflow-engine
+          path: releases/
+          retention-days: 1
+
+  # ──────────────────────────────────────────────────────────────
+  # JOB 3 — Build Desktop app (matrix: mac / win / linux)
+  # ──────────────────────────────────────────────────────────────
+  build-desktop:
+    name: Desktop — ${{ matrix.label }}
+    needs: prepare
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - label: macOS (arm64 + x64)
+            os: macos-latest
+            script: dist:mac
+            artifact: desktop-mac
+            glob: "akoflow-desktop/dist/*.dmg"
+
+          - label: Windows (x64)
+            os: windows-latest
+            script: dist:win
+            artifact: desktop-win
+            glob: "akoflow-desktop/dist/*.exe"
+
+          - label: Linux (x64)
+            os: ubuntu-latest
+            script: dist:linux
+            artifact: desktop-linux
+            glob: "akoflow-desktop/dist/*.AppImage"
+
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        working-directory: ./akoflow-desktop
+        run: npm install
+
+      - name: Build desktop distribution
+        working-directory: ./akoflow-desktop
+        run: npm run ${{ matrix.script }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: ${{ matrix.glob }}
+          retention-days: 1
+
+  # ──────────────────────────────────────────────────────────────
+  # JOB 4 — Docker: Workflow Engine
+  # ──────────────────────────────────────────────────────────────
+  docker-workflow-engine:
+    name: Docker — Workflow Engine
+    runs-on: ubuntu-latest
+    needs: prepare
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: docker/setup-qemu-action@v3
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: ./akoflow-workflow-engine
+          file: ./releases/workflow-engine/server.Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: |
+            ${{ env.DOCKER_ORG }}/akoflow-workflow-engine:${{ needs.prepare.outputs.tag }}
+            ${{ env.DOCKER_ORG }}/akoflow-workflow-engine:latest
+          cache-from: type=gha,scope=docker-engine
+          cache-to: type=gha,scope=docker-engine,mode=max
+
+  # ──────────────────────────────────────────────────────────────
+  # JOB 5 — Docker: Control Plane (API + UI, separate images)
+  # ──────────────────────────────────────────────────────────────
+  docker-control-plane:
+    name: Docker — Control Plane
+    runs-on: ubuntu-latest
+    needs: prepare
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: docker/setup-qemu-action@v3
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push — API (Laravel)
+        uses: docker/build-push-action@v6
+        with:
+          context: ./akoflow-deployment-control-plane
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: |
+            ${{ env.DOCKER_ORG }}/akoflow-deployment-control-plane:${{ needs.prepare.outputs.tag }}
+            ${{ env.DOCKER_ORG }}/akoflow-deployment-control-plane:latest
+          cache-from: type=gha,scope=docker-cp-api
+          cache-to: type=gha,scope=docker-cp-api,mode=max
+
+      - name: Build and push — UI (Next.js)
+        uses: docker/build-push-action@v6
+        with:
+          context: ./akoflow-deployment-control-plane-ui
+          file: ./akoflow-deployment-control-plane-ui/Dockerfile.deploy
+          platforms: linux/amd64,linux/arm64
+          push: true
+          build-args: |
+            NEXT_PUBLIC_API_URL=https://cloud.akoflow.com/api
+          tags: |
+            ${{ env.DOCKER_ORG }}/akoflow-deployment-control-plane-ui:${{ needs.prepare.outputs.tag }}
+            ${{ env.DOCKER_ORG }}/akoflow-deployment-control-plane-ui:latest
+          cache-from: type=gha,scope=docker-cp-ui
+          cache-to: type=gha,scope=docker-cp-ui,mode=max
+
+  # ──────────────────────────────────────────────────────────────
+  # JOB 6 — Docker: Standalone (API + UI + nginx in one image)
+  # ──────────────────────────────────────────────────────────────
+  docker-standalone:
+    name: Docker — Standalone
+    runs-on: ubuntu-latest
+    needs: prepare
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-qemu-action@v3
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Prepare standalone build context
+        run: |
+          # The Dockerfile expects config files inside a docker/ subdirectory
+          mkdir -p releases/standalone/docker
+          cp releases/standalone/nginx.conf        releases/standalone/docker/nginx.conf
+          cp releases/standalone/php-fpm-pool.conf releases/standalone/docker/php-fpm-pool.conf
+          cp releases/standalone/supervisord.conf  releases/standalone/docker/supervisord.conf
+          cp releases/standalone/entrypoint.sh     releases/standalone/docker/entrypoint.sh
+
+      - name: Build and push — Standalone
+        uses: docker/build-push-action@v6
+        with:
+          context: ./releases/standalone
+          platforms: linux/amd64,linux/arm64
+          push: true
+          build-args: |
+            BACKEND_REF=main
+            FRONTEND_REF=main
+          tags: |
+            ${{ env.DOCKER_ORG }}/akoflow:${{ needs.prepare.outputs.tag }}
+            ${{ env.DOCKER_ORG }}/akoflow:latest
+          cache-from: type=gha,scope=docker-standalone
+          cache-to: type=gha,scope=docker-standalone,mode=max
+
+  # ──────────────────────────────────────────────────────────────
+  # JOB 7 — Assemble and publish the GitHub Release
+  # ──────────────────────────────────────────────────────────────
+  create-release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    needs:
+      - prepare
+      - build-workflow-engine
+      - build-desktop
+      - docker-workflow-engine
+      - docker-control-plane
+      - docker-standalone
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Download all build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ./dist
+          merge-multiple: true
+
+      - name: Generate release notes
+        run: |
+          TAG=${{ needs.prepare.outputs.tag }}
+          VERSION=${{ needs.prepare.outputs.version }}
+
+          # ── Per-module changelogs ──────────────────────────────
+          get_log() {
+            local dir="$1"
+            local log
+            log=$(git -C "$dir" log --pretty=format:"- %s" -15 2>/dev/null) || log="- No commits found"
+            [ -z "$log" ] && log="- No commits found"
+            echo "$log"
+          }
+
+          ENGINE_LOG=$(get_log akoflow-workflow-engine)
+          DESKTOP_LOG=$(get_log akoflow-desktop)
+          CP_LOG=$(get_log akoflow-deployment-control-plane)
+          UI_LOG=$(get_log akoflow-deployment-control-plane-ui)
+
+          # ── Write release-notes.md ─────────────────────────────
+          cat > release-notes.md << MARKDOWN
+          # AkôFlow ${TAG}
+
+          > **AkôFlow** is a scientific workflow management platform for multi-cloud and HPC environments.
+          > This release delivers updates across all modules — engine, desktop, control plane, and standalone bundle.
+
+          ---
+
+          ## What's new
+
+          <details open>
+          <summary><strong>Workflow Engine</strong> — Go binary &amp; Docker image</summary>
+
+          ${ENGINE_LOG}
+
+          </details>
+
+          <details open>
+          <summary><strong>Desktop App</strong> — Electron (macOS · Windows · Linux)</summary>
+
+          ${DESKTOP_LOG}
+
+          </details>
+
+          <details open>
+          <summary><strong>Control Plane API</strong> — Laravel / PHP</summary>
+
+          ${CP_LOG}
+
+          </details>
+
+          <details open>
+          <summary><strong>Control Plane UI</strong> — Next.js</summary>
+
+          ${UI_LOG}
+
+          </details>
+
+          ---
+
+          ## Desktop downloads
+
+          | Platform | Architecture | File |
+          |---|---|---|
+          | macOS | Apple Silicon (arm64) | \`AkôFlow Desktop-*-arm64.dmg\` |
+          | macOS | Intel (x64) | \`AkôFlow Desktop-*.dmg\` |
+          | Windows | x64 | \`AkôFlow Desktop Setup *.exe\` |
+          | Linux | x64 | \`AkôFlow Desktop-*.AppImage\` |
+
+          > **macOS note:** If the app is blocked by Gatekeeper, run:
+          > \`\`\`
+          > xattr -cr /Applications/AkôFlow\ Desktop.app
+          > \`\`\`
+
+          ---
+
+          ## Workflow Engine downloads
+
+          | Platform | File |
+          |---|---|
+          | Linux x64 | \`akoflow-engine_${VERSION}_linux_amd64.tar.gz\` |
+          | Linux arm64 | \`akoflow-engine_${VERSION}_linux_arm64.tar.gz\` |
+          | macOS x64 | \`akoflow-engine_${VERSION}_darwin_amd64.tar.gz\` |
+          | macOS arm64 (Apple Silicon) | \`akoflow-engine_${VERSION}_darwin_arm64.tar.gz\` |
+          | Windows x64 | \`akoflow-engine_${VERSION}_windows_amd64.zip\` |
+
+          The archive contains two binaries:
+          - **akoflow-server** — the workflow execution server
+          - **akoflow-client** — the CLI to submit and manage workflows
+
+          **Quick install (Linux/macOS):**
+          \`\`\`bash
+          # Example for Linux x64
+          curl -L https://github.com/UFFeScience/akoflow/releases/download/${TAG}/akoflow-engine_${VERSION}_linux_amd64.tar.gz | tar xz
+          chmod +x akoflow-server akoflow-client
+          sudo mv akoflow-server akoflow-client /usr/local/bin/
+          \`\`\`
+
+          Verify integrity with \`akoflow-engine_${VERSION}_checksums.txt\`.
+
+          ---
+
+          ## Docker images
+
+          All images are published to [Docker Hub](https://hub.docker.com/u/akoflow) for **linux/amd64** and **linux/arm64**.
+
+          ### Pull commands
+
+          \`\`\`bash
+          # Workflow Engine (standalone Go server)
+          docker pull akoflow/akoflow-workflow-engine:${TAG}
+
+          # Control Plane — API (Laravel)
+          docker pull akoflow/akoflow-deployment-control-plane:${TAG}
+
+          # Control Plane — UI (Next.js)
+          docker pull akoflow/akoflow-deployment-control-plane-ui:${TAG}
+
+          # Standalone bundle (API + UI + nginx in one container — simplest deploy)
+          docker pull akoflow/akoflow:${TAG}
+          \`\`\`
+
+          ### Option A — Standalone (one container, everything included)
+
+          \`\`\`bash
+          docker run -d \
+            --name akoflow \
+            -p 80:80 \
+            -v akoflow-data:/app/backend/database \
+            -v akoflow-storage:/app/backend/storage \
+            akoflow/akoflow:${TAG}
+          \`\`\`
+
+          Open **http://localhost** in your browser.
+
+          ### Option B — Control Plane (separate containers)
+
+          \`\`\`yaml
+          # docker-compose.yml
+          services:
+            db:
+              image: postgres:16-alpine
+              environment:
+                POSTGRES_DB: akoflow
+                POSTGRES_USER: akoflow
+                POSTGRES_PASSWORD: secret
+              volumes:
+                - pgdata:/var/lib/postgresql/data
+
+            api:
+              image: akoflow/akoflow-deployment-control-plane:${TAG}
+              depends_on: [db]
+              environment:
+                DB_CONNECTION: pgsql
+                DB_HOST: db
+                DB_DATABASE: akoflow
+                DB_USERNAME: akoflow
+                DB_PASSWORD: secret
+                APP_KEY: base64:<generate with php artisan key:generate --show>
+              ports:
+                - "8000:8000"
+
+            ui:
+              image: akoflow/akoflow-deployment-control-plane-ui:${TAG}
+              environment:
+                NEXT_PUBLIC_API_URL: http://api:8000/api
+              ports:
+                - "3000:3000"
+
+          volumes:
+            pgdata:
+          \`\`\`
+
+          \`\`\`bash
+          docker compose up -d
+          \`\`\`
+
+          ### Option C — Workflow Engine only
+
+          \`\`\`bash
+          docker run -d \
+            --name akoflow-engine \
+            -p 8080:8080 \
+            -v \$(pwd)/workflows:/app/workflows \
+            akoflow/akoflow-workflow-engine:${TAG}
+          \`\`\`
+
+          ---
+
+          ## Architecture overview
+
+          \`\`\`
+          ┌─────────────────────────────────────────────────┐
+          │                   AkôFlow ${TAG}                     │
+          ├──────────────┬──────────────┬───────────────────┤
+          │   Desktop    │ Control Plane│  Workflow Engine  │
+          │  (Electron)  │ API  │  UI   │   (Go binary /    │
+          │  mac/win/lnx │(PHP) │(Next) │   Docker)         │
+          └──────────────┴──────┴───────┴───────────────────┘
+                    ↕                           ↕
+          ┌─────────────────────┐   ┌──────────────────────┐
+          │  akoflow/akoflow    │   │  Multi-cloud / HPC   │
+          │  (all-in-one bundle)│   │  AWS · GCP · Azure   │
+          └─────────────────────┘   └──────────────────────┘
+          \`\`\`
+
+          ---
+
+          ## Resources
+
+          | | Link |
+          |---|---|
+          | Documentation | https://uffescience.github.io/akoflow/ |
+          | Project site  | https://akoflow.com/ |
+          | Docker Hub    | https://hub.docker.com/u/akoflow |
+          | Issues        | https://github.com/UFFeScience/akoflow/issues |
+          | Source (engine) | https://github.com/UFFeScience/akoflow-workflow-engine |
+          | Source (desktop) | https://github.com/UFFeScience/akoflow-desktop |
+          | Source (control plane) | https://github.com/UFFeScience/akoflow-deployment-control-plane |
+          | Source (control plane UI) | https://github.com/UFFeScience/akoflow-deployment-control-plane-ui |
+
+          ---
+
+          *Released by [AkôFlow CI](https://github.com/UFFeScience/akoflow/actions) · tag \`${TAG}\`*
+          MARKDOWN
+
+          echo "Release notes written to release-notes.md"
+          wc -l release-notes.md
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ needs.prepare.outputs.tag }}
+          name: "AkôFlow ${{ needs.prepare.outputs.tag }}"
+          body_path: release-notes.md
+          draft: false
+          prerelease: false
+          fail_on_unmatched_files: false
+          files: |
+            dist/**
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

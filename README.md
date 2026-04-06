@@ -17,6 +17,33 @@ Although initially focused on Kubernetes-based workloads, AkôFlow has evolved t
 
 * To see our documentation, please visit: [https://uffescience.github.io/akoflow/](https://uffescience.github.io/akoflow/)
 
+## Getting Started
+
+AkôFlow can be installed and run with a single command, making it easy to get started with containerized workflow execution.
+
+```bash
+curl -fsSL https://akoflow.com/run | bash 
+```
+
+
+## Docker images
+
+All images are published to [Docker Hub](https://hub.docker.com/u/akoflow) for `linux/amd64` and `linux/arm64`.
+
+| Image | Description |
+|---|---|
+| [`akoflow/akoflow`](https://hub.docker.com/r/akoflow/akoflow) | Standalone bundle — one container |
+| [`akoflow/akoflow-workflow-engine`](https://hub.docker.com/r/akoflow/akoflow-workflow-engine) | Workflow execution engine |
+| [`akoflow/akoflow-deployment-control-plane`](https://hub.docker.com/r/akoflow/akoflow-deployment-control-plane) | Control Plane API |
+| [`akoflow/akoflow-deployment-control-plane-ui`](https://hub.docker.com/r/akoflow/akoflow-deployment-control-plane-ui) | Control Plane UI |
+
+## Releases
+
+New versions are released automatically when a tag in the format `v0.x.y` is pushed to this repository.  
+Each release includes binaries, desktop installers, and versioned Docker images.
+
+See all releases: [https://github.com/UFFeScience/akoflow/releases](https://github.com/UFFeScience/akoflow/releases)
+
 ## Contributors
 * [D.Sc. Daniel de Oliveira — Research Advisor](http://profs.ic.uff.br/~danielcmo/)  
 * [Wesley Ferreira - @ovvesley — Maintainer - IC/UFF](https://github.com/ovvesley)  

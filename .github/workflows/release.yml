@@ -377,28 +377,28 @@ jobs:
           ## What's new
 
           <details open>
-          <summary><strong>Workflow Engine</strong> — Go binary &amp; Docker image</summary>
+          <summary><strong>Workflow Engine</strong></summary>
 
           ${ENGINE_LOG}
 
           </details>
 
           <details open>
-          <summary><strong>Desktop App</strong> — Electron (macOS · Windows · Linux)</summary>
+          <summary><strong>Desktop App</strong></summary>
 
           ${DESKTOP_LOG}
 
           </details>
 
           <details open>
-          <summary><strong>Control Plane API</strong> — Laravel / PHP</summary>
+          <summary><strong>Control Plane API</strong></summary>
 
           ${CP_LOG}
 
           </details>
 
           <details open>
-          <summary><strong>Control Plane UI</strong> — Next.js</summary>
+          <summary><strong>Control Plane UI</strong></summary>
 
           ${UI_LOG}
 
@@ -406,7 +406,7 @@ jobs:
 
           ---
 
-          ## Desktop downloads
+          ## AkôFlow Desktop downloads
 
           | Platform | Architecture | File |
           |---|---|---|
@@ -419,119 +419,6 @@ jobs:
           > \`\`\`
           > xattr -cr /Applications/AkôFlow\ Desktop.app
           > \`\`\`
-
-          ---
-
-          ## Workflow Engine downloads
-
-          | Platform | File |
-          |---|---|
-          | Linux x64 | \`akoflow-engine_${VERSION}_linux_amd64.tar.gz\` |
-          | Linux arm64 | \`akoflow-engine_${VERSION}_linux_arm64.tar.gz\` |
-          | macOS x64 | \`akoflow-engine_${VERSION}_darwin_amd64.tar.gz\` |
-          | macOS arm64 (Apple Silicon) | \`akoflow-engine_${VERSION}_darwin_arm64.tar.gz\` |
-          | Windows x64 | \`akoflow-engine_${VERSION}_windows_amd64.zip\` |
-
-          The archive contains two binaries:
-          - **akoflow-server** — the workflow execution server
-          - **akoflow-client** — the CLI to submit and manage workflows
-
-          **Quick install (Linux/macOS):**
-          \`\`\`bash
-          # Example for Linux x64
-          curl -L https://github.com/UFFeScience/akoflow/releases/download/${TAG}/akoflow-engine_${VERSION}_linux_amd64.tar.gz | tar xz
-          chmod +x akoflow-server akoflow-client
-          sudo mv akoflow-server akoflow-client /usr/local/bin/
-          \`\`\`
-
-          Verify integrity with \`akoflow-engine_${VERSION}_checksums.txt\`.
-
-          ---
-
-          ## Docker images
-
-          All images are published to [Docker Hub](https://hub.docker.com/u/akoflow) for **linux/amd64** and **linux/arm64**.
-
-          ### Pull commands
-
-          \`\`\`bash
-          # Workflow Engine (standalone Go server)
-          docker pull akoflow/akoflow-workflow-engine:${TAG}
-
-          # Control Plane — API (Laravel)
-          docker pull akoflow/akoflow-deployment-control-plane:${TAG}
-
-          # Control Plane — UI (Next.js)
-          docker pull akoflow/akoflow-deployment-control-plane-ui:${TAG}
-
-          # Standalone bundle (API + UI + nginx in one container — simplest deploy)
-          docker pull akoflow/akoflow:${TAG}
-          \`\`\`
-
-          ### Option A — Standalone (one container, everything included)
-
-          \`\`\`bash
-          docker run -d \
-            --name akoflow \
-            -p 80:80 \
-            -v akoflow-data:/app/backend/database \
-            -v akoflow-storage:/app/backend/storage \
-            akoflow/akoflow:${TAG}
-          \`\`\`
-
-          Open **http://localhost** in your browser.
-
-          ### Option B — Control Plane (separate containers)
-
-          \`\`\`yaml
-          # docker-compose.yml
-          services:
-            db:
-              image: postgres:16-alpine
-              environment:
-                POSTGRES_DB: akoflow
-                POSTGRES_USER: akoflow
-                POSTGRES_PASSWORD: secret
-              volumes:
-                - pgdata:/var/lib/postgresql/data
-
-            api:
-              image: akoflow/akoflow-deployment-control-plane:${TAG}
-              depends_on: [db]
-              environment:
-                DB_CONNECTION: pgsql
-                DB_HOST: db
-                DB_DATABASE: akoflow
-                DB_USERNAME: akoflow
-                DB_PASSWORD: secret
-                APP_KEY: base64:<generate with php artisan key:generate --show>
-              ports:
-                - "8000:8000"
-
-            ui:
-              image: akoflow/akoflow-deployment-control-plane-ui:${TAG}
-              environment:
-                NEXT_PUBLIC_API_URL: http://api:8000/api
-              ports:
-                - "3000:3000"
-
-          volumes:
-            pgdata:
-          \`\`\`
-
-          \`\`\`bash
-          docker compose up -d
-          \`\`\`
-
-          ### Option C — Workflow Engine only
-
-          \`\`\`bash
-          docker run -d \
-            --name akoflow-engine \
-            -p 8080:8080 \
-            -v \$(pwd)/workflows:/app/workflows \
-            akoflow/akoflow-workflow-engine:${TAG}
-          \`\`\`
 
           ---
 

@@ -11,17 +11,7 @@ RUN git checkout main
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o akoflow-server ./cmd/server
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o akoflow ./cmd/client
 
-FROM debian:bookworm-slim
-
-RUN apt-get update && apt-get install -y \
-    ca-certificates \
-    curl \
-    unzip \
-    sqlite3 \
-    ssh \
-    sshpass \
-    rsync \
- && rm -rf /var/lib/apt/lists/*
+FROM akoflow/base-workflow-engine:latest
 
 WORKDIR /app
 

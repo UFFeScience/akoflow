@@ -2,14 +2,23 @@ FROM golang:1.23-bookworm AS builder
 
 WORKDIR /build
 
-RUN apt-get update && apt-get install -y git
+ARG TARGETOS=linux
+ARG TARGETARCH
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+	gcc \
+	libc-dev \
+	libsqlite3-dev \
+	pkg-config \
+	git \
+	&& rm -rf /var/lib/apt/lists/*
 
 RUN git clone https://github.com/UFFeScience/akoflow-workflow-engine.git .
 
 RUN git checkout main
 
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o akoflow-server ./cmd/server
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o akoflow ./cmd/client
+RUN CGO_ENABLED=1 GOOS=$TARGETOS GOARCH=$TARGETARCH go build -o akoflow-server ./cmd/server
+RUN CGO_ENABLED=0 GOOS=$TARGETOS GOARCH=$TARGETARCH go build -o akoflow ./cmd/client
 
 FROM akoflow/base-workflow-engine:latest
 

@@ -1,0 +1,98 @@
+run:
+  id: simulation-example-run-v1
+  schedulePlanId: simulation-example-plan-v1
+  mode: simulation
+  seed: 1
+  status: created
+
+plan:
+  id: simulation-example-plan-v1
+  workflowVersionId: simulation-example-workflow-v1
+  executionScopeId: simulation-example-v1-scope
+  networkTopologyId: simulation-network-v1
+  source: imported
+  algorithm: manual-example
+  algorithmVersion: "1"
+  objective: time-cost
+  deadlineSeconds: 20
+  budget: 0.02
+  predicted: {makespanSeconds: 19.6, cost: 0.0157, feasible: true}
+  assignments:
+    - {id: simulation-plan-prepare, planId: simulation-example-plan-v1, activityId: prepare, resourceId: simulated-edge, coreId: core-0, slotId: default, orderOnResource: 1, priority: 30}
+    - {id: simulation-plan-analyze, planId: simulation-example-plan-v1, activityId: analyze, resourceId: simulated-cloud, coreId: core-0, slotId: default, orderOnResource: 1, priority: 20}
+    - {id: simulation-plan-summarize, planId: simulation-example-plan-v1, activityId: summarize, resourceId: simulated-edge, coreId: core-0, slotId: default, orderOnResource: 2, priority: 10}
+
+workflow:
+  id: simulation-example-workflow-v1
+  workflowId: simulation-example-workflow
+  version: 1
+  definitionHash: simulation-example-workflow-v1
+  activities:
+    - id: prepare
+      workflowVersionId: simulation-example-workflow-v1
+      activityTypeId: simulation-task
+      externalId: prepare
+      name: Prepare
+      kind: task
+      capabilities: [simulation]
+      command: {entrypoint: simulate}
+      resources: {cpu: 1, memoryBytes: 134217728, storageBytes: 0}
+      simulation: {model: deterministic, durationSeconds: 4}
+      policy: {maxAttempts: 1}
+      priority: 30
+      metadata: {baseRuntimeSeconds: 4}
+    - id: analyze
+      workflowVersionId: simulation-example-workflow-v1
+      activityTypeId: simulation-task
+      externalId: analyze
+      name: Analyze
+      kind: task
+      capabilities: [simulation]
+      command: {entrypoint: simulate}
+      resources: {cpu: 2, memoryBytes: 1073741824, storageBytes: 0}
+      simulation: {model: deterministic, durationSeconds: 12}
+      policy: {maxAttempts: 1}
+      priority: 20
+      metadata: {baseRuntimeSeconds: 12}
+    - id: summarize
+      workflowVersionId: simulation-example-workflow-v1
+      activityTypeId: simulation-task
+      externalId: summarize
+      name: Summarize
+      kind: task
+      capabilities: [simulation]
+      command: {entrypoint: simulate}
+      resources: {cpu: 1, memoryBytes: 134217728, storageBytes: 0}
+      simulation: {model: deterministic, durationSeconds: 2}
+      policy: {maxAttempts: 1}
+      priority: 10
+      metadata: {baseRuntimeSeconds: 2}
+  dependencies:
+    - {activityId: analyze, dependsOnActivityId: prepare, type: control}
+    - {activityId: summarize, dependsOnActivityId: analyze, type: control}
+  dataDependencies:
+    - {producerActivityId: prepare, consumerActivityId: analyze, logicalName: dataset.bin, sizeBytes: 100000000}
+    - {producerActivityId: analyze, consumerActivityId: summarize, logicalName: result.bin, sizeBytes: 20000000}
+
+resources:
+  - {id: simulated-edge, environmentVersionId: simulation-example-v1, executionTarget: batch, type: fog_device, name: Simulated edge, providerId: simulated-edge, cpuCores: 2, cpuCapacity: 2, memoryBytes: 2147483648, storageBytes: 21474836480, computeSpeedup: 1, pricePerSecond: 0, containerOverheadSeconds: 0.1, schedulable: true}
+  - {id: simulated-cloud, environmentVersionId: simulation-example-v1, executionTarget: batch, type: cloud_vm, name: Simulated cloud VM, providerId: simulated-cloud, cpuCores: 8, cpuCapacity: 8, memoryBytes: 17179869184, storageBytes: 107374182400, computeSpeedup: 4, pricePerSecond: 0.001, bootOverheadSeconds: 0.5, containerOverheadSeconds: 0.2, schedulable: true}
+
+networkTopology:
+  id: simulation-network-v1
+  name: Simulated edge-cloud network
+  version: 1
+  executionScopeId: simulation-example-v1-scope
+  links:
+    - {id: edge-cloud, topologyId: simulation-network-v1, sourceResourceId: simulated-edge, targetResourceId: simulated-cloud, bandwidthBitsPerSecond: 100000000, latencySeconds: 0.05, pricePerByte: 0.0000000001, bidirectional: true, sharingPolicy: shared, maxConcurrentTransfers: 1}
+
+activityProfiles: []
+runtimes:
+  - {environmentVersionId: simulation-example-v1, id: simgrid, name: SimGrid, driver: simgrid, mode: simulation, role: simulation, capabilities: {simulation: true}}
+runtimeBindings:
+  - {resourceId: simulated-edge, runtimeId: simgrid, enabled: true}
+  - {resourceId: simulated-cloud, runtimeId: simgrid, enabled: true}
+executionScope:
+  id: simulation-example-v1-scope
+  name: Edge cloud simulation scope
+  environmentVersionIds: [simulation-example-v1]

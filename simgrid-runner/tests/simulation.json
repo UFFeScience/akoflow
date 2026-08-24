@@ -1,0 +1,31 @@
+{
+  "runId": "simgrid-smoke-run",
+  "planId": "simgrid-smoke-plan",
+  "deadlineSeconds": 10,
+  "budget": 1,
+  "tasks": [
+    {
+      "id": "prepare",
+      "assignmentId": "assignment-prepare",
+      "resourceId": "edge",
+      "flops": 2000000000,
+      "pricePerSecond": 0
+    },
+    {
+      "id": "analyze",
+      "assignmentId": "assignment-analyze",
+      "resourceId": "cloud",
+      "flops": 12000000000,
+      "pricePerSecond": 0.001
+    }
+  ],
+  "dependencies": [
+    {
+      "producerId": "prepare",
+      "consumerId": "analyze",
+      "bytes": 1000000,
+      "pricePerByte": 0.000000001
+    }
+  ],
+  "resourceLaneOrders": []
+}

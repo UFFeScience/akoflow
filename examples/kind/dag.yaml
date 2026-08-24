@@ -1,0 +1,27 @@
+name: kind-dag
+
+spec:
+  namespace: examples
+  image: busybox:1.36
+  storageClassName: standard
+  storageSize: 1Gi
+  storagePolicy:
+    type: standalone
+  mountPath: /data
+
+  activities:
+    - name: prepare
+      runtime: kubernetes
+      run: echo 'prepare started'; sleep 2; echo 'prepare completed'
+      cpuLimit: 100m
+      memoryLimit: 16Mi
+      keepDisk: false
+
+    - name: process
+      runtime: kubernetes
+      run: echo 'process started after prepare'; sleep 2; echo 'process completed'
+      cpuLimit: 100m
+      memoryLimit: 16Mi
+      dependsOn:
+        - prepare
+      keepDisk: false

@@ -1,0 +1,113 @@
+environment:
+  id: kind-akoflow
+  name: Akoflow Kind
+  description: Local Kubernetes environment for real DAG execution
+  status: ready
+
+version:
+  id: kind-akoflow-v1
+  environmentId: kind-akoflow
+  version: 1
+  status: published
+  networkModel: kubernetes
+  interferenceModel: none
+  costModel: free
+  configurationHash: kind-akoflow-v1
+
+connections:
+  - id: kind-akoflow-connection
+    environmentId: kind-akoflow
+    name: kind-api
+    type: kubernetes
+    endpoint: https://host.docker.internal:63395
+    credentialRef: K8S_API_SERVER_TOKEN
+    configuration:
+      namespace: akoflow
+      insecureSkipTLSVerify: true
+
+runtimes:
+  - environmentVersionId: kind-akoflow-v1
+    id: kubernetes
+    name: Kind Kubernetes
+    driver: kubernetes
+    mode: execution
+    role: compute
+    configuration:
+      namespace: akoflow
+    capabilities:
+      batch: true
+      container: true
+      cancellation: true
+
+storages:
+  - id: kind-akoflow-data
+    environmentVersionId: kind-akoflow-v1
+    name: workflow-data
+    type: pvc
+    endpoint: pvc://akoflow/akoflow-data
+    capacityBytes: 1073741824
+    shared: true
+    readOnly: false
+    configuration:
+      namespace: akoflow
+      claimName: akoflow-data
+      mountPath: /akoflow/data
+    runtimeBindings:
+      - runtimeId: kubernetes
+        default: true
+        containerPath: /akoflow/data
+
+resources:
+  - id: kind-cluster
+    environmentVersionId: kind-akoflow-v1
+    type: cluster
+    name: AkôFlow Kind cluster
+    providerId: kind-akoflow
+    schedulable: false
+
+  - id: kind-worker
+    environmentVersionId: kind-akoflow-v1
+    parentResourceId: kind-cluster
+    type: kubernetes_machine
+    name: kind-worker
+    providerId: akoflow-worker
+    tier: local
+    architecture: amd64
+    cpuCores: 4
+    cpuCapacity: 4
+    memoryBytes: 8589934592
+    storageBytes: 21474836480
+    computeSpeedup: 1
+    pricePerSecond: 0
+    bootOverheadSeconds: 0
+    containerOverheadSeconds: 0
+    schedulable: true
+    metadata:
+      kubernetesNode: akoflow-worker
+
+  - id: kind-worker-2
+    environmentVersionId: kind-akoflow-v1
+    parentResourceId: kind-cluster
+    type: kubernetes_machine
+    name: kind-worker-2
+    providerId: akoflow-worker2
+    tier: local
+    architecture: amd64
+    cpuCores: 4
+    cpuCapacity: 4
+    memoryBytes: 8589934592
+    storageBytes: 21474836480
+    computeSpeedup: 1
+    pricePerSecond: 0
+    bootOverheadSeconds: 0
+    containerOverheadSeconds: 0
+    schedulable: true
+    metadata:
+      kubernetesNode: akoflow-worker2
+
+activityResourceProfiles: []
+
+resourceRuntimeBindings:
+  - {resourceId: kind-cluster, runtimeId: kubernetes, enabled: true}
+  - {resourceId: kind-worker, runtimeId: kubernetes, enabled: true}
+  - {resourceId: kind-worker-2, runtimeId: kubernetes, enabled: true}

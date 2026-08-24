@@ -1,0 +1,61 @@
+services:
+  akoflow-server:
+    build:
+      context: .
+      dockerfile: releases/dockerfiles/server.dev.Dockerfile
+    command: /usr/local/go/bin/go run ./cmd/server
+    environment:
+      AKOFLOW_HTTP_ADDRESS: 0.0.0.0:8080
+      AKOFLOW_API_TOKEN: ${AKOFLOW_API_TOKEN:?set AKOFLOW_API_TOKEN in .env}
+      AKOFLOW_API_ALLOWED_ORIGINS: ${AKOFLOW_API_ALLOWED_ORIGINS:?set AKOFLOW_API_ALLOWED_ORIGINS in .env}
+      AKOFLOW_ARTIFACT_STORE_ROOT: /var/lib/akoflow/artifacts
+      AKOFLOW_BUILDCTL: buildctl
+      AKOFLOW_APPTAINER: apptainer
+      # Interactive terminals are enabled only for the local control-plane
+      # deployment. The runner still uses each environment's SSH credentials
+      # and SLURM allocation rules.
+      AKOFLOW_CONSOLE_ENABLED: ${AKOFLOW_CONSOLE_ENABLED:-true}
+      BUILDKIT_HOST: tcp://buildkitd:1234
+      # Kubernetes connections resolve their token from this process, while
+      # the environment definition retains only env:K8S_API_SERVER_TOKEN.
+      K8S_API_SERVER_HOST: ${K8S_API_SERVER_HOST:?set K8S_API_SERVER_HOST in .env}
+      K8S_API_SERVER_TOKEN: ${K8S_API_SERVER_TOKEN:?set K8S_API_SERVER_TOKEN in .env}
+      K8S_API_SERVER_CA_FILE: ${K8S_API_SERVER_CA_FILE:-}
+      K8S_API_SERVER_INSECURE_SKIP_TLS_VERIFY: ${K8S_API_SERVER_INSECURE_SKIP_TLS_VERIFY:-true}
+    volumes:
+      - .:/app
+      - go-module-cache:/go/pkg/mod
+      - go-build-cache:/root/.cache/go-build
+      - artifact-store:/var/lib/akoflow/artifacts
+      # Plans, preparation state and execution history need to survive a
+      # release container recreation. This starts as a clean database volume.
+      - engine-data:/app/storage
+      # Private SSH keys are available to the engine only, read-only. They are
+      # referenced by connection YAML and are never stored in the database.
+      - ./storage/credentials/ssh:/app/storage/credentials/ssh:ro
+    ports:
+      - "8080:8080"
+    depends_on:
+      buildkitd:
+        condition: service_started
+    # Apptainer needs mount/fuse support to create SIF. This grants only that
+    # capability; the Docker socket is intentionally never mounted.
+    cap_add:
+      - SYS_ADMIN
+    devices:
+      - /dev/fuse:/dev/fuse
+    security_opt:
+      - apparmor:unconfined
+  buildkitd:
+    image: moby/buildkit:latest
+    command: ["buildkitd", "--addr", "tcp://0.0.0.0:1234"]
+    volumes:
+      - buildkit-state:/var/lib/buildkit
+      - artifact-store:/var/lib/akoflow/artifacts
+    privileged: true
+volumes:
+  artifact-store:
+  buildkit-state:
+  engine-data:
+  go-module-cache:
+  go-build-cache:

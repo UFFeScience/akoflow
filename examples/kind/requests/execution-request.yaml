@@ -1,0 +1,168 @@
+---
+run:
+  id: kind-dag-run-v1
+  schedulePlanId: kind-dag-plan-v1
+  mode: real
+  seed: 1
+  status: created
+plan:
+  id: kind-dag-plan-v1
+  workflowVersionId: kind-dag-v1
+  executionScopeId: kind-akoflow-v1-scope
+  networkTopologyId: kind-network-v1
+  source: imported
+  algorithm: manual-topological
+  algorithmVersion: '1'
+  objective: time
+  deadlineSeconds: 120
+  budget: 0
+  predicted:
+    makespanSeconds: 4
+    cost: 0
+    feasible: true
+  assignments:
+  - id: kind-plan-prepare
+    planId: kind-dag-plan-v1
+    activityId: prepare
+    resourceId: kind-worker
+    coreId: default
+    slotId: default
+    orderOnResource: 1
+    priority: 10
+    predictedReadyAt: 0
+    predictedStartAt: 0
+    predictedFinishAt: 2
+    predictedRuntimeSeconds: 2
+    predictedTransferSeconds: 0
+    predictedCost: 0
+  - id: kind-plan-process
+    planId: kind-dag-plan-v1
+    activityId: process
+    resourceId: kind-worker
+    coreId: default
+    slotId: default
+    orderOnResource: 2
+    priority: 5
+    predictedReadyAt: 2
+    predictedStartAt: 2
+    predictedFinishAt: 4
+    predictedRuntimeSeconds: 2
+    predictedTransferSeconds: 0
+    predictedCost: 0
+workflow:
+  id: kind-dag-v1
+  workflowId: kind-dag
+  version: 1
+  definitionHash: kind-dag-v1
+  activities:
+  - id: prepare
+    workflowVersionId: kind-dag-v1
+    activityTypeId: shell-task
+    externalId: prepare
+    name: Prepare
+    kind: task
+    capabilities:
+    - real
+    command:
+      image: busybox:1.36
+      entrypoint: sh
+      arguments:
+      - "-c"
+      - echo 'prepare started'; sleep 2; printf 'prepared\n' > result.txt; echo 'prepare completed'
+    resources:
+      cpu: 0.1
+      memoryBytes: 16777216
+      storageBytes: 0
+    policy:
+      timeoutSeconds: 60
+      maxAttempts: 1
+    metadata:
+      storage:
+        type: pvc
+        resourceId: kind-akoflow-data
+        claimName: akoflow-data
+        mountPath: /akoflow/data
+    priority: 10
+  - id: process
+    workflowVersionId: kind-dag-v1
+    activityTypeId: shell-task
+    externalId: process
+    name: Process
+    kind: task
+    capabilities:
+    - real
+    command:
+      image: busybox:1.36
+      entrypoint: sh
+      arguments:
+      - "-c"
+      - echo 'process started after prepare'; sleep 2; cat "$AKOFLOW_INPUT_RESULT_TXT" > consumed.txt; echo 'process completed'
+    resources:
+      cpu: 0.1
+      memoryBytes: 16777216
+      storageBytes: 0
+    policy:
+      timeoutSeconds: 60
+      maxAttempts: 1
+    metadata:
+      storage:
+        type: pvc
+        resourceId: kind-akoflow-data
+        claimName: akoflow-data
+        mountPath: /akoflow/data
+    priority: 5
+  dependencies:
+  - activityId: process
+    dependsOnActivityId: prepare
+    type: control
+  dataDependencies:
+  - producerActivityId: prepare
+    consumerActivityId: process
+    logicalName: result.txt
+    sizeBytes: 0
+resources:
+- id: kind-worker
+  environmentVersionId: kind-akoflow-v1
+  type: kubernetes_machine
+  name: kind-worker
+  providerId: akoflow-worker
+  tier: local
+  architecture: amd64
+  cpuCores: 4
+  cpuCapacity: 4
+  memoryBytes: 8589934592
+  storageBytes: 21474836480
+  computeSpeedup: 1
+  pricePerSecond: 0
+  bootOverheadSeconds: 0
+  containerOverheadSeconds: 0
+  schedulable: true
+  metadata:
+    kubernetesNode: kind-worker
+networkTopology:
+  id: kind-network-v1
+  name: Kind worker network
+  version: 1
+  executionScopeId: kind-akoflow-v1-scope
+  links:
+  - id: kind-worker-to-worker-2
+    topologyId: kind-network-v1
+    sourceResourceId: kind-worker
+    targetResourceId: kind-worker-2
+    bandwidthBitsPerSecond: 1000000000
+    latencySeconds: 0.001
+    pricePerByte: 0
+    bidirectional: true
+    sharingPolicy: shared
+    maxConcurrentTransfers: 4
+    metadata:
+      technology: docker-bridge
+activityProfiles: []
+runtimes:
+  - {environmentVersionId: kind-akoflow-v1, id: kubernetes, name: Kind Kubernetes, driver: kubernetes, mode: execution, role: compute, capabilities: {batch: true, container: true, cancellation: true}}
+runtimeBindings:
+  - {resourceId: kind-worker, runtimeId: kubernetes, enabled: true}
+executionScope:
+  id: kind-akoflow-v1-scope
+  name: Kind AkôFlow scope
+  environmentVersionIds: [kind-akoflow-v1]

@@ -1,0 +1,4 @@
+id: example-slurm-v1-scope
+name: Example Slurm scope
+environmentVersionIds:
+  - example-slurm-v1

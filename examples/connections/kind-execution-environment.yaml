@@ -1,0 +1,62 @@
+environment:
+  id: kind-execution
+  name: Kind Kubernetes
+  description: Local Kind cluster for real Kubernetes workflow execution.
+  status: defined
+version:
+  id: kind-execution-v1
+  environmentId: kind-execution
+  version: 1
+  status: published
+  networkModel: local-kubernetes
+  interferenceModel: observed
+  costModel: free
+  configurationHash: kind-execution-v1
+connections:
+  - id: kind-execution-api
+    environmentId: kind-execution
+    name: Kind Kubernetes API
+    type: kubernetes
+    endpoint: https://host.docker.internal:61640
+    credentialRef: env:K8S_API_SERVER_TOKEN
+    configuration:
+      context: kind-akoflow-cluster
+      namespace: akoflow
+      insecureSkipTlsVerify: true
+runtimes:
+  - id: kind-execution-kubernetes
+    environmentVersionId: kind-execution-v1
+    name: Kind Kubernetes runtime
+    driver: kubernetes
+    mode: execution
+    role: compute
+    configuration:
+      connectionId: kind-execution-api
+      namespace: akoflow
+    capabilities:
+      batch: true
+      interactive: true
+      container: true
+      dataStaging: true
+      cancellation: true
+      logStreaming: true
+resources:
+  - id: kind-execution-cluster
+    environmentVersionId: kind-execution-v1
+    executionTarget: batch
+    type: cluster
+    name: Kind cluster
+    providerId: kind-akoflow-cluster
+    tier: local
+    architecture: arm64
+    cpuCores: 1
+    cpuCapacity: 1
+    memoryBytes: 0
+    storageBytes: 0
+    computeSpeedup: 1
+    pricePerSecond: 0
+    schedulable: false
+resourceRuntimeBindings:
+  - resourceId: kind-execution-cluster
+    runtimeId: kind-execution-kubernetes
+    enabled: true

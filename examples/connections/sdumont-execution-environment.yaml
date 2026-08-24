@@ -1,0 +1,67 @@
+environment:
+  id: sdumont-execution
+  name: SDumont
+  description: SDumont SLURM environment submitted through its login node.
+  status: defined
+version:
+  id: sdumont-execution-v1
+  environmentId: sdumont-execution
+  version: 1
+  status: published
+  networkModel: pending-measurement
+  interferenceModel: observed
+  costModel: academic-allocation
+  configurationHash: sdumont-execution-v1
+connections:
+  - id: sdumont-execution-ssh
+    environmentId: sdumont-execution
+    name: SDumont login node
+    type: ssh
+    endpoint: login.sdumont.lncc.br
+    username: wesley.ferreira
+    credentialRef: file:/app/storage/credentials/ssh/sdumont-engine
+    configuration:
+      scheduler: slurm
+      port: 22
+      hostKeyAlias: login.sdumont.lncc.br
+      # This is a writable TOFU cache in the engine-data volume. Once first
+      # contact succeeds, the host key remains pinned for later executions.
+      knownHostsFile: /app/storage/ssh-known-hosts/sdumont
+      scriptDirectory: /prj/aidexl/wesley.ferreira/akoflow/slurm/scripts
+runtimes:
+  - id: sdumont-execution-slurm
+    environmentVersionId: sdumont-execution-v1
+    name: SDumont SLURM
+    driver: slurm
+    mode: execution
+    role: compute
+    configuration:
+      connectionId: sdumont-execution-ssh
+      scriptDirectory: /prj/aidexl/wesley.ferreira/akoflow/slurm/scripts
+    capabilities:
+      batch: true
+      container: true
+      sharedStorage: true
+      dataStaging: true
+      cancellation: true
+      logStreaming: true
+resources:
+  - id: sdumont-execution-login
+    environmentVersionId: sdumont-execution-v1
+    executionTarget: direct
+    type: hpc_machine
+    name: SDumont login node
+    providerId: sdumont-login
+    tier: login
+    architecture: amd64
+    cpuCores: 1
+    cpuCapacity: 1
+    memoryBytes: 0
+    storageBytes: 0
+    computeSpeedup: 1
+    pricePerSecond: 0
+    schedulable: false
+resourceRuntimeBindings:
+  - resourceId: sdumont-execution-login
+    runtimeId: sdumont-execution-slurm
+    enabled: true

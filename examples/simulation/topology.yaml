@@ -1,0 +1,15 @@
+id: simulation-network-v1
+name: Simulated edge-cloud network
+version: 1
+executionScopeId: simulation-example-v1-scope
+links:
+  - id: edge-cloud
+    topologyId: simulation-network-v1
+    sourceResourceId: simulated-edge
+    targetResourceId: simulated-cloud
+    bandwidthBitsPerSecond: 100000000
+    latencySeconds: 0.05
+    pricePerByte: 0.0000000001
+    bidirectional: true
+    sharingPolicy: shared
+    maxConcurrentTransfers: 1

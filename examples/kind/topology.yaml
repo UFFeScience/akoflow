@@ -1,0 +1,18 @@
+id: kind-network-v1
+name: Kind worker network
+version: 1
+executionScopeId: kind-akoflow-v1-scope
+
+links:
+  - id: kind-worker-to-worker-2
+    topologyId: kind-network-v1
+    sourceResourceId: kind-worker
+    targetResourceId: kind-worker-2
+    bandwidthBitsPerSecond: 1000000000
+    latencySeconds: 0.001
+    pricePerByte: 0
+    bidirectional: true
+    sharingPolicy: shared
+    maxConcurrentTransfers: 4
+    metadata:
+      technology: docker-bridge

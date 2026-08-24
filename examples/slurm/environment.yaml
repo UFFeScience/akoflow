@@ -1,0 +1,117 @@
+environment:
+  id: example-slurm
+  name: Example SLURM cluster
+  status: ready
+
+version:
+  id: example-slurm-v1
+  environmentId: example-slurm
+  version: 1
+  status: published
+  networkModel: measured
+  interferenceModel: observed
+  costModel: free
+  configurationHash: example-slurm-v1
+
+runtimes:
+  - environmentVersionId: example-slurm-v1
+    id: slurm
+    name: Example Slurm
+    driver: slurm
+    mode: execution
+    role: compute
+    configuration:
+      partition: cpu
+      containerRuntime: apptainer
+    capabilities:
+      batch: true
+      container: true
+      sharedStorage: true
+      dataStaging: true
+      cancellation: true
+
+storages:
+  # Used automatically when an activity does not select another storage.
+  - id: slurm-default-lustre
+    environmentVersionId: example-slurm-v1
+    name: cluster-scratch
+    type: lustre
+    endpoint: /scratch/akoflow
+    shared: true
+    runtimeBindings:
+      - runtimeId: slurm
+        default: true
+        hostPath: /scratch/akoflow
+        containerPath: /akoflow/data
+
+  # Additional registered storage, selected explicitly by its ID.
+  - id: slurm-archive-nfs
+    environmentVersionId: example-slurm-v1
+    name: experiment-archive
+    type: nfs
+    endpoint: /archive/akoflow
+    shared: true
+    runtimeBindings:
+      - runtimeId: slurm
+        hostPath: /archive/akoflow
+        containerPath: /akoflow/archive
+
+resources:
+  - id: slurm-cluster
+    environmentVersionId: example-slurm-v1
+    type: cluster
+    name: Example Slurm cluster
+    providerId: example-slurm
+    schedulable: false
+
+  # Regular workflow activities are submitted to this batch partition.
+  - id: slurm-cpu-partition
+    environmentVersionId: example-slurm-v1
+    parentResourceId: slurm-cluster
+    executionTarget: batch
+    type: hpc_partition
+    name: CPU partition
+    providerId: cpu
+    schedulable: true
+
+  # Opt-in direct execution. The AkôFlow server/agent must run on this host.
+  # Keep its advertised capacity small so heavy work remains in the batch queue.
+  - id: slurm-login-node
+    environmentVersionId: example-slurm-v1
+    parentResourceId: slurm-cluster
+    executionTarget: direct
+    type: hpc_machine
+    name: Login node
+    providerId: login
+    cpuCores: 1
+    cpuCapacity: 1
+    memoryBytes: 1073741824
+    schedulable: true
+    metadata:
+      purpose: lightweight-interactive-and-control
+
+  # Compute machines are resources too. A machine may belong to multiple
+  # partitions through resourceRelations without being duplicated.
+  - id: slurm-compute-001
+    environmentVersionId: example-slurm-v1
+    parentResourceId: slurm-cluster
+    executionTarget: batch
+    type: hpc_machine
+    name: compute-001
+    providerId: compute-001
+    cpuCores: 48
+    cpuCapacity: 48
+    memoryBytes: 206158430208
+    schedulable: true
+
+resourceRelations:
+  - environmentVersionId: example-slurm-v1
+    sourceResourceId: slurm-cpu-partition
+    targetResourceId: slurm-compute-001
+    type: contains
+
+resourceRuntimeBindings:
+  - {resourceId: slurm-cluster, runtimeId: slurm, enabled: true}
+  - {resourceId: slurm-cpu-partition, runtimeId: slurm, enabled: true}
+  - {resourceId: slurm-login-node, runtimeId: slurm, enabled: true}
+  - {resourceId: slurm-compute-001, runtimeId: slurm, enabled: true}

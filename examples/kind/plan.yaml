@@ -1,0 +1,42 @@
+id: kind-dag-plan-v1
+workflowVersionId: kind-dag-v1
+executionScopeId: kind-akoflow-v1-scope
+source: imported
+algorithm: manual-topological
+algorithmVersion: "1"
+objective: time
+deadlineSeconds: 120
+budget: 0
+predicted:
+  makespanSeconds: 4
+  cost: 0
+  feasible: true
+assignments:
+  - id: kind-plan-prepare
+    planId: kind-dag-plan-v1
+    activityId: prepare
+    resourceId: kind-worker
+    coreId: default
+    slotId: default
+    orderOnResource: 1
+    priority: 10
+    predictedReadyAt: 0
+    predictedStartAt: 0
+    predictedFinishAt: 2
+    predictedRuntimeSeconds: 2
+    predictedTransferSeconds: 0
+    predictedCost: 0
+  - id: kind-plan-process
+    planId: kind-dag-plan-v1
+    activityId: process
+    resourceId: kind-worker
+    coreId: default
+    slotId: default
+    orderOnResource: 2
+    priority: 5
+    predictedReadyAt: 2
+    predictedStartAt: 2
+    predictedFinishAt: 4
+    predictedRuntimeSeconds: 2
+    predictedTransferSeconds: 0
+    predictedCost: 0

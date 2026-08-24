@@ -1,0 +1,5 @@
+id: kind-dag-run-v1
+schedulePlanId: kind-dag-plan-v1
+mode: real
+seed: 1
+status: created

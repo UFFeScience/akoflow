@@ -1,0 +1,4 @@
+id: simulation-example-v1-scope
+name: Edge cloud simulation scope
+environmentVersionIds:
+  - simulation-example-v1

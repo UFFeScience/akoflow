@@ -1,0 +1,67 @@
+environment:
+  id: plafrim-execution
+  name: PlaFRIM
+  description: PlaFRIM SLURM environment submitted through its login node.
+  status: defined
+version:
+  id: plafrim-execution-v1
+  environmentId: plafrim-execution
+  version: 1
+  status: published
+  networkModel: pending-measurement
+  interferenceModel: observed
+  costModel: academic-allocation
+  configurationHash: plafrim-execution-v1
+connections:
+  - id: plafrim-execution-ssh
+    environmentId: plafrim-execution
+    name: PlaFRIM login node
+    type: ssh
+    endpoint: plafrim
+    username: wferreir
+    credentialRef: file:/app/storage/credentials/ssh/plafrim-engine
+    configuration:
+      scheduler: slurm
+      port: 22
+      hostKeyAlias: plafrim
+      knownHostsFile: /app/storage/credentials/ssh/known_hosts
+      proxyCommand: ssh -i /app/storage/credentials/ssh/plafrim-engine -o UserKnownHostsFile=/app/storage/credentials/ssh/known_hosts -o StrictHostKeyChecking=yes -A -l wferreir ssh.plafrim.fr -W plafrim:22
+      forwardAgent: true
+      scriptDirectory: /home/wferreir/.akoflow/slurm/scripts
+runtimes:
+  - id: plafrim-execution-slurm
+    environmentVersionId: plafrim-execution-v1
+    name: PlaFRIM SLURM
+    driver: slurm
+    mode: execution
+    role: compute
+    configuration:
+      connectionId: plafrim-execution-ssh
+      scriptDirectory: /home/wferreir/.akoflow/slurm/scripts
+    capabilities:
+      batch: true
+      container: true
+      sharedStorage: true
+      dataStaging: true
+      cancellation: true
+      logStreaming: true
+resources:
+  - id: plafrim-execution-login
+    environmentVersionId: plafrim-execution-v1
+    executionTarget: direct
+    type: hpc_machine
+    name: PlaFRIM login node
+    providerId: plafrim-login
+    tier: login
+    architecture: amd64
+    cpuCores: 1
+    cpuCapacity: 1
+    memoryBytes: 0
+    storageBytes: 0
+    computeSpeedup: 1
+    pricePerSecond: 0
+    schedulable: false
+resourceRuntimeBindings:
+  - resourceId: plafrim-execution-login
+    runtimeId: plafrim-execution-slurm
+    enabled: true

@@ -30,7 +30,9 @@ func buildSimulator(settings config.Settings) (ports.PlanExecutor, error) {
 }
 
 func connectKubernetes(settings config.Settings) (kubernetes.API, error) {
-	if settings.KubernetesAPIServer == "" && settings.KubernetesToken == "" {
+	// Kubernetes is an optional integration. A partial fallback configuration
+	// must not prevent the control-plane from serving its other environments.
+	if settings.KubernetesAPIServer == "" || settings.KubernetesToken == "" {
 		return nil, nil
 	}
 	client, err := kubernetes.NewClient(kubernetes.ClientConfig{

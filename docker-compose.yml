@@ -6,8 +6,10 @@ services:
     command: /usr/local/go/bin/go run ./cmd/server
     environment:
       AKOFLOW_HTTP_ADDRESS: 0.0.0.0:8080
-      AKOFLOW_API_TOKEN: ${AKOFLOW_API_TOKEN:?set AKOFLOW_API_TOKEN in .env}
-      AKOFLOW_API_ALLOWED_ORIGINS: ${AKOFLOW_API_ALLOWED_ORIGINS:?set AKOFLOW_API_ALLOWED_ORIGINS in .env}
+      # These defaults make the development stack runnable on a fresh clone.
+      # Override both values in .env for any shared or production deployment.
+      AKOFLOW_API_TOKEN: ${AKOFLOW_API_TOKEN:-akoflow-development-token}
+      AKOFLOW_API_ALLOWED_ORIGINS: ${AKOFLOW_API_ALLOWED_ORIGINS:-http://localhost:5173,http://127.0.0.1:5173}
       AKOFLOW_ARTIFACT_STORE_ROOT: /var/lib/akoflow/artifacts
       AKOFLOW_BUILDCTL: buildctl
       AKOFLOW_APPTAINER: apptainer
@@ -18,8 +20,10 @@ services:
       BUILDKIT_HOST: tcp://buildkitd:1234
       # Kubernetes connections resolve their token from this process, while
       # the environment definition retains only env:K8S_API_SERVER_TOKEN.
-      K8S_API_SERVER_HOST: ${K8S_API_SERVER_HOST:?set K8S_API_SERVER_HOST in .env}
-      K8S_API_SERVER_TOKEN: ${K8S_API_SERVER_TOKEN:?set K8S_API_SERVER_TOKEN in .env}
+      # Kubernetes is optional: only configure these when a Kubernetes
+      # environment is going to be connected.
+      K8S_API_SERVER_HOST: ${K8S_API_SERVER_HOST:-}
+      K8S_API_SERVER_TOKEN: ${K8S_API_SERVER_TOKEN:-}
       K8S_API_SERVER_CA_FILE: ${K8S_API_SERVER_CA_FILE:-}
       K8S_API_SERVER_INSECURE_SKIP_TLS_VERIFY: ${K8S_API_SERVER_INSECURE_SKIP_TLS_VERIFY:-true}
     volumes:

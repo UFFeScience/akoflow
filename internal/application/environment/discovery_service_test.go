@@ -123,6 +123,9 @@ func TestDiscoveryMaterializesSlurmNodesAndPartitionRelations(t *testing.T) {
 	if login == nil || login.ExecutionTarget != domain.ExecutionTargetDirect || login.ParentResourceID == nil {
 		t.Fatalf("login=%+v", login)
 	}
+	if login.Schedulable {
+		t.Fatalf("login node must remain a gateway, not an activity scheduling target: %+v", login)
+	}
 	if node == nil || node.Type != domain.ResourceHPCMachine {
 		t.Fatalf("node=%+v", node)
 	}

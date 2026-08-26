@@ -334,6 +334,15 @@ func (s *DiscoveryCoordinator) materializeLoginNode(
 	available bool,
 ) (domain.ResourceSnapshot, error) {
 	resourceID := loginResourceID(connection.ID)
+	// The environment bootstrap already contains a direct resource for the
+	// login endpoint. Reuse it when discovery confirms the same host rather
+	// than creating a second resource with the same provider identity.
+	for _, configured := range definition.Resources {
+		if configured.ProviderID == connection.Endpoint {
+			resourceID = configured.ID
+			break
+		}
+	}
 	metadata := cloneMetadata(discovered.Metadata)
 	metadata["connectionId"], metadata["discovered"] = connection.ID, true
 	role, _ := metadata["role"].(string)
@@ -353,7 +362,7 @@ func (s *DiscoveryCoordinator) materializeLoginNode(
 		ExecutionTarget: domain.ExecutionTargetDirect, Type: domain.ResourceHPCMachine, Name: connection.Name,
 		ProviderID: connection.Endpoint, Architecture: discovered.Architecture, CPUCores: discovered.CPUCores,
 		CPUCapacity: float64(minPositive(discovered.CPUCores, 2)), MemoryBytes: discovered.MemoryBytes,
-		StorageBytes: discovered.StorageBytes, ComputeSpeedup: 1, Schedulable: true, Metadata: metadata}
+		StorageBytes: discovered.StorageBytes, ComputeSpeedup: 1, Schedulable: false, Metadata: metadata}
 	if err := s.resources.Upsert(ctx, resource); err != nil {
 		return domain.ResourceSnapshot{}, fmt.Errorf("upsert discovered login node %q: %w", discovered.Name, err)
 	}

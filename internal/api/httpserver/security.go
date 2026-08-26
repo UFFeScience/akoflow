@@ -38,7 +38,8 @@ func isPublicBootstrapRequest(r *http.Request) bool {
 	if r.Method != http.MethodGet {
 		return false
 	}
-	return r.URL.Path == "/akoflow-api/instance" || r.URL.Path == "/akoflow-api/instance/"
+	return r.URL.Path == "/akoflow-api/instance" || r.URL.Path == "/akoflow-api/instance/" ||
+		r.URL.Path == "/akoflow-api/preflight/"
 }
 
 func validBearer(r *http.Request, expected string) bool {

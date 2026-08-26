@@ -11,6 +11,8 @@ RUN git clone --depth 1 --branch ${APPTAINER_VERSION} https://github.com/apptain
  && make -C builddir -j4 \
  && make -C builddir install
 
+FROM moby/buildkit:latest AS buildkit-client
+
 FROM golang:1.25-trixie
 
 ENV PATH="/usr/local/go/bin:${PATH}"
@@ -31,5 +33,6 @@ COPY --from=apptainer-builder /usr/local/bin/singularity /usr/local/bin/singular
 COPY --from=apptainer-builder /usr/local/libexec/apptainer /usr/local/libexec/apptainer
 COPY --from=apptainer-builder /usr/local/etc/apptainer /usr/local/etc/apptainer
 COPY --from=apptainer-builder /usr/local/var/apptainer /usr/local/var/apptainer
+COPY --from=buildkit-client /usr/bin/buildctl /usr/local/bin/buildctl
 
 WORKDIR /app

@@ -18,22 +18,13 @@ import (
 // TerminalRunner creates a short-lived, explicitly labeled pod then attaches
 // kubectl exec to it. It works for Kind and remote Kubernetes alike; Docker is
 // never required by the control-plane container.
-type TerminalRunner struct{ Fallback ClientConfig }
+type TerminalRunner struct{}
 
 var _ ports.InteractiveConsoleRunner = TerminalRunner{}
 
 func (r TerminalRunner) StartInteractive(ctx context.Context, connection domain.EnvironmentConnection, resource domain.Resource) (ports.InteractiveTerminal, error) {
 	endpoint := strings.TrimSpace(connection.Endpoint)
-	if endpoint == "" {
-		endpoint = r.Fallback.Endpoint
-	}
-	token, err := resolveCredential(connection.CredentialRef)
-	if err != nil {
-		return nil, err
-	}
-	if token == "" {
-		token = r.Fallback.Token
-	}
+	token := configString(connection.Configuration, "bearerToken")
 	if endpoint == "" || token == "" {
 		return nil, fmt.Errorf("Kubernetes interactive terminal needs endpoint and credential")
 	}
@@ -41,7 +32,7 @@ func (r TerminalRunner) StartInteractive(ctx context.Context, connection domain.
 	if namespace == "" {
 		namespace = "default"
 	}
-	insecure := configBool(connection.Configuration, "insecureSkipTlsVerify", r.Fallback.InsecureSkipTLSVerify)
+	insecure := configBool(connection.Configuration, "insecureSkipTlsVerify", false)
 	client, err := NewClient(ClientConfig{Endpoint: endpoint, Token: token, CAFile: configString(connection.Configuration, "caFile"), InsecureSkipTLSVerify: insecure})
 	if err != nil {
 		return nil, err

@@ -15,13 +15,6 @@ type Settings struct {
 	APIAllowedOrigins          []string
 	LocalStorageRoot           string
 	DefaultNamespace           string
-	KubernetesAPIServer        string
-	KubernetesToken            string
-	KubernetesCAFile           string
-	KubernetesInsecureSkipTLS  bool
-	KubernetesCleanupEnabled   bool
-	KubernetesCleanupInterval  time.Duration
-	KubernetesHistoryRetention time.Duration
 	ConnectionCheckInterval    time.Duration
 	ConsoleEnabled             bool
 	SlurmScriptDirectory       string
@@ -41,8 +34,6 @@ type Settings struct {
 func Load() Settings {
 	settings := Settings{
 		HTTPAddress: "127.0.0.1:8080", DefaultNamespace: "akoflow",
-		KubernetesCleanupEnabled: true, KubernetesCleanupInterval: 15 * time.Minute,
-		KubernetesHistoryRetention: 24 * time.Hour,
 		ConnectionCheckInterval:    time.Minute,
 		ConsoleEnabled:             false,
 		SlurmScriptDirectory:       "storage/slurm/scripts",
@@ -78,21 +69,12 @@ func loadServer(settings *Settings) {
 	if value := os.Getenv("AKOFLOW_NAMESPACE"); value != "" {
 		settings.DefaultNamespace = value
 	}
-	settings.KubernetesAPIServer = os.Getenv("K8S_API_SERVER_HOST")
-	settings.KubernetesToken = os.Getenv("K8S_API_SERVER_TOKEN")
-	settings.KubernetesCAFile = os.Getenv("K8S_API_SERVER_CA_FILE")
-	settings.KubernetesInsecureSkipTLS = os.Getenv("K8S_API_SERVER_INSECURE_SKIP_TLS_VERIFY") == "true"
 	if value := os.Getenv("AKOFLOW_SLURM_SCRIPT_DIRECTORY"); value != "" {
 		settings.SlurmScriptDirectory = value
 	}
 	if value := os.Getenv("AKOFLOW_SSH_KEY_DIRECTORY"); value != "" {
 		settings.SSHKeyDirectory = value
 	}
-	if value := os.Getenv("AKOFLOW_KUBERNETES_HISTORY_CLEANUP_ENABLED"); value != "" {
-		settings.KubernetesCleanupEnabled = value == "true"
-	}
-	settings.KubernetesCleanupInterval = durationOrDefault(os.Getenv("AKOFLOW_KUBERNETES_HISTORY_CLEANUP_INTERVAL"), settings.KubernetesCleanupInterval)
-	settings.KubernetesHistoryRetention = durationOrDefault(os.Getenv("AKOFLOW_KUBERNETES_HISTORY_RETENTION"), settings.KubernetesHistoryRetention)
 	settings.ConnectionCheckInterval = durationOrDefault(os.Getenv("AKOFLOW_CONNECTION_CHECK_INTERVAL"), settings.ConnectionCheckInterval)
 	settings.ConsoleEnabled = os.Getenv("AKOFLOW_CONSOLE_ENABLED") == "true"
 }

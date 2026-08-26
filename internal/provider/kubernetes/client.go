@@ -43,7 +43,7 @@ func NewClient(config ClientConfig) (*Client, error) {
 	if endpoint == "" {
 		return nil, fmt.Errorf("Kubernetes API server is required")
 	}
-	// Preserve the historical K8S_API_SERVER_HOST format (host[:port]).
+	// Accept a host[:port] endpoint as a convenience for environment definitions.
 	if !strings.Contains(endpoint, "://") {
 		endpoint = "https://" + endpoint
 	}

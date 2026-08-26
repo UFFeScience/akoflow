@@ -29,29 +29,12 @@ func buildSimulator(settings config.Settings) (ports.PlanExecutor, error) {
 	}
 }
 
-func connectKubernetes(settings config.Settings) (kubernetes.API, error) {
-	// Kubernetes is an optional integration. A partial fallback configuration
-	// must not prevent the control-plane from serving its other environments.
-	if settings.KubernetesAPIServer == "" || settings.KubernetesToken == "" {
-		return nil, nil
-	}
-	client, err := kubernetes.NewClient(kubernetes.ClientConfig{
-		Endpoint: settings.KubernetesAPIServer, Token: settings.KubernetesToken,
-		CAFile:                settings.KubernetesCAFile,
-		InsecureSkipTLSVerify: settings.KubernetesInsecureSkipTLS,
-	})
-	if err != nil {
-		return nil, fmt.Errorf("configure Kubernetes API: %w", err)
-	}
-	return client, nil
-}
-
-func buildRuntimes(settings config.Settings, kubernetesAPI kubernetes.API, catalogs ...ports.EnvironmentCatalog) (ports.RuntimeResolver, error) {
+func buildRuntimes(settings config.Settings, catalogs ...ports.EnvironmentCatalog) (ports.RuntimeResolver, error) {
 	runtimes := registry.New()
 	adapters := map[string]ports.RuntimeAdapter{
 		"*":          simgrid.NewActivityRuntime(),
 		"local":      local.New(),
-		"kubernetes": kubernetes.New(kubernetesAPI, settings.DefaultNamespace),
+		"kubernetes": kubernetes.New(nil, settings.DefaultNamespace),
 		"slurm": slurm.NewWithConfig(provider.OSCommandExecutor{}, slurm.Config{
 			ScriptDirectory: settings.SlurmScriptDirectory,
 		}),
@@ -63,12 +46,7 @@ func buildRuntimes(settings config.Settings, kubernetesAPI kubernetes.API, catal
 	}
 	if len(catalogs) > 0 && catalogs[0] != nil {
 		return registry.NewCatalogResolver(runtimes, catalogs[0],
-			kubernetes.ConnectionFactory{
-				DefaultNamespace: settings.DefaultNamespace,
-				Fallback: kubernetes.ClientConfig{Endpoint: settings.KubernetesAPIServer,
-					Token: settings.KubernetesToken, CAFile: settings.KubernetesCAFile,
-					InsecureSkipTLSVerify: settings.KubernetesInsecureSkipTLS},
-			},
+			kubernetes.ConnectionFactory{DefaultNamespace: settings.DefaultNamespace},
 			slurm.ConnectionFactory{Executor: provider.OSCommandExecutor{},
 				DefaultScriptDirectory: settings.SlurmScriptDirectory},
 		), nil

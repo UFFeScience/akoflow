@@ -28,7 +28,6 @@ type application struct {
 	database          *sql.DB
 	api               *workflow_engine_api_handler.Handler
 	eventLoop         *eventloop.Loop
-	historyCleaner    *kubernetes.HistoryCleaner
 	connectionMonitor *applicationenvironment.ConnectionMonitor
 }
 
@@ -41,11 +40,7 @@ func newApplication(ctx context.Context, settings config.Settings, log *logger.L
 		_ = storage.database.Close()
 		return nil, err
 	}
-	kubernetesAPI, err := connectKubernetes(settings)
-	if err != nil {
-		return fail(err)
-	}
-	runtimes, err := buildRuntimes(settings, kubernetesAPI, storage.environments)
+	runtimes, err := buildRuntimes(settings, storage.environments)
 	if err != nil {
 		return fail(err)
 	}
@@ -60,14 +55,14 @@ func newApplication(ctx context.Context, settings config.Settings, log *logger.L
 	}
 	connectionMonitor := applicationenvironment.NewConnectionMonitor(storage.environments,
 		map[domain.ConnectionType]ports.ConnectionProber{
-			domain.ConnectionKubernetes: kubernetes.NewConnectionProber(kubernetesAPI, settings.DefaultNamespace),
+			domain.ConnectionKubernetes: kubernetes.NewConnectionProber(settings.DefaultNamespace),
 			domain.ConnectionSSH:        slurm.NewConnectionProber(provider.OSCommandExecutor{}),
 			domain.ConnectionAgent:      slurm.NewConnectionProber(provider.OSCommandExecutor{}),
 			domain.ConnectionLocal:      local.NewConnectionProber(),
 		}, storage.audit)
 	discovery := applicationenvironment.NewDiscoveryCoordinator(storage.environments, storage.resources,
 		map[domain.ConnectionType]ports.ConnectionDiscoverer{
-			domain.ConnectionKubernetes: kubernetes.NewDiscovery(kubernetes.ClientConfig{Endpoint: settings.KubernetesAPIServer, Token: settings.KubernetesToken, CAFile: settings.KubernetesCAFile, InsecureSkipTLSVerify: settings.KubernetesInsecureSkipTLS}),
+			domain.ConnectionKubernetes: kubernetes.NewDiscovery(),
 			domain.ConnectionLocal:      local.NewDiscovery(),
 			domain.ConnectionSSH:        slurm.NewDiscovery(provider.OSCommandExecutor{}),
 			domain.ConnectionAgent:      slurm.NewDiscovery(provider.OSCommandExecutor{}),
@@ -78,19 +73,15 @@ func newApplication(ctx context.Context, settings config.Settings, log *logger.L
 		controller := applicationconsole.NewCommandController(storage.environments, storage.resources, storage.console,
 			slurm.ConsoleRunner{Executor: provider.OSCommandExecutor{}}, storage.audit)
 		consoleCommands = controller
-		terminal = applicationconsole.NewTerminalController(controller, terminalRunner{kubernetes: kubernetes.TerminalRunner{Fallback: kubernetes.ClientConfig{Endpoint: settings.KubernetesAPIServer, Token: settings.KubernetesToken, CAFile: settings.KubernetesCAFile, InsecureSkipTLSVerify: settings.KubernetesInsecureSkipTLS}}, slurm: slurm.TerminalRunner{}}, storage.audit, storage.console)
+		terminal = applicationconsole.NewTerminalController(controller, terminalRunner{kubernetes: kubernetes.TerminalRunner{}, slurm: slurm.TerminalRunner{}}, storage.audit, storage.console)
 	}
 	api, err := buildAPI(storage, settings, connectionMonitor, discovery, consoleCommands, terminal, sshkey.New(settings.SSHKeyDirectory))
 	if err != nil {
 		return fail(err)
 	}
-	cleaner, err := buildHistoryCleaner(settings, kubernetesAPI)
-	if err != nil {
-		return fail(err)
-	}
 	return &application{
 		settings: settings, log: log, database: storage.database,
-		api: api, eventLoop: loop, historyCleaner: cleaner,
+		api: api, eventLoop: loop,
 		connectionMonitor: connectionMonitor,
 	}, nil
 }
@@ -98,7 +89,6 @@ func newApplication(ctx context.Context, settings config.Settings, log *logger.L
 func (a *application) Run(ctx context.Context) error {
 	a.log.Info("Starting Akoflow Server")
 	a.startEventLoop(ctx)
-	a.startHistoryCleanup(ctx)
 	go a.connectionMonitor.Run(ctx, a.settings.ConnectionCheckInterval)
 	if err := httpserver.Serve(ctx, a.settings.HTTPAddress, a.api); err != nil {
 		return fmt.Errorf("serve Akoflow API: %w", err)

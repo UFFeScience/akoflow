@@ -13,29 +13,20 @@ import (
 
 // Discovery reads the Kubernetes node inventory once. It does not create pods
 // or inspect workloads, keeping the connection discovery inexpensive.
-type Discovery struct{ fallback ClientConfig }
+type Discovery struct{}
 
-func NewDiscovery(fallback ClientConfig) *Discovery { return &Discovery{fallback: fallback} }
+func NewDiscovery() *Discovery { return &Discovery{} }
 
 func (d *Discovery) DiscoverConnection(ctx context.Context, connection domain.EnvironmentConnection) (ports.ConnectionDiscovery, error) {
 	endpoint := strings.TrimSpace(connection.Endpoint)
-	if endpoint == "" {
-		endpoint = d.fallback.Endpoint
-	}
-	token, err := resolveCredential(connection.CredentialRef)
-	if err != nil {
-		return ports.ConnectionDiscovery{}, err
-	}
-	if token == "" {
-		token = d.fallback.Token
-	}
+	token := configString(connection.Configuration, "bearerToken")
 	if endpoint == "" || token == "" {
 		return ports.ConnectionDiscovery{}, fmt.Errorf("Kubernetes discovery needs endpoint and credential")
 	}
 	config := ClientConfig{
 		Endpoint: endpoint, Token: token,
 		CAFile:                configString(connection.Configuration, "caFile"),
-		InsecureSkipTLSVerify: configBool(connection.Configuration, "insecureSkipTlsVerify", d.fallback.InsecureSkipTLSVerify),
+		InsecureSkipTLSVerify: configBool(connection.Configuration, "insecureSkipTlsVerify", false),
 	}
 	client, err := NewClient(config)
 	if err != nil {

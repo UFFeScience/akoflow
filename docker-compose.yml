@@ -18,14 +18,6 @@ services:
       # and SLURM allocation rules.
       AKOFLOW_CONSOLE_ENABLED: ${AKOFLOW_CONSOLE_ENABLED:-true}
       BUILDKIT_HOST: tcp://buildkitd:1234
-      # Kubernetes connections resolve their token from this process, while
-      # the environment definition retains only env:K8S_API_SERVER_TOKEN.
-      # Kubernetes is optional: only configure these when a Kubernetes
-      # environment is going to be connected.
-      K8S_API_SERVER_HOST: ${K8S_API_SERVER_HOST:-}
-      K8S_API_SERVER_TOKEN: ${K8S_API_SERVER_TOKEN:-}
-      K8S_API_SERVER_CA_FILE: ${K8S_API_SERVER_CA_FILE:-}
-      K8S_API_SERVER_INSECURE_SKIP_TLS_VERIFY: ${K8S_API_SERVER_INSECURE_SKIP_TLS_VERIFY:-true}
     volumes:
       - .:/app
       - go-module-cache:/go/pkg/mod
@@ -33,17 +25,19 @@ services:
       - artifact-store:/var/lib/akoflow/artifacts
       # Plans, preparation state and execution history need to survive a
       # release container recreation. This starts as a clean database volume.
-      - engine-data:/app/storage
+      - ./storage/:/app/storage
       # Private SSH keys are available to the engine only, read-only. They are
       # referenced by connection YAML and are never stored in the database.
       - ./storage/credentials/ssh:/app/storage/credentials/ssh:ro
+      # The local runtime provisions containers through the Docker daemon on
+      # the development host. Do not use this mount for shared deployments.
+      - /var/run/docker.sock:/var/run/docker.sock
     ports:
       - "8080:8080"
     depends_on:
       buildkitd:
         condition: service_started
-    # Apptainer needs mount/fuse support to create SIF. This grants only that
-    # capability; the Docker socket is intentionally never mounted.
+    # Apptainer needs mount/fuse support to create SIF.
     cap_add:
       - SYS_ADMIN
     devices:

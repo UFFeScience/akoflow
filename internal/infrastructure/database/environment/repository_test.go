@@ -46,7 +46,7 @@ func TestEnvironmentDefinitionCreate(t *testing.T) {
 		Relations: []domain.ResourceRelation{{
 			SourceResourceID: "cluster", TargetResourceID: "r1", Type: domain.ResourceRelationContains,
 		}},
-		Connections: []domain.EnvironmentConnection{{ID: "c1", Name: "cluster", Type: domain.ConnectionSSH, Endpoint: "login.example", Username: "user", CredentialRef: "keychain:test", Configuration: map[string]any{"port": float64(22)}}},
+		Connections: []domain.EnvironmentConnection{{ID: "c1", Name: "cluster", Type: domain.ConnectionKubernetes, Endpoint: "https://cluster.example", Configuration: map[string]any{"namespace": "science", "bearerToken": "saved-token", "insecureSkipTlsVerify": true}}},
 	}
 	if err := repository.Create(context.Background(), definition); err != nil {
 		t.Fatal(err)
@@ -59,7 +59,7 @@ func TestEnvironmentDefinitionCreate(t *testing.T) {
 		t.Fatal("duplicate environment must fail")
 	}
 	connections, err := repository.ListConnections(context.Background(), "env")
-	if err != nil || len(connections) != 1 || connections[0].CredentialRef != "keychain:test" {
+	if err != nil || len(connections) != 1 || connections[0].Configuration["bearerToken"] != "saved-token" || connections[0].Configuration["namespace"] != "science" {
 		t.Fatalf("connections=%+v err=%v", connections, err)
 	}
 	connection := connections[0]

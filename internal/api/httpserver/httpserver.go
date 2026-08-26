@@ -2,9 +2,11 @@ package httpserver
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"net"
 	"net/http"
+	"os/exec"
 	"time"
 
 	"github.com/UFFeScience/akoflow/internal/api/handlers/workflow_engine_api_handler"
@@ -17,10 +19,52 @@ func HealthCheck(w http.ResponseWriter, r *http.Request) {
 	_, _ = w.Write([]byte("ok"))
 }
 
+// Preflight reports the engine capabilities required before an environment can
+// be connected. Commands run in the engine process context, never in the UI.
+func Preflight(w http.ResponseWriter, r *http.Request) {
+	docker := dockerDaemonCheck(r)
+	buildkit := buildkitCheck(r)
+	w.Header().Set("Content-Type", "application/json")
+	_ = json.NewEncoder(w).Encode(map[string]any{
+		"server": map[string]any{"available": true, "message": "AkôFlow daemon is online"},
+		"docker": docker,
+		"buildkit": buildkit,
+	})
+}
+
+func buildkitCheck(r *http.Request) map[string]any {
+	output, err := exec.CommandContext(r.Context(), "buildctl", "debug", "workers").CombinedOutput()
+	if err != nil {
+		return map[string]any{"available": false, "message": string(output)}
+	}
+	return map[string]any{"available": true, "message": "BuildKit is available"}
+}
+
+func dockerDaemonCheck(r *http.Request) map[string]any {
+	transport := &http.Transport{DialContext: func(_ context.Context, _, _ string) (net.Conn, error) {
+		return net.DialTimeout("unix", "/var/run/docker.sock", 2*time.Second)
+	}}
+	client := &http.Client{Transport: transport, Timeout: 3 * time.Second}
+	request, err := http.NewRequestWithContext(r.Context(), http.MethodGet, "http://docker/_ping", nil)
+	if err != nil {
+		return map[string]any{"available": false, "message": err.Error()}
+	}
+	response, err := client.Do(request)
+	if err != nil {
+		return map[string]any{"available": false, "message": err.Error()}
+	}
+	defer response.Body.Close()
+	if response.StatusCode < http.StatusOK || response.StatusCode >= http.StatusMultipleChoices {
+		return map[string]any{"available": false, "message": "Docker daemon returned " + response.Status}
+	}
+	return map[string]any{"available": true, "message": "Docker daemon is available"}
+}
+
 func NewMux(workflowEngine *workflow_engine_api_handler.Handler) *http.ServeMux {
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /", http_config.KernelHandler(HealthCheck))
 	mux.HandleFunc("GET /akoflow-api/instance/", http_config.KernelHandler(workflowEngine.GetInstance))
+	mux.HandleFunc("GET /akoflow-api/preflight/", http_config.KernelHandler(Preflight))
 	mux.HandleFunc("GET /akoflow-api/search/", http_config.KernelHandler(workflowEngine.Search))
 	mux.HandleFunc("GET /akoflow-api/audit-events/", http_config.KernelHandler(workflowEngine.ListAuditEvents))
 	mux.HandleFunc("GET /akoflow-api/console-commands/", http_config.KernelHandler(workflowEngine.ListConsoleCommands))

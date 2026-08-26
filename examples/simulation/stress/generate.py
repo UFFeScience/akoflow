@@ -22,9 +22,9 @@ def post(api, token, endpoint, payload):
         raise RuntimeError(f"{endpoint}: HTTP {error.code}: {detail[:1000]}") from error
 
 
-def build(total):
+def build(total, cores):
     workers = total - 2
-    prefix = f"simgrid-{total}-activities"
+    prefix = f"simgrid-{total}-activities-{cores}-cores"
     workflow_id = f"{prefix}-workflow"
     version_id = f"{workflow_id}-v1"
     environment_id = f"{prefix}-environment"
@@ -67,12 +67,12 @@ def build(total):
                 "dependencies": dependencies, "dataDependencies": data_dependencies}
 
     resources = []
-    for machine, cores in (("m1", 1), ("m2", 50), ("m3", 1)):
+    for machine, machine_cores in (("m1", 1), ("m2", cores), ("m3", 1)):
         resources.append({
             "id": f"{prefix}-{machine}", "environmentVersionId": environment_version,
             "executionTarget": "batch", "type": "local_machine", "name": machine.upper(),
-            "providerId": f"{prefix}-{machine}", "tier": "compute", "cpuCores": cores,
-            "cpuCapacity": cores, "memoryBytes": 274877906944, "storageBytes": 1099511627776,
+            "providerId": f"{prefix}-{machine}", "tier": "compute", "cpuCores": machine_cores,
+            "cpuCapacity": machine_cores, "memoryBytes": 274877906944, "storageBytes": 1099511627776,
             "computeSpeedup": 1, "pricePerSecond": 0, "schedulable": True,
         })
     runtime = {"environmentVersionId": environment_version, "id": runtime_id,
@@ -82,7 +82,7 @@ def build(total):
                 for resource in resources]
     environment = {
         "environment": {"id": environment_id, "name": f"SimGrid {total} activities",
-                        "description": f"{total} activities over 50 M2 cores", "status": "ready"},
+                        "description": f"{total} activities over {cores} M2 cores", "status": "ready"},
         "version": {"id": environment_version, "environmentId": environment_id, "version": 1,
                     "status": "published", "networkModel": "static-links",
                     "interferenceModel": "none", "costModel": "per-second",
@@ -111,17 +111,17 @@ def build(total):
     }]
     fanout_finish = 10 + workers
     for index in range(workers):
-        number, wave = index + 1, index // 50
+        number, wave = index + 1, index // cores
         start = fanout_finish + wave * 10
         assignments.append({
             "id": f"{prefix}-plan-worker-{number:04d}", "planId": plan_id,
             "activityId": f"{workflow_id}-worker-{number:04d}", "resourceId": f"{prefix}-m2",
-            "coreId": f"core-{index % 50}", "slotId": "default", "orderOnResource": wave + 1,
+            "coreId": f"core-{index % cores}", "slotId": "default", "orderOnResource": wave + 1,
             "priority": 50, "predictedReadyAt": fanout_finish, "predictedStartAt": start,
             "predictedFinishAt": start + 10, "predictedRuntimeSeconds": 10,
             "predictedTransferSeconds": workers,
         })
-    waves = (workers + 49) // 50
+    waves = (workers + cores - 1) // cores
     sink_start = fanout_finish + waves * 10 + workers
     makespan = sink_start + 10
     assignments.append({
@@ -166,6 +166,7 @@ def main():
     parser.add_argument("totals", nargs="+", type=int)
     parser.add_argument("--api", default=os.getenv("AKOFLOW_API_URL", "http://localhost:8080/akoflow-api"))
     parser.add_argument("--token", default=os.getenv("AKOFLOW_API_TOKEN", ""))
+    parser.add_argument("--cores", type=int, help="M2 cores; defaults to the activity total")
     parser.add_argument("--start-at", choices=("environments", "execution-scopes", "network-topologies",
                                                "workflow-definitions", "schedule-plans", "execution-runs"),
                         default="environments")
@@ -175,7 +176,10 @@ def main():
     for total in args.totals:
         if total < 3:
             parser.error("each total must be at least 3")
-        environment, scope, topology, definition, plan, run, run_id, makespan = build(total)
+        cores = args.cores or total
+        if cores < 1:
+            parser.error("--cores must be positive")
+        environment, scope, topology, definition, plan, run, run_id, makespan = build(total, cores)
         requests = (("environments", environment), ("execution-scopes", scope),
                     ("network-topologies", topology), ("workflow-definitions", definition),
                     ("schedule-plans", plan), ("execution-runs", run))

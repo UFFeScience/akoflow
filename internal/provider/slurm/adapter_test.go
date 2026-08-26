@@ -3,6 +3,8 @@ package slurm
 import (
 	"context"
 	"os"
+	"os/exec"
+	"path/filepath"
 	"strings"
 	"testing"
 	"time"
@@ -108,10 +110,42 @@ func TestAdapterSubmitsSafeBatchScript(t *testing.T) {
 	}
 	hasTrap := strings.Contains(string(script), "trap finish EXIT")
 	hasRunningState := strings.Contains(string(script), "state=running")
+	hasAbsoluteArtifactRoot := strings.Contains(string(script), `artifact_root=$(cd "$artifact_root" && pwd -P)`)
 	hasLogPath := strings.Contains(string(script), "akoflow-run-analysis-%j.log")
 	hasSentinelPath := handle.Metadata["sentinelPath"] == "akoflow-run-analysis-123.status"
-	if !hasTrap || !hasRunningState || !hasLogPath || !hasSentinelPath {
+	if !hasTrap || !hasRunningState || !hasAbsoluteArtifactRoot || !hasLogPath || !hasSentinelPath {
 		t.Fatalf("missing execution sentinel: script=%s metadata=%+v", script, handle.Metadata)
+	}
+}
+
+func TestBatchScriptObservesFilesAfterChangingIntoRelativeWorkspace(t *testing.T) {
+	root := t.TempDir()
+	workspace := filepath.Join("akoflow-workspaces", "run", "activity")
+	script, err := batchScript("run", domain.Activity{ID: "activity", Command: domain.ActivityCommand{
+		Entrypoint: "sh", Arguments: []string{"-c", "printf output > result.txt"}, WorkingDirectory: workspace,
+	}}, "", "")
+	if err != nil {
+		t.Fatal(err)
+	}
+	command := exec.Command("sh", "-c", script)
+	command.Dir = root
+	command.Env = append(os.Environ(), "SLURM_JOB_ID=42")
+	if output, runErr := command.CombinedOutput(); runErr != nil {
+		t.Fatalf("run batch script: %v: %s", runErr, output)
+	}
+	sentinels, err := filepath.Glob(filepath.Join(root, "akoflow-*.status"))
+	if err != nil || len(sentinels) != 1 {
+		entries, _ := os.ReadDir(root)
+		t.Fatalf("sentinels=%v entries=%v err=%v", sentinels, entries, err)
+	}
+	sentinel, err := os.ReadFile(sentinels[0])
+	if err != nil {
+		t.Fatal(err)
+	}
+	values := sentinelValues(string(sentinel))
+	manifest := slurmArtifacts(domain.ActivityHandle{RunID: "run", ActivityID: "activity", RuntimeID: "slurm"}, values)
+	if len(manifest.Files) != 1 || manifest.Files[0].Path != "result.txt" || manifest.Files[0].SizeBytes != 6 {
+		t.Fatalf("manifest=%+v sentinel=%s", manifest, sentinel)
 	}
 }
 

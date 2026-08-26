@@ -52,6 +52,10 @@ func TestAdapterExecutesDirectlyOnLoginResource(t *testing.T) {
 			t.Fatal(err)
 		}
 		if handle.Status == domain.HandleCompleted {
+			executor := adapter.executor.(*executorFake)
+			if executor.name != "sh" || len(executor.args) != 1 || executor.args[0] != "-s" || !strings.Contains(string(executor.input), "'/bin/sh' '-c' 'exit 0'") {
+				t.Fatalf("direct execution must use the configured executor: name=%q args=%v input=%q", executor.name, executor.args, executor.input)
+			}
 			return
 		}
 		time.Sleep(time.Millisecond)

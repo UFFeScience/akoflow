@@ -8,6 +8,7 @@ import (
 	"errors"
 	"fmt"
 	"path"
+	"regexp"
 	"strings"
 	"time"
 
@@ -19,6 +20,8 @@ const (
 	activityContainer = "activity"
 	manifestLogPrefix = "AKOFLOW_ARTIFACT_MANIFEST="
 )
+
+var kubernetesLabelValue = regexp.MustCompile(`^[A-Za-z0-9]([A-Za-z0-9_.-]{0,61}[A-Za-z0-9])?$`)
 
 type Adapter struct {
 	api       API
@@ -365,12 +368,30 @@ func observedPodSpec(
 		podSpec["volumes"] = []map[string]any{{"name": "akoflow-data",
 			"nfs": map[string]any{"server": binding.Server, "path": binding.Path, "readOnly": binding.ReadOnly}}}
 	}
-	if resource.Type == domain.ResourceKubernetesMachine && resource.ProviderID != "" {
+	if nodeName := kubernetesNodeName(resource); nodeName != "" {
 		podSpec["nodeSelector"] = map[string]string{
-			"kubernetes.io/hostname": resource.ProviderID,
+			"kubernetes.io/hostname": nodeName,
 		}
 	}
 	return podSpec
+}
+
+func kubernetesNodeName(resource domain.Resource) string {
+	if resource.Type != domain.ResourceKubernetesMachine {
+		return ""
+	}
+	if name, _ := resource.Metadata["observedHostname"].(string); validKubernetesLabelValue(name) {
+		return name
+	}
+	if validKubernetesLabelValue(resource.ProviderID) {
+		return resource.ProviderID
+	}
+	return ""
+}
+
+func validKubernetesLabelValue(value string) bool {
+	value = strings.TrimSpace(value)
+	return len(value) <= 63 && kubernetesLabelValue.MatchString(value)
 }
 
 func inputEnvironmentName(logicalName string) string {

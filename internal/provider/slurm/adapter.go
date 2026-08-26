@@ -8,19 +8,27 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/UFFeScience/akoflow/internal/domain"
 	runtimecommon "github.com/UFFeScience/akoflow/internal/provider"
-	"github.com/UFFeScience/akoflow/internal/provider/local"
 )
 
 type Adapter struct {
 	executor        runtimecommon.CommandExecutor
 	partition       string
-	direct          *local.Adapter
 	scriptDirectory string
 	submitFromStdin bool
+	directMu        sync.RWMutex
+	directResults   map[string]directResult
+	directCancels   map[string]context.CancelFunc
+}
+
+type directResult struct {
+	output     string
+	err        error
+	finishedAt float64
 }
 
 type Config struct {
@@ -37,8 +45,9 @@ func New(executor runtimecommon.CommandExecutor, partition string) *Adapter {
 }
 
 func NewWithConfig(executor runtimecommon.CommandExecutor, config Config) *Adapter {
-	return &Adapter{executor: executor, partition: config.Partition, direct: local.New(),
-		scriptDirectory: config.ScriptDirectory, submitFromStdin: config.SubmitFromStdin}
+	return &Adapter{executor: executor, partition: config.Partition,
+		scriptDirectory: config.ScriptDirectory, submitFromStdin: config.SubmitFromStdin,
+		directResults: make(map[string]directResult), directCancels: make(map[string]context.CancelFunc)}
 }
 
 func (*Adapter) Modes() []domain.ExecutionMode {
@@ -120,7 +129,7 @@ func parseJobID(output []byte) (string, error) {
 
 func (a *Adapter) Inspect(ctx context.Context, handle domain.ActivityHandle) (domain.ActivityHandle, error) {
 	if handle.Metadata["executionTarget"] == string(domain.ExecutionTargetDirect) {
-		return a.direct.Inspect(ctx, handle)
+		return a.inspectDirect(handle), nil
 	}
 	if logPath, ok := handle.Metadata["logPath"].(string); ok && logPath != "" {
 		if log, logErr := a.executor.Run(ctx, "cat", []string{logPath}, nil); logErr == nil {
@@ -303,13 +312,23 @@ func slurmControlState(payload string) string {
 
 func (a *Adapter) Stop(ctx context.Context, handle domain.ActivityHandle) error {
 	if handle.Metadata["executionTarget"] == string(domain.ExecutionTargetDirect) {
-		return a.direct.Stop(ctx, handle)
+		a.directMu.Lock()
+		cancel := a.directCancels[handle.ID]
+		a.directMu.Unlock()
+		if cancel == nil {
+			return fmt.Errorf("direct activity %q is not running", handle.ID)
+		}
+		cancel()
+		return nil
 	}
 	_, err := a.executor.Run(ctx, "scancel", []string{handle.ExternalID}, nil)
 	return err
 }
 
 func (a *Adapter) startDirect(ctx context.Context, execution domain.ActivityExecutionContext) (domain.ActivityHandle, error) {
+	if a.executor == nil {
+		return domain.ActivityHandle{}, fmt.Errorf("slurm command executor is required")
+	}
 	activity := execution.Activity
 	script, err := directScript(activity)
 	if err != nil {
@@ -319,18 +338,43 @@ func (a *Adapter) startDirect(ctx context.Context, execution domain.ActivityExec
 	if err != nil {
 		return domain.ActivityHandle{}, err
 	}
-	execution.Activity.Command = domain.ActivityCommand{Entrypoint: "/bin/sh", Arguments: []string{scriptPath}, WorkingDirectory: activity.Command.WorkingDirectory}
-	handle, err := a.direct.Start(ctx, execution)
-	if err != nil {
-		return handle, err
-	}
-	if handle.Metadata == nil {
-		handle.Metadata = make(map[string]any)
-	}
-	handle.Metadata["executionTarget"] = string(domain.ExecutionTargetDirect)
-	handle.Metadata["slurmSubmission"] = "login-node"
-	handle.Metadata["scriptPath"] = scriptPath
+	startedAt := runtimecommon.UnixSeconds(time.Now())
+	handle := domain.ActivityHandle{ID: execution.Run.ID + ":" + activity.ID, RunID: execution.Run.ID,
+		ActivityID: activity.ID, ResourceID: execution.Resource.ID, RuntimeID: execution.RuntimeID,
+		Status: domain.HandleRunning, StartedAt: startedAt, Metadata: map[string]any{
+			"executionTarget": string(domain.ExecutionTargetDirect), "slurmSubmission": "login-node",
+			"scriptPath": scriptPath, domain.TimingSubmittedAt: startedAt,
+		}}
+	runContext, cancel := context.WithCancel(ctx)
+	a.directMu.Lock()
+	a.directCancels[handle.ID] = cancel
+	a.directMu.Unlock()
+	go func() {
+		output, runErr := a.executor.Run(runContext, "sh", []string{"-s"}, []byte(script))
+		a.directMu.Lock()
+		a.directResults[handle.ID] = directResult{output: string(output), err: runErr, finishedAt: runtimecommon.UnixSeconds(time.Now())}
+		delete(a.directCancels, handle.ID)
+		a.directMu.Unlock()
+	}()
 	return handle, nil
+}
+
+func (a *Adapter) inspectDirect(handle domain.ActivityHandle) domain.ActivityHandle {
+	a.directMu.RLock()
+	result, done := a.directResults[handle.ID]
+	a.directMu.RUnlock()
+	if !done {
+		return handle
+	}
+	handle.Log = result.output
+	handle.FinishedAt = result.finishedAt
+	if result.err != nil {
+		handle.Status = domain.HandleFailed
+		handle.Failure = result.err.Error()
+		return handle
+	}
+	handle.Status = domain.HandleCompleted
+	return handle
 }
 
 func (a *Adapter) saveScript(runID, activityID, extension, content string) (string, error) {

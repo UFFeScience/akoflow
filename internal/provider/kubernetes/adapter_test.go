@@ -90,6 +90,26 @@ func TestAdapterCreatesJobAndServiceFromActivity(t *testing.T) {
 	}
 }
 
+func TestAdapterDoesNotUseAPIEndpointAsKubernetesNodeSelector(t *testing.T) {
+	podSpec := observedPodSpec(domain.WorkflowVersion{}, domain.Activity{}, domain.Resource{
+		Type: domain.ResourceKubernetesMachine, ProviderID: "https://host.docker.internal:61640",
+	}, "run")
+	if _, exists := podSpec["nodeSelector"]; exists {
+		t.Fatalf("API endpoint must not be emitted as node selector: %v", podSpec)
+	}
+}
+
+func TestAdapterUsesObservedHostnameForKubernetesNodeSelector(t *testing.T) {
+	podSpec := observedPodSpec(domain.WorkflowVersion{}, domain.Activity{}, domain.Resource{
+		Type: domain.ResourceKubernetesMachine, ProviderID: "https://host.docker.internal:61640",
+		Metadata: map[string]any{"observedHostname": "kind-worker"},
+	}, "run")
+	selector, ok := podSpec["nodeSelector"].(map[string]string)
+	if !ok || selector["kubernetes.io/hostname"] != "kind-worker" {
+		t.Fatalf("node selector=%v", podSpec["nodeSelector"])
+	}
+}
+
 func TestAdapterExplainsMissingShellContract(t *testing.T) {
 	api := &apiFake{
 		getOutput:  []byte(`{"status":{"failed":1,"conditions":[{"type":"Failed","status":"True","message":"Backoff limit exceeded"}]}}`),

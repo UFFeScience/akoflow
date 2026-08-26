@@ -76,53 +76,53 @@ type DockerArtifactRequest struct {
 }
 
 type Dependencies struct {
-	Environments ports.EnvironmentCatalog
-	Workflows    ports.WorkflowStore
-	Plans        ports.PlanStore
-	Events       ports.EventPublisher
-	Validator    ports.PlanValidator
-	Executions   ExecutionQuery
-	Topologies   ports.NetworkTopologyStore
-	Scopes       ports.ExecutionScopeStore
-	Data         ports.DataCatalog
-	Resources    ports.ResourceInventory
-	Instance     ports.InstanceStore
-	Connections  ports.ConnectionHealthMonitor
-	Discovery    ports.EnvironmentDiscovery
-	SSHKeys      *sshkey.Manager
+	Environments     ports.EnvironmentCatalog
+	Workflows        ports.WorkflowStore
+	Plans            ports.PlanStore
+	Events           ports.EventPublisher
+	Validator        ports.PlanValidator
+	Executions       ExecutionQuery
+	Topologies       ports.NetworkTopologyStore
+	Scopes           ports.ExecutionScopeStore
+	Data             ports.DataCatalog
+	Resources        ports.ResourceInventory
+	Instance         ports.InstanceStore
+	Connections      ports.ConnectionHealthMonitor
+	Discovery        ports.EnvironmentDiscovery
+	SSHKeys          *sshkey.Manager
 	KubernetesTokens *token.Manager
-	Audit        ports.AuditStore
-	Console      ports.ConsoleCommands
-	Terminal     ports.InteractiveConsole
-	Storage      StorageNavigator
-	Build        BuildOrchestrator
-	FactoryReset func(context.Context) error
-	ConnectionTest func(context.Context, domain.EnvironmentConnection) ports.ConnectionHealth
+	Audit            ports.AuditStore
+	Console          ports.ConsoleCommands
+	Terminal         ports.InteractiveConsole
+	Storage          StorageNavigator
+	Build            BuildOrchestrator
+	FactoryReset     func(context.Context) error
+	ConnectionTest   func(context.Context, domain.EnvironmentConnection) ports.ConnectionHealth
 }
 
 type Handler struct {
-	environments ports.EnvironmentCatalog
-	workflows    ports.WorkflowStore
-	plans        ports.PlanStore
-	events       ports.EventPublisher
-	validator    ports.PlanValidator
-	executions   ExecutionQuery
-	topologies   ports.NetworkTopologyStore
-	scopes       ports.ExecutionScopeStore
-	data         ports.DataCatalog
-	resources    ports.ResourceInventory
-	instance     ports.InstanceStore
-	connections  ports.ConnectionHealthMonitor
-	discovery    ports.EnvironmentDiscovery
-	sshKeys      *sshkey.Manager
+	environments     ports.EnvironmentCatalog
+	workflows        ports.WorkflowStore
+	plans            ports.PlanStore
+	events           ports.EventPublisher
+	validator        ports.PlanValidator
+	executions       ExecutionQuery
+	topologies       ports.NetworkTopologyStore
+	scopes           ports.ExecutionScopeStore
+	data             ports.DataCatalog
+	resources        ports.ResourceInventory
+	instance         ports.InstanceStore
+	connections      ports.ConnectionHealthMonitor
+	discovery        ports.EnvironmentDiscovery
+	sshKeys          *sshkey.Manager
 	kubernetesTokens *token.Manager
-	audit        ports.AuditStore
-	console      ports.ConsoleCommands
-	terminal     ports.InteractiveConsole
-	storage      StorageNavigator
-	build        BuildOrchestrator
-	factoryReset func(context.Context) error
-	connectionTest func(context.Context, domain.EnvironmentConnection) ports.ConnectionHealth
+	audit            ports.AuditStore
+	console          ports.ConsoleCommands
+	terminal         ports.InteractiveConsole
+	storage          StorageNavigator
+	build            BuildOrchestrator
+	factoryReset     func(context.Context) error
+	connectionTest   func(context.Context, domain.EnvironmentConnection) ports.ConnectionHealth
 }
 
 // SearchResult is a compact, navigable projection of a control-plane entity.
@@ -145,36 +145,47 @@ func New(dependencies Dependencies) (*Handler, error) {
 		environments: dependencies.Environments, workflows: dependencies.Workflows,
 		plans: dependencies.Plans, events: dependencies.Events,
 		validator: dependencies.Validator, executions: dependencies.Executions,
-		topologies:  dependencies.Topologies,
-		scopes:      dependencies.Scopes,
-		data:        dependencies.Data,
-		resources:   dependencies.Resources,
-		instance:    dependencies.Instance,
-		connections: dependencies.Connections,
-		discovery:   dependencies.Discovery,
-		sshKeys:     dependencies.SSHKeys,
+		topologies:       dependencies.Topologies,
+		scopes:           dependencies.Scopes,
+		data:             dependencies.Data,
+		resources:        dependencies.Resources,
+		instance:         dependencies.Instance,
+		connections:      dependencies.Connections,
+		discovery:        dependencies.Discovery,
+		sshKeys:          dependencies.SSHKeys,
 		kubernetesTokens: dependencies.KubernetesTokens,
-		audit:       dependencies.Audit,
-		console:     dependencies.Console,
-		terminal:    dependencies.Terminal,
-		storage:     dependencies.Storage,
-		build:       dependencies.Build,
-		factoryReset: dependencies.FactoryReset,
-		connectionTest: dependencies.ConnectionTest,
+		audit:            dependencies.Audit,
+		console:          dependencies.Console,
+		terminal:         dependencies.Terminal,
+		storage:          dependencies.Storage,
+		build:            dependencies.Build,
+		factoryReset:     dependencies.FactoryReset,
+		connectionTest:   dependencies.ConnectionTest,
 	}, nil
 }
 
 func (h *Handler) TestEnvironmentConnection(w http.ResponseWriter, r *http.Request) {
-	if h.connectionTest == nil { writeError(w, http.StatusServiceUnavailable, fmt.Errorf("connection testing is unavailable")); return }
+	if h.connectionTest == nil {
+		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("connection testing is unavailable"))
+		return
+	}
 	var connection domain.EnvironmentConnection
-	if !decode(w, r, &connection) { return }
+	if !decode(w, r, &connection) {
+		return
+	}
 	health := h.connectionTest(r.Context(), connection)
 	writeJSON(w, http.StatusOK, map[string]any{"healthy": health.Healthy, "message": health.Message})
 }
 
 func (h *Handler) FactoryReset(w http.ResponseWriter, r *http.Request) {
-	if h.factoryReset == nil { writeError(w, http.StatusServiceUnavailable, fmt.Errorf("factory reset is unavailable")); return }
-	if err := h.factoryReset(r.Context()); err != nil { writeError(w, http.StatusUnprocessableEntity, err); return }
+	if h.factoryReset == nil {
+		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("factory reset is unavailable"))
+		return
+	}
+	if err := h.factoryReset(r.Context()); err != nil {
+		writeError(w, http.StatusUnprocessableEntity, err)
+		return
+	}
 	w.WriteHeader(http.StatusNoContent)
 }
 
@@ -499,6 +510,26 @@ func (h *Handler) GenerateSSHKey(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	key, err := h.sshKeys.Generate(request.ID, request.Comment)
+	if err != nil {
+		writeError(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+	writeJSON(w, http.StatusCreated, key)
+}
+
+func (h *Handler) ImportSSHKey(w http.ResponseWriter, r *http.Request) {
+	if h.sshKeys == nil {
+		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("SSH key management is unavailable"))
+		return
+	}
+	var request struct {
+		ID         string `json:"id"`
+		PrivateKey string `json:"privateKey"`
+	}
+	if !decode(w, r, &request) {
+		return
+	}
+	key, err := h.sshKeys.Import(request.ID, request.PrivateKey)
 	if err != nil {
 		writeError(w, http.StatusUnprocessableEntity, err)
 		return

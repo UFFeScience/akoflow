@@ -63,6 +63,47 @@ func (m *Manager) Generate(id, comment string) (Key, error) {
 	return Key{ID: id, CredentialRef: "file:" + privatePath, PublicKey: publicKey, Fingerprint: fingerprint(public)}, nil
 }
 
+// Import stores an existing OpenSSH private key in the daemon credential
+// directory. The key material is accepted only by this method and is never
+// returned through the API; callers receive public metadata only.
+func (m *Manager) Import(id, privateKey string) (Key, error) {
+	if !validID.MatchString(id) {
+		return Key{}, fmt.Errorf("invalid SSH key id")
+	}
+	if strings.TrimSpace(privateKey) == "" {
+		return Key{}, fmt.Errorf("SSH private key is required")
+	}
+	if err := os.MkdirAll(m.directory, 0700); err != nil {
+		return Key{}, err
+	}
+	privatePath := filepath.Join(m.directory, id)
+	if _, err := os.Lstat(privatePath); err == nil {
+		return Key{}, fmt.Errorf("SSH key %q already exists", id)
+	} else if !os.IsNotExist(err) {
+		return Key{}, err
+	}
+	if err := os.WriteFile(privatePath, []byte(strings.TrimSpace(privateKey)+"\n"), 0600); err != nil {
+		return Key{}, err
+	}
+	output, err := exec.Command("ssh-keygen", "-y", "-f", privatePath).CombinedOutput()
+	if err != nil {
+		_ = os.Remove(privatePath)
+		return Key{}, fmt.Errorf("read OpenSSH private key: %s", strings.TrimSpace(string(output)))
+	}
+	publicKey := strings.TrimSpace(string(output))
+	if err := os.WriteFile(privatePath+".pub", []byte(publicKey+"\n"), 0644); err != nil {
+		_ = os.Remove(privatePath)
+		return Key{}, err
+	}
+	public, err := publicMaterial(publicKey)
+	if err != nil {
+		_ = os.Remove(privatePath)
+		_ = os.Remove(privatePath + ".pub")
+		return Key{}, err
+	}
+	return Key{ID: id, CredentialRef: "file:" + privatePath, PublicKey: publicKey, Fingerprint: fingerprint(public)}, nil
+}
+
 // List returns the public metadata for service keys managed by this Engine.
 // Private material never leaves the credential directory or this process.
 func (m *Manager) List() ([]Key, error) {

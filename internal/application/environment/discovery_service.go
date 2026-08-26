@@ -48,7 +48,16 @@ func (s *DiscoveryCoordinator) DiscoverConnection(ctx context.Context, connectio
 			ConnectionID: connection.ID, Outcome: domainaudit.OutcomeFailed, Summary: err.Error()})
 		return nil, err
 	}
-	structureSnapshots, err := s.materializeHPCStructure(ctx, *definition, connection, observation)
+	directSSH := connection.Type == domain.ConnectionSSH && configurationBool(connection.Configuration, "skipSchedulerCheck")
+	if directSSH {
+		if err := s.materializeDirectMachine(ctx, *definition, connection, observation); err != nil {
+			return nil, err
+		}
+	}
+	structureSnapshots := []domain.ResourceSnapshot(nil)
+	if !directSSH {
+		structureSnapshots, err = s.materializeHPCStructure(ctx, *definition, connection, observation)
+	}
 	if err != nil {
 		return nil, err
 	}
@@ -89,6 +98,60 @@ func (s *DiscoveryCoordinator) DiscoverConnection(ctx context.Context, connectio
 		ConnectionID: connection.ID, Outcome: domainaudit.OutcomeSucceeded, Summary: "Infrastructure discovery completed",
 		Metadata: map[string]any{"nodeCount": len(observation.Nodes), "snapshotCount": len(items), "loginNodeDiscovered": observation.LoginNode != nil}})
 	return items, nil
+}
+
+// materializeDirectMachine updates the configured SSH target with the facts
+// collected from that host. Generic SSH environments run Docker directly and
+// must never be expanded into SLURM cluster, partition or login-node records.
+func (s *DiscoveryCoordinator) materializeDirectMachine(ctx context.Context, definition domain.EnvironmentDefinition, connection domain.EnvironmentConnection, observation ports.ConnectionDiscovery) error {
+	bound := map[string]bool{}
+	for _, id := range boundResourceIDs(definition, connection.ID) {
+		bound[id] = true
+	}
+	for _, configured := range definition.Resources {
+		if !bound[configured.ID] {
+			continue
+		}
+		resource := configured
+		resource.Type = domain.ResourceCloudVM
+		resource.ExecutionTarget = domain.ExecutionTargetDirect
+		resource.Architecture, _ = observation.Metadata["architecture"].(string)
+		resource.CPUCores = intValue(observation.Metadata["cpuCores"])
+		resource.CPUCapacity = float64(resource.CPUCores)
+		resource.MemoryBytes = int64Value(observation.Metadata["memoryBytes"])
+		resource.StorageBytes = int64Value(observation.Metadata["storageBytes"])
+		resource.Schedulable = observation.Available
+		resource.Metadata = cloneMetadata(configured.Metadata)
+		resource.Metadata["connectionId"] = connection.ID
+		resource.Metadata["discovered"] = true
+		resource.Metadata["containerRuntime"] = "docker"
+		resource.Metadata["dockerAvailable"] = observation.Metadata["dockerAvailable"]
+		if hostname, ok := observation.Metadata["hostname"].(string); ok {
+			resource.Metadata["observedHostname"] = hostname
+		}
+		if err := s.resources.Upsert(ctx, resource); err != nil {
+			return fmt.Errorf("update discovered direct SSH machine %q: %w", resource.ID, err)
+		}
+	}
+	return nil
+}
+
+func configurationBool(configuration map[string]any, key string) bool {
+	value, _ := configuration[key].(bool)
+	return value
+}
+
+func int64Value(value any) int64 {
+	switch value := value.(type) {
+	case int64:
+		return value
+	case int:
+		return int64(value)
+	case float64:
+		return int64(value)
+	default:
+		return 0
+	}
 }
 
 func (s *DiscoveryCoordinator) recordAudit(ctx context.Context, event domainaudit.Event) {

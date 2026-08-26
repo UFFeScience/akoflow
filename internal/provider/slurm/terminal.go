@@ -67,9 +67,10 @@ func interactiveCommandForJob(connection domain.EnvironmentConnection, resource 
 	if alias := configString(connection.Configuration, "hostKeyAlias"); alias != "" {
 		args = append(args, "-o", "HostKeyAlias="+alias)
 	}
-	if hosts := configString(connection.Configuration, "knownHostsFile"); hosts != "" {
-		args = append(args, "-o", "UserKnownHostsFile="+hosts, "-o", "StrictHostKeyChecking=yes")
-	}
+	// Reuse the daemon-managed known_hosts file populated during the connection
+	// test. Interactive terminals must verify that same host identity instead of
+	// falling back to the container user's transient SSH configuration.
+	args = append(args, "-o", "UserKnownHostsFile="+knownHostsFile(connection), "-o", "StrictHostKeyChecking=yes")
 	if configBool(connection.Configuration, "forwardAgent", false) {
 		args = append(args, "-A")
 	}

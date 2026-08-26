@@ -41,6 +41,12 @@ func (p *ConnectionProber) Probe(ctx context.Context, connection domain.Environm
 	}
 	probeContext, cancel := context.WithTimeout(ctx, defaultProbeTimeout)
 	defer cancel()
+	if configBool(connection.Configuration, "skipSchedulerCheck", false) {
+		if _, err := executor.Run(probeContext, "true", nil, nil); err != nil {
+			return ports.ConnectionHealth{Message: fmt.Sprintf("SSH is unreachable: %v", err)}
+		}
+		return ports.ConnectionHealth{Healthy: true, Message: "SSH is reachable from the AkôFlow daemon"}
+	}
 	output, err := executor.Run(probeContext, "sinfo", []string{"--noheader", "--format=%P"}, nil)
 	if err != nil {
 		return ports.ConnectionHealth{Message: fmt.Sprintf("SLURM is unreachable: %v", err)}

@@ -10,6 +10,7 @@ import (
 	"github.com/UFFeScience/akoflow/internal/provider/kubernetes"
 	"github.com/UFFeScience/akoflow/internal/provider/local"
 	"github.com/UFFeScience/akoflow/internal/provider/registry"
+	"github.com/UFFeScience/akoflow/internal/provider/remote"
 	"github.com/UFFeScience/akoflow/internal/provider/simgrid"
 	"github.com/UFFeScience/akoflow/internal/provider/slurm"
 )
@@ -47,6 +48,7 @@ func buildRuntimes(settings config.Settings, catalogs ...ports.EnvironmentCatalo
 	if len(catalogs) > 0 && catalogs[0] != nil {
 		return registry.NewCatalogResolver(runtimes, catalogs[0],
 			kubernetes.ConnectionFactory{DefaultNamespace: settings.DefaultNamespace},
+			remote.Factory{Executor: provider.OSCommandExecutor{}},
 			slurm.ConnectionFactory{Executor: provider.OSCommandExecutor{},
 				DefaultScriptDirectory: settings.SlurmScriptDirectory},
 		), nil

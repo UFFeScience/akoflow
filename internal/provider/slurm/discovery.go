@@ -37,6 +37,12 @@ func (d *Discovery) DiscoverConnection(ctx context.Context, connection domain.En
 			KnownHostsFile: knownHostsFile(connection),
 			ForwardAgent:   configBool(connection.Configuration, "forwardAgent", false)}
 	}
+	// A generic SSH machine is a direct Docker target, not a SLURM login
+	// node. Do not invoke scheduler commands or emit scheduler inventory for
+	// it; only collect the host facts required to schedule direct containers.
+	if configBool(connection.Configuration, "skipSchedulerCheck", false) {
+		return discoverDirectMachine(ctx, executor)
+	}
 	script := strings.Join([]string{
 		`printf 'FACT|architecture|'; uname -m`,
 		`printf 'FACT|hostname|'; hostname -f 2>/dev/null || hostname`,
@@ -70,6 +76,48 @@ func (d *Discovery) DiscoverConnection(ctx context.Context, connection domain.En
 	addConfiguredTransferPaths(&result.Transfer, connection.Configuration)
 	result.Metadata["transferCapabilities"] = result.Transfer
 	return result, nil
+}
+
+func discoverDirectMachine(ctx context.Context, executor runtimecommon.CommandExecutor) (ports.ConnectionDiscovery, error) {
+	script := strings.Join([]string{
+		`printf 'FACT|architecture|'; uname -m`,
+		`printf 'FACT|hostname|'; hostname -f 2>/dev/null || hostname`,
+		`printf 'FACT|cpuCores|'; (getconf _NPROCESSORS_ONLN 2>/dev/null || sysctl -n hw.ncpu 2>/dev/null || printf '0')`,
+		`printf 'FACT|memoryBytes|'; if [ -r /proc/meminfo ]; then awk '/^MemTotal:/ {print $2 * 1024; exit}' /proc/meminfo; else sysctl -n hw.memsize 2>/dev/null || printf '0'; fi`,
+		`printf 'FACT|storageBytes|'; df -Pk / | awk 'NR==2 {print $2 * 1024}'`,
+		`docker_bin="$(command -v docker 2>/dev/null || true)"; if [ -z "$docker_bin" ]; then for candidate in /usr/local/bin/docker /opt/homebrew/bin/docker /Applications/Docker.app/Contents/Resources/bin/docker; do if [ -x "$candidate" ]; then docker_bin="$candidate"; break; fi; done; fi; if [ -n "$docker_bin" ]; then printf 'FACT|docker|available\n'; printf 'FACT|dockerPath|%s\n' "$docker_bin"; printf 'FACT|dockerVersion|'; "$docker_bin" version --format '{{.Server.Version}}' 2>/dev/null || printf 'unknown\n'; else printf 'FACT|docker|unavailable\n'; fi`,
+	}, "; ")
+	encodedScript := base64.StdEncoding.EncodeToString([]byte(script))
+	output, err := executor.Run(ctx, "/bin/sh", []string{"-c", "printf %s " + encodedScript + " | base64 -d | /bin/sh"}, nil)
+	if err != nil {
+		return ports.ConnectionDiscovery{}, fmt.Errorf("direct SSH discovery: %w", err)
+	}
+	metadata := map[string]any{"containerRuntimes": []string{}}
+	warnings := []string{}
+	for _, raw := range strings.Split(string(output), "\n") {
+		fields := strings.SplitN(strings.TrimSpace(raw), "|", 3)
+		if len(fields) != 3 || fields[0] != "FACT" {
+			continue
+		}
+		key, value := fields[1], strings.TrimSpace(fields[2])
+		switch key {
+		case "cpuCores":
+			metadata[key] = integer(value)
+		case "memoryBytes", "storageBytes":
+			parsed, _ := strconv.ParseInt(value, 10, 64)
+			metadata[key] = parsed
+		case "docker":
+			metadata["dockerAvailable"] = value == "available"
+			if value == "available" {
+				metadata["containerRuntimes"] = []string{"docker"}
+			} else {
+				warnings = append(warnings, "Docker is unavailable on the remote machine")
+			}
+		default:
+			metadata[key] = value
+		}
+	}
+	return ports.ConnectionDiscovery{Available: true, Metadata: metadata, Warnings: warnings}, nil
 }
 
 func parseDiscovery(output []byte) ports.ConnectionDiscovery {

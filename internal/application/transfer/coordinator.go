@@ -3,6 +3,7 @@ package transfer
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/UFFeScience/akoflow/internal/domain"
 )
@@ -29,6 +30,13 @@ func (c Coordinator) Prepare(ctx context.Context, _ string, requirement domain.P
 		initial.Status = domain.MaterializationTransferring
 		if err := c.save(ctx, initial); err != nil {
 			return nil, fmt.Errorf("save artifact materialization: %w", err)
+		}
+		if err := c.saveTransfer(ctx, domain.DataTransferRun{
+			ID: requirement.ArtifactTransfer.ID, PlanID: requirement.ArtifactTransfer.ID,
+			Strategy: requirement.ArtifactTransfer.Strategy, Status: domain.TransferRunning,
+			StartedAt: float64(time.Now().UnixNano()) / float64(time.Second),
+		}); err != nil {
+			return nil, fmt.Errorf("start artifact transfer log: %w", err)
 		}
 		result, transferRun, err := c.Materializer.Materialize(ctx, *requirement.ArtifactTransfer, initial)
 		if saveErr := c.saveTransfer(ctx, transferRun); saveErr != nil {

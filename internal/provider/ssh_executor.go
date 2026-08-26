@@ -53,7 +53,7 @@ func (e SSHCommandExecutor) Run(ctx context.Context, name string, args []string,
 		sshArgs = append(sshArgs, "-i", e.IdentityFile)
 	}
 	if e.ProxyCommand != "" {
-		sshArgs = append(sshArgs, "-o", "ProxyCommand="+e.ProxyCommand)
+		sshArgs = append(sshArgs, "-o", "ProxyCommand="+ProxyCommandWithKnownHosts(e.ProxyCommand, e.KnownHostsFile, e.IdentityFile))
 	}
 	if e.HostKeyAlias != "" {
 		sshArgs = append(sshArgs, "-o", "HostKeyAlias="+e.HostKeyAlias)
@@ -71,6 +71,21 @@ func (e SSHCommandExecutor) Run(ctx context.Context, name string, args []string,
 	}
 	sshArgs = append(sshArgs, target, strings.Join(remote, " "))
 	return e.Executor.Run(ctx, "ssh", sshArgs, input)
+}
+
+// A ProxyCommand starts its own SSH process. Give that hop the same
+// daemon-managed known_hosts policy as the destination so first-time gateway
+// connections can be recorded during the explicit connection test.
+func ProxyCommandWithKnownHosts(command, knownHosts, identityFile string) string {
+	command = strings.TrimSpace(command)
+	if knownHosts == "" || !strings.HasPrefix(command, "ssh ") {
+		return command
+	}
+	options := "-o UserKnownHostsFile=" + shellQuote(knownHosts) + " -o StrictHostKeyChecking=accept-new "
+	if identityFile != "" {
+		options += "-i " + shellQuote(identityFile) + " "
+	}
+	return "ssh " + options + strings.TrimSpace(strings.TrimPrefix(command, "ssh "))
 }
 
 func shellQuote(value string) string {

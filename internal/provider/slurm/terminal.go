@@ -12,6 +12,7 @@ import (
 
 	"github.com/UFFeScience/akoflow/internal/application/ports"
 	"github.com/UFFeScience/akoflow/internal/domain"
+	"github.com/UFFeScience/akoflow/internal/provider"
 	"github.com/creack/pty"
 )
 
@@ -62,7 +63,7 @@ func interactiveCommandForJob(connection domain.EnvironmentConnection, resource 
 		args = append(args, "-i", identityFile)
 	}
 	if proxy := configString(connection.Configuration, "proxyCommand"); proxy != "" {
-		args = append(args, "-o", "ProxyCommand="+proxy)
+		args = append(args, "-o", "ProxyCommand="+provider.ProxyCommandWithKnownHosts(proxy, knownHostsFile(connection), credentialFile(connection.CredentialRef)))
 	}
 	if alias := configString(connection.Configuration, "hostKeyAlias"); alias != "" {
 		args = append(args, "-o", "HostKeyAlias="+alias)

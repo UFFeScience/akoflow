@@ -1,3 +1,19 @@
+FROM debian:trixie AS simgrid-builder
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    cmake \
+    g++ \
+    libsimgrid-dev \
+    ninja-build \
+    nlohmann-json3-dev \
+    pkg-config \
+ && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /build
+COPY simgrid-runner ./simgrid-runner
+RUN cmake -S simgrid-runner -B output -G Ninja -DCMAKE_BUILD_TYPE=Debug \
+ && cmake --build output --parallel
+
 FROM golang:1.25-trixie AS apptainer-builder
 
 ARG APPTAINER_VERSION=v1.5.3
@@ -21,7 +37,7 @@ ENV PATH="/usr/local/go/bin:${PATH}"
 # mounted by docker-compose.yml and compiled by `go run`, so code changes
 # never require rebuilding this image.
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    ca-certificates gcc libsqlite3-dev libseccomp2 libgpgme11 libfuse3-4 \
+    ca-certificates gcc libsqlite3-dev libsimgrid4.0 libseccomp2 libgpgme11 libfuse3-4 \
     openssh-client rsync kubernetes-client squashfs-tools uidmap \
  && rm -rf /var/lib/apt/lists/*
 
@@ -34,5 +50,6 @@ COPY --from=apptainer-builder /usr/local/libexec/apptainer /usr/local/libexec/ap
 COPY --from=apptainer-builder /usr/local/etc/apptainer /usr/local/etc/apptainer
 COPY --from=apptainer-builder /usr/local/var/apptainer /usr/local/var/apptainer
 COPY --from=buildkit-client /usr/bin/buildctl /usr/local/bin/buildctl
+COPY --from=simgrid-builder /build/output/akoflow-simgrid-runner /usr/local/bin/akoflow-simgrid-runner
 
 WORKDIR /app

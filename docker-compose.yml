@@ -13,6 +13,7 @@ services:
       AKOFLOW_ARTIFACT_STORE_ROOT: /var/lib/akoflow/artifacts
       AKOFLOW_BUILDCTL: buildctl
       AKOFLOW_APPTAINER: apptainer
+      AKOFLOW_SIMGRID_BINARY: /usr/local/bin/akoflow-simgrid-runner
       AKOFLOW_KIND_TOKEN: ${AKOFLOW_KIND_TOKEN:-}
       # Interactive terminals are enabled only for the local control-plane
       # deployment. The runner still uses each environment's SSH credentials

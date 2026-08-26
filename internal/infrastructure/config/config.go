@@ -41,7 +41,7 @@ func Load() Settings {
 		SSHKeyDirectory:            "storage/credentials/ssh",
 		KubernetesTokenDirectory:   "storage/credentials/kubernetes",
 		SimulationBackend:          "simgrid",
-		SimGridBinaryPath:          "akoflow-simgrid-runner",
+		SimGridBinaryPath:          "/usr/local/bin/akoflow-simgrid-runner",
 		SimGridWorkspace:           "storage/simgrid",
 		SimGridMaxConcurrent:       2,
 		SimGridTimeout:             30 * time.Minute,

@@ -7,6 +7,8 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+
+	"github.com/UFFeScience/akoflow/internal/domain"
 )
 
 // SSHCommandExecutor runs a command on a login node while preserving the
@@ -23,6 +25,32 @@ type SSHCommandExecutor struct {
 	HostKeyAlias   string
 	KnownHostsFile string
 	ForwardAgent   bool
+}
+
+// NewSSHCommandExecutor builds the canonical daemon-side SSH transport for an
+// environment connection. Every caller gets the same proxy, credential,
+// host-key and agent-forwarding behavior.
+func NewSSHCommandExecutor(executor CommandExecutor, connection domain.EnvironmentConnection) SSHCommandExecutor {
+	if executor == nil {
+		executor = OSCommandExecutor{}
+	}
+	knownHosts := connectionString(connection.Configuration, "knownHostsFile")
+	if knownHosts == "" {
+		knownHosts = filepath.Join("storage", "credentials", "ssh", "known_hosts")
+	}
+	identity := ""
+	if strings.HasPrefix(connection.CredentialRef, "file:") {
+		identity = strings.TrimSpace(strings.TrimPrefix(connection.CredentialRef, "file:"))
+	}
+	return SSHCommandExecutor{
+		Executor: executor, Endpoint: connection.Endpoint, Username: connection.Username,
+		Port:           connectionInt(connection.Configuration, "port"),
+		IdentityFile:   identity,
+		ProxyCommand:   connectionString(connection.Configuration, "proxyCommand"),
+		HostKeyAlias:   connectionString(connection.Configuration, "hostKeyAlias"),
+		KnownHostsFile: knownHosts,
+		ForwardAgent:   connectionBool(connection.Configuration, "forwardAgent"),
+	}
 }
 
 func (e SSHCommandExecutor) Run(ctx context.Context, name string, args []string, input []byte) ([]byte, error) {
@@ -93,4 +121,28 @@ func shellQuote(value string) string {
 		return "''"
 	}
 	return "'" + strings.ReplaceAll(value, "'", "'\\\"'\\\"'") + "'"
+}
+
+func connectionString(configuration map[string]any, key string) string {
+	value, _ := configuration[key].(string)
+	return strings.TrimSpace(value)
+}
+
+func connectionInt(configuration map[string]any, key string) int {
+	switch value := configuration[key].(type) {
+	case int:
+		return value
+	case float64:
+		return int(value)
+	case string:
+		parsed, _ := strconv.Atoi(value)
+		return parsed
+	default:
+		return 0
+	}
+}
+
+func connectionBool(configuration map[string]any, key string) bool {
+	value, _ := configuration[key].(bool)
+	return value
 }

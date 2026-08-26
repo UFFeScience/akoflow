@@ -5,7 +5,6 @@ package remote
 import (
 	"context"
 	"fmt"
-	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
@@ -27,11 +26,7 @@ func (f Factory) Build(_ domain.EnvironmentRuntime, connection domain.Environmen
 	if executor == nil {
 		executor = runtimecommon.OSCommandExecutor{}
 	}
-	return &Adapter{executor: runtimecommon.SSHCommandExecutor{
-		Executor: executor, Endpoint: connection.Endpoint, Username: connection.Username,
-		Port: intConfig(connection.Configuration, "port"), IdentityFile: credentialFile(connection.CredentialRef),
-		KnownHostsFile: filepath.Join("storage", "credentials", "ssh", "known_hosts"),
-	}}, nil
+	return &Adapter{executor: runtimecommon.NewSSHCommandExecutor(executor, connection)}, nil
 }
 
 type Adapter struct{ executor runtimecommon.CommandExecutor }

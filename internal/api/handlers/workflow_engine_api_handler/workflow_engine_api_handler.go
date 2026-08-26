@@ -12,6 +12,7 @@ import (
 	"net/http"
 	"net/url"
 	"path"
+	"path/filepath"
 	"reflect"
 	"sort"
 	"strconv"
@@ -1551,10 +1552,21 @@ func (h *Handler) configureGatewayArtifactTransfer(ctx context.Context, requirem
 	if identity := strings.TrimPrefix(connection.CredentialRef, "file:"); identity != "" {
 		query.Set("identityFile", identity)
 	}
-	for _, key := range []string{"knownHostsFile", "proxyCommand"} {
+	knownHosts := filepath.Join("storage", "credentials", "ssh", "known_hosts")
+	if configured, _ := connection.Configuration["knownHostsFile"].(string); strings.TrimSpace(configured) != "" {
+		knownHosts = strings.TrimSpace(configured)
+	}
+	query.Set("knownHostsFile", knownHosts)
+	for _, key := range []string{"proxyCommand", "hostKeyAlias"} {
 		if value, _ := connection.Configuration[key].(string); value != "" {
 			query.Set(key, value)
 		}
+	}
+	if port := integerConfiguration(connection.Configuration, "port"); port > 0 {
+		query.Set("port", strconv.Itoa(port))
+	}
+	if forward, _ := connection.Configuration["forwardAgent"].(bool); forward {
+		query.Set("forwardAgent", "true")
 	}
 	u.RawQuery = query.Encode()
 	// The transfer materializer stores each blob under its complete digest. The
@@ -1564,6 +1576,20 @@ func (h *Handler) configureGatewayArtifactTransfer(ctx context.Context, requirem
 	requirement.ArtifactTransfer.Destination.URI = u.String()
 	requirement.ArtifactTransfer.Destination.Path = ""
 	return nil
+}
+
+func integerConfiguration(configuration map[string]any, key string) int {
+	switch value := configuration[key].(type) {
+	case int:
+		return value
+	case float64:
+		return int(value)
+	case string:
+		parsed, _ := strconv.Atoi(value)
+		return parsed
+	default:
+		return 0
+	}
 }
 
 func executionRuntimeDriver(request ports.ExecutionRequest, assignment domain.PlanAssignment) domain.RuntimeDriver {

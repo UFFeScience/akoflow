@@ -30,12 +30,7 @@ func (d *Discovery) DiscoverConnection(ctx context.Context, connection domain.En
 	}
 	executor := d.executor
 	if connection.Type == domain.ConnectionSSH {
-		executor = runtimecommon.SSHCommandExecutor{Executor: d.executor, Endpoint: connection.Endpoint,
-			Username: connection.Username, Port: configInt(connection.Configuration, "port"),
-			IdentityFile: credentialFile(connection.CredentialRef), ProxyCommand: configString(connection.Configuration, "proxyCommand"),
-			HostKeyAlias:   configString(connection.Configuration, "hostKeyAlias"),
-			KnownHostsFile: knownHostsFile(connection),
-			ForwardAgent:   configBool(connection.Configuration, "forwardAgent", false)}
+		executor = runtimecommon.NewSSHCommandExecutor(d.executor, connection)
 	}
 	// A generic SSH machine is a direct Docker target, not a SLURM login
 	// node. Do not invoke scheduler commands or emit scheduler inventory for

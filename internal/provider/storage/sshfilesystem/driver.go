@@ -185,14 +185,8 @@ func (d *Driver) connectionExecutor(ctx context.Context, storage domain.StorageR
 	if connection.Type != domain.ConnectionSSH && connection.Type != domain.ConnectionAgent {
 		return nil, fmt.Errorf("connection %q is not SSH-capable", id)
 	}
-	return provider.SSHCommandExecutor{
-		Executor: d.executor, Endpoint: connection.Endpoint, Username: connection.Username,
-		Port: integer(connection.Configuration, "port"), IdentityFile: credentialFile(connection.CredentialRef),
-		ProxyCommand:   configString(connection.Configuration, "proxyCommand"),
-		HostKeyAlias:   configString(connection.Configuration, "hostKeyAlias"),
-		KnownHostsFile: configString(connection.Configuration, "knownHostsFile"),
-		ForwardAgent:   boolean(connection.Configuration, "forwardAgent"),
-	}, nil
+	value := provider.NewSSHCommandExecutor(d.executor, *connection)
+	return value, nil
 }
 
 func browseRoot(storage domain.StorageResource, value string) (string, string, error) {

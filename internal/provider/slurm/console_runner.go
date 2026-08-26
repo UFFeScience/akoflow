@@ -21,11 +21,7 @@ func (r ConsoleRunner) RunConsoleCommand(ctx context.Context, connection domain.
 		executor = runtimecommon.OSCommandExecutor{}
 	}
 	if connection.Type == domain.ConnectionSSH {
-		executor = runtimecommon.SSHCommandExecutor{Executor: executor, Endpoint: connection.Endpoint,
-			Username: connection.Username, Port: configInt(connection.Configuration, "port"), IdentityFile: credentialFile(connection.CredentialRef),
-			ProxyCommand: configString(connection.Configuration, "proxyCommand"), HostKeyAlias: configString(connection.Configuration, "hostKeyAlias"),
-			KnownHostsFile: knownHostsFile(connection),
-			ForwardAgent:   configBool(connection.Configuration, "forwardAgent", false)}
+		executor = runtimecommon.NewSSHCommandExecutor(executor, connection)
 	}
 	script := consoleScript(resource, command)
 	output, err := executor.Run(ctx, "/bin/sh", []string{"-s"}, []byte(script))

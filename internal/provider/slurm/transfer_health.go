@@ -26,7 +26,7 @@ func NewArtifactLocationChecker(executors ...runtimecommon.CommandExecutor) *Art
 func (c *ArtifactLocationChecker) Check(ctx context.Context, connection domain.EnvironmentConnection, locationRef, path, expectedDigest string, expectedSize int64, probeComputeNode bool) (domain.ArtifactLocationHealth, error) {
 	executor := c.executor
 	if connection.Type == domain.ConnectionSSH {
-		executor = runtimecommon.SSHCommandExecutor{Executor: c.executor, Endpoint: connection.Endpoint, Username: connection.Username, Port: configInt(connection.Configuration, "port"), IdentityFile: credentialFile(connection.CredentialRef)}
+		executor = runtimecommon.NewSSHCommandExecutor(c.executor, connection)
 	}
 	health := domain.ArtifactLocationHealth{LocationRef: locationRef, ExpectedDigest: expectedDigest, ExpectedSizeBytes: expectedSize, CheckedAt: time.Now().UTC()}
 	script := `p="$1"; test -e "$p" || exit 20; test -r "$p" || exit 21; size=$(wc -c < "$p" | tr -d ' '); digest=$(sha256sum "$p" | awk '{print $1}'); printf '%s|%s\n' "$size" "$digest"`

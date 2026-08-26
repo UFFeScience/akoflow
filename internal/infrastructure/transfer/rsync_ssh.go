@@ -8,9 +8,11 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strconv"
 	"strings"
 
 	"github.com/UFFeScience/akoflow/internal/domain"
+	"github.com/UFFeScience/akoflow/internal/provider"
 )
 
 // RsyncSSH uses ssh/rsync installed on the gateway. Endpoint URI is
@@ -46,7 +48,9 @@ func sshTarget(e domain.TransferEndpoint, name string) (string, string, error) {
 }
 func sshArgs(e domain.TransferEndpoint) []string {
 	args := []string{}
+	identity, knownHosts := "", ""
 	if key := e.Configuration["identityFile"]; key != "" {
+		identity = key
 		args = append(args, "-i", key)
 	}
 	if options := e.Configuration["sshOptions"]; options != "" {
@@ -54,14 +58,25 @@ func sshArgs(e domain.TransferEndpoint) []string {
 	}
 	if uri, err := url.Parse(e.URI); err == nil {
 		query := uri.Query()
-		if identity := query.Get("identityFile"); identity != "" {
-			args = append(args, "-i", identity)
+		if queryIdentity := query.Get("identityFile"); queryIdentity != "" {
+			identity = queryIdentity
+			args = append(args, "-i", queryIdentity)
 		}
-		if knownHosts := query.Get("knownHostsFile"); knownHosts != "" {
-			args = append(args, "-o", "UserKnownHostsFile="+knownHosts, "-o", "StrictHostKeyChecking=yes")
+		if queryKnownHosts := query.Get("knownHostsFile"); queryKnownHosts != "" {
+			knownHosts = queryKnownHosts
+			args = append(args, "-o", "UserKnownHostsFile="+queryKnownHosts, "-o", "StrictHostKeyChecking=yes")
+		}
+		if port := query.Get("port"); port != "" {
+			args = append(args, "-p", port)
 		}
 		if proxy := query.Get("proxyCommand"); proxy != "" {
-			args = append(args, "-o", "ProxyCommand="+proxy)
+			args = append(args, "-o", "ProxyCommand="+provider.ProxyCommandWithKnownHosts(proxy, knownHosts, identity))
+		}
+		if alias := query.Get("hostKeyAlias"); alias != "" {
+			args = append(args, "-o", "HostKeyAlias="+alias)
+		}
+		if forward, _ := strconv.ParseBool(query.Get("forwardAgent")); forward {
+			args = append(args, "-A")
 		}
 	}
 	return args
@@ -162,11 +177,20 @@ func rsyncSSHConfig(endpoint domain.TransferEndpoint, fallbackHost string) (stri
 	if identity := query.Get("identityFile"); identity != "" {
 		lines = append(lines, "  IdentityFile "+identity)
 	}
+	if port := query.Get("port"); port != "" {
+		lines = append(lines, "  Port "+port)
+	}
 	if knownHosts := query.Get("knownHostsFile"); knownHosts != "" {
 		lines = append(lines, "  UserKnownHostsFile "+knownHosts, "  StrictHostKeyChecking yes")
 	}
 	if proxy := query.Get("proxyCommand"); proxy != "" {
-		lines = append(lines, "  ProxyCommand "+proxy)
+		lines = append(lines, "  ProxyCommand "+provider.ProxyCommandWithKnownHosts(proxy, query.Get("knownHostsFile"), query.Get("identityFile")))
+	}
+	if alias := query.Get("hostKeyAlias"); alias != "" {
+		lines = append(lines, "  HostKeyAlias "+alias)
+	}
+	if forward, _ := strconv.ParseBool(query.Get("forwardAgent")); forward {
+		lines = append(lines, "  ForwardAgent yes")
 	}
 	file, err := os.CreateTemp("", "akoflow-ssh-config-*")
 	if err != nil {

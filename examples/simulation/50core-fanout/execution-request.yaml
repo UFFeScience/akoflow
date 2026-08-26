@@ -1,0 +1,6 @@
+run:
+  id: simgrid-50core-fanout-run-v3
+  schedulePlanId: simgrid-50core-fanout-plan-v1
+  mode: simulation
+  seed: 1
+  status: created

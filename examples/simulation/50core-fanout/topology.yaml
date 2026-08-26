@@ -1,0 +1,7 @@
+id: simgrid-50core-network
+name: 50-core shared 10 GB/s network
+version: 1
+executionScopeId: simgrid-50core-scope
+links:
+  - {id: simgrid-50core-m1-m2, topologyId: simgrid-50core-network, sourceResourceId: simgrid-50core-m1, targetResourceId: simgrid-50core-m2, bandwidthBitsPerSecond: 80000000000, latencySeconds: 0, pricePerByte: 0, bidirectional: true, sharingPolicy: shared, maxConcurrentTransfers: 50}
+  - {id: simgrid-50core-m2-m3, topologyId: simgrid-50core-network, sourceResourceId: simgrid-50core-m2, targetResourceId: simgrid-50core-m3, bandwidthBitsPerSecond: 80000000000, latencySeconds: 0, pricePerByte: 0, bidirectional: true, sharingPolicy: shared, maxConcurrentTransfers: 50}

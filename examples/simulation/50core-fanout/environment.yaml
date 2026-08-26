@@ -1,0 +1,33 @@
+environment:
+  id: simgrid-50core-environment
+  name: SimGrid 50-core fan-out
+  description: Three-machine environment with 50 parallel cores on M2
+  status: ready
+version:
+  id: simgrid-50core-environment-v1
+  environmentId: simgrid-50core-environment
+  version: 1
+  status: published
+  networkModel: static-links
+  interferenceModel: none
+  costModel: per-second
+  configurationHash: simgrid-50core-environment-v1
+runtimes:
+  - environmentVersionId: simgrid-50core-environment-v1
+    id: simgrid-50core
+    name: SimGrid 50-core
+    driver: simgrid
+    mode: simulation
+    role: simulation
+    capabilities: {simulation: true}
+resources:
+  - {id: simgrid-50core-m1, environmentVersionId: simgrid-50core-environment-v1, executionTarget: batch, type: local_machine, name: M1, providerId: simgrid-50core-m1, tier: compute, cpuCores: 1, cpuCapacity: 1, memoryBytes: 68719476736, storageBytes: 1099511627776, computeSpeedup: 1, pricePerSecond: 0, schedulable: true}
+  - {id: simgrid-50core-m2, environmentVersionId: simgrid-50core-environment-v1, executionTarget: batch, type: local_machine, name: M2, providerId: simgrid-50core-m2, tier: compute, cpuCores: 50, cpuCapacity: 50, memoryBytes: 137438953472, storageBytes: 1099511627776, computeSpeedup: 1, pricePerSecond: 0, schedulable: true}
+  - {id: simgrid-50core-m3, environmentVersionId: simgrid-50core-environment-v1, executionTarget: batch, type: local_machine, name: M3, providerId: simgrid-50core-m3, tier: compute, cpuCores: 1, cpuCapacity: 1, memoryBytes: 68719476736, storageBytes: 1099511627776, computeSpeedup: 1, pricePerSecond: 0, schedulable: true}
+storages: []
+connections: []
+activityResourceProfiles: []
+resourceRuntimeBindings:
+  - {resourceId: simgrid-50core-m1, runtimeId: simgrid-50core, enabled: true}
+  - {resourceId: simgrid-50core-m2, runtimeId: simgrid-50core, enabled: true}
+  - {resourceId: simgrid-50core-m3, runtimeId: simgrid-50core, enabled: true}

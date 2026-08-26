@@ -1,0 +1,3 @@
+id: simgrid-50core-scope
+name: SimGrid 50-core scope
+environmentVersionIds: [simgrid-50core-environment-v1]

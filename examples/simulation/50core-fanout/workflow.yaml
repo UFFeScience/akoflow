@@ -1,0 +1,416 @@
+name: simgrid-50core-fanout
+spec:
+  namespace: examples
+  activities:
+    - name: source
+      runtime: simgrid-50core
+      cpuLimit: "1"
+      memoryLimit: 1Gi
+      simulation: {model: deterministic, durationSeconds: 10}
+    - name: worker-01
+      runtime: simgrid-50core
+      cpuLimit: "1"
+      memoryLimit: 1Gi
+      dependsOn: [source]
+      simulation: {model: deterministic, durationSeconds: 10}
+    - name: worker-02
+      runtime: simgrid-50core
+      cpuLimit: "1"
+      memoryLimit: 1Gi
+      dependsOn: [source]
+      simulation: {model: deterministic, durationSeconds: 10}
+    - name: worker-03
+      runtime: simgrid-50core
+      cpuLimit: "1"
+      memoryLimit: 1Gi
+      dependsOn: [source]
+      simulation: {model: deterministic, durationSeconds: 10}
+    - name: worker-04
+      runtime: simgrid-50core
+      cpuLimit: "1"
+      memoryLimit: 1Gi
+      dependsOn: [source]
+      simulation: {model: deterministic, durationSeconds: 10}
+    - name: worker-05
+      runtime: simgrid-50core
+      cpuLimit: "1"
+      memoryLimit: 1Gi
+      dependsOn: [source]
+      simulation: {model: deterministic, durationSeconds: 10}
+    - name: worker-06
+      runtime: simgrid-50core
+      cpuLimit: "1"
+      memoryLimit: 1Gi
+      dependsOn: [source]
+      simulation: {model: deterministic, durationSeconds: 10}
+    - name: worker-07
+      runtime: simgrid-50core
+      cpuLimit: "1"
+      memoryLimit: 1Gi
+      dependsOn: [source]
+      simulation: {model: deterministic, durationSeconds: 10}
+    - name: worker-08
+      runtime: simgrid-50core
+      cpuLimit: "1"
+      memoryLimit: 1Gi
+      dependsOn: [source]
+      simulation: {model: deterministic, durationSeconds: 10}
+    - name: worker-09
+      runtime: simgrid-50core
+      cpuLimit: "1"
+      memoryLimit: 1Gi
+      dependsOn: [source]
+      simulation: {model: deterministic, durationSeconds: 10}
+    - name: worker-10
+      runtime: simgrid-50core
+      cpuLimit: "1"
+      memoryLimit: 1Gi
+      dependsOn: [source]
+      simulation: {model: deterministic, durationSeconds: 10}
+    - name: worker-11
+      runtime: simgrid-50core
+      cpuLimit: "1"
+      memoryLimit: 1Gi
+      dependsOn: [source]
+      simulation: {model: deterministic, durationSeconds: 10}
+    - name: worker-12
+      runtime: simgrid-50core
+      cpuLimit: "1"
+      memoryLimit: 1Gi
+      dependsOn: [source]
+      simulation: {model: deterministic, durationSeconds: 10}
+    - name: worker-13
+      runtime: simgrid-50core
+      cpuLimit: "1"
+      memoryLimit: 1Gi
+      dependsOn: [source]
+      simulation: {model: deterministic, durationSeconds: 10}
+    - name: worker-14
+      runtime: simgrid-50core
+      cpuLimit: "1"
+      memoryLimit: 1Gi
+      dependsOn: [source]
+      simulation: {model: deterministic, durationSeconds: 10}
+    - name: worker-15
+      runtime: simgrid-50core
+      cpuLimit: "1"
+      memoryLimit: 1Gi
+      dependsOn: [source]
+      simulation: {model: deterministic, durationSeconds: 10}
+    - name: worker-16
+      runtime: simgrid-50core
+      cpuLimit: "1"
+      memoryLimit: 1Gi
+      dependsOn: [source]
+      simulation: {model: deterministic, durationSeconds: 10}
+    - name: worker-17
+      runtime: simgrid-50core
+      cpuLimit: "1"
+      memoryLimit: 1Gi
+      dependsOn: [source]
+      simulation: {model: deterministic, durationSeconds: 10}
+    - name: worker-18
+      runtime: simgrid-50core
+      cpuLimit: "1"
+      memoryLimit: 1Gi
+      dependsOn: [source]
+      simulation: {model: deterministic, durationSeconds: 10}
+    - name: worker-19
+      runtime: simgrid-50core
+      cpuLimit: "1"
+      memoryLimit: 1Gi
+      dependsOn: [source]
+      simulation: {model: deterministic, durationSeconds: 10}
+    - name: worker-20
+      runtime: simgrid-50core
+      cpuLimit: "1"
+      memoryLimit: 1Gi
+      dependsOn: [source]
+      simulation: {model: deterministic, durationSeconds: 10}
+    - name: worker-21
+      runtime: simgrid-50core
+      cpuLimit: "1"
+      memoryLimit: 1Gi
+      dependsOn: [source]
+      simulation: {model: deterministic, durationSeconds: 10}
+    - name: worker-22
+      runtime: simgrid-50core
+      cpuLimit: "1"
+      memoryLimit: 1Gi
+      dependsOn: [source]
+      simulation: {model: deterministic, durationSeconds: 10}
+    - name: worker-23
+      runtime: simgrid-50core
+      cpuLimit: "1"
+      memoryLimit: 1Gi
+      dependsOn: [source]
+      simulation: {model: deterministic, durationSeconds: 10}
+    - name: worker-24
+      runtime: simgrid-50core
+      cpuLimit: "1"
+      memoryLimit: 1Gi
+      dependsOn: [source]
+      simulation: {model: deterministic, durationSeconds: 10}
+    - name: worker-25
+      runtime: simgrid-50core
+      cpuLimit: "1"
+      memoryLimit: 1Gi
+      dependsOn: [source]
+      simulation: {model: deterministic, durationSeconds: 10}
+    - name: worker-26
+      runtime: simgrid-50core
+      cpuLimit: "1"
+      memoryLimit: 1Gi
+      dependsOn: [source]
+      simulation: {model: deterministic, durationSeconds: 10}
+    - name: worker-27
+      runtime: simgrid-50core
+      cpuLimit: "1"
+      memoryLimit: 1Gi
+      dependsOn: [source]
+      simulation: {model: deterministic, durationSeconds: 10}
+    - name: worker-28
+      runtime: simgrid-50core
+      cpuLimit: "1"
+      memoryLimit: 1Gi
+      dependsOn: [source]
+      simulation: {model: deterministic, durationSeconds: 10}
+    - name: worker-29
+      runtime: simgrid-50core
+      cpuLimit: "1"
+      memoryLimit: 1Gi
+      dependsOn: [source]
+      simulation: {model: deterministic, durationSeconds: 10}
+    - name: worker-30
+      runtime: simgrid-50core
+      cpuLimit: "1"
+      memoryLimit: 1Gi
+      dependsOn: [source]
+      simulation: {model: deterministic, durationSeconds: 10}
+    - name: worker-31
+      runtime: simgrid-50core
+      cpuLimit: "1"
+      memoryLimit: 1Gi
+      dependsOn: [source]
+      simulation: {model: deterministic, durationSeconds: 10}
+    - name: worker-32
+      runtime: simgrid-50core
+      cpuLimit: "1"
+      memoryLimit: 1Gi
+      dependsOn: [source]
+      simulation: {model: deterministic, durationSeconds: 10}
+    - name: worker-33
+      runtime: simgrid-50core
+      cpuLimit: "1"
+      memoryLimit: 1Gi
+      dependsOn: [source]
+      simulation: {model: deterministic, durationSeconds: 10}
+    - name: worker-34
+      runtime: simgrid-50core
+      cpuLimit: "1"
+      memoryLimit: 1Gi
+      dependsOn: [source]
+      simulation: {model: deterministic, durationSeconds: 10}
+    - name: worker-35
+      runtime: simgrid-50core
+      cpuLimit: "1"
+      memoryLimit: 1Gi
+      dependsOn: [source]
+      simulation: {model: deterministic, durationSeconds: 10}
+    - name: worker-36
+      runtime: simgrid-50core
+      cpuLimit: "1"
+      memoryLimit: 1Gi
+      dependsOn: [source]
+      simulation: {model: deterministic, durationSeconds: 10}
+    - name: worker-37
+      runtime: simgrid-50core
+      cpuLimit: "1"
+      memoryLimit: 1Gi
+      dependsOn: [source]
+      simulation: {model: deterministic, durationSeconds: 10}
+    - name: worker-38
+      runtime: simgrid-50core
+      cpuLimit: "1"
+      memoryLimit: 1Gi
+      dependsOn: [source]
+      simulation: {model: deterministic, durationSeconds: 10}
+    - name: worker-39
+      runtime: simgrid-50core
+      cpuLimit: "1"
+      memoryLimit: 1Gi
+      dependsOn: [source]
+      simulation: {model: deterministic, durationSeconds: 10}
+    - name: worker-40
+      runtime: simgrid-50core
+      cpuLimit: "1"
+      memoryLimit: 1Gi
+      dependsOn: [source]
+      simulation: {model: deterministic, durationSeconds: 10}
+    - name: worker-41
+      runtime: simgrid-50core
+      cpuLimit: "1"
+      memoryLimit: 1Gi
+      dependsOn: [source]
+      simulation: {model: deterministic, durationSeconds: 10}
+    - name: worker-42
+      runtime: simgrid-50core
+      cpuLimit: "1"
+      memoryLimit: 1Gi
+      dependsOn: [source]
+      simulation: {model: deterministic, durationSeconds: 10}
+    - name: worker-43
+      runtime: simgrid-50core
+      cpuLimit: "1"
+      memoryLimit: 1Gi
+      dependsOn: [source]
+      simulation: {model: deterministic, durationSeconds: 10}
+    - name: worker-44
+      runtime: simgrid-50core
+      cpuLimit: "1"
+      memoryLimit: 1Gi
+      dependsOn: [source]
+      simulation: {model: deterministic, durationSeconds: 10}
+    - name: worker-45
+      runtime: simgrid-50core
+      cpuLimit: "1"
+      memoryLimit: 1Gi
+      dependsOn: [source]
+      simulation: {model: deterministic, durationSeconds: 10}
+    - name: worker-46
+      runtime: simgrid-50core
+      cpuLimit: "1"
+      memoryLimit: 1Gi
+      dependsOn: [source]
+      simulation: {model: deterministic, durationSeconds: 10}
+    - name: worker-47
+      runtime: simgrid-50core
+      cpuLimit: "1"
+      memoryLimit: 1Gi
+      dependsOn: [source]
+      simulation: {model: deterministic, durationSeconds: 10}
+    - name: worker-48
+      runtime: simgrid-50core
+      cpuLimit: "1"
+      memoryLimit: 1Gi
+      dependsOn: [source]
+      simulation: {model: deterministic, durationSeconds: 10}
+    - name: worker-49
+      runtime: simgrid-50core
+      cpuLimit: "1"
+      memoryLimit: 1Gi
+      dependsOn: [source]
+      simulation: {model: deterministic, durationSeconds: 10}
+    - name: worker-50
+      runtime: simgrid-50core
+      cpuLimit: "1"
+      memoryLimit: 1Gi
+      dependsOn: [source]
+      simulation: {model: deterministic, durationSeconds: 10}
+    - name: sink
+      runtime: simgrid-50core
+      cpuLimit: "1"
+      memoryLimit: 1Gi
+      dependsOn: [worker-01, worker-02, worker-03, worker-04, worker-05, worker-06, worker-07, worker-08, worker-09, worker-10, worker-11, worker-12, worker-13, worker-14, worker-15, worker-16, worker-17, worker-18, worker-19, worker-20, worker-21, worker-22, worker-23, worker-24, worker-25, worker-26, worker-27, worker-28, worker-29, worker-30, worker-31, worker-32, worker-33, worker-34, worker-35, worker-36, worker-37, worker-38, worker-39, worker-40, worker-41, worker-42, worker-43, worker-44, worker-45, worker-46, worker-47, worker-48, worker-49, worker-50]
+      simulation: {model: deterministic, durationSeconds: 10}
+  dataDependencies:
+    - {producerActivity: source, consumerActivity: worker-01, logicalName: source-to-worker-01.bin, sizeBytes: 10000000000}
+    - {producerActivity: worker-01, consumerActivity: sink, logicalName: worker-01-to-sink.bin, sizeBytes: 10000000000}
+    - {producerActivity: source, consumerActivity: worker-02, logicalName: source-to-worker-02.bin, sizeBytes: 10000000000}
+    - {producerActivity: worker-02, consumerActivity: sink, logicalName: worker-02-to-sink.bin, sizeBytes: 10000000000}
+    - {producerActivity: source, consumerActivity: worker-03, logicalName: source-to-worker-03.bin, sizeBytes: 10000000000}
+    - {producerActivity: worker-03, consumerActivity: sink, logicalName: worker-03-to-sink.bin, sizeBytes: 10000000000}
+    - {producerActivity: source, consumerActivity: worker-04, logicalName: source-to-worker-04.bin, sizeBytes: 10000000000}
+    - {producerActivity: worker-04, consumerActivity: sink, logicalName: worker-04-to-sink.bin, sizeBytes: 10000000000}
+    - {producerActivity: source, consumerActivity: worker-05, logicalName: source-to-worker-05.bin, sizeBytes: 10000000000}
+    - {producerActivity: worker-05, consumerActivity: sink, logicalName: worker-05-to-sink.bin, sizeBytes: 10000000000}
+    - {producerActivity: source, consumerActivity: worker-06, logicalName: source-to-worker-06.bin, sizeBytes: 10000000000}
+    - {producerActivity: worker-06, consumerActivity: sink, logicalName: worker-06-to-sink.bin, sizeBytes: 10000000000}
+    - {producerActivity: source, consumerActivity: worker-07, logicalName: source-to-worker-07.bin, sizeBytes: 10000000000}
+    - {producerActivity: worker-07, consumerActivity: sink, logicalName: worker-07-to-sink.bin, sizeBytes: 10000000000}
+    - {producerActivity: source, consumerActivity: worker-08, logicalName: source-to-worker-08.bin, sizeBytes: 10000000000}
+    - {producerActivity: worker-08, consumerActivity: sink, logicalName: worker-08-to-sink.bin, sizeBytes: 10000000000}
+    - {producerActivity: source, consumerActivity: worker-09, logicalName: source-to-worker-09.bin, sizeBytes: 10000000000}
+    - {producerActivity: worker-09, consumerActivity: sink, logicalName: worker-09-to-sink.bin, sizeBytes: 10000000000}
+    - {producerActivity: source, consumerActivity: worker-10, logicalName: source-to-worker-10.bin, sizeBytes: 10000000000}
+    - {producerActivity: worker-10, consumerActivity: sink, logicalName: worker-10-to-sink.bin, sizeBytes: 10000000000}
+    - {producerActivity: source, consumerActivity: worker-11, logicalName: source-to-worker-11.bin, sizeBytes: 10000000000}
+    - {producerActivity: worker-11, consumerActivity: sink, logicalName: worker-11-to-sink.bin, sizeBytes: 10000000000}
+    - {producerActivity: source, consumerActivity: worker-12, logicalName: source-to-worker-12.bin, sizeBytes: 10000000000}
+    - {producerActivity: worker-12, consumerActivity: sink, logicalName: worker-12-to-sink.bin, sizeBytes: 10000000000}
+    - {producerActivity: source, consumerActivity: worker-13, logicalName: source-to-worker-13.bin, sizeBytes: 10000000000}
+    - {producerActivity: worker-13, consumerActivity: sink, logicalName: worker-13-to-sink.bin, sizeBytes: 10000000000}
+    - {producerActivity: source, consumerActivity: worker-14, logicalName: source-to-worker-14.bin, sizeBytes: 10000000000}
+    - {producerActivity: worker-14, consumerActivity: sink, logicalName: worker-14-to-sink.bin, sizeBytes: 10000000000}
+    - {producerActivity: source, consumerActivity: worker-15, logicalName: source-to-worker-15.bin, sizeBytes: 10000000000}
+    - {producerActivity: worker-15, consumerActivity: sink, logicalName: worker-15-to-sink.bin, sizeBytes: 10000000000}
+    - {producerActivity: source, consumerActivity: worker-16, logicalName: source-to-worker-16.bin, sizeBytes: 10000000000}
+    - {producerActivity: worker-16, consumerActivity: sink, logicalName: worker-16-to-sink.bin, sizeBytes: 10000000000}
+    - {producerActivity: source, consumerActivity: worker-17, logicalName: source-to-worker-17.bin, sizeBytes: 10000000000}
+    - {producerActivity: worker-17, consumerActivity: sink, logicalName: worker-17-to-sink.bin, sizeBytes: 10000000000}
+    - {producerActivity: source, consumerActivity: worker-18, logicalName: source-to-worker-18.bin, sizeBytes: 10000000000}
+    - {producerActivity: worker-18, consumerActivity: sink, logicalName: worker-18-to-sink.bin, sizeBytes: 10000000000}
+    - {producerActivity: source, consumerActivity: worker-19, logicalName: source-to-worker-19.bin, sizeBytes: 10000000000}
+    - {producerActivity: worker-19, consumerActivity: sink, logicalName: worker-19-to-sink.bin, sizeBytes: 10000000000}
+    - {producerActivity: source, consumerActivity: worker-20, logicalName: source-to-worker-20.bin, sizeBytes: 10000000000}
+    - {producerActivity: worker-20, consumerActivity: sink, logicalName: worker-20-to-sink.bin, sizeBytes: 10000000000}
+    - {producerActivity: source, consumerActivity: worker-21, logicalName: source-to-worker-21.bin, sizeBytes: 10000000000}
+    - {producerActivity: worker-21, consumerActivity: sink, logicalName: worker-21-to-sink.bin, sizeBytes: 10000000000}
+    - {producerActivity: source, consumerActivity: worker-22, logicalName: source-to-worker-22.bin, sizeBytes: 10000000000}
+    - {producerActivity: worker-22, consumerActivity: sink, logicalName: worker-22-to-sink.bin, sizeBytes: 10000000000}
+    - {producerActivity: source, consumerActivity: worker-23, logicalName: source-to-worker-23.bin, sizeBytes: 10000000000}
+    - {producerActivity: worker-23, consumerActivity: sink, logicalName: worker-23-to-sink.bin, sizeBytes: 10000000000}
+    - {producerActivity: source, consumerActivity: worker-24, logicalName: source-to-worker-24.bin, sizeBytes: 10000000000}
+    - {producerActivity: worker-24, consumerActivity: sink, logicalName: worker-24-to-sink.bin, sizeBytes: 10000000000}
+    - {producerActivity: source, consumerActivity: worker-25, logicalName: source-to-worker-25.bin, sizeBytes: 10000000000}
+    - {producerActivity: worker-25, consumerActivity: sink, logicalName: worker-25-to-sink.bin, sizeBytes: 10000000000}
+    - {producerActivity: source, consumerActivity: worker-26, logicalName: source-to-worker-26.bin, sizeBytes: 10000000000}
+    - {producerActivity: worker-26, consumerActivity: sink, logicalName: worker-26-to-sink.bin, sizeBytes: 10000000000}
+    - {producerActivity: source, consumerActivity: worker-27, logicalName: source-to-worker-27.bin, sizeBytes: 10000000000}
+    - {producerActivity: worker-27, consumerActivity: sink, logicalName: worker-27-to-sink.bin, sizeBytes: 10000000000}
+    - {producerActivity: source, consumerActivity: worker-28, logicalName: source-to-worker-28.bin, sizeBytes: 10000000000}
+    - {producerActivity: worker-28, consumerActivity: sink, logicalName: worker-28-to-sink.bin, sizeBytes: 10000000000}
+    - {producerActivity: source, consumerActivity: worker-29, logicalName: source-to-worker-29.bin, sizeBytes: 10000000000}
+    - {producerActivity: worker-29, consumerActivity: sink, logicalName: worker-29-to-sink.bin, sizeBytes: 10000000000}
+    - {producerActivity: source, consumerActivity: worker-30, logicalName: source-to-worker-30.bin, sizeBytes: 10000000000}
+    - {producerActivity: worker-30, consumerActivity: sink, logicalName: worker-30-to-sink.bin, sizeBytes: 10000000000}
+    - {producerActivity: source, consumerActivity: worker-31, logicalName: source-to-worker-31.bin, sizeBytes: 10000000000}
+    - {producerActivity: worker-31, consumerActivity: sink, logicalName: worker-31-to-sink.bin, sizeBytes: 10000000000}
+    - {producerActivity: source, consumerActivity: worker-32, logicalName: source-to-worker-32.bin, sizeBytes: 10000000000}
+    - {producerActivity: worker-32, consumerActivity: sink, logicalName: worker-32-to-sink.bin, sizeBytes: 10000000000}
+    - {producerActivity: source, consumerActivity: worker-33, logicalName: source-to-worker-33.bin, sizeBytes: 10000000000}
+    - {producerActivity: worker-33, consumerActivity: sink, logicalName: worker-33-to-sink.bin, sizeBytes: 10000000000}
+    - {producerActivity: source, consumerActivity: worker-34, logicalName: source-to-worker-34.bin, sizeBytes: 10000000000}
+    - {producerActivity: worker-34, consumerActivity: sink, logicalName: worker-34-to-sink.bin, sizeBytes: 10000000000}
+    - {producerActivity: source, consumerActivity: worker-35, logicalName: source-to-worker-35.bin, sizeBytes: 10000000000}
+    - {producerActivity: worker-35, consumerActivity: sink, logicalName: worker-35-to-sink.bin, sizeBytes: 10000000000}
+    - {producerActivity: source, consumerActivity: worker-36, logicalName: source-to-worker-36.bin, sizeBytes: 10000000000}
+    - {producerActivity: worker-36, consumerActivity: sink, logicalName: worker-36-to-sink.bin, sizeBytes: 10000000000}
+    - {producerActivity: source, consumerActivity: worker-37, logicalName: source-to-worker-37.bin, sizeBytes: 10000000000}
+    - {producerActivity: worker-37, consumerActivity: sink, logicalName: worker-37-to-sink.bin, sizeBytes: 10000000000}
+    - {producerActivity: source, consumerActivity: worker-38, logicalName: source-to-worker-38.bin, sizeBytes: 10000000000}
+    - {producerActivity: worker-38, consumerActivity: sink, logicalName: worker-38-to-sink.bin, sizeBytes: 10000000000}
+    - {producerActivity: source, consumerActivity: worker-39, logicalName: source-to-worker-39.bin, sizeBytes: 10000000000}
+    - {producerActivity: worker-39, consumerActivity: sink, logicalName: worker-39-to-sink.bin, sizeBytes: 10000000000}
+    - {producerActivity: source, consumerActivity: worker-40, logicalName: source-to-worker-40.bin, sizeBytes: 10000000000}
+    - {producerActivity: worker-40, consumerActivity: sink, logicalName: worker-40-to-sink.bin, sizeBytes: 10000000000}
+    - {producerActivity: source, consumerActivity: worker-41, logicalName: source-to-worker-41.bin, sizeBytes: 10000000000}
+    - {producerActivity: worker-41, consumerActivity: sink, logicalName: worker-41-to-sink.bin, sizeBytes: 10000000000}
+    - {producerActivity: source, consumerActivity: worker-42, logicalName: source-to-worker-42.bin, sizeBytes: 10000000000}
+    - {producerActivity: worker-42, consumerActivity: sink, logicalName: worker-42-to-sink.bin, sizeBytes: 10000000000}
+    - {producerActivity: source, consumerActivity: worker-43, logicalName: source-to-worker-43.bin, sizeBytes: 10000000000}
+    - {producerActivity: worker-43, consumerActivity: sink, logicalName: worker-43-to-sink.bin, sizeBytes: 10000000000}
+    - {producerActivity: source, consumerActivity: worker-44, logicalName: source-to-worker-44.bin, sizeBytes: 10000000000}
+    - {producerActivity: worker-44, consumerActivity: sink, logicalName: worker-44-to-sink.bin, sizeBytes: 10000000000}
+    - {producerActivity: source, consumerActivity: worker-45, logicalName: source-to-worker-45.bin, sizeBytes: 10000000000}
+    - {producerActivity: worker-45, consumerActivity: sink, logicalName: worker-45-to-sink.bin, sizeBytes: 10000000000}
+    - {producerActivity: source, consumerActivity: worker-46, logicalName: source-to-worker-46.bin, sizeBytes: 10000000000}
+    - {producerActivity: worker-46, consumerActivity: sink, logicalName: worker-46-to-sink.bin, sizeBytes: 10000000000}
+    - {producerActivity: source, consumerActivity: worker-47, logicalName: source-to-worker-47.bin, sizeBytes: 10000000000}
+    - {producerActivity: worker-47, consumerActivity: sink, logicalName: worker-47-to-sink.bin, sizeBytes: 10000000000}
+    - {producerActivity: source, consumerActivity: worker-48, logicalName: source-to-worker-48.bin, sizeBytes: 10000000000}
+    - {producerActivity: worker-48, consumerActivity: sink, logicalName: worker-48-to-sink.bin, sizeBytes: 10000000000}
+    - {producerActivity: source, consumerActivity: worker-49, logicalName: source-to-worker-49.bin, sizeBytes: 10000000000}
+    - {producerActivity: worker-49, consumerActivity: sink, logicalName: worker-49-to-sink.bin, sizeBytes: 10000000000}
+    - {producerActivity: source, consumerActivity: worker-50, logicalName: source-to-worker-50.bin, sizeBytes: 10000000000}
+    - {producerActivity: worker-50, consumerActivity: sink, logicalName: worker-50-to-sink.bin, sizeBytes: 10000000000}

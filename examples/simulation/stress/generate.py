@@ -22,9 +22,9 @@ def post(api, token, endpoint, payload):
         raise RuntimeError(f"{endpoint}: HTTP {error.code}: {detail[:1000]}") from error
 
 
-def build(total, cores):
-    workers = total - 2
-    prefix = f"simgrid-{total}-activities-{cores}-cores"
+def build(workers, cores):
+    total = workers + 2
+    prefix = f"simgrid-{workers}-workers-{cores}-cores"
     workflow_id = f"{prefix}-workflow"
     version_id = f"{workflow_id}-v1"
     environment_id = f"{prefix}-environment"
@@ -163,7 +163,8 @@ def build(total, cores):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("totals", nargs="+", type=int)
+    parser.add_argument("workers", nargs="+", type=int,
+                        help="number of intermediate activities running on M2")
     parser.add_argument("--api", default=os.getenv("AKOFLOW_API_URL", "http://localhost:8080/akoflow-api"))
     parser.add_argument("--token", default=os.getenv("AKOFLOW_API_TOKEN", ""))
     parser.add_argument("--cores", type=int, help="M2 cores; defaults to the activity total")
@@ -173,20 +174,20 @@ def main():
     args = parser.parse_args()
     if not args.token:
         parser.error("--token or AKOFLOW_API_TOKEN is required")
-    for total in args.totals:
-        if total < 3:
-            parser.error("each total must be at least 3")
-        cores = args.cores or total
+    for workers in args.workers:
+        if workers < 1:
+            parser.error("each worker count must be positive")
+        cores = args.cores or workers
         if cores < 1:
             parser.error("--cores must be positive")
-        environment, scope, topology, definition, plan, run, run_id, makespan = build(total, cores)
+        environment, scope, topology, definition, plan, run, run_id, makespan = build(workers, cores)
         requests = (("environments", environment), ("execution-scopes", scope),
                     ("network-topologies", topology), ("workflow-definitions", definition),
                     ("schedule-plans", plan), ("execution-runs", run))
         start = next(index for index, item in enumerate(requests) if item[0] == args.start_at)
         for endpoint, payload in requests[start:]:
-            print(f"{total}: {endpoint} HTTP {post(args.api, args.token, endpoint, payload)}")
-        print(f"{total}: run={run_id} predictedMakespan={makespan}s")
+            print(f"{workers} workers: {endpoint} HTTP {post(args.api, args.token, endpoint, payload)}")
+        print(f"{workers} workers: total={workers + 2} run={run_id} predictedMakespan={makespan}s")
 
 
 if __name__ == "__main__":

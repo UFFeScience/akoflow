@@ -1,15 +1,23 @@
 package main
 
 import (
+	"context"
+	"fmt"
+	"os"
 	"github.com/UFFeScience/akoflow/internal/api/handlers/workflow_engine_api_handler"
 	appbuild "github.com/UFFeScience/akoflow/internal/application/build"
 	"github.com/UFFeScience/akoflow/internal/application/ports"
 	appstorage "github.com/UFFeScience/akoflow/internal/application/storage"
 	"github.com/UFFeScience/akoflow/internal/domain"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/config"
+	"github.com/UFFeScience/akoflow/internal/infrastructure/database"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/credentials/sshkey"
+	"github.com/UFFeScience/akoflow/internal/infrastructure/credentials/token"
 	planningplugin "github.com/UFFeScience/akoflow/internal/infrastructure/plugins/planning"
 	"github.com/UFFeScience/akoflow/internal/provider"
+	"github.com/UFFeScience/akoflow/internal/provider/kubernetes"
+	"github.com/UFFeScience/akoflow/internal/provider/local"
+	"github.com/UFFeScience/akoflow/internal/provider/slurm"
 	filesystem "github.com/UFFeScience/akoflow/internal/provider/storage/filesystem"
 	s3 "github.com/UFFeScience/akoflow/internal/provider/storage/s3"
 	sshfilesystem "github.com/UFFeScience/akoflow/internal/provider/storage/sshfilesystem"
@@ -53,10 +61,32 @@ func buildAPI(
 		Connections:  connections,
 		Discovery:    discovery,
 		SSHKeys:      sshKeys,
+		KubernetesTokens: token.New(settings.KubernetesTokenDirectory),
 		Audit:        storage.audit,
 		Console:      console,
 		Terminal:     terminal,
 		Storage:      appstorage.NewBrowserCoordinator(storage.storage, browsers),
 		Build:        manager,
+		FactoryReset: func(ctx context.Context) error {
+			if err := database.Reset(ctx, storage.database); err != nil { return err }
+			// SSH keys can be an operator-provided read-only volume. They are not
+			// owned by the database and must never make a factory reset fail.
+			if err := os.RemoveAll(settings.KubernetesTokenDirectory); err != nil {
+				return fmt.Errorf("remove managed Kubernetes credentials: %w", err)
+			}
+			return nil
+		},
+		ConnectionTest: func(ctx context.Context, connection domain.EnvironmentConnection) ports.ConnectionHealth {
+			switch connection.Type {
+			case domain.ConnectionKubernetes:
+				return kubernetes.NewConnectionProber(settings.DefaultNamespace).Probe(ctx, connection)
+			case domain.ConnectionSSH, domain.ConnectionAgent:
+				return slurm.NewConnectionProber(provider.OSCommandExecutor{}).Probe(ctx, connection)
+			case domain.ConnectionLocal:
+				return local.NewConnectionProber().Probe(ctx, connection)
+			default:
+				return ports.ConnectionHealth{Message: "unsupported connection type"}
+			}
+		},
 	})
 }

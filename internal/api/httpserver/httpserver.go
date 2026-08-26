@@ -33,7 +33,9 @@ func Preflight(w http.ResponseWriter, r *http.Request) {
 }
 
 func buildkitCheck(r *http.Request) map[string]any {
-	output, err := exec.CommandContext(r.Context(), "buildctl", "debug", "workers").CombinedOutput()
+	ctx, cancel := context.WithTimeout(r.Context(), 3*time.Second)
+	defer cancel()
+	output, err := exec.CommandContext(ctx, "buildctl", "debug", "workers").CombinedOutput()
 	if err != nil {
 		return map[string]any{"available": false, "message": string(output)}
 	}
@@ -76,7 +78,9 @@ func NewMux(workflowEngine *workflow_engine_api_handler.Handler) *http.ServeMux 
 	mux.HandleFunc("GET /akoflow-api/console-sessions/{sessionId}/stream/", workflowEngine.StreamConsoleSession)
 	mux.HandleFunc("GET /akoflow-api/ssh-keys/", http_config.KernelHandler(workflowEngine.ListSSHKeys))
 	mux.HandleFunc("POST /akoflow-api/ssh-keys/", http_config.KernelHandler(workflowEngine.GenerateSSHKey))
+	mux.HandleFunc("POST /akoflow-api/kubernetes-tokens/", http_config.KernelHandler(workflowEngine.SaveKubernetesToken))
 	mux.HandleFunc("PUT /akoflow-api/instance/", http_config.KernelHandler(workflowEngine.SaveInstance))
+	mux.HandleFunc("POST /akoflow-api/factory-reset/", http_config.KernelHandler(workflowEngine.FactoryReset))
 	mux.HandleFunc("GET /akoflow-api/user-preferences/{clientId}/", http_config.KernelHandler(workflowEngine.GetUserPreferences))
 	mux.HandleFunc("PUT /akoflow-api/user-preferences/{clientId}/", http_config.KernelHandler(workflowEngine.SaveUserPreferences))
 
@@ -102,6 +106,7 @@ func NewMux(workflowEngine *workflow_engine_api_handler.Handler) *http.ServeMux 
 	mux.HandleFunc("GET /akoflow-api/storage-downloads/{downloadId}/", http_config.KernelHandler(workflowEngine.GetDownload))
 	mux.HandleFunc("GET /akoflow-api/storage-downloads/{downloadId}/content/", workflowEngine.StreamDownload)
 	mux.HandleFunc("POST /akoflow-api/environment-connections/{connectionId}/health/", http_config.KernelHandler(workflowEngine.CheckEnvironmentConnection))
+	mux.HandleFunc("POST /akoflow-api/connection-tests/", http_config.KernelHandler(workflowEngine.TestEnvironmentConnection))
 	mux.HandleFunc("PUT /akoflow-api/environment-connections/{connectionId}/", http_config.KernelHandler(workflowEngine.UpdateEnvironmentConnection))
 	mux.HandleFunc("POST /akoflow-api/environment-connections/{connectionId}/discover/", http_config.KernelHandler(workflowEngine.DiscoverEnvironmentConnection))
 	mux.HandleFunc("GET /akoflow-api/environment-connections/{connectionId}/history/", http_config.KernelHandler(workflowEngine.ListEnvironmentConnectionHistory))

@@ -29,6 +29,7 @@ import (
 	domaininstance "github.com/UFFeScience/akoflow/internal/domain/instance"
 	domainqueue "github.com/UFFeScience/akoflow/internal/domain/queue"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/credentials/sshkey"
+	"github.com/UFFeScience/akoflow/internal/infrastructure/credentials/token"
 	"gopkg.in/yaml.v3"
 )
 
@@ -89,11 +90,14 @@ type Dependencies struct {
 	Connections  ports.ConnectionHealthMonitor
 	Discovery    ports.EnvironmentDiscovery
 	SSHKeys      *sshkey.Manager
+	KubernetesTokens *token.Manager
 	Audit        ports.AuditStore
 	Console      ports.ConsoleCommands
 	Terminal     ports.InteractiveConsole
 	Storage      StorageNavigator
 	Build        BuildOrchestrator
+	FactoryReset func(context.Context) error
+	ConnectionTest func(context.Context, domain.EnvironmentConnection) ports.ConnectionHealth
 }
 
 type Handler struct {
@@ -111,11 +115,14 @@ type Handler struct {
 	connections  ports.ConnectionHealthMonitor
 	discovery    ports.EnvironmentDiscovery
 	sshKeys      *sshkey.Manager
+	kubernetesTokens *token.Manager
 	audit        ports.AuditStore
 	console      ports.ConsoleCommands
 	terminal     ports.InteractiveConsole
 	storage      StorageNavigator
 	build        BuildOrchestrator
+	factoryReset func(context.Context) error
+	connectionTest func(context.Context, domain.EnvironmentConnection) ports.ConnectionHealth
 }
 
 // SearchResult is a compact, navigable projection of a control-plane entity.
@@ -146,12 +153,29 @@ func New(dependencies Dependencies) (*Handler, error) {
 		connections: dependencies.Connections,
 		discovery:   dependencies.Discovery,
 		sshKeys:     dependencies.SSHKeys,
+		kubernetesTokens: dependencies.KubernetesTokens,
 		audit:       dependencies.Audit,
 		console:     dependencies.Console,
 		terminal:    dependencies.Terminal,
 		storage:     dependencies.Storage,
 		build:       dependencies.Build,
+		factoryReset: dependencies.FactoryReset,
+		connectionTest: dependencies.ConnectionTest,
 	}, nil
+}
+
+func (h *Handler) TestEnvironmentConnection(w http.ResponseWriter, r *http.Request) {
+	if h.connectionTest == nil { writeError(w, http.StatusServiceUnavailable, fmt.Errorf("connection testing is unavailable")); return }
+	var connection domain.EnvironmentConnection
+	if !decode(w, r, &connection) { return }
+	health := h.connectionTest(r.Context(), connection)
+	writeJSON(w, http.StatusOK, map[string]any{"healthy": health.Healthy, "message": health.Message})
+}
+
+func (h *Handler) FactoryReset(w http.ResponseWriter, r *http.Request) {
+	if h.factoryReset == nil { writeError(w, http.StatusServiceUnavailable, fmt.Errorf("factory reset is unavailable")); return }
+	if err := h.factoryReset(r.Context()); err != nil { writeError(w, http.StatusUnprocessableEntity, err); return }
+	w.WriteHeader(http.StatusNoContent)
 }
 
 func (h *Handler) ListStorages(w http.ResponseWriter, r *http.Request) {
@@ -489,6 +513,28 @@ func (h *Handler) ListSSHKeys(w http.ResponseWriter, r *http.Request) {
 	}
 	keys, err := h.sshKeys.List()
 	writeList(w, keys, err)
+}
+
+// SaveKubernetesToken stores a bearer token in the server credential store and
+// deliberately returns only a reference suitable for an environment connection.
+func (h *Handler) SaveKubernetesToken(w http.ResponseWriter, r *http.Request) {
+	if h.kubernetesTokens == nil {
+		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("Kubernetes credential storage is unavailable"))
+		return
+	}
+	var request struct {
+		ID    string `json:"id"`
+		Token string `json:"token"`
+	}
+	if !decode(w, r, &request) {
+		return
+	}
+	reference, err := h.kubernetesTokens.Save(request.ID, request.Token)
+	if err != nil {
+		writeError(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+	writeJSON(w, http.StatusCreated, map[string]string{"credentialRef": reference})
 }
 
 func (h *Handler) DiscoverEnvironmentConnection(w http.ResponseWriter, r *http.Request) {

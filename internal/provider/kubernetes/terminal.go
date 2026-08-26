@@ -24,7 +24,10 @@ var _ ports.InteractiveConsoleRunner = TerminalRunner{}
 
 func (r TerminalRunner) StartInteractive(ctx context.Context, connection domain.EnvironmentConnection, resource domain.Resource) (ports.InteractiveTerminal, error) {
 	endpoint := strings.TrimSpace(connection.Endpoint)
-	token := configString(connection.Configuration, "bearerToken")
+	token, credentialErr := connectionToken(connection)
+	if credentialErr != nil {
+		return nil, fmt.Errorf("Kubernetes interactive terminal credential: %w", credentialErr)
+	}
 	if endpoint == "" || token == "" {
 		return nil, fmt.Errorf("Kubernetes interactive terminal needs endpoint and credential")
 	}

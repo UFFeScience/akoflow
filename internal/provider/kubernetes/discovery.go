@@ -19,7 +19,10 @@ func NewDiscovery() *Discovery { return &Discovery{} }
 
 func (d *Discovery) DiscoverConnection(ctx context.Context, connection domain.EnvironmentConnection) (ports.ConnectionDiscovery, error) {
 	endpoint := strings.TrimSpace(connection.Endpoint)
-	token := configString(connection.Configuration, "bearerToken")
+	token, err := connectionToken(connection)
+	if err != nil {
+		return ports.ConnectionDiscovery{}, fmt.Errorf("Kubernetes credential: %w", err)
+	}
 	if endpoint == "" || token == "" {
 		return ports.ConnectionDiscovery{}, fmt.Errorf("Kubernetes discovery needs endpoint and credential")
 	}

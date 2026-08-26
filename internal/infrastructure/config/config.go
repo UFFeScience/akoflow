@@ -19,6 +19,7 @@ type Settings struct {
 	ConsoleEnabled             bool
 	SlurmScriptDirectory       string
 	SSHKeyDirectory            string
+	KubernetesTokenDirectory   string
 	SimulationBackend          string
 	SimGridBinaryPath          string
 	SimGridWorkspace           string
@@ -38,6 +39,7 @@ func Load() Settings {
 		ConsoleEnabled:             false,
 		SlurmScriptDirectory:       "storage/slurm/scripts",
 		SSHKeyDirectory:            "storage/credentials/ssh",
+		KubernetesTokenDirectory:   "storage/credentials/kubernetes",
 		SimulationBackend:          "simgrid",
 		SimGridBinaryPath:          "akoflow-simgrid-runner",
 		SimGridWorkspace:           "storage/simgrid",
@@ -74,6 +76,9 @@ func loadServer(settings *Settings) {
 	}
 	if value := os.Getenv("AKOFLOW_SSH_KEY_DIRECTORY"); value != "" {
 		settings.SSHKeyDirectory = value
+	}
+	if value := os.Getenv("AKOFLOW_KUBERNETES_TOKEN_DIRECTORY"); value != "" {
+		settings.KubernetesTokenDirectory = value
 	}
 	settings.ConnectionCheckInterval = durationOrDefault(os.Getenv("AKOFLOW_CONNECTION_CHECK_INTERVAL"), settings.ConnectionCheckInterval)
 	settings.ConsoleEnabled = os.Getenv("AKOFLOW_CONSOLE_ENABLED") == "true"

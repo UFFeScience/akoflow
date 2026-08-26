@@ -22,7 +22,10 @@ func (f ConnectionFactory) Build(runtime domain.EnvironmentRuntime, connection d
 		return nil, fmt.Errorf("connection %q is %q, Kubernetes runtime requires a kubernetes connection", connection.ID, connection.Type)
 	}
 	endpoint := strings.TrimSpace(connection.Endpoint)
-	token := configString(connection.Configuration, "bearerToken")
+	token, err := connectionToken(connection)
+	if err != nil {
+		return nil, fmt.Errorf("connection %q credential: %w", connection.ID, err)
+	}
 	if endpoint == "" || token == "" {
 		return nil, fmt.Errorf("connection %q needs an endpoint and bearer token", connection.ID)
 	}

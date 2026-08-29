@@ -13,6 +13,27 @@ import (
 	infra "github.com/UFFeScience/akoflow/internal/infrastructure/transfer"
 )
 
+type materializationCatalogStub struct {
+	materializations []domain.ArtifactMaterialization
+	runs             []domain.DataTransferRun
+	err              error
+}
+
+func (s *materializationCatalogStub) SaveArtifactMaterialization(_ context.Context, value domain.ArtifactMaterialization) error {
+	if s.err != nil {
+		return s.err
+	}
+	s.materializations = append(s.materializations, value)
+	return nil
+}
+func (s *materializationCatalogStub) SaveTransferRun(_ context.Context, value domain.DataTransferRun) error {
+	if s.err != nil {
+		return s.err
+	}
+	s.runs = append(s.runs, value)
+	return nil
+}
+
 func TestMaterializerCommitsVerifiedBlob(t *testing.T) {
 	source, destination := t.TempDir(), t.TempDir()
 	content := []byte("portable artifact")
@@ -71,4 +92,83 @@ func TestMaterializerRejectsGatewayExecutionOfDestinationPull(t *testing.T) {
 	if err == nil || run.Status != domain.TransferFailed {
 		t.Fatalf("run=%+v err=%v", run, err)
 	}
+}
+
+func TestPlannerFiltersExistingBlobsAndUsesExistingLocation(t *testing.T) {
+	blobs := []domain.BlobDescriptor{{Digest: "one"}, {Digest: "two"}}
+	plan := (Planner{}).Plan(domain.TransferLocation{URI: "source"}, domain.TransferLocation{URI: "destination"}, blobs, map[string]bool{"one": true})
+	if plan.Strategy != domain.TransferSourcePush || len(plan.Blobs) != 1 || plan.Blobs[0].Digest != "two" {
+		t.Fatalf("plan = %#v", plan)
+	}
+	plan = (Planner{}).Plan(domain.TransferLocation{URI: "same", Path: "/data"}, domain.TransferLocation{URI: "same", Path: "/data"}, blobs, nil)
+	if plan.Strategy != domain.TransferUseExisting || len(plan.Blobs) != 0 {
+		t.Fatalf("existing plan = %#v", plan)
+	}
+}
+
+func TestCoordinatorPreparesArtifactAndWorkspace(t *testing.T) {
+	source, destination := t.TempDir(), t.TempDir()
+	artifactContent, workspaceContent := []byte("executable"), []byte("workspace")
+	artifactDigest := digestOf(artifactContent)
+	workspaceDigest := digestOf(workspaceContent)
+	if err := os.WriteFile(filepath.Join(source, "artifact.sif"), artifactContent, 0600); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(source, "input.txt"), workspaceContent, 0600); err != nil {
+		t.Fatal(err)
+	}
+	catalog := &materializationCatalogStub{}
+	coordinator := Coordinator{Materializer: Materializer{Connectors: []ports.TransferConnector{infra.LocalFilesystem{}}}, Catalog: catalog}
+	requirement := domain.PreparationRequirement{
+		Artifact:          &domain.ArtifactMaterialization{ID: "artifact", Digest: artifactDigest},
+		ArtifactTransfer:  &domain.DataTransferPlan{ID: "artifact-transfer", Source: domain.TransferLocation{URI: "file://" + source, Path: "artifact.sif"}, Destination: domain.TransferLocation{URI: "file://" + destination}, Blobs: []domain.BlobDescriptor{{Digest: artifactDigest, SizeBytes: int64(len(artifactContent))}}},
+		Workspace:         &domain.WorkspaceMaterialization{ID: "workspace", Missing: []domain.BlobDescriptor{{Digest: workspaceDigest, Path: "input.txt", SizeBytes: int64(len(workspaceContent))}}},
+		WorkspaceTransfer: &domain.DataTransferPlan{ID: "workspace-transfer", Source: domain.TransferLocation{URI: "file://" + source}, Destination: domain.TransferLocation{URI: "file://" + destination, Path: "workspace"}, Blobs: []domain.BlobDescriptor{{Digest: workspaceDigest, Path: "input.txt", SizeBytes: int64(len(workspaceContent))}}},
+	}
+	gate, err := coordinator.Prepare(context.Background(), "activity", requirement)
+	if err != nil {
+		t.Fatalf("Prepare() = %#v, %v", gate, err)
+	}
+	if err = gate.Ready(); err != nil {
+		t.Fatalf("gate.Ready() = %v", err)
+	}
+	if len(gate.TransferRuns) != 2 || len(catalog.runs) != 3 || len(catalog.materializations) != 2 {
+		t.Fatalf("observations = gate:%d runs:%d materializations:%d", len(gate.TransferRuns), len(catalog.runs), len(catalog.materializations))
+	}
+}
+
+func TestCoordinatorRequiresTransferPlansAndPropagatesPersistenceFailures(t *testing.T) {
+	coordinator := Coordinator{}
+	if _, err := coordinator.Prepare(context.Background(), "", domain.PreparationRequirement{Artifact: &domain.ArtifactMaterialization{ID: "artifact"}}); err == nil {
+		t.Fatal("expected artifact transfer error")
+	}
+	if _, err := coordinator.Prepare(context.Background(), "", domain.PreparationRequirement{Workspace: &domain.WorkspaceMaterialization{ID: "workspace", Missing: []domain.BlobDescriptor{{Digest: "missing"}}}}); err == nil {
+		t.Fatal("expected workspace transfer error")
+	}
+	coordinator.Catalog = &materializationCatalogStub{err: fmt.Errorf("database")}
+	plan := domain.DataTransferPlan{ID: "transfer"}
+	if _, err := coordinator.Prepare(context.Background(), "", domain.PreparationRequirement{Artifact: &domain.ArtifactMaterialization{ID: "artifact"}, ArtifactTransfer: &plan}); err == nil {
+		t.Fatal("expected persistence error")
+	}
+}
+
+func TestMaterializerReportsMissingConnectorAndChecksumMismatch(t *testing.T) {
+	plan := domain.DataTransferPlan{ID: "missing", Source: domain.TransferLocation{URI: "unknown://source"}, Destination: domain.TransferLocation{URI: "unknown://destination"}}
+	if _, _, err := (Materializer{}).Materialize(context.Background(), plan, domain.ArtifactMaterialization{}); err == nil {
+		t.Fatal("expected connector error")
+	}
+	source, destination := t.TempDir(), t.TempDir()
+	if err := os.WriteFile(filepath.Join(source, "input"), []byte("wrong"), 0600); err != nil {
+		t.Fatal(err)
+	}
+	plan = domain.DataTransferPlan{ID: "checksum", Source: domain.TransferLocation{URI: "file://" + source, Path: "input"}, Destination: domain.TransferLocation{URI: "file://" + destination}, Blobs: []domain.BlobDescriptor{{Digest: digestOf([]byte("expected")), SizeBytes: 5}}}
+	_, run, err := (Materializer{Connectors: []ports.TransferConnector{infra.LocalFilesystem{}}}).Materialize(context.Background(), plan, domain.ArtifactMaterialization{})
+	if err == nil || run.Status != domain.TransferFailed {
+		t.Fatalf("checksum run = %#v, %v", run, err)
+	}
+}
+
+func digestOf(content []byte) string {
+	hash := sha256.Sum256(content)
+	return fmt.Sprintf("sha256:%x", hash[:])
 }

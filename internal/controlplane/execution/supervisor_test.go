@@ -3,6 +3,7 @@ package execution
 import (
 	"context"
 	"fmt"
+	"strings"
 	"testing"
 	"time"
 
@@ -190,6 +191,88 @@ func TestWorkspaceBlobsDeduplicateCommonJoinAncestors(t *testing.T) {
 	}
 	if len(groups[0].blobs) != 2 || len(groups[1].blobs) != 1 {
 		t.Fatalf("groups=%+v, common ancestor should be transferred only once", groups)
+	}
+}
+
+func TestWorkspaceLocationsFollowAssignedRuntime(t *testing.T) {
+	tests := []struct {
+		name          string
+		driver        domain.RuntimeDriver
+		configuration map[string]any
+		metadata      map[string]any
+		wantSource    string
+		wantTarget    string
+	}{
+		{
+			name: "kubernetes", driver: domain.RuntimeDriverKubernetes,
+			configuration: map[string]any{"connectionId": "cluster", "namespace": "science"},
+			wantSource:    "kubernetes://cluster/tmp/akoflow/workspace?claim=akoflow-run-producer-workspace&namespace=science",
+			wantTarget:    "activityId=producer&claim=akoflow-run-producer-workspace&claimBytes=24&createClaim=true&namespace=science&runId=run",
+		},
+		{
+			name: "slurm", driver: domain.RuntimeDriverSlurm,
+			configuration: map[string]any{"connectionId": "hpc"},
+			metadata:      map[string]any{"homeDirectory": "/home/scientist"},
+			wantSource:    "file:///home/scientist/akoflow-workspaces/run/producer?connectionId=hpc",
+			wantTarget:    "file:///home/scientist/akoflow-workspaces/run/producer?connectionId=hpc",
+		},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			request := ports.ExecutionRequest{
+				Run: domain.ExecutionRun{ID: "run"},
+				Plan: domain.SchedulePlan{Assignments: []domain.PlanAssignment{{
+					ActivityID: "producer", ResourceID: "resource", Metadata: map[string]any{"runtimeId": "runtime"},
+				}}},
+				Resources: []domain.Resource{{ID: "resource", EnvironmentVersionID: "environment", Metadata: test.metadata}},
+				Runtimes:  []domain.EnvironmentRuntime{{ID: "runtime", Driver: test.driver, Configuration: test.configuration}},
+			}
+			source, err := workspaceSourceForActivity(request, "producer")
+			if err != nil {
+				t.Fatal(err)
+			}
+			if source.URI != test.wantSource {
+				t.Fatalf("source=%q, want %q", source.URI, test.wantSource)
+			}
+			destination, err := workspaceDestination(request, "producer", request.Resources[0], 12)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if test.driver == domain.RuntimeDriverKubernetes {
+				if !strings.Contains(destination.URI, test.wantTarget) {
+					t.Fatalf("destination=%q, want query %q", destination.URI, test.wantTarget)
+				}
+			} else if destination.URI != test.wantTarget {
+				t.Fatalf("destination=%q, want %q", destination.URI, test.wantTarget)
+			}
+		})
+	}
+}
+
+func TestWorkspaceClaimNameIsKubernetesSafeAndBounded(t *testing.T) {
+	name := workspaceClaimName("RUN_With.Invalid/Characters", strings.Repeat("activity", 20))
+	if len(name) > 63 {
+		t.Fatalf("claim name has %d characters", len(name))
+	}
+	if strings.ContainsAny(name, "_./ABCDEFGHIJKLMNOPQRSTUVWXYZ") {
+		t.Fatalf("claim name is not normalized: %q", name)
+	}
+}
+
+func TestTransferObservationsPreserveDirectWorkspaceRoute(t *testing.T) {
+	requirement := domain.PreparationRequirement{WorkspaceTransfers: []domain.DataTransferPlan{{
+		ID: "workspace-plan", ProducerActivityID: "k6",
+		Source: domain.TransferLocation{ResourceID: "source"},
+	}}}
+	transfers := transferObservations("run", "k7", "target", []string{"k6"}, requirement, []domain.DataTransferRun{{
+		ID: "transfer", PlanID: "workspace-plan", TransferredBytes: 42, StartedAt: 5, FinishedAt: 8,
+	}})
+	if len(transfers) != 1 {
+		t.Fatalf("transfers=%+v", transfers)
+	}
+	got := transfers[0]
+	if got.ProducerActivityID != "k6" || got.ConsumerActivityID != "k7" || got.SourceResourceID != "source" || got.TargetResourceID != "target" || got.DurationSeconds != 3 || got.Bytes != 42 {
+		t.Fatalf("unexpected transfer observation: %+v", got)
 	}
 }
 

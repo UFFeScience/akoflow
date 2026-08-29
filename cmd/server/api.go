@@ -3,16 +3,15 @@ package main
 import (
 	"context"
 	"fmt"
-	"os"
 	"github.com/UFFeScience/akoflow/internal/api/handlers/workflow_engine_api_handler"
 	appbuild "github.com/UFFeScience/akoflow/internal/application/build"
 	"github.com/UFFeScience/akoflow/internal/application/ports"
 	appstorage "github.com/UFFeScience/akoflow/internal/application/storage"
 	"github.com/UFFeScience/akoflow/internal/domain"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/config"
-	"github.com/UFFeScience/akoflow/internal/infrastructure/database"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/credentials/sshkey"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/credentials/token"
+	"github.com/UFFeScience/akoflow/internal/infrastructure/database"
 	planningplugin "github.com/UFFeScience/akoflow/internal/infrastructure/plugins/planning"
 	"github.com/UFFeScience/akoflow/internal/provider"
 	"github.com/UFFeScience/akoflow/internal/provider/kubernetes"
@@ -21,6 +20,7 @@ import (
 	filesystem "github.com/UFFeScience/akoflow/internal/provider/storage/filesystem"
 	s3 "github.com/UFFeScience/akoflow/internal/provider/storage/s3"
 	sshfilesystem "github.com/UFFeScience/akoflow/internal/provider/storage/sshfilesystem"
+	"os"
 )
 
 func buildAPI(
@@ -31,6 +31,7 @@ func buildAPI(
 	console ports.ConsoleCommands,
 	terminal ports.InteractiveConsole,
 	sshKeys *sshkey.Manager,
+	planning workflow_engine_api_handler.PlanningOrchestrator,
 ) (*workflow_engine_api_handler.Handler, error) {
 	// Never expose the process filesystem as a storage browser. Local storage is
 	// opt-in and must have a deliberately configured, bounded root.
@@ -47,28 +48,32 @@ func buildAPI(
 	manager := appbuild.Manager{Root: settings.ArtifactStoreRoot, MaxBytes: settings.BuildContextMaxBytes, Catalog: storage.data}
 	manager.Executor = appbuild.Executor{Catalog: storage.data, Contexts: manager, Runner: provider.OSCommandExecutor{}, Buildctl: settings.Buildctl, Apptainer: settings.Apptainer, ArtifactStoreRoot: settings.ArtifactStoreRoot}
 	return workflow_engine_api_handler.New(workflow_engine_api_handler.Dependencies{
-		Environments: storage.environments,
-		Workflows:    storage.workflows,
-		Plans:        storage.plans,
-		Events:       storage.events,
-		Validator:    planningplugin.NewValidator(),
-		Executions:   storage.executions,
-		Topologies:   storage.topologies,
-		Scopes:       storage.topologies,
-		Data:         storage.data,
-		Resources:    storage.resources,
-		Instance:     storage.instance,
-		Connections:  connections,
-		Discovery:    discovery,
-		SSHKeys:      sshKeys,
+		Environments:     storage.environments,
+		Workflows:        storage.workflows,
+		Plans:            storage.plans,
+		Events:           storage.events,
+		Validator:        planningplugin.NewValidator(),
+		Executions:       storage.executions,
+		Topologies:       storage.topologies,
+		Scopes:           storage.topologies,
+		Data:             storage.data,
+		Resources:        storage.resources,
+		Instance:         storage.instance,
+		Connections:      connections,
+		Discovery:        discovery,
+		SSHKeys:          sshKeys,
 		KubernetesTokens: token.New(settings.KubernetesTokenDirectory),
-		Audit:        storage.audit,
-		Console:      console,
-		Terminal:     terminal,
-		Storage:      appstorage.NewBrowserCoordinator(storage.storage, browsers),
-		Build:        manager,
+		Audit:            storage.audit,
+		Console:          console,
+		Terminal:         terminal,
+		Storage:          appstorage.NewBrowserCoordinator(storage.storage, browsers),
+		Build:            manager,
+		Planning:         planning,
+		PlanningStore:    storage.plans,
 		FactoryReset: func(ctx context.Context) error {
-			if err := database.Reset(ctx, storage.database); err != nil { return err }
+			if err := database.Reset(ctx, storage.database); err != nil {
+				return err
+			}
 			// SSH keys can be an operator-provided read-only volume. They are not
 			// owned by the database and must never make a factory reset fail.
 			if err := os.RemoveAll(settings.KubernetesTokenDirectory); err != nil {

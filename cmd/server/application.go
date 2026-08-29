@@ -10,12 +10,15 @@ import (
 	applicationconsole "github.com/UFFeScience/akoflow/internal/application/console"
 	applicationenvironment "github.com/UFFeScience/akoflow/internal/application/environment"
 	applicationexecution "github.com/UFFeScience/akoflow/internal/application/execution"
+	applicationplanning "github.com/UFFeScience/akoflow/internal/application/planning"
 	"github.com/UFFeScience/akoflow/internal/application/ports"
 	"github.com/UFFeScience/akoflow/internal/controlplane/eventloop"
 	"github.com/UFFeScience/akoflow/internal/domain"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/config"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/config/logger"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/credentials/sshkey"
+	planningplugin "github.com/UFFeScience/akoflow/internal/infrastructure/plugins/planning"
+	"github.com/UFFeScience/akoflow/internal/planning/algorithms"
 	"github.com/UFFeScience/akoflow/internal/provider"
 	"github.com/UFFeScience/akoflow/internal/provider/kubernetes"
 	"github.com/UFFeScience/akoflow/internal/provider/local"
@@ -49,7 +52,17 @@ func newApplication(ctx context.Context, settings config.Settings, log *logger.L
 	if err != nil {
 		return fail(err)
 	}
-	loop, err := buildEventLoop(storage.events, storage.executions, storage.data, storage.instance, storage.environments, activities, simulator, settings.ArtifactStoreRoot)
+	registry, err := algorithms.NewRegistry(algorithms.HEFT{}, algorithms.NewPRISMTime(), algorithms.NewPRISMCost())
+	if err != nil {
+		return fail(err)
+	}
+	planningService := &applicationplanning.Coordinator{
+		Store: storage.plans, Plans: storage.plans, Workflows: storage.workflows,
+		Environments: storage.environments, Resources: storage.resources,
+		Scopes: storage.topologies, Topologies: storage.topologies,
+		Validator: planningplugin.NewValidator(), Registry: registry, Events: storage.events,
+	}
+	loop, err := buildEventLoop(storage.events, storage.executions, storage.data, storage.instance, storage.environments, activities, simulator, settings.ArtifactStoreRoot, planningService)
 	if err != nil {
 		return fail(err)
 	}
@@ -75,7 +88,7 @@ func newApplication(ctx context.Context, settings config.Settings, log *logger.L
 		consoleCommands = controller
 		terminal = applicationconsole.NewTerminalController(controller, terminalRunner{kubernetes: kubernetes.TerminalRunner{}, slurm: slurm.TerminalRunner{}}, storage.audit, storage.console)
 	}
-	api, err := buildAPI(storage, settings, connectionMonitor, discovery, consoleCommands, terminal, sshkey.New(settings.SSHKeyDirectory))
+	api, err := buildAPI(storage, settings, connectionMonitor, discovery, consoleCommands, terminal, sshkey.New(settings.SSHKeyDirectory), planningService)
 	if err != nil {
 		return fail(err)
 	}

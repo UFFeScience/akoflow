@@ -1,6 +1,8 @@
 package planning
 
 import (
+	"time"
+
 	"github.com/UFFeScience/akoflow/internal/domain/environment"
 	"github.com/UFFeScience/akoflow/internal/domain/resource"
 	"github.com/UFFeScience/akoflow/internal/domain/workflow"
@@ -8,13 +10,23 @@ import (
 
 type PlanningSource string
 type ExecutionMode string
+type PlanningStatus string
 
 const (
 	PlanningSourcePlugin     PlanningSource = "plugin"
+	PlanningSourceManual     PlanningSource = "manual"
 	PlanningSourceImported   PlanningSource = "imported"
 	ExecutionModeReal        ExecutionMode  = "real"
 	ExecutionModeSimulation  ExecutionMode  = "simulation"
 	ExecutionModeInteractive ExecutionMode  = "interactive"
+)
+
+const (
+	PlanningStatusQueued    PlanningStatus = "queued"
+	PlanningStatusRunning   PlanningStatus = "running"
+	PlanningStatusCompleted PlanningStatus = "completed"
+	PlanningStatusFailed    PlanningStatus = "failed"
+	PlanningStatusCancelled PlanningStatus = "cancelled"
 )
 
 type PredictedMetrics struct {
@@ -67,4 +79,63 @@ type PlanningRequest struct {
 	ActivityProfiles []workflow.ActivityResourceProfile `json:"activityProfiles"`
 	DeadlineSeconds  float64                            `json:"deadlineSeconds"`
 	Budget           float64                            `json:"budget"`
+}
+
+type AlgorithmSelection struct {
+	ID            string         `json:"id"`
+	Configuration map[string]any `json:"configuration,omitempty"`
+}
+
+// PlanningSession owns one reproducible comparison of scheduling algorithms.
+// Its inventory snapshot is frozen in Configuration by the application service.
+type PlanningSession struct {
+	ID                  string               `json:"id"`
+	WorkflowVersionID   string               `json:"workflowVersionId"`
+	ExecutionScopeID    string               `json:"executionScopeId"`
+	NetworkTopologyID   string               `json:"networkTopologyId"`
+	Status              PlanningStatus       `json:"status"`
+	Algorithms          []AlgorithmSelection `json:"algorithms"`
+	Progress            float64              `json:"progress"`
+	CandidateCount      int                  `json:"candidateCount"`
+	SelectedCandidateID string               `json:"selectedCandidateId,omitempty"`
+	SelectedPlanID      string               `json:"selectedPlanId,omitempty"`
+	DeadlineSeconds     float64              `json:"deadlineSeconds,omitempty"`
+	Budget              float64              `json:"budget,omitempty"`
+	Configuration       map[string]any       `json:"configuration,omitempty"`
+	FailureReason       string               `json:"failureReason,omitempty"`
+	CreatedAt           time.Time            `json:"createdAt"`
+	StartedAt           *time.Time           `json:"startedAt,omitempty"`
+	CompletedAt         *time.Time           `json:"completedAt,omitempty"`
+}
+
+type AlgorithmRun struct {
+	ID                string         `json:"id"`
+	PlanningSessionID string         `json:"planningSessionId"`
+	Algorithm         string         `json:"algorithm"`
+	Objective         string         `json:"objective"`
+	Status            PlanningStatus `json:"status"`
+	Progress          float64        `json:"progress"`
+	CandidateCount    int            `json:"candidateCount"`
+	Configuration     map[string]any `json:"configuration,omitempty"`
+	FailureReason     string         `json:"failureReason,omitempty"`
+	StartedAt         *time.Time     `json:"startedAt,omitempty"`
+	CompletedAt       *time.Time     `json:"completedAt,omitempty"`
+}
+
+// PlanCandidate is intentionally separate from SchedulePlan. Only a selected
+// candidate is promoted to the canonical plan aggregate used by execution.
+type PlanCandidate struct {
+	ID                string           `json:"id"`
+	PlanningSessionID string           `json:"planningSessionId"`
+	AlgorithmRunID    string           `json:"algorithmRunId"`
+	Algorithm         string           `json:"algorithm"`
+	Objective         string           `json:"objective"`
+	Rank              int              `json:"rank"`
+	ParetoOptimal     bool             `json:"paretoOptimal"`
+	Dominated         bool             `json:"dominated"`
+	Feasible          bool             `json:"feasible"`
+	Predicted         PredictedMetrics `json:"predicted"`
+	Plan              SchedulePlan     `json:"plan,omitempty"`
+	Fingerprint       string           `json:"fingerprint"`
+	CreatedAt         time.Time        `json:"createdAt"`
 }

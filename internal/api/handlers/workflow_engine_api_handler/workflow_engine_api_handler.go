@@ -69,6 +69,12 @@ type BuildOrchestrator interface {
 	MaxUploadBytes() int64
 }
 
+type PlanningOrchestrator interface {
+	Algorithms() []ports.SchedulerDescriptor
+	Create(context.Context, domain.PlanningSession) (*domain.PlanningSession, error)
+	Select(context.Context, string, string) (*domain.SchedulePlan, error)
+}
+
 type DockerArtifactRequest struct {
 	ArtifactID   string `json:"artifactId"`
 	Version      string `json:"version"`
@@ -97,6 +103,8 @@ type Dependencies struct {
 	Terminal         ports.InteractiveConsole
 	Storage          StorageNavigator
 	Build            BuildOrchestrator
+	Planning         PlanningOrchestrator
+	PlanningStore    ports.PlanningStore
 	FactoryReset     func(context.Context) error
 	ConnectionTest   func(context.Context, domain.EnvironmentConnection) ports.ConnectionHealth
 }
@@ -122,6 +130,8 @@ type Handler struct {
 	terminal         ports.InteractiveConsole
 	storage          StorageNavigator
 	build            BuildOrchestrator
+	planning         PlanningOrchestrator
+	planningStore    ports.PlanningStore
 	factoryReset     func(context.Context) error
 	connectionTest   func(context.Context, domain.EnvironmentConnection) ports.ConnectionHealth
 }
@@ -160,6 +170,8 @@ func New(dependencies Dependencies) (*Handler, error) {
 		terminal:         dependencies.Terminal,
 		storage:          dependencies.Storage,
 		build:            dependencies.Build,
+		planning:         dependencies.Planning,
+		planningStore:    dependencies.PlanningStore,
 		factoryReset:     dependencies.FactoryReset,
 		connectionTest:   dependencies.ConnectionTest,
 	}, nil
@@ -1416,6 +1428,137 @@ func (h *Handler) CreatePlan(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	writeJSON(w, http.StatusCreated, request.Plan)
+}
+
+func (h *Handler) ImportPlan(w http.ResponseWriter, r *http.Request) {
+	var request struct {
+		Plan domain.SchedulePlan `json:"plan"`
+	}
+	if !decode(w, r, &request) {
+		return
+	}
+	plan := request.Plan
+	plan.Source = domain.PlanningSourceImported
+	workflow, err := h.workflows.FindVersion(r.Context(), plan.WorkflowVersionID)
+	if err != nil || workflow == nil {
+		if err == nil {
+			err = fmt.Errorf("workflow version not found")
+		}
+		writeError(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+	scope, err := h.scopes.FindScope(r.Context(), plan.ExecutionScopeID)
+	if err != nil || scope == nil {
+		if err == nil {
+			err = fmt.Errorf("execution scope not found")
+		}
+		writeError(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+	topology, err := h.topologies.Find(r.Context(), plan.NetworkTopologyID)
+	if err != nil || topology == nil {
+		if err == nil {
+			err = fmt.Errorf("network topology not found")
+		}
+		writeError(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+	resources, err := h.resources.List(r.Context())
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, err)
+		return
+	}
+	if err := h.validator.Validate(plan, *workflow, resources, *scope, *topology); err != nil {
+		writeError(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+	if err := h.plans.Save(r.Context(), plan); err != nil {
+		writeError(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+	writeJSON(w, http.StatusCreated, plan)
+}
+
+func (h *Handler) ListPlanningAlgorithms(w http.ResponseWriter, _ *http.Request) {
+	if h.planning == nil {
+		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("planning is unavailable"))
+		return
+	}
+	writeJSON(w, http.StatusOK, h.planning.Algorithms())
+}
+
+func (h *Handler) CreatePlanningSession(w http.ResponseWriter, r *http.Request) {
+	if h.planning == nil {
+		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("planning is unavailable"))
+		return
+	}
+	var session domain.PlanningSession
+	if !decode(w, r, &session) {
+		return
+	}
+	created, err := h.planning.Create(r.Context(), session)
+	if err != nil {
+		writeError(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+	writeJSON(w, http.StatusAccepted, created)
+}
+
+func (h *Handler) ListPlanningSessions(w http.ResponseWriter, r *http.Request) {
+	if h.planningStore == nil {
+		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("planning is unavailable"))
+		return
+	}
+	items, err := h.planningStore.ListSessions(r.Context())
+	writeList(w, items, err)
+}
+
+func (h *Handler) GetPlanningSession(w http.ResponseWriter, r *http.Request) {
+	if h.planningStore == nil {
+		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("planning is unavailable"))
+		return
+	}
+	session, err := h.planningStore.FindSession(r.Context(), r.PathValue("sessionId"))
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, err)
+		return
+	}
+	if session == nil {
+		writeError(w, http.StatusNotFound, nil)
+		return
+	}
+	runs, err := h.planningStore.ListAlgorithmRuns(r.Context(), session.ID)
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, err)
+		return
+	}
+	writeJSON(w, http.StatusOK, map[string]any{"session": session, "algorithmRuns": runs})
+}
+
+func (h *Handler) ListPlanningCandidates(w http.ResponseWriter, r *http.Request) {
+	if h.planningStore == nil {
+		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("planning is unavailable"))
+		return
+	}
+	items, err := h.planningStore.ListCandidates(r.Context(), r.PathValue("sessionId"))
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, err)
+		return
+	}
+	writeJSON(w, http.StatusOK, items)
+}
+
+func (h *Handler) SelectPlanningCandidate(w http.ResponseWriter, r *http.Request) {
+	if h.planning == nil {
+		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("planning is unavailable"))
+		return
+	}
+	plan, err := h.planning.Select(r.Context(), r.PathValue("sessionId"), r.PathValue("candidateId"))
+	if err != nil {
+		writeError(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+	writeJSON(w, http.StatusCreated, plan)
 }
 
 func (h *Handler) GetPlan(w http.ResponseWriter, r *http.Request) {

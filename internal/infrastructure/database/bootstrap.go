@@ -38,6 +38,9 @@ func Bootstrap(ctx context.Context, db *sql.DB) error {
 	if err := migrateWorkflowDataDependencies(ctx, db); err != nil {
 		return err
 	}
+	if err := migratePlanningSessions(ctx, db); err != nil {
+		return err
+	}
 	if err := Validate(ctx, db); err != nil {
 		return fmt.Errorf("%w; remove the existing database file and recreate it: %v", ErrIncompatibleSchema, err)
 	}
@@ -51,6 +54,7 @@ const legacySchemaBeforeUserPreferences = "e69b7b1e006cddda2f49939e41e5b2c84b7fd
 const schemaBeforeExecutionMetrics = "9bf9465dbc586d92d41480a45fa5d680653ddb6aba0402b132e992fc91c0b9ac"
 const schemaBeforeTransferSettings = "2412be2fc4530cf52b1e620dc2454ab97207980f6be17876b7ad4c357abe5223"
 const schemaBeforeWorkflowDataDependencies = "2a07d9d4c5230f9c5cf884142c092eb7bda7b726fdd03b55e7e3174251e80288"
+const schemaBeforePlanningSessions = "8f6ed6fec292490f85e3fe8e6bf7edca918375589516a687d8a00d61f882c137"
 
 func migrateUserPreferences(ctx context.Context, db *sql.DB) error {
 	var checksum string
@@ -156,8 +160,62 @@ func migrateWorkflowDataDependencies(ctx context.Context, db *sql.DB) error {
 	)`); err != nil {
 		return fmt.Errorf("create workflow data dependencies table: %w", err)
 	}
-	if _, err := tx.ExecContext(ctx, `UPDATE schema_metadata SET checksum=?, applied_at=?`, schemaChecksum(), time.Now().UTC()); err != nil {
+	if _, err := tx.ExecContext(ctx, `UPDATE schema_metadata SET checksum=?, applied_at=?`, schemaBeforePlanningSessions, time.Now().UTC()); err != nil {
 		return fmt.Errorf("record workflow data dependencies migration: %w", err)
+	}
+	return tx.Commit()
+}
+
+func migratePlanningSessions(ctx context.Context, db *sql.DB) error {
+	var checksum string
+	if err := db.QueryRowContext(ctx, `SELECT checksum FROM schema_metadata LIMIT 1`).Scan(&checksum); err != nil || checksum == schemaChecksum() {
+		return nil
+	}
+	if checksum != schemaBeforePlanningSessions {
+		return nil
+	}
+	tx, err := db.BeginTx(ctx, nil)
+	if err != nil {
+		return fmt.Errorf("begin planning sessions migration: %w", err)
+	}
+	defer tx.Rollback()
+	statements := []string{
+		`CREATE TABLE planning_sessions (
+			id TEXT PRIMARY KEY, workflow_version_id TEXT NOT NULL REFERENCES workflow_versions(id),
+			execution_scope_id TEXT NOT NULL REFERENCES execution_scopes(id),
+			network_topology_id TEXT NOT NULL REFERENCES network_topologies(id),
+			status TEXT NOT NULL CHECK(status IN ('queued','running','completed','failed','cancelled')),
+			algorithms TEXT NOT NULL DEFAULT '[]', progress REAL NOT NULL DEFAULT 0,
+			candidate_count INTEGER NOT NULL DEFAULT 0, selected_candidate_id TEXT,
+			selected_plan_id TEXT REFERENCES schedule_plans(id), deadline_seconds REAL NOT NULL DEFAULT 0,
+			budget REAL NOT NULL DEFAULT 0, configuration TEXT NOT NULL DEFAULT '{}',
+			failure_reason TEXT NOT NULL DEFAULT '', created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+			started_at DATETIME, completed_at DATETIME)`,
+		`CREATE TABLE planning_algorithm_runs (
+			id TEXT PRIMARY KEY, planning_session_id TEXT NOT NULL REFERENCES planning_sessions(id) ON DELETE CASCADE,
+			algorithm TEXT NOT NULL, objective TEXT NOT NULL DEFAULT '',
+			status TEXT NOT NULL CHECK(status IN ('queued','running','completed','failed','cancelled')),
+			progress REAL NOT NULL DEFAULT 0, candidate_count INTEGER NOT NULL DEFAULT 0,
+			configuration TEXT NOT NULL DEFAULT '{}', failure_reason TEXT NOT NULL DEFAULT '',
+			started_at DATETIME, completed_at DATETIME, UNIQUE(planning_session_id, algorithm))`,
+		`CREATE TABLE planning_candidates (
+			id TEXT PRIMARY KEY, planning_session_id TEXT NOT NULL REFERENCES planning_sessions(id) ON DELETE CASCADE,
+			algorithm_run_id TEXT NOT NULL REFERENCES planning_algorithm_runs(id) ON DELETE CASCADE,
+			algorithm TEXT NOT NULL, objective TEXT NOT NULL DEFAULT '', rank INTEGER NOT NULL DEFAULT 0,
+			pareto_optimal INTEGER NOT NULL DEFAULT 0, dominated INTEGER NOT NULL DEFAULT 0,
+			feasible INTEGER NOT NULL DEFAULT 0, predicted_makespan_seconds REAL NOT NULL DEFAULT 0,
+			predicted_cost REAL NOT NULL DEFAULT 0, plan TEXT NOT NULL, fingerprint TEXT NOT NULL,
+			created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, UNIQUE(planning_session_id, fingerprint))`,
+		`CREATE INDEX idx_planning_candidates_session_rank ON planning_candidates(planning_session_id, rank)`,
+		`CREATE INDEX idx_planning_candidates_session_pareto ON planning_candidates(planning_session_id, pareto_optimal, dominated)`,
+	}
+	for _, statement := range statements {
+		if _, err := tx.ExecContext(ctx, statement); err != nil {
+			return fmt.Errorf("apply planning sessions migration: %w", err)
+		}
+	}
+	if _, err := tx.ExecContext(ctx, `UPDATE schema_metadata SET checksum=?, applied_at=?`, schemaChecksum(), time.Now().UTC()); err != nil {
+		return fmt.Errorf("record planning sessions migration: %w", err)
 	}
 	return tx.Commit()
 }

@@ -133,10 +133,21 @@ type PredictedMetrics = planning.PredictedMetrics
 type SchedulePlan = planning.SchedulePlan
 type PlanAssignment = planning.PlanAssignment
 type PlanningRequest = planning.PlanningRequest
+type AlgorithmSelection = planning.AlgorithmSelection
+type PlanningSession = planning.PlanningSession
+type AlgorithmRun = planning.AlgorithmRun
+type PlanCandidate = planning.PlanCandidate
+type PlanningStatus = planning.PlanningStatus
 
 const (
 	PlanningSourcePlugin          = planning.PlanningSourcePlugin
+	PlanningSourceManual          = planning.PlanningSourceManual
 	PlanningSourceImported        = planning.PlanningSourceImported
+	PlanningStatusQueued          = planning.PlanningStatusQueued
+	PlanningStatusRunning         = planning.PlanningStatusRunning
+	PlanningStatusCompleted       = planning.PlanningStatusCompleted
+	PlanningStatusFailed          = planning.PlanningStatusFailed
+	PlanningStatusCancelled       = planning.PlanningStatusCancelled
 	ExecutionModeReal             = planning.ExecutionModeReal
 	ExecutionModeSimulation       = planning.ExecutionModeSimulation
 	ExecutionModeInteractive      = planning.ExecutionModeInteractive

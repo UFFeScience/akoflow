@@ -26,8 +26,8 @@ func Preflight(w http.ResponseWriter, r *http.Request) {
 	buildkit := buildkitCheck(r)
 	w.Header().Set("Content-Type", "application/json")
 	_ = json.NewEncoder(w).Encode(map[string]any{
-		"server": map[string]any{"available": true, "message": "AkôFlow daemon is online"},
-		"docker": docker,
+		"server":   map[string]any{"available": true, "message": "AkôFlow daemon is online"},
+		"docker":   docker,
 		"buildkit": buildkit,
 	})
 }
@@ -142,8 +142,15 @@ func NewMux(workflowEngine *workflow_engine_api_handler.Handler) *http.ServeMux 
 	mux.HandleFunc("GET /akoflow-api/workflow-definitions/{workflowId}/export/", http_config.KernelHandler(workflowEngine.ExportWorkflow))
 	mux.HandleFunc("POST /akoflow-api/workflow-definition-actions/duplicate/{workflowId}/", http_config.KernelHandler(workflowEngine.DuplicateWorkflow))
 	mux.HandleFunc("POST /akoflow-api/schedule-plans/", http_config.KernelHandler(workflowEngine.CreatePlan))
+	mux.HandleFunc("POST /akoflow-api/schedule-plans/import/", http_config.KernelHandler(workflowEngine.ImportPlan))
 	mux.HandleFunc("GET /akoflow-api/schedule-plans/", http_config.KernelHandler(workflowEngine.ListPlans))
 	mux.HandleFunc("GET /akoflow-api/schedule-plans/{planId}/", http_config.KernelHandler(workflowEngine.GetPlan))
+	mux.HandleFunc("GET /akoflow-api/planning-algorithms/", http_config.KernelHandler(workflowEngine.ListPlanningAlgorithms))
+	mux.HandleFunc("POST /akoflow-api/planning-sessions/", http_config.KernelHandler(workflowEngine.CreatePlanningSession))
+	mux.HandleFunc("GET /akoflow-api/planning-sessions/", http_config.KernelHandler(workflowEngine.ListPlanningSessions))
+	mux.HandleFunc("GET /akoflow-api/planning-sessions/{sessionId}/", http_config.KernelHandler(workflowEngine.GetPlanningSession))
+	mux.HandleFunc("GET /akoflow-api/planning-sessions/{sessionId}/candidates/", http_config.KernelHandler(workflowEngine.ListPlanningCandidates))
+	mux.HandleFunc("POST /akoflow-api/planning-sessions/{sessionId}/candidates/{candidateId}/select/", http_config.KernelHandler(workflowEngine.SelectPlanningCandidate))
 	mux.HandleFunc("POST /akoflow-api/execution-runs/", http_config.KernelHandler(workflowEngine.CreateExecution))
 	mux.HandleFunc("GET /akoflow-api/execution-runs/", http_config.KernelHandler(workflowEngine.ListExecutions))
 	mux.HandleFunc("GET /akoflow-api/execution-runs/{runId}/", http_config.KernelHandler(workflowEngine.GetExecution))

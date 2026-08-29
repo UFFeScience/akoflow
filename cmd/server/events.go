@@ -23,9 +23,13 @@ func buildEventLoop(
 	activities *applicationexecution.Controller,
 	simulator ports.PlanExecutor,
 	artifactStoreRoot string,
+	planning eventloop.PlanningRunner,
 ) (*eventloop.Loop, error) {
 	dispatcher := eventloop.NewDispatcher()
 	if err := registerExecutionHandlers(dispatcher, executions, data, instance, connections, activities, simulator, artifactStoreRoot); err != nil {
+		return nil, err
+	}
+	if err := dispatcher.Register(eventloop.EventPlanningSessionRequested, eventloop.NewPlanningSessionHandler(planning)); err != nil {
 		return nil, err
 	}
 	for _, eventType := range domainEventTypes() {

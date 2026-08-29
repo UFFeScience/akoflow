@@ -132,3 +132,43 @@ func TestSchedulePlanSaveErrors(t *testing.T) {
 		t.Fatal("duplicate plan must fail")
 	}
 }
+
+func TestSaveCandidateIsIdempotentForEveryUniqueConstraint(t *testing.T) {
+	repository := setup(t)
+	ctx := context.Background()
+	if _, err := repository.db.ExecContext(ctx, `INSERT INTO planning_sessions (
+		id, workflow_version_id, execution_scope_id, network_topology_id, status, algorithms
+	) VALUES ('session', 'w1', 'scope', 'network-v1', 'running', '[]')`); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := repository.db.ExecContext(ctx, `INSERT INTO planning_algorithm_runs (
+		id, planning_session_id, algorithm, status
+	) VALUES ('run', 'session', 'prism-cost', 'running')`); err != nil {
+		t.Fatal(err)
+	}
+	candidate := domain.PlanCandidate{
+		ID:                "candidate",
+		PlanningSessionID: "session",
+		AlgorithmRunID:    "run",
+		Algorithm:         "prism-cost",
+		Fingerprint:       "fingerprint",
+		Feasible:          true,
+		Plan:              domain.SchedulePlan{ID: "candidate-plan"},
+	}
+	if err := repository.SaveCandidate(ctx, candidate); err != nil {
+		t.Fatalf("save first candidate: %v", err)
+	}
+	if err := repository.SaveCandidate(ctx, candidate); err != nil {
+		t.Fatalf("save duplicate candidate: %v", err)
+	}
+	runCandidates := 0
+	if err := repository.db.QueryRowContext(
+		ctx,
+		`SELECT candidate_count FROM planning_algorithm_runs WHERE id='run'`,
+	).Scan(&runCandidates); err != nil {
+		t.Fatal(err)
+	}
+	if runCandidates != 1 {
+		t.Fatalf("candidate count = %d, want 1", runCandidates)
+	}
+}

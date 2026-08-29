@@ -24,6 +24,7 @@ const (
 	CategoryMonitoring    = "monitoring"
 	CategoryTransfer      = "transfer"
 	CategoryMaintenance   = "maintenance"
+	CategoryPlanning      = "planning"
 )
 
 type Job struct {

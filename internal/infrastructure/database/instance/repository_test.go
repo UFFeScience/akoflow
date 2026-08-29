@@ -41,3 +41,37 @@ func TestRepositoryLifecycle(t *testing.T) {
 		t.Fatalf("instance was not updated: %+v", value)
 	}
 }
+
+func TestUserPreferencesLifecycle(t *testing.T) {
+	db, err := sql.Open("sqlite3", ":memory:")
+	if err != nil {
+		t.Fatal(err)
+	}
+	db.SetMaxOpenConns(1)
+	t.Cleanup(func() { _ = db.Close() })
+	ctx := context.Background()
+	if err = database.Bootstrap(ctx, db); err != nil {
+		t.Fatal(err)
+	}
+	repository := New(db)
+	value, err := repository.FindPreferences(ctx, "client")
+	if err != nil || value != nil {
+		t.Fatalf("empty preferences = %#v, %v", value, err)
+	}
+	preferences := domaininstance.UserPreferences{ClientID: "client", Theme: "dark", AnimationsEnabled: true}
+	if err = repository.SavePreferences(ctx, preferences); err != nil {
+		t.Fatal(err)
+	}
+	value, err = repository.FindPreferences(ctx, preferences.ClientID)
+	if err != nil || value == nil || value.Theme != "dark" || !value.AnimationsEnabled || value.UpdatedAt.IsZero() {
+		t.Fatalf("preferences = %#v, %v", value, err)
+	}
+	preferences.Theme, preferences.AnimationsEnabled = "light", false
+	if err = repository.SavePreferences(ctx, preferences); err != nil {
+		t.Fatal(err)
+	}
+	value, err = repository.FindPreferences(ctx, preferences.ClientID)
+	if err != nil || value.Theme != "light" || value.AnimationsEnabled {
+		t.Fatalf("updated preferences = %#v, %v", value, err)
+	}
+}

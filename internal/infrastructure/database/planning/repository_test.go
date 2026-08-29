@@ -57,6 +57,7 @@ func TestSchedulePlanSaveAndFind(t *testing.T) {
 		Source: domain.PlanningSourcePlugin, Algorithm: "prism", AlgorithmVersion: "1",
 		Objective: "time", DeadlineSeconds: 10, Budget: 2,
 		Predicted: domain.PredictedMetrics{MakespanSeconds: 8, Cost: 1, Feasible: true},
+		Metadata:  map[string]any{"strategy": "fastest"},
 		Assignments: []domain.PlanAssignment{{
 			ID: "a1", ActivityID: "task", ResourceID: "r1", CoreID: "c", SlotID: "s",
 			OrderOnResource: 1, Priority: 2, PredictedReadyAt: 1, PredictedStartAt: 2,
@@ -72,7 +73,7 @@ func TestSchedulePlanSaveAndFind(t *testing.T) {
 	if err != nil || got == nil {
 		t.Fatalf("find failed: %+v %v", got, err)
 	}
-	if got.Algorithm != "prism" || got.Source != domain.PlanningSourcePlugin || got.NetworkTopologyID != "network-v1" || len(got.Assignments) != 1 || got.Assignments[0].PlanID != "p1" || got.Assignments[0].Metadata["reason"] != "best" {
+	if got.Algorithm != "prism" || got.Source != domain.PlanningSourcePlugin || got.NetworkTopologyID != "network-v1" || len(got.Assignments) != 1 || got.Assignments[0].PlanID != "p1" || got.Assignments[0].Metadata["reason"] != "best" || got.Metadata["strategy"] != "fastest" {
 		t.Fatalf("unexpected plan: %+v", got)
 	}
 	missing, err := repository.Find(context.Background(), "missing")
@@ -81,8 +82,37 @@ func TestSchedulePlanSaveAndFind(t *testing.T) {
 	}
 }
 
+func TestSchedulePlanListIncludesAssignmentCounts(t *testing.T) {
+	repository := setup(t)
+	ctx := context.Background()
+	plans := []domain.SchedulePlan{
+		{ID: "p1", WorkflowVersionID: "w1", ExecutionScopeID: "scope", NetworkTopologyID: "network-v1", Source: domain.PlanningSourcePlugin, Algorithm: "prism", AlgorithmVersion: "1", Objective: "time", Predicted: domain.PredictedMetrics{MakespanSeconds: 8, Cost: 1, Feasible: true}, Assignments: []domain.PlanAssignment{{ID: "a1", ActivityID: "task", ResourceID: "r1", OrderOnResource: 1}}},
+		{ID: "p2", WorkflowVersionID: "w1", ExecutionScopeID: "scope", Source: domain.PlanningSourceImported, Algorithm: "manual", Objective: "custom"},
+	}
+	for _, plan := range plans {
+		if err := repository.Save(ctx, plan); err != nil {
+			t.Fatal(err)
+		}
+	}
+	listed, err := repository.List(ctx)
+	if err != nil || len(listed) != 2 {
+		t.Fatalf("plans=%+v err=%v", listed, err)
+	}
+	counts := map[string]int{}
+	for _, plan := range listed {
+		counts[plan.ID] = plan.AssignmentCount
+	}
+	if counts["p1"] != 1 || counts["p2"] != 0 {
+		t.Fatalf("assignment counts=%+v", counts)
+	}
+}
+
 func TestSchedulePlanSaveErrors(t *testing.T) {
 	repository := setup(t)
+	invalidPlanMetadata := domain.SchedulePlan{ID: "bad-metadata", WorkflowVersionID: "w1", ExecutionScopeID: "scope", Metadata: map[string]any{"channel": make(chan int)}}
+	if err := repository.Save(context.Background(), invalidPlanMetadata); err == nil {
+		t.Fatal("unserializable plan metadata must fail")
+	}
 	bad := domain.SchedulePlan{
 		ID: "bad", WorkflowVersionID: "w1", ExecutionScopeID: "scope",
 		Source: domain.PlanningSourcePlugin,

@@ -29,6 +29,23 @@ func setup(t *testing.T) (*Repository, *sql.DB) {
 	return repository, db
 }
 
+func TestRepositoryConstructionAndClose(t *testing.T) {
+	if _, err := New(nil); err == nil {
+		t.Fatal("nil database must be rejected")
+	}
+	repository, db := setup(t)
+	if err := repository.Close(); err != nil {
+		t.Fatal(err)
+	}
+	if err := db.Ping(); err != nil {
+		t.Fatalf("non-owned database was closed: %v", err)
+	}
+	repository.owned = true
+	if err := repository.Close(); err != nil {
+		t.Fatal(err)
+	}
+}
+
 func newJob(t *testing.T, key string) domainqueue.Job {
 	t.Helper()
 	job, err := domainqueue.New(domainqueue.CategoryExecution, "test.event", []byte(`{}`), time.Now().UTC())
@@ -112,5 +129,70 @@ func TestRetryEventuallyFailsAndExpiredLeaseReturns(t *testing.T) {
 	stored, _ = repository.FindByID(ctx, expiring.ID)
 	if stored.Status != domainqueue.StatusPending {
 		t.Fatalf("expected pending, got %s", stored.Status)
+	}
+}
+
+func TestPublishWithoutIdempotencyAndValidateLeaseArguments(t *testing.T) {
+	repository, db := setup(t)
+	defer db.Close()
+	ctx := context.Background()
+	invalid := newJob(t, "")
+	invalid.ID = ""
+	if _, err := repository.Publish(ctx, invalid); err == nil {
+		t.Fatal("invalid job must fail")
+	}
+	job := newJob(t, "")
+	job.AvailableAt = time.Time{}
+	job.CreatedAt = time.Time{}
+	published, err := repository.Publish(ctx, job)
+	if err != nil || published.ID != job.ID || published.AvailableAt.IsZero() || published.CreatedAt.IsZero() {
+		t.Fatalf("published=%+v err=%v", published, err)
+	}
+	for _, args := range []struct {
+		owner    string
+		limit    int
+		duration time.Duration
+	}{{"", 1, time.Second}, {"worker", 0, time.Second}, {"worker", 1, 0}} {
+		if _, err := repository.Lease(ctx, args.owner, nil, args.limit, args.duration); err == nil {
+			t.Fatalf("invalid lease accepted: %+v", args)
+		}
+	}
+	missing, err := repository.FindByID(ctx, "missing")
+	if err != nil || missing != nil {
+		t.Fatalf("missing=%+v err=%v", missing, err)
+	}
+}
+
+func TestRenewCancelAndRetryWithoutCause(t *testing.T) {
+	repository, db := setup(t)
+	defer db.Close()
+	ctx := context.Background()
+	job, err := repository.Publish(ctx, newJob(t, "lifecycle"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	leased, err := repository.Lease(ctx, "worker", nil, 1, time.Minute)
+	if err != nil || len(leased) != 1 {
+		t.Fatalf("leased=%+v err=%v", leased, err)
+	}
+	expires := time.Now().UTC().Add(2 * time.Minute)
+	if err := repository.RenewLease(ctx, job.ID, "other", expires); err == nil {
+		t.Fatal("another owner must not renew")
+	}
+	if err := repository.RenewLease(ctx, job.ID, "worker", expires); err != nil {
+		t.Fatal(err)
+	}
+	if err := repository.Retry(ctx, job.ID, "worker", nil, time.Now().Add(-time.Second)); err != nil {
+		t.Fatal(err)
+	}
+	if err := repository.Cancel(ctx, job.ID, time.Now().UTC()); err != nil {
+		t.Fatal(err)
+	}
+	stored, err := repository.FindByID(ctx, job.ID)
+	if err != nil || stored == nil || stored.Status != domainqueue.StatusCancelled || stored.CompletedAt == nil {
+		t.Fatalf("stored=%+v err=%v", stored, err)
+	}
+	if err := repository.Cancel(ctx, "missing", time.Now()); err == nil {
+		t.Fatal("missing job cancel must fail")
 	}
 }

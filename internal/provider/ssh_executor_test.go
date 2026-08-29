@@ -1,11 +1,27 @@
 package provider
 
 import (
+	"context"
+	"fmt"
+	"path/filepath"
 	"strings"
 	"testing"
 
 	"github.com/UFFeScience/akoflow/internal/domain"
 )
+
+type sshExecutorStub struct {
+	name   string
+	args   []string
+	input  []byte
+	output []byte
+	err    error
+}
+
+func (s *sshExecutorStub) Run(_ context.Context, name string, args []string, input []byte) ([]byte, error) {
+	s.name, s.args, s.input = name, append([]string(nil), args...), append([]byte(nil), input...)
+	return s.output, s.err
+}
 
 func TestNewSSHCommandExecutorPreservesConnectionTransport(t *testing.T) {
 	connection := domain.EnvironmentConnection{
@@ -33,5 +49,46 @@ func TestProxyCommandUsesManagedCredential(t *testing.T) {
 		if !strings.Contains(value, expected) {
 			t.Fatalf("proxy command %q does not contain %q", value, expected)
 		}
+	}
+}
+
+func TestSSHCommandExecutorBuildsSafeTransportCommand(t *testing.T) {
+	stub := &sshExecutorStub{output: []byte("ok")}
+	knownHosts := filepath.Join(t.TempDir(), "ssh", "known_hosts")
+	executor := SSHCommandExecutor{Executor: stub, Endpoint: "host", Username: "user", Port: 2222, IdentityFile: "/keys/id", KnownHostsFile: knownHosts, ProxyCommand: "ssh gateway -W host:22", HostKeyAlias: "alias", ForwardAgent: true}
+	output, err := executor.Run(context.Background(), "sh", []string{"-c", "echo 'hello world'"}, []byte("input"))
+	if err != nil || string(output) != "ok" {
+		t.Fatalf("Run() = %q, %v", output, err)
+	}
+	joined := strings.Join(stub.args, " ")
+	for _, expected := range []string{"BatchMode=yes", "UserKnownHostsFile=" + knownHosts, "-p 2222", "-i /keys/id", "ProxyCommand=ssh", "HostKeyAlias=alias", "-A", "user@host", `'sh' '-c' 'echo '`} {
+		if !strings.Contains(joined, expected) {
+			t.Fatalf("args %q lack %q", joined, expected)
+		}
+	}
+	if string(stub.input) != "input" || stub.name != "ssh" {
+		t.Fatalf("invocation = %s %q", stub.name, stub.input)
+	}
+}
+
+func TestSSHCommandExecutorValidatesConfigurationAndPropagatesErrors(t *testing.T) {
+	if _, err := (SSHCommandExecutor{}).Run(context.Background(), "true", nil, nil); err == nil {
+		t.Fatal("expected executor error")
+	}
+	if _, err := (SSHCommandExecutor{Executor: &sshExecutorStub{}}).Run(context.Background(), "true", nil, nil); err == nil {
+		t.Fatal("expected endpoint error")
+	}
+	stub := &sshExecutorStub{err: fmt.Errorf("ssh failed")}
+	if _, err := (SSHCommandExecutor{Executor: stub, Endpoint: "user@host"}).Run(context.Background(), "true", nil, nil); err == nil {
+		t.Fatal("expected delegated error")
+	}
+	if shellQuote("") != "''" || shellQuote("it's") == "'it's'" {
+		t.Fatalf("shell quoting mismatch: %s", shellQuote("it's"))
+	}
+	if ProxyCommandWithKnownHosts("nc gateway", "/known", "") != "nc gateway" {
+		t.Fatal("non-ssh proxy changed")
+	}
+	if connectionInt(map[string]any{"port": "2022"}, "port") != 2022 || connectionInt(map[string]any{"port": true}, "port") != 0 {
+		t.Fatal("connectionInt mismatch")
 	}
 }

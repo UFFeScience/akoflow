@@ -2,6 +2,7 @@ package slurm
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -16,6 +17,12 @@ type executorFake struct {
 	output, input []byte
 	name          string
 	args          []string
+}
+
+type failingStatusExecutor struct{}
+
+func (failingStatusExecutor) Run(_ context.Context, name string, _ []string, _ []byte) ([]byte, error) {
+	return nil, fmt.Errorf("%s unavailable", name)
 }
 
 func (f *executorFake) Run(_ context.Context, name string, args []string, input []byte) ([]byte, error) {
@@ -67,6 +74,26 @@ func TestSlurmRejectsUnmaterializedOCIInsteadOfAddingDockerURI(t *testing.T) {
 	_, err := slurmExecutable(domain.ActivityCommand{Image: "alpine:3.20"})
 	if err == nil || strings.Contains(err.Error(), "docker://") {
 		t.Fatalf("err=%v", err)
+	}
+}
+
+func TestSlurmTreatsEmptyExecutableFormAsNativeCommand(t *testing.T) {
+	image, err := slurmExecutable(domain.ActivityCommand{
+		Executable: &domain.ExecutableReference{}, Entrypoint: "hostname",
+	})
+	if err != nil || image != "" {
+		t.Fatalf("image=%q err=%v", image, err)
+	}
+}
+
+func TestSlurmAccountingOutageDoesNotCreateFalseJobFailure(t *testing.T) {
+	handle := domain.ActivityHandle{ExternalID: "42", Status: domain.HandleRunning}
+	observed, err := New(failingStatusExecutor{}, "").Inspect(context.Background(), handle)
+	if err != nil || observed.Status != domain.HandleRunning || observed.Failure != "" {
+		t.Fatalf("handle=%+v err=%v", observed, err)
+	}
+	if !strings.Contains(fmt.Sprint(observed.Metadata["statusQueryWarning"]), "sacct unavailable") {
+		t.Fatalf("missing accounting warning: %+v", observed.Metadata)
 	}
 }
 

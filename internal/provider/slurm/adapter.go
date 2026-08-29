@@ -249,9 +249,15 @@ func (a *Adapter) fallbackStatus(ctx context.Context, handle domain.ActivityHand
 			return applySlurmStatus(handle, state+"|"), nil
 		}
 	}
-	handle.Status = domain.HandleFailed
-	handle.Failure = "query Slurm job status: " + sacctErr.Error()
-	handle.FinishedAt = runtimecommon.UnixSeconds(time.Now())
+	if handle.Metadata == nil {
+		handle.Metadata = make(map[string]any)
+	}
+	// sacct depends on slurmdbd and may be unavailable while the scheduler is
+	// healthy. Absence from squeue/scontrol is not proof that the job failed:
+	// completed jobs can disappear from controller memory before accounting is
+	// restored. Keep polling the AkôFlow sentinel instead of creating a false
+	// terminal failure.
+	handle.Metadata["statusQueryWarning"] = "sacct unavailable: " + sacctErr.Error()
 	return handle, nil
 }
 

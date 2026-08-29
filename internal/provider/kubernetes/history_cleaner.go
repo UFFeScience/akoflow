@@ -11,8 +11,9 @@ import (
 const managedByAkoflowSelector = "app.kubernetes.io/managed-by=akoflow"
 
 type CleanupResult struct {
-	JobsDeleted int
-	PodsDeleted int
+	JobsDeleted   int
+	PodsDeleted   int
+	ClaimsDeleted int
 }
 
 type HistoryCleaner struct {
@@ -68,8 +69,13 @@ func (c *HistoryCleaner) Cleanup(ctx context.Context) (CleanupResult, error) {
 		if !job.expired(cutoff) {
 			continue
 		}
-		podsDeleted, err := c.deleteJobHistory(ctx, job.Metadata.Name)
+		podsDeleted, claimsDeleted, err := c.deleteJobHistory(
+			ctx, job.Metadata.Name,
+			job.Metadata.Annotations["akoflow.io/run-id"],
+			job.Metadata.Annotations["akoflow.io/activity-id"],
+		)
 		result.PodsDeleted += podsDeleted
+		result.ClaimsDeleted += claimsDeleted
 		if err != nil {
 			cleanupErrors = append(cleanupErrors, err)
 			continue
@@ -86,10 +92,10 @@ func (c *HistoryCleaner) runOnce(ctx context.Context, report func(CleanupResult,
 	}
 }
 
-func (c *HistoryCleaner) deleteJobHistory(ctx context.Context, jobName string) (int, error) {
+func (c *HistoryCleaner) deleteJobHistory(ctx context.Context, jobName, runID, activityID string) (int, int, error) {
 	pods, err := c.jobPods(ctx, jobName)
 	if err != nil {
-		return 0, err
+		return 0, 0, err
 	}
 	deleted := 0
 	var cleanupErrors []error
@@ -106,7 +112,48 @@ func (c *HistoryCleaner) deleteJobHistory(ctx context.Context, jobName string) (
 	if err := ignoreNotFound(c.api.Delete(ctx, c.namespace, "jobs", jobName)); err != nil {
 		cleanupErrors = append(cleanupErrors, fmt.Errorf("delete job %q: %w", jobName, err))
 	}
-	return deleted, errors.Join(cleanupErrors...)
+	claimsDeleted := 0
+	if runID != "" && activityID != "" {
+		claims, claimErr := c.workspaceClaims(ctx, runID, activityID)
+		if claimErr != nil {
+			cleanupErrors = append(cleanupErrors, claimErr)
+		} else {
+			for _, claim := range claims {
+				if deleteErr := ignoreNotFound(c.api.Delete(ctx, c.namespace, "persistentvolumeclaims", claim)); deleteErr != nil {
+					cleanupErrors = append(cleanupErrors, fmt.Errorf("delete workspace claim %q: %w", claim, deleteErr))
+				} else {
+					claimsDeleted++
+				}
+			}
+		}
+	}
+	return deleted, claimsDeleted, errors.Join(cleanupErrors...)
+}
+
+func (c *HistoryCleaner) workspaceClaims(ctx context.Context, runID, activityID string) ([]string, error) {
+	payload, err := c.api.List(ctx, c.namespace, "persistentvolumeclaims", managedByAkoflowSelector)
+	if err != nil {
+		return nil, fmt.Errorf("list Akoflow workspace claims: %w", err)
+	}
+	var list struct {
+		Items []struct {
+			Metadata struct {
+				Name        string            `json:"name"`
+				Annotations map[string]string `json:"annotations"`
+			} `json:"metadata"`
+		} `json:"items"`
+	}
+	if err := json.Unmarshal(payload, &list); err != nil {
+		return nil, fmt.Errorf("decode Akoflow workspace claims: %w", err)
+	}
+	result := make([]string, 0, 1)
+	for _, claim := range list.Items {
+		if claim.Metadata.Annotations["akoflow.io/run-id"] == runID &&
+			claim.Metadata.Annotations["akoflow.io/activity-id"] == activityID {
+			result = append(result, claim.Metadata.Name)
+		}
+	}
+	return result, nil
 }
 
 func (c *HistoryCleaner) jobPods(ctx context.Context, jobName string) ([]string, error) {
@@ -139,8 +186,9 @@ type kubernetesJobList struct {
 
 type kubernetesJob struct {
 	Metadata struct {
-		Name              string    `json:"name"`
-		CreationTimestamp time.Time `json:"creationTimestamp"`
+		Name              string            `json:"name"`
+		CreationTimestamp time.Time         `json:"creationTimestamp"`
+		Annotations       map[string]string `json:"annotations"`
 	} `json:"metadata"`
 	Status struct {
 		Active         int        `json:"active"`

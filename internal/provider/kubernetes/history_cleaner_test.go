@@ -75,6 +75,29 @@ func TestHistoryCleanerReportsPartialDeletionErrors(t *testing.T) {
 	require.Zero(t, result.JobsDeleted)
 }
 
+func TestHistoryCleanerRemovesWorkspaceClaimOwnedByExpiredJob(t *testing.T) {
+	api := &cleanupAPIFake{
+		jobsPayload: []byte(`{"items":[{"metadata":{"name":"old","creationTimestamp":"2026-08-10T00:00:00Z","annotations":{"akoflow.io/run-id":"run-1","akoflow.io/activity-id":"activity-1"}},"status":{"succeeded":1}}]}`),
+		podsByJob: map[string][]byte{
+			"job-name=old": []byte(`{"items":[]}`),
+			managedByAkoflowSelector: []byte(`{"items":[
+				{"metadata":{"name":"workspace-1","annotations":{"akoflow.io/run-id":"run-1","akoflow.io/activity-id":"activity-1"}}},
+				{"metadata":{"name":"workspace-2","annotations":{"akoflow.io/run-id":"run-2","akoflow.io/activity-id":"activity-1"}}}
+			]}`),
+		},
+		deleteErr: map[string]error{},
+	}
+	cleaner, err := NewHistoryCleaner(api, "akoflow", time.Hour)
+	require.NoError(t, err)
+	cleaner.now = func() time.Time { return time.Date(2026, 8, 16, 12, 0, 0, 0, time.UTC) }
+
+	result, err := cleaner.Cleanup(context.Background())
+	require.NoError(t, err)
+	require.Equal(t, CleanupResult{JobsDeleted: 1, ClaimsDeleted: 1}, result)
+	require.Contains(t, api.deletes, "persistentvolumeclaims/workspace-1")
+	require.NotContains(t, api.deletes, "persistentvolumeclaims/workspace-2")
+}
+
 func TestHistoryCleanerValidatesConfiguration(t *testing.T) {
 	_, err := NewHistoryCleaner(nil, "", time.Hour)
 	require.Error(t, err)

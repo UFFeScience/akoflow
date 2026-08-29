@@ -14,7 +14,10 @@ import (
 	"strings"
 )
 
-var ErrNotFound = errors.New("kubernetes resource not found")
+var (
+	ErrNotFound = errors.New("kubernetes resource not found")
+	ErrConflict = errors.New("kubernetes resource conflict")
+)
 
 type API interface {
 	Create(context.Context, string, string, []byte) error
@@ -147,6 +150,9 @@ func (c *Client) requestWithLimit(
 	}
 	if response.StatusCode == http.StatusNotFound {
 		return nil, ErrNotFound
+	}
+	if response.StatusCode == http.StatusConflict {
+		return nil, fmt.Errorf("%w: Kubernetes API returned %s: %s", ErrConflict, response.Status, strings.TrimSpace(string(payload)))
 	}
 	if response.StatusCode < 200 || response.StatusCode >= 300 {
 		return nil, fmt.Errorf("Kubernetes API returned %s: %s", response.Status, strings.TrimSpace(string(payload)))

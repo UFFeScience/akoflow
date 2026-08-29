@@ -187,3 +187,46 @@ func TestDiscoveryBindsDiscoveredStorageToConnectionRuntimes(t *testing.T) {
 		t.Fatalf("binding=%+v", binding)
 	}
 }
+
+func TestDiscoveryMaterializesDirectSSHMachine(t *testing.T) {
+	definition := domain.EnvironmentDefinition{
+		Environment: domain.Environment{ID: "remote"}, Version: domain.EnvironmentVersion{ID: "remote-v1"},
+		Connections:     []domain.EnvironmentConnection{{ID: "ssh", EnvironmentID: "remote", Type: domain.ConnectionSSH, Configuration: map[string]any{"skipSchedulerCheck": true}}},
+		Runtimes:        []domain.EnvironmentRuntime{{ID: "docker", Configuration: map[string]any{"connectionId": "ssh"}}},
+		Resources:       []domain.Resource{{ID: "machine", Type: domain.ResourceHPCMachine, Metadata: map[string]any{"configured": true}}},
+		RuntimeBindings: []domain.ResourceRuntimeBinding{{ResourceID: "machine", RuntimeID: "docker", Enabled: true}},
+	}
+	inventory := &discoveryInventory{}
+	coordinator := NewDiscoveryCoordinator(discoveryCatalog{definition: definition}, inventory,
+		map[domain.ConnectionType]ports.ConnectionDiscoverer{domain.ConnectionSSH: connectionDiscovererStub{observation: ports.ConnectionDiscovery{
+			Available: true, Metadata: map[string]any{
+				"architecture": "amd64", "cpuCores": float64(8), "memoryBytes": int64(16384),
+				"storageBytes": 32768, "dockerAvailable": true, "hostname": "remote.example",
+			},
+		}}})
+	snapshots, err := coordinator.DiscoverConnection(context.Background(), "ssh")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(inventory.resources) != 1 {
+		t.Fatalf("resources=%+v", inventory.resources)
+	}
+	resource := inventory.resources[0]
+	if resource.Type != domain.ResourceCloudVM || resource.ExecutionTarget != domain.ExecutionTargetDirect ||
+		resource.CPUCores != 8 || resource.MemoryBytes != 16384 || resource.StorageBytes != 32768 ||
+		resource.Metadata["observedHostname"] != "remote.example" || !resource.Schedulable {
+		t.Fatalf("resource=%+v", resource)
+	}
+	if len(snapshots) != 1 || snapshots[0].ResourceID != "machine" {
+		t.Fatalf("snapshots=%+v", snapshots)
+	}
+}
+
+func TestNumericDiscoveryHelpers(t *testing.T) {
+	if int64Value(int64(1)) != 1 || int64Value(2) != 2 || int64Value(float64(3)) != 3 || int64Value("4") != 0 {
+		t.Fatal("unexpected int64 conversion")
+	}
+	if intValue(int64(1)) != 1 || intValue(2) != 2 || intValue(float64(3)) != 3 || intValue("4") != 0 {
+		t.Fatal("unexpected int conversion")
+	}
+}

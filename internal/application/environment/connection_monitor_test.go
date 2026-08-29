@@ -125,3 +125,15 @@ func TestConnectionMonitorRecordsUnsupportedConnectionOffline(t *testing.T) {
 		t.Fatalf("check=%+v status=%q err=%v", check, store.status, err)
 	}
 }
+
+func TestConnectionMonitorHistoryAndCancelledRun(t *testing.T) {
+	store := &monitorStore{connection: domain.EnvironmentConnection{ID: "connection"}, checks: []domain.ConnectionCheck{{ID: "check"}}}
+	monitor := NewConnectionMonitor(store, nil)
+	history, err := monitor.History(context.Background(), "connection", 10)
+	if err != nil || len(history) != 1 || history[0].ID != "check" {
+		t.Fatalf("history=%+v err=%v", history, err)
+	}
+	ctx, cancel := context.WithCancel(context.Background())
+	cancel()
+	monitor.Run(ctx, 0)
+}

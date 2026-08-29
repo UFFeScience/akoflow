@@ -51,6 +51,12 @@ func TestWorkflowDefinitionCreateAndFind(t *testing.T) {
 					Capabilities: []domain.ActivityCapability{domain.ActivityCapabilitySimulation},
 					Simulation:   simulation,
 				},
+				{
+					ID: "c", ActivityTypeID: "type", ExternalID: "C", Name: "executable-only",
+					Kind:         domain.ActivityKindTask,
+					Capabilities: []domain.ActivityCapability{domain.ActivityCapabilityReal},
+					Command:      domain.ActivityCommand{Entrypoint: "true"},
+				},
 			},
 			Dependencies: []domain.ActivityDependency{{
 				ActivityID: "b", DependsOnActivityID: "a", Type: "control",
@@ -67,7 +73,7 @@ func TestWorkflowDefinitionCreateAndFind(t *testing.T) {
 	if err != nil || got == nil {
 		t.Fatalf("find failed: %+v %v", got, err)
 	}
-	if got.WorkflowID != "workflow" || len(got.Activities) != 2 || len(got.Dependencies) != 1 || len(got.DataDependencies) != 1 || got.DataDependencies[0].SizeBytes != 10_000_000_000 || got.Activities[0].Metadata["x"] != "y" {
+	if got.WorkflowID != "workflow" || len(got.Activities) != 3 || len(got.Dependencies) != 1 || len(got.DataDependencies) != 1 || got.DataDependencies[0].SizeBytes != 10_000_000_000 || got.Activities[0].Metadata["x"] != "y" || got.Activities[2].Simulation != nil || got.Activities[2].Service != nil {
 		t.Fatalf("unexpected workflow: %+v", got)
 	}
 	missing, err := repository.FindVersion(context.Background(), "missing")

@@ -212,12 +212,10 @@ func (r *Repository) FindVersion(ctx context.Context, id string) (*domain.Workfl
 		_ = json.Unmarshal([]byte(resources), &activity.Resources)
 		_ = json.Unmarshal([]byte(policy), &activity.Policy)
 		if service.Valid {
-			activity.Service = &domain.ServiceSpec{}
-			_ = json.Unmarshal([]byte(service.String), activity.Service)
+			_ = json.Unmarshal([]byte(service.String), &activity.Service)
 		}
 		if simulation.Valid {
-			activity.Simulation = &domain.ActivitySimulation{}
-			_ = json.Unmarshal([]byte(simulation.String), activity.Simulation)
+			_ = json.Unmarshal([]byte(simulation.String), &activity.Simulation)
 		}
 		workflow.Activities = append(workflow.Activities, activity)
 	}

@@ -21,7 +21,7 @@ func setup(t *testing.T) *Repository {
 	if err := database.Bootstrap(context.Background(), db); err != nil {
 		t.Fatal(err)
 	}
-	repository := &Repository{db: db}
+	repository := New(db)
 	seedExecutionParents(t, repository)
 	return repository
 }
@@ -172,5 +172,161 @@ func TestListRunsPageCombinesWorkflowInteractiveAndStandaloneRuns(t *testing.T) 
 	filtered, err := repository.ListRunsPage(ctx, 1, 20, "interactive", "", "running")
 	if err != nil || filtered.Total != 1 || filtered.Items[0].ID != "session" {
 		t.Fatalf("filtered=%+v err=%v", filtered, err)
+	}
+}
+
+func TestListRunsTasksAndEvents(t *testing.T) {
+	repository := setup(t)
+	ctx := context.Background()
+	run := domain.ExecutionRun{ID: "run", SchedulePlanID: "plan", Mode: domain.ExecutionModeReal, Status: domain.ExecutionRunRunning}
+	if err := repository.CreateRun(ctx, run); err != nil {
+		t.Fatal(err)
+	}
+	// Creating the same run is deliberately idempotent and must not duplicate its event.
+	if err := repository.CreateRun(ctx, run); err != nil {
+		t.Fatal(err)
+	}
+	task := domain.TaskExecution{
+		ID: "task", ExecutionRunID: "run", PlanAssignmentID: "assignment", ActivityID: "activity",
+		PlannedResourceID: "resource", AllocatedResourceID: "resource", Attempt: 1,
+		Status: domain.TaskRunning, ReadyAt: 1, DataReadyAt: 2, QueuedAt: 3, StartedAt: 4,
+		RuntimeSeconds: 2, QueueSeconds: 1, TransferSeconds: .5, TransferBytes: 10,
+		InterferenceSeconds: .25, OverheadSeconds: .75, Cost: 3,
+	}
+	if err := repository.SaveTask(ctx, task); err != nil {
+		t.Fatal(err)
+	}
+	// Saving the same status updates measurements without emitting another lifecycle event.
+	task.RuntimeSeconds = 3
+	if err := repository.SaveTask(ctx, task); err != nil {
+		t.Fatal(err)
+	}
+	tasks, err := repository.ListTasks(ctx, "run")
+	if err != nil || len(tasks) != 1 || tasks[0].RuntimeSeconds != 3 || tasks[0].AllocatedResourceID != "resource" {
+		t.Fatalf("tasks=%+v err=%v", tasks, err)
+	}
+	events, err := repository.ListEvents(ctx, "run")
+	if err != nil || len(events) != 2 {
+		t.Fatalf("events=%+v err=%v", events, err)
+	}
+	runs, err := repository.ListRuns(ctx)
+	if err != nil || len(runs) != 1 || runs[0].ActivityCount != 1 || runs[0].Breakdown.ComputeSeconds != 3 {
+		t.Fatalf("runs=%+v err=%v", runs, err)
+	}
+	page, err := repository.ListRunsPage(ctx, 0, 0, "all", "all", "all")
+	if err != nil || page.Page != 1 || page.PageSize != 20 || page.Total != 1 {
+		t.Fatalf("page=%+v err=%v", page, err)
+	}
+}
+
+func TestCompleteSimulationPersistsTasksAndRunMetrics(t *testing.T) {
+	repository := setup(t)
+	ctx := context.Background()
+	if err := repository.CreateRun(ctx, domain.ExecutionRun{ID: "simulation", SchedulePlanID: "plan", Mode: domain.ExecutionModeSimulation, Status: domain.ExecutionRunRunning}); err != nil {
+		t.Fatal(err)
+	}
+	trace := domain.ExecutionTrace{
+		RunID: "simulation", Mode: domain.ExecutionModeSimulation,
+		Tasks: []domain.TaskExecution{{
+			ID: "simulation-task", ExecutionRunID: "simulation", PlanAssignmentID: "assignment",
+			ActivityID: "activity", PlannedResourceID: "resource", Attempt: 1,
+			Status: domain.TaskCompleted, StartedAt: 1, FinishedAt: 6, RuntimeSeconds: 5,
+		}},
+		Executed: domain.ExecutionMetrics{MakespanSeconds: 5, Cost: 1.5},
+	}
+	if err := repository.CompleteRun(ctx, trace); err != nil {
+		t.Fatal(err)
+	}
+	run, err := repository.FindRun(ctx, "simulation")
+	if err != nil || run == nil || run.Status != domain.ExecutionRunCompleted || run.MakespanSeconds != 5 || run.Cost != 1.5 {
+		t.Fatalf("run=%+v err=%v", run, err)
+	}
+	tasks, err := repository.ListTasks(ctx, "simulation")
+	if err != nil || len(tasks) != 1 || tasks[0].Status != domain.TaskCompleted {
+		t.Fatalf("tasks=%+v err=%v", tasks, err)
+	}
+	if err := repository.CompleteRun(ctx, domain.ExecutionTrace{RunID: "missing"}); err == nil {
+		t.Fatal("missing run must fail")
+	}
+}
+
+func TestFailRunAndStoppedHandleOverrideRunningTask(t *testing.T) {
+	repository := setup(t)
+	ctx := context.Background()
+	if err := repository.CreateRun(ctx, domain.ExecutionRun{ID: "run", SchedulePlanID: "plan", Mode: domain.ExecutionModeReal, Status: domain.ExecutionRunRunning}); err != nil {
+		t.Fatal(err)
+	}
+	task := domain.TaskExecution{ID: "task", ExecutionRunID: "run", PlanAssignmentID: "assignment", ActivityID: "activity", PlannedResourceID: "resource", Attempt: 1, Status: domain.TaskRunning}
+	if err := repository.SaveTask(ctx, task); err != nil {
+		t.Fatal(err)
+	}
+	handle := domain.ActivityHandle{ID: "handle", RunID: "run", ActivityID: "activity", ResourceID: "resource", RuntimeID: "local", Status: domain.HandleStopped, Failure: "cancelled", Metadata: map[string]any{}}
+	if err := repository.Save(ctx, handle); err != nil {
+		t.Fatal(err)
+	}
+	tasks, err := repository.ListTasks(ctx, "run")
+	if err != nil || len(tasks) != 1 || tasks[0].Status != domain.TaskFailed || tasks[0].FailureReason != "cancelled" {
+		t.Fatalf("tasks=%+v err=%v", tasks, err)
+	}
+	if err := repository.FailRun(ctx, "run", "scheduler failed"); err != nil {
+		t.Fatal(err)
+	}
+	run, err := repository.FindRun(ctx, "run")
+	if err != nil || run == nil || run.Status != domain.ExecutionRunFailed || run.FailureReason != "scheduler failed" {
+		t.Fatalf("run=%+v err=%v", run, err)
+	}
+}
+
+func TestHandleUpsertAndMalformedPayload(t *testing.T) {
+	repository := setup(t)
+	ctx := context.Background()
+	if err := repository.CreateRun(ctx, domain.ExecutionRun{ID: "run", SchedulePlanID: "plan", Mode: domain.ExecutionModeReal, Status: domain.ExecutionRunRunning}); err != nil {
+		t.Fatal(err)
+	}
+	handle := domain.ActivityHandle{ID: "handle", RunID: "run", ActivityID: "activity", ResourceID: "resource", RuntimeID: "local", Status: domain.HandleRunning, Endpoints: []string{"first"}, Metadata: map[string]any{}}
+	if err := repository.Save(ctx, handle); err != nil {
+		t.Fatal(err)
+	}
+	handle.Status, handle.Endpoints[0] = domain.HandleCompleted, "second"
+	if err := repository.Save(ctx, handle); err != nil {
+		t.Fatal(err)
+	}
+	stored, err := repository.Find(ctx, "handle")
+	if err != nil || stored == nil || stored.Status != domain.HandleCompleted || stored.Endpoints[0] != "second" {
+		t.Fatalf("handle=%+v err=%v", stored, err)
+	}
+	if _, err := repository.db.ExecContext(ctx, `UPDATE activity_handles SET endpoints='not-json' WHERE id='handle'`); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := repository.Find(ctx, "handle"); err == nil {
+		t.Fatal("malformed endpoint payload must fail")
+	}
+}
+
+func TestTaskNonLifecycleAndCancelledTransitions(t *testing.T) {
+	repository := setup(t)
+	ctx := context.Background()
+	if err := repository.CreateRun(ctx, domain.ExecutionRun{ID: "run", SchedulePlanID: "plan", Mode: domain.ExecutionModeReal, Status: domain.ExecutionRunRunning}); err != nil {
+		t.Fatal(err)
+	}
+	task := domain.TaskExecution{ID: "task", ExecutionRunID: "run", PlanAssignmentID: "assignment", ActivityID: "activity", PlannedResourceID: "resource", Attempt: 1, Status: domain.TaskReady}
+	if err := repository.SaveTask(ctx, task); err != nil {
+		t.Fatal(err)
+	}
+	task.Status, task.FailureReason = domain.TaskCancelled, "cancelled by user"
+	if err := repository.SaveTask(ctx, task); err != nil {
+		t.Fatal(err)
+	}
+	events, err := repository.ListEvents(ctx, "run")
+	if err != nil || len(events) != 2 {
+		t.Fatalf("events=%+v err=%v", events, err)
+	}
+}
+
+func TestSaveRejectsUnserializableMetadata(t *testing.T) {
+	repository := setup(t)
+	handle := domain.ActivityHandle{Metadata: map[string]any{"invalid": make(chan int)}}
+	if err := repository.Save(context.Background(), handle); err == nil {
+		t.Fatal("metadata serialization error expected")
 	}
 }

@@ -2,8 +2,12 @@ package execution
 
 import (
 	"context"
+	"crypto/sha256"
 	"fmt"
+	"net/url"
+	"path"
 	"sort"
+	"strings"
 	"time"
 
 	"github.com/UFFeScience/akoflow/internal/application/ports"
@@ -19,6 +23,7 @@ type Config struct {
 	PollInterval time.Duration
 	MaxParallel  int
 	Preparer     ports.PreparationCoordinator
+	Data         ports.DataCatalog
 }
 
 type Supervisor struct {
@@ -132,6 +137,9 @@ func (s *Supervisor) inspectRunning(
 		if err != nil {
 			return fmt.Errorf("inspect activity %q: %w", activityID, err)
 		}
+		if observed == nil {
+			return fmt.Errorf("inspect activity %q: runtime returned no handle for %q", activityID, handle.ID)
+		}
 		task := tasks[activityID]
 		switch observed.Status {
 		case domain.HandleCompleted:
@@ -180,6 +188,9 @@ func (s *Supervisor) startReadyActivities(
 			return fmt.Errorf("resource %q not found", assignment.ResourceID)
 		}
 		var preparation *domain.PreparationGate
+		if err := s.addWorkspacePreparation(ctx, &request, activityID, resource, workspaceProducers(request.Workflow, activityID)); err != nil {
+			return fmt.Errorf("prepare workspace for activity %q: %w", activityID, err)
+		}
 		if requirement, required := request.PreparationRequirementsByActivity[activityID]; required {
 			var prepareErr error
 			preparation, prepareErr = s.prepareActivity(ctx, request.Run.ID, activityID, requirement)
@@ -188,7 +199,10 @@ func (s *Supervisor) startReadyActivities(
 				_ = s.recordStartFailure(ctx, request.Run.ID, activityID, assignment, resource, selectRuntime(request, assignment), failure)
 				return failure
 			}
-			*transfers = append(*transfers, transferObservations(request.Run.ID, activityID, resource.ID, preparation.TransferRuns)...)
+			*transfers = append(*transfers, transferObservations(
+				request.Run.ID, activityID, resource.ID,
+				workspaceProducers(request.Workflow, activityID), requirement, preparation.TransferRuns,
+			)...)
 		} else if activity.Command.Executable != nil && activity.Command.Executable.Source.Type == domain.ExecutableSourceType("build") {
 			// Authored executable references are location-independent contracts.
 			// Running them without a generated preparation requirement would let a
@@ -229,6 +243,303 @@ func (s *Supervisor) startReadyActivities(
 	return nil
 }
 
+func workspaceProducers(workflow domain.WorkflowVersion, activityID string) []string {
+	producers := make([]string, 0)
+	seen := make(map[string]bool)
+	for _, dependency := range workflow.DataDependencies {
+		if dependency.ConsumerActivityID == activityID && !seen[dependency.ProducerActivityID] {
+			producers = append(producers, dependency.ProducerActivityID)
+			seen[dependency.ProducerActivityID] = true
+		}
+	}
+	// A control edge carries the predecessor workspace by default. Explicit data
+	// dependencies remain useful for naming/filtering but are not required.
+	for _, dependency := range workflow.Dependencies {
+		if dependency.ActivityID == activityID && !seen[dependency.DependsOnActivityID] {
+			producers = append(producers, dependency.DependsOnActivityID)
+			seen[dependency.DependsOnActivityID] = true
+		}
+	}
+	return producers
+}
+
+func (s *Supervisor) addWorkspacePreparation(
+	ctx context.Context,
+	request *ports.ExecutionRequest,
+	activityID string,
+	resource domain.Resource,
+	producerIDs []string,
+) error {
+	if s.config.Data == nil || (len(producerIDs) == 0 && runtimeDriver(*request, activityID) != domain.RuntimeDriverKubernetes) {
+		return nil
+	}
+	instances, err := s.config.Data.ListInstances(ctx, request.Run.ID)
+	if err != nil {
+		return err
+	}
+	blobGroups, err := workspaceBlobsByDirectProducer(request.Workflow, producerIDs, instances)
+	if err != nil {
+		return err
+	}
+	destination, err := workspaceDestination(*request, activityID, resource, 0)
+	if err != nil {
+		return err
+	}
+	type sourceGroup struct {
+		location           domain.TransferLocation
+		producerActivityID string
+		blobs              []domain.BlobDescriptor
+	}
+	groups := make([]sourceGroup, 0, len(producerIDs))
+	allBlobs := make([]domain.BlobDescriptor, 0)
+	var totalBytes int64
+	for _, blobGroup := range blobGroups {
+		source, sourceErr := workspaceSourceForActivity(*request, blobGroup.producerActivityID)
+		if sourceErr != nil {
+			return sourceErr
+		}
+		group := sourceGroup{location: source, producerActivityID: blobGroup.producerActivityID, blobs: blobGroup.blobs}
+		for _, blob := range blobGroup.blobs {
+			allBlobs = append(allBlobs, blob)
+			totalBytes += blob.SizeBytes
+		}
+		groups = append(groups, group)
+	}
+	destination, err = workspaceDestination(*request, activityID, resource, totalBytes)
+	if err != nil {
+		return err
+	}
+	requirement := request.PreparationRequirementsByActivity[activityID]
+	requirement.Workspace = &domain.WorkspaceMaterialization{
+		ID: "workspace-" + request.Run.ID + "-" + activityID, RevisionID: request.Run.ID,
+		Destination: destination, Status: domain.MaterializationPlanned, Missing: allBlobs,
+	}
+	requirement.WorkspaceTransfer = nil
+	requirement.WorkspaceTransfers = nil
+	groupIndex := 0
+	for _, group := range groups {
+		requirement.WorkspaceTransfers = append(requirement.WorkspaceTransfers, domain.DataTransferPlan{
+			ID:                 fmt.Sprintf("transfer-workspace-%s-%s-%d", request.Run.ID, activityID, groupIndex),
+			ProducerActivityID: group.producerActivityID,
+			Strategy:           domain.TransferSourcePush, Source: group.location, Destination: destination, Blobs: group.blobs,
+		})
+		groupIndex++
+	}
+	if request.PreparationRequirementsByActivity == nil {
+		request.PreparationRequirementsByActivity = make(map[string]domain.PreparationRequirement)
+	}
+	request.PreparationRequirementsByActivity[activityID] = requirement
+	return nil
+}
+
+type workspaceBlobGroup struct {
+	producerActivityID string
+	blobs              []domain.BlobDescriptor
+}
+
+func workspaceBlobsByDirectProducer(workflow domain.WorkflowVersion, producerIDs []string, instances []domain.DataObjectInstance) ([]workspaceBlobGroup, error) {
+	instancesByProducer := make(map[string][]domain.DataObjectInstance)
+	for _, instance := range instances {
+		if instance.Checksum != "" {
+			instancesByProducer[instance.ProducerActivityID] = append(instancesByProducer[instance.ProducerActivityID], instance)
+		}
+	}
+	groups := make([]workspaceBlobGroup, 0, len(producerIDs))
+	paths := make(map[string]string)
+	for _, producerID := range producerIDs {
+		group := workspaceBlobGroup{producerActivityID: producerID}
+		branchPaths := make(map[string]bool)
+		// A producer workspace is cumulative. Ancestors identify which blobs are
+		// present in that snapshot; they do not create additional transfer routes.
+		for _, ancestorID := range workspaceAncestors(workflow, []string{producerID}) {
+			for _, instance := range instancesByProducer[ancestorID] {
+				// The nearest producer wins when a branch overwrote an inherited path.
+				if branchPaths[instance.RelativePath] {
+					continue
+				}
+				branchPaths[instance.RelativePath] = true
+				if prior, exists := paths[instance.RelativePath]; exists {
+					if prior != instance.Checksum {
+						return nil, fmt.Errorf("workspace path %q is produced with conflicting contents across direct dependencies", instance.RelativePath)
+					}
+					continue
+				}
+				paths[instance.RelativePath] = instance.Checksum
+				group.blobs = append(group.blobs, domain.BlobDescriptor{Digest: instance.Checksum, SizeBytes: instance.SizeBytes, Path: instance.RelativePath})
+			}
+		}
+		if len(group.blobs) > 0 {
+			groups = append(groups, group)
+		}
+	}
+	return groups, nil
+}
+
+func workspaceSourceForActivity(request ports.ExecutionRequest, activityID string) (domain.TransferLocation, error) {
+	assignment, ok := indexAssignments(request.Plan.Assignments)[activityID]
+	if !ok {
+		return domain.TransferLocation{}, fmt.Errorf("producer %q has no resource assignment", activityID)
+	}
+	resource, ok := indexResources(request.Resources)[assignment.ResourceID]
+	if !ok {
+		return domain.TransferLocation{}, fmt.Errorf("producer %q resource %q was not found", activityID, assignment.ResourceID)
+	}
+	connectionID := runtimeConnectionID(request, activityID)
+	if connectionID == "" {
+		return domain.TransferLocation{}, fmt.Errorf("producer %q has no runtime connection", activityID)
+	}
+	switch runtimeDriver(request, activityID) {
+	case domain.RuntimeDriverKubernetes:
+		u := &url.URL{Scheme: "kubernetes", Host: connectionID, Path: "/tmp/akoflow/workspace"}
+		query := u.Query()
+		query.Set("namespace", runtimeNamespace(request, activityID))
+		query.Set("claim", workspaceClaimName(request.Run.ID, activityID))
+		u.RawQuery = query.Encode()
+		return domain.TransferLocation{URI: u.String(), ResourceID: resource.ID}, nil
+	case domain.RuntimeDriverSlurm:
+		home := environmentHome(request.Resources, resource.EnvironmentVersionID)
+		if home == "" {
+			return domain.TransferLocation{}, fmt.Errorf("producer %q HPC environment has no discovered home directory", activityID)
+		}
+		u := &url.URL{Scheme: "file", Path: path.Join(home, "akoflow-workspaces", request.Run.ID, activityID)}
+		query := u.Query()
+		query.Set("connectionId", connectionID)
+		u.RawQuery = query.Encode()
+		return domain.TransferLocation{URI: u.String(), ResourceID: resource.ID}, nil
+	default:
+		return domain.TransferLocation{}, fmt.Errorf("runtime for producer %q does not support workspace transfer", activityID)
+	}
+}
+
+func workspaceAncestors(workflow domain.WorkflowVersion, initial []string) []string {
+	result := make([]string, 0, len(initial))
+	seen := make(map[string]bool)
+	queue := append([]string(nil), initial...)
+	for len(queue) > 0 {
+		activityID := queue[0]
+		queue = queue[1:]
+		if seen[activityID] {
+			continue
+		}
+		seen[activityID] = true
+		result = append(result, activityID)
+		queue = append(queue, workspaceProducers(workflow, activityID)...)
+	}
+	return result
+}
+
+func workspaceDestination(request ports.ExecutionRequest, activityID string, resource domain.Resource, totalBytes int64) (domain.TransferLocation, error) {
+	connectionID := runtimeConnectionID(request, activityID)
+	if connectionID == "" {
+		return domain.TransferLocation{}, fmt.Errorf("runtime for activity %q has no connection", activityID)
+	}
+	switch runtimeDriver(request, activityID) {
+	case domain.RuntimeDriverKubernetes:
+		u := &url.URL{Scheme: "kubernetes", Host: connectionID, Path: "/tmp/akoflow/workspace"}
+		query := u.Query()
+		query.Set("namespace", runtimeNamespace(request, activityID))
+		query.Set("claim", workspaceClaimName(request.Run.ID, activityID))
+		query.Set("createClaim", "true")
+		query.Set("claimBytes", fmt.Sprint(totalBytes*2))
+		query.Set("runId", request.Run.ID)
+		query.Set("activityId", activityID)
+		u.RawQuery = query.Encode()
+		return domain.TransferLocation{URI: u.String(), ResourceID: resource.ID}, nil
+	case domain.RuntimeDriverSlurm:
+		home := environmentHome(request.Resources, resource.EnvironmentVersionID)
+		if home == "" {
+			return domain.TransferLocation{}, fmt.Errorf("HPC environment has no discovered home directory")
+		}
+		u := &url.URL{Scheme: "file", Path: path.Join(home, "akoflow-workspaces", request.Run.ID, activityID)}
+		query := u.Query()
+		query.Set("connectionId", connectionID)
+		u.RawQuery = query.Encode()
+		return domain.TransferLocation{URI: u.String(), ResourceID: resource.ID}, nil
+	default:
+		return domain.TransferLocation{}, fmt.Errorf("runtime for activity %q does not support workspace transfer", activityID)
+	}
+}
+
+func environmentHome(resources []domain.Resource, environmentVersionID string) string {
+	for _, resource := range resources {
+		if resource.EnvironmentVersionID == environmentVersionID {
+			if home, _ := resource.Metadata["homeDirectory"].(string); home != "" {
+				return home
+			}
+		}
+	}
+	return ""
+}
+
+func resourceConnectionID(resources []domain.Resource, resourceID string) (string, bool) {
+	for _, resource := range resources {
+		if resource.ID == resourceID {
+			value, ok := resource.Metadata["connectionId"].(string)
+			return value, ok && value != ""
+		}
+	}
+	return "", false
+}
+
+func runtimeDriver(request ports.ExecutionRequest, activityID string) domain.RuntimeDriver {
+	runtimeID := assignmentRuntimeID(request.Plan.Assignments, activityID)
+	for _, runtime := range request.Runtimes {
+		if runtime.ID == runtimeID {
+			return runtime.Driver
+		}
+	}
+	return ""
+}
+
+func runtimeConnectionID(request ports.ExecutionRequest, activityID string) string {
+	runtimeID := assignmentRuntimeID(request.Plan.Assignments, activityID)
+	for _, runtime := range request.Runtimes {
+		if runtime.ID == runtimeID {
+			value, _ := runtime.Configuration["connectionId"].(string)
+			return value
+		}
+	}
+	return ""
+}
+
+func runtimeNamespace(request ports.ExecutionRequest, activityID string) string {
+	runtimeID := assignmentRuntimeID(request.Plan.Assignments, activityID)
+	for _, runtime := range request.Runtimes {
+		if runtime.ID == runtimeID {
+			if value, _ := runtime.Configuration["namespace"].(string); value != "" {
+				return value
+			}
+		}
+	}
+	return "default"
+}
+
+func assignmentRuntimeID(assignments []domain.PlanAssignment, activityID string) string {
+	for _, assignment := range assignments {
+		if assignment.ActivityID == activityID {
+			value, _ := assignment.Metadata["runtimeId"].(string)
+			return value
+		}
+	}
+	return ""
+}
+
+func workspaceClaimName(runID, activityID string) string {
+	value := strings.ToLower("akoflow-" + runID + "-" + activityID + "-workspace")
+	value = strings.Map(func(character rune) rune {
+		if character >= 'a' && character <= 'z' || character >= '0' && character <= '9' || character == '-' {
+			return character
+		}
+		return '-'
+	}, value)
+	value = strings.Trim(value, "-")
+	if len(value) > 63 {
+		digest := sha256.Sum256([]byte(value))
+		value = strings.Trim(value[:54], "-") + fmt.Sprintf("-%x", digest[:4])
+	}
+	return value
+}
+
 func (s *Supervisor) prepareActivity(
 	ctx context.Context,
 	runID, activityID string,
@@ -245,20 +556,39 @@ func (s *Supervisor) prepareActivity(
 }
 
 func transferObservations(
-	runID, activityID, resourceID string,
+	runID, activityID, targetResourceID string,
+	producerIDs []string,
+	requirement domain.PreparationRequirement,
 	observations []domain.DataTransferRun,
 ) []domain.DataTransfer {
 	transfers := make([]domain.DataTransfer, 0, len(observations))
 	for _, observation := range observations {
+		sourceResourceID, producerActivityID := targetResourceID, ""
+		plans := append([]domain.DataTransferPlan(nil), requirement.WorkspaceTransfers...)
+		if requirement.WorkspaceTransfer != nil {
+			plans = append(plans, *requirement.WorkspaceTransfer)
+		}
+		for _, plan := range plans {
+			if plan.ID == observation.PlanID {
+				sourceResourceID = plan.Source.ResourceID
+				if plan.ProducerActivityID != "" {
+					producerActivityID = plan.ProducerActivityID
+				} else if len(producerIDs) == 1 {
+					producerActivityID = producerIDs[0]
+				}
+				break
+			}
+		}
 		// Artifact stores are not execution resources in the current transfer
 		// schema. Attribute ingress to the selected resource until the schema
 		// includes a storage endpoint dimension.
 		transfers = append(transfers, domain.DataTransfer{
 			ID:                 runID + ":" + activityID + ":" + observation.ID,
 			ExecutionRunID:     runID,
+			ProducerActivityID: producerActivityID,
 			ConsumerActivityID: activityID,
-			SourceResourceID:   resourceID,
-			TargetResourceID:   resourceID,
+			SourceResourceID:   sourceResourceID,
+			TargetResourceID:   targetResourceID,
 			Bytes:              observation.TransferredBytes,
 			StartedAt:          observation.StartedAt,
 			FinishedAt:         observation.FinishedAt,

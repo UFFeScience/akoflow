@@ -34,9 +34,10 @@ func ensureSystemInstance(ctx context.Context, store ports.InstanceStore) error 
 		identifier = "akoflow"
 	}
 	if err := store.Save(ctx, domaininstance.Instance{
-		ID:          identifier,
-		Name:        hostname,
-		Description: "AkôFlow control plane detected on " + hostname,
+		ID:                  identifier,
+		Name:                hostname,
+		Description:         "AkôFlow control plane detected on " + hostname,
+		TransferBufferBytes: domaininstance.DefaultTransferBufferBytes,
 	}); err != nil {
 		return fmt.Errorf("initialize system instance: %w", err)
 	}

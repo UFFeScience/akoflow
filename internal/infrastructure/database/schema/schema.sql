@@ -4,6 +4,7 @@ CREATE TABLE system_instance (
 		description TEXT NOT NULL DEFAULT '',
 		organization TEXT NOT NULL DEFAULT '',
 		location TEXT NOT NULL DEFAULT '',
+		transfer_buffer_bytes INTEGER NOT NULL DEFAULT 8388608,
 		created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 		updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 	);
@@ -209,7 +210,15 @@ CREATE TABLE activity_dependencies (
 		dependency_type TEXT NOT NULL DEFAULT 'control',
 		PRIMARY KEY(activity_id, depends_on_activity_id),
 		CHECK(activity_id <> depends_on_activity_id)
-	);
+);
+CREATE TABLE workflow_data_dependencies (
+	producer_activity_id TEXT NOT NULL REFERENCES activity_definitions(id),
+	consumer_activity_id TEXT NOT NULL REFERENCES activity_definitions(id),
+	logical_name TEXT NOT NULL,
+	size_bytes INTEGER NOT NULL CHECK(size_bytes > 0),
+	PRIMARY KEY(producer_activity_id, consumer_activity_id, logical_name),
+	CHECK(producer_activity_id <> consumer_activity_id)
+);
 CREATE TABLE activity_resource_profiles (
 		id TEXT PRIMARY KEY,
 		activity_type_id TEXT NOT NULL REFERENCES activity_types(id),

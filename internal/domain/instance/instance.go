@@ -2,15 +2,23 @@ package instance
 
 import "time"
 
+const (
+	DefaultTransferBufferBytes int64 = 8 << 20
+	// Five MiB is also the minimum multipart part size required by S3.
+	MinTransferBufferBytes int64 = 5 << 20
+	MaxTransferBufferBytes int64 = 64 << 20
+)
+
 // Instance identifies one AkôFlow control-plane installation.
 type Instance struct {
-	ID           string    `json:"id"`
-	Name         string    `json:"name"`
-	Description  string    `json:"description,omitempty"`
-	Organization string    `json:"organization,omitempty"`
-	Location     string    `json:"location,omitempty"`
-	CreatedAt    time.Time `json:"createdAt"`
-	UpdatedAt    time.Time `json:"updatedAt"`
+	ID                  string    `json:"id"`
+	Name                string    `json:"name"`
+	Description         string    `json:"description,omitempty"`
+	Organization        string    `json:"organization,omitempty"`
+	Location            string    `json:"location,omitempty"`
+	TransferBufferBytes int64     `json:"transferBufferBytes"`
+	CreatedAt           time.Time `json:"createdAt"`
+	UpdatedAt           time.Time `json:"updatedAt"`
 }
 
 // UserPreferences stores presentation choices for one locally identified

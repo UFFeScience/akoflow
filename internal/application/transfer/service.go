@@ -29,7 +29,21 @@ func (Planner) Plan(source, destination domain.TransferLocation, blobs []domain.
 	return plan
 }
 
-type Materializer struct{ Connectors []ports.TransferConnector }
+type EndpointResolver interface {
+	ResolveTransferEndpoint(context.Context, domain.TransferLocation) (domain.TransferEndpoint, error)
+}
+
+type Materializer struct {
+	Connectors []ports.TransferConnector
+	Resolver   EndpointResolver
+}
+
+func (m Materializer) endpoint(ctx context.Context, location domain.TransferLocation) (domain.TransferEndpoint, error) {
+	if m.Resolver != nil {
+		return m.Resolver.ResolveTransferEndpoint(ctx, location)
+	}
+	return domain.TransferEndpoint{URI: location.URI}, nil
+}
 
 func (m Materializer) connector(endpoint domain.TransferEndpoint) (ports.TransferConnector, error) {
 	for _, c := range m.Connectors {
@@ -40,8 +54,14 @@ func (m Materializer) connector(endpoint domain.TransferEndpoint) (ports.Transfe
 	return nil, fmt.Errorf("no connector for endpoint %q", endpoint.URI)
 }
 func (m Materializer) Materialize(ctx context.Context, plan domain.DataTransferPlan, target domain.ArtifactMaterialization) (domain.ArtifactMaterialization, domain.DataTransferRun, error) {
-	source := domain.TransferEndpoint{URI: plan.Source.URI}
-	destination := domain.TransferEndpoint{URI: plan.Destination.URI}
+	source, err := m.endpoint(ctx, plan.Source)
+	if err != nil {
+		return target, domain.DataTransferRun{}, err
+	}
+	destination, err := m.endpoint(ctx, plan.Destination)
+	if err != nil {
+		return target, domain.DataTransferRun{}, err
+	}
 	sc, err := m.connector(source)
 	if err != nil {
 		return target, domain.DataTransferRun{}, err
@@ -63,7 +83,11 @@ func (m Materializer) Materialize(ctx context.Context, plan domain.DataTransferP
 	run := domain.DataTransferRun{ID: plan.ID, PlanID: plan.ID, Strategy: strategy,
 		Status: domain.TransferRunning, StartedAt: unixNow()}
 	for _, blob := range plan.Blobs {
-		final := destinationName(plan.Destination.Path, blob.Digest)
+		finalName := blob.Digest
+		if blob.Path != "" {
+			finalName = blob.Path
+		}
+		final := destinationName(plan.Destination.Path, finalName)
 		// A complete matching object is an idempotent, no-copy materialization.
 		if ok, verifyErr := m.verify(ctx, dc, destination, final, blob.Digest); verifyErr == nil && ok {
 			run.VerifiedBlobs = append(run.VerifiedBlobs, blob.Digest)
@@ -74,16 +98,18 @@ func (m Materializer) Materialize(ctx context.Context, plan domain.DataTransferP
 		if err != nil {
 			return failed(target, run, err)
 		}
-		sourceName := sourceName(plan.Source.Path, blob.Digest, len(plan.Blobs))
+		sourceName := sourceName(plan.Source.Path, blob, len(plan.Blobs))
 		input, err := sc.Open(ctx, source, sourceName, offset)
 		if err != nil {
 			return failed(target, run, err)
 		}
 		if err = dc.Put(ctx, destination, partial, input, offset); err != nil {
-			input.Close()
+			_ = input.Close()
 			return failed(target, run, err)
 		}
-		input.Close()
+		if err = input.Close(); err != nil {
+			return failed(target, run, fmt.Errorf("close source stream for %s: %w", blob.Digest, err))
+		}
 		// The transfer plan is content-addressed, so SizeBytes is the verified
 		// object length. A resumed copy transfers only the remaining bytes.
 		sizeBytes := blob.SizeBytes
@@ -114,11 +140,14 @@ func (m Materializer) Materialize(ctx context.Context, plan domain.DataTransferP
 	return target, run, nil
 }
 
-func sourceName(configured, digest string, count int) string {
+func sourceName(configured string, blob domain.BlobDescriptor, count int) string {
 	if configured != "" && count == 1 {
 		return configured
 	}
-	return digest
+	if blob.Path != "" {
+		return blob.Path
+	}
+	return blob.Digest
 }
 func destinationName(root, digest string) string {
 	if root == "" {

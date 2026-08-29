@@ -2,7 +2,6 @@ package transfer
 
 import (
 	"net/url"
-	"os"
 	"strings"
 	"testing"
 
@@ -27,27 +26,9 @@ func TestSSHArgsApplyProxyCredentialAndHostPolicy(t *testing.T) {
 	}
 }
 
-func TestRsyncConfigAppliesProxyCredentialAndPort(t *testing.T) {
-	query := url.Values{
-		"identityFile":   {"/keys/personal"},
-		"knownHostsFile": {"/keys/known_hosts"},
-		"proxyCommand":   {"ssh gateway -W target:22"},
-		"port":           {"2222"},
-	}
-	endpoint := domain.TransferEndpoint{URI: "ssh://user@target/data?" + query.Encode()}
-	configuration, _, cleanup, err := rsyncSSHConfig(endpoint, "user@target")
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer cleanup()
-	contents, err := os.ReadFile(configuration)
-	if err != nil {
-		t.Fatal(err)
-	}
-	text := string(contents)
-	for _, expected := range []string{"IdentityFile /keys/personal", "Port 2222", "UserKnownHostsFile /keys/known_hosts", "ProxyCommand ssh", "-i '/keys/personal'"} {
-		if !strings.Contains(text, expected) {
-			t.Fatalf("rsync SSH config %q does not contain %q", text, expected)
-		}
+func TestSSHTargetRejectsPathTraversal(t *testing.T) {
+	endpoint := domain.TransferEndpoint{URI: "ssh://user@target/data"}
+	if _, _, err := sshTarget(endpoint, "../secret"); err == nil {
+		t.Fatal("expected traversal to be rejected")
 	}
 }

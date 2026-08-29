@@ -64,7 +64,7 @@ func TestWorkflowExportYAMLRoundTripsThroughImportContract(t *testing.T) {
 	require.Len(t, rebuilt.Version.Activities, 2)
 	require.Equal(t, domain.DeliveryManaged, rebuilt.Version.Activities[0].Command.Executable.Delivery.Strategy)
 	require.Equal(t, "/apps/tool.sif", rebuilt.Version.Activities[1].Command.Executable.Source.Path)
-	require.Equal(t, "prepare", rebuilt.Version.Dependencies[0].DependsOnActivityID)
+	require.Equal(t, "portable-flow-prepare", rebuilt.Version.Dependencies[0].DependsOnActivityID)
 }
 
 func TestLegacyShapedWorkflowConvertsToNormalizedDomain(t *testing.T) {
@@ -79,8 +79,8 @@ func TestLegacyShapedWorkflowConvertsToNormalizedDomain(t *testing.T) {
 	require.Equal(t, "science-flow-v1", definition.Version.ID)
 	require.Equal(t, 0.1, definition.Version.Activities[0].Resources.CPU)
 	require.Equal(t, int64(16*1024*1024), definition.Version.Activities[0].Resources.MemoryBytes)
-	require.Equal(t, "process", definition.Version.Dependencies[0].ActivityID)
-	require.Equal(t, "prepare", definition.Version.Dependencies[0].DependsOnActivityID)
+	require.Equal(t, "science-flow-process", definition.Version.Dependencies[0].ActivityID)
+	require.Equal(t, "science-flow-prepare", definition.Version.Dependencies[0].DependsOnActivityID)
 }
 
 func TestWorkflowRejectsUnknownDependency(t *testing.T) {
@@ -89,4 +89,25 @@ func TestWorkflowRejectsUnknownDependency(t *testing.T) {
 		Activities: []WorkflowActivity{{Name: "process", Run: "run", DependsOn: []string{"missing"}}},
 	}}).Domain()
 	require.ErrorContains(t, err, "unknown activity")
+}
+
+func TestSimulationWorkflowPreservesDurationsAndDataDependencies(t *testing.T) {
+	definition, err := (Workflow{Name: "fanout-simulation", Spec: WorkflowSpec{
+		Namespace: "simulation",
+		Activities: []WorkflowActivity{
+			{Name: "t1", Simulation: &domain.ActivitySimulation{Model: "deterministic", DurationSeconds: 10}},
+			{Name: "t2", DependsOn: []string{"t1"}, Simulation: &domain.ActivitySimulation{Model: "deterministic", DurationSeconds: 10}},
+		},
+		DataDependencies: []WorkflowDataDependency{{
+			ProducerActivity: "t1", ConsumerActivity: "t2", LogicalName: "t1-to-t2.bin", SizeBytes: 10_000_000_000,
+		}},
+	}}).Domain()
+	require.NoError(t, err)
+	require.Equal(t, []domain.ActivityCapability{domain.ActivityCapabilitySimulation}, definition.Version.Activities[0].Capabilities)
+	require.Equal(t, 10.0, definition.Version.Activities[0].Simulation.DurationSeconds)
+	require.Equal(t, int64(10_000_000_000), definition.Version.DataDependencies[0].SizeBytes)
+	require.Equal(t, "fanout-simulation-t1", definition.Version.DataDependencies[0].ProducerActivityID)
+
+	exported := FromDomain(definition)
+	require.Equal(t, int64(10_000_000_000), exported.Spec.DataDependencies[0].SizeBytes)
 }

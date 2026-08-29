@@ -279,6 +279,7 @@ const (
 	DeliveryBuildAndTransfer    = workflow.DeliveryBuildAndTransfer
 	DeliveryPreferInPlace       = workflow.DeliveryPreferInPlace
 	ExecutableSourceOCI         = workflow.ExecutableSourceOCI
+	ExecutableSourceCatalog     = workflow.ExecutableSourceCatalog
 	ExecutableSourceRemoteFile  = workflow.ExecutableSourceRemoteFile
 	ExecutableFormatSIF         = workflow.ExecutableFormatSIF
 )

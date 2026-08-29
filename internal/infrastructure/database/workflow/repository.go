@@ -166,6 +166,14 @@ func (r *Repository) Create(ctx context.Context, definition Definition) error {
 			return err
 		}
 	}
+	for _, dependency := range version.DataDependencies {
+		if _, err = tx.Exec(`INSERT INTO workflow_data_dependencies (
+			producer_activity_id, consumer_activity_id, logical_name, size_bytes
+		) VALUES (?, ?, ?, ?)`, dependency.ProducerActivityID, dependency.ConsumerActivityID,
+			dependency.LogicalName, dependency.SizeBytes); err != nil {
+			return err
+		}
+	}
 	return tx.Commit()
 }
 
@@ -230,7 +238,27 @@ func (r *Repository) FindVersion(ctx context.Context, id string) (*domain.Workfl
 		}
 		workflow.Dependencies = append(workflow.Dependencies, dependency)
 	}
-	return &workflow, deps.Err()
+	if err := deps.Err(); err != nil {
+		return nil, err
+	}
+	dataDependencies, err := r.db.QueryContext(ctx, `SELECT d.producer_activity_id,
+		d.consumer_activity_id, d.logical_name, d.size_bytes
+		FROM workflow_data_dependencies d
+		JOIN activity_definitions a ON a.id=d.producer_activity_id
+		WHERE a.workflow_version_id=? ORDER BY d.producer_activity_id, d.consumer_activity_id, d.logical_name`, id)
+	if err != nil {
+		return nil, err
+	}
+	defer dataDependencies.Close()
+	for dataDependencies.Next() {
+		var dependency domain.ActivityDataDependency
+		if err := dataDependencies.Scan(&dependency.ProducerActivityID, &dependency.ConsumerActivityID,
+			&dependency.LogicalName, &dependency.SizeBytes); err != nil {
+			return nil, err
+		}
+		workflow.DataDependencies = append(workflow.DataDependencies, dependency)
+	}
+	return &workflow, dataDependencies.Err()
 }
 
 func nullableJSON(value any, encoded []byte) any {

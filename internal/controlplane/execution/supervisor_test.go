@@ -146,6 +146,53 @@ func TestSelectRuntimeHonorsPlannedRuntime(t *testing.T) {
 	}
 }
 
+func TestWorkspaceBlobsUseOnlyDirectProducerRoute(t *testing.T) {
+	workflow := domain.WorkflowVersion{Dependencies: []domain.ActivityDependency{
+		{ActivityID: "k2", DependsOnActivityID: "k1"},
+		{ActivityID: "k3", DependsOnActivityID: "k2"},
+		{ActivityID: "k7", DependsOnActivityID: "k3"},
+	}}
+	instances := []domain.DataObjectInstance{
+		{ProducerActivityID: "k1", RelativePath: "k1.txt", Checksum: "sha-k1", SizeBytes: 1},
+		{ProducerActivityID: "k2", RelativePath: "k2.txt", Checksum: "sha-k2", SizeBytes: 2},
+		{ProducerActivityID: "k3", RelativePath: "k3.txt", Checksum: "sha-k3", SizeBytes: 3},
+	}
+	groups, err := workspaceBlobsByDirectProducer(workflow, []string{"k3"}, instances)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(groups) != 1 || groups[0].producerActivityID != "k3" {
+		t.Fatalf("groups=%+v, want one direct route from k3", groups)
+	}
+	if len(groups[0].blobs) != 3 {
+		t.Fatalf("blobs=%+v, want cumulative k1/k2/k3 snapshot", groups[0].blobs)
+	}
+}
+
+func TestWorkspaceBlobsDeduplicateCommonJoinAncestors(t *testing.T) {
+	workflow := domain.WorkflowVersion{Dependencies: []domain.ActivityDependency{
+		{ActivityID: "k4", DependsOnActivityID: "k3"},
+		{ActivityID: "k5", DependsOnActivityID: "k3"},
+		{ActivityID: "k6", DependsOnActivityID: "k4"},
+		{ActivityID: "k6", DependsOnActivityID: "k5"},
+	}}
+	instances := []domain.DataObjectInstance{
+		{ProducerActivityID: "k3", RelativePath: "common.txt", Checksum: "sha-common", SizeBytes: 1},
+		{ProducerActivityID: "k4", RelativePath: "k4.txt", Checksum: "sha-k4", SizeBytes: 1},
+		{ProducerActivityID: "k5", RelativePath: "k5.txt", Checksum: "sha-k5", SizeBytes: 1},
+	}
+	groups, err := workspaceBlobsByDirectProducer(workflow, []string{"k4", "k5"}, instances)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(groups) != 2 || groups[0].producerActivityID != "k4" || groups[1].producerActivityID != "k5" {
+		t.Fatalf("groups=%+v, want routes k4 and k5", groups)
+	}
+	if len(groups[0].blobs) != 2 || len(groups[1].blobs) != 1 {
+		t.Fatalf("groups=%+v, common ancestor should be transferred only once", groups)
+	}
+}
+
 func TestSupervisorExecutesDAGInDependencyOrder(t *testing.T) {
 	store := &executionStoreFake{}
 	activities := &activityControllerFake{}

@@ -14,17 +14,58 @@ import (
 
 type apiFake struct {
 	created    map[string][]byte
+	createErr  map[string]error
 	getOutput  []byte
 	listOutput []byte
 	logsOutput []byte
 }
 
 func (f *apiFake) Create(_ context.Context, _, resource string, body []byte) error {
+	if err := f.createErr[resource]; err != nil {
+		return err
+	}
 	if f.created == nil {
 		f.created = map[string][]byte{}
 	}
 	f.created[resource] = body
 	return nil
+}
+
+func TestAdapterAdoptsExistingJobOwnedBySameActivity(t *testing.T) {
+	api := &apiFake{
+		createErr: map[string]error{"jobs": ErrConflict},
+		getOutput: []byte(`{"metadata":{"labels":{"app.kubernetes.io/managed-by":"akoflow"}},"spec":{"template":{"metadata":{"labels":{"akoflow.io/activity":"activity"}}}}}`),
+	}
+	handle, err := New(api, "science").Start(context.Background(), domain.ActivityExecutionContext{
+		Run:       domain.ExecutionRun{ID: "run"},
+		Activity:  domain.Activity{ID: "activity", Command: domain.ActivityCommand{Image: "image:1"}},
+		RuntimeID: "kubernetes",
+		Resource:  domain.Resource{ID: "node", Type: domain.ResourceKubernetesMachine},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if handle.ExternalID != "akoflow-run-activity" || handle.Status != domain.HandleStarting {
+		t.Fatalf("handle=%+v", handle)
+	}
+}
+
+func TestAdapterRejectsExistingJobOwnedByAnotherActivity(t *testing.T) {
+	existing := `{"metadata":{"labels":{"app.kubernetes.io/managed-by":"akoflow"},` +
+		`"annotations":{"akoflow.io/run-id":"other-run","akoflow.io/activity-id":"activity"}},` +
+		`"spec":{"template":{"metadata":{"labels":{"akoflow.io/activity":"activity"}}}}}`
+	api := &apiFake{
+		createErr: map[string]error{"jobs": ErrConflict},
+		getOutput: []byte(existing),
+	}
+	_, err := New(api, "science").Start(context.Background(), domain.ActivityExecutionContext{
+		Run:      domain.ExecutionRun{ID: "run"},
+		Activity: domain.Activity{ID: "activity", Command: domain.ActivityCommand{Image: "image:1"}},
+		Resource: domain.Resource{Type: domain.ResourceKubernetesMachine},
+	})
+	if err == nil || !strings.Contains(err.Error(), "run owner") {
+		t.Fatalf("error=%v", err)
+	}
 }
 func (f *apiFake) Get(context.Context, string, string, string) ([]byte, error) {
 	return f.getOutput, nil

@@ -52,7 +52,11 @@ func (c Coordinator) Prepare(ctx context.Context, _ string, requirement domain.P
 		requirement.Artifact = &result
 	}
 	if requirement.Workspace != nil {
-		if requirement.WorkspaceTransfer == nil {
+		plans := append([]domain.DataTransferPlan(nil), requirement.WorkspaceTransfers...)
+		if requirement.WorkspaceTransfer != nil {
+			plans = append(plans, *requirement.WorkspaceTransfer)
+		}
+		if len(plans) == 0 && len(requirement.Workspace.Missing) > 0 {
 			return nil, fmt.Errorf("workspace materialization lacks transfer plan")
 		}
 		// Workspace uses the same verified content transport. Artifact fields are
@@ -60,17 +64,26 @@ func (c Coordinator) Prepare(ctx context.Context, _ string, requirement domain.P
 		// Do not use a sentinel digest as proof of a workspace: each content blob
 		// in the plan must be verified before the workspace can be committed.
 		if len(requirement.Workspace.Missing) == 0 {
-			requirement.Workspace.Missing = append([]domain.BlobDescriptor(nil), requirement.WorkspaceTransfer.Blobs...)
+			for _, plan := range plans {
+				requirement.Workspace.Missing = append(requirement.Workspace.Missing, plan.Blobs...)
+			}
 		}
-		result, run, err := c.Materializer.Materialize(ctx, *requirement.WorkspaceTransfer, domain.ArtifactMaterialization{ID: requirement.Workspace.ID, Digest: "workspace"})
-		if err != nil {
-			return nil, err
+		verified := make([]string, 0, len(requirement.Workspace.Missing))
+		for _, plan := range plans {
+			result, run, err := c.Materializer.Materialize(ctx, plan, domain.ArtifactMaterialization{ID: requirement.Workspace.ID, Digest: "workspace"})
+			if saveErr := c.saveTransfer(ctx, run); saveErr != nil {
+				return nil, fmt.Errorf("save workspace transfer: %w", saveErr)
+			}
+			if err != nil {
+				return nil, err
+			}
+			transferRuns = append(transferRuns, run)
+			if result.Status != domain.MaterializationCommitted {
+				return nil, fmt.Errorf("workspace materialization is not committed")
+			}
+			verified = append(verified, run.VerifiedBlobs...)
 		}
-		transferRuns = append(transferRuns, run)
-		if result.Status != domain.MaterializationCommitted {
-			return nil, fmt.Errorf("workspace materialization is not committed")
-		}
-		if err := requirement.Workspace.Commit(run.VerifiedBlobs); err != nil {
+		if err := requirement.Workspace.Commit(verified); err != nil {
 			return nil, err
 		}
 	}

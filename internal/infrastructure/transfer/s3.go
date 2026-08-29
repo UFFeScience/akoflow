@@ -34,7 +34,10 @@ func (EnvironmentS3Credentials) Resolve(ref string) (S3Credentials, error) {
 	return S3Credentials{key, secret, os.Getenv("AWS_SESSION_TOKEN")}, nil
 }
 
-type S3Compatible struct{ Credentials S3CredentialResolver }
+type S3Compatible struct {
+	Credentials S3CredentialResolver
+	BufferSize  BufferSizeProvider
+}
 
 func (S3Compatible) CanHandle(e domain.TransferEndpoint) bool {
 	return strings.HasPrefix(e.URI, "s3://")
@@ -115,7 +118,14 @@ func (s S3Compatible) Put(ctx context.Context, e domain.TransferEndpoint, name s
 		// streaming the whole existing object would duplicate bytes on resume.
 		input = io.MultiReader(io.LimitReader(previous, offset), input)
 	}
-	_, err = c.PutObject(ctx, b, s3Object(p, name), input, -1, minio.PutObjectOptions{})
+	partSize := int64(0)
+	if s.BufferSize != nil {
+		partSize = int64(s.BufferSize(ctx))
+	}
+	partSize = int64(normalizeBufferSize(partSize))
+	_, err = c.PutObject(ctx, b, s3Object(p, name), input, -1, minio.PutObjectOptions{
+		PartSize: uint64(partSize), NumThreads: 1, ConcurrentStreamParts: false,
+	})
 	return err
 }
 func (s S3Compatible) Commit(ctx context.Context, e domain.TransferEndpoint, partial, final string) error {

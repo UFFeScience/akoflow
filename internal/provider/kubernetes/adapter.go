@@ -2,13 +2,16 @@ package kubernetes
 
 import (
 	"context"
+	"crypto/sha256"
 	_ "embed"
 	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"net/url"
 	"path"
 	"regexp"
+	"strconv"
 	"strings"
 	"time"
 
@@ -44,6 +47,7 @@ func (a *Adapter) Start(ctx context.Context, execution domain.ActivityExecutionC
 		return domain.ActivityHandle{}, fmt.Errorf("Kubernetes API client is required")
 	}
 	activity := execution.Activity
+	activity = withPreparedWorkspace(activity, execution.Preparation)
 	if activity.Command.Image == "" {
 		return domain.ActivityHandle{}, fmt.Errorf("activity image is required for Kubernetes")
 	}
@@ -54,12 +58,29 @@ func (a *Adapter) Start(ctx context.Context, execution domain.ActivityExecutionC
 	if err != nil {
 		return domain.ActivityHandle{}, err
 	}
-	if err := a.api.Create(ctx, a.namespace, "jobs", job); err != nil {
+	claim, claimName, err := preparedWorkspaceClaim(activity, execution.Preparation, a.namespace, execution.Run.ID)
+	if err != nil {
+		return domain.ActivityHandle{}, err
+	}
+	claimCreated := false
+	if claim != nil {
+		claimCreated, err = a.createOrAdopt(ctx, "persistentvolumeclaims", claimName, claim, execution.Run.ID, activity.ID)
+		if err != nil {
+			return domain.ActivityHandle{}, err
+		}
+	}
+	jobCreated, err := a.createOrAdopt(ctx, "jobs", name, job, execution.Run.ID, activity.ID)
+	if err != nil {
+		if claimCreated {
+			_ = a.api.Delete(ctx, a.namespace, "persistentvolumeclaims", claimName)
+		}
 		return domain.ActivityHandle{}, err
 	}
 	if service != nil {
-		if err := a.api.Create(ctx, a.namespace, "services", service); err != nil {
-			_ = a.api.Delete(ctx, a.namespace, "jobs", name)
+		if _, err := a.createOrAdopt(ctx, "services", name, service, execution.Run.ID, activity.ID); err != nil {
+			if jobCreated {
+				_ = a.api.Delete(ctx, a.namespace, "jobs", name)
+			}
 			return domain.ActivityHandle{}, err
 		}
 	}
@@ -76,6 +97,137 @@ func (a *Adapter) Start(ctx context.Context, execution domain.ActivityExecutionC
 			"artifactStorageType":       storageBindingFor(activity).Type,
 			"artifactStorageResourceId": storageBindingFor(activity).ResourceID,
 		}}, nil
+}
+
+func preparedWorkspaceClaim(activity domain.Activity, preparation *domain.PreparationGate, namespace, runID string) ([]byte, string, error) {
+	if preparation == nil || preparation.Workspace == nil {
+		return nil, "", nil
+	}
+	u, err := url.Parse(preparation.Workspace.Destination.URI)
+	if err != nil || u.Scheme != "kubernetes" || u.Query().Get("createClaim") != "true" {
+		return nil, "", err
+	}
+	claimName := u.Query().Get("claim")
+	if claimName == "" {
+		return nil, "", fmt.Errorf("prepared Kubernetes workspace has no claim")
+	}
+	claimBytes, _ := strconv.ParseInt(u.Query().Get("claimBytes"), 10, 64)
+	if claimBytes < 64<<20 {
+		claimBytes = 64 << 20
+	}
+	claim := map[string]any{
+		"apiVersion": "v1", "kind": "PersistentVolumeClaim",
+		"metadata": map[string]any{
+			"name": claimName, "namespace": namespace,
+			"labels":      map[string]string{"app.kubernetes.io/managed-by": "akoflow"},
+			"annotations": map[string]string{"akoflow.io/run-id": runID, "akoflow.io/activity-id": activity.ID},
+		},
+		"spec": map[string]any{
+			"accessModes": []string{"ReadWriteOnce"},
+			"resources":   map[string]any{"requests": map[string]string{"storage": strconv.FormatInt(claimBytes, 10)}},
+		},
+	}
+	payload, err := json.Marshal(claim)
+	return payload, claimName, err
+}
+
+func withPreparedWorkspace(activity domain.Activity, preparation *domain.PreparationGate) domain.Activity {
+	if preparation == nil || preparation.Workspace == nil {
+		return activity
+	}
+	u, err := url.Parse(preparation.Workspace.Destination.URI)
+	if err != nil || u.Scheme != "kubernetes" || u.Query().Get("claim") == "" {
+		return activity
+	}
+	metadata := make(map[string]any, len(activity.Metadata)+2)
+	for key, value := range activity.Metadata {
+		metadata[key] = value
+	}
+	metadata["storage"] = map[string]any{
+		"type": "pvc", "claimName": u.Query().Get("claim"), "mountPath": u.Path,
+	}
+	metadata["artifactObservationRoot"] = u.Path
+	activity.Metadata = metadata
+	return activity
+}
+
+// createOrAdopt makes submission idempotent across a process crash between the
+// Kubernetes create call and persistence of the activity handle.
+func (a *Adapter) createOrAdopt(
+	ctx context.Context,
+	resource, name string,
+	body []byte,
+	runID, activityID string,
+) (bool, error) {
+	if err := a.api.Create(ctx, a.namespace, resource, body); err == nil {
+		return true, nil
+	} else if !errors.Is(err, ErrConflict) {
+		return false, err
+	}
+
+	existing, err := a.api.Get(ctx, a.namespace, resource, name)
+	if err != nil {
+		return false, fmt.Errorf("inspect conflicting Kubernetes %s %q: %w", resource, name, err)
+	}
+	if err := validateOwnership(existing, resource, runID, activityID); err != nil {
+		return false, fmt.Errorf("Kubernetes %s %q already exists but cannot be adopted: %w", resource, name, err)
+	}
+	return false, nil
+}
+
+func validateOwnership(payload []byte, resource, runID, activityID string) error {
+	var object struct {
+		Metadata struct {
+			Labels      map[string]string `json:"labels"`
+			Annotations map[string]string `json:"annotations"`
+		} `json:"metadata"`
+		Spec struct {
+			Selector json.RawMessage `json:"selector"`
+			Template struct {
+				Metadata struct {
+					Labels map[string]string `json:"labels"`
+				} `json:"metadata"`
+			} `json:"template"`
+		} `json:"spec"`
+	}
+	if err := json.Unmarshal(payload, &object); err != nil {
+		return fmt.Errorf("decode existing resource: %w", err)
+	}
+	if object.Metadata.Labels["app.kubernetes.io/managed-by"] != "akoflow" {
+		return fmt.Errorf("resource is not managed by AkôFlow")
+	}
+	if owner := object.Metadata.Annotations["akoflow.io/run-id"]; owner != "" && owner != runID {
+		return fmt.Errorf("run owner is %q, expected %q", owner, runID)
+	}
+	if owner := object.Metadata.Annotations["akoflow.io/activity-id"]; owner != "" && owner != activityID {
+		return fmt.Errorf("activity owner is %q, expected %q", owner, activityID)
+	}
+
+	// Legacy resources only carried the activity label in the pod template or
+	// Service selector. Accept those so in-flight runs survive this upgrade.
+	actualActivity := object.Spec.Template.Metadata.Labels["akoflow.io/activity"]
+	if resource == "services" {
+		var selector map[string]string
+		if err := json.Unmarshal(object.Spec.Selector, &selector); err != nil {
+			return fmt.Errorf("decode existing Service selector: %w", err)
+		}
+		actualActivity = selector["akoflow.io/activity"]
+	}
+	if resource == "persistentvolumeclaims" && object.Metadata.Annotations["akoflow.io/activity-id"] == activityID {
+		return nil
+	}
+	if resource == "persistentvolumeclaims" &&
+		object.Metadata.Labels["akoflow.io/purpose"] == "workspace-transfer" &&
+		object.Metadata.Annotations["akoflow.io/run-id"] == "" {
+		// Compatibility with claims created by the streaming connector before
+		// ownership annotations were added. The deterministic claim name is
+		// already checked by the caller.
+		return nil
+	}
+	if actualActivity != activityID {
+		return fmt.Errorf("activity label is %q, expected %q", actualActivity, activityID)
+	}
+	return nil
 }
 
 func (a *Adapter) Inspect(ctx context.Context, handle domain.ActivityHandle) (domain.ActivityHandle, error) {
@@ -283,9 +435,10 @@ func resources(
 	runID string,
 ) ([]byte, []byte, error) {
 	podSpec := observedPodSpec(workflow, activity, resource, runID)
+	ownership := map[string]string{"akoflow.io/run-id": runID, "akoflow.io/activity-id": activity.ID}
 	job := map[string]any{"apiVersion": "batch/v1", "kind": "Job",
 		"metadata": map[string]any{"name": name, "namespace": namespace,
-			"labels": map[string]string{"app.kubernetes.io/managed-by": "akoflow"}},
+			"labels": map[string]string{"app.kubernetes.io/managed-by": "akoflow"}, "annotations": ownership},
 		"spec": map[string]any{"backoffLimit": max(activity.Policy.MaxAttempts-1, 0),
 			"template": map[string]any{
 				"metadata": map[string]any{"labels": map[string]string{"akoflow.io/activity": activity.ID}},
@@ -304,7 +457,7 @@ func resources(
 	}
 	service := map[string]any{"apiVersion": "v1", "kind": "Service",
 		"metadata": map[string]any{"name": name, "namespace": namespace,
-			"labels": map[string]string{"app.kubernetes.io/managed-by": "akoflow"}},
+			"labels": map[string]string{"app.kubernetes.io/managed-by": "akoflow"}, "annotations": ownership},
 		"spec": map[string]any{"selector": map[string]string{"akoflow.io/activity": activity.ID}, "ports": ports}}
 	serviceJSON, err := json.Marshal(service)
 	return jobJSON, serviceJSON, err
@@ -474,7 +627,8 @@ func kubernetesName(value string) string {
 	}, value)
 	value = strings.Trim(value, "-")
 	if len(value) > 63 {
-		value = value[:63]
+		digest := sha256.Sum256([]byte(value))
+		value = strings.Trim(value[:54], "-") + fmt.Sprintf("-%x", digest[:4])
 	}
 	return strings.Trim(value, "-")
 }

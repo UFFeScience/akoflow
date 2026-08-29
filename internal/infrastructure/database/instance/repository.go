@@ -16,7 +16,7 @@ func New(db *sql.DB) *Repository {
 }
 
 func (repository *Repository) Find(ctx context.Context) (*domaininstance.Instance, error) {
-	const query = `SELECT id, name, description, organization, location, created_at, updated_at
+	const query = `SELECT id, name, description, organization, location, transfer_buffer_bytes, created_at, updated_at
 		FROM system_instance LIMIT 1`
 	value := &domaininstance.Instance{}
 	err := repository.db.QueryRowContext(ctx, query).Scan(
@@ -25,6 +25,7 @@ func (repository *Repository) Find(ctx context.Context) (*domaininstance.Instanc
 		&value.Description,
 		&value.Organization,
 		&value.Location,
+		&value.TransferBufferBytes,
 		&value.CreatedAt,
 		&value.UpdatedAt,
 	)
@@ -35,14 +36,18 @@ func (repository *Repository) Find(ctx context.Context) (*domaininstance.Instanc
 }
 
 func (repository *Repository) Save(ctx context.Context, value domaininstance.Instance) error {
+	if value.TransferBufferBytes == 0 {
+		value.TransferBufferBytes = domaininstance.DefaultTransferBufferBytes
+	}
 	const query = `INSERT INTO system_instance (
-		id, name, description, organization, location, created_at, updated_at
-	) VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+		id, name, description, organization, location, transfer_buffer_bytes, created_at, updated_at
+	) VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
 	ON CONFLICT(id) DO UPDATE SET
 		name = excluded.name,
 		description = excluded.description,
 		organization = excluded.organization,
 		location = excluded.location,
+		transfer_buffer_bytes = excluded.transfer_buffer_bytes,
 		updated_at = CURRENT_TIMESTAMP`
 	_, err := repository.db.ExecContext(
 		ctx,
@@ -52,6 +57,7 @@ func (repository *Repository) Save(ctx context.Context, value domaininstance.Ins
 		value.Description,
 		value.Organization,
 		value.Location,
+		value.TransferBufferBytes,
 	)
 	return err
 }

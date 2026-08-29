@@ -677,6 +677,13 @@ func (h *Handler) SaveInstance(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusUnprocessableEntity, fmt.Errorf("instance id and name are required"))
 		return
 	}
+	if value.TransferBufferBytes == 0 {
+		value.TransferBufferBytes = domaininstance.DefaultTransferBufferBytes
+	}
+	if value.TransferBufferBytes < domaininstance.MinTransferBufferBytes || value.TransferBufferBytes > domaininstance.MaxTransferBufferBytes {
+		writeError(w, http.StatusUnprocessableEntity, fmt.Errorf("transfer buffer must be between %d and %d bytes", domaininstance.MinTransferBufferBytes, domaininstance.MaxTransferBufferBytes))
+		return
+	}
 	if err := h.instance.Save(r.Context(), value); err != nil {
 		writeError(w, http.StatusUnprocessableEntity, err)
 		return
@@ -1484,7 +1491,8 @@ func (h *Handler) resolveBuildPreparations(ctx context.Context, request *ports.E
 		assignments[assignment.ActivityID] = assignment
 	}
 	resolver := applicationbuild.OutputResolver{Catalog: h.data}
-	for _, activity := range request.Workflow.Activities {
+	for index := range request.Workflow.Activities {
+		activity := request.Workflow.Activities[index]
 		if activity.Command.Executable == nil {
 			continue
 		}
@@ -1496,9 +1504,40 @@ func (h *Handler) resolveBuildPreparations(ctx context.Context, request *ports.E
 		if !ok {
 			return fmt.Errorf("build activity %q has unknown resource %q", activity.ID, assignment.ResourceID)
 		}
+		if activity.Command.Executable.Source.Type == domain.ExecutableSourceCatalog && executionRuntimeDriver(*request, assignment) == domain.RuntimeDriverKubernetes {
+			catalog, ok := any(h.data).(applicationbuild.CatalogOCIReference)
+			if !ok {
+				return fmt.Errorf("artifact catalog OCI resolver is unavailable")
+			}
+			ref := activity.Command.Executable.Source.ArtifactRef
+			if ref == nil {
+				return fmt.Errorf("activity %q catalog executable has no artifact reference", activity.ID)
+			}
+			image, err := applicationbuild.OCIReferenceForCatalog(ctx, catalog, ref.ID, ref.Version, resource.Architecture)
+			if err != nil {
+				return err
+			}
+			request.Workflow.Activities[index].Command.Image = image
+			continue
+		}
 		var requirement domain.PreparationRequirement
 		var required bool
 		switch activity.Command.Executable.Source.Type {
+		case domain.ExecutableSourceCatalog:
+			catalog, ok := any(h.data).(applicationbuild.CatalogOutput)
+			if !ok {
+				return fmt.Errorf("artifact catalog output resolver is unavailable")
+			}
+			ref := activity.Command.Executable.Source.ArtifactRef
+			if ref == nil {
+				return fmt.Errorf("activity %q catalog executable has no artifact reference", activity.ID)
+			}
+			var err error
+			requirement, err = applicationbuild.PreparationForCatalog(ctx, catalog, ref.ID, ref.Version, activity.ID, resource, "")
+			if err != nil {
+				return err
+			}
+			required = true
 		case domain.ExecutableSourceType("build"):
 			var err error
 			requirement, err = resolver.Preparation(ctx, activity.Command.Executable.Source.ArtifactBuildRef, activity.ID, resource, "")
@@ -1519,7 +1558,7 @@ func (h *Handler) resolveBuildPreparations(ctx context.Context, request *ports.E
 		if !required {
 			continue
 		}
-		if err := h.configureGatewayArtifactTransfer(ctx, &requirement, resource); err != nil {
+		if err := h.configureGatewayArtifactTransfer(ctx, &requirement, resource, activity); err != nil {
 			return err
 		}
 		if request.PreparationRequirementsByActivity == nil {
@@ -1530,7 +1569,7 @@ func (h *Handler) resolveBuildPreparations(ctx context.Context, request *ports.E
 	return nil
 }
 
-func (h *Handler) configureGatewayArtifactTransfer(ctx context.Context, requirement *domain.PreparationRequirement, resource domain.Resource) error {
+func (h *Handler) configureGatewayArtifactTransfer(ctx context.Context, requirement *domain.PreparationRequirement, resource domain.Resource, activity domain.Activity) error {
 	if requirement.Artifact == nil || requirement.ArtifactTransfer == nil {
 		return nil
 	}
@@ -1543,8 +1582,34 @@ func (h *Handler) configureGatewayArtifactTransfer(ctx context.Context, requirem
 		return nil
 	}
 	connection, err := connections.FindConnection(ctx, connectionID)
-	if err != nil || connection == nil || connection.Type != domain.ConnectionSSH || connection.Endpoint == "" || connection.Username == "" {
+	if err != nil || connection == nil {
 		return err
+	}
+	if connection.Type == domain.ConnectionKubernetes {
+		storage, _ := activity.Metadata["storage"].(map[string]any)
+		claim, _ := storage["claimName"].(string)
+		mountPath, _ := storage["mountPath"].(string)
+		if claim == "" {
+			return fmt.Errorf("Kubernetes activity %q requires a PVC storage binding for artifact transfer", activity.ID)
+		}
+		if mountPath == "" {
+			mountPath = "/akoflow/data"
+		}
+		root := path.Join(mountPath, ".akoflow", "artifacts")
+		u := url.URL{Scheme: "kubernetes", Host: connection.ID, Path: root}
+		query := url.Values{"claim": {claim}}
+		if namespace, _ := connection.Configuration["namespace"].(string); namespace != "" {
+			query.Set("namespace", namespace)
+		}
+		u.RawQuery = query.Encode()
+		requirement.Artifact.DestinationPath = path.Join(root, requirement.Artifact.Digest)
+		requirement.ArtifactTransfer.Strategy = domain.TransferGateway
+		requirement.ArtifactTransfer.Destination.URI = u.String()
+		requirement.ArtifactTransfer.Destination.Path = ""
+		return nil
+	}
+	if connection.Type != domain.ConnectionSSH || connection.Endpoint == "" || connection.Username == "" {
+		return nil
 	}
 	root := path.Join("/home", connection.Username, ".akoflow", "artifacts")
 	u := url.URL{Scheme: "ssh", User: url.User(connection.Username), Host: connection.Endpoint, Path: root}

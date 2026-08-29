@@ -13,7 +13,9 @@ import (
 )
 
 // LocalFilesystem is also useful for mounted NFS/PVC and gateway staging.
-type LocalFilesystem struct{}
+type LocalFilesystem struct {
+	BufferSize BufferSizeProvider
+}
 
 func (LocalFilesystem) CanHandle(e domain.TransferEndpoint) bool {
 	u, err := url.Parse(e.URI)
@@ -95,7 +97,7 @@ func (LocalFilesystem) Open(_ context.Context, e domain.TransferEndpoint, name s
 	}
 	return f, err
 }
-func (LocalFilesystem) Put(_ context.Context, e domain.TransferEndpoint, name string, r io.Reader, offset int64) error {
+func (connector LocalFilesystem) Put(ctx context.Context, e domain.TransferEndpoint, name string, r io.Reader, offset int64) error {
 	p, err := localPath(e, name)
 	if err != nil {
 		return err
@@ -118,7 +120,7 @@ func (LocalFilesystem) Put(_ context.Context, e domain.TransferEndpoint, name st
 		_ = f.Close()
 		return err
 	}
-	_, err = io.Copy(f, r)
+	_, err = copyWithBuffer(ctx, f, r, connector.BufferSize)
 	cerr := f.Close()
 	if err != nil {
 		return err

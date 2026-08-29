@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"io"
 	"net/url"
-	"os"
 	"os/exec"
 	"path/filepath"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/UFFeScience/akoflow/internal/domain"
 	"github.com/UFFeScience/akoflow/internal/provider"
@@ -18,7 +18,9 @@ import (
 // RsyncSSH uses ssh/rsync installed on the gateway. Endpoint URI is
 // ssh://user@host/absolute/base/path. A key path or extra SSH options may be
 // provided in endpoint configuration as identityFile and sshOptions.
-type RsyncSSH struct{}
+type RsyncSSH struct {
+	BufferSize BufferSizeProvider
+}
 
 func (RsyncSSH) CanHandle(e domain.TransferEndpoint) bool { return strings.HasPrefix(e.URI, "ssh://") }
 func sshTarget(e domain.TransferEndpoint, name string) (string, string, error) {
@@ -118,20 +120,29 @@ func (RsyncSSH) Open(ctx context.Context, e domain.TransferEndpoint, name string
 	if err = cmd.Start(); err != nil {
 		return nil, err
 	}
-	return readCloser{Reader: out, close: cmd.Wait}, nil
+	return readCloser{Reader: out, close: func() error {
+		_ = out.Close()
+		return waitSSHCommand(cmd)
+	}}, nil
 }
-func (RsyncSSH) Put(ctx context.Context, e domain.TransferEndpoint, name string, input io.Reader, offset int64) error {
-	tmp, err := os.CreateTemp("", "akoflow-rsync-*")
-	if err != nil {
+
+func waitSSHCommand(command *exec.Cmd) error {
+	result := make(chan error, 1)
+	go func() { result <- command.Wait() }()
+	select {
+	case err := <-result:
 		return err
+	case <-time.After(5 * time.Second):
+		if command.Process != nil {
+			_ = command.Process.Kill()
+		}
+		<-result
+		// The caller already consumed the complete stdout stream. A lingering
+		// ProxyCommand is transport cleanup, not a failed content read.
+		return nil
 	}
-	defer os.Remove(tmp.Name())
-	if _, err = io.Copy(tmp, input); err == nil {
-		err = tmp.Close()
-	}
-	if err != nil {
-		return err
-	}
+}
+func (connector RsyncSSH) Put(ctx context.Context, e domain.TransferEndpoint, name string, input io.Reader, offset int64) error {
 	host, path, err := sshTarget(e, name)
 	if err != nil {
 		return err
@@ -139,73 +150,33 @@ func (RsyncSSH) Put(ctx context.Context, e domain.TransferEndpoint, name string,
 	if output, mkdirErr := exec.CommandContext(ctx, "ssh", append(sshArgs(e), host, "mkdir -p -- "+shell(filepath.Dir(path)))...).CombinedOutput(); mkdirErr != nil {
 		return fmt.Errorf("create SSH staging directory: %w: %s", mkdirErr, strings.TrimSpace(string(output)))
 	}
-	config, target, cleanup, err := rsyncSSHConfig(e, host)
+	command := "cat > " + shell(path)
+	if offset > 0 {
+		command = fmt.Sprintf("test $(wc -c < %s) -eq %d && cat >> %s", shell(path), offset, shell(path))
+	}
+	cmd := exec.CommandContext(ctx, "ssh", append(sshArgs(e), host, command)...)
+	stdin, err := cmd.StdinPipe()
 	if err != nil {
 		return err
 	}
-	defer cleanup()
-	sshCommand := "ssh -F " + config
-	args := []string{"-a", "--partial", "-e", sshCommand, tmp.Name(), target + ":" + path}
-	if offset > 0 {
-		args = []string{"-a", "--append-verify", "--partial", "-e", sshCommand, tmp.Name(), target + ":" + path}
+	var stderr strings.Builder
+	cmd.Stderr = &stderr
+	if err = cmd.Start(); err != nil {
+		return err
 	}
-	output, err := exec.CommandContext(ctx, "rsync", args...).CombinedOutput()
-	if err != nil {
-		return fmt.Errorf("copy to SSH staging: %w: %s", err, strings.TrimSpace(string(output)))
+	_, copyErr := copyWithBuffer(ctx, stdin, input, connector.BufferSize)
+	closeErr := stdin.Close()
+	waitErr := cmd.Wait()
+	if copyErr != nil {
+		return fmt.Errorf("stream to SSH staging: %w", copyErr)
+	}
+	if closeErr != nil {
+		return fmt.Errorf("close SSH stream: %w", closeErr)
+	}
+	if waitErr != nil {
+		return fmt.Errorf("stream to SSH staging: %w: %s", waitErr, strings.TrimSpace(stderr.String()))
 	}
 	return nil
-}
-
-func rsyncSSHConfig(endpoint domain.TransferEndpoint, fallbackHost string) (string, string, func(), error) {
-	uri, err := url.Parse(endpoint.URI)
-	if err != nil {
-		return "", "", nil, err
-	}
-	target := "akoflow-staging"
-	user, host := "", uri.Host
-	if uri.User != nil {
-		user = uri.User.Username()
-	}
-	if host == "" {
-		host = strings.TrimPrefix(fallbackHost, user+"@")
-	}
-	lines := []string{"Host " + target, "  HostName " + host}
-	if user != "" {
-		lines = append(lines, "  User "+user)
-	}
-	query := uri.Query()
-	if identity := query.Get("identityFile"); identity != "" {
-		lines = append(lines, "  IdentityFile "+identity)
-	}
-	if port := query.Get("port"); port != "" {
-		lines = append(lines, "  Port "+port)
-	}
-	if knownHosts := query.Get("knownHostsFile"); knownHosts != "" {
-		lines = append(lines, "  UserKnownHostsFile "+knownHosts, "  StrictHostKeyChecking yes")
-	}
-	if proxy := query.Get("proxyCommand"); proxy != "" {
-		lines = append(lines, "  ProxyCommand "+provider.ProxyCommandWithKnownHosts(proxy, query.Get("knownHostsFile"), query.Get("identityFile")))
-	}
-	if alias := query.Get("hostKeyAlias"); alias != "" {
-		lines = append(lines, "  HostKeyAlias "+alias)
-	}
-	if forward, _ := strconv.ParseBool(query.Get("forwardAgent")); forward {
-		lines = append(lines, "  ForwardAgent yes")
-	}
-	file, err := os.CreateTemp("", "akoflow-ssh-config-*")
-	if err != nil {
-		return "", "", nil, err
-	}
-	if _, err = file.WriteString(strings.Join(lines, "\n") + "\n"); err != nil {
-		_ = file.Close()
-		_ = os.Remove(file.Name())
-		return "", "", nil, err
-	}
-	if err = file.Close(); err != nil {
-		_ = os.Remove(file.Name())
-		return "", "", nil, err
-	}
-	return file.Name(), target, func() { _ = os.Remove(file.Name()) }, nil
 }
 func (RsyncSSH) Commit(ctx context.Context, e domain.TransferEndpoint, partial, final string) error {
 	host, p, err := sshTarget(e, partial)

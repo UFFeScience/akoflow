@@ -26,18 +26,18 @@ func TestRepositoryLifecycle(t *testing.T) {
 	if err != nil || value != nil {
 		t.Fatalf("expected an empty instance: %+v %v", value, err)
 	}
-	if err := repository.Save(ctx, domaininstance.Instance{ID: "lab", Name: "Lab"}); err != nil {
+	if err := repository.Save(ctx, domaininstance.Instance{ID: "lab", Name: "Lab", TransferBufferBytes: 4 << 20}); err != nil {
 		t.Fatal(err)
 	}
 	value, err = repository.Find(ctx)
-	if err != nil || value == nil || value.Name != "Lab" {
+	if err != nil || value == nil || value.Name != "Lab" || value.TransferBufferBytes != 4<<20 {
 		t.Fatalf("unexpected stored instance: %+v %v", value, err)
 	}
 	if err := repository.Save(ctx, domaininstance.Instance{ID: "lab", Name: "Updated"}); err != nil {
 		t.Fatal(err)
 	}
 	value, _ = repository.Find(ctx)
-	if value.Name != "Updated" {
+	if value.Name != "Updated" || value.TransferBufferBytes != domaininstance.DefaultTransferBufferBytes {
 		t.Fatalf("instance was not updated: %+v", value)
 	}
 }

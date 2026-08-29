@@ -55,6 +55,9 @@ func TestWorkflowDefinitionCreateAndFind(t *testing.T) {
 			Dependencies: []domain.ActivityDependency{{
 				ActivityID: "b", DependsOnActivityID: "a", Type: "control",
 			}},
+			DataDependencies: []domain.ActivityDataDependency{{
+				ProducerActivityID: "a", ConsumerActivityID: "b", LogicalName: "result.bin", SizeBytes: 10_000_000_000,
+			}},
 		},
 	}
 	if err := repository.Create(context.Background(), definition); err != nil {
@@ -64,7 +67,7 @@ func TestWorkflowDefinitionCreateAndFind(t *testing.T) {
 	if err != nil || got == nil {
 		t.Fatalf("find failed: %+v %v", got, err)
 	}
-	if got.WorkflowID != "workflow" || len(got.Activities) != 2 || len(got.Dependencies) != 1 || got.Activities[0].Metadata["x"] != "y" {
+	if got.WorkflowID != "workflow" || len(got.Activities) != 2 || len(got.Dependencies) != 1 || len(got.DataDependencies) != 1 || got.DataDependencies[0].SizeBytes != 10_000_000_000 || got.Activities[0].Metadata["x"] != "y" {
 		t.Fatalf("unexpected workflow: %+v", got)
 	}
 	missing, err := repository.FindVersion(context.Background(), "missing")

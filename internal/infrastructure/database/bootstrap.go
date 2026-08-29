@@ -32,6 +32,12 @@ func Bootstrap(ctx context.Context, db *sql.DB) error {
 	if err := migrateExecutionMetrics(ctx, db); err != nil {
 		return err
 	}
+	if err := migrateTransferSettings(ctx, db); err != nil {
+		return err
+	}
+	if err := migrateWorkflowDataDependencies(ctx, db); err != nil {
+		return err
+	}
 	if err := Validate(ctx, db); err != nil {
 		return fmt.Errorf("%w; remove the existing database file and recreate it: %v", ErrIncompatibleSchema, err)
 	}
@@ -43,6 +49,8 @@ func Bootstrap(ctx context.Context, db *sql.DB) error {
 // than masking a damaged or manually altered database.
 const legacySchemaBeforeUserPreferences = "e69b7b1e006cddda2f49939e41e5b2c84b7fddb61317a38216258e28b55ef250"
 const schemaBeforeExecutionMetrics = "9bf9465dbc586d92d41480a45fa5d680653ddb6aba0402b132e992fc91c0b9ac"
+const schemaBeforeTransferSettings = "2412be2fc4530cf52b1e620dc2454ab97207980f6be17876b7ad4c357abe5223"
+const schemaBeforeWorkflowDataDependencies = "2a07d9d4c5230f9c5cf884142c092eb7bda7b726fdd03b55e7e3174251e80288"
 
 func migrateUserPreferences(ctx context.Context, db *sql.DB) error {
 	var checksum string
@@ -97,8 +105,59 @@ func migrateExecutionMetrics(ctx context.Context, db *sql.DB) error {
 			return fmt.Errorf("apply execution metrics migration: %w", err)
 		}
 	}
-	if _, err := tx.ExecContext(ctx, `UPDATE schema_metadata SET checksum=?, applied_at=?`, schemaChecksum(), time.Now().UTC()); err != nil {
+	if _, err := tx.ExecContext(ctx, `UPDATE schema_metadata SET checksum=?, applied_at=?`, schemaBeforeTransferSettings, time.Now().UTC()); err != nil {
 		return fmt.Errorf("record execution metrics migration: %w", err)
+	}
+	return tx.Commit()
+}
+
+func migrateTransferSettings(ctx context.Context, db *sql.DB) error {
+	var checksum string
+	if err := db.QueryRowContext(ctx, `SELECT checksum FROM schema_metadata LIMIT 1`).Scan(&checksum); err != nil || checksum == schemaChecksum() {
+		return nil
+	}
+	if checksum != schemaBeforeTransferSettings {
+		return nil
+	}
+	tx, err := db.BeginTx(ctx, nil)
+	if err != nil {
+		return fmt.Errorf("begin transfer settings migration: %w", err)
+	}
+	defer tx.Rollback()
+	if _, err := tx.ExecContext(ctx, `ALTER TABLE system_instance ADD COLUMN transfer_buffer_bytes INTEGER NOT NULL DEFAULT 8388608`); err != nil {
+		return fmt.Errorf("add transfer buffer setting: %w", err)
+	}
+	if _, err := tx.ExecContext(ctx, `UPDATE schema_metadata SET checksum=?, applied_at=?`, schemaBeforeWorkflowDataDependencies, time.Now().UTC()); err != nil {
+		return fmt.Errorf("record transfer settings migration: %w", err)
+	}
+	return tx.Commit()
+}
+
+func migrateWorkflowDataDependencies(ctx context.Context, db *sql.DB) error {
+	var checksum string
+	if err := db.QueryRowContext(ctx, `SELECT checksum FROM schema_metadata LIMIT 1`).Scan(&checksum); err != nil || checksum == schemaChecksum() {
+		return nil
+	}
+	if checksum != schemaBeforeWorkflowDataDependencies {
+		return nil
+	}
+	tx, err := db.BeginTx(ctx, nil)
+	if err != nil {
+		return fmt.Errorf("begin workflow data dependencies migration: %w", err)
+	}
+	defer tx.Rollback()
+	if _, err := tx.ExecContext(ctx, `CREATE TABLE workflow_data_dependencies (
+		producer_activity_id TEXT NOT NULL REFERENCES activity_definitions(id),
+		consumer_activity_id TEXT NOT NULL REFERENCES activity_definitions(id),
+		logical_name TEXT NOT NULL,
+		size_bytes INTEGER NOT NULL CHECK(size_bytes > 0),
+		PRIMARY KEY(producer_activity_id, consumer_activity_id, logical_name),
+		CHECK(producer_activity_id <> consumer_activity_id)
+	)`); err != nil {
+		return fmt.Errorf("create workflow data dependencies table: %w", err)
+	}
+	if _, err := tx.ExecContext(ctx, `UPDATE schema_metadata SET checksum=?, applied_at=?`, schemaChecksum(), time.Now().UTC()); err != nil {
+		return fmt.Errorf("record workflow data dependencies migration: %w", err)
 	}
 	return tx.Commit()
 }

@@ -3,6 +3,7 @@ package execution
 import (
 	"context"
 	"fmt"
+	"net/url"
 	"strings"
 	"time"
 
@@ -40,6 +41,11 @@ func (s *Controller) Start(ctx context.Context, execution domain.ActivityExecuti
 				VariantID: executable.VariantID, Digest: executable.Digest, LocalPath: executable.DestinationPath,
 				EnvironmentID: executable.EnvironmentID, ResourceID: executable.ResourceID,
 				MaterializationID: executable.ID, MaterializationDone: executable.Committed(),
+			}
+		}
+		if workspace := execution.Preparation.Workspace; workspace != nil && execution.Activity.Command.WorkingDirectory == "" {
+			if destination, parseErr := url.Parse(workspace.Destination.URI); parseErr == nil && destination.Path != "" {
+				execution.Activity.Command.WorkingDirectory = destination.Path
 			}
 		}
 	}
@@ -116,6 +122,12 @@ func (s *Controller) Inspect(ctx context.Context, handleID string, mode domain.E
 				updated.Metadata = make(map[string]any)
 			}
 			updated.Metadata["artifactCatalogError"] = catalogErr.Error()
+			if updated.Status == domain.HandleCompleted {
+				updated.Status = domain.HandleFailed
+				updated.FinishedAt = float64(time.Now().UnixNano()) / float64(time.Second)
+				updated.Failure = "catalog activity outputs: " + catalogErr.Error()
+				updated.Log = appendLog(updated.Log, "error", updated.Failure)
+			}
 		}
 	}
 	if err := s.handles.Save(ctx, updated); err != nil {

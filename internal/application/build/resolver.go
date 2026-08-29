@@ -18,6 +18,42 @@ type OutputResolver struct {
 	}
 }
 
+type CatalogOutput interface {
+	FindCatalogOutput(context.Context, string, string, string) (*domain.ArtifactVariant, *domain.ArtifactLocation, error)
+}
+
+type CatalogOCIReference interface {
+	FindCatalogOCIReference(context.Context, string, string, string) (string, error)
+}
+
+func OCIReferenceForCatalog(ctx context.Context, catalog CatalogOCIReference, artifactID, version, architecture string) (string, error) {
+	if catalog == nil {
+		return "", fmt.Errorf("artifact catalog OCI resolver is unavailable")
+	}
+	reference, err := catalog.FindCatalogOCIReference(ctx, artifactID, version, normalizedArchitecture(architecture))
+	if err != nil {
+		return "", err
+	}
+	if reference == "" {
+		return "", fmt.Errorf("catalog artifact %q version %q has no OCI source for Kubernetes", artifactID, version)
+	}
+	return reference, nil
+}
+
+func PreparationForCatalog(ctx context.Context, catalog CatalogOutput, artifactID, version, activityID string, resource domain.Resource, destination string) (domain.PreparationRequirement, error) {
+	if catalog == nil {
+		return domain.PreparationRequirement{}, fmt.Errorf("artifact catalog is unavailable")
+	}
+	variant, location, err := catalog.FindCatalogOutput(ctx, artifactID, version, normalizedArchitecture(resource.Architecture))
+	if err != nil {
+		return domain.PreparationRequirement{}, err
+	}
+	if variant == nil || location == nil {
+		return domain.PreparationRequirement{}, fmt.Errorf("catalog artifact %q version %q has no available variant for %q", artifactID, version, normalizedArchitecture(resource.Architecture))
+	}
+	return preparationForOutput(variant, location, activityID, resource, destination), nil
+}
+
 func (r OutputResolver) Preparation(ctx context.Context, buildID, activityID string, resource domain.Resource, destination string) (domain.PreparationRequirement, error) {
 	if r.Catalog == nil {
 		return domain.PreparationRequirement{}, fmt.Errorf("build output catalog is unavailable")

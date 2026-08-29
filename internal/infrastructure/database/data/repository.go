@@ -52,7 +52,7 @@ func (r *Repository) CatalogArtifacts(ctx context.Context, handle domain.Activit
 		id, environment_version_id, name, type, endpoint, shared, configuration, metadata
 	) VALUES (?, ?, ?, ?, ?, ?, '{}', '{"managedBy":"akoflow"}')
 	ON CONFLICT(id) DO NOTHING`, storageID, environmentVersionID,
-		"workspace-"+handle.ResourceID, storageType, handle.Artifacts.Root,
+		"workspace-"+handle.ResourceID+"-"+string(storageType), storageType, handle.Artifacts.Root,
 		storageType == domain.StoragePVC || storageType == domain.StorageNFS); err != nil {
 		return fmt.Errorf("register workspace storage: %w", err)
 	}
@@ -423,6 +423,46 @@ func (r *Repository) FindBuildOutput(ctx context.Context, buildID string) (*doma
 		return nil, nil, err
 	}
 	return &variant, &location, nil
+}
+
+func (r *Repository) FindCatalogOutput(ctx context.Context, artifactID, version, architecture string) (*domain.ArtifactVariant, *domain.ArtifactLocation, error) {
+	const query = `SELECT v.id,av.artifact_id,v.digest,v.format,v.architecture,v.size_bytes,
+		l.id,l.variant_id,l.scope,l.scope_id,l.endpoint_id,l.uri,l.digest,l.available
+		FROM artifact_versions av
+		JOIN artifact_variants v ON v.artifact_version_id=av.id
+		JOIN artifact_locations l ON l.variant_id=v.id
+		WHERE av.artifact_id=? AND (?='' OR av.version=?) AND l.available=1
+		AND (?='' OR v.architecture='' OR v.architecture=?)
+		ORDER BY CASE WHEN v.architecture=? THEN 0 ELSE 1 END,
+			CASE WHEN v.format='sif' THEN 0 ELSE 1 END, av.version DESC LIMIT 1`
+	var variant domain.ArtifactVariant
+	var location domain.ArtifactLocation
+	err := r.db.QueryRowContext(ctx, query, artifactID, version, version, architecture, architecture, architecture).Scan(
+		&variant.ID, &variant.ArtifactID, &variant.Digest, &variant.Format, &variant.Architecture, &variant.SizeBytes,
+		&location.ID, &location.VariantID, &location.Scope, &location.ScopeID, &location.EndpointID, &location.URI, &location.Digest, &location.Available,
+	)
+	if err == sql.ErrNoRows {
+		return nil, nil, nil
+	}
+	if err != nil {
+		return nil, nil, err
+	}
+	return &variant, &location, nil
+}
+
+func (r *Repository) FindCatalogOCIReference(ctx context.Context, artifactID, version, architecture string) (string, error) {
+	const query = `SELECT b.recipe_path FROM artifact_versions av
+		JOIN artifact_builds b ON b.artifact_version_id=av.id
+		JOIN build_runs r ON r.artifact_build_id=b.id AND r.status='completed'
+		WHERE av.artifact_id=? AND (?='' OR av.version=?) AND b.source_type='docker-image'
+		AND (?='' OR b.target_architecture='' OR b.target_architecture=?)
+		ORDER BY CASE WHEN b.target_architecture=? THEN 0 ELSE 1 END, r.finished_at DESC LIMIT 1`
+	var reference string
+	err := r.db.QueryRowContext(ctx, query, artifactID, version, version, architecture, architecture, architecture).Scan(&reference)
+	if err == sql.ErrNoRows {
+		return "", nil
+	}
+	return reference, err
 }
 
 // FindDockerBuildOutput locates the latest published SIF for an OCI image.

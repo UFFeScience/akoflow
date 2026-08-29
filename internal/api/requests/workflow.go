@@ -44,6 +44,7 @@ func FromDomain(definition domain.WorkflowDefinition) Workflow {
 			CPULimit:    strconv.FormatFloat(activity.Resources.CPU, 'f', -1, 64),
 			MemoryLimit: strconv.FormatInt(activity.Resources.MemoryBytes, 10),
 			DependsOn:   predecessors,
+			Simulation:  activity.Simulation,
 		}
 		if metadata != nil {
 			item.Runtime, _ = metadata["runtime"].(string)
@@ -52,6 +53,14 @@ func FromDomain(definition domain.WorkflowDefinition) Workflow {
 			item.MountPath, _ = metadata["mountPath"].(string)
 		}
 		request.Spec.Activities = append(request.Spec.Activities, item)
+	}
+	for _, dependency := range definition.Version.DataDependencies {
+		request.Spec.DataDependencies = append(request.Spec.DataDependencies, WorkflowDataDependency{
+			ProducerActivity: activityNames[dependency.ProducerActivityID],
+			ConsumerActivity: activityNames[dependency.ConsumerActivityID],
+			LogicalName:      dependency.LogicalName,
+			SizeBytes:        dependency.SizeBytes,
+		})
 	}
 	return request
 }
@@ -71,13 +80,21 @@ func (request Workflow) YAML() ([]byte, error) {
 }
 
 type WorkflowSpec struct {
-	Namespace        string             `json:"namespace"`
-	Image            string             `json:"image,omitempty"`
-	StorageClassName string             `json:"storageClassName,omitempty"`
-	StorageSize      string             `json:"storageSize,omitempty"`
-	StoragePolicy    StoragePolicy      `json:"storagePolicy,omitempty"`
-	MountPath        string             `json:"mountPath,omitempty"`
-	Activities       []WorkflowActivity `json:"activities"`
+	Namespace        string                   `json:"namespace"`
+	Image            string                   `json:"image,omitempty"`
+	StorageClassName string                   `json:"storageClassName,omitempty"`
+	StorageSize      string                   `json:"storageSize,omitempty"`
+	StoragePolicy    StoragePolicy            `json:"storagePolicy,omitempty"`
+	MountPath        string                   `json:"mountPath,omitempty"`
+	Activities       []WorkflowActivity       `json:"activities"`
+	DataDependencies []WorkflowDataDependency `json:"dataDependencies,omitempty"`
+}
+
+type WorkflowDataDependency struct {
+	ProducerActivity string `json:"producerActivity"`
+	ConsumerActivity string `json:"consumerActivity"`
+	LogicalName      string `json:"logicalName"`
+	SizeBytes        int64  `json:"sizeBytes"`
 }
 
 type StoragePolicy struct {
@@ -85,17 +102,18 @@ type StoragePolicy struct {
 }
 
 type WorkflowActivity struct {
-	Name             string                 `json:"name"`
-	Command          domain.ActivityCommand `json:"command"`
-	Image            string                 `json:"image,omitempty"`
-	Runtime          string                 `json:"runtime,omitempty"`
-	Run              string                 `json:"run,omitempty"`
-	MemoryLimit      string                 `json:"memoryLimit,omitempty"`
-	CPULimit         string                 `json:"cpuLimit,omitempty"`
-	DependsOn        []string               `json:"dependsOn,omitempty"`
-	ResourceSelector string                 `json:"resourceSelector,omitempty"`
-	KeepDisk         bool                   `json:"keepDisk,omitempty"`
-	MountPath        string                 `json:"mountPath,omitempty"`
+	Name             string                     `json:"name"`
+	Command          domain.ActivityCommand     `json:"command"`
+	Image            string                     `json:"image,omitempty"`
+	Runtime          string                     `json:"runtime,omitempty"`
+	Run              string                     `json:"run,omitempty"`
+	MemoryLimit      string                     `json:"memoryLimit,omitempty"`
+	CPULimit         string                     `json:"cpuLimit,omitempty"`
+	DependsOn        []string                   `json:"dependsOn,omitempty"`
+	ResourceSelector string                     `json:"resourceSelector,omitempty"`
+	KeepDisk         bool                       `json:"keepDisk,omitempty"`
+	MountPath        string                     `json:"mountPath,omitempty"`
+	Simulation       *domain.ActivitySimulation `json:"simulation,omitempty"`
 }
 
 func (request Workflow) Domain() (domain.WorkflowDefinition, error) {
@@ -119,10 +137,10 @@ func (request Workflow) Domain() (domain.WorkflowDefinition, error) {
 		if _, exists := names[value.Name]; exists {
 			return domain.WorkflowDefinition{}, fmt.Errorf("duplicate activity %q", value.Name)
 		}
-		names[value.Name] = id
+		names[value.Name] = workflowID + "-" + id
 	}
 	for index, value := range request.Spec.Activities {
-		activity, err := activityDomain(value, request.Spec.Image, versionID, typeID, index)
+		activity, err := activityDomain(value, names[value.Name], request.Spec.Image, versionID, typeID, index)
 		if err != nil {
 			return domain.WorkflowDefinition{}, err
 		}
@@ -137,10 +155,24 @@ func (request Workflow) Domain() (domain.WorkflowDefinition, error) {
 			})
 		}
 	}
+	for _, value := range request.Spec.DataDependencies {
+		producerID, producerExists := names[value.ProducerActivity]
+		consumerID, consumerExists := names[value.ConsumerActivity]
+		if !producerExists || !consumerExists {
+			return domain.WorkflowDefinition{}, fmt.Errorf("data dependency %q references an unknown activity", value.LogicalName)
+		}
+		if value.LogicalName == "" || value.SizeBytes <= 0 {
+			return domain.WorkflowDefinition{}, fmt.Errorf("data dependency between %q and %q requires logicalName and positive sizeBytes", value.ProducerActivity, value.ConsumerActivity)
+		}
+		definition.Version.DataDependencies = append(definition.Version.DataDependencies, domain.ActivityDataDependency{
+			ProducerActivityID: producerID, ConsumerActivityID: consumerID,
+			LogicalName: value.LogicalName, SizeBytes: value.SizeBytes,
+		})
+	}
 	return definition, nil
 }
 
-func activityDomain(value WorkflowActivity, defaultImage, versionID, typeID string, index int) (domain.Activity, error) {
+func activityDomain(value WorkflowActivity, activityID, defaultImage, versionID, typeID string, index int) (domain.Activity, error) {
 	cpu, err := cpuValue(value.CPULimit)
 	if err != nil {
 		return domain.Activity{}, fmt.Errorf("activity %q cpuLimit: %w", value.Name, err)
@@ -154,7 +186,8 @@ func activityDomain(value WorkflowActivity, defaultImage, versionID, typeID stri
 		command.Entrypoint = "sh"
 		command.Arguments = []string{"-c", value.Run}
 	}
-	if command.Executable == nil {
+	simulationActivity := value.Simulation != nil
+	if command.Executable == nil && !simulationActivity {
 		image := value.Image
 		if image == "" {
 			image = defaultImage
@@ -166,18 +199,25 @@ func activityDomain(value WorkflowActivity, defaultImage, versionID, typeID stri
 			}
 		}
 	}
-	if command.Entrypoint == "" || command.Executable == nil {
+	if !simulationActivity && (command.Entrypoint == "" || command.Executable == nil) {
 		return domain.Activity{}, fmt.Errorf("activity %q command.entrypoint and command.executable are required", value.Name)
 	}
-	if err := command.Executable.Validate(); err != nil {
-		return domain.Activity{}, fmt.Errorf("activity %q: %w", value.Name, err)
+	if command.Executable != nil {
+		if err := command.Executable.Validate(); err != nil {
+			return domain.Activity{}, fmt.Errorf("activity %q: %w", value.Name, err)
+		}
+	}
+	capabilities := []domain.ActivityCapability{domain.ActivityCapabilityReal}
+	if simulationActivity {
+		capabilities = []domain.ActivityCapability{domain.ActivityCapabilitySimulation}
 	}
 	return domain.Activity{
-		ID: identifier(value.Name), WorkflowVersionID: versionID, ActivityTypeID: typeID,
+		ID: activityID, WorkflowVersionID: versionID, ActivityTypeID: typeID,
 		ExternalID: identifier(value.Name), Name: value.Name, Kind: domain.ActivityKindTask,
-		Capabilities: []domain.ActivityCapability{domain.ActivityCapabilityReal},
+		Capabilities: capabilities,
 		Command:      command,
 		Resources:    domain.ActivityResources{CPU: cpu, MemoryBytes: memory},
+		Simulation:   value.Simulation,
 		Policy:       domain.ActivityPolicy{TimeoutSeconds: 3600, MaxAttempts: 1}, Priority: len(value.DependsOn) + index,
 		Metadata: map[string]any{"runtime": value.Runtime, "resourceSelector": value.ResourceSelector,
 			"keepDisk": value.KeepDisk, "mountPath": value.MountPath},

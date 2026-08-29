@@ -92,12 +92,21 @@ type ResolvedExecutable struct {
 
 func (c ActivityCommand) EffectiveExecutable() *ExecutableReference {
 	if c.Executable != nil {
+		if c.Executable.empty() {
+			return nil
+		}
 		return c.Executable
 	}
 	if strings.TrimSpace(c.Image) == "" {
 		return nil
 	}
 	return &ExecutableReference{Source: ExecutableSource{Type: ExecutableSourceOCI, Reference: c.Image}, Delivery: ExecutableDelivery{Strategy: DeliveryAuto}}
+}
+
+func (e ExecutableReference) empty() bool {
+	return e.Source.Type == "" && strings.TrimSpace(e.Source.Reference) == "" &&
+		strings.TrimSpace(e.Source.Path) == "" && strings.TrimSpace(e.Source.URI) == "" &&
+		e.Source.ArtifactRef == nil && strings.TrimSpace(e.Source.ArtifactBuildRef) == ""
 }
 
 func (e ExecutableReference) Validate() error {

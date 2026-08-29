@@ -49,7 +49,7 @@ func newApplication(ctx context.Context, settings config.Settings, log *logger.L
 	if err != nil {
 		return fail(err)
 	}
-	loop, err := buildEventLoop(storage.events, storage.executions, storage.data, activities, simulator, settings.ArtifactStoreRoot)
+	loop, err := buildEventLoop(storage.events, storage.executions, storage.data, storage.instance, storage.environments, activities, simulator, settings.ArtifactStoreRoot)
 	if err != nil {
 		return fail(err)
 	}

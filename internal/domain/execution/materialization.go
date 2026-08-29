@@ -103,6 +103,7 @@ type ConnectorBinding struct {
 type BlobDescriptor struct {
 	Digest    string `json:"digest"`
 	SizeBytes int64  `json:"sizeBytes"`
+	Path      string `json:"path,omitempty"`
 }
 type TransferChunk struct {
 	Index     int    `json:"index"`
@@ -112,25 +113,26 @@ type TransferChunk struct {
 	Received  bool   `json:"received,omitempty"`
 }
 type DataTransferPlan struct {
-	ID          string           `json:"id"`
-	Strategy    TransferStrategy `json:"strategy,omitempty"`
-	Source      TransferLocation `json:"source"`
-	Destination TransferLocation `json:"destination"`
-	Blobs       []BlobDescriptor `json:"blobs"`
-	Chunks      []TransferChunk  `json:"chunks,omitempty"`
-	ResumeFrom  []int            `json:"resumeFrom,omitempty"`
+	ID                 string           `json:"id"`
+	ProducerActivityID string           `json:"producerActivityId,omitempty"`
+	Strategy           TransferStrategy `json:"strategy,omitempty"`
+	Source             TransferLocation `json:"source"`
+	Destination        TransferLocation `json:"destination"`
+	Blobs              []BlobDescriptor `json:"blobs"`
+	Chunks             []TransferChunk  `json:"chunks,omitempty"`
+	ResumeFrom         []int            `json:"resumeFrom,omitempty"`
 }
 type DataTransferRun struct {
-	ID              string           `json:"id"`
-	PlanID          string           `json:"planId"`
-	Strategy        TransferStrategy `json:"strategy"`
-	Status          TransferStatus   `json:"status"`
-	VerifiedBlobs   []string         `json:"verifiedBlobs,omitempty"`
-	CompletedChunks []int            `json:"completedChunks,omitempty"`
-	StartedAt       float64          `json:"startedAt,omitempty"`
-	FinishedAt      float64          `json:"finishedAt,omitempty"`
-	TransferredBytes int64           `json:"transferredBytes,omitempty"`
-	Error           string           `json:"error,omitempty"`
+	ID               string           `json:"id"`
+	PlanID           string           `json:"planId"`
+	Strategy         TransferStrategy `json:"strategy"`
+	Status           TransferStatus   `json:"status"`
+	VerifiedBlobs    []string         `json:"verifiedBlobs,omitempty"`
+	CompletedChunks  []int            `json:"completedChunks,omitempty"`
+	StartedAt        float64          `json:"startedAt,omitempty"`
+	FinishedAt       float64          `json:"finishedAt,omitempty"`
+	TransferredBytes int64            `json:"transferredBytes,omitempty"`
+	Error            string           `json:"error,omitempty"`
 }
 
 // ArtifactBuild is an immutable build specification. Context and recipe are
@@ -192,10 +194,11 @@ type WorkspaceMaterialization struct {
 }
 
 type PreparationRequirement struct {
-	Artifact          *ArtifactMaterialization  `json:"artifact,omitempty"`
-	ArtifactTransfer  *DataTransferPlan         `json:"artifactTransfer,omitempty"`
-	Workspace         *WorkspaceMaterialization `json:"workspace,omitempty"`
-	WorkspaceTransfer *DataTransferPlan         `json:"workspaceTransfer,omitempty"`
+	Artifact           *ArtifactMaterialization  `json:"artifact,omitempty"`
+	ArtifactTransfer   *DataTransferPlan         `json:"artifactTransfer,omitempty"`
+	Workspace          *WorkspaceMaterialization `json:"workspace,omitempty"`
+	WorkspaceTransfer  *DataTransferPlan         `json:"workspaceTransfer,omitempty"`
+	WorkspaceTransfers []DataTransferPlan        `json:"workspaceTransfers,omitempty"`
 }
 
 // ReconcileWorkspace returns the content-addressed blobs needed to construct

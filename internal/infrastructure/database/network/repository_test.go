@@ -39,6 +39,12 @@ func TestRepositoryPersistsFederatedTopology(t *testing.T) {
 	require.Equal(t, "hybrid", stored.ExecutionScopeID)
 	require.Equal(t, "cloud-vm", stored.Links[0].TargetResourceID)
 	require.Equal(t, "internet", stored.Links[0].Metadata["carrier"])
+	values, err := repository.List(context.Background())
+	require.NoError(t, err)
+	require.Len(t, values, 1)
+	missing, err := repository.Find(context.Background(), "missing")
+	require.NoError(t, err)
+	require.Nil(t, missing)
 }
 
 func TestRepositoryPersistsMultiEnvironmentExecutionScope(t *testing.T) {
@@ -67,4 +73,40 @@ func TestRepositoryPersistsMultiEnvironmentExecutionScope(t *testing.T) {
 	scopes, err := repository.ListScopes(context.Background())
 	require.NoError(t, err)
 	require.Len(t, scopes, 1)
+	_, err = db.Exec(`
+		INSERT INTO workflow_definitions(id,external_id,name) VALUES('workflow','workflow','Workflow');
+		INSERT INTO workflow_versions(id,workflow_id,version,definition_hash) VALUES('workflow-v1','workflow',1,'hash');
+		INSERT INTO schedule_plans(id,workflow_version_id,execution_scope_id,source,algorithm) VALUES('plan','workflow-v1','hybrid','plugin','test');
+	`)
+	require.NoError(t, err)
+	require.ErrorContains(t, repository.DeleteScope(context.Background(), scope.ID), "used by a schedule plan")
+	_, err = db.Exec(`DELETE FROM schedule_plans WHERE id='plan'`)
+	require.NoError(t, err)
+	require.NoError(t, repository.DeleteScope(context.Background(), scope.ID))
+	missing, err := repository.FindScope(context.Background(), scope.ID)
+	require.NoError(t, err)
+	require.Nil(t, missing)
+	require.ErrorIs(t, repository.DeleteScope(context.Background(), scope.ID), sql.ErrNoRows)
+}
+
+func TestTopologyAndScopeValidation(t *testing.T) {
+	invalidTopologies := []domain.NetworkTopology{
+		{},
+		{ID: "topology", Name: "Topology", Version: 1},
+		{ID: "topology", Name: "Topology", Version: 1, ExecutionScopeID: "scope", Links: []domain.NetworkLink{{}}},
+		{ID: "topology", Name: "Topology", Version: 1, ExecutionScopeID: "scope", Links: []domain.NetworkLink{{ID: "link", SourceResourceID: "same", TargetResourceID: "same", BandwidthBitsPerSecond: 1}}},
+		{ID: "topology", Name: "Topology", Version: 1, ExecutionScopeID: "scope", Links: []domain.NetworkLink{{ID: "link", SourceResourceID: "a", TargetResourceID: "b", BandwidthBitsPerSecond: 1, LatencySeconds: -1}}},
+		{ID: "topology", Name: "Topology", Version: 1, ExecutionScopeID: "scope", Links: []domain.NetworkLink{{ID: "link", SourceResourceID: "a", TargetResourceID: "b", BandwidthBitsPerSecond: 1}, {ID: "link", SourceResourceID: "b", TargetResourceID: "a", BandwidthBitsPerSecond: 1}}},
+	}
+	for _, topology := range invalidTopologies {
+		require.Error(t, validate(topology))
+	}
+	db, err := sql.Open("sqlite3", ":memory:")
+	require.NoError(t, err)
+	db.SetMaxOpenConns(1)
+	defer db.Close()
+	require.NoError(t, database.Bootstrap(context.Background(), db))
+	repository := New(db)
+	require.Error(t, repository.Create(context.Background(), invalidTopologies[0]))
+	require.Error(t, repository.CreateScope(context.Background(), domain.ExecutionScope{}))
 }

@@ -27,6 +27,9 @@ func setupRepository(t *testing.T) *Repository {
 
 func TestEnvironmentDefinitionCreate(t *testing.T) {
 	repository := setupRepository(t)
+	if _, err := repository.db.Exec(`INSERT INTO activity_types(id, name) VALUES ('activity-type', 'task')`); err != nil {
+		t.Fatal(err)
+	}
 	definition := Definition{
 		Environment: domain.Environment{ID: "env", Name: "hybrid", Description: "test"},
 		Version:     domain.EnvironmentVersion{ID: "v1", Version: 1, Status: domain.EnvironmentVersionPublished, NetworkModel: "real", InterferenceModel: "none", CostModel: "aws", ConfigurationHash: "hash"},
@@ -37,7 +40,7 @@ func TestEnvironmentDefinitionCreate(t *testing.T) {
 				RuntimeID: "k8s", Default: true, HostPath: "/shared/akoflow"}}}},
 		Resources: []domain.Resource{
 			{ID: "cluster", Type: domain.ResourceCluster, Name: "cluster", ProviderID: "cluster"},
-			{ID: "r1", Type: domain.ResourceCloudVM, Name: "vm", ProviderID: "provider", CPUCores: 2, CPUCapacity: 2, MemoryBytes: 1024, Schedulable: true, Metadata: map[string]any{"tier": "cloud"}},
+			{ID: "r1", Type: domain.ResourceCloudVM, Name: "vm", ProviderID: "provider", ExecutionTarget: domain.ExecutionTargetDirect, CPUCores: 2, CPUCapacity: 2, MemoryBytes: 1024, Schedulable: true, Metadata: map[string]any{"tier": "cloud"}},
 		},
 		RuntimeBindings: []domain.ResourceRuntimeBinding{
 			{ResourceID: "cluster", RuntimeID: "k8s", Enabled: true},
@@ -46,14 +49,24 @@ func TestEnvironmentDefinitionCreate(t *testing.T) {
 		Relations: []domain.ResourceRelation{{
 			SourceResourceID: "cluster", TargetResourceID: "r1", Type: domain.ResourceRelationContains,
 		}},
+		Profiles: []domain.ActivityResourceProfile{{
+			ID: "profile", ActivityTypeID: "activity-type", ResourceID: "r1", RuntimeSeconds: 5,
+			RuntimeStdDevSeconds: .5, CPUUtilization: .8, PeakMemoryBytes: 512,
+			DiskReadBytes: 10, DiskWriteBytes: 20, EnergyJoules: 3, Source: "measured",
+			SampleSize: 4, ModelVersion: "1", Metadata: map[string]any{"host": "node"},
+		}},
 		Connections: []domain.EnvironmentConnection{{ID: "c1", Name: "cluster", Type: domain.ConnectionKubernetes, Endpoint: "https://cluster.example", Configuration: map[string]any{"namespace": "science", "bearerToken": "saved-token", "insecureSkipTlsVerify": true}}},
 	}
 	if err := repository.Create(context.Background(), definition); err != nil {
 		t.Fatal(err)
 	}
 	found, err := repository.Find(context.Background(), "env")
-	if err != nil || found == nil || len(found.Relations) != 1 {
+	if err != nil || found == nil || len(found.Relations) != 1 || len(found.Profiles) != 1 || found.Profiles[0].Metadata["host"] != "node" {
 		t.Fatalf("resource relations were not loaded: %+v %v", found, err)
+	}
+	definitions, err := repository.List(context.Background())
+	if err != nil || len(definitions) != 1 || definitions[0].Environment.ID != "env" {
+		t.Fatalf("definitions=%+v err=%v", definitions, err)
 	}
 	if err := repository.Create(context.Background(), definition); err == nil {
 		t.Fatal("duplicate environment must fail")
@@ -61,6 +74,14 @@ func TestEnvironmentDefinitionCreate(t *testing.T) {
 	connections, err := repository.ListConnections(context.Background(), "env")
 	if err != nil || len(connections) != 1 || connections[0].Configuration["bearerToken"] != "saved-token" || connections[0].Configuration["namespace"] != "science" {
 		t.Fatalf("connections=%+v err=%v", connections, err)
+	}
+	allConnections, err := repository.ListAllConnections(context.Background())
+	if err != nil || len(allConnections) != 1 || allConnections[0].ID != "c1" {
+		t.Fatalf("all connections=%+v err=%v", allConnections, err)
+	}
+	missingConnection, err := repository.FindConnection(context.Background(), "missing")
+	if err != nil || missingConnection != nil {
+		t.Fatalf("missing connection=%+v err=%v", missingConnection, err)
 	}
 	connection := connections[0]
 	connection.Endpoint = "new-login.example"
@@ -97,6 +118,17 @@ func TestEnvironmentDefinitionCreate(t *testing.T) {
 	storage, err := repository.FindDefaultRuntimeStorage(context.Background(), "v1", "k8s")
 	if err != nil || storage.ID != "shared" || storage.RuntimeBindings[0].ContainerPath != "/akoflow/data" {
 		t.Fatalf("storage=%+v err=%v", storage, err)
+	}
+}
+
+func TestFindEnvironmentWithoutVersion(t *testing.T) {
+	repository := setupRepository(t)
+	if _, err := repository.db.Exec(`INSERT INTO environments(id, name, description, status) VALUES ('empty', 'Empty', '', 'draft')`); err != nil {
+		t.Fatal(err)
+	}
+	definition, err := repository.Find(context.Background(), "empty")
+	if err != nil || definition == nil || definition.Version.ID != "" || len(definition.Resources) != 0 {
+		t.Fatalf("definition=%+v err=%v", definition, err)
 	}
 }
 
@@ -171,6 +203,9 @@ func TestDeleteEnvironmentRemovesDiscoveredInventory(t *testing.T) {
 
 func TestReplaceEnvironmentUsesCompleteDefinition(t *testing.T) {
 	repository := setupRepository(t)
+	if err := repository.Replace(context.Background(), Definition{Environment: domain.Environment{ID: "missing"}}); err != sql.ErrNoRows {
+		t.Fatalf("missing replacement error=%v", err)
+	}
 	initial := Definition{
 		Environment: domain.Environment{ID: "editable", Name: "Before"},
 		Version:     domain.EnvironmentVersion{ID: "editable-v1", Version: 1, Status: domain.EnvironmentVersionDraft, NetworkModel: "real", InterferenceModel: "none", CostModel: "free"},
@@ -190,5 +225,89 @@ func TestReplaceEnvironmentUsesCompleteDefinition(t *testing.T) {
 	found, err := repository.Find(context.Background(), "editable")
 	if err != nil || found == nil || found.Environment.Name != "After" || found.Resources[0].Name != "After machine" || len(found.Connections) != 1 {
 		t.Fatalf("replacement=%+v error=%v", found, err)
+	}
+}
+
+func TestCreateRejectsUnserializableNestedConfiguration(t *testing.T) {
+	invalid := make(chan int)
+	tests := []struct {
+		name   string
+		mutate func(*Definition)
+	}{
+		{"connection", func(d *Definition) {
+			d.Connections = []domain.EnvironmentConnection{{ID: "connection", Configuration: map[string]any{"invalid": invalid}}}
+		}},
+		{"runtime configuration", func(d *Definition) {
+			d.Runtimes = []domain.EnvironmentRuntime{{ID: "runtime", Configuration: map[string]any{"invalid": invalid}}}
+		}},
+		{"resource", func(d *Definition) {
+			d.Resources = []domain.Resource{{ID: "resource", Metadata: map[string]any{"invalid": invalid}}}
+		}},
+		{"runtime binding", func(d *Definition) {
+			d.RuntimeBindings = []domain.ResourceRuntimeBinding{{Configuration: map[string]any{"invalid": invalid}}}
+		}},
+		{"relation", func(d *Definition) {
+			d.Relations = []domain.ResourceRelation{{Metadata: map[string]any{"invalid": invalid}}}
+		}},
+		{"storage configuration", func(d *Definition) {
+			d.Storages = []domain.StorageResource{{ID: "storage", Configuration: map[string]any{"invalid": invalid}}}
+		}},
+		{"storage metadata", func(d *Definition) {
+			d.Storages = []domain.StorageResource{{ID: "storage", Metadata: map[string]any{"invalid": invalid}}}
+		}},
+		{"storage binding", func(d *Definition) {
+			d.Storages = []domain.StorageResource{{ID: "storage", RuntimeBindings: []domain.StorageRuntimeBinding{{Configuration: map[string]any{"invalid": invalid}}}}}
+		}},
+		{"profile", func(d *Definition) {
+			d.Profiles = []domain.ActivityResourceProfile{{ID: "profile", Metadata: map[string]any{"invalid": invalid}}}
+		}},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			repository := setupRepository(t)
+			definition := Definition{Environment: domain.Environment{ID: "env", Name: "test"}, Version: domain.EnvironmentVersion{ID: "version", Version: 1}}
+			test.mutate(&definition)
+			if err := repository.Create(context.Background(), definition); err == nil {
+				t.Fatal("serialization error expected")
+			}
+		})
+	}
+}
+
+func TestConnectionAndDiscoveryRejectUnserializableMetadata(t *testing.T) {
+	repository := setupRepository(t)
+	invalid := map[string]any{"invalid": make(chan int)}
+	if err := repository.UpsertConnection(context.Background(), domain.EnvironmentConnection{Configuration: invalid}); err == nil {
+		t.Fatal("connection serialization error expected")
+	}
+	if err := repository.SaveConnectionCheck(context.Background(), domain.ConnectionCheck{Metadata: invalid}); err == nil {
+		t.Fatal("check serialization error expected")
+	}
+	if err := repository.UpsertDiscoveredStorage(context.Background(), domain.StorageResource{Configuration: invalid}); err == nil {
+		t.Fatal("storage serialization error expected")
+	}
+	if _, err := repository.FindDefaultRuntimeStorage(context.Background(), "missing", "missing"); err != sql.ErrNoRows {
+		t.Fatalf("missing default storage error=%v", err)
+	}
+	checks, err := repository.ListConnectionChecks(context.Background(), "missing", 0)
+	if err != nil || len(checks) != 0 {
+		t.Fatalf("checks=%+v err=%v", checks, err)
+	}
+}
+
+func TestDeleteRejectsEnvironmentUsedByScope(t *testing.T) {
+	repository := setupRepository(t)
+	definition := Definition{Environment: domain.Environment{ID: "used", Name: "Used"}, Version: domain.EnvironmentVersion{ID: "used-v1", Version: 1}}
+	if err := repository.Create(context.Background(), definition); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := repository.db.Exec(`INSERT INTO execution_scopes(id,name) VALUES ('scope','Scope')`); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := repository.db.Exec(`INSERT INTO execution_scope_environments(execution_scope_id,environment_version_id) VALUES ('scope','used-v1')`); err != nil {
+		t.Fatal(err)
+	}
+	if err := repository.Delete(context.Background(), "used"); err == nil {
+		t.Fatal("environment used by a scope must not be deleted")
 	}
 }

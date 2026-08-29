@@ -123,7 +123,7 @@ func simulate(
 				resourceReadyAt = completed[previous].FinishedAt
 			}
 			start := max(dataReadyAt, resourceReadyAt)
-			runtimeSeconds := resolveRuntime(activity, resource, model.profiles)
+			runtimeSeconds := resolveRuntime(activity, assignment, resource, model.profiles)
 			overhead := resolveAssignmentOverhead(assignment, resource)
 			finish := start + runtimeSeconds + overhead
 			execution := domain.TaskExecution{
@@ -275,7 +275,7 @@ func allCompleted(ids []string, completed map[string]domain.TaskExecution) bool 
 	return true
 }
 
-func resolveRuntime(activity domain.Activity, resource domain.Resource, profiles map[string]domain.ActivityResourceProfile) float64 {
+func resolveRuntime(activity domain.Activity, assignment domain.PlanAssignment, resource domain.Resource, profiles map[string]domain.ActivityResourceProfile) float64 {
 	if base, ok := numberMetadata(activity.Metadata, "baseRuntimeSeconds"); ok && resource.ComputeSpeedup > 0 {
 		return base / resource.ComputeSpeedup
 	}
@@ -285,7 +285,10 @@ func resolveRuntime(activity domain.Activity, resource domain.Resource, profiles
 	if activity.Simulation != nil {
 		return activity.Simulation.DurationSeconds
 	}
-	return 0
+	// Manually authored plans freeze the expected duration in the assignment.
+	// This is the simulation model for executable-only workflows created in the
+	// desktop UI, which do not carry an ActivitySimulation definition.
+	return assignment.PredictedRuntimeSeconds
 }
 
 func numberMetadata(metadata map[string]any, key string) (float64, bool) {

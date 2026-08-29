@@ -57,7 +57,7 @@ func buildRunnerInput(request ports.ExecutionRequest, referenceFLOPS float64) ([
 		flops := activityFLOPS(activity)
 		overhead := resolveAssignmentOverhead(assignment, resource)
 		if flops <= 0 {
-			runtimeSeconds := resolveRuntime(activity, resource, model.profiles)
+			runtimeSeconds := resolveRuntime(activity, assignment, resource, model.profiles)
 			flops = runtimeSeconds * resourceFLOPS(resource, referenceFLOPS)
 		}
 		input.Tasks = append(input.Tasks, runnerTask{

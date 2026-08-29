@@ -84,6 +84,33 @@ func TestSimulationUsesAssignmentOverheadAndBillsResourceActiveWindowOnce(t *tes
 	require.InDelta(t, 6, trace.Executed.Cost, 1e-9)
 }
 
+func TestSimulationUsesPlannedDurationForExecutableOnlyWorkflow(t *testing.T) {
+	workflow := domain.WorkflowVersion{ID: "wf", Activities: []domain.Activity{
+		{ID: "created-in-desktop", ActivityTypeID: "type"},
+	}}
+	resource := domain.Resource{
+		ID: "simulated-host", EnvironmentVersionID: "env",
+		CPUCapacity: 1, MemoryBytes: 1, ComputeSpeedup: 1, Schedulable: true,
+	}
+	plan := domain.SchedulePlan{
+		ID: "plan", WorkflowVersionID: "wf", ExecutionScopeID: "scope",
+		Assignments: []domain.PlanAssignment{{
+			ID: "assignment", ActivityID: "created-in-desktop", ResourceID: "simulated-host",
+			PredictedRuntimeSeconds: 12.5,
+		}},
+	}
+	trace, err := NewSimulationExecutor().Execute(context.Background(), Request{
+		Run: domain.ExecutionRun{ID: "run", Mode: domain.ExecutionModeSimulation}, Plan: plan,
+		Workflow: workflow, Resources: []domain.Resource{resource},
+		ExecutionScope:  domain.ExecutionScope{ID: "scope", EnvironmentVersionIDs: []string{"env"}},
+		NetworkTopology: domain.NetworkTopology{ExecutionScopeID: "scope"},
+	})
+	require.NoError(t, err)
+	require.Len(t, trace.Tasks, 1)
+	require.InDelta(t, 12.5, trace.Tasks[0].RuntimeSeconds, 1e-9)
+	require.InDelta(t, 12.5, trace.Executed.MakespanSeconds, 1e-9)
+}
+
 func TestSimulationRejectsPlanThatDoesNotCoverWorkflow(t *testing.T) {
 	workflow := domain.WorkflowVersion{ID: "wf", Activities: []domain.Activity{{ID: "a"}}}
 	_, err := NewSimulationExecutor().Execute(context.Background(), Request{

@@ -4,6 +4,8 @@ import (
 	"context"
 	"net/http"
 	"net/http/httptest"
+	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 
@@ -34,5 +36,36 @@ func TestConnectionProberReportsMissingConnectionSettings(t *testing.T) {
 	health := NewConnectionProber("akoflow").Probe(context.Background(), domain.EnvironmentConnection{})
 	if health.Healthy || !strings.Contains(health.Message, "invalid") {
 		t.Fatalf("health=%+v", health)
+	}
+}
+
+func TestConnectionTokenSourcesAndErrors(t *testing.T) {
+	t.Setenv("KUBERNETES_TEST_TOKEN", "environment-token")
+	token, err := connectionToken(domain.EnvironmentConnection{CredentialRef: "env:KUBERNETES_TEST_TOKEN"})
+	if err != nil || token != "environment-token" {
+		t.Fatalf("token=%q err=%v", token, err)
+	}
+	for _, reference := range []string{"env:", "env:MISSING_KUBERNETES_TEST_TOKEN", "file:"} {
+		if _, err := connectionToken(domain.EnvironmentConnection{CredentialRef: reference}); err == nil {
+			t.Fatalf("invalid reference accepted: %q", reference)
+		}
+	}
+	file := filepath.Join(t.TempDir(), "token")
+	if err := os.WriteFile(file, []byte(" file-token\n"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	token, err = connectionToken(domain.EnvironmentConnection{CredentialRef: "file:" + file})
+	if err != nil || token != "file-token" {
+		t.Fatalf("token=%q err=%v", token, err)
+	}
+	if _, err := connectionToken(domain.EnvironmentConnection{CredentialRef: "file:" + file + ".missing"}); err == nil {
+		t.Fatal("missing token file must fail")
+	}
+	empty := filepath.Join(t.TempDir(), "empty")
+	if err := os.WriteFile(empty, nil, 0o600); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := connectionToken(domain.EnvironmentConnection{CredentialRef: "file:" + empty}); err == nil {
+		t.Fatal("empty token file must fail")
 	}
 }

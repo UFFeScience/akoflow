@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/base64"
 	"encoding/json"
+	"errors"
 	"os"
 	"os/exec"
 	"strings"
@@ -18,6 +19,8 @@ type apiFake struct {
 	getOutput  []byte
 	listOutput []byte
 	logsOutput []byte
+	deleteErr  map[string]error
+	deleted    []string
 }
 
 func (f *apiFake) Create(_ context.Context, _, resource string, body []byte) error {
@@ -76,7 +79,10 @@ func (f *apiFake) List(context.Context, string, string, string) ([]byte, error) 
 func (f *apiFake) Logs(context.Context, string, string, string) ([]byte, error) {
 	return f.logsOutput, nil
 }
-func (f *apiFake) Delete(context.Context, string, string, string) error { return nil }
+func (f *apiFake) Delete(_ context.Context, _, resource, name string) error {
+	f.deleted = append(f.deleted, resource+"/"+name)
+	return f.deleteErr[resource]
+}
 
 func TestAdapterCreatesJobAndServiceFromActivity(t *testing.T) {
 	api := &apiFake{}
@@ -261,5 +267,103 @@ func TestObservationFailureDoesNotChangeExecutionStatus(t *testing.T) {
 	handle, err := New(api, "default").Inspect(context.Background(), domain.ActivityHandle{ExternalID: "job"})
 	if err != nil || handle.Status != domain.HandleCompleted || handle.Metadata["artifactObservationError"] == nil {
 		t.Fatalf("handle=%+v err=%v", handle, err)
+	}
+}
+
+func TestAdapterPreparedWorkspaceClaimAndDependencies(t *testing.T) {
+	api := &apiFake{}
+	activity := domain.Activity{ID: "consumer", Command: domain.ActivityCommand{Image: "image:1"}, Metadata: map[string]any{"existing": true}}
+	preparation := &domain.PreparationGate{Workspace: &domain.WorkspaceMaterialization{
+		Status:      domain.MaterializationCommitted,
+		Destination: domain.TransferLocation{URI: "kubernetes:///workspace?claim=run-workspace&createClaim=true&claimBytes=1024"},
+	}}
+	workflow := domain.WorkflowVersion{DataDependencies: []domain.ActivityDataDependency{{ProducerActivityID: "producer", ConsumerActivityID: "consumer", LogicalName: "input data.csv"}}}
+	handle, err := New(api, "science").Start(context.Background(), domain.ActivityExecutionContext{
+		Run: domain.ExecutionRun{ID: "run"}, Activity: activity, Workflow: workflow,
+		Preparation: preparation, RuntimeID: "kubernetes",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if handle.Metadata["artifactObservationRoot"] != "/workspace" || api.created["persistentvolumeclaims"] == nil || api.created["jobs"] == nil {
+		t.Fatalf("handle=%+v created=%+v", handle, api.created)
+	}
+	var claim map[string]any
+	if err := json.Unmarshal(api.created["persistentvolumeclaims"], &claim); err != nil {
+		t.Fatal(err)
+	}
+	storage := claim["spec"].(map[string]any)["resources"].(map[string]any)["requests"].(map[string]any)["storage"]
+	if storage != "67108864" {
+		t.Fatalf("minimum claim size=%v", storage)
+	}
+	prepared := withPreparedWorkspace(activity, preparation)
+	spec := observedPodSpec(workflow, prepared, domain.Resource{}, "run")
+	container := spec["containers"].([]any)[0].(map[string]any)
+	environment := container["env"].([]map[string]string)
+	foundInput := false
+	for _, variable := range environment {
+		if variable["name"] == "AKOFLOW_INPUT_INPUT_DATA_CSV" && strings.Contains(variable["value"], "/producer/input data.csv") {
+			foundInput = true
+		}
+	}
+	if !foundInput {
+		t.Fatalf("environment=%+v", environment)
+	}
+}
+
+func TestPreparedWorkspaceValidation(t *testing.T) {
+	activity := domain.Activity{ID: "activity"}
+	if claim, name, err := preparedWorkspaceClaim(activity, nil, "default", "run"); err != nil || claim != nil || name != "" {
+		t.Fatalf("claim=%q name=%q err=%v", claim, name, err)
+	}
+	unchanged := withPreparedWorkspace(activity, &domain.PreparationGate{Workspace: &domain.WorkspaceMaterialization{Destination: domain.TransferLocation{URI: "file:///tmp"}}})
+	if unchanged.Metadata != nil {
+		t.Fatalf("activity changed=%+v", unchanged)
+	}
+	preparation := &domain.PreparationGate{Workspace: &domain.WorkspaceMaterialization{Destination: domain.TransferLocation{URI: "kubernetes:///workspace?createClaim=true"}}}
+	if _, _, err := preparedWorkspaceClaim(activity, preparation, "default", "run"); err == nil {
+		t.Fatal("claim name is required")
+	}
+}
+
+func TestAdapterModesStopAndStartValidation(t *testing.T) {
+	adapter := New(nil, "")
+	if len(adapter.Modes()) != 2 || adapter.namespace != "default" {
+		t.Fatalf("adapter=%+v modes=%+v", adapter, adapter.Modes())
+	}
+	if _, err := adapter.Start(context.Background(), domain.ActivityExecutionContext{}); err == nil {
+		t.Fatal("nil API must fail")
+	}
+	if _, err := New(&apiFake{}, "default").Start(context.Background(), domain.ActivityExecutionContext{Activity: domain.Activity{ID: "activity"}}); err == nil {
+		t.Fatal("missing image must fail")
+	}
+	api := &apiFake{deleteErr: map[string]error{"jobs": ErrNotFound}}
+	if err := New(api, "default").Stop(context.Background(), domain.ActivityHandle{ExternalID: "job"}); err != nil || len(api.deleted) != 2 {
+		t.Fatalf("deleted=%+v err=%v", api.deleted, err)
+	}
+	api.deleteErr = map[string]error{"jobs": errors.New("delete failed")}
+	if err := New(api, "default").Stop(context.Background(), domain.ActivityHandle{ExternalID: "job"}); err == nil {
+		t.Fatal("delete failure expected")
+	}
+}
+
+func TestValidateOwnershipVariants(t *testing.T) {
+	for _, test := range []struct {
+		name, resource, payload string
+		wantErr                 bool
+	}{
+		{"malformed", "jobs", `{`, true},
+		{"not managed", "jobs", `{}`, true},
+		{"activity owner", "jobs", `{"metadata":{"labels":{"app.kubernetes.io/managed-by":"akoflow"},"annotations":{"akoflow.io/activity-id":"other"}}}`, true},
+		{"service", "services", `{"metadata":{"labels":{"app.kubernetes.io/managed-by":"akoflow"}},"spec":{"selector":{"akoflow.io/activity":"activity"}}}`, false},
+		{"claim", "persistentvolumeclaims", `{"metadata":{"labels":{"app.kubernetes.io/managed-by":"akoflow"},"annotations":{"akoflow.io/activity-id":"activity"}}}`, false},
+		{"legacy claim", "persistentvolumeclaims", `{"metadata":{"labels":{"app.kubernetes.io/managed-by":"akoflow","akoflow.io/purpose":"workspace-transfer"}}}`, false},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			err := validateOwnership([]byte(test.payload), test.resource, "run", "activity")
+			if (err != nil) != test.wantErr {
+				t.Fatalf("err=%v wantErr=%v", err, test.wantErr)
+			}
+		})
 	}
 }

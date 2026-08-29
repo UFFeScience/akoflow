@@ -92,3 +92,49 @@ func TestWorkflowDefinitionDuplicateFails(t *testing.T) {
 		t.Fatal("duplicate definition must fail")
 	}
 }
+
+func TestWorkflowListAndFindHydrateLatestVersionAndTypes(t *testing.T) {
+	repository := setupRepository(t)
+	service := &domain.ServiceSpec{Ports: []int{8080}, HealthCheck: "/health", KeepAlive: true}
+	definition := Definition{
+		ID: "workflow", ExternalID: "external", Name: "Scientific workflow", Namespace: "science",
+		Types: []domain.ActivityType{{ID: "type", Name: "Compute", Application: "simulation", DefaultImage: "ubuntu", CPUIntensity: 1, MemoryIntensity: 2, IOIntensity: 3, NetworkIntensity: 4, Metadata: map[string]any{"category": "science"}}},
+		Version: domain.WorkflowVersion{ID: "version", WorkflowID: "workflow", Version: 1, DefinitionHash: "hash", Activities: []domain.Activity{{
+			ID: "activity", WorkflowVersionID: "version", ActivityTypeID: "type", ExternalID: "activity", Name: "Service", Kind: domain.ActivityKindService,
+			Capabilities: []domain.ActivityCapability{domain.ActivityCapabilityReal}, Command: domain.ActivityCommand{Image: "ubuntu", Entrypoint: "server"}, Resources: domain.ActivityResources{CPU: 2, MemoryBytes: 1024}, Service: service, Policy: domain.ActivityPolicy{TimeoutSeconds: 30}, Priority: 4,
+		}}},
+	}
+	if err := repository.Create(context.Background(), definition); err != nil {
+		t.Fatal(err)
+	}
+	found, err := repository.Find(context.Background(), definition.ID)
+	if err != nil || found == nil || found.Version.ID != "version" || len(found.Types) != 1 || found.Types[0].Metadata["category"] != "science" || found.Version.Activities[0].Service == nil || found.Version.Activities[0].Service.Ports[0] != 8080 {
+		t.Fatalf("Find() = %#v, %v", found, err)
+	}
+	values, err := repository.List(context.Background())
+	if err != nil || len(values) != 1 || values[0].Name != definition.Name {
+		t.Fatalf("List() = %#v, %v", values, err)
+	}
+	missing, err := repository.Find(context.Background(), "missing")
+	if err != nil || missing != nil {
+		t.Fatalf("missing = %#v, %v", missing, err)
+	}
+	if value := nullableJSON(nil, []byte(`{}`)); value != nil {
+		t.Fatalf("nullable nil = %#v", value)
+	}
+	if value := nullableJSON(service, []byte(`{"ports":[8080]}`)); value != `{"ports":[8080]}` {
+		t.Fatalf("nullable value = %#v", value)
+	}
+}
+
+func TestWorkflowCreateRejectsInvalidActivityTransactionally(t *testing.T) {
+	repository := setupRepository(t)
+	definition := Definition{ID: "invalid", Name: "Invalid", Version: domain.WorkflowVersion{ID: "invalid-v1", Version: 1, Activities: []domain.Activity{{ID: "activity"}}}}
+	if err := repository.Create(context.Background(), definition); err == nil {
+		t.Fatal("expected activity validation error")
+	}
+	var count int
+	if err := repository.db.QueryRow(`SELECT COUNT(*) FROM workflow_definitions WHERE id='invalid'`).Scan(&count); err != nil || count != 0 {
+		t.Fatalf("transaction was not rolled back: count=%d err=%v", count, err)
+	}
+}

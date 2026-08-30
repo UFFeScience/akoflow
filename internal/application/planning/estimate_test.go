@@ -1,6 +1,7 @@
 package planning
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/UFFeScience/akoflow/internal/domain"
@@ -53,5 +54,32 @@ func TestHEFTEstimateDoesNotUseBeam(t *testing.T) {
 	estimate := estimateAlgorithmRun("heft", map[string]any{"beamWidth": 999}, workflow, scope, resources)
 	if estimate.BeamWidth != 0 || estimate.ExpandedStates != 4 {
 		t.Fatalf("unexpected HEFT estimate: %+v", estimate)
+	}
+}
+
+func TestHEFTEstimateKeepsMontageScaleBelowOneMinute(t *testing.T) {
+	activities := make([]domain.Activity, 6448)
+	for index := range activities {
+		activities[index] = domain.Activity{ID: fmt.Sprintf("activity-%d", index)}
+	}
+	workflow := domain.WorkflowVersion{Activities: activities}
+	scope := domain.ExecutionScope{EnvironmentVersionIDs: []string{"environment"}}
+	resources := []domain.Resource{
+		{
+			ID:                   "resource-1",
+			EnvironmentVersionID: "environment",
+			Schedulable:          true,
+			CPUCapacity:          4,
+			CPUCores:             4,
+		},
+	}
+
+	estimate := estimateAlgorithmRun("heft", nil, workflow, scope, resources)
+
+	if estimate.ExpandedStates != 25792 {
+		t.Fatalf("expected 6,448 activities * 4 cores, got %d evaluations", estimate.ExpandedStates)
+	}
+	if estimate.DurationSeconds >= 1 {
+		t.Fatalf("optimized HEFT should be estimated below one second at this scale, got %.1fs", estimate.DurationSeconds)
 	}
 }

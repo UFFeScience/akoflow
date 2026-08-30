@@ -3,6 +3,10 @@ package main
 import (
 	"context"
 	"fmt"
+	"os"
+	"strings"
+	"time"
+
 	"github.com/UFFeScience/akoflow/internal/api/handlers/workflow_engine_api_handler"
 	appbuild "github.com/UFFeScience/akoflow/internal/application/build"
 	"github.com/UFFeScience/akoflow/internal/application/ports"
@@ -21,7 +25,6 @@ import (
 	filesystem "github.com/UFFeScience/akoflow/internal/provider/storage/filesystem"
 	s3 "github.com/UFFeScience/akoflow/internal/provider/storage/s3"
 	sshfilesystem "github.com/UFFeScience/akoflow/internal/provider/storage/sshfilesystem"
-	"os"
 )
 
 func buildAPI(
@@ -58,6 +61,13 @@ func buildAPI(
 	if err != nil {
 		return nil, err
 	}
+	var restart func()
+	if strings.EqualFold(strings.TrimSpace(os.Getenv("AKOFLOW_RESTART_ON_INSTANCE_SWITCH")), "true") {
+		restart = func() {
+			time.Sleep(300 * time.Millisecond)
+			os.Exit(0)
+		}
+	}
 	return workflow_engine_api_handler.New(workflow_engine_api_handler.Dependencies{
 		Environments:     storage.environments,
 		Workflows:        storage.workflows,
@@ -82,6 +92,8 @@ func buildAPI(
 		Planning:         planning,
 		PlanningStore:    storage.plans,
 		InstanceArchive:  archives,
+		ReadOnly:         storage.readOnly,
+		Restart:          restart,
 		FactoryReset: func(ctx context.Context) error {
 			if err := database.Reset(ctx, storage.database); err != nil {
 				return err

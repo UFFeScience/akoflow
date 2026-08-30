@@ -32,6 +32,7 @@ type application struct {
 	api               *workflow_engine_api_handler.Handler
 	eventLoop         *eventloop.Loop
 	connectionMonitor *applicationenvironment.ConnectionMonitor
+	readOnly          bool
 }
 
 func newApplication(ctx context.Context, settings config.Settings, log *logger.Logger) (*application, error) {
@@ -96,13 +97,16 @@ func newApplication(ctx context.Context, settings config.Settings, log *logger.L
 		settings: settings, log: log, database: storage.database,
 		api: api, eventLoop: loop,
 		connectionMonitor: connectionMonitor,
+		readOnly:          storage.readOnly,
 	}, nil
 }
 
 func (a *application) Run(ctx context.Context) error {
 	a.log.Info("Starting Akoflow Server")
-	a.startEventLoop(ctx)
-	go a.connectionMonitor.Run(ctx, a.settings.ConnectionCheckInterval)
+	if !a.readOnly {
+		a.startEventLoop(ctx)
+		go a.connectionMonitor.Run(ctx, a.settings.ConnectionCheckInterval)
+	}
 	if err := httpserver.Serve(ctx, a.settings.HTTPAddress, a.api); err != nil {
 		return fmt.Errorf("serve Akoflow API: %w", err)
 	}

@@ -1,5 +1,6 @@
 services:
   akoflow-server:
+    restart: unless-stopped
     build:
       context: .
       dockerfile: releases/dockerfiles/server.dev.Dockerfile
@@ -14,6 +15,7 @@ services:
       AKOFLOW_BUILDCTL: buildctl
       AKOFLOW_APPTAINER: apptainer
       AKOFLOW_SIMGRID_BINARY: /usr/local/bin/akoflow-simgrid-runner
+      AKOFLOW_RESTART_ON_INSTANCE_SWITCH: 'true'
       AKOFLOW_KIND_TOKEN: ${AKOFLOW_KIND_TOKEN:-}
       # Interactive terminals are enabled only for the local control-plane
       # deployment. The runner still uses each environment's SSH credentials

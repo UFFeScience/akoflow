@@ -7,6 +7,7 @@ import (
 	"net"
 	"net/http"
 	"os/exec"
+	"strings"
 	"time"
 
 	"github.com/UFFeScience/akoflow/internal/api/handlers/workflow_engine_api_handler"
@@ -85,6 +86,7 @@ func NewMux(workflowEngine *workflow_engine_api_handler.Handler) *http.ServeMux 
 	mux.HandleFunc("GET /akoflow-api/instances/", http_config.KernelHandler(workflowEngine.ListArchiveInstances))
 	mux.HandleFunc("GET /akoflow-api/instances/default/export/", workflowEngine.ExportArchiveInstance)
 	mux.HandleFunc("POST /akoflow-api/instances/import/", http_config.KernelHandler(workflowEngine.ImportArchiveInstance))
+	mux.HandleFunc("POST /akoflow-api/instance-activations/{instanceId}/", http_config.KernelHandler(workflowEngine.ActivateArchiveInstance))
 	mux.HandleFunc("GET /akoflow-api/user-preferences/{clientId}/", http_config.KernelHandler(workflowEngine.GetUserPreferences))
 	mux.HandleFunc("PUT /akoflow-api/user-preferences/{clientId}/", http_config.KernelHandler(workflowEngine.SaveUserPreferences))
 
@@ -171,7 +173,7 @@ func Serve(ctx context.Context, address string, workflowEngine *workflow_engine_
 }
 
 func ServeSecure(ctx context.Context, address string, workflowEngine *workflow_engine_api_handler.Handler, security SecurityOptions) error {
-	handler := AllowCORSFor(SecureAPI(NewMux(workflowEngine), security), security.AllowedOrigins)
+	handler := AllowCORSFor(SecureAPI(readOnlyAPI(NewMux(workflowEngine), workflowEngine), security), security.AllowedOrigins)
 	server := &http.Server{Addr: address, Handler: handler, ReadHeaderTimeout: 10 * time.Second, IdleTimeout: 60 * time.Second}
 	go shutdownWhenCanceled(ctx, server)
 	err := server.ListenAndServe()
@@ -179,6 +181,20 @@ func ServeSecure(ctx context.Context, address string, workflowEngine *workflow_e
 		return nil
 	}
 	return err
+}
+
+func readOnlyAPI(next http.Handler, workflowEngine *workflow_engine_api_handler.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		activation := r.Method == http.MethodPost &&
+			strings.HasPrefix(r.URL.Path, "/akoflow-api/instance-activations/")
+		if workflowEngine.IsReadOnly() && r.Method != http.MethodGet && !activation {
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusLocked)
+			_ = json.NewEncoder(w).Encode(map[string]string{"error": "the selected instance is a read-only snapshot"})
+			return
+		}
+		next.ServeHTTP(w, r)
+	})
 }
 
 func isLoopbackAddress(address string) bool {

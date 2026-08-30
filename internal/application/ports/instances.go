@@ -11,4 +11,5 @@ type InstanceArchive interface {
 	List(context.Context) ([]domaininstance.ArchiveInstance, error)
 	Export(context.Context, io.Writer, bool) error
 	Import(context.Context, io.Reader, int64) (domaininstance.ArchiveInstance, error)
+	Activate(context.Context, string) (domaininstance.ArchiveInstance, error)
 }

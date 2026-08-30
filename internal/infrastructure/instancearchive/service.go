@@ -34,6 +34,8 @@ type Service struct {
 	version      string
 }
 
+const activeInstanceFile = ".active-instance"
+
 func New(db *sql.DB, databasePath, root, artifacts, version string) (*Service, error) {
 	if db == nil {
 		return nil, fmt.Errorf("instance archive requires a database")
@@ -59,8 +61,9 @@ func New(db *sql.DB, databasePath, root, artifacts, version string) (*Service, e
 }
 
 func (s *Service) List(_ context.Context) ([]domaininstance.ArchiveInstance, error) {
+	activeID := ActiveID(s.root)
 	items := []domaininstance.ArchiveInstance{{
-		ID: "default", Name: "Default instance", Source: "local", Status: "active",
+		ID: "default", Name: "Default instance", Source: "local", Status: instanceStatus("default", activeID),
 		ReadOnly: false, CredentialsSet: true, DatabasePath: s.databasePath, AkoflowVersion: s.version,
 	}}
 	entries, err := os.ReadDir(s.root)
@@ -76,6 +79,7 @@ func (s *Service) List(_ context.Context) ([]domaininstance.ArchiveInstance, err
 			continue
 		}
 		item := manifest.Instance
+		item.Status = instanceStatus(item.ID, activeID)
 		item.Contents = manifest.Contents
 		item.DatabasePath = filepath.Join(s.root, entry.Name(), "database", "akoflow.sqlite")
 		items = append(items, item)
@@ -91,6 +95,59 @@ func (s *Service) List(_ context.Context) ([]domaininstance.ArchiveInstance, err
 		return left.ImportedAt.After(*right.ImportedAt)
 	})
 	return items, nil
+}
+
+func instanceStatus(id, activeID string) string {
+	if id == activeID {
+		return "active"
+	}
+	return "snapshot"
+}
+
+func ActiveID(root string) string {
+	value, err := os.ReadFile(filepath.Join(root, activeInstanceFile))
+	if err != nil || strings.TrimSpace(string(value)) == "" {
+		return "default"
+	}
+	id := strings.TrimSpace(string(value))
+	if id == "default" {
+		return id
+	}
+	if !safeArchiveID(id) {
+		return "default"
+	}
+	if _, err := os.Stat(filepath.Join(root, id, "database", "akoflow.sqlite")); err != nil {
+		return "default"
+	}
+	return id
+}
+
+func (s *Service) Activate(ctx context.Context, id string) (domaininstance.ArchiveInstance, error) {
+	id = strings.TrimSpace(id)
+	items, err := s.List(ctx)
+	if err != nil {
+		return domaininstance.ArchiveInstance{}, err
+	}
+	var selected *domaininstance.ArchiveInstance
+	for index := range items {
+		if items[index].ID == id {
+			selected = &items[index]
+			break
+		}
+	}
+	if selected == nil {
+		return domaininstance.ArchiveInstance{}, fmt.Errorf("instance %q was not found", id)
+	}
+	temporary := filepath.Join(s.root, activeInstanceFile+".tmp")
+	destination := filepath.Join(s.root, activeInstanceFile)
+	if err := os.WriteFile(temporary, []byte(id+"\n"), 0o600); err != nil {
+		return domaininstance.ArchiveInstance{}, err
+	}
+	if err := os.Rename(temporary, destination); err != nil {
+		return domaininstance.ArchiveInstance{}, err
+	}
+	selected.Status = "active"
+	return *selected, nil
 }
 
 func (s *Service) Export(ctx context.Context, output io.Writer, includeArtifacts bool) error {
@@ -502,15 +559,35 @@ func writeManifest(path string, manifest domaininstance.ArchiveManifest) error {
 }
 
 func ResolveDatabasePath() string {
+	root := DefaultRoot()
+	activeID := ActiveID(root)
+	if activeID != "default" && safeArchiveID(activeID) {
+		candidate := filepath.Join(root, activeID, "database", "akoflow.sqlite")
+		if _, err := os.Stat(candidate); err == nil {
+			return candidate
+		}
+	}
 	if value := strings.TrimSpace(os.Getenv("AKOFLOW_DATABASE_PATH")); value != "" {
 		return value
 	}
 	return database.DefaultPath
 }
 
+func IsReadOnlySelection() bool {
+	return ActiveID(DefaultRoot()) != "default"
+}
+
+func safeArchiveID(value string) bool {
+	return value != "" && value != "." && value != ".." && filepath.Base(value) == value
+}
+
 func DefaultRoot() string {
 	if value := strings.TrimSpace(os.Getenv("AKOFLOW_INSTANCE_ARCHIVE_ROOT")); value != "" {
 		return value
+	}
+	if value := strings.TrimSpace(os.Getenv("AKOFLOW_DATABASE_PATH")); value != "" {
+		value = os.ExpandEnv(strings.Trim(value, `"'`))
+		return filepath.Join(filepath.Dir(value), "instances")
 	}
 	return "storage/instances"
 }

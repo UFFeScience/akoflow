@@ -42,6 +42,29 @@ func TestOpenExpandsQuotedWorkspaceVariable(t *testing.T) {
 	}
 }
 
+func TestOpenReadOnlyRejectsWrites(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "snapshot.db")
+	db, err := Open(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := db.Exec(`CREATE TABLE example (id TEXT PRIMARY KEY)`); err != nil {
+		t.Fatal(err)
+	}
+	if err := db.Close(); err != nil {
+		t.Fatal(err)
+	}
+
+	snapshot, err := OpenReadOnly(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer snapshot.Close()
+	if _, err := snapshot.Exec(`INSERT INTO example (id) VALUES ('write')`); err == nil {
+		t.Fatal("expected a read-only database to reject writes")
+	}
+}
+
 func TestBootstrapInstallsAndValidatesCanonicalSchema(t *testing.T) {
 	db := memoryDatabase(t)
 	ctx := context.Background()

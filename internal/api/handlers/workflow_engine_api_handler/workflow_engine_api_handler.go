@@ -107,6 +107,8 @@ type Dependencies struct {
 	Planning         PlanningOrchestrator
 	PlanningStore    ports.PlanningStore
 	InstanceArchive  ports.InstanceArchive
+	ReadOnly         bool
+	Restart          func()
 	FactoryReset     func(context.Context) error
 	ConnectionTest   func(context.Context, domain.EnvironmentConnection) ports.ConnectionHealth
 }
@@ -135,6 +137,8 @@ type Handler struct {
 	planning         PlanningOrchestrator
 	planningStore    ports.PlanningStore
 	instanceArchive  ports.InstanceArchive
+	readOnly         bool
+	restart          func()
 	factoryReset     func(context.Context) error
 	connectionTest   func(context.Context, domain.EnvironmentConnection) ports.ConnectionHealth
 }
@@ -176,9 +180,29 @@ func New(dependencies Dependencies) (*Handler, error) {
 		planning:         dependencies.Planning,
 		planningStore:    dependencies.PlanningStore,
 		instanceArchive:  dependencies.InstanceArchive,
+		readOnly:         dependencies.ReadOnly,
+		restart:          dependencies.Restart,
 		factoryReset:     dependencies.FactoryReset,
 		connectionTest:   dependencies.ConnectionTest,
 	}, nil
+}
+
+func (h *Handler) IsReadOnly() bool { return h.readOnly }
+
+func (h *Handler) ActivateArchiveInstance(w http.ResponseWriter, r *http.Request) {
+	if h.instanceArchive == nil {
+		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("instance archives are unavailable"))
+		return
+	}
+	item, err := h.instanceArchive.Activate(r.Context(), r.PathValue("instanceId"))
+	if err != nil {
+		writeError(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+	writeJSON(w, http.StatusAccepted, map[string]any{"instance": item, "restarting": h.restart != nil})
+	if h.restart != nil {
+		go h.restart()
+	}
 }
 
 func (h *Handler) ListArchiveInstances(w http.ResponseWriter, r *http.Request) {

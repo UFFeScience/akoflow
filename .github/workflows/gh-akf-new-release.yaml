@@ -110,18 +110,18 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - runner: macos-13
-            command: npx electron-builder --mac --x64 --publish never
-            artifact: macos-x64
           - runner: macos-14
-            command: npx electron-builder --mac --arm64 --publish never
-            artifact: macos-arm64
+            command: npx electron-builder --mac --universal --publish never
+            artifact: macos-universal
+            signing: macos
           - runner: windows-latest
             command: npx electron-builder --win --x64 --publish never
             artifact: windows-x64
+            signing: windows
           - runner: ubuntu-latest
             command: npx electron-builder --linux --x64 --publish never
             artifact: linux-x64
+            signing: none
     runs-on: ${{ matrix.runner }}
     steps:
       - name: Checkout desktop source
@@ -143,7 +143,12 @@ jobs:
       - name: Package desktop application
         run: ${{ matrix.command }}
         env:
-          CSC_IDENTITY_AUTO_DISCOVERY: "false"
+          CSC_LINK: ${{ matrix.signing == 'macos' && secrets.MACOS_CSC_LINK || matrix.signing == 'windows' && secrets.WINDOWS_CSC_LINK || '' }}
+          CSC_KEY_PASSWORD: ${{ matrix.signing == 'macos' && secrets.MACOS_CSC_KEY_PASSWORD || matrix.signing == 'windows' && secrets.WINDOWS_CSC_KEY_PASSWORD || '' }}
+          CSC_IDENTITY_AUTO_DISCOVERY: ${{ (matrix.signing == 'macos' && secrets.MACOS_CSC_LINK != '') || (matrix.signing == 'windows' && secrets.WINDOWS_CSC_LINK != '') }}
+          APPLE_ID: ${{ matrix.signing == 'macos' && secrets.MACOS_APPLE_ID || '' }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ matrix.signing == 'macos' && secrets.MACOS_APP_SPECIFIC_PASSWORD || '' }}
+          APPLE_TEAM_ID: ${{ matrix.signing == 'macos' && secrets.MACOS_TEAM_ID || '' }}
 
       - name: Upload desktop package
         uses: actions/upload-artifact@v4

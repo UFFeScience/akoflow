@@ -14,6 +14,14 @@ import (
 const DefaultPath = "storage/database.db"
 
 func Open(path string) (*sql.DB, error) {
+	return open(path, false)
+}
+
+func OpenReadOnly(path string) (*sql.DB, error) {
+	return open(path, true)
+}
+
+func open(path string, readOnly bool) (*sql.DB, error) {
 	if path == "" {
 		path = os.Getenv("AKOFLOW_DATABASE_PATH")
 	}
@@ -28,7 +36,13 @@ func Open(path string) (*sql.DB, error) {
 		return nil, fmt.Errorf("create database directory: %w", err)
 	}
 	location := (&url.URL{Scheme: "file", Path: path}).String()
-	dsn := location + "?_busy_timeout=10000&_journal_mode=WAL&_foreign_keys=on"
+	query := "?_busy_timeout=10000&_foreign_keys=on"
+	if readOnly {
+		query += "&mode=ro&immutable=1"
+	} else {
+		query += "&_journal_mode=WAL"
+	}
+	dsn := location + query
 	db, err := sql.Open("sqlite3", dsn)
 	if err != nil {
 		return nil, fmt.Errorf("open database: %w", err)

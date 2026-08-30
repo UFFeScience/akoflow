@@ -33,6 +33,24 @@ Linux containers.
 Docker selects an available API port bound only to `127.0.0.1`; no fixed host
 port is reserved. BuildKit remains entirely inside the Compose network.
 
+### Updates
+
+The packaged desktop application checks the releases in this repository for a
+new version. Updates are downloaded only after confirmation and installed when
+the application restarts. The desktop application, daemon image and BuildKit
+image use the same release version.
+
+When the updated application starts, it pulls and health-checks the matching
+containers. Persistent Docker volumes are retained. If the new runtime cannot
+become healthy, AkôFlow restores the last healthy container version and reports
+the failed update instead of deleting data.
+
+Release maintainers should configure `MACOS_CSC_LINK`,
+`MACOS_CSC_KEY_PASSWORD`, `MACOS_APPLE_ID`,
+`MACOS_APP_SPECIFIC_PASSWORD`, `MACOS_TEAM_ID`, `WINDOWS_CSC_LINK` and
+`WINDOWS_CSC_KEY_PASSWORD` as GitHub Actions secrets. These credentials sign
+and notarize the installers; they are never included in the application.
+
 ### Container images
 
 Versioned images are published to the GitHub Container Registry for

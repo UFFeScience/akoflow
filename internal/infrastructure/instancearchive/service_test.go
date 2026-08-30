@@ -72,6 +72,56 @@ func TestExportRedactsCredentialsAndImportKeepsSnapshotIsolated(t *testing.T) {
 	if len(instances) != 2 || instances[0].Status != "active" || instances[1].ID != imported.ID {
 		t.Fatalf("unexpected instance catalog: %+v", instances)
 	}
+	activated, err := service.Activate(ctx, imported.ID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if activated.ID != imported.ID || activated.Status != "active" || ActiveID(service.root) != imported.ID {
+		t.Fatalf("unexpected activated instance: %+v", activated)
+	}
+	instances, err = service.List(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if instances[0].Status != "snapshot" || instances[1].Status != "active" {
+		t.Fatalf("unexpected catalog after activation: %+v", instances)
+	}
+	if _, err := service.Activate(ctx, "missing-instance"); err == nil {
+		t.Fatal("expected activating an unknown instance to fail")
+	}
+	if _, err := service.Activate(ctx, "default"); err != nil {
+		t.Fatal(err)
+	}
+	if ActiveID(service.root) != "default" {
+		t.Fatalf("expected default instance to be active, got %q", ActiveID(service.root))
+	}
+}
+
+func TestActiveIDFallsBackToDefaultForInvalidSelection(t *testing.T) {
+	root := t.TempDir()
+	if err := os.WriteFile(filepath.Join(root, activeInstanceFile), []byte("../outside\n"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	if got := ActiveID(root); got != "default" {
+		t.Fatalf("expected invalid selection to fall back to default, got %q", got)
+	}
+	if err := os.WriteFile(filepath.Join(root, activeInstanceFile), []byte("missing\n"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	if got := ActiveID(root); got != "default" {
+		t.Fatalf("expected missing selection to fall back to default, got %q", got)
+	}
+}
+
+func TestDefaultRootFollowsConfiguredDatabaseDirectory(t *testing.T) {
+	workspace := t.TempDir()
+	t.Setenv("AKOFLOW_INSTANCE_ARCHIVE_ROOT", "")
+	t.Setenv("AKOFLOW_ARCHIVE_TEST_ROOT", workspace)
+	t.Setenv("AKOFLOW_DATABASE_PATH", `"$AKOFLOW_ARCHIVE_TEST_ROOT/database/akoflow.sqlite"`)
+	expected := filepath.Join(workspace, "database", "instances")
+	if got := DefaultRoot(); got != expected {
+		t.Fatalf("archive root = %q, expected %q", got, expected)
+	}
 }
 
 func archiveManifest(t *testing.T, files []*zip.File) domaininstance.ArchiveManifest {

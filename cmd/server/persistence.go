@@ -17,10 +17,12 @@ import (
 	dbresource "github.com/UFFeScience/akoflow/internal/infrastructure/database/resource"
 	dbstorage "github.com/UFFeScience/akoflow/internal/infrastructure/database/storage"
 	dbworkflow "github.com/UFFeScience/akoflow/internal/infrastructure/database/workflow"
+	"github.com/UFFeScience/akoflow/internal/infrastructure/instancearchive"
 )
 
 type persistence struct {
 	database     *sql.DB
+	readOnly     bool
 	environments *dbenvironment.Repository
 	executions   *dbexecution.Repository
 	data         *dbdata.Repository
@@ -36,13 +38,23 @@ type persistence struct {
 }
 
 func openPersistence(ctx context.Context) (persistence, error) {
-	db, err := database.Open("")
+	readOnly := instancearchive.IsReadOnlySelection()
+	path := instancearchive.ResolveDatabasePath()
+	var db *sql.DB
+	var err error
+	if readOnly {
+		db, err = database.OpenReadOnly(path)
+	} else {
+		db, err = database.Open(path)
+	}
 	if err != nil {
 		return persistence{}, err
 	}
-	if err := database.Bootstrap(ctx, db); err != nil {
-		_ = db.Close()
-		return persistence{}, err
+	if !readOnly {
+		if err := database.Bootstrap(ctx, db); err != nil {
+			_ = db.Close()
+			return persistence{}, err
+		}
 	}
 	events, err := dbqueue.New(db)
 	if err != nil {
@@ -50,12 +62,15 @@ func openPersistence(ctx context.Context) (persistence, error) {
 		return persistence{}, err
 	}
 	instanceRepository := dbinstance.New(db)
-	if err := ensureSystemInstance(ctx, instanceRepository); err != nil {
-		_ = db.Close()
-		return persistence{}, err
+	if !readOnly {
+		if err := ensureSystemInstance(ctx, instanceRepository); err != nil {
+			_ = db.Close()
+			return persistence{}, err
+		}
 	}
 	return persistence{
-		database: db, environments: dbenvironment.New(db), executions: dbexecution.New(db),
+		database: db, readOnly: readOnly,
+		environments: dbenvironment.New(db), executions: dbexecution.New(db),
 		data:       dbdata.New(db),
 		topologies: dbnetwork.New(db), plans: dbplanning.New(db), events: events,
 		workflows: dbworkflow.New(db),

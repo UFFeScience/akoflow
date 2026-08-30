@@ -28,6 +28,7 @@ services:
       AKOFLOW_BUILDCTL: buildctl
       AKOFLOW_APPTAINER: apptainer
       AKOFLOW_SIMGRID_BINARY: /usr/local/bin/akoflow-simgrid-runner
+      AKOFLOW_RESTART_ON_INSTANCE_SWITCH: 'true'
       AKOFLOW_SIMGRID_WORKSPACE: /var/lib/akoflow/simgrid
       AKOFLOW_SSH_KEY_DIRECTORY: /var/lib/akoflow/credentials/ssh
       AKOFLOW_KUBERNETES_TOKEN_DIRECTORY: /var/lib/akoflow/credentials/kubernetes

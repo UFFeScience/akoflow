@@ -1,152 +1,193 @@
-name: Create Release on Tag
+name: Publish production images
 
 on:
   push:
     tags:
-      - 'v*'
+      - "v*.*.*"
 
 permissions:
   contents: write
   packages: write
+  id-token: write
+  attestations: write
+
+env:
+  REGISTRY: ghcr.io
 
 jobs:
-  build-and-release:
+  test:
+    name: Test daemon
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Checkout source
+        uses: actions/checkout@v6
+
+      - name: Set up Go
+        uses: actions/setup-go@v6
         with:
-          fetch-depth: 0
+          go-version-file: go.mod
+          cache: true
+
+      - name: Run tests
+        run: go test ./...
+
+  publish:
+    name: Publish ${{ matrix.name }} image
+    needs: test
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: daemon
+            image: ghcr.io/uffescience/akoflow-daemon
+            dockerfile: releases/dockerfiles/server.Dockerfile
+          - name: buildkit
+            image: ghcr.io/uffescience/akoflow-buildkit
+            dockerfile: releases/dockerfiles/buildkit.Dockerfile
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v6
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
 
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
         with:
-          registry: ghcr.io
+          registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Get tag name (without v prefix)
-        id: get_version
-        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+      - name: Generate image metadata
+        id: metadata
+        uses: docker/metadata-action@v6
+        with:
+          images: ${{ matrix.image }}
+          flavor: |
+            latest=auto
+          tags: |
+            type=raw,value=${{ github.ref_name }}
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=sha,prefix=sha-
+          labels: |
+            org.opencontainers.image.title=AkôFlow ${{ matrix.name }}
+            org.opencontainers.image.description=AkôFlow production ${{ matrix.name }} image
+            org.opencontainers.image.vendor=UFFeScience
 
-      - name: Get tag name (with v prefix)
-        id: get_tag
-        run: echo "TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
-
-      - name: Get previous tag
-        id: previous_tag
-        run: |
-          PREVIOUS_TAG=$(git describe --tags --abbrev=0 ${{ steps.get_tag.outputs.TAG }}^ 2>/dev/null || echo "")
-          echo "PREVIOUS_TAG=$PREVIOUS_TAG" >> $GITHUB_OUTPUT
-
-      - name: Generate changelog
-        id: changelog
-        run: |
-          if [ -n "${{ steps.previous_tag.outputs.PREVIOUS_TAG }}" ]; then
-            echo "CHANGELOG<<EOF" >> $GITHUB_OUTPUT
-            git log --pretty=format:"- %s (%h)" ${{ steps.previous_tag.outputs.PREVIOUS_TAG }}..${{ steps.get_tag.outputs.TAG }} >> $GITHUB_OUTPUT
-            echo "EOF" >> $GITHUB_OUTPUT
-          else
-            echo "CHANGELOG<<EOF" >> $GITHUB_OUTPUT
-            git log --pretty=format:"- %s (%h)" ${{ steps.get_tag.outputs.TAG }} >> $GITHUB_OUTPUT
-            echo "EOF" >> $GITHUB_OUTPUT
-          fi || echo "CHANGELOG<<EOF" >> $GITHUB_OUTPUT && echo "No changes available." >> $GITHUB_OUTPUT && echo "EOF" >> $GITHUB_OUTPUT
-      - name: Build Docker image for building
-        uses: docker/build-push-action@v4
+      - name: Build and publish image
+        id: build
+        uses: docker/build-push-action@v6
         with:
           context: .
-          file: .devcontainer/dev.Dockerfile
-          load: true
-          tags: akoflow-builder:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          file: ${{ matrix.dockerfile }}
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.metadata.outputs.tags }}
+          labels: ${{ steps.metadata.outputs.labels }}
+          build-args: |
+            AKOFLOW_VERSION=${{ github.ref_name }}
+          cache-from: type=gha,scope=${{ matrix.name }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.name }}
+          provenance: mode=max
+          sbom: true
 
-      - name: Create releases directory
-        run: mkdir -p releases/bin
-
-      - name: Build all binaries
-        run: |
-          docker run --rm -v $(pwd):/app -e VERSION=${{ steps.get_version.outputs.VERSION }} akoflow-builder:latest sh -c "\
-          mkdir -p /app/releases/bin && \
-          CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -o /app/releases/bin/akoflow-server_${{ steps.get_version.outputs.VERSION }}_linux_amd64 /app/cmd/server && \
-          CGO_ENABLED=1 GOOS=linux GOARCH=arm64 CC=aarch64-linux-gnu-gcc go build -o /app/releases/bin/akoflow-server_${{ steps.get_version.outputs.VERSION }}_linux_arm64 /app/cmd/server && \
-          CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /app/releases/bin/akoflow_${{ steps.get_version.outputs.VERSION }}_linux_amd64 /app/cmd/akoflow/main.go && \
-          CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -o /app/releases/bin/akoflow_${{ steps.get_version.outputs.VERSION }}_linux_arm64 /app/cmd/akoflow/main.go && \
-          CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o /app/releases/bin/akoflow_${{ steps.get_version.outputs.VERSION }}_windows_amd64.exe /app/cmd/akoflow/main.go && \
-          CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o /app/releases/bin/akoflow_${{ steps.get_version.outputs.VERSION }}_darwin_amd64 /app/cmd/akoflow/main.go && \
-          CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 go build -o /app/releases/bin/akoflow_${{ steps.get_version.outputs.VERSION }}_darwin_arm64 /app/cmd/akoflow/main.go"
-
-      - name: Create platform archives
-        run: |
-          cd releases/bin
-
-          # Linux AMD64
-          tar -czf ../akoflow_${{ steps.get_version.outputs.VERSION }}_linux_amd64.tar.gz *_linux_amd64
-
-          # Linux ARM64
-          tar -czf ../akoflow_${{ steps.get_version.outputs.VERSION }}_linux_arm64.tar.gz *_linux_arm64
-
-          # Windows AMD64
-          zip -r ../akoflow_${{ steps.get_version.outputs.VERSION }}_windows_amd64.zip *_windows_amd64.exe
-
-          # macOS AMD64
-          tar -czf ../akoflow_${{ steps.get_version.outputs.VERSION }}_darwin_amd64.tar.gz *_darwin_amd64
-
-          # macOS ARM64
-          tar -czf ../akoflow_${{ steps.get_version.outputs.VERSION }}_darwin_arm64.tar.gz *_darwin_arm64
-
-          cd ../..
-
-      - name: Create checksums
-        run: |
-          cd releases/bin
-          sha256sum * > ../akoflow_${{ steps.get_version.outputs.VERSION }}_checksums.txt
-          cd ../..
-
-      - name: Create Release
-        id: create_release
-        uses: softprops/action-gh-release@v1
+      - name: Attest published image
+        uses: actions/attest-build-provenance@v3
         with:
-          tag_name: ${{ steps.get_tag.outputs.TAG }}
-          name: AkôFlow ${{ steps.get_tag.outputs.TAG }}
-          body: |
-            # AkôFlow Release ${{ steps.get_tag.outputs.TAG }}
+          subject-name: ${{ matrix.image }}
+          subject-digest: ${{ steps.build.outputs.digest }}
+          push-to-registry: true
 
-            ## Changes
-            ${{ steps.changelog.outputs.CHANGELOG }}
+  desktop:
+    name: Package desktop (${{ matrix.artifact }})
+    needs: publish
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: macos-13
+            command: npx electron-builder --mac --x64 --publish never
+            artifact: macos-x64
+          - runner: macos-14
+            command: npx electron-builder --mac --arm64 --publish never
+            artifact: macos-arm64
+          - runner: windows-latest
+            command: npx electron-builder --win --x64 --publish never
+            artifact: windows-x64
+          - runner: ubuntu-latest
+            command: npx electron-builder --linux --x64 --publish never
+            artifact: linux-x64
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - name: Checkout desktop source
+        uses: actions/checkout@v6
+        with:
+          repository: UFFeScience/akoflow-desktop
+          ref: main
 
-            ## Installation
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
 
-            ### Client Binaries
-            - Linux (AMD64): `akoflow_${{ steps.get_version.outputs.VERSION }}_linux_amd64`
-            - Linux (ARM64): `akoflow_${{ steps.get_version.outputs.VERSION }}_linux_arm64`
-            - Windows (AMD64): `akoflow_${{ steps.get_version.outputs.VERSION }}_windows_amd64.exe`
-            - macOS (AMD64): `akoflow_${{ steps.get_version.outputs.VERSION }}_darwin_amd64`
-            - macOS (ARM64): `akoflow_${{ steps.get_version.outputs.VERSION }}_darwin_arm64`
+      - run: npm ci
+      - run: npm version "${{ github.ref_name }}" --no-git-tag-version
+      - run: npm run build
 
-            ### Server Binaries
-            - Linux (AMD64): `akoflow-server_${{ steps.get_version.outputs.VERSION }}_linux_amd64`
-            - Linux (ARM64): `akoflow-server_${{ steps.get_version.outputs.VERSION }}_linux_arm64`
-
-            The server is distributed for Linux because SQLite requires a native CGO build.
-
-            Download the appropriate binary for your platform, make it executable, and add it to your PATH.
-
-            ### Download Client
-            For more information, visit [AkôFlow Client documentation](https://github.com/UFFeScience/akoflow/wiki/).
-
-            ### Download Server
-            For more information, visit [AkôFlow Server documentation](https://github.com/UFFeScience/akoflow/wiki/).
-
-            ## Documentation
-            For more information, visit [AkôFlow documentation](https://github.com/UFFeScience/akoflow/wiki/).
-          draft: false
-          prerelease: false
-          files: |
-            releases/bin/*
-            releases/*_checksums.txt
+      - name: Package desktop application
+        run: ${{ matrix.command }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CSC_IDENTITY_AUTO_DISCOVERY: "false"
+
+      - name: Upload desktop package
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: |
+            release/*.dmg
+            release/*.zip
+            release/*.exe
+            release/*.AppImage
+            release/*.deb
+            release/*.yml
+            release/*.blockmap
+          if-no-files-found: error
+
+  release:
+    name: Create GitHub release
+    needs: [publish, desktop]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download desktop packages
+        uses: actions/download-artifact@v4
+        with:
+          path: desktop-artifacts
+          merge-multiple: true
+
+      - name: Create AkôFlow release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          prerelease: ${{ contains(github.ref_name, '-') }}
+          files: desktop-artifacts/*
+          body: |
+            ## AkôFlow Desktop
+
+            Download the installer for macOS, Windows or Linux from the assets below. The application verifies Docker and Docker Compose, explains any missing requirement, and starts the AkôFlow daemon and BuildKit automatically.
+
+            ## Container images
+
+            This release publishes the following multi-platform OCI images for `linux/amd64` and `linux/arm64`:
+
+            ```text
+            ghcr.io/uffescience/akoflow-daemon:${{ github.ref_name }}
+            ghcr.io/uffescience/akoflow-buildkit:${{ github.ref_name }}
+            ```
+
+            Set `AKOFLOW_VERSION=${{ github.ref_name }}` in Docker Compose to pin this exact release.

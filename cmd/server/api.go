@@ -12,6 +12,7 @@ import (
 	"github.com/UFFeScience/akoflow/internal/infrastructure/credentials/sshkey"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/credentials/token"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/database"
+	"github.com/UFFeScience/akoflow/internal/infrastructure/instancearchive"
 	planningplugin "github.com/UFFeScience/akoflow/internal/infrastructure/plugins/planning"
 	"github.com/UFFeScience/akoflow/internal/provider"
 	"github.com/UFFeScience/akoflow/internal/provider/kubernetes"
@@ -47,6 +48,16 @@ func buildAPI(
 	browsers[domain.StorageSSH] = ssh
 	manager := appbuild.Manager{Root: settings.ArtifactStoreRoot, MaxBytes: settings.BuildContextMaxBytes, Catalog: storage.data}
 	manager.Executor = appbuild.Executor{Catalog: storage.data, Contexts: manager, Runner: provider.OSCommandExecutor{}, Buildctl: settings.Buildctl, Apptainer: settings.Apptainer, ArtifactStoreRoot: settings.ArtifactStoreRoot}
+	archives, err := instancearchive.New(
+		storage.database,
+		instancearchive.ResolveDatabasePath(),
+		instancearchive.DefaultRoot(),
+		settings.ArtifactStoreRoot,
+		config.GetVersion(),
+	)
+	if err != nil {
+		return nil, err
+	}
 	return workflow_engine_api_handler.New(workflow_engine_api_handler.Dependencies{
 		Environments:     storage.environments,
 		Workflows:        storage.workflows,
@@ -70,6 +81,7 @@ func buildAPI(
 		Build:            manager,
 		Planning:         planning,
 		PlanningStore:    storage.plans,
+		InstanceArchive:  archives,
 		FactoryReset: func(ctx context.Context) error {
 			if err := database.Reset(ctx, storage.database); err != nil {
 				return err

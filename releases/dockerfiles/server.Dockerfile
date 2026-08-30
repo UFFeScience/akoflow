@@ -1,3 +1,5 @@
+ARG BUILDKIT_VERSION=v0.30.0
+
 FROM debian:trixie AS simgrid-builder
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -24,7 +26,7 @@ RUN go mod download
 COPY . .
 RUN go build -o /output/akoflow-server ./cmd/server
 
-FROM moby/buildkit:latest AS buildkit-client
+FROM moby/buildkit:${BUILDKIT_VERSION} AS buildkit-client
 
 # Apptainer is built from source because Debian trixie does not ship the
 # runtime package. The build is architecture-native, so Docker Buildx produces
@@ -43,14 +45,32 @@ RUN git clone --depth 1 --branch ${APPTAINER_VERSION} https://github.com/apptain
 
 FROM debian:trixie-slim
 
+ARG AKOFLOW_VERSION=dev
+LABEL org.opencontainers.image.title="AkôFlow Daemon" \
+      org.opencontainers.image.description="AkôFlow workflow control plane" \
+      org.opencontainers.image.vendor="UFFeScience" \
+      org.opencontainers.image.version="${AKOFLOW_VERSION}"
+
+ENV AKOFLOW_SERVER_VERSION=${AKOFLOW_VERSION} \
+    AKOFLOW_HTTP_ADDRESS=0.0.0.0:8080 \
+    AKOFLOW_DATABASE_PATH=/var/lib/akoflow/database.db \
+    AKOFLOW_ARTIFACT_STORE_ROOT=/var/lib/akoflow/artifacts \
+    AKOFLOW_SIMGRID_WORKSPACE=/var/lib/akoflow/simgrid \
+    AKOFLOW_BUILDCTL=buildctl \
+    AKOFLOW_APPTAINER=apptainer \
+    AKOFLOW_SIMGRID_BINARY=/usr/local/bin/akoflow-simgrid-runner
+
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
+    curl \
+    docker-cli \
     libsimgrid4.0 \
     libsqlite3-0 \
     libseccomp2 \
     libgpgme11 \
     libfuse3-4 \
     openssh-client \
+    rsync \
     kubernetes-client \
     squashfs-tools \
     uidmap \
@@ -62,7 +82,13 @@ COPY --from=buildkit-client /usr/bin/buildctl /usr/local/bin/buildctl
 COPY --from=apptainer-builder /usr/local /usr/local
 COPY --from=simgrid-builder /build/output/akoflow-simgrid-runner /usr/local/bin/akoflow-simgrid-runner
 
-RUN mkdir -p /app/storage /var/lib/akoflow/artifacts \
+RUN mkdir -p /var/lib/akoflow/artifacts \
+    /var/lib/akoflow/credentials/ssh \
+    /var/lib/akoflow/credentials/kubernetes \
+    /var/lib/akoflow/simgrid \
  && apptainer --version
 EXPOSE 8080
+VOLUME ["/var/lib/akoflow"]
+HEALTHCHECK --interval=10s --timeout=3s --start-period=10s --retries=12 \
+  CMD ["curl", "--fail", "--silent", "http://127.0.0.1:8080/akoflow-api/instance/"]
 CMD ["akoflow-server"]

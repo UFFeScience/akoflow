@@ -82,6 +82,9 @@ func NewMux(workflowEngine *workflow_engine_api_handler.Handler) *http.ServeMux 
 	mux.HandleFunc("POST /akoflow-api/kubernetes-tokens/", http_config.KernelHandler(workflowEngine.SaveKubernetesToken))
 	mux.HandleFunc("PUT /akoflow-api/instance/", http_config.KernelHandler(workflowEngine.SaveInstance))
 	mux.HandleFunc("POST /akoflow-api/factory-reset/", http_config.KernelHandler(workflowEngine.FactoryReset))
+	mux.HandleFunc("GET /akoflow-api/instances/", http_config.KernelHandler(workflowEngine.ListArchiveInstances))
+	mux.HandleFunc("GET /akoflow-api/instances/default/export/", workflowEngine.ExportArchiveInstance)
+	mux.HandleFunc("POST /akoflow-api/instances/import/", http_config.KernelHandler(workflowEngine.ImportArchiveInstance))
 	mux.HandleFunc("GET /akoflow-api/user-preferences/{clientId}/", http_config.KernelHandler(workflowEngine.GetUserPreferences))
 	mux.HandleFunc("PUT /akoflow-api/user-preferences/{clientId}/", http_config.KernelHandler(workflowEngine.SaveUserPreferences))
 

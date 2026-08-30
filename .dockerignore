@@ -4,6 +4,9 @@ storage
 tmp
 coverage
 node_modules
+**/node_modules
+server
+releases/bin
 *.db
 *.sqlite
 *.log

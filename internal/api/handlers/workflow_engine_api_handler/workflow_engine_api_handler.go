@@ -106,6 +106,7 @@ type Dependencies struct {
 	Build            BuildOrchestrator
 	Planning         PlanningOrchestrator
 	PlanningStore    ports.PlanningStore
+	InstanceArchive  ports.InstanceArchive
 	FactoryReset     func(context.Context) error
 	ConnectionTest   func(context.Context, domain.EnvironmentConnection) ports.ConnectionHealth
 }
@@ -133,6 +134,7 @@ type Handler struct {
 	build            BuildOrchestrator
 	planning         PlanningOrchestrator
 	planningStore    ports.PlanningStore
+	instanceArchive  ports.InstanceArchive
 	factoryReset     func(context.Context) error
 	connectionTest   func(context.Context, domain.EnvironmentConnection) ports.ConnectionHealth
 }
@@ -173,9 +175,49 @@ func New(dependencies Dependencies) (*Handler, error) {
 		build:            dependencies.Build,
 		planning:         dependencies.Planning,
 		planningStore:    dependencies.PlanningStore,
+		instanceArchive:  dependencies.InstanceArchive,
 		factoryReset:     dependencies.FactoryReset,
 		connectionTest:   dependencies.ConnectionTest,
 	}, nil
+}
+
+func (h *Handler) ListArchiveInstances(w http.ResponseWriter, r *http.Request) {
+	if h.instanceArchive == nil {
+		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("instance archives are unavailable"))
+		return
+	}
+	items, err := h.instanceArchive.List(r.Context())
+	writeList(w, items, err)
+}
+
+func (h *Handler) ExportArchiveInstance(w http.ResponseWriter, r *http.Request) {
+	if h.instanceArchive == nil {
+		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("instance archives are unavailable"))
+		return
+	}
+	w.Header().Set("Content-Type", "application/zip")
+	w.Header().Set("Content-Disposition", `attachment; filename="akoflow-instance.zip"`)
+	includeArtifacts := r.URL.Query().Get("includeArtifacts") == "true"
+	if err := h.instanceArchive.Export(r.Context(), w, includeArtifacts); err != nil {
+		// Export streams directly. If no bytes were written the normal API error is
+		// returned; otherwise the client observes a truncated, invalid ZIP.
+		writeError(w, http.StatusUnprocessableEntity, err)
+	}
+}
+
+func (h *Handler) ImportArchiveInstance(w http.ResponseWriter, r *http.Request) {
+	if h.instanceArchive == nil {
+		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("instance archives are unavailable"))
+		return
+	}
+	const maximum = int64(8 << 30)
+	r.Body = http.MaxBytesReader(w, r.Body, maximum)
+	item, err := h.instanceArchive.Import(r.Context(), r.Body, maximum)
+	if err != nil {
+		writeError(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+	writeJSON(w, http.StatusCreated, item)
 }
 
 func (h *Handler) TestEnvironmentConnection(w http.ResponseWriter, r *http.Request) {

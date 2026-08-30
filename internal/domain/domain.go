@@ -136,6 +136,7 @@ type PlanningRequest = planning.PlanningRequest
 type AlgorithmSelection = planning.AlgorithmSelection
 type PlanningSession = planning.PlanningSession
 type AlgorithmRun = planning.AlgorithmRun
+type PlanningEstimate = planning.PlanningEstimate
 type PlanCandidate = planning.PlanCandidate
 type PlanningStatus = planning.PlanningStatus
 

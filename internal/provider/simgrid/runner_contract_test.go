@@ -34,3 +34,24 @@ func TestRunnerInputPrefersActivityRuntimeAndSeparatesOverhead(t *testing.T) {
 	require.InDelta(t, 1e12, input.Tasks[0].FLOPs, 1)
 	require.InDelta(t, 15, input.Tasks[0].OverheadSeconds, 1e-9)
 }
+
+func TestRunnerInputUsesFrozenPlannedRuntimeForProfileSimulation(t *testing.T) {
+	request := ports.ExecutionRequest{
+		Run: domain.ExecutionRun{ID: "run"},
+		Plan: domain.SchedulePlan{ID: "plan", Assignments: []domain.PlanAssignment{{
+			ID: "assignment", ActivityID: "activity", ResourceID: "resource",
+			PredictedRuntimeSeconds: 2,
+		}}},
+		Workflow: domain.WorkflowVersion{Activities: []domain.Activity{{
+			ID: "activity", Simulation: &domain.ActivitySimulation{DurationSeconds: 10},
+		}}},
+		Resources: []domain.Resource{{ID: "resource", ComputeSpeedup: 5}},
+	}
+
+	payload, err := buildRunnerInput(request, 1e9)
+	require.NoError(t, err)
+	var input runnerInput
+	require.NoError(t, json.Unmarshal(payload, &input))
+	require.Len(t, input.Tasks, 1)
+	require.InDelta(t, 10e9, input.Tasks[0].FLOPs, 1)
+}

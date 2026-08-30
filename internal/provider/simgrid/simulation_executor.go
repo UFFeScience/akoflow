@@ -282,13 +282,19 @@ func resolveRuntime(activity domain.Activity, assignment domain.PlanAssignment, 
 	if profile, ok := profiles[activity.ActivityTypeID+"\x00"+resource.ID]; ok {
 		return profile.RuntimeSeconds
 	}
+	// The selected plan freezes the resource-specific runtime. Reusing the
+	// activity's reference duration here would apply ComputeSpeedup a second
+	// time when the runner converts this duration back to FLOPs.
+	if assignment.PredictedRuntimeSeconds > 0 {
+		return assignment.PredictedRuntimeSeconds
+	}
 	if activity.Simulation != nil {
 		return activity.Simulation.DurationSeconds
 	}
 	// Manually authored plans freeze the expected duration in the assignment.
 	// This is the simulation model for executable-only workflows created in the
 	// desktop UI, which do not carry an ActivitySimulation definition.
-	return assignment.PredictedRuntimeSeconds
+	return 0
 }
 
 func numberMetadata(metadata map[string]any, key string) (float64, bool) {

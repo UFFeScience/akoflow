@@ -2,6 +2,7 @@ package algorithms
 
 import (
 	"context"
+	"reflect"
 	"testing"
 
 	"github.com/UFFeScience/akoflow/internal/domain"
@@ -29,6 +30,108 @@ func TestHEFTProducesOneCompletePlan(t *testing.T) {
 	assertCompletePlan(t, sink.plans[0], request)
 }
 
+func TestOptimizedHEFTPreservesCanonicalPlacement(t *testing.T) {
+	request := planningRequestFixture()
+	want := legacyHEFTPlan(t, request)
+	sink := &testSink{}
+	if err := (HEFT{}).Schedule(context.Background(), request, nil, nil, sink); err != nil {
+		t.Fatalf("schedule optimized HEFT: %v", err)
+	}
+	if !reflect.DeepEqual(sink.plans[0].Assignments, want.Assignments) {
+		t.Fatalf(
+			"optimized HEFT changed canonical assignments\nactual: %#v\nexpected: %#v",
+			sink.plans[0].Assignments,
+			want.Assignments,
+		)
+	}
+	if sink.plans[0].Predicted != want.Predicted {
+		t.Fatalf(
+			"optimized HEFT changed predicted metrics: actual %#v, expected %#v",
+			sink.plans[0].Predicted,
+			want.Predicted,
+		)
+	}
+}
+
+func legacyHEFTPlan(t *testing.T, request domain.PlanningRequest) domain.SchedulePlan {
+	t.Helper()
+	order, err := heftOrder(request)
+	if err != nil {
+		t.Fatalf("order legacy HEFT activities: %v", err)
+	}
+	state := initialState()
+	for index, activity := range order {
+		var selected *scheduledState
+		for _, resource := range schedulableResources(request) {
+			if !resourceFeasible(activity, resource) {
+				continue
+			}
+			for _, core := range cores(resource) {
+				candidate := place(request, state, activity, resource, core, index)
+				if selected == nil || candidate.makespan < selected.makespan ||
+					(candidate.makespan == selected.makespan && candidate.cost < selected.cost) {
+					copy := candidate
+					selected = &copy
+				}
+			}
+		}
+		if selected == nil {
+			t.Fatalf("legacy HEFT found no placement for %q", activity.ID)
+		}
+		state = *selected
+	}
+	return planFromState("heft-candidate-1", "heft", "time", request, state)
+}
+
+func TestHPCMachineExposesDiscoveredCoresToSchedulers(t *testing.T) {
+	resource := planningResource("hpc-node", 36, 1, 0)
+	resource.ExecutionTarget = domain.ExecutionTargetBatch
+	resource.Type = domain.ResourceHPCMachine
+
+	actual := cores(resource)
+	if len(actual) != 36 {
+		t.Fatalf("expected 36 schedulable HPC cores, got %d", len(actual))
+	}
+}
+
+func TestHEFTDistributesParallelActivitiesAcrossHPCMachineCores(t *testing.T) {
+	resource := planningResource("hpc-node", 4, 1, 0)
+	resource.ExecutionTarget = domain.ExecutionTargetBatch
+	resource.Type = domain.ResourceHPCMachine
+	request := domain.PlanningRequest{
+		Workflow: domain.WorkflowVersion{Activities: []domain.Activity{
+			planningActivity("t1", 1), planningActivity("t2", 1),
+			planningActivity("t3", 1), planningActivity("t4", 1),
+		}},
+		ExecutionScope: domain.ExecutionScope{
+			EnvironmentVersionIDs: []string{"environment"},
+		},
+		Resources: []domain.Resource{resource},
+	}
+	sink := &testSink{}
+	if err := (HEFT{}).Schedule(context.Background(), request, nil, nil, sink); err != nil {
+		t.Fatalf("schedule parallel HPC work: %v", err)
+	}
+	used := map[string]bool{}
+	for _, assignment := range sink.plans[0].Assignments {
+		used[assignment.CoreID] = true
+	}
+	if len(used) != 4 {
+		t.Fatalf("expected HEFT to use four HPC cores, got %v", used)
+	}
+}
+
+func TestAbstractBatchQueueRemainsASingleSchedulerTarget(t *testing.T) {
+	resource := planningResource("partition", 36, 1, 0)
+	resource.ExecutionTarget = domain.ExecutionTargetBatch
+	resource.Type = domain.ResourceHPCPartition
+
+	actual := cores(resource)
+	if len(actual) != 1 || actual[0] != "partition-slot" {
+		t.Fatalf("expected one opaque partition slot, got %v", actual)
+	}
+}
+
 func TestPRISMPreservesMultipleOptionsForEachExclusiveObjective(t *testing.T) {
 	request := planningRequestFixture()
 	for _, scheduler := range []PRISM{NewPRISMTime(), NewPRISMCost()} {
@@ -54,6 +157,175 @@ func TestPRISMPreservesMultipleOptionsForEachExclusiveObjective(t *testing.T) {
 				}
 			}
 		})
+	}
+}
+
+func TestPRISMTimeIsAnchoredToCanonicalHEFT(t *testing.T) {
+	request := planningRequestFixture()
+	heftSink := &testSink{}
+	if err := (HEFT{}).Schedule(context.Background(), request, nil, nil, heftSink); err != nil {
+		t.Fatalf("schedule HEFT: %v", err)
+	}
+	prismSink := &testSink{}
+	if err := NewPRISMTime().Schedule(
+		context.Background(),
+		request,
+		map[string]any{"beamWidth": 20, "optionCount": 6},
+		nil,
+		prismSink,
+	); err != nil {
+		t.Fatalf("schedule PRISM Time: %v", err)
+	}
+	if len(prismSink.plans) == 0 {
+		t.Fatal("expected at least the canonical HEFT anchor")
+	}
+	if prismSink.plans[0].Predicted.MakespanSeconds > heftSink.plans[0].Predicted.MakespanSeconds+prismImprovementEpsilon {
+		t.Fatalf(
+			"PRISM Time makespan %.3f is worse than HEFT %.3f",
+			prismSink.plans[0].Predicted.MakespanSeconds,
+			heftSink.plans[0].Predicted.MakespanSeconds,
+		)
+	}
+}
+
+func TestPRISMPriorityRankIncludesCommunication(t *testing.T) {
+	request := planningRequestFixture()
+	request.Workflow.DataDependencies = []domain.ActivityDataDependency{
+		{ProducerActivityID: "t1", ConsumerActivityID: "t2", SizeBytes: 1_000_000_000},
+	}
+	request.NetworkTopology.Links = []domain.NetworkLink{
+		{
+			SourceResourceID:       "m1",
+			TargetResourceID:       "m2",
+			BandwidthBitsPerSecond: 8_000_000_000,
+			Bidirectional:          true,
+		},
+	}
+	order, err := topologicalOrder(request.Workflow)
+	if err != nil {
+		t.Fatalf("topological order: %v", err)
+	}
+	ranks, err := prismCommunicationRanks(request, order, schedulableResources(request))
+	if err != nil {
+		t.Fatalf("PRISM ranks: %v", err)
+	}
+	if ranks["t1"] <= ranks["t2"] {
+		t.Fatalf("expected predecessor rank %.3f to include communication and exceed successor %.3f", ranks["t1"], ranks["t2"])
+	}
+}
+
+func TestPRISMTransferCountsKnownActiveFlowAtSharedSource(t *testing.T) {
+	flow := scheduledNetworkFlow{
+		sourceResourceID:      "source",
+		destinationResourceID: "another-target",
+		readyAt:               0,
+		deliveredAt:           3,
+	}
+	assertPRISMTransferSeconds(t, flow, 2.25)
+}
+
+func TestPRISMTransferCountsKnownActiveFlowAtSharedDestination(t *testing.T) {
+	flow := scheduledNetworkFlow{
+		sourceResourceID:      "another-source",
+		destinationResourceID: "target",
+		readyAt:               0,
+		deliveredAt:           3,
+	}
+	assertPRISMTransferSeconds(t, flow, 2.25)
+}
+
+func TestPRISMTransferIgnoresDisjointActiveFlow(t *testing.T) {
+	flow := scheduledNetworkFlow{
+		sourceResourceID:      "another-source",
+		destinationResourceID: "another-target",
+		readyAt:               0,
+		deliveredAt:           3,
+	}
+	assertPRISMTransferSeconds(t, flow, 1.25)
+}
+
+func TestPRISMTransferIgnoresFlowDeliveredAtReadyTime(t *testing.T) {
+	flow := scheduledNetworkFlow{
+		sourceResourceID:      "source",
+		destinationResourceID: "another-target",
+		readyAt:               0,
+		deliveredAt:           1,
+	}
+	assertPRISMTransferSeconds(t, flow, 1.25)
+}
+
+func assertPRISMTransferSeconds(t *testing.T, flow scheduledNetworkFlow, expected float64) {
+	t.Helper()
+	topology := domain.NetworkTopology{
+		Links: []domain.NetworkLink{
+			{
+				SourceResourceID:       "source",
+				TargetResourceID:       "target",
+				BandwidthBitsPerSecond: 80,
+				LatencySeconds:         0.25,
+			},
+		},
+	}
+	actual := prismTransferSeconds(topology, "source", "target", 10, 1, []scheduledNetworkFlow{flow})
+	if actual != expected {
+		t.Fatalf("expected %.2f seconds, got %.2f", expected, actual)
+	}
+}
+
+func TestHEFTPlacementIgnoresPRISMNetworkFlowState(t *testing.T) {
+	request := domain.PlanningRequest{
+		Workflow: domain.WorkflowVersion{
+			Activities: []domain.Activity{
+				planningActivity("producer", 1),
+				planningActivity("consumer", 1),
+			},
+			Dependencies: []domain.ActivityDependency{
+				{ActivityID: "consumer", DependsOnActivityID: "producer"},
+			},
+			DataDependencies: []domain.ActivityDataDependency{
+				{ProducerActivityID: "producer", ConsumerActivityID: "consumer", SizeBytes: 10},
+			},
+		},
+		NetworkTopology: domain.NetworkTopology{
+			Links: []domain.NetworkLink{
+				{
+					SourceResourceID:       "source",
+					TargetResourceID:       "target",
+					BandwidthBitsPerSecond: 80,
+				},
+			},
+		},
+	}
+	state := initialState()
+	state.byActivity["producer"] = domain.PlanAssignment{
+		ActivityID:        "producer",
+		ResourceID:        "source",
+		PredictedFinishAt: 1,
+	}
+	state.networkFlows = []scheduledNetworkFlow{
+		{
+			sourceResourceID:      "source",
+			destinationResourceID: "another-target",
+			readyAt:               0,
+			deliveredAt:           3,
+		},
+	}
+
+	resource := planningResource("target", 1, 1, 0)
+	heftState := place(request, state, request.Workflow.Activities[1], resource, "target-core-1", 1)
+	prismState := placePRISM(request, state, request.Workflow.Activities[1], resource, "target-core-1", 1)
+
+	if heftState.assignments[0].PredictedTransferSeconds != 1 {
+		t.Fatalf(
+			"expected HEFT transfer to remain 1 second, got %.2f",
+			heftState.assignments[0].PredictedTransferSeconds,
+		)
+	}
+	if prismState.assignments[0].PredictedTransferSeconds != 2 {
+		t.Fatalf(
+			"expected PRISM transfer to account for contention, got %.2f",
+			prismState.assignments[0].PredictedTransferSeconds,
+		)
 	}
 }
 

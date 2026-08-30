@@ -26,16 +26,21 @@ type PlanningStore interface {
 	FindSession(context.Context, string) (*domain.PlanningSession, error)
 	ListSessions(context.Context) ([]domain.PlanningSession, error)
 	ListAlgorithmRuns(context.Context, string) ([]domain.AlgorithmRun, error)
+	SetSessionQueued(context.Context, string) error
 	SetSessionRunning(context.Context, string) error
 	SetSessionCompleted(context.Context, string) error
 	SetSessionFailed(context.Context, string, string) error
+	SetSessionCancelled(context.Context, string) error
 	SetAlgorithmRunRunning(context.Context, string) error
+	SetAlgorithmRunEstimate(context.Context, string, domain.PlanningEstimate) error
 	UpdateAlgorithmRunProgress(context.Context, string, float64) error
 	UpdateSessionProgress(context.Context, string, float64) error
 	SetAlgorithmRunCompleted(context.Context, string) error
 	SetAlgorithmRunFailed(context.Context, string, string) error
+	SetAlgorithmRunCancelled(context.Context, string) error
 	SaveCandidate(context.Context, domain.PlanCandidate) error
 	ListCandidates(context.Context, string) ([]domain.PlanCandidate, error)
+	ListCandidateSummaries(context.Context, string) ([]domain.PlanCandidate, error)
 	FindCandidate(context.Context, string) (*domain.PlanCandidate, error)
 	UpdateCandidateRanks(context.Context, []domain.PlanCandidate) error
 	SelectCandidate(context.Context, string, domain.PlanCandidate) error

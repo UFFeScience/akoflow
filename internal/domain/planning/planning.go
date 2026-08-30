@@ -109,17 +109,32 @@ type PlanningSession struct {
 }
 
 type AlgorithmRun struct {
-	ID                string         `json:"id"`
-	PlanningSessionID string         `json:"planningSessionId"`
-	Algorithm         string         `json:"algorithm"`
-	Objective         string         `json:"objective"`
-	Status            PlanningStatus `json:"status"`
-	Progress          float64        `json:"progress"`
-	CandidateCount    int            `json:"candidateCount"`
-	Configuration     map[string]any `json:"configuration,omitempty"`
-	FailureReason     string         `json:"failureReason,omitempty"`
-	StartedAt         *time.Time     `json:"startedAt,omitempty"`
-	CompletedAt       *time.Time     `json:"completedAt,omitempty"`
+	ID                string           `json:"id"`
+	PlanningSessionID string           `json:"planningSessionId"`
+	Algorithm         string           `json:"algorithm"`
+	Objective         string           `json:"objective"`
+	Status            PlanningStatus   `json:"status"`
+	Progress          float64          `json:"progress"`
+	CandidateCount    int              `json:"candidateCount"`
+	Configuration     map[string]any   `json:"configuration,omitempty"`
+	Estimate          PlanningEstimate `json:"estimate"`
+	FailureReason     string           `json:"failureReason,omitempty"`
+	StartedAt         *time.Time       `json:"startedAt,omitempty"`
+	CompletedAt       *time.Time       `json:"completedAt,omitempty"`
+}
+
+// PlanningEstimate describes the amount of search work expected before an
+// algorithm starts. Clients combine it with live progress to estimate the
+// remaining wall-clock time.
+type PlanningEstimate struct {
+	DurationSeconds     float64 `json:"durationSeconds"`
+	ExpandedStates      int64   `json:"expandedStates"`
+	ActivityCount       int     `json:"activityCount"`
+	DependencyCount     int     `json:"dependencyCount"`
+	CompatibleResources int     `json:"compatibleResources"`
+	BeamWidth           int     `json:"beamWidth,omitempty"`
+	ReadyBranchLimit    int     `json:"readyBranchLimit,omitempty"`
+	Confidence          string  `json:"confidence"`
 }
 
 // PlanCandidate is intentionally separate from SchedulePlan. Only a selected

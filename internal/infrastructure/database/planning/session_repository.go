@@ -45,7 +45,12 @@ func (r *Repository) CreateSession(ctx context.Context, session domain.PlanningS
 		return err
 	}
 	for _, run := range runs {
-		config, err := encodeJSON(run.Configuration)
+		persistedConfiguration := make(map[string]any, len(run.Configuration)+1)
+		for key, value := range run.Configuration {
+			persistedConfiguration[key] = value
+		}
+		persistedConfiguration["_planningEstimate"] = run.Estimate
+		config, err := encodeJSON(persistedConfiguration)
 		if err != nil {
 			return err
 		}
@@ -137,6 +142,16 @@ func scanAlgorithmRun(scanner interface{ Scan(...any) error }) (*domain.Algorith
 		if err := json.Unmarshal([]byte(configuration), &run.Configuration); err != nil {
 			return nil, err
 		}
+		if raw, exists := run.Configuration["_planningEstimate"]; exists {
+			encoded, err := json.Marshal(raw)
+			if err != nil {
+				return nil, err
+			}
+			if err := json.Unmarshal(encoded, &run.Estimate); err != nil {
+				return nil, err
+			}
+			delete(run.Configuration, "_planningEstimate")
+		}
 	}
 	if startedAt.Valid {
 		run.StartedAt = &startedAt.Time
@@ -166,6 +181,11 @@ func (r *Repository) ListAlgorithmRuns(ctx context.Context, sessionID string) ([
 	return items, rows.Err()
 }
 
+func (r *Repository) SetSessionQueued(ctx context.Context, id string) error {
+	_, err := r.db.ExecContext(ctx, `UPDATE planning_sessions SET status='queued' WHERE id=? AND status='running'`, id)
+	return err
+}
+
 func (r *Repository) SetSessionRunning(ctx context.Context, id string) error {
 	_, err := r.db.ExecContext(ctx, `UPDATE planning_sessions SET status='running', started_at=COALESCE(started_at, CURRENT_TIMESTAMP) WHERE id=? AND status IN ('queued','running')`, id)
 	return err
@@ -178,8 +198,31 @@ func (r *Repository) SetSessionFailed(ctx context.Context, id, reason string) er
 	_, err := r.db.ExecContext(ctx, `UPDATE planning_sessions SET status='failed', failure_reason=?, completed_at=CURRENT_TIMESTAMP WHERE id=?`, reason, id)
 	return err
 }
+func (r *Repository) SetSessionCancelled(ctx context.Context, id string) error {
+	_, err := r.db.ExecContext(ctx, `UPDATE planning_sessions SET status='cancelled', completed_at=CURRENT_TIMESTAMP WHERE id=? AND status IN ('queued','running')`, id)
+	return err
+}
 func (r *Repository) SetAlgorithmRunRunning(ctx context.Context, id string) error {
 	_, err := r.db.ExecContext(ctx, `UPDATE planning_algorithm_runs SET status='running', started_at=COALESCE(started_at,CURRENT_TIMESTAMP) WHERE id=?`, id)
+	return err
+}
+func (r *Repository) SetAlgorithmRunEstimate(ctx context.Context, id string, estimate domain.PlanningEstimate) error {
+	var encodedConfiguration string
+	if err := r.db.QueryRowContext(ctx, `SELECT configuration FROM planning_algorithm_runs WHERE id=?`, id).Scan(&encodedConfiguration); err != nil {
+		return err
+	}
+	configuration := map[string]any{}
+	if encodedConfiguration != "" {
+		if err := json.Unmarshal([]byte(encodedConfiguration), &configuration); err != nil {
+			return err
+		}
+	}
+	configuration["_planningEstimate"] = estimate
+	encoded, err := json.Marshal(configuration)
+	if err != nil {
+		return err
+	}
+	_, err = r.db.ExecContext(ctx, `UPDATE planning_algorithm_runs SET configuration=? WHERE id=?`, string(encoded), id)
 	return err
 }
 func (r *Repository) UpdateAlgorithmRunProgress(ctx context.Context, id string, progress float64) error {
@@ -196,6 +239,10 @@ func (r *Repository) SetAlgorithmRunCompleted(ctx context.Context, id string) er
 }
 func (r *Repository) SetAlgorithmRunFailed(ctx context.Context, id, reason string) error {
 	_, err := r.db.ExecContext(ctx, `UPDATE planning_algorithm_runs SET status='failed', failure_reason=?, completed_at=CURRENT_TIMESTAMP WHERE id=?`, reason, id)
+	return err
+}
+func (r *Repository) SetAlgorithmRunCancelled(ctx context.Context, id string) error {
+	_, err := r.db.ExecContext(ctx, `UPDATE planning_algorithm_runs SET status='cancelled', completed_at=CURRENT_TIMESTAMP WHERE id=? AND status IN ('queued','running')`, id)
 	return err
 }
 
@@ -260,6 +307,49 @@ func (r *Repository) ListCandidates(ctx context.Context, sessionID string) ([]do
 	items := []domain.PlanCandidate{}
 	for rows.Next() {
 		item, err := scanCandidate(rows)
+		if err != nil {
+			return nil, err
+		}
+		items = append(items, *item)
+	}
+	return items, rows.Err()
+}
+
+func scanCandidateSummary(scanner interface{ Scan(...any) error }) (*domain.PlanCandidate, error) {
+	var candidate domain.PlanCandidate
+	err := scanner.Scan(
+		&candidate.ID,
+		&candidate.PlanningSessionID,
+		&candidate.AlgorithmRunID,
+		&candidate.Algorithm,
+		&candidate.Objective,
+		&candidate.Rank,
+		&candidate.ParetoOptimal,
+		&candidate.Dominated,
+		&candidate.Feasible,
+		&candidate.Predicted.MakespanSeconds,
+		&candidate.Predicted.Cost,
+		&candidate.Plan.AssignmentCount,
+		&candidate.Fingerprint,
+		&candidate.CreatedAt,
+	)
+	candidate.Predicted.Feasible = candidate.Feasible
+	return &candidate, err
+}
+
+func (r *Repository) ListCandidateSummaries(ctx context.Context, sessionID string) ([]domain.PlanCandidate, error) {
+	const columns = `id, planning_session_id, algorithm_run_id, algorithm, objective,
+		rank, pareto_optimal, dominated, feasible, predicted_makespan_seconds, predicted_cost,
+		COALESCE(json_array_length(json_extract(plan, '$.assignments')), 0), fingerprint, created_at`
+	rows, err := r.db.QueryContext(ctx, `SELECT `+columns+` FROM planning_candidates
+		WHERE planning_session_id=? ORDER BY rank, predicted_makespan_seconds, predicted_cost`, sessionID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []domain.PlanCandidate{}
+	for rows.Next() {
+		item, err := scanCandidateSummary(rows)
 		if err != nil {
 			return nil, err
 		}

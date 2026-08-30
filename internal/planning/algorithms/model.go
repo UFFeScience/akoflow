@@ -9,26 +9,42 @@ import (
 )
 
 type scheduledState struct {
-	assignments []domain.PlanAssignment
-	byActivity  map[string]domain.PlanAssignment
-	coreFree    map[string]float64
-	coreOrder   map[string]int
-	makespan    float64
-	cost        float64
+	assignments  []domain.PlanAssignment
+	byActivity   map[string]domain.PlanAssignment
+	coreFree     map[string]float64
+	coreOrder    map[string]int
+	networkFlows []scheduledNetworkFlow
+	makespan     float64
+	cost         float64
+	signature    uint64
+}
+
+type scheduledNetworkFlow struct {
+	sourceResourceID      string
+	destinationResourceID string
+	readyAt               float64
+	deliveredAt           float64
 }
 
 func initialState() scheduledState {
-	return scheduledState{byActivity: map[string]domain.PlanAssignment{}, coreFree: map[string]float64{}, coreOrder: map[string]int{}}
+	return scheduledState{
+		byActivity: map[string]domain.PlanAssignment{},
+		coreFree:   map[string]float64{},
+		coreOrder:  map[string]int{},
+		signature:  14695981039346656037,
+	}
 }
 
 func cloneState(value scheduledState) scheduledState {
 	out := scheduledState{
-		assignments: append([]domain.PlanAssignment{}, value.assignments...),
-		byActivity:  map[string]domain.PlanAssignment{},
-		coreFree:    map[string]float64{},
-		coreOrder:   map[string]int{},
-		makespan:    value.makespan,
-		cost:        value.cost,
+		assignments:  append([]domain.PlanAssignment{}, value.assignments...),
+		byActivity:   map[string]domain.PlanAssignment{},
+		coreFree:     map[string]float64{},
+		coreOrder:    map[string]int{},
+		networkFlows: append([]scheduledNetworkFlow{}, value.networkFlows...),
+		makespan:     value.makespan,
+		cost:         value.cost,
+		signature:    value.signature,
 	}
 	for key, item := range value.byActivity {
 		out.byActivity[key] = item
@@ -138,10 +154,22 @@ func duration(activity domain.Activity, resource domain.Resource, profiles []dom
 }
 
 func resourceFeasible(activity domain.Activity, resource domain.Resource) bool {
-	if resource.ExecutionTarget == domain.ExecutionTargetBatch {
+	if opaqueBatchTarget(resource) {
 		return true
 	}
 	return resource.CPUCapacity >= activity.Resources.CPU && resource.MemoryBytes >= activity.Resources.MemoryBytes
+}
+
+// An abstract queue, partition, or reservation does not expose stable cores to
+// the planner. A discovered HPC machine does, even when its jobs are submitted
+// through a batch scheduler.
+func opaqueBatchTarget(resource domain.Resource) bool {
+	if resource.ExecutionTarget != domain.ExecutionTargetBatch {
+		return false
+	}
+	return resource.Type == domain.ResourceBatchQueue ||
+		resource.Type == domain.ResourceHPCPartition ||
+		resource.Type == domain.ResourceSlurmReservation
 }
 
 func cores(resource domain.Resource) []string {
@@ -153,7 +181,7 @@ func cores(resource domain.Resource) []string {
 	for index := range items {
 		items[index] = fmt.Sprintf("%s-core-%d", resource.ID, index+1)
 	}
-	if resource.ExecutionTarget == domain.ExecutionTargetBatch {
+	if opaqueBatchTarget(resource) {
 		return []string{resource.ID + "-slot"}
 	}
 	return items
@@ -168,6 +196,44 @@ func transferSeconds(topology domain.NetworkTopology, source, target string, byt
 			return link.TransferSeconds(bytes)
 		}
 	}
+	return 0
+}
+
+func prismTransferSeconds(
+	topology domain.NetworkTopology,
+	source string,
+	target string,
+	bytes int64,
+	readyAt float64,
+	knownFlows []scheduledNetworkFlow,
+) float64 {
+	if source == target || bytes <= 0 {
+		return 0
+	}
+
+	for _, link := range topology.Links {
+		matchesForward := link.SourceResourceID == source && link.TargetResourceID == target
+		matchesReverse := link.Bidirectional && link.SourceResourceID == target && link.TargetResourceID == source
+		if !matchesForward && !matchesReverse {
+			continue
+		}
+
+		concurrency := 1
+		for _, flow := range knownFlows {
+			activeAtReady := flow.readyAt <= readyAt && readyAt < flow.deliveredAt
+			sharesEndpoint := flow.sourceResourceID == source || flow.destinationResourceID == target
+			if activeAtReady && sharesEndpoint {
+				concurrency++
+			}
+		}
+
+		if link.BandwidthBitsPerSecond <= 0 {
+			return link.TransferSeconds(bytes)
+		}
+		dataSeconds := float64(bytes) / (link.BandwidthBitsPerSecond / 8.0)
+		return link.LatencySeconds + dataSeconds*float64(concurrency)
+	}
+
 	return 0
 }
 
@@ -208,6 +274,101 @@ func place(request domain.PlanningRequest, state scheduledState, activity domain
 		out.makespan = finish
 	}
 	return out
+}
+
+func placePRISM(
+	request domain.PlanningRequest,
+	state scheduledState,
+	activity domain.Activity,
+	resource domain.Resource,
+	core string,
+	sequence int,
+) scheduledState {
+	out := cloneState(state)
+	readyAt, transfers := 0.0, 0.0
+	preds := predecessors(request.Workflow)[activity.ID]
+	bytes := dataBytes(request.Workflow)[activity.ID]
+	for _, predecessorID := range preds {
+		predecessor := state.byActivity[predecessorID]
+		flowReadyAt := predecessor.PredictedFinishAt
+		transfer := prismTransferSeconds(
+			request.NetworkTopology,
+			predecessor.ResourceID,
+			resource.ID,
+			bytes[predecessorID],
+			flowReadyAt,
+			out.networkFlows,
+		)
+		transfers += transfer
+		deliveredAt := flowReadyAt + transfer
+		if deliveredAt > readyAt {
+			readyAt = deliveredAt
+		}
+		if predecessor.ResourceID != resource.ID && bytes[predecessorID] > 0 {
+			out.networkFlows = append(out.networkFlows, scheduledNetworkFlow{
+				sourceResourceID:      predecessor.ResourceID,
+				destinationResourceID: resource.ID,
+				readyAt:               flowReadyAt,
+				deliveredAt:           deliveredAt,
+			})
+		}
+	}
+
+	start := math.Max(readyAt, state.coreFree[core])
+	runtime := duration(activity, resource, request.ActivityProfiles)
+	if state.coreOrder[core] == 0 {
+		start += resource.BootOverheadSeconds
+	}
+	start += resource.ContainerOverhead
+	finish := start + runtime
+	assignment := domain.PlanAssignment{
+		ID:                       fmt.Sprintf("assignment-%d-%s-%s", sequence, activity.ID, resource.ID),
+		ActivityID:               activity.ID,
+		ResourceID:               resource.ID,
+		CoreID:                   core,
+		OrderOnResource:          state.coreOrder[core],
+		Priority:                 activity.Priority,
+		PredictedReadyAt:         readyAt,
+		PredictedStartAt:         start,
+		PredictedFinishAt:        finish,
+		PredictedRuntimeSeconds:  runtime,
+		PredictedTransferSeconds: transfers,
+		PredictedCost:            runtime * resource.PricePerSecond,
+		Metadata: map[string]any{
+			"scheduleBasis":           "algorithm",
+			"expectedDurationSeconds": runtime,
+			"networkContentionModel":  "known-active-flows",
+		},
+	}
+	out.assignments = append(out.assignments, assignment)
+	out.byActivity[activity.ID] = assignment
+	out.coreFree[core] = finish
+	out.coreOrder[core]++
+	out.cost += assignment.PredictedCost
+	out.signature = extendScheduleSignature(
+		state.signature,
+		activity.ID,
+		resource.ID,
+		core,
+	)
+	if finish > out.makespan {
+		out.makespan = finish
+	}
+	return out
+}
+
+func extendScheduleSignature(seed uint64, values ...string) uint64 {
+	const prime = uint64(1099511628211)
+	value := seed
+	for _, item := range values {
+		for index := 0; index < len(item); index++ {
+			value ^= uint64(item[index])
+			value *= prime
+		}
+		value ^= 0xff
+		value *= prime
+	}
+	return value
 }
 
 func planFromState(id, algorithm, objective string, request domain.PlanningRequest, state scheduledState) domain.SchedulePlan {

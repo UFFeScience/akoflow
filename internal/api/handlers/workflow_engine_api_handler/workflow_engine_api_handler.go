@@ -72,6 +72,7 @@ type BuildOrchestrator interface {
 type PlanningOrchestrator interface {
 	Algorithms() []ports.SchedulerDescriptor
 	Create(context.Context, domain.PlanningSession) (*domain.PlanningSession, error)
+	Cancel(context.Context, string) error
 	Select(context.Context, string, string) (*domain.SchedulePlan, error)
 }
 
@@ -1535,17 +1536,46 @@ func (h *Handler) GetPlanningSession(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, http.StatusOK, map[string]any{"session": session, "algorithmRuns": runs})
 }
 
+func (h *Handler) CancelPlanningSession(w http.ResponseWriter, r *http.Request) {
+	if h.planning == nil {
+		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("planning is unavailable"))
+		return
+	}
+	if err := h.planning.Cancel(r.Context(), r.PathValue("sessionId")); err != nil {
+		writeError(w, http.StatusConflict, err)
+		return
+	}
+	w.WriteHeader(http.StatusNoContent)
+}
+
 func (h *Handler) ListPlanningCandidates(w http.ResponseWriter, r *http.Request) {
 	if h.planningStore == nil {
 		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("planning is unavailable"))
 		return
 	}
-	items, err := h.planningStore.ListCandidates(r.Context(), r.PathValue("sessionId"))
+	items, err := h.planningStore.ListCandidateSummaries(r.Context(), r.PathValue("sessionId"))
 	if err != nil {
 		writeError(w, http.StatusInternalServerError, err)
 		return
 	}
 	writeJSON(w, http.StatusOK, items)
+}
+
+func (h *Handler) GetPlanningCandidate(w http.ResponseWriter, r *http.Request) {
+	if h.planningStore == nil {
+		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("planning is unavailable"))
+		return
+	}
+	item, err := h.planningStore.FindCandidate(r.Context(), r.PathValue("candidateId"))
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, err)
+		return
+	}
+	if item == nil || item.PlanningSessionID != r.PathValue("sessionId") {
+		writeError(w, http.StatusNotFound, nil)
+		return
+	}
+	writeJSON(w, http.StatusOK, item)
 }
 
 func (h *Handler) SelectPlanningCandidate(w http.ResponseWriter, r *http.Request) {

@@ -2,22 +2,66 @@ package algorithms
 
 import (
 	"math"
-
-	"github.com/UFFeScience/akoflow/internal/domain"
 )
 
+type compactPRISMAssignment struct {
+	valid            bool
+	activityOrdinal  int
+	resourceOrdinal  int
+	coreOrdinal      int
+	sequence         int
+	order            int
+	priority         int
+	readyAt          float64
+	startAt          float64
+	finishAt         float64
+	runtimeSeconds   float64
+	transferSeconds  float64
+	cost             float64
+	bootSeconds      float64
+	containerSeconds float64
+	queueSeconds     float64
+	transferCost     float64
+}
+
 type compactPRISMAssignmentTrace struct {
-	assignment domain.PlanAssignment
+	assignment compactPRISMAssignment
 	previous   *compactPRISMAssignmentTrace
 	length     int
 }
 
-type compactPRISMAssignmentNode struct {
-	key      int
-	value    domain.PlanAssignment
-	priority uint64
-	left     *compactPRISMAssignmentNode
-	right    *compactPRISMAssignmentNode
+func compactPRISMAssignmentChunkLookup(
+	chunks [][]compactPRISMAssignment,
+	key int,
+) (compactPRISMAssignment, bool) {
+	chunkIndex := key / prismPendingChunkSize
+	offset := key % prismPendingChunkSize
+	if chunkIndex < 0 || chunkIndex >= len(chunks) || chunks[chunkIndex] == nil {
+		return compactPRISMAssignment{}, false
+	}
+	assignment := chunks[chunkIndex][offset]
+	if !assignment.valid {
+		return compactPRISMAssignment{}, false
+	}
+	return assignment, true
+}
+
+func compactPRISMAssignmentChunkInsert(
+	chunks [][]compactPRISMAssignment,
+	key int,
+	value compactPRISMAssignment,
+) [][]compactPRISMAssignment {
+	chunkIndex := key / prismPendingChunkSize
+	offset := key % prismPendingChunkSize
+	updated := append([][]compactPRISMAssignment(nil), chunks...)
+	chunk := make([]compactPRISMAssignment, prismPendingChunkSize)
+	if updated[chunkIndex] != nil {
+		copy(chunk, updated[chunkIndex])
+	}
+	value.valid = true
+	chunk[offset] = value
+	updated[chunkIndex] = chunk
+	return updated
 }
 
 type compactPRISMIntNode struct {
@@ -45,68 +89,6 @@ func compactPRISMPriority(key int) uint64 {
 	value ^= value >> 27
 	value *= 0x94d049bb133111eb
 	return value ^ (value >> 31)
-}
-
-func compactPRISMAssignmentLookup(
-	root *compactPRISMAssignmentNode,
-	key int,
-) (domain.PlanAssignment, bool) {
-	for root != nil {
-		switch {
-		case key < root.key:
-			root = root.left
-		case key > root.key:
-			root = root.right
-		default:
-			return root.value, true
-		}
-	}
-	return domain.PlanAssignment{}, false
-}
-
-func compactPRISMAssignmentInsert(
-	root *compactPRISMAssignmentNode,
-	key int,
-	value domain.PlanAssignment,
-) *compactPRISMAssignmentNode {
-	if root == nil {
-		return &compactPRISMAssignmentNode{
-			key: key, value: value, priority: compactPRISMPriority(key),
-		}
-	}
-	copy := *root
-	if key < root.key {
-		copy.left = compactPRISMAssignmentInsert(root.left, key, value)
-		if copy.left.priority < copy.priority {
-			return compactPRISMRotateAssignmentRight(&copy)
-		}
-	} else if key > root.key {
-		copy.right = compactPRISMAssignmentInsert(root.right, key, value)
-		if copy.right.priority < copy.priority {
-			return compactPRISMRotateAssignmentLeft(&copy)
-		}
-	} else {
-		copy.value = value
-	}
-	return &copy
-}
-
-func compactPRISMRotateAssignmentRight(
-	root *compactPRISMAssignmentNode,
-) *compactPRISMAssignmentNode {
-	left, updated := *root.left, *root
-	updated.left = left.right
-	left.right = &updated
-	return &left
-}
-
-func compactPRISMRotateAssignmentLeft(
-	root *compactPRISMAssignmentNode,
-) *compactPRISMAssignmentNode {
-	right, updated := *root.right, *root
-	updated.right = right.left
-	right.left = &updated
-	return &right
 }
 
 func compactPRISMIntLookup(root *compactPRISMIntNode, key int) int {

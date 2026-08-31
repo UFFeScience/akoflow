@@ -217,17 +217,19 @@ func expandCompactPRISMState(
 		len(ready)*len(search.resources),
 	)
 	for _, activityOrdinal := range ready {
+		prepared := compactPRISMPrepareFanIn(search, state, activityOrdinal)
 		for resourceOrdinal := range search.resources {
 			if !search.feasible[activityOrdinal][resourceOrdinal] {
 				continue
 			}
-			children = append(children, compactPRISMPlace(
+			children = append(children, compactPRISMPlacePrepared(
 				search,
 				state,
 				activityOrdinal,
 				resourceOrdinal,
 				step,
 				true,
+				prepared,
 			))
 		}
 	}

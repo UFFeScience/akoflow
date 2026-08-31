@@ -1,7 +1,6 @@
 package algorithms
 
 import (
-	"fmt"
 	"math"
 	"math/bits"
 
@@ -9,26 +8,27 @@ import (
 )
 
 type compactPRISMState struct {
-	assignmentTrace    *compactPRISMAssignmentTrace
-	assignmentIndex    *compactPRISMAssignmentNode
-	coreAvailable      []*compactPRISMCoreNode
-	coreOrder          *compactPRISMIntNode
-	networkIntervals   *compactPRISMIntervalIndexNode
-	resourceActiveFrom []float64
-	resourceActiveTo   []float64
-	pendingPredChunks  [][]uint16
-	readyTaskBits      []uint64
-	makespan           float64
-	cost               float64
-	remainingMinCost   float64
-	projectedMakespan  float64
-	projectedCost      float64
-	queueSeconds       float64
-	transferSeconds    float64
-	networkCost        float64
-	usedResourceCount  int
-	signature          uint64
-	networkSequence    uint64
+	assignmentTrace      *compactPRISMAssignmentTrace
+	assignmentChunks     [][]compactPRISMAssignment
+	evaluatedAssignments []domain.PlanAssignment
+	coreAvailable        []*compactPRISMCoreNode
+	coreOrder            *compactPRISMIntNode
+	networkIntervals     *compactPRISMIntervalIndexNode
+	resourceActiveFrom   []float64
+	resourceActiveTo     []float64
+	pendingPredChunks    [][]uint16
+	readyTaskBits        []uint64
+	makespan             float64
+	cost                 float64
+	remainingMinCost     float64
+	projectedMakespan    float64
+	projectedCost        float64
+	queueSeconds         float64
+	transferSeconds      float64
+	networkCost          float64
+	usedResourceCount    int
+	signature            uint64
+	networkSequence      uint64
 }
 
 type compactPRISMTransferResult struct {
@@ -38,10 +38,20 @@ type compactPRISMTransferResult struct {
 	cost    float64
 }
 
+type compactPRISMFanInDependency struct {
+	assignment compactPRISMAssignment
+	bytes      int64
+}
+
+type compactPRISMFanIn struct {
+	dependencies []compactPRISMFanInDependency
+}
+
 func initialCompactPRISMState(search compactPRISMContext) compactPRISMState {
 	chunkCount := (len(search.activities) + prismPendingChunkSize - 1) / prismPendingChunkSize
 	state := compactPRISMState{
 		coreAvailable:      compactPRISMInitialCoreRoots(search),
+		assignmentChunks:   make([][]compactPRISMAssignment, chunkCount),
 		pendingPredChunks:  make([][]uint16, chunkCount),
 		readyTaskBits:      make([]uint64, (len(search.activities)+63)/64),
 		signature:          14695981039346656037,
@@ -131,16 +141,35 @@ func compactPRISMPlace(
 	sequence int,
 	contention bool,
 ) compactPRISMState {
-	resource := search.resources[resourceOrdinal]
-	coreRoot := state.coreAvailable[resourceOrdinal]
-	coreOrdinal := coreRoot.bestKey
-	coreID := resource.cores[coreOrdinal-resource.coreOffset]
-	transfer := compactPRISMResolveTransfers(
+	return compactPRISMPlacePrepared(
 		search,
 		state,
 		activityOrdinal,
+		resourceOrdinal,
+		sequence,
+		contention,
+		compactPRISMPrepareFanIn(search, state, activityOrdinal),
+	)
+}
+
+func compactPRISMPlacePrepared(
+	search compactPRISMContext,
+	state compactPRISMState,
+	activityOrdinal int,
+	resourceOrdinal int,
+	sequence int,
+	contention bool,
+	prepared compactPRISMFanIn,
+) compactPRISMState {
+	resource := search.resources[resourceOrdinal]
+	coreRoot := state.coreAvailable[resourceOrdinal]
+	coreOrdinal := coreRoot.bestKey
+	transfer := compactPRISMResolvePreparedTransfers(
+		search,
+		state,
 		resource.resource.ID,
 		contention,
+		prepared,
 	)
 	start := math.Max(transfer.readyAt, coreRoot.bestValue)
 	order := compactPRISMIntLookup(state.coreOrder, coreOrdinal)
@@ -153,11 +182,12 @@ func compactPRISMPlace(
 	start += container
 	runtime := search.durations[activityOrdinal][resourceOrdinal]
 	assignment := compactPRISMBuildAssignment(
-		search.activities[activityOrdinal],
-		resource.resource,
-		coreID,
+		activityOrdinal,
+		resourceOrdinal,
+		coreOrdinal,
 		sequence,
 		order,
+		search.activities[activityOrdinal].Priority,
 		transfer,
 		start,
 		runtime,
@@ -176,6 +206,31 @@ func compactPRISMPlace(
 	)
 }
 
+func compactPRISMPrepareFanIn(
+	search compactPRISMContext,
+	state compactPRISMState,
+	activityOrdinal int,
+) compactPRISMFanIn {
+	predecessors := search.predecessors[activityOrdinal]
+	prepared := compactPRISMFanIn{
+		dependencies: make([]compactPRISMFanInDependency, 0, len(predecessors)),
+	}
+	for _, dependency := range predecessors {
+		assignment, exists := compactPRISMAssignmentChunkLookup(
+			state.assignmentChunks,
+			dependency.predecessor,
+		)
+		if !exists {
+			continue
+		}
+		prepared.dependencies = append(prepared.dependencies, compactPRISMFanInDependency{
+			assignment: assignment,
+			bytes:      dependency.bytes,
+		})
+	}
+	return prepared
+}
+
 func compactPRISMResolveTransfers(
 	search compactPRISMContext,
 	state compactPRISMState,
@@ -183,88 +238,101 @@ func compactPRISMResolveTransfers(
 	resourceID string,
 	contention bool,
 ) compactPRISMTransferResult {
+	return compactPRISMResolvePreparedTransfers(
+		search,
+		state,
+		resourceID,
+		contention,
+		compactPRISMPrepareFanIn(search, state, activityOrdinal),
+	)
+}
+
+func compactPRISMResolvePreparedTransfers(
+	search compactPRISMContext,
+	state compactPRISMState,
+	resourceID string,
+	contention bool,
+	prepared compactPRISMFanIn,
+) compactPRISMTransferResult {
 	result := compactPRISMTransferResult{state: state}
-	for _, dependency := range search.predecessors[activityOrdinal] {
-		predecessor, exists := compactPRISMAssignmentLookup(
-			state.assignmentIndex,
-			dependency.predecessor,
-		)
-		if !exists {
-			continue
-		}
-		flowReadyAt := predecessor.PredictedFinishAt
-		transferState := compactPRISMState{}
-		if contention {
-			transferState = result.state
-		}
-		route, routeExists := search.router.route(predecessor.ResourceID, resourceID)
-		transfer := math.Inf(1)
-		if routeExists {
-			transfer = compactPRISMTransferSecondsOnRoute(
-				transferState,
-				predecessor.ResourceID,
-				resourceID,
-				dependency.bytes,
-				flowReadyAt,
-				route,
-			)
-		}
-		result.seconds += transfer
-		if predecessor.ResourceID != resourceID && dependency.bytes > 0 && routeExists {
-			for _, hop := range route.hops {
-				result.cost += float64(dependency.bytes) * hop.link.PricePerByte
+	var networkBatch *compactPRISMNetworkBatch
+	if contention {
+		networkBatch = newCompactPRISMNetworkBatch(state)
+	}
+	for batchStart := 0; batchStart < len(prepared.dependencies); batchStart += prismPendingChunkSize {
+		batchEnd := min(batchStart+prismPendingChunkSize, len(prepared.dependencies))
+		for _, dependency := range prepared.dependencies[batchStart:batchEnd] {
+			predecessor := dependency.assignment
+			flowReadyAt := predecessor.finishAt
+			// Large fan-in joins often contain thousands of local or metadata-only
+			// dependencies. They only constrain readiness; routing and contention
+			// cannot change their zero transfer duration, so resolve them directly.
+			predecessorResourceID := search.resources[predecessor.resourceOrdinal].resource.ID
+			if predecessorResourceID == resourceID || dependency.bytes <= 0 {
+				result.readyAt = math.Max(result.readyAt, flowReadyAt)
+				continue
+			}
+			route, routeExists := search.router.route(predecessorResourceID, resourceID)
+			transfer := math.Inf(1)
+			if routeExists {
+				if contention {
+					transfer = compactPRISMTransferSecondsOnRouteBatch(
+						networkBatch, predecessorResourceID, resourceID,
+						dependency.bytes, flowReadyAt, route,
+					)
+				} else {
+					transfer = compactPRISMTransferSecondsOnRoute(
+						compactPRISMState{}, predecessorResourceID, resourceID,
+						dependency.bytes, flowReadyAt, route,
+					)
+				}
+			}
+			result.seconds += transfer
+			if predecessorResourceID != resourceID && dependency.bytes > 0 && routeExists {
+				for _, hop := range route.hops {
+					result.cost += float64(dependency.bytes) * hop.link.PricePerByte
+				}
+			}
+			deliveredAt := flowReadyAt + transfer
+			result.readyAt = math.Max(result.readyAt, deliveredAt)
+			if contention && predecessorResourceID != resourceID && dependency.bytes > 0 {
+				networkBatch.add(
+					predecessorResourceID,
+					resourceID,
+					flowReadyAt,
+					deliveredAt,
+					route.hops,
+				)
 			}
 		}
-		deliveredAt := flowReadyAt + transfer
-		result.readyAt = math.Max(result.readyAt, deliveredAt)
-		if contention && predecessor.ResourceID != resourceID && dependency.bytes > 0 {
-			result.state = compactPRISMAddNetworkFlowOnRoute(
-				result.state,
-				predecessor.ResourceID,
-				resourceID,
-				flowReadyAt,
-				deliveredAt,
-				route.hops,
-			)
-		}
+	}
+	if contention {
+		result.state = networkBatch.commit()
 	}
 	return result
 }
 
 func compactPRISMBuildAssignment(
-	activity domain.Activity,
-	resource domain.Resource,
-	coreID string,
+	activityOrdinal int,
+	resourceOrdinal int,
+	coreOrdinal int,
 	sequence int,
 	order int,
+	priority int,
 	transfer compactPRISMTransferResult,
 	start float64,
 	runtime float64,
 	boot float64,
 	container float64,
-) domain.PlanAssignment {
-	return domain.PlanAssignment{
-		ID: fmt.Sprintf(
-			"assignment-%d-%s-%s",
-			sequence,
-			activity.ID,
-			resource.ID,
-		),
-		ActivityID: activity.ID, ResourceID: resource.ID,
-		CoreID: coreID, OrderOnResource: order, Priority: activity.Priority,
-		PredictedReadyAt: transfer.readyAt, PredictedStartAt: start,
-		PredictedFinishAt: start + runtime, PredictedRuntimeSeconds: runtime,
-		PredictedTransferSeconds: transfer.seconds,
-		PredictedCost:            runtime * resource.PricePerSecond,
-		Metadata: map[string]any{
-			"scheduleBasis":            "algorithm",
-			"expectedDurationSeconds":  runtime,
-			"networkContentionModel":   "known-active-flows",
-			"bootOverheadSeconds":      boot,
-			"containerOverheadSeconds": container,
-			"queueSeconds":             math.Max(0, start-transfer.readyAt-boot-container),
-			"transferCost":             transfer.cost,
-		},
+) compactPRISMAssignment {
+	return compactPRISMAssignment{
+		activityOrdinal: activityOrdinal, resourceOrdinal: resourceOrdinal,
+		coreOrdinal: coreOrdinal, sequence: sequence, order: order, priority: priority,
+		readyAt: transfer.readyAt, startAt: start, finishAt: start + runtime,
+		runtimeSeconds: runtime, transferSeconds: transfer.seconds,
+		bootSeconds: boot, containerSeconds: container,
+		queueSeconds: math.Max(0, start-transfer.readyAt-boot-container),
+		transferCost: transfer.cost,
 	}
 }
 
@@ -276,7 +344,7 @@ func compactPRISMCommitPlacement(
 	resourceOrdinal int,
 	coreOrdinal int,
 	sequence int,
-	assignment domain.PlanAssignment,
+	assignment compactPRISMAssignment,
 ) compactPRISMState {
 	activity := search.activities[activityOrdinal]
 	out.resourceActiveFrom = append([]float64(nil), previous.resourceActiveFrom...)
@@ -286,27 +354,25 @@ func compactPRISMCommitPlacement(
 	if !resourceWasUnused {
 		previousWindow = out.resourceActiveTo[resourceOrdinal] - out.resourceActiveFrom[resourceOrdinal]
 	}
-	billingStart := assignment.PredictedStartAt -
-		prismMetadataNumber(assignment.Metadata, "bootOverheadSeconds") -
-		prismMetadataNumber(assignment.Metadata, "containerOverheadSeconds")
+	billingStart := assignment.startAt - assignment.bootSeconds - assignment.containerSeconds
 	out.resourceActiveFrom[resourceOrdinal] = math.Min(
 		out.resourceActiveFrom[resourceOrdinal],
 		billingStart,
 	)
 	out.resourceActiveTo[resourceOrdinal] = math.Max(
 		out.resourceActiveTo[resourceOrdinal],
-		assignment.PredictedFinishAt,
+		assignment.finishAt,
 	)
 	activeWindow := out.resourceActiveTo[resourceOrdinal] - out.resourceActiveFrom[resourceOrdinal]
-	assignment.PredictedCost = (activeWindow-previousWindow)*search.resources[resourceOrdinal].resource.PricePerSecond + prismMetadataNumber(assignment.Metadata, "transferCost")
-	out.cost += assignment.PredictedCost
+	assignment.cost = (activeWindow-previousWindow)*search.resources[resourceOrdinal].resource.PricePerSecond + assignment.transferCost
+	out.cost += assignment.cost
 	out.assignmentTrace = &compactPRISMAssignmentTrace{
 		assignment: assignment,
 		previous:   previous.assignmentTrace,
 		length:     sequence + 1,
 	}
-	out.assignmentIndex = compactPRISMAssignmentInsert(
-		previous.assignmentIndex,
+	out.assignmentChunks = compactPRISMAssignmentChunkInsert(
+		previous.assignmentChunks,
 		activityOrdinal,
 		assignment,
 	)
@@ -314,13 +380,13 @@ func compactPRISMCommitPlacement(
 	out.coreAvailable[resourceOrdinal] = compactPRISMCoreInsert(
 		previous.coreAvailable[resourceOrdinal],
 		coreOrdinal,
-		assignment.PredictedFinishAt,
+		assignment.finishAt,
 	)
-	out.coreOrder = compactPRISMIntInsert(previous.coreOrder, coreOrdinal, assignment.OrderOnResource+1)
-	out.makespan = math.Max(previous.makespan, assignment.PredictedFinishAt)
-	out.queueSeconds = previous.queueSeconds + prismMetadataNumber(assignment.Metadata, "queueSeconds")
-	out.transferSeconds = previous.transferSeconds + assignment.PredictedTransferSeconds
-	out.networkCost = previous.networkCost + prismMetadataNumber(assignment.Metadata, "transferCost")
+	out.coreOrder = compactPRISMIntInsert(previous.coreOrder, coreOrdinal, assignment.order+1)
+	out.makespan = math.Max(previous.makespan, assignment.finishAt)
+	out.queueSeconds = previous.queueSeconds + assignment.queueSeconds
+	out.transferSeconds = previous.transferSeconds + assignment.transferSeconds
+	out.networkCost = previous.networkCost + assignment.transferCost
 	out.usedResourceCount = previous.usedResourceCount
 	if resourceWasUnused {
 		out.usedResourceCount++
@@ -329,8 +395,8 @@ func compactPRISMCommitPlacement(
 	out.signature = extendScheduleSignature(
 		previous.signature,
 		activity.ID,
-		assignment.ResourceID,
-		assignment.CoreID,
+		search.resources[assignment.resourceOrdinal].resource.ID,
+		search.resources[assignment.resourceOrdinal].cores[assignment.coreOrdinal-search.resources[assignment.resourceOrdinal].coreOffset],
 	)
 	out = compactPRISMAdvanceReady(search, out, activityOrdinal)
 	out.projectedCost = out.cost
@@ -343,7 +409,7 @@ func compactPRISMCommitPlacement(
 		0,
 		search.ranks[activityOrdinal]-search.averageDurations[activityOrdinal],
 	)
-	out.projectedMakespan = math.Max(out.makespan, assignment.PredictedFinishAt+remainingPath)
+	out.projectedMakespan = math.Max(out.makespan, assignment.finishAt+remainingPath)
 	out.projectedMakespan = math.Max(out.projectedMakespan, compactPRISMReadyRankBound(search, out))
 	return out
 }
@@ -366,13 +432,35 @@ func compactPRISMReadyRankBound(
 	return 0
 }
 
-func compactPRISMAssignments(state compactPRISMState) []domain.PlanAssignment {
+func compactPRISMAssignments(search compactPRISMContext, state compactPRISMState) []domain.PlanAssignment {
+	if state.evaluatedAssignments != nil {
+		return append([]domain.PlanAssignment(nil), state.evaluatedAssignments...)
+	}
 	if state.assignmentTrace == nil {
 		return nil
 	}
 	items := make([]domain.PlanAssignment, state.assignmentTrace.length)
 	for trace := state.assignmentTrace; trace != nil; trace = trace.previous {
-		items[trace.length-1] = trace.assignment
+		assignment := trace.assignment
+		activity := search.activities[assignment.activityOrdinal]
+		resource := search.resources[assignment.resourceOrdinal]
+		coreID := resource.cores[assignment.coreOrdinal-resource.coreOffset]
+		items[trace.length-1] = domain.PlanAssignment{
+			ActivityID: activity.ID, ResourceID: resource.resource.ID, CoreID: coreID,
+			OrderOnResource: assignment.order, Priority: assignment.priority,
+			PredictedReadyAt: assignment.readyAt, PredictedStartAt: assignment.startAt,
+			PredictedFinishAt:        assignment.finishAt,
+			PredictedRuntimeSeconds:  assignment.runtimeSeconds,
+			PredictedTransferSeconds: assignment.transferSeconds,
+			PredictedCost:            assignment.cost,
+			Metadata: map[string]any{
+				"scheduleBasis": "algorithm", "expectedDurationSeconds": assignment.runtimeSeconds,
+				"networkContentionModel":   "known-active-flows",
+				"bootOverheadSeconds":      assignment.bootSeconds,
+				"containerOverheadSeconds": assignment.containerSeconds,
+				"queueSeconds":             assignment.queueSeconds, "transferCost": assignment.transferCost,
+			},
+		}
 	}
 	return items
 }

@@ -8,6 +8,29 @@ import (
 	"github.com/UFFeScience/akoflow/internal/domain"
 )
 
+func TestCompactPRISMAssignmentChunksUseCopyOnWrite(t *testing.T) {
+	base := make([][]compactPRISMAssignment, 2)
+	first := compactPRISMAssignment{activityOrdinal: 1, resourceOrdinal: 2}
+	withFirst := compactPRISMAssignmentChunkInsert(base, 1, first)
+	second := compactPRISMAssignment{activityOrdinal: 3, resourceOrdinal: 4}
+	withSecond := compactPRISMAssignmentChunkInsert(withFirst, prismPendingChunkSize+2, second)
+
+	if _, exists := compactPRISMAssignmentChunkLookup(base, 1); exists {
+		t.Fatal("copy-on-write insert mutated the base assignment table")
+	}
+	actualFirst, exists := compactPRISMAssignmentChunkLookup(withFirst, 1)
+	if !exists || actualFirst.activityOrdinal != first.activityOrdinal || actualFirst.resourceOrdinal != first.resourceOrdinal {
+		t.Fatalf("first assignment = %#v, %t; want %#v, true", actualFirst, exists, first)
+	}
+	if _, exists := compactPRISMAssignmentChunkLookup(withFirst, prismPendingChunkSize+2); exists {
+		t.Fatal("copy-on-write insert mutated the previous assignment table")
+	}
+	actualSecond, exists := compactPRISMAssignmentChunkLookup(withSecond, prismPendingChunkSize+2)
+	if !exists || actualSecond.activityOrdinal != second.activityOrdinal || actualSecond.resourceOrdinal != second.resourceOrdinal {
+		t.Fatalf("second assignment = %#v, %t; want %#v, true", actualSecond, exists, second)
+	}
+}
+
 func TestCompactPRISMTransferDoesNotDoubleCountSameFlow(t *testing.T) {
 	topology := domain.NetworkTopology{Links: []domain.NetworkLink{{
 		SourceResourceID:       "source",
@@ -33,6 +56,50 @@ func TestCompactPRISMTransferDoesNotDoubleCountSameFlow(t *testing.T) {
 	)
 	if math.Abs(actual-2.25) > 1e-9 {
 		t.Fatalf("expected one existing flow to produce concurrency 2, got %.2f seconds", actual)
+	}
+}
+
+func TestCompactPRISMActiveIntervalIndexCountsBoundariesPersistently(t *testing.T) {
+	base := compactPRISMState{}
+	one := compactPRISMAddNetworkFlow(base, "source", "target", 0, 3)
+	two := compactPRISMAddNetworkFlow(one, "source", "target", 1, 4)
+	three := compactPRISMAddNetworkFlow(two, "source", "target", 3, 5)
+
+	intervals := func(state compactPRISMState) *compactPRISMIntervalSet {
+		return compactPRISMIntervalIndexLookup(state.networkIntervals, "s:source")
+	}
+	if got := compactPRISMActiveIntervals(intervals(one), 2); got != 1 {
+		t.Fatalf("persistent base count = %d, want 1", got)
+	}
+	for instant, want := range map[float64]int{0: 1, 2: 2, 3: 2, 4: 1, 5: 0} {
+		if got := compactPRISMActiveIntervals(intervals(three), instant); got != want {
+			t.Fatalf("active intervals at %.0f = %d, want %d", instant, got, want)
+		}
+	}
+}
+
+func TestCompactPRISMNetworkBatchMatchesSequentialFlowIndex(t *testing.T) {
+	base := compactPRISMAddNetworkFlow(compactPRISMState{}, "source", "target", 0, 2)
+	sequential := compactPRISMAddNetworkFlow(base, "source", "target", 1, 4)
+	sequential = compactPRISMAddNetworkFlow(sequential, "source", "target", 3, 6)
+
+	batch := newCompactPRISMNetworkBatch(base)
+	batch.add("source", "target", 1, 4, nil)
+	batch.add("source", "target", 3, 6, nil)
+	batched := batch.commit()
+
+	for _, key := range []string{"s:source", "d:target", "p:source\x00target"} {
+		for _, instant := range []float64{0, 1, 2, 3, 4, 6} {
+			want := compactPRISMActiveIntervals(
+				compactPRISMIntervalIndexLookup(sequential.networkIntervals, key), instant,
+			)
+			got := compactPRISMActiveIntervals(
+				compactPRISMIntervalIndexLookup(batched.networkIntervals, key), instant,
+			)
+			if got != want {
+				t.Fatalf("%s active at %.0f = %d, want %d", key, instant, got, want)
+			}
+		}
 	}
 }
 
@@ -109,7 +176,7 @@ func TestCompactPRISMCostIncludesFrozenOverheads(t *testing.T) {
 	if math.Abs(state.cost-28) > 1e-9 {
 		t.Fatalf("expected a 14 second active window at $2/s, got %.2f", state.cost)
 	}
-	assignment := compactPRISMAssignments(state)[0]
+	assignment := compactPRISMAssignments(search, state)[0]
 	if prismMetadataNumber(assignment.Metadata, "bootOverheadSeconds") != 3 ||
 		prismMetadataNumber(assignment.Metadata, "containerOverheadSeconds") != 1 {
 		t.Fatalf("expected frozen overhead metadata, got %#v", assignment.Metadata)
@@ -157,7 +224,7 @@ func TestDetailedPRISMEvaluatorRedistributesSharedLinkBandwidth(t *testing.T) {
 	if err != nil {
 		t.Fatalf("evaluate candidate: %v", err)
 	}
-	actual := compactPRISMAssignments(evaluated)
+	actual := compactPRISMAssignments(search, evaluated)
 	if math.Abs(evaluated.makespan-4) > 1e-9 {
 		t.Fatalf("expected makespan 4 with two 2-second shared transfers, got %.2f", evaluated.makespan)
 	}
@@ -210,7 +277,7 @@ func TestDetailedPRISMEvaluatorRedistributesSharedSourceBandwidthAcrossRoutes(t 
 	if err != nil {
 		t.Fatalf("evaluate candidate: %v", err)
 	}
-	actual := compactPRISMAssignments(evaluated)
+	actual := compactPRISMAssignments(search, evaluated)
 	if math.Abs(evaluated.makespan-4) > 1e-9 {
 		t.Fatalf("expected makespan 4 with the source shared across routes, got %.2f", evaluated.makespan)
 	}

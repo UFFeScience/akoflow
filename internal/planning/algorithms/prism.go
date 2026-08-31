@@ -46,6 +46,10 @@ func (p PRISM) Schedule(
 	if err != nil {
 		return err
 	}
+	// Equal placement signatures produce the same detailed event simulation.
+	// Remove them before the expensive shared-network evaluation instead of
+	// evaluating every duplicate retained by the beam.
+	states = dedupeCompactPRISMStates(states, p.Objective)
 	states, err = reevaluateCompleteCompactPRISMStates(search, states)
 	if err != nil {
 		return fmt.Errorf("evaluate PRISM candidates with shared network: %w", err)
@@ -59,7 +63,7 @@ func (p PRISM) Schedule(
 	)
 	for index, state := range states {
 		id := fmt.Sprintf("%s-candidate-%d", p.Descriptor().ID, index+1)
-		plan := compactPRISMPlan(id, p.Descriptor().ID, p.Objective, request, state)
+		plan := compactPRISMPlan(id, p.Descriptor().ID, p.Objective, request, search, state)
 		if err := sink.Emit(ctx, plan); err != nil {
 			return err
 		}

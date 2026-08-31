@@ -2,8 +2,12 @@ package algorithms
 
 import (
 	"container/heap"
+	"context"
 	"fmt"
 	"math"
+	"runtime"
+	"sort"
+	"sync"
 
 	"github.com/UFFeScience/akoflow/internal/domain"
 )
@@ -46,6 +50,21 @@ func (queue *prismEvaluationTaskQueue) Pop() any {
 	return value
 }
 
+type prismEvaluationReadyQueue []int
+
+func (queue prismEvaluationReadyQueue) Len() int           { return len(queue) }
+func (queue prismEvaluationReadyQueue) Less(i, j int) bool { return queue[i] < queue[j] }
+func (queue prismEvaluationReadyQueue) Swap(i, j int)      { queue[i], queue[j] = queue[j], queue[i] }
+func (queue *prismEvaluationReadyQueue) Push(value any) {
+	*queue = append(*queue, value.(int))
+}
+func (queue *prismEvaluationReadyQueue) Pop() any {
+	old := *queue
+	value := old[len(old)-1]
+	*queue = old[:len(old)-1]
+	return value
+}
+
 type prismEvaluationFlow struct {
 	consumer  int
 	source    string
@@ -62,13 +81,48 @@ func reevaluateCompleteCompactPRISMStates(
 	search compactPRISMContext,
 	states []compactPRISMState,
 ) ([]compactPRISMState, error) {
-	result := make([]compactPRISMState, 0, len(states))
-	for _, state := range states {
-		evaluated, err := evaluateCompleteCompactPRISMState(search, state)
-		if err != nil {
-			return nil, err
+	if len(states) == 0 {
+		return nil, nil
+	}
+	result := make([]compactPRISMState, len(states))
+	type evaluationJob struct{ index int }
+	jobs := make(chan evaluationJob)
+	workerCount := min(len(states), max(1, runtime.GOMAXPROCS(0)))
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+	var workers sync.WaitGroup
+	var firstErr error
+	var errOnce sync.Once
+	workers.Add(workerCount)
+	for worker := 0; worker < workerCount; worker++ {
+		go func() {
+			defer workers.Done()
+			for job := range jobs {
+				if ctx.Err() != nil {
+					continue
+				}
+				evaluated, err := evaluateCompleteCompactPRISMState(search, states[job.index])
+				if err != nil {
+					errOnce.Do(func() {
+						firstErr = err
+						cancel()
+					})
+					continue
+				}
+				result[job.index] = evaluated
+			}
+		}()
+	}
+	for index := range states {
+		if ctx.Err() != nil {
+			break
 		}
-		result = append(result, evaluated)
+		jobs <- evaluationJob{index: index}
+	}
+	close(jobs)
+	workers.Wait()
+	if firstErr != nil {
+		return nil, firstErr
 	}
 	return result, nil
 }
@@ -77,7 +131,7 @@ func evaluateCompleteCompactPRISMState(
 	search compactPRISMContext,
 	state compactPRISMState,
 ) (compactPRISMState, error) {
-	assignments := compactPRISMAssignments(state)
+	assignments := compactPRISMAssignments(search, state)
 	if len(assignments) != len(search.activities) {
 		return state, nil
 	}
@@ -87,7 +141,8 @@ func evaluateCompleteCompactPRISMState(
 	}
 	tasks := make([]prismEvaluationTask, len(search.activities))
 	assignmentOrdinal := make(map[string]int, len(assignments))
-	for index, assignment := range assignments {
+	for _, assignment := range assignments {
+		assignment.Metadata = clonePRISMEvaluationMetadata(assignment.Metadata)
 		ordinal, exists := search.activityOrdinal[assignment.ActivityID]
 		if !exists {
 			return state, fmt.Errorf("evaluate PRISM candidate: unknown activity %q", assignment.ActivityID)
@@ -98,7 +153,6 @@ func evaluateCompleteCompactPRISMState(
 		}
 		tasks[ordinal] = prismEvaluationTask{assignment: assignment, resource: resource}
 		assignmentOrdinal[assignment.ActivityID] = ordinal
-		_ = index
 	}
 	outgoing := make([][]prismEvaluationDependency, len(tasks))
 	data := dataBytes(search.request.Workflow)
@@ -122,13 +176,10 @@ func evaluateCompleteCompactPRISMState(
 		byLane[lane] = append(byLane[lane], ordinal)
 	}
 	for _, lane := range byLane {
-		for left := 0; left < len(lane); left++ {
-			for right := left + 1; right < len(lane); right++ {
-				if tasks[lane[right]].assignment.OrderOnResource < tasks[lane[left]].assignment.OrderOnResource {
-					lane[left], lane[right] = lane[right], lane[left]
-				}
-			}
-		}
+		sort.Slice(lane, func(left, right int) bool {
+			return tasks[lane[left]].assignment.OrderOnResource <
+				tasks[lane[right]].assignment.OrderOnResource
+		})
 		for index := 1; index < len(lane); index++ {
 			tasks[lane[index]].laneReady = false
 			laneSuccessor[lane[index-1]] = lane[index]
@@ -139,6 +190,13 @@ func evaluateCompleteCompactPRISMState(
 	completed := 0
 	taskEvents := &prismEvaluationTaskQueue{}
 	heap.Init(taskEvents)
+	readyTasks := &prismEvaluationReadyQueue{}
+	heap.Init(readyTasks)
+	for index := range tasks {
+		if tasks[index].remainingInputs == 0 && tasks[index].laneReady {
+			heap.Push(readyTasks, index)
+		}
+	}
 	flows := make([]prismEvaluationFlow, 0, len(search.request.Workflow.Dependencies))
 	resourceStart := make(map[string]float64)
 	resourceFinish := make(map[string]float64)
@@ -146,7 +204,7 @@ func evaluateCompleteCompactPRISMState(
 	transferCost := 0.0
 
 	for completed < len(tasks) {
-		started := prismStartReadyTasks(tasks, taskEvents, clock, resourceStart, resourceFinish, resourceUsed)
+		started := prismStartReadyTasks(tasks, readyTasks, taskEvents, clock, resourceStart, resourceFinish, resourceUsed)
 		if completed == len(tasks) {
 			break
 		}
@@ -184,12 +242,14 @@ func evaluateCompleteCompactPRISMState(
 			completed++
 			if successor := laneSuccessor[event.activity]; successor >= 0 {
 				tasks[successor].laneReady = true
+				prismQueueEvaluationTaskIfReady(tasks, readyTasks, successor)
 			}
 			for _, dependency := range outgoing[event.activity] {
 				producer := tasks[event.activity]
 				consumer := &tasks[dependency.consumer]
 				if dependency.bytes <= 0 || producer.assignment.ResourceID == consumer.assignment.ResourceID {
 					prismSatisfyEvaluationInput(consumer, clock, 0)
+					prismQueueEvaluationTaskIfReady(tasks, readyTasks, dependency.consumer)
 					continue
 				}
 				route, exists := search.router.route(
@@ -228,7 +288,18 @@ func evaluateCompleteCompactPRISMState(
 				clock,
 				clock-flows[index].startedAt,
 			)
+			prismQueueEvaluationTaskIfReady(tasks, readyTasks, flows[index].consumer)
 		}
+		// Only active transfers affect future bandwidth allocation. Keeping every
+		// completed flow made each later event rescan the entire dependency
+		// history, turning large DAG evaluation into quadratic work.
+		activeFlows := flows[:0]
+		for _, flow := range flows {
+			if flow.active {
+				activeFlows = append(activeFlows, flow)
+			}
+		}
+		flows = activeFlows
 	}
 
 	cost := transferCost
@@ -243,8 +314,20 @@ func evaluateCompleteCompactPRISMState(
 	return compactPRISMStateFromEvaluation(state, evaluatedAssignments, clock, cost), nil
 }
 
+func clonePRISMEvaluationMetadata(metadata map[string]any) map[string]any {
+	if metadata == nil {
+		return nil
+	}
+	cloned := make(map[string]any, len(metadata))
+	for key, value := range metadata {
+		cloned[key] = value
+	}
+	return cloned
+}
+
 func prismStartReadyTasks(
 	tasks []prismEvaluationTask,
+	ready *prismEvaluationReadyQueue,
 	events *prismEvaluationTaskQueue,
 	clock float64,
 	resourceStart map[string]float64,
@@ -252,7 +335,8 @@ func prismStartReadyTasks(
 	resourceUsed map[string]bool,
 ) bool {
 	started := false
-	for index := range tasks {
+	for ready.Len() > 0 {
+		index := heap.Pop(ready).(int)
 		task := &tasks[index]
 		if task.started || task.remainingInputs > 0 || !task.laneReady {
 			continue
@@ -279,6 +363,17 @@ func prismStartReadyTasks(
 		resourceFinish[resourceID] = math.Max(resourceFinish[resourceID], task.assignment.PredictedFinishAt)
 	}
 	return started
+}
+
+func prismQueueEvaluationTaskIfReady(
+	tasks []prismEvaluationTask,
+	ready *prismEvaluationReadyQueue,
+	index int,
+) {
+	task := &tasks[index]
+	if !task.started && task.remainingInputs == 0 && task.laneReady {
+		heap.Push(ready, index)
+	}
 }
 
 func prismEvaluationFlowRates(flows []prismEvaluationFlow, clock float64) ([]float64, float64) {
@@ -342,17 +437,13 @@ func compactPRISMStateFromEvaluation(
 	cost float64,
 ) compactPRISMState {
 	state.assignmentTrace = nil
+	state.evaluatedAssignments = append([]domain.PlanAssignment(nil), assignments...)
 	state.queueSeconds = 0
 	state.transferSeconds = 0
 	state.networkCost = 0
 	state.usedResourceCount = 0
 	usedResources := make(map[string]struct{}, len(assignments))
-	for index, assignment := range assignments {
-		state.assignmentTrace = &compactPRISMAssignmentTrace{
-			assignment: assignment,
-			previous:   state.assignmentTrace,
-			length:     index + 1,
-		}
+	for _, assignment := range assignments {
 		state.queueSeconds += prismMetadataNumber(assignment.Metadata, "queueSeconds")
 		state.transferSeconds += assignment.PredictedTransferSeconds
 		state.networkCost += prismMetadataNumber(assignment.Metadata, "transferCost")

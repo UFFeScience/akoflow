@@ -62,9 +62,10 @@ func compactPRISMPlan(
 	algorithm string,
 	objective string,
 	request domain.PlanningRequest,
+	search compactPRISMContext,
 	state compactPRISMState,
 ) domain.SchedulePlan {
-	assignments := compactPRISMAssignments(state)
+	assignments := compactPRISMAssignments(search, state)
 	for index := range assignments {
 		assignments[index].ID = fmt.Sprintf(
 			"%s-%s",

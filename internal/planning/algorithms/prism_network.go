@@ -87,19 +87,29 @@ func (queue *compactPRISMRouteQueue) Pop() any {
 	return value
 }
 
-type compactPRISMIntervalNode struct {
-	readyAt     float64
-	deliveredAt float64
-	maximumEnd  float64
-	sequence    uint64
-	priority    uint64
-	left        *compactPRISMIntervalNode
-	right       *compactPRISMIntervalNode
+type compactPRISMTimeNode struct {
+	instant  float64
+	sequence uint64
+	priority uint64
+	size     int
+	left     *compactPRISMTimeNode
+	right    *compactPRISMTimeNode
+}
+
+type compactPRISMIntervalSet struct {
+	starts *compactPRISMTimeNode
+	ends   *compactPRISMTimeNode
+}
+
+type compactPRISMNetworkBatch struct {
+	base      compactPRISMState
+	intervals map[string]*compactPRISMIntervalSet
+	sequence  uint64
 }
 
 type compactPRISMIntervalIndexNode struct {
 	key      string
-	value    *compactPRISMIntervalNode
+	value    *compactPRISMIntervalSet
 	priority uint64
 	left     *compactPRISMIntervalIndexNode
 	right    *compactPRISMIntervalIndexNode
@@ -115,84 +125,234 @@ func compactPRISMStringPriority(value string) uint64 {
 	return hash
 }
 
-func compactPRISMIntervalInsert(
-	root *compactPRISMIntervalNode,
-	readyAt float64,
-	deliveredAt float64,
+func compactPRISMTimeInsert(
+	root *compactPRISMTimeNode,
+	instant float64,
 	sequence uint64,
-) *compactPRISMIntervalNode {
+) *compactPRISMTimeNode {
 	if root == nil {
-		return &compactPRISMIntervalNode{
-			readyAt: readyAt, deliveredAt: deliveredAt, maximumEnd: deliveredAt,
-			sequence: sequence, priority: compactPRISMPriority(int(sequence)),
+		return &compactPRISMTimeNode{
+			instant: instant, sequence: sequence,
+			priority: compactPRISMPriority(int(sequence)), size: 1,
 		}
 	}
 	copy := *root
-	if readyAt < root.readyAt || (readyAt == root.readyAt && sequence < root.sequence) {
-		copy.left = compactPRISMIntervalInsert(root.left, readyAt, deliveredAt, sequence)
+	if instant < root.instant || (instant == root.instant && sequence < root.sequence) {
+		copy.left = compactPRISMTimeInsert(root.left, instant, sequence)
 		if copy.left.priority < copy.priority {
-			return compactPRISMRotateIntervalRight(&copy)
+			return compactPRISMRotateTimeRight(&copy)
 		}
 	} else {
-		copy.right = compactPRISMIntervalInsert(root.right, readyAt, deliveredAt, sequence)
+		copy.right = compactPRISMTimeInsert(root.right, instant, sequence)
 		if copy.right.priority < copy.priority {
-			return compactPRISMRotateIntervalLeft(&copy)
+			return compactPRISMRotateTimeLeft(&copy)
 		}
 	}
-	compactPRISMRefreshInterval(&copy)
+	compactPRISMRefreshTime(&copy)
 	return &copy
 }
 
-func compactPRISMRefreshInterval(root *compactPRISMIntervalNode) {
-	root.maximumEnd = root.deliveredAt
-	if root.left != nil {
-		root.maximumEnd = math.Max(root.maximumEnd, root.left.maximumEnd)
+func compactPRISMTimeInsertMutable(
+	root *compactPRISMTimeNode,
+	instant float64,
+	sequence uint64,
+) *compactPRISMTimeNode {
+	if root == nil {
+		return &compactPRISMTimeNode{
+			instant: instant, sequence: sequence,
+			priority: compactPRISMPriority(int(sequence)), size: 1,
+		}
 	}
-	if root.right != nil {
-		root.maximumEnd = math.Max(root.maximumEnd, root.right.maximumEnd)
+	if instant < root.instant || (instant == root.instant && sequence < root.sequence) {
+		root.left = compactPRISMTimeInsertMutable(root.left, instant, sequence)
+		if root.left.priority < root.priority {
+			return compactPRISMRotateTimeRightMutable(root)
+		}
+	} else {
+		root.right = compactPRISMTimeInsertMutable(root.right, instant, sequence)
+		if root.right.priority < root.priority {
+			return compactPRISMRotateTimeLeftMutable(root)
+		}
 	}
+	compactPRISMRefreshTime(root)
+	return root
 }
 
-func compactPRISMRotateIntervalRight(
-	root *compactPRISMIntervalNode,
-) *compactPRISMIntervalNode {
+func compactPRISMTimeSize(root *compactPRISMTimeNode) int {
+	if root == nil {
+		return 0
+	}
+	return root.size
+}
+
+func compactPRISMRefreshTime(root *compactPRISMTimeNode) {
+	root.size = 1 + compactPRISMTimeSize(root.left) + compactPRISMTimeSize(root.right)
+}
+
+func compactPRISMRotateTimeRight(root *compactPRISMTimeNode) *compactPRISMTimeNode {
 	left, updated := *root.left, *root
 	updated.left = left.right
-	compactPRISMRefreshInterval(&updated)
+	compactPRISMRefreshTime(&updated)
 	left.right = &updated
-	compactPRISMRefreshInterval(&left)
+	compactPRISMRefreshTime(&left)
 	return &left
 }
 
-func compactPRISMRotateIntervalLeft(
-	root *compactPRISMIntervalNode,
-) *compactPRISMIntervalNode {
+func compactPRISMRotateTimeLeft(root *compactPRISMTimeNode) *compactPRISMTimeNode {
 	right, updated := *root.right, *root
 	updated.right = right.left
-	compactPRISMRefreshInterval(&updated)
+	compactPRISMRefreshTime(&updated)
 	right.left = &updated
-	compactPRISMRefreshInterval(&right)
+	compactPRISMRefreshTime(&right)
 	return &right
 }
 
-func compactPRISMActiveIntervals(root *compactPRISMIntervalNode, instant float64) int {
-	if root == nil || root.maximumEnd <= instant {
-		return 0
+func compactPRISMRotateTimeRightMutable(root *compactPRISMTimeNode) *compactPRISMTimeNode {
+	left := root.left
+	root.left = left.right
+	compactPRISMRefreshTime(root)
+	left.right = root
+	compactPRISMRefreshTime(left)
+	return left
+}
+
+func compactPRISMRotateTimeLeftMutable(root *compactPRISMTimeNode) *compactPRISMTimeNode {
+	right := root.right
+	root.right = right.left
+	compactPRISMRefreshTime(root)
+	right.left = root
+	compactPRISMRefreshTime(right)
+	return right
+}
+
+func compactPRISMTimeBefore(root *compactPRISMTimeNode, instant float64, sequence uint64) bool {
+	return root.instant < instant || (root.instant == instant && root.sequence < sequence)
+}
+
+func compactPRISMTimeSplit(
+	root *compactPRISMTimeNode,
+	instant float64,
+	sequence uint64,
+) (*compactPRISMTimeNode, *compactPRISMTimeNode) {
+	if root == nil {
+		return nil, nil
 	}
-	count := compactPRISMActiveIntervals(root.left, instant)
-	if root.readyAt <= instant && instant < root.deliveredAt {
-		count++
+	copy := *root
+	if compactPRISMTimeBefore(root, instant, sequence) {
+		left, right := compactPRISMTimeSplit(root.right, instant, sequence)
+		copy.right = left
+		compactPRISMRefreshTime(&copy)
+		return &copy, right
 	}
-	if root.readyAt <= instant {
-		count += compactPRISMActiveIntervals(root.right, instant)
+	left, right := compactPRISMTimeSplit(root.left, instant, sequence)
+	copy.left = right
+	compactPRISMRefreshTime(&copy)
+	return left, &copy
+}
+
+func compactPRISMTimeUnion(
+	left *compactPRISMTimeNode,
+	right *compactPRISMTimeNode,
+) *compactPRISMTimeNode {
+	if left == nil {
+		return right
+	}
+	if right == nil {
+		return left
+	}
+	if right.priority < left.priority {
+		left, right = right, left
+	}
+	before, after := compactPRISMTimeSplit(right, left.instant, left.sequence)
+	copy := *left
+	copy.left = compactPRISMTimeUnion(left.left, before)
+	copy.right = compactPRISMTimeUnion(left.right, after)
+	compactPRISMRefreshTime(&copy)
+	return &copy
+}
+
+func compactPRISMTimeCountAtOrBefore(root *compactPRISMTimeNode, instant float64) int {
+	count := 0
+	for root != nil {
+		if root.instant > instant {
+			root = root.left
+			continue
+		}
+		count += 1 + compactPRISMTimeSize(root.left)
+		root = root.right
 	}
 	return count
+}
+
+func compactPRISMActiveIntervals(set *compactPRISMIntervalSet, instant float64) int {
+	if set == nil {
+		return 0
+	}
+	// Intervals are [start, end): flows delivered exactly at instant are no
+	// longer active, hence both counts include equality.
+	return compactPRISMTimeCountAtOrBefore(set.starts, instant) -
+		compactPRISMTimeCountAtOrBefore(set.ends, instant)
+}
+
+func newCompactPRISMNetworkBatch(state compactPRISMState) *compactPRISMNetworkBatch {
+	return &compactPRISMNetworkBatch{
+		base: state, intervals: make(map[string]*compactPRISMIntervalSet),
+		sequence: state.networkSequence,
+	}
+}
+
+func (batch *compactPRISMNetworkBatch) active(key string, instant float64) int {
+	return compactPRISMActiveIntervals(
+		compactPRISMIntervalIndexLookup(batch.base.networkIntervals, key), instant,
+	) + compactPRISMActiveIntervals(batch.intervals[key], instant)
+}
+
+func (batch *compactPRISMNetworkBatch) add(
+	source string,
+	target string,
+	readyAt float64,
+	deliveredAt float64,
+	route []compactPRISMRouteHop,
+) {
+	batch.sequence++
+	keys := []string{"s:" + source, "d:" + target, "p:" + source + "\x00" + target}
+	for _, hop := range route {
+		keys = append(keys, hop.key)
+	}
+	for _, key := range keys {
+		set := batch.intervals[key]
+		if set == nil {
+			set = &compactPRISMIntervalSet{}
+			batch.intervals[key] = set
+		}
+		set.starts = compactPRISMTimeInsertMutable(set.starts, readyAt, batch.sequence)
+		set.ends = compactPRISMTimeInsertMutable(set.ends, deliveredAt, batch.sequence)
+	}
+}
+
+func (batch *compactPRISMNetworkBatch) commit() compactPRISMState {
+	state := batch.base
+	state.networkSequence = batch.sequence
+	for key, overlay := range batch.intervals {
+		base := compactPRISMIntervalIndexLookup(state.networkIntervals, key)
+		merged := &compactPRISMIntervalSet{}
+		if base != nil {
+			merged.starts = base.starts
+			merged.ends = base.ends
+		}
+		merged.starts = compactPRISMTimeUnion(merged.starts, overlay.starts)
+		merged.ends = compactPRISMTimeUnion(merged.ends, overlay.ends)
+		state.networkIntervals = compactPRISMIntervalIndexInsert(
+			state.networkIntervals, key, merged,
+		)
+	}
+	return state
 }
 
 func compactPRISMIntervalIndexLookup(
 	root *compactPRISMIntervalIndexNode,
 	key string,
-) *compactPRISMIntervalNode {
+) *compactPRISMIntervalSet {
 	for root != nil {
 		if key < root.key {
 			root = root.left
@@ -208,7 +368,7 @@ func compactPRISMIntervalIndexLookup(
 func compactPRISMIntervalIndexInsert(
 	root *compactPRISMIntervalIndexNode,
 	key string,
-	value *compactPRISMIntervalNode,
+	value *compactPRISMIntervalSet,
 ) *compactPRISMIntervalIndexNode {
 	if root == nil {
 		return &compactPRISMIntervalIndexNode{
@@ -295,6 +455,33 @@ func compactPRISMTransferSecondsOnRoute(
 			compactPRISMIntervalIndexLookup(state.networkIntervals, hop.key), readyAt,
 		)
 		concurrency := max(endpointConcurrency, linkConcurrency)
+		if hop.link.BandwidthBitsPerSecond <= 0 {
+			return math.Inf(1)
+		}
+		dataSeconds := float64(bytes) / (hop.link.BandwidthBitsPerSecond / 8.0)
+		seconds += hop.link.LatencySeconds + dataSeconds*float64(concurrency)
+	}
+	return seconds
+}
+
+func compactPRISMTransferSecondsOnRouteBatch(
+	batch *compactPRISMNetworkBatch,
+	source string,
+	target string,
+	bytes int64,
+	readyAt float64,
+	route compactPRISMRoute,
+) float64 {
+	if source == target || bytes <= 0 {
+		return 0
+	}
+	sourceActive := batch.active("s:"+source, readyAt)
+	targetActive := batch.active("d:"+target, readyAt)
+	duplicate := batch.active("p:"+source+"\x00"+target, readyAt)
+	endpointConcurrency := 1 + sourceActive + targetActive - duplicate
+	seconds := 0.0
+	for _, hop := range route.hops {
+		concurrency := max(endpointConcurrency, 1+batch.active(hop.key, readyAt))
 		if hop.link.BandwidthBitsPerSecond <= 0 {
 			return math.Inf(1)
 		}
@@ -401,12 +588,16 @@ func compactPRISMAddNetworkFlowOnRoute(
 		keys = append(keys, hop.key)
 	}
 	for _, key := range keys {
-		intervals := compactPRISMIntervalIndexLookup(state.networkIntervals, key)
-		intervals = compactPRISMIntervalInsert(
-			intervals,
-			readyAt,
-			deliveredAt,
-			state.networkSequence,
+		previous := compactPRISMIntervalIndexLookup(state.networkIntervals, key)
+		intervals := &compactPRISMIntervalSet{}
+		if previous != nil {
+			*intervals = *previous
+		}
+		intervals.starts = compactPRISMTimeInsert(
+			intervals.starts, readyAt, state.networkSequence,
+		)
+		intervals.ends = compactPRISMTimeInsert(
+			intervals.ends, deliveredAt, state.networkSequence,
 		)
 		state.networkIntervals = compactPRISMIntervalIndexInsert(
 			state.networkIntervals,

@@ -17,6 +17,55 @@ type compactPRISMRoute struct {
 	hops []compactPRISMRouteHop
 }
 
+type compactPRISMRouteKey struct {
+	source string
+	target string
+}
+
+type compactPRISMCachedRoute struct {
+	route  compactPRISMRoute
+	exists bool
+}
+
+// compactPRISMRouter freezes every resource-to-resource route used by a
+// planning request. Routes depend only on the frozen topology, not on payload
+// size or search state, so rebuilding the graph during every beam expansion is
+// pure duplicate work.
+type compactPRISMRouter struct {
+	routes map[compactPRISMRouteKey]compactPRISMCachedRoute
+}
+
+func newCompactPRISMRouter(
+	topology domain.NetworkTopology,
+	resources []domain.Resource,
+) compactPRISMRouter {
+	router := compactPRISMRouter{
+		routes: make(map[compactPRISMRouteKey]compactPRISMCachedRoute, len(resources)*len(resources)),
+	}
+	for _, source := range resources {
+		for _, target := range resources {
+			if source.ID == target.ID {
+				continue
+			}
+			route, exists := compactPRISMShortestRoute(topology, source.ID, target.ID, 0)
+			router.routes[compactPRISMRouteKey{source: source.ID, target: target.ID}] =
+				compactPRISMCachedRoute{route: route, exists: exists}
+		}
+	}
+	return router
+}
+
+func (router compactPRISMRouter) route(source string, target string) (compactPRISMRoute, bool) {
+	if source == target {
+		return compactPRISMRoute{}, true
+	}
+	cached, exists := router.routes[compactPRISMRouteKey{source: source, target: target}]
+	if !exists {
+		return compactPRISMRoute{}, false
+	}
+	return cached.route, cached.exists
+}
+
 type compactPRISMRouteCandidate struct {
 	node     string
 	seconds  float64
@@ -215,6 +264,20 @@ func compactPRISMTransferSeconds(
 	route, exists := compactPRISMShortestRoute(topology, source, target, bytes)
 	if !exists {
 		return math.Inf(1)
+	}
+	return compactPRISMTransferSecondsOnRoute(state, source, target, bytes, readyAt, route)
+}
+
+func compactPRISMTransferSecondsOnRoute(
+	state compactPRISMState,
+	source string,
+	target string,
+	bytes int64,
+	readyAt float64,
+	route compactPRISMRoute,
+) float64 {
+	if source == target || bytes <= 0 {
+		return 0
 	}
 	sourceActive := compactPRISMActiveIntervals(
 		compactPRISMIntervalIndexLookup(state.networkIntervals, "s:"+source), readyAt,

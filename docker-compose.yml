@@ -15,6 +15,10 @@ services:
       AKOFLOW_BUILDCTL: buildctl
       AKOFLOW_APPTAINER: apptainer
       AKOFLOW_SIMGRID_BINARY: /usr/local/bin/akoflow-simgrid-runner
+      # Docker Desktop bind mounts do not provide the same WAL locking
+      # guarantees as a native Linux filesystem. DELETE keeps the development
+      # catalog durable while large workflow definitions are imported.
+      AKOFLOW_SQLITE_JOURNAL_MODE: ${AKOFLOW_SQLITE_JOURNAL_MODE:-DELETE}
       AKOFLOW_RESTART_ON_INSTANCE_SWITCH: 'true'
       AKOFLOW_KIND_TOKEN: ${AKOFLOW_KIND_TOKEN:-}
       # Interactive terminals are enabled only for the local control-plane

@@ -160,12 +160,8 @@ func TestPRISMPreservesMultipleOptionsForEachExclusiveObjective(t *testing.T) {
 	}
 }
 
-func TestPRISMTimeIsAnchoredToCanonicalHEFT(t *testing.T) {
+func TestPRISMTimeIsEvaluatedIndependentlyFromCanonicalHEFT(t *testing.T) {
 	request := planningRequestFixture()
-	heftSink := &testSink{}
-	if err := (HEFT{}).Schedule(context.Background(), request, nil, nil, heftSink); err != nil {
-		t.Fatalf("schedule HEFT: %v", err)
-	}
 	prismSink := &testSink{}
 	if err := NewPRISMTime().Schedule(
 		context.Background(),
@@ -177,14 +173,33 @@ func TestPRISMTimeIsAnchoredToCanonicalHEFT(t *testing.T) {
 		t.Fatalf("schedule PRISM Time: %v", err)
 	}
 	if len(prismSink.plans) == 0 {
-		t.Fatal("expected at least the canonical HEFT anchor")
+		t.Fatal("expected PRISM to return its independently evaluated options")
 	}
-	if prismSink.plans[0].Predicted.MakespanSeconds > heftSink.plans[0].Predicted.MakespanSeconds+prismImprovementEpsilon {
-		t.Fatalf(
-			"PRISM Time makespan %.3f is worse than HEFT %.3f",
-			prismSink.plans[0].Predicted.MakespanSeconds,
-			heftSink.plans[0].Predicted.MakespanSeconds,
-		)
+	assertCompletePlan(t, prismSink.plans[0], request)
+}
+
+func TestPRISMReturnsBestEffortAnchorWhenSLAPrunesEverySearchState(t *testing.T) {
+	request := planningRequestFixture()
+	request.DeadlineSeconds = 0.001
+	request.Budget = 0.001
+	sink := &testSink{}
+	if err := NewPRISMTime().Schedule(
+		context.Background(),
+		request,
+		map[string]any{"beamWidth": 20, "optionCount": 6},
+		nil,
+		sink,
+	); err != nil {
+		t.Fatalf("schedule constrained PRISM: %v", err)
+	}
+	if len(sink.plans) == 0 {
+		t.Fatal("expected PRISM best-effort plans")
+	}
+	for _, plan := range sink.plans {
+		if plan.Predicted.Feasible {
+			t.Fatal("expected best-effort plan to be marked infeasible")
+		}
+		assertCompletePlan(t, plan, request)
 	}
 }
 

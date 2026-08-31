@@ -27,9 +27,11 @@ type compactPRISMContext struct {
 	predecessors     [][]compactPRISMDependency
 	successors       [][]int
 	resources        []compactPRISMResource
+	router           compactPRISMRouter
 	durations        [][]float64
 	feasible         [][]bool
 	minimumCosts     []float64
+	averageDurations []float64
 	ranks            []float64
 	readyBranchLimit int
 	beamWidth        int
@@ -48,7 +50,8 @@ func newCompactPRISMContext(
 	if len(resources) == 0 {
 		return compactPRISMContext{}, fmt.Errorf("execution scope has no schedulable resources")
 	}
-	rankByID, err := prismCommunicationRanks(request, topological, resources)
+	router := newCompactPRISMRouter(request.NetworkTopology, resources)
+	rankByID, err := prismCommunicationRanksWithRouter(request, topological, resources, router)
 	if err != nil {
 		return compactPRISMContext{}, err
 	}
@@ -69,7 +72,9 @@ func newCompactPRISMContext(
 		durations:        make([][]float64, len(ranked)),
 		feasible:         make([][]bool, len(ranked)),
 		minimumCosts:     make([]float64, len(ranked)),
+		averageDurations: make([]float64, len(ranked)),
 		ranks:            make([]float64, len(ranked)),
+		router:           router,
 		readyBranchLimit: intOption(configuration, "readyBranchLimit", 3, 1, 16),
 		beamWidth:        intOption(configuration, "beamWidth", 120, 1, 10000),
 	}
@@ -116,12 +121,13 @@ func (search *compactPRISMContext) buildDependencies() {
 }
 
 func (search *compactPRISMContext) buildExecutionMatrices() {
+	resources := extractCompactPRISMResources(search.resources)
 	for activityOrdinal, activity := range search.activities {
 		search.durations[activityOrdinal] = make([]float64, len(search.resources))
 		search.feasible[activityOrdinal] = make([]bool, len(search.resources))
 		minimumCost := minimumActivityCost(
 			activity,
-			extractCompactPRISMResources(search.resources),
+			resources,
 			search.request.ActivityProfiles,
 		)
 		search.minimumCosts[activityOrdinal] = minimumCost
@@ -135,7 +141,9 @@ func (search *compactPRISMContext) buildExecutionMatrices() {
 				resource.resource,
 				search.request.ActivityProfiles,
 			)
+			search.averageDurations[activityOrdinal] += search.durations[activityOrdinal][resourceOrdinal]
 		}
+		search.averageDurations[activityOrdinal] /= float64(len(search.resources))
 	}
 }
 

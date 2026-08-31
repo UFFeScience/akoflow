@@ -23,6 +23,10 @@ type compactPRISMState struct {
 	remainingMinCost   float64
 	projectedMakespan  float64
 	projectedCost      float64
+	queueSeconds       float64
+	transferSeconds    float64
+	networkCost        float64
+	usedResourceCount  int
 	signature          uint64
 	networkSequence    uint64
 }
@@ -193,21 +197,19 @@ func compactPRISMResolveTransfers(
 		if contention {
 			transferState = result.state
 		}
-		transfer := compactPRISMTransferSeconds(
-			search.request.NetworkTopology,
-			transferState,
-			predecessor.ResourceID,
-			resourceID,
-			dependency.bytes,
-			flowReadyAt,
-		)
+		route, routeExists := search.router.route(predecessor.ResourceID, resourceID)
+		transfer := math.Inf(1)
+		if routeExists {
+			transfer = compactPRISMTransferSecondsOnRoute(
+				transferState,
+				predecessor.ResourceID,
+				resourceID,
+				dependency.bytes,
+				flowReadyAt,
+				route,
+			)
+		}
 		result.seconds += transfer
-		route, routeExists := compactPRISMShortestRoute(
-			search.request.NetworkTopology,
-			predecessor.ResourceID,
-			resourceID,
-			dependency.bytes,
-		)
 		if predecessor.ResourceID != resourceID && dependency.bytes > 0 && routeExists {
 			for _, hop := range route.hops {
 				result.cost += float64(dependency.bytes) * hop.link.PricePerByte
@@ -280,7 +282,8 @@ func compactPRISMCommitPlacement(
 	out.resourceActiveFrom = append([]float64(nil), previous.resourceActiveFrom...)
 	out.resourceActiveTo = append([]float64(nil), previous.resourceActiveTo...)
 	previousWindow := 0.0
-	if !math.IsInf(out.resourceActiveFrom[resourceOrdinal], 1) {
+	resourceWasUnused := math.IsInf(out.resourceActiveFrom[resourceOrdinal], 1)
+	if !resourceWasUnused {
 		previousWindow = out.resourceActiveTo[resourceOrdinal] - out.resourceActiveFrom[resourceOrdinal]
 	}
 	billingStart := assignment.PredictedStartAt -
@@ -315,6 +318,13 @@ func compactPRISMCommitPlacement(
 	)
 	out.coreOrder = compactPRISMIntInsert(previous.coreOrder, coreOrdinal, assignment.OrderOnResource+1)
 	out.makespan = math.Max(previous.makespan, assignment.PredictedFinishAt)
+	out.queueSeconds = previous.queueSeconds + prismMetadataNumber(assignment.Metadata, "queueSeconds")
+	out.transferSeconds = previous.transferSeconds + assignment.PredictedTransferSeconds
+	out.networkCost = previous.networkCost + prismMetadataNumber(assignment.Metadata, "transferCost")
+	out.usedResourceCount = previous.usedResourceCount
+	if resourceWasUnused {
+		out.usedResourceCount++
+	}
 	out.remainingMinCost -= search.minimumCosts[activityOrdinal]
 	out.signature = extendScheduleSignature(
 		previous.signature,
@@ -324,10 +334,17 @@ func compactPRISMCommitPlacement(
 	)
 	out = compactPRISMAdvanceReady(search, out, activityOrdinal)
 	out.projectedCost = out.cost
-	out.projectedMakespan = math.Max(
-		out.makespan,
-		compactPRISMReadyRankBound(search, out),
+	// Anchor the remaining upward-rank path at the finish time produced by this
+	// actual placement. The previous bound used an unanchored rank, so states
+	// with very different core waits frequently tied and were then selected by
+	// cost. Subtract this activity's average runtime because its concrete
+	// resource-specific runtime is already included in PredictedFinishAt.
+	remainingPath := math.Max(
+		0,
+		search.ranks[activityOrdinal]-search.averageDurations[activityOrdinal],
 	)
+	out.projectedMakespan = math.Max(out.makespan, assignment.PredictedFinishAt+remainingPath)
+	out.projectedMakespan = math.Max(out.projectedMakespan, compactPRISMReadyRankBound(search, out))
 	return out
 }
 
@@ -335,18 +352,18 @@ func compactPRISMReadyRankBound(
 	search compactPRISMContext,
 	state compactPRISMState,
 ) float64 {
-	bound := 0.0
+	// Context construction sorts activity ordinals by descending PRISM rank.
+	// Therefore the first ready bit is the maximum ready rank.
 	for wordIndex, word := range state.readyTaskBits {
-		for word != 0 {
-			bit := bits.TrailingZeros64(word)
-			ordinal := wordIndex*64 + bit
-			if ordinal < len(search.ranks) {
-				bound = math.Max(bound, search.ranks[ordinal])
-			}
-			word &^= uint64(1) << bit
+		if word == 0 {
+			continue
+		}
+		ordinal := wordIndex*64 + bits.TrailingZeros64(word)
+		if ordinal < len(search.ranks) {
+			return search.ranks[ordinal]
 		}
 	}
-	return bound
+	return 0
 }
 
 func compactPRISMAssignments(state compactPRISMState) []domain.PlanAssignment {

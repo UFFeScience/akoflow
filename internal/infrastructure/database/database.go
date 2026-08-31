@@ -40,7 +40,16 @@ func open(path string, readOnly bool) (*sql.DB, error) {
 	if readOnly {
 		query += "&mode=ro&immutable=1"
 	} else {
-		query += "&_journal_mode=WAL"
+		journalMode := strings.ToUpper(strings.TrimSpace(os.Getenv("AKOFLOW_SQLITE_JOURNAL_MODE")))
+		if journalMode == "" {
+			journalMode = "WAL"
+		}
+		switch journalMode {
+		case "WAL", "DELETE", "TRUNCATE", "PERSIST":
+		default:
+			return nil, fmt.Errorf("unsupported SQLite journal mode %q", journalMode)
+		}
+		query += "&_journal_mode=" + url.QueryEscape(journalMode) + "&_synchronous=FULL"
 	}
 	dsn := location + query
 	db, err := sql.Open("sqlite3", dsn)

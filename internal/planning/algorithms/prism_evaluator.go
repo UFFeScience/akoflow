@@ -8,8 +8,6 @@ import (
 	"github.com/UFFeScience/akoflow/internal/domain"
 )
 
-const prismDetailedEvaluationLimit = 512
-
 type prismEvaluationDependency struct {
 	consumer int
 	bytes    int64
@@ -50,6 +48,8 @@ func (queue *prismEvaluationTaskQueue) Pop() any {
 
 type prismEvaluationFlow struct {
 	consumer  int
+	source    string
+	target    string
 	bytes     int64
 	remaining float64
 	startedAt float64
@@ -62,9 +62,6 @@ func reevaluateCompleteCompactPRISMStates(
 	search compactPRISMContext,
 	states []compactPRISMState,
 ) ([]compactPRISMState, error) {
-	if len(search.activities) > prismDetailedEvaluationLimit {
-		return states, nil
-	}
 	result := make([]compactPRISMState, 0, len(states))
 	for _, state := range states {
 		evaluated, err := evaluateCompleteCompactPRISMState(search, state)
@@ -195,11 +192,9 @@ func evaluateCompleteCompactPRISMState(
 					prismSatisfyEvaluationInput(consumer, clock, 0)
 					continue
 				}
-				route, exists := compactPRISMShortestRoute(
-					search.request.NetworkTopology,
+				route, exists := search.router.route(
 					producer.assignment.ResourceID,
 					consumer.assignment.ResourceID,
-					dependency.bytes,
 				)
 				if !exists {
 					return state, fmt.Errorf(
@@ -214,7 +209,10 @@ func evaluateCompleteCompactPRISMState(
 					transferCost += float64(dependency.bytes) * hop.link.PricePerByte
 				}
 				flows = append(flows, prismEvaluationFlow{
-					consumer: dependency.consumer, bytes: dependency.bytes,
+					consumer:  dependency.consumer,
+					source:    producer.assignment.ResourceID,
+					target:    consumer.assignment.ResourceID,
+					bytes:     dependency.bytes,
 					remaining: float64(dependency.bytes), startedAt: clock,
 					payloadAt: clock + latency, route: route, active: true,
 				})
@@ -286,6 +284,9 @@ func prismStartReadyTasks(
 func prismEvaluationFlowRates(flows []prismEvaluationFlow, clock float64) ([]float64, float64) {
 	rates := make([]float64, len(flows))
 	linkUsers := make(map[string]int)
+	sourceUsers := make(map[string]int)
+	targetUsers := make(map[string]int)
+	pairUsers := make(map[string]int)
 	nextAt := math.Inf(1)
 	for index, flow := range flows {
 		if !flow.active {
@@ -298,6 +299,9 @@ func prismEvaluationFlowRates(flows []prismEvaluationFlow, clock float64) ([]flo
 		for _, hop := range flow.route.hops {
 			linkUsers[hop.key]++
 		}
+		sourceUsers[flow.source]++
+		targetUsers[flow.target]++
+		pairUsers[flow.source+"\x00"+flow.target]++
 		_ = index
 	}
 	for index, flow := range flows {
@@ -305,8 +309,13 @@ func prismEvaluationFlowRates(flows []prismEvaluationFlow, clock float64) ([]flo
 			continue
 		}
 		rate := math.Inf(1)
+		// Distinct routes can still contend at their sending or receiving
+		// resource. Count the flow itself once, even when source and target are
+		// shared by the same set of active flows.
+		endpointUsers := sourceUsers[flow.source] + targetUsers[flow.target] -
+			pairUsers[flow.source+"\x00"+flow.target]
 		for _, hop := range flow.route.hops {
-			users := math.Max(float64(linkUsers[hop.key]), 1)
+			users := math.Max(float64(max(linkUsers[hop.key], endpointUsers)), 1)
 			rate = math.Min(rate, hop.link.BandwidthBitsPerSecond/8/users)
 		}
 		if math.IsInf(rate, 1) || rate <= 0 {
@@ -333,13 +342,23 @@ func compactPRISMStateFromEvaluation(
 	cost float64,
 ) compactPRISMState {
 	state.assignmentTrace = nil
+	state.queueSeconds = 0
+	state.transferSeconds = 0
+	state.networkCost = 0
+	state.usedResourceCount = 0
+	usedResources := make(map[string]struct{}, len(assignments))
 	for index, assignment := range assignments {
 		state.assignmentTrace = &compactPRISMAssignmentTrace{
 			assignment: assignment,
 			previous:   state.assignmentTrace,
 			length:     index + 1,
 		}
+		state.queueSeconds += prismMetadataNumber(assignment.Metadata, "queueSeconds")
+		state.transferSeconds += assignment.PredictedTransferSeconds
+		state.networkCost += prismMetadataNumber(assignment.Metadata, "transferCost")
+		usedResources[assignment.ResourceID] = struct{}{}
 	}
+	state.usedResourceCount = len(usedResources)
 	state.makespan = makespan
 	state.cost = cost
 	state.projectedMakespan = makespan

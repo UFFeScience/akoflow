@@ -10,8 +10,6 @@ import (
 	"github.com/UFFeScience/akoflow/internal/domain"
 )
 
-const prismImprovementEpsilon = 1e-6
-
 type PRISM struct{ Objective string }
 
 func NewPRISMTime() PRISM { return PRISM{Objective: "time"} }
@@ -48,30 +46,16 @@ func (p PRISM) Schedule(
 	if err != nil {
 		return err
 	}
-	anchor, err := compactPRISMHEFTAnchor(search)
-	if err != nil {
-		return fmt.Errorf("build canonical HEFT anchor: %w", err)
-	}
 	states, err = reevaluateCompleteCompactPRISMStates(search, states)
 	if err != nil {
 		return fmt.Errorf("evaluate PRISM candidates with shared network: %w", err)
 	}
-	evaluatedAnchor, err := reevaluateCompleteCompactPRISMStates(
-		search,
-		[]compactPRISMState{anchor},
-	)
-	if err != nil {
-		return fmt.Errorf("evaluate HEFT anchor with shared network: %w", err)
-	}
-	anchor = evaluatedAnchor[0]
-	states = append(states, anchor)
 	optionCount := intOption(configuration, "optionCount", 25, 1, 1000)
 	states = selectCompleteCompactPRISMOptions(
 		states,
 		optionCount,
 		p.Objective,
 		request,
-		anchor,
 	)
 	for index, state := range states {
 		id := fmt.Sprintf("%s-candidate-%d", p.Descriptor().ID, index+1)
@@ -87,6 +71,20 @@ func prismCommunicationRanks(
 	request domain.PlanningRequest,
 	topological []domain.Activity,
 	resources []domain.Resource,
+) (map[string]float64, error) {
+	return prismCommunicationRanksWithRouter(
+		request,
+		topological,
+		resources,
+		newCompactPRISMRouter(request.NetworkTopology, resources),
+	)
+}
+
+func prismCommunicationRanksWithRouter(
+	request domain.PlanningRequest,
+	topological []domain.Activity,
+	resources []domain.Resource,
+	router compactPRISMRouter,
 ) (map[string]float64, error) {
 	byID := map[string]domain.Activity{}
 	successors := map[string][]string{}
@@ -122,8 +120,8 @@ func prismCommunicationRanks(
 			if err != nil {
 				return 0, err
 			}
-			communication := averageTransferSeconds(
-				request.NetworkTopology,
+			communication := averageTransferSecondsWithRouter(
+				router,
 				resources,
 				bytes[successor][id],
 			)
@@ -146,6 +144,18 @@ func averageTransferSeconds(
 	resources []domain.Resource,
 	bytes int64,
 ) float64 {
+	return averageTransferSecondsWithRouter(
+		newCompactPRISMRouter(topology, resources),
+		resources,
+		bytes,
+	)
+}
+
+func averageTransferSecondsWithRouter(
+	router compactPRISMRouter,
+	resources []domain.Resource,
+	bytes int64,
+) float64 {
 	if bytes <= 0 || len(resources) < 2 {
 		return 0
 	}
@@ -155,13 +165,17 @@ func averageTransferSeconds(
 			if source.ID == target.ID {
 				continue
 			}
-			seconds := compactPRISMTransferSeconds(
-				topology,
+			route, exists := router.route(source.ID, target.ID)
+			if !exists {
+				continue
+			}
+			seconds := compactPRISMTransferSecondsOnRoute(
 				compactPRISMState{},
 				source.ID,
 				target.ID,
 				bytes,
 				0,
+				route,
 			)
 			if math.IsInf(seconds, 1) {
 				continue
@@ -201,25 +215,19 @@ func selectCompleteCompactPRISMOptions(
 	limit int,
 	objective string,
 	request domain.PlanningRequest,
-	anchor compactPRISMState,
 ) []compactPRISMState {
 	states = dedupeCompactPRISMStates(states, objective)
 	eligible := make([]compactPRISMState, 0, len(states))
 	for _, state := range states {
-		if objective == "time" {
-			if state.makespan <= anchor.makespan+prismImprovementEpsilon {
-				eligible = append(eligible, state)
-			}
+		if !compactPRISMWithinConstraints(state, request) {
 			continue
 		}
-		feasible := (request.DeadlineSeconds <= 0 || state.makespan <= request.DeadlineSeconds) &&
-			(request.Budget <= 0 || state.cost <= request.Budget)
-		if feasible && state.cost <= anchor.cost+prismImprovementEpsilon {
-			eligible = append(eligible, state)
-		}
+		eligible = append(eligible, state)
 	}
 	if len(eligible) == 0 {
-		eligible = append(eligible, anchor)
+		// Preserve the best plans found even when every complete option misses
+		// the configured SLA. compactPRISMPlan marks them as infeasible.
+		eligible = append(eligible, states...)
 	}
 	sort.SliceStable(eligible, func(i, j int) bool {
 		return compactPRISMCompleteLess(eligible[i], eligible[j], objective)

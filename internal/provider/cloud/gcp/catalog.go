@@ -22,27 +22,17 @@ import (
 )
 
 const computeEndpoint = "https://compute.googleapis.com/compute/v1"
-const resourceManagerEndpoint = "https://cloudresourcemanager.googleapis.com/v1"
-
-var requiredGCPPermissions = []string{
-	"compute.disks.create", "compute.disks.delete", "compute.firewalls.create",
-	"compute.firewalls.delete", "compute.instances.create", "compute.instances.delete",
-	"compute.instances.get", "compute.instances.setMetadata", "compute.instances.setTags",
-	"compute.instances.start", "compute.instances.stop", "compute.networks.get",
-	"compute.subnetworks.use", "compute.subnetworks.useExternalIp",
-}
 
 type Catalog struct {
-	client                  *http.Client
-	computeEndpoint         string
-	resourceManagerEndpoint string
+	client          *http.Client
+	computeEndpoint string
 }
 
 func New(client *http.Client) *Catalog {
 	if client == nil {
 		client = &http.Client{Timeout: 45 * time.Second}
 	}
-	return &Catalog{client: client, computeEndpoint: computeEndpoint, resourceManagerEndpoint: resourceManagerEndpoint}
+	return &Catalog{client: client, computeEndpoint: computeEndpoint}
 }
 
 func (*Catalog) Provider() string { return "gcp" }
@@ -101,7 +91,7 @@ func (c *Catalog) accessToken(ctx context.Context, account serviceAccount) (stri
 	}
 	now := time.Now().Unix()
 	header, _ := json.Marshal(map[string]string{"alg": "RS256", "typ": "JWT"})
-	claim, _ := json.Marshal(map[string]any{"iss": account.ClientEmail, "scope": "https://www.googleapis.com/auth/cloud-platform", "aud": tokenURI, "iat": now, "exp": now + 3600})
+	claim, _ := json.Marshal(map[string]any{"iss": account.ClientEmail, "scope": "https://www.googleapis.com/auth/compute.readonly", "aud": tokenURI, "iat": now, "exp": now + 3600})
 	unsigned := base64.RawURLEncoding.EncodeToString(header) + "." + base64.RawURLEncoding.EncodeToString(claim)
 	block, _ := pem.Decode([]byte(account.PrivateKey))
 	if block == nil {
@@ -143,63 +133,6 @@ func (c *Catalog) accessToken(ctx context.Context, account serviceAccount) (stri
 		return "", fmt.Errorf("GCP authentication returned no access token")
 	}
 	return payload.AccessToken, nil
-}
-
-func (c *Catalog) ValidateAccess(
-	ctx context.Context,
-	connection domain.EnvironmentConnection,
-	credential []byte,
-) error {
-	var account serviceAccount
-	if err := json.Unmarshal(credential, &account); err != nil {
-		return fmt.Errorf("decode GCP service account: %w", err)
-	}
-	project := configString(connection.Configuration, "projectId")
-	if project == "" {
-		project = account.ProjectID
-	}
-	token, err := c.accessToken(ctx, account)
-	if err != nil {
-		return err
-	}
-	required := requiredGCPPermissions
-	body, _ := json.Marshal(map[string]any{"permissions": required})
-	endpoint := fmt.Sprintf("%s/projects/%s:testIamPermissions", c.resourceManagerEndpoint, url.PathEscape(project))
-	req, err := http.NewRequestWithContext(ctx, http.MethodPost, endpoint, strings.NewReader(string(body)))
-	if err != nil {
-		return err
-	}
-	req.Header.Set("Authorization", "Bearer "+token)
-	req.Header.Set("Content-Type", "application/json")
-	response, err := c.client.Do(req)
-	if err != nil {
-		return fmt.Errorf("validate GCP IAM permissions: %w", err)
-	}
-	defer response.Body.Close()
-	data, _ := io.ReadAll(io.LimitReader(response.Body, 1<<20))
-	if response.StatusCode/100 != 2 {
-		return fmt.Errorf("GCP IAM validation returned %s: %s", response.Status, strings.TrimSpace(string(data)))
-	}
-	var payload struct {
-		Permissions []string `json:"permissions"`
-	}
-	if err := json.Unmarshal(data, &payload); err != nil {
-		return fmt.Errorf("decode GCP IAM validation: %w", err)
-	}
-	granted := make(map[string]bool, len(payload.Permissions))
-	for _, permission := range payload.Permissions {
-		granted[permission] = true
-	}
-	missing := make([]string, 0)
-	for _, permission := range required {
-		if !granted[permission] {
-			missing = append(missing, permission)
-		}
-	}
-	if len(missing) > 0 {
-		return fmt.Errorf("GCP credential is missing required permissions: %s", strings.Join(missing, ", "))
-	}
-	return nil
 }
 
 func (c *Catalog) get(ctx context.Context, token, endpoint string, output any) error {

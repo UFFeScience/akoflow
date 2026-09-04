@@ -79,27 +79,6 @@ func TestMachineCatalogFollowsProviderPagination(t *testing.T) {
 	}
 }
 
-func TestValidateAccessReportsMissingProvisioningPermission(t *testing.T) {
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		if r.URL.Path == "/token" {
-			_, _ = w.Write([]byte(`{"access_token":"token"}`))
-			return
-		}
-		granted := append([]string(nil), requiredGCPPermissions[:len(requiredGCPPermissions)-1]...)
-		_ = json.NewEncoder(w).Encode(map[string]any{"permissions": granted})
-	}))
-	defer server.Close()
-	catalog := New(server.Client())
-	catalog.resourceManagerEndpoint = server.URL
-	err := catalog.ValidateAccess(context.Background(), domain.EnvironmentConnection{
-		Configuration: map[string]any{"projectId": "science"},
-	}, testCredential(t, server.URL+"/token"))
-	if err == nil || !strings.Contains(err.Error(), "compute.subnetworks.useExternalIp") {
-		t.Fatalf("validation error = %v", err)
-	}
-}
-
 func testCredential(t *testing.T, tokenURI string) []byte {
 	t.Helper()
 	key, err := rsa.GenerateKey(rand.Reader, 2048)

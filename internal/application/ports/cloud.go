@@ -31,6 +31,10 @@ type CloudCatalogProvider interface {
 	Discover(context.Context, domain.EnvironmentConnection, []byte) (domain.CloudCatalog, error)
 }
 
+type CloudAccessValidator interface {
+	ValidateAccess(context.Context, domain.EnvironmentConnection, []byte) error
+}
+
 type CloudCatalog interface {
 	Discover(context.Context, string) (domain.CloudCatalog, error)
 	Validate(context.Context, domain.EnvironmentConnection, []byte) (domain.CloudCatalog, error)

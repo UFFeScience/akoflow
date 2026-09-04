@@ -68,6 +68,11 @@ func (c *Catalog) Validate(
 	if adapter == nil {
 		return domain.CloudCatalog{}, fmt.Errorf("cloud provider %q is not supported", provider)
 	}
+	if validator, ok := adapter.(ports.CloudAccessValidator); ok {
+		if err := validator.ValidateAccess(ctx, connection, credential); err != nil {
+			return domain.CloudCatalog{}, err
+		}
+	}
 	return adapter.Discover(ctx, connection, credential)
 }
 

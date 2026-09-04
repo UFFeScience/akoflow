@@ -42,12 +42,15 @@ func TestInteractiveCloudTerminalAcceptsAndRecordsNewHostKey(t *testing.T) {
 			Type: domain.ConnectionSSH, Endpoint: "203.0.113.10",
 			Configuration: map[string]any{"dynamicHost": true},
 		},
-		domain.Resource{Type: domain.ResourceCloudVM, ExecutionTarget: domain.ExecutionTargetDirect},
+		domain.Resource{Type: domain.ResourceCloudVM, ExecutionTarget: domain.ExecutionTargetBatch},
 	)
 	if err != nil {
 		t.Fatal(err)
 	}
 	if arguments := strings.Join(command.Args, " "); !strings.Contains(arguments, "StrictHostKeyChecking=accept-new") {
 		t.Fatalf("dynamic cloud host key policy is missing: %s", arguments)
+	}
+	if arguments := strings.Join(command.Args, " "); strings.Contains(arguments, "srun") {
+		t.Fatalf("cloud terminal must open a direct SSH shell: %s", arguments)
 	}
 }

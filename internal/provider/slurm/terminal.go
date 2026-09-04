@@ -87,7 +87,11 @@ func interactiveCommandForJob(connection domain.EnvironmentConnection, resource 
 		return nil, nil, fmt.Errorf("SSH endpoint is required for an interactive terminal")
 	}
 	args = append(args, target)
-	if resource.ExecutionTarget == domain.ExecutionTargetDirect {
+	// A cloud VM is reached directly over its dynamically resolved SSH
+	// connection. Its "batch" execution target describes workflow scheduling,
+	// not an intermediate SLURM allocation for an interactive shell.
+	if resource.ExecutionTarget == domain.ExecutionTargetDirect ||
+		(resource.Type == domain.ResourceCloudVM && configBool(connection.Configuration, "dynamicHost", false)) {
 		args = append(args, "/bin/sh", "-l")
 		return exec.Command("ssh", args...), nil, nil
 	}

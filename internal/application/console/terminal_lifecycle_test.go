@@ -14,6 +14,9 @@ type terminalCloudStub struct{ released []string }
 func (*terminalCloudStub) Provision(context.Context, string, domain.CloudProvisionRequest) (domain.CloudProvisionedInstance, error) {
 	return domain.CloudProvisionedInstance{}, nil
 }
+func (*terminalCloudStub) Configure(context.Context, string) (domain.CloudProvisionedInstance, error) {
+	return domain.CloudProvisionedInstance{}, nil
+}
 func (*terminalCloudStub) Destroy(context.Context, string) (domain.CloudProvisionedInstance, error) {
 	return domain.CloudProvisionedInstance{}, nil
 }

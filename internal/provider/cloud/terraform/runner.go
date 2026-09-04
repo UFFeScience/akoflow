@@ -108,9 +108,17 @@ func (r Runner) prepare(spec ports.TerraformProvisionSpec) (string, error) {
 		"ssh_user":         spec.SSHUser,
 		"ssh_public_key":   spec.PublicKey,
 		"desired_status":   "RUNNING",
+		"network":          stringValue(spec.Target.Configuration, "network"),
+		"subnetwork":       stringValue(spec.Target.Configuration, "subnetwork"),
+		"ssh_source_ranges": stringSliceValue(
+			spec.Target.Configuration, "sshSourceRanges", []string{"0.0.0.0/0"},
+		),
 	}
 	if values["disk_type"] == "" {
 		values["disk_type"] = "pd-balanced"
+	}
+	if values["network"] == "" {
+		values["network"] = "default"
 	}
 	encoded, err := json.MarshalIndent(values, "", "  ")
 	if err != nil {
@@ -194,6 +202,38 @@ func intValue(values map[string]any, key string, fallback int) int {
 	}
 }
 
+func stringSliceValue(values map[string]any, key string, fallback []string) []string {
+	value, exists := values[key]
+	if !exists {
+		return fallback
+	}
+	switch items := value.(type) {
+	case []string:
+		return items
+	case []any:
+		result := make([]string, 0, len(items))
+		for _, item := range items {
+			if text := strings.TrimSpace(stringAny(item)); text != "" {
+				result = append(result, text)
+			}
+		}
+		if len(result) > 0 {
+			return result
+		}
+	case string:
+		result := []string{}
+		for _, item := range strings.Split(items, ",") {
+			if text := strings.TrimSpace(item); text != "" {
+				result = append(result, text)
+			}
+		}
+		if len(result) > 0 {
+			return result
+		}
+	}
+	return fallback
+}
+
 const gcpModule = `terraform {
   required_providers {
     google = {
@@ -224,6 +264,12 @@ variable "desired_status" {
   type    = string
   default = "RUNNING"
 }
+variable "network" { type = string }
+variable "subnetwork" {
+  type    = string
+  default = ""
+}
+variable "ssh_source_ranges" { type = list(string) }
 provider "google" {
   credentials = file(var.credentials_file)
   project     = var.project
@@ -253,7 +299,8 @@ resource "google_compute_instance" "worker" {
     }
   }
   network_interface {
-    network = "default"
+    network    = var.subnetwork == "" ? var.network : null
+    subnetwork = var.subnetwork == "" ? null : var.subnetwork
     access_config {}
   }
   metadata = { ssh-keys = "${var.ssh_user}:${var.ssh_public_key}" }
@@ -267,9 +314,9 @@ resource "google_compute_instance" "worker" {
 resource "google_compute_firewall" "ssh" {
   name          = "${var.name}-ssh"
   project       = var.project
-  network       = "default"
+  network       = var.network
   direction     = "INGRESS"
-  source_ranges = ["0.0.0.0/0"]
+  source_ranges = var.ssh_source_ranges
   target_tags   = [var.name]
   allow {
     protocol = "tcp"

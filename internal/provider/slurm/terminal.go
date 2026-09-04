@@ -71,7 +71,11 @@ func interactiveCommandForJob(connection domain.EnvironmentConnection, resource 
 	// Reuse the daemon-managed known_hosts file populated during the connection
 	// test. Interactive terminals must verify that same host identity instead of
 	// falling back to the container user's transient SSH configuration.
-	args = append(args, "-o", "UserKnownHostsFile="+knownHostsFile(connection), "-o", "StrictHostKeyChecking=yes")
+	hostKeyPolicy := "yes"
+	if configBool(connection.Configuration, "dynamicHost", false) {
+		hostKeyPolicy = "accept-new"
+	}
+	args = append(args, "-o", "UserKnownHostsFile="+knownHostsFile(connection), "-o", "StrictHostKeyChecking="+hostKeyPolicy)
 	if configBool(connection.Configuration, "forwardAgent", false) {
 		args = append(args, "-A")
 	}

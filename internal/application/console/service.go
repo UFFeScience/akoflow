@@ -148,7 +148,9 @@ func (s *CommandController) resolveCloudConnection(
 			ID: connection.ID + "-" + instance.ID, EnvironmentID: connection.EnvironmentID,
 			Name: instance.Name, Type: domain.ConnectionSSH, Endpoint: instance.PublicAddress,
 			Username: instance.SSHUsername, CredentialRef: instance.SSHCredentialRef,
-			Configuration: map[string]any{"port": 22, "skipSchedulerCheck": true},
+			Configuration: map[string]any{
+				"port": 22, "skipSchedulerCheck": true, "dynamicHost": true,
+			},
 		}, nil
 	}
 	return connection, fmt.Errorf("cloud capacity target %q has no ready instance", capacityTargetID)

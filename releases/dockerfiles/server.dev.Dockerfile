@@ -28,6 +28,7 @@ RUN git clone --depth 1 --branch ${APPTAINER_VERSION} https://github.com/apptain
  && make -C builddir install
 
 FROM moby/buildkit:latest AS buildkit-client
+FROM hashicorp/terraform:1.13.4 AS terraform-client
 
 FROM golang:1.25-trixie
 
@@ -38,7 +39,7 @@ ENV PATH="/usr/local/go/bin:${PATH}"
 # never require rebuilding this image.
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates gcc libsqlite3-dev libsimgrid4.0 libseccomp2 libgpgme11 libfuse3-4 \
-    openssh-client rsync kubernetes-client squashfs-tools uidmap \
+    ansible-core openssh-client rsync kubernetes-client squashfs-tools uidmap \
  && rm -rf /var/lib/apt/lists/*
 
 # Copy only Apptainer's installed files. Copying all of /usr/local would
@@ -50,6 +51,7 @@ COPY --from=apptainer-builder /usr/local/libexec/apptainer /usr/local/libexec/ap
 COPY --from=apptainer-builder /usr/local/etc/apptainer /usr/local/etc/apptainer
 COPY --from=apptainer-builder /usr/local/var/apptainer /usr/local/var/apptainer
 COPY --from=buildkit-client /usr/bin/buildctl /usr/local/bin/buildctl
+COPY --from=terraform-client /bin/terraform /usr/local/bin/terraform
 COPY --from=simgrid-builder /build/output/akoflow-simgrid-runner /usr/local/bin/akoflow-simgrid-runner
 
 WORKDIR /app

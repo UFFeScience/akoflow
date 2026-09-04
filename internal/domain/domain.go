@@ -24,6 +24,8 @@ type CloudCatalog = cloud.Catalog
 type CloudMachineOffering = cloud.MachineOffering
 type CloudImageOffering = cloud.ImageOffering
 type CloudDiskOffering = cloud.DiskOffering
+type CloudProvisionedInstance = cloud.ProvisionedInstance
+type CloudProvisionRequest = cloud.ProvisionRequest
 
 const DefaultMachineConfigurationID = cloud.DefaultConfigurationID
 

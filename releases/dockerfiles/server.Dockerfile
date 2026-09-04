@@ -27,6 +27,7 @@ COPY . .
 RUN go build -o /output/akoflow-server ./cmd/server
 
 FROM moby/buildkit:${BUILDKIT_VERSION} AS buildkit-client
+FROM hashicorp/terraform:1.13.4 AS terraform-client
 
 # Apptainer is built from source because Debian trixie does not ship the
 # runtime package. The build is architecture-native, so Docker Buildx produces
@@ -61,6 +62,7 @@ ENV AKOFLOW_SERVER_VERSION=${AKOFLOW_VERSION} \
     AKOFLOW_SIMGRID_BINARY=/usr/local/bin/akoflow-simgrid-runner
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
+    ansible-core \
     ca-certificates \
     curl \
     docker-cli \
@@ -79,6 +81,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 WORKDIR /app
 COPY --from=go-builder /output/akoflow-server /usr/local/bin/akoflow-server
 COPY --from=buildkit-client /usr/bin/buildctl /usr/local/bin/buildctl
+COPY --from=terraform-client /bin/terraform /usr/local/bin/terraform
 COPY --from=apptainer-builder /usr/local /usr/local
 COPY --from=simgrid-builder /build/output/akoflow-simgrid-runner /usr/local/bin/akoflow-simgrid-runner
 

@@ -112,6 +112,7 @@ type Dependencies struct {
 	Provenance       ports.ProvenanceExplorer
 	Cloud            ports.CloudConfigurationStore
 	CloudCatalog     ports.CloudCatalog
+	CloudProvisioner ports.CloudProvisioner
 	CloudCredentials *cloudcredential.Manager
 	InstanceArchive  ports.InstanceArchive
 	ReadOnly         bool
@@ -146,6 +147,7 @@ type Handler struct {
 	provenance       ports.ProvenanceExplorer
 	cloud            ports.CloudConfigurationStore
 	cloudCatalog     ports.CloudCatalog
+	cloudProvisioner ports.CloudProvisioner
 	cloudCredentials *cloudcredential.Manager
 	instanceArchive  ports.InstanceArchive
 	readOnly         bool
@@ -193,6 +195,7 @@ func New(dependencies Dependencies) (*Handler, error) {
 		provenance:       dependencies.Provenance,
 		cloud:            dependencies.Cloud,
 		cloudCatalog:     dependencies.CloudCatalog,
+		cloudProvisioner: dependencies.CloudProvisioner,
 		cloudCredentials: dependencies.CloudCredentials,
 		instanceArchive:  dependencies.InstanceArchive,
 		readOnly:         dependencies.ReadOnly,
@@ -1563,6 +1566,45 @@ func (h *Handler) CreateCloudCapacityTarget(w http.ResponseWriter, r *http.Reque
 		return
 	}
 	writeJSON(w, http.StatusCreated, value)
+}
+
+func (h *Handler) ListCloudInstances(w http.ResponseWriter, r *http.Request) {
+	if h.cloud == nil {
+		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("cloud configuration is unavailable"))
+		return
+	}
+	values, err := h.cloud.ListProvisionedInstances(r.Context(), r.PathValue("environmentId"))
+	writeList(w, values, err)
+}
+
+func (h *Handler) ProvisionCloudInstance(w http.ResponseWriter, r *http.Request) {
+	if h.cloudProvisioner == nil {
+		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("cloud provisioner is unavailable"))
+		return
+	}
+	var request domain.CloudProvisionRequest
+	if !decode(w, r, &request) {
+		return
+	}
+	value, err := h.cloudProvisioner.Provision(r.Context(), r.PathValue("environmentId"), request)
+	if err != nil {
+		writeError(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+	writeJSON(w, http.StatusCreated, value)
+}
+
+func (h *Handler) DestroyCloudInstance(w http.ResponseWriter, r *http.Request) {
+	if h.cloudProvisioner == nil {
+		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("cloud provisioner is unavailable"))
+		return
+	}
+	value, err := h.cloudProvisioner.Destroy(r.Context(), r.PathValue("instanceId"))
+	if err != nil {
+		writeError(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+	writeJSON(w, http.StatusOK, value)
 }
 
 func (h *Handler) ReplaceEnvironment(w http.ResponseWriter, r *http.Request) {

@@ -297,3 +297,101 @@ func (r *Repository) ListCapacityTargets(ctx context.Context, environmentID stri
 	}
 	return values, nil
 }
+
+func (r *Repository) FindCapacityTarget(ctx context.Context, id string) (*domain.CloudCapacityTarget, error) {
+	var environmentID string
+	err := r.db.QueryRowContext(ctx, `SELECT environment_id FROM cloud_capacity_targets WHERE id=?`, id).Scan(&environmentID)
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+	values, err := r.ListCapacityTargets(ctx, environmentID)
+	if err != nil {
+		return nil, err
+	}
+	for index := range values {
+		if values[index].ID == id {
+			return &values[index], nil
+		}
+	}
+	return nil, nil
+}
+
+func (r *Repository) CreateProvisionedInstance(ctx context.Context, value domain.CloudProvisionedInstance) error {
+	disk, _ := json.Marshal(value.Disk)
+	output, _ := json.Marshal(value.TerraformOutput)
+	_, err := r.db.ExecContext(ctx, `INSERT INTO cloud_provisioned_instances(
+		id,capacity_target_id,environment_id,provider,provider_id,name,status,public_address,
+		private_address,ssh_username,ssh_credential_ref,disk,terraform_output,failure_reason,
+		created_at,ready_at,destroyed_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
+		value.ID, value.CapacityTargetID, value.EnvironmentID, value.Provider, value.ProviderID,
+		value.Name, value.Status, value.PublicAddress, value.PrivateAddress, value.SSHUsername,
+		value.SSHCredentialRef, disk, output, value.FailureReason, value.CreatedAt, value.ReadyAt,
+		value.DestroyedAt)
+	return err
+}
+
+func (r *Repository) UpdateProvisionedInstance(ctx context.Context, value domain.CloudProvisionedInstance) error {
+	disk, _ := json.Marshal(value.Disk)
+	output, _ := json.Marshal(value.TerraformOutput)
+	_, err := r.db.ExecContext(ctx, `UPDATE cloud_provisioned_instances SET provider_id=?,name=?,status=?,
+		public_address=?,private_address=?,ssh_username=?,ssh_credential_ref=?,disk=?,
+		terraform_output=?,failure_reason=?,ready_at=?,destroyed_at=? WHERE id=?`,
+		value.ProviderID, value.Name, value.Status, value.PublicAddress, value.PrivateAddress,
+		value.SSHUsername, value.SSHCredentialRef, disk, output, value.FailureReason,
+		value.ReadyAt, value.DestroyedAt, value.ID)
+	return err
+}
+
+func (r *Repository) FindProvisionedInstance(ctx context.Context, id string) (*domain.CloudProvisionedInstance, error) {
+	row := r.db.QueryRowContext(ctx, `SELECT id,capacity_target_id,environment_id,provider,provider_id,
+		name,status,public_address,private_address,ssh_username,ssh_credential_ref,disk,
+		terraform_output,failure_reason,created_at,ready_at,destroyed_at
+		FROM cloud_provisioned_instances WHERE id=?`, id)
+	value, err := scanProvisionedInstance(row.Scan)
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
+	return value, err
+}
+
+func (r *Repository) ListProvisionedInstances(ctx context.Context, environmentID string) ([]domain.CloudProvisionedInstance, error) {
+	rows, err := r.db.QueryContext(ctx, `SELECT id,capacity_target_id,environment_id,provider,provider_id,
+		name,status,public_address,private_address,ssh_username,ssh_credential_ref,disk,
+		terraform_output,failure_reason,created_at,ready_at,destroyed_at
+		FROM cloud_provisioned_instances WHERE environment_id=? ORDER BY created_at DESC`, environmentID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	values := make([]domain.CloudProvisionedInstance, 0)
+	for rows.Next() {
+		value, scanErr := scanProvisionedInstance(rows.Scan)
+		if scanErr != nil {
+			return nil, scanErr
+		}
+		values = append(values, *value)
+	}
+	return values, rows.Err()
+}
+
+type scanner func(...any) error
+
+func scanProvisionedInstance(scan scanner) (*domain.CloudProvisionedInstance, error) {
+	var value domain.CloudProvisionedInstance
+	var disk, output []byte
+	err := scan(
+		&value.ID, &value.CapacityTargetID, &value.EnvironmentID, &value.Provider,
+		&value.ProviderID, &value.Name, &value.Status, &value.PublicAddress,
+		&value.PrivateAddress, &value.SSHUsername, &value.SSHCredentialRef, &disk,
+		&output, &value.FailureReason, &value.CreatedAt, &value.ReadyAt, &value.DestroyedAt,
+	)
+	if err != nil {
+		return nil, err
+	}
+	_ = json.Unmarshal(disk, &value.Disk)
+	_ = json.Unmarshal(output, &value.TerraformOutput)
+	return &value, nil
+}

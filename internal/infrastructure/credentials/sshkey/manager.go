@@ -12,6 +12,8 @@ import (
 	"regexp"
 	"sort"
 	"strings"
+
+	"github.com/UFFeScience/akoflow/internal/application/ports"
 )
 
 var validID = regexp.MustCompile(`^[a-zA-Z0-9][a-zA-Z0-9_-]{0,63}$`)
@@ -145,6 +147,20 @@ func (m *Manager) List() ([]Key, error) {
 	}
 	sort.Slice(keys, func(i, j int) bool { return keys[i].ID < keys[j].ID })
 	return keys, nil
+}
+
+func (m *Manager) Ensure(id, comment string) (ports.CloudSSHKey, error) {
+	keys, err := m.List()
+	if err != nil {
+		return ports.CloudSSHKey{}, err
+	}
+	for _, key := range keys {
+		if key.ID == id {
+			return ports.CloudSSHKey{CredentialRef: key.CredentialRef, PublicKey: key.PublicKey}, nil
+		}
+	}
+	key, err := m.Generate(id, comment)
+	return ports.CloudSSHKey{CredentialRef: key.CredentialRef, PublicKey: key.PublicKey}, err
 }
 
 func publicMaterial(value string) (ed25519.PublicKey, error) {

@@ -44,6 +44,9 @@ func Bootstrap(ctx context.Context, db *sql.DB) error {
 	if err := migrateCloudFoundation(ctx, db); err != nil {
 		return err
 	}
+	if err := migrateCloudInstances(ctx, db); err != nil {
+		return err
+	}
 	if err := Validate(ctx, db); err != nil {
 		return fmt.Errorf("%w; remove the existing database file and recreate it: %v", ErrIncompatibleSchema, err)
 	}
@@ -59,6 +62,7 @@ const schemaBeforeTransferSettings = "2412be2fc4530cf52b1e620dc2454ab97207980f6b
 const schemaBeforeWorkflowDataDependencies = "2a07d9d4c5230f9c5cf884142c092eb7bda7b726fdd03b55e7e3174251e80288"
 const schemaBeforePlanningSessions = "8f6ed6fec292490f85e3fe8e6bf7edca918375589516a687d8a00d61f882c137"
 const schemaBeforeCloudFoundation = "7e1bbb05c5eb78bdaf86806a2a7c18a474b28035ebffee5ce8e0f65b5fffd722"
+const schemaBeforeCloudInstances = "5c0308e9166ed23dc481b04192cd1539b96ba60b0543df10c7fb2cd065e8b4bc"
 
 func migrateUserPreferences(ctx context.Context, db *sql.DB) error {
 	var checksum string
@@ -279,8 +283,45 @@ func migrateCloudFoundation(ctx context.Context, db *sql.DB) error {
 			return fmt.Errorf("apply cloud foundation migration: %w", err)
 		}
 	}
-	if _, err := tx.ExecContext(ctx, `UPDATE schema_metadata SET checksum=?, applied_at=?`, schemaChecksum(), time.Now().UTC()); err != nil {
+	if _, err := tx.ExecContext(ctx, `UPDATE schema_metadata SET checksum=?, applied_at=?`, schemaBeforeCloudInstances, time.Now().UTC()); err != nil {
 		return fmt.Errorf("record cloud foundation migration: %w", err)
+	}
+	return tx.Commit()
+}
+
+func migrateCloudInstances(ctx context.Context, db *sql.DB) error {
+	var checksum string
+	if err := db.QueryRowContext(ctx, `SELECT checksum FROM schema_metadata LIMIT 1`).Scan(&checksum); err != nil || checksum == schemaChecksum() {
+		return nil
+	}
+	if checksum != schemaBeforeCloudInstances {
+		return nil
+	}
+	tx, err := db.BeginTx(ctx, nil)
+	if err != nil {
+		return fmt.Errorf("begin cloud instances migration: %w", err)
+	}
+	defer tx.Rollback()
+	statements := []string{
+		`CREATE TABLE cloud_provisioned_instances (
+			id TEXT PRIMARY KEY, capacity_target_id TEXT NOT NULL REFERENCES cloud_capacity_targets(id),
+			environment_id TEXT NOT NULL REFERENCES environments(id), provider TEXT NOT NULL,
+			provider_id TEXT NOT NULL DEFAULT '', name TEXT NOT NULL,
+			status TEXT NOT NULL CHECK(status IN ('provisioning','configuring','ready','stopped','destroying','destroyed','failed')),
+			public_address TEXT NOT NULL DEFAULT '', private_address TEXT NOT NULL DEFAULT '',
+			ssh_username TEXT NOT NULL DEFAULT '', ssh_credential_ref TEXT NOT NULL DEFAULT '',
+			disk TEXT NOT NULL DEFAULT '{}', terraform_output TEXT NOT NULL DEFAULT '{}',
+			failure_reason TEXT NOT NULL DEFAULT '', created_at DATETIME NOT NULL,
+			ready_at DATETIME, destroyed_at DATETIME)`,
+		`CREATE INDEX cloud_instances_environment_status_idx ON cloud_provisioned_instances(environment_id,status)`,
+	}
+	for _, statement := range statements {
+		if _, err := tx.ExecContext(ctx, statement); err != nil {
+			return fmt.Errorf("apply cloud instances migration: %w", err)
+		}
+	}
+	if _, err := tx.ExecContext(ctx, `UPDATE schema_metadata SET checksum=?, applied_at=?`, schemaChecksum(), time.Now().UTC()); err != nil {
+		return fmt.Errorf("record cloud instances migration: %w", err)
 	}
 	return tx.Commit()
 }

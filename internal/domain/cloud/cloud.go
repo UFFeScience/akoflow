@@ -131,3 +131,29 @@ type Catalog struct {
 	Warnings      []string          `json:"warnings,omitempty"`
 	DiscoveredAt  time.Time         `json:"discoveredAt"`
 }
+
+type ProvisionedInstance struct {
+	ID               string         `json:"id"`
+	CapacityTargetID string         `json:"capacityTargetId"`
+	EnvironmentID    string         `json:"environmentId"`
+	Provider         string         `json:"provider"`
+	ProviderID       string         `json:"providerId,omitempty"`
+	Name             string         `json:"name"`
+	Status           string         `json:"status"`
+	PublicAddress    string         `json:"publicAddress,omitempty"`
+	PrivateAddress   string         `json:"privateAddress,omitempty"`
+	SSHUsername      string         `json:"sshUsername,omitempty"`
+	SSHCredentialRef string         `json:"sshCredentialRef,omitempty"`
+	Disk             map[string]any `json:"disk,omitempty"`
+	TerraformOutput  map[string]any `json:"terraformOutput,omitempty"`
+	FailureReason    string         `json:"failureReason,omitempty"`
+	CreatedAt        time.Time      `json:"createdAt"`
+	ReadyAt          *time.Time     `json:"readyAt,omitempty"`
+	DestroyedAt      *time.Time     `json:"destroyedAt,omitempty"`
+}
+
+type ProvisionRequest struct {
+	CapacityTargetID string `json:"capacityTargetId"`
+	Name             string `json:"name,omitempty"`
+	SSHUsername      string `json:"sshUsername,omitempty"`
+}

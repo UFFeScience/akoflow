@@ -572,6 +572,26 @@ CREATE TABLE cloud_capacity_target_configurations (
 	UNIQUE(capacity_target_id, execution_order)
 );
 CREATE INDEX cloud_capacity_targets_environment_idx ON cloud_capacity_targets(environment_id, enabled);
+CREATE TABLE cloud_provisioned_instances (
+	id TEXT PRIMARY KEY,
+	capacity_target_id TEXT NOT NULL REFERENCES cloud_capacity_targets(id),
+	environment_id TEXT NOT NULL REFERENCES environments(id),
+	provider TEXT NOT NULL,
+	provider_id TEXT NOT NULL DEFAULT '',
+	name TEXT NOT NULL,
+	status TEXT NOT NULL CHECK(status IN ('provisioning','configuring','ready','stopped','destroying','destroyed','failed')),
+	public_address TEXT NOT NULL DEFAULT '',
+	private_address TEXT NOT NULL DEFAULT '',
+	ssh_username TEXT NOT NULL DEFAULT '',
+	ssh_credential_ref TEXT NOT NULL DEFAULT '',
+	disk TEXT NOT NULL DEFAULT '{}',
+	terraform_output TEXT NOT NULL DEFAULT '{}',
+	failure_reason TEXT NOT NULL DEFAULT '',
+	created_at DATETIME NOT NULL,
+	ready_at DATETIME,
+	destroyed_at DATETIME
+);
+CREATE INDEX cloud_instances_environment_status_idx ON cloud_provisioned_instances(environment_id, status);
 
 CREATE TABLE schema_metadata (
 	checksum TEXT NOT NULL,

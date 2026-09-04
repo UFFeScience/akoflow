@@ -6,8 +6,10 @@ import (
 	"errors"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 
+	"github.com/UFFeScience/akoflow/internal/infrastructure/database/schema"
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -107,6 +109,34 @@ func TestBootstrapInstallsAndValidatesCanonicalSchema(t *testing.T) {
 	}
 	if checksum != schemaChecksum() {
 		t.Fatalf("metadata checksum = %q", checksum)
+	}
+}
+
+func TestBootstrapAddsCloudRuntimeDriverToExistingDatabase(t *testing.T) {
+	db := memoryDatabase(t)
+	oldSchema := strings.Replace(
+		schema.SQL,
+		"'serverless', 'simgrid', 'cloud'",
+		"'serverless', 'simgrid'",
+		1,
+	)
+	if _, err := db.Exec(oldSchema); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := db.Exec(`INSERT INTO schema_metadata(checksum, applied_at) VALUES (?, CURRENT_TIMESTAMP)`, schemaBeforeCloudRuntimeDriver); err != nil {
+		t.Fatal(err)
+	}
+	if err := Bootstrap(context.Background(), db); err != nil {
+		t.Fatal(err)
+	}
+	for _, statement := range []string{
+		`INSERT INTO environments(id, name, description, status) VALUES ('env', 'Cloud', '', 'defined')`,
+		`INSERT INTO environment_versions(id, environment_id, version, status, network_model, interference_model, cost_model, configuration_hash) VALUES ('env-v1', 'env', 1, 'draft', 'static-links', 'none', 'per-second', 'hash')`,
+		`INSERT INTO environment_runtimes(id, environment_version_id, name, driver, mode) VALUES ('cloud-runtime', 'env-v1', 'Cloud', 'cloud', 'execution')`,
+	} {
+		if _, err := db.Exec(statement); err != nil {
+			t.Fatal(err)
+		}
 	}
 }
 

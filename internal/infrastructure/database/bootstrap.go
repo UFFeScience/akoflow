@@ -47,6 +47,9 @@ func Bootstrap(ctx context.Context, db *sql.DB) error {
 	if err := migrateCloudInstances(ctx, db); err != nil {
 		return err
 	}
+	if err := migrateCloudRuntimeDriver(ctx, db); err != nil {
+		return err
+	}
 	if err := Validate(ctx, db); err != nil {
 		return fmt.Errorf("%w; remove the existing database file and recreate it: %v", ErrIncompatibleSchema, err)
 	}
@@ -63,6 +66,7 @@ const schemaBeforeWorkflowDataDependencies = "2a07d9d4c5230f9c5cf884142c092eb7bd
 const schemaBeforePlanningSessions = "8f6ed6fec292490f85e3fe8e6bf7edca918375589516a687d8a00d61f882c137"
 const schemaBeforeCloudFoundation = "7e1bbb05c5eb78bdaf86806a2a7c18a474b28035ebffee5ce8e0f65b5fffd722"
 const schemaBeforeCloudInstances = "5c0308e9166ed23dc481b04192cd1539b96ba60b0543df10c7fb2cd065e8b4bc"
+const schemaBeforeCloudRuntimeDriver = "2d4a31031d61e8dd5a8c80550cc47d8fa158d8695cffb979f490342bb8d340a6"
 
 func migrateUserPreferences(ctx context.Context, db *sql.DB) error {
 	var checksum string
@@ -324,6 +328,59 @@ func migrateCloudInstances(ctx context.Context, db *sql.DB) error {
 		return fmt.Errorf("record cloud instances migration: %w", err)
 	}
 	return tx.Commit()
+}
+
+func migrateCloudRuntimeDriver(ctx context.Context, db *sql.DB) error {
+	var checksum string
+	if err := db.QueryRowContext(ctx, `SELECT checksum FROM schema_metadata LIMIT 1`).Scan(&checksum); err != nil || checksum == schemaChecksum() {
+		return nil
+	}
+	if checksum != schemaBeforeCloudRuntimeDriver {
+		return nil
+	}
+	if _, err := db.ExecContext(ctx, `PRAGMA foreign_keys = OFF`); err != nil {
+		return fmt.Errorf("disable foreign keys for cloud runtime migration: %w", err)
+	}
+	defer db.ExecContext(context.Background(), `PRAGMA foreign_keys = ON`)
+	tx, err := db.BeginTx(ctx, nil)
+	if err != nil {
+		return fmt.Errorf("begin cloud runtime migration: %w", err)
+	}
+	defer tx.Rollback()
+	statements := []string{
+		`CREATE TABLE environment_runtimes_new (
+			id TEXT PRIMARY KEY,
+			environment_version_id TEXT NOT NULL REFERENCES environment_versions(id),
+			name TEXT NOT NULL,
+			driver TEXT NOT NULL CHECK(driver IN ('slurm', 'kubernetes', 'ssh', 'local', 'serverless', 'simgrid', 'cloud')),
+			mode TEXT NOT NULL CHECK(mode IN ('execution', 'simulation')),
+			role TEXT NOT NULL DEFAULT '',
+			configuration TEXT NOT NULL DEFAULT '{}',
+			UNIQUE(environment_version_id, name),
+			UNIQUE(id, environment_version_id)
+		)`,
+		`INSERT INTO environment_runtimes_new
+			(id, environment_version_id, name, driver, mode, role, configuration)
+		 SELECT id, environment_version_id, name, driver, mode, role, configuration
+		 FROM environment_runtimes`,
+		`DROP TABLE environment_runtimes`,
+		`ALTER TABLE environment_runtimes_new RENAME TO environment_runtimes`,
+	}
+	for _, statement := range statements {
+		if _, err := tx.ExecContext(ctx, statement); err != nil {
+			return fmt.Errorf("apply cloud runtime migration: %w", err)
+		}
+	}
+	if _, err := tx.ExecContext(ctx, `UPDATE schema_metadata SET checksum=?, applied_at=?`, schemaChecksum(), time.Now().UTC()); err != nil {
+		return fmt.Errorf("record cloud runtime migration: %w", err)
+	}
+	if err := tx.Commit(); err != nil {
+		return fmt.Errorf("commit cloud runtime migration: %w", err)
+	}
+	if _, err := db.ExecContext(ctx, `PRAGMA foreign_keys = ON`); err != nil {
+		return fmt.Errorf("restore foreign keys after cloud runtime migration: %w", err)
+	}
+	return nil
 }
 
 func installSchema(ctx context.Context, db *sql.DB) error {

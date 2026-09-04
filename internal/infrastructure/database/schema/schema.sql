@@ -50,7 +50,7 @@ CREATE TABLE environment_runtimes (
 		id TEXT PRIMARY KEY,
 		environment_version_id TEXT NOT NULL REFERENCES environment_versions(id),
 		name TEXT NOT NULL,
-		driver TEXT NOT NULL CHECK(driver IN ('slurm', 'kubernetes', 'ssh', 'local', 'serverless', 'simgrid')),
+		driver TEXT NOT NULL CHECK(driver IN ('slurm', 'kubernetes', 'ssh', 'local', 'serverless', 'simgrid', 'cloud')),
 		mode TEXT NOT NULL CHECK(mode IN ('execution', 'simulation')),
 		role TEXT NOT NULL DEFAULT '',
 		configuration TEXT NOT NULL DEFAULT '{}',

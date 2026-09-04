@@ -172,15 +172,18 @@ func (r Runner) run(ctx context.Context, workspace string, arguments ...string) 
 	}
 	defer logFile.Close()
 	_, _ = fmt.Fprintf(logFile, "\n[Terraform] terraform %s\n", strings.Join(arguments, " "))
+	_ = logFile.Sync()
 	var output bytes.Buffer
 	command.Stdout = io.MultiWriter(&output, logFile)
 	command.Stderr = io.MultiWriter(&output, logFile)
 	err := command.Run()
 	if err != nil {
 		_, _ = fmt.Fprintf(logFile, "[Terraform] failed: %v\n", err)
+		_ = logFile.Sync()
 		return nil, fmt.Errorf("terraform %s: %w: %s", arguments[0], err, strings.TrimSpace(output.String()))
 	}
 	_, _ = fmt.Fprintln(logFile, "[Terraform] completed")
+	_ = logFile.Sync()
 	return output.Bytes(), nil
 }
 

@@ -50,11 +50,14 @@ func (r Runner) Configure(ctx context.Context, spec ports.MachineConfigurationSp
 	}
 	defer logFile.Close()
 	_, _ = fmt.Fprintln(logFile, "\n[Ansible] waiting for SSH connectivity")
-	if err := waitForSSH(ctx, spec, keyPath); err != nil {
+	_ = logFile.Sync()
+	if err := waitForSSH(ctx, spec, keyPath, logFile); err != nil {
 		_, _ = fmt.Fprintf(logFile, "[Ansible] SSH failed: %v\n", err)
+		_ = logFile.Sync()
 		return err
 	}
 	_, _ = fmt.Fprintln(logFile, "[Ansible] SSH ready")
+	_ = logFile.Sync()
 	binary := r.Binary
 	if strings.TrimSpace(binary) == "" {
 		binary = "ansible-playbook"
@@ -67,32 +70,45 @@ func (r Runner) Configure(ctx context.Context, spec ports.MachineConfigurationSp
 	command.Dir = workspace
 	command.Env = append(os.Environ(), "ANSIBLE_HOST_KEY_CHECKING=False")
 	_, _ = fmt.Fprintf(logFile, "\n[Ansible] applying %s\n", filepath.Base(playbookPath))
+	_ = logFile.Sync()
 	var output bytes.Buffer
 	command.Stdout = io.MultiWriter(&output, logFile)
 	command.Stderr = io.MultiWriter(&output, logFile)
 	err = command.Run()
 	if err != nil {
 		_, _ = fmt.Fprintf(logFile, "[Ansible] failed: %v\n", err)
+		_ = logFile.Sync()
 		return fmt.Errorf("ansible-playbook: %w: %s", err, strings.TrimSpace(output.String()))
 	}
 	_, _ = fmt.Fprintln(logFile, "[Ansible] playbook completed; running validation checks")
+	_ = logFile.Sync()
 	for _, check := range spec.Checks {
+		_, _ = fmt.Fprintf(logFile, "[Ansible] validating %s\n", check.Name)
+		_ = logFile.Sync()
 		if err := runCheck(ctx, spec, keyPath, check.Command); err != nil {
+			_, _ = fmt.Fprintf(logFile, "[Ansible] validation %s failed: %v\n", check.Name, err)
+			_ = logFile.Sync()
 			return fmt.Errorf("validation %q: %w", check.Name, err)
 		}
+		_, _ = fmt.Fprintf(logFile, "[Ansible] validation %s passed\n", check.Name)
+		_ = logFile.Sync()
 	}
 	_, _ = fmt.Fprintln(logFile, "[Ansible] configuration validated")
+	_ = logFile.Sync()
 	return nil
 }
 
-func waitForSSH(ctx context.Context, spec ports.MachineConfigurationSpec, keyPath string) error {
+func waitForSSH(ctx context.Context, spec ports.MachineConfigurationSpec, keyPath string, logFile *os.File) error {
 	timeout := time.NewTimer(5 * time.Minute)
 	defer timeout.Stop()
 	ticker := time.NewTicker(5 * time.Second)
 	defer ticker.Stop()
-	for {
-		if runCheck(ctx, spec, keyPath, "true") == nil {
+	for attempt := 1; ; attempt++ {
+		if err := runCheck(ctx, spec, keyPath, "true"); err == nil {
 			return nil
+		} else {
+			_, _ = fmt.Fprintf(logFile, "[Ansible] SSH attempt %d not ready: %v\n", attempt, err)
+			_ = logFile.Sync()
 		}
 		select {
 		case <-ctx.Done():

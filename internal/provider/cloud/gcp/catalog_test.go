@@ -7,6 +7,7 @@ import (
 	"crypto/x509"
 	"encoding/json"
 	"encoding/pem"
+	"math"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -36,6 +37,8 @@ func TestDiscoverNormalizesLiveCatalog(t *testing.T) {
 			}`))
 		case strings.HasSuffix(r.URL.Path, "/aggregated/diskTypes"):
 			_, _ = w.Write([]byte(`{"items":{"zones/us-central1-a":{"diskTypes":[{"name":"pd-balanced","zone":"zones/us-central1-a"}]}}}`))
+		case r.URL.Path == "/skus":
+			_, _ = w.Write([]byte(`{"skus":[]}`))
 		case strings.Contains(r.URL.Path, "/global/images"):
 			_, _ = w.Write([]byte(`{"items":[{"name":"ubuntu-2404-v1","selfLink":"projects/ubuntu-os-cloud/global/images/ubuntu-2404-v1","architecture":"X86_64","status":"READY","diskSizeGb":"10"}]}`))
 		default:
@@ -46,6 +49,7 @@ func TestDiscoverNormalizesLiveCatalog(t *testing.T) {
 	credential := testCredential(t, server.URL+"/token")
 	catalog := New(server.Client())
 	catalog.computeEndpoint = server.URL
+	catalog.billingEndpoint = server.URL + "/skus"
 	result, err := catalog.Discover(context.Background(), domain.EnvironmentConnection{Configuration: map[string]any{"provider": "gcp", "projectId": "science", "region": "us-central1"}}, credential)
 	if err != nil {
 		t.Fatal(err)
@@ -56,6 +60,58 @@ func TestDiscoverNormalizesLiveCatalog(t *testing.T) {
 	if len(result.Disks) != 1 || len(result.Images) != 4 {
 		t.Fatalf("unexpected catalog disks=%d images=%d", len(result.Disks), len(result.Images))
 	}
+}
+
+func TestApplyPricesCombinesMachineAndDiskSKUs(t *testing.T) {
+	result := domain.CloudCatalog{
+		Region:   "us-central1",
+		Machines: []domain.CloudMachineOffering{{Family: "e2", VCPU: 2, MemoryMiB: 4096}},
+		Disks:    []domain.CloudDiskOffering{{ProviderTypeID: "pd-balanced"}},
+	}
+	core := priceSKU("E2 Instance Core running in Americas", "CPU", 0.02)
+	ram := priceSKU("E2 Instance Ram running in Americas", "RAM", 0.003)
+	disk := priceSKU("Balanced PD Capacity", "SSD", 0.1)
+	applyPrices([]billingSKU{core, ram, disk}, &result)
+
+	if got, want := result.Machines[0].PricePerHour, 0.052; math.Abs(got-want) > 1e-12 {
+		t.Fatalf("machine price = %f, want %f", got, want)
+	}
+	if got, want := result.Machines[0].PricePerMinute, 0.052/60; math.Abs(got-want) > 1e-12 {
+		t.Fatalf("machine minute price = %f, want %f", got, want)
+	}
+	if got, want := result.Disks[0].PricePerGiBMonth, 0.1; math.Abs(got-want) > 1e-12 {
+		t.Fatalf("disk price = %f, want %f", got, want)
+	}
+}
+
+func priceSKU(description, resourceGroup string, price float64) billingSKU {
+	value := billingSKU{Description: description, ServiceRegions: []string{"us-central1"}}
+	value.Category.ResourceGroup = resourceGroup
+	value.Category.UsageType = "OnDemand"
+	value.PricingInfo = make([]struct {
+		PricingExpression struct {
+			UsageUnit   string `json:"usageUnit"`
+			TieredRates []struct {
+				StartUsageAmount float64 `json:"startUsageAmount"`
+				UnitPrice        struct {
+					CurrencyCode string `json:"currencyCode"`
+					Units        string `json:"units"`
+					Nanos        int64  `json:"nanos"`
+				} `json:"unitPrice"`
+			} `json:"tieredRates"`
+		} `json:"pricingExpression"`
+	}, 1)
+	value.PricingInfo[0].PricingExpression.TieredRates = make([]struct {
+		StartUsageAmount float64 `json:"startUsageAmount"`
+		UnitPrice        struct {
+			CurrencyCode string `json:"currencyCode"`
+			Units        string `json:"units"`
+			Nanos        int64  `json:"nanos"`
+		} `json:"unitPrice"`
+	}, 1)
+	value.PricingInfo[0].PricingExpression.TieredRates[0].UnitPrice.CurrencyCode = "USD"
+	value.PricingInfo[0].PricingExpression.TieredRates[0].UnitPrice.Nanos = int64(price * 1e9)
+	return value
 }
 
 func TestMachineCatalogFollowsProviderPagination(t *testing.T) {

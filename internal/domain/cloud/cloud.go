@@ -92,6 +92,10 @@ type MachineOffering struct {
 	GPUModel         string         `json:"gpuModel,omitempty"`
 	SupportsSpot     bool           `json:"supportsSpot"`
 	Available        bool           `json:"available"`
+	PricePerHour     float64        `json:"pricePerHour,omitempty"`
+	PricePerMinute   float64        `json:"pricePerMinute,omitempty"`
+	PriceCurrency    string         `json:"priceCurrency,omitempty"`
+	PriceSource      string         `json:"priceSource,omitempty"`
 	ProviderMetadata map[string]any `json:"providerMetadata,omitempty"`
 }
 
@@ -117,6 +121,9 @@ type DiskOffering struct {
 	Region           string         `json:"region"`
 	Zones            []string       `json:"zones"`
 	Available        bool           `json:"available"`
+	PricePerGiBMonth float64        `json:"pricePerGiBMonth,omitempty"`
+	PriceCurrency    string         `json:"priceCurrency,omitempty"`
+	PriceSource      string         `json:"priceSource,omitempty"`
 	ProviderMetadata map[string]any `json:"providerMetadata,omitempty"`
 }
 

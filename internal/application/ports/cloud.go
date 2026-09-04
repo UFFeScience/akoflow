@@ -16,6 +16,7 @@ type CloudConfigurationStore interface {
 	CreateCapacityTarget(context.Context, domain.CloudCapacityTarget) error
 	ListCapacityTargets(context.Context, string) ([]domain.CloudCapacityTarget, error)
 	FindCapacityTarget(context.Context, string) (*domain.CloudCapacityTarget, error)
+	DeleteCapacityTarget(context.Context, string) error
 	CreateProvisionedInstance(context.Context, domain.CloudProvisionedInstance) error
 	UpdateProvisionedInstance(context.Context, domain.CloudProvisionedInstance) error
 	FindProvisionedInstance(context.Context, string) (*domain.CloudProvisionedInstance, error)

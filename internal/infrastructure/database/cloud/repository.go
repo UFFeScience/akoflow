@@ -323,7 +323,7 @@ func (r *Repository) ListCapacityTargets(ctx context.Context, environmentID stri
 	rows, err := r.db.QueryContext(ctx, `SELECT id,environment_id,name,provider,provider_machine_type,
 		region,zone_policy,fixed_zone,image_reference,architecture,vcpu,memory_mib,
 		provisioning_mode,maximum_instances,lifecycle_policy,configuration,enabled,created_at
-		FROM cloud_capacity_targets WHERE environment_id=? ORDER BY name`, environmentID)
+		FROM cloud_capacity_targets WHERE environment_id=? AND enabled=1 ORDER BY name`, environmentID)
 	if err != nil {
 		return nil, err
 	}
@@ -371,6 +371,23 @@ func (r *Repository) ListCapacityTargets(ctx context.Context, environmentID stri
 		cr.Close()
 	}
 	return values, nil
+}
+
+func (r *Repository) DeleteCapacityTarget(ctx context.Context, id string) error {
+	result, err := r.db.ExecContext(ctx, `UPDATE cloud_capacity_targets
+		SET enabled=0, name=name || ' [removed ' || substr(id, -8) || ']'
+		WHERE id=? AND enabled=1`, id)
+	if err != nil {
+		return err
+	}
+	updated, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if updated == 0 {
+		return sql.ErrNoRows
+	}
+	return nil
 }
 
 func (r *Repository) FindCapacityTarget(ctx context.Context, id string) (*domain.CloudCapacityTarget, error) {

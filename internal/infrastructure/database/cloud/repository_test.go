@@ -46,6 +46,23 @@ func TestRepositoryStoresConfigurationsAndTargets(t *testing.T) {
 	if len(targets) != 1 || len(targets[0].MachineConfigurations) != 1 || !targets[0].MachineConfigurations[0].Required {
 		t.Fatalf("unexpected targets: %#v", targets)
 	}
+	if err := repository.DeleteCapacityTarget(ctx, "cpu-8"); err != nil {
+		t.Fatal(err)
+	}
+	targets, err = repository.ListCapacityTargets(ctx, "gcp-env")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(targets) != 0 {
+		t.Fatalf("removed target remains visible: %#v", targets)
+	}
+	if err := repository.CreateCapacityTarget(ctx, domain.CloudCapacityTarget{
+		ID: "cpu-8-replacement", EnvironmentID: "gcp-env", Name: "CPU 8", Provider: "gcp",
+		ProviderMachineType: "c3-standard-8", Region: "us-central1", ImageReference: "ubuntu-2404",
+		VCPU: 8, MemoryMiB: 32768, Enabled: true,
+	}); err != nil {
+		t.Fatalf("reuse removed target name: %v", err)
+	}
 }
 
 func TestRepositoryRejectsInvalidPlaybook(t *testing.T) {

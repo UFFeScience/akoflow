@@ -1724,6 +1724,55 @@ func (h *Handler) CreateCloudCapacityTarget(w http.ResponseWriter, r *http.Reque
 	writeJSON(w, http.StatusCreated, value)
 }
 
+func (h *Handler) DeleteCloudCapacityTarget(w http.ResponseWriter, r *http.Request) {
+	if h.cloud == nil {
+		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("cloud configuration is unavailable"))
+		return
+	}
+	id := r.PathValue("targetId")
+	target, err := h.cloud.FindCapacityTarget(r.Context(), id)
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, err)
+		return
+	}
+	if target == nil {
+		writeError(w, http.StatusNotFound, fmt.Errorf("cloud capacity target %q was not found", id))
+		return
+	}
+	instances, err := h.cloud.ListProvisionedInstances(r.Context(), target.EnvironmentID)
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, err)
+		return
+	}
+	for _, instance := range instances {
+		if instance.CapacityTargetID == id && instance.Status != "destroyed" && instance.Status != "failed" {
+			writeError(w, http.StatusConflict, fmt.Errorf("destroy the active instance %q before removing this capacity", instance.Name))
+			return
+		}
+	}
+	resource, err := h.resources.FindByID(r.Context(), id)
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, err)
+		return
+	}
+	if resource != nil {
+		resource.Schedulable = false
+		if err := h.resources.Upsert(r.Context(), *resource); err != nil {
+			writeError(w, http.StatusInternalServerError, err)
+			return
+		}
+	}
+	if err := h.cloud.DeleteCapacityTarget(r.Context(), id); err != nil {
+		if err == sql.ErrNoRows {
+			writeError(w, http.StatusNotFound, fmt.Errorf("cloud capacity target %q was not found", id))
+			return
+		}
+		writeError(w, http.StatusInternalServerError, err)
+		return
+	}
+	w.WriteHeader(http.StatusNoContent)
+}
+
 func configurationInt64(values map[string]any, key string) int64 {
 	switch value := values[key].(type) {
 	case float64:

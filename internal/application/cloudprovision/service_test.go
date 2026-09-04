@@ -38,6 +38,7 @@ func (*capacityStoreStub) ListCapacityTargets(context.Context, string) ([]domain
 func (*capacityStoreStub) FindCapacityTarget(context.Context, string) (*domain.CloudCapacityTarget, error) {
 	return nil, nil
 }
+func (*capacityStoreStub) DeleteCapacityTarget(context.Context, string) error { return nil }
 func (*capacityStoreStub) CreateProvisionedInstance(context.Context, domain.CloudProvisionedInstance) error {
 	return nil
 }

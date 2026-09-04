@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/UFFeScience/akoflow/internal/application/ports"
 	"github.com/UFFeScience/akoflow/internal/domain"
@@ -53,15 +54,56 @@ func (c *Catalog) Discover(ctx context.Context, environmentID string) (domain.Cl
 	}
 	result, err := c.Validate(ctx, *connection, credential)
 	if err != nil {
+		c.recordConnectionHealth(ctx, *connection, false, err.Error())
 		return domain.CloudCatalog{}, err
 	}
 	result.EnvironmentID = environmentID
+	c.recordConnectionHealth(ctx, *connection, true, fmt.Sprintf(
+		"Cloud credential authenticated; %d machines, %d images and %d disk types synchronized.",
+		len(result.Machines), len(result.Images), len(result.Disks),
+	))
 	if c.store != nil {
 		if err := c.store.SaveCloudCatalog(ctx, result); err != nil {
 			return domain.CloudCatalog{}, fmt.Errorf("save cloud catalog: %w", err)
 		}
 	}
 	return result, nil
+}
+
+type connectionCheckStore interface {
+	SaveConnectionCheck(context.Context, domain.ConnectionCheck) error
+}
+
+func (c *Catalog) recordConnectionHealth(
+	ctx context.Context,
+	connection domain.EnvironmentConnection,
+	healthy bool,
+	message string,
+) {
+	store, ok := c.environments.(connectionCheckStore)
+	if !ok {
+		return
+	}
+	now := time.Now().UTC()
+	status := domain.ConnectionOffline
+	environmentStatus := domain.EnvironmentUnreachable
+	if healthy {
+		status = domain.ConnectionOnline
+		environmentStatus = domain.EnvironmentConnected
+	}
+	_ = store.SaveConnectionCheck(ctx, domain.ConnectionCheck{
+		ID:           fmt.Sprintf("cloud-connection-check-%d", now.UnixNano()),
+		ConnectionID: connection.ID,
+		Status:       status,
+		Message:      message,
+		CheckedAt:    now,
+		Metadata: map[string]any{
+			"connectionType": connection.Type,
+			"provider":       stringValue(connection.Configuration, "provider"),
+			"projectId":      stringValue(connection.Configuration, "projectId"),
+		},
+	})
+	_ = c.environments.UpdateStatus(ctx, connection.EnvironmentID, environmentStatus)
 }
 
 func (c *Catalog) Cached(ctx context.Context, environmentID string) (*domain.CloudCatalog, error) {

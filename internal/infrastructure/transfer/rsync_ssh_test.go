@@ -22,7 +22,7 @@ for argument in "$@"; do command="$argument"; done
 case "$command" in
   *missing*) exit 1 ;;
   *transport-error*) echo 'remote unavailable' >&2; exit 2 ;;
-  *cat*|*tail*) printf payload; exit 0 ;;
+  *"cat --"*|*"tail -c"*) printf payload; exit 0 ;;
   *) cat >/dev/null 2>/dev/null || true; exit 0 ;;
 esac
 `

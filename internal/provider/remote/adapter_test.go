@@ -37,7 +37,14 @@ func (s *commandExecutorStub) Run(_ context.Context, name string, args []string,
 func executionFixture() domain.ActivityExecutionContext {
 	return domain.ActivityExecutionContext{
 		Run: domain.ExecutionRun{ID: "run:one"}, RuntimeID: "runtime",
-		Activity: domain.Activity{ID: "activity/one", Command: domain.ActivityCommand{Image: "ubuntu:latest", Entrypoint: "sh", Arguments: []string{"-c", "echo ok"}, Environment: map[string]string{"A": "B"}}, Resources: domain.ActivityResources{CPU: 2.5, MemoryBytes: 1024}},
+		Activity: domain.Activity{
+			ID: "activity/one",
+			Command: domain.ActivityCommand{
+				Image: "ubuntu:latest", Entrypoint: "sh", Arguments: []string{"-c", "echo ok"},
+				Environment: map[string]string{"A": "B"},
+			},
+			Resources: domain.ActivityResources{CPU: 2.5, MemoryBytes: 1024},
+		},
 		Resource: domain.Resource{ID: "machine"},
 	}
 }

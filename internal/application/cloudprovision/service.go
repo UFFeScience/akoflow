@@ -92,6 +92,15 @@ func (s *Provisioner) Provision(
 		_ = s.store.UpdateProvisionedInstance(ctx, instance)
 		return instance, err
 	}
+	return s.finishProvision(ctx, instance, *target, result)
+}
+
+func (s *Provisioner) finishProvision(
+	ctx context.Context,
+	instance domain.CloudProvisionedInstance,
+	target domain.CloudCapacityTarget,
+	result ports.TerraformResult,
+) (domain.CloudProvisionedInstance, error) {
 	instance.ProviderID = result.ProviderID
 	instance.PublicAddress = result.PublicAddress
 	instance.PrivateAddress = result.PrivateAddress
@@ -101,7 +110,7 @@ func (s *Provisioner) Provision(
 	if err := s.store.UpdateProvisionedInstance(ctx, instance); err != nil {
 		return instance, err
 	}
-	if err := s.configure(ctx, &instance, *target, target.MachineConfigurations); err != nil {
+	if err := s.configure(ctx, &instance, target, target.MachineConfigurations); err != nil {
 		instance.Status = "failed"
 		instance.FailureReason = err.Error()
 		_ = s.store.UpdateProvisionedInstance(ctx, instance)

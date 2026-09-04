@@ -49,6 +49,7 @@ type CloudCatalogStore interface {
 
 type CloudProvisioner interface {
 	Provision(context.Context, string, domain.CloudProvisionRequest) (domain.CloudProvisionedInstance, error)
+	Configure(context.Context, string) (domain.CloudProvisionedInstance, error)
 	Destroy(context.Context, string) (domain.CloudProvisionedInstance, error)
 	Release(context.Context, []string) error
 	Log(context.Context, string) ([]byte, error)

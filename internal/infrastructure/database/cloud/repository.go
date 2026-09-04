@@ -28,10 +28,25 @@ const defaultPlaybook = `---
           - rsync
           - tar
         state: present
-    - name: Install Docker
-      ansible.builtin.apt:
-        name: docker.io
-        state: present
+        update_cache: true
+        cache_valid_time: 3600
+    - name: Install Docker from the distribution repository
+      block:
+        - name: Install Docker package
+          ansible.builtin.apt:
+            name: docker.io
+            state: present
+            update_cache: true
+      rescue:
+        - name: Download the official Docker installer
+          ansible.builtin.get_url:
+            url: https://get.docker.com
+            dest: /tmp/get-docker.sh
+            mode: "0755"
+        - name: Install Docker from the official repository
+          ansible.builtin.command: /tmp/get-docker.sh
+          args:
+            creates: /usr/bin/docker
     - name: Enable Docker
       ansible.builtin.service:
         name: docker
@@ -82,8 +97,14 @@ func (r *Repository) EnsureDefaults(ctx context.Context) error {
 	_, err = tx.ExecContext(ctx, `INSERT OR IGNORE INTO machine_configuration_versions
 		(id,machine_configuration_id,version,status,playbook_yaml,content_sha256,compatibility,variables_schema,validation_checks,created_at)
 		VALUES (?,?,?,?,?,?,?,?,?,?)`, domain.DefaultMachineConfigurationVersionID,
-		domain.DefaultMachineConfigurationID, 2, "published", defaultPlaybook,
+		domain.DefaultMachineConfigurationID, 3, "published", defaultPlaybook,
 		validation.SHA256, compatJSON, variablesJSON, checksJSON, now)
+	if err != nil {
+		return err
+	}
+	_, err = tx.ExecContext(ctx, `UPDATE cloud_capacity_target_configurations
+		SET configuration_version_id=? WHERE configuration_version_id=?`,
+		domain.DefaultMachineConfigurationVersionID, "akoflow-scientific-worker-v2")
 	if err != nil {
 		return err
 	}

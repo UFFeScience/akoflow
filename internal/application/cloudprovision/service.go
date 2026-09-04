@@ -213,6 +213,35 @@ func (s *Provisioner) configure(
 	return nil
 }
 
+func (s *Provisioner) Configure(ctx context.Context, instanceID string) (domain.CloudProvisionedInstance, error) {
+	instance, err := s.store.FindProvisionedInstance(ctx, instanceID)
+	if err != nil || instance == nil {
+		return domain.CloudProvisionedInstance{}, fmt.Errorf("cloud instance %q was not found", instanceID)
+	}
+	if strings.TrimSpace(instance.PublicAddress) == "" {
+		return *instance, fmt.Errorf("cloud instance %q has no public address", instanceID)
+	}
+	target, err := s.store.FindCapacityTarget(ctx, instance.CapacityTargetID)
+	if err != nil || target == nil {
+		return *instance, targetError(instance.CapacityTargetID, err)
+	}
+	instance.Status, instance.FailureReason = "configuring", ""
+	if err := s.store.UpdateProvisionedInstance(ctx, *instance); err != nil {
+		return *instance, err
+	}
+	if err := s.configure(ctx, instance, *target, target.MachineConfigurations); err != nil {
+		instance.Status, instance.FailureReason = "failed", err.Error()
+		_ = s.store.UpdateProvisionedInstance(ctx, *instance)
+		return *instance, err
+	}
+	now := time.Now().UTC()
+	instance.Status, instance.ReadyAt = "ready", &now
+	if err := s.store.UpdateProvisionedInstance(ctx, *instance); err != nil {
+		return *instance, err
+	}
+	return *instance, nil
+}
+
 func validateCompatibility(
 	version domain.MachineConfigurationVersion,
 	target domain.CloudCapacityTarget,

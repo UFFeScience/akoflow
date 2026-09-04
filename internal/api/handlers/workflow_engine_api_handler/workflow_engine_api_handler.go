@@ -1854,6 +1854,18 @@ func (h *Handler) GetCloudProvisioningLog(w http.ResponseWriter, r *http.Request
 	writeJSON(w, http.StatusOK, map[string]string{"log": string(data)})
 }
 
+func (h *Handler) ConfigureCloudInstance(w http.ResponseWriter, r *http.Request) {
+	if h.cloudProvisioner == nil {
+		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("cloud provisioner is unavailable"))
+		return
+	}
+	instanceID := r.PathValue("instanceId")
+	go func() {
+		_, _ = h.cloudProvisioner.Configure(context.Background(), instanceID)
+	}()
+	writeJSON(w, http.StatusAccepted, map[string]string{"status": "configuring"})
+}
+
 func (h *Handler) DestroyCloudInstance(w http.ResponseWriter, r *http.Request) {
 	if h.cloudProvisioner == nil {
 		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("cloud provisioner is unavailable"))

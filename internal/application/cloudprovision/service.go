@@ -101,7 +101,7 @@ func (s *Provisioner) Provision(
 	if err := s.store.UpdateProvisionedInstance(ctx, instance); err != nil {
 		return instance, err
 	}
-	if err := s.configure(ctx, &instance, target.MachineConfigurations); err != nil {
+	if err := s.configure(ctx, &instance, *target, target.MachineConfigurations); err != nil {
 		instance.Status = "failed"
 		instance.FailureReason = err.Error()
 		_ = s.store.UpdateProvisionedInstance(ctx, instance)
@@ -143,7 +143,7 @@ func (s *Provisioner) reuseCapacity(
 		instance.Status, instance.FailureReason = "configuring", ""
 		instance.PublicAddress, instance.PrivateAddress = result.PublicAddress, result.PrivateAddress
 		instance.TerraformOutput, instance.Disk = result.Output, result.Disk
-		if configureErr := s.configure(ctx, instance, target.MachineConfigurations); configureErr != nil {
+		if configureErr := s.configure(ctx, instance, target, target.MachineConfigurations); configureErr != nil {
 			instance.Status, instance.FailureReason = "failed", configureErr.Error()
 			_ = s.store.UpdateProvisionedInstance(ctx, *instance)
 			return *instance, true, configureErr
@@ -170,6 +170,7 @@ func (s *Provisioner) reuseCapacity(
 func (s *Provisioner) configure(
 	ctx context.Context,
 	instance *domain.CloudProvisionedInstance,
+	target domain.CloudCapacityTarget,
 	configurations []domain.CloudTargetConfiguration,
 ) error {
 	for _, assignment := range configurations {
@@ -182,6 +183,9 @@ func (s *Provisioner) configure(
 				return fmt.Errorf("load required machine configuration %q: %w", assignment.ConfigurationVersionID, err)
 			}
 			continue
+		}
+		if compatibilityErr := validateCompatibility(*version, target, assignment.Required); compatibilityErr != nil {
+			return compatibilityErr
 		}
 		variables := map[string]any{"akoflow_workspace_path": "/akoflow/workspace"}
 		for key, value := range assignment.Variables {
@@ -198,6 +202,35 @@ func (s *Provisioner) configure(
 		}
 	}
 	return nil
+}
+
+func validateCompatibility(
+	version domain.MachineConfigurationVersion,
+	target domain.CloudCapacityTarget,
+	required bool,
+) error {
+	compatible := func(accepted []string, actual string) bool {
+		if len(accepted) == 0 {
+			return true
+		}
+		for _, value := range accepted {
+			if strings.EqualFold(strings.TrimSpace(value), strings.TrimSpace(actual)) {
+				return true
+			}
+		}
+		return false
+	}
+	if compatible(version.Compatibility.Providers, target.Provider) &&
+		compatible(version.Compatibility.Architectures, target.Architecture) {
+		return nil
+	}
+	if !required {
+		return nil
+	}
+	return fmt.Errorf(
+		"required machine configuration %q is not compatible with provider %q and architecture %q",
+		version.ID, target.Provider, target.Architecture,
+	)
 }
 
 func (s *Provisioner) Destroy(ctx context.Context, instanceID string) (domain.CloudProvisionedInstance, error) {

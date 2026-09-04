@@ -267,11 +267,18 @@ func (r *Repository) CreateCapacityTarget(ctx context.Context, value domain.Clou
 		return err
 	}
 	configurations := value.MachineConfigurations
-	if len(configurations) == 0 {
-		configurations = []domain.CloudTargetConfiguration{{
+	hasDefault := false
+	for _, configuration := range configurations {
+		if configuration.ConfigurationVersionID == domain.DefaultMachineConfigurationVersionID {
+			hasDefault = true
+			break
+		}
+	}
+	if !hasDefault {
+		configurations = append([]domain.CloudTargetConfiguration{{
 			ConfigurationVersionID: domain.DefaultMachineConfigurationVersionID,
 			ExecutionOrder:         0, Required: true, Enabled: true,
-		}}
+		}}, configurations...)
 	}
 	for _, item := range configurations {
 		variables, _ := json.Marshal(item.Variables)

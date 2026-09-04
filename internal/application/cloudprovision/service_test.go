@@ -99,5 +99,28 @@ func TestReuseCapacityEnforcesMaximumAllocatedInstances(t *testing.T) {
 	}
 }
 
+func TestRequiredConfigurationMustMatchProviderAndArchitecture(t *testing.T) {
+	version := domain.MachineConfigurationVersion{
+		ID: "config", Compatibility: domain.MachineConfigurationCompatibility{
+			Providers: []string{"gcp"}, Architectures: []string{"amd64"},
+		},
+	}
+	if err := validateCompatibility(version, domain.CloudCapacityTarget{
+		Provider: "gcp", Architecture: "amd64",
+	}, true); err != nil {
+		t.Fatal(err)
+	}
+	if err := validateCompatibility(version, domain.CloudCapacityTarget{
+		Provider: "aws", Architecture: "amd64",
+	}, true); err == nil {
+		t.Fatal("expected incompatible provider to be rejected")
+	}
+	if err := validateCompatibility(version, domain.CloudCapacityTarget{
+		Provider: "gcp", Architecture: "arm64",
+	}, true); err == nil {
+		t.Fatal("expected incompatible architecture to be rejected")
+	}
+}
+
 var _ ports.CloudConfigurationStore = (*capacityStoreStub)(nil)
 var _ ports.TerraformRunner = (*terraformStub)(nil)

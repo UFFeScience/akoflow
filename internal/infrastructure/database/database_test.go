@@ -120,6 +120,12 @@ func TestBootstrapAddsCloudRuntimeDriverToExistingDatabase(t *testing.T) {
 		"'serverless', 'simgrid'",
 		1,
 	)
+	oldSchema = strings.Replace(
+		oldSchema,
+		"'batch', 'direct', 'provisioned'",
+		"'batch', 'direct'",
+		1,
+	)
 	if _, err := db.Exec(oldSchema); err != nil {
 		t.Fatal(err)
 	}
@@ -133,6 +139,34 @@ func TestBootstrapAddsCloudRuntimeDriverToExistingDatabase(t *testing.T) {
 		`INSERT INTO environments(id, name, description, status) VALUES ('env', 'Cloud', '', 'defined')`,
 		`INSERT INTO environment_versions(id, environment_id, version, status, network_model, interference_model, cost_model, configuration_hash) VALUES ('env-v1', 'env', 1, 'draft', 'static-links', 'none', 'per-second', 'hash')`,
 		`INSERT INTO environment_runtimes(id, environment_version_id, name, driver, mode) VALUES ('cloud-runtime', 'env-v1', 'Cloud', 'cloud', 'execution')`,
+	} {
+		if _, err := db.Exec(statement); err != nil {
+			t.Fatal(err)
+		}
+	}
+}
+
+func TestBootstrapAddsProvisionedExecutionTargetToExistingDatabase(t *testing.T) {
+	db := memoryDatabase(t)
+	oldSchema := strings.Replace(
+		schema.SQL,
+		"'batch', 'direct', 'provisioned'",
+		"'batch', 'direct'",
+		1,
+	)
+	if _, err := db.Exec(oldSchema); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := db.Exec(`INSERT INTO schema_metadata(checksum, applied_at) VALUES (?, CURRENT_TIMESTAMP)`, schemaBeforeCloudExecutionTarget); err != nil {
+		t.Fatal(err)
+	}
+	if err := Bootstrap(context.Background(), db); err != nil {
+		t.Fatal(err)
+	}
+	for _, statement := range []string{
+		`INSERT INTO environments(id, name, description, status) VALUES ('env', 'Cloud', '', 'defined')`,
+		`INSERT INTO environment_versions(id, environment_id, version, status, network_model, interference_model, cost_model, configuration_hash) VALUES ('env-v1', 'env', 1, 'draft', 'static-links', 'none', 'per-second', 'hash')`,
+		`INSERT INTO resources(id, environment_version_id, execution_target, type, name, provider_id) VALUES ('cloud-resource', 'env-v1', 'provisioned', 'cloud_vm', 'Cloud VM', 'gcp')`,
 	} {
 		if _, err := db.Exec(statement); err != nil {
 			t.Fatal(err)

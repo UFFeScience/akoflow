@@ -50,6 +50,9 @@ func Bootstrap(ctx context.Context, db *sql.DB) error {
 	if err := migrateCloudRuntimeDriver(ctx, db); err != nil {
 		return err
 	}
+	if err := migrateCloudExecutionTarget(ctx, db); err != nil {
+		return err
+	}
 	if err := Validate(ctx, db); err != nil {
 		return fmt.Errorf("%w; remove the existing database file and recreate it: %v", ErrIncompatibleSchema, err)
 	}
@@ -67,6 +70,7 @@ const schemaBeforePlanningSessions = "8f6ed6fec292490f85e3fe8e6bf7edca9183755895
 const schemaBeforeCloudFoundation = "7e1bbb05c5eb78bdaf86806a2a7c18a474b28035ebffee5ce8e0f65b5fffd722"
 const schemaBeforeCloudInstances = "5c0308e9166ed23dc481b04192cd1539b96ba60b0543df10c7fb2cd065e8b4bc"
 const schemaBeforeCloudRuntimeDriver = "2d4a31031d61e8dd5a8c80550cc47d8fa158d8695cffb979f490342bb8d340a6"
+const schemaBeforeCloudExecutionTarget = "e515cbbfe701482f1c952431134d34359284f42959ace947f55faabad269d739"
 
 func migrateUserPreferences(ctx context.Context, db *sql.DB) error {
 	var checksum string
@@ -371,7 +375,7 @@ func migrateCloudRuntimeDriver(ctx context.Context, db *sql.DB) error {
 			return fmt.Errorf("apply cloud runtime migration: %w", err)
 		}
 	}
-	if _, err := tx.ExecContext(ctx, `UPDATE schema_metadata SET checksum=?, applied_at=?`, schemaChecksum(), time.Now().UTC()); err != nil {
+	if _, err := tx.ExecContext(ctx, `UPDATE schema_metadata SET checksum=?, applied_at=?`, schemaBeforeCloudExecutionTarget, time.Now().UTC()); err != nil {
 		return fmt.Errorf("record cloud runtime migration: %w", err)
 	}
 	if err := tx.Commit(); err != nil {
@@ -379,6 +383,79 @@ func migrateCloudRuntimeDriver(ctx context.Context, db *sql.DB) error {
 	}
 	if _, err := db.ExecContext(ctx, `PRAGMA foreign_keys = ON`); err != nil {
 		return fmt.Errorf("restore foreign keys after cloud runtime migration: %w", err)
+	}
+	return nil
+}
+
+func migrateCloudExecutionTarget(ctx context.Context, db *sql.DB) error {
+	var checksum string
+	if err := db.QueryRowContext(ctx, `SELECT checksum FROM schema_metadata LIMIT 1`).Scan(&checksum); err != nil || checksum == schemaChecksum() {
+		return nil
+	}
+	if checksum != schemaBeforeCloudExecutionTarget {
+		return nil
+	}
+	if _, err := db.ExecContext(ctx, `PRAGMA foreign_keys = OFF`); err != nil {
+		return fmt.Errorf("disable foreign keys for cloud resource migration: %w", err)
+	}
+	defer db.ExecContext(context.Background(), `PRAGMA foreign_keys = ON`)
+	tx, err := db.BeginTx(ctx, nil)
+	if err != nil {
+		return fmt.Errorf("begin cloud resource migration: %w", err)
+	}
+	defer tx.Rollback()
+	statements := []string{
+		`CREATE TABLE resources_new (
+			id TEXT PRIMARY KEY,
+			environment_version_id TEXT NOT NULL REFERENCES environment_versions(id),
+			execution_target TEXT NOT NULL DEFAULT 'batch'
+				CHECK(execution_target IN ('batch', 'direct', 'provisioned')),
+			parent_resource_id TEXT REFERENCES resources_new(id),
+			type TEXT NOT NULL,
+			name TEXT NOT NULL,
+			provider_id TEXT NOT NULL,
+			tier TEXT NOT NULL DEFAULT '',
+			region TEXT NOT NULL DEFAULT '',
+			zone TEXT NOT NULL DEFAULT '',
+			architecture TEXT NOT NULL DEFAULT '',
+			cpu_cores INTEGER NOT NULL DEFAULT 0,
+			cpu_capacity REAL NOT NULL DEFAULT 0,
+			memory_bytes INTEGER NOT NULL DEFAULT 0,
+			storage_bytes INTEGER NOT NULL DEFAULT 0,
+			compute_speedup REAL NOT NULL DEFAULT 1,
+			price_per_second REAL NOT NULL DEFAULT 0,
+			boot_overhead_seconds REAL NOT NULL DEFAULT 0,
+			container_overhead_seconds REAL NOT NULL DEFAULT 0,
+			schedulable INTEGER NOT NULL DEFAULT 1,
+			metadata TEXT NOT NULL DEFAULT '{}',
+			UNIQUE(environment_version_id, provider_id)
+		)`,
+		`INSERT INTO resources_new (
+			id, environment_version_id, execution_target, parent_resource_id, type, name,
+			provider_id, tier, region, zone, architecture, cpu_cores, cpu_capacity,
+			memory_bytes, storage_bytes, compute_speedup, price_per_second,
+			boot_overhead_seconds, container_overhead_seconds, schedulable, metadata)
+		 SELECT id, environment_version_id, execution_target, parent_resource_id, type, name,
+			provider_id, tier, region, zone, architecture, cpu_cores, cpu_capacity,
+			memory_bytes, storage_bytes, compute_speedup, price_per_second,
+			boot_overhead_seconds, container_overhead_seconds, schedulable, metadata
+		 FROM resources`,
+		`DROP TABLE resources`,
+		`ALTER TABLE resources_new RENAME TO resources`,
+	}
+	for _, statement := range statements {
+		if _, err := tx.ExecContext(ctx, statement); err != nil {
+			return fmt.Errorf("apply cloud resource migration: %w", err)
+		}
+	}
+	if _, err := tx.ExecContext(ctx, `UPDATE schema_metadata SET checksum=?, applied_at=?`, schemaChecksum(), time.Now().UTC()); err != nil {
+		return fmt.Errorf("record cloud resource migration: %w", err)
+	}
+	if err := tx.Commit(); err != nil {
+		return fmt.Errorf("commit cloud resource migration: %w", err)
+	}
+	if _, err := db.ExecContext(ctx, `PRAGMA foreign_keys = ON`); err != nil {
+		return fmt.Errorf("restore foreign keys after cloud resource migration: %w", err)
 	}
 	return nil
 }

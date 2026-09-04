@@ -75,7 +75,7 @@ CREATE TABLE resources (
 		id TEXT PRIMARY KEY,
 		environment_version_id TEXT NOT NULL REFERENCES environment_versions(id),
 		execution_target TEXT NOT NULL DEFAULT 'batch'
-			CHECK(execution_target IN ('batch', 'direct')),
+			CHECK(execution_target IN ('batch', 'direct', 'provisioned')),
 		parent_resource_id TEXT REFERENCES resources(id),
 		type TEXT NOT NULL,
 		name TEXT NOT NULL,

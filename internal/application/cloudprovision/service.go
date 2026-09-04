@@ -277,6 +277,7 @@ func (s *Provisioner) Destroy(ctx context.Context, instanceID string) (domain.Cl
 		return domain.CloudProvisionedInstance{}, fmt.Errorf("cloud instance %q was not found", instanceID)
 	}
 	instance.Status = "destroying"
+	instance.FailureReason = ""
 	if err := s.store.UpdateProvisionedInstance(ctx, *instance); err != nil {
 		return *instance, err
 	}
@@ -288,6 +289,7 @@ func (s *Provisioner) Destroy(ctx context.Context, instanceID string) (domain.Cl
 	}
 	now := time.Now().UTC()
 	instance.Status = "destroyed"
+	instance.FailureReason = ""
 	instance.DestroyedAt = &now
 	instance.PublicAddress = ""
 	instance.PrivateAddress = ""

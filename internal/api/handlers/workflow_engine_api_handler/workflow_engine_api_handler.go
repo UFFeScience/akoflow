@@ -1871,12 +1871,11 @@ func (h *Handler) DestroyCloudInstance(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("cloud provisioner is unavailable"))
 		return
 	}
-	value, err := h.cloudProvisioner.Destroy(r.Context(), r.PathValue("instanceId"))
-	if err != nil {
-		writeError(w, http.StatusUnprocessableEntity, err)
-		return
-	}
-	writeJSON(w, http.StatusOK, value)
+	instanceID := r.PathValue("instanceId")
+	go func() {
+		_, _ = h.cloudProvisioner.Destroy(context.Background(), instanceID)
+	}()
+	writeJSON(w, http.StatusAccepted, map[string]string{"status": "destroying"})
 }
 
 func (h *Handler) ReplaceEnvironment(w http.ResponseWriter, r *http.Request) {

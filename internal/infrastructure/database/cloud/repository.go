@@ -57,10 +57,16 @@ const defaultPlaybook = `---
         name: "{{ ansible_user_id }}"
         groups: docker
         append: true
-    - name: Install Apptainer
-      ansible.builtin.apt:
-        name: apptainer
-        state: present
+    - name: Install Apptainer when available
+      block:
+        - name: Install Apptainer package
+          ansible.builtin.apt:
+            name: apptainer
+            state: present
+      rescue:
+        - name: Record optional Apptainer capability
+          ansible.builtin.debug:
+            msg: "Apptainer is unavailable for this image; Docker remains the container runtime."
     - name: Create Akoflow workspace
       ansible.builtin.file:
         path: "{{ akoflow_workspace_path }}"
@@ -88,7 +94,6 @@ func (r *Repository) EnsureDefaults(ctx context.Context) error {
 	compatibility := domain.MachineConfigurationCompatibility{Providers: []string{"gcp", "aws", "azure"}, OperatingSystems: []string{"ubuntu-22.04", "ubuntu-24.04"}, Architectures: []string{"amd64"}}
 	checks := []domain.MachineConfigurationValidationCheck{
 		{Name: "Docker available", Command: "docker version", Capability: "docker"},
-		{Name: "Apptainer available", Command: "apptainer version", Capability: "apptainer"},
 		{Name: "Workspace writable", Command: `test -w "${AKOFLOW_WORKSPACE:-/akoflow/workspace}"`, Capability: "workspace"},
 	}
 	compatJSON, _ := json.Marshal(compatibility)
@@ -97,7 +102,7 @@ func (r *Repository) EnsureDefaults(ctx context.Context) error {
 	_, err = tx.ExecContext(ctx, `INSERT OR IGNORE INTO machine_configuration_versions
 		(id,machine_configuration_id,version,status,playbook_yaml,content_sha256,compatibility,variables_schema,validation_checks,created_at)
 		VALUES (?,?,?,?,?,?,?,?,?,?)`, domain.DefaultMachineConfigurationVersionID,
-		domain.DefaultMachineConfigurationID, 3, "published", defaultPlaybook,
+		domain.DefaultMachineConfigurationID, 4, "published", defaultPlaybook,
 		validation.SHA256, compatJSON, variablesJSON, checksJSON, now)
 	if err != nil {
 		return err
@@ -105,6 +110,12 @@ func (r *Repository) EnsureDefaults(ctx context.Context) error {
 	_, err = tx.ExecContext(ctx, `UPDATE cloud_capacity_target_configurations
 		SET configuration_version_id=? WHERE configuration_version_id=?`,
 		domain.DefaultMachineConfigurationVersionID, "akoflow-scientific-worker-v2")
+	if err != nil {
+		return err
+	}
+	_, err = tx.ExecContext(ctx, `UPDATE cloud_capacity_target_configurations
+		SET configuration_version_id=? WHERE configuration_version_id=?`,
+		domain.DefaultMachineConfigurationVersionID, "akoflow-scientific-worker-v3")
 	if err != nil {
 		return err
 	}

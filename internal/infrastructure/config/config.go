@@ -11,43 +11,51 @@ type Settings struct {
 	HTTPAddress string
 	// APIToken is required for non-loopback API listeners. It is deliberately
 	// not generated at startup: an operator must be able to distribute it.
-	APIToken                   string
-	APIAllowedOrigins          []string
-	LocalStorageRoot           string
-	DefaultNamespace           string
-	ConnectionCheckInterval    time.Duration
-	ConsoleEnabled             bool
-	SlurmScriptDirectory       string
-	SSHKeyDirectory            string
-	KubernetesTokenDirectory   string
-	SimulationBackend          string
-	SimGridBinaryPath          string
-	SimGridWorkspace           string
-	SimGridMaxConcurrent       int
-	SimGridTimeout             time.Duration
-	SimGridReferenceFLOPS      float64
-	ArtifactStoreRoot          string
-	BuildContextMaxBytes       int64
-	Buildctl                   string
-	Apptainer                  string
+	APIToken                 string
+	APIAllowedOrigins        []string
+	LocalStorageRoot         string
+	DefaultNamespace         string
+	ConnectionCheckInterval  time.Duration
+	ConsoleEnabled           bool
+	SlurmScriptDirectory     string
+	SSHKeyDirectory          string
+	KubernetesTokenDirectory string
+	CloudCredentialDirectory string
+	TerraformWorkspace       string
+	TerraformBinary          string
+	AnsiblePlaybookBinary    string
+	SimulationBackend        string
+	SimGridBinaryPath        string
+	SimGridWorkspace         string
+	SimGridMaxConcurrent     int
+	SimGridTimeout           time.Duration
+	SimGridReferenceFLOPS    float64
+	ArtifactStoreRoot        string
+	BuildContextMaxBytes     int64
+	Buildctl                 string
+	Apptainer                string
 }
 
 func Load() Settings {
 	settings := Settings{
 		HTTPAddress: "127.0.0.1:8080", DefaultNamespace: "akoflow",
-		ConnectionCheckInterval:    time.Minute,
-		ConsoleEnabled:             false,
-		SlurmScriptDirectory:       "storage/slurm/scripts",
-		SSHKeyDirectory:            "storage/credentials/ssh",
-		KubernetesTokenDirectory:   "storage/credentials/kubernetes",
-		SimulationBackend:          "simgrid",
-		SimGridBinaryPath:          "/usr/local/bin/akoflow-simgrid-runner",
-		SimGridWorkspace:           "storage/simgrid",
-		SimGridMaxConcurrent:       2,
-		SimGridTimeout:             30 * time.Minute,
-		SimGridReferenceFLOPS:      1e9,
-		ArtifactStoreRoot:          "storage/artifacts",
-		BuildContextMaxBytes:       512 << 20,
+		ConnectionCheckInterval:  time.Minute,
+		ConsoleEnabled:           false,
+		SlurmScriptDirectory:     "storage/slurm/scripts",
+		SSHKeyDirectory:          "storage/credentials/ssh",
+		KubernetesTokenDirectory: "storage/credentials/kubernetes",
+		CloudCredentialDirectory: "storage/credentials/cloud",
+		TerraformWorkspace:       "storage/terraform",
+		TerraformBinary:          "terraform",
+		AnsiblePlaybookBinary:    "ansible-playbook",
+		SimulationBackend:        "simgrid",
+		SimGridBinaryPath:        "/usr/local/bin/akoflow-simgrid-runner",
+		SimGridWorkspace:         "storage/simgrid",
+		SimGridMaxConcurrent:     2,
+		SimGridTimeout:           30 * time.Minute,
+		SimGridReferenceFLOPS:    1e9,
+		ArtifactStoreRoot:        "storage/artifacts",
+		BuildContextMaxBytes:     512 << 20,
 	}
 	loadBuild(&settings)
 	loadServer(&settings)
@@ -79,6 +87,18 @@ func loadServer(settings *Settings) {
 	}
 	if value := os.Getenv("AKOFLOW_KUBERNETES_TOKEN_DIRECTORY"); value != "" {
 		settings.KubernetesTokenDirectory = value
+	}
+	if value := os.Getenv("AKOFLOW_CLOUD_CREDENTIAL_DIRECTORY"); value != "" {
+		settings.CloudCredentialDirectory = value
+	}
+	if value := os.Getenv("AKOFLOW_TERRAFORM_WORKSPACE"); value != "" {
+		settings.TerraformWorkspace = value
+	}
+	if value := os.Getenv("AKOFLOW_TERRAFORM_BINARY"); value != "" {
+		settings.TerraformBinary = value
+	}
+	if value := os.Getenv("AKOFLOW_ANSIBLE_PLAYBOOK_BINARY"); value != "" {
+		settings.AnsiblePlaybookBinary = value
 	}
 	settings.ConnectionCheckInterval = durationOrDefault(os.Getenv("AKOFLOW_CONNECTION_CHECK_INTERVAL"), settings.ConnectionCheckInterval)
 	settings.ConsoleEnabled = os.Getenv("AKOFLOW_CONSOLE_ENABLED") == "true"

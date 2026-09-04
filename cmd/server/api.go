@@ -9,10 +9,12 @@ import (
 
 	"github.com/UFFeScience/akoflow/internal/api/handlers/workflow_engine_api_handler"
 	appbuild "github.com/UFFeScience/akoflow/internal/application/build"
+	applicationcloud "github.com/UFFeScience/akoflow/internal/application/cloudcatalog"
 	"github.com/UFFeScience/akoflow/internal/application/ports"
 	appstorage "github.com/UFFeScience/akoflow/internal/application/storage"
 	"github.com/UFFeScience/akoflow/internal/domain"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/config"
+	cloudcredential "github.com/UFFeScience/akoflow/internal/infrastructure/credentials/cloud"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/credentials/sshkey"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/credentials/token"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/database"
@@ -20,6 +22,7 @@ import (
 	"github.com/UFFeScience/akoflow/internal/infrastructure/instancearchive"
 	planningplugin "github.com/UFFeScience/akoflow/internal/infrastructure/plugins/planning"
 	"github.com/UFFeScience/akoflow/internal/provider"
+	gcpcloud "github.com/UFFeScience/akoflow/internal/provider/cloud/gcp"
 	"github.com/UFFeScience/akoflow/internal/provider/kubernetes"
 	"github.com/UFFeScience/akoflow/internal/provider/local"
 	"github.com/UFFeScience/akoflow/internal/provider/slurm"
@@ -38,6 +41,8 @@ func buildAPI(
 	sshKeys *sshkey.Manager,
 	planning workflow_engine_api_handler.PlanningOrchestrator,
 ) (*workflow_engine_api_handler.Handler, error) {
+	cloudCredentials := cloudcredential.New(settings.CloudCredentialDirectory)
+	cloudCatalog := applicationcloud.New(storage.environments, cloudCredentials, gcpcloud.New(nil))
 	// Never expose the process filesystem as a storage browser. Local storage is
 	// opt-in and must have a deliberately configured, bounded root.
 	browsers := appstorage.Registry{domain.StorageSSH: sshfilesystem.New(storage.environments, provider.OSCommandExecutor{}), domain.StorageS3: s3.New(nil, nil), domain.StorageMinIO: s3.New(nil, nil)}
@@ -94,6 +99,8 @@ func buildAPI(
 		PlanningStore:    storage.plans,
 		Provenance:       databaseprovenance.New(storage.database),
 		Cloud:            storage.cloud,
+		CloudCatalog:     cloudCatalog,
+		CloudCredentials: cloudCredentials,
 		InstanceArchive:  archives,
 		ReadOnly:         storage.readOnly,
 		Restart:          restart,

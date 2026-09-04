@@ -15,3 +15,16 @@ type CloudConfigurationStore interface {
 	CreateCapacityTarget(context.Context, domain.CloudCapacityTarget) error
 	ListCapacityTargets(context.Context, string) ([]domain.CloudCapacityTarget, error)
 }
+
+type CloudCredentialResolver interface {
+	Resolve(string) ([]byte, error)
+}
+
+type CloudCatalogProvider interface {
+	Provider() string
+	Discover(context.Context, domain.EnvironmentConnection, []byte) (domain.CloudCatalog, error)
+}
+
+type CloudCatalog interface {
+	Discover(context.Context, string) (domain.CloudCatalog, error)
+}

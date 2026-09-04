@@ -30,6 +30,7 @@ import (
 	domainevents "github.com/UFFeScience/akoflow/internal/domain/events"
 	domaininstance "github.com/UFFeScience/akoflow/internal/domain/instance"
 	domainqueue "github.com/UFFeScience/akoflow/internal/domain/queue"
+	cloudcredential "github.com/UFFeScience/akoflow/internal/infrastructure/credentials/cloud"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/credentials/sshkey"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/credentials/token"
 	"github.com/google/uuid"
@@ -110,6 +111,8 @@ type Dependencies struct {
 	PlanningStore    ports.PlanningStore
 	Provenance       ports.ProvenanceExplorer
 	Cloud            ports.CloudConfigurationStore
+	CloudCatalog     ports.CloudCatalog
+	CloudCredentials *cloudcredential.Manager
 	InstanceArchive  ports.InstanceArchive
 	ReadOnly         bool
 	Restart          func()
@@ -142,6 +145,8 @@ type Handler struct {
 	planningStore    ports.PlanningStore
 	provenance       ports.ProvenanceExplorer
 	cloud            ports.CloudConfigurationStore
+	cloudCatalog     ports.CloudCatalog
+	cloudCredentials *cloudcredential.Manager
 	instanceArchive  ports.InstanceArchive
 	readOnly         bool
 	restart          func()
@@ -187,6 +192,8 @@ func New(dependencies Dependencies) (*Handler, error) {
 		planningStore:    dependencies.PlanningStore,
 		provenance:       dependencies.Provenance,
 		cloud:            dependencies.Cloud,
+		cloudCatalog:     dependencies.CloudCatalog,
+		cloudCredentials: dependencies.CloudCredentials,
 		instanceArchive:  dependencies.InstanceArchive,
 		readOnly:         dependencies.ReadOnly,
 		restart:          dependencies.Restart,
@@ -1420,6 +1427,40 @@ func (h *Handler) ValidateMachineConfiguration(w http.ResponseWriter, r *http.Re
 		status = http.StatusUnprocessableEntity
 	}
 	writeJSON(w, status, result)
+}
+
+func (h *Handler) SaveCloudCredential(w http.ResponseWriter, r *http.Request) {
+	if h.cloudCredentials == nil {
+		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("cloud credential storage is unavailable"))
+		return
+	}
+	var request struct {
+		ID         string          `json:"id"`
+		Provider   string          `json:"provider"`
+		Credential json.RawMessage `json:"credential"`
+	}
+	if !decode(w, r, &request) {
+		return
+	}
+	reference, err := h.cloudCredentials.Save(request.ID, request.Provider, request.Credential)
+	if err != nil {
+		writeError(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+	writeJSON(w, http.StatusCreated, map[string]string{"credentialRef": reference})
+}
+
+func (h *Handler) RefreshCloudCatalog(w http.ResponseWriter, r *http.Request) {
+	if h.cloudCatalog == nil {
+		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("cloud catalog is unavailable"))
+		return
+	}
+	result, err := h.cloudCatalog.Discover(r.Context(), r.PathValue("environmentId"))
+	if err != nil {
+		writeError(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+	writeJSON(w, http.StatusOK, result)
 }
 
 func (h *Handler) ListMachineConfigurations(w http.ResponseWriter, r *http.Request) {

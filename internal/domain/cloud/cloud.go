@@ -77,3 +77,57 @@ type PlaybookValidation struct {
 	SHA256 string   `json:"sha256,omitempty"`
 	Errors []string `json:"errors,omitempty"`
 }
+
+type MachineOffering struct {
+	Provider         string         `json:"provider"`
+	ProviderTypeID   string         `json:"providerTypeId"`
+	Region           string         `json:"region"`
+	Zones            []string       `json:"zones"`
+	Family           string         `json:"family,omitempty"`
+	VCPU             int            `json:"vcpu"`
+	MemoryMiB        int64          `json:"memoryMiB"`
+	Architecture     string         `json:"architecture"`
+	GPUCount         int            `json:"gpuCount"`
+	GPUModel         string         `json:"gpuModel,omitempty"`
+	SupportsSpot     bool           `json:"supportsSpot"`
+	Available        bool           `json:"available"`
+	ProviderMetadata map[string]any `json:"providerMetadata,omitempty"`
+}
+
+type ImageOffering struct {
+	Provider         string         `json:"provider"`
+	ProviderImageID  string         `json:"providerImageId"`
+	Name             string         `json:"name"`
+	Publisher        string         `json:"publisher,omitempty"`
+	Family           string         `json:"family,omitempty"`
+	OperatingSystem  string         `json:"operatingSystem"`
+	Architecture     string         `json:"architecture"`
+	Source           string         `json:"source"`
+	Status           string         `json:"status"`
+	MinimumDiskGiB   int64          `json:"minimumDiskGiB"`
+	Deprecated       bool           `json:"deprecated"`
+	ProviderMetadata map[string]any `json:"providerMetadata,omitempty"`
+}
+
+type DiskOffering struct {
+	Provider         string         `json:"provider"`
+	ProviderTypeID   string         `json:"providerTypeId"`
+	Name             string         `json:"name"`
+	Region           string         `json:"region"`
+	Zones            []string       `json:"zones"`
+	Available        bool           `json:"available"`
+	ProviderMetadata map[string]any `json:"providerMetadata,omitempty"`
+}
+
+type Catalog struct {
+	Provider      string            `json:"provider"`
+	EnvironmentID string            `json:"environmentId"`
+	Project       string            `json:"project,omitempty"`
+	Region        string            `json:"region,omitempty"`
+	Source        string            `json:"source"`
+	Machines      []MachineOffering `json:"machines"`
+	Images        []ImageOffering   `json:"images"`
+	Disks         []DiskOffering    `json:"disks"`
+	Warnings      []string          `json:"warnings,omitempty"`
+	DiscoveredAt  time.Time         `json:"discoveredAt"`
+}

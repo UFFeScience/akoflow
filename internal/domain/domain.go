@@ -20,6 +20,10 @@ type MachineConfigurationValidationCheck = cloud.ValidationCheck
 type MachineConfigurationValidation = cloud.PlaybookValidation
 type CloudCapacityTarget = cloud.CapacityTarget
 type CloudTargetConfiguration = cloud.TargetConfiguration
+type CloudCatalog = cloud.Catalog
+type CloudMachineOffering = cloud.MachineOffering
+type CloudImageOffering = cloud.ImageOffering
+type CloudDiskOffering = cloud.DiskOffering
 
 const DefaultMachineConfigurationID = cloud.DefaultConfigurationID
 

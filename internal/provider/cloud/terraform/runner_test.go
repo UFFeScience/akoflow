@@ -2,7 +2,11 @@ package terraform
 
 import (
 	"context"
+	"encoding/json"
+	"os"
 	"os/exec"
+	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/UFFeScience/akoflow/internal/application/ports"
@@ -53,5 +57,37 @@ func TestGeneratedGCPModuleIsFormatted(t *testing.T) {
 func TestProviderNameIsSafe(t *testing.T) {
 	if value := providerName("Cloud_INSTANCE_ABC"); value != "cloud-instance-abc" {
 		t.Fatalf("unexpected provider name %q", value)
+	}
+}
+
+func TestPrepareUsesCompatibleDiskForE2Machine(t *testing.T) {
+	runner := Runner{Root: t.TempDir()}
+	workspace, err := runner.prepare(ports.TerraformProvisionSpec{
+		InstanceID: "cloud-instance-disk-compatibility",
+		Target: domain.CloudCapacityTarget{
+			Provider: "gcp", ProviderMachineType: "e2-micro", Region: "us-central1",
+			Configuration: map[string]any{"diskType": "hyperdisk-balanced"},
+		},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	encoded, err := os.ReadFile(filepath.Join(workspace, "terraform.tfvars.json"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	var variables map[string]any
+	if err := json.Unmarshal(encoded, &variables); err != nil {
+		t.Fatal(err)
+	}
+	if variables["disk_type"] != "pd-balanced" {
+		t.Fatalf("expected pd-balanced fallback, got %v", variables["disk_type"])
+	}
+	logData, err := os.ReadFile(filepath.Join(workspace, "provision.log"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(string(logData), "does not support hyperdisk-balanced") {
+		t.Fatalf("expected compatibility decision in log, got %q", string(logData))
 	}
 }

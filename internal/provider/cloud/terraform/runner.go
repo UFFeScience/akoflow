@@ -131,6 +131,11 @@ func (r Runner) prepare(spec ports.TerraformProvisionSpec) (string, error) {
 			spec.Target.Configuration, "sshSourceRanges", []string{"0.0.0.0/0"},
 		),
 	}
+	diskAdjusted := strings.HasPrefix(spec.Target.ProviderMachineType, "e2-") &&
+		strings.HasPrefix(stringAny(values["disk_type"]), "hyperdisk-")
+	if diskAdjusted {
+		values["disk_type"] = "pd-balanced"
+	}
 	if values["disk_type"] == "" {
 		values["disk_type"] = "pd-balanced"
 	}
@@ -143,6 +148,15 @@ func (r Runner) prepare(spec ports.TerraformProvisionSpec) (string, error) {
 	}
 	if err := os.WriteFile(filepath.Join(workspace, "terraform.tfvars.json"), encoded, 0600); err != nil {
 		return "", err
+	}
+	if diskAdjusted {
+		logFile, logErr := os.OpenFile(filepath.Join(workspace, "provision.log"), os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0600)
+		if logErr != nil {
+			return "", logErr
+		}
+		_, _ = fmt.Fprintf(logFile, "[Terraform] compatibility: %s does not support %s; using pd-balanced\n", spec.Target.ProviderMachineType, stringValue(spec.Target.Configuration, "diskType"))
+		_ = logFile.Sync()
+		_ = logFile.Close()
 	}
 	return workspace, nil
 }

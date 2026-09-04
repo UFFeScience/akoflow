@@ -307,6 +307,17 @@ func (s *Provisioner) Release(ctx context.Context, capacityTargetIDs []string) e
 	return nil
 }
 
+func (s *Provisioner) Log(ctx context.Context, instanceID string) ([]byte, error) {
+	instance, err := s.store.FindProvisionedInstance(ctx, instanceID)
+	if err != nil {
+		return nil, err
+	}
+	if instance == nil {
+		return nil, fmt.Errorf("cloud instance %q was not found", instanceID)
+	}
+	return s.terraform.Log(ctx, instanceID)
+}
+
 func cloudConnection(connections []domain.EnvironmentConnection) *domain.EnvironmentConnection {
 	for index := range connections {
 		if connections[index].Type == domain.ConnectionCloud {

@@ -17,6 +17,7 @@ func (*terminalCloudStub) Provision(context.Context, string, domain.CloudProvisi
 func (*terminalCloudStub) Destroy(context.Context, string) (domain.CloudProvisionedInstance, error) {
 	return domain.CloudProvisionedInstance{}, nil
 }
+func (*terminalCloudStub) Log(context.Context, string) ([]byte, error) { return nil, nil }
 func (s *terminalCloudStub) Release(_ context.Context, targets []string) error {
 	s.released = append(s.released, targets...)
 	return nil

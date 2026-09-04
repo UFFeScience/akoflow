@@ -65,8 +65,9 @@ func (s *terraformStub) Start(_ context.Context, id string) (ports.TerraformResu
 	s.started = append(s.started, id)
 	return s.result, nil
 }
-func (*terraformStub) Destroy(context.Context, string) error { return nil }
-func (*terraformStub) Stop(context.Context, string) error    { return nil }
+func (*terraformStub) Destroy(context.Context, string) error       { return nil }
+func (*terraformStub) Stop(context.Context, string) error          { return nil }
+func (*terraformStub) Log(context.Context, string) ([]byte, error) { return nil, nil }
 
 func TestReuseCapacityResumesStoppedTerraformInstance(t *testing.T) {
 	store := &capacityStoreStub{instances: []domain.CloudProvisionedInstance{{

@@ -104,6 +104,8 @@ func NewMux(workflowEngine *workflow_engine_api_handler.Handler) *http.ServeMux 
 	mux.HandleFunc("DELETE /akoflow-api/cloud-capacity-targets/{targetId}/", http_config.KernelHandler(workflowEngine.DeleteCloudCapacityTarget))
 	mux.HandleFunc("GET /akoflow-api/environments/{environmentId}/cloud-instances/", http_config.KernelHandler(workflowEngine.ListCloudInstances))
 	mux.HandleFunc("POST /akoflow-api/environments/{environmentId}/cloud-instances/", http_config.KernelHandler(workflowEngine.ProvisionCloudInstance))
+	mux.HandleFunc("POST /akoflow-api/environments/{environmentId}/cloud-provisioning/", http_config.KernelHandler(workflowEngine.StartCloudProvisioning))
+	mux.HandleFunc("GET /akoflow-api/cloud-instances/{instanceId}/provisioning-log/", http_config.KernelHandler(workflowEngine.GetCloudProvisioningLog))
 	mux.HandleFunc("POST /akoflow-api/cloud-instances/{instanceId}/destroy/", http_config.KernelHandler(workflowEngine.DestroyCloudInstance))
 	mux.HandleFunc("GET /akoflow-api/machine-configurations/", http_config.KernelHandler(workflowEngine.ListMachineConfigurations))
 	mux.HandleFunc("POST /akoflow-api/machine-configurations/", http_config.KernelHandler(workflowEngine.CreateMachineConfiguration))

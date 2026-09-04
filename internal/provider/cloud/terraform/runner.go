@@ -1,9 +1,11 @@
 package terraform
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -164,11 +166,34 @@ func (r Runner) run(ctx context.Context, workspace string, arguments ...string) 
 	command := exec.CommandContext(ctx, binary, arguments...)
 	command.Dir = workspace
 	command.Env = append(os.Environ(), "TF_IN_AUTOMATION=1")
-	output, err := command.CombinedOutput()
-	if err != nil {
-		return nil, fmt.Errorf("terraform %s: %w: %s", arguments[0], err, strings.TrimSpace(string(output)))
+	logFile, logErr := os.OpenFile(filepath.Join(workspace, "provision.log"), os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0600)
+	if logErr != nil {
+		return nil, logErr
 	}
-	return output, nil
+	defer logFile.Close()
+	_, _ = fmt.Fprintf(logFile, "\n[Terraform] terraform %s\n", strings.Join(arguments, " "))
+	var output bytes.Buffer
+	command.Stdout = io.MultiWriter(&output, logFile)
+	command.Stderr = io.MultiWriter(&output, logFile)
+	err := command.Run()
+	if err != nil {
+		_, _ = fmt.Fprintf(logFile, "[Terraform] failed: %v\n", err)
+		return nil, fmt.Errorf("terraform %s: %w: %s", arguments[0], err, strings.TrimSpace(output.String()))
+	}
+	_, _ = fmt.Fprintln(logFile, "[Terraform] completed")
+	return output.Bytes(), nil
+}
+
+func (r Runner) Log(_ context.Context, instanceID string) ([]byte, error) {
+	workspace, err := r.workspace(instanceID)
+	if err != nil {
+		return nil, err
+	}
+	data, err := os.ReadFile(filepath.Join(workspace, "provision.log"))
+	if os.IsNotExist(err) {
+		return []byte("Provisioning has started; waiting for Terraform output...\n"), nil
+	}
+	return data, err
 }
 
 func parseOutput(encoded []byte) (ports.TerraformResult, error) {

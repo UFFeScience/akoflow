@@ -1,9 +1,11 @@
 package ansible
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -42,9 +44,17 @@ func (r Runner) Configure(ctx context.Context, spec ports.MachineConfigurationSp
 	if err := os.WriteFile(variablesPath, variables, 0600); err != nil {
 		return err
 	}
+	logFile, logErr := os.OpenFile(filepath.Join(r.Root, spec.InstanceID, "provision.log"), os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0600)
+	if logErr != nil {
+		return logErr
+	}
+	defer logFile.Close()
+	_, _ = fmt.Fprintln(logFile, "\n[Ansible] waiting for SSH connectivity")
 	if err := waitForSSH(ctx, spec, keyPath); err != nil {
+		_, _ = fmt.Fprintf(logFile, "[Ansible] SSH failed: %v\n", err)
 		return err
 	}
+	_, _ = fmt.Fprintln(logFile, "[Ansible] SSH ready")
 	binary := r.Binary
 	if strings.TrimSpace(binary) == "" {
 		binary = "ansible-playbook"
@@ -56,15 +66,22 @@ func (r Runner) Configure(ctx context.Context, spec ports.MachineConfigurationSp
 	)
 	command.Dir = workspace
 	command.Env = append(os.Environ(), "ANSIBLE_HOST_KEY_CHECKING=False")
-	output, err := command.CombinedOutput()
+	_, _ = fmt.Fprintf(logFile, "\n[Ansible] applying %s\n", filepath.Base(playbookPath))
+	var output bytes.Buffer
+	command.Stdout = io.MultiWriter(&output, logFile)
+	command.Stderr = io.MultiWriter(&output, logFile)
+	err = command.Run()
 	if err != nil {
-		return fmt.Errorf("ansible-playbook: %w: %s", err, strings.TrimSpace(string(output)))
+		_, _ = fmt.Fprintf(logFile, "[Ansible] failed: %v\n", err)
+		return fmt.Errorf("ansible-playbook: %w: %s", err, strings.TrimSpace(output.String()))
 	}
+	_, _ = fmt.Fprintln(logFile, "[Ansible] playbook completed; running validation checks")
 	for _, check := range spec.Checks {
 		if err := runCheck(ctx, spec, keyPath, check.Command); err != nil {
 			return fmt.Errorf("validation %q: %w", check.Name, err)
 		}
 	}
+	_, _ = fmt.Fprintln(logFile, "[Ansible] configuration validated")
 	return nil
 }
 

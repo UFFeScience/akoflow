@@ -1825,6 +1825,35 @@ func (h *Handler) ProvisionCloudInstance(w http.ResponseWriter, r *http.Request)
 	writeJSON(w, http.StatusCreated, value)
 }
 
+func (h *Handler) StartCloudProvisioning(w http.ResponseWriter, r *http.Request) {
+	if h.cloudProvisioner == nil {
+		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("cloud provisioner is unavailable"))
+		return
+	}
+	var request domain.CloudProvisionRequest
+	if !decode(w, r, &request) {
+		return
+	}
+	environmentID := r.PathValue("environmentId")
+	go func() {
+		_, _ = h.cloudProvisioner.Provision(context.Background(), environmentID, request)
+	}()
+	writeJSON(w, http.StatusAccepted, map[string]string{"status": "starting"})
+}
+
+func (h *Handler) GetCloudProvisioningLog(w http.ResponseWriter, r *http.Request) {
+	if h.cloudProvisioner == nil {
+		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("cloud provisioner is unavailable"))
+		return
+	}
+	data, err := h.cloudProvisioner.Log(r.Context(), r.PathValue("instanceId"))
+	if err != nil {
+		writeError(w, http.StatusNotFound, err)
+		return
+	}
+	writeJSON(w, http.StatusOK, map[string]string{"log": string(data)})
+}
+
 func (h *Handler) DestroyCloudInstance(w http.ResponseWriter, r *http.Request) {
 	if h.cloudProvisioner == nil {
 		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("cloud provisioner is unavailable"))

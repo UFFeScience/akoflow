@@ -21,6 +21,7 @@ import (
 
 	apirequests "github.com/UFFeScience/akoflow/internal/api/requests"
 	applicationbuild "github.com/UFFeScience/akoflow/internal/application/build"
+	applicationconfiguration "github.com/UFFeScience/akoflow/internal/application/machineconfiguration"
 	"github.com/UFFeScience/akoflow/internal/application/ports"
 	"github.com/UFFeScience/akoflow/internal/controlplane/eventloop"
 	"github.com/UFFeScience/akoflow/internal/domain"
@@ -31,6 +32,7 @@ import (
 	domainqueue "github.com/UFFeScience/akoflow/internal/domain/queue"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/credentials/sshkey"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/credentials/token"
+	"github.com/google/uuid"
 	"gopkg.in/yaml.v3"
 )
 
@@ -107,6 +109,7 @@ type Dependencies struct {
 	Planning         PlanningOrchestrator
 	PlanningStore    ports.PlanningStore
 	Provenance       ports.ProvenanceExplorer
+	Cloud            ports.CloudConfigurationStore
 	InstanceArchive  ports.InstanceArchive
 	ReadOnly         bool
 	Restart          func()
@@ -138,6 +141,7 @@ type Handler struct {
 	planning         PlanningOrchestrator
 	planningStore    ports.PlanningStore
 	provenance       ports.ProvenanceExplorer
+	cloud            ports.CloudConfigurationStore
 	instanceArchive  ports.InstanceArchive
 	readOnly         bool
 	restart          func()
@@ -182,6 +186,7 @@ func New(dependencies Dependencies) (*Handler, error) {
 		planning:         dependencies.Planning,
 		planningStore:    dependencies.PlanningStore,
 		provenance:       dependencies.Provenance,
+		cloud:            dependencies.Cloud,
 		instanceArchive:  dependencies.InstanceArchive,
 		readOnly:         dependencies.ReadOnly,
 		restart:          dependencies.Restart,
@@ -1400,6 +1405,123 @@ func (h *Handler) CreateEnvironment(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	writeJSON(w, http.StatusCreated, definition)
+}
+
+func (h *Handler) ValidateMachineConfiguration(w http.ResponseWriter, r *http.Request) {
+	var request struct {
+		PlaybookYAML string `json:"playbookYaml"`
+	}
+	if !decode(w, r, &request) {
+		return
+	}
+	result := applicationconfiguration.ValidatePlaybook(request.PlaybookYAML)
+	status := http.StatusOK
+	if !result.Valid {
+		status = http.StatusUnprocessableEntity
+	}
+	writeJSON(w, status, result)
+}
+
+func (h *Handler) ListMachineConfigurations(w http.ResponseWriter, r *http.Request) {
+	if h.cloud == nil {
+		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("cloud configuration is unavailable"))
+		return
+	}
+	values, err := h.cloud.ListMachineConfigurations(r.Context())
+	writeList(w, values, err)
+}
+
+func (h *Handler) GetMachineConfiguration(w http.ResponseWriter, r *http.Request) {
+	if h.cloud == nil {
+		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("cloud configuration is unavailable"))
+		return
+	}
+	value, err := h.cloud.FindMachineConfiguration(r.Context(), r.PathValue("configurationId"))
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, err)
+		return
+	}
+	if value == nil {
+		writeError(w, http.StatusNotFound, fmt.Errorf("machine configuration not found"))
+		return
+	}
+	writeJSON(w, http.StatusOK, value)
+}
+
+func (h *Handler) CreateMachineConfiguration(w http.ResponseWriter, r *http.Request) {
+	if h.cloud == nil {
+		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("cloud configuration is unavailable"))
+		return
+	}
+	var value domain.MachineConfiguration
+	if !decode(w, r, &value) {
+		return
+	}
+	if strings.TrimSpace(value.ID) == "" {
+		value.ID = "machine-configuration-" + uuid.NewString()
+	}
+	value.Ownership = "user"
+	value.Enabled = true
+	if err := h.cloud.CreateMachineConfiguration(r.Context(), value); err != nil {
+		writeError(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+	writeJSON(w, http.StatusCreated, value)
+}
+
+func (h *Handler) CreateMachineConfigurationVersion(w http.ResponseWriter, r *http.Request) {
+	if h.cloud == nil {
+		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("cloud configuration is unavailable"))
+		return
+	}
+	var value domain.MachineConfigurationVersion
+	if !decode(w, r, &value) {
+		return
+	}
+	value.MachineConfigurationID = r.PathValue("configurationId")
+	if strings.TrimSpace(value.ID) == "" {
+		value.ID = value.MachineConfigurationID + "-" + uuid.NewString()
+	}
+	if err := h.cloud.CreateMachineConfigurationVersion(r.Context(), value); err != nil {
+		writeError(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+	stored, err := h.cloud.FindMachineConfiguration(r.Context(), value.MachineConfigurationID)
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, err)
+		return
+	}
+	writeJSON(w, http.StatusCreated, stored)
+}
+
+func (h *Handler) ListCloudCapacityTargets(w http.ResponseWriter, r *http.Request) {
+	if h.cloud == nil {
+		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("cloud configuration is unavailable"))
+		return
+	}
+	values, err := h.cloud.ListCapacityTargets(r.Context(), r.PathValue("environmentId"))
+	writeList(w, values, err)
+}
+
+func (h *Handler) CreateCloudCapacityTarget(w http.ResponseWriter, r *http.Request) {
+	if h.cloud == nil {
+		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("cloud configuration is unavailable"))
+		return
+	}
+	var value domain.CloudCapacityTarget
+	if !decode(w, r, &value) {
+		return
+	}
+	value.EnvironmentID = r.PathValue("environmentId")
+	if strings.TrimSpace(value.ID) == "" {
+		value.ID = "cloud-capacity-" + uuid.NewString()
+	}
+	value.Enabled = true
+	if err := h.cloud.CreateCapacityTarget(r.Context(), value); err != nil {
+		writeError(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+	writeJSON(w, http.StatusCreated, value)
 }
 
 func (h *Handler) ReplaceEnvironment(w http.ResponseWriter, r *http.Request) {

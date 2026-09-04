@@ -6,6 +6,7 @@ import (
 
 	"github.com/UFFeScience/akoflow/internal/infrastructure/database"
 	dbaudit "github.com/UFFeScience/akoflow/internal/infrastructure/database/audit"
+	dbcloud "github.com/UFFeScience/akoflow/internal/infrastructure/database/cloud"
 	dbconsole "github.com/UFFeScience/akoflow/internal/infrastructure/database/console"
 	dbdata "github.com/UFFeScience/akoflow/internal/infrastructure/database/data"
 	dbenvironment "github.com/UFFeScience/akoflow/internal/infrastructure/database/environment"
@@ -35,6 +36,7 @@ type persistence struct {
 	audit        *dbaudit.Repository
 	console      *dbconsole.Repository
 	storage      *dbstorage.Repository
+	cloud        *dbcloud.Repository
 }
 
 func openPersistence(ctx context.Context) (persistence, error) {
@@ -62,8 +64,13 @@ func openPersistence(ctx context.Context) (persistence, error) {
 		return persistence{}, err
 	}
 	instanceRepository := dbinstance.New(db)
+	cloudRepository := dbcloud.New(db)
 	if !readOnly {
 		if err := ensureSystemInstance(ctx, instanceRepository); err != nil {
+			_ = db.Close()
+			return persistence{}, err
+		}
+		if err := cloudRepository.EnsureDefaults(ctx); err != nil {
 			_ = db.Close()
 			return persistence{}, err
 		}
@@ -79,5 +86,6 @@ func openPersistence(ctx context.Context) (persistence, error) {
 		audit:     dbaudit.New(db),
 		console:   dbconsole.New(db),
 		storage:   dbstorage.New(db),
+		cloud:     cloudRepository,
 	}, nil
 }

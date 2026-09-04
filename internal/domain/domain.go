@@ -4,6 +4,7 @@
 package domain
 
 import (
+	"github.com/UFFeScience/akoflow/internal/domain/cloud"
 	"github.com/UFFeScience/akoflow/internal/domain/environment"
 	"github.com/UFFeScience/akoflow/internal/domain/execution"
 	"github.com/UFFeScience/akoflow/internal/domain/planning"
@@ -11,6 +12,16 @@ import (
 	"github.com/UFFeScience/akoflow/internal/domain/simulation"
 	"github.com/UFFeScience/akoflow/internal/domain/workflow"
 )
+
+type MachineConfiguration = cloud.MachineConfiguration
+type MachineConfigurationVersion = cloud.MachineConfigurationVersion
+type MachineConfigurationCompatibility = cloud.Compatibility
+type MachineConfigurationValidationCheck = cloud.ValidationCheck
+type MachineConfigurationValidation = cloud.PlaybookValidation
+type CloudCapacityTarget = cloud.CapacityTarget
+type CloudTargetConfiguration = cloud.TargetConfiguration
+
+const DefaultMachineConfigurationID = cloud.DefaultConfigurationID
 
 type SimulationEngine = simulation.Engine
 type SimulationModel = simulation.Model

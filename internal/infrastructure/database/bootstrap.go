@@ -41,6 +41,9 @@ func Bootstrap(ctx context.Context, db *sql.DB) error {
 	if err := migratePlanningSessions(ctx, db); err != nil {
 		return err
 	}
+	if err := migrateCloudFoundation(ctx, db); err != nil {
+		return err
+	}
 	if err := Validate(ctx, db); err != nil {
 		return fmt.Errorf("%w; remove the existing database file and recreate it: %v", ErrIncompatibleSchema, err)
 	}
@@ -55,6 +58,7 @@ const schemaBeforeExecutionMetrics = "9bf9465dbc586d92d41480a45fa5d680653ddb6aba
 const schemaBeforeTransferSettings = "2412be2fc4530cf52b1e620dc2454ab97207980f6be17876b7ad4c357abe5223"
 const schemaBeforeWorkflowDataDependencies = "2a07d9d4c5230f9c5cf884142c092eb7bda7b726fdd03b55e7e3174251e80288"
 const schemaBeforePlanningSessions = "8f6ed6fec292490f85e3fe8e6bf7edca918375589516a687d8a00d61f882c137"
+const schemaBeforeCloudFoundation = "7e1bbb05c5eb78bdaf86806a2a7c18a474b28035ebffee5ce8e0f65b5fffd722"
 
 func migrateUserPreferences(ctx context.Context, db *sql.DB) error {
 	var checksum string
@@ -214,8 +218,69 @@ func migratePlanningSessions(ctx context.Context, db *sql.DB) error {
 			return fmt.Errorf("apply planning sessions migration: %w", err)
 		}
 	}
-	if _, err := tx.ExecContext(ctx, `UPDATE schema_metadata SET checksum=?, applied_at=?`, schemaChecksum(), time.Now().UTC()); err != nil {
+	if _, err := tx.ExecContext(ctx, `UPDATE schema_metadata SET checksum=?, applied_at=?`, schemaBeforeCloudFoundation, time.Now().UTC()); err != nil {
 		return fmt.Errorf("record planning sessions migration: %w", err)
+	}
+	return tx.Commit()
+}
+
+func migrateCloudFoundation(ctx context.Context, db *sql.DB) error {
+	var checksum string
+	if err := db.QueryRowContext(ctx, `SELECT checksum FROM schema_metadata LIMIT 1`).Scan(&checksum); err != nil || checksum == schemaChecksum() {
+		return nil
+	}
+	if checksum != schemaBeforeCloudFoundation {
+		return nil
+	}
+	tx, err := db.BeginTx(ctx, nil)
+	if err != nil {
+		return fmt.Errorf("begin cloud foundation migration: %w", err)
+	}
+	defer tx.Rollback()
+	statements := []string{
+		`CREATE TABLE machine_configurations (
+			id TEXT PRIMARY KEY, name TEXT NOT NULL, description TEXT NOT NULL DEFAULT '',
+			ownership TEXT NOT NULL DEFAULT 'user' CHECK(ownership IN ('system','user')),
+			enabled INTEGER NOT NULL DEFAULT 1, created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+			updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP)`,
+		`CREATE TABLE machine_configuration_versions (
+			id TEXT PRIMARY KEY, machine_configuration_id TEXT NOT NULL
+				REFERENCES machine_configurations(id) ON DELETE CASCADE,
+			version INTEGER NOT NULL CHECK(version > 0),
+			status TEXT NOT NULL CHECK(status IN ('draft','published','deprecated')),
+			playbook_yaml TEXT NOT NULL, content_sha256 TEXT NOT NULL,
+			compatibility TEXT NOT NULL DEFAULT '{}', variables_schema TEXT NOT NULL DEFAULT '{}',
+			validation_checks TEXT NOT NULL DEFAULT '[]', created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+			UNIQUE(machine_configuration_id,version))`,
+		`CREATE TABLE cloud_capacity_targets (
+			id TEXT PRIMARY KEY, environment_id TEXT NOT NULL REFERENCES environments(id) ON DELETE CASCADE,
+			name TEXT NOT NULL, provider TEXT NOT NULL CHECK(provider IN ('gcp','aws','azure')),
+			provider_machine_type TEXT NOT NULL, region TEXT NOT NULL,
+			zone_policy TEXT NOT NULL DEFAULT 'any-compatible', fixed_zone TEXT NOT NULL DEFAULT '',
+			image_reference TEXT NOT NULL, architecture TEXT NOT NULL DEFAULT 'amd64',
+			vcpu INTEGER NOT NULL CHECK(vcpu > 0), memory_mib INTEGER NOT NULL CHECK(memory_mib > 0),
+			provisioning_mode TEXT NOT NULL DEFAULT 'standard'
+				CHECK(provisioning_mode IN ('standard','spot')),
+			maximum_instances INTEGER NOT NULL DEFAULT 1 CHECK(maximum_instances > 0),
+			lifecycle_policy TEXT NOT NULL DEFAULT 'destroy-after-execution',
+			configuration TEXT NOT NULL DEFAULT '{}', enabled INTEGER NOT NULL DEFAULT 1,
+			created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, UNIQUE(environment_id,name))`,
+		`CREATE TABLE cloud_capacity_target_configurations (
+			capacity_target_id TEXT NOT NULL REFERENCES cloud_capacity_targets(id) ON DELETE CASCADE,
+			configuration_version_id TEXT NOT NULL REFERENCES machine_configuration_versions(id),
+			execution_order INTEGER NOT NULL CHECK(execution_order >= 0), variables TEXT NOT NULL DEFAULT '{}',
+			required INTEGER NOT NULL DEFAULT 0, enabled INTEGER NOT NULL DEFAULT 1,
+			PRIMARY KEY(capacity_target_id,configuration_version_id),
+			UNIQUE(capacity_target_id,execution_order))`,
+		`CREATE INDEX cloud_capacity_targets_environment_idx ON cloud_capacity_targets(environment_id,enabled)`,
+	}
+	for _, statement := range statements {
+		if _, err := tx.ExecContext(ctx, statement); err != nil {
+			return fmt.Errorf("apply cloud foundation migration: %w", err)
+		}
+	}
+	if _, err := tx.ExecContext(ctx, `UPDATE schema_metadata SET checksum=?, applied_at=?`, schemaChecksum(), time.Now().UTC()); err != nil {
+		return fmt.Errorf("record cloud foundation migration: %w", err)
 	}
 	return tx.Commit()
 }

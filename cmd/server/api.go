@@ -93,6 +93,7 @@ func buildAPI(
 		Planning:         planning,
 		PlanningStore:    storage.plans,
 		Provenance:       databaseprovenance.New(storage.database),
+		Cloud:            storage.cloud,
 		InstanceArchive:  archives,
 		ReadOnly:         storage.readOnly,
 		Restart:          restart,

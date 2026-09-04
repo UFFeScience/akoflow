@@ -518,6 +518,61 @@ CREATE INDEX domain_events_aggregate_idx
 		ON domain_events(aggregate_type, aggregate_id, occurred_at);
 CREATE INDEX domain_events_type_idx
 		ON domain_events(event_type, occurred_at);
+CREATE TABLE machine_configurations (
+	id TEXT PRIMARY KEY,
+	name TEXT NOT NULL,
+	description TEXT NOT NULL DEFAULT '',
+	ownership TEXT NOT NULL DEFAULT 'user' CHECK(ownership IN ('system', 'user')),
+	enabled INTEGER NOT NULL DEFAULT 1,
+	created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE machine_configuration_versions (
+	id TEXT PRIMARY KEY,
+	machine_configuration_id TEXT NOT NULL REFERENCES machine_configurations(id) ON DELETE CASCADE,
+	version INTEGER NOT NULL CHECK(version > 0),
+	status TEXT NOT NULL CHECK(status IN ('draft', 'published', 'deprecated')),
+	playbook_yaml TEXT NOT NULL,
+	content_sha256 TEXT NOT NULL,
+	compatibility TEXT NOT NULL DEFAULT '{}',
+	variables_schema TEXT NOT NULL DEFAULT '{}',
+	validation_checks TEXT NOT NULL DEFAULT '[]',
+	created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	UNIQUE(machine_configuration_id, version)
+);
+CREATE TABLE cloud_capacity_targets (
+	id TEXT PRIMARY KEY,
+	environment_id TEXT NOT NULL REFERENCES environments(id) ON DELETE CASCADE,
+	name TEXT NOT NULL,
+	provider TEXT NOT NULL CHECK(provider IN ('gcp', 'aws', 'azure')),
+	provider_machine_type TEXT NOT NULL,
+	region TEXT NOT NULL,
+	zone_policy TEXT NOT NULL DEFAULT 'any-compatible',
+	fixed_zone TEXT NOT NULL DEFAULT '',
+	image_reference TEXT NOT NULL,
+	architecture TEXT NOT NULL DEFAULT 'amd64',
+	vcpu INTEGER NOT NULL CHECK(vcpu > 0),
+	memory_mib INTEGER NOT NULL CHECK(memory_mib > 0),
+	provisioning_mode TEXT NOT NULL DEFAULT 'standard' CHECK(provisioning_mode IN ('standard', 'spot')),
+	maximum_instances INTEGER NOT NULL DEFAULT 1 CHECK(maximum_instances > 0),
+	lifecycle_policy TEXT NOT NULL DEFAULT 'destroy-after-execution',
+	configuration TEXT NOT NULL DEFAULT '{}',
+	enabled INTEGER NOT NULL DEFAULT 1,
+	created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	UNIQUE(environment_id, name)
+);
+CREATE TABLE cloud_capacity_target_configurations (
+	capacity_target_id TEXT NOT NULL REFERENCES cloud_capacity_targets(id) ON DELETE CASCADE,
+	configuration_version_id TEXT NOT NULL REFERENCES machine_configuration_versions(id),
+	execution_order INTEGER NOT NULL CHECK(execution_order >= 0),
+	variables TEXT NOT NULL DEFAULT '{}',
+	required INTEGER NOT NULL DEFAULT 0,
+	enabled INTEGER NOT NULL DEFAULT 1,
+	PRIMARY KEY(capacity_target_id, configuration_version_id),
+	UNIQUE(capacity_target_id, execution_order)
+);
+CREATE INDEX cloud_capacity_targets_environment_idx ON cloud_capacity_targets(environment_id, enabled);
+
 CREATE TABLE schema_metadata (
 	checksum TEXT NOT NULL,
 	applied_at DATETIME NOT NULL

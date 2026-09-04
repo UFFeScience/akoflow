@@ -79,6 +79,24 @@ type PlanningRequest struct {
 	ActivityProfiles []workflow.ActivityResourceProfile `json:"activityProfiles"`
 	DeadlineSeconds  float64                            `json:"deadlineSeconds"`
 	Budget           float64                            `json:"budget"`
+	Interference     *InterferenceMatrix                `json:"interference,omitempty"`
+}
+
+// InterferenceMatrix is an immutable planning-session input. Entries are
+// directed: PriorityWeight is the affected activity's relative CPU priority
+// while InterferingActivityID overlaps it on the same resource. A missing pair
+// keeps the SimGrid default priority (1).
+type InterferenceMatrix struct {
+	SchemaVersion string              `json:"schemaVersion"`
+	Model         string              `json:"model"`
+	Aggregation   string              `json:"aggregation"`
+	Entries       []InterferenceEntry `json:"entries"`
+}
+
+type InterferenceEntry struct {
+	AffectedActivityID    string  `json:"affectedActivityId"`
+	InterferingActivityID string  `json:"interferingActivityId"`
+	PriorityWeight        float64 `json:"priorityWeight"`
 }
 
 type AlgorithmSelection struct {

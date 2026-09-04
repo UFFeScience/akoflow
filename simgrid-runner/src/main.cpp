@@ -1,6 +1,7 @@
 #include <simgrid/s4u.hpp>
 
 #include <algorithm>
+#include <cmath>
 #include <fstream>
 #include <iostream>
 #include <map>
@@ -32,7 +33,30 @@ struct TaskModel {
   double compute_started_at = 0;
   double compute_finished_at = 0;
   double finished_at      = 0;
+  double interference_seconds = 0;
 };
+
+using InterferenceFactors = std::map<std::string, std::map<std::string, double>>;
+
+static InterferenceFactors create_interference(const json& input)
+{
+  InterferenceFactors factors;
+  if (!input.contains("interference") || input.at("interference").is_null())
+    return factors;
+  const auto& matrix = input.at("interference");
+  if (matrix.value("model", "pairwise-cpu-priority") != "pairwise-cpu-priority" ||
+      matrix.value("aggregation", "minimum") != "minimum")
+    throw std::runtime_error("unsupported interference matrix model");
+  for (const auto& entry : matrix.value("entries", json::array())) {
+    const auto affected = entry.at("affectedActivityId").get<std::string>();
+    const auto interferer = entry.at("interferingActivityId").get<std::string>();
+    const double priority = entry.at("priorityWeight").get<double>();
+    if (priority <= 0)
+      throw std::runtime_error("interference priorityWeight must be > 0");
+    factors[affected][interferer] = priority;
+  }
+  return factors;
+}
 
 struct TransferModel {
   std::string producer_id;
@@ -131,13 +155,15 @@ static std::string mailbox_name(const std::string& run_id, const std::string& ki
 
 static void run_simulation(sg4::Engine& engine, const json& input,
                            std::map<std::string, TaskModel>& tasks,
-                           std::vector<TransferModel>& transfers)
+                           std::vector<TransferModel>& transfers,
+                           const InterferenceFactors& interference)
 {
   const auto run_id = input.at("runId").get<std::string>();
   std::map<std::string, std::vector<std::pair<std::string, std::string>>> incoming_dependencies;
   std::map<std::string, std::vector<std::string>> outgoing_dependency_signals;
   std::map<std::string, std::vector<std::string>> incoming_lanes;
   std::map<std::string, std::vector<std::string>> outgoing_lanes;
+  std::map<std::string, std::set<std::string>> active_by_resource;
 
   for (const auto& dependency : input.at("dependencies")) {
     const auto producer = dependency.at("producerId").get<std::string>();
@@ -173,7 +199,8 @@ static void run_simulation(sg4::Engine& engine, const json& input,
     auto* host = engine.host_by_name(task.resource_id);
     sg4::Actor::create("task-" + id, host,
                        [task_model, id, &incoming_dependencies, &outgoing_dependency_signals,
-                        &incoming_lanes, &outgoing_lanes, &tasks, run_id]() {
+                        &incoming_lanes, &outgoing_lanes, &tasks, &active_by_resource,
+                        &interference, run_id]() {
       for (const auto& [producer_id, mailbox] : incoming_dependencies[id]) {
         if (tasks.at(producer_id).resource_id == task_model->resource_id)
           sg4::Mailbox::by_name(mailbox_name(run_id, "ready", producer_id, id))->get<void>();
@@ -186,7 +213,33 @@ static void run_simulation(sg4::Engine& engine, const json& input,
       if (task_model->overhead_seconds > 0)
         sg4::this_actor::sleep_for(task_model->overhead_seconds);
       task_model->compute_started_at = sg4::Engine::get_clock();
-      sg4::this_actor::execute(task_model->flops);
+      active_by_resource[task_model->resource_id].insert(id);
+      const auto affected = interference.find(id);
+      const bool needs_sampling = affected != interference.end() && !affected->second.empty();
+      const int slices = needs_sampling ? 64 : 1;
+      double remaining = task_model->flops;
+      for (int slice = 0; slice < slices && remaining > 0; ++slice) {
+        const double baseline_work = slice + 1 == slices ? remaining : std::min(remaining, task_model->flops / slices);
+        double priority = 1.0;
+        bool matched = false;
+        if (affected != interference.end()) {
+          for (const auto& peer : active_by_resource[task_model->resource_id]) {
+            if (peer == id)
+              continue;
+            const auto pair = affected->second.find(peer);
+            if (pair != affected->second.end()) {
+              priority = matched ? std::min(priority, pair->second) : pair->second;
+              matched = true;
+            }
+          }
+        }
+        const double before = sg4::Engine::get_clock();
+        sg4::this_actor::execute(baseline_work, priority);
+        const double elapsed = sg4::Engine::get_clock() - before;
+        task_model->interference_seconds += elapsed * std::abs(priority - 1.0) / std::max(priority, 1.0);
+        remaining -= baseline_work;
+      }
+      active_by_resource[task_model->resource_id].erase(id);
       task_model->compute_finished_at = sg4::Engine::get_clock();
       task_model->finished_at = sg4::Engine::get_clock();
       for (const auto& mailbox : outgoing_dependency_signals[id])
@@ -293,7 +346,7 @@ static json build_result(const json& input, const std::map<std::string, TaskMode
         {"attempt", 1}, {"status", "completed"}, {"readyAt", ready}, {"dataReadyAt", ready},
         {"queuedAt", ready}, {"startedAt", start}, {"finishedAt", finish},
         {"runtimeSeconds", duration}, {"queueSeconds", queued}, {"transferSeconds", inbound_transfer[id]},
-        {"interferenceSeconds", 0}, {"overheadSeconds", task.overhead_seconds}, {"cost", costs.at(id)},
+        {"interferenceSeconds", task.interference_seconds}, {"overheadSeconds", task.overhead_seconds}, {"cost", costs.at(id)},
     });
   }
   for (const auto& transfer : transfers) {
@@ -314,9 +367,12 @@ static json build_result(const json& input, const std::map<std::string, TaskMode
   const double deadline = input.value("deadlineSeconds", 0.0);
   const double budget = input.value("budget", 0.0);
   const bool feasible = (deadline <= 0 || makespan <= deadline) && (budget <= 0 || total_cost <= budget);
+  double interference_seconds = 0;
+  for (const auto& [_, task] : tasks)
+    interference_seconds += task.interference_seconds;
   result["executed"] = {
       {"makespanSeconds", makespan}, {"cost", total_cost}, {"computeSeconds", compute},
-      {"transferSeconds", transfer_seconds}, {"queueSeconds", queue}, {"interferenceSeconds", 0},
+      {"transferSeconds", transfer_seconds}, {"queueSeconds", queue}, {"interferenceSeconds", interference_seconds},
       {"overheadSeconds", overhead_seconds}, {"feasible", feasible},
   };
   return result;
@@ -334,7 +390,8 @@ int main(int argc, char** argv)
       throw std::runtime_error("platform has no hosts");
     auto tasks     = create_tasks(engine, input);
     auto transfers = create_transfers(input, tasks);
-    run_simulation(engine, input, tasks, transfers);
+    const auto interference = create_interference(input);
+    run_simulation(engine, input, tasks, transfers, interference);
     const json result = build_result(input, tasks, transfers);
     write_json(arguments.output, result);
     return 0;

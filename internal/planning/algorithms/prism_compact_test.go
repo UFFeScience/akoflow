@@ -153,6 +153,43 @@ func TestCompactPRISMCostUsesResourceActiveWindow(t *testing.T) {
 	}
 }
 
+func TestDetailedPRISMEvaluatorAppliesPairwiseInterferenceOnSameResource(t *testing.T) {
+	request := domain.PlanningRequest{
+		Workflow: domain.WorkflowVersion{Activities: []domain.Activity{
+			planningActivity("a", 10), planningActivity("b", 10),
+		}},
+		ExecutionScope: domain.ExecutionScope{EnvironmentVersionIDs: []string{"environment"}},
+		Resources:      []domain.Resource{planningResource("machine", 1, 1, 0)},
+		Interference: &domain.InterferenceMatrix{
+			SchemaVersion: "1", Model: "pairwise-cpu-priority", Aggregation: "minimum",
+			Entries: []domain.InterferenceEntry{
+				{AffectedActivityID: "a", InterferingActivityID: "b", PriorityWeight: 0.9230769230769231},
+				{AffectedActivityID: "b", InterferingActivityID: "a", PriorityWeight: 1.0810810810810811},
+			},
+		},
+	}
+	search, err := newCompactPRISMContext(request, nil)
+	if err != nil {
+		t.Fatalf("build compact context: %v", err)
+	}
+	assignments := []domain.PlanAssignment{
+		{ActivityID: "a", ResourceID: "machine", CoreID: "machine-core-1", PredictedRuntimeSeconds: 10},
+		{ActivityID: "b", ResourceID: "machine", CoreID: "machine-core-2", PredictedRuntimeSeconds: 10},
+	}
+	state := compactPRISMStateFromEvaluation(compactPRISMState{}, assignments, 0, 0)
+	evaluated, err := evaluateCompleteCompactPRISMState(search, state)
+	if err != nil {
+		t.Fatalf("evaluate candidate: %v", err)
+	}
+	if math.Abs(evaluated.makespan-20) > 1e-6 {
+		t.Fatalf("expected priority sharing to conserve 20 seconds of CPU work, got %.2f", evaluated.makespan)
+	}
+	evaluatedAssignments := compactPRISMAssignments(search, evaluated)
+	if math.Abs(evaluatedAssignments[0].PredictedFinishAt-evaluatedAssignments[1].PredictedFinishAt) < 1 {
+		t.Fatalf("expected asymmetric priorities to produce different finish times: %#v", evaluatedAssignments)
+	}
+}
+
 func TestCompactPRISMCostIncludesFrozenOverheads(t *testing.T) {
 	request := domain.PlanningRequest{
 		Workflow:       domain.WorkflowVersion{Activities: []domain.Activity{planningActivity("a", 10)}},

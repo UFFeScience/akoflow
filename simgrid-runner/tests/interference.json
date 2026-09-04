@@ -1,0 +1,21 @@
+{
+  "runId": "simgrid-interference-run",
+  "planId": "simgrid-interference-plan",
+  "deadlineSeconds": 0,
+  "budget": 0,
+  "tasks": [
+    {"id": "one", "assignmentId": "assignment-one", "resourceId": "edge", "flops": 60000000000, "pricePerSecond": 0},
+    {"id": "two", "assignmentId": "assignment-two", "resourceId": "edge", "flops": 60000000000, "pricePerSecond": 0}
+  ],
+  "dependencies": [],
+  "resourceLaneOrders": [],
+  "interference": {
+    "schemaVersion": "1",
+    "model": "pairwise-cpu-priority",
+    "aggregation": "minimum",
+    "entries": [
+      {"affectedActivityId": "one", "interferingActivityId": "two", "priorityWeight": 0.9230769230769231},
+      {"affectedActivityId": "two", "interferingActivityId": "one", "priorityWeight": 1.0810810810810811}
+    ]
+  }
+}

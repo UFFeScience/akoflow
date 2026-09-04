@@ -63,6 +63,20 @@ func (s *Coordinator) Create(
 		}
 		return nil, err
 	}
+	interference, err := decodeInterferenceMatrix(session.Configuration[interferenceConfigurationKey])
+	if err != nil {
+		return nil, err
+	}
+	interference, err = normalizeInterferenceMatrix(interference, *workflow)
+	if err != nil {
+		return nil, err
+	}
+	if interference != nil {
+		if session.Configuration == nil {
+			session.Configuration = map[string]any{}
+		}
+		session.Configuration[interferenceConfigurationKey] = interference
+	}
 	scope, err := s.Scopes.FindScope(ctx, session.ExecutionScopeID)
 	if err != nil || scope == nil {
 		if err == nil {
@@ -384,6 +398,10 @@ func (s *Coordinator) buildRequest(
 			profiles = append(profiles, definition.Profiles...)
 		}
 	}
+	interference, err := decodeInterferenceMatrix(session.Configuration[interferenceConfigurationKey])
+	if err != nil {
+		return domain.PlanningRequest{}, err
+	}
 	return domain.PlanningRequest{
 		Workflow:         *workflow,
 		ExecutionScope:   *scope,
@@ -393,6 +411,7 @@ func (s *Coordinator) buildRequest(
 		ActivityProfiles: profiles,
 		DeadlineSeconds:  session.DeadlineSeconds,
 		Budget:           session.Budget,
+		Interference:     interference,
 	}, nil
 }
 
@@ -449,6 +468,12 @@ type candidateSink struct {
 }
 
 func (s *candidateSink) Emit(ctx context.Context, plan domain.SchedulePlan) error {
+	if s.request.Interference != nil {
+		if plan.Metadata == nil {
+			plan.Metadata = map[string]any{}
+		}
+		plan.Metadata[interferenceConfigurationKey] = s.request.Interference
+	}
 	if err := s.validator.Validate(
 		plan,
 		s.request.Workflow,

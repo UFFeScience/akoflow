@@ -55,3 +55,28 @@ func TestRunnerInputUsesFrozenPlannedRuntimeForProfileSimulation(t *testing.T) {
 	require.Len(t, input.Tasks, 1)
 	require.InDelta(t, 10e9, input.Tasks[0].FLOPs, 1)
 }
+
+func TestRunnerInputCarriesPlanInterferenceMatrix(t *testing.T) {
+	request := ports.ExecutionRequest{
+		Run: domain.ExecutionRun{ID: "run"},
+		Plan: domain.SchedulePlan{
+			ID: "plan",
+			Assignments: []domain.PlanAssignment{{
+				ID: "assignment", ActivityID: "activity", ResourceID: "resource",
+			}},
+			Metadata: map[string]any{"interferenceMatrix": map[string]any{
+				"schemaVersion": "1", "model": "pairwise-cpu-priority",
+				"aggregation": "minimum", "entries": []any{},
+			}},
+		},
+		Workflow:  domain.WorkflowVersion{Activities: []domain.Activity{{ID: "activity"}}},
+		Resources: []domain.Resource{{ID: "resource"}},
+	}
+
+	payload, err := buildRunnerInput(request, 1e9)
+	require.NoError(t, err)
+	var input runnerInput
+	require.NoError(t, json.Unmarshal(payload, &input))
+	require.NotNil(t, input.Interference)
+	require.Equal(t, "pairwise-cpu-priority", input.Interference.Model)
+}

@@ -33,6 +33,7 @@ type compactPRISMContext struct {
 	minimumCosts     []float64
 	averageDurations []float64
 	ranks            []float64
+	interference     []map[int]float64
 	readyBranchLimit int
 	beamWidth        int
 	coreCount        int
@@ -74,6 +75,7 @@ func newCompactPRISMContext(
 		minimumCosts:     make([]float64, len(ranked)),
 		averageDurations: make([]float64, len(ranked)),
 		ranks:            make([]float64, len(ranked)),
+		interference:     make([]map[int]float64, len(ranked)),
 		router:           router,
 		readyBranchLimit: intOption(configuration, "readyBranchLimit", 3, 1, 16),
 		beamWidth:        intOption(configuration, "beamWidth", 120, 1, 10000),
@@ -85,7 +87,25 @@ func newCompactPRISMContext(
 	search.buildResources(resources)
 	search.buildDependencies()
 	search.buildExecutionMatrices()
+	search.buildInterference()
 	return search, nil
+}
+
+func (search *compactPRISMContext) buildInterference() {
+	if search.request.Interference == nil {
+		return
+	}
+	for _, entry := range search.request.Interference.Entries {
+		affected, affectedOK := search.activityOrdinal[entry.AffectedActivityID]
+		interferer, interfererOK := search.activityOrdinal[entry.InterferingActivityID]
+		if !affectedOK || !interfererOK || entry.PriorityWeight <= 0 {
+			continue
+		}
+		if search.interference[affected] == nil {
+			search.interference[affected] = map[int]float64{}
+		}
+		search.interference[affected][interferer] = entry.PriorityWeight
+	}
 }
 
 func (search *compactPRISMContext) buildResources(resources []domain.Resource) {

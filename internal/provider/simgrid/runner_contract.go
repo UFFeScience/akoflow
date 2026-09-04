@@ -9,13 +9,14 @@ import (
 )
 
 type runnerInput struct {
-	RunID              string             `json:"runId"`
-	PlanID             string             `json:"planId"`
-	DeadlineSeconds    float64            `json:"deadlineSeconds"`
-	Budget             float64            `json:"budget"`
-	Tasks              []runnerTask       `json:"tasks"`
-	Dependencies       []runnerDependency `json:"dependencies"`
-	ResourceLaneOrders []runnerLaneOrder  `json:"resourceLaneOrders"`
+	RunID              string                     `json:"runId"`
+	PlanID             string                     `json:"planId"`
+	DeadlineSeconds    float64                    `json:"deadlineSeconds"`
+	Budget             float64                    `json:"budget"`
+	Tasks              []runnerTask               `json:"tasks"`
+	Dependencies       []runnerDependency         `json:"dependencies"`
+	ResourceLaneOrders []runnerLaneOrder          `json:"resourceLaneOrders"`
+	Interference       *domain.InterferenceMatrix `json:"interference,omitempty"`
 }
 
 type runnerTask struct {
@@ -44,6 +45,17 @@ func buildRunnerInput(request ports.ExecutionRequest, referenceFLOPS float64) ([
 	input := runnerInput{
 		RunID: request.Run.ID, PlanID: request.Plan.ID,
 		DeadlineSeconds: request.Plan.DeadlineSeconds, Budget: request.Plan.Budget,
+	}
+	if raw := request.Plan.Metadata["interferenceMatrix"]; raw != nil {
+		encoded, err := json.Marshal(raw)
+		if err != nil {
+			return nil, fmt.Errorf("encode plan interference matrix: %w", err)
+		}
+		var matrix domain.InterferenceMatrix
+		if err := json.Unmarshal(encoded, &matrix); err != nil {
+			return nil, fmt.Errorf("decode plan interference matrix: %w", err)
+		}
+		input.Interference = &matrix
 	}
 	for _, activity := range request.Workflow.Activities {
 		assignment, exists := model.assignments[activity.ID]

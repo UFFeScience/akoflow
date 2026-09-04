@@ -181,6 +181,7 @@ func compactPRISMPlacePrepared(
 	container := resource.resource.ContainerOverhead
 	start += container
 	runtime := search.durations[activityOrdinal][resourceOrdinal]
+	runtime *= compactPRISMInterferenceFactor(search, state, activityOrdinal, resourceOrdinal, start, start+runtime)
 	assignment := compactPRISMBuildAssignment(
 		activityOrdinal,
 		resourceOrdinal,
@@ -204,6 +205,43 @@ func compactPRISMPlacePrepared(
 		sequence,
 		assignment,
 	)
+}
+
+func compactPRISMInterferenceFactor(
+	search compactPRISMContext,
+	state compactPRISMState,
+	activityOrdinal int,
+	resourceOrdinal int,
+	start float64,
+	finish float64,
+) float64 {
+	priority := math.Inf(1)
+	totalPriority := 0.0
+	concurrent := 0
+	for interferer, candidate := range search.interference[activityOrdinal] {
+		assignment, exists := compactPRISMAssignmentChunkLookup(state.assignmentChunks, interferer)
+		if !exists || assignment.resourceOrdinal != resourceOrdinal {
+			continue
+		}
+		if assignment.startAt < finish && start < assignment.finishAt {
+			priority = math.Min(priority, candidate)
+			peerPriority := 1.0
+			if reverse, ok := search.interference[interferer][activityOrdinal]; ok {
+				peerPriority = reverse
+			}
+			totalPriority += peerPriority
+			concurrent++
+		}
+	}
+	if concurrent == 0 {
+		return 1
+	}
+	if math.IsInf(priority, 1) {
+		priority = 1
+	}
+	totalPriority += priority
+	cores := math.Max(1, float64(search.resources[resourceOrdinal].resource.CPUCores))
+	return math.Max(1, totalPriority/(cores*priority))
 }
 
 func compactPRISMPrepareFanIn(
@@ -459,6 +497,7 @@ func compactPRISMAssignments(search compactPRISMContext, state compactPRISMState
 				"bootOverheadSeconds":      assignment.bootSeconds,
 				"containerOverheadSeconds": assignment.containerSeconds,
 				"queueSeconds":             assignment.queueSeconds, "transferCost": assignment.transferCost,
+				"interferenceSlowdown": assignment.runtimeSeconds / math.Max(search.durations[assignment.activityOrdinal][assignment.resourceOrdinal], 1e-12),
 			},
 		}
 	}

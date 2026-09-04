@@ -18,14 +18,19 @@ type prismEvaluationDependency struct {
 }
 
 type prismEvaluationTask struct {
-	assignment      domain.PlanAssignment
-	resource        domain.Resource
-	remainingInputs int
-	dataReadyAt     float64
-	transferSeconds float64
-	laneReady       bool
-	started         bool
-	completed       bool
+	assignment       domain.PlanAssignment
+	resource         domain.Resource
+	remainingInputs  int
+	dataReadyAt      float64
+	transferSeconds  float64
+	laneReady        bool
+	started          bool
+	completed        bool
+	baseRuntime      float64
+	slowdown         float64
+	remainingRuntime float64
+	rate             float64
+	rateUpdatedAt    float64
 }
 
 type prismEvaluationTaskEvent struct {
@@ -151,7 +156,7 @@ func evaluateCompleteCompactPRISMState(
 		if !exists {
 			return state, fmt.Errorf("evaluate PRISM candidate: unknown resource %q", assignment.ResourceID)
 		}
-		tasks[ordinal] = prismEvaluationTask{assignment: assignment, resource: resource}
+		tasks[ordinal] = prismEvaluationTask{assignment: assignment, resource: resource, baseRuntime: search.durations[ordinal][compactPRISMResourceOrdinal(search, resource.ID)], slowdown: 1}
 		assignmentOrdinal[assignment.ActivityID] = ordinal
 	}
 	outgoing := make([][]prismEvaluationDependency, len(tasks))
@@ -201,10 +206,11 @@ func evaluateCompleteCompactPRISMState(
 	resourceStart := make(map[string]float64)
 	resourceFinish := make(map[string]float64)
 	resourceUsed := make(map[string]bool)
+	activeByResource := make(map[string]map[int]bool)
 	transferCost := 0.0
 
 	for completed < len(tasks) {
-		started := prismStartReadyTasks(tasks, readyTasks, taskEvents, clock, resourceStart, resourceFinish, resourceUsed)
+		started := prismStartReadyTasks(search, tasks, readyTasks, taskEvents, clock, resourceStart, resourceFinish, resourceUsed, activeByResource)
 		if completed == len(tasks) {
 			break
 		}
@@ -235,10 +241,18 @@ func evaluateCompleteCompactPRISMState(
 
 		for taskEvents.Len() > 0 && (*taskEvents)[0].finishAt <= clock+1e-9 {
 			event := heap.Pop(taskEvents).(prismEvaluationTaskEvent)
-			if tasks[event.activity].completed {
+			if tasks[event.activity].completed || event.finishAt+1e-9 < tasks[event.activity].assignment.PredictedFinishAt {
+				continue
+			}
+			resourceID := tasks[event.activity].assignment.ResourceID
+			prismAdvanceActiveTasks(tasks, activeByResource[resourceID], clock)
+			if tasks[event.activity].remainingRuntime > 1e-9 {
+				prismRecomputePriorityRates(search, tasks, activeByResource[resourceID], taskEvents, clock)
 				continue
 			}
 			tasks[event.activity].completed = true
+			delete(activeByResource[resourceID], event.activity)
+			prismRecomputePriorityRates(search, tasks, activeByResource[resourceID], taskEvents, clock)
 			completed++
 			if successor := laneSuccessor[event.activity]; successor >= 0 {
 				tasks[successor].laneReady = true
@@ -326,6 +340,7 @@ func clonePRISMEvaluationMetadata(metadata map[string]any) map[string]any {
 }
 
 func prismStartReadyTasks(
+	search compactPRISMContext,
 	tasks []prismEvaluationTask,
 	ready *prismEvaluationReadyQueue,
 	events *prismEvaluationTaskQueue,
@@ -333,6 +348,7 @@ func prismStartReadyTasks(
 	resourceStart map[string]float64,
 	resourceFinish map[string]float64,
 	resourceUsed map[string]bool,
+	activeByResource map[string]map[int]bool,
 ) bool {
 	started := false
 	for ready.Len() > 0 {
@@ -347,15 +363,25 @@ func prismStartReadyTasks(
 			prismMetadataNumber(task.assignment.Metadata, "containerOverheadSeconds")
 		task.assignment.PredictedReadyAt = task.dataReadyAt
 		task.assignment.PredictedStartAt = clock + overhead
-		task.assignment.PredictedFinishAt = task.assignment.PredictedStartAt + task.assignment.PredictedRuntimeSeconds
+		resourceID := task.assignment.ResourceID
+		prismAdvanceActiveTasks(tasks, activeByResource[resourceID], clock)
+		task.remainingRuntime = task.baseRuntime
+		task.rate = 1
+		task.rateUpdatedAt = task.assignment.PredictedStartAt
+		task.assignment.PredictedRuntimeSeconds = task.baseRuntime
+		task.assignment.PredictedFinishAt = task.assignment.PredictedStartAt + task.baseRuntime
 		task.assignment.PredictedTransferSeconds = task.transferSeconds
 		if task.assignment.Metadata == nil {
 			task.assignment.Metadata = map[string]any{}
 		}
 		task.assignment.Metadata["queueSeconds"] = math.Max(0, clock-task.dataReadyAt)
 		task.assignment.Metadata["networkContentionModel"] = "simgrid-shared-link-events"
-		heap.Push(events, prismEvaluationTaskEvent{activity: index, finishAt: task.assignment.PredictedFinishAt})
-		resourceID := task.assignment.ResourceID
+		task.assignment.Metadata["cpuPriorityWeight"] = 1.0
+		if activeByResource[resourceID] == nil {
+			activeByResource[resourceID] = map[int]bool{}
+		}
+		activeByResource[resourceID][index] = true
+		prismRecomputePriorityRates(search, tasks, activeByResource[resourceID], events, clock)
 		if !resourceUsed[resourceID] {
 			resourceStart[resourceID] = clock
 			resourceUsed[resourceID] = true
@@ -363,6 +389,71 @@ func prismStartReadyTasks(
 		resourceFinish[resourceID] = math.Max(resourceFinish[resourceID], task.assignment.PredictedFinishAt)
 	}
 	return started
+}
+
+func compactPRISMResourceOrdinal(search compactPRISMContext, resourceID string) int {
+	for ordinal, resource := range search.resources {
+		if resource.resource.ID == resourceID {
+			return ordinal
+		}
+	}
+	return 0
+}
+
+func prismInterferencePriority(search compactPRISMContext, affected, interferer int) (float64, bool) {
+	if affected < 0 || affected >= len(search.interference) || search.interference[affected] == nil {
+		return 1, false
+	}
+	priority, exists := search.interference[affected][interferer]
+	return math.Max(priority, 1e-12), exists
+}
+
+func prismAdvanceActiveTasks(tasks []prismEvaluationTask, active map[int]bool, clock float64) {
+	for index := range active {
+		task := &tasks[index]
+		delta := math.Max(0, clock-task.rateUpdatedAt)
+		task.remainingRuntime = math.Max(0, task.remainingRuntime-delta*task.rate)
+		task.rateUpdatedAt = clock
+	}
+}
+
+func prismRecomputePriorityRates(search compactPRISMContext, tasks []prismEvaluationTask, active map[int]bool, events *prismEvaluationTaskQueue, clock float64) {
+	if len(active) == 0 {
+		return
+	}
+	weights := make(map[int]float64, len(active))
+	total := 0.0
+	for index := range active {
+		weight := math.Inf(1)
+		for peer := range active {
+			if peer == index {
+				continue
+			}
+			if candidate, exists := prismInterferencePriority(search, index, peer); exists {
+				weight = math.Min(weight, candidate)
+			}
+		}
+		if math.IsInf(weight, 1) {
+			weight = 1
+		}
+		weights[index] = weight
+		total += weight
+	}
+	for index := range active {
+		task := &tasks[index]
+		capacity := math.Max(1, float64(task.resource.CPUCores))
+		task.rate = math.Min(1, capacity*weights[index]/math.Max(total, 1e-12))
+		task.slowdown = 1 / math.Max(task.rate, 1e-12)
+		task.rateUpdatedAt = clock
+		task.assignment.PredictedFinishAt = clock + task.remainingRuntime/math.Max(task.rate, 1e-12)
+		task.assignment.PredictedRuntimeSeconds = task.assignment.PredictedFinishAt - task.assignment.PredictedStartAt
+		if task.assignment.Metadata == nil {
+			task.assignment.Metadata = map[string]any{}
+		}
+		task.assignment.Metadata["cpuPriorityWeight"] = weights[index]
+		task.assignment.Metadata["interferenceSlowdown"] = task.slowdown
+		heap.Push(events, prismEvaluationTaskEvent{activity: index, finishAt: task.assignment.PredictedFinishAt})
+	}
 }
 
 func prismQueueEvaluationTaskIfReady(

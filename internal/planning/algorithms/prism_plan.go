@@ -102,6 +102,7 @@ func compactPRISMPlan(
 			"containerOverheadSeconds":  breakdown.ContainerSeconds,
 			"costModel":                 "resource-active-window",
 			"networkPathModel":          "simgrid-route-shared-link-events",
+			"interferenceModel":         "pairwise-cpu-priority-minimum",
 		},
 	}
 }

@@ -23,6 +23,7 @@ import (
 
 type persistence struct {
 	database     *sql.DB
+	analytics    *sql.DB
 	readOnly     bool
 	environments *dbenvironment.Repository
 	executions   *dbexecution.Repository
@@ -58,8 +59,14 @@ func openPersistence(ctx context.Context) (persistence, error) {
 			return persistence{}, err
 		}
 	}
+	analytics, err := database.OpenReadOnly(path)
+	if err != nil {
+		_ = db.Close()
+		return persistence{}, err
+	}
 	events, err := dbqueue.New(db)
 	if err != nil {
+		_ = analytics.Close()
 		_ = db.Close()
 		return persistence{}, err
 	}
@@ -67,16 +74,18 @@ func openPersistence(ctx context.Context) (persistence, error) {
 	cloudRepository := dbcloud.New(db)
 	if !readOnly {
 		if err := ensureSystemInstance(ctx, instanceRepository); err != nil {
+			_ = analytics.Close()
 			_ = db.Close()
 			return persistence{}, err
 		}
 		if err := cloudRepository.EnsureDefaults(ctx); err != nil {
+			_ = analytics.Close()
 			_ = db.Close()
 			return persistence{}, err
 		}
 	}
 	return persistence{
-		database: db, readOnly: readOnly,
+		database: db, analytics: analytics, readOnly: readOnly,
 		environments: dbenvironment.New(db), executions: dbexecution.New(db),
 		data:       dbdata.New(db),
 		topologies: dbnetwork.New(db), plans: dbplanning.New(db), events: events,

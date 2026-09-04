@@ -223,7 +223,59 @@ func (h *Handler) QueryProvenanceEntity(w http.ResponseWriter, r *http.Request) 
 	result, err := h.provenance.Query(r.Context(), ports.ProvenanceQuery{
 		Entity: r.PathValue("entity"), Search: r.URL.Query().Get("q"),
 		FilterField: r.URL.Query().Get("filterField"), FilterValue: r.URL.Query().Get("filterValue"),
-		Page: page, PageSize: pageSize,
+		Page: page, PageSize: pageSize, SortField: r.URL.Query().Get("sortField"), SortOrder: r.URL.Query().Get("sortOrder"),
+	})
+	if err != nil {
+		writeError(w, http.StatusBadRequest, err)
+		return
+	}
+	writeJSON(w, http.StatusOK, result)
+}
+
+func (h *Handler) QueryProvenanceSQL(w http.ResponseWriter, r *http.Request) {
+	if h.provenance == nil {
+		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("provenance explorer is unavailable"))
+		return
+	}
+	var query ports.ProvenanceSQLQuery
+	if !decode(w, r, &query) {
+		return
+	}
+	result, err := h.provenance.SQL(r.Context(), query)
+	if err != nil {
+		writeError(w, http.StatusBadRequest, err)
+		return
+	}
+	writeJSON(w, http.StatusOK, result)
+}
+
+func (h *Handler) ExplainProvenanceSQL(w http.ResponseWriter, r *http.Request) {
+	if h.provenance == nil {
+		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("provenance explorer is unavailable"))
+		return
+	}
+	var query ports.ProvenanceSQLQuery
+	if !decode(w, r, &query) {
+		return
+	}
+	result, err := h.provenance.Explain(r.Context(), query)
+	if err != nil {
+		writeError(w, http.StatusBadRequest, err)
+		return
+	}
+	writeJSON(w, http.StatusOK, result)
+}
+
+func (h *Handler) GetProvenanceLineage(w http.ResponseWriter, r *http.Request) {
+	if h.provenance == nil {
+		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("provenance explorer is unavailable"))
+		return
+	}
+	depth, _ := strconv.Atoi(r.URL.Query().Get("depth"))
+	maxNodes, _ := strconv.Atoi(r.URL.Query().Get("maxNodes"))
+	result, err := h.provenance.Lineage(r.Context(), ports.ProvenanceLineageQuery{
+		Entity: r.PathValue("entity"), ID: r.PathValue("id"),
+		Direction: r.URL.Query().Get("direction"), Depth: depth, MaxNodes: maxNodes,
 	})
 	if err != nil {
 		writeError(w, http.StatusBadRequest, err)

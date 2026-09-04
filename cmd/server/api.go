@@ -108,7 +108,7 @@ func buildAPI(
 		Build:            manager,
 		Planning:         planning,
 		PlanningStore:    storage.plans,
-		Provenance:       databaseprovenance.New(storage.database),
+		Provenance:       databaseprovenance.New(storage.analytics),
 		Cloud:            storage.cloud,
 		CloudCatalog:     cloudCatalog,
 		CloudProvisioner: cloudProvisioner,

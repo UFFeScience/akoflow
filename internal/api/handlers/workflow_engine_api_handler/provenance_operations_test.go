@@ -10,7 +10,24 @@ import (
 )
 
 type provenanceStub struct {
-	query ports.ProvenanceQuery
+	query        ports.ProvenanceQuery
+	sqlQuery     ports.ProvenanceSQLQuery
+	lineageQuery ports.ProvenanceLineageQuery
+}
+
+func (s *provenanceStub) SQL(_ context.Context, query ports.ProvenanceSQLQuery) (ports.ProvenanceSQLResult, error) {
+	s.sqlQuery = query
+	return ports.ProvenanceSQLResult{Items: []map[string]any{{"id": "run-1"}}}, nil
+}
+
+func (s *provenanceStub) Explain(_ context.Context, query ports.ProvenanceSQLQuery) (ports.ProvenanceSQLResult, error) {
+	s.sqlQuery = query
+	return ports.ProvenanceSQLResult{Items: []map[string]any{{"detail": "SCAN runs"}}}, nil
+}
+
+func (s *provenanceStub) Lineage(_ context.Context, query ports.ProvenanceLineageQuery) (ports.ProvenanceLineage, error) {
+	s.lineageQuery = query
+	return ports.ProvenanceLineage{Root: "runs:" + query.ID}, nil
 }
 
 func (s *provenanceStub) Entities() []ports.ProvenanceEntity {

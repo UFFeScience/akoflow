@@ -29,6 +29,7 @@ type application struct {
 	settings          config.Settings
 	log               *logger.Logger
 	database          *sql.DB
+	analytics         *sql.DB
 	api               *workflow_engine_api_handler.Handler
 	eventLoop         *eventloop.Loop
 	connectionMonitor *applicationenvironment.ConnectionMonitor
@@ -41,6 +42,7 @@ func newApplication(ctx context.Context, settings config.Settings, log *logger.L
 		return nil, err
 	}
 	fail := func(err error) (*application, error) {
+		_ = storage.analytics.Close()
 		_ = storage.database.Close()
 		return nil, err
 	}
@@ -94,7 +96,7 @@ func newApplication(ctx context.Context, settings config.Settings, log *logger.L
 		return fail(err)
 	}
 	return &application{
-		settings: settings, log: log, database: storage.database,
+		settings: settings, log: log, database: storage.database, analytics: storage.analytics,
 		api: api, eventLoop: loop,
 		connectionMonitor: connectionMonitor,
 		readOnly:          storage.readOnly,
@@ -114,5 +116,10 @@ func (a *application) Run(ctx context.Context) error {
 }
 
 func (a *application) Close() error {
-	return a.database.Close()
+	analyticsErr := a.analytics.Close()
+	databaseErr := a.database.Close()
+	if analyticsErr != nil {
+		return analyticsErr
+	}
+	return databaseErr
 }

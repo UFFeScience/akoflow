@@ -73,8 +73,12 @@ func (r *Repository) Query(ctx context.Context, query ports.ProvenanceQuery) (po
 	if err := r.db.QueryRowContext(ctx, "SELECT COUNT(*) FROM "+spec.table+where, args...).Scan(&total); err != nil {
 		return ports.ProvenancePage{}, fmt.Errorf("count provenance %s: %w", query.Entity, err)
 	}
+	order, err := validatedOrder(spec, query.SortField, query.SortOrder)
+	if err != nil {
+		return ports.ProvenancePage{}, err
+	}
 	rows, err := r.db.QueryContext(ctx,
-		"SELECT "+strings.Join(columns, ",")+" FROM "+spec.table+where+" ORDER BY "+spec.order+" LIMIT ? OFFSET ?",
+		"SELECT "+strings.Join(columns, ",")+" FROM "+spec.table+where+" ORDER BY "+order+" LIMIT ? OFFSET ?",
 		append(args, pageSize, (page-1)*pageSize)...,
 	)
 	if err != nil {
@@ -90,6 +94,27 @@ func (r *Repository) Query(ctx context.Context, query ports.ProvenanceQuery) (po
 		Entity: spec.entity, Items: items, Page: page, PageSize: pageSize,
 		Total: total, HasNext: page*pageSize < total,
 	}, nil
+}
+
+func validatedOrder(spec entitySpec, field, direction string) (string, error) {
+	if strings.TrimSpace(field) == "" {
+		return spec.order, nil
+	}
+	valid := false
+	for _, candidate := range spec.entity.Fields {
+		valid = valid || candidate.Name == field
+	}
+	if !valid {
+		return "", fmt.Errorf("unknown sort field %q for entity %q", field, spec.entity.Name)
+	}
+	direction = strings.ToUpper(strings.TrimSpace(direction))
+	if direction == "" {
+		direction = "ASC"
+	}
+	if direction != "ASC" && direction != "DESC" {
+		return "", fmt.Errorf("sort order must be asc or desc")
+	}
+	return field + " " + direction, nil
 }
 
 func pagination(page, pageSize int) (int, int) {
@@ -153,7 +178,7 @@ func catalog() (map[string]entitySpec, []string) {
 
 func entitySpecifications() []entitySpec {
 	return []entitySpec{
-		workflowSpec(), workflowVersionSpec(), activitySpec(), planningSessionSpec(),
+		environmentSpec(), resourceSpec(), executionScopeSpec(), workflowSpec(), workflowVersionSpec(), activitySpec(), planningSessionSpec(),
 		planSpec(), runSpec(), taskExecutionSpec(), dataObjectSpec(), dataInstanceSpec(),
 		transferSpec(), auditEventSpec(),
 	}
@@ -164,6 +189,32 @@ func specification(name, label, description, table, order string, fieldList []po
 		entity: ports.ProvenanceEntity{Name: name, Label: label, Description: description, Fields: fieldList},
 		table:  table, order: order,
 	}
+}
+
+func environmentSpec() entitySpec {
+	return specification("environments", "Environments", "Execution and simulation environments.",
+		"environments", "created_at DESC", fields(
+			"id", "ID", "identifier", "name", "Name", "text", "description", "Description", "text",
+			"status", "Status", "status", "created_at", "Created", "datetime",
+		))
+}
+
+func resourceSpec() entitySpec {
+	spec := specification("resources", "Resources", "Schedulable compute resources used by plans and executions.",
+		"resources", "name ASC", fields(
+			"id", "ID", "identifier", "environment_version_id", "Environment version", "identifier",
+			"parent_resource_id", "Parent resource", "identifier", "name", "Name", "text", "type", "Type", "status",
+			"cpu_cores", "CPU cores", "number", "memory_bytes", "Memory", "bytes", "schedulable", "Schedulable", "boolean",
+		))
+	spec.entity.Links = []ports.ProvenanceRelationship{relationship("parent_resource_id", "resources")}
+	return spec
+}
+
+func executionScopeSpec() entitySpec {
+	return specification("execution_scopes", "Execution scopes", "Infrastructure universes evaluated by scheduling algorithms.",
+		"execution_scopes", "name ASC", fields(
+			"id", "ID", "identifier", "name", "Name", "text", "network_topology_id", "Network topology", "identifier",
+		))
 }
 
 func relationship(field, target string) ports.ProvenanceRelationship {
@@ -209,11 +260,13 @@ func planningSessionSpec() entitySpec {
 			"completed_at", "Completed", "datetime",
 		))
 	spec.entity.Links = []ports.ProvenanceRelationship{relationship("selected_plan_id", "plans")}
+	spec.entity.Links = append(spec.entity.Links,
+		relationship("workflow_version_id", "workflow_versions"), relationship("execution_scope_id", "execution_scopes"))
 	return spec
 }
 
 func planSpec() entitySpec {
-	return specification("plans", "Execution plans", "Generated or manual plans with predicted outcomes.",
+	spec := specification("plans", "Execution plans", "Generated or manual plans with predicted outcomes.",
 		"schedule_plans", "created_at DESC", fields(
 			"id", "ID", "identifier", "workflow_version_id", "Workflow version", "identifier",
 			"execution_scope_id", "Execution scope", "identifier", "source", "Source", "status",
@@ -221,6 +274,10 @@ func planSpec() entitySpec {
 			"predicted_makespan_seconds", "Predicted makespan", "duration", "predicted_cost", "Predicted cost", "currency",
 			"predicted_feasible", "Feasible", "boolean", "created_at", "Created", "datetime",
 		))
+	spec.entity.Links = []ports.ProvenanceRelationship{
+		relationship("workflow_version_id", "workflow_versions"), relationship("execution_scope_id", "execution_scopes"),
+	}
+	return spec
 }
 
 func runSpec() entitySpec {
@@ -247,38 +304,56 @@ func taskExecutionSpec() entitySpec {
 		))
 	spec.entity.Links = []ports.ProvenanceRelationship{
 		relationship("execution_run_id", "runs"), relationship("activity_id", "activities"),
+		relationship("planned_resource_id", "resources"), relationship("allocated_resource_id", "resources"),
 	}
 	return spec
 }
 
 func dataObjectSpec() entitySpec {
-	return specification("data_objects", "Data objects", "Logical inputs and outputs declared or discovered by workflows.",
+	spec := specification("data_objects", "Data objects", "Logical inputs and outputs declared or discovered by workflows.",
 		"data_objects", "logical_name", fields(
 			"id", "ID", "identifier", "workflow_version_id", "Workflow version", "identifier",
 			"producer_activity_id", "Producer activity", "identifier", "logical_name", "Logical name", "text",
 			"relative_path", "Relative path", "text", "declared", "Declared", "boolean",
 		))
+	spec.entity.Links = []ports.ProvenanceRelationship{
+		relationship("workflow_version_id", "workflow_versions"), relationship("producer_activity_id", "activities"),
+	}
+	return spec
 }
 
 func dataInstanceSpec() entitySpec {
-	return specification("data_instances", "Data instances", "Concrete produced files with size and checksum evidence.",
+	spec := specification("data_instances", "Data instances", "Concrete produced files with size and checksum evidence.",
 		"data_object_instances", "created_at DESC", fields(
 			"id", "ID", "identifier", "data_object_id", "Data object", "identifier",
 			"execution_run_id", "Run", "identifier", "producer_activity_id", "Producer activity", "identifier",
 			"relative_path", "Relative path", "text", "size_bytes", "Size", "bytes", "checksum", "Checksum", "text",
 			"media_type", "Media type", "text", "discovered", "Discovered", "boolean", "created_at", "Created", "datetime",
 		))
+	spec.entity.Links = []ports.ProvenanceRelationship{
+		relationship("data_object_id", "data_objects"), relationship("execution_run_id", "runs"),
+		relationship("producer_activity_id", "activities"),
+	}
+	return spec
 }
 
 func transferSpec() entitySpec {
-	return specification("transfers", "Data transfers", "Observed data movement between resources during a run.",
+	spec := specification("transfers", "Data transfers", "Observed data movement between resources during a run.",
 		"data_transfer_observations", "execution_run_id, started_at", fields(
-			"id", "ID", "identifier", "execution_run_id", "Run", "identifier",
+			"id", "ID", "identifier", "execution_run_id", "Run", "identifier", "data_object_id", "Data object", "identifier",
+			"data_object_instance_id", "Data instance", "identifier",
 			"producer_activity_id", "Producer", "identifier", "consumer_activity_id", "Consumer", "identifier",
 			"source_resource_id", "Source resource", "identifier", "target_resource_id", "Target resource", "identifier",
 			"bytes", "Bytes", "bytes", "status", "Status", "status",
 			"duration_seconds", "Duration", "duration", "cost", "Cost", "currency",
 		))
+	spec.entity.Links = []ports.ProvenanceRelationship{
+		relationship("execution_run_id", "runs"), relationship("data_object_id", "data_objects"),
+		relationship("data_object_instance_id", "data_instances"), relationship("producer_activity_id", "activities"),
+		relationship("consumer_activity_id", "activities"), relationship("source_resource_id", "resources"),
+		relationship("target_resource_id", "resources"),
+	}
+	return spec
 }
 
 func auditEventSpec() entitySpec {

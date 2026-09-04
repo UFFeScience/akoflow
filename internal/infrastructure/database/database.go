@@ -38,7 +38,9 @@ func open(path string, readOnly bool) (*sql.DB, error) {
 	location := (&url.URL{Scheme: "file", Path: path}).String()
 	query := "?_busy_timeout=10000&_foreign_keys=on"
 	if readOnly {
-		query += "&mode=ro&immutable=1"
+		// Keep the analytical connection read-only while allowing it to observe
+		// new WAL commits made by the operational connection.
+		query += "&mode=ro"
 	} else {
 		journalMode := strings.ToUpper(strings.TrimSpace(os.Getenv("AKOFLOW_SQLITE_JOURNAL_MODE")))
 		if journalMode == "" {
@@ -63,6 +65,12 @@ func open(path string, readOnly bool) (*sql.DB, error) {
 	if err := db.Ping(); err != nil {
 		_ = db.Close()
 		return nil, fmt.Errorf("connect database: %w", err)
+	}
+	if readOnly {
+		if _, err := db.Exec("PRAGMA query_only = ON"); err != nil {
+			_ = db.Close()
+			return nil, fmt.Errorf("configure read-only database: %w", err)
+		}
 	}
 	return db, nil
 }

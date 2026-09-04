@@ -1817,12 +1817,11 @@ func (h *Handler) ProvisionCloudInstance(w http.ResponseWriter, r *http.Request)
 	if !decode(w, r, &request) {
 		return
 	}
-	value, err := h.cloudProvisioner.Provision(r.Context(), r.PathValue("environmentId"), request)
-	if err != nil {
-		writeError(w, http.StatusUnprocessableEntity, err)
-		return
-	}
-	writeJSON(w, http.StatusCreated, value)
+	environmentID := r.PathValue("environmentId")
+	go func() {
+		_, _ = h.cloudProvisioner.Provision(context.Background(), environmentID, request)
+	}()
+	writeJSON(w, http.StatusAccepted, map[string]string{"status": "starting"})
 }
 
 func (h *Handler) StartCloudProvisioning(w http.ResponseWriter, r *http.Request) {

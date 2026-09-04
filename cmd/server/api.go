@@ -23,6 +23,7 @@ import (
 	"github.com/UFFeScience/akoflow/internal/infrastructure/instancearchive"
 	planningplugin "github.com/UFFeScience/akoflow/internal/infrastructure/plugins/planning"
 	"github.com/UFFeScience/akoflow/internal/provider"
+	ansiblecloud "github.com/UFFeScience/akoflow/internal/provider/cloud/ansible"
 	gcpcloud "github.com/UFFeScience/akoflow/internal/provider/cloud/gcp"
 	terraformcloud "github.com/UFFeScience/akoflow/internal/provider/cloud/terraform"
 	"github.com/UFFeScience/akoflow/internal/provider/kubernetes"
@@ -51,6 +52,7 @@ func buildAPI(
 		cloudCredentials,
 		sshKeys,
 		terraformcloud.Runner{Root: settings.TerraformWorkspace, Binary: settings.TerraformBinary},
+		ansiblecloud.Runner{Root: settings.TerraformWorkspace, Binary: settings.AnsiblePlaybookBinary},
 	)
 	// Never expose the process filesystem as a storage browser. Local storage is
 	// opt-in and must have a deliberately configured, bounded root.

@@ -12,6 +12,7 @@ type CloudConfigurationStore interface {
 	CreateMachineConfigurationVersion(context.Context, domain.MachineConfigurationVersion) error
 	ListMachineConfigurations(context.Context) ([]domain.MachineConfiguration, error)
 	FindMachineConfiguration(context.Context, string) (*domain.MachineConfiguration, error)
+	FindMachineConfigurationVersion(context.Context, string) (*domain.MachineConfigurationVersion, error)
 	CreateCapacityTarget(context.Context, domain.CloudCapacityTarget) error
 	ListCapacityTargets(context.Context, string) ([]domain.CloudCapacityTarget, error)
 	FindCapacityTarget(context.Context, string) (*domain.CloudCapacityTarget, error)
@@ -67,4 +68,18 @@ type CloudSSHKey struct {
 
 type CloudSSHKeyManager interface {
 	Ensure(string, string) (CloudSSHKey, error)
+}
+
+type MachineConfigurationSpec struct {
+	InstanceID    string
+	Address       string
+	SSHUser       string
+	CredentialRef string
+	PlaybookYAML  string
+	Variables     map[string]any
+	Checks        []domain.MachineConfigurationValidationCheck
+}
+
+type MachineConfigurator interface {
+	Configure(context.Context, MachineConfigurationSpec) error
 }

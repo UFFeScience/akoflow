@@ -187,6 +187,32 @@ func (r *Repository) FindMachineConfiguration(ctx context.Context, id string) (*
 	return &value, rows.Err()
 }
 
+func (r *Repository) FindMachineConfigurationVersion(
+	ctx context.Context,
+	id string,
+) (*domain.MachineConfigurationVersion, error) {
+	row := r.db.QueryRowContext(ctx, `SELECT id,machine_configuration_id,version,status,
+		playbook_yaml,content_sha256,compatibility,variables_schema,validation_checks,created_at
+		FROM machine_configuration_versions WHERE id=?`, id)
+	var value domain.MachineConfigurationVersion
+	var compatibility, variables, checks []byte
+	err := row.Scan(
+		&value.ID, &value.MachineConfigurationID, &value.Version, &value.Status,
+		&value.PlaybookYAML, &value.ContentSHA256, &compatibility, &variables,
+		&checks, &value.CreatedAt,
+	)
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+	_ = json.Unmarshal(compatibility, &value.Compatibility)
+	_ = json.Unmarshal(variables, &value.VariablesSchema)
+	_ = json.Unmarshal(checks, &value.ValidationChecks)
+	return &value, nil
+}
+
 func (r *Repository) CreateCapacityTarget(ctx context.Context, value domain.CloudCapacityTarget) error {
 	if value.ID == "" || value.EnvironmentID == "" || value.Name == "" || value.ProviderMachineType == "" || value.ImageReference == "" {
 		return fmt.Errorf("target id, environment, name, machine type and image are required")

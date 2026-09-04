@@ -17,6 +17,7 @@ type Service struct {
 	credentials  ports.CloudCredentialResolver
 	sshKeys      ports.CloudSSHKeyManager
 	terraform    ports.TerraformRunner
+	configurator ports.MachineConfigurator
 }
 
 func New(
@@ -25,10 +26,11 @@ func New(
 	credentials ports.CloudCredentialResolver,
 	sshKeys ports.CloudSSHKeyManager,
 	terraform ports.TerraformRunner,
+	configurator ports.MachineConfigurator,
 ) *Service {
 	return &Service{
 		store: store, environments: environments, credentials: credentials,
-		sshKeys: sshKeys, terraform: terraform,
+		sshKeys: sshKeys, terraform: terraform, configurator: configurator,
 	}
 }
 
@@ -87,18 +89,61 @@ func (s *Service) Provision(
 		_ = s.store.UpdateProvisionedInstance(ctx, instance)
 		return instance, err
 	}
-	now := time.Now().UTC()
-	instance.Status = "ready"
 	instance.ProviderID = result.ProviderID
 	instance.PublicAddress = result.PublicAddress
 	instance.PrivateAddress = result.PrivateAddress
 	instance.Disk = result.Disk
 	instance.TerraformOutput = result.Output
+	instance.Status = "configuring"
+	if err := s.store.UpdateProvisionedInstance(ctx, instance); err != nil {
+		return instance, err
+	}
+	if err := s.configure(ctx, &instance, target.MachineConfigurations); err != nil {
+		instance.Status = "failed"
+		instance.FailureReason = err.Error()
+		_ = s.store.UpdateProvisionedInstance(ctx, instance)
+		return instance, err
+	}
+	now := time.Now().UTC()
+	instance.Status = "ready"
 	instance.ReadyAt = &now
 	if err := s.store.UpdateProvisionedInstance(ctx, instance); err != nil {
 		return instance, err
 	}
 	return instance, nil
+}
+
+func (s *Service) configure(
+	ctx context.Context,
+	instance *domain.CloudProvisionedInstance,
+	configurations []domain.CloudTargetConfiguration,
+) error {
+	for _, assignment := range configurations {
+		if !assignment.Enabled {
+			continue
+		}
+		version, err := s.store.FindMachineConfigurationVersion(ctx, assignment.ConfigurationVersionID)
+		if err != nil || version == nil {
+			if assignment.Required {
+				return fmt.Errorf("load required machine configuration %q: %w", assignment.ConfigurationVersionID, err)
+			}
+			continue
+		}
+		variables := map[string]any{"akoflow_workspace_path": "/akoflow/workspace"}
+		for key, value := range assignment.Variables {
+			variables[key] = value
+		}
+		err = s.configurator.Configure(ctx, ports.MachineConfigurationSpec{
+			InstanceID: instance.ID, Address: instance.PublicAddress,
+			SSHUser: instance.SSHUsername, CredentialRef: instance.SSHCredentialRef,
+			PlaybookYAML: version.PlaybookYAML, Variables: variables,
+			Checks: version.ValidationChecks,
+		})
+		if err != nil && assignment.Required {
+			return fmt.Errorf("apply machine configuration %q: %w", assignment.ConfigurationVersionID, err)
+		}
+	}
+	return nil
 }
 
 func (s *Service) Destroy(ctx context.Context, instanceID string) (domain.CloudProvisionedInstance, error) {

@@ -65,6 +65,33 @@ func TestOpenReadOnlyRejectsWrites(t *testing.T) {
 	}
 }
 
+func TestOpenReadOnlyObservesNewWALCommits(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "live.db")
+	writer, err := Open(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer writer.Close()
+	if _, err := writer.Exec(`CREATE TABLE example (id TEXT PRIMARY KEY)`); err != nil {
+		t.Fatal(err)
+	}
+	reader, err := OpenReadOnly(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer reader.Close()
+	if _, err := writer.Exec(`INSERT INTO example (id) VALUES ('visible')`); err != nil {
+		t.Fatal(err)
+	}
+	var count int
+	if err := reader.QueryRow(`SELECT COUNT(*) FROM example`).Scan(&count); err != nil {
+		t.Fatal(err)
+	}
+	if count != 1 {
+		t.Fatalf("read-only connection observed %d rows, want 1", count)
+	}
+}
+
 func TestBootstrapInstallsAndValidatesCanonicalSchema(t *testing.T) {
 	db := memoryDatabase(t)
 	ctx := context.Background()

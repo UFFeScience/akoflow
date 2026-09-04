@@ -70,6 +70,19 @@ func (s commandRunnerStub) RunConsoleCommand(context.Context, domain.Environment
 
 type auditStoreStub struct{ events []domainaudit.Event }
 
+type cloudConfigurationStoreStub struct {
+	ports.CloudConfigurationStore
+	instances []domain.CloudProvisionedInstance
+}
+
+func (s cloudConfigurationStoreStub) ListProvisionedInstances(context.Context, string) ([]domain.CloudProvisionedInstance, error) {
+	return s.instances, nil
+}
+
+func (s cloudConfigurationStoreStub) ListCapacityTargets(context.Context, string) ([]domain.CloudCapacityTarget, error) {
+	return nil, nil
+}
+
 func (s *auditStoreStub) RecordAuditEvent(_ context.Context, event domainaudit.Event) error {
 	s.events = append(s.events, event)
 	return nil
@@ -130,6 +143,22 @@ func TestCommandControllerFailureAndValidation(t *testing.T) {
 	unbound := NewCommandController(environmentCatalogStub{definitions: []domain.EnvironmentDefinition{definition}}, resourceInventoryStub{resource: &domain.Resource{ID: "other", EnvironmentVersionID: "version"}}, store, commandRunnerStub{}, nil)
 	if _, err = unbound.ExecuteCommand(context.Background(), domainconsole.Request{ResourceID: "other", Command: "x"}); err == nil {
 		t.Fatal("expected target error")
+	}
+}
+
+func TestCloudConnectionIsAvailableWhileAnsibleConfigures(t *testing.T) {
+	controller := &CommandController{cloud: cloudConfigurationStoreStub{instances: []domain.CloudProvisionedInstance{{
+		ID: "instance", CapacityTargetID: "capacity", Status: "configuring",
+		PublicAddress: "203.0.113.10", SSHUsername: "akoflow", SSHCredentialRef: "file:key",
+	}}}}
+	connection, err := controller.resolveCloudConnection(context.Background(), domain.EnvironmentConnection{
+		ID: "cloud", EnvironmentID: "environment", Type: domain.ConnectionCloud,
+	}, domain.Resource{ID: "capacity"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if connection.Type != domain.ConnectionSSH || connection.Endpoint != "203.0.113.10" {
+		t.Fatalf("unexpected SSH connection %#v", connection)
 	}
 }
 

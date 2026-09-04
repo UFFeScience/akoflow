@@ -115,7 +115,7 @@ func (s *CommandController) resolveTarget(ctx context.Context, resource domain.R
 				connectionID, _ := runtime.Configuration["connectionId"].(string)
 				for _, connection := range definition.Connections {
 					if connection.ID == connectionID {
-						resolved, resolveErr := s.resolveCloudConnection(ctx, connection, resource.ID)
+						resolved, resolveErr := s.resolveCloudConnection(ctx, connection, resource)
 						return runtime, resolved, definition.Environment.ID, resolveErr
 					}
 				}
@@ -128,7 +128,7 @@ func (s *CommandController) resolveTarget(ctx context.Context, resource domain.R
 func (s *CommandController) resolveCloudConnection(
 	ctx context.Context,
 	connection domain.EnvironmentConnection,
-	capacityTargetID string,
+	resource domain.Resource,
 ) (domain.EnvironmentConnection, error) {
 	if connection.Type != domain.ConnectionCloud {
 		return connection, nil
@@ -140,20 +140,36 @@ func (s *CommandController) resolveCloudConnection(
 	if err != nil {
 		return connection, err
 	}
+	targetIDs := map[string]bool{resource.ID: true}
+	if value, ok := resource.Metadata["capacityTargetId"].(string); ok && strings.TrimSpace(value) != "" {
+		targetIDs[value] = true
+	}
+	if targets, listErr := s.cloud.ListCapacityTargets(ctx, connection.EnvironmentID); listErr == nil {
+		for _, target := range targets {
+			if strings.EqualFold(target.Name, resource.Name) && target.VCPU == resource.CPUCores && target.MemoryMiB<<20 == resource.MemoryBytes {
+				targetIDs[target.ID] = true
+			}
+		}
+	}
 	for _, instance := range instances {
-		if instance.Status != "ready" || instance.CapacityTargetID != capacityTargetID {
+		connectable := instance.Status == "configuring" || instance.Status == "ready"
+		address := strings.TrimSpace(instance.PublicAddress)
+		if address == "" {
+			address = strings.TrimSpace(instance.PrivateAddress)
+		}
+		if !connectable || !targetIDs[instance.CapacityTargetID] || address == "" {
 			continue
 		}
 		return domain.EnvironmentConnection{
 			ID: connection.ID + "-" + instance.ID, EnvironmentID: connection.EnvironmentID,
-			Name: instance.Name, Type: domain.ConnectionSSH, Endpoint: instance.PublicAddress,
+			Name: instance.Name, Type: domain.ConnectionSSH, Endpoint: address,
 			Username: instance.SSHUsername, CredentialRef: instance.SSHCredentialRef,
 			Configuration: map[string]any{
 				"port": 22, "skipSchedulerCheck": true, "dynamicHost": true,
 			},
 		}, nil
 	}
-	return connection, fmt.Errorf("cloud capacity target %q has no ready instance", capacityTargetID)
+	return connection, fmt.Errorf("cloud resource %q has no SSH-connectable instance", resource.ID)
 }
 
 func (s *CommandController) auditEvent(ctx context.Context, command domainconsole.Command, environmentID, eventType string, outcome domainaudit.Outcome, summary string) {

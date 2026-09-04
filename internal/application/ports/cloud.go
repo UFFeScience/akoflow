@@ -31,6 +31,10 @@ type CloudCatalogProvider interface {
 	Discover(context.Context, domain.EnvironmentConnection, []byte) (domain.CloudCatalog, error)
 }
 
+type CloudCredentialValidator interface {
+	ValidateCredential(context.Context, domain.EnvironmentConnection, []byte) error
+}
+
 type CloudCatalog interface {
 	Discover(context.Context, string) (domain.CloudCatalog, error)
 	Cached(context.Context, string) (*domain.CloudCatalog, error)

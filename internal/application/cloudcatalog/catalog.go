@@ -113,6 +113,33 @@ func (c *Catalog) Cached(ctx context.Context, environmentID string) (*domain.Clo
 	return c.store.FindCloudCatalog(ctx, strings.TrimSpace(environmentID))
 }
 
+func (c *Catalog) Probe(ctx context.Context, connection domain.EnvironmentConnection) ports.ConnectionHealth {
+	provider := strings.ToLower(strings.TrimSpace(stringValue(connection.Configuration, "provider")))
+	adapter := c.providers[provider]
+	if adapter == nil {
+		return ports.ConnectionHealth{Message: fmt.Sprintf("cloud provider %q is not supported", provider)}
+	}
+	validator, ok := adapter.(ports.CloudCredentialValidator)
+	if !ok {
+		return ports.ConnectionHealth{Message: fmt.Sprintf("cloud provider %q cannot validate credentials", provider)}
+	}
+	credential, err := c.credentials.Resolve(connection.CredentialRef)
+	if err != nil {
+		return ports.ConnectionHealth{Message: err.Error()}
+	}
+	if err := validator.ValidateCredential(ctx, connection, credential); err != nil {
+		return ports.ConnectionHealth{Message: err.Error()}
+	}
+	return ports.ConnectionHealth{
+		Healthy: true,
+		Message: fmt.Sprintf(
+			"Cloud credential authenticated with %s for project %s.",
+			strings.ToUpper(provider),
+			stringValue(connection.Configuration, "projectId"),
+		),
+	}
+}
+
 func (c *Catalog) Validate(
 	ctx context.Context,
 	connection domain.EnvironmentConnection,

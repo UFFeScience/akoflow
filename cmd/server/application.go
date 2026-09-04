@@ -7,6 +7,7 @@ import (
 
 	"github.com/UFFeScience/akoflow/internal/api/handlers/workflow_engine_api_handler"
 	"github.com/UFFeScience/akoflow/internal/api/httpserver"
+	applicationcloud "github.com/UFFeScience/akoflow/internal/application/cloudcatalog"
 	applicationconsole "github.com/UFFeScience/akoflow/internal/application/console"
 	applicationenvironment "github.com/UFFeScience/akoflow/internal/application/environment"
 	applicationexecution "github.com/UFFeScience/akoflow/internal/application/execution"
@@ -21,6 +22,7 @@ import (
 	planningplugin "github.com/UFFeScience/akoflow/internal/infrastructure/plugins/planning"
 	"github.com/UFFeScience/akoflow/internal/planning/algorithms"
 	"github.com/UFFeScience/akoflow/internal/provider"
+	gcpcloud "github.com/UFFeScience/akoflow/internal/provider/cloud/gcp"
 	"github.com/UFFeScience/akoflow/internal/provider/kubernetes"
 	"github.com/UFFeScience/akoflow/internal/provider/local"
 	"github.com/UFFeScience/akoflow/internal/provider/slurm"
@@ -83,6 +85,9 @@ func newApplication(ctx context.Context, settings config.Settings, log *logger.L
 			domain.ConnectionSSH:        slurm.NewConnectionProber(provider.OSCommandExecutor{}),
 			domain.ConnectionAgent:      slurm.NewConnectionProber(provider.OSCommandExecutor{}),
 			domain.ConnectionLocal:      local.NewConnectionProber(),
+			domain.ConnectionCloud: applicationcloud.New(
+				storage.environments, cloudCredentials, storage.cloud, gcpcloud.New(nil),
+			),
 		}, storage.audit)
 	discovery := applicationenvironment.NewDiscoveryCoordinator(storage.environments, storage.resources,
 		map[domain.ConnectionType]ports.ConnectionDiscoverer{

@@ -37,6 +37,15 @@ func New(client *http.Client) *Catalog {
 
 func (*Catalog) Provider() string { return "gcp" }
 
+func (c *Catalog) ValidateCredential(ctx context.Context, connection domain.EnvironmentConnection, credential []byte) error {
+	var account serviceAccount
+	if err := json.Unmarshal(credential, &account); err != nil {
+		return fmt.Errorf("decode GCP service account: %w", err)
+	}
+	_, err := c.accessToken(ctx, account)
+	return err
+}
+
 type serviceAccount struct {
 	ProjectID   string `json:"project_id"`
 	ClientEmail string `json:"client_email"`

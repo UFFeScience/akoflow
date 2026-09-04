@@ -158,7 +158,8 @@ func (c *Catalog) get(ctx context.Context, token, endpoint string, output any) e
 
 func (c *Catalog) machines(ctx context.Context, token, project string, result *domain.CloudCatalog) error {
 	var payload struct {
-		Items map[string]struct {
+		NextPageToken string `json:"nextPageToken"`
+		Items         map[string]struct {
 			MachineTypes []struct {
 				Name         string         `json:"name"`
 				GuestCPUs    int            `json:"guestCpus"`
@@ -173,49 +174,58 @@ func (c *Catalog) machines(ctx context.Context, token, project string, result *d
 			} `json:"machineTypes"`
 		} `json:"items"`
 	}
-	endpoint := fmt.Sprintf("%s/projects/%s/aggregated/machineTypes?returnPartialSuccess=true&maxResults=500", c.computeEndpoint, url.PathEscape(project))
-	if err := c.get(ctx, token, endpoint, &payload); err != nil {
-		return err
-	}
 	byType := map[string]int{}
-	for _, scope := range payload.Items {
-		for _, machine := range scope.MachineTypes {
-			zone := lastPath(machine.Zone)
-			region := zoneRegion(zone)
-			if result.Region != "" && region != result.Region {
-				continue
-			}
-			index, exists := byType[machine.Name]
-			if !exists {
-				gpuCount, gpuModel := 0, ""
-				for _, gpu := range machine.Accelerators {
-					gpuCount += gpu.Count
-					if gpuModel == "" {
-						gpuModel = gpu.Type
+	pageToken := ""
+	for {
+		endpoint := fmt.Sprintf("%s/projects/%s/aggregated/machineTypes?returnPartialSuccess=true&maxResults=500", c.computeEndpoint, url.PathEscape(project))
+		endpoint = pageEndpoint(endpoint, pageToken)
+		payload.Items, payload.NextPageToken = nil, ""
+		if err := c.get(ctx, token, endpoint, &payload); err != nil {
+			return err
+		}
+		for _, scope := range payload.Items {
+			for _, machine := range scope.MachineTypes {
+				zone := lastPath(machine.Zone)
+				region := zoneRegion(zone)
+				if result.Region != "" && region != result.Region {
+					continue
+				}
+				index, exists := byType[machine.Name]
+				if !exists {
+					gpuCount, gpuModel := 0, ""
+					for _, gpu := range machine.Accelerators {
+						gpuCount += gpu.Count
+						if gpuModel == "" {
+							gpuModel = gpu.Type
+						}
 					}
+					architecture := strings.ToLower(machine.Architecture)
+					if architecture == "" {
+						architecture = "amd64"
+					}
+					value := domain.CloudMachineOffering{
+						Provider:       "gcp",
+						ProviderTypeID: machine.Name,
+						Region:         region,
+						Family:         strings.Split(machine.Name, "-")[0],
+						VCPU:           machine.GuestCPUs,
+						MemoryMiB:      machine.MemoryMB,
+						Architecture:   architecture,
+						GPUCount:       gpuCount,
+						GPUModel:       gpuModel,
+						SupportsSpot:   true,
+						Available:      machine.Deprecated == nil,
+					}
+					result.Machines = append(result.Machines, value)
+					index = len(result.Machines) - 1
+					byType[machine.Name] = index
 				}
-				architecture := strings.ToLower(machine.Architecture)
-				if architecture == "" {
-					architecture = "amd64"
-				}
-				value := domain.CloudMachineOffering{
-					Provider:       "gcp",
-					ProviderTypeID: machine.Name,
-					Region:         region,
-					Family:         strings.Split(machine.Name, "-")[0],
-					VCPU:           machine.GuestCPUs,
-					MemoryMiB:      machine.MemoryMB,
-					Architecture:   architecture,
-					GPUCount:       gpuCount,
-					GPUModel:       gpuModel,
-					SupportsSpot:   true,
-					Available:      machine.Deprecated == nil,
-				}
-				result.Machines = append(result.Machines, value)
-				index = len(result.Machines) - 1
-				byType[machine.Name] = index
+				result.Machines[index].Zones = append(result.Machines[index].Zones, zone)
 			}
-			result.Machines[index].Zones = append(result.Machines[index].Zones, zone)
+		}
+		pageToken = payload.NextPageToken
+		if pageToken == "" {
+			break
 		}
 	}
 	return nil
@@ -223,7 +233,8 @@ func (c *Catalog) machines(ctx context.Context, token, project string, result *d
 
 func (c *Catalog) images(ctx context.Context, token, targetProject, imageProject string, result *domain.CloudCatalog) error {
 	var payload struct {
-		Items []struct {
+		NextPageToken string `json:"nextPageToken"`
+		Items         []struct {
 			Name         string         `json:"name"`
 			SelfLink     string         `json:"selfLink"`
 			Family       string         `json:"family"`
@@ -233,36 +244,46 @@ func (c *Catalog) images(ctx context.Context, token, targetProject, imageProject
 			Deprecated   map[string]any `json:"deprecated"`
 		} `json:"items"`
 	}
-	endpoint := fmt.Sprintf("%s/projects/%s/global/images?filter=status%%3DREADY&maxResults=500", c.computeEndpoint, url.PathEscape(imageProject))
-	if err := c.get(ctx, token, endpoint, &payload); err != nil {
-		return err
-	}
-	for _, image := range payload.Items {
-		source := "official"
-		if imageProject == targetProject {
-			source = "project-owned"
+	pageToken := ""
+	for {
+		endpoint := fmt.Sprintf("%s/projects/%s/global/images?filter=status%%3DREADY&maxResults=500", c.computeEndpoint, url.PathEscape(imageProject))
+		endpoint = pageEndpoint(endpoint, pageToken)
+		payload.Items, payload.NextPageToken = nil, ""
+		if err := c.get(ctx, token, endpoint, &payload); err != nil {
+			return err
 		}
-		value := domain.CloudImageOffering{
-			Provider:        "gcp",
-			ProviderImageID: image.SelfLink,
-			Name:            image.Name,
-			Publisher:       imageProject,
-			Family:          image.Family,
-			OperatingSystem: imageOS(imageProject, image.Name),
-			Architecture:    normalizeArchitecture(image.Architecture),
-			Source:          source,
-			Status:          strings.ToLower(image.Status),
-			MinimumDiskGiB:  parseInt64(image.DiskSizeGB),
-			Deprecated:      image.Deprecated != nil,
+		for _, image := range payload.Items {
+			source := "official"
+			if imageProject == targetProject {
+				source = "project-owned"
+			}
+			value := domain.CloudImageOffering{
+				Provider:        "gcp",
+				ProviderImageID: image.SelfLink,
+				Name:            image.Name,
+				Publisher:       imageProject,
+				Family:          image.Family,
+				OperatingSystem: imageOS(imageProject, image.Name),
+				Architecture:    normalizeArchitecture(image.Architecture),
+				Source:          source,
+				Status:          strings.ToLower(image.Status),
+				MinimumDiskGiB:  parseInt64(image.DiskSizeGB),
+				Deprecated:      image.Deprecated != nil,
+			}
+			result.Images = append(result.Images, value)
 		}
-		result.Images = append(result.Images, value)
+		pageToken = payload.NextPageToken
+		if pageToken == "" {
+			break
+		}
 	}
 	return nil
 }
 
 func (c *Catalog) disks(ctx context.Context, token, project string, result *domain.CloudCatalog) error {
 	var payload struct {
-		Items map[string]struct {
+		NextPageToken string `json:"nextPageToken"`
+		Items         map[string]struct {
 			DiskTypes []struct {
 				Name       string         `json:"name"`
 				Zone       string         `json:"zone"`
@@ -270,29 +291,45 @@ func (c *Catalog) disks(ctx context.Context, token, project string, result *doma
 			} `json:"diskTypes"`
 		} `json:"items"`
 	}
-	endpoint := fmt.Sprintf("%s/projects/%s/aggregated/diskTypes?returnPartialSuccess=true&maxResults=500", c.computeEndpoint, url.PathEscape(project))
-	if err := c.get(ctx, token, endpoint, &payload); err != nil {
-		return err
-	}
 	byType := map[string]int{}
-	for _, scope := range payload.Items {
-		for _, disk := range scope.DiskTypes {
-			zone := lastPath(disk.Zone)
-			region := zoneRegion(zone)
-			if result.Region != "" && region != result.Region {
-				continue
+	pageToken := ""
+	for {
+		endpoint := fmt.Sprintf("%s/projects/%s/aggregated/diskTypes?returnPartialSuccess=true&maxResults=500", c.computeEndpoint, url.PathEscape(project))
+		endpoint = pageEndpoint(endpoint, pageToken)
+		payload.Items, payload.NextPageToken = nil, ""
+		if err := c.get(ctx, token, endpoint, &payload); err != nil {
+			return err
+		}
+		for _, scope := range payload.Items {
+			for _, disk := range scope.DiskTypes {
+				zone := lastPath(disk.Zone)
+				region := zoneRegion(zone)
+				if result.Region != "" && region != result.Region {
+					continue
+				}
+				index, exists := byType[disk.Name]
+				if !exists {
+					value := domain.CloudDiskOffering{Provider: "gcp", ProviderTypeID: disk.Name, Name: disk.Name, Region: region, Available: disk.Deprecated == nil}
+					result.Disks = append(result.Disks, value)
+					index = len(result.Disks) - 1
+					byType[disk.Name] = index
+				}
+				result.Disks[index].Zones = append(result.Disks[index].Zones, zone)
 			}
-			index, exists := byType[disk.Name]
-			if !exists {
-				value := domain.CloudDiskOffering{Provider: "gcp", ProviderTypeID: disk.Name, Name: disk.Name, Region: region, Available: disk.Deprecated == nil}
-				result.Disks = append(result.Disks, value)
-				index = len(result.Disks) - 1
-				byType[disk.Name] = index
-			}
-			result.Disks[index].Zones = append(result.Disks[index].Zones, zone)
+		}
+		pageToken = payload.NextPageToken
+		if pageToken == "" {
+			break
 		}
 	}
 	return nil
+}
+
+func pageEndpoint(endpoint, token string) string {
+	if token == "" {
+		return endpoint
+	}
+	return endpoint + "&pageToken=" + url.QueryEscape(token)
 }
 
 func configString(values map[string]any, key string) string {

@@ -58,6 +58,27 @@ func TestDiscoverNormalizesLiveCatalog(t *testing.T) {
 	}
 }
 
+func TestMachineCatalogFollowsProviderPagination(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		if r.URL.Query().Get("pageToken") == "second page" {
+			_, _ = w.Write([]byte(`{"items":{"zones/us-central1-b":{"machineTypes":[{"name":"c3-standard-8","guestCpus":8,"memoryMb":32768,"zone":"zones/us-central1-b"}]}}}`))
+			return
+		}
+		_, _ = w.Write([]byte(`{"nextPageToken":"second page","items":{"zones/us-central1-a":{"machineTypes":[{"name":"c3-standard-8","guestCpus":8,"memoryMb":32768,"zone":"zones/us-central1-a"}]}}}`))
+	}))
+	defer server.Close()
+	catalog := New(server.Client())
+	catalog.computeEndpoint = server.URL
+	result := domain.CloudCatalog{Region: "us-central1"}
+	if err := catalog.machines(context.Background(), "token", "science", &result); err != nil {
+		t.Fatal(err)
+	}
+	if len(result.Machines) != 1 || len(result.Machines[0].Zones) != 2 {
+		t.Fatalf("machines = %#v", result.Machines)
+	}
+}
+
 func testCredential(t *testing.T, tokenURI string) []byte {
 	t.Helper()
 	key, err := rsa.GenerateKey(rand.Reader, 2048)

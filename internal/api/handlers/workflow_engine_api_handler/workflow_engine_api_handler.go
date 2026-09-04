@@ -1685,10 +1685,13 @@ func (h *Handler) CreateCloudCapacityTarget(w http.ResponseWriter, r *http.Reque
 		CPUCores: value.VCPU, CPUCapacity: float64(value.VCPU),
 		MemoryBytes:    value.MemoryMiB << 20,
 		StorageBytes:   configurationInt64(value.Configuration, "diskSizeGiB") << 30,
-		ComputeSpeedup: 1, Schedulable: true,
+		ComputeSpeedup: 1,
+		PricePerSecond: configurationFloat64(value.Configuration, "pricePerHour") / 3600,
+		Schedulable:    true,
 		Metadata: map[string]any{
 			"capacityTargetId": value.ID, "maximumInstances": value.MaximumInstances,
 			"lifecyclePolicy": value.LifecyclePolicy, "provisioningMode": value.ProvisioningMode,
+			"diskPricePerGiBMonth": configurationFloat64(value.Configuration, "diskPricePerGiBMonth"),
 		},
 	}
 	if err := h.resources.Upsert(r.Context(), resource); err != nil {
@@ -1712,6 +1715,19 @@ func configurationInt64(values map[string]any, key string) int64 {
 		return int64(value)
 	case int64:
 		return value
+	default:
+		return 0
+	}
+}
+
+func configurationFloat64(values map[string]any, key string) float64 {
+	switch value := values[key].(type) {
+	case float64:
+		return value
+	case int:
+		return float64(value)
+	case int64:
+		return float64(value)
 	default:
 		return 0
 	}

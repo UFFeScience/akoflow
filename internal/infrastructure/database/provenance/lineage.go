@@ -56,15 +56,89 @@ func (r *Repository) Lineage(ctx context.Context, query ports.ProvenanceLineageQ
 		}
 		if direction != "downstream" {
 			r.expandUpstream(record, visit, &queue, &result, edges)
+			if err := r.expandActivityDependencies(ctx, visit, true, &queue, &result, edges); err != nil {
+				return ports.ProvenanceLineage{}, err
+			}
 		}
 		if direction != "upstream" {
 			if err := r.expandDownstream(ctx, visit, maxNodes-len(result.Nodes), &queue, &result, edges); err != nil {
+				return ports.ProvenanceLineage{}, err
+			}
+			if err := r.expandActivityDependencies(ctx, visit, false, &queue, &result, edges); err != nil {
 				return ports.ProvenanceLineage{}, err
 			}
 		}
 	}
 	result.Truncated = len(queue) > 0
 	return result, nil
+}
+
+func (r *Repository) expandActivityDependencies(
+	ctx context.Context,
+	visit lineageVisit,
+	upstream bool,
+	queue *[]lineageVisit,
+	result *ports.ProvenanceLineage,
+	edges map[string]bool,
+) error {
+	if visit.entity != "activities" {
+		return nil
+	}
+	left, right := "activity_id", "depends_on_activity_id"
+	if !upstream {
+		left, right = right, left
+	}
+	rows, err := r.db.QueryContext(ctx,
+		"SELECT "+right+", dependency_type FROM activity_dependencies WHERE "+left+" = ? LIMIT 500", visit.id)
+	if err != nil {
+		return fmt.Errorf("expand activity dependencies: %w", err)
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var id, dependencyType string
+		if err := rows.Scan(&id, &dependencyType); err != nil {
+			return err
+		}
+		current, related := lineageKey("activities", visit.id), lineageKey("activities", id)
+		if upstream {
+			appendLineageEdge(result, edges, related, current, dependencyType)
+		} else {
+			appendLineageEdge(result, edges, current, related, dependencyType)
+		}
+		*queue = append(*queue, lineageVisit{entity: "activities", id: id, depth: visit.depth + 1})
+	}
+	if err := rows.Err(); err != nil {
+		return err
+	}
+	if err := rows.Close(); err != nil {
+		return err
+	}
+	dataLeft, dataRight := "consumer_activity_id", "producer_activity_id"
+	if !upstream {
+		dataLeft, dataRight = dataRight, dataLeft
+	}
+	dataRows, err := r.db.QueryContext(ctx,
+		"SELECT "+dataRight+", logical_name, size_bytes FROM workflow_data_dependencies WHERE "+dataLeft+" = ? LIMIT 500", visit.id)
+	if err != nil {
+		return fmt.Errorf("expand workflow data dependencies: %w", err)
+	}
+	defer dataRows.Close()
+	for dataRows.Next() {
+		var id, logicalName string
+		var sizeBytes int64
+		if err := dataRows.Scan(&id, &logicalName, &sizeBytes); err != nil {
+			return err
+		}
+		current, related := lineageKey("activities", visit.id), lineageKey("activities", id)
+		label := fmt.Sprintf("data:%s (%d B)", logicalName, sizeBytes)
+		if upstream {
+			appendLineageEdge(result, edges, related, current, label)
+		} else {
+			appendLineageEdge(result, edges, current, related, label)
+		}
+		*queue = append(*queue, lineageVisit{entity: "activities", id: id, depth: visit.depth + 1})
+	}
+	return dataRows.Err()
 }
 
 func lineageOptions(query ports.ProvenanceLineageQuery) (string, int, int, error) {

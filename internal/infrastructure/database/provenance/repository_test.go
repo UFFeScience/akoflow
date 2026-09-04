@@ -94,3 +94,33 @@ func TestLineageTraversesCatalogRelationships(t *testing.T) {
 		t.Fatalf("unexpected lineage: %#v", result)
 	}
 }
+
+func TestLineageIncludesControlAndDataDependencies(t *testing.T) {
+	db, err := sql.Open("sqlite3", ":memory:")
+	if err != nil {
+		t.Fatal(err)
+	}
+	db.SetMaxOpenConns(1)
+	defer db.Close()
+	if _, err := db.Exec(`
+		CREATE TABLE activity_definitions (id TEXT, workflow_version_id TEXT, external_id TEXT, name TEXT, kind TEXT, priority INTEGER);
+		CREATE TABLE activity_dependencies (activity_id TEXT, depends_on_activity_id TEXT, dependency_type TEXT);
+		CREATE TABLE workflow_data_dependencies (producer_activity_id TEXT, consumer_activity_id TEXT, logical_name TEXT, size_bytes INTEGER);
+		INSERT INTO activity_definitions VALUES ('a', 'version', 'a', 'Producer', 'task', 0), ('b', 'version', 'b', 'Consumer', 'task', 0);
+		INSERT INTO activity_dependencies VALUES ('b', 'a', 'control');
+		INSERT INTO workflow_data_dependencies VALUES ('a', 'b', 'result.dat', 1024);
+	`); err != nil {
+		t.Fatal(err)
+	}
+	result := ports.ProvenanceLineage{}
+	queue := []lineageVisit{}
+	if err := New(db).expandActivityDependencies(
+		context.Background(), lineageVisit{entity: "activities", id: "a"}, false,
+		&queue, &result, map[string]bool{},
+	); err != nil {
+		t.Fatal(err)
+	}
+	if len(queue) != 2 || len(result.Edges) != 2 {
+		t.Fatalf("unexpected activity lineage: %#v", result)
+	}
+}

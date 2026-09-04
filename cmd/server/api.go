@@ -16,6 +16,7 @@ import (
 	"github.com/UFFeScience/akoflow/internal/infrastructure/credentials/sshkey"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/credentials/token"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/database"
+	databaseprovenance "github.com/UFFeScience/akoflow/internal/infrastructure/database/provenance"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/instancearchive"
 	planningplugin "github.com/UFFeScience/akoflow/internal/infrastructure/plugins/planning"
 	"github.com/UFFeScience/akoflow/internal/provider"
@@ -91,6 +92,7 @@ func buildAPI(
 		Build:            manager,
 		Planning:         planning,
 		PlanningStore:    storage.plans,
+		Provenance:       databaseprovenance.New(storage.database),
 		InstanceArchive:  archives,
 		ReadOnly:         storage.readOnly,
 		Restart:          restart,

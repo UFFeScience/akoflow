@@ -106,6 +106,7 @@ type Dependencies struct {
 	Build            BuildOrchestrator
 	Planning         PlanningOrchestrator
 	PlanningStore    ports.PlanningStore
+	Provenance       ports.ProvenanceExplorer
 	InstanceArchive  ports.InstanceArchive
 	ReadOnly         bool
 	Restart          func()
@@ -136,6 +137,7 @@ type Handler struct {
 	build            BuildOrchestrator
 	planning         PlanningOrchestrator
 	planningStore    ports.PlanningStore
+	provenance       ports.ProvenanceExplorer
 	instanceArchive  ports.InstanceArchive
 	readOnly         bool
 	restart          func()
@@ -179,12 +181,40 @@ func New(dependencies Dependencies) (*Handler, error) {
 		build:            dependencies.Build,
 		planning:         dependencies.Planning,
 		planningStore:    dependencies.PlanningStore,
+		provenance:       dependencies.Provenance,
 		instanceArchive:  dependencies.InstanceArchive,
 		readOnly:         dependencies.ReadOnly,
 		restart:          dependencies.Restart,
 		factoryReset:     dependencies.FactoryReset,
 		connectionTest:   dependencies.ConnectionTest,
 	}, nil
+}
+
+func (h *Handler) ListProvenanceEntities(w http.ResponseWriter, _ *http.Request) {
+	if h.provenance == nil {
+		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("provenance explorer is unavailable"))
+		return
+	}
+	writeJSON(w, http.StatusOK, map[string]any{"items": h.provenance.Entities()})
+}
+
+func (h *Handler) QueryProvenanceEntity(w http.ResponseWriter, r *http.Request) {
+	if h.provenance == nil {
+		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("provenance explorer is unavailable"))
+		return
+	}
+	page, _ := strconv.Atoi(r.URL.Query().Get("page"))
+	pageSize, _ := strconv.Atoi(r.URL.Query().Get("pageSize"))
+	result, err := h.provenance.Query(r.Context(), ports.ProvenanceQuery{
+		Entity: r.PathValue("entity"), Search: r.URL.Query().Get("q"),
+		FilterField: r.URL.Query().Get("filterField"), FilterValue: r.URL.Query().Get("filterValue"),
+		Page: page, PageSize: pageSize,
+	})
+	if err != nil {
+		writeError(w, http.StatusBadRequest, err)
+		return
+	}
+	writeJSON(w, http.StatusOK, result)
 }
 
 func (h *Handler) IsReadOnly() bool { return h.readOnly }

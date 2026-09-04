@@ -34,6 +34,10 @@ func (s *provenanceStub) Entities() []ports.ProvenanceEntity {
 	return []ports.ProvenanceEntity{{Name: "runs", Label: "Runs"}}
 }
 
+func (s *provenanceStub) Schema(context.Context) ([]ports.ProvenanceSQLTable, error) {
+	return []ports.ProvenanceSQLTable{{Name: "execution_runs"}}, nil
+}
+
 func (s *provenanceStub) Query(_ context.Context, query ports.ProvenanceQuery) (ports.ProvenancePage, error) {
 	s.query = query
 	return ports.ProvenancePage{

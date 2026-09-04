@@ -73,6 +73,7 @@ func NewMux(workflowEngine *workflow_engine_api_handler.Handler) *http.ServeMux 
 	mux.HandleFunc("GET /akoflow-api/provenance/entities/", http_config.KernelHandler(workflowEngine.ListProvenanceEntities))
 	mux.HandleFunc("GET /akoflow-api/provenance/entities/{entity}/", http_config.KernelHandler(workflowEngine.QueryProvenanceEntity))
 	mux.HandleFunc("POST /akoflow-api/provenance/sql/", http_config.KernelHandler(workflowEngine.QueryProvenanceSQL))
+	mux.HandleFunc("GET /akoflow-api/provenance/sql/schema/", http_config.KernelHandler(workflowEngine.GetProvenanceSchema))
 	mux.HandleFunc("POST /akoflow-api/provenance/sql/explain/", http_config.KernelHandler(workflowEngine.ExplainProvenanceSQL))
 	mux.HandleFunc("GET /akoflow-api/provenance/lineage/{entity}/{id}/", http_config.KernelHandler(workflowEngine.GetProvenanceLineage))
 	mux.HandleFunc("GET /akoflow-api/console-commands/", http_config.KernelHandler(workflowEngine.ListConsoleCommands))

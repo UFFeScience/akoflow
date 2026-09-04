@@ -47,6 +47,11 @@ type ProvenanceSQLColumn struct {
 	Type string `json:"type"`
 }
 
+type ProvenanceSQLTable struct {
+	Name    string                `json:"name"`
+	Columns []ProvenanceSQLColumn `json:"columns"`
+}
+
 type ProvenanceSQLResult struct {
 	Columns             []ProvenanceSQLColumn `json:"columns"`
 	Items               []map[string]any      `json:"items"`
@@ -96,6 +101,7 @@ type ProvenancePage struct {
 
 type ProvenanceExplorer interface {
 	Entities() []ProvenanceEntity
+	Schema(context.Context) ([]ProvenanceSQLTable, error)
 	Query(context.Context, ProvenanceQuery) (ProvenancePage, error)
 	SQL(context.Context, ProvenanceSQLQuery) (ProvenanceSQLResult, error)
 	Explain(context.Context, ProvenanceSQLQuery) (ProvenanceSQLResult, error)

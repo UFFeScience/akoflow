@@ -47,12 +47,12 @@ func TestSQLAllowsSelectAndRejectsWrites(t *testing.T) {
 	}
 	db.SetMaxOpenConns(1)
 	defer db.Close()
-	if _, err := db.Exec("CREATE TABLE runs (id TEXT, status TEXT); INSERT INTO runs VALUES ('run-1', 'completed')"); err != nil {
+	if _, err := db.Exec("CREATE TABLE execution_runs (id TEXT, status TEXT); INSERT INTO execution_runs VALUES ('run-1', 'completed')"); err != nil {
 		t.Fatal(err)
 	}
 	repository := New(db)
 	result, err := repository.SQL(context.Background(), ports.ProvenanceSQLQuery{
-		SQL: "SELECT id, status FROM runs WHERE status = :status", Parameters: map[string]any{"status": "completed"},
+		SQL: "SELECT id, status FROM execution_runs WHERE status = :status", Parameters: map[string]any{"status": "completed"},
 	})
 	if err != nil {
 		t.Fatal(err)
@@ -60,8 +60,11 @@ func TestSQLAllowsSelectAndRejectsWrites(t *testing.T) {
 	if len(result.Items) != 1 || result.Items[0]["id"] != "run-1" {
 		t.Fatalf("unexpected SQL result: %#v", result)
 	}
-	if _, err := repository.SQL(context.Background(), ports.ProvenanceSQLQuery{SQL: "DELETE FROM runs"}); err == nil {
+	if _, err := repository.SQL(context.Background(), ports.ProvenanceSQLQuery{SQL: "DELETE FROM execution_runs"}); err == nil {
 		t.Fatal("write statement must be rejected")
+	}
+	if _, err := repository.SQL(context.Background(), ports.ProvenanceSQLQuery{SQL: "SELECT name FROM sqlite_master"}); err == nil {
+		t.Fatal("non-allowlisted table must be rejected")
 	}
 }
 

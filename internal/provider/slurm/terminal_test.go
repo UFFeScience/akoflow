@@ -35,3 +35,19 @@ func TestInteractiveSchedulerTerminalCreatesNamedJob(t *testing.T) {
 		t.Fatalf("interactive scheduler job has no unique name: %s", arguments)
 	}
 }
+
+func TestInteractiveCloudTerminalAcceptsAndRecordsNewHostKey(t *testing.T) {
+	command, err := interactiveCommand(
+		domain.EnvironmentConnection{
+			Type: domain.ConnectionSSH, Endpoint: "203.0.113.10",
+			Configuration: map[string]any{"dynamicHost": true},
+		},
+		domain.Resource{Type: domain.ResourceCloudVM, ExecutionTarget: domain.ExecutionTargetDirect},
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if arguments := strings.Join(command.Args, " "); !strings.Contains(arguments, "StrictHostKeyChecking=accept-new") {
+		t.Fatalf("dynamic cloud host key policy is missing: %s", arguments)
+	}
+}

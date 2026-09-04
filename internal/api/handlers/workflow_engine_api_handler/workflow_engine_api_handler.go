@@ -1518,6 +1518,37 @@ func (h *Handler) SaveCloudCredential(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, http.StatusCreated, map[string]string{"credentialRef": reference})
 }
 
+func (h *Handler) ValidateCloudCredential(w http.ResponseWriter, r *http.Request) {
+	if h.cloudCatalog == nil {
+		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("cloud catalog is unavailable"))
+		return
+	}
+	var request struct {
+		Provider   string          `json:"provider"`
+		Credential json.RawMessage `json:"credential"`
+		ProjectID  string          `json:"projectId"`
+		Region     string          `json:"region"`
+	}
+	if !decode(w, r, &request) {
+		return
+	}
+	result, err := h.cloudCatalog.Validate(r.Context(), domain.EnvironmentConnection{
+		Type: domain.ConnectionCloud,
+		Configuration: map[string]any{
+			"provider": request.Provider, "projectId": request.ProjectID, "region": request.Region,
+		},
+	}, request.Credential)
+	if err != nil {
+		writeError(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+	writeJSON(w, http.StatusOK, map[string]any{
+		"valid": true, "provider": result.Provider, "project": result.Project,
+		"region": result.Region, "machineCount": len(result.Machines),
+		"imageCount": len(result.Images), "diskCount": len(result.Disks),
+	})
+}
+
 func (h *Handler) RefreshCloudCatalog(w http.ResponseWriter, r *http.Request) {
 	if h.cloudCatalog == nil {
 		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("cloud catalog is unavailable"))

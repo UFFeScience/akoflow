@@ -50,12 +50,25 @@ func (c *Catalog) Discover(ctx context.Context, environmentID string) (domain.Cl
 	if err != nil {
 		return domain.CloudCatalog{}, err
 	}
-	result, err := adapter.Discover(ctx, *connection, credential)
+	result, err := c.Validate(ctx, *connection, credential)
 	if err != nil {
 		return domain.CloudCatalog{}, err
 	}
 	result.EnvironmentID = environmentID
 	return result, nil
+}
+
+func (c *Catalog) Validate(
+	ctx context.Context,
+	connection domain.EnvironmentConnection,
+	credential []byte,
+) (domain.CloudCatalog, error) {
+	provider := strings.ToLower(strings.TrimSpace(stringValue(connection.Configuration, "provider")))
+	adapter := c.providers[provider]
+	if adapter == nil {
+		return domain.CloudCatalog{}, fmt.Errorf("cloud provider %q is not supported", provider)
+	}
+	return adapter.Discover(ctx, connection, credential)
 }
 
 func stringValue(values map[string]any, key string) string {

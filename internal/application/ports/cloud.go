@@ -59,6 +59,7 @@ type TerraformResult struct {
 
 type TerraformRunner interface {
 	Apply(context.Context, TerraformProvisionSpec) (TerraformResult, error)
+	Start(context.Context, string) (TerraformResult, error)
 	Destroy(context.Context, string) error
 	Stop(context.Context, string) error
 }

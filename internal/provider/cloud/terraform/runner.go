@@ -54,29 +54,44 @@ func (r Runner) Destroy(ctx context.Context, instanceID string) error {
 }
 
 func (r Runner) Stop(ctx context.Context, instanceID string) error {
+	_, err := r.setDesiredStatus(ctx, instanceID, "TERMINATED")
+	return err
+}
+
+func (r Runner) Start(ctx context.Context, instanceID string) (ports.TerraformResult, error) {
+	return r.setDesiredStatus(ctx, instanceID, "RUNNING")
+}
+
+func (r Runner) setDesiredStatus(ctx context.Context, instanceID, status string) (ports.TerraformResult, error) {
 	workspace, err := r.workspace(instanceID)
 	if err != nil {
-		return err
+		return ports.TerraformResult{}, err
 	}
 	variablesPath := filepath.Join(workspace, "terraform.tfvars.json")
 	encoded, err := os.ReadFile(variablesPath)
 	if err != nil {
-		return err
+		return ports.TerraformResult{}, err
 	}
 	var values map[string]any
 	if err := json.Unmarshal(encoded, &values); err != nil {
-		return err
+		return ports.TerraformResult{}, err
 	}
-	values["desired_status"] = "TERMINATED"
+	values["desired_status"] = status
 	encoded, _ = json.MarshalIndent(values, "", "  ")
 	if err := os.WriteFile(variablesPath, encoded, 0600); err != nil {
-		return err
+		return ports.TerraformResult{}, err
 	}
-	_, err = r.run(
+	if _, err = r.run(
 		ctx, workspace, "apply", "-auto-approve", "-no-color", "-input=false",
 		"-var-file=terraform.tfvars.json",
-	)
-	return err
+	); err != nil {
+		return ports.TerraformResult{}, err
+	}
+	output, err := r.run(ctx, workspace, "output", "-json")
+	if err != nil {
+		return ports.TerraformResult{}, err
+	}
+	return parseOutput(output)
 }
 
 func (r Runner) prepare(spec ports.TerraformProvisionSpec) (string, error) {

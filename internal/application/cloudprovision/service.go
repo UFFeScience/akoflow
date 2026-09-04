@@ -54,6 +54,9 @@ func (s *Provisioner) Provision(
 	if connection == nil {
 		return domain.CloudProvisionedInstance{}, fmt.Errorf("environment has no cloud connection")
 	}
+	if instance, handled, reuseErr := s.reuseCapacity(ctx, *target); handled {
+		return instance, reuseErr
+	}
 	credential, err := s.credentials.Resolve(connection.CredentialRef)
 	if err != nil {
 		return domain.CloudProvisionedInstance{}, err
@@ -111,6 +114,57 @@ func (s *Provisioner) Provision(
 		return instance, err
 	}
 	return instance, nil
+}
+
+func (s *Provisioner) reuseCapacity(
+	ctx context.Context,
+	target domain.CloudCapacityTarget,
+) (domain.CloudProvisionedInstance, bool, error) {
+	instances, err := s.store.ListProvisionedInstances(ctx, target.EnvironmentID)
+	if err != nil {
+		return domain.CloudProvisionedInstance{}, true, err
+	}
+	active := 0
+	for index := range instances {
+		instance := &instances[index]
+		if instance.CapacityTargetID != target.ID || instance.Status == "destroyed" || instance.Status == "failed" {
+			continue
+		}
+		active++
+		if instance.Status != "stopped" {
+			continue
+		}
+		result, startErr := s.terraform.Start(ctx, instance.ID)
+		if startErr != nil {
+			instance.Status, instance.FailureReason = "failed", startErr.Error()
+			_ = s.store.UpdateProvisionedInstance(ctx, *instance)
+			return *instance, true, startErr
+		}
+		instance.Status, instance.FailureReason = "configuring", ""
+		instance.PublicAddress, instance.PrivateAddress = result.PublicAddress, result.PrivateAddress
+		instance.TerraformOutput, instance.Disk = result.Output, result.Disk
+		if configureErr := s.configure(ctx, instance, target.MachineConfigurations); configureErr != nil {
+			instance.Status, instance.FailureReason = "failed", configureErr.Error()
+			_ = s.store.UpdateProvisionedInstance(ctx, *instance)
+			return *instance, true, configureErr
+		}
+		now := time.Now().UTC()
+		instance.Status, instance.ReadyAt = "ready", &now
+		if updateErr := s.store.UpdateProvisionedInstance(ctx, *instance); updateErr != nil {
+			return *instance, true, updateErr
+		}
+		return *instance, true, nil
+	}
+	limit := target.MaximumInstances
+	if limit <= 0 {
+		limit = 1
+	}
+	if active >= limit {
+		return domain.CloudProvisionedInstance{}, true, fmt.Errorf(
+			"capacity target %q already has %d of %d instances allocated", target.ID, active, limit,
+		)
+	}
+	return domain.CloudProvisionedInstance{}, false, nil
 }
 
 func (s *Provisioner) configure(

@@ -119,6 +119,7 @@ const (
 	ResourceSlurmReservation      = resource.ResourceSlurmReservation
 	ExecutionTargetBatch          = resource.ExecutionTargetBatch
 	ExecutionTargetDirect         = resource.ExecutionTargetDirect
+	ExecutionTargetProvisioned    = resource.ExecutionTargetProvisioned
 	ResourceRelationContains      = resource.ResourceRelationContains
 	ResourceRelationMemberOf      = resource.ResourceRelationMemberOf
 	ResourceRelationAccessibleVia = resource.ResourceRelationAccessibleVia

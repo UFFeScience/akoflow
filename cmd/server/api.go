@@ -62,7 +62,7 @@ func buildAPI(
 	cloudProvisioner ports.CloudProvisioner,
 	planning workflow_engine_api_handler.PlanningOrchestrator,
 ) (*workflow_engine_api_handler.Handler, error) {
-	cloudCatalog := applicationcloud.New(storage.environments, cloudCredentials, gcpcloud.New(nil))
+	cloudCatalog := applicationcloud.New(storage.environments, cloudCredentials, storage.cloud, gcpcloud.New(nil))
 	// Never expose the process filesystem as a storage browser. Local storage is
 	// opt-in and must have a deliberately configured, bounded root.
 	browsers := appstorage.Registry{domain.StorageSSH: sshfilesystem.New(storage.environments, provider.OSCommandExecutor{}), domain.StorageS3: s3.New(nil, nil), domain.StorageMinIO: s3.New(nil, nil)}

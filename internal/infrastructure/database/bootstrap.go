@@ -53,6 +53,9 @@ func Bootstrap(ctx context.Context, db *sql.DB) error {
 	if err := migrateCloudExecutionTarget(ctx, db); err != nil {
 		return err
 	}
+	if err := migrateCloudCatalogSnapshots(ctx, db); err != nil {
+		return err
+	}
 	if err := Validate(ctx, db); err != nil {
 		return fmt.Errorf("%w; remove the existing database file and recreate it: %v", ErrIncompatibleSchema, err)
 	}
@@ -71,6 +74,7 @@ const schemaBeforeCloudFoundation = "7e1bbb05c5eb78bdaf86806a2a7c18a474b28035ebf
 const schemaBeforeCloudInstances = "5c0308e9166ed23dc481b04192cd1539b96ba60b0543df10c7fb2cd065e8b4bc"
 const schemaBeforeCloudRuntimeDriver = "2d4a31031d61e8dd5a8c80550cc47d8fa158d8695cffb979f490342bb8d340a6"
 const schemaBeforeCloudExecutionTarget = "e515cbbfe701482f1c952431134d34359284f42959ace947f55faabad269d739"
+const schemaBeforeCloudCatalogSnapshots = "c9f8b4a4d2d2fd5bfecc4f289d0e68657f608d3b7a75ba53ee4e946dcf251f0b"
 
 func migrateUserPreferences(ctx context.Context, db *sql.DB) error {
 	var checksum string
@@ -328,7 +332,7 @@ func migrateCloudInstances(ctx context.Context, db *sql.DB) error {
 			return fmt.Errorf("apply cloud instances migration: %w", err)
 		}
 	}
-	if _, err := tx.ExecContext(ctx, `UPDATE schema_metadata SET checksum=?, applied_at=?`, schemaChecksum(), time.Now().UTC()); err != nil {
+	if _, err := tx.ExecContext(ctx, `UPDATE schema_metadata SET checksum=?, applied_at=?`, schemaBeforeCloudRuntimeDriver, time.Now().UTC()); err != nil {
 		return fmt.Errorf("record cloud instances migration: %w", err)
 	}
 	return tx.Commit()
@@ -385,6 +389,32 @@ func migrateCloudRuntimeDriver(ctx context.Context, db *sql.DB) error {
 		return fmt.Errorf("restore foreign keys after cloud runtime migration: %w", err)
 	}
 	return nil
+}
+
+func migrateCloudCatalogSnapshots(ctx context.Context, db *sql.DB) error {
+	var checksum string
+	if err := db.QueryRowContext(ctx, `SELECT checksum FROM schema_metadata LIMIT 1`).Scan(&checksum); err != nil || checksum == schemaChecksum() {
+		return nil
+	}
+	if checksum != schemaBeforeCloudCatalogSnapshots {
+		return nil
+	}
+	tx, err := db.BeginTx(ctx, nil)
+	if err != nil {
+		return fmt.Errorf("begin cloud catalog migration: %w", err)
+	}
+	defer tx.Rollback()
+	if _, err := tx.ExecContext(ctx, `CREATE TABLE IF NOT EXISTS cloud_catalog_snapshots (
+		environment_id TEXT PRIMARY KEY REFERENCES environments(id) ON DELETE CASCADE,
+		catalog TEXT NOT NULL,
+		discovered_at DATETIME NOT NULL
+	)`); err != nil {
+		return fmt.Errorf("apply cloud catalog migration: %w", err)
+	}
+	if _, err := tx.ExecContext(ctx, `UPDATE schema_metadata SET checksum=?, applied_at=?`, schemaChecksum(), time.Now().UTC()); err != nil {
+		return fmt.Errorf("record cloud catalog migration: %w", err)
+	}
+	return tx.Commit()
 }
 
 func migrateCloudExecutionTarget(ctx context.Context, db *sql.DB) error {
@@ -448,7 +478,7 @@ func migrateCloudExecutionTarget(ctx context.Context, db *sql.DB) error {
 			return fmt.Errorf("apply cloud resource migration: %w", err)
 		}
 	}
-	if _, err := tx.ExecContext(ctx, `UPDATE schema_metadata SET checksum=?, applied_at=?`, schemaChecksum(), time.Now().UTC()); err != nil {
+	if _, err := tx.ExecContext(ctx, `UPDATE schema_metadata SET checksum=?, applied_at=?`, schemaBeforeCloudCatalogSnapshots, time.Now().UTC()); err != nil {
 		return fmt.Errorf("record cloud resource migration: %w", err)
 	}
 	if err := tx.Commit(); err != nil {

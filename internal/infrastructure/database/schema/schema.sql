@@ -592,6 +592,11 @@ CREATE TABLE cloud_provisioned_instances (
 	destroyed_at DATETIME
 );
 CREATE INDEX cloud_instances_environment_status_idx ON cloud_provisioned_instances(environment_id, status);
+CREATE TABLE cloud_catalog_snapshots (
+    environment_id TEXT PRIMARY KEY REFERENCES environments(id) ON DELETE CASCADE,
+    catalog TEXT NOT NULL,
+    discovered_at DATETIME NOT NULL
+);
 
 CREATE TABLE schema_metadata (
 	checksum TEXT NOT NULL,

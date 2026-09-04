@@ -1562,6 +1562,23 @@ func (h *Handler) RefreshCloudCatalog(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, http.StatusOK, result)
 }
 
+func (h *Handler) GetCloudCatalog(w http.ResponseWriter, r *http.Request) {
+	if h.cloudCatalog == nil {
+		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("cloud catalog is unavailable"))
+		return
+	}
+	result, err := h.cloudCatalog.Cached(r.Context(), r.PathValue("environmentId"))
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, err)
+		return
+	}
+	if result == nil {
+		writeError(w, http.StatusNotFound, fmt.Errorf("cloud catalog has not been synchronized"))
+		return
+	}
+	writeJSON(w, http.StatusOK, result)
+}
+
 func (h *Handler) ListMachineConfigurations(w http.ResponseWriter, r *http.Request) {
 	if h.cloud == nil {
 		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("cloud configuration is unavailable"))
@@ -1679,7 +1696,7 @@ func (h *Handler) CreateCloudCapacityTarget(w http.ResponseWriter, r *http.Reque
 	}
 	resource := domain.Resource{
 		ID: value.ID, EnvironmentVersionID: definition.Version.ID,
-		ExecutionTarget: domain.ExecutionTargetDirect, Type: domain.ResourceCloudVM,
+		ExecutionTarget: domain.ExecutionTargetProvisioned, Type: domain.ResourceCloudVM,
 		Name: value.Name, ProviderID: value.ProviderMachineType, Tier: "cloud",
 		Region: value.Region, Zone: value.FixedZone, Architecture: value.Architecture,
 		CPUCores: value.VCPU, CPUCapacity: float64(value.VCPU),

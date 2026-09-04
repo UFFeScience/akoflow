@@ -21,8 +21,9 @@ const (
 	ResourceKubernetesNamespace ResourceType = "kubernetes_namespace"
 	ResourceSlurmReservation    ResourceType = "slurm_reservation"
 
-	ExecutionTargetBatch  ResourceExecutionTarget = "batch"
-	ExecutionTargetDirect ResourceExecutionTarget = "direct"
+	ExecutionTargetBatch       ResourceExecutionTarget = "batch"
+	ExecutionTargetDirect      ResourceExecutionTarget = "direct"
+	ExecutionTargetProvisioned ResourceExecutionTarget = "provisioned"
 )
 
 const (

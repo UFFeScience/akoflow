@@ -90,6 +90,32 @@ func (r *Repository) EnsureDefaults(ctx context.Context) error {
 	return tx.Commit()
 }
 
+func (r *Repository) SaveCloudCatalog(ctx context.Context, value domain.CloudCatalog) error {
+	payload, err := json.Marshal(value)
+	if err != nil {
+		return fmt.Errorf("encode cloud catalog: %w", err)
+	}
+	_, err = r.db.ExecContext(ctx, `INSERT INTO cloud_catalog_snapshots(environment_id,catalog,discovered_at)
+		VALUES(?,?,?) ON CONFLICT(environment_id) DO UPDATE SET
+		catalog=excluded.catalog,discovered_at=excluded.discovered_at`, value.EnvironmentID, payload, value.DiscoveredAt)
+	return err
+}
+
+func (r *Repository) FindCloudCatalog(ctx context.Context, environmentID string) (*domain.CloudCatalog, error) {
+	var payload []byte
+	if err := r.db.QueryRowContext(ctx, `SELECT catalog FROM cloud_catalog_snapshots WHERE environment_id=?`, environmentID).Scan(&payload); err != nil {
+		if err == sql.ErrNoRows {
+			return nil, nil
+		}
+		return nil, err
+	}
+	var value domain.CloudCatalog
+	if err := json.Unmarshal(payload, &value); err != nil {
+		return nil, fmt.Errorf("decode cloud catalog: %w", err)
+	}
+	return &value, nil
+}
+
 func (r *Repository) CreateMachineConfiguration(ctx context.Context, value domain.MachineConfiguration) error {
 	if value.ID == "" || value.Name == "" {
 		return fmt.Errorf("machine configuration id and name are required")

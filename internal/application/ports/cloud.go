@@ -33,7 +33,13 @@ type CloudCatalogProvider interface {
 
 type CloudCatalog interface {
 	Discover(context.Context, string) (domain.CloudCatalog, error)
+	Cached(context.Context, string) (*domain.CloudCatalog, error)
 	Validate(context.Context, domain.EnvironmentConnection, []byte) (domain.CloudCatalog, error)
+}
+
+type CloudCatalogStore interface {
+	SaveCloudCatalog(context.Context, domain.CloudCatalog) error
+	FindCloudCatalog(context.Context, string) (*domain.CloudCatalog, error)
 }
 
 type CloudProvisioner interface {

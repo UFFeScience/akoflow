@@ -112,6 +112,7 @@ func NewMux(workflowEngine *workflow_engine_api_handler.Handler) *http.ServeMux 
 	mux.HandleFunc("POST /akoflow-api/cloud-credentials/", http_config.KernelHandler(workflowEngine.SaveCloudCredential))
 	mux.HandleFunc("POST /akoflow-api/cloud-credentials/validate/", http_config.KernelHandler(workflowEngine.ValidateCloudCredential))
 	mux.HandleFunc("POST /akoflow-api/environments/{environmentId}/cloud-catalog/refresh/", http_config.KernelHandler(workflowEngine.RefreshCloudCatalog))
+	mux.HandleFunc("GET /akoflow-api/environments/{environmentId}/cloud-catalog/", http_config.KernelHandler(workflowEngine.GetCloudCatalog))
 	mux.HandleFunc("PUT /akoflow-api/environments/{environmentId}/", http_config.KernelHandler(workflowEngine.ReplaceEnvironment))
 	mux.HandleFunc("DELETE /akoflow-api/environments/{environmentId}/", http_config.KernelHandler(workflowEngine.DeleteEnvironment))
 	mux.HandleFunc("GET /akoflow-api/environments/{environmentId}/storages/", http_config.KernelHandler(workflowEngine.ListStorages))

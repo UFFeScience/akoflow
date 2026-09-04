@@ -12,15 +12,16 @@ import (
 type Catalog struct {
 	environments ports.EnvironmentCatalog
 	credentials  ports.CloudCredentialResolver
+	store        ports.CloudCatalogStore
 	providers    map[string]ports.CloudCatalogProvider
 }
 
-func New(environments ports.EnvironmentCatalog, credentials ports.CloudCredentialResolver, providers ...ports.CloudCatalogProvider) *Catalog {
+func New(environments ports.EnvironmentCatalog, credentials ports.CloudCredentialResolver, store ports.CloudCatalogStore, providers ...ports.CloudCatalogProvider) *Catalog {
 	registry := make(map[string]ports.CloudCatalogProvider, len(providers))
 	for _, provider := range providers {
 		registry[provider.Provider()] = provider
 	}
-	return &Catalog{environments: environments, credentials: credentials, providers: registry}
+	return &Catalog{environments: environments, credentials: credentials, store: store, providers: registry}
 }
 
 func (c *Catalog) Discover(ctx context.Context, environmentID string) (domain.CloudCatalog, error) {
@@ -55,7 +56,19 @@ func (c *Catalog) Discover(ctx context.Context, environmentID string) (domain.Cl
 		return domain.CloudCatalog{}, err
 	}
 	result.EnvironmentID = environmentID
+	if c.store != nil {
+		if err := c.store.SaveCloudCatalog(ctx, result); err != nil {
+			return domain.CloudCatalog{}, fmt.Errorf("save cloud catalog: %w", err)
+		}
+	}
 	return result, nil
+}
+
+func (c *Catalog) Cached(ctx context.Context, environmentID string) (*domain.CloudCatalog, error) {
+	if c.store == nil {
+		return nil, nil
+	}
+	return c.store.FindCloudCatalog(ctx, strings.TrimSpace(environmentID))
 }
 
 func (c *Catalog) Validate(

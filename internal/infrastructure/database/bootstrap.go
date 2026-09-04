@@ -59,7 +59,7 @@ func Bootstrap(ctx context.Context, db *sql.DB) error {
 	if err := Validate(ctx, db); err != nil {
 		return fmt.Errorf("%w; remove the existing database file and recreate it: %v", ErrIncompatibleSchema, err)
 	}
-	return nil
+	return cleanupLegacyCloudEntrypoints(ctx, db)
 }
 
 // legacySchemaBeforeUserPreferences is the only schema version that can be
@@ -415,6 +415,27 @@ func migrateCloudCatalogSnapshots(ctx context.Context, db *sql.DB) error {
 		return fmt.Errorf("record cloud catalog migration: %w", err)
 	}
 	return tx.Commit()
+}
+
+func cleanupLegacyCloudEntrypoints(ctx context.Context, db *sql.DB) error {
+	_, err := db.ExecContext(ctx, `DELETE FROM resources
+		WHERE type='cloud_vm'
+		AND execution_target='provisioned'
+		AND schedulable=0
+		AND provider_id='local-engine'
+		AND metadata IN ('{}', 'null')
+		AND region=''
+		AND zone=''
+		AND EXISTS (
+			SELECT 1 FROM environment_versions version
+			JOIN environment_connections connection ON connection.environment_id=version.environment_id
+			WHERE version.id=resources.environment_version_id AND connection.type='cloud'
+		)
+		AND NOT EXISTS (SELECT 1 FROM cloud_capacity_targets target WHERE target.id=resources.id)`)
+	if err != nil {
+		return fmt.Errorf("remove legacy cloud entrypoint resources: %w", err)
+	}
+	return nil
 }
 
 func migrateCloudExecutionTarget(ctx context.Context, db *sql.DB) error {

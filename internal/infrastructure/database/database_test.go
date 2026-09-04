@@ -174,6 +174,34 @@ func TestBootstrapAddsProvisionedExecutionTargetToExistingDatabase(t *testing.T)
 	}
 }
 
+func TestBootstrapRemovesLegacyCloudEntrypointResource(t *testing.T) {
+	db := memoryDatabase(t)
+	ctx := context.Background()
+	if err := Bootstrap(ctx, db); err != nil {
+		t.Fatal(err)
+	}
+	for _, statement := range []string{
+		`INSERT INTO environments(id, name, description, status) VALUES ('env', 'Cloud', '', 'defined')`,
+		`INSERT INTO environment_versions(id, environment_id, version, status, network_model, interference_model, cost_model, configuration_hash) VALUES ('env-v1', 'env', 1, 'draft', 'static-links', 'none', 'per-second', 'hash')`,
+		`INSERT INTO environment_connections(id, environment_id, name, type, endpoint) VALUES ('cloud-connection', 'env', 'Cloud', 'cloud', '')`,
+		`INSERT INTO resources(id, environment_version_id, execution_target, type, name, provider_id, schedulable) VALUES ('env-entrypoint', 'env-v1', 'provisioned', 'cloud_vm', 'Cloud on demand', 'local-engine', 0)`,
+	} {
+		if _, err := db.Exec(statement); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if err := Bootstrap(ctx, db); err != nil {
+		t.Fatal(err)
+	}
+	var count int
+	if err := db.QueryRow(`SELECT COUNT(*) FROM resources WHERE id='env-entrypoint'`).Scan(&count); err != nil {
+		t.Fatal(err)
+	}
+	if count != 0 {
+		t.Fatalf("legacy cloud entrypoint count = %d, want 0", count)
+	}
+}
+
 func TestBootstrapRejectsPartialDatabase(t *testing.T) {
 	db := memoryDatabase(t)
 	if _, err := db.Exec(`CREATE TABLE stray(id INTEGER PRIMARY KEY)`); err != nil {

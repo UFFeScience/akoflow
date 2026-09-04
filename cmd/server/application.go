@@ -97,7 +97,10 @@ func newApplication(ctx context.Context, settings config.Settings, log *logger.L
 		controller := applicationconsole.NewCommandController(storage.environments, storage.resources, storage.console,
 			slurm.ConsoleRunner{Executor: provider.OSCommandExecutor{}}, storage.audit, storage.cloud)
 		consoleCommands = controller
-		terminal = applicationconsole.NewTerminalController(controller, terminalRunner{kubernetes: kubernetes.TerminalRunner{}, slurm: slurm.TerminalRunner{}}, storage.audit, storage.console)
+		terminal = applicationconsole.NewTerminalController(
+			controller, terminalRunner{kubernetes: kubernetes.TerminalRunner{}, slurm: slurm.TerminalRunner{}},
+			storage.audit, storage.console, cloudProvisioner,
+		)
 	}
 	api, err := buildAPI(
 		storage, settings, connectionMonitor, discovery, consoleCommands, terminal,

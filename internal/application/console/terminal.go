@@ -23,6 +23,7 @@ type TerminalController struct {
 	runner   ports.InteractiveConsoleRunner
 	audit    ports.AuditStore
 	logs     ports.ConsoleSessionLogStore
+	cloud    ports.CloudProvisioner
 	mu       sync.RWMutex
 	sessions map[string]*liveSession
 }
@@ -30,6 +31,7 @@ type liveSession struct {
 	value       domainconsole.Session
 	terminal    ports.InteractiveTerminal
 	environment string
+	cloudTarget string
 	mu          sync.Mutex
 	log         []byte
 	clients     map[*terminalClient]struct{}
@@ -42,8 +44,12 @@ type terminalClient struct {
 
 var _ ports.InteractiveConsole = (*TerminalController)(nil)
 
-func NewTerminalController(commands *CommandController, runner ports.InteractiveConsoleRunner, audit ports.AuditStore, logs ports.ConsoleSessionLogStore) *TerminalController {
-	return &TerminalController{commands: commands, runner: runner, audit: audit, logs: logs, sessions: map[string]*liveSession{}}
+func NewTerminalController(commands *CommandController, runner ports.InteractiveConsoleRunner, audit ports.AuditStore, logs ports.ConsoleSessionLogStore, cloud ...ports.CloudProvisioner) *TerminalController {
+	controller := &TerminalController{commands: commands, runner: runner, audit: audit, logs: logs, sessions: map[string]*liveSession{}}
+	if len(cloud) > 0 {
+		controller.cloud = cloud[0]
+	}
+	return controller
 }
 
 func (c *TerminalController) OpenSession(ctx context.Context, request domainconsole.SessionRequest) (domainconsole.Session, error) {
@@ -88,7 +94,14 @@ func (c *TerminalController) OpenSession(ctx context.Context, request domaincons
 			return domainconsole.Session{}, fmt.Errorf("persist connected interactive session: %w", err)
 		}
 	}
-	session := &liveSession{value: value, terminal: terminal, environment: environmentID, clients: map[*terminalClient]struct{}{}}
+	cloudTarget := ""
+	if runtime.Driver == "cloud" {
+		cloudTarget = resource.ID
+	}
+	session := &liveSession{
+		value: value, terminal: terminal, environment: environmentID,
+		cloudTarget: cloudTarget, clients: map[*terminalClient]struct{}{},
+	}
 	c.mu.Lock()
 	c.sessions[value.ID] = session
 	c.mu.Unlock()
@@ -265,6 +278,9 @@ func (c *TerminalController) finishSession(
 		delete(c.sessions, session.value.ID)
 		c.mu.Unlock()
 		c.record(session.value, session.environment, eventType, outcome, summary)
+		if c.cloud != nil && session.cloudTarget != "" {
+			_ = c.cloud.Release(context.Background(), []string{session.cloudTarget})
+		}
 	})
 }
 func (c *TerminalController) record(value domainconsole.Session, environmentID, eventType string, outcome domainaudit.Outcome, summary string) {

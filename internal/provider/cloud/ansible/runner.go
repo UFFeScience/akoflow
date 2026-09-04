@@ -28,7 +28,11 @@ func (r Runner) Configure(ctx context.Context, spec ports.MachineConfigurationSp
 	if err != nil {
 		return err
 	}
-	workspace := filepath.Join(r.Root, spec.InstanceID, "ansible")
+	root, err := filepath.Abs(r.Root)
+	if err != nil {
+		return fmt.Errorf("resolve Ansible workspace: %w", err)
+	}
+	workspace := filepath.Join(root, spec.InstanceID, "ansible")
 	if err := os.MkdirAll(workspace, 0700); err != nil {
 		return err
 	}
@@ -44,7 +48,7 @@ func (r Runner) Configure(ctx context.Context, spec ports.MachineConfigurationSp
 	if err := os.WriteFile(variablesPath, variables, 0600); err != nil {
 		return err
 	}
-	logFile, logErr := os.OpenFile(filepath.Join(r.Root, spec.InstanceID, "provision.log"), os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0600)
+	logFile, logErr := os.OpenFile(filepath.Join(root, spec.InstanceID, "provision.log"), os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0600)
 	if logErr != nil {
 		return logErr
 	}
@@ -138,9 +142,13 @@ func privateKeyPath(reference string) (string, error) {
 		return "", fmt.Errorf("unsupported SSH credential reference")
 	}
 	path := strings.TrimPrefix(reference, "file:")
-	info, err := os.Stat(path)
+	absolutePath, err := filepath.Abs(path)
+	if err != nil {
+		return "", fmt.Errorf("resolve SSH private key: %w", err)
+	}
+	info, err := os.Stat(absolutePath)
 	if err != nil || info.IsDir() {
 		return "", fmt.Errorf("SSH private key is unavailable")
 	}
-	return path, nil
+	return absolutePath, nil
 }

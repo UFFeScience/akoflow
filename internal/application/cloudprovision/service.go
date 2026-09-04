@@ -11,7 +11,7 @@ import (
 	"github.com/google/uuid"
 )
 
-type Service struct {
+type Provisioner struct {
 	store        ports.CloudConfigurationStore
 	environments ports.EnvironmentCatalog
 	credentials  ports.CloudCredentialResolver
@@ -27,14 +27,14 @@ func New(
 	sshKeys ports.CloudSSHKeyManager,
 	terraform ports.TerraformRunner,
 	configurator ports.MachineConfigurator,
-) *Service {
-	return &Service{
+) *Provisioner {
+	return &Provisioner{
 		store: store, environments: environments, credentials: credentials,
 		sshKeys: sshKeys, terraform: terraform, configurator: configurator,
 	}
 }
 
-func (s *Service) Provision(
+func (s *Provisioner) Provision(
 	ctx context.Context,
 	environmentID string,
 	request domain.CloudProvisionRequest,
@@ -113,7 +113,7 @@ func (s *Service) Provision(
 	return instance, nil
 }
 
-func (s *Service) configure(
+func (s *Provisioner) configure(
 	ctx context.Context,
 	instance *domain.CloudProvisionedInstance,
 	configurations []domain.CloudTargetConfiguration,
@@ -146,7 +146,7 @@ func (s *Service) configure(
 	return nil
 }
 
-func (s *Service) Destroy(ctx context.Context, instanceID string) (domain.CloudProvisionedInstance, error) {
+func (s *Provisioner) Destroy(ctx context.Context, instanceID string) (domain.CloudProvisionedInstance, error) {
 	instance, err := s.store.FindProvisionedInstance(ctx, instanceID)
 	if err != nil || instance == nil {
 		return domain.CloudProvisionedInstance{}, fmt.Errorf("cloud instance %q was not found", instanceID)
@@ -170,6 +170,45 @@ func (s *Service) Destroy(ctx context.Context, instanceID string) (domain.CloudP
 		return *instance, err
 	}
 	return *instance, nil
+}
+
+func (s *Provisioner) Release(ctx context.Context, capacityTargetIDs []string) error {
+	selected := make(map[string]bool, len(capacityTargetIDs))
+	for _, id := range capacityTargetIDs {
+		selected[id] = true
+	}
+	for targetID := range selected {
+		target, err := s.store.FindCapacityTarget(ctx, targetID)
+		if err != nil || target == nil {
+			return targetError(targetID, err)
+		}
+		instances, err := s.store.ListProvisionedInstances(ctx, target.EnvironmentID)
+		if err != nil {
+			return err
+		}
+		for index := range instances {
+			instance := &instances[index]
+			if instance.CapacityTargetID != targetID || instance.Status != "ready" {
+				continue
+			}
+			switch target.LifecyclePolicy {
+			case "destroy-after-run", "destroy-after-execution":
+				if _, err := s.Destroy(ctx, instance.ID); err != nil {
+					return err
+				}
+			case "stop-when-idle":
+				if err := s.terraform.Stop(ctx, instance.ID); err != nil {
+					return err
+				}
+				instance.Status = "stopped"
+				instance.PublicAddress = ""
+				if err := s.store.UpdateProvisionedInstance(ctx, *instance); err != nil {
+					return err
+				}
+			}
+		}
+	}
+	return nil
 }
 
 func cloudConnection(connections []domain.EnvironmentConnection) *domain.EnvironmentConnection {

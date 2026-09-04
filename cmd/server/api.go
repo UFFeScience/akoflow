@@ -34,6 +34,22 @@ import (
 	sshfilesystem "github.com/UFFeScience/akoflow/internal/provider/storage/sshfilesystem"
 )
 
+func buildCloudProvisioner(
+	storage persistence,
+	settings config.Settings,
+	credentials *cloudcredential.Manager,
+	sshKeys *sshkey.Manager,
+) ports.CloudProvisioner {
+	return cloudprovision.New(
+		storage.cloud,
+		storage.environments,
+		credentials,
+		sshKeys,
+		terraformcloud.Runner{Root: settings.TerraformWorkspace, Binary: settings.TerraformBinary},
+		ansiblecloud.Runner{Root: settings.TerraformWorkspace, Binary: settings.AnsiblePlaybookBinary},
+	)
+}
+
 func buildAPI(
 	storage persistence,
 	settings config.Settings,
@@ -42,18 +58,11 @@ func buildAPI(
 	console ports.ConsoleCommands,
 	terminal ports.InteractiveConsole,
 	sshKeys *sshkey.Manager,
+	cloudCredentials *cloudcredential.Manager,
+	cloudProvisioner ports.CloudProvisioner,
 	planning workflow_engine_api_handler.PlanningOrchestrator,
 ) (*workflow_engine_api_handler.Handler, error) {
-	cloudCredentials := cloudcredential.New(settings.CloudCredentialDirectory)
 	cloudCatalog := applicationcloud.New(storage.environments, cloudCredentials, gcpcloud.New(nil))
-	cloudProvisioner := cloudprovision.New(
-		storage.cloud,
-		storage.environments,
-		cloudCredentials,
-		sshKeys,
-		terraformcloud.Runner{Root: settings.TerraformWorkspace, Binary: settings.TerraformBinary},
-		ansiblecloud.Runner{Root: settings.TerraformWorkspace, Binary: settings.AnsiblePlaybookBinary},
-	)
 	// Never expose the process filesystem as a storage browser. Local storage is
 	// opt-in and must have a deliberately configured, bounded root.
 	browsers := appstorage.Registry{domain.StorageSSH: sshfilesystem.New(storage.environments, provider.OSCommandExecutor{}), domain.StorageS3: s3.New(nil, nil), domain.StorageMinIO: s3.New(nil, nil)}

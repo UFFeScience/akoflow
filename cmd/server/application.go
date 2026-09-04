@@ -16,6 +16,7 @@ import (
 	"github.com/UFFeScience/akoflow/internal/domain"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/config"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/config/logger"
+	cloudcredential "github.com/UFFeScience/akoflow/internal/infrastructure/credentials/cloud"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/credentials/sshkey"
 	planningplugin "github.com/UFFeScience/akoflow/internal/infrastructure/plugins/planning"
 	"github.com/UFFeScience/akoflow/internal/planning/algorithms"
@@ -46,7 +47,10 @@ func newApplication(ctx context.Context, settings config.Settings, log *logger.L
 		_ = storage.database.Close()
 		return nil, err
 	}
-	runtimes, err := buildRuntimes(settings, storage.environments)
+	sshKeys := sshkey.New(settings.SSHKeyDirectory)
+	cloudCredentials := cloudcredential.New(settings.CloudCredentialDirectory)
+	cloudProvisioner := buildCloudProvisioner(storage, settings, cloudCredentials, sshKeys)
+	runtimes, err := buildRuntimes(settings, storage.environments, storage.cloud, cloudProvisioner)
 	if err != nil {
 		return fail(err)
 	}
@@ -65,7 +69,11 @@ func newApplication(ctx context.Context, settings config.Settings, log *logger.L
 		Scopes: storage.topologies, Topologies: storage.topologies,
 		Validator: planningplugin.NewValidator(), Registry: registry, Events: storage.events,
 	}
-	loop, err := buildEventLoop(storage.events, storage.executions, storage.data, storage.instance, storage.environments, activities, simulator, settings.ArtifactStoreRoot, planningService)
+	loop, err := buildEventLoop(
+		storage.events, storage.executions, storage.data, storage.instance,
+		storage.environments, activities, simulator, settings.ArtifactStoreRoot,
+		planningService, storage.cloud, cloudProvisioner,
+	)
 	if err != nil {
 		return fail(err)
 	}
@@ -87,11 +95,14 @@ func newApplication(ctx context.Context, settings config.Settings, log *logger.L
 	var terminal ports.InteractiveConsole
 	if settings.ConsoleEnabled {
 		controller := applicationconsole.NewCommandController(storage.environments, storage.resources, storage.console,
-			slurm.ConsoleRunner{Executor: provider.OSCommandExecutor{}}, storage.audit)
+			slurm.ConsoleRunner{Executor: provider.OSCommandExecutor{}}, storage.audit, storage.cloud)
 		consoleCommands = controller
 		terminal = applicationconsole.NewTerminalController(controller, terminalRunner{kubernetes: kubernetes.TerminalRunner{}, slurm: slurm.TerminalRunner{}}, storage.audit, storage.console)
 	}
-	api, err := buildAPI(storage, settings, connectionMonitor, discovery, consoleCommands, terminal, sshkey.New(settings.SSHKeyDirectory), planningService)
+	api, err := buildAPI(
+		storage, settings, connectionMonitor, discovery, consoleCommands, terminal,
+		sshKeys, cloudCredentials, cloudProvisioner, planningService,
+	)
 	if err != nil {
 		return fail(err)
 	}

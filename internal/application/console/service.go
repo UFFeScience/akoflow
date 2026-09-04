@@ -19,12 +19,26 @@ type CommandController struct {
 	store     ports.ConsoleCommandStore
 	runner    ports.ConsoleCommandRunner
 	audit     ports.AuditStore
+	cloud     ports.CloudConfigurationStore
 }
 
 var _ ports.ConsoleCommands = (*CommandController)(nil)
 
-func NewCommandController(catalog ports.EnvironmentCatalog, resources ports.ResourceInventory, store ports.ConsoleCommandStore, runner ports.ConsoleCommandRunner, audit ports.AuditStore) *CommandController {
-	return &CommandController{catalog: catalog, resources: resources, store: store, runner: runner, audit: audit}
+func NewCommandController(
+	catalog ports.EnvironmentCatalog,
+	resources ports.ResourceInventory,
+	store ports.ConsoleCommandStore,
+	runner ports.ConsoleCommandRunner,
+	audit ports.AuditStore,
+	cloud ...ports.CloudConfigurationStore,
+) *CommandController {
+	controller := &CommandController{
+		catalog: catalog, resources: resources, store: store, runner: runner, audit: audit,
+	}
+	if len(cloud) > 0 {
+		controller.cloud = cloud[0]
+	}
+	return controller
 }
 
 func (s *CommandController) ExecuteCommand(ctx context.Context, request domainconsole.Request) (domainconsole.Command, error) {
@@ -101,13 +115,43 @@ func (s *CommandController) resolveTarget(ctx context.Context, resource domain.R
 				connectionID, _ := runtime.Configuration["connectionId"].(string)
 				for _, connection := range definition.Connections {
 					if connection.ID == connectionID {
-						return runtime, connection, definition.Environment.ID, nil
+						resolved, resolveErr := s.resolveCloudConnection(ctx, connection, resource.ID)
+						return runtime, resolved, definition.Environment.ID, resolveErr
 					}
 				}
 			}
 		}
 	}
 	return domain.EnvironmentRuntime{}, domain.EnvironmentConnection{}, "", fmt.Errorf("resource %q has no connected runtime", resource.ID)
+}
+
+func (s *CommandController) resolveCloudConnection(
+	ctx context.Context,
+	connection domain.EnvironmentConnection,
+	capacityTargetID string,
+) (domain.EnvironmentConnection, error) {
+	if connection.Type != domain.ConnectionCloud {
+		return connection, nil
+	}
+	if s.cloud == nil {
+		return connection, fmt.Errorf("cloud instance inventory is unavailable")
+	}
+	instances, err := s.cloud.ListProvisionedInstances(ctx, connection.EnvironmentID)
+	if err != nil {
+		return connection, err
+	}
+	for _, instance := range instances {
+		if instance.Status != "ready" || instance.CapacityTargetID != capacityTargetID {
+			continue
+		}
+		return domain.EnvironmentConnection{
+			ID: connection.ID + "-" + instance.ID, EnvironmentID: connection.EnvironmentID,
+			Name: instance.Name, Type: domain.ConnectionSSH, Endpoint: instance.PublicAddress,
+			Username: instance.SSHUsername, CredentialRef: instance.SSHCredentialRef,
+			Configuration: map[string]any{"port": 22, "skipSchedulerCheck": true},
+		}, nil
+	}
+	return connection, fmt.Errorf("cloud capacity target %q has no ready instance", capacityTargetID)
 }
 
 func (s *CommandController) auditEvent(ctx context.Context, command domainconsole.Command, environmentID, eventType string, outcome domainaudit.Outcome, summary string) {

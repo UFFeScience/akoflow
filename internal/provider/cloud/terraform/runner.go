@@ -28,6 +28,9 @@ func (r Runner) Apply(ctx context.Context, spec ports.TerraformProvisionSpec) (p
 	if err != nil {
 		return ports.TerraformResult{}, err
 	}
+	if _, err = r.run(ctx, workspace, "fmt", "-no-color"); err != nil {
+		return ports.TerraformResult{}, err
+	}
 	if _, err = r.run(ctx, workspace, "init", "-no-color", "-input=false"); err != nil {
 		return ports.TerraformResult{}, err
 	}
@@ -47,6 +50,32 @@ func (r Runner) Destroy(ctx context.Context, instanceID string) error {
 		return err
 	}
 	_, err = r.run(ctx, workspace, "destroy", "-auto-approve", "-no-color", "-input=false", "-var-file=terraform.tfvars.json")
+	return err
+}
+
+func (r Runner) Stop(ctx context.Context, instanceID string) error {
+	workspace, err := r.workspace(instanceID)
+	if err != nil {
+		return err
+	}
+	variablesPath := filepath.Join(workspace, "terraform.tfvars.json")
+	encoded, err := os.ReadFile(variablesPath)
+	if err != nil {
+		return err
+	}
+	var values map[string]any
+	if err := json.Unmarshal(encoded, &values); err != nil {
+		return err
+	}
+	values["desired_status"] = "TERMINATED"
+	encoded, _ = json.MarshalIndent(values, "", "  ")
+	if err := os.WriteFile(variablesPath, encoded, 0600); err != nil {
+		return err
+	}
+	_, err = r.run(
+		ctx, workspace, "apply", "-auto-approve", "-no-color", "-input=false",
+		"-var-file=terraform.tfvars.json",
+	)
 	return err
 }
 
@@ -78,6 +107,7 @@ func (r Runner) prepare(spec ports.TerraformProvisionSpec) (string, error) {
 		"spot":             spec.Target.ProvisioningMode == "spot",
 		"ssh_user":         spec.SSHUser,
 		"ssh_public_key":   spec.PublicKey,
+		"desired_status":   "RUNNING",
 	}
 	if values["disk_type"] == "" {
 		values["disk_type"] = "pd-balanced"
@@ -166,13 +196,22 @@ func intValue(values map[string]any, key string, fallback int) int {
 
 const gcpModule = `terraform {
   required_providers {
-    google = { source = "hashicorp/google", version = "~> 6.0" }
+    google = {
+      source  = "hashicorp/google"
+      version = "~> 6.0"
+    }
   }
 }
-variable "credentials_file" { type = string; sensitive = true }
+variable "credentials_file" {
+  type      = string
+  sensitive = true
+}
 variable "project" { type = string }
 variable "region" { type = string }
-variable "zone" { type = string; default = "" }
+variable "zone" {
+  type    = string
+  default = ""
+}
 variable "name" { type = string }
 variable "machine_type" { type = string }
 variable "image" { type = string }
@@ -181,24 +220,61 @@ variable "disk_size_gib" { type = number }
 variable "spot" { type = bool }
 variable "ssh_user" { type = string }
 variable "ssh_public_key" { type = string }
-provider "google" { credentials = file(var.credentials_file); project = var.project; region = var.region }
-data "google_compute_zones" "available" { project = var.project; region = var.region; status = "UP" }
-locals { selected_zone = var.zone != "" ? var.zone : data.google_compute_zones.available.names[0] }
-resource "google_compute_instance" "worker" {
-  name = var.name
+variable "desired_status" {
+  type    = string
+  default = "RUNNING"
+}
+provider "google" {
+  credentials = file(var.credentials_file)
+  project     = var.project
+  region      = var.region
+}
+data "google_compute_zones" "available" {
   project = var.project
-  zone = local.selected_zone
-  machine_type = var.machine_type
+  region  = var.region
+  status  = "UP"
+}
+locals {
+  selected_zone = var.zone != "" ? var.zone : data.google_compute_zones.available.names[0]
+}
+resource "google_compute_instance" "worker" {
+  name                      = var.name
+  project                   = var.project
+  zone                      = local.selected_zone
+  machine_type              = var.machine_type
+  desired_status            = var.desired_status
   allow_stopping_for_update = true
-  boot_disk { initialize_params { image = var.image; size = var.disk_size_gib; type = var.disk_type } }
-  network_interface { network = "default"; access_config {} }
+  tags                      = [var.name]
+  boot_disk {
+    initialize_params {
+      image = var.image
+      size  = var.disk_size_gib
+      type  = var.disk_type
+    }
+  }
+  network_interface {
+    network = "default"
+    access_config {}
+  }
   metadata = { ssh-keys = "${var.ssh_user}:${var.ssh_public_key}" }
   scheduling {
     provisioning_model = var.spot ? "SPOT" : "STANDARD"
-    preemptible = var.spot
-    automatic_restart = var.spot ? false : true
+    preemptible         = var.spot
+    automatic_restart   = var.spot ? false : true
   }
   labels = { managed-by = "akoflow" }
+}
+resource "google_compute_firewall" "ssh" {
+  name          = "${var.name}-ssh"
+  project       = var.project
+  network       = "default"
+  direction     = "INGRESS"
+  source_ranges = ["0.0.0.0/0"]
+  target_tags   = [var.name]
+  allow {
+    protocol = "tcp"
+    ports    = ["22"]
+  }
 }
 output "instance_id" { value = google_compute_instance.worker.instance_id }
 output "public_ip" { value = google_compute_instance.worker.network_interface[0].access_config[0].nat_ip }

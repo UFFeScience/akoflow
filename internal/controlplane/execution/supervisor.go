@@ -24,6 +24,7 @@ type Config struct {
 	MaxParallel  int
 	Preparer     ports.PreparationCoordinator
 	Data         ports.DataCatalog
+	Cloud        ports.CloudProvisioner
 }
 
 type Supervisor struct {
@@ -56,6 +57,12 @@ func (s *Supervisor) Execute(ctx context.Context, request ports.ExecutionRequest
 		return domain.ExecutionTrace{}, fmt.Errorf("create execution run: %w", err)
 	}
 	defer func() {
+		if request.Run.Mode != domain.ExecutionModeSimulation && request.Run.Mode != domain.ExecutionModeInteractive {
+			// Lifecycle cleanup belongs to the infrastructure result, not the
+			// scientific result. Release records its own failed instance status;
+			// a teardown failure must not turn completed computation into failure.
+			_ = s.releaseCloud(context.WithoutCancel(ctx), request)
+		}
 		if err != nil {
 			_ = s.executions.FailRun(context.WithoutCancel(ctx), request.Run.ID, err.Error())
 		}
@@ -75,6 +82,22 @@ func (s *Supervisor) Execute(ctx context.Context, request ports.ExecutionRequest
 		return domain.ExecutionTrace{}, fmt.Errorf("complete execution run: %w", err)
 	}
 	return trace, nil
+}
+
+func (s *Supervisor) releaseCloud(ctx context.Context, request ports.ExecutionRequest) error {
+	if s.config.Cloud == nil {
+		return nil
+	}
+	resourceIDs := make([]string, 0, len(request.Plan.Assignments))
+	for _, assignment := range request.Plan.Assignments {
+		if runtimeDriver(request, assignment.ActivityID) == domain.RuntimeDriverCloud {
+			resourceIDs = append(resourceIDs, assignment.ResourceID)
+		}
+	}
+	if err := s.config.Cloud.Release(ctx, resourceIDs); err != nil {
+		return fmt.Errorf("release cloud capacity: %w", err)
+	}
+	return nil
 }
 
 func (s *Supervisor) executeActivities(ctx context.Context, request ports.ExecutionRequest) (domain.ExecutionTrace, error) {
@@ -270,7 +293,8 @@ func (s *Supervisor) addWorkspacePreparation(
 	resource domain.Resource,
 	producerIDs []string,
 ) error {
-	if s.config.Data == nil || (len(producerIDs) == 0 && runtimeDriver(*request, activityID) != domain.RuntimeDriverKubernetes) {
+	driver := runtimeDriver(*request, activityID)
+	if s.config.Data == nil || (len(producerIDs) == 0 && driver != domain.RuntimeDriverKubernetes && driver != domain.RuntimeDriverCloud) {
 		return nil
 	}
 	instances, err := s.config.Data.ListInstances(ctx, request.Run.ID)
@@ -406,6 +430,15 @@ func workspaceSourceForActivity(request ports.ExecutionRequest, activityID strin
 		query.Set("connectionId", connectionID)
 		u.RawQuery = query.Encode()
 		return domain.TransferLocation{URI: u.String(), ResourceID: resource.ID}, nil
+	case domain.RuntimeDriverCloud:
+		u := &url.URL{
+			Scheme: "file",
+			Path:   path.Join("/akoflow/workspace/runs", request.Run.ID, activityID),
+		}
+		query := u.Query()
+		query.Set("connectionId", connectionID)
+		u.RawQuery = query.Encode()
+		return domain.TransferLocation{URI: u.String(), ResourceID: resource.ID}, nil
 	default:
 		return domain.TransferLocation{}, fmt.Errorf("runtime for producer %q does not support workspace transfer", activityID)
 	}
@@ -451,6 +484,15 @@ func workspaceDestination(request ports.ExecutionRequest, activityID string, res
 			return domain.TransferLocation{}, fmt.Errorf("HPC environment has no discovered home directory")
 		}
 		u := &url.URL{Scheme: "file", Path: path.Join(home, "akoflow-workspaces", request.Run.ID, activityID)}
+		query := u.Query()
+		query.Set("connectionId", connectionID)
+		u.RawQuery = query.Encode()
+		return domain.TransferLocation{URI: u.String(), ResourceID: resource.ID}, nil
+	case domain.RuntimeDriverCloud:
+		u := &url.URL{
+			Scheme: "file",
+			Path:   path.Join("/akoflow/workspace/runs", request.Run.ID, activityID),
+		}
 		query := u.Query()
 		query.Set("connectionId", connectionID)
 		u.RawQuery = query.Encode()

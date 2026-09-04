@@ -32,6 +32,16 @@ const defaultPlaybook = `---
       ansible.builtin.apt:
         name: docker.io
         state: present
+    - name: Enable Docker
+      ansible.builtin.service:
+        name: docker
+        state: started
+        enabled: true
+    - name: Allow the remote user to run Docker
+      ansible.builtin.user:
+        name: "{{ ansible_user_id }}"
+        groups: docker
+        append: true
     - name: Install Apptainer
       ansible.builtin.apt:
         name: apptainer
@@ -40,7 +50,8 @@ const defaultPlaybook = `---
       ansible.builtin.file:
         path: "{{ akoflow_workspace_path }}"
         state: directory
-        mode: "0750"
+        owner: "{{ ansible_user_id }}"
+        mode: "0770"
 `
 
 func (r *Repository) EnsureDefaults(ctx context.Context) error {
@@ -70,7 +81,9 @@ func (r *Repository) EnsureDefaults(ctx context.Context) error {
 	checksJSON, _ := json.Marshal(checks)
 	_, err = tx.ExecContext(ctx, `INSERT OR IGNORE INTO machine_configuration_versions
 		(id,machine_configuration_id,version,status,playbook_yaml,content_sha256,compatibility,variables_schema,validation_checks,created_at)
-		VALUES (?,?,?,?,?,?,?,?,?,?)`, domain.DefaultMachineConfigurationID+"-v1", domain.DefaultMachineConfigurationID, 1, "published", defaultPlaybook, validation.SHA256, compatJSON, variablesJSON, checksJSON, now)
+		VALUES (?,?,?,?,?,?,?,?,?,?)`, domain.DefaultMachineConfigurationVersionID,
+		domain.DefaultMachineConfigurationID, 2, "published", defaultPlaybook,
+		validation.SHA256, compatJSON, variablesJSON, checksJSON, now)
 	if err != nil {
 		return err
 	}
@@ -255,7 +268,10 @@ func (r *Repository) CreateCapacityTarget(ctx context.Context, value domain.Clou
 	}
 	configurations := value.MachineConfigurations
 	if len(configurations) == 0 {
-		configurations = []domain.CloudTargetConfiguration{{ConfigurationVersionID: domain.DefaultMachineConfigurationID + "-v1", ExecutionOrder: 0, Required: true, Enabled: true}}
+		configurations = []domain.CloudTargetConfiguration{{
+			ConfigurationVersionID: domain.DefaultMachineConfigurationVersionID,
+			ExecutionOrder:         0, Required: true, Enabled: true,
+		}}
 	}
 	for _, item := range configurations {
 		variables, _ := json.Marshal(item.Variables)

@@ -249,6 +249,19 @@ func (h *Handler) QueryProvenanceSQL(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, http.StatusOK, result)
 }
 
+func (h *Handler) GetProvenanceSchema(w http.ResponseWriter, r *http.Request) {
+	if h.provenance == nil {
+		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("provenance explorer is unavailable"))
+		return
+	}
+	result, err := h.provenance.Schema(r.Context())
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, err)
+		return
+	}
+	writeJSON(w, http.StatusOK, map[string]any{"items": result})
+}
+
 func (h *Handler) ExplainProvenanceSQL(w http.ResponseWriter, r *http.Request) {
 	if h.provenance == nil {
 		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("provenance explorer is unavailable"))
@@ -1617,7 +1630,60 @@ func (h *Handler) CreateCloudCapacityTarget(w http.ResponseWriter, r *http.Reque
 		writeError(w, http.StatusUnprocessableEntity, err)
 		return
 	}
+	definition, err := h.environments.Find(r.Context(), value.EnvironmentID)
+	if err != nil || definition == nil {
+		writeError(w, http.StatusUnprocessableEntity, fmt.Errorf("load target environment: %w", err))
+		return
+	}
+	var runtimeID string
+	for _, runtime := range definition.Runtimes {
+		if runtime.Driver == domain.RuntimeDriverCloud {
+			runtimeID = runtime.ID
+			break
+		}
+	}
+	if runtimeID == "" {
+		writeError(w, http.StatusUnprocessableEntity, fmt.Errorf("environment has no cloud runtime"))
+		return
+	}
+	resource := domain.Resource{
+		ID: value.ID, EnvironmentVersionID: definition.Version.ID,
+		ExecutionTarget: domain.ExecutionTargetDirect, Type: domain.ResourceCloudVM,
+		Name: value.Name, ProviderID: value.ProviderMachineType, Tier: "cloud",
+		Region: value.Region, Zone: value.FixedZone, Architecture: value.Architecture,
+		CPUCores: value.VCPU, CPUCapacity: float64(value.VCPU),
+		MemoryBytes:    value.MemoryMiB << 20,
+		StorageBytes:   configurationInt64(value.Configuration, "diskSizeGiB") << 30,
+		ComputeSpeedup: 1, Schedulable: true,
+		Metadata: map[string]any{
+			"capacityTargetId": value.ID, "maximumInstances": value.MaximumInstances,
+			"lifecyclePolicy": value.LifecyclePolicy, "provisioningMode": value.ProvisioningMode,
+		},
+	}
+	if err := h.resources.Upsert(r.Context(), resource); err != nil {
+		writeError(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+	if err := h.resources.UpsertRuntimeBinding(r.Context(), domain.ResourceRuntimeBinding{
+		ResourceID: value.ID, RuntimeID: runtimeID, Enabled: true,
+	}); err != nil {
+		writeError(w, http.StatusUnprocessableEntity, err)
+		return
+	}
 	writeJSON(w, http.StatusCreated, value)
+}
+
+func configurationInt64(values map[string]any, key string) int64 {
+	switch value := values[key].(type) {
+	case float64:
+		return int64(value)
+	case int:
+		return int64(value)
+	case int64:
+		return value
+	default:
+		return 0
+	}
 }
 
 func (h *Handler) ListCloudInstances(w http.ResponseWriter, r *http.Request) {

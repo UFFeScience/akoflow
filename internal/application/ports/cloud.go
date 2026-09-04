@@ -38,6 +38,7 @@ type CloudCatalog interface {
 type CloudProvisioner interface {
 	Provision(context.Context, string, domain.CloudProvisionRequest) (domain.CloudProvisionedInstance, error)
 	Destroy(context.Context, string) (domain.CloudProvisionedInstance, error)
+	Release(context.Context, []string) error
 }
 
 type TerraformProvisionSpec struct {
@@ -59,6 +60,7 @@ type TerraformResult struct {
 type TerraformRunner interface {
 	Apply(context.Context, TerraformProvisionSpec) (TerraformResult, error)
 	Destroy(context.Context, string) error
+	Stop(context.Context, string) error
 }
 
 type CloudSSHKey struct {

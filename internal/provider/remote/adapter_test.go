@@ -59,7 +59,7 @@ func TestFactoryValidatesDirectDockerConnection(t *testing.T) {
 }
 
 func TestAdapterStartsRemoteContainerWithResourceLimits(t *testing.T) {
-	executor := &commandExecutorStub{responses: [][]byte{[]byte("container-id\n")}}
+	executor := &commandExecutorStub{responses: [][]byte{nil, []byte("[]"), []byte("container-id\n")}}
 	adapter := &Adapter{executor: executor}
 	handle, err := adapter.Start(context.Background(), executionFixture())
 	if err != nil {
@@ -68,7 +68,10 @@ func TestAdapterStartsRemoteContainerWithResourceLimits(t *testing.T) {
 	if handle.ExternalID != "container-id" || handle.Status != domain.HandleStarting || handle.Metadata["containerName"] != "akoflow-run-one-activity-one" {
 		t.Fatalf("handle = %#v", handle)
 	}
-	call := executor.calls[0]
+	if executor.calls[0].name != "mkdir" || executor.calls[1].name != "python3" {
+		t.Fatalf("workspace preparation calls = %#v", executor.calls[:2])
+	}
+	call := executor.calls[2]
 	joined := strings.Join(call.args, " ")
 	for _, expected := range []string{"run --detach", "--label akoflow.run=run:one", "--env A=B", "--cpus 2.5", "--memory 1024", "ubuntu:latest sh -c echo ok"} {
 		if !strings.Contains(joined, expected) {
@@ -92,7 +95,7 @@ func TestAdapterRejectsUnreadyPreparationAndMissingImage(t *testing.T) {
 		t.Fatal("expected image error")
 	}
 	execution.Activity.Command.Image = "image"
-	adapter.executor = &commandExecutorStub{errors: []error{fmt.Errorf("docker unavailable")}}
+	adapter.executor = &commandExecutorStub{responses: [][]byte{nil, []byte("[]")}, errors: []error{nil, nil, fmt.Errorf("docker unavailable")}}
 	if _, err := adapter.Start(context.Background(), execution); err == nil || !strings.Contains(err.Error(), "start remote Docker") {
 		t.Fatalf("start error = %v", err)
 	}
@@ -126,6 +129,38 @@ func TestAdapterInspectsRunningCompletedFailedAndUnknownContainers(t *testing.T)
 				t.Fatalf("failure = %q", handle.Failure)
 			}
 		})
+	}
+}
+
+func TestAdapterCatalogsOnlyRemoteWorkspaceChanges(t *testing.T) {
+	before := `[{"path":"input.txt","size":3,"checksum":"old","modified":1},{"path":"gone.txt","size":2,"checksum":"gone","modified":1}]`
+	after := `[{"path":"input.txt","size":4,"checksum":"new","modified":2},{"path":"result.txt","size":5,"checksum":"result","modified":3}]`
+	executor := &commandExecutorStub{responses: [][]byte{
+		[]byte("exited|0\n"), []byte(after), []byte("done\n"),
+	}}
+	adapter := &Adapter{executor: executor}
+	handle, err := adapter.Inspect(context.Background(), domain.ActivityHandle{
+		RunID: "run", ActivityID: "activity", RuntimeID: "cloud", ExternalID: "container",
+		StartedAt: 10, Metadata: map[string]any{
+			"artifactObservationRoot":   "/akoflow/workspace/run/activity",
+			"artifactObservationBefore": before,
+		},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if handle.Status != domain.HandleCompleted || handle.Artifacts == nil {
+		t.Fatalf("handle = %#v", handle)
+	}
+	manifest := handle.Artifacts
+	if manifest.Summary.InitialFiles != 2 || manifest.Summary.FinalFiles != 2 ||
+		manifest.Summary.CreatedFiles != 1 || manifest.Summary.ModifiedFiles != 1 ||
+		manifest.Summary.DeletedFiles != 1 || manifest.Summary.OutputBytes != 9 {
+		t.Fatalf("summary = %#v", manifest.Summary)
+	}
+	if len(manifest.Files) != 3 || manifest.Files[0].Path != "gone.txt" ||
+		manifest.Files[1].Path != "input.txt" || manifest.Files[2].Path != "result.txt" {
+		t.Fatalf("files = %#v", manifest.Files)
 	}
 }
 

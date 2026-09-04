@@ -33,6 +33,7 @@ const (
 	RuntimeDriverLocal      RuntimeDriver = "local"
 	RuntimeDriverServerless RuntimeDriver = "serverless"
 	RuntimeDriverSimGrid    RuntimeDriver = "simgrid"
+	RuntimeDriverCloud      RuntimeDriver = "cloud"
 
 	RuntimeModeExecution  RuntimeMode = "execution"
 	RuntimeModeSimulation RuntimeMode = "simulation"

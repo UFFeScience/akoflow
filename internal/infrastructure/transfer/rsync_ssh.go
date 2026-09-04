@@ -66,7 +66,11 @@ func sshArgs(e domain.TransferEndpoint) []string {
 		}
 		if queryKnownHosts := query.Get("knownHostsFile"); queryKnownHosts != "" {
 			knownHosts = queryKnownHosts
-			args = append(args, "-o", "UserKnownHostsFile="+queryKnownHosts, "-o", "StrictHostKeyChecking=yes")
+			policy := "yes"
+			if accepted, _ := strconv.ParseBool(query.Get("acceptNewHostKey")); accepted {
+				policy = "accept-new"
+			}
+			args = append(args, "-o", "UserKnownHostsFile="+queryKnownHosts, "-o", "StrictHostKeyChecking="+policy)
 		}
 		if port := query.Get("port"); port != "" {
 			args = append(args, "-p", port)

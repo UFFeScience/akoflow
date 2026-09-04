@@ -28,6 +28,7 @@ type CloudProvisionedInstance = cloud.ProvisionedInstance
 type CloudProvisionRequest = cloud.ProvisionRequest
 
 const DefaultMachineConfigurationID = cloud.DefaultConfigurationID
+const DefaultMachineConfigurationVersionID = cloud.DefaultConfigurationVersionID
 
 type SimulationEngine = simulation.Engine
 type SimulationModel = simulation.Model
@@ -84,6 +85,7 @@ const (
 	RuntimeDriverSlurm          = environment.RuntimeDriverSlurm
 	RuntimeDriverKubernetes     = environment.RuntimeDriverKubernetes
 	RuntimeDriverSSH            = environment.RuntimeDriverSSH
+	RuntimeDriverCloud          = environment.RuntimeDriverCloud
 	RuntimeDriverLocal          = environment.RuntimeDriverLocal
 	RuntimeDriverServerless     = environment.RuntimeDriverServerless
 	RuntimeDriverSimGrid        = environment.RuntimeDriverSimGrid

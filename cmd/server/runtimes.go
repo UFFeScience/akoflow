@@ -7,6 +7,7 @@ import (
 	"github.com/UFFeScience/akoflow/internal/application/ports"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/config"
 	"github.com/UFFeScience/akoflow/internal/provider"
+	cloudruntime "github.com/UFFeScience/akoflow/internal/provider/cloud/runtime"
 	"github.com/UFFeScience/akoflow/internal/provider/kubernetes"
 	"github.com/UFFeScience/akoflow/internal/provider/local"
 	"github.com/UFFeScience/akoflow/internal/provider/registry"
@@ -30,7 +31,12 @@ func buildSimulator(settings config.Settings) (ports.PlanExecutor, error) {
 	}
 }
 
-func buildRuntimes(settings config.Settings, catalogs ...ports.EnvironmentCatalog) (ports.RuntimeResolver, error) {
+func buildRuntimes(
+	settings config.Settings,
+	catalog ports.EnvironmentCatalog,
+	cloudStore ports.CloudConfigurationStore,
+	cloudProvisioner ports.CloudProvisioner,
+) (ports.RuntimeResolver, error) {
 	runtimes := registry.New()
 	adapters := map[string]ports.RuntimeAdapter{
 		"*":          simgrid.NewActivityRuntime(),
@@ -45,10 +51,14 @@ func buildRuntimes(settings config.Settings, catalogs ...ports.EnvironmentCatalo
 			return nil, err
 		}
 	}
-	if len(catalogs) > 0 && catalogs[0] != nil {
-		return registry.NewCatalogResolver(runtimes, catalogs[0],
+	if catalog != nil {
+		return registry.NewCatalogResolver(runtimes, catalog,
 			kubernetes.ConnectionFactory{DefaultNamespace: settings.DefaultNamespace},
 			remote.Factory{Executor: provider.OSCommandExecutor{}},
+			cloudruntime.Factory{
+				Store: cloudStore, Provisioner: cloudProvisioner,
+				Executor: provider.OSCommandExecutor{},
+			},
 			slurm.ConnectionFactory{Executor: provider.OSCommandExecutor{},
 				DefaultScriptDirectory: settings.SlurmScriptDirectory},
 		), nil

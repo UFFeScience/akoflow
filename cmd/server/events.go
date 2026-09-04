@@ -24,9 +24,14 @@ func buildEventLoop(
 	simulator ports.PlanExecutor,
 	artifactStoreRoot string,
 	planning eventloop.PlanningRunner,
+	cloud ports.CloudConfigurationStore,
+	cloudProvisioner ports.CloudProvisioner,
 ) (*eventloop.Loop, error) {
 	dispatcher := eventloop.NewDispatcher()
-	if err := registerExecutionHandlers(dispatcher, executions, data, instance, connections, activities, simulator, artifactStoreRoot); err != nil {
+	if err := registerExecutionHandlers(
+		dispatcher, executions, data, instance, connections, activities, simulator,
+		artifactStoreRoot, cloud, cloudProvisioner,
+	); err != nil {
 		return nil, err
 	}
 	if err := dispatcher.Register(eventloop.EventPlanningSessionRequested, eventloop.NewPlanningSessionHandler(planning)); err != nil {
@@ -52,17 +57,27 @@ func registerExecutionHandlers(
 	activities *applicationexecution.Controller,
 	simulator ports.PlanExecutor,
 	artifactStoreRoot string,
+	cloud ports.CloudConfigurationStore,
+	cloudProvisioner ports.CloudProvisioner,
 ) error {
 	if err := dispatcher.Register(eventloop.EventActivityExecutionRequested,
 		eventloop.NewActivityExecutionHandler(activities)); err != nil {
 		return err
 	}
 	bufferSize := infratransfer.InstanceBufferSize(instance)
-	preparer := applicationtransfer.Coordinator{Catalog: data, Materializer: applicationtransfer.Materializer{Resolver: infratransfer.EnvironmentEndpointResolver{Connections: connections}, Connectors: []ports.TransferConnector{
+	resolver := infratransfer.EnvironmentEndpointResolver{
+		Connections: connections, Cloud: cloud, Provisioner: cloudProvisioner,
+	}
+	preparer := applicationtransfer.Coordinator{Catalog: data, Materializer: applicationtransfer.Materializer{Resolver: resolver, Connectors: []ports.TransferConnector{
 		infratransfer.ArtifactStore{Root: artifactStoreRoot}, infratransfer.LocalFilesystem{BufferSize: bufferSize}, infratransfer.RsyncSSH{BufferSize: bufferSize}, infratransfer.KubernetesExec{BufferSize: bufferSize}, infratransfer.HTTPDownload{}, infratransfer.S3Compatible{BufferSize: bufferSize}, infratransfer.GCS{},
 	}}}
-	supervisor, err := controlexecution.New(executions, activities,
-		simulator, controlexecution.Config{PollInterval: time.Second, MaxParallel: 8, Preparer: preparer, Data: data})
+	supervisor, err := controlexecution.New(
+		executions, activities, simulator,
+		controlexecution.Config{
+			PollInterval: time.Second, MaxParallel: 8, Preparer: preparer,
+			Data: data, Cloud: cloudProvisioner,
+		},
+	)
 	if err != nil {
 		return err
 	}

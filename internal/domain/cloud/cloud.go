@@ -5,6 +5,7 @@ import (
 )
 
 const DefaultConfigurationID = "akoflow-scientific-worker"
+const DefaultConfigurationVersionID = "akoflow-scientific-worker-v2"
 
 type Compatibility struct {
 	Providers        []string `json:"providers,omitempty" yaml:"providers,omitempty"`

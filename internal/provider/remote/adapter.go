@@ -4,7 +4,9 @@ package remote
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -31,6 +33,13 @@ func (f Factory) Build(_ domain.EnvironmentRuntime, connection domain.Environmen
 
 type Adapter struct{ executor runtimecommon.CommandExecutor }
 
+type remoteArtifactFile struct {
+	Path     string `json:"path"`
+	Size     int64  `json:"size"`
+	Checksum string `json:"checksum"`
+	Modified int64  `json:"modified"`
+}
+
 func (*Adapter) Modes() []domain.ExecutionMode {
 	return []domain.ExecutionMode{domain.ExecutionModeReal}
 }
@@ -46,6 +55,18 @@ func (a *Adapter) Start(ctx context.Context, execution domain.ActivityExecutionC
 		return domain.ActivityHandle{}, fmt.Errorf("activity image is required for remote Docker execution")
 	}
 	name := "akoflow-" + safeName(execution.Run.ID) + "-" + safeName(activity.ID)
+	workingDirectory := strings.TrimSpace(activity.Command.WorkingDirectory)
+	if workingDirectory == "" {
+		workingDirectory = "/akoflow/workspace/runs/" + safeName(execution.Run.ID) + "/" + safeName(activity.ID)
+	}
+	if _, err := a.executor.Run(ctx, "mkdir", []string{"-p", workingDirectory}, nil); err != nil {
+		return domain.ActivityHandle{}, fmt.Errorf("prepare remote workspace: %w", err)
+	}
+	before, err := a.snapshot(ctx, workingDirectory)
+	if err != nil {
+		return domain.ActivityHandle{}, fmt.Errorf("snapshot remote workspace: %w", err)
+	}
+	beforeJSON, _ := json.Marshal(before)
 	args := []string{"run", "--detach", "--name", name, "--label", "akoflow.run=" + execution.Run.ID}
 	for key, value := range activity.Command.Environment {
 		args = append(args, "--env", key+"="+value)
@@ -56,6 +77,7 @@ func (a *Adapter) Start(ctx context.Context, execution domain.ActivityExecutionC
 	if activity.Resources.MemoryBytes > 0 {
 		args = append(args, "--memory", strconv.FormatInt(activity.Resources.MemoryBytes, 10))
 	}
+	args = append(args, "--volume", workingDirectory+":"+workingDirectory, "--workdir", workingDirectory)
 	args = append(args, activity.Command.Image)
 	if activity.Command.Entrypoint != "" {
 		args = append(args, activity.Command.Entrypoint)
@@ -68,7 +90,10 @@ func (a *Adapter) Start(ctx context.Context, execution domain.ActivityExecutionC
 	now := runtimecommon.UnixSeconds(time.Now())
 	return domain.ActivityHandle{ID: runtimecommon.NewID("activity"), RunID: execution.Run.ID, ActivityID: activity.ID,
 		ResourceID: execution.Resource.ID, RuntimeID: execution.RuntimeID, ExternalID: strings.TrimSpace(string(output)),
-		Status: domain.HandleStarting, StartedAt: now, Metadata: map[string]any{"containerName": name, "executionTarget": "remote-docker"}}, nil
+		Status: domain.HandleStarting, StartedAt: now, Metadata: map[string]any{
+			"containerName": name, "executionTarget": "remote-docker", "artifactObservationRoot": workingDirectory,
+			"artifactObservationBefore": string(beforeJSON),
+		}}, nil
 }
 
 func (a *Adapter) Inspect(ctx context.Context, handle domain.ActivityHandle) (domain.ActivityHandle, error) {
@@ -90,6 +115,22 @@ func (a *Adapter) Inspect(ctx context.Context, handle domain.ActivityHandle) (do
 			handle.Status = domain.HandleFailed
 			handle.Failure = "remote Docker container exited with code " + strconv.Itoa(code)
 		}
+		root, _ := handle.Metadata["artifactObservationRoot"].(string)
+		if root != "" {
+			artifacts, observeErr := a.collectArtifacts(ctx, handle, code)
+			if observeErr == nil {
+				handle.Artifacts = artifacts
+			} else {
+				if handle.Metadata == nil {
+					handle.Metadata = map[string]any{}
+				}
+				handle.Metadata["artifactObservationError"] = observeErr.Error()
+				if code == 0 {
+					handle.Status = domain.HandleFailed
+					handle.Failure = "observe remote workspace: " + observeErr.Error()
+				}
+			}
+		}
 	default:
 		handle.Status = domain.HandleFailed
 		handle.Failure = "remote Docker container state: " + parts[0]
@@ -98,6 +139,113 @@ func (a *Adapter) Inspect(ctx context.Context, handle domain.ActivityHandle) (do
 		handle.Log = string(log)
 	}
 	return handle, nil
+}
+
+func (a *Adapter) snapshot(ctx context.Context, root string) ([]remoteArtifactFile, error) {
+	const script = `import hashlib,json,os,sys
+root=sys.argv[1]
+result=[]
+for base,dirs,files in os.walk(root):
+  dirs.sort(); files.sort()
+  for name in files:
+    full=os.path.join(base,name)
+    if not os.path.isfile(full): continue
+    h=hashlib.sha256()
+    with open(full,'rb') as stream:
+      for chunk in iter(lambda: stream.read(1024*1024),b''): h.update(chunk)
+    stat=os.stat(full)
+    result.append({'path':os.path.relpath(full,root).replace(os.sep,'/'),'size':stat.st_size,'checksum':h.hexdigest(),'modified':stat.st_mtime_ns})
+print(json.dumps(result,separators=(',',':')))`
+	output, err := a.executor.Run(ctx, "python3", []string{"-c", script, root}, nil)
+	if err != nil {
+		return nil, err
+	}
+	var files []remoteArtifactFile
+	if err := json.Unmarshal(output, &files); err != nil {
+		return nil, fmt.Errorf("decode remote artifact snapshot: %w", err)
+	}
+	return files, nil
+}
+
+func (a *Adapter) collectArtifacts(ctx context.Context, handle domain.ActivityHandle, exitCode int) (*domain.ArtifactManifest, error) {
+	root, _ := handle.Metadata["artifactObservationRoot"].(string)
+	encoded, _ := handle.Metadata["artifactObservationBefore"].(string)
+	if root == "" {
+		return nil, fmt.Errorf("remote workspace metadata is missing")
+	}
+	var before []remoteArtifactFile
+	if encoded != "" {
+		if err := json.Unmarshal([]byte(encoded), &before); err != nil {
+			return nil, fmt.Errorf("decode initial remote snapshot: %w", err)
+		}
+	}
+	after, err := a.snapshot(ctx, root)
+	if err != nil {
+		return nil, err
+	}
+	return remoteArtifactManifest(handle, root, exitCode, before, after), nil
+}
+
+func remoteArtifactManifest(handle domain.ActivityHandle, root string, exitCode int, before, after []remoteArtifactFile) *domain.ArtifactManifest {
+	initial, final := indexRemoteFiles(before), indexRemoteFiles(after)
+	paths := make([]string, 0, len(initial)+len(final))
+	seen := map[string]bool{}
+	for path := range initial {
+		seen[path] = true
+		paths = append(paths, path)
+	}
+	for path := range final {
+		if !seen[path] {
+			paths = append(paths, path)
+		}
+	}
+	sort.Strings(paths)
+	manifest := &domain.ArtifactManifest{SchemaVersion: 1, RunID: handle.RunID, ActivityID: handle.ActivityID,
+		Attempt: 1, Runtime: handle.RuntimeID, Root: root, StartedAt: handle.StartedAt, FinishedAt: handle.FinishedAt,
+		ExitCode: exitCode, Files: []domain.ArtifactObservation{}}
+	manifest.Summary.InitialFiles, manifest.Summary.FinalFiles = len(initial), len(final)
+	for _, path := range paths {
+		old, hadOld := initial[path]
+		current, hasCurrent := final[path]
+		change := domain.ArtifactCreated
+		switch {
+		case !hadOld:
+			manifest.Summary.CreatedFiles++
+		case !hasCurrent:
+			change = domain.ArtifactDeleted
+			manifest.Summary.DeletedFiles++
+			current = old
+		case old.Size == current.Size && old.Checksum == current.Checksum:
+			continue
+		default:
+			change = domain.ArtifactModified
+			manifest.Summary.ModifiedFiles++
+		}
+		manifest.Files = append(manifest.Files, domain.ArtifactObservation{Path: path, Change: change,
+			SizeBytes: current.Size, Checksum: "sha256:" + current.Checksum, ModifiedUnixNano: current.Modified})
+		if change != domain.ArtifactDeleted {
+			manifest.Summary.OutputBytes += current.Size
+		}
+	}
+	status := "completed"
+	if exitCode != 0 {
+		status = "failed"
+	}
+	duration := handle.FinishedAt - handle.StartedAt
+	if duration < 0 {
+		duration = 0
+	}
+	manifest.Phases = []domain.LifecycleObservation{{Phase: "execution", Status: status, StartedAt: handle.StartedAt,
+		FinishedAt: handle.FinishedAt, DurationSeconds: duration}}
+	return manifest
+}
+
+func indexRemoteFiles(files []remoteArtifactFile) map[string]remoteArtifactFile {
+	result := make(map[string]remoteArtifactFile, len(files))
+	for _, file := range files {
+		result[file.Path] = file
+	}
+	return result
 }
 
 func (a *Adapter) Stop(ctx context.Context, handle domain.ActivityHandle) error {

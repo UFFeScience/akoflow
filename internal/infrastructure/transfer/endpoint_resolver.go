@@ -13,6 +13,8 @@ import (
 
 type EnvironmentEndpointResolver struct {
 	Connections ports.ConnectionStore
+	Cloud       ports.CloudConfigurationStore
+	Provisioner ports.CloudProvisioner
 }
 
 func (resolver EnvironmentEndpointResolver) ResolveTransferEndpoint(ctx context.Context, location domain.TransferLocation) (domain.TransferEndpoint, error) {
@@ -36,6 +38,12 @@ func (resolver EnvironmentEndpointResolver) ResolveTransferEndpoint(ctx context.
 	connection, err := resolver.Connections.FindConnection(ctx, connectionID)
 	if err != nil || connection == nil {
 		return endpoint, fmt.Errorf("resolve transfer connection %q: %w", connectionID, err)
+	}
+	if connection.Type == domain.ConnectionCloud {
+		connection, err = resolver.cloudConnection(ctx, *connection, location.ResourceID)
+		if err != nil {
+			return endpoint, err
+		}
 	}
 	endpoint.ID = connection.ID
 	endpoint.EnvironmentID = connection.EnvironmentID
@@ -72,6 +80,9 @@ func (resolver EnvironmentEndpointResolver) ResolveTransferEndpoint(ctx context.
 			knownHosts = "storage/credentials/ssh/known_hosts"
 		}
 		query.Set("knownHostsFile", knownHosts)
+		if value, _ := connection.Configuration["acceptNewHostKey"].(bool); value {
+			query.Set("acceptNewHostKey", "true")
+		}
 		if value, ok := connection.Configuration["forwardAgent"].(bool); ok && value {
 			query.Set("forwardAgent", "true")
 		}
@@ -84,4 +95,40 @@ func (resolver EnvironmentEndpointResolver) ResolveTransferEndpoint(ctx context.
 		return endpoint, fmt.Errorf("connection %q of type %q cannot resolve URI scheme %q", connectionID, connection.Type, u.Scheme)
 	}
 	return endpoint, nil
+}
+
+func (resolver EnvironmentEndpointResolver) cloudConnection(
+	ctx context.Context,
+	connection domain.EnvironmentConnection,
+	capacityTargetID string,
+) (*domain.EnvironmentConnection, error) {
+	if resolver.Cloud == nil || resolver.Provisioner == nil {
+		return nil, fmt.Errorf("cloud transfer endpoint is unavailable")
+	}
+	instances, err := resolver.Cloud.ListProvisionedInstances(ctx, connection.EnvironmentID)
+	if err != nil {
+		return nil, err
+	}
+	var selected *domain.CloudProvisionedInstance
+	for index := range instances {
+		if instances[index].Status == "ready" && instances[index].CapacityTargetID == capacityTargetID {
+			selected = &instances[index]
+			break
+		}
+	}
+	if selected == nil {
+		created, provisionErr := resolver.Provisioner.Provision(ctx, connection.EnvironmentID, domain.CloudProvisionRequest{
+			CapacityTargetID: capacityTargetID,
+		})
+		if provisionErr != nil {
+			return nil, provisionErr
+		}
+		selected = &created
+	}
+	return &domain.EnvironmentConnection{
+		ID: connection.ID + "-" + selected.ID, EnvironmentID: connection.EnvironmentID,
+		Name: selected.Name, Type: domain.ConnectionSSH, Endpoint: selected.PublicAddress,
+		Username: selected.SSHUsername, CredentialRef: selected.SSHCredentialRef,
+		Configuration: map[string]any{"port": 22, "acceptNewHostKey": true},
+	}, nil
 }

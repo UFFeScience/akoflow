@@ -1875,22 +1875,27 @@ func (h *Handler) DestroyCloudInstance(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) enqueueCloudOperation(w http.ResponseWriter, r *http.Request, kind, environmentID, instanceID, targetID string, request domain.CloudProvisionRequest) {
-	if instanceID != "" {
-		operations, err := h.cloudOperations.ListCloudOperations(r.Context())
-		if err != nil {
-			writeError(w, http.StatusInternalServerError, err)
+	operations, err := h.cloudOperations.ListCloudOperations(r.Context())
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, err)
+		return
+	}
+	for _, existing := range operations {
+		if existing.Status != "queued" && existing.Status != "running" {
+			continue
+		}
+		sameInstance := instanceID != "" && existing.InstanceID == instanceID
+		sameProvisionTarget := kind == "provision" && existing.Kind == "provision" &&
+			existing.EnvironmentID == environmentID && existing.CapacityTargetID == targetID
+		if !sameInstance && !sameProvisionTarget {
+			continue
+		}
+		if existing.Kind == kind {
+			writeJSON(w, http.StatusAccepted, existing)
 			return
 		}
-		for _, existing := range operations {
-			if existing.InstanceID == instanceID && (existing.Status == "queued" || existing.Status == "running") {
-				if existing.Kind == kind {
-					writeJSON(w, http.StatusAccepted, existing)
-					return
-				}
-				writeError(w, http.StatusConflict, fmt.Errorf("cloud resource already has an active %s run", existing.Kind))
-				return
-			}
-		}
+		writeError(w, http.StatusConflict, fmt.Errorf("cloud resource already has an active %s run", existing.Kind))
+		return
 	}
 	operation := domain.CloudOperationRun{ID: "cloud-run-" + uuid.NewString(), Kind: kind,
 		Status: "queued", EnvironmentID: environmentID, InstanceID: instanceID,

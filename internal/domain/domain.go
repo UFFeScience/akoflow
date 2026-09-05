@@ -219,6 +219,7 @@ type BuildContextArtifact = execution.BuildContextArtifact
 type TransferLocation = execution.TransferLocation
 type BlobDescriptor = execution.BlobDescriptor
 type TransferEndpoint = execution.TransferEndpoint
+type TransferRoute = execution.TransferRoute
 type TransferConnectorBinding = execution.ConnectorBinding
 type ArtifactVersion = execution.ArtifactVersion
 type ArtifactLocation = execution.ArtifactLocation
@@ -306,6 +307,9 @@ const (
 	TransferUseExisting         = execution.TransferUseExisting
 	TransferDestinationPull     = execution.TransferDestinationPull
 	TransferSourcePush          = execution.TransferSourcePush
+	TransferRuntimeLocal        = execution.TransferRuntimeLocal
+	TransferSharedStorage       = execution.TransferSharedStorage
+	TransferDirectRuntime       = execution.TransferDirectRuntime
 	DeliveryAuto                = workflow.DeliveryAuto
 	DeliveryManaged             = workflow.DeliveryManaged
 	DeliveryUseInPlace          = workflow.DeliveryUseInPlace

@@ -18,6 +18,9 @@ const (
 	TransferDestinationPull     TransferStrategy      = "destination-pull"
 	TransferSourcePush          TransferStrategy      = "source-push"
 	TransferGateway             TransferStrategy      = "gateway"
+	TransferRuntimeLocal        TransferStrategy      = "runtime-local"
+	TransferSharedStorage       TransferStrategy      = "shared-storage"
+	TransferDirectRuntime       TransferStrategy      = "direct-runtime"
 	MaterializationPlanned      MaterializationStatus = "planned"
 	MaterializationReconciling  MaterializationStatus = "reconciling"
 	MaterializationTransferring MaterializationStatus = "transferring"
@@ -63,10 +66,14 @@ func (m ArtifactMaterialization) Committed() bool {
 }
 
 type TransferLocation struct {
-	ResourceID    string `json:"resourceId,omitempty"`
-	EnvironmentID string `json:"environmentId,omitempty"`
-	URI           string `json:"uri"`
-	Path          string `json:"path,omitempty"`
+	ResourceID      string `json:"resourceId,omitempty"`
+	EnvironmentID   string `json:"environmentId,omitempty"`
+	RuntimeID       string `json:"runtimeId,omitempty"`
+	ConnectionID    string `json:"connectionId,omitempty"`
+	CloudInstanceID string `json:"cloudInstanceId,omitempty"`
+	NetworkDomain   string `json:"networkDomain,omitempty"`
+	URI             string `json:"uri"`
+	Path            string `json:"path,omitempty"`
 }
 type ArtifactVersion struct {
 	ID         string       `json:"id"`
@@ -86,12 +93,25 @@ type ArtifactLocation struct {
 	Available  bool         `json:"available"`
 }
 type TransferEndpoint struct {
-	ID            string            `json:"id"`
-	Kind          string            `json:"kind"`
-	URI           string            `json:"uri"`
-	ResourceID    string            `json:"resourceId,omitempty"`
-	EnvironmentID string            `json:"environmentId,omitempty"`
-	Configuration map[string]string `json:"configuration,omitempty"`
+	ID              string            `json:"id"`
+	Kind            string            `json:"kind"`
+	URI             string            `json:"uri"`
+	ResourceID      string            `json:"resourceId,omitempty"`
+	EnvironmentID   string            `json:"environmentId,omitempty"`
+	RuntimeID       string            `json:"runtimeId,omitempty"`
+	ConnectionID    string            `json:"connectionId,omitempty"`
+	CloudInstanceID string            `json:"cloudInstanceId,omitempty"`
+	NetworkDomain   string            `json:"networkDomain,omitempty"`
+	Configuration   map[string]string `json:"configuration,omitempty"`
+}
+
+type TransferRoute struct {
+	Strategy      TransferStrategy `json:"strategy"`
+	SourceAddress string           `json:"sourceAddress,omitempty"`
+	TargetAddress string           `json:"targetAddress,omitempty"`
+	NetworkDomain string           `json:"networkDomain,omitempty"`
+	Fallback      TransferStrategy `json:"fallback,omitempty"`
+	Reason        string           `json:"reason"`
 }
 type ConnectorBinding struct {
 	ID            string `json:"id"`
@@ -121,6 +141,7 @@ type DataTransferPlan struct {
 	Blobs              []BlobDescriptor `json:"blobs"`
 	Chunks             []TransferChunk  `json:"chunks,omitempty"`
 	ResumeFrom         []int            `json:"resumeFrom,omitempty"`
+	Route              TransferRoute    `json:"route,omitempty"`
 }
 type DataTransferRun struct {
 	ID               string           `json:"id"`
@@ -133,6 +154,9 @@ type DataTransferRun struct {
 	FinishedAt       float64          `json:"finishedAt,omitempty"`
 	TransferredBytes int64            `json:"transferredBytes,omitempty"`
 	Error            string           `json:"error,omitempty"`
+	Route            TransferRoute    `json:"route,omitempty"`
+	LogicalBytes     int64            `json:"logicalBytes,omitempty"`
+	NetworkBytes     int64            `json:"networkBytes,omitempty"`
 }
 
 // ArtifactBuild is an immutable build specification. Context and recipe are

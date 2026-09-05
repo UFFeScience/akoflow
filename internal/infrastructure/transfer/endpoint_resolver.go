@@ -18,7 +18,11 @@ type EnvironmentEndpointResolver struct {
 }
 
 func (resolver EnvironmentEndpointResolver) ResolveTransferEndpoint(ctx context.Context, location domain.TransferLocation) (domain.TransferEndpoint, error) {
-	endpoint := domain.TransferEndpoint{URI: location.URI}
+	endpoint := domain.TransferEndpoint{
+		URI: location.URI, ResourceID: location.ResourceID, EnvironmentID: location.EnvironmentID,
+		RuntimeID: location.RuntimeID, ConnectionID: location.ConnectionID,
+		CloudInstanceID: location.CloudInstanceID, NetworkDomain: location.NetworkDomain,
+	}
 	u, err := url.Parse(location.URI)
 	if err != nil {
 		return endpoint, err
@@ -40,13 +44,17 @@ func (resolver EnvironmentEndpointResolver) ResolveTransferEndpoint(ctx context.
 		return endpoint, fmt.Errorf("resolve transfer connection %q: %w", connectionID, err)
 	}
 	if connection.Type == domain.ConnectionCloud {
-		connection, err = resolver.cloudConnection(ctx, *connection, location.ResourceID)
+		connection, err = resolver.cloudConnection(ctx, *connection, location.ResourceID, location.CloudInstanceID)
 		if err != nil {
 			return endpoint, err
 		}
 	}
 	endpoint.ID = connection.ID
+	endpoint.ConnectionID = connection.ID
 	endpoint.EnvironmentID = connection.EnvironmentID
+	if value, _ := connection.Configuration["networkDomain"].(string); value != "" {
+		endpoint.NetworkDomain = value
+	}
 	endpoint.Configuration = make(map[string]string)
 	switch connection.Type {
 	case domain.ConnectionKubernetes:
@@ -83,6 +91,9 @@ func (resolver EnvironmentEndpointResolver) ResolveTransferEndpoint(ctx context.
 		if value, _ := connection.Configuration["acceptNewHostKey"].(bool); value {
 			query.Set("acceptNewHostKey", "true")
 		}
+		if value, _ := connection.Configuration["hostKeyAlias"].(string); value != "" {
+			query.Set("hostKeyAlias", value)
+		}
 		if value, ok := connection.Configuration["forwardAgent"].(bool); ok && value {
 			query.Set("forwardAgent", "true")
 		}
@@ -101,9 +112,13 @@ func (resolver EnvironmentEndpointResolver) cloudConnection(
 	ctx context.Context,
 	connection domain.EnvironmentConnection,
 	capacityTargetID string,
+	cloudInstanceID string,
 ) (*domain.EnvironmentConnection, error) {
-	if resolver.Cloud == nil || resolver.Provisioner == nil {
+	if resolver.Cloud == nil {
 		return nil, fmt.Errorf("cloud transfer endpoint is unavailable")
+	}
+	if strings.TrimSpace(cloudInstanceID) == "" {
+		return nil, fmt.Errorf("cloud transfer endpoint for capacity target %q has no concrete instance allocation", capacityTargetID)
 	}
 	instances, err := resolver.Cloud.ListProvisionedInstances(ctx, connection.EnvironmentID)
 	if err != nil {
@@ -111,24 +126,26 @@ func (resolver EnvironmentEndpointResolver) cloudConnection(
 	}
 	var selected *domain.CloudProvisionedInstance
 	for index := range instances {
-		if instances[index].Status == "ready" && instances[index].CapacityTargetID == capacityTargetID {
+		if instances[index].ID == cloudInstanceID && instances[index].Status == "ready" && instances[index].CapacityTargetID == capacityTargetID {
 			selected = &instances[index]
 			break
 		}
 	}
 	if selected == nil {
-		created, provisionErr := resolver.Provisioner.Provision(ctx, connection.EnvironmentID, domain.CloudProvisionRequest{
-			CapacityTargetID: capacityTargetID,
-		})
-		if provisionErr != nil {
-			return nil, provisionErr
-		}
-		selected = &created
+		return nil, fmt.Errorf("allocated cloud instance %q is not ready for capacity target %q", cloudInstanceID, capacityTargetID)
+	}
+	address := selected.PrivateAddress
+	if strings.TrimSpace(address) == "" {
+		address = selected.PublicAddress
+	}
+	networkDomain, _ := selected.TerraformOutput["network_domain"].(string)
+	if networkDomain == "" {
+		networkDomain = selected.EnvironmentID
 	}
 	return &domain.EnvironmentConnection{
 		ID: connection.ID + "-" + selected.ID, EnvironmentID: connection.EnvironmentID,
-		Name: selected.Name, Type: domain.ConnectionSSH, Endpoint: selected.PublicAddress,
+		Name: selected.Name, Type: domain.ConnectionSSH, Endpoint: address,
 		Username: selected.SSHUsername, CredentialRef: selected.SSHCredentialRef,
-		Configuration: map[string]any{"port": 22, "acceptNewHostKey": true},
+		Configuration: map[string]any{"port": 22, "acceptNewHostKey": true, "hostKeyAlias": selected.ID, "networkDomain": networkDomain},
 	}, nil
 }

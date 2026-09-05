@@ -166,6 +166,10 @@ func (s *CommandController) resolveCloudConnection(
 			Username: instance.SSHUsername, CredentialRef: instance.SSHCredentialRef,
 			Configuration: map[string]any{
 				"port": 22, "skipSchedulerCheck": true, "dynamicHost": true,
+				// Public cloud addresses are routinely reused by a different VM. Key the
+				// trust record by Akoflow's immutable instance id instead of that address,
+				// so SSH still verifies the host without colliding with a former tenant.
+				"hostKeyAlias": instance.ID,
 			},
 		}, nil
 	}

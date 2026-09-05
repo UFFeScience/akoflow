@@ -160,6 +160,9 @@ func TestCloudConnectionIsAvailableWhileAnsibleConfigures(t *testing.T) {
 	if connection.Type != domain.ConnectionSSH || connection.Endpoint != "203.0.113.10" {
 		t.Fatalf("unexpected SSH connection %#v", connection)
 	}
+	if connection.Configuration["hostKeyAlias"] != "instance" {
+		t.Fatalf("cloud host key must be scoped to the provisioned instance: %#v", connection.Configuration)
+	}
 }
 
 type interactiveRunnerStub struct {

@@ -59,7 +59,7 @@ const defaultPlaybook = `---
         enabled: true
     - name: Allow the remote user to run Docker
       ansible.builtin.user:
-        name: "{{ ansible_user_id }}"
+        name: "{{ ansible_user }}"
         groups: docker
         append: true
     - name: Detect optional Apptainer capability
@@ -105,7 +105,7 @@ func (r *Repository) EnsureDefaults(ctx context.Context) error {
 	_, err = tx.ExecContext(ctx, `INSERT OR IGNORE INTO machine_configuration_versions
 		(id,machine_configuration_id,version,status,playbook_yaml,content_sha256,compatibility,variables_schema,validation_checks,created_at)
 		VALUES (?,?,?,?,?,?,?,?,?,?)`, domain.DefaultMachineConfigurationVersionID,
-		domain.DefaultMachineConfigurationID, 5, "published", defaultPlaybook,
+		domain.DefaultMachineConfigurationID, 6, "published", defaultPlaybook,
 		validation.SHA256, compatJSON, variablesJSON, checksJSON, now)
 	if err != nil {
 		return err
@@ -125,6 +125,12 @@ func (r *Repository) EnsureDefaults(ctx context.Context) error {
 	_, err = tx.ExecContext(ctx, `UPDATE cloud_capacity_target_configurations
 		SET configuration_version_id=? WHERE configuration_version_id=?`,
 		domain.DefaultMachineConfigurationVersionID, "akoflow-scientific-worker-v4")
+	if err != nil {
+		return err
+	}
+	_, err = tx.ExecContext(ctx, `UPDATE cloud_capacity_target_configurations
+		SET configuration_version_id=? WHERE configuration_version_id=?`,
+		domain.DefaultMachineConfigurationVersionID, "akoflow-scientific-worker-v5")
 	if err != nil {
 		return err
 	}

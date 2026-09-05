@@ -111,6 +111,7 @@ type Dependencies struct {
 	PlanningStore    ports.PlanningStore
 	Provenance       ports.ProvenanceExplorer
 	Cloud            ports.CloudConfigurationStore
+	CloudOperations  ports.CloudOperationStore
 	CloudCatalog     ports.CloudCatalog
 	CloudProvisioner ports.CloudProvisioner
 	CloudCredentials *cloudcredential.Manager
@@ -146,6 +147,7 @@ type Handler struct {
 	planningStore    ports.PlanningStore
 	provenance       ports.ProvenanceExplorer
 	cloud            ports.CloudConfigurationStore
+	cloudOperations  ports.CloudOperationStore
 	cloudCatalog     ports.CloudCatalog
 	cloudProvisioner ports.CloudProvisioner
 	cloudCredentials *cloudcredential.Manager
@@ -194,6 +196,7 @@ func New(dependencies Dependencies) (*Handler, error) {
 		planningStore:    dependencies.PlanningStore,
 		provenance:       dependencies.Provenance,
 		cloud:            dependencies.Cloud,
+		cloudOperations:  dependencies.CloudOperations,
 		cloudCatalog:     dependencies.CloudCatalog,
 		cloudProvisioner: dependencies.CloudProvisioner,
 		cloudCredentials: dependencies.CloudCredentials,
@@ -1817,11 +1820,7 @@ func (h *Handler) ProvisionCloudInstance(w http.ResponseWriter, r *http.Request)
 	if !decode(w, r, &request) {
 		return
 	}
-	environmentID := r.PathValue("environmentId")
-	go func() {
-		_, _ = h.cloudProvisioner.Provision(context.Background(), environmentID, request)
-	}()
-	writeJSON(w, http.StatusAccepted, map[string]string{"status": "starting"})
+	h.enqueueCloudOperation(w, r, "provision", r.PathValue("environmentId"), "", request.CapacityTargetID, request)
 }
 
 func (h *Handler) StartCloudProvisioning(w http.ResponseWriter, r *http.Request) {
@@ -1833,11 +1832,7 @@ func (h *Handler) StartCloudProvisioning(w http.ResponseWriter, r *http.Request)
 	if !decode(w, r, &request) {
 		return
 	}
-	environmentID := r.PathValue("environmentId")
-	go func() {
-		_, _ = h.cloudProvisioner.Provision(context.Background(), environmentID, request)
-	}()
-	writeJSON(w, http.StatusAccepted, map[string]string{"status": "starting"})
+	h.enqueueCloudOperation(w, r, "provision", r.PathValue("environmentId"), "", request.CapacityTargetID, request)
 }
 
 func (h *Handler) GetCloudProvisioningLog(w http.ResponseWriter, r *http.Request) {
@@ -1858,11 +1853,12 @@ func (h *Handler) ConfigureCloudInstance(w http.ResponseWriter, r *http.Request)
 		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("cloud provisioner is unavailable"))
 		return
 	}
-	instanceID := r.PathValue("instanceId")
-	go func() {
-		_, _ = h.cloudProvisioner.Configure(context.Background(), instanceID)
-	}()
-	writeJSON(w, http.StatusAccepted, map[string]string{"status": "configuring"})
+	instance, err := h.cloud.FindProvisionedInstance(r.Context(), r.PathValue("instanceId"))
+	if err != nil || instance == nil {
+		writeError(w, http.StatusNotFound, err)
+		return
+	}
+	h.enqueueCloudOperation(w, r, "configure", instance.EnvironmentID, instance.ID, instance.CapacityTargetID, domain.CloudProvisionRequest{})
 }
 
 func (h *Handler) DestroyCloudInstance(w http.ResponseWriter, r *http.Request) {
@@ -1870,11 +1866,57 @@ func (h *Handler) DestroyCloudInstance(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("cloud provisioner is unavailable"))
 		return
 	}
-	instanceID := r.PathValue("instanceId")
-	go func() {
-		_, _ = h.cloudProvisioner.Destroy(context.Background(), instanceID)
-	}()
-	writeJSON(w, http.StatusAccepted, map[string]string{"status": "destroying"})
+	instance, err := h.cloud.FindProvisionedInstance(r.Context(), r.PathValue("instanceId"))
+	if err != nil || instance == nil {
+		writeError(w, http.StatusNotFound, err)
+		return
+	}
+	h.enqueueCloudOperation(w, r, "destroy", instance.EnvironmentID, instance.ID, instance.CapacityTargetID, domain.CloudProvisionRequest{})
+}
+
+func (h *Handler) enqueueCloudOperation(w http.ResponseWriter, r *http.Request, kind, environmentID, instanceID, targetID string, request domain.CloudProvisionRequest) {
+	operation := domain.CloudOperationRun{ID: "cloud-run-" + uuid.NewString(), Kind: kind,
+		Status: "queued", EnvironmentID: environmentID, InstanceID: instanceID,
+		CapacityTargetID: targetID, Request: request, CreatedAt: time.Now().UTC()}
+	if err := h.cloudOperations.CreateCloudOperation(r.Context(), operation); err != nil {
+		writeError(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+	payload, _ := json.Marshal(map[string]string{"operationId": operation.ID})
+	job, err := domainqueue.New(domainqueue.CategoryInfrastructure, eventloop.EventCloudOperationRequested, payload, time.Now().UTC())
+	if err == nil {
+		job.AggregateType, job.AggregateID = "cloud_operation", operation.ID
+		job.IdempotencyKey = "cloud-operation:" + operation.ID
+		job.MaxAttempts = 1
+		_, err = h.events.Publish(r.Context(), job)
+	}
+	if err != nil {
+		operation.Status, operation.FailureReason = "failed", err.Error()
+		now := time.Now().UTC()
+		operation.FinishedAt = &now
+		_ = h.cloudOperations.UpdateCloudOperation(r.Context(), operation)
+		writeError(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+	writeJSON(w, http.StatusAccepted, operation)
+}
+
+func (h *Handler) ListCloudOperations(w http.ResponseWriter, r *http.Request) {
+	values, err := h.cloudOperations.ListCloudOperations(r.Context())
+	writeList(w, values, err)
+}
+
+func (h *Handler) GetCloudOperation(w http.ResponseWriter, r *http.Request) {
+	value, err := h.cloudOperations.FindCloudOperation(r.Context(), r.PathValue("operationId"))
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, err)
+		return
+	}
+	if value == nil {
+		writeError(w, http.StatusNotFound, nil)
+		return
+	}
+	writeJSON(w, http.StatusOK, value)
 }
 
 func (h *Handler) ReplaceEnvironment(w http.ResponseWriter, r *http.Request) {

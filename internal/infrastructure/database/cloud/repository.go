@@ -19,25 +19,29 @@ const defaultPlaybook = `---
 - name: Configure Akoflow scientific worker
   hosts: all
   become: true
+  gather_facts: false
   tasks:
-    - name: Install base packages
+    - name: Detect Docker
+      ansible.builtin.command: docker version
+      register: docker_available
+      changed_when: false
+      failed_when: false
+    - name: Install worker packages and Docker when required
       ansible.builtin.apt:
         name:
           - ca-certificates
           - curl
+          - docker.io
           - rsync
           - tar
         state: present
         update_cache: true
         cache_valid_time: 3600
-    - name: Install Docker from the distribution repository
+      when: docker_available.rc != 0
+      register: distribution_docker
+      ignore_errors: true
+    - name: Install Docker from the official repository when unavailable
       block:
-        - name: Install Docker package
-          ansible.builtin.apt:
-            name: docker.io
-            state: present
-            update_cache: true
-      rescue:
         - name: Download the official Docker installer
           ansible.builtin.get_url:
             url: https://get.docker.com
@@ -47,6 +51,7 @@ const defaultPlaybook = `---
           ansible.builtin.command: /tmp/get-docker.sh
           args:
             creates: /usr/bin/docker
+      when: docker_available.rc != 0 and distribution_docker is failed
     - name: Enable Docker
       ansible.builtin.service:
         name: docker
@@ -57,16 +62,14 @@ const defaultPlaybook = `---
         name: "{{ ansible_user_id }}"
         groups: docker
         append: true
-    - name: Install Apptainer when available
-      block:
-        - name: Install Apptainer package
-          ansible.builtin.apt:
-            name: apptainer
-            state: present
-      rescue:
-        - name: Record optional Apptainer capability
-          ansible.builtin.debug:
-            msg: "Apptainer is unavailable for this image; Docker remains the container runtime."
+    - name: Detect optional Apptainer capability
+      ansible.builtin.command: apptainer version
+      register: apptainer_available
+      changed_when: false
+      failed_when: false
+    - name: Report optional Apptainer capability
+      ansible.builtin.debug:
+        msg: "{{ 'Apptainer is available.' if apptainer_available.rc == 0 else 'Apptainer is unavailable; Docker will be used.' }}"
     - name: Create Akoflow workspace
       ansible.builtin.file:
         path: "{{ akoflow_workspace_path }}"
@@ -102,7 +105,7 @@ func (r *Repository) EnsureDefaults(ctx context.Context) error {
 	_, err = tx.ExecContext(ctx, `INSERT OR IGNORE INTO machine_configuration_versions
 		(id,machine_configuration_id,version,status,playbook_yaml,content_sha256,compatibility,variables_schema,validation_checks,created_at)
 		VALUES (?,?,?,?,?,?,?,?,?,?)`, domain.DefaultMachineConfigurationVersionID,
-		domain.DefaultMachineConfigurationID, 4, "published", defaultPlaybook,
+		domain.DefaultMachineConfigurationID, 5, "published", defaultPlaybook,
 		validation.SHA256, compatJSON, variablesJSON, checksJSON, now)
 	if err != nil {
 		return err
@@ -116,6 +119,12 @@ func (r *Repository) EnsureDefaults(ctx context.Context) error {
 	_, err = tx.ExecContext(ctx, `UPDATE cloud_capacity_target_configurations
 		SET configuration_version_id=? WHERE configuration_version_id=?`,
 		domain.DefaultMachineConfigurationVersionID, "akoflow-scientific-worker-v3")
+	if err != nil {
+		return err
+	}
+	_, err = tx.ExecContext(ctx, `UPDATE cloud_capacity_target_configurations
+		SET configuration_version_id=? WHERE configuration_version_id=?`,
+		domain.DefaultMachineConfigurationVersionID, "akoflow-scientific-worker-v4")
 	if err != nil {
 		return err
 	}
@@ -517,5 +526,66 @@ func scanProvisionedInstance(scan scanner) (*domain.CloudProvisionedInstance, er
 	}
 	_ = json.Unmarshal(disk, &value.Disk)
 	_ = json.Unmarshal(output, &value.TerraformOutput)
+	return &value, nil
+}
+
+func (r *Repository) CreateCloudOperation(ctx context.Context, value domain.CloudOperationRun) error {
+	request, _ := json.Marshal(value.Request)
+	_, err := r.db.ExecContext(ctx, `INSERT INTO cloud_operation_runs(
+		id,kind,status,environment_id,capacity_target_id,instance_id,request,failure_reason,
+		created_at,started_at,finished_at) VALUES(?,?,?,?,?,?,?,?,?,?,?)`, value.ID, value.Kind,
+		value.Status, value.EnvironmentID, value.CapacityTargetID, value.InstanceID, request,
+		value.FailureReason, value.CreatedAt, value.StartedAt, value.FinishedAt)
+	return err
+}
+
+func (r *Repository) UpdateCloudOperation(ctx context.Context, value domain.CloudOperationRun) error {
+	request, _ := json.Marshal(value.Request)
+	_, err := r.db.ExecContext(ctx, `UPDATE cloud_operation_runs SET status=?,environment_id=?,
+		capacity_target_id=?,instance_id=?,request=?,failure_reason=?,started_at=?,finished_at=?
+		WHERE id=?`, value.Status, value.EnvironmentID, value.CapacityTargetID, value.InstanceID,
+		request, value.FailureReason, value.StartedAt, value.FinishedAt, value.ID)
+	return err
+}
+
+func (r *Repository) FindCloudOperation(ctx context.Context, id string) (*domain.CloudOperationRun, error) {
+	value, err := scanCloudOperation(r.db.QueryRowContext(ctx, `SELECT id,kind,status,environment_id,
+		capacity_target_id,instance_id,request,failure_reason,created_at,started_at,finished_at
+		FROM cloud_operation_runs WHERE id=?`, id).Scan)
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
+	return value, err
+}
+
+func (r *Repository) ListCloudOperations(ctx context.Context) ([]domain.CloudOperationRun, error) {
+	rows, err := r.db.QueryContext(ctx, `SELECT id,kind,status,environment_id,capacity_target_id,
+		instance_id,request,failure_reason,created_at,started_at,finished_at
+		FROM cloud_operation_runs ORDER BY created_at DESC`)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	values := make([]domain.CloudOperationRun, 0)
+	for rows.Next() {
+		value, scanErr := scanCloudOperation(rows.Scan)
+		if scanErr != nil {
+			return nil, scanErr
+		}
+		values = append(values, *value)
+	}
+	return values, rows.Err()
+}
+
+func scanCloudOperation(scan scanner) (*domain.CloudOperationRun, error) {
+	var value domain.CloudOperationRun
+	var request []byte
+	err := scan(&value.ID, &value.Kind, &value.Status, &value.EnvironmentID,
+		&value.CapacityTargetID, &value.InstanceID, &request, &value.FailureReason,
+		&value.CreatedAt, &value.StartedAt, &value.FinishedAt)
+	if err != nil {
+		return nil, err
+	}
+	_ = json.Unmarshal(request, &value.Request)
 	return &value, nil
 }

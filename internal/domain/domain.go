@@ -26,6 +26,7 @@ type CloudImageOffering = cloud.ImageOffering
 type CloudDiskOffering = cloud.DiskOffering
 type CloudProvisionedInstance = cloud.ProvisionedInstance
 type CloudProvisionRequest = cloud.ProvisionRequest
+type CloudOperationRun = cloud.OperationRun
 
 const DefaultMachineConfigurationID = cloud.DefaultConfigurationID
 const DefaultMachineConfigurationVersionID = cloud.DefaultConfigurationVersionID

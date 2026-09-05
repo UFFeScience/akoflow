@@ -18,13 +18,14 @@ const (
 )
 
 const (
-	CategoryEnvironment   = "environment"
-	CategoryOrchestration = "orchestration"
-	CategoryExecution     = "execution"
-	CategoryMonitoring    = "monitoring"
-	CategoryTransfer      = "transfer"
-	CategoryMaintenance   = "maintenance"
-	CategoryPlanning      = "planning"
+	CategoryEnvironment    = "environment"
+	CategoryOrchestration  = "orchestration"
+	CategoryExecution      = "execution"
+	CategoryMonitoring     = "monitoring"
+	CategoryTransfer       = "transfer"
+	CategoryMaintenance    = "maintenance"
+	CategoryPlanning       = "planning"
+	CategoryInfrastructure = "infrastructure"
 )
 
 type Job struct {

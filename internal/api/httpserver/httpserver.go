@@ -108,6 +108,8 @@ func NewMux(workflowEngine *workflow_engine_api_handler.Handler) *http.ServeMux 
 	mux.HandleFunc("GET /akoflow-api/cloud-instances/{instanceId}/provisioning-log/", http_config.KernelHandler(workflowEngine.GetCloudProvisioningLog))
 	mux.HandleFunc("POST /akoflow-api/cloud-instances/{instanceId}/configure/", http_config.KernelHandler(workflowEngine.ConfigureCloudInstance))
 	mux.HandleFunc("POST /akoflow-api/cloud-instances/{instanceId}/destroy/", http_config.KernelHandler(workflowEngine.DestroyCloudInstance))
+	mux.HandleFunc("GET /akoflow-api/cloud-operations/", http_config.KernelHandler(workflowEngine.ListCloudOperations))
+	mux.HandleFunc("GET /akoflow-api/cloud-operations/{operationId}/", http_config.KernelHandler(workflowEngine.GetCloudOperation))
 	mux.HandleFunc("GET /akoflow-api/machine-configurations/", http_config.KernelHandler(workflowEngine.ListMachineConfigurations))
 	mux.HandleFunc("POST /akoflow-api/machine-configurations/", http_config.KernelHandler(workflowEngine.CreateMachineConfiguration))
 	mux.HandleFunc("GET /akoflow-api/machine-configurations/{configurationId}/", http_config.KernelHandler(workflowEngine.GetMachineConfiguration))

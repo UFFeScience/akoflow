@@ -5,7 +5,7 @@ import (
 )
 
 const DefaultConfigurationID = "akoflow-scientific-worker"
-const DefaultConfigurationVersionID = "akoflow-scientific-worker-v4"
+const DefaultConfigurationVersionID = "akoflow-scientific-worker-v5"
 
 type Compatibility struct {
 	Providers        []string `json:"providers,omitempty" yaml:"providers,omitempty"`
@@ -164,4 +164,18 @@ type ProvisionRequest struct {
 	CapacityTargetID string `json:"capacityTargetId"`
 	Name             string `json:"name,omitempty"`
 	SSHUsername      string `json:"sshUsername,omitempty"`
+}
+
+type OperationRun struct {
+	ID               string           `json:"id"`
+	Kind             string           `json:"kind"`
+	Status           string           `json:"status"`
+	EnvironmentID    string           `json:"environmentId"`
+	CapacityTargetID string           `json:"capacityTargetId,omitempty"`
+	InstanceID       string           `json:"instanceId,omitempty"`
+	Request          ProvisionRequest `json:"request,omitempty"`
+	FailureReason    string           `json:"failureReason,omitempty"`
+	CreatedAt        time.Time        `json:"createdAt"`
+	StartedAt        *time.Time       `json:"startedAt,omitempty"`
+	FinishedAt       *time.Time       `json:"finishedAt,omitempty"`
 }

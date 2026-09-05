@@ -23,6 +23,13 @@ type CloudConfigurationStore interface {
 	ListProvisionedInstances(context.Context, string) ([]domain.CloudProvisionedInstance, error)
 }
 
+type CloudOperationStore interface {
+	CreateCloudOperation(context.Context, domain.CloudOperationRun) error
+	UpdateCloudOperation(context.Context, domain.CloudOperationRun) error
+	FindCloudOperation(context.Context, string) (*domain.CloudOperationRun, error)
+	ListCloudOperations(context.Context) ([]domain.CloudOperationRun, error)
+}
+
 type CloudCredentialResolver interface {
 	Resolve(string) ([]byte, error)
 }

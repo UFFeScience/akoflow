@@ -56,6 +56,9 @@ func Bootstrap(ctx context.Context, db *sql.DB) error {
 	if err := migrateCloudCatalogSnapshots(ctx, db); err != nil {
 		return err
 	}
+	if err := migrateCloudOperationRuns(ctx, db); err != nil {
+		return err
+	}
 	if err := Validate(ctx, db); err != nil {
 		return fmt.Errorf("%w; remove the existing database file and recreate it: %v", ErrIncompatibleSchema, err)
 	}
@@ -75,6 +78,7 @@ const schemaBeforeCloudInstances = "5c0308e9166ed23dc481b04192cd1539b96ba60b0543
 const schemaBeforeCloudRuntimeDriver = "2d4a31031d61e8dd5a8c80550cc47d8fa158d8695cffb979f490342bb8d340a6"
 const schemaBeforeCloudExecutionTarget = "e515cbbfe701482f1c952431134d34359284f42959ace947f55faabad269d739"
 const schemaBeforeCloudCatalogSnapshots = "c9f8b4a4d2d2fd5bfecc4f289d0e68657f608d3b7a75ba53ee4e946dcf251f0b"
+const schemaBeforeCloudOperationRuns = "f96a82d2abb3977da8df5907bec5a3b1b09e5a852d385d1e3daa6c019d5ab75c"
 
 func migrateUserPreferences(ctx context.Context, db *sql.DB) error {
 	var checksum string
@@ -411,8 +415,43 @@ func migrateCloudCatalogSnapshots(ctx context.Context, db *sql.DB) error {
 	)`); err != nil {
 		return fmt.Errorf("apply cloud catalog migration: %w", err)
 	}
-	if _, err := tx.ExecContext(ctx, `UPDATE schema_metadata SET checksum=?, applied_at=?`, schemaChecksum(), time.Now().UTC()); err != nil {
+	if _, err := tx.ExecContext(ctx, `UPDATE schema_metadata SET checksum=?, applied_at=?`, schemaBeforeCloudOperationRuns, time.Now().UTC()); err != nil {
 		return fmt.Errorf("record cloud catalog migration: %w", err)
+	}
+	return tx.Commit()
+}
+
+func migrateCloudOperationRuns(ctx context.Context, db *sql.DB) error {
+	var checksum string
+	if err := db.QueryRowContext(ctx, `SELECT checksum FROM schema_metadata LIMIT 1`).Scan(&checksum); err != nil || checksum == schemaChecksum() {
+		return nil
+	}
+	if checksum != schemaBeforeCloudOperationRuns {
+		return nil
+	}
+	tx, err := db.BeginTx(ctx, nil)
+	if err != nil {
+		return fmt.Errorf("begin cloud operation runs migration: %w", err)
+	}
+	defer tx.Rollback()
+	statements := []string{
+		`CREATE TABLE IF NOT EXISTS cloud_operation_runs (
+			id TEXT PRIMARY KEY,
+			kind TEXT NOT NULL CHECK(kind IN ('provision','configure','destroy')),
+			status TEXT NOT NULL CHECK(status IN ('queued','running','completed','failed')),
+			environment_id TEXT NOT NULL REFERENCES environments(id),
+			capacity_target_id TEXT NOT NULL DEFAULT '', instance_id TEXT NOT NULL DEFAULT '',
+			request TEXT NOT NULL DEFAULT '{}', failure_reason TEXT NOT NULL DEFAULT '',
+			created_at DATETIME NOT NULL, started_at DATETIME, finished_at DATETIME)`,
+		`CREATE INDEX IF NOT EXISTS cloud_operation_runs_created_idx ON cloud_operation_runs(created_at DESC)`,
+	}
+	for _, statement := range statements {
+		if _, err := tx.ExecContext(ctx, statement); err != nil {
+			return fmt.Errorf("apply cloud operation runs migration: %w", err)
+		}
+	}
+	if _, err := tx.ExecContext(ctx, `UPDATE schema_metadata SET checksum=?, applied_at=?`, schemaChecksum(), time.Now().UTC()); err != nil {
+		return fmt.Errorf("record cloud operation runs migration: %w", err)
 	}
 	return tx.Commit()
 }

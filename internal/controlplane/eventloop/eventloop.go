@@ -131,7 +131,7 @@ func (l *Loop) keepLeaseAlive(ctx context.Context, job domainqueue.Job, cancel c
 		case <-ctx.Done():
 			return
 		case now := <-ticker.C:
-			if err := l.queue.RenewLease(ctx, job.ID, l.config.Owner, now.Add(l.config.LeaseDuration)); err != nil {
+			if err := l.queue.RenewLease(ctx, job.ID, l.config.Owner, now.UTC().Add(l.config.LeaseDuration)); err != nil {
 				cancel()
 				return
 			}

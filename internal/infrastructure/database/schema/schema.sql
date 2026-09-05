@@ -592,6 +592,20 @@ CREATE TABLE cloud_provisioned_instances (
 	destroyed_at DATETIME
 );
 CREATE INDEX cloud_instances_environment_status_idx ON cloud_provisioned_instances(environment_id, status);
+CREATE TABLE cloud_operation_runs (
+	id TEXT PRIMARY KEY,
+	kind TEXT NOT NULL CHECK(kind IN ('provision','configure','destroy')),
+	status TEXT NOT NULL CHECK(status IN ('queued','running','completed','failed')),
+	environment_id TEXT NOT NULL REFERENCES environments(id),
+	capacity_target_id TEXT NOT NULL DEFAULT '',
+	instance_id TEXT NOT NULL DEFAULT '',
+	request TEXT NOT NULL DEFAULT '{}',
+	failure_reason TEXT NOT NULL DEFAULT '',
+	created_at DATETIME NOT NULL,
+	started_at DATETIME,
+	finished_at DATETIME
+);
+CREATE INDEX cloud_operation_runs_created_idx ON cloud_operation_runs(created_at DESC);
 CREATE TABLE cloud_catalog_snapshots (
     environment_id TEXT PRIMARY KEY REFERENCES environments(id) ON DELETE CASCADE,
     catalog TEXT NOT NULL,

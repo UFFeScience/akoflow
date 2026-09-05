@@ -1883,7 +1883,11 @@ func (h *Handler) enqueueCloudOperation(w http.ResponseWriter, r *http.Request, 
 		}
 		for _, existing := range operations {
 			if existing.InstanceID == instanceID && (existing.Status == "queued" || existing.Status == "running") {
-				writeJSON(w, http.StatusAccepted, existing)
+				if existing.Kind == kind {
+					writeJSON(w, http.StatusAccepted, existing)
+					return
+				}
+				writeError(w, http.StatusConflict, fmt.Errorf("cloud resource already has an active %s run", existing.Kind))
 				return
 			}
 		}

@@ -74,7 +74,7 @@ const defaultPlaybook = `---
       ansible.builtin.file:
         path: "{{ akoflow_workspace_path }}"
         state: directory
-        owner: "{{ ansible_user_id }}"
+        owner: "{{ ansible_user }}"
         mode: "0770"
 `
 
@@ -105,7 +105,7 @@ func (r *Repository) EnsureDefaults(ctx context.Context) error {
 	_, err = tx.ExecContext(ctx, `INSERT OR IGNORE INTO machine_configuration_versions
 		(id,machine_configuration_id,version,status,playbook_yaml,content_sha256,compatibility,variables_schema,validation_checks,created_at)
 		VALUES (?,?,?,?,?,?,?,?,?,?)`, domain.DefaultMachineConfigurationVersionID,
-		domain.DefaultMachineConfigurationID, 6, "published", defaultPlaybook,
+		domain.DefaultMachineConfigurationID, 7, "published", defaultPlaybook,
 		validation.SHA256, compatJSON, variablesJSON, checksJSON, now)
 	if err != nil {
 		return err
@@ -131,6 +131,12 @@ func (r *Repository) EnsureDefaults(ctx context.Context) error {
 	_, err = tx.ExecContext(ctx, `UPDATE cloud_capacity_target_configurations
 		SET configuration_version_id=? WHERE configuration_version_id=?`,
 		domain.DefaultMachineConfigurationVersionID, "akoflow-scientific-worker-v5")
+	if err != nil {
+		return err
+	}
+	_, err = tx.ExecContext(ctx, `UPDATE cloud_capacity_target_configurations
+		SET configuration_version_id=? WHERE configuration_version_id=?`,
+		domain.DefaultMachineConfigurationVersionID, "akoflow-scientific-worker-v6")
 	if err != nil {
 		return err
 	}

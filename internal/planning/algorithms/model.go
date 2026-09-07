@@ -378,10 +378,12 @@ func planFromState(id, algorithm, objective string, request domain.PlanningReque
 		assignments[index].PlanID = id
 	}
 	feasible := (request.DeadlineSeconds <= 0 || state.makespan <= request.DeadlineSeconds) && (request.Budget <= 0 || state.cost <= request.Budget)
-	return domain.SchedulePlan{ID: id, WorkflowVersionID: request.Workflow.ID, ExecutionScopeID: request.ExecutionScope.ID,
+	plan := domain.SchedulePlan{ID: id, WorkflowVersionID: request.Workflow.ID, ExecutionScopeID: request.ExecutionScope.ID,
 		NetworkTopologyID: request.NetworkTopology.ID, Source: domain.PlanningSourcePlugin, Algorithm: algorithm,
 		AlgorithmVersion: "1", Objective: objective, DeadlineSeconds: request.DeadlineSeconds, Budget: request.Budget,
 		Predicted: domain.PredictedMetrics{MakespanSeconds: state.makespan, Cost: state.cost, Feasible: feasible}, Assignments: assignments}
+	addCloudLifecycle(&plan, request)
+	return plan
 }
 
 func intOption(configuration map[string]any, key string, fallback, minimum, maximum int) int {

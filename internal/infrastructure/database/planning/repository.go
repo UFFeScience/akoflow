@@ -55,6 +55,20 @@ func (r *Repository) Save(ctx context.Context, plan domain.SchedulePlan) error {
 			return err
 		}
 	}
+	for _, action := range plan.LifecycleActions {
+		dependencies, err := json.Marshal(action.DependsOn)
+		if err != nil {
+			return err
+		}
+		metadata, err := json.Marshal(action.Metadata)
+		if err != nil {
+			return err
+		}
+		if _, err := tx.Exec(`INSERT INTO planned_lifecycle_actions(id,schedule_plan_id,capacity_target_id,cloud_instance_id,action,earliest_start,expected_duration,depends_on,metadata)
+			VALUES(?,?,?,?,?,?,?,?,?)`, action.ID, plan.ID, action.CapacityTargetID, action.CloudInstanceID, action.Action, action.EarliestStart, action.ExpectedDuration, string(dependencies), string(metadata)); err != nil {
+			return err
+		}
+	}
 	return tx.Commit()
 }
 
@@ -109,7 +123,30 @@ func (r *Repository) Find(ctx context.Context, id string) (*domain.SchedulePlan,
 		}
 		plan.Assignments = append(plan.Assignments, assignment)
 	}
-	return &plan, rows.Err()
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	actionRows, err := r.db.QueryContext(ctx, `SELECT id,schedule_plan_id,capacity_target_id,cloud_instance_id,action,earliest_start,expected_duration,depends_on,metadata
+		FROM planned_lifecycle_actions WHERE schedule_plan_id=? ORDER BY earliest_start,id`, id)
+	if err != nil {
+		return nil, err
+	}
+	defer actionRows.Close()
+	for actionRows.Next() {
+		var action domain.PlannedLifecycleAction
+		var dependencies, metadata string
+		if err := actionRows.Scan(&action.ID, &action.SchedulePlanID, &action.CapacityTargetID, &action.CloudInstanceID, &action.Action, &action.EarliestStart, &action.ExpectedDuration, &dependencies, &metadata); err != nil {
+			return nil, err
+		}
+		if err := json.Unmarshal([]byte(dependencies), &action.DependsOn); err != nil {
+			return nil, err
+		}
+		if err := json.Unmarshal([]byte(metadata), &action.Metadata); err != nil {
+			return nil, err
+		}
+		plan.LifecycleActions = append(plan.LifecycleActions, action)
+	}
+	return &plan, actionRows.Err()
 }
 
 func (r *Repository) List(ctx context.Context) ([]domain.SchedulePlan, error) {

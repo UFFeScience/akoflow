@@ -78,7 +78,7 @@ func compactPRISMPlan(
 		(request.Budget <= 0 || state.cost <= request.Budget)
 	breakdown := compactPRISMPredictionBreakdown(assignments)
 	confidence, confidenceScore := compactPRISMPredictionConfidence(request)
-	return domain.SchedulePlan{
+	plan := domain.SchedulePlan{
 		ID: id, WorkflowVersionID: request.Workflow.ID,
 		ExecutionScopeID:  request.ExecutionScope.ID,
 		NetworkTopologyID: request.NetworkTopology.ID,
@@ -105,6 +105,8 @@ func compactPRISMPlan(
 			"interferenceModel":         "pairwise-cpu-priority-minimum",
 		},
 	}
+	addCloudLifecycle(&plan, request)
+	return plan
 }
 
 func compactPRISMPredictionBreakdown(assignments []domain.PlanAssignment) prismPredictionBreakdown {

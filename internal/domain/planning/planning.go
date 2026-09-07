@@ -36,20 +36,21 @@ type PredictedMetrics struct {
 }
 
 type SchedulePlan struct {
-	ID                string           `json:"id"`
-	WorkflowVersionID string           `json:"workflowVersionId"`
-	ExecutionScopeID  string           `json:"executionScopeId"`
-	NetworkTopologyID string           `json:"networkTopologyId,omitempty"`
-	Source            PlanningSource   `json:"source"`
-	Algorithm         string           `json:"algorithm"`
-	AlgorithmVersion  string           `json:"algorithmVersion,omitempty"`
-	Objective         string           `json:"objective,omitempty"`
-	DeadlineSeconds   float64          `json:"deadlineSeconds"`
-	Budget            float64          `json:"budget"`
-	Predicted         PredictedMetrics `json:"predicted"`
-	Assignments       []PlanAssignment `json:"assignments"`
-	AssignmentCount   int              `json:"assignmentCount,omitempty"`
-	Metadata          map[string]any   `json:"metadata,omitempty"`
+	ID                string                   `json:"id"`
+	WorkflowVersionID string                   `json:"workflowVersionId"`
+	ExecutionScopeID  string                   `json:"executionScopeId"`
+	NetworkTopologyID string                   `json:"networkTopologyId,omitempty"`
+	Source            PlanningSource           `json:"source"`
+	Algorithm         string                   `json:"algorithm"`
+	AlgorithmVersion  string                   `json:"algorithmVersion,omitempty"`
+	Objective         string                   `json:"objective,omitempty"`
+	DeadlineSeconds   float64                  `json:"deadlineSeconds"`
+	Budget            float64                  `json:"budget"`
+	Predicted         PredictedMetrics         `json:"predicted"`
+	Assignments       []PlanAssignment         `json:"assignments"`
+	LifecycleActions  []PlannedLifecycleAction `json:"lifecycleActions,omitempty"`
+	AssignmentCount   int                      `json:"assignmentCount,omitempty"`
+	Metadata          map[string]any           `json:"metadata,omitempty"`
 }
 
 type PlanAssignment struct {

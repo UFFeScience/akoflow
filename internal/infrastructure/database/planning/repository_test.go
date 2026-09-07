@@ -65,6 +65,7 @@ func TestSchedulePlanSaveAndFind(t *testing.T) {
 			PredictedTransferSeconds: .5, PredictedCost: .2,
 			Metadata: map[string]any{"reason": "best"},
 		}},
+		LifecycleActions: []domain.PlannedLifecycleAction{{ID: "lifecycle", CapacityTargetID: "r1", Action: "provision", EarliestStart: 1, ExpectedDuration: 30, DependsOn: []string{"dependency"}, Metadata: map[string]any{"phase": "provisioning"}}},
 	}
 	if err := repository.Save(context.Background(), plan); err != nil {
 		t.Fatal(err)
@@ -73,7 +74,7 @@ func TestSchedulePlanSaveAndFind(t *testing.T) {
 	if err != nil || got == nil {
 		t.Fatalf("find failed: %+v %v", got, err)
 	}
-	if got.Algorithm != "prism" || got.Source != domain.PlanningSourcePlugin || got.NetworkTopologyID != "network-v1" || len(got.Assignments) != 1 || got.Assignments[0].PlanID != "p1" || got.Assignments[0].Metadata["reason"] != "best" || got.Metadata["strategy"] != "fastest" {
+	if got.Algorithm != "prism" || got.Source != domain.PlanningSourcePlugin || got.NetworkTopologyID != "network-v1" || len(got.Assignments) != 1 || got.Assignments[0].PlanID != "p1" || got.Assignments[0].Metadata["reason"] != "best" || got.Metadata["strategy"] != "fastest" || len(got.LifecycleActions) != 1 || got.LifecycleActions[0].SchedulePlanID != "p1" || got.LifecycleActions[0].DependsOn[0] != "dependency" {
 		t.Fatalf("unexpected plan: %+v", got)
 	}
 	missing, err := repository.Find(context.Background(), "missing")

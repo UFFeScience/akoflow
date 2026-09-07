@@ -44,6 +44,17 @@ func (h *CloudOperationHandler) Handle(ctx context.Context, job domainqueue.Job)
 	if operation.Status == "completed" || operation.Status == "cancelled" {
 		return nil
 	}
+	if operation.Kind == "stop" || operation.Kind == "destroy" {
+		if guard, ok := h.store.(ports.CloudLifecycleGuard); ok {
+			if guardErr := guard.CheckCloudLifecycle(ctx, operation.InstanceID, operation.ID); guardErr != nil {
+				finished := time.Now().UTC()
+				operation.Status, operation.Phase, operation.FailureReason, operation.FinishedAt = "failed", "failed", guardErr.Error(), &finished
+				_ = h.store.UpdateCloudOperation(ctx, *operation)
+				_ = h.store.AppendCloudOperationEvent(ctx, domain.CloudOperationEvent{OperationID: operation.ID, Sequence: 0, Timestamp: finished, Phase: "safety", Level: "error", Event: "lifecycle.blocked", Message: guardErr.Error()})
+				return nil
+			}
+		}
+	}
 	now := time.Now().UTC()
 	operation.Status, operation.StartedAt, operation.FailureReason = "running", &now, ""
 	operation.Phase = operationPhase(operation.Kind)
@@ -59,6 +70,20 @@ func (h *CloudOperationHandler) Handle(ctx context.Context, job domainqueue.Job)
 		instance, err = h.provisioner.Configure(ctx, operation.InstanceID)
 	case "destroy":
 		instance, err = h.provisioner.Destroy(ctx, operation.InstanceID)
+	case "start", "stop", "validate":
+		lifecycle, ok := h.provisioner.(ports.CloudLifecycleProvisioner)
+		if !ok {
+			err = fmt.Errorf("cloud lifecycle operation %q is unavailable", operation.Kind)
+			break
+		}
+		switch operation.Kind {
+		case "start":
+			instance, err = lifecycle.Start(ctx, operation.InstanceID)
+		case "stop":
+			instance, err = lifecycle.Stop(ctx, operation.InstanceID)
+		case "validate":
+			instance, err = lifecycle.Validate(ctx, operation.InstanceID)
+		}
 	default:
 		err = fmt.Errorf("unsupported cloud operation %q", operation.Kind)
 	}
@@ -91,11 +116,14 @@ func operationPhase(kind string) string {
 	if kind == "configure" {
 		return "ansible"
 	}
+	if kind == "validate" {
+		return "validation"
+	}
 	return "terraform"
 }
 
 func operationTool(kind string) string {
-	if kind == "configure" {
+	if kind == "configure" || kind == "validate" {
 		return "ansible"
 	}
 	return "terraform"

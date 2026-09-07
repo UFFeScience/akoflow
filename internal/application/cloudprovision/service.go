@@ -2,6 +2,8 @@ package cloudprovision
 
 import (
 	"context"
+	"crypto/sha256"
+	"encoding/json"
 	"fmt"
 	"strings"
 	"time"
@@ -209,6 +211,12 @@ func (s *Provisioner) configure(
 	target domain.CloudCapacityTarget,
 	configurations []domain.CloudTargetConfiguration,
 ) error {
+	fingerprint := configurationFingerprint(configurations)
+	if current, _ := instance.TerraformOutput["configurationFingerprint"].(string); current != "" && current == fingerprint {
+		if err := s.validate(ctx, instance, target, configurations); err == nil {
+			return nil
+		}
+	}
 	for _, assignment := range configurations {
 		if !assignment.Enabled {
 			continue
@@ -235,6 +243,47 @@ func (s *Provisioner) configure(
 		})
 		if err != nil && assignment.Required {
 			return fmt.Errorf("apply machine configuration %q: %w", assignment.ConfigurationVersionID, err)
+		}
+	}
+	if instance.TerraformOutput == nil {
+		instance.TerraformOutput = map[string]any{}
+	}
+	instance.TerraformOutput["configurationFingerprint"] = fingerprint
+	return nil
+}
+
+func configurationFingerprint(configurations []domain.CloudTargetConfiguration) string {
+	var value strings.Builder
+	for _, configuration := range configurations {
+		if configuration.Enabled {
+			variables, _ := json.Marshal(configuration.Variables)
+			fmt.Fprintf(&value, "%s:%d:%s;", configuration.ConfigurationVersionID, configuration.ExecutionOrder, variables)
+		}
+	}
+	return fmt.Sprintf("sha256:%x", sha256.Sum256([]byte(value.String())))
+}
+
+func (s *Provisioner) validate(ctx context.Context, instance *domain.CloudProvisionedInstance, target domain.CloudCapacityTarget, configurations []domain.CloudTargetConfiguration) error {
+	validator, ok := s.configurator.(ports.MachineConfigurationValidator)
+	if !ok {
+		return fmt.Errorf("machine configuration validator is unavailable")
+	}
+	for _, assignment := range configurations {
+		if !assignment.Enabled {
+			continue
+		}
+		version, err := s.store.FindMachineConfigurationVersion(ctx, assignment.ConfigurationVersionID)
+		if err != nil || version == nil {
+			if assignment.Required {
+				return fmt.Errorf("load required machine configuration %q: %w", assignment.ConfigurationVersionID, err)
+			}
+			continue
+		}
+		if err := validateCompatibility(*version, target, assignment.Required); err != nil {
+			return err
+		}
+		if err := validator.Validate(ctx, ports.MachineConfigurationSpec{InstanceID: instance.ID, Address: instance.PublicAddress, SSHUser: instance.SSHUsername, CredentialRef: instance.SSHCredentialRef, Checks: version.ValidationChecks}); err != nil && assignment.Required {
+			return err
 		}
 	}
 	return nil
@@ -321,6 +370,69 @@ func (s *Provisioner) Destroy(ctx context.Context, instanceID string) (domain.Cl
 	instance.PublicAddress = ""
 	instance.PrivateAddress = ""
 	if err := s.store.UpdateProvisionedInstance(ctx, *instance); err != nil {
+		return *instance, err
+	}
+	return *instance, nil
+}
+
+func (s *Provisioner) Start(ctx context.Context, instanceID string) (domain.CloudProvisionedInstance, error) {
+	instance, err := s.store.FindProvisionedInstance(ctx, instanceID)
+	if err != nil || instance == nil {
+		return domain.CloudProvisionedInstance{}, fmt.Errorf("cloud instance %q was not found", instanceID)
+	}
+	if instance.Status == "ready" {
+		return *instance, nil
+	}
+	if instance.Status != "stopped" {
+		return *instance, fmt.Errorf("cloud instance %q cannot start from status %q", instanceID, instance.Status)
+	}
+	result, err := s.terraform.Start(ctx, instanceID)
+	if err != nil {
+		return *instance, err
+	}
+	instance.PublicAddress, instance.PrivateAddress = result.PublicAddress, result.PrivateAddress
+	if result.Output == nil {
+		result.Output = map[string]any{}
+	}
+	for key, value := range instance.TerraformOutput {
+		if _, exists := result.Output[key]; !exists {
+			result.Output[key] = value
+		}
+	}
+	instance.Disk, instance.TerraformOutput, instance.Status = result.Disk, result.Output, "ready"
+	now := time.Now().UTC()
+	instance.ReadyAt = &now
+	return *instance, s.store.UpdateProvisionedInstance(ctx, *instance)
+}
+
+func (s *Provisioner) Stop(ctx context.Context, instanceID string) (domain.CloudProvisionedInstance, error) {
+	instance, err := s.store.FindProvisionedInstance(ctx, instanceID)
+	if err != nil || instance == nil {
+		return domain.CloudProvisionedInstance{}, fmt.Errorf("cloud instance %q was not found", instanceID)
+	}
+	if instance.Status == "stopped" {
+		return *instance, nil
+	}
+	if instance.Status != "ready" {
+		return *instance, fmt.Errorf("cloud instance %q cannot stop from status %q", instanceID, instance.Status)
+	}
+	if err := s.terraform.Stop(ctx, instanceID); err != nil {
+		return *instance, err
+	}
+	instance.Status, instance.PublicAddress = "stopped", ""
+	return *instance, s.store.UpdateProvisionedInstance(ctx, *instance)
+}
+
+func (s *Provisioner) Validate(ctx context.Context, instanceID string) (domain.CloudProvisionedInstance, error) {
+	instance, err := s.store.FindProvisionedInstance(ctx, instanceID)
+	if err != nil || instance == nil {
+		return domain.CloudProvisionedInstance{}, fmt.Errorf("cloud instance %q was not found", instanceID)
+	}
+	target, err := s.store.FindCapacityTarget(ctx, instance.CapacityTargetID)
+	if err != nil || target == nil {
+		return *instance, targetError(instance.CapacityTargetID, err)
+	}
+	if err := s.validate(ctx, instance, *target, target.MachineConfigurations); err != nil {
 		return *instance, err
 	}
 	return *instance, nil

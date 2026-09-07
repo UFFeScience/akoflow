@@ -1862,6 +1862,22 @@ func (h *Handler) ConfigureCloudInstance(w http.ResponseWriter, r *http.Request)
 }
 
 func (h *Handler) DestroyCloudInstance(w http.ResponseWriter, r *http.Request) {
+	h.enqueueExistingCloudInstanceOperation(w, r, "destroy")
+}
+
+func (h *Handler) StartCloudInstance(w http.ResponseWriter, r *http.Request) {
+	h.enqueueExistingCloudInstanceOperation(w, r, "start")
+}
+
+func (h *Handler) StopCloudInstance(w http.ResponseWriter, r *http.Request) {
+	h.enqueueExistingCloudInstanceOperation(w, r, "stop")
+}
+
+func (h *Handler) ValidateCloudInstance(w http.ResponseWriter, r *http.Request) {
+	h.enqueueExistingCloudInstanceOperation(w, r, "validate")
+}
+
+func (h *Handler) enqueueExistingCloudInstanceOperation(w http.ResponseWriter, r *http.Request, kind string) {
 	if h.cloudProvisioner == nil {
 		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("cloud provisioner is unavailable"))
 		return
@@ -1871,7 +1887,7 @@ func (h *Handler) DestroyCloudInstance(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusNotFound, err)
 		return
 	}
-	h.enqueueCloudOperation(w, r, "destroy", instance.EnvironmentID, instance.ID, instance.CapacityTargetID, domain.CloudProvisionRequest{})
+	h.enqueueCloudOperation(w, r, kind, instance.EnvironmentID, instance.ID, instance.CapacityTargetID, domain.CloudProvisionRequest{})
 }
 
 func (h *Handler) enqueueCloudOperation(w http.ResponseWriter, r *http.Request, kind, environmentID, instanceID, targetID string, request domain.CloudProvisionRequest) {

@@ -106,12 +106,14 @@ type TransferEndpoint struct {
 }
 
 type TransferRoute struct {
-	Strategy      TransferStrategy `json:"strategy"`
-	SourceAddress string           `json:"sourceAddress,omitempty"`
-	TargetAddress string           `json:"targetAddress,omitempty"`
-	NetworkDomain string           `json:"networkDomain,omitempty"`
-	Fallback      TransferStrategy `json:"fallback,omitempty"`
-	Reason        string           `json:"reason"`
+	Strategy              TransferStrategy `json:"strategy"`
+	SourceAddress         string           `json:"sourceAddress,omitempty"`
+	TargetAddress         string           `json:"targetAddress,omitempty"`
+	SourceCloudInstanceID string           `json:"sourceCloudInstanceId,omitempty"`
+	TargetCloudInstanceID string           `json:"targetCloudInstanceId,omitempty"`
+	NetworkDomain         string           `json:"networkDomain,omitempty"`
+	Fallback              TransferStrategy `json:"fallback,omitempty"`
+	Reason                string           `json:"reason"`
 }
 type ConnectorBinding struct {
 	ID            string `json:"id"`

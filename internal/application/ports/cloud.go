@@ -32,6 +32,10 @@ type CloudOperationStore interface {
 	ListCloudOperationEvents(context.Context, string) ([]domain.CloudOperationEvent, error)
 }
 
+type CloudLifecycleGuard interface {
+	CheckCloudLifecycle(context.Context, string, string) error
+}
+
 type CloudCredentialResolver interface {
 	Resolve(string) ([]byte, error)
 }
@@ -62,6 +66,12 @@ type CloudProvisioner interface {
 	Destroy(context.Context, string) (domain.CloudProvisionedInstance, error)
 	Release(context.Context, []string) error
 	Log(context.Context, string) ([]byte, error)
+}
+
+type CloudLifecycleProvisioner interface {
+	Start(context.Context, string) (domain.CloudProvisionedInstance, error)
+	Stop(context.Context, string) (domain.CloudProvisionedInstance, error)
+	Validate(context.Context, string) (domain.CloudProvisionedInstance, error)
 }
 
 type TerraformProvisionSpec struct {
@@ -109,4 +119,8 @@ type MachineConfigurationSpec struct {
 
 type MachineConfigurator interface {
 	Configure(context.Context, MachineConfigurationSpec) error
+}
+
+type MachineConfigurationValidator interface {
+	Validate(context.Context, MachineConfigurationSpec) error
 }

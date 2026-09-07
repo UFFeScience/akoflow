@@ -642,3 +642,34 @@ func (r *Repository) ListCloudOperationEvents(ctx context.Context, operationID s
 	}
 	return values, rows.Err()
 }
+
+func (r *Repository) CheckCloudLifecycle(ctx context.Context, instanceID, excludedOperationID string) error {
+	checks := []struct {
+		query   string
+		message string
+	}{
+		{`SELECT COUNT(*) FROM task_executions WHERE json_extract(metadata,'$.cloudInstanceId')=? AND status IN ('blocked','ready','preparing','running')`, "workflow activities are still active"},
+		{`SELECT COUNT(*) FROM transfer_runs WHERE status IN ('planned','running') AND (json_extract(route,'$.sourceCloudInstanceId')=? OR json_extract(route,'$.targetCloudInstanceId')=?)`, "data transfers are still active"},
+		{`SELECT COUNT(*) FROM console_sessions s JOIN cloud_provisioned_instances i ON i.capacity_target_id=s.resource_id WHERE i.id=? AND s.status IN ('starting','connected')`, "interactive sessions are still active"},
+		{`SELECT COUNT(*) FROM cloud_operation_runs WHERE instance_id=? AND id<>? AND status IN ('queued','running')`, "another infrastructure operation is still active"},
+	}
+	for index, check := range checks {
+		var count int
+		var err error
+		switch index {
+		case 1:
+			err = r.db.QueryRowContext(ctx, check.query, instanceID, instanceID).Scan(&count)
+		case 3:
+			err = r.db.QueryRowContext(ctx, check.query, instanceID, excludedOperationID).Scan(&count)
+		default:
+			err = r.db.QueryRowContext(ctx, check.query, instanceID).Scan(&count)
+		}
+		if err != nil {
+			return fmt.Errorf("inspect cloud lifecycle safety: %w", err)
+		}
+		if count > 0 {
+			return fmt.Errorf("cloud instance %q cannot change lifecycle: %s", instanceID, check.message)
+		}
+	}
+	return nil
+}

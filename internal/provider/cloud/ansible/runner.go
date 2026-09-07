@@ -102,6 +102,34 @@ func (r Runner) Configure(ctx context.Context, spec ports.MachineConfigurationSp
 	return nil
 }
 
+func (r Runner) Validate(ctx context.Context, spec ports.MachineConfigurationSpec) error {
+	keyPath, err := privateKeyPath(spec.CredentialRef)
+	if err != nil {
+		return err
+	}
+	root, err := filepath.Abs(r.Root)
+	if err != nil {
+		return err
+	}
+	logFile, err := os.OpenFile(filepath.Join(root, spec.InstanceID, "provision.log"), os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0o600)
+	if err != nil {
+		return err
+	}
+	defer logFile.Close()
+	for _, check := range spec.Checks {
+		_, _ = fmt.Fprintf(logFile, "[Ansible] validating %s\n", check.Name)
+		_ = logFile.Sync()
+		if err := runCheck(ctx, spec, keyPath, check.Command); err != nil {
+			_, _ = fmt.Fprintf(logFile, "[Ansible] validation %s failed: %v\n", check.Name, err)
+			_ = logFile.Sync()
+			return fmt.Errorf("validation %q: %w", check.Name, err)
+		}
+		_, _ = fmt.Fprintf(logFile, "[Ansible] validation %s passed\n", check.Name)
+		_ = logFile.Sync()
+	}
+	return nil
+}
+
 func waitForSSH(ctx context.Context, spec ports.MachineConfigurationSpec, keyPath string, logFile *os.File) error {
 	timeout := time.NewTimer(5 * time.Minute)
 	defer timeout.Stop()

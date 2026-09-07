@@ -16,9 +16,11 @@ func (StrategyResolver) Resolve(source, destination domain.TransferEndpoint) dom
 	sourceAddress := endpointAddress(source)
 	targetAddress := endpointAddress(destination)
 	route := domain.TransferRoute{
-		SourceAddress: sourceAddress,
-		TargetAddress: targetAddress,
-		Fallback:      domain.TransferGateway,
+		SourceAddress:         sourceAddress,
+		TargetAddress:         targetAddress,
+		SourceCloudInstanceID: source.CloudInstanceID,
+		TargetCloudInstanceID: destination.CloudInstanceID,
+		Fallback:              domain.TransferGateway,
 	}
 	if sameObject(source, destination) {
 		route.Strategy = domain.TransferUseExisting

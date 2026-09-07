@@ -146,3 +146,53 @@ func TestLoopRenewsLeaseWhileHandlerIsRunning(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+func TestLoopReservesWorkerForInfrastructureLifecycle(t *testing.T) {
+	db, err := sql.Open("sqlite3", ":memory:")
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer db.Close()
+	db.SetMaxOpenConns(1)
+	if err := database.Bootstrap(context.Background(), db); err != nil {
+		t.Fatal(err)
+	}
+	repository, _ := queue.New(db)
+	dispatcher := NewDispatcher()
+	executionStarted, releaseExecution, infrastructureRan := make(chan struct{}), make(chan struct{}), make(chan struct{})
+	_ = dispatcher.Register("blocked-execution", HandlerFunc(func(context.Context, domainqueue.Job) error {
+		close(executionStarted)
+		<-releaseExecution
+		return nil
+	}))
+	_ = dispatcher.Register("infrastructure", HandlerFunc(func(context.Context, domainqueue.Job) error {
+		close(infrastructureRan)
+		return nil
+	}))
+	config := DefaultConfig("reserved-worker")
+	config.Concurrency, config.InfrastructureConcurrency, config.PollInterval = 1, 1, 5*time.Millisecond
+	loop, err := New(repository, dispatcher, config)
+	if err != nil {
+		t.Fatal(err)
+	}
+	ctx, cancel := context.WithCancel(context.Background())
+	done := make(chan error, 1)
+	go func() { done <- loop.Run(ctx) }()
+	executionJob, _ := domainqueue.New(domainqueue.CategoryExecution, "blocked-execution", nil, time.Now())
+	_, _ = repository.Publish(ctx, executionJob)
+	loop.Notify()
+	<-executionStarted
+	infrastructureJob, _ := domainqueue.New(domainqueue.CategoryInfrastructure, "infrastructure", nil, time.Now())
+	_, _ = repository.Publish(ctx, infrastructureJob)
+	loop.Notify()
+	select {
+	case <-infrastructureRan:
+	case <-time.After(time.Second):
+		t.Fatal("infrastructure operation was starved by workflow execution")
+	}
+	close(releaseExecution)
+	cancel()
+	if err := <-done; err != nil {
+		t.Fatal(err)
+	}
+}

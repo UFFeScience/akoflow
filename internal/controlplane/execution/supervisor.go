@@ -20,12 +20,13 @@ type ActivityController interface {
 }
 
 type Config struct {
-	PollInterval time.Duration
-	MaxParallel  int
-	Preparer     ports.PreparationCoordinator
-	Data         ports.DataCatalog
-	Cloud        ports.CloudProvisioner
-	CloudStore   ports.CloudConfigurationStore
+	PollInterval   time.Duration
+	MaxParallel    int
+	Preparer       ports.PreparationCoordinator
+	Data           ports.DataCatalog
+	Cloud          ports.CloudProvisioner
+	CloudStore     ports.CloudConfigurationStore
+	CloudAllocator CloudAllocator
 }
 
 type Supervisor struct {
@@ -49,6 +50,9 @@ func New(executions ports.ExecutionStore, activities ActivityController, simulat
 }
 
 func (s *Supervisor) Execute(ctx context.Context, request ports.ExecutionRequest) (trace domain.ExecutionTrace, err error) {
+	if request.RuntimeAllocations == nil {
+		request.RuntimeAllocations = make(map[string]domain.RuntimeAllocation)
+	}
 	request.Run.SchedulePlanID = request.Plan.ID
 	request.Run.Status = domain.ExecutionRunRunning
 	if err := validateRequest(request); err != nil {
@@ -62,7 +66,7 @@ func (s *Supervisor) Execute(ctx context.Context, request ports.ExecutionRequest
 			// Lifecycle cleanup belongs to the infrastructure result, not the
 			// scientific result. Release records its own failed instance status;
 			// a teardown failure must not turn completed computation into failure.
-			_ = s.releaseCloud(context.WithoutCancel(ctx), request)
+			_ = s.releaseCloud(context.WithoutCancel(ctx), request, err != nil)
 		}
 		if err != nil {
 			_ = s.executions.FailRun(context.WithoutCancel(ctx), request.Run.ID, err.Error())
@@ -85,7 +89,10 @@ func (s *Supervisor) Execute(ctx context.Context, request ports.ExecutionRequest
 	return trace, nil
 }
 
-func (s *Supervisor) releaseCloud(ctx context.Context, request ports.ExecutionRequest) error {
+func (s *Supervisor) releaseCloud(ctx context.Context, request ports.ExecutionRequest, failed bool) error {
+	if s.config.CloudAllocator != nil {
+		return s.config.CloudAllocator.Release(ctx, request.Run.ID, request.RuntimeAllocations, failed)
+	}
 	if s.config.Cloud == nil {
 		return nil
 	}
@@ -316,7 +323,12 @@ func (s *Supervisor) ensureRuntimeAllocation(
 			return allocation, nil
 		}
 	}
-	instance, err := s.config.Cloud.Provision(ctx, target.EnvironmentID, domain.CloudProvisionRequest{CapacityTargetID: target.ID})
+	var instance domain.CloudProvisionedInstance
+	if s.config.CloudAllocator != nil {
+		instance, err = s.config.CloudAllocator.Allocate(ctx, request.Run.ID, activityID, *target)
+	} else {
+		instance, err = s.config.Cloud.Provision(ctx, target.EnvironmentID, domain.CloudProvisionRequest{CapacityTargetID: target.ID})
+	}
 	if err != nil {
 		return allocation, err
 	}

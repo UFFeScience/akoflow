@@ -33,7 +33,7 @@ func buildEventLoop(
 ) (*eventloop.Loop, error) {
 	dispatcher := eventloop.NewDispatcher()
 	if err := registerExecutionHandlers(
-		dispatcher, executions, data, instance, connections, activities, simulator,
+		dispatcher, events, executions, data, instance, connections, activities, simulator,
 		artifactStoreRoot, cloud, cloudProvisioner,
 	); err != nil {
 		return nil, err
@@ -58,6 +58,7 @@ func buildEventLoop(
 
 func registerExecutionHandlers(
 	dispatcher *eventloop.Dispatcher,
+	events ports.QueueStore,
 	executions ports.ExecutionStore,
 	data ports.DataCatalog,
 	instance ports.InstanceStore,
@@ -65,7 +66,10 @@ func registerExecutionHandlers(
 	activities *applicationexecution.Controller,
 	simulator ports.PlanExecutor,
 	artifactStoreRoot string,
-	cloud ports.CloudConfigurationStore,
+	cloud interface {
+		ports.CloudConfigurationStore
+		ports.CloudOperationStore
+	},
 	cloudProvisioner ports.CloudProvisioner,
 ) error {
 	if err := dispatcher.Register(eventloop.EventActivityExecutionRequested,
@@ -84,6 +88,7 @@ func registerExecutionHandlers(
 		controlexecution.Config{
 			PollInterval: time.Second, MaxParallel: 8, Preparer: preparer,
 			Data: data, Cloud: cloudProvisioner, CloudStore: cloud,
+			CloudAllocator: controlexecution.QueuedCloudAllocator{Cloud: cloud, Operations: cloud, Queue: events, PollInterval: 500 * time.Millisecond},
 		},
 	)
 	if err != nil {

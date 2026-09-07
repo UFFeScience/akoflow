@@ -11,17 +11,18 @@ import (
 )
 
 type Config struct {
-	Owner             string
-	Categories        []string
-	Concurrency       int
-	LeaseDuration     time.Duration
-	PollInterval      time.Duration
-	RetryBaseInterval time.Duration
+	Owner                     string
+	Categories                []string
+	Concurrency               int
+	InfrastructureConcurrency int
+	LeaseDuration             time.Duration
+	PollInterval              time.Duration
+	RetryBaseInterval         time.Duration
 }
 
 func DefaultConfig(owner string) Config {
 	return Config{
-		Owner: owner, Concurrency: 8, LeaseDuration: 30 * time.Second,
+		Owner: owner, Concurrency: 8, InfrastructureConcurrency: 2, LeaseDuration: 30 * time.Second,
 		PollInterval: time.Second, RetryBaseInterval: 2 * time.Second,
 	}
 }
@@ -37,7 +38,7 @@ func New(repository ports.QueueStore, dispatcher *Dispatcher, config Config) (*L
 	if repository == nil || dispatcher == nil {
 		return nil, fmt.Errorf("event loop requires queue repository and dispatcher")
 	}
-	if config.Owner == "" || config.Concurrency < 1 || config.LeaseDuration <= 0 || config.PollInterval <= 0 {
+	if config.Owner == "" || config.Concurrency < 1 || config.InfrastructureConcurrency < 1 || config.LeaseDuration <= 0 || config.PollInterval <= 0 {
 		return nil, fmt.Errorf("invalid event loop configuration")
 	}
 	if config.RetryBaseInterval <= 0 {
@@ -57,32 +58,40 @@ func (l *Loop) Run(ctx context.Context) error {
 	ticker := time.NewTicker(l.config.PollInterval)
 	defer ticker.Stop()
 	semaphore := make(chan struct{}, l.config.Concurrency)
+	infrastructure := make(chan struct{}, l.config.InfrastructureConcurrency)
+	infrastructureCategories, regularCategories := splitCategories(l.config.Categories)
 	var running sync.WaitGroup
 
 	defer func() {
 		running.Wait()
 	}()
 
-	l.drain(ctx, semaphore, &running)
+	l.drain(ctx, infrastructure, &running, infrastructureCategories)
+	l.drain(ctx, semaphore, &running, regularCategories)
 	for {
 		select {
 		case <-ctx.Done():
 			return nil
 		case <-ticker.C:
 			_, _ = l.queue.ReleaseExpired(ctx, time.Now().UTC())
-			l.drain(ctx, semaphore, &running)
+			l.drain(ctx, infrastructure, &running, infrastructureCategories)
+			l.drain(ctx, semaphore, &running, regularCategories)
 		case <-l.wakeUp:
-			l.drain(ctx, semaphore, &running)
+			l.drain(ctx, infrastructure, &running, infrastructureCategories)
+			l.drain(ctx, semaphore, &running, regularCategories)
 		}
 	}
 }
 
-func (l *Loop) drain(ctx context.Context, semaphore chan struct{}, running *sync.WaitGroup) {
+func (l *Loop) drain(ctx context.Context, semaphore chan struct{}, running *sync.WaitGroup, categories []string) {
+	if len(categories) == 0 {
+		return
+	}
 	available := cap(semaphore) - len(semaphore)
 	if available <= 0 {
 		return
 	}
-	jobs, err := l.queue.Lease(ctx, l.config.Owner, l.config.Categories, available, l.config.LeaseDuration)
+	jobs, err := l.queue.Lease(ctx, l.config.Owner, categories, available, l.config.LeaseDuration)
 	if err != nil {
 		return
 	}
@@ -99,6 +108,25 @@ func (l *Loop) drain(ctx context.Context, semaphore chan struct{}, running *sync
 			l.handle(ctx, job)
 		}()
 	}
+}
+
+func nonInfrastructureCategories() []string {
+	return []string{domainqueue.CategoryEnvironment, domainqueue.CategoryOrchestration, domainqueue.CategoryExecution, domainqueue.CategoryMonitoring, domainqueue.CategoryTransfer, domainqueue.CategoryMaintenance, domainqueue.CategoryPlanning}
+}
+
+func splitCategories(configured []string) ([]string, []string) {
+	if len(configured) == 0 {
+		return []string{domainqueue.CategoryInfrastructure}, nonInfrastructureCategories()
+	}
+	infrastructure, regular := []string{}, []string{}
+	for _, category := range configured {
+		if category == domainqueue.CategoryInfrastructure {
+			infrastructure = append(infrastructure, category)
+		} else {
+			regular = append(regular, category)
+		}
+	}
+	return infrastructure, regular
 }
 
 func (l *Loop) handle(ctx context.Context, job domainqueue.Job) {

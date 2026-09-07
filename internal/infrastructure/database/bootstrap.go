@@ -59,6 +59,9 @@ func Bootstrap(ctx context.Context, db *sql.DB) error {
 	if err := migrateCloudOperationRuns(ctx, db); err != nil {
 		return err
 	}
+	if err := migrateCloudExecutionDataPlane(ctx, db); err != nil {
+		return err
+	}
 	if err := Validate(ctx, db); err != nil {
 		return fmt.Errorf("%w; remove the existing database file and recreate it: %v", ErrIncompatibleSchema, err)
 	}
@@ -79,6 +82,7 @@ const schemaBeforeCloudRuntimeDriver = "2d4a31031d61e8dd5a8c80550cc47d8fa158d869
 const schemaBeforeCloudExecutionTarget = "e515cbbfe701482f1c952431134d34359284f42959ace947f55faabad269d739"
 const schemaBeforeCloudCatalogSnapshots = "c9f8b4a4d2d2fd5bfecc4f289d0e68657f608d3b7a75ba53ee4e946dcf251f0b"
 const schemaBeforeCloudOperationRuns = "f96a82d2abb3977da8df5907bec5a3b1b09e5a852d385d1e3daa6c019d5ab75c"
+const schemaBeforeCloudExecutionDataPlane = "45527a1e824b489f357e154689780cc164bc6cbbdd46905eeaec774303e5eed1"
 
 func migrateUserPreferences(ctx context.Context, db *sql.DB) error {
 	var checksum string
@@ -450,8 +454,79 @@ func migrateCloudOperationRuns(ctx context.Context, db *sql.DB) error {
 			return fmt.Errorf("apply cloud operation runs migration: %w", err)
 		}
 	}
-	if _, err := tx.ExecContext(ctx, `UPDATE schema_metadata SET checksum=?, applied_at=?`, schemaChecksum(), time.Now().UTC()); err != nil {
+	if _, err := tx.ExecContext(ctx, `UPDATE schema_metadata SET checksum=?, applied_at=?`, schemaBeforeCloudExecutionDataPlane, time.Now().UTC()); err != nil {
 		return fmt.Errorf("record cloud operation runs migration: %w", err)
+	}
+	return tx.Commit()
+}
+
+func migrateCloudExecutionDataPlane(ctx context.Context, db *sql.DB) error {
+	var checksum string
+	if err := db.QueryRowContext(ctx, `SELECT checksum FROM schema_metadata LIMIT 1`).Scan(&checksum); err != nil || checksum == schemaChecksum() {
+		return nil
+	}
+	if checksum != schemaBeforeCloudExecutionDataPlane {
+		return nil
+	}
+	// Tests and development builds can contain the new physical schema while
+	// still carrying the previous migration checksum. In that case there is
+	// nothing to rebuild; only advance the migration marker.
+	var executionRunColumn int
+	if err := db.QueryRowContext(ctx, `SELECT COUNT(*) FROM pragma_table_info('cloud_operation_runs') WHERE name='execution_run_id'`).Scan(&executionRunColumn); err != nil {
+		return fmt.Errorf("inspect cloud operation schema: %w", err)
+	}
+	if executionRunColumn > 0 {
+		if _, err := db.ExecContext(ctx, `UPDATE schema_metadata SET checksum=?, applied_at=?`, schemaChecksum(), time.Now().UTC()); err != nil {
+			return fmt.Errorf("record cloud execution data plane migration: %w", err)
+		}
+		return nil
+	}
+	tx, err := db.BeginTx(ctx, nil)
+	if err != nil {
+		return fmt.Errorf("begin cloud execution data plane migration: %w", err)
+	}
+	defer tx.Rollback()
+	statements := []string{
+		`ALTER TABLE cloud_operation_runs RENAME TO cloud_operation_runs_legacy`,
+		`CREATE TABLE cloud_operation_runs (
+			id TEXT PRIMARY KEY,
+			kind TEXT NOT NULL CHECK(kind IN ('provision','configure','validate','start','stop','destroy','attach-volume','detach-volume')),
+			status TEXT NOT NULL CHECK(status IN ('queued','running','completed','failed','cancelled')),
+			environment_id TEXT NOT NULL REFERENCES environments(id), capacity_target_id TEXT NOT NULL DEFAULT '',
+			instance_id TEXT NOT NULL DEFAULT '', execution_run_id TEXT NOT NULL DEFAULT '', activity_id TEXT NOT NULL DEFAULT '',
+			phase TEXT NOT NULL DEFAULT 'queued', request TEXT NOT NULL DEFAULT '{}', failure_reason TEXT NOT NULL DEFAULT '',
+			created_at DATETIME NOT NULL, started_at DATETIME, finished_at DATETIME)`,
+		`INSERT INTO cloud_operation_runs(id,kind,status,environment_id,capacity_target_id,instance_id,request,failure_reason,created_at,started_at,finished_at)
+			SELECT id,kind,status,environment_id,capacity_target_id,instance_id,request,failure_reason,created_at,started_at,finished_at FROM cloud_operation_runs_legacy`,
+		`DROP TABLE cloud_operation_runs_legacy`,
+		`CREATE INDEX cloud_operation_runs_created_idx ON cloud_operation_runs(created_at DESC)`,
+		`CREATE TABLE cloud_operation_events (
+			operation_id TEXT NOT NULL REFERENCES cloud_operation_runs(id) ON DELETE CASCADE, sequence INTEGER NOT NULL,
+			timestamp DATETIME NOT NULL, tool TEXT NOT NULL DEFAULT '', phase TEXT NOT NULL DEFAULT '', level TEXT NOT NULL DEFAULT 'info',
+			event TEXT NOT NULL, task TEXT NOT NULL DEFAULT '', host TEXT NOT NULL DEFAULT '', message TEXT NOT NULL DEFAULT '',
+			raw TEXT NOT NULL DEFAULT '', duration_seconds REAL NOT NULL DEFAULT 0, PRIMARY KEY(operation_id, sequence))`,
+		`ALTER TABLE transfer_runs ADD COLUMN logical_bytes INTEGER NOT NULL DEFAULT 0`,
+		`ALTER TABLE transfer_runs ADD COLUMN network_bytes INTEGER NOT NULL DEFAULT 0`,
+		`ALTER TABLE transfer_runs ADD COLUMN route TEXT NOT NULL DEFAULT '{}'`,
+		`CREATE TABLE transfer_chunk_runs (
+			transfer_run_id TEXT NOT NULL REFERENCES transfer_runs(id) ON DELETE CASCADE, chunk_index INTEGER NOT NULL,
+			offset_bytes INTEGER NOT NULL, size_bytes INTEGER NOT NULL, digest TEXT NOT NULL DEFAULT '',
+			status TEXT NOT NULL CHECK(status IN ('planned','running','completed','failed')), attempts INTEGER NOT NULL DEFAULT 0,
+			updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY(transfer_run_id, chunk_index))`,
+		`CREATE TABLE planned_lifecycle_actions (
+			id TEXT PRIMARY KEY, schedule_plan_id TEXT NOT NULL REFERENCES schedule_plans(id) ON DELETE CASCADE,
+			capacity_target_id TEXT NOT NULL, cloud_instance_id TEXT NOT NULL DEFAULT '',
+			action TEXT NOT NULL CHECK(action IN ('provision','configure','validate','start','stop','destroy','attach-volume','detach-volume')),
+			earliest_start REAL NOT NULL DEFAULT 0, expected_duration REAL NOT NULL DEFAULT 0,
+			depends_on TEXT NOT NULL DEFAULT '[]', metadata TEXT NOT NULL DEFAULT '{}')`,
+	}
+	for _, statement := range statements {
+		if _, err := tx.ExecContext(ctx, statement); err != nil {
+			return fmt.Errorf("apply cloud execution data plane migration: %w", err)
+		}
+	}
+	if _, err := tx.ExecContext(ctx, `UPDATE schema_metadata SET checksum=?, applied_at=?`, schemaChecksum(), time.Now().UTC()); err != nil {
+		return fmt.Errorf("record cloud execution data plane migration: %w", err)
 	}
 	return tx.Commit()
 }

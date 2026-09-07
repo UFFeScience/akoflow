@@ -239,15 +239,20 @@ func (r *Repository) SaveTransferRun(ctx context.Context, value domain.DataTrans
 	if err != nil {
 		return err
 	}
-	_, err = r.db.ExecContext(ctx, `INSERT INTO transfer_runs(id,plan_id,strategy,status,verified_blobs,completed_chunks,started_at,finished_at,transferred_bytes,error)
-		VALUES(?,?,?,?,?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET status=excluded.status, verified_blobs=excluded.verified_blobs,
+	route, err := json.Marshal(value.Route)
+	if err != nil {
+		return err
+	}
+	_, err = r.db.ExecContext(ctx, `INSERT INTO transfer_runs(id,plan_id,strategy,status,verified_blobs,completed_chunks,started_at,finished_at,transferred_bytes,error,logical_bytes,network_bytes,route)
+		VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET strategy=excluded.strategy, status=excluded.status, verified_blobs=excluded.verified_blobs,
 		completed_chunks=excluded.completed_chunks, started_at=excluded.started_at, finished_at=excluded.finished_at,
-		transferred_bytes=excluded.transferred_bytes, error=excluded.error`, value.ID, value.PlanID, value.Strategy, value.Status, string(verified), string(chunks), value.StartedAt, value.FinishedAt, value.TransferredBytes, value.Error)
+		transferred_bytes=excluded.transferred_bytes, error=excluded.error, logical_bytes=excluded.logical_bytes,
+		network_bytes=excluded.network_bytes, route=excluded.route`, value.ID, value.PlanID, value.Strategy, value.Status, string(verified), string(chunks), value.StartedAt, value.FinishedAt, value.TransferredBytes, value.Error, value.LogicalBytes, value.NetworkBytes, string(route))
 	return err
 }
 
 func (r *Repository) ListArtifactTransferRuns(ctx context.Context, runID string) ([]domain.DataTransferRun, error) {
-	rows, err := r.db.QueryContext(ctx, `SELECT t.id,t.plan_id,t.strategy,t.status,t.verified_blobs,t.completed_chunks,t.started_at,t.finished_at,t.transferred_bytes,t.error
+	rows, err := r.db.QueryContext(ctx, `SELECT t.id,t.plan_id,t.strategy,t.status,t.verified_blobs,t.completed_chunks,t.started_at,t.finished_at,t.transferred_bytes,t.error,t.logical_bytes,t.network_bytes,t.route
 		FROM transfer_runs t JOIN artifact_materializations m ON t.id='transfer-' || m.id
 		WHERE m.run_id=? ORDER BY t.id`, runID)
 	if err != nil {
@@ -257,14 +262,17 @@ func (r *Repository) ListArtifactTransferRuns(ctx context.Context, runID string)
 	values := []domain.DataTransferRun{}
 	for rows.Next() {
 		var value domain.DataTransferRun
-		var verified, chunks string
-		if err := rows.Scan(&value.ID, &value.PlanID, &value.Strategy, &value.Status, &verified, &chunks, &value.StartedAt, &value.FinishedAt, &value.TransferredBytes, &value.Error); err != nil {
+		var verified, chunks, route string
+		if err := rows.Scan(&value.ID, &value.PlanID, &value.Strategy, &value.Status, &verified, &chunks, &value.StartedAt, &value.FinishedAt, &value.TransferredBytes, &value.Error, &value.LogicalBytes, &value.NetworkBytes, &route); err != nil {
 			return nil, err
 		}
 		if err := json.Unmarshal([]byte(verified), &value.VerifiedBlobs); err != nil {
 			return nil, err
 		}
 		if err := json.Unmarshal([]byte(chunks), &value.CompletedChunks); err != nil {
+			return nil, err
+		}
+		if err := json.Unmarshal([]byte(route), &value.Route); err != nil {
 			return nil, err
 		}
 		values = append(values, value)
@@ -274,9 +282,9 @@ func (r *Repository) ListArtifactTransferRuns(ctx context.Context, runID string)
 
 func (r *Repository) FindTransferRun(ctx context.Context, id string) (*domain.DataTransferRun, error) {
 	var value domain.DataTransferRun
-	var verified, chunks string
-	err := r.db.QueryRowContext(ctx, `SELECT id,plan_id,strategy,status,verified_blobs,completed_chunks,started_at,finished_at,transferred_bytes,error FROM transfer_runs WHERE id=?`, id).
-		Scan(&value.ID, &value.PlanID, &value.Strategy, &value.Status, &verified, &chunks, &value.StartedAt, &value.FinishedAt, &value.TransferredBytes, &value.Error)
+	var verified, chunks, route string
+	err := r.db.QueryRowContext(ctx, `SELECT id,plan_id,strategy,status,verified_blobs,completed_chunks,started_at,finished_at,transferred_bytes,error,logical_bytes,network_bytes,route FROM transfer_runs WHERE id=?`, id).
+		Scan(&value.ID, &value.PlanID, &value.Strategy, &value.Status, &verified, &chunks, &value.StartedAt, &value.FinishedAt, &value.TransferredBytes, &value.Error, &value.LogicalBytes, &value.NetworkBytes, &route)
 	if err == sql.ErrNoRows {
 		return nil, nil
 	}
@@ -289,7 +297,36 @@ func (r *Repository) FindTransferRun(ctx context.Context, id string) (*domain.Da
 	if err := json.Unmarshal([]byte(chunks), &value.CompletedChunks); err != nil {
 		return nil, fmt.Errorf("decode transfer chunks: %w", err)
 	}
+	if err := json.Unmarshal([]byte(route), &value.Route); err != nil {
+		return nil, fmt.Errorf("decode transfer route: %w", err)
+	}
 	return &value, nil
+}
+
+func (r *Repository) SaveTransferChunkRun(ctx context.Context, value domain.TransferChunkRun) error {
+	_, err := r.db.ExecContext(ctx, `INSERT INTO transfer_chunk_runs(transfer_run_id,chunk_index,offset_bytes,size_bytes,digest,status,attempts,updated_at)
+		VALUES(?,?,?,?,?,?,?,CURRENT_TIMESTAMP) ON CONFLICT(transfer_run_id,chunk_index) DO UPDATE SET
+		offset_bytes=excluded.offset_bytes,size_bytes=excluded.size_bytes,digest=excluded.digest,status=excluded.status,
+		attempts=excluded.attempts,updated_at=CURRENT_TIMESTAMP`, value.TransferRunID, value.Index, value.Offset, value.SizeBytes, value.Digest, value.Status, value.Attempts)
+	return err
+}
+
+func (r *Repository) ListTransferChunkRuns(ctx context.Context, transferRunID string) ([]domain.TransferChunkRun, error) {
+	rows, err := r.db.QueryContext(ctx, `SELECT transfer_run_id,chunk_index,offset_bytes,size_bytes,digest,status,attempts
+		FROM transfer_chunk_runs WHERE transfer_run_id=? ORDER BY chunk_index`, transferRunID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	values := []domain.TransferChunkRun{}
+	for rows.Next() {
+		var value domain.TransferChunkRun
+		if err := rows.Scan(&value.TransferRunID, &value.Index, &value.Offset, &value.SizeBytes, &value.Digest, &value.Status, &value.Attempts); err != nil {
+			return nil, err
+		}
+		values = append(values, value)
+	}
+	return values, rows.Err()
 }
 
 func (r *Repository) SaveArtifactBuild(ctx context.Context, value domain.ArtifactBuild) error {

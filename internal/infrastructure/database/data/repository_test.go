@@ -165,7 +165,7 @@ func TestMaterializationAndTransferLifecycle(t *testing.T) {
 	if err != nil || len(all) != 1 {
 		t.Fatalf("all materializations = %#v, %v", all, err)
 	}
-	transfer := domain.DataTransferRun{ID: "transfer-materialization", PlanID: "plan", Strategy: domain.TransferSourcePush, Status: domain.TransferRunning, VerifiedBlobs: []string{digest}, CompletedChunks: []int{1}, StartedAt: 1, TransferredBytes: 50}
+	transfer := domain.DataTransferRun{ID: "transfer-materialization", PlanID: "plan", Strategy: domain.TransferDirectRuntime, Status: domain.TransferRunning, VerifiedBlobs: []string{digest}, CompletedChunks: []int{1}, StartedAt: 1, TransferredBytes: 50, LogicalBytes: 100, NetworkBytes: 50, Route: domain.TransferRoute{Strategy: domain.TransferDirectRuntime, SourceAddress: "10.0.0.1", TargetAddress: "10.0.0.2", Reason: "private network"}}
 	if err = repository.SaveTransferRun(ctx, transfer); err != nil {
 		t.Fatal(err)
 	}
@@ -174,8 +174,20 @@ func TestMaterializationAndTransferLifecycle(t *testing.T) {
 		t.Fatal(err)
 	}
 	found, err := repository.FindTransferRun(ctx, transfer.ID)
-	if err != nil || found == nil || len(found.VerifiedBlobs) != 1 || len(found.CompletedChunks) != 1 || found.TransferredBytes != 100 {
+	if err != nil || found == nil || len(found.VerifiedBlobs) != 1 || len(found.CompletedChunks) != 1 || found.TransferredBytes != 100 || found.LogicalBytes != 100 || found.NetworkBytes != 50 || found.Route.TargetAddress != "10.0.0.2" {
 		t.Fatalf("transfer = %#v, %v", found, err)
+	}
+	chunk := domain.TransferChunkRun{TransferRunID: transfer.ID, Index: 1, Offset: 50, SizeBytes: 50, Digest: digest, Status: domain.TransferCompleted, Attempts: 2}
+	if err := repository.SaveTransferChunkRun(ctx, chunk); err != nil {
+		t.Fatal(err)
+	}
+	chunk.Attempts = 3
+	if err := repository.SaveTransferChunkRun(ctx, chunk); err != nil {
+		t.Fatal(err)
+	}
+	chunkRuns, err := repository.ListTransferChunkRuns(ctx, transfer.ID)
+	if err != nil || len(chunkRuns) != 1 || chunkRuns[0].Attempts != 3 {
+		t.Fatalf("chunks = %#v, %v", chunkRuns, err)
 	}
 	transfers, err := repository.ListArtifactTransferRuns(ctx, "run")
 	if err != nil || len(transfers) != 1 || transfers[0].Status != domain.TransferCompleted {

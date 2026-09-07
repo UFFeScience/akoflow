@@ -4,6 +4,7 @@ import (
 	"context"
 	"path/filepath"
 	"testing"
+	"time"
 
 	"github.com/UFFeScience/akoflow/internal/domain"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/database"
@@ -62,6 +63,37 @@ func TestRepositoryStoresConfigurationsAndTargets(t *testing.T) {
 		VCPU: 8, MemoryMiB: 32768, Enabled: true,
 	}); err != nil {
 		t.Fatalf("reuse removed target name: %v", err)
+	}
+}
+
+func TestRepositoryStoresCloudOperationEventsAndExecutionBinding(t *testing.T) {
+	ctx := context.Background()
+	db, err := database.Open(filepath.Join(t.TempDir(), "cloud.db"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer db.Close()
+	if err := database.Bootstrap(ctx, db); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := db.Exec(`INSERT INTO environments(id,name) VALUES('gcp-env','GCP')`); err != nil {
+		t.Fatal(err)
+	}
+	repository := dbcloud.New(db)
+	operation := domain.CloudOperationRun{ID: "operation", Kind: "provision", Status: "running", EnvironmentID: "gcp-env", ExecutionRunID: "run", ActivityID: "activity", Phase: "terraform", CreatedAt: time.Now().UTC()}
+	if err := repository.CreateCloudOperation(ctx, operation); err != nil {
+		t.Fatal(err)
+	}
+	if err := repository.AppendCloudOperationEvent(ctx, domain.CloudOperationEvent{OperationID: operation.ID, Sequence: 1, Tool: "terraform", Phase: "apply", Event: "resource_start", Message: "creating VM"}); err != nil {
+		t.Fatal(err)
+	}
+	found, err := repository.FindCloudOperation(ctx, operation.ID)
+	if err != nil || found == nil || found.ExecutionRunID != "run" || found.ActivityID != "activity" || found.Phase != "terraform" {
+		t.Fatalf("operation = %#v, %v", found, err)
+	}
+	events, err := repository.ListCloudOperationEvents(ctx, operation.ID)
+	if err != nil || len(events) != 1 || events[0].Tool != "terraform" || events[0].Message != "creating VM" {
+		t.Fatalf("events = %#v, %v", events, err)
 	}
 }
 

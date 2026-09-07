@@ -173,9 +173,27 @@ type OperationRun struct {
 	EnvironmentID    string           `json:"environmentId"`
 	CapacityTargetID string           `json:"capacityTargetId,omitempty"`
 	InstanceID       string           `json:"instanceId,omitempty"`
+	ExecutionRunID   string           `json:"executionRunId,omitempty"`
+	ActivityID       string           `json:"activityId,omitempty"`
+	Phase            string           `json:"phase"`
 	Request          ProvisionRequest `json:"request,omitempty"`
 	FailureReason    string           `json:"failureReason,omitempty"`
 	CreatedAt        time.Time        `json:"createdAt"`
 	StartedAt        *time.Time       `json:"startedAt,omitempty"`
 	FinishedAt       *time.Time       `json:"finishedAt,omitempty"`
+}
+
+type OperationEvent struct {
+	OperationID     string    `json:"operationId"`
+	Sequence        int       `json:"sequence"`
+	Timestamp       time.Time `json:"timestamp"`
+	Tool            string    `json:"tool,omitempty"`
+	Phase           string    `json:"phase,omitempty"`
+	Level           string    `json:"level"`
+	Event           string    `json:"event"`
+	Task            string    `json:"task,omitempty"`
+	Host            string    `json:"host,omitempty"`
+	Message         string    `json:"message,omitempty"`
+	Raw             string    `json:"raw,omitempty"`
+	DurationSeconds float64   `json:"durationSeconds,omitempty"`
 }

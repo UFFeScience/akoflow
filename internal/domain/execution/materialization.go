@@ -132,6 +132,15 @@ type TransferChunk struct {
 	Digest    string `json:"digest,omitempty"`
 	Received  bool   `json:"received,omitempty"`
 }
+type TransferChunkRun struct {
+	TransferRunID string         `json:"transferRunId"`
+	Index         int            `json:"index"`
+	Offset        int64          `json:"offset"`
+	SizeBytes     int64          `json:"sizeBytes"`
+	Digest        string         `json:"digest,omitempty"`
+	Status        TransferStatus `json:"status"`
+	Attempts      int            `json:"attempts"`
+}
 type DataTransferPlan struct {
 	ID                 string           `json:"id"`
 	ProducerActivityID string           `json:"producerActivityId,omitempty"`

@@ -70,6 +70,18 @@ type PlanAssignment struct {
 	Metadata                 map[string]any `json:"metadata,omitempty"`
 }
 
+type PlannedLifecycleAction struct {
+	ID               string         `json:"id"`
+	SchedulePlanID   string         `json:"schedulePlanId"`
+	CapacityTargetID string         `json:"capacityTargetId"`
+	CloudInstanceID  string         `json:"cloudInstanceId,omitempty"`
+	Action           string         `json:"action"`
+	EarliestStart    float64        `json:"earliestStart"`
+	ExpectedDuration float64        `json:"expectedDuration"`
+	DependsOn        []string       `json:"dependsOn,omitempty"`
+	Metadata         map[string]any `json:"metadata,omitempty"`
+}
+
 type PlanningRequest struct {
 	Workflow         workflow.WorkflowVersion           `json:"workflow"`
 	ExecutionScope   environment.ExecutionScope         `json:"executionScope"`

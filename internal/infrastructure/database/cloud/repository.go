@@ -542,11 +542,15 @@ func scanProvisionedInstance(scan scanner) (*domain.CloudProvisionedInstance, er
 }
 
 func (r *Repository) CreateCloudOperation(ctx context.Context, value domain.CloudOperationRun) error {
+	if value.Phase == "" {
+		value.Phase = "queued"
+	}
 	request, _ := json.Marshal(value.Request)
 	_, err := r.db.ExecContext(ctx, `INSERT INTO cloud_operation_runs(
-		id,kind,status,environment_id,capacity_target_id,instance_id,request,failure_reason,
-		created_at,started_at,finished_at) VALUES(?,?,?,?,?,?,?,?,?,?,?)`, value.ID, value.Kind,
-		value.Status, value.EnvironmentID, value.CapacityTargetID, value.InstanceID, request,
+		id,kind,status,environment_id,capacity_target_id,instance_id,execution_run_id,activity_id,phase,request,failure_reason,
+		created_at,started_at,finished_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)`, value.ID, value.Kind,
+		value.Status, value.EnvironmentID, value.CapacityTargetID, value.InstanceID,
+		value.ExecutionRunID, value.ActivityID, value.Phase, request,
 		value.FailureReason, value.CreatedAt, value.StartedAt, value.FinishedAt)
 	return err
 }
@@ -554,15 +558,16 @@ func (r *Repository) CreateCloudOperation(ctx context.Context, value domain.Clou
 func (r *Repository) UpdateCloudOperation(ctx context.Context, value domain.CloudOperationRun) error {
 	request, _ := json.Marshal(value.Request)
 	_, err := r.db.ExecContext(ctx, `UPDATE cloud_operation_runs SET status=?,environment_id=?,
-		capacity_target_id=?,instance_id=?,request=?,failure_reason=?,started_at=?,finished_at=?
+		capacity_target_id=?,instance_id=?,execution_run_id=?,activity_id=?,phase=?,request=?,failure_reason=?,started_at=?,finished_at=?
 		WHERE id=?`, value.Status, value.EnvironmentID, value.CapacityTargetID, value.InstanceID,
-		request, value.FailureReason, value.StartedAt, value.FinishedAt, value.ID)
+		value.ExecutionRunID, value.ActivityID, value.Phase, request, value.FailureReason,
+		value.StartedAt, value.FinishedAt, value.ID)
 	return err
 }
 
 func (r *Repository) FindCloudOperation(ctx context.Context, id string) (*domain.CloudOperationRun, error) {
 	value, err := scanCloudOperation(r.db.QueryRowContext(ctx, `SELECT id,kind,status,environment_id,
-		capacity_target_id,instance_id,request,failure_reason,created_at,started_at,finished_at
+		capacity_target_id,instance_id,execution_run_id,activity_id,phase,request,failure_reason,created_at,started_at,finished_at
 		FROM cloud_operation_runs WHERE id=?`, id).Scan)
 	if err == sql.ErrNoRows {
 		return nil, nil
@@ -572,7 +577,7 @@ func (r *Repository) FindCloudOperation(ctx context.Context, id string) (*domain
 
 func (r *Repository) ListCloudOperations(ctx context.Context) ([]domain.CloudOperationRun, error) {
 	rows, err := r.db.QueryContext(ctx, `SELECT id,kind,status,environment_id,capacity_target_id,
-		instance_id,request,failure_reason,created_at,started_at,finished_at
+		instance_id,execution_run_id,activity_id,phase,request,failure_reason,created_at,started_at,finished_at
 		FROM cloud_operation_runs ORDER BY created_at DESC`)
 	if err != nil {
 		return nil, err
@@ -593,11 +598,47 @@ func scanCloudOperation(scan scanner) (*domain.CloudOperationRun, error) {
 	var value domain.CloudOperationRun
 	var request []byte
 	err := scan(&value.ID, &value.Kind, &value.Status, &value.EnvironmentID,
-		&value.CapacityTargetID, &value.InstanceID, &request, &value.FailureReason,
+		&value.CapacityTargetID, &value.InstanceID, &value.ExecutionRunID, &value.ActivityID,
+		&value.Phase, &request, &value.FailureReason,
 		&value.CreatedAt, &value.StartedAt, &value.FinishedAt)
 	if err != nil {
 		return nil, err
 	}
 	_ = json.Unmarshal(request, &value.Request)
 	return &value, nil
+}
+
+func (r *Repository) AppendCloudOperationEvent(ctx context.Context, value domain.CloudOperationEvent) error {
+	if value.Timestamp.IsZero() {
+		value.Timestamp = time.Now().UTC()
+	}
+	if value.Level == "" {
+		value.Level = "info"
+	}
+	_, err := r.db.ExecContext(ctx, `INSERT INTO cloud_operation_events(
+		operation_id,sequence,timestamp,tool,phase,level,event,task,host,message,raw,duration_seconds)
+		VALUES(?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT(operation_id,sequence) DO NOTHING`,
+		value.OperationID, value.Sequence, value.Timestamp, value.Tool, value.Phase, value.Level,
+		value.Event, value.Task, value.Host, value.Message, value.Raw, value.DurationSeconds)
+	return err
+}
+
+func (r *Repository) ListCloudOperationEvents(ctx context.Context, operationID string) ([]domain.CloudOperationEvent, error) {
+	rows, err := r.db.QueryContext(ctx, `SELECT operation_id,sequence,timestamp,tool,phase,level,event,task,host,message,raw,duration_seconds
+		FROM cloud_operation_events WHERE operation_id=? ORDER BY sequence`, operationID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	values := make([]domain.CloudOperationEvent, 0)
+	for rows.Next() {
+		var value domain.CloudOperationEvent
+		if err := rows.Scan(&value.OperationID, &value.Sequence, &value.Timestamp, &value.Tool,
+			&value.Phase, &value.Level, &value.Event, &value.Task, &value.Host, &value.Message,
+			&value.Raw, &value.DurationSeconds); err != nil {
+			return nil, err
+		}
+		values = append(values, value)
+	}
+	return values, rows.Err()
 }

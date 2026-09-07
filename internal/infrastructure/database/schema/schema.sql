@@ -594,11 +594,14 @@ CREATE TABLE cloud_provisioned_instances (
 CREATE INDEX cloud_instances_environment_status_idx ON cloud_provisioned_instances(environment_id, status);
 CREATE TABLE cloud_operation_runs (
 	id TEXT PRIMARY KEY,
-	kind TEXT NOT NULL CHECK(kind IN ('provision','configure','destroy')),
-	status TEXT NOT NULL CHECK(status IN ('queued','running','completed','failed')),
+	kind TEXT NOT NULL CHECK(kind IN ('provision','configure','validate','start','stop','destroy','attach-volume','detach-volume')),
+	status TEXT NOT NULL CHECK(status IN ('queued','running','completed','failed','cancelled')),
 	environment_id TEXT NOT NULL REFERENCES environments(id),
 	capacity_target_id TEXT NOT NULL DEFAULT '',
 	instance_id TEXT NOT NULL DEFAULT '',
+	execution_run_id TEXT NOT NULL DEFAULT '',
+	activity_id TEXT NOT NULL DEFAULT '',
+	phase TEXT NOT NULL DEFAULT 'queued',
 	request TEXT NOT NULL DEFAULT '{}',
 	failure_reason TEXT NOT NULL DEFAULT '',
 	created_at DATETIME NOT NULL,
@@ -606,6 +609,15 @@ CREATE TABLE cloud_operation_runs (
 	finished_at DATETIME
 );
 CREATE INDEX cloud_operation_runs_created_idx ON cloud_operation_runs(created_at DESC);
+CREATE TABLE cloud_operation_events (
+	operation_id TEXT NOT NULL REFERENCES cloud_operation_runs(id) ON DELETE CASCADE,
+	sequence INTEGER NOT NULL,
+	timestamp DATETIME NOT NULL,
+	tool TEXT NOT NULL DEFAULT '', phase TEXT NOT NULL DEFAULT '', level TEXT NOT NULL DEFAULT 'info',
+	event TEXT NOT NULL, task TEXT NOT NULL DEFAULT '', host TEXT NOT NULL DEFAULT '',
+	message TEXT NOT NULL DEFAULT '', raw TEXT NOT NULL DEFAULT '', duration_seconds REAL NOT NULL DEFAULT 0,
+	PRIMARY KEY(operation_id, sequence)
+);
 CREATE TABLE cloud_catalog_snapshots (
     environment_id TEXT PRIMARY KEY REFERENCES environments(id) ON DELETE CASCADE,
     catalog TEXT NOT NULL,
@@ -773,8 +785,23 @@ CREATE TABLE transfer_runs (
     id TEXT PRIMARY KEY, plan_id TEXT NOT NULL, strategy TEXT NOT NULL, status TEXT NOT NULL,
     verified_blobs TEXT NOT NULL DEFAULT '[]', completed_chunks TEXT NOT NULL DEFAULT '[]',
     started_at REAL NOT NULL DEFAULT 0, finished_at REAL NOT NULL DEFAULT 0,
-    transferred_bytes INTEGER NOT NULL DEFAULT 0, error TEXT NOT NULL DEFAULT '',
+    transferred_bytes INTEGER NOT NULL DEFAULT 0, logical_bytes INTEGER NOT NULL DEFAULT 0,
+    network_bytes INTEGER NOT NULL DEFAULT 0, route TEXT NOT NULL DEFAULT '{}', error TEXT NOT NULL DEFAULT '',
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE transfer_chunk_runs (
+    transfer_run_id TEXT NOT NULL REFERENCES transfer_runs(id) ON DELETE CASCADE,
+    chunk_index INTEGER NOT NULL, offset_bytes INTEGER NOT NULL, size_bytes INTEGER NOT NULL,
+    digest TEXT NOT NULL DEFAULT '', status TEXT NOT NULL CHECK(status IN ('planned','running','completed','failed')),
+    attempts INTEGER NOT NULL DEFAULT 0, updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY(transfer_run_id, chunk_index)
+);
+CREATE TABLE planned_lifecycle_actions (
+    id TEXT PRIMARY KEY, schedule_plan_id TEXT NOT NULL REFERENCES schedule_plans(id) ON DELETE CASCADE,
+    capacity_target_id TEXT NOT NULL, cloud_instance_id TEXT NOT NULL DEFAULT '',
+    action TEXT NOT NULL CHECK(action IN ('provision','configure','validate','start','stop','destroy','attach-volume','detach-volume')),
+    earliest_start REAL NOT NULL DEFAULT 0, expected_duration REAL NOT NULL DEFAULT 0,
+    depends_on TEXT NOT NULL DEFAULT '[]', metadata TEXT NOT NULL DEFAULT '{}'
 );
 CREATE TABLE artifact_builds (
     id TEXT PRIMARY KEY,

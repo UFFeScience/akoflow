@@ -28,6 +28,8 @@ type CloudOperationStore interface {
 	UpdateCloudOperation(context.Context, domain.CloudOperationRun) error
 	FindCloudOperation(context.Context, string) (*domain.CloudOperationRun, error)
 	ListCloudOperations(context.Context) ([]domain.CloudOperationRun, error)
+	AppendCloudOperationEvent(context.Context, domain.CloudOperationEvent) error
+	ListCloudOperationEvents(context.Context, string) ([]domain.CloudOperationEvent, error)
 }
 
 type CloudCredentialResolver interface {

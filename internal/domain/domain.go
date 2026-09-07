@@ -192,6 +192,7 @@ type ExecutionRun = execution.ExecutionRun
 type ExecutionRunPage = execution.ExecutionRunPage
 type ExecutionRunKind = execution.ExecutionRunKind
 type TaskExecution = execution.TaskExecution
+type RuntimeAllocation = execution.RuntimeAllocation
 type ExecutionMetrics = execution.ExecutionMetrics
 type ExecutionTrace = execution.ExecutionTrace
 type DataTransfer = execution.DataTransfer

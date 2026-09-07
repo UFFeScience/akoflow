@@ -46,9 +46,21 @@ func (a *Adapter) Start(
 	ctx context.Context,
 	execution domain.ActivityExecutionContext,
 ) (domain.ActivityHandle, error) {
-	instance, err := a.readyInstance(ctx, execution.Resource.ID)
+	if execution.Allocation.CloudInstanceID == "" {
+		return domain.ActivityHandle{}, fmt.Errorf("cloud activity has no concrete instance allocation")
+	}
+	instance, err := a.store.FindProvisionedInstance(ctx, execution.Allocation.CloudInstanceID)
 	if err != nil {
 		return domain.ActivityHandle{}, err
+	}
+	if instance == nil || instance.Status != "ready" {
+		return domain.ActivityHandle{}, fmt.Errorf("allocated cloud instance %q is not ready", execution.Allocation.CloudInstanceID)
+	}
+	if instance.CapacityTargetID != execution.Resource.ID {
+		capacityTargetID, _ := execution.Resource.Metadata["capacityTargetId"].(string)
+		if capacityTargetID == "" || instance.CapacityTargetID != capacityTargetID {
+			return domain.ActivityHandle{}, fmt.Errorf("allocated cloud instance %q does not belong to resource %q", instance.ID, execution.Resource.ID)
+		}
 	}
 	delegate, err := a.remoteAdapter(*instance)
 	if err != nil {
@@ -123,7 +135,10 @@ func (a *Adapter) remoteAdapter(instance domain.CloudProvisionedInstance) (ports
 		ID: a.environmentID + "-" + instance.ID, EnvironmentID: a.environmentID,
 		Name: instance.Name, Type: domain.ConnectionSSH, Endpoint: instance.PublicAddress,
 		Username: instance.SSHUsername, CredentialRef: instance.SSHCredentialRef,
-		Configuration: map[string]any{"adapter": "ssh-docker", "port": 22},
+		Configuration: map[string]any{
+			"adapter": "ssh-docker", "port": 22, "dynamicHost": true,
+			"hostKeyAlias": instance.ID,
+		},
 	}
 	return (remote.Factory{Executor: a.executor}).Build(domain.EnvironmentRuntime{}, connection)
 }

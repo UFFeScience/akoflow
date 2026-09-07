@@ -189,6 +189,7 @@ func TestListRunsTasksAndEvents(t *testing.T) {
 	task := domain.TaskExecution{
 		ID: "task", ExecutionRunID: "run", PlanAssignmentID: "assignment", ActivityID: "activity",
 		PlannedResourceID: "resource", AllocatedResourceID: "resource", Attempt: 1,
+		RuntimeID: "cloud-runtime", ConnectionID: "cloud-connection", CloudInstanceID: "cloud-instance",
 		Status: domain.TaskRunning, ReadyAt: 1, DataReadyAt: 2, QueuedAt: 3, StartedAt: 4,
 		RuntimeSeconds: 2, QueueSeconds: 1, TransferSeconds: .5, TransferBytes: 10,
 		InterferenceSeconds: .25, OverheadSeconds: .75, Cost: 3,
@@ -202,7 +203,8 @@ func TestListRunsTasksAndEvents(t *testing.T) {
 		t.Fatal(err)
 	}
 	tasks, err := repository.ListTasks(ctx, "run")
-	if err != nil || len(tasks) != 1 || tasks[0].RuntimeSeconds != 3 || tasks[0].AllocatedResourceID != "resource" {
+	if err != nil || len(tasks) != 1 || tasks[0].RuntimeSeconds != 3 || tasks[0].AllocatedResourceID != "resource" ||
+		tasks[0].RuntimeID != "cloud-runtime" || tasks[0].ConnectionID != "cloud-connection" || tasks[0].CloudInstanceID != "cloud-instance" {
 		t.Fatalf("tasks=%+v err=%v", tasks, err)
 	}
 	events, err := repository.ListEvents(ctx, "run")

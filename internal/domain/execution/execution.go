@@ -98,6 +98,9 @@ type TaskExecution struct {
 	ActivityID          string              `json:"activityId"`
 	PlannedResourceID   string              `json:"plannedResourceId"`
 	AllocatedResourceID string              `json:"allocatedResourceId,omitempty"`
+	RuntimeID           string              `json:"runtimeId,omitempty"`
+	ConnectionID        string              `json:"connectionId,omitempty"`
+	CloudInstanceID     string              `json:"cloudInstanceId,omitempty"`
 	Attempt             int                 `json:"attempt"`
 	Status              TaskExecutionStatus `json:"status"`
 	ReadyAt             float64             `json:"readyAt"`
@@ -113,6 +116,17 @@ type TaskExecution struct {
 	OverheadSeconds     float64             `json:"overheadSeconds"`
 	Cost                float64             `json:"cost"`
 	FailureReason       string              `json:"failureReason,omitempty"`
+	Metadata            map[string]any      `json:"metadata,omitempty"`
+}
+
+// RuntimeAllocation is resolved before materialization and remains immutable
+// for one activity attempt. It binds logical capacity to the concrete runtime
+// endpoint used by both data movement and execution.
+type RuntimeAllocation struct {
+	ResourceID      string `json:"resourceId"`
+	RuntimeID       string `json:"runtimeId"`
+	ConnectionID    string `json:"connectionId,omitempty"`
+	CloudInstanceID string `json:"cloudInstanceId,omitempty"`
 }
 
 type ExecutionMetrics struct {
@@ -157,6 +171,7 @@ type ActivityExecutionContext struct {
 	Assignment planning.PlanAssignment  `json:"assignment"`
 	Resource   resource.Resource        `json:"resource"`
 	RuntimeID  string                   `json:"runtimeId"`
+	Allocation RuntimeAllocation        `json:"allocation"`
 	// Preparation is supplied by the orchestration/data plane when the
 	// activity has executable or workspace requirements. Providers must not
 	// start work until it is committed.

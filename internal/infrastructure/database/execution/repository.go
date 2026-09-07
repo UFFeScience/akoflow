@@ -171,7 +171,8 @@ func (r *Repository) ListTasks(ctx context.Context, runID string) ([]domain.Task
 		CASE WHEN t.status='running' AND h.id IS NOT NULL THEN h.finished_at ELSE t.finished_at END,
 		t.runtime_seconds, t.queue_seconds, t.transfer_seconds, t.transfer_bytes, t.interference_seconds,
 		t.overhead_seconds, t.cost,
-		CASE WHEN t.status='running' AND h.id IS NOT NULL THEN h.failure ELSE t.failure_reason END
+		CASE WHEN t.status='running' AND h.id IS NOT NULL THEN h.failure ELSE t.failure_reason END,
+		t.metadata
 		FROM task_executions t
 		LEFT JOIN activity_handles h ON h.execution_run_id=t.execution_run_id
 			AND h.activity_id=t.activity_id AND h.status IN ('failed', 'stopped')
@@ -183,14 +184,23 @@ func (r *Repository) ListTasks(ctx context.Context, runID string) ([]domain.Task
 	var tasks []domain.TaskExecution
 	for rows.Next() {
 		var task domain.TaskExecution
+		var metadata []byte
 		if err := rows.Scan(&task.ID, &task.ExecutionRunID, &task.PlanAssignmentID,
 			&task.ActivityID, &task.PlannedResourceID, &task.AllocatedResourceID,
 			&task.Attempt, &task.Status, &task.ReadyAt, &task.DataReadyAt,
 			&task.QueuedAt, &task.StartedAt, &task.FinishedAt, &task.RuntimeSeconds,
 			&task.QueueSeconds, &task.TransferSeconds, &task.TransferBytes, &task.InterferenceSeconds,
-			&task.OverheadSeconds, &task.Cost, &task.FailureReason); err != nil {
+			&task.OverheadSeconds, &task.Cost, &task.FailureReason, &metadata); err != nil {
 			return nil, err
 		}
+		if len(metadata) > 0 {
+			if err := json.Unmarshal(metadata, &task.Metadata); err != nil {
+				return nil, fmt.Errorf("decode task allocation metadata: %w", err)
+			}
+		}
+		task.RuntimeID, _ = task.Metadata["runtimeId"].(string)
+		task.ConnectionID, _ = task.Metadata["connectionId"].(string)
+		task.CloudInstanceID, _ = task.Metadata["cloudInstanceId"].(string)
 		tasks = append(tasks, task)
 	}
 	return tasks, rows.Err()
@@ -467,12 +477,29 @@ func appendTaskEvent(ctx context.Context, tx *sql.Tx, task domain.TaskExecution)
 }
 
 func saveTask(ctx context.Context, tx *sql.Tx, task domain.TaskExecution) error {
-	_, err := tx.ExecContext(ctx, `INSERT INTO task_executions (
+	metadata := task.Metadata
+	if metadata == nil {
+		metadata = make(map[string]any)
+	}
+	if task.RuntimeID != "" {
+		metadata["runtimeId"] = task.RuntimeID
+	}
+	if task.ConnectionID != "" {
+		metadata["connectionId"] = task.ConnectionID
+	}
+	if task.CloudInstanceID != "" {
+		metadata["cloudInstanceId"] = task.CloudInstanceID
+	}
+	encodedMetadata, err := json.Marshal(metadata)
+	if err != nil {
+		return fmt.Errorf("encode task allocation metadata: %w", err)
+	}
+	_, err = tx.ExecContext(ctx, `INSERT INTO task_executions (
 		id, execution_run_id, plan_assignment_id, activity_id, planned_resource_id,
 		allocated_resource_id, attempt, status, ready_at, data_ready_at, queued_at,
 		started_at, finished_at, runtime_seconds, queue_seconds, transfer_seconds, transfer_bytes,
-		interference_seconds, overhead_seconds, cost, failure_reason
-	) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+		interference_seconds, overhead_seconds, cost, failure_reason, metadata
+	) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 	ON CONFLICT(execution_run_id, activity_id, attempt) DO UPDATE SET
 		allocated_resource_id=excluded.allocated_resource_id, status=excluded.status,
 		started_at=excluded.started_at, finished_at=excluded.finished_at,
@@ -480,12 +507,12 @@ func saveTask(ctx context.Context, tx *sql.Tx, task domain.TaskExecution) error 
 		transfer_seconds=excluded.transfer_seconds, transfer_bytes=excluded.transfer_bytes,
 		interference_seconds=excluded.interference_seconds,
 		overhead_seconds=excluded.overhead_seconds, cost=excluded.cost,
-		failure_reason=excluded.failure_reason`,
+		failure_reason=excluded.failure_reason, metadata=excluded.metadata`,
 		task.ID, task.ExecutionRunID, task.PlanAssignmentID, task.ActivityID,
 		task.PlannedResourceID, nullableString(task.AllocatedResourceID), task.Attempt,
 		task.Status, task.ReadyAt, task.DataReadyAt, task.QueuedAt, task.StartedAt,
 		task.FinishedAt, task.RuntimeSeconds, task.QueueSeconds, task.TransferSeconds, task.TransferBytes,
-		task.InterferenceSeconds, task.OverheadSeconds, task.Cost, task.FailureReason)
+		task.InterferenceSeconds, task.OverheadSeconds, task.Cost, task.FailureReason, encodedMetadata)
 	return err
 }
 

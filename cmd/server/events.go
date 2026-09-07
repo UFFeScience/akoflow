@@ -82,7 +82,7 @@ func registerExecutionHandlers(
 		executions, activities, simulator,
 		controlexecution.Config{
 			PollInterval: time.Second, MaxParallel: 8, Preparer: preparer,
-			Data: data, Cloud: cloudProvisioner,
+			Data: data, Cloud: cloudProvisioner, CloudStore: cloud,
 		},
 	)
 	if err != nil {

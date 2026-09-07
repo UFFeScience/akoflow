@@ -17,6 +17,7 @@ type ExecutionRequest struct {
 	NetworkTopology                   domain.NetworkTopology
 	ActivityProfiles                  []domain.ActivityResourceProfile
 	PreparationRequirementsByActivity map[string]domain.PreparationRequirement
+	RuntimeAllocations                map[string]domain.RuntimeAllocation
 }
 
 type PreparationCoordinator interface {

@@ -25,6 +25,7 @@ type Config struct {
 	Preparer     ports.PreparationCoordinator
 	Data         ports.DataCatalog
 	Cloud        ports.CloudProvisioner
+	CloudStore   ports.CloudConfigurationStore
 }
 
 type Supervisor struct {
@@ -101,6 +102,9 @@ func (s *Supervisor) releaseCloud(ctx context.Context, request ports.ExecutionRe
 }
 
 func (s *Supervisor) executeActivities(ctx context.Context, request ports.ExecutionRequest) (domain.ExecutionTrace, error) {
+	if request.RuntimeAllocations == nil {
+		request.RuntimeAllocations = make(map[string]domain.RuntimeAllocation)
+	}
 	activities := indexActivities(request.Workflow.Activities)
 	resources := indexResources(request.Resources)
 	assignments := indexAssignments(request.Plan.Assignments)
@@ -211,6 +215,13 @@ func (s *Supervisor) startReadyActivities(
 			return fmt.Errorf("resource %q not found", assignment.ResourceID)
 		}
 		var preparation *domain.PreparationGate
+		allocation, allocationErr := s.ensureRuntimeAllocation(ctx, request, activityID, assignment, resource)
+		if allocationErr != nil {
+			failure := fmt.Errorf("allocate runtime for activity %q: %w", activityID, allocationErr)
+			_ = s.recordStartFailure(ctx, request.Run.ID, activityID, assignment, resource, selectRuntime(request, assignment), failure)
+			return failure
+		}
+		request.RuntimeAllocations[activityID] = allocation
 		if err := s.addWorkspacePreparation(ctx, &request, activityID, resource, workspaceProducers(request.Workflow, activityID)); err != nil {
 			return fmt.Errorf("prepare workspace for activity %q: %w", activityID, err)
 		}
@@ -238,7 +249,7 @@ func (s *Supervisor) startReadyActivities(
 		handle, err := s.activities.Start(ctx, domain.ActivityExecutionContext{
 			Run: request.Run, Workflow: request.Workflow, Activity: activity,
 			Assignment: assignment, Resource: resource,
-			RuntimeID: selectRuntime(request, assignment), Preparation: preparation,
+			RuntimeID: selectRuntime(request, assignment), Allocation: allocation, Preparation: preparation,
 		})
 		if err != nil {
 			_ = s.recordStartFailure(
@@ -252,7 +263,7 @@ func (s *Supervisor) startReadyActivities(
 			)
 			return fmt.Errorf("start activity %q: %w", activityID, err)
 		}
-		task := newRunningTask(request.Run.ID, activityID, assignment, resource, handle, readyAt, preparation)
+		task := newRunningTask(request.Run.ID, activityID, assignment, resource, allocation, handle, readyAt, preparation)
 		tasks[activityID], running[activityID] = task, handle
 		if handle.Status == domain.HandleCompleted {
 			completeTask(&task, handle)
@@ -264,6 +275,56 @@ func (s *Supervisor) startReadyActivities(
 		}
 	}
 	return nil
+}
+
+func (s *Supervisor) ensureRuntimeAllocation(
+	ctx context.Context,
+	request ports.ExecutionRequest,
+	activityID string,
+	assignment domain.PlanAssignment,
+	resource domain.Resource,
+) (domain.RuntimeAllocation, error) {
+	allocation := domain.RuntimeAllocation{
+		ResourceID:   resource.ID,
+		RuntimeID:    selectRuntime(request, assignment),
+		ConnectionID: runtimeConnectionID(request, activityID),
+	}
+	if runtimeDriver(request, activityID) != domain.RuntimeDriverCloud {
+		return allocation, nil
+	}
+	if s.config.Cloud == nil || s.config.CloudStore == nil {
+		return allocation, fmt.Errorf("cloud allocation service is unavailable")
+	}
+	targetID := resource.ID
+	if value, _ := resource.Metadata["capacityTargetId"].(string); strings.TrimSpace(value) != "" {
+		targetID = strings.TrimSpace(value)
+	}
+	target, err := s.config.CloudStore.FindCapacityTarget(ctx, targetID)
+	if err != nil || target == nil {
+		return allocation, fmt.Errorf("load cloud capacity target %q: %w", targetID, err)
+	}
+	instances, err := s.config.CloudStore.ListProvisionedInstances(ctx, target.EnvironmentID)
+	if err != nil {
+		return allocation, err
+	}
+	sort.SliceStable(instances, func(left, right int) bool {
+		return instances[left].CreatedAt.Before(instances[right].CreatedAt)
+	})
+	for _, instance := range instances {
+		if instance.CapacityTargetID == target.ID && instance.Status == "ready" {
+			allocation.CloudInstanceID = instance.ID
+			return allocation, nil
+		}
+	}
+	instance, err := s.config.Cloud.Provision(ctx, target.EnvironmentID, domain.CloudProvisionRequest{CapacityTargetID: target.ID})
+	if err != nil {
+		return allocation, err
+	}
+	if instance.ID == "" || instance.Status != "ready" {
+		return allocation, fmt.Errorf("cloud capacity target %q did not produce a ready instance", target.ID)
+	}
+	allocation.CloudInstanceID = instance.ID
+	return allocation, nil
 }
 
 func workspaceProducers(workflow domain.WorkflowVersion, activityID string) []string {
@@ -409,6 +470,7 @@ func workspaceSourceForActivity(request ports.ExecutionRequest, activityID strin
 		return domain.TransferLocation{}, fmt.Errorf("producer %q resource %q was not found", activityID, assignment.ResourceID)
 	}
 	connectionID := runtimeConnectionID(request, activityID)
+	allocation := request.RuntimeAllocations[activityID]
 	if connectionID == "" {
 		return domain.TransferLocation{}, fmt.Errorf("producer %q has no runtime connection", activityID)
 	}
@@ -419,7 +481,7 @@ func workspaceSourceForActivity(request ports.ExecutionRequest, activityID strin
 		query.Set("namespace", runtimeNamespace(request, activityID))
 		query.Set("claim", workspaceClaimName(request.Run.ID, activityID))
 		u.RawQuery = query.Encode()
-		return domain.TransferLocation{URI: u.String(), ResourceID: resource.ID}, nil
+		return transferLocation(u.String(), resource, allocation), nil
 	case domain.RuntimeDriverSlurm:
 		home := environmentHome(request.Resources, resource.EnvironmentVersionID)
 		if home == "" {
@@ -429,7 +491,7 @@ func workspaceSourceForActivity(request ports.ExecutionRequest, activityID strin
 		query := u.Query()
 		query.Set("connectionId", connectionID)
 		u.RawQuery = query.Encode()
-		return domain.TransferLocation{URI: u.String(), ResourceID: resource.ID}, nil
+		return transferLocation(u.String(), resource, allocation), nil
 	case domain.RuntimeDriverCloud:
 		u := &url.URL{
 			Scheme: "file",
@@ -438,7 +500,7 @@ func workspaceSourceForActivity(request ports.ExecutionRequest, activityID strin
 		query := u.Query()
 		query.Set("connectionId", connectionID)
 		u.RawQuery = query.Encode()
-		return domain.TransferLocation{URI: u.String(), ResourceID: resource.ID}, nil
+		return transferLocation(u.String(), resource, allocation), nil
 	default:
 		return domain.TransferLocation{}, fmt.Errorf("runtime for producer %q does not support workspace transfer", activityID)
 	}
@@ -463,6 +525,7 @@ func workspaceAncestors(workflow domain.WorkflowVersion, initial []string) []str
 
 func workspaceDestination(request ports.ExecutionRequest, activityID string, resource domain.Resource, totalBytes int64) (domain.TransferLocation, error) {
 	connectionID := runtimeConnectionID(request, activityID)
+	allocation := request.RuntimeAllocations[activityID]
 	if connectionID == "" {
 		return domain.TransferLocation{}, fmt.Errorf("runtime for activity %q has no connection", activityID)
 	}
@@ -477,7 +540,7 @@ func workspaceDestination(request ports.ExecutionRequest, activityID string, res
 		query.Set("runId", request.Run.ID)
 		query.Set("activityId", activityID)
 		u.RawQuery = query.Encode()
-		return domain.TransferLocation{URI: u.String(), ResourceID: resource.ID}, nil
+		return transferLocation(u.String(), resource, allocation), nil
 	case domain.RuntimeDriverSlurm:
 		home := environmentHome(request.Resources, resource.EnvironmentVersionID)
 		if home == "" {
@@ -487,7 +550,7 @@ func workspaceDestination(request ports.ExecutionRequest, activityID string, res
 		query := u.Query()
 		query.Set("connectionId", connectionID)
 		u.RawQuery = query.Encode()
-		return domain.TransferLocation{URI: u.String(), ResourceID: resource.ID}, nil
+		return transferLocation(u.String(), resource, allocation), nil
 	case domain.RuntimeDriverCloud:
 		u := &url.URL{
 			Scheme: "file",
@@ -496,9 +559,17 @@ func workspaceDestination(request ports.ExecutionRequest, activityID string, res
 		query := u.Query()
 		query.Set("connectionId", connectionID)
 		u.RawQuery = query.Encode()
-		return domain.TransferLocation{URI: u.String(), ResourceID: resource.ID}, nil
+		return transferLocation(u.String(), resource, allocation), nil
 	default:
 		return domain.TransferLocation{}, fmt.Errorf("runtime for activity %q does not support workspace transfer", activityID)
+	}
+}
+
+func transferLocation(uri string, resource domain.Resource, allocation domain.RuntimeAllocation) domain.TransferLocation {
+	return domain.TransferLocation{
+		URI: uri, ResourceID: resource.ID, EnvironmentID: resource.EnvironmentVersionID,
+		RuntimeID: allocation.RuntimeID, ConnectionID: allocation.ConnectionID,
+		CloudInstanceID: allocation.CloudInstanceID,
 	}
 }
 
@@ -664,7 +735,7 @@ func (s *Supervisor) recordStartFailure(
 	if saveErr := s.executions.Save(ctx, handle); saveErr != nil {
 		return saveErr
 	}
-	task := newRunningTask(runID, activityID, assignment, resource, handle, now, nil)
+	task := newRunningTask(runID, activityID, assignment, resource, domain.RuntimeAllocation{ResourceID: resource.ID, RuntimeID: runtimeID}, handle, now, nil)
 	task.Status, task.FinishedAt, task.FailureReason = domain.TaskFailed, now, message
 	return s.executions.SaveTask(ctx, task)
 }
@@ -701,6 +772,7 @@ func newRunningTask(
 	activityID string,
 	assignment domain.PlanAssignment,
 	resource domain.Resource,
+	allocation domain.RuntimeAllocation,
 	handle domain.ActivityHandle,
 	readyAt float64,
 	preparation *domain.PreparationGate,
@@ -709,7 +781,9 @@ func newRunningTask(
 		ID: runID + ":" + activityID, ExecutionRunID: runID,
 		PlanAssignmentID: assignment.ID, ActivityID: activityID,
 		PlannedResourceID: assignment.ResourceID, AllocatedResourceID: resource.ID,
-		Attempt: 1, Status: domain.TaskRunning, ReadyAt: readyAt, DataReadyAt: unixNow(),
+		RuntimeID: allocation.RuntimeID, ConnectionID: allocation.ConnectionID,
+		CloudInstanceID: allocation.CloudInstanceID,
+		Attempt:         1, Status: domain.TaskRunning, ReadyAt: readyAt, DataReadyAt: unixNow(),
 		QueuedAt: handle.StartedAt, StartedAt: handle.StartedAt,
 	}
 	if preparation != nil {

@@ -68,7 +68,11 @@ func (s *cloudProvisionerStub) Provision(context.Context, string, domain.CloudPr
 func (*cloudProvisionerStub) Destroy(context.Context, string) (domain.CloudProvisionedInstance, error) {
 	return domain.CloudProvisionedInstance{}, nil
 }
-func (*cloudProvisionerStub) Release(context.Context, []string) error { return nil }
+func (*cloudProvisionerStub) Configure(context.Context, string) (domain.CloudProvisionedInstance, error) {
+	return domain.CloudProvisionedInstance{}, nil
+}
+func (*cloudProvisionerStub) Release(context.Context, []string) error     { return nil }
+func (*cloudProvisionerStub) Log(context.Context, string) ([]byte, error) { return nil, nil }
 
 type executorStub struct {
 	responses [][]byte
@@ -84,16 +88,17 @@ func (s *executorStub) Run(context.Context, string, []string, []byte) ([]byte, e
 	return nil, nil
 }
 
-func TestCloudRuntimeProvisionsExactTargetAndStartsRemoteDocker(t *testing.T) {
-	store := &cloudStoreStub{}
+func TestCloudRuntimeUsesAllocatedInstanceAndStartsRemoteDocker(t *testing.T) {
 	provisioner := &cloudProvisionerStub{created: domain.CloudProvisionedInstance{
 		ID: "instance", CapacityTargetID: "target", EnvironmentID: "environment", Status: "ready",
 		PublicAddress: "203.0.113.10", SSHUsername: "akoflow", SSHCredentialRef: "file:/key",
 	}}
+	store := &cloudStoreStub{instances: []domain.CloudProvisionedInstance{provisioner.created}}
 	executor := &executorStub{responses: [][]byte{nil, []byte("[]"), []byte("container\n")}}
 	adapter := &Adapter{environmentID: "environment", store: store, provisioner: provisioner, executor: executor}
 	handle, err := adapter.Start(context.Background(), domain.ActivityExecutionContext{
 		Run: domain.ExecutionRun{ID: "run"}, RuntimeID: "runtime", Resource: domain.Resource{ID: "target"},
+		Allocation: domain.RuntimeAllocation{CloudInstanceID: "instance"},
 		Activity: domain.Activity{ID: "activity", Command: domain.ActivityCommand{
 			Image: "ubuntu:latest", Entrypoint: "sh", Arguments: []string{"-c", "echo ok > result.txt"},
 		}},
@@ -101,8 +106,15 @@ func TestCloudRuntimeProvisionsExactTargetAndStartsRemoteDocker(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if provisioner.calls != 1 || handle.Metadata["cloudInstanceId"] != "instance" || handle.ExternalID != "container" {
+	if provisioner.calls != 0 || handle.Metadata["cloudInstanceId"] != "instance" || handle.ExternalID != "container" {
 		t.Fatalf("handle = %#v, provisions = %d", handle, provisioner.calls)
+	}
+}
+
+func TestCloudRuntimeRejectsMissingConcreteAllocation(t *testing.T) {
+	adapter := &Adapter{environmentID: "environment", store: &cloudStoreStub{}, provisioner: &cloudProvisionerStub{}}
+	if _, err := adapter.Start(context.Background(), domain.ActivityExecutionContext{Resource: domain.Resource{ID: "target"}}); err == nil {
+		t.Fatal("expected an allocation error")
 	}
 }
 

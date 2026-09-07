@@ -64,12 +64,14 @@ func (f *executionStoreFake) ListHandles(_ context.Context, runID string) ([]dom
 
 type activityControllerFake struct {
 	started     []string
+	contexts    []domain.ActivityExecutionContext
 	inspections map[string]int
 	startErr    error
 }
 
 func (f *activityControllerFake) Start(_ context.Context, execution domain.ActivityExecutionContext) (domain.ActivityHandle, error) {
 	f.started = append(f.started, execution.Activity.ID)
+	f.contexts = append(f.contexts, execution)
 	if f.startErr != nil {
 		return domain.ActivityHandle{}, f.startErr
 	}
@@ -79,6 +81,34 @@ func (f *activityControllerFake) Start(_ context.Context, execution domain.Activ
 		RuntimeID: execution.RuntimeID, Status: domain.HandleRunning, StartedAt: 1,
 	}, nil
 }
+
+type cloudAllocationStoreFake struct {
+	ports.CloudConfigurationStore
+	target    domain.CloudCapacityTarget
+	instances []domain.CloudProvisionedInstance
+}
+
+func (f cloudAllocationStoreFake) FindCapacityTarget(context.Context, string) (*domain.CloudCapacityTarget, error) {
+	value := f.target
+	return &value, nil
+}
+
+func (f cloudAllocationStoreFake) ListProvisionedInstances(context.Context, string) ([]domain.CloudProvisionedInstance, error) {
+	return f.instances, nil
+}
+
+type cloudProvisionerFake struct {
+	ports.CloudProvisioner
+	instance domain.CloudProvisionedInstance
+	calls    int
+}
+
+func (f *cloudProvisionerFake) Provision(context.Context, string, domain.CloudProvisionRequest) (domain.CloudProvisionedInstance, error) {
+	f.calls++
+	return f.instance, nil
+}
+
+func (*cloudProvisionerFake) Release(context.Context, []string) error { return nil }
 func (f *activityControllerFake) Inspect(_ context.Context, id string, _ domain.ExecutionMode) (*domain.ActivityHandle, error) {
 	if f.inspections == nil {
 		f.inspections = map[string]int{}
@@ -293,6 +323,46 @@ func TestSupervisorExecutesDAGInDependencyOrder(t *testing.T) {
 	}
 	if trace.RunID != "run" || store.trace.RunID != "run" {
 		t.Fatal("trace was not completed")
+	}
+}
+
+func TestSupervisorBindsCloudInstanceBeforeActivityStart(t *testing.T) {
+	request := requestFixture(domain.ExecutionModeReal)
+	request.Workflow.Activities = request.Workflow.Activities[:1]
+	request.Workflow.Dependencies = nil
+	request.Plan.Assignments = request.Plan.Assignments[:1]
+	request.Plan.Assignments[0].Metadata = map[string]any{"runtimeId": "cloud-runtime"}
+	request.Resources[0].Type = domain.ResourceCloudVM
+	request.Resources[0].Metadata = map[string]any{"capacityTargetId": "capacity"}
+	request.Runtimes = []domain.EnvironmentRuntime{{
+		ID: "cloud-runtime", Driver: domain.RuntimeDriverCloud, Mode: domain.RuntimeModeExecution,
+		Configuration: map[string]any{"connectionId": "cloud-connection"},
+	}}
+	request.RuntimeBindings = []domain.ResourceRuntimeBinding{{ResourceID: "r", RuntimeID: "cloud-runtime", Enabled: true}}
+	cloud := &cloudProvisionerFake{instance: domain.CloudProvisionedInstance{
+		ID: "instance-a", CapacityTargetID: "capacity", EnvironmentID: "environment", Status: "ready",
+	}}
+	store := &executionStoreFake{}
+	activities := &activityControllerFake{}
+	service, err := New(store, activities, &planExecutorFake{}, Config{
+		PollInterval: time.Microsecond, MaxParallel: 1, Cloud: cloud,
+		CloudStore: cloudAllocationStoreFake{target: domain.CloudCapacityTarget{ID: "capacity", EnvironmentID: "environment"}},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err = service.Execute(context.Background(), request); err != nil {
+		t.Fatal(err)
+	}
+	if cloud.calls != 1 || len(activities.contexts) != 1 {
+		t.Fatalf("provision calls=%d contexts=%d", cloud.calls, len(activities.contexts))
+	}
+	allocation := activities.contexts[0].Allocation
+	if allocation.CloudInstanceID != "instance-a" || allocation.RuntimeID != "cloud-runtime" || allocation.ConnectionID != "cloud-connection" {
+		t.Fatalf("unexpected concrete allocation: %#v", allocation)
+	}
+	if len(store.tasks) == 0 || store.tasks[0].CloudInstanceID != "instance-a" {
+		t.Fatalf("task did not persist allocation: %#v", store.tasks)
 	}
 }
 

@@ -13,6 +13,7 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/UFFeScience/akoflow/internal/domain"
@@ -24,11 +25,83 @@ import (
 // the URI persisted in transfer plans.
 type KubernetesExec struct {
 	BufferSize BufferSizeProvider
+	mu         sync.Mutex
+	sessions   map[string]kubernetesTransferSession
 }
 
-func (KubernetesExec) CanHandle(endpoint domain.TransferEndpoint) bool {
+type kubernetesTransferSession struct {
+	pod     string
+	cleanup func()
+}
+
+func (*KubernetesExec) CanHandle(endpoint domain.TransferEndpoint) bool {
 	u, err := url.Parse(endpoint.URI)
 	return err == nil && u.Scheme == "kubernetes"
+}
+
+func kubernetesSessionKey(endpoint domain.TransferEndpoint) string {
+	return endpoint.URI + "\x00" + endpoint.Configuration["transferSessionId"]
+}
+
+func (connector *KubernetesExec) BeginTransferSession(ctx context.Context, endpoint domain.TransferEndpoint) error {
+	if endpoint.Configuration["transferSessionId"] == "" {
+		return fmt.Errorf("Kubernetes transfer session requires an id")
+	}
+	target, _, err := kubernetesTarget(endpoint, "")
+	if err != nil {
+		return err
+	}
+	key := kubernetesSessionKey(endpoint)
+	connector.mu.Lock()
+	if connector.sessions != nil {
+		if _, exists := connector.sessions[key]; exists {
+			connector.mu.Unlock()
+			return nil
+		}
+	}
+	connector.mu.Unlock()
+	pod, cleanup, err := target.pod(ctx)
+	if err != nil {
+		return err
+	}
+	connector.mu.Lock()
+	if connector.sessions == nil {
+		connector.sessions = map[string]kubernetesTransferSession{}
+	}
+	if existing, exists := connector.sessions[key]; exists {
+		connector.mu.Unlock()
+		cleanup()
+		_ = existing
+		return nil
+	}
+	connector.sessions[key] = kubernetesTransferSession{pod: pod, cleanup: cleanup}
+	connector.mu.Unlock()
+	return nil
+}
+
+func (connector *KubernetesExec) EndTransferSession(_ context.Context, endpoint domain.TransferEndpoint) error {
+	key := kubernetesSessionKey(endpoint)
+	connector.mu.Lock()
+	session, exists := connector.sessions[key]
+	delete(connector.sessions, key)
+	connector.mu.Unlock()
+	if exists && session.cleanup != nil {
+		session.cleanup()
+	}
+	return nil
+}
+
+func (connector *KubernetesExec) pod(ctx context.Context, target kubernetesTransferTarget, endpoint domain.TransferEndpoint) (string, func(), error) {
+	key := kubernetesSessionKey(endpoint)
+	if endpoint.Configuration["transferSessionId"] != "" {
+		connector.mu.Lock()
+		session, exists := connector.sessions[key]
+		connector.mu.Unlock()
+		if exists {
+			return session.pod, func() {}, nil
+		}
+	}
+	return target.pod(ctx)
 }
 
 type kubernetesTransferTarget struct {
@@ -166,12 +239,12 @@ func (target kubernetesTransferTarget) exec(ctx context.Context, pod, script str
 	return exec.CommandContext(ctx, "kubectl", append(target.args(), "exec", "-i", pod, "--", "/bin/sh", "-c", script)...)
 }
 
-func (KubernetesExec) Exists(ctx context.Context, endpoint domain.TransferEndpoint, name string) (bool, error) {
+func (connector *KubernetesExec) Exists(ctx context.Context, endpoint domain.TransferEndpoint, name string) (bool, error) {
 	target, file, err := kubernetesTarget(endpoint, name)
 	if err != nil {
 		return false, err
 	}
-	pod, cleanup, err := target.pod(ctx)
+	pod, cleanup, err := connector.pod(ctx, target, endpoint)
 	if err != nil {
 		return false, err
 	}
@@ -186,12 +259,12 @@ func (KubernetesExec) Exists(ctx context.Context, endpoint domain.TransferEndpoi
 	return false, fmt.Errorf("check Kubernetes transfer location: %w: %s", err, strings.TrimSpace(string(output)))
 }
 
-func (KubernetesExec) Open(ctx context.Context, endpoint domain.TransferEndpoint, name string, offset int64) (io.ReadCloser, error) {
+func (connector *KubernetesExec) Open(ctx context.Context, endpoint domain.TransferEndpoint, name string, offset int64) (io.ReadCloser, error) {
 	target, file, err := kubernetesTarget(endpoint, name)
 	if err != nil {
 		return nil, err
 	}
-	pod, cleanup, err := target.pod(ctx)
+	pod, cleanup, err := connector.pod(ctx, target, endpoint)
 	if err != nil {
 		return nil, err
 	}
@@ -222,12 +295,12 @@ func (KubernetesExec) Open(ctx context.Context, endpoint domain.TransferEndpoint
 	}}, nil
 }
 
-func (connector KubernetesExec) Put(ctx context.Context, endpoint domain.TransferEndpoint, name string, input io.Reader, offset int64) error {
+func (connector *KubernetesExec) Put(ctx context.Context, endpoint domain.TransferEndpoint, name string, input io.Reader, offset int64) error {
 	target, file, err := kubernetesTarget(endpoint, name)
 	if err != nil {
 		return err
 	}
-	pod, cleanup, err := target.pod(ctx)
+	pod, cleanup, err := connector.pod(ctx, target, endpoint)
 	if err != nil {
 		return err
 	}
@@ -259,7 +332,7 @@ func (connector KubernetesExec) Put(ctx context.Context, endpoint domain.Transfe
 	return nil
 }
 
-func (KubernetesExec) Commit(ctx context.Context, endpoint domain.TransferEndpoint, partial, final string) error {
+func (connector *KubernetesExec) Commit(ctx context.Context, endpoint domain.TransferEndpoint, partial, final string) error {
 	target, source, err := kubernetesTarget(endpoint, partial)
 	if err != nil {
 		return err
@@ -268,7 +341,7 @@ func (KubernetesExec) Commit(ctx context.Context, endpoint domain.TransferEndpoi
 	if err != nil {
 		return err
 	}
-	pod, cleanup, err := target.pod(ctx)
+	pod, cleanup, err := connector.pod(ctx, target, endpoint)
 	if err != nil {
 		return err
 	}

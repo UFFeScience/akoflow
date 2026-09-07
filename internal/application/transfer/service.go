@@ -33,9 +33,18 @@ type EndpointResolver interface {
 	ResolveTransferEndpoint(context.Context, domain.TransferLocation) (domain.TransferEndpoint, error)
 }
 
+type TransferProgressStore interface {
+	SaveTransferRun(context.Context, domain.DataTransferRun) error
+	SaveTransferChunkRun(context.Context, domain.TransferChunkRun) error
+	ListTransferChunkRuns(context.Context, string) ([]domain.TransferChunkRun, error)
+}
+
 type Materializer struct {
 	Connectors []ports.TransferConnector
 	Resolver   EndpointResolver
+	Strategies StrategyResolver
+	Progress   TransferProgressStore
+	ChunkSize  func(context.Context) int64
 }
 
 func (m Materializer) endpoint(ctx context.Context, location domain.TransferLocation) (domain.TransferEndpoint, error) {
@@ -71,18 +80,39 @@ func (m Materializer) Materialize(ctx context.Context, plan domain.DataTransferP
 		return target, domain.DataTransferRun{}, err
 	}
 	strategy := plan.Strategy
+	route := plan.Route
 	if strategy == "" {
-		strategy = domain.TransferSourcePush
+		route = m.Strategies.Resolve(source, destination)
+		strategy = route.Strategy
+	} else if route.Strategy == "" {
+		route = domain.TransferRoute{Strategy: strategy, Fallback: domain.TransferGateway, Reason: "strategy explicitly selected by the transfer plan"}
 	}
 	// This process is a gateway executor. A destination pull may only be run by
 	// a destination agent; never silently turn a registry/HTTP reference into a
 	// pull during Slurm submission.
 	if strategy == domain.TransferDestinationPull {
-		return failed(target, domain.DataTransferRun{ID: plan.ID, PlanID: plan.ID, Strategy: strategy, Status: domain.TransferPlanned}, fmt.Errorf("destination-pull requires a destination transfer agent"))
+		return failed(target, domain.DataTransferRun{ID: plan.ID, PlanID: plan.ID, Strategy: strategy, Route: route, Status: domain.TransferPlanned}, fmt.Errorf("destination-pull requires a destination transfer agent"))
+	}
+	source = withTransferSession(source, plan.ID)
+	destination = withTransferSession(destination, plan.ID)
+	if err := beginTransferSession(ctx, sc, source); err != nil {
+		return failed(target, domain.DataTransferRun{ID: plan.ID, PlanID: plan.ID, Strategy: strategy, Route: route}, err)
+	}
+	defer endTransferSession(sc, source)
+	if source.URI != destination.URI {
+		if err := beginTransferSession(ctx, dc, destination); err != nil {
+			return failed(target, domain.DataTransferRun{ID: plan.ID, PlanID: plan.ID, Strategy: strategy, Route: route}, err)
+		}
+		defer endTransferSession(dc, destination)
 	}
 	run := domain.DataTransferRun{ID: plan.ID, PlanID: plan.ID, Strategy: strategy,
-		Status: domain.TransferRunning, StartedAt: unixNow()}
+		Route: route, Status: domain.TransferRunning, StartedAt: unixNow()}
+	if err := m.saveProgress(ctx, run); err != nil {
+		return failed(target, run, err)
+	}
+	nextChunkIndex := 0
 	for _, blob := range plan.Blobs {
+		run.LogicalBytes += blob.SizeBytes
 		finalName := blob.Digest
 		if blob.Path != "" {
 			finalName = blob.Path
@@ -91,6 +121,7 @@ func (m Materializer) Materialize(ctx context.Context, plan domain.DataTransferP
 		// A complete matching object is an idempotent, no-copy materialization.
 		if ok, verifyErr := m.verify(ctx, dc, destination, final, blob.Digest); verifyErr == nil && ok {
 			run.VerifiedBlobs = append(run.VerifiedBlobs, blob.Digest)
+			nextChunkIndex += chunkCount(blob.SizeBytes, m.chunkSize(ctx))
 			continue
 		}
 		partial := final + ".partial"
@@ -99,17 +130,6 @@ func (m Materializer) Materialize(ctx context.Context, plan domain.DataTransferP
 			return failed(target, run, err)
 		}
 		sourceName := sourceName(plan.Source.Path, blob, len(plan.Blobs))
-		input, err := sc.Open(ctx, source, sourceName, offset)
-		if err != nil {
-			return failed(target, run, err)
-		}
-		if err = dc.Put(ctx, destination, partial, input, offset); err != nil {
-			_ = input.Close()
-			return failed(target, run, err)
-		}
-		if err = input.Close(); err != nil {
-			return failed(target, run, fmt.Errorf("close source stream for %s: %w", blob.Digest, err))
-		}
 		// The transfer plan is content-addressed, so SizeBytes is the verified
 		// object length. A resumed copy transfers only the remaining bytes.
 		sizeBytes := blob.SizeBytes
@@ -119,7 +139,36 @@ func (m Materializer) Materialize(ctx context.Context, plan domain.DataTransferP
 				return failed(target, run, err)
 			}
 		}
-		if sizeBytes > offset {
+		routed := false
+		if strategy == domain.TransferRuntimeLocal || strategy == domain.TransferDirectRuntime || strategy == domain.TransferSharedStorage {
+			if routeConnector, ok := sc.(ports.TransferRouteConnector); ok {
+				networkBytes, routeErr := routeConnector.TransferRoute(ctx, strategy, source, destination, sourceName, partial, offset)
+				if routeErr == nil {
+					if networkBytes < 0 && sizeBytes > offset {
+						networkBytes = sizeBytes - offset
+					}
+					run.NetworkBytes += networkBytes
+					routed = true
+				} else if route.Fallback != domain.TransferGateway {
+					return failed(target, run, routeErr)
+				} else {
+					run.Strategy = domain.TransferGateway
+					run.Route.Strategy = domain.TransferGateway
+					run.Route.Reason = fmt.Sprintf("%s; direct operation failed (%v), used bounded Akoflow relay", route.Reason, routeErr)
+				}
+			} else if route.Fallback == domain.TransferGateway {
+				run.Strategy = domain.TransferGateway
+				run.Route.Strategy = domain.TransferGateway
+				run.Route.Reason = route.Reason + "; connector has no runtime route support, used bounded Akoflow relay"
+			}
+		}
+		if !routed {
+			if err = m.copyGatewayChunks(ctx, sc, dc, source, destination, sourceName, partial, blob, offset, sizeBytes, nextChunkIndex, &run); err != nil {
+				return failed(target, run, err)
+			}
+		}
+		nextChunkIndex += chunkCount(sizeBytes, m.chunkSize(ctx))
+		if routed && sizeBytes > offset {
 			run.TransferredBytes += sizeBytes - offset
 		}
 		ok, err := m.verify(ctx, dc, destination, partial, blob.Digest)
@@ -135,9 +184,117 @@ func (m Materializer) Materialize(ctx context.Context, plan domain.DataTransferP
 		run.VerifiedBlobs = append(run.VerifiedBlobs, blob.Digest)
 	}
 	run.Status, run.FinishedAt = domain.TransferCompleted, unixNow()
+	if err := m.saveProgress(ctx, run); err != nil {
+		return failed(target, run, err)
+	}
 	target.Status = domain.MaterializationCommitted
 	target.VerifiedDigest = target.Digest
 	return target, run, nil
+}
+
+func (m Materializer) chunkSize(ctx context.Context) int64 {
+	if m.ChunkSize != nil {
+		if size := m.ChunkSize(ctx); size > 0 {
+			return size
+		}
+	}
+	return 8 << 20
+}
+
+func chunkCount(size, chunkSize int64) int {
+	if size <= 0 || chunkSize <= 0 {
+		return 0
+	}
+	return int((size + chunkSize - 1) / chunkSize)
+}
+
+func (m Materializer) copyGatewayChunks(ctx context.Context, sourceConnector, destinationConnector ports.TransferConnector, source, destination domain.TransferEndpoint, sourceName, partial string, blob domain.BlobDescriptor, offset, sizeBytes int64, baseIndex int, run *domain.DataTransferRun) error {
+	input, err := sourceConnector.Open(ctx, source, sourceName, offset)
+	if err != nil {
+		return err
+	}
+	closed := false
+	defer func() {
+		if !closed {
+			_ = input.Close()
+		}
+	}()
+	chunkSize := m.chunkSize(ctx)
+	current := offset
+	for current < sizeBytes {
+		size := chunkSize
+		if remaining := sizeBytes - current; remaining < size {
+			size = remaining
+		}
+		index := baseIndex + int(current/chunkSize)
+		chunk := domain.TransferChunkRun{TransferRunID: run.ID, Index: index, Offset: current, SizeBytes: size, Status: domain.TransferRunning, Attempts: 1}
+		if err := m.saveChunk(ctx, chunk); err != nil {
+			return err
+		}
+		hash := sha256.New()
+		limited := io.LimitReader(input, size)
+		if err := destinationConnector.Put(ctx, destination, partial, io.TeeReader(limited, hash), current); err != nil {
+			chunk.Status = domain.TransferFailed
+			_ = m.saveChunk(ctx, chunk)
+			return err
+		}
+		chunk.Digest = fmt.Sprintf("sha256:%x", hash.Sum(nil))
+		chunk.Status = domain.TransferCompleted
+		if err := m.saveChunk(ctx, chunk); err != nil {
+			return err
+		}
+		current += size
+		run.TransferredBytes += size
+		run.NetworkBytes += size
+		run.CompletedChunks = append(run.CompletedChunks, index)
+		if err := m.saveProgress(ctx, *run); err != nil {
+			return err
+		}
+	}
+	if err := input.Close(); err != nil {
+		return fmt.Errorf("close source stream for %s: %w", blob.Digest, err)
+	}
+	closed = true
+	return nil
+}
+
+func (m Materializer) saveProgress(ctx context.Context, run domain.DataTransferRun) error {
+	if m.Progress == nil {
+		return nil
+	}
+	return m.Progress.SaveTransferRun(ctx, run)
+}
+
+func (m Materializer) saveChunk(ctx context.Context, chunk domain.TransferChunkRun) error {
+	if m.Progress == nil {
+		return nil
+	}
+	return m.Progress.SaveTransferChunkRun(ctx, chunk)
+}
+
+func withTransferSession(endpoint domain.TransferEndpoint, id string) domain.TransferEndpoint {
+	configuration := make(map[string]string, len(endpoint.Configuration)+1)
+	for key, value := range endpoint.Configuration {
+		configuration[key] = value
+	}
+	configuration["transferSessionId"] = id
+	endpoint.Configuration = configuration
+	return endpoint
+}
+
+func beginTransferSession(ctx context.Context, connector ports.TransferConnector, endpoint domain.TransferEndpoint) error {
+	if session, ok := connector.(ports.TransferSessionConnector); ok {
+		return session.BeginTransferSession(ctx, endpoint)
+	}
+	return nil
+}
+
+func endTransferSession(connector ports.TransferConnector, endpoint domain.TransferEndpoint) {
+	if session, ok := connector.(ports.TransferSessionConnector); ok {
+		cleanupCtx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+		defer cancel()
+		_ = session.EndTransferSession(cleanupCtx, endpoint)
+	}
 }
 
 func sourceName(configured string, blob domain.BlobDescriptor, count int) string {

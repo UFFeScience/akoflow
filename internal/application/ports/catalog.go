@@ -39,6 +39,8 @@ type DataCatalog interface {
 	SaveArtifactMaterialization(context.Context, domain.ArtifactMaterialization) error
 	SaveTransferRun(context.Context, domain.DataTransferRun) error
 	FindTransferRun(context.Context, string) (*domain.DataTransferRun, error)
+	SaveTransferChunkRun(context.Context, domain.TransferChunkRun) error
+	ListTransferChunkRuns(context.Context, string) ([]domain.TransferChunkRun, error)
 	SaveArtifactBuild(context.Context, domain.ArtifactBuild) error
 	FindArtifactBuildByCacheKey(context.Context, string) (*domain.ArtifactBuild, error)
 	FindArtifactBuild(context.Context, string) (*domain.ArtifactBuild, error)

@@ -19,6 +19,48 @@ type materializationCatalogStub struct {
 	err              error
 }
 
+type sessionFilesystem struct {
+	infra.LocalFilesystem
+	begins int
+	ends   int
+}
+
+type transferProgressStub struct {
+	runs   []domain.DataTransferRun
+	chunks map[int]domain.TransferChunkRun
+}
+
+func (s *transferProgressStub) SaveTransferRun(_ context.Context, value domain.DataTransferRun) error {
+	s.runs = append(s.runs, value)
+	return nil
+}
+
+func (s *transferProgressStub) SaveTransferChunkRun(_ context.Context, value domain.TransferChunkRun) error {
+	if s.chunks == nil {
+		s.chunks = map[int]domain.TransferChunkRun{}
+	}
+	s.chunks[value.Index] = value
+	return nil
+}
+
+func (s *transferProgressStub) ListTransferChunkRuns(context.Context, string) ([]domain.TransferChunkRun, error) {
+	values := make([]domain.TransferChunkRun, 0, len(s.chunks))
+	for _, value := range s.chunks {
+		values = append(values, value)
+	}
+	return values, nil
+}
+
+func (s *sessionFilesystem) BeginTransferSession(context.Context, domain.TransferEndpoint) error {
+	s.begins++
+	return nil
+}
+
+func (s *sessionFilesystem) EndTransferSession(context.Context, domain.TransferEndpoint) error {
+	s.ends++
+	return nil
+}
+
 func (s *materializationCatalogStub) SaveArtifactMaterialization(_ context.Context, value domain.ArtifactMaterialization) error {
 	if s.err != nil {
 		return s.err
@@ -53,6 +95,50 @@ func TestMaterializerCommitsVerifiedBlob(t *testing.T) {
 	}
 	if _, err = os.Stat(filepath.Join(destination, digest)); err != nil {
 		t.Fatal(err)
+	}
+}
+
+func TestMaterializerClassifiesRouteAndUsesOneConnectorSession(t *testing.T) {
+	source, destination := t.TempDir(), t.TempDir()
+	content := []byte("session payload")
+	if err := os.WriteFile(filepath.Join(source, "input"), content, 0o600); err != nil {
+		t.Fatal(err)
+	}
+	connector := &sessionFilesystem{}
+	digest := digestOf(content)
+	plan := domain.DataTransferPlan{ID: "session", Source: domain.TransferLocation{URI: "file://" + source, Path: "input"}, Destination: domain.TransferLocation{URI: "file://" + destination}, Blobs: []domain.BlobDescriptor{{Digest: digest, SizeBytes: int64(len(content))}}}
+	_, run, err := (Materializer{Connectors: []ports.TransferConnector{connector}}).Materialize(context.Background(), plan, domain.ArtifactMaterialization{Digest: digest})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if connector.begins != 2 || connector.ends != 2 {
+		t.Fatalf("sessions begin=%d end=%d", connector.begins, connector.ends)
+	}
+	if run.Strategy != domain.TransferGateway || run.Route.Reason == "" || run.LogicalBytes != int64(len(content)) || run.NetworkBytes != int64(len(content)) {
+		t.Fatalf("run = %#v", run)
+	}
+}
+
+func TestMaterializerPersistsBoundedChunkProgress(t *testing.T) {
+	source, destination := t.TempDir(), t.TempDir()
+	content := []byte("0123456789")
+	if err := os.WriteFile(filepath.Join(source, "input"), content, 0o600); err != nil {
+		t.Fatal(err)
+	}
+	progress := &transferProgressStub{}
+	digest := digestOf(content)
+	plan := domain.DataTransferPlan{ID: "chunks", Strategy: domain.TransferGateway, Source: domain.TransferLocation{URI: "file://" + source, Path: "input"}, Destination: domain.TransferLocation{URI: "file://" + destination}, Blobs: []domain.BlobDescriptor{{Digest: digest, SizeBytes: int64(len(content))}}}
+	_, run, err := (Materializer{Connectors: []ports.TransferConnector{infra.LocalFilesystem{}}, Progress: progress, ChunkSize: func(context.Context) int64 { return 4 }}).Materialize(context.Background(), plan, domain.ArtifactMaterialization{Digest: digest})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(progress.chunks) != 3 || len(run.CompletedChunks) != 3 || len(progress.runs) < 4 {
+		t.Fatalf("chunks=%#v run=%#v snapshots=%d", progress.chunks, run, len(progress.runs))
+	}
+	for index, chunk := range progress.chunks {
+		if chunk.Status != domain.TransferCompleted || chunk.Index != index || chunk.Digest == "" {
+			t.Fatalf("chunk %d = %#v", index, chunk)
+		}
 	}
 }
 

@@ -122,3 +122,25 @@ func TestRsyncSSHRejectsUnsafePathsBeforeExecution(t *testing.T) {
 		t.Fatal("unsafe final path accepted")
 	}
 }
+
+func TestRsyncSSHRuntimeRoutesRequireConcreteAndRestrictedCredentials(t *testing.T) {
+	installFakeSSH(t)
+	connector := RsyncSSH{}
+	source := sshTestEndpoint()
+	source.CloudInstanceID = "instance-a"
+	destination := sshTestEndpoint()
+	destination.CloudInstanceID = "instance-a"
+	if networkBytes, err := connector.TransferRoute(context.Background(), domain.TransferRuntimeLocal, source, destination, "source", "target.partial", 0); err != nil || networkBytes != 0 {
+		t.Fatalf("runtime local bytes=%d err=%v", networkBytes, err)
+	}
+	destination.CloudInstanceID = "instance-b"
+	destination.URI = "ssh://researcher@target.test/scratch/project"
+	if _, err := connector.TransferRoute(context.Background(), domain.TransferDirectRuntime, source, destination, "source", "target.partial", 0); err == nil || !strings.Contains(err.Error(), "short-lived") {
+		t.Fatalf("direct route accepted without credential: %v", err)
+	}
+	destination.Configuration["directIdentityFile"] = "/run/akoflow/ephemeral-key"
+	destination.Configuration["directKnownHostsFile"] = "/run/akoflow/known-hosts"
+	if networkBytes, err := connector.TransferRoute(context.Background(), domain.TransferDirectRuntime, source, destination, "source", "target.partial", 3); err != nil || networkBytes != -1 {
+		t.Fatalf("direct route bytes=%d err=%v", networkBytes, err)
+	}
+}

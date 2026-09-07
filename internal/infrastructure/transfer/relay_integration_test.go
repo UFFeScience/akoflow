@@ -62,7 +62,7 @@ func TestRelayPlafrimToKindAndBack(t *testing.T) {
 	sshEndpoint, kubernetesEndpoint := plafrimTransferEndpoint(), kindTransferEndpoint()
 	materializer := applicationtransfer.Materializer{Connectors: []ports.TransferConnector{
 		integrationEndpointConnector{TransferConnector: RsyncSSH{BufferSize: buffer}, endpoint: sshEndpoint},
-		integrationEndpointConnector{TransferConnector: KubernetesExec{BufferSize: buffer}, endpoint: kubernetesEndpoint},
+		integrationEndpointConnector{TransferConnector: &KubernetesExec{BufferSize: buffer}, endpoint: kubernetesEndpoint},
 	}}
 	payload := bytes.Repeat([]byte("akoflow-hpc-stream-validation\n"), 4096)
 	digest := fmt.Sprintf("sha256:%x", sha256.Sum256(payload))
@@ -72,7 +72,7 @@ func TestRelayPlafrimToKindAndBack(t *testing.T) {
 		Destination: domain.TransferLocation{URI: kubernetesEndpoint.URI, Path: "plafrim-to-kind-v3"}, Blobs: []domain.BlobDescriptor{blob}}
 	_, forwardRun, err := materializer.Materialize(context.Background(), forward, domain.ArtifactMaterialization{ID: "plafrim-kind", Digest: digest})
 	if err != nil || forwardRun.Status != domain.TransferCompleted || len(forwardRun.VerifiedBlobs) != 1 {
-		reader, openErr := (KubernetesExec{}).Open(context.Background(), kubernetesEndpoint, "plafrim-to-kind-v3/"+digest+".partial", 0)
+		reader, openErr := (&KubernetesExec{}).Open(context.Background(), kubernetesEndpoint, "plafrim-to-kind-v3/"+digest+".partial", 0)
 		if openErr == nil {
 			hash := sha256.New()
 			count, readErr := io.Copy(hash, reader)

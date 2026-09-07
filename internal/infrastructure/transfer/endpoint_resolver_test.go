@@ -95,7 +95,7 @@ func TestEnvironmentEndpointResolverInjectsKubernetesCredential(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !((KubernetesExec{}).CanHandle(endpoint)) || endpoint.Configuration["server"] != "https://kind.test" || endpoint.Configuration["tokenFile"] != "/credentials/kind.token" {
+	if !((&KubernetesExec{}).CanHandle(endpoint)) || endpoint.Configuration["server"] != "https://kind.test" || endpoint.Configuration["tokenFile"] != "/credentials/kind.token" {
 		t.Fatalf("unexpected resolved endpoint: %+v", endpoint)
 	}
 }

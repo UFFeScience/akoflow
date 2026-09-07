@@ -18,6 +18,21 @@ type TransferConnector interface {
 	Commit(context.Context, domain.TransferEndpoint, string, string) error
 }
 
+// TransferSessionConnector lets connectors keep one bounded remote execution
+// context for the whole transfer. Kubernetes uses it to create one transfer
+// pod per run instead of one pod per Exists/Open/Put/Commit call.
+type TransferSessionConnector interface {
+	BeginTransferSession(context.Context, domain.TransferEndpoint) error
+	EndTransferSession(context.Context, domain.TransferEndpoint) error
+}
+
+// TransferRouteConnector performs a coordinated transfer without routing the
+// payload through the Akoflow process. It returns the bytes moved on the
+// runtime network. The materializer still owns checksum and atomic commit.
+type TransferRouteConnector interface {
+	TransferRoute(context.Context, domain.TransferStrategy, domain.TransferEndpoint, domain.TransferEndpoint, string, string, int64) (int64, error)
+}
+
 type TransferPlanner interface {
 	Plan(domain.TransferLocation, domain.TransferLocation, []domain.BlobDescriptor, map[string]bool) domain.DataTransferPlan
 }

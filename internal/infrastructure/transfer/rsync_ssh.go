@@ -195,6 +195,67 @@ func (RsyncSSH) Commit(ctx context.Context, e domain.TransferEndpoint, partial, 
 	return exec.CommandContext(ctx, "ssh", args...).Run()
 }
 
+// TransferRoute keeps payload bytes on the runtime side. For different VMs a
+// short-lived destination key must already be exposed to the source through
+// directIdentityFile; Akoflow never copies its permanent platform key.
+func (RsyncSSH) TransferRoute(ctx context.Context, strategy domain.TransferStrategy, source, destination domain.TransferEndpoint, sourceName, destinationName string, offset int64) (int64, error) {
+	sourceHost, sourcePath, err := sshTarget(source, sourceName)
+	if err != nil {
+		return 0, err
+	}
+	destinationHost, destinationPath, err := sshTarget(destination, destinationName)
+	if err != nil {
+		return 0, err
+	}
+	var remoteCommand string
+	switch strategy {
+	case domain.TransferRuntimeLocal:
+		if source.CloudInstanceID == "" || source.CloudInstanceID != destination.CloudInstanceID || sourceHost != destinationHost {
+			return 0, fmt.Errorf("runtime-local requires the same concrete cloud instance")
+		}
+		if offset > 0 {
+			remoteCommand = fmt.Sprintf("test $(wc -c < %s) -eq %d && tail -c +%d -- %s >> %s", shell(destinationPath), offset, offset+1, shell(sourcePath), shell(destinationPath))
+		} else {
+			remoteCommand = "mkdir -p -- " + shell(filepath.Dir(destinationPath)) + " && (cp --reflink=auto -- " + shell(sourcePath) + " " + shell(destinationPath) + " 2>/dev/null || cp -- " + shell(sourcePath) + " " + shell(destinationPath) + ")"
+		}
+		output, runErr := exec.CommandContext(ctx, "ssh", append(sshArgs(source), sourceHost, remoteCommand)...).CombinedOutput()
+		if runErr != nil {
+			return 0, fmt.Errorf("copy workspace inside cloud instance: %w: %s", runErr, strings.TrimSpace(string(output)))
+		}
+		return 0, nil
+	case domain.TransferDirectRuntime:
+		identity := destination.Configuration["directIdentityFile"]
+		if identity == "" {
+			return 0, fmt.Errorf("direct runtime route has no short-lived destination credential")
+		}
+		remoteSSH := []string{"ssh", "-i", shell(identity), "-o", "BatchMode=yes", "-o", "IdentitiesOnly=yes"}
+		if knownHosts := destination.Configuration["directKnownHostsFile"]; knownHosts != "" {
+			remoteSSH = append(remoteSSH, "-o", shell("UserKnownHostsFile="+knownHosts), "-o", "StrictHostKeyChecking=yes")
+		} else {
+			return 0, fmt.Errorf("direct runtime route has no restricted destination host key file")
+		}
+		if uri, parseErr := url.Parse(destination.URI); parseErr == nil && uri.Port() != "" {
+			remoteSSH = append(remoteSSH, "-p", shell(uri.Port()))
+		}
+		writeCommand := "mkdir -p -- " + shell(filepath.Dir(destinationPath)) + " && cat > " + shell(destinationPath)
+		if offset > 0 {
+			writeCommand = fmt.Sprintf("test $(wc -c < %s) -eq %d && cat >> %s", shell(destinationPath), offset, shell(destinationPath))
+		}
+		readCommand := "cat -- " + shell(sourcePath)
+		if offset > 0 {
+			readCommand = fmt.Sprintf("tail -c +%d -- %s", offset+1, shell(sourcePath))
+		}
+		remoteCommand = readCommand + " | " + strings.Join(remoteSSH, " ") + " " + shell(destinationHost) + " " + shell(writeCommand)
+		output, runErr := exec.CommandContext(ctx, "ssh", append(sshArgs(source), sourceHost, remoteCommand)...).CombinedOutput()
+		if runErr != nil {
+			return 0, fmt.Errorf("stream directly between cloud instances: %w: %s", runErr, strings.TrimSpace(string(output)))
+		}
+		return -1, nil // caller replaces this with the known remaining blob size
+	default:
+		return 0, fmt.Errorf("SSH connector does not implement %q route", strategy)
+	}
+}
+
 type readCloser struct {
 	io.Reader
 	close func() error

@@ -12,11 +12,12 @@ import (
 	"github.com/UFFeScience/akoflow/internal/domain"
 )
 
-func fakeKubectl(t *testing.T) {
+func fakeKubectl(t *testing.T) string {
 	t.Helper()
 	directory := t.TempDir()
 	script := filepath.Join(directory, "kubectl")
 	payload := `#!/bin/sh
+printf '%s\n' "$*" >> "$AKOFLOW_TEST_KUBECTL_LOG"
 case " $* " in
   *" exec "*)
     command="${@: -1}"
@@ -35,6 +36,9 @@ exit 0
 		t.Fatal(err)
 	}
 	t.Setenv("PATH", directory+string(os.PathListSeparator)+os.Getenv("PATH"))
+	log := filepath.Join(directory, "kubectl.log")
+	t.Setenv("AKOFLOW_TEST_KUBECTL_LOG", log)
+	return log
 }
 
 func TestKubernetesTargetResolvesCredentialAndPath(t *testing.T) {
@@ -107,5 +111,41 @@ func TestKubernetesExecLifecycleWithKubectl(t *testing.T) {
 	}
 	if err := connector.Commit(context.Background(), endpoint, "result.partial", "result.txt"); err != nil {
 		t.Fatal(err)
+	}
+}
+
+func TestKubernetesExecReusesOnePodForTransferSession(t *testing.T) {
+	log := fakeKubectl(t)
+	endpoint := domain.TransferEndpoint{
+		URI: "kubernetes:///workspace?claim=data",
+		Configuration: map[string]string{
+			"server": "https://cluster", "token": "token", "transferSessionId": "transfer-1",
+		},
+	}
+	connector := &KubernetesExec{}
+	ctx := context.Background()
+	if err := connector.BeginTransferSession(ctx, endpoint); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := connector.Exists(ctx, endpoint, "result.txt"); err != nil {
+		t.Fatal(err)
+	}
+	reader, err := connector.Open(ctx, endpoint, "result.txt", 0)
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, _ = io.Copy(io.Discard, reader)
+	if err := reader.Close(); err != nil {
+		t.Fatal(err)
+	}
+	if err := connector.EndTransferSession(ctx, endpoint); err != nil {
+		t.Fatal(err)
+	}
+	contents, err := os.ReadFile(log)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if count := strings.Count(string(contents), " wait --for=condition=Ready pod/"); count != 1 {
+		t.Fatalf("created %d transfer pod sessions; log:\n%s", count, contents)
 	}
 }

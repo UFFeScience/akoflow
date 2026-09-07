@@ -54,14 +54,22 @@ func (s *Provisioner) Provision(
 	if connection == nil {
 		return domain.CloudProvisionedInstance{}, fmt.Errorf("environment has no cloud connection")
 	}
-	if instance, handled, reuseErr := s.reuseCapacity(ctx, *target); handled {
-		return instance, reuseErr
+	if strings.TrimSpace(request.InstanceID) == "" {
+		if instance, handled, reuseErr := s.reuseCapacity(ctx, *target); handled {
+			return instance, reuseErr
+		}
 	}
 	credential, err := s.credentials.Resolve(connection.CredentialRef)
 	if err != nil {
 		return domain.CloudProvisionedInstance{}, err
 	}
-	instanceID := "cloud-instance-" + uuid.NewString()
+	instanceID := strings.TrimSpace(request.InstanceID)
+	if instanceID == "" {
+		instanceID = "cloud-instance-" + uuid.NewString()
+	}
+	if !strings.HasPrefix(instanceID, "cloud-instance-") {
+		return domain.CloudProvisionedInstance{}, fmt.Errorf("invalid cloud instance id")
+	}
 	sshUser := strings.TrimSpace(request.SSHUsername)
 	if sshUser == "" {
 		sshUser = "akoflow"
@@ -79,7 +87,26 @@ func (s *Provisioner) Provision(
 		Provider: target.Provider, Name: name, Status: "provisioning", SSHUsername: sshUser,
 		SSHCredentialRef: key.CredentialRef, CreatedAt: time.Now().UTC(),
 	}
-	if err := s.store.CreateProvisionedInstance(ctx, instance); err != nil {
+	existing, err := s.store.FindProvisionedInstance(ctx, instanceID)
+	if err != nil {
+		return domain.CloudProvisionedInstance{}, err
+	}
+	if existing != nil {
+		if existing.EnvironmentID != environmentID || existing.CapacityTargetID != target.ID {
+			return domain.CloudProvisionedInstance{}, fmt.Errorf("cloud instance id is already bound to another capacity target")
+		}
+		if existing.Status == "ready" {
+			return *existing, nil
+		}
+		if existing.Status == "destroyed" || existing.Status == "destroying" {
+			return *existing, fmt.Errorf("cloud instance %q is being destroyed or was destroyed", instanceID)
+		}
+		instance = *existing
+		instance.Status, instance.FailureReason = "provisioning", ""
+		if err := s.store.UpdateProvisionedInstance(ctx, instance); err != nil {
+			return instance, err
+		}
+	} else if err := s.store.CreateProvisionedInstance(ctx, instance); err != nil {
 		return domain.CloudProvisionedInstance{}, err
 	}
 	result, err := s.terraform.Apply(ctx, ports.TerraformProvisionSpec{

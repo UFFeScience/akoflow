@@ -1897,6 +1897,10 @@ func (h *Handler) enqueueCloudOperation(w http.ResponseWriter, r *http.Request, 
 		writeError(w, http.StatusConflict, fmt.Errorf("cloud resource already has an active %s run", existing.Kind))
 		return
 	}
+	if kind == "provision" && instanceID == "" {
+		instanceID = "cloud-instance-" + uuid.NewString()
+		request.InstanceID = instanceID
+	}
 	operation := domain.CloudOperationRun{ID: "cloud-run-" + uuid.NewString(), Kind: kind,
 		Status: "queued", EnvironmentID: environmentID, InstanceID: instanceID,
 		CapacityTargetID: targetID, Request: request, CreatedAt: time.Now().UTC()}
@@ -1939,6 +1943,27 @@ func (h *Handler) GetCloudOperation(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	writeJSON(w, http.StatusOK, value)
+}
+
+func (h *Handler) ListCloudOperationEvents(w http.ResponseWriter, r *http.Request) {
+	operation, err := h.cloudOperations.FindCloudOperation(r.Context(), r.PathValue("operationId"))
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, err)
+		return
+	}
+	if operation == nil {
+		writeError(w, http.StatusNotFound, nil)
+		return
+	}
+	if operation.InstanceID != "" && h.cloudProvisioner != nil {
+		if raw, logErr := h.cloudProvisioner.Log(r.Context(), operation.InstanceID); logErr == nil {
+			for _, event := range eventloop.ParseCloudOperationLog(operation.ID, raw) {
+				_ = h.cloudOperations.AppendCloudOperationEvent(r.Context(), event)
+			}
+		}
+	}
+	values, err := h.cloudOperations.ListCloudOperationEvents(r.Context(), operation.ID)
+	writeList(w, values, err)
 }
 
 func (h *Handler) ReplaceEnvironment(w http.ResponseWriter, r *http.Request) {

@@ -164,6 +164,7 @@ type ProvisionRequest struct {
 	CapacityTargetID string `json:"capacityTargetId"`
 	Name             string `json:"name,omitempty"`
 	SSHUsername      string `json:"sshUsername,omitempty"`
+	InstanceID       string `json:"instanceId,omitempty"`
 }
 
 type OperationRun struct {

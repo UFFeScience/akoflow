@@ -131,7 +131,7 @@ func (h *CloudOperationHandler) Handle(ctx context.Context, job domainqueue.Job)
 	finished := time.Now().UTC()
 	operation.FinishedAt = &finished
 	if err != nil {
-		operation.Status, operation.Phase, operation.FailureReason = "retrying", "retrying", err.Error()
+		operation.Status, operation.Phase, operation.FailureReason = "queued", "retrying", err.Error()
 		operation.FinishedAt = nil
 		if job.Attempts >= job.MaxAttempts {
 			operation.Status, operation.Phase, operation.FinishedAt = "failed", "failed", &finished

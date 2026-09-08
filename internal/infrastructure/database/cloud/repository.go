@@ -647,23 +647,32 @@ func (r *Repository) CheckCloudLifecycle(ctx context.Context, instanceID, exclud
 	checks := []struct {
 		query   string
 		message string
+		args    []any
 	}{
-		{`SELECT COUNT(*) FROM task_executions WHERE json_extract(metadata,'$.cloudInstanceId')=? AND status IN ('blocked','ready','preparing','running')`, "workflow activities are still active"},
-		{`SELECT COUNT(*) FROM transfer_runs WHERE status IN ('planned','running') AND (json_extract(route,'$.sourceCloudInstanceId')=? OR json_extract(route,'$.targetCloudInstanceId')=?)`, "data transfers are still active"},
-		{`SELECT COUNT(*) FROM console_sessions s JOIN cloud_provisioned_instances i ON i.capacity_target_id=s.resource_id WHERE i.id=? AND s.status IN ('starting','connected')`, "interactive sessions are still active"},
-		{`SELECT COUNT(*) FROM cloud_operation_runs WHERE instance_id=? AND id<>? AND status IN ('queued','running')`, "another infrastructure operation is still active"},
+		{
+			query:   `SELECT COUNT(*) FROM task_executions WHERE json_extract(metadata,'$.cloudInstanceId')=? AND status IN ('blocked','ready','preparing','running')`,
+			message: "workflow activities are still active", args: []any{instanceID},
+		},
+		{
+			query:   `SELECT COUNT(*) FROM transfer_runs WHERE status IN ('planned','running') AND (json_extract(route,'$.sourceCloudInstanceId')=? OR json_extract(route,'$.targetCloudInstanceId')=?)`,
+			message: "data transfers are still active", args: []any{instanceID, instanceID},
+		},
+		{
+			query:   `SELECT COUNT(*) FROM artifact_materializations m JOIN cloud_operation_runs o ON o.execution_run_id=m.run_id JOIN cloud_provisioned_instances i ON i.id=o.instance_id AND i.capacity_target_id=m.resource_id WHERE o.id=? AND i.id=? AND m.status<>'committed'`,
+			message: "required outputs have not been committed", args: []any{excludedOperationID, instanceID},
+		},
+		{
+			query:   `SELECT COUNT(*) FROM console_sessions s JOIN cloud_provisioned_instances i ON i.capacity_target_id=s.resource_id WHERE i.id=? AND s.status IN ('starting','connected')`,
+			message: "interactive sessions are still active", args: []any{instanceID},
+		},
+		{
+			query:   `SELECT COUNT(*) FROM cloud_operation_runs WHERE instance_id=? AND id<>? AND status IN ('queued','running')`,
+			message: "another infrastructure operation is still active", args: []any{instanceID, excludedOperationID},
+		},
 	}
-	for index, check := range checks {
+	for _, check := range checks {
 		var count int
-		var err error
-		switch index {
-		case 1:
-			err = r.db.QueryRowContext(ctx, check.query, instanceID, instanceID).Scan(&count)
-		case 3:
-			err = r.db.QueryRowContext(ctx, check.query, instanceID, excludedOperationID).Scan(&count)
-		default:
-			err = r.db.QueryRowContext(ctx, check.query, instanceID).Scan(&count)
-		}
+		err := r.db.QueryRowContext(ctx, check.query, check.args...).Scan(&count)
 		if err != nil {
 			return fmt.Errorf("inspect cloud lifecycle safety: %w", err)
 		}

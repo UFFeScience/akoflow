@@ -1960,7 +1960,7 @@ func (h *Handler) enqueueCloudOperation(w http.ResponseWriter, r *http.Request, 
 	if err == nil {
 		job.AggregateType, job.AggregateID = "cloud_operation", operation.ID
 		job.IdempotencyKey = "cloud-operation:" + operation.ID
-		job.MaxAttempts = 1
+		job.MaxAttempts = 3
 		_, err = h.events.Publish(r.Context(), job)
 	}
 	if err != nil {

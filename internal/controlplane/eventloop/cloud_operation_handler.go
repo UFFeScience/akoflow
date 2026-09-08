@@ -61,7 +61,8 @@ func (h *CloudOperationHandler) Handle(ctx context.Context, job domainqueue.Job)
 	if err := h.store.UpdateCloudOperation(ctx, *operation); err != nil {
 		return err
 	}
-	_ = h.store.AppendCloudOperationEvent(ctx, domain.CloudOperationEvent{OperationID: operation.ID, Sequence: 0, Timestamp: now, Tool: operationTool(operation.Kind), Phase: operation.Phase, Event: "operation.started", Message: operation.Kind + " started"})
+	sequenceBase := job.Attempts * 1_000_000
+	_ = h.store.AppendCloudOperationEvent(ctx, domain.CloudOperationEvent{OperationID: operation.ID, Sequence: sequenceBase, Timestamp: now, Tool: operationTool(operation.Kind), Phase: operation.Phase, Event: "operation.started", Message: operation.Kind + " started"})
 	var instance domain.CloudProvisionedInstance
 	switch operation.Kind {
 	case "provision":
@@ -93,6 +94,7 @@ func (h *CloudOperationHandler) Handle(ctx context.Context, job domainqueue.Job)
 	if operation.InstanceID != "" {
 		if raw, logErr := h.provisioner.Log(ctx, operation.InstanceID); logErr == nil {
 			for _, event := range ParseCloudOperationLog(operation.ID, raw) {
+				event.Sequence += sequenceBase
 				_ = h.store.AppendCloudOperationEvent(ctx, event)
 			}
 		}
@@ -100,12 +102,14 @@ func (h *CloudOperationHandler) Handle(ctx context.Context, job domainqueue.Job)
 	finished := time.Now().UTC()
 	operation.FinishedAt = &finished
 	if err != nil {
-		operation.Status, operation.Phase, operation.FailureReason = "failed", "failed", err.Error()
-		_ = h.store.AppendCloudOperationEvent(context.Background(), domain.CloudOperationEvent{OperationID: operation.ID, Sequence: 1_000_000_000, Timestamp: finished, Tool: operationTool(operation.Kind), Phase: "failed", Level: "error", Event: "operation.failed", Message: err.Error()})
+		operation.Status, operation.Phase, operation.FailureReason = "retrying", "retrying", err.Error()
+		operation.FinishedAt = nil
+		if job.Attempts >= job.MaxAttempts {
+			operation.Status, operation.Phase, operation.FinishedAt = "failed", "failed", &finished
+		}
+		_ = h.store.AppendCloudOperationEvent(context.Background(), domain.CloudOperationEvent{OperationID: operation.ID, Sequence: sequenceBase + 999_999, Timestamp: finished, Tool: operationTool(operation.Kind), Phase: operation.Phase, Level: "error", Event: "operation.failed", Message: err.Error()})
 		_ = h.store.UpdateCloudOperation(context.Background(), *operation)
-		// The operation itself records a terminal failure. Do not retry Terraform
-		// implicitly because provisioning is not safe to duplicate.
-		return nil
+		return err
 	}
 	operation.Status, operation.Phase = "completed", "ready"
 	_ = h.store.AppendCloudOperationEvent(ctx, domain.CloudOperationEvent{OperationID: operation.ID, Sequence: 1_000_000_000, Timestamp: finished, Tool: operationTool(operation.Kind), Phase: "ready", Event: "operation.completed", Message: operation.Kind + " completed", DurationSeconds: finished.Sub(*operation.StartedAt).Seconds()})

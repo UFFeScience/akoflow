@@ -959,6 +959,9 @@ func completedTrace(request ports.ExecutionRequest, tasks map[string]domain.Task
 		trace.Executed.QueueSeconds += task.QueueSeconds
 		trace.Executed.Cost += task.Cost
 	}
+	for _, transfer := range trace.Transfers {
+		trace.Executed.Cost += transfer.Cost
+	}
 	trace.Executed.MakespanSeconds = maxFloat(0, lastFinish-firstStart)
 	return trace
 }

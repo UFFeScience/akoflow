@@ -415,6 +415,20 @@ func TestCompletedTaskAccountsForObservedRuntimeCost(t *testing.T) {
 	}
 }
 
+func TestCompletedTraceIncludesObservedTransferCost(t *testing.T) {
+	request := requestFixture(domain.ExecutionModeReal)
+	task := domain.TaskExecution{
+		ActivityID: "a",
+		StartedAt:  10,
+		FinishedAt: 14,
+		Cost:       1,
+	}
+	trace := completedTrace(request, map[string]domain.TaskExecution{"a": task}, []domain.DataTransfer{{Cost: 2.5}})
+	if trace.Executed.Cost != 3.5 {
+		t.Fatalf("cost=%v", trace.Executed.Cost)
+	}
+}
+
 func TestSupervisorMarksActivityFailedWhenStartIsRejected(t *testing.T) {
 	store := &executionStoreFake{}
 	activities := &activityControllerFake{startErr: fmt.Errorf("activity image is required for Kubernetes")}

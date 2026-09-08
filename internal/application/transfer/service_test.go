@@ -170,6 +170,64 @@ func TestMaterializerResumesPartialAndSkipsVerifiedDestination(t *testing.T) {
 	}
 }
 
+func TestMaterializerResumesPersistedChunksAndIncrementsAttempts(t *testing.T) {
+	source, destination := t.TempDir(), t.TempDir()
+	content := []byte("0123456789")
+	if err := os.WriteFile(filepath.Join(source, "input"), content, 0o600); err != nil {
+		t.Fatal(err)
+	}
+	digest := digestOf(content)
+	if err := os.WriteFile(filepath.Join(destination, digest+".partial"), content[:4], 0o600); err != nil {
+		t.Fatal(err)
+	}
+	progress := &transferProgressStub{chunks: map[int]domain.TransferChunkRun{
+		0: {
+			TransferRunID: "resume-chunks",
+			Index:         0,
+			Offset:        0,
+			SizeBytes:     4,
+			Status:        domain.TransferCompleted,
+			Attempts:      1,
+		},
+		1: {
+			TransferRunID: "resume-chunks",
+			Index:         1,
+			Offset:        4,
+			SizeBytes:     4,
+			Status:        domain.TransferFailed,
+			Attempts:      2,
+		},
+	}}
+	plan := domain.DataTransferPlan{
+		ID:          "resume-chunks",
+		Strategy:    domain.TransferGateway,
+		Source:      domain.TransferLocation{URI: "file://" + source, Path: "input"},
+		Destination: domain.TransferLocation{URI: "file://" + destination},
+		Blobs: []domain.BlobDescriptor{{
+			Digest: digest, SizeBytes: int64(len(content)),
+		}},
+	}
+	materializer := Materializer{
+		Connectors: []ports.TransferConnector{infra.LocalFilesystem{}},
+		Progress:   progress,
+		ChunkSize:  func(context.Context) int64 { return 4 },
+	}
+	_, run, err := materializer.Materialize(
+		context.Background(),
+		plan,
+		domain.ArtifactMaterialization{Digest: digest},
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if progress.chunks[1].Attempts != 3 {
+		t.Fatalf("chunk retry attempts = %d", progress.chunks[1].Attempts)
+	}
+	if len(run.CompletedChunks) != 3 || run.TransferredBytes != 6 {
+		t.Fatalf("resumed run = %#v", run)
+	}
+}
+
 func TestMaterializerRejectsGatewayExecutionOfDestinationPull(t *testing.T) {
 	plan := domain.DataTransferPlan{ID: "pull", Strategy: domain.TransferDestinationPull,
 		Source: domain.TransferLocation{URI: "file:///source"}, Destination: domain.TransferLocation{URI: "file:///destination"}}

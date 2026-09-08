@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"path"
+	"sort"
 	"strings"
 	"time"
 
@@ -107,6 +108,16 @@ func (m Materializer) Materialize(ctx context.Context, plan domain.DataTransferP
 	}
 	run := domain.DataTransferRun{ID: plan.ID, PlanID: plan.ID, Strategy: strategy,
 		Route: route, Status: domain.TransferRunning, StartedAt: unixNow()}
+	chunkRuns, err := m.persistedChunks(ctx, run.ID)
+	if err != nil {
+		return failed(target, run, err)
+	}
+	for index, chunk := range chunkRuns {
+		if chunk.Status == domain.TransferCompleted {
+			run.CompletedChunks = append(run.CompletedChunks, index)
+		}
+	}
+	sort.Ints(run.CompletedChunks)
 	if err := m.saveProgress(ctx, run); err != nil {
 		return failed(target, run, err)
 	}
@@ -163,7 +174,7 @@ func (m Materializer) Materialize(ctx context.Context, plan domain.DataTransferP
 			}
 		}
 		if !routed {
-			if err = m.copyGatewayChunks(ctx, sc, dc, source, destination, sourceName, partial, blob, offset, sizeBytes, nextChunkIndex, &run); err != nil {
+			if err = m.copyGatewayChunks(ctx, sc, dc, source, destination, sourceName, partial, blob, offset, sizeBytes, nextChunkIndex, chunkRuns, &run); err != nil {
 				return failed(target, run, err)
 			}
 		}
@@ -208,7 +219,7 @@ func chunkCount(size, chunkSize int64) int {
 	return int((size + chunkSize - 1) / chunkSize)
 }
 
-func (m Materializer) copyGatewayChunks(ctx context.Context, sourceConnector, destinationConnector ports.TransferConnector, source, destination domain.TransferEndpoint, sourceName, partial string, blob domain.BlobDescriptor, offset, sizeBytes int64, baseIndex int, run *domain.DataTransferRun) error {
+func (m Materializer) copyGatewayChunks(ctx context.Context, sourceConnector, destinationConnector ports.TransferConnector, source, destination domain.TransferEndpoint, sourceName, partial string, blob domain.BlobDescriptor, offset, sizeBytes int64, baseIndex int, persisted map[int]domain.TransferChunkRun, run *domain.DataTransferRun) error {
 	input, err := sourceConnector.Open(ctx, source, sourceName, offset)
 	if err != nil {
 		return err
@@ -227,7 +238,8 @@ func (m Materializer) copyGatewayChunks(ctx context.Context, sourceConnector, de
 			size = remaining
 		}
 		index := baseIndex + int(current/chunkSize)
-		chunk := domain.TransferChunkRun{TransferRunID: run.ID, Index: index, Offset: current, SizeBytes: size, Status: domain.TransferRunning, Attempts: 1}
+		attempts := persisted[index].Attempts + 1
+		chunk := domain.TransferChunkRun{TransferRunID: run.ID, Index: index, Offset: current, SizeBytes: size, Status: domain.TransferRunning, Attempts: attempts}
 		if err := m.saveChunk(ctx, chunk); err != nil {
 			return err
 		}
@@ -246,7 +258,10 @@ func (m Materializer) copyGatewayChunks(ctx context.Context, sourceConnector, de
 		current += size
 		run.TransferredBytes += size
 		run.NetworkBytes += size
-		run.CompletedChunks = append(run.CompletedChunks, index)
+		if !containsChunk(run.CompletedChunks, index) {
+			run.CompletedChunks = append(run.CompletedChunks, index)
+			sort.Ints(run.CompletedChunks)
+		}
 		if err := m.saveProgress(ctx, *run); err != nil {
 			return err
 		}
@@ -256,6 +271,30 @@ func (m Materializer) copyGatewayChunks(ctx context.Context, sourceConnector, de
 	}
 	closed = true
 	return nil
+}
+
+func (m Materializer) persistedChunks(ctx context.Context, transferRunID string) (map[int]domain.TransferChunkRun, error) {
+	result := map[int]domain.TransferChunkRun{}
+	if m.Progress == nil {
+		return result, nil
+	}
+	values, err := m.Progress.ListTransferChunkRuns(ctx, transferRunID)
+	if err != nil {
+		return nil, fmt.Errorf("load persisted chunks for %s: %w", transferRunID, err)
+	}
+	for _, value := range values {
+		result[value.Index] = value
+	}
+	return result, nil
+}
+
+func containsChunk(values []int, expected int) bool {
+	for _, value := range values {
+		if value == expected {
+			return true
+		}
+	}
+	return false
 }
 
 func (m Materializer) saveProgress(ctx context.Context, run domain.DataTransferRun) error {

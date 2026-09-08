@@ -35,15 +35,49 @@ func (a QueuedCloudAllocator) Allocate(ctx context.Context, executionRunID, acti
 		return domain.CloudProvisionedInstance{}, err
 	}
 	sort.SliceStable(instances, func(i, j int) bool { return instances[i].CreatedAt.Before(instances[j].CreatedAt) })
+	var stopped *domain.CloudProvisionedInstance
 	for _, instance := range instances {
-		if instance.CapacityTargetID == target.ID && instance.Status == "ready" {
+		if instance.CapacityTargetID != target.ID {
+			continue
+		}
+		if instance.Status == "ready" {
 			return instance, nil
 		}
+		if instance.Status == "stopped" && stopped == nil {
+			candidate := instance
+			stopped = &candidate
+		}
 	}
-	operation, err := a.findOrCreate(ctx, executionRunID, activityID, target)
+	kind, instanceID := "provision", ""
+	if stopped != nil {
+		kind, instanceID = "start", stopped.ID
+	}
+	operation, err := a.findOrCreate(ctx, executionRunID, activityID, target, kind, instanceID)
 	if err != nil {
 		return domain.CloudProvisionedInstance{}, err
 	}
+	instance, err := a.wait(ctx, operation)
+	if err != nil {
+		return domain.CloudProvisionedInstance{}, err
+	}
+	if kind == "start" {
+		validation, validationErr := a.findOrCreate(
+			ctx,
+			executionRunID,
+			activityID,
+			target,
+			"validate",
+			instance.ID,
+		)
+		if validationErr != nil {
+			return domain.CloudProvisionedInstance{}, validationErr
+		}
+		return a.wait(ctx, validation)
+	}
+	return instance, nil
+}
+
+func (a QueuedCloudAllocator) wait(ctx context.Context, operation domain.CloudOperationRun) (domain.CloudProvisionedInstance, error) {
 	interval := a.PollInterval
 	if interval <= 0 {
 		interval = time.Second
@@ -76,18 +110,20 @@ func (a QueuedCloudAllocator) Allocate(ctx context.Context, executionRunID, acti
 	}
 }
 
-func (a QueuedCloudAllocator) findOrCreate(ctx context.Context, executionRunID, activityID string, target domain.CloudCapacityTarget) (domain.CloudOperationRun, error) {
+func (a QueuedCloudAllocator) findOrCreate(ctx context.Context, executionRunID, activityID string, target domain.CloudCapacityTarget, kind, instanceID string) (domain.CloudOperationRun, error) {
 	operations, err := a.Operations.ListCloudOperations(ctx)
 	if err != nil {
 		return domain.CloudOperationRun{}, err
 	}
 	for _, operation := range operations {
-		if operation.Kind == "provision" && operation.ExecutionRunID == executionRunID && operation.ActivityID == activityID && operation.CapacityTargetID == target.ID {
+		if operation.Kind == kind && operation.ExecutionRunID == executionRunID && operation.ActivityID == activityID && operation.CapacityTargetID == target.ID {
 			return operation, nil
 		}
 	}
-	instanceID := "cloud-instance-" + uuid.NewString()
-	operation := domain.CloudOperationRun{ID: "cloud-run-" + uuid.NewString(), Kind: "provision", Status: "queued", Phase: "queued", EnvironmentID: target.EnvironmentID, CapacityTargetID: target.ID, InstanceID: instanceID, ExecutionRunID: executionRunID, ActivityID: activityID, Request: domain.CloudProvisionRequest{CapacityTargetID: target.ID, InstanceID: instanceID}, CreatedAt: time.Now().UTC()}
+	if kind == "provision" && instanceID == "" {
+		instanceID = "cloud-instance-" + uuid.NewString()
+	}
+	operation := domain.CloudOperationRun{ID: "cloud-run-" + uuid.NewString(), Kind: kind, Status: "queued", Phase: "queued", EnvironmentID: target.EnvironmentID, CapacityTargetID: target.ID, InstanceID: instanceID, ExecutionRunID: executionRunID, ActivityID: activityID, Request: domain.CloudProvisionRequest{CapacityTargetID: target.ID, InstanceID: instanceID}, CreatedAt: time.Now().UTC()}
 	if err := a.Operations.CreateCloudOperation(ctx, operation); err != nil {
 		return domain.CloudOperationRun{}, err
 	}
@@ -95,7 +131,7 @@ func (a QueuedCloudAllocator) findOrCreate(ctx context.Context, executionRunID, 
 	job, err := domainqueue.New(domainqueue.CategoryInfrastructure, eventloop.EventCloudOperationRequested, payload, time.Now().UTC())
 	if err == nil {
 		job.AggregateType, job.AggregateID = "cloud_operation", operation.ID
-		job.IdempotencyKey = "cloud-allocation:" + executionRunID + ":" + activityID + ":" + target.ID
+		job.IdempotencyKey = "cloud-allocation:" + executionRunID + ":" + activityID + ":" + target.ID + ":" + kind
 		job.Priority, job.MaxAttempts = 100, 3
 		_, err = a.Queue.Publish(ctx, job)
 	}

@@ -105,3 +105,39 @@ func TestQueuedCloudAllocatorAssociatesDurableOperationWithActivity(t *testing.T
 		t.Fatalf("operations=%#v", operations)
 	}
 }
+
+func TestQueuedCloudAllocatorStartsAndValidatesStoppedInstance(t *testing.T) {
+	store := &allocatorStore{
+		operations: map[string]domain.CloudOperationRun{},
+		instances: map[string]domain.CloudProvisionedInstance{
+			"stopped": {
+				ID: "stopped", CapacityTargetID: "target",
+				EnvironmentID: "environment", Status: "stopped",
+			},
+		},
+	}
+	queue := &allocatorQueue{store: store}
+	allocator := QueuedCloudAllocator{
+		Cloud: store, Operations: store, Queue: queue, PollInterval: time.Millisecond,
+	}
+	instance, err := allocator.Allocate(
+		context.Background(),
+		"run",
+		"activity",
+		domain.CloudCapacityTarget{ID: "target", EnvironmentID: "environment"},
+	)
+	if err != nil || instance.ID != "stopped" || instance.Status != "ready" {
+		t.Fatalf("instance=%#v err=%v", instance, err)
+	}
+	if len(queue.jobs) != 2 {
+		t.Fatalf("jobs=%#v", queue.jobs)
+	}
+	operations, _ := store.ListCloudOperations(context.Background())
+	kinds := map[string]bool{}
+	for _, operation := range operations {
+		kinds[operation.Kind] = true
+	}
+	if !kinds["start"] || !kinds["validate"] {
+		t.Fatalf("operation kinds=%#v", kinds)
+	}
+}

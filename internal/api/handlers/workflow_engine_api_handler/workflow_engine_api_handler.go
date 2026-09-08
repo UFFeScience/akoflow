@@ -1949,7 +1949,7 @@ func (h *Handler) enqueueCloudOperation(w http.ResponseWriter, r *http.Request, 
 		request.InstanceID = instanceID
 	}
 	operation := domain.CloudOperationRun{ID: "cloud-run-" + uuid.NewString(), Kind: kind,
-		Status: "queued", EnvironmentID: environmentID, InstanceID: instanceID,
+		Status: "queued", Phase: "queued", EnvironmentID: environmentID, InstanceID: instanceID,
 		CapacityTargetID: targetID, Request: request, CreatedAt: time.Now().UTC()}
 	if err := h.cloudOperations.CreateCloudOperation(r.Context(), operation); err != nil {
 		writeError(w, http.StatusUnprocessableEntity, err)

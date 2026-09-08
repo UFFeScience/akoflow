@@ -429,6 +429,28 @@ func TestCompletedTraceIncludesObservedTransferCost(t *testing.T) {
 	}
 }
 
+func TestObservedCloudCostIncludesIdleWindowAndPersistentDisk(t *testing.T) {
+	tasks := []domain.TaskExecution{
+		{CloudInstanceID: "instance-a", AllocatedResourceID: "cloud-a", StartedAt: 10, FinishedAt: 12, Cost: 2},
+		{CloudInstanceID: "instance-a", AllocatedResourceID: "cloud-a", StartedAt: 15, FinishedAt: 17, Cost: 2},
+	}
+	resources := []domain.Resource{{
+		ID:             "cloud-a",
+		PricePerSecond: 1,
+		StorageBytes:   10 << 30,
+		Metadata: map[string]any{
+			"diskPricePerGiBMonth": float64(730 * 3600 / 10),
+		},
+	}}
+
+	// Seven seconds of allocated compute cost seven units. The activities
+	// already account for four, leaving three idle units. The 10 GiB disk at
+	// the test rate contributes another seven units over the same window.
+	if cost := observedCloudIdleAndDiskCost(tasks, resources); cost != 10 {
+		t.Fatalf("cloud idle and disk cost=%v, want 10", cost)
+	}
+}
+
 func TestSupervisorMarksActivityFailedWhenStartIsRejected(t *testing.T) {
 	store := &executionStoreFake{}
 	activities := &activityControllerFake{startErr: fmt.Errorf("activity image is required for Kubernetes")}

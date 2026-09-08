@@ -996,8 +996,59 @@ func completedTrace(request ports.ExecutionRequest, tasks map[string]domain.Task
 	for _, transfer := range trace.Transfers {
 		trace.Executed.Cost += transfer.Cost
 	}
+	trace.Executed.Cost += observedCloudIdleAndDiskCost(trace.Tasks, request.Resources)
 	trace.Executed.MakespanSeconds = maxFloat(0, lastFinish-firstStart)
 	return trace
+}
+
+func observedCloudIdleAndDiskCost(tasks []domain.TaskExecution, resources []domain.Resource) float64 {
+	resourcesByID := indexResources(resources)
+	type instanceWindow struct {
+		first, last, taskCost float64
+		resource              domain.Resource
+	}
+	windows := map[string]instanceWindow{}
+	for _, task := range tasks {
+		if task.CloudInstanceID == "" || task.FinishedAt <= task.StartedAt {
+			continue
+		}
+		window := windows[task.CloudInstanceID]
+		if window.first == 0 || task.StartedAt < window.first {
+			window.first = task.StartedAt
+		}
+		if task.FinishedAt > window.last {
+			window.last = task.FinishedAt
+		}
+		window.taskCost += task.Cost
+		window.resource = resourcesByID[task.AllocatedResourceID]
+		if window.resource.ID == "" {
+			window.resource = resourcesByID[task.PlannedResourceID]
+		}
+		windows[task.CloudInstanceID] = window
+	}
+	total := 0.0
+	for _, window := range windows {
+		seconds := maxFloat(0, window.last-window.first)
+		compute := seconds * window.resource.PricePerSecond
+		idle := maxFloat(0, compute-window.taskCost)
+		diskGiB := float64(window.resource.StorageBytes) / float64(1<<30)
+		disk := diskGiB * metadataFloatValue(window.resource.Metadata, "diskPricePerGiBMonth") * seconds / (730 * 3600)
+		total += idle + disk
+	}
+	return total
+}
+
+func metadataFloatValue(values map[string]any, key string) float64 {
+	switch value := values[key].(type) {
+	case float64:
+		return value
+	case int:
+		return float64(value)
+	case int64:
+		return float64(value)
+	default:
+		return 0
+	}
 }
 func runningTrace(request ports.ExecutionRequest, tasks map[string]domain.TaskExecution, transfers []domain.DataTransfer) domain.ExecutionTrace {
 	result := make([]domain.TaskExecution, 0, len(tasks))

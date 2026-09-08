@@ -2,6 +2,10 @@ package transfer
 
 import (
 	"context"
+	"crypto/ed25519"
+	"crypto/rand"
+	"crypto/x509"
+	"encoding/pem"
 	"fmt"
 	"io"
 	"net/url"
@@ -13,6 +17,7 @@ import (
 
 	"github.com/UFFeScience/akoflow/internal/domain"
 	"github.com/UFFeScience/akoflow/internal/provider"
+	"golang.org/x/crypto/ssh"
 )
 
 // RsyncSSH uses ssh/rsync installed on the gateway. Endpoint URI is
@@ -225,15 +230,17 @@ func (RsyncSSH) TransferRoute(ctx context.Context, strategy domain.TransferStrat
 		return 0, nil
 	case domain.TransferDirectRuntime:
 		identity := destination.Configuration["directIdentityFile"]
-		if identity == "" {
-			return 0, fmt.Errorf("direct runtime route has no short-lived destination credential")
+		knownHosts := destination.Configuration["directKnownHostsFile"]
+		cleanup := func() {}
+		if identity == "" || knownHosts == "" {
+			identity, knownHosts, cleanup, err = prepareDirectCredential(ctx, source, destination)
+			if err != nil {
+				return 0, err
+			}
+			defer cleanup()
 		}
 		remoteSSH := []string{"ssh", "-i", shell(identity), "-o", "BatchMode=yes", "-o", "IdentitiesOnly=yes"}
-		if knownHosts := destination.Configuration["directKnownHostsFile"]; knownHosts != "" {
-			remoteSSH = append(remoteSSH, "-o", shell("UserKnownHostsFile="+knownHosts), "-o", "StrictHostKeyChecking=yes")
-		} else {
-			return 0, fmt.Errorf("direct runtime route has no restricted destination host key file")
-		}
+		remoteSSH = append(remoteSSH, "-o", shell("UserKnownHostsFile="+knownHosts), "-o", "StrictHostKeyChecking=yes")
 		if uri, parseErr := url.Parse(destination.URI); parseErr == nil && uri.Port() != "" {
 			remoteSSH = append(remoteSSH, "-p", shell(uri.Port()))
 		}
@@ -254,6 +261,78 @@ func (RsyncSSH) TransferRoute(ctx context.Context, strategy domain.TransferStrat
 	default:
 		return 0, fmt.Errorf("SSH connector does not implement %q route", strategy)
 	}
+}
+
+func prepareDirectCredential(ctx context.Context, source, destination domain.TransferEndpoint) (string, string, func(), error) {
+	publicKey, privateKey, err := ephemeralSSHKey()
+	if err != nil {
+		return "", "", func() {}, err
+	}
+	token := fmt.Sprintf("akoflow-transfer-%d", time.Now().UnixNano())
+	identity := "/tmp/" + token
+	knownHosts := identity + ".known_hosts"
+	destinationHost, _, err := sshTarget(destination, "")
+	if err != nil {
+		return "", "", func() {}, err
+	}
+	sourceHost, _, err := sshTarget(source, "")
+	if err != nil {
+		return "", "", func() {}, err
+	}
+	authorizedLine := "no-agent-forwarding,no-port-forwarding,no-X11-forwarding,no-pty " + strings.TrimSpace(string(publicKey)) + " " + token
+	installDestination := "umask 077; mkdir -p ~/.ssh; touch ~/.ssh/authorized_keys; printf '%s\\n' " + shell(authorizedLine) + " >> ~/.ssh/authorized_keys"
+	if output, installErr := exec.CommandContext(ctx, "ssh", append(sshArgs(destination), destinationHost, installDestination)...).CombinedOutput(); installErr != nil {
+		return "", "", func() {}, fmt.Errorf("install temporary destination credential: %w: %s", installErr, strings.TrimSpace(string(output)))
+	}
+	cleanup := func() {
+		cleanupCtx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+		defer cancel()
+		removeDestination := "grep -v -- " + shell(token) + " ~/.ssh/authorized_keys > ~/.ssh/authorized_keys.akoflow && mv ~/.ssh/authorized_keys.akoflow ~/.ssh/authorized_keys"
+		_, _ = exec.CommandContext(cleanupCtx, "ssh", append(sshArgs(destination), destinationHost, removeDestination)...).CombinedOutput()
+		_, _ = exec.CommandContext(cleanupCtx, "ssh", append(sshArgs(source), sourceHost, "rm -f -- "+shell(identity)+" "+shell(knownHosts))...).CombinedOutput()
+	}
+	installSource := "umask 077; cat > " + shell(identity)
+	if err := runSSHInput(ctx, source, sourceHost, installSource, privateKey); err != nil {
+		cleanup()
+		return "", "", func() {}, fmt.Errorf("install temporary source credential: %w", err)
+	}
+	destinationURL, _ := url.Parse(destination.URI)
+	port := destinationURL.Port()
+	if port == "" {
+		port = "22"
+	}
+	scan := "ssh-keyscan -p " + shell(port) + " -- " + shell(destinationURL.Hostname()) + " > " + shell(knownHosts)
+	if output, scanErr := exec.CommandContext(ctx, "ssh", append(sshArgs(source), sourceHost, scan)...).CombinedOutput(); scanErr != nil {
+		cleanup()
+		return "", "", func() {}, fmt.Errorf("capture direct destination host key: %w: %s", scanErr, strings.TrimSpace(string(output)))
+	}
+	return identity, knownHosts, cleanup, nil
+}
+
+func ephemeralSSHKey() ([]byte, []byte, error) {
+	public, private, err := ed25519.GenerateKey(rand.Reader)
+	if err != nil {
+		return nil, nil, fmt.Errorf("generate temporary transfer key: %w", err)
+	}
+	sshPublic, err := ssh.NewPublicKey(public)
+	if err != nil {
+		return nil, nil, fmt.Errorf("encode temporary transfer public key: %w", err)
+	}
+	encodedPrivate, err := x509.MarshalPKCS8PrivateKey(private)
+	if err != nil {
+		return nil, nil, fmt.Errorf("encode temporary transfer private key: %w", err)
+	}
+	return ssh.MarshalAuthorizedKey(sshPublic), pem.EncodeToMemory(&pem.Block{Type: "PRIVATE KEY", Bytes: encodedPrivate}), nil
+}
+
+func runSSHInput(ctx context.Context, endpoint domain.TransferEndpoint, host, command string, input []byte) error {
+	cmd := exec.CommandContext(ctx, "ssh", append(sshArgs(endpoint), host, command)...)
+	cmd.Stdin = strings.NewReader(string(input))
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		return fmt.Errorf("ssh command: %w: %s", err, strings.TrimSpace(string(output)))
+	}
+	return nil
 }
 
 type readCloser struct {

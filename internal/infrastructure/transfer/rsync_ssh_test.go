@@ -135,8 +135,8 @@ func TestRsyncSSHRuntimeRoutesRequireConcreteAndRestrictedCredentials(t *testing
 	}
 	destination.CloudInstanceID = "instance-b"
 	destination.URI = "ssh://researcher@target.test/scratch/project"
-	if _, err := connector.TransferRoute(context.Background(), domain.TransferDirectRuntime, source, destination, "source", "target.partial", 0); err == nil || !strings.Contains(err.Error(), "short-lived") {
-		t.Fatalf("direct route accepted without credential: %v", err)
+	if networkBytes, err := connector.TransferRoute(context.Background(), domain.TransferDirectRuntime, source, destination, "source", "target.partial", 0); err != nil || networkBytes != -1 {
+		t.Fatalf("automatic direct route bytes=%d err=%v", networkBytes, err)
 	}
 	destination.Configuration["directIdentityFile"] = "/run/akoflow/ephemeral-key"
 	destination.Configuration["directKnownHostsFile"] = "/run/akoflow/known-hosts"

@@ -64,21 +64,26 @@ func (m Materializer) connector(endpoint domain.TransferEndpoint) (ports.Transfe
 	return nil, fmt.Errorf("no connector for endpoint %q", endpoint.URI)
 }
 func (m Materializer) Materialize(ctx context.Context, plan domain.DataTransferPlan, target domain.ArtifactMaterialization) (domain.ArtifactMaterialization, domain.DataTransferRun, error) {
+	run := domain.DataTransferRun{
+		ID: plan.ID, PlanID: plan.ID, ExecutionRunID: plan.ExecutionRunID,
+		ActivityID: plan.ConsumerActivityID, Strategy: plan.Strategy, Route: plan.Route,
+		Status: domain.TransferPlanned,
+	}
 	source, err := m.endpoint(ctx, plan.Source)
 	if err != nil {
-		return target, domain.DataTransferRun{}, err
+		return failed(target, run, err)
 	}
 	destination, err := m.endpoint(ctx, plan.Destination)
 	if err != nil {
-		return target, domain.DataTransferRun{}, err
+		return failed(target, run, err)
 	}
 	sc, err := m.connector(source)
 	if err != nil {
-		return target, domain.DataTransferRun{}, err
+		return failed(target, run, err)
 	}
 	dc, err := m.connector(destination)
 	if err != nil {
-		return target, domain.DataTransferRun{}, err
+		return failed(target, run, err)
 	}
 	strategy := plan.Strategy
 	route := plan.Route
@@ -92,22 +97,24 @@ func (m Materializer) Materialize(ctx context.Context, plan domain.DataTransferP
 	// a destination agent; never silently turn a registry/HTTP reference into a
 	// pull during Slurm submission.
 	if strategy == domain.TransferDestinationPull {
-		return failed(target, domain.DataTransferRun{ID: plan.ID, PlanID: plan.ID, Strategy: strategy, Route: route, Status: domain.TransferPlanned}, fmt.Errorf("destination-pull requires a destination transfer agent"))
+		run.Strategy, run.Route = strategy, route
+		return failed(target, run, fmt.Errorf("destination-pull requires a destination transfer agent"))
 	}
 	source = withTransferSession(source, plan.ID)
 	destination = withTransferSession(destination, plan.ID)
 	if err := beginTransferSession(ctx, sc, source); err != nil {
-		return failed(target, domain.DataTransferRun{ID: plan.ID, PlanID: plan.ID, Strategy: strategy, Route: route}, err)
+		run.Strategy, run.Route = strategy, route
+		return failed(target, run, err)
 	}
 	defer endTransferSession(sc, source)
 	if source.URI != destination.URI {
 		if err := beginTransferSession(ctx, dc, destination); err != nil {
-			return failed(target, domain.DataTransferRun{ID: plan.ID, PlanID: plan.ID, Strategy: strategy, Route: route}, err)
+			run.Strategy, run.Route = strategy, route
+			return failed(target, run, err)
 		}
 		defer endTransferSession(dc, destination)
 	}
-	run := domain.DataTransferRun{ID: plan.ID, PlanID: plan.ID, Strategy: strategy,
-		Route: route, Status: domain.TransferRunning, StartedAt: unixNow()}
+	run.Strategy, run.Route, run.Status, run.StartedAt = strategy, route, domain.TransferRunning, unixNow()
 	chunkRuns, err := m.persistedChunks(ctx, run.ID)
 	if err != nil {
 		return failed(target, run, err)

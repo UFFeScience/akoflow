@@ -62,6 +62,9 @@ func Bootstrap(ctx context.Context, db *sql.DB) error {
 	if err := migrateCloudExecutionDataPlane(ctx, db); err != nil {
 		return err
 	}
+	if err := migrateTransferRunOwnership(ctx, db); err != nil {
+		return err
+	}
 	if err := Validate(ctx, db); err != nil {
 		return fmt.Errorf("%w; remove the existing database file and recreate it: %v", ErrIncompatibleSchema, err)
 	}
@@ -83,6 +86,7 @@ const schemaBeforeCloudExecutionTarget = "e515cbbfe701482f1c952431134d34359284f4
 const schemaBeforeCloudCatalogSnapshots = "c9f8b4a4d2d2fd5bfecc4f289d0e68657f608d3b7a75ba53ee4e946dcf251f0b"
 const schemaBeforeCloudOperationRuns = "f96a82d2abb3977da8df5907bec5a3b1b09e5a852d385d1e3daa6c019d5ab75c"
 const schemaBeforeCloudExecutionDataPlane = "45527a1e824b489f357e154689780cc164bc6cbbdd46905eeaec774303e5eed1"
+const schemaBeforeTransferRunOwnership = "e4e6a07b937bdef39d2056c2606db45762576553351c623e1d9fccd1b2b1de16"
 
 func migrateUserPreferences(ctx context.Context, db *sql.DB) error {
 	var checksum string
@@ -508,6 +512,8 @@ func migrateCloudExecutionDataPlane(ctx context.Context, db *sql.DB) error {
 		`ALTER TABLE transfer_runs ADD COLUMN logical_bytes INTEGER NOT NULL DEFAULT 0`,
 		`ALTER TABLE transfer_runs ADD COLUMN network_bytes INTEGER NOT NULL DEFAULT 0`,
 		`ALTER TABLE transfer_runs ADD COLUMN route TEXT NOT NULL DEFAULT '{}'`,
+		`ALTER TABLE transfer_runs ADD COLUMN execution_run_id TEXT NOT NULL DEFAULT ''`,
+		`ALTER TABLE transfer_runs ADD COLUMN activity_id TEXT NOT NULL DEFAULT ''`,
 		`CREATE TABLE transfer_chunk_runs (
 			transfer_run_id TEXT NOT NULL REFERENCES transfer_runs(id) ON DELETE CASCADE, chunk_index INTEGER NOT NULL,
 			offset_bytes INTEGER NOT NULL, size_bytes INTEGER NOT NULL, digest TEXT NOT NULL DEFAULT '',
@@ -527,6 +533,33 @@ func migrateCloudExecutionDataPlane(ctx context.Context, db *sql.DB) error {
 	}
 	if _, err := tx.ExecContext(ctx, `UPDATE schema_metadata SET checksum=?, applied_at=?`, schemaChecksum(), time.Now().UTC()); err != nil {
 		return fmt.Errorf("record cloud execution data plane migration: %w", err)
+	}
+	return tx.Commit()
+}
+
+func migrateTransferRunOwnership(ctx context.Context, db *sql.DB) error {
+	var checksum string
+	if err := db.QueryRowContext(ctx, `SELECT checksum FROM schema_metadata LIMIT 1`).Scan(&checksum); err != nil || checksum == schemaChecksum() {
+		return nil
+	}
+	if checksum != schemaBeforeTransferRunOwnership {
+		return nil
+	}
+	tx, err := db.BeginTx(ctx, nil)
+	if err != nil {
+		return fmt.Errorf("begin transfer run ownership migration: %w", err)
+	}
+	defer tx.Rollback()
+	for _, statement := range []string{
+		`ALTER TABLE transfer_runs ADD COLUMN execution_run_id TEXT NOT NULL DEFAULT ''`,
+		`ALTER TABLE transfer_runs ADD COLUMN activity_id TEXT NOT NULL DEFAULT ''`,
+	} {
+		if _, err := tx.ExecContext(ctx, statement); err != nil {
+			return fmt.Errorf("apply transfer run ownership migration: %w", err)
+		}
+	}
+	if _, err := tx.ExecContext(ctx, `UPDATE schema_metadata SET checksum=?, applied_at=?`, schemaChecksum(), time.Now().UTC()); err != nil {
+		return fmt.Errorf("record transfer run ownership migration: %w", err)
 	}
 	return tx.Commit()
 }

@@ -418,7 +418,9 @@ func (s *Supervisor) addWorkspacePreparation(
 	for _, group := range groups {
 		requirement.WorkspaceTransfers = append(requirement.WorkspaceTransfers, domain.DataTransferPlan{
 			ID:                 fmt.Sprintf("transfer-workspace-%s-%s-%d", request.Run.ID, activityID, groupIndex),
+			ExecutionRunID:     request.Run.ID,
 			ProducerActivityID: group.producerActivityID,
+			ConsumerActivityID: activityID,
 			Source:             group.location, Destination: destination, Blobs: group.blobs,
 		})
 		groupIndex++

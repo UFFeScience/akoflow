@@ -266,7 +266,7 @@ func TestCoordinatorPreparesArtifactAndWorkspace(t *testing.T) {
 	requirement := domain.PreparationRequirement{
 		Artifact:          &domain.ArtifactMaterialization{ID: "artifact", Digest: artifactDigest},
 		ArtifactTransfer:  &domain.DataTransferPlan{ID: "artifact-transfer", Source: domain.TransferLocation{URI: "file://" + source, Path: "artifact.sif"}, Destination: domain.TransferLocation{URI: "file://" + destination}, Blobs: []domain.BlobDescriptor{{Digest: artifactDigest, SizeBytes: int64(len(artifactContent))}}},
-		Workspace:         &domain.WorkspaceMaterialization{ID: "workspace", Missing: []domain.BlobDescriptor{{Digest: workspaceDigest, Path: "input.txt", SizeBytes: int64(len(workspaceContent))}}},
+		Workspace:         &domain.WorkspaceMaterialization{ID: "workspace", RevisionID: "run", Missing: []domain.BlobDescriptor{{Digest: workspaceDigest, Path: "input.txt", SizeBytes: int64(len(workspaceContent))}}},
 		WorkspaceTransfer: &domain.DataTransferPlan{ID: "workspace-transfer", Source: domain.TransferLocation{URI: "file://" + source}, Destination: domain.TransferLocation{URI: "file://" + destination, Path: "workspace"}, Blobs: []domain.BlobDescriptor{{Digest: workspaceDigest, Path: "input.txt", SizeBytes: int64(len(workspaceContent))}}},
 	}
 	gate, err := coordinator.Prepare(context.Background(), "activity", requirement)
@@ -276,8 +276,11 @@ func TestCoordinatorPreparesArtifactAndWorkspace(t *testing.T) {
 	if err = gate.Ready(); err != nil {
 		t.Fatalf("gate.Ready() = %v", err)
 	}
-	if len(gate.TransferRuns) != 2 || len(catalog.runs) != 3 || len(catalog.materializations) != 2 {
+	if len(gate.TransferRuns) != 2 || len(catalog.runs) != 4 || len(catalog.materializations) != 2 {
 		t.Fatalf("observations = gate:%d runs:%d materializations:%d", len(gate.TransferRuns), len(catalog.runs), len(catalog.materializations))
+	}
+	if gate.TransferRuns[0].ExecutionRunID != "" || gate.TransferRuns[1].ExecutionRunID != "run" || gate.TransferRuns[1].ActivityID != "activity" {
+		t.Fatalf("transfer ownership = %#v", gate.TransferRuns)
 	}
 }
 

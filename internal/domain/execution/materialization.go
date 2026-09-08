@@ -145,7 +145,9 @@ type TransferChunkRun struct {
 }
 type DataTransferPlan struct {
 	ID                 string           `json:"id"`
+	ExecutionRunID     string           `json:"executionRunId,omitempty"`
 	ProducerActivityID string           `json:"producerActivityId,omitempty"`
+	ConsumerActivityID string           `json:"consumerActivityId,omitempty"`
 	Strategy           TransferStrategy `json:"strategy,omitempty"`
 	Source             TransferLocation `json:"source"`
 	Destination        TransferLocation `json:"destination"`
@@ -157,6 +159,8 @@ type DataTransferPlan struct {
 type DataTransferRun struct {
 	ID               string           `json:"id"`
 	PlanID           string           `json:"planId"`
+	ExecutionRunID   string           `json:"executionRunId,omitempty"`
+	ActivityID       string           `json:"activityId,omitempty"`
 	Strategy         TransferStrategy `json:"strategy"`
 	Status           TransferStatus   `json:"status"`
 	VerifiedBlobs    []string         `json:"verifiedBlobs,omitempty"`

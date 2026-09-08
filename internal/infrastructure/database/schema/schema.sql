@@ -782,7 +782,8 @@ CREATE TABLE artifact_materializations (
     verified_digest TEXT NOT NULL DEFAULT '', updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 CREATE TABLE transfer_runs (
-    id TEXT PRIMARY KEY, plan_id TEXT NOT NULL, strategy TEXT NOT NULL, status TEXT NOT NULL,
+    id TEXT PRIMARY KEY, plan_id TEXT NOT NULL, execution_run_id TEXT NOT NULL DEFAULT '',
+    activity_id TEXT NOT NULL DEFAULT '', strategy TEXT NOT NULL, status TEXT NOT NULL,
     verified_blobs TEXT NOT NULL DEFAULT '[]', completed_chunks TEXT NOT NULL DEFAULT '[]',
     started_at REAL NOT NULL DEFAULT 0, finished_at REAL NOT NULL DEFAULT 0,
     transferred_bytes INTEGER NOT NULL DEFAULT 0, logical_bytes INTEGER NOT NULL DEFAULT 0,

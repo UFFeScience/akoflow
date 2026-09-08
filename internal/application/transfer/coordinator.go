@@ -20,7 +20,7 @@ type Coordinator struct {
 	Catalog      MaterializationCatalog
 }
 
-func (c Coordinator) Prepare(ctx context.Context, _ string, requirement domain.PreparationRequirement) (*domain.PreparationGate, error) {
+func (c Coordinator) Prepare(ctx context.Context, activityID string, requirement domain.PreparationRequirement) (*domain.PreparationGate, error) {
 	transferRuns := make([]domain.DataTransferRun, 0, 2)
 	if requirement.Artifact != nil {
 		if requirement.ArtifactTransfer == nil {
@@ -31,14 +31,17 @@ func (c Coordinator) Prepare(ctx context.Context, _ string, requirement domain.P
 		if err := c.save(ctx, initial); err != nil {
 			return nil, fmt.Errorf("save artifact materialization: %w", err)
 		}
+		plan := *requirement.ArtifactTransfer
+		plan.ExecutionRunID = requirement.Artifact.RunID
+		plan.ConsumerActivityID = activityID
 		if err := c.saveTransfer(ctx, domain.DataTransferRun{
-			ID: requirement.ArtifactTransfer.ID, PlanID: requirement.ArtifactTransfer.ID,
+			ID: plan.ID, PlanID: plan.ID, ExecutionRunID: plan.ExecutionRunID, ActivityID: activityID,
 			Strategy: requirement.ArtifactTransfer.Strategy, Status: domain.TransferRunning,
 			StartedAt: float64(time.Now().UnixNano()) / float64(time.Second),
 		}); err != nil {
 			return nil, fmt.Errorf("start artifact transfer log: %w", err)
 		}
-		result, transferRun, err := c.Materializer.Materialize(ctx, *requirement.ArtifactTransfer, initial)
+		result, transferRun, err := c.Materializer.Materialize(ctx, plan, initial)
 		if saveErr := c.saveTransfer(ctx, transferRun); saveErr != nil {
 			return nil, fmt.Errorf("save artifact transfer: %w", saveErr)
 		}
@@ -69,7 +72,21 @@ func (c Coordinator) Prepare(ctx context.Context, _ string, requirement domain.P
 			}
 		}
 		verified := make([]string, 0, len(requirement.Workspace.Missing))
-		for _, plan := range plans {
+		for _, originalPlan := range plans {
+			plan := originalPlan
+			if plan.ExecutionRunID == "" {
+				plan.ExecutionRunID = requirement.Workspace.RevisionID
+			}
+			if plan.ConsumerActivityID == "" {
+				plan.ConsumerActivityID = activityID
+			}
+			if err := c.saveTransfer(ctx, domain.DataTransferRun{
+				ID: plan.ID, PlanID: plan.ID, ExecutionRunID: plan.ExecutionRunID,
+				ActivityID: plan.ConsumerActivityID, Strategy: plan.Strategy,
+				Status: domain.TransferRunning, StartedAt: float64(time.Now().UnixNano()) / float64(time.Second),
+			}); err != nil {
+				return nil, fmt.Errorf("start workspace transfer log: %w", err)
+			}
 			result, run, err := c.Materializer.Materialize(ctx, plan, domain.ArtifactMaterialization{ID: requirement.Workspace.ID, Digest: "workspace"})
 			if saveErr := c.saveTransfer(ctx, run); saveErr != nil {
 				return nil, fmt.Errorf("save workspace transfer: %w", saveErr)

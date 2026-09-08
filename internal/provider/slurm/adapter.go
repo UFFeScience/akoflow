@@ -217,11 +217,11 @@ func slurmArtifacts(handle domain.ActivityHandle, values map[string]string) *dom
 		if err != nil {
 			continue
 		}
-		size, err := strconv.ParseInt(parts[1], 10, 64)
+		size, err := strconv.ParseInt(strings.TrimSpace(parts[1]), 10, 64)
 		if err != nil {
 			continue
 		}
-		manifest.Files = append(manifest.Files, domain.ArtifactObservation{Path: string(path), Change: domain.ArtifactCreated, SizeBytes: size, Checksum: "sha256:" + parts[2]})
+		manifest.Files = append(manifest.Files, domain.ArtifactObservation{Path: string(path), Change: domain.ArtifactCreated, SizeBytes: size, Checksum: "sha256:" + strings.TrimSpace(parts[2])})
 		manifest.Summary.CreatedFiles++
 		manifest.Summary.OutputBytes += size
 	}

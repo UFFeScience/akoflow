@@ -209,7 +209,7 @@ func (r *Repository) ListTasks(ctx context.Context, runID string) ([]domain.Task
 func (r *Repository) ListTransfers(ctx context.Context, runID string) ([]domain.DataTransfer, error) {
 	rows, err := r.db.QueryContext(ctx, `SELECT id, execution_run_id,
 		COALESCE(producer_activity_id, ''), COALESCE(consumer_activity_id, ''), source_resource_id,
-		target_resource_id, bytes, started_at, finished_at, duration_seconds, cost
+		target_resource_id, bytes, started_at, finished_at, duration_seconds, cost, metadata
 		FROM data_transfer_observations WHERE execution_run_id=?
 		ORDER BY started_at, producer_activity_id, consumer_activity_id`, runID)
 	if err != nil {
@@ -219,12 +219,18 @@ func (r *Repository) ListTransfers(ctx context.Context, runID string) ([]domain.
 	transfers := make([]domain.DataTransfer, 0)
 	for rows.Next() {
 		var transfer domain.DataTransfer
+		var metadata []byte
 		if err := rows.Scan(&transfer.ID, &transfer.ExecutionRunID,
 			&transfer.ProducerActivityID, &transfer.ConsumerActivityID,
 			&transfer.SourceResourceID, &transfer.TargetResourceID, &transfer.Bytes,
 			&transfer.StartedAt, &transfer.FinishedAt, &transfer.DurationSeconds,
-			&transfer.Cost); err != nil {
+			&transfer.Cost, &metadata); err != nil {
 			return nil, err
+		}
+		if len(metadata) > 0 {
+			if err := json.Unmarshal(metadata, &transfer); err != nil {
+				return nil, fmt.Errorf("decode transfer route metadata: %w", err)
+			}
 		}
 		transfers = append(transfers, transfer)
 	}
@@ -379,18 +385,25 @@ func (r *Repository) CompleteRun(ctx context.Context, trace domain.ExecutionTrac
 		}
 	}
 	for _, transfer := range trace.Transfers {
+		metadata, err := json.Marshal(map[string]any{
+			"strategy": transfer.Strategy, "route": transfer.Route,
+			"logicalBytes": transfer.LogicalBytes, "networkBytes": transfer.NetworkBytes,
+		})
+		if err != nil {
+			return err
+		}
 		if _, err := tx.ExecContext(ctx, `INSERT INTO data_transfer_observations (
 			id, execution_run_id, producer_activity_id, consumer_activity_id,
 			source_resource_id, target_resource_id, bytes, status, started_at,
-			finished_at, duration_seconds, cost
-		) VALUES (?, ?, ?, ?, ?, ?, ?, 'completed', ?, ?, ?, ?)
+			finished_at, duration_seconds, cost, metadata
+		) VALUES (?, ?, ?, ?, ?, ?, ?, 'completed', ?, ?, ?, ?, ?)
 		ON CONFLICT(id) DO UPDATE SET status='completed', started_at=excluded.started_at,
 			finished_at=excluded.finished_at, duration_seconds=excluded.duration_seconds,
-			cost=excluded.cost`, transfer.ID,
+			cost=excluded.cost, metadata=excluded.metadata`, transfer.ID,
 			trace.RunID, nullableString(transfer.ProducerActivityID), nullableString(transfer.ConsumerActivityID),
 			transfer.SourceResourceID, transfer.TargetResourceID, transfer.Bytes,
 			transfer.StartedAt, transfer.FinishedAt, transfer.DurationSeconds,
-			transfer.Cost); err != nil {
+			transfer.Cost, metadata); err != nil {
 			return err
 		}
 	}

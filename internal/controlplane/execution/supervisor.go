@@ -755,6 +755,10 @@ func transferObservations(
 			FinishedAt:         observation.FinishedAt,
 			DurationSeconds:    maxFloat(0, observation.FinishedAt-observation.StartedAt),
 			Cost:               transferPrice(topology, sourceResourceID, targetResourceID) * float64(bytes),
+			Strategy:           observation.Strategy,
+			Route:              observation.Route,
+			LogicalBytes:       observation.LogicalBytes,
+			NetworkBytes:       observation.NetworkBytes,
 		})
 	}
 	return transfers

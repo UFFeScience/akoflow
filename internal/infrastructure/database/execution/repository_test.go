@@ -97,13 +97,17 @@ func TestRepositoryOwnsCompleteExecutionAggregate(t *testing.T) {
 			ConsumerActivityID: "activity", SourceResourceID: "resource",
 			TargetResourceID: "resource", Bytes: 1024, StartedAt: 1,
 			FinishedAt: 2, DurationSeconds: 1, Cost: 0.25,
+			Strategy: domain.TransferDirectRuntime, LogicalBytes: 2048, NetworkBytes: 1024,
+			Route: domain.TransferRoute{SourceAddress: "10.0.0.1", TargetAddress: "10.0.0.2"},
 		}},
 	}
 	if err := repository.CompleteRun(ctx, trace); err != nil {
 		t.Fatal(err)
 	}
 	transfers, err := repository.ListTransfers(ctx, "run")
-	if err != nil || len(transfers) != 1 || transfers[0].Bytes != 1024 || transfers[0].DurationSeconds != 1 {
+	if err != nil || len(transfers) != 1 || transfers[0].Bytes != 1024 || transfers[0].DurationSeconds != 1 ||
+		transfers[0].Strategy != domain.TransferDirectRuntime || transfers[0].LogicalBytes != 2048 ||
+		transfers[0].Route.TargetAddress != "10.0.0.2" {
 		t.Fatalf("transfers=%+v err=%v", transfers, err)
 	}
 	var domainEvents, lifecycleEvents, outboxDeliveries int

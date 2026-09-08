@@ -56,6 +56,9 @@ func sameObject(source, destination domain.TransferEndpoint) bool {
 }
 
 func endpointAddress(endpoint domain.TransferEndpoint) string {
+	if address := strings.TrimSpace(endpoint.Configuration["directAddress"]); address != "" {
+		return address
+	}
 	u, err := url.Parse(endpoint.URI)
 	if err != nil {
 		return ""

@@ -76,6 +76,17 @@ func TestStrategyResolverCoversHybridCloudAcceptanceRoute(t *testing.T) {
 	}
 }
 
+func TestStrategyResolverReportsPrivateAddressForDirectCloudRoute(t *testing.T) {
+	source := endpoint("ssh://user@203.0.113.10/work", "cloud-a", "vpc")
+	destination := endpoint("ssh://user@203.0.113.11/work", "cloud-b", "vpc")
+	source.Configuration["directAddress"] = "10.0.0.10"
+	destination.Configuration["directAddress"] = "10.0.0.11"
+	route := (StrategyResolver{}).Resolve(source, destination)
+	if route.Strategy != domain.TransferDirectRuntime || route.SourceAddress != "10.0.0.10" || route.TargetAddress != "10.0.0.11" {
+		t.Fatalf("route=%#v", route)
+	}
+}
+
 func endpoint(uri, instance, network string) domain.TransferEndpoint {
 	return domain.TransferEndpoint{URI: uri, CloudInstanceID: instance, NetworkDomain: network, Configuration: map[string]string{}}
 }

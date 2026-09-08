@@ -144,3 +144,10 @@ func TestRsyncSSHRuntimeRoutesRequireConcreteAndRestrictedCredentials(t *testing
 		t.Fatalf("direct route bytes=%d err=%v", networkBytes, err)
 	}
 }
+
+func TestDestinationUserHostPreservesUserForPrivateRoute(t *testing.T) {
+	endpoint := sshTestEndpoint()
+	if got := destinationUserHost(endpoint, "10.0.0.7"); got != "researcher@10.0.0.7" {
+		t.Fatalf("host=%q", got)
+	}
+}

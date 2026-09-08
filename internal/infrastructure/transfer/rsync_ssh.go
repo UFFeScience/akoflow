@@ -229,6 +229,9 @@ func (RsyncSSH) TransferRoute(ctx context.Context, strategy domain.TransferStrat
 		}
 		return 0, nil
 	case domain.TransferDirectRuntime:
+		if address := strings.TrimSpace(destination.Configuration["directAddress"]); address != "" {
+			destinationHost = destinationUserHost(destination, address)
+		}
 		identity := destination.Configuration["directIdentityFile"]
 		knownHosts := destination.Configuration["directKnownHostsFile"]
 		cleanup := func() {}
@@ -261,6 +264,14 @@ func (RsyncSSH) TransferRoute(ctx context.Context, strategy domain.TransferStrat
 	default:
 		return 0, fmt.Errorf("SSH connector does not implement %q route", strategy)
 	}
+}
+
+func destinationUserHost(endpoint domain.TransferEndpoint, address string) string {
+	u, err := url.Parse(endpoint.URI)
+	if err == nil && u.User != nil && u.User.Username() != "" {
+		return u.User.Username() + "@" + address
+	}
+	return address
 }
 
 func prepareDirectCredential(ctx context.Context, source, destination domain.TransferEndpoint) (string, string, func(), error) {
@@ -297,11 +308,15 @@ func prepareDirectCredential(ctx context.Context, source, destination domain.Tra
 		return "", "", func() {}, fmt.Errorf("install temporary source credential: %w", err)
 	}
 	destinationURL, _ := url.Parse(destination.URI)
+	directAddress := strings.TrimSpace(destination.Configuration["directAddress"])
+	if directAddress == "" {
+		directAddress = destinationURL.Hostname()
+	}
 	port := destinationURL.Port()
 	if port == "" {
 		port = "22"
 	}
-	scan := "ssh-keyscan -p " + shell(port) + " -- " + shell(destinationURL.Hostname()) + " > " + shell(knownHosts)
+	scan := "ssh-keyscan -p " + shell(port) + " -- " + shell(directAddress) + " > " + shell(knownHosts)
 	if output, scanErr := exec.CommandContext(ctx, "ssh", append(sshArgs(source), sourceHost, scan)...).CombinedOutput(); scanErr != nil {
 		cleanup()
 		return "", "", func() {}, fmt.Errorf("capture direct destination host key: %w: %s", scanErr, strings.TrimSpace(string(output)))

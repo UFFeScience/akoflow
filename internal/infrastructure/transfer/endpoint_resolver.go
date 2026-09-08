@@ -100,6 +100,9 @@ func (resolver EnvironmentEndpointResolver) ResolveTransferEndpoint(ctx context.
 		if key := strings.TrimPrefix(connection.CredentialRef, "file:"); key != "" {
 			query.Set("identityFile", key)
 		}
+		if value, _ := connection.Configuration["directAddress"].(string); value != "" {
+			endpoint.Configuration["directAddress"] = value
+		}
 		remote.RawQuery = query.Encode()
 		endpoint.URI = remote.String()
 	default:
@@ -134,9 +137,9 @@ func (resolver EnvironmentEndpointResolver) cloudConnection(
 	if selected == nil {
 		return nil, fmt.Errorf("allocated cloud instance %q is not ready for capacity target %q", cloudInstanceID, capacityTargetID)
 	}
-	address := selected.PrivateAddress
+	address := selected.PublicAddress
 	if strings.TrimSpace(address) == "" {
-		address = selected.PublicAddress
+		address = selected.PrivateAddress
 	}
 	networkDomain, _ := selected.TerraformOutput["network_domain"].(string)
 	if networkDomain == "" {
@@ -146,6 +149,10 @@ func (resolver EnvironmentEndpointResolver) cloudConnection(
 		ID: connection.ID + "-" + selected.ID, EnvironmentID: connection.EnvironmentID,
 		Name: selected.Name, Type: domain.ConnectionSSH, Endpoint: address,
 		Username: selected.SSHUsername, CredentialRef: selected.SSHCredentialRef,
-		Configuration: map[string]any{"port": 22, "acceptNewHostKey": true, "hostKeyAlias": selected.ID, "networkDomain": networkDomain},
+		Configuration: map[string]any{
+			"port": 22, "acceptNewHostKey": true,
+			"hostKeyAlias": selected.ID, "networkDomain": networkDomain,
+			"directAddress": selected.PrivateAddress,
+		},
 	}, nil
 }

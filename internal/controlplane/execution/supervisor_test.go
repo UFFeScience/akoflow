@@ -294,14 +294,17 @@ func TestTransferObservationsPreserveDirectWorkspaceRoute(t *testing.T) {
 		ID: "workspace-plan", ProducerActivityID: "k6",
 		Source: domain.TransferLocation{ResourceID: "source"},
 	}}}
+	topology := domain.NetworkTopology{Links: []domain.NetworkLink{{
+		SourceResourceID: "source", TargetResourceID: "target", PricePerByte: 0.5,
+	}}}
 	transfers := transferObservations("run", "k7", "target", []string{"k6"}, requirement, []domain.DataTransferRun{{
 		ID: "transfer", PlanID: "workspace-plan", TransferredBytes: 42, StartedAt: 5, FinishedAt: 8,
-	}})
+	}}, topology)
 	if len(transfers) != 1 {
 		t.Fatalf("transfers=%+v", transfers)
 	}
 	got := transfers[0]
-	if got.ProducerActivityID != "k6" || got.ConsumerActivityID != "k7" || got.SourceResourceID != "source" || got.TargetResourceID != "target" || got.DurationSeconds != 3 || got.Bytes != 42 {
+	if got.ProducerActivityID != "k6" || got.ConsumerActivityID != "k7" || got.SourceResourceID != "source" || got.TargetResourceID != "target" || got.DurationSeconds != 3 || got.Bytes != 42 || got.Cost != 21 {
 		t.Fatalf("unexpected transfer observation: %+v", got)
 	}
 }
@@ -399,6 +402,16 @@ func TestCompletedTaskSeparatesContainerOverheadFromCompute(t *testing.T) {
 	})
 	if task.QueueSeconds != 3 || task.OverheadSeconds != 2.5 || task.RuntimeSeconds != 5.5 {
 		t.Fatalf("timing=%+v", task)
+	}
+}
+
+func TestCompletedTaskAccountsForObservedRuntimeCost(t *testing.T) {
+	task := domain.TaskExecution{
+		Metadata: map[string]any{"pricePerSecond": 0.25},
+	}
+	completeTask(&task, domain.ActivityHandle{StartedAt: 10, FinishedAt: 14})
+	if task.RuntimeSeconds != 4 || task.Cost != 1 {
+		t.Fatalf("task=%#v", task)
 	}
 }
 

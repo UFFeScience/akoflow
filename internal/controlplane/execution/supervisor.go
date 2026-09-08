@@ -242,7 +242,8 @@ func (s *Supervisor) startReadyActivities(
 			}
 			*transfers = append(*transfers, transferObservations(
 				request.Run.ID, activityID, resource.ID,
-				workspaceProducers(request.Workflow, activityID), requirement, preparation.TransferRuns,
+				workspaceProducers(request.Workflow, activityID), requirement,
+				preparation.TransferRuns, request.NetworkTopology,
 			)...)
 		} else if activity.Command.Executable != nil && activity.Command.Executable.Source.Type == domain.ExecutableSourceType("build") {
 			// Authored executable references are location-independent contracts.
@@ -685,6 +686,7 @@ func transferObservations(
 	producerIDs []string,
 	requirement domain.PreparationRequirement,
 	observations []domain.DataTransferRun,
+	topology domain.NetworkTopology,
 ) []domain.DataTransfer {
 	transfers := make([]domain.DataTransfer, 0, len(observations))
 	for _, observation := range observations {
@@ -707,6 +709,10 @@ func transferObservations(
 		// Artifact stores are not execution resources in the current transfer
 		// schema. Attribute ingress to the selected resource until the schema
 		// includes a storage endpoint dimension.
+		bytes := observation.NetworkBytes
+		if bytes <= 0 {
+			bytes = observation.TransferredBytes
+		}
 		transfers = append(transfers, domain.DataTransfer{
 			ID:                 runID + ":" + activityID + ":" + observation.ID,
 			ExecutionRunID:     runID,
@@ -718,9 +724,21 @@ func transferObservations(
 			StartedAt:          observation.StartedAt,
 			FinishedAt:         observation.FinishedAt,
 			DurationSeconds:    maxFloat(0, observation.FinishedAt-observation.StartedAt),
+			Cost:               transferPrice(topology, sourceResourceID, targetResourceID) * float64(bytes),
 		})
 	}
 	return transfers
+}
+
+func transferPrice(topology domain.NetworkTopology, sourceResourceID, targetResourceID string) float64 {
+	for _, link := range topology.Links {
+		direct := link.SourceResourceID == sourceResourceID && link.TargetResourceID == targetResourceID
+		reverse := link.Bidirectional && link.SourceResourceID == targetResourceID && link.TargetResourceID == sourceResourceID
+		if direct || reverse {
+			return link.PricePerByte
+		}
+	}
+	return 0
 }
 
 func (s *Supervisor) recordStartFailure(
@@ -797,6 +815,7 @@ func newRunningTask(
 		CloudInstanceID: allocation.CloudInstanceID,
 		Attempt:         1, Status: domain.TaskRunning, ReadyAt: readyAt, DataReadyAt: unixNow(),
 		QueuedAt: handle.StartedAt, StartedAt: handle.StartedAt,
+		Metadata: map[string]any{"pricePerSecond": resource.PricePerSecond},
 	}
 	if preparation != nil {
 		for _, transfer := range preparation.TransferRuns {
@@ -811,6 +830,9 @@ func completeTask(task *domain.TaskExecution, handle domain.ActivityHandle) {
 	task.Status, task.FinishedAt = domain.TaskCompleted, handle.FinishedAt
 	applyHandleTiming(task, handle)
 	task.RuntimeSeconds = maxFloat(0, handle.FinishedAt-executionStartedAt(handle))
+	if pricePerSecond, ok := metadataFloat(task.Metadata, "pricePerSecond"); ok {
+		task.Cost = task.RuntimeSeconds * pricePerSecond
+	}
 }
 
 func applyHandleTiming(task *domain.TaskExecution, handle domain.ActivityHandle) {

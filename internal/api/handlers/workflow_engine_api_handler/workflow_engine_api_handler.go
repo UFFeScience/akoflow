@@ -1268,6 +1268,14 @@ func (h *Handler) GetExecution(w http.ResponseWriter, r *http.Request) {
 		"run": run, "activities": tasks, "dataTransfers": transfers,
 		"handles": handles, "events": events,
 	}
+	if h.cloudOperations != nil {
+		infrastructureRuns, infrastructureErr := h.infrastructureRuns(r.Context(), run.ID)
+		if infrastructureErr != nil {
+			writeError(w, http.StatusInternalServerError, infrastructureErr)
+			return
+		}
+		response["infrastructureRuns"] = infrastructureRuns
+	}
 	if h.data != nil {
 		instances, dataErr := h.data.ListInstances(r.Context(), run.ID)
 		if dataErr != nil {
@@ -1294,6 +1302,28 @@ func (h *Handler) GetExecution(w http.ResponseWriter, r *http.Request) {
 		response["artifactTransferRuns"] = transferRuns
 	}
 	writeJSON(w, http.StatusOK, response)
+}
+
+func (h *Handler) infrastructureRuns(ctx context.Context, executionRunID string) ([]map[string]any, error) {
+	operations, err := h.cloudOperations.ListCloudOperations(ctx)
+	if err != nil {
+		return nil, err
+	}
+	result := make([]map[string]any, 0)
+	for _, operation := range operations {
+		if operation.ExecutionRunID != executionRunID {
+			continue
+		}
+		events, eventErr := h.cloudOperations.ListCloudOperationEvents(ctx, operation.ID)
+		if eventErr != nil {
+			return nil, eventErr
+		}
+		result = append(result, map[string]any{
+			"run":    operation,
+			"events": events,
+		})
+	}
+	return result, nil
 }
 
 func (h *Handler) ListArtifactLocations(w http.ResponseWriter, r *http.Request) {

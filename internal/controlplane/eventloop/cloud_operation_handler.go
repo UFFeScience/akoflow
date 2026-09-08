@@ -11,7 +11,36 @@ import (
 	domainqueue "github.com/UFFeScience/akoflow/internal/domain/queue"
 )
 
-const EventCloudOperationRequested = "cloud.operation.requested"
+const (
+	EventCloudProvisionRequested = "cloud.provision.requested"
+	EventCloudConfigureRequested = "cloud.configure.requested"
+	EventCloudStartRequested     = "cloud.start.requested"
+	EventCloudStopRequested      = "cloud.stop.requested"
+	EventCloudDestroyRequested   = "cloud.destroy.requested"
+	EventCloudValidateRequested  = "cloud.validate.requested"
+)
+
+func CloudOperationEventType(kind string) string {
+	return map[string]string{
+		"provision": EventCloudProvisionRequested,
+		"configure": EventCloudConfigureRequested,
+		"start":     EventCloudStartRequested,
+		"stop":      EventCloudStopRequested,
+		"destroy":   EventCloudDestroyRequested,
+		"validate":  EventCloudValidateRequested,
+	}[kind]
+}
+
+func CloudOperationEventTypes() []string {
+	return []string{
+		EventCloudProvisionRequested,
+		EventCloudConfigureRequested,
+		EventCloudStartRequested,
+		EventCloudStopRequested,
+		EventCloudDestroyRequested,
+		EventCloudValidateRequested,
+	}
+}
 
 type cloudOperationPayload struct {
 	OperationID string `json:"operationId"`

@@ -1956,7 +1956,7 @@ func (h *Handler) enqueueCloudOperation(w http.ResponseWriter, r *http.Request, 
 		return
 	}
 	payload, _ := json.Marshal(map[string]string{"operationId": operation.ID})
-	job, err := domainqueue.New(domainqueue.CategoryInfrastructure, eventloop.EventCloudOperationRequested, payload, time.Now().UTC())
+	job, err := domainqueue.New(domainqueue.CategoryInfrastructure, eventloop.CloudOperationEventType(kind), payload, time.Now().UTC())
 	if err == nil {
 		job.AggregateType, job.AggregateID = "cloud_operation", operation.ID
 		job.IdempotencyKey = "cloud-operation:" + operation.ID

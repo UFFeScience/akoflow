@@ -41,9 +41,11 @@ func buildEventLoop(
 	if err := dispatcher.Register(eventloop.EventPlanningSessionRequested, eventloop.NewPlanningSessionHandler(planning)); err != nil {
 		return nil, err
 	}
-	if err := dispatcher.Register(eventloop.EventCloudOperationRequested,
-		eventloop.NewCloudOperationHandler(cloud, cloudProvisioner)); err != nil {
-		return nil, err
+	cloudHandler := eventloop.NewCloudOperationHandler(cloud, cloudProvisioner)
+	for _, eventType := range eventloop.CloudOperationEventTypes() {
+		if err := dispatcher.Register(eventType, cloudHandler); err != nil {
+			return nil, err
+		}
 	}
 	for _, eventType := range domainEventTypes() {
 		if err := dispatcher.Register(eventType, eventloop.DomainEventHandler{}); err != nil {

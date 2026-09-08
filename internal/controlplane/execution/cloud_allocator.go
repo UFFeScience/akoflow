@@ -128,7 +128,7 @@ func (a QueuedCloudAllocator) findOrCreate(ctx context.Context, executionRunID, 
 		return domain.CloudOperationRun{}, err
 	}
 	payload, _ := json.Marshal(map[string]string{"operationId": operation.ID})
-	job, err := domainqueue.New(domainqueue.CategoryInfrastructure, eventloop.EventCloudOperationRequested, payload, time.Now().UTC())
+	job, err := domainqueue.New(domainqueue.CategoryInfrastructure, eventloop.CloudOperationEventType(kind), payload, time.Now().UTC())
 	if err == nil {
 		job.AggregateType, job.AggregateID = "cloud_operation", operation.ID
 		job.IdempotencyKey = "cloud-allocation:" + executionRunID + ":" + activityID + ":" + target.ID + ":" + kind
@@ -189,7 +189,7 @@ func (a QueuedCloudAllocator) Release(ctx context.Context, executionRunID string
 			return err
 		}
 		payload, _ := json.Marshal(map[string]string{"operationId": operation.ID})
-		job, err := domainqueue.New(domainqueue.CategoryInfrastructure, eventloop.EventCloudOperationRequested, payload, time.Now().UTC())
+		job, err := domainqueue.New(domainqueue.CategoryInfrastructure, eventloop.CloudOperationEventType(kind), payload, time.Now().UTC())
 		if err != nil {
 			return err
 		}

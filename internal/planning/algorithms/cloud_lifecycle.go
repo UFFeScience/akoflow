@@ -59,6 +59,15 @@ func addCloudLifecycle(plan *domain.SchedulePlan, request domain.PlanningRequest
 	plan.Predicted.Feasible = (plan.DeadlineSeconds <= 0 || plan.Predicted.MakespanSeconds <= plan.DeadlineSeconds) && (plan.Budget <= 0 || plan.Predicted.Cost <= plan.Budget)
 }
 
+// EnrichCloudLifecycle applies the same lifecycle and cost model to manual and
+// imported plans as scheduler-produced plans.
+func EnrichCloudLifecycle(plan *domain.SchedulePlan, resources []domain.Resource) {
+	if len(plan.LifecycleActions) > 0 {
+		return
+	}
+	addCloudLifecycle(plan, domain.PlanningRequest{Resources: resources})
+}
+
 func metadataSeconds(values map[string]any, key string, fallback float64) float64 {
 	if value := metadataNumber(values, key); value > 0 {
 		return value

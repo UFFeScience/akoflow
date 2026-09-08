@@ -33,6 +33,7 @@ import (
 	cloudcredential "github.com/UFFeScience/akoflow/internal/infrastructure/credentials/cloud"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/credentials/sshkey"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/credentials/token"
+	planningalgorithms "github.com/UFFeScience/akoflow/internal/planning/algorithms"
 	"github.com/google/uuid"
 	"gopkg.in/yaml.v3"
 )
@@ -2126,6 +2127,7 @@ func (h *Handler) CreatePlan(w http.ResponseWriter, r *http.Request) {
 	if request.Plan.NetworkTopologyID == "" {
 		request.Plan.NetworkTopologyID = request.NetworkTopology.ID
 	}
+	planningalgorithms.EnrichCloudLifecycle(&request.Plan, request.Resources)
 	if err := h.validator.Validate(request.Plan, request.Workflow, request.Resources, request.ExecutionScope, request.NetworkTopology); err != nil {
 		writeError(w, http.StatusUnprocessableEntity, err)
 		return
@@ -2175,6 +2177,7 @@ func (h *Handler) ImportPlan(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusInternalServerError, err)
 		return
 	}
+	planningalgorithms.EnrichCloudLifecycle(&plan, resources)
 	if err := h.validator.Validate(plan, *workflow, resources, *scope, *topology); err != nil {
 		writeError(w, http.StatusUnprocessableEntity, err)
 		return

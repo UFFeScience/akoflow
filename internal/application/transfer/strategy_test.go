@@ -28,6 +28,54 @@ func TestStrategyResolverClassifiesRuntimeTopology(t *testing.T) {
 	}
 }
 
+func TestStrategyResolverCoversHybridCloudAcceptanceRoute(t *testing.T) {
+	resolver := StrategyResolver{}
+	kubernetes := endpoint("kubernetes://cluster/workspace", "", "kubernetes")
+	cloudA := endpoint("ssh://worker-a/workspace-a", "cloud-a", "gcp-vpc")
+	cloudAConsumer := endpoint("ssh://worker-a/workspace-b", "cloud-a", "gcp-vpc")
+	cloudB := endpoint("ssh://worker-b/workspace", "cloud-b", "gcp-vpc")
+	hpc := endpoint("ssh://plafrim/workspace", "", "plafrim")
+	cases := []struct {
+		name        string
+		source      domain.TransferEndpoint
+		destination domain.TransferEndpoint
+		expected    domain.TransferStrategy
+	}{
+		{
+			name: "kubernetes to cloud A", source: kubernetes,
+			destination: cloudA, expected: domain.TransferGateway,
+		},
+		{
+			name: "within cloud A", source: cloudA,
+			destination: cloudAConsumer, expected: domain.TransferRuntimeLocal,
+		},
+		{
+			name: "cloud A to cloud B", source: cloudA,
+			destination: cloudB, expected: domain.TransferDirectRuntime,
+		},
+		{
+			name: "cloud B to HPC", source: cloudB,
+			destination: hpc, expected: domain.TransferGateway,
+		},
+		{
+			name: "HPC to cloud B", source: hpc,
+			destination: cloudB, expected: domain.TransferGateway,
+		},
+		{
+			name: "cloud B to Kubernetes", source: cloudB,
+			destination: kubernetes, expected: domain.TransferGateway,
+		},
+	}
+	for _, test := range cases {
+		t.Run(test.name, func(t *testing.T) {
+			route := resolver.Resolve(test.source, test.destination)
+			if route.Strategy != test.expected || route.Reason == "" {
+				t.Fatalf("route=%#v", route)
+			}
+		})
+	}
+}
+
 func endpoint(uri, instance, network string) domain.TransferEndpoint {
 	return domain.TransferEndpoint{URI: uri, CloudInstanceID: instance, NetworkDomain: network, Configuration: map[string]string{}}
 }

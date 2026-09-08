@@ -19,6 +19,10 @@ type CloudAllocator interface {
 	Release(context.Context, string, map[string]domain.RuntimeAllocation, bool) error
 }
 
+type CloudPrewarmer interface {
+	Prewarm(context.Context, string, string, domain.CloudCapacityTarget) error
+}
+
 // QueuedCloudAllocator is the execution-to-infrastructure boundary. It never
 // invokes Terraform itself: it persists an operation, publishes a durable
 // message, then waits for the infrastructure worker to settle it.
@@ -27,6 +31,20 @@ type QueuedCloudAllocator struct {
 	Operations   ports.CloudOperationStore
 	Queue        ports.QueueStore
 	PollInterval time.Duration
+}
+
+func (a QueuedCloudAllocator) Prewarm(ctx context.Context, executionRunID, activityID string, target domain.CloudCapacityTarget) error {
+	instances, err := a.Cloud.ListProvisionedInstances(ctx, target.EnvironmentID)
+	if err != nil {
+		return err
+	}
+	for _, instance := range instances {
+		if instance.CapacityTargetID == target.ID && (instance.Status == "ready" || instance.Status == "stopped") {
+			return nil
+		}
+	}
+	_, err = a.findOrCreate(ctx, executionRunID, activityID, target, "provision", "")
+	return err
 }
 
 func (a QueuedCloudAllocator) Allocate(ctx context.Context, executionRunID, activityID string, target domain.CloudCapacityTarget) (domain.CloudProvisionedInstance, error) {

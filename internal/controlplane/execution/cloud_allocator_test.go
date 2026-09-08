@@ -106,6 +106,31 @@ func TestQueuedCloudAllocatorAssociatesDurableOperationWithActivity(t *testing.T
 	}
 }
 
+func TestQueuedCloudAllocatorPrewarmsWithoutWaitingForActivity(t *testing.T) {
+	store := &allocatorStore{
+		operations: map[string]domain.CloudOperationRun{},
+		instances:  map[string]domain.CloudProvisionedInstance{},
+	}
+	queue := &allocatorQueue{store: store}
+	allocator := QueuedCloudAllocator{
+		Cloud: store, Operations: store, Queue: queue, PollInterval: time.Millisecond,
+	}
+	target := domain.CloudCapacityTarget{ID: "target", EnvironmentID: "environment"}
+	if err := allocator.Prewarm(context.Background(), "run", "future-activity", target); err != nil {
+		t.Fatal(err)
+	}
+	if len(queue.jobs) != 1 {
+		t.Fatalf("prewarm jobs=%#v", queue.jobs)
+	}
+	time.Sleep(5 * time.Millisecond)
+	if _, err := allocator.Allocate(context.Background(), "run", "future-activity", target); err != nil {
+		t.Fatal(err)
+	}
+	if len(queue.jobs) != 1 {
+		t.Fatalf("allocation created duplicate job: %#v", queue.jobs)
+	}
+}
+
 func TestQueuedCloudAllocatorStartsAndValidatesStoppedInstance(t *testing.T) {
 	store := &allocatorStore{
 		operations: map[string]domain.CloudOperationRun{},

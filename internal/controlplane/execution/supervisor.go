@@ -72,6 +72,9 @@ func (s *Supervisor) Execute(ctx context.Context, request ports.ExecutionRequest
 			_ = s.executions.FailRun(context.WithoutCancel(ctx), request.Run.ID, err.Error())
 		}
 	}()
+	if err = s.prewarmCloud(ctx, request); err != nil {
+		return domain.ExecutionTrace{}, fmt.Errorf("prepare planned cloud lifecycle: %w", err)
+	}
 	if request.Run.Mode == domain.ExecutionModeSimulation {
 		trace, err = s.simulation.Execute(ctx, request)
 	} else {
@@ -87,6 +90,31 @@ func (s *Supervisor) Execute(ctx context.Context, request ports.ExecutionRequest
 		return domain.ExecutionTrace{}, fmt.Errorf("complete execution run: %w", err)
 	}
 	return trace, nil
+}
+
+func (s *Supervisor) prewarmCloud(ctx context.Context, request ports.ExecutionRequest) error {
+	prewarmer, ok := s.config.CloudAllocator.(CloudPrewarmer)
+	if !ok || s.config.CloudStore == nil || request.Run.Mode != domain.ExecutionModeReal {
+		return nil
+	}
+	seen := map[string]bool{}
+	for _, assignment := range request.Plan.Assignments {
+		if seen[assignment.ResourceID] || runtimeDriver(request, assignment.ActivityID) != domain.RuntimeDriverCloud {
+			continue
+		}
+		target, err := s.config.CloudStore.FindCapacityTarget(ctx, assignment.ResourceID)
+		if err != nil {
+			return err
+		}
+		if target == nil {
+			return fmt.Errorf("cloud capacity target %q was not found", assignment.ResourceID)
+		}
+		if err := prewarmer.Prewarm(ctx, request.Run.ID, assignment.ActivityID, *target); err != nil {
+			return err
+		}
+		seen[assignment.ResourceID] = true
+	}
+	return nil
 }
 
 func (s *Supervisor) releaseCloud(ctx context.Context, request ports.ExecutionRequest, failed bool) error {

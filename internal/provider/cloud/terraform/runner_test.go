@@ -18,13 +18,14 @@ func TestParseOutput(t *testing.T) {
 		"instance_id":{"value":"123"},
 		"public_ip":{"value":"203.0.113.8"},
 		"private_ip":{"value":"10.0.0.2"},
+		"network_domain":{"value":"project:region:network:subnetwork"},
 		"disk_name":{"value":"disk-1"},
 		"disk_size_gib":{"value":30}
 	}`))
 	if err != nil {
 		t.Fatal(err)
 	}
-	if result.ProviderID != "123" || result.PublicAddress != "203.0.113.8" {
+	if result.ProviderID != "123" || result.PublicAddress != "203.0.113.8" || result.Output["network_domain"] != "project:region:network:subnetwork" {
 		t.Fatalf("unexpected result %#v", result)
 	}
 }

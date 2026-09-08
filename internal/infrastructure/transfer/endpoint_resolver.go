@@ -142,9 +142,6 @@ func (resolver EnvironmentEndpointResolver) cloudConnection(
 		address = selected.PrivateAddress
 	}
 	networkDomain, _ := selected.TerraformOutput["network_domain"].(string)
-	if networkDomain == "" {
-		networkDomain = selected.EnvironmentID
-	}
 	return &domain.EnvironmentConnection{
 		ID: connection.ID + "-" + selected.ID, EnvironmentID: connection.EnvironmentID,
 		Name: selected.Name, Type: domain.ConnectionSSH, Endpoint: address,

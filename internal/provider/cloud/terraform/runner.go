@@ -383,6 +383,7 @@ resource "google_compute_firewall" "ssh" {
 output "instance_id" { value = google_compute_instance.worker.instance_id }
 output "public_ip" { value = google_compute_instance.worker.network_interface[0].access_config[0].nat_ip }
 output "private_ip" { value = google_compute_instance.worker.network_interface[0].network_ip }
+output "network_domain" { value = "${var.project}:${var.region}:${var.network}:${var.subnetwork}" }
 output "zone" { value = google_compute_instance.worker.zone }
 output "disk_name" { value = google_compute_instance.worker.boot_disk[0].source }
 output "disk_size_gib" { value = var.disk_size_gib }

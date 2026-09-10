@@ -41,6 +41,12 @@ func TestSecureAPIAllowsOnlyPublicInstanceBootstrapWithoutToken(t *testing.T) {
 	if response.Code != http.StatusNoContent {
 		t.Fatalf("public instance GET without trailing slash got %d, want 204", response.Code)
 	}
+	request = httptest.NewRequest(http.MethodHead, "/akoflow-api/instance/", nil)
+	response = httptest.NewRecorder()
+	handler.ServeHTTP(response, request)
+	if response.Code != http.StatusNoContent {
+		t.Fatalf("public instance HEAD got %d, want 204", response.Code)
+	}
 
 	request = httptest.NewRequest(http.MethodPut, "/akoflow-api/instance/", nil)
 	response = httptest.NewRecorder()
@@ -86,6 +92,9 @@ func TestPublicBootstrapAndBearerParsing(t *testing.T) {
 	for _, path := range []string{"/akoflow-api/instance", "/akoflow-api/instance/", "/akoflow-api/preflight/"} {
 		if !isPublicBootstrapRequest(httptest.NewRequest(http.MethodGet, path, nil)) {
 			t.Fatalf("%s should be public", path)
+		}
+		if !isPublicBootstrapRequest(httptest.NewRequest(http.MethodHead, path, nil)) {
+			t.Fatalf("HEAD %s should be public", path)
 		}
 	}
 	if isPublicBootstrapRequest(httptest.NewRequest(http.MethodPost, "/akoflow-api/preflight/", nil)) {

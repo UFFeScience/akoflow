@@ -24,6 +24,13 @@ Although initially focused on Kubernetes-based workloads, AkôFlow has evolved t
 Download the current installer for macOS, Windows or Linux from
 [AkôFlow Releases](https://github.com/UFFeScience/akoflow/releases/latest).
 
+- **macOS:** open the universal `.dmg`, drag **AkôFlow Desktop** to
+  `Applications`, and launch it.
+- **Windows:** run the x64 installer `.exe`, or use the portable `.exe` without
+  installation.
+- **Linux:** run the x64 `.AppImage` after `chmod +x`, or install the `.deb`
+  package with `sudo apt install ./Akoflow-Desktop-*.deb`.
+
 AkôFlow Desktop requires Docker Desktop on macOS and Windows, or Docker Engine
 with the Compose v2 plugin on Linux. At startup it verifies the requirements,
 explains anything that is missing, and starts the version-matched AkôFlow daemon

@@ -161,6 +161,39 @@ html {
 ::-webkit-scrollbar-thumb { background: rgba(128, 128, 128, 0.3); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: rgba(128, 128, 128, 0.5); }
 
+/* Documentation media */
+.akoflow-annotated-screenshot,
+.akoflow-demo-video {
+  margin: 1.5rem 0;
+}
+
+.akoflow-annotated-screenshot img,
+.akoflow-demo-video video {
+  display: block;
+  width: 100%;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 12px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+}
+
+.akoflow-annotated-screenshot figcaption,
+.akoflow-demo-video figcaption {
+  margin-top: 0.75rem;
+  color: var(--ifm-color-emphasis-700);
+  font-size: 0.9rem;
+}
+
+.akoflow-media-placeholder {
+  display: grid;
+  gap: 0.35rem;
+  margin: 1.5rem 0;
+  padding: 1.25rem;
+  border: 1px dashed var(--ifm-color-emphasis-400);
+  border-radius: 12px;
+  background: var(--ifm-background-surface-color);
+  color: var(--ifm-color-emphasis-700);
+}
+
 /* ══════════════════════════════════════
    Background Graph (SVG global classes)
 ══════════════════════════════════════ */

@@ -1,0 +1,74 @@
+---
+id: interface-tour
+title: Tour the AkôFlow interface
+sidebar_label: Interface tour
+description: Learn how the AkôFlow Desktop navigation maps to the control-plane API.
+---
+
+import AnnotatedScreenshot from '@site/src/components/AnnotatedScreenshot';
+import DemoVideo from '@site/src/components/DemoVideo';
+
+AkôFlow Desktop is the visual client for the AkôFlow daemon. The application does not run infrastructure commands from the browser renderer: it requests the daemon API, and the daemon performs discovery, planning, execution, data movement, and infrastructure operations.
+
+<AnnotatedScreenshot
+  alt="AkôFlow Desktop overview with the sidebar, global search, notifications, instance status, and workflow summary identified"
+  callouts={[
+    {number: 1, label: 'The sidebar groups workflows, infrastructure, runs, artifacts, provenance, and audit.'},
+    {number: 2, label: 'Global search opens entities without first visiting their list page.'},
+    {number: 3, label: 'Notifications report operations that need attention.'},
+    {number: 4, label: 'The instance indicator confirms which daemon the client is using.'},
+  ]}
+/>
+
+## Main areas
+
+| Area | What you do there | Main API domain |
+|---|---|---|
+| Overview | Check registered environments, workflows, and completed runs | Multiple read endpoints |
+| Workflows | Create versioned definitions and inspect activity DAGs | `/workflow-definitions/` |
+| Planning sessions | compare algorithms and promote a candidate to a plan | `/planning-sessions/` |
+| Infrastructure | Connect environments, discover resources, and define execution scopes | `/environments/`, `/resources/`, `/execution-scopes/` |
+| Runs | Start and inspect workflow, standalone, simulated, and interactive runs | `/execution-runs/` |
+| Artifacts | Register, build, locate, and materialize executable artifacts | `/artifacts/`, `/artifact-builds/` |
+| Provenance | Query evidence and follow lineage | `/provenance/` |
+| Audit | Inspect the operational event history | `/audit-events/` |
+
+## Follow the ownership hierarchy
+
+AkôFlow pages preserve the relationship between records. An execution belongs to a plan, a plan belongs to a workflow, and a provisioning operation belongs to a cloud resource. Breadcrumbs show that chain; their ancestors are links.
+
+For example:
+
+```text
+Workflows › Workflow › Plan › Execution › Activity
+
+Environments › Environment › Inventory › Resource › Provisioning › Operation
+```
+
+Use the back control below the breadcrumb to return to the logical parent. Its destination remains correct even when the page was opened from search or a notification.
+
+## Desktop and API are two views of the same operation
+
+Most task guides contain two paths:
+
+- **AkôFlow Desktop** explains the controls, validation, progress, and resulting detail page.
+- **API** shows the corresponding HTTP request and a minimal payload.
+
+The API path is useful for automation and reproducible experiments. The Desktop path is useful for exploration, comparison, and live monitoring. Records created through either path appear in the same interface.
+
+## Global terminal
+
+Interactive commands open in the terminal panel fixed to the bottom of the application. The daemon owns the session and streams its output; closing a page does not make the renderer execute or manage a remote shell itself.
+
+<DemoVideo
+  title="Open an AkôFlow interactive session"
+  description="Planned capture: choose a resource, open a session, inspect the terminal panel, and download its log."
+/>
+
+## Read-only instances
+
+Some instance modes prevent write operations. The interface displays the active mode and guards creation, update, execution, and destructive actions. Read-only exploration, provenance, and audit remain available according to the daemon configuration.
+
+## Continue
+
+Start with [your first end-to-end run](./workflows/first-run), or connect [execution infrastructure](./infrastructure/environments).

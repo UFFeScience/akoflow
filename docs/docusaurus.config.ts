@@ -77,14 +77,14 @@ const config: Config = {
             { label: 'CLI Reference', to: '/docs/cli' },
             { label: 'Installation', to: '/docs/installation' },
             { label: 'Downloads', to: '/docs/downloads' },
-            { label: 'User Guide', to: '/docs/user-guide' },
+            { label: 'Interface Tour', to: '/docs/guides/interface-tour' },
           ],
         },
         {
           title: 'Reference',
           items: [
             { label: 'Workflow Spec', to: '/docs/internal/workflow-spec' },
-            { label: 'API Reference', to: '/docs/internal/api' },
+            { label: 'API Reference', to: '/docs/reference/api-overview' },
           ],
         },
         {

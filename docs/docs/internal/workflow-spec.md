@@ -1,367 +1,163 @@
 ---
 id: workflow-spec
-title: Workflow Specification
-sidebar_label: Workflow Spec
+title: Portable workflow specification
+sidebar_label: Workflow specification
+description: Current YAML and JSON authoring contract accepted by the AkôFlow workflow API.
 ---
 
-This document describes every field in an AkôFlow workflow YAML file. A workflow definition tells AkôFlow what to run, where to run it, how much resources to allocate, and how tasks depend on each other.
+AkôFlow accepts a compact, portable workflow document and normalizes it into the versioned domain model used by planning and execution. This page documents the **authoring contract**, not the larger persisted API response.
 
----
+Submit YAML or JSON to `POST /akoflow-api/workflow-definitions/` or `/workflow-definitions/import/`. Exporting a workflow produces this portable format without generated IDs or resolved runtime state.
 
 ## Complete example
 
 ```yaml
-name: etl-pipeline
-
+name: astronomy-fanout
 spec:
-  image: "python:3.11"
-  namespace: "akoflow"
-  runtime: "k8s-aws"
-  schedule: "memory-optimized"
-
-  storagePolicy:
-    type: distributed
-    storageClassName: "gp2"
-    storageSize: "10Gi"
-
-  mountPath: "/data"
-  volumes:
-    - "/local/datasets"
-
+  namespace: research
+  image: python:3.12
   activities:
-    - name: "ingest"
-      cpuLimit: 0.5
-      memoryLimit: 512Mi
-      run: |
-        python ingest.py --output /data/raw
+    - name: prepare
+      cpuLimit: "0.5"
+      memoryLimit: 256Mi
+      run: python /app/prepare.py
+      simulation:
+        model: fixed-duration
+        durationSeconds: 4
 
-    - name: "deduplicate"
-      dependsOn: ["ingest"]
-      cpuLimit: 2.0
-      memoryLimit: 4Gi
-      keepDisk: true
-      run: |
-        python dedup.py --input /data/raw --output /data/clean
+    - name: analyze-a
+      cpuLimit: "1"
+      memoryLimit: 1Gi
+      dependsOn: [prepare]
+      command:
+        executable:
+          source:
+            type: oci
+            reference: ghcr.io/example/analyzer:1.0
+          delivery:
+            strategy: auto
+        entrypoint: python
+        arguments: [/app/analyze.py, --partition, a]
 
-    - name: "predict-us"
-      dependsOn: ["deduplicate"]
-      runtime: "k8s-aws"
-      nodeSelector: "region=us-east-1"
-      cpuLimit: 4.0
-      memoryLimit: 8Gi
-      run: |
-        python predict.py --region us --input /data/clean
+    - name: combine
+      cpuLimit: 250m
+      memoryLimit: 128Mi
+      dependsOn: [analyze-a]
+      run: python /app/combine.py
 
-    - name: "predict-eu"
-      dependsOn: ["deduplicate"]
-      runtime: "k8s-gcp"
-      nodeSelector: "region=europe-west1"
-      cpuLimit: 4.0
-      memoryLimit: 8Gi
-      run: |
-        python predict.py --region eu --input /data/clean
-
-    - name: "aggregate"
-      dependsOn: ["predict-us", "predict-eu"]
-      cpuLimit: 0.5
-      memoryLimit: 512Mi
-      run: |
-        python aggregate.py --output /data/final
+  dataDependencies:
+    - producerActivity: prepare
+      consumerActivity: analyze-a
+      logicalName: prepared-catalog
+      sizeBytes: 104857600
 ```
 
----
+:::important Real and simulated capabilities
+In the current portable importer, an activity with `simulation` is normalized as simulation-capable; an activity without it is normalized as real-capable. Do not assume that adding simulation fields creates one activity that runs in both modes.
+:::
 
 ## Top-level fields
 
-### `name`
+| Field | Type | Required | Meaning |
+|---|---|---:|---|
+| `name` | string | yes | Display name and source for the stable workflow identifier |
+| `spec.namespace` | string | yes | Logical namespace for the definition |
+| `spec.image` | string | no | Default OCI image for real activities that do not declare an executable |
+| `spec.activities` | array | yes | Ordered activity definitions |
+| `spec.dataDependencies` | array | no | Explicit data edges and their logical sizes |
+| `spec.storageClassName` | string | no | Legacy portable storage hint retained by the request contract |
+| `spec.storageSize` | string | no | Legacy portable storage-size hint |
+| `spec.storagePolicy.type` | string | no | Legacy portable storage-policy hint |
+| `spec.mountPath` | string | no | Default portable mount hint |
 
-- **Type**: string
-- **Required**: yes
-- **Description**: Unique identifier for the workflow. Used internally for naming resources, jobs, and logs.
-- **Convention**: lowercase-hyphenated, e.g., `wf-my-pipeline`
-
----
-
-## `spec` block
-
-The `spec` section defines the execution context for the entire workflow.
-
----
-
-### `spec.image`
-
-- **Type**: string
-- **Required**: yes
-- **Description**: Default container image for all activities. Each activity runs inside a container built from this image.
-- **Examples**: `python:3.11`, `ubuntu:22.04`, `ghcr.io/myorg/myimage:1.0`
-
-Activities can override this by specifying their own `image` field.
-
----
-
-### `spec.namespace`
-
-- **Type**: string
-- **Default**: `"akoflow"`
-- **Description**: The Kubernetes namespace (or AkôFlow logical namespace) where the workflow runs. Isolates resources between environments or teams.
-
----
-
-### `spec.runtime`
-
-- **Type**: string
-- **Default**: engine's default runtime
-- **Description**: The default runtime for all activities. Determines which infrastructure backend executes tasks.
-
-Available built-in values:
-
-| Value | Backend |
-|---|---|
-| `k8s` | Kubernetes (any cluster) |
-| `k8s-{name}` | Named Kubernetes cluster (e.g., `k8s-aws`) |
-| `hpc-{name}` | Named HPC/SLURM cluster (e.g., `hpc-sdumont`) |
-| `singularity` | Singularity on local machine |
-| `local` | Bare shell process on the local machine |
-| `docker` | Docker (stub, not yet fully implemented) |
-
-Individual activities can override this with their own `runtime` field — enabling cross-environment execution within a single workflow.
-
-→ See [Runtimes](../runtimes) for a full explanation of each backend and its environment variables.
-
----
-
-### `spec.schedule`
-
-- **Type**: string
-- **Default**: engine's default AkôScore policy
-- **Description**: Name of the scheduling policy to apply when assigning tasks to nodes. References a registered schedule (plugin) in the engine.
-
-If omitted, the engine uses its built-in AkôScore function (balancing makespan and memory utilization).
-
-```yaml
-spec:
-  schedule: "memory-optimized"   # custom Go plugin registered in the engine
-```
-
-→ See [Concepts — AkôScore](../concepts#akôscore--the-scheduling-function) for details on writing custom scheduling policies.
-
----
-
-### `spec.storagePolicy`
-
-- **Type**: object
-- **Description**: Controls how persistent storage is provisioned for the workflow.
-
-**Subfields:**
-
-#### `storagePolicy.type`
-
-- **Type**: string
-- **Values**: `distributed` | `standalone`
-- **Description**:
-  - `distributed` — each Worker node gets its own independent volume; tasks cannot read each other's files directly
-  - `standalone` — all nodes share a single volume; tasks can read outputs produced by other tasks without additional coordination
-
-#### `storagePolicy.storageClassName`
-
-- **Type**: string
-- **Description**: Kubernetes StorageClass for PVC provisioning. Common values:
-  - `hostpath` → local clusters or Kind
-  - `nfs-client` → distributed NFS
-  - `gp2` or `standard` → cloud-managed storage (AWS, GCP)
-
-#### `storagePolicy.storageSize`
-
-- **Type**: string
-- **Default**: `"1Gi"`
-- **Description**: Disk capacity allocated for the workflow's data volume. Uses Kubernetes size notation: `Mi`, `Gi`, `Ti`.
-
----
-
-### `spec.mountPath`
-
-- **Type**: string
-- **Default**: `"/data"`
-- **Description**: The path inside the container where the storage volume is mounted. All activities read and write files through this path.
-
----
-
-### `spec.volumes`
-
-- **Type**: array of strings
-- **Description**: Local paths on the Engine host to synchronize with the execution environment before workflow starts. Used primarily by the HPC runtime to `rsync` data to the remote cluster before job submission.
-
-```yaml
-volumes:
-  - "/local/datasets/customers.csv"
-  - "/local/models/baseline"
-```
-
----
-
-## `activities` block
-
-### `activities`
-
-- **Type**: array
-- **Required**: yes
-- **Description**: The ordered list of tasks in the workflow. AkôFlow constructs a DAG from the `dependsOn` fields and executes tasks as their dependencies complete.
-
----
+The importer derives a lowercase, hyphenated ID from `name`, creates version `1`, and generates stable activity IDs inside that workflow namespace.
 
 ## Activity fields
 
-Each item in `activities` supports the following fields:
+| Field | Type | Default | Meaning |
+|---|---|---|---|
+| `name` | string | required | Unique activity name within the document |
+| `run` | string | — | Shell shorthand, normalized to `sh -c <run>` |
+| `command` | object | — | Structured executable and command declaration |
+| `image` | string | `spec.image` | Per-activity OCI shorthand |
+| `runtime` | string | — | Runtime-selection hint retained as metadata |
+| `cpuLimit` | string | `0.1` | CPU demand; accepts decimal cores or millicores such as `250m` |
+| `memoryLimit` | string | `16Mi` | Bytes or a `Ki`, `Mi`, or `Gi` value |
+| `dependsOn` | string[] | `[]` | Names of predecessor activities |
+| `resourceSelector` | string | — | Resource-selection hint retained as metadata |
+| `keepDisk` | boolean | `false` | Disk-retention hint |
+| `mountPath` | string | — | Per-activity mount hint |
+| `simulation` | object | — | Simulation model for a simulated activity |
 
----
+For a real activity, AkôFlow requires an effective executable and an entrypoint. `run` supplies the entrypoint automatically, while `image` or `spec.image` supplies an OCI executable automatically.
 
-### `name`
-
-- **Type**: string
-- **Required**: yes
-- **Description**: Unique identifier for the activity within the workflow. Used in `dependsOn` references, logs, and provenance records.
-
----
-
-### `run`
-
-- **Type**: multiline string
-- **Required**: yes
-- **Description**: Shell commands to execute inside the container. Written as a bash script. The container's working directory is set to `mountPath`.
-
-```yaml
-run: |
-  echo "starting"
-  python train.py --epochs 10 --output /data/model
-  echo "done"
-```
-
----
-
-### `image`
-
-- **Type**: string
-- **Default**: inherits `spec.image`
-- **Description**: Override the container image for this specific activity. Useful when different tasks need different runtime environments.
+### Structured command
 
 ```yaml
-- name: "gpu-step"
-  image: "pytorch/pytorch:2.0-cuda11.7"
-  run: python train_gpu.py
+command:
+  executable:
+    source:
+      type: oci
+      reference: python:3.12
+    delivery:
+      strategy: auto
+  entrypoint: python
+  arguments: [/app/task.py, --output, result.json]
+  environment:
+    LOG_LEVEL: info
+  workingDirectory: /workspace
 ```
 
----
+`command` supports `entrypoint`, `arguments`, `environment`, `workingDirectory`, and `executable`. The server adds resolved executable state later; authored documents must not include `resolvedExecutable`.
 
-### `runtime`
+### Executable source
 
-- **Type**: string
-- **Default**: inherits `spec.runtime`
-- **Description**: Override the execution runtime for this activity. Enables cross-environment workflows where different tasks run on different infrastructure.
-
-```yaml
-- name: "eu-processing"
-  runtime: "k8s-gcp-europe"
-  run: python process_eu.py
-```
-
----
-
-### `dependsOn`
-
-- **Type**: array of strings
-- **Default**: `[]` (no dependencies — runs immediately)
-- **Description**: Names of activities that must reach `Finished` state before this activity becomes `Ready`. This field defines the DAG structure.
-
-```yaml
-- name: "aggregate"
-  dependsOn: ["predict-us", "predict-eu"]   # waits for both
-```
-
-Activities not listed in any `dependsOn` run in parallel from the start.
-
----
-
-### `memoryLimit`
-
-- **Type**: string
-- **Default**: no limit
-- **Description**: Maximum memory the container may use. Uses Kubernetes notation: `128Mi`, `1Gi`, `4Gi`. The AkôScore scheduler uses this value to find nodes with sufficient free memory.
-
-Exceeding this limit may cause the container to be OOM-killed by the runtime.
-
----
-
-### `cpuLimit`
-
-- **Type**: float
-- **Default**: no limit
-- **Description**: Maximum CPU cores the container may use. `0.5` means half a core; `2.0` means two cores. The AkôScore scheduler uses this value to check CPU feasibility on candidate nodes.
-
----
-
-### `nodeSelector`
-
-- **Type**: string
-- **Default**: none
-- **Description**: Constrains task execution to nodes matching a label or property. The format and semantics depend on the runtime:
-  - For Kubernetes: matches Kubernetes node labels (e.g., `region=us-east-1`, `gpu=true`)
-  - For HPC: may match SLURM node properties or partition constraints
-
-```yaml
-- name: "gpu-training"
-  nodeSelector: "accelerator=nvidia-tesla-v100"
-```
-
----
-
-### `keepDisk`
-
-- **Type**: boolean
-- **Default**: `false`
-- **Description**: When `true`, the activity's storage volume is not deleted after the workflow completes. Useful for preserving intermediate results for inspection or reuse in subsequent runs.
-
-```yaml
-- name: "expensive-preprocessing"
-  keepDisk: true
-  run: python preprocess.py   # results kept for debugging
-```
-
----
-
-## Activity lifecycle fields (read-only)
-
-These fields are set and updated by the engine during execution. They are visible in API responses and provenance records but should not be set in the workflow YAML.
-
-| Field | Description |
+| `source.type` | Required locator |
 |---|---|
-| `status` | Current state: `Pending`, `Ready`, `Running`, `Finished`, `Failed` |
-| `procId` | OS-level process ID or SLURM job ID assigned by the runtime |
-| `createdAt` | Timestamp when the activity was created in the database |
-| `startedAt` | Timestamp when the activity transitioned to `Running` |
-| `finishedAt` | Timestamp when the activity transitioned to `Finished` or `Failed` |
+| `catalog` | `artifactRef.id`, with optional version |
+| `oci` | `reference` |
+| `local-container-image` | `reference` |
+| `build` | `artifactBuildRef` |
+| `local-file` | `path` |
+| `remote-file` | `path` and either `environmentRef` or `resourceRef` |
+| `object-storage` | `uri` |
+| `http` | `uri` |
 
----
+A source may also carry `expectedDigest`, `format`, or `credentialRef` when appropriate.
 
-## Field summary table
+Delivery strategies are `auto`, `managed`, `use-in-place`, `destination-pull`, `gateway-transfer`, `build-and-transfer`, and `prefer-in-place`. Target executable formats currently include `oci` and `sif`.
 
-| Field | Scope | Required | Type | Description |
-|---|---|---|---|---|
-| `name` | Workflow | yes | string | Workflow identifier |
-| `spec.image` | Workflow | yes | string | Default container image |
-| `spec.namespace` | Workflow | no | string | Logical namespace |
-| `spec.runtime` | Workflow | no | string | Default execution runtime |
-| `spec.schedule` | Workflow | no | string | Custom AkôScore policy name |
-| `spec.storagePolicy.type` | Workflow | no | string | `distributed` or `standalone` |
-| `spec.storagePolicy.storageClassName` | Workflow | no | string | Kubernetes StorageClass |
-| `spec.storagePolicy.storageSize` | Workflow | no | string | Volume size (e.g., `1Gi`) |
-| `spec.mountPath` | Workflow | no | string | Mount path inside containers |
-| `spec.volumes` | Workflow | no | string[] | Local paths to sync to runtime |
-| `activities[].name` | Activity | yes | string | Unique activity name |
-| `activities[].run` | Activity | yes | string | Shell commands to execute |
-| `activities[].image` | Activity | no | string | Override container image |
-| `activities[].runtime` | Activity | no | string | Override runtime |
-| `activities[].dependsOn` | Activity | no | string[] | Names of prerequisite activities |
-| `activities[].memoryLimit` | Activity | no | string | Max memory (e.g., `4Gi`) |
-| `activities[].cpuLimit` | Activity | no | float | Max CPU cores (e.g., `2.0`) |
-| `activities[].nodeSelector` | Activity | no | string | Node constraint |
-| `activities[].keepDisk` | Activity | no | boolean | Preserve storage after completion |
+### Simulation
+
+```yaml
+simulation:
+  model: fixed-duration
+  durationSeconds: 12.5
+  flops: 5000000000
+  parameters:
+    dataset: small
+```
+
+The simulation object accepts `model`, `durationSeconds`, `flops`, and arbitrary `parameters`. The configured simulation runtime determines how the model is interpreted.
+
+## Dependencies
+
+`dependsOn` creates control edges. Every referenced name must identify another activity in the same document.
+
+Use `dataDependencies` when planning also needs the logical data size between two activities:
+
+```yaml
+dataDependencies:
+  - producerActivity: preprocess
+    consumerActivity: train
+    logicalName: normalized-dataset
+    sizeBytes: 2147483648
+```
+
+`logicalName` must be non-empty and `sizeBytes` must be positive. Producer and consumer names must exist in `spec.activities`.
+
+## Normalized model
+
+The API response is richer than the submitted document. It contains the workflow and version IDs, normalized activities, capabilities, resources in bytes/cores, structured dependencies, policies, priorities, and runtime resolution state. Plans refer to `version.id`, not to the mutable authoring file.
+
+See [Workflow definitions](../guides/workflows/definitions) for Desktop and API procedures.

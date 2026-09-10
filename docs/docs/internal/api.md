@@ -1,8 +1,9 @@
 ---
 id: api
-title: API Reference
-sidebar_label: API Reference
+title: API reference
+sidebar_label: API reference
 ---
 
-# AkôFlow API Reference
-This document provides a comprehensive reference for the AkôFlow API, detailing the available endpoints, request and response formats, and usage examples. The API allows users to interact programmatically with the AkôFlow middleware to manage workflows, activities, and resources.
+The API documentation has moved to the [current API overview](../reference/api-overview).
+
+That reference is derived from the daemon HTTP router and is grouped by the same domains exposed in AkôFlow Desktop.

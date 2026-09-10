@@ -138,7 +138,7 @@ jobs:
           cache: npm
 
       - run: npm ci
-      - run: npm version "${{ github.ref_name }}" --no-git-tag-version
+      - run: npm version "${{ github.ref_name }}" --no-git-tag-version --allow-same-version
       - run: npm run build
 
       - name: Package desktop application

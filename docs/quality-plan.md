@@ -102,5 +102,5 @@ The documentation is ready for external users only when all of the following are
 
 1. A complete SLURM showcase requires either a safe test cluster or a reproducible local SLURM fixture.
 2. GCP and AWS/S3 procedures still require disposable provider accounts to verify minimum permissions, cleanup, and current interface behavior.
-3. Additional focused Desktop captures would improve the remaining run-inspection guides. The planning, environment-catalog and execution-scope captures are reviewed in light and dark themes; the automated link checker is in CI.
+3. Additional focused Desktop captures would improve the remaining run-detail guides. The planning, environment-catalog, execution-scope and workflow-history captures are reviewed in light and dark themes; the automated link checker is in CI.
 4. Release installation is not externally verifiable until the macOS server artifact and anonymous GHCR image access are fixed.

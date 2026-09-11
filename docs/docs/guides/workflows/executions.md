@@ -38,6 +38,10 @@ The completed trace includes:
 6. Open the run to inspect live activity state, logs, placement, network transfers, and execution prerequisites.
 7. After completion, compare predicted and observed Gantt charts, per-activity runtime gaps, makespan, cost, and the execution-time decomposition.
 
+<img src={require('@site/static/img/interface/runs/workflow-history.png').default} alt="AkôFlow Desktop Runs history filtered to Workflow, showing type, real or simulation mode, status, target, start time and activity progress." />
+
+*Start with the **Type** filter when investigating a workflow. The table then separates real and simulation runs, exposes the target and completion state, and reports activity progress. Select a row or **Details** to move from the compact history into the run evidence.*
+
 To open an interactive terminal, use the console action for a compatible resource. The session appears with interactive runs in **Runs** and can be closed or have its log exported.
 
 ## Using the API

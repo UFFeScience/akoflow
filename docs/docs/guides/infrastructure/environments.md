@@ -16,9 +16,9 @@ Environment definitions are versioned. Execution scopes and plans refer to an en
 4. For a real remote environment, configure its connection and credential reference. Secrets are stored by the daemon; the environment keeps a reference rather than the secret value.
 5. Test the connection when the form offers the action, then save the environment.
 
-<img src={require('@site/static/img/interface/infrastructure/environments.png').default} alt="AkôFlow Desktop Environments catalog with Connect environment and Create simulation actions visible at the top right." />
+<img src={require('@site/static/img/interface/infrastructure/environments.png').default} alt="AkôFlow Desktop Environments catalog showing the execution and simulation tabs, environment health, connection state, runtime type and inventory summary." />
 
-*The catalog separates connection-backed environments from SimGrid models. Use **Connect environment** for a real target and **Create simulation** for a modeled platform; the form that follows determines the appropriate fields.*
+*The catalog separates connection-backed targets from SimGrid models. Each card makes its health, connection or cloud-access state, runtime and discovered inventory visible before you open it. Use **Connect environment** for a real target and **Create simulation** for a modeled platform; the form that follows determines the appropriate fields.*
 
 Simulation creation collects a SimGrid platform model and can also define an execution host used by the simulation engine. It does not validate a remote SSH or Kubernetes endpoint.
 

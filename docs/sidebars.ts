@@ -31,6 +31,7 @@ const sidebars: SidebarsConfig = {
       collapsed: false,
       items: [
         "guides/infrastructure/environments",
+        "guides/infrastructure/simgrid",
         "guides/infrastructure/execution-scopes",
         "guides/infrastructure/storage",
         "guides/infrastructure/cloud-capacity",

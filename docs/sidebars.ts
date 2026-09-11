@@ -80,6 +80,7 @@ const sidebars: SidebarsConfig = {
         "engine",
         "runtimes",
         "explanations/planning",
+        "explanations/prism-and-heft",
         "explanations/network-modeling",
         "explanations/evidence-and-provenance",
       ],

@@ -57,6 +57,14 @@ Most task guides contain two paths:
 
 The API path is useful for automation and reproducible experiments. The Desktop path is useful for exploration, comparison, and live monitoring. Records created through either path appear in the same interface.
 
+## Use global search deliberately
+
+Press <kbd>⌘</kbd>+<kbd>K</kbd> on macOS, <kbd>Ctrl</kbd>+<kbd>K</kbd> on Windows or Linux, or select the search field in the title bar. With an empty field, Desktop lists navigation shortcuts such as **Workflow definitions**, **Planning sessions**, **Runs**, and **Provenance**. This is the fastest route when you know the product area but not its sidebar location.
+
+Once you enter text, the list changes to matching control-plane entities. A result identifies its record by title and ID, and may show a status and type; select it to open the corresponding record. Press <kbd>Enter</kbd> to open the first available result, or <kbd>Escape</kbd> to close the result list.
+
+Search is a locator, not an investigation surface. It does not replace the filtered lists or the provenance query tools: use the workflow, run, plan, environment, or provenance page after opening a result when you need status history, evidence, or a precise server-side filter. If Desktop says **Search is temporarily unavailable**, the search request failed; retry after confirming that the daemon connection is healthy.
+
 ## Global terminal
 
 Interactive commands open in the terminal panel fixed to the bottom of the application. The daemon owns the session and streams its output; closing a page does not make the renderer execute or manage a remote shell itself.

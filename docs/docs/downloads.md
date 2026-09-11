@@ -4,8 +4,7 @@ title: Downloads & Releases
 sidebar_label: Downloads
 ---
 
-All AkôFlow components are released automatically when a version tag (`v0.x.y`) is pushed to the repository.  
-Find every release at [github.com/UFFeScience/akoflow/releases](https://github.com/UFFeScience/akoflow/releases).
+Pushing a version tag (`v0.x.y`) triggers the repository release workflow. A version is available to users only after that workflow completes successfully; find published artifacts at [github.com/UFFeScience/akoflow/releases](https://github.com/UFFeScience/akoflow/releases).
 
 ---
 
@@ -22,7 +21,7 @@ The desktop app is the recommended graphical client. It starts the version-match
 
 [**→ Download latest release**](https://github.com/UFFeScience/akoflow/releases/latest)
 
-Before installing, review the platform requirements in [Installation](installation). The packaged application checks for updates, health-checks the matching runtime images, and returns to the last healthy version if startup fails.
+Before installing, review the platform requirements in [Installation](installation). On first launch, confirm that Docker can start the matching runtime images and that the Desktop reaches **Overview**.
 
 :::note macOS Gatekeeper
 If macOS blocks the app on first launch, run:

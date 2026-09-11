@@ -1,7 +1,7 @@
 ---
 id: modules
-title: System architecture
-sidebar_label: System architecture
+title: AkôFlow components and boundaries
+sidebar_label: Components and boundaries
 ---
 
 AkôFlow is a single control-plane daemon with a REST API, a persistent event queue, planning and execution services, and pluggable infrastructure adapters. The Desktop application is the primary client of that API. AkôFlow does **not** deploy a separate Workflow Engine into every environment.

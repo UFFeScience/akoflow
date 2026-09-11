@@ -7,7 +7,7 @@ description: How AkôFlow preserves predictions, runtime observations, artifacts
 
 AkôFlow does not overwrite a plan with a completed run. It preserves the prediction used to choose a placement and records the execution evidence beside it. This makes disagreement inspectable: it can indicate an inaccurate model, an unexpected runtime condition, or a different data-preparation path.
 
-Use [Provenance and audit](../guides/data/provenance-and-audit) to query the records. This page explains why the records are separate.
+Use [Provenance and audit](../guides/data/provenance-and-audit) to query the records. This explanation describes why they remain separate.
 
 ## Two timelines for one selected plan
 

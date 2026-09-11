@@ -7,7 +7,7 @@ description: How the daemon persists work, dispatches planning and execution, an
 
 AkôFlow's server is a persistent control-plane daemon. The HTTP API validates and stores requests; a durable event loop dispatches work that may take longer than one request. The daemon is therefore responsible for recording intent and state transitions, while runtime adapters perform provider-specific work.
 
-This page explains orchestration. It does not define an API contract; use the [planning and execution state reference](./reference/planning-and-execution-states) for states and endpoints.
+This is an orchestration explanation, not an API contract. Use the [planning and execution state reference](./reference/planning-and-execution-states) for states and endpoints.
 
 ## From request to durable work
 

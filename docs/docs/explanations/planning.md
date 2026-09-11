@@ -6,7 +6,7 @@ description: Why planning sessions produce candidates before one placement becom
 
 Planning answers a bounded placement question: given one workflow version and one execution scope, which feasible assignment should be used for the chosen objective? It is not execution, and it does not reserve or start infrastructure.
 
-Use [Plan a workflow](../guides/workflows/planning) when you need the Desktop or API procedure. This page explains the model behind that procedure.
+Use [Plan a workflow](../guides/workflows/planning) for the Desktop or API procedure; this explanation covers the model behind it.
 
 ## A planning session freezes the question
 

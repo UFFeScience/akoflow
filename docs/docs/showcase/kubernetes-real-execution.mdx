@@ -1,0 +1,69 @@
+---
+title: Kubernetes real execution
+description: Dispatch a complete container workflow to Kind using AkôFlow Desktop or the API.
+---
+
+import InterfaceApiTabs from '@site/src/components/InterfaceApiTabs';
+import {FileList, WorkflowDiagram} from '@site/src/components/WorkflowShowcase';
+
+# Kubernetes real execution
+
+<WorkflowDiagram kind="kubernetes" />
+
+This example executes two real container activities on a local Kind cluster. Use it after the simulation walkthrough to validate runtime credentials, persistent storage, Kubernetes Jobs, logs, artifacts, and provenance.
+
+:::warning Development environment
+The checked-in access manifest intentionally grants broad permissions for a disposable local cluster. Do not reuse it in production.
+:::
+
+## Download the inputs
+
+<FileList>
+  <a href="https://github.com/UFFeScience/akoflow/raw/main/examples/kind/cluster.yaml">Kind cluster ↓</a>
+  <a href="https://github.com/UFFeScience/akoflow/raw/main/examples/kind/akoflow-access.yaml">AkôFlow access ↓</a>
+  <a href="https://github.com/UFFeScience/akoflow/raw/main/examples/kind/environment.yaml">Environment YAML ↓</a>
+  <a href="https://github.com/UFFeScience/akoflow/raw/main/examples/kind/scope.yaml">Execution scope YAML ↓</a>
+  <a href="https://github.com/UFFeScience/akoflow/raw/main/examples/kind/topology.yaml">Network topology YAML ↓</a>
+  <a href="https://github.com/UFFeScience/akoflow/raw/main/examples/kind/dag.yaml">Workflow YAML ↓</a>
+  <a href="https://github.com/UFFeScience/akoflow/raw/main/examples/kind/requests/plan-request.yaml">Plan envelope ↓</a>
+  <a href="https://github.com/UFFeScience/akoflow/raw/main/examples/kind/requests/execution-request.yaml">Execution envelope ↓</a>
+</FileList>
+
+<InterfaceApiTabs
+  desktop={<div>
+    <h2>Run with AkôFlow Desktop</h2>
+    <ol>
+      <li>Create the Kind cluster and apply <code>akoflow-access.yaml</code> and <code>storage.yaml</code>.</li>
+      <li>Generate a ServiceAccount token. In <strong>Infrastructure → Environments</strong>, create a Kubernetes environment and store that token in the daemon credential flow.</li>
+      <li>Test the connection and run discovery. Confirm that the Kind worker appears as a schedulable resource.</li>
+      <li>Create a scope and topology matching the supplied YAML, then import <code>dag.yaml</code> under <strong>Workflows → Definitions</strong>.</li>
+      <li>Create a manual plan or generate candidates, select the Kind resource, and start a <strong>Real execution</strong>.</li>
+      <li>Inspect activity logs, generated files, artifacts, timeline, events, and provenance after completion.</li>
+    </ol>
+  </div>}
+  api={<div>
+    <h2>Run through the API</h2>
+    <p>After creating the cluster and token as described in <a href="https://github.com/UFFeScience/akoflow/tree/main/examples/kind">the complete Kind README</a>, submit the same objects:</p>
+    <pre><code>{`export AKOFLOW_API_URL="http://127.0.0.1:8080/akoflow-api"
+export AKOFLOW_API_TOKEN="<token>"
+
+for pair in \\
+  "environments examples/kind/environment.yaml" \\
+  "execution-scopes examples/kind/scope.yaml" \\
+  "network-topologies examples/kind/topology.yaml" \\
+  "workflow-definitions examples/kind/dag.yaml" \\
+  "schedule-plans examples/kind/requests/plan-request.yaml" \\
+  "execution-runs examples/kind/requests/execution-request.yaml"
+do
+  set -- $pair
+  curl --fail-with-body \\
+    -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \\
+    -H 'Content-Type: application/yaml' \\
+    --data-binary "@$2" "$AKOFLOW_API_URL/$1/"
+done`}</code></pre>
+  </div>}
+/>
+
+## Expected evidence
+
+A successful run produces Kubernetes Jobs and Pods for both activities, persisted activity logs, run lifecycle events, and artifacts from the shared workspace. The AkôFlow run detail remains the canonical projection even after Kubernetes history cleanup.

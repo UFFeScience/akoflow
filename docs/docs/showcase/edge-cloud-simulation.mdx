@@ -1,0 +1,65 @@
+---
+title: Edge to cloud simulation
+description: Run a complete edge-cloud workflow through AkôFlow Desktop or the API.
+---
+
+import InterfaceApiTabs from '@site/src/components/InterfaceApiTabs';
+import {FileList, WorkflowDiagram} from '@site/src/components/WorkflowShowcase';
+
+# Edge to cloud simulation
+
+<WorkflowDiagram kind="edge-cloud" />
+
+This deterministic example runs `prepare → analyze → summarize`. The middle activity benefits from the faster cloud resource, but moving it introduces two network transfers and a non-zero cloud cost. It is a compact example of the trade-off evaluated by PRISM Time, PRISM Cost, and HEFT.
+
+## Download the inputs
+
+<FileList>
+  <a href="https://github.com/UFFeScience/akoflow/raw/main/examples/simulation/environment.yaml">Environment YAML ↓</a>
+  <a href="https://github.com/UFFeScience/akoflow/raw/main/examples/simulation/scope.yaml">Execution scope YAML ↓</a>
+  <a href="https://github.com/UFFeScience/akoflow/raw/main/examples/simulation/topology.yaml">Network topology YAML ↓</a>
+  <a href="https://github.com/UFFeScience/akoflow/raw/main/examples/simulation/workflow.yaml">Workflow YAML ↓</a>
+  <a href="https://github.com/UFFeScience/akoflow/raw/main/examples/simulation/plan-request.yaml">Manual plan envelope ↓</a>
+  <a href="https://github.com/UFFeScience/akoflow/raw/main/examples/simulation/execution-request.yaml">Execution envelope ↓</a>
+</FileList>
+
+<InterfaceApiTabs
+  desktop={<div>
+    <h2>Run with AkôFlow Desktop</h2>
+    <ol>
+      <li>Open <strong>Infrastructure → Environments</strong> and create a simulation environment matching <code>environment.yaml</code>: two resources, the SimGrid runtime, and the declared speed and cost values.</li>
+      <li>Create the execution scope from <code>scope.yaml</code>, then add its bidirectional 100 Mbit/s topology from <code>topology.yaml</code>.</li>
+      <li>Open <strong>Workflows → Definitions</strong>, choose <strong>Import YAML</strong>, and select <code>workflow.yaml</code>.</li>
+      <li>Open the workflow, choose <strong>Generate plan</strong>, select <em>Edge cloud simulation scope</em>, and run PRISM Cost, PRISM Time, or HEFT. Alternatively, reproduce the checked-in assignment in the manual editor.</li>
+      <li>Select a candidate, inspect its Gantt chart, and choose <strong>Use selected plan</strong>.</li>
+      <li>Start the simulation. In the completed run, inspect <strong>Timeline</strong>, <strong>Data</strong>, and <strong>Plan vs execution</strong>.</li>
+    </ol>
+  </div>}
+  api={<div>
+    <h2>Run through the API</h2>
+    <p>From the repository root, set the daemon address and token, then submit the complete bundle:</p>
+    <pre><code>{`export AKOFLOW_API_URL="http://127.0.0.1:8080/akoflow-api"
+export AKOFLOW_API_TOKEN="<token>"
+
+post_yaml() {
+  curl --fail-with-body \\
+    -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \\
+    -H 'Content-Type: application/yaml' \\
+    --data-binary "@$2" "$AKOFLOW_API_URL/$1/"
+}
+
+post_yaml environments examples/simulation/environment.yaml
+post_yaml execution-scopes examples/simulation/scope.yaml
+post_yaml network-topologies examples/simulation/topology.yaml
+post_yaml workflow-definitions examples/simulation/workflow.yaml
+post_yaml schedule-plans examples/simulation/plan-request.yaml
+post_yaml execution-runs examples/simulation/execution-request.yaml`}</code></pre>
+    <p>Poll the immutable run projection:</p>
+    <pre><code>{`curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \\
+  "$AKOFLOW_API_URL/execution-runs/simulation-example-run-v1/"`}</code></pre>
+  </div>}
+/>
+
+## Expected evidence
+
+The run contains three settled activities, two cross-resource data transfers, predicted and observed makespan/cost, the selected assignments, and the SimGrid trace. The execution bundle is also preserved under `storage/simgrid/` for reproduction.

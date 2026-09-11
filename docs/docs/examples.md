@@ -5,7 +5,9 @@ sidebar_label: Examples
 description: Runnable AkôFlow scenarios maintained with the current API contracts.
 ---
 
-Use the examples checked into the repository instead of copying isolated payloads from older documentation. Each scenario keeps its workflow, infrastructure, topology, planning, and execution inputs together.
+The guided, visual catalog now lives in the [Workflow showcase](showcase/). Use it to download complete inputs and choose between equivalent AkôFlow Desktop and API walkthroughs.
+
+This reference remains as an inventory of the examples checked into the repository. Each scenario keeps its workflow, infrastructure, topology, planning, and execution inputs together.
 
 ## Simulation
 

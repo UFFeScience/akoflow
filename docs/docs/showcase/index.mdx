@@ -1,0 +1,44 @@
+---
+title: Workflow showcase
+sidebar_label: Overview
+description: Complete AkôFlow workflows with downloadable files and Desktop and API walkthroughs.
+---
+
+import {ShowcaseCard, ShowcaseGrid} from '@site/src/components/WorkflowShowcase';
+
+# Workflow showcase
+
+Start from a complete, runnable workflow instead of assembling isolated payloads. Every showcase includes the workflow graph, infrastructure inputs, planning data, execution request, expected evidence, and two equivalent paths: **AkôFlow Desktop** and **API**.
+
+<ShowcaseGrid>
+  <ShowcaseCard
+    title="Edge to cloud simulation"
+    description="A deterministic three-stage workflow that exposes computation, transfer time, placement, and cost in SimGrid."
+    href="/docs/showcase/edge-cloud-simulation"
+    kind="edge-cloud"
+    tags={['Beginner', 'SimGrid', 'Time + cost']}
+  />
+  <ShowcaseCard
+    title="Kubernetes real execution"
+    description="A two-stage container workflow dispatched to a local Kind cluster with persistent data and observable activity logs."
+    href="/docs/showcase/kubernetes-real-execution"
+    kind="kubernetes"
+    tags={['Intermediate', 'Kubernetes', 'Real run']}
+  />
+  <ShowcaseCard
+    title="30 GB network fan-out"
+    description="A data-intensive workflow for studying parallel transfers, shared bandwidth, and fan-in across three machines."
+    href="/docs/showcase/network-fanout"
+    kind="fanout"
+    tags={['Network', 'SimGrid', 'Contention']}
+  />
+</ShowcaseGrid>
+
+## How to use a showcase
+
+1. Choose a scenario and download its checked-in YAML files.
+2. Follow the **Desktop** tab to import and inspect each object visually, or the **API** tab to submit the same files.
+3. Generate or register a plan, start the run, and wait for a terminal status.
+4. Compare planned and observed makespan, cost, activity placement, transfers, and provenance.
+
+The files are the source of truth. Walkthroughs refer to them directly so the graphical path and API path exercise the same model.

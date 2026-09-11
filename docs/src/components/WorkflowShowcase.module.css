@@ -1,0 +1,97 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 1.4rem 0 2rem;
+}
+
+.card {
+  overflow: hidden;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 10px;
+  color: inherit;
+  background: var(--ifm-background-color);
+  text-decoration: none;
+  transition: border-color 120ms ease, transform 120ms ease;
+}
+
+.card:hover {
+  border-color: var(--ifm-color-emphasis-500);
+  color: inherit;
+  text-decoration: none;
+  transform: translateY(-1px);
+}
+
+.cardBody { padding: 1rem; }
+.cardBody h2 { margin: 0.55rem 0 0.35rem; font-size: 1.1rem; }
+.cardBody p { min-height: 3.2em; margin: 0 0 0.8rem; color: var(--ifm-color-emphasis-700); }
+.cardBody strong { font-size: 0.78rem; }
+
+.diagram,
+.fanout {
+  position: relative;
+  display: flex;
+  min-height: 116px;
+  gap: 0.55rem;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+  background:
+    radial-gradient(circle at 1px 1px, var(--ifm-color-emphasis-200) 1px, transparent 0) 0 0 / 14px 14px,
+    var(--ifm-background-surface-color);
+}
+
+.node,
+.target,
+.parallel i {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 3.4rem;
+  min-height: 2rem;
+  padding: 0.3rem 0.55rem;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 6px;
+  background: var(--ifm-background-color);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.72rem;
+  font-style: normal;
+  font-weight: 600;
+}
+
+.target { border-style: dashed; }
+.arrow { color: var(--ifm-color-emphasis-500); font-size: 1.2rem; }
+.route { position: absolute; right: 0.7rem; bottom: 0.45rem; color: var(--ifm-color-emphasis-600); font-size: 0.65rem; }
+.parallel { display: grid; gap: 0.3rem; }
+
+.tags { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.tags span {
+  padding: 0.15rem 0.4rem;
+  border-radius: 999px;
+  background: var(--ifm-color-emphasis-100);
+  color: var(--ifm-color-emphasis-700);
+  font-size: 0.65rem;
+  font-weight: 600;
+}
+
+.files {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+
+.files > * {
+  display: block;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 6px;
+  background: var(--ifm-background-surface-color);
+}
+
+@media (max-width: 760px) {
+  .grid, .files { grid-template-columns: 1fr; }
+  .diagram, .fanout { overflow-x: auto; justify-content: flex-start; }
+}

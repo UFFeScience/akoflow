@@ -4,6 +4,17 @@ const sidebars: SidebarsConfig = {
   docsSidebar: [
     {
       type: "category",
+      label: "Workflow showcase",
+      collapsed: false,
+      items: [
+        "showcase/index",
+        "showcase/edge-cloud-simulation",
+        "showcase/kubernetes-real-execution",
+        "showcase/network-fanout",
+      ],
+    },
+    {
+      type: "category",
       label: "Start here",
       collapsed: false,
       items: [
@@ -73,7 +84,6 @@ const sidebars: SidebarsConfig = {
         },
         "internal/workflow-spec",
         "cli",
-        "examples",
       ],
     },
     {

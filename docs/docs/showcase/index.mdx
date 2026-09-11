@@ -58,5 +58,12 @@ The files are the source of truth. Walkthroughs refer to them directly so the gr
 | 30 GB fan-out | [`examples/simulation/30gb-fanout`](https://github.com/UFFeScience/akoflow/tree/main/examples/simulation/30gb-fanout) | Shared links, parallel transfers, and fan-in |
 | 50-core fan-out | [`examples/simulation/50core-fanout`](https://github.com/UFFeScience/akoflow/tree/main/examples/simulation/50core-fanout) | Per-core placement and parallel capacity |
 | Kubernetes with Kind | [`examples/kind`](https://github.com/UFFeScience/akoflow/tree/main/examples/kind) | Local real execution, namespace access, and requests |
-| SLURM cluster | [`examples/slurm`](https://github.com/UFFeScience/akoflow/tree/main/examples/slurm) | Partition, login node, shared storage, and bindings |
 | Remote connections | [`examples/connections`](https://github.com/UFFeScience/akoflow/tree/main/examples/connections) | SSH-based PlaFRIM, Santos Dumont, and Kind connections |
+
+## Infrastructure configuration references
+
+These files model infrastructure inputs, but are not end-to-end showcases. In particular, they do not include a portable cluster, a submitted run, or observed execution evidence.
+
+| Infrastructure | Files | Scope and next step |
+| --- | --- | --- |
+| SLURM cluster | [`examples/slurm`](https://github.com/UFFeScience/akoflow/tree/main/examples/slurm) | A catalog for a partition, login node, shared storage, and runtime bindings. Pair it with an approved SLURM cluster and follow [Connect an HPC and SLURM cluster](../guides/infrastructure/hpc-slurm) before submitting a site-approved probe. |

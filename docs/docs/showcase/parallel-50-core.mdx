@@ -1,0 +1,53 @@
+---
+title: 100 activities on 50 cores
+description: Exercise core-level placement and parallel execution in SimGrid.
+---
+
+import InterfaceApiTabs from '@site/src/components/InterfaceApiTabs';
+import {FileList, WorkflowDiagram} from '@site/src/components/WorkflowShowcase';
+
+# 100 activities on 50 cores
+
+<WorkflowDiagram kind="parallel" />
+
+This workload separates *machine capacity* from *activity count*. One hundred independent activities are eligible for a simulated machine with 50 cores, so two waves are expected when every activity requests one core. The example is useful for detecting plans that accidentally treat a machine as one slot or display only the cores that received work.
+
+## Download the complete bundle
+
+<FileList>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/simulation/50core-fanout/environment.yaml">Environment YAML ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/simulation/50core-fanout/scope.yaml">Execution scope YAML ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/simulation/50core-fanout/topology.yaml">Network topology YAML ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/simulation/50core-fanout/workflow.yaml">Workflow YAML ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/simulation/50core-fanout/plan-request.yaml">Plan envelope ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/simulation/50core-fanout/execution-request.yaml">Execution envelope ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/simulation/50core-fanout/run.sh">Runnable shell script ↓</a>
+</FileList>
+
+<InterfaceApiTabs
+  desktop={<div>
+    <h2>Run with AkôFlow Desktop</h2>
+    <ol>
+      <li>Import the environment, scope, and topology under <strong>Infrastructure</strong>. Confirm that the M2 resource reports 50 schedulable cores.</li>
+      <li>Import <code>workflow.yaml</code> under <strong>Workflows → Definitions</strong>.</li>
+      <li>Generate a plan against the imported scope, or import the manual plan envelope.</li>
+      <li>Expand the candidate Gantt chart. Its resource lanes must represent individual cores; unused cores may be hidden in compact mode.</li>
+      <li>Start the simulation and compare planned and observed makespan. Queue time is accumulated over activities and is not itself the wall-clock makespan.</li>
+    </ol>
+  </div>}
+  api={<div>
+    <h2>Run through the API</h2>
+    <p>The checked-in script submits the objects in dependency order and stops on the first HTTP error:</p>
+    <pre><code>{`export AKOFLOW_API_URL="http://127.0.0.1:8080/akoflow-api"
+export AKOFLOW_API_TOKEN="<token>"
+bash examples/simulation/50core-fanout/run.sh`}</code></pre>
+    <p>Inspect the script before running it if the target instance already contains objects with the same IDs.</p>
+  </div>}
+/>
+
+## Checks after execution
+
+- Exactly 100 activities settle.
+- No activity consumes more cores than requested by the workflow.
+- The Gantt can show all lanes without constructing thousands of off-screen DOM nodes.
+- Planned and observed evidence retain execution, queue, and transfer components separately.

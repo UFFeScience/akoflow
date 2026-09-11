@@ -2,13 +2,21 @@ import React, {type ReactNode} from "react";
 import Link from "@docusaurus/Link";
 import styles from "./WorkflowShowcase.module.css";
 
-type DiagramKind = "edge-cloud" | "fanout" | "kubernetes";
+type DiagramKind = "edge-cloud" | "fanout" | "kubernetes" | "parallel";
 
 function Arrow() {
   return <span className={styles.arrow} aria-hidden="true">→</span>;
 }
 
 export function WorkflowDiagram({kind}: {kind: DiagramKind}) {
+  if (kind === "parallel") {
+    return (
+      <div className={styles.fanout} role="img" aria-label="One hundred independent activities distributed across fifty cores">
+        <span className={styles.node}>100 tasks</span><Arrow />
+        <span className={styles.parallel}><i>core 1</i><i>core 2…49</i><i>core 50</i></span>
+      </div>
+    );
+  }
   if (kind === "fanout") {
     return (
       <div className={styles.fanout} role="img" aria-label="One producer, three parallel workers, and one consumer">

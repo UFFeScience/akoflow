@@ -5,7 +5,11 @@ sidebar_label: Installation
 description: Install the AkôFlow Desktop application or run the versioned daemon stack.
 ---
 
-The recommended path is the packaged **AkôFlow Desktop** application. It includes the graphical client and starts the version-matched daemon and BuildKit services through Docker Compose. Use the manual stack when you need to inspect Docker output or automate the API directly.
+The packaged **AkôFlow Desktop** application is intended to be the primary installation path. It includes the graphical client and starts the version-matched daemon and BuildKit services through Docker Compose.
+
+:::caution Public release status
+The public release path is not currently verified end to end. On 2026-09-11, the latest public release was `v1.0.3`, while its Desktop artifacts were named `1.0.0` and the public daemon image manifest at `ghcr.io/uffescience/akoflow-daemon:v1.0.3` returned `401 Unauthorized`. Do not rely on the release assets for a new production installation until a matching Desktop artifact and anonymously pullable runtime images are published.
+:::
 
 ## Requirements
 
@@ -17,7 +21,9 @@ The recommended path is the packaged **AkôFlow Desktop** application. It includ
 
 The first startup checks these requirements and reports anything that is missing. The renderer does not receive the daemon token and does not execute Docker, shell, SSH, Kubernetes, or infrastructure commands.
 
-## Install the Desktop application
+## Install the Desktop application after a verified release
+
+Use these steps only after the release page contains a matching Desktop package and the required GHCR images can be pulled without private organization credentials.
 
 1. Open the [latest AkôFlow release](https://github.com/UFFeScience/akoflow/releases/latest).
 2. Download the installer for your operating system and architecture.
@@ -35,7 +41,7 @@ Database records, credentials, artifacts, and simulation data live in the `akofl
 
 ## Run the daemon stack without the Desktop bootstrap
 
-Use the release bundle when you want to operate the API stack yourself. This path is also the quickest way to distinguish an image-distribution problem from a Desktop problem.
+Use the release bundle when you want to operate the API stack yourself. This path is also the quickest way to distinguish an image-distribution problem from a Desktop problem. It needs the same publicly accessible daemon and BuildKit images as Desktop.
 
 1. Verify Docker and Compose are available:
 
@@ -111,7 +117,7 @@ Use `npm run desktop` to run the Electron development shell. The Vite proxy read
 
 ## Updates and rollback
 
-The packaged application checks releases from the main AkôFlow repository. After confirmation, it installs the update on restart, pulls matching daemon and BuildKit images, and runs a health check. If the new runtime does not become healthy, AkôFlow restores the last healthy container version without deleting persistent volumes.
+Update and rollback behavior must be verified against the packaged release in use. Until the public release path above is repaired, do not use the updater as a recovery mechanism. Preserve the `akoflow-desktop-data` Docker volume and export the instance before changing containers or versions.
 
 ## Verify the installation
 

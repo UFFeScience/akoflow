@@ -10,21 +10,24 @@ Pushing a version tag (`v0.x.y`) triggers the repository release workflow. A ver
 
 ## Desktop App
 
-The desktop app is the recommended graphical client. It starts the version-matched AkôFlow daemon and BuildKit stack through Docker and preserves application data in Docker volumes.
+The Desktop application is the graphical client. A usable package needs a matching daemon/BuildKit image pair that Docker can pull.
 
-| Platform | Architecture | File |
+| Platform | Architecture | Release asset family |
 |---|---|---|
-| macOS | Apple Silicon (arm64) | `AkôFlow Desktop-*-arm64.dmg` |
-| macOS | Intel (x64) | `AkôFlow Desktop-*.dmg` |
-| Windows | x64 | `AkôFlow Desktop Setup *.exe` |
-| Linux | x64 | `AkôFlow Desktop-*.AppImage` |
+| macOS | universal build | `.dmg` and `.zip` |
+| Windows | x64 | `.exe` |
+| Linux | x64 | `.AppImage` and `.deb` |
 
 [**→ Download latest release**](https://github.com/UFFeScience/akoflow/releases/latest)
 
-Before installing, review the platform requirements in [Installation](installation). On first launch, confirm that Docker can start the matching runtime images and that the Desktop reaches **Overview**.
+:::caution Verify the release before installing
+The latest public release may contain packages that cannot yet start their matching runtime images. In particular, the public `v1.0.3` release was checked on 2026-09-11: its Desktop asset names still carried `1.0.0`, and anonymous access to `ghcr.io/uffescience/akoflow-daemon:v1.0.3` returned `401 Unauthorized`. Treat a release as installable only after its package version, image tag, and public pull access agree.
+:::
+
+Before installing, review the platform requirements in [Installation](installation). After launch, confirm Docker starts the matching runtime images and that Desktop reaches **Overview**.
 
 :::note macOS Gatekeeper
-If macOS blocks the app on first launch, run:
+After verifying that the bundle came from the official release, if macOS blocks it on first launch, run:
 ```bash
 xattr -cr /Applications/AkôFlow\ Desktop.app
 ```

@@ -46,7 +46,7 @@ Work on the first unchecked unit only. Do not combine units unless the changes a
 
 - [x] Rewrite `guides/workflows/first-run.md` as one complete SimGrid tutorial. Evidence: the corrected six-file bundle produced run `simulation-example-run-v1` with 3/3 completed activities, two transfers, 120,000,000 transferred bytes, and 21.593 s observed makespan on 2026-09-11; all seven screenshot markers were removed because commands and invariant output provide the clearer verification path.
 - [x] Review `getting-started.md` as a short orientation page. Evidence: the page now routes by user goal to installation, the verified first run, infrastructure-specific guides, concepts, troubleshooting, and API/reference material without repeating tutorial commands.
-- [ ] Verify installation on a clean supported host. The pending first-start screenshot was removed because text-based preflight checks are more useful and safe. Re-verified on 2026-09-11: the public `v1.0.3` macOS/arm64 server artifact downloads but reports `Binary was compiled with 'CGO_ENABLED=0', go-sqlite3 requires cgo to work`; anonymous inspection of `ghcr.io/uffescience/akoflow-daemon:v1.0.3` still returns `unauthorized`. Re-test after a distributable SQLite-enabled server artifact and public package visibility are fixed.
+- [ ] Verify installation on a clean supported host. The pending first-start screenshot was removed because text-based preflight checks are more useful and safe. Re-verified on 2026-09-11: GitHub exposes `v1.0.3`, but its Desktop assets still use `1.0.0` names and anonymous inspection of `ghcr.io/uffescience/akoflow-daemon:v1.0.3` returns `401 Unauthorized`. Re-test after matching Desktop assets and public package visibility are fixed.
 
 ### P0 — runnable showcases
 

@@ -113,7 +113,22 @@ SQL favorites and recent-query history are stored in the browser profile. They a
 
 ## Inspect the audit trail
 
-Open **Audit** for a chronological table containing time, event type, target, actor, outcome, and summary. Desktop groups the loaded records into discovery/resources, connections, console sessions, workflows, and credentials; **All events** removes this client-side category filter.
+Open **Audit** for a chronological record of infrastructure discovery, connections, console access, commands, credentials, and workflow activity. It starts in **All events** and groups the loaded records into discovery/resources, connections, console sessions, workflows, and credentials.
+
+<img src={require('@site/static/img/interface/operations/audit-events.png').default} alt="AkôFlow Desktop Audit view showing the All events filter, chronological audit table, event targets, succeeded and failed outcomes, and operational summaries." />
+
+*Each row keeps the event time, its machine-readable type, the persisted target, the outcome, and an operational summary. In this capture, connection health checks show both a failed Kubernetes check and a successful cloud credential check; the colored outcome is a result to investigate, not a diagnosis by itself.*
+
+### Read the Audit screen
+
+| Area | Use it for | Important interpretation |
+| --- | --- | --- |
+| **All events** and category tabs | Narrow the visible list to discovery/resources, connections, console sessions, workflows, or credentials. | The Desktop fetches an audit list and applies these categories in the browser. **All events** removes that local category filter; it does not request a different server-side result set. |
+| **Time** | Correlate an operation with a run, connection check, or terminal session. | The value is displayed in the local browser time zone. Use persisted IDs and API filters when an investigation needs exact cross-system correlation. |
+| **Event** | Identify the operation class, such as `connection.health.checked`. | Event types are machine-readable, dot-separated names. The category tabs match their leading namespace. |
+| **Target** | Locate the connection, environment, resource, session, execution, or system record affected by the event. | This is a persisted target identifier when one is available; it is not necessarily the friendly name shown elsewhere in Desktop. |
+| **Outcome** | Quickly distinguish `started`, `succeeded`, and `failed` records. | A failure tells you that the recorded operation did not complete successfully. Read **Summary** and then inspect the target before changing a configuration. |
+| **Summary** | Read the service-provided context or error associated with the event. | Treat it as operational evidence. It can include a runtime error returned by an external system, so do not copy it into public reports without reviewing it. |
 
 The API supports server-side filtering:
 

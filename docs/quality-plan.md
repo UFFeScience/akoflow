@@ -102,5 +102,5 @@ The documentation is ready for external users only when all of the following are
 
 1. A complete SLURM showcase requires either a safe test cluster or a reproducible local SLURM fixture.
 2. GCP and AWS/S3 procedures still require disposable provider accounts to verify minimum permissions, cleanup, and current interface behavior.
-3. Focused Desktop captures now cover planning, environment catalog, execution scope, workflow history, SimGrid run detail, provenance exploration, lineage, and read-only SQL. These captures were reviewed in light and dark themes; the automated link checker is in CI. Further captures should be added only where they clarify a verified procedure.
+3. Focused Desktop captures now cover planning, environment catalog, execution scope, workflow history, SimGrid run detail, provenance exploration, lineage, read-only SQL, and audit events. These captures were reviewed in light and dark themes; the automated link checker is in CI. Further captures should be added only where they clarify a verified procedure.
 4. Release installation is not externally verifiable until the macOS server artifact and anonymous GHCR image access are fixed.

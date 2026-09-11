@@ -38,6 +38,20 @@ const config: Config = {
     ],
   ],
 
+  themes: [
+    [
+      require.resolve("@easyops-cn/docusaurus-search-local"),
+      {
+        hashed: true,
+        indexDocs: true,
+        indexPages: true,
+        docsRouteBasePath: "/docs",
+        language: ["en"],
+        searchBarShortcutHint: true,
+      },
+    ],
+  ],
+
   themeConfig: {
     image: "img/akoflow-social-card.png",
     colorMode: {
@@ -55,10 +69,19 @@ const config: Config = {
       },
       items: [
         {
-          type: "docSidebar",
-          sidebarId: "docsSidebar",
+          to: "/docs/getting-started",
           position: "left",
-          label: "Documentation",
+          label: "Guide",
+        },
+        {
+          to: "/docs/concepts",
+          position: "left",
+          label: "Concepts",
+        },
+        {
+          to: "/docs/reference/api-overview",
+          position: "left",
+          label: "API Reference",
         },
         {
           href: "https://github.com/UFFeScience/akoflow",

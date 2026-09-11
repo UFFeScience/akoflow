@@ -1,0 +1,33 @@
+@media (min-width: 997px) {
+  .menu {
+    flex-grow: 1;
+    padding: 0.75rem;
+  }
+
+  @supports (scrollbar-gutter: stable) {
+    .menu {
+      padding: 0.75rem 0 0.75rem 0.75rem;
+      scrollbar-gutter: stable;
+    }
+  }
+
+  .menuWithAnnouncementBar {
+    margin-bottom: var(--docusaurus-announcement-bar-height);
+  }
+}
+
+.tools {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.5rem;
+  align-items: center;
+  margin: 0 0.15rem 0.8rem;
+}
+
+.tools > :first-child {
+  min-width: 0;
+}
+
+.colorMode {
+  flex: none;
+}

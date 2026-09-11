@@ -2,24 +2,29 @@
   display: inline-flex;
   gap: 2px;
   align-items: center;
-  padding: 3px;
+  padding: 2px;
   border: 1px solid var(--ifm-color-emphasis-200);
   border-radius: 999px;
-  background: var(--ifm-background-color);
+  background: var(--ifm-color-emphasis-100);
 }
 
 .switcher button {
   display: grid;
-  width: 26px;
-  height: 26px;
+  width: 24px;
+  height: 24px;
   place-items: center;
   padding: 0;
   border: 0;
   border-radius: 999px;
   background: transparent;
   color: var(--ifm-color-emphasis-500);
-  font-size: 0.85rem;
+  font-size: 0.78rem;
   cursor: pointer;
+}
+
+.switcher button span,
+.switcher button svg {
+  display: block;
 }
 
 .switcher button:hover {
@@ -29,7 +34,8 @@
 
 .switcher button.active {
   color: var(--ifm-font-color-base);
-  background: var(--ifm-color-emphasis-200);
+  background: var(--ifm-background-color);
+  box-shadow: 0 0 0 1px var(--ifm-color-emphasis-200);
 }
 
 @media (max-width: 996px) {

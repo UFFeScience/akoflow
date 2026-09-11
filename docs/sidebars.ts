@@ -84,6 +84,7 @@ const sidebars: SidebarsConfig = {
         "reference/api-overview",
         "reference/environment-yaml",
         "reference/execution-scopes-and-topologies",
+        "reference/planning-and-execution-states",
         {
           type: "category",
           label: "API endpoints",

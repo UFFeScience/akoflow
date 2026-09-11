@@ -72,6 +72,22 @@ The response contains a `root` key, `nodes`, directed `edges`, and `truncated`. 
 
 The **SQL** tab presents the queryable schema, templates for common investigations, named JSON parameters, result paging, explain, favorites, and local query history.
 
+<img src={require('@site/static/img/interface/provenance/sql-planned-versus-observed.png').default} alt="AkôFlow Desktop Provenance SQL view showing the safe schema, a read-only query that compares planned and observed run durations, query controls, and the result summary." />
+
+*This query joins completed execution runs to their schedule plans. The result summary reports the returned row count, current page, elapsed query time, and whether more rows are available; the values are evidence from the connected local database, not fixed example values.*
+
+### Read the SQL screen
+
+| Area | Use it for | Important interpretation |
+| --- | --- | --- |
+| **Safe schema** | Discover the tables and columns that the service makes available to read-only queries. Click a field to insert its name into the editor. | This is the current service schema, not a generic SQLite browser. Start here instead of assuming a column exists. |
+| **Query template** | Start a common investigation, then refine it in the editor. | A template is ordinary editable SQL. Review joins, filters, and ordering before relying on its output. |
+| **Query editor** | Write a `SELECT` or `WITH` query, including named parameters. | The interface shows the active timeout and row limit. Statements that modify data are rejected. |
+| **Run query** and **Query result** | Execute the query and inspect typed columns, rows, page controls, and elapsed milliseconds. | Row limits bound one result page. A “more rows available” message means that the result is not the complete matching set yet. |
+| **Explain** | Inspect SQLite's query plan before using a costly investigation repeatedly. | An explanation describes the database's access plan; it does not replace the normal query result or prove a result is scientifically meaningful. |
+| **Export CSV** and **Export JSON** | Save the current result page for analysis or a report. | Record the SQL, parameters, page, and time of export with the file so another investigator can reproduce it. |
+| **Favorite** and **History** | Reuse a query in the same Desktop browser profile. | They are local conveniences, not shared provenance records. |
+
 Only read-only `SELECT` and `WITH` queries are accepted. The Desktop communicates the current service limits as a 10-second execution timeout and 200 rows per page. Fetch the runtime schema instead of assuming table or column names:
 
 ```bash

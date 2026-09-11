@@ -1,53 +1,39 @@
 ---
 id: engine
-title: Control plane and execution
-sidebar_label: Control plane and execution
+title: Execution control plane
+sidebar_label: Execution control plane
+description: How the daemon persists work, dispatches planning and execution, and recovers runtime state.
 ---
 
-The current AkôFlow server is a control-plane daemon. Older descriptions of one engine per environment, a global in-memory `WorfklowChannel`, fixed orchestrator goroutines, or SQLite aggregation across engines no longer describe the implementation.
+AkôFlow's server is a persistent control-plane daemon. The HTTP API validates and stores requests; a durable event loop dispatches work that may take longer than one request. The daemon is therefore responsible for recording intent and state transitions, while runtime adapters perform provider-specific work.
 
-## Process lifecycle
+This page explains orchestration. It does not define an API contract; use the [planning and execution state reference](./reference/planning-and-execution-states) for states and endpoints.
 
-At startup the daemon opens operational and analytics persistence, builds credential stores, provider registries, planning algorithms, transfer connectors, cloud services, API handlers, and the persistent event loop. In writable mode it also starts connection monitoring. The API is the synchronous entry point; long-running work is queued.
+## From request to durable work
 
 ```text
 HTTP request
-   +-- validate and persist
-   +-- enqueue typed job
-   v
-persistent queue -> dispatcher -> planning | execution | cloud handler
-                                      |
-                               repositories + providers
+   |
+validate + persist
+   |
+typed queue job
+   |
+persistent dispatcher ----> planning handler
+                      \---> execution handler
+                      \---> cloud, transfer, monitoring, and maintenance handlers
 ```
 
-Read-only instance mode serves inspection APIs without starting mutating background processing.
+The API can acknowledge a request before its job starts. In particular, an execution request is accepted into the durable queue; the workflow execution run is created when the daemon begins processing that job. In read-only instance mode the server serves inspection APIs but does not run mutating background work.
 
-## Planning flow
+## Planning and execution are separate handlers
 
-1. Create a planning session for a workflow version and execution scope.
-2. The coordinator freezes versions, resources, topology, profiles, constraints, interference data, and algorithms.
-3. A planning job is dispatched.
-4. Registered algorithms generate candidates and predicted metrics.
-5. Compare candidates and select one to obtain the plan used by execution.
+A planning handler freezes the inputs for a session, invokes registered algorithms, and persists candidates. A user or API client selects one candidate to create the schedule plan used by execution. The [planning explanation](./explanations/planning) covers the significance of that boundary.
 
-Built-ins are HEFT, PRISM Time, and PRISM Cost. External plugins are validated. Clients should read algorithm availability from the API.
+An execution handler validates the selected plan and its bindings, then hands the work to the supervisor. The supervisor follows the workflow DAG: it starts an activity only when its control predecessors have completed and its preparation gate has committed. If incomplete activities remain and nothing can run, the run fails rather than silently assuming a valid schedule.
 
-## Execution flow
+## Runtime-independent supervision
 
-Starting a run persists its request and queues an execution job. The supervisor then:
-
-1. validates the plan, assignments, runtime bindings, and DAG;
-2. prewarms planned cloud targets for real execution;
-3. indexes activities, resources, assignments, and dependencies;
-4. inspects running handles and identifies dependency-ready work;
-5. prepares executable and workspace data;
-6. dispatches work up to the parallel limit;
-7. persists task, log, artifact, timing, and transfer observations;
-8. completes or fails the run and releases ephemeral cloud allocations.
-
-The current defaults are eight parallel activities and one-second inspection, but these are server defaults rather than API guarantees.
-
-## Runtime-independent control
+Every adapter has the same lifecycle boundary:
 
 ```go
 type RuntimeAdapter interface {
@@ -58,33 +44,16 @@ type RuntimeAdapter interface {
 }
 ```
 
-The resolver selects an adapter using execution mode and runtime identity. An `ActivityHandle` hides provider identifiers such as a PID, Kubernetes Job, Docker container, Slurm job, or simulation event while carrying status, endpoints, log, exit code, failure, and artifacts.
+An `ActivityHandle` carries the provider's external identity, status, endpoints, log, exit result, failure, and artifact observation. This lets the supervisor recover by inspecting a persisted handle instead of starting an uncertain activity again. The [runtime adapters explanation](./runtimes) describes what each current driver does behind this interface.
 
-## DAG progress
+## Preparation happens before execution
 
-Readiness is calculated from dependencies and completed tasks; there is no public `Ready` task state. If nothing is running, nothing is ready, and incomplete activities remain, the run fails as a cycle or incomplete plan.
+The supervisor resolves executable variants, workspaces, upstream data, and transfer routes before calling a provider. A preparation gate is committed only after required materializations and transfers are verified. A task therefore cannot be considered ready merely because its predecessor process ended: the required input must also be available at the assigned destination.
 
-Interactive runs return a running trace after a supported activity starts so its session can be used. Simulation sends the frozen request to the simulator and never invokes real adapters.
+For real runs, cloud lifecycle actions can be prewarmed before an activity is dispatched. For a simulation run, the frozen request is given to the simulator; real adapters are not started.
 
-## Preparation gate and transfers
+## Recovery and failure evidence
 
-Providers must not start until `PreparationGate` is ready. Requirements can include a resolved executable variant, workspace destination, upstream data, and verified transfers. The coordinator resolves endpoints, selects a route/connector, supports chunk and resume metadata, and checks digests. `committed` means verified bytes match the expected digest, not merely that a file exists.
+Queue jobs retain ownership, attempts, retry timing, and terminal status. Runtime handles, transfers, and materializations are persisted as evidence. When a provider supports stopping work, cancellation calls its `Stop` method. A task failure ends the run when no permitted retry remains. A completed task also records its output observation; a zero exit code is not sufficient if the configured output observation cannot be trusted.
 
-## Artifact observation
-
-Where supported, adapters snapshot the workspace before and after an activity. The manifest of created or changed files is persisted into the data/provenance model. Observation errors remain execution evidence and can fail a zero-exit activity when outputs cannot be trusted.
-
-## Cloud orchestration
-
-Cloud lifecycle uses the persistent queue. Plans can contain lifecycle actions and provisioned targets. The supervisor prewarms each target, waits for operations, binds the instance/runtime allocation, and releases it after a real run. Cleanup failure is an infrastructure result and does not invalidate completed computation.
-
-## Failure and recovery
-
-- Queue jobs persist ownership, attempts, retry timing, and terminal status.
-- Runtime handles are saved so recovery inspects instead of blindly duplicating work.
-- Timeout and retry policy belongs to the activity definition.
-- Transfer/materialization failures remain first-class records.
-- Cancellation calls adapter stop where supported.
-- A failed activity fails its run when no valid retry remains.
-
-Desktop and API expose the same stored evidence: predicted-versus-observed timing, assignments, logs, exits, artifacts, transfer routes/bytes/cost, cloud operations, provenance, and audit.
+The result is an inspectable distinction between what the plan predicted and what the runtime observed. See [evidence and provenance](./explanations/evidence-and-provenance) for that comparison.

@@ -74,7 +74,7 @@ Work on the first unchecked unit only. Do not combine units unless the changes a
 
 ### P1 — explanations
 
-- [ ] Separate `concepts.md`, `engine.md`, and `runtimes.md` into focused explanations for architecture, planning, execution, network modeling, provenance, and plan-versus-observed evidence.
+- [x] Separate `concepts.md`, `engine.md`, and `runtimes.md` into focused explanations for architecture, planning, execution, network modeling, provenance, and plan-versus-observed evidence. The preserved entry points now have narrow responsibilities and link to dedicated planning, network-modeling, and evidence/provenance explanations; verified against planning, execution, transfer, and runtime contracts on 2026-09-11.
 - [ ] Explain PRISM versus HEFT without promising that one algorithm always wins; distinguish candidate generation, common evaluation, objective choice, and prediction fidelity.
 - [ ] Explain network flow, contention, accumulated stage time, queue time, makespan, cost, and why accumulated activity values are not wall-clock totals.
 

@@ -1,84 +1,54 @@
 ---
 id: concepts
-title: Core concepts
-sidebar_label: Core concepts
+title: System architecture
+sidebar_label: System architecture
+description: How AkôFlow keeps infrastructure, workflow intent, planning decisions, and execution evidence separate.
 ---
 
-AkôFlow separates infrastructure description, workflow intent, scheduling decisions, and execution observations. This makes a run reproducible and lets the same workflow be planned against different infrastructure.
+AkôFlow is a control plane for scientific workflows. It keeps the description of the available infrastructure separate from the workflow definition, the scheduling decision, and the evidence produced by an execution. That separation lets the same immutable workflow version be compared on different infrastructure scopes without rewriting the workflow.
 
-## Object chain
+This is an explanation of the records and their boundaries. For the exact YAML fields, use the [workflow specification](./internal/workflow-spec) and the [environment reference](./reference/environment-yaml). For an end-to-end task, start with [the first simulated workflow](./guides/workflows/first-run).
+
+## The record chain
 
 ```text
-Environment -> published version -> Execution scope
-                                      |
-Workflow -> immutable version --------+-> Planning session
-                                              |
-                                      candidate / Schedule plan
-                                              |
-                                         Execution run
-                                              |
-                           tasks, transfers, artifacts, provenance
+Environment definition -> published environment version -> execution scope
+                                                        |
+Workflow definition  -> immutable workflow version ----+-> planning session
+                                                               |
+                                                        candidate -> selected plan
+                                                                              |
+                                                                        execution run
+                                                                              |
+                                      task attempts, transfers, artifacts, provenance, audit
 ```
 
-## Environment
+The arrows express references, not a single mutable object. A planning session preserves a snapshot of the workflow, scope, inventory, topology, profiles, constraints, and selected algorithms. A later discovery refresh can create new inventory for future sessions, but it does not change that earlier comparison.
 
-An environment names an infrastructure boundary such as a local machine, Kubernetes cluster, SSH host, Slurm cluster, simulation model, or cloud configuration. States are `defined`, `connecting`, `connected`, `discovering`, `ready`, `degraded`, and `unreachable`.
+## Infrastructure is a versioned boundary
 
-Connections contain access metadata and a credential reference. Connection checks report `online` or `offline`, latency, and diagnostics. Discovery creates inventory; it does not execute workloads.
+An **environment** names an infrastructure boundary: a local host, Kubernetes cluster, SSH/SLURM system, modeled SimGrid platform, or cloud configuration. Its published version can contain runtimes, resources and their hierarchy, runtime bindings, storage, connection observations, and capability observations.
 
-### Published version
+A **resource** is capacity that may be assigned by a plan. A **runtime** says how an activity is launched and observed. A binding states which runtime may use which resource. The [runtime adapters explanation](./runtimes) describes that boundary in more detail.
 
-Planning uses an immutable environment version. Versions are `draft`, `published`, or `retired`. A definition can contain runtimes, resources and hierarchy, runtime bindings, storage, relations, profiles, connections, connector bindings, and capability observations.
+An **execution scope** chooses the published environment versions that an algorithm may consider. Its network topology supplies directed links between resources. This means a plan answers a constrained question—"place this workflow on this frozen universe"—rather than a claim about every resource the daemon may ever discover.
 
-## Resource, runtime, and scope
+## A workflow describes intent, not placement
 
-A resource is schedulable capacity: a local machine, Kubernetes machine/node pool, HPC partition/machine, cloud VM, serverless target, queue, namespace, or reservation. `executionTarget` distinguishes `batch`, `direct`, and `provisioned` capacity.
+A workflow definition owns identity and namespace. Its immutable version has activities plus control and data dependencies. Activities carry executable and resource requirements and may carry a simulation profile. They do not name a target resource; that is a planning decision.
 
-A runtime says **how** to launch work. Drivers include `local`, `kubernetes`, `ssh`, `slurm`, `serverless`, `simgrid`, and `cloud`; runtime mode is `execution` or `simulation`. A binding determines which runtime may use a resource.
+Control dependencies establish ordering. Data dependencies identify the producer, consumer, logical data, and byte volume used for movement modeling. In the current portable importer, a data dependency contributes to scheduling only when its producer/consumer pair also has the matching control dependency. This protects the DAG semantics from a data declaration that has no ordering edge.
 
-An execution scope selects published environment versions and a network topology. Directed links model bandwidth, latency, byte price, sharing, and concurrency, allowing planners to account for data movement.
+## A plan is a prediction and a decision
 
-## Workflow
+A planning session may produce several **candidates**. They are alternatives, not runnable plans in their own right. Selecting a candidate promotes its placement to a canonical **schedule plan** with assignments and predicted ready, start, finish, runtime, transfer, and cost values. Manual and imported plans use the same plan aggregate after validation.
 
-A definition owns identity and namespace; an immutable version contains activities plus control and data dependencies. Activities declare:
+Planning does not start work. The [planning explanation](./explanations/planning) explains why candidates, objectives, and a selected plan are different records.
 
-- kind: `task`, `service`, or `interactive`;
-- capabilities: `real`, `simulation`, and/or `interactive`;
-- executable/image, entrypoint, arguments, environment, and working directory;
-- CPU, memory, storage, and optional GPU requirements;
-- optional simulation and service specifications;
-- timeout and retry policy.
+## Execution creates observations
 
-Control dependencies order activities. Data dependencies also identify producer, consumer, logical name, and size so movement can be planned and observed.
+An **execution run** binds one selected plan to real, simulation, or interactive mode. The supervisor persists task attempts, runtime handles, transfer routes, logs, artifact manifests, and timing. Those records are observations of a run; they do not retroactively alter the plan prediction.
 
-## Executables and outputs
+An executable artifact is immutable runnable input. An artifact manifest is an observed output from an activity. They are deliberately different: an input can be materialized before a task starts, while an output can become a scientific data object only after the activity has been observed.
 
-An **executable artifact** is immutable runnable input, with digest-addressed variants, format, architecture, locations, builds, and materializations. An **artifact manifest** is observed output from an activity and feeds the data catalog and provenance. They are not interchangeable.
-
-## Planning session and plan
-
-A session snapshots workflow, scope, inventory, topology, profiles, algorithms, deadline, budget, and optional interference data. States are `queued`, `running`, `completed`, `failed`, and `cancelled`.
-
-Candidates expose feasibility, predicted makespan, and cost. A plan records assignments, predicted ready/start/finish/runtime/transfer values, resource order, and optional lifecycle actions. Its source may be `plugin`, `manual`, or `imported`. Planning never starts execution automatically.
-
-## Execution run
-
-A run binds a plan to `real`, `simulation`, or `interactive` mode. Run states are `pending`, `running`, `completed`, and `failed`; activity handles are `starting`, `running`, `completed`, `failed`, and `stopped`. These replace the retired public `Ready`/`In Execution`/`Finished` vocabulary.
-
-The supervisor starts an activity only after predecessors complete and its preparation gate commits. It stores observed timing, queue delay, logs, exit code, output manifest, and transfers alongside predicted plan values.
-
-## Data preparation
-
-Materializations progress through `planned`, `reconciling`, `transferring`, `verifying`, `committed`, or `failed`. Transfers are `planned`, `running`, `completed`, or `failed`. Routes retain strategy, endpoints, network domain, fallback, reason, logical bytes, and actual network bytes. An existing verified copy may satisfy a dependency without transfer.
-
-## Cloud capacity
-
-A capacity target is schedulable intent; a provisioned instance is observed infrastructure. Plans may add create/start actions. Execution resolves the instance to a runtime allocation, waits until usable, and later stops or destroys it according to policy.
-
-## Provenance, audit, and reproducibility
-
-- **Provenance** links scientific entities and data lineage.
-- **Audit** records operational and security-relevant actions.
-- **Planning snapshots** preserve what an algorithm saw even after discovery changes live inventory.
-
-Together they explain what was intended, why placement was chosen, what ran, which bytes moved, what was produced, and who changed state.
+Read [execution and control-plane behavior](./engine) for orchestration, [network modeling](./explanations/network-modeling) for movement assumptions, and [evidence and provenance](./explanations/evidence-and-provenance) for the records used to compare a plan with a completed run.

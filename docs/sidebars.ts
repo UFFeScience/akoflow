@@ -74,7 +74,15 @@ const sidebars: SidebarsConfig = {
       type: "category",
       label: "Concepts and internals",
       collapsed: true,
-      items: ["modules", "concepts", "engine", "runtimes"],
+      items: [
+        "modules",
+        "concepts",
+        "engine",
+        "runtimes",
+        "explanations/planning",
+        "explanations/network-modeling",
+        "explanations/evidence-and-provenance",
+      ],
     },
     {
       type: "category",

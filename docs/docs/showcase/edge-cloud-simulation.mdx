@@ -1,6 +1,6 @@
 ---
 title: Edge to cloud simulation
-description: Run a complete edge-cloud workflow through AkôFlow Desktop or the API.
+description: A verified SimGrid workflow that makes computation, network transfer, and cost visible.
 ---
 
 import InterfaceApiTabs from '@site/src/components/InterfaceApiTabs';
@@ -10,7 +10,20 @@ import {FileList, WorkflowDiagram} from '@site/src/components/WorkflowShowcase';
 
 <WorkflowDiagram kind="edge-cloud" />
 
-This deterministic example runs `prepare → analyze → summarize`. The middle activity benefits from the faster cloud resource, but moving it introduces two network transfers and a non-zero cloud cost. It is a compact example of the trade-off evaluated by PRISM Time, PRISM Cost, and HEFT.
+This is a complete, deterministic SimGrid tutorial. It runs `prepare → analyze → summarize`: the 12-second analysis runs on a cloud VM that is four times faster than the edge device, then its result returns to the edge. The placement gains compute time and pays for two network flows and cloud use.
+
+Use it when you want a small workflow whose planned and observed values can be inspected end to end. Do not use the checked-in manual plan to compare schedulers: generate a planning session instead when the goal is to compare PRISM and HEFT candidates.
+
+## What the simulation models
+
+| Item | Value in this example | Why it matters |
+| --- | --- | --- |
+| Edge resource | 2 cores, speedup 1, no per-second price | Runs `prepare` and `summarize`. |
+| Cloud resource | 8 cores, speedup 4, `$0.001` per second | Runs `analyze` faster, with boot and container overhead. |
+| Link | Bidirectional, 100 Mbit/s, 50 ms latency | Carries the 100 MB input to cloud and the 20 MB result back. |
+| Activity durations | 4 s, 12 s, 2 s before resource speedup | These are per-activity simulation profiles, not one shared default. |
+
+The diagram and the workflow YAML show the same topology: `prepare` produces `dataset.bin` (100,000,000 bytes), and `analyze` produces `result.bin` (20,000,000 bytes). Because the manual assignment places adjacent activities on different resources, the completed run must report two transfers totaling 120,000,000 bytes.
 
 ## Download the inputs
 
@@ -27,17 +40,17 @@ This deterministic example runs `prepare → analyze → summarize`. The middle 
   desktop={<div>
     <h2>Run with AkôFlow Desktop</h2>
     <ol>
-      <li>Open <strong>Infrastructure → Environments</strong> and create a simulation environment matching <code>environment.yaml</code>: two resources, the SimGrid runtime, and the declared speed and cost values.</li>
-      <li>Create the execution scope from <code>scope.yaml</code>, then add its bidirectional 100 Mbit/s topology from <code>topology.yaml</code>.</li>
-      <li>Open <strong>Workflows → Definitions</strong>, choose <strong>Import YAML</strong>, and select <code>workflow.yaml</code>.</li>
-      <li>Open the workflow, choose <strong>Generate plan</strong>, select <em>Edge cloud simulation scope</em>, and run PRISM Cost, PRISM Time, or HEFT. Alternatively, reproduce the checked-in assignment in the manual editor.</li>
-      <li>Select a candidate, inspect its Gantt chart, and choose <strong>Use selected plan</strong>.</li>
-      <li>Start the simulation. In the completed run, inspect <strong>Timeline</strong>, <strong>Data</strong>, and <strong>Plan vs execution</strong>.</li>
+      <li>Open <strong>Infrastructure → Environments</strong> and create a <strong>simulation</strong> environment matching <code>environment.yaml</code>. Add the SimGrid runtime, then bind it to the edge and cloud resources. Set cores, speedup, price, boot, and container values before planning.</li>
+      <li>Open <strong>Infrastructure → Execution scopes</strong> and create the scope from <code>scope.yaml</code>. Attach a topology matching <code>topology.yaml</code>: it must include both directions of the 100 Mbit/s link. A scope without this link cannot predict the cross-resource transfers in this example.</li>
+      <li>Open <strong>Workflows → Definitions</strong> and import <code>workflow.yaml</code>. Open the imported workflow and check the Definition graph: it must contain three activities and the two arrows <code>prepare → analyze → summarize</code>. Select an activity to confirm that it is simulatable and has its own duration profile.</li>
+      <li>To reproduce the documented placement, choose <strong>Generate plan</strong>, select <em>Create manually</em>, choose the simulation scope, then place <code>prepare</code> and <code>summarize</code> on the edge and <code>analyze</code> on cloud. The portable <code>plan-request.yaml</code> is the API equivalent of this choice.</li>
+      <li>To compare algorithms instead, choose <strong>Generate plans</strong>, select the same scope, and run the desired candidates. Expand a candidate to inspect its Gantt chart before selecting it.</li>
+      <li>Start the selected simulation. On the completed run, use <strong>Data</strong> for the two data flows and <strong>Plan vs execution</strong> for predicted versus observed makespan and cost.</li>
     </ol>
   </div>}
   api={<div>
     <h2>Run through the API</h2>
-    <p>From the repository root, set the daemon address and token, then submit the complete bundle:</p>
+    <p>Run this in a fresh AkôFlow instance, or change every ID in the six YAML files first. The API treats these identifiers as persistent objects and rejects duplicate IDs. From the repository root, set the daemon address and token, then submit the complete bundle:</p>
     <pre><code>{`export AKOFLOW_API_URL="http://127.0.0.1:8080/akoflow-api"
 export AKOFLOW_API_TOKEN="<token>"
 
@@ -54,12 +67,23 @@ post_yaml network-topologies examples/simulation/topology.yaml
 post_yaml workflow-definitions examples/simulation/workflow.yaml
 post_yaml schedule-plans examples/simulation/plan-request.yaml
 post_yaml execution-runs examples/simulation/execution-request.yaml`}</code></pre>
-    <p>Poll the immutable run projection:</p>
+    <p>Submitting <code>execution-runs</code> acknowledges the request; it does not mean the execution has completed. Poll the immutable run projection until <code>status</code> is <code>completed</code>:</p>
     <pre><code>{`curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \\
   "$AKOFLOW_API_URL/execution-runs/simulation-example-run-v1/"`}</code></pre>
   </div>}
 />
 
-## Expected evidence
+## Verify the result
 
-The run contains three settled activities, two cross-resource data transfers, predicted and observed makespan/cost, the selected assignments, and the SimGrid trace. The execution bundle is also preserved under `storage/simgrid/` for reproduction.
+The bundle was exercised against the current API on 2026-09-11. Its run projection, `simulation-example-run-v1`, reached `completed` with three settled activities, two transfers, and `120000000` transferred bytes. The observed makespan was `21.593 s`; its accumulated execution time was `9 s`, and its accumulated transfer time was `11.693 s`.
+
+Those stage values are accumulated across activities; they are evidence components, not additional wall-clock makespan. The completed run also stores the selected assignments, predicted values, observed cost, and the SimGrid trace under the daemon's configured simulation workspace.
+
+If any of these checks fails, recover in this order:
+
+1. Confirm that all three activities retained their individual `simulation.durationSeconds` values after import.
+2. Confirm the resource runtime bindings enable `simgrid` for both resources.
+3. Confirm the scope points to `simulation-example-v1` and the topology is attached to that scope.
+4. Confirm that the activity IDs in the manual plan are the imported IDs: `simulation-example-workflow-prepare`, `simulation-example-workflow-analyze`, and `simulation-example-workflow-summarize`.
+
+For a shorter first execution, use [Run your first simulated workflow](../guides/workflows/first-run). For the semantics behind resources, scopes, and data dependencies, see [Core concepts](../concepts).

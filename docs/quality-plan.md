@@ -50,7 +50,7 @@ Work on the first unchecked unit only. Do not combine units unless the changes a
 
 ### P0 — runnable showcases
 
-- [ ] Execute and validate the edge–cloud SimGrid showcase through the documented API sequence and Desktop path. Record expected IDs, terminal status, activity count, and transfer evidence.
+- [x] Execute and validate the edge–cloud SimGrid showcase through the documented API sequence and Desktop path. Evidence: on 2026-09-11, the versioned six-file bundle completed as `simulation-example-run-v1` with 3/3 activities, two transfers, 120,000,000 bytes, and a 21.593 s observed makespan; the current Desktop Definition view showed the imported three-node DAG and individual SimGrid activity capability. The page now records the IDs, verification values, recovery checks, and equivalent UI/API paths.
 - [ ] Complete the 30 GB fan-out bundle with an execution request or explicitly reclassify it as an explanation. A partial bundle cannot remain a showcase.
 - [ ] Execute and validate the 50-core showcase; confirm 100 settled activities, 50-core scheduling, and evidence rendering.
 - [ ] Execute and validate the Kind showcase from a clean cluster, including output-file capture.

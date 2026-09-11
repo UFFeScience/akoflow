@@ -81,7 +81,7 @@ Work on the first unchecked unit only. Do not combine units unless the changes a
 ### P2 — visual and editorial cleanup
 
 - [x] Replace or remove screenshot markers in the 15 affected pages. All legacy screenshot markers were removed on 2026-09-11. Checked-in Desktop captures are embedded in the environment, workflow-definition, and planning guides; the planning capture was produced from the current Desktop on 2026-09-11 and reviewed in light and dark themes.
-- [ ] Reorganize `sidebars.ts` by Diátaxis purpose while retaining product-area landing pages and redirects for existing URLs.
+- [x] Reorganize `sidebars.ts` by Diátaxis purpose while retaining product-area landing pages and existing URLs. Tutorials, How-to guides, Explanations, and Reference are now the primary sidebar sections; workflow and infrastructure groupings remain nested under the appropriate purpose. Verified in the running documentation site on 2026-09-11.
 - [ ] Remove or redirect legacy overlapping pages (`examples.md`, `user-guide.md`, `internal/api.md`, and legacy CLI material) after checking inbound links.
 - [ ] Perform a final plain-language edit for repeated introductions, unsupported claims, inconsistent terminology, and generated-sounding filler.
 

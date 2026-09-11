@@ -14,7 +14,7 @@ predicted:
 assignments:
   - id: kind-plan-prepare
     planId: kind-dag-plan-v1
-    activityId: prepare
+    activityId: kind-dag-prepare
     resourceId: kind-worker
     coreId: default
     slotId: default
@@ -26,9 +26,10 @@ assignments:
     predictedRuntimeSeconds: 2
     predictedTransferSeconds: 0
     predictedCost: 0
+    metadata: {runtimeId: kind-kubernetes}
   - id: kind-plan-process
     planId: kind-dag-plan-v1
-    activityId: process
+    activityId: kind-dag-process
     resourceId: kind-worker
     coreId: default
     slotId: default
@@ -40,3 +41,4 @@ assignments:
     predictedRuntimeSeconds: 2
     predictedTransferSeconds: 0
     predictedCost: 0
+    metadata: {runtimeId: kind-kubernetes}

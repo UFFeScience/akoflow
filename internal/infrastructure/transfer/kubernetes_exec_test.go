@@ -47,14 +47,14 @@ func TestKubernetesTargetResolvesCredentialAndPath(t *testing.T) {
 		t.Fatal(err)
 	}
 	endpoint := domain.TransferEndpoint{
-		URI:           "kubernetes:///workspace?namespace=science&claim=data&createClaim=true&claimBytes=123&runId=run&activityId=a",
+		URI:           "kubernetes:///workspace?namespace=science&claim=data&createClaim=true&claimBytes=123&runId=run&activityId=a&nodeName=worker-a",
 		Configuration: map[string]string{"server": "https://cluster", "tokenFile": tokenFile, "caFile": "/ca.pem"},
 	}
 	target, file, err := kubernetesTarget(endpoint, "nested/result.txt")
 	if err != nil {
 		t.Fatal(err)
 	}
-	if file != "/workspace/nested/result.txt" || target.token != "secret" || !target.createClaim || target.claimBytes != 123 || target.runID != "run" || target.activityID != "a" {
+	if file != "/workspace/nested/result.txt" || target.token != "secret" || !target.createClaim || target.claimBytes != 123 || target.runID != "run" || target.activityID != "a" || target.nodeName != "worker-a" {
 		t.Fatalf("target=%+v file=%q", target, file)
 	}
 	args := strings.Join(target.args(), " ")

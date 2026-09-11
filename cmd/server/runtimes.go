@@ -39,9 +39,8 @@ func buildRuntimes(
 ) (ports.RuntimeResolver, error) {
 	runtimes := registry.New()
 	adapters := map[string]ports.RuntimeAdapter{
-		"*":          simgrid.NewActivityRuntime(),
-		"local":      local.New(),
-		"kubernetes": kubernetes.New(nil, settings.DefaultNamespace),
+		"*":     simgrid.NewActivityRuntime(),
+		"local": local.New(),
 		"slurm": slurm.NewWithConfig(provider.OSCommandExecutor{}, slurm.Config{
 			ScriptDirectory: settings.SlurmScriptDirectory,
 		}),

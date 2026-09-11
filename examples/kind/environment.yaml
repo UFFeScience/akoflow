@@ -20,20 +20,21 @@ connections:
     name: kind-api
     type: kubernetes
     endpoint: https://host.docker.internal:63395
-    credentialRef: K8S_API_SERVER_TOKEN
+    credentialRef: file:storage/credentials/kubernetes/kind-akoflow.token
     configuration:
       namespace: akoflow
-      insecureSkipTLSVerify: true
+      insecureSkipTlsVerify: true
 
 runtimes:
   - environmentVersionId: kind-akoflow-v1
-    id: kubernetes
+    id: kind-kubernetes
     name: Kind Kubernetes
     driver: kubernetes
     mode: execution
     role: compute
     configuration:
       namespace: akoflow
+      connectionId: kind-akoflow-connection
     capabilities:
       batch: true
       container: true
@@ -53,7 +54,7 @@ storages:
       claimName: akoflow-data
       mountPath: /akoflow/data
     runtimeBindings:
-      - runtimeId: kubernetes
+      - runtimeId: kind-kubernetes
         default: true
         containerPath: /akoflow/data
 
@@ -108,6 +109,6 @@ resources:
 activityResourceProfiles: []
 
 resourceRuntimeBindings:
-  - {resourceId: kind-cluster, runtimeId: kubernetes, enabled: true}
-  - {resourceId: kind-worker, runtimeId: kubernetes, enabled: true}
-  - {resourceId: kind-worker-2, runtimeId: kubernetes, enabled: true}
+  - {resourceId: kind-cluster, runtimeId: kind-kubernetes, enabled: true}
+  - {resourceId: kind-worker, runtimeId: kind-kubernetes, enabled: true}
+  - {resourceId: kind-worker-2, runtimeId: kind-kubernetes, enabled: true}

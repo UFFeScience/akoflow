@@ -36,9 +36,11 @@ func NewCatalogResolver(runtimes *Registry, catalog ports.EnvironmentCatalog, fa
 }
 
 func (r *CatalogResolver) Resolve(mode domain.ExecutionMode, runtimeID string) (ports.RuntimeAdapter, error) {
-	adapter, err := r.runtimes.Resolve(mode, runtimeID)
-	if err == nil || r.catalog == nil {
-		return adapter, err
+	if adapter := r.runtimes.resolveExact(mode, runtimeID); adapter != nil {
+		return adapter, nil
+	}
+	if r.catalog == nil {
+		return r.runtimes.Resolve(mode, runtimeID)
 	}
 	definitions, catalogErr := r.catalog.List(context.Background())
 	if catalogErr != nil {
@@ -73,7 +75,7 @@ func (r *CatalogResolver) Resolve(mode domain.ExecutionMode, runtimeID string) (
 			}
 		}
 	}
-	return nil, err
+	return r.runtimes.Resolve(mode, runtimeID)
 }
 
 type Registry struct {
@@ -118,6 +120,15 @@ func (r *Registry) Resolve(mode domain.ExecutionMode, runtimeID string) (ports.R
 		return nil, fmt.Errorf("runtime %q is not registered for mode %q", runtimeID, mode)
 	}
 	return adapter, nil
+}
+
+// resolveExact intentionally ignores the wildcard adapter. Catalog-backed
+// runtimes must be configured with their persisted connection before falling
+// back to a generic driver implementation.
+func (r *Registry) resolveExact(mode domain.ExecutionMode, runtimeID string) ports.RuntimeAdapter {
+	r.mu.RLock()
+	defer r.mu.RUnlock()
+	return r.runtimes[runtimeKey(mode, runtimeID)]
 }
 
 func runtimeKey(mode domain.ExecutionMode, runtimeID string) string {

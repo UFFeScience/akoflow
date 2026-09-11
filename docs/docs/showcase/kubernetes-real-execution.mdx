@@ -21,6 +21,7 @@ The checked-in access manifest intentionally grants broad permissions for a disp
 <FileList>
   <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/kind/cluster.yaml">Kind cluster ↓</a>
   <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/kind/akoflow-access.yaml">AkôFlow access ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/kind/storage.yaml">Persistent storage YAML ↓</a>
   <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/kind/environment.yaml">Environment YAML ↓</a>
   <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/kind/scope.yaml">Execution scope YAML ↓</a>
   <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/kind/topology.yaml">Network topology YAML ↓</a>
@@ -34,7 +35,7 @@ The checked-in access manifest intentionally grants broad permissions for a disp
     <h2>Run with AkôFlow Desktop</h2>
     <ol>
       <li>Create the Kind cluster and apply <code>akoflow-access.yaml</code> and <code>storage.yaml</code>.</li>
-      <li>Generate a ServiceAccount token. In <strong>Infrastructure → Environments</strong>, create a Kubernetes environment and store that token in the daemon credential flow.</li>
+      <li>Generate a short-lived ServiceAccount token. In <strong>Infrastructure → Environments</strong>, create the Kubernetes connection and store the token through the credential flow; do not paste it into the workflow.</li>
       <li>Test the connection and run discovery. Confirm that the Kind worker appears as a schedulable resource.</li>
       <li>Create a scope and topology matching the supplied YAML, then import <code>dag.yaml</code> under <strong>Workflows → Definitions</strong>.</li>
       <li>Create a manual plan or generate candidates, select the Kind resource, and start a <strong>Real execution</strong>.</li>
@@ -66,4 +67,8 @@ done`}</code></pre>
 
 ## Expected evidence
 
-A successful run produces Kubernetes Jobs and Pods for both activities, persisted activity logs, run lifecycle events, and artifacts from the shared workspace. The AkôFlow run detail remains the canonical projection even after Kubernetes history cleanup.
+A successful run produces two Kubernetes Jobs, a workspace PVC for each activity, persisted logs, transfer observations, and artifacts from the activity workspaces. The `prepare` Job writes `result.txt`; the `process` Job reads that transferred file and writes `consumed.txt`.
+
+The checked-in bundle was executed from a clean Kind cluster on 2026-09-11 as `kind-dag-run-v8`: both activities completed, 9 bytes were transferred, and both files had checksum `sha256:cb064c1339ffa3d7777bcb0459de3dceddb9146156dde58065a4ac826b029aa7`. Its observed makespan was 17.776 s. Kubernetes scheduling and Pod startup are included in that wall-clock result.
+
+If the consumer Job remains `Pending`, use `kubectl describe pod <pod-name>` to inspect PVC/node affinity. The full setup, verification, and cleanup procedure is in the [Kind README](https://github.com/UFFeScience/akoflow/tree/main/examples/kind).

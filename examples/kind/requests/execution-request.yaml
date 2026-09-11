@@ -1,6 +1,6 @@
 ---
 run:
-  id: kind-dag-run-v1
+  id: kind-dag-run-v8
   schedulePlanId: kind-dag-plan-v1
   mode: real
   seed: 1
@@ -23,7 +23,7 @@ plan:
   assignments:
   - id: kind-plan-prepare
     planId: kind-dag-plan-v1
-    activityId: prepare
+    activityId: kind-dag-prepare
     resourceId: kind-worker
     coreId: default
     slotId: default
@@ -35,9 +35,10 @@ plan:
     predictedRuntimeSeconds: 2
     predictedTransferSeconds: 0
     predictedCost: 0
+    metadata: {runtimeId: kind-kubernetes}
   - id: kind-plan-process
     planId: kind-dag-plan-v1
-    activityId: process
+    activityId: kind-dag-process
     resourceId: kind-worker
     coreId: default
     slotId: default
@@ -49,13 +50,14 @@ plan:
     predictedRuntimeSeconds: 2
     predictedTransferSeconds: 0
     predictedCost: 0
+    metadata: {runtimeId: kind-kubernetes}
 workflow:
   id: kind-dag-v1
   workflowId: kind-dag
   version: 1
   definitionHash: kind-dag-v1
   activities:
-  - id: prepare
+  - id: kind-dag-prepare
     workflowVersionId: kind-dag-v1
     activityTypeId: shell-task
     externalId: prepare
@@ -83,7 +85,7 @@ workflow:
         claimName: akoflow-data
         mountPath: /akoflow/data
     priority: 10
-  - id: process
+  - id: kind-dag-process
     workflowVersionId: kind-dag-v1
     activityTypeId: shell-task
     externalId: process
@@ -96,7 +98,7 @@ workflow:
       entrypoint: sh
       arguments:
       - "-c"
-      - echo 'process started after prepare'; sleep 2; cat "$AKOFLOW_INPUT_RESULT_TXT" > consumed.txt; echo 'process completed'
+      - set -e; echo 'process started after prepare'; sleep 2; cat result.txt > consumed.txt; echo 'process completed'
     resources:
       cpu: 0.1
       memoryBytes: 16777216
@@ -112,12 +114,12 @@ workflow:
         mountPath: /akoflow/data
     priority: 5
   dependencies:
-  - activityId: process
-    dependsOnActivityId: prepare
+  - activityId: kind-dag-process
+    dependsOnActivityId: kind-dag-prepare
     type: control
   dataDependencies:
-  - producerActivityId: prepare
-    consumerActivityId: process
+  - producerActivityId: kind-dag-prepare
+    consumerActivityId: kind-dag-process
     logicalName: result.txt
     sizeBytes: 0
 resources:
@@ -159,9 +161,9 @@ networkTopology:
       technology: docker-bridge
 activityProfiles: []
 runtimes:
-  - {environmentVersionId: kind-akoflow-v1, id: kubernetes, name: Kind Kubernetes, driver: kubernetes, mode: execution, role: compute, capabilities: {batch: true, container: true, cancellation: true}}
+  - {environmentVersionId: kind-akoflow-v1, id: kind-kubernetes, name: Kind Kubernetes, driver: kubernetes, mode: execution, role: compute, configuration: {namespace: akoflow, connectionId: kind-akoflow-connection}, capabilities: {batch: true, container: true, cancellation: true}}
 runtimeBindings:
-  - {resourceId: kind-worker, runtimeId: kubernetes, enabled: true}
+  - {resourceId: kind-worker, runtimeId: kind-kubernetes, enabled: true}
 executionScope:
   id: kind-akoflow-v1-scope
   name: Kind AkôFlow scope

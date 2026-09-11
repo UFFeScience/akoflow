@@ -523,6 +523,9 @@ func workspaceSourceForActivity(request ports.ExecutionRequest, activityID strin
 		query := u.Query()
 		query.Set("namespace", runtimeNamespace(request, activityID))
 		query.Set("claim", workspaceClaimName(request.Run.ID, activityID))
+		if nodeName := kubernetesNodeName(resource); nodeName != "" {
+			query.Set("nodeName", nodeName)
+		}
 		u.RawQuery = query.Encode()
 		return transferLocation(u.String(), resource, allocation), nil
 	case domain.RuntimeDriverSlurm:
@@ -578,6 +581,9 @@ func workspaceDestination(request ports.ExecutionRequest, activityID string, res
 		query := u.Query()
 		query.Set("namespace", runtimeNamespace(request, activityID))
 		query.Set("claim", workspaceClaimName(request.Run.ID, activityID))
+		if nodeName := kubernetesNodeName(resource); nodeName != "" {
+			query.Set("nodeName", nodeName)
+		}
 		query.Set("createClaim", "true")
 		query.Set("claimBytes", fmt.Sprint(totalBytes*2))
 		query.Set("runId", request.Run.ID)
@@ -606,6 +612,16 @@ func workspaceDestination(request ports.ExecutionRequest, activityID string, res
 	default:
 		return domain.TransferLocation{}, fmt.Errorf("runtime for activity %q does not support workspace transfer", activityID)
 	}
+}
+
+func kubernetesNodeName(resource domain.Resource) string {
+	if resource.Type != domain.ResourceKubernetesMachine {
+		return ""
+	}
+	if nodeName, _ := resource.Metadata["observedHostname"].(string); nodeName != "" {
+		return nodeName
+	}
+	return resource.ProviderID
 }
 
 func transferLocation(uri string, resource domain.Resource, allocation domain.RuntimeAllocation) domain.TransferLocation {

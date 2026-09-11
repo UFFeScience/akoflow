@@ -77,6 +77,23 @@ func TestCatalogResolverBuildsRuntimeFromItsConnection(t *testing.T) {
 		t.Fatalf("resolved=%T err=%v", resolved, err)
 	}
 }
+
+func TestCatalogResolverConfiguresConnectionBeforeWildcardFallback(t *testing.T) {
+	base := New()
+	if err := base.Register("*", &adapterFake{mode: domain.ExecutionModeReal}); err != nil {
+		t.Fatal(err)
+	}
+	configured := &adapterFake{mode: domain.ExecutionModeReal}
+	resolver := NewCatalogResolver(base, catalogStub{definitions: []domain.EnvironmentDefinition{{
+		Connections: []domain.EnvironmentConnection{{ID: "kind", Type: domain.ConnectionKubernetes}},
+		Runtimes: []domain.EnvironmentRuntime{{ID: "kind-kubernetes", Driver: domain.RuntimeDriverKubernetes,
+			Configuration: map[string]any{"connectionId": "kind"}}},
+	}}}, connectionFactoryFake{adapter: configured})
+	resolved, err := resolver.Resolve(domain.ExecutionModeReal, "kind-kubernetes")
+	if err != nil || resolved != configured {
+		t.Fatalf("resolved=%T err=%v", resolved, err)
+	}
+}
 func (adapterFake) Inspect(_ context.Context, h domain.ActivityHandle) (domain.ActivityHandle, error) {
 	return h, nil
 }

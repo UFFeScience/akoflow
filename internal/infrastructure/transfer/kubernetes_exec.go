@@ -105,11 +105,11 @@ func (connector *KubernetesExec) pod(ctx context.Context, target kubernetesTrans
 }
 
 type kubernetesTransferTarget struct {
-	root, namespace, claim, server, token, caFile string
-	runID, activityID                             string
-	insecure                                      bool
-	createClaim                                   bool
-	claimBytes                                    int64
+	root, namespace, claim, server, token, caFile, nodeName string
+	runID, activityID                                       string
+	insecure                                                bool
+	createClaim                                             bool
+	claimBytes                                              int64
 }
 
 func kubernetesTarget(endpoint domain.TransferEndpoint, name string) (kubernetesTransferTarget, string, error) {
@@ -118,7 +118,7 @@ func kubernetesTarget(endpoint domain.TransferEndpoint, name string) (kubernetes
 		return kubernetesTransferTarget{}, "", fmt.Errorf("invalid Kubernetes transfer endpoint")
 	}
 	target := kubernetesTransferTarget{
-		root: u.Path, namespace: u.Query().Get("namespace"), claim: u.Query().Get("claim"),
+		root: u.Path, namespace: u.Query().Get("namespace"), claim: u.Query().Get("claim"), nodeName: u.Query().Get("nodeName"),
 		server: endpoint.Configuration["server"], token: endpoint.Configuration["token"],
 		caFile: endpoint.Configuration["caFile"], insecure: endpoint.Configuration["insecureSkipTLSVerify"] == "true",
 		createClaim: u.Query().Get("createClaim") == "true",
@@ -176,6 +176,11 @@ func (target kubernetesTransferTarget) pod(ctx context.Context) (string, func(),
 				"volumeMounts": []map[string]any{{"name": "workspace", "mountPath": target.root}}}},
 			"volumes": []map[string]any{{"name": "workspace", "persistentVolumeClaim": map[string]any{"claimName": target.claim}}},
 		},
+	}
+	if target.nodeName != "" {
+		spec["spec"].(map[string]any)["nodeSelector"] = map[string]string{
+			"kubernetes.io/hostname": target.nodeName,
+		}
 	}
 	if target.runID != "" && target.activityID != "" {
 		spec["metadata"].(map[string]any)["annotations"] = map[string]string{

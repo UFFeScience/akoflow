@@ -1,0 +1,40 @@
+name: simgrid-30gb-fanout
+spec:
+  namespace: examples
+  activities:
+    - name: t1
+      runtime: simgrid-30gb
+      cpuLimit: "1"
+      memoryLimit: 1Gi
+      simulation: {model: deterministic, durationSeconds: 10}
+    - name: t2
+      runtime: simgrid-30gb
+      cpuLimit: "1"
+      memoryLimit: 1Gi
+      dependsOn: [t1]
+      simulation: {model: deterministic, durationSeconds: 10}
+    - name: t3
+      runtime: simgrid-30gb
+      cpuLimit: "1"
+      memoryLimit: 1Gi
+      dependsOn: [t1]
+      simulation: {model: deterministic, durationSeconds: 10}
+    - name: t4
+      runtime: simgrid-30gb
+      cpuLimit: "1"
+      memoryLimit: 1Gi
+      dependsOn: [t1]
+      simulation: {model: deterministic, durationSeconds: 10}
+    - name: t5
+      runtime: simgrid-30gb
+      cpuLimit: "1"
+      memoryLimit: 1Gi
+      dependsOn: [t2, t3, t4]
+      simulation: {model: deterministic, durationSeconds: 10}
+  dataDependencies:
+    - {producerActivity: t1, consumerActivity: t2, logicalName: t1-to-t2.bin, sizeBytes: 10000000000}
+    - {producerActivity: t1, consumerActivity: t3, logicalName: t1-to-t3.bin, sizeBytes: 10000000000}
+    - {producerActivity: t1, consumerActivity: t4, logicalName: t1-to-t4.bin, sizeBytes: 10000000000}
+    - {producerActivity: t2, consumerActivity: t5, logicalName: t2-to-t5.bin, sizeBytes: 10000000000}
+    - {producerActivity: t3, consumerActivity: t5, logicalName: t3-to-t5.bin, sizeBytes: 10000000000}
+    - {producerActivity: t4, consumerActivity: t5, logicalName: t4-to-t5.bin, sizeBytes: 10000000000}

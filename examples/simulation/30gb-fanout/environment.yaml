@@ -1,0 +1,72 @@
+environment:
+  id: simgrid-30gb-environment
+  name: SimGrid 30 GB fan-out
+  description: Three-machine deterministic environment for the 30 GB fan-out example
+  status: ready
+version:
+  id: simgrid-30gb-environment-v1
+  environmentId: simgrid-30gb-environment
+  version: 1
+  status: published
+  networkModel: static-links
+  interferenceModel: none
+  costModel: per-second
+  configurationHash: simgrid-30gb-environment-v1
+runtimes:
+  - environmentVersionId: simgrid-30gb-environment-v1
+    id: simgrid-30gb
+    name: SimGrid
+    driver: simgrid
+    mode: simulation
+    role: simulation
+    capabilities: {simulation: true}
+resources:
+  - id: simgrid-30gb-m1
+    environmentVersionId: simgrid-30gb-environment-v1
+    executionTarget: batch
+    type: local_machine
+    name: M1
+    providerId: simgrid-30gb-m1
+    tier: compute
+    cpuCores: 1
+    cpuCapacity: 1
+    memoryBytes: 68719476736
+    storageBytes: 137438953472
+    computeSpeedup: 1
+    pricePerSecond: 0
+    schedulable: true
+  - id: simgrid-30gb-m2
+    environmentVersionId: simgrid-30gb-environment-v1
+    executionTarget: batch
+    type: local_machine
+    name: M2
+    providerId: simgrid-30gb-m2
+    tier: compute
+    cpuCores: 3
+    cpuCapacity: 3
+    memoryBytes: 68719476736
+    storageBytes: 137438953472
+    computeSpeedup: 1
+    pricePerSecond: 0
+    schedulable: true
+  - id: simgrid-30gb-m3
+    environmentVersionId: simgrid-30gb-environment-v1
+    executionTarget: batch
+    type: local_machine
+    name: M3
+    providerId: simgrid-30gb-m3
+    tier: compute
+    cpuCores: 1
+    cpuCapacity: 1
+    memoryBytes: 68719476736
+    storageBytes: 137438953472
+    computeSpeedup: 1
+    pricePerSecond: 0
+    schedulable: true
+storages: []
+connections: []
+activityResourceProfiles: []
+resourceRuntimeBindings:
+  - {resourceId: simgrid-30gb-m1, runtimeId: simgrid-30gb, enabled: true}
+  - {resourceId: simgrid-30gb-m2, runtimeId: simgrid-30gb, enabled: true}
+  - {resourceId: simgrid-30gb-m3, runtimeId: simgrid-30gb, enabled: true}

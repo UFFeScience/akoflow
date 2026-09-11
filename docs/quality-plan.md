@@ -51,7 +51,7 @@ Work on the first unchecked unit only. Do not combine units unless the changes a
 ### P0 — runnable showcases
 
 - [x] Execute and validate the edge–cloud SimGrid showcase through the documented API sequence and Desktop path. Evidence: on 2026-09-11, the versioned six-file bundle completed as `simulation-example-run-v1` with 3/3 activities, two transfers, 120,000,000 bytes, and a 21.593 s observed makespan; the current Desktop Definition view showed the imported three-node DAG and individual SimGrid activity capability. The page now records the IDs, verification values, recovery checks, and equivalent UI/API paths.
-- [ ] Complete the 30 GB fan-out bundle with an execution request or explicitly reclassify it as an explanation. A partial bundle cannot remain a showcase.
+- [x] Complete the 30 GB fan-out bundle with an execution request or explicitly reclassify it as an explanation. Evidence: `examples/simulation/30gb-fanout/execution-request.yaml` and `run.sh` now provide the full portable flow; on 2026-09-11 it completed as `simgrid-30gb-fanout-run-v1` with 5/5 activities, 6 transfers, 60,000,000,000 bytes, and a 36.495 s observed makespan. The page records the observed sharing trace and includes a current planning-screen capture.
 - [ ] Execute and validate the 50-core showcase; confirm 100 settled activities, 50-core scheduling, and evidence rendering.
 - [ ] Execute and validate the Kind showcase from a clean cluster, including output-file capture.
 - [ ] Add one complete SLURM showcase only when a safe test cluster or reproducible local SLURM fixture is available.

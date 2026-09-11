@@ -1,6 +1,6 @@
 ---
 title: 30 GB network fan-out
-description: Inspect shared bandwidth and parallel activity placement in SimGrid.
+description: Run a verified SimGrid experiment for concurrent flows and parallel placement.
 ---
 
 import InterfaceApiTabs from '@site/src/components/InterfaceApiTabs';
@@ -10,7 +10,19 @@ import {FileList, WorkflowDiagram} from '@site/src/components/WorkflowShowcase';
 
 <WorkflowDiagram kind="fanout" />
 
-`t1` produces three 10 GB dependencies. `t2`, `t3`, and `t4` run concurrently on the three cores of M2 and each sends 10 GB to `t5` on M3. The example makes endpoint contention visible: concurrent flows share the link instead of each receiving its full nominal bandwidth.
+This complete SimGrid experiment makes network sharing visible. `t1` produces three 10 GB dependencies. `t2`, `t3`, and `t4` run concurrently on the three cores of M2, then each sends 10 GB to `t5` on M3. The links are shared: a concurrent flow does not receive the full nominal bandwidth on its own.
+
+Use it to inspect how a placement with parallel tasks can still be limited by its network endpoints. Do not treat the 36-second manual-plan estimate as a universal formula for 10 GB/s networks; the observed trace is the authoritative evidence for the configured sharing model.
+
+## Model at a glance
+
+| Resource | Cores | Activities |
+| --- | ---: | --- |
+| M1 | 1 | `t1` |
+| M2 | 3 | `t2`, `t3`, `t4` in parallel |
+| M3 | 1 | `t5` |
+
+Every dependency is 10,000,000,000 bytes. There are six dependencies, so a completed run must report 60,000,000,000 transferred bytes. The two bidirectional links are 80 Gbit/s (10 GB/s) and permit three concurrent transfers.
 
 ## Download the model
 
@@ -20,29 +32,47 @@ import {FileList, WorkflowDiagram} from '@site/src/components/WorkflowShowcase';
   <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/simulation/30gb-fanout/topology.yaml">Network topology YAML ↓</a>
   <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/simulation/30gb-fanout/workflow.yaml">Workflow YAML ↓</a>
   <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/simulation/30gb-fanout/plan-request.yaml">Plan envelope ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/simulation/30gb-fanout/execution-request.yaml">Execution envelope ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/simulation/30gb-fanout/run.sh">Submission script ↓</a>
 </FileList>
 
 <InterfaceApiTabs
   desktop={<div>
     <h2>Explore with AkôFlow Desktop</h2>
     <ol>
-      <li>Create the three-resource simulation environment and its shared-link topology.</li>
-      <li>Import <code>workflow.yaml</code> and open its DAG.</li>
-      <li>Generate PRISM and HEFT candidates, or reproduce <code>plan-request.yaml</code> manually.</li>
-      <li>Expand each candidate Gantt and compare placement, transfer segments, makespan, and cost.</li>
-      <li>Start the selected simulation and compare planned transfers with the observed SimGrid trace.</li>
+      <li>Create a simulation environment with M1 (one core), M2 (three cores), and M3 (one core), and bind SimGrid to each resource.</li>
+      <li>Create the scope and attach the two shared, bidirectional 80 Gbit/s links from <code>topology.yaml</code>.</li>
+      <li>Import <code>workflow.yaml</code>. In its Definition graph, confirm that <code>t1</code> fans out to three activities and that all three converge on <code>t5</code>.</li>
+      <li>Choose <strong>Generate plan</strong>. Use <strong>Create manually</strong> to reproduce the checked-in M1 → M2 → M3 assignment, or use <strong>Generate plans</strong> to compare PRISM Cost, PRISM Time, and HEFT on the same scope.</li>
+      <li>Expand a candidate Gantt. Verify that `t2`, `t3`, and `t4` occupy different M2 cores; then select the plan and start the simulation.</li>
+      <li>On the completed run, open <strong>Data</strong> to inspect six transfers and <strong>Plan vs execution</strong> to compare the 36-second estimate with the observed trace.</li>
     </ol>
   </div>}
   api={<div>
-    <h2>Register and plan through the API</h2>
+    <h2>Register, plan, and execute through the API</h2>
+    <p>From a fresh instance, run the versioned script. It submits the environment, scope, topology, workflow, manual plan, and execution envelope in dependency order:</p>
     <pre><code>{`export AKOFLOW_API_URL="http://127.0.0.1:8080/akoflow-api"
 export AKOFLOW_API_TOKEN="<token>"
-
-curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" -H 'Content-Type: application/yaml' --data-binary @examples/simulation/30gb-fanout/environment.yaml "$AKOFLOW_API_URL/environments/"
-curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" -H 'Content-Type: application/yaml' --data-binary @examples/simulation/30gb-fanout/scope.yaml "$AKOFLOW_API_URL/execution-scopes/"
-curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" -H 'Content-Type: application/yaml' --data-binary @examples/simulation/30gb-fanout/topology.yaml "$AKOFLOW_API_URL/network-topologies/"
-curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" -H 'Content-Type: application/yaml' --data-binary @examples/simulation/30gb-fanout/workflow.yaml "$AKOFLOW_API_URL/workflow-definitions/"
-curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" -H 'Content-Type: application/yaml' --data-binary @examples/simulation/30gb-fanout/plan-request.yaml "$AKOFLOW_API_URL/schedule-plans/"`}</code></pre>
-    <p>Start a simulation from the resulting plan using the execution flow described in <a href="../guides/workflows/executions">Execute and monitor a workflow</a>.</p>
+bash examples/simulation/30gb-fanout/run.sh`}</code></pre>
+    <p>Poll the run until it reports <code>completed</code>:</p>
+    <pre><code>{`curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \\
+  "$AKOFLOW_API_URL/execution-runs/simgrid-30gb-fanout-run-v1/"`}</code></pre>
   </div>}
 />
+
+<figure>
+  <img src={require('@site/static/img/interface/showcase/simgrid-plan-mode-and-algorithms.png').default} alt="AkôFlow Desktop's Create an execution plan page showing Generate plans, Create manually, the planning target switch, and PRISM Cost, PRISM Time, and HEFT choices." />
+  <figcaption>Choose the simulation target before selecting algorithms. The two PRISM objectives are exclusive; HEFT remains a baseline candidate for the same frozen workflow and scope.</figcaption>
+</figure>
+
+## Verify the result
+
+The current bundle completed on 2026-09-11 as `simgrid-30gb-fanout-run-v1`. It settled all five activities and recorded six transfers totaling 60,000,000,000 bytes. The observed makespan was `36.495 s`; the run stored `50 s` of accumulated compute time and `16.237 s` of accumulated transfer time.
+
+The trace is useful because it exposes the sharing rather than hiding it in one aggregate number:
+
+- the three M1 → M2 transfers started together at 10 s and each lasted about 3.247 s;
+- the M2 → M3 transfers became ready together after the parallel tasks and completed at different times, with the final transfer ending at about 26.495 s;
+- `t5` then ran for 10 s, giving the observed makespan.
+
+Accumulated stage time is not additional wall-clock time: activities `t2`, `t3`, and `t4` contribute compute time concurrently. If the run has fewer than six transfers, check that the manual plan still maps M1, M2, and M3 to distinct resources and that all six `dataDependencies` were retained after import.

@@ -1,0 +1,3 @@
+id: simgrid-30gb-scope
+name: SimGrid 30 GB scope
+environmentVersionIds: [simgrid-30gb-environment-v1]

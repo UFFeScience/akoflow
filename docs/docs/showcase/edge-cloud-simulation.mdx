@@ -73,6 +73,16 @@ post_yaml execution-runs examples/simulation/execution-request.yaml`}</code></pr
   </div>}
 />
 
+<figure>
+  <img src={require('@site/static/img/interface/showcase/simgrid-edge-cloud-workflow-definition.png').default} alt="AkôFlow Desktop showing the imported simulation-example-workflow definition, its prepare-to-analyze-to-summarize DAG, activity list, and Generate plan control." />
+  <figcaption>The imported definition before planning. Verify the three nodes and their two dependency arrows; use <strong>Generate plan</strong> only after this graph reflects the workflow YAML.</figcaption>
+</figure>
+
+<figure>
+  <img src={require('@site/static/img/interface/showcase/simgrid-plan-mode-and-algorithms.png').default} alt="AkôFlow Desktop Create an execution plan page with manual and generated planning paths, the target mode switch, and PRISM Cost, PRISM Time, and HEFT algorithm controls." />
+  <figcaption>The planning screen uses one frozen workflow, scope, and topology for every candidate. Choose <strong>Simulation</strong> for this Showcase, then use manual placement for reproduction or generated candidates for an algorithm comparison.</figcaption>
+</figure>
+
 ## Verify the result
 
 The bundle was exercised against the current API on 2026-09-11. Its run projection, `simulation-example-run-v1`, reached `completed` with three settled activities, two transfers, and `120000000` transferred bytes. The observed makespan was `21.593 s`; its accumulated execution time was `9 s`, and its accumulated transfer time was `11.693 s`.

@@ -1,0 +1,59 @@
+plan:
+  id: simgrid-30gb-fanout-plan-v1
+  workflowVersionId: simgrid-30gb-fanout-v1
+  executionScopeId: simgrid-30gb-scope
+  networkTopologyId: simgrid-30gb-network
+  source: imported
+  algorithm: manual
+  algorithmVersion: "1"
+  objective: makespan
+  deadlineSeconds: 36
+  budget: 0
+  predicted: {makespanSeconds: 36, cost: 0, feasible: true}
+  assignments:
+    - {id: simgrid-30gb-plan-t1, planId: simgrid-30gb-fanout-plan-v1, activityId: simgrid-30gb-fanout-t1, resourceId: simgrid-30gb-m1, coreId: core-0, slotId: default, orderOnResource: 1, priority: 50, predictedReadyAt: 0, predictedStartAt: 0, predictedFinishAt: 10, predictedRuntimeSeconds: 10}
+    - {id: simgrid-30gb-plan-t2, planId: simgrid-30gb-fanout-plan-v1, activityId: simgrid-30gb-fanout-t2, resourceId: simgrid-30gb-m2, coreId: core-0, slotId: default, orderOnResource: 1, priority: 40, predictedReadyAt: 13, predictedStartAt: 13, predictedFinishAt: 23, predictedRuntimeSeconds: 10, predictedTransferSeconds: 3}
+    - {id: simgrid-30gb-plan-t3, planId: simgrid-30gb-fanout-plan-v1, activityId: simgrid-30gb-fanout-t3, resourceId: simgrid-30gb-m2, coreId: core-1, slotId: default, orderOnResource: 1, priority: 30, predictedReadyAt: 13, predictedStartAt: 13, predictedFinishAt: 23, predictedRuntimeSeconds: 10, predictedTransferSeconds: 3}
+    - {id: simgrid-30gb-plan-t4, planId: simgrid-30gb-fanout-plan-v1, activityId: simgrid-30gb-fanout-t4, resourceId: simgrid-30gb-m2, coreId: core-2, slotId: default, orderOnResource: 1, priority: 20, predictedReadyAt: 13, predictedStartAt: 13, predictedFinishAt: 23, predictedRuntimeSeconds: 10, predictedTransferSeconds: 3}
+    - {id: simgrid-30gb-plan-t5, planId: simgrid-30gb-fanout-plan-v1, activityId: simgrid-30gb-fanout-t5, resourceId: simgrid-30gb-m3, coreId: core-0, slotId: default, orderOnResource: 1, priority: 10, predictedReadyAt: 26, predictedStartAt: 26, predictedFinishAt: 36, predictedRuntimeSeconds: 10, predictedTransferSeconds: 3}
+workflow:
+  id: simgrid-30gb-fanout-v1
+  workflowId: simgrid-30gb-fanout
+  version: 1
+  definitionHash: simgrid-30gb-fanout-v1
+  activities:
+    - {id: simgrid-30gb-fanout-t1, workflowVersionId: simgrid-30gb-fanout-v1, activityTypeId: simgrid-30gb-fanout-activity, externalId: t1, name: t1, kind: task, capabilities: [simulation], command: {}, resources: {cpu: 1, memoryBytes: 1073741824, storageBytes: 0}, simulation: {model: deterministic, durationSeconds: 10}, policy: {maxAttempts: 1}, priority: 50}
+    - {id: simgrid-30gb-fanout-t2, workflowVersionId: simgrid-30gb-fanout-v1, activityTypeId: simgrid-30gb-fanout-activity, externalId: t2, name: t2, kind: task, capabilities: [simulation], command: {}, resources: {cpu: 1, memoryBytes: 1073741824, storageBytes: 0}, simulation: {model: deterministic, durationSeconds: 10}, policy: {maxAttempts: 1}, priority: 40}
+    - {id: simgrid-30gb-fanout-t3, workflowVersionId: simgrid-30gb-fanout-v1, activityTypeId: simgrid-30gb-fanout-activity, externalId: t3, name: t3, kind: task, capabilities: [simulation], command: {}, resources: {cpu: 1, memoryBytes: 1073741824, storageBytes: 0}, simulation: {model: deterministic, durationSeconds: 10}, policy: {maxAttempts: 1}, priority: 30}
+    - {id: simgrid-30gb-fanout-t4, workflowVersionId: simgrid-30gb-fanout-v1, activityTypeId: simgrid-30gb-fanout-activity, externalId: t4, name: t4, kind: task, capabilities: [simulation], command: {}, resources: {cpu: 1, memoryBytes: 1073741824, storageBytes: 0}, simulation: {model: deterministic, durationSeconds: 10}, policy: {maxAttempts: 1}, priority: 20}
+    - {id: simgrid-30gb-fanout-t5, workflowVersionId: simgrid-30gb-fanout-v1, activityTypeId: simgrid-30gb-fanout-activity, externalId: t5, name: t5, kind: task, capabilities: [simulation], command: {}, resources: {cpu: 1, memoryBytes: 1073741824, storageBytes: 0}, simulation: {model: deterministic, durationSeconds: 10}, policy: {maxAttempts: 1}, priority: 10}
+  dependencies:
+    - {activityId: simgrid-30gb-fanout-t2, dependsOnActivityId: simgrid-30gb-fanout-t1, type: control}
+    - {activityId: simgrid-30gb-fanout-t3, dependsOnActivityId: simgrid-30gb-fanout-t1, type: control}
+    - {activityId: simgrid-30gb-fanout-t4, dependsOnActivityId: simgrid-30gb-fanout-t1, type: control}
+    - {activityId: simgrid-30gb-fanout-t5, dependsOnActivityId: simgrid-30gb-fanout-t2, type: control}
+    - {activityId: simgrid-30gb-fanout-t5, dependsOnActivityId: simgrid-30gb-fanout-t3, type: control}
+    - {activityId: simgrid-30gb-fanout-t5, dependsOnActivityId: simgrid-30gb-fanout-t4, type: control}
+  dataDependencies:
+    - {producerActivityId: simgrid-30gb-fanout-t1, consumerActivityId: simgrid-30gb-fanout-t2, logicalName: t1-to-t2.bin, sizeBytes: 10000000000}
+    - {producerActivityId: simgrid-30gb-fanout-t1, consumerActivityId: simgrid-30gb-fanout-t3, logicalName: t1-to-t3.bin, sizeBytes: 10000000000}
+    - {producerActivityId: simgrid-30gb-fanout-t1, consumerActivityId: simgrid-30gb-fanout-t4, logicalName: t1-to-t4.bin, sizeBytes: 10000000000}
+    - {producerActivityId: simgrid-30gb-fanout-t2, consumerActivityId: simgrid-30gb-fanout-t5, logicalName: t2-to-t5.bin, sizeBytes: 10000000000}
+    - {producerActivityId: simgrid-30gb-fanout-t3, consumerActivityId: simgrid-30gb-fanout-t5, logicalName: t3-to-t5.bin, sizeBytes: 10000000000}
+    - {producerActivityId: simgrid-30gb-fanout-t4, consumerActivityId: simgrid-30gb-fanout-t5, logicalName: t4-to-t5.bin, sizeBytes: 10000000000}
+resources:
+  - {id: simgrid-30gb-m1, environmentVersionId: simgrid-30gb-environment-v1, executionTarget: batch, type: local_machine, name: M1, providerId: simgrid-30gb-m1, cpuCores: 1, cpuCapacity: 1, memoryBytes: 68719476736, storageBytes: 137438953472, computeSpeedup: 1, pricePerSecond: 0, schedulable: true}
+  - {id: simgrid-30gb-m2, environmentVersionId: simgrid-30gb-environment-v1, executionTarget: batch, type: local_machine, name: M2, providerId: simgrid-30gb-m2, cpuCores: 3, cpuCapacity: 3, memoryBytes: 68719476736, storageBytes: 137438953472, computeSpeedup: 1, pricePerSecond: 0, schedulable: true}
+  - {id: simgrid-30gb-m3, environmentVersionId: simgrid-30gb-environment-v1, executionTarget: batch, type: local_machine, name: M3, providerId: simgrid-30gb-m3, cpuCores: 1, cpuCapacity: 1, memoryBytes: 68719476736, storageBytes: 137438953472, computeSpeedup: 1, pricePerSecond: 0, schedulable: true}
+executionScope:
+  id: simgrid-30gb-scope
+  name: SimGrid 30 GB scope
+  environmentVersionIds: [simgrid-30gb-environment-v1]
+networkTopology:
+  id: simgrid-30gb-network
+  name: M1 to M2 at 10 GB/s
+  version: 1
+  executionScopeId: simgrid-30gb-scope
+  links:
+    - {id: simgrid-30gb-m1-m2, topologyId: simgrid-30gb-network, sourceResourceId: simgrid-30gb-m1, targetResourceId: simgrid-30gb-m2, bandwidthBitsPerSecond: 80000000000, latencySeconds: 0, pricePerByte: 0, bidirectional: true, sharingPolicy: shared, maxConcurrentTransfers: 3}
+    - {id: simgrid-30gb-m2-m3, topologyId: simgrid-30gb-network, sourceResourceId: simgrid-30gb-m2, targetResourceId: simgrid-30gb-m3, bandwidthBitsPerSecond: 80000000000, latencySeconds: 0, pricePerByte: 0, bidirectional: true, sharingPolicy: shared, maxConcurrentTransfers: 3}

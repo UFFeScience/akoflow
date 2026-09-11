@@ -22,9 +22,9 @@ Showcases are extended tutorials. They may link to how-to and reference pages, b
 - [x] Provider limitations are stated explicitly. Evidence: `guides/infrastructure/cloud-capacity.md`, `gcp.md`, and `aws.md` distinguish GCP compute provisioning from AWS S3 support.
 - [x] HPC concepts and the proxy-aware connection path are documented. Evidence: `guides/infrastructure/hpc-slurm.md` and `guides/operations/interactive-console.md`.
 - [x] Existing Showcase download URLs use `raw.githubusercontent.com` and the 50-core bundle was checked against repository files on 2026-09-11.
-- [ ] No screenshot markers remain. Current audit: 13 pages still contain `<!-- screenshot: ... -->` markers.
-- [ ] All internal links and every downloadable asset pass an automated link check. No link-check script exists yet.
-- [ ] Navigation is organized visibly by Tutorial, How-to, Reference, and Explanation. The current sidebar is organized mostly by product domain.
+- [x] No screenshot markers remain. `rg '<!--\\s*screenshot:' docs/docs` returned no matches on 2026-09-11; relevant guides now use checked-in captures or executable verification steps.
+- [x] All internal links and every downloadable asset pass an automated link check. Evidence: `docs/scripts/check-links.mjs` and `.github/workflows/docs-checks.yaml`; the check passed with 264 local route/asset links and 36 Showcase downloads on 2026-09-11.
+- [x] Navigation is organized visibly by Tutorial, How-to, Reference, and Explanation. `docs/sidebars.ts` presents these as its four primary sections, verified in the running documentation site on 2026-09-11.
 - [ ] Every supported runtime has an end-to-end, independently verified showcase.
 
 ## Runtime and provider coverage
@@ -100,8 +100,7 @@ The documentation is ready for external users only when all of the following are
 
 ## Short remaining-gap list
 
-1. The Kind and SLURM showcases remain unverified end to end; the SimGrid edge, 30 GB fan-out, and 50-core bundles are complete.
-2. SLURM has no complete showcase, and SimGrid/Kubernetes lack dedicated infrastructure how-to pages.
+1. A complete SLURM showcase requires either a safe test cluster or a reproducible local SLURM fixture.
+2. GCP and AWS/S3 procedures still require disposable provider accounts to verify minimum permissions, cleanup, and current interface behavior.
 3. Additional focused Desktop captures would improve the remaining infrastructure and run-inspection guides. The current planning capture is reviewed in light and dark themes; the automated link checker is in CI.
 4. Release installation is not externally verifiable until the macOS server artifact and anonymous GHCR image access are fixed.
-5. Navigation is not yet organized by the four Diátaxis purposes.

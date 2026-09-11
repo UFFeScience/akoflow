@@ -80,7 +80,7 @@ Work on the first unchecked unit only. Do not combine units unless the changes a
 
 ### P2 — visual and editorial cleanup
 
-- [ ] Replace or remove screenshot markers in the 15 affected pages. All legacy screenshot markers were removed on 2026-09-11; the two applicable, checked-in Desktop captures are now embedded in the environment and workflow-definition guides. New captures and light/dark visual verification remain pending because the available Desktop surface is locked.
+- [x] Replace or remove screenshot markers in the 15 affected pages. All legacy screenshot markers were removed on 2026-09-11. Checked-in Desktop captures are embedded in the environment, workflow-definition, and planning guides; the planning capture was produced from the current Desktop on 2026-09-11 and reviewed in light and dark themes.
 - [ ] Reorganize `sidebars.ts` by Diátaxis purpose while retaining product-area landing pages and redirects for existing URLs.
 - [ ] Remove or redirect legacy overlapping pages (`examples.md`, `user-guide.md`, `internal/api.md`, and legacy CLI material) after checking inbound links.
 - [ ] Perform a final plain-language edit for repeated introductions, unsupported claims, inconsistent terminology, and generated-sounding filler.
@@ -102,6 +102,6 @@ The documentation is ready for external users only when all of the following are
 
 1. The Kind and SLURM showcases remain unverified end to end; the SimGrid edge, 30 GB fan-out, and 50-core bundles are complete.
 2. SLURM has no complete showcase, and SimGrid/Kubernetes lack dedicated infrastructure how-to pages.
-3. Fresh Desktop captures and their light/dark visual review remain blocked until the available Desktop surface is unlocked; legacy screenshot markers have been removed and the automated link checker is in CI.
+3. Additional focused Desktop captures would improve the remaining infrastructure and run-inspection guides. The current planning capture is reviewed in light and dark themes; the automated link checker is in CI.
 4. Release installation is not externally verifiable until the macOS server artifact and anonymous GHCR image access are fixed.
 5. Navigation is not yet organized by the four Diátaxis purposes.

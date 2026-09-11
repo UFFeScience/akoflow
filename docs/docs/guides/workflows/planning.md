@@ -25,7 +25,7 @@ Assignments include predicted ready, start, finish, runtime, transfer time, cost
 
 ## Using AkôFlow Desktop
 
-1. Open a workflow and choose its planning action, or open **Workflows → Planning sessions** and start a new session.
+1. Open a workflow definition and choose **Generate plan**. Planning sessions are created from that workflow so the session stays bound to its immutable version.
 2. Choose **Automatic planning**.
 3. Select an execution or simulation scope and its network topology.
 4. Select one or more algorithms. Configure PRISM search options if applicable.
@@ -33,6 +33,10 @@ Assignments include predicted ready, start, finish, runtime, transfer time, cost
 6. Choose **Generate candidate plans**.
 7. Follow each algorithm run's progress. Expand candidates to inspect their Gantt timelines and assignments.
 8. Compare predicted time, cost, feasibility, and Pareto status, then select a candidate. AkôFlow creates the executable schedule plan from that candidate.
+
+<img src={require('@site/static/img/interface/planning/create-execution-plan.png').default} alt="AkôFlow Desktop Create an execution plan screen in light mode, with generated and manual planning choices, a planning target selector, an execution scope, and PRISM Cost, PRISM Time, and HEFT controls." />
+
+*Choose **Generate plans** to compare candidate schedules. The target selector keeps real execution scopes separate from simulation-only scopes; PRISM Cost and PRISM Time are exclusive objectives, while HEFT is a comparison baseline.*
 
 ### Manual plans
 

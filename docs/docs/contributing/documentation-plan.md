@@ -70,6 +70,23 @@ Independent guide groups may be authored in parallel after their source inventor
 - Review screenshots for secrets, hostnames, tokens, usernames, and unstable identifiers.
 - Search for removed terminology and stale fixed-port instructions.
 
+## Link verification
+
+Run the repository-owned link check after a documentation build:
+
+```bash
+npm run build --prefix docs
+npm run check:links --prefix docs
+```
+
+The check rejects a missing internal documentation route, a missing file below
+`docs/static/`, and a Showcase download that no longer has its checked-in
+counterpart under `examples/`. It intentionally does not make network requests
+or judge third-party URLs: availability of external services belongs to the
+reader's environment, while these three classes are artifacts maintained in
+this repository. GitHub Actions runs the same type-check, build, and link check
+for documentation or example changes.
+
 ## Media naming
 
 Store static screenshots under `static/img/interface/<area>/` and walkthroughs under `static/media/tutorials/`.

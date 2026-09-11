@@ -1,0 +1,37 @@
+name: Documentation checks
+
+on:
+  pull_request:
+    paths:
+      - "docs/**"
+      - "examples/**"
+      - ".github/workflows/docs-checks.yaml"
+  push:
+    branches: [main]
+    paths:
+      - "docs/**"
+      - "examples/**"
+      - ".github/workflows/docs-checks.yaml"
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Build and verify documentation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: docs/package-lock.json
+      - name: Install documentation dependencies
+        run: npm ci --prefix docs
+      - name: Type-check documentation code
+        run: npm run typecheck --prefix docs
+      - name: Build the documentation site
+        run: npm run build --prefix docs
+      - name: Verify repository-owned documentation links
+        run: npm run check:links --prefix docs

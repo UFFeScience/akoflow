@@ -21,8 +21,20 @@ Although initially focused on Kubernetes-based workloads, AkôFlow has evolved t
 
 ### Desktop application
 
-Download the current installer for macOS, Windows or Linux from
-[AkôFlow Releases](https://github.com/UFFeScience/akoflow/releases/latest).
+The Desktop is the intended installation path: it starts the graphical client
+and the version-matched daemon and BuildKit services through Docker Compose.
+
+> **Current public-release limitation.** Do not use the latest public release
+> as a new production installation yet. On 2026-09-11, release `v1.0.3`
+> published Desktop assets named `1.0.0`, and anonymous manifest requests for
+> both runtime images returned `401 Unauthorized`. A public release must have
+> matching Desktop assets and anonymously pullable GHCR images before the
+> steps below are reproducible. See the
+> [installation guide](https://uffescience.github.io/akoflow/installation/) for
+> verification commands and the manual-stack recovery path.
+
+After that release condition is met, download the matching installer for macOS,
+Windows, or Linux from [AkôFlow Releases](https://github.com/UFFeScience/akoflow/releases/latest).
 
 - **macOS:** open the universal `.dmg`, drag **AkôFlow Desktop** to
   `Applications`, and launch it.
@@ -32,25 +44,19 @@ Download the current installer for macOS, Windows or Linux from
   package with `sudo apt install ./Akoflow-Desktop-*.deb`.
 
 AkôFlow Desktop requires Docker Desktop on macOS and Windows, or Docker Engine
-with the Compose v2 plugin on Linux. At startup it verifies the requirements,
-explains anything that is missing, and starts the version-matched AkôFlow daemon
-and BuildKit containers automatically. Docker Desktop for Windows must use
-Linux containers.
+with the Compose v2 plugin on Linux. Docker Desktop for Windows must use Linux
+containers. At startup, Desktop checks those requirements and starts the
+version-matched daemon and BuildKit containers.
 
 Docker selects an available API port bound only to `127.0.0.1`; no fixed host
 port is reserved. BuildKit remains entirely inside the Compose network.
 
 ### Updates
 
-The packaged desktop application checks the releases in this repository for a
-new version. Updates are downloaded only after confirmation and installed when
-the application restarts. The desktop application, daemon image and BuildKit
-image use the same release version.
-
-When the updated application starts, it pulls and health-checks the matching
-containers. Persistent Docker volumes are retained. If the new runtime cannot
-become healthy, AkôFlow restores the last healthy container version and reports
-the failed update instead of deleting data.
+Update behavior must be validated against the packaged public release before it
+is relied upon operationally. Preserve the local Docker volumes and export the
+instance before changing versions. Do not treat the current public release as a
+recovery path until matching installers and public runtime images are available.
 
 Release maintainers should configure `MACOS_CSC_LINK`,
 `MACOS_CSC_KEY_PASSWORD`, `MACOS_APPLE_ID`,
@@ -60,8 +66,8 @@ and notarize the installers; they are never included in the application.
 
 ### Container images
 
-Versioned images are published to the GitHub Container Registry for
-`linux/amd64` and `linux/arm64`:
+The release workflow is configured to publish versioned images for
+`linux/amd64` and `linux/arm64` to:
 
 - `ghcr.io/uffescience/akoflow-daemon`
 - `ghcr.io/uffescience/akoflow-buildkit`
@@ -71,9 +77,10 @@ The production Compose bundle and configuration instructions are available in
 
 ## Releases
 
-New versions are released automatically when a semantic-version tag such as
-`v1.2.3` is pushed to this repository. Each release publishes the desktop
-installers and versioned Docker images for the AkôFlow daemon and BuildKit.
+The release workflow runs when a semantic-version tag such as `v1.2.3` is
+pushed. Its intended output is Desktop installers plus versioned daemon and
+BuildKit images. Verify that those artifacts are available and version-aligned
+before calling a release installable.
 
 See all releases: [https://github.com/UFFeScience/akoflow/releases](https://github.com/UFFeScience/akoflow/releases)
 

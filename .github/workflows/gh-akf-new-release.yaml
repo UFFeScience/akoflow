@@ -130,6 +130,9 @@ jobs:
           repository: UFFeScience/akoflow-desktop
           # Desktop releases intentionally package the current frontend main.
           ref: main
+          # GITHUB_TOKEN is scoped to this repository and cannot read the
+          # private desktop repository. Use a fine-grained cross-repo token.
+          token: ${{ secrets.DESKTOP_REPOSITORY_TOKEN }}
 
       - name: Set up Node.js
         uses: actions/setup-node@v6

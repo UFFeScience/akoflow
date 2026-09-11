@@ -9,6 +9,10 @@ AkôFlow is a control plane for scientific workflows. It keeps the description o
 
 This is an explanation of the records and their boundaries. For the exact YAML fields, use the [workflow specification](./internal/workflow-spec) and the [environment reference](./reference/environment-yaml). For an end-to-end task, start with [the first simulated workflow](./guides/workflows/first-run).
 
+<img src={require('@site/static/img/architecture/akoflow-control-plane.svg').default} alt="AkôFlow control-plane architecture: Desktop and API clients call the daemon; its workflow, planning, and execution services preserve scientific evidence in SQLite and dispatch work through SimGrid, Kubernetes, SSH/Slurm, cloud, and local adapters." />
+
+*The diagram groups responsibilities rather than deployment units. AkôFlow is one daemon with application services and adapters; the cards do not imply separately deployable microservices.*
+
 ## The record chain
 
 ```text

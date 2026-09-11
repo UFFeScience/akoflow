@@ -39,7 +39,7 @@ Data preparation and output observation are evidence too. Transfer records can c
 
 ## Compare before drawing conclusions
 
-Compare a selected plan with a completed run at the same scope and execution mode. Check assignments, transfer records, activity attempts, and provider conditions before attributing a makespan gap to the scheduling algorithm. The execution trace reports both wall-clock makespan and accumulated activity-stage totals; interpret those as different measurements.
+Compare a selected plan with a completed run at the same scope and execution mode. Check assignments, transfer records, activity attempts, and provider conditions before attributing a makespan gap to the scheduling algorithm. The execution trace reports both wall-clock makespan and accumulated activity-stage totals; [interpreting observed timing](./observed-timing) defines the distinction.
 
 ## Related material
 

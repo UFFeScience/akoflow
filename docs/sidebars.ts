@@ -83,6 +83,7 @@ const sidebars: SidebarsConfig = {
         "explanations/prism-and-heft",
         "explanations/network-modeling",
         "explanations/evidence-and-provenance",
+        "explanations/observed-timing",
       ],
     },
     {

@@ -76,7 +76,7 @@ Work on the first unchecked unit only. Do not combine units unless the changes a
 
 - [x] Separate `concepts.md`, `engine.md`, and `runtimes.md` into focused explanations for architecture, planning, execution, network modeling, provenance, and plan-versus-observed evidence. The preserved entry points now have narrow responsibilities and link to dedicated planning, network-modeling, and evidence/provenance explanations; verified against planning, execution, transfer, and runtime contracts on 2026-09-11.
 - [x] Explain PRISM versus HEFT without promising that one algorithm always wins; distinguish candidate generation, common evaluation, objective choice, and prediction fidelity. `explanations/prism-and-heft.md` documents the current separate HEFT and PRISM evaluation paths, bounded PRISM beam search, objective ordering, network/interference model, and the absence of a cross-algorithm shared evaluator; verified against the scheduler implementations and tests on 2026-09-11.
-- [ ] Explain network flow, contention, accumulated stage time, queue time, makespan, cost, and why accumulated activity values are not wall-clock totals.
+- [x] Explain network flow, contention, accumulated stage time, queue time, makespan, cost, and why accumulated activity values are not wall-clock totals. `explanations/observed-timing.md` distinguishes current PRISM modeled contention from persisted run observations and grounds every stage and aggregate in the execution supervisor and run-feed queries, verified on 2026-09-11.
 
 ### P2 — visual and editorial cleanup
 

@@ -6,12 +6,13 @@ description: Learn how the AkôFlow Desktop navigation maps to the control-plane
 ---
 
 import AnnotatedScreenshot from '@site/src/components/AnnotatedScreenshot';
-import DemoVideo from '@site/src/components/DemoVideo';
 
 AkôFlow Desktop is the visual client for the AkôFlow daemon. The application does not run infrastructure commands from the browser renderer: it requests the daemon API, and the daemon performs discovery, planning, execution, data movement, and infrastructure operations.
 
 <AnnotatedScreenshot
+  src="/img/interface/overview.png"
   alt="AkôFlow Desktop overview with the sidebar, global search, notifications, instance status, and workflow summary identified"
+  caption="The overview is a current snapshot of the connected daemon. Counts and workflow names change with the selected instance; use a workflow row or View all to continue into the record rather than treating the dashboard as a report export."
   callouts={[
     {number: 1, label: 'The sidebar groups workflows, infrastructure, runs, artifacts, provenance, and audit.'},
     {number: 2, label: 'Global search opens entities without first visiting their list page.'},
@@ -60,10 +61,7 @@ The API path is useful for automation and reproducible experiments. The Desktop 
 
 Interactive commands open in the terminal panel fixed to the bottom of the application. The daemon owns the session and streams its output; closing a page does not make the renderer execute or manage a remote shell itself.
 
-<DemoVideo
-  title="Open an AkôFlow interactive session"
-  description="Planned capture: choose a resource, open a session, inspect the terminal panel, and download its log."
-/>
+Open an interactive session from a resource or runtime-aware operation, then use the terminal panel to inspect its output. The session detail page provides the durable record and log-export control; the panel is a live view, not a replacement for the persisted session evidence. See [Interactive console](./operations/interactive-console) for prerequisites, connection behavior, and recovery.
 
 ## Read-only instances
 

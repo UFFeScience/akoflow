@@ -511,23 +511,6 @@ function endpointDocument(endpoint, position) {
   const title = endpoint.title;
   const params = extractParameters(endpoint.path);
   const body = Boolean(endpoint.request);
-  const requestSection = endpoint.request
-    ? `\n## Request body\n\nContent-Type: \`application/json\` or \`application/yaml\`\n\nContract: \`${endpoint.request.type}\`\n\n\`\`\`json\n${JSON.stringify(endpoint.request.example, null, 2)}\n\`\`\`\n`
-    : `\n## Request body\n\nThis endpoint does not accept a request body.\n`;
-  const responseBody =
-    endpoint.response.example === null
-      ? endpoint.response.type === "empty response"
-        ? "No response body."
-        : `Returns a ${endpoint.response.type}; it is not JSON.`
-      : `\`\`\`${endpoint.response.mediaType === "application/json" ? "json" : "text"}\n${typeof endpoint.response.example === "string" ? endpoint.response.example : JSON.stringify(endpoint.response.example, null, 2)}\n\`\`\``;
-  const querySection =
-    endpoint.queryParameters.length === 0
-      ? ""
-      : `
-## Query parameters
-
-${endpoint.queryParameters.map((parameter) => `- \`${parameter}\`: ${queryDescriptions[parameter] || "Optional query value consumed by this handler."}`).join("\n")}
-`;
   return `---
 title: ${JSON.stringify(title)}
 sidebar_label: ${JSON.stringify(`${endpoint.method} ${relativePath}`)}
@@ -556,27 +539,6 @@ import ApiEndpoint from '@site/src/components/ApiEndpoint';
   hasRequestBody={${body}}
 />
 
-This endpoint ${endpoint.description}
-${requestSection}
-
-## Successful response
-
-${endpoint.successStatuses.map((status) => `- **${status}**`).join("\n")}
-
-Media type: ${endpoint.response.mediaType ? `\`${endpoint.response.mediaType}\`` : "none"}
-
-Contract: \`${endpoint.response.type}\`
-
-${responseBody}
-
-### Error response
-
-\`\`\`json
-{
-  "error": "error description"
-}
-\`\`\`
-${querySection}
 ## Related guide
 
 See the [${endpoint.group} guide](${groupMetadata[endpoint.group][0]}) for the corresponding Desktop workflow, concepts, and authored request examples.

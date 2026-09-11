@@ -329,31 +329,46 @@ html {
 /* Generated API reference */
 .akoflow-api-reference {
   display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
-  gap: 1.25rem;
+  grid-template-columns: minmax(0, 1.25fr) minmax(360px, 0.95fr);
+  gap: clamp(2rem, 4vw, 4.5rem);
   align-items: start;
+  max-width: 1380px;
+  margin: 1.6rem auto 0;
 }
 
-.akoflow-api-reference > main {
+.akoflow-api-main {
   min-width: 0;
+  padding: 0.5rem 0 3rem;
 }
 
 .akoflow-api-eyebrow {
   color: var(--ifm-color-emphasis-600);
   font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+.akoflow-api-main > h1 {
+  margin: 0.55rem 0 0.45rem;
+  font-size: clamp(2rem, 3.6vw, 3rem);
+  line-height: 1.06;
+}
+
+.akoflow-api-lead {
+  margin: 0 0 1.7rem;
+  color: var(--ifm-color-emphasis-700);
+  font-size: 1rem;
+  line-height: 1.55;
 }
 
 .akoflow-endpoint-signature {
   display: flex;
   gap: 0.75rem;
   align-items: center;
-  margin: 0.8rem 0 1.25rem;
-  padding: 0.55rem 0.7rem;
+  margin: 0 0 3.5rem;
+  padding: 0.7rem 0.85rem;
   border: 1px solid var(--ifm-color-emphasis-200);
-  border-radius: 6px;
+  border-radius: 10px;
 }
 
 .akoflow-endpoint-signature code {
@@ -401,30 +416,111 @@ html {
 .akoflow-method-patch { background: #fef3c7; color: #92400e; }
 .akoflow-method-delete { background: #fee2e2; color: #b91c1c; }
 
-.akoflow-api-example {
+.akoflow-api-section {
+  margin: 0 0 2.6rem;
+}
+
+.akoflow-api-section-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 0.65rem;
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+}
+
+.akoflow-api-section-heading h2 {
+  margin: 0;
+  padding: 0;
+  font-size: 1.15rem;
+}
+
+.akoflow-api-section-heading > code {
+  color: var(--ifm-color-emphasis-600);
+  background: transparent;
+  font-size: 0.72rem;
+}
+
+.akoflow-api-fields,
+.akoflow-api-parameters {
+  margin: 0;
+}
+
+.akoflow-api-fields > div,
+.akoflow-api-parameters > div {
+  display: grid;
+  grid-template-columns: minmax(180px, 0.4fr) 1fr;
+  gap: 1.25rem;
+  padding: 1.1rem 0;
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+}
+
+.akoflow-api-fields dt,
+.akoflow-api-parameters dt,
+.akoflow-api-fields dd,
+.akoflow-api-parameters dd { margin: 0; }
+
+.akoflow-api-fields dt {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  align-items: baseline;
+}
+
+.akoflow-api-fields dt code,
+.akoflow-api-parameters dt code { background: transparent; font-size: 0.82rem; }
+
+.akoflow-api-fields dt span {
+  margin-left: 0;
+  padding: 0.15rem 0.4rem;
+  border-radius: 5px;
+  background: var(--ifm-color-emphasis-100);
+  color: var(--ifm-color-emphasis-600);
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.68rem;
+  font-weight: 500;
+}
+
+.akoflow-api-fields dd,
+.akoflow-api-parameters dd,
+.akoflow-api-empty {
+  color: var(--ifm-color-emphasis-700);
+  font-size: 0.84rem;
+}
+
+.akoflow-api-empty { padding: 1rem 0; }
+
+.akoflow-api-examples {
   position: sticky;
   top: calc(var(--ifm-navbar-height) + 1.5rem);
+  display: grid;
+  gap: 1.5rem;
+}
+
+.akoflow-api-example {
   overflow: hidden;
   border: 1px solid var(--ifm-color-emphasis-200);
-  border-radius: 6px;
+  border-radius: 12px;
   background: var(--ifm-background-surface-color);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
 }
 
 .akoflow-api-example pre {
   margin: 0;
   border-radius: 0;
-  background: #1a1a1a;
-  color: #e5e7eb;
-  overflow-x: hidden;
-  font-size: 0.74rem;
-  line-height: 1.45;
+  padding: 1rem;
+  background: var(--ifm-background-color);
+  color: var(--ifm-font-color-base);
+  overflow: auto;
+  font-size: 0.76rem;
+  line-height: 1.55;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
   word-break: break-word;
 }
 
 .akoflow-api-example pre code {
-  color: #e5e7eb;
+  color: inherit;
   background: transparent;
 }
 
@@ -432,10 +528,40 @@ html {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.45rem 0.65rem;
+  min-height: 42px;
+  padding: 0.55rem 0.85rem;
   color: var(--ifm-color-emphasis-700);
   font-size: 0.8rem;
   font-weight: 700;
+}
+
+.akoflow-api-status-tabs > span:first-child {
+  position: relative;
+  color: var(--ifm-font-color-base);
+}
+
+.akoflow-api-status-tabs > span:first-child::after {
+  position: absolute;
+  right: 0;
+  bottom: -0.58rem;
+  left: 0;
+  height: 2px;
+  background: currentColor;
+  content: '';
+}
+
+.akoflow-api-status-tabs > span:last-child {
+  color: var(--ifm-color-emphasis-600);
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.68rem;
+  font-weight: 500;
+}
+
+.akoflow-api-example-empty {
+  margin: 0;
+  padding: 1.25rem;
+  background: var(--ifm-background-color);
+  color: var(--ifm-color-emphasis-600);
 }
 
 .akoflow-api-example-title button {
@@ -467,17 +593,9 @@ html {
   background: #dcfce7;
 }
 
-.akoflow-api-parameters > div {
-  display: grid;
-  grid-template-columns: minmax(100px, 0.3fr) 1fr;
-  gap: 1rem;
-  padding: 0.5rem 0;
-  border-bottom: 1px solid var(--ifm-color-emphasis-200);
-}
-
 @media (max-width: 1200px) {
   .akoflow-api-reference { grid-template-columns: 1fr; }
-  .akoflow-api-example { position: static; }
+  .akoflow-api-examples { position: static; }
 }
 
 @media (max-width: 996px) {
@@ -493,6 +611,9 @@ html {
   .akoflow-api-reference {
     gap: 1.25rem;
   }
+
+  .akoflow-api-fields > div,
+  .akoflow-api-parameters > div { grid-template-columns: 1fr; gap: 0.35rem; }
 }
 
 /* ══════════════════════════════════════

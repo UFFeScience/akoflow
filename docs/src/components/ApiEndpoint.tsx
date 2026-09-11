@@ -16,6 +16,26 @@ type ApiEndpointProps = {
   hasRequestBody?: boolean;
 };
 
+function fieldsFromExample(example: string | null) {
+  if (!example) return [];
+  try {
+    const value = JSON.parse(example);
+    if (!value || Array.isArray(value) || typeof value !== "object") return [];
+    return Object.entries(value).map(([name, fieldValue]) => ({
+      name,
+      type: Array.isArray(fieldValue)
+        ? "array"
+        : fieldValue === null
+          ? "null"
+          : typeof fieldValue === "object"
+            ? "object"
+            : typeof fieldValue,
+    }));
+  } catch {
+    return [];
+  }
+}
+
 function commandFor(
   method: string,
   endpointPath: string,
@@ -55,6 +75,7 @@ export default function ApiEndpoint({
   const displayPath = path.replace("/akoflow-api", "") || "/";
   const description = handler.replace(/([a-z0-9])([A-Z])/g, "$1 $2");
   const command = commandFor(method, path, hasRequestBody);
+  const requestFields = fieldsFromExample(requestExample);
 
   async function copyCommand() {
     await navigator.clipboard.writeText(command);
@@ -64,9 +85,13 @@ export default function ApiEndpoint({
 
   return (
     <div className="akoflow-api-reference">
-      <main>
+      <main className="akoflow-api-main">
         <span className="akoflow-api-eyebrow">{group} endpoint</span>
         <h1>{description}</h1>
+        <p className="akoflow-api-lead">
+          Send this request to the AkôFlow daemon. Authentication is required
+          when an API token is configured.
+        </p>
         <div className="akoflow-endpoint-signature">
           <span
             className={`akoflow-method akoflow-method-${method.toLowerCase()}`}
@@ -76,16 +101,11 @@ export default function ApiEndpoint({
           <code>{displayPath}</code>
         </div>
 
-        <h2>Request</h2>
-        <p>
-          Send this request to the AkôFlow daemon. When a token is configured,
-          all endpoints except the public bootstrap reads require bearer
-          authentication.
-        </p>
-
         {pathParams.length > 0 && (
-          <>
-            <h3>Path parameters</h3>
+          <section className="akoflow-api-section">
+            <div className="akoflow-api-section-heading">
+              <h2>Path parameters</h2>
+            </div>
             <dl className="akoflow-api-parameters">
               {pathParams.map((parameter) => (
                 <div key={parameter}>
@@ -96,64 +116,68 @@ export default function ApiEndpoint({
                 </div>
               ))}
             </dl>
-          </>
+          </section>
         )}
 
-        <h3>Body</h3>
-        <p>
-          <code>{requestType}</code>
-        </p>
-        {hasRequestBody && requestExample ? (
-          <pre className="akoflow-api-payload">
-            <code>{requestExample}</code>
-          </pre>
-        ) : (
-          <p>No request body.</p>
-        )}
+        <section className="akoflow-api-section">
+          <div className="akoflow-api-section-heading">
+            <h2>Body</h2>
+            <code>{hasRequestBody ? "application/json" : "none"}</code>
+          </div>
+          {requestFields.length > 0 ? (
+            <dl className="akoflow-api-fields">
+              {requestFields.map((field) => (
+                <div key={field.name}>
+                  <dt><code>{field.name}</code> <span>{field.type}</span></dt>
+                  <dd>Field defined by <code>{requestType}</code>.</dd>
+                </div>
+              ))}
+            </dl>
+          ) : (
+            <p className="akoflow-api-empty">
+              {hasRequestBody ? <>Body contract: <code>{requestType}</code>.</> : "This endpoint does not accept a request body."}
+            </p>
+          )}
+        </section>
 
-        <h2>Response</h2>
-        <p>
-          <code>{responseMediaType || "no content"}</code> · {responseType}
-        </p>
-        {responseExample ? (
-          <pre className="akoflow-api-payload">
-            <code>{responseExample}</code>
-          </pre>
-        ) : (
-          <p>No JSON response body.</p>
+        {queryParams.length > 0 && (
+          <section className="akoflow-api-section">
+            <div className="akoflow-api-section-heading"><h2>Query parameters</h2></div>
+            <dl className="akoflow-api-parameters">
+              {queryParams.map((parameter) => (
+                <div key={parameter}><dt><code>{parameter}</code></dt><dd>Optional query value consumed by this route.</dd></div>
+              ))}
+            </dl>
+          </section>
         )}
       </main>
 
-      <aside className="akoflow-api-example">
-        <div className="akoflow-api-example-title">
-          <span>cURL</span>
-          <button type="button" onClick={copyCommand}>
-            {copied ? "Copied" : "Copy"}
-          </button>
-        </div>
-        <pre>
-          <code>{command}</code>
-        </pre>
-        <div className="akoflow-api-example-title">Endpoint</div>
-        <pre>
-          <code>{`${method} ${path}`}</code>
-        </pre>
-        <div className="akoflow-api-example-title">Response</div>
-        <div className="akoflow-api-response-summary">
-          {successStatuses.map((status) => (
-            <code key={status}>{status}</code>
-          ))}
-          <span>
-            {queryParams.length > 0
-              ? `${queryParams.length} query parameter${queryParams.length === 1 ? "" : "s"}`
-              : "No documented query parameters"}
-          </span>
-        </div>
-        {responseExample && (
-          <pre>
-            <code>{responseExample}</code>
-          </pre>
-        )}
+      <aside className="akoflow-api-examples">
+        <section className="akoflow-api-example">
+          <div className="akoflow-api-example-title">
+            <span>cURL</span>
+            <button type="button" onClick={copyCommand}>
+              {copied ? "Copied" : "Copy"}
+            </button>
+          </div>
+          <pre><code>{command}</code></pre>
+        </section>
+
+        <section className="akoflow-api-example">
+          <div className="akoflow-api-example-title akoflow-api-status-tabs">
+            <span>{successStatuses[0]}</span>
+            <span>{responseMediaType || "No content"}</span>
+          </div>
+          {responseExample ? (
+            <pre><code>{responseExample}</code></pre>
+          ) : (
+            <p className="akoflow-api-example-empty">No response body.</p>
+          )}
+          <div className="akoflow-api-response-summary">
+            <span>{responseType}</span>
+            {successStatuses.slice(1).map((status) => <code key={status}>{status}</code>)}
+          </div>
+        </section>
       </aside>
     </div>
   );

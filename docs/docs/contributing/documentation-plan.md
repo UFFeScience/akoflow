@@ -102,6 +102,17 @@ environment-real-create.webm
 
 Every media item must have descriptive alternative text. Videos need a written procedure that can be completed without watching them.
 
+## Architecture-diagram system
+
+Use the black, white, and neutral-gray visual system established by [`akoflow-control-plane.svg`](../../static/img/architecture/akoflow-control-plane.svg) for new architecture, lifecycle, and relationship diagrams. It is a reusable visual reference, not a claim that every diagram has the same topology.
+
+- Use a white page or card, black rules, light-gray responsibility groups, and restrained rounded corners.
+- Use the checked-in AkôFlow logo rather than recreating or tracing it.
+- Group by responsibility, runtime boundary, or lifecycle stage; do not draw application-service cards as separate microservices unless they are independently deployed and evidenced as such.
+- Draw only directional arrows that communicate a real request, dispatch, observation, or ownership relationship. Keep labels beside the line rather than on top of the arrowhead.
+- Keep every diagram as a versioned SVG below `static/img/architecture/`, include a `<title>` and `<desc>`, and provide equivalent explanatory text in the page.
+- Review each new diagram in the rendered documentation at desktop and narrow widths before merging.
+
 ## Definition of done for a guide
 
 - The task has prerequisites, Desktop steps, API steps, expected result, and next steps.

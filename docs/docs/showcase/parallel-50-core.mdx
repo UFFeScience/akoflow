@@ -10,7 +10,20 @@ import {FileList, WorkflowDiagram} from '@site/src/components/WorkflowShowcase';
 
 <WorkflowDiagram kind="parallel" />
 
-This workload separates *machine capacity* from *activity count*. One hundred independent activities are eligible for a simulated machine with 50 cores, so two waves are expected when every activity requests one core. The example is useful for detecting plans that accidentally treat a machine as one slot or display only the cores that received work.
+This workload separates *machine capacity* from *activity count*. One hundred independent activities are assigned to M2, a simulated machine with 50 cores. Each activity requests one core and lasts 10 seconds, so the manual plan has two 50-activity waves. The example is useful for checking that a plan uses cores rather than treating a machine as one execution slot.
+
+M1 and M3 are retained only to keep the three-machine SimGrid scope used by the related examples. No activity is assigned to them, and this workflow has no data dependencies. It is deliberately a compute-capacity exercise, not a network experiment.
+
+## Model at a glance
+
+| Item | Value |
+| --- | --- |
+| Workflow | 100 independent `worker-001` … `worker-100` activities |
+| Assigned resource | M2 only |
+| M2 capacity | 50 schedulable cores |
+| Activity profile | 1 CPU core, deterministic 10 s duration |
+| Plan | workers 001–050 at 0–10 s; workers 051–100 at 10–20 s |
+| Network data | none |
 
 ## Download the complete bundle
 
@@ -28,26 +41,36 @@ This workload separates *machine capacity* from *activity count*. One hundred in
   desktop={<div>
     <h2>Run with AkôFlow Desktop</h2>
     <ol>
-      <li>Import the environment, scope, and topology under <strong>Infrastructure</strong>. Confirm that the M2 resource reports 50 schedulable cores.</li>
-      <li>Import <code>workflow.yaml</code> under <strong>Workflows → Definitions</strong>.</li>
-      <li>Generate a plan against the imported scope, or import the manual plan envelope.</li>
-      <li>Expand the candidate Gantt chart. Its resource lanes must represent individual cores; unused cores may be hidden in compact mode.</li>
-      <li>Start the simulation and compare planned and observed makespan. Queue time is accumulated over activities and is not itself the wall-clock makespan.</li>
+      <li>Open <strong>Infrastructure → Environments</strong> and create a simulation environment that matches <code>environment.yaml</code>. Add the SimGrid runtime and bind it to M1, M2, and M3. M2 must have 50 schedulable cores.</li>
+      <li>Open <strong>Infrastructure → Execution scopes</strong>, create the scope and topology from the supplied YAML, then attach the environment version. The links are present for consistency with the other examples but carry no data in this workflow.</li>
+      <li>Open <strong>Workflows → Definitions</strong> and import <code>workflow.yaml</code>. Its Definition view must contain 100 unconnected worker nodes, each with a 10-second simulation duration.</li>
+      <li>Choose <strong>Generate plan</strong>, then <em>Create manually</em>. Select the simulation scope and assign workers 001–050 to M2 cores 0–49. Assign workers 051–100 to the same cores after the first wave. The checked-in plan is the API representation of that placement.</li>
+      <li>Expand the plan Gantt chart before starting it. It should show 50 used M2 core lanes, with two adjacent 10-second bars per lane. Start the simulation and compare its plan with the completed run.</li>
     </ol>
   </div>}
   api={<div>
     <h2>Run through the API</h2>
-    <p>The checked-in script submits the objects in dependency order and stops on the first HTTP error:</p>
+    <p>The checked-in script submits the objects in dependency order and stops on the first HTTP error. Run it against a fresh instance, or change every persistent ID in the bundle:</p>
     <pre><code>{`export AKOFLOW_API_URL="http://127.0.0.1:8080/akoflow-api"
 export AKOFLOW_API_TOKEN="<token>"
 bash examples/simulation/50core-fanout/run.sh`}</code></pre>
-    <p>Inspect the script before running it if the target instance already contains objects with the same IDs.</p>
+    <p>Poll the run projection until its status is <code>completed</code>:</p>
+    <pre><code>{`curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \\
+  "$AKOFLOW_API_URL/execution-runs/simgrid-50core-workers-run-v2/"`}</code></pre>
   </div>}
 />
 
-## Checks after execution
+## Verify the result
 
-- Exactly 100 activities settle.
-- No activity consumes more cores than requested by the workflow.
-- The Gantt can show all lanes without constructing thousands of off-screen DOM nodes.
-- Planned and observed evidence retain execution, queue, and transfer components separately.
+The bundle was run against the current local API on 2026-09-11 as `simgrid-50core-workers-run-v2`. It completed all 100 activities with a planned and observed makespan of `20 s`. The saved plan contains `50` distinct core IDs for M2, from `core-0` through `core-49`; its final predicted finish is `20 s`. The completed run recorded no transfers and `0` transferred bytes.
+
+The run also records `1000 s` of accumulated execution time: 100 activities × 10 s. Its `500 s` accumulated queue time is the sum of the 10-second wait for the second 50 activities; it is not added to the 20-second wall-clock makespan. The two waves overlap across different cores, so accumulated stage values must not be read as a sequential duration.
+
+If the makespan is not 20 seconds, check these invariants in order:
+
+1. All 100 activities retained `simulation.durationSeconds: 10` after import.
+2. M2 has `cpuCores: 50` and the SimGrid runtime binding is enabled for M2.
+3. Each assignment requests one core and uses a distinct `coreId` in its wave.
+4. The second wave starts at 10 seconds rather than at 0 seconds on an already occupied core.
+
+For a data-transfer counterpart, see [30 GB network fan-out](./network-fanout). For the distinction between accumulated stage time and makespan, see [Core concepts](../concepts).

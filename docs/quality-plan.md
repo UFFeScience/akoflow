@@ -52,7 +52,7 @@ Work on the first unchecked unit only. Do not combine units unless the changes a
 
 - [x] Execute and validate the edge–cloud SimGrid showcase through the documented API sequence and Desktop path. Evidence: on 2026-09-11, the versioned six-file bundle completed as `simulation-example-run-v1` with 3/3 activities, two transfers, 120,000,000 bytes, and a 21.593 s observed makespan; the current Desktop Definition view showed the imported three-node DAG and individual SimGrid activity capability. The page now records the IDs, verification values, recovery checks, and equivalent UI/API paths.
 - [x] Complete the 30 GB fan-out bundle with an execution request or explicitly reclassify it as an explanation. Evidence: `examples/simulation/30gb-fanout/execution-request.yaml` and `run.sh` now provide the full portable flow; on 2026-09-11 it completed as `simgrid-30gb-fanout-run-v1` with 5/5 activities, 6 transfers, 60,000,000,000 bytes, and a 36.495 s observed makespan. The page records the observed sharing trace and includes a current planning-screen capture.
-- [ ] Execute and validate the 50-core showcase; confirm 100 settled activities, 50-core scheduling, and evidence rendering.
+- [x] Execute and validate the 50-core showcase; confirm 100 settled activities, 50-core scheduling, and evidence rendering. Evidence: the versioned bundle completed as `simgrid-50core-workers-run-v2` on 2026-09-11 with 100/100 activities, 50 distinct M2 core IDs in the saved plan, 20 s planned and observed makespan, and zero transfers/bytes. The Showcase records the reproducible API verification and explains its accumulated execution and queue values.
 - [ ] Execute and validate the Kind showcase from a clean cluster, including output-file capture.
 - [ ] Add one complete SLURM showcase only when a safe test cluster or reproducible local SLURM fixture is available.
 
@@ -100,7 +100,7 @@ The documentation is ready for external users only when all of the following are
 
 ## Short remaining-gap list
 
-1. Showcase bundles have not all been executed end to end in this audit; 30 GB fan-out is incomplete.
+1. The Kind and SLURM showcases remain unverified end to end; the SimGrid edge, 30 GB fan-out, and 50-core bundles are complete.
 2. SLURM has no complete showcase, and SimGrid/Kubernetes lack dedicated infrastructure how-to pages.
 3. Thirteen pages contain screenshot markers; no automated link checker exists.
 4. Release installation is not externally verifiable until the macOS server artifact and anonymous GHCR image access are fixed.

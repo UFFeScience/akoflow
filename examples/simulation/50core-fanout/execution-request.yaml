@@ -1,6 +1,11 @@
 run:
-  id: simgrid-50core-fanout-run-v3
-  schedulePlanId: simgrid-50core-fanout-plan-v1
+  id: simgrid-50core-workers-run-v2
+  schedulePlanId: simgrid-50core-workers-plan-v1
   mode: simulation
-  seed: 1
   status: created
+runtimes:
+  - {environmentVersionId: simgrid-50core-environment-v1, id: simgrid-50core, name: SimGrid 50-core, driver: simgrid, mode: simulation, role: simulation, capabilities: {simulation: true}}
+runtimeBindings:
+  - {resourceId: simgrid-50core-m1, runtimeId: simgrid-50core, enabled: true}
+  - {resourceId: simgrid-50core-m2, runtimeId: simgrid-50core, enabled: true}
+  - {resourceId: simgrid-50core-m3, runtimeId: simgrid-50core, enabled: true}

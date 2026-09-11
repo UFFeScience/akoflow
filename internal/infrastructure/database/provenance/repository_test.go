@@ -68,6 +68,32 @@ func TestSQLAllowsSelectAndRejectsWrites(t *testing.T) {
 	}
 }
 
+func TestSchemaRemainsAvailableAfterReadOnlySQL(t *testing.T) {
+	db, err := sql.Open("sqlite3", ":memory:")
+	if err != nil {
+		t.Fatal(err)
+	}
+	db.SetMaxOpenConns(1)
+	defer db.Close()
+	if _, err := db.Exec(`CREATE TABLE activity_definitions (id TEXT, workflow_version_id TEXT); INSERT INTO activity_definitions VALUES ('activity-1', 'version-1')`); err != nil {
+		t.Fatal(err)
+	}
+	repository := New(db)
+	if _, err := repository.SQL(context.Background(), ports.ProvenanceSQLQuery{SQL: "SELECT id FROM activity_definitions"}); err != nil {
+		t.Fatalf("execute read-only SQL: %v", err)
+	}
+	tables, err := repository.Schema(context.Background())
+	if err != nil {
+		t.Fatalf("discover schema after SQL: %v", err)
+	}
+	for _, table := range tables {
+		if table.Name == "activity_definitions" {
+			return
+		}
+	}
+	t.Fatalf("activity_definitions missing from schema: %#v", tables)
+}
+
 func TestLineageTraversesCatalogRelationships(t *testing.T) {
 	db, err := sql.Open("sqlite3", ":memory:")
 	if err != nil {

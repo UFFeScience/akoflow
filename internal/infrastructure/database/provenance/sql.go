@@ -104,6 +104,7 @@ func (r *Repository) executeSQL(
 	if err := configureReadAuthorizer(connection); err != nil {
 		return ports.ProvenanceSQLResult{}, err
 	}
+	defer func() { _ = clearReadAuthorizer(connection) }()
 	rows, err := connection.QueryContext(queryCtx, statement, args...)
 	if err != nil {
 		return ports.ProvenanceSQLResult{}, fmt.Errorf("execute read-only provenance query: %w", err)
@@ -155,6 +156,20 @@ func configureReadAuthorizer(connection *sql.Conn) error {
 				return sqlite3.SQLITE_DENY
 			}
 		})
+		return nil
+	})
+}
+
+// clearReadAuthorizer prevents a per-query SQLite authorizer from leaking into
+// a pooled connection. Schema discovery uses PRAGMA and must not inherit the
+// read-only query policy after the connection is returned to database/sql.
+func clearReadAuthorizer(connection *sql.Conn) error {
+	return connection.Raw(func(driverConnection any) error {
+		sqliteConnection, ok := driverConnection.(*sqlite3.SQLiteConn)
+		if !ok {
+			return fmt.Errorf("provenance database is not SQLite")
+		}
+		sqliteConnection.RegisterAuthorizer(nil)
 		return nil
 	})
 }

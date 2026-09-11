@@ -15,7 +15,11 @@ An execution scope is a reusable set of environment versions available to planni
 5. Leave **Create the initial network topology** selected if you want Desktop to create an empty topology with the scope.
 6. Save, then open the scope detail to review its members.
 
-The catalog shows the version IDs in each scope. A scope is not a copy of its environments and does not create connections or resources.
+<img src={require('@site/static/img/interface/infrastructure/execution-scopes.png').default} alt="AkôFlow Desktop Execution scopes catalog showing scope names, stable IDs, member environment versions and the Create scope action." />
+
+*The catalog is a compact inventory: every row shows the scope name, its stable ID, the environment version selected for it and the number of member environments. Opening a row exposes the scope detail; it does not create a new connection or resource.*
+
+A scope is not a copy of its environments and does not create connections or resources.
 
 ### Using the API
 

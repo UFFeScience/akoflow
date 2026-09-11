@@ -53,6 +53,23 @@ const config: Config = {
     ],
   ],
 
+  plugins: [
+    [
+      "@docusaurus/plugin-client-redirects",
+      {
+        redirects: [
+          { from: "/docs/examples", to: "/docs/showcase/" },
+          { from: "/docs/user-guide", to: "/docs/getting-started/" },
+          {
+            from: "/docs/internal/api",
+            to: "/docs/reference/api-overview/",
+          },
+          { from: "/docs/cli", to: "/docs/reference/api-overview/" },
+        ],
+      },
+    ],
+  ],
+
   themeConfig: {
     image: "img/akoflow-social-card.png",
     colorMode: {
@@ -99,7 +116,6 @@ const config: Config = {
           items: [
             { label: "Getting Started", to: "/docs/getting-started" },
             { label: "Modules", to: "/docs/modules" },
-            { label: "CLI Reference", to: "/docs/cli" },
             { label: "Installation", to: "/docs/installation" },
             { label: "Downloads", to: "/docs/downloads" },
             { label: "Interface Tour", to: "/docs/guides/interface-tour" },

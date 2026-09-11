@@ -17,10 +17,10 @@
 
   --ifm-font-family-base: 'Inter', system-ui, -apple-system, sans-serif;
   --ifm-font-family-monospace: 'JetBrains Mono', 'Fira Code', monospace;
-  --ifm-font-size-base: 16px;
-  --ifm-line-height-base: 1.7;
+  --ifm-font-size-base: 14px;
+  --ifm-line-height-base: 1.55;
 
-  --ifm-navbar-height: 64px;
+  --ifm-navbar-height: 56px;
   --ifm-navbar-background-color: rgba(255, 255, 255, 0.9);
   --ifm-navbar-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.08);
 
@@ -34,7 +34,7 @@
   --ifm-code-padding-vertical: 0.15em;
 
   --ifm-pre-background: #1a1a1a;
-  --ifm-pre-border-radius: 10px;
+  --ifm-pre-border-radius: 6px;
 
   --ifm-heading-font-weight: 700;
   --ifm-global-radius: 10px;
@@ -83,7 +83,7 @@ h1, h2, h3, h4, h5, h6 {
 .navbar {
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  padding: 0 1.25rem;
+  padding: 0 1rem;
 }
 
 .navbar__brand {
@@ -95,13 +95,13 @@ h1, h2, h3, h4, h5, h6 {
 
 .navbar__logo {
   display: grid;
-  width: 34px;
-  height: 34px;
+  width: 30px;
+  height: 30px;
   place-items: center;
   margin-right: 0;
   padding: 4px;
   border: 1px solid var(--ifm-color-emphasis-200);
-  border-radius: 9px;
+  border-radius: 7px;
   background: var(--ifm-background-color);
 }
 
@@ -114,22 +114,23 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ── Sidebar ── */
 .theme-doc-sidebar-container {
+  --doc-sidebar-width: 270px;
   border-right: 1px solid var(--ifm-color-emphasis-200) !important;
   background: var(--ifm-background-color);
 }
 
 .theme-doc-sidebar-menu {
-  padding: 1rem 0.85rem 2rem !important;
+  padding: 0.65rem 0.6rem 1.25rem !important;
 }
 
 .menu__link {
-  min-height: 36px;
+  min-height: 30px;
   align-items: center;
-  padding: 0.45rem 0.65rem;
-  font-size: 0.84rem;
+  padding: 0.32rem 0.55rem;
+  font-size: 0.8rem;
   font-weight: 500;
   line-height: 1.35;
-  border-radius: 7px;
+  border-radius: 5px;
 }
 
 .menu__link--active {
@@ -138,12 +139,12 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .menu__list-item-collapsible {
-  margin-top: 0.55rem;
+  margin-top: 0.3rem;
 }
 
 .menu__list-item-collapsible > .menu__link {
   color: var(--ifm-font-color-base);
-  font-size: 0.78rem;
+  font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.035em;
   text-transform: uppercase;
@@ -157,9 +158,9 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Content rhythm mirrors the Desktop application's calm, card-based spacing. */
 .main-wrapper .container {
-  max-width: 1480px;
-  padding-right: 2rem;
-  padding-left: 2rem;
+  max-width: 1600px;
+  padding-right: 1.25rem;
+  padding-left: 1.25rem;
 }
 
 .theme-doc-markdown {
@@ -167,20 +168,20 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .theme-doc-markdown > h1:first-child {
-  margin-bottom: 1.25rem;
-  font-size: clamp(2rem, 4vw, 3rem);
+  margin-bottom: 0.85rem;
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
   line-height: 1.08;
 }
 
 .theme-doc-markdown h2 {
-  margin-top: 3rem;
+  margin-top: 2rem;
   padding-top: 0.25rem;
-  font-size: 1.55rem;
+  font-size: 1.35rem;
 }
 
-.theme-doc-markdown h3 { margin-top: 2rem; }
+.theme-doc-markdown h3 { margin-top: 1.35rem; }
 .theme-doc-markdown p,
-.theme-doc-markdown li { line-height: 1.75; }
+.theme-doc-markdown li { line-height: 1.6; }
 
 .theme-doc-toc-desktop {
   padding-left: 1.25rem;
@@ -195,8 +196,8 @@ h1, h2, h3, h4, h5, h6 {
 /* ── Code blocks ── */
 .prism-code {
   font-family: var(--ifm-font-family-monospace) !important;
-  font-size: 0.85rem !important;
-  line-height: 1.65 !important;
+  font-size: 0.76rem !important;
+  line-height: 1.5 !important;
 }
 
 div[class*='codeBlockContainer'] {
@@ -213,7 +214,7 @@ code {
 
 /* ── Tables ── */
 table {
-  border-radius: 8px;
+  border-radius: 5px;
   overflow: hidden;
 }
 
@@ -275,7 +276,7 @@ html {
 .akoflow-api-reference {
   display: grid;
   grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
-  gap: 2rem;
+  gap: 1.25rem;
   align-items: start;
 }
 
@@ -295,10 +296,10 @@ html {
   display: flex;
   gap: 0.75rem;
   align-items: center;
-  margin: 1.25rem 0 2rem;
-  padding: 0.8rem 1rem;
+  margin: 0.8rem 0 1.25rem;
+  padding: 0.55rem 0.7rem;
   border: 1px solid var(--ifm-color-emphasis-200);
-  border-radius: 12px;
+  border-radius: 6px;
 }
 
 .akoflow-endpoint-signature code {
@@ -315,6 +316,11 @@ html {
   border: 1px solid var(--ifm-color-emphasis-200);
   background: #f6f8fa;
   color: #1f2937;
+  font-size: 0.76rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .akoflow-api-payload code {
@@ -346,7 +352,7 @@ html {
   top: calc(var(--ifm-navbar-height) + 1.5rem);
   overflow: hidden;
   border: 1px solid var(--ifm-color-emphasis-200);
-  border-radius: 14px;
+  border-radius: 6px;
   background: var(--ifm-background-surface-color);
 }
 
@@ -355,6 +361,12 @@ html {
   border-radius: 0;
   background: #1a1a1a;
   color: #e5e7eb;
+  overflow-x: hidden;
+  font-size: 0.74rem;
+  line-height: 1.45;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .akoflow-api-example pre code {
@@ -366,7 +378,7 @@ html {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.65rem 0.9rem;
+  padding: 0.45rem 0.65rem;
   color: var(--ifm-color-emphasis-700);
   font-size: 0.8rem;
   font-weight: 700;
@@ -391,7 +403,7 @@ html {
   flex-wrap: wrap;
   gap: 0.5rem;
   align-items: center;
-  padding: 0 0.9rem 0.9rem;
+  padding: 0 0.65rem 0.65rem;
   color: var(--ifm-color-emphasis-600);
   font-size: 0.78rem;
 }
@@ -405,7 +417,7 @@ html {
   display: grid;
   grid-template-columns: minmax(100px, 0.3fr) 1fr;
   gap: 1rem;
-  padding: 0.75rem 0;
+  padding: 0.5rem 0;
   border-bottom: 1px solid var(--ifm-color-emphasis-200);
 }
 

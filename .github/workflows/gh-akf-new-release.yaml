@@ -141,7 +141,17 @@ jobs:
           cache: npm
 
       - run: npm ci
-      - run: npm version "${{ github.ref_name }}" --no-git-tag-version --allow-same-version
+      - name: Derive the package version from the release tag
+        id: version
+        shell: bash
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          if ! [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+([-.+][0-9A-Za-z.-]+)?$ ]]; then
+            echo "Release tag must be a semantic version prefixed with v; received: $GITHUB_REF_NAME" >&2
+            exit 1
+          fi
+          echo "value=$version" >> "$GITHUB_OUTPUT"
+      - run: npm version "${{ steps.version.outputs.value }}" --no-git-tag-version --allow-same-version
       - run: npm run build
 
       - name: Package desktop application
@@ -153,6 +163,22 @@ jobs:
           APPLE_ID: ${{ matrix.signing == 'macos' && secrets.MACOS_APPLE_ID || '' }}
           APPLE_APP_SPECIFIC_PASSWORD: ${{ matrix.signing == 'macos' && secrets.MACOS_APP_SPECIFIC_PASSWORD || '' }}
           APPLE_TEAM_ID: ${{ matrix.signing == 'macos' && secrets.MACOS_TEAM_ID || '' }}
+
+      - name: Verify desktop artifact versions
+        shell: bash
+        run: |
+          shopt -s nullglob
+          packages=(release/*.dmg release/*.zip release/*.exe release/*.AppImage release/*.deb)
+          if (( ${#packages[@]} == 0 )); then
+            echo "No desktop packages were produced." >&2
+            exit 1
+          fi
+          for package in "${packages[@]}"; do
+            if [[ "$package" != *"${{ steps.version.outputs.value }}"* ]]; then
+              echo "Artifact does not contain release version ${{ steps.version.outputs.value }}: $package" >&2
+              exit 1
+            fi
+          done
 
       - name: Upload desktop package
         uses: actions/upload-artifact@v4

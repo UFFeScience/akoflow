@@ -11,7 +11,9 @@ AkôFlow uses a service account to read the Compute catalog and, when requested,
 
 You need a GCP project with billing enabled and a service account JSON key. Enable the Compute Engine API. Enable the Cloud Billing API if you want catalog price estimates; without it, machine discovery can still succeed but pricing may be incomplete.
 
-Grant only the permissions needed by your lifecycle policy. A read-only catalog setup needs permission to list machine types, images, zones, disks, and networks. Provisioning additionally needs permission to create, inspect, start, stop, and delete compute instances, disks, firewall/network attachments, and service-account bindings used by the Terraform target.
+Grant only the permissions needed by your lifecycle policy. The read-only catalog calls Compute Engine to list aggregated machine types and disk types in the selected project, and ready images in that project plus the Ubuntu, Debian, and Rocky public image projects. It also requests public Compute Engine SKUs from the Cloud Billing Catalog API; a pricing failure becomes a catalog warning and does not prevent machine discovery.
+
+Provisioning uses the Terraform target shipped with the daemon. It lists available zones in the chosen region, creates and manages one Compute Engine instance and its boot disk, and creates a tagged ingress firewall rule for SSH. It references the VPC or subnetwork selected in the capacity target; it does not create a network, attach a service account to the instance, or manage IAM bindings. Confirm the exact least-privilege role set in a disposable project before adopting it as an institutional policy.
 
 ## 1. Store the service-account credential
 

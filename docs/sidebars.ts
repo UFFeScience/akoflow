@@ -82,6 +82,7 @@ const sidebars: SidebarsConfig = {
       collapsed: false,
       items: [
         "reference/api-overview",
+        "reference/environment-yaml",
         {
           type: "category",
           label: "API endpoints",

@@ -66,7 +66,7 @@ Work on the first unchecked unit only. Do not combine units unless the changes a
 
 ### P1 — reference completeness
 
-- [ ] Generate or maintain a field-level environment YAML reference from the authoritative domain types, including required fields, defaults, enum values, and compatibility.
+- [x] Generate or maintain a field-level environment YAML reference from the authoritative domain types, including required fields, defaults, enum values, and compatibility. Verified against `internal/domain/environment`, `internal/domain/resource`, and the SQLite persistence schema on 2026-09-11.
 - [ ] Do the same for execution scopes and network topologies.
 - [ ] Audit the workflow specification against current parsers, especially per-activity simulation duration and data dependencies.
 - [ ] Add planning-session, candidate, schedule-plan, and execution-run state diagrams or tables from the authoritative state machines.

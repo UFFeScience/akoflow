@@ -16,6 +16,10 @@ Use provenance to answer “how was this result produced?” Use audit to answer
 
 Open **Provenance**. The **Explore** tab loads a server-defined entity catalog. Select an entity, search across its safe projection, apply a field filter, sort a column, and page through the result. The current page can be exported as CSV or JSON.
 
+<img src={require('@site/static/img/interface/provenance/explore-runs.png').default} alt="AkôFlow Desktop Provenance Explore view with the trusted-record catalog, Runs projection, search field, filter control, CSV and JSON exports, and lineage actions for each row." />
+
+*The catalog defines the projections available for exploration. In the **Runs** projection, the row action opens the record details and the lineage action follows its relationship to the selected plan; use the search and export controls only after choosing the record type that answers the question.*
+
 The API exposes the same server-defined catalog and query:
 
 ```bash

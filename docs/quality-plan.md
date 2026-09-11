@@ -22,7 +22,7 @@ Showcases are extended tutorials. They may link to how-to and reference pages, b
 - [x] Provider limitations are stated explicitly. Evidence: `guides/infrastructure/cloud-capacity.md`, `gcp.md`, and `aws.md` distinguish GCP compute provisioning from AWS S3 support.
 - [x] HPC concepts and the proxy-aware connection path are documented. Evidence: `guides/infrastructure/hpc-slurm.md` and `guides/operations/interactive-console.md`.
 - [x] Existing Showcase download URLs use `raw.githubusercontent.com` and the 50-core bundle was checked against repository files on 2026-09-11.
-- [ ] No screenshot markers remain. Current audit: 15 pages still contain `<!-- screenshot: ... -->` markers.
+- [ ] No screenshot markers remain. Current audit: 13 pages still contain `<!-- screenshot: ... -->` markers.
 - [ ] All internal links and every downloadable asset pass an automated link check. No link-check script exists yet.
 - [ ] Navigation is organized visibly by Tutorial, How-to, Reference, and Explanation. The current sidebar is organized mostly by product domain.
 - [ ] Every supported runtime has an end-to-end, independently verified showcase.
@@ -46,7 +46,7 @@ Work on the first unchecked unit only. Do not combine units unless the changes a
 
 - [x] Rewrite `guides/workflows/first-run.md` as one complete SimGrid tutorial. Evidence: the corrected six-file bundle produced run `simulation-example-run-v1` with 3/3 completed activities, two transfers, 120,000,000 transferred bytes, and 21.593 s observed makespan on 2026-09-11; all seven screenshot markers were removed because commands and invariant output provide the clearer verification path.
 - [x] Review `getting-started.md` as a short orientation page. Evidence: the page now routes by user goal to installation, the verified first run, infrastructure-specific guides, concepts, troubleshooting, and API/reference material without repeating tutorial commands.
-- [ ] Verify installation on a clean supported host and replace the pending first-start screenshot in `installation.md`.
+- [ ] Verify installation on a clean supported host. The pending first-start screenshot was removed because text-based preflight checks are more useful and safe. Current blocker: public release binaries download, but the macOS/arm64 server artifact fails to initialize SQLite and anonymous pulls of the GHCR daemon/buildkit images return `unauthorized`; re-test after distributable server artifacts and public package visibility are fixed.
 
 ### P0 — runnable showcases
 
@@ -102,5 +102,6 @@ The documentation is ready for external users only when all of the following are
 
 1. Showcase bundles have not all been executed end to end in this audit; 30 GB fan-out is incomplete.
 2. SLURM has no complete showcase, and SimGrid/Kubernetes lack dedicated infrastructure how-to pages.
-3. Fourteen pages contain screenshot markers; no automated link checker exists.
-4. Navigation is not yet organized by the four Diátaxis purposes.
+3. Thirteen pages contain screenshot markers; no automated link checker exists.
+4. Release installation is not externally verifiable until the macOS server artifact and anonymous GHCR image access are fixed.
+5. Navigation is not yet organized by the four Diátaxis purposes.

@@ -5,7 +5,7 @@ sidebar_label: Installation
 description: Install the AkôFlow Desktop application or run the versioned daemon stack.
 ---
 
-The recommended way to use AkôFlow is the packaged **AkôFlow Desktop** application. It includes the graphical client and starts the version-matched daemon and BuildKit services through Docker Compose.
+The recommended path is the packaged **AkôFlow Desktop** application. It includes the graphical client and starts the version-matched daemon and BuildKit services through Docker Compose. Use the manual stack when you need to inspect Docker output or automate the API directly.
 
 ## Requirements
 
@@ -23,9 +23,9 @@ The first startup checks these requirements and reports anything that is missing
 2. Download the installer for your operating system and architecture.
 3. Install and open AkôFlow Desktop.
 4. Allow the application to start Docker when prompted.
-5. Wait for the instance screen or Overview to appear.
+5. Wait for **Overview** to appear and for the connection indicator to report that the daemon is connected.
 
-<!-- screenshot: installation/desktop-first-start.png — first startup requirement and daemon health screen -->
+If startup does not reach Overview, open the failure details before retrying. Typical causes are Docker not running, an unavailable image pull, or a local port conflict. The Desktop does not need you to copy the daemon token into the application.
 
 Docker chooses an available API port bound to `127.0.0.1`; a fixed host port is not required. BuildKit remains inside the private Compose network.
 
@@ -35,11 +35,27 @@ Database records, credentials, artifacts, and simulation data live in the `akofl
 
 ## Run the daemon stack without the Desktop bootstrap
 
-Use the release bundle when you want to operate the API stack yourself.
+Use the release bundle when you want to operate the API stack yourself. This path is also the quickest way to distinguish an image-distribution problem from a Desktop problem.
 
-1. Copy `releases/.env.example` to `releases/.env`.
-2. Replace `AKOFLOW_API_TOKEN` with a random secret.
-3. Pull and start the pinned images:
+1. Verify Docker and Compose are available:
+
+```bash
+docker info >/dev/null
+docker compose version
+```
+
+2. Copy `releases/.env.example` to `releases/.env`.
+3. Set `AKOFLOW_VERSION` to the release tag and replace `AKOFLOW_API_TOKEN` with a secret. For example:
+
+```bash
+AKOFLOW_TOKEN_VALUE="$(openssl rand -hex 32)"
+sed -i.bak "s/^AKOFLOW_API_TOKEN=.*/AKOFLOW_API_TOKEN=$AKOFLOW_TOKEN_VALUE/" releases/.env
+rm releases/.env.bak
+```
+
+Keep `releases/.env` private. It is intentionally ignored by Git.
+
+4. Pull and start the pinned images:
 
 ```bash
 docker compose --env-file releases/.env -f releases/compose.yaml pull
@@ -54,12 +70,33 @@ The last command prints the loopback port selected by Docker. Use it as the API 
 export AKOFLOW_URL="http://127.0.0.1:<port>/akoflow-api"
 export AKOFLOW_TOKEN="<the token from releases/.env>"
 
-curl --fail --silent \
+curl --fail-with-body \
   -H "Authorization: Bearer ${AKOFLOW_TOKEN}" \
-  "${AKOFLOW_URL}/environments/"
+  "${AKOFLOW_URL}/preflight/" | jq
 ```
 
-Do not commit `releases/.env` or paste its token into screenshots.
+The check is successful when `server.available`, `docker.available`, and `buildkit.available` are all `true`. Then verify authentication and an empty/new catalog:
+
+```bash
+curl --fail-with-body \
+  -H "Authorization: Bearer ${AKOFLOW_TOKEN}" \
+  "${AKOFLOW_URL}/environments/" | jq
+```
+
+### If image pull is denied
+
+The Compose stack pulls `ghcr.io/uffescience/akoflow-daemon` and `ghcr.io/uffescience/akoflow-buildkit`. If `docker compose pull` reports `unauthorized`, the registry package is not publicly reachable to your Docker client. Do not continue with a partial stack.
+
+For an organization account that has package access, authenticate with a GitHub token that has `read:packages`:
+
+```bash
+printf '%s' "$GHCR_TOKEN" | docker login ghcr.io --username "$GITHUB_USERNAME" --password-stdin
+docker compose --env-file releases/.env -f releases/compose.yaml pull
+```
+
+For an open-source public installation, the package owner must instead make the package public. A GitHub release being public does not by itself make its GHCR container packages public.
+
+Do not commit `releases/.env`, `GHCR_TOKEN`, or any daemon token. Do not paste them into screenshots.
 
 ## Develop the graphical client
 
@@ -78,4 +115,4 @@ The packaged application checks releases from the main AkôFlow repository. Afte
 
 ## Verify the installation
 
-Continue to the [interface tour](./guides/interface-tour), then complete the [first end-to-end run](./guides/workflows/first-run).
+After Desktop shows a connected daemon or the API preflight succeeds, complete the [first end-to-end run](./guides/workflows/first-run). That tutorial verifies a real lifecycle boundary: registered infrastructure, workflow, plan, execution, activity records, and data-transfer evidence.

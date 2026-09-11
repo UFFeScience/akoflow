@@ -3,6 +3,8 @@ title: Interactive console and commands
 description: Run one-shot remote commands and open streamed terminal sessions on AkôFlow resources.
 ---
 
+import {ConnectionPath, TerminalPanelGuide} from '@site/src/components/InfrastructureWalkthrough';
+
 # Interactive console and commands
 
 AkôFlow exposes two related mechanisms:
@@ -12,6 +14,8 @@ AkôFlow exposes two related mechanisms:
 
 Both resolve the selected resource to a runtime and connection. They are operational access paths and produce audit events.
 
+<ConnectionPath />
+
 ## Open a terminal in Desktop
 
 1. Open **Infrastructure → Resources** and select a login node, partition, compute node, or another SSH-capable resource.
@@ -20,11 +24,13 @@ Both resolve the selected resource to a runtime and connection. They are operati
 4. Use session tabs to switch between active terminals.
 5. Use **Export log** to download the captured text or **Close session** to release the remote terminal.
 
-<!-- screenshot: Resource detail terminal action and eligible resource context annotated -->
-
-<!-- screenshot: Global terminal expanded with session tabs, terminal stream, export, close, minimize, and navigation-collapse controls numbered -->
+<TerminalPanelGuide />
 
 The panel polls active sessions every three seconds. Switching tabs closes only the local WebSocket for the previous view; it does not intentionally close that remote session. If the active stream disappears unexpectedly, Desktop requests session closure so the remote terminal is not left consuming resources.
+
+### When the terminal action is unavailable
+
+The action appears only after AkôFlow can resolve all three layers: a resource, a runtime binding that supports interactive execution, and a usable connection/credential. Check the resource health and binding first. For an HPC cluster, select the login node rather than an abstract cluster or a batch-only partition. For a proxied site, the daemon must use the connection that contains the proxy route.
 
 ## Open and manage a session through the API
 
@@ -122,4 +128,3 @@ Command creation returns `422` for an unknown/unbound resource, invalid input, a
 - Imported instance snapshots are read-only; opening, writing to, or closing a session is blocked with `423 Locked`.
 - Terminal logs may contain command output and secrets printed by programs. Treat exported logs as sensitive operational data.
 - Close sessions when finished; closing the detail page alone does not close a daemon-owned session.
-

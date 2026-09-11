@@ -9,6 +9,17 @@ A cloud environment separates four concerns:
 3. versioned machine configurations expressed as Ansible playbooks;
 4. provisioned instances and their asynchronous lifecycle operations.
 
+## Provider support in v1.0
+
+| Capability | Google Cloud | AWS |
+| --- | --- | --- |
+| Store provider credentials | Yes | Yes |
+| Discover compute machines, images, disks, zones, and prices | Yes | Not yet |
+| Provision compute capacity with Terraform | Yes | Not yet |
+| Transfer artifacts through object storage | GCS through configured storage adapters | S3 and S3-compatible endpoints |
+
+For a runnable Google Cloud setup, continue with [Configure Google Cloud](./gcp). For AWS, read [Configure AWS](./aws) before creating an environment: v1.0 can use AWS credentials for S3 data movement, but cannot create or discover EC2 workers. This distinction prevents a stored credential from being mistaken for a working compute provider.
+
 ## Synchronize the provider catalog
 
 ### Using AkôFlow Desktop
@@ -125,4 +136,3 @@ curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_TOKEN" "$AKOFLOW_URL/cl
 ```
 
 The provisioning request queues an operation; it does not wait for the instance to become ready. Lifecycle endpoints also exist for configure, validate, start, stop, and destroy. Before destructive lifecycle actions, inspect the instance and active operation state in Desktop or through the API.
-

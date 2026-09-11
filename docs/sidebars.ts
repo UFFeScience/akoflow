@@ -11,6 +11,7 @@ const sidebars: SidebarsConfig = {
         "showcase/edge-cloud-simulation",
         "showcase/kubernetes-real-execution",
         "showcase/network-fanout",
+        "showcase/parallel-50-core",
       ],
     },
     {
@@ -33,6 +34,9 @@ const sidebars: SidebarsConfig = {
         "guides/infrastructure/execution-scopes",
         "guides/infrastructure/storage",
         "guides/infrastructure/cloud-capacity",
+        "guides/infrastructure/gcp",
+        "guides/infrastructure/aws",
+        "guides/infrastructure/hpc-slurm",
       ],
     },
     {

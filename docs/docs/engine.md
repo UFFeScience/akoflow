@@ -1,251 +1,90 @@
 ---
 id: engine
-title: Workflow Engine Internals
-sidebar_label: Engine Internals
+title: Control plane and execution
+sidebar_label: Control plane and execution
 ---
 
-The Workflow Engine is the component that actually runs your workflows. When it starts, it launches six concurrent **goroutines** (Go's lightweight threads) that cooperate through a shared channel. Understanding how they interact helps you reason about performance, timing, and failure handling.
+The current AkôFlow server is a control-plane daemon. Older descriptions of one engine per environment, a global in-memory `WorfklowChannel`, fixed orchestrator goroutines, or SQLite aggregation across engines no longer describe the implementation.
 
----
+## Process lifecycle
 
-## Startup sequence
+At startup the daemon opens operational and analytics persistence, builds credential stores, provider registries, planning algorithms, transfer connectors, cloud services, API handlers, and the persistent event loop. In writable mode it also starts connection monitoring. The API is the synchronous entry point; long-running work is queued.
 
-When the engine starts, the `main` function launches each goroutine and then blocks on the HTTP server:
+```text
+HTTP request
+   +-- validate and persist
+   +-- enqueue typed job
+   v
+persistent queue -> dispatcher -> planning | execution | cloud handler
+                                      |
+                               repositories + providers
+```
+
+Read-only instance mode serves inspection APIs without starting mutating background processing.
+
+## Planning flow
+
+1. Create a planning session for a workflow version and execution scope.
+2. The coordinator freezes versions, resources, topology, profiles, constraints, interference data, and algorithms.
+3. A planning job is dispatched.
+4. Registered algorithms generate candidates and predicted metrics.
+5. Compare candidates and select one to obtain the plan used by execution.
+
+Built-ins are HEFT, PRISM Time, and PRISM Cost. External plugins are validated. Clients should read algorithm availability from the API.
+
+## Execution flow
+
+Starting a run persists its request and queues an execution job. The supervisor then:
+
+1. validates the plan, assignments, runtime bindings, and DAG;
+2. prewarms planned cloud targets for real execution;
+3. indexes activities, resources, assignments, and dependencies;
+4. inspects running handles and identifies dependency-ready work;
+5. prepares executable and workspace data;
+6. dispatches work up to the parallel limit;
+7. persists task, log, artifact, timing, and transfer observations;
+8. completes or fails the run and releases ephemeral cloud allocations.
+
+The current defaults are eight parallel activities and one-second inspection, but these are server defaults rather than API guarantees.
+
+## Runtime-independent control
 
 ```go
-// cmd/server/main.go
-func main() {
-    config.SetupEnv()
-
-    go healthcheck.New().StartHealthCheck()   // ① connects to runtimes
-    go worker.New().StartWorker()             // ② executes tasks
-    go orchestrator.StartOrchestrator()       // ③ dispatches ready tasks
-    go monitor.StartMonitor()                 // ④ collects metrics + state changes
-    go garbagecollector.StartGarbageCollector() // ⑤ cleans up storage
-
-    httpserver.StartServer()                  // ⑥ REST API (blocks main)
+type RuntimeAdapter interface {
+    Modes() []ExecutionMode
+    Start(context.Context, ActivityExecutionContext) (ActivityHandle, error)
+    Inspect(context.Context, ActivityHandle) (ActivityHandle, error)
+    Stop(context.Context, ActivityHandle) error
 }
 ```
 
-All six run concurrently. Here is a map of how they interact:
+The resolver selects an adapter using execution mode and runtime identity. An `ActivityHandle` hides provider identifiers such as a PID, Kubernetes Job, Docker container, Slurm job, or simulation event while carrying status, endpoints, log, exit code, failure, and artifacts.
 
-```
-                    ┌──────────────────────────────────────────────────┐
-                    │               HTTP Server  ⑥                     │
-                    │  (REST API — workflow submission, status, PROV)  │
-                    └─────────────────┬────────────────────────────────┘
-                                      │ writes to DB
-                                      ▼
-┌──────────────┐   reads DB    ┌──────────────────┐   writes channel   ┌──────────────┐
-│ Orchestrator │──────────────▶│   SQLite DB       │◀──────────────────│   Worker     │
-│     ③        │               │  (single source   │   writes DB        │     ②        │
-│  every 1s    │               │   of truth)       │                    │  blocks on   │
-└──────────────┘               └──────────────────┘                    │  channel     │
-                                      ▲                                 └──────┬───────┘
-                                      │ writes DB                             │
-                               ┌──────┴──────┐                               │ dispatches
-                               │   Monitor   │                          ┌─────▼──────────┐
-                               │     ④       │                          │  WorfklowChannel│
-                               │  every 1s   │                          │  (capacity 1000)│
-                               └─────────────┘                          └────────────────┘
-                                      ▲
-                               ┌──────┴──────┐
-                               │HealthCheck  │
-                               │     ①       │
-                               │  every 5s   │
-                               └─────────────┘
-                               ┌─────────────┐
-                               │  Garbage    │
-                               │ Collector ⑤ │
-                               │  every 1s   │
-                               └─────────────┘
-```
+## DAG progress
 
----
+Readiness is calculated from dependencies and completed tasks; there is no public `Ready` task state. If nothing is running, nothing is ready, and incomplete activities remain, the run fails as a cycle or incomplete plan.
 
-## Goroutine reference
+Interactive runs return a running trace after a supported activity starts so its session can be used. Simulation sends the frozen request to the simulator and never invokes real adapters.
 
-### ① HealthCheck — every 5 seconds
+## Preparation gate and transfers
 
-**Responsibility:** Discover and monitor runtime connectivity.
+Providers must not start until `PreparationGate` is ready. Requirements can include a resolved executable variant, workspace destination, upstream data, and verified transfers. The coordinator resolves endpoints, selects a route/connector, supports chunk and resume metadata, and checks digests. `committed` means verified bytes match the expected digest, not merely that a file exists.
 
-At startup, the HealthCheck reads all configured runtimes from environment variables and registers them in the database. Then it loops every 5 seconds:
+## Artifact observation
 
-1. For each registered runtime, calls `HealthCheck(runtimeName)` on the appropriate runtime adapter
-2. If the runtime responds successfully, marks it `READY` in the database; otherwise marks it `NOT_READY`
-3. For Kubernetes runtimes: additionally calls the Metrics API and upserts current CPU/memory usage for each node
-4. For Kubernetes runtimes: calls the Nodes API to discover new worker nodes (auto-registration)
+Where supported, adapters snapshot the workspace before and after an activity. The manifest of created or changed files is persisted into the data/provenance model. Observation errors remain execution evidence and can fail a zero-exit activity when outputs cannot be trusted.
 
-```
-HealthCheck goroutine
-│
-├─ [startup] read env vars → register runtimes in DB
-│
-└─ [every 5s]
-    ├─ for each runtime:
-    │   ├─ ping /healthz → update status (READY | NOT_READY)
-    │   ├─ GET /metrics → update node CPU/memory in DB
-    │   └─ GET /nodes → discover and register new nodes
-```
+## Cloud orchestration
 
-Without a healthy runtime, the Orchestrator cannot schedule tasks to it — the HealthCheck is the gatekeeper for node availability.
+Cloud lifecycle uses the persistent queue. Plans can contain lifecycle actions and provisioned targets. The supervisor prewarms each target, waits for operations, binds the instance/runtime allocation, and releases it after a real run. Cleanup failure is an infrastructure result and does not invalidate completed computation.
 
----
+## Failure and recovery
 
-### ② Worker — event-driven
+- Queue jobs persist ownership, attempts, retry timing, and terminal status.
+- Runtime handles are saved so recovery inspects instead of blindly duplicating work.
+- Timeout and retry policy belongs to the activity definition.
+- Transfer/materialization failures remain first-class records.
+- Cancellation calls adapter stop where supported.
+- A failed activity fails its run when no valid retry remains.
 
-**Responsibility:** Execute individual tasks on the target runtime.
-
-The Worker runs a blocking `for` loop that reads from the shared `WorfklowChannel`. It does not poll — it blocks until a task arrives:
-
-```go
-// pkg/server/engine/worker/worker.go
-func (w *Worker) StartWorker() {
-    for {
-        result := <-managerChannel.WorfklowChannel   // blocks here
-
-        runActivityInClusterService.Run(result.Id)   // executes the task
-    }
-}
-```
-
-When a task ID arrives on the channel, the Worker:
-1. Loads the activity from the database
-2. Selects the appropriate runtime adapter based on the task's `runtime` field
-3. Calls `ApplyJob(workflowID, activityID)` on the adapter
-4. The adapter translates this into runtime-specific calls (K8s Job, Singularity process, SLURM sbatch, etc.)
-
-The channel has a capacity of **1000 pending tasks** — this acts as a backpressure buffer between the Orchestrator and the Worker.
-
----
-
-### ③ Orchestrator — every 1 second
-
-**Responsibility:** Evaluate DAG dependencies and dispatch Ready tasks.
-
-The Orchestrator is the brain of execution. Every second it:
-
-1. Fetches all workflows in `Pending` or `Running` state from the database
-2. For each workflow, computes which tasks are **Ready** (all dependencies `Finished`)
-3. Runs those Ready tasks through the **AkôScore scheduler** to assign each to a node
-4. Records the scheduling decision in the database
-5. Sends the task ID to the `WorfklowChannel` for the Worker to pick up
-
-```
-Orchestrator loop (every 1s)
-│
-└─ for each pending/running workflow:
-    ├─ load tasks and their statuses
-    ├─ compute ready tasks (dependsOn all Finished?)
-    ├─ for each ready task:
-    │   ├─ AkôScore: evaluate (task, node) pairs
-    │   ├─ select best node
-    │   ├─ write schedule decision to DB
-    │   └─ send task ID → WorfklowChannel
-```
-
-The Orchestrator never blocks waiting for tasks to complete — it fires and forgets onto the channel, then checks again in the next cycle.
-
----
-
-### ④ Monitor — every 1 second
-
-**Responsibility:** Track state changes and collect runtime metrics.
-
-The Monitor runs two sub-services every second:
-
-**MonitorChangeWorkflow** — checks if running tasks have completed:
-- For each running task, asks the runtime adapter if the task has finished (`VerifyActivitiesWasFinished`)
-- If finished, updates the task status to `Finished` in the database
-- This status change will be picked up by the Orchestrator in its next cycle to unlock downstream tasks
-
-**MonitorCollectMetrics** — collects resource utilization:
-- For each running task, calls `GetMetrics` and `GetLogs` on the runtime adapter
-- Inserts a `Metrics` record in the database (CPU %, memory %, wall time, timestamp)
-- Inserts `Logs` records for stdout/stderr
-- This data feeds the provenance store and the live monitoring UI
-
-```
-Monitor loop (every 1s)
-│
-├─ MonitorChangeWorkflow:
-│   └─ for each running task → check finished? → update DB status
-│
-└─ MonitorCollectMetrics:
-    └─ for each running task → collect CPU/mem/logs → insert Metrics + Logs in DB
-```
-
----
-
-### ⑤ GarbageCollector — every 1 second
-
-**Responsibility:** Clean up storage volumes after workflow completion.
-
-When a workflow finishes, its associated storage volumes (PVCs, local directories) need to be removed. The GarbageCollector finds completed workflows with lingering storage and deprovisions them.
-
----
-
-### ⑥ HTTP Server — main goroutine
-
-**Responsibility:** Expose the REST API for workflow management.
-
-The HTTP Server is the entry point for users and the Control Plane. It handles:
-- Workflow submission (POST with base64-encoded YAML)
-- Workflow status queries
-- Activity and metrics queries
-- Provenance graph queries
-- Runtime and schedule management
-
----
-
-## The WorfklowChannel
-
-The channel is the communication backbone between the Orchestrator and the Worker:
-
-```go
-// pkg/server/engine/channel/channel.go
-
-type Manager struct {
-    WorfklowChannel chan DataChannel   // buffered, capacity 1000
-}
-
-type DataChannel struct {
-    Namespace string
-    Job       interface{}
-    Id        int      // activity ID — the Worker loads the rest from DB
-}
-```
-
-Key properties:
-- **Buffered** (capacity 1000) — the Orchestrator can enqueue up to 1000 tasks without the Worker having processed them yet
-- **Singleton** — there is exactly one channel instance per Engine, protected by a mutex
-- **ID-only** — only the activity ID is sent through the channel; the Worker loads the full task specification from the database, avoiding serialization overhead
-
-If the channel is full, the Orchestrator's `dispatchToWorker` call will block until the Worker drains a slot. This is the natural back-pressure mechanism.
-
----
-
-## Timing model
-
-| Goroutine | Interval | Purpose |
-|---|---|---|
-| HealthCheck | 5 seconds | Runtime connectivity + node discovery |
-| Worker | Event-driven | Executes tasks as they arrive |
-| Orchestrator | 1 second | DAG evaluation + task dispatch |
-| Monitor | 1 second | State sync + metrics collection |
-| GarbageCollector | 1 second | Storage cleanup |
-| HTTP Server | Always on | REST API |
-
-The minimum latency from a task becoming Ready to its first container action is approximately **1–2 seconds** (one Orchestrator cycle to detect it, one Worker cycle to execute it).
-
----
-
-## SQLite as the shared state store
-
-All goroutines communicate indirectly through the **SQLite database** (not through shared memory or direct Go channels). This design choice means:
-
-- Any goroutine can read/write state independently
-- State survives engine restarts (crash recovery)
-- The provenance data is co-located with execution state
-
-The tradeoff is that SQLite serializes writes, which is acceptable for the current workload but would become a bottleneck at very high task throughput.
+Desktop and API expose the same stored evidence: predicted-versus-observed timing, assignments, logs, exits, artifacts, transfer routes/bytes/cost, cloud operations, provenance, and audit.

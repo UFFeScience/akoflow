@@ -93,3 +93,19 @@ Every media item must have descriptive alternative text. Videos need a written p
 - Identifiers in examples are visibly placeholders or come from a documented demo dataset.
 - Links resolve and the documentation build succeeds.
 - Another reviewer has compared the page with both the UI and daemon implementation.
+
+## Generated API reference
+
+Run `npm run generate:api` to rebuild the endpoint catalog from `internal/api/httpserver/httpserver.go`. The Docusaurus `prestart` and `prebuild` hooks run this automatically. Generated pages are intentionally ignored by Git; changes to method, path, or handler appear on the next documentation build without copying the router by hand.
+
+Each generated endpoint page includes its HTTP method, registered path, path parameters, authentication example, request-body indication, owning handler, and a copyable cURL command. Domain guides remain responsible for semantic explanations and complete payload examples.
+
+## Reproducible media capture
+
+With the AkôFlow Desktop development server on port `5173` and the documentation server on port `3000`, run:
+
+```bash
+npm run capture:media
+```
+
+The script opens an isolated headless Chrome profile, applies a fixed `1440 × 900` viewport and reduced-motion preference, waits for each page, and stores captures below `static/img/interface/`. It can read the local development API token without printing or embedding it; the temporary browser profile is removed after capture. Use `AKOFLOW_CAPTURE_TOKEN`, `AKOFLOW_DESKTOP_URL`, or `AKOFLOW_DOCS_ENDPOINT_URL` to override local defaults.

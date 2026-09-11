@@ -47,7 +47,7 @@ The import action accepts the same portable YAML format as the API. Export remov
 Set the API address and, when API authentication is enabled, its bearer token:
 
 ```bash
-export AKOFLOW_API_URL="http://localhost:8080/akoflow-api"
+export AKOFLOW_API_URL="http://127.0.0.1:<port>/akoflow-api"
 export AKOFLOW_API_TOKEN="<token>"
 ```
 
@@ -107,4 +107,3 @@ The create response is the normalized `WorkflowDefinition`. Use `version.id` fro
 ## Next step
 
 Once the workflow, execution scope, resources, and network topology exist, [create a planning session](./planning.md).
-

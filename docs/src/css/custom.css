@@ -20,7 +20,7 @@
   --ifm-font-size-base: 16px;
   --ifm-line-height-base: 1.7;
 
-  --ifm-navbar-height: 60px;
+  --ifm-navbar-height: 64px;
   --ifm-navbar-background-color: rgba(255, 255, 255, 0.9);
   --ifm-navbar-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.08);
 
@@ -72,6 +72,7 @@
 body {
   font-family: var(--ifm-font-family-base);
   -webkit-font-smoothing: antialiased;
+  letter-spacing: -0.005em;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -82,18 +83,29 @@ h1, h2, h3, h4, h5, h6 {
 .navbar {
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+  padding: 0 1.25rem;
 }
 
 .navbar__brand {
   font-weight: 700;
-  font-size: 1rem;
+  font-size: 0.95rem;
   letter-spacing: -0.02em;
+  gap: 0.65rem;
 }
 
 .navbar__logo {
-  height: 26px;
-  border-radius: 6px;
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  margin-right: 0;
+  padding: 4px;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 9px;
+  background: var(--ifm-background-color);
 }
+
+.navbar__logo img { width: 100%; height: 100%; object-fit: contain; }
 
 .navbar__link {
   font-weight: 500;
@@ -103,16 +115,81 @@ h1, h2, h3, h4, h5, h6 {
 /* ── Sidebar ── */
 .theme-doc-sidebar-container {
   border-right: 1px solid var(--ifm-color-emphasis-200) !important;
+  background: var(--ifm-background-color);
+}
+
+.theme-doc-sidebar-menu {
+  padding: 1rem 0.85rem 2rem !important;
 }
 
 .menu__link {
-  font-size: 0.875rem;
+  min-height: 36px;
+  align-items: center;
+  padding: 0.45rem 0.65rem;
+  font-size: 0.84rem;
   font-weight: 500;
-  border-radius: 6px;
+  line-height: 1.35;
+  border-radius: 7px;
 }
 
 .menu__link--active {
   font-weight: 600;
+  background: var(--ifm-color-emphasis-100);
+}
+
+.menu__list-item-collapsible {
+  margin-top: 0.55rem;
+}
+
+.menu__list-item-collapsible > .menu__link {
+  color: var(--ifm-font-color-base);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.035em;
+  text-transform: uppercase;
+}
+
+.menu__list .menu__list {
+  margin-left: 0.5rem;
+  padding-left: 0.65rem;
+  border-left: 1px solid var(--ifm-color-emphasis-200);
+}
+
+/* Content rhythm mirrors the Desktop application's calm, card-based spacing. */
+.main-wrapper .container {
+  max-width: 1480px;
+  padding-right: 2rem;
+  padding-left: 2rem;
+}
+
+.theme-doc-markdown {
+  max-width: 980px;
+}
+
+.theme-doc-markdown > h1:first-child {
+  margin-bottom: 1.25rem;
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1.08;
+}
+
+.theme-doc-markdown h2 {
+  margin-top: 3rem;
+  padding-top: 0.25rem;
+  font-size: 1.55rem;
+}
+
+.theme-doc-markdown h3 { margin-top: 2rem; }
+.theme-doc-markdown p,
+.theme-doc-markdown li { line-height: 1.75; }
+
+.theme-doc-toc-desktop {
+  padding-left: 1.25rem;
+  border-left-color: var(--ifm-color-emphasis-200);
+}
+
+.table-of-contents__link {
+  font-size: 0.8rem;
+  line-height: 1.45;
 }
 
 /* ── Code blocks ── */
@@ -192,6 +269,164 @@ html {
   border-radius: 12px;
   background: var(--ifm-background-surface-color);
   color: var(--ifm-color-emphasis-700);
+}
+
+/* Generated API reference */
+.akoflow-api-reference {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
+  gap: 2rem;
+  align-items: start;
+}
+
+.akoflow-api-reference > main {
+  min-width: 0;
+}
+
+.akoflow-api-eyebrow {
+  color: var(--ifm-color-emphasis-600);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.akoflow-endpoint-signature {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  margin: 1.25rem 0 2rem;
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 12px;
+}
+
+.akoflow-endpoint-signature code {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+/* Raw API examples do not pass through Prism. Give them an explicit,
+   accessible palette instead of combining the light-theme text with the
+   global dark pre background. */
+.akoflow-api-payload {
+  max-height: 32rem;
+  overflow: auto;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  background: #f6f8fa;
+  color: #1f2937;
+}
+
+.akoflow-api-payload code {
+  color: inherit;
+  background: transparent;
+}
+
+[data-theme='dark'] .akoflow-api-payload {
+  border-color: rgba(255, 255, 255, 0.08);
+  background: #161616;
+  color: #e5e7eb;
+}
+
+.akoflow-method {
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.akoflow-method-get { background: #dcfce7; color: #166534; }
+.akoflow-method-post { background: #dbeafe; color: #1d4ed8; }
+.akoflow-method-put,
+.akoflow-method-patch { background: #fef3c7; color: #92400e; }
+.akoflow-method-delete { background: #fee2e2; color: #b91c1c; }
+
+.akoflow-api-example {
+  position: sticky;
+  top: calc(var(--ifm-navbar-height) + 1.5rem);
+  overflow: hidden;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 14px;
+  background: var(--ifm-background-surface-color);
+}
+
+.akoflow-api-example pre {
+  margin: 0;
+  border-radius: 0;
+  background: #1a1a1a;
+  color: #e5e7eb;
+}
+
+.akoflow-api-example pre code {
+  color: #e5e7eb;
+  background: transparent;
+}
+
+.akoflow-api-example-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.65rem 0.9rem;
+  color: var(--ifm-color-emphasis-700);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.akoflow-api-example-title button {
+  padding: 0.2rem 0.45rem;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.akoflow-api-example-title button:hover {
+  background: var(--ifm-color-emphasis-200);
+}
+
+.akoflow-api-response-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0 0.9rem 0.9rem;
+  color: var(--ifm-color-emphasis-600);
+  font-size: 0.78rem;
+}
+
+.akoflow-api-response-summary code {
+  color: #166534;
+  background: #dcfce7;
+}
+
+.akoflow-api-parameters > div {
+  display: grid;
+  grid-template-columns: minmax(100px, 0.3fr) 1fr;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+}
+
+@media (max-width: 1200px) {
+  .akoflow-api-reference { grid-template-columns: 1fr; }
+  .akoflow-api-example { position: static; }
+}
+
+@media (max-width: 996px) {
+  .main-wrapper .container { padding-right: 1rem; padding-left: 1rem; }
+}
+
+@media (max-width: 576px) {
+  .akoflow-endpoint-signature {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .akoflow-api-reference {
+    gap: 1.25rem;
+  }
 }
 
 /* ══════════════════════════════════════

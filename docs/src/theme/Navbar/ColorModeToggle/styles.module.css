@@ -1,0 +1,39 @@
+.switcher {
+  display: inline-flex;
+  gap: 2px;
+  align-items: center;
+  padding: 3px;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 999px;
+  background: var(--ifm-background-color);
+}
+
+.switcher button {
+  display: grid;
+  width: 26px;
+  height: 26px;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ifm-color-emphasis-500);
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.switcher button:hover {
+  color: var(--ifm-font-color-base);
+  background: var(--ifm-color-emphasis-100);
+}
+
+.switcher button.active {
+  color: var(--ifm-font-color-base);
+  background: var(--ifm-color-emphasis-200);
+}
+
+@media (max-width: 996px) {
+  .switcher {
+    margin: 0 0.5rem;
+  }
+}

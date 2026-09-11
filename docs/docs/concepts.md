@@ -1,271 +1,84 @@
 ---
 id: concepts
-title: Concepts
-sidebar_label: Concepts
+title: Core concepts
+sidebar_label: Core concepts
 ---
 
-This page explains the key concepts behind AkôFlow: how workflows are modeled, how tasks are scheduled, how execution state is managed, and how provenance is captured. Understanding these concepts helps you write better workflows and make informed decisions about scheduling and deployment.
+AkôFlow separates infrastructure description, workflow intent, scheduling decisions, and execution observations. This makes a run reproducible and lets the same workflow be planned against different infrastructure.
 
----
+## Object chain
 
-## The workflow model
-
-### Workflows as DAGs
-
-AkôFlow represents workflows as **Directed Acyclic Graphs (DAGs)**. Formally, a workflow is a graph `G = (V, A, a, ω)` where:
-
-- `V = N ∪ D` — the node set, composed of **transformations** `N` (tasks) and **data items** `D` (files/artifacts)
-- `A` — directed edges encoding data dependencies between transformations and data items
-- `a_i` — computational cost associated with each transformation `i ∈ N`
-- `ω_ij` — communication cost associated with edge `(i, j) ∈ A`
-
-In practice, this means:
-- Every task in the graph is always preceded and succeeded by a data item, reflecting a structured dataflow
-- A task cannot start until all its input data items are available (i.e., all upstream tasks have finished producing them)
-- Tasks with no dependencies between them can run in parallel
-
-### YAML representation
-
-You express this DAG in a YAML file. The `activities` list defines the transformation nodes, and the optional `dependsOn` field encodes the edges:
-
-```yaml
-name: etl-pipeline
-spec:
-  image: "python:3.11"
-  namespace: "akoflow"
-  mountPath: "/data"
-  activities:
-    - name: "ingest"
-      cpuLimit: 0.5
-      memoryLimit: 512Mi
-      run: |
-        python ingest.py --source /data/raw --output /data/ingested
-
-    - name: "deduplicate"
-      dependsOn: ["ingest"]
-      cpuLimit: 1.0
-      memoryLimit: 1Gi
-      run: |
-        python dedup.py --input /data/ingested --output /data/clean
-
-    - name: "predict-us"
-      dependsOn: ["deduplicate"]
-      cpuLimit: 2.0
-      memoryLimit: 4Gi
-      run: |
-        python predict.py --region us --input /data/clean --output /data/results-us
-
-    - name: "predict-eu"
-      dependsOn: ["deduplicate"]
-      cpuLimit: 2.0
-      memoryLimit: 4Gi
-      run: |
-        python predict.py --region eu --input /data/clean --output /data/results-eu
-
-    - name: "aggregate"
-      dependsOn: ["predict-us", "predict-eu"]
-      cpuLimit: 0.5
-      memoryLimit: 512Mi
-      run: |
-        python aggregate.py --inputs /data/results-us /data/results-eu --output /data/final
+```text
+Environment -> published version -> Execution scope
+                                      |
+Workflow -> immutable version --------+-> Planning session
+                                              |
+                                      candidate / Schedule plan
+                                              |
+                                         Execution run
+                                              |
+                           tasks, transfers, artifacts, provenance
 ```
 
-In this example:
-- `ingest` has no dependencies — it runs immediately
-- `deduplicate` runs after `ingest` finishes
-- `predict-us` and `predict-eu` both depend on `deduplicate` but not on each other — they run in **parallel**
-- `aggregate` waits for both predictions to complete
+## Environment
 
----
+An environment names an infrastructure boundary such as a local machine, Kubernetes cluster, SSH host, Slurm cluster, simulation model, or cloud configuration. States are `defined`, `connecting`, `connected`, `discovering`, `ready`, `degraded`, and `unreachable`.
 
-## Task lifecycle
+Connections contain access metadata and a credential reference. Connection checks report `online` or `offline`, latency, and diagnostics. Discovery creates inventory; it does not execute workloads.
 
-Every task in AkôFlow moves through a well-defined sequence of states:
+### Published version
 
-```
-  Pending
-     │
-     │  (all dependencies finished)
-     ▼
-  Ready ──→ (enters scheduling queue)
-     │
-     │  (AkôScore selects a node)
-     ▼
-  In Execution ──→ (container running on a Worker)
-     │
-     ├──→  Finished  (outputs available for downstream tasks)
-     │
-     └──→  Failed    (fault-handling may apply)
-```
+Planning uses an immutable environment version. Versions are `draft`, `published`, or `retired`. A definition can contain runtimes, resources and hierarchy, runtime bindings, storage, relations, profiles, connections, connector bindings, and capability observations.
 
-| State | Meaning |
-|---|---|
-| **Pending** | Task is waiting for one or more upstream tasks to finish |
-| **Ready** | All dependencies are satisfied; task is in the scheduling queue |
-| **In Execution** | Task has been assigned to a node and its container is running |
-| **Finished** | Task completed successfully; its outputs are available to downstream tasks |
-| **Failed** | Task encountered an error during execution |
+## Resource, runtime, and scope
 
-The Orchestrator runs on a continuous loop, checking for newly Ready tasks and dispatching them to Workers via the AkôScore scheduler.
+A resource is schedulable capacity: a local machine, Kubernetes machine/node pool, HPC partition/machine, cloud VM, serverless target, queue, namespace, or reservation. `executionTarget` distinguishes `batch`, `direct`, and `provisioned` capacity.
 
----
+A runtime says **how** to launch work. Drivers include `local`, `kubernetes`, `ssh`, `slurm`, `serverless`, `simgrid`, and `cloud`; runtime mode is `execution` or `simulation`. A binding determines which runtime may use a resource.
 
-## Execution strategies
+An execution scope selects published environment versions and a network topology. Directed links model bandwidth, latency, byte price, sharing, and concurrency, allowing planners to account for data movement.
 
-AkôFlow supports two execution strategies that control when tasks become eligible for scheduling:
+## Workflow
 
-### First-Data-First (FDF)
+A definition owns identity and namespace; an immutable version contains activities plus control and data dependencies. Activities declare:
 
-Tasks are dispatched **as soon as their input data becomes available**. This enables pipelined execution — downstream tasks can start processing partial results while upstream tasks are still running on other data partitions. FDF maximizes resource utilization and is well-suited for streaming or data-parallel workflows.
+- kind: `task`, `service`, or `interactive`;
+- capabilities: `real`, `simulation`, and/or `interactive`;
+- executable/image, entrypoint, arguments, environment, and working directory;
+- CPU, memory, storage, and optional GPU requirements;
+- optional simulation and service specifications;
+- timeout and retry policy.
 
-### First-Activity-First (FAF)
+Control dependencies order activities. Data dependencies also identify producer, consumer, logical name, and size so movement can be planned and observed.
 
-AkôFlow enforces **synchronization at each level of the workflow**. All tasks at a given DAG depth must complete before any task at the next depth starts. FAF provides simpler execution semantics and is useful when strict data consistency between levels is required.
+## Executables and outputs
 
----
+An **executable artifact** is immutable runnable input, with digest-addressed variants, format, architecture, locations, builds, and materializations. An **artifact manifest** is observed output from an activity and feeds the data catalog and provenance. They are not interchangeable.
 
-## AkôScore — the scheduling function
+## Planning session and plan
 
-### Why scheduling matters for containerized workflows
+A session snapshots workflow, scope, inventory, topology, profiles, algorithms, deadline, budget, and optional interference data. States are `queued`, `running`, `completed`, `failed`, and `cancelled`.
 
-Containers executing on the same host share its CPU and memory. Poor scheduling leads to two failure modes:
-- **Underutilization** — resources sit idle, making executions slower and more expensive (especially in pay-as-you-go cloud environments)
-- **Overutilization** — too many memory-hungry tasks land on the same node, causing performance degradation or task failures
+Candidates expose feasibility, predicted makespan, and cost. A plan records assignments, predicted ready/start/finish/runtime/transfer values, resource order, and optional lifecycle actions. Its source may be `plugin`, `manual`, or `imported`. Planning never starts execution automatically.
 
-Scheduling is especially hard because the memory consumption of a task can vary substantially depending on the characteristics of its input data — making static, pre-computed schedules unreliable.
+## Execution run
 
-### The AkôScore formulation
+A run binds a plan to `real`, `simulation`, or `interactive` mode. Run states are `pending`, `running`, `completed`, and `failed`; activity handles are `starting`, `running`, `completed`, `failed`, and `stopped`. These replace the retired public `Ready`/`In Execution`/`Finished` vocabulary.
 
-AkôScore is evaluated **at scheduling time**, for each (task, node) pair. For a task `i` ready to run, AkôFlow computes a score for every available node `j`:
+The supervisor starts an activity only after predecessors complete and its preparation gate commits. It stores observed timing, queue delay, logs, exit code, output manifest, and transfers alongside predicted plan values.
 
-```
-S(i,j) = A(i,j) × [ α × (M_free(j) − M_req(i)) / M_max
-                   + (1−α) × 1 / T(i,j) ]
-```
+## Data preparation
 
-Where:
-- `A(i,j)` — feasibility indicator: `1` if node `j` has enough free CPU and memory for task `i`, `0` otherwise
-- `α` — user-defined weight (`0` to `1`): controls the trade-off between memory and speed
-- `M_free(j)` — memory currently available on node `j`
-- `M_req(i)` — memory required by task `i`
-- `M_max` — maximum memory capacity among all nodes (used for normalization)
-- `T(i,j)` — estimated execution time of task `i` on node `j`, based on the node's processing capacity
+Materializations progress through `planned`, `reconciling`, `transferring`, `verifying`, `committed`, or `failed`. Transfers are `planned`, `running`, `completed`, or `failed`. Routes retain strategy, endpoints, network domain, fallback, reason, logical bytes, and actual network bytes. An existing verified copy may satisfy a dependency without transfer.
 
-The node with the **highest AkôScore** is selected. If all nodes score `0` (none has sufficient resources), the task stays in the Ready queue until the next scheduling cycle.
+## Cloud capacity
 
-### Tuning α
+A capacity target is schedulable intent; a provisioned instance is observed infrastructure. Plans may add create/start actions. Execution resolves the instance to a runtime allocation, waits until usable, and later stops or destroys it according to policy.
 
-| α value | Effect |
-|---|---|
-| `0.0` | Minimize makespan — assign tasks to the fastest available node |
-| `1.0` | Maximize memory fit — prefer nodes where memory availability closely matches task requirements |
-| `0.5` | Balanced — equal weight to speed and memory |
+## Provenance, audit, and reproducibility
 
-### Per-environment scheduling policies
+- **Provenance** links scientific entities and data lineage.
+- **Audit** records operational and security-relevant actions.
+- **Planning snapshots** preserve what an algorithm saw even after discovery changes live inventory.
 
-A key feature of AkôScore is that it can be configured **per environment**. This means the same workflow can use different scheduling strategies across its deployment targets:
-
-- In a cloud environment: optimize for monetary cost
-- In an HPC cluster: optimize for energy consumption
-- Locally: optimize for makespan (to finish quickly during development)
-
-### Custom scheduling via plugins
-
-AkôScore is extensible. The Engine loads scheduling functions at runtime as **Go plugins** (compiled `.so` files). To implement a custom policy:
-
-1. Write a Go function with the signature `func AkoScore(input any) float64`
-2. Compile it as a shared library
-3. Register it in AkôFlow and reference it by name in your workflow YAML
-
-```yaml
-spec:
-  schedule: "my-cost-aware-policy"
-```
-
-The Engine will call your function with a map containing the task's resource requirements and the node's current state, and use the returned score for placement decisions.
-
----
-
-## Provenance
-
-### Why provenance matters
-
-Provenance answers questions like:
-- *Which transformation produced this output file?*
-- *What input data was used, and where did it come from?*
-- *Which node ran this task, at what time, and with what resource utilization?*
-- *If an output is wrong, which tasks and data artifacts are implicated?*
-
-AkôFlow treats provenance as a **first-class component** — not an optional logging feature. It is captured continuously at runtime, across all environments, and queryable at any point during or after execution.
-
-### The provenance data model
-
-AkôFlow's provenance is stored in a five-table relational schema (SQLite per Engine instance, aggregated by the Control Plane):
-
-| Table | What it records |
-|---|---|
-| `Workflow` | Submission metadata: namespace, spec file path, execution state, timestamps |
-| `Activity` | Each task execution: parent workflow, assigned node, state, scheduling metadata |
-| `Metrics` | Resource utilization samples collected every 15 seconds per running task: CPU %, memory, wall-clock time |
-| `Errors` | Standard output and error streams for each task, preserving the full execution trace |
-| `Files` | All data artifacts produced during execution |
-
-### Data lineage graph
-
-From the `Files` and `Activity` tables, AkôFlow constructs a **data lineage graph** — a W3C PROV-compliant directed graph:
-
-```
-[input-file] ──used──▶ [task-A] ──wasGeneratedBy──▶ [output-file-A]
-                                                            │
-                                                          used
-                                                            ▼
-                                                        [task-B] ──wasGeneratedBy──▶ [final-output]
-```
-
-The graph is built by diffing the file system state **before and after** each task runs:
-- Files present at the end but not at the start → **produced** by the task (`wasGeneratedBy`)
-- Files present at the start → **consumed** by the task (`used`)
-
-This approach requires no instrumentation of user code — provenance is captured transparently at the storage layer.
-
-### Three levels of provenance
-
-AkôFlow captures provenance at three levels:
-
-| Level | What it tracks |
-|---|---|
-| **Data-level** | Relationships between data artifacts and transformations (lineage graph) |
-| **Execution-level** | Runtime behavior: task states, container placement, scheduling decisions, resource utilization |
-| **Environment-level** | Infrastructure context: node configuration, runtime type, scheduling parameters used |
-
-### Querying provenance
-
-Provenance data can be explored through:
-- **The web UI** — visual lineage graphs with filtering by task or artifact
-- **SQL queries** — direct queries against the SQLite provenance database for targeted inspection
-- **W3C PROV export** — export the full graph in PROV-compliant format for use with external tools
-
----
-
-## The computing continuum
-
-AkôFlow is designed for execution across the **computing continuum** — the full spectrum of computational infrastructure from edge devices to supercomputers:
-
-```
-Local machine → On-premise cluster → HPC system → Private cloud → Public cloud (AWS, GCP, ...)
-```
-
-Most workflow engines are optimized for one point on this spectrum. AkôFlow abstracts infrastructure-specific dependencies through containerization and Terraform-based provisioning, allowing the same workflow to run across any combination of these environments.
-
-A practical example: a workflow processing user data under GDPR must keep European data in EU-based infrastructure. AkôFlow can distribute the same DAG across environments — EU-region cloud for European data, US-region cloud for American data — with the Control Plane coordinating execution and aggregating results.
-
-### Supported environments
-
-| Environment | Runtime |
-|---|---|
-| Local machine | Docker |
-| On-premise cluster | Docker, Kubernetes |
-| HPC system | Singularity (where Docker is unavailable) |
-| AWS | Kubernetes (EKS), Docker |
-| GCP | Kubernetes (GKE), Docker |
-| Any Kubernetes cluster | Kubernetes |
+Together they explain what was intended, why placement was chosen, what ran, which bytes moved, what was produced, and who changed state.

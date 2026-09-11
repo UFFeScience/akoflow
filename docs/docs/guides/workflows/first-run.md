@@ -58,7 +58,7 @@ See [Execute and monitor a workflow](./executions.md) for run modes, states, mon
 Set the address and token once:
 
 ```bash
-export AKOFLOW_API_URL="http://localhost:8080/akoflow-api"
+export AKOFLOW_API_URL="http://127.0.0.1:<port>/akoflow-api"
 export AKOFLOW_API_TOKEN="<token>"
 ```
 
@@ -119,4 +119,3 @@ A successful first run demonstrates that:
 3. dependencies controlled the execution order;
 4. the run produced activity, transfer, handle, and event records;
 5. predicted and observed metrics can be inspected through both the Desktop and API.
-

@@ -32,6 +32,7 @@ const sidebars: SidebarsConfig = {
       items: [
         "guides/infrastructure/environments",
         "guides/infrastructure/simgrid",
+        "guides/infrastructure/kubernetes",
         "guides/infrastructure/execution-scopes",
         "guides/infrastructure/storage",
         "guides/infrastructure/cloud-capacity",

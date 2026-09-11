@@ -45,7 +45,7 @@ Work on the first unchecked unit only. Do not combine units unless the changes a
 ### P0 — first successful run
 
 - [x] Rewrite `guides/workflows/first-run.md` as one complete SimGrid tutorial. Evidence: the corrected six-file bundle produced run `simulation-example-run-v1` with 3/3 completed activities, two transfers, 120,000,000 transferred bytes, and 21.593 s observed makespan on 2026-09-11; all seven screenshot markers were removed because commands and invariant output provide the clearer verification path.
-- [ ] Review `getting-started.md` as a short orientation page. It must route readers to installation, first run, concepts, or reference without duplicating the tutorial.
+- [x] Review `getting-started.md` as a short orientation page. Evidence: the page now routes by user goal to installation, the verified first run, infrastructure-specific guides, concepts, troubleshooting, and API/reference material without repeating tutorial commands.
 - [ ] Verify installation on a clean supported host and replace the pending first-start screenshot in `installation.md`.
 
 ### P0 — runnable showcases

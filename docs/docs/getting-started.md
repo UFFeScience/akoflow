@@ -1,78 +1,75 @@
 ---
 id: getting-started
-title: Getting started
+title: Choose where to start
 sidebar_label: Getting started
 slug: /getting-started
-description: Understand the current AkôFlow workflow from infrastructure to reproducible execution.
+description: Choose the shortest AkôFlow documentation path for installation, a first run, operations, concepts, or API integration.
 ---
 
-# AkôFlow
+# Choose where to start
 
-AkôFlow models, plans, and executes containerized scientific workflows across local, cloud, Kubernetes, HPC, and simulated infrastructure. The same control-plane records connect infrastructure, scheduling decisions, observed execution, artifacts, and scientific provenance.
+AkôFlow plans and executes scientific workflow DAGs on simulated or connected infrastructure, then preserves the plan, observed execution, data movement, artifacts, audit events, and provenance. This page is a map of the documentation; it does not teach an individual workflow.
 
-## The AkôFlow lifecycle
+You do not need prior AkôFlow experience. Choose the path that matches what you want to accomplish.
 
-AkôFlow intentionally separates definition, planning, and execution:
+## I want to run AkôFlow for the first time
+
+1. [Install AkôFlow](./installation) and verify that its daemon is available.
+2. [Run the first simulated workflow](./guides/workflows/first-run). The tutorial uses checked-in files, requires no cluster or cloud account, and ends with concrete activity and transfer checks.
+3. Use the [interface tour](./guides/interface-tour) when you want to learn where the same records appear in Desktop.
+
+Start with the simulation even if your eventual target is Kubernetes or HPC. It separates installation problems from credentials, network access, scheduler policy, and remote storage.
+
+## I already have AkôFlow running
+
+| Goal | Continue with |
+| --- | --- |
+| Define or import an activity DAG | [Workflow definitions](./guides/workflows/definitions) |
+| Generate PRISM or HEFT candidates, or place activities manually | [Plan a workflow](./guides/workflows/planning) |
+| Start a selected plan and inspect observed evidence | [Execute and monitor a workflow](./guides/workflows/executions) |
+| Configure simulated or connected infrastructure | [Environments](./guides/infrastructure/environments) |
+| Limit the resources and network offered to planning | [Execution scopes and network topologies](./guides/infrastructure/execution-scopes) |
+| Reproduce a complete example | [Workflow Showcase](./showcase/) |
+| Query lineage, evidence, or audit records | [Provenance and audit](./guides/data/provenance-and-audit) |
+
+## I am connecting infrastructure
+
+Choose the guide for the actual target. Provider and runtime support are not interchangeable.
+
+- [SimGrid first run](./guides/workflows/first-run): deterministic local simulation.
+- [Kubernetes real execution](./showcase/kubernetes-real-execution): container execution on the checked-in Kind example.
+- [HPC and SLURM](./guides/infrastructure/hpc-slurm): login nodes, partitions, shared storage, SSH proxies, and batch execution.
+- [Google Cloud](./guides/infrastructure/gcp): service-account credentials, catalog discovery, pricing, and Terraform provisioning.
+- [AWS](./guides/infrastructure/aws): S3 and S3-compatible data movement. AkôFlow v1.0 does not discover or provision EC2 capacity.
+
+Review the [cloud support matrix](./guides/infrastructure/cloud-capacity#provider-support-in-v10) before designing a cloud deployment.
+
+## I am automating through the API
+
+Read the [API overview](./reference/api-overview) for the base URL, authentication, content types, asynchronous operations, error envelope, and generated endpoint index. Use the [workflow specification](./internal/workflow-spec) for portable YAML authoring.
+
+The Desktop and HTTP API operate on the same persisted records. The API is preferable for repeatable experiments and integrations; Desktop is preferable for inspecting infrastructure, candidate Gantt charts, live activity state, and plan-versus-observed evidence.
+
+## I need to understand the model first
+
+Read [Core concepts](./concepts) for the vocabulary and record relationships. Continue to [Engine](./engine) for control-plane behavior and [Runtimes](./runtimes) for execution-provider boundaries.
+
+The central lifecycle is:
 
 ```text
-Environment and resources
-          ↓
-Execution scope and network topology
-          ↓
-Versioned workflow definition
-          ↓
-Planning session and candidate comparison
-          ↓
-Selected schedule plan
-          ↓
-Real, simulated, or interactive execution
-          ↓
-Observed metrics, artifacts, audit, and provenance
+environment + execution scope + network
+                    ↓
+          versioned workflow DAG
+                    ↓
+      candidate plans → selected plan
+                    ↓
+             execution run
+                    ↓
+   observed metrics + data + provenance
 ```
 
-This separation makes an experiment reproducible. A plan identifies the workflow version and infrastructure boundary it was built for; a run preserves the selected plan and what actually happened.
+A plan is not an execution. It predicts an assignment within a frozen workflow and infrastructure boundary. A run records what happened when that plan was dispatched.
 
-## Core records
+## When something fails
 
-| Record | Purpose |
-|---|---|
-| Environment | Owns connected or simulated infrastructure and its versioned inventory |
-| Resource | Represents schedulable compute or storage discovered in an environment |
-| Execution scope | Selects the environments and network boundary available to planning |
-| Workflow definition | Owns a versioned activity DAG and its executable or simulation requirements |
-| Planning session | Runs one or more algorithms against a frozen planning input |
-| Plan candidate | Preserves one algorithm result for comparison |
-| Schedule plan | Canonical assignment selected for execution |
-| Execution run | Records a real, simulated, interactive, or standalone run |
-| Artifact and data record | Tracks executable materialization and scientific outputs |
-
-## Desktop and API
-
-The Desktop application and HTTP API operate on the same records.
-
-- Use **AkôFlow Desktop** to connect infrastructure, inspect graphs, compare candidates, watch progress, and investigate results.
-- Use the **API** to automate experiments, import definitions, create runs, and query results reproducibly.
-
-Task guides show both paths whenever the feature is available in both surfaces.
-
-## Start here
-
-1. [Install AkôFlow](./installation).
-2. [Tour the Desktop interface](./guides/interface-tour).
-3. [Complete your first end-to-end run](./guides/workflows/first-run).
-4. Learn how to manage [environments](./guides/infrastructure/environments) and [workflow definitions](./guides/workflows/definitions).
-5. Use the [API overview](./reference/api-overview) for automation.
-
-## What AkôFlow can show
-
-- Connected and simulated infrastructure inventories.
-- Activity DAGs and data dependencies.
-- Multiple planning algorithms and candidate plans.
-- Predicted makespan and cost before execution.
-- Planned and observed Gantt timelines.
-- Compute, queue, transfer, interference, overhead, storage, and network effects.
-- Cloud capacity and infrastructure lifecycle operations.
-- Executable artifact builds and materializations.
-- Scientific lineage and an operational audit trail.
-
-The guides use screenshots for spatial context and short walkthroughs for state transitions. Every visual procedure also has complete text instructions.
+Use [Troubleshooting](./guides/operations/troubleshooting) for daemon readiness, authentication, Docker and BuildKit checks, connection failures, and diagnostic collection. For remote targets, validate credentials and the environment connection before debugging the workflow itself.

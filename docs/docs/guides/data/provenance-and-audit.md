@@ -43,6 +43,21 @@ Entity names and fields are supplied by `/provenance/entities/`; clients should 
 
 From an Explore result, choose **Open lineage**, or open the **Lineage** tab and provide an entity and ID. Select `upstream`, `downstream`, or `both`, choose a depth, then inspect nodes and relationships. Any node can become the new root.
 
+<img src={require('@site/static/img/interface/provenance/lineage-fanout.png').default} alt="AkôFlow Desktop Lineage view for the completed SimGrid 30 GB fan-out run, showing record type and ID controls, direction and depth, the grouped lineage graph, graph filters, and the selected run details." />
+
+*The fan-out example starts at the completed run. Distance 1 contains its plan, activity executions, and transfers; distance 2 reaches the workflow version, scope, activities, and allocated resources. Select a card to inspect the fields in the detail panel rather than inferring them from its position in the graph.*
+
+### Read the Lineage screen
+
+| Area | Use it for | Important interpretation |
+| --- | --- | --- |
+| **Record type** and **Record ID** | Define the root record. The current root can also come from **Open lineage** in Explore. | Use the stored ID, not a display name. IDs remain stable when a user changes a label. |
+| **Direction** and **Depth** | Choose whether to follow antecedents, descendants, or both, then bound the search. | A larger depth adds relationships; it does not mean a later execution time. Start at 1 or 2 and expand only when the question requires it. |
+| **Lineage graph** | Inspect the nodes grouped by graph distance from the root. | The heading reports the returned node and relationship counts. Grouped columns are distance from the root, not workflow stages or chronological lanes. |
+| **Find a node** and **node-type filter** | Reduce a large graph to a specific record or entity kind such as transfers or activity executions. | Filtering changes the visible graph only. It does not change the lineage query or delete evidence. |
+| **Selected-record panel** | Read the status and persisted fields for the selected card, then use **Open record** for the operational page. | The panel is evidence for that one record. Compare the plan and run IDs deliberately when investigating planned versus observed behavior. |
+| **Export JSON** | Preserve the exact lineage response for an investigation or a report. | The export is a snapshot of the current root, direction, and depth; record those choices with the file. |
+
 ```bash
 curl -G -H "Authorization: Bearer $AKOFLOW_TOKEN" \
   --data-urlencode "direction=both" \

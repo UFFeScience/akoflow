@@ -13,8 +13,6 @@ AkôFlow exposes storage through environment discovery or configured storage con
 3. Select an approved root and navigate folders with the breadcrumb.
 4. Use **Refresh** to reload the current listing. Use **Index** only when indexing is enabled for that storage.
 
-<!-- screenshot: Storage browser with storage selector, approved-root selector, breadcrumbs, capability badges, and Index annotated -->
-
 Entries are loaded lazily for the selected path; opening Storage does not scan the entire filesystem. The badges report read/write access and whether access from compute nodes was verified.
 
 ### Using the API
@@ -41,8 +39,6 @@ Do not construct paths outside the returned roots. The server validates the requ
 ### Using AkôFlow Desktop
 
 The actions column can download a file, archive and download a directory, copy an entry to another storage, calculate a checksum, or delete an entry. Buttons are disabled when the selected storage is unhealthy or lacks the required capability. Deletion asks for confirmation and cannot be undone by AkôFlow.
-
-<!-- screenshot: File actions with Download, Copy, Register data, Register artifact, Checksum, and Delete callouts -->
 
 ### Using the API
 
@@ -74,8 +70,6 @@ Downloads and archives may return queued runs. Read `GET /storage-downloads/{dow
 
 Use **Register as DataObject** for a file that should enter the workflow data model. For a `.sif` file, **Register executable artifact** is also available. The current quick actions register the selected path with generated identifiers; use the API when you need explicit lineage or artifact metadata.
 
-<!-- screenshot: DataObject and SIF artifact registration actions with result notice -->
-
 ### Using the API
 
 ```bash
@@ -91,4 +85,3 @@ curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_TOKEN" \
 ```
 
 Promotion registers the existing path; it does not upload or move the file.
-

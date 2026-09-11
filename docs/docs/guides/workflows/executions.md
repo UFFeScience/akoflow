@@ -38,17 +38,7 @@ The completed trace includes:
 6. Open the run to inspect live activity state, logs, placement, network transfers, and execution prerequisites.
 7. After completion, compare predicted and observed Gantt charts, per-activity runtime gaps, makespan, cost, and the execution-time decomposition.
 
-<!-- screenshot: Start execution form with plan selector, derived mode, compatible runtimes, and predicted Gantt annotated -->
-
-<!-- screenshot: Runs list with Type, Mode, and Status filters annotated -->
-
-<!-- screenshot: Live workflow monitor with activity states, selected activity logs, placement, and transfer network annotated -->
-
-<!-- screenshot: Completed run comparison showing planned and observed Gantts, runtime gaps, cost, and time decomposition -->
-
 To open an interactive terminal, use the console action for a compatible resource. The session appears with interactive runs in **Runs** and can be closed or have its log exported.
-
-<!-- screenshot: Interactive terminal opened for a resource, with connection state and close/export controls annotated -->
 
 ## Using the API
 
@@ -96,4 +86,3 @@ Consult `GET /console-commands/` before constructing an open-session request bec
 ## Investigating a failure
 
 Start with `run.failureReason`, then inspect the failed activity, its handle `failure`, exit code and log, and the ordered run events. If the activity remained in `preparing`, inspect executable/workspace preparation and transfer records before the runtime log.
-

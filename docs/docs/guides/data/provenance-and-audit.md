@@ -16,8 +16,6 @@ Use provenance to answer “how was this result produced?” Use audit to answer
 
 Open **Provenance**. The **Explore** tab loads a server-defined entity catalog. Select an entity, search across its safe projection, apply a field filter, sort a column, and page through the result. The current page can be exported as CSV or JSON.
 
-<!-- screenshot: Provenance Explore tab with entity list, search, field filter, export controls, sortable result table, and Open lineage action numbered -->
-
 The API exposes the same server-defined catalog and query:
 
 ```bash
@@ -41,8 +39,6 @@ Entity names and fields are supplied by `/provenance/entities/`; clients should 
 
 From an Explore result, choose **Open lineage**, or open the **Lineage** tab and provide an entity and ID. Select `upstream`, `downstream`, or `both`, choose a depth, then inspect nodes and relationships. Any node can become the new root.
 
-<!-- screenshot: Lineage tab with root entity/ID, direction, depth, graph, selected-node details, and Use as root numbered -->
-
 ```bash
 curl -G -H "Authorization: Bearer $AKOFLOW_TOKEN" \
   --data-urlencode "direction=both" \
@@ -56,8 +52,6 @@ The response contains a `root` key, `nodes`, directed `edges`, and `truncated`. 
 ## Query with read-only SQL
 
 The **SQL** tab presents the queryable schema, templates for common investigations, named JSON parameters, result paging, explain, favorites, and local query history.
-
-<!-- screenshot: Provenance SQL tab with schema browser, template selector, editor, named parameters, Run query, Explain, and results numbered -->
 
 Only read-only `SELECT` and `WITH` queries are accepted. The Desktop communicates the current service limits as a 10-second execution timeout and 200 rows per page. Fetch the runtime schema instead of assuming table or column names:
 
@@ -85,8 +79,6 @@ SQL favorites and recent-query history are stored in the browser profile. They a
 ## Inspect the audit trail
 
 Open **Audit** for a chronological table containing time, event type, target, actor, outcome, and summary. Desktop groups the loaded records into discovery/resources, connections, console sessions, workflows, and credentials; **All events** removes this client-side category filter.
-
-<!-- screenshot: Audit page with category tabs and Time, Event, Target, Outcome, Summary columns numbered -->
 
 The API supports server-side filtering:
 

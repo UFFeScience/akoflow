@@ -36,8 +36,6 @@ curl --fail-with-body \
 
 The first-run Desktop screen performs this check before environment onboarding. It reports the AkôFlow daemon, host Docker daemon, and BuildKit readiness exposed by the current runtime.
 
-<!-- screenshot: Daemon preflight with daemon, Docker, and BuildKit checks and retry action numbered -->
-
 If Desktop shows **Instance identity unavailable**, the Engine did not provide `/instance/`. Confirm that the current matching Engine container/version is running, inspect its logs, and retry. Do not create an identity manually just to hide a startup failure; the Engine creates it from the hostname.
 
 ## 2. Fix authentication
@@ -47,8 +45,6 @@ If Desktop shows **Instance identity unavailable**, the Engine did not provide `
 1. Open **Settings → General → API access token**.
 2. Paste the token configured for this Engine and select **Save token**.
 3. Retry the protected request.
-
-<!-- screenshot: API access token field and successful-save message annotated -->
 
 For API calls, send `Authorization: Bearer <token>`. Avoid putting the token in URLs, screenshots, workflow files or shell history committed to source control.
 
@@ -160,4 +156,3 @@ curl -H "Authorization: Bearer $AKOFLOW_TOKEN" \
 ```
 
 Factory reset is a last resort, not a diagnostic step. Export a sanitized snapshot first and use reset only when loss of local control-plane state is intentional.
-

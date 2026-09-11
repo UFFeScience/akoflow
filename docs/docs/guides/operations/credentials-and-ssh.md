@@ -16,8 +16,6 @@ AkôFlow stores secret material in the Engine and places a `credentialRef` in co
 3. Select **Generate key**.
 4. Copy the public key and authorize it on every SSH hop required by the target—for example, both a gateway and its HPC login node.
 
-<!-- screenshot: SSH service keys page with generation form, managed key card, fingerprint, credential reference, and Copy public key numbered -->
-
 The Engine generates an Ed25519 key. IDs must start with an ASCII letter or digit, may then contain letters, digits, `_` or `-`, and may contain at most 64 characters. The private file is stored with mode `0600`.
 
 ### Using the API
@@ -42,8 +40,6 @@ The response contains `id`, `credentialRef`, `publicKey`, and SHA-256 `fingerpri
 1. Open **Settings → SSH service keys**.
 2. Enter a new **Key ID** under **Import an existing private key**.
 3. Paste the OpenSSH private key and select **Import private key**.
-
-<!-- screenshot: SSH private-key import form with one-time secret handling callout -->
 
 The private key is sent once to the Engine, validated with `ssh-keygen`, stored in the credential directory and never displayed again.
 
@@ -86,8 +82,6 @@ Generating a key does not grant access. A connection must reference it, and the 
 2. Select the environment and connection.
 3. Select **Assign / update key**.
 4. Run the connection health check from the environment.
-
-<!-- screenshot: Managed key card with assigned-connection badges and assignment selector numbered -->
 
 Assignment changes only `credentialRef`; it preserves the connection's endpoint, user and configuration.
 
@@ -136,4 +130,3 @@ Cloud onboarding similarly sends provider credential JSON to `/cloud-credentials
 - Instance export redacts credentials and credential references. Imported snapshots therefore cannot reconnect until you return to a writable instance and configure credentials there.
 - If SSH uses a gateway or proxy command, authorize and validate every hop. `forwardAgent` and proxy settings are connection configuration, not substitutes for an Engine-managed key.
 - A leaked public key does not reveal the private key, but remote `authorized_keys` entries still determine where that key can authenticate.
-

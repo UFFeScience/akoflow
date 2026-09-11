@@ -14,8 +14,6 @@ Global search is backed by the Engine catalogs. Notifications are a Desktop conv
 3. Select a result, or press Enter to open the first result.
 4. Press Escape to close search.
 
-<!-- screenshot: Global search open with navigation and entity results, status, subtitle, and keyboard shortcut numbered -->
-
 With an empty query, the field filters quick navigation destinations. A non-empty query waits 220 ms, queries the Engine and shows entity results. Each result includes a direct interface path, so selecting it opens the corresponding detail or filtered list page.
 
 Search covers:
@@ -79,8 +77,6 @@ The bell in the top bar reports completed or terminal states for operations star
 - cloud provisioning;
 - Desktop application updates.
 
-<!-- screenshot: Notification center with unread indicator, completed operation, update notice, and mark-all-read control numbered -->
-
 Select an operation notification to mark it read and open its associated page. Use the check control to mark all current items read. The center retains at most 40 entries.
 
 Tracked operations are polled every five seconds. A notification is created when a tracked operation reaches `completed`, `failed`, `cancelled`, `closed`, `ready`, or `destroyed`, depending on its type. A terminal disappears from the active-session list when closed, which completes its tracked notification.
@@ -121,4 +117,3 @@ For a durable cross-domain timeline, query `/audit-events/` with the appropriate
 - Search only returns records visible through the same catalogs as their list pages.
 - A red error message means the Engine request failed; verify the API token and daemon, then retry.
 - Notifications only cover operations started and tracked by the current Desktop profile. Opening the app after an operation was started elsewhere does not reconstruct a notification history.
-

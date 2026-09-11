@@ -13,8 +13,6 @@ The Desktop is the easiest way to perform these operations. Every view described
 
 In Desktop, open **Infrastructure**, select an environment, then open **Storage**. Choose a storage card and one of its declared roots. Entries are loaded lazily; opening this view does not scan an entire filesystem.
 
-<!-- screenshot: Environment Storage page with the storage cards, health/capability badges, root selector, breadcrumb, and file table numbered -->
-
 The actions offered for an entry depend on the storage capabilities reported by discovery. The current interface can inspect an entry, download a file, archive a directory for download, calculate a checksum, copy to another storage, promote a file, delete an entry, and start or inspect an index run. A storage may be read-only or visible only from a login node.
 
 List the storage resources for an environment and browse a directory:
@@ -51,8 +49,6 @@ Copy and archive operations return `202 Accepted`. Download creation returns a r
 
 Use the entry menu in **Storage** to promote an existing file. **Promote data** associates it with workflow, run, and activity context. **Promote artifact** registers executable content in the artifact catalog.
 
-<!-- screenshot: Storage entry overflow menu with Promote data and Promote artifact callouts -->
-
 The minimal API calls are:
 
 ```bash
@@ -83,10 +79,6 @@ If `id` is omitted, the server generates one. Supply meaningful provenance ident
 ## Build an executable from a Docker image
 
 Open **Artifacts** and choose **Build artifact**. Enter an artifact ID, semantic version, registry image reference, and architecture. Desktop registers an immutable catalog version, creates a Docker-image-to-SIF build specification, and immediately starts its build run.
-
-<!-- screenshot: Build artifact form with Artifact ID, Version, Docker image, Architecture, and Create and build artifact button numbered -->
-
-<!-- screenshot: Artifact detail showing build specification, current build-run status, logs, and output availability -->
 
 The equivalent two-call API flow is:
 
@@ -122,8 +114,6 @@ Then create an immutable build specification at `/artifact-builds/`. It requires
 ## Locations and materializations
 
 Use **Artifacts** to see executable versions, **Artifact locations** to see verified byte locations, and **Materializations** to see preparation on target resources.
-
-<!-- screenshot: Artifacts navigation and the three catalog views, with status and scope callouts -->
 
 A materialization identifies a variant and digest, target resource and destination path, plus its lifecycle status: `planned`, `reconciling`, `transferring`, `verifying`, `committed`, or `failed`. A materialization is considered committed only when `verifiedDigest` equals the requested `digest`.
 

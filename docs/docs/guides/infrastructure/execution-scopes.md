@@ -15,10 +15,6 @@ An execution scope is a reusable set of environment versions available to planni
 5. Leave **Create the initial network topology** selected if you want Desktop to create an empty topology with the scope.
 6. Save, then open the scope detail to review its members.
 
-<!-- screenshot: Execution scopes catalog and Create scope action annotated -->
-
-<!-- screenshot: Scope form with environment-version selection annotated -->
-
 The catalog shows the version IDs in each scope. A scope is not a copy of its environments and does not create connections or resources.
 
 ### Using the API
@@ -48,8 +44,6 @@ curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_TOKEN" "$AKOFLOW_URL/ex
 ### Using AkôFlow Desktop
 
 The current Desktop scope flow can create an empty initial topology, but it does not provide a link editor. Create a topology containing links through the API. Each link identifies source and target **resource IDs**, bandwidth in bits per second, latency in seconds, transfer price per byte, and whether traffic is bidirectional.
-
-<!-- screenshot: Create scope form with the initial-network-topology checkbox annotated -->
 
 Topology values affect transfer estimates. They do not test the physical network and are not produced by a connection health check.
 

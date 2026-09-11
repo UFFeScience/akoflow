@@ -16,11 +16,9 @@ Environment definitions are versioned. Execution scopes and plans refer to an en
 4. For a real remote environment, configure its connection and credential reference. Secrets are stored by the daemon; the environment keeps a reference rather than the secret value.
 5. Test the connection when the form offers the action, then save the environment.
 
-<!-- screenshot: Environments catalog with the Create environment action numbered -->
+<img src={require('@site/static/img/interface/infrastructure/environments.png').default} alt="AkôFlow Desktop Environments catalog with Connect environment and Create simulation actions visible at the top right." />
 
-<!-- screenshot: Real/simulation environment type selector with explanatory callouts -->
-
-<!-- screenshot: Connection form with Test connection and credential-reference fields annotated -->
+*The catalog separates connection-backed environments from SimGrid models. Use **Connect environment** for a real target and **Create simulation** for a modeled platform; the form that follows determines the appropriate fields.*
 
 Simulation creation collects a SimGrid platform model and can also define an execution host used by the simulation engine. It does not validate a remote SSH or Kubernetes endpoint.
 
@@ -70,8 +68,6 @@ The response contains `healthy` and `message`. Testing does not create an enviro
 3. Run discovery to refresh observed resources and storage.
 4. Open **Inventory** to review the resulting resources and host-observed filesystems.
 
-<!-- screenshot: Environment detail with Connections, health, discovery, Inventory, and Storage entry points annotated -->
-
 Health and discovery are different operations: health verifies access; discovery collects snapshots and updates the infrastructure AkôFlow can expose. Discovery results depend on the connection and runtime driver.
 
 ### Using the API
@@ -97,8 +93,6 @@ Discovery returns a `snapshots` array. A successful request does not imply that 
 ### Using AkôFlow Desktop
 
 The detail page is the hub for the environment map, version, runtimes, connections, resources, and storage. Cloud environments also expose **Cloud capacity** and **Provisioning** tabs. Use **Inventory** for discovered compute details and **Storage** to browse approved roots.
-
-<!-- screenshot: Environment detail map with navigation destinations numbered -->
 
 ### Using the API
 

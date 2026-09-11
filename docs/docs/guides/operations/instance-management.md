@@ -20,8 +20,6 @@ export AKOFLOW_TOKEN='<daemon-token>'
 
 Open **Settings → General**. The current interface exposes the workspace transfer relay setting; instance identity fields are read through the Engine but are not currently editable as a separate Desktop form.
 
-<!-- screenshot: Settings General with appearance, transfer relay buffer, and API token numbered -->
-
 The relay is an in-memory buffer per active transfer. It streams source output to destination input and does not persist the transferred payload. The default is 8 MiB; accepted values are 5–64 MiB.
 
 ### Using the API
@@ -61,8 +59,6 @@ Theme and graph animation are associated with a stable browser-profile client ID
 2. Select **Light** or **Dark**.
 3. Turn **Graph animation** on or off.
 
-<!-- screenshot: Appearance controls with Light, Dark, and Graph animation annotated -->
-
 ### Using the API
 
 The client ID must contain 8–128 characters. The only accepted themes are `light` and `dark`.
@@ -89,8 +85,6 @@ curl --fail-with-body \
 2. Optionally enable **Include artifact files**. Large artifact stores can produce a large ZIP.
 3. Select **Export instance ZIP**.
 
-<!-- screenshot: Instance backup cards with include-artifacts option and export/import actions numbered -->
-
 The Engine uses SQLite `VACUUM INTO` to create a consistent database snapshot. Tokens, private keys, credential references and connection secrets are redacted. The ZIP manifest records that credentials were not included. Including artifacts adds artifact files but does not restore credentials.
 
 ### Using the API
@@ -114,8 +108,6 @@ Import does not replace the active database. It validates the ZIP format, manife
 2. Choose an AkôFlow ZIP. The new card appears under **Available instances**.
 3. Select **Open read-only snapshot** and confirm the daemon restart.
 4. To leave it, return to the same section and select **Return to writable instance**.
-
-<!-- screenshot: Available instances showing active writable instance and imported read-only snapshot -->
 
 The Desktop waits up to 90 seconds for the daemon after switching. When server-side restart is unavailable it asks you to restart the daemon yourself.
 
@@ -162,8 +154,6 @@ Factory reset permanently removes the active AkôFlow catalog, environments, wor
 2. Read the deletion summary.
 3. Confirm the reset using the control shown by the application.
 
-<!-- screenshot: Danger zone factory reset panel with destructive warning and confirmation control -->
-
 ### Using the API
 
 ```bash
@@ -173,4 +163,3 @@ curl --fail-with-body \
 ```
 
 Success is `204 No Content`. The endpoint returns `503` when reset support is unavailable and `422` when the reset operation fails. It cannot run while a read-only snapshot is active because the read-only guard returns `423` first.
-

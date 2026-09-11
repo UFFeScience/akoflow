@@ -26,8 +26,6 @@ For a runnable Google Cloud setup, continue with [Configure Google Cloud](./gcp)
 
 Open a cloud environment and select **Cloud capacity**. If no cached catalog exists, refresh it. Search and filter machine families and images, then choose a compatible disk. Displayed estimates combine catalog compute pricing and configured disk size; they are estimates rather than provider invoices.
 
-<!-- screenshot: Cloud capacity catalog with Refresh, machine family, image, disk, and cost estimate annotated -->
-
 ### Using the API
 
 ```bash
@@ -48,8 +46,6 @@ The GET endpoint returns `404` until a catalog has been synchronized. Provider c
 2. Select a zone policy, provisioning mode, maximum instance count, and lifecycle policy.
 3. Optionally attach an additional machine-configuration version.
 4. Save the target. It becomes a provisioned cloud resource available to planning.
-
-<!-- screenshot: Capacity target form with sizing, placement, lifecycle, and machine configuration callouts -->
 
 ### Using the API
 
@@ -83,8 +79,6 @@ The server supplies the target ID and environment ID when omitted, enables the t
 
 Open **Infrastructure → Machine configurations**. Create a named configuration, edit its Ansible playbook, validate it, and save a version. Existing capacity targets refer to a specific configuration-version ID, not to mutable editor contents.
 
-<!-- screenshot: Machine configuration editor with metadata, playbook, Validate, and Save version annotated -->
-
 ### Using the API
 
 Validate YAML before saving it:
@@ -116,10 +110,6 @@ Validation checks playbook structure and returns `valid`, a content hash, and er
 ### Using AkôFlow Desktop
 
 Open a cloud resource or the environment **Provisioning** tab and start provisioning from a capacity target. The operation view separates Terraform provisioning from machine configuration and shows events and logs as they become available. Provisioning is asynchronous.
-
-<!-- screenshot: Provisioning list and Start provisioning action annotated -->
-
-<!-- screenshot: Provisioning detail with Terraform, configuration, events, and provisioned instance sections annotated -->
 
 ### Using the API
 

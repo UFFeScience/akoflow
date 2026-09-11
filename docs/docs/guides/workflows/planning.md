@@ -34,17 +34,9 @@ Assignments include predicted ready, start, finish, runtime, transfer time, cost
 7. Follow each algorithm run's progress. Expand candidates to inspect their Gantt timelines and assignments.
 8. Compare predicted time, cost, feasibility, and Pareto status, then select a candidate. AkôFlow creates the executable schedule plan from that candidate.
 
-<!-- screenshot: Automatic planning form with target mode, scope, topology, algorithms, deadline, and budget annotated -->
-
-<!-- screenshot: Running planning session with per-algorithm progress and estimated search work -->
-
-<!-- screenshot: Candidate table with rank, Pareto status, makespan, cost, expandable Gantt, and Select action annotated -->
-
 ### Manual plans
 
 Choose the manual planning mode when placement is known in advance. Select a scope and topology, then assign every activity to a compatible runtime and resource and provide its expected duration. The Desktop computes a dependency-aware schedule and submits the complete plan for validation.
-
-<!-- screenshot: Manual plan editor with DAG, bulk placement helpers, per-activity resource/runtime, and expected duration annotated -->
 
 ### Imported plans
 
@@ -109,4 +101,3 @@ For a manual plan, send the complete validation envelope used by `examples/simul
 ## Next step
 
 Review the selected plan and [start and monitor an execution](./executions.md).
-

@@ -34,11 +34,9 @@ For real execution, an activity needs `command.entrypoint` and `command.executab
 5. Check the live DAG preview and create the workflow.
 6. Open the definition to inspect its activities and dependencies. From the definition page you can also export or duplicate it.
 
-<!-- screenshot: Workflow definitions list with the Create workflow and Import actions numbered -->
+<img src={require('@site/static/img/interface/workflows/definitions.png').default} alt="AkôFlow Desktop Workflow definitions catalog showing Import YAML, Create workflow, versioned workflow rows, and activity counts." />
 
-<!-- screenshot: Create workflow form with definition fields, executable selector, activity fields, and DAG preview annotated -->
-
-<!-- screenshot: Workflow detail showing immutable version, activity graph, and export/duplicate actions -->
+*The catalog is the entry point for either path: use **Import YAML** for a portable definition or **Create workflow** to enter activities in Desktop. After creation, open the row to inspect the immutable version and its DAG.*
 
 The import action accepts the same portable YAML format as the API. Export removes generated IDs and resolved runtime paths so that the result can be imported as a new definition.
 

@@ -18,9 +18,9 @@ plan:
   budget: 0.02
   predicted: {makespanSeconds: 19.6, cost: 0.0157, feasible: true}
   assignments:
-    - {id: simulation-plan-prepare, planId: simulation-example-plan-v1, activityId: prepare, resourceId: simulated-edge, coreId: core-0, slotId: default, orderOnResource: 1, priority: 30}
-    - {id: simulation-plan-analyze, planId: simulation-example-plan-v1, activityId: analyze, resourceId: simulated-cloud, coreId: core-0, slotId: default, orderOnResource: 1, priority: 20}
-    - {id: simulation-plan-summarize, planId: simulation-example-plan-v1, activityId: summarize, resourceId: simulated-edge, coreId: core-0, slotId: default, orderOnResource: 2, priority: 10}
+    - {id: simulation-plan-prepare, planId: simulation-example-plan-v1, activityId: simulation-example-workflow-prepare, resourceId: simulated-edge, coreId: core-0, slotId: default, orderOnResource: 1, priority: 30}
+    - {id: simulation-plan-analyze, planId: simulation-example-plan-v1, activityId: simulation-example-workflow-analyze, resourceId: simulated-cloud, coreId: core-0, slotId: default, orderOnResource: 1, priority: 20}
+    - {id: simulation-plan-summarize, planId: simulation-example-plan-v1, activityId: simulation-example-workflow-summarize, resourceId: simulated-edge, coreId: core-0, slotId: default, orderOnResource: 2, priority: 10}
 
 workflow:
   id: simulation-example-workflow-v1
@@ -28,7 +28,7 @@ workflow:
   version: 1
   definitionHash: simulation-example-workflow-v1
   activities:
-    - id: prepare
+    - id: simulation-example-workflow-prepare
       workflowVersionId: simulation-example-workflow-v1
       activityTypeId: simulation-task
       externalId: prepare
@@ -41,7 +41,7 @@ workflow:
       policy: {maxAttempts: 1}
       priority: 30
       metadata: {baseRuntimeSeconds: 4}
-    - id: analyze
+    - id: simulation-example-workflow-analyze
       workflowVersionId: simulation-example-workflow-v1
       activityTypeId: simulation-task
       externalId: analyze
@@ -54,7 +54,7 @@ workflow:
       policy: {maxAttempts: 1}
       priority: 20
       metadata: {baseRuntimeSeconds: 12}
-    - id: summarize
+    - id: simulation-example-workflow-summarize
       workflowVersionId: simulation-example-workflow-v1
       activityTypeId: simulation-task
       externalId: summarize
@@ -68,11 +68,11 @@ workflow:
       priority: 10
       metadata: {baseRuntimeSeconds: 2}
   dependencies:
-    - {activityId: analyze, dependsOnActivityId: prepare, type: control}
-    - {activityId: summarize, dependsOnActivityId: analyze, type: control}
+    - {activityId: simulation-example-workflow-analyze, dependsOnActivityId: simulation-example-workflow-prepare, type: control}
+    - {activityId: simulation-example-workflow-summarize, dependsOnActivityId: simulation-example-workflow-analyze, type: control}
   dataDependencies:
-    - {producerActivityId: prepare, consumerActivityId: analyze, logicalName: dataset.bin, sizeBytes: 100000000}
-    - {producerActivityId: analyze, consumerActivityId: summarize, logicalName: result.bin, sizeBytes: 20000000}
+    - {producerActivityId: simulation-example-workflow-prepare, consumerActivityId: simulation-example-workflow-analyze, logicalName: dataset.bin, sizeBytes: 100000000}
+    - {producerActivityId: simulation-example-workflow-analyze, consumerActivityId: simulation-example-workflow-summarize, logicalName: result.bin, sizeBytes: 20000000}
 
 resources:
   - {id: simulated-edge, environmentVersionId: simulation-example-v1, executionTarget: batch, type: fog_device, name: Simulated edge, providerId: simulated-edge, cpuCores: 2, cpuCapacity: 2, memoryBytes: 2147483648, storageBytes: 21474836480, computeSpeedup: 1, pricePerSecond: 0, containerOverheadSeconds: 0.1, schedulable: true}

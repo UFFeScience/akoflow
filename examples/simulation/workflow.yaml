@@ -8,11 +8,17 @@ spec:
       run: prepare-data
       cpuLimit: "1"
       memoryLimit: 128Mi
+      simulation:
+        model: deterministic
+        durationSeconds: 4
     - name: analyze
       runtime: simgrid
       run: analyze-data
       cpuLimit: "2"
       memoryLimit: 1Gi
+      simulation:
+        model: deterministic
+        durationSeconds: 12
       dependsOn:
         - prepare
     - name: summarize
@@ -20,5 +26,17 @@ spec:
       run: summarize-results
       cpuLimit: "1"
       memoryLimit: 128Mi
+      simulation:
+        model: deterministic
+        durationSeconds: 2
       dependsOn:
         - analyze
+  dataDependencies:
+    - producerActivity: prepare
+      consumerActivity: analyze
+      logicalName: dataset.bin
+      sizeBytes: 100000000
+    - producerActivity: analyze
+      consumerActivity: summarize
+      logicalName: result.bin
+      sizeBytes: 20000000

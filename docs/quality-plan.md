@@ -2,7 +2,7 @@
 
 This file is the editorial backlog for preparing the AkôFlow documentation for external open-source users. Update it after each documentation unit. A checked item must point to evidence in the repository or to a recorded verification command; absence of a known defect is not sufficient evidence.
 
-Last audited: 2026-09-11 at commit `9b0513f`.
+Last audited: 2026-09-11 after the verified SimGrid first-run exercise.
 
 ## Editorial contract
 
@@ -44,7 +44,7 @@ Work on the first unchecked unit only. Do not combine units unless the changes a
 
 ### P0 — first successful run
 
-- [ ] Rewrite `guides/workflows/first-run.md` as one complete SimGrid tutorial. Verify every command and UI label against the current app, use the versioned simulation bundle, replace all seven screenshot markers with current cropped captures or remove them where code is clearer, and end with objective evidence from a completed run.
+- [x] Rewrite `guides/workflows/first-run.md` as one complete SimGrid tutorial. Evidence: the corrected six-file bundle produced run `simulation-example-run-v1` with 3/3 completed activities, two transfers, 120,000,000 transferred bytes, and 21.593 s observed makespan on 2026-09-11; all seven screenshot markers were removed because commands and invariant output provide the clearer verification path.
 - [ ] Review `getting-started.md` as a short orientation page. It must route readers to installation, first run, concepts, or reference without duplicating the tutorial.
 - [ ] Verify installation on a clean supported host and replace the pending first-start screenshot in `installation.md`.
 
@@ -100,8 +100,7 @@ The documentation is ready for external users only when all of the following are
 
 ## Short remaining-gap list
 
-1. First-run tutorial is not yet externally verifiable and contains pending screenshots.
-2. Showcase bundles have not all been executed end to end in this audit; 30 GB fan-out is incomplete.
-3. SLURM has no complete showcase, and SimGrid/Kubernetes lack dedicated infrastructure how-to pages.
-4. Fifteen pages contain screenshot markers; no automated link checker exists.
-5. Navigation is not yet organized by the four Diátaxis purposes.
+1. Showcase bundles have not all been executed end to end in this audit; 30 GB fan-out is incomplete.
+2. SLURM has no complete showcase, and SimGrid/Kubernetes lack dedicated infrastructure how-to pages.
+3. Fourteen pages contain screenshot markers; no automated link checker exists.
+4. Navigation is not yet organized by the four Diátaxis purposes.

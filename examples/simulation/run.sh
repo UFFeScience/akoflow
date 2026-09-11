@@ -4,10 +4,19 @@ set -eu
 api=${AKOFLOW_API_URL:-http://localhost:8080/akoflow-api}
 directory=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 
+authorization_header=
+if [ -n "${AKOFLOW_API_TOKEN:-}" ]; then
+  authorization_header="Authorization: Bearer $AKOFLOW_API_TOKEN"
+fi
+
 post() {
   endpoint=$1
   file=$2
-  curl -fsS -H 'Content-Type: application/yaml' --data-binary "@$directory/$file" "$api/$endpoint/"
+  if [ -n "$authorization_header" ]; then
+    curl -fsS -H "$authorization_header" -H 'Content-Type: application/yaml' --data-binary "@$directory/$file" "$api/$endpoint/"
+  else
+    curl -fsS -H 'Content-Type: application/yaml' --data-binary "@$directory/$file" "$api/$endpoint/"
+  fi
   printf '\n'
 }
 

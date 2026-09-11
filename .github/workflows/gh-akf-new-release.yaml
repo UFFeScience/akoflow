@@ -103,6 +103,16 @@ jobs:
           subject-digest: ${{ steps.build.outputs.digest }}
           push-to-registry: true
 
+      - name: Verify anonymous image pull
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error --location \
+            --retry 6 --retry-all-errors --retry-delay 5 \
+            -H 'Accept: application/vnd.oci.image.index.v1+json, application/vnd.oci.image.manifest.v1+json' \
+            "https://ghcr.io/v2/uffescience/${{ matrix.name == 'daemon' && 'akoflow-daemon' || 'akoflow-buildkit' }}/manifests/${GITHUB_REF_NAME}" \
+            >/dev/null
+
   desktop:
     name: Package desktop (${{ matrix.artifact }})
     needs: publish

@@ -20,8 +20,27 @@ validation, state, and evidence.
 
 ## Before you begin
 
-Start compatible Core and Desktop revisions, then set these values from the Core
-checkout (`jq` and `curl` are required):
+Start compatible Core and Desktop revisions. Install `jq` and `curl`. The
+simulation also requires `akoflow-simgrid-runner`: the published server image
+already contains it, but a source checkout must build it first as described in
+the
+[`examples/simulation` README](https://github.com/UFFeScience/akoflow/blob/main/examples/simulation/README.md):
+
+```bash
+cmake -S simgrid-runner -B build/simgrid-runner -G Ninja \
+  -DCMAKE_BUILD_TYPE=Release
+cmake --build build/simgrid-runner --parallel
+export AKOFLOW_SIMULATION_BACKEND=simgrid
+export AKOFLOW_SIMGRID_BINARY="$PWD/build/simgrid-runner/akoflow-simgrid-runner"
+test -x "$AKOFLOW_SIMGRID_BINARY"
+```
+
+Building the runner requires the SimGrid and `nlohmann_json` development
+packages. Stop if the final check fails: you can inspect the registered Desktop
+records, but you cannot claim a completed 3/3 run or the 120,000,000-byte
+transfer result without executing the runner.
+
+From the Core checkout, set:
 
 ```bash
 export AKOFLOW_API_URL="http://127.0.0.1:8080/akoflow-api"
@@ -87,7 +106,10 @@ akf "$AKOFLOW_API_URL/workflow-definitions/simulation-example-workflow/" |
 ```
 
 The result has three activities, two control dependencies, and two data
-dependencies. Core returns `201`; malformed DAGs return `422`.
+dependencies.
+
+**Core contracts.** Workflow creation returns the persisted immutable
+definition with `201`; malformed DAGs return `422`.
 
 **If it fails.** Import the complete file. Duplicate stable IDs also fail; use a
 fresh database or change every related ID consistently.
@@ -145,8 +167,10 @@ akf -H 'Content-Type: application/yaml' \
 ![Execution scope list used to constrain eligible environment versions and resources.](/img/interface/infrastructure/execution-scopes.png)
 
 **Expected result.** The scope contains `simulation-example-v1`; the topology
-contains one bidirectional 100 Mbit/s link. Core validates immutable definitions
-synchronously and returns `422` for incompatible ownership or missing links.
+contains one bidirectional 100 Mbit/s link.
+
+**Core contracts.** Scope and topology creation validate immutable definitions
+synchronously and return `422` for incompatible ownership or missing links.
 
 **If it fails.** Submit environment before scope, and scope before topology.
 Bandwidth is bits per second; dependency sizes are bytes.
@@ -211,8 +235,10 @@ detail retains handles and events. Core has no run-cancel endpoint or run event
 stream.
 
 **If it fails.** A missing projection just after submission is expected; retry.
-For `failed`, inspect events and Core logs. Persistent `pending` usually means
-the asynchronous handler or runtime failed.
+For `failed`, inspect events and Core logs. An error naming
+`akoflow-simgrid-runner` means the runner path from **Before you begin** is
+missing or not executable. Persistent `pending` usually means the asynchronous
+handler or runtime failed.
 
 ## 7. Verify artifacts and transfers
 

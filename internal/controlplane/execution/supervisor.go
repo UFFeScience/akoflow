@@ -669,7 +669,7 @@ func resourceConnectionID(resources []domain.Resource, resourceID string) (strin
 }
 
 func runtimeDriver(request ports.ExecutionRequest, activityID string) domain.RuntimeDriver {
-	runtimeID := assignmentRuntimeID(request.Plan.Assignments, activityID)
+	runtimeID := resolvedRuntimeID(request, activityID)
 	for _, runtime := range request.Runtimes {
 		if runtime.ID == runtimeID {
 			return runtime.Driver
@@ -679,7 +679,7 @@ func runtimeDriver(request ports.ExecutionRequest, activityID string) domain.Run
 }
 
 func runtimeConnectionID(request ports.ExecutionRequest, activityID string) string {
-	runtimeID := assignmentRuntimeID(request.Plan.Assignments, activityID)
+	runtimeID := resolvedRuntimeID(request, activityID)
 	for _, runtime := range request.Runtimes {
 		if runtime.ID == runtimeID {
 			value, _ := runtime.Configuration["connectionId"].(string)
@@ -690,7 +690,7 @@ func runtimeConnectionID(request ports.ExecutionRequest, activityID string) stri
 }
 
 func runtimeNamespace(request ports.ExecutionRequest, activityID string) string {
-	runtimeID := assignmentRuntimeID(request.Plan.Assignments, activityID)
+	runtimeID := resolvedRuntimeID(request, activityID)
 	for _, runtime := range request.Runtimes {
 		if runtime.ID == runtimeID {
 			if value, _ := runtime.Configuration["namespace"].(string); value != "" {
@@ -701,11 +701,10 @@ func runtimeNamespace(request ports.ExecutionRequest, activityID string) string 
 	return "default"
 }
 
-func assignmentRuntimeID(assignments []domain.PlanAssignment, activityID string) string {
-	for _, assignment := range assignments {
+func resolvedRuntimeID(request ports.ExecutionRequest, activityID string) string {
+	for _, assignment := range request.Plan.Assignments {
 		if assignment.ActivityID == activityID {
-			value, _ := assignment.Metadata["runtimeId"].(string)
-			return value
+			return selectRuntime(request, assignment)
 		}
 	}
 	return ""

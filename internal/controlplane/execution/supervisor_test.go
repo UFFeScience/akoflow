@@ -257,10 +257,15 @@ func TestWorkspaceLocationsFollowAssignedRuntime(t *testing.T) {
 			request := ports.ExecutionRequest{
 				Run: domain.ExecutionRun{ID: "run"},
 				Plan: domain.SchedulePlan{Assignments: []domain.PlanAssignment{{
-					ActivityID: "producer", ResourceID: "resource", Metadata: map[string]any{"runtimeId": "runtime"},
+					ActivityID: "producer", ResourceID: "resource",
 				}}},
 				Resources: []domain.Resource{{ID: "resource", EnvironmentVersionID: "environment", Metadata: test.metadata}},
-				Runtimes:  []domain.EnvironmentRuntime{{ID: "runtime", Driver: test.driver, Configuration: test.configuration}},
+				Runtimes: []domain.EnvironmentRuntime{{
+					ID: "runtime", Driver: test.driver, Mode: domain.RuntimeModeExecution, Configuration: test.configuration,
+				}},
+				RuntimeBindings: []domain.ResourceRuntimeBinding{{
+					ResourceID: "resource", RuntimeID: "runtime", Enabled: true,
+				}},
 			}
 			source, err := workspaceSourceForActivity(request, "producer")
 			if err != nil {

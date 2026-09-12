@@ -65,9 +65,9 @@ This is an iteration ledger, not a completion certificate. The current pass insp
 | `showcase/network-fanout.mdx` | Edited in this pass | Check procedure and result against pinned bundle |
 | `showcase/parallel-50-core.mdx` | Edited in this pass | Check procedure and result against pinned bundle |
 | `showcase/slurm-local-fixture.mdx` | Edited in this pass | Check procedure and result against pinned bundle |
-| `tutorials/api-access.md` | Opening and purpose scanned | Full read after P0/P1 fixes |
-| `tutorials/connect-cloud.md` | AWS caveat corrected | Full read after P0/P1 fixes |
-| `tutorials/register-hpc.md` | Opening and purpose scanned | Full read after P0/P1 fixes |
+| `tutorials/api-access.md` | Full read; API prerequisites and token limits are explicit | Recheck commands after P0 contracts fix |
+| `tutorials/connect-cloud.md` | Full read; AWS caveat and unvalidated GCP steps are explicit | Validate with disposable GCP account |
+| `tutorials/register-hpc.md` | Full read; placeholders and remote-run limit are explicit | Validate on an approved institutional cluster |
 
 ## Verification in this pass
 

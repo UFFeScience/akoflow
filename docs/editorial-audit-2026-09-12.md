@@ -12,6 +12,8 @@ This is an iteration ledger, not a completion certificate. The current pass insp
 4. **P1 — Full plain-language review:** after those corrections, re-read every authored page and the generated template as a new user, then repeat the audit until no new P0/P1 issue appears.
 5. **P0 resolved in this pass — AWS/S3 narrative:** the former guide described a Desktop storage-creation flow and implied saved AWS credentials enabled S3 operations. Current code exposes a browsing screen without creation and wires the transfer connector to server environment credentials. The guide and support matrix now state that limit; a live S3 procedure still needs validation.
 6. **P0 resolved in this pass — GCS claim:** the former support matrix and runtime explanations listed GCS as implemented transfer. The current `gs://` connector returns an unavailable error. The matrix, runtime pages, and schema reference now distinguish accepted `gcs` values from a working transfer path.
+7. **P1 resolved in this pass — scope/topology UI:** the SimGrid guide implied Desktop could edit network links, while the execution-scope guide states that Desktop only creates an empty topology. The SimGrid procedure now sends link edits through the API.
+8. **P1 resolved in this pass — cloud target language:** saving a capacity target was described as making a provisioned resource. The guide now states that no VM is created at that step.
 
 ## Page inventory
 
@@ -30,14 +32,14 @@ This is an iteration ledger, not a completion certificate. The current pass insp
 | `guides/data/artifacts.md` | Full read; simplified the task-first opening | Recheck API payloads after P0 contracts fix |
 | `guides/data/provenance-and-audit.md` | Full read; detailed screen tables serve investigation tasks | Recheck API payloads after P0 contracts fix |
 | `guides/infrastructure/aws.md` | Rewritten after code audit | Check provider claims against real-environment evidence |
-| `guides/infrastructure/cloud-capacity.md` | Edited in this pass | Full read after P0/P1 fixes |
+| `guides/infrastructure/cloud-capacity.md` | Full read; distinguished target from VM and simplified opening | Validate with disposable GCP account |
 | `guides/infrastructure/environments.md` | Full read; aligned Desktop actions and shared API setup | Recheck API payloads after P0 contracts fix |
 | `guides/infrastructure/execution-scopes.md` | Full read; moved reciprocal IDs to API procedure | Recheck API payloads after P0 contracts fix |
 | `guides/infrastructure/gcp.md` | Edited in this pass | Check provider claims against real-environment evidence |
 | `guides/infrastructure/hpc-slurm.md` | Edited in this pass | Check provider claims against real-environment evidence |
-| `guides/infrastructure/kubernetes.md` | Edited in this pass | Full read after P0/P1 fixes |
-| `guides/infrastructure/simgrid.md` | Edited in this pass | Full read after P0/P1 fixes |
-| `guides/infrastructure/storage.md` | Edited in this pass | Full read after P0/P1 fixes |
+| `guides/infrastructure/kubernetes.md` | Full read; aligned API setup and task-first opening | Recheck procedure against Kind bundle |
+| `guides/infrastructure/simgrid.md` | Full read; corrected unsupported Desktop link editing | Recheck procedure against pinned bundle |
+| `guides/infrastructure/storage.md` | Full read; action limits are qualified by capabilities | Recheck API payloads after P0 contracts fix |
 | `guides/interface-tour.mdx` | Edited in this pass | Full read after P0/P1 fixes |
 | `guides/operations/credentials-and-ssh.md` | Edited in this pass | Full read after P0/P1 fixes |
 | `guides/operations/instance-management.md` | Edited in this pass | Full read after P0/P1 fixes |

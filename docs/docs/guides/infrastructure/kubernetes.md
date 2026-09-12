@@ -5,7 +5,7 @@ description: Configure a Kubernetes runtime, credential, namespace, resources, s
 
 # Connect a Kubernetes environment
 
-This how-to connects an existing Kubernetes cluster to AkôFlow for real container execution. It is for an operator who controls a namespace and its service account. The [Kind real-execution Showcase](../../showcase/kubernetes-real-execution) is the reproducible local reference implementation; use it before adapting these steps to a shared cluster.
+Use this guide to connect an existing Kubernetes cluster so AkôFlow can run container activities as Jobs. You need access to a namespace and its service account. The [Kind real-execution Showcase](../../showcase/kubernetes-real-execution) provides a local example to try before using a shared cluster.
 
 Use this runtime for container workloads that must become Kubernetes Jobs. Do not use it to simulate a cluster: use [SimGrid](./simgrid) for modeled infrastructure. Do not put a bearer token in a workflow, plan, repository, or screenshot.
 
@@ -81,12 +81,9 @@ For node discovery, a separate `ClusterRole` and `ClusterRoleBinding` granting `
 
 ## 2. Store the API credential outside the environment definition
 
-Generate a short-lived token and send it to the daemon's local Kubernetes-token endpoint. The example below deliberately avoids printing the token after it has been assigned to the shell variable.
+Complete [API connection setup](../../tutorials/api-access). Generate a short-lived Kubernetes token and send it to the daemon's credential endpoint. The example avoids printing the token after it is assigned to the shell variable.
 
 ```bash
-export AKOFLOW_API_URL='http://127.0.0.1:8080/akoflow-api'
-export AKOFLOW_API_TOKEN='<daemon API token>'
-
 KUBE_TOKEN="$(kubectl -n akoflow create token akoflow-runtime --duration=1h)"
 curl --fail-with-body \
   -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \

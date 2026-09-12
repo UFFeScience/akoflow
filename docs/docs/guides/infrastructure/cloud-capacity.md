@@ -2,12 +2,7 @@
 title: Configure cloud capacity
 ---
 
-A cloud environment separates four concerns:
-
-1. the cached provider catalog (machines, images, disks, zones, and prices);
-2. capacity targets that planners may select;
-3. versioned machine configurations expressed as Ansible playbooks;
-4. provisioned instances and their asynchronous lifecycle operations.
+Use this guide after connecting a Google Cloud environment. Choose a machine from its catalog, save a capacity target for planning, and provision an instance when a run needs it. Machine configurations let you prepare the instance after provisioning.
 
 For the API commands on this page, complete [API connection setup](../../tutorials/api-access) first.
 
@@ -47,7 +42,7 @@ The GET endpoint returns `404` until a catalog has been synchronized. Provider c
 1. Choose a catalog machine, image, disk, and disk size.
 2. Select a zone policy, provisioning mode, maximum instance count, and lifecycle policy.
 3. Optionally attach an additional machine-configuration version.
-4. Save the target. It becomes a provisioned cloud resource available to planning.
+4. Save the target. It becomes a capacity option available to planning; saving it does not create a VM.
 
 ### Using the API
 
@@ -121,7 +116,7 @@ curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   "$AKOFLOW_API_URL/environments/gcp-lab/cloud-provisioning/" \
   -d '{"capacityTargetId":"<capacity-target-id>"}'
 
-# Configure cloud capacity
+# Inspect the operation
 curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" "$AKOFLOW_API_URL/cloud-operations/"
 curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" "$AKOFLOW_API_URL/cloud-operations/<operation-id>/"
 curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" "$AKOFLOW_API_URL/cloud-operations/<operation-id>/events/"

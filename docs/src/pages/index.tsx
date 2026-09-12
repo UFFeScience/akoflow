@@ -36,7 +36,7 @@ function DesktopCard() {
         versioned GitHub Releases.
       </p>
       <a
-        href="https://github.com/UFFeScience/akoflow/releases"
+        href="https://github.com/UFFeScience/akoflow/releases/latest"
         target="_blank"
         rel="noopener noreferrer"
         className={styles.downloadBtn}

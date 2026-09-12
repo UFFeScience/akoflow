@@ -3,6 +3,7 @@ package build
 import (
 	"context"
 	"fmt"
+	"net/url"
 	"path/filepath"
 	"strings"
 
@@ -97,21 +98,35 @@ func normalizedArchitecture(value string) string {
 }
 
 func preparationForOutput(variant *domain.ArtifactVariant, location *domain.ArtifactLocation, activityID string, resource domain.Resource, destination string) domain.PreparationRequirement {
+	destinationURI := ""
+	materializedPath := destination
 	if destination == "" {
-		destination = filepath.Join(".akoflow", "artifacts", variant.Digest[7:]+"."+variant.Format)
+		workingDirectory, err := filepath.Abs(".")
+		if err != nil {
+			workingDirectory = "."
+		}
+		destination = filepath.Join(".akoflow", "artifacts")
+		destinationURI = (&url.URL{Scheme: "file", Path: workingDirectory}).String()
+		materializedPath = filepath.Join(workingDirectory, destination, variant.Digest)
+	} else {
+		// Explicit destinations are replaced by the SSH/Kubernetes endpoint
+		// configuration before transfer. Keep a syntactically valid local URL
+		// as the fallback instead of allowing a relative path to become a host.
+		destinationURI = (&url.URL{Scheme: "file", Path: "/"}).String()
+		destination = strings.TrimPrefix(filepath.Clean(destination), string(filepath.Separator))
 	}
 	materialization := domain.ArtifactMaterialization{
 		ID:         "materialization-" + activityID + "-" + variant.ID,
 		ActivityID: activityID, VariantID: variant.ID, Digest: variant.Digest,
 		ResourceID: resource.ID, EnvironmentID: resource.EnvironmentVersionID,
-		DestinationPath: destination, Status: domain.MaterializationPlanned,
+		DestinationPath: materializedPath, Status: domain.MaterializationPlanned,
 	}
 	transfer := domain.DataTransferPlan{
 		ID: "transfer-" + materialization.ID, Strategy: domain.TransferSourcePush,
 		Source: domain.TransferLocation{URI: location.URI},
 		Destination: domain.TransferLocation{
 			ResourceID: resource.ID, EnvironmentID: resource.EnvironmentVersionID,
-			Path: destination, URI: "file://" + destination,
+			Path: destination, URI: destinationURI,
 		},
 		Blobs: []domain.BlobDescriptor{{Digest: variant.Digest, SizeBytes: variant.SizeBytes}},
 	}

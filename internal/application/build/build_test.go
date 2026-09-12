@@ -6,6 +6,7 @@ import (
 	"compress/gzip"
 	"context"
 	"io"
+	"net/url"
 	"os"
 	"path/filepath"
 	"strings"
@@ -285,8 +286,21 @@ func TestOutputResolversCreateMaterializationContracts(t *testing.T) {
 	if err != nil || !found || dockerRequirement.Artifact.DestinationPath != "/target.sif" {
 		t.Fatalf("requirement=%+v found=%v err=%v", dockerRequirement, found, err)
 	}
-	if _, err := PreparationForCatalog(context.Background(), catalog, "artifact", "v1", "activity", resource, ""); err != nil {
+	catalogRequirement, err := PreparationForCatalog(context.Background(), catalog, "artifact", "v1", "activity", resource, "")
+	if err != nil {
 		t.Fatal(err)
+	}
+	destination := catalogRequirement.ArtifactTransfer.Destination
+	parsedDestination, err := url.Parse(destination.URI)
+	if err != nil || parsedDestination.Scheme != "file" || parsedDestination.Host != "" || !filepath.IsAbs(parsedDestination.Path) {
+		t.Fatalf("invalid local destination URI %q: parsed=%+v err=%v", destination.URI, parsedDestination, err)
+	}
+	if destination.Path != filepath.Join(".akoflow", "artifacts") {
+		t.Fatalf("destination path=%q", destination.Path)
+	}
+	expectedMaterialization := filepath.Join(parsedDestination.Path, destination.Path, variant.Digest)
+	if catalogRequirement.Artifact.DestinationPath != expectedMaterialization {
+		t.Fatalf("materialization path=%q want=%q", catalogRequirement.Artifact.DestinationPath, expectedMaterialization)
 	}
 	if reference, err := OCIReferenceForCatalog(context.Background(), catalog, "artifact", "v1", "aarch64"); err != nil || reference != catalog.oci {
 		t.Fatalf("reference=%q err=%v", reference, err)

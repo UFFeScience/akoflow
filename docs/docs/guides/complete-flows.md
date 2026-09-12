@@ -160,9 +160,14 @@ registry; never send the secret in an artifact payload.
 then inspect immutable versions, locations, build records, and materializations.
 For an existing `.sif`, browse it and choose **Register executable artifact**.
 
-**API alternative.** Use `POST /artifacts/`; upload through
-`POST /build-contexts/` and create `POST /artifact-builds/`, or promote an
-existing storage path. See [Artifacts, storage, and builds](./data/artifacts).
+**API alternative.** To register a Docker image, use
+`POST /artifacts/docker/` with `artifactId`, `version`, `image`, and optional
+`architecture` (the default is `amd64`). The response is `201 Created` with the
+immutable `artifact` version and its `build` specification; start that build
+separately with `POST /artifact-builds/{buildId}/runs/`, which returns
+`202 Accepted`. For custom recipes, upload through `POST /build-contexts/` and
+create `POST /artifact-builds/`, or promote an existing storage path. See
+[Artifacts, storage, and builds](./data/artifacts).
 
 **Expected result.** The artifact has an immutable version and digest. A
 materialization is committed only when its verified digest matches that digest.

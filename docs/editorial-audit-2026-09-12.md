@@ -23,7 +23,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 
 | Page | Current pass | Next review |
 | --- | --- | --- |
-| `guides/workflows/first-local-run.md` | New; end-to-end Linux package UI path verified through generated file evidence | Repeat on a clean supported host and other platforms |
+| `guides/workflows/first-local-run.md` | New; end-to-end Linux package UI path verified through generated file evidence; built page and open mobile menu inspected at 390 × 844 | Repeat on a clean supported host and other platforms |
 | `concepts.md` | Full read; corrected executable/data distinction | Recheck basic narrative after first-run validation |
 | `contributing/documentation-plan.md` | Full read; replaced historical production waves with recurring review contract | Recheck contract at final audit |
 | `downloads.md` | Full read; platform limits and verification are explicit | Recheck release links when version changes |
@@ -80,5 +80,5 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 
 - `npm run typecheck`, `npm run build`, `npm run check:links`, and `git diff --check` passed on the editorial branch.
 - The latest link check covered 367 local links/assets and 53 showcase downloads from the `v1.0.8` Git tag.
-- Headless Chromium at 390 × 844 loaded Getting Started, Core concepts, and the console guide without page errors or horizontal overflow; the mobile menu opened to full viewport height.
+- Headless Chromium at 390 × 844 loaded Getting Started, Core concepts, the console guide, and the new Desktop first-run page without page errors or horizontal overflow. The first-run page's mobile menu opened and showed its tutorial link.
 - These checks establish site integrity for this pass. They do not prove tutorial execution, provider support, or completion of the editorial gate.

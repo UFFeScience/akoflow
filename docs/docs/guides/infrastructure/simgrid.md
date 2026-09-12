@@ -129,11 +129,11 @@ environmentVersionIds:
 
 In Desktop, open the workflow, choose **Generate plan**, select **Simulation**, and choose the scope. Use **Generate plans** to compare algorithms, or **Create manually** to reproduce a known placement. Inspect the candidate Gantt before selecting it: the lane count should reflect the selected resource cores, and cross-resource dependency lines should correspond to the modeled data dependencies.
 
-To submit the checked-in manual plan and run it through the API, execute the bundle from the repository root:
+To submit the checked-in manual plan and run it through the API, complete [API connection setup](../../tutorials/api-access), use a v1.0.8 checkout, and execute the bundle from its root:
 
 ```bash
-export AKOFLOW_API_URL='http://127.0.0.1:8080/akoflow-api'
-export AKOFLOW_API_TOKEN='<token>'
+git clone --branch v1.0.8 --depth 1 https://github.com/UFFeScience/akoflow.git akoflow-simgrid
+cd akoflow-simgrid
 sh examples/simulation/run.sh
 ```
 

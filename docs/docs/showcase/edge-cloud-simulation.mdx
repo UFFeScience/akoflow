@@ -34,6 +34,7 @@ The diagram and the workflow YAML show the same topology: `prepare` produces `da
   <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/simulation/workflow.yaml">Workflow YAML ↓</a>
   <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/simulation/plan-request.yaml">Manual plan envelope ↓</a>
   <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/simulation/execution-request.yaml">Execution envelope ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/simulation/run.sh">Submission script ↓</a>
 </FileList>
 
 <InterfaceApiTabs
@@ -49,23 +50,10 @@ The diagram and the workflow YAML show the same topology: `prepare` produces `da
   </div>}
   api={<div>
     <h2>Run through the API</h2>
-    <p>Run this in a fresh AkôFlow instance, or change every ID in the six YAML files first. The API treats these identifiers as persistent objects and rejects duplicate IDs. From the repository root, set the daemon address and token, then submit the complete bundle:</p>
-    <pre><code>{`export AKOFLOW_API_URL="http://127.0.0.1:8080/akoflow-api"
-export AKOFLOW_API_TOKEN="<token>"
-
-post_yaml() {
-  curl --fail-with-body \\
-    -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \\
-    -H 'Content-Type: application/yaml' \\
-    --data-binary "@$2" "$AKOFLOW_API_URL/$1/"
-}
-
-post_yaml environments examples/simulation/environment.yaml
-post_yaml execution-scopes examples/simulation/scope.yaml
-post_yaml network-topologies examples/simulation/topology.yaml
-post_yaml workflow-definitions examples/simulation/workflow.yaml
-post_yaml schedule-plans examples/simulation/plan-request.yaml
-post_yaml execution-runs examples/simulation/execution-request.yaml`}</code></pre>
+    <p>Complete <a href="/docs/tutorials/api-access">API connection setup</a>. Run this in a fresh AkôFlow instance, or change every ID in the six YAML files first. Clone the v1.0.8 files, or use an existing matching checkout, then submit the bundle:</p>
+    <pre><code>{`git clone --branch v1.0.8 --depth 1 https://github.com/UFFeScience/akoflow.git akoflow-showcase
+cd akoflow-showcase
+sh examples/simulation/run.sh`}</code></pre>
     <p>Submitting <code>execution-runs</code> acknowledges the request; it does not mean the execution has completed. Poll the immutable run projection until <code>status</code> is <code>completed</code>:</p>
     <pre><code>{`curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \\
   "$AKOFLOW_API_URL/execution-runs/simulation-example-run-v1/"`}</code></pre>
@@ -95,4 +83,4 @@ If any of these checks fails, recover in this order:
 3. Confirm the scope points to `simulation-example-v1` and the topology is attached to that scope.
 4. Confirm that the activity IDs in the manual plan are the imported IDs: `simulation-example-workflow-prepare`, `simulation-example-workflow-analyze`, and `simulation-example-workflow-summarize`.
 
-For a shorter first execution, use [Run your first simulated workflow](../guides/workflows/first-run). For the semantics behind resources, scopes, and data dependencies, see [Core concepts](../concepts).
+For a first run in Desktop, use [Run your first local workflow](../guides/workflows/first-local-run). For a shorter simulation through the API, use [the SimGrid first-run tutorial](../guides/workflows/first-run). For the meaning of resources, scopes, and data dependencies, see [Core concepts](../concepts).

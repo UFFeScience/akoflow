@@ -48,7 +48,7 @@ Each example includes versioned files, an API submission path, and an expected r
   />
   <ShowcaseCard
     title="100 activities on 50 cores"
-    description="A reproducible parallel workload for checking core-level placement, queueing, and scheduler scalability."
+    description="A reproducible parallel workload for checking placement and queueing across 50 cores."
     href="/docs/showcase/parallel-50-core"
     kind="parallel"
     tags={['Parallel', 'SimGrid', 'Capacity']}
@@ -57,10 +57,10 @@ Each example includes versioned files, an API submission path, and an expected r
 
 ## How to use a showcase
 
-1. Choose a scenario and download its checked-in YAML files.
-2. Follow its versioned API procedure and check the prerequisites before submitting objects.
-3. Register the plan, start the run, and wait for a terminal status.
-4. Compare planned and observed makespan, cost, activity placement, transfers, and provenance.
+1. Choose a scenario and open its v1.0.8 checkout.
+2. Complete the scenario's prerequisites and [API connection setup](../tutorials/api-access).
+3. Submit the files in the stated order and wait for the run to finish.
+4. Check the result listed on that scenario's page.
 
 The files define the submitted model. If Desktop is connected to the same server, use it to inspect the saved records and result.
 

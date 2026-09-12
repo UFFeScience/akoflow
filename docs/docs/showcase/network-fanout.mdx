@@ -49,9 +49,9 @@ Every dependency is 10,000,000,000 bytes. There are six dependencies, so a compl
   </div>}
   api={<div>
     <h2>Register, plan, and execute through the API</h2>
-    <p>From a fresh instance, run the versioned script. It submits the environment, scope, topology, workflow, manual plan, and execution envelope in dependency order:</p>
-    <pre><code>{`export AKOFLOW_API_URL="http://127.0.0.1:8080/akoflow-api"
-export AKOFLOW_API_TOKEN="<token>"
+    <p>Complete <a href="/docs/tutorials/api-access">API connection setup</a> and use a fresh AkôFlow instance. Clone v1.0.8, then run the script from that checkout. It submits the environment, scope, topology, workflow, manual plan, and execution envelope in order:</p>
+    <pre><code>{`git clone --branch v1.0.8 --depth 1 https://github.com/UFFeScience/akoflow.git akoflow-showcase
+cd akoflow-showcase
 bash examples/simulation/30gb-fanout/run.sh`}</code></pre>
     <p>Poll the run until it reports <code>completed</code>:</p>
     <pre><code>{`curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \\

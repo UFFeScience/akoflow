@@ -20,6 +20,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 12. **P0 resolved in this pass — GCP Desktop route:** the detailed guide directed readers to a separate Settings credential form and a “New environment” action that do not match the current cloud onboarding. It now follows the tested form path in the connection tutorial.
 13. **P0 resolved in the second pass — credential examples:** the SSH import example wrote a private key into a predictable `/tmp` JSON file without restrictive creation permissions. It now streams JSON directly from the existing protected key file to the API, without a temporary payload. The Kubernetes token example likewise reads a protected file into a streamed request instead of asking readers to put a token in a shell command. Both Bash blocks passed syntax checking.
 14. **P0 resolved in the second pass — cloud target/API examples:** the API overview put a literal token in a shell `export`; it now uses the shared secret prompt. The capacity-target example omitted `sshSourceRanges`, which lets the current Terraform target default SSH ingress to `0.0.0.0/0`, and attached a configuration-version ID before the guide created it. The example now requires an approved CIDR and leaves optional machine configuration out of the base request.
+15. **P0/P1 resolved in the second pass — Showcase setup:** four Showcase API blocks and the SimGrid guide put a token placeholder in a shell `export`; they now use the shared API setup. Six Showcase procedures assumed an unprovided repository checkout; each now shows how to enter the v1.0.8 files before running its script or inline requests. The edge–cloud page uses the checked-in submission script instead of repeating six HTTP calls. The Showcase index no longer calls a single 50-core run a scheduler scalability test.
 
 ## Page inventory
 
@@ -45,7 +46,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `guides/infrastructure/gcp.md` | Full read; corrected Desktop onboarding and aligned API setup | Check provider claims against disposable-project evidence |
 | `guides/infrastructure/hpc-slurm.md` | Full read; aligned API setup and retained site-specific limits | Check provider claims against real cluster evidence |
 | `guides/infrastructure/kubernetes.md` | Full read; aligned API setup and task-first opening | Recheck procedure against Kind bundle |
-| `guides/infrastructure/simgrid.md` | Full read; corrected unlinked Desktop topology-creation path | Recheck procedure against pinned bundle |
+| `guides/infrastructure/simgrid.md` | Second read; corrected unlinked Desktop topology path and now uses shared API setup with a versioned checkout | Recheck procedure against pinned bundle |
 | `guides/infrastructure/storage.md` | Second read; Desktop capability gates match current browser; API IDs and paths are examples, and data promotion no longer supplies fictitious optional lineage IDs | Recheck storage payloads against a real registered storage |
 | `guides/interface-tour.mdx` | Full read; removed API routes, shortened search explanation, and linked the verified Desktop first run | Recheck rendered page at mobile width |
 | `guides/operations/credentials-and-ssh.md` | Second read; streamed private key and token payloads from protected files; aligned reference wording with connection fields | Recheck current Desktop form and key lifecycle claims |
@@ -67,13 +68,13 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `reference/feature-coverage.md` | Second read; now distinguishes registered but unlinked Desktop network routes from navigable task paths | Check contracts against current handlers and schemas |
 | `reference/planning-and-execution-states.md` | Full read; state limits are explicit | Check contracts against current handlers and schemas |
 | `runtimes.md` | Full read; replaced duplicate user procedure with task-guide links | Recheck provider claims against adapters |
-| `showcase/edge-cloud-simulation.mdx` | Full read; Desktop path limited to same-server inspection | Check result against pinned bundle |
-| `showcase/index.mdx` | Full read; clarified verified API submission and Desktop inspection | Recheck cards after Showcase audit |
-| `showcase/kubernetes-real-execution.mdx` | Full read; Desktop path limited to same-server inspection | Check result against pinned bundle |
-| `showcase/local-direct-execution.mdx` | Full read; removed unsupported cancellation link | Check result against pinned bundle |
-| `showcase/network-fanout.mdx` | Full read; link creation stays in API | Check result against pinned bundle |
-| `showcase/parallel-50-core.mdx` | Full read; timing explanation links to correct page | Check result against pinned bundle |
-| `showcase/slurm-local-fixture.mdx` | Full read; Desktop path limited to optional development-client inspection | Check result against pinned bundle |
+| `showcase/edge-cloud-simulation.mdx` | Second read; uses versioned checkout and submission script, shared API setup, and same-server Desktop inspection | Check result against pinned bundle |
+| `showcase/index.mdx` | Second read; instructions fit script and inline API examples; removed unsupported scalability language | Recheck cards after Showcase audit |
+| `showcase/kubernetes-real-execution.mdx` | Second read; checkout precedes Kind setup and inline API submission; Desktop is same-server inspection | Check result against pinned bundle |
+| `showcase/local-direct-execution.mdx` | Second read; uses versioned checkout and shared API setup; removed unsupported cancellation link | Check result against pinned bundle |
+| `showcase/network-fanout.mdx` | Second read; uses versioned checkout and shared API setup; network link creation stays in API | Check result against pinned bundle |
+| `showcase/parallel-50-core.mdx` | Second read; uses versioned checkout and shared API setup; timing explanation links to correct page | Check result against pinned bundle |
+| `showcase/slurm-local-fixture.mdx` | Second read; both terminals use the versioned checkout; Desktop path remains optional inspection | Check result against pinned bundle |
 | `tutorials/api-access.md` | Full read; API prerequisites and token limits are explicit | Recheck commands after P0 contracts fix |
 | `tutorials/connect-cloud.md` | Full read; AWS caveat and unvalidated GCP steps are explicit | Validate with disposable GCP account |
 | `tutorials/register-hpc.md` | Full read; placeholders and remote-run limit are explicit | Validate on an approved institutional cluster |
@@ -81,6 +82,6 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 ## Verification in this pass
 
 - `npm run typecheck`, `npm run build`, `npm run check:links`, and `git diff --check` passed on the editorial branch.
-- The latest link check covered 371 local links/assets and 53 showcase downloads from the `v1.0.8` Git tag.
-- Headless Chromium at 390 × 844 loaded Getting Started, Core concepts, the console guide, and the new Desktop first-run page without page errors or horizontal overflow. The first-run page's mobile menu opened and showed its tutorial link.
+- The latest link check covered 380 local links/assets and 54 showcase downloads from the `v1.0.8` Git tag.
+- Headless Chromium at 390 × 844 loaded Getting Started, Core concepts, the console guide, the new Desktop first-run page, and all seven Showcase pages without page errors or horizontal overflow. Every Showcase API tab displayed its v1.0.8 checkout command; the first-run page's mobile menu opened and showed its tutorial link.
 - These checks establish site integrity for this pass. They do not prove tutorial execution, provider support, or completion of the editorial gate.

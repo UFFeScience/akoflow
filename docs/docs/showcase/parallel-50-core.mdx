@@ -50,9 +50,9 @@ M1 and M3 are retained only to keep the three-machine SimGrid scope used by the 
   </div>}
   api={<div>
     <h2>Run through the API</h2>
-    <p>The checked-in script submits the objects in dependency order and stops on the first HTTP error. Run it against a fresh instance, or change every persistent ID in the bundle:</p>
-    <pre><code>{`export AKOFLOW_API_URL="http://127.0.0.1:8080/akoflow-api"
-export AKOFLOW_API_TOKEN="<token>"
+    <p>Complete <a href="/docs/tutorials/api-access">API connection setup</a>. The script submits objects in dependency order and stops on the first HTTP error. Use a fresh instance or change every persistent ID in the bundle, then run it from a v1.0.8 checkout:</p>
+    <pre><code>{`git clone --branch v1.0.8 --depth 1 https://github.com/UFFeScience/akoflow.git akoflow-showcase
+cd akoflow-showcase
 bash examples/simulation/50core-fanout/run.sh`}</code></pre>
     <p>Poll the run projection until its status is <code>completed</code>:</p>
     <pre><code>{`curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \\

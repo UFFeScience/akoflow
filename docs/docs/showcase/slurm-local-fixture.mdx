@@ -43,9 +43,11 @@ The fixture is intentionally local and disposable. It writes all database and ge
   </div>}
   api={<div>
     <h2>Run the fixture through the API</h2>
-    <p>In one terminal, start the isolated daemon from the repository root:</p>
-    <pre><code>{`sh examples/slurm/local-fixture/start-fixture.sh`}</code></pre>
-    <p>Wait until it is listening, then use a second terminal:</p>
+    <p>Clone v1.0.8, or use an existing matching checkout. In one terminal, start the isolated daemon from its root:</p>
+    <pre><code>{`git clone --branch v1.0.8 --depth 1 https://github.com/UFFeScience/akoflow.git akoflow-showcase
+cd akoflow-showcase
+sh examples/slurm/local-fixture/start-fixture.sh`}</code></pre>
+    <p>Wait until it is listening, then open a second terminal at the root of the same checkout:</p>
     <pre><code>{`export AKOFLOW_API_URL="http://127.0.0.1:18082/akoflow-api"
 sh examples/slurm/local-fixture/run.sh
 

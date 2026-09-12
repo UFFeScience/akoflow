@@ -19,13 +19,13 @@ This is an iteration ledger, not a completion certificate. The current pass insp
 | --- | --- | --- |
 | `concepts.md` | Edited in this pass | Full read after P0/P1 fixes |
 | `contributing/documentation-plan.md` | Edited in this pass | Full read after P0/P1 fixes |
-| `downloads.md` | Opening and purpose scanned | Full read after P0/P1 fixes |
+| `downloads.md` | Full read; platform limits and verification are explicit | Recheck release links when version changes |
 | `engine.md` | Opening and purpose scanned | Full read after P0/P1 fixes |
-| `explanations/evidence-and-provenance.md` | Opening and purpose scanned | Full read after P0/P1 fixes |
-| `explanations/network-modeling.md` | Opening and purpose scanned | Full read after P0/P1 fixes |
-| `explanations/observed-timing.md` | Opening and purpose scanned | Full read after P0/P1 fixes |
-| `explanations/planning.md` | Opening and purpose scanned | Full read after P0/P1 fixes |
-| `explanations/prism-and-heft.md` | Opening and purpose scanned | Full read after P0/P1 fixes |
+| `explanations/evidence-and-provenance.md` | Full read and simplified runtime language | Recheck against execution evidence after P0 fixes |
+| `explanations/network-modeling.md` | Full read; detailed model belongs in this explanation | Recheck transfer claims after P0 fixes |
+| `explanations/observed-timing.md` | Full read; optional observations are qualified | Recheck metrics after P0 fixes |
+| `explanations/planning.md` | Full read and simplified plan terminology | Recheck planning claims after P0 fixes |
+| `explanations/prism-and-heft.md` | Full read; algorithm detail serves comparison readers | Recheck algorithm claims after P0 fixes |
 | `getting-started.md` | Edited in this pass | Verify complete first-user path |
 | `guides/data/artifacts.md` | Edited in this pass | Full read after P0/P1 fixes |
 | `guides/data/provenance-and-audit.md` | Edited in this pass | Full read after P0/P1 fixes |
@@ -43,7 +43,7 @@ This is an iteration ledger, not a completion certificate. The current pass insp
 | `guides/operations/instance-management.md` | Edited in this pass | Full read after P0/P1 fixes |
 | `guides/operations/interactive-console.md` | Edited in this pass | Full read after P0/P1 fixes |
 | `guides/operations/search-and-notifications.md` | Edited in this pass | Full read after P0/P1 fixes |
-| `guides/operations/server-instance.md` | Opening and purpose scanned | Full read after P0/P1 fixes |
+| `guides/operations/server-instance.md` | Full read; prerequisites, verification, and removal are explicit | Recheck release assets when version changes |
 | `guides/operations/troubleshooting.md` | Edited in this pass | Full read after P0/P1 fixes |
 | `guides/workflows/definitions.md` | Edited in this pass | Full read after P0/P1 fixes |
 | `guides/workflows/executions.md` | Edited in this pass | Full read after P0/P1 fixes |
@@ -55,8 +55,8 @@ This is an iteration ledger, not a completion certificate. The current pass insp
 | `reference/api-overview.md` | Edited in this pass | Check contracts against current handlers and schemas |
 | `reference/environment-yaml.md` | Edited in this pass | Check contracts against current handlers and schemas |
 | `reference/execution-scopes-and-topologies.md` | Edited in this pass | Check contracts against current handlers and schemas |
-| `reference/feature-coverage.md` | Opening and purpose scanned | Check contracts against current handlers and schemas |
-| `reference/planning-and-execution-states.md` | Opening and purpose scanned | Check contracts against current handlers and schemas |
+| `reference/feature-coverage.md` | Full read; route coverage remains a reference checklist | Check contracts against current handlers and schemas |
+| `reference/planning-and-execution-states.md` | Full read; state limits are explicit | Check contracts against current handlers and schemas |
 | `runtimes.md` | Edited in this pass | Full read after P0/P1 fixes |
 | `showcase/edge-cloud-simulation.mdx` | Edited in this pass | Check procedure and result against pinned bundle |
 | `showcase/index.mdx` | Edited in this pass | Check procedure and result against pinned bundle |

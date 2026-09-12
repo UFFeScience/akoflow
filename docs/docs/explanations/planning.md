@@ -7,13 +7,13 @@ description: Why planning sessions produce candidates before one placement becom
 
 import useBaseUrl from '@docusaurus/useBaseUrl';
 
-Planning answers a bounded placement question: given one workflow version and one execution scope, which feasible assignment should be used for the chosen objective? It is not execution, and it does not reserve or start infrastructure.
+Planning compares where a workflow could run within a chosen execution scope. It produces predicted placements and costs so you can choose a plan before starting a run. Planning does not reserve or start infrastructure.
 
 Use [Plan a workflow](../guides/workflows/planning) for the Desktop or API procedure; this explanation covers the model behind it.
 
 ## A planning session freezes the question
 
-The session stores the workflow version, execution scope, network topology, environment snapshots, resources, activity profiles, deadline, budget, interference data, and algorithm selection. Freezing these inputs makes a later comparison meaningful: each algorithm evaluates the same recorded infrastructure universe instead of whatever discovery happens to return later.
+A planning session records the workflow version, available resources, network topology, deadline, budget, and selected algorithms. It also keeps the profiles and environment data used for prediction. This lets you compare candidates against the same inputs, even if the environment changes later.
 
 <img src={useBaseUrl('/img/architecture/planning-session-lifecycle.svg')} alt="Frozen workflow and infrastructure input create a planning session. Independent algorithm runs produce candidate sets, from which one candidate becomes a schedule plan." />
 
@@ -21,11 +21,11 @@ The session stores the workflow version, execution scope, network topology, envi
 
 A candidate has a predicted makespan and cost, feasibility flags, rank and Pareto metadata, and an embedded prospective plan. Several candidates can have the same algorithm and objective. They exist so the user can inspect trade-offs before committing to one placement.
 
-Only selection promotes a candidate to the canonical schedule plan. The plan contains assignments to a resource/core/slot and prediction fields such as ready, start, finish, runtime, transfer, and cost. It may also contain cloud lifecycle actions. A manually authored placement and an imported placement use the same schedule-plan representation after validation.
+When you select a candidate, it becomes the schedule plan for the run. The plan records where activities should run and their predicted timing and cost. It can also include cloud setup actions. You can instead supply or import a placement, subject to validation.
 
 ## Objectives and constraints answer different questions
 
-An algorithm objective ranks candidates, while deadline and budget determine whether a candidate is feasible for the request. A candidate can remain visible when it misses a constraint; that preserves the best alternatives discovered even if no candidate meets the SLA. It is not a promise that the option will be recommended for execution.
+An algorithm's objective ranks candidates. Deadline and budget determine whether each candidate meets your constraints. A candidate may remain visible even when it misses a limit, so you can inspect the alternatives the planner found.
 
 The current built-ins include HEFT, PRISM Time, and PRISM Cost. Their search and objective behavior is intentionally separate from this record model. The selected plan's prediction is also separate from observed timing: a completed run supplies the evidence needed to assess that prediction.
 

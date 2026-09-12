@@ -67,7 +67,7 @@ curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -d '{"path":"/scratch/project-a/result.csv"}'
 ```
 
-Downloads and archives may return queued runs. Read `GET /storage-downloads/{downloadId}/` until the run is ready, then fetch `GET /storage-downloads/{downloadId}/content/`.
+The file-download request returns a ready record; fetch its ID through `GET /storage-downloads/{downloadId}/content/`. An archive starts as queued, writes a `.tar.gz` beside the directory, and becomes downloadable when `GET /storage-downloads/{downloadId}/` reports `ready`. A copy runs in the background at the same path in the destination storage; check that record for `completed` or `failed` before using the copy. The checksum request reads the file and returns its SHA-256 digest directly.
 
 ## Register an existing file
 

@@ -1,11 +1,13 @@
 ---
-title: Credentials and SSH service keys
+title: Manage credentials and SSH service keys
 description: Store credentials in the Engine, assign SSH service keys, and keep private material outside workflow definitions.
 ---
 
-# Credentials and SSH service keys
+# Manage credentials and SSH service keys
 
-AkôFlow stores secret material in the Engine and places a `credentialRef` in connection definitions. The renderer sends a secret only when it is first saved or imported; list operations return references or public metadata, never the original private key or bearer token.
+Use this guide when an environment needs an SSH key, Kubernetes token, or cloud credential. Store the credential in AkôFlow, then select it while configuring the connection. Workflow files should contain credential references, never secrets.
+
+AkôFlow returns public metadata or a credential reference when you list stored credentials; it does not return the original private key or bearer token.
 
 ## Generate an SSH service key
 
@@ -21,13 +23,13 @@ The Engine generates an Ed25519 key. IDs must start with an ASCII letter or digi
 ### Using the API
 
 ```bash
-export AKOFLOW_URL='http://127.0.0.1:<daemon-port>/akoflow-api'
-export AKOFLOW_TOKEN='<daemon-token>'
+export AKOFLOW_API_URL='http://127.0.0.1:<daemon-port>/akoflow-api'
+export AKOFLOW_API_TOKEN='<daemon-token>'
 
 curl --fail-with-body \
-  -H "Authorization: Bearer $AKOFLOW_TOKEN" \
+  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -H 'Content-Type: application/json' \
-  -X POST "$AKOFLOW_URL/ssh-keys/" \
+  -X POST "$AKOFLOW_API_URL/ssh-keys/" \
   -d '{"id":"plafrim-service","comment":"akoflow@plafrim"}'
 ```
 
@@ -54,9 +56,9 @@ jq -n \
   '{id:$id, privateKey:$privateKey}' > /tmp/akoflow-ssh-key.json
 
 curl --fail-with-body \
-  -H "Authorization: Bearer $AKOFLOW_TOKEN" \
+  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -H 'Content-Type: application/json' \
-  -X POST "$AKOFLOW_URL/ssh-keys/import/" \
+  -X POST "$AKOFLOW_API_URL/ssh-keys/import/" \
   --data-binary @/tmp/akoflow-ssh-key.json
 ```
 
@@ -66,8 +68,8 @@ List public metadata at any time:
 
 ```bash
 curl --fail-with-body \
-  -H "Authorization: Bearer $AKOFLOW_TOKEN" \
-  "$AKOFLOW_URL/ssh-keys/"
+  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  "$AKOFLOW_API_URL/ssh-keys/"
 ```
 
 There is currently no SSH-key deletion endpoint. Manage key lifecycle deliberately and rotate authorization on remote systems when a key should no longer be trusted.
@@ -91,9 +93,9 @@ Read the current environment definition first so you preserve every connection f
 
 ```bash
 curl --fail-with-body \
-  -H "Authorization: Bearer $AKOFLOW_TOKEN" \
+  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -H 'Content-Type: application/json' \
-  -X PUT "$AKOFLOW_URL/environment-connections/hpc-ssh/" \
+  -X PUT "$AKOFLOW_API_URL/environment-connections/hpc-ssh/" \
   -d '{
     "id":"hpc-ssh",
     "environmentId":"plafrim",
@@ -111,9 +113,9 @@ The Desktop environment connection flow stores a Kubernetes token and retains on
 
 ```bash
 curl --fail-with-body \
-  -H "Authorization: Bearer $AKOFLOW_TOKEN" \
+  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -H 'Content-Type: application/json' \
-  -X POST "$AKOFLOW_URL/kubernetes-tokens/" \
+  -X POST "$AKOFLOW_API_URL/kubernetes-tokens/" \
   -d '{"id":"research-cluster","token":"<bearer-token>"}'
 ```
 

@@ -1,5 +1,5 @@
 ---
-title: Cloud capacity and machine configuration
+title: Configure cloud capacity
 ---
 
 A cloud environment separates four concerns:
@@ -8,6 +8,8 @@ A cloud environment separates four concerns:
 2. capacity targets that planners may select;
 3. versioned machine configurations expressed as Ansible playbooks;
 4. provisioned instances and their asynchronous lifecycle operations.
+
+For the API commands on this page, complete [API connection setup](../../tutorials/api-access) first.
 
 ## Provider support in v1.0
 
@@ -29,11 +31,11 @@ Open a cloud environment and select **Cloud capacity**. If no cached catalog exi
 ### Using the API
 
 ```bash
-curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_TOKEN" \
-  -X POST "$AKOFLOW_URL/environments/gcp-lab/cloud-catalog/refresh/"
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  -X POST "$AKOFLOW_API_URL/environments/gcp-lab/cloud-catalog/refresh/"
 
-curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_TOKEN" \
-  "$AKOFLOW_URL/environments/gcp-lab/cloud-catalog/"
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  "$AKOFLOW_API_URL/environments/gcp-lab/cloud-catalog/"
 ```
 
 The GET endpoint returns `404` until a catalog has been synchronized. Provider credentials must already be stored and referenced by the cloud environment connection.
@@ -50,9 +52,9 @@ The GET endpoint returns `404` until a catalog has been synchronized. Provider c
 ### Using the API
 
 ```bash
-curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_TOKEN" \
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -H 'Content-Type: application/json' -X POST \
-  "$AKOFLOW_URL/environments/gcp-lab/cloud-capacity-targets/" \
+  "$AKOFLOW_API_URL/environments/gcp-lab/cloud-capacity-targets/" \
   -d '{
     "name":"E2 standard worker",
     "provider":"gcp",
@@ -84,22 +86,22 @@ Open **Infrastructure → Machine configurations**. Create a named configuration
 Validate YAML before saving it:
 
 ```bash
-curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_TOKEN" \
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -H 'Content-Type: application/json' -X POST \
-  "$AKOFLOW_URL/machine-configuration-validations/" \
+  "$AKOFLOW_API_URL/machine-configuration-validations/" \
   -d '{"playbookYaml":"---\n- name: Configure worker\n  hosts: all\n  become: true\n  tasks:\n    - name: Install curl\n      ansible.builtin.package:\n        name: curl\n        state: present\n"}'
 ```
 
 Create the configuration and then its first version:
 
 ```bash
-curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_TOKEN" \
-  -H 'Content-Type: application/json' -X POST "$AKOFLOW_URL/machine-configurations/" \
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  -H 'Content-Type: application/json' -X POST "$AKOFLOW_API_URL/machine-configurations/" \
   -d '{"id":"analysis-worker","name":"Analysis worker","description":"Packages used by analysis jobs"}'
 
-curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_TOKEN" \
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -H 'Content-Type: application/json' -X POST \
-  "$AKOFLOW_URL/machine-configurations/analysis-worker/versions/" \
+  "$AKOFLOW_API_URL/machine-configurations/analysis-worker/versions/" \
   -d '{"version":1,"status":"published","playbookYaml":"---\n- name: Configure worker\n  hosts: all\n  tasks: []\n","compatibility":{"providers":["gcp"]}}'
 ```
 
@@ -114,15 +116,15 @@ Open a cloud resource or the environment **Provisioning** tab and start provisio
 ### Using the API
 
 ```bash
-curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_TOKEN" \
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -H 'Content-Type: application/json' -X POST \
-  "$AKOFLOW_URL/environments/gcp-lab/cloud-provisioning/" \
+  "$AKOFLOW_API_URL/environments/gcp-lab/cloud-provisioning/" \
   -d '{"capacityTargetId":"<capacity-target-id>"}'
 
-# Follow all operations, then inspect the selected operation and its events
-curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_TOKEN" "$AKOFLOW_URL/cloud-operations/"
-curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_TOKEN" "$AKOFLOW_URL/cloud-operations/<operation-id>/"
-curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_TOKEN" "$AKOFLOW_URL/cloud-operations/<operation-id>/events/"
+# Configure cloud capacity
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" "$AKOFLOW_API_URL/cloud-operations/"
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" "$AKOFLOW_API_URL/cloud-operations/<operation-id>/"
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" "$AKOFLOW_API_URL/cloud-operations/<operation-id>/events/"
 ```
 
 The provisioning request queues an operation; it does not wait for the instance to become ready. Lifecycle endpoints also exist for configure, validate, start, stop, and destroy. Before destructive lifecycle actions, inspect the instance and active operation state in Desktop or through the API.

@@ -1,14 +1,14 @@
 ---
 title: Workflow showcase
 sidebar_label: Overview
-description: Complete AkôFlow workflows with downloadable files and Desktop and API walkthroughs.
+description: Workflow examples with downloadable files, prerequisites, and stated validation scope.
 ---
 
 import {ShowcaseCard, ShowcaseGrid} from '@site/src/components/WorkflowShowcase';
 
 # Workflow showcase
 
-Start from a complete, runnable workflow instead of assembling isolated payloads. Every showcase includes the workflow graph, infrastructure inputs, planning data, execution request, expected evidence, and two equivalent paths: **AkôFlow Desktop** and **API**.
+Start from a checked-in example instead of assembling isolated payloads. Some use local simulation, some run real workloads, and the SLURM fixture checks only the local adapter path. Read the example's setup and expected evidence before choosing a Desktop or API procedure.
 
 <ShowcaseGrid>
   <ShowcaseCard
@@ -58,7 +58,7 @@ Start from a complete, runnable workflow instead of assembling isolated payloads
 ## How to use a showcase
 
 1. Choose a scenario and download its checked-in YAML files.
-2. Follow the **Desktop** tab to import and inspect each object visually, or the **API** tab to submit the same files.
+2. Follow the procedure provided for that example; check its prerequisites before choosing Desktop or API.
 3. Generate or register a plan, start the run, and wait for a terminal status.
 4. Compare planned and observed makespan, cost, activity placement, transfers, and provenance.
 
@@ -68,13 +68,13 @@ The files are the source of truth. Walkthroughs refer to them directly so the gr
 
 | Scenario | Files | What it demonstrates |
 | --- | --- | --- |
-| Edge–cloud simulation | [`examples/simulation`](https://github.com/UFFeScience/akoflow/tree/main/examples/simulation) | Complete environment, topology, workflow, plan, and execution request |
-| 30 GB fan-out | [`examples/simulation/30gb-fanout`](https://github.com/UFFeScience/akoflow/tree/main/examples/simulation/30gb-fanout) | Shared links, parallel transfers, and fan-in |
-| 50-core fan-out | [`examples/simulation/50core-fanout`](https://github.com/UFFeScience/akoflow/tree/main/examples/simulation/50core-fanout) | Per-core placement and parallel capacity |
-| Kubernetes with Kind | [`examples/kind`](https://github.com/UFFeScience/akoflow/tree/main/examples/kind) | Local real execution, namespace access, and requests |
-| Local direct | [`examples/local/direct-hello`](https://github.com/UFFeScience/akoflow/tree/main/examples/local/direct-hello) | A trusted host-local command and observed filesystem artifact |
-| SLURM batch fixture | [`examples/slurm/local-fixture`](https://github.com/UFFeScience/akoflow/tree/main/examples/slurm/local-fixture) | Reproducible local validation of the SLURM adapter's batch submission and artifact path |
-| Remote connections | [`examples/connections`](https://github.com/UFFeScience/akoflow/tree/main/examples/connections) | SSH-based PlaFRIM, Santos Dumont, and Kind connections |
+| Edge–cloud simulation | [`examples/simulation`](https://github.com/UFFeScience/akoflow/tree/v1.0.8/examples/simulation) | Complete environment, topology, workflow, plan, and execution request |
+| 30 GB fan-out | [`examples/simulation/30gb-fanout`](https://github.com/UFFeScience/akoflow/tree/v1.0.8/examples/simulation/30gb-fanout) | Shared links, parallel transfers, and fan-in |
+| 50-core fan-out | [`examples/simulation/50core-fanout`](https://github.com/UFFeScience/akoflow/tree/v1.0.8/examples/simulation/50core-fanout) | Per-core placement and parallel capacity |
+| Kubernetes with Kind | [`examples/kind`](https://github.com/UFFeScience/akoflow/tree/v1.0.8/examples/kind) | Local real execution, namespace access, and requests |
+| Local direct | [`examples/local/direct-hello`](https://github.com/UFFeScience/akoflow/tree/v1.0.8/examples/local/direct-hello) | A trusted host-local command and observed filesystem artifact |
+| SLURM batch fixture | [`examples/slurm/local-fixture`](https://github.com/UFFeScience/akoflow/tree/v1.0.8/examples/slurm/local-fixture) | Reproducible local validation of the SLURM adapter's batch submission and artifact path |
+| Remote connections | [`examples/connections`](https://github.com/UFFeScience/akoflow/tree/v1.0.8/examples/connections) | SSH-based PlaFRIM, Santos Dumont, and Kind connections |
 
 ## Infrastructure configuration references
 
@@ -82,4 +82,4 @@ These files model infrastructure inputs, but are not end-to-end showcases. In pa
 
 | Infrastructure | Files | Scope and next step |
 | --- | --- | --- |
-| SLURM cluster | [`examples/slurm`](https://github.com/UFFeScience/akoflow/tree/main/examples/slurm) | A catalog for a partition, login node, shared storage, and runtime bindings. Pair it with an approved SLURM cluster and follow [Connect an HPC and SLURM cluster](../guides/infrastructure/hpc-slurm) before submitting a site-approved probe. The separate [SLURM batch fixture](./slurm-local-fixture) validates only the local adapter path. |
+| SLURM cluster | [`examples/slurm`](https://github.com/UFFeScience/akoflow/tree/v1.0.8/examples/slurm) | A catalog for a partition, login node, shared storage, and runtime bindings. Pair it with an approved SLURM cluster and follow [Connect an HPC and SLURM cluster](../guides/infrastructure/hpc-slurm) before submitting a site-approved probe. The separate [SLURM batch fixture](./slurm-local-fixture) validates only the local adapter path. |

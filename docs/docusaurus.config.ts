@@ -118,7 +118,7 @@ const config: Config = {
           title: "Docs",
           items: [
             { label: "Getting Started", to: "/docs/getting-started" },
-            { label: "Modules", to: "/docs/modules" },
+            { label: "Architecture internals", to: "/docs/modules" },
             { label: "Installation", to: "/docs/installation" },
             { label: "Downloads", to: "/docs/downloads" },
             { label: "Interface Tour", to: "/docs/guides/interface-tour" },

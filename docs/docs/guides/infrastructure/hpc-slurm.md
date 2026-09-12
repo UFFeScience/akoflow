@@ -50,9 +50,9 @@ In Desktop, add the connection under **Infrastructure → Environments**, assign
 
 ```bash
 curl --fail-with-body \
-  -H "Authorization: Bearer $AKOFLOW_TOKEN" \
+  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -H 'Content-Type: application/json' \
-  -X PUT "$AKOFLOW_URL/environment-connections/research-hpc-ssh/" \
+  -X PUT "$AKOFLOW_API_URL/environment-connections/research-hpc-ssh/" \
   --data @research-hpc-connection.json
 ```
 
@@ -60,7 +60,7 @@ The exact `PUT` body must contain `id`, `environmentId`, `type`, endpoint, usern
 
 ## 2. Define the SLURM runtime and the infrastructure boundary
 
-The versioned [`examples/slurm/environment.yaml`](https://github.com/UFFeScience/akoflow/blob/main/examples/slurm/environment.yaml) provides the catalog portion: runtime, cluster, partition, representative compute node, storage resources, and runtime bindings. Add a real connection like the preceding one before submitting it.
+The versioned [`examples/slurm/environment.yaml`](https://github.com/UFFeScience/akoflow/blob/v1.0.8/examples/slurm/environment.yaml) provides the catalog portion: runtime, cluster, partition, representative compute node, storage resources, and runtime bindings. Add a real connection like the preceding one before submitting it.
 
 ```yaml title="examples/slurm/environment.yaml"
 runtimes:

@@ -1,12 +1,12 @@
 ---
 
-title: Troubleshooting
+title: Troubleshoot AkôFlow
 description: Diagnose daemon access, authentication, connection, discovery, planning, execution, storage, and snapshot problems.
 ---
 
 import useBaseUrl from '@docusaurus/useBaseUrl';
 
-# Troubleshooting
+# Troubleshoot AkôFlow
 
 Start at the first failing boundary. Desktop is a client of the Engine API; the Engine then talks to Docker/BuildKit, runtimes, remote connections, storage and cloud providers.
 
@@ -15,8 +15,8 @@ Start at the first failing boundary. Desktop is a client of the Engine API; the 
 Set the endpoint and token before using the checks below:
 
 ```bash
-export AKOFLOW_URL='http://127.0.0.1:<daemon-port>'
-export AKOFLOW_TOKEN='<daemon-token>'
+export AKOFLOW_API_URL='http://127.0.0.1:<daemon-port>/akoflow-api'
+export AKOFLOW_API_TOKEN='<daemon-token>'
 ```
 
 ## 1. Check the Engine and prerequisites
@@ -24,15 +24,15 @@ export AKOFLOW_TOKEN='<daemon-token>'
 The root endpoint is the basic health check:
 
 ```bash
-curl --fail-with-body "$AKOFLOW_URL/"
+curl --fail-with-body "${AKOFLOW_API_URL%/akoflow-api}/"
 ```
 
 Then run the authenticated preflight:
 
 ```bash
 curl --fail-with-body \
-  -H "Authorization: Bearer $AKOFLOW_TOKEN" \
-  "$AKOFLOW_URL/akoflow-api/preflight/"
+  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  "$AKOFLOW_API_URL/preflight/"
 ```
 
 The first-run Desktop screen performs this check before environment onboarding. It reports the AkôFlow daemon, host Docker daemon, and BuildKit readiness exposed by the current runtime.
@@ -41,13 +41,11 @@ If Desktop shows **Instance identity unavailable**, the Engine did not provide `
 
 ## 2. Fix authentication
 
-`401 Unauthorized` or `403 Forbidden` means the API token is missing or rejected.
+For direct API calls, `401 Unauthorized` usually means a missing or invalid bearer token. Set `AKOFLOW_API_TOKEN` to the token configured for the daemon and retry with `Authorization: Bearer <token>`.
 
-1. Open **Settings → General → API access token**.
-2. Paste the token configured for this Engine and select **Save token**.
-3. Retry the protected request.
+The packaged Desktop manages its own local API connection; you do not need to paste its token into the application. In a separate web development client, **Settings → General → API access token** can supply a token for that client. A `403 Forbidden` response can also mean the request is outside a loopback-only access boundary; check the daemon listen address and caller location before changing credentials.
 
-For API calls, send `Authorization: Bearer <token>`. Avoid putting the token in URLs, screenshots, workflow files or shell history committed to source control.
+Avoid putting tokens in URLs, screenshots, workflow files, or committed shell history.
 
 ## 3. Recognize read-only mode
 
@@ -55,8 +53,8 @@ If a write returns `423 Locked` with `the selected instance is a read-only snaps
 
 ```bash
 curl --fail-with-body \
-  -H "Authorization: Bearer $AKOFLOW_TOKEN" \
-  -X POST "$AKOFLOW_URL/akoflow-api/instance-activations/default/"
+  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  -X POST "$AKOFLOW_API_URL/instance-activations/default/"
 ```
 
 The daemon may restart. Desktop waits up to 90 seconds; a temporary connection failure is expected during that restart.
@@ -78,8 +76,8 @@ Typical SSH causes are an unauthorized public key, wrong user/port, missing gate
 For historical evidence:
 
 ```bash
-curl -H "Authorization: Bearer $AKOFLOW_TOKEN" \
-  "$AKOFLOW_URL/akoflow-api/environment-connections/$CONNECTION_ID/history/?limit=20"
+curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  "$AKOFLOW_API_URL/environment-connections/$CONNECTION_ID/history/?limit=20"
 ```
 
 ## 5. Diagnose search and missing data
@@ -142,18 +140,18 @@ Useful endpoints:
 
 ```bash
 # Durable operational events
-curl --get -H "Authorization: Bearer $AKOFLOW_TOKEN" \
+curl --get -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   --data-urlencode 'outcome=failed' \
   --data-urlencode 'limit=100' \
-  "$AKOFLOW_URL/akoflow-api/audit-events/"
+  "$AKOFLOW_API_URL/audit-events/"
 
 # Available instance modes
-curl -H "Authorization: Bearer $AKOFLOW_TOKEN" \
-  "$AKOFLOW_URL/akoflow-api/instances/"
+curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  "$AKOFLOW_API_URL/instances/"
 
 # Current Engine identity
-curl -H "Authorization: Bearer $AKOFLOW_TOKEN" \
-  "$AKOFLOW_URL/akoflow-api/instance/"
+curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  "$AKOFLOW_API_URL/instance/"
 ```
 
 Factory reset is a last resort, not a diagnostic step. Export a sanitized snapshot first and use reset only when loss of local control-plane state is intentional.

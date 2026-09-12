@@ -1,13 +1,15 @@
 ---
-title: Artifacts, storage, and builds
+title: Manage artifacts, storage, and builds
 description: Browse data, register executable artifacts, and follow materialization and build runs in Desktop or through the API.
 ---
 
-# Artifacts, storage, and builds
+# Manage artifacts, storage, and builds
 
 AkôFlow separates **scientific data** from **executable artifacts**. Files produced by a workflow can be promoted to the scientific record. Executable artifacts are immutable, versioned definitions whose bytes may have verified locations or be materialized on a target resource.
 
 The Desktop is the easiest way to perform these operations. Every view described below uses the same HTTP API, so the API examples are suitable for scripts and integrations.
+
+For the API commands on this page, complete [API connection setup](../../tutorials/api-access) first.
 
 ## Browse storage
 
@@ -18,13 +20,13 @@ The actions offered for an entry depend on the storage capabilities reported by 
 List the storage resources for an environment and browse a directory:
 
 ```bash
-curl -H "Authorization: Bearer $AKOFLOW_TOKEN" \
-  "$AKOFLOW_URL/akoflow-api/environments/$ENVIRONMENT_ID/storages/"
+curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  "$AKOFLOW_API_URL/environments/$ENVIRONMENT_ID/storages/"
 
-curl -G -H "Authorization: Bearer $AKOFLOW_TOKEN" \
+curl -G -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   --data-urlencode "path=/shared/project" \
   --data-urlencode "limit=100" \
-  "$AKOFLOW_URL/akoflow-api/storages/$STORAGE_ID/entries/"
+  "$AKOFLOW_API_URL/storages/$STORAGE_ID/entries/"
 ```
 
 Use the returned `nextCursor` as `cursor` to continue when the response is paginated. Paths are interpreted within a root allowed by the storage adapter; do not assume host filesystem semantics.
@@ -32,15 +34,15 @@ Use the returned `nextCursor` as `cursor` to continue when the response is pagin
 Calculate a digest or queue a copy:
 
 ```bash
-curl -X POST -H "Authorization: Bearer $AKOFLOW_TOKEN" \
+curl -X POST -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"path":"/shared/project/result.csv"}' \
-  "$AKOFLOW_URL/akoflow-api/storages/$STORAGE_ID/checksum/"
+  "$AKOFLOW_API_URL/storages/$STORAGE_ID/checksum/"
 
-curl -X POST -H "Authorization: Bearer $AKOFLOW_TOKEN" \
+curl -X POST -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"path":"/shared/project/result.csv","destinationStorageId":"storage-archive"}' \
-  "$AKOFLOW_URL/akoflow-api/storages/$STORAGE_ID/copies/"
+  "$AKOFLOW_API_URL/storages/$STORAGE_ID/copies/"
 ```
 
 Copy and archive operations return `202 Accepted`. Download creation returns a run that can be polled at `/storage-downloads/{downloadId}/`; fetch completed content from `/storage-downloads/{downloadId}/content/`.
@@ -52,7 +54,7 @@ Use the entry menu in **Storage** to promote an existing file. **Promote data** 
 The minimal API calls are:
 
 ```bash
-curl -X POST -H "Authorization: Bearer $AKOFLOW_TOKEN" \
+curl -X POST -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
     "path":"/shared/project/result.csv",
@@ -60,9 +62,9 @@ curl -X POST -H "Authorization: Bearer $AKOFLOW_TOKEN" \
     "runId":"run-1",
     "activityId":"analyse"
   }' \
-  "$AKOFLOW_URL/akoflow-api/storages/$STORAGE_ID/promote-data/"
+  "$AKOFLOW_API_URL/storages/$STORAGE_ID/promote-data/"
 
-curl -X POST -H "Authorization: Bearer $AKOFLOW_TOKEN" \
+curl -X POST -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
     "path":"/shared/bin/model.sif",
@@ -71,7 +73,7 @@ curl -X POST -H "Authorization: Bearer $AKOFLOW_TOKEN" \
     "scope":"project",
     "scopeId":"project-1"
   }' \
-  "$AKOFLOW_URL/akoflow-api/storages/$STORAGE_ID/promote-artifact/"
+  "$AKOFLOW_API_URL/storages/$STORAGE_ID/promote-artifact/"
 ```
 
 If `id` is omitted, the server generates one. Supply meaningful provenance identifiers when promoting scientific data; an anonymous promotion is valid at the transport layer but loses useful context.
@@ -84,7 +86,7 @@ The equivalent two-call API flow is:
 
 ```bash
 REGISTERED=$(curl -sS -X POST \
-  -H "Authorization: Bearer $AKOFLOW_TOKEN" \
+  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
     "artifactId":"busybox",
@@ -92,11 +94,11 @@ REGISTERED=$(curl -sS -X POST \
     "image":"docker.io/library/busybox:1.36",
     "architecture":"amd64"
   }' \
-  "$AKOFLOW_URL/akoflow-api/artifacts/docker/")
+  "$AKOFLOW_API_URL/artifacts/docker/")
 
 # Read .build.id from REGISTERED, then start it:
-curl -X POST -H "Authorization: Bearer $AKOFLOW_TOKEN" \
-  "$AKOFLOW_URL/akoflow-api/artifact-builds/$BUILD_ID/runs/"
+curl -X POST -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  "$AKOFLOW_API_URL/artifact-builds/$BUILD_ID/runs/"
 ```
 
 The Docker registry pull and SIF conversion run in the build service, not in the browser. Poll `/build-runs/{runId}/`. When complete, `/build-runs/{runId}/output/` streams the SIF file.
@@ -104,9 +106,9 @@ The Docker registry pull and SIF conversion run in the build service, not in the
 For custom recipes, first upload a build context as multipart form data:
 
 ```bash
-curl -X POST -H "Authorization: Bearer $AKOFLOW_TOKEN" \
+curl -X POST -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -F "context=@context.tar.gz" \
-  "$AKOFLOW_URL/akoflow-api/build-contexts/"
+  "$AKOFLOW_API_URL/build-contexts/"
 ```
 
 Then create an immutable build specification at `/artifact-builds/`. It requires `id`, `artifactVersionId`, `contextDigest`, `recipeDigest`, and `cacheKey`; target and recipe fields describe the desired output. A repeated cache key returns the existing build rather than creating a duplicate. The JSON form of `/build-contexts/` only records metadata for bytes already present in the artifact store and requires `digest`, `storageUri`, and a positive `sizeBytes`.
@@ -118,12 +120,12 @@ Use **Artifacts** to see executable versions, **Artifact locations** to see veri
 A materialization identifies a variant and digest, target resource and destination path, plus its lifecycle status: `planned`, `reconciling`, `transferring`, `verifying`, `committed`, or `failed`. A materialization is considered committed only when `verifiedDigest` equals the requested `digest`.
 
 ```bash
-curl -H "Authorization: Bearer $AKOFLOW_TOKEN" \
-  "$AKOFLOW_URL/akoflow-api/artifact-locations/"
+curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  "$AKOFLOW_API_URL/artifact-locations/"
 
-curl -G -H "Authorization: Bearer $AKOFLOW_TOKEN" \
+curl -G -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   --data-urlencode "runId=$RUN_ID" \
-  "$AKOFLOW_URL/akoflow-api/artifact-materializations/"
+  "$AKOFLOW_API_URL/artifact-materializations/"
 ```
 
 Execution detail also shows prepared artifacts and transfer activity. Use it to relate catalog identity to the bytes actually made available for an activity.

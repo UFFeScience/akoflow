@@ -14,7 +14,7 @@ This reference describes the `EnvironmentDefinition` document accepted by `POST 
 - Declare performance values deliberately. Omitting a numeric value decodes it as `0` (except `computeSpeedup`, which the database defaults to `1`); that is rarely a useful planning model.
 - Keep credentials out of the file. `credentialRef` and `credentialReference` name a credential already stored in AkôFlow; they are not the secret itself.
 
-The smallest useful simulation definition is versioned in [`examples/simulation/environment.yaml`](https://github.com/UFFeScience/akoflow/blob/main/examples/simulation/environment.yaml). It is a better starting point than an empty document because it includes a runtime, schedulable resources, and their bindings.
+The smallest useful simulation definition is versioned in [`examples/simulation/environment.yaml`](https://github.com/UFFeScience/akoflow/blob/v1.0.8/examples/simulation/environment.yaml). It is a better starting point than an empty document because it includes a runtime, schedulable resources, and their bindings.
 
 ## Document shape
 

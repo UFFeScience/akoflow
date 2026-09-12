@@ -1,8 +1,8 @@
 ---
-title: Workflow definitions
+title: Define a workflow
 ---
 
-# Workflow definitions
+# Define a workflow
 
 A workflow definition is the reusable description of a scientific computation. AkôFlow stores a stable definition and an immutable, versioned graph of activities. Plans and runs refer to the workflow **version ID**, so a past execution remains traceable to the graph that produced it.
 

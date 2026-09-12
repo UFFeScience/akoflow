@@ -1,11 +1,11 @@
 ---
-title: Search and notifications
+title: Find records and follow notifications
 description: Find control-plane entities and follow long-running operations in AkôFlow Desktop.
 ---
 
-# Search and notifications
+# Find records and follow notifications
 
-Global search is backed by the Engine catalogs. Notifications are a Desktop convenience built by tracking operations and polling their existing APIs; there is no notification collection endpoint.
+Use search to open a workflow, run, environment, or other record by name or ID. Notifications point to operations that need attention. For a full history, open the record or its audit events.
 
 ## Search from Desktop
 
@@ -34,15 +34,15 @@ The Engine ranks an exact field match above a prefix match, which ranks above a 
 ## Search through the API
 
 ```bash
-export AKOFLOW_URL='http://127.0.0.1:<daemon-port>/akoflow-api'
-export AKOFLOW_TOKEN='<daemon-token>'
+export AKOFLOW_API_URL='http://127.0.0.1:<daemon-port>/akoflow-api'
+export AKOFLOW_API_TOKEN='<daemon-token>'
 
 curl --get --fail-with-body \
-  -H "Authorization: Bearer $AKOFLOW_TOKEN" \
+  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   --data-urlencode 'q=science' \
   --data-urlencode 'types=workflow,execution,artifact' \
   --data-urlencode 'limit=20' \
-  "$AKOFLOW_URL/search/"
+  "$AKOFLOW_API_URL/search/"
 ```
 
 The response shape is:
@@ -93,20 +93,20 @@ There is no `/notifications/` endpoint. Automation should query the resource tha
 
 ```bash
 # Planning session
-curl -H "Authorization: Bearer $AKOFLOW_TOKEN" \
-  "$AKOFLOW_URL/planning-sessions/$PLANNING_SESSION_ID/"
+curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  "$AKOFLOW_API_URL/planning-sessions/$PLANNING_SESSION_ID/"
 
 # Execution run
-curl -H "Authorization: Bearer $AKOFLOW_TOKEN" \
-  "$AKOFLOW_URL/execution-runs/$RUN_ID/"
+curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  "$AKOFLOW_API_URL/execution-runs/$RUN_ID/"
 
 # Active interactive sessions
-curl -H "Authorization: Bearer $AKOFLOW_TOKEN" \
-  "$AKOFLOW_URL/console-sessions/"
+curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  "$AKOFLOW_API_URL/console-sessions/"
 
 # Provisioned cloud instances for one environment
-curl -H "Authorization: Bearer $AKOFLOW_TOKEN" \
-  "$AKOFLOW_URL/environments/$ENVIRONMENT_ID/cloud-instances/"
+curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  "$AKOFLOW_API_URL/environments/$ENVIRONMENT_ID/cloud-instances/"
 ```
 
 For a durable cross-domain timeline, query `/audit-events/` with the appropriate execution, session, connection, resource or environment filter.

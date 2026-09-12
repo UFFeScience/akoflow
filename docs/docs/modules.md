@@ -1,8 +1,8 @@
 ---
 
 id: modules
-title: AkôFlow components and boundaries
-sidebar_label: Components and boundaries
+title: Architecture internals
+sidebar_label: Architecture internals
 ---
 
 import useBaseUrl from '@docusaurus/useBaseUrl';

@@ -1,8 +1,10 @@
 ---
-title: Execution scopes and network topologies
+title: Define execution scopes and network links
 ---
 
 An execution scope is a reusable set of environment versions available to planning. A network topology describes transfer links between resources. The scope stores a `networkTopologyId`; the topology stores its `executionScopeId`. Use stable IDs and create the scope before the topology when building them through the current API.
+
+For the API commands on this page, complete [API connection setup](../../tutorials/api-access) first.
 
 ## Create a scope
 
@@ -25,9 +27,9 @@ A scope is not a copy of its environments and does not create connections or res
 
 ```bash
 curl --fail-with-body \
-  -H "Authorization: Bearer $AKOFLOW_TOKEN" \
+  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -H 'Content-Type: application/json' \
-  -X POST "$AKOFLOW_URL/execution-scopes/" \
+  -X POST "$AKOFLOW_API_URL/execution-scopes/" \
   -d '{
     "id":"hybrid-research",
     "name":"Hybrid research",
@@ -39,8 +41,8 @@ curl --fail-with-body \
 List or inspect scopes with:
 
 ```bash
-curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_TOKEN" "$AKOFLOW_URL/execution-scopes/"
-curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_TOKEN" "$AKOFLOW_URL/execution-scopes/hybrid-research/"
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" "$AKOFLOW_API_URL/execution-scopes/"
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" "$AKOFLOW_API_URL/execution-scopes/hybrid-research/"
 ```
 
 ## Add a network topology
@@ -55,9 +57,9 @@ Topology values affect transfer estimates. They do not test the physical network
 
 ```bash
 curl --fail-with-body \
-  -H "Authorization: Bearer $AKOFLOW_TOKEN" \
+  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -H 'Content-Type: application/json' \
-  -X POST "$AKOFLOW_URL/network-topologies/" \
+  -X POST "$AKOFLOW_API_URL/network-topologies/" \
   -d '{
     "id":"hybrid-network-v1",
     "name":"HPC to cloud",
@@ -79,8 +81,8 @@ curl --fail-with-body \
 Retrieve the stored model before using it for planning:
 
 ```bash
-curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_TOKEN" \
-  "$AKOFLOW_URL/network-topologies/hybrid-network-v1/"
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  "$AKOFLOW_API_URL/network-topologies/hybrid-network-v1/"
 ```
 
 Use resource IDs that belong to environment versions in the scope. The API validates persistence constraints but does not measure whether the bandwidth and latency values match the real infrastructure.

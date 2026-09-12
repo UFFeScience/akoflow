@@ -19,15 +19,15 @@ The checked-in access manifest intentionally grants broad permissions for a disp
 ## Download the inputs
 
 <FileList>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/kind/cluster.yaml">Kind cluster ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/kind/akoflow-access.yaml">AkôFlow access ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/kind/storage.yaml">Persistent storage YAML ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/kind/environment.yaml">Environment YAML ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/kind/scope.yaml">Execution scope YAML ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/kind/topology.yaml">Network topology YAML ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/kind/dag.yaml">Workflow YAML ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/kind/requests/plan-request.yaml">Plan envelope ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/kind/requests/execution-request.yaml">Execution envelope ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/kind/cluster.yaml">Kind cluster ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/kind/akoflow-access.yaml">AkôFlow access ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/kind/storage.yaml">Persistent storage YAML ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/kind/environment.yaml">Environment YAML ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/kind/scope.yaml">Execution scope YAML ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/kind/topology.yaml">Network topology YAML ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/kind/dag.yaml">Workflow YAML ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/kind/requests/plan-request.yaml">Plan envelope ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/kind/requests/execution-request.yaml">Execution envelope ↓</a>
 </FileList>
 
 <InterfaceApiTabs
@@ -44,7 +44,7 @@ The checked-in access manifest intentionally grants broad permissions for a disp
   </div>}
   api={<div>
     <h2>Run through the API</h2>
-    <p>After creating the cluster and token as described in <a href="https://github.com/UFFeScience/akoflow/tree/main/examples/kind">the complete Kind README</a>, submit the same objects:</p>
+    <p>After creating the cluster and token as described in <a href="https://github.com/UFFeScience/akoflow/tree/v1.0.8/examples/kind">the complete Kind README</a>, submit the same objects:</p>
     <pre><code>{`export AKOFLOW_API_URL="http://127.0.0.1:8080/akoflow-api"
 export AKOFLOW_API_TOKEN="<token>"
 
@@ -71,4 +71,4 @@ A successful run produces two Kubernetes Jobs, a workspace PVC for each activity
 
 The checked-in bundle was executed from a clean Kind cluster on 2026-09-11 as `kind-dag-run-v8`: both activities completed, 9 bytes were transferred, and both files had checksum `sha256:cb064c1339ffa3d7777bcb0459de3dceddb9146156dde58065a4ac826b029aa7`. Its observed makespan was 17.776 s. Kubernetes scheduling and Pod startup are included in that wall-clock result.
 
-If the consumer Job remains `Pending`, use `kubectl describe pod <pod-name>` to inspect PVC/node affinity. The full setup, verification, and cleanup procedure is in the [Kind README](https://github.com/UFFeScience/akoflow/tree/main/examples/kind).
+If the consumer Job remains `Pending`, use `kubectl describe pod <pod-name>` to inspect PVC/node affinity. The full setup, verification, and cleanup procedure is in the [Kind README](https://github.com/UFFeScience/akoflow/tree/v1.0.8/examples/kind).

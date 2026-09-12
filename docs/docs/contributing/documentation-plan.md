@@ -7,10 +7,24 @@ description: Source-of-truth, media, and review rules for AkôFlow documentation
 
 This plan keeps the documentation aligned with the shipping daemon and Desktop application. It is also the contract for parallel documentation work.
 
+## Editorial contract
+
+The documentation should show how AkôFlow simplifies scientific workflow execution, not display the complexity of its implementation.
+
+1. Explain the task and expected result before implementation details. Give each page one main job.
+2. Use workflow, environment, plan, run, artifacts, and provenance in user paths. Put supervisors, handlers, adapters, and persistence in developer architecture pages unless a task requires them.
+3. Make support claims only when code and appropriate evidence support them. Label partial features and distinguish code review, local fixtures, and real-environment validation.
+4. Prefer a concrete example over a list of capabilities. Remove repeated caveats and text that does not help a reader act or decide.
+5. Check whether each page quickly answers what it is for, when to use it, how to use it, and what to expect.
+
+For each editorial pass, classify passages as **KEEP**, **SIMPLIFY**, **MOVE**, **DELETE**, or **VERIFY**. Resolve P0 (false claims and broken instructions), then P1 (confusing paths and misplaced concepts), then P2 (length and repetition), then P3 (presentation). Repeat audit → edit → build → link check → claim check → first-time-reader review until a full pass finds no P0 or P1 issues. A successful build alone is not the finish line.
+
+The completion gate is a new user running a first workflow without undocumented knowledge, support claims matching implementation and validation, implementation details outside the basic path, and no P0/P1 findings in the final audit.
+
 ## Documentation principles
 
 1. Teach complete user tasks instead of listing screens in isolation.
-2. Present **AkôFlow Desktop** and **API** as equivalent paths whenever both exist.
+2. Present **AkôFlow Desktop** and **API** paths only where each procedure is documented and verified; state extra prerequisites instead of calling them equivalent by default.
 3. Derive behavior from code, tests, and checked-in examples; never infer an endpoint or field from a label alone.
 4. Use screenshots to explain spatial relationships and short videos to explain motion or multi-step transitions.
 5. Keep a text equivalent for every visual procedure.
@@ -20,12 +34,12 @@ This plan keeps the documentation aligned with the shipping daemon and Desktop a
 
 | Subject | Primary source |
 |---|---|
-| Desktop navigation | `akoflow-admin/src/App.jsx` and `src/components/AppShell.jsx` |
-| Desktop operations | Page, form, and provider components in `akoflow-admin/src` |
-| HTTP methods and paths | `akoflow/internal/api/httpserver/httpserver.go` |
+| Desktop navigation | `akoflow-desktop/src/App.jsx` and `akoflow-desktop/src/components/AppShell.jsx` in the Desktop repository |
+| Desktop operations | Page, form, and provider components in `akoflow-desktop/src` |
+| HTTP methods and paths | `internal/api/httpserver/httpserver.go` in this repository |
 | Request and response contracts | HTTP handlers, application services, and `internal/domain` |
-| Runnable scenarios | `akoflow/examples` and integration tests |
-| Packaged installation | Root README, `releases/`, Electron bootstrap, and release workflows |
+| Runnable scenarios | `examples/` and integration tests in this repository |
+| Packaged installation | Root README, `releases/`, the Desktop repository's `electron/` bootstrap, and release workflows |
 
 Generated site output and old copied Markdown files are not sources of truth.
 
@@ -115,7 +129,7 @@ Use the black, white, and neutral-gray visual system established by [`akoflow-co
 
 ## Definition of done for a guide
 
-- The task has prerequisites, Desktop steps, API steps, expected result, and next steps.
+- The task has prerequisites, a verified procedure for its stated interface, an expected result, and next steps. Add a second interface only when its path has been checked.
 - Screenshot placeholders or final captures cover only moments where the visual adds information.
 - API examples include authentication and use the current `/akoflow-api` prefix.
 - Identifiers in examples are visibly placeholders or come from a documented demo dataset.
@@ -126,7 +140,7 @@ Use the black, white, and neutral-gray visual system established by [`akoflow-co
 
 Run `npm run generate:api` to rebuild the endpoint catalog from `internal/api/httpserver/httpserver.go`. The Docusaurus `prestart` and `prebuild` hooks run this automatically. Generated pages are intentionally ignored by Git; changes to method, path, or handler appear on the next documentation build without copying the router by hand.
 
-Each generated endpoint page includes its HTTP method, registered path, path parameters, authentication example, request-body indication, owning handler, and a copyable cURL command. Domain guides remain responsible for semantic explanations and complete payload examples.
+Each generated endpoint page includes its HTTP method, registered path, path parameters, authentication example, request-body indication, owning handler, and a cURL command. Inferred JSON shapes are illustrative, not guaranteed valid payloads. Priority endpoints need authored, handler-checked contracts before their commands can be treated as runnable examples.
 
 ## Reproducible media capture
 

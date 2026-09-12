@@ -4,6 +4,8 @@ title: Browse and manage storage
 
 AkôFlow exposes storage through environment discovery or configured storage connectors. Browsing is constrained to approved roots and operations are capability-driven: a read-only or unavailable storage does not expose the same actions as a healthy writable storage.
 
+For the API commands on this page, complete [API connection setup](../../tutorials/api-access) first.
+
 ## Browse files
 
 ### Using AkôFlow Desktop
@@ -19,17 +21,17 @@ Entries are loaded lazily for the selected path; opening Storage does not scan t
 
 ```bash
 # Discover storage IDs for an environment
-curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_TOKEN" \
-  "$AKOFLOW_URL/environments/hpc/storages/"
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  "$AKOFLOW_API_URL/environments/hpc/storages/"
 
 # Inspect approved roots
-curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_TOKEN" \
-  "$AKOFLOW_URL/storages/hpc-scratch/roots/"
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  "$AKOFLOW_API_URL/storages/hpc-scratch/roots/"
 
 # Browse one path; preserve nextCursor when the response is paginated
-curl --fail-with-body -G -H "Authorization: Bearer $AKOFLOW_TOKEN" \
+curl --fail-with-body -G -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   --data-urlencode 'path=/scratch/project-a' --data-urlencode 'limit=100' \
-  "$AKOFLOW_URL/storages/hpc-scratch/entries/"
+  "$AKOFLOW_API_URL/storages/hpc-scratch/entries/"
 ```
 
 Do not construct paths outside the returned roots. The server validates the requested path against storage policy.
@@ -44,21 +46,21 @@ The actions column can download a file, archive and download a directory, copy a
 
 ```bash
 # Prepare a file download (POST /archives/ for a directory)
-curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_TOKEN" \
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -H 'Content-Type: application/json' -X POST \
-  "$AKOFLOW_URL/storages/hpc-scratch/downloads/" \
+  "$AKOFLOW_API_URL/storages/hpc-scratch/downloads/" \
   -d '{"path":"/scratch/project-a/result.csv","id":"download-result-1"}'
 
 # Copy to another registered storage
-curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_TOKEN" \
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -H 'Content-Type: application/json' -X POST \
-  "$AKOFLOW_URL/storages/hpc-scratch/copies/" \
+  "$AKOFLOW_API_URL/storages/hpc-scratch/copies/" \
   -d '{"path":"/scratch/project-a/result.csv","destinationStorageId":"archive-store","id":"copy-result-1"}'
 
 # Calculate a checksum
-curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_TOKEN" \
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -H 'Content-Type: application/json' -X POST \
-  "$AKOFLOW_URL/storages/hpc-scratch/checksum/" \
+  "$AKOFLOW_API_URL/storages/hpc-scratch/checksum/" \
   -d '{"path":"/scratch/project-a/result.csv"}'
 ```
 
@@ -73,14 +75,14 @@ Use **Register as DataObject** for a file that should enter the workflow data mo
 ### Using the API
 
 ```bash
-curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_TOKEN" \
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -H 'Content-Type: application/json' -X POST \
-  "$AKOFLOW_URL/storages/hpc-scratch/promote-data/" \
+  "$AKOFLOW_API_URL/storages/hpc-scratch/promote-data/" \
   -d '{"path":"/scratch/project-a/result.csv","id":"data-result-1","workflowVersionId":"analysis-v3","runId":"run-42","activityId":"aggregate"}'
 
-curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_TOKEN" \
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -H 'Content-Type: application/json' -X POST \
-  "$AKOFLOW_URL/storages/hpc-scratch/promote-artifact/" \
+  "$AKOFLOW_API_URL/storages/hpc-scratch/promote-artifact/" \
   -d '{"path":"/scratch/images/solver.sif","id":"solver-sif-1","name":"Solver","version":"1.2.0","scope":"environment","scopeId":"hpc"}'
 ```
 

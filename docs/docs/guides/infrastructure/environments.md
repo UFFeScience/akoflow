@@ -1,5 +1,5 @@
 ---
-title: Environments
+title: Create and inspect environments
 ---
 
 An environment describes where AkôFlow can plan or run work. A **real environment** has an execution runtime such as local, SSH, Kubernetes, SLURM, or cloud. A **simulation environment** uses the SimGrid runtime and models resources without connecting to physical infrastructure.
@@ -27,17 +27,17 @@ Simulation creation collects a SimGrid platform model and can also define an exe
 Set the daemon address and token once:
 
 ```bash
-export AKOFLOW_URL='http://127.0.0.1:<daemon-port>/akoflow-api'
-export AKOFLOW_TOKEN='<daemon-token>'
+export AKOFLOW_API_URL='http://127.0.0.1:<daemon-port>/akoflow-api'
+export AKOFLOW_API_TOKEN='<daemon-token>'
 ```
 
 The creation body is an `EnvironmentDefinition`, not only an environment name. This minimal local example includes one version, runtime, resource, and runtime binding:
 
 ```bash
 curl --fail-with-body \
-  -H "Authorization: Bearer $AKOFLOW_TOKEN" \
+  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -H 'Content-Type: application/json' \
-  -X POST "$AKOFLOW_URL/environments/" \
+  -X POST "$AKOFLOW_API_URL/environments/" \
   -d '{
     "environment":{"id":"local-lab","name":"Local lab","status":"defined"},
     "version":{"id":"local-lab-v1","environmentId":"local-lab","version":1,"status":"published"},
@@ -51,9 +51,9 @@ Before storing a remote connection, test the same connection object independentl
 
 ```bash
 curl --fail-with-body \
-  -H "Authorization: Bearer $AKOFLOW_TOKEN" \
+  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -H 'Content-Type: application/json' \
-  -X POST "$AKOFLOW_URL/connection-tests/" \
+  -X POST "$AKOFLOW_API_URL/connection-tests/" \
   -d '{"id":"hpc-ssh","name":"HPC login","type":"ssh","endpoint":"login.example.org:22","username":"researcher","credentialRef":"<ssh-key-reference>"}'
 ```
 
@@ -73,17 +73,17 @@ Health and discovery are different operations: health verifies access; discovery
 ### Using the API
 
 ```bash
-# Persisted connection health check
-curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_TOKEN" \
-  -X POST "$AKOFLOW_URL/environment-connections/hpc-ssh/health/"
+# Create and inspect environments
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  -X POST "$AKOFLOW_API_URL/environment-connections/hpc-ssh/health/"
 
 # Discovery through that connection
-curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_TOKEN" \
-  -X POST "$AKOFLOW_URL/environment-connections/hpc-ssh/discover/"
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  -X POST "$AKOFLOW_API_URL/environment-connections/hpc-ssh/discover/"
 
 # Recent health history
-curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_TOKEN" \
-  "$AKOFLOW_URL/environment-connections/hpc-ssh/history/?limit=20"
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  "$AKOFLOW_API_URL/environment-connections/hpc-ssh/history/?limit=20"
 ```
 
 Discovery returns a `snapshots` array. A successful request does not imply that every possible resource type was found; inspect the returned snapshots and the environment inventory.
@@ -97,8 +97,8 @@ The detail page is the hub for the environment map, version, runtimes, connectio
 ### Using the API
 
 ```bash
-curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_TOKEN" \
-  "$AKOFLOW_URL/environments/local-lab/"
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  "$AKOFLOW_API_URL/environments/local-lab/"
 ```
 
 The response is the full definition, including the current version and related runtimes, resources, connections, and discovered storage when present.

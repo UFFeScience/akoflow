@@ -44,7 +44,7 @@ const methodOrder = { GET: 1, POST: 2, PUT: 3, PATCH: 4, DELETE: 5 };
 
 const groupMetadata = {
   Instance: [
-    "/docs/installation",
+    "/docs/guides/operations/instance-management",
     "instance configuration, archives, preferences, and search",
   ],
   Environments: [
@@ -531,8 +531,10 @@ import ApiEndpoint from '@site/src/components/ApiEndpoint';
   pathParams={${JSON.stringify(params)}}
   queryParams={${JSON.stringify(endpoint.queryParameters)}}
   successStatuses={${JSON.stringify(endpoint.successStatuses)}}
-  requestExample={${JSON.stringify(endpoint.request ? JSON.stringify(endpoint.request.example, null, 2) : null)}}
+  requestExample={${JSON.stringify(endpoint.request?.example == null ? null : JSON.stringify(endpoint.request.example, null, 2))}}
   requestType=${JSON.stringify(endpoint.request?.type || "No request body")}
+  requestMediaType={${JSON.stringify(endpoint.request?.mediaType || (body ? "application/json" : null))}}
+  requestFileName={${JSON.stringify(endpoint.request?.fileName || null)}}
   responseExample={${JSON.stringify(endpoint.response.example === null ? null : typeof endpoint.response.example === "string" ? endpoint.response.example : JSON.stringify(endpoint.response.example, null, 2))}}
   responseType=${JSON.stringify(endpoint.response.type)}
   responseMediaType={${JSON.stringify(endpoint.response.mediaType)}}
@@ -544,7 +546,7 @@ import ApiEndpoint from '@site/src/components/ApiEndpoint';
 See the [${endpoint.group} guide](${groupMetadata[endpoint.group][0]}) for the corresponding Desktop workflow, concepts, and authored request examples.
 
 :::info Generated from the daemon router
-This page is generated from \`internal/api/httpserver/httpserver.go\`, the registered handler, and JSON-tagged Go structs. Method, path, request fields, response kind, query parameters, media type, and successful status codes stay synchronized with the implementation.
+This page is generated from the daemon router, handler, and JSON-tagged Go structs. Method and path come from registered routes. Fields and examples inferred from structs show shape only; they do not establish required fields, valid values, or a runnable request. Check the related guide and handler-specific validation before sending a request.
 :::
 `;
 }
@@ -578,7 +580,9 @@ for (const match of source.matchAll(routePattern)) {
   };
   endpoints.push({
     ...baseEndpoint,
-    request: extractRequestContract(handlerBody, structIndex),
+    request: handler === "ImportArchiveInstance"
+      ? { type: "ZIP instance archive (maximum 8 GiB)", example: null, mediaType: "application/zip", fileName: "instance.zip" }
+      : extractRequestContract(handlerBody, structIndex),
     response: extractResponseContract(
       baseEndpoint,
       handlerBody,

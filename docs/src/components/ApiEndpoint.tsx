@@ -14,6 +14,8 @@ type ApiEndpointProps = {
   responseType?: string;
   responseMediaType?: string | null;
   hasRequestBody?: boolean;
+  requestMediaType?: string | null;
+  requestFileName?: string | null;
 };
 
 function fieldsFromExample(example: string | null) {
@@ -40,14 +42,16 @@ function commandFor(
   method: string,
   endpointPath: string,
   hasRequestBody: boolean,
+  requestMediaType: string | null,
+  requestFileName: string | null,
 ) {
   const lines = [
     `curl --fail-with-body \\`,
     `  -H "Authorization: Bearer \${AKOFLOW_API_TOKEN}" \\`,
   ];
   if (hasRequestBody) {
-    lines.push(`  -H "Content-Type: application/json" \\`);
-    lines.push(`  --data-binary @request.json \\`);
+    lines.push(`  -H "Content-Type: ${requestMediaType || "application/json"}" \\`);
+    lines.push(`  --data-binary @${requestFileName || "request.json"} \\`);
   }
   if (method !== "GET") lines.push(`  -X ${method} \\`);
   lines.push(
@@ -70,11 +74,13 @@ export default function ApiEndpoint({
   responseType = "JSON object",
   responseMediaType = "application/json",
   hasRequestBody = false,
+  requestMediaType = null,
+  requestFileName = null,
 }: ApiEndpointProps) {
   const [copied, setCopied] = useState(false);
   const displayPath = path.replace("/akoflow-api", "") || "/";
   const description = handler.replace(/([a-z0-9])([A-Z])/g, "$1 $2");
-  const command = commandFor(method, path, hasRequestBody);
+  const command = commandFor(method, path, hasRequestBody, requestMediaType, requestFileName);
   const requestFields = fieldsFromExample(requestExample);
 
   async function copyCommand() {
@@ -122,14 +128,14 @@ export default function ApiEndpoint({
         <section className="akoflow-api-section">
           <div className="akoflow-api-section-heading">
             <h2>Body</h2>
-            <code>{hasRequestBody ? "application/json" : "none"}</code>
+            <code>{hasRequestBody ? requestMediaType || "application/json" : "none"}</code>
           </div>
           {requestFields.length > 0 ? (
             <dl className="akoflow-api-fields">
               {requestFields.map((field) => (
                 <div key={field.name}>
                   <dt><code>{field.name}</code> <span>{field.type}</span></dt>
-                  <dd>Field defined by <code>{requestType}</code>.</dd>
+                  <dd>Illustrative field from <code>{requestType}</code>; check required values in the related guide.</dd>
                 </div>
               ))}
             </dl>
@@ -138,6 +144,8 @@ export default function ApiEndpoint({
               {hasRequestBody ? <>Body contract: <code>{requestType}</code>.</> : "This endpoint does not accept a request body."}
             </p>
           )}
+          {requestExample && <><p>Illustrative JSON shape; replace sample values and check the related guide for required fields.</p><pre><code>{requestExample}</code></pre></>}
+          {handler === "SaveBuildContext" && <p>Alternatively, upload a file as multipart field <code>context</code>. See the Artifacts guide for the upload procedure.</p>}
         </section>
 
         {queryParams.length > 0 && (
@@ -161,6 +169,7 @@ export default function ApiEndpoint({
             </button>
           </div>
           <pre><code>{command}</code></pre>
+          {hasRequestBody && <p>Supply a valid <code>{requestFileName || "request.json"}</code> before running this command.</p>}
         </section>
 
         <section className="akoflow-api-example">

@@ -2,7 +2,7 @@
 
 This file is the editorial backlog for preparing the AkôFlow documentation for external open-source users. Update it after each documentation unit. A checked item must point to evidence in the repository or to a recorded verification command; absence of a known defect is not sufficient evidence.
 
-Last audited: 2026-09-11 after the verified SimGrid first-run exercise.
+Last audited: 2026-09-12. The current editorial pass found an unresolved Desktop first-workflow gap and generated-reference defects. Earlier checks below describe their historical scope, not a clean completion gate.
 
 ## Editorial contract
 
@@ -25,7 +25,7 @@ Showcases are extended tutorials. They may link to how-to and reference pages, b
 - [x] Existing Showcase download URLs use `raw.githubusercontent.com` and the 50-core bundle was checked against repository files on 2026-09-11.
 - [x] No screenshot markers remain. `rg '<!--\\s*screenshot:' docs/docs` returned no matches on 2026-09-11; relevant guides now use checked-in captures or executable verification steps.
 - [x] All internal links and every downloadable asset pass an automated link check. Evidence: `docs/scripts/check-links.mjs` and `.github/workflows/docs-checks.yaml`; the check passed with 264 local route/asset links and 36 Showcase downloads on 2026-09-11.
-- [x] Navigation is organized visibly by Tutorial, How-to, Reference, and Explanation. `docs/sidebars.ts` presents these as its four primary sections, verified in the running documentation site on 2026-09-11.
+- [x] Navigation separates Tutorials, How-to guides, Explanations, Reference, and Developing AkôFlow. Evidence: `docs/sidebars.ts`; rendered mobile navigation was verified after PR #41. The changed sidebar still needs a fresh visual review.
 - [x] Desktop is the only end-user installation and download path; self-managed server deployment is a separate operator guide. Evidence: `installation.md`, `downloads.md`, `guides/operations/server-instance.md`, and `static/examples/server-instance/compose.yaml`; Compose interpolation, documentation typecheck, production build, and link check passed on 2026-09-12.
 - [ ] Every supported runtime has an end-to-end, independently verified showcase.
 
@@ -47,7 +47,8 @@ Work on the first unchecked unit only. Do not combine units unless the changes a
 ### P0 — first successful run
 
 - [x] Rewrite `guides/workflows/first-run.md` as one complete SimGrid tutorial. Evidence: the corrected six-file bundle produced run `simulation-example-run-v1` with 3/3 completed activities, two transfers, 120,000,000 transferred bytes, and 21.593 s observed makespan on 2026-09-11; all seven screenshot markers were removed because commands and invariant output provide the clearer verification path.
-- [x] Review `getting-started.md` as a short orientation page. Evidence: the page now routes by user goal to installation, the verified first run, infrastructure-specific guides, concepts, troubleshooting, and API/reference material without repeating tutorial commands.
+- [x] Review `getting-started.md` as a short orientation page. It now states that the checked-in SimGrid tutorial requires a separately managed API endpoint and repository files.
+- [ ] Create and verify a Desktop-only first-workflow path from packaged installation to visible results. The current installation checkup registers an environment but does not run a workflow.
 - [ ] Verify installation on a clean supported host. The pending first-start screenshot was removed because text-based preflight checks are more useful and safe. The next tagged release must attach version-matched Desktop installers plus SHA-256-checked runtime archives for each supported architecture; verify that Desktop loads those release assets locally without a container-registry pull.
 
 Installation progress on 2026-09-12: the v1.0.8 Linux DEB was downloaded in full, its asset SHA-256 and package metadata checked, and its extracted application opened with a fresh profile. Desktop loaded the version-matched runtime archives and reached successful daemon/Docker/BuildKit preflight. Real screenshots and Desktop/API onboarding tutorials now live in `installation.md` and `tutorials/`. This does not close the clean-host, package-manager or macOS/Windows validation requirement. See `onboarding-verification-2026-09-12.md` for evidence and scope.
@@ -88,7 +89,7 @@ Installation progress on 2026-09-12: the v1.0.8 Linux DEB was downloaded in full
 - [x] Replace or remove screenshot markers in the 15 affected pages. All legacy screenshot markers were removed on 2026-09-11. Checked-in Desktop captures are embedded in the environment, workflow-definition, and planning guides; the planning capture was produced from the current Desktop on 2026-09-11 and reviewed in light and dark themes.
 - [x] Reorganize `sidebars.ts` by Diátaxis purpose while retaining product-area landing pages and existing URLs. Tutorials, How-to guides, Explanations, and Reference are now the primary sidebar sections; workflow and infrastructure groupings remain nested under the appropriate purpose. Verified in the running documentation site on 2026-09-11.
 - [x] Remove or redirect legacy overlapping pages (`examples.md`, `user-guide.md`, `internal/api.md`, and legacy CLI material) after checking inbound links. The source pages and their sidebar/footer entries were removed; `@docusaurus/plugin-client-redirects` preserves their public URLs by directing readers to the Showcase, Tutorials, or current API Reference. Repository links were audited on 2026-09-11 before removal.
-- [x] Perform a final plain-language edit for repeated introductions, unsupported claims, inconsistent terminology, and generated-sounding filler. The final audit on 2026-09-11 removed duplicate architecture navigation labels, replaced repeated page-introduction phrasing, and narrowed release/install statements to the behavior evidenced by the release workflow and installation checks.
+- [ ] Perform a final plain-language pass across every authored page after P0/P1 corrections. The 2026-09-11 pass predates the current onboarding and claim findings and cannot serve as final evidence.
 - [x] Replace active structural ASCII diagrams with accessible versioned SVGs. Evidence: `static/img/architecture/` now contains the lifecycle, control-plane, planning, network, scope, evidence, timing, interface-hierarchy, and troubleshooting diagrams; each has a `<title>` and `<desc>`, its page supplies alternative text, and the production documentation build passed on 2026-09-12.
 
 ## Completion gate
@@ -106,7 +107,8 @@ The documentation is ready for external users only when all of the following are
 
 ## Short remaining-gap list
 
-1. A complete SLURM showcase requires either a safe test cluster or a reproducible local SLURM fixture.
+1. A Desktop-only first-workflow path remains unverified; the current SimGrid tutorial requires API access and repository files.
 2. GCP and AWS/S3 procedures still require disposable provider accounts to verify minimum permissions, cleanup, and current interface behavior.
 3. Focused Desktop captures now cover planning, environment catalog, execution scope, workflow history, SimGrid run detail, provenance exploration, lineage, read-only SQL, and audit events. These captures were reviewed in light and dark themes; the automated link checker is in CI. Further captures should be added only where they clarify a verified procedure.
-4. Release installation is not externally verifiable until a new tagged release is produced and installed on a clean supported host using its Desktop and runtime archive assets.
+4. The v1.0.8 Linux package and first launch were exercised, but clean-host package-manager installation and macOS/Windows installation remain unverified. See `onboarding-verification-2026-09-12.md`.
+5. Generated endpoint pages now identify inferred JSON shapes and handle ZIP instance import, but priority request contracts still need explicit required fields, valid examples, and handler checks. Build and link validation do not prove that a copied request works.

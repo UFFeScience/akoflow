@@ -6,6 +6,8 @@ title: Execute and monitor a workflow
 
 An execution run applies one immutable schedule plan to the workflow and infrastructure snapshots supplied in its request. Real and simulated runs share the same run, activity, timing, transfer, and cost model, which makes planned-versus-observed comparison possible.
 
+For the API commands on this page, complete [API connection setup](../../tutorials/api-access) first.
+
 ## Modes and run types
 
 - **Real** runs dispatch activities through execution runtimes such as a Kubernetes or SLURM adapter configured by the environment.

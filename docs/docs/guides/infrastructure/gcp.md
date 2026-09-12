@@ -88,10 +88,10 @@ Use the API when automating onboarding. Store the secret through the credentials
 ```bash
 export AKOFLOW_API_URL="http://127.0.0.1:8080/akoflow-api"
 
-curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_TOKEN" \
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -X POST "$AKOFLOW_API_URL/environments/gcp-lab/cloud-catalog/refresh/"
 
-curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_TOKEN" \
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   "$AKOFLOW_API_URL/environments/gcp-lab/cloud-catalog/"
 ```
 

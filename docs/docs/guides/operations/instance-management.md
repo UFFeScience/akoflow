@@ -1,17 +1,17 @@
 ---
-title: Instance management
+title: Manage an instance
 description: Configure an AkôFlow instance, export and import sanitized snapshots, switch instances, and reset local state.
 ---
 
-# Instance management
+# Manage an instance
 
-An AkôFlow **instance** is one control-plane installation and its catalog. Its identity contains an ID, name, optional description, organization and location, plus the transfer relay buffer. The Engine creates an identity automatically from the machine hostname during startup; the Desktop cannot proceed when `GET /instance/` is unavailable.
+An AkôFlow **instance** contains your environments, workflows, plans, runs, and settings. Use this guide to inspect its identity, export a snapshot, open a read-only archive, or return to the writable instance. Export a snapshot before changing versions or resetting local state.
 
-Set these variables for the API examples:
+For direct API use, complete [API connection setup](../../tutorials/api-access). The examples below use these variables:
 
 ```bash
-export AKOFLOW_URL='http://127.0.0.1:<daemon-port>/akoflow-api'
-export AKOFLOW_TOKEN='<daemon-token>'
+export AKOFLOW_API_URL='http://127.0.0.1:<daemon-port>/akoflow-api'
+export AKOFLOW_API_TOKEN='<daemon-token>'
 ```
 
 ## Inspect the active identity
@@ -26,17 +26,17 @@ The relay is an in-memory buffer per active transfer. It streams source output t
 
 ```bash
 curl --fail-with-body \
-  -H "Authorization: Bearer $AKOFLOW_TOKEN" \
-  "$AKOFLOW_URL/instance/"
+  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  "$AKOFLOW_API_URL/instance/"
 ```
 
 To change the relay size, first preserve the identity returned by `GET`, then send the complete object:
 
 ```bash
 curl --fail-with-body \
-  -H "Authorization: Bearer $AKOFLOW_TOKEN" \
+  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -H 'Content-Type: application/json' \
-  -X PUT "$AKOFLOW_URL/instance/" \
+  -X PUT "$AKOFLOW_API_URL/instance/" \
   -d '{
     "id":"akoflow-lab",
     "name":"AkôFlow lab",
@@ -67,14 +67,14 @@ The client ID must contain 8–128 characters. The only accepted themes are `lig
 CLIENT_ID='docs-client-01'
 
 curl --fail-with-body \
-  -H "Authorization: Bearer $AKOFLOW_TOKEN" \
+  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -H 'Content-Type: application/json' \
-  -X PUT "$AKOFLOW_URL/user-preferences/$CLIENT_ID/" \
+  -X PUT "$AKOFLOW_API_URL/user-preferences/$CLIENT_ID/" \
   -d '{"theme":"dark","animationsEnabled":false}'
 
 curl --fail-with-body \
-  -H "Authorization: Bearer $AKOFLOW_TOKEN" \
-  "$AKOFLOW_URL/user-preferences/$CLIENT_ID/"
+  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  "$AKOFLOW_API_URL/user-preferences/$CLIENT_ID/"
 ```
 
 ## Export a sanitized instance
@@ -91,8 +91,8 @@ The Engine uses SQLite `VACUUM INTO` to create a consistent database snapshot. T
 
 ```bash
 curl --fail-with-body \
-  -H "Authorization: Bearer $AKOFLOW_TOKEN" \
-  "$AKOFLOW_URL/instances/default/export/?includeArtifacts=false" \
+  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  "$AKOFLOW_API_URL/instances/default/export/?includeArtifacts=false" \
   --output akoflow-instance.zip
 ```
 
@@ -115,19 +115,19 @@ The Desktop waits up to 90 seconds for the daemon after switching. When server-s
 
 ```bash
 curl --fail-with-body \
-  -H "Authorization: Bearer $AKOFLOW_TOKEN" \
+  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -H 'Content-Type: application/zip' \
   --data-binary @akoflow-instance.zip \
-  "$AKOFLOW_URL/instances/import/"
+  "$AKOFLOW_API_URL/instances/import/"
 
 curl --fail-with-body \
-  -H "Authorization: Bearer $AKOFLOW_TOKEN" \
-  "$AKOFLOW_URL/instances/"
+  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  "$AKOFLOW_API_URL/instances/"
 
 SNAPSHOT_ID='<id returned by import>'
 curl --fail-with-body \
-  -H "Authorization: Bearer $AKOFLOW_TOKEN" \
-  -X POST "$AKOFLOW_URL/instance-activations/$SNAPSHOT_ID/"
+  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  -X POST "$AKOFLOW_API_URL/instance-activations/$SNAPSHOT_ID/"
 ```
 
 Import accepts at most 8 GiB compressed data, at most 10,000 archive entries, and at most 64 GiB expanded data. Symbolic links and unsafe or unsupported archives are rejected with `422`. Activation returns `202 Accepted` with `instance` and a `restarting` boolean.
@@ -158,8 +158,8 @@ Factory reset permanently removes the active AkôFlow catalog, environments, wor
 
 ```bash
 curl --fail-with-body \
-  -H "Authorization: Bearer $AKOFLOW_TOKEN" \
-  -X POST "$AKOFLOW_URL/factory-reset/"
+  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  -X POST "$AKOFLOW_API_URL/factory-reset/"
 ```
 
 Success is `204 No Content`. The endpoint returns `503` when reset support is unavailable and `422` when the reset operation fails. It cannot run while a read-only snapshot is active because the read-only guard returns `423` first.

@@ -6,7 +6,7 @@ sidebar_label: Runtime adapters
 
 A runtime adapter translates an assigned activity into operations on an execution technology. Runtimes belong to an environment version and connect to resources through bindings. Workflows do not select a runtime through a legacy top-level YAML `runtime` field; a selected plan assigns resources and execution resolves their bindings.
 
-This explanation focuses on the adapter boundary. Read [system architecture](./concepts) for the surrounding records and [execution control plane](./engine) for how the supervisor uses adapters.
+This explanation focuses on runtime adapters. Read [Architecture internals](./modules) for the surrounding services and [Execution control plane](./engine) for how the server uses adapters.
 
 ## Runtime model
 

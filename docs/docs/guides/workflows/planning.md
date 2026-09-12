@@ -8,6 +8,8 @@ Planning is separate from execution. A planning session freezes a workflow versi
 
 Only a selected candidate becomes a canonical schedule plan that can be executed.
 
+For the API commands on this page, complete [API connection setup](../../tutorials/api-access) first.
+
 ## Sessions, algorithms, and candidates
 
 A session records its workflow version, execution scope, network topology, selected algorithms, optional deadline and budget, progress, and final selection. Its status is `queued`, `running`, `completed`, `failed`, or `cancelled`.

@@ -1,13 +1,13 @@
 ---
-title: Run your first simulated workflow
+title: Run the SimGrid example through the API
 description: Register the checked-in SimGrid example, execute it, and verify computation and network evidence.
 ---
 
-# Run your first simulated workflow
+# Run the SimGrid example through the API
 
-This tutorial is for a first-time AkôFlow user with a running local daemon. You will submit a three-activity workflow to SimGrid and verify that all activities and both data transfers completed. Nothing is dispatched to Kubernetes, SLURM, or a cloud account.
+This tutorial is for a reader with a separately managed AkôFlow API endpoint. You will submit a three-activity workflow to SimGrid and verify that all activities and both data transfers completed. Nothing is dispatched to Kubernetes, SLURM, or a cloud account.
 
-Use this tutorial to confirm a new installation. Do not use it to learn automatic scheduling—the example imports a fixed plan so that the first result is reproducible. Continue to [Plan a workflow](./planning.md) after this run succeeds.
+Use this tutorial to verify the simulation path. Do not use it to learn automatic scheduling—the example imports a fixed plan so that the first result is reproducible. Continue to [Plan a workflow](./planning.md) after this run succeeds.
 
 ## Before you begin
 

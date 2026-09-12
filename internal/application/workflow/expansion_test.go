@@ -63,3 +63,36 @@ func TestExpansionCoordinatorPersistsRejectedDecisionAndReplaysIt(t *testing.T) 
 		t.Fatalf("replay was not idempotent: %+v err=%v", second, err)
 	}
 }
+
+func TestExpansionCoordinatorRejectedOutOfOrderEventDoesNotConsumeSequence(t *testing.T) {
+	base := &domain.WorkflowVersion{ID: "v", Activities: []domain.Activity{{
+		ID: "root", Name: "root", Kind: domain.ActivityKindTask,
+		Capabilities: []domain.ActivityCapability{domain.ActivityCapabilityReal},
+		Command:      domain.ActivityCommand{Entrypoint: "true"},
+	}}}
+	store := &expansionStoreStub{}
+	coordinator := ExpansionCoordinator{Workflows: workflowStoreStub{version: base}, Store: store}
+	request := func(event, key string, sequence int) domain.ExpansionRequest {
+		return domain.ExpansionRequest{
+			ID: event, WorkflowVersionID: "v", SourceActivityID: "root", SourceEventID: event, Sequence: sequence,
+			Activities: []domain.ExpansionActivity{{Key: key, Activity: domain.Activity{
+				Name: key, Kind: domain.ActivityKindTask,
+				Capabilities: []domain.ActivityCapability{domain.ActivityCapabilityReal},
+				Command:      domain.ActivityCommand{Entrypoint: "true"},
+			}}},
+		}
+	}
+
+	rejected, err := coordinator.Apply(context.Background(), request("early", "early-child", 2))
+	if err != nil || rejected.Status != "rejected" {
+		t.Fatalf("expected out-of-order rejection, got %+v err=%v", rejected, err)
+	}
+	first, err := coordinator.Apply(context.Background(), request("first", "first-child", 1))
+	if err != nil || first.Status != "applied" {
+		t.Fatalf("expected sequence 1 to remain applicable, got %+v err=%v", first, err)
+	}
+	second, err := coordinator.Apply(context.Background(), request("second", "second-child", 2))
+	if err != nil || second.Status != "applied" {
+		t.Fatalf("expected corrected sequence 2 to apply, got %+v err=%v", second, err)
+	}
+}

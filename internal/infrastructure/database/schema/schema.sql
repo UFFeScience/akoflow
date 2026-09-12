@@ -231,9 +231,10 @@ CREATE TABLE workflow_expansions (
 		failure_reason TEXT NOT NULL DEFAULT '',
 		metadata TEXT NOT NULL DEFAULT '{}',
 		created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-		UNIQUE(workflow_version_id, execution_run_id, sequence),
 		UNIQUE(workflow_version_id, source_event_id)
 );
+CREATE UNIQUE INDEX workflow_expansions_applied_sequence_idx
+	ON workflow_expansions(workflow_version_id, execution_run_id, sequence) WHERE status='applied';
 CREATE TABLE workflow_expansion_activities (
 		expansion_id TEXT NOT NULL REFERENCES workflow_expansions(id),
 		activity_id TEXT NOT NULL,

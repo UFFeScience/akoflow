@@ -35,12 +35,18 @@ func (c ExpansionCoordinator) Apply(ctx context.Context, request domain.Expansio
 	if err != nil {
 		return nil, err
 	}
-	if request.Sequence != len(prior)+1 {
-		return c.reject(ctx, request, len(prior)+1, fmt.Errorf("expansion sequence must be %d", len(prior)+1))
+	nextSequence := 1
+	for _, expansion := range prior {
+		if expansion.Status == domainworkflow.ExpansionStatusApplied && expansion.Sequence >= nextSequence {
+			nextSequence = expansion.Sequence + 1
+		}
+	}
+	if request.Sequence != nextSequence {
+		return c.reject(ctx, request, nextSequence, fmt.Errorf("expansion sequence must be %d", nextSequence))
 	}
 	expansion, _, err := domainworkflow.MaterializeExpansion(*base, prior, request, c.Limits)
 	if err != nil {
-		return c.reject(ctx, request, len(prior)+1, err)
+		return c.reject(ctx, request, nextSequence, err)
 	}
 	return c.Store.SaveExpansion(ctx, expansion)
 }

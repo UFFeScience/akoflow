@@ -100,6 +100,16 @@ func migrateWorkflowExpansions(ctx context.Context, db *sql.DB) error {
 	if checksum != schemaBeforeWorkflowExpansions {
 		return nil
 	}
+	var expansionTable int
+	if err := db.QueryRowContext(ctx, `SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='workflow_expansions'`).Scan(&expansionTable); err != nil {
+		return fmt.Errorf("inspect workflow expansion schema: %w", err)
+	}
+	if expansionTable > 0 {
+		if _, err := db.ExecContext(ctx, `UPDATE schema_metadata SET checksum=?, applied_at=?`, schemaChecksum(), time.Now().UTC()); err != nil {
+			return fmt.Errorf("record workflow expansion migration: %w", err)
+		}
+		return nil
+	}
 	tx, err := db.BeginTx(ctx, nil)
 	if err != nil {
 		return fmt.Errorf("begin workflow expansion migration: %w", err)
@@ -112,7 +122,9 @@ func migrateWorkflowExpansions(ctx context.Context, db *sql.DB) error {
 			sequence INTEGER NOT NULL CHECK(sequence > 0), result_revision INTEGER NOT NULL CHECK(result_revision > 0),
 			status TEXT NOT NULL CHECK(status IN ('applied', 'rejected')), failure_reason TEXT NOT NULL DEFAULT '',
 			metadata TEXT NOT NULL DEFAULT '{}', created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-			UNIQUE(workflow_version_id, execution_run_id, sequence), UNIQUE(workflow_version_id, source_event_id))`,
+			UNIQUE(workflow_version_id, source_event_id))`,
+		`CREATE UNIQUE INDEX workflow_expansions_applied_sequence_idx
+			ON workflow_expansions(workflow_version_id, execution_run_id, sequence) WHERE status='applied'`,
 		`CREATE TABLE workflow_expansion_activities (
 			expansion_id TEXT NOT NULL REFERENCES workflow_expansions(id), activity_id TEXT NOT NULL,
 			definition TEXT NOT NULL, PRIMARY KEY(expansion_id, activity_id))`,
@@ -523,7 +535,7 @@ func migrateCloudExecutionDataPlane(ctx context.Context, db *sql.DB) error {
 		return fmt.Errorf("inspect cloud operation schema: %w", err)
 	}
 	if executionRunColumn > 0 {
-		if _, err := db.ExecContext(ctx, `UPDATE schema_metadata SET checksum=?, applied_at=?`, schemaChecksum(), time.Now().UTC()); err != nil {
+		if _, err := db.ExecContext(ctx, `UPDATE schema_metadata SET checksum=?, applied_at=?`, schemaBeforeWorkflowExpansions, time.Now().UTC()); err != nil {
 			return fmt.Errorf("record cloud execution data plane migration: %w", err)
 		}
 		return nil

@@ -112,6 +112,36 @@ func TestBootstrapInstallsAndValidatesCanonicalSchema(t *testing.T) {
 	}
 }
 
+func TestBootstrapAddsWorkflowExpansionsWhenCloudDataPlaneAlreadyExists(t *testing.T) {
+	db := memoryDatabase(t)
+	ctx := context.Background()
+	if err := Bootstrap(ctx, db); err != nil {
+		t.Fatal(err)
+	}
+	for _, statement := range []string{
+		`DROP TABLE workflow_expansion_dependencies`,
+		`DROP TABLE workflow_expansion_activities`,
+		`DROP TABLE workflow_expansions`,
+		`UPDATE schema_metadata SET checksum='` + schemaBeforeCloudExecutionDataPlane + `'`,
+	} {
+		if _, err := db.Exec(statement); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if err := Bootstrap(ctx, db); err != nil {
+		t.Fatalf("bootstrap should continue from the existing cloud data plane into workflow expansions: %v", err)
+	}
+	for _, table := range []string{"workflow_expansions", "workflow_expansion_activities", "workflow_expansion_dependencies"} {
+		var count int
+		if err := db.QueryRow(`SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name=?`, table).Scan(&count); err != nil {
+			t.Fatal(err)
+		}
+		if count != 1 {
+			t.Fatalf("required table %q was not migrated", table)
+		}
+	}
+}
+
 func TestBootstrapAddsCloudRuntimeDriverToExistingDatabase(t *testing.T) {
 	db := memoryDatabase(t)
 	oldSchema := strings.Replace(

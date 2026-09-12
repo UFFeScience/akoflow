@@ -48,3 +48,31 @@ func TestExpansionRepositoryPersistsGraphAndDeduplicatesSourceEvent(t *testing.T
 		t.Fatalf("unexpected persisted expansion: %+v", items)
 	}
 }
+
+func TestExpansionRepositoryRejectedDecisionDoesNotReserveAppliedSequence(t *testing.T) {
+	repository := setupRepository(t)
+	definition := Definition{
+		ID: "workflow", ExternalID: "workflow", Name: "workflow",
+		Types: []domain.ActivityType{{ID: "type", Name: "type"}},
+		Version: domain.WorkflowVersion{
+			ID: "version", WorkflowID: "workflow", Version: 1, DefinitionHash: "hash",
+			Activities: []domain.Activity{{
+				ID: "root", WorkflowVersionID: "version", ActivityTypeID: "type",
+				ExternalID: "root", Name: "root", Kind: domain.ActivityKindTask,
+				Capabilities: []domain.ActivityCapability{domain.ActivityCapabilityReal},
+				Command:      domain.ActivityCommand{Entrypoint: "true"},
+			}},
+		},
+	}
+	if err := repository.Create(context.Background(), definition); err != nil {
+		t.Fatal(err)
+	}
+	for _, expansion := range []domain.WorkflowExpansion{
+		{ID: "rejected", WorkflowVersionID: "version", SourceActivityID: "root", SourceEventID: "early", Sequence: 2, ResultRevision: 1, Status: "rejected", FailureReason: "out of order"},
+		{ID: "applied", WorkflowVersionID: "version", SourceActivityID: "root", SourceEventID: "corrected", Sequence: 2, ResultRevision: 2, Status: "applied"},
+	} {
+		if _, err := repository.SaveExpansion(context.Background(), expansion); err != nil {
+			t.Fatalf("save %s expansion: %v", expansion.Status, err)
+		}
+	}
+}

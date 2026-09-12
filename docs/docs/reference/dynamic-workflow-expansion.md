@@ -50,9 +50,9 @@ Use `GET /akoflow-api/workflow-versions/{versionId}/expanded/?executionRunId={ru
 - Every activity key is unique inside an event. All dependencies must resolve to the base graph, a prior accepted expansion, or the current event.
 - Self-dependencies and cycles across the complete resulting graph are rejected.
 - The default projection limits are 1,000 activities and 4,000 dependencies. Limits are enforced against the complete base-plus-expansion graph.
-- Per-run `sequence` is contiguous. This serializes concurrent discoveries and makes the projection revision reproducible.
+- Per-run `sequence` is contiguous across applied expansions. Rejected decisions remain in the audit history but do not consume or reserve a sequence, so an out-of-order producer can recover by submitting the expected sequence with a new source event. This serializes concurrent discoveries and makes the projection revision reproducible.
 - Invalid output is persisted as a `rejected` expansion with its reason. It does not partially add activities or dependencies. Other already-applied expansions remain valid.
-- A rejected source event is immutable; a producer corrects it with a new source event and the next sequence.
+- A rejected source event is immutable; a producer corrects it with a new source event and the sequence currently expected from the applied projection.
 
 ## Planning and execution
 

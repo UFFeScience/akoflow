@@ -2,7 +2,7 @@
 title: Define execution scopes and network links
 ---
 
-An execution scope tells the planner which environments it may use. Add network links when transfer time or cost matters between their resources. In Desktop, you can create a scope with an empty topology; add links through the API.
+An execution scope tells the planner which environments it may use. Add network links when transfer time or cost matters between their resources. The current Desktop navigation creates an empty topology with a scope; use the API procedure below to register a topology with links.
 
 For the API commands on this page, complete [API connection setup](../../tutorials/api-access) first.
 
@@ -51,7 +51,9 @@ curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" "$AKOFLOW_AP
 
 ### Using AkôFlow Desktop
 
-The current Desktop scope flow can create an empty initial topology, but it does not provide a link editor. Create a topology containing links through the API. Each link identifies source and target **resource IDs**, bandwidth in bits per second, latency in seconds, transfer price per byte, and whether traffic is bidirectional.
+The scope form can create an empty initial topology. The current Desktop sidebar does not expose the separate topology-creation form, so use the API to register a topology with links. This creates a new topology; it does not edit the empty one. Select the topology with links when planning.
+
+Each API link identifies source and target **resource IDs**, bandwidth in bits per second, latency in seconds, transfer price per byte, and whether traffic is bidirectional.
 
 Topology values affect transfer estimates. They do not test the physical network and are not produced by a connection health check.
 

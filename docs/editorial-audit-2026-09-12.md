@@ -2,21 +2,21 @@
 
 Date: 2026-09-12. Scope: authored documentation pages in the current branch; generated API endpoint pages are reviewed through their generator and component.
 
-This is an iteration ledger, not a completion certificate. The current pass inspected the title, opening, heading structure, and claim language of every authored page. It edited the entry narrative, user-facing terminology, API convention, and versioned example links where findings were confirmed. A full line-by-line read and external-provider validation remain open.
+This is an iteration ledger, not a completion certificate. The first pass read all 51 authored pages and corrected confirmed narrative, terminology, API convention, example, and support-claim findings. A second full audit, runnable first-user path, priority endpoint contracts, and external-provider validation remain open.
 
 ## Open P0/P1 findings
 
-1. **P0 — Desktop first workflow:** installation reaches a connected local environment, but no verified Desktop-only procedure takes a new user through workflow creation, planning, execution, and result inspection. The SimGrid API tutorial has separate prerequisites.
+1. **P0 — Desktop first workflow:** installation reaches a connected local environment, but no verified Desktop-only procedure takes a new user through workflow creation, planning, execution, and result inspection. The current Desktop workflow form creates real-capable activities; simulation-capable activities require YAML import. The SimGrid API tutorial has separate prerequisites.
 2. **P0 — Generated request contracts:** ZIP instance import is corrected and inferred JSON is labeled. Six first-run POST pages now link the verified, versioned SimGrid payloads and their submission order. Other priority endpoints still need handler-checked required fields and runnable payloads.
 3. **P1 — Provider evidence:** GCP and S3 procedures still need disposable-account validation. The SLURM fixture is local adapter evidence, not an institutional batch run.
 4. **P1 — Full plain-language review:** after those corrections, re-read every authored page and the generated template as a new user, then repeat the audit until no new P0/P1 issue appears.
 5. **P0 resolved in this pass — AWS/S3 narrative:** the former guide described a Desktop storage-creation flow and implied saved AWS credentials enabled S3 operations. Current code exposes a browsing screen without creation and wires the transfer connector to server environment credentials. The guide and support matrix now state that limit; a live S3 procedure still needs validation.
 6. **P0 resolved in this pass — GCS claim:** the former support matrix and runtime explanations listed GCS as implemented transfer. The current `gs://` connector returns an unavailable error. The matrix, runtime pages, and schema reference now distinguish accepted `gcs` values from a working transfer path.
-7. **P1 resolved in this pass — scope/topology UI:** the SimGrid guide implied Desktop could edit network links, while the execution-scope guide states that Desktop only creates an empty topology. The SimGrid procedure now sends link edits through the API.
+7. **P1 resolved in this pass — scope/topology UI:** the scope form creates an empty topology. A separate link-creation form exists at `/network/new` in Desktop source, but current sidebar and scope detail do not link to it. The documented, navigable path for registering links is the API; the SimGrid and scope guides now say so.
 8. **P1 resolved in this pass — cloud target language:** saving a capacity target was described as making a provisioned resource. The guide now states that no VM is created at that step.
 9. **P1 resolved in this pass — execution state language:** the workflow guide said normal runs move through `created`, though the supervisor creates them as `running` after queue acceptance. The guide now matches the state reference.
 10. **P1 resolved in this pass — core concepts:** the concept page conflated executable artifacts with observed scientific files. It now distinguishes executable artifacts from scientific data, matching the data guide.
-11. **P1 resolved in this pass — Showcase Desktop claims:** six Showcase tabs described unverified Desktop-only submissions; some asked users to add network links in Desktop despite the missing link editor. The tabs now identify API submission as the verified path and limit Desktop steps to inspection on the same server.
+11. **P1 resolved in this pass — Showcase Desktop claims:** six Showcase tabs described unverified Desktop-only submissions; some asked users to add network links through a Desktop path not exposed in current navigation. The tabs now identify API submission as the verified path and limit Desktop steps to inspection on the same server.
 12. **P0 resolved in this pass — GCP Desktop route:** the detailed guide directed readers to a separate Settings credential form and a “New environment” action that do not match the current cloud onboarding. It now follows the tested form path in the connection tutorial.
 
 ## Page inventory
@@ -42,7 +42,7 @@ This is an iteration ledger, not a completion certificate. The current pass insp
 | `guides/infrastructure/gcp.md` | Full read; corrected Desktop onboarding and aligned API setup | Check provider claims against disposable-project evidence |
 | `guides/infrastructure/hpc-slurm.md` | Full read; aligned API setup and retained site-specific limits | Check provider claims against real cluster evidence |
 | `guides/infrastructure/kubernetes.md` | Full read; aligned API setup and task-first opening | Recheck procedure against Kind bundle |
-| `guides/infrastructure/simgrid.md` | Full read; corrected unsupported Desktop link editing | Recheck procedure against pinned bundle |
+| `guides/infrastructure/simgrid.md` | Full read; corrected unlinked Desktop topology-creation path | Recheck procedure against pinned bundle |
 | `guides/infrastructure/storage.md` | Full read; action limits are qualified by capabilities | Recheck API payloads after P0 contracts fix |
 | `guides/interface-tour.mdx` | Full read; removed API routes and simplified navigation/terminal language | Recheck rendered page at mobile width |
 | `guides/operations/credentials-and-ssh.md` | Full read; aligned shared API setup and server terminology | Recheck secret-handling claims against handlers |

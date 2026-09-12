@@ -80,7 +80,7 @@ After importing, open the workflow definition and inspect every activity. A miss
 
 ## 3. Model the network before planning
 
-Create a topology for the execution scope. Desktop can create an empty topology with a scope; to add links, submit `topology.yaml` through the API after creating the scope. The example models one bidirectional edge-to-cloud link:
+Create a topology for the execution scope. The Desktop scope form creates an empty topology; its current navigation does not expose link creation. Submit `topology.yaml` through the API after creating the scope. The example models one bidirectional edge-to-cloud link:
 
 ```yaml title="examples/simulation/topology.yaml"
 links:

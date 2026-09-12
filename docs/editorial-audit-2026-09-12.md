@@ -15,12 +15,13 @@ This is an iteration ledger, not a completion certificate. The current pass insp
 7. **P1 resolved in this pass — scope/topology UI:** the SimGrid guide implied Desktop could edit network links, while the execution-scope guide states that Desktop only creates an empty topology. The SimGrid procedure now sends link edits through the API.
 8. **P1 resolved in this pass — cloud target language:** saving a capacity target was described as making a provisioned resource. The guide now states that no VM is created at that step.
 9. **P1 resolved in this pass — execution state language:** the workflow guide said normal runs move through `created`, though the supervisor creates them as `running` after queue acceptance. The guide now matches the state reference.
+10. **P1 resolved in this pass — core concepts:** the concept page conflated executable artifacts with observed scientific files. It now distinguishes executable artifacts from scientific data, matching the data guide.
 
 ## Page inventory
 
 | Page | Current pass | Next review |
 | --- | --- | --- |
-| `concepts.md` | Edited in this pass | Full read after P0/P1 fixes |
+| `concepts.md` | Full read; corrected executable/data distinction | Recheck basic narrative after first-run validation |
 | `contributing/documentation-plan.md` | Full read; replaced historical production waves with recurring review contract | Recheck contract at final audit |
 | `downloads.md` | Full read; platform limits and verification are explicit | Recheck release links when version changes |
 | `engine.md` | Full read; implementation details are in the developer section | Recheck claims against event-loop code |
@@ -29,7 +30,7 @@ This is an iteration ledger, not a completion certificate. The current pass insp
 | `explanations/observed-timing.md` | Full read; optional observations are qualified | Recheck metrics after P0 fixes |
 | `explanations/planning.md` | Full read and simplified plan terminology | Recheck planning claims after P0 fixes |
 | `explanations/prism-and-heft.md` | Full read; algorithm detail serves comparison readers | Recheck algorithm claims after P0 fixes |
-| `getting-started.md` | Edited in this pass | Verify complete first-user path |
+| `getting-started.md` | Full read; API-only example is clearly qualified | Verify complete first-user path |
 | `guides/data/artifacts.md` | Full read; simplified the task-first opening | Recheck API payloads after P0 contracts fix |
 | `guides/data/provenance-and-audit.md` | Full read; detailed screen tables serve investigation tasks | Recheck API payloads after P0 contracts fix |
 | `guides/infrastructure/aws.md` | Rewritten after code audit | Check provider claims against real-environment evidence |
@@ -41,7 +42,7 @@ This is an iteration ledger, not a completion certificate. The current pass insp
 | `guides/infrastructure/kubernetes.md` | Full read; aligned API setup and task-first opening | Recheck procedure against Kind bundle |
 | `guides/infrastructure/simgrid.md` | Full read; corrected unsupported Desktop link editing | Recheck procedure against pinned bundle |
 | `guides/infrastructure/storage.md` | Full read; action limits are qualified by capabilities | Recheck API payloads after P0 contracts fix |
-| `guides/interface-tour.mdx` | Edited in this pass | Full read after P0/P1 fixes |
+| `guides/interface-tour.mdx` | Full read; removed API routes and simplified navigation/terminal language | Recheck rendered page at mobile width |
 | `guides/operations/credentials-and-ssh.md` | Full read; aligned shared API setup and server terminology | Recheck secret-handling claims against handlers |
 | `guides/operations/instance-management.md` | Full read; aligned shared API setup and removed internal snapshot detail | Recheck import/export contracts against handlers |
 | `guides/operations/interactive-console.md` | Full read; removed polling implementation detail and aligned API setup | Recheck session behavior against Desktop |
@@ -52,7 +53,7 @@ This is an iteration ledger, not a completion certificate. The current pass insp
 | `guides/workflows/executions.md` | Full read; corrected queued/run state distinction | Verify Desktop-only start flow |
 | `guides/workflows/first-run.md` | Full read; API submission and Desktop inspection are distinguished | Verify complete Desktop-only path |
 | `guides/workflows/planning.md` | Full read; simplified candidate language | Verify Desktop-only planning flow |
-| `installation.md` | Opening and purpose scanned | Verify complete first-user path |
+| `installation.md` | Full read; public bootstrap checks verified in `security.go` and tests | Verify complete first-user path and cross-platform installation |
 | `internal/workflow-spec.md` | Opening and purpose scanned | Check contracts against current handlers and schemas |
 | `modules.md` | Full read; removed incidental polling default | Recheck claims against daemon composition |
 | `reference/api-overview.md` | Edited in this pass | Check contracts against current handlers and schemas |

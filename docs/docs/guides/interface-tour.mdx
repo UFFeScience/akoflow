@@ -3,7 +3,7 @@
 id: interface-tour
 title: Tour the AkôFlow interface
 sidebar_label: Interface tour
-description: Learn how the AkôFlow Desktop navigation maps to the control-plane API.
+description: Find workflows, environments, plans, runs, and results in AkôFlow Desktop.
 ---
 
 import AnnotatedScreenshot from '@site/src/components/AnnotatedScreenshot';
@@ -26,20 +26,20 @@ AkôFlow Desktop lets you see your workflows, environments, plans, runs, and res
 
 ## Main areas
 
-| Area | What you do there | Main API domain |
-|---|---|---|
-| Overview | Check registered environments, workflows, and completed runs | Multiple read endpoints |
-| Workflows | Create versioned definitions and inspect activity DAGs | `/workflow-definitions/` |
-| Planning sessions | compare algorithms and promote a candidate to a plan | `/planning-sessions/` |
-| Infrastructure | Connect environments, discover resources, and define execution scopes | `/environments/`, `/resources/`, `/execution-scopes/` |
-| Runs | Start and inspect workflow, standalone, simulated, and interactive runs | `/execution-runs/` |
-| Artifacts | Register, build, locate, and materialize executable artifacts | `/artifacts/`, `/artifact-builds/` |
-| Provenance | Query evidence and follow lineage | `/provenance/` |
-| Audit | Inspect the operational event history | `/audit-events/` |
+| Area | What you do there |
+|---|---|
+| Overview | Check registered environments, workflows, and completed runs |
+| Workflows | Create workflows and inspect their activities |
+| Planning sessions | Compare candidate plans and select one |
+| Infrastructure | Connect environments and inspect available resources |
+| Runs | Start and inspect workflow, simulation, and interactive runs |
+| Artifacts | Register and build executables for workflows |
+| Provenance | Follow how a result was produced |
+| Audit | Inspect the history of operations |
 
 ## Follow the ownership hierarchy
 
-AkôFlow pages preserve the relationship between records. An execution belongs to a plan, a plan belongs to a workflow, and a provisioning operation belongs to a cloud resource. Breadcrumbs show that chain; their ancestors are links.
+Breadcrumbs show how records relate. A run belongs to a plan, and a plan belongs to a workflow. Select an earlier item in the breadcrumb to return to it.
 
 For example:
 
@@ -66,9 +66,9 @@ Search is a locator, not an investigation surface. It does not replace the filte
 
 ## Global terminal
 
-Interactive commands open in the terminal panel fixed to the bottom of the application. The daemon owns the session and streams its output; closing a page does not make the renderer execute or manage a remote shell itself.
+Interactive commands open in the terminal panel at the bottom of the application. Closing a page does not close a remote session; close it from the panel when you finish.
 
-Open an interactive session from a resource or runtime-aware operation, then use the terminal panel to inspect its output. The session detail page provides the durable record and log-export control; the panel is a live view, not a replacement for the persisted session evidence. See [Interactive console](./operations/interactive-console) for prerequisites, connection behavior, and recovery.
+Open a session from a compatible resource, then use the panel to inspect its output. Export the log from the session detail page when you need a saved record. See [Interactive console](./operations/interactive-console) for prerequisites and recovery.
 
 ## Read-only instances
 

@@ -21,7 +21,7 @@ A **plan** assigns activities to resources and predicts timing, transfers, and p
 
 A **run** records what happened when that plan was submitted. It has activity statuses, observed timing, transfers, and output evidence. Compare the run with its plan to see where prediction and observation differ.
 
-**Artifacts** are the executable inputs or observed files associated with work. **Provenance** links the workflow, plan, run, activities, and data so you can trace how a result was produced. The audit trail records operational actions separately.
+**Executable artifacts** are the versioned programs or images used by activities. **Scientific data** includes inputs and outputs associated with the work. **Provenance** links the workflow, plan, run, activities, and data so you can trace how a result was produced. The audit trail records operational actions separately.
 
 ## Where to go next
 

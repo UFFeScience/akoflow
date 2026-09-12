@@ -44,7 +44,7 @@ curl --fail-with-body \
   -d '{"resourceId":"hpc-login","actorId":"researcher@example.org"}'
 ```
 
-The created session has `starting`, `connected`, `closed`, or `failed` status and returns the resolved `runtimeId` and `connectionId`. `resourceId` is required. Creation returns `422` when resolution or terminal startup fails and `503` when interactive console support is unavailable.
+A successful creation returns a `connected` session with its resolved `runtimeId` and `connectionId`. `resourceId` is required. Creation returns `422` when resolution or terminal startup fails and `503` when interactive console support is unavailable. Session records can later be `closed` or `failed`.
 
 List and close sessions:
 
@@ -107,7 +107,7 @@ curl --fail-with-body \
   }'
 ```
 
-`resourceId` and `command` are required. The default timeout is 30 seconds and the maximum is 3,600 seconds. The returned record has `running`, `completed`, or `failed` status and may include `stdout`, `stderr`, `exitCode`, `failure` and the provider `externalId`.
+`resourceId` and `command` are required. The default timeout is 30 seconds and the maximum is 3,600 seconds. The request waits for the runner and returns a `completed` or `failed` record with `stdout`, `stderr`, `exitCode`, `failure`, and provider `externalId` when available. Check the record's `status`; HTTP `201 Created` alone does not mean the command succeeded.
 
 List recent commands:
 
@@ -118,7 +118,7 @@ curl --get --fail-with-body \
   "$AKOFLOW_API_URL/console-commands/"
 ```
 
-Command creation returns `422` for an unknown/unbound resource, invalid input, an excessive timeout, or runner failure. It returns `503` if console commands are unavailable.
+Command creation returns `422` for an unknown or unbound resource, missing input, or an excessive timeout. A runner failure is recorded as `status: failed` in the `201 Created` response. The route returns `503` if console commands are unavailable.
 
 ## Access and safety
 

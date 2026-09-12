@@ -21,6 +21,27 @@ The public release path is not currently verified end to end. On 2026-09-11, the
 
 The first startup checks these requirements and reports anything that is missing. The renderer does not receive the daemon token and does not execute Docker, shell, SSH, Kubernetes, or infrastructure commands.
 
+## Verify public distribution before installing
+
+Run this read-only preflight before downloading a Desktop installer or creating `releases/.env`. It checks two independent publication boundaries: the current GitHub release must contain a Desktop installer with the same semantic version as the tag, and the daemon and BuildKit image manifests must be anonymously readable from GHCR.
+
+```bash
+export AKOFLOW_RELEASE_TAG="v1.0.3" # replace with the tag you intend to install
+
+curl --fail-with-body --silent --show-error \
+  "https://api.github.com/repos/UFFeScience/akoflow/releases/tags/${AKOFLOW_RELEASE_TAG}" \
+  | jq -r '.assets[].name' | sort
+
+for image in akoflow-daemon akoflow-buildkit; do
+  printf '%s: ' "$image"
+  curl --silent --show-error --output /dev/null --write-out '%{http_code}\n' \
+    -H 'Accept: application/vnd.oci.image.index.v1+json, application/vnd.oci.image.manifest.v1+json' \
+    "https://ghcr.io/v2/uffescience/${image}/manifests/${AKOFLOW_RELEASE_TAG}"
+done
+```
+
+Continue only when the listed Desktop installer filename contains the release version — for example, `1.0.4` for tag `v1.0.4` — and both image checks print `200`. A `401` or `403` means the image package is not publicly pullable. A missing or mismatched installer filename means the Desktop build was not packaged from the same release version. Neither condition can be repaired from a client machine; wait for a corrected release.
+
 ## Install the Desktop application after a verified release
 
 Use these steps only after the release page contains a matching Desktop package and the required GHCR images can be pulled without private organization credentials.

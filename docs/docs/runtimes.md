@@ -63,7 +63,7 @@ Inventory refresh must not mutate the frozen inputs of an existing planning sess
 
 ## Data access
 
-Execution is preceded by preparation. Routes may use an existing verified location, shared storage, destination pull, source push, gateway, runtime-local, or direct-runtime transfer. Implementations include artifact store, filesystem, rsync/SSH, Kubernetes exec, HTTP, S3-compatible storage, and GCS. An adapter must reject an uncommitted preparation gate.
+Execution is preceded by preparation. Routes may use an existing verified location, shared storage, destination pull, source push, gateway, runtime-local, or direct-runtime transfer. Implemented connectors include artifact store, filesystem, rsync/SSH, Kubernetes exec, HTTP download, and S3-compatible transfer. Direct `gs://` transfer is unavailable in the current server; the GCS connector returns an error until a deployment supplies a working transfer agent.
 
 ## Choose a target
 

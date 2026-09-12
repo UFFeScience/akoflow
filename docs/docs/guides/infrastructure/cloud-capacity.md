@@ -18,7 +18,7 @@ For the API commands on this page, complete [API connection setup](../../tutoria
 | Store provider credentials | Yes | Record accepted; not wired to the S3 transfer connector |
 | Discover compute machines, images, disks, zones, and prices | Yes | Not yet |
 | Provision compute capacity with Terraform | Yes | Not yet |
-| Transfer artifacts through object storage | GCS through configured storage adapters | S3-compatible connector with server environment credentials; external AWS validation pending |
+| Transfer artifacts through object storage | Direct `gs://` transfer is unavailable in the current server; use a separately supported route such as signed HTTPS when applicable | S3-compatible connector with server environment credentials; external AWS validation pending |
 
 For a Google Cloud setup, continue with [Configure Google Cloud](./gcp). For AWS, read [AWS and S3 support](./aws) before planning data movement. A saved AWS credential does not currently configure the transfer connector or create EC2 capacity.
 

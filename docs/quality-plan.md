@@ -19,7 +19,7 @@ Showcases are extended tutorials. They may link to how-to and reference pages, b
 
 - [x] The documentation builds from a clean generated state. Evidence: `cd docs && npm run clear && npm run typecheck && npm run build`, passed on 2026-09-11.
 - [x] API endpoint reference is generated from `internal/api/httpserver/httpserver.go`. Evidence: `docs/scripts/generate-api-reference.mjs`; 125 generated endpoint pages in the current tree.
-- [x] Provider limitations are stated explicitly. Evidence: `guides/infrastructure/cloud-capacity.md`, `gcp.md`, and `aws.md` distinguish GCP compute provisioning from the partial AWS S3 connector. The saved AWS credential is not wired to that connector.
+- [x] Provider limitations are stated explicitly. Evidence: `guides/infrastructure/cloud-capacity.md`, `gcp.md`, and `aws.md` distinguish GCP compute provisioning from partial object-storage support. The current GCS connector rejects direct `gs://` transfer, and saved AWS credentials are not wired to the S3 transfer connector.
 - [x] GCP catalog and provisioning access are documented as source-audited behavior rather than an unverified IAM recipe. Evidence: `guides/infrastructure/gcp.md`, `internal/provider/cloud/gcp/catalog.go`, and `internal/provider/cloud/terraform/runner.go`; a disposable-project validation remains required.
 - [x] HPC concepts and the proxy-aware connection path are documented. Evidence: `guides/infrastructure/hpc-slurm.md` and `guides/operations/interactive-console.md`.
 - [x] Existing Showcase download URLs use `raw.githubusercontent.com` and the 50-core bundle was checked against repository files on 2026-09-11.

@@ -4,6 +4,8 @@ title: Browse and manage storage
 
 AkôFlow exposes storage through environment discovery or configured storage connectors. Browsing is constrained to approved roots and operations are capability-driven: a read-only or unavailable storage does not expose the same actions as a healthy writable storage.
 
+For object storage, check the [AWS/S3 limits](./aws) and [cloud support matrix](./cloud-capacity#provider-support-in-v10) before relying on browse or transfer actions. A registered storage type does not guarantee that the current server can authenticate to it.
+
 For the API commands on this page, complete [API connection setup](../../tutorials/api-access) first.
 
 ## Browse files

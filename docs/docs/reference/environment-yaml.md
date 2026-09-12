@@ -119,13 +119,13 @@ resourceRuntimeBindings:
 | `connections[].configuration` | No | object | `{}` | Connection-type-specific settings. |
 | `connections[].createdAt` | No | timestamp | server-managed | Read-only evidence field. |
 
-`connectorBindings` declares artifact-transfer capabilities. Its `connector` enum is `rsync`, `scp`, `sftp`, `http`, `s3-compatible`, or `gcs`. The fields `id`, `environmentId`, and `connector` identify the binding; `endpoint`, `credentialRef`, and `configuration` are optional. `health` is observation data and should be written by a check rather than authored as an assumption.
+`connectorBindings` declares artifact-transfer capabilities. Its `connector` enum is `rsync`, `scp`, `sftp`, `http`, `s3-compatible`, or `gcs`. The fields `id`, `environmentId`, and `connector` identify the binding; `endpoint`, `credentialRef`, and `configuration` are optional. The schema accepts `gcs`, but the current server's direct `gs://` connector returns an unavailable error. A declared binding alone does not make that transfer usable. `health` is observation data and should be written by a check rather than authored as an assumption.
 
 `connectionChecks` is also observed data. Do not copy a historical `online` result into a new environment file: validate the connection again after import.
 
 ## Storage
 
-`storages` records accessible storage; it does not create a bucket, NFS export, PVC, or filesystem. Each storage entry requires `id`, `environmentVersionId`, `name`, and `type`. Supported types are `local`, `pvc`, `nfs`, `s3`, `lustre`, `gcs`, `s3-compatible`, and `ssh-filesystem`.
+`storages` records accessible storage; it does not create a bucket, NFS export, PVC, or filesystem. Each storage entry requires `id`, `environmentVersionId`, `name`, and `type`. Accepted type values are `local`, `pvc`, `nfs`, `s3`, `lustre`, `gcs`, `s3-compatible`, and `ssh-filesystem`. An accepted type does not prove that the running server has a working browser or transfer driver for it; check the storage health and intended operation.
 
 | Path | Required | Type | Default | Notes |
 | --- | --- | --- | --- | --- |

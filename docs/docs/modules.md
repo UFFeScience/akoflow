@@ -50,7 +50,7 @@ The execution supervisor consumes a selected plan. It validates the DAG and assi
 
 An **environment** is a managed infrastructure boundary. Published versions contain runtimes, resources, bindings, storage, relations, connections, and capability observations. An **execution scope** combines environment versions with a network topology.
 
-Before start, the data plane can materialize executable artifacts and workspaces. Routes may use an existing location, shared storage, destination pull, source push, a gateway, runtime-local, or direct-runtime transfer. Implemented connectors include the artifact store, local filesystem, rsync/SSH, Kubernetes exec, HTTP, S3-compatible storage, and GCS. A materialization is usable only after digest verification commits it.
+Before start, the data plane can prepare executable artifacts and workspaces. Implemented transfer paths include the artifact store, local filesystem, rsync/SSH, Kubernetes exec, HTTP download, and an S3-compatible connector. The current GCS connector rejects direct `gs://` transfers; a deployment needs another supported route or its own transfer agent. A prepared artifact is usable only after digest verification.
 
 ## Cloud lifecycle
 

@@ -26,6 +26,7 @@ func TestLoadSettings(t *testing.T) {
 	t.Setenv("AKOFLOW_SIMGRID_MAX_CONCURRENT", "3")
 	t.Setenv("AKOFLOW_SIMGRID_TIMEOUT", "20m")
 	t.Setenv("AKOFLOW_SIMGRID_REFERENCE_FLOPS", "2500000000")
+	t.Setenv("AKOFLOW_RECREATE_DATABASE_ON_SCHEMA_CHANGE", "true")
 	settings := Load()
 	if settings.HTTPAddress != ":9090" || settings.DefaultNamespace != "science" {
 		t.Fatalf("settings=%+v", settings)
@@ -38,5 +39,8 @@ func TestLoadSettings(t *testing.T) {
 		settings.SimGridTimeout != 20*time.Minute ||
 		settings.SimGridReferenceFLOPS != 2.5e9 {
 		t.Fatalf("settings=%+v", settings)
+	}
+	if !settings.RecreateDatabaseOnSchemaChange {
+		t.Fatal("expected schema changes to recreate the development database")
 	}
 }

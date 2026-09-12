@@ -20,6 +20,9 @@ services:
       # catalog durable while large workflow definitions are imported.
       AKOFLOW_SQLITE_JOURNAL_MODE: ${AKOFLOW_SQLITE_JOURNAL_MODE:-DELETE}
       AKOFLOW_RESTART_ON_INSTANCE_SWITCH: 'true'
+      # Development uses one canonical bootstrap instead of accumulating
+      # migrations. A schema change recreates the local catalog from scratch.
+      AKOFLOW_RECREATE_DATABASE_ON_SCHEMA_CHANGE: 'true'
       AKOFLOW_KIND_TOKEN: ${AKOFLOW_KIND_TOKEN:-}
       # Interactive terminals are enabled only for the local control-plane
       # deployment. The runner still uses each environment's SSH credentials

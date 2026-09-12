@@ -47,13 +47,30 @@ func ApplyPendingFactoryReset(path string) (bool, error) {
 		return false, fmt.Errorf("inspect factory reset marker: %w", err)
 	}
 
-	for _, candidate := range []string{path, path + "-wal", path + "-shm", path + "-journal"} {
-		if err := os.Remove(candidate); err != nil && !errors.Is(err, os.ErrNotExist) {
-			return false, fmt.Errorf("remove SQLite file %s: %w", filepath.Base(candidate), err)
-		}
+	if err := removeDatabaseFiles(path); err != nil {
+		return false, err
 	}
 	if err := os.Remove(marker); err != nil {
 		return false, fmt.Errorf("remove factory reset marker: %w", err)
 	}
 	return true, nil
+}
+
+// Recreate removes a closed SQLite database and all of its sidecar files.
+// Callers must close every connection before using it.
+func Recreate(path string) error {
+	path, err := normalizePath(path)
+	if err != nil {
+		return err
+	}
+	return removeDatabaseFiles(path)
+}
+
+func removeDatabaseFiles(path string) error {
+	for _, candidate := range []string{path, path + "-wal", path + "-shm", path + "-journal"} {
+		if err := os.Remove(candidate); err != nil && !errors.Is(err, os.ErrNotExist) {
+			return fmt.Errorf("remove SQLite file %s: %w", filepath.Base(candidate), err)
+		}
+	}
+	return nil
 }

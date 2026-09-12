@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"database/sql"
+	"errors"
 
 	"github.com/UFFeScience/akoflow/internal/infrastructure/database"
 	dbaudit "github.com/UFFeScience/akoflow/internal/infrastructure/database/audit"
@@ -40,7 +41,7 @@ type persistence struct {
 	cloud        *dbcloud.Repository
 }
 
-func openPersistence(ctx context.Context) (persistence, error) {
+func openPersistence(ctx context.Context, recreateOnSchemaChange bool) (persistence, error) {
 	readOnly := instancearchive.IsReadOnlySelection()
 	path := instancearchive.ResolveDatabasePath()
 	if !readOnly {
@@ -61,7 +62,20 @@ func openPersistence(ctx context.Context) (persistence, error) {
 	if !readOnly {
 		if err := database.Bootstrap(ctx, db); err != nil {
 			_ = db.Close()
-			return persistence{}, err
+			if !recreateOnSchemaChange || !errors.Is(err, database.ErrIncompatibleSchema) {
+				return persistence{}, err
+			}
+			if err := database.Recreate(path); err != nil {
+				return persistence{}, err
+			}
+			db, err = database.Open(path)
+			if err != nil {
+				return persistence{}, err
+			}
+			if err := database.Bootstrap(ctx, db); err != nil {
+				_ = db.Close()
+				return persistence{}, err
+			}
 		}
 	}
 	analytics, err := database.OpenReadOnly(path)

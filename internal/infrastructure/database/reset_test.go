@@ -1,6 +1,7 @@
 package database
 
 import (
+	"errors"
 	"os"
 	"path/filepath"
 	"testing"
@@ -52,5 +53,22 @@ func TestApplyPendingFactoryResetIsNoOpWithoutMarker(t *testing.T) {
 	}
 	if _, err := os.Stat(path); err != nil {
 		t.Fatalf("database was modified without a reset marker: %v", err)
+	}
+}
+
+func TestRecreateRemovesDatabaseAndSidecarsWithoutMarker(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "database.db")
+	for _, candidate := range []string{path, path + "-wal", path + "-shm", path + "-journal"} {
+		if err := os.WriteFile(candidate, []byte("data"), 0o600); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if err := Recreate(path); err != nil {
+		t.Fatal(err)
+	}
+	for _, candidate := range []string{path, path + "-wal", path + "-shm", path + "-journal"} {
+		if _, err := os.Stat(candidate); !errors.Is(err, os.ErrNotExist) {
+			t.Fatalf("expected %s to be removed, got %v", candidate, err)
+		}
 	}
 }

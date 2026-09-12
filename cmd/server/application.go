@@ -40,7 +40,7 @@ type application struct {
 }
 
 func newApplication(ctx context.Context, settings config.Settings, log *logger.Logger) (*application, error) {
-	storage, err := openPersistence(ctx)
+	storage, err := openPersistence(ctx, settings.RecreateDatabaseOnSchemaChange)
 	if err != nil {
 		return nil, err
 	}

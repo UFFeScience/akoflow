@@ -11,29 +11,30 @@ type Settings struct {
 	HTTPAddress string
 	// APIToken is required for non-loopback API listeners. It is deliberately
 	// not generated at startup: an operator must be able to distribute it.
-	APIToken                 string
-	APIAllowedOrigins        []string
-	LocalStorageRoot         string
-	DefaultNamespace         string
-	ConnectionCheckInterval  time.Duration
-	ConsoleEnabled           bool
-	SlurmScriptDirectory     string
-	SSHKeyDirectory          string
-	KubernetesTokenDirectory string
-	CloudCredentialDirectory string
-	TerraformWorkspace       string
-	TerraformBinary          string
-	AnsiblePlaybookBinary    string
-	SimulationBackend        string
-	SimGridBinaryPath        string
-	SimGridWorkspace         string
-	SimGridMaxConcurrent     int
-	SimGridTimeout           time.Duration
-	SimGridReferenceFLOPS    float64
-	ArtifactStoreRoot        string
-	BuildContextMaxBytes     int64
-	Buildctl                 string
-	Apptainer                string
+	APIToken                       string
+	APIAllowedOrigins              []string
+	LocalStorageRoot               string
+	DefaultNamespace               string
+	ConnectionCheckInterval        time.Duration
+	ConsoleEnabled                 bool
+	RecreateDatabaseOnSchemaChange bool
+	SlurmScriptDirectory           string
+	SSHKeyDirectory                string
+	KubernetesTokenDirectory       string
+	CloudCredentialDirectory       string
+	TerraformWorkspace             string
+	TerraformBinary                string
+	AnsiblePlaybookBinary          string
+	SimulationBackend              string
+	SimGridBinaryPath              string
+	SimGridWorkspace               string
+	SimGridMaxConcurrent           int
+	SimGridTimeout                 time.Duration
+	SimGridReferenceFLOPS          float64
+	ArtifactStoreRoot              string
+	BuildContextMaxBytes           int64
+	Buildctl                       string
+	Apptainer                      string
 }
 
 func Load() Settings {
@@ -102,6 +103,7 @@ func loadServer(settings *Settings) {
 	}
 	settings.ConnectionCheckInterval = durationOrDefault(os.Getenv("AKOFLOW_CONNECTION_CHECK_INTERVAL"), settings.ConnectionCheckInterval)
 	settings.ConsoleEnabled = os.Getenv("AKOFLOW_CONSOLE_ENABLED") == "true"
+	settings.RecreateDatabaseOnSchemaChange = os.Getenv("AKOFLOW_RECREATE_DATABASE_ON_SCHEMA_CHANGE") == "true"
 }
 func loadBuild(settings *Settings) {
 	if value := os.Getenv("AKOFLOW_ARTIFACT_STORE_ROOT"); value != "" {

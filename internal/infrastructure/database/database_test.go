@@ -6,10 +6,8 @@ import (
 	"errors"
 	"os"
 	"path/filepath"
-	"strings"
 	"testing"
 
-	"github.com/UFFeScience/akoflow/internal/infrastructure/database/schema"
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -112,93 +110,36 @@ func TestBootstrapInstallsAndValidatesCanonicalSchema(t *testing.T) {
 	}
 }
 
-func TestBootstrapAddsCloudRuntimeDriverToExistingDatabase(t *testing.T) {
+func TestBootstrapRejectsLegacySchemaInsteadOfMigratingIt(t *testing.T) {
 	db := memoryDatabase(t)
-	oldSchema := strings.Replace(
-		schema.SQL,
-		"'serverless', 'simgrid', 'cloud'",
-		"'serverless', 'simgrid'",
-		1,
-	)
-	oldSchema = strings.Replace(
-		oldSchema,
-		"'batch', 'direct', 'provisioned'",
-		"'batch', 'direct'",
-		1,
-	)
-	if _, err := db.Exec(oldSchema); err != nil {
+	if _, err := db.Exec(`CREATE TABLE schema_metadata (checksum TEXT NOT NULL, applied_at DATETIME NOT NULL)`); err != nil {
 		t.Fatal(err)
 	}
-	if _, err := db.Exec(`INSERT INTO schema_metadata(checksum, applied_at) VALUES (?, CURRENT_TIMESTAMP)`, schemaBeforeCloudRuntimeDriver); err != nil {
+	if _, err := db.Exec(`INSERT INTO schema_metadata(checksum, applied_at) VALUES ('legacy', CURRENT_TIMESTAMP)`); err != nil {
 		t.Fatal(err)
 	}
-	if err := Bootstrap(context.Background(), db); err != nil {
-		t.Fatal(err)
-	}
-	for _, statement := range []string{
-		`INSERT INTO environments(id, name, description, status) VALUES ('env', 'Cloud', '', 'defined')`,
-		`INSERT INTO environment_versions(id, environment_id, version, status, network_model, interference_model, cost_model, configuration_hash) VALUES ('env-v1', 'env', 1, 'draft', 'static-links', 'none', 'per-second', 'hash')`,
-		`INSERT INTO environment_runtimes(id, environment_version_id, name, driver, mode) VALUES ('cloud-runtime', 'env-v1', 'Cloud', 'cloud', 'execution')`,
-	} {
-		if _, err := db.Exec(statement); err != nil {
-			t.Fatal(err)
-		}
+	if err := Bootstrap(context.Background(), db); !errors.Is(err, ErrIncompatibleSchema) {
+		t.Fatalf("expected incompatible schema, got %v", err)
 	}
 }
 
-func TestBootstrapAddsProvisionedExecutionTargetToExistingDatabase(t *testing.T) {
+func TestBootstrapDoesNotModifyIncompatibleDatabase(t *testing.T) {
 	db := memoryDatabase(t)
-	oldSchema := strings.Replace(
-		schema.SQL,
-		"'batch', 'direct', 'provisioned'",
-		"'batch', 'direct'",
-		1,
-	)
-	if _, err := db.Exec(oldSchema); err != nil {
+	if _, err := db.Exec(`CREATE TABLE retained (id TEXT PRIMARY KEY)`); err != nil {
 		t.Fatal(err)
 	}
-	if _, err := db.Exec(`INSERT INTO schema_metadata(checksum, applied_at) VALUES (?, CURRENT_TIMESTAMP)`, schemaBeforeCloudExecutionTarget); err != nil {
+	if _, err := db.Exec(`INSERT INTO retained(id) VALUES ('unchanged')`); err != nil {
 		t.Fatal(err)
 	}
-	if err := Bootstrap(context.Background(), db); err != nil {
-		t.Fatal(err)
-	}
-	for _, statement := range []string{
-		`INSERT INTO environments(id, name, description, status) VALUES ('env', 'Cloud', '', 'defined')`,
-		`INSERT INTO environment_versions(id, environment_id, version, status, network_model, interference_model, cost_model, configuration_hash) VALUES ('env-v1', 'env', 1, 'draft', 'static-links', 'none', 'per-second', 'hash')`,
-		`INSERT INTO resources(id, environment_version_id, execution_target, type, name, provider_id) VALUES ('cloud-resource', 'env-v1', 'provisioned', 'cloud_vm', 'Cloud VM', 'gcp')`,
-	} {
-		if _, err := db.Exec(statement); err != nil {
-			t.Fatal(err)
-		}
-	}
-}
-
-func TestBootstrapRemovesLegacyCloudEntrypointResource(t *testing.T) {
-	db := memoryDatabase(t)
-	ctx := context.Background()
-	if err := Bootstrap(ctx, db); err != nil {
-		t.Fatal(err)
-	}
-	for _, statement := range []string{
-		`INSERT INTO environments(id, name, description, status) VALUES ('env', 'Cloud', '', 'defined')`,
-		`INSERT INTO environment_versions(id, environment_id, version, status, network_model, interference_model, cost_model, configuration_hash) VALUES ('env-v1', 'env', 1, 'draft', 'static-links', 'none', 'per-second', 'hash')`,
-		`INSERT INTO environment_connections(id, environment_id, name, type, endpoint) VALUES ('cloud-connection', 'env', 'Cloud', 'cloud', '')`,
-		`INSERT INTO resources(id, environment_version_id, execution_target, type, name, provider_id, schedulable) VALUES ('env-entrypoint', 'env-v1', 'provisioned', 'cloud_vm', 'Cloud on demand', 'local-engine', 0)`,
-	} {
-		if _, err := db.Exec(statement); err != nil {
-			t.Fatal(err)
-		}
-	}
-	if err := Bootstrap(ctx, db); err != nil {
-		t.Fatal(err)
+	if err := Bootstrap(context.Background(), db); !errors.Is(err, ErrIncompatibleSchema) {
+		t.Fatalf("expected incompatible schema, got %v", err)
 	}
 	var count int
-	if err := db.QueryRow(`SELECT COUNT(*) FROM resources WHERE id='env-entrypoint'`).Scan(&count); err != nil {
+	if err := db.QueryRow(`SELECT COUNT(*) FROM retained WHERE id='unchanged'`).Scan(&count); err != nil {
 		t.Fatal(err)
 	}
-	if count != 0 {
-		t.Fatalf("legacy cloud entrypoint count = %d, want 0", count)
+	if count != 1 {
+		t.Fatalf("retained rows = %d, want 1", count)
 	}
 }
 

@@ -47,7 +47,7 @@ Work on the first unchecked unit only. Do not combine units unless the changes a
 ### P0 — first successful run
 
 - [x] Rewrite `guides/workflows/first-run.md` as one complete SimGrid tutorial. Evidence: the corrected six-file bundle produced run `simulation-example-run-v1` with 3/3 completed activities, two transfers, 120,000,000 transferred bytes, and 21.593 s observed makespan on 2026-09-11; all seven screenshot markers were removed because commands and invariant output provide the clearer verification path.
-- [x] Review `getting-started.md` as a short orientation page. It now states that the checked-in SimGrid tutorial requires a separately managed API endpoint and repository files.
+- [x] Review `getting-started.md` as a short orientation page. It leads to the verified local Desktop run and identifies the SimGrid tutorial as a separate API path.
 - [x] Create and verify a Desktop-only first-workflow path to visible results. The extracted v1.0.8 Linux Desktop package, launched with Docker access, created a local environment, workflow, scope, manual plan, and real run `run-1789254029488`; activity exit code was 0 and its generated-file evidence recorded `result.txt` (20 B, SHA-256 `8dcc517ee6ace065324746726b7f6b5cd67b8c22956ec75bd8b713a0aeaca070`). `guides/workflows/first-local-run.md` now gives the UI steps. Clean package-manager and other-platform installation remain separate validation work.
 - [ ] Verify installation on a clean supported host. The pending first-start screenshot was removed because text-based preflight checks are more useful and safe. The next tagged release must attach version-matched Desktop installers plus SHA-256-checked runtime archives for each supported architecture; verify that Desktop loads those release assets locally without a container-registry pull.
 
@@ -107,8 +107,8 @@ The documentation is ready for external users only when all of the following are
 
 ## Short remaining-gap list
 
-1. A Desktop-only first-workflow path remains unverified; the current SimGrid tutorial requires API access and repository files.
+1. The Linux v1.0.8 Desktop package completed the local first-workflow path through a generated file; clean-host package-manager and other-platform first runs still need verification. The SimGrid tutorial remains a separate API path.
 2. GCP and AWS/S3 procedures still require disposable provider accounts to verify minimum permissions, cleanup, and current interface behavior.
 3. Focused Desktop captures now cover planning, environment catalog, execution scope, workflow history, SimGrid run detail, provenance exploration, lineage, read-only SQL, and audit events. These captures were reviewed in light and dark themes; the automated link checker is in CI. Further captures should be added only where they clarify a verified procedure.
 4. The v1.0.8 Linux package and first launch were exercised, but clean-host package-manager installation and macOS/Windows installation remain unverified. See `onboarding-verification-2026-09-12.md`.
-5. Generated endpoint pages now identify inferred JSON shapes and handle ZIP instance import, but priority request contracts still need explicit required fields, valid examples, and handler checks. Build and link validation do not prove that a copied request works.
+5. Generated endpoint pages identify inferred JSON shapes, handle ZIP instance import, link six runnable SimGrid POST payloads, and add handler-checked notes to eight more routes. Remaining priority request contracts still need required fields, valid examples, and handler checks. Build and link validation do not prove that a copied request works.

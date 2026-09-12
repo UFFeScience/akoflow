@@ -143,14 +143,7 @@ The root health check returns `ok`. Preflight reports server, Docker, and BuildK
 | `GET` | `/planning-sessions/{sessionId}/candidates/{candidateId}/` | Read a candidate |
 | `POST` | `/planning-sessions/{sessionId}/candidates/{candidateId}/select/` | Select a candidate and produce a plan |
 
-Create a workflow by posting the current workflow definition document:
-
-```bash
-curl -X POST -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
-  -H "Content-Type: application/json" \
-  --data-binary @workflow.json \
-  "$AKOFLOW_API_URL/workflow-definitions/"
-```
+For a complete workflow request and the required registration order, use [Workflow definitions](../guides/workflows/definitions) or the [SimGrid first-run tutorial](../guides/workflows/first-run).
 
 ## Executions
 

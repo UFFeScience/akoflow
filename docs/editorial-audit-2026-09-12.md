@@ -61,7 +61,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `installation.md` | Full read; public bootstrap checks verified in `security.go` and tests; clarified what Connected proves | Verify clean-host and cross-platform installation |
 | `internal/workflow-spec.md` | Full read; compatibility and simulation-only import limits are explicit | Check contracts against current importer |
 | `modules.md` | Full read; removed incidental polling default | Recheck claims against daemon composition |
-| `reference/api-overview.md` | Second read; removed a token-in-shell-history setup example in favor of the shared API setup | Check contracts against current handlers and schemas |
+| `reference/api-overview.md` | Second read; removed token-in-shell-history setup and an unprovided `workflow.json` example; linked the task guide and versioned tutorial | Check contracts against current handlers and schemas |
 | `reference/environment-yaml.md` | Full read; field-level detail belongs in reference | Check contracts against current handlers and schemas |
 | `reference/execution-scopes-and-topologies.md` | Full read; creation order, units, and validation limits are explicit | Check contracts against current handlers and schemas |
 | `reference/feature-coverage.md` | Full read; route coverage remains a reference checklist | Check contracts against current handlers and schemas |
@@ -81,6 +81,6 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 ## Verification in this pass
 
 - `npm run typecheck`, `npm run build`, `npm run check:links`, and `git diff --check` passed on the editorial branch.
-- The latest link check covered 368 local links/assets and 53 showcase downloads from the `v1.0.8` Git tag.
+- The latest link check covered 370 local links/assets and 53 showcase downloads from the `v1.0.8` Git tag.
 - Headless Chromium at 390 × 844 loaded Getting Started, Core concepts, the console guide, and the new Desktop first-run page without page errors or horizontal overflow. The first-run page's mobile menu opened and showed its tutorial link.
 - These checks establish site integrity for this pass. They do not prove tutorial execution, provider support, or completion of the editorial gate.

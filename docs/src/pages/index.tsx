@@ -1,40 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import Link from "@docusaurus/Link";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import Layout from "@theme/Layout";
 import BackgroundGraph from "../components/BackgroundGraph";
 import styles from "./index.module.css";
-
-function CopyIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <rect x="9" y="9" width="13" height="13" rx="2" />
-      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-    </svg>
-  );
-}
-
-function CheckIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <polyline points="20 6 9 17 4 12" />
-    </svg>
-  );
-}
 
 function DownloadIcon() {
   return (
@@ -54,32 +23,6 @@ function DownloadIcon() {
     </svg>
   );
 }
-
-function CopyBtn({ text }: { text: string }) {
-  const [copied, setCopied] = useState(false);
-  function handle() {
-    navigator.clipboard.writeText(text).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    });
-  }
-  return (
-    <button
-      className={`${styles.copyBtn} ${copied ? styles.copied : ""}`}
-      onClick={handle}
-      title="Copy"
-    >
-      {copied ? <CheckIcon /> : <CopyIcon />}
-    </button>
-  );
-}
-
-type Platform = "desktop" | "api";
-
-const platforms: { id: Platform; label: string; recommended?: boolean }[] = [
-  { id: "desktop", label: "Desktop", recommended: true },
-  { id: "api", label: "API" },
-];
 
 function DesktopCard() {
   return (
@@ -108,44 +51,8 @@ function DesktopCard() {
   );
 }
 
-function ApiCard() {
-  return (
-    <div className={styles.installCard}>
-      <div className={styles.installCardHeader}>
-        <span className={styles.installCardTitle}>
-          Automate through the HTTP API
-        </span>
-      </div>
-      <p className={styles.installCardDesc}>
-        Use the same operations as Desktop from scripts, experiment pipelines,
-        and integrations.
-      </p>
-      <div className={styles.cmdRow}>
-        <span className={styles.cmdText}>
-          curl -H &quot;Authorization: Bearer $AKOFLOW_API_TOKEN&quot;
-          $AKOFLOW_API_URL/environments/
-        </span>
-        <CopyBtn
-          text={
-            'curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" "$AKOFLOW_API_URL/environments/"'
-          }
-        />
-      </div>
-      <Link to="/docs/reference/api-overview" className={styles.docsLink}>
-        API reference
-      </Link>
-    </div>
-  );
-}
-
-const cards: Record<Platform, React.ReactNode> = {
-  desktop: <DesktopCard />,
-  api: <ApiCard />,
-};
-
 export default function Home(): React.JSX.Element {
   const { siteConfig } = useDocusaurusContext();
-  const [platform, setPlatform] = useState<Platform>("desktop");
 
   return (
     <Layout
@@ -185,25 +92,10 @@ export default function Home(): React.JSX.Element {
         </p>
 
         <div className={styles.platformSection}>
-          <div className={styles.platformTabs}>
-            {platforms.map((p) => (
-              <button
-                key={p.id}
-                className={`${styles.tabBtn} ${platform === p.id ? styles.tabBtnActive : ""}`}
-                onClick={() => setPlatform(p.id)}
-              >
-                {p.label}
-                {p.recommended && platform !== p.id && (
-                  <span className={styles.tabRecommended}>rec</span>
-                )}
-              </button>
-            ))}
-          </div>
-
-          {cards[platform]}
+          <DesktopCard />
 
           <p className={styles.hint}>
-            Docker selects an available loopback API port &middot;{" "}
+            Desktop runs the local control plane through Docker &middot;{" "}
             <Link to="/docs/installation">Full installation guide</Link>
           </p>
         </div>

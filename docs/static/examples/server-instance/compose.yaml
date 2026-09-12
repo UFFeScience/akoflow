@@ -1,0 +1,39 @@
+services:
+  akoflow-server:
+    image: akoflow/daemon:${AKOFLOW_RELEASE_TAG:?set AKOFLOW_RELEASE_TAG in .env}
+    pull_policy: never
+    restart: unless-stopped
+    environment:
+      AKOFLOW_API_TOKEN: ${AKOFLOW_API_TOKEN:?set AKOFLOW_API_TOKEN in .env}
+      AKOFLOW_API_ALLOWED_ORIGINS: ${AKOFLOW_API_ALLOWED_ORIGINS:-}
+      AKOFLOW_ARTIFACT_STORE_ROOT: /var/lib/akoflow/artifacts
+      AKOFLOW_SIMGRID_WORKSPACE: /var/lib/akoflow/simgrid
+      AKOFLOW_SSH_KEY_DIRECTORY: /var/lib/akoflow/credentials/ssh
+      AKOFLOW_KUBERNETES_TOKEN_DIRECTORY: /var/lib/akoflow/credentials/kubernetes
+      AKOFLOW_CLOUD_CREDENTIAL_DIRECTORY: /var/lib/akoflow/credentials/cloud
+      AKOFLOW_TERRAFORM_WORKSPACE: /var/lib/akoflow/terraform
+      AKOFLOW_SLURM_SCRIPT_DIRECTORY: /var/lib/akoflow/slurm/scripts
+      AKOFLOW_CONSOLE_ENABLED: "false"
+      BUILDKIT_HOST: tcp://buildkitd:1234
+    ports:
+      - "127.0.0.1:${AKOFLOW_PORT:-8080}:8080"
+    volumes:
+      - akoflow-state:/var/lib/akoflow
+      # Required only when this trusted control plane must run local Docker work.
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      buildkitd:
+        condition: service_started
+
+  buildkitd:
+    image: akoflow/buildkit:${AKOFLOW_RELEASE_TAG:?set AKOFLOW_RELEASE_TAG in .env}
+    pull_policy: never
+    restart: unless-stopped
+    privileged: true
+    volumes:
+      - buildkit-state:/var/lib/buildkit
+      - akoflow-state:/var/lib/akoflow
+
+volumes:
+  akoflow-state:
+  buildkit-state:

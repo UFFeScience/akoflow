@@ -30,6 +30,10 @@ from that release into local Docker; no container-registry package is required.
 
 Before installing, review the platform requirements in [Installation](installation). After launch, confirm that Desktop reaches **Overview**.
 
+Need a control plane on a Linux instance instead of a workstation installation?
+Use the separate [self-managed server guide](./guides/operations/server-instance).
+It is an operator procedure, not a Desktop download option.
+
 :::note macOS Gatekeeper
 After verifying that the bundle came from the official release, if macOS blocks it on first launch, run:
 ```bash

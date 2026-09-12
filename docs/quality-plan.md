@@ -26,6 +26,7 @@ Showcases are extended tutorials. They may link to how-to and reference pages, b
 - [x] No screenshot markers remain. `rg '<!--\\s*screenshot:' docs/docs` returned no matches on 2026-09-11; relevant guides now use checked-in captures or executable verification steps.
 - [x] All internal links and every downloadable asset pass an automated link check. Evidence: `docs/scripts/check-links.mjs` and `.github/workflows/docs-checks.yaml`; the check passed with 264 local route/asset links and 36 Showcase downloads on 2026-09-11.
 - [x] Navigation is organized visibly by Tutorial, How-to, Reference, and Explanation. `docs/sidebars.ts` presents these as its four primary sections, verified in the running documentation site on 2026-09-11.
+- [x] Desktop is the only end-user installation and download path; self-managed server deployment is a separate operator guide. Evidence: `installation.md`, `downloads.md`, `guides/operations/server-instance.md`, and `static/examples/server-instance/compose.yaml`; Compose interpolation, documentation typecheck, production build, and link check passed on 2026-09-12.
 - [ ] Every supported runtime has an end-to-end, independently verified showcase.
 
 ## Runtime and provider coverage

@@ -55,24 +55,13 @@ The first launch downloads the matching runtime archives from the same release
 and loads them into Docker. The Desktop does not need you to copy a daemon
 token into the application.
 
-## Run from a source tag
+## Running a server on an instance
 
-The GitHub Release assets are the supported end-user distribution. For local
-development or a custom deployment, check out the desired Git tag and follow
-the repository's development Compose instructions. This is a source-based
-workflow, not a package installation, and it is maintained separately from the
-Desktop release path.
-
-## Develop the graphical client
-
-The Desktop source is maintained in the sibling `akoflow-admin` project. Start the daemon, then run:
-
-```bash
-npm install --legacy-peer-deps
-npm run dev
-```
-
-Use `npm run desktop` to run the Electron development shell. The Vite proxy reads the daemon token on the development server; it is not bundled into React or stored by the production Desktop bootstrap.
+Desktop is the installation path for an individual workstation. If an operator
+needs a control plane on a Linux instance, follow [Run the AkôFlow server on a
+Linux instance](./guides/operations/server-instance). That separate how-to
+uses the daemon and BuildKit runtime archives from a named Release and keeps
+the server API off the public network by default.
 
 ## Updates and rollback
 
@@ -81,4 +70,4 @@ before changing versions so it can be restored if needed.
 
 ## Verify the installation
 
-After Desktop shows a connected daemon or the API preflight succeeds, complete the [first end-to-end run](./guides/workflows/first-run). That tutorial verifies a real lifecycle boundary: registered infrastructure, workflow, plan, execution, activity records, and data-transfer evidence.
+After Desktop shows a connected daemon, complete the [first end-to-end run](./guides/workflows/first-run). That tutorial verifies a real lifecycle boundary: registered infrastructure, workflow, plan, execution, activity records, and data-transfer evidence.

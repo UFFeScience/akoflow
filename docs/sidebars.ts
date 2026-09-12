@@ -71,6 +71,7 @@ const sidebars: SidebarsConfig = {
           collapsed: true,
           items: [
             "guides/operations/instance-management",
+            "guides/operations/server-instance",
             "guides/operations/search-and-notifications",
             "guides/operations/interactive-console",
             "guides/operations/credentials-and-ssh",

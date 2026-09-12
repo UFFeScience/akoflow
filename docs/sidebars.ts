@@ -103,6 +103,7 @@ const sidebars: SidebarsConfig = {
       items: [
         "reference/api-overview",
         "reference/core-ui-contract-matrix",
+        "reference/desktop-flow-map",
         "reference/environment-yaml",
         "reference/execution-scopes-and-topologies",
         "reference/planning-and-execution-states",
@@ -119,7 +120,7 @@ const sidebars: SidebarsConfig = {
       type: "category",
       label: "Contributing",
       collapsed: true,
-      items: ["contributing/documentation-plan"],
+      items: ["contributing/documentation-plan", "contributing/desktop-media"],
     },
   ],
 };

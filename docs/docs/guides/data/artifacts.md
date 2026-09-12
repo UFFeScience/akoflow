@@ -5,9 +5,9 @@ description: Browse data, register executable artifacts, and follow materializat
 
 # Manage artifacts, storage, and builds
 
-AkôFlow separates **scientific data** from **executable artifacts**. Files produced by a workflow can be promoted to the scientific record. Executable artifacts are immutable, versioned definitions whose bytes may have verified locations or be materialized on a target resource.
+Use this guide to browse workflow files, record an output as scientific data, or register an executable for later runs. AkôFlow tracks scientific results separately from the executables that produce them. Executables have versioned definitions and can be prepared on a target resource before a run.
 
-The Desktop is the easiest way to perform these operations. Every view described below uses the same HTTP API, so the API examples are suitable for scripts and integrations.
+Use Desktop for the guided actions or the API commands for scripts.
 
 For the API commands on this page, complete [API connection setup](../../tutorials/api-access) first.
 

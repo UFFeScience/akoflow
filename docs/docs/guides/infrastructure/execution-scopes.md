@@ -2,7 +2,7 @@
 title: Define execution scopes and network links
 ---
 
-An execution scope is a reusable set of environment versions available to planning. A network topology describes transfer links between resources. The scope stores a `networkTopologyId`; the topology stores its `executionScopeId`. Use stable IDs and create the scope before the topology when building them through the current API.
+An execution scope tells the planner which environments it may use. Add network links when transfer time or cost matters between their resources. In Desktop, you can create a scope with an empty topology; add links through the API.
 
 For the API commands on this page, complete [API connection setup](../../tutorials/api-access) first.
 
@@ -24,6 +24,8 @@ For the API commands on this page, complete [API connection setup](../../tutoria
 A scope is not a copy of its environments and does not create connections or resources.
 
 ### Using the API
+
+Create the scope first. The scope refers to the topology by `networkTopologyId`; the topology refers back to the scope by `executionScopeId`. Keep both IDs stable.
 
 ```bash
 curl --fail-with-body \

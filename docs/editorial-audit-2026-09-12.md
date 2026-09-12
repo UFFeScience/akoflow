@@ -27,12 +27,12 @@ This is an iteration ledger, not a completion certificate. The current pass insp
 | `explanations/planning.md` | Full read and simplified plan terminology | Recheck planning claims after P0 fixes |
 | `explanations/prism-and-heft.md` | Full read; algorithm detail serves comparison readers | Recheck algorithm claims after P0 fixes |
 | `getting-started.md` | Edited in this pass | Verify complete first-user path |
-| `guides/data/artifacts.md` | Edited in this pass | Full read after P0/P1 fixes |
-| `guides/data/provenance-and-audit.md` | Edited in this pass | Full read after P0/P1 fixes |
+| `guides/data/artifacts.md` | Full read; simplified the task-first opening | Recheck API payloads after P0 contracts fix |
+| `guides/data/provenance-and-audit.md` | Full read; detailed screen tables serve investigation tasks | Recheck API payloads after P0 contracts fix |
 | `guides/infrastructure/aws.md` | Rewritten after code audit | Check provider claims against real-environment evidence |
 | `guides/infrastructure/cloud-capacity.md` | Edited in this pass | Full read after P0/P1 fixes |
-| `guides/infrastructure/environments.md` | Edited in this pass | Full read after P0/P1 fixes |
-| `guides/infrastructure/execution-scopes.md` | Edited in this pass | Full read after P0/P1 fixes |
+| `guides/infrastructure/environments.md` | Full read; aligned Desktop actions and shared API setup | Recheck API payloads after P0 contracts fix |
+| `guides/infrastructure/execution-scopes.md` | Full read; moved reciprocal IDs to API procedure | Recheck API payloads after P0 contracts fix |
 | `guides/infrastructure/gcp.md` | Edited in this pass | Check provider claims against real-environment evidence |
 | `guides/infrastructure/hpc-slurm.md` | Edited in this pass | Check provider claims against real-environment evidence |
 | `guides/infrastructure/kubernetes.md` | Edited in this pass | Full read after P0/P1 fixes |

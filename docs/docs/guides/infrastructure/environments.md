@@ -10,7 +10,7 @@ Environment definitions are versioned. Execution scopes and plans refer to an en
 
 ### Using AkôFlow Desktop
 
-1. Open **Infrastructure → Environments** and select **Create environment**.
+1. Open **Infrastructure → Environments** and select **Connect environment** for a real target or **Create simulation** for a modeled platform.
 2. Choose the environment type. Use a simulation environment when you need modeled resources only; use a real environment when AkôFlow must connect to infrastructure.
 3. Enter the environment name and the fields shown for the selected runtime.
 4. For a real remote environment, configure its connection and credential reference. Secrets are stored by the daemon; the environment keeps a reference rather than the secret value.
@@ -24,12 +24,7 @@ Simulation creation collects a SimGrid platform model and can also define an exe
 
 ### Using the API
 
-Set the daemon address and token once:
-
-```bash
-export AKOFLOW_API_URL='http://127.0.0.1:<daemon-port>/akoflow-api'
-export AKOFLOW_API_TOKEN='<daemon-token>'
-```
+Complete [API connection setup](../../tutorials/api-access) before running these commands.
 
 The creation body is an `EnvironmentDefinition`, not only an environment name. This minimal local example includes one version, runtime, resource, and runtime binding:
 
@@ -73,7 +68,7 @@ Health and discovery are different operations: health verifies access; discovery
 ### Using the API
 
 ```bash
-# Create and inspect environments
+# Check the connection
 curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -X POST "$AKOFLOW_API_URL/environment-connections/hpc-ssh/health/"
 

@@ -15,12 +15,12 @@ For the API commands on this page, complete [API connection setup](../../tutoria
 
 | Capability | Google Cloud | AWS |
 | --- | --- | --- |
-| Store provider credentials | Yes | Yes |
+| Store provider credentials | Yes | Record accepted; not wired to the S3 transfer connector |
 | Discover compute machines, images, disks, zones, and prices | Yes | Not yet |
 | Provision compute capacity with Terraform | Yes | Not yet |
-| Transfer artifacts through object storage | GCS through configured storage adapters | S3 and S3-compatible endpoints |
+| Transfer artifacts through object storage | GCS through configured storage adapters | S3-compatible connector with server environment credentials; external AWS validation pending |
 
-For a runnable Google Cloud setup, continue with [Configure Google Cloud](./gcp). For AWS, read [Configure AWS](./aws) before creating an environment: v1.0 can use AWS credentials for S3 data movement, but cannot create or discover EC2 workers. This distinction prevents a stored credential from being mistaken for a working compute provider.
+For a Google Cloud setup, continue with [Configure Google Cloud](./gcp). For AWS, read [AWS and S3 support](./aws) before planning data movement. A saved AWS credential does not currently configure the transfer connector or create EC2 capacity.
 
 ## Synchronize the provider catalog
 

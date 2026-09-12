@@ -8,8 +8,7 @@ This tutorial connects **Google Cloud**, the compute provider available in the
 current **Cloud on demand** form. Its result is a registered environment and a
 synchronized catalog. It does not provision a VM.
 
-AWS support is currently for S3 data movement, not EC2 discovery/provisioning.
-For that separate task use [Configure AWS](../guides/infrastructure/aws).
+AWS support is currently limited to a separately configured S3-compatible transfer connector; saved cloud credentials are not wired to it, and EC2 discovery/provisioning is unavailable. See [AWS and S3 support](../guides/infrastructure/aws).
 
 ## Before you begin
 

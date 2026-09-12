@@ -10,6 +10,7 @@ This is an iteration ledger, not a completion certificate. The current pass insp
 2. **P0 — Generated request contracts:** ZIP instance import is corrected and inferred JSON is labeled, but priority endpoints still need handler-checked required fields and runnable payloads.
 3. **P1 — Provider evidence:** GCP and S3 procedures still need disposable-account validation. The SLURM fixture is local adapter evidence, not an institutional batch run.
 4. **P1 — Full plain-language review:** after those corrections, re-read every authored page and the generated template as a new user, then repeat the audit until no new P0/P1 issue appears.
+5. **P0 resolved in this pass — AWS/S3 narrative:** the former guide described a Desktop storage-creation flow and implied saved AWS credentials enabled S3 operations. Current code exposes a browsing screen without creation and wires the transfer connector to server environment credentials. The guide and support matrix now state that limit; a live S3 procedure still needs validation.
 
 ## Page inventory
 
@@ -27,7 +28,7 @@ This is an iteration ledger, not a completion certificate. The current pass insp
 | `getting-started.md` | Edited in this pass | Verify complete first-user path |
 | `guides/data/artifacts.md` | Edited in this pass | Full read after P0/P1 fixes |
 | `guides/data/provenance-and-audit.md` | Edited in this pass | Full read after P0/P1 fixes |
-| `guides/infrastructure/aws.md` | Opening and purpose scanned | Check provider claims against real-environment evidence |
+| `guides/infrastructure/aws.md` | Rewritten after code audit | Check provider claims against real-environment evidence |
 | `guides/infrastructure/cloud-capacity.md` | Edited in this pass | Full read after P0/P1 fixes |
 | `guides/infrastructure/environments.md` | Edited in this pass | Full read after P0/P1 fixes |
 | `guides/infrastructure/execution-scopes.md` | Edited in this pass | Full read after P0/P1 fixes |
@@ -64,7 +65,7 @@ This is an iteration ledger, not a completion certificate. The current pass insp
 | `showcase/parallel-50-core.mdx` | Edited in this pass | Check procedure and result against pinned bundle |
 | `showcase/slurm-local-fixture.mdx` | Edited in this pass | Check procedure and result against pinned bundle |
 | `tutorials/api-access.md` | Opening and purpose scanned | Full read after P0/P1 fixes |
-| `tutorials/connect-cloud.md` | Opening and purpose scanned | Full read after P0/P1 fixes |
+| `tutorials/connect-cloud.md` | AWS caveat corrected | Full read after P0/P1 fixes |
 | `tutorials/register-hpc.md` | Opening and purpose scanned | Full read after P0/P1 fixes |
 
 ## Verification in this pass

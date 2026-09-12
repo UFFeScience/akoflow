@@ -26,6 +26,7 @@ Showcases are extended tutorials. They may link to how-to and reference pages, b
 - [x] No screenshot markers remain. `rg '<!--\\s*screenshot:' docs/docs` returned no matches on 2026-09-11; relevant guides now use checked-in captures or executable verification steps.
 - [x] All internal links and every downloadable asset pass an automated link check. Evidence: `docs/scripts/check-links.mjs` and `.github/workflows/docs-checks.yaml`; the latest check covered 382 local route/asset links and 54 Showcase downloads on 2026-09-12.
 - [x] Navigation separates Tutorials, How-to guides, Explanations, Reference, and Developing AkôFlow. Evidence: `docs/sidebars.ts`; at 390 × 844 the built site's menu opened, showed the new first-workflow link, and had no horizontal overflow or page error on 2026-09-12.
+- [x] Home, Getting started, Installation, and Interface tour use the same first action: a real local Desktop workflow. Home now links to the pinned download-selection page rather than an unqualified latest-release page. The built Home link and target route were checked on 2026-09-12.
 - [x] Desktop is the only end-user installation and download path; self-managed server deployment is a separate operator guide. Evidence: `installation.md`, `downloads.md`, `guides/operations/server-instance.md`, and `static/examples/server-instance/compose.yaml`; Compose interpolation, documentation typecheck, production build, and link check passed on 2026-09-12.
 - [ ] Every supported runtime has an end-to-end, independently verified showcase.
 

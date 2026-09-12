@@ -27,22 +27,24 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 19. **P0 resolved in the second pass — console outcome:** the one-shot console guide wrongly treated runner failure as HTTP `422`. The service waits for the runner and returns a `201` command record with `status: failed`; the guide and generated endpoint now tell readers to inspect status and failure. A successful session creation returns `connected`, not a `starting` session. Seven more generated endpoint pages now state checked console, connection-test, machine-configuration, and GCP-only catalog-validation limits.
 20. **P0/P1 resolved in the generated API template:** the short-name struct index let a SimGrid `Request` alias overwrite the real console `Request`, so the console-command page displayed an unrelated workflow execution body. Concrete structs now win over aliases; conflicting short names produce no inferred sample. All 125 generated pages now show each JSON shape once, omit Go type names from the reader-facing component, use a short sample caveat, and link Console to its actual task guide. The six verified SimGrid routes use their versioned files instead of large inferred request bodies.
 21. **P1 resolved in the generated API template — qualified responses:** `environment.Definition` and `workflow.Definition` shared a short name, which suppressed response examples after the conservative collision fix. The generator now resolves qualified aliases for both types; environment and workflow responses have their correct shapes again. Long response examples scroll within a bounded block instead of stretching the whole page.
+22. **P1 resolved in the entry path — first action and download:** Home said to start with a local simulation even though the recommended first Desktop workflow is a real local run. It now names that workflow and sends the download action to the versioned platform-selection page. Installation and Interface tour replace avoidable daemon/control-plane language with the service or instance the reader sees. The current GitHub latest release was checked as `v1.0.8` before this second read.
 
 ## Page inventory
 
 | Page | Current pass | Next review |
 | --- | --- | --- |
-| `guides/workflows/first-local-run.md` | New; end-to-end Linux package UI path verified through generated file evidence; built page and open mobile menu inspected at 390 × 844 | Repeat on a clean supported host and other platforms |
+| `guides/workflows/first-local-run.md` | Second read; end-to-end Linux package UI path verified through generated file evidence; built page and open mobile menu inspected at 390 × 844 | Repeat on a clean supported host and other platforms |
+| `src/pages/index.tsx` | Second read; corrected real-local-run narrative and routed download to the pinned selection page | Recheck rendered entry path on mobile |
 | `concepts.md` | Second read; corrected executable/data distinction and made verified Desktop first run the next step | Recheck complete new-user path |
 | `contributing/documentation-plan.md` | Full read; replaced historical production waves with recurring review contract | Recheck contract at final audit |
-| `downloads.md` | Full read; platform limits and verification are explicit | Recheck release links when version changes |
+| `downloads.md` | Second read; platform limits and verification are explicit, and latest release was `v1.0.8` on 2026-09-12 | Recheck release links when version changes |
 | `engine.md` | Second read; implementation details remain in the developer section | Recheck claims against event-loop code |
 | `explanations/evidence-and-provenance.md` | Second read; plan predictions and optional observations remain distinct | Recheck against execution evidence after P0 fixes |
 | `explanations/network-modeling.md` | Second read; shortened transfer strategy list and clarified data-versus-order dependency | Recheck transfer claims against execution paths |
 | `explanations/observed-timing.md` | Second read; removed repeated evaluator detail while preserving optional observed-field limits | Recheck metrics against trace aggregation |
 | `explanations/planning.md` | Second read; linked scheduler comparison and removed abstract separation language | Recheck planning claims against coordinator |
 | `explanations/prism-and-heft.md` | Second read; removed Go request type and condensed bounded-search detail | Recheck algorithm claims against source |
-| `getting-started.md` | Full read; now leads to the verified Desktop local run before the API simulation | Recheck the entry flow on a clean supported host |
+| `getting-started.md` | Second read; leads to the verified Desktop local run before the API simulation | Recheck the entry flow on a clean supported host |
 | `guides/data/artifacts.md` | Second read; removed fictitious lineage/project IDs, made build ID acquisition explicit, and aligned storage operation states | Recheck API payloads after P0 contracts fix |
 | `guides/data/provenance-and-audit.md` | Full read; detailed screen tables serve investigation tasks | Recheck API payloads after P0 contracts fix |
 | `guides/infrastructure/aws.md` | Full read after code audit; partial S3 path and absent EC2 path are explicit | Check provider claims against disposable-bucket evidence |
@@ -54,7 +56,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `guides/infrastructure/kubernetes.md` | Full read; aligned API setup and task-first opening | Recheck procedure against Kind bundle |
 | `guides/infrastructure/simgrid.md` | Second read; corrected unlinked Desktop topology path and now uses shared API setup with a versioned checkout | Recheck procedure against pinned bundle |
 | `guides/infrastructure/storage.md` | Second read; Desktop capability gates match current browser; API IDs and paths are examples, promotion omits fictitious lineage IDs, and operation states match the storage coordinator | Recheck storage payloads against a real registered storage |
-| `guides/interface-tour.mdx` | Full read; removed API routes, shortened search explanation, and linked the verified Desktop first run | Recheck rendered page at mobile width |
+| `guides/interface-tour.mdx` | Second read; removed API routes, shortened search explanation, linked the verified Desktop first run, and simplified service language | Recheck rendered page at mobile width |
 | `guides/operations/credentials-and-ssh.md` | Second read; streamed private key and token payloads from protected files; aligned reference wording with connection fields | Recheck current Desktop form and key lifecycle claims |
 | `guides/operations/instance-management.md` | Full read; aligned shared API setup and removed internal snapshot detail | Recheck import/export contracts against handlers |
 | `guides/operations/interactive-console.md` | Second read; corrected synchronous command failure and successful session creation states against controllers | Recheck session behavior against Desktop |
@@ -65,7 +67,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `guides/workflows/executions.md` | Full read; corrected queued/run state distinction; packaged Desktop start flow verified with a local real run | Recheck other runtimes against their own guides |
 | `guides/workflows/first-run.md` | Full read; API submission and Desktop inspection are distinguished | Keep the SimGrid API example aligned with its versioned bundle |
 | `guides/workflows/planning.md` | Full read; simplified candidate language and made the API example's registration prerequisite explicit | Verify automatic Desktop planning flow |
-| `installation.md` | Full read; public bootstrap checks verified in `security.go` and tests; clarified what Connected proves | Verify clean-host and cross-platform installation |
+| `installation.md` | Second read; public bootstrap checks verified in `security.go` and tests; clarified what Connected proves and simplified first-launch language | Verify clean-host and cross-platform installation |
 | `internal/workflow-spec.md` | Full read; compatibility and simulation-only import limits are explicit | Check contracts against current importer |
 | `modules.md` | Second read; source map and implementation detail remain in the developer section | Recheck claims against daemon composition |
 | `reference/api-overview.md` | Second read; removed token-in-shell-history setup and an unprovided `workflow.json` example; linked the task guide and versioned tutorial | Check contracts against current handlers and schemas |

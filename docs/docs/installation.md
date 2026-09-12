@@ -8,8 +8,8 @@ description: Download the correct Desktop package, open AkôFlow, and verify the
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-Install **AkôFlow Desktop** on your workstation. It starts a local daemon and
-BuildKit using Docker and downloads matching runtime archives automatically.
+Install **AkôFlow Desktop** on your workstation. It uses Docker to start its
+local services and downloads matching runtime files automatically.
 You do not need a source checkout to install the application.
 
 ## Before you begin: prepare Docker
@@ -120,8 +120,8 @@ for its own version and architecture, verifies their SHA-256 checksums, loads
 them into Docker, and starts the local services. Keep internet access available
 for this first launch. You do not need to download the `.tar` files yourself.
 
-The application's proxy supplies the local API credential. Do not paste a token
-into a form just to complete packaged Desktop installation.
+Desktop handles its local API credential. You do not need to enter a token
+during packaged installation.
 
 ### Welcome
 
@@ -157,9 +157,8 @@ or use a unique name, and optionally edit **Description**. Choose
 
 ![Environment step with Local machine selected and Configure and check visible](../static/img/interface/onboarding/environment-selection.png)
 
-_Local machine configures execution through the daemon. With packaged Desktop,
-that daemon runs in Docker; this is not a measurement of your laptop's full
-compute capacity. Review discovered resources before planning real work._
+_Local machine uses the service running in Docker. Review discovered resources
+before planning work that needs your workstation's full compute capacity._
 
 The initial assistant also offers **Supercomputer / HPC** and **Kubernetes cluster**.
 For HPC, use the [guided registration tutorial](./tutorials/register-hpc) to
@@ -206,11 +205,11 @@ the checks in the relevant infrastructure tutorial.
 | Checkpoint           | Expected result                                      | If it fails                                                                        |
 | -------------------- | ---------------------------------------------------- | ---------------------------------------------------------------------------------- |
 | Application opens    | Welcome screen or Overview appears                   | Read startup error details and confirm Docker/Compose access                       |
-| Local service        | Sidebar connection indicator says **Connected**      | Wait for startup; inspect the daemon failure rather than creating a new identity   |
+| Local service        | Sidebar connection indicator says **Connected**      | Wait for startup; inspect the service error rather than creating a new identity    |
 | Catalog navigation   | **Infrastructure → Environments** opens              | Use [Troubleshooting](./guides/operations/troubleshooting) for API/instance errors |
 | Infrastructure setup | **Connect environment** opens the connection choices | Continue with the HPC or cloud tutorial below                                      |
 
-![Overview after first launch with the local control-plane connection established](../static/img/interface/onboarding/installation-result.png)
+![Overview after first launch with the local AkôFlow service connected](../static/img/interface/onboarding/installation-result.png)
 
 _Overview after choosing Set up later on a fresh installation. If you completed
 the local assistant, your environment is already present; empty execution charts
@@ -230,12 +229,10 @@ curl --fail-with-body "$AKOFLOW_API_URL/preflight/" | jq
 curl --fail-with-body "$AKOFLOW_API_URL/instance/" | jq '{id, name}'
 ```
 
-Expect `server.available: true` and a non-empty instance ID. Review `docker` and
-`buildkit` separately: server availability alone does not confirm either build
-prerequisite. These checks diagnose an existing installation; HTTP requests do
-not install the Desktop package. The packaged application's internal port and
-credential are managed by Desktop; do not assume they are `8080` and a token
-from a development checkout.
+Expect `server.available: true` and a non-empty instance ID. Check `docker` and
+`buildkit` separately; server availability alone does not confirm either build
+prerequisite. Desktop manages its own internal port and credential, which may
+differ from a separately managed server.
 
 ## 5. Continue with your execution target
 

@@ -45,7 +45,7 @@ curl -X POST -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   "$AKOFLOW_API_URL/storages/$STORAGE_ID/copies/"
 ```
 
-Copy and archive operations return `202 Accepted`. Download creation returns a run that can be polled at `/storage-downloads/{downloadId}/`; fetch completed content from `/storage-downloads/{downloadId}/content/`.
+Copy and archive operations return `202 Accepted`; check the returned record at `/storage-downloads/{downloadId}/` for `completed` or `ready`, respectively. File-download creation returns a ready record; fetch its content at `/storage-downloads/{downloadId}/content/`.
 
 ## Promote existing files
 
@@ -56,12 +56,7 @@ The minimal API calls are:
 ```bash
 curl -X POST -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -H "Content-Type: application/json" \
-  -d '{
-    "path":"/shared/project/result.csv",
-    "workflowVersionId":"workflow-version-1",
-    "runId":"run-1",
-    "activityId":"analyse"
-  }' \
+  -d '{"path":"/shared/project/result.csv"}' \
   "$AKOFLOW_API_URL/storages/$STORAGE_ID/promote-data/"
 
 curl -X POST -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
@@ -69,14 +64,12 @@ curl -X POST -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -d '{
     "path":"/shared/bin/model.sif",
     "name":"model",
-    "version":"1.0.0",
-    "scope":"project",
-    "scopeId":"project-1"
+    "version":"1.0.0"
   }' \
   "$AKOFLOW_API_URL/storages/$STORAGE_ID/promote-artifact/"
 ```
 
-If `id` is omitted, the server generates one. Supply meaningful provenance identifiers when promoting scientific data; an anonymous promotion is valid at the transport layer but loses useful context.
+If `id` is omitted, the server generates one. Add `workflowVersionId`, `runId`, or `activityId` only when those records exist and you want to associate the data with them. A path-only promotion registers the file without that lineage context. For executable artifacts, the omitted `scope` defaults to `environment`.
 
 ## Build an executable from a Docker image
 
@@ -85,7 +78,7 @@ Open **Artifacts** and choose **Build artifact**. Enter an artifact ID, semantic
 The equivalent two-call API flow is:
 
 ```bash
-REGISTERED=$(curl -sS -X POST \
+curl --fail-with-body -X POST \
   -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -94,10 +87,11 @@ REGISTERED=$(curl -sS -X POST \
     "image":"docker.io/library/busybox:1.36",
     "architecture":"amd64"
   }' \
-  "$AKOFLOW_API_URL/artifacts/docker/")
+  "$AKOFLOW_API_URL/artifacts/docker/"
 
-# Read .build.id from REGISTERED, then start it:
-curl -X POST -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+# Copy build.id from the response before starting the build.
+read -r -p 'Build ID from the response: ' BUILD_ID
+curl --fail-with-body -X POST -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   "$AKOFLOW_API_URL/artifact-builds/$BUILD_ID/runs/"
 ```
 

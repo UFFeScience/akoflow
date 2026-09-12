@@ -39,6 +39,7 @@ The diagram and the workflow YAML show the same topology: `prepare` produces `da
 <InterfaceApiTabs
   desktop={<div>
     <h2>Run with AkôFlow Desktop</h2>
+    <p>The API bundle below is the verified submission path. The Desktop steps show how to recreate and inspect the same model; a Desktop-only submission of this complete bundle has not yet been verified end to end.</p>
     <ol>
       <li>Open <strong>Infrastructure → Environments</strong> and create a <strong>simulation</strong> environment matching <code>environment.yaml</code>. Add the SimGrid runtime, then bind it to the edge and cloud resources. Set cores, speedup, price, boot, and container values before planning.</li>
       <li>Open <strong>Infrastructure → Execution scopes</strong> and create the scope from <code>scope.yaml</code>. Attach a topology matching <code>topology.yaml</code>: it must include both directions of the 100 Mbit/s link. A scope without this link cannot predict the cross-resource transfers in this example.</li>

@@ -218,16 +218,14 @@ sh examples/simulation/run.sh
 
 The script stops at the first HTTP failure. It does not erase or overwrite existing catalog objects.
 
-## Follow the same path in Desktop
+## Find the records in Desktop
 
-The API sequence above is the verified reference path. The current Desktop exposes the same objects:
+The API sequence above is the verified submission path. After it completes, Desktop can display the saved environment, workflow, plan, run, and results. Creating every object through Desktop alone still needs an end-to-end verification; the steps below are a navigation outline, not a second validated tutorial.
 
-1. Under **Infrastructure → Environments**, import or recreate the environment and confirm two resources plus the SimGrid runtime.
-2. Under **Infrastructure → Execution scopes**, create the scope and associate the network topology.
-3. Under **Workflows → Definitions**, choose **Import YAML** and select `workflow.yaml`. Open the workflow and confirm the three-node DAG.
-4. Open the workflow's **Plans** tab and create the fixed assignment manually, or choose **Generate plan** to learn automatic planning separately.
-5. Start the selected plan. Simulation mode is derived from the selected scope; there is no separate mode or seed choice in the start form.
-6. Open the completed run and inspect **Activities**, **Timeline**, **Data**, and **Plan vs execution**.
+1. Under **Infrastructure → Environments**, open `simulation-example` and confirm two resources plus the SimGrid runtime.
+2. Under **Infrastructure → Execution scopes**, find the scope and its network topology.
+3. Under **Workflows → Definitions**, open `simulation-example-workflow` and confirm the three-node DAG.
+4. Open its plan and the completed run. Inspect **Activities**, **Timeline**, **Data**, and **Plan vs execution**.
 
 The run is complete only when the header says `completed` and the activity summary says `3/3 settled`. In **Data**, confirm the 100 MB edge-to-cloud dependency and the 20 MB return dependency.
 

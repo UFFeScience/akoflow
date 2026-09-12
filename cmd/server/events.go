@@ -25,6 +25,7 @@ func buildEventLoop(
 	simulator ports.PlanExecutor,
 	artifactStoreRoot string,
 	planning eventloop.PlanningRunner,
+	expansions eventloop.WorkflowExpansionRunner,
 	cloud interface {
 		ports.CloudConfigurationStore
 		ports.CloudOperationStore
@@ -39,6 +40,9 @@ func buildEventLoop(
 		return nil, err
 	}
 	if err := dispatcher.Register(eventloop.EventPlanningSessionRequested, eventloop.NewPlanningSessionHandler(planning)); err != nil {
+		return nil, err
+	}
+	if err := dispatcher.Register(eventloop.EventWorkflowExpansionRequested, eventloop.NewWorkflowExpansionHandler(expansions)); err != nil {
 		return nil, err
 	}
 	cloudHandler := eventloop.NewCloudOperationHandler(cloud, cloudProvisioner)

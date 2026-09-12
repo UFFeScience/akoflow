@@ -170,12 +170,7 @@ func NewMux(workflowEngine *workflow_engine_api_handler.Handler) *http.ServeMux 
 	mux.HandleFunc("GET /akoflow-api/execution-scopes/", http_config.KernelHandler(workflowEngine.ListExecutionScopes))
 	mux.HandleFunc("GET /akoflow-api/execution-scopes/{scopeId}/", http_config.KernelHandler(workflowEngine.GetExecutionScope))
 	mux.HandleFunc("DELETE /akoflow-api/execution-scopes/{scopeId}/", http_config.KernelHandler(workflowEngine.DeleteExecutionScope))
-	mux.HandleFunc("POST /akoflow-api/workflow-definitions/", http_config.KernelHandler(workflowEngine.CreateWorkflow))
-	mux.HandleFunc("POST /akoflow-api/workflow-definitions/import/", http_config.KernelHandler(workflowEngine.CreateWorkflow))
-	mux.HandleFunc("GET /akoflow-api/workflow-definitions/", http_config.KernelHandler(workflowEngine.ListWorkflows))
-	mux.HandleFunc("GET /akoflow-api/workflow-definitions/{workflowId}/", http_config.KernelHandler(workflowEngine.GetWorkflow))
-	mux.HandleFunc("GET /akoflow-api/workflow-definitions/{workflowId}/export/", http_config.KernelHandler(workflowEngine.ExportWorkflow))
-	mux.HandleFunc("POST /akoflow-api/workflow-definition-actions/duplicate/{workflowId}/", http_config.KernelHandler(workflowEngine.DuplicateWorkflow))
+	registerWorkflowRoutes(mux, workflowEngine)
 	mux.HandleFunc("POST /akoflow-api/schedule-plans/", http_config.KernelHandler(workflowEngine.CreatePlan))
 	mux.HandleFunc("POST /akoflow-api/schedule-plans/import/", http_config.KernelHandler(workflowEngine.ImportPlan))
 	mux.HandleFunc("GET /akoflow-api/schedule-plans/", http_config.KernelHandler(workflowEngine.ListPlans))
@@ -192,6 +187,17 @@ func NewMux(workflowEngine *workflow_engine_api_handler.Handler) *http.ServeMux 
 	mux.HandleFunc("GET /akoflow-api/execution-runs/", http_config.KernelHandler(workflowEngine.ListExecutions))
 	mux.HandleFunc("GET /akoflow-api/execution-runs/{runId}/", http_config.KernelHandler(workflowEngine.GetExecution))
 	return mux
+}
+
+func registerWorkflowRoutes(mux *http.ServeMux, workflowEngine *workflow_engine_api_handler.Handler) {
+	mux.HandleFunc("POST /akoflow-api/workflow-definitions/", http_config.KernelHandler(workflowEngine.CreateWorkflow))
+	mux.HandleFunc("POST /akoflow-api/workflow-definitions/import/", http_config.KernelHandler(workflowEngine.CreateWorkflow))
+	mux.HandleFunc("GET /akoflow-api/workflow-definitions/", http_config.KernelHandler(workflowEngine.ListWorkflows))
+	mux.HandleFunc("GET /akoflow-api/workflow-definitions/{workflowId}/", http_config.KernelHandler(workflowEngine.GetWorkflow))
+	mux.HandleFunc("GET /akoflow-api/workflow-definitions/{workflowId}/export/", http_config.KernelHandler(workflowEngine.ExportWorkflow))
+	mux.HandleFunc("POST /akoflow-api/workflow-definition-actions/duplicate/{workflowId}/", http_config.KernelHandler(workflowEngine.DuplicateWorkflow))
+	mux.HandleFunc("POST /akoflow-api/workflow-versions/{versionId}/expansions/", http_config.KernelHandler(workflowEngine.RequestWorkflowExpansion))
+	mux.HandleFunc("GET /akoflow-api/workflow-versions/{versionId}/expanded/", http_config.KernelHandler(workflowEngine.GetExpandedWorkflow))
 }
 
 func Serve(ctx context.Context, address string, workflowEngine *workflow_engine_api_handler.Handler) error {

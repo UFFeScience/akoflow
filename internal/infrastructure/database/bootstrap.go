@@ -65,6 +65,9 @@ func Bootstrap(ctx context.Context, db *sql.DB) error {
 	if err := migrateTransferRunOwnership(ctx, db); err != nil {
 		return err
 	}
+	if err := migrateWorkflowExpansions(ctx, db); err != nil {
+		return err
+	}
 	if err := Validate(ctx, db); err != nil {
 		return fmt.Errorf("%w; remove the existing database file and recreate it: %v", ErrIncompatibleSchema, err)
 	}
@@ -87,6 +90,46 @@ const schemaBeforeCloudCatalogSnapshots = "c9f8b4a4d2d2fd5bfecc4f289d0e68657f608
 const schemaBeforeCloudOperationRuns = "f96a82d2abb3977da8df5907bec5a3b1b09e5a852d385d1e3daa6c019d5ab75c"
 const schemaBeforeCloudExecutionDataPlane = "45527a1e824b489f357e154689780cc164bc6cbbdd46905eeaec774303e5eed1"
 const schemaBeforeTransferRunOwnership = "e4e6a07b937bdef39d2056c2606db45762576553351c623e1d9fccd1b2b1de16"
+const schemaBeforeWorkflowExpansions = "3827285aac2f21a0af43632c65af5dff749900b45e1f0d06d707f145a031386f"
+
+func migrateWorkflowExpansions(ctx context.Context, db *sql.DB) error {
+	var checksum string
+	if err := db.QueryRowContext(ctx, `SELECT checksum FROM schema_metadata LIMIT 1`).Scan(&checksum); err != nil || checksum == schemaChecksum() {
+		return nil
+	}
+	if checksum != schemaBeforeWorkflowExpansions {
+		return nil
+	}
+	tx, err := db.BeginTx(ctx, nil)
+	if err != nil {
+		return fmt.Errorf("begin workflow expansion migration: %w", err)
+	}
+	defer tx.Rollback()
+	for _, statement := range []string{
+		`CREATE TABLE workflow_expansions (
+			id TEXT PRIMARY KEY, workflow_version_id TEXT NOT NULL REFERENCES workflow_versions(id),
+			execution_run_id TEXT NOT NULL DEFAULT '', source_activity_id TEXT NOT NULL, source_event_id TEXT NOT NULL,
+			sequence INTEGER NOT NULL CHECK(sequence > 0), result_revision INTEGER NOT NULL CHECK(result_revision > 0),
+			status TEXT NOT NULL CHECK(status IN ('applied', 'rejected')), failure_reason TEXT NOT NULL DEFAULT '',
+			metadata TEXT NOT NULL DEFAULT '{}', created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+			UNIQUE(workflow_version_id, execution_run_id, sequence), UNIQUE(workflow_version_id, source_event_id))`,
+		`CREATE TABLE workflow_expansion_activities (
+			expansion_id TEXT NOT NULL REFERENCES workflow_expansions(id), activity_id TEXT NOT NULL,
+			definition TEXT NOT NULL, PRIMARY KEY(expansion_id, activity_id))`,
+		`CREATE TABLE workflow_expansion_dependencies (
+			expansion_id TEXT NOT NULL REFERENCES workflow_expansions(id), activity_id TEXT NOT NULL,
+			depends_on_activity_id TEXT NOT NULL, dependency_type TEXT NOT NULL DEFAULT 'control',
+			PRIMARY KEY(expansion_id, activity_id, depends_on_activity_id))`,
+	} {
+		if _, err := tx.ExecContext(ctx, statement); err != nil {
+			return fmt.Errorf("apply workflow expansion migration: %w", err)
+		}
+	}
+	if _, err := tx.ExecContext(ctx, `UPDATE schema_metadata SET checksum=?, applied_at=?`, schemaChecksum(), time.Now().UTC()); err != nil {
+		return fmt.Errorf("record workflow expansion migration: %w", err)
+	}
+	return tx.Commit()
+}
 
 func migrateUserPreferences(ctx context.Context, db *sql.DB) error {
 	var checksum string
@@ -531,7 +574,7 @@ func migrateCloudExecutionDataPlane(ctx context.Context, db *sql.DB) error {
 			return fmt.Errorf("apply cloud execution data plane migration: %w", err)
 		}
 	}
-	if _, err := tx.ExecContext(ctx, `UPDATE schema_metadata SET checksum=?, applied_at=?`, schemaChecksum(), time.Now().UTC()); err != nil {
+	if _, err := tx.ExecContext(ctx, `UPDATE schema_metadata SET checksum=?, applied_at=?`, schemaBeforeWorkflowExpansions, time.Now().UTC()); err != nil {
 		return fmt.Errorf("record cloud execution data plane migration: %w", err)
 	}
 	return tx.Commit()
@@ -558,7 +601,7 @@ func migrateTransferRunOwnership(ctx context.Context, db *sql.DB) error {
 			return fmt.Errorf("apply transfer run ownership migration: %w", err)
 		}
 	}
-	if _, err := tx.ExecContext(ctx, `UPDATE schema_metadata SET checksum=?, applied_at=?`, schemaChecksum(), time.Now().UTC()); err != nil {
+	if _, err := tx.ExecContext(ctx, `UPDATE schema_metadata SET checksum=?, applied_at=?`, schemaBeforeWorkflowExpansions, time.Now().UTC()); err != nil {
 		return fmt.Errorf("record transfer run ownership migration: %w", err)
 	}
 	return tx.Commit()

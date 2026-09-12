@@ -30,6 +30,7 @@ import (
 	domainevents "github.com/UFFeScience/akoflow/internal/domain/events"
 	domaininstance "github.com/UFFeScience/akoflow/internal/domain/instance"
 	domainqueue "github.com/UFFeScience/akoflow/internal/domain/queue"
+	domainworkflow "github.com/UFFeScience/akoflow/internal/domain/workflow"
 	cloudcredential "github.com/UFFeScience/akoflow/internal/infrastructure/credentials/cloud"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/credentials/sshkey"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/credentials/token"
@@ -48,6 +49,10 @@ type ExecutionQuery interface {
 	ListTransfers(context.Context, string) ([]domain.DataTransfer, error)
 	ListHandles(context.Context, string) ([]domain.ActivityHandle, error)
 	ListEvents(context.Context, string) ([]domainevents.Event, error)
+}
+
+type WorkflowExpansionQuery interface {
+	Result(context.Context, string, string) (*domain.ExpandedWorkflow, error)
 }
 type StorageNavigator interface {
 	List(context.Context, string) ([]domain.StorageResource, error)
@@ -90,6 +95,7 @@ type DockerArtifactRequest struct {
 type Dependencies struct {
 	Environments     ports.EnvironmentCatalog
 	Workflows        ports.WorkflowStore
+	Expansions       WorkflowExpansionQuery
 	Plans            ports.PlanStore
 	Events           ports.EventPublisher
 	Validator        ports.PlanValidator
@@ -126,6 +132,7 @@ type Dependencies struct {
 type Handler struct {
 	environments     ports.EnvironmentCatalog
 	workflows        ports.WorkflowStore
+	expansions       WorkflowExpansionQuery
 	plans            ports.PlanStore
 	events           ports.EventPublisher
 	validator        ports.PlanValidator
@@ -177,7 +184,8 @@ func New(dependencies Dependencies) (*Handler, error) {
 	}
 	return &Handler{
 		environments: dependencies.Environments, workflows: dependencies.Workflows,
-		plans: dependencies.Plans, events: dependencies.Events,
+		expansions: dependencies.Expansions,
+		plans:      dependencies.Plans, events: dependencies.Events,
 		validator: dependencies.Validator, executions: dependencies.Executions,
 		topologies:       dependencies.Topologies,
 		scopes:           dependencies.Scopes,
@@ -962,6 +970,50 @@ func (h *Handler) ListWorkflows(w http.ResponseWriter, r *http.Request) {
 func (h *Handler) GetWorkflow(w http.ResponseWriter, r *http.Request) {
 	item, err := h.workflows.Find(r.Context(), r.PathValue("workflowId"))
 	writeItem(w, item, err)
+}
+
+// RequestWorkflowExpansion accepts the versioned output of a dynamic
+// activity. Materialization is performed asynchronously by the event loop.
+func (h *Handler) RequestWorkflowExpansion(w http.ResponseWriter, r *http.Request) {
+	var request domain.ExpansionRequest
+	if !decode(w, r, &request) {
+		return
+	}
+	request.WorkflowVersionID = r.PathValue("versionId")
+	if request.ID == "" {
+		request.ID = domainworkflow.DeterministicExpansionID(request.WorkflowVersionID, request.SourceEventID)
+	}
+	if err := request.Validate(); err != nil {
+		writeError(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+	payload, err := json.Marshal(request)
+	if err != nil {
+		writeError(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+	job, err := domainqueue.New(domainqueue.CategoryOrchestration, eventloop.EventWorkflowExpansionRequested, payload, time.Now().UTC())
+	if err != nil {
+		writeError(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+	job.AggregateType, job.AggregateID = "workflow_version", request.WorkflowVersionID
+	job.IdempotencyKey = "workflow-expansion:" + request.WorkflowVersionID + ":" + request.SourceEventID
+	published, err := h.events.Publish(r.Context(), job)
+	if err != nil {
+		writeError(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+	writeJSON(w, http.StatusAccepted, map[string]any{"request": request, "jobId": published.ID})
+}
+
+func (h *Handler) GetExpandedWorkflow(w http.ResponseWriter, r *http.Request) {
+	if h.expansions == nil {
+		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("workflow expansion service is unavailable"))
+		return
+	}
+	result, err := h.expansions.Result(r.Context(), r.PathValue("versionId"), r.URL.Query().Get("executionRunId"))
+	writeItem(w, result, err)
 }
 
 // ExportWorkflow returns the same portable YAML authoring contract accepted by

@@ -219,6 +219,34 @@ CREATE TABLE workflow_data_dependencies (
 	PRIMARY KEY(producer_activity_id, consumer_activity_id, logical_name),
 	CHECK(producer_activity_id <> consumer_activity_id)
 );
+CREATE TABLE workflow_expansions (
+		id TEXT PRIMARY KEY,
+		workflow_version_id TEXT NOT NULL REFERENCES workflow_versions(id),
+		execution_run_id TEXT NOT NULL DEFAULT '',
+		source_activity_id TEXT NOT NULL,
+		source_event_id TEXT NOT NULL,
+		sequence INTEGER NOT NULL CHECK(sequence > 0),
+		result_revision INTEGER NOT NULL CHECK(result_revision > 0),
+		status TEXT NOT NULL CHECK(status IN ('applied', 'rejected')),
+		failure_reason TEXT NOT NULL DEFAULT '',
+		metadata TEXT NOT NULL DEFAULT '{}',
+		created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+		UNIQUE(workflow_version_id, execution_run_id, sequence),
+		UNIQUE(workflow_version_id, source_event_id)
+);
+CREATE TABLE workflow_expansion_activities (
+		expansion_id TEXT NOT NULL REFERENCES workflow_expansions(id),
+		activity_id TEXT NOT NULL,
+		definition TEXT NOT NULL,
+		PRIMARY KEY(expansion_id, activity_id)
+);
+CREATE TABLE workflow_expansion_dependencies (
+		expansion_id TEXT NOT NULL REFERENCES workflow_expansions(id),
+		activity_id TEXT NOT NULL,
+		depends_on_activity_id TEXT NOT NULL,
+		dependency_type TEXT NOT NULL DEFAULT 'control',
+		PRIMARY KEY(expansion_id, activity_id, depends_on_activity_id)
+);
 CREATE TABLE activity_resource_profiles (
 		id TEXT PRIMARY KEY,
 		activity_type_id TEXT NOT NULL REFERENCES activity_types(id),

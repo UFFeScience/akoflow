@@ -148,6 +148,12 @@ type ActivityPolicy = workflow.ActivityPolicy
 type ActivityDependency = workflow.ActivityDependency
 type ActivityDataDependency = workflow.ActivityDataDependency
 type ActivityResourceProfile = workflow.ActivityResourceProfile
+type ExpansionRequest = workflow.ExpansionRequest
+type ExpansionActivity = workflow.ExpansionActivity
+type ExpansionDependency = workflow.ExpansionDependency
+type WorkflowExpansion = workflow.WorkflowExpansion
+type ExpandedWorkflow = workflow.ExpandedWorkflow
+type ExpansionLimits = workflow.ExpansionLimits
 
 type PlanningSource = planning.PlanningSource
 type ExecutionMode = planning.ExecutionMode

@@ -178,7 +178,7 @@ func catalog() (map[string]entitySpec, []string) {
 
 func entitySpecifications() []entitySpec {
 	return []entitySpec{
-		environmentSpec(), resourceSpec(), executionScopeSpec(), workflowSpec(), workflowVersionSpec(), activitySpec(), planningSessionSpec(),
+		environmentSpec(), resourceSpec(), executionScopeSpec(), workflowSpec(), workflowVersionSpec(), workflowExpansionSpec(), activitySpec(), planningSessionSpec(),
 		planSpec(), runSpec(), taskExecutionSpec(), dataObjectSpec(), dataInstanceSpec(),
 		transferSpec(), auditEventSpec(),
 	}
@@ -236,6 +236,22 @@ func workflowVersionSpec() entitySpec {
 			"definition_hash", "Definition hash", "text", "status", "Status", "status", "created_at", "Created", "datetime",
 		))
 	spec.entity.Links = []ports.ProvenanceRelationship{relationship("workflow_id", "workflows")}
+	return spec
+}
+
+func workflowExpansionSpec() entitySpec {
+	spec := specification("workflow_expansions", "Workflow expansions", "Append-only dynamic graph decisions and their resulting projection revisions.",
+		"workflow_expansions", "created_at DESC", fields(
+			"id", "ID", "identifier", "workflow_version_id", "Workflow version", "identifier",
+			"execution_run_id", "Execution run", "identifier", "source_activity_id", "Source activity", "identifier",
+			"source_event_id", "Source event", "identifier", "sequence", "Sequence", "number",
+			"result_revision", "Result revision", "number", "status", "Status", "status",
+			"failure_reason", "Failure reason", "text", "created_at", "Created", "datetime",
+		))
+	spec.entity.Links = []ports.ProvenanceRelationship{
+		relationship("workflow_version_id", "workflow_versions"), relationship("execution_run_id", "runs"),
+		relationship("source_activity_id", "activities"),
+	}
 	return spec
 }
 

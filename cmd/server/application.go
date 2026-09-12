@@ -13,6 +13,7 @@ import (
 	applicationexecution "github.com/UFFeScience/akoflow/internal/application/execution"
 	applicationplanning "github.com/UFFeScience/akoflow/internal/application/planning"
 	"github.com/UFFeScience/akoflow/internal/application/ports"
+	applicationworkflow "github.com/UFFeScience/akoflow/internal/application/workflow"
 	"github.com/UFFeScience/akoflow/internal/controlplane/eventloop"
 	"github.com/UFFeScience/akoflow/internal/domain"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/config"
@@ -71,10 +72,11 @@ func newApplication(ctx context.Context, settings config.Settings, log *logger.L
 		Scopes: storage.topologies, Topologies: storage.topologies,
 		Validator: planningplugin.NewValidator(), Registry: registry, Events: storage.events,
 	}
+	expansionService := &applicationworkflow.ExpansionCoordinator{Workflows: storage.workflows, Store: storage.workflows}
 	loop, err := buildEventLoop(
 		storage.events, storage.executions, storage.data, storage.instance,
 		storage.environments, activities, simulator, settings.ArtifactStoreRoot,
-		planningService, storage.cloud, cloudProvisioner,
+		planningService, expansionService, storage.cloud, cloudProvisioner,
 	)
 	if err != nil {
 		return fail(err)
@@ -109,7 +111,7 @@ func newApplication(ctx context.Context, settings config.Settings, log *logger.L
 	}
 	api, err := buildAPI(
 		storage, settings, connectionMonitor, discovery, consoleCommands, terminal,
-		sshKeys, cloudCredentials, cloudProvisioner, planningService,
+		sshKeys, cloudCredentials, cloudProvisioner, planningService, expansionService,
 	)
 	if err != nil {
 		return fail(err)

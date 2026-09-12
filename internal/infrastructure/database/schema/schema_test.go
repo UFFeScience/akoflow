@@ -14,6 +14,7 @@ func TestCanonicalSchemaIsEmbedded(t *testing.T) {
 		"CREATE TABLE console_commands",
 		"CREATE TABLE console_session_logs",
 		"CREATE TABLE workflow_definitions",
+		"CREATE TABLE workflow_expansions",
 		"CREATE TABLE execution_runs",
 		"log TEXT NOT NULL DEFAULT ''",
 		"CREATE TABLE queue_jobs",

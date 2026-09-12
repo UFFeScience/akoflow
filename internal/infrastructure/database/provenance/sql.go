@@ -22,6 +22,7 @@ var safeSQLTables = map[string]bool{
 	"execution_scope_environments": true, "network_topologies": true, "network_links": true,
 	"workflow_definitions": true, "workflow_versions": true, "activity_types": true,
 	"activity_definitions": true, "activity_dependencies": true, "workflow_data_dependencies": true,
+	"workflow_expansions": true, "workflow_expansion_activities": true, "workflow_expansion_dependencies": true,
 	"activity_resource_profiles": true, "schedule_plans": true, "schedule_plan_assignments": true,
 	"planning_sessions": true, "planning_algorithm_runs": true, "planning_candidates": true,
 	"execution_runs": true, "task_executions": true, "activity_lifecycle_events": true,

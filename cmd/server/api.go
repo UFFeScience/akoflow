@@ -61,6 +61,7 @@ func buildAPI(
 	cloudCredentials *cloudcredential.Manager,
 	cloudProvisioner ports.CloudProvisioner,
 	planning workflow_engine_api_handler.PlanningOrchestrator,
+	expansions workflow_engine_api_handler.WorkflowExpansionQuery,
 ) (*workflow_engine_api_handler.Handler, error) {
 	cloudCatalog := applicationcloud.New(storage.environments, cloudCredentials, storage.cloud, gcpcloud.New(nil))
 	// Never expose the process filesystem as a storage browser. Local storage is
@@ -97,6 +98,7 @@ func buildAPI(
 	return workflow_engine_api_handler.New(workflow_engine_api_handler.Dependencies{
 		Environments:     storage.environments,
 		Workflows:        storage.workflows,
+		Expansions:       expansions,
 		Plans:            storage.plans,
 		Events:           storage.events,
 		Validator:        planningplugin.NewValidator(),

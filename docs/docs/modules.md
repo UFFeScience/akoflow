@@ -1,32 +1,17 @@
 ---
+
 id: modules
 title: AkôFlow components and boundaries
 sidebar_label: Components and boundaries
 ---
 
+import useBaseUrl from '@docusaurus/useBaseUrl';
+
 AkôFlow is a single control-plane daemon with a REST API, a persistent event queue, planning and execution services, and pluggable infrastructure adapters. The Desktop application is the primary client of that API. AkôFlow does **not** deploy a separate Workflow Engine into every environment.
 
 ## At a glance
 
-```text
-AkôFlow Desktop / API clients
-              | authenticated HTTP
-              v
-+-----------------------------------------------------------+
-| AkôFlow daemon                                           |
-| REST API -> application services -> SQLite repositories   |
-|                         |                                 |
-|                persistent event loop                      |
-|                 /        |        \\                      |
-|          planning    execution    cloud lifecycle         |
-|                         |                                 |
-|               data preparation/transfers                  |
-+-------------------------+---------------------------------+
-                          |
-              runtime and connection adapters
-          /---------------+---------------\\
-       Local         Kubernetes        SSH / Slurm      Cloud
-```
+<img src={useBaseUrl('/img/architecture/control-plane-components.svg')} alt="AkôFlow Desktop and API clients call one daemon. The daemon contains API services, a persistent event loop, repositories, planning, execution, cloud lifecycle and data-preparation responsibilities, then uses adapters for local, Kubernetes, SSH or Slurm, and cloud targets." />
 
 The daemon owns orchestration and state. Target environments expose compute, storage, and network capabilities; they do not need an AkôFlow server installed inside each environment.
 

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 190" role="img" aria-labelledby="title desc">
+  <title id="title">AkôFlow lifecycle</title><desc id="desc">Environment, scope and network define the infrastructure boundary. A workflow version produces candidate plans, one selected plan produces an execution run, and the run preserves observed evidence.</desc>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#151515"/></marker></defs>
+  <rect width="960" height="190" rx="14" fill="#fff" stroke="#151515"/>
+  <g fill="#f2f2f2" stroke="#151515" stroke-width="1.5"><rect x="32" y="54" width="156" height="72" rx="8"/><rect x="222" y="54" width="150" height="72" rx="8"/><rect x="406" y="54" width="150" height="72" rx="8"/><rect x="590" y="54" width="150" height="72" rx="8"/><rect x="774" y="54" width="154" height="72" rx="8"/></g>
+  <g font-family="system-ui, sans-serif" fill="#151515" text-anchor="middle"><g font-size="15" font-weight="700"><text x="110" y="82">Infrastructure boundary</text><text x="297" y="82">Workflow version</text><text x="481" y="82">Candidate plans</text><text x="665" y="82">Execution run</text><text x="851" y="82">Observed evidence</text></g><g font-size="12"><text x="110" y="104">environment · scope · network</text><text x="297" y="104">immutable activity DAG</text><text x="481" y="104">select one placement</text><text x="665" y="104">real, simulated, interactive</text><text x="851" y="104">metrics · data · provenance</text></g></g>
+  <g stroke="#151515" stroke-width="2" marker-end="url(#arrow)"><path d="M188 90H212"/><path d="M372 90H396"/><path d="M556 90H580"/><path d="M740 90H764"/></g>
+  <text x="480" y="161" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" fill="#555">A plan predicts a placement; execution records what happened after dispatch.</text>
+</svg>

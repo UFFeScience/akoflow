@@ -1,9 +1,12 @@
 ---
+
 id: evidence-and-provenance
 title: Plan-versus-observed evidence and provenance
 sidebar_label: Evidence and provenance
 description: How AkôFlow preserves predictions, runtime observations, artifacts, lineage, and audit history.
 ---
+
+import useBaseUrl from '@docusaurus/useBaseUrl';
 
 AkôFlow does not overwrite a plan with a completed run. It preserves the prediction used to choose a placement and records the execution evidence beside it. This makes disagreement inspectable: it can indicate an inaccurate model, an unexpected runtime condition, or a different data-preparation path.
 
@@ -11,17 +14,7 @@ Use [Provenance and audit](../guides/data/provenance-and-audit) to query the rec
 
 ## Two timelines for one selected plan
 
-```text
-selected plan
-  assignments + predicted metrics + predicted timing
-                         |
-                         v
-                   execution run
-                         |
- task attempts + handles + transfers + logs + artifact manifests
-                         |
-                execution trace and provenance records
-```
+<img src={useBaseUrl('/img/architecture/evidence-provenance-timeline.svg')} alt="A selected plan holds predictions; the execution run produces runtime observations; those observations form the execution trace and provenance records." />
 
 The plan retains predicted makespan and cost. Each task attempt records its planned and allocated resource, runtime, queue, transfer, interference, and overhead timing where available. The execution trace combines task and transfer observations into observed metrics. A completed trace marks the observed result feasible; it does not certify that the prediction was accurate.
 

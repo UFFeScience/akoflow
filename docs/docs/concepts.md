@@ -17,17 +17,7 @@ This is an explanation of the records and their boundaries. For the exact YAML f
 
 ## The record chain
 
-```text
-Environment definition -> published environment version -> execution scope
-                                                        |
-Workflow definition  -> immutable workflow version ----+-> planning session
-                                                               |
-                                                        candidate -> selected plan
-                                                                              |
-                                                                        execution run
-                                                                              |
-                                      task attempts, transfers, artifacts, provenance, audit
-```
+<img src={useBaseUrl('/img/architecture/record-chain.svg')} alt="Environment definitions become published versions and scopes; immutable workflow versions join planning sessions; selected plans lead to execution runs and observed task, transfer, artifact, provenance and audit records." />
 
 The arrows express references, not a single mutable object. A planning session preserves a snapshot of the workflow, scope, inventory, topology, profiles, constraints, and selected algorithms. A later discovery refresh can create new inventory for future sessions, but it does not change that earlier comparison.
 

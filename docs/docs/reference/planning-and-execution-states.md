@@ -1,7 +1,10 @@
 ---
+
 title: Planning and execution states
 description: Authoritative lifecycle states for planning sessions, algorithm runs, candidates, schedule plans, and execution runs.
 ---
+
+import useBaseUrl from '@docusaurus/useBaseUrl';
 
 # Planning and execution states
 
@@ -9,13 +12,7 @@ This reference distinguishes the state-bearing records used by AkôFlow planning
 
 ## Lifecycle overview
 
-```text
-planning request ──> queued planning session ──> algorithm runs ──> candidates ──> selected schedule plan
-                                  │                    │
-                                  └── failed/cancelled ┘
-
-execution request ──> durable queue job ──> running execution run ──> completed or failed evidence
-```
+<img src={useBaseUrl('/img/architecture/planning-execution-states.svg')} alt="Planning flow from request to selected plan and separate execution flow from request through durable queue job to terminal evidence." />
 
 A planning request is persisted as a session and publishes a queue job. An execution request first publishes a queue job; a workflow `ExecutionRun` is created only when the daemon starts processing that job. Consequently, an accepted execution request may not yet appear in `GET /execution-runs/`.
 

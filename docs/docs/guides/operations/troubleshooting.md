@@ -1,15 +1,16 @@
 ---
+
 title: Troubleshooting
 description: Diagnose daemon access, authentication, connection, discovery, planning, execution, storage, and snapshot problems.
 ---
+
+import useBaseUrl from '@docusaurus/useBaseUrl';
 
 # Troubleshooting
 
 Start at the first failing boundary. Desktop is a client of the Engine API; the Engine then talks to Docker/BuildKit, runtimes, remote connections, storage and cloud providers.
 
-```text
-Desktop → Engine API → credential/connection → runtime or provider → workload/data
-```
+<img src={useBaseUrl('/img/architecture/troubleshooting-boundary.svg')} alt="Troubleshoot from the Desktop through the Engine API, credentials and connections, then the runtime or provider and workload or data." />
 
 Set the endpoint and token before using the checks below:
 

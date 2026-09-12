@@ -1,9 +1,12 @@
 ---
+
 id: engine
 title: Execution control plane
 sidebar_label: Execution control plane
 description: How the daemon persists work, dispatches planning and execution, and recovers runtime state.
 ---
+
+import useBaseUrl from '@docusaurus/useBaseUrl';
 
 AkôFlow's server is a persistent control-plane daemon. The HTTP API validates and stores requests; a durable event loop dispatches work that may take longer than one request. The daemon is therefore responsible for recording intent and state transitions, while runtime adapters perform provider-specific work.
 
@@ -11,17 +14,7 @@ This is an orchestration explanation, not an API contract. Use the [planning and
 
 ## From request to durable work
 
-```text
-HTTP request
-   |
-validate + persist
-   |
-typed queue job
-   |
-persistent dispatcher ----> planning handler
-                      \---> execution handler
-                      \---> cloud, transfer, monitoring, and maintenance handlers
-```
+<img src={useBaseUrl('/img/architecture/engine-request-dispatch.svg')} alt="An HTTP request is validated and persisted as a typed queue job, then dispatched to planning, execution, cloud, transfer, monitoring or maintenance handlers." />
 
 The API can acknowledge a request before its job starts. In particular, an execution request is accepted into the durable queue; the workflow execution run is created when the daemon begins processing that job. In read-only instance mode the server serves inspection APIs but does not run mutating background work.
 

@@ -6,6 +6,8 @@ slug: /getting-started
 description: Choose the shortest AkôFlow documentation path for installation, a first run, operations, concepts, or API integration.
 ---
 
+import useBaseUrl from '@docusaurus/useBaseUrl';
+
 # Choose where to start
 
 AkôFlow plans and executes scientific workflow DAGs on simulated or connected infrastructure, then preserves the plan, observed execution, data movement, artifacts, audit events, and provenance. This page is a map of the documentation; it does not teach an individual workflow.
@@ -54,19 +56,9 @@ The Desktop and HTTP API operate on the same persisted records. The API is prefe
 
 Read [Core concepts](./concepts) for the vocabulary and record relationships. Continue to [Engine](./engine) for control-plane behavior and [Runtimes](./runtimes) for execution-provider boundaries.
 
-The central lifecycle is:
+The central lifecycle is shown below.
 
-```text
-environment + execution scope + network
-                    ↓
-          versioned workflow DAG
-                    ↓
-      candidate plans → selected plan
-                    ↓
-             execution run
-                    ↓
-   observed metrics + data + provenance
-```
+<img src={useBaseUrl('/img/architecture/lifecycle-overview.svg')} alt="AkôFlow lifecycle: an infrastructure boundary and workflow version produce candidate plans; one selected plan produces an execution run and observed evidence." />
 
 A plan is not an execution. It predicts an assignment within a frozen workflow and infrastructure boundary. A run records what happened when that plan was dispatched.
 

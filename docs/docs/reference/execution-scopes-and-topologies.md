@@ -1,7 +1,10 @@
 ---
+
 title: Execution scopes and network topology reference
 description: Field-level reference for execution scopes and network topologies accepted by the AkôFlow API.
 ---
+
+import useBaseUrl from '@docusaurus/useBaseUrl';
 
 # Execution scopes and network topology reference
 
@@ -13,10 +16,7 @@ The API accepts JSON, `application/yaml`, `application/x-yaml`, and `text/yaml` 
 
 Create environments and their versions first. Then choose IDs for both the scope and its topology, create the scope, and create the topology.
 
-```text
-environment versions ──> execution scope ──> network topology ──> planning session / plan
-         resources ────────────────────────────────┘
-```
+<img src={useBaseUrl('/img/architecture/scope-topology-lifecycle.svg')} alt="Published environment versions and resources feed an execution scope, which owns a network topology used by planning sessions and plans." />
 
 The current API exposes `POST`, `GET`, and list operations for topologies; it does not expose topology replacement or deletion. For scopes it exposes `POST`, `GET`, list, and `DELETE`; it does not expose replacement. Treat IDs and link values as immutable once they are included in a plan.
 

@@ -1,8 +1,11 @@
 ---
+
 title: Planning, candidates, and selected plans
 sidebar_label: Planning and plans
 description: Why planning sessions produce candidates before one placement becomes executable.
 ---
+
+import useBaseUrl from '@docusaurus/useBaseUrl';
 
 Planning answers a bounded placement question: given one workflow version and one execution scope, which feasible assignment should be used for the chosen objective? It is not execution, and it does not reserve or start infrastructure.
 
@@ -12,22 +15,7 @@ Use [Plan a workflow](../guides/workflows/planning) for the Desktop or API proce
 
 The session stores the workflow version, execution scope, network topology, environment snapshots, resources, activity profiles, deadline, budget, interference data, and algorithm selection. Freezing these inputs makes a later comparison meaningful: each algorithm evaluates the same recorded infrastructure universe instead of whatever discovery happens to return later.
 
-```text
-workflow version + scope + snapshots + constraints
-                         |
-                         v
-                  planning session
-                         |
-          +--------------+--------------+
-          |                             |
-     algorithm run                  algorithm run
-          |                             |
-      candidate(s)                 candidate(s)
-          \                             /
-           \---- select one candidate -/
-                         |
-                    schedule plan
-```
+<img src={useBaseUrl('/img/architecture/planning-session-lifecycle.svg')} alt="Frozen workflow and infrastructure input create a planning session. Independent algorithm runs produce candidate sets, from which one candidate becomes a schedule plan." />
 
 ## Candidates are alternatives, not executions
 

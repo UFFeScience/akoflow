@@ -1,8 +1,11 @@
 ---
+
 title: Interpreting observed timing and cost
 sidebar_label: Observed timing and cost
 description: The difference between flows, queue and stage totals, makespan, and observed execution cost.
 ---
+
+import useBaseUrl from '@docusaurus/useBaseUrl';
 
 Execution evidence contains both a wall-clock result and accumulated activity
 measurements. They answer different questions. A large accumulated transfer or
@@ -71,14 +74,7 @@ overhead, and separately sums observed transfer durations and transferred bytes.
 Those sums are **accumulated stage time**. Parallel work is counted once for each
 activity that experienced it.
 
-```text
-Clock time:       0s ----------- 10s
-activity A:        [ runtime 10s ]
-activity B:        [ runtime 10s ]
-
-makespan:          10s
-accumulated compute: 20s
-```
+<img src={useBaseUrl('/img/architecture/accumulated-time.svg')} alt="Two ten-second activities run concurrently. Makespan is ten seconds, while accumulated compute time is twenty seconds." />
 
 The same applies to concurrent transfers and queue waits. Use makespan to answer
 "how long did the workflow take?" Use accumulated values to answer "where did

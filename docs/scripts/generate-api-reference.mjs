@@ -78,7 +78,7 @@ const groupMetadata = {
     "scientific provenance",
   ],
   Console: [
-    "/docs/guides/interface-tour",
+    "/docs/guides/operations/interactive-console",
     "interactive console sessions and commands",
   ],
   Audit: ["/docs/guides/data/provenance-and-audit", "operational audit events"],
@@ -307,7 +307,16 @@ function buildStructIndex(sources) {
       /type\s+([A-Za-z0-9_]+)\s+struct\s*\{([\s\S]*?)\n\}/g,
     )) {
       const fields = parseJSONFields(match[2]);
-      if (fields.length > 0) index.set(match[1], fields);
+      if (fields.length > 0) {
+        const existing = index.get(match[1]);
+        // Distinct packages can use the same short type name. Never borrow
+        // one package's fields for an unrelated request.
+        if (existing === null || (existing && JSON.stringify(existing) !== JSON.stringify(fields))) {
+          index.set(match[1], null);
+        } else if (!existing) {
+          index.set(match[1], fields);
+        }
+      }
     }
     for (const match of sourceText.matchAll(
       /type\s+([A-Za-z0-9_]+)\s*=\s*(?:[A-Za-z0-9_]+\.)?([A-Za-z0-9_]+)/g,
@@ -316,8 +325,11 @@ function buildStructIndex(sources) {
     }
   }
   for (const [alias, target] of aliases) {
+    // A domain alias must not replace a concrete type with the same name in
+    // another package (for example console.Request vs simgrid.Request).
+    if (index.has(alias)) continue;
     const fields = index.get(target);
-    if (fields) index.set(alias, fields);
+    if (fields !== undefined) index.set(alias, fields);
   }
   return index;
 }
@@ -386,6 +398,7 @@ function sampleValue(typeName, structIndex, depth = 0) {
   if (/(?:^|\b)(?:u?int(?:8|16|32|64)?|float(?:32|64))$/.test(clean)) return 0;
   const shortName = clean.split(".").at(-1);
   const fields = structIndex.get(shortName);
+  if (fields === null) return null;
   if (fields && depth < 3) {
     return Object.fromEntries(
       fields.map((field) => [
@@ -555,8 +568,7 @@ function extractResponseContract(
 }
 
 function endpointDescription(endpoint) {
-  const action = endpoint.title;
-  return `${action.charAt(0).toLowerCase()}${action.slice(1)} through the AkôFlow ${groupMetadata[endpoint.group][1]} API.`;
+  return `AkôFlow ${endpoint.group} API: ${endpoint.title}.`;
 }
 
 function endpointDocument(endpoint, position) {
@@ -567,15 +579,17 @@ function endpointDocument(endpoint, position) {
   const runnableFile =
     runnableSimulationRequests[`${endpoint.method} ${endpoint.path}`];
   const runnableSection = runnableFile
-    ? `## Runnable SimGrid request\n\nThe [first-run tutorial](/docs/guides/workflows/first-run) submits [\`examples/simulation/${runnableFile}\`](https://github.com/UFFeScience/akoflow/blob/v1.0.8/examples/simulation/${runnableFile}) as part of its verified six-request sequence. Follow that sequence so referenced IDs exist before this request. The inferred shape above is illustrative; use the versioned file for a runnable payload.\n\n`
+    ? `## Runnable SimGrid request\n\nThe [first-run tutorial](/docs/guides/workflows/first-run) submits [\`examples/simulation/${runnableFile}\`](https://github.com/UFFeScience/akoflow/blob/v1.0.8/examples/simulation/${runnableFile}) in a six-request sequence. Follow that order so referenced IDs exist.\n\n`
     : "";
   const verifiedNote = verifiedRequestNotes[`${endpoint.method} ${endpoint.path}`];
   const verifiedSection = verifiedNote
     ? `## Handler-checked request notes\n\n${verifiedNote}\n\n`
     : "";
   const requestExample =
-    verifiedRequestExamples[`${endpoint.method} ${endpoint.path}`] ??
-    endpoint.request?.example;
+    runnableFile
+      ? null
+      : verifiedRequestExamples[`${endpoint.method} ${endpoint.path}`] ??
+        endpoint.request?.example;
   return `---
 title: ${JSON.stringify(title)}
 sidebar_label: ${JSON.stringify(`${endpoint.method} ${relativePath}`)}
@@ -597,7 +611,6 @@ import ApiEndpoint from '@site/src/components/ApiEndpoint';
   queryParams={${JSON.stringify(endpoint.queryParameters)}}
   successStatuses={${JSON.stringify(endpoint.successStatuses)}}
   requestExample={${JSON.stringify(requestExample == null ? null : JSON.stringify(requestExample, null, 2))}}
-  requestType=${JSON.stringify(endpoint.request?.type || "No request body")}
   requestMediaType={${JSON.stringify(endpoint.request?.mediaType || (body ? "application/json" : null))}}
   requestFileName={${JSON.stringify(endpoint.request?.fileName || null)}}
   responseExample={${JSON.stringify(endpoint.response.example === null ? null : typeof endpoint.response.example === "string" ? endpoint.response.example : JSON.stringify(endpoint.response.example, null, 2))}}
@@ -608,10 +621,10 @@ import ApiEndpoint from '@site/src/components/ApiEndpoint';
 
 ${runnableSection}${verifiedSection}## Related guide
 
-See the [${endpoint.group} guide](${groupMetadata[endpoint.group][0]}) for the corresponding Desktop workflow, concepts, and authored request examples.
+See the [${endpoint.group} guide](${groupMetadata[endpoint.group][0]}) for related tasks and context.
 
-:::info Generated from the daemon router
-This page is generated from the daemon router, handler, and JSON-tagged Go structs. Method and path come from registered routes. Generic JSON examples show shape only; they do not establish required fields, valid values, or a runnable request. Route-specific notes and linked versioned examples identify checks performed separately. Read those notes and the related guide before sending a request.
+:::note About examples
+JSON samples show field shape, not validated request values. Use the route notes or linked guide for required fields.
 :::
 `;
 }

@@ -25,6 +25,6 @@ A **run** records what happened when that plan was submitted. It has activity st
 
 ## Where to go next
 
-Use [Workflow definitions](./guides/workflows/definitions) to create a workflow, [Planning](./guides/workflows/planning) to choose placement, and [Execution](./guides/workflows/executions) to inspect a run. The [SimGrid API tutorial](./guides/workflows/first-run) supplies a complete small example.
+Start with [the first local workflow in Desktop](./guides/workflows/first-local-run). Then use [Workflow definitions](./guides/workflows/definitions), [Planning](./guides/workflows/planning), and [Execution](./guides/workflows/executions) for the individual tasks. The [SimGrid API tutorial](./guides/workflows/first-run) is a separate simulation example.
 
 For exact file fields, use the [workflow specification](./internal/workflow-spec) and [environment reference](./reference/environment-yaml). For implementation details, see [Architecture internals](./modules).

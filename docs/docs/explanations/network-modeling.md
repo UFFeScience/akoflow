@@ -18,7 +18,7 @@ This is an explanation of the model. Use [SimGrid modeling](../guides/infrastruc
 
 The control dependency makes the consumer wait for the producer. The matching data dependency gives the planner a logical byte volume. If a selected plan puts both activities on the same resource, no network transfer time is added for that edge. If they are on different resources, the topology is consulted for a route.
 
-The portable workflow importer deliberately requires the matching control edge for data bytes to participate in scheduling. A data declaration without that ordering relationship remains data metadata, not an implicit workflow edge.
+The portable workflow importer uses declared bytes in scheduling only when the same pair of activities also has a control dependency. A data declaration alone does not order the activities.
 
 ## What a topology models
 
@@ -28,7 +28,7 @@ PRISM precomputes routes from the frozen topology and includes communication in 
 
 ## Planned route versus executed transfer
 
-The plan predicts transfer time for each assignment. At execution, preparation selects a concrete strategy such as a verified existing copy, shared storage, destination pull, source push, gateway, runtime-local, or direct-runtime transfer. The resulting transfer observation can record source, target, logical and network bytes, timing, cost, strategy, and route.
+The plan predicts transfer time for each assignment. During execution, AkôFlow may use an existing verified copy, shared storage, or a supported transfer route. The transfer record shows how data became available and, when reported, how many bytes moved and how long it took.
 
 That distinction matters: the model describes a possible network penalty for a placement; the observation says how bytes were actually made available. Shared storage or a verified existing copy may satisfy a dependency without a new network transfer.
 

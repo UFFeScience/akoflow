@@ -24,9 +24,9 @@ Adapters implement `Modes`, `Start`, `Inspect`, and `Stop`. A common handle keep
 | `slurm` | Batch submission or explicit direct target | real |
 | `simgrid` | Plan/activity simulation | simulation |
 | `cloud` | Capacity resolved to a concrete runtime allocation | real via lifecycle binding |
-| `serverless` | Reserved domain capability | depends on registered provider |
+| `serverless` | Schema value only; no built-in adapter | unavailable |
 
-A driver value in the domain model does not prove that its provider is configured in a particular instance.
+A driver value in the domain model does not prove that its provider is implemented or configured in a particular instance. The current server has no serverless runtime adapter.
 
 ## Local
 

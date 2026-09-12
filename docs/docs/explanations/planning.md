@@ -27,7 +27,7 @@ When you select a candidate, it becomes the schedule plan for the run. The plan 
 
 An algorithm's objective ranks candidates. Deadline and budget determine whether each candidate meets your constraints. A candidate may remain visible even when it misses a limit, so you can inspect the alternatives the planner found.
 
-The current built-ins include HEFT, PRISM Time, and PRISM Cost. Their search and objective behavior is intentionally separate from this record model. The selected plan's prediction is also separate from observed timing: a completed run supplies the evidence needed to assess that prediction.
+The built-in schedulers are HEFT, PRISM Time, and PRISM Cost. They rank candidates in different ways; [PRISM and HEFT](./prism-and-heft) explains those differences. A completed run supplies the evidence needed to assess the selected plan's prediction.
 
 ## Why a plan can differ from a completed run
 

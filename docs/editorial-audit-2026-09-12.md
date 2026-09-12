@@ -21,21 +21,22 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 13. **P0 resolved in the second pass — credential examples:** the SSH import example wrote a private key into a predictable `/tmp` JSON file without restrictive creation permissions. It now streams JSON directly from the existing protected key file to the API, without a temporary payload. The Kubernetes token example likewise reads a protected file into a streamed request instead of asking readers to put a token in a shell command. Both Bash blocks passed syntax checking.
 14. **P0 resolved in the second pass — cloud target/API examples:** the API overview put a literal token in a shell `export`; it now uses the shared secret prompt. The capacity-target example omitted `sshSourceRanges`, which lets the current Terraform target default SSH ingress to `0.0.0.0/0`, and attached a configuration-version ID before the guide created it. The example now requires an approved CIDR and leaves optional machine configuration out of the base request.
 15. **P0/P1 resolved in the second pass — Showcase setup:** four Showcase API blocks and the SimGrid guide put a token placeholder in a shell `export`; they now use the shared API setup. Six Showcase procedures assumed an unprovided repository checkout; each now shows how to enter the v1.0.8 files before running its script or inline requests. The edge–cloud page uses the checked-in submission script instead of repeating six HTTP calls. The Showcase index no longer calls a single 50-core run a scheduler scalability test.
+16. **P0/P1 resolved in the second pass — core narrative and runtime support:** Core concepts now leads to the verified local Desktop run. `serverless` was listed alongside runtime drivers with an ambiguous mode; current source has a domain enum but no built-in adapter, so the runtime table now marks it unavailable. The planning and timing explanations removed repeated implementation detail while preserving prediction-versus-observation limits.
 
 ## Page inventory
 
 | Page | Current pass | Next review |
 | --- | --- | --- |
 | `guides/workflows/first-local-run.md` | New; end-to-end Linux package UI path verified through generated file evidence; built page and open mobile menu inspected at 390 × 844 | Repeat on a clean supported host and other platforms |
-| `concepts.md` | Full read; corrected executable/data distinction | Recheck basic narrative after first-run validation |
+| `concepts.md` | Second read; corrected executable/data distinction and made verified Desktop first run the next step | Recheck complete new-user path |
 | `contributing/documentation-plan.md` | Full read; replaced historical production waves with recurring review contract | Recheck contract at final audit |
 | `downloads.md` | Full read; platform limits and verification are explicit | Recheck release links when version changes |
-| `engine.md` | Full read; implementation details are in the developer section | Recheck claims against event-loop code |
-| `explanations/evidence-and-provenance.md` | Full read and simplified runtime language | Recheck against execution evidence after P0 fixes |
-| `explanations/network-modeling.md` | Full read; detailed model belongs in this explanation | Recheck transfer claims after P0 fixes |
-| `explanations/observed-timing.md` | Full read; optional observations are qualified | Recheck metrics after P0 fixes |
-| `explanations/planning.md` | Full read and simplified plan terminology | Recheck planning claims after P0 fixes |
-| `explanations/prism-and-heft.md` | Full read; algorithm detail serves comparison readers | Recheck algorithm claims after P0 fixes |
+| `engine.md` | Second read; implementation details remain in the developer section | Recheck claims against event-loop code |
+| `explanations/evidence-and-provenance.md` | Second read; plan predictions and optional observations remain distinct | Recheck against execution evidence after P0 fixes |
+| `explanations/network-modeling.md` | Second read; shortened transfer strategy list and clarified data-versus-order dependency | Recheck transfer claims against execution paths |
+| `explanations/observed-timing.md` | Second read; removed repeated evaluator detail while preserving optional observed-field limits | Recheck metrics against trace aggregation |
+| `explanations/planning.md` | Second read; linked scheduler comparison and removed abstract separation language | Recheck planning claims against coordinator |
+| `explanations/prism-and-heft.md` | Second read; removed Go request type and condensed bounded-search detail | Recheck algorithm claims against source |
 | `getting-started.md` | Full read; now leads to the verified Desktop local run before the API simulation | Recheck the entry flow on a clean supported host |
 | `guides/data/artifacts.md` | Full read; simplified the task-first opening | Recheck API payloads after P0 contracts fix |
 | `guides/data/provenance-and-audit.md` | Full read; detailed screen tables serve investigation tasks | Recheck API payloads after P0 contracts fix |
@@ -61,13 +62,13 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `guides/workflows/planning.md` | Full read; simplified candidate language and made the API example's registration prerequisite explicit | Verify automatic Desktop planning flow |
 | `installation.md` | Full read; public bootstrap checks verified in `security.go` and tests; clarified what Connected proves | Verify clean-host and cross-platform installation |
 | `internal/workflow-spec.md` | Full read; compatibility and simulation-only import limits are explicit | Check contracts against current importer |
-| `modules.md` | Full read; removed incidental polling default | Recheck claims against daemon composition |
+| `modules.md` | Second read; source map and implementation detail remain in the developer section | Recheck claims against daemon composition |
 | `reference/api-overview.md` | Second read; removed token-in-shell-history setup and an unprovided `workflow.json` example; linked the task guide and versioned tutorial | Check contracts against current handlers and schemas |
 | `reference/environment-yaml.md` | Full read; field-level detail belongs in reference | Check contracts against current handlers and schemas |
 | `reference/execution-scopes-and-topologies.md` | Full read; creation order, units, and validation limits are explicit | Check contracts against current handlers and schemas |
 | `reference/feature-coverage.md` | Second read; now distinguishes registered but unlinked Desktop network routes from navigable task paths | Check contracts against current handlers and schemas |
 | `reference/planning-and-execution-states.md` | Full read; state limits are explicit | Check contracts against current handlers and schemas |
-| `runtimes.md` | Full read; replaced duplicate user procedure with task-guide links | Recheck provider claims against adapters |
+| `runtimes.md` | Second read; marked serverless schema value unavailable because no adapter is registered | Recheck other provider claims against adapters |
 | `showcase/edge-cloud-simulation.mdx` | Second read; uses versioned checkout and submission script, shared API setup, and same-server Desktop inspection | Check result against pinned bundle |
 | `showcase/index.mdx` | Second read; instructions fit script and inline API examples; removed unsupported scalability language | Recheck cards after Showcase audit |
 | `showcase/kubernetes-real-execution.mdx` | Second read; checkout precedes Kind setup and inline API submission; Desktop is same-server inspection | Check result against pinned bundle |
@@ -82,6 +83,6 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 ## Verification in this pass
 
 - `npm run typecheck`, `npm run build`, `npm run check:links`, and `git diff --check` passed on the editorial branch.
-- The latest link check covered 380 local links/assets and 54 showcase downloads from the `v1.0.8` Git tag.
+- The latest link check covered 382 local links/assets and 54 showcase downloads from the `v1.0.8` Git tag.
 - Headless Chromium at 390 × 844 loaded Getting Started, Core concepts, the console guide, the new Desktop first-run page, and all seven Showcase pages without page errors or horizontal overflow. Every Showcase API tab displayed its v1.0.8 checkout command; the first-run page's mobile menu opened and showed its tutorial link.
 - These checks establish site integrity for this pass. They do not prove tutorial execution, provider support, or completion of the editorial gate.

@@ -10,7 +10,7 @@ This explanation is for readers choosing or interpreting a built-in scheduler. F
 
 ## What is shared
 
-All three schedulers receive the same `PlanningRequest`: a workflow version, execution scope, schedulable resources, network topology, activity-resource profiles, deadline, budget, and optional interference matrix. They reject a scope with no schedulable resources and only place an activity on a resource that satisfies its CPU and memory requirements. A resource with multiple cores offers multiple scheduling lanes, except for an opaque batch target such as an HPC partition or batch queue, which is treated as one slot.
+All three schedulers use the same workflow version, execution scope, resources, topology, activity profiles, deadline, and budget. They only place an activity where its CPU and memory requirements fit. A resource with multiple cores offers multiple scheduling lanes; an HPC partition or batch queue is treated as one slot.
 
 The base duration for a placement is selected from an activity-resource profile when one matches. Otherwise the planner uses the activity's `simulation.durationSeconds` when present, falling back to one second and then dividing by the resource's compute speedup. These inputs need to be credible before any comparison of algorithm quality is meaningful.
 
@@ -22,7 +22,7 @@ The base duration for a placement is selected from an activity-resource profile 
 | PRISM Time | Beam search over ready activities and feasible resource/core placements; complete states are re-evaluated | Predicted makespan, then transfer time, network cost, used resources, and cost | Routed transfers, active-flow sharing, resource active-window cost, optional CPU interference, queue and frozen overhead metadata |
 | PRISM Cost | The same PRISM search and complete-state re-evaluation | Predicted cost, then network cost, transfer time, used resources, makespan, and queue | The same PRISM model, ranked exclusively for cost |
 
-"Primary" does not mean that later values are ignored. They are deterministic tie-breakers. PRISM also reserves parts of each beam for the other objective and for network-local placements. In a time search, one lane keeps alternatives by concrete earliest finish; this reduces the chance that a tie in the projected critical path discards a low-wait placement too early. It is search diversity, not a promise that every possible placement is retained.
+The later values break ties. PRISM also keeps some alternatives for the other objective and for network-local placements, but its bounded search does not retain every possible placement.
 
 ## Ranking work before placement
 

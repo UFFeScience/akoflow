@@ -18,13 +18,10 @@ replace [network modeling](./network-modeling) or the [execution state reference
 
 ## A flow is a scheduled movement of data
 
-A **network flow** exists when a control dependency also has a data dependency,
-the producer and consumer are assigned to different resources, and the selected
-route requires movement. It has a producer, consumer, source resource, target
-resource, logical byte volume, and a route. During a completed execution,
-AkôFlow persists a `DataTransfer` observation with start/finish time, duration,
-cost, source/target, strategy, route, logical bytes, and network bytes when the
-runtime reports them.
+A **network flow** can occur when a producer and consumer have both an ordering
+and a data dependency and a plan assigns them to different resources. The run
+can record the route, bytes moved, duration, and cost when the runtime reports
+them.
 
 The link bandwidth is in bits per second while dependency size is in bytes. For
 a single 10 GiB flow over a 10 Gbit/s link, the raw payload time is roughly
@@ -33,17 +30,11 @@ limited by its effective available bandwidth.
 
 ## Contention means simultaneous users of a bottleneck
 
-Two flows contend when they overlap and use a shared bottleneck. In the current
-PRISM complete-state evaluator, that can be a shared route hop, a shared source
-resource, or a shared target resource. It divides modeled bandwidth among the
-active users. The model is event-based: a flow begins after route latency, then
-its remaining bytes progress at the current shared rate until another task or
-flow event changes the set of active users.
-
-This is not a claim that every real runtime reports network contention as a
-separate observed number. It is a planning-model effect used by PRISM. Inspect
-the actual transfer records to determine whether a completed run moved the
-expected bytes and how long that movement lasted.
+Two flows contend when they overlap at a shared link or endpoint. PRISM models
+that sharing when predicting transfers. A real runtime may not report a separate
+contention value, so use the run's transfer records to see how many bytes moved
+and how long they took. [Network modeling](./network-modeling) explains the
+routes behind those predictions.
 
 ## Four activity-stage timings
 
@@ -84,7 +75,7 @@ the activity work and waiting occur across the whole run?"
 
 For completed execution traces, task cost is task runtime multiplied by the
 assigned resource's `pricePerSecond`. The trace also includes observed transfer
-cost. For an allocated cloud instance, the control plane adds the idle portion
+cost. For an allocated cloud instance, AkôFlow adds the idle portion
 of the resource active window plus persistent-disk price when the resource
 metadata has `diskPricePerGiBMonth`.
 

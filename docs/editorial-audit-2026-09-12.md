@@ -64,7 +64,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `reference/api-overview.md` | Second read; removed token-in-shell-history setup and an unprovided `workflow.json` example; linked the task guide and versioned tutorial | Check contracts against current handlers and schemas |
 | `reference/environment-yaml.md` | Full read; field-level detail belongs in reference | Check contracts against current handlers and schemas |
 | `reference/execution-scopes-and-topologies.md` | Full read; creation order, units, and validation limits are explicit | Check contracts against current handlers and schemas |
-| `reference/feature-coverage.md` | Full read; route coverage remains a reference checklist | Check contracts against current handlers and schemas |
+| `reference/feature-coverage.md` | Second read; now distinguishes registered but unlinked Desktop network routes from navigable task paths | Check contracts against current handlers and schemas |
 | `reference/planning-and-execution-states.md` | Full read; state limits are explicit | Check contracts against current handlers and schemas |
 | `runtimes.md` | Full read; replaced duplicate user procedure with task-guide links | Recheck provider claims against adapters |
 | `showcase/edge-cloud-simulation.mdx` | Full read; Desktop path limited to same-server inspection | Check result against pinned bundle |
@@ -81,6 +81,6 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 ## Verification in this pass
 
 - `npm run typecheck`, `npm run build`, `npm run check:links`, and `git diff --check` passed on the editorial branch.
-- The latest link check covered 370 local links/assets and 53 showcase downloads from the `v1.0.8` Git tag.
+- The latest link check covered 371 local links/assets and 53 showcase downloads from the `v1.0.8` Git tag.
 - Headless Chromium at 390 × 844 loaded Getting Started, Core concepts, the console guide, and the new Desktop first-run page without page errors or horizontal overflow. The first-run page's mobile menu opened and showed its tutorial link.
 - These checks establish site integrity for this pass. They do not prove tutorial execution, provider support, or completion of the editorial gate.

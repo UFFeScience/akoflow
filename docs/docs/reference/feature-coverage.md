@@ -7,6 +7,8 @@ description: Map every AkôFlow Desktop area to its API family and task document
 
 This matrix is maintained as the coverage checklist for the public documentation. A route may be hidden from the primary sidebar when it is a child page, compatibility redirect, or contextual action.
 
+The `/network` and `/network/new` routes exist in Desktop, but the current sidebar and scope detail do not link to them. To register network links through a documented path, use the [execution-scope API procedure](../guides/infrastructure/execution-scopes#using-the-api-1).
+
 ## Workflows and execution
 
 | Desktop route | Purpose | API family | Guide |

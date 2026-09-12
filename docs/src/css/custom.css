@@ -308,6 +308,39 @@ html {
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
 }
 
+.akoflow-annotated-screenshot__image {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.akoflow-annotated-screenshot__image img {
+  border-radius: 12px;
+}
+
+.akoflow-annotated-screenshot__marker {
+  position: absolute;
+  display: grid;
+  width: 1.65rem;
+  height: 1.65rem;
+  place-items: center;
+  transform: translate(-50%, -50%);
+  border: 2px solid #fff;
+  border-radius: 999px;
+  background: #111;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+[data-theme='dark'] .akoflow-annotated-screenshot__marker {
+  border-color: #111;
+  background: #fff;
+  color: #111;
+}
+
 .akoflow-annotated-screenshot figcaption,
 .akoflow-demo-video figcaption {
   margin-top: 0.75rem;

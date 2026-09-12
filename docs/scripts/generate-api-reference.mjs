@@ -156,6 +156,8 @@ const verifiedRequestNotes = {
   "POST /akoflow-api/environments/{environmentId}/cloud-provisioning/": "`capacityTargetId` must identify an existing capacity target in this environment. This compatibility route queues the same provisioning operation; inspect the returned operation status.",
   "POST /akoflow-api/planning-sessions/": "Required: `id`, an existing `workflowVersionId`, `executionScopeId`, and `networkTopologyId`, plus at least one `algorithms` entry. Each algorithm ID must appear in `GET /planning-algorithms/`; duplicate IDs are rejected. The server sets status and timestamps. The example IDs require the SimGrid environment, scope, topology, and workflow to be registered first.",
   "POST /akoflow-api/schedule-plans/import/": "Send `{\"plan\": ...}` with a complete plan. Its workflow version, execution scope, topology, and resources must already exist; the server marks its source as `imported` and validates the schedule before saving it.",
+  "POST /akoflow-api/storages/{storageId}/promote-data/": "`path` must name an existing file within an approved storage root. `id` is optional; the server generates one when omitted. `workflowVersionId`, `runId`, and `activityId` are optional associations and should identify real records when supplied. The [storage guide](/docs/guides/infrastructure/storage) shows a minimal request.",
+  "POST /akoflow-api/storages/{storageId}/promote-artifact/": "`path` must name an existing `.sif` file within an approved storage root. `id`, `name`, `version`, and `scope` have server defaults. The [storage guide](/docs/guides/infrastructure/storage) shows the registration request; no file is uploaded or moved.",
 };
 
 const verifiedRequestExamples = {

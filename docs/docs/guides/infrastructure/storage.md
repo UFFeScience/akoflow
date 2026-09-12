@@ -7,6 +7,7 @@ AkôFlow exposes storage through environment discovery or configured storage con
 For object storage, check the [AWS/S3 limits](./aws) and [cloud support matrix](./cloud-capacity#provider-support-in-v10) before relying on browse or transfer actions. A registered storage type does not guarantee that the current server can authenticate to it.
 
 For the API commands on this page, complete [API connection setup](../../tutorials/api-access) first.
+The IDs `hpc`, `hpc-scratch`, and `archive-store` and the `/scratch/project-a` paths below are examples. Replace them with an environment, storage IDs, and approved paths returned by your own server before running a command.
 
 ## Browse files
 
@@ -80,7 +81,7 @@ Use **Register as DataObject** for a file that should enter the workflow data mo
 curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -H 'Content-Type: application/json' -X POST \
   "$AKOFLOW_API_URL/storages/hpc-scratch/promote-data/" \
-  -d '{"path":"/scratch/project-a/result.csv","id":"data-result-1","workflowVersionId":"analysis-v3","runId":"run-42","activityId":"aggregate"}'
+  -d '{"path":"/scratch/project-a/result.csv","id":"data-result-1"}'
 
 curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -H 'Content-Type: application/json' -X POST \
@@ -88,4 +89,4 @@ curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -d '{"path":"/scratch/images/solver.sif","id":"solver-sif-1","name":"Solver","version":"1.2.0","scope":"environment","scopeId":"hpc"}'
 ```
 
-Promotion registers the existing path; it does not upload or move the file.
+Promotion registers the existing path; it does not upload or move the file. Add `workflowVersionId`, `runId`, and `activityId` to the data request only when you have matching existing records and want to associate the file with them.

@@ -5,7 +5,7 @@ import type * as Preset from "@docusaurus/preset-classic";
 const config: Config = {
   title: "AkôFlow",
   tagline: "Open Source Engine for Containerized Scientific Workflows",
-  favicon: "img/favicon.ico",
+  favicon: "img/brand/akoflow-macos.png",
 
   // GitHub Pages is the deployment origin. The public proxy exposes the
   // documentation at this canonical root, so generated links and assets must
@@ -85,8 +85,8 @@ const config: Config = {
       hideOnScroll: false,
       logo: {
         alt: "AkôFlow application logo",
-        src: "img/icon_akoflow.png",
-        srcDark: "img/icon_akoflow.png",
+        src: "img/brand/akoflow-macos.png",
+        srcDark: "img/brand/akoflow-macos.png",
       },
       items: [
         {

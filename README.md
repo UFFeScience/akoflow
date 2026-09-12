@@ -1,9 +1,9 @@
 <div align="center">
-  <img src="docs/static/img/brand/akoflow-macos.png" alt="AkôFlow" width="120" />
+  <img src="docs/static/img/brand/akoflow-readme-banner.png" alt="AkôFlow Desktop: scientific workflows across cloud, HPC, and on-premises environments" width="100%" />
 
   # AkôFlow
 
-  **Plan, execute, observe scientific workflows.**
+  **Run scientific workflows anywhere.**
 
   <a href="https://github.com/UFFeScience/akoflow/releases/latest"><img src="https://img.shields.io/github/v/release/UFFeScience/akoflow?display_name=tag&label=Desktop&color=111111" alt="Latest Desktop release" /></a>
   <a href="https://akoflow.com/docs/"><img src="https://img.shields.io/badge/docs-Read%20the%20guide-111111" alt="AkôFlow documentation" /></a>
@@ -20,35 +20,53 @@
 
 <br />
 
-AkôFlow is an open-source control plane for containerized scientific workflows.
-Build a workflow, model or connect its environment, compare execution plans, and
-retain the evidence from each run.
+AkôFlow helps you create workflows, choose where they run, execute them, and see
+the result.
 
-<p align="center">
-  <img src="docs/static/img/architecture/lifecycle-overview.svg" alt="AkôFlow lifecycle from infrastructure to observed evidence" width="960" />
-</p>
-
-| I want to… | Go to |
+| To… | Open |
 | --- | --- |
-| Install AkôFlow Desktop | [Download the latest release](https://github.com/UFFeScience/akoflow/releases/latest) |
-| Run an end-to-end SimGrid example | [First simulated workflow](https://akoflow.com/docs/guides/workflows/first-run) |
-| Use ready-to-run workflow examples | [Workflow Showcase](https://akoflow.com/docs/showcase/) |
-| Configure SimGrid, Kubernetes, SLURM, storage, or cloud capacity | [Infrastructure guides](https://akoflow.com/docs/guides/infrastructure/) |
-| Work with the Engine programmatically | [API reference](https://akoflow.com/docs/api/) |
+| Install Desktop | [Download AkôFlow](https://github.com/UFFeScience/akoflow/releases/latest) |
+| Run a SimGrid example | [First workflow](https://akoflow.com/docs/guides/workflows/first-run) |
+| Explore examples | [Workflow Showcase](https://akoflow.com/docs/showcase/) |
+| Use the API | [API reference](https://akoflow.com/docs/reference/api-overview) |
 
 ## Desktop requirements
 
-Docker Desktop on macOS and Windows, or Docker Engine with the Compose v2 plugin
-on Linux. The release installer loads the corresponding runtime archives locally;
-no container-registry package is required.
-
-## Releases
-
-A semantic tag such as `v1.2.3` creates a GitHub Release with Desktop installers,
-runtime archives, and SHA-256 checksums. See [all releases](https://github.com/UFFeScience/akoflow/releases).
+Use Docker Desktop on macOS and Windows, or Docker Engine with Compose v2 on
+Linux. Runtime archives are included with each release; no container registry is required.
 
 ## Academic context
 
-AkôFlow is developed within the e-Science Research Group, Institute of Computing,
-Fluminense Federal University (UFF). The project is described in the 2024
-[SBBD publication](https://doi.org/10.5753/sbbd.2024.241126).
+<a href="https://github.com/UFFeScience"><img src="https://github.com/UFFeScience.png?size=128" alt="UFFeScience" width="64" align="left" /></a>
+
+AkôFlow is developed by the [UFFeScience](https://github.com/UFFeScience)
+research group at the Institute of Computing, Fluminense Federal University
+(UFF). The group develops open tools and research for data-intensive science,
+workflows, and distributed computing.
+
+<br clear="left" />
+
+<a href="https://github.com/UFFeScience/akoflow/graphs/contributors"><img src="https://img.shields.io/github/contributors/UFFeScience/akoflow?label=contributors&color=111111" alt="AkôFlow contributors" /></a>
+&nbsp;
+<a href="https://github.com/UFFeScience/akoflow/graphs/contributors">Meet the contributors →</a>
+
+<br /><br />
+
+<a href="https://github.com/UFFeScience/akoflow/graphs/contributors"><img src="https://contrib.rocks/image?repo=UFFeScience/akoflow" alt="AkôFlow contributor avatars" /></a>
+
+## Cite AkôFlow
+
+If AkôFlow contributes to your research, please cite:
+
+```bibtex
+@inproceedings{ferreira2024akoflow,
+  author    = {Ferreira, Wesley and Kunstmann, Liliane and Paes, Aline and Bedo, Marcos and de Oliveira, Daniel},
+  title     = {AkôFlow: um Middleware para execução de Workflows científicos em múltiplos ambientes conteinerizados},
+  booktitle = {Proceedings of the 39th Brazilian Symposium on Databases (SBBD)},
+  pages     = {27--39},
+  year      = {2024},
+  doi       = {10.5753/sbbd.2024.241126}
+}
+```
+
+[Read the publication](https://doi.org/10.5753/sbbd.2024.241126).

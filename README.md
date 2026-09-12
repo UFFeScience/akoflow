@@ -1,83 +1,54 @@
-```
- █████╗ ██╗  ██╗ ██████╗ ███████╗██╗      ██████╗ ██╗    ██╗
-██╔══██╗██║ ██╔╝██╔═══██╗██╔════╝██║     ██╔═══██╗██║    ██║
-███████║█████╔╝ ██║   ██║█████╗  ██║     ██║   ██║██║ █╗ ██║
-██╔══██║██╔═██╗ ██║   ██║██╔══╝  ██║     ██║   ██║██║███╗██║
-██║  ██║██║  ██╗╚██████╔╝██║     ███████╗╚██████╔╝╚███╔███╔╝
-╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝ ╚═╝     ╚══════╝ ╚═════╝  ╚══╝╚══╝
-```
+<div align="center">
+  <img src="docs/static/img/brand/akoflow-macos.png" alt="AkôFlow" width="120" />
 
-# AkôFlow - Open Source Engine for Containerized Scientific Workflows
+  # AkôFlow
 
-AkôFlow is an open-source engine for orchestrating and executing container-based scientific workflows in the computing continuum. It was originally developed within the e-Science Research Group at the Institute of Computing, Fluminense Federal University (UFF).
+  **Plan, execute, observe scientific workflows.**
 
-Although initially focused on Kubernetes-based workloads, AkôFlow has evolved to support general containerized execution across multiple infrastructures.
+  <a href="https://github.com/UFFeScience/akoflow/releases/latest"><img src="https://img.shields.io/github/v/release/UFFeScience/akoflow?display_name=tag&label=Desktop&color=111111" alt="Latest Desktop release" /></a>
+  <a href="https://akoflow.com/docs/"><img src="https://img.shields.io/badge/docs-Read%20the%20guide-111111" alt="AkôFlow documentation" /></a>
+  <a href="https://github.com/UFFeScience/akoflow/actions/workflows/docs-checks.yaml"><img src="https://github.com/UFFeScience/akoflow/actions/workflows/docs-checks.yaml/badge.svg?branch=main" alt="Documentation checks" /></a>
+</div>
 
-- To learn more about AkôFlow, please visit our project page: [https://akoflow.com/](https://akoflow.com)
+<br />
 
-- To see our documentation, please visit: [https://uffescience.github.io/akoflow/](https://uffescience.github.io/akoflow/)
+<div align="center">
+  <a href="https://github.com/UFFeScience/akoflow/releases/latest"><img src="https://img.shields.io/badge/Download-Ak%C3%B4Flow%20Desktop-111111?style=for-the-badge" alt="Download AkôFlow Desktop" /></a>
+  &nbsp;
+  <a href="https://akoflow.com/docs/getting-started"><img src="https://img.shields.io/badge/Start-Documentation-f3f4f6?style=for-the-badge&logoColor=111111" alt="Open the getting started guide" /></a>
+</div>
 
-## Getting Started
+<br />
 
-### Desktop application
+AkôFlow is an open-source control plane for containerized scientific workflows.
+Build a workflow, model or connect its environment, compare execution plans, and
+retain the evidence from each run.
 
-The Desktop is the intended end-user installation path. Download the installer
-for macOS, Windows, or Linux from [AkôFlow Releases](https://github.com/UFFeScience/akoflow/releases/latest).
+<p align="center">
+  <img src="docs/static/img/architecture/lifecycle-overview.svg" alt="AkôFlow lifecycle from infrastructure to observed evidence" width="960" />
+</p>
 
-- **macOS:** open the universal `.dmg`, drag **AkôFlow Desktop** to
-  `Applications`, and launch it.
-- **Windows:** run the x64 installer `.exe`, or use the portable `.exe` without
-  installation.
-- **Linux:** run the x64 `.AppImage` after `chmod +x`, or install the `.deb`
-  package with `sudo apt install ./Akoflow-Desktop-*.deb`.
+| I want to… | Go to |
+| --- | --- |
+| Install AkôFlow Desktop | [Download the latest release](https://github.com/UFFeScience/akoflow/releases/latest) |
+| Run an end-to-end SimGrid example | [First simulated workflow](https://akoflow.com/docs/guides/workflows/first-run) |
+| Use ready-to-run workflow examples | [Workflow Showcase](https://akoflow.com/docs/showcase/) |
+| Configure SimGrid, Kubernetes, SLURM, storage, or cloud capacity | [Infrastructure guides](https://akoflow.com/docs/guides/infrastructure/) |
+| Work with the Engine programmatically | [API reference](https://akoflow.com/docs/api/) |
 
-Each release asset is associated with the semantic version in its GitHub release
-and the corresponding Git tag. Desktop downloads the version-matched runtime
-archives from that release and loads them into local Docker; the project does
-not publish daemon or BuildKit packages to a container registry.
+## Desktop requirements
 
-AkôFlow Desktop requires Docker Desktop on macOS and Windows, or Docker Engine
-with the Compose v2 plugin on Linux. Docker Desktop for Windows must use Linux
-containers.
-
-### Updates
-
-Update behavior must be validated against the Desktop release in use. Export an
-instance before changing versions so that it can be restored if needed.
-
-Release maintainers should configure `MACOS_CSC_LINK`,
-`MACOS_CSC_KEY_PASSWORD`, `MACOS_APPLE_ID`,
-`MACOS_APP_SPECIFIC_PASSWORD`, `MACOS_TEAM_ID`, `WINDOWS_CSC_LINK` and
-`WINDOWS_CSC_KEY_PASSWORD` as GitHub Actions secrets. These credentials sign
-and notarize the installers; they are never included in the application.
+Docker Desktop on macOS and Windows, or Docker Engine with the Compose v2 plugin
+on Linux. The release installer loads the corresponding runtime archives locally;
+no container-registry package is required.
 
 ## Releases
 
-The release workflow runs when a semantic-version tag such as `v1.2.3` is
-pushed. Its output is a GitHub Release containing Desktop installers and the
-runtime archives they load locally; the tag identifies the exact source
-revision used for the release.
+A semantic tag such as `v1.2.3` creates a GitHub Release with Desktop installers,
+runtime archives, and SHA-256 checksums. See [all releases](https://github.com/UFFeScience/akoflow/releases).
 
-See all releases: [https://github.com/UFFeScience/akoflow/releases](https://github.com/UFFeScience/akoflow/releases)
+## Academic context
 
-## Contributors
-
-- [D.Sc. Daniel de Oliveira — Research Advisor](http://profs.ic.uff.br/~danielcmo/)
-- [Wesley Ferreira - @ovvesley — Maintainer - IC/UFF](https://github.com/ovvesley)
-- Liliane Kunstmann - COPPE/UFRJ
-- Debora Pina - COPPE/UFRJ
-- Raphael Garcia — IC/UFF
-- [Yuri Frota — IC/UFF](http://www.ic.uff.br/~yuri/)
-- [Marcos Bedo — IC/UFF](https://www.professores.uff.br/marcosbedo/)
-- [Aline Paes — IC/UFF](http://www.ic.uff.br/~alinepaes/)
-- [Luan Teylo — INRIA/Université de Bordeaux](https://team.inria.fr/)
-
-## Publications (in Portuguese)
-
-- Ferreira, W., Kunstmann, L., Paes, A., Bedo, M., & de Oliveira, D. (2024, October). `AkôFlow`: um Middleware para execução de Workflows científicos em múltiplos ambientes conteinerizados. In 39th Simpósio Brasileiro de Banco de Dados (SBBD) (pp. 27-39). SBC. ([DOI:10.5753/sbbd.2024.241126.](https://doi.org/10.5753/sbbd.2024.241126.))
-
-- Ferreira, W., Kunstmann, L., Garcia R., Bedo, M., & de Oliveira, D. (2025, October). _Plug and Flow_: Execução de Workflows Científicos em Contêineres com o Middleware `AkôFlow`. In 40th Simpósio Brasileiro de Banco de Dados (SBBD). (_Paper just accepted_)
-
-## Academic Context
-
-AkôFlow originated as a final undergraduate project and has since expanded with broader contributions and integrations. It continues to serve both academic and industrial workflow execution scenarios.
+AkôFlow is developed within the e-Science Research Group, Institute of Computing,
+Fluminense Federal University (UFF). The project is described in the 2024
+[SBBD publication](https://doi.org/10.5753/sbbd.2024.241126).

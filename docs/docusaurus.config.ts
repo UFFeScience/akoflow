@@ -7,8 +7,11 @@ const config: Config = {
   tagline: "Open Source Engine for Containerized Scientific Workflows",
   favicon: "img/favicon.ico",
 
-  url: "https://uffescience.github.io",
-  baseUrl: "/akoflow/",
+  // GitHub Pages is the deployment origin. The public proxy exposes the
+  // documentation at this canonical root, so generated links and assets must
+  // not retain the GitHub Pages repository prefix.
+  url: "https://akoflow.com",
+  baseUrl: "/",
 
   organizationName: "UFFeScience",
   projectName: "akoflow",

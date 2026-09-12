@@ -156,7 +156,7 @@ export default function Home(): React.JSX.Element {
         <BackgroundGraph />
 
         <img
-          src="/akoflow/img/icon_akoflow.png"
+          src="/img/icon_akoflow.png"
           alt="AkôFlow"
           className={styles.logo}
         />

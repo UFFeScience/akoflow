@@ -202,6 +202,7 @@ jobs:
         uses: actions/download-artifact@v5
         with:
           path: desktop-artifacts
+          pattern: "!*.dockerbuild"
           merge-multiple: true
 
       - name: Create AkôFlow release

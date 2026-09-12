@@ -19,6 +19,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 11. **P1 resolved in this pass — Showcase Desktop claims:** six Showcase tabs described unverified Desktop-only submissions; some asked users to add network links through a Desktop path not exposed in current navigation. The tabs now identify API submission as the verified path and limit Desktop steps to inspection on the same server.
 12. **P0 resolved in this pass — GCP Desktop route:** the detailed guide directed readers to a separate Settings credential form and a “New environment” action that do not match the current cloud onboarding. It now follows the tested form path in the connection tutorial.
 13. **P0 resolved in the second pass — credential examples:** the SSH import example wrote a private key into a predictable `/tmp` JSON file without restrictive creation permissions. It now streams JSON directly from the existing protected key file to the API, without a temporary payload. The Kubernetes token example likewise reads a protected file into a streamed request instead of asking readers to put a token in a shell command. Both Bash blocks passed syntax checking.
+14. **P0 resolved in the second pass — cloud target/API examples:** the API overview put a literal token in a shell `export`; it now uses the shared secret prompt. The capacity-target example omitted `sshSourceRanges`, which lets the current Terraform target default SSH ingress to `0.0.0.0/0`, and attached a configuration-version ID before the guide created it. The example now requires an approved CIDR and leaves optional machine configuration out of the base request.
 
 ## Page inventory
 
@@ -38,7 +39,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `guides/data/artifacts.md` | Full read; simplified the task-first opening | Recheck API payloads after P0 contracts fix |
 | `guides/data/provenance-and-audit.md` | Full read; detailed screen tables serve investigation tasks | Recheck API payloads after P0 contracts fix |
 | `guides/infrastructure/aws.md` | Full read after code audit; partial S3 path and absent EC2 path are explicit | Check provider claims against disposable-bucket evidence |
-| `guides/infrastructure/cloud-capacity.md` | Full read; distinguished target from VM and simplified opening | Validate with disposable GCP account |
+| `guides/infrastructure/cloud-capacity.md` | Second read; target example now states CIDR and configuration-version prerequisites; target versus VM remains explicit | Validate with disposable GCP account |
 | `guides/infrastructure/environments.md` | Full read; aligned Desktop actions and shared API setup | Recheck API payloads after P0 contracts fix |
 | `guides/infrastructure/execution-scopes.md` | Full read; moved reciprocal IDs to API procedure | Recheck API payloads after P0 contracts fix |
 | `guides/infrastructure/gcp.md` | Full read; corrected Desktop onboarding and aligned API setup | Check provider claims against disposable-project evidence |
@@ -60,7 +61,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `installation.md` | Full read; public bootstrap checks verified in `security.go` and tests; clarified what Connected proves | Verify clean-host and cross-platform installation |
 | `internal/workflow-spec.md` | Full read; compatibility and simulation-only import limits are explicit | Check contracts against current importer |
 | `modules.md` | Full read; removed incidental polling default | Recheck claims against daemon composition |
-| `reference/api-overview.md` | Full read; bootstrap and route conventions are explicit | Check contracts against current handlers and schemas |
+| `reference/api-overview.md` | Second read; removed a token-in-shell-history setup example in favor of the shared API setup | Check contracts against current handlers and schemas |
 | `reference/environment-yaml.md` | Full read; field-level detail belongs in reference | Check contracts against current handlers and schemas |
 | `reference/execution-scopes-and-topologies.md` | Full read; creation order, units, and validation limits are explicit | Check contracts against current handlers and schemas |
 | `reference/feature-coverage.md` | Full read; route coverage remains a reference checklist | Check contracts against current handlers and schemas |
@@ -80,6 +81,6 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 ## Verification in this pass
 
 - `npm run typecheck`, `npm run build`, `npm run check:links`, and `git diff --check` passed on the editorial branch.
-- The latest link check covered 367 local links/assets and 53 showcase downloads from the `v1.0.8` Git tag.
+- The latest link check covered 368 local links/assets and 53 showcase downloads from the `v1.0.8` Git tag.
 - Headless Chromium at 390 × 844 loaded Getting Started, Core concepts, the console guide, and the new Desktop first-run page without page errors or horizontal overflow. The first-run page's mobile menu opened and showed its tutorial link.
 - These checks establish site integrity for this pass. They do not prove tutorial execution, provider support, or completion of the editorial gate.

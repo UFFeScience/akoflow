@@ -9,13 +9,10 @@ The AkôFlow Desktop uses the same API available to automation. Paths in the tab
 
 ## Connect and authenticate
 
-Set the API base URL (including `/akoflow-api`) and token in your shell:
+Follow [API connection setup](../tutorials/api-access) to set the base URL and enter the token without putting it in shell history. The base URL includes `/akoflow-api`. Then check a protected catalog:
 
 ```bash
-export AKOFLOW_API_URL="http://127.0.0.1:8080/akoflow-api"
-export AKOFLOW_API_TOKEN="replace-with-the-configured-token"
-
-curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   "$AKOFLOW_API_URL/environments/"
 ```
 

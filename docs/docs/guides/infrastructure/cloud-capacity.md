@@ -44,6 +44,8 @@ The GET endpoint returns `404` until a catalog has been synchronized. Provider c
 3. Optionally attach an additional machine-configuration version.
 4. Save the target. It becomes a capacity option available to planning; saving it does not create a VM.
 
+If you need a machine configuration, [create its version](#create-and-version-a-machine-configuration) before saving the target and attach that version's actual ID. Provisioning needs the referenced version.
+
 ### Using the API
 
 ```bash
@@ -63,12 +65,16 @@ curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
     "provisioningMode":"standard",
     "maximumInstances":2,
     "lifecyclePolicy":"destroy-after-run",
-    "configuration":{"diskType":"pd-balanced","diskSizeGiB":30,"network":"default"},
-    "machineConfigurations":[{"configurationVersionId":"akoflow-scientific-worker-v4","executionOrder":0,"required":true,"enabled":true}]
+    "configuration":{
+      "diskType":"pd-balanced",
+      "diskSizeGiB":30,
+      "network":"default",
+      "sshSourceRanges":["<approved-daemon-or-bastion-cidr>"]
+    }
   }'
 ```
 
-The server supplies the target ID and environment ID when omitted, enables the target, and creates the corresponding provisioned resource. Machine/image identifiers are provider values from the synchronized catalog.
+Replace the CIDR placeholder with the approved daemon or bastion range before sending this request. The current Terraform target otherwise defaults SSH ingress to `0.0.0.0/0`. The server supplies the target ID and environment ID when omitted, enables the target, and creates a schedulable capacity record; no VM is created yet. Machine/image identifiers must come from the synchronized catalog.
 
 ## Create and version a machine configuration
 

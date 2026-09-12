@@ -11,6 +11,7 @@ const sidebars: SidebarsConfig = {
         "installation",
         "downloads",
         "guides/interface-tour",
+        "guides/complete-user-flows",
         "guides/workflows/first-run",
         {
           type: "category",

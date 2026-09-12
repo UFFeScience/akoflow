@@ -1,0 +1,329 @@
+---
+id: complete-user-flows
+title: Complete user flows
+sidebar_label: Complete user flows
+description: Task-oriented walkthrough of the AkôFlow Desktop backed by a running Core.
+---
+
+import useBaseUrl from '@docusaurus/useBaseUrl';
+
+# Complete user flows
+
+This tutorial follows one workflow from a fresh AkôFlow instance through
+planning, execution, evidence, and operations. It uses the deterministic
+[`examples/simulation`](https://github.com/UFFeScience/akoflow/tree/main/examples/simulation)
+bundle and does not require Kubernetes, an SSH host, or a cloud account.
+
+Screenshots show stable decision points. Compare labels and states, not generated
+IDs or timestamps. Desktop is an HTTP client; Core remains authoritative for
+validation, state, and evidence.
+
+## Before you begin
+
+Start compatible Core and Desktop revisions, then set these values from the Core
+checkout (`jq` and `curl` are required):
+
+```bash
+export AKOFLOW_API_URL="http://127.0.0.1:8080/akoflow-api"
+export AKOFLOW_API_TOKEN="<token>"
+akf() {
+  curl --fail-with-body \
+    -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+    "$@"
+}
+```
+
+## 1. Install and bootstrap
+
+**Preconditions.** Install a published Desktop package, or install the locked
+dependencies in its source checkout. Start Core with an isolated database. A
+release installation additionally needs Docker and Compose because Electron
+main starts the pinned Core stack.
+
+**Action.** Open Desktop and wait for the readiness step. Verify Core separately:
+
+```bash
+akf "$AKOFLOW_API_URL/instance/" | jq '{name, description}'
+akf "$AKOFLOW_API_URL/preflight/" | jq '{server, docker, buildkit}'
+```
+
+![Desktop welcome page connected to an operational Core and waiting for environment setup.](/img/interface/desktop/installation-welcome.png)
+
+**Expected result.** The welcome page is complete, the instance request returns
+HTTP 200, and `server.available` is `true`. Docker or BuildKit may be unavailable
+when you only intend to simulate.
+
+**Core contracts.** `GET /instance/` identifies the installation;
+`GET /preflight/` reports capabilities. Renderer readiness does not prove that a
+published package contains matching Core assets.
+
+**If it fails.** A 502, unavailable identity, or endless loading means bootstrap
+failed. Check Core, the Desktop proxy target, API token, and allowed origin.
+Never put the token in a screenshot.
+
+## 2. Register a workflow
+
+**Preconditions.** Core is ready and the deterministic bundle is available.
+
+**Action.** In **Workflows → Definitions**, choose **Import YAML**, select
+`examples/simulation/workflow.yaml`, and open the result. The API equivalent is:
+
+```bash
+akf -H 'Content-Type: application/yaml' \
+  --data-binary @examples/simulation/workflow.yaml \
+  "$AKOFLOW_API_URL/workflow-definitions/"
+```
+
+![Workflow definitions list with the deterministic three-activity example available to open.](/img/interface/workflows/definitions.png)
+
+**Expected result.** The detail displays the `prepare → analyze → summarize`
+DAG. Verify the persisted contract:
+
+```bash
+akf "$AKOFLOW_API_URL/workflow-definitions/simulation-example-workflow/" |
+  jq '{activities: [.version.activities[].name],
+       dependencies: (.version.dependencies | length),
+       dataDependencies: (.version.dataDependencies | length)}'
+```
+
+The result has three activities, two control dependencies, and two data
+dependencies. Core returns `201`; malformed DAGs return `422`.
+
+**If it fails.** Import the complete file. Duplicate stable IDs also fail; use a
+fresh database or change every related ID consistently.
+
+## 3. Register an environment
+
+**Preconditions.** Use simulation here. Connected SSH, Kubernetes, and cloud
+environments need credentials stored through the dedicated credential flow,
+never inline in an environment document.
+
+**Action.** Under **Infrastructure → Environments**, import or recreate the
+example:
+
+```bash
+akf -H 'Content-Type: application/yaml' \
+  --data-binary @examples/simulation/environment.yaml \
+  "$AKOFLOW_API_URL/environments/"
+```
+
+![Environment list showing registered execution domains and connection state.](/img/interface/infrastructure/environments.png)
+
+**Expected result.** The detail contains `simulated-edge`, `simulated-cloud`,
+and SimGrid. Verify it:
+
+```bash
+akf "$AKOFLOW_API_URL/environments/simulation-example/" |
+  jq '{runtime: .runtimes[0].driver, resources: [.resources[].id]}'
+```
+
+**Core contracts.** Creation is synchronous (`201`), but an environment record
+does not prove that a connected target is healthy. Connection test, discovery,
+and health history are separate contracts.
+
+**If it fails.** A connected target must pass its test before registration.
+Missing SSH, `kubectl`, or provider capability is a failure or limitation; do
+not relabel that target as simulated.
+
+## 4. Define infrastructure boundaries
+
+**Preconditions.** The environment version exists. Scope, resources, and
+topology must refer to that same version.
+
+**Action.** Open **Infrastructure → Execution scopes**. Register the scope, then
+the topology:
+
+```bash
+akf -H 'Content-Type: application/yaml' \
+  --data-binary @examples/simulation/scope.yaml \
+  "$AKOFLOW_API_URL/execution-scopes/"
+akf -H 'Content-Type: application/yaml' \
+  --data-binary @examples/simulation/topology.yaml \
+  "$AKOFLOW_API_URL/network-topologies/"
+```
+
+![Execution scope list used to constrain eligible environment versions and resources.](/img/interface/infrastructure/execution-scopes.png)
+
+**Expected result.** The scope contains `simulation-example-v1`; the topology
+contains one bidirectional 100 Mbit/s link. Core validates immutable definitions
+synchronously and returns `422` for incompatible ownership or missing links.
+
+**If it fails.** Submit environment before scope, and scope before topology.
+Bandwidth is bits per second; dependency sizes are bytes.
+
+## 5. Plan the workflow
+
+**Preconditions.** Workflow, scope, resources, and topology are registered.
+
+**Action.** From the workflow, choose **Generate plan**, select scope and
+algorithms, start the session, and poll while it is `queued` or `running`. After
+completion, compare candidates and select a feasible one. The deterministic
+fixed path is:
+
+```bash
+akf -H 'Content-Type: application/yaml' \
+  --data-binary @examples/simulation/plan-request.yaml \
+  "$AKOFLOW_API_URL/schedule-plans/"
+```
+
+![Plan creation step with execution mode and planning algorithms visible.](/img/interface/planning/create-execution-plan.png)
+
+**Expected result.** Prepare and summarize use the edge; analyze uses the
+cloud. The stored plan is authoritative because Core can recalculate imported
+predictions.
+
+**Core contracts.** Planning-session creation returns `202`; detail includes
+algorithm runs; candidate selection returns a plan with `201`. There is no
+planning event stream. A manual/imported plan has no lifecycle status.
+
+**If it fails.** Wait for final ranking, choose only a feasible candidate, and
+inspect `422` details for incompatible resources or topology.
+
+## 6. Start a run and inspect activities
+
+**Preconditions.** A plan exists and its runtime is available.
+
+**Action.** Start the plan in Desktop, or submit the frozen request:
+
+```bash
+akf -H 'Content-Type: application/yaml' \
+  --data-binary @examples/simulation/execution-request.yaml \
+  "$AKOFLOW_API_URL/execution-runs/"
+```
+
+The `202` response is a queue job, not the run. Poll the requested ID:
+
+```bash
+while :; do
+  projection=$(akf "$AKOFLOW_API_URL/execution-runs/simulation-example-run-v1/") || exit 1
+  state=$(printf '%s' "$projection" | jq -r '.run.status')
+  case "$state" in completed|failed|cancelled) break ;; esac
+  sleep 1
+done
+```
+
+![Completed workflow history with one run selected for evidence inspection.](/img/interface/runs/workflow-history.png)
+
+![Run detail separating activity computation and transfer timing.](/img/interface/runs/simgrid-run-decomposition.png)
+
+**Expected result.** The run is `completed`, all three activities settle, and
+detail retains handles and events. Core has no run-cancel endpoint or run event
+stream.
+
+**If it fails.** A missing projection just after submission is expected; retry.
+For `failed`, inspect events and Core logs. Persistent `pending` usually means
+the asynchronous handler or runtime failed.
+
+## 7. Verify artifacts and transfers
+
+**Preconditions.** The run completed with its two cross-resource dependencies.
+
+**Action.** Open the run's **Data** section and compare logical dependencies
+with observed transfers, then verify:
+
+```bash
+akf "$AKOFLOW_API_URL/execution-runs/simulation-example-run-v1/" |
+  jq '{transfers: (.dataTransfers | length), bytes: .run.transferredBytes}'
+```
+
+**Expected result.** Two transfer records total 120,000,000 bytes. Artifact
+registration, build runs, locations, and materializations remain separate from
+execution transfer observations.
+
+**Core contracts.** Build-run creation returns `202`; poll before fetching its
+binary output. Download content is binary, not JSON. Storage copy/archive also
+returns `202`, but currently exposes no dedicated public job-detail route.
+
+**If it fails.** Zero bytes means dependencies are absent or endpoints used the
+same resource. Build `503` means unavailable capability. For copy/archive,
+refresh browse and audit evidence; never present acceptance as completion.
+
+## 8. Trace provenance and audit
+
+**Preconditions.** At least one workflow or run exists.
+
+**Action.** Use **Provenance** for scientific evidence, lineage, and safe
+read-only SQL. Use **Audit** separately for operational events.
+
+![Provenance run explorer for selecting persisted scientific evidence.](/img/interface/provenance/explore-runs.png)
+
+![Lineage view showing a fan-out between related persisted records.](/img/interface/provenance/lineage-fanout.png)
+
+![Audit event list showing operational history independently from scientific provenance.](/img/interface/operations/audit-events.png)
+
+**Expected result.** Provenance links workflow, plan, run, activities, and
+transfers; audit reports who or what requested operations. Query errors stay
+visible instead of becoming empty results.
+
+**Core contracts.** Catalog, query, read-only SQL, explain, and lineage are
+synchronous JSON. `/audit-events/` has separate filters and pagination. Neither
+area has a live subscription.
+
+**If it fails.** Consult the catalog before SQL and keep it read-only. Audit is
+not scientific lineage; provenance is not operational accountability.
+
+## 9. Understand cloud lifecycle
+
+**Preconditions.** Provision/configure/start/stop/destroy requires a configured
+provider, external credentials, and human authority. Those prerequisites are
+intentionally absent from this deterministic tutorial.
+
+**Action.** On an approved cloud resource, request one lifecycle action and
+follow its operation detail and ordered events. The ownership path is
+**Environment → Inventory → Resource → Provisioning → Operation**.
+
+<img
+  src={useBaseUrl('/img/architecture/lifecycle-overview.svg')}
+  alt="Cloud capacity lifecycle from requested provisioning through configuration, execution, and teardown"
+/>
+
+**Expected result.** The operation reaches a terminal state and its ordered
+events persist. These are HTTP records, not server-sent events.
+
+**Core contracts.** Capacity catalog/configuration prepare inputs; lifecycle
+actions create operation or instance records; detail and `/events/` report
+progress. Provider adapters own external commands.
+
+**Limitation and recovery.** This local walkthrough proves navigation and Core
+contracts, not a cloud mutation. Validation errors and `503` mean unsupported or
+unavailable, not success. Never provision merely for a screenshot, and never
+show credentials or host-derived identity.
+
+## 10. Use the console
+
+**Preconditions.** Core has console support and the selected runtime exposes an
+interactive terminal adapter. SimGrid does not.
+
+**Action.** Open **Console** or the global terminal, create a session against an
+authorized resource, run a harmless command such as `pwd`, inspect the live
+stream, then close it. Reopen detail to verify the persisted log.
+
+**Expected result.** Desktop renders the authenticated stream; Core owns the
+remote process, audit record, session log, and explicit close lifecycle.
+
+**Core contracts.** Recorded commands use `POST /console-commands/`; sessions,
+stream, log, and close have distinct endpoints. The stream is not JSON and must
+be proxied by Electron main.
+
+**Limitation and recovery.** This deterministic path verifies the unsupported
+state only; it does not claim a successful SimGrid session. On a configured
+console, reopen the durable session, inspect its log, and explicitly reconnect
+or close. Polling cannot replace the stream route.
+
+## Final verification
+
+The locally reproducible path is complete when:
+
+- readiness returns HTTP 200;
+- the environment has two simulated resources;
+- the workflow has three activities and two data dependencies;
+- scope and topology resolve to the same environment version;
+- the run reaches `completed` with 3/3 activities and two transfers totaling
+  120,000,000 bytes;
+- provenance and audit remain distinct and queryable;
+- cloud and console stay marked as external-capability limitations unless they
+  were exercised on approved infrastructure.
+
+Continue with the [Core and Desktop contract matrix](../reference/core-ui-contract-matrix)
+for exact status codes, or use [Run your first simulated workflow](./workflows/first-run)
+for the shorter command-only path.

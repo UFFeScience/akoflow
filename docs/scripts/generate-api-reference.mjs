@@ -134,6 +134,17 @@ const routeTitles = {
     "Inspect storage entry (compatibility route)",
 };
 
+// These files are submitted together by the versioned SimGrid first-run
+// procedure. Each depends on IDs created earlier in that sequence.
+const runnableSimulationRequests = {
+  "POST /akoflow-api/environments/": "environment.yaml",
+  "POST /akoflow-api/execution-scopes/": "scope.yaml",
+  "POST /akoflow-api/network-topologies/": "topology.yaml",
+  "POST /akoflow-api/workflow-definitions/": "workflow.yaml",
+  "POST /akoflow-api/schedule-plans/": "plan-request.yaml",
+  "POST /akoflow-api/execution-runs/": "execution-request.yaml",
+};
+
 function humanizeHandler(handler) {
   const phrase = handler
     .replace(/([A-Z]+)([A-Z][a-z])/g, "$1 $2")
@@ -511,6 +522,11 @@ function endpointDocument(endpoint, position) {
   const title = endpoint.title;
   const params = extractParameters(endpoint.path);
   const body = Boolean(endpoint.request);
+  const runnableFile =
+    runnableSimulationRequests[`${endpoint.method} ${endpoint.path}`];
+  const runnableSection = runnableFile
+    ? `## Runnable SimGrid request\n\nThe [first-run tutorial](/docs/guides/workflows/first-run) submits [\`examples/simulation/${runnableFile}\`](https://github.com/UFFeScience/akoflow/blob/v1.0.8/examples/simulation/${runnableFile}) as part of its verified six-request sequence. Follow that sequence so referenced IDs exist before this request. The inferred shape above is illustrative; use the versioned file for a runnable payload.\n\n`
+    : "";
   return `---
 title: ${JSON.stringify(title)}
 sidebar_label: ${JSON.stringify(`${endpoint.method} ${relativePath}`)}
@@ -541,7 +557,7 @@ import ApiEndpoint from '@site/src/components/ApiEndpoint';
   hasRequestBody={${body}}
 />
 
-## Related guide
+${runnableSection}## Related guide
 
 See the [${endpoint.group} guide](${groupMetadata[endpoint.group][0]}) for the corresponding Desktop workflow, concepts, and authored request examples.
 

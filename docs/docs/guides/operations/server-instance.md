@@ -25,6 +25,7 @@ You need:
 - a Linux `amd64` or `arm64` instance with Docker Engine and the Docker Compose
   v2 plugin installed;
 - an account allowed to download the public GitHub Release assets;
+- Bash, `curl`, `jq`, and `sha256sum` on the instance;
 - shell access to the instance and enough disk space for the two image archives,
   their loaded images, BuildKit state, SQLite data, and workflow artifacts;
 - a firewall or private network policy that keeps port 8080 reachable only from
@@ -46,7 +47,7 @@ On the instance, choose the exact release tag and map the kernel architecture
 to the name used by the Release assets.
 
 ```bash
-export AKOFLOW_RELEASE_TAG="v1.0.4" # replace with an existing release tag
+export AKOFLOW_RELEASE_TAG="v1.0.8" # version documented in Downloads
 
 case "$(uname -m)" in
   x86_64) export AKOFLOW_ARCH="amd64" ;;
@@ -208,13 +209,13 @@ akoflow`.
 
 ## Troubleshooting
 
-| Symptom | Check and recovery |
-| --- | --- |
+| Symptom                                              | Check and recovery                                                                                                                                       |
+| ---------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `manifest unknown` or Compose tries to pull an image | Verify `AKOFLOW_RELEASE_TAG` in `.env` and repeat `docker image load`; `docker image inspect akoflow/daemon:<tag>` must succeed before starting Compose. |
-| Preflight reports BuildKit unavailable | Run `docker compose -f compose.yaml logs buildkitd`; the supplied service needs a Docker host that permits privileged containers. |
-| `401 Unauthorized` from an API route | Re-enter the token from `.env`. The preflight route is public, but environments, workflows, plans, runs, and credentials require the bearer token. |
-| State disappeared after a restart | Use `docker compose ... down`, not `down --volumes`. Inspect the `akoflow-state` volume before recreating or removing it. |
-| A request needs browser CORS access | Configure only the exact trusted origin in `AKOFLOW_API_ALLOWED_ORIGINS`; do not use a wildcard or expose the API port directly. |
+| Preflight reports BuildKit unavailable               | Run `docker compose -f compose.yaml logs buildkitd`; the supplied service needs a Docker host that permits privileged containers.                        |
+| `401 Unauthorized` from an API route                 | Re-enter the token from `.env`. The preflight route is public, but environments, workflows, plans, runs, and credentials require the bearer token.       |
+| State disappeared after a restart                    | Use `docker compose ... down`, not `down --volumes`. Inspect the `akoflow-state` volume before recreating or removing it.                                |
+| A request needs browser CORS access                  | Configure only the exact trusted origin in `AKOFLOW_API_ALLOWED_ORIGINS`; do not use a wildcard or expose the API port directly.                         |
 
 For server logs, Docker/BuildKit diagnostics, and network checks, see
 [Troubleshooting](./troubleshooting).

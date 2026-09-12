@@ -11,19 +11,22 @@ Use this tutorial to confirm a new installation. Do not use it to learn automati
 
 ## Before you begin
 
-You need:
+You need Git, Bash, `curl`, `jq`, and a daemon with the SimGrid runner available.
+Complete [API connection setup](../../tutorials/api-access) first, using a daemon
+whose URL and token you manage. The graphical Desktop setup does not expose a
+token for these commands; use the [server installation](../operations/server-instance)
+if you need a separately managed API endpoint.
 
-- a clone of the AkôFlow repository;
-- the AkôFlow daemon running with the SimGrid runner available;
-- `curl` and `jq` on your command line;
-- the daemon API token, when authentication is enabled.
-
-From the repository root, set the API address and token. The development Compose stack listens on port 8080 by default.
+Download the matching example source and enter its directory:
 
 ```bash
-export AKOFLOW_API_URL="http://127.0.0.1:8080/akoflow-api"
-export AKOFLOW_API_TOKEN="<token>"
+git clone --branch v1.0.8 --depth 1 https://github.com/UFFeScience/akoflow.git akoflow-first-run
+cd akoflow-first-run
 ```
+
+If you already have a matching checkout, enter that repository instead. Run the
+commands below in the same Bash session where you configured `AKOFLOW_API_URL`
+and `AKOFLOW_API_TOKEN`.
 
 Check the daemon before registering anything:
 
@@ -41,16 +44,16 @@ The files use stable IDs such as `simulation-example` and `simulation-example-ru
 
 ## Understand what will run
 
-The versioned bundle lives in [`examples/simulation`](https://github.com/UFFeScience/akoflow/tree/main/examples/simulation):
+The versioned bundle lives in [`examples/simulation`](https://github.com/UFFeScience/akoflow/tree/v1.0.8/examples/simulation):
 
-| File | Purpose |
-| --- | --- |
-| `environment.yaml` | SimGrid runtime, a two-core edge resource, and an eight-core cloud resource |
-| `scope.yaml` | Limits planning and execution to that environment version |
-| `topology.yaml` | A shared 100 Mbit/s bidirectional link with 50 ms latency |
-| `workflow.yaml` | `prepare → analyze → summarize`, including individual simulation durations and two data dependencies |
-| `plan-request.yaml` | Fixed edge → cloud → edge placement and predicted timing |
-| `execution-request.yaml` | Frozen execution snapshot submitted to SimGrid |
+| File                     | Purpose                                                                                              |
+| ------------------------ | ---------------------------------------------------------------------------------------------------- |
+| `environment.yaml`       | SimGrid runtime, a two-core edge resource, and an eight-core cloud resource                          |
+| `scope.yaml`             | Limits planning and execution to that environment version                                            |
+| `topology.yaml`          | A shared 100 Mbit/s bidirectional link with 50 ms latency                                            |
+| `workflow.yaml`          | `prepare → analyze → summarize`, including individual simulation durations and two data dependencies |
+| `plan-request.yaml`      | Fixed edge → cloud → edge placement and predicted timing                                             |
+| `execution-request.yaml` | Frozen execution snapshot submitted to SimGrid                                                       |
 
 The activities have base durations of 4 s, 12 s, and 2 s. The cloud resource has a `computeSpeedup` of 4, so `analyze` requires about 3 s of computation there. Moving 100,000,000 bytes to the cloud and 20,000,000 bytes back makes network time observable.
 
@@ -148,7 +151,7 @@ curl --fail-with-body \
 Creation is asynchronous. The POST response acknowledges the command; it is not the completed run projection. Poll the requested run ID:
 
 ```bash
-while :; do
+for attempt in {1..60}; do
   projection=$(curl --fail-with-body --silent --show-error \
     -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
     "$AKOFLOW_API_URL/execution-runs/simulation-example-run-v1/") || exit 1
@@ -162,7 +165,9 @@ while :; do
 done
 ```
 
-Continue only when the final status is `completed`. A local simulation normally finishes quickly, but the HTTP operation still follows the same asynchronous lifecycle as a real run.
+The loop checks for up to 60 attempts. If it exits while the run is still pending
+or running, inspect the run events before retrying the read; do not resubmit the
+creation request. Continue only when the final status is `completed`. A local simulation normally finishes quickly, but the HTTP operation still follows the same asynchronous lifecycle as a real run.
 
 ## 6. Verify the result
 
@@ -190,6 +195,14 @@ A successful run has these invariant results:
 - `breakdown.computeSeconds` and `breakdown.transferSeconds` are both greater than zero.
 
 On the development stack verified on 2026-09-11, the deterministic run reported a makespan of approximately 21.593 s, 9 s accumulated compute time, and 11.693 s accumulated transfer time. Small model or SimGrid-version changes may alter the decimal values; use the invariants above as the pass criteria.
+
+The same six requests were also exercised against the official v1.0.8 packaged
+runtime on 2026-09-12: all three activities completed, with two transfers,
+120,000,000 bytes, 9 s compute and approximately 11.693 s transfer time.
+
+![Completed first simulation in the official Desktop application](../../../static/img/interface/onboarding/first-simulation-result.png)
+
+_The simulation was submitted through the API and then inspected in Desktop._
 
 The reproducibility bundle is stored under `storage/simgrid/<run-id>-<instance>/` with `platform.xml`, `simulation.json`, `result.json`, and `runner.log`.
 
@@ -220,13 +233,13 @@ The run is complete only when the header says `completed` and the activity summa
 
 ## Recover from common failures
 
-| Failure | Cause and recovery |
-| --- | --- |
-| `401 Unauthorized` | The daemon requires a token. Set `AKOFLOW_API_TOKEN` and keep the `Authorization` header. |
-| `422` while creating an object | The stable ID probably already exists, or an earlier dependency was not created. Use a fresh instance or update every related ID consistently. |
-| `FOREIGN KEY constraint failed` while creating the plan | An assignment activity ID does not match the registered workflow version. Use the complete files from the same repository revision. |
-| `akoflow-simgrid-runner: executable file not found` | Install/build the runner and set `AKOFLOW_SIMGRID_BINARY`, or use the server image that includes it. |
-| Completed run has zero transferred bytes | The workflow lacks data dependencies or producer and consumer were placed on the same resource. Recheck `workflow.yaml`, the plan assignments, and topology IDs. |
-| Run remains `pending` | Inspect the run events and daemon log; the asynchronous command may have failed before the simulation process started. |
+| Failure                                                 | Cause and recovery                                                                                                                                               |
+| ------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `401 Unauthorized`                                      | The daemon requires a token. Set `AKOFLOW_API_TOKEN` and keep the `Authorization` header.                                                                        |
+| `422` while creating an object                          | The stable ID probably already exists, or an earlier dependency was not created. Use a fresh instance or update every related ID consistently.                   |
+| `FOREIGN KEY constraint failed` while creating the plan | An assignment activity ID does not match the registered workflow version. Use the complete files from the same repository revision.                              |
+| `akoflow-simgrid-runner: executable file not found`     | Install/build the runner and set `AKOFLOW_SIMGRID_BINARY`, or use the server image that includes it.                                                             |
+| Completed run has zero transferred bytes                | The workflow lacks data dependencies or producer and consumer were placed on the same resource. Recheck `workflow.yaml`, the plan assignments, and topology IDs. |
+| Run remains `pending`                                   | Inspect the run events and daemon log; the asynchronous command may have failed before the simulation process started.                                           |
 
 Next, use [the edge-to-cloud Showcase](../../showcase/edge-cloud-simulation) to inspect the same model visually, or [Plan a workflow](./planning.md) to compare PRISM Cost, PRISM Time, and HEFT.

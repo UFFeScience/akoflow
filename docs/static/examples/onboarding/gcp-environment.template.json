@@ -1,0 +1,54 @@
+{
+  "environment": {
+    "id": "research-gcp",
+    "name": "Research GCP",
+    "description": "Tutorial environment; replace site-specific settings.",
+    "status": "defined"
+  },
+  "version": {
+    "id": "research-gcp-v1",
+    "environmentId": "research-gcp",
+    "version": 1,
+    "status": "draft",
+    "networkModel": "static-links",
+    "interferenceModel": "none",
+    "costModel": "per-second",
+    "configurationHash": "research-gcp-v1"
+  },
+  "runtimes": [
+    {
+      "id": "research-gcp-cloud",
+      "environmentVersionId": "research-gcp-v1",
+      "name": "Cloud on demand",
+      "driver": "cloud",
+      "mode": "execution",
+      "role": "execution",
+      "configuration": {
+        "connectionId": "research-gcp-connection",
+        "adapter": "cloud-ssh"
+      },
+      "capabilities": {
+        "batch": true,
+        "interactive": true,
+        "container": true,
+        "simulation": false
+      }
+    }
+  ],
+  "resources": [],
+  "resourceRuntimeBindings": [],
+  "connections": [
+    {
+      "id": "research-gcp-connection",
+      "environmentId": "research-gcp",
+      "name": "Research GCP",
+      "type": "cloud",
+      "credentialRef": "REPLACE_WITH_RETURNED_REFERENCE",
+      "configuration": {
+        "provider": "gcp",
+        "projectId": "REPLACE_WITH_PROJECT_ID",
+        "region": "us-central1"
+      }
+    }
+  ]
+}

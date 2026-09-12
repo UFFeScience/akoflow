@@ -5,6 +5,10 @@ description: Connect a GCP project, discover capacity, and provision an AkôFlow
 
 # Configure Google Cloud
 
+For a guided first registration with interface screenshots and complete API steps,
+start with [the connection tutorial](../../tutorials/connect-cloud). This page provides
+the detailed operational requirements.
+
 AkôFlow uses a service account to read the Compute catalog and, when requested, run Terraform to create a worker. The credential is stored locally by the daemon; the documentation examples never embed the private key in an environment YAML file.
 
 ## Before you begin

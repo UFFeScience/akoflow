@@ -22,6 +22,14 @@ You do not need prior AkôFlow experience. Choose the path that matches what you
 
 Start with the simulation even if your eventual target is Kubernetes or HPC. It separates installation problems from credentials, network access, scheduler policy, and remote storage.
 
+## Continue after installation
+
+Follow [installation result checks](./installation#4-installation-result), then
+[register HPC / SLURM](./tutorials/register-hpc) or
+[connect Google Cloud](./tutorials/connect-cloud). Each tutorial includes the
+actual connection form, an API path, and expected results. For automation, start
+with [API connection setup](./tutorials/api-access).
+
 ## I already have AkôFlow running
 
 | Goal | Continue with |

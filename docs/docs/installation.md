@@ -206,7 +206,7 @@ the checks in the relevant infrastructure tutorial.
 | Checkpoint           | Expected result                                      | If it fails                                                                        |
 | -------------------- | ---------------------------------------------------- | ---------------------------------------------------------------------------------- |
 | Application opens    | Welcome screen or Overview appears                   | Read startup error details and confirm Docker/Compose access                       |
-| Local control plane  | Sidebar connection indicator says **Connected**      | Wait for startup; inspect the daemon failure rather than creating a new identity   |
+| Local service        | Sidebar connection indicator says **Connected**      | Wait for startup; inspect the daemon failure rather than creating a new identity   |
 | Catalog navigation   | **Infrastructure → Environments** opens              | Use [Troubleshooting](./guides/operations/troubleshooting) for API/instance errors |
 | Infrastructure setup | **Connect environment** opens the connection choices | Continue with the HPC or cloud tutorial below                                      |
 
@@ -216,9 +216,9 @@ _Overview after choosing Set up later on a fresh installation. If you completed
 the local assistant, your environment is already present; empty execution charts
 are still expected before running workflows._
 
-An empty catalog is normal on a new installation. A connected daemon confirms
-that the application can reach its control plane; it does not prove that a
-remote cluster, a cloud credential, or a workflow is ready.
+An empty catalog is normal on a new installation. **Connected** means Desktop
+can reach its local service. Check each remote environment before using it;
+the connection indicator does not run a workflow.
 
 ### Check through the API
 

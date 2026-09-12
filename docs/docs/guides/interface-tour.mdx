@@ -56,13 +56,13 @@ Some task guides describe both paths:
 
 The API is useful for automation and reproducible experiments. Desktop helps you inspect and compare records. Check each guide's prerequisites before switching paths; the packaged Desktop manages its own local API credential.
 
-## Use global search deliberately
+## Find a record
 
 Press <kbd>⌘</kbd>+<kbd>K</kbd> on macOS, <kbd>Ctrl</kbd>+<kbd>K</kbd> on Windows or Linux, or select the search field in the title bar. With an empty field, Desktop lists navigation shortcuts such as **Workflow definitions**, **Planning sessions**, **Runs**, and **Provenance**. This is the fastest route when you know the product area but not its sidebar location.
 
 Once you enter text, the list shows matching records. A result identifies its record by title and ID, and may show a status and type; select it to open the corresponding record. Press <kbd>Enter</kbd> to open the first available result, or <kbd>Escape</kbd> to close the result list.
 
-Search is a locator, not an investigation surface. It does not replace the filtered lists or the provenance query tools: use the workflow, run, plan, environment, or provenance page after opening a result when you need status history, evidence, or a precise server-side filter. If Desktop says **Search is temporarily unavailable**, the search request failed; retry after confirming that the daemon connection is healthy.
+Open a result's detail page for its status and history. If Desktop says **Search is temporarily unavailable**, check the daemon connection and try again.
 
 ## Global terminal
 
@@ -76,4 +76,4 @@ Some instance modes prevent write operations. The interface displays the active 
 
 ## Continue
 
-For a checked-in end-to-end example through a separately managed API, use the [SimGrid tutorial](./workflows/first-run). To connect a real target, see [Environments](./infrastructure/environments).
+To create and run one workflow in Desktop, follow the [first local run](./workflows/first-local-run). For a simulation through a separately managed API, use the [SimGrid tutorial](./workflows/first-run). To connect another target, see [Environments](./infrastructure/environments).

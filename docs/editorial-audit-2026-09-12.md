@@ -45,7 +45,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `guides/infrastructure/kubernetes.md` | Full read; aligned API setup and task-first opening | Recheck procedure against Kind bundle |
 | `guides/infrastructure/simgrid.md` | Full read; corrected unlinked Desktop topology-creation path | Recheck procedure against pinned bundle |
 | `guides/infrastructure/storage.md` | Full read; action limits are qualified by capabilities | Recheck API payloads after P0 contracts fix |
-| `guides/interface-tour.mdx` | Full read; removed API routes and simplified navigation/terminal language | Recheck rendered page at mobile width |
+| `guides/interface-tour.mdx` | Full read; removed API routes, shortened search explanation, and linked the verified Desktop first run | Recheck rendered page at mobile width |
 | `guides/operations/credentials-and-ssh.md` | Full read; aligned shared API setup and server terminology | Recheck secret-handling claims against handlers |
 | `guides/operations/instance-management.md` | Full read; aligned shared API setup and removed internal snapshot detail | Recheck import/export contracts against handlers |
 | `guides/operations/interactive-console.md` | Full read; removed polling implementation detail and aligned API setup | Recheck session behavior against Desktop |
@@ -56,7 +56,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `guides/workflows/executions.md` | Full read; corrected queued/run state distinction | Verify Desktop-only start flow |
 | `guides/workflows/first-run.md` | Full read; API submission and Desktop inspection are distinguished | Verify complete Desktop-only path |
 | `guides/workflows/planning.md` | Full read; simplified candidate language | Verify Desktop-only planning flow |
-| `installation.md` | Full read; public bootstrap checks verified in `security.go` and tests | Verify complete first-user path and cross-platform installation |
+| `installation.md` | Full read; public bootstrap checks verified in `security.go` and tests; clarified what Connected proves | Verify clean-host and cross-platform installation |
 | `internal/workflow-spec.md` | Full read; compatibility and simulation-only import limits are explicit | Check contracts against current importer |
 | `modules.md` | Full read; removed incidental polling default | Recheck claims against daemon composition |
 | `reference/api-overview.md` | Full read; bootstrap and route conventions are explicit | Check contracts against current handlers and schemas |

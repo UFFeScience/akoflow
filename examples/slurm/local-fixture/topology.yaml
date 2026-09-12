@@ -1,0 +1,5 @@
+id: slurm-fixture-network
+name: Local SLURM fixture network
+version: 1
+executionScopeId: slurm-fixture-scope
+links: []

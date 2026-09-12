@@ -5,7 +5,7 @@ description: Configure a proxy-aware SSH connection, discover a SLURM cluster, m
 
 # Connect an HPC and SLURM cluster
 
-This how-to is for an HPC operator or researcher who has an approved account on a SLURM cluster. It connects AkôFlow to the **login node** over SSH and submits workflow activities through `sbatch`. It does not provide a runnable local SLURM emulator: use it with a cluster approved by its administrator.
+This how-to is for an HPC operator or researcher who has an approved account on a SLURM cluster. It connects AkôFlow to the **login node** over SSH and submits workflow activities through `sbatch`. For a safe adapter-only check before involving a cluster, use the [SLURM batch fixture](../../showcase/slurm-local-fixture). The fixture validates AkôFlow's local batch-script, sentinels, and artifact path; it is not a SLURM scheduler emulator and does not validate SSH, allocation, accounting, or site policy.
 
 Use a SLURM environment for batch work governed by SLURM partitions, accounts, QoS, and node allocation. Do not model a login node as a high-capacity compute resource or send ordinary batch work directly to it. For a no-remote-infrastructure experiment, use [SimGrid](./simgrid) instead.
 

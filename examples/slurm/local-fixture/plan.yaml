@@ -1,0 +1,12 @@
+plan:
+  id: slurm-fixture-plan-v1
+  workflowVersionId: slurm-fixture-v1
+  executionScopeId: slurm-fixture-scope
+  networkTopologyId: slurm-fixture-network
+  source: imported
+  algorithm: manual
+  algorithmVersion: "1"
+  objective: custom
+  predicted: {makespanSeconds: 1, cost: 0, feasible: true}
+  assignments:
+    - {activityId: slurm-fixture-write-report, resourceId: slurm-fixture-partition, orderOnResource: 0, metadata: {runtimeId: slurm}}

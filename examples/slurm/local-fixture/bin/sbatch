@@ -1,0 +1,21 @@
+#!/bin/sh
+# Local fixture for the small surface AkôFlow uses: `sbatch --parsable SCRIPT`.
+# It runs the generated script in a disposable Alpine container and returns a
+# stable fixture job ID. It is not an implementation of SLURM scheduling.
+set -eu
+[ "$1" = --parsable ]
+script=$2
+job_id=1
+root=$AKOFLOW_SLURM_FIXTURE_ROOT
+relative=${script#"$root"/}
+log=$(sed -n 's/^#SBATCH --output=//p' "$script" | head -n 1 | sed "s/%j/$job_id/g")
+(
+  docker run --rm \
+    -v "$root:/work" \
+    -v "$AKOFLOW_SLURM_FIXTURE_BIN:/fixture-bin:ro" \
+    -w /work \
+    -e SLURM_JOB_ID="$job_id" \
+    -e PATH="/fixture-bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" \
+    alpine:3.20 /bin/sh "/work/$relative"
+) > "$root/$log" 2>&1 &
+printf '%s\n' "$job_id"

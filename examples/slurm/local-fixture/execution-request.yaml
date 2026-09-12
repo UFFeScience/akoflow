@@ -1,0 +1,67 @@
+run:
+  id: slurm-fixture-run-v1
+  schedulePlanId: slurm-fixture-plan-v1
+  mode: real
+  status: created
+plan:
+  id: slurm-fixture-plan-v1
+  workflowVersionId: slurm-fixture-v1
+  executionScopeId: slurm-fixture-scope
+  networkTopologyId: slurm-fixture-network
+  source: imported
+  algorithm: manual
+  algorithmVersion: "1"
+  objective: custom
+  predicted: {makespanSeconds: 1, cost: 0, feasible: true}
+  assignments:
+    - {activityId: slurm-fixture-write-report, resourceId: slurm-fixture-partition, orderOnResource: 0, metadata: {runtimeId: slurm}}
+workflow:
+  id: slurm-fixture-v1
+  workflowId: slurm-fixture
+  version: 1
+  definitionHash: slurm-fixture-v1
+  activities:
+    - id: slurm-fixture-write-report
+      workflowVersionId: slurm-fixture-v1
+      activityTypeId: slurm-fixture-activity
+      externalId: write-report
+      name: write-report
+      kind: task
+      capabilities: [real]
+      command:
+        executable:
+          source: {type: remote-file, path: /bin/sh, environmentRef: slurm-fixture}
+          delivery: {strategy: use-in-place}
+        entrypoint: sh
+        arguments: ["-c", "printf 'Akoflow Slurm fixture\\n' > result.txt"]
+      resources: {cpu: 1, memoryBytes: 16777216, storageBytes: 0}
+      policy: {timeoutSeconds: 60, maxAttempts: 1}
+      metadata: {runtime: slurm}
+resources:
+  - id: slurm-fixture-partition
+    environmentVersionId: slurm-fixture-v1
+    executionTarget: batch
+    type: hpc_partition
+    name: Fixture partition
+    providerId: fixture
+    cpuCores: 1
+    cpuCapacity: 1
+    memoryBytes: 1073741824
+    storageBytes: 1073741824
+    computeSpeedup: 1
+    pricePerSecond: 0
+    schedulable: true
+executionScope:
+  id: slurm-fixture-scope
+  name: Local SLURM fixture scope
+  environmentVersionIds: [slurm-fixture-v1]
+networkTopology:
+  id: slurm-fixture-network
+  name: Local SLURM fixture network
+  version: 1
+  executionScopeId: slurm-fixture-scope
+  links: []
+runtimes:
+  - {environmentVersionId: slurm-fixture-v1, id: slurm, name: Fixture SLURM runtime, driver: slurm, mode: execution, role: compute, configuration: {partition: fixture}}
+runtimeBindings:
+  - {resourceId: slurm-fixture-partition, runtimeId: slurm, enabled: true}

@@ -1,0 +1,41 @@
+environment:
+  id: slurm-fixture
+  name: Local SLURM fixture
+  status: ready
+
+version:
+  id: slurm-fixture-v1
+  environmentId: slurm-fixture
+  version: 1
+  status: published
+  networkModel: measured
+  interferenceModel: observed
+  costModel: free
+  configurationHash: slurm-fixture-v1
+
+runtimes:
+  - environmentVersionId: slurm-fixture-v1
+    id: slurm
+    name: Fixture SLURM runtime
+    driver: slurm
+    mode: execution
+    role: compute
+    configuration: {partition: fixture}
+
+resources:
+  - id: slurm-fixture-partition
+    environmentVersionId: slurm-fixture-v1
+    executionTarget: batch
+    type: hpc_partition
+    name: Fixture partition
+    providerId: fixture
+    cpuCores: 1
+    cpuCapacity: 1
+    memoryBytes: 1073741824
+    storageBytes: 1073741824
+    computeSpeedup: 1
+    pricePerSecond: 0
+    schedulable: true
+
+resourceRuntimeBindings:
+  - {resourceId: slurm-fixture-partition, runtimeId: slurm, enabled: true}

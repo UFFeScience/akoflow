@@ -1,0 +1,8 @@
+#!/bin/sh
+# Minimal fixture adapter: accept `singularity exec IMAGE COMMAND ...` and run
+# COMMAND in the disposable Linux container used by the fake sbatch command.
+set -eu
+[ "$1" = exec ] && shift
+image=$1
+shift
+exec "$@"

@@ -1,0 +1,14 @@
+name: slurm-fixture
+spec:
+  namespace: examples
+  activities:
+    - name: write-report
+      runtime: slurm
+      command:
+        entrypoint: sh
+        arguments: ["-c", "printf 'Akoflow Slurm fixture\\n' > result.txt"]
+        executable:
+          source: {type: remote-file, path: /bin/sh, environmentRef: slurm-fixture}
+          delivery: {strategy: use-in-place}
+      cpuLimit: "1"
+      memoryLimit: 16Mi

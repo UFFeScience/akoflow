@@ -1,0 +1,3 @@
+id: slurm-fixture-scope
+name: Local SLURM fixture scope
+environmentVersionIds: [slurm-fixture-v1]

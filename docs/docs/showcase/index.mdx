@@ -33,6 +33,13 @@ Start from a complete, runnable workflow instead of assembling isolated payloads
     tags={['Beginner', 'Local', 'Real run']}
   />
   <ShowcaseCard
+    title="SLURM batch fixture"
+    description="A disposable local check of AkôFlow's batch-script, status-sentinel, and artifact-evidence path."
+    href="/docs/showcase/slurm-local-fixture"
+    kind="slurm"
+    tags={['Intermediate', 'SLURM', 'Fixture']}
+  />
+  <ShowcaseCard
     title="30 GB network fan-out"
     description="A data-intensive workflow for studying parallel transfers, shared bandwidth, and fan-in across three machines."
     href="/docs/showcase/network-fanout"
@@ -66,6 +73,7 @@ The files are the source of truth. Walkthroughs refer to them directly so the gr
 | 50-core fan-out | [`examples/simulation/50core-fanout`](https://github.com/UFFeScience/akoflow/tree/main/examples/simulation/50core-fanout) | Per-core placement and parallel capacity |
 | Kubernetes with Kind | [`examples/kind`](https://github.com/UFFeScience/akoflow/tree/main/examples/kind) | Local real execution, namespace access, and requests |
 | Local direct | [`examples/local/direct-hello`](https://github.com/UFFeScience/akoflow/tree/main/examples/local/direct-hello) | A trusted host-local command and observed filesystem artifact |
+| SLURM batch fixture | [`examples/slurm/local-fixture`](https://github.com/UFFeScience/akoflow/tree/main/examples/slurm/local-fixture) | Reproducible local validation of the SLURM adapter's batch submission and artifact path |
 | Remote connections | [`examples/connections`](https://github.com/UFFeScience/akoflow/tree/main/examples/connections) | SSH-based PlaFRIM, Santos Dumont, and Kind connections |
 
 ## Infrastructure configuration references
@@ -74,4 +82,4 @@ These files model infrastructure inputs, but are not end-to-end showcases. In pa
 
 | Infrastructure | Files | Scope and next step |
 | --- | --- | --- |
-| SLURM cluster | [`examples/slurm`](https://github.com/UFFeScience/akoflow/tree/main/examples/slurm) | A catalog for a partition, login node, shared storage, and runtime bindings. Pair it with an approved SLURM cluster and follow [Connect an HPC and SLURM cluster](../guides/infrastructure/hpc-slurm) before submitting a site-approved probe. |
+| SLURM cluster | [`examples/slurm`](https://github.com/UFFeScience/akoflow/tree/main/examples/slurm) | A catalog for a partition, login node, shared storage, and runtime bindings. Pair it with an approved SLURM cluster and follow [Connect an HPC and SLURM cluster](../guides/infrastructure/hpc-slurm) before submitting a site-approved probe. The separate [SLURM batch fixture](./slurm-local-fixture) validates only the local adapter path. |

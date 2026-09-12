@@ -18,14 +18,14 @@ This plan keeps the documentation aligned with the shipping daemon and Desktop a
 
 ## Sources of truth
 
-| Subject | Primary source |
-|---|---|
-| Desktop navigation | `akoflow-admin/src/App.jsx` and `src/components/AppShell.jsx` |
-| Desktop operations | Page, form, and provider components in `akoflow-admin/src` |
-| HTTP methods and paths | `akoflow/internal/api/httpserver/httpserver.go` |
-| Request and response contracts | HTTP handlers, application services, and `internal/domain` |
-| Runnable scenarios | `akoflow/examples` and integration tests |
-| Packaged installation | Root README, `releases/`, Electron bootstrap, and release workflows |
+| Subject                        | Primary source                                                      |
+| ------------------------------ | ------------------------------------------------------------------- |
+| Desktop navigation             | `akoflow-admin/src/App.jsx` and `src/components/AppShell.jsx`       |
+| Desktop operations             | Page, form, and provider components in `akoflow-admin/src`          |
+| HTTP methods and paths         | `akoflow/internal/api/httpserver/httpserver.go`                     |
+| Request and response contracts | HTTP handlers, application services, and `internal/domain`          |
+| Runnable scenarios             | `akoflow/examples` and integration tests                            |
+| Packaged installation          | Root README, `releases/`, Electron bootstrap, and release workflows |
 
 Generated site output and old copied Markdown files are not sources of truth.
 
@@ -104,8 +104,15 @@ Every media item must have descriptive alternative text. Videos need a written p
 
 ### Canonical image lifecycle
 
-- Capture Desktop screenshots at `1440 × 900`, device scale factor `1`, with
-  reduced motion. Keep the original PNG resolution; optimize without resizing.
+- Capture Electron Desktop screenshots at `1280 × 860`, device scale factor
+  `1`, with reduced motion. A larger Xvfb screen may surround the Electron
+  window, but it does not change the canonical output size. Browser-only
+  documentation captures keep their scripted `1440 × 900` viewport. Keep the
+  original PNG resolution; optimize without resizing.
+- Existing reviewed captures from before this convention are an explicit legacy
+  exception: keep their original pixels while the depicted task remains
+  accurate, and replace them at `1280 × 860` when that screen is next
+  recaptured. Do not resize old evidence merely to satisfy the convention.
 - Name files `<area>-<task>-<two-digit-step>-<description>.png` for a sequence,
   or `<area>-<stable-view>.png` for a single durable view. Dark-theme variants
   use the `-dark` suffix before the extension.

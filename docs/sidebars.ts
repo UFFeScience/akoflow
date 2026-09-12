@@ -10,6 +10,7 @@ const sidebars: SidebarsConfig = {
         "getting-started",
         "installation",
         "downloads",
+        "guides/complete-flows",
         "guides/interface-tour",
         "guides/workflows/first-run",
         {

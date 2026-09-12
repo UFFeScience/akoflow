@@ -18,6 +18,15 @@ returned HTTP 200. The image is 1280 × 860 pixels; the wrapper ran Electron
 screen. The shared browser-only tool used Chromium 153.0.8010.12 at the time of
 verification; Electron capture uses Electron's bundled Chromium instead.
 
+`1280 × 860` is the canonical Electron output size at device scale factor 1.
+The `1440 × 1000` Xvfb screen only gives the framed window enough room; it is
+not a second screenshot convention. Browser-only documentation captures use a
+separate `1440 × 900` viewport because they do not include Electron chrome.
+Reviewed captures created before this rule keep their original high-DPI or
+`1440 × 900` pixels until the depicted screen changes. They are a documented
+legacy exception, not a second target for new captures; resizing them would
+alter evidence without reproducing the UI.
+
 ![AkôFlow Desktop welcome step connected to an operational local Core, before environment configuration.](/img/interface/desktop/installation-welcome.png)
 
 ## Capture procedure

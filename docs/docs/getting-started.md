@@ -20,19 +20,23 @@ You do not need prior AkôFlow experience. Choose the path that matches what you
 2. [Run the first simulated workflow](./guides/workflows/first-run). The tutorial uses checked-in files, requires no cluster or cloud account, and ends with concrete activity and transfer checks.
 3. Use the [interface tour](./guides/interface-tour) when you want to learn where the same records appear in Desktop.
 
+For a task-by-task path across installation, infrastructure, workflows,
+execution, data, evidence, cloud operations, and the terminal, use the
+[ten complete flows](./guides/complete-flows).
+
 Start with the simulation even if your eventual target is Kubernetes or HPC. It separates installation problems from credentials, network access, scheduler policy, and remote storage.
 
 ## I already have AkôFlow running
 
-| Goal | Continue with |
-| --- | --- |
-| Define or import an activity DAG | [Workflow definitions](./guides/workflows/definitions) |
-| Generate PRISM or HEFT candidates, or place activities manually | [Plan a workflow](./guides/workflows/planning) |
-| Start a selected plan and inspect observed evidence | [Execute and monitor a workflow](./guides/workflows/executions) |
-| Configure simulated or connected infrastructure | [Environments](./guides/infrastructure/environments) |
-| Limit the resources and network offered to planning | [Execution scopes and network topologies](./guides/infrastructure/execution-scopes) |
-| Reproduce a complete example | [Workflow Showcase](./showcase/) |
-| Query lineage, evidence, or audit records | [Provenance and audit](./guides/data/provenance-and-audit) |
+| Goal                                                            | Continue with                                                                       |
+| --------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| Define or import an activity DAG                                | [Workflow definitions](./guides/workflows/definitions)                              |
+| Generate PRISM or HEFT candidates, or place activities manually | [Plan a workflow](./guides/workflows/planning)                                      |
+| Start a selected plan and inspect observed evidence             | [Execute and monitor a workflow](./guides/workflows/executions)                     |
+| Configure simulated or connected infrastructure                 | [Environments](./guides/infrastructure/environments)                                |
+| Limit the resources and network offered to planning             | [Execution scopes and network topologies](./guides/infrastructure/execution-scopes) |
+| Reproduce a complete example                                    | [Workflow Showcase](./showcase/)                                                    |
+| Query lineage, evidence, or audit records                       | [Provenance and audit](./guides/data/provenance-and-audit)                          |
 
 ## I am connecting infrastructure
 

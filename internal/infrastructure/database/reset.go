@@ -1,25 +1,59 @@
 package database
 
 import (
-	"context"
-	"database/sql"
+	"errors"
 	"fmt"
+	"os"
+	"path/filepath"
 )
 
-// Reset removes persisted user data while preserving the schema and immutable
-// system instance identity required for the daemon to remain reachable.
-func Reset(ctx context.Context, db *sql.DB) error {
-	rows, err := db.QueryContext(ctx, `SELECT name FROM sqlite_master WHERE type='table' AND name NOT IN ('schema_metadata', 'system_instance', 'sqlite_sequence')`)
-	if err != nil { return fmt.Errorf("list database tables: %w", err) }
-	defer rows.Close()
-	var names []string
-	for rows.Next() { var name string; if err := rows.Scan(&name); err != nil { return err }; names = append(names, name) }
-	if err := rows.Err(); err != nil { return err }
-	tx, err := db.BeginTx(ctx, nil); if err != nil { return err }
-	defer tx.Rollback()
-	if _, err = tx.ExecContext(ctx, `PRAGMA defer_foreign_keys = ON`); err != nil { return err }
-	for _, name := range names {
-		if _, err = tx.ExecContext(ctx, `DELETE FROM "`+name+`"`); err != nil { return fmt.Errorf("clear %s: %w", name, err) }
+const factoryResetSuffix = ".factory-reset-pending"
+
+// ScheduleFactoryReset records a reset request without modifying the database
+// while it is open. The marker is consumed before SQLite is opened again.
+func ScheduleFactoryReset(path string) error {
+	path, err := normalizePath(path)
+	if err != nil {
+		return err
 	}
-	return tx.Commit()
+	marker := path + factoryResetSuffix
+	temporary := marker + ".tmp"
+	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+		return fmt.Errorf("create database directory: %w", err)
+	}
+	if err := os.WriteFile(temporary, []byte("factory-reset\n"), 0o600); err != nil {
+		return fmt.Errorf("write factory reset marker: %w", err)
+	}
+	if err := os.Rename(temporary, marker); err != nil {
+		_ = os.Remove(temporary)
+		return fmt.Errorf("publish factory reset marker: %w", err)
+	}
+	return nil
+}
+
+// ApplyPendingFactoryReset removes the SQLite database and its sidecar files.
+// It must run before any connection to path is opened. The marker is removed
+// last so an interrupted reset is retried on the next process start.
+func ApplyPendingFactoryReset(path string) (bool, error) {
+	path, err := normalizePath(path)
+	if err != nil {
+		return false, err
+	}
+	marker := path + factoryResetSuffix
+	if _, err := os.Stat(marker); err != nil {
+		if errors.Is(err, os.ErrNotExist) {
+			return false, nil
+		}
+		return false, fmt.Errorf("inspect factory reset marker: %w", err)
+	}
+
+	for _, candidate := range []string{path, path + "-wal", path + "-shm", path + "-journal"} {
+		if err := os.Remove(candidate); err != nil && !errors.Is(err, os.ErrNotExist) {
+			return false, fmt.Errorf("remove SQLite file %s: %w", filepath.Base(candidate), err)
+		}
+	}
+	if err := os.Remove(marker); err != nil {
+		return false, fmt.Errorf("remove factory reset marker: %w", err)
+	}
+	return true, nil
 }

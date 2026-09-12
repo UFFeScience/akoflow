@@ -162,4 +162,6 @@ curl --fail-with-body \
   -X POST "$AKOFLOW_URL/factory-reset/"
 ```
 
-Success is `204 No Content`. The endpoint returns `503` when reset support is unavailable and `422` when the reset operation fails. It cannot run while a read-only snapshot is active because the read-only guard returns `423` first.
+Success is `202 Accepted` with a `restarting` flag. The server first persists a small reset marker, returns the response, and then restarts. Before opening SQLite again, the new process removes the database and its journal sidecars and bootstraps an empty schema. Reset time therefore does not grow with the number of stored plans, candidates, activities, or runs.
+
+When `restarting` is `false`, restart the AkôFlow server after receiving the response. The reset remains pending until startup and is retried if deletion is interrupted. The endpoint returns `503` when reset support is unavailable and `422` when the reset request cannot be persisted. It cannot run while a read-only snapshot is active because the read-only guard returns `423` first.

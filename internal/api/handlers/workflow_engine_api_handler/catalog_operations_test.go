@@ -315,7 +315,7 @@ func TestInstancePreferencesEnvironmentReplacementAndReset(t *testing.T) {
 	}{
 		{"get instance", http.MethodGet, "", nil, h.GetInstance, 200}, {"save instance", http.MethodPut, `{"id":"instance","name":"Updated"}`, nil, h.SaveInstance, 200},
 		{"save preferences", http.MethodPut, `{"theme":"dark"}`, map[string]string{"clientId": "client-123"}, h.SaveUserPreferences, 200}, {"get preferences", http.MethodGet, "", map[string]string{"clientId": "client-123"}, h.GetUserPreferences, 200},
-		{"replace environment", http.MethodPut, `{"environment":{"id":"environment","name":"Updated"},"version":{"id":"v1"}}`, map[string]string{"environmentId": "environment"}, h.ReplaceEnvironment, 200}, {"delete environment", http.MethodDelete, "", map[string]string{"environmentId": "environment"}, h.DeleteEnvironment, 204}, {"factory reset", http.MethodPost, "", nil, h.FactoryReset, 204},
+		{"replace environment", http.MethodPut, `{"environment":{"id":"environment","name":"Updated"},"version":{"id":"v1"}}`, map[string]string{"environmentId": "environment"}, h.ReplaceEnvironment, 200}, {"delete environment", http.MethodDelete, "", map[string]string{"environmentId": "environment"}, h.DeleteEnvironment, 204}, {"factory reset", http.MethodPost, "", nil, h.FactoryReset, 202},
 	}
 	for _, test := range tests {
 		response := callHandler(t, test.method, "/", test.body, test.values, test.handler)

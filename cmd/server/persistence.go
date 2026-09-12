@@ -43,6 +43,11 @@ type persistence struct {
 func openPersistence(ctx context.Context) (persistence, error) {
 	readOnly := instancearchive.IsReadOnlySelection()
 	path := instancearchive.ResolveDatabasePath()
+	if !readOnly {
+		if _, err := database.ApplyPendingFactoryReset(path); err != nil {
+			return persistence{}, err
+		}
+	}
 	var db *sql.DB
 	var err error
 	if readOnly {

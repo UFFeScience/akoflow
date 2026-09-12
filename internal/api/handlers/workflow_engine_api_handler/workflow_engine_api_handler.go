@@ -380,7 +380,10 @@ func (h *Handler) FactoryReset(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusUnprocessableEntity, err)
 		return
 	}
-	w.WriteHeader(http.StatusNoContent)
+	writeJSON(w, http.StatusAccepted, map[string]any{"restarting": h.restart != nil})
+	if h.restart != nil {
+		go h.restart()
+	}
 }
 
 func (h *Handler) ListStorages(w http.ResponseWriter, r *http.Request) {

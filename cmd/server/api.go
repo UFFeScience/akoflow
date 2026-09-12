@@ -126,8 +126,8 @@ func buildAPI(
 		InstanceArchive:  archives,
 		ReadOnly:         storage.readOnly,
 		Restart:          restart,
-		FactoryReset: func(ctx context.Context) error {
-			if err := database.Reset(ctx, storage.database); err != nil {
+		FactoryReset: func(_ context.Context) error {
+			if err := database.ScheduleFactoryReset(instancearchive.ResolveDatabasePath()); err != nil {
 				return err
 			}
 			// SSH keys can be an operator-provided read-only volume. They are not

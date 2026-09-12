@@ -21,9 +21,9 @@ This is an iteration ledger, not a completion certificate. The current pass insp
 | Page | Current pass | Next review |
 | --- | --- | --- |
 | `concepts.md` | Edited in this pass | Full read after P0/P1 fixes |
-| `contributing/documentation-plan.md` | Edited in this pass | Full read after P0/P1 fixes |
+| `contributing/documentation-plan.md` | Full read; replaced historical production waves with recurring review contract | Recheck contract at final audit |
 | `downloads.md` | Full read; platform limits and verification are explicit | Recheck release links when version changes |
-| `engine.md` | Opening and purpose scanned | Full read after P0/P1 fixes |
+| `engine.md` | Full read; implementation details are in the developer section | Recheck claims against event-loop code |
 | `explanations/evidence-and-provenance.md` | Full read and simplified runtime language | Recheck against execution evidence after P0 fixes |
 | `explanations/network-modeling.md` | Full read; detailed model belongs in this explanation | Recheck transfer claims after P0 fixes |
 | `explanations/observed-timing.md` | Full read; optional observations are qualified | Recheck metrics after P0 fixes |
@@ -54,13 +54,13 @@ This is an iteration ledger, not a completion certificate. The current pass insp
 | `guides/workflows/planning.md` | Full read; simplified candidate language | Verify Desktop-only planning flow |
 | `installation.md` | Opening and purpose scanned | Verify complete first-user path |
 | `internal/workflow-spec.md` | Opening and purpose scanned | Check contracts against current handlers and schemas |
-| `modules.md` | Edited in this pass | Full read after P0/P1 fixes |
+| `modules.md` | Full read; removed incidental polling default | Recheck claims against daemon composition |
 | `reference/api-overview.md` | Edited in this pass | Check contracts against current handlers and schemas |
 | `reference/environment-yaml.md` | Edited in this pass | Check contracts against current handlers and schemas |
 | `reference/execution-scopes-and-topologies.md` | Edited in this pass | Check contracts against current handlers and schemas |
 | `reference/feature-coverage.md` | Full read; route coverage remains a reference checklist | Check contracts against current handlers and schemas |
 | `reference/planning-and-execution-states.md` | Full read; state limits are explicit | Check contracts against current handlers and schemas |
-| `runtimes.md` | Edited in this pass | Full read after P0/P1 fixes |
+| `runtimes.md` | Full read; replaced duplicate user procedure with task-guide links | Recheck provider claims against adapters |
 | `showcase/edge-cloud-simulation.mdx` | Edited in this pass | Check procedure and result against pinned bundle |
 | `showcase/index.mdx` | Edited in this pass | Check procedure and result against pinned bundle |
 | `showcase/kubernetes-real-execution.mdx` | Edited in this pass | Check procedure and result against pinned bundle |

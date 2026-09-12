@@ -5,7 +5,7 @@ sidebar_label: Production plan
 description: Source-of-truth, media, and review rules for AkôFlow documentation.
 ---
 
-This plan keeps the documentation aligned with the shipping daemon and Desktop application. It is also the contract for parallel documentation work.
+This page defines the editorial and verification rules for the documentation. Apply them whenever a page, example, screenshot, API route, or supported capability changes.
 
 ## Editorial contract
 
@@ -43,46 +43,14 @@ The completion gate is a new user running a first workflow without undocumented 
 
 Generated site output and old copied Markdown files are not sources of truth.
 
-## Production waves
+## Review a change
 
-### Wave 1 — foundation
-
-- Establish the information architecture and sidebar.
-- Add reusable screenshot, video, and Desktop/API components.
-- Build a feature coverage matrix.
-- Define stable demo data and redact all secrets from captures.
-
-### Wave 2 — task guides
-
-- Infrastructure and execution scopes.
-- Workflow definition, planning, and execution.
-- Artifacts, storage, provenance, and audit.
-- Installation, instance management, and troubleshooting.
-
-Independent guide groups may be authored in parallel after their source inventory is complete. Each group owns separate files.
-
-### Wave 3 — reference
-
-- Replace the legacy workflow specification with the current versioned model.
-- Document API conventions and endpoint groups.
-- Document runtime capabilities, lifecycle states, and compatibility rules.
-
-### Wave 4 — media
-
-- Load a deterministic demonstration instance.
-- Capture a fixed desktop viewport in the light theme.
-- Add numbered callouts and restrained directional arrows.
-- Record one operation per video.
-- Prefer WebM for the site; create an optimized GIF only when a fallback is useful.
-
-### Wave 5 — verification
-
-- Verify every field against the Go contract.
-- Verify every route against the HTTP mux.
-- Run or validate checked-in examples.
-- Build and type-check Docusaurus.
-- Review screenshots for secrets, hostnames, tokens, usernames, and unstable identifiers.
-- Search for removed terminology and stale fixed-port instructions.
+1. Check page purpose, audience, order of concepts, and whether the example solves a concrete task.
+2. Compare affected claims and payloads with current handlers, Desktop behavior, tests, and checked-in examples.
+3. Distinguish local fixtures from real-provider validation, and update support limits when evidence changes.
+4. Check screenshots for secrets, hostnames, tokens, usernames, and unstable identifiers.
+5. Run the documentation type-check, build, and link check; then read the rendered path at desktop and mobile widths.
+6. Record unresolved P0/P1 findings and repeat the pass after corrections.
 
 ## Link verification
 

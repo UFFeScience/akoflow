@@ -65,18 +65,9 @@ Inventory refresh must not mutate the frozen inputs of an existing planning sess
 
 Execution is preceded by preparation. Routes may use an existing verified location, shared storage, destination pull, source push, gateway, runtime-local, or direct-runtime transfer. Implemented connectors include artifact store, filesystem, rsync/SSH, Kubernetes exec, HTTP download, and S3-compatible transfer. Direct `gs://` transfer is unavailable in the current server; the GCS connector returns an error until a deployment supplies a working transfer agent.
 
-## Choose a target
+## User procedures
 
-In Desktop:
-
-1. create an environment and connection;
-2. validate it and run discovery;
-3. review resources, bindings, storage, and capabilities in the inventory;
-4. include the published version in an execution scope;
-5. plan the workflow and inspect candidate assignments;
-6. select a plan and start the required execution mode.
-
-API clients perform the equivalent environment, check, discovery, scope, planning, selection, and execution operations. Use the generated API Reference for exact current routes.
+To connect infrastructure, use [Create and inspect environments](./guides/infrastructure/environments). For the task flow after registration, follow [Define execution scopes](./guides/infrastructure/execution-scopes), [Plan a workflow](./guides/workflows/planning), and [Execute and monitor a workflow](./guides/workflows/executions). Those guides keep the user steps separate from adapter details here.
 
 ## Provider extension boundary
 

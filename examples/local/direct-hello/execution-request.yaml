@@ -1,0 +1,74 @@
+run:
+  id: local-direct-hello-run-v1
+  schedulePlanId: local-direct-hello-plan-v1
+  mode: real
+  status: created
+
+plan:
+  id: local-direct-hello-plan-v1
+  workflowVersionId: local-direct-hello-v1
+  executionScopeId: local-direct-hello-scope
+  networkTopologyId: local-direct-hello-network
+  source: imported
+  algorithm: manual
+  algorithmVersion: "1"
+  objective: custom
+  predicted: {makespanSeconds: 1, cost: 0, feasible: true}
+  assignments:
+    - {activityId: local-direct-hello-write-report, resourceId: local-host, orderOnResource: 0, metadata: {runtimeId: local}}
+
+workflow:
+  id: local-direct-hello-v1
+  workflowId: local-direct-hello
+  version: 1
+  definitionHash: local-direct-hello-v1
+  activities:
+    - id: local-direct-hello-write-report
+      workflowVersionId: local-direct-hello-v1
+      activityTypeId: local-direct-hello-activity
+      externalId: write-report
+      name: write-report
+      kind: task
+      capabilities: [real]
+      command:
+        executable:
+          source: {type: oci, reference: busybox:1.36}
+          delivery: {strategy: auto}
+        entrypoint: sh
+        arguments: ["-c", "printf 'Akoflow local execution\\n' > result.txt"]
+      resources: {cpu: 1, memoryBytes: 16777216, storageBytes: 0}
+      policy: {timeoutSeconds: 60, maxAttempts: 1}
+      metadata: {runtime: local}
+
+resources:
+  - id: local-host
+    environmentVersionId: local-direct-hello-v1
+    executionTarget: direct
+    type: local_machine
+    name: Daemon host
+    providerId: local-host
+    cpuCores: 1
+    cpuCapacity: 1
+    memoryBytes: 1073741824
+    storageBytes: 1073741824
+    computeSpeedup: 1
+    pricePerSecond: 0
+    schedulable: true
+
+executionScope:
+  id: local-direct-hello-scope
+  name: Local direct scope
+  environmentVersionIds: [local-direct-hello-v1]
+
+networkTopology:
+  id: local-direct-hello-network
+  name: Local direct network
+  version: 1
+  executionScopeId: local-direct-hello-scope
+  links: []
+
+runtimes:
+  - {environmentVersionId: local-direct-hello-v1, id: local, name: Local process runtime, driver: local, mode: execution, role: compute}
+
+runtimeBindings:
+  - {resourceId: local-host, runtimeId: local, enabled: true}

@@ -1,0 +1,42 @@
+environment:
+  id: local-direct-hello
+  name: Local direct host
+  status: ready
+
+version:
+  id: local-direct-hello-v1
+  environmentId: local-direct-hello
+  version: 1
+  status: published
+  networkModel: measured
+  interferenceModel: observed
+  costModel: free
+  configurationHash: local-direct-hello-v1
+
+runtimes:
+  - environmentVersionId: local-direct-hello-v1
+    id: local
+    name: Local process runtime
+    driver: local
+    mode: execution
+    role: compute
+
+resources:
+  - id: local-host
+    environmentVersionId: local-direct-hello-v1
+    executionTarget: direct
+    type: local_machine
+    name: Daemon host
+    providerId: local-host
+    cpuCores: 1
+    cpuCapacity: 1
+    memoryBytes: 1073741824
+    storageBytes: 1073741824
+    computeSpeedup: 1
+    pricePerSecond: 0
+    schedulable: true
+
+resourceRuntimeBindings:
+  - resourceId: local-host
+    runtimeId: local
+    enabled: true

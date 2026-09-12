@@ -1,0 +1,4 @@
+id: local-direct-hello-scope
+name: Local direct scope
+environmentVersionIds:
+  - local-direct-hello-v1

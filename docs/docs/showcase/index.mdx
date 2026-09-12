@@ -26,6 +26,13 @@ Start from a complete, runnable workflow instead of assembling isolated payloads
     tags={['Intermediate', 'Kubernetes', 'Real run']}
   />
   <ShowcaseCard
+    title="Local direct execution"
+    description="A single trusted host-local command that creates an observable output artifact on the daemon host."
+    href="/docs/showcase/local-direct-execution"
+    kind="local"
+    tags={['Beginner', 'Local', 'Real run']}
+  />
+  <ShowcaseCard
     title="30 GB network fan-out"
     description="A data-intensive workflow for studying parallel transfers, shared bandwidth, and fan-in across three machines."
     href="/docs/showcase/network-fanout"
@@ -58,6 +65,7 @@ The files are the source of truth. Walkthroughs refer to them directly so the gr
 | 30 GB fan-out | [`examples/simulation/30gb-fanout`](https://github.com/UFFeScience/akoflow/tree/main/examples/simulation/30gb-fanout) | Shared links, parallel transfers, and fan-in |
 | 50-core fan-out | [`examples/simulation/50core-fanout`](https://github.com/UFFeScience/akoflow/tree/main/examples/simulation/50core-fanout) | Per-core placement and parallel capacity |
 | Kubernetes with Kind | [`examples/kind`](https://github.com/UFFeScience/akoflow/tree/main/examples/kind) | Local real execution, namespace access, and requests |
+| Local direct | [`examples/local/direct-hello`](https://github.com/UFFeScience/akoflow/tree/main/examples/local/direct-hello) | A trusted host-local command and observed filesystem artifact |
 | Remote connections | [`examples/connections`](https://github.com/UFFeScience/akoflow/tree/main/examples/connections) | SSH-based PlaFRIM, Santos Dumont, and Kind connections |
 
 ## Infrastructure configuration references

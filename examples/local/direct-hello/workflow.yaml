@@ -1,0 +1,12 @@
+name: local-direct-hello
+spec:
+  namespace: examples
+  # The portable definition requires an executable reference. The local runtime
+  # runs the command on the daemon host; it does not pull this OCI image.
+  image: busybox:1.36
+  activities:
+    - name: write-report
+      runtime: local
+      run: "printf 'Akoflow local execution\\n' > result.txt"
+      cpuLimit: "1"
+      memoryLimit: 16Mi

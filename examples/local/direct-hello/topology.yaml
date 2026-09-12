@@ -1,0 +1,5 @@
+id: local-direct-hello-network
+name: Local direct network
+version: 1
+executionScopeId: local-direct-hello-scope
+links: []

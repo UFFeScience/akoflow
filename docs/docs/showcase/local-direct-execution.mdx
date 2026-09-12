@@ -1,0 +1,87 @@
+---
+title: Local direct execution
+description: Run a verified host-local workflow and inspect its output artifact through AkôFlow Desktop or the API.
+---
+
+import InterfaceApiTabs from '@site/src/components/InterfaceApiTabs';
+import {FileList, WorkflowDiagram} from '@site/src/components/WorkflowShowcase';
+
+# Local direct execution
+
+<WorkflowDiagram kind="local" />
+
+This Showcase executes one real activity through the `local` runtime. The daemon starts the activity command on the **same host as the daemon**, then observes its workspace for created or changed files. It is useful for a controlled first real execution or a small trusted host-local tool.
+
+Do not use this runtime to isolate untrusted workloads. It is not a container sandbox, and it does not submit work to a Kubernetes cluster or a SLURM allocation.
+
+## Prerequisites
+
+- An AkôFlow daemon running on the host that is allowed to execute the command.
+- A POSIX `sh` and `printf` available to that daemon process.
+- Permission to run a trusted command and to create its temporary activity workspace.
+
+The bundle declares `busybox:1.36` as an executable reference because portable real-workflow imports require one. The local adapter does **not** pull or run that image: it invokes `command.entrypoint` and `command.arguments` on the daemon host.
+
+## Download the inputs
+
+<FileList>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/local/direct-hello/environment.yaml">Environment YAML ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/local/direct-hello/scope.yaml">Execution scope YAML ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/local/direct-hello/topology.yaml">Network topology YAML ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/local/direct-hello/workflow.yaml">Workflow YAML ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/local/direct-hello/plan.yaml">Manual plan envelope ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/local/direct-hello/execution-request.yaml">Execution envelope ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/local/direct-hello/run.sh">Submission script ↓</a>
+</FileList>
+
+<InterfaceApiTabs
+  desktop={<div>
+    <h2>Run with AkôFlow Desktop</h2>
+    <ol>
+      <li>In <strong>Infrastructure → Environments</strong>, create the local environment and its <code>local-host</code> resource from <code>environment.yaml</code>. Keep its execution target as <strong>Direct</strong>.</li>
+      <li>Create the scope and topology from the supplied YAML. This one-host Showcase deliberately has no network links.</li>
+      <li>In <strong>Workflows → Definitions</strong>, import <code>workflow.yaml</code>. Open its definition and confirm that <code>write-report</code> is a real activity assigned to the local runtime.</li>
+      <li>Create a manual plan with <code>write-report</code> on <code>local-host</code>, or import <code>plan.yaml</code> through the plan API. Start a <strong>Real execution</strong>.</li>
+      <li>When the run is complete, open its activity details and artifacts. Verify that <code>result.txt</code> is listed as a created file.</li>
+    </ol>
+    <p>The host that runs Desktop is not necessarily the execution host; the daemon's host is. Check that distinction before starting a direct run.</p>
+  </div>}
+  api={<div>
+    <h2>Run through the API</h2>
+    <p>From the repository root, submit the versioned files in their required order:</p>
+    <pre><code>{`export AKOFLOW_API_URL="http://127.0.0.1:8080/akoflow-api"
+# Set AKOFLOW_API_TOKEN too when this daemon requires authentication.
+sh examples/local/direct-hello/run.sh
+
+curl --fail-with-body \
+  "$AKOFLOW_API_URL/execution-runs/local-direct-hello-run-v1/"`}</code></pre>
+    <p>When the daemon requires a token, set <code>AKOFLOW_API_TOKEN</code>; the supplied script adds the matching bearer header to each request.</p>
+  </div>}
+/>
+
+## Verify the result
+
+The checked-in files were run against an isolated local daemon on 2026-09-12. `local-direct-hello-run-v1` completed its one activity; the recorded artifact manifest contained one created file, `result.txt`, at 24 bytes with checksum:
+
+```text
+sha256:602b3cbda35539a2cd4c0504fe198cb423493832d93cf78147a470b2d82329db
+```
+
+The observed runtime was approximately 0.006 seconds on that host. Treat that duration as evidence for this small command, not as a performance baseline for another machine. The expected content is:
+
+```text
+Akoflow local execution
+```
+
+The run has no data dependency and therefore reports zero transferred bytes. Use the [Kind real-execution Showcase](./kubernetes-real-execution) when you need a workflow that transfers output between activities.
+
+## Troubleshooting
+
+| Symptom | Cause and recovery |
+| --- | --- |
+| `activity entrypoint is required` | Use the supplied workflow or set `command.entrypoint`; `run` is converted to `sh -c` by the portable workflow importer. |
+| `start local activity` fails | The daemon host cannot find or execute the command. Verify `sh` is on its `PATH`, then use an absolute entrypoint if needed. |
+| The activity writes no artifact | The run only records changes made below its activity workspace. Make the command write relative to its working directory, as this example does. |
+| The wrong machine executes the command | Direct execution always occurs on the daemon host. Run a daemon in the target environment, or use a remote runtime such as Kubernetes or SLURM instead. |
+
+Read [Execution modes and runtimes](../explanations/runtimes) for the execution boundary and [Workflow runs](../guides/workflows/execution) for monitoring and cancellation.

@@ -1,0 +1,19 @@
+plan:
+  id: local-direct-hello-plan-v1
+  workflowVersionId: local-direct-hello-v1
+  executionScopeId: local-direct-hello-scope
+  networkTopologyId: local-direct-hello-network
+  source: imported
+  algorithm: manual
+  algorithmVersion: "1"
+  objective: custom
+  predicted:
+    makespanSeconds: 1
+    cost: 0
+    feasible: true
+  assignments:
+    - activityId: local-direct-hello-write-report
+      resourceId: local-host
+      orderOnResource: 0
+      metadata:
+        runtimeId: local

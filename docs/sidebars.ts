@@ -20,6 +20,7 @@ const sidebars: SidebarsConfig = {
             "showcase/index",
             "showcase/edge-cloud-simulation",
             "showcase/kubernetes-real-execution",
+            "showcase/local-direct-execution",
             "showcase/network-fanout",
             "showcase/parallel-50-core",
           ],

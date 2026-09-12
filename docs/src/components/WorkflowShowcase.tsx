@@ -2,7 +2,7 @@ import React, {type ReactNode} from "react";
 import Link from "@docusaurus/Link";
 import styles from "./WorkflowShowcase.module.css";
 
-type DiagramKind = "edge-cloud" | "fanout" | "kubernetes" | "parallel";
+type DiagramKind = "edge-cloud" | "fanout" | "kubernetes" | "local" | "parallel";
 
 function Arrow() {
   return <span className={styles.arrow} aria-hidden="true">→</span>;
@@ -33,6 +33,16 @@ export function WorkflowDiagram({kind}: {kind: DiagramKind}) {
         <span className={styles.node}>prepare</span><Arrow />
         <span className={styles.node}>process</span><Arrow />
         <span className={styles.target}>Kubernetes</span>
+      </div>
+    );
+  }
+
+  if (kind === "local") {
+    return (
+      <div className={styles.diagram} role="img" aria-label="One write-report activity running directly on the daemon host">
+        <span className={styles.node}>write-report</span><Arrow />
+        <span className={styles.target}>daemon host</span>
+        <span className={styles.route}>result.txt</span>
       </div>
     );
   }

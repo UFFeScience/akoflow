@@ -98,6 +98,7 @@ type TaskExecution struct {
 	ActivityID          string              `json:"activityId"`
 	PlannedResourceID   string              `json:"plannedResourceId"`
 	AllocatedResourceID string              `json:"allocatedResourceId,omitempty"`
+	EnvironmentID       string              `json:"environmentId,omitempty"`
 	RuntimeID           string              `json:"runtimeId,omitempty"`
 	ConnectionID        string              `json:"connectionId,omitempty"`
 	CloudInstanceID     string              `json:"cloudInstanceId,omitempty"`
@@ -151,21 +152,28 @@ type ExecutionTrace struct {
 }
 
 type DataTransfer struct {
-	ID                 string           `json:"id"`
-	ExecutionRunID     string           `json:"executionRunId"`
-	ProducerActivityID string           `json:"producerActivityId"`
-	ConsumerActivityID string           `json:"consumerActivityId"`
-	SourceResourceID   string           `json:"sourceResourceId"`
-	TargetResourceID   string           `json:"targetResourceId"`
-	Bytes              int64            `json:"bytes"`
-	StartedAt          float64          `json:"startedAt"`
-	FinishedAt         float64          `json:"finishedAt"`
-	DurationSeconds    float64          `json:"durationSeconds"`
-	Cost               float64          `json:"cost"`
-	Strategy           TransferStrategy `json:"strategy,omitempty"`
-	Route              TransferRoute    `json:"route,omitempty"`
-	LogicalBytes       int64            `json:"logicalBytes,omitempty"`
-	NetworkBytes       int64            `json:"networkBytes,omitempty"`
+	ID                  string           `json:"id"`
+	ExecutionRunID      string           `json:"executionRunId"`
+	ProducerActivityID  string           `json:"producerActivityId"`
+	ConsumerActivityID  string           `json:"consumerActivityId"`
+	SourceResourceID    string           `json:"sourceResourceId"`
+	TargetResourceID    string           `json:"targetResourceId"`
+	SourceEnvironmentID string           `json:"sourceEnvironmentId,omitempty"`
+	TargetEnvironmentID string           `json:"targetEnvironmentId,omitempty"`
+	SourceRuntimeID     string           `json:"sourceRuntimeId,omitempty"`
+	TargetRuntimeID     string           `json:"targetRuntimeId,omitempty"`
+	Bytes               int64            `json:"bytes"`
+	StartedAt           float64          `json:"startedAt"`
+	FinishedAt          float64          `json:"finishedAt"`
+	DurationSeconds     float64          `json:"durationSeconds"`
+	Cost                float64          `json:"cost"`
+	Strategy            TransferStrategy `json:"strategy,omitempty"`
+	Route               TransferRoute    `json:"route,omitempty"`
+	LogicalBytes        int64            `json:"logicalBytes,omitempty"`
+	NetworkBytes        int64            `json:"networkBytes,omitempty"`
+	Digests             []string         `json:"digests,omitempty"`
+	IntegrityStatus     string           `json:"integrityStatus"`
+	FallbackUsed        bool             `json:"fallbackUsed,omitempty"`
 }
 
 type ActivityExecutionContext struct {

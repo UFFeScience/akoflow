@@ -43,6 +43,7 @@ type ConnectionType = environment.ConnectionType
 type Environment = environment.Environment
 type EnvironmentVersion = environment.EnvironmentVersion
 type EnvironmentRuntime = environment.EnvironmentRuntime
+type RuntimeWorkspace = environment.RuntimeWorkspace
 type RuntimeDriver = environment.RuntimeDriver
 type RuntimeMode = environment.RuntimeMode
 type ExecutionScope = environment.ExecutionScope

@@ -137,7 +137,7 @@ func (m Materializer) Materialize(ctx context.Context, plan domain.DataTransferP
 		}
 		final := destinationName(plan.Destination.Path, finalName)
 		// A complete matching object is an idempotent, no-copy materialization.
-		if ok, verifyErr := m.verify(ctx, dc, destination, final, blob.Digest); verifyErr == nil && ok {
+		if ok, verifyErr := m.verify(ctx, dc, destination, final, blob.Digest, blob.SizeBytes); verifyErr == nil && ok {
 			run.VerifiedBlobs = append(run.VerifiedBlobs, blob.Digest)
 			nextChunkIndex += chunkCount(blob.SizeBytes, m.chunkSize(ctx))
 			continue
@@ -189,7 +189,7 @@ func (m Materializer) Materialize(ctx context.Context, plan domain.DataTransferP
 		if routed && sizeBytes > offset {
 			run.TransferredBytes += sizeBytes - offset
 		}
-		ok, err := m.verify(ctx, dc, destination, partial, blob.Digest)
+		ok, err := m.verify(ctx, dc, destination, partial, blob.Digest, sizeBytes)
 		if err != nil || !ok {
 			if err == nil {
 				err = fmt.Errorf("checksum mismatch for %s", blob.Digest)
@@ -370,7 +370,7 @@ func (m Materializer) size(ctx context.Context, c ports.TransferConnector, endpo
 	defer r.Close()
 	return io.Copy(io.Discard, r)
 }
-func (m Materializer) verify(ctx context.Context, c ports.TransferConnector, endpoint domain.TransferEndpoint, name, expected string) (bool, error) {
+func (m Materializer) verify(ctx context.Context, c ports.TransferConnector, endpoint domain.TransferEndpoint, name, expected string, expectedSize int64) (bool, error) {
 	exists, err := c.Exists(ctx, endpoint, name)
 	if err != nil || !exists {
 		return false, err
@@ -381,8 +381,12 @@ func (m Materializer) verify(ctx context.Context, c ports.TransferConnector, end
 	}
 	defer r.Close()
 	hash := sha256.New()
-	if _, err = io.Copy(hash, r); err != nil {
+	size, err := io.Copy(hash, r)
+	if err != nil {
 		return false, err
+	}
+	if expectedSize > 0 && size != expectedSize {
+		return false, nil
 	}
 	return strings.TrimPrefix(fmt.Sprintf("sha256:%x", hash.Sum(nil)), "sha256:") == strings.TrimPrefix(expected, "sha256:"), nil
 }

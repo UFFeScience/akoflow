@@ -98,6 +98,24 @@ func TestMaterializerCommitsVerifiedBlob(t *testing.T) {
 	}
 }
 
+func TestMaterializerRejectsMatchingDigestWithWrongDeclaredSize(t *testing.T) {
+	source, destination := t.TempDir(), t.TempDir()
+	content := []byte("size must be verified")
+	if err := os.WriteFile(filepath.Join(source, "input"), content, 0o600); err != nil {
+		t.Fatal(err)
+	}
+	digest := digestOf(content)
+	plan := domain.DataTransferPlan{ID: "wrong-size",
+		Source:      domain.TransferLocation{URI: "file://" + source, Path: "input"},
+		Destination: domain.TransferLocation{URI: "file://" + destination},
+		Blobs:       []domain.BlobDescriptor{{Digest: digest, SizeBytes: int64(len(content) - 1)}},
+	}
+	_, run, err := (Materializer{Connectors: []ports.TransferConnector{infra.LocalFilesystem{}}}).Materialize(context.Background(), plan, domain.ArtifactMaterialization{Digest: digest})
+	if err == nil || run.Status != domain.TransferFailed {
+		t.Fatalf("run=%#v err=%v", run, err)
+	}
+}
+
 func TestMaterializerClassifiesRouteAndUsesOneConnectorSession(t *testing.T) {
 	source, destination := t.TempDir(), t.TempDir()
 	content := []byte("session payload")

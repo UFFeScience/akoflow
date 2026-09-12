@@ -201,6 +201,7 @@ func (r *Repository) ListTasks(ctx context.Context, runID string) ([]domain.Task
 		task.RuntimeID, _ = task.Metadata["runtimeId"].(string)
 		task.ConnectionID, _ = task.Metadata["connectionId"].(string)
 		task.CloudInstanceID, _ = task.Metadata["cloudInstanceId"].(string)
+		task.EnvironmentID, _ = task.Metadata["environmentId"].(string)
 		tasks = append(tasks, task)
 	}
 	return tasks, rows.Err()
@@ -385,10 +386,9 @@ func (r *Repository) CompleteRun(ctx context.Context, trace domain.ExecutionTrac
 		}
 	}
 	for _, transfer := range trace.Transfers {
-		metadata, err := json.Marshal(map[string]any{
-			"strategy": transfer.Strategy, "route": transfer.Route,
-			"logicalBytes": transfer.LogicalBytes, "networkBytes": transfer.NetworkBytes,
-		})
+		// Keep the extensible trace contract in metadata while retaining the
+		// indexed relational columns used by run feeds and rollups.
+		metadata, err := json.Marshal(transfer)
 		if err != nil {
 			return err
 		}
@@ -502,6 +502,9 @@ func saveTask(ctx context.Context, tx *sql.Tx, task domain.TaskExecution) error 
 	}
 	if task.CloudInstanceID != "" {
 		metadata["cloudInstanceId"] = task.CloudInstanceID
+	}
+	if task.EnvironmentID != "" {
+		metadata["environmentId"] = task.EnvironmentID
 	}
 	encodedMetadata, err := json.Marshal(metadata)
 	if err != nil {

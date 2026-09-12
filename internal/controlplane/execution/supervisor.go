@@ -5,7 +5,6 @@ import (
 	"crypto/sha256"
 	"fmt"
 	"net/url"
-	"path"
 	"sort"
 	"strings"
 	"time"
@@ -395,9 +394,14 @@ func (s *Supervisor) addWorkspacePreparation(
 	resource domain.Resource,
 	producerIDs []string,
 ) error {
-	driver := runtimeDriver(*request, activityID)
-	if s.config.Data == nil || (len(producerIDs) == 0 && driver != domain.RuntimeDriverKubernetes && driver != domain.RuntimeDriverCloud) {
+	if s.config.Data == nil {
 		return nil
+	}
+	if _, err := runtimeWorkspace(*request, activityID); err != nil {
+		if len(producerIDs) == 0 {
+			return nil
+		}
+		return err
 	}
 	instances, err := s.config.Data.ListInstances(ctx, request.Run.ID)
 	if err != nil {
@@ -512,44 +516,20 @@ func workspaceSourceForActivity(request ports.ExecutionRequest, activityID strin
 	if !ok {
 		return domain.TransferLocation{}, fmt.Errorf("producer %q resource %q was not found", activityID, assignment.ResourceID)
 	}
-	connectionID := runtimeConnectionID(request, activityID)
-	allocation := request.RuntimeAllocations[activityID]
-	if connectionID == "" {
-		return domain.TransferLocation{}, fmt.Errorf("producer %q has no runtime connection", activityID)
+	allocation := workspaceAllocation(request, activityID, resource)
+	workspace, err := runtimeWorkspace(request, activityID)
+	if err != nil {
+		return domain.TransferLocation{}, fmt.Errorf("producer %q: %w", activityID, err)
 	}
-	switch runtimeDriver(request, activityID) {
-	case domain.RuntimeDriverKubernetes:
-		u := &url.URL{Scheme: "kubernetes", Host: connectionID, Path: "/tmp/akoflow/workspace"}
-		query := u.Query()
-		query.Set("namespace", runtimeNamespace(request, activityID))
-		query.Set("claim", workspaceClaimName(request.Run.ID, activityID))
-		if nodeName := kubernetesNodeName(resource); nodeName != "" {
-			query.Set("nodeName", nodeName)
-		}
-		u.RawQuery = query.Encode()
-		return transferLocation(u.String(), resource, allocation), nil
-	case domain.RuntimeDriverSlurm:
-		home := environmentHome(request.Resources, resource.EnvironmentVersionID)
-		if home == "" {
-			return domain.TransferLocation{}, fmt.Errorf("producer %q HPC environment has no discovered home directory", activityID)
-		}
-		u := &url.URL{Scheme: "file", Path: path.Join(home, "akoflow-workspaces", request.Run.ID, activityID)}
-		query := u.Query()
-		query.Set("connectionId", connectionID)
-		u.RawQuery = query.Encode()
-		return transferLocation(u.String(), resource, allocation), nil
-	case domain.RuntimeDriverCloud:
-		u := &url.URL{
-			Scheme: "file",
-			Path:   path.Join("/akoflow/workspace/runs", request.Run.ID, activityID),
-		}
-		query := u.Query()
-		query.Set("connectionId", connectionID)
-		u.RawQuery = query.Encode()
-		return transferLocation(u.String(), resource, allocation), nil
-	default:
-		return domain.TransferLocation{}, fmt.Errorf("runtime for producer %q does not support workspace transfer", activityID)
+	template := workspace.SourceURI
+	if template == "" {
+		template = workspace.DestinationURI
 	}
+	uri, err := expandWorkspaceURI(template, request, activityID, resource, allocation, 0)
+	if err != nil {
+		return domain.TransferLocation{}, err
+	}
+	return transferLocation(uri, resource, allocation), nil
 }
 
 func workspaceAncestors(workflow domain.WorkflowVersion, initial []string) []string {
@@ -570,48 +550,57 @@ func workspaceAncestors(workflow domain.WorkflowVersion, initial []string) []str
 }
 
 func workspaceDestination(request ports.ExecutionRequest, activityID string, resource domain.Resource, totalBytes int64) (domain.TransferLocation, error) {
-	connectionID := runtimeConnectionID(request, activityID)
+	allocation := workspaceAllocation(request, activityID, resource)
+	workspace, err := runtimeWorkspace(request, activityID)
+	if err != nil {
+		return domain.TransferLocation{}, err
+	}
+	uri, err := expandWorkspaceURI(workspace.DestinationURI, request, activityID, resource, allocation, totalBytes)
+	if err != nil {
+		return domain.TransferLocation{}, err
+	}
+	return transferLocation(uri, resource, allocation), nil
+}
+
+func workspaceAllocation(request ports.ExecutionRequest, activityID string, resource domain.Resource) domain.RuntimeAllocation {
 	allocation := request.RuntimeAllocations[activityID]
-	if connectionID == "" {
-		return domain.TransferLocation{}, fmt.Errorf("runtime for activity %q has no connection", activityID)
+	if allocation.ResourceID == "" {
+		allocation.ResourceID = resource.ID
 	}
-	switch runtimeDriver(request, activityID) {
-	case domain.RuntimeDriverKubernetes:
-		u := &url.URL{Scheme: "kubernetes", Host: connectionID, Path: "/tmp/akoflow/workspace"}
-		query := u.Query()
-		query.Set("namespace", runtimeNamespace(request, activityID))
-		query.Set("claim", workspaceClaimName(request.Run.ID, activityID))
-		if nodeName := kubernetesNodeName(resource); nodeName != "" {
-			query.Set("nodeName", nodeName)
-		}
-		query.Set("createClaim", "true")
-		query.Set("claimBytes", fmt.Sprint(totalBytes*2))
-		query.Set("runId", request.Run.ID)
-		query.Set("activityId", activityID)
-		u.RawQuery = query.Encode()
-		return transferLocation(u.String(), resource, allocation), nil
-	case domain.RuntimeDriverSlurm:
-		home := environmentHome(request.Resources, resource.EnvironmentVersionID)
-		if home == "" {
-			return domain.TransferLocation{}, fmt.Errorf("HPC environment has no discovered home directory")
-		}
-		u := &url.URL{Scheme: "file", Path: path.Join(home, "akoflow-workspaces", request.Run.ID, activityID)}
-		query := u.Query()
-		query.Set("connectionId", connectionID)
-		u.RawQuery = query.Encode()
-		return transferLocation(u.String(), resource, allocation), nil
-	case domain.RuntimeDriverCloud:
-		u := &url.URL{
-			Scheme: "file",
-			Path:   path.Join("/akoflow/workspace/runs", request.Run.ID, activityID),
-		}
-		query := u.Query()
-		query.Set("connectionId", connectionID)
-		u.RawQuery = query.Encode()
-		return transferLocation(u.String(), resource, allocation), nil
-	default:
-		return domain.TransferLocation{}, fmt.Errorf("runtime for activity %q does not support workspace transfer", activityID)
+	if allocation.RuntimeID == "" {
+		allocation.RuntimeID = assignmentRuntimeID(request.Plan.Assignments, activityID)
 	}
+	if allocation.ConnectionID == "" {
+		allocation.ConnectionID = runtimeConnectionID(request, activityID)
+	}
+	return allocation
+}
+
+func runtimeWorkspace(request ports.ExecutionRequest, activityID string) (domain.RuntimeWorkspace, error) {
+	runtimeID := assignmentRuntimeID(request.Plan.Assignments, activityID)
+	for _, runtime := range request.Runtimes {
+		if runtime.ID == runtimeID && runtime.Capabilities.Workspace != nil && strings.TrimSpace(runtime.Capabilities.Workspace.DestinationURI) != "" {
+			return *runtime.Capabilities.Workspace, nil
+		}
+	}
+	return domain.RuntimeWorkspace{}, fmt.Errorf("runtime %q does not advertise workspace transfer capability", runtimeID)
+}
+
+func expandWorkspaceURI(template string, request ports.ExecutionRequest, activityID string, resource domain.Resource, allocation domain.RuntimeAllocation, totalBytes int64) (string, error) {
+	uri := strings.NewReplacer(
+		"{runId}", url.QueryEscape(request.Run.ID), "{activityId}", url.QueryEscape(activityID),
+		"{connectionId}", url.QueryEscape(allocation.ConnectionID), "{resourceId}", url.QueryEscape(resource.ID),
+		"{environmentId}", url.QueryEscape(resource.EnvironmentVersionID), "{runtimeId}", url.QueryEscape(allocation.RuntimeID),
+		"{cloudInstanceId}", url.QueryEscape(allocation.CloudInstanceID), "{bytes}", fmt.Sprint(totalBytes),
+	).Replace(template)
+	parsed, err := url.Parse(uri)
+	if err != nil || parsed.Scheme == "" {
+		return "", fmt.Errorf("invalid workspace URI template for runtime %q", allocation.RuntimeID)
+	}
+	if strings.Contains(uri, "{") {
+		return "", fmt.Errorf("workspace URI template for runtime %q has an unknown placeholder", allocation.RuntimeID)
+	}
+	return uri, nil
 }
 
 func kubernetesNodeName(resource domain.Resource) string {
@@ -630,17 +619,6 @@ func transferLocation(uri string, resource domain.Resource, allocation domain.Ru
 		RuntimeID: allocation.RuntimeID, ConnectionID: allocation.ConnectionID,
 		CloudInstanceID: allocation.CloudInstanceID,
 	}
-}
-
-func environmentHome(resources []domain.Resource, environmentVersionID string) string {
-	for _, resource := range resources {
-		if resource.EnvironmentVersionID == environmentVersionID {
-			if home, _ := resource.Metadata["homeDirectory"].(string); home != "" {
-				return home
-			}
-		}
-	}
-	return ""
 }
 
 func resourceConnectionID(resources []domain.Resource, resourceID string) (string, bool) {
@@ -760,24 +738,57 @@ func transferObservations(
 			bytes = observation.TransferredBytes
 		}
 		transfers = append(transfers, domain.DataTransfer{
-			ID:                 runID + ":" + activityID + ":" + observation.ID,
-			ExecutionRunID:     runID,
-			ProducerActivityID: producerActivityID,
-			ConsumerActivityID: activityID,
-			SourceResourceID:   sourceResourceID,
-			TargetResourceID:   targetResourceID,
-			Bytes:              observation.TransferredBytes,
-			StartedAt:          observation.StartedAt,
-			FinishedAt:         observation.FinishedAt,
-			DurationSeconds:    maxFloat(0, observation.FinishedAt-observation.StartedAt),
-			Cost:               transferPrice(topology, sourceResourceID, targetResourceID) * float64(bytes),
-			Strategy:           observation.Strategy,
-			Route:              observation.Route,
-			LogicalBytes:       observation.LogicalBytes,
-			NetworkBytes:       observation.NetworkBytes,
+			ID:                  runID + ":" + activityID + ":" + observation.ID,
+			ExecutionRunID:      runID,
+			ProducerActivityID:  producerActivityID,
+			ConsumerActivityID:  activityID,
+			SourceResourceID:    sourceResourceID,
+			TargetResourceID:    targetResourceID,
+			SourceEnvironmentID: planForObservation(requirement, observation.PlanID).Source.EnvironmentID,
+			TargetEnvironmentID: planForObservation(requirement, observation.PlanID).Destination.EnvironmentID,
+			SourceRuntimeID:     planForObservation(requirement, observation.PlanID).Source.RuntimeID,
+			TargetRuntimeID:     planForObservation(requirement, observation.PlanID).Destination.RuntimeID,
+			Bytes:               observation.TransferredBytes,
+			StartedAt:           observation.StartedAt,
+			FinishedAt:          observation.FinishedAt,
+			DurationSeconds:     maxFloat(0, observation.FinishedAt-observation.StartedAt),
+			Cost:                transferPrice(topology, sourceResourceID, targetResourceID) * float64(bytes),
+			Strategy:            observation.Strategy,
+			Route:               observation.Route,
+			LogicalBytes:        observation.LogicalBytes,
+			NetworkBytes:        observation.NetworkBytes,
+			Digests:             append([]string(nil), observation.VerifiedBlobs...),
+			IntegrityStatus:     transferIntegrityStatus(observation),
+			FallbackUsed:        observation.Route.Fallback != "" && observation.Route.Strategy == domain.TransferGateway,
 		})
 	}
 	return transfers
+}
+
+func transferIntegrityStatus(observation domain.DataTransferRun) string {
+	if observation.Status == domain.TransferCompleted && len(observation.VerifiedBlobs) > 0 {
+		return "verified"
+	}
+	if observation.Status == domain.TransferFailed {
+		return "failed"
+	}
+	return "pending"
+}
+
+func planForObservation(requirement domain.PreparationRequirement, planID string) domain.DataTransferPlan {
+	plans := append([]domain.DataTransferPlan(nil), requirement.WorkspaceTransfers...)
+	if requirement.WorkspaceTransfer != nil {
+		plans = append(plans, *requirement.WorkspaceTransfer)
+	}
+	if requirement.ArtifactTransfer != nil {
+		plans = append(plans, *requirement.ArtifactTransfer)
+	}
+	for _, plan := range plans {
+		if plan.ID == planID {
+			return plan
+		}
+	}
+	return domain.DataTransferPlan{}
 }
 
 func transferPrice(topology domain.NetworkTopology, sourceResourceID, targetResourceID string) float64 {
@@ -861,7 +872,8 @@ func newRunningTask(
 		ID: runID + ":" + activityID, ExecutionRunID: runID,
 		PlanAssignmentID: assignment.ID, ActivityID: activityID,
 		PlannedResourceID: assignment.ResourceID, AllocatedResourceID: resource.ID,
-		RuntimeID: allocation.RuntimeID, ConnectionID: allocation.ConnectionID,
+		EnvironmentID: resource.EnvironmentVersionID,
+		RuntimeID:     allocation.RuntimeID, ConnectionID: allocation.ConnectionID,
 		CloudInstanceID: allocation.CloudInstanceID,
 		Attempt:         1, Status: domain.TaskRunning, ReadyAt: readyAt, DataReadyAt: unixNow(),
 		QueuedAt: handle.StartedAt, StartedAt: handle.StartedAt,

@@ -255,7 +255,8 @@ func TestWorkspaceLocationsFollowAssignedRuntime(t *testing.T) {
 					ActivityID: "producer", ResourceID: "resource", Metadata: map[string]any{"runtimeId": "runtime"},
 				}}},
 				Resources: []domain.Resource{{ID: "resource", EnvironmentVersionID: "environment", Metadata: test.metadata}},
-				Runtimes:  []domain.EnvironmentRuntime{{ID: "runtime", Driver: test.driver, Configuration: test.configuration}},
+				Runtimes: []domain.EnvironmentRuntime{{ID: "runtime", Driver: test.driver, Configuration: test.configuration,
+					Capabilities: domain.EnvironmentCapabilities{Workspace: testWorkspace(test.driver)}}},
 			}
 			source, err := workspaceSourceForActivity(request, "producer")
 			if err != nil {
@@ -277,6 +278,16 @@ func TestWorkspaceLocationsFollowAssignedRuntime(t *testing.T) {
 			}
 		})
 	}
+}
+
+func testWorkspace(driver domain.RuntimeDriver) *domain.RuntimeWorkspace {
+	if driver == domain.RuntimeDriverKubernetes {
+		return &domain.RuntimeWorkspace{
+			SourceURI:      "kubernetes://cluster/tmp/akoflow/workspace?claim=akoflow-run-producer-workspace&namespace=science",
+			DestinationURI: "kubernetes://cluster/tmp/akoflow/workspace?activityId={activityId}&claim=akoflow-run-producer-workspace&claimBytes=24&createClaim=true&namespace=science&runId={runId}",
+		}
+	}
+	return &domain.RuntimeWorkspace{DestinationURI: "file:///home/scientist/akoflow-workspaces/{runId}/{activityId}?connectionId={connectionId}"}
 }
 
 func TestWorkspaceClaimNameIsKubernetesSafeAndBounded(t *testing.T) {
@@ -306,6 +317,52 @@ func TestTransferObservationsPreserveDirectWorkspaceRoute(t *testing.T) {
 	got := transfers[0]
 	if got.ProducerActivityID != "k6" || got.ConsumerActivityID != "k7" || got.SourceResourceID != "source" || got.TargetResourceID != "target" || got.DurationSeconds != 3 || got.Bytes != 42 || got.Cost != 21 {
 		t.Fatalf("unexpected transfer observation: %+v", got)
+	}
+}
+
+func TestHybridFourEnvironmentFixtureHasStableAssignmentsAndTransferTrace(t *testing.T) {
+	ids := []string{"local", "slurm-a", "slurm-b", "cloud"}
+	request := ports.ExecutionRequest{Run: domain.ExecutionRun{ID: "hybrid-run"}, RuntimeAllocations: map[string]domain.RuntimeAllocation{}}
+	for index, id := range ids {
+		activityID := fmt.Sprintf("step-%d", index+1)
+		resourceID, runtimeID, environmentID := "resource-"+id, "runtime-"+id, "environment-"+id
+		request.Plan.Assignments = append(request.Plan.Assignments, domain.PlanAssignment{
+			ID: "assignment-" + id, ActivityID: activityID, ResourceID: resourceID,
+			Metadata: map[string]any{"runtimeId": runtimeID},
+		})
+		request.Resources = append(request.Resources, domain.Resource{ID: resourceID, EnvironmentVersionID: environmentID})
+		request.Runtimes = append(request.Runtimes, domain.EnvironmentRuntime{
+			ID: runtimeID, Mode: domain.RuntimeModeExecution,
+			Capabilities:  domain.EnvironmentCapabilities{Workspace: &domain.RuntimeWorkspace{DestinationURI: "file:///workspaces/{environmentId}/{runId}/{activityId}?connectionId={connectionId}"}},
+			Configuration: map[string]any{"connectionId": "connection-" + id},
+		})
+		request.RuntimeBindings = append(request.RuntimeBindings, domain.ResourceRuntimeBinding{ResourceID: resourceID, RuntimeID: runtimeID, Enabled: true})
+		request.RuntimeAllocations[activityID] = domain.RuntimeAllocation{ResourceID: resourceID, RuntimeID: runtimeID, ConnectionID: "connection-" + id}
+	}
+	for index, assignment := range request.Plan.Assignments {
+		if got := selectRuntime(request, assignment); got != "runtime-"+ids[index] {
+			t.Fatalf("assignment %s selected runtime %q", assignment.ID, got)
+		}
+		location, err := workspaceDestination(request, assignment.ActivityID, request.Resources[index], 64)
+		if err != nil || location.EnvironmentID != "environment-"+ids[index] || location.RuntimeID != "runtime-"+ids[index] {
+			t.Fatalf("location %d = %#v, %v", index, location, err)
+		}
+	}
+
+	digest := "sha256:" + strings.Repeat("a", 64)
+	plan := domain.DataTransferPlan{ID: "slurm-a-to-slurm-b",
+		Source:      domain.TransferLocation{ResourceID: "resource-slurm-a", EnvironmentID: "environment-slurm-a", RuntimeID: "runtime-slurm-a"},
+		Destination: domain.TransferLocation{ResourceID: "resource-slurm-b", EnvironmentID: "environment-slurm-b", RuntimeID: "runtime-slurm-b"},
+	}
+	requirement := domain.PreparationRequirement{WorkspaceTransfers: []domain.DataTransferPlan{plan}}
+	observed := transferObservations("hybrid-run", "step-3", "resource-slurm-b", []string{"step-2"}, requirement, []domain.DataTransferRun{{
+		ID: "slurm-a-to-slurm-b", PlanID: plan.ID, Status: domain.TransferCompleted,
+		VerifiedBlobs: []string{digest}, TransferredBytes: 64, LogicalBytes: 64, NetworkBytes: 64,
+		StartedAt: 10, FinishedAt: 11, Route: domain.TransferRoute{Strategy: domain.TransferDirectRuntime, Fallback: domain.TransferGateway},
+	}}, domain.NetworkTopology{})
+	if len(observed) != 1 || observed[0].SourceEnvironmentID != "environment-slurm-a" || observed[0].TargetEnvironmentID != "environment-slurm-b" ||
+		observed[0].SourceRuntimeID != "runtime-slurm-a" || observed[0].TargetRuntimeID != "runtime-slurm-b" || observed[0].IntegrityStatus != "verified" || observed[0].Digests[0] != digest {
+		t.Fatalf("hybrid transfer trace = %#v", observed)
 	}
 }
 

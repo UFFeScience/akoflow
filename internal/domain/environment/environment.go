@@ -86,17 +86,18 @@ type ConnectionCheck struct {
 }
 
 type Capabilities struct {
-	Batch         bool `json:"batch"`
-	Interactive   bool `json:"interactive"`
-	Container     bool `json:"container"`
-	Serverless    bool `json:"serverless"`
-	GPU           bool `json:"gpu"`
-	MPI           bool `json:"mpi"`
-	SharedStorage bool `json:"sharedStorage"`
-	DataStaging   bool `json:"dataStaging"`
-	Cancellation  bool `json:"cancellation"`
-	LogStreaming  bool `json:"logStreaming"`
-	Simulation    bool `json:"simulation"`
+	Batch         bool              `json:"batch"`
+	Interactive   bool              `json:"interactive"`
+	Container     bool              `json:"container"`
+	Serverless    bool              `json:"serverless"`
+	GPU           bool              `json:"gpu"`
+	MPI           bool              `json:"mpi"`
+	SharedStorage bool              `json:"sharedStorage"`
+	DataStaging   bool              `json:"dataStaging"`
+	Cancellation  bool              `json:"cancellation"`
+	LogStreaming  bool              `json:"logStreaming"`
+	Simulation    bool              `json:"simulation"`
+	Workspace     *RuntimeWorkspace `json:"workspace,omitempty"`
 }
 
 type DiscoveryRun struct {
@@ -132,6 +133,16 @@ type EnvironmentRuntime struct {
 	Role                 string         `json:"role,omitempty"`
 	Configuration        map[string]any `json:"configuration,omitempty"`
 	Capabilities         Capabilities   `json:"capabilities"`
+}
+
+// RuntimeWorkspace is the data-staging contract advertised by a runtime.
+// The control plane expands these templates without knowing which provider
+// implements the runtime. Supported placeholders are {runId}, {activityId},
+// {connectionId}, {resourceId}, {environmentId}, {runtimeId},
+// {cloudInstanceId}, and {bytes}.
+type RuntimeWorkspace struct {
+	SourceURI      string `json:"sourceUri,omitempty"`
+	DestinationURI string `json:"destinationUri"`
 }
 
 type ExecutionScope struct {

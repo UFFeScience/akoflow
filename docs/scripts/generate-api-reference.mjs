@@ -145,6 +145,17 @@ const runnableSimulationRequests = {
   "POST /akoflow-api/execution-runs/": "execution-request.yaml",
 };
 
+// These notes come from handler calls and the credential/operation services,
+// not from JSON tags alone. Keep them scoped to fields the service validates.
+const verifiedRequestNotes = {
+  "POST /akoflow-api/ssh-keys/": "`id` is required: 1–64 ASCII letters, digits, `_`, or `-`, starting with a letter or digit. `comment` is optional. The ID must not already exist. The daemon needs `ssh-keygen`.",
+  "POST /akoflow-api/ssh-keys/import/": "`id` follows the same SSH key ID rule and must not already exist. `privateKey` must contain a non-empty OpenSSH private key that `ssh-keygen -y` can read. The response returns public metadata, not the private key.",
+  "POST /akoflow-api/kubernetes-tokens/": "`id` is required: 1–63 lowercase letters, digits, or hyphens, starting with a letter or digit. `token` must be non-empty. The response returns a `credentialRef`; it does not echo the token.",
+  "POST /akoflow-api/cloud-credentials/": "`id` follows the Kubernetes credential ID rule. `provider` must be `gcp`, `aws`, or `azure`; `credential` must be valid JSON. Saving a credential does not validate provider access or make every provider operation available. The response returns a `credentialRef`.",
+  "POST /akoflow-api/environments/{environmentId}/cloud-instances/": "`capacityTargetId` must identify an existing capacity target in this environment. This request queues a provisioning operation; inspect the returned operation status before treating a VM as ready.",
+  "POST /akoflow-api/environments/{environmentId}/cloud-provisioning/": "`capacityTargetId` must identify an existing capacity target in this environment. This compatibility route queues the same provisioning operation; inspect the returned operation status.",
+};
+
 function humanizeHandler(handler) {
   const phrase = handler
     .replace(/([A-Z]+)([A-Z][a-z])/g, "$1 $2")
@@ -527,6 +538,10 @@ function endpointDocument(endpoint, position) {
   const runnableSection = runnableFile
     ? `## Runnable SimGrid request\n\nThe [first-run tutorial](/docs/guides/workflows/first-run) submits [\`examples/simulation/${runnableFile}\`](https://github.com/UFFeScience/akoflow/blob/v1.0.8/examples/simulation/${runnableFile}) as part of its verified six-request sequence. Follow that sequence so referenced IDs exist before this request. The inferred shape above is illustrative; use the versioned file for a runnable payload.\n\n`
     : "";
+  const verifiedNote = verifiedRequestNotes[`${endpoint.method} ${endpoint.path}`];
+  const verifiedSection = verifiedNote
+    ? `## Handler-checked request notes\n\n${verifiedNote}\n\n`
+    : "";
   return `---
 title: ${JSON.stringify(title)}
 sidebar_label: ${JSON.stringify(`${endpoint.method} ${relativePath}`)}
@@ -557,7 +572,7 @@ import ApiEndpoint from '@site/src/components/ApiEndpoint';
   hasRequestBody={${body}}
 />
 
-${runnableSection}## Related guide
+${runnableSection}${verifiedSection}## Related guide
 
 See the [${endpoint.group} guide](${groupMetadata[endpoint.group][0]}) for the corresponding Desktop workflow, concepts, and authored request examples.
 

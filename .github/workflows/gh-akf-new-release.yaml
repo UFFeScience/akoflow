@@ -82,7 +82,7 @@ jobs:
             > "akoflow-runtime-${GITHUB_REF_NAME}-linux-${{ matrix.arch }}.sha256"
 
       - name: Upload runtime archives
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: runtime-${{ matrix.arch }}
           path: |
@@ -173,7 +173,7 @@ jobs:
           done
 
       - name: Upload desktop package
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: ${{ matrix.artifact }}
           path: |
@@ -192,7 +192,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download release assets
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           path: desktop-artifacts
           merge-multiple: true

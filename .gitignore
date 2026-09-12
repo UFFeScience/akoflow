@@ -23,3 +23,9 @@ volumes/
 /build/
 /examples/
 config
+
+# Browser/E2E output is temporary. Documentation media is reviewed and stored
+# only under docs/static/img/interface or docs/static/media/tutorials.
+playwright-report/
+test-results/
+blob-report/

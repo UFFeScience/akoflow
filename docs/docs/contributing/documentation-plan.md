@@ -102,6 +102,28 @@ environment-real-create.webm
 
 Every media item must have descriptive alternative text. Videos need a written procedure that can be completed without watching them.
 
+### Canonical image lifecycle
+
+- Capture Desktop screenshots at `1440 × 900`, device scale factor `1`, with
+  reduced motion. Keep the original PNG resolution; optimize without resizing.
+- Name files `<area>-<task>-<two-digit-step>-<description>.png` for a sequence,
+  or `<area>-<stable-view>.png` for a single durable view. Dark-theme variants
+  use the `-dark` suffix before the extension.
+- Commit only reviewed files below `docs/static/img/interface/<area>/`. A path
+  below a Playwright report, test-results directory, browser profile, system
+  temporary directory, or `PAPERCLIP_*_SCRATCH_DIR` is never canonical and must
+  not be copied into Git without the naming and review steps above.
+- Review the rendered page at desktop and narrow widths. Confirm that the image
+  matches the current release, contains no token, username, host, credential,
+  transient notification, or unstable identifier, and has useful alt text.
+- To update an image, reproduce the same deterministic dataset and viewport,
+  replace the canonical file in place, and review its Git diff. Rename only
+  when the documented task changes, updating all references in the same commit.
+- Remove an image when the related UI/task no longer exists or the text is
+  clearer without it. Delete the canonical file and every documentation
+  reference together; `npm run check:links --prefix docs` verifies no local
+  reference was left behind.
+
 ## Architecture-diagram system
 
 Use the black, white, and neutral-gray visual system established by [`akoflow-control-plane.svg`](../../static/img/architecture/akoflow-control-plane.svg) for new architecture, lifecycle, and relationship diagrams. It is a reusable visual reference, not a claim that every diagram has the same topology.

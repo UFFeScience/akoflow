@@ -7,6 +7,11 @@ description: Authentication, conventions, and current AkôFlow HTTP endpoint gro
 
 The AkôFlow Desktop is an HTTP client of the same API available to automation. API paths below are relative to the daemon origin and begin with `/akoflow-api/`.
 
+For lifecycle, polling, error handling, and renderer/Electron/daemon ownership,
+use the [Core and Desktop contract matrix](./core-ui-contract-matrix). The
+generated endpoint catalog documents registration details; this overview and
+the matrix document the operational contract.
+
 ## Connect and authenticate
 
 Set the daemon URL and token in your shell:

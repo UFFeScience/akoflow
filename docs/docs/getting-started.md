@@ -50,6 +50,11 @@ Review the [cloud support matrix](./guides/infrastructure/cloud-capacity#provide
 
 Read the [API overview](./reference/api-overview) for the base URL, authentication, content types, asynchronous operations, error envelope, and generated endpoint index. Use the [workflow specification](./internal/workflow-spec) for portable YAML authoring.
 
+Desktop integrators should also use the [Core and Desktop contract
+matrix](./reference/core-ui-contract-matrix) to distinguish synchronous
+responses, accepted queue work, polling, streaming, and responsibility across
+the renderer, Electron main, and daemon.
+
 The Desktop and HTTP API operate on the same persisted records. The API is preferable for repeatable experiments and integrations; Desktop is preferable for inspecting infrastructure, candidate Gantt charts, live activity state, and plan-versus-observed evidence.
 
 ## I need to understand the model first

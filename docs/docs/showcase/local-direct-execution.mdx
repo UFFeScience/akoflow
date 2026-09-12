@@ -1,6 +1,6 @@
 ---
 title: Local direct execution
-description: Run a verified host-local workflow and inspect its output artifact through AkôFlow Desktop or the API.
+description: Run a verified host-local workflow through the API and inspect its output artifact.
 ---
 
 import InterfaceApiTabs from '@site/src/components/InterfaceApiTabs';
@@ -36,15 +36,13 @@ The bundle declares `busybox:1.36` as an executable reference because portable r
 
 <InterfaceApiTabs
   desktop={<div>
-    <h2>Run with AkôFlow Desktop</h2>
+    <h2>Inspect the API run in Desktop</h2>
+    <p>Submit the versioned bundle through the API path below, then open Desktop connected to the same server.</p>
     <ol>
-      <li>In <strong>Infrastructure → Environments</strong>, create the local environment and its <code>local-host</code> resource from <code>environment.yaml</code>. Keep its execution target as <strong>Direct</strong>.</li>
-      <li>Create the scope and topology from the supplied YAML. This one-host Showcase deliberately has no network links.</li>
-      <li>In <strong>Workflows → Definitions</strong>, import <code>workflow.yaml</code>. Open its definition and confirm that <code>write-report</code> is a real activity assigned to the local runtime.</li>
-      <li>Create a manual plan with <code>write-report</code> on <code>local-host</code>, or import <code>plan.yaml</code> through the plan API. Start a <strong>Real execution</strong>.</li>
-      <li>When the run is complete, open its activity details and artifacts. Verify that <code>result.txt</code> is listed as a created file.</li>
+      <li>Open the local environment and confirm that <code>local-host</code> is the assigned resource.</li>
+      <li>Open the completed run and inspect the activity's artifacts. Confirm that <code>result.txt</code> is listed as a created file.</li>
     </ol>
-    <p>The host that runs Desktop is not necessarily the execution host; the daemon's host is. Check that distinction before starting a direct run.</p>
+    <p>The command runs on the server host, which may differ from the Desktop host. Desktop-only submission of this bundle has not been verified.</p>
   </div>}
   api={<div>
     <h2>Run through the API</h2>

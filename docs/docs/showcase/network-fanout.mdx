@@ -38,15 +38,14 @@ Every dependency is 10,000,000,000 bytes. There are six dependencies, so a compl
 
 <InterfaceApiTabs
   desktop={<div>
-    <h2>Explore with AkôFlow Desktop</h2>
+    <h2>Inspect the API run in Desktop</h2>
+    <p>Run the versioned API script below, then open Desktop connected to that same server. The packaged Desktop uses its own local server by default.</p>
     <ol>
-      <li>Create a simulation environment with M1 (one core), M2 (three cores), and M3 (one core), and bind SimGrid to each resource.</li>
-      <li>Create the scope and attach the two shared, bidirectional 80 Gbit/s links from <code>topology.yaml</code>.</li>
-      <li>Import <code>workflow.yaml</code>. In its Definition graph, confirm that <code>t1</code> fans out to three activities and that all three converge on <code>t5</code>.</li>
-      <li>Choose <strong>Generate plan</strong>. Use <strong>Create manually</strong> to reproduce the checked-in M1 → M2 → M3 assignment, or use <strong>Generate plans</strong> to compare PRISM Cost, PRISM Time, and HEFT on the same scope.</li>
-      <li>Expand a candidate Gantt. Verify that `t2`, `t3`, and `t4` occupy different M2 cores; then select the plan and start the simulation.</li>
-      <li>On the completed run, open <strong>Data</strong> to inspect six transfers and <strong>Plan vs execution</strong> to compare the 36-second estimate with the observed trace.</li>
+      <li>Open the workflow definition and confirm that <code>t1</code> fans out to <code>t2</code>, <code>t3</code>, and <code>t4</code>, which converge on <code>t5</code>.</li>
+      <li>Open the saved plan and check that the three middle activities use different M2 cores.</li>
+      <li>Open the completed run. Use <strong>Data</strong> for the six transfers and <strong>Plan vs execution</strong> for timing.</li>
     </ol>
+    <p>The API script registers the two network links. Desktop does not currently provide a link editor.</p>
   </div>}
   api={<div>
     <h2>Register, plan, and execute through the API</h2>

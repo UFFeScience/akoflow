@@ -38,16 +38,14 @@ The diagram and the workflow YAML show the same topology: `prepare` produces `da
 
 <InterfaceApiTabs
   desktop={<div>
-    <h2>Run with AkôFlow Desktop</h2>
-    <p>The API bundle below is the verified submission path. The Desktop steps show how to recreate and inspect the same model; a Desktop-only submission of this complete bundle has not yet been verified end to end.</p>
+    <h2>Inspect the API run in Desktop</h2>
+    <p>Submit the versioned bundle through the API path below. Desktop can inspect its records only when connected to that same server. The packaged Desktop manages a separate local server by default.</p>
     <ol>
-      <li>Open <strong>Infrastructure → Environments</strong> and create a <strong>simulation</strong> environment matching <code>environment.yaml</code>. Add the SimGrid runtime, then bind it to the edge and cloud resources. Set cores, speedup, price, boot, and container values before planning.</li>
-      <li>Open <strong>Infrastructure → Execution scopes</strong> and create the scope from <code>scope.yaml</code>. Attach a topology matching <code>topology.yaml</code>: it must include both directions of the 100 Mbit/s link. A scope without this link cannot predict the cross-resource transfers in this example.</li>
-      <li>Open <strong>Workflows → Definitions</strong> and import <code>workflow.yaml</code>. Open the imported workflow and check the Definition graph: it must contain three activities and the two arrows <code>prepare → analyze → summarize</code>. Select an activity to confirm that it is simulatable and has its own duration profile.</li>
-      <li>To reproduce the documented placement, choose <strong>Generate plan</strong>, select <em>Create manually</em>, choose the simulation scope, then place <code>prepare</code> and <code>summarize</code> on the edge and <code>analyze</code> on cloud. The portable <code>plan-request.yaml</code> is the API equivalent of this choice.</li>
-      <li>To compare algorithms instead, choose <strong>Generate plans</strong>, select the same scope, and run the desired candidates. Expand a candidate to inspect its Gantt chart before selecting it.</li>
-      <li>Start the selected simulation. On the completed run, use <strong>Data</strong> for the two data flows and <strong>Plan vs execution</strong> for predicted versus observed makespan and cost.</li>
+      <li>Open <strong>Infrastructure → Environments</strong> and inspect the saved edge and cloud resources.</li>
+      <li>Open <strong>Workflows → Definitions</strong> and confirm the three-activity graph.</li>
+      <li>Open the completed run. Use <strong>Data</strong> to inspect two transfers and <strong>Plan vs execution</strong> to compare prediction with observation.</li>
     </ol>
+    <p>A Desktop-only submission of this bundle has not been verified. Desktop cannot currently add topology links; the API path registers the supplied network model.</p>
   </div>}
   api={<div>
     <h2>Run through the API</h2>

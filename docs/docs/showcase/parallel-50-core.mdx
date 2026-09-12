@@ -39,14 +39,14 @@ M1 and M3 are retained only to keep the three-machine SimGrid scope used by the 
 
 <InterfaceApiTabs
   desktop={<div>
-    <h2>Run with AkôFlow Desktop</h2>
+    <h2>Inspect the API run in Desktop</h2>
+    <p>Submit the bundle with the versioned API script below, then use Desktop connected to that server to inspect it.</p>
     <ol>
-      <li>Open <strong>Infrastructure → Environments</strong> and create a simulation environment that matches <code>environment.yaml</code>. Add the SimGrid runtime and bind it to M1, M2, and M3. M2 must have 50 schedulable cores.</li>
-      <li>Open <strong>Infrastructure → Execution scopes</strong>, create the scope and topology from the supplied YAML, then attach the environment version. The links are present for consistency with the other examples but carry no data in this workflow.</li>
-      <li>Open <strong>Workflows → Definitions</strong> and import <code>workflow.yaml</code>. Its Definition view must contain 100 unconnected worker nodes, each with a 10-second simulation duration.</li>
-      <li>Choose <strong>Generate plan</strong>, then <em>Create manually</em>. Select the simulation scope and assign workers 001–050 to M2 cores 0–49. Assign workers 051–100 to the same cores after the first wave. The checked-in plan is the API representation of that placement.</li>
-      <li>Expand the plan Gantt chart before starting it. It should show 50 used M2 core lanes, with two adjacent 10-second bars per lane. Start the simulation and compare its plan with the completed run.</li>
+      <li>Open the workflow definition and confirm that it has 100 independent workers with 10-second simulation profiles.</li>
+      <li>Open the saved plan and check for 50 M2 core lanes with two waves of activities.</li>
+      <li>Open the completed run and compare its 20-second makespan with the accumulated activity time.</li>
     </ol>
+    <p>Desktop-only creation and submission of this 100-activity bundle have not been verified.</p>
   </div>}
   api={<div>
     <h2>Run through the API</h2>

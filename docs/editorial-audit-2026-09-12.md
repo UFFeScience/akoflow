@@ -16,6 +16,7 @@ This is an iteration ledger, not a completion certificate. The current pass insp
 8. **P1 resolved in this pass — cloud target language:** saving a capacity target was described as making a provisioned resource. The guide now states that no VM is created at that step.
 9. **P1 resolved in this pass — execution state language:** the workflow guide said normal runs move through `created`, though the supervisor creates them as `running` after queue acceptance. The guide now matches the state reference.
 10. **P1 resolved in this pass — core concepts:** the concept page conflated executable artifacts with observed scientific files. It now distinguishes executable artifacts from scientific data, matching the data guide.
+11. **P1 resolved in this pass — Showcase Desktop claims:** six Showcase tabs described unverified Desktop-only submissions; some asked users to add network links in Desktop despite the missing link editor. The tabs now identify API submission as the verified path and limit Desktop steps to inspection on the same server.
 
 ## Page inventory
 
@@ -62,13 +63,13 @@ This is an iteration ledger, not a completion certificate. The current pass insp
 | `reference/feature-coverage.md` | Full read; route coverage remains a reference checklist | Check contracts against current handlers and schemas |
 | `reference/planning-and-execution-states.md` | Full read; state limits are explicit | Check contracts against current handlers and schemas |
 | `runtimes.md` | Full read; replaced duplicate user procedure with task-guide links | Recheck provider claims against adapters |
-| `showcase/edge-cloud-simulation.mdx` | Edited in this pass | Check procedure and result against pinned bundle |
-| `showcase/index.mdx` | Edited in this pass | Check procedure and result against pinned bundle |
-| `showcase/kubernetes-real-execution.mdx` | Edited in this pass | Check procedure and result against pinned bundle |
-| `showcase/local-direct-execution.mdx` | Edited in this pass | Check procedure and result against pinned bundle |
-| `showcase/network-fanout.mdx` | Edited in this pass | Check procedure and result against pinned bundle |
-| `showcase/parallel-50-core.mdx` | Edited in this pass | Check procedure and result against pinned bundle |
-| `showcase/slurm-local-fixture.mdx` | Edited in this pass | Check procedure and result against pinned bundle |
+| `showcase/edge-cloud-simulation.mdx` | Desktop path limited to same-server inspection; API submission remains verified | Check result against pinned bundle |
+| `showcase/index.mdx` | Clarified submission/inspection scope | Recheck each card after Showcase audit |
+| `showcase/kubernetes-real-execution.mdx` | Desktop path limited to same-server inspection; API submission remains verified | Check result against pinned bundle |
+| `showcase/local-direct-execution.mdx` | Desktop path limited to same-server inspection; API submission remains verified | Check result against pinned bundle |
+| `showcase/network-fanout.mdx` | Desktop path limited to same-server inspection; link creation stays in API | Check result against pinned bundle |
+| `showcase/parallel-50-core.mdx` | Desktop path limited to same-server inspection; API submission remains verified | Check result against pinned bundle |
+| `showcase/slurm-local-fixture.mdx` | Desktop path limited to optional development-client inspection | Check result against pinned bundle |
 | `tutorials/api-access.md` | Full read; API prerequisites and token limits are explicit | Recheck commands after P0 contracts fix |
 | `tutorials/connect-cloud.md` | Full read; AWS caveat and unvalidated GCP steps are explicit | Validate with disposable GCP account |
 | `tutorials/register-hpc.md` | Full read; placeholders and remote-run limit are explicit | Validate on an approved institutional cluster |

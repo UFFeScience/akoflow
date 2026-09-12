@@ -37,15 +37,9 @@ The fixture is intentionally local and disposable. It writes all database and ge
 
 <InterfaceApiTabs
   desktop={<div>
-    <h2>Inspect it with AkôFlow Desktop</h2>
-    <ol>
-      <li>Start the fixture daemon as described below, then configure Desktop to use <code>http://127.0.0.1:18082/akoflow-api</code>.</li>
-      <li>Under <strong>Infrastructure → Environments</strong>, import or recreate <code>environment.yaml</code>. Confirm the <code>slurm</code> runtime is bound to the batch partition.</li>
-      <li>Create the scope and empty topology, then import <code>workflow.yaml</code> under <strong>Workflows → Definitions</strong>.</li>
-      <li>Import the manual plan or create the same one-activity assignment to <code>slurm-fixture-partition</code>. Start a <strong>Real execution</strong>.</li>
-      <li>Open the completed run. The activity's artifacts must list the created <code>result.txt</code> file.</li>
-    </ol>
-    <p>Desktop is optional for this fixture. The API path below submits the same versioned files and is the reproducible verification route.</p>
+    <h2>Inspect the API run in a connected client</h2>
+    <p>Run the fixture through the API path below. If a development Desktop client is configured for that same fixture server, open the completed run and verify that its activity artifacts include <code>result.txt</code>.</p>
+    <p>The packaged Desktop does not automatically connect to the fixture server on port <code>18082</code>. A Desktop-only fixture submission has not been verified.</p>
   </div>}
   api={<div>
     <h2>Run the fixture through the API</h2>

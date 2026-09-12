@@ -223,7 +223,7 @@ remote cluster, a cloud credential, or a workflow is ready.
 ### Check through the API
 
 For a daemon you manage directly, first follow [API connection setup](./tutorials/api-access).
-Run these public bootstrap checks against **that daemon**, using its actual port:
+Run these public bootstrap checks against **that server**, using its actual address:
 
 ```bash
 curl --fail-with-body "$AKOFLOW_API_URL/preflight/" | jq

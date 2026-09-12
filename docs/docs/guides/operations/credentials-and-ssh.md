@@ -46,29 +46,23 @@ The private key is sent once to the AkôFlow server, validated with `ssh-keygen`
 
 ### Using the API
 
-Avoid putting a private key directly in shell history. Create a JSON payload with a tool that reads a protected file:
+Avoid putting a private key in shell history or a temporary JSON file. Read the existing protected key file and stream the request:
 
 ```bash
 (
-  set -e
-  umask 077
-  key_payload=$(mktemp)
-  trap 'rm -- "$key_payload"' EXIT
-
+  set -o pipefail
   jq -n \
     --arg id 'existing-hpc-key' \
     --rawfile privateKey "$HOME/.ssh/id_ed25519" \
-    '{id:$id, privateKey:$privateKey}' > "$key_payload"
-
-  curl --fail-with-body \
+    '{id:$id, privateKey:$privateKey}' | curl --fail-with-body \
     -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
     -H 'Content-Type: application/json' \
     -X POST "$AKOFLOW_API_URL/ssh-keys/import/" \
-    --data-binary @"$key_payload"
+    --data-binary @-
 )
 ```
 
-The subshell removes the temporary payload on exit. An empty or invalid private key, invalid/duplicate ID, or `ssh-keygen` failure returns `422`.
+An empty or invalid private key, invalid/duplicate ID, or `ssh-keygen` failure returns `422`.
 
 List public metadata at any time:
 

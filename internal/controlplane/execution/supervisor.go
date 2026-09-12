@@ -5,7 +5,9 @@ import (
 	"crypto/sha256"
 	"fmt"
 	"net/url"
+	"os"
 	"path"
+	"path/filepath"
 	"sort"
 	"strings"
 	"time"
@@ -396,7 +398,7 @@ func (s *Supervisor) addWorkspacePreparation(
 	producerIDs []string,
 ) error {
 	driver := runtimeDriver(*request, activityID)
-	if s.config.Data == nil || (len(producerIDs) == 0 && driver != domain.RuntimeDriverKubernetes && driver != domain.RuntimeDriverCloud) {
+	if s.config.Data == nil || (len(producerIDs) == 0 && driver != domain.RuntimeDriverKubernetes && driver != domain.RuntimeDriverCloud && driver != domain.RuntimeDriverLocal) {
 		return nil
 	}
 	instances, err := s.config.Data.ListInstances(ctx, request.Run.ID)
@@ -514,6 +516,9 @@ func workspaceSourceForActivity(request ports.ExecutionRequest, activityID strin
 	}
 	connectionID := runtimeConnectionID(request, activityID)
 	allocation := request.RuntimeAllocations[activityID]
+	if runtimeDriver(request, activityID) == domain.RuntimeDriverLocal {
+		return transferLocation(localWorkspaceURI(request.Run.ID, activityID), resource, allocation), nil
+	}
 	if connectionID == "" {
 		return domain.TransferLocation{}, fmt.Errorf("producer %q has no runtime connection", activityID)
 	}
@@ -572,6 +577,9 @@ func workspaceAncestors(workflow domain.WorkflowVersion, initial []string) []str
 func workspaceDestination(request ports.ExecutionRequest, activityID string, resource domain.Resource, totalBytes int64) (domain.TransferLocation, error) {
 	connectionID := runtimeConnectionID(request, activityID)
 	allocation := request.RuntimeAllocations[activityID]
+	if runtimeDriver(request, activityID) == domain.RuntimeDriverLocal {
+		return transferLocation(localWorkspaceURI(request.Run.ID, activityID), resource, allocation), nil
+	}
 	if connectionID == "" {
 		return domain.TransferLocation{}, fmt.Errorf("runtime for activity %q has no connection", activityID)
 	}
@@ -612,6 +620,13 @@ func workspaceDestination(request ports.ExecutionRequest, activityID string, res
 	default:
 		return domain.TransferLocation{}, fmt.Errorf("runtime for activity %q does not support workspace transfer", activityID)
 	}
+}
+
+func localWorkspaceURI(runID, activityID string) string {
+	return (&url.URL{
+		Scheme: "file",
+		Path:   filepath.Join(os.TempDir(), "akoflow", "workspace", "runs", runID, activityID),
+	}).String()
 }
 
 func kubernetesNodeName(resource domain.Resource) string {

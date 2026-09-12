@@ -21,5 +21,6 @@ volumes/
 /hybrid.yaml
 /wf-*.yaml
 /build/
+/.akoflow/
 /examples/
 config

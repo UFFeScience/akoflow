@@ -234,6 +234,11 @@ func TestWorkspaceLocationsFollowAssignedRuntime(t *testing.T) {
 		wantTarget    string
 	}{
 		{
+			name: "local", driver: domain.RuntimeDriverLocal,
+			wantSource: localWorkspaceURI("run", "producer"),
+			wantTarget: localWorkspaceURI("run", "producer"),
+		},
+		{
 			name: "kubernetes", driver: domain.RuntimeDriverKubernetes,
 			configuration: map[string]any{"connectionId": "cluster", "namespace": "science"},
 			wantSource:    "kubernetes://cluster/tmp/akoflow/workspace?claim=akoflow-run-producer-workspace&namespace=science",

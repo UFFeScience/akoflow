@@ -21,20 +21,8 @@ Although initially focused on Kubernetes-based workloads, AkôFlow has evolved t
 
 ### Desktop application
 
-The Desktop is the intended installation path: it starts the graphical client
-and the version-matched daemon and BuildKit services through Docker Compose.
-
-> **Current public-release limitation.** Do not use the latest public release
-> as a new production installation yet. On 2026-09-11, release `v1.0.3`
-> published Desktop assets named `1.0.0`, and anonymous manifest requests for
-> both runtime images returned `401 Unauthorized`. A public release must have
-> matching Desktop assets and anonymously pullable GHCR images before the
-> steps below are reproducible. See the
-> [installation guide](https://uffescience.github.io/akoflow/installation/) for
-> verification commands and the manual-stack recovery path.
-
-After that release condition is met, download the matching installer for macOS,
-Windows, or Linux from [AkôFlow Releases](https://github.com/UFFeScience/akoflow/releases/latest).
+The Desktop is the intended end-user installation path. Download the installer
+for macOS, Windows, or Linux from [AkôFlow Releases](https://github.com/UFFeScience/akoflow/releases/latest).
 
 - **macOS:** open the universal `.dmg`, drag **AkôFlow Desktop** to
   `Applications`, and launch it.
@@ -43,20 +31,19 @@ Windows, or Linux from [AkôFlow Releases](https://github.com/UFFeScience/akoflo
 - **Linux:** run the x64 `.AppImage` after `chmod +x`, or install the `.deb`
   package with `sudo apt install ./Akoflow-Desktop-*.deb`.
 
+Each release asset is associated with the semantic version in its GitHub release
+and the corresponding Git tag. Desktop downloads the version-matched runtime
+archives from that release and loads them into local Docker; the project does
+not publish daemon or BuildKit packages to a container registry.
+
 AkôFlow Desktop requires Docker Desktop on macOS and Windows, or Docker Engine
 with the Compose v2 plugin on Linux. Docker Desktop for Windows must use Linux
-containers. At startup, Desktop checks those requirements and starts the
-version-matched daemon and BuildKit containers.
-
-Docker selects an available API port bound only to `127.0.0.1`; no fixed host
-port is reserved. BuildKit remains entirely inside the Compose network.
+containers.
 
 ### Updates
 
-Update behavior must be validated against the packaged public release before it
-is relied upon operationally. Preserve the local Docker volumes and export the
-instance before changing versions. Do not treat the current public release as a
-recovery path until matching installers and public runtime images are available.
+Update behavior must be validated against the Desktop release in use. Export an
+instance before changing versions so that it can be restored if needed.
 
 Release maintainers should configure `MACOS_CSC_LINK`,
 `MACOS_CSC_KEY_PASSWORD`, `MACOS_APPLE_ID`,
@@ -64,23 +51,12 @@ Release maintainers should configure `MACOS_CSC_LINK`,
 `WINDOWS_CSC_KEY_PASSWORD` as GitHub Actions secrets. These credentials sign
 and notarize the installers; they are never included in the application.
 
-### Container images
-
-The release workflow is configured to publish versioned images for
-`linux/amd64` and `linux/arm64` to:
-
-- `ghcr.io/uffescience/akoflow-daemon`
-- `ghcr.io/uffescience/akoflow-buildkit`
-
-The production Compose bundle and configuration instructions are available in
-[`releases/`](./releases/README.md).
-
 ## Releases
 
 The release workflow runs when a semantic-version tag such as `v1.2.3` is
-pushed. Its intended output is Desktop installers plus versioned daemon and
-BuildKit images. Verify that those artifacts are available and version-aligned
-before calling a release installable.
+pushed. Its output is a GitHub Release containing Desktop installers and the
+runtime archives they load locally; the tag identifies the exact source
+revision used for the release.
 
 See all releases: [https://github.com/UFFeScience/akoflow/releases](https://github.com/UFFeScience/akoflow/releases)
 

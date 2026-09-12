@@ -140,10 +140,6 @@ const config: Config = {
               href: "https://github.com/UFFeScience/akoflow/releases",
             },
             {
-              label: "Docker Hub",
-              href: "https://hub.docker.com/u/akoflow",
-            },
-            {
               label: "IC/UFF",
               href: "http://www.ic.uff.br/",
             },

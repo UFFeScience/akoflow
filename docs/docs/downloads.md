@@ -10,7 +10,9 @@ Pushing a version tag (`v0.x.y`) triggers the repository release workflow. A ver
 
 ## Desktop App
 
-The Desktop application is the graphical client. A usable package needs a matching daemon/BuildKit image pair that Docker can pull.
+The Desktop application is the graphical client. A GitHub Release contains the
+installers and runtime archives; its semantic tag identifies the corresponding
+source revision.
 
 | Platform | Architecture | Release asset family |
 |---|---|---|
@@ -21,10 +23,12 @@ The Desktop application is the graphical client. A usable package needs a matchi
 [**→ Download latest release**](https://github.com/UFFeScience/akoflow/releases/latest)
 
 :::caution Verify the release before installing
-The latest public release may contain packages that cannot yet start their matching runtime images. In particular, the public `v1.0.3` release was checked on 2026-09-11: its Desktop asset names still carried `1.0.0`, and anonymous access to `ghcr.io/uffescience/akoflow-daemon:v1.0.3` returned `401 Unauthorized`. Treat a release as installable only after its package version, image tag, and public pull access agree.
+Use an installer whose filename contains the same semantic version as the
+GitHub Release tag. Desktop loads the matching daemon and BuildKit archives
+from that release into local Docker; no container-registry package is required.
 :::
 
-Before installing, review the platform requirements in [Installation](installation). After launch, confirm Docker starts the matching runtime images and that Desktop reaches **Overview**.
+Before installing, review the platform requirements in [Installation](installation). After launch, confirm that Desktop reaches **Overview**.
 
 :::note macOS Gatekeeper
 After verifying that the bundle came from the official release, if macOS blocks it on first launch, run:

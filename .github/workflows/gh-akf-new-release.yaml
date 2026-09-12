@@ -1,4 +1,4 @@
-name: Publish production images
+name: Publish GitHub release
 
 on:
   push:
@@ -7,12 +7,6 @@ on:
 
 permissions:
   contents: write
-  packages: write
-  id-token: write
-  attestations: write
-
-env:
-  REGISTRY: ghcr.io
 
 jobs:
   test:
@@ -31,20 +25,14 @@ jobs:
       - name: Run tests
         run: go test ./...
 
-  publish:
-    name: Publish ${{ matrix.name }} image
+  runtime-assets:
+    name: Build runtime archives (${{ matrix.arch }})
     needs: test
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - name: daemon
-            image: ghcr.io/uffescience/akoflow-daemon
-            dockerfile: releases/dockerfiles/server.Dockerfile
-          - name: buildkit
-            image: ghcr.io/uffescience/akoflow-buildkit
-            dockerfile: releases/dockerfiles/buildkit.Dockerfile
+        arch: [amd64, arm64]
     steps:
       - name: Checkout source
         uses: actions/checkout@v6
@@ -55,67 +43,57 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Generate image metadata
-        id: metadata
-        uses: docker/metadata-action@v6
-        with:
-          images: ${{ matrix.image }}
-          flavor: |
-            latest=auto
-          tags: |
-            type=raw,value=${{ github.ref_name }}
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=sha,prefix=sha-
-          labels: |
-            org.opencontainers.image.title=AkôFlow ${{ matrix.name }}
-            org.opencontainers.image.description=AkôFlow production ${{ matrix.name }} image
-            org.opencontainers.image.vendor=UFFeScience
-
-      - name: Build and publish image
-        id: build
+      - name: Build daemon archive
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: ${{ matrix.dockerfile }}
-          platforms: linux/amd64,linux/arm64
-          push: true
-          tags: ${{ steps.metadata.outputs.tags }}
-          labels: ${{ steps.metadata.outputs.labels }}
+          file: releases/dockerfiles/server.Dockerfile
+          platforms: linux/${{ matrix.arch }}
+          push: false
+          tags: akoflow/daemon:${{ github.ref_name }}
+          outputs: type=docker,dest=/tmp/akoflow-daemon-${{ github.ref_name }}-linux-${{ matrix.arch }}.tar
           build-args: |
             AKOFLOW_VERSION=${{ github.ref_name }}
-          cache-from: type=gha,scope=${{ matrix.name }}
-          cache-to: type=gha,mode=max,scope=${{ matrix.name }}
-          provenance: mode=max
-          sbom: true
+          cache-from: type=gha,scope=runtime-daemon-${{ matrix.arch }}
+          cache-to: type=gha,mode=max,scope=runtime-daemon-${{ matrix.arch }}
 
-      - name: Attest published image
-        uses: actions/attest-build-provenance@v3
+      - name: Build BuildKit archive
+        uses: docker/build-push-action@v6
         with:
-          subject-name: ${{ matrix.image }}
-          subject-digest: ${{ steps.build.outputs.digest }}
-          push-to-registry: true
+          context: .
+          file: releases/dockerfiles/buildkit.Dockerfile
+          platforms: linux/${{ matrix.arch }}
+          push: false
+          tags: akoflow/buildkit:${{ github.ref_name }}
+          outputs: type=docker,dest=/tmp/akoflow-buildkit-${{ github.ref_name }}-linux-${{ matrix.arch }}.tar
+          build-args: |
+            AKOFLOW_VERSION=${{ github.ref_name }}
+          cache-from: type=gha,scope=runtime-buildkit-${{ matrix.arch }}
+          cache-to: type=gha,mode=max,scope=runtime-buildkit-${{ matrix.arch }}
 
-      - name: Verify anonymous image pull
+      - name: Create runtime checksums
         shell: bash
         run: |
           set -euo pipefail
-          curl --fail --silent --show-error --location \
-            --retry 6 --retry-all-errors --retry-delay 5 \
-            -H 'Accept: application/vnd.oci.image.index.v1+json, application/vnd.oci.image.manifest.v1+json' \
-            "https://ghcr.io/v2/uffescience/${{ matrix.name == 'daemon' && 'akoflow-daemon' || 'akoflow-buildkit' }}/manifests/${GITHUB_REF_NAME}" \
-            >/dev/null
+          cd /tmp
+          sha256sum \
+            "akoflow-daemon-${GITHUB_REF_NAME}-linux-${{ matrix.arch }}.tar" \
+            "akoflow-buildkit-${GITHUB_REF_NAME}-linux-${{ matrix.arch }}.tar" \
+            > "akoflow-runtime-${GITHUB_REF_NAME}-linux-${{ matrix.arch }}.sha256"
+
+      - name: Upload runtime archives
+        uses: actions/upload-artifact@v4
+        with:
+          name: runtime-${{ matrix.arch }}
+          path: |
+            /tmp/akoflow-daemon-${{ github.ref_name }}-linux-${{ matrix.arch }}.tar
+            /tmp/akoflow-buildkit-${{ github.ref_name }}-linux-${{ matrix.arch }}.tar
+            /tmp/akoflow-runtime-${{ github.ref_name }}-linux-${{ matrix.arch }}.sha256
+          if-no-files-found: error
 
   desktop:
     name: Package desktop (${{ matrix.artifact }})
-    needs: publish
+    needs: test
     strategy:
       fail-fast: false
       matrix:
@@ -206,10 +184,10 @@ jobs:
 
   release:
     name: Create GitHub release
-    needs: [publish, desktop]
+    needs: [runtime-assets, desktop]
     runs-on: ubuntu-latest
     steps:
-      - name: Download desktop packages
+      - name: Download release assets
         uses: actions/download-artifact@v4
         with:
           path: desktop-artifacts
@@ -230,23 +208,4 @@ jobs:
             - **Windows:** run the x64 installer `.exe`, or use the portable `.exe` without installation.
             - **Linux:** run the x64 `.AppImage` after `chmod +x`, or install the `.deb` with `sudo apt install ./Akoflow-Desktop-*.deb`.
 
-            On first launch, the application validates Docker and starts the version-matched AkôFlow daemon and BuildKit automatically. Updates preserve the Docker volumes containing the local database, credentials and artifacts.
-
-            ## Run the container stack manually
-
-            This release publishes the following multi-platform OCI images for `linux/amd64` and `linux/arm64`:
-
-            ```text
-            ghcr.io/uffescience/akoflow-daemon:${{ github.ref_name }}
-            ghcr.io/uffescience/akoflow-buildkit:${{ github.ref_name }}
-            ```
-
-            Copy `releases/.env.example` to `releases/.env`, replace the example API token, and run:
-
-            ```sh
-            docker compose --env-file releases/.env -f releases/compose.yaml pull
-            docker compose --env-file releases/.env -f releases/compose.yaml up -d
-            docker compose --env-file releases/.env -f releases/compose.yaml port daemon 8080
-            ```
-
-            Set `AKOFLOW_VERSION=${{ github.ref_name }}` to pin this exact release. See the repository README for configuration and upgrade guidance.
+            The matching source is the Git tag `${{ github.ref_name }}`. The runtime Docker archives in this release are loaded locally by Desktop; AkôFlow does not publish daemon or BuildKit packages to a container registry.

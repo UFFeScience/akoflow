@@ -47,7 +47,7 @@ Work on the first unchecked unit only. Do not combine units unless the changes a
 
 - [x] Rewrite `guides/workflows/first-run.md` as one complete SimGrid tutorial. Evidence: the corrected six-file bundle produced run `simulation-example-run-v1` with 3/3 completed activities, two transfers, 120,000,000 transferred bytes, and 21.593 s observed makespan on 2026-09-11; all seven screenshot markers were removed because commands and invariant output provide the clearer verification path.
 - [x] Review `getting-started.md` as a short orientation page. Evidence: the page now routes by user goal to installation, the verified first run, infrastructure-specific guides, concepts, troubleshooting, and API/reference material without repeating tutorial commands.
-- [ ] Verify installation on a clean supported host. The pending first-start screenshot was removed because text-based preflight checks are more useful and safe. Re-verified on 2026-09-11: GitHub exposes `v1.0.3`, but its Desktop assets still use `1.0.0` names and anonymous inspection of `ghcr.io/uffescience/akoflow-daemon:v1.0.3` returns `401 Unauthorized`. Re-test after matching Desktop assets and public package visibility are fixed.
+- [ ] Verify installation on a clean supported host. The pending first-start screenshot was removed because text-based preflight checks are more useful and safe. The next tagged release must attach version-matched Desktop installers plus SHA-256-checked runtime archives for each supported architecture; verify that Desktop loads those release assets locally without a container-registry pull.
 
 ### P0 — runnable showcases
 
@@ -106,4 +106,4 @@ The documentation is ready for external users only when all of the following are
 1. A complete SLURM showcase requires either a safe test cluster or a reproducible local SLURM fixture.
 2. GCP and AWS/S3 procedures still require disposable provider accounts to verify minimum permissions, cleanup, and current interface behavior.
 3. Focused Desktop captures now cover planning, environment catalog, execution scope, workflow history, SimGrid run detail, provenance exploration, lineage, read-only SQL, and audit events. These captures were reviewed in light and dark themes; the automated link checker is in CI. Further captures should be added only where they clarify a verified procedure.
-4. Release installation is not externally verifiable until the macOS server artifact and anonymous GHCR image access are fixed.
+4. Release installation is not externally verifiable until a new tagged release is produced and installed on a clean supported host using its Desktop and runtime archive assets.

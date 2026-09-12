@@ -74,36 +74,12 @@ function CopyBtn({ text }: { text: string }) {
   );
 }
 
-type Platform = "desktop" | "compose" | "api";
+type Platform = "desktop" | "api";
 
 const platforms: { id: Platform; label: string; recommended?: boolean }[] = [
   { id: "desktop", label: "Desktop", recommended: true },
-  { id: "compose", label: "Docker Compose" },
   { id: "api", label: "API" },
 ];
-
-function ComposeCard() {
-  return (
-    <div className={styles.installCard}>
-      <div className={styles.installCardHeader}>
-        <span className={styles.installCardTitle}>Versioned daemon stack</span>
-      </div>
-      <p className={styles.installCardDesc}>
-        Operate the AkôFlow daemon and BuildKit images directly from the release
-        bundle.
-      </p>
-      <div className={styles.cmdRow}>
-        <span className={styles.cmdText}>
-          docker compose --env-file releases/.env -f releases/compose.yaml up -d
-        </span>
-        <CopyBtn text="docker compose --env-file releases/.env -f releases/compose.yaml up -d" />
-      </div>
-      <Link to="/docs/installation" className={styles.docsLink}>
-        Deployment instructions
-      </Link>
-    </div>
-  );
-}
 
 function DesktopCard() {
   return (
@@ -113,8 +89,8 @@ function DesktopCard() {
         <span className={styles.installCardBadge}>Recommended</span>
       </div>
       <p className={styles.installCardDesc}>
-        Native client for macOS, Windows, and Linux. It starts the matching
-        daemon and BuildKit services through Docker.
+        Native client for macOS, Windows, and Linux, distributed through
+        versioned GitHub Releases.
       </p>
       <a
         href="https://github.com/UFFeScience/akoflow/releases"
@@ -164,7 +140,6 @@ function ApiCard() {
 
 const cards: Record<Platform, React.ReactNode> = {
   desktop: <DesktopCard />,
-  compose: <ComposeCard />,
   api: <ApiCard />,
 };
 

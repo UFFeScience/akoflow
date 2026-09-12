@@ -15,6 +15,24 @@ Grant only the permissions needed by your lifecycle policy. The read-only catalo
 
 Provisioning uses the Terraform target shipped with the daemon. It lists available zones in the chosen region, creates and manages one Compute Engine instance and its boot disk, and creates a tagged ingress firewall rule for SSH. It references the VPC or subnetwork selected in the capacity target; it does not create a network, attach a service account to the instance, or manage IAM bindings. Confirm the exact least-privilege role set in a disposable project before adopting it as an institutional policy.
 
+## Implementation access inventory
+
+The following is an inventory of the current daemon behavior, not a claim that one predefined Google role is least privilege. It gives the cloud administrator a concrete review surface before they create a service-account policy. The service-account token requests the broad OAuth scope `cloud-platform`; IAM still controls the operations that token can perform.
+
+| AkôFlow operation | Current provider call or managed resource | Review before enabling |
+| --- | --- | --- |
+| Refresh catalog | Compute Engine aggregated machine types and disk types in the selected project | Read access to machine and disk-type metadata in the selected project and region |
+| Refresh catalog | Ready images in the project plus `ubuntu-os-cloud`, `debian-cloud`, and `rocky-linux-cloud` | Read access to project-owned images; public-image visibility for the three named publisher projects |
+| Refresh catalog | Cloud Billing Catalog SKUs for Compute Engine | Billing Catalog read access if estimates are required; the catalog remains usable with a pricing warning when this call fails |
+| Choose a zone | Available Compute Engine zones in the selected region | Zone metadata read access |
+| Provision or update | One `google_compute_instance` and its initialized boot disk | Instance and boot-disk lifecycle permissions in the selected project and zone |
+| Reach the worker | One tagged `google_compute_firewall` ingress rule for TCP/22 | Firewall lifecycle permissions on the VPC named by the capacity target; restrict the source range before approval |
+| Stop, start, or destroy | The Terraform-managed instance, disk, and firewall rule | Lifecycle and deletion rights only for resources managed by the target; review cleanup ownership before using automatic destroy |
+
+The implementation does **not** create a VPC, subnet, Cloud NAT, service-account attachment, or project IAM binding. It does create one SSH firewall rule. If `sshSourceRanges` is omitted, the current Terraform target falls back to `0.0.0.0/0`; always set a daemon or bastion CIDR explicitly before provisioning. A target using a custom VPC or subnetwork must name resources that already exist and are authorized for the service account.
+
+For an institutional least-privilege policy, first run catalog refresh in a disposable project with audit logging enabled, then provision and destroy one short-lived worker. Export the provider audit entries and derive the policy from the observed permission checks. This is safer than copying a broad owner/editor role from an example, and it is the validation still required before this guide can claim a tested minimal role set.
+
 ## 1. Store the service-account credential
 
 In Desktop, open **Settings → Credentials**, choose **Cloud credential**, select **GCP**, and paste or import the service-account JSON. AkôFlow validates the presence of `project_id`, `client_email`, `private_key`, and `token_uri`. Give the credential a stable name such as `gcp-research-project`; environments refer to this record, not to the JSON file.
@@ -61,14 +79,16 @@ Stopping an instance preserves provider resources and can continue to incur disk
 
 ## API checkpoints
 
-Use the API when automating onboarding. Store the secret through the credentials endpoint used by your deployment, create the environment with `provider: gcp`, then refresh and inspect the catalog:
+Use the API when automating onboarding. Store the secret through the credentials endpoint used by your deployment, create the environment with `provider: gcp`, then refresh and inspect the catalog. Set the API base to include the daemon's `/akoflow-api` prefix:
 
 ```bash
-curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_TOKEN" \
-  -X POST "$AKOFLOW_URL/environments/gcp-lab/cloud-catalog/refresh/"
+export AKOFLOW_API_URL="http://127.0.0.1:8080/akoflow-api"
 
 curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_TOKEN" \
-  "$AKOFLOW_URL/environments/gcp-lab/cloud-catalog/"
+  -X POST "$AKOFLOW_API_URL/environments/gcp-lab/cloud-catalog/refresh/"
+
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_TOKEN" \
+  "$AKOFLOW_API_URL/environments/gcp-lab/cloud-catalog/"
 ```
 
 Continue with [Cloud capacity and machine configuration](./cloud-capacity) for the target and provisioning payloads, and [Interactive console and commands](../operations/interactive-console) to open a shell after validation.

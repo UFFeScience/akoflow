@@ -154,6 +154,18 @@ const verifiedRequestNotes = {
   "POST /akoflow-api/cloud-credentials/": "`id` follows the Kubernetes credential ID rule. `provider` must be `gcp`, `aws`, or `azure`; `credential` must be valid JSON. Saving a credential does not validate provider access or make every provider operation available. The response returns a `credentialRef`.",
   "POST /akoflow-api/environments/{environmentId}/cloud-instances/": "`capacityTargetId` must identify an existing capacity target in this environment. This request queues a provisioning operation; inspect the returned operation status before treating a VM as ready.",
   "POST /akoflow-api/environments/{environmentId}/cloud-provisioning/": "`capacityTargetId` must identify an existing capacity target in this environment. This compatibility route queues the same provisioning operation; inspect the returned operation status.",
+  "POST /akoflow-api/planning-sessions/": "Required: `id`, an existing `workflowVersionId`, `executionScopeId`, and `networkTopologyId`, plus at least one `algorithms` entry. Each algorithm ID must appear in `GET /planning-algorithms/`; duplicate IDs are rejected. The server sets status and timestamps. The example IDs require the SimGrid environment, scope, topology, and workflow to be registered first.",
+  "POST /akoflow-api/schedule-plans/import/": "Send `{\"plan\": ...}` with a complete plan. Its workflow version, execution scope, topology, and resources must already exist; the server marks its source as `imported` and validates the schedule before saving it.",
+};
+
+const verifiedRequestExamples = {
+  "POST /akoflow-api/planning-sessions/": {
+    id: "planning-simulation-example",
+    workflowVersionId: "simulation-example-workflow-v1",
+    executionScopeId: "simulation-example-v1-scope",
+    networkTopologyId: "simulation-network-v1",
+    algorithms: [{ id: "heft", configuration: {} }],
+  },
 };
 
 function humanizeHandler(handler) {
@@ -542,6 +554,9 @@ function endpointDocument(endpoint, position) {
   const verifiedSection = verifiedNote
     ? `## Handler-checked request notes\n\n${verifiedNote}\n\n`
     : "";
+  const requestExample =
+    verifiedRequestExamples[`${endpoint.method} ${endpoint.path}`] ??
+    endpoint.request?.example;
   return `---
 title: ${JSON.stringify(title)}
 sidebar_label: ${JSON.stringify(`${endpoint.method} ${relativePath}`)}
@@ -562,7 +577,7 @@ import ApiEndpoint from '@site/src/components/ApiEndpoint';
   pathParams={${JSON.stringify(params)}}
   queryParams={${JSON.stringify(endpoint.queryParameters)}}
   successStatuses={${JSON.stringify(endpoint.successStatuses)}}
-  requestExample={${JSON.stringify(endpoint.request?.example == null ? null : JSON.stringify(endpoint.request.example, null, 2))}}
+  requestExample={${JSON.stringify(requestExample == null ? null : JSON.stringify(requestExample, null, 2))}}
   requestType=${JSON.stringify(endpoint.request?.type || "No request body")}
   requestMediaType={${JSON.stringify(endpoint.request?.mediaType || (body ? "application/json" : null))}}
   requestFileName={${JSON.stringify(endpoint.request?.fileName || null)}}
@@ -577,7 +592,7 @@ ${runnableSection}${verifiedSection}## Related guide
 See the [${endpoint.group} guide](${groupMetadata[endpoint.group][0]}) for the corresponding Desktop workflow, concepts, and authored request examples.
 
 :::info Generated from the daemon router
-This page is generated from the daemon router, handler, and JSON-tagged Go structs. Method and path come from registered routes. Fields and examples inferred from structs show shape only; they do not establish required fields, valid values, or a runnable request. Check the related guide and handler-specific validation before sending a request.
+This page is generated from the daemon router, handler, and JSON-tagged Go structs. Method and path come from registered routes. Generic JSON examples show shape only; they do not establish required fields, valid values, or a runnable request. Route-specific notes and linked versioned examples identify checks performed separately. Read those notes and the related guide before sending a request.
 :::
 `;
 }

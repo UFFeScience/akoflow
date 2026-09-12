@@ -57,7 +57,7 @@ curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   "$AKOFLOW_API_URL/planning-algorithms/"
 ```
 
-Create an automatic planning session. The IDs below match the repository's simulation example:
+Create an automatic planning session. The IDs below refer to the environment, scope, topology, and workflow registered in the [SimGrid first-run sequence](./first-run). Complete those registration steps first, or replace all four IDs with records from your own instance:
 
 ```bash
 curl --fail-with-body \

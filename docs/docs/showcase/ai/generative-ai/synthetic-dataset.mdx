@@ -1,0 +1,19 @@
+---
+title: Synthetic dataset generation
+description: Generate, filter, deduplicate, review, and publish synthetic records.
+---
+
+import {AIWorkflowPattern} from '@site/src/components/WorkflowShowcase';
+
+# Synthetic dataset generation
+
+<AIWorkflowPattern
+  title="Synthetic dataset generation"
+  summary="Generate, filter, deduplicate, review, and publish synthetic records."
+  stages={["define schema and policy",["generate batch A","generate batch B","generate batch N"],"filter","deduplicate","quality review","publish dataset"]}
+  inputs={["Schema and policy","Source examples","Generator model"]}
+  outputs={["Raw batches","Validated dataset","Quality report"]}
+  evidence={["Prompt and model","Filter reasons","Review decisions"]}
+  execution="Use queued external jobs for rate-limited generation. Stable record identities prevent duplicates after retries."
+/>
+

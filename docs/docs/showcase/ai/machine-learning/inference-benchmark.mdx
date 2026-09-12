@@ -1,0 +1,19 @@
+---
+title: Inference benchmark
+description: Compare one frozen model and input set across CPU, GPU, and edge targets.
+---
+
+import {AIWorkflowPattern} from '@site/src/components/WorkflowShowcase';
+
+# Inference benchmark
+
+<AIWorkflowPattern
+  title="Inference benchmark"
+  summary="Compare one frozen model and input set across CPU, GPU, and edge targets."
+  stages={["freeze model and inputs",["benchmark CPU","benchmark GPU","benchmark edge"],"normalize measurements","compare cost and latency"]}
+  inputs={["Model and inputs","Benchmark protocol","Target scopes"]}
+  outputs={["Raw traces","Normalized metrics","Comparison"]}
+  evidence={["Hardware and runtime","Warm-up policy","Batch and concurrency"]}
+  execution="Separate cold-start from steady-state measurements and preserve the execution scope for every observation."
+/>
+

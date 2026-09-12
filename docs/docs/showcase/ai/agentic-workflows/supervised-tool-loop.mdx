@@ -1,0 +1,19 @@
+---
+title: Supervised tool loop
+description: Separate proposal, policy, approval, execution, and verification.
+---
+
+import {AIWorkflowPattern} from '@site/src/components/WorkflowShowcase';
+
+# Supervised tool loop
+
+<AIWorkflowPattern
+  title="Supervised tool loop"
+  summary="Separate proposal, policy, approval, execution, and verification."
+  stages={["build context","propose action","policy check","human approval","execute tool","verify result"]}
+  inputs={["Goal and state","Policies","Tool credentials"]}
+  outputs={["Verified change","Decision record","Execution evidence"]}
+  evidence={["Proposal revisions","Approver","Idempotency key"]}
+  execution="This pattern requires durable pause and resume. A daemon restart must not execute an approved action twice."
+/>
+

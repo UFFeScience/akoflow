@@ -1,0 +1,19 @@
+---
+title: Model conversion and quantization
+description: Create hardware-specific variants and validate compatibility and quality.
+---
+
+import {AIWorkflowPattern} from '@site/src/components/WorkflowShowcase';
+
+# Model conversion and quantization
+
+<AIWorkflowPattern
+  title="Model conversion and quantization"
+  summary="Create hardware-specific variants and validate compatibility and quality."
+  stages={["load trained model",["export ONNX","export TorchScript"],["quantize CPU","quantize GPU"],"validate outputs","publish variants"]}
+  inputs={["Canonical model","Target formats","Tolerance policy"]}
+  outputs={["Optimized variants","Compatibility report","Registry entries"]}
+  evidence={["Converter versions","Calibration data","Target hardware"]}
+  execution="Conversion branches can use different images. Validate optimized artifacts on representative target hardware before publication."
+/>
+

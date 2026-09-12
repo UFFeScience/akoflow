@@ -1,0 +1,19 @@
+---
+title: Model distillation
+description: Generate teacher targets and train a smaller student with measured quality and latency.
+---
+
+import {AIWorkflowPattern} from '@site/src/components/WorkflowShowcase';
+
+# Model distillation
+
+<AIWorkflowPattern
+  title="Model distillation"
+  summary="Generate teacher targets and train a smaller student with measured quality and latency."
+  stages={["load teacher","generate soft labels","train student",["evaluate quality","benchmark latency"],"publish student"]}
+  inputs={["Teacher model","Examples","Student architecture"]}
+  outputs={["Soft labels","Student model","Quality and latency reports"]}
+  evidence={["Teacher revision","Generated targets","Benchmark hardware"]}
+  execution="Cache generated labels and run latency tests on the intended deployment class rather than the training host."
+/>
+

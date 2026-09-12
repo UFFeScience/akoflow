@@ -1,0 +1,19 @@
+---
+title: Model-guided experiment cycle
+description: Use observations to propose a constrained next experiment batch while preserving each iteration.
+---
+
+import {AIWorkflowPattern} from '@site/src/components/WorkflowShowcase';
+
+# Model-guided experiment cycle
+
+<AIWorkflowPattern
+  title="Model-guided experiment cycle"
+  summary="Use observations to propose a constrained next experiment batch while preserving each iteration."
+  stages={["collect observations","update model","propose experiments","apply safety constraints","run selected experiments","record observations"]}
+  inputs={["Observation history","Search space","Safety and budget"]}
+  outputs={["Updated model","Selected experiments","New observations"]}
+  evidence={["Iteration parent","Rejected proposals","Experiment measurements"]}
+  execution="Represent each cycle as a durable iteration with explicit pause, approval, termination, and re-entry policies."
+/>
+

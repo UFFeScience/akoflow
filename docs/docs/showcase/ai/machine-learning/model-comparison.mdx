@@ -1,0 +1,19 @@
+---
+title: Comparative model evaluation
+description: Evaluate candidate models with the same immutable dataset and policy.
+---
+
+import {AIWorkflowPattern} from '@site/src/components/WorkflowShowcase';
+
+# Comparative model evaluation
+
+<AIWorkflowPattern
+  title="Comparative model evaluation"
+  summary="Evaluate candidate models with the same immutable dataset and policy."
+  stages={["freeze evaluation set",["evaluate model A","evaluate model B","evaluate model C"],"compare metrics","approve candidate"]}
+  inputs={["Candidate models","Evaluation set","Acceptance policy"]}
+  outputs={["Metric reports","Decision record","Approved candidate"]}
+  evidence={["Model versions","Evaluation runtime","Approval rationale"]}
+  execution="Use comparable resources when latency is part of the decision. Keep quality and execution performance as separate measurements."
+/>
+

@@ -1,0 +1,20 @@
+---
+title: AI workflow patterns
+sidebar_label: Overview
+description: DAG patterns for orchestrating machine learning, generative AI, agentic, and scientific workloads with AkôFlow.
+---
+
+# AI workflow patterns
+
+AkôFlow does not need a special execution model for AI. A training script, MLflow server, inference container, agent loop, GPU job, or external API remains an activity with inputs, outputs, dependencies, resources, and provenance.
+
+This collection separates common AI workloads by purpose. Every diagram is an independent starting point; it does not imply a required framework or cloud provider.
+
+| Section | Patterns |
+| --- | --- |
+| [Machine Learning](./machine-learning) | Training, tuning, fine-tuning, inference, evaluation, conversion, vision, anomaly detection, ensembles, distillation, benchmarking, and placement |
+| [Generative AI](./generative-ai) | RAG, synthetic data, transcription, and document extraction |
+| [Agentic workflows](./agentic-workflows) | Encapsulated agents, supervised tool loops, and multi-agent review |
+| [Scientific AI](./scientific-ai) | AI-assisted interpretation, surrogate modeling, and experiment feedback loops |
+
+The orchestration boundary stays explicit: AkôFlow deploys and executes the activities, moves their data, records evidence, and can schedule them across environments. MLflow, PyTorch, Hugging Face, an agent framework, or a domain tool remains inside the corresponding activity.

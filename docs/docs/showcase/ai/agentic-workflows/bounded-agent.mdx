@@ -1,0 +1,19 @@
+---
+title: Encapsulated agent task
+description: Run an agent loop as one bounded activity with explicit limits and validation.
+---
+
+import {AIWorkflowPattern} from '@site/src/components/WorkflowShowcase';
+
+# Encapsulated agent task
+
+<AIWorkflowPattern
+  title="Encapsulated agent task"
+  summary="Run an agent loop as one bounded activity with explicit limits and validation."
+  stages={["prepare objective","run agent loop","validate output",["publish result","store trace"]]}
+  inputs={["Objective and context","Tool allowlist","Iteration limits"]}
+  outputs={["Validated result","Tool outputs","Agent trace"]}
+  evidence={["Prompt and model","Tool calls","Cost and validation"]}
+  execution="Apply timeout, cancellation, restricted credentials, and idempotency to any external side effect."
+/>
+

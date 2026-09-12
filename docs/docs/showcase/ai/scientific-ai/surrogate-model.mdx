@@ -1,0 +1,19 @@
+---
+title: Surrogate model construction
+description: Approximate an expensive simulator using a traceable design of experiments.
+---
+
+import {AIWorkflowPattern} from '@site/src/components/WorkflowShowcase';
+
+# Surrogate model construction
+
+<AIWorkflowPattern
+  title="Surrogate model construction"
+  summary="Approximate an expensive simulator using a traceable design of experiments."
+  stages={["design samples",["run simulation batch A","run simulation batch N"],"assemble dataset","train surrogate","validate against simulator","publish model"]}
+  inputs={["Simulator","Parameter space","Sampling policy"]}
+  outputs={["Simulation dataset","Surrogate","Validity report"]}
+  evidence={["Simulator version","Samples","Error by region"]}
+  execution="Run simulations as HPC jobs and training on suitable accelerators. Preserve failed simulations and validity boundaries."
+/>
+

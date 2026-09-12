@@ -1,0 +1,19 @@
+---
+title: RAG index construction and evaluation
+description: Build a retrievable knowledge index and validate it before publication.
+---
+
+import {AIWorkflowPattern} from '@site/src/components/WorkflowShowcase';
+
+# RAG index construction and evaluation
+
+<AIWorkflowPattern
+  title="RAG index construction and evaluation"
+  summary="Build a retrievable knowledge index and validate it before publication."
+  stages={["collect documents","extract and clean","chunk","embed","build index",["retrieval tests","answer tests"],"publish index"]}
+  inputs={["Source collection","Chunking policy","Model revisions"]}
+  outputs={["Index snapshot","Evaluation reports","Source manifest"]}
+  evidence={["Source revisions","Chunk identifiers","Prompts and models"]}
+  execution="Fan out document processing and embedding. Treat the vector database as a service while retaining immutable index evidence."
+/>
+

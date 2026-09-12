@@ -1,0 +1,19 @@
+---
+title: Infrastructure selection for training
+description: Compare plans for local GPU, HPC, and cloud before executing the selected candidate.
+---
+
+import {AIWorkflowPattern} from '@site/src/components/WorkflowShowcase';
+
+# Infrastructure selection for training
+
+<AIWorkflowPattern
+  title="Infrastructure selection for training"
+  summary="Compare plans for local GPU, HPC, and cloud before executing the selected candidate."
+  stages={["profile workload",["plan local GPU","plan HPC","plan cloud"],"compare plans","select scope","train"]}
+  inputs={["Workflow profile","Execution scopes","Budget and deadline"]}
+  outputs={["Candidate plans","Selection record","Observed run"]}
+  evidence={["Planner version","Predictions","Plan-versus-observed error"]}
+  execution="Evaluate candidates with frozen inputs and one common model. Queue planning experiments so concurrent load does not distort evidence."
+/>
+

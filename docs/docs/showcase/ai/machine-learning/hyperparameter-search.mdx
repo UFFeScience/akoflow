@@ -1,0 +1,19 @@
+---
+title: Hyperparameter search
+description: Explore independent configurations in parallel and select one with a reproducible objective.
+---
+
+import {AIWorkflowPattern} from '@site/src/components/WorkflowShowcase';
+
+# Hyperparameter search
+
+<AIWorkflowPattern
+  title="Hyperparameter search"
+  summary="Explore independent configurations in parallel and select one with a reproducible objective."
+  stages={["prepare dataset",["trial 1","trial 2","trial N"],"compare trials","register best"]}
+  inputs={["Dataset snapshot","Search space","Selection objective"]}
+  outputs={["Trial models","Leaderboard","Selected model"]}
+  evidence={["Parameters per trial","Failures and retries","Selection rationale"]}
+  execution="Cap concurrent trials by accelerator capacity, budget, or queue policy. Reuse trial identities when resuming the workflow."
+/>
+

@@ -1,0 +1,19 @@
+---
+title: Computer vision training
+description: Expose collection, labels, augmentation, training, and packaging as observable stages.
+---
+
+import {AIWorkflowPattern} from '@site/src/components/WorkflowShowcase';
+
+# Computer vision training
+
+<AIWorkflowPattern
+  title="Computer vision training"
+  summary="Expose collection, labels, augmentation, training, and packaging as observable stages."
+  stages={["collect images","import labels","augment dataset","train detector","evaluate","package model"]}
+  inputs={["Images and labels","Augmentation policy","Training configuration"]}
+  outputs={["Detector","Slice metrics","Deployment package"]}
+  evidence={["Annotation version","Augmentation parameters","Class-wise metrics"]}
+  execution="Cache immutable image data near GPU workers and preserve the augmentation manifest or random seed."
+/>
+

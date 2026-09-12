@@ -1,0 +1,19 @@
+---
+title: OCR and document extraction
+description: Combine native extraction and OCR before validating structured records.
+---
+
+import {AIWorkflowPattern} from '@site/src/components/WorkflowShowcase';
+
+# OCR and document extraction
+
+<AIWorkflowPattern
+  title="OCR and document extraction"
+  summary="Combine native extraction and OCR before validating structured records."
+  stages={["ingest documents",["OCR pages","extract native text"],"classify sections","extract fields","validate schema","publish records"]}
+  inputs={["Documents","Extraction schema","OCR model"]}
+  outputs={["Page text","Structured records","Validation report"]}
+  evidence={["Page coordinates","Confidence","Validation failures"]}
+  execution="Route pages according to text-layer quality and retain coordinates linking every field to source evidence."
+/>
+

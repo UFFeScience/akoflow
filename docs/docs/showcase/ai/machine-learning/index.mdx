@@ -1,0 +1,25 @@
+---
+title: Machine Learning workflows
+sidebar_label: Overview
+description: Training, evaluation, optimization, inference, and model lifecycle patterns.
+---
+
+# Machine Learning workflows
+
+Training, evaluation, optimization, inference, and model lifecycle patterns. Each workflow below has its own page with a DAG, inputs, outputs, provenance, and execution considerations.
+
+| Workflow | Purpose |
+| --- | --- |
+| [Training with MLflow](./training-with-mlflow) | Train and register a model while preserving data, parameters, metrics, and artifacts. |
+| [Hyperparameter search](./hyperparameter-search) | Explore independent configurations in parallel and select one with a reproducible objective. |
+| [LoRA fine-tuning](./lora-fine-tuning) | Produce lightweight adapters from a pinned base model and instruction dataset. |
+| [Batch inference](./batch-inference) | Partition a large input, infer concurrently, and merge traceable predictions. |
+| [Comparative model evaluation](./model-comparison) | Evaluate candidate models with the same immutable dataset and policy. |
+| [Model conversion and quantization](./model-conversion) | Create hardware-specific variants and validate compatibility and quality. |
+| [Computer vision training](./computer-vision) | Expose collection, labels, augmentation, training, and packaging as observable stages. |
+| [Anomaly detection](./anomaly-detection) | Train a detector and make threshold selection an explicit workflow decision. |
+| [Model ensemble](./model-ensemble) | Run independent predictors and combine them through a versioned aggregation rule. |
+| [Model distillation](./model-distillation) | Generate teacher targets and train a smaller student with measured quality and latency. |
+| [Inference benchmark](./inference-benchmark) | Compare one frozen model and input set across CPU, GPU, and edge targets. |
+| [Infrastructure selection for training](./infrastructure-selection) | Compare plans for local GPU, HPC, and cloud before executing the selected candidate. |
+

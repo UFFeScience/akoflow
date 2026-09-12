@@ -28,7 +28,8 @@
 .cardBody strong { font-size: 0.78rem; }
 
 .diagram,
-.fanout {
+.fanout,
+.dag {
   position: relative;
   display: flex;
   min-height: 116px;
@@ -40,6 +41,25 @@
   background:
     radial-gradient(circle at 1px 1px, var(--ifm-color-emphasis-200) 1px, transparent 0) 0 0 / 14px 14px,
     var(--ifm-background-surface-color);
+}
+
+.dagFigure {
+  margin: 0.8rem 0 1.5rem;
+  overflow: hidden;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 8px;
+  background: var(--ifm-background-color);
+}
+
+.dagFigure figcaption {
+  padding: 0.55rem 0.75rem;
+  color: var(--ifm-color-emphasis-700);
+  font-size: 0.72rem;
+}
+
+.dag {
+  min-height: 92px;
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
 }
 
 .node,
@@ -91,7 +111,35 @@
   background: var(--ifm-background-surface-color);
 }
 
+.detailGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin: 1.25rem 0;
+}
+
+.detailGrid section {
+  padding: 0.85rem;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 8px;
+  background: var(--ifm-background-surface-color);
+}
+
+.detailGrid h2 { margin: 0 0 0.5rem; font-size: 0.9rem; }
+.detailGrid ul { margin: 0; padding-left: 1.1rem; }
+.detailGrid li { margin: 0.25rem 0; font-size: 0.78rem; }
+
+.patternLead { max-width: 52rem; font-size: 1.02rem; }
+.activityTable { overflow-x: auto; }
+.activityTable table { width: 100%; }
+.activityTable td:first-child { width: 28%; white-space: nowrap; }
+.patternNote {
+  padding: 0.75rem 0.85rem;
+  border-left: 3px solid var(--ifm-color-emphasis-400);
+  background: var(--ifm-color-emphasis-100);
+}
+
 @media (max-width: 760px) {
-  .grid, .files { grid-template-columns: 1fr; }
-  .diagram, .fanout { overflow-x: auto; justify-content: flex-start; }
+  .grid, .files, .detailGrid { grid-template-columns: 1fr; }
+  .diagram, .fanout, .dag { overflow-x: auto; justify-content: flex-start; }
 }

@@ -1,0 +1,19 @@
+---
+title: Batch inference
+description: Partition a large input, infer concurrently, and merge traceable predictions.
+---
+
+import {AIWorkflowPattern} from '@site/src/components/WorkflowShowcase';
+
+# Batch inference
+
+<AIWorkflowPattern
+  title="Batch inference"
+  summary="Partition a large input, infer concurrently, and merge traceable predictions."
+  stages={["load model","partition input",["infer shard A","infer shard B","infer shard N"],"merge predictions","publish"]}
+  inputs={["Approved model","Input dataset","Inference configuration"]}
+  outputs={["Prediction shards","Merged predictions","Completeness report"]}
+  evidence={["Shard boundaries","Model digest","Per-shard logs"]}
+  execution="Place shards according to memory, accelerator availability, and data locality. The merge stage must detect missing shards."
+/>
+

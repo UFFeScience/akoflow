@@ -1,0 +1,19 @@
+---
+title: Anomaly detection
+description: Train a detector and make threshold selection an explicit workflow decision.
+---
+
+import {AIWorkflowPattern} from '@site/src/components/WorkflowShowcase';
+
+# Anomaly detection
+
+<AIWorkflowPattern
+  title="Anomaly detection"
+  summary="Train a detector and make threshold selection an explicit workflow decision."
+  stages={["collect signals","build features","train detector","score validation data","choose threshold","publish detector"]}
+  inputs={["Signal dataset","Feature specification","Operating-cost policy"]}
+  outputs={["Detector","Threshold","Validation report"]}
+  evidence={["Time window","Feature code","Threshold rationale"]}
+  execution="Preserve time-based splits to prevent leakage. Feature construction may require more data movement than training."
+/>
+

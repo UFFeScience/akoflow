@@ -1,0 +1,19 @@
+---
+title: Training with MLflow
+description: Train and register a model while preserving data, parameters, metrics, and artifacts.
+---
+
+import {AIWorkflowPattern} from '@site/src/components/WorkflowShowcase';
+
+# Training with MLflow
+
+<AIWorkflowPattern
+  title="Training with MLflow"
+  summary="Train and register a model while preserving data, parameters, metrics, and artifacts."
+  stages={["ingest data","validate","train","evaluate",["register model","log MLflow run"]]}
+  inputs={["Versioned dataset","Training configuration","Runtime image"]}
+  outputs={["Model artifact","Evaluation report","MLflow run"]}
+  evidence={["Dataset and code digests","Parameters and metrics","Resource placement"]}
+  execution="Use GPU capacity for training and CPU capacity for validation or registration. MLflow remains an external service; AkôFlow records the activity that communicates with it."
+/>
+

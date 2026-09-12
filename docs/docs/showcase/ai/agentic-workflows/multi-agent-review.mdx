@@ -1,0 +1,19 @@
+---
+title: Multi-agent review
+description: Run specialists concurrently, critique their findings, and synthesize one result.
+---
+
+import {AIWorkflowPattern} from '@site/src/components/WorkflowShowcase';
+
+# Multi-agent review
+
+<AIWorkflowPattern
+  title="Multi-agent review"
+  summary="Run specialists concurrently, critique their findings, and synthesize one result."
+  stages={["prepare shared context",["research agent","code agent","domain agent"],"critic review","synthesize answer","publish evidence"]}
+  inputs={["Shared brief","Role definitions","Source policy"]}
+  outputs={["Specialist findings","Critique","Final result"]}
+  evidence={["Context version","Per-role traces","Accepted claims"]}
+  execution="Synthesis waits for terminal specialist states or an explicit partial-result policy. Models and resources may differ by role."
+/>
+

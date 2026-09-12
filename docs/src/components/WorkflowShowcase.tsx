@@ -3,9 +3,107 @@ import Link from "@docusaurus/Link";
 import styles from "./WorkflowShowcase.module.css";
 
 type DiagramKind = "edge-cloud" | "fanout" | "kubernetes" | "local" | "parallel" | "slurm";
+type DagStage = string | string[];
 
 function Arrow() {
   return <span className={styles.arrow} aria-hidden="true">→</span>;
+}
+
+export function WorkflowDag({
+  title,
+  stages,
+}: {
+  title: string;
+  stages: DagStage[];
+}) {
+  const description = stages
+    .map((stage) => Array.isArray(stage) ? stage.join(" and ") : stage)
+    .join(" then ");
+
+  return (
+    <figure className={styles.dagFigure}>
+      <div className={styles.dag} role="img" aria-label={`${title}: ${description}`}>
+        {stages.map((stage, index) => (
+          <React.Fragment key={`${title}-${index}`}>
+            {index > 0 && <Arrow />}
+            {Array.isArray(stage) ? (
+              <span className={styles.parallel}>
+                {stage.map((node) => <i key={node}>{node}</i>)}
+              </span>
+            ) : (
+              <span className={styles.node}>{stage}</span>
+            )}
+          </React.Fragment>
+        ))}
+      </div>
+      <figcaption>{title}</figcaption>
+    </figure>
+  );
+}
+
+export function WorkflowPatternDetails({
+  inputs,
+  outputs,
+  evidence,
+}: {
+  inputs: string[];
+  outputs: string[];
+  evidence: string[];
+}) {
+  return (
+    <div className={styles.detailGrid}>
+      <section><h2>Inputs</h2><ul>{inputs.map((item) => <li key={item}>{item}</li>)}</ul></section>
+      <section><h2>Outputs</h2><ul>{outputs.map((item) => <li key={item}>{item}</li>)}</ul></section>
+      <section><h2>Provenance to preserve</h2><ul>{evidence.map((item) => <li key={item}>{item}</li>)}</ul></section>
+    </div>
+  );
+}
+
+export function AIWorkflowPattern({
+  title,
+  summary,
+  stages,
+  activities,
+  inputs,
+  outputs,
+  evidence,
+  execution,
+}: {
+  title: string;
+  summary: string;
+  stages: DagStage[];
+  activities?: Array<{name: string; responsibility: string}>;
+  inputs: string[];
+  outputs: string[];
+  evidence: string[];
+  execution: string;
+}) {
+  const documentedActivities = activities ?? stages.flatMap((stage) =>
+    (Array.isArray(stage) ? stage : [stage]).map((name) => ({
+      name: name.toLowerCase().replaceAll(" ", "-"),
+      responsibility: `Execute the ${name} stage and publish its declared outputs for downstream activities.`,
+    })),
+  );
+
+  return (
+    <>
+      <p className={styles.patternLead}>{summary}</p>
+      <WorkflowDag title={title} stages={stages} />
+      <h2>Activity responsibilities</h2>
+      <div className={styles.activityTable}>
+        <table>
+          <thead><tr><th>Activity</th><th>Responsibility</th></tr></thead>
+          <tbody>{documentedActivities.map((activity) => (
+            <tr key={activity.name}><td><code>{activity.name}</code></td><td>{activity.responsibility}</td></tr>
+          ))}</tbody>
+        </table>
+      </div>
+      <WorkflowPatternDetails inputs={inputs} outputs={outputs} evidence={evidence} />
+      <h2>Execution considerations</h2>
+      <p>{execution}</p>
+      <p className={styles.patternNote}><strong>AkôFlow boundary:</strong> the engine schedules, deploys, executes, transfers data, and records evidence. The ML or agent framework remains an implementation choice inside each activity.</p>
+    </>
+  );
 }
 
 export function WorkflowDiagram({kind}: {kind: DiagramKind}) {

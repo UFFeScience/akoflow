@@ -1,0 +1,19 @@
+---
+title: Model ensemble
+description: Run independent predictors and combine them through a versioned aggregation rule.
+---
+
+import {AIWorkflowPattern} from '@site/src/components/WorkflowShowcase';
+
+# Model ensemble
+
+<AIWorkflowPattern
+  title="Model ensemble"
+  summary="Run independent predictors and combine them through a versioned aggregation rule."
+  stages={["prepare input",["predict A","predict B","predict C"],"combine predictions","evaluate ensemble","publish"]}
+  inputs={["Input dataset","Component models","Aggregation policy"]}
+  outputs={["Component predictions","Ensemble output","Evaluation"]}
+  evidence={["Component versions","Aggregation weights","Per-model logs"]}
+  execution="Components may run in different environments. Transfer predictions when co-locating incompatible frameworks is more expensive."
+/>
+

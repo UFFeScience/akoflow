@@ -1,0 +1,19 @@
+---
+title: LoRA fine-tuning
+description: Produce lightweight adapters from a pinned base model and instruction dataset.
+---
+
+import {AIWorkflowPattern} from '@site/src/components/WorkflowShowcase';
+
+# LoRA fine-tuning
+
+<AIWorkflowPattern
+  title="LoRA fine-tuning"
+  summary="Produce lightweight adapters from a pinned base model and instruction dataset."
+  stages={["fetch base model","prepare examples","fine-tune adapters","evaluate",["publish adapter","record lineage"]]}
+  inputs={["Base-model revision","Instruction dataset","LoRA configuration"]}
+  outputs={["Adapter weights","Evaluation report","Published version"]}
+  evidence={["Model and dataset revisions","GPU/runtime profile","Evaluation results"]}
+  execution="Keep the base model near the accelerator or cache it as a reusable artifact. Every adapter must remain linked to its compatible base revision."
+/>
+

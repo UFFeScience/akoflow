@@ -301,8 +301,10 @@ function parseJSONFields(structBody) {
 
 function buildStructIndex(sources) {
   const index = new Map();
+  const qualified = new Map();
   const aliases = new Map();
   for (const sourceText of sources) {
+    const packageName = /^package\s+([A-Za-z0-9_]+)/m.exec(sourceText)?.[1];
     for (const match of sourceText.matchAll(
       /type\s+([A-Za-z0-9_]+)\s+struct\s*\{([\s\S]*?)\n\}/g,
     )) {
@@ -316,10 +318,15 @@ function buildStructIndex(sources) {
         } else if (!existing) {
           index.set(match[1], fields);
         }
+        if (packageName) {
+          const key = `${packageName}.${match[1]}`;
+          const known = qualified.get(key);
+          qualified.set(key, known && JSON.stringify(known) !== JSON.stringify(fields) ? null : fields);
+        }
       }
     }
     for (const match of sourceText.matchAll(
-      /type\s+([A-Za-z0-9_]+)\s*=\s*(?:[A-Za-z0-9_]+\.)?([A-Za-z0-9_]+)/g,
+      /type\s+([A-Za-z0-9_]+)\s*=\s*((?:[A-Za-z0-9_]+\.)?[A-Za-z0-9_]+)/g,
     )) {
       aliases.set(match[1], match[2]);
     }
@@ -328,7 +335,7 @@ function buildStructIndex(sources) {
     // A domain alias must not replace a concrete type with the same name in
     // another package (for example console.Request vs simgrid.Request).
     if (index.has(alias)) continue;
-    const fields = index.get(target);
+    const fields = target.includes(".") ? qualified.get(target) : index.get(target);
     if (fields !== undefined) index.set(alias, fields);
   }
   return index;

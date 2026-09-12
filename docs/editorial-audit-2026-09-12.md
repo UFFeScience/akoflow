@@ -26,6 +26,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 18. **P0/P1 resolved in the second pass — artifact examples and contracts:** the artifact guide no longer supplies nonexistent lineage/project IDs or leaves `BUILD_ID` undefined. Five generated endpoint pages now distinguish upload from metadata registration, build specification from started run, and stored materialization records from verified byte transfers.
 19. **P0 resolved in the second pass — console outcome:** the one-shot console guide wrongly treated runner failure as HTTP `422`. The service waits for the runner and returns a `201` command record with `status: failed`; the guide and generated endpoint now tell readers to inspect status and failure. A successful session creation returns `connected`, not a `starting` session. Seven more generated endpoint pages now state checked console, connection-test, machine-configuration, and GCP-only catalog-validation limits.
 20. **P0/P1 resolved in the generated API template:** the short-name struct index let a SimGrid `Request` alias overwrite the real console `Request`, so the console-command page displayed an unrelated workflow execution body. Concrete structs now win over aliases; conflicting short names produce no inferred sample. All 125 generated pages now show each JSON shape once, omit Go type names from the reader-facing component, use a short sample caveat, and link Console to its actual task guide. The six verified SimGrid routes use their versioned files instead of large inferred request bodies.
+21. **P1 resolved in the generated API template — qualified responses:** `environment.Definition` and `workflow.Definition` shared a short name, which suppressed response examples after the conservative collision fix. The generator now resolves qualified aliases for both types; environment and workflow responses have their correct shapes again. Long response examples scroll within a bounded block instead of stretching the whole page.
 
 ## Page inventory
 
@@ -86,7 +87,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 
 ## Verification in this pass
 
-- `npm run typecheck`, `npm run build`, `npm run check:links`, and `git diff --check` passed on the editorial branch. The generated console-command request now has `resourceId` and `command` without an unrelated workflow `Run`; all six first-run routes link their versioned files.
+- `npm run typecheck`, `npm run build`, `npm run check:links`, and `git diff --check` passed on the editorial branch. All 125 endpoint pages generated; targeted checks confirmed the console-command request, qualified environment and workflow responses, and all six versioned first-run links.
 - The latest link check covered 382 local links/assets and 54 showcase downloads from the `v1.0.8` Git tag.
 - Headless Chromium at 390 × 844 loaded Getting Started, Core concepts, the console guide, the new Desktop first-run page, and all seven Showcase pages without page errors or horizontal overflow. Every Showcase API tab displayed its v1.0.8 checkout command; the first-run page's mobile menu opened and showed its tutorial link.
 - These checks establish site integrity for this pass. They do not prove tutorial execution, provider support, or completion of the editorial gate.

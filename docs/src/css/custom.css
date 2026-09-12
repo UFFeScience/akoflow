@@ -523,6 +523,7 @@ html {
   padding: 1rem;
   background: var(--ifm-background-color);
   color: var(--ifm-font-color-base);
+  max-height: 32rem;
   overflow: auto;
   font-size: 0.76rem;
   line-height: 1.55;

@@ -1,94 +1,50 @@
 ---
 title: Provenance and audit
-description: Explore scientific lineage, run safe read-only SQL, and inspect the operational audit trail.
+description: Query local execution evidence safely with SQL and inspect the operational audit trail.
 ---
 
 # Provenance and audit
 
-AkôFlow exposes two complementary records:
+AkôFlow keeps two complementary records:
 
-- **Provenance** connects workflows, plans, runs, activities, transfers, and data as scientific evidence.
+- **Provenance** is a read-only SQL workspace over the local evidence database. Use it to compare workflows, plans, runs, activities, transfers, and data.
 - **Audit** records operational actions such as discovery, connection use, console access, credentials, and workflow operations.
 
-Use provenance to answer “how was this result produced?” Use audit to answer “what operation happened, when, to which target, and with what outcome?”
+Use SQL when the question crosses several records. Use Audit to answer what operation happened, when, against which target, and with which outcome.
 
-## Explore provenance in Desktop
+## Query local evidence
 
-Open **Provenance**. The **Explore** tab loads a server-defined entity catalog. Select an entity, search across its safe projection, apply a field filter, sort a column, and page through the result. The current page can be exported as CSV or JSON.
-
-<img src={require('@site/static/img/interface/provenance/explore-runs.png').default} alt="AkôFlow Desktop Provenance Explore view with the trusted-record catalog, Runs projection, search field, filter control, CSV and JSON exports, and lineage actions for each row." />
-
-*The catalog defines the projections available for exploration. In the **Runs** projection, the row action opens the record details and the lineage action follows its relationship to the selected plan; use the search and export controls only after choosing the record type that answers the question.*
-
-The API exposes the same server-defined catalog and query:
-
-```bash
-curl -H "Authorization: Bearer $AKOFLOW_TOKEN" \
-  "$AKOFLOW_URL/akoflow-api/provenance/entities/"
-
-curl -G -H "Authorization: Bearer $AKOFLOW_TOKEN" \
-  --data-urlencode "q=completed" \
-  --data-urlencode "filterField=status" \
-  --data-urlencode "filterValue=completed" \
-  --data-urlencode "page=1" \
-  --data-urlencode "pageSize=50" \
-  --data-urlencode "sortField=created_at" \
-  --data-urlencode "sortOrder=desc" \
-  "$AKOFLOW_URL/akoflow-api/provenance/entities/runs/"
-```
-
-Entity names and fields are supplied by `/provenance/entities/`; clients should not invent them. Query responses include entity metadata, `items`, `page`, `pageSize`, `total`, and `hasNext`.
-
-## Follow lineage
-
-From an Explore result, choose **Open lineage**, or open the **Lineage** tab and provide an entity and ID. Select `upstream`, `downstream`, or `both`, choose a depth, then inspect nodes and relationships. Any node can become the new root.
-
-<img src={require('@site/static/img/interface/provenance/lineage-fanout.png').default} alt="AkôFlow Desktop Lineage view for the completed SimGrid 30 GB fan-out run, showing record type and ID controls, direction and depth, the grouped lineage graph, graph filters, and the selected run details." />
-
-*The fan-out example starts at the completed run. Distance 1 contains its plan, activity executions, and transfers; distance 2 reaches the workflow version, scope, activities, and allocated resources. Select a card to inspect the fields in the detail panel rather than inferring them from its position in the graph.*
-
-### Read the Lineage screen
-
-| Area | Use it for | Important interpretation |
-| --- | --- | --- |
-| **Record type** and **Record ID** | Define the root record. The current root can also come from **Open lineage** in Explore. | Use the stored ID, not a display name. IDs remain stable when a user changes a label. |
-| **Direction** and **Depth** | Choose whether to follow antecedents, descendants, or both, then bound the search. | A larger depth adds relationships; it does not mean a later execution time. Start at 1 or 2 and expand only when the question requires it. |
-| **Lineage graph** | Inspect the nodes grouped by graph distance from the root. | The heading reports the returned node and relationship counts. Grouped columns are distance from the root, not workflow stages or chronological lanes. |
-| **Find a node** and **node-type filter** | Reduce a large graph to a specific record or entity kind such as transfers or activity executions. | Filtering changes the visible graph only. It does not change the lineage query or delete evidence. |
-| **Selected-record panel** | Read the status and persisted fields for the selected card, then use **Open record** for the operational page. | The panel is evidence for that one record. Compare the plan and run IDs deliberately when investigating planned versus observed behavior. |
-| **Export JSON** | Preserve the exact lineage response for an investigation or a report. | The export is a snapshot of the current root, direction, and depth; record those choices with the file. |
-
-```bash
-curl -G -H "Authorization: Bearer $AKOFLOW_TOKEN" \
-  --data-urlencode "direction=both" \
-  --data-urlencode "depth=2" \
-  --data-urlencode "maxNodes=300" \
-  "$AKOFLOW_URL/akoflow-api/provenance/lineage/runs/$RUN_ID/"
-```
-
-The response contains a `root` key, `nodes`, directed `edges`, and `truncated`. Increase depth deliberately: the graph may expand quickly, and the interface caps a request at 300 nodes.
-
-## Query with read-only SQL
-
-The **SQL** tab presents the queryable schema, templates for common investigations, named JSON parameters, result paging, explain, favorites, and local query history.
+Open **Provenance** in Desktop. The page loads the service-provided safe schema and opens with a planned-versus-observed template. It accepts only `SELECT` and `WITH` statements, so it cannot change the local database.
 
 <img src={require('@site/static/img/interface/provenance/sql-planned-versus-observed.png').default} alt="AkôFlow Desktop Provenance SQL view showing the safe schema, a read-only query that compares planned and observed run durations, query controls, and the result summary." />
 
-*This query joins completed execution runs to their schedule plans. The result summary reports the returned row count, current page, elapsed query time, and whether more rows are available; the values are evidence from the connected local database, not fixed example values.*
+*The query joins completed execution runs to their schedule plans. Values in the result are evidence from the connected local database, not fixed example values.*
+
+### Start from a table
+
+The **Safe schema** column is the quickest way to inspect a table. Click a table name and Desktop replaces the editor with a bounded query such as:
+
+```sql
+SELECT *
+FROM "execution_runs"
+LIMIT 100
+```
+
+Expand the table to see its available fields. Clicking a field appends its name to the editor, which is useful while refining a `SELECT`, join, or filter. Review the query and choose **Run query** when ready; selecting a table does not execute it automatically.
 
 ### Read the SQL screen
 
 | Area | Use it for | Important interpretation |
 | --- | --- | --- |
-| **Safe schema** | Discover the tables and columns that the service makes available to read-only queries. Click a field to insert its name into the editor. | This is the current service schema, not a generic SQLite browser. Start here instead of assuming a column exists. |
+| **Safe schema** | Discover the tables and columns made available to read-only SQL. Click a table to create its starter query; click a field to insert its name. | This is the schema exposed by the connected service, not a generic SQLite browser. Start here rather than assuming a table or column exists. |
 | **Query template** | Start a common investigation, then refine it in the editor. | A template is ordinary editable SQL. Review joins, filters, and ordering before relying on its output. |
 | **Query editor** | Write a `SELECT` or `WITH` query, including named parameters. | The interface shows the active timeout and row limit. Statements that modify data are rejected. |
-| **Run query** and **Query result** | Execute the query and inspect typed columns, rows, page controls, and elapsed milliseconds. | Row limits bound one result page. A “more rows available” message means that the result is not the complete matching set yet. |
-| **Explain** | Inspect SQLite's query plan before using a costly investigation repeatedly. | An explanation describes the database's access plan; it does not replace the normal query result or prove a result is scientifically meaningful. |
-| **Export CSV** and **Export JSON** | Save the current result page for analysis or a report. | Record the SQL, parameters, page, and time of export with the file so another investigator can reproduce it. |
-| **Favorite** and **History** | Reuse a query in the same Desktop browser profile. | They are local conveniences, not shared provenance records. |
+| **Run query** and **Query result** | Execute the query and inspect typed columns, rows, page controls, and elapsed milliseconds. | Row limits bound one result page. A “more rows available” message means the result is not the complete matching set yet. |
+| **Explain** | Inspect SQLite's query plan before repeating a costly investigation. | An explanation describes the database access plan; it does not replace a normal result or prove a result is scientifically meaningful. |
+| **Export CSV** and **Export JSON** | Save the current result page for analysis or a report. | Record the SQL, parameters, page, and time of export so another investigator can reproduce it. |
+| **Favorite** and **History** | Reuse a query in the same Desktop browser profile. | They are local conveniences, not shared evidence records. |
 
-Only read-only `SELECT` and `WITH` queries are accepted. The Desktop communicates the current service limits as a 10-second execution timeout and 200 rows per page. Fetch the runtime schema instead of assuming table or column names:
+Only read-only `SELECT` and `WITH` queries are accepted. Desktop uses a 10-second execution timeout and returns up to 200 rows per page. Fetch the runtime schema instead of assuming table or column names:
 
 ```bash
 curl -H "Authorization: Bearer $AKOFLOW_TOKEN" \
@@ -105,10 +61,10 @@ curl -X POST -H "Authorization: Bearer $AKOFLOW_TOKEN" \
   "$AKOFLOW_URL/akoflow-api/provenance/sql/"
 ```
 
-Send the same payload to `/provenance/sql/explain/` to inspect the query plan without running the ordinary result path. SQL results contain typed `columns`, `items`, pagination information, a `truncated` flag, and elapsed milliseconds.
+Send the same payload to `/provenance/sql/explain/` to inspect the query plan. SQL results contain typed `columns`, `items`, pagination information, a `truncated` flag, and elapsed milliseconds.
 
 :::note Local UI state
-SQL favorites and recent-query history are stored in the browser profile. They are conveniences, not provenance records, and are not synchronized through the API.
+SQL favorites and recent-query history are stored in the browser profile. They are conveniences, not evidence records, and are not synchronized through the API.
 :::
 
 ## Inspect the audit trail
@@ -117,18 +73,15 @@ Open **Audit** for a chronological record of infrastructure discovery, connectio
 
 <img src={require('@site/static/img/interface/operations/audit-events.png').default} alt="AkôFlow Desktop Audit view showing the All events filter, chronological audit table, event targets, succeeded and failed outcomes, and operational summaries." />
 
-*Each row keeps the event time, its machine-readable type, the persisted target, the outcome, and an operational summary. In this capture, connection health checks show both a failed Kubernetes check and a successful cloud credential check; the colored outcome is a result to investigate, not a diagnosis by itself.*
-
-### Read the Audit screen
+*Each row keeps the event time, its machine-readable type, persisted target, outcome, and an operational summary. A colored outcome is a result to investigate, not a diagnosis by itself.*
 
 | Area | Use it for | Important interpretation |
 | --- | --- | --- |
-| **All events** and category tabs | Narrow the visible list to discovery/resources, connections, console sessions, workflows, or credentials. | The Desktop fetches an audit list and applies these categories in the browser. **All events** removes that local category filter; it does not request a different server-side result set. |
-| **Time** | Correlate an operation with a run, connection check, or terminal session. | The value is displayed in the local browser time zone. Use persisted IDs and API filters when an investigation needs exact cross-system correlation. |
-| **Event** | Identify the operation class, such as `connection.health.checked`. | Event types are machine-readable, dot-separated names. The category tabs match their leading namespace. |
-| **Target** | Locate the connection, environment, resource, session, execution, or system record affected by the event. | This is a persisted target identifier when one is available; it is not necessarily the friendly name shown elsewhere in Desktop. |
-| **Outcome** | Quickly distinguish `started`, `succeeded`, and `failed` records. | A failure tells you that the recorded operation did not complete successfully. Read **Summary** and then inspect the target before changing a configuration. |
-| **Summary** | Read the service-provided context or error associated with the event. | Treat it as operational evidence. It can include a runtime error returned by an external system, so do not copy it into public reports without reviewing it. |
+| **All events** and category tabs | Narrow the visible list to discovery/resources, connections, console sessions, workflows, or credentials. | **All events** removes the local category filter; it does not request a different server-side result set. |
+| **Time** | Correlate an operation with a run, connection check, or terminal session. | The value is displayed in the local browser time zone. Use IDs and API filters for exact cross-system correlation. |
+| **Event** | Identify an operation class, such as `connection.health.checked`. | Event types are machine-readable, dot-separated names. The category tabs match their leading namespace. |
+| **Target** | Locate the connection, environment, resource, session, execution, or system record affected by an event. | This is a persisted target identifier when available; it is not necessarily the friendly name shown elsewhere in Desktop. |
+| **Outcome** | Distinguish `started`, `succeeded`, and `failed` records. | A failure means the recorded operation did not complete successfully. Read **Summary** before changing a configuration. |
 
 The API supports server-side filtering:
 
@@ -140,16 +93,12 @@ curl -G -H "Authorization: Bearer $AKOFLOW_TOKEN" \
   "$AKOFLOW_URL/akoflow-api/audit-events/"
 ```
 
-Available filter parameters are `eventType`, `environmentId`, `resourceId`, `connectionId`, `sessionId`, `executionId`, `outcome`, and `limit`. Outcomes currently include `started`, `succeeded`, and `failed`. The Desktop currently loads the audit list and applies its category tabs locally; use API filters for precise automation.
+Available filter parameters are `eventType`, `environmentId`, `resourceId`, `connectionId`, `sessionId`, `executionId`, `outcome`, and `limit`.
 
 ## Investigation workflow
 
-For a failed or surprising result:
-
-1. Open the execution and identify the run, activity, plan, and produced data IDs.
-2. Open **Provenance > Explore**, find the record, and open its lineage.
-3. Use **SQL** when the question crosses multiple entities or compares planned and observed values.
+1. Open the execution and identify the run, activity, plan, and produced-data IDs relevant to the question.
+2. Open **Provenance**, select the relevant table in **Safe schema**, and refine the generated `SELECT` with those IDs.
+3. Use the planned-versus-observed or transfer template when the question spans plans and runs.
 4. Open **Audit** to correlate infrastructure, connection, credential, or console operations around the same time.
-5. Export the relevant Explore page when evidence must be shared; preserve IDs so another investigator can reproduce the query.
-
-Provenance endpoints return `503 Service Unavailable` when the explorer is not configured, `400 Bad Request` for invalid entity, SQL, or lineage requests, and `500 Internal Server Error` if schema discovery fails.
+5. Export the relevant SQL result and preserve the SQL, parameters, and IDs with the report.

@@ -55,7 +55,7 @@ This matrix is maintained as the coverage checklist for the public documentation
 | `/artifact-locations` | Compatibility/aggregate location catalog | `/artifact-locations/` | [Artifacts and builds](../guides/data/artifacts) |
 | `/materializations` | Compatibility/aggregate materialization catalog | `/artifact-materializations/` | [Artifacts and builds](../guides/data/artifacts) |
 | `/data` | Generated scientific data grouped by workflow | Provenance data projections | [Provenance and audit](../guides/data/provenance-and-audit) |
-| `/provenance` | Explore entities, SQL, and lineage | `/provenance/` | [Provenance and audit](../guides/data/provenance-and-audit) |
+| `/provenance` | Query local evidence with read-only SQL | `/provenance/sql/` | [Provenance and audit](../guides/data/provenance-and-audit) |
 | `/audit` | Search operational history | `/audit-events/` | [Provenance and audit](../guides/data/provenance-and-audit) |
 | `/console` | Open interactive terminal sessions | `/console-commands/`, `/console-sessions/` | [Interactive console](../guides/operations/interactive-console) |
 | `/settings` | Manage identity, appearance, instance archives, and reset | Instance and preference endpoints | [Instance management](../guides/operations/instance-management) |

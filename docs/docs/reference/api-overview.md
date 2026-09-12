@@ -186,12 +186,9 @@ See [Artifacts, storage, and builds](../guides/data/artifacts.md) for payload ex
 
 | Method | Path | Purpose |
 |---|---|---|
-| `GET` | `/provenance/entities/` | List safe entity projections |
-| `GET` | `/provenance/entities/{entity}/` | Search, filter, sort, and page an entity |
 | `GET` | `/provenance/sql/schema/` | Read the queryable schema |
 | `POST` | `/provenance/sql/` | Execute parameterized read-only SQL |
 | `POST` | `/provenance/sql/explain/` | Explain read-only SQL |
-| `GET` | `/provenance/lineage/{entity}/{id}/` | Traverse lineage |
 
 See [Provenance and audit](../guides/data/provenance-and-audit.md) for query parameters and examples.
 

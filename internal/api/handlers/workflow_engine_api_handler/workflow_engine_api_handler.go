@@ -1040,7 +1040,7 @@ func (h *Handler) Search(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	if types["artifact"] {
-		items, err := h.data.ListArtifacts(r.Context())
+		items, err := h.data.ListArtifacts(r.Context(), false)
 		if err != nil {
 			writeError(w, http.StatusInternalServerError, err)
 			return
@@ -1336,7 +1336,7 @@ func (h *Handler) ListArtifactLocations(w http.ResponseWriter, r *http.Request) 
 }
 
 func (h *Handler) ListArtifacts(w http.ResponseWriter, r *http.Request) {
-	values, err := h.data.ListArtifacts(r.Context())
+	values, err := h.data.ListArtifacts(r.Context(), r.URL.Query().Get("selectable") == "true")
 	writeList(w, values, err)
 }
 func (h *Handler) ListArtifactMaterializations(w http.ResponseWriter, r *http.Request) {

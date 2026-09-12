@@ -36,9 +36,12 @@ const (
 // ExecutableArtifact and ArtifactVariant describe immutable executable bytes.
 // They intentionally differ from ArtifactManifest, which records activity output.
 type ExecutableArtifact struct {
-	ID      string `json:"id"`
-	Name    string `json:"name"`
-	Version string `json:"version,omitempty"`
+	ID            string   `json:"id"`
+	Name          string   `json:"name"`
+	Version       string   `json:"version,omitempty"`
+	Formats       []string `json:"formats,omitempty"`
+	Architectures []string `json:"architectures,omitempty"`
+	Available     bool     `json:"available"`
 }
 type ArtifactVariant struct {
 	ID           string `json:"id"`

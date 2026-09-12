@@ -3,6 +3,7 @@ package data
 import (
 	"context"
 	"database/sql"
+	"slices"
 	"strings"
 	"testing"
 
@@ -79,6 +80,7 @@ func TestArtifactBuildCatalogLifecycle(t *testing.T) {
 	if err = repository.SaveArtifactBuild(ctx, build); err != nil {
 		t.Fatal(err)
 	}
+	assertSelectableArtifacts(t, repository, ctx, false)
 	for name, lookup := range map[string]func(context.Context, string) (*domain.ArtifactBuild, error){"id": repository.FindArtifactBuild, "cache": repository.FindArtifactBuildByCacheKey} {
 		argument := build.ID
 		if name == "cache" {
@@ -130,13 +132,30 @@ func TestArtifactBuildCatalogLifecycle(t *testing.T) {
 	if err != nil || dockerBuild == nil || dockerVariant == nil || dockerLocation == nil {
 		t.Fatalf("docker output = %#v %#v %#v, %v", dockerBuild, dockerVariant, dockerLocation, err)
 	}
-	artifacts, err := repository.ListArtifacts(ctx)
-	if err != nil || len(artifacts) != 1 || artifacts[0].ID != "tool" {
-		t.Fatalf("artifacts = %#v, %v", artifacts, err)
-	}
+	assertArtifactCatalog(t, repository, ctx)
+	assertSelectableArtifacts(t, repository, ctx, true)
 	locations, err := repository.ListArtifactLocations(ctx)
 	if err != nil || len(locations) != 1 {
 		t.Fatalf("locations = %#v, %v", locations, err)
+	}
+}
+
+func assertSelectableArtifacts(t *testing.T, repository *Repository, ctx context.Context, published bool) {
+	t.Helper()
+	values, err := repository.ListArtifacts(ctx, true)
+	if !published && (err != nil || len(values) != 0) {
+		t.Fatalf("unpublished selectable artifacts = %#v, %v", values, err)
+	}
+	if published && (err != nil || len(values) != 1 || !slices.Equal(values[0].Formats, []string{"sif"}) || !slices.Equal(values[0].Architectures, []string{"amd64"})) {
+		t.Fatalf("selectable artifacts = %#v, %v", values, err)
+	}
+}
+
+func assertArtifactCatalog(t *testing.T, repository *Repository, ctx context.Context) {
+	t.Helper()
+	artifacts, err := repository.ListArtifacts(ctx, false)
+	if err != nil || len(artifacts) != 1 || artifacts[0].ID != "tool" || !artifacts[0].Available {
+		t.Fatalf("artifacts = %#v, %v", artifacts, err)
 	}
 }
 

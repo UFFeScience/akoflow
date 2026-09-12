@@ -171,21 +171,61 @@ func (r *Repository) ListArtifactLocations(ctx context.Context) ([]domain.Artifa
 	return values, rows.Err()
 }
 
-func (r *Repository) ListArtifacts(ctx context.Context) ([]domain.ExecutableArtifact, error) {
-	rows, err := r.db.QueryContext(ctx, `SELECT artifact_id, name, version FROM artifact_versions ORDER BY artifact_id, version, scope, scope_id`)
+func (r *Repository) ListArtifacts(ctx context.Context, selectable bool) ([]domain.ExecutableArtifact, error) {
+	query := `SELECT av.artifact_id, av.name, av.version,
+		COALESCE(v.format, ''), COALESCE(v.architecture, ''),
+		CASE WHEN EXISTS (
+			SELECT 1 FROM artifact_variants available_variant
+			JOIN artifact_locations available_location ON available_location.variant_id=available_variant.id
+			WHERE available_variant.artifact_version_id=av.id AND available_location.available=1
+		) THEN 1 ELSE 0 END
+		FROM artifact_versions av
+		LEFT JOIN artifact_variants v ON v.artifact_version_id=av.id`
+	if selectable {
+		query += ` WHERE EXISTS (
+			SELECT 1 FROM artifact_variants available_variant
+			JOIN artifact_locations available_location ON available_location.variant_id=available_variant.id
+			WHERE available_variant.artifact_version_id=av.id AND available_location.available=1
+		)`
+	}
+	query += ` ORDER BY av.artifact_id, av.version, av.scope, av.scope_id, v.format, v.architecture`
+	rows, err := r.db.QueryContext(ctx, query)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var values []domain.ExecutableArtifact
+	values := []domain.ExecutableArtifact{}
+	indexes := map[string]int{}
 	for rows.Next() {
 		var value domain.ExecutableArtifact
-		if err := rows.Scan(&value.ID, &value.Name, &value.Version); err != nil {
+		var format, architecture string
+		if err := rows.Scan(&value.ID, &value.Name, &value.Version, &format, &architecture, &value.Available); err != nil {
 			return nil, err
 		}
-		values = append(values, value)
+		key := value.ID + "\x00" + value.Version
+		index, exists := indexes[key]
+		if !exists {
+			indexes[key] = len(values)
+			values = append(values, value)
+			index = len(values) - 1
+		}
+		if format != "" && !containsString(values[index].Formats, format) {
+			values[index].Formats = append(values[index].Formats, format)
+		}
+		if architecture != "" && !containsString(values[index].Architectures, architecture) {
+			values[index].Architectures = append(values[index].Architectures, architecture)
+		}
 	}
 	return values, rows.Err()
+}
+
+func containsString(values []string, candidate string) bool {
+	for _, value := range values {
+		if value == candidate {
+			return true
+		}
+	}
+	return false
 }
 
 func (r *Repository) ListArtifactMaterializations(ctx context.Context, runID string) ([]domain.ArtifactMaterialization, error) {

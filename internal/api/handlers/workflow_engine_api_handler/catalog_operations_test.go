@@ -184,7 +184,7 @@ type dataCatalogRichStub struct {
 	transferRuns     []domain.DataTransferRun
 }
 
-func (s *dataCatalogRichStub) ListArtifacts(context.Context) ([]domain.ExecutableArtifact, error) {
+func (s *dataCatalogRichStub) ListArtifacts(context.Context, bool) ([]domain.ExecutableArtifact, error) {
 	return s.artifacts, s.err
 }
 func (s *dataCatalogRichStub) ListArtifactLocations(context.Context) ([]domain.ArtifactLocation, error) {

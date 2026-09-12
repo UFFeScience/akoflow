@@ -14,6 +14,11 @@ const sidebars: SidebarsConfig = {
         "guides/workflows/first-run",
         {
           type: "category",
+          label: "Connect execution infrastructure",
+          items: ["tutorials/register-hpc", "tutorials/connect-cloud"],
+        },
+        {
+          type: "category",
           label: "Workflow showcases",
           collapsed: true,
           items: [
@@ -101,6 +106,7 @@ const sidebars: SidebarsConfig = {
       label: "Reference",
       collapsed: false,
       items: [
+        "tutorials/api-access",
         "reference/api-overview",
         "reference/environment-yaml",
         "reference/execution-scopes-and-topologies",

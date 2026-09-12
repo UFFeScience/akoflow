@@ -1,0 +1,57 @@
+{
+  "environment": {
+    "id": "research-hpc",
+    "name": "Research HPC",
+    "description": "Tutorial environment; replace site-specific settings.",
+    "status": "defined"
+  },
+  "version": {
+    "id": "research-hpc-v1",
+    "environmentId": "research-hpc",
+    "version": 1,
+    "status": "draft",
+    "networkModel": "static-links",
+    "interferenceModel": "none",
+    "costModel": "per-second",
+    "configurationHash": "research-hpc-v1"
+  },
+  "runtimes": [
+    {
+      "id": "research-hpc-slurm",
+      "environmentVersionId": "research-hpc-v1",
+      "name": "SLURM",
+      "driver": "slurm",
+      "mode": "execution",
+      "role": "execution",
+      "configuration": {
+        "connectionId": "research-hpc-connection",
+        "adapter": "slurm",
+        "partition": "cpu"
+      },
+      "capabilities": {
+        "batch": true,
+        "interactive": true,
+        "container": true,
+        "simulation": false
+      }
+    }
+  ],
+  "resources": [],
+  "resourceRuntimeBindings": [],
+  "connections": [
+    {
+      "id": "research-hpc-connection",
+      "environmentId": "research-hpc",
+      "name": "Research HPC",
+      "type": "ssh",
+      "credentialRef": "REPLACE_WITH_RETURNED_REFERENCE",
+      "configuration": {
+        "port": 22,
+        "partition": "cpu",
+        "proxyCommand": ""
+      },
+      "endpoint": "login.example.org",
+      "username": "researcher"
+    }
+  ]
+}

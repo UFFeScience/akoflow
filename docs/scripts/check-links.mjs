@@ -111,7 +111,7 @@ function checkTarget(sourceFile, rawTarget, sourceIsShowcase) {
     return;
   }
 
-  if (target.startsWith("/img/") || target.startsWith("/media/") || target.startsWith("/downloads/") || target.startsWith("/showcase/")) {
+  if (target.startsWith("/examples/") || target.startsWith("/img/") || target.startsWith("/media/") || target.startsWith("/downloads/") || target.startsWith("/showcase/")) {
     checkRepositoryPath(sourceFile, target, resolve(staticDirectory, target.slice(1)), "Static asset");
     return;
   }

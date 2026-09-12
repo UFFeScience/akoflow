@@ -101,7 +101,11 @@ jobs:
           - runner: macos-14
             command: npx electron-builder --mac --universal --publish never
             artifact: macos-universal
-            signing: macos
+            # Signing is opt-in. Do not pass a certificate value unless the
+            # repository has a valid exported signing identity; an invalid
+            # CSC_LINK otherwise makes an otherwise usable Desktop release
+            # fail while producing the universal macOS package.
+            signing: none
           - runner: windows-latest
             command: npx electron-builder --win --x64 --publish never
             artifact: windows-x64

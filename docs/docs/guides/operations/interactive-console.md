@@ -26,7 +26,7 @@ Both require a resource with a usable runtime and connection. AkôFlow records t
 
 <TerminalPanelGuide />
 
-The panel polls active sessions every three seconds. Switching tabs closes only the local WebSocket for the previous view; it does not intentionally close that remote session. If the active stream disappears unexpectedly, Desktop requests session closure so the remote terminal is not left consuming resources.
+Switching tabs keeps the remote session open. Use **Close session** when you finish. If the active stream disappears unexpectedly, Desktop requests closure; check the session list before opening a replacement.
 
 ### When the terminal action is unavailable
 
@@ -34,10 +34,9 @@ The action appears only after AkôFlow can resolve all three layers: a resource,
 
 ## Open and manage a session through the API
 
-```bash
-export AKOFLOW_API_URL='http://127.0.0.1:<daemon-port>/akoflow-api'
-export AKOFLOW_API_TOKEN='<daemon-token>'
+Complete [API connection setup](../../tutorials/api-access) first.
 
+```bash
 curl --fail-with-body \
   -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -H 'Content-Type: application/json' \

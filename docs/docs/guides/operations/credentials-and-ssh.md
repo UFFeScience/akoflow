@@ -1,6 +1,6 @@
 ---
 title: Manage credentials and SSH service keys
-description: Store credentials in the Engine, assign SSH service keys, and keep private material outside workflow definitions.
+description: Store credentials with AkôFlow, assign SSH service keys, and keep private material outside workflow definitions.
 ---
 
 # Manage credentials and SSH service keys
@@ -18,14 +18,13 @@ AkôFlow returns public metadata or a credential reference when you list stored 
 3. Select **Generate key**.
 4. Copy the public key and authorize it on every SSH hop required by the target—for example, both a gateway and its HPC login node.
 
-The Engine generates an Ed25519 key. IDs must start with an ASCII letter or digit, may then contain letters, digits, `_` or `-`, and may contain at most 64 characters. The private file is stored with mode `0600`.
+The AkôFlow server generates an Ed25519 key. IDs must start with an ASCII letter or digit, may then contain letters, digits, `_` or `-`, and may contain at most 64 characters. The private file is stored with mode `0600`.
 
 ### Using the API
 
-```bash
-export AKOFLOW_API_URL='http://127.0.0.1:<daemon-port>/akoflow-api'
-export AKOFLOW_API_TOKEN='<daemon-token>'
+Complete [API connection setup](../../tutorials/api-access) first.
 
+```bash
 curl --fail-with-body \
   -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -H 'Content-Type: application/json' \
@@ -43,7 +42,7 @@ The response contains `id`, `credentialRef`, `publicKey`, and SHA-256 `fingerpri
 2. Enter a new **Key ID** under **Import an existing private key**.
 3. Paste the OpenSSH private key and select **Import private key**.
 
-The private key is sent once to the Engine, validated with `ssh-keygen`, stored in the credential directory and never displayed again.
+The private key is sent once to the AkôFlow server, validated with `ssh-keygen`, stored in the credential directory and never displayed again.
 
 ### Using the API
 
@@ -128,7 +127,7 @@ Cloud onboarding similarly sends provider credential JSON to `/cloud-credentials
 ## Security boundaries
 
 - Do not place private keys or tokens in workflow YAML, resource metadata, screenshots, logs, or documentation examples.
-- API Bearer authentication protects transport to the Engine; `credentialRef` authorizes a provider operation after the request reaches the Engine.
+- API Bearer authentication protects requests to the server; `credentialRef` identifies the saved credential used for a provider operation.
 - Instance export redacts credentials and credential references. Imported snapshots therefore cannot reconnect until you return to a writable instance and configure credentials there.
-- If SSH uses a gateway or proxy command, authorize and validate every hop. `forwardAgent` and proxy settings are connection configuration, not substitutes for an Engine-managed key.
+- If SSH uses a gateway or proxy command, authorize and validate every hop. `forwardAgent` and proxy settings are connection configuration, not substitutes for a server-managed key.
 - A leaked public key does not reveal the private key, but remote `authorized_keys` entries still determine where that key can authenticate.

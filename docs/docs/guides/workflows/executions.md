@@ -52,7 +52,7 @@ To open an interactive terminal, use the console action for a compatible resourc
 
 ## Using the API
 
-`POST /execution-runs/` accepts a complete, reproducible execution envelope. The checked-in files `examples/simulation/execution-request.yaml` and `examples/kind/requests/execution-request.yaml` are canonical examples for simulation and real Kubernetes execution respectively.
+`POST /execution-runs/` accepts a complete execution request. Use the checked-in `examples/simulation/execution-request.yaml` for simulation or `examples/kind/requests/execution-request.yaml` for Kubernetes execution.
 
 ```bash
 curl --fail-with-body \

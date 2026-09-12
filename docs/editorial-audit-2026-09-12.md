@@ -42,12 +42,12 @@ This is an iteration ledger, not a completion certificate. The current pass insp
 | `guides/infrastructure/simgrid.md` | Full read; corrected unsupported Desktop link editing | Recheck procedure against pinned bundle |
 | `guides/infrastructure/storage.md` | Full read; action limits are qualified by capabilities | Recheck API payloads after P0 contracts fix |
 | `guides/interface-tour.mdx` | Edited in this pass | Full read after P0/P1 fixes |
-| `guides/operations/credentials-and-ssh.md` | Edited in this pass | Full read after P0/P1 fixes |
-| `guides/operations/instance-management.md` | Edited in this pass | Full read after P0/P1 fixes |
-| `guides/operations/interactive-console.md` | Edited in this pass | Full read after P0/P1 fixes |
-| `guides/operations/search-and-notifications.md` | Edited in this pass | Full read after P0/P1 fixes |
+| `guides/operations/credentials-and-ssh.md` | Full read; aligned shared API setup and server terminology | Recheck secret-handling claims against handlers |
+| `guides/operations/instance-management.md` | Full read; aligned shared API setup and removed internal snapshot detail | Recheck import/export contracts against handlers |
+| `guides/operations/interactive-console.md` | Full read; removed polling implementation detail and aligned API setup | Recheck session behavior against Desktop |
+| `guides/operations/search-and-notifications.md` | Full read; removed debounce/polling details and aligned API setup | Recheck UI behavior against Desktop |
 | `guides/operations/server-instance.md` | Full read; prerequisites, verification, and removal are explicit | Recheck release assets when version changes |
-| `guides/operations/troubleshooting.md` | Edited in this pass | Full read after P0/P1 fixes |
+| `guides/operations/troubleshooting.md` | Full read; starts with user-visible failure and uses server terminology | Recheck diagnostic claims after P0 fixes |
 | `guides/workflows/definitions.md` | Full read; simplified opening and aligned API setup | Recheck payload against importer after P0 contracts fix |
 | `guides/workflows/executions.md` | Full read; corrected queued/run state distinction | Verify Desktop-only start flow |
 | `guides/workflows/first-run.md` | Full read; API submission and Desktop inspection are distinguished | Verify complete Desktop-only path |

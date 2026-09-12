@@ -7,18 +7,13 @@ description: Configure an AkôFlow instance, export and import sanitized snapsho
 
 An AkôFlow **instance** contains your environments, workflows, plans, runs, and settings. Use this guide to inspect its identity, export a snapshot, open a read-only archive, or return to the writable instance. Export a snapshot before changing versions or resetting local state.
 
-For direct API use, complete [API connection setup](../../tutorials/api-access). The examples below use these variables:
-
-```bash
-export AKOFLOW_API_URL='http://127.0.0.1:<daemon-port>/akoflow-api'
-export AKOFLOW_API_TOKEN='<daemon-token>'
-```
+For direct API use, complete [API connection setup](../../tutorials/api-access) before running the commands below.
 
 ## Inspect the active identity
 
 ### Using AkôFlow Desktop
 
-Open **Settings → General**. The current interface exposes the workspace transfer relay setting; instance identity fields are read through the Engine but are not currently editable as a separate Desktop form.
+Open **Settings → General**. The current interface exposes the workspace transfer relay setting; instance identity fields are read through the server but are not currently editable as a separate Desktop form.
 
 The relay is an in-memory buffer per active transfer. It streams source output to destination input and does not persist the transferred payload. The default is 8 MiB; accepted values are 5–64 MiB.
 
@@ -51,7 +46,7 @@ curl --fail-with-body \
 
 ## Personal preferences
 
-Theme and graph animation are associated with a stable browser-profile client ID, not with an authenticated user account. Desktop saves them in local storage immediately and attempts to synchronize them with the Engine. If the Engine is offline, local preferences keep the interface usable.
+Theme and graph animation are associated with a stable browser-profile client ID, not with an authenticated user account. Desktop saves them in local storage immediately and attempts to synchronize them with the server. If the server is offline, local preferences keep the interface usable.
 
 ### Using AkôFlow Desktop
 
@@ -85,7 +80,7 @@ curl --fail-with-body \
 2. Optionally enable **Include artifact files**. Large artifact stores can produce a large ZIP.
 3. Select **Export instance ZIP**.
 
-The Engine uses SQLite `VACUUM INTO` to create a consistent database snapshot. Tokens, private keys, credential references and connection secrets are redacted. The ZIP manifest records that credentials were not included. Including artifacts adds artifact files but does not restore credentials.
+The server creates a consistent database snapshot and removes tokens, private keys, credential references, and connection secrets. The ZIP manifest records that credentials were not included. Including artifacts adds artifact files but does not restore credentials.
 
 ### Using the API
 
@@ -145,7 +140,7 @@ with status `423 Locked`. The sole write exception is `POST /instance-activation
 ## Factory reset
 
 :::danger Permanent local deletion
-Factory reset permanently removes the active AkôFlow catalog, environments, workflows, plans, runs, artifacts metadata, managed credentials and personal preferences. Export a snapshot first if any state must be retained. External SSH key files are retained only when they are outside the Engine-managed credential directory; the Desktop specifically notes that external SSH key files remain.
+Factory reset permanently removes the active AkôFlow catalog, environments, workflows, plans, runs, artifacts metadata, managed credentials and personal preferences. Export a snapshot first if any state must be retained. External SSH key files are retained only when they are outside the server-managed credential directory; the Desktop specifically notes that external SSH key files remain.
 :::
 
 ### Using AkôFlow Desktop

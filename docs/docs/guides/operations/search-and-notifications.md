@@ -14,7 +14,7 @@ Use search to open a workflow, run, environment, or other record by name or ID. 
 3. Select a result, or press Enter to open the first result.
 4. Press Escape to close search.
 
-With an empty query, the field filters quick navigation destinations. A non-empty query waits 220 ms, queries the Engine and shows entity results. Each result includes a direct interface path, so selecting it opens the corresponding detail or filtered list page.
+With an empty query, search shows quick navigation destinations. As you type, it shows matching records; select one to open its detail or list page.
 
 Search covers:
 
@@ -29,14 +29,13 @@ Search covers:
 | `scope` | ID, name, topology and environment versions |
 | `materialization` | ID, variant, digest, resource, run, activity, path and status |
 
-The Engine ranks an exact field match above a prefix match, which ranks above a substring match. Results with equal score preserve catalog order.
+Exact matches appear before partial matches.
 
 ## Search through the API
 
-```bash
-export AKOFLOW_API_URL='http://127.0.0.1:<daemon-port>/akoflow-api'
-export AKOFLOW_API_TOKEN='<daemon-token>'
+Complete [API connection setup](../../tutorials/api-access) first.
 
+```bash
 curl --get --fail-with-body \
   -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   --data-urlencode 'q=science' \
@@ -79,7 +78,7 @@ The bell in the top bar reports completed or terminal states for operations star
 
 Select an operation notification to mark it read and open its associated page. Use the check control to mark all current items read. The center retains at most 40 entries.
 
-Tracked operations are polled every five seconds. A notification is created when a tracked operation reaches `completed`, `failed`, `cancelled`, `closed`, `ready`, or `destroyed`, depending on its type. A terminal disappears from the active-session list when closed, which completes its tracked notification.
+A notification appears when a tracked operation finishes or fails. Closed terminals also leave the active-session list.
 
 :::note Profile-local state
 Notification entries and the list of tracked operations live in browser local storage. They are not audit or provenance records, do not synchronize between Desktop profiles, and may disappear when site data is cleared. Use **Audit**, execution details, planning details, or build details for durable operational evidence.
@@ -115,5 +114,5 @@ For a durable cross-domain timeline, query `/audit-events/` with the appropriate
 
 - Wait until at least one non-whitespace character is entered; an empty server query deliberately returns no entities.
 - Search only returns records visible through the same catalogs as their list pages.
-- A red error message means the Engine request failed; verify the API token and daemon, then retry.
+- A red error message means the server request failed; check the server connection and retry.
 - Notifications only cover operations started and tracked by the current Desktop profile. Opening the app after an operation was started elsewhere does not reconstruct a notification history.

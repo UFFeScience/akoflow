@@ -24,7 +24,7 @@ Showcases are extended tutorials. They may link to how-to and reference pages, b
 - [x] HPC concepts and the proxy-aware connection path are documented. Evidence: `guides/infrastructure/hpc-slurm.md` and `guides/operations/interactive-console.md`.
 - [x] Existing Showcase download URLs use `raw.githubusercontent.com` and the 50-core bundle was checked against repository files on 2026-09-11.
 - [x] No screenshot markers remain. `rg '<!--\\s*screenshot:' docs/docs` returned no matches on 2026-09-11; relevant guides now use checked-in captures or executable verification steps.
-- [x] All internal links and every downloadable asset pass an automated link check. Evidence: `docs/scripts/check-links.mjs` and `.github/workflows/docs-checks.yaml`; the latest check covered 382 local route/asset links and 54 Showcase downloads on 2026-09-12.
+- [x] All internal links and every downloadable asset pass an automated link check. Evidence: `docs/scripts/check-links.mjs` and `.github/workflows/docs-checks.yaml`; the latest check covered 381 local route/asset links and 54 Showcase downloads on 2026-09-12.
 - [x] Navigation separates Tutorials, How-to guides, Explanations, Reference, and Developing AkôFlow. Evidence: `docs/sidebars.ts`; at 390 × 844 the built site's menu opened, showed the new first-workflow link, and had no horizontal overflow or page error on 2026-09-12.
 - [x] Home, Getting started, Installation, and Interface tour use the same first action: a real local Desktop workflow. Home now links to the pinned download-selection page rather than an unqualified latest-release page. The built Home link and target route were checked on 2026-09-12.
 - [x] Desktop is the only end-user installation and download path; self-managed server deployment is a separate operator guide. Evidence: `installation.md`, `downloads.md`, `guides/operations/server-instance.md`, and `static/examples/server-instance/compose.yaml`; Compose interpolation, documentation typecheck, production build, and link check passed on 2026-09-12.
@@ -53,6 +53,8 @@ Work on the first unchecked unit only. Do not combine units unless the changes a
 - [ ] Verify installation on a clean supported host. The pending first-start screenshot was removed because text-based preflight checks are more useful and safe. The next tagged release must attach version-matched Desktop installers plus SHA-256-checked runtime archives for each supported architecture; verify that Desktop loads those release assets locally without a container-registry pull.
 
 Installation progress on 2026-09-12: the v1.0.8 Linux DEB was downloaded in full, its asset SHA-256 and package metadata checked, and its extracted application opened with a fresh profile. Desktop loaded the version-matched runtime archives and reached successful daemon/Docker/BuildKit preflight. Real screenshots and Desktop/API onboarding tutorials now live in `installation.md` and `tutorials/`. This does not close the clean-host, package-manager or macOS/Windows validation requirement. See `onboarding-verification-2026-09-12.md` for evidence and scope.
+
+The second API tutorial read now takes the GCP target project explicitly instead of assuming the service-account key's owning project. The provider uses connection `projectId` when supplied; a fake-key `jq` check and Bash parsing passed. Disposable-account validation remains open.
 
 ### P0 — runnable showcases
 

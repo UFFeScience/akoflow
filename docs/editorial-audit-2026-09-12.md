@@ -28,6 +28,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 20. **P0/P1 resolved in the generated API template:** the short-name struct index let a SimGrid `Request` alias overwrite the real console `Request`, so the console-command page displayed an unrelated workflow execution body. Concrete structs now win over aliases; conflicting short names produce no inferred sample. All 125 generated pages now show each JSON shape once, omit Go type names from the reader-facing component, use a short sample caveat, and link Console to its actual task guide. The six verified SimGrid routes use their versioned files instead of large inferred request bodies.
 21. **P1 resolved in the generated API template — qualified responses:** `environment.Definition` and `workflow.Definition` shared a short name, which suppressed response examples after the conservative collision fix. The generator now resolves qualified aliases for both types; environment and workflow responses have their correct shapes again. Long response examples scroll within a bounded block instead of stretching the whole page.
 22. **P1 resolved in the entry path — first action and download:** Home said to start with a local simulation even though the recommended first Desktop workflow is a real local run. It now names that workflow and sends the download action to the versioned platform-selection page. Installation and Interface tour replace avoidable daemon/control-plane language with the service or instance the reader sees. The current GitHub latest release was checked as `v1.0.8` before this second read.
+23. **P1 resolved in the GCP connection tutorial — target project:** the API example derived its target project from the service-account key's `project_id`, while the provider accepts an explicit connection `projectId`. It now asks for the approved target project separately, matching Desktop and supporting a key authorized across projects. Critical credential/registration pipelines stop on failure rather than reading an older result file. All Bash blocks in the three connection tutorials parsed; a fake-key `jq` check confirmed separate credential-owner and target-project values. This is local contract evidence, not live GCP validation.
 
 ## Page inventory
 
@@ -83,13 +84,13 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `showcase/network-fanout.mdx` | Second read; uses versioned checkout and shared API setup; network link creation stays in API | Check result against pinned bundle |
 | `showcase/parallel-50-core.mdx` | Second read; uses versioned checkout and shared API setup; timing explanation links to correct page | Check result against pinned bundle |
 | `showcase/slurm-local-fixture.mdx` | Second read; both terminals use the versioned checkout; Desktop path remains optional inspection | Check result against pinned bundle |
-| `tutorials/api-access.md` | Full read; API prerequisites and token limits are explicit | Recheck commands after P0 contracts fix |
-| `tutorials/connect-cloud.md` | Full read; AWS caveat and unvalidated GCP steps are explicit | Validate with disposable GCP account |
-| `tutorials/register-hpc.md` | Full read; placeholders and remote-run limit are explicit | Validate on an approved institutional cluster |
+| `tutorials/api-access.md` | Second read; API prerequisites and token limits are explicit; Bash blocks parsed | Recheck commands after P0 contracts fix |
+| `tutorials/connect-cloud.md` | Second read; AWS caveat and unvalidated GCP steps are explicit; target project is independent of credential owner | Validate with disposable GCP account |
+| `tutorials/register-hpc.md` | Second read; placeholders and remote-run limit are explicit; removed unrelated cloud next step | Validate on an approved institutional cluster |
 
 ## Verification in this pass
 
 - `npm run typecheck`, `npm run build`, `npm run check:links`, and `git diff --check` passed on the editorial branch. All 125 endpoint pages generated; targeted checks confirmed the console-command request, qualified environment and workflow responses, and all six versioned first-run links.
-- The latest link check covered 382 local links/assets and 54 showcase downloads from the `v1.0.8` Git tag.
+- The latest link check covered 381 local links/assets and 54 showcase downloads from the `v1.0.8` Git tag.
 - Headless Chromium at 390 × 844 loaded Getting Started, Core concepts, the console guide, the new Desktop first-run page, and all seven Showcase pages without page errors or horizontal overflow. Every Showcase API tab displayed its v1.0.8 checkout command; the first-run page's mobile menu opened and showed its tutorial link.
 - These checks establish site integrity for this pass. They do not prove tutorial execution, provider support, or completion of the editorial gate.

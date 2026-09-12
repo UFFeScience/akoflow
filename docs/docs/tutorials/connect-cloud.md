@@ -71,25 +71,28 @@ outside your repository, with access restricted to your account.
 
 ### 1. Validate the service account
 
-The commands read the credential file directly; replace its path and the region.
+The commands read the credential file directly. Set the path, target project ID,
+and region to the values approved for this connection. The target project may
+differ from the project that owns the service account if it has the required
+access.
 Run the following in Bash so `pipefail` also catches a failed JSON preparation:
 
 ```bash
 set -o pipefail
 AKOFLOW_GCP_KEY_FILE='/secure/path/service-account.json'
+AKOFLOW_GCP_PROJECT='your-project-id'
 AKOFLOW_GCP_REGION='us-central1'
-AKOFLOW_GCP_PROJECT=$(jq -er '.project_id' "$AKOFLOW_GCP_KEY_FILE") || exit 1
 
-jq --arg region "$AKOFLOW_GCP_REGION" \
-  '{provider:"gcp", credential:., projectId:.project_id, region:$region}' \
+jq --arg project "$AKOFLOW_GCP_PROJECT" --arg region "$AKOFLOW_GCP_REGION" \
+  '{provider:"gcp", credential:., projectId:$project, region:$region}' \
   "$AKOFLOW_GCP_KEY_FILE" \
   | curl --fail-with-body \
       -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
       -H 'Content-Type: application/json' --data-binary @- \
-      "$AKOFLOW_API_URL/cloud-credentials/validate/" -o gcp-validation.json
+      "$AKOFLOW_API_URL/cloud-credentials/validate/" -o gcp-validation.json || exit 1
 
 jq . gcp-validation.json
-jq -e '.valid == true' gcp-validation.json
+jq -e '.valid == true' gcp-validation.json || exit 1
 ```
 
 Continue only when validation succeeds. Inspect `project`, `region`,
@@ -103,7 +106,7 @@ jq '{id:"research-gcp-credential", provider:"gcp", credential:.}' \
   | curl --fail-with-body \
       -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
       -H 'Content-Type: application/json' --data-binary @- \
-      "$AKOFLOW_API_URL/cloud-credentials/" -o gcp-reference.json
+      "$AKOFLOW_API_URL/cloud-credentials/" -o gcp-reference.json || exit 1
 ```
 
 The response contains `credentialRef`, not the original secret. Download
@@ -118,12 +121,12 @@ jq --arg ref "$AKOFLOW_GCP_REF" \
   '.connections[0].credentialRef=$ref |
    .connections[0].configuration.projectId=$project |
    .connections[0].configuration.region=$region' \
-  gcp-environment.template.json > gcp-environment.json
+  gcp-environment.template.json > gcp-environment.json || exit 1
 
 curl --fail-with-body \
   -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -H 'Content-Type: application/json' --data-binary @gcp-environment.json \
-  "$AKOFLOW_API_URL/environments/" | jq
+  "$AKOFLOW_API_URL/environments/" | jq || exit 1
 ```
 
 ### 3. Refresh and inspect the catalog

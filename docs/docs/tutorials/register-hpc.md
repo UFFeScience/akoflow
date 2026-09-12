@@ -187,5 +187,3 @@ Continue with [scope setup and a small real execution](../guides/infrastructure/
 The screenshots and payload structure were checked against the local interface
 and handlers. Remote SSH, discovery and a real batch submission require your
 institution's access and were not performed for this tutorial's capture.
-
-Next: [connect Google Cloud](./connect-cloud) when you also need cloud capacity.

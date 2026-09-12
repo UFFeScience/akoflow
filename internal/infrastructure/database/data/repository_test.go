@@ -146,7 +146,7 @@ func assertSelectableArtifacts(t *testing.T, repository *Repository, ctx context
 	if !published && (err != nil || len(values) != 0) {
 		t.Fatalf("unpublished selectable artifacts = %#v, %v", values, err)
 	}
-	if published && (err != nil || len(values) != 1 || !slices.Equal(values[0].Formats, []string{"sif"}) || !slices.Equal(values[0].Architectures, []string{"amd64"})) {
+	if published && (err != nil || len(values) != 1 || !slices.Equal(values[0].Formats, []string{"sif", "docker"}) || !slices.Equal(values[0].Architectures, []string{"amd64"})) {
 		t.Fatalf("selectable artifacts = %#v, %v", values, err)
 	}
 }

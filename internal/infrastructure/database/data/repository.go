@@ -216,7 +216,35 @@ func (r *Repository) ListArtifacts(ctx context.Context, selectable bool) ([]doma
 			values[index].Architectures = append(values[index].Architectures, architecture)
 		}
 	}
-	return values, rows.Err()
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	dockerRows, err := r.db.QueryContext(ctx, `SELECT DISTINCT av.artifact_id, av.version, b.target_architecture
+		FROM artifact_versions av
+		JOIN artifact_builds b ON b.artifact_version_id=av.id
+		JOIN build_runs br ON br.artifact_build_id=b.id AND br.status='completed'
+		WHERE b.source_type='docker-image'`)
+	if err != nil {
+		return nil, err
+	}
+	defer dockerRows.Close()
+	for dockerRows.Next() {
+		var artifactID, version, architecture string
+		if err := dockerRows.Scan(&artifactID, &version, &architecture); err != nil {
+			return nil, err
+		}
+		index, exists := indexes[artifactID+"\x00"+version]
+		if !exists {
+			continue
+		}
+		if !containsString(values[index].Formats, "docker") {
+			values[index].Formats = append(values[index].Formats, "docker")
+		}
+		if architecture != "" && !containsString(values[index].Architectures, architecture) {
+			values[index].Architectures = append(values[index].Architectures, architecture)
+		}
+	}
+	return values, dockerRows.Err()
 }
 
 func containsString(values []string, candidate string) bool {

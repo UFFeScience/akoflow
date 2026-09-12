@@ -1,6 +1,6 @@
 ---
 title: Find records and follow notifications
-description: Find control-plane entities and follow long-running operations in AkôFlow Desktop.
+description: Find AkôFlow records and follow operations in Desktop.
 ---
 
 # Find records and follow notifications

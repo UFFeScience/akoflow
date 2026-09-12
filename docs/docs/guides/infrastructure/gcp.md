@@ -19,7 +19,7 @@ Grant only the permissions needed by your lifecycle policy. The read-only catalo
 
 Provisioning uses the Terraform target shipped with the daemon. It lists available zones in the chosen region, creates and manages one Compute Engine instance and its boot disk, and creates a tagged ingress firewall rule for SSH. It references the VPC or subnetwork selected in the capacity target; it does not create a network, attach a service account to the instance, or manage IAM bindings. Confirm the exact least-privilege role set in a disposable project before adopting it as an institutional policy.
 
-## Implementation access inventory
+## Permissions to review
 
 The following is an inventory of the current daemon behavior, not a claim that one predefined Google role is least privilege. It gives the cloud administrator a concrete review surface before they create a service-account policy. The service-account token requests the broad OAuth scope `cloud-platform`; IAM still controls the operations that token can perform.
 
@@ -37,22 +37,15 @@ The implementation does **not** create a VPC, subnet, Cloud NAT, service-account
 
 For an institutional least-privilege policy, first run catalog refresh in a disposable project with audit logging enabled, then provision and destroy one short-lived worker. Export the provider audit entries and derive the policy from the observed permission checks. This is safer than copying a broad owner/editor role from an example, and it is the validation still required before this guide can claim a tested minimal role set.
 
-## 1. Store the service-account credential
+## 1. Connect the project
 
-In Desktop, open **Settings → Credentials**, choose **Cloud credential**, select **GCP**, and paste or import the service-account JSON. AkôFlow validates the presence of `project_id`, `client_email`, `private_key`, and `token_uri`. Give the credential a stable name such as `gcp-research-project`; environments refer to this record, not to the JSON file.
+In Desktop, open **Infrastructure → Environments → Connect environment**, select **Cloud on demand**, and keep **Google Cloud** as the provider. Enter the project ID, region, and approved service-account JSON. Choose **Test connection** before saving. The [connection tutorial](../../tutorials/connect-cloud) shows the current form and its result checks.
 
-Keep the downloaded key outside the repository, restrict its filesystem permissions, and rotate it according to your institution's policy. A failed validation usually means the JSON is truncated, belongs to a different credential type, or lacks one of the required fields.
+The server stores the credential separately and saves its reference with the environment. Keep the original key outside the repository, restrict its filesystem permissions, and rotate it according to your institution's policy. A failed validation can indicate a malformed key, a disabled API, or missing access; read the returned message before changing settings.
 
-## 2. Create the cloud environment
+## 2. Inspect the cloud environment
 
-Open **Infrastructure → Environments → New environment** and choose a cloud execution environment. Set:
-
-- **Provider:** `gcp`
-- **Project ID:** the service account's GCP project
-- **Region:** for example `us-central1`
-- **Credential:** the record created above
-
-After saving, open **Cloud capacity** and select **Refresh catalog**. AkôFlow reads machine types from your project and public images from the project itself plus `ubuntu-os-cloud`, `debian-cloud`, and `rocky-linux-cloud`.
+After saving, open the environment's **Cloud capacity** tab. Check that catalog synchronization returned machines, compatible images, and disks. Refresh the catalog if it is absent or stale. AkôFlow reads machine types from your project and public images from the project itself plus `ubuntu-os-cloud`, `debian-cloud`, and `rocky-linux-cloud`.
 
 If refresh fails, check the daemon log before changing the credential. A `403` normally identifies a disabled API or missing IAM permission; an empty price field with otherwise valid machines normally points to the Cloud Billing API.
 
@@ -83,11 +76,9 @@ Stopping an instance preserves provider resources and can continue to incur disk
 
 ## API checkpoints
 
-Use the API when automating onboarding. Store the secret through the credentials endpoint used by your deployment, create the environment with `provider: gcp`, then refresh and inspect the catalog. Set the API base to include the daemon's `/akoflow-api` prefix:
+For automation, follow [API connection setup](../../tutorials/api-access) and the [cloud connection tutorial](../../tutorials/connect-cloud) to validate and store the credential and register the environment. Then refresh and inspect the catalog:
 
 ```bash
-export AKOFLOW_API_URL="http://127.0.0.1:8080/akoflow-api"
-
 curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -X POST "$AKOFLOW_API_URL/environments/gcp-lab/cloud-catalog/refresh/"
 

@@ -52,7 +52,7 @@ Candidates may appear while an algorithm run and its parent session are still `r
 
 ## Selecting a candidate and schedule plans
 
-A `SchedulePlan` does **not** have a lifecycle status. It is the canonical persisted plan containing assignments, predicted metrics, algorithm/source information, and lifecycle actions. It can originate from a manual plan, an import, or a selected candidate.
+A `SchedulePlan` does **not** have a lifecycle status. It is the saved plan containing assignments, predicted metrics, algorithm/source information, and lifecycle actions. It can originate from a manual plan, an import, or a selected candidate.
 
 `POST /planning-sessions/{sessionId}/candidates/{candidateId}/select/` promotes a feasible candidate. The API verifies that the candidate belongs to the session and is feasible, stores its embedded plan if it is new, and records `selectedCandidateId` and `selectedPlanId` on the session. It currently does not require the session to be `completed`, so clients should normally wait for completed ranking before selecting unless they deliberately choose an early candidate.
 

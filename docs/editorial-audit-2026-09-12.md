@@ -17,6 +17,7 @@ This is an iteration ledger, not a completion certificate. The current pass insp
 9. **P1 resolved in this pass — execution state language:** the workflow guide said normal runs move through `created`, though the supervisor creates them as `running` after queue acceptance. The guide now matches the state reference.
 10. **P1 resolved in this pass — core concepts:** the concept page conflated executable artifacts with observed scientific files. It now distinguishes executable artifacts from scientific data, matching the data guide.
 11. **P1 resolved in this pass — Showcase Desktop claims:** six Showcase tabs described unverified Desktop-only submissions; some asked users to add network links in Desktop despite the missing link editor. The tabs now identify API submission as the verified path and limit Desktop steps to inspection on the same server.
+12. **P0 resolved in this pass — GCP Desktop route:** the detailed guide directed readers to a separate Settings credential form and a “New environment” action that do not match the current cloud onboarding. It now follows the tested form path in the connection tutorial.
 
 ## Page inventory
 
@@ -34,12 +35,12 @@ This is an iteration ledger, not a completion certificate. The current pass insp
 | `getting-started.md` | Full read; API-only example is clearly qualified | Verify complete first-user path |
 | `guides/data/artifacts.md` | Full read; simplified the task-first opening | Recheck API payloads after P0 contracts fix |
 | `guides/data/provenance-and-audit.md` | Full read; detailed screen tables serve investigation tasks | Recheck API payloads after P0 contracts fix |
-| `guides/infrastructure/aws.md` | Rewritten after code audit | Check provider claims against real-environment evidence |
+| `guides/infrastructure/aws.md` | Full read after code audit; partial S3 path and absent EC2 path are explicit | Check provider claims against disposable-bucket evidence |
 | `guides/infrastructure/cloud-capacity.md` | Full read; distinguished target from VM and simplified opening | Validate with disposable GCP account |
 | `guides/infrastructure/environments.md` | Full read; aligned Desktop actions and shared API setup | Recheck API payloads after P0 contracts fix |
 | `guides/infrastructure/execution-scopes.md` | Full read; moved reciprocal IDs to API procedure | Recheck API payloads after P0 contracts fix |
-| `guides/infrastructure/gcp.md` | Edited in this pass | Check provider claims against real-environment evidence |
-| `guides/infrastructure/hpc-slurm.md` | Edited in this pass | Check provider claims against real-environment evidence |
+| `guides/infrastructure/gcp.md` | Full read; corrected Desktop onboarding and aligned API setup | Check provider claims against disposable-project evidence |
+| `guides/infrastructure/hpc-slurm.md` | Full read; aligned API setup and retained site-specific limits | Check provider claims against real cluster evidence |
 | `guides/infrastructure/kubernetes.md` | Full read; aligned API setup and task-first opening | Recheck procedure against Kind bundle |
 | `guides/infrastructure/simgrid.md` | Full read; corrected unsupported Desktop link editing | Recheck procedure against pinned bundle |
 | `guides/infrastructure/storage.md` | Full read; action limits are qualified by capabilities | Recheck API payloads after P0 contracts fix |
@@ -55,21 +56,21 @@ This is an iteration ledger, not a completion certificate. The current pass insp
 | `guides/workflows/first-run.md` | Full read; API submission and Desktop inspection are distinguished | Verify complete Desktop-only path |
 | `guides/workflows/planning.md` | Full read; simplified candidate language | Verify Desktop-only planning flow |
 | `installation.md` | Full read; public bootstrap checks verified in `security.go` and tests | Verify complete first-user path and cross-platform installation |
-| `internal/workflow-spec.md` | Opening and purpose scanned | Check contracts against current handlers and schemas |
+| `internal/workflow-spec.md` | Full read; compatibility and simulation-only import limits are explicit | Check contracts against current importer |
 | `modules.md` | Full read; removed incidental polling default | Recheck claims against daemon composition |
-| `reference/api-overview.md` | Edited in this pass | Check contracts against current handlers and schemas |
-| `reference/environment-yaml.md` | Edited in this pass | Check contracts against current handlers and schemas |
-| `reference/execution-scopes-and-topologies.md` | Edited in this pass | Check contracts against current handlers and schemas |
+| `reference/api-overview.md` | Full read; bootstrap and route conventions are explicit | Check contracts against current handlers and schemas |
+| `reference/environment-yaml.md` | Full read; field-level detail belongs in reference | Check contracts against current handlers and schemas |
+| `reference/execution-scopes-and-topologies.md` | Full read; creation order, units, and validation limits are explicit | Check contracts against current handlers and schemas |
 | `reference/feature-coverage.md` | Full read; route coverage remains a reference checklist | Check contracts against current handlers and schemas |
 | `reference/planning-and-execution-states.md` | Full read; state limits are explicit | Check contracts against current handlers and schemas |
 | `runtimes.md` | Full read; replaced duplicate user procedure with task-guide links | Recheck provider claims against adapters |
-| `showcase/edge-cloud-simulation.mdx` | Desktop path limited to same-server inspection; API submission remains verified | Check result against pinned bundle |
-| `showcase/index.mdx` | Clarified submission/inspection scope | Recheck each card after Showcase audit |
-| `showcase/kubernetes-real-execution.mdx` | Desktop path limited to same-server inspection; API submission remains verified | Check result against pinned bundle |
-| `showcase/local-direct-execution.mdx` | Desktop path limited to same-server inspection; API submission remains verified | Check result against pinned bundle |
-| `showcase/network-fanout.mdx` | Desktop path limited to same-server inspection; link creation stays in API | Check result against pinned bundle |
-| `showcase/parallel-50-core.mdx` | Desktop path limited to same-server inspection; API submission remains verified | Check result against pinned bundle |
-| `showcase/slurm-local-fixture.mdx` | Desktop path limited to optional development-client inspection | Check result against pinned bundle |
+| `showcase/edge-cloud-simulation.mdx` | Full read; Desktop path limited to same-server inspection | Check result against pinned bundle |
+| `showcase/index.mdx` | Full read; clarified verified API submission and Desktop inspection | Recheck cards after Showcase audit |
+| `showcase/kubernetes-real-execution.mdx` | Full read; Desktop path limited to same-server inspection | Check result against pinned bundle |
+| `showcase/local-direct-execution.mdx` | Full read; removed unsupported cancellation link | Check result against pinned bundle |
+| `showcase/network-fanout.mdx` | Full read; link creation stays in API | Check result against pinned bundle |
+| `showcase/parallel-50-core.mdx` | Full read; timing explanation links to correct page | Check result against pinned bundle |
+| `showcase/slurm-local-fixture.mdx` | Full read; Desktop path limited to optional development-client inspection | Check result against pinned bundle |
 | `tutorials/api-access.md` | Full read; API prerequisites and token limits are explicit | Recheck commands after P0 contracts fix |
 | `tutorials/connect-cloud.md` | Full read; AWS caveat and unvalidated GCP steps are explicit | Validate with disposable GCP account |
 | `tutorials/register-hpc.md` | Full read; placeholders and remote-run limit are explicit | Validate on an approved institutional cluster |
@@ -77,6 +78,6 @@ This is an iteration ledger, not a completion certificate. The current pass insp
 ## Verification in this pass
 
 - `npm run typecheck`, `npm run build`, `npm run check:links`, and `git diff --check` passed on the editorial branch.
-- The link check covered 337 local links/assets and 53 showcase downloads from the `v1.0.8` Git tag.
+- The latest link check covered 358 local links/assets and 53 showcase downloads from the `v1.0.8` Git tag.
 - Headless Chromium at 390 × 844 loaded Getting Started, Core concepts, and the console guide without page errors or horizontal overflow; the mobile menu opened to full viewport height.
 - These checks establish site integrity for this pass. They do not prove tutorial execution, provider support, or completion of the editorial gate.

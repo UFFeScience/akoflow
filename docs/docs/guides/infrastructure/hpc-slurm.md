@@ -46,7 +46,7 @@ connections:
 
 `proxyCommand` is passed to every SSH-based path that uses this connection. When the site documents `ProxyJump`, express it as an SSH proxy command—for example, `ssh -J bastion.example.org -W login.example.org:22`—and validate the entire route from the **daemon host**, not only from Desktop. AkôFlow records trusted host keys in the configured known-hosts file; do not disable host-key checking for a production cluster.
 
-In Desktop, add the connection under **Infrastructure → Environments**, assign the managed SSH key, and run the connection health check. Through the API, update the connection after first reading the environment definition so unrelated connection fields remain intact:
+In Desktop, add the connection under **Infrastructure → Environments**, assign the managed SSH key, and run the connection health check. For the API command below, complete [API connection setup](../../tutorials/api-access). Read the environment definition before updating a connection so unrelated fields remain intact:
 
 ```bash
 curl --fail-with-body \

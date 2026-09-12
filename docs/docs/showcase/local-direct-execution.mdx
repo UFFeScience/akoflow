@@ -82,4 +82,4 @@ The run has no data dependency and therefore reports zero transferred bytes. Use
 | The activity writes no artifact | The run only records changes made below its activity workspace. Make the command write relative to its working directory, as this example does. |
 | The wrong machine executes the command | Direct execution always occurs on the daemon host. Run a daemon in the target environment, or use a remote runtime such as Kubernetes or SLURM instead. |
 
-Read [Execution modes and runtimes](../runtimes) for the execution boundary and [Workflow runs](../guides/workflows/executions) for monitoring and cancellation.
+Read [Runtime adapters](../runtimes) for where the command runs and [Execute and monitor a workflow](../guides/workflows/executions) for run status and results.

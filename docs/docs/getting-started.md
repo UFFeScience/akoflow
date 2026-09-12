@@ -15,10 +15,10 @@ Start with a local environment to learn the interface. Connecting HPC, Kubernete
 ## Start with Desktop
 
 1. [Install AkôFlow Desktop](./installation) and complete its local environment checkup.
-2. [Tour the interface](./guides/interface-tour) to find workflows, plans, runs, and results.
-3. Use [Workflow definitions](./guides/workflows/definitions), [Planning](./guides/workflows/planning), and [Execution](./guides/workflows/executions) for the next tasks.
+2. [Run your first local workflow](./guides/workflows/first-local-run) and inspect its result in Desktop.
+3. [Tour the interface](./guides/interface-tour) or continue with [Workflow definitions](./guides/workflows/definitions), [Planning](./guides/workflows/planning), and [Execution](./guides/workflows/executions).
 
-The [checked-in SimGrid example](./guides/workflows/first-run) verifies three activities and two transfers. It uses a separately managed API endpoint, Bash tools, and versioned repository files. It is not a Desktop-only first-run tutorial.
+The [checked-in SimGrid example](./guides/workflows/first-run) verifies three activities and two transfers through a separately managed API endpoint. Use it after the local Desktop run if you want to explore simulation.
 
 ## Connect another environment
 

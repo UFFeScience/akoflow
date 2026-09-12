@@ -2,11 +2,11 @@
 
 Date: 2026-09-12. Scope: authored documentation pages in the current branch; generated API endpoint pages are reviewed through their generator and component.
 
-This is an iteration ledger, not a completion certificate. The first pass read all 51 authored pages and corrected confirmed narrative, terminology, API convention, example, and support-claim findings. A second full audit, runnable first-user path, priority endpoint contracts, and external-provider validation remain open.
+This is an iteration ledger, not a completion certificate. The first pass read all 51 authored pages and corrected confirmed narrative, terminology, API convention, example, and support-claim findings. A Desktop first-workflow path has since been run through the v1.0.8 Linux package and documented as page 52. A second full audit, priority endpoint contracts, and external-provider validation remain open.
 
 ## Open P0/P1 findings
 
-1. **P0 — Desktop first workflow:** installation reaches a connected local environment, but no verified Desktop-only procedure takes a new user through workflow creation, planning, execution, and result inspection. The current Desktop workflow form creates real-capable activities; simulation-capable activities require YAML import. The SimGrid API tutorial has separate prerequisites.
+1. **P0 resolved — Desktop first workflow:** the v1.0.8 Linux package created a local environment, workflow, scope, and manual plan through Desktop. Run `run-1789254029488` completed with 1/1 activities, exit code 0, and generated `result.txt` (20 B, SHA-256 `8dcc517ee6ace065324746726b7f6b5cd67b8c22956ec75bd8b713a0aeaca070`). The new `guides/workflows/first-local-run.md` documents that UI path. The package was extracted and launched under Xvfb with Docker access; this run does not validate a clean package-manager install or other platforms.
 2. **P0 — Generated request contracts:** ZIP instance import is corrected and inferred JSON is labeled. Six first-run POST pages now link the verified, versioned SimGrid payloads and their submission order. Other priority endpoints still need handler-checked required fields and runnable payloads.
 3. **P1 — Provider evidence:** GCP and S3 procedures still need disposable-account validation. The SLURM fixture is local adapter evidence, not an institutional batch run.
 4. **P1 — Full plain-language review:** after those corrections, re-read every authored page and the generated template as a new user, then repeat the audit until no new P0/P1 issue appears.
@@ -23,6 +23,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 
 | Page | Current pass | Next review |
 | --- | --- | --- |
+| `guides/workflows/first-local-run.md` | New; end-to-end Linux package UI path verified through generated file evidence | Repeat on a clean supported host and other platforms |
 | `concepts.md` | Full read; corrected executable/data distinction | Recheck basic narrative after first-run validation |
 | `contributing/documentation-plan.md` | Full read; replaced historical production waves with recurring review contract | Recheck contract at final audit |
 | `downloads.md` | Full read; platform limits and verification are explicit | Recheck release links when version changes |

@@ -239,6 +239,7 @@ from a development checkout.
 
 ## 5. Continue with your execution target
 
+- [Run your first local workflow in Desktop](./guides/workflows/first-local-run): create one activity, run it, and inspect its generated file.
 - [Register an HPC / SLURM environment](./tutorials/register-hpc): authorize an SSH key, test the login connection, and discover partitions.
 - [Connect Google Cloud](./tutorials/connect-cloud): validate a service account, register the environment, and synchronize the compute catalog.
 - [Run the first simulated workflow](./guides/workflows/first-run): verify workflow execution through the documented API setup without a remote account.

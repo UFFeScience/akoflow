@@ -4,9 +4,9 @@ title: Plan a workflow
 
 # Plan a workflow
 
-Planning is separate from execution. A planning session freezes a workflow version and an infrastructure/network scope, runs one or more scheduling algorithms against the same inputs, and preserves their candidate plans for comparison.
+Plan a workflow to compare possible placements before starting a run. A planning session uses one workflow version and one execution scope, then keeps the candidates produced by the selected algorithms.
 
-Only a selected candidate becomes a canonical schedule plan that can be executed.
+Select a candidate to save it as the schedule plan for execution.
 
 For the API commands on this page, complete [API connection setup](../../tutorials/api-access) first.
 
@@ -100,7 +100,7 @@ curl --fail-with-body -X POST \
   "$AKOFLOW_API_URL/planning-sessions/planning-simulation-example/candidates/<candidate-id>/select/"
 ```
 
-Selection returns `201 Created` with the canonical schedule plan.
+Selection returns `201 Created` with the saved schedule plan.
 
 For a manual plan, send the complete validation envelope used by `examples/simulation/plan-request.yaml` to `POST /schedule-plans/`. To import an already assembled plan whose referenced objects are registered, send `{ "plan": ... }` to `POST /schedule-plans/import/`; the server sets its source to `imported` and validates it.
 

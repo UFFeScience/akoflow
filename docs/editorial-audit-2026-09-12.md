@@ -14,6 +14,7 @@ This is an iteration ledger, not a completion certificate. The current pass insp
 6. **P0 resolved in this pass — GCS claim:** the former support matrix and runtime explanations listed GCS as implemented transfer. The current `gs://` connector returns an unavailable error. The matrix, runtime pages, and schema reference now distinguish accepted `gcs` values from a working transfer path.
 7. **P1 resolved in this pass — scope/topology UI:** the SimGrid guide implied Desktop could edit network links, while the execution-scope guide states that Desktop only creates an empty topology. The SimGrid procedure now sends link edits through the API.
 8. **P1 resolved in this pass — cloud target language:** saving a capacity target was described as making a provisioned resource. The guide now states that no VM is created at that step.
+9. **P1 resolved in this pass — execution state language:** the workflow guide said normal runs move through `created`, though the supervisor creates them as `running` after queue acceptance. The guide now matches the state reference.
 
 ## Page inventory
 
@@ -47,10 +48,10 @@ This is an iteration ledger, not a completion certificate. The current pass insp
 | `guides/operations/search-and-notifications.md` | Edited in this pass | Full read after P0/P1 fixes |
 | `guides/operations/server-instance.md` | Full read; prerequisites, verification, and removal are explicit | Recheck release assets when version changes |
 | `guides/operations/troubleshooting.md` | Edited in this pass | Full read after P0/P1 fixes |
-| `guides/workflows/definitions.md` | Edited in this pass | Full read after P0/P1 fixes |
-| `guides/workflows/executions.md` | Edited in this pass | Full read after P0/P1 fixes |
-| `guides/workflows/first-run.md` | Edited in this pass | Verify complete first-user path |
-| `guides/workflows/planning.md` | Edited in this pass | Full read after P0/P1 fixes |
+| `guides/workflows/definitions.md` | Full read; simplified opening and aligned API setup | Recheck payload against importer after P0 contracts fix |
+| `guides/workflows/executions.md` | Full read; corrected queued/run state distinction | Verify Desktop-only start flow |
+| `guides/workflows/first-run.md` | Full read; API submission and Desktop inspection are distinguished | Verify complete Desktop-only path |
+| `guides/workflows/planning.md` | Full read; simplified candidate language | Verify Desktop-only planning flow |
 | `installation.md` | Opening and purpose scanned | Verify complete first-user path |
 | `internal/workflow-spec.md` | Opening and purpose scanned | Check contracts against current handlers and schemas |
 | `modules.md` | Edited in this pass | Full read after P0/P1 fixes |

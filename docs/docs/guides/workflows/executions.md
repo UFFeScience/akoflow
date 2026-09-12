@@ -4,7 +4,7 @@ title: Execute and monitor a workflow
 
 # Execute and monitor a workflow
 
-An execution run applies one immutable schedule plan to the workflow and infrastructure snapshots supplied in its request. Real and simulated runs share the same run, activity, timing, transfer, and cost model, which makes planned-versus-observed comparison possible.
+Start a run from a saved plan, then follow its activities and inspect the result. AkôFlow records both real and simulated runs with timing, transfer, and cost information so you can compare what happened with the plan's predictions.
 
 For the API commands on this page, complete [API connection setup](../../tutorials/api-access) first.
 
@@ -18,7 +18,7 @@ The run history distinguishes `workflow`, `interactive`, and `standalone` kinds.
 
 ## Status and timing
 
-A workflow run moves through `created`, `running`, and either `completed` or `failed`. Its activities expose the more detailed states `blocked`, `ready`, `preparing`, `running`, `completed`, `failed`, and `cancelled`.
+A submitted execution first enters the queue. Once the daemon starts it, the workflow run is `running` and then becomes `completed` or `failed`. The domain defines `created`, but the current workflow supervisor does not persist that state during normal execution. Activities expose the more detailed states `blocked`, `ready`, `preparing`, `running`, `completed`, `failed`, and `cancelled`.
 
 Runtime handles distinguish `starting`, `running`, `completed`, `failed`, and `stopped`. For real runtimes, submitted time means the control plane handed work to the runtime; started time means the runtime allocated it; container-started time marks when user code could begin inside the container.
 

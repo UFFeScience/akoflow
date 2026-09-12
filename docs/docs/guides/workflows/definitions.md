@@ -4,9 +4,9 @@ title: Define a workflow
 
 # Define a workflow
 
-A workflow definition is the reusable description of a scientific computation. AkôFlow stores a stable definition and an immutable, versioned graph of activities. Plans and runs refer to the workflow **version ID**, so a past execution remains traceable to the graph that produced it.
+A workflow lists the activities in a scientific computation and the order in which they run. AkôFlow saves versions of that definition, so a plan or past run always points to the workflow version it used.
 
-The authoring format is intentionally smaller than the persisted domain model. AkôFlow normalizes activity names into IDs, creates the first workflow version, expands dependencies, converts CPU and memory limits, and records execution capabilities.
+You can create one in Desktop or import portable YAML. AkôFlow assigns IDs and converts the resource limits in the imported definition when it saves the first version.
 
 ## The activity model
 
@@ -42,12 +42,7 @@ The import action accepts the same portable YAML format as the API. Export remov
 
 ## Using the API
 
-Set the API address and, when API authentication is enabled, its bearer token:
-
-```bash
-export AKOFLOW_API_URL="http://127.0.0.1:<port>/akoflow-api"
-export AKOFLOW_API_TOKEN="<token>"
-```
+Complete [API connection setup](../../tutorials/api-access) before running these commands.
 
 The simulation example in `examples/simulation/workflow.yaml` uses the legacy shorthand. This equivalent command-oriented definition shows the preferred portable shape:
 

@@ -33,7 +33,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `explanations/observed-timing.md` | Full read; optional observations are qualified | Recheck metrics after P0 fixes |
 | `explanations/planning.md` | Full read and simplified plan terminology | Recheck planning claims after P0 fixes |
 | `explanations/prism-and-heft.md` | Full read; algorithm detail serves comparison readers | Recheck algorithm claims after P0 fixes |
-| `getting-started.md` | Full read; API-only example is clearly qualified | Verify complete first-user path |
+| `getting-started.md` | Full read; now leads to the verified Desktop local run before the API simulation | Recheck the entry flow on a clean supported host |
 | `guides/data/artifacts.md` | Full read; simplified the task-first opening | Recheck API payloads after P0 contracts fix |
 | `guides/data/provenance-and-audit.md` | Full read; detailed screen tables serve investigation tasks | Recheck API payloads after P0 contracts fix |
 | `guides/infrastructure/aws.md` | Full read after code audit; partial S3 path and absent EC2 path are explicit | Check provider claims against disposable-bucket evidence |
@@ -53,8 +53,8 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `guides/operations/server-instance.md` | Full read; prerequisites, verification, and removal are explicit | Recheck release assets when version changes |
 | `guides/operations/troubleshooting.md` | Full read; starts with user-visible failure and uses server terminology | Recheck diagnostic claims after P0 fixes |
 | `guides/workflows/definitions.md` | Full read; simplified opening and aligned API setup | Recheck payload against importer after P0 contracts fix |
-| `guides/workflows/executions.md` | Full read; corrected queued/run state distinction | Verify Desktop-only start flow |
-| `guides/workflows/first-run.md` | Full read; API submission and Desktop inspection are distinguished | Verify complete Desktop-only path |
+| `guides/workflows/executions.md` | Full read; corrected queued/run state distinction; packaged Desktop start flow verified with a local real run | Recheck other runtimes against their own guides |
+| `guides/workflows/first-run.md` | Full read; API submission and Desktop inspection are distinguished | Keep the SimGrid API example aligned with its versioned bundle |
 | `guides/workflows/planning.md` | Full read; simplified candidate language and made the API example's registration prerequisite explicit | Verify automatic Desktop planning flow |
 | `installation.md` | Full read; public bootstrap checks verified in `security.go` and tests; clarified what Connected proves | Verify clean-host and cross-platform installation |
 | `internal/workflow-spec.md` | Full read; compatibility and simulation-only import limits are explicit | Check contracts against current importer |
@@ -79,6 +79,6 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 ## Verification in this pass
 
 - `npm run typecheck`, `npm run build`, `npm run check:links`, and `git diff --check` passed on the editorial branch.
-- The latest link check covered 358 local links/assets and 53 showcase downloads from the `v1.0.8` Git tag.
+- The latest link check covered 367 local links/assets and 53 showcase downloads from the `v1.0.8` Git tag.
 - Headless Chromium at 390 × 844 loaded Getting Started, Core concepts, and the console guide without page errors or horizontal overflow; the mobile menu opened to full viewport height.
 - These checks establish site integrity for this pass. They do not prove tutorial execution, provider support, or completion of the editorial gate.

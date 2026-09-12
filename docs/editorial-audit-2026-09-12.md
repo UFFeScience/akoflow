@@ -18,6 +18,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 10. **P1 resolved in this pass — core concepts:** the concept page conflated executable artifacts with observed scientific files. It now distinguishes executable artifacts from scientific data, matching the data guide.
 11. **P1 resolved in this pass — Showcase Desktop claims:** six Showcase tabs described unverified Desktop-only submissions; some asked users to add network links through a Desktop path not exposed in current navigation. The tabs now identify API submission as the verified path and limit Desktop steps to inspection on the same server.
 12. **P0 resolved in this pass — GCP Desktop route:** the detailed guide directed readers to a separate Settings credential form and a “New environment” action that do not match the current cloud onboarding. It now follows the tested form path in the connection tutorial.
+13. **P0 resolved in the second pass — credential examples:** the SSH import example wrote a private key into a predictable `/tmp` JSON file without restrictive creation permissions. It now uses `mktemp` under `umask 077` and a cleanup trap. The Kubernetes token example now reads a protected file into a streamed request rather than asking readers to put a token in a shell command. Both Bash blocks passed syntax checking.
 
 ## Page inventory
 
@@ -46,7 +47,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `guides/infrastructure/simgrid.md` | Full read; corrected unlinked Desktop topology-creation path | Recheck procedure against pinned bundle |
 | `guides/infrastructure/storage.md` | Full read; action limits are qualified by capabilities | Recheck API payloads after P0 contracts fix |
 | `guides/interface-tour.mdx` | Full read; removed API routes, shortened search explanation, and linked the verified Desktop first run | Recheck rendered page at mobile width |
-| `guides/operations/credentials-and-ssh.md` | Full read; aligned shared API setup and server terminology | Recheck secret-handling claims against handlers |
+| `guides/operations/credentials-and-ssh.md` | Second read; removed an unsafe private-key temporary-file example and a token-in-shell example; aligned reference wording with connection fields | Recheck current Desktop form and key lifecycle claims |
 | `guides/operations/instance-management.md` | Full read; aligned shared API setup and removed internal snapshot detail | Recheck import/export contracts against handlers |
 | `guides/operations/interactive-console.md` | Full read; removed polling implementation detail and aligned API setup | Recheck session behavior against Desktop |
 | `guides/operations/search-and-notifications.md` | Full read; removed debounce/polling details and aligned API setup | Recheck UI behavior against Desktop |

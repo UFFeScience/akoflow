@@ -5,7 +5,7 @@ description: Store credentials with AkôFlow, assign SSH service keys, and keep 
 
 # Manage credentials and SSH service keys
 
-Use this guide when an environment needs an SSH key, Kubernetes token, or cloud credential. Store the credential in AkôFlow, then select it while configuring the connection. Workflow files should contain credential references, never secrets.
+Use this guide when an environment needs an SSH key, Kubernetes token, or cloud credential. Store the credential in AkôFlow and use the returned reference in the connection that needs it. Keep private keys and tokens out of workflow definitions.
 
 AkôFlow returns public metadata or a credential reference when you list stored credentials; it does not return the original private key or bearer token.
 
@@ -49,19 +49,26 @@ The private key is sent once to the AkôFlow server, validated with `ssh-keygen`
 Avoid putting a private key directly in shell history. Create a JSON payload with a tool that reads a protected file:
 
 ```bash
-jq -n \
-  --arg id 'existing-hpc-key' \
-  --rawfile privateKey "$HOME/.ssh/id_ed25519" \
-  '{id:$id, privateKey:$privateKey}' > /tmp/akoflow-ssh-key.json
+(
+  set -e
+  umask 077
+  key_payload=$(mktemp)
+  trap 'rm -- "$key_payload"' EXIT
 
-curl --fail-with-body \
-  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
-  -H 'Content-Type: application/json' \
-  -X POST "$AKOFLOW_API_URL/ssh-keys/import/" \
-  --data-binary @/tmp/akoflow-ssh-key.json
+  jq -n \
+    --arg id 'existing-hpc-key' \
+    --rawfile privateKey "$HOME/.ssh/id_ed25519" \
+    '{id:$id, privateKey:$privateKey}' > "$key_payload"
+
+  curl --fail-with-body \
+    -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+    -H 'Content-Type: application/json' \
+    -X POST "$AKOFLOW_API_URL/ssh-keys/import/" \
+    --data-binary @"$key_payload"
+)
 ```
 
-Remove the temporary payload securely according to your operating-system policy. An empty or invalid private key, invalid/duplicate ID, or `ssh-keygen` failure returns `422`.
+The subshell removes the temporary payload on exit. An empty or invalid private key, invalid/duplicate ID, or `ssh-keygen` failure returns `422`.
 
 List public metadata at any time:
 
@@ -71,7 +78,7 @@ curl --fail-with-body \
   "$AKOFLOW_API_URL/ssh-keys/"
 ```
 
-There is currently no SSH-key deletion endpoint. Manage key lifecycle deliberately and rotate authorization on remote systems when a key should no longer be trusted.
+There is currently no SSH-key deletion endpoint. When a key should no longer be trusted, remove its authorization on remote systems and follow your operator's key-rotation procedure.
 
 ## Assign a key to a connection
 
@@ -108,14 +115,20 @@ curl --fail-with-body \
 
 ## Kubernetes bearer tokens
 
-The Desktop environment connection flow stores a Kubernetes token and retains only its reference. The direct API is:
+The Desktop environment connection flow stores a Kubernetes token and retains only its reference. For direct API use, put the token in a file readable only by your user and set `KUBE_TOKEN_FILE` to its path. The command reads that file without placing the token in shell history:
 
 ```bash
-curl --fail-with-body \
-  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
-  -H 'Content-Type: application/json' \
-  -X POST "$AKOFLOW_API_URL/kubernetes-tokens/" \
-  -d '{"id":"research-cluster","token":"<bearer-token>"}'
+KUBE_TOKEN_FILE="$HOME/.kube/akoflow-token"
+
+(
+  set -o pipefail
+  jq -n --arg id 'research-cluster' --rawfile token "$KUBE_TOKEN_FILE" \
+    '{id:$id, token:$token}' | curl --fail-with-body \
+    -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+    -H 'Content-Type: application/json' \
+    -X POST "$AKOFLOW_API_URL/kubernetes-tokens/" \
+    --data-binary @-
+)
 ```
 
 The response is `{"credentialRef":"..."}`. Empty/invalid values return `422`; unavailable credential storage returns `503`.

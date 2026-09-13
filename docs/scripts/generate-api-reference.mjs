@@ -136,9 +136,18 @@ const delegatedSuccessStatuses = {
   ValidateCloudInstance: ["202 Accepted"],
 };
 
-// Map responses need checked shapes: key extraction alone cannot infer Go's
-// interface{} value types or conditional response envelopes.
-const checkedMapResponses = {
+// Checked response shapes cover map values and ambiguous Go type names that
+// cannot be inferred safely from a handler's outer return type alone.
+const checkedResponseShapes = {
+  ListAuditEvents: {
+    example: [{
+      id: "audit-event-id", eventType: "connection.health.checked",
+      environmentId: "environment-id", connectionId: "connection-id",
+      outcome: "succeeded", summary: "Connection is healthy",
+      occurredAt: "2026-01-01T00:00:00Z",
+    }],
+    note: "This is one connection-health event. The list can be empty; current emitters record connection checks, resource discovery, and console actions, not every operation in AkôFlow.",
+  },
   RegisterDockerArtifact: {
     example: {
       artifact: { id: "artifact-version-...", artifactId: "busybox", version: "1.36", scope: "system" },
@@ -599,6 +608,7 @@ function buildStructIndex(sources) {
     const fields = target.includes(".") ? qualified.get(target) : index.get(target);
     if (fields !== undefined) index.set(alias, fields);
   }
+  for (const [qualifiedName, fields] of qualified) index.set(qualifiedName, fields);
   return index;
 }
 
@@ -665,7 +675,7 @@ function sampleValue(typeName, structIndex, depth = 0) {
   if (/(?:^|\.)(?:Time|Duration)$/.test(clean)) return "2026-01-01T00:00:00Z";
   if (/(?:^|\b)(?:u?int(?:8|16|32|64)?|float(?:32|64))$/.test(clean)) return 0;
   const shortName = clean.split(".").at(-1);
-  const fields = structIndex.get(shortName);
+  const fields = structIndex.get(clean) ?? structIndex.get(shortName);
   if (fields === null) return null;
   if (fields && depth < 3) {
     return Object.fromEntries(
@@ -675,6 +685,7 @@ function sampleValue(typeName, structIndex, depth = 0) {
       ]),
     );
   }
+  if (fields) return {};
   return "string";
 }
 
@@ -827,10 +838,18 @@ function extractResponseContract(
     declaredType ||
     ownerType ||
     (candidates.length === 1 ? candidates[0] : null);
+  const example = inferredType ? sampleValue(inferredType, structIndex) : {};
+  if (inferredType?.includes("EnvironmentDefinition")) {
+    const definitions = Array.isArray(example) ? example : [example];
+    for (const definition of definitions) {
+      if (definition && "connectorBindings" in definition)
+        definition.connectorBindings = [sampleValue("environment.ConnectorBinding", structIndex)];
+    }
+  }
   return {
     mediaType: "application/json",
     type: inferredType || "JSON object",
-    example: inferredType ? sampleValue(inferredType, structIndex) : {},
+    example,
   };
 }
 
@@ -854,7 +873,7 @@ function endpointDocument(endpoint, position) {
   const verifiedSection = verifiedNote
     ? `## Handler-checked behavior\n\n${verifiedNote}\n\n`
     : "";
-  const checkedResponseNote = checkedMapResponses[endpoint.handler]?.note;
+  const checkedResponseNote = checkedResponseShapes[endpoint.handler]?.note;
   const responseSection = checkedResponseNote
     ? `## Response shape\n\n${checkedResponseNote}\n\n`
     : "";
@@ -944,7 +963,7 @@ for (const match of source.matchAll(routePattern)) {
         ownerReturnTypeIndex,
         handlerFieldTypes,
       ),
-      ...(checkedMapResponses[handler] || {}),
+      ...(checkedResponseShapes[handler] || {}),
     },
   });
 }
@@ -953,11 +972,34 @@ if (endpoints.length === 0) {
   throw new Error(`No API routes found in ${routerFile}`);
 }
 
-const missingCheckedResponses = Object.keys(checkedMapResponses).filter(
+const missingCheckedResponses = Object.keys(checkedResponseShapes).filter(
   (handler) => !endpoints.some((endpoint) => endpoint.handler === handler),
 );
 if (missingCheckedResponses.length > 0) {
   throw new Error(`Checked response handlers are missing from the router: ${missingCheckedResponses.join(", ")}`);
+}
+
+function syntheticNullPath(value, path = "$") {
+  if (value === null) return path;
+  if (Array.isArray(value)) {
+    for (const [index, item] of value.entries()) {
+      const found = syntheticNullPath(item, `${path}[${index}]`);
+      if (found) return found;
+    }
+  } else if (value && typeof value === "object") {
+    for (const [key, item] of Object.entries(value)) {
+      const found = syntheticNullPath(item, `${path}.${key}`);
+      if (found) return found;
+    }
+  }
+  return null;
+}
+
+for (const endpoint of endpoints) {
+  if (endpoint.response.example == null) continue;
+  const invalidPath = syntheticNullPath(endpoint.response.example);
+  if (invalidPath)
+    throw new Error(`Ambiguous null in ${endpoint.method} ${endpoint.path} response example at ${invalidPath}`);
 }
 
 const staleCheckedNotes = Object.keys(verifiedRequestNotes).filter(

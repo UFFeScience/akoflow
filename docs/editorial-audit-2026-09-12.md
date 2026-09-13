@@ -185,6 +185,8 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 
 138. **P1 resolved in the Cloud provisioning-log read path:** the remaining seven JSON-object response pages were checked against their handler map literals: cloud log, cloud/Kubernetes credential references, discovery snapshots, storage checksum, and the two promotion IDs. Their outer keys match current handlers. The Cloud log page now says to use an instance ID rather than an operation ID, and explains the `200 OK` waiting message before Terraform writes a log. The service and Terraform runner were checked. This completes the outer-key review of all 16 map-shaped response pages; nested fields, error variants, and the rest of the 125 endpoints remain open.
 
+139. **P0 resolved in generated list and nested response types:** a scan of all 125 generated response examples found `GET /audit-events/` rendered as `[null]` and four environment create/read/replace/list pages rendered `connectorBindings: [null]`. The generator had treated same-named Go structs from different packages as ambiguous. Audit now has a source-checked connection-event example; environment responses use the `environment.ConnectorBinding` fields. Beyond the sample depth, known struct values now render as `{}` instead of the false primitive `"string"` (for example runtime `capabilities`). Generation now fails if any displayed response example contains a synthetic null. The zero-null scan passed. This fixes the misleading-shape class while full field-level validation remains open.
+
 ## Page inventory
 
 | Page | Current pass | Next review |

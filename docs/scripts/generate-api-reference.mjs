@@ -206,6 +206,9 @@ const verifiedRequestNotes = {
 };
 
 const verifiedRequestExamples = {
+  "POST /akoflow-api/machine-configuration-validations/": {
+    playbookYaml: "- hosts: all\n  tasks:\n    - ansible.builtin.debug:\n        msg: ready\n",
+  },
   "POST /akoflow-api/provenance/sql/": {
     sql: "SELECT id, status FROM execution_runs WHERE status = :status",
     parameters: { status: "completed" },

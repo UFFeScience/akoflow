@@ -2,6 +2,7 @@ package workflow_engine_api_handler
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
@@ -13,6 +14,18 @@ import (
 	domainaudit "github.com/UFFeScience/akoflow/internal/domain/audit"
 	domainconsole "github.com/UFFeScience/akoflow/internal/domain/console"
 )
+
+func TestMachineConfigurationDocumentationRequest(t *testing.T) {
+	const body = `{"playbookYaml":"- hosts: all\n  tasks:\n    - ansible.builtin.debug:\n        msg: ready\n"}`
+	request := httptest.NewRequest(http.MethodPost, "/machine-configuration-validations/", strings.NewReader(body))
+	request.Header.Set("Content-Type", "application/json")
+	recorder := httptest.NewRecorder()
+	(&Handler{}).ValidateMachineConfiguration(recorder, request)
+	var result domain.MachineConfigurationValidation
+	if err := json.Unmarshal(recorder.Body.Bytes(), &result); err != nil || recorder.Code != http.StatusOK || !result.Valid || result.SHA256 == "" {
+		t.Fatalf("documentation request failed: status=%d result=%#v error=%v", recorder.Code, result, err)
+	}
+}
 
 type storageNavigatorStub struct {
 	err                                     error

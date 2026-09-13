@@ -5,9 +5,11 @@ description: Configure a reproducible simulated environment with resources, netw
 
 # Model a SimGrid environment
 
-This how-to is for users who already know how to import a workflow and want to model the infrastructure it will run on. It uses the checked-in [edge-to-cloud bundle](../../showcase/edge-cloud-simulation) because that bundle contains a resource model, a topology, per-activity simulation profiles, a scope, and a runnable plan.
+Use this guide to model resources, activity duration, and network transfers for a simulated workflow. It draws on the checked-in [edge-to-cloud bundle](../../showcase/edge-cloud-simulation), which includes a complete runnable plan.
 
 Use SimGrid when the question is about a modeled platform: placement, parallel capacity, transfers, latency, and simulated cost. Do not use it to validate an SSH, Kubernetes, cloud, or Slurm connection; a SimGrid environment has no remote endpoint to test. For a first end-to-end execution, start with [Run your first simulated workflow](../workflows/first-run).
+
+The YAML blocks below show only the fields discussed in each step. Use the [complete versioned files](https://github.com/UFFeScience/akoflow/tree/v1.0.8/examples/simulation) when submitting the example.
 
 ## Prerequisites
 
@@ -19,7 +21,7 @@ Use SimGrid when the question is about a modeled platform: placement, parallel c
 
 Create a simulation environment and bind the `simgrid` runtime to every resource that a plan may use. In Desktop, open **Infrastructure → Environments**, create a simulation environment, add its resources and the SimGrid runtime, then enable a runtime binding for each resource. The API equivalent is the `environment.yaml` in the example bundle.
 
-```yaml title="examples/simulation/environment.yaml"
+```yaml title="Resource excerpt from environment.yaml"
 resources:
   - id: simulated-edge
     cpuCores: 2
@@ -55,7 +57,7 @@ Do not raise `cpuCores` merely to make a predicted makespan smaller. A 50-core r
 
 The most important input for a meaningful prediction is not the image or command: it is the work associated with each activity. Put the profile on the activity rather than applying one shared default to the workflow.
 
-```yaml title="examples/simulation/workflow.yaml"
+```yaml title="Activity excerpt from workflow.yaml"
 activities:
   - name: prepare
     runtime: simgrid
@@ -82,7 +84,7 @@ After importing, open the workflow definition and inspect every activity. A miss
 
 Create a topology for the execution scope. The Desktop scope form creates an empty topology; its current navigation does not expose link creation. Submit `topology.yaml` through the API after creating the scope. The example models one bidirectional edge-to-cloud link:
 
-```yaml title="examples/simulation/topology.yaml"
+```yaml title="Link excerpt from topology.yaml"
 links:
   - id: edge-cloud
     sourceResourceId: simulated-edge
@@ -104,7 +106,7 @@ For example, 100,000,000 bytes over 100,000,000 bit/s with 50 ms latency has a b
 
 Declare the data itself in the workflow:
 
-```yaml title="examples/simulation/workflow.yaml"
+```yaml title="Data-dependency excerpt from workflow.yaml"
 dataDependencies:
   - producerActivity: prepare
     consumerActivity: analyze

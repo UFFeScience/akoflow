@@ -1,6 +1,6 @@
 ---
 title: Configure Google Cloud
-description: Connect a GCP project, discover capacity, and provision an AkôFlow worker safely.
+description: Connect a GCP project and review the current worker-provisioning requirements.
 ---
 
 # Configure Google Cloud
@@ -10,6 +10,8 @@ start with [the connection tutorial](../../tutorials/connect-cloud). This page p
 the detailed operational requirements.
 
 AkôFlow uses a service account to read the Compute catalog and, when requested, run Terraform to create a worker. The credential is stored locally by the daemon; the documentation examples never embed the private key in an environment YAML file.
+
+The provider calls and Terraform resources below were checked against the source. A full provision-and-destroy cycle has not yet been verified in a disposable GCP project; confirm permissions, network policy, and cleanup before relying on this procedure.
 
 ## Before you begin
 

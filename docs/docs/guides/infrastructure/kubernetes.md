@@ -104,7 +104,7 @@ In Desktop, open **Infrastructure → Environments**, create a real Kubernetes e
 
 The relevant part of `examples/kind/environment.yaml` is:
 
-```yaml title="examples/kind/environment.yaml"
+```yaml title="Connection and resource excerpt from environment.yaml"
 connections:
   - id: kind-akoflow-connection
     type: kubernetes
@@ -150,7 +150,7 @@ For a manually maintained resource, set `metadata.kubernetesNode` or `providerId
 
 Use a PVC or NFS storage resource when the workflow needs a shared workspace. The Kind example defines a PVC and its runtime mount:
 
-```yaml title="examples/kind/environment.yaml"
+```yaml title="Storage excerpt from environment.yaml"
 storages:
   - id: kind-akoflow-data
     type: pvc

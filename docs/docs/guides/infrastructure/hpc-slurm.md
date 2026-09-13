@@ -1,6 +1,6 @@
 ---
 title: Connect an HPC and SLURM cluster
-description: Configure a proxy-aware SSH connection, discover a SLURM cluster, model partitions and storage, and validate a safe batch submission.
+description: Configure SSH access, discover SLURM resources, and prepare a small site-approved batch validation.
 ---
 
 # Connect an HPC and SLURM cluster
@@ -8,6 +8,8 @@ description: Configure a proxy-aware SSH connection, discover a SLURM cluster, m
 This guide is for an HPC operator or researcher with an approved SLURM account. AkôFlow connects to the **login node** over SSH and submits workflow activities with `sbatch`. For a guided first registration, start with the [connection tutorial](../../tutorials/register-hpc).
 
 Use a SLURM environment for work governed by partitions, accounts, QoS, and node allocation. Keep ordinary batch work off the login node. To check the local batch-submission path without a cluster, use the [SLURM batch fixture](../../showcase/slurm-local-fixture); it does not verify SSH, allocation, accounting, or site policy. For an infrastructure simulation, use [SimGrid](./simgrid).
+
+The YAML blocks below are excerpts for discussion. Use the linked versioned files as a starting catalog, then supply your site's connection, paths, permissions, and scheduler settings. An institutional cluster run has not been verified by this documentation.
 
 ## Prerequisites
 
@@ -48,7 +50,7 @@ In Desktop, add the connection under **Infrastructure → Environments**, assign
 
 The versioned [`examples/slurm/environment.yaml`](https://github.com/UFFeScience/akoflow/blob/v1.0.8/examples/slurm/environment.yaml) provides the catalog portion: runtime, cluster, partition, representative compute node, storage resources, and runtime bindings. Add a real connection like the preceding one before submitting it.
 
-```yaml title="examples/slurm/environment.yaml"
+```yaml title="Runtime and resource excerpt from environment.yaml"
 runtimes:
   - id: slurm
     driver: slurm
@@ -106,7 +108,7 @@ Discovery is inventory evidence, not a reservation. A partition shown as availab
 
 The example registers a Lustre workspace and an NFS archive separately:
 
-```yaml title="examples/slurm/environment.yaml"
+```yaml title="Storage excerpt from environment.yaml"
 storages:
   - id: slurm-default-lustre
     name: cluster-scratch

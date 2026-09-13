@@ -32,6 +32,7 @@ type storageNavigatorStub struct {
 	deleted, promotedData, promotedArtifact       bool
 	promotedDataPath, promotedArtifactPath        string
 	promotedArtifactName, promotedArtifactVersion string
+	checksumPath                                  string
 }
 
 func (s *storageNavigatorStub) List(context.Context, string) ([]domain.StorageResource, error) {
@@ -55,7 +56,8 @@ func (s *storageNavigatorStub) OpenDownload(context.Context, string) (io.ReadClo
 func (s *storageNavigatorStub) Download(_ context.Context, id string) (*domain.DownloadRun, error) {
 	return &domain.DownloadRun{ID: id}, s.err
 }
-func (s *storageNavigatorStub) Checksum(context.Context, string, string) (string, error) {
+func (s *storageNavigatorStub) Checksum(_ context.Context, _, path string) (string, error) {
+	s.checksumPath = path
 	return "sha256:abc", s.err
 }
 func (s *storageNavigatorStub) QueueCopy(_ context.Context, _, path, destination, id string) (domain.DownloadRun, error) {
@@ -148,6 +150,33 @@ func TestStoragePromotionDocumentationRequests(t *testing.T) {
 	artifact := callHandler(t, http.MethodPost, "/", `{"path":"/shared/bin/model.sif","name":"model","version":"1.0.0"}`, path, handler.PromoteStorageArtifact)
 	if data.Code != http.StatusCreated || artifact.Code != http.StatusCreated || storage.promotedDataPath != "/shared/project/result.csv" || storage.promotedArtifactPath != "/shared/bin/model.sif" || storage.promotedArtifactName != "model" || storage.promotedArtifactVersion != "1.0.0" {
 		t.Fatalf("promotion request fields: data=%d artifact=%d storage=%#v", data.Code, artifact.Code, storage)
+	}
+}
+
+func TestStorageOperationDocumentationRequests(t *testing.T) {
+	storage := &storageNavigatorStub{}
+	handler := &Handler{storage: storage}
+	path := map[string]string{"storageId": "registered-storage"}
+	for _, test := range []struct {
+		name, body, want string
+		status           int
+		handle           http.HandlerFunc
+	}{
+		{"download", `{"path":"/shared/project/result.csv"}`, "/shared/project/result.csv", http.StatusCreated, handler.CreateDownload},
+		{"checksum", `{"path":"/shared/project/result.csv"}`, "sha256:abc", http.StatusOK, handler.ChecksumStorageEntry},
+		{"copy", `{"path":"/shared/project/result.csv","destinationStorageId":"storage-archive"}`, "copy:storage-archive", http.StatusAccepted, handler.CopyStorageEntry},
+		{"archive", `{"path":"/shared/project/experiment"}`, "/shared/project/experiment", http.StatusAccepted, handler.ArchiveStorageDirectory},
+		{"index", `{"id":"example-index-run-1"}`, "example-index-run-1", http.StatusAccepted, handler.StartStorageIndex},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			response := callHandler(t, http.MethodPost, "/", test.body, path, test.handle)
+			if response.Code != test.status || !strings.Contains(response.Body.String(), test.want) {
+				t.Fatalf("request result: status=%d body=%s", response.Code, response.Body.String())
+			}
+		})
+	}
+	if storage.checksumPath != "/shared/project/result.csv" {
+		t.Fatalf("checksum path was not decoded: %q", storage.checksumPath)
 	}
 }
 

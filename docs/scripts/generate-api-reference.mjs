@@ -186,11 +186,11 @@ const verifiedRequestNotes = {
   "POST /akoflow-api/schedule-plans/import/": "Send `{\"plan\": ...}` with a complete plan. Its workflow version, execution scope, topology, and resources must already exist; the server marks its source as `imported` and validates the schedule before saving it.",
   "POST /akoflow-api/storages/{storageId}/promote-data/": "Replace the example `path` with an existing file within the selected storage's approved root. `id` is optional; the server generates one when omitted. `workflowVersionId`, `runId`, and `activityId` are optional associations and should identify real records when supplied. The [storage guide](/docs/guides/infrastructure/storage) shows the browsing step.",
   "POST /akoflow-api/storages/{storageId}/promote-artifact/": "Replace the example `path` with an existing `.sif` file within the selected storage's approved root. `id`, `name`, `version`, and `scope` have server defaults. The [storage guide](/docs/guides/infrastructure/storage) shows the browsing step; no file is uploaded or moved.",
-  "POST /akoflow-api/storages/{storageId}/downloads/": "`path` must name an existing file within an approved browse root; directories require the archive route. `id` is optional. The response is a ready download record: use its ID with `GET /storage-downloads/{downloadId}/content/` to stream the file.",
-  "POST /akoflow-api/storages/{storageId}/checksum/": "`path` must name an existing file within an approved browse root. The server reads the file and returns a `sha256:`-prefixed checksum; it does not queue a background job.",
-  "POST /akoflow-api/storages/{storageId}/copies/": "`path` must exist in the source storage, and `destinationStorageId` must identify a registered, writable storage. `id` is optional. The copy runs in the background at the same path in the destination. Inspect `GET /storage-downloads/{downloadId}/` until its status is `completed` or `failed`; `202 Accepted` does not mean the bytes have arrived.",
-  "POST /akoflow-api/storages/{storageId}/archives/": "`path` must name an existing directory in a writable storage. `id` is optional. AkôFlow writes a `.tar.gz` beside that directory and returns a queued record. Inspect `GET /storage-downloads/{downloadId}/` until its status is `ready` or `failed`; only a ready archive can be streamed through the download content route.",
-  "POST /akoflow-api/storages/{storageId}/index-runs/": "Indexing must be enabled for this registered storage. `id` is optional. The current service completes the bounded scan before responding; the returned record is `completed` or the request fails. The `202 Accepted` status does not mean this scan continues in the background.",
+  "POST /akoflow-api/storages/{storageId}/downloads/": "Replace the example `path` with an existing file within the selected storage's approved browse root; directories require the archive route. `id` is optional. The response is a ready download record: use its ID with `GET /storage-downloads/{downloadId}/content/` to stream the file.",
+  "POST /akoflow-api/storages/{storageId}/checksum/": "Replace the example `path` with an existing file within the selected storage's approved browse root. The server reads the file and returns a `sha256:`-prefixed checksum; it does not queue a background job.",
+  "POST /akoflow-api/storages/{storageId}/copies/": "Replace the example `path` with a file in the source storage and `destinationStorageId` with a registered, writable storage ID. `id` is optional. The copy runs in the background at the same path in the destination. Inspect `GET /storage-downloads/{downloadId}/` until its status is `completed` or `failed`; `202 Accepted` does not mean the bytes have arrived.",
+  "POST /akoflow-api/storages/{storageId}/archives/": "Replace the example `path` with an existing directory in a writable storage. `id` is optional. AkôFlow writes a `.tar.gz` beside that directory and returns a queued record. Inspect `GET /storage-downloads/{downloadId}/` until its status is `ready` or `failed`; only a ready archive can be streamed through the download content route.",
+  "POST /akoflow-api/storages/{storageId}/index-runs/": "Indexing must be enabled for this registered storage. Use a unique `id` in place of the example or omit it for a generated ID. The current service completes the bounded scan before responding; the returned record is `completed` or the request fails. The `202 Accepted` status does not mean this scan continues in the background.",
   "POST /akoflow-api/build-contexts/": "To upload bytes, send multipart form data with file field `context`. The JSON form only records metadata for bytes already in the artifact store; it requires `digest`, `storageUri`, and positive `sizeBytes`. A browser-local path is not a server build context.",
   "POST /akoflow-api/artifact-builds/": "Required: `id`, `artifactVersionId`, `contextDigest`, `recipeDigest`, and `cacheKey`. The build context named by `contextDigest` must already be uploaded. An existing cache key returns that build with `200 OK`; a new specification returns `201 Created`. Creating a specification does not start a build run.",
   "POST /akoflow-api/artifacts/docker/": "Required: `artifactId`, `version`, and a Docker image reference without whitespace. `architecture` defaults to `amd64`. The response contains `artifact` and `build` objects. This registers a version and build specification; the registry pull and SIF conversion begin only after `POST /artifact-builds/{buildId}/runs/`.",
@@ -206,6 +206,22 @@ const verifiedRequestNotes = {
 };
 
 const verifiedRequestExamples = {
+  "POST /akoflow-api/storages/{storageId}/downloads/": {
+    path: "/shared/project/result.csv",
+  },
+  "POST /akoflow-api/storages/{storageId}/checksum/": {
+    path: "/shared/project/result.csv",
+  },
+  "POST /akoflow-api/storages/{storageId}/copies/": {
+    path: "/shared/project/result.csv",
+    destinationStorageId: "storage-archive",
+  },
+  "POST /akoflow-api/storages/{storageId}/archives/": {
+    path: "/shared/project/experiment",
+  },
+  "POST /akoflow-api/storages/{storageId}/index-runs/": {
+    id: "example-index-run-1",
+  },
   "POST /akoflow-api/storages/{storageId}/promote-data/": {
     path: "/shared/project/result.csv",
   },

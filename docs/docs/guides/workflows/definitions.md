@@ -1,29 +1,13 @@
 ---
-title: Workflow definitions
+title: Define a workflow
+description: Create a workflow, inspect its activities, and import a definition.
 ---
 
-# Workflow definitions
+# Define a workflow
 
-A workflow definition is the reusable description of a scientific computation. AkôFlow stores a stable definition and an immutable, versioned graph of activities. Plans and runs refer to the workflow **version ID**, so a past execution remains traceable to the graph that produced it.
+A workflow lists the activities in a scientific computation and the order in which they run. AkôFlow saves versions of that definition, so a plan or past run always points to the workflow version it used.
 
-The authoring format is intentionally smaller than the persisted domain model. AkôFlow normalizes activity names into IDs, creates the first workflow version, expands dependencies, converts CPU and memory limits, and records execution capabilities.
-
-## The activity model
-
-An activity has a `kind`, one or more `capabilities`, a command, resource requirements, a retry/timeout policy, and optional simulation or service settings.
-
-| Field | Meaning |
-| --- | --- |
-| `kind` | `task`, `service`, or `interactive` in the persisted model. Portable workflow imports currently create `task` activities. |
-| `capabilities` | The modes the activity supports: `real`, `simulation`, or `interactive`. |
-| `command` | Executable reference, entrypoint, arguments, environment, and working directory. |
-| `resources` | Normalized CPU, memory, storage, and optional GPU demand. In portable input, use `cpuLimit` and `memoryLimit`. |
-| `simulation` | Model, duration, FLOPs, and optional parameters. Supplying it makes a portable activity simulation-capable. |
-| `policy` | Timeout, maximum attempts, and retry delay in the persisted model. |
-| `dependsOn` | Control dependencies, written with activity names in portable input. |
-| `dataDependencies` | Producer-to-consumer data edges with a logical name and byte size. |
-
-For real execution, an activity needs `command.entrypoint` and `command.executable`. An executable can point to an OCI image or another supported artifact source and includes a delivery strategy. The legacy `spec.image`, activity `image`, and `run` shorthands are still accepted, but new definitions should prefer `command` and `command.executable`.
+You can create one in Desktop or import portable YAML. Start with the steps below; use the [workflow specification](/docs/internal/workflow-spec) when you need exact fields, limits, and compatibility rules.
 
 ## Using AkôFlow Desktop
 
@@ -42,17 +26,14 @@ The import action accepts the same portable YAML format as the API. Export remov
 
 ## Using the API
 
-Set the API address and, when API authentication is enabled, its bearer token:
+Complete [API connection setup](/docs/tutorials/api-access) before running these commands.
 
-```bash
-export AKOFLOW_API_URL="http://127.0.0.1:<port>/akoflow-api"
-export AKOFLOW_API_TOKEN="<token>"
-```
+In portable YAML, each activity names its command, CPU and memory limits, dependencies, and any simulation model. For real execution, `command.entrypoint` and `command.executable` are required. An executable can point to an OCI image or another supported artifact source. The older `spec.image`, activity `image`, and `run` shorthands remain accepted, but new definitions should use `command` and `command.executable`.
 
-The simulation example in `examples/simulation/workflow.yaml` uses the legacy shorthand. This equivalent command-oriented definition shows the preferred portable shape:
+The checked-in SimGrid example uses legacy shorthand. To try the portable simulation fields directly, save this as `workflow.yaml`. The empty `command` means these activities are simulation-only; a real run needs an executable and entrypoint as described in the [workflow specification](/docs/internal/workflow-spec).
 
 ```yaml
-name: simulation-example-workflow
+name: portable-simulation-demo
 spec:
   namespace: examples
   activities:
@@ -87,21 +68,21 @@ Useful definition operations are:
 
 ```bash
 # List definitions
-curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   "$AKOFLOW_API_URL/workflow-definitions/"
 
 # Read one definition
-curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
-  "$AKOFLOW_API_URL/workflow-definitions/simulation-example-workflow/"
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  "$AKOFLOW_API_URL/workflow-definitions/portable-simulation-demo/"
 
 # Export portable YAML
-curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -o exported-workflow.yaml \
-  "$AKOFLOW_API_URL/workflow-definitions/simulation-example-workflow/export/"
+  "$AKOFLOW_API_URL/workflow-definitions/portable-simulation-demo/export/"
 ```
 
-The create response is the normalized `WorkflowDefinition`. Use `version.id` from that response when creating a planning session.
+The create response contains the saved definition. Use its `version.id` when creating a planning session.
 
 ## Next step
 
-Once the workflow, execution scope, resources, and network topology exist, [create a planning session](./planning.md).
+Once the workflow, execution scope, resources, and network topology exist, [create a planning session](/docs/guides/workflows/planning).

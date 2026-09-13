@@ -1,30 +1,32 @@
 ---
 title: Execute and monitor a workflow
+description: Start a saved plan, follow its activities, and inspect the run's observations.
 ---
 
 # Execute and monitor a workflow
 
-An execution run applies one immutable schedule plan to the workflow and infrastructure snapshots supplied in its request. Real and simulated runs share the same run, activity, timing, transfer, and cost model, which makes planned-versus-observed comparison possible.
+Start a run from a saved plan, follow its activities, and inspect the result. AkôFlow keeps the plan's predictions beside the run's observations so you can compare them when the runtime reports enough data.
 
-## Modes and run types
+For the API commands on this page, complete [API connection setup](/docs/tutorials/api-access) first.
 
-- **Real** runs dispatch activities through execution runtimes such as a Kubernetes or SLURM adapter configured by the environment.
-- **Simulation** runs dispatch simulation-capable activities through a simulation runtime such as SimGrid.
-- **Interactive** sessions open a terminal against a compatible resource. They are represented in the unified run history, but are opened through the console-session API rather than the planned workflow execution request.
+## Choose real execution or simulation
 
-The run history distinguishes `workflow`, `interactive`, and `standalone` kinds.
+- **Real** runs send activities to resources configured for execution, such as the local machine, Kubernetes, or SLURM.
+- **Simulation** runs evaluate a workflow with a simulation environment such as SimGrid.
+
+To open a terminal on one resource, follow the [interactive console guide](/docs/guides/operations/interactive-console). Terminal sessions also appear in the run history, but they do not start from a workflow plan.
 
 ## Status and timing
 
-A workflow run moves through `created`, `running`, and either `completed` or `failed`. Its activities expose the more detailed states `blocked`, `ready`, `preparing`, `running`, `completed`, `failed`, and `cancelled`.
+A submitted execution first enters the queue. When AkôFlow starts it, the workflow run becomes `running`, then `completed` or `failed`. The current supervisor records activities as `running`, `completed`, or `failed`; other task states exist in the model but are not a normal progression to wait for.
 
-Runtime handles distinguish `starting`, `running`, `completed`, `failed`, and `stopped`. For real runtimes, submitted time means the control plane handed work to the runtime; started time means the runtime allocated it; container-started time marks when user code could begin inside the container.
+For real runs, submitted time marks when AkôFlow handed work to the runtime; started time marks when the runtime allocated it; container-started time marks when user code could begin inside the container.
 
-The completed trace includes:
+Depending on the runtime and available observations, the run detail can include:
 
-- makespan and total cost;
+- makespan and cost;
 - compute, transfer, queue, interference, and overhead time;
-- activity placement and runtime handles;
+- activity placement and runtime job identifiers;
 - transferred bytes, transfer duration/cost, strategy, and route;
 - observed task intervals alongside predicted assignments.
 
@@ -46,11 +48,9 @@ The completed trace includes:
 
 *In the run detail, **Workflow makespan** is wall-clock completion time. **Accumulated stage time** is the sum of work attributed to stages across activities, so it can be greater than makespan when activities overlap. The decomposition makes transfer, execution, queue, boot and interference visible instead of treating them as a single unexplained duration.*
 
-To open an interactive terminal, use the console action for a compatible resource. The session appears with interactive runs in **Runs** and can be closed or have its log exported.
-
 ## Using the API
 
-`POST /execution-runs/` accepts a complete, reproducible execution envelope. The checked-in files `examples/simulation/execution-request.yaml` and `examples/kind/requests/execution-request.yaml` are canonical examples for simulation and real Kubernetes execution respectively.
+`POST /execution-runs/` accepts a complete execution request. The command below assumes you have a v1.0.8 checkout and have registered the environment, scope, topology, workflow, and plan in the [SimGrid first-run tutorial](/docs/guides/workflows/first-run). For Kubernetes, use the separate [Kind example](/docs/showcase/kubernetes-real-execution) and its own execution request.
 
 ```bash
 curl --fail-with-body \
@@ -60,37 +60,25 @@ curl --fail-with-body \
   "$AKOFLOW_API_URL/execution-runs/"
 ```
 
-The request contains `run`, `plan`, `workflow`, `executionScope`, `resources`, `runtimes`, runtime bindings, the network topology, and activity profiles. Submission is asynchronous and returns `202 Accepted` with the queued job. Read the run by the `run.id` in the request:
+This example submits the saved SimGrid plan with the workflow and environment it uses. The [request reference](/docs/api/endpoints/executions/post-execution-runs) lists the full payload. Submission returns `202 Accepted` with a queued job; use the `run.id` from the example to read the run:
 
 ```bash
-curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   "$AKOFLOW_API_URL/execution-runs/simulation-example-run-v1/"
 ```
 
-The detail response contains `run`, `activities`, `dataTransfers`, `handles`, and `events`; it can also include related infrastructure operations. List endpoints support the Desktop's run history and filters:
+A `404` immediately after submission can mean the queued request has not been
+processed yet. Retry after a short wait. If the run never appears, check the
+server log and the complete request: worker validation happens before the run
+is saved, so an invalid queued request can fail without a run record.
+
+The detail response contains `run`, `activities`, `dataTransfers`, `handles`, and `events`. It can also include infrastructure operations and saved data or artifact preparation records when those services are configured. List endpoints support the Desktop's run history and filters:
 
 ```bash
-curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   "$AKOFLOW_API_URL/execution-runs/"
 ```
 
-Interactive terminals use the console endpoints:
-
-```bash
-# Inspect available console commands and their required arguments
-curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
-  "$AKOFLOW_API_URL/console-commands/"
-
-# After opening a session, stream it with:
-# GET /console-sessions/<session-id>/stream/
-# Close it with:
-# DELETE /console-sessions/<session-id>/
-# Export its log with:
-# GET /console-sessions/<session-id>/log/
-```
-
-Consult `GET /console-commands/` before constructing an open-session request because compatibility and arguments depend on the resources and runtimes registered in the instance.
-
 ## Investigating a failure
 
-Start with `run.failureReason`, then inspect the failed activity, its handle `failure`, exit code and log, and the ordered run events. If the activity remained in `preparing`, inspect executable/workspace preparation and transfer records before the runtime log.
+Start with `run.failureReason`, then inspect the failed activity, its handle `failure`, exit code and log, and the ordered run events. If failure happened during preparation, inspect executable/workspace preparation and transfer records; a runtime log may not exist yet.

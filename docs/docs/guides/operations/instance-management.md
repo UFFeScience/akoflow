@@ -1,24 +1,19 @@
 ---
-title: Instance management
-description: Configure an AkôFlow instance, export and import sanitized snapshots, switch instances, and reset local state.
+title: Manage an instance
+description: Configure an AkôFlow instance, manage sanitized snapshots, and reset its saved catalog.
 ---
 
-# Instance management
+# Manage an instance
 
-An AkôFlow **instance** is one control-plane installation and its catalog. Its identity contains an ID, name, optional description, organization and location, plus the transfer relay buffer. The Engine creates an identity automatically from the machine hostname during startup; the Desktop cannot proceed when `GET /instance/` is unavailable.
+An AkôFlow **instance** contains your environments, workflows, plans, runs, and settings. Use this guide to inspect its identity, export a snapshot, open a read-only archive, or return to the writable instance. Export a snapshot before changing versions or resetting local state.
 
-Set these variables for the API examples:
-
-```bash
-export AKOFLOW_URL='http://127.0.0.1:<daemon-port>/akoflow-api'
-export AKOFLOW_TOKEN='<daemon-token>'
-```
+For direct API use, complete [API connection setup](/docs/tutorials/api-access) before running the commands below. To change theme or graph animation, use [Personal preferences](/docs/guides/operations/personal-preferences).
 
 ## Inspect the active identity
 
 ### Using AkôFlow Desktop
 
-Open **Settings → General**. The current interface exposes the workspace transfer relay setting; instance identity fields are read through the Engine but are not currently editable as a separate Desktop form.
+Open **Settings → General**. The current interface exposes the workspace transfer relay setting; instance identity fields are read through the server but are not currently editable as a separate Desktop form.
 
 The relay is an in-memory buffer per active transfer. It streams source output to destination input and does not persist the transferred payload. The default is 8 MiB; accepted values are 5–64 MiB.
 
@@ -26,56 +21,26 @@ The relay is an in-memory buffer per active transfer. It streams source output t
 
 ```bash
 curl --fail-with-body \
-  -H "Authorization: Bearer $AKOFLOW_TOKEN" \
-  "$AKOFLOW_URL/instance/"
+  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  "$AKOFLOW_API_URL/instance/"
 ```
 
-To change the relay size, first preserve the identity returned by `GET`, then send the complete object:
+To change the relay size, read the current instance, update that field, and send the complete object back:
 
 ```bash
-curl --fail-with-body \
-  -H "Authorization: Bearer $AKOFLOW_TOKEN" \
-  -H 'Content-Type: application/json' \
-  -X PUT "$AKOFLOW_URL/instance/" \
-  -d '{
-    "id":"akoflow-lab",
-    "name":"AkôFlow lab",
-    "description":"Research control plane",
-    "organization":"Example Lab",
-    "location":"Niterói",
-    "transferBufferBytes":8388608
-  }'
+set -o pipefail
+curl --fail-with-body --silent \
+  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  "$AKOFLOW_API_URL/instance/" \
+  | jq '.transferBufferBytes = 8388608' \
+  | curl --fail-with-body \
+      -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+      -H 'Content-Type: application/json' \
+      -X PUT "$AKOFLOW_API_URL/instance/" \
+      --data-binary @-
 ```
 
 `id` and `name` are required. A zero buffer selects the 8 MiB default; values outside 5–64 MiB return `422 Unprocessable Entity`.
-
-## Personal preferences
-
-Theme and graph animation are associated with a stable browser-profile client ID, not with an authenticated user account. Desktop saves them in local storage immediately and attempts to synchronize them with the Engine. If the Engine is offline, local preferences keep the interface usable.
-
-### Using AkôFlow Desktop
-
-1. Open **Settings → General**.
-2. Select **Light** or **Dark**.
-3. Turn **Graph animation** on or off.
-
-### Using the API
-
-The client ID must contain 8–128 characters. The only accepted themes are `light` and `dark`.
-
-```bash
-CLIENT_ID='docs-client-01'
-
-curl --fail-with-body \
-  -H "Authorization: Bearer $AKOFLOW_TOKEN" \
-  -H 'Content-Type: application/json' \
-  -X PUT "$AKOFLOW_URL/user-preferences/$CLIENT_ID/" \
-  -d '{"theme":"dark","animationsEnabled":false}'
-
-curl --fail-with-body \
-  -H "Authorization: Bearer $AKOFLOW_TOKEN" \
-  "$AKOFLOW_URL/user-preferences/$CLIENT_ID/"
-```
 
 ## Export a sanitized instance
 
@@ -85,14 +50,14 @@ curl --fail-with-body \
 2. Optionally enable **Include artifact files**. Large artifact stores can produce a large ZIP.
 3. Select **Export instance ZIP**.
 
-The Engine uses SQLite `VACUUM INTO` to create a consistent database snapshot. Tokens, private keys, credential references and connection secrets are redacted. The ZIP manifest records that credentials were not included. Including artifacts adds artifact files but does not restore credentials.
+The server creates a consistent database snapshot and removes tokens, private keys, credential references, and connection secrets. The ZIP manifest records that credentials were not included. Including artifacts adds artifact files but does not restore credentials.
 
 ### Using the API
 
 ```bash
 curl --fail-with-body \
-  -H "Authorization: Bearer $AKOFLOW_TOKEN" \
-  "$AKOFLOW_URL/instances/default/export/?includeArtifacts=false" \
+  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  "$AKOFLOW_API_URL/instances/default/export/?includeArtifacts=false" \
   --output akoflow-instance.zip
 ```
 
@@ -115,22 +80,24 @@ The Desktop waits up to 90 seconds for the daemon after switching. When server-s
 
 ```bash
 curl --fail-with-body \
-  -H "Authorization: Bearer $AKOFLOW_TOKEN" \
+  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -H 'Content-Type: application/zip' \
   --data-binary @akoflow-instance.zip \
-  "$AKOFLOW_URL/instances/import/"
+  "$AKOFLOW_API_URL/instances/import/" \
+  -o imported-instance.json || exit 1
+
+SNAPSHOT_ID=$(jq -er '.id' imported-instance.json) || exit 1
 
 curl --fail-with-body \
-  -H "Authorization: Bearer $AKOFLOW_TOKEN" \
-  "$AKOFLOW_URL/instances/"
+  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  "$AKOFLOW_API_URL/instances/"
 
-SNAPSHOT_ID='<id returned by import>'
 curl --fail-with-body \
-  -H "Authorization: Bearer $AKOFLOW_TOKEN" \
-  -X POST "$AKOFLOW_URL/instance-activations/$SNAPSHOT_ID/"
+  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  -X POST "$AKOFLOW_API_URL/instance-activations/$SNAPSHOT_ID/"
 ```
 
-Import accepts at most 8 GiB compressed data, at most 10,000 archive entries, and at most 64 GiB expanded data. Symbolic links and unsafe or unsupported archives are rejected with `422`. Activation returns `202 Accepted` with `instance` and a `restarting` boolean.
+Import accepts at most 8 GiB compressed data, at most 100,000 archive entries, and at most 64 GiB expanded data. Symbolic links and unsafe or unsupported archives are rejected with `422`. Activation returns `202 Accepted` with `instance` and a `restarting` boolean.
 
 ## What read-only means
 
@@ -145,8 +112,10 @@ with status `423 Locked`. The sole write exception is `POST /instance-activation
 ## Factory reset
 
 :::danger Permanent local deletion
-Factory reset permanently removes the active AkôFlow catalog, environments, workflows, plans, runs, artifacts metadata, managed credentials and personal preferences. Export a snapshot first if any state must be retained. External SSH key files are retained only when they are outside the Engine-managed credential directory; the Desktop specifically notes that external SSH key files remain.
+Factory reset deletes the active database catalog, including environments, workflows, plans, runs, artifact metadata, and saved credential references. It also removes the server-managed Kubernetes token directory. It does **not** remove SSH private-key files, saved cloud credential files, or artifact files from disk. Export a snapshot first if any catalog state must be retained, and remove retained files separately when retiring the instance.
 :::
+
+The Desktop reset also clears local storage in the current browser profile, including its preferences and saved API token. Calling the API directly does not clear browser storage or other profiles. The Desktop confirmation currently describes all managed credentials as removed; the server behavior above is the limit to rely on.
 
 ### Using AkôFlow Desktop
 
@@ -158,8 +127,8 @@ Factory reset permanently removes the active AkôFlow catalog, environments, wor
 
 ```bash
 curl --fail-with-body \
-  -H "Authorization: Bearer $AKOFLOW_TOKEN" \
-  -X POST "$AKOFLOW_URL/factory-reset/"
+  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  -X POST "$AKOFLOW_API_URL/factory-reset/"
 ```
 
 Success is `202 Accepted` with a `restarting` flag. The server first persists a small reset marker, returns the response, and then restarts. Before opening SQLite again, the new process removes the database and its journal sidecars and bootstraps an empty schema. Reset time therefore does not grow with the number of stored plans, candidates, activities, or runs.

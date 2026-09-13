@@ -205,7 +205,7 @@ func (r *Repository) SaveDownload(ctx context.Context, v domain.DownloadRun) err
 	const query = `INSERT INTO storage_download_runs(
 		id,storage_resource_id,path,status,strategy,url,size_bytes,transferred_bytes,error,created_at,updated_at
 	) VALUES(?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET
-		status=excluded.status,url=excluded.url,transferred_bytes=excluded.transferred_bytes,
+		path=excluded.path,status=excluded.status,url=excluded.url,transferred_bytes=excluded.transferred_bytes,
 		error=excluded.error,updated_at=excluded.updated_at`
 	_, e := r.db.ExecContext(ctx, query,
 		v.ID, v.StorageID, v.Path, v.Status, v.Strategy, v.URL, v.SizeBytes,

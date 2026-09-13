@@ -3,7 +3,7 @@ title: Provenance and audit
 description: Query local execution evidence safely with SQL and inspect the operational audit trail.
 ---
 
-# Provenance and audit
+# Choose provenance or audit
 
 AkôFlow keeps two complementary records:
 
@@ -47,10 +47,10 @@ Expand the table to see its available fields. Clicking a field appends its name 
 Only read-only `SELECT` and `WITH` queries are accepted. Desktop uses a 10-second execution timeout and returns up to 200 rows per page. Fetch the runtime schema instead of assuming table or column names:
 
 ```bash
-curl -H "Authorization: Bearer $AKOFLOW_TOKEN" \
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_TOKEN" \
   "$AKOFLOW_URL/akoflow-api/provenance/sql/schema/"
 
-curl -X POST -H "Authorization: Bearer $AKOFLOW_TOKEN" \
+curl --fail-with-body -X POST -H "Authorization: Bearer $AKOFLOW_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
     "sql":"SELECT id, status, created_at FROM execution_runs WHERE status = :status ORDER BY created_at DESC",
@@ -86,7 +86,7 @@ Open **Audit** for a chronological record of infrastructure discovery, connectio
 The API supports server-side filtering:
 
 ```bash
-curl -G -H "Authorization: Bearer $AKOFLOW_TOKEN" \
+curl --fail-with-body -G -H "Authorization: Bearer $AKOFLOW_TOKEN" \
   --data-urlencode "environmentId=$ENVIRONMENT_ID" \
   --data-urlencode "outcome=failed" \
   --data-urlencode "limit=100" \

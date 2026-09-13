@@ -6,6 +6,8 @@ import (
 	"errors"
 	"net/http"
 	"net/http/httptest"
+	"os"
+	"path/filepath"
 	"testing"
 
 	"github.com/UFFeScience/akoflow/internal/domain"
@@ -268,6 +270,36 @@ func TestDuplicateWorkflowCreatesIndependentDefinition(t *testing.T) {
 	require.Equal(t, "copied", store.created.Namespace)
 	require.Equal(t, "copied-workflow-v1", store.created.Version.ID)
 	require.Equal(t, "copied-workflow-activity", store.created.Version.Activities[0].ActivityTypeID)
+}
+
+func TestDuplicateWorkflowDocumentationJSON(t *testing.T) {
+	store := &workflowRepositoryStub{definition: ptr(workflowFixture())}
+	handler := newTestHandler()
+	handler.workflows = store
+	request := httptest.NewRequest(http.MethodPost, "/workflow-definition-actions/duplicate/source/", bytes.NewBufferString(`{"name":"Copied workflow","namespace":"copied"}`))
+	request.Header.Set("Content-Type", "application/json")
+	request.SetPathValue("workflowId", "source")
+	recorder := httptest.NewRecorder()
+	handler.DuplicateWorkflow(recorder, request)
+	require.Equal(t, http.StatusCreated, recorder.Code)
+	require.NotNil(t, store.created)
+	require.Equal(t, "copied-workflow", store.created.ID)
+	require.Equal(t, "copied", store.created.Namespace)
+}
+
+func TestWorkflowImportCompatibilityRouteAcceptsVersionedExample(t *testing.T) {
+	file, err := os.ReadFile(filepath.Join("..", "..", "..", "..", "examples", "simulation", "workflow.yaml"))
+	require.NoError(t, err)
+	store := &workflowRepositoryStub{}
+	handler := newTestHandler()
+	handler.workflows = store
+	request := httptest.NewRequest(http.MethodPost, "/workflow-definitions/import/", bytes.NewReader(file))
+	request.Header.Set("Content-Type", "application/yaml")
+	recorder := httptest.NewRecorder()
+	handler.CreateWorkflow(recorder, request)
+	require.Equal(t, http.StatusCreated, recorder.Code, recorder.Body.String())
+	require.NotNil(t, store.created)
+	require.Equal(t, "simulation-example-workflow", store.created.ID)
 }
 
 func TestDuplicateWorkflowRejectsMissingNameAndUnknownWorkflow(t *testing.T) {

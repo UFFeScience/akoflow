@@ -12,7 +12,7 @@ import {FileList, WorkflowDiagram} from '@site/src/components/WorkflowShowcase';
 
 This complete SimGrid experiment makes network sharing visible. `t1` produces three 10 GB dependencies. `t2`, `t3`, and `t4` run concurrently on the three cores of M2, then each sends 10 GB to `t5` on M3. The links are shared: a concurrent flow does not receive the full nominal bandwidth on its own.
 
-Use it to inspect how a placement with parallel tasks can still be limited by its network endpoints. Do not treat the 36-second manual-plan estimate as a universal formula for 10 GB/s networks; the observed trace is the authoritative evidence for the configured sharing model.
+Use it to inspect how network endpoints limit parallel tasks. The manual plan's 36-second estimate applies to this model; compare it with the observed trace.
 
 ## Model at a glance
 
@@ -27,35 +27,34 @@ Every dependency is 10,000,000,000 bytes. There are six dependencies, so a compl
 ## Download the model
 
 <FileList>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/simulation/30gb-fanout/environment.yaml">Environment YAML ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/simulation/30gb-fanout/scope.yaml">Execution scope YAML ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/simulation/30gb-fanout/topology.yaml">Network topology YAML ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/simulation/30gb-fanout/workflow.yaml">Workflow YAML ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/simulation/30gb-fanout/plan-request.yaml">Plan envelope ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/simulation/30gb-fanout/execution-request.yaml">Execution envelope ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/simulation/30gb-fanout/run.sh">Submission script ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/simulation/30gb-fanout/environment.yaml">Environment YAML ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/simulation/30gb-fanout/scope.yaml">Execution scope YAML ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/simulation/30gb-fanout/topology.yaml">Network topology YAML ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/simulation/30gb-fanout/workflow.yaml">Workflow YAML ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/simulation/30gb-fanout/plan-request.yaml">Plan envelope ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/simulation/30gb-fanout/execution-request.yaml">Execution envelope ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/simulation/30gb-fanout/run.sh">Submission script ↓</a>
 </FileList>
 
 <InterfaceApiTabs
   desktop={<div>
-    <h2>Explore with AkôFlow Desktop</h2>
+    <h2>Inspect the API run in Desktop</h2>
+    <p>Run the versioned API script below, then open Desktop connected to that same server. The packaged Desktop uses its own local server by default.</p>
     <ol>
-      <li>Create a simulation environment with M1 (one core), M2 (three cores), and M3 (one core), and bind SimGrid to each resource.</li>
-      <li>Create the scope and attach the two shared, bidirectional 80 Gbit/s links from <code>topology.yaml</code>.</li>
-      <li>Import <code>workflow.yaml</code>. In its Definition graph, confirm that <code>t1</code> fans out to three activities and that all three converge on <code>t5</code>.</li>
-      <li>Choose <strong>Generate plan</strong>. Use <strong>Create manually</strong> to reproduce the checked-in M1 → M2 → M3 assignment, or use <strong>Generate plans</strong> to compare PRISM Cost, PRISM Time, and HEFT on the same scope.</li>
-      <li>Expand a candidate Gantt. Verify that `t2`, `t3`, and `t4` occupy different M2 cores; then select the plan and start the simulation.</li>
-      <li>On the completed run, open <strong>Data</strong> to inspect six transfers and <strong>Plan vs execution</strong> to compare the 36-second estimate with the observed trace.</li>
+      <li>Open the workflow definition and confirm that <code>t1</code> fans out to <code>t2</code>, <code>t3</code>, and <code>t4</code>, which converge on <code>t5</code>.</li>
+      <li>Open the saved plan and check that the three middle activities use different M2 cores.</li>
+      <li>Open the completed run. Use <strong>Data</strong> for the six transfers and <strong>Plan vs execution</strong> for timing.</li>
     </ol>
+    <p>The API script registers the two network links used by this result. The current Desktop navigation does not expose link creation, and a full Desktop-only submission has not been verified.</p>
   </div>}
   api={<div>
     <h2>Register, plan, and execute through the API</h2>
-    <p>From a fresh instance, run the versioned script. It submits the environment, scope, topology, workflow, manual plan, and execution envelope in dependency order:</p>
-    <pre><code>{`export AKOFLOW_API_URL="http://127.0.0.1:8080/akoflow-api"
-export AKOFLOW_API_TOKEN="<token>"
+    <p>Complete <a href="/docs/tutorials/api-access">API connection setup</a> and use a fresh AkôFlow instance. Clone v1.0.8, then run the script from that checkout. It submits the environment, scope, topology, workflow, manual plan, and execution envelope in order:</p>
+    <pre><code>{`git clone --branch v1.0.8 --depth 1 https://github.com/UFFeScience/akoflow.git akoflow-showcase
+cd akoflow-showcase
 bash examples/simulation/30gb-fanout/run.sh`}</code></pre>
     <p>Poll the run until it reports <code>completed</code>:</p>
-    <pre><code>{`curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \\
+    <pre><code>{`curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \\
   "$AKOFLOW_API_URL/execution-runs/simgrid-30gb-fanout-run-v1/"`}</code></pre>
   </div>}
 />

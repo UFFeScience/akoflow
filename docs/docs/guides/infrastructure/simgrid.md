@@ -5,13 +5,15 @@ description: Configure a reproducible simulated environment with resources, netw
 
 # Model a SimGrid environment
 
-This how-to is for users who already know how to import a workflow and want to model the infrastructure it will run on. It uses the checked-in [edge-to-cloud bundle](../../showcase/edge-cloud-simulation) because that bundle contains a resource model, a topology, per-activity simulation profiles, a scope, and a runnable plan.
+Use this guide to model resources, activity duration, and network transfers for a simulated workflow. It draws on the checked-in [edge-to-cloud bundle](/docs/showcase/edge-cloud-simulation), which includes a complete runnable plan.
 
-Use SimGrid when the question is about a modeled platform: placement, parallel capacity, transfers, latency, and simulated cost. Do not use it to validate an SSH, Kubernetes, cloud, or Slurm connection; a SimGrid environment has no remote endpoint to test. For a first end-to-end execution, start with [Run your first simulated workflow](../workflows/first-run).
+Use SimGrid when the question is about a modeled platform: placement, parallel capacity, transfers, latency, and simulated cost. Do not use it to validate an SSH, Kubernetes, cloud, or Slurm connection; a SimGrid environment has no remote endpoint to test. For a first end-to-end execution, start with [Run your first simulated workflow](/docs/guides/workflows/first-run).
+
+The YAML blocks below show only the fields discussed in each step. Use the [complete versioned files](https://github.com/UFFeScience/akoflow/tree/v1.0.8/examples/simulation) when submitting the example.
 
 ## Prerequisites
 
-- A running AkôFlow daemon with the SimGrid runner available. The server image includes it; source builds can follow [`examples/simulation/README.md`](https://github.com/UFFeScience/akoflow/blob/main/examples/simulation/README.md).
+- A running AkôFlow server with the SimGrid runner available. The server image includes it; source builds can follow [`examples/simulation/README.md`](https://github.com/UFFeScience/akoflow/blob/v1.0.8/examples/simulation/README.md).
 - A local checkout of the repository if you will submit the versioned YAML bundle.
 - A workflow with explicit `simulation.durationSeconds` or `simulation.flops` for every activity whose execution time should be modeled.
 
@@ -19,7 +21,7 @@ Use SimGrid when the question is about a modeled platform: placement, parallel c
 
 Create a simulation environment and bind the `simgrid` runtime to every resource that a plan may use. In Desktop, open **Infrastructure → Environments**, create a simulation environment, add its resources and the SimGrid runtime, then enable a runtime binding for each resource. The API equivalent is the `environment.yaml` in the example bundle.
 
-```yaml title="examples/simulation/environment.yaml"
+```yaml title="Resource excerpt from environment.yaml"
 resources:
   - id: simulated-edge
     cpuCores: 2
@@ -49,13 +51,15 @@ The fields have different jobs:
 | `bootOverheadSeconds` and `containerOverheadSeconds` | Add modeled setup time. A plan assignment may override these values when it freezes the selected placement. |
 | `schedulable` | Makes the resource available to a scope and to planning. Keep non-execution resources out of a placement by setting it to `false`. |
 
-Do not raise `cpuCores` merely to make a predicted makespan smaller. A 50-core resource models 50 simultaneous execution lanes only when the workflow and the resulting plan can use them. The [50-core fan-out Showcase](../../showcase/parallel-50-core) is the worked example for that case.
+Do not raise `cpuCores` merely to make a predicted makespan smaller. A 50-core resource models 50 simultaneous execution lanes only when the workflow and the resulting plan can use them. The [50-core fan-out Showcase](/docs/showcase/parallel-50-core) is the worked example for that case.
 
 ## 2. Give each activity its own compute profile
 
-The most important input for a meaningful prediction is not the image or command: it is the work associated with each activity. Put the profile on the activity rather than applying one shared default to the workflow.
+Give each activity a compute profile based on its own work. That profile drives
+the modeled duration; a single workflow-wide default hides differences between
+activities.
 
-```yaml title="examples/simulation/workflow.yaml"
+```yaml title="Activity excerpt from workflow.yaml"
 activities:
   - name: prepare
     runtime: simgrid
@@ -80,9 +84,9 @@ After importing, open the workflow definition and inspect every activity. A miss
 
 ## 3. Model the network before planning
 
-Create a topology for the execution scope. In Desktop, select the scope and create or edit its topology; with the API, submit `topology.yaml` after the scope. The example models one bidirectional edge-to-cloud link:
+Create a topology for the execution scope. The Desktop scope form creates an empty topology; its current navigation does not expose link creation. Submit `topology.yaml` through the API after creating the scope. The example models one bidirectional edge-to-cloud link:
 
-```yaml title="examples/simulation/topology.yaml"
+```yaml title="Link excerpt from topology.yaml"
 links:
   - id: edge-cloud
     sourceResourceId: simulated-edge
@@ -100,11 +104,11 @@ Bandwidth is in **bits per second**, while dependency sizes are in **bytes**. Fo
 
 For example, 100,000,000 bytes over 100,000,000 bit/s with 50 ms latency has a base transfer time of `8.05 s`. The SimGrid platform uses the same bandwidth and latency values. A data dependency creates a transfer only when its producer and consumer are assigned to different resources.
 
-`bidirectional: true` makes the link usable in both directions. `sharingPolicy: shared` is emitted as a shared SimGrid link; use `independent` or `fatpipe` only when the modeled link should not share bandwidth. A topology can contain several links: AkôFlow derives an available path between resources and uses the lowest-latency path according to the configured link latencies and bandwidths. A missing route is not a zero-cost transfer; fix the topology or keep the dependent activities on the same resource.
+`bidirectional: true` makes the link usable in both directions. `sharingPolicy: shared` is emitted as a shared SimGrid link; use `independent` or `fatpipe` only when the modeled link should not share bandwidth. AkôFlow selects a route through the available links using their latency and bandwidth, then models the transfer on that route. If dependent activities may use different resources, provide a route between them: PRISM rejects a missing route, while HEFT's baseline can estimate zero transfer time without a direct link. [Network modeling](/docs/explanations/network-modeling) explains the difference.
 
 Declare the data itself in the workflow:
 
-```yaml title="examples/simulation/workflow.yaml"
+```yaml title="Data-dependency excerpt from workflow.yaml"
 dataDependencies:
   - producerActivity: prepare
     consumerActivity: analyze
@@ -129,11 +133,11 @@ environmentVersionIds:
 
 In Desktop, open the workflow, choose **Generate plan**, select **Simulation**, and choose the scope. Use **Generate plans** to compare algorithms, or **Create manually** to reproduce a known placement. Inspect the candidate Gantt before selecting it: the lane count should reflect the selected resource cores, and cross-resource dependency lines should correspond to the modeled data dependencies.
 
-To submit the checked-in manual plan and run it through the API, execute the bundle from the repository root:
+To submit the checked-in manual plan and run it through the API, complete [API connection setup](/docs/tutorials/api-access), use a v1.0.8 checkout, and execute the bundle from its root:
 
 ```bash
-export AKOFLOW_API_URL='http://127.0.0.1:8080/akoflow-api'
-export AKOFLOW_API_TOKEN='<token>'
+git clone --branch v1.0.8 --depth 1 https://github.com/UFFeScience/akoflow.git akoflow-simgrid
+cd akoflow-simgrid
 sh examples/simulation/run.sh
 ```
 
@@ -165,6 +169,6 @@ The run's execution, transfer, queue, and overhead totals are accumulated across
 | No transfer is reported | Confirm that the data dependency has `sizeBytes > 0`, the selected assignments use different resources, and the scope topology has a route between them. |
 | A planned transfer is unrealistically fast | Check units: topology bandwidth is bit/s and data dependency size is bytes. Include link latency. |
 | Parallel activities appear in one lane | Check `cpuCores`, activity CPU requirements, and the plan's `coreId` assignments. Then regenerate the plan. |
-| A resource is absent from candidate plans | Confirm `schedulable: true`, an enabled `simgrid` runtime binding, enough CPU/memory for the activity, and that its environment version belongs to the scope. |
+| A resource is absent from candidate plans | Confirm `schedulable: true` and that its environment version belongs to the scope; then inspect the activity requirements and algorithm placement. An enabled `simgrid` runtime binding is needed to execute a selected plan, but it is not part of the planning resource filter. |
 
-Related material: [execution scopes](./execution-scopes), [network fan-out](../../showcase/network-fanout), [parallel 50-core fan-out](../../showcase/parallel-50-core), and [the execution evidence guide](../workflows/executions).
+Related material: [execution scopes](/docs/guides/infrastructure/execution-scopes), [network fan-out](/docs/showcase/network-fanout), [parallel 50-core fan-out](/docs/showcase/parallel-50-core), and [the execution evidence guide](/docs/guides/workflows/executions).

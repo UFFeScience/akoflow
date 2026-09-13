@@ -1,24 +1,20 @@
 ---
-title: Cloud capacity and machine configuration
+title: Configure cloud capacity
+description: Choose a Google Cloud worker target, save it for planning, and inspect provisioning.
 ---
 
-A cloud environment separates four concerns:
+Use this guide after [connecting Google Cloud](/docs/tutorials/connect-cloud).
+Choose a machine from its catalog, save a capacity target for planning, and
+provision an instance when a run needs it. Google Cloud is the current compute
+provider; check [cloud provider support](/docs/guides/infrastructure/cloud-support) for AWS and object
+storage limits. For optional Ansible setup, create a
+[machine configuration](/docs/guides/infrastructure/machine-configurations) before saving the target.
 
-1. the cached provider catalog (machines, images, disks, zones, and prices);
-2. capacity targets that planners may select;
-3. versioned machine configurations expressed as Ansible playbooks;
-4. provisioned instances and their asynchronous lifecycle operations.
+For the API commands on this page, complete [API connection setup](/docs/tutorials/api-access) and register `research-gcp` through the [Google Cloud connection tutorial](/docs/tutorials/connect-cloud) first. Run the commands in the same Bash session.
 
-## Provider support in v1.0
-
-| Capability | Google Cloud | AWS |
-| --- | --- | --- |
-| Store provider credentials | Yes | Yes |
-| Discover compute machines, images, disks, zones, and prices | Yes | Not yet |
-| Provision compute capacity with Terraform | Yes | Not yet |
-| Transfer artifacts through object storage | GCS through configured storage adapters | S3 and S3-compatible endpoints |
-
-For a runnable Google Cloud setup, continue with [Configure Google Cloud](./gcp). For AWS, read [Configure AWS](./aws) before creating an environment: v1.0 can use AWS credentials for S3 data movement, but cannot create or discover EC2 workers. This distinction prevents a stored credential from being mistaken for a working compute provider.
+This procedure has not yet passed a live provision-and-destroy cycle in a
+disposable project. [Configure Google Cloud](/docs/guides/infrastructure/gcp) covers account access and
+the checks to perform before a real worker run.
 
 ## Synchronize the provider catalog
 
@@ -29,11 +25,11 @@ Open a cloud environment and select **Cloud capacity**. If no cached catalog exi
 ### Using the API
 
 ```bash
-curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_TOKEN" \
-  -X POST "$AKOFLOW_URL/environments/gcp-lab/cloud-catalog/refresh/"
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  -X POST "$AKOFLOW_API_URL/environments/research-gcp/cloud-catalog/refresh/"
 
-curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_TOKEN" \
-  "$AKOFLOW_URL/environments/gcp-lab/cloud-catalog/"
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  "$AKOFLOW_API_URL/environments/research-gcp/cloud-catalog/"
 ```
 
 The GET endpoint returns `404` until a catalog has been synchronized. Provider credentials must already be stored and referenced by the cloud environment connection.
@@ -43,67 +39,67 @@ The GET endpoint returns `404` until a catalog has been synchronized. Provider c
 ### Using AkôFlow Desktop
 
 1. Choose a catalog machine, image, disk, and disk size.
-2. Select a zone policy, provisioning mode, maximum instance count, and lifecycle policy.
+2. Select the region, provisioning mode, maximum instance count, and lifecycle policy.
 3. Optionally attach an additional machine-configuration version.
-4. Save the target. It becomes a provisioned cloud resource available to planning.
+4. Save the target. It becomes a capacity option available to planning; saving it does not create a VM.
+
+If you need a machine configuration, [create its version](/docs/guides/infrastructure/machine-configurations) before saving the target and attach that version's actual ID. Provisioning needs the referenced version.
+
+For a required zone, set `fixedZone` through the target API below.
 
 ### Using the API
 
-```bash
-curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_TOKEN" \
-  -H 'Content-Type: application/json' -X POST \
-  "$AKOFLOW_URL/environments/gcp-lab/cloud-capacity-targets/" \
-  -d '{
-    "name":"E2 standard worker",
-    "provider":"gcp",
-    "providerMachineType":"e2-standard-4",
-    "region":"us-central1",
-    "zonePolicy":"any",
-    "imageReference":"projects/debian-cloud/global/images/family/debian-12",
-    "architecture":"x86_64",
-    "vcpu":4,
-    "memoryMiB":16384,
-    "provisioningMode":"standard",
-    "maximumInstances":2,
-    "lifecyclePolicy":"destroy-after-run",
-    "configuration":{"diskType":"pd-balanced","diskSizeGiB":30,"network":"default"},
-    "machineConfigurations":[{"configurationVersionId":"akoflow-scientific-worker-v4","executionOrder":0,"required":true,"enabled":true}]
-  }'
-```
-
-The server supplies the target ID and environment ID when omitted, enables the target, and creates the corresponding provisioned resource. Machine/image identifiers are provider values from the synchronized catalog.
-
-## Create and version a machine configuration
-
-### Using AkôFlow Desktop
-
-Open **Infrastructure → Machine configurations**. Create a named configuration, edit its Ansible playbook, validate it, and save a version. Existing capacity targets refer to a specific configuration-version ID, not to mutable editor contents.
-
-### Using the API
-
-Validate YAML before saving it:
+Keep the `AKOFLOW_GCP_PROJECT` value from the validated [connection tutorial](/docs/tutorials/connect-cloud). Read a compatible Ubuntu image's `providerImageId` from the synchronized catalog. Confirm that `e2-standard-4` is available in the selected region, or replace the machine type and its CPU/memory values with a catalog match. Enter the approved daemon or bastion CIDR before the request is sent.
 
 ```bash
-curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_TOKEN" \
-  -H 'Content-Type: application/json' -X POST \
-  "$AKOFLOW_URL/machine-configuration-validations/" \
-  -d '{"playbookYaml":"---\n- name: Configure worker\n  hosts: all\n  become: true\n  tasks:\n    - name: Install curl\n      ansible.builtin.package:\n        name: curl\n        state: present\n"}'
+set -o pipefail
+: "${AKOFLOW_GCP_PROJECT:?Complete the GCP connection tutorial first}"
+read -r -p 'Ubuntu providerImageId from the catalog: ' AKOFLOW_GCP_IMAGE_ID || exit 1
+read -r -p 'Approved SSH source CIDR: ' AKOFLOW_SSH_CIDR || exit 1
+[ -n "$AKOFLOW_GCP_IMAGE_ID" ] && [ -n "$AKOFLOW_SSH_CIDR" ] || exit 1
+
+jq -n --arg project "$AKOFLOW_GCP_PROJECT" \
+  --arg image "$AKOFLOW_GCP_IMAGE_ID" --arg cidr "$AKOFLOW_SSH_CIDR" \
+  --arg configVersion "${AKOFLOW_MACHINE_CONFIGURATION_VERSION_ID:-}" '{
+    name:"E2 standard worker",
+    provider:"gcp",
+    providerMachineType:"e2-standard-4",
+    region:"us-central1",
+    imageReference:$image,
+    architecture:"amd64",
+    vcpu:4,
+    memoryMiB:16384,
+    provisioningMode:"standard",
+    maximumInstances:2,
+    lifecyclePolicy:"destroy-after-run",
+    configuration:{
+      projectId:$project,
+      diskType:"pd-balanced",
+      diskSizeGiB:30,
+      network:"default",
+      sshSourceRanges:[$cidr]
+    }
+  } + (if $configVersion == "" then {} else {
+    machineConfigurations:[{
+      configurationVersionId:$configVersion,
+      executionOrder:1,
+      required:true,
+      enabled:true
+    }]
+  } end)' | curl --fail-with-body \
+    -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+    -H 'Content-Type: application/json' --data-binary @- \
+    "$AKOFLOW_API_URL/environments/research-gcp/cloud-capacity-targets/" \
+    -o cloud-target.json || exit 1
+
+AKOFLOW_CAPACITY_TARGET_ID=$(jq -er '.id' cloud-target.json) || exit 1
 ```
 
-Create the configuration and then its first version:
+The project ID is required by the current Terraform target; it is not copied from the environment connection. The built-in worker configuration requires `amd64`, even when Google Cloud labels a machine `X86_64`. If the CIDR is omitted, the Terraform target defaults SSH ingress to `0.0.0.0/0`.
 
-```bash
-curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_TOKEN" \
-  -H 'Content-Type: application/json' -X POST "$AKOFLOW_URL/machine-configurations/" \
-  -d '{"id":"analysis-worker","name":"Analysis worker","description":"Packages used by analysis jobs"}'
+Set `fixedZone` in the target if the worker must use a particular zone. Without it, the current Terraform module chooses the first active zone returned for the region. The saved `zonePolicy` field does not currently affect that choice.
 
-curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_TOKEN" \
-  -H 'Content-Type: application/json' -X POST \
-  "$AKOFLOW_URL/machine-configurations/analysis-worker/versions/" \
-  -d '{"version":1,"status":"published","playbookYaml":"---\n- name: Configure worker\n  hosts: all\n  tasks: []\n","compatibility":{"providers":["gcp"]}}'
-```
-
-Validation checks playbook structure and returns `valid`, a content hash, and errors when present. It does not provision a machine or execute the playbook.
+The server supplies the target ID and environment ID when omitted, enables the target, and creates a schedulable capacity record; no VM is created yet. The command saves the returned ID for provisioning. The machine type must also come from the synchronized catalog.
 
 ## Provision and follow an instance
 
@@ -114,15 +110,26 @@ Open a cloud resource or the environment **Provisioning** tab and start provisio
 ### Using the API
 
 ```bash
-curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_TOKEN" \
-  -H 'Content-Type: application/json' -X POST \
-  "$AKOFLOW_URL/environments/gcp-lab/cloud-provisioning/" \
-  -d '{"capacityTargetId":"<capacity-target-id>"}'
+set -o pipefail
+jq -n --arg id "$AKOFLOW_CAPACITY_TARGET_ID" '{capacityTargetId:$id}' | \
+  curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+    -H 'Content-Type: application/json' --data-binary @- \
+    "$AKOFLOW_API_URL/environments/research-gcp/cloud-provisioning/" \
+    -o cloud-operation.json || exit 1
 
-# Follow all operations, then inspect the selected operation and its events
-curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_TOKEN" "$AKOFLOW_URL/cloud-operations/"
-curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_TOKEN" "$AKOFLOW_URL/cloud-operations/<operation-id>/"
-curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_TOKEN" "$AKOFLOW_URL/cloud-operations/<operation-id>/events/"
+AKOFLOW_CLOUD_OPERATION_ID=$(jq -er '.id' cloud-operation.json) || exit 1
+
+# Inspect the operation
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" "$AKOFLOW_API_URL/cloud-operations/"
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" "$AKOFLOW_API_URL/cloud-operations/$AKOFLOW_CLOUD_OPERATION_ID/"
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" "$AKOFLOW_API_URL/cloud-operations/$AKOFLOW_CLOUD_OPERATION_ID/events/"
 ```
 
-The provisioning request queues an operation; it does not wait for the instance to become ready. Lifecycle endpoints also exist for configure, validate, start, stop, and destroy. Before destructive lifecycle actions, inspect the instance and active operation state in Desktop or through the API.
+The provisioning request queues an operation. Read its status, failure reason,
+and events until it completes or fails. A `202 Accepted` response does not
+confirm that the target belongs to this environment, the credential works, or
+the VM is ready; those checks run later. Lifecycle endpoints also exist for
+configure, validate, start, stop, and destroy. Before destructive actions,
+inspect the instance and active operation state in Desktop or through the API.
+
+If the worker becomes ready, confirm that its environment version belongs to the [execution scope](/docs/guides/infrastructure/execution-scopes) before planning a run. Use [Configure Google Cloud](/docs/guides/infrastructure/gcp#4-provision-and-verify) to review worker validation and cleanup; a live provision-and-destroy cycle remains unverified.

@@ -12,7 +12,7 @@ import {FileList, WorkflowDiagram} from '@site/src/components/WorkflowShowcase';
 
 This workload separates *machine capacity* from *activity count*. One hundred independent activities are assigned to M2, a simulated machine with 50 cores. Each activity requests one core and lasts 10 seconds, so the manual plan has two 50-activity waves. The example is useful for checking that a plan uses cores rather than treating a machine as one execution slot.
 
-M1 and M3 are retained only to keep the three-machine SimGrid scope used by the related examples. No activity is assigned to them, and this workflow has no data dependencies. It is deliberately a compute-capacity exercise, not a network experiment.
+M1 and M3 remain in the shared three-machine SimGrid scope, but no activity uses them. The workflow has no data dependencies, so its result shows compute capacity and queueing across cores.
 
 ## Model at a glance
 
@@ -28,34 +28,34 @@ M1 and M3 are retained only to keep the three-machine SimGrid scope used by the 
 ## Download the complete bundle
 
 <FileList>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/simulation/50core-fanout/environment.yaml">Environment YAML ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/simulation/50core-fanout/scope.yaml">Execution scope YAML ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/simulation/50core-fanout/topology.yaml">Network topology YAML ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/simulation/50core-fanout/workflow.yaml">Workflow YAML ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/simulation/50core-fanout/plan-request.yaml">Plan envelope ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/simulation/50core-fanout/execution-request.yaml">Execution envelope ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/simulation/50core-fanout/run.sh">Runnable shell script ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/simulation/50core-fanout/environment.yaml">Environment YAML ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/simulation/50core-fanout/scope.yaml">Execution scope YAML ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/simulation/50core-fanout/topology.yaml">Network topology YAML ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/simulation/50core-fanout/workflow.yaml">Workflow YAML ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/simulation/50core-fanout/plan-request.yaml">Plan envelope ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/simulation/50core-fanout/execution-request.yaml">Execution envelope ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/simulation/50core-fanout/run.sh">Runnable shell script ↓</a>
 </FileList>
 
 <InterfaceApiTabs
   desktop={<div>
-    <h2>Run with AkôFlow Desktop</h2>
+    <h2>Inspect the API run in Desktop</h2>
+    <p>Submit the bundle with the versioned API script below, then use Desktop connected to that server to inspect it.</p>
     <ol>
-      <li>Open <strong>Infrastructure → Environments</strong> and create a simulation environment that matches <code>environment.yaml</code>. Add the SimGrid runtime and bind it to M1, M2, and M3. M2 must have 50 schedulable cores.</li>
-      <li>Open <strong>Infrastructure → Execution scopes</strong>, create the scope and topology from the supplied YAML, then attach the environment version. The links are present for consistency with the other examples but carry no data in this workflow.</li>
-      <li>Open <strong>Workflows → Definitions</strong> and import <code>workflow.yaml</code>. Its Definition view must contain 100 unconnected worker nodes, each with a 10-second simulation duration.</li>
-      <li>Choose <strong>Generate plan</strong>, then <em>Create manually</em>. Select the simulation scope and assign workers 001–050 to M2 cores 0–49. Assign workers 051–100 to the same cores after the first wave. The checked-in plan is the API representation of that placement.</li>
-      <li>Expand the plan Gantt chart before starting it. It should show 50 used M2 core lanes, with two adjacent 10-second bars per lane. Start the simulation and compare its plan with the completed run.</li>
+      <li>Open the workflow definition and confirm that it has 100 independent workers with 10-second simulation profiles.</li>
+      <li>Open the saved plan and check for 50 M2 core lanes with two waves of activities.</li>
+      <li>Open the completed run and compare its 20-second makespan with the accumulated activity time.</li>
     </ol>
+    <p>Desktop-only creation and submission of this 100-activity bundle have not been verified.</p>
   </div>}
   api={<div>
     <h2>Run through the API</h2>
-    <p>The checked-in script submits the objects in dependency order and stops on the first HTTP error. Run it against a fresh instance, or change every persistent ID in the bundle:</p>
-    <pre><code>{`export AKOFLOW_API_URL="http://127.0.0.1:8080/akoflow-api"
-export AKOFLOW_API_TOKEN="<token>"
+    <p>Complete <a href="/docs/tutorials/api-access">API connection setup</a>. The script submits objects in dependency order and stops on the first HTTP error. Use a fresh instance or change every persistent ID in the bundle, then run it from a v1.0.8 checkout:</p>
+    <pre><code>{`git clone --branch v1.0.8 --depth 1 https://github.com/UFFeScience/akoflow.git akoflow-showcase
+cd akoflow-showcase
 bash examples/simulation/50core-fanout/run.sh`}</code></pre>
     <p>Poll the run projection until its status is <code>completed</code>:</p>
-    <pre><code>{`curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \\
+    <pre><code>{`curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \\
   "$AKOFLOW_API_URL/execution-runs/simgrid-50core-workers-run-v2/"`}</code></pre>
   </div>}
 />
@@ -73,4 +73,4 @@ If the makespan is not 20 seconds, check these invariants in order:
 3. Each assignment requests one core and uses a distinct `coreId` in its wave.
 4. The second wave starts at 10 seconds rather than at 0 seconds on an already occupied core.
 
-For a data-transfer counterpart, see [30 GB network fan-out](./network-fanout). For the distinction between accumulated stage time and makespan, see [Core concepts](../concepts).
+For a data-transfer counterpart, see [30 GB network fan-out](/docs/showcase/network-fanout). For the distinction between accumulated stage time and makespan, see [Interpreting observed timing](/docs/explanations/observed-timing).

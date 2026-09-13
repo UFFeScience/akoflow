@@ -35,15 +35,10 @@ function DesktopCard() {
         Native client for macOS, Windows, and Linux, distributed through
         versioned GitHub Releases.
       </p>
-      <a
-        href="https://github.com/UFFeScience/akoflow/releases/latest"
-        target="_blank"
-        rel="noopener noreferrer"
-        className={styles.downloadBtn}
-      >
+      <Link to="/docs/downloads" className={styles.downloadBtn}>
         <DownloadIcon />
-        Download
-      </a>
+        Choose download
+      </Link>
       <Link to="/docs/installation" className={styles.docsLink}>
         Installation guide
       </Link>
@@ -57,7 +52,7 @@ export default function Home(): React.JSX.Element {
   return (
     <Layout
       title={siteConfig.title}
-      description="One Workflow. Multiple Platforms."
+      description="Define, plan, run, and inspect scientific workflows with AkôFlow."
     >
       <main className={styles.page}>
         <BackgroundGraph />
@@ -87,15 +82,16 @@ export default function Home(): React.JSX.Element {
         </h1>
 
         <p className={styles.subheadline}>
-          Model, compare, and execute container-based scientific workflows
-          across local, simulated, cloud, Kubernetes, and HPC environments.
+          Define a scientific workflow, choose where it runs, make a plan,
+          execute it, and inspect the result. Start locally;
+          connected environments require their own setup.
         </p>
 
         <div className={styles.platformSection}>
           <DesktopCard />
 
           <p className={styles.hint}>
-            Desktop runs the local control plane through Docker &middot;{" "}
+            Desktop starts the local AkôFlow service through Docker &middot;{" "}
             <Link to="/docs/installation">Full installation guide</Link>
           </p>
         </div>

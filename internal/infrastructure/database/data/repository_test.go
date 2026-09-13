@@ -169,6 +169,11 @@ func TestMaterializationAndTransferLifecycle(t *testing.T) {
 		t.Fatal(err)
 	}
 	materialization := domain.ArtifactMaterialization{ID: "materialization", RunID: "run", ActivityID: "activity", VariantID: "variant", Digest: digest, ResourceID: "resource", EnvironmentID: "env", DestinationPath: "/work/tool.sif", Status: domain.MaterializationPlanned}
+	wrongEnvironment := materialization
+	wrongEnvironment.EnvironmentID = "environment" // The public field stores an environment version ID.
+	if err := repository.SaveArtifactMaterialization(ctx, wrongEnvironment); err == nil {
+		t.Fatal("materialization accepted an environment ID where the version ID is required")
+	}
 	if err := repository.SaveArtifactMaterialization(ctx, materialization); err != nil {
 		t.Fatal(err)
 	}

@@ -1,13 +1,14 @@
 ---
 
 id: modules
-title: AkôFlow components and boundaries
-sidebar_label: Components and boundaries
+title: Architecture internals
+sidebar_label: Architecture internals
+description: How the AkôFlow server coordinates planning, execution, persistence, and adapters.
 ---
 
 import useBaseUrl from '@docusaurus/useBaseUrl';
 
-AkôFlow is a single control-plane daemon with a REST API, a persistent event queue, planning and execution services, and pluggable infrastructure adapters. The Desktop application is the primary client of that API. AkôFlow does **not** deploy a separate Workflow Engine into every environment.
+The AkôFlow server exposes one REST API and coordinates planning, execution, and saved state. Desktop uses that API. Runtime adapters connect the server to local, cluster, and cloud execution technologies.
 
 ## At a glance
 
@@ -23,34 +24,34 @@ The Desktop application and development web UI use the same React interface and 
 - **Infrastructure** — environments, connections, discovered inventory, machine configurations, execution scopes, network topology, storage, and cloud capacity.
 - **Runs** — real, simulated, and interactive executions, activity status, logs, transfers, and planned-versus-observed timing.
 - **Artifacts** — executable artifacts, immutable variants, locations, builds, and materializations.
-- **Provenance** and **Audit** — scientific lineage and operational actions respectively.
+- **Provenance** — scientific lineage; **Audit** — recorded connection, discovery, and console actions.
 - **Settings** and **Console** — instance configuration, credential references, and supported interactive access.
 
 The UI is a client, not a second implementation of the control plane. Desktop actions call the same API available to automation clients.
 
 ## API and services
 
-The HTTP server handles authentication, request validation, and representation. Handlers delegate to services for connection checks, discovery, workflows, planning, execution, storage, transfers, artifact builds, cloud provisioning, console commands, and terminal sessions. Operational and analytics/provenance persistence have distinct responsibilities.
+The HTTP server authenticates and validates requests, then calls the service responsible for the task. Planning, execution, infrastructure checks, and data preparation have separate services. Operational state and provenance data also have separate persistence paths; the [source map](#source-map) points to their entry points.
 
 ## Persistent event loop
 
-Long-running commands are queued rather than completed inside the initiating HTTP request. The daemon dispatches persistent typed jobs for planning sessions, execution runs, activities, cloud operations, and execution/activity domain events. Queue ownership and retries make work recoverable across interruptions. Clients should observe resource status instead of depending on the current 500 ms polling default.
+Long-running commands are queued rather than completed inside the initiating HTTP request. The daemon dispatches persistent typed jobs for planning sessions, execution runs, activities, cloud operations, and execution/activity domain events. An expired queue lease can return a job to the pending state; this does not resume a workflow run already started by the supervisor. Clients observe the status of the requested operation.
 
 ## Planning
 
-A planning session freezes the workflow version, execution scope, environment versions, resources, topology, activity profiles, deadline, budget, and optional interference model. Registered algorithms generate comparable candidates; built-ins currently include HEFT, PRISM Time, and PRISM Cost.
+A planning session freezes the selected workflow, execution scope, topology, resources, and planning constraints. Built-in algorithms include HEFT, PRISM Time, and PRISM Cost. They use the same session inputs, but their predictions come from different evaluation models; see [PRISM and HEFT](/docs/explanations/prism-and-heft) before comparing them.
 
 Selecting a candidate creates or selects a schedule plan; it does not execute the workflow. A plan contains assignments, predicted timing and cost, transfer estimates, and optional cloud lifecycle actions.
 
 ## Execution
 
-The execution supervisor consumes a selected plan. It validates the DAG and assignments, prewarms planned cloud capacity, finds dependency-ready activities, prepares executable/workspace data, resolves runtime adapters, starts and inspects handles, records observations, and releases ephemeral capacity. Simulation uses a simulator rather than real adapters. Interactive execution returns while its activity/session remains active.
+The execution supervisor checks the selected plan and starts activities when their dependencies are ready. It prepares their executable and workspace data, selects a runtime adapter, then follows each activity through completion. When a real plan needs cloud capacity, it can prepare that capacity before dispatch and release it afterward. Simulation uses a simulator instead of real adapters. An interactive request returns while its session remains active.
 
 ## Infrastructure and data plane
 
-An **environment** is a managed infrastructure boundary. Published versions contain runtimes, resources, bindings, storage, relations, connections, and capability observations. An **execution scope** combines environment versions with a network topology.
+An **environment** is a managed infrastructure boundary. Published versions contain runtimes, resources, bindings, storage, relations, connections, and capability observations. An **execution scope** selects environment versions; a planning session also chooses a network topology.
 
-Before start, the data plane can materialize executable artifacts and workspaces. Routes may use an existing location, shared storage, destination pull, source push, a gateway, runtime-local, or direct-runtime transfer. Implemented connectors include the artifact store, local filesystem, rsync/SSH, Kubernetes exec, HTTP, S3-compatible storage, and GCS. A materialization is usable only after digest verification commits it.
+Before start, the data plane can prepare executable artifacts and workspaces. Implemented transfer paths include the artifact store, local filesystem, rsync/SSH, Kubernetes exec, HTTP download, and an S3-compatible connector. The current GCS connector rejects direct `gs://` transfers; a deployment needs another supported route or its own transfer agent. A prepared artifact is usable only after digest verification.
 
 ## Cloud lifecycle
 
@@ -58,7 +59,7 @@ Cloud support separates catalog/configuration, capacity targets, provisioned ins
 
 ## Provenance and audit
 
-Provenance links workflow versions, plans, runs, activities, data, artifacts, locations, materializations, and transfers. Audit records control-plane actions and their results. They are related but intentionally separate histories.
+Provenance links workflow versions, plans, runs, activities, data, artifacts, locations, materializations, and transfers. Audit currently records connection health, resource discovery, and console actions and their outcomes. It does not record every control-plane change. These are separate histories.
 
 ## Source map
 

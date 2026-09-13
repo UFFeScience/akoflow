@@ -74,8 +74,8 @@ resources:
     providerId: cpu
     schedulable: true
 
-  # Opt-in direct execution. The AkôFlow server/agent must run on this host.
-  # Keep its advertised capacity small so heavy work remains in the batch queue.
+  # Keep the login node out of workflow plans by default. Interactive console
+  # access still uses its connection; enable direct scheduling only with site approval.
   - id: slurm-login-node
     environmentVersionId: example-slurm-v1
     parentResourceId: slurm-cluster
@@ -86,7 +86,7 @@ resources:
     cpuCores: 1
     cpuCapacity: 1
     memoryBytes: 1073741824
-    schedulable: true
+    schedulable: false
     metadata:
       purpose: lightweight-interactive-and-control
 

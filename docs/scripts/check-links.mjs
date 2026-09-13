@@ -8,6 +8,7 @@
  * the Workflow Showcase.
  */
 import { existsSync, readdirSync, readFileSync } from "node:fs";
+import { spawnSync } from "node:child_process";
 import { dirname, extname, join, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -95,11 +96,18 @@ function checkTarget(sourceFile, rawTarget, sourceIsShowcase) {
   if (!target || target.startsWith("#") || /^(mailto:|tel:|data:|javascript:)/i.test(target)) return;
 
   const githubMatch = target.match(
-    /^https:\/\/(?:raw\.githubusercontent\.com|github\.com)\/UFFeScience\/akoflow\/(?:raw\/)?(?:blob\/|tree\/)?main\/(.+)$/,
+    /^https:\/\/(?:raw\.githubusercontent\.com\/UFFeScience\/akoflow\/(v[0-9]+\.[0-9]+\.[0-9]+|main)\/|github\.com\/UFFeScience\/akoflow\/(?:blob|tree)\/(v[0-9]+\.[0-9]+\.[0-9]+|main)\/)(examples\/.+)$/,
   );
   if (githubMatch && sourceIsShowcase) {
     checkedShowcaseDownloads += 1;
-    checkRepositoryPath(sourceFile, target, resolve(repositoryDirectory, githubMatch[1]), "Showcase download");
+    const ref = githubMatch[1] || githubMatch[2];
+    const examplePath = githubMatch[3];
+    if (ref === "main") {
+      checkRepositoryPath(sourceFile, target, resolve(repositoryDirectory, examplePath), "Showcase download");
+    } else {
+      const result = spawnSync("git", ["cat-file", "-e", `${ref}:${examplePath}`], { cwd: repositoryDirectory });
+      if (result.status !== 0) report(sourceFile, target, `Showcase download is missing from ${ref}`);
+    }
     return;
   }
 
@@ -111,7 +119,7 @@ function checkTarget(sourceFile, rawTarget, sourceIsShowcase) {
     return;
   }
 
-  if (target.startsWith("/img/") || target.startsWith("/media/") || target.startsWith("/downloads/") || target.startsWith("/showcase/")) {
+  if (target.startsWith("/examples/") || target.startsWith("/img/") || target.startsWith("/media/") || target.startsWith("/downloads/") || target.startsWith("/showcase/")) {
     checkRepositoryPath(sourceFile, target, resolve(staticDirectory, target.slice(1)), "Static asset");
     return;
   }
@@ -123,7 +131,10 @@ function checkTarget(sourceFile, rawTarget, sourceIsShowcase) {
   }
 
   const localPath = resolve(dirname(sourceFile), target);
-  if (candidateDocumentationFiles(localPath).some((candidate) => existsSync(candidate))) return;
+  if (candidateDocumentationFiles(localPath).some((candidate) => existsSync(candidate) && inside(contentDirectory, candidate))) {
+    report(sourceFile, target, "Use an absolute /docs/ route; relative documentation links can navigate to the wrong client-side route");
+    return;
+  }
 
   if (extname(target)) {
     checkRepositoryPath(sourceFile, target, localPath, "Local link");

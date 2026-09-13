@@ -13,6 +13,18 @@ const config: Config = {
   url: "https://akoflow.com",
   baseUrl: "/",
 
+  // GitHub Pages also exposes this build under /akoflow/, while its assets
+  // are built for the public root domain. Redirect direct Pages visits before
+  // the app loads so navigation works there as well.
+  headTags: [
+    {
+      tagName: "script",
+      attributes: {},
+      innerHTML:
+        "if (location.hostname === 'uffescience.github.io' && location.pathname.startsWith('/akoflow/')) { location.replace('https://akoflow.com' + location.pathname.slice('/akoflow'.length) + location.search + location.hash); }",
+    },
+  ],
+
   organizationName: "UFFeScience",
   projectName: "akoflow",
 
@@ -68,6 +80,18 @@ const config: Config = {
             to: "/docs/reference/api-overview/",
           },
           { from: "/docs/cli", to: "/docs/reference/api-overview/" },
+          ...[
+            "get-environments-environmentid-cloud-capacity-targets",
+            "post-environments-environmentid-cloud-capacity-targets",
+            "get-environments-environmentid-cloud-instances",
+            "post-environments-environmentid-cloud-instances",
+            "get-environments-environmentid-cloud-catalog",
+            "post-environments-environmentid-cloud-catalog-refresh",
+            "post-environments-environmentid-cloud-provisioning",
+          ].map((slug) => ({
+            from: `/docs/api/endpoints/environments/${slug}`,
+            to: `/docs/api/endpoints/cloud/${slug}`,
+          })),
         ],
       },
     ],
@@ -118,7 +142,7 @@ const config: Config = {
           title: "Docs",
           items: [
             { label: "Getting Started", to: "/docs/getting-started" },
-            { label: "Modules", to: "/docs/modules" },
+            { label: "Architecture internals", to: "/docs/modules" },
             { label: "Installation", to: "/docs/installation" },
             { label: "Downloads", to: "/docs/downloads" },
             { label: "Interface Tour", to: "/docs/guides/interface-tour" },

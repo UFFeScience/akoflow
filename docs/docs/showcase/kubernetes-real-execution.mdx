@@ -1,6 +1,6 @@
 ---
 title: Kubernetes real execution
-description: Dispatch a complete container workflow to Kind using AkôFlow Desktop or the API.
+description: Dispatch a complete container workflow to Kind through the API and inspect its result.
 ---
 
 import InterfaceApiTabs from '@site/src/components/InterfaceApiTabs';
@@ -10,7 +10,7 @@ import {FileList, WorkflowDiagram} from '@site/src/components/WorkflowShowcase';
 
 <WorkflowDiagram kind="kubernetes" />
 
-This example executes two real container activities on a local Kind cluster. Use it after the simulation walkthrough to validate runtime credentials, persistent storage, Kubernetes Jobs, logs, artifacts, and provenance.
+This example executes two real container activities on a local Kind cluster. Use it after the simulation walkthrough to check runtime access, persistent storage, Kubernetes Jobs, logs, and output files.
 
 :::warning Development environment
 The checked-in access manifest intentionally grants broad permissions for a disposable local cluster. Do not reuse it in production.
@@ -19,36 +19,35 @@ The checked-in access manifest intentionally grants broad permissions for a disp
 ## Download the inputs
 
 <FileList>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/kind/cluster.yaml">Kind cluster ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/kind/akoflow-access.yaml">AkôFlow access ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/kind/storage.yaml">Persistent storage YAML ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/kind/environment.yaml">Environment YAML ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/kind/scope.yaml">Execution scope YAML ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/kind/topology.yaml">Network topology YAML ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/kind/dag.yaml">Workflow YAML ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/kind/requests/plan-request.yaml">Plan envelope ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/kind/requests/execution-request.yaml">Execution envelope ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/kind/cluster.yaml">Kind cluster ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/kind/akoflow-access.yaml">AkôFlow access ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/kind/storage.yaml">Persistent storage YAML ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/kind/environment.yaml">Environment YAML ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/kind/scope.yaml">Execution scope YAML ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/kind/topology.yaml">Network topology YAML ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/kind/dag.yaml">Workflow YAML ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/kind/requests/plan-request.yaml">Plan envelope ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/kind/requests/execution-request.yaml">Execution envelope ↓</a>
 </FileList>
 
 <InterfaceApiTabs
   desktop={<div>
-    <h2>Run with AkôFlow Desktop</h2>
+    <h2>Inspect the API run in Desktop</h2>
+    <p>Use the verified Kind and API procedure below. Desktop can inspect the run when it connects to that same server; the packaged Desktop uses a separate local server by default.</p>
     <ol>
-      <li>Create the Kind cluster and apply <code>akoflow-access.yaml</code> and <code>storage.yaml</code>.</li>
-      <li>Generate a short-lived ServiceAccount token. In <strong>Infrastructure → Environments</strong>, create the Kubernetes connection and store the token through the credential flow; do not paste it into the workflow.</li>
-      <li>Test the connection and run discovery. Confirm that the Kind worker appears as a schedulable resource.</li>
-      <li>Create a scope and topology matching the supplied YAML, then import <code>dag.yaml</code> under <strong>Workflows → Definitions</strong>.</li>
-      <li>Create a manual plan or generate candidates, select the Kind resource, and start a <strong>Real execution</strong>.</li>
-      <li>Inspect activity logs, generated files, artifacts, timeline, events, and provenance after completion.</li>
+      <li>Open the Kubernetes environment and confirm the discovered Kind worker.</li>
+      <li>Open the imported two-activity workflow and its saved plan.</li>
+      <li>Open the completed run to inspect Job logs, transferred data, output files, and events. Follow provenance when its explorer is configured.</li>
     </ol>
+    <p>A complete Desktop-only Kind submission has not been verified.</p>
   </div>}
   api={<div>
     <h2>Run through the API</h2>
-    <p>After creating the cluster and token as described in <a href="https://github.com/UFFeScience/akoflow/tree/main/examples/kind">the complete Kind README</a>, submit the same objects:</p>
-    <pre><code>{`export AKOFLOW_API_URL="http://127.0.0.1:8080/akoflow-api"
-export AKOFLOW_API_TOKEN="<token>"
-
-for pair in \\
+    <p>Complete <a href="/docs/tutorials/api-access">API connection setup</a> and clone v1.0.8, or use an existing matching checkout:</p>
+    <pre><code>{`git clone --branch v1.0.8 --depth 1 https://github.com/UFFeScience/akoflow.git akoflow-showcase
+cd akoflow-showcase`}</code></pre>
+    <p>From that checkout, follow <a href="https://github.com/UFFeScience/akoflow/tree/v1.0.8/examples/kind">the Kind README</a> to create the cluster and token. Then use a fresh instance and submit:</p>
+    <pre><code>{`for pair in \\
   "environments examples/kind/environment.yaml" \\
   "execution-scopes examples/kind/scope.yaml" \\
   "network-topologies examples/kind/topology.yaml" \\
@@ -71,4 +70,4 @@ A successful run produces two Kubernetes Jobs, a workspace PVC for each activity
 
 The checked-in bundle was executed from a clean Kind cluster on 2026-09-11 as `kind-dag-run-v8`: both activities completed, 9 bytes were transferred, and both files had checksum `sha256:cb064c1339ffa3d7777bcb0459de3dceddb9146156dde58065a4ac826b029aa7`. Its observed makespan was 17.776 s. Kubernetes scheduling and Pod startup are included in that wall-clock result.
 
-If the consumer Job remains `Pending`, use `kubectl describe pod <pod-name>` to inspect PVC/node affinity. The full setup, verification, and cleanup procedure is in the [Kind README](https://github.com/UFFeScience/akoflow/tree/main/examples/kind).
+If the consumer Job remains `Pending`, use `kubectl describe pod <pod-name>` to inspect PVC/node affinity. The full setup, verification, and cleanup procedure is in the [Kind README](https://github.com/UFFeScience/akoflow/tree/v1.0.8/examples/kind).

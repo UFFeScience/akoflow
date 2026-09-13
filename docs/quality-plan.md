@@ -2,7 +2,7 @@
 
 This file is the editorial backlog for preparing the AkôFlow documentation for external open-source users. Update it after each documentation unit. A checked item must point to evidence in the repository or to a recorded verification command; absence of a known defect is not sufficient evidence.
 
-Last audited: 2026-09-13. The Desktop first-workflow gap and several generated-reference defects have been corrected. Clean-host installation, provider validation, remaining API contracts, and the final full-page audit still keep the completion gate open.
+Last audited: 2026-09-13. The current iteration is assessed in [editorial-closeout-2026-09-13.md](./editorial-closeout-2026-09-13.md). The Desktop first-workflow gap and several generated-reference defects have been corrected. Clean-host installation, provider validation, remaining API contracts, and the final full-page audit still keep the completion gate open.
 
 ## Editorial contract
 

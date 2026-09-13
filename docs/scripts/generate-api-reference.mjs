@@ -139,6 +139,16 @@ const delegatedSuccessStatuses = {
 // Checked response shapes cover map values and ambiguous Go type names that
 // cannot be inferred safely from a handler's outer return type alone.
 const checkedResponseShapes = {
+  CreateExecution: {
+    example: {
+      id: "queue-job-id", category: "execution", eventType: "execution.run.requested",
+      aggregateType: "execution_run", aggregateId: "run-id", status: "pending",
+      priority: 0, availableAt: "2026-01-01T00:00:00Z", attempts: 0,
+      maxAttempts: 5, idempotencyKey: "execution-run:run-id",
+      createdAt: "2026-01-01T00:00:00Z",
+    },
+    note: "This is the queue job for a new request, not the execution-run record. `id` identifies the job; `aggregateId` matches the submitted `run.id`. Queue status may advance while the daemon works, and optional lease/completion fields appear later. A run is saved only after the worker validates the request.",
+  },
   ListAuditEvents: {
     example: [{
       id: "audit-event-id", eventType: "connection.health.checked",
@@ -259,6 +269,7 @@ const checkedResponseShapes = {
 const routeTitles = {
   "GET /": "Check daemon health",
   "GET /akoflow-api/preflight/": "Inspect daemon preflight",
+  "POST /akoflow-api/execution-runs/": "Queue workflow execution",
   "POST /akoflow-api/workflow-definitions/import/":
     "Import workflow definition",
   "GET /akoflow-api/storages/{storageId}/entry/": "Inspect storage entry",
@@ -281,6 +292,7 @@ const runnableSimulationRequests = {
 // These notes come from handler calls and the credential/operation services,
 // not from JSON tags alone. Keep them scoped to fields the service validates.
 const verifiedRequestNotes = {
+  "POST /akoflow-api/execution-runs/": "`202 Accepted` publishes a queue job. The returned `id` is the job ID, while `aggregateId` is the submitted `run.id`. The worker validates the request before saving a run; `GET /execution-runs/{runId}/` can return `404` until then, or remain `404` if validation fails. Use the original `run.id` to read the run, and do not treat the queue job's status as the run's status. Repeating the same `run.id` returns the existing idempotent job rather than creating a second one.",
   "POST /akoflow-api/environments/": "The response echoes the submitted definition. The repository saves the environment, version, inventory, storage, and connections, but ignores `connectionChecks` and `connectorBindings` if they appear in the body. Read `GET /environments/{environmentId}/` for saved IDs and separately recorded connection checks. See the [environment YAML reference](/docs/reference/environment-yaml).",
   "GET /akoflow-api/environments/": "Each item is a saved environment definition. `connectionChecks` can include recent health records for its connections; these were recorded separately from the environment YAML. The repository does not populate `connectorBindings` from a submitted definition.",
   "GET /akoflow-api/environments/{environmentId}/": "Returns the saved definition, including IDs filled from the enclosing environment/version. `connectionChecks` comes from recent connection-health records, not from the submitted YAML. The repository does not populate `connectorBindings` from that document.",

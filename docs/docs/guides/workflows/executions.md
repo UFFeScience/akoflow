@@ -67,6 +67,11 @@ curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   "$AKOFLOW_API_URL/execution-runs/simulation-example-run-v1/"
 ```
 
+A `404` immediately after submission can mean the queued request has not been
+processed yet. Retry after a short wait. If the run never appears, check the
+server log and the complete request: worker validation happens before the run
+is saved, so an invalid queued request can fail without a run record.
+
 The detail response contains `run`, `activities`, `dataTransfers`, `handles`, and `events`. It can also include infrastructure operations and saved data or artifact preparation records when those services are configured. List endpoints support the Desktop's run history and filters:
 
 ```bash

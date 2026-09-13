@@ -14,7 +14,7 @@ This reference distinguishes the state-bearing records used by AkôFlow planning
 
 <img src={useBaseUrl('/img/architecture/planning-execution-states.svg')} alt="Planning flow from request to selected plan and separate execution flow from request through durable queue job to terminal evidence." />
 
-A planning request is persisted as a session and publishes a queue job. An execution request first publishes a queue job; a workflow `ExecutionRun` is created only when the daemon starts processing that job. Consequently, an accepted execution request may not yet appear in `GET /execution-runs/`.
+A planning request is persisted as a session and publishes a queue job. An execution request first publishes a queue job; the worker validates it before creating an `ExecutionRun`. An accepted request may not yet appear in `GET /execution-runs/`, and an invalid queued request may never produce a run.
 
 ## Planning session
 
@@ -62,7 +62,7 @@ Selecting another feasible candidate updates the session's selected IDs; it does
 
 ## Workflow execution runs
 
-Workflow execution uses a distinct `ExecutionRun` lifecycle. Submit `POST /execution-runs/`; it returns an accepted queue job. Once the daemon consumes that job, the supervisor creates the run and begins execution.
+Workflow execution uses a distinct `ExecutionRun` lifecycle. `POST /execution-runs/` returns an accepted queue job. Once the worker validates that job, the supervisor creates the run and begins execution. If worker validation fails, no run record is created.
 
 | State | How it is reached | Meaning | Terminal? |
 | --- | --- | --- | --- |

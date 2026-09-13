@@ -95,6 +95,31 @@ Check the candidate's `feasible` field before selecting it. Selection returns `2
 
 For a manual plan, send the complete validation envelope used by `examples/simulation/plan-request.yaml` to `POST /schedule-plans/`. To import an already assembled plan whose referenced objects are registered, send `{ "plan": ... }` to `POST /schedule-plans/import/`; the server sets its source to `imported` and validates it. These routes save the predicted metrics you supply rather than recalculating them.
 
+### Import a saved plan
+
+To try the import route, complete the [SimGrid first-run tutorial](./first-run) through **Register the fixed plan**. This reads that saved plan, gives the copy and its assignments new IDs, and submits only the import envelope. Run it once per imported ID; use another ID if the copy already exists.
+
+```bash
+set -o pipefail
+AKOFLOW_IMPORTED_PLAN_ID='simulation-example-import-v1'
+
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  "$AKOFLOW_API_URL/schedule-plans/simulation-example-plan-v1/" |
+  jq --arg id "$AKOFLOW_IMPORTED_PLAN_ID" '{plan:(
+    .id = $id |
+    .assignments |= map(.id = ($id + "-" + .id) | .planId = $id)
+  )}' |
+  curl --fail-with-body \
+    -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+    -H 'Content-Type: application/json' --data-binary @- \
+    "$AKOFLOW_API_URL/schedule-plans/import/" \
+    -o imported-plan.json || exit 1
+
+jq '{id,source,predicted}' imported-plan.json
+```
+
+Expect `source: "imported"` and the new ID. This SimGrid plan has no cloud lifecycle actions; when copying a plan that has them, each action also needs a new `id` and the new `schedulePlanId`.
+
 ## Next step
 
 Review the selected plan and [start and monitor an execution](./executions.md).

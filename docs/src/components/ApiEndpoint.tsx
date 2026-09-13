@@ -41,7 +41,9 @@ function commandFor(
   }
   if (method !== "GET") lines.push(`  -X ${method} \\`);
   lines.push(
-    `  "\${AKOFLOW_API_URL}${endpointPath.replace("/akoflow-api", "")}"`,
+    endpointPath === "/"
+      ? `  "\${AKOFLOW_API_URL%/akoflow-api}/"`
+      : `  "\${AKOFLOW_API_URL}${endpointPath.replace("/akoflow-api", "")}"`,
   );
   return lines.join("\n");
 }

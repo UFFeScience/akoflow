@@ -7,7 +7,7 @@ description: Register the checked-in SimGrid example, execute it, and verify com
 
 This tutorial is for a reader with a separately managed AkôFlow API endpoint. You will submit a three-activity workflow to SimGrid and verify that all activities and both data transfers completed. Nothing is dispatched to Kubernetes, SLURM, or a cloud account.
 
-Use this tutorial to verify the simulation path. Do not use it to learn automatic scheduling—the example imports a fixed plan so that the first result is reproducible. Continue to [Plan a workflow](./planning.md) after this run succeeds.
+The example imports a fixed plan so the first result is reproducible. After it succeeds, use [Plan a workflow](./planning.md) to compare automatic scheduling choices.
 
 ## Before you begin
 
@@ -220,7 +220,7 @@ The script stops at the first HTTP failure. It does not erase or overwrite exist
 
 ## Find the records in Desktop
 
-The API sequence above is the verified submission path. After it completes, Desktop can display the saved environment, workflow, plan, run, and results. Creating every object through Desktop alone still needs an end-to-end verification; the steps below are a navigation outline, not a second validated tutorial.
+After the API sequence completes, Desktop can show its environment, workflow, plan, run, and results on the same server. These steps inspect those records; Desktop-only submission of the full bundle has not been verified.
 
 1. Under **Infrastructure → Environments**, open `simulation-example` and confirm two resources plus the SimGrid runtime.
 2. Under **Infrastructure → Execution scopes**, find the scope and its network topology.

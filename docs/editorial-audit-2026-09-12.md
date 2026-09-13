@@ -31,6 +31,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 23. **P1 resolved in the GCP connection tutorial — target project:** the API example derived its target project from the service-account key's `project_id`, while the provider accepts an explicit connection `projectId`. It now asks for the approved target project separately, matching Desktop and supporting a key authorized across projects. Critical credential/registration pipelines stop on failure rather than reading an older result file. All Bash blocks in the three connection tutorials parsed; a fake-key `jq` check confirmed separate credential-owner and target-project values. This is local contract evidence, not live GCP validation.
 24. **P0 resolved in the Kubernetes how-to — token exposure:** its API example interpolated a short-lived bearer token into `curl --data`, exposing the token in process arguments. It now streams the token from `kubectl` through `jq` to `curl --data-binary @-`, stops on any pipeline failure, and uses the server-returned `credentialRef`. Handler and token-manager source confirm the response contains only that reference. Bash parsing and a fake-token JSON check passed; no shared cluster was contacted.
 25. **P1 resolved in the environment how-to — incomplete remote path:** the page tested an SSH connection using `host:port` in `endpoint` and then queried a different connection ID that it never saved. Remote registration now links to complete HPC/GCP tutorials; the health/discovery commands use the actual ID from the HPC template as an explicit precondition. The page also replaces an internal Go type name with the fields readers need.
+26. **P0/P1 resolved in the workflow guides — misleading examples:** the portable YAML guide reused the checked-in first-run workflow name, so following both guides could collide. It now uses its own name and matching read/export paths, says to save the file before the `curl` command, and identifies the empty commands as simulation-only. The execution guide no longer describes command history as a catalog of available console commands, and states the SimGrid setup required by its request example. The first-run guide trims repeated caveats while retaining its verification limit.
 
 ## Page inventory
 
@@ -66,10 +67,10 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `guides/operations/search-and-notifications.md` | Full read; removed debounce/polling details and aligned API setup | Recheck UI behavior against Desktop |
 | `guides/operations/server-instance.md` | Full read; prerequisites, verification, and removal are explicit | Recheck release assets when version changes |
 | `guides/operations/troubleshooting.md` | Full read; starts with user-visible failure and uses server terminology | Recheck diagnostic claims after P0 fixes |
-| `guides/workflows/definitions.md` | Full read; simplified opening and aligned API setup | Recheck payload against importer after P0 contracts fix |
-| `guides/workflows/executions.md` | Full read; corrected queued/run state distinction; packaged Desktop start flow verified with a local real run | Recheck other runtimes against their own guides |
-| `guides/workflows/first-run.md` | Full read; API submission and Desktop inspection are distinguished | Keep the SimGrid API example aligned with its versioned bundle |
-| `guides/workflows/planning.md` | Full read; simplified candidate language and made the API example's registration prerequisite explicit | Verify automatic Desktop planning flow |
+| `guides/workflows/definitions.md` | Second read; isolated the portable demo ID, stated its save step and simulation-only scope | Recheck payload against importer after P0 contracts fix |
+| `guides/workflows/executions.md` | Second read; corrected console-history claim and specified prerequisites for SimGrid submission | Recheck other runtimes against their own guides |
+| `guides/workflows/first-run.md` | Second read; shortened fixed-plan and Desktop inspection caveats | Keep the SimGrid API example aligned with its versioned bundle |
+| `guides/workflows/planning.md` | Second read; example and prerequisite still serve the planning task | Verify automatic Desktop planning flow |
 | `installation.md` | Second read; public bootstrap checks verified in `security.go` and tests; clarified what Connected proves and simplified first-launch language | Verify clean-host and cross-platform installation |
 | `internal/workflow-spec.md` | Full read; compatibility and simulation-only import limits are explicit | Check contracts against current importer |
 | `modules.md` | Second read; source map and implementation detail remain in the developer section | Recheck claims against daemon composition |
@@ -93,6 +94,6 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 ## Verification in this pass
 
 - `npm run typecheck`, `npm run build`, `npm run check:links`, and `git diff --check` passed on the editorial branch. All 125 endpoint pages generated; targeted checks confirmed the console-command request, qualified environment and workflow responses, and all six versioned first-run links.
-- The latest link check covered 383 local links/assets and 54 showcase downloads from the `v1.0.8` Git tag on 2026-09-13.
+- The latest link check covered 387 local links/assets and 54 showcase downloads from the `v1.0.8` Git tag on 2026-09-13.
 - Headless Chromium at 390 × 844 loaded Getting Started, Core concepts, the console guide, the new Desktop first-run page, and all seven Showcase pages without page errors or horizontal overflow. Every Showcase API tab displayed its v1.0.8 checkout command; the first-run page's mobile menu opened and showed its tutorial link.
 - These checks establish site integrity for this pass. They do not prove tutorial execution, provider support, or completion of the editorial gate.

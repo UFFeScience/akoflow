@@ -44,10 +44,10 @@ The import action accepts the same portable YAML format as the API. Export remov
 
 Complete [API connection setup](../../tutorials/api-access) before running these commands.
 
-The simulation example in `examples/simulation/workflow.yaml` uses the legacy shorthand. This equivalent command-oriented definition shows the preferred portable shape:
+The checked-in SimGrid example uses legacy shorthand. To try the portable simulation fields directly, save this as `workflow.yaml`. The empty `command` means these activities are simulation-only; a real run needs an executable and entrypoint as described in the [workflow specification](../../internal/workflow-spec).
 
 ```yaml
-name: simulation-example-workflow
+name: portable-simulation-demo
 spec:
   namespace: examples
   activities:
@@ -87,15 +87,15 @@ curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
 
 # Read one definition
 curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
-  "$AKOFLOW_API_URL/workflow-definitions/simulation-example-workflow/"
+  "$AKOFLOW_API_URL/workflow-definitions/portable-simulation-demo/"
 
 # Export portable YAML
 curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -o exported-workflow.yaml \
-  "$AKOFLOW_API_URL/workflow-definitions/simulation-example-workflow/export/"
+  "$AKOFLOW_API_URL/workflow-definitions/portable-simulation-demo/export/"
 ```
 
-The create response is the normalized `WorkflowDefinition`. Use `version.id` from that response when creating a planning session.
+The create response contains the saved definition. Use its `version.id` when creating a planning session.
 
 ## Next step
 

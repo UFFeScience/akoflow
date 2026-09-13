@@ -18,9 +18,9 @@ The run history distinguishes `workflow`, `interactive`, and `standalone` kinds.
 
 ## Status and timing
 
-A submitted execution first enters the queue. Once the daemon starts it, the workflow run is `running` and then becomes `completed` or `failed`. The domain defines `created`, but the current workflow supervisor does not persist that state during normal execution. Activities expose the more detailed states `blocked`, `ready`, `preparing`, `running`, `completed`, `failed`, and `cancelled`.
+A submitted execution first enters the queue. When AkôFlow starts it, the workflow run becomes `running`, then `completed` or `failed`. Activities expose the more detailed states `blocked`, `ready`, `preparing`, `running`, `completed`, `failed`, and `cancelled`.
 
-Runtime handles distinguish `starting`, `running`, `completed`, `failed`, and `stopped`. For real runtimes, submitted time means the control plane handed work to the runtime; started time means the runtime allocated it; container-started time marks when user code could begin inside the container.
+For real runs, submitted time marks when AkôFlow handed work to the runtime; started time marks when the runtime allocated it; container-started time marks when user code could begin inside the container.
 
 The completed trace includes:
 
@@ -52,7 +52,7 @@ To open an interactive terminal, use the console action for a compatible resourc
 
 ## Using the API
 
-`POST /execution-runs/` accepts a complete execution request. Use the checked-in `examples/simulation/execution-request.yaml` for simulation or `examples/kind/requests/execution-request.yaml` for Kubernetes execution.
+`POST /execution-runs/` accepts a complete execution request. The command below assumes you have a v1.0.8 checkout and have registered the environment, scope, topology, workflow, and plan in the [SimGrid first-run tutorial](./first-run). For Kubernetes, use the separate [Kind example](../../showcase/kubernetes-real-execution) and its own execution request.
 
 ```bash
 curl --fail-with-body \
@@ -76,22 +76,7 @@ curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   "$AKOFLOW_API_URL/execution-runs/"
 ```
 
-Interactive terminals use the console endpoints:
-
-```bash
-# Inspect available console commands and their required arguments
-curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
-  "$AKOFLOW_API_URL/console-commands/"
-
-# After opening a session, stream it with:
-# GET /console-sessions/<session-id>/stream/
-# Close it with:
-# DELETE /console-sessions/<session-id>/
-# Export its log with:
-# GET /console-sessions/<session-id>/log/
-```
-
-Consult `GET /console-commands/` before constructing an open-session request because compatibility and arguments depend on the resources and runtimes registered in the instance.
+To open an interactive terminal, select a compatible resource and follow the [interactive console guide](../operations/interactive-console). `GET /console-commands/` lists past one-shot commands; it does not describe available commands or the arguments for opening a session.
 
 ## Investigating a failure
 

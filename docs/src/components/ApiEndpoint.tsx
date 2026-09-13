@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 
 type ApiEndpointProps = {
+  title: string;
   method: string;
   path: string;
   handler: string;
   group: string;
   pathParams?: string[];
   queryParams?: string[];
+  queryDescriptions?: Record<string, string>;
   successStatuses?: string[];
   requestExample?: string | null;
   requestExampleVerified?: boolean;
@@ -49,12 +51,14 @@ function commandFor(
 }
 
 export default function ApiEndpoint({
+  title,
   method,
   path,
   handler,
   group,
   pathParams = [],
   queryParams = [],
+  queryDescriptions = {},
   successStatuses = ["200 OK"],
   requestExample = null,
   requestExampleVerified = false,
@@ -68,7 +72,6 @@ export default function ApiEndpoint({
 }: ApiEndpointProps) {
   const [copied, setCopied] = useState(false);
   const displayPath = path.replace("/akoflow-api", "") || "/";
-  const description = handler.replace(/([a-z0-9])([A-Z])/g, "$1 $2");
   const command = commandFor(method, path, hasRequestBody, requestMediaType, requestFileName, requestMultipartField);
   const commandIsTemplate = hasRequestBody || pathParams.length > 0;
   const requestHeading = requestExample
@@ -85,7 +88,7 @@ export default function ApiEndpoint({
     <div className="akoflow-api-reference">
       <main className="akoflow-api-main">
         <span className="akoflow-api-eyebrow">{group} endpoint</span>
-        <h1>{description}</h1>
+        <h1>{title}</h1>
         <div className="akoflow-endpoint-signature">
           <span
             className={`akoflow-method akoflow-method-${method.toLowerCase()}`}
@@ -136,7 +139,7 @@ export default function ApiEndpoint({
             <div className="akoflow-api-section-heading"><h2>Query parameters</h2></div>
             <dl className="akoflow-api-parameters">
               {queryParams.map((parameter) => (
-                <div key={parameter}><dt><code>{parameter}</code></dt><dd>Optional query value consumed by this route.</dd></div>
+                <div key={parameter}><dt><code>{parameter}</code></dt><dd>{queryDescriptions[parameter]}</dd></div>
               ))}
             </dl>
           </section>

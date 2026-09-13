@@ -856,7 +856,7 @@ function extractResponseContract(
 }
 
 function endpointDescription(endpoint) {
-  return `AkôFlow ${endpoint.group} API: ${endpoint.title}.`;
+  return `${endpoint.title} using ${endpoint.method} ${endpointPath(endpoint.path)}.`;
 }
 
 function endpointDocument(endpoint, position) {
@@ -897,12 +897,14 @@ description: ${JSON.stringify(endpoint.description)}
 import ApiEndpoint from '@site/src/components/ApiEndpoint';
 
 <ApiEndpoint
+  title=${JSON.stringify(title)}
   method=${JSON.stringify(endpoint.method)}
   path=${JSON.stringify(endpoint.path)}
   handler=${JSON.stringify(endpoint.handler)}
   group=${JSON.stringify(endpoint.group)}
   pathParams={${JSON.stringify(params)}}
   queryParams={${JSON.stringify(endpoint.queryParameters)}}
+  queryDescriptions={${JSON.stringify(Object.fromEntries(endpoint.queryParameters.map((name) => [name, queryDescriptions[name]])))}}
   successStatuses={${JSON.stringify(endpoint.successStatuses)}}
   requestExample={${JSON.stringify(requestExample == null ? null : JSON.stringify(requestExample, null, 2))}}
   requestExampleVerified={${Boolean(verifiedRequestExamples[`${endpoint.method} ${endpoint.path}`])}}
@@ -972,6 +974,12 @@ for (const match of source.matchAll(routePattern)) {
 
 if (endpoints.length === 0) {
   throw new Error(`No API routes found in ${routerFile}`);
+}
+
+const undocumentedQueryParameters = [...new Set(endpoints.flatMap((endpoint) => endpoint.queryParameters))]
+  .filter((name) => !queryDescriptions[name]);
+if (undocumentedQueryParameters.length > 0) {
+  throw new Error(`Query parameters need descriptions: ${undocumentedQueryParameters.join(", ")}`);
 }
 
 const missingCheckedResponses = Object.keys(checkedResponseShapes).filter(

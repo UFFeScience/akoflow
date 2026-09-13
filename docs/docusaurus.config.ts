@@ -13,6 +13,18 @@ const config: Config = {
   url: "https://akoflow.com",
   baseUrl: "/",
 
+  // GitHub Pages also exposes this build under /akoflow/, while its assets
+  // are built for the public root domain. Redirect direct Pages visits before
+  // the app loads so navigation works there as well.
+  headTags: [
+    {
+      tagName: "script",
+      attributes: {},
+      innerHTML:
+        "if (location.hostname === 'uffescience.github.io' && location.pathname.startsWith('/akoflow/')) { location.replace('https://akoflow.com' + location.pathname.slice('/akoflow'.length) + location.search + location.hash); }",
+    },
+  ],
+
   organizationName: "UFFeScience",
   projectName: "akoflow",
 

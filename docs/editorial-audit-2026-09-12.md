@@ -131,6 +131,8 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 
 111. **P1/P2 resolved in the public reference overview:** the Desktop/API coverage page mixed a user route map with maintainer instructions. The update rule now lives in the editorial contract, leaving the public page focused on finding a task, guide, and API family. The API overview's archive rule said only mutating requests return `423`, but `readOnlyAPI` blocks every non-`GET` method except instance activation; the wording now matches the middleware, including `HEAD`. Full endpoint-contract and final plain-language audits remain open.
 
+112. **P0 resolved in health diagnostics:** the API overview and troubleshooting guide called the root health route without a bearer token, which returns `401` on a protected daemon because only instance identity and preflight are public bootstrap routes. Both root commands now send the configured token; troubleshooting labels preflight correctly as public. A security regression assertion covers the root route. The generated root endpoint template already supplied the token.
+
 ## Page inventory
 
 | Page | Current pass | Next review |
@@ -172,7 +174,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `guides/operations/find-records.md` | Desktop/API search procedure, result fields, limits, and empty-result recovery | Recheck UI behavior against Desktop |
 | `guides/operations/follow-notifications.md` | Notification behavior, owning API collections, and missing-alert recovery | Recheck UI behavior against Desktop |
 | `guides/operations/server-instance.md` | Second read; corrected invalid tunnel command, simplified server language, and preserved HTTP failure through jq | Recheck release assets when version changes |
-| `guides/operations/troubleshooting.md` | Plain-language reread; terminal diagnosis now starts with interactive access and connection health; connection history takes a saved ID | Recheck diagnostic claims after P0 fixes |
+| `guides/operations/troubleshooting.md` | Third read; root health now sends the token and public preflight is labeled correctly | Recheck other diagnostic claims after P0 fixes |
 | `guides/workflows/definitions.md` | Progressive-disclosure reread; Desktop creation precedes portable API fields, with exact model details in the reference | Recheck payload against importer after P0 contracts fix |
 | `guides/workflows/executions.md` | Plain-language reread; workflow task is separate from terminal sessions, and trace fields are conditional on observed evidence | Recheck other runtimes against their own guides |
 | `guides/workflows/first-run.md` | Claim reread; fixed-plan submission is described as validation and save, without falsely promising prediction recalculation | Keep the SimGrid API example aligned with its versioned bundle |
@@ -180,7 +182,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `installation.md` | Entry-path reread; Desktop checkup remains central, self-managed API checks moved to their guides, and platform verification is stated once | Verify clean-host and cross-platform installation |
 | `internal/workflow-spec.md` | Second read; lead example now uses one execution mode and marks script paths as prerequisites | Check every field contract against current importer |
 | `modules.md` | Developer detail remains in the architecture section; planning candidates now distinguish shared inputs from algorithm-specific predictions | Recheck claims against daemon composition |
-| `reference/api-overview.md` | Third read; token setup and tutorial links remain; archive method rule now matches `readOnlyAPI` | Check contracts against current handlers and schemas |
+| `reference/api-overview.md` | Fourth read; root health now sends the token; archive method rule matches `readOnlyAPI` | Check contracts against current handlers and schemas |
 | `reference/environment-yaml.md` | Claim pass; corrected API defaults and documents local storage opt-in, persisted browseRoots configuration, and catalog health limits | Continue field-level schema contract audit |
 | `reference/execution-scopes-and-topologies.md` | Claim pass; clarified API prerequisites and the actual omitted link direction/sharing values | Check contracts against current handlers and schemas |
 | `reference/feature-coverage.md` | Third read; route map now serves the reader, with its maintainer update rule in the quality plan | Check contracts against current handlers and schemas |

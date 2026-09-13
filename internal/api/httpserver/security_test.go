@@ -61,6 +61,12 @@ func TestSecureAPIAllowsOnlyPublicInstanceBootstrapWithoutToken(t *testing.T) {
 	if response.Code != http.StatusUnauthorized {
 		t.Fatalf("environment GET got %d, want 401", response.Code)
 	}
+	request = httptest.NewRequest(http.MethodGet, "/", nil)
+	response = httptest.NewRecorder()
+	handler.ServeHTTP(response, request)
+	if response.Code != http.StatusUnauthorized {
+		t.Fatalf("root health GET got %d, want 401", response.Code)
+	}
 }
 
 func TestSecureAPIRestrictsNonLoopbackRequests(t *testing.T) {

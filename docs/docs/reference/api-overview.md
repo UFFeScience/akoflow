@@ -34,11 +34,13 @@ Browser origins are controlled by the daemon's allowed-origin configuration. Aut
 Check daemon and local build capabilities:
 
 ```bash
-curl "${AKOFLOW_API_URL%/akoflow-api}/"
-curl "$AKOFLOW_API_URL/preflight/"
+curl --fail-with-body \
+  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  "${AKOFLOW_API_URL%/akoflow-api}/"
+curl --fail-with-body "$AKOFLOW_API_URL/preflight/"
 ```
 
-The root health check returns `ok`. Preflight reports server, Docker, and BuildKit availability.
+The authenticated root health check returns `ok`. Public preflight reports server, Docker, and BuildKit availability.
 
 ## Instance, search, and operations
 

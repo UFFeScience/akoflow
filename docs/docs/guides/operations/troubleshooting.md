@@ -16,18 +16,18 @@ For the command-line checks below, complete [API connection setup](../../tutoria
 
 ## 1. Check the server and prerequisites
 
-The root endpoint is the basic health check:
-
-```bash
-curl --fail-with-body "${AKOFLOW_API_URL%/akoflow-api}/"
-```
-
-Then run the authenticated preflight:
+The root endpoint is the basic authenticated health check:
 
 ```bash
 curl --fail-with-body \
   -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
-  "$AKOFLOW_API_URL/preflight/"
+  "${AKOFLOW_API_URL%/akoflow-api}/"
+```
+
+Then run the public preflight:
+
+```bash
+curl --fail-with-body "$AKOFLOW_API_URL/preflight/"
 ```
 
 The first-run Desktop screen performs this check before environment onboarding. It reports the AkôFlow daemon, host Docker daemon, and BuildKit readiness exposed by the current runtime.

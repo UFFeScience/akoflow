@@ -5,7 +5,7 @@ description: Field-level reference for the environment definition accepted by th
 
 # Environment YAML reference
 
-This reference describes the `EnvironmentDefinition` document accepted by `POST /environments/` and `PUT /environments/{environmentId}/`. JSON and YAML carry the same structure. It is for authors who need a reproducible infrastructure inventory; use the [environment guide](../guides/infrastructure/environments) for the Desktop workflow and the runtime guides for provider-specific setup.
+This reference describes the `EnvironmentDefinition` document accepted by `POST /environments/` and `PUT /environments/{environmentId}/`. JSON and YAML carry the same structure. It is for authors who need a reproducible infrastructure inventory; use the [environment guide](../guides/infrastructure/environments) for the Desktop workflow and the runtime guides for provider-specific setup. “Recommended” fields improve the inventory but are not required by the create handler.
 
 ## Before you write a definition
 
@@ -41,16 +41,16 @@ connectorBindings: []
 | `environment.id` | Yes | string | unique ID | Primary environment ID. |
 | `environment.name` | Yes | string | non-empty in a useful definition | Display name; unique names are not required. |
 | `environment.description` | No | string | `""` | Free text. |
-| `environment.status` | No | string | `defined` | `defined`, `connecting`, `connected`, `discovering`, `ready`, `degraded`, or `unreachable`. Set it from observed connection state rather than treating it as a runtime selector. |
+| `environment.status` | No | string | `defined` | Documented states are `defined`, `connecting`, `connected`, `discovering`, `ready`, `degraded`, and `unreachable`. The create path does not validate this string; use an observed state rather than treating it as a runtime selector. |
 | `environment.createdAt` | No | timestamp | database creation time | Returned by reads; do not author it. |
 | `version.id` | Yes | string | unique ID | The immutable ID referenced by scopes. |
 | `version.environmentId` | Yes | string | `environment.id` | Keep it equal to the enclosing environment ID. The create path persists the enclosing ID. |
 | `version.version` | Yes | integer | sequence chosen by author | Must be unique for an environment. |
-| `version.status` | Yes | string | `draft`, `published`, `retired` | Use `published` for an inventory intended for a scope. |
-| `version.networkModel` | Yes | string | author-defined label | A descriptive model label such as `static-links`; topology links themselves live in the execution-scope document. |
-| `version.interferenceModel` | Yes | string | author-defined label | Record the model assumption, for example `none`. |
-| `version.costModel` | Yes | string | author-defined label | Record the cost interpretation, for example `per-second`. |
-| `version.configurationHash` | Yes | string | author-provided stable hash/label | Used to identify the inventory configuration. |
+| `version.status` | Recommended | string | `""` if omitted | Documented states are `draft`, `published`, and `retired`; the create path does not validate this string. Use `published` for inventory intended for planning. |
+| `version.networkModel` | No | string | `""` if omitted | Optional model label such as `static-links`. Topology links live in a separate network-topology document. |
+| `version.interferenceModel` | No | string | `""` if omitted | Record the model assumption when one is known, for example `none`. |
+| `version.costModel` | No | string | `""` if omitted | Record the cost interpretation when one is known, for example `per-second`. |
+| `version.configurationHash` | Recommended | string | `""` if omitted | Supply a stable label or hash to identify the inventory configuration; the create path does not compute it. |
 | `version.createdAt`, `version.publishedAt` | No | timestamp | server-managed / optional | Read-only evidence fields. |
 
 ## Runtimes
@@ -78,7 +78,7 @@ Resources are the candidates a plan can place activities on. A resource is usabl
 | --- | --- | --- | --- | --- |
 | `resources[].id` | Yes | string | unique ID | Referenced by bindings, relations, profiles, assignments, and topology links. |
 | `resources[].environmentVersionId` | Yes | string | `version.id` | Keep equal to the enclosing version ID; create persists the enclosing version. |
-| `resources[].type` | Yes | enum | See resource types below | Classifies the resource. |
+| `resources[].type` | Recommended | string | `""` if omitted | Use a known resource type below to classify the resource. The create path does not validate this field against that list. |
 | `resources[].name` | Yes | string | — | Display name. |
 | `resources[].providerId` | Yes | string | unique per version | Provider-facing or modeled identifier. |
 | `resources[].executionTarget` | No | enum | `batch` | `batch`, `direct`, or `provisioned`. The create path normalizes an omitted value to `batch`. |
@@ -93,7 +93,7 @@ Resources are the candidates a plan can place activities on. A resource is usabl
 | `resources[].schedulable` | Recommended | boolean | `false` when omitted from API input | Set `true` for a placement target. `false` retains inventory visibility without making a placement target. |
 | `resources[].metadata` | No | object | omitted | Provider- or experiment-specific metadata. |
 
-Accepted resource types are: `cluster`, `node_pool`, `kubernetes_machine`, `hpc_partition`, `hpc_machine`, `cloud_vm`, `fog_device`, `local_machine`, `serverless_platform`, `serverless_function`, `batch_queue`, `kubernetes_namespace`, and `slurm_reservation`.
+Known resource types are: `cluster`, `node_pool`, `kubernetes_machine`, `hpc_partition`, `hpc_machine`, `cloud_vm`, `fog_device`, `local_machine`, `serverless_platform`, `serverless_function`, `batch_queue`, `kubernetes_namespace`, and `slurm_reservation`. A stored type does not by itself make the resource runnable.
 
 ```yaml
 resourceRuntimeBindings:
@@ -113,7 +113,7 @@ resourceRuntimeBindings:
 
 | Path | Required | Type | Values / default | Notes |
 | --- | --- | --- | --- | --- |
-| `connections[].id`, `name`, `type` | Yes | string / enum | `ssh`, `kubernetes`, `cloud`, `local`, `agent` | `name` is unique within the environment. |
+| `connections[].id`, `name`, `type` | Yes for a usable connection | string | Known types: `ssh`, `kubernetes`, `cloud`, `local`, `agent` | `name` is unique within the environment. The create path does not validate `type` against this list. |
 | `connections[].environmentId` | Yes | string | `environment.id` | Keep it equal to the enclosing environment; create persists the enclosing ID. |
 | `connections[].endpoint`, `username`, `credentialRef` | No | string | `""` | Reference stored credentials; never put tokens or private keys here. |
 | `connections[].configuration` | No | object | omitted | Connection-type-specific settings. |

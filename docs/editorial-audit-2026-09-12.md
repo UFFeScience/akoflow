@@ -183,6 +183,8 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 
 137. **P1 resolved across four map response examples:** the planning-session detail, instance activation, provenance entity catalog, and provenance SQL schema pages showed empty nested objects or lists that hid the response fields readers need next. Their generated examples now show source-checked session/algorithm-run fields, active-instance identity and restart flag, one catalog entity with a field and link, and one safe SQL table with columns. Notes identify selected-plan fields as conditional, imported snapshots as read-only, and both provenance examples as partial catalogs. Handler, domain, catalog, schema, and instance-archive source were checked; the remaining 125-endpoint field audit is still open.
 
+138. **P1 resolved in the Cloud provisioning-log read path:** the remaining seven JSON-object response pages were checked against their handler map literals: cloud log, cloud/Kubernetes credential references, discovery snapshots, storage checksum, and the two promotion IDs. Their outer keys match current handlers. The Cloud log page now says to use an instance ID rather than an operation ID, and explains the `200 OK` waiting message before Terraform writes a log. The service and Terraform runner were checked. This completes the outer-key review of all 16 map-shaped response pages; nested fields, error variants, and the rest of the 125 endpoints remain open.
+
 ## Page inventory
 
 | Page | Current pass | Next review |

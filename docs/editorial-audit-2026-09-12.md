@@ -149,6 +149,8 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 
 120. **P1/P2 resolved across the five explanation pages:** the planning explanation treated candidate rank as immediate, although ranking and Pareto fields are finalized when a session completes, and its selection sentence could imply that selecting a candidate starts a run. The page now states the lifecycle in order. Evidence/provenance now distinguishes real runtime handles from simulated task timing, which has no provider job to inspect. Network route wording and observed-timing introduction were shortened, and the PRISM/HEFT comparison headings now name the reader's task. The final all-page audit remains open.
 
+121. **P0 resolved in generated map response shapes:** shallow key extraction rendered every value of several `map[string]any` responses as `"string"`, including cloud validation's boolean `valid` and integer counts, connection health's boolean, search totals and result arrays, provenance arrays, archive activation's boolean, and planning-session runs. Checked shapes now cover nine handlers. The connection test note says `200 OK` can still have `healthy: false`; cloud validation counts can be zero. `GET /execution-runs/` has two actual response forms: an array without pagination parameters and an envelope when `page` or `pageSize` is supplied; its misleading single example was replaced with that rule. The generator rejects checked-shape entries whose handler disappears from the router. This closes this map-shape class, not full field/response validation of all 125 endpoints.
+
 ## Page inventory
 
 | Page | Current pass | Next review |

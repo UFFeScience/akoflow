@@ -136,6 +136,31 @@ const delegatedSuccessStatuses = {
   ValidateCloudInstance: ["202 Accepted"],
 };
 
+// Map responses need checked shapes: key extraction alone cannot infer Go's
+// interface{} value types or conditional response envelopes.
+const checkedMapResponses = {
+  RegisterDockerArtifact: { example: { artifact: {}, build: {} } },
+  ValidateCloudCredential: {
+    example: { valid: true, provider: "gcp", project: "project-id", region: "region", machineCount: 0, imageCount: 0, diskCount: 0 },
+    note: "A `200 OK` response has `valid: true`, but any catalog count can be zero. Check the returned categories before creating a capacity target.",
+  },
+  TestEnvironmentConnection: {
+    example: { healthy: true, message: "string" },
+    note: "The route can return `200 OK` with `healthy: false`. Read `healthy` and `message` before saving or using the connection.",
+  },
+  DiscoverEnvironmentConnection: { example: { snapshots: [] } },
+  ListExecutions: {
+    type: "JSON array or paginated object",
+    example: null,
+    note: "Without `page` or `pageSize`, the response is an array of `{ \"run\": ... }` items. Supplying either pagination parameter returns `{ \"items\": [...], \"page\": number, \"pageSize\": number, \"total\": number, \"hasNext\": boolean }`.",
+  },
+  Search: { example: { query: "string", results: [], total: 0 } },
+  ActivateArchiveInstance: { example: { instance: {}, restarting: false } },
+  GetPlanningSession: { example: { session: {}, algorithmRuns: [] } },
+  ListProvenanceEntities: { example: { items: [] } },
+  GetProvenanceSchema: { example: { items: [] } },
+};
+
 // Route-specific wording is reserved for aliases whose handler name cannot
 // explain the public operation on its own.
 const routeTitles = {
@@ -753,6 +778,10 @@ function endpointDocument(endpoint, position) {
   const verifiedSection = verifiedNote
     ? `## Handler-checked request notes\n\n${verifiedNote}\n\n`
     : "";
+  const checkedResponseNote = checkedMapResponses[endpoint.handler]?.note;
+  const responseSection = checkedResponseNote
+    ? `## Response shape\n\n${checkedResponseNote}\n\n`
+    : "";
   const requestExample =
     runnableFile || requestWithoutStandaloneExample.has(`${endpoint.method} ${endpoint.path}`)
       ? null
@@ -789,7 +818,7 @@ import ApiEndpoint from '@site/src/components/ApiEndpoint';
   hasRequestBody={${body}}
 />
 
-${runnableSection}${verifiedSection}## Related guide
+${runnableSection}${verifiedSection}${responseSection}## Related guide
 
 See the [${endpoint.group} guide](${groupMetadata[endpoint.group][0]}) for related tasks and context.
 `;
@@ -830,19 +859,29 @@ for (const match of source.matchAll(routePattern)) {
       : handler === "ImportArchiveInstance"
       ? { type: "ZIP instance archive (maximum 8 GiB)", example: null, mediaType: "application/zip", fileName: "instance.zip" }
       : extractRequestContract(handlerBody, structIndex),
-    response: extractResponseContract(
-      baseEndpoint,
-      handlerBody,
-      structIndex,
-      returnTypeIndex,
-      ownerReturnTypeIndex,
-      handlerFieldTypes,
-    ),
+    response: {
+      ...extractResponseContract(
+        baseEndpoint,
+        handlerBody,
+        structIndex,
+        returnTypeIndex,
+        ownerReturnTypeIndex,
+        handlerFieldTypes,
+      ),
+      ...(checkedMapResponses[handler] || {}),
+    },
   });
 }
 
 if (endpoints.length === 0) {
   throw new Error(`No API routes found in ${routerFile}`);
+}
+
+const missingCheckedResponses = Object.keys(checkedMapResponses).filter(
+  (handler) => !endpoints.some((endpoint) => endpoint.handler === handler),
+);
+if (missingCheckedResponses.length > 0) {
+  throw new Error(`Checked response handlers are missing from the router: ${missingCheckedResponses.join(", ")}`);
 }
 
 const undocumentedMutations = endpoints

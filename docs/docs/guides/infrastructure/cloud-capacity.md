@@ -124,4 +124,9 @@ curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" "$AKOFLOW_AP
 curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" "$AKOFLOW_API_URL/cloud-operations/$AKOFLOW_CLOUD_OPERATION_ID/events/"
 ```
 
-The provisioning request queues an operation; it does not wait for the instance to become ready. Lifecycle endpoints also exist for configure, validate, start, stop, and destroy. Before destructive lifecycle actions, inspect the instance and active operation state in Desktop or through the API.
+The provisioning request queues an operation. Read its status, failure reason,
+and events until it completes or fails. A `202 Accepted` response does not
+confirm that the target belongs to this environment, the credential works, or
+the VM is ready; those checks run later. Lifecycle endpoints also exist for
+configure, validate, start, stop, and destroy. Before destructive actions,
+inspect the instance and active operation state in Desktop or through the API.

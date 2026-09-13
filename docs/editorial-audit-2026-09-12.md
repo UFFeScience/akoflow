@@ -157,6 +157,8 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 
 124. **P1 resolved in notification recovery:** the API section for a cloud-provisioning notification formerly listed cloud instances, which show resource state rather than the tracked operation. It now lists cloud operations, adds artifact-build runs for another notification type named on the page, and identifies Desktop update notices as app-local. The Desktop section heading and terminal-state description were shortened. Router paths were checked against the current Go server; live Desktop notification behavior remains a separate UI validation.
 
+125. **P0/P1 resolved in Cloud provisioning acceptance wording:** both provision endpoints return `202 Accepted` after persisting and enqueueing an operation. Target existence, environment ownership, connection, credential, and provider checks happen later in the provisioner. The generated notes for both routes and the capacity guide now direct readers to status, failure reason, and events before treating a VM as ready. This is source-checked asynchronous behavior; a live provider run remains unverified.
+
 ## Page inventory
 
 | Page | Current pass | Next review |
@@ -180,7 +182,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `guides/data/provenance.md` | Third read; screenshot captions shortened and API examples fail on HTTP errors | Recheck Desktop interactions against packaged app |
 | `guides/data/audit-events.md` | Reading-order reread; event investigation now precedes UI/API controls and duplicate event-category prose was cut | Recheck Desktop interactions against packaged app |
 | `guides/infrastructure/aws.md` | Third read; omitted/`env` transfer credential selection and unsigned S3 browsing are explicit | Check provider claims against disposable-bucket evidence |
-| `guides/infrastructure/cloud-capacity.md` | Third read; project, architecture, CIDR and actual fixed-zone behavior match the Terraform target | Validate with disposable GCP account |
+| `guides/infrastructure/cloud-capacity.md` | Fourth read; project, architecture, CIDR, zone choice, and asynchronous provision failures match handlers and Terraform | Validate with disposable GCP account |
 | `guides/infrastructure/cloud-support.md` | First read; GCP/AWS support matrix separated from capacity procedure and linked to provider tasks | Recheck against live GCP/S3 evidence |
 | `guides/infrastructure/machine-configurations.md` | Focused optional Ansible setup; validation and saved version use one playbook, and the returned version ID is consumed by the capacity example in the same Bash session | Validate against disposable GCP worker |
 | `guides/infrastructure/environments.md` | Plain-language/claim pass; local API definition persisted in a one-off repository test, and in-use revision language matches the API | Recheck remote flows with provider evidence |

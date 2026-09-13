@@ -5,7 +5,14 @@ description: Find saved records, follow lineage, and query run evidence with rea
 
 # Trace a result with provenance
 
-Use **Provenance** to answer how a result was produced. Start with a run or data record, follow its lineage, and use SQL when the question crosses several record types.
+Use **Provenance** to find the workflow, run, and data behind a result.
+
+## Investigate a result
+
+1. Open the execution and copy its run ID and any produced data IDs.
+2. Find the run in **Provenance → Explore**, then open its lineage.
+3. If lineage does not answer the question, use read-only SQL to compare records or planned and observed values.
+4. Export the relevant result with its IDs, query, parameters, and page when you need to share it.
 
 For the API commands below, complete [API connection setup](../../tutorials/api-access) first.
 
@@ -108,16 +115,5 @@ curl -X POST -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
 ```
 
 Send the same payload to `/provenance/sql/explain/` to inspect the query plan without running the ordinary result path. SQL results contain typed `columns`, `items`, pagination information, a `truncated` flag, and elapsed milliseconds.
-
-:::note Local UI state
-SQL favorites and recent-query history are stored in the browser profile. They are conveniences, not provenance records, and are not synchronized through the API.
-:::
-
-## Investigate a result
-
-1. Open the execution and copy its run ID and any produced data IDs.
-2. Find the run in **Provenance → Explore**, then open its lineage.
-3. Use read-only SQL to compare records or planned and observed values.
-4. Export the relevant result with its IDs, query, parameters, and page when you need to share it.
 
 For connection, credential, or console operations around the same time, [inspect audit events](./audit-events). Provenance endpoints return `503 Service Unavailable` when the explorer is not configured, `400 Bad Request` for invalid entity, SQL, or lineage requests, and `500 Internal Server Error` if schema discovery fails.

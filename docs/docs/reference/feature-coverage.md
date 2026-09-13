@@ -56,9 +56,9 @@ The `/network` and `/network/new` routes exist in Desktop, but the current sideb
 | `/artifacts/:id` | Inspect versions, locations, builds, and materializations | Artifact detail families | [Artifacts and builds](../guides/data/artifacts) |
 | `/artifact-locations` | Compatibility/aggregate location catalog | `/artifact-locations/` | [Artifacts and builds](../guides/data/artifacts) |
 | `/materializations` | Compatibility/aggregate materialization catalog | `/artifact-materializations/` | [Artifacts and builds](../guides/data/artifacts) |
-| `/data` | Generated scientific data grouped by workflow | Provenance data projections | [Provenance and audit](../guides/data/provenance-and-audit) |
-| `/provenance` | Explore entities, SQL, and lineage | `/provenance/` | [Provenance and audit](../guides/data/provenance-and-audit) |
-| `/audit` | Search operational history | `/audit-events/` | [Provenance and audit](../guides/data/provenance-and-audit) |
+| `/data` | Generated scientific data grouped by workflow | Provenance data projections | [Trace a result](../guides/data/provenance) |
+| `/provenance` | Explore entities, SQL, and lineage | `/provenance/` | [Trace a result](../guides/data/provenance) |
+| `/audit` | Search operational history | `/audit-events/` | [Inspect audit events](../guides/data/audit-events) |
 | `/console` | Open interactive terminal sessions | `/console-commands/`, `/console-sessions/` | [Interactive console](../guides/operations/interactive-console) |
 | `/settings` | Manage identity, appearance, instance archives, and reset | Instance and preference endpoints | [Instance management](../guides/operations/instance-management) |
 | `/settings/ssh-keys` | Generate or import daemon-owned SSH keys | `/ssh-keys/` | [Credentials and SSH](../guides/operations/credentials-and-ssh) |

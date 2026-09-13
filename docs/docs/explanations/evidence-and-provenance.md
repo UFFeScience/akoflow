@@ -10,7 +10,7 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 
 AkôFlow keeps a plan's predictions alongside what happened during the run. Compare them to see whether activities took longer than expected, used different resources, or moved data differently.
 
-Use [Provenance and audit](../guides/data/provenance-and-audit) to query the records. This explanation describes why they remain separate.
+Use [Trace a result with provenance](../guides/data/provenance) or [Inspect audit events](../guides/data/audit-events) to query the records. This explanation describes why they remain separate.
 
 ## Two timelines for one selected plan
 

@@ -69,7 +69,12 @@ const sidebars: SidebarsConfig = {
           type: "category",
           label: "Data and evidence",
           collapsed: true,
-          items: ["guides/data/artifacts", "guides/data/provenance-and-audit"],
+          items: [
+            "guides/data/artifacts",
+            "guides/data/provenance-and-audit",
+            "guides/data/provenance",
+            "guides/data/audit-events",
+          ],
         },
         {
           type: "category",

@@ -39,7 +39,8 @@ For direct API work, complete [API connection setup](./tutorials/api-access) fir
 | Configure simulated or connected infrastructure | [Environments](./guides/infrastructure/environments) |
 | Limit the resources and network offered to planning | [Execution scopes and network topologies](./guides/infrastructure/execution-scopes) |
 | Reproduce a complete example | [Workflow Showcase](./showcase/) |
-| Query lineage, evidence, or audit records | [Provenance and audit](./guides/data/provenance-and-audit) |
+| Trace how a result was produced | [Trace a result with provenance](./guides/data/provenance) |
+| Investigate a connection or other operation | [Inspect audit events](./guides/data/audit-events) |
 
 ## Understand the records
 

@@ -183,7 +183,7 @@ See [Artifacts, storage, and builds](../guides/data/artifacts.md) for payload ex
 | `POST` | `/provenance/sql/explain/` | Explain read-only SQL |
 | `GET` | `/provenance/lineage/{entity}/{id}/` | Traverse lineage |
 
-See [Provenance and audit](../guides/data/provenance-and-audit.md) for query parameters and examples.
+See [Trace a result with provenance](../guides/data/provenance.md) for query examples.
 
 ## Console
 

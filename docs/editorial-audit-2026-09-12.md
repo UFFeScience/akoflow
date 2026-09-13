@@ -2,7 +2,7 @@
 
 Date: 2026-09-12. Scope: authored documentation pages in the current branch; generated API endpoint pages are reviewed through their generator and component.
 
-This is an iteration ledger, not a completion certificate. The first pass read all 51 authored pages and corrected confirmed narrative, terminology, API convention, example, and support-claim findings. A Desktop first-workflow path has since been run through the v1.0.8 Linux package and documented as page 52. A second full audit, priority endpoint contracts, and external-provider validation remain open.
+This is an iteration ledger, not a completion certificate. The first pass read all 51 authored pages and corrected confirmed narrative, terminology, API convention, example, and support-claim findings. A Desktop first-workflow path was added as page 52; splitting the provenance and audit procedures now brings the authored tree to 54 pages. A final full audit, priority endpoint contracts, and external-provider validation remain open.
 
 ## Open P0/P1 findings
 
@@ -85,6 +85,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 77. **P1 resolved in installation narrative:** the installation page now states near platform selection that an extracted Linux v1.0.8 package completed a local workflow while clean `apt`, macOS, Windows, and AppImage first launches remain unverified. Its duplicate post-setup checkpoint table was replaced with a short `Set up later` confirmation: **Connected** proves local daemon reachability, while the catalog stays empty until an environment is registered. The existing **Ready** step remains the confirmation for the full local assistant path.
 78. **P1 resolved in the basic reading path:** Home, Downloads, Getting Started, Installation, the Desktop first-workflow tutorial, and Interface Tour were read together as one new-user sequence. Downloads now calls daemon/BuildKit archives service assets without claiming automatic retrieval on every platform. The first-workflow tutorial identifies the verified Linux package as extracted and removes an irrelevant BusyBox implementation detail. The tour no longer introduces read-only instance modes before the user needs them. The sequence still requires clean-host and other-platform execution checks before its completion gate can be claimed.
 79. **P1 resolved in the scheduling path:** the planning how-to led with session states, candidate field inventories, and assignment internals before the user procedure. It now starts with the workflow/scope/candidate action, keeps the Desktop and API steps together, and links to the PRISM/HEFT explanation and state reference when those details become useful. The PRISM/HEFT, planning-model, and observed-timing explanations were read alongside it; their predicted-versus-observed distinctions remain intact. Provider-dependent timing and full request validation are still open.
+80. **P1 resolved in evidence guide scope:** one long guide mixed tracing a scientific result with investigating operational events. The old URL is now a short choice page; separate provenance and audit guides hold their own Desktop/API procedures, screenshots, limits, and investigation steps. Sidebar, Getting Started, Interface Tour, feature coverage, and API-reference links now lead to the relevant task. This preserves the old URL for inbound links while giving each procedure one objective.
 
 ## Page inventory
 
@@ -103,7 +104,9 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `explanations/prism-and-heft.md` | Plain-language pass; cut 27% while preserving search, evaluation, cost, and cross-algorithm limits | Recheck algorithm claims against source |
 | `getting-started.md` | Second read; leads to the verified Desktop local run before the API simulation | Recheck the entry flow on a clean supported host |
 | `guides/data/artifacts.md` | API-path pass; environment and storage IDs now come from inventory, and the materialization query no longer requires an undefined run ID | Recheck API payloads after P0 contracts fix |
-| `guides/data/provenance-and-audit.md` | API-path/plain-language pass; removed undefined run/environment variables, shortened panel/depth language, and kept route limits checked against source | Recheck Desktop interactions against packaged app |
+| `guides/data/provenance-and-audit.md` | Short choice page preserving the old URL and distinguishing the two record types | Check both destinations in navigation |
+| `guides/data/provenance.md` | Moved Explore, lineage, SQL, and result investigation into one scientific-evidence task | Recheck Desktop interactions against packaged app |
+| `guides/data/audit-events.md` | Moved audit screen, server filters, and operation correlation into one operational-evidence task | Recheck Desktop interactions against packaged app |
 | `guides/infrastructure/aws.md` | Plain-language pass after code audit; server credential setup, partial S3 path, and absent EC2 path are explicit | Check provider claims against disposable-bucket evidence |
 | `guides/infrastructure/cloud-capacity.md` | Claim/path pass; aligned environment with GCP tutorial and derived target/operation IDs from responses | Validate with disposable GCP account |
 | `guides/infrastructure/environments.md` | Plain-language/claim pass; local API definition persisted in a one-off repository test, and in-use revision language matches the API | Recheck remote flows with provider evidence |

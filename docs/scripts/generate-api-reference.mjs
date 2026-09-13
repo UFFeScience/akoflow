@@ -74,14 +74,14 @@ const groupMetadata = {
     "artifacts, materializations, and builds",
   ],
   Provenance: [
-    "/docs/guides/data/provenance-and-audit",
+    "/docs/guides/data/provenance",
     "scientific provenance",
   ],
   Console: [
     "/docs/guides/operations/interactive-console",
     "interactive console sessions and commands",
   ],
-  Audit: ["/docs/guides/data/provenance-and-audit", "operational audit events"],
+  Audit: ["/docs/guides/data/audit-events", "operational audit events"],
   System: ["/docs/getting-started", "daemon status"],
 };
 
@@ -165,7 +165,7 @@ const verifiedRequestNotes = {
   "GET /": "This health route is at the daemon root, outside `/akoflow-api/`. With the API URL from the [API access tutorial](/docs/tutorials/api-access), the cURL command removes that prefix and requests `/`. A healthy daemon returns plain text `ok`; this check does not verify Docker, BuildKit, or a workflow runtime. Use [preflight](/docs/api/endpoints/instance/get-preflight) for those local capability checks.",
   "GET /akoflow-api/preflight/": "The response has `server`, `docker`, and `buildkit` objects, each with `available` and `message`. `server.available` is true when this route responds, but the Docker and BuildKit checks can be false while HTTP still returns `200 OK`. Inspect their individual values before running a local workflow. The checks run in the daemon process, not in your browser or shell.",
   "GET /akoflow-api/console-sessions/{sessionId}/stream/": "Open this URL with a WebSocket client after creating a console session. A successful upgrade returns `101 Switching Protocols` and carries terminal input and output over the socket; it is not a JSON response. An unknown session returns `404`. See the [interactive console guide](/docs/guides/operations/interactive-console) for session lifecycle.",
-  "POST /akoflow-api/provenance/sql/": "Send a read-only `sql` query using `SELECT` or `WITH`; `parameters` supplies optional named values, and `page`/`pageSize` control results (at most 200 rows per page). Use `GET /provenance/sql/schema/` to see allowed tables and columns. The service enforces a 10-second timeout and rejects writes or restricted fields with `400`; an unavailable explorer returns `503`. See [provenance and audit](/docs/guides/data/provenance-and-audit#query-with-read-only-sql).",
+  "POST /akoflow-api/provenance/sql/": "Send a read-only `sql` query using `SELECT` or `WITH`; `parameters` supplies optional named values, and `page`/`pageSize` control results (at most 200 rows per page). Use `GET /provenance/sql/schema/` to see allowed tables and columns. The service enforces a 10-second timeout and rejects writes or restricted fields with `400`; an unavailable explorer returns `503`. See [provenance SQL guide](/docs/guides/data/provenance#query-with-read-only-sql).",
   "POST /akoflow-api/provenance/sql/explain/": "Send the same `sql` and optional named `parameters` as the read-only SQL route. This runs `EXPLAIN QUERY PLAN` for a permitted `SELECT` or `WITH` statement and returns plan rows, not the query's data rows. It uses the same read-only table/column restrictions and 10-second timeout; invalid SQL returns `400` and an unavailable explorer returns `503`.",
   "PUT /akoflow-api/instance/": "Send the complete current instance object with non-empty `id` and `name`; this route saves the supplied object, so preserve existing identity and metadata when changing one field. `transferBufferBytes` accepts 5–64 MiB; `0` selects the 8 MiB default. The [instance guide](/docs/guides/operations/instance-management#inspect-the-active-identity) reads the current object before updating it.",
   "PUT /akoflow-api/environments/{environmentId}/": "Read `GET /environments/{environmentId}/` before editing and send a complete environment definition; `environment.id` must match the path ID. Replacement returns `404` when the environment does not exist and can return `422` when references prevent replacing its inventory. Use new environment and version IDs for revised inventory already used by scopes or plans; see the [environment YAML reference](/docs/reference/environment-yaml#compatibility-and-common-failures).",

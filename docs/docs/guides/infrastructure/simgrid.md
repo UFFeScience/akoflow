@@ -13,7 +13,7 @@ The YAML blocks below show only the fields discussed in each step. Use the [comp
 
 ## Prerequisites
 
-- A running AkôFlow daemon with the SimGrid runner available. The server image includes it; source builds can follow [`examples/simulation/README.md`](https://github.com/UFFeScience/akoflow/blob/v1.0.8/examples/simulation/README.md).
+- A running AkôFlow server with the SimGrid runner available. The server image includes it; source builds can follow [`examples/simulation/README.md`](https://github.com/UFFeScience/akoflow/blob/v1.0.8/examples/simulation/README.md).
 - A local checkout of the repository if you will submit the versioned YAML bundle.
 - A workflow with explicit `simulation.durationSeconds` or `simulation.flops` for every activity whose execution time should be modeled.
 

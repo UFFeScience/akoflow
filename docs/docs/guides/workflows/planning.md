@@ -4,7 +4,7 @@ title: Plan a workflow
 
 # Plan a workflow
 
-Plan a workflow to compare where its activities could run before starting execution. Choose a workflow version and an execution scope, generate candidates, then select one as the schedule plan.
+Plan a workflow before starting execution. For a known placement, make a manual plan. To compare placements, choose a workflow version and execution scope, generate candidates, then select one as the schedule plan.
 
 ## Using AkôFlow Desktop
 

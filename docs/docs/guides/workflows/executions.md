@@ -10,7 +10,7 @@ For the API commands on this page, complete [API connection setup](../../tutoria
 
 ## Choose real execution or simulation
 
-- **Real** runs send activities to resources configured for execution, such as Kubernetes or SLURM.
+- **Real** runs send activities to resources configured for execution, such as the local machine, Kubernetes, or SLURM.
 - **Simulation** runs evaluate a workflow with a simulation environment such as SimGrid.
 
 To open a terminal on one resource, follow the [interactive console guide](../operations/interactive-console). Terminal sessions also appear in the run history, but they do not start from a workflow plan.

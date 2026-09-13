@@ -199,6 +199,8 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 
 145. **P1 resolved in operations page ownership:** the earlier preferences split left a full duplicate Desktop/API procedure in Instance management, despite its link to the dedicated Personal preferences page and an inventory note claiming it had moved. The duplicate is removed; the link, dedicated guide, sidebar entry, and API overview remain. A repository search found no links to the removed heading. The notifications guide now calls its absent server record "server-side" rather than introducing daemon terminology. Search, console, and the remaining instance lifecycle were reread; snapshot/runtime behavior still needs its own validation.
 
+146. **P1 resolved in environment-to-execution progression:** Planning now introduces the manual path used by the first Desktop workflow before explaining automatic candidate comparison. Execution includes the verified local runtime among real-run examples. The execution-scope API explanation marks `networkTopologyId` optional and says a planning session selects its topology; the scope repository and planning service were checked. The SimGrid prerequisite uses user-facing server terminology. Environments, Kubernetes, and HPC/SLURM were reread in the same sequence; live remote-target validation remains open.
+
 ## Page inventory
 
 | Page | Current pass | Next review |
@@ -226,11 +228,11 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `guides/infrastructure/cloud-support.md` | First read; GCP/AWS support matrix separated from capacity procedure and linked to provider tasks | Recheck against live GCP/S3 evidence |
 | `guides/infrastructure/machine-configurations.md` | Focused optional Ansible setup; validation and saved version use one playbook, and the returned version ID is consumed by the capacity example in the same Bash session | Validate against disposable GCP worker |
 | `guides/infrastructure/environments.md` | Plain-language/claim pass; local API definition persisted in a one-off repository test, and in-use revision language matches the API | Recheck remote flows with provider evidence |
-| `guides/infrastructure/execution-scopes.md` | Second read; cross-resource dependencies now prompt link modeling, and the link example omits redundant topologyId | Recheck API payloads after P0 contracts fix |
+| `guides/infrastructure/execution-scopes.md` | Third read; API explanation marks scope topology ID optional and session topology selection explicit | Recheck API payloads after P0 contracts fix |
 | `guides/infrastructure/gcp.md` | Third read; target zone choice now matches Terraform's fixed-or-first-active behavior | Check provider claims against disposable-project evidence |
 | `guides/infrastructure/hpc-slurm.md` | Second cross-runtime read; pinned login-node scheduling opt-in and compute-allocation workspace probe are explicit | Check provider claims against real cluster evidence |
 | `guides/infrastructure/kubernetes.md` | Second cross-runtime read; real Job versus modeled-cluster choice is direct, and the token stream stays out of shell variables and files | Recheck procedure against Kind bundle and shared-cluster RBAC |
-| `guides/infrastructure/simgrid.md` | Third read; activity profile introduction is direct; topology, API setup, and pinned bundle remain aligned | Recheck procedure against pinned bundle |
+| `guides/infrastructure/simgrid.md` | Fourth read; server prerequisite and activity profile introduction are direct; pinned bundle remains aligned | Recheck procedure against pinned bundle |
 | `guides/infrastructure/storage.md` | Third read; opening now states unsigned S3 browsing directly; local API path remains verified | Verify remote/provider storage independently |
 | `guides/interface-tour.mdx` | Plain-language pass; removed repeated Desktop/API framing and shortened search/breadcrumb guidance; rendered page inspected at 390 × 844 | Recheck screenshots and controls during final visual audit |
 | `guides/operations/credentials-and-ssh.md` | Task-scope reread; now covers SSH keys and assignment only, with provider credentials routed to their own tutorials | Recheck current Desktop form and key lifecycle claims |
@@ -243,9 +245,9 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `guides/operations/server-instance.md` | Second read; corrected invalid tunnel command, simplified server language, and preserved HTTP failure through jq | Recheck release assets when version changes |
 | `guides/operations/troubleshooting.md` | Fifth read; evidence collection now separates run/operation records, Provenance, and actual Audit emitters | Recheck other diagnostic claims after P0 fixes |
 | `guides/workflows/definitions.md` | Third read; API list, detail, and export now fail on HTTP errors | Recheck payload against importer after P0 contracts fix |
-| `guides/workflows/executions.md` | Fourth read; run detail now mentions conditional infrastructure/data/artifact families and API requests fail on HTTP errors | Recheck other runtimes against their own guides |
+| `guides/workflows/executions.md` | Fifth read; real-run examples include the verified local path and conditional response families remain qualified | Recheck other runtimes against their own guides |
 | `guides/workflows/first-run.md` | Terminology reread; server address/readiness/log language is consistent; fixed-plan submission remains validation and save | Keep the SimGrid API example aligned with its versioned bundle |
-| `guides/workflows/planning.md` | Third read; algorithm and session/candidate reads now fail on HTTP errors | Verify automatic Desktop planning flow |
+| `guides/workflows/planning.md` | Fourth read; manual first plan precedes automatic comparison; API reads fail on HTTP errors | Verify automatic Desktop planning flow |
 | `installation.md` | Fourth entry-path read; local server language is clear while exact checkup labels remain; Desktop checkup stays central | Verify clean-host and cross-platform installation |
 | `internal/workflow-spec.md` | Second read; lead example now uses one execution mode and marks script paths as prerequisites | Check every field contract against current importer |
 | `modules.md` | Developer detail remains in the architecture section; planning candidates now distinguish shared inputs from algorithm-specific predictions | Recheck claims against daemon composition |

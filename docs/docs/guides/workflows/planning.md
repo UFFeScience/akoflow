@@ -97,7 +97,7 @@ For a manual plan, send the complete validation envelope used by `examples/simul
 
 ### Import a saved plan
 
-To try the import route, complete the [SimGrid first-run tutorial](./first-run) through **Register the fixed plan**. This reads that saved plan, gives the copy and its assignments new IDs, and submits only the import envelope. Run it once per imported ID; use another ID if the copy already exists.
+To try the import route, complete the [SimGrid first-run tutorial](./first-run) through **Register the fixed plan**. This reads that saved plan, gives the copy, its assignments, and its cloud lifecycle actions new IDs, and submits only the import envelope. Run it once per imported ID; use another ID if the copy already exists.
 
 ```bash
 set -o pipefail
@@ -107,7 +107,14 @@ curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   "$AKOFLOW_API_URL/schedule-plans/simulation-example-plan-v1/" |
   jq --arg id "$AKOFLOW_IMPORTED_PLAN_ID" '{plan:(
     .id = $id |
-    .assignments |= map(.id = ($id + "-" + .id) | .planId = $id)
+    .assignments |= map(.id = ($id + "-" + .id) | .planId = $id) |
+    (.lifecycleActions //= []) |
+    .lifecycleActions |= map(
+      .id = ($id + "-" + .id) |
+      .schedulePlanId = $id |
+      (.dependsOn //= []) |
+      .dependsOn |= map($id + "-" + .)
+    )
   )}' |
   curl --fail-with-body \
     -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
@@ -118,7 +125,7 @@ curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
 jq '{id,source,predicted}' imported-plan.json
 ```
 
-Expect `source: "imported"` and the new ID. This SimGrid plan has no cloud lifecycle actions; when copying a plan that has them, each action also needs a new `id` and the new `schedulePlanId`.
+Expect `source: "imported"` and the new ID. The copied lifecycle dependencies must point to the new action or assignment IDs; the command above updates those references too.
 
 ## Next step
 

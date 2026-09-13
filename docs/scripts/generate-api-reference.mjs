@@ -198,7 +198,7 @@ const verifiedRequestNotes = {
   "POST /akoflow-api/artifact-materializations/": "This endpoint stores a materialization record supplied by the caller; it does not itself copy or verify artifact bytes. Execution preparation records the actual transfer and verified digest. Use the [Artifacts guide](/docs/guides/data/artifacts) to inspect materializations from a run.",
   "POST /akoflow-api/console-sessions/": "Replace the example `resourceId` with a saved resource that has a connected interactive runtime; `actorId` is optional. A successful request starts the terminal and returns a `connected` session. Resolution or startup failure returns `422`, not a successful session record. Use the [console guide](/docs/guides/operations/interactive-console) for streaming and closure.",
   "POST /akoflow-api/console-commands/": "Replace the example `resourceId` with a saved resource that supports one-shot commands. `resourceId` and `command` are required; `timeoutSeconds` defaults to 30 and cannot exceed 3600. The request waits for the runner and returns a command record. A runner failure can return `201 Created` with `status: failed`; inspect `status`, `exitCode`, and `failure` instead of treating HTTP status as command success.",
-  "POST /akoflow-api/connection-tests/": "Send an `EnvironmentConnection` object with the connection type and its required endpoint or configuration. The route tests the supplied object without saving it. It returns `200 OK` with `healthy` and `message`; `healthy: false` is a failed probe even though the HTTP request succeeded. The current test dispatcher handles local, SSH, agent, and Kubernetes connections, not cloud connections.",
+  "POST /akoflow-api/connection-tests/": "The example tests the local server. For SSH, agent, or Kubernetes, send the connection fields and credentials required by that type instead. This route tests the supplied connection without saving it. It returns `200 OK` with `healthy` and `message`; `healthy: false` means the probe failed even though the HTTP request succeeded. Cloud connections are not handled here.",
   "POST /akoflow-api/machine-configuration-validations/": "Send `playbookYaml` containing the Ansible playbook text. Valid input returns `200 OK` with `valid: true` and a content hash; invalid input returns `422` with `valid: false` and errors. This validates structure only and does not run a playbook or provision a machine.",
   "POST /akoflow-api/machine-configurations/": "`name` is required. `id` is optional and generated when omitted. The server sets `ownership: user` and `enabled: true`. Create a version separately; this request does not validate or execute a playbook.",
   "POST /akoflow-api/machine-configurations/{configurationId}/versions/": "Create the configuration first, then use its returned ID as `configurationId` (the preceding example uses `example-machine-setup`). The path ID overrides any body `machineConfigurationId`. Send a positive `version` and valid `playbookYaml`; `id` is optional and `status` defaults to `draft`. The response is the stored configuration with its versions, not just the new version.",
@@ -206,6 +206,9 @@ const verifiedRequestNotes = {
 };
 
 const verifiedRequestExamples = {
+  "POST /akoflow-api/connection-tests/": {
+    type: "local",
+  },
   "POST /akoflow-api/console-sessions/": {
     resourceId: "my-interactive-resource",
   },

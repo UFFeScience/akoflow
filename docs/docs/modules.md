@@ -38,7 +38,7 @@ Long-running commands are queued rather than completed inside the initiating HTT
 
 ## Planning
 
-A planning session freezes the workflow version, execution scope, environment versions, resources, topology, activity profiles, deadline, budget, and optional interference model. Registered algorithms generate comparable candidates; built-ins currently include HEFT, PRISM Time, and PRISM Cost.
+A planning session freezes the workflow version, execution scope, environment versions, resources, topology, activity profiles, deadline, budget, and optional interference model. Built-in algorithms include HEFT, PRISM Time, and PRISM Cost. They produce candidates from the same session inputs, but their predicted metrics come from different evaluation models; see [PRISM and HEFT](./explanations/prism-and-heft) before comparing them.
 
 Selecting a candidate creates or selects a schedule plan; it does not execute the workflow. A plan contains assignments, predicted timing and cost, transfer estimates, and optional cloud lifecycle actions.
 

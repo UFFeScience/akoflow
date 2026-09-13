@@ -15,7 +15,7 @@ Plan a workflow to compare where its activities could run before starting execut
 5. Optionally set a deadline, budget, or import an interference matrix.
 6. Choose **Generate candidate plans**.
 7. Follow each algorithm run's progress. Expand candidates to inspect their Gantt timelines and assignments.
-8. Compare predicted time, cost, feasibility, and assignments, then select a candidate. AkôFlow saves its schedule plan for execution.
+8. Inspect predicted time, cost, feasibility, and assignments, then select a candidate. HEFT and PRISM use different prediction models, so compare observed runs when you need evidence of which plan performs better. AkôFlow saves the selected schedule plan for execution.
 
 <img src={require('@site/static/img/interface/planning/create-execution-plan.png').default} alt="AkôFlow Desktop Create an execution plan screen in light mode, with generated and manual planning choices, a planning target selector, an execution scope, and PRISM Cost, PRISM Time, and HEFT controls." />
 

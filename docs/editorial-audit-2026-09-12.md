@@ -107,6 +107,8 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 
 99. **P1 resolved in Docker-to-SIF guide:** the API path stopped after starting the build and left the reader to infer both `build.id` and the asynchronous run ID. It now captures the two response IDs, reads the run status with failure details, and downloads output only after completion. The server-side Apptainer and artifact-store prerequisites are explicit. The response fields and `queued`/`running`/`publishing`/`completed`/`failed` states were checked against the handler, build manager, executor, and domain type; a live registry pull and SIF build remain unverified.
 
+100. **P1 resolved across architecture and planning:** the architecture page called HEFT and PRISM candidates “comparable” although their predictions use different evaluators. The architecture now states that candidates share session inputs but use different prediction models. The planning guide tells readers to inspect estimates for selection and compare observed runs when judging performance. Both now align with the source-audited PRISM/HEFT explanation.
+
 ## Page inventory
 
 | Page | Current pass | Next review |
@@ -152,10 +154,10 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `guides/workflows/definitions.md` | Progressive-disclosure reread; Desktop creation precedes portable API fields, with exact model details in the reference | Recheck payload against importer after P0 contracts fix |
 | `guides/workflows/executions.md` | Plain-language reread; workflow task is separate from terminal sessions, and trace fields are conditional on observed evidence | Recheck other runtimes against their own guides |
 | `guides/workflows/first-run.md` | Claim reread; fixed-plan submission is described as validation and save, without falsely promising prediction recalculation | Keep the SimGrid API example aligned with its versioned bundle |
-| `guides/workflows/planning.md` | Import-path reread; saved SimGrid plan is copied with new plan, assignment, and lifecycle IDs; isolated HTTP import and GET passed with predictions preserved | Verify automatic Desktop planning flow |
+| `guides/workflows/planning.md` | Import-path and prediction reread; isolated HTTP import and GET passed; HEFT/PRISM estimates are identified as model-specific | Verify automatic Desktop planning flow |
 | `installation.md` | Entry-path reread; Desktop checkup remains central, self-managed API checks moved to their guides, and platform verification is stated once | Verify clean-host and cross-platform installation |
 | `internal/workflow-spec.md` | Second read; lead example now uses one execution mode and marks script paths as prerequisites | Check every field contract against current importer |
-| `modules.md` | Second read; source map and implementation detail remain in the developer section | Recheck claims against daemon composition |
+| `modules.md` | Developer detail remains in the architecture section; planning candidates now distinguish shared inputs from algorithm-specific predictions | Recheck claims against daemon composition |
 | `reference/api-overview.md` | Second read; removed token-in-shell-history setup and an unprovided `workflow.json` example; linked the task guide and versioned tutorial | Check contracts against current handlers and schemas |
 | `reference/environment-yaml.md` | Claim pass; corrected append-version advice and API create defaults for speedup, schedulability, binding, and optional objects | Continue field-level schema contract audit |
 | `reference/execution-scopes-and-topologies.md` | Claim pass; clarified API prerequisites and the actual omitted link direction/sharing values | Check contracts against current handlers and schemas |

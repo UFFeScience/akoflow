@@ -149,7 +149,7 @@ curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
 | Topology creation returns 422 | Check that `version >= 1`, `executionScopeId` is present, every link has distinct endpoints and positive bit/s bandwidth, and no value is negative. |
 | A reverse transfer has no modeled route | Set `bidirectional: true` or declare the reverse link explicitly. |
 | Transfer time is eight times too small or large | Verify units: links use bits/s; workflow data uses bytes. |
-| A resource never appears in a candidate plan | Check its environment version is in the scope, it is schedulable, and it has an enabled binding to the selected runtime. |
+| A resource never appears in a candidate plan | Check that its environment version is in the scope and it is schedulable; then inspect workflow constraints and the algorithm's placement. Runtime bindings are checked when execution starts, not by this planning filter. |
 | The scope cannot be deleted | Existing schedule plans reference it. Preserve it for evidence and create a new scope/version for a new experiment. |
 
 Related reference: [Environment YAML](./environment-yaml), [workflow YAML](../internal/workflow-spec), [SimGrid modeling](../guides/infrastructure/simgrid), and [planning](../guides/workflows/planning).

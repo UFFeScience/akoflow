@@ -30,7 +30,7 @@ activityResourceProfiles: []
 connections: []
 ```
 
-`environment` and `version` are required for a persisted definition. The remaining collections may be empty at creation time, but a plan needs at least one schedulable resource, an enabled binding, and a runtime compatible with the selected execution mode.
+`environment` and `version` are required for a persisted definition. The remaining collections may be empty at creation time. Planning needs a schedulable resource in the selected scope; executing the plan also needs an enabled binding to a runtime compatible with the run mode.
 
 The create handler returns the submitted document. It may still show omitted nested parent IDs as empty strings. Read `GET /environments/{environmentId}/` to see the IDs actually saved with the environment and version.
 
@@ -72,7 +72,7 @@ Each entry in `runtimes` defines how a version can execute or simulate work. `co
 
 ## Resources and resource bindings
 
-Resources are the candidates a plan can place activities on. A resource is usable only when it belongs to the selected version, is `schedulable: true`, and has an enabled binding to a compatible runtime.
+Planning considers resources in the selected scope marked `schedulable: true`; for non-batch targets it also checks the workflow's CPU and memory requirements. It does not filter them by runtime binding. Before execution, ensure each assigned resource has an enabled binding to a runtime compatible with the run mode; the supervisor rejects the request otherwise.
 
 | Path | Required | Type | Values / default | Notes |
 | --- | --- | --- | --- | --- |
@@ -211,7 +211,7 @@ After creating it, retrieve `GET /environments/lab-sim/` and confirm that the ru
 | --- | --- |
 | A runtime driver or mode is not in the documented enum | SQLite rejects the definition. Use a supported driver/mode pair. |
 | A duplicate `environment.id`, version number, provider ID, runtime name, connection name, or binding pair is supplied | The create transaction fails. Choose a new identity or update the existing definition through `PUT`. |
-| A resource is not bound to the selected runtime | It is absent from compatible planning resources. Add an enabled resource-runtime binding. |
+| A resource is not bound to a runtime compatible with the run mode | Planning can still assign it, but execution rejects the request. Add an enabled resource-runtime binding before starting the run. |
 | A resource has zero capacity or an omitted compute model | Planning may have no feasible placement or a meaningless estimate. Set resource capacities and workflow activity profiles explicitly. |
 | Two default storages bind to one runtime | The definition is rejected. Keep one default storage for each runtime/version pair. |
 | A scope or plan already uses the environment | Deletion or replacement can fail to preserve existing references. Register the revised inventory as a new environment with new environment and version IDs; the current API has no endpoint to append a version to an existing environment. |

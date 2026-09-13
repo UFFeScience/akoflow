@@ -169,6 +169,6 @@ The run's execution, transfer, queue, and overhead totals are accumulated across
 | No transfer is reported | Confirm that the data dependency has `sizeBytes > 0`, the selected assignments use different resources, and the scope topology has a route between them. |
 | A planned transfer is unrealistically fast | Check units: topology bandwidth is bit/s and data dependency size is bytes. Include link latency. |
 | Parallel activities appear in one lane | Check `cpuCores`, activity CPU requirements, and the plan's `coreId` assignments. Then regenerate the plan. |
-| A resource is absent from candidate plans | Confirm `schedulable: true`, an enabled `simgrid` runtime binding, enough CPU/memory for the activity, and that its environment version belongs to the scope. |
+| A resource is absent from candidate plans | Confirm `schedulable: true` and that its environment version belongs to the scope; then inspect the activity requirements and algorithm placement. An enabled `simgrid` runtime binding is needed to execute a selected plan, but it is not part of the planning resource filter. |
 
 Related material: [execution scopes](./execution-scopes), [network fan-out](../../showcase/network-fanout), [parallel 50-core fan-out](../../showcase/parallel-50-core), and [the execution evidence guide](../workflows/executions).

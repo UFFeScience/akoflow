@@ -155,6 +155,8 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 
 123. **P1 resolved in Cloud navigation and page purpose:** a provider matrix interrupted the cloud-capacity procedure before its first catalog action. It now has a dedicated Cloud provider support page immediately before the capacity guide in the sidebar. Getting Started links directly to that page, and the stale section anchor was removed. The capacity guide begins with its task and links to the support decision; the matrix keeps GCP compute, incomplete GCS transfer, partial AWS S3 transfer, and unverified live-provider limits together. The Cloud path is now support → connect GCP or review AWS → configure capacity, without hiding the status behind a long how-to opening.
 
+124. **P1 resolved in notification recovery:** the API section for a cloud-provisioning notification formerly listed cloud instances, which show resource state rather than the tracked operation. It now lists cloud operations, adds artifact-build runs for another notification type named on the page, and identifies Desktop update notices as app-local. The Desktop section heading and terminal-state description were shortened. Router paths were checked against the current Go server; live Desktop notification behavior remains a separate UI validation.
+
 ## Page inventory
 
 | Page | Current pass | Next review |
@@ -195,7 +197,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `guides/operations/interactive-console.md` | Plain-language reread; basic path and diagram now use resource/connection terms, while API retains returned IDs; closure follows streaming/log use | Recheck session behavior against Desktop |
 | `guides/operations/search-and-notifications.md` | Short choice page preserving the old URL and distinguishing lookup from profile-local alerts | Check both destinations in navigation |
 | `guides/operations/find-records.md` | Desktop/API search procedure, result fields, limits, and empty-result recovery | Recheck UI behavior against Desktop |
-| `guides/operations/follow-notifications.md` | Notification behavior, owning API collections, and missing-alert recovery | Recheck UI behavior against Desktop |
+| `guides/operations/follow-notifications.md` | Second read; API recovery now uses cloud operations and artifact-build runs, matching the tracked notification types | Recheck UI behavior against Desktop |
 | `guides/operations/server-instance.md` | Second read; corrected invalid tunnel command, simplified server language, and preserved HTTP failure through jq | Recheck release assets when version changes |
 | `guides/operations/troubleshooting.md` | Fourth read; root health authentication and HTTP-error exits are consistent | Recheck other diagnostic claims after P0 fixes |
 | `guides/workflows/definitions.md` | Third read; API list, detail, and export now fail on HTTP errors | Recheck payload against importer after P0 contracts fix |

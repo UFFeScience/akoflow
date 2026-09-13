@@ -282,6 +282,8 @@ const runnableSimulationRequests = {
 // not from JSON tags alone. Keep them scoped to fields the service validates.
 const verifiedRequestNotes = {
   "POST /akoflow-api/environments/": "The response echoes the submitted definition. The repository saves the environment, version, inventory, storage, and connections, but ignores `connectionChecks` and `connectorBindings` if they appear in the body. Read `GET /environments/{environmentId}/` for saved IDs and separately recorded connection checks. See the [environment YAML reference](/docs/reference/environment-yaml).",
+  "GET /akoflow-api/environments/": "Each item is a saved environment definition. `connectionChecks` can include recent health records for its connections; these were recorded separately from the environment YAML. The repository does not populate `connectorBindings` from a submitted definition.",
+  "GET /akoflow-api/environments/{environmentId}/": "Returns the saved definition, including IDs filled from the enclosing environment/version. `connectionChecks` comes from recent connection-health records, not from the submitted YAML. The repository does not populate `connectorBindings` from that document.",
   "POST /akoflow-api/schedule-plans/": "Returns the saved `plan`. If `plan.networkTopologyId` is empty, the server fills it from `networkTopology.id`. Submitted predictions are saved without recalculation.",
   "GET /akoflow-api/environments/{environmentId}/cloud-catalog/": "Returns the last synchronized catalog; this GET does not call the provider. Before the first successful refresh it returns `404`. Read catalog warnings as well as machine, image, and disk choices; missing price data does not make a machine free.",
   "GET /akoflow-api/environments/{environmentId}/cloud-capacity-targets/": "Returns enabled targets for this environment, ordered by name. Deleting a target disables its record, so it disappears from this list without erasing historical operations or instances that used it.",
@@ -987,20 +989,32 @@ for (const match of source.matchAll(routePattern)) {
     delete request.example.connectionChecks;
     delete request.example.connectorBindings;
   }
+  const response = {
+    ...extractResponseContract(
+      baseEndpoint,
+      handlerBody,
+      structIndex,
+      returnTypeIndex,
+      ownerReturnTypeIndex,
+      handlerFieldTypes,
+    ),
+    ...(checkedResponseShapes[handler] || {}),
+  };
+  if (["ListEnvironments", "CreateEnvironment", "GetEnvironment", "ReplaceEnvironment"].includes(handler)) {
+    const definitions = Array.isArray(response.example) ? response.example : [response.example];
+    for (const definition of definitions) {
+      if (!definition || typeof definition !== "object") continue;
+      delete definition.connectorBindings;
+      if (handler === "CreateEnvironment" || handler === "ReplaceEnvironment")
+        delete definition.connectionChecks;
+      else if ("connectionChecks" in definition)
+        definition.connectionChecks = [];
+    }
+  }
   endpoints.push({
     ...baseEndpoint,
     request,
-    response: {
-      ...extractResponseContract(
-        baseEndpoint,
-        handlerBody,
-        structIndex,
-        returnTypeIndex,
-        ownerReturnTypeIndex,
-        handlerFieldTypes,
-      ),
-      ...(checkedResponseShapes[handler] || {}),
-    },
+    response,
   });
 }
 

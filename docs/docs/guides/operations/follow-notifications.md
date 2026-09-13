@@ -9,19 +9,22 @@ Notifications help you return to an operation started in this Desktop profile. F
 
 ## In Desktop
 
-The bell in the top bar reports terminal states for operations started in this
-Desktop profile:
+The bell in the top bar reports when these operations, started in this Desktop
+profile, finish or fail:
 
 - planning sessions;
 - executions;
 - artifact builds;
 - interactive terminals;
-- cloud provisioning;
-- Desktop application updates.
+- cloud provisioning.
+
+In the packaged Desktop, the same bell also shows an available application
+update or its download progress. That update notice is separate from the saved
+operation entries below.
 
 Select an operation notification to mark it read and open its associated page. Use the check control to mark all current items read. The center retains at most 40 entries.
 
-A notification appears when a tracked operation finishes or fails. Closed terminals also leave the active-session list.
+A saved notification appears when a tracked operation finishes or fails. Closed terminals also leave the active-session list.
 
 :::note Profile-local state
 Notification entries and the list of tracked operations live in browser local storage. They are not audit or provenance records, do not synchronize between Desktop profiles, and may disappear when site data is cleared. Use execution, planning, build, cloud-operation, or console details for lasting status. Audit records connection checks, resource discovery, and console actions.

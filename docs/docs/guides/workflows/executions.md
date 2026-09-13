@@ -18,7 +18,7 @@ To open a terminal on one resource, follow the [interactive console guide](../op
 
 ## Status and timing
 
-A submitted execution first enters the queue. When AkôFlow starts it, the workflow run becomes `running`, then `completed` or `failed`. Activities expose the more detailed states `blocked`, `ready`, `preparing`, `running`, `completed`, `failed`, and `cancelled`.
+A submitted execution first enters the queue. When AkôFlow starts it, the workflow run becomes `running`, then `completed` or `failed`. The current supervisor records activities as `running`, `completed`, or `failed`; other task states exist in the model but are not a normal progression to wait for.
 
 For real runs, submitted time marks when AkôFlow handed work to the runtime; started time marks when the runtime allocated it; container-started time marks when user code could begin inside the container.
 
@@ -76,4 +76,4 @@ curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
 
 ## Investigating a failure
 
-Start with `run.failureReason`, then inspect the failed activity, its handle `failure`, exit code and log, and the ordered run events. If the activity remained in `preparing`, inspect executable/workspace preparation and transfer records before the runtime log.
+Start with `run.failureReason`, then inspect the failed activity, its handle `failure`, exit code and log, and the ordered run events. If failure happened during preparation, inspect executable/workspace preparation and transfer records; a runtime log may not exist yet.

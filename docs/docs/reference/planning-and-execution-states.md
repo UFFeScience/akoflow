@@ -79,7 +79,7 @@ Task records offer finer-grained evidence than the workflow-run badge:
 
 | Record | States | Notes |
 | --- | --- | --- |
-| `TaskExecution` | `blocked`, `ready`, `preparing`, `running`, `completed`, `failed`, `cancelled` | The domain supports all values. The current supervisor persists running and completed task records for normal execution; failure/cancellation can be recorded from runtime outcomes. |
+| `TaskExecution` | `blocked`, `ready`, `preparing`, `running`, `completed`, `failed`, `cancelled` | The domain supports all values. The current workflow supervisor persists `running`, `completed`, and `failed`; a stopped or failed runtime handle produces a failed task. The other values are not a normal workflow-run progression today. |
 | `ActivityHandle` | `starting`, `running`, `completed`, `failed`, `stopped` | Runtime adapter identity, such as a Kubernetes Job, Slurm Job, PID, or simulation event. `stopped` is surfaced as a failed task with the handle failure reason in task reads. |
 
 Task-stage totals such as `queueSeconds`, `transferSeconds`, and `runtimeSeconds` are accumulated over all tasks. They are diagnostic totals, not wall-clock makespan. Use the run's `makespanSeconds` and task timestamps to understand elapsed time.

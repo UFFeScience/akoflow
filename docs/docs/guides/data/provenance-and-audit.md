@@ -57,18 +57,23 @@ From an Explore result, choose **Open lineage**, or open the **Lineage** tab and
 | **Direction** and **Depth** | Choose whether to follow antecedents, descendants, or both, then bound the search. | A larger depth adds relationships; it does not mean a later execution time. Start at 1 or 2 and expand only when the question requires it. |
 | **Lineage graph** | Inspect the nodes grouped by graph distance from the root. | The heading reports the returned node and relationship counts. Grouped columns are distance from the root, not workflow stages or chronological lanes. |
 | **Find a node** and **node-type filter** | Reduce a large graph to a specific record or entity kind such as transfers or activity executions. | Filtering changes the visible graph only. It does not change the lineage query or delete evidence. |
-| **Selected-record panel** | Read the status and persisted fields for the selected card, then use **Open record** for the operational page. | The panel is evidence for that one record. Compare the plan and run IDs deliberately when investigating planned versus observed behavior. |
+| **Selected-record panel** | Read the status and saved fields for the selected card, then use **Open record** for its page. | Compare the plan and run IDs when investigating planned versus observed behavior. |
 | **Export JSON** | Preserve the exact lineage response for an investigation or a report. | The export is a snapshot of the current root, direction, and depth; record those choices with the file. |
 
+For the API path, copy a run ID from the **Runs** results in Explore and enter it when prompted:
+
 ```bash
-curl -G -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+read -r -p 'Run ID: ' RUN_ID || exit 1
+[ -n "$RUN_ID" ] || exit 1
+
+curl --fail-with-body -G -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   --data-urlencode "direction=both" \
   --data-urlencode "depth=2" \
   --data-urlencode "maxNodes=300" \
   "$AKOFLOW_API_URL/provenance/lineage/runs/$RUN_ID/"
 ```
 
-The response contains a `root` key, `nodes`, directed `edges`, and `truncated`. Increase depth deliberately: the graph may expand quickly, and the interface caps a request at 300 nodes.
+The response contains a `root` key, `nodes`, directed `edges`, and `truncated`. Start with a small depth: the graph may expand quickly, and the interface caps a request at 300 nodes.
 
 ## Query with read-only SQL
 
@@ -132,17 +137,16 @@ Open **Audit** for a chronological record of infrastructure discovery, connectio
 | **Outcome** | Quickly distinguish `started`, `succeeded`, and `failed` records. | A failure tells you that the recorded operation did not complete successfully. Read **Summary** and then inspect the target before changing a configuration. |
 | **Summary** | Read the service-provided context or error associated with the event. | Treat it as operational evidence. It can include a runtime error returned by an external system, so do not copy it into public reports without reviewing it. |
 
-The API supports server-side filtering:
+The API can filter events on the server. This request lists recent failures without requiring an environment ID:
 
 ```bash
-curl -G -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
-  --data-urlencode "environmentId=$ENVIRONMENT_ID" \
+curl --fail-with-body -G -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   --data-urlencode "outcome=failed" \
   --data-urlencode "limit=100" \
   "$AKOFLOW_API_URL/audit-events/"
 ```
 
-Available filter parameters are `eventType`, `environmentId`, `resourceId`, `connectionId`, `sessionId`, `executionId`, `outcome`, and `limit`. Outcomes currently include `started`, `succeeded`, and `failed`. The Desktop currently loads the audit list and applies its category tabs locally; use API filters for precise automation.
+Add `--data-urlencode "environmentId=<your-environment-id>"` when investigating one environment. Other filters are `eventType`, `resourceId`, `connectionId`, `sessionId`, `executionId`, and `limit`. Outcomes include `started`, `succeeded`, and `failed`. Desktop applies its category tabs to the list it has loaded; use API filters when you need a specific server query.
 
 ## Investigation workflow
 

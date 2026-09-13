@@ -23,10 +23,10 @@ and a data dependency and a plan assigns them to different resources. The run
 can record the route, bytes moved, duration, and cost when the runtime reports
 them.
 
-The link bandwidth is in bits per second while dependency size is in bytes. For
-a single 10 GiB flow over a 10 Gbit/s link, the raw payload time is about
-8.6 seconds before latency. A multi-hop route adds latency for its hops and is
-limited by its effective available bandwidth.
+Link bandwidth is in bits per second while dependency size is in bytes. A
+multi-hop route adds latency for its hops and is limited by its effective
+available bandwidth. [Network modeling](./network-modeling#units-and-a-small-example)
+works through a concrete transfer estimate.
 
 ## Contention means simultaneous users of a bottleneck
 

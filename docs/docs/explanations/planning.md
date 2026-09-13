@@ -7,7 +7,7 @@ description: Why planning sessions produce candidates before one placement becom
 
 import useBaseUrl from '@docusaurus/useBaseUrl';
 
-Planning compares where a workflow could run within a chosen execution scope. It produces predicted placements and costs so you can choose a plan before starting a run. Planning does not reserve or start infrastructure.
+A plan records where a workflow's activities should run within an execution scope. You can make one manually or use a planning session to compare predicted placements and costs. Selecting a plan does not start a run or reserve infrastructure.
 
 Use [Plan a workflow](../guides/workflows/planning) for the Desktop or API procedure; this explanation covers the model behind it.
 

@@ -201,6 +201,8 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 
 146. **P1 resolved in environment-to-execution progression:** Planning now introduces the manual path used by the first Desktop workflow before explaining automatic candidate comparison. Execution includes the verified local runtime among real-run examples. The execution-scope API explanation marks `networkTopologyId` optional and says a planning session selects its topology; the scope repository and planning service were checked. The SimGrid prerequisite uses user-facing server terminology. Environments, Kubernetes, and HPC/SLURM were reread in the same sequence; live remote-target validation remains open.
 
+147. **P1/P2 resolved across explanations:** the Planning explanation now introduces manual placement as well as automatic session comparison, matching the first Desktop path and the planning guide. The Evidence/Provenance opening sends scientific-result questions to Provenance and limits Audit to its actual emitters. Observed timing no longer repeats the same 10 GiB/10 Gbit/s calculation already worked through in Network modeling; it links to that example. PRISM/HEFT and Network modeling were reread without another P0/P1 prose change. Field-level trace aggregation and full scientific-result validation remain open.
+
 ## Page inventory
 
 | Page | Current pass | Next review |
@@ -211,10 +213,10 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `contributing/documentation-plan.md` | Fourth read; link and shell check scope now fits short paragraphs; progressive disclosure and HTTP-failing cURL checks remain explicit | Recheck contract at final audit |
 | `downloads.md` | Second read; platform limits and verification are explicit, and latest release was `v1.0.8` on 2026-09-12 | Recheck release links when version changes |
 | `engine.md` | Second read; implementation details remain in the developer section | Recheck claims against event-loop code |
-| `explanations/evidence-and-provenance.md` | Third read; real runtime handles separated from simulated task evidence | Recheck against execution evidence after P0 fixes |
+| `explanations/evidence-and-provenance.md` | Fourth read; opening routes result records to Provenance and actual Audit emitters to Audit | Recheck against execution evidence after P0 fixes |
 | `explanations/network-modeling.md` | Fourth read; opening now names the topology chosen for the planning session; one-byte route choice remains qualified | Recheck transfer claims against execution paths |
-| `explanations/observed-timing.md` | Third read; opening now leads with makespan versus accumulated time | Recheck metrics against trace aggregation |
-| `explanations/planning.md` | Third read; candidate rank follows session completion and selection saves a plan without starting a run | Recheck planning claims against coordinator |
+| `explanations/observed-timing.md` | Fourth read; makespan versus accumulated time leads, and network example is linked rather than repeated | Recheck metrics against trace aggregation |
+| `explanations/planning.md` | Fourth read; manual placement and automatic candidate comparison appear in the right order | Recheck planning claims against coordinator |
 | `explanations/prism-and-heft.md` | Third read; comparison headings now describe observed-run and experiment tasks | Recheck algorithm claims against source |
 | `getting-started.md` | Sixth read; a manual first plan precedes comparison and server terminology stays user-facing | Recheck the entry flow on a clean supported host |
 | `guides/data/artifacts.md` | Short choice page preserving the old URL and routing storage, build, and recorded-location tasks | Check destinations in navigation |

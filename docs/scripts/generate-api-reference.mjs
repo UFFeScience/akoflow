@@ -174,7 +174,7 @@ const verifiedRequestNotes = {
   "POST /akoflow-api/cloud-instances/{instanceId}/validate/": "No JSON body is required. The instance ID must exist (`404` otherwise). `202 Accepted` queues validation against the target's configured checks; it does not by itself provision, configure, start, or stop the instance. Inspect the operation status and events for the result. A repeated active validation returns the existing operation; a different active action returns `409`.",
   "DELETE /akoflow-api/environments/{environmentId}/": "No body is required. The environment must exist (`404` otherwise) and must not be referenced by an execution scope, network topology, schedule plan, execution data or transfers, console activity, or simulation scenario (`422` if referenced). Success returns `204 No Content` and removes its saved versions, inventory, and connections. Inspect dependencies before deleting; see [environments](/docs/guides/infrastructure/environments).",
   "DELETE /akoflow-api/storages/{storageId}/entries/": "Pass the entry path as a URL query parameter, for example `?path=/approved/root/file.txt`; there is no JSON body. The storage must be registered, writable, and usable, and the path must be allowed by its adapter. Success returns `204 No Content`; adapter or policy errors return `422`. This removes the entry rather than merely deleting its catalog record.",
-  "POST /akoflow-api/resources/": "Send a complete resource with an existing `environmentVersionId` and a unique `id` for creation. This route calls upsert: reusing an ID updates that resource's fields and still returns `201 Created`, so inspect existing IDs before submission. It does not create or enable a resource-runtime binding; a resource is not schedulable for a runtime until an enabled binding exists.",
+  "POST /akoflow-api/resources/": "The example adds an inventory-only resource to the SimGrid environment from the [first-run tutorial](/docs/guides/workflows/first-run); that environment version must already exist. Use a unique `id`: reusing one updates the resource and still returns `201 Created`. This route does not create a runtime binding, so the example is not a runnable planning resource. Add an enabled binding through a complete environment definition before selecting it in a plan.",
   "DELETE /akoflow-api/execution-scopes/{scopeId}/": "No body is required. A missing scope returns `404`; a scope referenced by a saved schedule plan cannot be deleted and returns `422`. Success returns `204 No Content`. Inspect plans before deleting a scope used by planning or execution.",
   "DELETE /akoflow-api/console-sessions/{sessionId}/": "No body is required. Close a session when its terminal work is finished; the route returns `204 No Content` on success and `404` for an unknown session. Closing the Desktop detail page alone does not close a daemon-owned session. See the [interactive console guide](/docs/guides/operations/interactive-console).",
   "POST /akoflow-api/ssh-keys/": "`id` is required: 1–64 ASCII letters, digits, `_`, or `-`, starting with a letter or digit. `comment` is optional. The ID must not already exist. The daemon needs `ssh-keygen`.",
@@ -207,6 +207,18 @@ const verifiedRequestNotes = {
 };
 
 const verifiedRequestExamples = {
+  "POST /akoflow-api/resources/": {
+    id: "inventory-only-node",
+    environmentVersionId: "simulation-example-v1",
+    type: "fog_device",
+    name: "Inventory-only node",
+    providerId: "inventory-only-node",
+    cpuCores: 2,
+    cpuCapacity: 2,
+    memoryBytes: 2147483648,
+    computeSpeedup: 1,
+    schedulable: false,
+  },
   "POST /akoflow-api/workflow-definition-actions/duplicate/{workflowId}/": {
     name: "Copied workflow",
     namespace: "copied",

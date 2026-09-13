@@ -1,0 +1,6 @@
+{
+  "id": "montage-58-cloud-local-scope-v1",
+  "name": "Montage 58 GCP e2-medium and local",
+  "networkTopologyId": "montage-58-cloud-local-network-v1",
+  "environmentVersionIds": ["goal-gcp-v1", "local-environment-initial"]
+}

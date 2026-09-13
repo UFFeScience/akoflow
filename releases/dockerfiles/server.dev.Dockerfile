@@ -29,6 +29,7 @@ RUN git clone --depth 1 --branch ${APPTAINER_VERSION} https://github.com/apptain
 
 FROM moby/buildkit:latest AS buildkit-client
 FROM hashicorp/terraform:1.13.4 AS terraform-client
+FROM docker:cli AS docker-client
 
 FROM golang:1.25-trixie
 
@@ -51,6 +52,7 @@ COPY --from=apptainer-builder /usr/local/libexec/apptainer /usr/local/libexec/ap
 COPY --from=apptainer-builder /usr/local/etc/apptainer /usr/local/etc/apptainer
 COPY --from=apptainer-builder /usr/local/var/apptainer /usr/local/var/apptainer
 COPY --from=buildkit-client /usr/bin/buildctl /usr/local/bin/buildctl
+COPY --from=docker-client /usr/local/bin/docker /usr/local/bin/docker
 COPY --from=terraform-client /bin/terraform /usr/local/bin/terraform
 COPY --from=simgrid-builder /build/output/akoflow-simgrid-runner /usr/local/bin/akoflow-simgrid-runner
 

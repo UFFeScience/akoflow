@@ -14,6 +14,7 @@ const sections: Section[] = [
       {title: "Edge to cloud simulation", href: "/docs/showcase/edge-cloud-simulation", stages: ["prepare · edge", "analyze · cloud", "summarize · edge"], label: "SimGrid"},
       {title: "Kubernetes real execution", href: "/docs/showcase/kubernetes-real-execution", stages: ["prepare · Kind", "process · Kind"], label: "Real run"},
       {title: "Hybrid local or Kind to GCP", href: "/docs/showcase/hybrid-cloud-transfer", stages: ["produce · local / Kind", "handoff.txt", "consume · GCP"], label: "Real run"},
+      {title: "Montage 58: GCP to local", href: "/docs/showcase/montage-cloud-local", stages: [["12 mProject · GCP e2-medium"], "projected FITS", "46 activities · local", "mosaic-color.png"], label: "Real workflow"},
       {title: "Local direct execution", href: "/docs/showcase/local-direct-execution", stages: ["write report · local", "result.txt"], label: "Real run"},
       {title: "SLURM batch fixture", href: "/docs/showcase/slurm-local-fixture", stages: ["write report", "sbatch fixture", "result.txt"], label: "Local fixture"},
       {title: "30 GB network fan-out", href: "/docs/showcase/network-fanout", stages: ["producer", ["worker 1", "worker 2", "worker 3"], "consumer"], label: "SimGrid"},

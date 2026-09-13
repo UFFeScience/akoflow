@@ -1,0 +1,1487 @@
+{
+  "name": "montage-58-cloud-local",
+  "spec": {
+    "namespace": "showcase",
+    "image": "ovvesley/akoflow-wf-montage:050d",
+    "activities": [
+      {
+        "name": "mprojectid0000001",
+        "runtime": "cloud",
+        "run": "set -eu; work=$PWD; cd /akoflow-wfa-shared; mProject -X poss2ukstu_blue_001_001.fits pposs2ukstu_blue_001_001.fits region-oversized.hdr; cp pposs2ukstu_blue_001_001.fits pposs2ukstu_blue_001_001_area.fits \"$work/\"",
+        "cpuLimit": "1",
+        "memoryLimit": "256Mi",
+        "dependsOn": [
+
+        ]
+      },
+      {
+        "name": "mprojectid0000002",
+        "runtime": "cloud",
+        "run": "set -eu; work=$PWD; cd /akoflow-wfa-shared; mProject -X poss2ukstu_blue_001_002.fits pposs2ukstu_blue_001_002.fits region-oversized.hdr; cp pposs2ukstu_blue_001_002.fits pposs2ukstu_blue_001_002_area.fits \"$work/\"",
+        "cpuLimit": "1",
+        "memoryLimit": "256Mi",
+        "dependsOn": [
+
+        ]
+      },
+      {
+        "name": "mprojectid0000003",
+        "runtime": "cloud",
+        "run": "set -eu; work=$PWD; cd /akoflow-wfa-shared; mProject -X poss2ukstu_blue_002_001.fits pposs2ukstu_blue_002_001.fits region-oversized.hdr; cp pposs2ukstu_blue_002_001.fits pposs2ukstu_blue_002_001_area.fits \"$work/\"",
+        "cpuLimit": "1",
+        "memoryLimit": "256Mi",
+        "dependsOn": [
+
+        ]
+      },
+      {
+        "name": "mprojectid0000004",
+        "runtime": "cloud",
+        "run": "set -eu; work=$PWD; cd /akoflow-wfa-shared; mProject -X poss2ukstu_blue_002_002.fits pposs2ukstu_blue_002_002.fits region-oversized.hdr; cp pposs2ukstu_blue_002_002.fits pposs2ukstu_blue_002_002_area.fits \"$work/\"",
+        "cpuLimit": "1",
+        "memoryLimit": "256Mi",
+        "dependsOn": [
+
+        ]
+      },
+      {
+        "name": "mdifffitid0000005",
+        "runtime": "local",
+        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mDiffFit\\ -d\\ -s\\ 1-fit.000001.000002.txt\\ pposs2ukstu_blue_001_001.fits\\ pposs2ukstu_blue_001_002.fits\\ 1-diff.000001.000002.fits\\ region-oversized.hdr)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp pposs2ukstu_blue_001_001.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_blue_001_001.fits\"\ndocker cp pposs2ukstu_blue_001_002.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_blue_001_002.fits\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/1-fit.000001.000002.txt\" 1-fit.000001.000002.txt\n",
+        "cpuLimit": "1",
+        "memoryLimit": "256Mi",
+        "dependsOn": [
+          "mprojectid0000001",
+          "mprojectid0000002"
+        ]
+      },
+      {
+        "name": "mdifffitid0000006",
+        "runtime": "local",
+        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mDiffFit\\ -d\\ -s\\ 1-fit.000001.000003.txt\\ pposs2ukstu_blue_001_001.fits\\ pposs2ukstu_blue_002_001.fits\\ 1-diff.000001.000003.fits\\ region-oversized.hdr)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp pposs2ukstu_blue_001_001.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_blue_001_001.fits\"\ndocker cp pposs2ukstu_blue_002_001.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_blue_002_001.fits\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/1-fit.000001.000003.txt\" 1-fit.000001.000003.txt\n",
+        "cpuLimit": "1",
+        "memoryLimit": "256Mi",
+        "dependsOn": [
+          "mprojectid0000001",
+          "mprojectid0000003"
+        ]
+      },
+      {
+        "name": "mdifffitid0000007",
+        "runtime": "local",
+        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mDiffFit\\ -d\\ -s\\ 1-fit.000001.000004.txt\\ pposs2ukstu_blue_001_001.fits\\ pposs2ukstu_blue_002_002.fits\\ 1-diff.000001.000004.fits\\ region-oversized.hdr)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp pposs2ukstu_blue_001_001.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_blue_001_001.fits\"\ndocker cp pposs2ukstu_blue_002_002.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_blue_002_002.fits\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/1-fit.000001.000004.txt\" 1-fit.000001.000004.txt\n",
+        "cpuLimit": "1",
+        "memoryLimit": "256Mi",
+        "dependsOn": [
+          "mprojectid0000001",
+          "mprojectid0000004"
+        ]
+      },
+      {
+        "name": "mdifffitid0000008",
+        "runtime": "local",
+        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mDiffFit\\ -d\\ -s\\ 1-fit.000002.000003.txt\\ pposs2ukstu_blue_001_002.fits\\ pposs2ukstu_blue_002_001.fits\\ 1-diff.000002.000003.fits\\ region-oversized.hdr)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp pposs2ukstu_blue_001_002.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_blue_001_002.fits\"\ndocker cp pposs2ukstu_blue_002_001.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_blue_002_001.fits\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/1-fit.000002.000003.txt\" 1-fit.000002.000003.txt\n",
+        "cpuLimit": "1",
+        "memoryLimit": "256Mi",
+        "dependsOn": [
+          "mprojectid0000002",
+          "mprojectid0000003"
+        ]
+      },
+      {
+        "name": "mdifffitid0000009",
+        "runtime": "local",
+        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mDiffFit\\ -d\\ -s\\ 1-fit.000002.000004.txt\\ pposs2ukstu_blue_001_002.fits\\ pposs2ukstu_blue_002_002.fits\\ 1-diff.000002.000004.fits\\ region-oversized.hdr)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp pposs2ukstu_blue_001_002.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_blue_001_002.fits\"\ndocker cp pposs2ukstu_blue_002_002.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_blue_002_002.fits\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/1-fit.000002.000004.txt\" 1-fit.000002.000004.txt\n",
+        "cpuLimit": "1",
+        "memoryLimit": "256Mi",
+        "dependsOn": [
+          "mprojectid0000002",
+          "mprojectid0000004"
+        ]
+      },
+      {
+        "name": "mdifffitid0000010",
+        "runtime": "local",
+        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mDiffFit\\ -d\\ -s\\ 1-fit.000003.000004.txt\\ pposs2ukstu_blue_002_001.fits\\ pposs2ukstu_blue_002_002.fits\\ 1-diff.000003.000004.fits\\ region-oversized.hdr)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp pposs2ukstu_blue_002_001.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_blue_002_001.fits\"\ndocker cp pposs2ukstu_blue_002_002.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_blue_002_002.fits\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/1-fit.000003.000004.txt\" 1-fit.000003.000004.txt\n",
+        "cpuLimit": "1",
+        "memoryLimit": "256Mi",
+        "dependsOn": [
+          "mprojectid0000003",
+          "mprojectid0000004"
+        ]
+      },
+      {
+        "name": "mconcatfitid0000011",
+        "runtime": "local",
+        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mConcatFit\\ 1-stat.tbl\\ 1-fits.tbl\\ .)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp 1-fit.000001.000002.txt \"$cid:/akoflow-wfa-shared/1-fit.000001.000002.txt\"\ndocker cp 1-fit.000001.000003.txt \"$cid:/akoflow-wfa-shared/1-fit.000001.000003.txt\"\ndocker cp 1-fit.000001.000004.txt \"$cid:/akoflow-wfa-shared/1-fit.000001.000004.txt\"\ndocker cp 1-fit.000002.000003.txt \"$cid:/akoflow-wfa-shared/1-fit.000002.000003.txt\"\ndocker cp 1-fit.000002.000004.txt \"$cid:/akoflow-wfa-shared/1-fit.000002.000004.txt\"\ndocker cp 1-fit.000003.000004.txt \"$cid:/akoflow-wfa-shared/1-fit.000003.000004.txt\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/1-fits.tbl\" 1-fits.tbl\n",
+        "cpuLimit": "1",
+        "memoryLimit": "256Mi",
+        "dependsOn": [
+          "mdifffitid0000005",
+          "mdifffitid0000006",
+          "mdifffitid0000007",
+          "mdifffitid0000008",
+          "mdifffitid0000009",
+          "mdifffitid0000010"
+        ]
+      },
+      {
+        "name": "mbgmodelid0000012",
+        "runtime": "local",
+        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mBgModel\\ -i\\ 100000\\ 1-images.tbl\\ 1-fits.tbl\\ 1-corrections.tbl)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp 1-fits.tbl \"$cid:/akoflow-wfa-shared/1-fits.tbl\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/1-corrections.tbl\" 1-corrections.tbl\n",
+        "cpuLimit": "1",
+        "memoryLimit": "256Mi",
+        "dependsOn": [
+          "mconcatfitid0000011"
+        ]
+      },
+      {
+        "name": "mbackgroundid0000013",
+        "runtime": "local",
+        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mBackground\\ -t\\ pposs2ukstu_blue_001_001.fits\\ cposs2ukstu_blue_001_001.fits\\ 1-projected.tbl\\ 1-corrections.tbl)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp pposs2ukstu_blue_001_001.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_blue_001_001.fits\"\ndocker cp 1-corrections.tbl \"$cid:/akoflow-wfa-shared/1-corrections.tbl\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/cposs2ukstu_blue_001_001.fits\" cposs2ukstu_blue_001_001.fits\ndocker cp \"$cid:/akoflow-wfa-shared/cposs2ukstu_blue_001_001_area.fits\" cposs2ukstu_blue_001_001_area.fits\n",
+        "cpuLimit": "1",
+        "memoryLimit": "256Mi",
+        "dependsOn": [
+          "mprojectid0000001",
+          "mbgmodelid0000012"
+        ]
+      },
+      {
+        "name": "mbackgroundid0000014",
+        "runtime": "local",
+        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mBackground\\ -t\\ pposs2ukstu_blue_001_002.fits\\ cposs2ukstu_blue_001_002.fits\\ 1-projected.tbl\\ 1-corrections.tbl)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp pposs2ukstu_blue_001_002.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_blue_001_002.fits\"\ndocker cp 1-corrections.tbl \"$cid:/akoflow-wfa-shared/1-corrections.tbl\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/cposs2ukstu_blue_001_002.fits\" cposs2ukstu_blue_001_002.fits\ndocker cp \"$cid:/akoflow-wfa-shared/cposs2ukstu_blue_001_002_area.fits\" cposs2ukstu_blue_001_002_area.fits\n",
+        "cpuLimit": "1",
+        "memoryLimit": "256Mi",
+        "dependsOn": [
+          "mprojectid0000002",
+          "mbgmodelid0000012"
+        ]
+      },
+      {
+        "name": "mbackgroundid0000015",
+        "runtime": "local",
+        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mBackground\\ -t\\ pposs2ukstu_blue_002_001.fits\\ cposs2ukstu_blue_002_001.fits\\ 1-projected.tbl\\ 1-corrections.tbl)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp pposs2ukstu_blue_002_001.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_blue_002_001.fits\"\ndocker cp 1-corrections.tbl \"$cid:/akoflow-wfa-shared/1-corrections.tbl\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/cposs2ukstu_blue_002_001.fits\" cposs2ukstu_blue_002_001.fits\ndocker cp \"$cid:/akoflow-wfa-shared/cposs2ukstu_blue_002_001_area.fits\" cposs2ukstu_blue_002_001_area.fits\n",
+        "cpuLimit": "1",
+        "memoryLimit": "256Mi",
+        "dependsOn": [
+          "mprojectid0000003",
+          "mbgmodelid0000012"
+        ]
+      },
+      {
+        "name": "mbackgroundid0000016",
+        "runtime": "local",
+        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mBackground\\ -t\\ pposs2ukstu_blue_002_002.fits\\ cposs2ukstu_blue_002_002.fits\\ 1-projected.tbl\\ 1-corrections.tbl)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp pposs2ukstu_blue_002_002.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_blue_002_002.fits\"\ndocker cp 1-corrections.tbl \"$cid:/akoflow-wfa-shared/1-corrections.tbl\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/cposs2ukstu_blue_002_002.fits\" cposs2ukstu_blue_002_002.fits\ndocker cp \"$cid:/akoflow-wfa-shared/cposs2ukstu_blue_002_002_area.fits\" cposs2ukstu_blue_002_002_area.fits\n",
+        "cpuLimit": "1",
+        "memoryLimit": "256Mi",
+        "dependsOn": [
+          "mprojectid0000004",
+          "mbgmodelid0000012"
+        ]
+      },
+      {
+        "name": "mimgtblid0000017",
+        "runtime": "local",
+        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mImgtbl\\ .\\ -t\\ 1-corrected.tbl\\ 1-updated-corrected.tbl)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp cposs2ukstu_blue_001_001.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_blue_001_001.fits\"\ndocker cp cposs2ukstu_blue_001_001_area.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_blue_001_001_area.fits\"\ndocker cp cposs2ukstu_blue_001_002.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_blue_001_002.fits\"\ndocker cp cposs2ukstu_blue_001_002_area.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_blue_001_002_area.fits\"\ndocker cp cposs2ukstu_blue_002_001.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_blue_002_001.fits\"\ndocker cp cposs2ukstu_blue_002_001_area.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_blue_002_001_area.fits\"\ndocker cp cposs2ukstu_blue_002_002.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_blue_002_002.fits\"\ndocker cp cposs2ukstu_blue_002_002_area.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_blue_002_002_area.fits\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/1-updated-corrected.tbl\" 1-updated-corrected.tbl\n",
+        "cpuLimit": "1",
+        "memoryLimit": "256Mi",
+        "dependsOn": [
+          "mbackgroundid0000013",
+          "mbackgroundid0000014",
+          "mbackgroundid0000015",
+          "mbackgroundid0000016"
+        ]
+      },
+      {
+        "name": "maddid0000018",
+        "runtime": "local",
+        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mAdd\\ -e\\ 1-updated-corrected.tbl\\ region.hdr\\ 1-mosaic.fits)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp cposs2ukstu_blue_001_001.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_blue_001_001.fits\"\ndocker cp cposs2ukstu_blue_001_001_area.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_blue_001_001_area.fits\"\ndocker cp cposs2ukstu_blue_001_002.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_blue_001_002.fits\"\ndocker cp cposs2ukstu_blue_001_002_area.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_blue_001_002_area.fits\"\ndocker cp cposs2ukstu_blue_002_001.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_blue_002_001.fits\"\ndocker cp cposs2ukstu_blue_002_001_area.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_blue_002_001_area.fits\"\ndocker cp cposs2ukstu_blue_002_002.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_blue_002_002.fits\"\ndocker cp cposs2ukstu_blue_002_002_area.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_blue_002_002_area.fits\"\ndocker cp 1-updated-corrected.tbl \"$cid:/akoflow-wfa-shared/1-updated-corrected.tbl\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/1-mosaic.fits\" 1-mosaic.fits\n",
+        "cpuLimit": "1",
+        "memoryLimit": "256Mi",
+        "dependsOn": [
+          "mbackgroundid0000013",
+          "mbackgroundid0000014",
+          "mbackgroundid0000015",
+          "mbackgroundid0000016",
+          "mimgtblid0000017"
+        ]
+      },
+      {
+        "name": "mviewerid0000019",
+        "runtime": "local",
+        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mViewer\\ -ct\\ 1\\ -gray\\ 1-mosaic.fits\\ -1s\\ max\\ gaussian\\ -png\\ 1-mosaic.png)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp 1-mosaic.fits \"$cid:/akoflow-wfa-shared/1-mosaic.fits\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/1-mosaic.png\" 1-mosaic.png\n",
+        "cpuLimit": "1",
+        "memoryLimit": "256Mi",
+        "dependsOn": [
+          "maddid0000018"
+        ]
+      },
+      {
+        "name": "mprojectid0000020",
+        "runtime": "cloud",
+        "run": "set -eu; work=$PWD; cd /akoflow-wfa-shared; mProject -X poss2ukstu_red_001_001.fits pposs2ukstu_red_001_001.fits region-oversized.hdr; cp pposs2ukstu_red_001_001.fits pposs2ukstu_red_001_001_area.fits \"$work/\"",
+        "cpuLimit": "1",
+        "memoryLimit": "256Mi",
+        "dependsOn": [
+
+        ]
+      },
+      {
+        "name": "mprojectid0000021",
+        "runtime": "cloud",
+        "run": "set -eu; work=$PWD; cd /akoflow-wfa-shared; mProject -X poss2ukstu_red_001_002.fits pposs2ukstu_red_001_002.fits region-oversized.hdr; cp pposs2ukstu_red_001_002.fits pposs2ukstu_red_001_002_area.fits \"$work/\"",
+        "cpuLimit": "1",
+        "memoryLimit": "256Mi",
+        "dependsOn": [
+
+        ]
+      },
+      {
+        "name": "mprojectid0000022",
+        "runtime": "cloud",
+        "run": "set -eu; work=$PWD; cd /akoflow-wfa-shared; mProject -X poss2ukstu_red_002_001.fits pposs2ukstu_red_002_001.fits region-oversized.hdr; cp pposs2ukstu_red_002_001.fits pposs2ukstu_red_002_001_area.fits \"$work/\"",
+        "cpuLimit": "1",
+        "memoryLimit": "256Mi",
+        "dependsOn": [
+
+        ]
+      },
+      {
+        "name": "mprojectid0000023",
+        "runtime": "cloud",
+        "run": "set -eu; work=$PWD; cd /akoflow-wfa-shared; mProject -X poss2ukstu_red_002_002.fits pposs2ukstu_red_002_002.fits region-oversized.hdr; cp pposs2ukstu_red_002_002.fits pposs2ukstu_red_002_002_area.fits \"$work/\"",
+        "cpuLimit": "1",
+        "memoryLimit": "256Mi",
+        "dependsOn": [
+
+        ]
+      },
+      {
+        "name": "mdifffitid0000024",
+        "runtime": "local",
+        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mDiffFit\\ -d\\ -s\\ 2-fit.000001.000002.txt\\ pposs2ukstu_red_001_001.fits\\ pposs2ukstu_red_001_002.fits\\ 2-diff.000001.000002.fits\\ region-oversized.hdr)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp pposs2ukstu_red_001_001.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_red_001_001.fits\"\ndocker cp pposs2ukstu_red_001_002.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_red_001_002.fits\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/2-fit.000001.000002.txt\" 2-fit.000001.000002.txt\n",
+        "cpuLimit": "1",
+        "memoryLimit": "256Mi",
+        "dependsOn": [
+          "mprojectid0000020",
+          "mprojectid0000021"
+        ]
+      },
+      {
+        "name": "mdifffitid0000025",
+        "runtime": "local",
+        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mDiffFit\\ -d\\ -s\\ 2-fit.000001.000003.txt\\ pposs2ukstu_red_001_001.fits\\ pposs2ukstu_red_002_001.fits\\ 2-diff.000001.000003.fits\\ region-oversized.hdr)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp pposs2ukstu_red_001_001.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_red_001_001.fits\"\ndocker cp pposs2ukstu_red_002_001.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_red_002_001.fits\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/2-fit.000001.000003.txt\" 2-fit.000001.000003.txt\n",
+        "cpuLimit": "1",
+        "memoryLimit": "256Mi",
+        "dependsOn": [
+          "mprojectid0000020",
+          "mprojectid0000022"
+        ]
+      },
+      {
+        "name": "mdifffitid0000026",
+        "runtime": "local",
+        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mDiffFit\\ -d\\ -s\\ 2-fit.000001.000004.txt\\ pposs2ukstu_red_001_001.fits\\ pposs2ukstu_red_002_002.fits\\ 2-diff.000001.000004.fits\\ region-oversized.hdr)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp pposs2ukstu_red_001_001.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_red_001_001.fits\"\ndocker cp pposs2ukstu_red_002_002.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_red_002_002.fits\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/2-fit.000001.000004.txt\" 2-fit.000001.000004.txt\n",
+        "cpuLimit": "1",
+        "memoryLimit": "256Mi",
+        "dependsOn": [
+          "mprojectid0000020",
+          "mprojectid0000023"
+        ]
+      },
+      {
+        "name": "mdifffitid0000027",
+        "runtime": "local",
+        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mDiffFit\\ -d\\ -s\\ 2-fit.000002.000003.txt\\ pposs2ukstu_red_001_002.fits\\ pposs2ukstu_red_002_001.fits\\ 2-diff.000002.000003.fits\\ region-oversized.hdr)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp pposs2ukstu_red_001_002.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_red_001_002.fits\"\ndocker cp pposs2ukstu_red_002_001.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_red_002_001.fits\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/2-fit.000002.000003.txt\" 2-fit.000002.000003.txt\n",
+        "cpuLimit": "1",
+        "memoryLimit": "256Mi",
+        "dependsOn": [
+          "mprojectid0000021",
+          "mprojectid0000022"
+        ]
+      },
+      {
+        "name": "mdifffitid0000028",
+        "runtime": "local",
+        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mDiffFit\\ -d\\ -s\\ 2-fit.000002.000004.txt\\ pposs2ukstu_red_001_002.fits\\ pposs2ukstu_red_002_002.fits\\ 2-diff.000002.000004.fits\\ region-oversized.hdr)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp pposs2ukstu_red_001_002.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_red_001_002.fits\"\ndocker cp pposs2ukstu_red_002_002.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_red_002_002.fits\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/2-fit.000002.000004.txt\" 2-fit.000002.000004.txt\n",
+        "cpuLimit": "1",
+        "memoryLimit": "256Mi",
+        "dependsOn": [
+          "mprojectid0000021",
+          "mprojectid0000023"
+        ]
+      },
+      {
+        "name": "mdifffitid0000029",
+        "runtime": "local",
+        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mDiffFit\\ -d\\ -s\\ 2-fit.000003.000004.txt\\ pposs2ukstu_red_002_001.fits\\ pposs2ukstu_red_002_002.fits\\ 2-diff.000003.000004.fits\\ region-oversized.hdr)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp pposs2ukstu_red_002_001.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_red_002_001.fits\"\ndocker cp pposs2ukstu_red_002_002.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_red_002_002.fits\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/2-fit.000003.000004.txt\" 2-fit.000003.000004.txt\n",
+        "cpuLimit": "1",
+        "memoryLimit": "256Mi",
+        "dependsOn": [
+          "mprojectid0000022",
+          "mprojectid0000023"
+        ]
+      },
+      {
+        "name": "mconcatfitid0000030",
+        "runtime": "local",
+        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mConcatFit\\ 2-stat.tbl\\ 2-fits.tbl\\ .)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp 2-fit.000001.000002.txt \"$cid:/akoflow-wfa-shared/2-fit.000001.000002.txt\"\ndocker cp 2-fit.000001.000003.txt \"$cid:/akoflow-wfa-shared/2-fit.000001.000003.txt\"\ndocker cp 2-fit.000001.000004.txt \"$cid:/akoflow-wfa-shared/2-fit.000001.000004.txt\"\ndocker cp 2-fit.000002.000003.txt \"$cid:/akoflow-wfa-shared/2-fit.000002.000003.txt\"\ndocker cp 2-fit.000002.000004.txt \"$cid:/akoflow-wfa-shared/2-fit.000002.000004.txt\"\ndocker cp 2-fit.000003.000004.txt \"$cid:/akoflow-wfa-shared/2-fit.000003.000004.txt\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/2-fits.tbl\" 2-fits.tbl\n",
+        "cpuLimit": "1",
+        "memoryLimit": "256Mi",
+        "dependsOn": [
+          "mdifffitid0000024",
+          "mdifffitid0000025",
+          "mdifffitid0000026",
+          "mdifffitid0000027",
+          "mdifffitid0000028",
+          "mdifffitid0000029"
+        ]
+      },
+      {
+        "name": "mbgmodelid0000031",
+        "runtime": "local",
+        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mBgModel\\ -i\\ 100000\\ 2-images.tbl\\ 2-fits.tbl\\ 2-corrections.tbl)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp 2-fits.tbl \"$cid:/akoflow-wfa-shared/2-fits.tbl\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/2-corrections.tbl\" 2-corrections.tbl\n",
+        "cpuLimit": "1",
+        "memoryLimit": "256Mi",
+        "dependsOn": [
+          "mconcatfitid0000030"
+        ]
+      },
+      {
+        "name": "mbackgroundid0000032",
+        "runtime": "local",
+        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mBackground\\ -t\\ pposs2ukstu_red_001_001.fits\\ cposs2ukstu_red_001_001.fits\\ 2-projected.tbl\\ 2-corrections.tbl)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp pposs2ukstu_red_001_001.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_red_001_001.fits\"\ndocker cp 2-corrections.tbl \"$cid:/akoflow-wfa-shared/2-corrections.tbl\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/cposs2ukstu_red_001_001.fits\" cposs2ukstu_red_001_001.fits\ndocker cp \"$cid:/akoflow-wfa-shared/cposs2ukstu_red_001_001_area.fits\" cposs2ukstu_red_001_001_area.fits\n",
+        "cpuLimit": "1",
+        "memoryLimit": "256Mi",
+        "dependsOn": [
+          "mprojectid0000020",
+          "mbgmodelid0000031"
+        ]
+      },
+      {
+        "name": "mbackgroundid0000033",
+        "runtime": "local",
+        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mBackground\\ -t\\ pposs2ukstu_red_001_002.fits\\ cposs2ukstu_red_001_002.fits\\ 2-projected.tbl\\ 2-corrections.tbl)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp pposs2ukstu_red_001_002.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_red_001_002.fits\"\ndocker cp 2-corrections.tbl \"$cid:/akoflow-wfa-shared/2-corrections.tbl\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/cposs2ukstu_red_001_002.fits\" cposs2ukstu_red_001_002.fits\ndocker cp \"$cid:/akoflow-wfa-shared/cposs2ukstu_red_001_002_area.fits\" cposs2ukstu_red_001_002_area.fits\n",
+        "cpuLimit": "1",
+        "memoryLimit": "256Mi",
+        "dependsOn": [
+          "mprojectid0000021",
+          "mbgmodelid0000031"
+        ]
+      },
+      {
+        "name": "mbackgroundid0000034",
+        "runtime": "local",
+        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mBackground\\ -t\\ pposs2ukstu_red_002_001.fits\\ cposs2ukstu_red_002_001.fits\\ 2-projected.tbl\\ 2-corrections.tbl)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp pposs2ukstu_red_002_001.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_red_002_001.fits\"\ndocker cp 2-corrections.tbl \"$cid:/akoflow-wfa-shared/2-corrections.tbl\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/cposs2ukstu_red_002_001.fits\" cposs2ukstu_red_002_001.fits\ndocker cp \"$cid:/akoflow-wfa-shared/cposs2ukstu_red_002_001_area.fits\" cposs2ukstu_red_002_001_area.fits\n",
+        "cpuLimit": "1",
+        "memoryLimit": "256Mi",
+        "dependsOn": [
+          "mprojectid0000022",
+          "mbgmodelid0000031"
+        ]
+      },
+      {
+        "name": "mbackgroundid0000035",
+        "runtime": "local",
+        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mBackground\\ -t\\ pposs2ukstu_red_002_002.fits\\ cposs2ukstu_red_002_002.fits\\ 2-projected.tbl\\ 2-corrections.tbl)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp pposs2ukstu_red_002_002.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_red_002_002.fits\"\ndocker cp 2-corrections.tbl \"$cid:/akoflow-wfa-shared/2-corrections.tbl\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/cposs2ukstu_red_002_002.fits\" cposs2ukstu_red_002_002.fits\ndocker cp \"$cid:/akoflow-wfa-shared/cposs2ukstu_red_002_002_area.fits\" cposs2ukstu_red_002_002_area.fits\n",
+        "cpuLimit": "1",
+        "memoryLimit": "256Mi",
+        "dependsOn": [
+          "mprojectid0000023",
+          "mbgmodelid0000031"
+        ]
+      },
+      {
+        "name": "mimgtblid0000036",
+        "runtime": "local",
+        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mImgtbl\\ .\\ -t\\ 2-corrected.tbl\\ 2-updated-corrected.tbl)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp cposs2ukstu_red_001_001.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_red_001_001.fits\"\ndocker cp cposs2ukstu_red_001_001_area.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_red_001_001_area.fits\"\ndocker cp cposs2ukstu_red_001_002.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_red_001_002.fits\"\ndocker cp cposs2ukstu_red_001_002_area.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_red_001_002_area.fits\"\ndocker cp cposs2ukstu_red_002_001.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_red_002_001.fits\"\ndocker cp cposs2ukstu_red_002_001_area.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_red_002_001_area.fits\"\ndocker cp cposs2ukstu_red_002_002.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_red_002_002.fits\"\ndocker cp cposs2ukstu_red_002_002_area.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_red_002_002_area.fits\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/2-updated-corrected.tbl\" 2-updated-corrected.tbl\n",
+        "cpuLimit": "1",
+        "memoryLimit": "256Mi",
+        "dependsOn": [
+          "mbackgroundid0000032",
+          "mbackgroundid0000033",
+          "mbackgroundid0000034",
+          "mbackgroundid0000035"
+        ]
+      },
+      {
+        "name": "maddid0000037",
+        "runtime": "local",
+        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mAdd\\ -e\\ 2-updated-corrected.tbl\\ region.hdr\\ 2-mosaic.fits)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp cposs2ukstu_red_001_001.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_red_001_001.fits\"\ndocker cp cposs2ukstu_red_001_001_area.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_red_001_001_area.fits\"\ndocker cp cposs2ukstu_red_001_002.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_red_001_002.fits\"\ndocker cp cposs2ukstu_red_001_002_area.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_red_001_002_area.fits\"\ndocker cp cposs2ukstu_red_002_001.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_red_002_001.fits\"\ndocker cp cposs2ukstu_red_002_001_area.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_red_002_001_area.fits\"\ndocker cp cposs2ukstu_red_002_002.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_red_002_002.fits\"\ndocker cp cposs2ukstu_red_002_002_area.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_red_002_002_area.fits\"\ndocker cp 2-updated-corrected.tbl \"$cid:/akoflow-wfa-shared/2-updated-corrected.tbl\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/2-mosaic.fits\" 2-mosaic.fits\n",
+        "cpuLimit": "1",
+        "memoryLimit": "256Mi",
+        "dependsOn": [
+          "mbackgroundid0000032",
+          "mbackgroundid0000033",
+          "mbackgroundid0000034",
+          "mbackgroundid0000035",
+          "mimgtblid0000036"
+        ]
+      },
+      {
+        "name": "mviewerid0000038",
+        "runtime": "local",
+        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mViewer\\ -ct\\ 1\\ -gray\\ 2-mosaic.fits\\ -1s\\ max\\ gaussian\\ -png\\ 2-mosaic.png)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp 2-mosaic.fits \"$cid:/akoflow-wfa-shared/2-mosaic.fits\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/2-mosaic.png\" 2-mosaic.png\n",
+        "cpuLimit": "1",
+        "memoryLimit": "256Mi",
+        "dependsOn": [
+          "maddid0000037"
+        ]
+      },
+      {
+        "name": "mprojectid0000039",
+        "runtime": "cloud",
+        "run": "set -eu; work=$PWD; cd /akoflow-wfa-shared; mProject -X poss2ukstu_ir_001_001.fits pposs2ukstu_ir_001_001.fits region-oversized.hdr; cp pposs2ukstu_ir_001_001.fits pposs2ukstu_ir_001_001_area.fits \"$work/\"",
+        "cpuLimit": "1",
+        "memoryLimit": "256Mi",
+        "dependsOn": [
+
+        ]
+      },
+      {
+        "name": "mprojectid0000040",
+        "runtime": "cloud",
+        "run": "set -eu; work=$PWD; cd /akoflow-wfa-shared; mProject -X poss2ukstu_ir_001_002.fits pposs2ukstu_ir_001_002.fits region-oversized.hdr; cp pposs2ukstu_ir_001_002.fits pposs2ukstu_ir_001_002_area.fits \"$work/\"",
+        "cpuLimit": "1",
+        "memoryLimit": "256Mi",
+        "dependsOn": [
+
+        ]
+      },
+      {
+        "name": "mprojectid0000041",
+        "runtime": "cloud",
+        "run": "set -eu; work=$PWD; cd /akoflow-wfa-shared; mProject -X poss2ukstu_ir_002_001.fits pposs2ukstu_ir_002_001.fits region-oversized.hdr; cp pposs2ukstu_ir_002_001.fits pposs2ukstu_ir_002_001_area.fits \"$work/\"",
+        "cpuLimit": "1",
+        "memoryLimit": "256Mi",
+        "dependsOn": [
+
+        ]
+      },
+      {
+        "name": "mprojectid0000042",
+        "runtime": "cloud",
+        "run": "set -eu; work=$PWD; cd /akoflow-wfa-shared; mProject -X poss2ukstu_ir_002_002.fits pposs2ukstu_ir_002_002.fits region-oversized.hdr; cp pposs2ukstu_ir_002_002.fits pposs2ukstu_ir_002_002_area.fits \"$work/\"",
+        "cpuLimit": "1",
+        "memoryLimit": "256Mi",
+        "dependsOn": [
+
+        ]
+      },
+      {
+        "name": "mdifffitid0000043",
+        "runtime": "local",
+        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mDiffFit\\ -d\\ -s\\ 3-fit.000001.000002.txt\\ pposs2ukstu_ir_001_001.fits\\ pposs2ukstu_ir_001_002.fits\\ 3-diff.000001.000002.fits\\ region-oversized.hdr)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp pposs2ukstu_ir_001_001.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_ir_001_001.fits\"\ndocker cp pposs2ukstu_ir_001_002.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_ir_001_002.fits\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/3-fit.000001.000002.txt\" 3-fit.000001.000002.txt\n",
+        "cpuLimit": "1",
+        "memoryLimit": "256Mi",
+        "dependsOn": [
+          "mprojectid0000039",
+          "mprojectid0000040"
+        ]
+      },
+      {
+        "name": "mdifffitid0000044",
+        "runtime": "local",
+        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mDiffFit\\ -d\\ -s\\ 3-fit.000001.000003.txt\\ pposs2ukstu_ir_001_001.fits\\ pposs2ukstu_ir_002_001.fits\\ 3-diff.000001.000003.fits\\ region-oversized.hdr)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp pposs2ukstu_ir_001_001.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_ir_001_001.fits\"\ndocker cp pposs2ukstu_ir_002_001.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_ir_002_001.fits\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/3-fit.000001.000003.txt\" 3-fit.000001.000003.txt\n",
+        "cpuLimit": "1",
+        "memoryLimit": "256Mi",
+        "dependsOn": [
+          "mprojectid0000039",
+          "mprojectid0000041"
+        ]
+      },
+      {
+        "name": "mdifffitid0000045",
+        "runtime": "local",
+        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mDiffFit\\ -d\\ -s\\ 3-fit.000001.000004.txt\\ pposs2ukstu_ir_001_001.fits\\ pposs2ukstu_ir_002_002.fits\\ 3-diff.000001.000004.fits\\ region-oversized.hdr)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp pposs2ukstu_ir_001_001.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_ir_001_001.fits\"\ndocker cp pposs2ukstu_ir_002_002.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_ir_002_002.fits\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/3-fit.000001.000004.txt\" 3-fit.000001.000004.txt\n",
+        "cpuLimit": "1",
+        "memoryLimit": "256Mi",
+        "dependsOn": [
+          "mprojectid0000039",
+          "mprojectid0000042"
+        ]
+      },
+      {
+        "name": "mdifffitid0000046",
+        "runtime": "local",
+        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mDiffFit\\ -d\\ -s\\ 3-fit.000002.000003.txt\\ pposs2ukstu_ir_001_002.fits\\ pposs2ukstu_ir_002_001.fits\\ 3-diff.000002.000003.fits\\ region-oversized.hdr)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp pposs2ukstu_ir_001_002.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_ir_001_002.fits\"\ndocker cp pposs2ukstu_ir_002_001.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_ir_002_001.fits\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/3-fit.000002.000003.txt\" 3-fit.000002.000003.txt\n",
+        "cpuLimit": "1",
+        "memoryLimit": "256Mi",
+        "dependsOn": [
+          "mprojectid0000040",
+          "mprojectid0000041"
+        ]
+      },
+      {
+        "name": "mdifffitid0000047",
+        "runtime": "local",
+        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mDiffFit\\ -d\\ -s\\ 3-fit.000002.000004.txt\\ pposs2ukstu_ir_001_002.fits\\ pposs2ukstu_ir_002_002.fits\\ 3-diff.000002.000004.fits\\ region-oversized.hdr)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp pposs2ukstu_ir_001_002.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_ir_001_002.fits\"\ndocker cp pposs2ukstu_ir_002_002.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_ir_002_002.fits\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/3-fit.000002.000004.txt\" 3-fit.000002.000004.txt\n",
+        "cpuLimit": "1",
+        "memoryLimit": "256Mi",
+        "dependsOn": [
+          "mprojectid0000040",
+          "mprojectid0000042"
+        ]
+      },
+      {
+        "name": "mdifffitid0000048",
+        "runtime": "local",
+        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mDiffFit\\ -d\\ -s\\ 3-fit.000003.000004.txt\\ pposs2ukstu_ir_002_001.fits\\ pposs2ukstu_ir_002_002.fits\\ 3-diff.000003.000004.fits\\ region-oversized.hdr)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp pposs2ukstu_ir_002_001.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_ir_002_001.fits\"\ndocker cp pposs2ukstu_ir_002_002.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_ir_002_002.fits\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/3-fit.000003.000004.txt\" 3-fit.000003.000004.txt\n",
+        "cpuLimit": "1",
+        "memoryLimit": "256Mi",
+        "dependsOn": [
+          "mprojectid0000041",
+          "mprojectid0000042"
+        ]
+      },
+      {
+        "name": "mconcatfitid0000049",
+        "runtime": "local",
+        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mConcatFit\\ 3-stat.tbl\\ 3-fits.tbl\\ .)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp 3-fit.000001.000002.txt \"$cid:/akoflow-wfa-shared/3-fit.000001.000002.txt\"\ndocker cp 3-fit.000001.000003.txt \"$cid:/akoflow-wfa-shared/3-fit.000001.000003.txt\"\ndocker cp 3-fit.000001.000004.txt \"$cid:/akoflow-wfa-shared/3-fit.000001.000004.txt\"\ndocker cp 3-fit.000002.000003.txt \"$cid:/akoflow-wfa-shared/3-fit.000002.000003.txt\"\ndocker cp 3-fit.000002.000004.txt \"$cid:/akoflow-wfa-shared/3-fit.000002.000004.txt\"\ndocker cp 3-fit.000003.000004.txt \"$cid:/akoflow-wfa-shared/3-fit.000003.000004.txt\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/3-fits.tbl\" 3-fits.tbl\n",
+        "cpuLimit": "1",
+        "memoryLimit": "256Mi",
+        "dependsOn": [
+          "mdifffitid0000043",
+          "mdifffitid0000044",
+          "mdifffitid0000045",
+          "mdifffitid0000046",
+          "mdifffitid0000047",
+          "mdifffitid0000048"
+        ]
+      },
+      {
+        "name": "mbgmodelid0000050",
+        "runtime": "local",
+        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mBgModel\\ -i\\ 100000\\ 3-images.tbl\\ 3-fits.tbl\\ 3-corrections.tbl)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp 3-fits.tbl \"$cid:/akoflow-wfa-shared/3-fits.tbl\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/3-corrections.tbl\" 3-corrections.tbl\n",
+        "cpuLimit": "1",
+        "memoryLimit": "256Mi",
+        "dependsOn": [
+          "mconcatfitid0000049"
+        ]
+      },
+      {
+        "name": "mbackgroundid0000051",
+        "runtime": "local",
+        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mBackground\\ -t\\ pposs2ukstu_ir_001_001.fits\\ cposs2ukstu_ir_001_001.fits\\ 3-projected.tbl\\ 3-corrections.tbl)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp pposs2ukstu_ir_001_001.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_ir_001_001.fits\"\ndocker cp 3-corrections.tbl \"$cid:/akoflow-wfa-shared/3-corrections.tbl\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/cposs2ukstu_ir_001_001.fits\" cposs2ukstu_ir_001_001.fits\ndocker cp \"$cid:/akoflow-wfa-shared/cposs2ukstu_ir_001_001_area.fits\" cposs2ukstu_ir_001_001_area.fits\n",
+        "cpuLimit": "1",
+        "memoryLimit": "256Mi",
+        "dependsOn": [
+          "mprojectid0000039",
+          "mbgmodelid0000050"
+        ]
+      },
+      {
+        "name": "mbackgroundid0000052",
+        "runtime": "local",
+        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mBackground\\ -t\\ pposs2ukstu_ir_001_002.fits\\ cposs2ukstu_ir_001_002.fits\\ 3-projected.tbl\\ 3-corrections.tbl)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp pposs2ukstu_ir_001_002.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_ir_001_002.fits\"\ndocker cp 3-corrections.tbl \"$cid:/akoflow-wfa-shared/3-corrections.tbl\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/cposs2ukstu_ir_001_002.fits\" cposs2ukstu_ir_001_002.fits\ndocker cp \"$cid:/akoflow-wfa-shared/cposs2ukstu_ir_001_002_area.fits\" cposs2ukstu_ir_001_002_area.fits\n",
+        "cpuLimit": "1",
+        "memoryLimit": "256Mi",
+        "dependsOn": [
+          "mprojectid0000040",
+          "mbgmodelid0000050"
+        ]
+      },
+      {
+        "name": "mbackgroundid0000053",
+        "runtime": "local",
+        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mBackground\\ -t\\ pposs2ukstu_ir_002_001.fits\\ cposs2ukstu_ir_002_001.fits\\ 3-projected.tbl\\ 3-corrections.tbl)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp pposs2ukstu_ir_002_001.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_ir_002_001.fits\"\ndocker cp 3-corrections.tbl \"$cid:/akoflow-wfa-shared/3-corrections.tbl\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/cposs2ukstu_ir_002_001.fits\" cposs2ukstu_ir_002_001.fits\ndocker cp \"$cid:/akoflow-wfa-shared/cposs2ukstu_ir_002_001_area.fits\" cposs2ukstu_ir_002_001_area.fits\n",
+        "cpuLimit": "1",
+        "memoryLimit": "256Mi",
+        "dependsOn": [
+          "mprojectid0000041",
+          "mbgmodelid0000050"
+        ]
+      },
+      {
+        "name": "mbackgroundid0000054",
+        "runtime": "local",
+        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mBackground\\ -t\\ pposs2ukstu_ir_002_002.fits\\ cposs2ukstu_ir_002_002.fits\\ 3-projected.tbl\\ 3-corrections.tbl)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp pposs2ukstu_ir_002_002.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_ir_002_002.fits\"\ndocker cp 3-corrections.tbl \"$cid:/akoflow-wfa-shared/3-corrections.tbl\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/cposs2ukstu_ir_002_002.fits\" cposs2ukstu_ir_002_002.fits\ndocker cp \"$cid:/akoflow-wfa-shared/cposs2ukstu_ir_002_002_area.fits\" cposs2ukstu_ir_002_002_area.fits\n",
+        "cpuLimit": "1",
+        "memoryLimit": "256Mi",
+        "dependsOn": [
+          "mprojectid0000042",
+          "mbgmodelid0000050"
+        ]
+      },
+      {
+        "name": "mimgtblid0000055",
+        "runtime": "local",
+        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mImgtbl\\ .\\ -t\\ 3-corrected.tbl\\ 3-updated-corrected.tbl)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp cposs2ukstu_ir_001_001.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_ir_001_001.fits\"\ndocker cp cposs2ukstu_ir_001_001_area.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_ir_001_001_area.fits\"\ndocker cp cposs2ukstu_ir_001_002.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_ir_001_002.fits\"\ndocker cp cposs2ukstu_ir_001_002_area.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_ir_001_002_area.fits\"\ndocker cp cposs2ukstu_ir_002_001.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_ir_002_001.fits\"\ndocker cp cposs2ukstu_ir_002_001_area.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_ir_002_001_area.fits\"\ndocker cp cposs2ukstu_ir_002_002.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_ir_002_002.fits\"\ndocker cp cposs2ukstu_ir_002_002_area.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_ir_002_002_area.fits\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/3-updated-corrected.tbl\" 3-updated-corrected.tbl\n",
+        "cpuLimit": "1",
+        "memoryLimit": "256Mi",
+        "dependsOn": [
+          "mbackgroundid0000051",
+          "mbackgroundid0000052",
+          "mbackgroundid0000053",
+          "mbackgroundid0000054"
+        ]
+      },
+      {
+        "name": "maddid0000056",
+        "runtime": "local",
+        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mAdd\\ -e\\ 3-updated-corrected.tbl\\ region.hdr\\ 3-mosaic.fits)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp cposs2ukstu_ir_001_001.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_ir_001_001.fits\"\ndocker cp cposs2ukstu_ir_001_001_area.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_ir_001_001_area.fits\"\ndocker cp cposs2ukstu_ir_001_002.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_ir_001_002.fits\"\ndocker cp cposs2ukstu_ir_001_002_area.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_ir_001_002_area.fits\"\ndocker cp cposs2ukstu_ir_002_001.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_ir_002_001.fits\"\ndocker cp cposs2ukstu_ir_002_001_area.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_ir_002_001_area.fits\"\ndocker cp cposs2ukstu_ir_002_002.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_ir_002_002.fits\"\ndocker cp cposs2ukstu_ir_002_002_area.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_ir_002_002_area.fits\"\ndocker cp 3-updated-corrected.tbl \"$cid:/akoflow-wfa-shared/3-updated-corrected.tbl\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/3-mosaic.fits\" 3-mosaic.fits\n",
+        "cpuLimit": "1",
+        "memoryLimit": "256Mi",
+        "dependsOn": [
+          "mbackgroundid0000051",
+          "mbackgroundid0000052",
+          "mbackgroundid0000053",
+          "mbackgroundid0000054",
+          "mimgtblid0000055"
+        ]
+      },
+      {
+        "name": "mviewerid0000057",
+        "runtime": "local",
+        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mViewer\\ -ct\\ 1\\ -gray\\ 3-mosaic.fits\\ -1s\\ max\\ gaussian\\ -png\\ 3-mosaic.png)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp 3-mosaic.fits \"$cid:/akoflow-wfa-shared/3-mosaic.fits\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/3-mosaic.png\" 3-mosaic.png\n",
+        "cpuLimit": "1",
+        "memoryLimit": "256Mi",
+        "dependsOn": [
+          "maddid0000056"
+        ]
+      },
+      {
+        "name": "mviewerid0000058",
+        "runtime": "local",
+        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mViewer\\ -red\\ 3-mosaic.fits\\ -0.5s\\ max\\ gaussian-log\\ -green\\ 2-mosaic.fits\\ -0.5s\\ max\\ gaussian-log\\ -blue\\ 1-mosaic.fits\\ -0.5s\\ max\\ gaussian-log\\ -png\\ mosaic-color.png)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp 1-mosaic.fits \"$cid:/akoflow-wfa-shared/1-mosaic.fits\"\ndocker cp 2-mosaic.fits \"$cid:/akoflow-wfa-shared/2-mosaic.fits\"\ndocker cp 3-mosaic.fits \"$cid:/akoflow-wfa-shared/3-mosaic.fits\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/mosaic-color.png\" mosaic-color.png\n",
+        "cpuLimit": "1",
+        "memoryLimit": "256Mi",
+        "dependsOn": [
+          "maddid0000018",
+          "maddid0000037",
+          "maddid0000056"
+        ]
+      }
+    ],
+    "dataDependencies": [
+      {
+        "producerActivity": "mprojectid0000001",
+        "consumerActivity": "mdifffitid0000005",
+        "logicalName": "pposs2ukstu_blue_001_001.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mprojectid0000002",
+        "consumerActivity": "mdifffitid0000005",
+        "logicalName": "pposs2ukstu_blue_001_002.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mprojectid0000001",
+        "consumerActivity": "mdifffitid0000006",
+        "logicalName": "pposs2ukstu_blue_001_001.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mprojectid0000003",
+        "consumerActivity": "mdifffitid0000006",
+        "logicalName": "pposs2ukstu_blue_002_001.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mprojectid0000001",
+        "consumerActivity": "mdifffitid0000007",
+        "logicalName": "pposs2ukstu_blue_001_001.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mprojectid0000004",
+        "consumerActivity": "mdifffitid0000007",
+        "logicalName": "pposs2ukstu_blue_002_002.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mprojectid0000002",
+        "consumerActivity": "mdifffitid0000008",
+        "logicalName": "pposs2ukstu_blue_001_002.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mprojectid0000003",
+        "consumerActivity": "mdifffitid0000008",
+        "logicalName": "pposs2ukstu_blue_002_001.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mprojectid0000002",
+        "consumerActivity": "mdifffitid0000009",
+        "logicalName": "pposs2ukstu_blue_001_002.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mprojectid0000004",
+        "consumerActivity": "mdifffitid0000009",
+        "logicalName": "pposs2ukstu_blue_002_002.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mprojectid0000003",
+        "consumerActivity": "mdifffitid0000010",
+        "logicalName": "pposs2ukstu_blue_002_001.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mprojectid0000004",
+        "consumerActivity": "mdifffitid0000010",
+        "logicalName": "pposs2ukstu_blue_002_002.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mdifffitid0000005",
+        "consumerActivity": "mconcatfitid0000011",
+        "logicalName": "1-fit.000001.000002.txt",
+        "sizeBytes": 4096
+      },
+      {
+        "producerActivity": "mdifffitid0000006",
+        "consumerActivity": "mconcatfitid0000011",
+        "logicalName": "1-fit.000001.000003.txt",
+        "sizeBytes": 4096
+      },
+      {
+        "producerActivity": "mdifffitid0000007",
+        "consumerActivity": "mconcatfitid0000011",
+        "logicalName": "1-fit.000001.000004.txt",
+        "sizeBytes": 4096
+      },
+      {
+        "producerActivity": "mdifffitid0000008",
+        "consumerActivity": "mconcatfitid0000011",
+        "logicalName": "1-fit.000002.000003.txt",
+        "sizeBytes": 4096
+      },
+      {
+        "producerActivity": "mdifffitid0000009",
+        "consumerActivity": "mconcatfitid0000011",
+        "logicalName": "1-fit.000002.000004.txt",
+        "sizeBytes": 4096
+      },
+      {
+        "producerActivity": "mdifffitid0000010",
+        "consumerActivity": "mconcatfitid0000011",
+        "logicalName": "1-fit.000003.000004.txt",
+        "sizeBytes": 4096
+      },
+      {
+        "producerActivity": "mconcatfitid0000011",
+        "consumerActivity": "mbgmodelid0000012",
+        "logicalName": "1-fits.tbl",
+        "sizeBytes": 4096
+      },
+      {
+        "producerActivity": "mprojectid0000001",
+        "consumerActivity": "mbackgroundid0000013",
+        "logicalName": "pposs2ukstu_blue_001_001.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mbgmodelid0000012",
+        "consumerActivity": "mbackgroundid0000013",
+        "logicalName": "1-corrections.tbl",
+        "sizeBytes": 4096
+      },
+      {
+        "producerActivity": "mprojectid0000002",
+        "consumerActivity": "mbackgroundid0000014",
+        "logicalName": "pposs2ukstu_blue_001_002.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mbgmodelid0000012",
+        "consumerActivity": "mbackgroundid0000014",
+        "logicalName": "1-corrections.tbl",
+        "sizeBytes": 4096
+      },
+      {
+        "producerActivity": "mprojectid0000003",
+        "consumerActivity": "mbackgroundid0000015",
+        "logicalName": "pposs2ukstu_blue_002_001.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mbgmodelid0000012",
+        "consumerActivity": "mbackgroundid0000015",
+        "logicalName": "1-corrections.tbl",
+        "sizeBytes": 4096
+      },
+      {
+        "producerActivity": "mprojectid0000004",
+        "consumerActivity": "mbackgroundid0000016",
+        "logicalName": "pposs2ukstu_blue_002_002.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mbgmodelid0000012",
+        "consumerActivity": "mbackgroundid0000016",
+        "logicalName": "1-corrections.tbl",
+        "sizeBytes": 4096
+      },
+      {
+        "producerActivity": "mbackgroundid0000013",
+        "consumerActivity": "mimgtblid0000017",
+        "logicalName": "cposs2ukstu_blue_001_001.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mbackgroundid0000013",
+        "consumerActivity": "mimgtblid0000017",
+        "logicalName": "cposs2ukstu_blue_001_001_area.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mbackgroundid0000014",
+        "consumerActivity": "mimgtblid0000017",
+        "logicalName": "cposs2ukstu_blue_001_002.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mbackgroundid0000014",
+        "consumerActivity": "mimgtblid0000017",
+        "logicalName": "cposs2ukstu_blue_001_002_area.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mbackgroundid0000015",
+        "consumerActivity": "mimgtblid0000017",
+        "logicalName": "cposs2ukstu_blue_002_001.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mbackgroundid0000015",
+        "consumerActivity": "mimgtblid0000017",
+        "logicalName": "cposs2ukstu_blue_002_001_area.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mbackgroundid0000016",
+        "consumerActivity": "mimgtblid0000017",
+        "logicalName": "cposs2ukstu_blue_002_002.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mbackgroundid0000016",
+        "consumerActivity": "mimgtblid0000017",
+        "logicalName": "cposs2ukstu_blue_002_002_area.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mbackgroundid0000013",
+        "consumerActivity": "maddid0000018",
+        "logicalName": "cposs2ukstu_blue_001_001.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mbackgroundid0000013",
+        "consumerActivity": "maddid0000018",
+        "logicalName": "cposs2ukstu_blue_001_001_area.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mbackgroundid0000014",
+        "consumerActivity": "maddid0000018",
+        "logicalName": "cposs2ukstu_blue_001_002.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mbackgroundid0000014",
+        "consumerActivity": "maddid0000018",
+        "logicalName": "cposs2ukstu_blue_001_002_area.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mbackgroundid0000015",
+        "consumerActivity": "maddid0000018",
+        "logicalName": "cposs2ukstu_blue_002_001.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mbackgroundid0000015",
+        "consumerActivity": "maddid0000018",
+        "logicalName": "cposs2ukstu_blue_002_001_area.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mbackgroundid0000016",
+        "consumerActivity": "maddid0000018",
+        "logicalName": "cposs2ukstu_blue_002_002.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mbackgroundid0000016",
+        "consumerActivity": "maddid0000018",
+        "logicalName": "cposs2ukstu_blue_002_002_area.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mimgtblid0000017",
+        "consumerActivity": "maddid0000018",
+        "logicalName": "1-updated-corrected.tbl",
+        "sizeBytes": 4096
+      },
+      {
+        "producerActivity": "maddid0000018",
+        "consumerActivity": "mviewerid0000019",
+        "logicalName": "1-mosaic.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mprojectid0000020",
+        "consumerActivity": "mdifffitid0000024",
+        "logicalName": "pposs2ukstu_red_001_001.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mprojectid0000021",
+        "consumerActivity": "mdifffitid0000024",
+        "logicalName": "pposs2ukstu_red_001_002.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mprojectid0000020",
+        "consumerActivity": "mdifffitid0000025",
+        "logicalName": "pposs2ukstu_red_001_001.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mprojectid0000022",
+        "consumerActivity": "mdifffitid0000025",
+        "logicalName": "pposs2ukstu_red_002_001.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mprojectid0000020",
+        "consumerActivity": "mdifffitid0000026",
+        "logicalName": "pposs2ukstu_red_001_001.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mprojectid0000023",
+        "consumerActivity": "mdifffitid0000026",
+        "logicalName": "pposs2ukstu_red_002_002.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mprojectid0000021",
+        "consumerActivity": "mdifffitid0000027",
+        "logicalName": "pposs2ukstu_red_001_002.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mprojectid0000022",
+        "consumerActivity": "mdifffitid0000027",
+        "logicalName": "pposs2ukstu_red_002_001.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mprojectid0000021",
+        "consumerActivity": "mdifffitid0000028",
+        "logicalName": "pposs2ukstu_red_001_002.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mprojectid0000023",
+        "consumerActivity": "mdifffitid0000028",
+        "logicalName": "pposs2ukstu_red_002_002.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mprojectid0000022",
+        "consumerActivity": "mdifffitid0000029",
+        "logicalName": "pposs2ukstu_red_002_001.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mprojectid0000023",
+        "consumerActivity": "mdifffitid0000029",
+        "logicalName": "pposs2ukstu_red_002_002.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mdifffitid0000024",
+        "consumerActivity": "mconcatfitid0000030",
+        "logicalName": "2-fit.000001.000002.txt",
+        "sizeBytes": 4096
+      },
+      {
+        "producerActivity": "mdifffitid0000025",
+        "consumerActivity": "mconcatfitid0000030",
+        "logicalName": "2-fit.000001.000003.txt",
+        "sizeBytes": 4096
+      },
+      {
+        "producerActivity": "mdifffitid0000026",
+        "consumerActivity": "mconcatfitid0000030",
+        "logicalName": "2-fit.000001.000004.txt",
+        "sizeBytes": 4096
+      },
+      {
+        "producerActivity": "mdifffitid0000027",
+        "consumerActivity": "mconcatfitid0000030",
+        "logicalName": "2-fit.000002.000003.txt",
+        "sizeBytes": 4096
+      },
+      {
+        "producerActivity": "mdifffitid0000028",
+        "consumerActivity": "mconcatfitid0000030",
+        "logicalName": "2-fit.000002.000004.txt",
+        "sizeBytes": 4096
+      },
+      {
+        "producerActivity": "mdifffitid0000029",
+        "consumerActivity": "mconcatfitid0000030",
+        "logicalName": "2-fit.000003.000004.txt",
+        "sizeBytes": 4096
+      },
+      {
+        "producerActivity": "mconcatfitid0000030",
+        "consumerActivity": "mbgmodelid0000031",
+        "logicalName": "2-fits.tbl",
+        "sizeBytes": 4096
+      },
+      {
+        "producerActivity": "mprojectid0000020",
+        "consumerActivity": "mbackgroundid0000032",
+        "logicalName": "pposs2ukstu_red_001_001.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mbgmodelid0000031",
+        "consumerActivity": "mbackgroundid0000032",
+        "logicalName": "2-corrections.tbl",
+        "sizeBytes": 4096
+      },
+      {
+        "producerActivity": "mprojectid0000021",
+        "consumerActivity": "mbackgroundid0000033",
+        "logicalName": "pposs2ukstu_red_001_002.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mbgmodelid0000031",
+        "consumerActivity": "mbackgroundid0000033",
+        "logicalName": "2-corrections.tbl",
+        "sizeBytes": 4096
+      },
+      {
+        "producerActivity": "mprojectid0000022",
+        "consumerActivity": "mbackgroundid0000034",
+        "logicalName": "pposs2ukstu_red_002_001.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mbgmodelid0000031",
+        "consumerActivity": "mbackgroundid0000034",
+        "logicalName": "2-corrections.tbl",
+        "sizeBytes": 4096
+      },
+      {
+        "producerActivity": "mprojectid0000023",
+        "consumerActivity": "mbackgroundid0000035",
+        "logicalName": "pposs2ukstu_red_002_002.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mbgmodelid0000031",
+        "consumerActivity": "mbackgroundid0000035",
+        "logicalName": "2-corrections.tbl",
+        "sizeBytes": 4096
+      },
+      {
+        "producerActivity": "mbackgroundid0000032",
+        "consumerActivity": "mimgtblid0000036",
+        "logicalName": "cposs2ukstu_red_001_001.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mbackgroundid0000032",
+        "consumerActivity": "mimgtblid0000036",
+        "logicalName": "cposs2ukstu_red_001_001_area.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mbackgroundid0000033",
+        "consumerActivity": "mimgtblid0000036",
+        "logicalName": "cposs2ukstu_red_001_002.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mbackgroundid0000033",
+        "consumerActivity": "mimgtblid0000036",
+        "logicalName": "cposs2ukstu_red_001_002_area.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mbackgroundid0000034",
+        "consumerActivity": "mimgtblid0000036",
+        "logicalName": "cposs2ukstu_red_002_001.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mbackgroundid0000034",
+        "consumerActivity": "mimgtblid0000036",
+        "logicalName": "cposs2ukstu_red_002_001_area.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mbackgroundid0000035",
+        "consumerActivity": "mimgtblid0000036",
+        "logicalName": "cposs2ukstu_red_002_002.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mbackgroundid0000035",
+        "consumerActivity": "mimgtblid0000036",
+        "logicalName": "cposs2ukstu_red_002_002_area.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mbackgroundid0000032",
+        "consumerActivity": "maddid0000037",
+        "logicalName": "cposs2ukstu_red_001_001.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mbackgroundid0000032",
+        "consumerActivity": "maddid0000037",
+        "logicalName": "cposs2ukstu_red_001_001_area.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mbackgroundid0000033",
+        "consumerActivity": "maddid0000037",
+        "logicalName": "cposs2ukstu_red_001_002.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mbackgroundid0000033",
+        "consumerActivity": "maddid0000037",
+        "logicalName": "cposs2ukstu_red_001_002_area.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mbackgroundid0000034",
+        "consumerActivity": "maddid0000037",
+        "logicalName": "cposs2ukstu_red_002_001.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mbackgroundid0000034",
+        "consumerActivity": "maddid0000037",
+        "logicalName": "cposs2ukstu_red_002_001_area.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mbackgroundid0000035",
+        "consumerActivity": "maddid0000037",
+        "logicalName": "cposs2ukstu_red_002_002.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mbackgroundid0000035",
+        "consumerActivity": "maddid0000037",
+        "logicalName": "cposs2ukstu_red_002_002_area.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mimgtblid0000036",
+        "consumerActivity": "maddid0000037",
+        "logicalName": "2-updated-corrected.tbl",
+        "sizeBytes": 4096
+      },
+      {
+        "producerActivity": "maddid0000037",
+        "consumerActivity": "mviewerid0000038",
+        "logicalName": "2-mosaic.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mprojectid0000039",
+        "consumerActivity": "mdifffitid0000043",
+        "logicalName": "pposs2ukstu_ir_001_001.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mprojectid0000040",
+        "consumerActivity": "mdifffitid0000043",
+        "logicalName": "pposs2ukstu_ir_001_002.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mprojectid0000039",
+        "consumerActivity": "mdifffitid0000044",
+        "logicalName": "pposs2ukstu_ir_001_001.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mprojectid0000041",
+        "consumerActivity": "mdifffitid0000044",
+        "logicalName": "pposs2ukstu_ir_002_001.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mprojectid0000039",
+        "consumerActivity": "mdifffitid0000045",
+        "logicalName": "pposs2ukstu_ir_001_001.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mprojectid0000042",
+        "consumerActivity": "mdifffitid0000045",
+        "logicalName": "pposs2ukstu_ir_002_002.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mprojectid0000040",
+        "consumerActivity": "mdifffitid0000046",
+        "logicalName": "pposs2ukstu_ir_001_002.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mprojectid0000041",
+        "consumerActivity": "mdifffitid0000046",
+        "logicalName": "pposs2ukstu_ir_002_001.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mprojectid0000040",
+        "consumerActivity": "mdifffitid0000047",
+        "logicalName": "pposs2ukstu_ir_001_002.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mprojectid0000042",
+        "consumerActivity": "mdifffitid0000047",
+        "logicalName": "pposs2ukstu_ir_002_002.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mprojectid0000041",
+        "consumerActivity": "mdifffitid0000048",
+        "logicalName": "pposs2ukstu_ir_002_001.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mprojectid0000042",
+        "consumerActivity": "mdifffitid0000048",
+        "logicalName": "pposs2ukstu_ir_002_002.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mdifffitid0000043",
+        "consumerActivity": "mconcatfitid0000049",
+        "logicalName": "3-fit.000001.000002.txt",
+        "sizeBytes": 4096
+      },
+      {
+        "producerActivity": "mdifffitid0000044",
+        "consumerActivity": "mconcatfitid0000049",
+        "logicalName": "3-fit.000001.000003.txt",
+        "sizeBytes": 4096
+      },
+      {
+        "producerActivity": "mdifffitid0000045",
+        "consumerActivity": "mconcatfitid0000049",
+        "logicalName": "3-fit.000001.000004.txt",
+        "sizeBytes": 4096
+      },
+      {
+        "producerActivity": "mdifffitid0000046",
+        "consumerActivity": "mconcatfitid0000049",
+        "logicalName": "3-fit.000002.000003.txt",
+        "sizeBytes": 4096
+      },
+      {
+        "producerActivity": "mdifffitid0000047",
+        "consumerActivity": "mconcatfitid0000049",
+        "logicalName": "3-fit.000002.000004.txt",
+        "sizeBytes": 4096
+      },
+      {
+        "producerActivity": "mdifffitid0000048",
+        "consumerActivity": "mconcatfitid0000049",
+        "logicalName": "3-fit.000003.000004.txt",
+        "sizeBytes": 4096
+      },
+      {
+        "producerActivity": "mconcatfitid0000049",
+        "consumerActivity": "mbgmodelid0000050",
+        "logicalName": "3-fits.tbl",
+        "sizeBytes": 4096
+      },
+      {
+        "producerActivity": "mprojectid0000039",
+        "consumerActivity": "mbackgroundid0000051",
+        "logicalName": "pposs2ukstu_ir_001_001.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mbgmodelid0000050",
+        "consumerActivity": "mbackgroundid0000051",
+        "logicalName": "3-corrections.tbl",
+        "sizeBytes": 4096
+      },
+      {
+        "producerActivity": "mprojectid0000040",
+        "consumerActivity": "mbackgroundid0000052",
+        "logicalName": "pposs2ukstu_ir_001_002.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mbgmodelid0000050",
+        "consumerActivity": "mbackgroundid0000052",
+        "logicalName": "3-corrections.tbl",
+        "sizeBytes": 4096
+      },
+      {
+        "producerActivity": "mprojectid0000041",
+        "consumerActivity": "mbackgroundid0000053",
+        "logicalName": "pposs2ukstu_ir_002_001.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mbgmodelid0000050",
+        "consumerActivity": "mbackgroundid0000053",
+        "logicalName": "3-corrections.tbl",
+        "sizeBytes": 4096
+      },
+      {
+        "producerActivity": "mprojectid0000042",
+        "consumerActivity": "mbackgroundid0000054",
+        "logicalName": "pposs2ukstu_ir_002_002.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mbgmodelid0000050",
+        "consumerActivity": "mbackgroundid0000054",
+        "logicalName": "3-corrections.tbl",
+        "sizeBytes": 4096
+      },
+      {
+        "producerActivity": "mbackgroundid0000051",
+        "consumerActivity": "mimgtblid0000055",
+        "logicalName": "cposs2ukstu_ir_001_001.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mbackgroundid0000051",
+        "consumerActivity": "mimgtblid0000055",
+        "logicalName": "cposs2ukstu_ir_001_001_area.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mbackgroundid0000052",
+        "consumerActivity": "mimgtblid0000055",
+        "logicalName": "cposs2ukstu_ir_001_002.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mbackgroundid0000052",
+        "consumerActivity": "mimgtblid0000055",
+        "logicalName": "cposs2ukstu_ir_001_002_area.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mbackgroundid0000053",
+        "consumerActivity": "mimgtblid0000055",
+        "logicalName": "cposs2ukstu_ir_002_001.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mbackgroundid0000053",
+        "consumerActivity": "mimgtblid0000055",
+        "logicalName": "cposs2ukstu_ir_002_001_area.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mbackgroundid0000054",
+        "consumerActivity": "mimgtblid0000055",
+        "logicalName": "cposs2ukstu_ir_002_002.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mbackgroundid0000054",
+        "consumerActivity": "mimgtblid0000055",
+        "logicalName": "cposs2ukstu_ir_002_002_area.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mbackgroundid0000051",
+        "consumerActivity": "maddid0000056",
+        "logicalName": "cposs2ukstu_ir_001_001.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mbackgroundid0000051",
+        "consumerActivity": "maddid0000056",
+        "logicalName": "cposs2ukstu_ir_001_001_area.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mbackgroundid0000052",
+        "consumerActivity": "maddid0000056",
+        "logicalName": "cposs2ukstu_ir_001_002.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mbackgroundid0000052",
+        "consumerActivity": "maddid0000056",
+        "logicalName": "cposs2ukstu_ir_001_002_area.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mbackgroundid0000053",
+        "consumerActivity": "maddid0000056",
+        "logicalName": "cposs2ukstu_ir_002_001.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mbackgroundid0000053",
+        "consumerActivity": "maddid0000056",
+        "logicalName": "cposs2ukstu_ir_002_001_area.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mbackgroundid0000054",
+        "consumerActivity": "maddid0000056",
+        "logicalName": "cposs2ukstu_ir_002_002.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mbackgroundid0000054",
+        "consumerActivity": "maddid0000056",
+        "logicalName": "cposs2ukstu_ir_002_002_area.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "mimgtblid0000055",
+        "consumerActivity": "maddid0000056",
+        "logicalName": "3-updated-corrected.tbl",
+        "sizeBytes": 4096
+      },
+      {
+        "producerActivity": "maddid0000056",
+        "consumerActivity": "mviewerid0000057",
+        "logicalName": "3-mosaic.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "maddid0000018",
+        "consumerActivity": "mviewerid0000058",
+        "logicalName": "1-mosaic.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "maddid0000037",
+        "consumerActivity": "mviewerid0000058",
+        "logicalName": "2-mosaic.fits",
+        "sizeBytes": 10000000
+      },
+      {
+        "producerActivity": "maddid0000056",
+        "consumerActivity": "mviewerid0000058",
+        "logicalName": "3-mosaic.fits",
+        "sizeBytes": 10000000
+      }
+    ]
+  }
+}

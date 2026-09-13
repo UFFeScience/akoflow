@@ -1,0 +1,60 @@
+---
+title: "Montage: project in GCP, finish locally"
+description: A 58-activity real Montage workflow with GCP e2-medium projection and local processing.
+---
+
+import InterfaceApiTabs from '@site/src/components/InterfaceApiTabs';
+import {FileList, WorkflowDag} from '@site/src/components/WorkflowShowcase';
+
+# Montage: project in GCP, finish locally
+
+<WorkflowDag title="Montage across GCP and local execution" stages={['12 mProject · GCP e2-medium', 'projected FITS transfer', ['18 mDiffFit · local', '3 mConcatFit · local'], 'background correction · local', '3 mosaics + color preview · local']} />
+
+This example preserves all **58 real Montage activities**. The twelve `mProject`
+activities use an on-demand GCP `e2-medium` worker; the other 46 use the local
+execution resource. The image `ovvesley/akoflow-wf-montage:050d` carries the
+input FITS images, headers, lookup tables, and Montage executables. AkôFlow
+transfers the projected FITS outputs into the local activities' workspaces.
+
+:::warning Cloud cost and validation
+This plan can create a billable GCP VM. Its predicted time is a sum of historical
+per-activity measurements on a *different* machine (`c3d-standard-16`); its
+compute cost excludes startup, disk, and network charges. Neither figure is an
+observed result. Check cloud quota, pricing, cleanup, and the local Docker
+runtime before submitting.
+:::
+
+## Download the complete bundle
+
+<FileList>
+  <a href="https://github.com/UFFeScience/akoflow/tree/main/examples/real/montage-cloud-local">Complete source and instructions ↗</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/real/montage-cloud-local/workflow.json">Workflow with 58 commands and named data handoffs ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/real/montage-cloud-local/plan.json">Manual GCP/local plan ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/real/montage-cloud-local/source-workflow.yaml">Original Montage DAG ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/real/montage-cloud-local/reference-runtimes.csv">Historical activity runtimes ↓</a>
+</FileList>
+
+The [bundle README](https://github.com/UFFeScience/akoflow/blob/main/examples/real/montage-cloud-local/README.md)
+explains the instance-specific resource IDs, local Docker requirement, import
+order, submission command, and post-run checks.
+
+<InterfaceApiTabs
+  desktop={<div>
+    <h2>Use Desktop</h2>
+    <p>First verify that the GCP environment has discovered an <code>e2-medium</code> capacity target and that the local daemon can launch the Montage image. Import the workflow and manual plan using the downloaded files, then inspect all 58 assignments before starting a real run. The expected final file is <code>mosaic-color.png</code>. In the run view, check the activity DAG, Data tab, transfer records, and cloud instance lifecycle.</p>
+  </div>}
+  api={<div>
+    <h2>Use the API</h2>
+    <p>Follow the <a href="/docs/tutorials/api-access">API access guide</a> and the bundle README. Import <code>scope.json</code>, <code>network.json</code>, <code>workflow.json</code>, and <code>plan.json</code> in that order. Then submit exactly one run using <code>submit-run.sh</code>. The example IDs refer to a particular AkôFlow instance and must be reviewed before reuse.</p>
+    <pre><code>{`sh examples/real/montage-cloud-local/submit-run.sh montage-58-cloud-local-run-v1`}</code></pre>
+  </div>}
+/>
+
+## What to verify
+
+The plan places 12 projections on GCP and 46 downstream activities locally.
+The workflow names 138 file handoffs rather than using generic `dependency.dat`
+records. A completed run must have 58 successful activities, a non-empty
+`mosaic-color.png`, and recorded projected-FITS transfers. The GCP VM must be
+destroyed after execution. **No completed observed run is claimed yet**;
+the historical reference CSV and manual plan prediction are not a result.

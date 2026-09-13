@@ -1,0 +1,17 @@
+{
+  "id": "montage-58-cloud-local-network-v1",
+  "name": "Montage GCP to local transfers",
+  "version": 1,
+  "executionScopeId": "montage-58-cloud-local-scope-v1",
+  "links": [
+    {
+      "id": "montage-gcp-local-link",
+      "sourceResourceId": "goal-gcp-e2-medium",
+      "targetResourceId": "local-environment-entrypoint",
+      "bandwidthBitsPerSecond": 100000000,
+      "latencySeconds": 0.05,
+      "pricePerByte": 0,
+      "bidirectional": true
+    }
+  ]
+}

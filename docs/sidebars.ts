@@ -32,6 +32,7 @@ const sidebars: SidebarsConfig = {
                 "showcase/edge-cloud-simulation",
                 "showcase/kubernetes-real-execution",
                 "showcase/hybrid-cloud-transfer",
+                "showcase/montage-cloud-local",
                 "showcase/local-direct-execution",
                 "showcase/slurm-local-fixture",
                 "showcase/network-fanout",

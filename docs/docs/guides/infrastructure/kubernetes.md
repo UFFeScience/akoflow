@@ -81,19 +81,20 @@ For node discovery, a separate `ClusterRole` and `ClusterRoleBinding` granting `
 
 ## 2. Store the API credential outside the environment definition
 
-Complete [API connection setup](../../tutorials/api-access). Generate a short-lived Kubernetes token and send it to the daemon's credential endpoint. The example avoids printing the token after it is assigned to the shell variable.
+Complete [API connection setup](../../tutorials/api-access). Generate a short-lived Kubernetes token and stream it to the credential endpoint without placing it in a command argument or a temporary file. Run this in Bash so `pipefail` catches a failed token request:
 
 ```bash
-KUBE_TOKEN="$(kubectl -n akoflow create token akoflow-runtime --duration=1h)"
-curl --fail-with-body \
-  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
-  -H 'Content-Type: application/json' \
-  --data "{\"id\":\"research-kubernetes\",\"token\":\"$KUBE_TOKEN\"}" \
-  "$AKOFLOW_API_URL/kubernetes-tokens/"
-unset KUBE_TOKEN
+set -o pipefail
+kubectl -n akoflow create token akoflow-runtime --duration=1h \
+  | jq -R '{id:"research-kubernetes",token:.}' \
+  | curl --fail-with-body \
+      -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+      -H 'Content-Type: application/json' --data-binary @- \
+      "$AKOFLOW_API_URL/kubernetes-tokens/" -o kubernetes-reference.json || exit 1
+jq -e '.credentialRef' kubernetes-reference.json
 ```
 
-The Kubernetes client accepts a `credentialRef` using `file:<path>` or `env:<variable>`, or a `bearerToken` in connection configuration. Prefer a daemon-managed local file reference such as `file:storage/credentials/kubernetes/research-kubernetes.token`; it keeps the token out of the versioned environment YAML. See [credentials and SSH service keys](../operations/credentials-and-ssh) for the daemon-side credential flow.
+Use the returned `credentialRef` in the connection you register. The Kubernetes client accepts `file:<path>` or `env:<variable>` references, or a `bearerToken` in connection configuration. The daemon-managed file reference keeps the token out of the versioned environment YAML. See [credentials and SSH service keys](../operations/credentials-and-ssh) for the daemon-side credential flow.
 
 For a production cluster, provide the API server certificate through `configuration.caFile`. `insecureSkipTlsVerify: true` is appropriate for the disposable Kind example only; do not copy it to a trusted cluster configuration.
 

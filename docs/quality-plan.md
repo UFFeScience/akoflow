@@ -2,7 +2,7 @@
 
 This file is the editorial backlog for preparing the AkôFlow documentation for external open-source users. Update it after each documentation unit. A checked item must point to evidence in the repository or to a recorded verification command; absence of a known defect is not sufficient evidence.
 
-Last audited: 2026-09-12. The current editorial pass found an unresolved Desktop first-workflow gap and generated-reference defects. Earlier checks below describe their historical scope, not a clean completion gate.
+Last audited: 2026-09-13. The Desktop first-workflow gap and several generated-reference defects have been corrected. Clean-host installation, provider validation, remaining API contracts, and the final full-page audit still keep the completion gate open.
 
 ## Editorial contract
 
@@ -22,9 +22,10 @@ Showcases are extended tutorials. They may link to how-to and reference pages, b
 - [x] Provider limitations are stated explicitly. Evidence: `guides/infrastructure/cloud-capacity.md`, `gcp.md`, and `aws.md` distinguish GCP compute provisioning from partial object-storage support. The current GCS connector rejects direct `gs://` transfer, and saved AWS credentials are not wired to the S3 transfer connector.
 - [x] GCP catalog and provisioning access are documented as source-audited behavior rather than an unverified IAM recipe. Evidence: `guides/infrastructure/gcp.md`, `internal/provider/cloud/gcp/catalog.go`, and `internal/provider/cloud/terraform/runner.go`; a disposable-project validation remains required.
 - [x] HPC concepts and the proxy-aware connection path are documented. Evidence: `guides/infrastructure/hpc-slurm.md` and `guides/operations/interactive-console.md`.
+- [x] The general environment guide does not imply a remote connection was saved after a standalone health test. It links to the complete HPC/GCP registration tutorials and uses the saved HPC template's connection ID for follow-up checks, verified on 2026-09-13.
 - [x] Existing Showcase download URLs use `raw.githubusercontent.com` and the 50-core bundle was checked against repository files on 2026-09-11.
 - [x] No screenshot markers remain. `rg '<!--\\s*screenshot:' docs/docs` returned no matches on 2026-09-11; relevant guides now use checked-in captures or executable verification steps.
-- [x] All internal links and every downloadable asset pass an automated link check. Evidence: `docs/scripts/check-links.mjs` and `.github/workflows/docs-checks.yaml`; the latest check covered 381 local route/asset links and 54 Showcase downloads on 2026-09-12.
+- [x] All internal links and every downloadable asset pass an automated link check. Evidence: `docs/scripts/check-links.mjs` and `.github/workflows/docs-checks.yaml`; the latest check covered 383 local route/asset links and 54 Showcase downloads on 2026-09-13.
 - [x] Navigation separates Tutorials, How-to guides, Explanations, Reference, and Developing AkôFlow. Evidence: `docs/sidebars.ts`; at 390 × 844 the built site's menu opened, showed the new first-workflow link, and had no horizontal overflow or page error on 2026-09-12.
 - [x] Home, Getting started, Installation, and Interface tour use the same first action: a real local Desktop workflow. Home now links to the pinned download-selection page rather than an unqualified latest-release page. The built Home link and target route were checked on 2026-09-12.
 - [x] Desktop is the only end-user installation and download path; self-managed server deployment is a separate operator guide. Evidence: `installation.md`, `downloads.md`, `guides/operations/server-instance.md`, and `static/examples/server-instance/compose.yaml`; Compose interpolation, documentation typecheck, production build, and link check passed on 2026-09-12.
@@ -34,11 +35,11 @@ Showcases are extended tutorials. They may link to how-to and reference pages, b
 
 | Runtime/provider | Tutorial or showcase | How-to | Reference | Explanation | Status |
 | --- | --- | --- | --- | --- | --- |
-| SimGrid | Edge–cloud, 30 GB fan-out, 50-core fan-out | Environment/scope/planning pages | API + workflow specification | Runtime and scheduler pages | Partial: verify each bundle end to end |
-| Kubernetes | Kind real execution | Environment and execution pages | API + example YAML | Runtime page | Partial: capture current UI and verify outputs |
+| SimGrid | Edge–cloud, 30 GB fan-out, 50-core fan-out | Environment/scope/planning pages | API + workflow specification | Runtime and scheduler pages | Verified: all three versioned bundles completed through the API |
+| Kubernetes | Kind real execution | Environment and execution pages | API + example YAML | Runtime page | Verified on isolated Kind with output-file evidence; shared clusters remain site-specific |
 | SLURM/HPC | Local SLURM batch fixture | `hpc-slurm.md` | Fixture YAML + API | Runtime page | Complete for the local adapter boundary; real cluster configuration still requires site validation |
 | Local/direct | Local direct execution | Environment and console pages | API | Runtime page | Complete: isolated daemon run produced an observed filesystem artifact on 2026-09-12 |
-| GCP | None complete | `gcp.md` and cloud capacity | Cloud API reference | Provider support notes | Missing safe, reproducible tutorial and current captures |
+| GCP | No verified worker run | `gcp.md` and cloud capacity | Cloud API reference | Provider support notes | Connection form captured; disposable-project validation and worker cleanup remain open |
 | AWS/S3 | None complete | `aws.md` and storage | Storage/cloud credential API | Support matrix | Partial: transfer connector uses server environment credentials; saved AWS credential is not wired; no verified AWS procedure |
 
 ## Prioritized editorial units
@@ -69,6 +70,7 @@ The second API tutorial read now takes the GCP target project explicitly instead
 
 - [x] Create a dedicated SimGrid setup how-to covering resource speed, per-core capacity, topology links, latency, bandwidth, activity duration, and verification. Evidence: `guides/infrastructure/simgrid.md` is grounded in the checked-in six-file edge-to-cloud bundle and the current SimGrid platform/runner implementation; it records field semantics, bit/s versus bytes, path and sharing behavior, API/Desktop procedures, completion invariants, and recovery checks.
 - [x] Create a dedicated Kubernetes setup how-to covering kubeconfig/token, namespace/RBAC, runtime binding, storage, image access, validation, troubleshooting, and cleanup. Evidence: `guides/infrastructure/kubernetes.md` is grounded in the verified Kind bundle and current Kubernetes client, adapter, transfer, and terminal implementations; it distinguishes the local broad-permission fixture from a namespace-scoped role and records the additional node-discovery permission, connection precedence, storage/node-affinity constraints, and cleanup checks.
+- [x] Keep Kubernetes token examples out of process arguments. The guide now pipes a short-lived token directly from `kubectl` through JSON encoding into the request body and uses the returned `credentialRef`; Bash syntax and a fake-token JSON check passed on 2026-09-13.
 - [x] Verify `hpc-slurm.md` against the current schemas and runtime behavior. Evidence: `guides/infrastructure/hpc-slurm.md` now distinguishes the static catalog example from a real SSH connection, documents the current SLURM connection factory, SSH proxy/host-key configuration, discovery, storage visibility, `sbatch`/`sacct`/fallback behavior, cancellation, and `srun` interactive sessions. Current interface capture remains deferred because the available Desktop surface is locked; the page uses executable configuration and explicit verification steps rather than an unverified visual.
 - [ ] Verify `gcp.md` with a disposable GCP project; document exact minimum IAM roles/permissions from observed API calls, provisioning cleanup, and current interface captures.
 - [ ] Verify `aws.md` with an S3 test bucket and document the exact storage payload and cleanup without implying EC2 support.

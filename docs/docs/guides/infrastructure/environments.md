@@ -26,7 +26,7 @@ Simulation creation collects a SimGrid platform model and can also define an exe
 
 Complete [API connection setup](../../tutorials/api-access) before running these commands.
 
-The creation body is an `EnvironmentDefinition`, not only an environment name. This minimal local example includes one version, runtime, resource, and runtime binding:
+The creation body needs more than an environment name. This local example includes a version, runtime, resource, and runtime binding:
 
 ```bash
 curl --fail-with-body \
@@ -42,17 +42,7 @@ curl --fail-with-body \
   }'
 ```
 
-Before storing a remote connection, test the same connection object independently:
-
-```bash
-curl --fail-with-body \
-  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
-  -H 'Content-Type: application/json' \
-  -X POST "$AKOFLOW_API_URL/connection-tests/" \
-  -d '{"id":"hpc-ssh","name":"HPC login","type":"ssh","endpoint":"login.example.org:22","username":"researcher","credentialRef":"<ssh-key-reference>"}'
-```
-
-The response contains `healthy` and `message`. Testing does not create an environment.
+For a remote connection, follow the complete [HPC registration](../../tutorials/register-hpc) or [Google Cloud connection](../../tutorials/connect-cloud) tutorial. Each shows how to obtain a credential reference, test the connection, and save the environment.
 
 ## Validate health and discover infrastructure
 
@@ -67,18 +57,21 @@ Health and discovery are different operations: health verifies access; discovery
 
 ### Using the API
 
+Use the ID of a connection already saved in the environment. For the HPC tutorial's template, that ID is `research-hpc-connection`.
+
 ```bash
+AKOFLOW_CONNECTION_ID='research-hpc-connection'
 # Check the connection
 curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
-  -X POST "$AKOFLOW_API_URL/environment-connections/hpc-ssh/health/"
+  -X POST "$AKOFLOW_API_URL/environment-connections/$AKOFLOW_CONNECTION_ID/health/"
 
 # Discovery through that connection
 curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
-  -X POST "$AKOFLOW_API_URL/environment-connections/hpc-ssh/discover/"
+  -X POST "$AKOFLOW_API_URL/environment-connections/$AKOFLOW_CONNECTION_ID/discover/"
 
 # Recent health history
 curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
-  "$AKOFLOW_API_URL/environment-connections/hpc-ssh/history/?limit=20"
+  "$AKOFLOW_API_URL/environment-connections/$AKOFLOW_CONNECTION_ID/history/?limit=20"
 ```
 
 Discovery returns a `snapshots` array. A successful request does not imply that every possible resource type was found; inspect the returned snapshots and the environment inventory.

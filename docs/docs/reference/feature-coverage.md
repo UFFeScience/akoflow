@@ -51,11 +51,11 @@ The `/network` and `/network/new` routes exist in Desktop, but the current sideb
 
 | Desktop route | Purpose | API family | Guide |
 |---|---|---|---|
-| `/artifacts` | List executable artifact definitions | `/artifacts/` | [Artifacts and builds](../guides/data/artifacts) |
-| `/artifacts/new` | Register an OCI artifact or start a build | Artifact and build endpoints | [Artifacts and builds](../guides/data/artifacts) |
-| `/artifacts/:id` | Inspect versions, locations, builds, and materializations | Artifact detail families | [Artifacts and builds](../guides/data/artifacts) |
-| `/artifact-locations` | Compatibility/aggregate location catalog | `/artifact-locations/` | [Artifacts and builds](../guides/data/artifacts) |
-| `/materializations` | Compatibility/aggregate materialization catalog | `/artifact-materializations/` | [Artifacts and builds](../guides/data/artifacts) |
+| `/artifacts` | List executable artifact definitions | `/artifacts/` | [Build an executable](../guides/data/build-executable) |
+| `/artifacts/new` | Register an OCI artifact or start a build | Artifact and build endpoints | [Build an executable](../guides/data/build-executable) |
+| `/artifacts/:id` | Inspect versions, locations, builds, and materializations | Artifact detail families | [Artifact locations](../guides/data/artifact-locations) |
+| `/artifact-locations` | Compatibility/aggregate location catalog | `/artifact-locations/` | [Artifact locations](../guides/data/artifact-locations) |
+| `/materializations` | Compatibility/aggregate materialization catalog | `/artifact-materializations/` | [Artifact locations](../guides/data/artifact-locations) |
 | `/data` | Generated scientific data grouped by workflow | Provenance data projections | [Trace a result](../guides/data/provenance) |
 | `/provenance` | Explore entities, SQL, and lineage | `/provenance/` | [Trace a result](../guides/data/provenance) |
 | `/audit` | Search operational history | `/audit-events/` | [Inspect audit events](../guides/data/audit-events) |

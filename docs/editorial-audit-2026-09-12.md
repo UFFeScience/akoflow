@@ -2,7 +2,7 @@
 
 Date: 2026-09-12. Scope: authored documentation pages in the current branch; generated API endpoint pages are reviewed through their generator and component.
 
-This is an iteration ledger, not a completion certificate. The first pass read all 51 authored pages and corrected confirmed narrative, terminology, API convention, example, and support-claim findings. A Desktop first-workflow path was added as page 52; splitting the evidence and operations procedures now brings the authored tree to 56 pages. A final full audit, priority endpoint contracts, and external-provider validation remain open.
+This is an iteration ledger, not a completion certificate. The first pass read all 51 authored pages and corrected confirmed narrative, terminology, API convention, example, and support-claim findings. A Desktop first-workflow path was added as page 52; splitting the evidence, operations, and artifact procedures now brings the authored tree to 58 pages. A final full audit, priority endpoint contracts, and external-provider validation remain open.
 
 ## Open P0/P1 findings
 
@@ -91,6 +91,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 83. **P0 resolved in the GCP guide API checkpoint:** the cloud tutorial and its environment template create `research-gcp`, but the detailed GCP guide refreshed and read the catalog of `gcp-lab`, which would return 404 on the documented path. Both checkpoint commands now use `research-gcp`. The cloud support matrix and AWS/S3 guide were reread together; their partial-support limits remain explicit. Live provider provisioning and transfer validation remain open.
 84. **P1 resolved in the console's basic path:** the console guide, troubleshooting step, and embedded connection diagram introduced control-plane and runtime-binding terms before the reader could open a terminal. They now describe the selected resource, interactive access, and its saved connection. The API section retains the runtime and connection IDs returned by session creation, where those fields matter.
 85. **P1 resolved in workflow execution scope:** the execution how-to mixed starting a planned workflow with terminal-session API details and used adapter language in its first explanation. It now explains real versus simulated workflow runs in user terms and links once to the separate console task. The result list is qualified because transfer, cost, and startup observations depend on the runtime and available evidence.
+86. **P1 resolved in artifact guide scope:** the former artifact guide combined storage browsing and file promotion, Docker/SIF builds, and artifact-location inspection. Storage already had a focused guide with the same browse and promotion procedures. The old URL is now a short choice page; a build guide and a location guide hold the remaining tasks, and sidebar, API overview, feature-coverage, and generated endpoint links point to the appropriate destination. The build no longer reports the two anchors removed from the former page.
 
 ## Page inventory
 
@@ -108,7 +109,9 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `explanations/planning.md` | Second read; linked scheduler comparison and removed abstract separation language | Recheck planning claims against coordinator |
 | `explanations/prism-and-heft.md` | Plain-language pass; cut 27% while preserving search, evaluation, cost, and cross-algorithm limits | Recheck algorithm claims against source |
 | `getting-started.md` | Second read; leads to the verified Desktop local run before the API simulation | Recheck the entry flow on a clean supported host |
-| `guides/data/artifacts.md` | API-path pass; environment and storage IDs now come from inventory, and the materialization query no longer requires an undefined run ID | Recheck API payloads after P0 contracts fix |
+| `guides/data/artifacts.md` | Short choice page preserving the old URL and routing storage, build, and location tasks | Check destinations in navigation |
+| `guides/data/build-executable.md` | Focused Docker/SIF build procedure moved from the combined guide; custom build-context path remains qualified | Recheck build payloads after P0 contracts fix |
+| `guides/data/artifact-locations.md` | Focused verified-byte and preparation-status procedure moved from the combined guide | Recheck materialization payloads after P0 contracts fix |
 | `guides/data/provenance-and-audit.md` | Short choice page preserving the old URL and distinguishing the two record types | Check both destinations in navigation |
 | `guides/data/provenance.md` | Moved Explore, lineage, SQL, and result investigation into one scientific-evidence task | Recheck Desktop interactions against packaged app |
 | `guides/data/audit-events.md` | Moved audit screen, server filters, and operation correlation into one operational-evidence task | Recheck Desktop interactions against packaged app |
@@ -157,7 +160,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 ## Verification in this pass
 
 - `npm run typecheck`, `npm run build`, `npm run check:links`, and `git diff --check` passed on the editorial branch. All 125 endpoint pages generated; targeted checks confirmed the console-command request, qualified environment and workflow responses, and all six versioned first-run links.
-- All 110 fenced Bash/sh blocks in authored documentation parsed with `bash -n` on 2026-09-13. This is a syntax check, not an execution test; snippets embedded in JSX and commands outside fences need separate review.
-- The latest link check covered 401 local links/assets and 54 showcase downloads from the `v1.0.8` Git tag on 2026-09-13.
+- All 107 fenced Bash/sh blocks in authored documentation parsed with `bash -n` on 2026-09-13. Three duplicated blocks were removed when the combined artifact guide became a choice page. This is a syntax check, not an execution test; snippets embedded in JSX and commands outside fences need separate review.
+- The latest link check covered 442 local links/assets and 54 showcase downloads from the `v1.0.8` Git tag on 2026-09-13.
 - Headless Chromium at 390 × 844 loaded Getting Started, Core concepts, the console guide, the new Desktop first-run page, and all seven Showcase pages without page errors or horizontal overflow. Every Showcase API tab displayed its v1.0.8 checkout command; the first-run page's mobile menu opened and showed its tutorial link.
 - These checks establish site integrity for this pass. They do not prove tutorial execution, provider support, or completion of the editorial gate.

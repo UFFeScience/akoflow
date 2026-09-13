@@ -71,6 +71,8 @@ const sidebars: SidebarsConfig = {
           collapsed: true,
           items: [
             "guides/data/artifacts",
+            "guides/data/build-executable",
+            "guides/data/artifact-locations",
             "guides/data/provenance-and-audit",
             "guides/data/provenance",
             "guides/data/audit-events",

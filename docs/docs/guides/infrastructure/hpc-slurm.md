@@ -83,7 +83,7 @@ resources:
     providerId: login
     cpuCores: 1
     cpuCapacity: 1
-    schedulable: true
+    schedulable: false
 ```
 
 Bind the runtime to the partition and compute resources. AkôFlow uses the selected partition's `providerId` for `sbatch`, or `configuration.partition` if that ID is absent. A selected batch `hpc_machine` becomes an `sbatch` node target. The login node in the example has a `direct` execution target; leave it unschedulable for workflow planning unless your site explicitly permits lightweight direct work. Interactive console access does not require scheduling workflow activities there.

@@ -35,33 +35,34 @@ The action appears only after AkôFlow can resolve all three layers: a resource,
 ## Open and manage a session through the API
 
 Complete [API connection setup](../../tutorials/api-access) first.
+Choose an interactive-capable resource in Desktop and use its saved ID below. Keep these commands in the same Bash session.
 
 ```bash
-curl --fail-with-body \
-  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
-  -H 'Content-Type: application/json' \
-  -X POST "$AKOFLOW_API_URL/console-sessions/" \
-  -d '{"resourceId":"hpc-login","actorId":"researcher@example.org"}'
+read -r -p 'Interactive resource ID: ' AKOFLOW_CONSOLE_RESOURCE_ID || exit 1
+[ -n "$AKOFLOW_CONSOLE_RESOURCE_ID" ] || exit 1
+
+jq -n --arg id "$AKOFLOW_CONSOLE_RESOURCE_ID" '{resourceId:$id}' | \
+  curl --fail-with-body \
+    -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+    -H 'Content-Type: application/json' \
+    --data-binary @- "$AKOFLOW_API_URL/console-sessions/" \
+    -o console-session.json || exit 1
+
+SESSION_ID=$(jq -er '.id' console-session.json) || exit 1
 ```
 
-A successful creation returns a `connected` session with its resolved `runtimeId` and `connectionId`. `resourceId` is required. Creation returns `422` when resolution or terminal startup fails and `503` when interactive console support is unavailable. Session records can later be `closed` or `failed`.
+A successful creation returns a `connected` session with its resolved `runtimeId` and `connectionId`. The command saves that response in `console-session.json` and sets `SESSION_ID` for the following requests. `resourceId` is required. Creation returns `422` when resolution or terminal startup fails and `503` when interactive console support is unavailable. Session records can later be `closed` or `failed`.
 
-List and close sessions:
+List sessions while you work:
 
 ```bash
-curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   "$AKOFLOW_API_URL/console-sessions/"
-
-curl --fail-with-body \
-  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
-  -X DELETE "$AKOFLOW_API_URL/console-sessions/$SESSION_ID/"
 ```
-
-Closure succeeds with `204 No Content`; an unknown session returns `404`.
 
 ### Stream protocol
 
-Connect a WebSocket client to:
+Connect a WebSocket client to the daemon, replacing the port and session ID with your values (`SESSION_ID` holds the ID returned above):
 
 ```text
 ws://127.0.0.1:<daemon-port>/akoflow-api/console-sessions/<session-id>/stream/
@@ -86,25 +87,33 @@ curl --fail-with-body \
 
 The response is UTF-8 text. A missing session log returns `404`; unavailable console support returns `503`.
 
-## Run a one-shot command
-
-The current Desktop focuses on the interactive terminal. Use the HTTP API for repeatable one-shot diagnostics:
+Close the session when finished:
 
 ```bash
-curl --fail-with-body \
+curl --fail-with-body -X DELETE \
+  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  "$AKOFLOW_API_URL/console-sessions/$SESSION_ID/"
+```
+
+Closure succeeds with `204 No Content`; an unknown session returns `404`.
+
+## Run a one-shot command
+
+The current Desktop focuses on the interactive terminal. Use the same resource ID for a repeatable one-shot diagnostic through the API:
+
+```bash
+jq -n --arg id "$AKOFLOW_CONSOLE_RESOURCE_ID" '{
+  resourceId:$id,
+  command:"hostname && uname -a",
+  workingDirectory:"/tmp",
+  environment:{LC_ALL:"C"},
+  cpuCores:1,
+  memoryBytes:268435456,
+  timeoutSeconds:30
+}' | curl --fail-with-body \
   -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -H 'Content-Type: application/json' \
-  -X POST "$AKOFLOW_API_URL/console-commands/" \
-  -d '{
-    "resourceId":"hpc-login",
-    "actorId":"researcher@example.org",
-    "command":"hostname && uname -a",
-    "workingDirectory":"/tmp",
-    "environment":{"LC_ALL":"C"},
-    "cpuCores":1,
-    "memoryBytes":268435456,
-    "timeoutSeconds":30
-  }'
+  --data-binary @- "$AKOFLOW_API_URL/console-commands/"
 ```
 
 `resourceId` and `command` are required. The default timeout is 30 seconds and the maximum is 3,600 seconds. The request waits for the runner and returns a `completed` or `failed` record with `stdout`, `stderr`, `exitCode`, `failure`, and provider `externalId` when available. Check the record's `status`; HTTP `201 Created` alone does not mean the command succeeded.

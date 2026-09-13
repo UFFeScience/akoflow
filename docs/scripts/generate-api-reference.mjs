@@ -688,8 +688,14 @@ function extractHandlerFieldTypes(handlerSource) {
 
 function sampleValue(typeName, structIndex, depth = 0) {
   const clean = typeName.replace(/^\*+/, "").trim();
-  if (/^\[\]/.test(clean))
-    return [sampleValue(clean.replace(/^\[\]/, ""), structIndex, depth + 1)];
+  if (/^\[\]/.test(clean)) {
+    const item = sampleValue(clean.replace(/^\[\]/, ""), structIndex, depth + 1);
+    // An unknown or depth-limited item would render as [{}], which looks
+    // like a real row without documenting any of its fields.
+    return item === null || (item && typeof item === "object" && !Array.isArray(item) && Object.keys(item).length === 0)
+      ? []
+      : [item];
+  }
   if (/^map\[/.test(clean) || /^(?:any|interface\{\})$/.test(clean)) return {};
   if (/bool$/.test(clean)) return true;
   if (/(?:^|\.)(?:Time|Duration)$/.test(clean)) return "2026-01-01T00:00:00Z";
@@ -864,7 +870,7 @@ function extractResponseContract(
     const definitions = Array.isArray(example) ? example : [example];
     for (const definition of definitions) {
       if (definition && "connectorBindings" in definition)
-        definition.connectorBindings = [sampleValue("environment.ConnectorBinding", structIndex)];
+        definition.connectorBindings = [];
     }
   }
   return {
@@ -1015,16 +1021,18 @@ for (const endpoint of endpoints) {
   }
 }
 
-function syntheticNullPath(value, path = "$") {
+function syntheticPlaceholderPath(value, path = "$") {
   if (value === null) return path;
   if (Array.isArray(value)) {
     for (const [index, item] of value.entries()) {
-      const found = syntheticNullPath(item, `${path}[${index}]`);
+      if (item && typeof item === "object" && !Array.isArray(item) && Object.keys(item).length === 0)
+        return `${path}[${index}]`;
+      const found = syntheticPlaceholderPath(item, `${path}[${index}]`);
       if (found) return found;
     }
   } else if (value && typeof value === "object") {
     for (const [key, item] of Object.entries(value)) {
-      const found = syntheticNullPath(item, `${path}.${key}`);
+      const found = syntheticPlaceholderPath(item, `${path}.${key}`);
       if (found) return found;
     }
   }
@@ -1032,10 +1040,12 @@ function syntheticNullPath(value, path = "$") {
 }
 
 for (const endpoint of endpoints) {
-  if (endpoint.response.example == null) continue;
-  const invalidPath = syntheticNullPath(endpoint.response.example);
+  const invalidPath = syntheticPlaceholderPath(endpoint.response.example ?? {});
   if (invalidPath)
-    throw new Error(`Ambiguous null in ${endpoint.method} ${endpoint.path} response example at ${invalidPath}`);
+    throw new Error(`Ambiguous placeholder in ${endpoint.method} ${endpoint.path} response example at ${invalidPath}`);
+  const invalidRequestPath = syntheticPlaceholderPath(endpoint.request?.example ?? {});
+  if (invalidRequestPath)
+    throw new Error(`Ambiguous placeholder in ${endpoint.method} ${endpoint.path} request example at ${invalidRequestPath}`);
 }
 
 const staleCheckedNotes = Object.keys(verifiedRequestNotes).filter(

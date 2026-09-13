@@ -202,21 +202,27 @@ func TestStorageHTTPHandlersReportUnavailableAndOperationErrors(t *testing.T) {
 	}
 }
 
-type consoleStub struct{ err error }
+type consoleStub struct {
+	err     error
+	request domainconsole.Request
+}
 
-func (s consoleStub) ExecuteCommand(context.Context, domainconsole.Request) (domainconsole.Command, error) {
+func (s *consoleStub) ExecuteCommand(_ context.Context, request domainconsole.Request) (domainconsole.Command, error) {
+	s.request = request
 	return domainconsole.Command{ID: "command"}, s.err
 }
-func (s consoleStub) ListCommands(context.Context, int) ([]domainconsole.Command, error) {
+func (s *consoleStub) ListCommands(context.Context, int) ([]domainconsole.Command, error) {
 	return []domainconsole.Command{{ID: "command"}}, s.err
 }
 
 type terminalStub struct {
 	err      error
 	streamed bool
+	request  domainconsole.SessionRequest
 }
 
-func (s *terminalStub) OpenSession(context.Context, domainconsole.SessionRequest) (domainconsole.Session, error) {
+func (s *terminalStub) OpenSession(_ context.Context, request domainconsole.SessionRequest) (domainconsole.Session, error) {
+	s.request = request
 	return domainconsole.Session{ID: "session"}, s.err
 }
 func (s *terminalStub) ListSessions(context.Context) ([]domainconsole.Session, error) {
@@ -244,7 +250,7 @@ func (s *auditStub) ListAuditEvents(_ context.Context, filter domainaudit.Filter
 
 func TestConsoleTerminalAndAuditHTTPHandlers(t *testing.T) {
 	terminal, audit := &terminalStub{}, &auditStub{}
-	h := &Handler{console: consoleStub{}, terminal: terminal, audit: audit}
+	h := &Handler{console: &consoleStub{}, terminal: terminal, audit: audit}
 	tests := []struct {
 		method, target, body string
 		values               map[string]string
@@ -269,6 +275,16 @@ func TestConsoleTerminalAndAuditHTTPHandlers(t *testing.T) {
 	}
 	if !terminal.streamed || audit.filter.Limit != 3 || audit.filter.EnvironmentID != "env" {
 		t.Fatalf("terminal/audit = %v %#v", terminal.streamed, audit.filter)
+	}
+}
+
+func TestConsoleDocumentationRequestsDecodeMinimalFields(t *testing.T) {
+	console, terminal := &consoleStub{}, &terminalStub{}
+	handler := &Handler{console: console, terminal: terminal}
+	session := callHandler(t, http.MethodPost, "/", `{"resourceId":"my-interactive-resource"}`, nil, handler.OpenConsoleSession)
+	command := callHandler(t, http.MethodPost, "/", `{"resourceId":"my-interactive-resource","command":"hostname"}`, nil, handler.ExecuteConsoleCommand)
+	if session.Code != http.StatusCreated || command.Code != http.StatusCreated || terminal.request.ResourceID != "my-interactive-resource" || console.request.ResourceID != "my-interactive-resource" || console.request.Command != "hostname" {
+		t.Fatalf("console request fields: session=%d command=%d terminal=%#v console=%#v", session.Code, command.Code, terminal.request, console.request)
 	}
 }
 

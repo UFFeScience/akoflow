@@ -89,23 +89,39 @@ Assignment changes only `credentialRef`; it preserves the connection's endpoint,
 
 ### Using the API
 
-Read the current environment definition first so you preserve every connection field. Then update the connection with the `credentialRef` returned above:
+Read the saved connection from its environment and change only `credentialRef`.
+Use the environment ID, connection ID, and reference returned by key registration:
 
 ```bash
-curl --fail-with-body \
+read -r -p 'Environment ID: ' AKOFLOW_ENVIRONMENT_ID || exit 1
+read -r -p 'Connection ID: ' AKOFLOW_CONNECTION_ID || exit 1
+read -r -p 'New credentialRef: ' AKOFLOW_CREDENTIAL_REF || exit 1
+[ -n "$AKOFLOW_ENVIRONMENT_ID" ] && [ -n "$AKOFLOW_CONNECTION_ID" ] &&
+  [ -n "$AKOFLOW_CREDENTIAL_REF" ] || exit 1
+
+(
+  set -o pipefail
+  curl --fail-with-body \
+    -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+    "$AKOFLOW_API_URL/environments/$AKOFLOW_ENVIRONMENT_ID/" |
+    jq -e --arg id "$AKOFLOW_CONNECTION_ID" \
+      --arg ref "$AKOFLOW_CREDENTIAL_REF" \
+      '.connections[] | select(.id == $id) | .credentialRef = $ref' |
+    curl --fail-with-body -X PUT \
+      -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+      -H 'Content-Type: application/json' \
+      --data-binary @- \
+      "$AKOFLOW_API_URL/environment-connections/$AKOFLOW_CONNECTION_ID/"
+) || exit 1
+
+curl --fail-with-body -X POST \
   -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
-  -H 'Content-Type: application/json' \
-  -X PUT "$AKOFLOW_API_URL/environment-connections/hpc-ssh/" \
-  -d '{
-    "id":"hpc-ssh",
-    "environmentId":"plafrim",
-    "name":"PlaFRIM login",
-    "type":"ssh",
-    "endpoint":"plafrim.example.org:22",
-    "username":"researcher",
-    "credentialRef":"<credentialRef returned by /ssh-keys/>"
-  }'
+  "$AKOFLOW_API_URL/environment-connections/$AKOFLOW_CONNECTION_ID/health/"
 ```
+
+The `PUT` replaces stored fields; the separate health request tests the updated
+connection. Inspect its returned status before using it. A missing connection ID
+makes `jq` fail; correct the ID rather than creating a second connection.
 
 ## Kubernetes bearer tokens
 
@@ -129,7 +145,7 @@ The response is `{"credentialRef":"..."}`. Empty/invalid values return `422`; un
 
 ## Cloud credentials
 
-Cloud onboarding similarly sends provider credential JSON to `/cloud-credentials/` and stores only the returned reference. Validation is a separate operation at `/cloud-credentials/validate/`; see [Cloud capacity](../infrastructure/cloud-capacity.md) for provider-specific fields and the complete flow.
+Cloud onboarding sends provider credential JSON to `/cloud-credentials/` and stores only the returned reference. Validation is a separate request at `/cloud-credentials/validate/`. The [Google Cloud connection tutorial](../../tutorials/connect-cloud) shows the current supported path and its limits.
 
 ## Security boundaries
 

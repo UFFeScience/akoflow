@@ -193,10 +193,37 @@ const checkedMapResponses = {
     note: "Without `page` or `pageSize`, the response is an array of `{ \"run\": ... }` items. Supplying either pagination parameter returns `{ \"items\": [...], \"page\": number, \"pageSize\": number, \"total\": number, \"hasNext\": boolean }`.",
   },
   Search: { example: { query: "string", results: [], total: 0 } },
-  ActivateArchiveInstance: { example: { instance: {}, restarting: false } },
-  GetPlanningSession: { example: { session: {}, algorithmRuns: [] } },
-  ListProvenanceEntities: { example: { items: [] } },
-  GetProvenanceSchema: { example: { items: [] } },
+  ActivateArchiveInstance: {
+    example: { instance: { id: "default", name: "Default instance", source: "local", status: "active", readOnly: false, credentialsSet: true }, restarting: false },
+    note: "`instance.status` is `active` after selection. `restarting` reports whether this server can trigger its own restart; when it is `false`, restart the daemon manually. An imported snapshot has `readOnly: true` instead of the default instance's `false`.",
+  },
+  GetPlanningSession: {
+    example: {
+      session: {
+        id: "session-id", workflowVersionId: "workflow-version-id", executionScopeId: "scope-id",
+        networkTopologyId: "topology-id", status: "completed", algorithms: [{ id: "heft" }],
+        progress: 1, candidateCount: 1, createdAt: "2026-01-01T00:00:00Z",
+      },
+      algorithmRuns: [{
+        id: "algorithm-run-id", planningSessionId: "session-id", algorithm: "heft", objective: "time",
+        status: "completed", progress: 1, candidateCount: 1,
+        estimate: { durationSeconds: 0.1, expandedStates: 1, activityCount: 1, dependencyCount: 0, compatibleResources: 1, confidence: "calibrated" },
+      }],
+    },
+    note: "The response pairs the saved session with its algorithm runs. `selectedCandidateId` and `selectedPlanId` appear only after selection; a completed session may have neither. The estimate describes predicted planning work, not execution time.",
+  },
+  ListProvenanceEntities: {
+    example: { items: [{
+      name: "runs", label: "Runs", description: "Workflow executions with observed makespan and cost.",
+      fields: [{ name: "id", label: "ID", type: "identifier" }],
+      links: [{ field: "schedule_plan_id", targetEntity: "plans", targetField: "id" }],
+    }] },
+    note: "This shows one entity and one of its fields. The configured explorer returns its full server-defined catalog, including other fields and entity types; use that response to choose query names and filters.",
+  },
+  GetProvenanceSchema: {
+    example: { items: [{ name: "execution_runs", columns: [{ name: "id", type: "text" }, { name: "status", type: "text" }] }] },
+    note: "This shows two columns from one safe table. The response lists all queryable tables and unblocked columns in the connected database; inspect it before writing a read-only SQL query.",
+  },
 };
 
 // Route-specific wording is reserved for aliases whose handler name cannot
@@ -239,7 +266,7 @@ const verifiedRequestNotes = {
   "POST /akoflow-api/provenance/sql/explain/": "Send the same `sql` and optional named `parameters` as the read-only SQL route. This runs `EXPLAIN QUERY PLAN` for a permitted `SELECT` or `WITH` statement and returns plan rows, not the query's data rows. It uses the same read-only table/column restrictions and 10-second timeout; invalid SQL returns `400` and an unavailable explorer returns `503`.",
   "PUT /akoflow-api/instance/": "Send the complete current instance object with non-empty `id` and `name`; this route saves the supplied object, so preserve existing identity and metadata when changing one field. `transferBufferBytes` accepts 5–64 MiB; `0` selects the 8 MiB default. The [instance guide](/docs/guides/operations/instance-management#inspect-the-active-identity) reads the current object before updating it.",
   "PUT /akoflow-api/environments/{environmentId}/": "Read `GET /environments/{environmentId}/` before editing and send a complete environment definition; `environment.id` must match the path ID. Replacement returns `404` when the environment does not exist and can return `422` when references prevent replacing its inventory. Use new environment and version IDs for revised inventory already used by scopes or plans; see the [environment YAML reference](/docs/reference/environment-yaml#compatibility-and-common-failures).",
-  "POST /akoflow-api/instance-activations/{instanceId}/": "Use `default` to return to the writable instance or an ID returned by `POST /instances/import/` to open a read-only snapshot. The response is `202 Accepted` with `instance` and `restarting`; when `restarting` is false, restart the server manually. See [instance management](/docs/guides/operations/instance-management#import-and-open-a-read-only-snapshot).",
+  "POST /akoflow-api/instance-activations/{instanceId}/": "Use `default` to return to the writable instance or an ID returned by `POST /instances/import/` to open a read-only snapshot. See [instance management](/docs/guides/operations/instance-management#import-and-open-a-read-only-snapshot) for the switching procedure.",
   "POST /akoflow-api/instances/import/": "Send a ZIP archive as the request body with `Content-Type: application/zip`, not JSON. The archive must be a compatible AkôFlow export with its redaction marker, valid database checksum and schema, no symbolic links, at most 100,000 entries, at most 8 GiB compressed and 64 GiB expanded. Success returns `201 Created` with the new read-only snapshot `id`; import does not replace the active instance. See [instance management](/docs/guides/operations/instance-management#import-and-open-a-read-only-snapshot).",
   "PUT /akoflow-api/user-preferences/{clientId}/": "The path `clientId` must be 8–128 characters and overrides any body `clientId`. Send `theme` as `light` or `dark`; `animationsEnabled` is optional and defaults to false when omitted. The route saves preferences for this client profile and returns the stored record with `200 OK`; invalid ID or theme returns `422`. See [Personal preferences](/docs/guides/operations/personal-preferences).",
   "POST /akoflow-api/factory-reset/": "No JSON body is required. This permanently clears user catalog/database records while retaining the schema and system instance identity; the server also removes managed Kubernetes token files. Success is `204 No Content`. The database reset runs before token-directory cleanup, so a `422` from that cleanup can arrive after the catalog has already been cleared. Export a snapshot first; see [instance management](/docs/guides/operations/instance-management#factory-reset).",

@@ -181,6 +181,8 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 
 136. **P1 resolved in execution detail response coverage:** `GET /execution-runs/{runId}/` previously displayed `run: {}` and five arrays, hiding the run's key status/plan/timing fields and the conditional cloud/data families. The generated example now shows the core `ExecutionRun` fields and the response note names `infrastructureRuns`, `dataObjects`, `dataLocations`, `artifactMaterializations`, and `artifactTransferRuns` with their configuration conditions. The execution guide uses the same language. Handler map assembly, domain JSON fields, and the existing execution-detail HTTP test were checked. This narrows the response audit; it does not validate every nested array contract.
 
+137. **P1 resolved across four map response examples:** the planning-session detail, instance activation, provenance entity catalog, and provenance SQL schema pages showed empty nested objects or lists that hid the response fields readers need next. Their generated examples now show source-checked session/algorithm-run fields, active-instance identity and restart flag, one catalog entity with a field and link, and one safe SQL table with columns. Notes identify selected-plan fields as conditional, imported snapshots as read-only, and both provenance examples as partial catalogs. Handler, domain, catalog, schema, and instance-archive source were checked; the remaining 125-endpoint field audit is still open.
+
 ## Page inventory
 
 | Page | Current pass | Next review |

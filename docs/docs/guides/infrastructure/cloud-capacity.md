@@ -4,7 +4,7 @@ title: Configure cloud capacity
 
 Use this guide after connecting a Google Cloud environment. Choose a machine from its catalog, save a capacity target for planning, and provision an instance when a run needs it. Machine configurations let you prepare the instance after provisioning.
 
-For the API commands on this page, complete [API connection setup](../../tutorials/api-access) first.
+For the API commands on this page, complete [API connection setup](../../tutorials/api-access) and register `research-gcp` through the [Google Cloud connection tutorial](../../tutorials/connect-cloud) first. Run the commands in the same Bash session.
 
 ## Provider support in v1.0
 
@@ -27,10 +27,10 @@ Open a cloud environment and select **Cloud capacity**. If no cached catalog exi
 
 ```bash
 curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
-  -X POST "$AKOFLOW_API_URL/environments/gcp-lab/cloud-catalog/refresh/"
+  -X POST "$AKOFLOW_API_URL/environments/research-gcp/cloud-catalog/refresh/"
 
 curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
-  "$AKOFLOW_API_URL/environments/gcp-lab/cloud-catalog/"
+  "$AKOFLOW_API_URL/environments/research-gcp/cloud-catalog/"
 ```
 
 The GET endpoint returns `404` until a catalog has been synchronized. Provider credentials must already be stored and referenced by the cloud environment connection.
@@ -51,7 +51,7 @@ If you need a machine configuration, [create its version](#create-and-version-a-
 ```bash
 curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -H 'Content-Type: application/json' -X POST \
-  "$AKOFLOW_API_URL/environments/gcp-lab/cloud-capacity-targets/" \
+  "$AKOFLOW_API_URL/environments/research-gcp/cloud-capacity-targets/" \
   -d '{
     "name":"E2 standard worker",
     "provider":"gcp",
@@ -71,10 +71,12 @@ curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
       "network":"default",
       "sshSourceRanges":["<approved-daemon-or-bastion-cidr>"]
     }
-  }'
+  }' -o cloud-target.json || exit 1
+
+AKOFLOW_CAPACITY_TARGET_ID=$(jq -er '.id' cloud-target.json) || exit 1
 ```
 
-Replace the CIDR placeholder with the approved daemon or bastion range before sending this request. The current Terraform target otherwise defaults SSH ingress to `0.0.0.0/0`. The server supplies the target ID and environment ID when omitted, enables the target, and creates a schedulable capacity record; no VM is created yet. Machine/image identifiers must come from the synchronized catalog.
+Replace the CIDR placeholder with the approved daemon or bastion range before sending this request. The current Terraform target otherwise defaults SSH ingress to `0.0.0.0/0`. The server supplies the target ID and environment ID when omitted, enables the target, and creates a schedulable capacity record; no VM is created yet. The command saves the returned ID for provisioning. Machine/image identifiers must come from the synchronized catalog.
 
 ## Create and version a machine configuration
 
@@ -117,15 +119,19 @@ Open a cloud resource or the environment **Provisioning** tab and start provisio
 ### Using the API
 
 ```bash
-curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
-  -H 'Content-Type: application/json' -X POST \
-  "$AKOFLOW_API_URL/environments/gcp-lab/cloud-provisioning/" \
-  -d '{"capacityTargetId":"<capacity-target-id>"}'
+set -o pipefail
+jq -n --arg id "$AKOFLOW_CAPACITY_TARGET_ID" '{capacityTargetId:$id}' | \
+  curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+    -H 'Content-Type: application/json' --data-binary @- \
+    "$AKOFLOW_API_URL/environments/research-gcp/cloud-provisioning/" \
+    -o cloud-operation.json || exit 1
+
+AKOFLOW_CLOUD_OPERATION_ID=$(jq -er '.id' cloud-operation.json) || exit 1
 
 # Inspect the operation
 curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" "$AKOFLOW_API_URL/cloud-operations/"
-curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" "$AKOFLOW_API_URL/cloud-operations/<operation-id>/"
-curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" "$AKOFLOW_API_URL/cloud-operations/<operation-id>/events/"
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" "$AKOFLOW_API_URL/cloud-operations/$AKOFLOW_CLOUD_OPERATION_ID/"
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" "$AKOFLOW_API_URL/cloud-operations/$AKOFLOW_CLOUD_OPERATION_ID/events/"
 ```
 
 The provisioning request queues an operation; it does not wait for the instance to become ready. Lifecycle endpoints also exist for configure, validate, start, stop, and destroy. Before destructive lifecycle actions, inspect the instance and active operation state in Desktop or through the API.

@@ -1,0 +1,11 @@
+{
+  "id": "plafrim-kind-cloud-roundtrip-network-v1",
+  "name": "PlaFRIM Kind Cloud round trip links",
+  "version": 1,
+  "executionScopeId": "plafrim-kind-cloud-roundtrip-scope-v1",
+  "links": [
+    {"id":"plafrim-kind-link","sourceResourceId":"hpc-environment-ssh-connection-partition-testing","targetResourceId":"kind-worker","bandwidthBitsPerSecond":100000000,"latencySeconds":0.05,"pricePerByte":0,"bidirectional":true},
+    {"id":"kind-cloud-link","sourceResourceId":"kind-worker","targetResourceId":"goal-gcp-worker-e2-small","bandwidthBitsPerSecond":100000000,"latencySeconds":0.05,"pricePerByte":0,"bidirectional":true},
+    {"id":"cloud-plafrim-link","sourceResourceId":"goal-gcp-worker-e2-small","targetResourceId":"hpc-environment-ssh-connection-partition-testing","bandwidthBitsPerSecond":100000000,"latencySeconds":0.05,"pricePerByte":0,"bidirectional":true}
+  ]
+}

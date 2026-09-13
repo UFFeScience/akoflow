@@ -7,7 +7,7 @@ import {
 } from "@docusaurus/theme-common/internal";
 import {translate} from "@docusaurus/Translate";
 import DocSidebarItems from "@theme/DocSidebarItems";
-import SearchBar from "@theme/SearchBar";
+import SidebarSearch from "@site/src/components/SidebarSearch";
 import ColorModeToggle from "@theme/Navbar/ColorModeToggle";
 import type {Props} from "@theme/DocSidebar/Desktop/Content";
 
@@ -49,7 +49,7 @@ export default function DocSidebarDesktopContent({
       )}
     >
       <div className={styles.tools}>
-        <SearchBar />
+        <SidebarSearch />
         <ColorModeToggle className={styles.colorMode} />
       </div>
       <ul className={clsx(ThemeClassNames.docs.docSidebarMenu, "menu__list")}>

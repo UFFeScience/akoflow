@@ -1,0 +1,15 @@
+plan:
+  id: plafrim-kind-cloud-roundtrip-plan-v2
+  workflowVersionId: plafrim-kind-cloud-roundtrip-v2-v1
+  executionScopeId: plafrim-kind-cloud-roundtrip-scope-v1
+  networkTopologyId: plafrim-kind-cloud-roundtrip-network-v1
+  source: imported
+  algorithm: manual
+  algorithmVersion: "1"
+  objective: custom
+  predicted: {makespanSeconds: 300, cost: 0.01, feasible: true}
+  assignments:
+    - {id: roundtrip-v2-assignment-1, activityId: plafrim-kind-cloud-roundtrip-v2-plafrim-source, resourceId: hpc-environment-ssh-connection-partition-testing, orderOnResource: 0, predictedStartAt: 0, predictedFinishAt: 20, predictedRuntimeSeconds: 20, metadata: {runtimeId: hpc-environment-slurm}}
+    - {id: roundtrip-v2-assignment-2, activityId: plafrim-kind-cloud-roundtrip-v2-kind-relay, resourceId: kind-worker, orderOnResource: 0, predictedStartAt: 20, predictedFinishAt: 35, predictedRuntimeSeconds: 15, metadata: {runtimeId: kind-kubernetes}}
+    - {id: roundtrip-v2-assignment-3, activityId: plafrim-kind-cloud-roundtrip-v2-cloud-relay, resourceId: goal-gcp-worker-e2-small, orderOnResource: 0, predictedStartAt: 130, predictedFinishAt: 140, predictedRuntimeSeconds: 10, metadata: {runtimeId: goal-gcp-worker-cloud}}
+    - {id: roundtrip-v2-assignment-4, activityId: plafrim-kind-cloud-roundtrip-v2-plafrim-finish, resourceId: hpc-environment-ssh-connection-partition-testing, orderOnResource: 1, predictedStartAt: 140, predictedFinishAt: 160, predictedRuntimeSeconds: 20, metadata: {runtimeId: hpc-environment-slurm}}

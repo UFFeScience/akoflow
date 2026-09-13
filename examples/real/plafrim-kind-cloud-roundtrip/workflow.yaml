@@ -1,0 +1,44 @@
+name: plafrim-kind-cloud-roundtrip-v2
+spec:
+  namespace: examples
+  image: docker.io/library/busybox:1.36
+  activities:
+    - name: plafrim-source
+      runtime: slurm
+      cpuLimit: "1"
+      memoryLimit: 16Mi
+      command:
+        entrypoint: sh
+        arguments: ["-c", "printf 'akoflow-plafrim-kind-cloud-plafrim-v1\\n' > payload.txt; sha256sum payload.txt > payload.sha256"]
+    - name: kind-relay
+      runtime: kubernetes
+      dependsOn: [plafrim-source]
+      cpuLimit: "0.1"
+      memoryLimit: 16Mi
+      run: |
+        set -eu
+        sha256sum -c payload.sha256
+        grep -qx 'akoflow-plafrim-kind-cloud-plafrim-v1' payload.txt
+        printf 'kind verified\n' > kind.receipt
+    - name: cloud-relay
+      runtime: cloud
+      dependsOn: [kind-relay]
+      cpuLimit: "0.1"
+      memoryLimit: 16Mi
+      run: |
+        set -eu
+        sha256sum -c payload.sha256
+        grep -qx 'kind verified' kind.receipt
+        printf 'cloud verified\n' > cloud.receipt
+    - name: plafrim-finish
+      runtime: slurm
+      dependsOn: [cloud-relay]
+      cpuLimit: "1"
+      memoryLimit: 16Mi
+      command:
+        entrypoint: sh
+        arguments: ["-c", "sha256sum -c payload.sha256 && grep -qx 'kind verified' kind.receipt && grep -qx 'cloud verified' cloud.receipt && printf 'roundtrip verified\\n' > final.receipt"]
+  dataDependencies:
+    - {producerActivity: plafrim-source, consumerActivity: kind-relay, logicalName: payload.txt, sizeBytes: 40}
+    - {producerActivity: kind-relay, consumerActivity: cloud-relay, logicalName: kind.receipt, sizeBytes: 14}
+    - {producerActivity: cloud-relay, consumerActivity: plafrim-finish, logicalName: cloud.receipt, sizeBytes: 15}

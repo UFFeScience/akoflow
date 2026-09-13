@@ -1,0 +1,6 @@
+{
+  "id": "plafrim-kind-cloud-roundtrip-scope-v1",
+  "name": "PlaFRIM Kind Cloud round trip",
+  "networkTopologyId": "plafrim-kind-cloud-roundtrip-network-v1",
+  "environmentVersionIds": ["hpc-environment-initial", "kind-akoflow-v1", "goal-gcp-worker-v1"]
+}

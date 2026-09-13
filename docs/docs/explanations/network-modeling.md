@@ -8,7 +8,7 @@ description: How data dependencies, topology links, routes, and observed transfe
 
 import useBaseUrl from '@docusaurus/useBaseUrl';
 
-Network modeling lets planning distinguish a local dependency from data that must cross a resource boundary. It starts with bytes declared by the workflow, but its result depends on the selected resource assignments and the directed topology included in the execution scope.
+Network modeling lets planning distinguish a local dependency from data that must cross a resource boundary. It starts with bytes declared by the workflow, but its result depends on the selected resource assignments and the directed topology chosen for the planning session.
 
 This is an explanation of the model. Use [SimGrid modeling](../guides/infrastructure/simgrid) to configure bandwidth and latency, or the [topology reference](../reference/execution-scopes-and-topologies) for the exact document fields.
 

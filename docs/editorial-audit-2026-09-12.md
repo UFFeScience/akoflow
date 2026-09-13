@@ -175,6 +175,8 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 
 133. **P2 resolved in four long prose blocks:** a length scan across the Markdown/MDX documentation found five non-code paragraphs over 85 words. Four were split or shortened after review. The Cloud target note now separates required input, provider choices, and saved outcome/failure recovery without removing its checked prerequisites; the generator remains the source of truth. The documentation production plan states what local checks cover in shorter prose. The environment YAML reference separates binding fields from S3/GCS limitations, and the planning-state reference separates algorithm lifecycle from progress fields. The fifth is a dense schedule-import request contract left intact for field-level verification. The final all-page plain-language pass remains open.
 
+134. **P1 resolved in the network explanation:** a cross-read of the five explanation pages and the scope/topology reference found one incorrect opening premise: the network page said the directed topology is included in the execution scope. The scope may omit `networkTopologyId`; a planning session supplies its own topology ID, while a topology records its scope ID. The opening now says the topology is chosen for the planning session, without introducing the optional-field detail before the reader needs it. Source checks covered the planning-session validator and topology repository. The final all-page pass remains open.
+
 ## Page inventory
 
 | Page | Current pass | Next review |
@@ -186,7 +188,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `downloads.md` | Second read; platform limits and verification are explicit, and latest release was `v1.0.8` on 2026-09-12 | Recheck release links when version changes |
 | `engine.md` | Second read; implementation details remain in the developer section | Recheck claims against event-loop code |
 | `explanations/evidence-and-provenance.md` | Third read; real runtime handles separated from simulated task evidence | Recheck against execution evidence after P0 fixes |
-| `explanations/network-modeling.md` | Third read; one-byte route choice now states its large-payload implication directly | Recheck transfer claims against execution paths |
+| `explanations/network-modeling.md` | Fourth read; opening now names the topology chosen for the planning session; one-byte route choice remains qualified | Recheck transfer claims against execution paths |
 | `explanations/observed-timing.md` | Third read; opening now leads with makespan versus accumulated time | Recheck metrics against trace aggregation |
 | `explanations/planning.md` | Third read; candidate rank follows session completion and selection saves a plan without starting a run | Recheck planning claims against coordinator |
 | `explanations/prism-and-heft.md` | Third read; comparison headings now describe observed-run and experiment tasks | Recheck algorithm claims against source |

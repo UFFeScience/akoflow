@@ -5,9 +5,9 @@ description: Configure one API base URL and token convention for infrastructure 
 ---
 
 Use this setup for the API path in the HPC and Google Cloud tutorials. You need
-Bash, `curl`, `jq`, and a daemon whose address and credential you manage.
+Bash, `curl`, `jq`, and an AkôFlow server whose address and credential you manage.
 The [server installation guide](../guides/operations/server-instance) explains
-how to deploy one and choose its token. A development daemon is also suitable
+how to deploy one and choose its token. A development server is also suitable
 when its connection settings are known.
 
 Set the base URL **including** `/akoflow-api`, without a trailing slash:
@@ -22,8 +22,8 @@ export AKOFLOW_API_TOKEN
 `pipefail` keeps a failed HTTP request visible when its output is piped to
 `jq`. Stop if a command fails before creating dependent records.
 
-Replace the origin and port with your daemon's settings. Press Enter without a
-token only for an explicitly tokenless local daemon. For packaged Desktop,
+Replace the origin and port with your server's settings. Press Enter without a
+token only for a local server configured without one. For packaged Desktop,
 connection details are managed by its proxy; completing the graphical tutorials
 does not require extracting its internal credential.
 
@@ -38,7 +38,7 @@ curl --fail-with-body \
 
 The first response must report `server.available: true`; the second must return
 a catalog, which may be empty. A `401` means the supplied credential was rejected.
-A `403` may indicate that a tokenless daemon rejects non-loopback access.
+A `403` may indicate that a server without a token rejects non-loopback access.
 
 Use a fresh tutorial identity. The examples use `research-hpc` and `research-gcp`;
 if those already exist, inspect them before continuing instead of resubmitting

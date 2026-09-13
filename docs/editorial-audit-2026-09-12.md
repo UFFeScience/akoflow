@@ -193,6 +193,8 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 
 142. **P1 resolved in the entry narrative:** Home and Getting Started offered plan comparison before the first Desktop path, which makes a manual plan. They now lead with making and executing a plan, leaving comparison as a later choice. The first local-run introduction now promises the output-file record and checksum actually visible in Desktop, rather than suggesting the file bytes appear in the UI. The Home metadata describes the scientific-workflow task. Installation and Interface Tour were reread as part of the same path; no additional P0/P1 prose issue was found in this pass. Clean-host and cross-platform runs remain unverified.
 
+143. **P2 resolved in basic-path terminology:** Getting Started, Installation, API connection setup, and the first SimGrid tutorial called the AkôFlow server a `daemon` in prose where the reader only needs its address, readiness, or log. Those passages now use `server`; exact checkup labels such as **AkôFlow daemon** remain unchanged. This keeps implementation vocabulary out of the entry path without hiding operational prerequisites. The larger user-guide terminology pass remains open.
+
 ## Page inventory
 
 | Page | Current pass | Next review |
@@ -208,7 +210,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `explanations/observed-timing.md` | Third read; opening now leads with makespan versus accumulated time | Recheck metrics against trace aggregation |
 | `explanations/planning.md` | Third read; candidate rank follows session completion and selection saves a plan without starting a run | Recheck planning claims against coordinator |
 | `explanations/prism-and-heft.md` | Third read; comparison headings now describe observed-run and experiment tasks | Recheck algorithm claims against source |
-| `getting-started.md` | Fifth entry-path read; a manual first plan precedes optional comparison; support limits remain explicit | Recheck the entry flow on a clean supported host |
+| `getting-started.md` | Sixth read; a manual first plan precedes comparison and server terminology stays user-facing | Recheck the entry flow on a clean supported host |
 | `guides/data/artifacts.md` | Short choice page preserving the old URL and routing storage, build, and recorded-location tasks | Check destinations in navigation |
 | `guides/data/build-executable.md` | Third read; build-context upload now fails on HTTP errors; asynchronous Docker/SIF flow remains | Verify a live registry pull and SIF conversion |
 | `guides/data/artifact-locations.md` | Cross-page read; catalog and run observations are explicitly saved records, not live byte checks | Recheck materialization payloads after P0 contracts fix |
@@ -238,9 +240,9 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `guides/operations/troubleshooting.md` | Fifth read; evidence collection now separates run/operation records, Provenance, and actual Audit emitters | Recheck other diagnostic claims after P0 fixes |
 | `guides/workflows/definitions.md` | Third read; API list, detail, and export now fail on HTTP errors | Recheck payload against importer after P0 contracts fix |
 | `guides/workflows/executions.md` | Fourth read; run detail now mentions conditional infrastructure/data/artifact families and API requests fail on HTTP errors | Recheck other runtimes against their own guides |
-| `guides/workflows/first-run.md` | Claim reread; fixed-plan submission is described as validation and save, without falsely promising prediction recalculation | Keep the SimGrid API example aligned with its versioned bundle |
+| `guides/workflows/first-run.md` | Terminology reread; server address/readiness/log language is consistent; fixed-plan submission remains validation and save | Keep the SimGrid API example aligned with its versioned bundle |
 | `guides/workflows/planning.md` | Third read; algorithm and session/candidate reads now fail on HTTP errors | Verify automatic Desktop planning flow |
-| `installation.md` | Third entry-path read; duplicate Windows asset caveat removed; Desktop checkup remains central | Verify clean-host and cross-platform installation |
+| `installation.md` | Fourth entry-path read; local server language is clear while exact checkup labels remain; Desktop checkup stays central | Verify clean-host and cross-platform installation |
 | `internal/workflow-spec.md` | Second read; lead example now uses one execution mode and marks script paths as prerequisites | Check every field contract against current importer |
 | `modules.md` | Developer detail remains in the architecture section; planning candidates now distinguish shared inputs from algorithm-specific predictions | Recheck claims against daemon composition |
 | `reference/api-overview.md` | Seventh read; Audit route label now names its actual emitters; 124 listed method/path pairs match the current Go router | Check field and response contracts against current handlers and schemas |
@@ -256,7 +258,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `showcase/network-fanout.mdx` | Second read; model-specific estimate phrased directly; authenticated polling now fails on HTTP errors | Check result against pinned bundle |
 | `showcase/parallel-50-core.mdx` | Second read; compute-capacity purpose stated directly; authenticated polling now fails on HTTP errors | Check result against pinned bundle |
 | `showcase/slurm-local-fixture.mdx` | Second read; local adapter evidence and real-cluster limits stated once; versioned checkout and optional Desktop inspection retained | Check result against pinned bundle |
-| `tutorials/api-access.md` | Third read; API-only purpose, prerequisites and token limits are explicit; Bash blocks parsed | Recheck commands after P0 contracts fix |
+| `tutorials/api-access.md` | Fourth read; API-only prerequisites and token limits use server language; Bash blocks parsed | Recheck commands after P0 contracts fix |
 | `tutorials/connect-cloud.md` | Second read; GCP task and verified result lead the page; valid access is separate from nonempty machine/image/disk choices | Validate with disposable GCP account |
 | `tutorials/register-hpc.md` | Second read; saved connection and inventory lead the page; compute-workspace access is deferred to a batch probe | Validate on an approved institutional cluster |
 

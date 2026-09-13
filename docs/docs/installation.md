@@ -190,7 +190,7 @@ passed, and discovery has completed. No workflow has run yet.
 If you chose **Set up later**, open **Overview** and check that the sidebar
 shows **Connected**. Then open **Infrastructure → Environments**. An empty catalog
 is expected until you register an environment; the connection indicator confirms
-only that Desktop reached its local daemon.
+only that Desktop reached its local AkôFlow server.
 
 ![Overview after first launch with the local AkôFlow service connected](../static/img/interface/onboarding/installation-result.png)
 

@@ -11,8 +11,8 @@ The example imports a fixed plan so the first result is reproducible. After it s
 
 ## Before you begin
 
-You need Git, Bash, `curl`, `jq`, and a daemon with the SimGrid runner available.
-Complete [API connection setup](../../tutorials/api-access) first, using a daemon
+You need Git, Bash, `curl`, `jq`, and an AkôFlow server with the SimGrid runner available.
+Complete [API connection setup](../../tutorials/api-access) first, using a server
 whose URL and token you manage. The graphical Desktop setup does not expose a
 token for these commands; use the [server installation](../operations/server-instance)
 if you need a separately managed API endpoint.
@@ -28,7 +28,7 @@ If you already have a matching checkout, enter that repository instead. Run the
 commands below in the same Bash session where you configured `AKOFLOW_API_URL`
 and `AKOFLOW_API_TOKEN`.
 
-Check the daemon before registering anything:
+Check the server before registering anything:
 
 ```bash
 curl --fail-with-body \
@@ -36,7 +36,7 @@ curl --fail-with-body \
   "$AKOFLOW_API_URL/preflight/" | jq
 ```
 
-Continue only when `server.available` is `true`. For this tutorial, the SimGrid runner must also be present in the daemon container or configured with `AKOFLOW_SIMGRID_BINARY`.
+Continue only when `server.available` is `true`. For this tutorial, the SimGrid runner must also be present in the server container or configured with `AKOFLOW_SIMGRID_BINARY`.
 
 :::note Fresh identifiers
 The files use stable IDs such as `simulation-example` and `simulation-example-run-v1`. Run them against a fresh instance. If those IDs already exist, use another instance or change the IDs consistently across all six files; repeating only part of the sequence returns `422` or a foreign-key error.
@@ -233,11 +233,11 @@ The run is complete only when the header says `completed` and the activity summa
 
 | Failure                                                 | Cause and recovery                                                                                                                                               |
 | ------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `401 Unauthorized`                                      | The daemon requires a token. Set `AKOFLOW_API_TOKEN` and keep the `Authorization` header.                                                                        |
+| `401 Unauthorized`                                      | The server requires a token. Set `AKOFLOW_API_TOKEN` and keep the `Authorization` header.                                                                        |
 | `422` while creating an object                          | The stable ID probably already exists, or an earlier dependency was not created. Use a fresh instance or update every related ID consistently.                   |
 | `FOREIGN KEY constraint failed` while creating the plan | An assignment activity ID does not match the registered workflow version. Use the complete files from the same repository revision.                              |
 | `akoflow-simgrid-runner: executable file not found`     | Install/build the runner and set `AKOFLOW_SIMGRID_BINARY`, or use the server image that includes it.                                                             |
 | Completed run has zero transferred bytes                | The workflow lacks data dependencies or producer and consumer were placed on the same resource. Recheck `workflow.yaml`, the plan assignments, and topology IDs. |
-| Run remains `pending`                                   | Inspect the run events and daemon log; the asynchronous command may have failed before the simulation process started.                                           |
+| Run remains `pending`                                   | Inspect the run events and server log; the asynchronous command may have failed before the simulation process started.                                           |
 
 Next, use [the edge-to-cloud Showcase](../../showcase/edge-cloud-simulation) to inspect the same model visually, or [Plan a workflow](./planning.md) to compare PRISM Cost, PRISM Time, and HEFT.

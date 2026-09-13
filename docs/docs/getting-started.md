@@ -53,4 +53,4 @@ Read [Core concepts](./concepts) for workflow, environment, plan, run, artifacts
 
 ## When something fails
 
-Use [Troubleshooting](./guides/operations/troubleshooting) for daemon readiness, authentication, Docker and BuildKit checks, connection failures, and diagnostic collection. For remote targets, validate credentials and the environment connection before debugging the workflow itself.
+Use [Troubleshooting](./guides/operations/troubleshooting) for server readiness, authentication, Docker and BuildKit checks, connection failures, and diagnostic collection. For remote targets, validate credentials and the environment connection before debugging the workflow itself.

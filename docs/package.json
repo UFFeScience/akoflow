@@ -17,7 +17,8 @@
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
     "typecheck": "tsc",
-    "check:links": "node scripts/check-links.mjs"
+    "check:links": "node scripts/check-links.mjs",
+    "check:shell": "node scripts/check-shell-examples.mjs"
   },
   "dependencies": {
     "@docusaurus/core": "3.8.1",

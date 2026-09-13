@@ -111,13 +111,15 @@ curl --fail-with-body \
   -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -H 'Content-Type: application/zip' \
   --data-binary @akoflow-instance.zip \
-  "$AKOFLOW_API_URL/instances/import/"
+  "$AKOFLOW_API_URL/instances/import/" \
+  -o imported-instance.json || exit 1
+
+SNAPSHOT_ID=$(jq -er '.id' imported-instance.json) || exit 1
 
 curl --fail-with-body \
   -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   "$AKOFLOW_API_URL/instances/"
 
-SNAPSHOT_ID='<id returned by import>'
 curl --fail-with-body \
   -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -X POST "$AKOFLOW_API_URL/instance-activations/$SNAPSHOT_ID/"

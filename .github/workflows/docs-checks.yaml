@@ -49,6 +49,8 @@ jobs:
         run: npm run build --prefix docs
       - name: Verify repository-owned documentation links
         run: npm run check:links --prefix docs
+      - name: Check documentation shell examples
+        run: npm run check:shell --prefix docs
       - name: Upload GitHub Pages artifact
         if: github.ref == 'refs/heads/main'
         uses: actions/upload-pages-artifact@v3

@@ -59,6 +59,7 @@ Run the repository-owned link check after a documentation build:
 ```bash
 npm run build --prefix docs
 npm run check:links --prefix docs
+npm run check:shell --prefix docs
 ```
 
 The check rejects a missing internal documentation route, a missing file below
@@ -66,8 +67,10 @@ The check rejects a missing internal documentation route, a missing file below
 counterpart under `examples/`. It intentionally does not make network requests
 or judge third-party URLs: availability of external services belongs to the
 reader's environment, while these three classes are artifacts maintained in
-this repository. GitHub Actions runs the same type-check, build, and link check
-for documentation or example changes.
+this repository. The shell check parses fenced Bash/sh examples without running
+them; it cannot validate the named files, API behavior, or commands embedded in
+JSX. GitHub Actions runs the type-check, build, link check, and shell check for
+documentation or example changes.
 
 ## Media naming
 

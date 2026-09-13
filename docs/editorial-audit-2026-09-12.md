@@ -228,6 +228,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 166. **P1 resolved in plan readiness language:** the planning explanation's metadata said a selected placement becomes executable, and the guide/reference could let readers treat `feasible` or a validated imported plan as a runtime readiness check. The plan validator checks workflow/placement constraints but not runtime bindings; the execution supervisor checks those before a run starts. The explanation, planning guide, and state reference now make that distinction at selection and import.
 167. **P2 resolved in first-user narrative:** the Home subheadline introduced provenance before the first workflow, while the verified local tutorial ends with an observed output-file record and checksum. Home now promises only the result inspection used on that path; Provenance remains a follow-on guide. At 390 px, browser clicks reached Home → Getting Started → Installation → First local workflow with no JavaScript errors or horizontal overflow.
 168. **P0 resolved in the HPC path:** the SLURM guide warned readers to keep the login node unschedulable, but its own YAML excerpt set `slurm-login-node` to `schedulable: true`. The excerpt now uses `false`, matching the current repository example and the guide's batch-allocation instructions. A real institutional run still requires site access and approval.
+169. **P0 resolved in SSH trust language:** the HPC guide called host keys recorded by the first connection test trusted, while the SSH executor uses `StrictHostKeyChecking=accept-new`, which saves an unknown key without checking it against an administrator's fingerprint. The guide now requires that comparison for the login host and gateways, and the registration tutorial distinguishes the service-key fingerprint returned by the API from the remote host-key fingerprint.
 
 ## Page inventory
 
@@ -258,7 +259,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `guides/infrastructure/environments.md` | Plain-language/claim pass; local API definition persisted in a one-off repository test, and in-use revision language matches the API | Recheck remote flows with provider evidence |
 | `guides/infrastructure/execution-scopes.md` | Third read; API explanation marks scope topology ID optional and session topology selection explicit | Recheck API payloads after P0 contracts fix |
 | `guides/infrastructure/gcp.md` | Third read; target zone choice now matches Terraform's fixed-or-first-active behavior | Check provider claims against disposable-project evidence |
-| `guides/infrastructure/hpc-slurm.md` | Fourth read; login-node YAML now matches the unschedulable institutional guidance and current example | Check provider claims against real cluster evidence |
+| `guides/infrastructure/hpc-slurm.md` | Fifth read; login-node YAML matches the current example and first-contact SSH host-key trust is qualified against `accept-new` | Check provider claims against real cluster evidence |
 | `guides/infrastructure/kubernetes.md` | Second cross-runtime read; real Job versus modeled-cluster choice is direct, and the token stream stays out of shell variables and files | Recheck procedure against Kind bundle and shared-cluster RBAC |
 | `guides/infrastructure/simgrid.md` | Fifth read; missing-candidate troubleshooting no longer attributes planning exclusion to runtime binding | Recheck procedure against pinned bundle |
 | `guides/infrastructure/storage.md` | Third read; opening now states unsigned S3 browsing directly; local API path remains verified | Verify remote/provider storage independently |
@@ -294,7 +295,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `showcase/slurm-local-fixture.mdx` | Second read; local adapter evidence and real-cluster limits stated once; versioned checkout and optional Desktop inspection retained | Check result against pinned bundle |
 | `tutorials/api-access.md` | Fourth read; API-only prerequisites and token limits use server language; Bash blocks parsed | Recheck commands after P0 contracts fix |
 | `tutorials/connect-cloud.md` | Second read; GCP task and verified result lead the page; valid access is separate from nonempty machine/image/disk choices | Validate with disposable GCP account |
-| `tutorials/register-hpc.md` | Second read; saved connection and inventory lead the page; compute-workspace access is deferred to a batch probe | Validate on an approved institutional cluster |
+| `tutorials/register-hpc.md` | Third read; service-key and cluster host-key fingerprints are distinguished; compute-workspace access remains a batch probe | Validate on an approved institutional cluster |
 
 ## Verification in this pass
 

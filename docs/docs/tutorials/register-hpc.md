@@ -94,6 +94,9 @@ jq '{id, publicKey, fingerprint}' hpc-key.json
 
 Authorize the returned `publicKey` through your institution's procedure before
 continuing. Keep the returned `credentialRef`; do not invent a private-key path.
+The returned `fingerprint` identifies your service key, not the cluster's host
+key. Compare the host key separately as described in the
+[HPC operator guide](../guides/infrastructure/hpc-slurm#1-create-the-ssh-credential-and-proxy-aware-connection).
 
 ### 2. Prepare the environment and test its connection
 

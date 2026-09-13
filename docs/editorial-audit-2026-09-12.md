@@ -213,6 +213,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 
 152. **P0/P1 resolved in Showcase support language:** across all seven Showcase pages, the edge–cloud simulation still called its modeled target a "cloud VM" and said it "pays" for cloud use. It now names modeled resources, transfers, and cost. The network and 50-core index cards explicitly say their machines and cores are simulated. The Kind page no longer lists provenance among the verified outputs of its recorded run; Desktop inspection mentions lineage only when the explorer is configured. The real Kind run, local direct run, and local SLURM fixture remain distinct from the SimGrid scenarios. This wording does not substitute for provider or lineage verification.
 153. **P1 resolved in developer architecture narrative:** the architecture page described an execution scope as combining environment versions with a topology, although planning sessions select the topology separately. It now gives each concept its actual role. The architecture and runtime adapter openings now state what the server and adapters do before introducing internal or legacy YAML detail; the SimGrid paragraph describes its behavior directly.
+154. **P0 resolved in execution internals:** the page implied the workflow supervisor resumes an interrupted run from persisted handles and retries a failed activity. Current code creates a new run and tracks running handles in memory; a failed activity ends that run. The page now states those limits and distinguishes the activity controller's internal `Stop` method from an unavailable workflow-run cancellation API. The opening also explains the queue without a defensive control-plane label.
 
 ## Page inventory
 
@@ -223,7 +224,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `concepts.md` | Second claim reread; plan selection is separate from execution, including diagram alt text; runtime-dependent observations stay qualified | Recheck complete new-user path |
 | `contributing/documentation-plan.md` | Fourth read; link and shell check scope now fits short paragraphs; progressive disclosure and HTTP-failing cURL checks remain explicit | Recheck contract at final audit |
 | `downloads.md` | Second read; platform limits and verification are explicit, and latest release was `v1.0.8` on 2026-09-12 | Recheck release links when version changes |
-| `engine.md` | Second read; implementation details remain in the developer section | Recheck claims against event-loop code |
+| `engine.md` | Third read; recovery, task retry, and cancellation claims corrected against supervisor/controller code | Recheck remaining queue claims against event-loop code |
 | `explanations/evidence-and-provenance.md` | Fourth read; opening routes result records to Provenance and actual Audit emitters to Audit | Recheck against execution evidence after P0 fixes |
 | `explanations/network-modeling.md` | Fourth read; opening now names the topology chosen for the planning session; one-byte route choice remains qualified | Recheck transfer claims against execution paths |
 | `explanations/observed-timing.md` | Fourth read; makespan versus accumulated time leads, and network example is linked rather than repeated | Recheck metrics against trace aggregation |

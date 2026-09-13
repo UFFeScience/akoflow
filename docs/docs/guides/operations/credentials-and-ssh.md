@@ -1,13 +1,15 @@
 ---
-title: Manage credentials and SSH service keys
-description: Store credentials with AkôFlow, assign SSH service keys, and keep private material outside workflow definitions.
+title: Manage SSH service keys
+description: Generate or import an SSH key and assign it to a saved connection.
 ---
 
-# Manage credentials and SSH service keys
+# Manage SSH service keys
 
-Use this guide when an environment needs an SSH key, Kubernetes token, or cloud credential. Store the credential in AkôFlow and use the returned reference in the connection that needs it. Keep private keys and tokens out of workflow definitions.
+Use this guide when an SSH connection needs a key managed by AkôFlow. Generate or import the key, authorize its public half on the remote host, then assign its reference to the saved connection. Keep the private key out of workflow definitions.
 
-AkôFlow returns public metadata or a credential reference when you list stored credentials; it does not return the original private key or bearer token.
+For other providers, use [Configure Kubernetes](../infrastructure/kubernetes) to store a cluster token or [Connect Google Cloud](../../tutorials/connect-cloud) to validate and store a service-account credential.
+
+AkôFlow returns public metadata and a credential reference when you list managed SSH keys; it does not return the original private key.
 
 ## Generate an SSH service key
 
@@ -123,33 +125,9 @@ The `PUT` replaces stored fields; the separate health request tests the updated
 connection. Inspect its returned status before using it. A missing connection ID
 makes `jq` fail; correct the ID rather than creating a second connection.
 
-## Kubernetes bearer tokens
+## Keep the key private
 
-The Desktop environment connection flow stores a Kubernetes token and retains only its reference. For direct API use, put the token in a file readable only by your user and set `KUBE_TOKEN_FILE` to its path. The command reads that file without placing the token in shell history:
-
-```bash
-KUBE_TOKEN_FILE="$HOME/.kube/akoflow-token"
-
-(
-  set -o pipefail
-  jq -n --arg id 'research-cluster' --rawfile token "$KUBE_TOKEN_FILE" \
-    '{id:$id, token:$token}' | curl --fail-with-body \
-    -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
-    -H 'Content-Type: application/json' \
-    -X POST "$AKOFLOW_API_URL/kubernetes-tokens/" \
-    --data-binary @-
-)
-```
-
-The response is `{"credentialRef":"..."}`. Empty/invalid values return `422`; unavailable credential storage returns `503`.
-
-## Cloud credentials
-
-Cloud onboarding sends provider credential JSON to `/cloud-credentials/` and stores only the returned reference. Validation is a separate request at `/cloud-credentials/validate/`. The [Google Cloud connection tutorial](../../tutorials/connect-cloud) shows the current supported path and its limits.
-
-## Security boundaries
-
-- Do not place private keys or tokens in workflow YAML, resource metadata, screenshots, logs, or documentation examples.
+- Do not place private keys in workflow YAML, resource metadata, screenshots, logs, or documentation examples.
 - API Bearer authentication protects requests to the server; `credentialRef` identifies the saved credential used for a provider operation.
 - Instance export redacts credentials and credential references. Imported snapshots therefore cannot reconnect until you return to a writable instance and configure credentials there.
 - If SSH uses a gateway or proxy command, authorize and validate every hop. `forwardAgent` and proxy settings are connection configuration, not substitutes for a server-managed key.

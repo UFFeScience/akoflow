@@ -7,7 +7,7 @@ description: Configure an AkôFlow instance, export and import sanitized snapsho
 
 An AkôFlow **instance** contains your environments, workflows, plans, runs, and settings. Use this guide to inspect its identity, export a snapshot, open a read-only archive, or return to the writable instance. Export a snapshot before changing versions or resetting local state.
 
-For direct API use, complete [API connection setup](../../tutorials/api-access) before running the commands below.
+For direct API use, complete [API connection setup](../../tutorials/api-access) before running the commands below. To change theme or graph animation, use [Personal preferences](./personal-preferences).
 
 ## Inspect the active identity
 

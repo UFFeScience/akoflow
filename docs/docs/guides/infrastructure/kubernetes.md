@@ -94,7 +94,7 @@ kubectl -n akoflow create token akoflow-runtime --duration=1h \
 jq -e '.credentialRef' kubernetes-reference.json
 ```
 
-Use the returned `credentialRef` in the connection you register. The Kubernetes client accepts `file:<path>` or `env:<variable>` references, or a `bearerToken` in connection configuration. The daemon-managed file reference keeps the token out of the versioned environment YAML. See [credentials and SSH service keys](../operations/credentials-and-ssh) for the daemon-side credential flow.
+Use the returned `credentialRef` in the connection you register. The Kubernetes client accepts `file:<path>` or `env:<variable>` references, or a `bearerToken` in connection configuration. The daemon-managed file reference keeps the token out of the versioned environment YAML.
 
 For a production cluster, provide the API server certificate through `configuration.caFile`. `insecureSkipTlsVerify: true` is appropriate for the disposable Kind example only; do not copy it to a trusted cluster configuration.
 

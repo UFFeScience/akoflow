@@ -21,7 +21,7 @@ The YAML blocks below are excerpts for discussion. Use the linked versioned file
 
 ## 1. Create the SSH credential and proxy-aware connection
 
-Create or import a service key using [Credentials and SSH service keys](../operations/credentials-and-ssh), then authorize its public key on the login node and any gateway. Store the returned `credentialRef` in the connection; never paste the private key into an environment YAML.
+Create or import a service key using [Manage SSH service keys](../operations/credentials-and-ssh), then authorize its public key on the login node and any gateway. Store the returned `credentialRef` in the connection; never paste the private key into an environment YAML.
 
 For a remote cluster, use `type: ssh`. Put the SSH port in `configuration.port` and the login host name in `endpoint`; AkôFlow uses this connection for health checks, discovery, runs, artifacts, and the terminal. Set the fields below in the [HPC registration template](../../tutorials/register-hpc), using the credential reference returned by key registration.
 
@@ -172,4 +172,4 @@ The interactive console uses the same connection and trust route. Selecting a pa
 | Status looks stale after completion | Check the sentinel/log path and wait for `sacct`; AkôFlow preserves a warning rather than converting missing accounting data into a false failure. |
 | Interactive allocation remains after closing the browser view | Close the AkôFlow console session explicitly; it owns the `srun` allocation and cleanup path. |
 
-Related material: [Credentials and SSH service keys](../operations/credentials-and-ssh), [interactive console and commands](../operations/interactive-console), [execution scopes](./execution-scopes), and [storage](./storage).
+Related material: [SSH service keys](../operations/credentials-and-ssh), [interactive console and commands](../operations/interactive-console), [execution scopes](./execution-scopes), and [storage](./storage).

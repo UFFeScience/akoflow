@@ -34,7 +34,7 @@ Open **Settings → SSH service keys**. Under **Register a service key**, enter
 `research-hpc` and choose **Generate key**. Copy the public key and have it
 authorized for your account on the login host and required gateways. If the
 institution requires an existing key, use the separate import action described
-in [Credentials and SSH](../guides/operations/credentials-and-ssh).
+in [Manage SSH service keys](../guides/operations/credentials-and-ssh).
 
 ![SSH service keys settings with import and generation actions](../../static/img/interface/onboarding/ssh-service-keys.png)
 

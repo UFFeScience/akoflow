@@ -60,8 +60,8 @@ The `/network` and `/network/new` routes exist in Desktop, but the current sideb
 | `/provenance` | Explore entities, SQL, and lineage | `/provenance/` | [Trace a result](../guides/data/provenance) |
 | `/audit` | Search operational history | `/audit-events/` | [Inspect audit events](../guides/data/audit-events) |
 | `/console` | Open interactive terminal sessions | `/console-commands/`, `/console-sessions/` | [Interactive console](../guides/operations/interactive-console) |
-| `/settings` | Manage identity, appearance, instance archives, and reset | Instance and preference endpoints | [Instance management](../guides/operations/instance-management) |
-| `/settings/ssh-keys` | Generate or import daemon-owned SSH keys | `/ssh-keys/` | [Credentials and SSH](../guides/operations/credentials-and-ssh) |
+| `/settings` | Manage identity, appearance, instance archives, and reset | Instance and preference endpoints | [Instance management](../guides/operations/instance-management), [Personal preferences](../guides/operations/personal-preferences) |
+| `/settings/ssh-keys` | Generate or import daemon-owned SSH keys | `/ssh-keys/` | [SSH service keys](../guides/operations/credentials-and-ssh) |
 
 ## Redirects and compatibility routes
 

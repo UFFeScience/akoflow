@@ -2,7 +2,7 @@
 
 Date: 2026-09-12. Scope: authored documentation pages in the current branch; generated API endpoint pages are reviewed through their generator and component.
 
-This is an iteration ledger, not a completion certificate. The first pass read all 51 authored pages and corrected confirmed narrative, terminology, API convention, example, and support-claim findings. A Desktop first-workflow path was added as page 52; splitting the evidence, operations, and artifact procedures now brings the authored tree to 58 pages. A final full audit, priority endpoint contracts, and external-provider validation remain open.
+This is an iteration ledger, not a completion certificate. The first pass read all 51 authored pages and corrected confirmed narrative, terminology, API convention, example, and support-claim findings. A Desktop first-workflow path was added as page 52; splitting the evidence, operations, and artifact procedures now brings the authored tree to 59 pages. A final full audit, priority endpoint contracts, and external-provider validation remain open.
 
 ## Open P0/P1 findings
 
@@ -92,6 +92,8 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 84. **P1 resolved in the console's basic path:** the console guide, troubleshooting step, and embedded connection diagram introduced control-plane and runtime-binding terms before the reader could open a terminal. They now describe the selected resource, interactive access, and its saved connection. The API section retains the runtime and connection IDs returned by session creation, where those fields matter.
 85. **P1 resolved in workflow execution scope:** the execution how-to mixed starting a planned workflow with terminal-session API details and used adapter language in its first explanation. It now explains real versus simulated workflow runs in user terms and links once to the separate console task. The result list is qualified because transfer, cost, and startup observations depend on the runtime and available evidence.
 86. **P1 resolved in artifact guide scope:** the former artifact guide combined storage browsing and file promotion, Docker/SIF builds, and artifact-location inspection. Storage already had a focused guide with the same browse and promotion procedures. The old URL is now a short choice page; a build guide and a location guide hold the remaining tasks, and sidebar, API overview, feature-coverage, and generated endpoint links point to the appropriate destination. The build no longer reports the two anchors removed from the former page.
+87. **P1 resolved in credential guide scope:** the SSH key guide repeated a Kubernetes token procedure and included a cloud-credential section, despite separate provider tutorials. The page now handles generating/importing and assigning SSH keys only, with early links to Kubernetes and Google Cloud. The Kubernetes guide retains its own streamed token request, and referring labels now match the SSH page title.
+88. **P1 resolved in instance guide scope:** appearance and graph-animation preferences were embedded between instance identity and archive export even though they are browser-profile settings. A short Personal preferences guide now owns the Desktop/API instructions; instance management, sidebar, feature coverage, and the generated preference endpoint link to it.
 
 ## Page inventory
 
@@ -121,12 +123,13 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `guides/infrastructure/execution-scopes.md` | Second read; marked illustrative IDs and linked a runnable, versioned setup | Recheck API payloads after P0 contracts fix |
 | `guides/infrastructure/gcp.md` | Cloud-path reread; API checkpoint now uses the environment created by the connection tutorial; source-audited permissions and absent live validation remain explicit | Check provider claims against disposable-project evidence |
 | `guides/infrastructure/hpc-slurm.md` | Plain-language pass; shortened the opening and resource setup after correcting the API and proxy examples | Check provider claims against real cluster evidence |
-| `guides/infrastructure/kubernetes.md` | Second read; token example now streams the secret without a shell variable, command argument, or temporary file | Recheck procedure against Kind bundle and shared-cluster RBAC |
+| `guides/infrastructure/kubernetes.md` | Credential-path reread; token example remains here and streams the secret without a shell variable, command argument, or temporary file | Recheck procedure against Kind bundle and shared-cluster RBAC |
 | `guides/infrastructure/simgrid.md` | Second read; corrected unlinked Desktop topology path and now uses shared API setup with a versioned checkout | Recheck procedure against pinned bundle |
 | `guides/infrastructure/storage.md` | Second read; Desktop capability gates match current browser; API IDs and paths are examples, promotion omits fictitious lineage IDs, and operation states match the storage coordinator | Recheck storage payloads against a real registered storage |
 | `guides/interface-tour.mdx` | Plain-language pass; removed repeated Desktop/API framing and shortened search/breadcrumb guidance; rendered page inspected at 390 × 844 | Recheck screenshots and controls during final visual audit |
-| `guides/operations/credentials-and-ssh.md` | Second read; streamed private key and token payloads from protected files; aligned reference wording with connection fields | Recheck current Desktop form and key lifecycle claims |
-| `guides/operations/instance-management.md` | Claim pass; preserves instance identity, derives imported snapshot ID, states reset partial-failure order, and matches the 100,000-entry import limit | Recheck complete snapshot behavior against a local archive |
+| `guides/operations/credentials-and-ssh.md` | Task-scope reread; now covers SSH keys and assignment only, with provider credentials routed to their own tutorials | Recheck current Desktop form and key lifecycle claims |
+| `guides/operations/instance-management.md` | Task-scope reread; browser-profile preferences moved out; identity, export/import, and reset remain grouped as instance lifecycle | Recheck complete snapshot behavior against a local archive |
+| `guides/operations/personal-preferences.md` | Focused Desktop/API instructions for theme and graph animation, moved from instance management | Recheck current Desktop controls |
 | `guides/operations/interactive-console.md` | Plain-language reread; basic path and diagram now use resource/connection terms, while API retains returned IDs; closure follows streaming/log use | Recheck session behavior against Desktop |
 | `guides/operations/search-and-notifications.md` | Short choice page preserving the old URL and distinguishing lookup from profile-local alerts | Check both destinations in navigation |
 | `guides/operations/find-records.md` | Desktop/API search procedure, result fields, limits, and empty-result recovery | Recheck UI behavior against Desktop |
@@ -160,7 +163,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 ## Verification in this pass
 
 - `npm run typecheck`, `npm run build`, `npm run check:links`, and `git diff --check` passed on the editorial branch. All 125 endpoint pages generated; targeted checks confirmed the console-command request, qualified environment and workflow responses, and all six versioned first-run links.
-- All 107 fenced Bash/sh blocks in authored documentation parsed with `bash -n` on 2026-09-13. Three duplicated blocks were removed when the combined artifact guide became a choice page. This is a syntax check, not an execution test; snippets embedded in JSX and commands outside fences need separate review.
-- The latest link check covered 442 local links/assets and 54 showcase downloads from the `v1.0.8` Git tag on 2026-09-13.
+- All 107 fenced Bash/sh blocks in authored documentation parsed with `bash -n` on 2026-09-13. Duplicated blocks were removed when the artifact and SSH guides were focused, and the preferences block moved to its own guide. This is a syntax check, not an execution test; snippets embedded in JSX and commands outside fences need separate review.
+- The latest link check covered 445 local links/assets and 54 showcase downloads from the `v1.0.8` Git tag on 2026-09-13.
 - Headless Chromium at 390 × 844 loaded Getting Started, Core concepts, the console guide, the new Desktop first-run page, and all seven Showcase pages without page errors or horizontal overflow. Every Showcase API tab displayed its v1.0.8 checkout command; the first-run page's mobile menu opened and showed its tutorial link.
 - These checks establish site integrity for this pass. They do not prove tutorial execution, provider support, or completion of the editorial gate.

@@ -55,7 +55,9 @@ Do not raise `cpuCores` merely to make a predicted makespan smaller. A 50-core r
 
 ## 2. Give each activity its own compute profile
 
-The most important input for a meaningful prediction is not the image or command: it is the work associated with each activity. Put the profile on the activity rather than applying one shared default to the workflow.
+Give each activity a compute profile based on its own work. That profile drives
+the modeled duration; a single workflow-wide default hides differences between
+activities.
 
 ```yaml title="Activity excerpt from workflow.yaml"
 activities:

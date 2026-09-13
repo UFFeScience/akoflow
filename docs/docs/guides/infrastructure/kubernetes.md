@@ -7,7 +7,9 @@ description: Configure a Kubernetes runtime, credential, namespace, resources, s
 
 Use this guide to connect an existing Kubernetes cluster so AkôFlow can run container activities as Jobs. You need access to a namespace and its service account. The [Kind real-execution Showcase](../../showcase/kubernetes-real-execution) provides a local example to try before using a shared cluster.
 
-Use this runtime for container workloads that must become Kubernetes Jobs. Do not use it to simulate a cluster: use [SimGrid](./simgrid) for modeled infrastructure. Do not put a bearer token in a workflow, plan, repository, or screenshot.
+Use this runtime when container activities must become Kubernetes Jobs. For a
+modeled cluster, use [SimGrid](./simgrid). Keep bearer tokens out of workflows,
+plans, repositories, and screenshots.
 
 ## Prerequisites
 

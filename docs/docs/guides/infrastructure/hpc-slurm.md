@@ -48,7 +48,7 @@ In Desktop, add the connection under **Infrastructure → Environments**, assign
 
 ## 2. Describe the SLURM resources
 
-The versioned [`examples/slurm/environment.yaml`](https://github.com/UFFeScience/akoflow/blob/v1.0.8/examples/slurm/environment.yaml) provides the catalog portion: runtime, cluster, partition, representative compute node, storage resources, and runtime bindings. Add a real connection like the preceding one before submitting it.
+The versioned [`examples/slurm/environment.yaml`](https://github.com/UFFeScience/akoflow/blob/v1.0.8/examples/slurm/environment.yaml) provides the catalog portion: runtime, cluster, partition, representative compute node, storage resources, and runtime bindings. Add a real connection like the preceding one before submitting it. The linked v1.0.8 file opts the login node into direct scheduling; set its `schedulable` field to `false` before institutional registration. The current repository example defaults to `false`.
 
 ```yaml title="Runtime and resource excerpt from environment.yaml"
 runtimes:
@@ -86,7 +86,7 @@ resources:
     schedulable: true
 ```
 
-Bind the runtime to the partition and compute resources. AkôFlow uses the selected partition's `providerId` for `sbatch`, or `configuration.partition` if that ID is absent. A selected `hpc_machine` becomes an `sbatch` node target. Keep the login node's capacity small and out of heavy workflow plans; use direct execution there only for approved lightweight or interactive work.
+Bind the runtime to the partition and compute resources. AkôFlow uses the selected partition's `providerId` for `sbatch`, or `configuration.partition` if that ID is absent. A selected batch `hpc_machine` becomes an `sbatch` node target. The login node in the example has a `direct` execution target; leave it unschedulable for workflow planning unless your site explicitly permits lightweight direct work. Interactive console access does not require scheduling workflow activities there.
 
 For a remote SSH connection, AkôFlow submits the batch script through standard input to `sbatch`; it keeps the audit copy in the configured `scriptDirectory` on the daemon host. Ensure that directory exists and is writable by the daemon. The remote login node does not need that local audit path for stdin submission.
 
@@ -99,7 +99,7 @@ Compare discovery with the initial catalog:
 1. Confirm the intended partition is available and its name has no trailing `*` in the stored `providerId`.
 2. Confirm cores and memory are appropriate for the activities' requests.
 3. Confirm the login host is represented separately from compute nodes.
-4. Confirm the required scratch, archive, or project path is writable and visible from a compute allocation.
+4. Record the required scratch, archive, or project path for the compute-allocation probe in the next step.
 5. Review the discovered transfer capabilities before selecting a staging strategy.
 
 Discovery is inventory evidence, not a reservation. A partition shown as available can still queue a job because of account, QoS, dependency, priority, or resource constraints.

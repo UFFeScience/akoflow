@@ -161,6 +161,8 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 
 126. **P1 resolved in Cloud operation follow-up reference:** list, detail, and event endpoints now explain global newest-first listing, terminal versus retrying status, and sequence-ordered events. A provider-log error event may belong to a retried attempt, so readers check the operation status before treating it as final. The shared generated endpoint component now says optional JSON fields may be absent, and all handler-checked notes use a behavior heading that fits both GET and mutation routes. The generator rejects notes for routes missing from the Go router. This checks the Cloud operation response narrative, not all 125 endpoint field contracts.
 
+127. **P0/P1 resolved in cross-runtime setup reading:** the pinned v1.0.8 SLURM catalog opts its login node into direct workflow scheduling, while current discovery marks a login gateway unschedulable. The current repository example now defaults that login node to unschedulable, and the HPC guide tells readers how to correct the pinned file before institutional registration. It distinguishes a batch compute node from an approved direct target. Its discovery checklist no longer presents compute-allocation workspace access as something a login-host probe can prove; that check belongs to the later batch probe. Kubernetes and SimGrid opening prose was shortened while keeping their real-versus-modeled boundary. A real cluster run remains unverified.
+
 ## Page inventory
 
 | Page | Current pass | Next review |
@@ -190,9 +192,9 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `guides/infrastructure/environments.md` | Plain-language/claim pass; local API definition persisted in a one-off repository test, and in-use revision language matches the API | Recheck remote flows with provider evidence |
 | `guides/infrastructure/execution-scopes.md` | Second read; cross-resource dependencies now prompt link modeling, and the link example omits redundant topologyId | Recheck API payloads after P0 contracts fix |
 | `guides/infrastructure/gcp.md` | Third read; target zone choice now matches Terraform's fixed-or-first-active behavior | Check provider claims against disposable-project evidence |
-| `guides/infrastructure/hpc-slurm.md` | Plain-language and claim pass; storage catalog is separated from configured browsing, with real-cluster probes still required | Check provider claims against real cluster evidence |
-| `guides/infrastructure/kubernetes.md` | Credential-path reread; token example remains here and streams the secret without a shell variable, command argument, or temporary file | Recheck procedure against Kind bundle and shared-cluster RBAC |
-| `guides/infrastructure/simgrid.md` | Second read; corrected topology path, uses shared API setup and versioned checkout, and describes route choice and missing-route behavior for PRISM versus HEFT | Recheck procedure against pinned bundle |
+| `guides/infrastructure/hpc-slurm.md` | Second cross-runtime read; pinned login-node scheduling opt-in and compute-allocation workspace probe are explicit | Check provider claims against real cluster evidence |
+| `guides/infrastructure/kubernetes.md` | Second cross-runtime read; real Job versus modeled-cluster choice is direct, and the token stream stays out of shell variables and files | Recheck procedure against Kind bundle and shared-cluster RBAC |
+| `guides/infrastructure/simgrid.md` | Third read; activity profile introduction is direct; topology, API setup, and pinned bundle remain aligned | Recheck procedure against pinned bundle |
 | `guides/infrastructure/storage.md` | Third read; opening now states unsigned S3 browsing directly; local API path remains verified | Verify remote/provider storage independently |
 | `guides/interface-tour.mdx` | Plain-language pass; removed repeated Desktop/API framing and shortened search/breadcrumb guidance; rendered page inspected at 390 × 844 | Recheck screenshots and controls during final visual audit |
 | `guides/operations/credentials-and-ssh.md` | Task-scope reread; now covers SSH keys and assignment only, with provider credentials routed to their own tutorials | Recheck current Desktop form and key lifecycle claims |

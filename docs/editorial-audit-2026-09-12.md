@@ -143,6 +143,8 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 
 117. **P0/P1 resolved in S3 credential narrative:** the AWS guide claimed every nonempty transfer credential reference fails, but `EnvironmentS3Credentials` accepts the literal `env` as well as an omitted reference; only other values fail with the default resolver. The guide and environment reference now state that rule. The default S3 storage browser is constructed without a credential resolver, so its saved `credentialReference` and server AWS environment variables do not sign browse requests; the docs distinguish that from the separate transfer connector. A regression assertion covers the accepted `env` reference. Live AWS and S3-compatible bucket access remain unverified.
 
+118. **P1 resolved in storage entry narrative:** the storage guide formerly sent object-storage readers to two support pages before they could learn whether browsing a private S3 bucket would work. Its opening now states the current unsigned-browser limit directly and distinguishes browsing from credentialed transfers, while retaining the AWS guide for details. The generic catalog caveat was shortened. Remote and provider storage operations remain unverified.
+
 ## Page inventory
 
 | Page | Current pass | Next review |
@@ -174,7 +176,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `guides/infrastructure/hpc-slurm.md` | Plain-language and claim pass; storage catalog is separated from configured browsing, with real-cluster probes still required | Check provider claims against real cluster evidence |
 | `guides/infrastructure/kubernetes.md` | Credential-path reread; token example remains here and streams the secret without a shell variable, command argument, or temporary file | Recheck procedure against Kind bundle and shared-cluster RBAC |
 | `guides/infrastructure/simgrid.md` | Second read; corrected topology path, uses shared API setup and versioned checkout, and describes route choice and missing-route behavior for PRISM versus HEFT | Recheck procedure against pinned bundle |
-| `guides/infrastructure/storage.md` | Second read; API path exercised against isolated registered local storages through browse, download, checksum, copy, and archive; catalog signals qualified | Verify remote/provider storage independently |
+| `guides/infrastructure/storage.md` | Third read; opening now states unsigned S3 browsing directly; local API path remains verified | Verify remote/provider storage independently |
 | `guides/interface-tour.mdx` | Plain-language pass; removed repeated Desktop/API framing and shortened search/breadcrumb guidance; rendered page inspected at 390 × 844 | Recheck screenshots and controls during final visual audit |
 | `guides/operations/credentials-and-ssh.md` | Task-scope reread; now covers SSH keys and assignment only, with provider credentials routed to their own tutorials | Recheck current Desktop form and key lifecycle claims |
 | `guides/operations/instance-management.md` | Task-scope reread; browser-profile preferences moved out; identity, export/import, and reset remain grouped as instance lifecycle | Recheck complete snapshot behavior against a local archive |

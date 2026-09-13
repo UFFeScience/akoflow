@@ -2,9 +2,9 @@
 title: Browse and manage storage
 ---
 
-AkôFlow lists discovered or configured storage with the actions available for its driver and read/write settings. Browsing stays within configured roots. A catalog status does not replace trying the operation on the intended path.
+Use **Storage** to browse approved roots and act on files. Available actions depend on the driver and storage settings. Try the intended path before relying on a catalog status.
 
-For object storage, check the [AWS/S3 limits](./aws) and [cloud support matrix](./cloud-capacity#provider-support-in-v10) before relying on browse or transfer actions. A registered storage type does not guarantee that the current server can authenticate to it.
+The current S3 browser sends unsigned requests, so a private bucket may fail to open even when an S3 transfer works with server credentials. See [AWS and S3 support](./aws) for that distinction and the current cloud limits.
 
 For the API commands on this page, complete [API connection setup](../../tutorials/api-access) first.
 The IDs `hpc`, `hpc-scratch`, and `archive-store` and the `/scratch/project-a` paths below are examples. Replace them with an environment, storage IDs, and approved paths returned by your own server before running a command.

@@ -5,13 +5,15 @@ sidebar_label: Runtime adapters
 description: How AkôFlow maps planned activities to local, HPC, Kubernetes, cloud, and simulated runtimes.
 ---
 
-A runtime adapter translates an assigned activity into operations on an execution technology. Runtimes belong to an environment version and connect to resources through bindings. Workflows do not select a runtime through a legacy top-level YAML `runtime` field; a selected plan assigns resources and execution resolves their bindings.
+A runtime adapter translates an assigned activity into operations on an execution technology. Runtimes belong to an environment version and connect to resources through bindings. Execution resolves the binding for each planned assignment.
 
 This explanation focuses on runtime adapters. Read [Architecture internals](./modules) for the surrounding services and [Execution control plane](./engine) for how the server uses adapters.
 
 ## Runtime model
 
 Each runtime declares `id`, name, driver, `execution` or `simulation` mode, optional role/configuration, and capabilities such as batch, interactive, container, GPU, MPI, shared storage, staging, cancellation, log streaming, and simulation.
+
+The portable workflow document does not select a runtime through a top-level YAML `runtime` field. A plan assigns resources; execution resolves their runtime bindings.
 
 Adapters implement `Modes`, `Start`, `Inspect`, and `Stop`. A common handle keeps provider identifiers out of orchestration code.
 
@@ -47,7 +49,7 @@ Slurm renders an `sbatch` script from activity, resource, and preparation contex
 
 ## SimGrid
 
-Simulation is a mode, not a fake infrastructure connection. It uses frozen inventory, profiles, topology, transfer costs, and optional interference data to produce a trace without starting jobs. Participating activities declare the `simulation` capability and simulation definition.
+Simulation uses frozen inventory, profiles, topology, transfer costs, and optional interference data to produce a trace without starting jobs. Participating activities declare the `simulation` capability and simulation definition.
 
 ## Cloud
 

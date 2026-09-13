@@ -8,7 +8,7 @@ description: How the AkôFlow server coordinates planning, execution, persistenc
 
 import useBaseUrl from '@docusaurus/useBaseUrl';
 
-AkôFlow is a single control-plane daemon with a REST API, a persistent event queue, planning and execution services, and pluggable infrastructure adapters. The Desktop application is the primary client of that API. AkôFlow does **not** deploy a separate Workflow Engine into every environment.
+The AkôFlow server exposes one REST API and coordinates planning, execution, and saved state. Desktop uses that API. Runtime adapters connect the server to local, cluster, and cloud execution technologies.
 
 ## At a glance
 
@@ -49,7 +49,7 @@ The execution supervisor consumes a selected plan. It validates the DAG and assi
 
 ## Infrastructure and data plane
 
-An **environment** is a managed infrastructure boundary. Published versions contain runtimes, resources, bindings, storage, relations, connections, and capability observations. An **execution scope** combines environment versions with a network topology.
+An **environment** is a managed infrastructure boundary. Published versions contain runtimes, resources, bindings, storage, relations, connections, and capability observations. An **execution scope** selects environment versions; a planning session also chooses a network topology.
 
 Before start, the data plane can prepare executable artifacts and workspaces. Implemented transfer paths include the artifact store, local filesystem, rsync/SSH, Kubernetes exec, HTTP download, and an S3-compatible connector. The current GCS connector rejects direct `gs://` transfers; a deployment needs another supported route or its own transfer agent. A prepared artifact is usable only after digest verification.
 

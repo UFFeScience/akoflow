@@ -206,3 +206,52 @@
 }
 
 .btnGhost:hover { border-color: var(--ifm-color-emphasis-600); }
+
+.directory {
+  width: 100%;
+  max-width: 1060px;
+  margin-top: 5rem;
+  text-align: left;
+}
+
+.catalogSection { width: 100%; max-width: 1060px; margin-top: 4rem; text-align: left; }
+
+.directoryHeading { margin-bottom: 1.5rem; }
+.directoryHeading h2 { font-size: 1.65rem; margin-bottom: 0.35rem; }
+.directoryHeading p { color: var(--ifm-color-emphasis-600); margin: 0; }
+
+.sectionGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.sectionCard {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 1.3rem;
+  background: var(--ifm-background-surface-color);
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 12px;
+}
+
+.sectionCard h3 { font-size: 1.05rem; margin: 0 0 0.4rem; }
+.sectionCard p { color: var(--ifm-color-emphasis-600); font-size: 0.88rem; line-height: 1.5; margin: 0 0 1rem; }
+.sectionCard ul { list-style: none; padding: 0; margin: auto 0 0; }
+.sectionCard li + li { border-top: 1px solid var(--ifm-color-emphasis-200); }
+.sectionCard a {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.55rem 0;
+  color: var(--ifm-font-color-base);
+  font-size: 0.88rem;
+  text-decoration: none;
+}
+.sectionCard a:hover { color: var(--ifm-color-primary); }
+
+@media (max-width: 680px) {
+  .page { padding: 3rem 1rem 4rem; }
+  .directory { margin-top: 3.5rem; }
+}

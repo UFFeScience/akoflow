@@ -4,65 +4,17 @@ sidebar_label: Overview
 description: Workflow examples with downloadable files, prerequisites, and stated validation scope.
 ---
 
-import {ShowcaseCard, ShowcaseGrid} from '@site/src/components/WorkflowShowcase';
+import WorkflowCatalog from '@site/src/components/WorkflowCatalog';
 
 # Workflow showcase
 
-Each example includes versioned files, an API submission path, and an expected result. Some simulate work; others run real workloads. The SLURM fixture checks only the local adapter path. Use Desktop to inspect records when it is connected to the same server used for submission.
+Browse every example below by section: Simple examples, Machine Learning, Generative AI, Agentic workflows, and Scientific AI. Select a graph to open its page. Simple examples include runnable bundles or verified fixtures; the other sections describe workflow patterns and are not presented as executable bundles.
 
-The showcase is organized in two collections:
-
-- **Infrastructure and execution** contains complete, runnable examples for SimGrid, Kubernetes, local execution, and SLURM.
-- **[AI workflow patterns](/docs/showcase/ai/)** contains independent DAG designs for machine learning, generative AI, agent loops, and AI-assisted science. These patterns focus on workflow structure; runnable bundles can be added without introducing AI-specific behavior into the AkôFlow engine.
-
-<ShowcaseGrid>
-  <ShowcaseCard
-    title="Edge to cloud simulation"
-    description="A deterministic three-stage workflow that exposes computation, transfer time, placement, and cost in SimGrid."
-    href="/docs/showcase/edge-cloud-simulation"
-    kind="edge-cloud"
-    tags={['Beginner', 'SimGrid', 'Time + cost']}
-  />
-  <ShowcaseCard
-    title="Kubernetes real execution"
-    description="A two-stage container workflow dispatched to a local Kind cluster with persistent data and observable activity logs."
-    href="/docs/showcase/kubernetes-real-execution"
-    kind="kubernetes"
-    tags={['Intermediate', 'Kubernetes', 'Real run']}
-  />
-  <ShowcaseCard
-    title="Local direct execution"
-    description="A single trusted local command that creates an observable output artifact on the AkôFlow server host."
-    href="/docs/showcase/local-direct-execution"
-    kind="local"
-    tags={['Beginner', 'Local', 'Real run']}
-  />
-  <ShowcaseCard
-    title="SLURM batch fixture"
-    description="A disposable local check of AkôFlow's batch-script, status-sentinel, and artifact-evidence path."
-    href="/docs/showcase/slurm-local-fixture"
-    kind="slurm"
-    tags={['Intermediate', 'SLURM', 'Fixture']}
-  />
-  <ShowcaseCard
-    title="30 GB network fan-out"
-    description="A SimGrid workflow for studying parallel transfers, shared bandwidth, and fan-in across three modeled machines."
-    href="/docs/showcase/network-fanout"
-    kind="fanout"
-    tags={['Network', 'SimGrid', 'Contention']}
-  />
-  <ShowcaseCard
-    title="100 activities on 50 cores"
-    description="A simulated workload for checking placement and queueing on a modeled 50-core resource."
-    href="/docs/showcase/parallel-50-core"
-    kind="parallel"
-    tags={['Parallel', 'SimGrid', 'Capacity']}
-  />
-</ShowcaseGrid>
+<WorkflowCatalog />
 
 ## How to use a showcase
 
-1. Choose a scenario and open its repository checkout. The links below show the current examples on `main`; when using a packaged release, select its matching tag on [Releases](https://github.com/UFFeScience/akoflow/releases/latest) and use the examples from that tag.
+1. Choose a runnable example from **Simple examples** and open its repository checkout. The links below show the current examples on `main`; when using a packaged release, select its matching tag on [Releases](https://github.com/UFFeScience/akoflow/releases/latest) and use the examples from that tag.
 2. Complete the scenario's prerequisites and [API connection setup](/docs/tutorials/api-access) when using an existing server. The SLURM fixture starts its own server and sets its API URL in the procedure.
 3. Submit the files in the stated order and wait for the run to finish.
 4. Check the result listed on that scenario's page.
@@ -77,6 +29,7 @@ The files define the submitted model. If Desktop is connected to the same server
 | 30 GB fan-out | [`examples/simulation/30gb-fanout`](https://github.com/UFFeScience/akoflow/tree/main/examples/simulation/30gb-fanout) | Shared links, parallel transfers, and fan-in |
 | 50-core fan-out | [`examples/simulation/50core-fanout`](https://github.com/UFFeScience/akoflow/tree/main/examples/simulation/50core-fanout) | Per-core placement and parallel capacity |
 | Kubernetes with Kind | [`examples/kind`](https://github.com/UFFeScience/akoflow/tree/main/examples/kind) | Local real execution, namespace access, and requests |
+| Hybrid local/Kind to GCP | [`examples/real/hybrid-cloud-transfer`](https://github.com/UFFeScience/akoflow/tree/main/examples/real/hybrid-cloud-transfer) | Cross-runtime file handoff to an on-demand GCP worker; requires existing matching resources |
 | Local direct | [`examples/local/direct-hello`](https://github.com/UFFeScience/akoflow/tree/main/examples/local/direct-hello) | A trusted host-local command and observed filesystem artifact |
 | SLURM batch fixture | [`examples/slurm/local-fixture`](https://github.com/UFFeScience/akoflow/tree/main/examples/slurm/local-fixture) | Reproducible local validation of the SLURM adapter's batch submission and artifact path |
 | Remote connections | [`examples/connections`](https://github.com/UFFeScience/akoflow/tree/main/examples/connections) | SSH-based PlaFRIM, Santos Dumont, and Kind connections |

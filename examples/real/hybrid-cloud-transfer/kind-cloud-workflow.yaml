@@ -1,0 +1,29 @@
+name: goal-kind-cloud-transfer
+spec:
+  namespace: examples
+  image: docker.io/library/busybox:1.36
+  activities:
+    - name: produce
+      runtime: kubernetes
+      cpuLimit: "0.1"
+      memoryLimit: 16Mi
+      run: |
+        set -eu
+        printf 'akoflow-kind-to-gcp\n' > handoff.txt
+        test -s handoff.txt
+    - name: consume
+      runtime: cloud
+      cpuLimit: "0.1"
+      memoryLimit: 16Mi
+      dependsOn: [produce]
+      run: |
+        set -eu
+        test -s handoff.txt
+        grep -qx 'akoflow-kind-to-gcp' handoff.txt
+        printf 'cloud consumed: ' > receipt.txt
+        cat handoff.txt >> receipt.txt
+  dataDependencies:
+    - producerActivity: produce
+      consumerActivity: consume
+      logicalName: handoff.txt
+      sizeBytes: 20

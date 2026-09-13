@@ -87,9 +87,17 @@ func (a *Adapter) Start(ctx context.Context, execution domain.ActivityExecutionC
 	if err != nil {
 		return domain.ActivityHandle{}, fmt.Errorf("start remote Docker container: %w", err)
 	}
+	// The SSH executor combines stdout and stderr. On a first run Docker may
+	// print image-pull progress before the container ID; only the final line is
+	// accepted by docker inspect, logs and rm.
+	lines := strings.Split(strings.TrimSpace(string(output)), "\n")
+	containerID := strings.TrimSpace(lines[len(lines)-1])
+	if containerID == "" {
+		return domain.ActivityHandle{}, fmt.Errorf("start remote Docker container: missing container ID")
+	}
 	now := runtimecommon.UnixSeconds(time.Now())
 	return domain.ActivityHandle{ID: runtimecommon.NewID("activity"), RunID: execution.Run.ID, ActivityID: activity.ID,
-		ResourceID: execution.Resource.ID, RuntimeID: execution.RuntimeID, ExternalID: strings.TrimSpace(string(output)),
+		ResourceID: execution.Resource.ID, RuntimeID: execution.RuntimeID, ExternalID: containerID,
 		Status: domain.HandleStarting, StartedAt: now, Metadata: map[string]any{
 			"containerName": name, "executionTarget": "remote-docker", "artifactObservationRoot": workingDirectory,
 			"artifactObservationBefore": string(beforeJSON),

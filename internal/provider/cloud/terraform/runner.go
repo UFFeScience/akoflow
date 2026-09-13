@@ -11,6 +11,7 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
+	"time"
 
 	"github.com/UFFeScience/akoflow/internal/application/ports"
 )
@@ -61,7 +62,38 @@ func (r Runner) Stop(ctx context.Context, instanceID string) error {
 }
 
 func (r Runner) Start(ctx context.Context, instanceID string) (ports.TerraformResult, error) {
-	return r.setDesiredStatus(ctx, instanceID, "RUNNING")
+	result, err := r.setDesiredStatus(ctx, instanceID, "RUNNING")
+	if err != nil || result.PublicAddress != "" {
+		return result, err
+	}
+	workspace, err := r.workspace(instanceID)
+	if err != nil {
+		return result, err
+	}
+	// GCP can report the instance as RUNNING before its external address has
+	// appeared in Terraform state. Refresh the outputs before SSH validation.
+	for attempt := 0; attempt < 3; attempt++ {
+		if attempt > 0 {
+			select {
+			case <-ctx.Done():
+				return result, ctx.Err()
+			case <-time.After(2 * time.Second):
+			}
+		}
+		if _, err = r.run(ctx, workspace, "apply", "-refresh-only", "-auto-approve", "-no-color", "-input=false", "-var-file=terraform.tfvars.json"); err != nil {
+			return result, err
+		}
+		var output []byte
+		output, err = r.run(ctx, workspace, "output", "-json")
+		if err != nil {
+			return result, err
+		}
+		result, err = parseOutput(output)
+		if err != nil || result.PublicAddress != "" {
+			return result, err
+		}
+	}
+	return result, fmt.Errorf("cloud instance %q started without a public address", instanceID)
 }
 
 func (r Runner) setDesiredStatus(ctx context.Context, instanceID, status string) (ports.TerraformResult, error) {

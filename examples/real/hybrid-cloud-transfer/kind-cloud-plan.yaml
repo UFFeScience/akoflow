@@ -1,0 +1,21 @@
+plan:
+  id: goal-kind-cloud-plan
+  workflowVersionId: goal-kind-cloud-transfer-v1
+  executionScopeId: goal-hybrid-scope
+  networkTopologyId: goal-hybrid-network
+  source: imported
+  algorithm: manual
+  algorithmVersion: "1"
+  objective: custom
+  predicted: {makespanSeconds: 120, cost: 0.01, feasible: true}
+  assignments:
+    - id: goal-kind-cloud-assignment-produce
+      activityId: goal-kind-cloud-transfer-produce
+      resourceId: kind-worker
+      orderOnResource: 0
+      metadata: {runtimeId: kind-kubernetes}
+    - id: goal-kind-cloud-assignment-consume
+      activityId: goal-kind-cloud-transfer-consume
+      resourceId: goal-gcp-worker-e2-small
+      orderOnResource: 0
+      metadata: {runtimeId: goal-gcp-worker-cloud}

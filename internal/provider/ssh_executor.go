@@ -120,7 +120,7 @@ func shellQuote(value string) string {
 	if value == "" {
 		return "''"
 	}
-	return "'" + strings.ReplaceAll(value, "'", "'\\\"'\\\"'") + "'"
+	return "'" + strings.ReplaceAll(value, "'", "'\"'\"'") + "'"
 }
 
 func connectionString(configuration map[string]any, key string) string {

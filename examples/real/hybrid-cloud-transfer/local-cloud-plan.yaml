@@ -1,0 +1,21 @@
+plan:
+  id: goal-local-cloud-plan
+  workflowVersionId: goal-local-cloud-transfer-v1
+  executionScopeId: goal-hybrid-scope
+  networkTopologyId: goal-hybrid-network
+  source: imported
+  algorithm: manual
+  algorithmVersion: "1"
+  objective: custom
+  predicted: {makespanSeconds: 120, cost: 0.01, feasible: true}
+  assignments:
+    - id: goal-local-cloud-assignment-produce
+      activityId: goal-local-cloud-transfer-produce
+      resourceId: local-environment-entrypoint
+      orderOnResource: 0
+      metadata: {runtimeId: local-environment-local}
+    - id: goal-local-cloud-assignment-consume
+      activityId: goal-local-cloud-transfer-consume
+      resourceId: goal-gcp-worker-e2-small
+      orderOnResource: 0
+      metadata: {runtimeId: goal-gcp-worker-cloud}

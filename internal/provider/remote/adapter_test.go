@@ -66,7 +66,7 @@ func TestFactoryValidatesDirectDockerConnection(t *testing.T) {
 }
 
 func TestAdapterStartsRemoteContainerWithResourceLimits(t *testing.T) {
-	executor := &commandExecutorStub{responses: [][]byte{nil, []byte("[]"), []byte("container-id\n")}}
+	executor := &commandExecutorStub{responses: [][]byte{nil, []byte("[]"), []byte("Unable to find image locally\nPull complete\ncontainer-id\n")}}
 	adapter := &Adapter{executor: executor}
 	handle, err := adapter.Start(context.Background(), executionFixture())
 	if err != nil {

@@ -42,7 +42,7 @@ func (c Coordinator) Prepare(ctx context.Context, activityID string, requirement
 			return nil, fmt.Errorf("start artifact transfer log: %w", err)
 		}
 		result, transferRun, err := c.Materializer.Materialize(ctx, plan, initial)
-		if saveErr := c.saveTransfer(ctx, transferRun); saveErr != nil {
+		if saveErr := c.saveTransfer(context.WithoutCancel(ctx), transferRun); saveErr != nil {
 			return nil, fmt.Errorf("save artifact transfer: %w", saveErr)
 		}
 		if saveErr := c.save(ctx, result); saveErr != nil {
@@ -88,7 +88,7 @@ func (c Coordinator) Prepare(ctx context.Context, activityID string, requirement
 				return nil, fmt.Errorf("start workspace transfer log: %w", err)
 			}
 			result, run, err := c.Materializer.Materialize(ctx, plan, domain.ArtifactMaterialization{ID: requirement.Workspace.ID, Digest: "workspace"})
-			if saveErr := c.saveTransfer(ctx, run); saveErr != nil {
+			if saveErr := c.saveTransfer(context.WithoutCancel(ctx), run); saveErr != nil {
 				return nil, fmt.Errorf("save workspace transfer: %w", saveErr)
 			}
 			if err != nil {

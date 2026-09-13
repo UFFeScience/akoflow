@@ -3,6 +3,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"os/exec"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -90,5 +91,13 @@ func TestSSHCommandExecutorValidatesConfigurationAndPropagatesErrors(t *testing.
 	}
 	if connectionInt(map[string]any{"port": "2022"}, "port") != 2022 || connectionInt(map[string]any{"port": true}, "port") != 0 {
 		t.Fatal("connectionInt mismatch")
+	}
+}
+
+func TestShellQuotePreservesSingleQuotesThroughRemoteShell(t *testing.T) {
+	input := `with open(full,'rb') as stream: print('ok')`
+	output, err := exec.Command("sh", "-c", "printf %s "+shellQuote(input)).Output()
+	if err != nil || string(output) != input {
+		t.Fatalf("quoted command changed argument: %q, %v", output, err)
 	}
 }

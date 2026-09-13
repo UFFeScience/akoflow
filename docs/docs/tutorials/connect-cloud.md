@@ -4,11 +4,9 @@ sidebar_label: Connect cloud / GCP
 description: Validate a GCP credential, register a cloud environment and inspect the compute catalog using Desktop or the API.
 ---
 
-This tutorial connects **Google Cloud**, the compute provider available in the
-current **Cloud on demand** form. Its result is a registered environment and a
-synchronized catalog. It does not provision a VM.
-
-AWS support is currently limited to a separately configured S3-compatible transfer connector; saved cloud credentials are not wired to it, and EC2 discovery/provisioning is unavailable. See [AWS and S3 support](../guides/infrastructure/aws).
+Connect Google Cloud through **Cloud on demand** and inspect its compute
+catalog. You will finish with a registered environment and reviewed machine,
+image, and disk choices. Connecting the account does not provision a VM.
 
 ## Before you begin
 
@@ -153,7 +151,7 @@ A catalog GET may return `404` before the first successful refresh. Inspect
 warnings as well as machines, images and disks: unavailable pricing must not
 be interpreted as free compute.
 
-## Verify the connection result
+## Check the result
 
 | Evidence              | Expected result                                            |
 | --------------------- | ---------------------------------------------------------- |

@@ -151,6 +151,8 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 
 121. **P0 resolved in generated map response shapes:** shallow key extraction rendered every value of several `map[string]any` responses as `"string"`, including cloud validation's boolean `valid` and integer counts, connection health's boolean, search totals and result arrays, provenance arrays, archive activation's boolean, and planning-session runs. Checked shapes now cover nine handlers. The connection test note says `200 OK` can still have `healthy: false`; cloud validation counts can be zero. `GET /execution-runs/` has two actual response forms: an array without pagination parameters and an envelope when `page` or `pageSize` is supplied; its misleading single example was replaced with that rule. The generator rejects checked-shape entries whose handler disappears from the router. This closes this map-shape class, not full field/response validation of all 125 endpoints.
 
+122. **P1/P2 resolved in the three infrastructure tutorial openings:** API setup now names its specific reader and tools; HPC registration begins with the result the steps can prove; and the GCP connection tutorial starts with its own task instead of an unrelated AWS/S3 support paragraph. HPC and GCP use the same “Check the result” heading. Their external-account, batch-job, and live-provider limits remain at the step or result where the reader needs them. Remote HPC and GCP validation remain open.
+
 ## Page inventory
 
 | Page | Current pass | Next review |
@@ -213,9 +215,9 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `showcase/network-fanout.mdx` | Second read; model-specific estimate phrased directly; authenticated polling now fails on HTTP errors | Check result against pinned bundle |
 | `showcase/parallel-50-core.mdx` | Second read; compute-capacity purpose stated directly; authenticated polling now fails on HTTP errors | Check result against pinned bundle |
 | `showcase/slurm-local-fixture.mdx` | Second read; local adapter evidence and real-cluster limits stated once; versioned checkout and optional Desktop inspection retained | Check result against pinned bundle |
-| `tutorials/api-access.md` | Second read; API prerequisites and token limits are explicit; Bash blocks parsed | Recheck commands after P0 contracts fix |
-| `tutorials/connect-cloud.md` | GCP validation now distinguishes valid access from nonempty machine/image/disk choices; live provider steps remain unverified | Validate with disposable GCP account |
-| `tutorials/register-hpc.md` | Registration result stops at saved connection and inventory; compute-workspace access is deferred to a batch probe | Validate on an approved institutional cluster |
+| `tutorials/api-access.md` | Third read; API-only purpose, prerequisites and token limits are explicit; Bash blocks parsed | Recheck commands after P0 contracts fix |
+| `tutorials/connect-cloud.md` | Second read; GCP task and verified result lead the page; valid access is separate from nonempty machine/image/disk choices | Validate with disposable GCP account |
+| `tutorials/register-hpc.md` | Second read; saved connection and inventory lead the page; compute-workspace access is deferred to a batch probe | Validate on an approved institutional cluster |
 
 ## Verification in this pass
 

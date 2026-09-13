@@ -4,8 +4,8 @@ sidebar_label: API connection setup
 description: Configure one API base URL and token convention for infrastructure tutorials.
 ---
 
-The infrastructure tutorials offer Desktop and API paths. For the API path,
-use Bash, `curl`, `jq`, and a daemon whose address and credential you manage.
+Use this setup for the API path in the HPC and Google Cloud tutorials. You need
+Bash, `curl`, `jq`, and a daemon whose address and credential you manage.
 The [server installation guide](../guides/operations/server-instance) explains
 how to deploy one and choose its token. A development daemon is also suitable
 when its connection settings are known.
@@ -19,8 +19,8 @@ read -rsp 'Akoflow API token: ' AKOFLOW_API_TOKEN; printf '\n'
 export AKOFLOW_API_TOKEN
 ```
 
-`pipefail` keeps a failed HTTP request visible even when its output is piped
-to `jq`. Stop at any failed command before creating dependent records.
+`pipefail` keeps a failed HTTP request visible when its output is piped to
+`jq`. Stop if a command fails before creating dependent records.
 
 Replace the origin and port with your daemon's settings. Press Enter without a
 token only for an explicitly tokenless local daemon. For packaged Desktop,

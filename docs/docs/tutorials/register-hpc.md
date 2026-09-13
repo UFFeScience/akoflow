@@ -4,17 +4,16 @@ sidebar_label: Register HPC / SLURM
 description: Register a cluster through Desktop or the API, test its SSH connection, and verify discovered inventory.
 ---
 
-This tutorial registers an existing institutional HPC account in AkôFlow. It
-does **not** create an account at the institution or allocate compute time.
-Ask the cluster administrator for your login, permitted partition, SSH access
-policy, gateway requirements, and a shared workspace before starting.
-
-The result is a saved environment with a healthy connection and reviewed
-inventory. Running the first batch job is a separate step after registration.
+Register an existing HPC account and check that AkôFlow can reach the cluster
+and discover its resources. You will finish with a saved environment, a healthy
+connection, and reviewed inventory. A batch job comes after registration.
 
 ## Before you begin
 
 - Complete [installation and its result checks](../installation).
+- Ask the cluster administrator for your login, permitted partition, SSH access
+  policy, gateway requirements, and a shared workspace. Registration does not
+  create an institutional account or allocate compute time.
 - Obtain the login hostname, SSH user and port, SLURM partition, and gateway
   command when required. The AkôFlow daemon must be able to reach that route.
 - Obtain authorization to use a managed SSH key and verify the site's host-key
@@ -161,7 +160,7 @@ curl --fail-with-body \
 Inspect the health result before running discovery. Keep the environment version
 returned by the server when creating an execution scope.
 
-## Verify the registration result
+## Check the result
 
 | Evidence          | Expected result                                                      |
 | ----------------- | -------------------------------------------------------------------- |

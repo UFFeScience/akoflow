@@ -29,8 +29,8 @@ Do not rename an older installer to match a newer tag.
 
 For Desktop installation, choose the package in the table. `.blockmap` and
 `latest*.yml` files are updater metadata. Source-code ZIP/TAR downloads are for
-development. Daemon/BuildKit `.tar` archives and the runtime `.sha256` manifests
-are downloaded by Desktop automatically; operators use them in the
+development. Daemon/BuildKit `.tar` archives and runtime `.sha256` manifests are
+service assets, not separate Desktop installers. Operators use them in the
 [self-managed server guide](./guides/operations/server-instance).
 
 v1.0.8 has a single Windows `.exe`, not separate named installer/portable files.

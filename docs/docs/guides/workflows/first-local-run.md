@@ -9,7 +9,7 @@ This tutorial runs one activity on your local machine. You will create a workflo
 
 ## Before you begin
 
-[Install AkôFlow Desktop](../../installation) and complete its first-start checkup. Docker must be available to your user, and Desktop must show **Connected**. The steps below were verified with the v1.0.8 Linux Desktop package and its bundled runtime. Other platforms need their own installation check.
+[Install AkôFlow Desktop](../../installation) and complete its first-start checkup. Docker must be available to your user, and Desktop must show **Connected**. The steps below were verified with the extracted v1.0.8 Linux Desktop package and its bundled runtime. A clean `apt` install and other platforms need their own check.
 
 ## 1. Check your local environment
 
@@ -27,7 +27,7 @@ Open **Workflows → New workflow** and enter:
 | Activity name | `write-report` |
 | Command | `printf 'Akoflow local check\n' > result.txt` |
 
-Leave the other activity settings at their defaults and select **Create workflow**. The workflow page should show one activity, `write-report`. The form's default BusyBox image reference is part of the activity definition; this local run executes the command on the daemon's host through the local runtime.
+Leave the other activity settings at their defaults and select **Create workflow**. The workflow page should show one activity, `write-report`.
 
 ## 3. Choose the local environment
 

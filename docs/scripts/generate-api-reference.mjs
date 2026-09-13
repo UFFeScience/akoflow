@@ -646,6 +646,7 @@ import ApiEndpoint from '@site/src/components/ApiEndpoint';
   queryParams={${JSON.stringify(endpoint.queryParameters)}}
   successStatuses={${JSON.stringify(endpoint.successStatuses)}}
   requestExample={${JSON.stringify(requestExample == null ? null : JSON.stringify(requestExample, null, 2))}}
+  requestExampleVerified={${Boolean(verifiedRequestExamples[`${endpoint.method} ${endpoint.path}`])}}
   requestMediaType={${JSON.stringify(endpoint.request?.mediaType || (body ? "application/json" : null))}}
   requestFileName={${JSON.stringify(endpoint.request?.fileName || null)}}
   responseExample={${JSON.stringify(endpoint.response.example === null ? null : typeof endpoint.response.example === "string" ? endpoint.response.example : JSON.stringify(endpoint.response.example, null, 2))}}
@@ -657,10 +658,6 @@ import ApiEndpoint from '@site/src/components/ApiEndpoint';
 ${runnableSection}${verifiedSection}## Related guide
 
 See the [${endpoint.group} guide](${groupMetadata[endpoint.group][0]}) for related tasks and context.
-
-:::note About examples
-JSON samples show field shape, not validated request values. Use the route notes or linked guide for required fields.
-:::
 `;
 }
 

@@ -9,6 +9,7 @@ type ApiEndpointProps = {
   queryParams?: string[];
   successStatuses?: string[];
   requestExample?: string | null;
+  requestExampleVerified?: boolean;
   responseExample?: string | null;
   responseType?: string;
   responseMediaType?: string | null;
@@ -48,6 +49,7 @@ export default function ApiEndpoint({
   queryParams = [],
   successStatuses = ["200 OK"],
   requestExample = null,
+  requestExampleVerified = false,
   responseExample = null,
   responseType = "JSON object",
   responseMediaType = "application/json",
@@ -59,6 +61,10 @@ export default function ApiEndpoint({
   const displayPath = path.replace("/akoflow-api", "") || "/";
   const description = handler.replace(/([a-z0-9])([A-Z])/g, "$1 $2");
   const command = commandFor(method, path, hasRequestBody, requestMediaType, requestFileName);
+  const commandIsTemplate = hasRequestBody || pathParams.length > 0;
+  const requestHeading = requestExample
+    ? requestExampleVerified ? "Example request" : "Request field shape"
+    : "Request body";
 
   async function copyCommand() {
     await navigator.clipboard.writeText(command);
@@ -100,11 +106,14 @@ export default function ApiEndpoint({
 
         <section className="akoflow-api-section">
           <div className="akoflow-api-section-heading">
-            <h2>Body</h2>
+            <h2>{requestHeading}</h2>
             <code>{hasRequestBody ? requestMediaType || "application/json" : "none"}</code>
           </div>
           {requestExample ? (
-            <pre><code>{requestExample}</code></pre>
+            <>
+              {!requestExampleVerified && <p>Field names and types are inferred. Use the checked notes below to supply valid values.</p>}
+              <pre><code>{requestExample}</code></pre>
+            </>
           ) : (
             <p className="akoflow-api-empty">
               {hasRequestBody ? "See the request guidance below for a valid body." : "This endpoint does not accept a request body."}
@@ -128,13 +137,14 @@ export default function ApiEndpoint({
       <aside className="akoflow-api-examples">
         <section className="akoflow-api-example">
           <div className="akoflow-api-example-title">
-            <span>cURL</span>
+            <span>{commandIsTemplate ? "cURL template" : "cURL"}</span>
             <button type="button" onClick={copyCommand}>
-              {copied ? "Copied" : "Copy"}
+              {copied ? "Copied" : commandIsTemplate ? "Copy template" : "Copy"}
             </button>
           </div>
           <pre><code>{command}</code></pre>
           {hasRequestBody && <p>Supply a valid <code>{requestFileName || "request.json"}</code> before running this command.</p>}
+          {pathParams.length > 0 && <p>Replace the path identifiers with IDs from your instance.</p>}
         </section>
 
         <section className="akoflow-api-example">
@@ -143,7 +153,10 @@ export default function ApiEndpoint({
             <span>{responseMediaType || "No content"}</span>
           </div>
           {responseExample ? (
-            <pre><code>{responseExample}</code></pre>
+            <>
+              <pre><code>{responseExample}</code></pre>
+              {responseMediaType === "application/json" && <p>Illustrative response shape; values vary.</p>}
+            </>
           ) : (
             <p className="akoflow-api-example-empty">
               {responseType === "empty response"

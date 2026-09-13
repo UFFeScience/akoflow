@@ -4,41 +4,24 @@ title: Plan a workflow
 
 # Plan a workflow
 
-Plan a workflow to compare possible placements before starting a run. A planning session uses one workflow version and one execution scope, then keeps the candidates produced by the selected algorithms.
-
-Select a candidate to save it as the schedule plan for execution.
-
-For the API commands on this page, complete [API connection setup](../../tutorials/api-access) first.
-
-## Sessions, algorithms, and candidates
-
-A session records its workflow version, execution scope, network topology, selected algorithms, optional deadline and budget, progress, and final selection. Its status is `queued`, `running`, `completed`, `failed`, or `cancelled`.
-
-The Desktop currently offers PRISM time and cost objectives plus HEFT when those algorithms are returned by the server. Always use `GET /planning-algorithms/` as the authoritative list for an installed instance. PRISM accepts an option count and beam width; an optional directed interference matrix can also be attached to the session. HEFT does not use that matrix while planning.
-
-Each candidate reports:
-
-- algorithm, objective, and rank;
-- Pareto-optimal/dominated and feasible flags;
-- predicted makespan and cost;
-- a complete schedule with activity-to-resource assignments.
-
-Assignments include predicted ready, start, finish, runtime, transfer time, cost, core/slot placement, and order on the resource. Plans can also contain infrastructure lifecycle actions when cloud capacity is involved.
+Plan a workflow to compare where its activities could run before starting execution. Choose a workflow version and an execution scope, generate candidates, then select one as the schedule plan.
 
 ## Using AkôFlow Desktop
 
 1. Open a workflow definition and choose **Generate plan**. Planning sessions are created from that workflow so the session stays bound to its immutable version.
 2. Choose **Automatic planning**.
 3. Select an execution or simulation scope and its network topology.
-4. Select one or more algorithms. Configure PRISM search options if applicable.
+4. Select the available algorithms you want to compare. Desktop offers PRISM Time, PRISM Cost, and HEFT when the server reports them. Set PRISM's option count or beam width if you want to change the search.
 5. Optionally set a deadline, budget, or import an interference matrix.
 6. Choose **Generate candidate plans**.
 7. Follow each algorithm run's progress. Expand candidates to inspect their Gantt timelines and assignments.
-8. Compare predicted time, cost, feasibility, and Pareto status, then select a candidate. AkôFlow creates the executable schedule plan from that candidate.
+8. Compare predicted time, cost, feasibility, and assignments, then select a candidate. AkôFlow saves its schedule plan for execution.
 
 <img src={require('@site/static/img/interface/planning/create-execution-plan.png').default} alt="AkôFlow Desktop Create an execution plan screen in light mode, with generated and manual planning choices, a planning target selector, an execution scope, and PRISM Cost, PRISM Time, and HEFT controls." />
 
 *Choose **Generate plans** to compare candidate schedules. The target selector keeps real execution scopes separate from simulation-only scopes; PRISM Cost and PRISM Time are exclusive objectives, while HEFT is a comparison baseline.*
+
+The server's available algorithms are listed by `GET /planning-algorithms/`. A session may also include a deadline, budget, or directed interference matrix; HEFT does not use that matrix for its placement. See [PRISM and HEFT](../../explanations/prism-and-heft) for the prediction models and [planning states](../../reference/planning-and-execution-states) for candidate and session fields.
 
 ### Manual plans
 
@@ -49,6 +32,8 @@ Choose the manual planning mode when placement is known in advance. Select a sco
 The plans API also accepts a complete plan as imported data. Imported IDs must refer to an existing workflow version, execution scope, topology, and resources; the server validates the plan before saving it.
 
 ## Using the API
+
+Complete [API connection setup](../../tutorials/api-access) before running the commands below.
 
 First discover the algorithms available in the running instance:
 

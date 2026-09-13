@@ -193,10 +193,10 @@ const verifiedRequestNotes = {
   "POST /akoflow-api/storages/{storageId}/archives/": "Replace the example `path` with an existing directory in a writable storage. `id` is optional. AkôFlow writes a `.tar.gz` beside that directory and returns a queued record. Inspect `GET /storage-downloads/{downloadId}/` until its status is `ready` or `failed`; only a ready archive can be streamed through the download content route.",
   "POST /akoflow-api/storages/{storageId}/index-runs/": "Indexing must be enabled for this registered storage. Use a unique `id` in place of the example or omit it for a generated ID. The current service completes the bounded scan before responding; the returned record is `completed` or the request fails. The `202 Accepted` status does not mean this scan continues in the background.",
   "POST /akoflow-api/build-contexts/": "To upload bytes, send multipart form data with file field `context`. The JSON form only records metadata for bytes already in the artifact store; it requires `digest`, `storageUri`, and positive `sizeBytes`. A browser-local path is not a server build context.",
-  "POST /akoflow-api/artifact-builds/": "Required: `id`, `artifactVersionId`, `contextDigest`, `recipeDigest`, and `cacheKey`. The build context named by `contextDigest` must already be uploaded. An existing cache key returns that build with `200 OK`; a new specification returns `201 Created`. Creating a specification does not start a build run.",
+  "POST /akoflow-api/artifact-builds/": "Upload the build context first and use its returned digest as `contextDigest`; `artifactVersionId` must identify a saved artifact version. Required fields are `id`, `artifactVersionId`, `contextDigest`, `recipeDigest`, and `cacheKey`. An existing cache key returns that build with `200 OK`; a new specification returns `201 Created`. Creating a specification does not start a build run. See [Build an executable](/docs/guides/data/artifacts#build-an-executable-from-a-docker-image) for the simpler Docker-image path.",
   "POST /akoflow-api/artifacts/docker/": "Required: `artifactId`, `version`, and a Docker image reference without whitespace. `architecture` defaults to `amd64`. The response contains `artifact` and `build` objects. This registers a version and build specification; the registry pull and SIF conversion begin only after `POST /artifact-builds/{buildId}/runs/`.",
   "POST /akoflow-api/artifact-builds/{buildId}/runs/": "`buildId` must identify an existing build specification. This request starts a build run and returns its record with `202 Accepted`; inspect `GET /build-runs/{runId}/` for its outcome. The request has no JSON body.",
-  "POST /akoflow-api/artifact-materializations/": "This endpoint stores a materialization record supplied by the caller; it does not itself copy or verify artifact bytes. Execution preparation records the actual transfer and verified digest. Use the [Artifacts guide](/docs/guides/data/artifacts) to inspect materializations from a run.",
+  "POST /akoflow-api/artifact-materializations/": "This endpoint stores a caller-supplied record; it does not copy or verify artifact bytes. Supply a distinct `id`, existing `variantId` and `resourceId`, the variant's `sha256:` digest, `destinationPath`, and a truthful `status`. The database checks references and digest format but does not prove the bytes exist at the destination. If supplied, `environmentId` must be the environment **version** ID, despite the field name. Use the [Artifacts guide](/docs/guides/data/artifacts#locations-and-materializations) to inspect evidence recorded by execution.",
   "POST /akoflow-api/console-sessions/": "Replace the example `resourceId` with a saved resource that has a connected interactive runtime; `actorId` is optional. A successful request starts the terminal and returns a `connected` session. Resolution or startup failure returns `422`, not a successful session record. Use the [console guide](/docs/guides/operations/interactive-console) for streaming and closure.",
   "POST /akoflow-api/console-commands/": "Replace the example `resourceId` with a saved resource that supports one-shot commands. `resourceId` and `command` are required; `timeoutSeconds` defaults to 30 and cannot exceed 3600. The request waits for the runner and returns a command record. A runner failure can return `201 Created` with `status: failed`; inspect `status`, `exitCode`, and `failure` instead of treating HTTP status as command success.",
   "POST /akoflow-api/connection-tests/": "The example tests the local server. For SSH, agent, or Kubernetes, send the connection fields and credentials required by that type instead. This route tests the supplied connection without saving it. It returns `200 OK` with `healthy` and `message`; `healthy: false` means the probe failed even though the HTTP request succeeded. Cloud connections are not handled here.",
@@ -297,10 +297,12 @@ const verifiedRequestExamples = {
   },
 };
 
-const requestFromCurrentRecord = new Set([
+const requestWithoutStandaloneExample = new Set([
   "PUT /akoflow-api/instance/",
   "PUT /akoflow-api/environments/{environmentId}/",
   "PUT /akoflow-api/environment-connections/{connectionId}/",
+  "POST /akoflow-api/artifact-builds/",
+  "POST /akoflow-api/artifact-materializations/",
 ]);
 
 function humanizeHandler(handler) {
@@ -711,7 +713,7 @@ function endpointDocument(endpoint, position) {
     ? `## Handler-checked request notes\n\n${verifiedNote}\n\n`
     : "";
   const requestExample =
-    runnableFile || requestFromCurrentRecord.has(`${endpoint.method} ${endpoint.path}`)
+    runnableFile || requestWithoutStandaloneExample.has(`${endpoint.method} ${endpoint.path}`)
       ? null
       : verifiedRequestExamples[`${endpoint.method} ${endpoint.path}`] ??
         endpoint.request?.example;

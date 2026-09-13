@@ -137,6 +137,8 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 
 114. **P1 resolved in generated cloud navigation:** seven environment-scoped cloud catalog, target, instance, and provisioning routes appeared under the generic Environments endpoint category because their URL starts with `/environments/`. The generator now groups them by their cloud operation, gives them the cloud-capacity guide, and points the compatibility provisioning route to the moved instance endpoint. The generated route count remains 125. Redirects preserve the seven former documentation URLs; HTTP routes are unchanged. Link/build checks cover the new navigation, while cloud account behavior remains unverified.
 
+115. **Entry/reference consistency check:** all 97 route rows in the API overview expanded to 124 method/path pairs, and every pair matched `internal/api/httpserver/httpserver.go`; the overview is intentionally a summary rather than a list of all 125 endpoint pages. In the new-user layer, Getting Started now names the verified Kubernetes example as Kind, and Installation no longer repeats the Windows asset distinction already stated in Downloads. This check covers route registration and wording, not field or response contracts.
+
 ## Page inventory
 
 | Page | Current pass | Next review |
@@ -152,7 +154,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `explanations/observed-timing.md` | Plain-language/units pass; uses run language, corrects the 8.6 s example, and preserves optional observed-field limits | Recheck metrics against trace aggregation |
 | `explanations/planning.md` | Second read; linked scheduler comparison and removed abstract separation language | Recheck planning claims against coordinator |
 | `explanations/prism-and-heft.md` | Plain-language pass; cut 27% while preserving search, evaluation, cost, and cross-algorithm limits | Recheck algorithm claims against source |
-| `getting-started.md` | Entry-path reread; leads to Desktop first run and now states verified versus partial provider paths before remote setup | Recheck the entry flow on a clean supported host |
+| `getting-started.md` | Third entry-path read; verified Kubernetes example is identified as Kind and support limits remain explicit | Recheck the entry flow on a clean supported host |
 | `guides/data/artifacts.md` | Short choice page preserving the old URL and routing storage, build, and recorded-location tasks | Check destinations in navigation |
 | `guides/data/build-executable.md` | Third read; build-context upload now fails on HTTP errors; asynchronous Docker/SIF flow remains | Verify a live registry pull and SIF conversion |
 | `guides/data/artifact-locations.md` | Focused catalog-location and preparation-status procedure; saved flags are distinguished from live byte checks | Recheck materialization payloads after P0 contracts fix |
@@ -183,10 +185,10 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `guides/workflows/executions.md` | Third read; run detail and list now fail on HTTP errors | Recheck other runtimes against their own guides |
 | `guides/workflows/first-run.md` | Claim reread; fixed-plan submission is described as validation and save, without falsely promising prediction recalculation | Keep the SimGrid API example aligned with its versioned bundle |
 | `guides/workflows/planning.md` | Third read; algorithm and session/candidate reads now fail on HTTP errors | Verify automatic Desktop planning flow |
-| `installation.md` | Entry-path reread; Desktop checkup remains central, self-managed API checks moved to their guides, and platform verification is stated once | Verify clean-host and cross-platform installation |
+| `installation.md` | Third entry-path read; duplicate Windows asset caveat removed; Desktop checkup remains central | Verify clean-host and cross-platform installation |
 | `internal/workflow-spec.md` | Second read; lead example now uses one execution mode and marks script paths as prerequisites | Check every field contract against current importer |
 | `modules.md` | Developer detail remains in the architecture section; planning candidates now distinguish shared inputs from algorithm-specific predictions | Recheck claims against daemon composition |
-| `reference/api-overview.md` | Fourth read; root health now sends the token; archive method rule matches `readOnlyAPI` | Check contracts against current handlers and schemas |
+| `reference/api-overview.md` | Fifth read; 124 listed method/path pairs match the current Go router | Check field and response contracts against current handlers and schemas |
 | `reference/environment-yaml.md` | Claim pass; corrected API defaults and documents local storage opt-in, persisted browseRoots configuration, and catalog health limits | Continue field-level schema contract audit |
 | `reference/execution-scopes-and-topologies.md` | Claim pass; clarified API prerequisites and the actual omitted link direction/sharing values | Check contracts against current handlers and schemas |
 | `reference/feature-coverage.md` | Third read; route map now serves the reader, with its maintainer update rule in the quality plan | Check contracts against current handlers and schemas |

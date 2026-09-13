@@ -85,10 +85,6 @@ before allowing it to run.
 2. Follow the package's installation prompts, if shown, then open AkôFlow Desktop.
 3. Keep Docker Desktop running with Linux containers enabled.
 
-The v1.0.8 release lists one Windows executable; it does not offer separately
-named installer and portable downloads. Do not look for an additional
-`portable.exe` asset in that release.
-
 </TabItem>
 <TabItem value="linux" label="Linux">
 

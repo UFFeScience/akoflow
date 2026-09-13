@@ -22,7 +22,7 @@ The [checked-in SimGrid example](./guides/workflows/first-run) verifies three ac
 
 ## What is supported today
 
-The local Desktop workflow has a verified run on Linux. The [Showcase](./showcase/) also has verified SimGrid and local Kind examples. The SLURM example exercises a local scheduler fixture; a run on an institutional cluster remains unverified.
+The local Desktop workflow has a verified run on Linux. The [Showcase](./showcase/) also has verified SimGrid and Kubernetes-on-Kind examples. The SLURM example exercises a local scheduler fixture; a run on an institutional cluster remains unverified.
 
 Google Cloud catalog and worker provisioning are implemented, but a complete live provision-and-destroy cycle has not been verified. AWS EC2 discovery and provisioning are unavailable; S3 transfers have local code tests but no verified AWS-account run. Check the [cloud support matrix](./guides/infrastructure/cloud-capacity#provider-support-in-v10) before choosing a provider.
 

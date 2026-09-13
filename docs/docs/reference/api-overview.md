@@ -28,7 +28,7 @@ Browser origins are controlled by the daemon's allowed-origin configuration. Aut
 - Many collection paths retain a trailing slash; use the route exactly as shown.
 - Successful creates generally return `201 Created`; queued work commonly returns `202 Accepted`; deletes commonly return `204 No Content`.
 - Errors from kernel-wrapped routes use a JSON `error` message. Validation failures commonly return `400` or `422`; missing records return `404`; unavailable capabilities return `503`.
-- An activated archive snapshot is read-only. Mutating requests return `423 Locked`, except instance activation itself.
+- An activated archive snapshot is read-only. Requests other than `GET` return `423 Locked`, except instance activation itself.
 - Export, download, build output, and console stream routes return non-JSON content.
 
 Check daemon and local build capabilities:

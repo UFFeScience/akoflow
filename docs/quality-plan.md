@@ -15,6 +15,8 @@ Every user-facing page has one primary Diátaxis purpose:
 
 Showcases are extended tutorials. They may link to how-to and reference pages, but must not duplicate those pages. Generated endpoint pages are reference material. Provider setup pages are how-to guides. Architecture and scheduling-model pages are explanations.
 
+When a Desktop route or daemon endpoint changes, regenerate the endpoint reference, update the task guide and the Desktop/API coverage map, and add a screenshot only when it clarifies the interface.
+
 ## Current evidence
 
 - [x] The documentation builds from a clean generated state. Evidence: `cd docs && npm run clear && npm run typecheck && npm run build`, passed on 2026-09-11.

@@ -5,7 +5,7 @@ sidebar_label: Desktop/API coverage
 description: Map every AkôFlow Desktop area to its API family and task documentation.
 ---
 
-This matrix is maintained as the coverage checklist for the public documentation. A route may be hidden from the primary sidebar when it is a child page, compatibility redirect, or contextual action.
+Use this map to find the guide and API family for a Desktop task. Some routes appear only after opening a record or starting an action.
 
 The `/network` and `/network/new` routes exist in Desktop, but the current sidebar and scope detail do not link to them. To register network links through a documented path, use the [execution-scope API procedure](../guides/infrastructure/execution-scopes#using-the-api-1).
 
@@ -69,12 +69,3 @@ The `/network` and `/network/new` routes exist in Desktop, but the current sideb
 - `/builds` redirects to the artifact catalog because builds belong to artifacts.
 - `/ssh-keys` redirects to `/settings/ssh-keys`.
 - Environment-level provisioning is an aggregate index; an individual provisioning operation belongs to its resource.
-
-## Verification rule
-
-When a Desktop route or daemon endpoint is added, the same change must update or regenerate this documentation:
-
-1. Endpoint pages regenerate automatically from the Go router.
-2. The relevant domain guide explains the user task and payload semantics.
-3. This matrix records where the operation appears in Desktop.
-4. A screenshot is added only when the spatial interface conveys information that text does not.

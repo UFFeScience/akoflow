@@ -129,6 +129,8 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 
 110. **P1 resolved in cloud catalog result:** the GCP tutorial treated available machine, image and disk choices as the expected result of `valid: true`. The validation handler returns counts from discovery without requiring any count to be positive; public-image lookup errors can also be warnings. The tutorial now asks readers to inspect the counts and investigate an empty category before provisioning. Live credential and provider checks remain open.
 
+111. **P1/P2 resolved in the public reference overview:** the Desktop/API coverage page mixed a user route map with maintainer instructions. The update rule now lives in the editorial contract, leaving the public page focused on finding a task, guide, and API family. The API overview's archive rule said only mutating requests return `423`, but `readOnlyAPI` blocks every non-`GET` method except instance activation; the wording now matches the middleware, including `HEAD`. Full endpoint-contract and final plain-language audits remain open.
+
 ## Page inventory
 
 | Page | Current pass | Next review |
@@ -178,10 +180,10 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `installation.md` | Entry-path reread; Desktop checkup remains central, self-managed API checks moved to their guides, and platform verification is stated once | Verify clean-host and cross-platform installation |
 | `internal/workflow-spec.md` | Second read; lead example now uses one execution mode and marks script paths as prerequisites | Check every field contract against current importer |
 | `modules.md` | Developer detail remains in the architecture section; planning candidates now distinguish shared inputs from algorithm-specific predictions | Recheck claims against daemon composition |
-| `reference/api-overview.md` | Second read; removed token-in-shell-history setup and an unprovided `workflow.json` example; linked the task guide and versioned tutorial | Check contracts against current handlers and schemas |
+| `reference/api-overview.md` | Third read; token setup and tutorial links remain; archive method rule now matches `readOnlyAPI` | Check contracts against current handlers and schemas |
 | `reference/environment-yaml.md` | Claim pass; corrected API defaults and documents local storage opt-in, persisted browseRoots configuration, and catalog health limits | Continue field-level schema contract audit |
 | `reference/execution-scopes-and-topologies.md` | Claim pass; clarified API prerequisites and the actual omitted link direction/sharing values | Check contracts against current handlers and schemas |
-| `reference/feature-coverage.md` | Second read; now distinguishes registered but unlinked Desktop network routes from navigable task paths | Check contracts against current handlers and schemas |
+| `reference/feature-coverage.md` | Third read; route map now serves the reader, with its maintainer update rule in the quality plan | Check contracts against current handlers and schemas |
 | `reference/planning-and-execution-states.md` | Second read; session cancellation and run/task status claims checked against handlers, coordinator, and domain | Recheck generated endpoint contracts after P0 fixes |
 | `runtimes.md` | Second read; marked serverless schema value unavailable because no adapter is registered | Recheck other provider claims against adapters |
 | `showcase/edge-cloud-simulation.mdx` | Second read; fixed manual plan and scheduler-comparison purpose are direct; authenticated polling now fails on HTTP errors | Check result against pinned bundle |

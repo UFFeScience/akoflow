@@ -16,6 +16,8 @@ For the API commands on this page, complete [API connection setup](../../tutoria
 | Provision compute capacity with Terraform | Yes | Not yet |
 | Transfer artifacts through object storage | Direct `gs://` transfer is unavailable in the current server; use a separately supported route such as signed HTTPS when applicable | S3-compatible connector with server environment credentials; external AWS validation pending |
 
+The Google Cloud compute path is present in the server, but this procedure has not yet passed a live provision-and-destroy cycle in a disposable project.
+
 For a Google Cloud setup, continue with [Configure Google Cloud](./gcp). For AWS, read [AWS and S3 support](./aws) before planning data movement. A saved AWS credential does not currently configure the transfer connector or create EC2 capacity.
 
 ## Synchronize the provider catalog
@@ -49,35 +51,56 @@ If you need a machine configuration, [create its version](./machine-configuratio
 
 ### Using the API
 
+Keep the `AKOFLOW_GCP_PROJECT` value from the validated [connection tutorial](../../tutorials/connect-cloud). Read a compatible Ubuntu image's `providerImageId` from the synchronized catalog. Confirm that `e2-standard-4` is available in the selected region, or replace the machine type and its CPU/memory values with a catalog match. Enter the approved daemon or bastion CIDR before the request is sent.
+
 ```bash
-curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
-  -H 'Content-Type: application/json' -X POST \
-  "$AKOFLOW_API_URL/environments/research-gcp/cloud-capacity-targets/" \
-  -d '{
-    "name":"E2 standard worker",
-    "provider":"gcp",
-    "providerMachineType":"e2-standard-4",
-    "region":"us-central1",
-    "zonePolicy":"any",
-    "imageReference":"projects/debian-cloud/global/images/family/debian-12",
-    "architecture":"x86_64",
-    "vcpu":4,
-    "memoryMiB":16384,
-    "provisioningMode":"standard",
-    "maximumInstances":2,
-    "lifecyclePolicy":"destroy-after-run",
-    "configuration":{
-      "diskType":"pd-balanced",
-      "diskSizeGiB":30,
-      "network":"default",
-      "sshSourceRanges":["<approved-daemon-or-bastion-cidr>"]
+set -o pipefail
+: "${AKOFLOW_GCP_PROJECT:?Complete the GCP connection tutorial first}"
+read -r -p 'Ubuntu providerImageId from the catalog: ' AKOFLOW_GCP_IMAGE_ID || exit 1
+read -r -p 'Approved SSH source CIDR: ' AKOFLOW_SSH_CIDR || exit 1
+[ -n "$AKOFLOW_GCP_IMAGE_ID" ] && [ -n "$AKOFLOW_SSH_CIDR" ] || exit 1
+
+jq -n --arg project "$AKOFLOW_GCP_PROJECT" \
+  --arg image "$AKOFLOW_GCP_IMAGE_ID" --arg cidr "$AKOFLOW_SSH_CIDR" \
+  --arg configVersion "${AKOFLOW_MACHINE_CONFIGURATION_VERSION_ID:-}" '{
+    name:"E2 standard worker",
+    provider:"gcp",
+    providerMachineType:"e2-standard-4",
+    region:"us-central1",
+    zonePolicy:"any",
+    imageReference:$image,
+    architecture:"amd64",
+    vcpu:4,
+    memoryMiB:16384,
+    provisioningMode:"standard",
+    maximumInstances:2,
+    lifecyclePolicy:"destroy-after-run",
+    configuration:{
+      projectId:$project,
+      diskType:"pd-balanced",
+      diskSizeGiB:30,
+      network:"default",
+      sshSourceRanges:[$cidr]
     }
-  }' -o cloud-target.json || exit 1
+  } + (if $configVersion == "" then {} else {
+    machineConfigurations:[{
+      configurationVersionId:$configVersion,
+      executionOrder:1,
+      required:true,
+      enabled:true
+    }]
+  } end)' | curl --fail-with-body \
+    -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+    -H 'Content-Type: application/json' --data-binary @- \
+    "$AKOFLOW_API_URL/environments/research-gcp/cloud-capacity-targets/" \
+    -o cloud-target.json || exit 1
 
 AKOFLOW_CAPACITY_TARGET_ID=$(jq -er '.id' cloud-target.json) || exit 1
 ```
 
-Replace the CIDR placeholder with the approved daemon or bastion range before sending this request. The current Terraform target otherwise defaults SSH ingress to `0.0.0.0/0`. The server supplies the target ID and environment ID when omitted, enables the target, and creates a schedulable capacity record; no VM is created yet. The command saves the returned ID for provisioning. Machine/image identifiers must come from the synchronized catalog.
+The project ID is required by the current Terraform target; it is not copied from the environment connection. The built-in worker configuration requires `amd64`, even when Google Cloud labels a machine `X86_64`. If the CIDR is omitted, the Terraform target defaults SSH ingress to `0.0.0.0/0`.
+
+The server supplies the target ID and environment ID when omitted, enables the target, and creates a schedulable capacity record; no VM is created yet. The command saves the returned ID for provisioning. The machine type must also come from the synchronized catalog.
 
 ## Provision and follow an instance
 

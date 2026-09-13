@@ -40,10 +40,4 @@ curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
 AKOFLOW_MACHINE_CONFIGURATION_VERSION_ID=$(jq -er '.versions[] | select(.version == 1) | .id' machine-configuration.json) || exit 1
 ```
 
-Validation checks playbook structure and returns `valid`, a content hash, and errors when present. It does not provision a machine or execute the playbook. The version request returns the configuration with its versions; use the saved version ID when creating a capacity target. In that target's JSON, add:
-
-```json
-{"machineConfigurations":[{"configurationVersionId":"<saved-version-id>","executionOrder":1,"required":true,"enabled":true}]}
-```
-
-Replace the placeholder with `AKOFLOW_MACHINE_CONFIGURATION_VERSION_ID`. The current [capacity-target example](./cloud-capacity#create-a-capacity-target) omits this optional field.
+Validation checks playbook structure and returns `valid`, a content hash, and errors when present. It does not provision a machine or execute the playbook. The version request returns the configuration with its versions. Run the [capacity-target example](./cloud-capacity#create-a-capacity-target) in the same Bash session: it attaches this saved version when `AKOFLOW_MACHINE_CONFIGURATION_VERSION_ID` is set. Without that variable, it creates a target using only the built-in worker configuration.

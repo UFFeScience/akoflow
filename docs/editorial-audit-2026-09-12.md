@@ -179,6 +179,8 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 
 135. **P1 resolved in the Docker artifact response example:** a scan of map-shaped API responses found that `POST /artifacts/docker/` showed empty `artifact` and `build` objects, although the next documented step requires `build.id`. The generated example now shows the `ArtifactVersion` and `ArtifactBuild` JSON fields, including both IDs, and the route note distinguishes registration from the later build run. Handler, domain structs, and the existing HTTP repository test confirm the response keys and stored build specification. This verifies one response family; the 125-endpoint field-level audit remains open.
 
+136. **P1 resolved in execution detail response coverage:** `GET /execution-runs/{runId}/` previously displayed `run: {}` and five arrays, hiding the run's key status/plan/timing fields and the conditional cloud/data families. The generated example now shows the core `ExecutionRun` fields and the response note names `infrastructureRuns`, `dataObjects`, `dataLocations`, `artifactMaterializations`, and `artifactTransferRuns` with their configuration conditions. The execution guide uses the same language. Handler map assembly, domain JSON fields, and the existing execution-detail HTTP test were checked. This narrows the response audit; it does not validate every nested array contract.
+
 ## Page inventory
 
 | Page | Current pass | Next review |
@@ -223,7 +225,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `guides/operations/server-instance.md` | Second read; corrected invalid tunnel command, simplified server language, and preserved HTTP failure through jq | Recheck release assets when version changes |
 | `guides/operations/troubleshooting.md` | Fourth read; root health authentication and HTTP-error exits are consistent | Recheck other diagnostic claims after P0 fixes |
 | `guides/workflows/definitions.md` | Third read; API list, detail, and export now fail on HTTP errors | Recheck payload against importer after P0 contracts fix |
-| `guides/workflows/executions.md` | Third read; run detail and list now fail on HTTP errors | Recheck other runtimes against their own guides |
+| `guides/workflows/executions.md` | Fourth read; run detail now mentions conditional infrastructure/data/artifact families and API requests fail on HTTP errors | Recheck other runtimes against their own guides |
 | `guides/workflows/first-run.md` | Claim reread; fixed-plan submission is described as validation and save, without falsely promising prediction recalculation | Keep the SimGrid API example aligned with its versioned bundle |
 | `guides/workflows/planning.md` | Third read; algorithm and session/candidate reads now fail on HTTP errors | Verify automatic Desktop planning flow |
 | `installation.md` | Third entry-path read; duplicate Windows asset caveat removed; Desktop checkup remains central | Verify clean-host and cross-platform installation |

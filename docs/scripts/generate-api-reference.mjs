@@ -166,6 +166,27 @@ const checkedMapResponses = {
     note: "The route can return `200 OK` with `healthy: false`. Read `healthy` and `message` before saving or using the connection.",
   },
   DiscoverEnvironmentConnection: { example: { snapshots: [] } },
+  GetExecution: {
+    example: {
+      run: {
+        id: "run-id",
+        schedulePlanId: "plan-id",
+        mode: "simulation",
+        seed: 0,
+        status: "completed",
+        makespanSeconds: 12.4,
+        cost: 0,
+        breakdown: { computeSeconds: 12.4, transferSeconds: 0, queueSeconds: 0, interferenceSeconds: 0, overheadSeconds: 0 },
+        transferredBytes: 0,
+        kind: "workflow",
+      },
+      activities: [],
+      dataTransfers: [],
+      handles: [],
+      events: [],
+    },
+    note: "The response always has `run`, `activities`, `dataTransfers`, `handles`, and `events`. With cloud operations configured, it also has `infrastructureRuns`. With the data catalog configured, it also has `dataObjects`, `dataLocations`, `artifactMaterializations`, and `artifactTransferRuns`. The example shows the core fields of a completed workflow run; optional run fields and related arrays vary by run and server configuration.",
+  },
   ListExecutions: {
     type: "JSON array or paginated object",
     example: null,

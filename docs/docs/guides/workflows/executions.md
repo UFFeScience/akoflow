@@ -66,7 +66,7 @@ curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   "$AKOFLOW_API_URL/execution-runs/simulation-example-run-v1/"
 ```
 
-The detail response contains `run`, `activities`, `dataTransfers`, `handles`, and `events`; it can also include related infrastructure operations. List endpoints support the Desktop's run history and filters:
+The detail response contains `run`, `activities`, `dataTransfers`, `handles`, and `events`. It can also include infrastructure operations and saved data or artifact preparation records when those services are configured. List endpoints support the Desktop's run history and filters:
 
 ```bash
 curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \

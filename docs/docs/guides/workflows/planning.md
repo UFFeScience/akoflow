@@ -30,7 +30,7 @@ Choose the manual planning mode when placement is known in advance. Select a sco
 
 ### Imported plans
 
-The plans API also accepts a complete plan as imported data. Imported IDs must refer to an existing workflow version, execution scope, topology, and resources; the server validates the plan before saving it.
+The plans API also accepts a complete plan as imported data. Imported IDs must refer to an existing workflow version, execution scope, topology, and resources; the server validates the plan before saving it. That validation does not check runtime bindings. Confirm an enabled, mode-compatible binding for every assigned resource before starting execution.
 
 ## Using the API
 
@@ -92,7 +92,7 @@ curl --fail-with-body -X POST \
   "$AKOFLOW_API_URL/planning-sessions/planning-simulation-example/candidates/$AKOFLOW_CANDIDATE_ID/select/"
 ```
 
-Check the candidate's `feasible` field before selecting it. Selection returns `201 Created` with the saved schedule plan.
+Check the candidate's `feasible` field before selecting it. It indicates that the candidate passed plan validation, not that its runtime bindings are ready. Selection returns `201 Created` with the saved schedule plan.
 
 For a manual plan, send the complete validation envelope used by `examples/simulation/plan-request.yaml` to `POST /schedule-plans/`. To import an already assembled plan whose referenced objects are registered, send `{ "plan": ... }` to `POST /schedule-plans/import/`; the server sets its source to `imported` and validates it. These routes save the predicted metrics you supply rather than recalculating them.
 

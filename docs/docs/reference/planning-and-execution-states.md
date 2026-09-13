@@ -44,7 +44,7 @@ A `PlanCandidate` has no `status` field. It is an immutable generated option ass
 
 | Field | Meaning |
 | --- | --- |
-| `feasible` | The candidate passed plan validation and may be selected. Infeasible candidates cannot be promoted. |
+| `feasible` | The candidate passed plan validation and may be selected. It does not confirm a runtime binding for execution. Infeasible candidates cannot be promoted. |
 | `rank` | Comparison order after session completion. Lower rank is preferred by the common ranking step. |
 | `paretoOptimal` | The candidate is on the non-dominated time/cost frontier. |
 | `dominated` | Another feasible candidate is no worse in both predicted metrics and better in at least one. |

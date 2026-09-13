@@ -2,7 +2,7 @@
 
 title: Planning, candidates, and selected plans
 sidebar_label: Planning and plans
-description: Why planning sessions produce candidates before one placement becomes executable.
+description: Why planning sessions produce candidates before one placement becomes a saved plan.
 ---
 
 import useBaseUrl from '@docusaurus/useBaseUrl';
@@ -22,6 +22,8 @@ A planning session records the workflow version, available resources, network to
 A candidate contains a possible placement with predicted makespan, cost, and feasibility. After the session completes, it receives rank and Pareto metadata for comparison. Several candidates can come from the same algorithm and objective.
 
 Selecting a candidate saves it as a schedule plan; it does not start a run. The plan records where activities should run and their predicted timing and cost. It can also include cloud setup actions. You can instead supply or import a placement, subject to validation.
+
+Plan validation checks placement and workflow constraints. The runtime binding for each assignment is checked when execution starts, so a saved plan can still fail to start if its assigned resource has no compatible enabled runtime.
 
 ## Objectives and constraints answer different questions
 

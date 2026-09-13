@@ -74,7 +74,7 @@ sh examples/simulation/run.sh`}</code></pre>
 
 The bundle was exercised against the current API on 2026-09-11. Its run projection, `simulation-example-run-v1`, reached `completed` with three settled activities, two transfers, and `120000000` transferred bytes. The observed makespan was `21.593 s`; its accumulated execution time was `9 s`, and its accumulated transfer time was `11.693 s`.
 
-Those stage values are accumulated across activities; they are evidence components, not additional wall-clock makespan. The completed run also stores the selected assignments, predicted values, observed cost, and the SimGrid trace under the daemon's configured simulation workspace.
+Those stage values are accumulated across activities; they are evidence components, not additional wall-clock makespan. The completed run also stores the selected assignments, predicted values, observed cost, and the SimGrid trace under the server's configured simulation workspace.
 
 If any of these checks fails, recover in this order:
 

@@ -62,7 +62,7 @@ curl --fail-with-body \
 
 ## Verify the result
 
-The checked-in files were run against an isolated local daemon on 2026-09-12. `local-direct-hello-run-v1` completed its one activity; the recorded artifact manifest contained one created file, `result.txt`, at 24 bytes with checksum:
+The checked-in files were run against an isolated local AkôFlow server on 2026-09-12. `local-direct-hello-run-v1` completed its one activity; the recorded artifact manifest contained one created file, `result.txt`, at 24 bytes with checksum:
 
 ```text
 sha256:602b3cbda35539a2cd4c0504fe198cb423493832d93cf78147a470b2d82329db
@@ -81,8 +81,8 @@ The run has no data dependency and therefore reports zero transferred bytes. Use
 | Symptom | Cause and recovery |
 | --- | --- |
 | `activity entrypoint is required` | Use the supplied workflow or set `command.entrypoint`; `run` is converted to `sh -c` by the portable workflow importer. |
-| `start local activity` fails | The daemon host cannot find or execute the command. Verify `sh` is on its `PATH`, then use an absolute entrypoint if needed. |
+| `start local activity` fails | The server host cannot find or execute the command. Verify `sh` is on its `PATH`, then use an absolute entrypoint if needed. |
 | The activity writes no artifact | The run only records changes made below its activity workspace. Make the command write relative to its working directory, as this example does. |
-| The wrong machine executes the command | Direct execution always occurs on the daemon host. Run a daemon in the target environment, or use a remote runtime such as Kubernetes or SLURM instead. |
+| The wrong machine executes the command | Direct execution always occurs on the AkôFlow server host. Run the server in the target environment, or use a remote runtime such as Kubernetes or SLURM instead. |
 
 Read [Runtime adapters](../runtimes) for where the command runs and [Execute and monitor a workflow](../guides/workflows/executions) for run status and results.

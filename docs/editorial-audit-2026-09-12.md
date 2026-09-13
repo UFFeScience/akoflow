@@ -207,6 +207,8 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 
 149. **P2 resolved in first-paragraph language:** all 61 authored-page openings were scanned for whether they state a task or subject early. The scope/topology reference replaced "freeze the infrastructure universe" with the concrete version-and-link relationship. The local direct Showcase now says the server runs the command on its own host and records workspace file changes; prerequisites use the same term. Other openings were left intact because their first paragraph already states a use or audience, or the page is a short choice table. This is an opening scan, not a full-body editorial pass.
 
+150. **P2 resolved in Showcase and operator wording:** a sentence-length scan of authored prose found few long sentences, but the local Showcase still alternated `daemon host` with `server host` after its opening had been simplified. Its evidence and recovery text, the Showcase index card/setup, and the edge-cloud trace location now use server language. The SLURM fixture keeps daemon terminology where it names the isolated process and script. The Linux server-update sequence is split into two shorter steps without changing the versioned-image order. Full-body and runtime-claim review remains open.
+
 ## Page inventory
 
 | Page | Current pass | Next review |
@@ -248,7 +250,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `guides/operations/search-and-notifications.md` | Short choice page preserving the old URL and distinguishing lookup from profile-local alerts | Check both destinations in navigation |
 | `guides/operations/find-records.md` | Desktop/API search procedure, result fields, limits, and empty-result recovery | Recheck UI behavior against Desktop |
 | `guides/operations/follow-notifications.md` | Second read; recovery uses each operation's owning record, and update notices have no server-side record | Recheck UI behavior against Desktop |
-| `guides/operations/server-instance.md` | Second read; corrected invalid tunnel command, simplified server language, and preserved HTTP failure through jq | Recheck release assets when version changes |
+| `guides/operations/server-instance.md` | Third read; update sequence split into short steps; tunnel command and HTTP failure checks remain | Recheck release assets when version changes |
 | `guides/operations/troubleshooting.md` | Fifth read; evidence collection now separates run/operation records, Provenance, and actual Audit emitters | Recheck other diagnostic claims after P0 fixes |
 | `guides/workflows/definitions.md` | Third read; API list, detail, and export now fail on HTTP errors | Recheck payload against importer after P0 contracts fix |
 | `guides/workflows/executions.md` | Fifth read; real-run examples include the verified local path and conditional response families remain qualified | Recheck other runtimes against their own guides |
@@ -263,10 +265,10 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `reference/feature-coverage.md` | Third read; route map now serves the reader, with its maintainer update rule in the quality plan | Check contracts against current handlers and schemas |
 | `reference/planning-and-execution-states.md` | Third read; algorithm lifecycle and progress fields are separate; status claims checked against handlers, coordinator, and domain | Recheck generated endpoint contracts after P0 fixes |
 | `runtimes.md` | Second read; marked serverless schema value unavailable because no adapter is registered | Recheck other provider claims against adapters |
-| `showcase/edge-cloud-simulation.mdx` | Second read; fixed manual plan and scheduler-comparison purpose are direct; authenticated polling now fails on HTTP errors | Check result against pinned bundle |
-| `showcase/index.mdx` | Second read; distinguishes existing-daemon API setup from the self-started SLURM fixture; no unsupported scalability language | Recheck cards after Showcase audit |
+| `showcase/edge-cloud-simulation.mdx` | Third read; trace location now names the server workspace; fixed-plan purpose and HTTP-failing polling remain | Check result against pinned bundle |
+| `showcase/index.mdx` | Third read; card and setup use server language; self-started SLURM fixture remains distinct | Recheck cards after Showcase audit |
 | `showcase/kubernetes-real-execution.mdx` | Second read; checkout precedes Kind setup and inline API submission; Desktop is same-server inspection | Check result against pinned bundle |
-| `showcase/local-direct-execution.mdx` | Third read; server-host execution leads the page; versioned checkout and bearer-authenticated run GET remain | Check result against pinned bundle |
+| `showcase/local-direct-execution.mdx` | Fourth read; server-host wording is consistent across purpose, evidence, and recovery | Check result against pinned bundle |
 | `showcase/network-fanout.mdx` | Second read; model-specific estimate phrased directly; authenticated polling now fails on HTTP errors | Check result against pinned bundle |
 | `showcase/parallel-50-core.mdx` | Second read; compute-capacity purpose stated directly; authenticated polling now fails on HTTP errors | Check result against pinned bundle |
 | `showcase/slurm-local-fixture.mdx` | Second read; local adapter evidence and real-cluster limits stated once; versioned checkout and optional Desktop inspection retained | Check result against pinned bundle |

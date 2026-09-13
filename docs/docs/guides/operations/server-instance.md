@@ -193,9 +193,9 @@ or register infrastructure and execute the [first simulated workflow](../workflo
 
 ## Operate, update, and remove
 
-Use the exact same steps with a newer release tag to update: download and
-verify its archives, load its versioned images, change only
-`AKOFLOW_RELEASE_TAG` in `.env`, then run `docker compose -f compose.yaml up -d`.
+To update, download and verify the archives for the newer release, then load
+its versioned images. Change only `AKOFLOW_RELEASE_TAG` in `.env` and run
+`docker compose -f compose.yaml up -d`.
 The named volumes remain attached, so plans, runs, artifacts, and managed
 credentials are retained. Export the instance before changing versions if you
 need an additional recovery point; see [Instance management](./instance-management).

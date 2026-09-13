@@ -206,27 +206,14 @@ in **Ready** above. If Desktop is not connected, use
 [Troubleshooting](./guides/operations/troubleshooting) before registering a
 remote target.
 
-### Check through the API
-
-For a daemon you manage directly, first follow [API connection setup](./tutorials/api-access).
-Run these public bootstrap checks against **that server**, using its actual address:
-
-```bash
-curl --fail-with-body "$AKOFLOW_API_URL/preflight/" | jq
-curl --fail-with-body "$AKOFLOW_API_URL/instance/" | jq '{id, name}'
-```
-
-Expect `server.available: true` and a non-empty instance ID. Check `docker` and
-`buildkit` separately; server availability alone does not confirm either build
-prerequisite. Desktop manages its own internal port and credential, which may
-differ from a separately managed server.
-
 ## 5. Continue with your execution target
 
 - [Run your first local workflow in Desktop](./guides/workflows/first-local-run): create one activity, run it, and inspect its generated file.
 - [Register an HPC / SLURM environment](./tutorials/register-hpc): authorize an SSH key, test the login connection, and discover partitions.
 - [Connect Google Cloud](./tutorials/connect-cloud): validate a service account, register the environment, and synchronize the compute catalog.
 - [Run the first simulated workflow](./guides/workflows/first-run): verify workflow execution through the documented API setup without a remote account.
+
+For a server you manage separately, use the [server installation](./guides/operations/server-instance) and [API connection setup](./tutorials/api-access) guides.
 
 ## Recover at the step that failed
 
@@ -246,13 +233,9 @@ For further diagnosis, use [Troubleshooting](./guides/operations/troubleshooting
 Keep the failed step, exact error, operating system and Desktop version when
 requesting help.
 
-## Updates and verification scope
+## Update AkôFlow
 
 Export your instance before changing versions; see [Instance management](./guides/operations/instance-management).
 Keep Desktop and its runtime on matching versions.
 
-The v1.0.8 Linux package was downloaded, checksum-verified, and opened from an
-extracted copy with a fresh profile on 2026-09-12. It reached the successful
-checkup above. A clean `apt` install and macOS/Windows installation remain
-unverified; [Downloads](./downloads#download-verification-result) records the
-package digest.
+For the v1.0.8 download digest and verification record, see [Downloads](./downloads#download-verification-result).

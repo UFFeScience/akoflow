@@ -20,12 +20,17 @@ Start with a local environment to learn the interface. Connecting HPC, Kubernete
 
 The [checked-in SimGrid example](./guides/workflows/first-run) verifies three activities and two transfers through a separately managed API endpoint. Use it after the local Desktop run if you want to explore simulation.
 
+## What is supported today
+
+The local Desktop workflow has a verified run on Linux. The [Showcase](./showcase/) also has verified SimGrid and local Kind examples. The SLURM example exercises a local scheduler fixture; a run on an institutional cluster remains unverified.
+
+Google Cloud catalog and worker provisioning are implemented, but a complete live provision-and-destroy cycle has not been verified. AWS EC2 discovery and provisioning are unavailable; S3 transfers have local code tests but no verified AWS-account run. Check the [cloud support matrix](./guides/infrastructure/cloud-capacity#provider-support-in-v10) before choosing a provider.
+
 ## Connect another environment
 
 - [Register HPC / SLURM](./tutorials/register-hpc) after receiving site-approved SSH and scheduler access.
 - [Connect Google Cloud](./tutorials/connect-cloud) with a service account and a project you can inspect.
 - [Configure Kubernetes](./guides/infrastructure/kubernetes) when you have cluster access.
-- [Review cloud support](./guides/infrastructure/cloud-capacity#provider-support-in-v10) before planning a cloud run. AWS EC2 discovery and provisioning are not implemented.
 
 For direct API work, complete [API connection setup](./tutorials/api-access) first.
 

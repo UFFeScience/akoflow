@@ -28,7 +28,7 @@ Transfer records can show how data reached a task and how many bytes moved. Wher
 
 **Provenance** connects scientific entities, produced data, their locations, and the workflow activity that created them. It answers questions such as "which run produced this file?" or "which input lineage fed this result?"
 
-**Audit** records operational and security-relevant actions, such as a user or service changing a record or requesting an operation. It answers "who changed this state and when?" It is not a replacement for data lineage.
+**Audit** currently records connection health checks, resource discovery, and console commands or sessions. It helps answer when those actions ran and whether they succeeded. Console events can include an actor ID; connection and discovery events do not identify who initiated them. Credential changes and workflow operations are not recorded here. Their current records and operation details may show status, but a complete change history is not available through Audit.
 
 ## Compare before drawing conclusions
 

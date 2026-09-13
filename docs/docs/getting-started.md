@@ -45,7 +45,7 @@ For direct API work, complete [API connection setup](./tutorials/api-access) fir
 | Limit the resources and network offered to planning | [Execution scopes and network topologies](./guides/infrastructure/execution-scopes) |
 | Reproduce a complete example | [Workflow Showcase](./showcase/) |
 | Trace how a result was produced | [Trace a result with provenance](./guides/data/provenance) |
-| Investigate a connection or other operation | [Inspect audit events](./guides/data/audit-events) |
+| Investigate a connection check, resource discovery, or console action | [Inspect audit events](./guides/data/audit-events) |
 
 ## Understand the records
 

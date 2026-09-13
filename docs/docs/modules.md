@@ -23,7 +23,7 @@ The Desktop application and development web UI use the same React interface and 
 - **Infrastructure** — environments, connections, discovered inventory, machine configurations, execution scopes, network topology, storage, and cloud capacity.
 - **Runs** — real, simulated, and interactive executions, activity status, logs, transfers, and planned-versus-observed timing.
 - **Artifacts** — executable artifacts, immutable variants, locations, builds, and materializations.
-- **Provenance** and **Audit** — scientific lineage and operational actions respectively.
+- **Provenance** — scientific lineage; **Audit** — recorded connection, discovery, and console actions.
 - **Settings** and **Console** — instance configuration, credential references, and supported interactive access.
 
 The UI is a client, not a second implementation of the control plane. Desktop actions call the same API available to automation clients.
@@ -58,7 +58,7 @@ Cloud support separates catalog/configuration, capacity targets, provisioned ins
 
 ## Provenance and audit
 
-Provenance links workflow versions, plans, runs, activities, data, artifacts, locations, materializations, and transfers. Audit records control-plane actions and their results. They are related but intentionally separate histories.
+Provenance links workflow versions, plans, runs, activities, data, artifacts, locations, materializations, and transfers. Audit currently records connection health, resource discovery, and console actions and their outcomes. It does not record every control-plane change. These are separate histories.
 
 ## Source map
 

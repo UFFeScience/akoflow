@@ -171,6 +171,8 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 
 131. **P1 resolved in artifact evidence wording:** a cross-page read of all six Data and evidence guides found one contradiction: the artifact-location guide said the API lists saved observations, while the API overview promised to "inspect prepared bytes" and the guide's closing sentence implied a fresh byte check. Both now describe recorded locations, preparation status, and run observations. The list handlers read catalog records; they do not recheck destination bytes. The other Data and evidence pages kept their distinct build, provenance, and audit tasks. The final all-page pass remains open.
 
+132. **P0 resolved in Audit coverage claims:** the guide, chooser, notifications, entry pages, explanation, and route map previously implied that Audit records workflow, credential, planning, build, and cloud operations, or answers who changed any state. A repository-wide search of `RecordAuditEvent` call sites found producers only for connection health, resource discovery, and console commands/sessions. Twelve authored pages now route readers to the owning operation or provenance record and state the actual Audit scope. The Desktop still shows workflow and credential category tabs, but the current daemon does not emit events into them. The final all-page pass and live Desktop verification remain open.
+
 ## Page inventory
 
 | Page | Current pass | Next review |
@@ -190,9 +192,9 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `guides/data/artifacts.md` | Short choice page preserving the old URL and routing storage, build, and recorded-location tasks | Check destinations in navigation |
 | `guides/data/build-executable.md` | Third read; build-context upload now fails on HTTP errors; asynchronous Docker/SIF flow remains | Verify a live registry pull and SIF conversion |
 | `guides/data/artifact-locations.md` | Cross-page read; catalog and run observations are explicitly saved records, not live byte checks | Recheck materialization payloads after P0 contracts fix |
-| `guides/data/provenance-and-audit.md` | Short choice page preserving the old URL and distinguishing the two record types | Check both destinations in navigation |
-| `guides/data/provenance.md` | Third read; screenshot captions shortened and API examples fail on HTTP errors | Recheck Desktop interactions against packaged app |
-| `guides/data/audit-events.md` | Reading-order reread; event investigation now precedes UI/API controls and duplicate event-category prose was cut | Recheck Desktop interactions against packaged app |
+| `guides/data/provenance-and-audit.md` | Scope reread; directs only recorded connection, discovery, and console actions to Audit | Check both destinations in navigation |
+| `guides/data/provenance.md` | Scope reread; no longer routes credential changes to Audit; API examples fail on HTTP errors | Recheck Desktop interactions against packaged app |
+| `guides/data/audit-events.md` | Source-checked scope; current emitters cover connection health, discovery, and console, while other category tabs can be empty | Recheck Desktop interactions against packaged app |
 | `guides/infrastructure/aws.md` | Third read; omitted/`env` transfer credential selection and unsigned S3 browsing are explicit | Check provider claims against disposable-bucket evidence |
 | `guides/infrastructure/cloud-capacity.md` | Fourth read; project, architecture, CIDR, zone choice, and asynchronous provision failures match handlers and Terraform | Validate with disposable GCP account |
 | `guides/infrastructure/cloud-support.md` | First read; GCP/AWS support matrix separated from capacity procedure and linked to provider tasks | Recheck against live GCP/S3 evidence |
@@ -211,7 +213,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `guides/operations/interactive-console.md` | Plain-language reread; basic path and diagram now use resource/connection terms, while API retains returned IDs; closure follows streaming/log use | Recheck session behavior against Desktop |
 | `guides/operations/search-and-notifications.md` | Short choice page preserving the old URL and distinguishing lookup from profile-local alerts | Check both destinations in navigation |
 | `guides/operations/find-records.md` | Desktop/API search procedure, result fields, limits, and empty-result recovery | Recheck UI behavior against Desktop |
-| `guides/operations/follow-notifications.md` | Second read; API recovery now uses cloud operations and artifact-build runs, matching the tracked notification types | Recheck UI behavior against Desktop |
+| `guides/operations/follow-notifications.md` | Audit-scope reread; recovery uses each operation's owning record, with Audit limited to its actual emitters | Recheck UI behavior against Desktop |
 | `guides/operations/server-instance.md` | Second read; corrected invalid tunnel command, simplified server language, and preserved HTTP failure through jq | Recheck release assets when version changes |
 | `guides/operations/troubleshooting.md` | Fourth read; root health authentication and HTTP-error exits are consistent | Recheck other diagnostic claims after P0 fixes |
 | `guides/workflows/definitions.md` | Third read; API list, detail, and export now fail on HTTP errors | Recheck payload against importer after P0 contracts fix |

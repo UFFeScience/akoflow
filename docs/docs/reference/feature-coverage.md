@@ -58,7 +58,7 @@ The `/network` and `/network/new` routes exist in Desktop, but the current sideb
 | `/materializations` | Compatibility/aggregate materialization catalog | `/artifact-materializations/` | [Artifact locations](../guides/data/artifact-locations) |
 | `/data` | Generated scientific data grouped by workflow | Provenance data projections | [Trace a result](../guides/data/provenance) |
 | `/provenance` | Explore entities, SQL, and lineage | `/provenance/` | [Trace a result](../guides/data/provenance) |
-| `/audit` | Search operational history | `/audit-events/` | [Inspect audit events](../guides/data/audit-events) |
+| `/audit` | Inspect recorded connection, discovery, and console events | `/audit-events/` | [Inspect audit events](../guides/data/audit-events) |
 | `/console` | Open interactive terminal sessions | `/console-commands/`, `/console-sessions/` | [Interactive console](../guides/operations/interactive-console) |
 | `/settings` | Manage identity, appearance, instance archives, and reset | Instance and preference endpoints | [Instance management](../guides/operations/instance-management), [Personal preferences](../guides/operations/personal-preferences) |
 | `/settings/ssh-keys` | Generate or import daemon-owned SSH keys | `/ssh-keys/` | [SSH service keys](../guides/operations/credentials-and-ssh) |

@@ -10,4 +10,4 @@ description: Find a saved record or return to a recent Desktop operation.
 | Find a workflow, run, environment, or other saved record | [Find a record](./find-records) |
 | Return to an operation started in this Desktop profile | [Follow operation notifications](./follow-notifications) |
 
-Notifications are local to the Desktop profile. When you need a durable record of what happened, [inspect audit events](../data/audit-events).
+Notifications are local to the Desktop profile. For a lasting status, open the operation's detail page. [Audit events](../data/audit-events) cover connection checks, resource discovery, and console actions, but not every notified operation.

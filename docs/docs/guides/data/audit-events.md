@@ -5,7 +5,7 @@ description: Find operational events and correlate failures with the affected Ak
 
 # Inspect audit events
 
-Use **Audit** to find what operation ran, when it ran, which record it targeted, and whether it succeeded. Audit covers connection checks, infrastructure discovery, console use, credentials, and workflow operations. For the scientific history of a result, [trace its provenance](./provenance).
+Use **Audit** to inspect recorded connection health checks, resource discovery, and console commands or sessions. Each event has a time, target, and outcome. The current daemon does not emit audit events for credential changes, planning, artifact builds, cloud provisioning, or workflow runs. Use each operation's detail page for its status; for the scientific history of a result, [trace its provenance](./provenance).
 
 ## Investigate an operation
 
@@ -15,7 +15,7 @@ Use **Audit** to find what operation ran, when it ran, which record it targeted,
 
 ## Inspect the audit trail
 
-Open **Audit**. It starts in **All events** and groups the loaded records into discovery/resources, connections, console sessions, workflows, and credentials.
+Open **Audit**. It starts in **All events**. The interface has category tabs for discovery/resources, connections, console sessions, workflows, and credentials. The current daemon writes events only to the first three groups; an empty workflow or credential tab does not prove that no such operation occurred.
 
 <img src={require('@site/static/img/interface/operations/audit-events.png').default} alt="AkôFlow Desktop Audit view showing the All events filter, chronological audit table, event targets, succeeded and failed outcomes, and operational summaries." />
 

@@ -114,7 +114,7 @@ For execution:
 2. inspect its failure reason, resolved resource/runtime and logs;
 3. compare planned and observed transfer, queue and execution timing;
 4. check artifact materialization and storage health;
-5. correlate IDs and timestamps in **Audit** and **Provenance**.
+5. use **Provenance** to follow the run's scientific records; check **Audit** only if a connection check, resource discovery, or console action may explain the failure.
 
 Do not assume an HTTP `202 Accepted` means a long-running operation completed; it means the operation was queued or accepted. Follow its detail endpoint until a terminal state.
 

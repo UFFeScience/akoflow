@@ -116,4 +116,4 @@ curl --fail-with-body -X POST -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
 
 Send the same payload to `/provenance/sql/explain/` to inspect the query plan without running the ordinary result path. SQL results contain typed `columns`, `items`, pagination information, a `truncated` flag, and elapsed milliseconds.
 
-For connection, credential, or console operations around the same time, [inspect audit events](./audit-events). Provenance endpoints return `503 Service Unavailable` when the explorer is not configured, `400 Bad Request` for invalid entity, SQL, or lineage requests, and `500 Internal Server Error` if schema discovery fails.
+For recorded connection checks, resource discovery, or console actions around the same time, [inspect audit events](./audit-events). Provenance endpoints return `503 Service Unavailable` when the explorer is not configured, `400 Bad Request` for invalid entity, SQL, or lineage requests, and `500 Internal Server Error` if schema discovery fails.

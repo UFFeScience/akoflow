@@ -163,6 +163,7 @@ const runnableSimulationRequests = {
 // not from JSON tags alone. Keep them scoped to fields the service validates.
 const verifiedRequestNotes = {
   "GET /": "This health route is at the daemon root, outside `/akoflow-api/`. With the API URL from the [API access tutorial](/docs/tutorials/api-access), the cURL command removes that prefix and requests `/`. A healthy daemon returns plain text `ok`; this check does not verify Docker, BuildKit, or a workflow runtime. Use [preflight](/docs/api/endpoints/instance/get-preflight) for those local capability checks.",
+  "GET /akoflow-api/preflight/": "The response has `server`, `docker`, and `buildkit` objects, each with `available` and `message`. `server.available` is true when this route responds, but the Docker and BuildKit checks can be false while HTTP still returns `200 OK`. Inspect their individual values before running a local workflow. The checks run in the daemon process, not in your browser or shell.",
   "GET /akoflow-api/console-sessions/{sessionId}/stream/": "Open this URL with a WebSocket client after creating a console session. A successful upgrade returns `101 Switching Protocols` and carries terminal input and output over the socket; it is not a JSON response. An unknown session returns `404`. See the [interactive console guide](/docs/guides/operations/interactive-console) for session lifecycle.",
   "POST /akoflow-api/provenance/sql/": "Send a read-only `sql` query using `SELECT` or `WITH`; `parameters` supplies optional named values, and `page`/`pageSize` control results (at most 200 rows per page). Use `GET /provenance/sql/schema/` to see allowed tables and columns. The service enforces a 10-second timeout and rejects writes or restricted fields with `400`; an unavailable explorer returns `503`. See [provenance and audit](/docs/guides/data/provenance-and-audit#query-with-read-only-sql).",
   "POST /akoflow-api/provenance/sql/explain/": "Send the same `sql` and optional named `parameters` as the read-only SQL route. This runs `EXPLAIN QUERY PLAN` for a permitted `SELECT` or `WITH` statement and returns plan rows, not the query's data rows. It uses the same read-only table/column restrictions and 10-second timeout; invalid SQL returns `400` and an unavailable explorer returns `503`.",
@@ -623,11 +624,10 @@ function extractResponseContract(
   if (endpoint.path === "/")
     return { mediaType: "text/plain", type: "plain text", example: "ok" };
   if (endpoint.path === "/akoflow-api/preflight/") {
-    const check = { available: true, message: "service is available" };
     return {
       mediaType: "application/json",
       type: "preflight checks",
-      example: { server: check, docker: check, buildkit: check },
+      example: null,
     };
   }
   if (endpoint.handler === "StreamConsoleSession")

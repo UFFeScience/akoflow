@@ -32,7 +32,18 @@ func TestInventoryOnlyResourceDocumentationRequest(t *testing.T) {
 	}
 	store := resourcerepo.New(db)
 	handler := &Handler{resources: store}
-	const body = `{"id":"inventory-only-node","environmentVersionId":"simulation-example-v1","type":"fog_device","name":"Inventory-only node","providerId":"inventory-only-node","cpuCores":2,"cpuCapacity":2,"memoryBytes":2147483648,"computeSpeedup":1,"schedulable":false}`
+	const body = `{
+		"id": "inventory-only-node",
+		"environmentVersionId": "simulation-example-v1",
+		"type": "fog_device",
+		"name": "Inventory-only node",
+		"providerId": "inventory-only-node",
+		"cpuCores": 2,
+		"cpuCapacity": 2,
+		"memoryBytes": 2147483648,
+		"computeSpeedup": 1,
+		"schedulable": false
+	}`
 	request := httptest.NewRequest(http.MethodPost, "/resources/", strings.NewReader(body))
 	request.Header.Set("Content-Type", "application/json")
 	response := httptest.NewRecorder()

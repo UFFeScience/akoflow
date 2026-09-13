@@ -12,7 +12,7 @@ This reference describes the `EnvironmentDefinition` document accepted by `POST 
 - Use stable, unique IDs. The environment ID is the identity used by `PUT`; send a complete definition when replacing an unused environment. Replacement can fail once a scope, plan, or other record references its inventory. The version ID is the identity referenced by scopes.
 - Create the environment before an execution scope. A scope refers to the version ID, and its network topology is a separate document.
 - Declare performance values deliberately. The API decodes omitted numeric values as `0`, including `computeSpeedup`, and saves them explicitly. Set a positive speedup and realistic capacity for schedulable resources.
-- Keep credentials out of the file. `credentialRef` and `credentialReference` name a credential already stored in AkôFlow; they are not the secret itself.
+- Keep secrets out of the file. Connection credential references identify saved credentials. Transfer and storage references have provider-specific behavior; see the [AWS/S3 limits](../guides/infrastructure/aws) before using them.
 
 The smallest useful simulation definition is versioned in [`examples/simulation/environment.yaml`](https://github.com/UFFeScience/akoflow/blob/v1.0.8/examples/simulation/environment.yaml). It is a better starting point than an empty document because it includes a runtime, schedulable resources, and their bindings.
 
@@ -119,7 +119,7 @@ resourceRuntimeBindings:
 | `connections[].configuration` | No | object | omitted | Connection-type-specific settings. |
 | `connections[].createdAt` | No | timestamp | server-managed | Read-only evidence field. |
 
-`connectorBindings` declares artifact-transfer capabilities. Its `connector` enum is `rsync`, `scp`, `sftp`, `http`, `s3-compatible`, or `gcs`. The fields `id`, `environmentId`, and `connector` identify the binding; `endpoint`, `credentialRef`, and `configuration` are optional. The schema accepts `gcs`, but the current server's direct `gs://` connector returns an unavailable error. A declared binding alone does not make that transfer usable. `health` is observation data and should be written by a check rather than authored as an assumption.
+`connectorBindings` declares artifact-transfer capabilities. Its `connector` enum is `rsync`, `scp`, `sftp`, `http`, `s3-compatible`, or `gcs`. The fields `id`, `environmentId`, and `connector` identify the binding; `endpoint`, `credentialRef`, and `configuration` are optional. The direct S3 transfer connector currently reads server environment credentials when its endpoint configuration omits `credentialRef` or sets it to `env`; it does not resolve an arbitrary saved reference. The schema accepts `gcs`, but the current server's direct `gs://` connector returns an unavailable error. A declared binding alone does not make that transfer usable. `health` is observation data and should be written by a check rather than authored as an assumption.
 
 `connectionChecks` is also observed data. Do not copy a historical `online` result into a new environment file: validate the connection again after import.
 
@@ -132,7 +132,7 @@ resourceRuntimeBindings:
 | `storages[].endpoint` | No | string | `""` | Mount, URL, bucket, or filesystem endpoint. |
 | `storages[].capacityBytes` | No | integer | `0` | Capacity in bytes; must not be negative. |
 | `storages[].shared`, `readOnly` | No | boolean | `false` | Access semantics. |
-| `storages[].credentialReference` | No | string | `""` | Stored credential reference. |
+| `storages[].credentialReference` | No | string | `""` | Recorded reference. The default S3 browser does not resolve it and sends unsigned requests. |
 | `storages[].configuration`, `metadata` | No | object | omitted | Storage-provider details. |
 | `storages[].configuration.browseRoots[]` | For browsing | array of objects | none | Approved roots, each with a `path`. For local filesystem browsing, include the exact `endpoint` path. |
 | `storages[].runtimeBindings[]` | No | array | none | Makes storage available to a runtime. |

@@ -141,6 +141,8 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 
 116. **P0 resolved in cloud zone selection claim:** the capacity guide asked readers to choose a zone policy and sent `zonePolicy: "any"`, implying that policy controls provisioning. The target repository stores the field, but the Terraform runner passes only `fixedZone` to its module; without it, the module takes the first active zone returned for the region. The capacity guide, GCP guide, and generated target endpoint note now say this directly, and the example omits the ineffective policy value. This is source-audited behavior; a live project run remains open.
 
+117. **P0/P1 resolved in S3 credential narrative:** the AWS guide claimed every nonempty transfer credential reference fails, but `EnvironmentS3Credentials` accepts the literal `env` as well as an omitted reference; only other values fail with the default resolver. The guide and environment reference now state that rule. The default S3 storage browser is constructed without a credential resolver, so its saved `credentialReference` and server AWS environment variables do not sign browse requests; the docs distinguish that from the separate transfer connector. A regression assertion covers the accepted `env` reference. Live AWS and S3-compatible bucket access remain unverified.
+
 ## Page inventory
 
 | Page | Current pass | Next review |
@@ -163,7 +165,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `guides/data/provenance-and-audit.md` | Short choice page preserving the old URL and distinguishing the two record types | Check both destinations in navigation |
 | `guides/data/provenance.md` | Third read; screenshot captions shortened and API examples fail on HTTP errors | Recheck Desktop interactions against packaged app |
 | `guides/data/audit-events.md` | Reading-order reread; event investigation now precedes UI/API controls and duplicate event-category prose was cut | Recheck Desktop interactions against packaged app |
-| `guides/infrastructure/aws.md` | Plain-language pass after code audit; server credential setup, partial S3 path, and absent EC2 path are explicit | Check provider claims against disposable-bucket evidence |
+| `guides/infrastructure/aws.md` | Third read; omitted/`env` transfer credential selection and unsigned S3 browsing are explicit | Check provider claims against disposable-bucket evidence |
 | `guides/infrastructure/cloud-capacity.md` | Third read; project, architecture, CIDR and actual fixed-zone behavior match the Terraform target | Validate with disposable GCP account |
 | `guides/infrastructure/machine-configurations.md` | Focused optional Ansible setup; validation and saved version use one playbook, and the returned version ID is consumed by the capacity example in the same Bash session | Validate against disposable GCP worker |
 | `guides/infrastructure/environments.md` | Plain-language/claim pass; local API definition persisted in a one-off repository test, and in-use revision language matches the API | Recheck remote flows with provider evidence |
@@ -191,7 +193,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `internal/workflow-spec.md` | Second read; lead example now uses one execution mode and marks script paths as prerequisites | Check every field contract against current importer |
 | `modules.md` | Developer detail remains in the architecture section; planning candidates now distinguish shared inputs from algorithm-specific predictions | Recheck claims against daemon composition |
 | `reference/api-overview.md` | Fifth read; 124 listed method/path pairs match the current Go router | Check field and response contracts against current handlers and schemas |
-| `reference/environment-yaml.md` | Claim pass; corrected API defaults and documents local storage opt-in, persisted browseRoots configuration, and catalog health limits | Continue field-level schema contract audit |
+| `reference/environment-yaml.md` | Third read; S3 transfer and browser credential exceptions now qualify the generic reference fields | Continue field-level schema contract audit |
 | `reference/execution-scopes-and-topologies.md` | Claim pass; clarified API prerequisites and the actual omitted link direction/sharing values | Check contracts against current handlers and schemas |
 | `reference/feature-coverage.md` | Third read; route map now serves the reader, with its maintainer update rule in the quality plan | Check contracts against current handlers and schemas |
 | `reference/planning-and-execution-states.md` | Second read; session cancellation and run/task status claims checked against handlers, coordinator, and domain | Recheck generated endpoint contracts after P0 fixes |

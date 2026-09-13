@@ -13,9 +13,10 @@ For the API commands below, complete [API connection setup](../../tutorials/api-
 
 Open **Artifacts** and choose **Build artifact**. Enter an artifact ID, semantic version, registry image reference, and architecture. Desktop registers an immutable catalog version, creates a Docker-image-to-SIF build specification, and immediately starts its build run.
 
-To do the same through the API, run these two calls in order:
+To do the same through the API, the server needs an artifact store and an Apptainer builder that can reach the image registry. Register the image, start the build, and keep the returned IDs:
 
 ```bash
+set -o pipefail
 curl --fail-with-body -X POST \
   -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -H "Content-Type: application/json" \
@@ -25,15 +26,23 @@ curl --fail-with-body -X POST \
     "image":"docker.io/library/busybox:1.36",
     "architecture":"amd64"
   }' \
-  "$AKOFLOW_API_URL/artifacts/docker/"
+  "$AKOFLOW_API_URL/artifacts/docker/" -o registered-artifact.json || exit 1
 
-# Copy build.id from the response before starting the build.
-read -r -p 'Build ID from the response: ' BUILD_ID
+BUILD_ID=$(jq -er '.build.id' registered-artifact.json) || exit 1
 curl --fail-with-body -X POST -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
-  "$AKOFLOW_API_URL/artifact-builds/$BUILD_ID/runs/"
+  "$AKOFLOW_API_URL/artifact-builds/$BUILD_ID/runs/" -o started-build.json || exit 1
+RUN_ID=$(jq -er '.id' started-build.json) || exit 1
+
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  "$AKOFLOW_API_URL/build-runs/$RUN_ID/" | jq '{id,status,error,logs}'
 ```
 
-The Docker registry pull and SIF conversion run in the build service, not in the browser. Poll `/build-runs/{runId}/`. When complete, `/build-runs/{runId}/output/` streams the SIF file.
+The build starts asynchronously. Repeat the last GET until `status` is `completed` or `failed`; if it fails, read `error` and `logs` before retrying. Once completed, download the SIF:
+
+```bash
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  "$AKOFLOW_API_URL/build-runs/$RUN_ID/output/" -o "$RUN_ID.sif"
+```
 
 ## Use a custom build recipe
 

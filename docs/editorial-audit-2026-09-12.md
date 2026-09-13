@@ -49,6 +49,8 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 41. **P0/P1 resolved in provenance/audit API examples — undefined filter IDs:** lineage used `$RUN_ID` without obtaining it, and the audit failure example required an undefined `$ENVIRONMENT_ID`. The page now asks for a run ID from Explore, rejects an empty value, and demonstrates a runnable failure query before showing an optional environment filter. The nearby panel and depth language was shortened.
 42. **P0/P1 resolved in artifact browsing examples — undefined inventory IDs:** the guide used `$ENVIRONMENT_ID`, `$STORAGE_ID`, and `$RUN_ID` without obtaining them. It now takes an existing environment ID, lists its storages, asks for one returned storage ID, and lists materializations without requiring a run filter. Sample file and destination paths are explicitly identified as values to replace.
 43. **P0/P1 resolved in interactive-console API flow — missing session ID and premature close:** the guide opened a session on a fictitious `hpc-login` ID, then used `$SESSION_ID` without setting it and placed session closure before streaming and log export. It now takes a saved interactive-capable resource ID, captures the returned session ID, reuses the resource for one-shot commands, and closes the session after use. The command JSON was checked with `jq`.
+44. **P1 resolved in notification API equivalents — undefined operation IDs:** the page listed detail URLs with `$PLANNING_SESSION_ID`, `$RUN_ID`, and `$ENVIRONMENT_ID` without obtaining them. It now begins with the planning-session and run collections, then asks for a saved cloud environment ID only for the cloud-instance list.
+45. **P1 resolved in troubleshooting connection history — undefined ID:** the history command used `$CONNECTION_ID` without a source. It now asks for the saved connection ID shown by the environment detail or registration response and rejects an empty value.
 
 ## Page inventory
 
@@ -81,9 +83,9 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `guides/operations/credentials-and-ssh.md` | Second read; streamed private key and token payloads from protected files; aligned reference wording with connection fields | Recheck current Desktop form and key lifecycle claims |
 | `guides/operations/instance-management.md` | Second read plus shell audit; preserves instance identity and derives imported snapshot ID from the response | Recheck complete snapshot behavior against a local archive |
 | `guides/operations/interactive-console.md` | API-path pass; resource ID is explicit, session ID comes from the creation response, and closure follows streaming/log use | Recheck session behavior against Desktop |
-| `guides/operations/search-and-notifications.md` | Second read; search fields, ranking, limits, and failure semantics checked against handler; notification UI claims still need Desktop review | Recheck UI behavior against Desktop |
+| `guides/operations/search-and-notifications.md` | API-path pass; operation collections replace undefined detail IDs, while cloud list takes a saved environment ID | Recheck UI behavior against Desktop |
 | `guides/operations/server-instance.md` | Second read; corrected invalid tunnel command, simplified server language, and preserved HTTP failure through jq | Recheck release assets when version changes |
-| `guides/operations/troubleshooting.md` | Second read; source-checked bootstrap/authentication and clarified reset data loss | Recheck diagnostic claims after P0 fixes |
+| `guides/operations/troubleshooting.md` | API-path pass; connection history now takes a saved connection ID; bootstrap/authentication and reset limits remain source-checked | Recheck diagnostic claims after P0 fixes |
 | `guides/workflows/definitions.md` | Second read; isolated the portable demo ID, stated its save step and simulation-only scope | Recheck payload against importer after P0 contracts fix |
 | `guides/workflows/executions.md` | Second read; corrected console-history claim and specified prerequisites for SimGrid submission | Recheck other runtimes against their own guides |
 | `guides/workflows/first-run.md` | Second read; shortened fixed-plan and Desktop inspection caveats | Keep the SimGrid API example aligned with its versioned bundle |
@@ -111,7 +113,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 ## Verification in this pass
 
 - `npm run typecheck`, `npm run build`, `npm run check:links`, and `git diff --check` passed on the editorial branch. All 125 endpoint pages generated; targeted checks confirmed the console-command request, qualified environment and workflow responses, and all six versioned first-run links.
-- All 109 fenced Bash/sh blocks in authored documentation parsed with `bash -n` on 2026-09-13. This is a syntax check, not an execution test; snippets embedded in JSX and commands outside fences need separate review.
+- All 110 fenced Bash/sh blocks in authored documentation parsed with `bash -n` on 2026-09-13. This is a syntax check, not an execution test; snippets embedded in JSX and commands outside fences need separate review.
 - The latest link check covered 396 local links/assets and 54 showcase downloads from the `v1.0.8` Git tag on 2026-09-13.
 - Headless Chromium at 390 × 844 loaded Getting Started, Core concepts, the console guide, the new Desktop first-run page, and all seven Showcase pages without page errors or horizontal overflow. Every Showcase API tab displayed its v1.0.8 checkout command; the first-run page's mobile menu opened and showed its tutorial link.
 - These checks establish site integrity for this pass. They do not prove tutorial execution, provider support, or completion of the editorial gate.

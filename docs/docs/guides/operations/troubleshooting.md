@@ -68,10 +68,12 @@ Test the credential and endpoint first, then health, then discovery. A healthy c
 
 Typical SSH causes are an unauthorized public key, wrong user/port, missing gateway authorization, invalid proxy command, or a key assigned to a different connection. Open **Settings → SSH service keys**, verify the assigned badge and fingerprint, and authorize the displayed public key on every hop.
 
-For historical evidence:
+For historical evidence, enter the saved connection ID shown in the environment detail or returned by the registration API:
 
 ```bash
-curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+read -r -p 'Connection ID: ' CONNECTION_ID || exit 1
+[ -n "$CONNECTION_ID" ] || exit 1
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   "$AKOFLOW_API_URL/environment-connections/$CONNECTION_ID/history/?limit=20"
 ```
 

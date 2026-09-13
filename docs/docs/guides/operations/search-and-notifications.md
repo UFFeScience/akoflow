@@ -88,23 +88,28 @@ Native operating-system notifications are emitted only when the browser/renderer
 
 ## API equivalents
 
-There is no `/notifications/` endpoint. Automation should query the resource that owns the operation:
+There is no `/notifications/` endpoint. Query the records that own the operation, then open a specific ID from a result when you need its detail:
 
 ```bash
-# Planning session
-curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
-  "$AKOFLOW_API_URL/planning-sessions/$PLANNING_SESSION_ID/"
+# Planning sessions
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  "$AKOFLOW_API_URL/planning-sessions/"
 
-# Execution run
-curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
-  "$AKOFLOW_API_URL/execution-runs/$RUN_ID/"
+# Execution runs
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  "$AKOFLOW_API_URL/execution-runs/"
 
 # Active interactive sessions
-curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   "$AKOFLOW_API_URL/console-sessions/"
+```
 
-# Provisioned cloud instances for one environment
-curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+For cloud instances, enter the ID of a cloud environment shown in **Infrastructure → Environments**:
+
+```bash
+read -r -p 'Cloud environment ID: ' ENVIRONMENT_ID || exit 1
+[ -n "$ENVIRONMENT_ID" ] || exit 1
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   "$AKOFLOW_API_URL/environments/$ENVIRONMENT_ID/cloud-instances/"
 ```
 

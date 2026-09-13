@@ -9,7 +9,7 @@ This reference describes the `EnvironmentDefinition` document accepted by `POST 
 
 ## Before you write a definition
 
-- Use stable, unique IDs. The environment ID is the identity used by `PUT`; send a complete definition when replacing an existing environment. The version ID is the identity referenced by scopes.
+- Use stable, unique IDs. The environment ID is the identity used by `PUT`; send a complete definition when replacing an unused environment. Replacement can fail once a scope, plan, or other record references its inventory. The version ID is the identity referenced by scopes.
 - Create the environment before an execution scope. A scope refers to the version ID, and its network topology is a separate document.
 - Declare performance values deliberately. Omitting a numeric value decodes it as `0` (except `computeSpeedup`, which the database defaults to `1`); that is rarely a useful planning model.
 - Keep credentials out of the file. `credentialRef` and `credentialReference` name a credential already stored in AkôFlow; they are not the secret itself.
@@ -201,6 +201,6 @@ After creating it, retrieve `GET /environments/lab-sim/` and confirm that the ru
 | A resource is not bound to the selected runtime | It is absent from compatible planning resources. Add an enabled resource-runtime binding. |
 | A resource has zero capacity or an omitted compute model | Planning may have no feasible placement or a meaningless estimate. Set resource capacities and workflow activity profiles explicitly. |
 | Two default storages bind to one runtime | The definition is rejected. Keep one default storage for each runtime/version pair. |
-| A scope or plan already uses the environment | Deletion is blocked to preserve reproducibility. Create a new version instead of mutating historical infrastructure. |
+| A scope or plan already uses the environment | Deletion or replacement can fail to preserve existing references. Register the revised inventory as a new environment with new environment and version IDs; the current API has no endpoint to append a version to an existing environment. |
 
 Related reference: [workflow YAML](../internal/workflow-spec), [SimGrid modeling](../guides/infrastructure/simgrid), [storage](../guides/infrastructure/storage), and [execution scopes](../guides/infrastructure/execution-scopes).

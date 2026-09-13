@@ -96,7 +96,9 @@ jq -e '.valid == true' gcp-validation.json || exit 1
 ```
 
 Continue only when validation succeeds. Inspect `project`, `region`,
-`machineCount`, `imageCount` and `diskCount` before saving.
+`machineCount`, `imageCount` and `diskCount` before saving. A `valid: true`
+response can still have an empty category; resolve that before choosing cloud
+capacity.
 
 ### 2. Store the credential and prepare the environment
 
@@ -157,7 +159,7 @@ be interpreted as free compute.
 | --------------------- | ---------------------------------------------------------- |
 | Credential validation | Correct project/region and `valid: true`                   |
 | Environment           | `research-gcp` exists with a cloud connection              |
-| Catalog               | Machines, compatible images and disk choices are available |
+| Catalog               | Machine, image and disk counts are reviewed; any empty category is investigated before provisioning |
 | Capacity              | No VM is expected merely from connecting the account       |
 
 Next, follow [Configure cloud capacity](../guides/infrastructure/cloud-capacity)

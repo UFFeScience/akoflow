@@ -169,7 +169,7 @@ returned by the server when creating an execution scope.
 | SSH health        | Healthy from the daemon using the selected credential and route      |
 | Discovery         | Expected partitions/nodes appear with plausible capacity             |
 | Compute boundary  | The login host is not treated as a batch compute allocation          |
-| Shared workspace  | Site-provided path is accessible from an approved compute allocation |
+| Shared workspace  | Site-provided path is recorded; access from a compute allocation still needs a batch probe |
 
 A discovered partition is not a reservation. Registration does not prove that
 an account, QoS, container image or shared filesystem will work in a batch job.

@@ -127,7 +127,7 @@ storages:
     shared: true
 ```
 
-These paths must be valid from the allocated compute node, not merely from the login shell. Submit a small site-approved probe that writes a file to the intended workspace and reads it back from a second allocation. Check ownership, quota, purge policy, and the path exposed inside Apptainer before relying on artifacts or inter-activity data.
+These paths must be valid from the allocated compute node, not merely from the login shell. Submit a small site-approved probe that writes a file to the intended workspace and reads it back from a second allocation. Check ownership, quota, purge policy, and the path exposed inside Apptainer before relying on artifacts or inter-activity data. The catalog entries alone do not enable Desktop file browsing; that also needs a configured browser and [approved roots](./storage).
 
 ## 5. Scope, validate, and submit a small real execution
 

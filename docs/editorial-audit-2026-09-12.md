@@ -125,6 +125,10 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 
 108. **P0 resolved in archive download and local-storage configuration:** an isolated daemon with two registered local storages completed browse (`200`), file download (`201`/content `200`), checksum (`200`), and copy (`202` to `completed`) with matching bytes. It also proved a ready download record is not a snapshot by changing the source and reading different bytes under the same ID. Archive creation reached `ready` but content returned `404`: the repository UPSERT saved status but not the archive's new `.tar.gz` path. Updating `path` and adding a repository regression assertion made a fresh isolated HTTP run pass archive `202` → `ready`, stored `.tar.gz` path, and content `200` with the expected tar member. The environment reference now shows `AKOFLOW_LOCAL_STORAGE_ROOT` and `configuration.browseRoots`; top-level `browseRoots` alone is not persisted. Storage health and compute-node visibility are labeled as catalog/configuration signals, not live path or node probes. External storage providers remain unverified.
 
+109. **P1 resolved in HPC registration and storage narrative:** the tutorial listed compute-allocation workspace access as an expected result of registration, although its steps stop after SSH health and discovery from the daemon/login path. The result table now records the site path and defers compute-node access to the batch probe in the operator guide. The Lustre/NFS catalog excerpt now says Desktop browsing also needs a configured browser and approved roots. Institutional SSH, scheduler, and allocation validation remain open.
+
+110. **P1 resolved in cloud catalog result:** the GCP tutorial treated available machine, image and disk choices as the expected result of `valid: true`. The validation handler returns counts from discovery without requiring any count to be positive; public-image lookup errors can also be warnings. The tutorial now asks readers to inspect the counts and investigate an empty category before provisioning. Live credential and provider checks remain open.
+
 ## Page inventory
 
 | Page | Current pass | Next review |
@@ -153,7 +157,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `guides/infrastructure/environments.md` | Plain-language/claim pass; local API definition persisted in a one-off repository test, and in-use revision language matches the API | Recheck remote flows with provider evidence |
 | `guides/infrastructure/execution-scopes.md` | Second read; cross-resource dependencies now prompt link modeling, and the link example omits redundant topologyId | Recheck API payloads after P0 contracts fix |
 | `guides/infrastructure/gcp.md` | Cloud-path reread; API checkpoint now uses the environment created by the connection tutorial; source-audited permissions and absent live validation remain explicit | Check provider claims against disposable-project evidence |
-| `guides/infrastructure/hpc-slurm.md` | Plain-language pass; shortened the opening and resource setup after correcting the API and proxy examples | Check provider claims against real cluster evidence |
+| `guides/infrastructure/hpc-slurm.md` | Plain-language and claim pass; storage catalog is separated from configured browsing, with real-cluster probes still required | Check provider claims against real cluster evidence |
 | `guides/infrastructure/kubernetes.md` | Credential-path reread; token example remains here and streams the secret without a shell variable, command argument, or temporary file | Recheck procedure against Kind bundle and shared-cluster RBAC |
 | `guides/infrastructure/simgrid.md` | Second read; corrected topology path, uses shared API setup and versioned checkout, and describes route choice and missing-route behavior for PRISM versus HEFT | Recheck procedure against pinned bundle |
 | `guides/infrastructure/storage.md` | Second read; API path exercised against isolated registered local storages through browse, download, checksum, copy, and archive; catalog signals qualified | Verify remote/provider storage independently |
@@ -188,8 +192,8 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `showcase/parallel-50-core.mdx` | Second read; compute-capacity purpose stated directly; authenticated polling now fails on HTTP errors | Check result against pinned bundle |
 | `showcase/slurm-local-fixture.mdx` | Second read; local adapter evidence and real-cluster limits stated once; versioned checkout and optional Desktop inspection retained | Check result against pinned bundle |
 | `tutorials/api-access.md` | Second read; API prerequisites and token limits are explicit; Bash blocks parsed | Recheck commands after P0 contracts fix |
-| `tutorials/connect-cloud.md` | Second read; AWS caveat and unvalidated GCP steps are explicit; target project is independent of credential owner | Validate with disposable GCP account |
-| `tutorials/register-hpc.md` | Second read; placeholders and remote-run limit are explicit; removed unrelated cloud next step | Validate on an approved institutional cluster |
+| `tutorials/connect-cloud.md` | GCP validation now distinguishes valid access from nonempty machine/image/disk choices; live provider steps remain unverified | Validate with disposable GCP account |
+| `tutorials/register-hpc.md` | Registration result stops at saved connection and inventory; compute-workspace access is deferred to a batch probe | Validate on an approved institutional cluster |
 
 ## Verification in this pass
 

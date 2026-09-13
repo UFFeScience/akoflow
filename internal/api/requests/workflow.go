@@ -51,6 +51,7 @@ func FromDomain(definition domain.WorkflowDefinition) Workflow {
 			item.ResourceSelector, _ = metadata["resourceSelector"].(string)
 			item.KeepDisk, _ = metadata["keepDisk"].(bool)
 			item.MountPath, _ = metadata["mountPath"].(string)
+			item.WorkspaceSeedPath, _ = metadata["workspaceSeedPath"].(string)
 		}
 		request.Spec.Activities = append(request.Spec.Activities, item)
 	}
@@ -102,18 +103,19 @@ type StoragePolicy struct {
 }
 
 type WorkflowActivity struct {
-	Name             string                     `json:"name"`
-	Command          domain.ActivityCommand     `json:"command"`
-	Image            string                     `json:"image,omitempty"`
-	Runtime          string                     `json:"runtime,omitempty"`
-	Run              string                     `json:"run,omitempty"`
-	MemoryLimit      string                     `json:"memoryLimit,omitempty"`
-	CPULimit         string                     `json:"cpuLimit,omitempty"`
-	DependsOn        []string                   `json:"dependsOn,omitempty"`
-	ResourceSelector string                     `json:"resourceSelector,omitempty"`
-	KeepDisk         bool                       `json:"keepDisk,omitempty"`
-	MountPath        string                     `json:"mountPath,omitempty"`
-	Simulation       *domain.ActivitySimulation `json:"simulation,omitempty"`
+	Name              string                     `json:"name"`
+	Command           domain.ActivityCommand     `json:"command"`
+	Image             string                     `json:"image,omitempty"`
+	Runtime           string                     `json:"runtime,omitempty"`
+	Run               string                     `json:"run,omitempty"`
+	MemoryLimit       string                     `json:"memoryLimit,omitempty"`
+	CPULimit          string                     `json:"cpuLimit,omitempty"`
+	DependsOn         []string                   `json:"dependsOn,omitempty"`
+	ResourceSelector  string                     `json:"resourceSelector,omitempty"`
+	KeepDisk          bool                       `json:"keepDisk,omitempty"`
+	MountPath         string                     `json:"mountPath,omitempty"`
+	WorkspaceSeedPath string                     `json:"workspaceSeedPath,omitempty"`
+	Simulation        *domain.ActivitySimulation `json:"simulation,omitempty"`
 }
 
 func (request Workflow) Domain() (domain.WorkflowDefinition, error) {
@@ -220,7 +222,7 @@ func activityDomain(value WorkflowActivity, activityID, defaultImage, versionID,
 		Simulation:   value.Simulation,
 		Policy:       domain.ActivityPolicy{TimeoutSeconds: 3600, MaxAttempts: 1}, Priority: len(value.DependsOn) + index,
 		Metadata: map[string]any{"runtime": value.Runtime, "resourceSelector": value.ResourceSelector,
-			"keepDisk": value.KeepDisk, "mountPath": value.MountPath},
+			"keepDisk": value.KeepDisk, "mountPath": value.MountPath, "workspaceSeedPath": value.WorkspaceSeedPath},
 	}, nil
 }
 

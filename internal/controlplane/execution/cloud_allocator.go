@@ -186,7 +186,7 @@ func (a QueuedCloudAllocator) Release(ctx context.Context, executionRunID string
 		kind := ""
 		if failed {
 			switch target.LifecyclePolicy {
-			case "destroy-on-failure":
+			case "destroy-on-failure", "destroy-after-run", "destroy-after-execution":
 				kind = "destroy"
 			case "stop-on-failure":
 				kind = "stop"

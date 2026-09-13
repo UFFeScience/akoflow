@@ -595,9 +595,13 @@ func workspaceDestination(request ports.ExecutionRequest, activityID string, res
 }
 
 func localWorkspaceURI(runID, activityID string) string {
+	root := os.Getenv("AKOFLOW_LOCAL_WORKSPACE_ROOT")
+	if root == "" {
+		root = filepath.Join(os.TempDir(), "akoflow", "workspace")
+	}
 	return (&url.URL{
 		Scheme: "file",
-		Path:   filepath.Join(os.TempDir(), "akoflow", "workspace", "runs", runID, activityID),
+		Path:   filepath.Join(root, "runs", runID, activityID),
 	}).String()
 }
 

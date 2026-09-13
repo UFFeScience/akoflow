@@ -7,7 +7,7 @@ require 'yaml'
 
 ROOT = __dir__
 IMAGE = 'ovvesley/akoflow-wf-montage:050d'
-NAME = 'montage-58-cloud-local'
+NAME = 'montage-58-four-vm-local'
 source = YAML.load_file(File.join(ROOT, 'source-workflow.yaml'))
 original = source.fetch('spec').fetch('activities')
 runtimes = CSV.read(File.join(ROOT, 'reference-runtimes.csv'), headers: true)
@@ -53,27 +53,9 @@ end
 
 activities = original.map do |activity|
   command = activity.fetch('run')
-  produced = outputs.fetch(activity.fetch('name'))
-  if command.start_with?('mProject')
-    # SSH cloud adapter mounts an empty per-activity directory. Input FITS and
-    # headers live in the image; copy only produced files to the mounted workdir.
-    script = "set -eu; work=$PWD; cd /akoflow-wfa-shared; #{command}; cp #{produced.map { |f| Shellwords.escape(f) }.join(' ')} \"$work/\""
-    runtime = 'cloud'
-  else
-    # The local adapter launches host commands (not image commands). Docker's
-    # daemon may run outside the AkôFlow container, so use docker cp, not -v.
-    inputs = dependencies.select { |d| d['consumerActivity'] == activity['name'] }.map { |d| d['logicalName'] }.uniq
-    script = <<~SH
-      set -eu
-      cid=$(docker create --workdir /akoflow-wfa-shared #{IMAGE} sh -c #{Shellwords.escape("set -eu; #{command}")})
-      trap 'docker rm -f "$cid" >/dev/null 2>&1 || true' EXIT
-      #{inputs.map { |f| "docker cp #{Shellwords.escape(f)} \"$cid:/akoflow-wfa-shared/#{f}\"" }.join("\n")}
-      docker start -a "$cid"
-      #{produced.map { |f| "docker cp \"$cid:/akoflow-wfa-shared/#{f}\" #{Shellwords.escape(f)}" }.join("\n")}
-    SH
-    runtime = 'local'
-  end
-  { 'name' => activity['name'], 'runtime' => runtime, 'run' => script,
+  runtime = command.start_with?('mProject') ? 'cloud' : 'local'
+  { 'name' => activity['name'], 'runtime' => runtime, 'run' => command,
+    'workspaceSeedPath' => '/akoflow-wfa-shared',
     'cpuLimit' => '1', 'memoryLimit' => '256Mi', 'dependsOn' => activity.fetch('dependsOn', []) }
 end
 
@@ -81,14 +63,21 @@ workflow = { 'name' => NAME, 'spec' => { 'namespace' => 'showcase', 'image' => I
   'activities' => activities, 'dataDependencies' => dependencies } }
 File.write(File.join(ROOT, 'workflow.json'), JSON.pretty_generate(workflow) + "\n")
 
-cloud_order = 0
+cloud_order = Array.new(4, 0)
 local_order = 0
+cloud_index = 0
 assignments = original.map do |a|
   cloud = a.fetch('run').start_with?('mProject')
-  order = cloud ? cloud_order : local_order
-  cloud ? cloud_order += 1 : local_order += 1
+  slot = cloud ? cloud_index % 4 : nil
+  order = cloud ? cloud_order[slot] : local_order
+  if cloud
+    cloud_order[slot] += 1
+    cloud_index += 1
+  else
+    local_order += 1
+  end
   { 'id' => "#{NAME}-assignment-#{a['name']}", 'activityId' => "#{NAME}-#{a['name']}",
-    'resourceId' => cloud ? 'goal-gcp-e2-medium' : 'local-environment-entrypoint',
+    'resourceId' => cloud ? "montage-gcp-e2-medium-#{slot + 1}" : 'local-environment-entrypoint',
     'orderOnResource' => order,
     'metadata' => { 'runtimeId' => cloud ? 'goal-gcp-cloud' : 'local-environment-local' } }
 end
@@ -102,4 +91,4 @@ plan = { 'plan' => { 'id' => "#{NAME}-manual-v1", 'workflowVersionId' => "#{NAME
   'predicted' => { 'makespanSeconds' => seconds.values.sum, 'cost' => reference_cloud_cost.round(6), 'feasible' => true },
   'assignments' => assignments } }
 File.write(File.join(ROOT, 'plan.json'), JSON.pretty_generate(plan) + "\n")
-puts "#{activities.length} real activities (#{cloud_order} GCP, #{local_order} local), #{dependencies.length} named data dependencies"
+puts "#{activities.length} real activities (#{cloud_order.sum} GCP across four machines, #{local_order} local), #{dependencies.length} named data dependencies"

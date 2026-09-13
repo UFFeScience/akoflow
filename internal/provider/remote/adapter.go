@@ -79,6 +79,9 @@ func (a *Adapter) Start(ctx context.Context, execution domain.ActivityExecutionC
 	}
 	args = append(args, "--volume", workingDirectory+":"+workingDirectory, "--workdir", workingDirectory)
 	args = append(args, activity.Command.Image)
+	if seed, _ := activity.Metadata["workspaceSeedPath"].(string); seed != "" {
+		args = append(args, "sh", "-c", `cp -an "$1"/. "$2"/ && cd "$2" && shift 2 && exec "$@"`, "akoflow-seed", seed, workingDirectory)
+	}
 	if activity.Command.Entrypoint != "" {
 		args = append(args, activity.Command.Entrypoint)
 	}

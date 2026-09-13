@@ -6,18 +6,19 @@ description: A 58-activity real Montage workflow with GCP e2-medium projection a
 import InterfaceApiTabs from '@site/src/components/InterfaceApiTabs';
 import {FileList, WorkflowDag} from '@site/src/components/WorkflowShowcase';
 
-# Montage: project in GCP, finish locally
+# Montage: project on four GCP machines, finish locally
 
-<WorkflowDag title="Montage across GCP and local execution" stages={['12 mProject · GCP e2-medium', 'projected FITS transfer', ['18 mDiffFit · local', '3 mConcatFit · local'], 'background correction · local', '3 mosaics + color preview · local']} />
+<WorkflowDag title="Montage across four GCP machines and local execution" stages={['12 mProject · four GCP e2-medium workers', 'projected FITS transfer', ['18 mDiffFit · local', '3 mConcatFit · local'], 'background correction · local', '3 mosaics + color preview · local']} />
 
 This example preserves all **58 real Montage activities**. The twelve `mProject`
-activities use an on-demand GCP `e2-medium` worker; the other 46 use the local
+activities are split into four groups of three on separate on-demand GCP
+`e2-medium` workers; the other 46 use the local
 execution resource. The image `ovvesley/akoflow-wf-montage:050d` carries the
 input FITS images, headers, lookup tables, and Montage executables. AkôFlow
 transfers the projected FITS outputs into the local activities' workspaces.
 
 :::warning Cloud cost and validation
-This plan can create a billable GCP VM. Its predicted time is a sum of historical
+This plan can create four billable GCP VMs. Its predicted time is a sum of historical
 per-activity measurements on a *different* machine (`c3d-standard-16`); its
 compute cost excludes startup, disk, and network charges. Neither figure is an
 observed result. Check cloud quota, pricing, cleanup, and the local Docker
@@ -45,16 +46,17 @@ order, submission command, and post-run checks.
   </div>}
   api={<div>
     <h2>Use the API</h2>
-    <p>Follow the <a href="/docs/tutorials/api-access">API access guide</a> and the bundle README. Import <code>scope.json</code>, <code>network.json</code>, <code>workflow.json</code>, and <code>plan.json</code> in that order. Then submit exactly one run using <code>submit-run.sh</code>. The example IDs refer to a particular AkôFlow instance and must be reviewed before reuse.</p>
-    <pre><code>{`sh examples/real/montage-cloud-local/submit-run.sh montage-58-cloud-local-run-v1`}</code></pre>
+    <p>Follow the <a href="/docs/tutorials/api-access">API access guide</a> and the bundle README. First create four one-instance cloud targets with <code>prepare-capacity.sh</code>, then import <code>scope.json</code>, <code>network.json</code>, <code>workflow.json</code>, and <code>plan.json</code> in that order. Submit exactly one run. The example IDs refer to a particular AkôFlow instance and must be reviewed before reuse.</p>
+    <pre><code>{`sh examples/real/montage-cloud-local/prepare-capacity.sh
+sh examples/real/montage-cloud-local/submit-run.sh montage-58-four-vm-local-run-v1`}</code></pre>
   </div>}
 />
 
 ## What to verify
 
-The plan places 12 projections on GCP and 46 downstream activities locally.
+The plan places three projections on each of four GCP machines and 46 downstream activities locally.
 The workflow names 138 file handoffs rather than using generic `dependency.dat`
 records. A completed run must have 58 successful activities, a non-empty
-`mosaic-color.png`, and recorded projected-FITS transfers. The GCP VM must be
+`mosaic-color.png`, and recorded projected-FITS transfers. All four GCP VMs must be
 destroyed after execution. **No completed observed run is claimed yet**;
 the historical reference CSV and manual plan prediction are not a result.

@@ -12,6 +12,8 @@ services:
       AKOFLOW_API_TOKEN: ${AKOFLOW_API_TOKEN:-akoflow-development-token}
       AKOFLOW_API_ALLOWED_ORIGINS: ${AKOFLOW_API_ALLOWED_ORIGINS:-http://localhost:5173,http://127.0.0.1:5173}
       AKOFLOW_ARTIFACT_STORE_ROOT: /var/lib/akoflow/artifacts
+      AKOFLOW_LOCAL_WORKSPACE_ROOT: /akoflow/workspace
+      AKOFLOW_LOCAL_WORKSPACE_VOLUME: akoflow-workspaces
       AKOFLOW_BUILDCTL: buildctl
       AKOFLOW_APPTAINER: apptainer
       AKOFLOW_SIMGRID_BINARY: /usr/local/bin/akoflow-simgrid-runner
@@ -34,6 +36,7 @@ services:
       - go-module-cache:/go/pkg/mod
       - go-build-cache:/root/.cache/go-build
       - artifact-store:/var/lib/akoflow/artifacts
+      - local-workspaces:/akoflow/workspace
       # Plans, preparation state and execution history need to survive a
       # release container recreation. This starts as a clean database volume.
       - ./storage/:/app/storage
@@ -63,6 +66,8 @@ services:
       - artifact-store:/var/lib/akoflow/artifacts
     privileged: true
 volumes:
+  local-workspaces:
+    name: akoflow-workspaces
   artifact-store:
   buildkit-state:
   engine-data:

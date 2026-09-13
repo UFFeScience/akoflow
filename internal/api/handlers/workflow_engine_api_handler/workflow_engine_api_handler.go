@@ -1782,7 +1782,7 @@ func (h *Handler) CreateCloudCapacityTarget(w http.ResponseWriter, r *http.Reque
 	resource := domain.Resource{
 		ID: value.ID, EnvironmentVersionID: definition.Version.ID,
 		ExecutionTarget: domain.ExecutionTargetProvisioned, Type: domain.ResourceCloudVM,
-		Name: value.Name, ProviderID: value.ProviderMachineType, Tier: "cloud",
+		Name: value.Name, ProviderID: value.ID, Tier: "cloud",
 		Region: value.Region, Zone: value.FixedZone, Architecture: value.Architecture,
 		CPUCores: value.VCPU, CPUCapacity: float64(value.VCPU),
 		MemoryBytes:    value.MemoryMiB << 20,
@@ -1791,7 +1791,7 @@ func (h *Handler) CreateCloudCapacityTarget(w http.ResponseWriter, r *http.Reque
 		PricePerSecond: configurationFloat64(value.Configuration, "pricePerHour") / 3600,
 		Schedulable:    true,
 		Metadata: map[string]any{
-			"capacityTargetId": value.ID, "maximumInstances": value.MaximumInstances,
+			"capacityTargetId": value.ID, "providerMachineType": value.ProviderMachineType, "maximumInstances": value.MaximumInstances,
 			"lifecyclePolicy": value.LifecyclePolicy, "provisioningMode": value.ProvisioningMode,
 			"diskPricePerGiBMonth": configurationFloat64(value.Configuration, "diskPricePerGiBMonth"),
 		},

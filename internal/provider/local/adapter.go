@@ -6,7 +6,9 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
 
@@ -68,6 +70,31 @@ func (a *Adapter) Start(_ context.Context, execution domain.ActivityExecutionCon
 		return domain.ActivityHandle{}, fmt.Errorf("snapshot artifact workspace: %w", err)
 	}
 	command := exec.Command(activity.Command.Entrypoint, activity.Command.Arguments...)
+	containerName := ""
+	if image := strings.TrimSpace(activity.Command.Image); image != "" {
+		containerName = "akoflow-" + strings.NewReplacer(":", "-", "/", "-").Replace(execution.Run.ID+"-"+activity.ID)
+		args := []string{"run", "--rm", "--name", containerName, "--label", "akoflow.run=" + execution.Run.ID}
+		if volume := os.Getenv("AKOFLOW_LOCAL_WORKSPACE_VOLUME"); volume != "" {
+			mountRoot := os.Getenv("AKOFLOW_LOCAL_WORKSPACE_ROOT")
+			if mountRoot == "" || !strings.HasPrefix(root, filepath.Clean(mountRoot)+string(os.PathSeparator)) {
+				return domain.ActivityHandle{}, fmt.Errorf("local workspace %q is outside the configured shared volume", root)
+			}
+			args = append(args, "--mount", "type=volume,source="+volume+",target="+mountRoot)
+		} else {
+			args = append(args, "--mount", "type=bind,source="+root+",target="+root)
+		}
+		args = append(args, "--workdir", root)
+		for key, value := range activity.Command.Environment {
+			args = append(args, "--env", key+"="+value)
+		}
+		args = append(args, image)
+		if seed, _ := activity.Metadata["workspaceSeedPath"].(string); seed != "" {
+			args = append(args, "sh", "-c", `cp -an "$1"/. "$2"/ && cd "$2" && shift 2 && exec "$@"`, "akoflow-seed", seed, root)
+		}
+		args = append(args, activity.Command.Entrypoint)
+		args = append(args, activity.Command.Arguments...)
+		command = exec.Command("docker", args...)
+	}
 	command.Dir = root
 	command.Env = os.Environ()
 	output := &logBuffer{}
@@ -87,6 +114,7 @@ func (a *Adapter) Start(_ context.Context, execution domain.ActivityExecutionCon
 			domain.TimingSubmittedAt:    startedAt,
 			"artifactObservationDriver": "filesystem-diff",
 			"artifactObservationRoot":   root,
+			"localContainerName":        containerName,
 		}}
 	a.mu.Lock()
 	a.logs[handle.ID] = output
@@ -148,6 +176,9 @@ func (a *Adapter) Inspect(_ context.Context, handle domain.ActivityHandle) (doma
 }
 
 func (*Adapter) Stop(_ context.Context, handle domain.ActivityHandle) error {
+	if name, _ := handle.Metadata["localContainerName"].(string); name != "" {
+		return exec.Command("docker", "stop", name).Run()
+	}
 	pid, err := strconv.Atoi(handle.ExternalID)
 	if err != nil {
 		return fmt.Errorf("invalid local process id: %w", err)

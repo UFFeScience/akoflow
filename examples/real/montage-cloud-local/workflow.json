@@ -1,5 +1,5 @@
 {
-  "name": "montage-58-cloud-local",
+  "name": "montage-58-four-vm-local",
   "spec": {
     "namespace": "showcase",
     "image": "ovvesley/akoflow-wf-montage:050d",
@@ -7,7 +7,8 @@
       {
         "name": "mprojectid0000001",
         "runtime": "cloud",
-        "run": "set -eu; work=$PWD; cd /akoflow-wfa-shared; mProject -X poss2ukstu_blue_001_001.fits pposs2ukstu_blue_001_001.fits region-oversized.hdr; cp pposs2ukstu_blue_001_001.fits pposs2ukstu_blue_001_001_area.fits \"$work/\"",
+        "run": "mProject -X poss2ukstu_blue_001_001.fits pposs2ukstu_blue_001_001.fits region-oversized.hdr",
+        "workspaceSeedPath": "/akoflow-wfa-shared",
         "cpuLimit": "1",
         "memoryLimit": "256Mi",
         "dependsOn": [
@@ -17,7 +18,8 @@
       {
         "name": "mprojectid0000002",
         "runtime": "cloud",
-        "run": "set -eu; work=$PWD; cd /akoflow-wfa-shared; mProject -X poss2ukstu_blue_001_002.fits pposs2ukstu_blue_001_002.fits region-oversized.hdr; cp pposs2ukstu_blue_001_002.fits pposs2ukstu_blue_001_002_area.fits \"$work/\"",
+        "run": "mProject -X poss2ukstu_blue_001_002.fits pposs2ukstu_blue_001_002.fits region-oversized.hdr",
+        "workspaceSeedPath": "/akoflow-wfa-shared",
         "cpuLimit": "1",
         "memoryLimit": "256Mi",
         "dependsOn": [
@@ -27,7 +29,8 @@
       {
         "name": "mprojectid0000003",
         "runtime": "cloud",
-        "run": "set -eu; work=$PWD; cd /akoflow-wfa-shared; mProject -X poss2ukstu_blue_002_001.fits pposs2ukstu_blue_002_001.fits region-oversized.hdr; cp pposs2ukstu_blue_002_001.fits pposs2ukstu_blue_002_001_area.fits \"$work/\"",
+        "run": "mProject -X poss2ukstu_blue_002_001.fits pposs2ukstu_blue_002_001.fits region-oversized.hdr",
+        "workspaceSeedPath": "/akoflow-wfa-shared",
         "cpuLimit": "1",
         "memoryLimit": "256Mi",
         "dependsOn": [
@@ -37,7 +40,8 @@
       {
         "name": "mprojectid0000004",
         "runtime": "cloud",
-        "run": "set -eu; work=$PWD; cd /akoflow-wfa-shared; mProject -X poss2ukstu_blue_002_002.fits pposs2ukstu_blue_002_002.fits region-oversized.hdr; cp pposs2ukstu_blue_002_002.fits pposs2ukstu_blue_002_002_area.fits \"$work/\"",
+        "run": "mProject -X poss2ukstu_blue_002_002.fits pposs2ukstu_blue_002_002.fits region-oversized.hdr",
+        "workspaceSeedPath": "/akoflow-wfa-shared",
         "cpuLimit": "1",
         "memoryLimit": "256Mi",
         "dependsOn": [
@@ -47,7 +51,8 @@
       {
         "name": "mdifffitid0000005",
         "runtime": "local",
-        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mDiffFit\\ -d\\ -s\\ 1-fit.000001.000002.txt\\ pposs2ukstu_blue_001_001.fits\\ pposs2ukstu_blue_001_002.fits\\ 1-diff.000001.000002.fits\\ region-oversized.hdr)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp pposs2ukstu_blue_001_001.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_blue_001_001.fits\"\ndocker cp pposs2ukstu_blue_001_002.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_blue_001_002.fits\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/1-fit.000001.000002.txt\" 1-fit.000001.000002.txt\n",
+        "run": "mDiffFit -d -s 1-fit.000001.000002.txt pposs2ukstu_blue_001_001.fits pposs2ukstu_blue_001_002.fits 1-diff.000001.000002.fits region-oversized.hdr",
+        "workspaceSeedPath": "/akoflow-wfa-shared",
         "cpuLimit": "1",
         "memoryLimit": "256Mi",
         "dependsOn": [
@@ -58,7 +63,8 @@
       {
         "name": "mdifffitid0000006",
         "runtime": "local",
-        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mDiffFit\\ -d\\ -s\\ 1-fit.000001.000003.txt\\ pposs2ukstu_blue_001_001.fits\\ pposs2ukstu_blue_002_001.fits\\ 1-diff.000001.000003.fits\\ region-oversized.hdr)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp pposs2ukstu_blue_001_001.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_blue_001_001.fits\"\ndocker cp pposs2ukstu_blue_002_001.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_blue_002_001.fits\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/1-fit.000001.000003.txt\" 1-fit.000001.000003.txt\n",
+        "run": "mDiffFit -d -s 1-fit.000001.000003.txt pposs2ukstu_blue_001_001.fits pposs2ukstu_blue_002_001.fits 1-diff.000001.000003.fits region-oversized.hdr",
+        "workspaceSeedPath": "/akoflow-wfa-shared",
         "cpuLimit": "1",
         "memoryLimit": "256Mi",
         "dependsOn": [
@@ -69,7 +75,8 @@
       {
         "name": "mdifffitid0000007",
         "runtime": "local",
-        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mDiffFit\\ -d\\ -s\\ 1-fit.000001.000004.txt\\ pposs2ukstu_blue_001_001.fits\\ pposs2ukstu_blue_002_002.fits\\ 1-diff.000001.000004.fits\\ region-oversized.hdr)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp pposs2ukstu_blue_001_001.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_blue_001_001.fits\"\ndocker cp pposs2ukstu_blue_002_002.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_blue_002_002.fits\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/1-fit.000001.000004.txt\" 1-fit.000001.000004.txt\n",
+        "run": "mDiffFit -d -s 1-fit.000001.000004.txt pposs2ukstu_blue_001_001.fits pposs2ukstu_blue_002_002.fits 1-diff.000001.000004.fits region-oversized.hdr",
+        "workspaceSeedPath": "/akoflow-wfa-shared",
         "cpuLimit": "1",
         "memoryLimit": "256Mi",
         "dependsOn": [
@@ -80,7 +87,8 @@
       {
         "name": "mdifffitid0000008",
         "runtime": "local",
-        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mDiffFit\\ -d\\ -s\\ 1-fit.000002.000003.txt\\ pposs2ukstu_blue_001_002.fits\\ pposs2ukstu_blue_002_001.fits\\ 1-diff.000002.000003.fits\\ region-oversized.hdr)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp pposs2ukstu_blue_001_002.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_blue_001_002.fits\"\ndocker cp pposs2ukstu_blue_002_001.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_blue_002_001.fits\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/1-fit.000002.000003.txt\" 1-fit.000002.000003.txt\n",
+        "run": "mDiffFit -d -s 1-fit.000002.000003.txt pposs2ukstu_blue_001_002.fits pposs2ukstu_blue_002_001.fits 1-diff.000002.000003.fits region-oversized.hdr",
+        "workspaceSeedPath": "/akoflow-wfa-shared",
         "cpuLimit": "1",
         "memoryLimit": "256Mi",
         "dependsOn": [
@@ -91,7 +99,8 @@
       {
         "name": "mdifffitid0000009",
         "runtime": "local",
-        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mDiffFit\\ -d\\ -s\\ 1-fit.000002.000004.txt\\ pposs2ukstu_blue_001_002.fits\\ pposs2ukstu_blue_002_002.fits\\ 1-diff.000002.000004.fits\\ region-oversized.hdr)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp pposs2ukstu_blue_001_002.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_blue_001_002.fits\"\ndocker cp pposs2ukstu_blue_002_002.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_blue_002_002.fits\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/1-fit.000002.000004.txt\" 1-fit.000002.000004.txt\n",
+        "run": "mDiffFit -d -s 1-fit.000002.000004.txt pposs2ukstu_blue_001_002.fits pposs2ukstu_blue_002_002.fits 1-diff.000002.000004.fits region-oversized.hdr",
+        "workspaceSeedPath": "/akoflow-wfa-shared",
         "cpuLimit": "1",
         "memoryLimit": "256Mi",
         "dependsOn": [
@@ -102,7 +111,8 @@
       {
         "name": "mdifffitid0000010",
         "runtime": "local",
-        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mDiffFit\\ -d\\ -s\\ 1-fit.000003.000004.txt\\ pposs2ukstu_blue_002_001.fits\\ pposs2ukstu_blue_002_002.fits\\ 1-diff.000003.000004.fits\\ region-oversized.hdr)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp pposs2ukstu_blue_002_001.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_blue_002_001.fits\"\ndocker cp pposs2ukstu_blue_002_002.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_blue_002_002.fits\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/1-fit.000003.000004.txt\" 1-fit.000003.000004.txt\n",
+        "run": "mDiffFit -d -s 1-fit.000003.000004.txt pposs2ukstu_blue_002_001.fits pposs2ukstu_blue_002_002.fits 1-diff.000003.000004.fits region-oversized.hdr",
+        "workspaceSeedPath": "/akoflow-wfa-shared",
         "cpuLimit": "1",
         "memoryLimit": "256Mi",
         "dependsOn": [
@@ -113,7 +123,8 @@
       {
         "name": "mconcatfitid0000011",
         "runtime": "local",
-        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mConcatFit\\ 1-stat.tbl\\ 1-fits.tbl\\ .)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp 1-fit.000001.000002.txt \"$cid:/akoflow-wfa-shared/1-fit.000001.000002.txt\"\ndocker cp 1-fit.000001.000003.txt \"$cid:/akoflow-wfa-shared/1-fit.000001.000003.txt\"\ndocker cp 1-fit.000001.000004.txt \"$cid:/akoflow-wfa-shared/1-fit.000001.000004.txt\"\ndocker cp 1-fit.000002.000003.txt \"$cid:/akoflow-wfa-shared/1-fit.000002.000003.txt\"\ndocker cp 1-fit.000002.000004.txt \"$cid:/akoflow-wfa-shared/1-fit.000002.000004.txt\"\ndocker cp 1-fit.000003.000004.txt \"$cid:/akoflow-wfa-shared/1-fit.000003.000004.txt\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/1-fits.tbl\" 1-fits.tbl\n",
+        "run": "mConcatFit 1-stat.tbl 1-fits.tbl .",
+        "workspaceSeedPath": "/akoflow-wfa-shared",
         "cpuLimit": "1",
         "memoryLimit": "256Mi",
         "dependsOn": [
@@ -128,7 +139,8 @@
       {
         "name": "mbgmodelid0000012",
         "runtime": "local",
-        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mBgModel\\ -i\\ 100000\\ 1-images.tbl\\ 1-fits.tbl\\ 1-corrections.tbl)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp 1-fits.tbl \"$cid:/akoflow-wfa-shared/1-fits.tbl\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/1-corrections.tbl\" 1-corrections.tbl\n",
+        "run": "mBgModel -i 100000 1-images.tbl 1-fits.tbl 1-corrections.tbl",
+        "workspaceSeedPath": "/akoflow-wfa-shared",
         "cpuLimit": "1",
         "memoryLimit": "256Mi",
         "dependsOn": [
@@ -138,7 +150,8 @@
       {
         "name": "mbackgroundid0000013",
         "runtime": "local",
-        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mBackground\\ -t\\ pposs2ukstu_blue_001_001.fits\\ cposs2ukstu_blue_001_001.fits\\ 1-projected.tbl\\ 1-corrections.tbl)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp pposs2ukstu_blue_001_001.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_blue_001_001.fits\"\ndocker cp 1-corrections.tbl \"$cid:/akoflow-wfa-shared/1-corrections.tbl\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/cposs2ukstu_blue_001_001.fits\" cposs2ukstu_blue_001_001.fits\ndocker cp \"$cid:/akoflow-wfa-shared/cposs2ukstu_blue_001_001_area.fits\" cposs2ukstu_blue_001_001_area.fits\n",
+        "run": "mBackground -t pposs2ukstu_blue_001_001.fits cposs2ukstu_blue_001_001.fits 1-projected.tbl 1-corrections.tbl",
+        "workspaceSeedPath": "/akoflow-wfa-shared",
         "cpuLimit": "1",
         "memoryLimit": "256Mi",
         "dependsOn": [
@@ -149,7 +162,8 @@
       {
         "name": "mbackgroundid0000014",
         "runtime": "local",
-        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mBackground\\ -t\\ pposs2ukstu_blue_001_002.fits\\ cposs2ukstu_blue_001_002.fits\\ 1-projected.tbl\\ 1-corrections.tbl)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp pposs2ukstu_blue_001_002.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_blue_001_002.fits\"\ndocker cp 1-corrections.tbl \"$cid:/akoflow-wfa-shared/1-corrections.tbl\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/cposs2ukstu_blue_001_002.fits\" cposs2ukstu_blue_001_002.fits\ndocker cp \"$cid:/akoflow-wfa-shared/cposs2ukstu_blue_001_002_area.fits\" cposs2ukstu_blue_001_002_area.fits\n",
+        "run": "mBackground -t pposs2ukstu_blue_001_002.fits cposs2ukstu_blue_001_002.fits 1-projected.tbl 1-corrections.tbl",
+        "workspaceSeedPath": "/akoflow-wfa-shared",
         "cpuLimit": "1",
         "memoryLimit": "256Mi",
         "dependsOn": [
@@ -160,7 +174,8 @@
       {
         "name": "mbackgroundid0000015",
         "runtime": "local",
-        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mBackground\\ -t\\ pposs2ukstu_blue_002_001.fits\\ cposs2ukstu_blue_002_001.fits\\ 1-projected.tbl\\ 1-corrections.tbl)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp pposs2ukstu_blue_002_001.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_blue_002_001.fits\"\ndocker cp 1-corrections.tbl \"$cid:/akoflow-wfa-shared/1-corrections.tbl\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/cposs2ukstu_blue_002_001.fits\" cposs2ukstu_blue_002_001.fits\ndocker cp \"$cid:/akoflow-wfa-shared/cposs2ukstu_blue_002_001_area.fits\" cposs2ukstu_blue_002_001_area.fits\n",
+        "run": "mBackground -t pposs2ukstu_blue_002_001.fits cposs2ukstu_blue_002_001.fits 1-projected.tbl 1-corrections.tbl",
+        "workspaceSeedPath": "/akoflow-wfa-shared",
         "cpuLimit": "1",
         "memoryLimit": "256Mi",
         "dependsOn": [
@@ -171,7 +186,8 @@
       {
         "name": "mbackgroundid0000016",
         "runtime": "local",
-        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mBackground\\ -t\\ pposs2ukstu_blue_002_002.fits\\ cposs2ukstu_blue_002_002.fits\\ 1-projected.tbl\\ 1-corrections.tbl)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp pposs2ukstu_blue_002_002.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_blue_002_002.fits\"\ndocker cp 1-corrections.tbl \"$cid:/akoflow-wfa-shared/1-corrections.tbl\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/cposs2ukstu_blue_002_002.fits\" cposs2ukstu_blue_002_002.fits\ndocker cp \"$cid:/akoflow-wfa-shared/cposs2ukstu_blue_002_002_area.fits\" cposs2ukstu_blue_002_002_area.fits\n",
+        "run": "mBackground -t pposs2ukstu_blue_002_002.fits cposs2ukstu_blue_002_002.fits 1-projected.tbl 1-corrections.tbl",
+        "workspaceSeedPath": "/akoflow-wfa-shared",
         "cpuLimit": "1",
         "memoryLimit": "256Mi",
         "dependsOn": [
@@ -182,7 +198,8 @@
       {
         "name": "mimgtblid0000017",
         "runtime": "local",
-        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mImgtbl\\ .\\ -t\\ 1-corrected.tbl\\ 1-updated-corrected.tbl)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp cposs2ukstu_blue_001_001.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_blue_001_001.fits\"\ndocker cp cposs2ukstu_blue_001_001_area.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_blue_001_001_area.fits\"\ndocker cp cposs2ukstu_blue_001_002.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_blue_001_002.fits\"\ndocker cp cposs2ukstu_blue_001_002_area.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_blue_001_002_area.fits\"\ndocker cp cposs2ukstu_blue_002_001.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_blue_002_001.fits\"\ndocker cp cposs2ukstu_blue_002_001_area.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_blue_002_001_area.fits\"\ndocker cp cposs2ukstu_blue_002_002.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_blue_002_002.fits\"\ndocker cp cposs2ukstu_blue_002_002_area.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_blue_002_002_area.fits\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/1-updated-corrected.tbl\" 1-updated-corrected.tbl\n",
+        "run": "mImgtbl . -t 1-corrected.tbl 1-updated-corrected.tbl",
+        "workspaceSeedPath": "/akoflow-wfa-shared",
         "cpuLimit": "1",
         "memoryLimit": "256Mi",
         "dependsOn": [
@@ -195,7 +212,8 @@
       {
         "name": "maddid0000018",
         "runtime": "local",
-        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mAdd\\ -e\\ 1-updated-corrected.tbl\\ region.hdr\\ 1-mosaic.fits)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp cposs2ukstu_blue_001_001.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_blue_001_001.fits\"\ndocker cp cposs2ukstu_blue_001_001_area.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_blue_001_001_area.fits\"\ndocker cp cposs2ukstu_blue_001_002.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_blue_001_002.fits\"\ndocker cp cposs2ukstu_blue_001_002_area.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_blue_001_002_area.fits\"\ndocker cp cposs2ukstu_blue_002_001.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_blue_002_001.fits\"\ndocker cp cposs2ukstu_blue_002_001_area.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_blue_002_001_area.fits\"\ndocker cp cposs2ukstu_blue_002_002.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_blue_002_002.fits\"\ndocker cp cposs2ukstu_blue_002_002_area.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_blue_002_002_area.fits\"\ndocker cp 1-updated-corrected.tbl \"$cid:/akoflow-wfa-shared/1-updated-corrected.tbl\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/1-mosaic.fits\" 1-mosaic.fits\n",
+        "run": "mAdd -e 1-updated-corrected.tbl region.hdr 1-mosaic.fits",
+        "workspaceSeedPath": "/akoflow-wfa-shared",
         "cpuLimit": "1",
         "memoryLimit": "256Mi",
         "dependsOn": [
@@ -209,7 +227,8 @@
       {
         "name": "mviewerid0000019",
         "runtime": "local",
-        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mViewer\\ -ct\\ 1\\ -gray\\ 1-mosaic.fits\\ -1s\\ max\\ gaussian\\ -png\\ 1-mosaic.png)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp 1-mosaic.fits \"$cid:/akoflow-wfa-shared/1-mosaic.fits\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/1-mosaic.png\" 1-mosaic.png\n",
+        "run": "mViewer -ct 1 -gray 1-mosaic.fits -1s max gaussian -png 1-mosaic.png",
+        "workspaceSeedPath": "/akoflow-wfa-shared",
         "cpuLimit": "1",
         "memoryLimit": "256Mi",
         "dependsOn": [
@@ -219,7 +238,8 @@
       {
         "name": "mprojectid0000020",
         "runtime": "cloud",
-        "run": "set -eu; work=$PWD; cd /akoflow-wfa-shared; mProject -X poss2ukstu_red_001_001.fits pposs2ukstu_red_001_001.fits region-oversized.hdr; cp pposs2ukstu_red_001_001.fits pposs2ukstu_red_001_001_area.fits \"$work/\"",
+        "run": "mProject -X poss2ukstu_red_001_001.fits pposs2ukstu_red_001_001.fits region-oversized.hdr",
+        "workspaceSeedPath": "/akoflow-wfa-shared",
         "cpuLimit": "1",
         "memoryLimit": "256Mi",
         "dependsOn": [
@@ -229,7 +249,8 @@
       {
         "name": "mprojectid0000021",
         "runtime": "cloud",
-        "run": "set -eu; work=$PWD; cd /akoflow-wfa-shared; mProject -X poss2ukstu_red_001_002.fits pposs2ukstu_red_001_002.fits region-oversized.hdr; cp pposs2ukstu_red_001_002.fits pposs2ukstu_red_001_002_area.fits \"$work/\"",
+        "run": "mProject -X poss2ukstu_red_001_002.fits pposs2ukstu_red_001_002.fits region-oversized.hdr",
+        "workspaceSeedPath": "/akoflow-wfa-shared",
         "cpuLimit": "1",
         "memoryLimit": "256Mi",
         "dependsOn": [
@@ -239,7 +260,8 @@
       {
         "name": "mprojectid0000022",
         "runtime": "cloud",
-        "run": "set -eu; work=$PWD; cd /akoflow-wfa-shared; mProject -X poss2ukstu_red_002_001.fits pposs2ukstu_red_002_001.fits region-oversized.hdr; cp pposs2ukstu_red_002_001.fits pposs2ukstu_red_002_001_area.fits \"$work/\"",
+        "run": "mProject -X poss2ukstu_red_002_001.fits pposs2ukstu_red_002_001.fits region-oversized.hdr",
+        "workspaceSeedPath": "/akoflow-wfa-shared",
         "cpuLimit": "1",
         "memoryLimit": "256Mi",
         "dependsOn": [
@@ -249,7 +271,8 @@
       {
         "name": "mprojectid0000023",
         "runtime": "cloud",
-        "run": "set -eu; work=$PWD; cd /akoflow-wfa-shared; mProject -X poss2ukstu_red_002_002.fits pposs2ukstu_red_002_002.fits region-oversized.hdr; cp pposs2ukstu_red_002_002.fits pposs2ukstu_red_002_002_area.fits \"$work/\"",
+        "run": "mProject -X poss2ukstu_red_002_002.fits pposs2ukstu_red_002_002.fits region-oversized.hdr",
+        "workspaceSeedPath": "/akoflow-wfa-shared",
         "cpuLimit": "1",
         "memoryLimit": "256Mi",
         "dependsOn": [
@@ -259,7 +282,8 @@
       {
         "name": "mdifffitid0000024",
         "runtime": "local",
-        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mDiffFit\\ -d\\ -s\\ 2-fit.000001.000002.txt\\ pposs2ukstu_red_001_001.fits\\ pposs2ukstu_red_001_002.fits\\ 2-diff.000001.000002.fits\\ region-oversized.hdr)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp pposs2ukstu_red_001_001.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_red_001_001.fits\"\ndocker cp pposs2ukstu_red_001_002.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_red_001_002.fits\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/2-fit.000001.000002.txt\" 2-fit.000001.000002.txt\n",
+        "run": "mDiffFit -d -s 2-fit.000001.000002.txt pposs2ukstu_red_001_001.fits pposs2ukstu_red_001_002.fits 2-diff.000001.000002.fits region-oversized.hdr",
+        "workspaceSeedPath": "/akoflow-wfa-shared",
         "cpuLimit": "1",
         "memoryLimit": "256Mi",
         "dependsOn": [
@@ -270,7 +294,8 @@
       {
         "name": "mdifffitid0000025",
         "runtime": "local",
-        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mDiffFit\\ -d\\ -s\\ 2-fit.000001.000003.txt\\ pposs2ukstu_red_001_001.fits\\ pposs2ukstu_red_002_001.fits\\ 2-diff.000001.000003.fits\\ region-oversized.hdr)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp pposs2ukstu_red_001_001.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_red_001_001.fits\"\ndocker cp pposs2ukstu_red_002_001.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_red_002_001.fits\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/2-fit.000001.000003.txt\" 2-fit.000001.000003.txt\n",
+        "run": "mDiffFit -d -s 2-fit.000001.000003.txt pposs2ukstu_red_001_001.fits pposs2ukstu_red_002_001.fits 2-diff.000001.000003.fits region-oversized.hdr",
+        "workspaceSeedPath": "/akoflow-wfa-shared",
         "cpuLimit": "1",
         "memoryLimit": "256Mi",
         "dependsOn": [
@@ -281,7 +306,8 @@
       {
         "name": "mdifffitid0000026",
         "runtime": "local",
-        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mDiffFit\\ -d\\ -s\\ 2-fit.000001.000004.txt\\ pposs2ukstu_red_001_001.fits\\ pposs2ukstu_red_002_002.fits\\ 2-diff.000001.000004.fits\\ region-oversized.hdr)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp pposs2ukstu_red_001_001.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_red_001_001.fits\"\ndocker cp pposs2ukstu_red_002_002.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_red_002_002.fits\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/2-fit.000001.000004.txt\" 2-fit.000001.000004.txt\n",
+        "run": "mDiffFit -d -s 2-fit.000001.000004.txt pposs2ukstu_red_001_001.fits pposs2ukstu_red_002_002.fits 2-diff.000001.000004.fits region-oversized.hdr",
+        "workspaceSeedPath": "/akoflow-wfa-shared",
         "cpuLimit": "1",
         "memoryLimit": "256Mi",
         "dependsOn": [
@@ -292,7 +318,8 @@
       {
         "name": "mdifffitid0000027",
         "runtime": "local",
-        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mDiffFit\\ -d\\ -s\\ 2-fit.000002.000003.txt\\ pposs2ukstu_red_001_002.fits\\ pposs2ukstu_red_002_001.fits\\ 2-diff.000002.000003.fits\\ region-oversized.hdr)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp pposs2ukstu_red_001_002.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_red_001_002.fits\"\ndocker cp pposs2ukstu_red_002_001.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_red_002_001.fits\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/2-fit.000002.000003.txt\" 2-fit.000002.000003.txt\n",
+        "run": "mDiffFit -d -s 2-fit.000002.000003.txt pposs2ukstu_red_001_002.fits pposs2ukstu_red_002_001.fits 2-diff.000002.000003.fits region-oversized.hdr",
+        "workspaceSeedPath": "/akoflow-wfa-shared",
         "cpuLimit": "1",
         "memoryLimit": "256Mi",
         "dependsOn": [
@@ -303,7 +330,8 @@
       {
         "name": "mdifffitid0000028",
         "runtime": "local",
-        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mDiffFit\\ -d\\ -s\\ 2-fit.000002.000004.txt\\ pposs2ukstu_red_001_002.fits\\ pposs2ukstu_red_002_002.fits\\ 2-diff.000002.000004.fits\\ region-oversized.hdr)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp pposs2ukstu_red_001_002.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_red_001_002.fits\"\ndocker cp pposs2ukstu_red_002_002.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_red_002_002.fits\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/2-fit.000002.000004.txt\" 2-fit.000002.000004.txt\n",
+        "run": "mDiffFit -d -s 2-fit.000002.000004.txt pposs2ukstu_red_001_002.fits pposs2ukstu_red_002_002.fits 2-diff.000002.000004.fits region-oversized.hdr",
+        "workspaceSeedPath": "/akoflow-wfa-shared",
         "cpuLimit": "1",
         "memoryLimit": "256Mi",
         "dependsOn": [
@@ -314,7 +342,8 @@
       {
         "name": "mdifffitid0000029",
         "runtime": "local",
-        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mDiffFit\\ -d\\ -s\\ 2-fit.000003.000004.txt\\ pposs2ukstu_red_002_001.fits\\ pposs2ukstu_red_002_002.fits\\ 2-diff.000003.000004.fits\\ region-oversized.hdr)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp pposs2ukstu_red_002_001.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_red_002_001.fits\"\ndocker cp pposs2ukstu_red_002_002.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_red_002_002.fits\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/2-fit.000003.000004.txt\" 2-fit.000003.000004.txt\n",
+        "run": "mDiffFit -d -s 2-fit.000003.000004.txt pposs2ukstu_red_002_001.fits pposs2ukstu_red_002_002.fits 2-diff.000003.000004.fits region-oversized.hdr",
+        "workspaceSeedPath": "/akoflow-wfa-shared",
         "cpuLimit": "1",
         "memoryLimit": "256Mi",
         "dependsOn": [
@@ -325,7 +354,8 @@
       {
         "name": "mconcatfitid0000030",
         "runtime": "local",
-        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mConcatFit\\ 2-stat.tbl\\ 2-fits.tbl\\ .)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp 2-fit.000001.000002.txt \"$cid:/akoflow-wfa-shared/2-fit.000001.000002.txt\"\ndocker cp 2-fit.000001.000003.txt \"$cid:/akoflow-wfa-shared/2-fit.000001.000003.txt\"\ndocker cp 2-fit.000001.000004.txt \"$cid:/akoflow-wfa-shared/2-fit.000001.000004.txt\"\ndocker cp 2-fit.000002.000003.txt \"$cid:/akoflow-wfa-shared/2-fit.000002.000003.txt\"\ndocker cp 2-fit.000002.000004.txt \"$cid:/akoflow-wfa-shared/2-fit.000002.000004.txt\"\ndocker cp 2-fit.000003.000004.txt \"$cid:/akoflow-wfa-shared/2-fit.000003.000004.txt\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/2-fits.tbl\" 2-fits.tbl\n",
+        "run": "mConcatFit 2-stat.tbl 2-fits.tbl .",
+        "workspaceSeedPath": "/akoflow-wfa-shared",
         "cpuLimit": "1",
         "memoryLimit": "256Mi",
         "dependsOn": [
@@ -340,7 +370,8 @@
       {
         "name": "mbgmodelid0000031",
         "runtime": "local",
-        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mBgModel\\ -i\\ 100000\\ 2-images.tbl\\ 2-fits.tbl\\ 2-corrections.tbl)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp 2-fits.tbl \"$cid:/akoflow-wfa-shared/2-fits.tbl\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/2-corrections.tbl\" 2-corrections.tbl\n",
+        "run": "mBgModel -i 100000 2-images.tbl 2-fits.tbl 2-corrections.tbl",
+        "workspaceSeedPath": "/akoflow-wfa-shared",
         "cpuLimit": "1",
         "memoryLimit": "256Mi",
         "dependsOn": [
@@ -350,7 +381,8 @@
       {
         "name": "mbackgroundid0000032",
         "runtime": "local",
-        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mBackground\\ -t\\ pposs2ukstu_red_001_001.fits\\ cposs2ukstu_red_001_001.fits\\ 2-projected.tbl\\ 2-corrections.tbl)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp pposs2ukstu_red_001_001.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_red_001_001.fits\"\ndocker cp 2-corrections.tbl \"$cid:/akoflow-wfa-shared/2-corrections.tbl\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/cposs2ukstu_red_001_001.fits\" cposs2ukstu_red_001_001.fits\ndocker cp \"$cid:/akoflow-wfa-shared/cposs2ukstu_red_001_001_area.fits\" cposs2ukstu_red_001_001_area.fits\n",
+        "run": "mBackground -t pposs2ukstu_red_001_001.fits cposs2ukstu_red_001_001.fits 2-projected.tbl 2-corrections.tbl",
+        "workspaceSeedPath": "/akoflow-wfa-shared",
         "cpuLimit": "1",
         "memoryLimit": "256Mi",
         "dependsOn": [
@@ -361,7 +393,8 @@
       {
         "name": "mbackgroundid0000033",
         "runtime": "local",
-        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mBackground\\ -t\\ pposs2ukstu_red_001_002.fits\\ cposs2ukstu_red_001_002.fits\\ 2-projected.tbl\\ 2-corrections.tbl)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp pposs2ukstu_red_001_002.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_red_001_002.fits\"\ndocker cp 2-corrections.tbl \"$cid:/akoflow-wfa-shared/2-corrections.tbl\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/cposs2ukstu_red_001_002.fits\" cposs2ukstu_red_001_002.fits\ndocker cp \"$cid:/akoflow-wfa-shared/cposs2ukstu_red_001_002_area.fits\" cposs2ukstu_red_001_002_area.fits\n",
+        "run": "mBackground -t pposs2ukstu_red_001_002.fits cposs2ukstu_red_001_002.fits 2-projected.tbl 2-corrections.tbl",
+        "workspaceSeedPath": "/akoflow-wfa-shared",
         "cpuLimit": "1",
         "memoryLimit": "256Mi",
         "dependsOn": [
@@ -372,7 +405,8 @@
       {
         "name": "mbackgroundid0000034",
         "runtime": "local",
-        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mBackground\\ -t\\ pposs2ukstu_red_002_001.fits\\ cposs2ukstu_red_002_001.fits\\ 2-projected.tbl\\ 2-corrections.tbl)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp pposs2ukstu_red_002_001.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_red_002_001.fits\"\ndocker cp 2-corrections.tbl \"$cid:/akoflow-wfa-shared/2-corrections.tbl\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/cposs2ukstu_red_002_001.fits\" cposs2ukstu_red_002_001.fits\ndocker cp \"$cid:/akoflow-wfa-shared/cposs2ukstu_red_002_001_area.fits\" cposs2ukstu_red_002_001_area.fits\n",
+        "run": "mBackground -t pposs2ukstu_red_002_001.fits cposs2ukstu_red_002_001.fits 2-projected.tbl 2-corrections.tbl",
+        "workspaceSeedPath": "/akoflow-wfa-shared",
         "cpuLimit": "1",
         "memoryLimit": "256Mi",
         "dependsOn": [
@@ -383,7 +417,8 @@
       {
         "name": "mbackgroundid0000035",
         "runtime": "local",
-        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mBackground\\ -t\\ pposs2ukstu_red_002_002.fits\\ cposs2ukstu_red_002_002.fits\\ 2-projected.tbl\\ 2-corrections.tbl)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp pposs2ukstu_red_002_002.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_red_002_002.fits\"\ndocker cp 2-corrections.tbl \"$cid:/akoflow-wfa-shared/2-corrections.tbl\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/cposs2ukstu_red_002_002.fits\" cposs2ukstu_red_002_002.fits\ndocker cp \"$cid:/akoflow-wfa-shared/cposs2ukstu_red_002_002_area.fits\" cposs2ukstu_red_002_002_area.fits\n",
+        "run": "mBackground -t pposs2ukstu_red_002_002.fits cposs2ukstu_red_002_002.fits 2-projected.tbl 2-corrections.tbl",
+        "workspaceSeedPath": "/akoflow-wfa-shared",
         "cpuLimit": "1",
         "memoryLimit": "256Mi",
         "dependsOn": [
@@ -394,7 +429,8 @@
       {
         "name": "mimgtblid0000036",
         "runtime": "local",
-        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mImgtbl\\ .\\ -t\\ 2-corrected.tbl\\ 2-updated-corrected.tbl)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp cposs2ukstu_red_001_001.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_red_001_001.fits\"\ndocker cp cposs2ukstu_red_001_001_area.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_red_001_001_area.fits\"\ndocker cp cposs2ukstu_red_001_002.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_red_001_002.fits\"\ndocker cp cposs2ukstu_red_001_002_area.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_red_001_002_area.fits\"\ndocker cp cposs2ukstu_red_002_001.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_red_002_001.fits\"\ndocker cp cposs2ukstu_red_002_001_area.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_red_002_001_area.fits\"\ndocker cp cposs2ukstu_red_002_002.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_red_002_002.fits\"\ndocker cp cposs2ukstu_red_002_002_area.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_red_002_002_area.fits\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/2-updated-corrected.tbl\" 2-updated-corrected.tbl\n",
+        "run": "mImgtbl . -t 2-corrected.tbl 2-updated-corrected.tbl",
+        "workspaceSeedPath": "/akoflow-wfa-shared",
         "cpuLimit": "1",
         "memoryLimit": "256Mi",
         "dependsOn": [
@@ -407,7 +443,8 @@
       {
         "name": "maddid0000037",
         "runtime": "local",
-        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mAdd\\ -e\\ 2-updated-corrected.tbl\\ region.hdr\\ 2-mosaic.fits)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp cposs2ukstu_red_001_001.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_red_001_001.fits\"\ndocker cp cposs2ukstu_red_001_001_area.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_red_001_001_area.fits\"\ndocker cp cposs2ukstu_red_001_002.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_red_001_002.fits\"\ndocker cp cposs2ukstu_red_001_002_area.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_red_001_002_area.fits\"\ndocker cp cposs2ukstu_red_002_001.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_red_002_001.fits\"\ndocker cp cposs2ukstu_red_002_001_area.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_red_002_001_area.fits\"\ndocker cp cposs2ukstu_red_002_002.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_red_002_002.fits\"\ndocker cp cposs2ukstu_red_002_002_area.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_red_002_002_area.fits\"\ndocker cp 2-updated-corrected.tbl \"$cid:/akoflow-wfa-shared/2-updated-corrected.tbl\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/2-mosaic.fits\" 2-mosaic.fits\n",
+        "run": "mAdd -e 2-updated-corrected.tbl region.hdr 2-mosaic.fits",
+        "workspaceSeedPath": "/akoflow-wfa-shared",
         "cpuLimit": "1",
         "memoryLimit": "256Mi",
         "dependsOn": [
@@ -421,7 +458,8 @@
       {
         "name": "mviewerid0000038",
         "runtime": "local",
-        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mViewer\\ -ct\\ 1\\ -gray\\ 2-mosaic.fits\\ -1s\\ max\\ gaussian\\ -png\\ 2-mosaic.png)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp 2-mosaic.fits \"$cid:/akoflow-wfa-shared/2-mosaic.fits\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/2-mosaic.png\" 2-mosaic.png\n",
+        "run": "mViewer -ct 1 -gray 2-mosaic.fits -1s max gaussian -png 2-mosaic.png",
+        "workspaceSeedPath": "/akoflow-wfa-shared",
         "cpuLimit": "1",
         "memoryLimit": "256Mi",
         "dependsOn": [
@@ -431,7 +469,8 @@
       {
         "name": "mprojectid0000039",
         "runtime": "cloud",
-        "run": "set -eu; work=$PWD; cd /akoflow-wfa-shared; mProject -X poss2ukstu_ir_001_001.fits pposs2ukstu_ir_001_001.fits region-oversized.hdr; cp pposs2ukstu_ir_001_001.fits pposs2ukstu_ir_001_001_area.fits \"$work/\"",
+        "run": "mProject -X poss2ukstu_ir_001_001.fits pposs2ukstu_ir_001_001.fits region-oversized.hdr",
+        "workspaceSeedPath": "/akoflow-wfa-shared",
         "cpuLimit": "1",
         "memoryLimit": "256Mi",
         "dependsOn": [
@@ -441,7 +480,8 @@
       {
         "name": "mprojectid0000040",
         "runtime": "cloud",
-        "run": "set -eu; work=$PWD; cd /akoflow-wfa-shared; mProject -X poss2ukstu_ir_001_002.fits pposs2ukstu_ir_001_002.fits region-oversized.hdr; cp pposs2ukstu_ir_001_002.fits pposs2ukstu_ir_001_002_area.fits \"$work/\"",
+        "run": "mProject -X poss2ukstu_ir_001_002.fits pposs2ukstu_ir_001_002.fits region-oversized.hdr",
+        "workspaceSeedPath": "/akoflow-wfa-shared",
         "cpuLimit": "1",
         "memoryLimit": "256Mi",
         "dependsOn": [
@@ -451,7 +491,8 @@
       {
         "name": "mprojectid0000041",
         "runtime": "cloud",
-        "run": "set -eu; work=$PWD; cd /akoflow-wfa-shared; mProject -X poss2ukstu_ir_002_001.fits pposs2ukstu_ir_002_001.fits region-oversized.hdr; cp pposs2ukstu_ir_002_001.fits pposs2ukstu_ir_002_001_area.fits \"$work/\"",
+        "run": "mProject -X poss2ukstu_ir_002_001.fits pposs2ukstu_ir_002_001.fits region-oversized.hdr",
+        "workspaceSeedPath": "/akoflow-wfa-shared",
         "cpuLimit": "1",
         "memoryLimit": "256Mi",
         "dependsOn": [
@@ -461,7 +502,8 @@
       {
         "name": "mprojectid0000042",
         "runtime": "cloud",
-        "run": "set -eu; work=$PWD; cd /akoflow-wfa-shared; mProject -X poss2ukstu_ir_002_002.fits pposs2ukstu_ir_002_002.fits region-oversized.hdr; cp pposs2ukstu_ir_002_002.fits pposs2ukstu_ir_002_002_area.fits \"$work/\"",
+        "run": "mProject -X poss2ukstu_ir_002_002.fits pposs2ukstu_ir_002_002.fits region-oversized.hdr",
+        "workspaceSeedPath": "/akoflow-wfa-shared",
         "cpuLimit": "1",
         "memoryLimit": "256Mi",
         "dependsOn": [
@@ -471,7 +513,8 @@
       {
         "name": "mdifffitid0000043",
         "runtime": "local",
-        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mDiffFit\\ -d\\ -s\\ 3-fit.000001.000002.txt\\ pposs2ukstu_ir_001_001.fits\\ pposs2ukstu_ir_001_002.fits\\ 3-diff.000001.000002.fits\\ region-oversized.hdr)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp pposs2ukstu_ir_001_001.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_ir_001_001.fits\"\ndocker cp pposs2ukstu_ir_001_002.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_ir_001_002.fits\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/3-fit.000001.000002.txt\" 3-fit.000001.000002.txt\n",
+        "run": "mDiffFit -d -s 3-fit.000001.000002.txt pposs2ukstu_ir_001_001.fits pposs2ukstu_ir_001_002.fits 3-diff.000001.000002.fits region-oversized.hdr",
+        "workspaceSeedPath": "/akoflow-wfa-shared",
         "cpuLimit": "1",
         "memoryLimit": "256Mi",
         "dependsOn": [
@@ -482,7 +525,8 @@
       {
         "name": "mdifffitid0000044",
         "runtime": "local",
-        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mDiffFit\\ -d\\ -s\\ 3-fit.000001.000003.txt\\ pposs2ukstu_ir_001_001.fits\\ pposs2ukstu_ir_002_001.fits\\ 3-diff.000001.000003.fits\\ region-oversized.hdr)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp pposs2ukstu_ir_001_001.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_ir_001_001.fits\"\ndocker cp pposs2ukstu_ir_002_001.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_ir_002_001.fits\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/3-fit.000001.000003.txt\" 3-fit.000001.000003.txt\n",
+        "run": "mDiffFit -d -s 3-fit.000001.000003.txt pposs2ukstu_ir_001_001.fits pposs2ukstu_ir_002_001.fits 3-diff.000001.000003.fits region-oversized.hdr",
+        "workspaceSeedPath": "/akoflow-wfa-shared",
         "cpuLimit": "1",
         "memoryLimit": "256Mi",
         "dependsOn": [
@@ -493,7 +537,8 @@
       {
         "name": "mdifffitid0000045",
         "runtime": "local",
-        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mDiffFit\\ -d\\ -s\\ 3-fit.000001.000004.txt\\ pposs2ukstu_ir_001_001.fits\\ pposs2ukstu_ir_002_002.fits\\ 3-diff.000001.000004.fits\\ region-oversized.hdr)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp pposs2ukstu_ir_001_001.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_ir_001_001.fits\"\ndocker cp pposs2ukstu_ir_002_002.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_ir_002_002.fits\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/3-fit.000001.000004.txt\" 3-fit.000001.000004.txt\n",
+        "run": "mDiffFit -d -s 3-fit.000001.000004.txt pposs2ukstu_ir_001_001.fits pposs2ukstu_ir_002_002.fits 3-diff.000001.000004.fits region-oversized.hdr",
+        "workspaceSeedPath": "/akoflow-wfa-shared",
         "cpuLimit": "1",
         "memoryLimit": "256Mi",
         "dependsOn": [
@@ -504,7 +549,8 @@
       {
         "name": "mdifffitid0000046",
         "runtime": "local",
-        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mDiffFit\\ -d\\ -s\\ 3-fit.000002.000003.txt\\ pposs2ukstu_ir_001_002.fits\\ pposs2ukstu_ir_002_001.fits\\ 3-diff.000002.000003.fits\\ region-oversized.hdr)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp pposs2ukstu_ir_001_002.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_ir_001_002.fits\"\ndocker cp pposs2ukstu_ir_002_001.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_ir_002_001.fits\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/3-fit.000002.000003.txt\" 3-fit.000002.000003.txt\n",
+        "run": "mDiffFit -d -s 3-fit.000002.000003.txt pposs2ukstu_ir_001_002.fits pposs2ukstu_ir_002_001.fits 3-diff.000002.000003.fits region-oversized.hdr",
+        "workspaceSeedPath": "/akoflow-wfa-shared",
         "cpuLimit": "1",
         "memoryLimit": "256Mi",
         "dependsOn": [
@@ -515,7 +561,8 @@
       {
         "name": "mdifffitid0000047",
         "runtime": "local",
-        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mDiffFit\\ -d\\ -s\\ 3-fit.000002.000004.txt\\ pposs2ukstu_ir_001_002.fits\\ pposs2ukstu_ir_002_002.fits\\ 3-diff.000002.000004.fits\\ region-oversized.hdr)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp pposs2ukstu_ir_001_002.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_ir_001_002.fits\"\ndocker cp pposs2ukstu_ir_002_002.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_ir_002_002.fits\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/3-fit.000002.000004.txt\" 3-fit.000002.000004.txt\n",
+        "run": "mDiffFit -d -s 3-fit.000002.000004.txt pposs2ukstu_ir_001_002.fits pposs2ukstu_ir_002_002.fits 3-diff.000002.000004.fits region-oversized.hdr",
+        "workspaceSeedPath": "/akoflow-wfa-shared",
         "cpuLimit": "1",
         "memoryLimit": "256Mi",
         "dependsOn": [
@@ -526,7 +573,8 @@
       {
         "name": "mdifffitid0000048",
         "runtime": "local",
-        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mDiffFit\\ -d\\ -s\\ 3-fit.000003.000004.txt\\ pposs2ukstu_ir_002_001.fits\\ pposs2ukstu_ir_002_002.fits\\ 3-diff.000003.000004.fits\\ region-oversized.hdr)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp pposs2ukstu_ir_002_001.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_ir_002_001.fits\"\ndocker cp pposs2ukstu_ir_002_002.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_ir_002_002.fits\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/3-fit.000003.000004.txt\" 3-fit.000003.000004.txt\n",
+        "run": "mDiffFit -d -s 3-fit.000003.000004.txt pposs2ukstu_ir_002_001.fits pposs2ukstu_ir_002_002.fits 3-diff.000003.000004.fits region-oversized.hdr",
+        "workspaceSeedPath": "/akoflow-wfa-shared",
         "cpuLimit": "1",
         "memoryLimit": "256Mi",
         "dependsOn": [
@@ -537,7 +585,8 @@
       {
         "name": "mconcatfitid0000049",
         "runtime": "local",
-        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mConcatFit\\ 3-stat.tbl\\ 3-fits.tbl\\ .)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp 3-fit.000001.000002.txt \"$cid:/akoflow-wfa-shared/3-fit.000001.000002.txt\"\ndocker cp 3-fit.000001.000003.txt \"$cid:/akoflow-wfa-shared/3-fit.000001.000003.txt\"\ndocker cp 3-fit.000001.000004.txt \"$cid:/akoflow-wfa-shared/3-fit.000001.000004.txt\"\ndocker cp 3-fit.000002.000003.txt \"$cid:/akoflow-wfa-shared/3-fit.000002.000003.txt\"\ndocker cp 3-fit.000002.000004.txt \"$cid:/akoflow-wfa-shared/3-fit.000002.000004.txt\"\ndocker cp 3-fit.000003.000004.txt \"$cid:/akoflow-wfa-shared/3-fit.000003.000004.txt\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/3-fits.tbl\" 3-fits.tbl\n",
+        "run": "mConcatFit 3-stat.tbl 3-fits.tbl .",
+        "workspaceSeedPath": "/akoflow-wfa-shared",
         "cpuLimit": "1",
         "memoryLimit": "256Mi",
         "dependsOn": [
@@ -552,7 +601,8 @@
       {
         "name": "mbgmodelid0000050",
         "runtime": "local",
-        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mBgModel\\ -i\\ 100000\\ 3-images.tbl\\ 3-fits.tbl\\ 3-corrections.tbl)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp 3-fits.tbl \"$cid:/akoflow-wfa-shared/3-fits.tbl\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/3-corrections.tbl\" 3-corrections.tbl\n",
+        "run": "mBgModel -i 100000 3-images.tbl 3-fits.tbl 3-corrections.tbl",
+        "workspaceSeedPath": "/akoflow-wfa-shared",
         "cpuLimit": "1",
         "memoryLimit": "256Mi",
         "dependsOn": [
@@ -562,7 +612,8 @@
       {
         "name": "mbackgroundid0000051",
         "runtime": "local",
-        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mBackground\\ -t\\ pposs2ukstu_ir_001_001.fits\\ cposs2ukstu_ir_001_001.fits\\ 3-projected.tbl\\ 3-corrections.tbl)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp pposs2ukstu_ir_001_001.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_ir_001_001.fits\"\ndocker cp 3-corrections.tbl \"$cid:/akoflow-wfa-shared/3-corrections.tbl\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/cposs2ukstu_ir_001_001.fits\" cposs2ukstu_ir_001_001.fits\ndocker cp \"$cid:/akoflow-wfa-shared/cposs2ukstu_ir_001_001_area.fits\" cposs2ukstu_ir_001_001_area.fits\n",
+        "run": "mBackground -t pposs2ukstu_ir_001_001.fits cposs2ukstu_ir_001_001.fits 3-projected.tbl 3-corrections.tbl",
+        "workspaceSeedPath": "/akoflow-wfa-shared",
         "cpuLimit": "1",
         "memoryLimit": "256Mi",
         "dependsOn": [
@@ -573,7 +624,8 @@
       {
         "name": "mbackgroundid0000052",
         "runtime": "local",
-        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mBackground\\ -t\\ pposs2ukstu_ir_001_002.fits\\ cposs2ukstu_ir_001_002.fits\\ 3-projected.tbl\\ 3-corrections.tbl)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp pposs2ukstu_ir_001_002.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_ir_001_002.fits\"\ndocker cp 3-corrections.tbl \"$cid:/akoflow-wfa-shared/3-corrections.tbl\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/cposs2ukstu_ir_001_002.fits\" cposs2ukstu_ir_001_002.fits\ndocker cp \"$cid:/akoflow-wfa-shared/cposs2ukstu_ir_001_002_area.fits\" cposs2ukstu_ir_001_002_area.fits\n",
+        "run": "mBackground -t pposs2ukstu_ir_001_002.fits cposs2ukstu_ir_001_002.fits 3-projected.tbl 3-corrections.tbl",
+        "workspaceSeedPath": "/akoflow-wfa-shared",
         "cpuLimit": "1",
         "memoryLimit": "256Mi",
         "dependsOn": [
@@ -584,7 +636,8 @@
       {
         "name": "mbackgroundid0000053",
         "runtime": "local",
-        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mBackground\\ -t\\ pposs2ukstu_ir_002_001.fits\\ cposs2ukstu_ir_002_001.fits\\ 3-projected.tbl\\ 3-corrections.tbl)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp pposs2ukstu_ir_002_001.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_ir_002_001.fits\"\ndocker cp 3-corrections.tbl \"$cid:/akoflow-wfa-shared/3-corrections.tbl\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/cposs2ukstu_ir_002_001.fits\" cposs2ukstu_ir_002_001.fits\ndocker cp \"$cid:/akoflow-wfa-shared/cposs2ukstu_ir_002_001_area.fits\" cposs2ukstu_ir_002_001_area.fits\n",
+        "run": "mBackground -t pposs2ukstu_ir_002_001.fits cposs2ukstu_ir_002_001.fits 3-projected.tbl 3-corrections.tbl",
+        "workspaceSeedPath": "/akoflow-wfa-shared",
         "cpuLimit": "1",
         "memoryLimit": "256Mi",
         "dependsOn": [
@@ -595,7 +648,8 @@
       {
         "name": "mbackgroundid0000054",
         "runtime": "local",
-        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mBackground\\ -t\\ pposs2ukstu_ir_002_002.fits\\ cposs2ukstu_ir_002_002.fits\\ 3-projected.tbl\\ 3-corrections.tbl)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp pposs2ukstu_ir_002_002.fits \"$cid:/akoflow-wfa-shared/pposs2ukstu_ir_002_002.fits\"\ndocker cp 3-corrections.tbl \"$cid:/akoflow-wfa-shared/3-corrections.tbl\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/cposs2ukstu_ir_002_002.fits\" cposs2ukstu_ir_002_002.fits\ndocker cp \"$cid:/akoflow-wfa-shared/cposs2ukstu_ir_002_002_area.fits\" cposs2ukstu_ir_002_002_area.fits\n",
+        "run": "mBackground -t pposs2ukstu_ir_002_002.fits cposs2ukstu_ir_002_002.fits 3-projected.tbl 3-corrections.tbl",
+        "workspaceSeedPath": "/akoflow-wfa-shared",
         "cpuLimit": "1",
         "memoryLimit": "256Mi",
         "dependsOn": [
@@ -606,7 +660,8 @@
       {
         "name": "mimgtblid0000055",
         "runtime": "local",
-        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mImgtbl\\ .\\ -t\\ 3-corrected.tbl\\ 3-updated-corrected.tbl)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp cposs2ukstu_ir_001_001.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_ir_001_001.fits\"\ndocker cp cposs2ukstu_ir_001_001_area.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_ir_001_001_area.fits\"\ndocker cp cposs2ukstu_ir_001_002.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_ir_001_002.fits\"\ndocker cp cposs2ukstu_ir_001_002_area.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_ir_001_002_area.fits\"\ndocker cp cposs2ukstu_ir_002_001.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_ir_002_001.fits\"\ndocker cp cposs2ukstu_ir_002_001_area.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_ir_002_001_area.fits\"\ndocker cp cposs2ukstu_ir_002_002.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_ir_002_002.fits\"\ndocker cp cposs2ukstu_ir_002_002_area.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_ir_002_002_area.fits\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/3-updated-corrected.tbl\" 3-updated-corrected.tbl\n",
+        "run": "mImgtbl . -t 3-corrected.tbl 3-updated-corrected.tbl",
+        "workspaceSeedPath": "/akoflow-wfa-shared",
         "cpuLimit": "1",
         "memoryLimit": "256Mi",
         "dependsOn": [
@@ -619,7 +674,8 @@
       {
         "name": "maddid0000056",
         "runtime": "local",
-        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mAdd\\ -e\\ 3-updated-corrected.tbl\\ region.hdr\\ 3-mosaic.fits)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp cposs2ukstu_ir_001_001.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_ir_001_001.fits\"\ndocker cp cposs2ukstu_ir_001_001_area.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_ir_001_001_area.fits\"\ndocker cp cposs2ukstu_ir_001_002.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_ir_001_002.fits\"\ndocker cp cposs2ukstu_ir_001_002_area.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_ir_001_002_area.fits\"\ndocker cp cposs2ukstu_ir_002_001.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_ir_002_001.fits\"\ndocker cp cposs2ukstu_ir_002_001_area.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_ir_002_001_area.fits\"\ndocker cp cposs2ukstu_ir_002_002.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_ir_002_002.fits\"\ndocker cp cposs2ukstu_ir_002_002_area.fits \"$cid:/akoflow-wfa-shared/cposs2ukstu_ir_002_002_area.fits\"\ndocker cp 3-updated-corrected.tbl \"$cid:/akoflow-wfa-shared/3-updated-corrected.tbl\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/3-mosaic.fits\" 3-mosaic.fits\n",
+        "run": "mAdd -e 3-updated-corrected.tbl region.hdr 3-mosaic.fits",
+        "workspaceSeedPath": "/akoflow-wfa-shared",
         "cpuLimit": "1",
         "memoryLimit": "256Mi",
         "dependsOn": [
@@ -633,7 +689,8 @@
       {
         "name": "mviewerid0000057",
         "runtime": "local",
-        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mViewer\\ -ct\\ 1\\ -gray\\ 3-mosaic.fits\\ -1s\\ max\\ gaussian\\ -png\\ 3-mosaic.png)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp 3-mosaic.fits \"$cid:/akoflow-wfa-shared/3-mosaic.fits\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/3-mosaic.png\" 3-mosaic.png\n",
+        "run": "mViewer -ct 1 -gray 3-mosaic.fits -1s max gaussian -png 3-mosaic.png",
+        "workspaceSeedPath": "/akoflow-wfa-shared",
         "cpuLimit": "1",
         "memoryLimit": "256Mi",
         "dependsOn": [
@@ -643,7 +700,8 @@
       {
         "name": "mviewerid0000058",
         "runtime": "local",
-        "run": "set -eu\ncid=$(docker create --workdir /akoflow-wfa-shared ovvesley/akoflow-wf-montage:050d sh -c set\\ -eu\\;\\ mViewer\\ -red\\ 3-mosaic.fits\\ -0.5s\\ max\\ gaussian-log\\ -green\\ 2-mosaic.fits\\ -0.5s\\ max\\ gaussian-log\\ -blue\\ 1-mosaic.fits\\ -0.5s\\ max\\ gaussian-log\\ -png\\ mosaic-color.png)\ntrap 'docker rm -f \"$cid\" >/dev/null 2>&1 || true' EXIT\ndocker cp 1-mosaic.fits \"$cid:/akoflow-wfa-shared/1-mosaic.fits\"\ndocker cp 2-mosaic.fits \"$cid:/akoflow-wfa-shared/2-mosaic.fits\"\ndocker cp 3-mosaic.fits \"$cid:/akoflow-wfa-shared/3-mosaic.fits\"\ndocker start -a \"$cid\"\ndocker cp \"$cid:/akoflow-wfa-shared/mosaic-color.png\" mosaic-color.png\n",
+        "run": "mViewer -red 3-mosaic.fits -0.5s max gaussian-log -green 2-mosaic.fits -0.5s max gaussian-log -blue 1-mosaic.fits -0.5s max gaussian-log -png mosaic-color.png",
+        "workspaceSeedPath": "/akoflow-wfa-shared",
         "cpuLimit": "1",
         "memoryLimit": "256Mi",
         "dependsOn": [

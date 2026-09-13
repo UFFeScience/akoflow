@@ -206,6 +206,12 @@ const verifiedRequestNotes = {
 };
 
 const verifiedRequestExamples = {
+  "POST /akoflow-api/artifacts/docker/": {
+    artifactId: "busybox",
+    version: "1.36",
+    image: "docker.io/library/busybox:1.36",
+    architecture: "amd64",
+  },
   "POST /akoflow-api/machine-configuration-validations/": {
     playbookYaml: "- hosts: all\n  tasks:\n    - ansible.builtin.debug:\n        msg: ready\n",
   },

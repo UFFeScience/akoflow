@@ -24,6 +24,7 @@ const groupRules = [
     "Instance",
     /^\/(instance|instances|instance-activations|factory-reset|user-preferences|preflight|search)/,
   ],
+  ["Cloud", /^\/environments\/[^/]+\/cloud-/],
   [
     "Environments",
     /^\/(environments|environment-connections|connection-tests|ssh-keys|kubernetes-tokens)/,
@@ -57,7 +58,7 @@ const groupMetadata = {
   ],
   Storage: [
     "/docs/guides/infrastructure/storage",
-    "remote storage content and operations",
+    "storage content and operations",
   ],
   Resources: [
     "/docs/guides/infrastructure/execution-scopes",
@@ -198,7 +199,7 @@ const verifiedRequestNotes = {
   "POST /akoflow-api/kubernetes-tokens/": "Send an `id` and your own non-empty `token` as JSON strings. The ID must be 1–63 lowercase letters, digits, or hyphens, starting with a letter or digit. The response returns a `credentialRef`; it does not echo the token. Supply the token from your cluster's credential process.",
   "POST /akoflow-api/cloud-credentials/": "Send `id`, `provider`, and `credential` with your actual provider credential. The ID follows the Kubernetes credential ID rule; `provider` must be `gcp`, `aws`, or `azure`, and `credential` must be valid JSON. Saving a credential does not validate provider access or make every provider operation available. The response returns a `credentialRef`.",
   "POST /akoflow-api/environments/{environmentId}/cloud-instances/": "Send a `capacityTargetId` for an existing target in this environment. `name` and `sshUsername` are optional; the server generates an `instanceId` when omitted. `202 Accepted` returns a queued operation, not a ready VM. Inspect its status and events; an active provision for the same target returns the existing operation. Follow the [GCP guide](/docs/guides/infrastructure/gcp) for account-specific setup.",
-  "POST /akoflow-api/environments/{environmentId}/cloud-provisioning/": "This compatibility route accepts the same `capacityTargetId` request as [Provision Cloud Instance](/docs/api/endpoints/environments/post-environments-environmentid-cloud-instances). It queues the same operation and returns `202 Accepted`; inspect status and events before treating the VM as ready.",
+  "POST /akoflow-api/environments/{environmentId}/cloud-provisioning/": "This compatibility route accepts the same `capacityTargetId` request as [Provision Cloud Instance](/docs/api/endpoints/cloud/post-environments-environmentid-cloud-instances). It queues the same operation and returns `202 Accepted`; inspect status and events before treating the VM as ready.",
   "POST /akoflow-api/planning-sessions/": "Required: `id`, an existing `workflowVersionId`, `executionScopeId`, and `networkTopologyId`, plus at least one `algorithms` entry. Each algorithm ID must appear in `GET /planning-algorithms/`; duplicate IDs are rejected. The server sets status and timestamps. The example IDs require the SimGrid environment, scope, topology, and workflow to be registered first.",
   "POST /akoflow-api/schedule-plans/import/": "Send a JSON object with a complete `plan`. Use a unique plan `id`, unique assignment IDs with matching `planId` values, and unique lifecycle action IDs with matching `schedulePlanId` and `dependsOn` references. Its workflow version, execution scope, topology, and resources must already exist. The server sets `source` to `imported`, checks the schedule against those saved records, and returns `422` if it is invalid. It saves the supplied predicted metrics without recalculating them. See the [saved-plan import example](/docs/guides/workflows/planning#import-a-saved-plan); a body filled with placeholder IDs would not pass validation.",
   "POST /akoflow-api/storages/{storageId}/promote-data/": "Replace the example `path` with an existing file within the selected storage's approved root. `id` is optional; the server generates one when omitted. `workflowVersionId`, `runId`, and `activityId` are optional associations and should identify real records when supplied. The [storage guide](/docs/guides/infrastructure/storage) shows the browsing step.",

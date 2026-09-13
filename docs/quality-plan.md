@@ -21,6 +21,7 @@ When a Desktop route or daemon endpoint changes, regenerate the endpoint referen
 
 - [x] The documentation builds from a clean generated state. Evidence: `cd docs && npm run clear && npm run typecheck && npm run build`, passed on 2026-09-11.
 - [x] API endpoint reference is generated from `internal/api/httpserver/httpserver.go`. Evidence: `docs/scripts/generate-api-reference.mjs`; 125 generated endpoint pages in the current tree.
+- [x] Environment-scoped cloud API routes appear with cloud operations and point to the cloud-capacity task guide. Evidence: the generator classifies `/environments/{environmentId}/cloud-*` before generic environment routes; seven pages moved to the Cloud category without changing the 125-route total.
 - [x] Provider limitations are stated explicitly. Evidence: `guides/infrastructure/cloud-capacity.md`, `gcp.md`, and `aws.md` distinguish GCP compute provisioning from partial object-storage support. The current GCS connector rejects direct `gs://` transfer, and saved AWS credentials are not wired to the S3 transfer connector.
 - [x] GCP catalog and provisioning access are documented as source-audited behavior rather than an unverified IAM recipe. Evidence: `guides/infrastructure/gcp.md`, `internal/provider/cloud/gcp/catalog.go`, and `internal/provider/cloud/terraform/runner.go`; a disposable-project validation remains required.
 - [x] HPC concepts and the proxy-aware connection path are documented. Evidence: `guides/infrastructure/hpc-slurm.md` and `guides/operations/interactive-console.md`.

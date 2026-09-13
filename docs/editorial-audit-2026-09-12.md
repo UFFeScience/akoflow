@@ -135,6 +135,8 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 
 113. **P1/P2 resolved across six task guides:** the provenance page repeated its screen tables in three long screenshot captions, which now identify the relevant result without re-explaining controls. A cross-page scan found 16 authored API `curl` examples without HTTP-error failure behavior across provenance, workflow definitions, planning, executions, build context, and troubleshooting. All now use `--fail-with-body`, so failed lookups and uploads produce failing exit statuses; download examples already used `--fail`. The shell checker now rejects future `curl` lines without either fail option. Syntax, links, and HTTP behavior have separate verification scopes.
 
+114. **P1 resolved in generated cloud navigation:** seven environment-scoped cloud catalog, target, instance, and provisioning routes appeared under the generic Environments endpoint category because their URL starts with `/environments/`. The generator now groups them by their cloud operation, gives them the cloud-capacity guide, and points the compatibility provisioning route to the moved instance endpoint. The generated route count remains 125. Redirects preserve the seven former documentation URLs; HTTP routes are unchanged. Link/build checks cover the new navigation, while cloud account behavior remains unverified.
+
 ## Page inventory
 
 | Page | Current pass | Next review |

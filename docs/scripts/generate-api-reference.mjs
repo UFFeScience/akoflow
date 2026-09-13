@@ -139,7 +139,24 @@ const delegatedSuccessStatuses = {
 // Map responses need checked shapes: key extraction alone cannot infer Go's
 // interface{} value types or conditional response envelopes.
 const checkedMapResponses = {
-  RegisterDockerArtifact: { example: { artifact: {}, build: {} } },
+  RegisterDockerArtifact: {
+    example: {
+      artifact: { id: "artifact-version-...", artifactId: "busybox", version: "1.36", scope: "system" },
+      build: {
+        id: "build-...",
+        artifactVersionId: "artifact-version-...",
+        sourceType: "docker-image",
+        contextDigest: "sha256:...",
+        recipePath: "docker.io/library/busybox:1.36",
+        recipeDigest: "sha256:...",
+        targetFormat: "sif",
+        targetOs: "linux",
+        targetArchitecture: "amd64",
+        buildArguments: "{}",
+        cacheKey: "docker-image:...",
+      },
+    },
+  },
   ValidateCloudCredential: {
     example: { valid: true, provider: "gcp", project: "project-id", region: "region", machineCount: 0, imageCount: 0, diskCount: 0 },
     note: "A `200 OK` response has `valid: true`, but any catalog count can be zero. Check the returned categories before creating a capacity target.",
@@ -246,7 +263,7 @@ const verifiedRequestNotes = {
   "POST /akoflow-api/storages/{storageId}/index-runs/": "Indexing must be enabled for this registered storage. Use a unique `id` in place of the example or omit it for a generated ID. The current service completes the bounded scan before responding; the returned record is `completed` or the request fails. The `202 Accepted` status does not mean this scan continues in the background.",
   "POST /akoflow-api/build-contexts/": "To upload bytes, send multipart form data with file field `context`. The JSON form only records metadata for bytes already in the artifact store; it requires `digest`, `storageUri`, and positive `sizeBytes`. A browser-local path is not a server build context.",
   "POST /akoflow-api/artifact-builds/": "Upload the build context first and use its returned digest as `contextDigest`; `artifactVersionId` must identify a saved artifact version. Required fields are `id`, `artifactVersionId`, `contextDigest`, `recipeDigest`, and `cacheKey`. An existing cache key returns that build with `200 OK`; a new specification returns `201 Created`. Creating a specification does not start a build run. See [Build an executable](/docs/guides/data/build-executable) for the simpler Docker-image path.",
-  "POST /akoflow-api/artifacts/docker/": "Required: `artifactId`, `version`, and a Docker image reference without whitespace. `architecture` defaults to `amd64`. The response contains `artifact` and `build` objects. This registers a version and build specification; the registry pull and SIF conversion begin only after `POST /artifact-builds/{buildId}/runs/`.",
+  "POST /akoflow-api/artifacts/docker/": "Required: `artifactId`, `version`, and a Docker image reference without whitespace. `architecture` defaults to `amd64`. This registers a version and build specification; it does not pull the image or create a SIF yet. Use `build.id` from the response in `POST /artifact-builds/{buildId}/runs/` to start conversion. The build run returns a separate ID.",
   "POST /akoflow-api/artifact-builds/{buildId}/runs/": "`buildId` must identify an existing build specification. This request starts a build run and returns its record with `202 Accepted`; inspect `GET /build-runs/{runId}/` for its outcome. The request has no JSON body.",
   "POST /akoflow-api/artifact-materializations/": "This endpoint stores a caller-supplied record; it does not copy or verify artifact bytes. Supply a distinct `id`, existing `variantId` and `resourceId`, the variant's `sha256:` digest, `destinationPath`, and a truthful `status`. The database checks references and digest format but does not prove the bytes exist at the destination. If supplied, `environmentId` must be the environment **version** ID, despite the field name. Use [Inspect artifact locations](/docs/guides/data/artifact-locations) to inspect evidence recorded by execution.",
   "POST /akoflow-api/console-sessions/": "Replace the example `resourceId` with a saved resource that has a connected interactive runtime; `actorId` is optional. A successful request starts the terminal and returns a `connected` session. Resolution or startup failure returns `422`, not a successful session record. Use the [console guide](/docs/guides/operations/interactive-console) for streaming and closure.",

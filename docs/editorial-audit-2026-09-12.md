@@ -177,6 +177,8 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 
 134. **P1 resolved in the network explanation:** a cross-read of the five explanation pages and the scope/topology reference found one incorrect opening premise: the network page said the directed topology is included in the execution scope. The scope may omit `networkTopologyId`; a planning session supplies its own topology ID, while a topology records its scope ID. The opening now says the topology is chosen for the planning session, without introducing the optional-field detail before the reader needs it. Source checks covered the planning-session validator and topology repository. The final all-page pass remains open.
 
+135. **P1 resolved in the Docker artifact response example:** a scan of map-shaped API responses found that `POST /artifacts/docker/` showed empty `artifact` and `build` objects, although the next documented step requires `build.id`. The generated example now shows the `ArtifactVersion` and `ArtifactBuild` JSON fields, including both IDs, and the route note distinguishes registration from the later build run. Handler, domain structs, and the existing HTTP repository test confirm the response keys and stored build specification. This verifies one response family; the 125-endpoint field-level audit remains open.
+
 ## Page inventory
 
 | Page | Current pass | Next review |

@@ -82,7 +82,7 @@ before allowing it to run.
 <TabItem value="windows" label="Windows">
 
 1. Open `Akoflow-Desktop-1.0.8-win-x64.exe` from the browser's download list.
-2. Follow the package's installation prompts, if shown, then open AkôFlow Desktop.
+2. Run the portable executable directly. v1.0.8 does not provide a separate Windows installer asset.
 3. Keep Docker Desktop running with Linux containers enabled.
 
 </TabItem>

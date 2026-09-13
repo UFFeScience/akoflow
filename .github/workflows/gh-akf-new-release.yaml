@@ -243,7 +243,7 @@ jobs:
             AkôFlow Desktop requires Docker Desktop on macOS and Windows, or Docker Engine with the Compose v2 plugin on Linux. Download the matching asset below:
 
             - **macOS:** open the universal `.dmg`, drag AkôFlow Desktop to Applications, and launch it.
-            - **Windows:** run the x64 installer `.exe`, or use the portable `.exe` without installation.
+            - **Windows:** run the x64 portable `.exe` asset without an installation wizard.
             - **Linux:** run the x64 `.AppImage` after `chmod +x`, or install the `.deb` with `sudo apt install ./Akoflow-Desktop-*.deb`.
 
             The matching source is the Git tag `${{ github.ref_name }}`. The runtime Docker archives in this release are loaded locally by Desktop; AkôFlow does not publish daemon or BuildKit packages to a container registry.

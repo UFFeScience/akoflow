@@ -912,6 +912,7 @@ import ApiEndpoint from '@site/src/components/ApiEndpoint';
   requestFileName={${JSON.stringify(endpoint.request?.fileName || null)}}
   requestMultipartField={${JSON.stringify(endpoint.request?.multipartField || null)}}
   responseExample={${JSON.stringify(endpoint.response.example === null ? null : typeof endpoint.response.example === "string" ? endpoint.response.example : JSON.stringify(endpoint.response.example, null, 2))}}
+  responseExampleChecked={${Boolean(checkedResponseShapes[endpoint.handler])}}
   responseType=${JSON.stringify(endpoint.response.type)}
   responseMediaType={${JSON.stringify(endpoint.response.mediaType)}}
   hasRequestBody={${body}}

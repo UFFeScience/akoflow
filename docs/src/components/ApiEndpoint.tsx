@@ -13,6 +13,7 @@ type ApiEndpointProps = {
   requestExample?: string | null;
   requestExampleVerified?: boolean;
   responseExample?: string | null;
+  responseExampleChecked?: boolean;
   responseType?: string;
   responseMediaType?: string | null;
   hasRequestBody?: boolean;
@@ -63,6 +64,7 @@ export default function ApiEndpoint({
   requestExample = null,
   requestExampleVerified = false,
   responseExample = null,
+  responseExampleChecked = false,
   responseType = "JSON object",
   responseMediaType = "application/json",
   hasRequestBody = false,
@@ -173,7 +175,9 @@ export default function ApiEndpoint({
           </div>
           {responseExample ? (
             <>
-              {responseMediaType === "application/json" && <p>Illustrative response shape; optional fields may be absent and values vary.</p>}
+              {responseMediaType === "application/json" && <p>{responseExampleChecked
+                ? "Handler-checked response shape; values and optional fields vary."
+                : "Field shape inferred from Go types; inspect the returned JSON for actual values and optional fields."}</p>}
               <pre><code>{responseExample}</code></pre>
             </>
           ) : (

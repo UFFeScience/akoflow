@@ -233,6 +233,25 @@ const checkedResponseShapes = {
     example: { items: [{ name: "execution_runs", columns: [{ name: "id", type: "text" }, { name: "status", type: "text" }] }] },
     note: "This shows two columns from one safe table. The response lists all queryable tables and unblocked columns in the connected database; inspect it before writing a read-only SQL query.",
   },
+  QueryProvenanceEntity: {
+    example: {
+      entity: {
+        name: "runs", label: "Runs", description: "Workflow executions with observed makespan and cost.",
+        fields: [{ name: "id", label: "ID", type: "identifier" }],
+        links: [{ field: "schedule_plan_id", targetEntity: "plans", targetField: "id" }],
+      },
+      items: [], page: 1, pageSize: 50, total: 0, hasNext: false,
+    },
+    note: "This shows an empty first page for the `runs` entity and only one of its available fields. Each returned row uses the selected entity's fields; inspect `entity.fields` before reading or filtering rows.",
+  },
+  QueryProvenanceSQL: {
+    example: { columns: [{ name: "id", type: "text" }], items: [], page: 1, pageSize: 50, truncated: false, elapsedMilliseconds: 0 },
+    note: "This shows an empty result for a query selecting `id`. `columns` follows the submitted SELECT list, and each item uses those column names. Pagination and elapsed time vary by query.",
+  },
+  ExplainProvenanceSQL: {
+    example: null,
+    note: "The response has `columns`, `items`, `page`, `pageSize`, `truncated`, and `elapsedMilliseconds`. `items` contains SQLite `EXPLAIN QUERY PLAN` rows; their columns and contents depend on the query and database, so no fixed plan is shown here.",
+  },
 };
 
 // Route-specific wording is reserved for aliases whose handler name cannot

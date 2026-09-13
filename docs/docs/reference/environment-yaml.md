@@ -28,8 +28,6 @@ resourceRelations: []
 storages: []
 activityResourceProfiles: []
 connections: []
-connectionChecks: []
-connectorBindings: []
 ```
 
 `environment` and `version` are required for a persisted definition. The remaining collections may be empty at creation time, but a plan needs at least one schedulable resource, an enabled binding, and a runtime compatible with the selected execution mode.
@@ -105,7 +103,7 @@ resourceRuntimeBindings:
     configuration: {}
 ```
 
-`resourceRuntimeBindings[].resourceId` and `runtimeId` are required and must reference entries in the same definition. Set `enabled: true` for a usable binding; an omitted value decodes as `false` through the API. Omit `configuration` when the binding needs no settings.
+`resourceRuntimeBindings[].resourceId` and `runtimeId` must identify saved entries. Use entries from the same environment version: the database checks that both IDs exist, but does not check that their versions match. Set `enabled: true` for a usable binding; an omitted value decodes as `false` through the API. Omit `configuration` when the binding needs no settings.
 
 `resourceRelations` is optional. When used, each relation needs `sourceResourceId`, `targetResourceId`, and `type`; the repository saves the enclosing `version.id` as its `environmentVersionId`. The allowed relation types are `contains`, `member_of`, and `accessible_via`. A relation cannot point from a resource to itself.
 
@@ -121,11 +119,7 @@ resourceRuntimeBindings:
 | `connections[].configuration` | No | object | omitted | Connection-type-specific settings. |
 | `connections[].createdAt` | No | timestamp | server-managed | Read-only evidence field. |
 
-`connectorBindings` declares artifact-transfer capabilities. Its `connector` enum is `rsync`, `scp`, `sftp`, `http`, `s3-compatible`, or `gcs`. The fields `id`, `environmentId`, and `connector` identify the binding; `endpoint`, `credentialRef`, and `configuration` are optional.
-
-The direct S3 transfer connector reads server environment credentials when `credentialRef` is omitted or set to `env`; it does not resolve an arbitrary saved reference. The schema accepts `gcs`, but the current server's direct `gs://` connector returns an unavailable error. A declared binding alone does not make a transfer usable. `health` is observation data; write it from a check, not an assumption.
-
-`connectionChecks` is also observed data. Do not copy a historical `online` result into a new environment file: validate the connection again after import.
+Do not author `connectorBindings` or `connectionChecks` in this definition. The Go type includes both fields, but POST and PUT do not save them. GET includes recent connection checks recorded by separate health operations; it does not return a saved connector-binding list from this file. Configure storage or transfer use through the supported runtime and storage paths; see the [AWS/S3 guide](../guides/infrastructure/aws) for the current S3 credential limits. Validate a connection again after import instead of copying a historical check.
 
 ## Storage
 

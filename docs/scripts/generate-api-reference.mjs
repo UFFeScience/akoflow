@@ -281,6 +281,7 @@ const runnableSimulationRequests = {
 // These notes come from handler calls and the credential/operation services,
 // not from JSON tags alone. Keep them scoped to fields the service validates.
 const verifiedRequestNotes = {
+  "POST /akoflow-api/environments/": "The response echoes the submitted definition. The repository saves the environment, version, inventory, storage, and connections, but ignores `connectionChecks` and `connectorBindings` if they appear in the body. Read `GET /environments/{environmentId}/` for saved IDs and separately recorded connection checks. See the [environment YAML reference](/docs/reference/environment-yaml).",
   "POST /akoflow-api/schedule-plans/": "Returns the saved `plan`. If `plan.networkTopologyId` is empty, the server fills it from `networkTopology.id`. Submitted predictions are saved without recalculation.",
   "GET /akoflow-api/environments/{environmentId}/cloud-catalog/": "Returns the last synchronized catalog; this GET does not call the provider. Before the first successful refresh it returns `404`. Read catalog warnings as well as machine, image, and disk choices; missing price data does not make a machine free.",
   "GET /akoflow-api/environments/{environmentId}/cloud-capacity-targets/": "Returns enabled targets for this environment, ordered by name. Deleting a target disables its record, so it disappears from this list without erasing historical operations or instances that used it.",
@@ -295,7 +296,7 @@ const verifiedRequestNotes = {
   "POST /akoflow-api/provenance/sql/": "Send a read-only `sql` query using `SELECT` or `WITH`; `parameters` supplies optional named values, and `page`/`pageSize` control results (at most 200 rows per page). Use `GET /provenance/sql/schema/` to see allowed tables and columns. The service enforces a 10-second timeout and rejects writes or restricted fields with `400`; an unavailable explorer returns `503`. See [provenance SQL guide](/docs/guides/data/provenance#query-with-read-only-sql).",
   "POST /akoflow-api/provenance/sql/explain/": "Send the same `sql` and optional named `parameters` as the read-only SQL route. This runs `EXPLAIN QUERY PLAN` for a permitted `SELECT` or `WITH` statement and returns plan rows, not the query's data rows. It uses the same read-only table/column restrictions and 10-second timeout; invalid SQL returns `400` and an unavailable explorer returns `503`.",
   "PUT /akoflow-api/instance/": "Send the complete current instance object with non-empty `id` and `name`; this route saves the supplied object, so preserve existing identity and metadata when changing one field. `transferBufferBytes` accepts 5–64 MiB; `0` selects the 8 MiB default. The [instance guide](/docs/guides/operations/instance-management#inspect-the-active-identity) reads the current object before updating it.",
-  "PUT /akoflow-api/environments/{environmentId}/": "Read `GET /environments/{environmentId}/` before editing and send a complete environment definition; `environment.id` must match the path ID. Replacement returns `404` when the environment does not exist and can return `422` when references prevent replacing its inventory. Use new environment and version IDs for revised inventory already used by scopes or plans; see the [environment YAML reference](/docs/reference/environment-yaml#compatibility-and-common-failures).",
+  "PUT /akoflow-api/environments/{environmentId}/": "Read `GET /environments/{environmentId}/` before editing and send a complete environment definition; `environment.id` must match the path ID. The response echoes the submitted definition, while the repository ignores `connectionChecks` and `connectorBindings` in it. Replacement returns `404` when the environment does not exist and can return `422` when references prevent replacing its inventory. Use new environment and version IDs for revised inventory already used by scopes or plans; see the [environment YAML reference](/docs/reference/environment-yaml#compatibility-and-common-failures).",
   "POST /akoflow-api/instance-activations/{instanceId}/": "Use `default` to return to the writable instance or an ID returned by `POST /instances/import/` to open a read-only snapshot. See [instance management](/docs/guides/operations/instance-management#import-and-open-a-read-only-snapshot) for the switching procedure.",
   "POST /akoflow-api/instances/import/": "Send a ZIP archive as the request body with `Content-Type: application/zip`, not JSON. The archive must be a compatible AkôFlow export with its redaction marker, valid database checksum and schema, no symbolic links, at most 100,000 entries, at most 8 GiB compressed and 64 GiB expanded. Success returns `201 Created` with the new read-only snapshot `id`; import does not replace the active instance. See [instance management](/docs/guides/operations/instance-management#import-and-open-a-read-only-snapshot).",
   "PUT /akoflow-api/user-preferences/{clientId}/": "The path `clientId` must be 8–128 characters and overrides any body `clientId`. Send `theme` as `light` or `dark`; `animationsEnabled` is optional and defaults to false when omitted. The route saves preferences for this client profile and returns the stored record with `200 OK`; invalid ID or theme returns `422`. See [Personal preferences](/docs/guides/operations/personal-preferences).",
@@ -977,13 +978,18 @@ for (const match of source.matchAll(routePattern)) {
       delegatedSuccessStatuses[handler] ?? extractSuccessStatuses(handlerBody, handler),
     guide: groupMetadata[group][0],
   };
+  const request = handler === "SaveBuildContext"
+    ? { type: "uploaded build context", example: null, mediaType: "multipart/form-data", fileName: "context.tar.gz", multipartField: "context" }
+    : handler === "ImportArchiveInstance"
+    ? { type: "ZIP instance archive (maximum 8 GiB)", example: null, mediaType: "application/zip", fileName: "instance.zip" }
+    : extractRequestContract(handlerBody, structIndex);
+  if ((handler === "CreateEnvironment" || handler === "ReplaceEnvironment") && request?.example) {
+    delete request.example.connectionChecks;
+    delete request.example.connectorBindings;
+  }
   endpoints.push({
     ...baseEndpoint,
-    request: handler === "SaveBuildContext"
-      ? { type: "uploaded build context", example: null, mediaType: "multipart/form-data", fileName: "context.tar.gz", multipartField: "context" }
-      : handler === "ImportArchiveInstance"
-      ? { type: "ZIP instance archive (maximum 8 GiB)", example: null, mediaType: "application/zip", fileName: "instance.zip" }
-      : extractRequestContract(handlerBody, structIndex),
+    request,
     response: {
       ...extractResponseContract(
         baseEndpoint,

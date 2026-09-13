@@ -79,7 +79,7 @@ curl --fail-with-body \
   "$AKOFLOW_API_URL/planning-sessions/"
 ```
 
-Creation returns `202 Accepted`. Poll the session and list its candidates:
+Creation returns `202 Accepted`. Poll the session until its status is `completed`, then list its candidates. This lets you compare the final ranks:
 
 ```bash
 curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
@@ -89,18 +89,24 @@ curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   "$AKOFLOW_API_URL/planning-sessions/planning-simulation-example/candidates/"
 ```
 
-Read a candidate before selecting it, then promote it to a plan:
+List the candidate IDs, choose one after comparing the candidates, and inspect it before selection:
 
 ```bash
-curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
-  "$AKOFLOW_API_URL/planning-sessions/planning-simulation-example/candidates/<candidate-id>/"
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  "$AKOFLOW_API_URL/planning-sessions/planning-simulation-example/candidates/" | jq -r '.[].id'
+
+read -r -p 'Candidate ID to select: ' AKOFLOW_CANDIDATE_ID || exit 1
+[ -n "$AKOFLOW_CANDIDATE_ID" ] || exit 1
+
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  "$AKOFLOW_API_URL/planning-sessions/planning-simulation-example/candidates/$AKOFLOW_CANDIDATE_ID/"
 
 curl --fail-with-body -X POST \
   -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
-  "$AKOFLOW_API_URL/planning-sessions/planning-simulation-example/candidates/<candidate-id>/select/"
+  "$AKOFLOW_API_URL/planning-sessions/planning-simulation-example/candidates/$AKOFLOW_CANDIDATE_ID/select/"
 ```
 
-Selection returns `201 Created` with the saved schedule plan.
+Check the candidate's `feasible` field before selecting it. Selection returns `201 Created` with the saved schedule plan.
 
 For a manual plan, send the complete validation envelope used by `examples/simulation/plan-request.yaml` to `POST /schedule-plans/`. To import an already assembled plan whose referenced objects are registered, send `{ "plan": ... }` to `POST /schedule-plans/import/`; the server sets its source to `imported` and validates it.
 

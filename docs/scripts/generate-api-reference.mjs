@@ -206,6 +206,16 @@ const verifiedRequestNotes = {
 };
 
 const verifiedRequestExamples = {
+  "POST /akoflow-api/provenance/sql/": {
+    sql: "SELECT id, status FROM execution_runs WHERE status = :status",
+    parameters: { status: "completed" },
+    page: 1,
+    pageSize: 50,
+  },
+  "POST /akoflow-api/provenance/sql/explain/": {
+    sql: "SELECT id, status FROM execution_runs WHERE status = :status",
+    parameters: { status: "completed" },
+  },
   "POST /akoflow-api/planning-sessions/": {
     id: "planning-simulation-example",
     workflowVersionId: "simulation-example-workflow-v1",

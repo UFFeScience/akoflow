@@ -60,6 +60,12 @@ func TestSQLAllowsSelectAndRejectsWrites(t *testing.T) {
 	if len(result.Items) != 1 || result.Items[0]["id"] != "run-1" {
 		t.Fatalf("unexpected SQL result: %#v", result)
 	}
+	plan, err := repository.Explain(context.Background(), ports.ProvenanceSQLQuery{
+		SQL: "SELECT id, status FROM execution_runs WHERE status = :status", Parameters: map[string]any{"status": "completed"},
+	})
+	if err != nil || len(plan.Items) == 0 {
+		t.Fatalf("unexpected SQL explanation: %#v, %v", plan, err)
+	}
 	if _, err := repository.SQL(context.Background(), ports.ProvenanceSQLQuery{SQL: "DELETE FROM execution_runs"}); err == nil {
 		t.Fatal("write statement must be rejected")
 	}

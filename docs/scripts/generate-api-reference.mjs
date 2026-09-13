@@ -122,9 +122,10 @@ const statusNames = {
   StatusNoContent: "204 No Content",
 };
 
-// These handlers delegate the response to enqueueCloudOperation, which writes
-// 202 Accepted. A scan of the shallow handler body cannot see that status.
+// These handlers delegate their responses. The WebSocket upgrade writes 101;
+// enqueueCloudOperation writes 202. Shallow handler scans cannot see either.
 const delegatedSuccessStatuses = {
+  StreamConsoleSession: ["101 Switching Protocols"],
   ProvisionCloudInstance: ["202 Accepted"],
   StartCloudProvisioning: ["202 Accepted"],
   ConfigureCloudInstance: ["202 Accepted"],
@@ -161,6 +162,7 @@ const runnableSimulationRequests = {
 // These notes come from handler calls and the credential/operation services,
 // not from JSON tags alone. Keep them scoped to fields the service validates.
 const verifiedRequestNotes = {
+  "GET /akoflow-api/console-sessions/{sessionId}/stream/": "Open this URL with a WebSocket client after creating a console session. A successful upgrade returns `101 Switching Protocols` and carries terminal input and output over the socket; it is not a JSON response. An unknown session returns `404`. See the [interactive console guide](/docs/guides/operations/interactive-console) for session lifecycle.",
   "POST /akoflow-api/provenance/sql/": "Send a read-only `sql` query using `SELECT` or `WITH`; `parameters` supplies optional named values, and `page`/`pageSize` control results (at most 200 rows per page). Use `GET /provenance/sql/schema/` to see allowed tables and columns. The service enforces a 10-second timeout and rejects writes or restricted fields with `400`; an unavailable explorer returns `503`. See [provenance and audit](/docs/guides/data/provenance-and-audit#query-with-read-only-sql).",
   "POST /akoflow-api/provenance/sql/explain/": "Send the same `sql` and optional named `parameters` as the read-only SQL route. This runs `EXPLAIN QUERY PLAN` for a permitted `SELECT` or `WITH` statement and returns plan rows, not the query's data rows. It uses the same read-only table/column restrictions and 10-second timeout; invalid SQL returns `400` and an unavailable explorer returns `503`.",
   "PUT /akoflow-api/instance/": "Send the complete current instance object with non-empty `id` and `name`; this route saves the supplied object, so preserve existing identity and metadata when changing one field. `transferBufferBytes` accepts 5–64 MiB; `0` selects the 8 MiB default. The [instance guide](/docs/guides/operations/instance-management#inspect-the-active-identity) reads the current object before updating it.",
@@ -391,7 +393,7 @@ function extractQueryParameters(body) {
   ].sort();
 }
 
-function extractSuccessStatuses(body) {
+function extractSuccessStatuses(body, handler) {
   const statuses = new Set();
   for (const match of body.matchAll(
     /http\.(Status(?:OK|Created|Accepted|NoContent))/g,
@@ -399,7 +401,20 @@ function extractSuccessStatuses(body) {
     if (statusNames[match[1]]) statuses.add(statusNames[match[1]]);
   }
   if (/\b(?:writeList|writeItem)\(/.test(body)) statuses.add("200 OK");
-  if (statuses.size === 0) statuses.add("200 OK");
+  // These handlers write response bytes without WriteHeader: Go uses 200.
+  if (
+    statuses.size === 0 &&
+    [
+      "ExportArchiveInstance",
+      "ExportConsoleSessionLog",
+      "Preflight",
+      "StreamBuildOutput",
+      "StreamDownload",
+    ].includes(handler)
+  )
+    statuses.add("200 OK");
+  if (statuses.size === 0)
+    throw new Error(`Cannot infer a success status for ${handler}`);
   return [...statuses];
 }
 
@@ -803,7 +818,7 @@ for (const match of source.matchAll(routePattern)) {
     description: endpointDescription(endpoint),
     queryParameters: extractQueryParameters(handlerBody),
     successStatuses:
-      delegatedSuccessStatuses[handler] ?? extractSuccessStatuses(handlerBody),
+      delegatedSuccessStatuses[handler] ?? extractSuccessStatuses(handlerBody, handler),
     guide: groupMetadata[group][0],
   };
   endpoints.push({

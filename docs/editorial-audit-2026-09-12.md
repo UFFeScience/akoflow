@@ -235,6 +235,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 173. **P2 resolved in developer explanations:** the execution page's handle and recovery paragraphs now separate saved evidence, failure behavior, and cancellation limits. The runtime page replaces long capability and extension inventories with the driver/mode model, a field-reference link, and the steps needed to validate a new provider. No user path gained internal terminology.
 174. **P0 resolved in factory-reset claims:** the instance guide promised removal of all managed credentials and implied a server reset cleared personal preferences everywhere. `cmd/server/api.go` resets the database and removes only the managed Kubernetes token directory; SSH/cloud credential files and artifact bytes remain. Desktop additionally clears its current browser profile's local storage, while direct API calls do not. The guide and API overview now state these boundaries, including the Desktop confirmation's broader wording. The generated endpoint already had the narrower server-side contract.
 175. **P1 resolved in Desktop notifications:** the guide described application-update notices as terminal tracked-operation states. `NotificationCenter.jsx` instead shows `available`, `downloading`, and `downloaded` update phases in a separate card; tracked planning, execution, build, terminal, and provisioning results become saved notification entries. The page now separates these cases and keeps the profile-local persistence limit.
+176. **P2 resolved in task-path headings:** the HPC and Google Cloud tutorials used “Through the interface/API” while the other task guides used “Using AkôFlow Desktop/the API”; the notification guide used a third “In Desktop” form. These headings now follow the same two-path vocabulary. The HPC operator guide's direct link to the registration API section was updated to the new anchor.
 
 ## Page inventory
 
@@ -265,7 +266,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `guides/infrastructure/environments.md` | Plain-language/claim pass; local API definition persisted in a one-off repository test, and in-use revision language matches the API | Recheck remote flows with provider evidence |
 | `guides/infrastructure/execution-scopes.md` | Third read; API explanation marks scope topology ID optional and session topology selection explicit | Recheck API payloads after P0 contracts fix |
 | `guides/infrastructure/gcp.md` | Third read; target zone choice now matches Terraform's fixed-or-first-active behavior | Check provider claims against disposable-project evidence |
-| `guides/infrastructure/hpc-slurm.md` | Fifth read; login-node YAML matches the current example and first-contact SSH host-key trust is qualified against `accept-new` | Check provider claims against real cluster evidence |
+| `guides/infrastructure/hpc-slurm.md` | Sixth read; registration API link follows the standardized heading; login-node and first-contact SSH limits remain explicit | Check provider claims against real cluster evidence |
 | `guides/infrastructure/kubernetes.md` | Second cross-runtime read; real Job versus modeled-cluster choice is direct, and the token stream stays out of shell variables and files | Recheck procedure against Kind bundle and shared-cluster RBAC |
 | `guides/infrastructure/simgrid.md` | Fifth read; missing-candidate troubleshooting no longer attributes planning exclusion to runtime binding | Recheck procedure against pinned bundle |
 | `guides/infrastructure/storage.md` | Third read; opening now states unsigned S3 browsing directly; local API path remains verified | Verify remote/provider storage independently |
@@ -276,7 +277,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `guides/operations/interactive-console.md` | Plain-language reread; basic path and diagram now use resource/connection terms, while API retains returned IDs; closure follows streaming/log use | Recheck session behavior against Desktop |
 | `guides/operations/search-and-notifications.md` | Short choice page preserving the old URL and distinguishing lookup from profile-local alerts | Check both destinations in navigation |
 | `guides/operations/find-records.md` | Desktop/API search procedure, result fields, limits, and empty-result recovery | Recheck UI behavior against Desktop |
-| `guides/operations/follow-notifications.md` | Third read; update availability/download card is separate from saved terminal-operation notifications | Recheck UI behavior against packaged Desktop |
+| `guides/operations/follow-notifications.md` | Fourth read; Desktop heading matches task guides and update card is separate from saved terminal-operation notifications | Recheck UI behavior against packaged Desktop |
 | `guides/operations/server-instance.md` | Third read; update sequence split into short steps; tunnel command and HTTP failure checks remain | Recheck release assets when version changes |
 | `guides/operations/troubleshooting.md` | Fifth read; evidence collection now separates run/operation records, Provenance, and actual Audit emitters | Recheck other diagnostic claims after P0 fixes |
 | `guides/workflows/definitions.md` | Third read; API list, detail, and export now fail on HTTP errors | Recheck payload against importer after P0 contracts fix |
@@ -300,8 +301,8 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `showcase/parallel-50-core.mdx` | Second read; compute-capacity purpose stated directly; authenticated polling now fails on HTTP errors | Check result against pinned bundle |
 | `showcase/slurm-local-fixture.mdx` | Second read; local adapter evidence and real-cluster limits stated once; versioned checkout and optional Desktop inspection retained | Check result against pinned bundle |
 | `tutorials/api-access.md` | Fourth read; API-only prerequisites and token limits use server language; Bash blocks parsed | Recheck commands after P0 contracts fix |
-| `tutorials/connect-cloud.md` | Second read; GCP task and verified result lead the page; valid access is separate from nonempty machine/image/disk choices | Validate with disposable GCP account |
-| `tutorials/register-hpc.md` | Third read; service-key and cluster host-key fingerprints are distinguished; compute-workspace access remains a batch probe | Validate on an approved institutional cluster |
+| `tutorials/connect-cloud.md` | Third read; Desktop/API path headings now match the other task guides; valid access remains separate from nonempty catalog choices | Validate with disposable GCP account |
+| `tutorials/register-hpc.md` | Fourth read; Desktop/API headings match the other guides, and service-key and host-key fingerprints remain distinct | Validate on an approved institutional cluster |
 
 ## Verification in this pass
 

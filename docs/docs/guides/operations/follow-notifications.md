@@ -7,7 +7,7 @@ description: Track recent Desktop operations and find their durable records.
 
 Notifications help you return to an operation started in this Desktop profile. For a saved record from any profile, [search by name or ID](/docs/guides/operations/find-records). Open that record for its lasting status; [Audit](/docs/guides/data/audit-events) covers only some operation types.
 
-## In Desktop
+## Using AkôFlow Desktop
 
 The bell in the top bar reports when these operations, started in this Desktop
 profile, finish or fail:

@@ -25,7 +25,7 @@ connection, and reviewed inventory. A batch job comes after registration.
 `login.example.org`, `researcher`, and `cpu` below are placeholders. Replace them
 with the values provided by your institution.
 
-## Through the interface
+## Using AkôFlow Desktop
 
 ### 1. Register an SSH service key
 
@@ -75,7 +75,7 @@ section, run **Check now** and **Discover**. Review **Inventory** for the
 expected cluster partitions and compute nodes; see the detailed
 [discovery checks](/docs/guides/infrastructure/hpc-slurm#3-discover-the-actual-cluster-before-trusting-the-catalog).
 
-## Through the API
+## Using the API
 
 Complete [API connection setup](/docs/tutorials/api-access). Use the same approved host,
 account and partition as in the graphical path.

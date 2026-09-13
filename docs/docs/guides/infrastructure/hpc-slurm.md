@@ -44,7 +44,7 @@ connections:
 
 `proxyCommand` is passed to SSH-based paths that use this connection. If the site requires a jump host, configure and test a complete SSH proxy command from the **server host**, not only from Desktop. SSH uses `accept-new` for the connection test: an unknown host key is saved in the configured known-hosts file on first contact, while a changed key is rejected. Verify the login host's fingerprint against the value supplied by your administrator before treating that saved key as trusted. Do the same for each SSH gateway hop.
 
-In Desktop, add the connection under **Infrastructure → Environments**, assign the managed SSH key, and run the connection health check. For API registration, follow the [complete connection tutorial](/docs/tutorials/register-hpc#through-the-api), which creates and tests the JSON payload before saving the environment. To change a saved connection later, read its current fields before sending a complete `PUT /environment-connections/{connectionId}/` body so unrelated settings remain intact.
+In Desktop, add the connection under **Infrastructure → Environments**, assign the managed SSH key, and run the connection health check. For API registration, follow the [complete connection tutorial](/docs/tutorials/register-hpc#using-the-api), which creates and tests the JSON payload before saving the environment. To change a saved connection later, read its current fields before sending a complete `PUT /environment-connections/{connectionId}/` body so unrelated settings remain intact.
 
 ## 2. Describe the SLURM resources
 

@@ -19,7 +19,7 @@ minimum IAM permissions that still require validation in a disposable project.
 The service account belongs to Google Cloud. Creating an AkôFlow environment
 does not create the project, service account, billing configuration or IAM grants.
 
-## Through the interface
+## Using AkôFlow Desktop
 
 ### 1. Open the cloud form
 
@@ -62,7 +62,7 @@ Open the saved environment and inspect **Cloud capacity**. If saving succeeded
 but refresh failed, reopen the existing environment and refresh there; do not
 create a duplicate just to retry synchronization.
 
-## Through the API
+## Using the API
 
 Complete [API connection setup](/docs/tutorials/api-access). Keep the service-account file
 outside your repository, with access restricted to your account.

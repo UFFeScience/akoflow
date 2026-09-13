@@ -262,6 +262,7 @@ const runnableSimulationRequests = {
 // These notes come from handler calls and the credential/operation services,
 // not from JSON tags alone. Keep them scoped to fields the service validates.
 const verifiedRequestNotes = {
+  "POST /akoflow-api/schedule-plans/": "Returns the saved `plan`. If `plan.networkTopologyId` is empty, the server fills it from `networkTopology.id`. Submitted predictions are saved without recalculation.",
   "GET /akoflow-api/environments/{environmentId}/cloud-catalog/": "Returns the last synchronized catalog; this GET does not call the provider. Before the first successful refresh it returns `404`. Read catalog warnings as well as machine, image, and disk choices; missing price data does not make a machine free.",
   "GET /akoflow-api/environments/{environmentId}/cloud-capacity-targets/": "Returns enabled targets for this environment, ordered by name. Deleting a target disables its record, so it disappears from this list without erasing historical operations or instances that used it.",
   "GET /akoflow-api/environments/{environmentId}/cloud-instances/": "Returns this environment's saved instances newest first, including records marked destroyed. Inspect each instance's `status` and `destroyedAt` rather than treating the list length as the number of active VMs.",
@@ -732,6 +733,7 @@ function extractResponseContract(
     ImportSSHKey: "sshkey.Key",
     ListSSHKeys: "[]sshkey.Key",
     ListPlanningAlgorithms: "[]ports.SchedulerDescriptor",
+    CreatePlan: "domain.SchedulePlan",
     ImportPlan: "domain.SchedulePlan",
   };
   if (endpoint.path === "/")
@@ -977,6 +979,12 @@ const missingCheckedResponses = Object.keys(checkedResponseShapes).filter(
 );
 if (missingCheckedResponses.length > 0) {
   throw new Error(`Checked response handlers are missing from the router: ${missingCheckedResponses.join(", ")}`);
+}
+
+for (const endpoint of endpoints) {
+  if (/(?:^|\.)[A-Za-z0-9_]*Request$/.test(endpoint.response.type)) {
+    throw new Error(`Request type used as a response for ${endpoint.method} ${endpoint.path}: ${endpoint.response.type}`);
+  }
 }
 
 function syntheticNullPath(value, path = "$") {

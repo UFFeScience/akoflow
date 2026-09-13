@@ -187,6 +187,8 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 
 139. **P0 resolved in generated list and nested response types:** a scan of all 125 generated response examples found `GET /audit-events/` rendered as `[null]` and four environment create/read/replace/list pages rendered `connectorBindings: [null]`. The generator had treated same-named Go structs from different packages as ambiguous. Audit now has a source-checked connection-event example; environment responses use the `environment.ConnectorBinding` fields. Beyond the sample depth, known struct values now render as `{}` instead of the false primitive `"string"` (for example runtime `capabilities`). Generation now fails if any displayed response example contains a synthetic null. The zero-null scan passed. This fixes the misleading-shape class while full field-level validation remains open.
 
+140. **P0 resolved in plan-creation response:** `POST /schedule-plans/` displayed `CreatePlanRequest` as its response, including the submitted workflow, resources, scope, and topology. The handler actually saves and returns only `request.Plan`, after filling its topology ID when needed. The generated page now shows `domain.SchedulePlan` and says that prediction values are saved without recalculation. Generation rejects future success-response types ending in `Request`. This fixes one endpoint contract; the field-level review of all 125 pages remains open.
+
 ## Page inventory
 
 | Page | Current pass | Next review |

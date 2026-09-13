@@ -122,6 +122,18 @@ const statusNames = {
   StatusNoContent: "204 No Content",
 };
 
+// These handlers delegate the response to enqueueCloudOperation, which writes
+// 202 Accepted. A scan of the shallow handler body cannot see that status.
+const delegatedSuccessStatuses = {
+  ProvisionCloudInstance: ["202 Accepted"],
+  StartCloudProvisioning: ["202 Accepted"],
+  ConfigureCloudInstance: ["202 Accepted"],
+  DestroyCloudInstance: ["202 Accepted"],
+  StartCloudInstance: ["202 Accepted"],
+  StopCloudInstance: ["202 Accepted"],
+  ValidateCloudInstance: ["202 Accepted"],
+};
+
 // Route-specific wording is reserved for aliases whose handler name cannot
 // explain the public operation on its own.
 const routeTitles = {
@@ -165,7 +177,7 @@ const verifiedRequestNotes = {
   "POST /akoflow-api/planning-sessions/{sessionId}/candidates/{candidateId}/select/": "The candidate must belong to this session and be feasible. No JSON body is required. A successful selection returns the saved schedule plan with `201 Created` and records the selected IDs on the session. The API permits selecting before the session completes; wait for final ranking unless choosing an early candidate intentionally.",
   "POST /akoflow-api/planning-sessions/{sessionId}/cancel/": "No JSON body is required. Cancelling a queued or running session marks its algorithm runs and session as cancelled and requests cancellation of active work; success returns `204 No Content`. Cancelling an already-cancelled session also returns `204`. A missing, completed, or failed session returns `409 Conflict`, not `404`.",
   "POST /akoflow-api/environments/{environmentId}/cloud-catalog/refresh/": "Discovers the catalog using the saved cloud connection for this environment and returns the discovered catalog with `200 OK`. This is a live provider call, not a VM provisioning request. A discovery error returns `422`; `GET /environments/{environmentId}/cloud-catalog/` returns `404` until a catalog has been synchronized.",
-  "POST /akoflow-api/environments/{environmentId}/cloud-capacity-targets/": "Use an existing cloud environment with a cloud runtime. `name`, `providerMachineType`, and `imageReference` are required; the server supplies an omitted target `id`, sets `environmentId` from the path, and enables the target. It also creates a schedulable capacity resource but no VM. Set an approved `configuration.sshSourceRanges` before provisioning: the current Terraform target otherwise defaults SSH ingress to `0.0.0.0/0`. If creation returns `422`, inspect the target list before retrying because target persistence precedes resource binding.",
+  "POST /akoflow-api/environments/{environmentId}/cloud-capacity-targets/": "Use an existing cloud environment with a cloud runtime. Send a target definition with `name`, `providerMachineType`, and `imageReference`; the server supplies an omitted `id`, sets `environmentId` from the path, and enables the target. Provider region, image, machine type, and network policy are account-specific; use the [GCP guide](/docs/guides/infrastructure/gcp) before creating one. The route creates a schedulable capacity resource but no VM. Set approved `configuration.sshSourceRanges` before provisioning: the current Terraform target otherwise defaults SSH ingress to `0.0.0.0/0`. If creation returns `422`, inspect the target list before retrying because target persistence precedes resource binding.",
   "DELETE /akoflow-api/cloud-capacity-targets/{targetId}/": "No body is required. An active provisioned instance using this target blocks removal with `409 Conflict`; destroy it first. Success returns `204 No Content`, disables and renames the target record, and marks its capacity resource unschedulable. A missing or already-disabled target returns `404`. This does not itself destroy a VM.",
   "POST /akoflow-api/cloud-instances/{instanceId}/configure/": "No JSON body is required. The instance ID must exist (`404` otherwise). This returns a queued cloud operation with `202 Accepted`; inspect its status and events before treating configuration as complete. The worker needs a public address and the target's machine-configuration versions; missing prerequisites can fail asynchronously. Repeating the same active action returns its existing operation; a different active action on the instance returns `409`.",
   "POST /akoflow-api/cloud-instances/{instanceId}/destroy/": "No JSON body is required. The instance ID must exist (`404` otherwise). `202 Accepted` queues destruction; inspect the operation until it completes or fails before assuming the VM is gone. A lifecycle safety check can block destruction after acceptance. The same active action returns its existing operation; another active action on this instance returns `409`.",
@@ -181,10 +193,10 @@ const verifiedRequestNotes = {
   "POST /akoflow-api/ssh-keys/import/": "Send a unique `id` and your own `privateKey` as a JSON string. The ID follows the same SSH key ID rule; the key must be a non-empty OpenSSH private key that `ssh-keygen -y` can read. The response returns public metadata, not the private key. No example key is supplied because its bytes must come from your credential store.",
   "POST /akoflow-api/kubernetes-tokens/": "Send an `id` and your own non-empty `token` as JSON strings. The ID must be 1–63 lowercase letters, digits, or hyphens, starting with a letter or digit. The response returns a `credentialRef`; it does not echo the token. Supply the token from your cluster's credential process.",
   "POST /akoflow-api/cloud-credentials/": "Send `id`, `provider`, and `credential` with your actual provider credential. The ID follows the Kubernetes credential ID rule; `provider` must be `gcp`, `aws`, or `azure`, and `credential` must be valid JSON. Saving a credential does not validate provider access or make every provider operation available. The response returns a `credentialRef`.",
-  "POST /akoflow-api/environments/{environmentId}/cloud-instances/": "`capacityTargetId` must identify an existing capacity target in this environment. This request queues a provisioning operation; inspect the returned operation status before treating a VM as ready.",
-  "POST /akoflow-api/environments/{environmentId}/cloud-provisioning/": "`capacityTargetId` must identify an existing capacity target in this environment. This compatibility route queues the same provisioning operation; inspect the returned operation status.",
+  "POST /akoflow-api/environments/{environmentId}/cloud-instances/": "Send a `capacityTargetId` for an existing target in this environment. `name` and `sshUsername` are optional; the server generates an `instanceId` when omitted. `202 Accepted` returns a queued operation, not a ready VM. Inspect its status and events; an active provision for the same target returns the existing operation. Follow the [GCP guide](/docs/guides/infrastructure/gcp) for account-specific setup.",
+  "POST /akoflow-api/environments/{environmentId}/cloud-provisioning/": "This compatibility route accepts the same `capacityTargetId` request as [Provision Cloud Instance](/docs/api/endpoints/environments/post-environments-environmentid-cloud-instances). It queues the same operation and returns `202 Accepted`; inspect status and events before treating the VM as ready.",
   "POST /akoflow-api/planning-sessions/": "Required: `id`, an existing `workflowVersionId`, `executionScopeId`, and `networkTopologyId`, plus at least one `algorithms` entry. Each algorithm ID must appear in `GET /planning-algorithms/`; duplicate IDs are rejected. The server sets status and timestamps. The example IDs require the SimGrid environment, scope, topology, and workflow to be registered first.",
-  "POST /akoflow-api/schedule-plans/import/": "Send `{\"plan\": ...}` with a complete plan. Its workflow version, execution scope, topology, and resources must already exist; the server marks its source as `imported` and validates the schedule before saving it.",
+  "POST /akoflow-api/schedule-plans/import/": "Send a JSON object with a complete `plan`. Use a unique plan `id` and matching assignment `planId` values. Its workflow version, execution scope, topology, and resources must already exist. The server sets `source` to `imported`, checks the schedule against those saved records, and returns `422` if it is invalid. The response shape below shows the plan fields; a body filled with placeholder IDs would not pass validation.",
   "POST /akoflow-api/storages/{storageId}/promote-data/": "Replace the example `path` with an existing file within the selected storage's approved root. `id` is optional; the server generates one when omitted. `workflowVersionId`, `runId`, and `activityId` are optional associations and should identify real records when supplied. The [storage guide](/docs/guides/infrastructure/storage) shows the browsing step.",
   "POST /akoflow-api/storages/{storageId}/promote-artifact/": "Replace the example `path` with an existing `.sif` file within the selected storage's approved root. `id`, `name`, `version`, and `scope` have server defaults. The [storage guide](/docs/guides/infrastructure/storage) shows the browsing step; no file is uploaded or moved.",
   "POST /akoflow-api/storages/{storageId}/downloads/": "Replace the example `path` with an existing file within the selected storage's approved browse root; directories require the archive route. `id` is optional. The response is a ready download record: use its ID with `GET /storage-downloads/{downloadId}/content/` to stream the file.",
@@ -302,6 +314,10 @@ const verifiedRequestExamples = {
 };
 
 const requestWithoutStandaloneExample = new Set([
+  "POST /akoflow-api/schedule-plans/import/",
+  "POST /akoflow-api/environments/{environmentId}/cloud-capacity-targets/",
+  "POST /akoflow-api/environments/{environmentId}/cloud-instances/",
+  "POST /akoflow-api/environments/{environmentId}/cloud-provisioning/",
   "POST /akoflow-api/ssh-keys/import/",
   "POST /akoflow-api/kubernetes-tokens/",
   "POST /akoflow-api/cloud-credentials/",
@@ -786,7 +802,8 @@ for (const match of source.matchAll(routePattern)) {
     ...endpoint,
     description: endpointDescription(endpoint),
     queryParameters: extractQueryParameters(handlerBody),
-    successStatuses: extractSuccessStatuses(handlerBody),
+    successStatuses:
+      delegatedSuccessStatuses[handler] ?? extractSuccessStatuses(handlerBody),
     guide: groupMetadata[group][0],
   };
   endpoints.push({

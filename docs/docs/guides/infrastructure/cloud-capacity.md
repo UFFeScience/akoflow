@@ -131,3 +131,5 @@ confirm that the target belongs to this environment, the credential works, or
 the VM is ready; those checks run later. Lifecycle endpoints also exist for
 configure, validate, start, stop, and destroy. Before destructive actions,
 inspect the instance and active operation state in Desktop or through the API.
+
+If the worker becomes ready, confirm that its environment version belongs to the [execution scope](./execution-scopes) before planning a run. Use [Configure Google Cloud](./gcp#4-provision-and-verify) to review worker validation and cleanup; a live provision-and-destroy cycle remains unverified.

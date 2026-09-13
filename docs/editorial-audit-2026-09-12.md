@@ -209,11 +209,13 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 
 150. **P2 resolved in Showcase and operator wording:** a sentence-length scan of authored prose found few long sentences, but the local Showcase still alternated `daemon host` with `server host` after its opening had been simplified. Its evidence and recovery text, the Showcase index card/setup, and the edge-cloud trace location now use server language. The SLURM fixture keeps daemon terminology where it names the isolated process and script. The Linux server-update sequence is split into two shorter steps without changing the versioned-image order. Full-body and runtime-claim review remains open.
 
+151. **P1 resolved in three navigation continuations:** the first local workflow now links its recorded result to the plan-versus-run explanation, completing the new-user path from install through result interpretation. The HPC/SLURM guide links a site-approved run to execution monitoring. The cloud-capacity guide links a ready worker to scope membership and the Google Cloud validation/cleanup section, while still marking the live cycle unverified. These links address reading continuity; clean-host, institutional-cluster, and disposable-cloud execution still need their own evidence.
+
 ## Page inventory
 
 | Page | Current pass | Next review |
 | --- | --- | --- |
-| `guides/workflows/first-local-run.md` | Entry-path reread; introduction now promises the visible file record and checksum; Linux package UI run verified through generated file evidence | Repeat on a clean supported host and other platforms |
+| `guides/workflows/first-local-run.md` | Navigation reread; result evidence now leads to the plan-versus-run explanation; Linux package UI run remains verified | Repeat on a clean supported host and other platforms |
 | `src/pages/index.tsx` | Fourth read; first-run sequence says make and execute a plan; page metadata describes the task | Recheck rendered entry path on mobile |
 | `concepts.md` | Second claim reread; plan selection is separate from execution, including diagram alt text; runtime-dependent observations stay qualified | Recheck complete new-user path |
 | `contributing/documentation-plan.md` | Fourth read; link and shell check scope now fits short paragraphs; progressive disclosure and HTTP-failing cURL checks remain explicit | Recheck contract at final audit |
@@ -232,13 +234,13 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `guides/data/provenance.md` | Scope reread; no longer routes credential changes to Audit; API examples fail on HTTP errors | Recheck Desktop interactions against packaged app |
 | `guides/data/audit-events.md` | Second scope read; procedure names actual emitters and routes workflow-result tracing to Provenance | Recheck Desktop interactions against packaged app |
 | `guides/infrastructure/aws.md` | Third read; omitted/`env` transfer credential selection and unsigned S3 browsing are explicit | Check provider claims against disposable-bucket evidence |
-| `guides/infrastructure/cloud-capacity.md` | Fourth read; project, architecture, CIDR, zone choice, and asynchronous provision failures match handlers and Terraform | Validate with disposable GCP account |
+| `guides/infrastructure/cloud-capacity.md` | Fifth read; ready-worker next step points to scope membership and GCP validation/cleanup | Validate with disposable GCP account |
 | `guides/infrastructure/cloud-support.md` | First read; GCP/AWS support matrix separated from capacity procedure and linked to provider tasks | Recheck against live GCP/S3 evidence |
 | `guides/infrastructure/machine-configurations.md` | Focused optional Ansible setup; validation and saved version use one playbook, and the returned version ID is consumed by the capacity example in the same Bash session | Validate against disposable GCP worker |
 | `guides/infrastructure/environments.md` | Plain-language/claim pass; local API definition persisted in a one-off repository test, and in-use revision language matches the API | Recheck remote flows with provider evidence |
 | `guides/infrastructure/execution-scopes.md` | Third read; API explanation marks scope topology ID optional and session topology selection explicit | Recheck API payloads after P0 contracts fix |
 | `guides/infrastructure/gcp.md` | Third read; target zone choice now matches Terraform's fixed-or-first-active behavior | Check provider claims against disposable-project evidence |
-| `guides/infrastructure/hpc-slurm.md` | Second cross-runtime read; pinned login-node scheduling opt-in and compute-allocation workspace probe are explicit | Check provider claims against real cluster evidence |
+| `guides/infrastructure/hpc-slurm.md` | Third read; site-approved run now leads to execution monitoring; login-node and workspace limits remain explicit | Check provider claims against real cluster evidence |
 | `guides/infrastructure/kubernetes.md` | Second cross-runtime read; real Job versus modeled-cluster choice is direct, and the token stream stays out of shell variables and files | Recheck procedure against Kind bundle and shared-cluster RBAC |
 | `guides/infrastructure/simgrid.md` | Fourth read; server prerequisite and activity profile introduction are direct; pinned bundle remains aligned | Recheck procedure against pinned bundle |
 | `guides/infrastructure/storage.md` | Third read; opening now states unsigned S3 browsing directly; local API path remains verified | Verify remote/provider storage independently |

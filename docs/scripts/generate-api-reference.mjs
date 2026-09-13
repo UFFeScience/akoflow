@@ -141,6 +141,7 @@ const runnableSimulationRequests = {
   "POST /akoflow-api/execution-scopes/": "scope.yaml",
   "POST /akoflow-api/network-topologies/": "topology.yaml",
   "POST /akoflow-api/workflow-definitions/": "workflow.yaml",
+  "POST /akoflow-api/workflow-definitions/import/": "workflow.yaml",
   "POST /akoflow-api/schedule-plans/": "plan-request.yaml",
   "POST /akoflow-api/execution-runs/": "execution-request.yaml",
 };
@@ -206,6 +207,10 @@ const verifiedRequestNotes = {
 };
 
 const verifiedRequestExamples = {
+  "POST /akoflow-api/workflow-definition-actions/duplicate/{workflowId}/": {
+    name: "Copied workflow",
+    namespace: "copied",
+  },
   "PUT /akoflow-api/user-preferences/{clientId}/": {
     theme: "dark",
     animationsEnabled: false,
@@ -683,7 +688,9 @@ function endpointDocument(endpoint, position) {
   const runnableFile =
     runnableSimulationRequests[`${endpoint.method} ${endpoint.path}`];
   const runnableSection = runnableFile
-    ? `## Runnable SimGrid request\n\nThe [first-run tutorial](/docs/guides/workflows/first-run) submits [\`examples/simulation/${runnableFile}\`](https://github.com/UFFeScience/akoflow/blob/v1.0.8/examples/simulation/${runnableFile}) in a six-request sequence. Follow that order so referenced IDs exist.\n\n`
+    ? endpoint.path === "/akoflow-api/workflow-definitions/import/"
+      ? `## Runnable SimGrid request\n\nUse [\`examples/simulation/workflow.yaml\`](https://github.com/UFFeScience/akoflow/blob/v1.0.8/examples/simulation/workflow.yaml) **instead of** the create-workflow request in the [first-run tutorial](/docs/guides/workflows/first-run). Keep the other five requests in order so their referenced IDs exist. Do not submit the same workflow through both routes.\n\n`
+      : `## Runnable SimGrid request\n\nThe [first-run tutorial](/docs/guides/workflows/first-run) submits [\`examples/simulation/${runnableFile}\`](https://github.com/UFFeScience/akoflow/blob/v1.0.8/examples/simulation/${runnableFile}) in a six-request sequence. Follow that order so referenced IDs exist.\n\n`
     : "";
   const verifiedNote = verifiedRequestNotes[`${endpoint.method} ${endpoint.path}`];
   const verifiedSection = verifiedNote

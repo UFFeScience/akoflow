@@ -10,7 +10,7 @@ import {FileList, WorkflowDiagram} from '@site/src/components/WorkflowShowcase';
 
 <WorkflowDiagram kind="kubernetes" />
 
-This example executes two real container activities on a local Kind cluster. Use it after the simulation walkthrough to validate runtime credentials, persistent storage, Kubernetes Jobs, logs, artifacts, and provenance.
+This example executes two real container activities on a local Kind cluster. Use it after the simulation walkthrough to check runtime access, persistent storage, Kubernetes Jobs, logs, and output files.
 
 :::warning Development environment
 The checked-in access manifest intentionally grants broad permissions for a disposable local cluster. Do not reuse it in production.
@@ -37,7 +37,7 @@ The checked-in access manifest intentionally grants broad permissions for a disp
     <ol>
       <li>Open the Kubernetes environment and confirm the discovered Kind worker.</li>
       <li>Open the imported two-activity workflow and its saved plan.</li>
-      <li>Open the completed run to inspect Job logs, transferred data, output files, events, and provenance.</li>
+      <li>Open the completed run to inspect Job logs, transferred data, output files, and events. Follow provenance when its explorer is configured.</li>
     </ol>
     <p>A complete Desktop-only Kind submission has not been verified.</p>
   </div>}

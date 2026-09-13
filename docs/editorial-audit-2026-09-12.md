@@ -211,6 +211,8 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 
 151. **P1 resolved in three navigation continuations:** the first local workflow now links its recorded result to the plan-versus-run explanation, completing the new-user path from install through result interpretation. The HPC/SLURM guide links a site-approved run to execution monitoring. The cloud-capacity guide links a ready worker to scope membership and the Google Cloud validation/cleanup section, while still marking the live cycle unverified. These links address reading continuity; clean-host, institutional-cluster, and disposable-cloud execution still need their own evidence.
 
+152. **P0/P1 resolved in Showcase support language:** across all seven Showcase pages, the edge–cloud simulation still called its modeled target a "cloud VM" and said it "pays" for cloud use. It now names modeled resources, transfers, and cost. The network and 50-core index cards explicitly say their machines and cores are simulated. The Kind page no longer lists provenance among the verified outputs of its recorded run; Desktop inspection mentions lineage only when the explorer is configured. The real Kind run, local direct run, and local SLURM fixture remain distinct from the SimGrid scenarios. This wording does not substitute for provider or lineage verification.
+
 ## Page inventory
 
 | Page | Current pass | Next review |
@@ -267,9 +269,9 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `reference/feature-coverage.md` | Third read; route map now serves the reader, with its maintainer update rule in the quality plan | Check contracts against current handlers and schemas |
 | `reference/planning-and-execution-states.md` | Third read; algorithm lifecycle and progress fields are separate; status claims checked against handlers, coordinator, and domain | Recheck generated endpoint contracts after P0 fixes |
 | `runtimes.md` | Second read; marked serverless schema value unavailable because no adapter is registered | Recheck other provider claims against adapters |
-| `showcase/edge-cloud-simulation.mdx` | Third read; trace location now names the server workspace; fixed-plan purpose and HTTP-failing polling remain | Check result against pinned bundle |
-| `showcase/index.mdx` | Third read; card and setup use server language; self-started SLURM fixture remains distinct | Recheck cards after Showcase audit |
-| `showcase/kubernetes-real-execution.mdx` | Second read; checkout precedes Kind setup and inline API submission; Desktop is same-server inspection | Check result against pinned bundle |
+| `showcase/edge-cloud-simulation.mdx` | Fourth read; modeled resources, transfers, and cost replace real-VM phrasing | Check result against pinned bundle |
+| `showcase/index.mdx` | Fourth read; simulation cards label modeled machines/cores and fixture remains distinct | Recheck cards after Showcase audit |
+| `showcase/kubernetes-real-execution.mdx` | Third read; intro names observed Kind outputs, with lineage conditional on explorer configuration | Check result against pinned bundle |
 | `showcase/local-direct-execution.mdx` | Fourth read; server-host wording is consistent across purpose, evidence, and recovery | Check result against pinned bundle |
 | `showcase/network-fanout.mdx` | Second read; model-specific estimate phrased directly; authenticated polling now fails on HTTP errors | Check result against pinned bundle |
 | `showcase/parallel-50-core.mdx` | Second read; compute-capacity purpose stated directly; authenticated polling now fails on HTTP errors | Check result against pinned bundle |

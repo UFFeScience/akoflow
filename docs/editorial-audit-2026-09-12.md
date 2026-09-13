@@ -232,6 +232,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 170. **P2 resolved in the workflow run guide:** the API path interrupted the submit-and-inspect task with a nine-field execution envelope list. It now explains the example's purpose in user terms, keeps the `202 Accepted` and run-ID instructions, and sends field-level readers to the generated request reference.
 171. **P2 resolved in the developer architecture page:** the API, planning, and execution sections each compressed many services, frozen inputs, or supervisor steps into one long enumeration. They now explain the responsibility and sequence in shorter sentences, preserving the algorithm/model distinction and real-versus-simulated execution boundary.
 172. **P0 resolved across documentation navigation:** source-relative Markdown page links compiled to plausible absolute `href` values but client-side clicks resolved their original relative paths against the current URL; the execution guide's request link landed on `/docs/guides/api/...` and the Kind example on `/docs/guides/showcase/...`, both 404s. All 334 remaining relative links to documentation pages were converted to `/docs/...` routes across 58 pages. The repository link check now rejects newly introduced route-relative links. A 390 px browser pass clicked a visible internal link from each of the 61 authored pages: all 61 reached their compiled targets after accounting for hidden Showcase tabs.
+173. **P2 resolved in developer explanations:** the execution page's handle and recovery paragraphs now separate saved evidence, failure behavior, and cancellation limits. The runtime page replaces long capability and extension inventories with the driver/mode model, a field-reference link, and the steps needed to validate a new provider. No user path gained internal terminology.
 
 ## Page inventory
 
@@ -242,7 +243,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `concepts.md` | Second claim reread; plan selection is separate from execution, including diagram alt text; runtime-dependent observations stay qualified | Recheck complete new-user path |
 | `contributing/documentation-plan.md` | Fourth read; link and shell check scope now fits short paragraphs; progressive disclosure and HTTP-failing cURL checks remain explicit | Recheck contract at final audit |
 | `downloads.md` | Second read; platform limits and verification are explicit, and latest release was `v1.0.8` on 2026-09-12 | Recheck release links when version changes |
-| `engine.md` | Third read; recovery, task retry, and cancellation claims corrected against supervisor/controller code; description aligned | Recheck remaining queue claims against event-loop code |
+| `engine.md` | Fourth read; handle observations and recovery limits now read as separate responsibilities; cancellation remains explicitly unavailable via API | Recheck remaining queue claims against event-loop code |
 | `explanations/evidence-and-provenance.md` | Fourth read; opening routes result records to Provenance and actual Audit emitters to Audit | Recheck against execution evidence after P0 fixes |
 | `explanations/network-modeling.md` | Fourth read; opening now names the topology chosen for the planning session; one-byte route choice remains qualified | Recheck transfer claims against execution paths |
 | `explanations/observed-timing.md` | Fourth read; makespan versus accumulated time leads, and network example is linked rather than repeated | Recheck metrics against trace aggregation |
@@ -288,7 +289,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `reference/execution-scopes-and-topologies.md` | Second pass; candidate diagnostics now separate planning filters from runtime binding validation | Check remaining contracts against current handlers and schemas |
 | `reference/feature-coverage.md` | Third read; route map now serves the reader, with its maintainer update rule in the quality plan | Check contracts against current handlers and schemas |
 | `reference/planning-and-execution-states.md` | Fifth read; feasible candidate clarified as plan-valid, not runtime-bound | Recheck generated endpoint contracts after P0 fixes |
-| `runtimes.md` | Second read; marked serverless schema value unavailable because no adapter is registered; opening and simulation wording simplified | Recheck other provider claims against adapters |
+| `runtimes.md` | Third read; capability and provider-extension inventories shortened, with field details linked to Environment YAML | Recheck other provider claims against adapters |
 | `showcase/edge-cloud-simulation.mdx` | Fourth read; modeled resources, transfers, and cost replace real-VM phrasing | Check result against pinned bundle |
 | `showcase/index.mdx` | Fourth read; simulation cards label modeled machines/cores and fixture remains distinct | Recheck cards after Showcase audit |
 | `showcase/kubernetes-real-execution.mdx` | Third read; intro names observed Kind outputs, with lineage conditional on explorer configuration | Check result against pinned bundle |

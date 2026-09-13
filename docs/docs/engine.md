@@ -37,7 +37,7 @@ type RuntimeAdapter interface {
 }
 ```
 
-An `ActivityHandle` carries the provider's external identity, status, endpoints, log, exit result, failure, and artifact observation. The supervisor inspects handles while a run is active. It does not currently reconstruct an interrupted workflow run from persisted handles after a server restart. The [runtime adapters explanation](/docs/runtimes) describes what each current driver does behind this interface.
+An `ActivityHandle` carries the provider job ID and the observations needed to follow it, including status, logs, and any failure. The supervisor inspects these handles while a run is active. It does not currently reconstruct an interrupted workflow run from saved handles after a server restart. The [runtime adapters explanation](/docs/runtimes) describes each driver behind this interface.
 
 ## Preparation happens before execution
 
@@ -47,6 +47,8 @@ For real runs, cloud lifecycle actions can be prewarmed before an activity is di
 
 ## Recovery and failure evidence
 
-Queue jobs retain ownership, attempts, retry timing, and terminal status. Runtime handles, transfers, and materializations are persisted as evidence. The activity controller has a `Stop` method for a handle, but the current API has no workflow-run cancellation endpoint. A failed activity ends the workflow run; the supervisor does not retry that activity. A completed task also records its output observation; a zero exit code is not sufficient if the configured output observation cannot be trusted.
+Queue jobs retain their owner, attempts, retry timing, and final status. The server also saves runtime handles, transfers, and materializations as evidence.
+
+A failed activity ends its workflow run; the supervisor does not retry the activity. The activity controller can stop a runtime handle internally, but the API has no workflow-run cancellation endpoint. For a completed task, the server also checks its configured output observation. Exit code zero alone is not enough when that observation fails.
 
 The result is an inspectable distinction between what the plan predicted and what the runtime observed. See [evidence and provenance](/docs/explanations/evidence-and-provenance) for that comparison.

@@ -11,7 +11,7 @@ This explanation focuses on runtime adapters. Read [Architecture internals](/doc
 
 ## Runtime model
 
-Each runtime declares `id`, name, driver, `execution` or `simulation` mode, optional role/configuration, and capabilities such as batch, interactive, container, GPU, MPI, shared storage, staging, cancellation, log streaming, and simulation.
+Each runtime has an ID, driver, and `execution` or `simulation` mode. Its configuration and declared capabilities describe what the driver can do. For example, a batch runtime may declare container and shared-storage support; these declarations do not verify a particular cluster or account. The [environment reference](/docs/reference/environment-yaml) lists the fields.
 
 The portable workflow document does not select a runtime through a top-level YAML `runtime` field. A plan assigns resources; execution resolves their runtime bindings.
 
@@ -74,4 +74,4 @@ To connect infrastructure, use [Create and inspect environments](/docs/guides/in
 
 ## Provider extension boundary
 
-A complete provider generally needs an adapter, resolver/factory registration, probing and discovery for external infrastructure, endpoint/transfer integration, capability declarations, and tests for start, inspect, stop, failures, and artifact observation. Provider behavior stays behind ports; workflow, planning, and execution domain objects remain provider-neutral.
+Adding a provider starts with an adapter registered for its driver and mode. External infrastructure also needs a connection check and discovery. Data access may need a transfer route. Test activity start, inspection, stop, failures, and output observation before documenting the provider as supported. Keep these provider details behind the runtime interface so workflow and plan records remain provider-neutral.

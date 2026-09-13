@@ -82,10 +82,10 @@ For automation, follow [API connection setup](../../tutorials/api-access) and th
 
 ```bash
 curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
-  -X POST "$AKOFLOW_API_URL/environments/gcp-lab/cloud-catalog/refresh/"
+  -X POST "$AKOFLOW_API_URL/environments/research-gcp/cloud-catalog/refresh/"
 
 curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
-  "$AKOFLOW_API_URL/environments/gcp-lab/cloud-catalog/"
+  "$AKOFLOW_API_URL/environments/research-gcp/cloud-catalog/"
 ```
 
 Continue with [Cloud capacity and machine configuration](./cloud-capacity) for the target and provisioning payloads, and [Interactive console and commands](../operations/interactive-console) to open a shell after validation.

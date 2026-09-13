@@ -97,6 +97,8 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 89. **P0/P1 resolved in cloud configuration path:** the capacity how-to mixed optional Ansible playbook creation with catalog/target/provisioning steps; the playbook it validated installed `curl`, but its saved version had no tasks. Machine configuration now has its own guide and uses the same playbook for validation and version creation. The response-derived version ID and optional target field are shown. The support matrix also distinguishes catalog discovery from zone lookup at provisioning and Billing-dependent price estimates. Live GCP provisioning remains unverified.
 90. **P1/P2 resolved in installation scope:** the Desktop installation guide repeated two self-managed-server API checks already covered by the server and API setup guides, then repeated the package validation caveat at the end. It now keeps installation/checkup as its task, points separate-server users to their path, and leaves one early platform-verification limit plus the linked download digest.
 91. **P1 resolved in Getting Started support choice:** the entry page gave provider links but required a reader to visit separate guides to learn which paths have end-to-end evidence. A short support section now distinguishes the verified local Desktop, SimGrid, and Kind paths, the SLURM fixture limit, GCP's unverified live lifecycle, and partial AWS/S3 support. It links the detailed cloud matrix without duplicating the AWS caveat in the provider list.
+92. **P1 resolved in workflow-definition order:** the how-to opened with an eight-field table of persisted activity fields before showing the Desktop creation task, including fields absent from the portable YAML example. It now starts with creation steps, gives a short portable-input explanation beside the API example, and sends exact fields and compatibility rules to the Workflow specification reference.
+93. **P1 resolved in core-concepts claim:** the run definition presented timing, transfers, and output evidence as universal fields. It now states that activity status is tracked and the other observations are stored when available, matching the runtime-dependent limits stated in the execution guide.
 
 ## Page inventory
 
@@ -104,7 +106,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | --- | --- | --- |
 | `guides/workflows/first-local-run.md` | Entry-navigation pass; menu paths now match Infrastructure guides; Linux package UI run verified through generated file evidence | Repeat on a clean supported host and other platforms |
 | `src/pages/index.tsx` | Second read; corrected real-local-run narrative and routed download to the pinned selection page | Recheck rendered entry path on mobile |
-| `concepts.md` | Second read; corrected executable/data distinction and made verified Desktop first run the next step | Recheck complete new-user path |
+| `concepts.md` | Claim reread; distinguishes always-tracked activity status from runtime-dependent timing, transfer, and output observations | Recheck complete new-user path |
 | `contributing/documentation-plan.md` | Second read; editorial contract, source hierarchy, and completion gate still match the active audit | Recheck contract at final audit |
 | `downloads.md` | Second read; platform limits and verification are explicit, and latest release was `v1.0.8` on 2026-09-12 | Recheck release links when version changes |
 | `engine.md` | Second read; implementation details remain in the developer section | Recheck claims against event-loop code |
@@ -140,7 +142,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `guides/operations/follow-notifications.md` | Notification behavior, owning API collections, and missing-alert recovery | Recheck UI behavior against Desktop |
 | `guides/operations/server-instance.md` | Second read; corrected invalid tunnel command, simplified server language, and preserved HTTP failure through jq | Recheck release assets when version changes |
 | `guides/operations/troubleshooting.md` | Plain-language reread; terminal diagnosis now starts with interactive access and connection health; connection history takes a saved ID | Recheck diagnostic claims after P0 fixes |
-| `guides/workflows/definitions.md` | Second read; isolated the portable demo ID, stated its save step and simulation-only scope | Recheck payload against importer after P0 contracts fix |
+| `guides/workflows/definitions.md` | Progressive-disclosure reread; Desktop creation precedes portable API fields, with exact model details in the reference | Recheck payload against importer after P0 contracts fix |
 | `guides/workflows/executions.md` | Plain-language reread; workflow task is separate from terminal sessions, and trace fields are conditional on observed evidence | Recheck other runtimes against their own guides |
 | `guides/workflows/first-run.md` | Second read; shortened fixed-plan and Desktop inspection caveats | Keep the SimGrid API example aligned with its versioned bundle |
 | `guides/workflows/planning.md` | API-path pass; uses a chosen returned candidate ID after completed ranking instead of an unfilled URL placeholder | Verify automatic Desktop planning flow |

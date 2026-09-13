@@ -19,7 +19,7 @@ An **environment** describes where work could run: a local host, a modeled simul
 
 A **plan** assigns activities to resources and predicts timing, transfers, and possibly cost. AkôFlow can produce several candidates, or you can supply a manual plan. Selecting one does not start a run; it records the choice you want to execute.
 
-A **run** records what happened when that plan was submitted. It has activity statuses, observed timing, transfers, and output evidence. Compare the run with its plan to see where prediction and observation differ.
+A **run** records what happened after the plan was submitted. It tracks activity status and stores timing, transfers, and output evidence when those observations are available. Compare them with the plan's predictions to see where they differ.
 
 **Executable artifacts** are the versioned programs or images used by activities. **Scientific data** includes inputs and outputs associated with the work. **Provenance** links the workflow, plan, run, activities, and data so you can trace how a result was produced. The audit trail records operational actions separately.
 

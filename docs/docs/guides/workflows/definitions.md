@@ -6,24 +6,7 @@ title: Define a workflow
 
 A workflow lists the activities in a scientific computation and the order in which they run. AkôFlow saves versions of that definition, so a plan or past run always points to the workflow version it used.
 
-You can create one in Desktop or import portable YAML. AkôFlow assigns IDs and converts the resource limits in the imported definition when it saves the first version.
-
-## The activity model
-
-An activity has a `kind`, one or more `capabilities`, a command, resource requirements, a retry/timeout policy, and optional simulation or service settings.
-
-| Field | Meaning |
-| --- | --- |
-| `kind` | `task`, `service`, or `interactive` in the persisted model. Portable workflow imports currently create `task` activities. |
-| `capabilities` | The modes the activity supports: `real`, `simulation`, or `interactive`. |
-| `command` | Executable reference, entrypoint, arguments, environment, and working directory. |
-| `resources` | Normalized CPU, memory, storage, and optional GPU demand. In portable input, use `cpuLimit` and `memoryLimit`. |
-| `simulation` | Model, duration, FLOPs, and optional parameters. Supplying it makes a portable activity simulation-capable. |
-| `policy` | Timeout, maximum attempts, and retry delay in the persisted model. |
-| `dependsOn` | Control dependencies, written with activity names in portable input. |
-| `dataDependencies` | Producer-to-consumer data edges with a logical name and byte size. |
-
-For real execution, an activity needs `command.entrypoint` and `command.executable`. An executable can point to an OCI image or another supported artifact source and includes a delivery strategy. The legacy `spec.image`, activity `image`, and `run` shorthands are still accepted, but new definitions should prefer `command` and `command.executable`.
+You can create one in Desktop or import portable YAML. Start with the steps below; use the [workflow specification](../../internal/workflow-spec) when you need exact fields, limits, and compatibility rules.
 
 ## Using AkôFlow Desktop
 
@@ -43,6 +26,8 @@ The import action accepts the same portable YAML format as the API. Export remov
 ## Using the API
 
 Complete [API connection setup](../../tutorials/api-access) before running these commands.
+
+In portable YAML, each activity names its command, CPU and memory limits, dependencies, and any simulation model. For real execution, `command.entrypoint` and `command.executable` are required. An executable can point to an OCI image or another supported artifact source. The older `spec.image`, activity `image`, and `run` shorthands remain accepted, but new definitions should use `command` and `command.executable`.
 
 The checked-in SimGrid example uses legacy shorthand. To try the portable simulation fields directly, save this as `workflow.yaml`. The empty `command` means these activities are simulation-only; a real run needs an executable and entrypoint as described in the [workflow specification](../../internal/workflow-spec).
 

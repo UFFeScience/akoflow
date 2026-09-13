@@ -162,6 +162,64 @@ h1, h2, h3, h4, h5, h6 {
   opacity: 1;
 }
 
+/* The local-search plugin sizes its dropdown for a navbar search field and
+   right-aligns it. In the sidebar that places most results off-screen. Keep
+   the results anchored to the left rail and use a compact, readable list. */
+.theme-doc-sidebar-container [class*='searchBar'] [class*='dropdownMenu'] {
+  position: fixed;
+  top: calc(var(--ifm-navbar-height) + 58px);
+  left: 16px !important;
+  right: auto !important;
+  z-index: 200;
+  width: min(420px, calc(100vw - 32px));
+  max-height: min(60vh, 560px);
+  overflow-y: auto;
+  padding: 6px;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 9px;
+  background: var(--ifm-background-color);
+  box-shadow: 0 12px 32px rgb(0 0 0 / 14%);
+}
+
+.theme-doc-sidebar-container [class*='dropdownMenu'] [class*='suggestion'] {
+  min-height: 46px;
+  height: auto;
+  padding: 6px 9px;
+  border-radius: 5px;
+  box-shadow: none;
+}
+
+.theme-doc-sidebar-container [class*='dropdownMenu'] [class*='suggestion']:not(:last-child) {
+  margin-bottom: 2px;
+}
+
+.theme-doc-sidebar-container [class*='dropdownMenu'] [class*='hitWrapper'] {
+  min-width: 0;
+  margin: 0 6px;
+}
+
+.theme-doc-sidebar-container [class*='dropdownMenu'] [class*='hitTitle'] {
+  font-size: 0.82rem;
+  line-height: 1.3;
+}
+
+.theme-doc-sidebar-container [class*='dropdownMenu'] [class*='hitPath'] {
+  font-size: 0.68rem;
+  line-height: 1.25;
+}
+
+.theme-doc-sidebar-container [class*='dropdownMenu'] [class*='hitTree'],
+.theme-doc-sidebar-container [class*='dropdownMenu'] [class*='hitIcon'],
+.theme-doc-sidebar-container [class*='dropdownMenu'] [class*='hitAction'] {
+  flex: none;
+}
+
+@media (max-width: 996px) {
+  .theme-doc-sidebar-container [class*='searchBar'] [class*='dropdownMenu'] {
+    top: calc(var(--ifm-navbar-height) + 58px);
+  }
+}
+
 @media (min-width: 997px) {
   .navbar__items:not(.navbar__items--right) .navbar__link {
     position: relative;

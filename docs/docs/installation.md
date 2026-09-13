@@ -8,9 +8,8 @@ description: Download the correct Desktop package, open AkôFlow, and verify the
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-Install **AkôFlow Desktop** on your workstation. It uses Docker to start its
-local services and downloads matching runtime files automatically.
-You do not need a source checkout to install the application.
+Install **AkôFlow Desktop** on your workstation. It uses Docker for its local
+services and downloads the files it needs. You do not need a source checkout.
 
 ## Before you begin: prepare Docker
 
@@ -30,17 +29,15 @@ docker info
 docker compose version
 ```
 
-Both commands must succeed **as the user who opens AkôFlow**. The first shows
-Docker's server information; the second prints the Compose plugin version.
+Both commands must succeed **as the user who opens AkôFlow**.
 On Linux, if access works only with `sudo`, follow Docker's
 [non-root access instructions](https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user),
 then sign out of the desktop session and sign back in before checking again.
 Membership in the Docker group grants root-level privileges; use your site's
 approved setup. A new terminal alone does not refresh the launcher session.
 
-Keep internet access available for the application and its runtime downloads.
-You do not need Git, Go, Node.js, a cloud account, or an HPC account for this
-installation. The command-line tutorials introduce their own prerequisites.
+Keep internet access available for the first launch. Git, Go, Node.js, and
+remote infrastructure accounts are not needed for local installation.
 
 ## 1. Download the correct file
 
@@ -59,9 +56,8 @@ The runtime has Linux ARM64 archives, but v1.0.8 does not include a Linux ARM64
 Desktop package. Use the [server installation](./guides/operations/server-instance)
 for a supported ARM64 server deployment.
 
-**Expected result:** one completed Desktop package for your operating system.
-If the browser reports an interrupted download, retry before opening the file.
-For checksum verification, use the [download verification procedure](./downloads#download-through-the-github-api).
+If the download is interrupted, retry before opening the file. For a checksum,
+use the [download verification procedure](./downloads#download-through-the-github-api).
 
 ## 2. Install and open
 
@@ -115,19 +111,14 @@ If **AkôFlow could not start** appears, read the error and use
 
 ## 3. First launch: what happens
 
-Desktop checks Docker and Compose, downloads the daemon and BuildKit archives
-for its own version and architecture, verifies their SHA-256 checksums, loads
-them into Docker, and starts the local services. Keep internet access available
-for this first launch. You do not need to download the `.tar` files yourself.
-
-Desktop handles its local API credential. You do not need to enter a token
-during packaged installation.
+Desktop checks Docker and Compose, downloads and verifies its matching service
+files, then starts them locally. It handles its own API credential; you do not
+need to download `.tar` files or enter a token.
 
 ### Welcome
 
-Choose **Configure environment** to follow the complete local setup below.
-The assistant proceeds through **Welcome → Engine checkup → Environment →
-Connection → Ready**.
+Choose **Configure environment** for the local setup below. The assistant moves
+through **Welcome → Engine checkup → Environment → Connection → Ready**.
 
 If you only want to connect HPC or Google Cloud later, **Set up later** opens
 the main interface immediately. Continue at [Installation result](#4-installation-result),
@@ -146,8 +137,8 @@ checks pass.
 
 ![Successful first-launch checkup: daemon, Docker and BuildKit are available](../static/img/interface/onboarding/engine-checkup.png)
 
-_Observed result from the downloaded Linux package: all three services were
-available. This check does not test an HPC cluster or a cloud credential._
+_The downloaded Linux package passed all three checks. Remote targets need
+their own connection checks._
 
 ### Environment: configure the local execution target
 
@@ -173,8 +164,6 @@ resources. Let these operations finish; success advances to **Ready** automatica
 
 ![Connection step while the application checks the local environment](../static/img/interface/onboarding/connection-checkup.png)
 
-_This step can be brief. The next screen is the completion checkpoint._
-
 If **Checkup needs attention** appears, read the failing operation. Use
 **Edit connection** to correct the settings or **Run checkup again** to retry.
 Registration can finish before a later check fails, so inspect the existing
@@ -194,9 +183,7 @@ appears. Open it to inspect its connection and inventory.
 ![Environment catalog after completing local setup](../static/img/interface/onboarding/environment-catalog.png)
 
 **Expected result:** the local environment is saved, its connection check has
-passed, and discovery has completed. No workflow has run yet. The full local
-assistant was exercised with the official Linux package; remote success requires
-the checks in the relevant infrastructure tutorial.
+passed, and discovery has completed. No workflow has run yet.
 
 ## 4. Installation result
 
@@ -264,9 +251,8 @@ requesting help.
 Export your instance before changing versions; see [Instance management](./guides/operations/instance-management).
 Keep Desktop and its runtime on matching versions.
 
-The v1.0.8 Linux `.deb` was fully downloaded on 2026-09-12. Its SHA-256 matches
-the GitHub asset digest, and its package metadata reports version `1.0.8`,
-architecture `amd64`. The application extracted from that package also started its release-matched
-daemon and BuildKit in Docker and reached the successful checkup shown above.
-This was an extracted-package smoke test on Linux with a fresh application
-profile, not a test of the `apt` installation procedure or of macOS/Windows.
+The v1.0.8 Linux package was downloaded, checksum-verified, and opened from an
+extracted copy with a fresh profile on 2026-09-12. It reached the successful
+checkup above. A clean `apt` install and macOS/Windows installation remain
+unverified; [Downloads](./downloads#download-verification-result) records the
+package digest.

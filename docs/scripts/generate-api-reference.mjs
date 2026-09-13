@@ -188,6 +188,9 @@ const runnableSimulationRequests = {
 // These notes come from handler calls and the credential/operation services,
 // not from JSON tags alone. Keep them scoped to fields the service validates.
 const verifiedRequestNotes = {
+  "GET /akoflow-api/cloud-operations/": "Returns all saved cloud operations, newest first, as an array. This route has no environment filter; use the returned `environmentId` and `capacityTargetId` to find your operation, then open its detail and events.",
+  "GET /akoflow-api/cloud-operations/{operationId}/": "Returns the current operation or `404` for an unknown ID. `queued` and `running` are not final outcomes. A `failureReason` may appear while an operation is queued for a retry; rely on a terminal `completed`, `failed`, or `cancelled` status and inspect events for details.",
+  "GET /akoflow-api/cloud-operations/{operationId}/events/": "Returns stored events in sequence order, or `404` for an unknown operation. The server may add parsed provider-log events before returning this list. An `operation.failed` event can describe a retry; check the operation's current status before treating it as a final failure.",
   "GET /": "This health route is at the daemon root, outside `/akoflow-api/`. With the API URL from the [API access tutorial](/docs/tutorials/api-access), the cURL command removes that prefix and requests `/`. A healthy daemon returns plain text `ok`; this check does not verify Docker, BuildKit, or a workflow runtime. Use [preflight](/docs/api/endpoints/instance/get-preflight) for those local capability checks.",
   "GET /akoflow-api/preflight/": "The response has `server`, `docker`, and `buildkit` objects, each with `available` and `message`. `server.available` is true when this route responds, but the Docker and BuildKit checks can be false while HTTP still returns `200 OK`. Inspect their individual values before running a local workflow. The checks run in the daemon process, not in your browser or shell.",
   "GET /akoflow-api/console-sessions/{sessionId}/stream/": "Open this URL with a WebSocket client after creating a console session. A successful upgrade returns `101 Switching Protocols` and carries terminal input and output over the socket; it is not a JSON response. An unknown session returns `404`. See the [interactive console guide](/docs/guides/operations/interactive-console) for session lifecycle.",
@@ -776,7 +779,7 @@ function endpointDocument(endpoint, position) {
     : "";
   const verifiedNote = verifiedRequestNotes[`${endpoint.method} ${endpoint.path}`];
   const verifiedSection = verifiedNote
-    ? `## Handler-checked request notes\n\n${verifiedNote}\n\n`
+    ? `## Handler-checked behavior\n\n${verifiedNote}\n\n`
     : "";
   const checkedResponseNote = checkedMapResponses[endpoint.handler]?.note;
   const responseSection = checkedResponseNote
@@ -882,6 +885,13 @@ const missingCheckedResponses = Object.keys(checkedMapResponses).filter(
 );
 if (missingCheckedResponses.length > 0) {
   throw new Error(`Checked response handlers are missing from the router: ${missingCheckedResponses.join(", ")}`);
+}
+
+const staleCheckedNotes = Object.keys(verifiedRequestNotes).filter(
+  (route) => !endpoints.some((endpoint) => route === `${endpoint.method} ${endpoint.path}`),
+);
+if (staleCheckedNotes.length > 0) {
+  throw new Error(`Handler-checked notes refer to missing routes: ${staleCheckedNotes.join(", ")}`);
 }
 
 const undocumentedMutations = endpoints

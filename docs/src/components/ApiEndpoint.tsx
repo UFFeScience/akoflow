@@ -170,7 +170,7 @@ export default function ApiEndpoint({
           </div>
           {responseExample ? (
             <>
-              {responseMediaType === "application/json" && <p>Illustrative response shape; values vary.</p>}
+              {responseMediaType === "application/json" && <p>Illustrative response shape; optional fields may be absent and values vary.</p>}
               <pre><code>{responseExample}</code></pre>
             </>
           ) : (

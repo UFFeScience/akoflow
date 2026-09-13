@@ -159,6 +159,8 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 
 125. **P0/P1 resolved in Cloud provisioning acceptance wording:** both provision endpoints return `202 Accepted` after persisting and enqueueing an operation. Target existence, environment ownership, connection, credential, and provider checks happen later in the provisioner. The generated notes for both routes and the capacity guide now direct readers to status, failure reason, and events before treating a VM as ready. This is source-checked asynchronous behavior; a live provider run remains unverified.
 
+126. **P1 resolved in Cloud operation follow-up reference:** list, detail, and event endpoints now explain global newest-first listing, terminal versus retrying status, and sequence-ordered events. A provider-log error event may belong to a retried attempt, so readers check the operation status before treating it as final. The shared generated endpoint component now says optional JSON fields may be absent, and all handler-checked notes use a behavior heading that fits both GET and mutation routes. The generator rejects notes for routes missing from the Go router. This checks the Cloud operation response narrative, not all 125 endpoint field contracts.
+
 ## Page inventory
 
 | Page | Current pass | Next review |

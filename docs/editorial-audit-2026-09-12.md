@@ -167,6 +167,8 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 
 129. **P3 resolved across architecture diagrams:** the record-chain inspection exposed the same inherited SVG fill behavior in nine other arrow groups. In particular, the request-dispatch branching paths rendered as large black triangles that obscured the branches. Arrow groups now set `fill="none"`, and the two standalone network arrows do the same. All 13 architecture SVGs parse with a title and description; Chromium previews of request dispatch, planning lifecycle, control-plane components, and network flow were inspected after the fix. The diagrams' wording and topology were not changed in this pass.
 
+130. **P1 resolved in Cloud read-reference behavior:** all 21 generated body examples are marked verified and no inferred body example is displayed, but three Cloud GET pages lacked the distinctions needed to interpret their results. The catalog GET reads synchronized cache and can return `404` before refresh; the target list returns only enabled records; the instance list includes destroyed records. Handler and repository source were checked for all three, and the generator's route guard covers their new notes. This narrows a reference gap without claiming full field-level validation of the 125 endpoints.
+
 ## Page inventory
 
 | Page | Current pass | Next review |

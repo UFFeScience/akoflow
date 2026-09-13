@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-// Check the syntax of fenced Bash examples in authored documentation.
+// Check the syntax of fenced and Showcase JSX Bash examples.
 import { readdirSync, readFileSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 import { dirname, extname, join, relative, resolve } from "node:path";
@@ -20,7 +20,15 @@ function walk(directory) {
 
 for (const file of walk(contentDirectory)) {
   if (![".md", ".mdx"].includes(extname(file))) continue;
-  const lines = readFileSync(file, "utf8").split("\n");
+  const source = readFileSync(file, "utf8");
+  const lines = source.split("\n");
+  const check = (body, line) => {
+    checked++;
+    const result = spawnSync("bash", ["-n"], { input: body, encoding: "utf8" });
+    if (result.error || result.status !== 0) {
+      errors.push(`${relative(docsDirectory, file)}:${line}: ${(result.stderr || result.error?.message || "invalid Bash").trim()}`);
+    }
+  };
   for (let index = 0; index < lines.length; index++) {
     if (!/^```(?:bash|sh)\s*$/.test(lines[index])) continue;
     const start = index + 1;
@@ -32,11 +40,13 @@ for (const file of walk(contentDirectory)) {
       errors.push(`${relative(docsDirectory, file)}:${start}: unclosed shell fence`);
       break;
     }
-    checked++;
-    const result = spawnSync("bash", ["-n"], { input: body.join("\n"), encoding: "utf8" });
-    if (result.error || result.status !== 0) {
-      errors.push(`${relative(docsDirectory, file)}:${start}: ${(result.stderr || result.error?.message || "invalid Bash").trim()}`);
-    }
+    check(body.join("\n"), start);
+  }
+  for (const match of source.matchAll(/<pre><code>\{`([\s\S]*?)`\}<\/code><\/pre>/g)) {
+    const line = source.slice(0, match.index).split("\n").length;
+    // JSX template literals escape shell continuations and `${...}` variables.
+    const body = match[1].replace(/\\([\\`$])/g, (_, escaped) => escaped);
+    check(body, line);
   }
 }
 
@@ -44,5 +54,5 @@ if (errors.length) {
   for (const error of errors) process.stderr.write(`${error}\n`);
   process.exitCode = 1;
 } else {
-  process.stdout.write(`Shell examples verified: ${checked} Bash/sh block(s).\n`);
+  process.stdout.write(`Shell examples verified: ${checked} fenced/JSX Bash/sh block(s).\n`);
 }

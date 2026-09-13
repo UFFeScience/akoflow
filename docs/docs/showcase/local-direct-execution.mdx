@@ -54,6 +54,7 @@ cd akoflow-showcase
 sh examples/local/direct-hello/run.sh
 
 curl --fail-with-body \
+  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   "$AKOFLOW_API_URL/execution-runs/local-direct-hello-run-v1/"`}</code></pre>
     <p>The supplied script adds a bearer header when <code>AKOFLOW_API_TOKEN</code> is set.</p>
   </div>}

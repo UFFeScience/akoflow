@@ -55,7 +55,7 @@ The diagram and the workflow YAML show the same topology: `prepare` produces `da
 cd akoflow-showcase
 sh examples/simulation/run.sh`}</code></pre>
     <p>Submitting <code>execution-runs</code> acknowledges the request; it does not mean the execution has completed. Poll the immutable run projection until <code>status</code> is <code>completed</code>:</p>
-    <pre><code>{`curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \\
+    <pre><code>{`curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \\
   "$AKOFLOW_API_URL/execution-runs/simulation-example-run-v1/"`}</code></pre>
   </div>}
 />

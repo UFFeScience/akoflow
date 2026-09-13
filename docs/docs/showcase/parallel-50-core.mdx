@@ -55,7 +55,7 @@ M1 and M3 remain in the shared three-machine SimGrid scope, but no activity uses
 cd akoflow-showcase
 bash examples/simulation/50core-fanout/run.sh`}</code></pre>
     <p>Poll the run projection until its status is <code>completed</code>:</p>
-    <pre><code>{`curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \\
+    <pre><code>{`curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \\
   "$AKOFLOW_API_URL/execution-runs/simgrid-50core-workers-run-v2/"`}</code></pre>
   </div>}
 />

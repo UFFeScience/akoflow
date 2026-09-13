@@ -54,7 +54,7 @@ Every dependency is 10,000,000,000 bytes. There are six dependencies, so a compl
 cd akoflow-showcase
 bash examples/simulation/30gb-fanout/run.sh`}</code></pre>
     <p>Poll the run until it reports <code>completed</code>:</p>
-    <pre><code>{`curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \\
+    <pre><code>{`curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \\
   "$AKOFLOW_API_URL/execution-runs/simgrid-30gb-fanout-run-v1/"`}</code></pre>
   </div>}
 />

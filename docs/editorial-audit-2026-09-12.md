@@ -119,6 +119,8 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 
 105. **P2 resolved in four Showcase narratives:** the SLURM fixture page repeated its local-only warning with a long inventory of untested cluster commands and policies; it now states the tested adapter path and groups the real-cluster limits in one short sentence. The edge-cloud, network fan-out, and 50-core pages now state what their fixed examples demonstrate without defensive “do not” framing. Checked-in evidence, result numbers, prerequisites, and recovery steps remain. Authored text across these files was reduced without removing support limits; the full 60-page final plain-language pass remains open.
 
+106. **P0/P1 resolved in Showcase command coverage:** the local direct API page submitted its bundle with a bearer token but omitted that token on the final run GET, causing `401` on a protected daemon. The GET now uses the shared API credential. The edge-cloud, network fan-out, and 50-core polling commands now fail on HTTP errors; the Showcase index distinguishes existing-daemon API setup from the self-started SLURM fixture. The shell syntax checker now covers the 11 JSX template-literal command blocks as well as 108 fenced blocks (119 total), closing a verifier blind spot; the contributor contract records its exact scope. These checks do not replace HTTP execution or final visual review.
+
 ## Page inventory
 
 | Page | Current pass | Next review |
@@ -126,7 +128,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `guides/workflows/first-local-run.md` | Entry-navigation pass; menu paths now match Infrastructure guides; Linux package UI run verified through generated file evidence | Repeat on a clean supported host and other platforms |
 | `src/pages/index.tsx` | Second read; corrected real-local-run narrative and routed download to the pinned selection page | Recheck rendered entry path on mobile |
 | `concepts.md` | Claim reread; distinguishes always-tracked activity status from runtime-dependent timing, transfer, and output observations | Recheck complete new-user path |
-| `contributing/documentation-plan.md` | Editorial contract and completion gate retained; generated request, response, template, and WebSocket descriptions now match the current component | Recheck contract at final audit |
+| `contributing/documentation-plan.md` | Editorial contract and completion gate retained; generated request, response, template, and WebSocket descriptions match the component; shell-checker scope includes Showcase JSX | Recheck contract at final audit |
 | `downloads.md` | Second read; platform limits and verification are explicit, and latest release was `v1.0.8` on 2026-09-12 | Recheck release links when version changes |
 | `engine.md` | Second read; implementation details remain in the developer section | Recheck claims against event-loop code |
 | `explanations/evidence-and-provenance.md` | Second read; plan predictions and optional observations remain distinct | Recheck against execution evidence after P0 fixes |
@@ -174,12 +176,12 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `reference/feature-coverage.md` | Second read; now distinguishes registered but unlinked Desktop network routes from navigable task paths | Check contracts against current handlers and schemas |
 | `reference/planning-and-execution-states.md` | Second read; session cancellation and run/task status claims checked against handlers, coordinator, and domain | Recheck generated endpoint contracts after P0 fixes |
 | `runtimes.md` | Second read; marked serverless schema value unavailable because no adapter is registered | Recheck other provider claims against adapters |
-| `showcase/edge-cloud-simulation.mdx` | Second read; fixed manual plan and scheduler-comparison purpose are stated directly; versioned checkout and same-server inspection retained | Check result against pinned bundle |
-| `showcase/index.mdx` | Second read; instructions fit script and inline API examples; removed unsupported scalability language | Recheck cards after Showcase audit |
+| `showcase/edge-cloud-simulation.mdx` | Second read; fixed manual plan and scheduler-comparison purpose are direct; authenticated polling now fails on HTTP errors | Check result against pinned bundle |
+| `showcase/index.mdx` | Second read; distinguishes existing-daemon API setup from the self-started SLURM fixture; no unsupported scalability language | Recheck cards after Showcase audit |
 | `showcase/kubernetes-real-execution.mdx` | Second read; checkout precedes Kind setup and inline API submission; Desktop is same-server inspection | Check result against pinned bundle |
-| `showcase/local-direct-execution.mdx` | Second read; uses versioned checkout and shared API setup; removed unsupported cancellation link | Check result against pinned bundle |
-| `showcase/network-fanout.mdx` | Second read; model-specific estimate phrased directly; versioned checkout and API network setup retained | Check result against pinned bundle |
-| `showcase/parallel-50-core.mdx` | Second read; compute-capacity purpose stated directly; versioned checkout and timing explanation retained | Check result against pinned bundle |
+| `showcase/local-direct-execution.mdx` | Second read; uses versioned checkout and shared API setup; final run GET now includes the bearer token | Check result against pinned bundle |
+| `showcase/network-fanout.mdx` | Second read; model-specific estimate phrased directly; authenticated polling now fails on HTTP errors | Check result against pinned bundle |
+| `showcase/parallel-50-core.mdx` | Second read; compute-capacity purpose stated directly; authenticated polling now fails on HTTP errors | Check result against pinned bundle |
 | `showcase/slurm-local-fixture.mdx` | Second read; local adapter evidence and real-cluster limits stated once; versioned checkout and optional Desktop inspection retained | Check result against pinned bundle |
 | `tutorials/api-access.md` | Second read; API prerequisites and token limits are explicit; Bash blocks parsed | Recheck commands after P0 contracts fix |
 | `tutorials/connect-cloud.md` | Second read; AWS caveat and unvalidated GCP steps are explicit; target project is independent of credential owner | Validate with disposable GCP account |

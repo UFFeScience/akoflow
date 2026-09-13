@@ -145,6 +145,8 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 
 118. **P1 resolved in storage entry narrative:** the storage guide formerly sent object-storage readers to two support pages before they could learn whether browsing a private S3 bucket would work. Its opening now states the current unsigned-browser limit directly and distinguishes browsing from credentialed transfers, while retaining the AWS guide for details. The generic catalog caveat was shortened. Remote and provider storage operations remain unverified.
 
+119. **P1 resolved in editorial governance:** the public Documentation production plan already held the page-level writing contract, KEEP/SIMPLIFY/MOVE/DELETE/VERIFY labels, priority order, iterative loop, and completion gate. The repository quality plan now links to that contract instead of duplicating its rules. The contract makes progressive disclosure explicit and describes the current shell check's HTTP-error requirement. The quality-plan link-check evidence was refreshed to 456 local links and 54 Showcase downloads.
+
 ## Page inventory
 
 | Page | Current pass | Next review |
@@ -152,7 +154,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `guides/workflows/first-local-run.md` | Entry-navigation pass; menu paths now match Infrastructure guides; Linux package UI run verified through generated file evidence | Repeat on a clean supported host and other platforms |
 | `src/pages/index.tsx` | Second read; corrected real-local-run narrative and routed download to the pinned selection page | Recheck rendered entry path on mobile |
 | `concepts.md` | Claim reread; distinguishes always-tracked activity status from runtime-dependent timing, transfer, and output observations | Recheck complete new-user path |
-| `contributing/documentation-plan.md` | Editorial contract and completion gate retained; generated request, response, template, and WebSocket descriptions match the component; shell-checker scope includes Showcase JSX | Recheck contract at final audit |
+| `contributing/documentation-plan.md` | Third read; remains the single page-level writing contract, with progressive disclosure and HTTP-failing cURL checks explicit | Recheck contract at final audit |
 | `downloads.md` | Second read; platform limits and verification are explicit, and latest release was `v1.0.8` on 2026-09-12 | Recheck release links when version changes |
 | `engine.md` | Second read; implementation details remain in the developer section | Recheck claims against event-loop code |
 | `explanations/evidence-and-provenance.md` | Second read; plan predictions and optional observations remain distinct | Recheck against execution evidence after P0 fixes |

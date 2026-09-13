@@ -6,6 +6,8 @@ Last audited: 2026-09-13. The Desktop first-workflow gap and several generated-r
 
 ## Editorial contract
 
+The [documentation production plan](./docs/contributing/documentation-plan.md) is the writing and review contract for every authored page. This file tracks evidence and unresolved work against that contract.
+
 Every user-facing page has one primary Diátaxis purpose:
 
 - **Tutorial:** a learning path that starts from stated prerequisites and ends in a result the reader can verify.
@@ -28,7 +30,7 @@ When a Desktop route or daemon endpoint changes, regenerate the endpoint referen
 - [x] The general environment guide does not imply a remote connection was saved after a standalone health test. It links to the complete HPC/GCP registration tutorials and uses the saved HPC template's connection ID for follow-up checks, verified on 2026-09-13.
 - [x] Existing Showcase download URLs use `raw.githubusercontent.com` and the 50-core bundle was checked against repository files on 2026-09-11.
 - [x] No screenshot markers remain. `rg '<!--\\s*screenshot:' docs/docs` returned no matches on 2026-09-11; relevant guides now use checked-in captures or executable verification steps.
-- [x] All internal links and every downloadable asset pass an automated link check. Evidence: `docs/scripts/check-links.mjs` and `.github/workflows/docs-checks.yaml`; the latest check covered 453 local route/asset links and 54 Showcase downloads on 2026-09-13.
+- [x] All internal links and every downloadable asset pass an automated link check. Evidence: `docs/scripts/check-links.mjs` and `.github/workflows/docs-checks.yaml`; the latest check covered 456 local route/asset links and 54 Showcase downloads on 2026-09-13.
 - [x] Fenced and Showcase JSX Bash/sh examples pass syntax checks in CI; `curl` commands must also fail on HTTP errors. Evidence: `docs/scripts/check-shell-examples.mjs` checked 121 authored blocks on 2026-09-13. Syntax does not verify files or API payloads.
 - [x] Navigation separates Tutorials, How-to guides, Explanations, Reference, and Developing AkôFlow. Evidence: `docs/sidebars.ts`; at 390 × 844 the built site's menu opened, showed the new first-workflow link, and had no horizontal overflow or page error on 2026-09-12.
 - [x] Home, Getting started, Installation, and Interface tour use the same first action: a real local Desktop workflow. Home now links to the pinned download-selection page rather than an unqualified latest-release page. The built Home link and target route were checked on 2026-09-12.

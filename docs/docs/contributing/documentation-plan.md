@@ -11,7 +11,7 @@ This page defines the editorial and verification rules for the documentation. Ap
 
 The documentation should show how AkôFlow simplifies scientific workflow execution, not display the complexity of its implementation.
 
-1. Explain the task and expected result before implementation details. Give each page one main job.
+1. Explain the task and expected result first. Give each page one main job and reveal details only when the reader needs them.
 2. Use workflow, environment, plan, run, artifacts, and provenance in user paths. Put supervisors, handlers, adapters, and persistence in developer architecture pages unless a task requires them.
 3. Make support claims only when code and appropriate evidence support them. Label partial features and distinguish code review, local fixtures, and real-environment validation.
 4. Prefer a concrete example over a list of capabilities. Remove repeated caveats and text that does not help a reader act or decide.
@@ -68,8 +68,9 @@ counterpart under `examples/`. It intentionally does not make network requests
 or judge third-party URLs: availability of external services belongs to the
 reader's environment, while these three classes are artifacts maintained in
 this repository. The shell check parses fenced Bash/sh examples and Showcase JSX
-command blocks without running them; it cannot validate named files or API
-behavior. GitHub Actions runs the type-check, build, link check, and shell check for
+command blocks without running them. It requires `curl` examples to fail on HTTP
+errors, but cannot validate named files or API behavior. GitHub Actions runs the
+type-check, build, link check, and shell check for
 documentation or example changes.
 
 ## Media naming

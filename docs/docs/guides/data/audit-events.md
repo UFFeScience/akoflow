@@ -5,7 +5,9 @@ description: Find recorded connection, discovery, and console events and inspect
 
 # Inspect audit events
 
-Use **Audit** to inspect recorded connection health checks, resource discovery, and console commands or sessions. Each event has a time, target, and outcome. The current daemon does not emit audit events for credential changes, planning, artifact builds, cloud provisioning, or workflow runs. Use each operation's detail page for its status; for the scientific history of a result, [trace its provenance](/docs/guides/data/provenance).
+Use **Audit** to inspect recorded connection checks, resource discovery, and console actions. Each event has a time, target, and outcome.
+
+Audit does not currently record credential changes, planning, artifact builds, cloud provisioning, or workflow runs. Open the operation's detail page for its status. To trace a scientific result, use [Provenance](/docs/guides/data/provenance).
 
 ## Investigate an operation
 

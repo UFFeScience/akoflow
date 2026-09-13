@@ -5,11 +5,11 @@ description: Find the right record for a scientific result or an operational act
 
 # Choose provenance or audit
 
-AkôFlow keeps scientific evidence and operational events separately. Choose the record that answers your question:
+Choose the record that answers your question:
 
 | Question | Open |
 | --- | --- |
 | Which workflow, plan, activity, and data produced this result? | [Trace a result with provenance](/docs/guides/data/provenance) |
 | What connection check, resource discovery, or console action happened? | [Inspect audit events](/docs/guides/data/audit-events) |
 
-Start with the execution's run ID when you have one. Provenance follows its scientific lineage. Audit can explain recorded connection checks, resource discovery, or console actions around the same time; it is not a complete history of workflow changes. The [evidence explanation](/docs/explanations/evidence-and-provenance) describes why the records stay separate.
+Have a run ID? Start in Provenance. Open Audit when a connection check, discovery, or console action may explain what happened. Audit is not a complete history of workflow changes. For the relationship between these records, read [Compare a plan with a completed run](/docs/explanations/evidence-and-provenance).

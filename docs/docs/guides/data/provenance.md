@@ -5,14 +5,14 @@ description: Find saved records, follow lineage, and query run evidence with rea
 
 # Trace a result with provenance
 
-Use **Provenance** to find the workflow, run, and data behind a result.
+Start with a completed run. Use **Provenance** to follow the workflow, activities, and data behind its result.
 
 ## Investigate a result
 
 1. Open the execution and copy its run ID and any produced data IDs.
 2. Find the run in **Provenance → Explore**, then open its lineage.
 3. If lineage does not answer the question, use read-only SQL to compare records or planned and observed values.
-4. Export the relevant result with its IDs, query, parameters, and page when you need to share it.
+4. When sharing an investigation, export the relevant record or query page with its IDs, SQL, parameters, and page number.
 
 For the API commands below, complete [API connection setup](/docs/tutorials/api-access) first.
 

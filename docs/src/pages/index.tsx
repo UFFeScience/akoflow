@@ -83,7 +83,7 @@ export default function Home(): React.JSX.Element {
 
         <p className={styles.subheadline}>
           Define a scientific workflow, choose where it runs, make a plan,
-          execute it, and inspect the results and provenance. Start locally;
+          execute it, and inspect the result. Start locally;
           connected environments require their own setup.
         </p>
 

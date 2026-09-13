@@ -2,23 +2,18 @@
 title: Configure cloud capacity
 ---
 
-Use this guide after connecting a Google Cloud environment. Choose a machine from its catalog, save a capacity target for planning, and provision an instance when a run needs it. For an optional Ansible setup, create a [machine configuration](./machine-configurations) before saving the target.
+Use this guide after [connecting Google Cloud](../../tutorials/connect-cloud).
+Choose a machine from its catalog, save a capacity target for planning, and
+provision an instance when a run needs it. Google Cloud is the current compute
+provider; check [cloud provider support](./cloud-support) for AWS and object
+storage limits. For optional Ansible setup, create a
+[machine configuration](./machine-configurations) before saving the target.
 
 For the API commands on this page, complete [API connection setup](../../tutorials/api-access) and register `research-gcp` through the [Google Cloud connection tutorial](../../tutorials/connect-cloud) first. Run the commands in the same Bash session.
 
-## Provider support in v1.0
-
-| Capability | Google Cloud | AWS |
-| --- | --- | --- |
-| Store provider credentials | Yes | Record accepted; not wired to the S3 transfer connector |
-| Discover compute machines, images, and disks | Yes | Not yet |
-| Choose a zone and estimate prices | A fixed zone can be set; otherwise provisioning uses the first active zone returned for the region. Estimates depend on Cloud Billing access | Not yet |
-| Provision compute capacity with Terraform | Yes | Not yet |
-| Transfer artifacts through object storage | Direct `gs://` transfer is unavailable in the current server; use a separately supported route such as signed HTTPS when applicable | S3-compatible connector with server environment credentials; external AWS validation pending |
-
-The Google Cloud compute path is present in the server, but this procedure has not yet passed a live provision-and-destroy cycle in a disposable project.
-
-For a Google Cloud setup, continue with [Configure Google Cloud](./gcp). For AWS, read [AWS and S3 support](./aws) before planning data movement. A saved AWS credential does not currently configure the transfer connector or create EC2 capacity.
+This procedure has not yet passed a live provision-and-destroy cycle in a
+disposable project. [Configure Google Cloud](./gcp) covers account access and
+the checks to perform before a real worker run.
 
 ## Synchronize the provider catalog
 

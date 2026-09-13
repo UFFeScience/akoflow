@@ -59,6 +59,7 @@ const sidebars: SidebarsConfig = {
             "guides/infrastructure/kubernetes",
             "guides/infrastructure/execution-scopes",
             "guides/infrastructure/storage",
+            "guides/infrastructure/cloud-support",
             "guides/infrastructure/cloud-capacity",
             "guides/infrastructure/machine-configurations",
             "guides/infrastructure/gcp",

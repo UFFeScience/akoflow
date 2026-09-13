@@ -2,7 +2,7 @@
 
 Date: 2026-09-12. Scope: authored documentation pages in the current branch; generated API endpoint pages are reviewed through their generator and component.
 
-This is an iteration ledger, not a completion certificate. The first pass read all 51 authored pages and corrected confirmed narrative, terminology, API convention, example, and support-claim findings. A Desktop first-workflow path was added as page 52; splitting the evidence, operations, artifact, and cloud-setup procedures now brings the authored tree to 60 pages. A final full audit, priority endpoint contracts, and external-provider validation remain open.
+This is an iteration ledger, not a completion certificate. The first pass read all 51 authored pages and corrected confirmed narrative, terminology, API convention, example, and support-claim findings. A Desktop first-workflow path was added as page 52; splitting the evidence, operations, artifact, and cloud-setup procedures and adding a Cloud support page now brings the authored tree to 61 pages. A final full audit, priority endpoint contracts, and external-provider validation remain open.
 
 ## Open P0/P1 findings
 
@@ -153,6 +153,8 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 
 122. **P1/P2 resolved in the three infrastructure tutorial openings:** API setup now names its specific reader and tools; HPC registration begins with the result the steps can prove; and the GCP connection tutorial starts with its own task instead of an unrelated AWS/S3 support paragraph. HPC and GCP use the same “Check the result” heading. Their external-account, batch-job, and live-provider limits remain at the step or result where the reader needs them. Remote HPC and GCP validation remain open.
 
+123. **P1 resolved in Cloud navigation and page purpose:** a provider matrix interrupted the cloud-capacity procedure before its first catalog action. It now has a dedicated Cloud provider support page immediately before the capacity guide in the sidebar. Getting Started links directly to that page, and the stale section anchor was removed. The capacity guide begins with its task and links to the support decision; the matrix keeps GCP compute, incomplete GCS transfer, partial AWS S3 transfer, and unverified live-provider limits together. The Cloud path is now support → connect GCP or review AWS → configure capacity, without hiding the status behind a long how-to opening.
+
 ## Page inventory
 
 | Page | Current pass | Next review |
@@ -177,6 +179,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `guides/data/audit-events.md` | Reading-order reread; event investigation now precedes UI/API controls and duplicate event-category prose was cut | Recheck Desktop interactions against packaged app |
 | `guides/infrastructure/aws.md` | Third read; omitted/`env` transfer credential selection and unsigned S3 browsing are explicit | Check provider claims against disposable-bucket evidence |
 | `guides/infrastructure/cloud-capacity.md` | Third read; project, architecture, CIDR and actual fixed-zone behavior match the Terraform target | Validate with disposable GCP account |
+| `guides/infrastructure/cloud-support.md` | First read; GCP/AWS support matrix separated from capacity procedure and linked to provider tasks | Recheck against live GCP/S3 evidence |
 | `guides/infrastructure/machine-configurations.md` | Focused optional Ansible setup; validation and saved version use one playbook, and the returned version ID is consumed by the capacity example in the same Bash session | Validate against disposable GCP worker |
 | `guides/infrastructure/environments.md` | Plain-language/claim pass; local API definition persisted in a one-off repository test, and in-use revision language matches the API | Recheck remote flows with provider evidence |
 | `guides/infrastructure/execution-scopes.md` | Second read; cross-resource dependencies now prompt link modeling, and the link example omits redundant topologyId | Recheck API payloads after P0 contracts fix |

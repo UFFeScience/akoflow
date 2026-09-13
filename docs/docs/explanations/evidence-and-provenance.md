@@ -20,7 +20,7 @@ The plan retains predicted duration and cost. A task attempt can record its plan
 
 ## What the run records
 
-AkôFlow keeps an identifier for each started activity so it can check its status again after a restart. The identifier depends on the runtime: it may point to a process, container, Kubernetes Job, Slurm job, or simulation event.
+In real execution, a runtime handle identifies a started process, container, Kubernetes Job, or Slurm job for later status checks. A simulated run records modeled task timing without a provider job to inspect.
 
 Transfer records can show how data reached a task and how many bytes moved. Where the runtime supports it, artifact records show files created or changed by the task. If required output observation fails, a task's zero exit code alone does not establish a valid result.
 

@@ -44,13 +44,13 @@ PRISM estimates resource cost from each active window and adds transfer byte cos
 
 PRISM Time ranks by predicted makespan; PRISM Cost ranks by predicted cost. Beam search does not guarantee a global optimum.
 
-## Do not infer a winner from the algorithm name
+## Compare observed runs
 
 PRISM models more network and interference effects, but a richer prediction need not lead to a faster run. Durations, queues, storage paths, startup, and transfers can differ from the session's inputs. Either scheduler may perform better for a particular workflow and scope.
 
 HEFT and PRISM do **not** pass through one shared evaluator before their predictions are compared. Treat their estimates as algorithm-specific. To compare outcomes, run selected plans under comparable conditions and inspect the observed traces.
 
-## A disciplined comparison
+## Compare plans in an experiment
 
 1. Use the same workflow version, scope, topology, activity profiles, deadline, and budget for every algorithm in the session.
 2. Inspect assignments, predicted transfers, and cost before selecting a plan.

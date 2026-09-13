@@ -147,6 +147,8 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 
 119. **P1 resolved in editorial governance:** the public Documentation production plan already held the page-level writing contract, KEEP/SIMPLIFY/MOVE/DELETE/VERIFY labels, priority order, iterative loop, and completion gate. The repository quality plan now links to that contract instead of duplicating its rules. The contract makes progressive disclosure explicit and describes the current shell check's HTTP-error requirement. The quality-plan link-check evidence was refreshed to 456 local links and 54 Showcase downloads.
 
+120. **P1/P2 resolved across the five explanation pages:** the planning explanation treated candidate rank as immediate, although ranking and Pareto fields are finalized when a session completes, and its selection sentence could imply that selecting a candidate starts a run. The page now states the lifecycle in order. Evidence/provenance now distinguishes real runtime handles from simulated task timing, which has no provider job to inspect. Network route wording and observed-timing introduction were shortened, and the PRISM/HEFT comparison headings now name the reader's task. The final all-page audit remains open.
+
 ## Page inventory
 
 | Page | Current pass | Next review |
@@ -157,11 +159,11 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `contributing/documentation-plan.md` | Third read; remains the single page-level writing contract, with progressive disclosure and HTTP-failing cURL checks explicit | Recheck contract at final audit |
 | `downloads.md` | Second read; platform limits and verification are explicit, and latest release was `v1.0.8` on 2026-09-12 | Recheck release links when version changes |
 | `engine.md` | Second read; implementation details remain in the developer section | Recheck claims against event-loop code |
-| `explanations/evidence-and-provenance.md` | Second read; plan predictions and optional observations remain distinct | Recheck against execution evidence after P0 fixes |
-| `explanations/network-modeling.md` | Plain-language/units pass; clarified data versus order, corrected 10 GiB/10 Gbit/s to 8.6 s, and explained one-byte route selection and HEFT missing-link estimates | Recheck transfer claims against execution paths |
-| `explanations/observed-timing.md` | Plain-language/units pass; uses run language, corrects the 8.6 s example, and preserves optional observed-field limits | Recheck metrics against trace aggregation |
-| `explanations/planning.md` | Second read; linked scheduler comparison and removed abstract separation language | Recheck planning claims against coordinator |
-| `explanations/prism-and-heft.md` | Plain-language pass; cut 27% while preserving search, evaluation, cost, and cross-algorithm limits | Recheck algorithm claims against source |
+| `explanations/evidence-and-provenance.md` | Third read; real runtime handles separated from simulated task evidence | Recheck against execution evidence after P0 fixes |
+| `explanations/network-modeling.md` | Third read; one-byte route choice now states its large-payload implication directly | Recheck transfer claims against execution paths |
+| `explanations/observed-timing.md` | Third read; opening now leads with makespan versus accumulated time | Recheck metrics against trace aggregation |
+| `explanations/planning.md` | Third read; candidate rank follows session completion and selection saves a plan without starting a run | Recheck planning claims against coordinator |
+| `explanations/prism-and-heft.md` | Third read; comparison headings now describe observed-run and experiment tasks | Recheck algorithm claims against source |
 | `getting-started.md` | Third entry-path read; verified Kubernetes example is identified as Kind and support limits remain explicit | Recheck the entry flow on a clean supported host |
 | `guides/data/artifacts.md` | Short choice page preserving the old URL and routing storage, build, and recorded-location tasks | Check destinations in navigation |
 | `guides/data/build-executable.md` | Third read; build-context upload now fails on HTTP errors; asynchronous Docker/SIF flow remains | Verify a live registry pull and SIF conversion |

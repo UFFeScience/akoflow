@@ -7,10 +7,10 @@ description: The difference between flows, queue and stage totals, makespan, and
 
 import useBaseUrl from '@docusaurus/useBaseUrl';
 
-Execution evidence contains both a wall-clock result and accumulated activity
-measurements. They answer different questions. A large accumulated transfer or
-queue total does not by itself mean that the workflow took that many seconds on
-the clock, because activities and transfers can overlap.
+Execution evidence has a wall-clock result and accumulated activity times. Use
+makespan for elapsed workflow time; use the accumulated values to see where work
+and waiting occurred. Activities and transfers can overlap, so their totals can
+exceed makespan.
 
 Use this page when reading a run detail, a planning-versus-execution comparison,
 or an experiment chart. It explains the current persisted metrics; it does not

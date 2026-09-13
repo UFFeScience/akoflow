@@ -19,9 +19,9 @@ A planning session records the workflow version, available resources, network to
 
 ## Candidates are alternatives, not executions
 
-A candidate has a predicted makespan and cost, feasibility flags, rank and Pareto metadata, and an embedded prospective plan. Several candidates can have the same algorithm and objective. They exist so the user can inspect trade-offs before committing to one placement.
+A candidate contains a possible placement with predicted makespan, cost, and feasibility. After the session completes, it receives rank and Pareto metadata for comparison. Several candidates can come from the same algorithm and objective.
 
-When you select a candidate, it becomes the schedule plan for the run. The plan records where activities should run and their predicted timing and cost. It can also include cloud setup actions. You can instead supply or import a placement, subject to validation.
+Selecting a candidate saves it as a schedule plan; it does not start a run. The plan records where activities should run and their predicted timing and cost. It can also include cloud setup actions. You can instead supply or import a placement, subject to validation.
 
 ## Objectives and constraints answer different questions
 

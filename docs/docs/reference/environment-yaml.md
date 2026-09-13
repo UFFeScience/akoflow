@@ -119,7 +119,9 @@ resourceRuntimeBindings:
 | `connections[].configuration` | No | object | omitted | Connection-type-specific settings. |
 | `connections[].createdAt` | No | timestamp | server-managed | Read-only evidence field. |
 
-`connectorBindings` declares artifact-transfer capabilities. Its `connector` enum is `rsync`, `scp`, `sftp`, `http`, `s3-compatible`, or `gcs`. The fields `id`, `environmentId`, and `connector` identify the binding; `endpoint`, `credentialRef`, and `configuration` are optional. The direct S3 transfer connector currently reads server environment credentials when its endpoint configuration omits `credentialRef` or sets it to `env`; it does not resolve an arbitrary saved reference. The schema accepts `gcs`, but the current server's direct `gs://` connector returns an unavailable error. A declared binding alone does not make that transfer usable. `health` is observation data and should be written by a check rather than authored as an assumption.
+`connectorBindings` declares artifact-transfer capabilities. Its `connector` enum is `rsync`, `scp`, `sftp`, `http`, `s3-compatible`, or `gcs`. The fields `id`, `environmentId`, and `connector` identify the binding; `endpoint`, `credentialRef`, and `configuration` are optional.
+
+The direct S3 transfer connector reads server environment credentials when `credentialRef` is omitted or set to `env`; it does not resolve an arbitrary saved reference. The schema accepts `gcs`, but the current server's direct `gs://` connector returns an unavailable error. A declared binding alone does not make a transfer usable. `health` is observation data; write it from a check, not an assumption.
 
 `connectionChecks` is also observed data. Do not copy a historical `online` result into a new environment file: validate the connection again after import.
 

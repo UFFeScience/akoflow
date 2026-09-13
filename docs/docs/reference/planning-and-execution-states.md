@@ -34,7 +34,9 @@ The cancellation endpoint returns a conflict for a completed or failed session, 
 
 Each selected algorithm creates an `AlgorithmRun` within the session. It uses the same status values: `queued`, `running`, `completed`, `failed`, and `cancelled`.
 
-Algorithm runs execute sequentially under the session's coordinator. A session can therefore be `running` while one algorithm run is `running` and later runs remain `queued`. A failed algorithm run does not automatically fail the session: other selected algorithms continue. The session fails only if there are no valid candidates after all work has finished. `progress` is a fraction between the completed algorithm runs; it is not a count of evaluated schedule states. `estimate` carries a predicted planning duration, search-space metadata, and confidence for that one algorithm run.
+Algorithm runs execute sequentially. A session can be `running` while one algorithm run is `running` and later runs remain `queued`. If one algorithm fails, the others continue. The session fails only when none produces a valid candidate.
+
+`progress` is a fraction based on completed algorithm runs, not a count of evaluated schedules. `estimate` carries a predicted planning duration, search-space metadata, and confidence for one algorithm run.
 
 ## Candidates are not state machines
 

@@ -173,6 +173,8 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 
 132. **P0 resolved in Audit coverage claims:** the guide, chooser, notifications, entry pages, explanation, and route map previously implied that Audit records workflow, credential, planning, build, and cloud operations, or answers who changed any state. A repository-wide search of `RecordAuditEvent` call sites found producers only for connection health, resource discovery, and console commands/sessions. Twelve authored pages now route readers to the owning operation or provenance record and state the actual Audit scope. The Desktop still shows workflow and credential category tabs, but the current daemon does not emit events into them. The final all-page pass and live Desktop verification remain open.
 
+133. **P2 resolved in four long prose blocks:** a length scan across the Markdown/MDX documentation found five non-code paragraphs over 85 words. Four were split or shortened after review. The Cloud target note now separates required input, provider choices, and saved outcome/failure recovery without removing its checked prerequisites; the generator remains the source of truth. The documentation production plan states what local checks cover in shorter prose. The environment YAML reference separates binding fields from S3/GCS limitations, and the planning-state reference separates algorithm lifecycle from progress fields. The fifth is a dense schedule-import request contract left intact for field-level verification. The final all-page plain-language pass remains open.
+
 ## Page inventory
 
 | Page | Current pass | Next review |
@@ -180,7 +182,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `guides/workflows/first-local-run.md` | Entry-navigation pass; menu paths now match Infrastructure guides; Linux package UI run verified through generated file evidence | Repeat on a clean supported host and other platforms |
 | `src/pages/index.tsx` | Third read; entry sequence includes the explicit execute action and routes download to the pinned selection page | Recheck rendered entry path on mobile |
 | `concepts.md` | Second claim reread; plan selection is separate from execution, including diagram alt text; runtime-dependent observations stay qualified | Recheck complete new-user path |
-| `contributing/documentation-plan.md` | Third read; remains the single page-level writing contract, with progressive disclosure and HTTP-failing cURL checks explicit | Recheck contract at final audit |
+| `contributing/documentation-plan.md` | Fourth read; link and shell check scope now fits short paragraphs; progressive disclosure and HTTP-failing cURL checks remain explicit | Recheck contract at final audit |
 | `downloads.md` | Second read; platform limits and verification are explicit, and latest release was `v1.0.8` on 2026-09-12 | Recheck release links when version changes |
 | `engine.md` | Second read; implementation details remain in the developer section | Recheck claims against event-loop code |
 | `explanations/evidence-and-provenance.md` | Third read; real runtime handles separated from simulated task evidence | Recheck against execution evidence after P0 fixes |
@@ -224,10 +226,10 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `internal/workflow-spec.md` | Second read; lead example now uses one execution mode and marks script paths as prerequisites | Check every field contract against current importer |
 | `modules.md` | Developer detail remains in the architecture section; planning candidates now distinguish shared inputs from algorithm-specific predictions | Recheck claims against daemon composition |
 | `reference/api-overview.md` | Sixth read; artifact links no longer promise a live byte check; 124 listed method/path pairs match the current Go router | Check field and response contracts against current handlers and schemas |
-| `reference/environment-yaml.md` | Third read; S3 transfer and browser credential exceptions now qualify the generic reference fields | Continue field-level schema contract audit |
+| `reference/environment-yaml.md` | Fourth read; binding fields are separate from S3/GCS limits, and browser credential exceptions remain qualified | Continue field-level schema contract audit |
 | `reference/execution-scopes-and-topologies.md` | Claim pass; clarified API prerequisites and the actual omitted link direction/sharing values | Check contracts against current handlers and schemas |
 | `reference/feature-coverage.md` | Third read; route map now serves the reader, with its maintainer update rule in the quality plan | Check contracts against current handlers and schemas |
-| `reference/planning-and-execution-states.md` | Second read; session cancellation and run/task status claims checked against handlers, coordinator, and domain | Recheck generated endpoint contracts after P0 fixes |
+| `reference/planning-and-execution-states.md` | Third read; algorithm lifecycle and progress fields are separate; status claims checked against handlers, coordinator, and domain | Recheck generated endpoint contracts after P0 fixes |
 | `runtimes.md` | Second read; marked serverless schema value unavailable because no adapter is registered | Recheck other provider claims against adapters |
 | `showcase/edge-cloud-simulation.mdx` | Second read; fixed manual plan and scheduler-comparison purpose are direct; authenticated polling now fails on HTTP errors | Check result against pinned bundle |
 | `showcase/index.mdx` | Second read; distinguishes existing-daemon API setup from the self-started SLURM fixture; no unsupported scalability language | Recheck cards after Showcase audit |

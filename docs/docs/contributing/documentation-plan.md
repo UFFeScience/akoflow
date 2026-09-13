@@ -62,16 +62,14 @@ npm run check:links --prefix docs
 npm run check:shell --prefix docs
 ```
 
-The check rejects a missing internal documentation route, a missing file below
-`docs/static/`, and a Showcase download that no longer has its checked-in
-counterpart under `examples/`. It intentionally does not make network requests
-or judge third-party URLs: availability of external services belongs to the
-reader's environment, while these three classes are artifacts maintained in
-this repository. The shell check parses fenced Bash/sh examples and Showcase JSX
-command blocks without running them. It requires `curl` examples to fail on HTTP
-errors, but cannot validate named files or API behavior. GitHub Actions runs the
-type-check, build, link check, and shell check for
-documentation or example changes.
+The link check rejects missing documentation routes, files under `docs/static/`,
+and Showcase downloads without a checked-in counterpart under `examples/`.
+It checks repository-owned links, not third-party availability.
+
+The shell check parses fenced Bash/sh examples and Showcase JSX command blocks
+without running them. It requires `curl` examples to fail on HTTP errors, but
+cannot validate named files or API behavior. GitHub Actions runs the type-check,
+build, link check, and shell check for documentation or example changes.
 
 ## Media naming
 

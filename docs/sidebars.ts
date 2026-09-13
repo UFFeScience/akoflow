@@ -60,6 +60,7 @@ const sidebars: SidebarsConfig = {
             "guides/infrastructure/execution-scopes",
             "guides/infrastructure/storage",
             "guides/infrastructure/cloud-capacity",
+            "guides/infrastructure/machine-configurations",
             "guides/infrastructure/gcp",
             "guides/infrastructure/aws",
             "guides/infrastructure/hpc-slurm",

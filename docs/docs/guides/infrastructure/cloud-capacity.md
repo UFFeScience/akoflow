@@ -2,7 +2,7 @@
 title: Configure cloud capacity
 ---
 
-Use this guide after connecting a Google Cloud environment. Choose a machine from its catalog, save a capacity target for planning, and provision an instance when a run needs it. Machine configurations let you prepare the instance after provisioning.
+Use this guide after connecting a Google Cloud environment. Choose a machine from its catalog, save a capacity target for planning, and provision an instance when a run needs it. For an optional Ansible setup, create a [machine configuration](./machine-configurations) before saving the target.
 
 For the API commands on this page, complete [API connection setup](../../tutorials/api-access) and register `research-gcp` through the [Google Cloud connection tutorial](../../tutorials/connect-cloud) first. Run the commands in the same Bash session.
 
@@ -11,7 +11,8 @@ For the API commands on this page, complete [API connection setup](../../tutoria
 | Capability | Google Cloud | AWS |
 | --- | --- | --- |
 | Store provider credentials | Yes | Record accepted; not wired to the S3 transfer connector |
-| Discover compute machines, images, disks, zones, and prices | Yes | Not yet |
+| Discover compute machines, images, and disks | Yes | Not yet |
+| Choose a zone and estimate prices | Zone lookup runs at provisioning; estimates depend on Cloud Billing access | Not yet |
 | Provision compute capacity with Terraform | Yes | Not yet |
 | Transfer artifacts through object storage | Direct `gs://` transfer is unavailable in the current server; use a separately supported route such as signed HTTPS when applicable | S3-compatible connector with server environment credentials; external AWS validation pending |
 
@@ -44,7 +45,7 @@ The GET endpoint returns `404` until a catalog has been synchronized. Provider c
 3. Optionally attach an additional machine-configuration version.
 4. Save the target. It becomes a capacity option available to planning; saving it does not create a VM.
 
-If you need a machine configuration, [create its version](#create-and-version-a-machine-configuration) before saving the target and attach that version's actual ID. Provisioning needs the referenced version.
+If you need a machine configuration, [create its version](./machine-configurations) before saving the target and attach that version's actual ID. Provisioning needs the referenced version.
 
 ### Using the API
 
@@ -77,38 +78,6 @@ AKOFLOW_CAPACITY_TARGET_ID=$(jq -er '.id' cloud-target.json) || exit 1
 ```
 
 Replace the CIDR placeholder with the approved daemon or bastion range before sending this request. The current Terraform target otherwise defaults SSH ingress to `0.0.0.0/0`. The server supplies the target ID and environment ID when omitted, enables the target, and creates a schedulable capacity record; no VM is created yet. The command saves the returned ID for provisioning. Machine/image identifiers must come from the synchronized catalog.
-
-## Create and version a machine configuration
-
-### Using AkôFlow Desktop
-
-Open **Infrastructure → Machine configurations**. Create a named configuration, edit its Ansible playbook, validate it, and save a version. Existing capacity targets refer to a specific configuration-version ID, not to mutable editor contents.
-
-### Using the API
-
-Validate YAML before saving it:
-
-```bash
-curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
-  -H 'Content-Type: application/json' -X POST \
-  "$AKOFLOW_API_URL/machine-configuration-validations/" \
-  -d '{"playbookYaml":"---\n- name: Configure worker\n  hosts: all\n  become: true\n  tasks:\n    - name: Install curl\n      ansible.builtin.package:\n        name: curl\n        state: present\n"}'
-```
-
-Create the configuration and then its first version:
-
-```bash
-curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
-  -H 'Content-Type: application/json' -X POST "$AKOFLOW_API_URL/machine-configurations/" \
-  -d '{"id":"analysis-worker","name":"Analysis worker","description":"Packages used by analysis jobs"}'
-
-curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
-  -H 'Content-Type: application/json' -X POST \
-  "$AKOFLOW_API_URL/machine-configurations/analysis-worker/versions/" \
-  -d '{"version":1,"status":"published","playbookYaml":"---\n- name: Configure worker\n  hosts: all\n  tasks: []\n","compatibility":{"providers":["gcp"]}}'
-```
-
-Validation checks playbook structure and returns `valid`, a content hash, and errors when present. It does not provision a machine or execute the playbook.
 
 ## Provision and follow an instance
 

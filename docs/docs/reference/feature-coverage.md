@@ -42,7 +42,7 @@ The `/network` and `/network/new` routes exist in Desktop, but the current sideb
 | `/execution-scopes/new` | Combine environment versions | `POST /execution-scopes/` | [Execution scopes](../guides/infrastructure/execution-scopes) |
 | `/network` | List network topologies | `/network-topologies/` | [Execution scopes](../guides/infrastructure/execution-scopes) |
 | `/network/new` | Create topology metadata and links | `POST /network-topologies/` | [Execution scopes](../guides/infrastructure/execution-scopes) |
-| `/machine-configurations` | Validate and version configuration playbooks | `/machine-configurations/` | [Cloud capacity](../guides/infrastructure/cloud-capacity) |
+| `/machine-configurations` | Validate and version configuration playbooks | `/machine-configurations/` | [Machine configurations](../guides/infrastructure/machine-configurations) |
 | `/environments/:id/cloud-capacity` | Refresh provider catalog and configure capacity targets | Cloud catalog and capacity-target endpoints | [Cloud capacity](../guides/infrastructure/cloud-capacity) |
 | `/environments/:id/provisioning` | List environment provisioning operations | `/cloud-operations/` | [Cloud capacity](../guides/infrastructure/cloud-capacity) |
 | `/resources/:resourceId/provisioning/:instanceId` | Follow a resource-owned operation and logs | Cloud instance and operation endpoints | [Cloud capacity](../guides/infrastructure/cloud-capacity) |

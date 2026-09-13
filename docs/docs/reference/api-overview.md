@@ -92,6 +92,8 @@ The root health check returns `ok`. Preflight reports server, Docker, and BuildK
 | `GET` | `/environments/{environmentId}/cloud-catalog/` | Read cached provider catalog |
 | `POST` | `/environments/{environmentId}/cloud-catalog/refresh/` | Refresh provider catalog |
 
+See [Configure cloud capacity](../guides/infrastructure/cloud-capacity) for target and provisioning steps, and [Machine configurations](../guides/infrastructure/machine-configurations) for the optional Ansible setup.
+
 ## Resources, topology, and execution scopes
 
 | Method | Path | Purpose |

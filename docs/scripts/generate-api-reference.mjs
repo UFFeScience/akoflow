@@ -53,7 +53,7 @@ const groupMetadata = {
   ],
   Cloud: [
     "/docs/guides/infrastructure/cloud-capacity",
-    "cloud capacity and machine configuration",
+    "cloud capacity and provisioning",
   ],
   Storage: [
     "/docs/guides/infrastructure/storage",

@@ -2,7 +2,7 @@
 
 Date: 2026-09-12. Scope: authored documentation pages in the current branch; generated API endpoint pages are reviewed through their generator and component.
 
-This is an iteration ledger, not a completion certificate. The first pass read all 51 authored pages and corrected confirmed narrative, terminology, API convention, example, and support-claim findings. A Desktop first-workflow path was added as page 52; splitting the evidence, operations, and artifact procedures now brings the authored tree to 59 pages. A final full audit, priority endpoint contracts, and external-provider validation remain open.
+This is an iteration ledger, not a completion certificate. The first pass read all 51 authored pages and corrected confirmed narrative, terminology, API convention, example, and support-claim findings. A Desktop first-workflow path was added as page 52; splitting the evidence, operations, artifact, and cloud-setup procedures now brings the authored tree to 60 pages. A final full audit, priority endpoint contracts, and external-provider validation remain open.
 
 ## Open P0/P1 findings
 
@@ -94,6 +94,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 86. **P1 resolved in artifact guide scope:** the former artifact guide combined storage browsing and file promotion, Docker/SIF builds, and artifact-location inspection. Storage already had a focused guide with the same browse and promotion procedures. The old URL is now a short choice page; a build guide and a location guide hold the remaining tasks, and sidebar, API overview, feature-coverage, and generated endpoint links point to the appropriate destination. The build no longer reports the two anchors removed from the former page.
 87. **P1 resolved in credential guide scope:** the SSH key guide repeated a Kubernetes token procedure and included a cloud-credential section, despite separate provider tutorials. The page now handles generating/importing and assigning SSH keys only, with early links to Kubernetes and Google Cloud. The Kubernetes guide retains its own streamed token request, and referring labels now match the SSH page title.
 88. **P1 resolved in instance guide scope:** appearance and graph-animation preferences were embedded between instance identity and archive export even though they are browser-profile settings. A short Personal preferences guide now owns the Desktop/API instructions; instance management, sidebar, feature coverage, and the generated preference endpoint link to it.
+89. **P0/P1 resolved in cloud configuration path:** the capacity how-to mixed optional Ansible playbook creation with catalog/target/provisioning steps; the playbook it validated installed `curl`, but its saved version had no tasks. Machine configuration now has its own guide and uses the same playbook for validation and version creation. The response-derived version ID and optional target field are shown. The support matrix also distinguishes catalog discovery from zone lookup at provisioning and Billing-dependent price estimates. Live GCP provisioning remains unverified.
 
 ## Page inventory
 
@@ -118,7 +119,8 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `guides/data/provenance.md` | Moved Explore, lineage, SQL, and result investigation into one scientific-evidence task | Recheck Desktop interactions against packaged app |
 | `guides/data/audit-events.md` | Moved audit screen, server filters, and operation correlation into one operational-evidence task | Recheck Desktop interactions against packaged app |
 | `guides/infrastructure/aws.md` | Plain-language pass after code audit; server credential setup, partial S3 path, and absent EC2 path are explicit | Check provider claims against disposable-bucket evidence |
-| `guides/infrastructure/cloud-capacity.md` | Claim/path pass; aligned environment with GCP tutorial and derived target/operation IDs from responses | Validate with disposable GCP account |
+| `guides/infrastructure/cloud-capacity.md` | Cloud-path reread; optional Ansible setup moved out, zone/pricing support qualified, and target/operation IDs come from responses | Validate with disposable GCP account |
+| `guides/infrastructure/machine-configurations.md` | Focused optional Ansible setup; validation and saved version use one playbook, and the returned version ID is shown for target attachment | Validate against disposable GCP worker |
 | `guides/infrastructure/environments.md` | Plain-language/claim pass; local API definition persisted in a one-off repository test, and in-use revision language matches the API | Recheck remote flows with provider evidence |
 | `guides/infrastructure/execution-scopes.md` | Second read; marked illustrative IDs and linked a runnable, versioned setup | Recheck API payloads after P0 contracts fix |
 | `guides/infrastructure/gcp.md` | Cloud-path reread; API checkpoint now uses the environment created by the connection tutorial; source-audited permissions and absent live validation remain explicit | Check provider claims against disposable-project evidence |
@@ -164,6 +166,6 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 
 - `npm run typecheck`, `npm run build`, `npm run check:links`, and `git diff --check` passed on the editorial branch. All 125 endpoint pages generated; targeted checks confirmed the console-command request, qualified environment and workflow responses, and all six versioned first-run links.
 - All 107 fenced Bash/sh blocks in authored documentation parsed with `bash -n` on 2026-09-13. Duplicated blocks were removed when the artifact and SSH guides were focused, and the preferences block moved to its own guide. This is a syntax check, not an execution test; snippets embedded in JSX and commands outside fences need separate review.
-- The latest link check covered 445 local links/assets and 54 showcase downloads from the `v1.0.8` Git tag on 2026-09-13.
+- The latest link check covered 452 local links/assets and 54 showcase downloads from the `v1.0.8` Git tag on 2026-09-13.
 - Headless Chromium at 390 × 844 loaded Getting Started, Core concepts, the console guide, the new Desktop first-run page, and all seven Showcase pages without page errors or horizontal overflow. Every Showcase API tab displayed its v1.0.8 checkout command; the first-run page's mobile menu opened and showed its tutorial link.
 - These checks establish site integrity for this pass. They do not prove tutorial execution, provider support, or completion of the editorial gate.

@@ -160,7 +160,7 @@ be interpreted as free compute.
 | Catalog               | Machines, compatible images and disk choices are available |
 | Capacity              | No VM is expected merely from connecting the account       |
 
-Next, follow [Cloud capacity and machine configuration](../guides/infrastructure/cloud-capacity)
+Next, follow [Configure cloud capacity](../guides/infrastructure/cloud-capacity)
 to choose a target and deliberately provision a worker. That operation can create
 billable resources; its guide covers lifecycle and cleanup. Do not treat catalog
 access as proof that provisioning permissions are complete.

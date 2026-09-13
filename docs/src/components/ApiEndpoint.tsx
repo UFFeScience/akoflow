@@ -142,17 +142,24 @@ export default function ApiEndpoint({
       </main>
 
       <aside className="akoflow-api-examples">
-        <section className="akoflow-api-example">
-          <div className="akoflow-api-example-title">
-            <span>{commandIsTemplate ? "cURL template" : "cURL"}</span>
-            <button type="button" onClick={copyCommand}>
-              {copied ? "Copied" : commandIsTemplate ? "Copy template" : "Copy"}
-            </button>
-          </div>
-          <pre><code>{command}</code></pre>
-          {hasRequestBody && <p>Supply a valid <code>{requestFileName || "request.json"}</code> before running this command.</p>}
-          {pathParams.length > 0 && <p>Replace the path identifiers with IDs from your instance.</p>}
-        </section>
+        {handler === "StreamConsoleSession" ? (
+          <section className="akoflow-api-example">
+            <div className="akoflow-api-example-title"><span>WebSocket connection</span></div>
+            <p>Connect a WebSocket client to <code>ws://&lt;daemon-host&gt;{path.replace("{sessionId}", "<sessionId>")}</code>. Use <code>wss</code> with HTTPS and replace the session ID with the one returned when you opened the console. See the <a href="/docs/guides/operations/interactive-console#stream-protocol">stream protocol guide</a> for authentication and terminal messages.</p>
+          </section>
+        ) : (
+          <section className="akoflow-api-example">
+            <div className="akoflow-api-example-title">
+              <span>{commandIsTemplate ? "cURL template" : "cURL"}</span>
+              <button type="button" onClick={copyCommand}>
+                {copied ? "Copied" : commandIsTemplate ? "Copy template" : "Copy"}
+              </button>
+            </div>
+            <pre><code>{command}</code></pre>
+            {hasRequestBody && <p>Supply a valid <code>{requestFileName || "request.json"}</code> before running this command.</p>}
+            {pathParams.length > 0 && <p>Replace the path identifiers with IDs from your instance.</p>}
+          </section>
+        )}
 
         <section className="akoflow-api-example">
           <div className="akoflow-api-example-title akoflow-api-status-tabs">
@@ -161,8 +168,8 @@ export default function ApiEndpoint({
           </div>
           {responseExample ? (
             <>
-              <pre><code>{responseExample}</code></pre>
               {responseMediaType === "application/json" && <p>Illustrative response shape; values vary.</p>}
+              <pre><code>{responseExample}</code></pre>
             </>
           ) : (
             <p className="akoflow-api-example-empty">

@@ -34,6 +34,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 26. **P0/P1 resolved in the workflow guides — misleading examples:** the portable YAML guide reused the checked-in first-run workflow name, so following both guides could collide. It now uses its own name and matching read/export paths, says to save the file before the `curl` command, and identifies the empty commands as simulation-only. The execution guide no longer describes command history as a catalog of available console commands, and states the SimGrid setup required by its request example. The first-run guide trims repeated caveats while retaining its verification limit.
 27. **P0 resolved in instance settings — sample overwrote identity:** the `PUT /instance/` example told readers to preserve the current identity but sent hard-coded `id`, `name`, and other metadata instead. It now reads the current object, changes only `transferBufferBytes` with `jq`, and sends the complete result. Handler code confirms the endpoint replaces the saved instance object and requires `id` and `name`.
 28. **P1 resolved in scope/topology guidance — example prerequisites:** the reference submitted checked-in SimGrid files without saying how to get them or register their environment. It now links the versioned first-run setup and states the required checkout and order. The scope guide now identifies its HPC/cloud IDs as illustrative, links the runnable bundle, and states that topology creation does not enforce scope membership for link endpoints.
+29. **P1 resolved in workflow specification — mixed-mode example:** the lead “complete” document combined one simulation-only activity with two real-only activities and named image paths without supplying scripts. It now presents a consistent real-execution field example, states the script prerequisite, and links the tested SimGrid sequence for a runnable tutorial.
 
 ## Page inventory
 
@@ -52,7 +53,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `explanations/prism-and-heft.md` | Second read; removed Go request type and condensed bounded-search detail | Recheck algorithm claims against source |
 | `getting-started.md` | Second read; leads to the verified Desktop local run before the API simulation | Recheck the entry flow on a clean supported host |
 | `guides/data/artifacts.md` | Second read; removed fictitious lineage/project IDs, made build ID acquisition explicit, and aligned storage operation states | Recheck API payloads after P0 contracts fix |
-| `guides/data/provenance-and-audit.md` | Full read; detailed screen tables serve investigation tasks | Recheck API payloads after P0 contracts fix |
+| `guides/data/provenance-and-audit.md` | Second read; provenance entity, SQL, lineage, and audit routes checked against handlers and repository limits; screen tables still serve investigations | Recheck Desktop interactions against packaged app |
 | `guides/infrastructure/aws.md` | Second read after code audit; partial S3 path and absent EC2 path are explicit | Check provider claims against disposable-bucket evidence |
 | `guides/infrastructure/cloud-capacity.md` | Second read; target example now states CIDR and configuration-version prerequisites; target versus VM remains explicit | Validate with disposable GCP account |
 | `guides/infrastructure/environments.md` | Second read; remote registration now links to complete tutorials and health commands use a saved connection ID | Recheck API payloads after P0 contracts fix |
@@ -74,7 +75,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `guides/workflows/first-run.md` | Second read; shortened fixed-plan and Desktop inspection caveats | Keep the SimGrid API example aligned with its versioned bundle |
 | `guides/workflows/planning.md` | Second read; example and prerequisite still serve the planning task | Verify automatic Desktop planning flow |
 | `installation.md` | Second read; public bootstrap checks verified in `security.go` and tests; clarified what Connected proves and simplified first-launch language | Verify clean-host and cross-platform installation |
-| `internal/workflow-spec.md` | Full read; compatibility and simulation-only import limits are explicit | Check contracts against current importer |
+| `internal/workflow-spec.md` | Second read; lead example now uses one execution mode and marks script paths as prerequisites | Check every field contract against current importer |
 | `modules.md` | Second read; source map and implementation detail remain in the developer section | Recheck claims against daemon composition |
 | `reference/api-overview.md` | Second read; removed token-in-shell-history setup and an unprovided `workflow.json` example; linked the task guide and versioned tutorial | Check contracts against current handlers and schemas |
 | `reference/environment-yaml.md` | Full read; field-level detail belongs in reference | Check contracts against current handlers and schemas |
@@ -96,6 +97,6 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 ## Verification in this pass
 
 - `npm run typecheck`, `npm run build`, `npm run check:links`, and `git diff --check` passed on the editorial branch. All 125 endpoint pages generated; targeted checks confirmed the console-command request, qualified environment and workflow responses, and all six versioned first-run links.
-- The latest link check covered 390 local links/assets and 54 showcase downloads from the `v1.0.8` Git tag on 2026-09-13.
+- The latest link check covered 391 local links/assets and 54 showcase downloads from the `v1.0.8` Git tag on 2026-09-13.
 - Headless Chromium at 390 × 844 loaded Getting Started, Core concepts, the console guide, the new Desktop first-run page, and all seven Showcase pages without page errors or horizontal overflow. Every Showcase API tab displayed its v1.0.8 checkout command; the first-run page's mobile menu opened and showed its tutorial link.
 - These checks establish site integrity for this pass. They do not prove tutorial execution, provider support, or completion of the editorial gate.

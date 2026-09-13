@@ -9,7 +9,9 @@ AkôFlow accepts a compact, portable workflow document and normalizes it into th
 
 Submit YAML or JSON to `POST /akoflow-api/workflow-definitions/` or `/workflow-definitions/import/`. Exporting a workflow produces this portable format without generated IDs or resolved runtime state.
 
-## Complete example
+## Example document
+
+This example shows real-execution fields. Supply an image that contains the referenced `/app` scripts before running it. For a complete, tested submission sequence, use the [SimGrid first-run tutorial](../guides/workflows/first-run).
 
 ```yaml
 name: astronomy-fanout
@@ -21,9 +23,6 @@ spec:
       cpuLimit: "0.5"
       memoryLimit: 256Mi
       run: python /app/prepare.py
-      simulation:
-        model: fixed-duration
-        durationSeconds: 4
 
     - name: analyze-a
       cpuLimit: "1"
@@ -53,7 +52,7 @@ spec:
 ```
 
 :::important Real and simulated capabilities
-In the current portable importer, an activity with `simulation` is normalized as simulation-capable; an activity without it is normalized as real-capable. Do not assume that adding simulation fields creates one activity that runs in both modes.
+In the current portable importer, an activity with `simulation` is simulation-capable; an activity without it is real-capable. Adding simulation fields does not make one activity runnable in both modes.
 :::
 
 ## Top-level fields

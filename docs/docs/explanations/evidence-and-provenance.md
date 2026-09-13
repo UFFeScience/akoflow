@@ -10,7 +10,7 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 
 AkôFlow keeps a plan's predictions alongside what happened during the run. Compare them to see whether activities took longer than expected, used different resources, or moved data differently.
 
-Use [Trace a result with provenance](../guides/data/provenance) for the scientific records. [Inspect audit events](../guides/data/audit-events) only when a connection check, resource discovery, or console action is relevant. This explanation shows how those records differ.
+Use [Trace a result with provenance](/docs/guides/data/provenance) for the scientific records. [Inspect audit events](/docs/guides/data/audit-events) only when a connection check, resource discovery, or console action is relevant. This explanation shows how those records differ.
 
 ## Two timelines for one selected plan
 
@@ -32,11 +32,11 @@ Transfer records can show how data reached a task and how many bytes moved. Wher
 
 ## Compare before drawing conclusions
 
-Compare a selected plan with a completed run at the same scope and execution mode. Check assignments, transfer records, activity attempts, and provider conditions before attributing a makespan gap to the scheduling algorithm. The execution trace reports both wall-clock makespan and accumulated activity-stage totals; [interpreting observed timing](./observed-timing) defines the distinction.
+Compare a selected plan with a completed run at the same scope and execution mode. Check assignments, transfer records, activity attempts, and provider conditions before attributing a makespan gap to the scheduling algorithm. The execution trace reports both wall-clock makespan and accumulated activity-stage totals; [interpreting observed timing](/docs/explanations/observed-timing) defines the distinction.
 
 ## Related material
 
-- [Execution control plane](../engine)
-- [Planning and plans](./planning)
-- [Network modeling](./network-modeling)
-- [Planning and execution state reference](../reference/planning-and-execution-states)
+- [Execution control plane](/docs/engine)
+- [Planning and plans](/docs/explanations/planning)
+- [Network modeling](/docs/explanations/network-modeling)
+- [Planning and execution state reference](/docs/reference/planning-and-execution-states)

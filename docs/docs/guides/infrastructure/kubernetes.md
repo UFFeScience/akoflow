@@ -5,10 +5,10 @@ description: Configure a Kubernetes runtime, credential, namespace, resources, s
 
 # Connect a Kubernetes environment
 
-Use this guide to connect an existing Kubernetes cluster so AkôFlow can run container activities as Jobs. You need access to a namespace and its service account. The [Kind real-execution Showcase](../../showcase/kubernetes-real-execution) provides a local example to try before using a shared cluster.
+Use this guide to connect an existing Kubernetes cluster so AkôFlow can run container activities as Jobs. You need access to a namespace and its service account. The [Kind real-execution Showcase](/docs/showcase/kubernetes-real-execution) provides a local example to try before using a shared cluster.
 
 Use this runtime when container activities must become Kubernetes Jobs. For a
-modeled cluster, use [SimGrid](./simgrid). Keep bearer tokens out of workflows,
+modeled cluster, use [SimGrid](/docs/guides/infrastructure/simgrid). Keep bearer tokens out of workflows,
 plans, repositories, and screenshots.
 
 ## Prerequisites
@@ -83,7 +83,7 @@ For node discovery, a separate `ClusterRole` and `ClusterRoleBinding` granting `
 
 ## 2. Store the API credential outside the environment definition
 
-Complete [API connection setup](../../tutorials/api-access). Generate a short-lived Kubernetes token and stream it to the credential endpoint without placing it in a command argument or a temporary file. Run this in Bash so `pipefail` catches a failed token request:
+Complete [API connection setup](/docs/tutorials/api-access). Generate a short-lived Kubernetes token and stream it to the credential endpoint without placing it in a command argument or a temporary file. Run this in Bash so `pipefail` catches a failed token request:
 
 ```bash
 set -o pipefail
@@ -201,4 +201,4 @@ kubectl -n akoflow get jobs,pods,services,pvc \
 
 Delete only the run resources you intend to remove. For the disposable Kind environment, use the Showcase cleanup command: `kind delete cluster --name akoflow`.
 
-Related material: [Kubernetes real execution](../../showcase/kubernetes-real-execution), [execution scopes](./execution-scopes), [storage](./storage), and [interactive console](../operations/interactive-console).
+Related material: [Kubernetes real execution](/docs/showcase/kubernetes-real-execution), [execution scopes](/docs/guides/infrastructure/execution-scopes), [storage](/docs/guides/infrastructure/storage), and [interactive console](/docs/guides/operations/interactive-console).

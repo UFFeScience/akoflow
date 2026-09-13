@@ -8,7 +8,7 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 
 # Execution scopes and network topology reference
 
-This reference defines the two API documents used to choose environment versions and describe data-transfer links for planning. An `ExecutionScope` selects the versions; a `NetworkTopology` defines links between their resources. For the Desktop sequence and a worked setup, use [Execution scopes and network topologies](../guides/infrastructure/execution-scopes).
+This reference defines the two API documents used to choose environment versions and describe data-transfer links for planning. An `ExecutionScope` selects the versions; a `NetworkTopology` defines links between their resources. For the Desktop sequence and a worked setup, use [Execution scopes and network topologies](/docs/guides/infrastructure/execution-scopes).
 
 The API accepts JSON, `application/yaml`, `application/x-yaml`, and `text/yaml` for both documents.
 
@@ -115,7 +115,7 @@ The HEFT baseline finds a matching direct link for its transfer estimate. PRISM 
 
 ## API sequence
 
-The checked-in [SimGrid bundle](https://github.com/UFFeScience/akoflow/tree/v1.0.8/examples/simulation) supplies compatible `scope.yaml` and `topology.yaml` files. Complete [API connection setup](../tutorials/api-access), enter a v1.0.8 repository checkout, and create the bundle's environment first. The [SimGrid first-run tutorial](../guides/workflows/first-run) gives the full setup. Then submit these two files in order:
+The checked-in [SimGrid bundle](https://github.com/UFFeScience/akoflow/tree/v1.0.8/examples/simulation) supplies compatible `scope.yaml` and `topology.yaml` files. Complete [API connection setup](/docs/tutorials/api-access), enter a v1.0.8 repository checkout, and create the bundle's environment first. The [SimGrid first-run tutorial](/docs/guides/workflows/first-run) gives the full setup. Then submit these two files in order:
 
 ```bash
 curl --fail-with-body \
@@ -152,4 +152,4 @@ curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
 | A resource never appears in a candidate plan | Check that its environment version is in the scope and it is schedulable; then inspect workflow constraints and the algorithm's placement. Runtime bindings are checked when execution starts, not by this planning filter. |
 | The scope cannot be deleted | Existing schedule plans reference it. Preserve it for evidence and create a new scope/version for a new experiment. |
 
-Related reference: [Environment YAML](./environment-yaml), [workflow YAML](../internal/workflow-spec), [SimGrid modeling](../guides/infrastructure/simgrid), and [planning](../guides/workflows/planning).
+Related reference: [Environment YAML](/docs/reference/environment-yaml), [workflow YAML](/docs/internal/workflow-spec), [SimGrid modeling](/docs/guides/infrastructure/simgrid), and [planning](/docs/guides/workflows/planning).

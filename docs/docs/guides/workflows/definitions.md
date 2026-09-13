@@ -7,7 +7,7 @@ description: Create a workflow, inspect its activities, and import a definition.
 
 A workflow lists the activities in a scientific computation and the order in which they run. AkôFlow saves versions of that definition, so a plan or past run always points to the workflow version it used.
 
-You can create one in Desktop or import portable YAML. Start with the steps below; use the [workflow specification](../../internal/workflow-spec) when you need exact fields, limits, and compatibility rules.
+You can create one in Desktop or import portable YAML. Start with the steps below; use the [workflow specification](/docs/internal/workflow-spec) when you need exact fields, limits, and compatibility rules.
 
 ## Using AkôFlow Desktop
 
@@ -26,11 +26,11 @@ The import action accepts the same portable YAML format as the API. Export remov
 
 ## Using the API
 
-Complete [API connection setup](../../tutorials/api-access) before running these commands.
+Complete [API connection setup](/docs/tutorials/api-access) before running these commands.
 
 In portable YAML, each activity names its command, CPU and memory limits, dependencies, and any simulation model. For real execution, `command.entrypoint` and `command.executable` are required. An executable can point to an OCI image or another supported artifact source. The older `spec.image`, activity `image`, and `run` shorthands remain accepted, but new definitions should use `command` and `command.executable`.
 
-The checked-in SimGrid example uses legacy shorthand. To try the portable simulation fields directly, save this as `workflow.yaml`. The empty `command` means these activities are simulation-only; a real run needs an executable and entrypoint as described in the [workflow specification](../../internal/workflow-spec).
+The checked-in SimGrid example uses legacy shorthand. To try the portable simulation fields directly, save this as `workflow.yaml`. The empty `command` means these activities are simulation-only; a real run needs an executable and entrypoint as described in the [workflow specification](/docs/internal/workflow-spec).
 
 ```yaml
 name: portable-simulation-demo
@@ -85,4 +85,4 @@ The create response contains the saved definition. Use its `version.id` when cre
 
 ## Next step
 
-Once the workflow, execution scope, resources, and network topology exist, [create a planning session](./planning.md).
+Once the workflow, execution scope, resources, and network topology exist, [create a planning session](/docs/guides/workflows/planning).

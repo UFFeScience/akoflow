@@ -12,7 +12,7 @@ import {FileList, WorkflowDiagram} from '@site/src/components/WorkflowShowcase';
 
 This Showcase executes one real activity through the `local` runtime. The AkôFlow server starts the command on its own host, then records files created or changed in the activity workspace. Use it for a controlled first real execution or a small trusted tool on the server host.
 
-For a first run entirely in Desktop, follow [Run your first workflow](../guides/workflows/first-local-run). This Showcase reproduces a versioned API bundle.
+For a first run entirely in Desktop, follow [Run your first workflow](/docs/guides/workflows/first-local-run). This Showcase reproduces a versioned API bundle.
 
 Do not use this runtime to isolate untrusted workloads. It is not a container sandbox, and it does not submit work to a Kubernetes cluster or a SLURM allocation.
 
@@ -74,7 +74,7 @@ The observed runtime was approximately 0.006 seconds on that host. Treat that du
 Akoflow local execution
 ```
 
-The run has no data dependency and therefore reports zero transferred bytes. Use the [Kind real-execution Showcase](./kubernetes-real-execution) when you need a workflow that transfers output between activities.
+The run has no data dependency and therefore reports zero transferred bytes. Use the [Kind real-execution Showcase](/docs/showcase/kubernetes-real-execution) when you need a workflow that transfers output between activities.
 
 ## Troubleshooting
 
@@ -85,4 +85,4 @@ The run has no data dependency and therefore reports zero transferred bytes. Use
 | The activity writes no artifact | The run only records changes made below its activity workspace. Make the command write relative to its working directory, as this example does. |
 | The wrong machine executes the command | Direct execution always occurs on the AkôFlow server host. Run the server in the target environment, or use a remote runtime such as Kubernetes or SLURM instead. |
 
-Read [Runtime adapters](../runtimes) for where the command runs and [Execute and monitor a workflow](../guides/workflows/executions) for run status and results.
+Read [Runtime adapters](/docs/runtimes) for where the command runs and [Execute and monitor a workflow](/docs/guides/workflows/executions) for run status and results.

@@ -5,13 +5,13 @@ sidebar_label: Workflow specification
 description: Current YAML and JSON authoring contract accepted by the AkôFlow workflow API.
 ---
 
-AkôFlow accepts a compact, portable workflow document and normalizes it into the versioned domain model used by planning and execution. This page documents the **authoring contract**, not the larger persisted API response. It is a reference: use [Workflow definitions](../guides/workflows/definitions) for the Desktop/API procedure and the SimGrid guide when modeling a simulation experiment.
+AkôFlow accepts a compact, portable workflow document and normalizes it into the versioned domain model used by planning and execution. This page documents the **authoring contract**, not the larger persisted API response. It is a reference: use [Workflow definitions](/docs/guides/workflows/definitions) for the Desktop/API procedure and the SimGrid guide when modeling a simulation experiment.
 
 Submit YAML or JSON to `POST /akoflow-api/workflow-definitions/` or `/workflow-definitions/import/`. Exporting a workflow produces this portable format without generated IDs or resolved runtime state.
 
 ## Example document
 
-This example shows real-execution fields. Supply an image that contains the referenced `/app` scripts before running it. For a complete, tested submission sequence, use the [SimGrid first-run tutorial](../guides/workflows/first-run).
+This example shows real-execution fields. Supply an image that contains the referenced `/app` scripts before running it. For a complete, tested submission sequence, use the [SimGrid first-run tutorial](/docs/guides/workflows/first-run).
 
 ```yaml
 name: astronomy-fanout
@@ -196,4 +196,4 @@ If the two activities are placed on different resources, this edge can become a 
 
 The API response is richer than the submitted document. It contains the workflow and version IDs, normalized activities, capabilities, resources in bytes/cores, structured dependencies, policies, priorities, and runtime resolution state. Plans refer to `version.id`, not to the mutable authoring file.
 
-See [Workflow definitions](../guides/workflows/definitions) for Desktop and API procedures, [SimGrid modeling](../guides/infrastructure/simgrid) for a calibrated simulated workflow, and [execution scopes and topologies](../reference/execution-scopes-and-topologies) for the network model used by a plan.
+See [Workflow definitions](/docs/guides/workflows/definitions) for Desktop and API procedures, [SimGrid modeling](/docs/guides/infrastructure/simgrid) for a calibrated simulated workflow, and [execution scopes and topologies](/docs/reference/execution-scopes-and-topologies) for the network model used by a plan.

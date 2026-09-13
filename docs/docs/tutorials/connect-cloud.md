@@ -10,9 +10,9 @@ image, and disk choices. Connecting the account does not provision a VM.
 
 ## Before you begin
 
-Complete [installation checks](../installation). Obtain a GCP project and an
+Complete [installation checks](/docs/installation). Obtain a GCP project and an
 approved service-account JSON credential from your cloud administrator. The
-project needs the APIs and access described in [Configure Google Cloud](../guides/infrastructure/gcp).
+project needs the APIs and access described in [Configure Google Cloud](/docs/guides/infrastructure/gcp).
 Read that guide's access inventory; it distinguishes source-audited calls from
 minimum IAM permissions that still require validation in a disposable project.
 
@@ -64,7 +64,7 @@ create a duplicate just to retry synchronization.
 
 ## Through the API
 
-Complete [API connection setup](./api-access). Keep the service-account file
+Complete [API connection setup](/docs/tutorials/api-access). Keep the service-account file
 outside your repository, with access restricted to your account.
 
 ### 1. Validate the service account
@@ -160,7 +160,7 @@ be interpreted as free compute.
 | Catalog               | Machine, image and disk counts are reviewed; any empty category is investigated before provisioning |
 | Capacity              | No VM is expected merely from connecting the account       |
 
-Next, follow [Configure cloud capacity](../guides/infrastructure/cloud-capacity)
+Next, follow [Configure cloud capacity](/docs/guides/infrastructure/cloud-capacity)
 to choose a target and deliberately provision a worker. That operation can create
 billable resources; its guide covers lifecycle and cleanup. Do not treat catalog
 access as proof that provisioning permissions are complete.

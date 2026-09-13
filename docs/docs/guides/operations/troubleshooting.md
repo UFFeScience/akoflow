@@ -12,7 +12,7 @@ Start with the first step that failed: opening Desktop, reaching the AkôFlow se
 
 <img src={useBaseUrl('/img/architecture/troubleshooting-boundary.svg')} alt="Troubleshoot from the Desktop through the AkôFlow server API, credentials and connections, then the runtime or provider and workload or data." />
 
-For the command-line checks below, complete [API connection setup](../../tutorials/api-access) first.
+For the command-line checks below, complete [API connection setup](/docs/tutorials/api-access) first.
 
 ## 1. Check the server and prerequisites
 

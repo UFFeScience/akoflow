@@ -7,7 +7,7 @@ description: Generate or import an SSH key and assign it to a saved connection.
 
 Use this guide when an SSH connection needs a key managed by AkôFlow. Generate or import the key, authorize its public half on the remote host, then assign its reference to the saved connection. Keep the private key out of workflow definitions.
 
-For other providers, use [Configure Kubernetes](../infrastructure/kubernetes) to store a cluster token or [Connect Google Cloud](../../tutorials/connect-cloud) to validate and store a service-account credential.
+For other providers, use [Configure Kubernetes](/docs/guides/infrastructure/kubernetes) to store a cluster token or [Connect Google Cloud](/docs/tutorials/connect-cloud) to validate and store a service-account credential.
 
 AkôFlow returns public metadata and a credential reference when you list managed SSH keys; it does not return the original private key.
 
@@ -24,7 +24,7 @@ The AkôFlow server generates an Ed25519 key. IDs must start with an ASCII lette
 
 ### Using the API
 
-Complete [API connection setup](../../tutorials/api-access) first.
+Complete [API connection setup](/docs/tutorials/api-access) first.
 
 ```bash
 curl --fail-with-body \

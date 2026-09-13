@@ -6,7 +6,7 @@ description: Connect a GCP project and review the current worker-provisioning re
 # Configure Google Cloud
 
 For a guided first registration with interface screenshots and complete API steps,
-start with [the connection tutorial](../../tutorials/connect-cloud). This page provides
+start with [the connection tutorial](/docs/tutorials/connect-cloud). This page provides
 the detailed operational requirements.
 
 AkôFlow uses a service account to read the Compute catalog and, when requested, run Terraform to create a worker. The credential is stored locally by the daemon; the documentation examples never embed the private key in an environment YAML file.
@@ -41,7 +41,7 @@ For an institutional least-privilege policy, first run catalog refresh in a disp
 
 ## 1. Connect the project
 
-In Desktop, open **Infrastructure → Environments → Connect environment**, select **Cloud on demand**, and keep **Google Cloud** as the provider. Enter the project ID, region, and approved service-account JSON. Choose **Test connection** before saving. The [connection tutorial](../../tutorials/connect-cloud) shows the current form and its result checks.
+In Desktop, open **Infrastructure → Environments → Connect environment**, select **Cloud on demand**, and keep **Google Cloud** as the provider. Enter the project ID, region, and approved service-account JSON. Choose **Test connection** before saving. The [connection tutorial](/docs/tutorials/connect-cloud) shows the current form and its result checks.
 
 The server stores the credential separately and saves its reference with the environment. Keep the original key outside the repository, restrict its filesystem permissions, and rotate it according to your institution's policy. A failed validation can indicate a malformed key, a disabled API, or missing access; read the returned message before changing settings.
 
@@ -78,7 +78,7 @@ Stopping an instance preserves provider resources and can continue to incur disk
 
 ## API checkpoints
 
-For automation, follow [API connection setup](../../tutorials/api-access) and the [cloud connection tutorial](../../tutorials/connect-cloud) to validate and store the credential and register the environment. Then refresh and inspect the catalog:
+For automation, follow [API connection setup](/docs/tutorials/api-access) and the [cloud connection tutorial](/docs/tutorials/connect-cloud) to validate and store the credential and register the environment. Then refresh and inspect the catalog:
 
 ```bash
 curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
@@ -88,4 +88,4 @@ curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   "$AKOFLOW_API_URL/environments/research-gcp/cloud-catalog/"
 ```
 
-Continue with [Configure cloud capacity](./cloud-capacity) for the target and provisioning payloads. Use [Machine configurations](./machine-configurations) if the worker needs an Ansible playbook, and [Interactive console](../operations/interactive-console) to open a shell after validation.
+Continue with [Configure cloud capacity](/docs/guides/infrastructure/cloud-capacity) for the target and provisioning payloads. Use [Machine configurations](/docs/guides/infrastructure/machine-configurations) if the worker needs an Ansible playbook, and [Interactive console](/docs/guides/operations/interactive-console) to open a shell after validation.

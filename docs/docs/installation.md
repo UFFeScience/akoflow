@@ -41,7 +41,7 @@ remote infrastructure accounts are not needed for local installation.
 
 ## 1. Download the correct file
 
-Open [Downloads and releases](./downloads), choose your operating system, and
+Open [Downloads and releases](/docs/downloads), choose your operating system, and
 save the linked file. Wait until the browser finishes downloading before opening
 it. The version in the filename must match the release tag.
 
@@ -53,7 +53,7 @@ it. The version in the filename must match the release tag.
 | Other Linux x64 desktops      | `.AppImage`      | Same Docker prerequisites; allow the file to execute                   |
 
 The runtime has Linux ARM64 archives, but v1.0.8 does not include a Linux ARM64
-Desktop package. Use the [server installation](./guides/operations/server-instance)
+Desktop package. Use the [server installation](/docs/guides/operations/server-instance)
 for a supported ARM64 server deployment.
 
 The Linux v1.0.8 package was opened from an extracted copy and completed a local
@@ -61,7 +61,7 @@ workflow. A clean `apt` install and first launch on macOS, Windows, or AppImage
 remain unverified.
 
 If the download is interrupted, retry before opening the file. For a checksum,
-use the [download verification procedure](./downloads#download-through-the-github-api).
+use the [download verification procedure](/docs/downloads#download-through-the-github-api).
 
 ## 2. Install and open
 
@@ -152,9 +152,9 @@ _Local machine uses the service running in Docker. Review discovered resources
 before planning work that needs your workstation's full compute capacity._
 
 The initial assistant also offers **Supercomputer / HPC** and **Kubernetes cluster**.
-For HPC, use the [guided registration tutorial](./tutorials/register-hpc) to
+For HPC, use the [guided registration tutorial](/docs/tutorials/register-hpc) to
 prepare and authorize an SSH key before connecting. For Kubernetes, use the
-[cluster guide](./guides/infrastructure/kubernetes). Google Cloud is connected
+[cluster guide](/docs/guides/infrastructure/kubernetes). Google Cloud is connected
 from the main **Environments** catalog after leaving this assistant.
 
 ### Connection: wait for registration, health and discovery
@@ -199,17 +199,17 @@ workflow runs._
 
 If you completed the local assistant, confirm the saved environment as described
 in **Ready** above. If Desktop is not connected, use
-[Troubleshooting](./guides/operations/troubleshooting) before registering a
+[Troubleshooting](/docs/guides/operations/troubleshooting) before registering a
 remote target.
 
 ## 5. Continue with your execution target
 
-- [Run your first local workflow in Desktop](./guides/workflows/first-local-run): create one activity, run it, and inspect its generated file.
-- [Register an HPC / SLURM environment](./tutorials/register-hpc): authorize an SSH key, test the login connection, and discover partitions.
-- [Connect Google Cloud](./tutorials/connect-cloud): validate a service account, register the environment, and synchronize the compute catalog.
-- [Run the first simulated workflow](./guides/workflows/first-run): verify workflow execution through the documented API setup without a remote account.
+- [Run your first local workflow in Desktop](/docs/guides/workflows/first-local-run): create one activity, run it, and inspect its generated file.
+- [Register an HPC / SLURM environment](/docs/tutorials/register-hpc): authorize an SSH key, test the login connection, and discover partitions.
+- [Connect Google Cloud](/docs/tutorials/connect-cloud): validate a service account, register the environment, and synchronize the compute catalog.
+- [Run the first simulated workflow](/docs/guides/workflows/first-run): verify workflow execution through the documented API setup without a remote account.
 
-For a server you manage separately, use the [server installation](./guides/operations/server-instance) and [API connection setup](./tutorials/api-access) guides.
+For a server you manage separately, use the [server installation](/docs/guides/operations/server-instance) and [API connection setup](/docs/tutorials/api-access) guides.
 
 ## Recover at the step that failed
 
@@ -225,13 +225,13 @@ For a server you manage separately, use the [server installation](./guides/opera
 | Welcome no longer appears                  | This is expected after completing or skipping setup. Continue from Infrastructure → Environments.                         |
 | The app is connected but there are no runs | Continue with a workflow tutorial; installation does not submit a workflow.                                               |
 
-For further diagnosis, use [Troubleshooting](./guides/operations/troubleshooting).
+For further diagnosis, use [Troubleshooting](/docs/guides/operations/troubleshooting).
 Keep the failed step, exact error, operating system and Desktop version when
 requesting help.
 
 ## Update AkôFlow
 
-Export your instance before changing versions; see [Instance management](./guides/operations/instance-management).
+Export your instance before changing versions; see [Instance management](/docs/guides/operations/instance-management).
 Keep Desktop and its runtime on matching versions.
 
-For the v1.0.8 download digest and verification record, see [Downloads](./downloads#download-verification-result).
+For the v1.0.8 download digest and verification record, see [Downloads](/docs/downloads#download-verification-result).

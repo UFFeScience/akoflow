@@ -7,7 +7,7 @@ description: Inspect recorded executable locations and preparation status on a r
 
 Use this guide after registering or building an executable artifact. It shows the catalog locations recorded for its bytes and whether preparation on a run's target resource finished.
 
-For the API commands below, complete [API connection setup](../../tutorials/api-access) first.
+For the API commands below, complete [API connection setup](/docs/tutorials/api-access) first.
 
 ## Find recorded locations and preparation status
 

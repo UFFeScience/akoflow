@@ -9,7 +9,7 @@ This tutorial runs one activity on your local machine. You will create a workflo
 
 ## Before you begin
 
-[Install AkôFlow Desktop](../../installation) and complete its first-start checkup. Docker must be available to your user, and Desktop must show **Connected**. The steps below were verified with the extracted v1.0.8 Linux Desktop package and its bundled runtime. A clean `apt` install and other platforms need their own check.
+[Install AkôFlow Desktop](/docs/installation) and complete its first-start checkup. Docker must be available to your user, and Desktop must show **Connected**. The steps below were verified with the extracted v1.0.8 Linux Desktop package and its bundled runtime. A clean `apt` install and other platforms need their own check.
 
 ## 1. Check your local environment
 
@@ -49,4 +49,4 @@ Select **Generate plan**. On the plan page, select **Execute plan**. Confirm tha
 
 Wait for the run to show **completed** and **1/1** activities settled. Open **Activities → write-report → Open activity details**. Expect **Exit code 0** and a **Generated files** row for `result.txt` with a SHA-256 checksum. That row records the file observed in the activity workspace; it does not mean Desktop downloaded the file to your computer.
 
-If the run fails, inspect the activity output on that page and use [Troubleshooting](../operations/troubleshooting). To understand how the plan and run records relate, read [Compare a plan with a completed run](../../explanations/evidence-and-provenance). To try scheduling alternatives or another target, continue with [Plan a workflow](./planning) and [Environments](../infrastructure/environments). For a reproducible simulation through a separately managed API, use the [SimGrid example](./first-run).
+If the run fails, inspect the activity output on that page and use [Troubleshooting](/docs/guides/operations/troubleshooting). To understand how the plan and run records relate, read [Compare a plan with a completed run](/docs/explanations/evidence-and-provenance). To try scheduling alternatives or another target, continue with [Plan a workflow](/docs/guides/workflows/planning) and [Environments](/docs/guides/infrastructure/environments). For a reproducible simulation through a separately managed API, use the [SimGrid example](/docs/guides/workflows/first-run).

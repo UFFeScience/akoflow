@@ -5,7 +5,7 @@ description: Change the Desktop theme and graph animation for one browser profil
 
 # Set personal preferences
 
-Use this guide to change AkôFlow Desktop's theme and graph animation. For the API commands below, complete [API connection setup](../../tutorials/api-access) first.
+Use this guide to change AkôFlow Desktop's theme and graph animation. For the API commands below, complete [API connection setup](/docs/tutorials/api-access) first.
 
 Preferences belong to a browser-profile client ID rather than a user account. Desktop saves changes locally and tries to synchronize them with the server. Your choices remain available in that browser when the server is offline.
 

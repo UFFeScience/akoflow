@@ -5,9 +5,9 @@ description: Configure a reproducible simulated environment with resources, netw
 
 # Model a SimGrid environment
 
-Use this guide to model resources, activity duration, and network transfers for a simulated workflow. It draws on the checked-in [edge-to-cloud bundle](../../showcase/edge-cloud-simulation), which includes a complete runnable plan.
+Use this guide to model resources, activity duration, and network transfers for a simulated workflow. It draws on the checked-in [edge-to-cloud bundle](/docs/showcase/edge-cloud-simulation), which includes a complete runnable plan.
 
-Use SimGrid when the question is about a modeled platform: placement, parallel capacity, transfers, latency, and simulated cost. Do not use it to validate an SSH, Kubernetes, cloud, or Slurm connection; a SimGrid environment has no remote endpoint to test. For a first end-to-end execution, start with [Run your first simulated workflow](../workflows/first-run).
+Use SimGrid when the question is about a modeled platform: placement, parallel capacity, transfers, latency, and simulated cost. Do not use it to validate an SSH, Kubernetes, cloud, or Slurm connection; a SimGrid environment has no remote endpoint to test. For a first end-to-end execution, start with [Run your first simulated workflow](/docs/guides/workflows/first-run).
 
 The YAML blocks below show only the fields discussed in each step. Use the [complete versioned files](https://github.com/UFFeScience/akoflow/tree/v1.0.8/examples/simulation) when submitting the example.
 
@@ -51,7 +51,7 @@ The fields have different jobs:
 | `bootOverheadSeconds` and `containerOverheadSeconds` | Add modeled setup time. A plan assignment may override these values when it freezes the selected placement. |
 | `schedulable` | Makes the resource available to a scope and to planning. Keep non-execution resources out of a placement by setting it to `false`. |
 
-Do not raise `cpuCores` merely to make a predicted makespan smaller. A 50-core resource models 50 simultaneous execution lanes only when the workflow and the resulting plan can use them. The [50-core fan-out Showcase](../../showcase/parallel-50-core) is the worked example for that case.
+Do not raise `cpuCores` merely to make a predicted makespan smaller. A 50-core resource models 50 simultaneous execution lanes only when the workflow and the resulting plan can use them. The [50-core fan-out Showcase](/docs/showcase/parallel-50-core) is the worked example for that case.
 
 ## 2. Give each activity its own compute profile
 
@@ -104,7 +104,7 @@ Bandwidth is in **bits per second**, while dependency sizes are in **bytes**. Fo
 
 For example, 100,000,000 bytes over 100,000,000 bit/s with 50 ms latency has a base transfer time of `8.05 s`. The SimGrid platform uses the same bandwidth and latency values. A data dependency creates a transfer only when its producer and consumer are assigned to different resources.
 
-`bidirectional: true` makes the link usable in both directions. `sharingPolicy: shared` is emitted as a shared SimGrid link; use `independent` or `fatpipe` only when the modeled link should not share bandwidth. AkôFlow selects a route through the available links using their latency and bandwidth, then models the transfer on that route. If dependent activities may use different resources, provide a route between them: PRISM rejects a missing route, while HEFT's baseline can estimate zero transfer time without a direct link. [Network modeling](../../explanations/network-modeling) explains the difference.
+`bidirectional: true` makes the link usable in both directions. `sharingPolicy: shared` is emitted as a shared SimGrid link; use `independent` or `fatpipe` only when the modeled link should not share bandwidth. AkôFlow selects a route through the available links using their latency and bandwidth, then models the transfer on that route. If dependent activities may use different resources, provide a route between them: PRISM rejects a missing route, while HEFT's baseline can estimate zero transfer time without a direct link. [Network modeling](/docs/explanations/network-modeling) explains the difference.
 
 Declare the data itself in the workflow:
 
@@ -133,7 +133,7 @@ environmentVersionIds:
 
 In Desktop, open the workflow, choose **Generate plan**, select **Simulation**, and choose the scope. Use **Generate plans** to compare algorithms, or **Create manually** to reproduce a known placement. Inspect the candidate Gantt before selecting it: the lane count should reflect the selected resource cores, and cross-resource dependency lines should correspond to the modeled data dependencies.
 
-To submit the checked-in manual plan and run it through the API, complete [API connection setup](../../tutorials/api-access), use a v1.0.8 checkout, and execute the bundle from its root:
+To submit the checked-in manual plan and run it through the API, complete [API connection setup](/docs/tutorials/api-access), use a v1.0.8 checkout, and execute the bundle from its root:
 
 ```bash
 git clone --branch v1.0.8 --depth 1 https://github.com/UFFeScience/akoflow.git akoflow-simgrid
@@ -171,4 +171,4 @@ The run's execution, transfer, queue, and overhead totals are accumulated across
 | Parallel activities appear in one lane | Check `cpuCores`, activity CPU requirements, and the plan's `coreId` assignments. Then regenerate the plan. |
 | A resource is absent from candidate plans | Confirm `schedulable: true` and that its environment version belongs to the scope; then inspect the activity requirements and algorithm placement. An enabled `simgrid` runtime binding is needed to execute a selected plan, but it is not part of the planning resource filter. |
 
-Related material: [execution scopes](./execution-scopes), [network fan-out](../../showcase/network-fanout), [parallel 50-core fan-out](../../showcase/parallel-50-core), and [the execution evidence guide](../workflows/executions).
+Related material: [execution scopes](/docs/guides/infrastructure/execution-scopes), [network fan-out](/docs/showcase/network-fanout), [parallel 50-core fan-out](/docs/showcase/parallel-50-core), and [the execution evidence guide](/docs/guides/workflows/executions).

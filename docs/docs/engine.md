@@ -10,7 +10,7 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 
 The AkôFlow server stores requests and dispatches longer work through a durable queue. Planning and execution handlers process those jobs; runtime adapters carry out provider-specific operations.
 
-This is an orchestration explanation, not an API contract. Use the [planning and execution state reference](./reference/planning-and-execution-states) for states and endpoints.
+This is an orchestration explanation, not an API contract. Use the [planning and execution state reference](/docs/reference/planning-and-execution-states) for states and endpoints.
 
 ## From request to durable work
 
@@ -20,7 +20,7 @@ The API can acknowledge a request before its job starts. In particular, an execu
 
 ## Planning and execution are separate handlers
 
-A planning handler freezes the inputs for a session, invokes registered algorithms, and persists candidates. A user or API client selects one candidate to create the schedule plan used by execution. The [planning explanation](./explanations/planning) covers the significance of that boundary.
+A planning handler freezes the inputs for a session, invokes registered algorithms, and persists candidates. A user or API client selects one candidate to create the schedule plan used by execution. The [planning explanation](/docs/explanations/planning) covers the significance of that boundary.
 
 An execution handler validates the selected plan and its bindings, then hands the work to the supervisor. The supervisor follows the workflow DAG: it starts an activity only when its control predecessors have completed and its preparation gate has committed. If incomplete activities remain and nothing can run, the run fails rather than silently assuming a valid schedule.
 
@@ -37,7 +37,7 @@ type RuntimeAdapter interface {
 }
 ```
 
-An `ActivityHandle` carries the provider's external identity, status, endpoints, log, exit result, failure, and artifact observation. The supervisor inspects handles while a run is active. It does not currently reconstruct an interrupted workflow run from persisted handles after a server restart. The [runtime adapters explanation](./runtimes) describes what each current driver does behind this interface.
+An `ActivityHandle` carries the provider's external identity, status, endpoints, log, exit result, failure, and artifact observation. The supervisor inspects handles while a run is active. It does not currently reconstruct an interrupted workflow run from persisted handles after a server restart. The [runtime adapters explanation](/docs/runtimes) describes what each current driver does behind this interface.
 
 ## Preparation happens before execution
 
@@ -49,4 +49,4 @@ For real runs, cloud lifecycle actions can be prewarmed before an activity is di
 
 Queue jobs retain ownership, attempts, retry timing, and terminal status. Runtime handles, transfers, and materializations are persisted as evidence. The activity controller has a `Stop` method for a handle, but the current API has no workflow-run cancellation endpoint. A failed activity ends the workflow run; the supervisor does not retry that activity. A completed task also records its output observation; a zero exit code is not sufficient if the configured output observation cannot be trusted.
 
-The result is an inspectable distinction between what the plan predicted and what the runtime observed. See [evidence and provenance](./explanations/evidence-and-provenance) for that comparison.
+The result is an inspectable distinction between what the plan predicted and what the runtime observed. See [evidence and provenance](/docs/explanations/evidence-and-provenance) for that comparison.

@@ -10,7 +10,7 @@ connection, and reviewed inventory. A batch job comes after registration.
 
 ## Before you begin
 
-- Complete [installation and its result checks](../installation).
+- Complete [installation and its result checks](/docs/installation).
 - Ask the cluster administrator for your login, permitted partition, SSH access
   policy, gateway requirements, and a shared workspace. Registration does not
   create an institutional account or allocate compute time.
@@ -19,7 +19,7 @@ connection, and reviewed inventory. A batch job comes after registration.
 - Obtain authorization to use a managed SSH key and verify the site's host-key
   trust requirements with your administrator.
 - Confirm `sinfo`, `sbatch`, `squeue`, `sacct`, and `scancel` are available to your
-  account. Review the [HPC operator guide](../guides/infrastructure/hpc-slurm)
+  account. Review the [HPC operator guide](/docs/guides/infrastructure/hpc-slurm)
   for account/QoS, storage and container-runtime requirements.
 
 `login.example.org`, `researcher`, and `cpu` below are placeholders. Replace them
@@ -33,7 +33,7 @@ Open **Settings → SSH service keys**. Under **Register a service key**, enter
 `research-hpc` and choose **Generate key**. Copy the public key and have it
 authorized for your account on the login host and required gateways. If the
 institution requires an existing key, use the separate import action described
-in [Manage SSH service keys](../guides/operations/credentials-and-ssh).
+in [Manage SSH service keys](/docs/guides/operations/credentials-and-ssh).
 
 ![SSH service keys settings with import and generation actions](../../static/img/interface/onboarding/ssh-service-keys.png)
 
@@ -73,11 +73,11 @@ runs from the daemon's host.
 Choose **Save environment**, then open the saved environment. In its connection
 section, run **Check now** and **Discover**. Review **Inventory** for the
 expected cluster partitions and compute nodes; see the detailed
-[discovery checks](../guides/infrastructure/hpc-slurm#3-discover-the-actual-cluster-before-trusting-the-catalog).
+[discovery checks](/docs/guides/infrastructure/hpc-slurm#3-discover-the-actual-cluster-before-trusting-the-catalog).
 
 ## Through the API
 
-Complete [API connection setup](./api-access). Use the same approved host,
+Complete [API connection setup](/docs/tutorials/api-access). Use the same approved host,
 account and partition as in the graphical path.
 
 ### 1. Generate and authorize the key
@@ -96,7 +96,7 @@ Authorize the returned `publicKey` through your institution's procedure before
 continuing. Keep the returned `credentialRef`; do not invent a private-key path.
 The returned `fingerprint` identifies your service key, not the cluster's host
 key. Compare the host key separately as described in the
-[HPC operator guide](../guides/infrastructure/hpc-slurm#1-create-the-ssh-credential-and-proxy-aware-connection).
+[HPC operator guide](/docs/guides/infrastructure/hpc-slurm#1-create-the-ssh-credential-and-proxy-aware-connection).
 
 ### 2. Prepare the environment and test its connection
 
@@ -175,7 +175,7 @@ returned by the server when creating an execution scope.
 
 A discovered partition is not a reservation. Registration does not prove that
 an account, QoS, container image or shared filesystem will work in a batch job.
-Continue with [scope setup and a small real execution](../guides/infrastructure/hpc-slurm#5-scope-validate-and-submit-a-small-real-execution).
+Continue with [scope setup and a small real execution](/docs/guides/infrastructure/hpc-slurm#5-scope-validate-and-submit-a-small-real-execution).
 
 ## If registration fails
 

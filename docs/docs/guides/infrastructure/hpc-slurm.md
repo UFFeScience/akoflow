@@ -5,9 +5,9 @@ description: Configure SSH access, discover SLURM resources, and prepare a small
 
 # Connect an HPC and SLURM cluster
 
-This guide is for an HPC operator or researcher with an approved SLURM account. AkôFlow connects to the **login node** over SSH and submits workflow activities with `sbatch`. For a guided first registration, start with the [connection tutorial](../../tutorials/register-hpc).
+This guide is for an HPC operator or researcher with an approved SLURM account. AkôFlow connects to the **login node** over SSH and submits workflow activities with `sbatch`. For a guided first registration, start with the [connection tutorial](/docs/tutorials/register-hpc).
 
-Use a SLURM environment for work governed by partitions, accounts, QoS, and node allocation. Keep ordinary batch work off the login node. To check the local batch-submission path without a cluster, use the [SLURM batch fixture](../../showcase/slurm-local-fixture); it does not verify SSH, allocation, accounting, or site policy. For an infrastructure simulation, use [SimGrid](./simgrid).
+Use a SLURM environment for work governed by partitions, accounts, QoS, and node allocation. Keep ordinary batch work off the login node. To check the local batch-submission path without a cluster, use the [SLURM batch fixture](/docs/showcase/slurm-local-fixture); it does not verify SSH, allocation, accounting, or site policy. For an infrastructure simulation, use [SimGrid](/docs/guides/infrastructure/simgrid).
 
 The YAML blocks below are excerpts for discussion. Use the linked versioned files as a starting catalog, then supply your site's connection, paths, permissions, and scheduler settings. An institutional cluster run has not been verified by this documentation.
 
@@ -21,9 +21,9 @@ The YAML blocks below are excerpts for discussion. Use the linked versioned file
 
 ## 1. Create the SSH credential and proxy-aware connection
 
-Create or import a service key using [Manage SSH service keys](../operations/credentials-and-ssh), then authorize its public key on the login node and any gateway. Store the returned `credentialRef` in the connection; never paste the private key into an environment YAML.
+Create or import a service key using [Manage SSH service keys](/docs/guides/operations/credentials-and-ssh), then authorize its public key on the login node and any gateway. Store the returned `credentialRef` in the connection; never paste the private key into an environment YAML.
 
-For a remote cluster, use `type: ssh`. Put the SSH port in `configuration.port` and the login host name in `endpoint`; AkôFlow uses this connection for health checks, discovery, runs, artifacts, and the terminal. Set the fields below in the [HPC registration template](../../tutorials/register-hpc), using the credential reference returned by key registration.
+For a remote cluster, use `type: ssh`. Put the SSH port in `configuration.port` and the login host name in `endpoint`; AkôFlow uses this connection for health checks, discovery, runs, artifacts, and the terminal. Set the fields below in the [HPC registration template](/docs/tutorials/register-hpc), using the credential reference returned by key registration.
 
 ```yaml
 connections:
@@ -44,7 +44,7 @@ connections:
 
 `proxyCommand` is passed to SSH-based paths that use this connection. If the site requires a jump host, configure and test a complete SSH proxy command from the **server host**, not only from Desktop. SSH uses `accept-new` for the connection test: an unknown host key is saved in the configured known-hosts file on first contact, while a changed key is rejected. Verify the login host's fingerprint against the value supplied by your administrator before treating that saved key as trusted. Do the same for each SSH gateway hop.
 
-In Desktop, add the connection under **Infrastructure → Environments**, assign the managed SSH key, and run the connection health check. For API registration, follow the [complete connection tutorial](../../tutorials/register-hpc#through-the-api), which creates and tests the JSON payload before saving the environment. To change a saved connection later, read its current fields before sending a complete `PUT /environment-connections/{connectionId}/` body so unrelated settings remain intact.
+In Desktop, add the connection under **Infrastructure → Environments**, assign the managed SSH key, and run the connection health check. For API registration, follow the [complete connection tutorial](/docs/tutorials/register-hpc#through-the-api), which creates and tests the JSON payload before saving the environment. To change a saved connection later, read its current fields before sending a complete `PUT /environment-connections/{connectionId}/` body so unrelated settings remain intact.
 
 ## 2. Describe the SLURM resources
 
@@ -127,7 +127,7 @@ storages:
     shared: true
 ```
 
-These paths must be valid from the allocated compute node, not merely from the login shell. Submit a small site-approved probe that writes a file to the intended workspace and reads it back from a second allocation. Check ownership, quota, purge policy, and the path exposed inside Apptainer before relying on artifacts or inter-activity data. The catalog entries alone do not enable Desktop file browsing; that also needs a configured browser and [approved roots](./storage).
+These paths must be valid from the allocated compute node, not merely from the login shell. Submit a small site-approved probe that writes a file to the intended workspace and reads it back from a second allocation. Check ownership, quota, purge policy, and the path exposed inside Apptainer before relying on artifacts or inter-activity data. The catalog entries alone do not enable Desktop file browsing; that also needs a configured browser and [approved roots](/docs/guides/infrastructure/storage).
 
 ## 5. Scope, validate, and submit a small real execution
 
@@ -172,4 +172,4 @@ The interactive console uses the same connection and trust route. Selecting a pa
 | Status looks stale after completion | Check the sentinel/log path and wait for `sacct`; AkôFlow preserves a warning rather than converting missing accounting data into a false failure. |
 | Interactive allocation remains after closing the browser view | Close the AkôFlow console session explicitly; it owns the `srun` allocation and cleanup path. |
 
-After a site-approved run, use [Execute and monitor a workflow](../workflows/executions) to inspect its activity status and evidence. Related setup: [SSH service keys](../operations/credentials-and-ssh), [interactive console and commands](../operations/interactive-console), [execution scopes](./execution-scopes), and [storage](./storage).
+After a site-approved run, use [Execute and monitor a workflow](/docs/guides/workflows/executions) to inspect its activity status and evidence. Related setup: [SSH service keys](/docs/guides/operations/credentials-and-ssh), [interactive console and commands](/docs/guides/operations/interactive-console), [execution scopes](/docs/guides/infrastructure/execution-scopes), and [storage](/docs/guides/infrastructure/storage).

@@ -31,7 +31,7 @@ The UI is a client, not a second implementation of the control plane. Desktop ac
 
 ## API and services
 
-The HTTP server handles authentication, request validation, and representation. Handlers delegate to services for connection checks, discovery, workflows, planning, execution, storage, transfers, artifact builds, cloud provisioning, console commands, and terminal sessions. Operational and analytics/provenance persistence have distinct responsibilities.
+The HTTP server authenticates and validates requests, then calls the service responsible for the task. Planning, execution, infrastructure checks, and data preparation have separate services. Operational state and provenance data also have separate persistence paths; the [source map](#source-map) points to their entry points.
 
 ## Persistent event loop
 
@@ -39,13 +39,13 @@ Long-running commands are queued rather than completed inside the initiating HTT
 
 ## Planning
 
-A planning session freezes the workflow version, execution scope, environment versions, resources, topology, activity profiles, deadline, budget, and optional interference model. Built-in algorithms include HEFT, PRISM Time, and PRISM Cost. They produce candidates from the same session inputs, but their predicted metrics come from different evaluation models; see [PRISM and HEFT](./explanations/prism-and-heft) before comparing them.
+A planning session freezes the selected workflow, execution scope, topology, resources, and planning constraints. Built-in algorithms include HEFT, PRISM Time, and PRISM Cost. They use the same session inputs, but their predictions come from different evaluation models; see [PRISM and HEFT](/docs/explanations/prism-and-heft) before comparing them.
 
 Selecting a candidate creates or selects a schedule plan; it does not execute the workflow. A plan contains assignments, predicted timing and cost, transfer estimates, and optional cloud lifecycle actions.
 
 ## Execution
 
-The execution supervisor consumes a selected plan. It validates the DAG and assignments, prewarms planned cloud capacity, finds dependency-ready activities, prepares executable/workspace data, resolves runtime adapters, starts and inspects handles, records observations, and releases ephemeral capacity. Simulation uses a simulator rather than real adapters. Interactive execution returns while its activity/session remains active.
+The execution supervisor checks the selected plan and starts activities when their dependencies are ready. It prepares their executable and workspace data, selects a runtime adapter, then follows each activity through completion. When a real plan needs cloud capacity, it can prepare that capacity before dispatch and release it afterward. Simulation uses a simulator instead of real adapters. An interactive request returns while its session remains active.
 
 ## Infrastructure and data plane
 

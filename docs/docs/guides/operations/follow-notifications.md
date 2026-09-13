@@ -5,7 +5,7 @@ description: Track recent Desktop operations and find their durable records.
 
 # Follow operation notifications
 
-Notifications help you return to an operation started in this Desktop profile. For a saved record from any profile, [search by name or ID](./find-records). Open that record for its lasting status; [Audit](../data/audit-events) covers only some operation types.
+Notifications help you return to an operation started in this Desktop profile. For a saved record from any profile, [search by name or ID](/docs/guides/operations/find-records). Open that record for its lasting status; [Audit](/docs/guides/data/audit-events) covers only some operation types.
 
 ## In Desktop
 
@@ -32,7 +32,7 @@ Native operating-system notifications are emitted only when the browser/renderer
 ## Find the operation through the API
 
 There is no `/notifications/` endpoint. Complete
-[API connection setup](../../tutorials/api-access), then query the record that
+[API connection setup](/docs/tutorials/api-access), then query the record that
 owns the operation:
 
 ```bash

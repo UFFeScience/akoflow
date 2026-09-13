@@ -5,13 +5,13 @@ description: Find recorded connection, discovery, and console events and inspect
 
 # Inspect audit events
 
-Use **Audit** to inspect recorded connection health checks, resource discovery, and console commands or sessions. Each event has a time, target, and outcome. The current daemon does not emit audit events for credential changes, planning, artifact builds, cloud provisioning, or workflow runs. Use each operation's detail page for its status; for the scientific history of a result, [trace its provenance](./provenance).
+Use **Audit** to inspect recorded connection health checks, resource discovery, and console commands or sessions. Each event has a time, target, and outcome. The current daemon does not emit audit events for credential changes, planning, artifact builds, cloud provisioning, or workflow runs. Use each operation's detail page for its status; for the scientific history of a result, [trace its provenance](/docs/guides/data/provenance).
 
 ## Investigate an operation
 
 1. Find the connection check, resource discovery, or console action in **Audit** and note its time, target ID, and outcome.
 2. Open the target record or use the API filters to narrow events around that ID.
-3. For a workflow result, [follow its provenance](./provenance). Consult nearby Audit events only when a connection, discovery, or console action may explain the result.
+3. For a workflow result, [follow its provenance](/docs/guides/data/provenance). Consult nearby Audit events only when a connection, discovery, or console action may explain the result.
 
 ## Inspect the audit trail
 
@@ -32,7 +32,7 @@ Open **Audit**. It starts in **All events**. The interface has category tabs for
 | **Outcome** | Quickly distinguish `started`, `succeeded`, and `failed` records. | A failure tells you that the recorded operation did not complete successfully. Read **Summary** and then inspect the target before changing a configuration. |
 | **Summary** | Read the service-provided context or error associated with the event. | Treat it as operational evidence. It can include a runtime error returned by an external system, so do not copy it into public reports without reviewing it. |
 
-For API queries, complete [API connection setup](../../tutorials/api-access) first. This request lists recent failures without requiring an environment ID:
+For API queries, complete [API connection setup](/docs/tutorials/api-access) first. This request lists recent failures without requiring an environment ID:
 
 ```bash
 curl --fail-with-body -G -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \

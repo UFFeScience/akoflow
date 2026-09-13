@@ -5,9 +5,9 @@ description: Validate and version an Ansible playbook for a cloud capacity targe
 
 # Prepare a cloud worker with Ansible
 
-Use a machine configuration when a provisioned Google Cloud worker needs packages or setup before a run. Create and validate a playbook, save a version, then attach that version to a [cloud capacity target](./cloud-capacity#create-a-capacity-target). A saved playbook does not provision a VM.
+Use a machine configuration when a provisioned Google Cloud worker needs packages or setup before a run. Create and validate a playbook, save a version, then attach that version to a [cloud capacity target](/docs/guides/infrastructure/cloud-capacity#create-a-capacity-target). A saved playbook does not provision a VM.
 
-For the API commands below, complete [API connection setup](../../tutorials/api-access) first.
+For the API commands below, complete [API connection setup](/docs/tutorials/api-access) first.
 
 ## Using AkôFlow Desktop
 
@@ -40,4 +40,4 @@ curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
 AKOFLOW_MACHINE_CONFIGURATION_VERSION_ID=$(jq -er '.versions[] | select(.version == 1) | .id' machine-configuration.json) || exit 1
 ```
 
-Validation checks playbook structure and returns `valid`, a content hash, and errors when present. It does not provision a machine or execute the playbook. The version request returns the configuration with its versions. Run the [capacity-target example](./cloud-capacity#create-a-capacity-target) in the same Bash session: it attaches this saved version when `AKOFLOW_MACHINE_CONFIGURATION_VERSION_ID` is set. Without that variable, it creates a target using only the built-in worker configuration.
+Validation checks playbook structure and returns `valid`, a content hash, and errors when present. It does not provision a machine or execute the playbook. The version request returns the configuration with its versions. Run the [capacity-target example](/docs/guides/infrastructure/cloud-capacity#create-a-capacity-target) in the same Bash session: it attaches this saved version when `AKOFLOW_MACHINE_CONFIGURATION_VERSION_ID` is set. Without that variable, it creates a target using only the built-in worker configuration.

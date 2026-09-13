@@ -9,7 +9,7 @@ The AkôFlow Desktop uses the same API available to automation. Paths in the tab
 
 ## Connect and authenticate
 
-Follow [API connection setup](../tutorials/api-access) to set the base URL and enter the token without putting it in shell history. The base URL includes `/akoflow-api`. Then check a protected catalog:
+Follow [API connection setup](/docs/tutorials/api-access) to set the base URL and enter the token without putting it in shell history. The base URL includes `/akoflow-api`. Then check a protected catalog:
 
 ```bash
 curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
@@ -94,7 +94,7 @@ The authenticated root health check returns `ok`. Public preflight reports serve
 | `GET` | `/environments/{environmentId}/cloud-catalog/` | Read cached provider catalog |
 | `POST` | `/environments/{environmentId}/cloud-catalog/refresh/` | Refresh provider catalog |
 
-See [Configure cloud capacity](../guides/infrastructure/cloud-capacity) for target and provisioning steps, and [Machine configurations](../guides/infrastructure/machine-configurations) for the optional Ansible setup.
+See [Configure cloud capacity](/docs/guides/infrastructure/cloud-capacity) for target and provisioning steps, and [Machine configurations](/docs/guides/infrastructure/machine-configurations) for the optional Ansible setup.
 
 ## Resources, topology, and execution scopes
 
@@ -147,7 +147,7 @@ See [Configure cloud capacity](../guides/infrastructure/cloud-capacity) for targ
 | `GET` | `/planning-sessions/{sessionId}/candidates/{candidateId}/` | Read a candidate |
 | `POST` | `/planning-sessions/{sessionId}/candidates/{candidateId}/select/` | Select a candidate and produce a plan |
 
-For a complete workflow request and the required registration order, use [Workflow definitions](../guides/workflows/definitions) or the [SimGrid first-run tutorial](../guides/workflows/first-run).
+For a complete workflow request and the required registration order, use [Workflow definitions](/docs/guides/workflows/definitions) or the [SimGrid first-run tutorial](/docs/guides/workflows/first-run).
 
 ## Executions
 
@@ -174,7 +174,7 @@ List queries accept endpoint-specific pagination and filters. For execution runs
 | `GET` | `/build-runs/{runId}/` | Read build-run status and logs |
 | `GET` | `/build-runs/{runId}/output/` | Stream SIF output |
 
-For a build request, see [Build an executable](../guides/data/build-executable). To inspect recorded locations and preparation status, see [Artifact locations](../guides/data/artifact-locations). Storage browsing and file registration are covered in [Browse and manage storage](../guides/infrastructure/storage).
+For a build request, see [Build an executable](/docs/guides/data/build-executable). To inspect recorded locations and preparation status, see [Artifact locations](/docs/guides/data/artifact-locations). Storage browsing and file registration are covered in [Browse and manage storage](/docs/guides/infrastructure/storage).
 
 ## Provenance
 
@@ -187,7 +187,7 @@ For a build request, see [Build an executable](../guides/data/build-executable).
 | `POST` | `/provenance/sql/explain/` | Explain read-only SQL |
 | `GET` | `/provenance/lineage/{entity}/{id}/` | Traverse lineage |
 
-See [Trace a result with provenance](../guides/data/provenance.md) for query examples.
+See [Trace a result with provenance](/docs/guides/data/provenance) for query examples.
 
 ## Console
 

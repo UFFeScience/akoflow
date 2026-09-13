@@ -3,17 +3,17 @@ title: Configure cloud capacity
 description: Choose a Google Cloud worker target, save it for planning, and inspect provisioning.
 ---
 
-Use this guide after [connecting Google Cloud](../../tutorials/connect-cloud).
+Use this guide after [connecting Google Cloud](/docs/tutorials/connect-cloud).
 Choose a machine from its catalog, save a capacity target for planning, and
 provision an instance when a run needs it. Google Cloud is the current compute
-provider; check [cloud provider support](./cloud-support) for AWS and object
+provider; check [cloud provider support](/docs/guides/infrastructure/cloud-support) for AWS and object
 storage limits. For optional Ansible setup, create a
-[machine configuration](./machine-configurations) before saving the target.
+[machine configuration](/docs/guides/infrastructure/machine-configurations) before saving the target.
 
-For the API commands on this page, complete [API connection setup](../../tutorials/api-access) and register `research-gcp` through the [Google Cloud connection tutorial](../../tutorials/connect-cloud) first. Run the commands in the same Bash session.
+For the API commands on this page, complete [API connection setup](/docs/tutorials/api-access) and register `research-gcp` through the [Google Cloud connection tutorial](/docs/tutorials/connect-cloud) first. Run the commands in the same Bash session.
 
 This procedure has not yet passed a live provision-and-destroy cycle in a
-disposable project. [Configure Google Cloud](./gcp) covers account access and
+disposable project. [Configure Google Cloud](/docs/guides/infrastructure/gcp) covers account access and
 the checks to perform before a real worker run.
 
 ## Synchronize the provider catalog
@@ -43,13 +43,13 @@ The GET endpoint returns `404` until a catalog has been synchronized. Provider c
 3. Optionally attach an additional machine-configuration version.
 4. Save the target. It becomes a capacity option available to planning; saving it does not create a VM.
 
-If you need a machine configuration, [create its version](./machine-configurations) before saving the target and attach that version's actual ID. Provisioning needs the referenced version.
+If you need a machine configuration, [create its version](/docs/guides/infrastructure/machine-configurations) before saving the target and attach that version's actual ID. Provisioning needs the referenced version.
 
 For a required zone, set `fixedZone` through the target API below.
 
 ### Using the API
 
-Keep the `AKOFLOW_GCP_PROJECT` value from the validated [connection tutorial](../../tutorials/connect-cloud). Read a compatible Ubuntu image's `providerImageId` from the synchronized catalog. Confirm that `e2-standard-4` is available in the selected region, or replace the machine type and its CPU/memory values with a catalog match. Enter the approved daemon or bastion CIDR before the request is sent.
+Keep the `AKOFLOW_GCP_PROJECT` value from the validated [connection tutorial](/docs/tutorials/connect-cloud). Read a compatible Ubuntu image's `providerImageId` from the synchronized catalog. Confirm that `e2-standard-4` is available in the selected region, or replace the machine type and its CPU/memory values with a catalog match. Enter the approved daemon or bastion CIDR before the request is sent.
 
 ```bash
 set -o pipefail
@@ -132,4 +132,4 @@ the VM is ready; those checks run later. Lifecycle endpoints also exist for
 configure, validate, start, stop, and destroy. Before destructive actions,
 inspect the instance and active operation state in Desktop or through the API.
 
-If the worker becomes ready, confirm that its environment version belongs to the [execution scope](./execution-scopes) before planning a run. Use [Configure Google Cloud](./gcp#4-provision-and-verify) to review worker validation and cleanup; a live provision-and-destroy cycle remains unverified.
+If the worker becomes ready, confirm that its environment version belongs to the [execution scope](/docs/guides/infrastructure/execution-scopes) before planning a run. Use [Configure Google Cloud](/docs/guides/infrastructure/gcp#4-provision-and-verify) to review worker validation and cleanup; a live provision-and-destroy cycle remains unverified.

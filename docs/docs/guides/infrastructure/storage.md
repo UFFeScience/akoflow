@@ -5,11 +5,11 @@ description: Browse approved storage paths and perform supported file operations
 
 Use **Storage** to browse approved roots and act on files. Available actions depend on the driver and storage settings. Try the intended path before relying on a catalog status.
 
-The current S3 browser sends unsigned requests, so a private bucket may fail to open even when an S3 transfer works with server credentials. See [AWS and S3 support](./aws) for that distinction and the current cloud limits.
+The current S3 browser sends unsigned requests, so a private bucket may fail to open even when an S3 transfer works with server credentials. See [AWS and S3 support](/docs/guides/infrastructure/aws) for that distinction and the current cloud limits.
 
-For the API commands on this page, complete [API connection setup](../../tutorials/api-access) first.
+For the API commands on this page, complete [API connection setup](/docs/tutorials/api-access) first.
 The IDs `hpc`, `hpc-scratch`, and `archive-store` and the `/scratch/project-a` paths below are examples. Replace them with an environment, storage IDs, and approved paths returned by your own server before running a command.
-For a self-managed daemon browsing local files, first configure the root as shown in the [environment YAML reference](../../reference/environment-yaml#storage).
+For a self-managed daemon browsing local files, first configure the root as shown in the [environment YAML reference](/docs/reference/environment-yaml#storage).
 
 ## Browse files
 

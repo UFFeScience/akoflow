@@ -34,7 +34,7 @@ The action appears only for a resource configured for interactive access with a 
 
 ## Open and manage a session through the API
 
-Complete [API connection setup](../../tutorials/api-access) first.
+Complete [API connection setup](/docs/tutorials/api-access) first.
 Choose an interactive-capable resource in Desktop and use its saved ID below. Keep these commands in the same Bash session.
 
 ```bash

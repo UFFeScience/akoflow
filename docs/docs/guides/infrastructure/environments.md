@@ -25,7 +25,7 @@ Simulation creation collects a SimGrid platform model and can also define an exe
 
 ### Using the API
 
-Complete [API connection setup](../../tutorials/api-access) before running these commands.
+Complete [API connection setup](/docs/tutorials/api-access) before running these commands.
 
 The creation body needs more than an environment name. This local example includes a version, runtime, resource, and runtime binding:
 
@@ -43,7 +43,7 @@ curl --fail-with-body \
   }'
 ```
 
-For a remote connection, follow the complete [HPC registration](../../tutorials/register-hpc) or [Google Cloud connection](../../tutorials/connect-cloud) tutorial. Each shows how to obtain a credential reference, test the connection, and save the environment.
+For a remote connection, follow the complete [HPC registration](/docs/tutorials/register-hpc) or [Google Cloud connection](/docs/tutorials/connect-cloud) tutorial. Each shows how to obtain a credential reference, test the connection, and save the environment.
 
 ## Validate health and discover infrastructure
 

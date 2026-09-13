@@ -10,7 +10,7 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 
 Network modeling lets planning distinguish a local dependency from data that must cross a resource boundary. It starts with bytes declared by the workflow, but its result depends on the selected resource assignments and the directed topology chosen for the planning session.
 
-This is an explanation of the model. Use [SimGrid modeling](../guides/infrastructure/simgrid) to configure bandwidth and latency, or the [topology reference](../reference/execution-scopes-and-topologies) for the exact document fields.
+This is an explanation of the model. Use [SimGrid modeling](/docs/guides/infrastructure/simgrid) to configure bandwidth and latency, or the [topology reference](/docs/reference/execution-scopes-and-topologies) for the exact document fields.
 
 ## From dependency to possible flow
 
@@ -38,10 +38,10 @@ That distinction matters: the model describes a possible network penalty for a p
 
 For a 10 GiB data dependency over a 10 Gbit/s link, the raw serialization time is about 8.6 seconds before latency and sharing. `10 GiB` is a byte volume; `10 Gbit/s` is a bit rate. The observed time can be higher because of setup, routing, sharing, or provider behavior.
 
-Inspect a completed run's transfer records alongside the assignment and plan prediction. The [30 GB network fan-out Showcase](../showcase/network-fanout) provides a checked-in topology and workflow where these effects are intentional.
+Inspect a completed run's transfer records alongside the assignment and plan prediction. The [30 GB network fan-out Showcase](/docs/showcase/network-fanout) provides a checked-in topology and workflow where these effects are intentional.
 
 ## Related material
 
-- [Workflow simulation semantics](../internal/workflow-spec)
-- [Execution scopes and topologies reference](../reference/execution-scopes-and-topologies)
-- [Plan-versus-observed evidence](./evidence-and-provenance)
+- [Workflow simulation semantics](/docs/internal/workflow-spec)
+- [Execution scopes and topologies reference](/docs/reference/execution-scopes-and-topologies)
+- [Plan-versus-observed evidence](/docs/explanations/evidence-and-provenance)

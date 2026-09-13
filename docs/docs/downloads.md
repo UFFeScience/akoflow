@@ -9,7 +9,7 @@ description: Direct official downloads for AkôFlow Desktop, with platform selec
 
 These links point to the published **v1.0.8** release, checked on **2026-09-12**.
 Choose one package for your workstation. The browser saves it in your configured
-download folder; open the completed download and follow [Installation](./installation).
+download folder; open the completed download and follow [Installation](/docs/installation).
 
 | Platform                       | Download                                                                                                                          | What to do next                                                          |
 | ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
@@ -31,7 +31,7 @@ For Desktop installation, choose the package in the table. `.blockmap` and
 `latest*.yml` files are updater metadata. Source-code ZIP/TAR downloads are for
 development. Daemon/BuildKit `.tar` archives and runtime `.sha256` manifests are
 service assets, not separate Desktop installers. Operators use them in the
-[self-managed server guide](./guides/operations/server-instance).
+[self-managed server guide](/docs/guides/operations/server-instance).
 
 v1.0.8 has a single Windows `.exe`, not separate named installer/portable files.
 It has no Linux ARM64 Desktop package.
@@ -82,4 +82,4 @@ redirect-following range requests. Download availability is separate from
 operating-system installation validation.
 
 The extracted Linux application was also opened with a fresh profile and reached
-the successful [daemon, Docker and BuildKit checkup](./installation#3-first-launch-what-happens).
+the successful [daemon, Docker and BuildKit checkup](/docs/installation#3-first-launch-what-happens).

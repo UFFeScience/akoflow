@@ -22,7 +22,7 @@ Plan a workflow before starting execution. For a known placement, make a manual 
 
 *Choose **Generate plans** to compare candidate schedules. The target selector keeps real execution scopes separate from simulation-only scopes; PRISM Cost and PRISM Time are exclusive objectives, while HEFT is a comparison baseline.*
 
-The server's available algorithms are listed by `GET /planning-algorithms/`. A session may also include a deadline, budget, or directed interference matrix; HEFT does not use that matrix for its placement. See [PRISM and HEFT](../../explanations/prism-and-heft) for the prediction models and [planning states](../../reference/planning-and-execution-states) for candidate and session fields.
+The server's available algorithms are listed by `GET /planning-algorithms/`. A session may also include a deadline, budget, or directed interference matrix; HEFT does not use that matrix for its placement. See [PRISM and HEFT](/docs/explanations/prism-and-heft) for the prediction models and [planning states](/docs/reference/planning-and-execution-states) for candidate and session fields.
 
 ### Manual plans
 
@@ -34,7 +34,7 @@ The plans API also accepts a complete plan as imported data. Imported IDs must r
 
 ## Using the API
 
-Complete [API connection setup](../../tutorials/api-access) before running the commands below.
+Complete [API connection setup](/docs/tutorials/api-access) before running the commands below.
 
 First discover the algorithms available in the running instance:
 
@@ -43,7 +43,7 @@ curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   "$AKOFLOW_API_URL/planning-algorithms/"
 ```
 
-Create an automatic planning session. The IDs below refer to the environment, scope, topology, and workflow registered in the [SimGrid first-run sequence](./first-run). Complete those registration steps first, or replace all four IDs with records from your own instance:
+Create an automatic planning session. The IDs below refer to the environment, scope, topology, and workflow registered in the [SimGrid first-run sequence](/docs/guides/workflows/first-run). Complete those registration steps first, or replace all four IDs with records from your own instance:
 
 ```bash
 curl --fail-with-body \
@@ -98,7 +98,7 @@ For a manual plan, send the complete validation envelope used by `examples/simul
 
 ### Import a saved plan
 
-To try the import route, complete the [SimGrid first-run tutorial](./first-run) through **Register the fixed plan**. This reads that saved plan, gives the copy, its assignments, and its cloud lifecycle actions new IDs, and submits only the import envelope. Run it once per imported ID; use another ID if the copy already exists.
+To try the import route, complete the [SimGrid first-run tutorial](/docs/guides/workflows/first-run) through **Register the fixed plan**. This reads that saved plan, gives the copy, its assignments, and its cloud lifecycle actions new IDs, and submits only the import envelope. Run it once per imported ID; use another ID if the copy already exists.
 
 ```bash
 set -o pipefail
@@ -130,4 +130,4 @@ Expect `source: "imported"` and the new ID. The copied lifecycle dependencies mu
 
 ## Next step
 
-Review the selected plan and [start and monitor an execution](./executions.md).
+Review the selected plan and [start and monitor an execution](/docs/guides/workflows/executions).

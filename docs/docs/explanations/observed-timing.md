@@ -14,7 +14,7 @@ exceed makespan.
 
 Use this page when reading a run detail, a planning-versus-execution comparison,
 or an experiment chart. It explains the current persisted metrics; it does not
-replace [network modeling](./network-modeling) or the [execution state reference](../reference/planning-and-execution-states).
+replace [network modeling](/docs/explanations/network-modeling) or the [execution state reference](/docs/reference/planning-and-execution-states).
 
 ## A flow is a scheduled movement of data
 
@@ -25,7 +25,7 @@ them.
 
 Link bandwidth is in bits per second while dependency size is in bytes. A
 multi-hop route adds latency for its hops and is limited by its effective
-available bandwidth. [Network modeling](./network-modeling#units-and-a-small-example)
+available bandwidth. [Network modeling](/docs/explanations/network-modeling#units-and-a-small-example)
 works through a concrete transfer estimate.
 
 ## Contention means simultaneous users of a bottleneck
@@ -33,7 +33,7 @@ works through a concrete transfer estimate.
 Two flows contend when they overlap at a shared link or endpoint. PRISM models
 that sharing when predicting transfers. A real runtime may not report a separate
 contention value, so use the run's transfer records to see how many bytes moved
-and how long they took. [Network modeling](./network-modeling) explains the
+and how long they took. [Network modeling](/docs/explanations/network-modeling) explains the
 routes behind those predictions.
 
 ## Four activity-stage timings
@@ -99,6 +99,6 @@ modeled cost only when they use the same resource price and scope.
 
 ## Related material
 
-- [PRISM and HEFT: search, objectives, and prediction](./prism-and-heft)
-- [Plan-versus-observed evidence and provenance](./evidence-and-provenance)
-- [30 GB network fan-out Showcase](../showcase/network-fanout)
+- [PRISM and HEFT: search, objectives, and prediction](/docs/explanations/prism-and-heft)
+- [Plan-versus-observed evidence and provenance](/docs/explanations/evidence-and-provenance)
+- [30 GB network fan-out Showcase](/docs/showcase/network-fanout)

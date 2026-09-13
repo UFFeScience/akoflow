@@ -13,7 +13,7 @@ Desktop. It loads the server and BuildKit images directly from a versioned
 GitHub Release. It does not use a container registry and it does not install
 the Desktop application.
 
-Use [Install AkôFlow](../../installation) for a personal workstation. Do not
+Use [Install AkôFlow](/docs/installation) for a personal workstation. Do not
 use this procedure for an untrusted or multi-tenant host: the supplied Compose
 configuration gives the server access to the host Docker socket and runs
 BuildKit with Docker privileges.
@@ -64,7 +64,7 @@ akoflow-buildkit-<tag>-linux-<arch>.tar
 akoflow-runtime-<tag>-linux-<arch>.sha256
 ```
 
-The [Downloads and Releases](../../downloads) page explains the relationship
+The [Downloads and Releases](/docs/downloads) page explains the relationship
 between the Git tag and published artifacts. This procedure deliberately uses
 the two runtime archives; it does not look for a package or a registry image.
 
@@ -188,8 +188,8 @@ ssh -N -L 8080:127.0.0.1:8080 "${AKOFLOW_SSH_USER}@${AKOFLOW_SERVER_HOST}"
 ```
 
 Run the same `curl` commands against your local `127.0.0.1:8080` while the
-tunnel is open. Continue with the [API overview](../../reference/api-overview)
-or register infrastructure and execute the [first simulated workflow](../workflows/first-run).
+tunnel is open. Continue with the [API overview](/docs/reference/api-overview)
+or register infrastructure and execute the [first simulated workflow](/docs/guides/workflows/first-run).
 
 ## Operate, update, and remove
 
@@ -198,7 +198,7 @@ its versioned images. Change only `AKOFLOW_RELEASE_TAG` in `.env` and run
 `docker compose -f compose.yaml up -d`.
 The named volumes remain attached, so plans, runs, artifacts, and managed
 credentials are retained. Export the instance before changing versions if you
-need an additional recovery point; see [Instance management](./instance-management).
+need an additional recovery point; see [Instance management](/docs/guides/operations/instance-management).
 
 To stop the services while retaining their state:
 
@@ -222,4 +222,4 @@ akoflow`.
 | A request needs browser CORS access                  | Configure only the exact trusted origin in `AKOFLOW_API_ALLOWED_ORIGINS`; do not use a wildcard or expose the API port directly.                         |
 
 For server logs, Docker/BuildKit diagnostics, and network checks, see
-[Troubleshooting](./troubleshooting).
+[Troubleshooting](/docs/guides/operations/troubleshooting).

@@ -20,6 +20,6 @@ provision-and-destroy cycle in a disposable project has not been verified.
 Local tests cover the S3 transfer connector; live bucket access has not been
 verified. A saved AWS credential does not enable S3 transfers.
 
-For compute, start with [Connect Google Cloud](../../tutorials/connect-cloud),
-then [configure cloud capacity](./cloud-capacity). For object transfers, read
-[AWS and S3 support](./aws) before planning data movement.
+For compute, start with [Connect Google Cloud](/docs/tutorials/connect-cloud),
+then [configure cloud capacity](/docs/guides/infrastructure/cloud-capacity). For object transfers, read
+[AWS and S3 support](/docs/guides/infrastructure/aws) before planning data movement.

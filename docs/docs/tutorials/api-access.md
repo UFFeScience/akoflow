@@ -6,7 +6,7 @@ description: Configure one API base URL and token convention for infrastructure 
 
 Use this setup for the API path in the HPC and Google Cloud tutorials. You need
 Bash, `curl`, `jq`, and an AkôFlow server whose address and credential you manage.
-The [server installation guide](../guides/operations/server-instance) explains
+The [server installation guide](/docs/guides/operations/server-instance) explains
 how to deploy one and choose its token. A development server is also suitable
 when its connection settings are known.
 
@@ -44,4 +44,4 @@ Use a fresh tutorial identity. The examples use `research-hpc` and `research-gcp
 if those already exist, inspect them before continuing instead of resubmitting
 a create request. Store only returned credential references in environment JSON.
 
-Continue with [HPC registration](./register-hpc) or [Google Cloud connection](./connect-cloud).
+Continue with [HPC registration](/docs/tutorials/register-hpc) or [Google Cloud connection](/docs/tutorials/connect-cloud).

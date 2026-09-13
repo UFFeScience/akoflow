@@ -94,4 +94,4 @@ Task-stage totals such as `queueSeconds`, `transferSeconds`, and `runtimeSeconds
 | Wait for execution | `GET /execution-runs/{runId}/` after the daemon creates the run | Run is `completed` or `failed`. |
 | Explain an observed result | Run projection tasks, transfers, events, and Plan vs execution view | Task/transfer records account for the observed critical path. |
 
-Related material: [planning a workflow](../guides/workflows/planning), [execution evidence](../guides/workflows/executions), [execution scopes and topologies](./execution-scopes-and-topologies), and [provenance and audit](../guides/data/provenance-and-audit).
+Related material: [planning a workflow](/docs/guides/workflows/planning), [execution evidence](/docs/guides/workflows/executions), [execution scopes and topologies](/docs/reference/execution-scopes-and-topologies), and [provenance and audit](/docs/guides/data/provenance-and-audit).

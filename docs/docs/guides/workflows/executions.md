@@ -7,14 +7,14 @@ description: Start a saved plan, follow its activities, and inspect the run's ob
 
 Start a run from a saved plan, follow its activities, and inspect the result. AkôFlow keeps the plan's predictions beside the run's observations so you can compare them when the runtime reports enough data.
 
-For the API commands on this page, complete [API connection setup](../../tutorials/api-access) first.
+For the API commands on this page, complete [API connection setup](/docs/tutorials/api-access) first.
 
 ## Choose real execution or simulation
 
 - **Real** runs send activities to resources configured for execution, such as the local machine, Kubernetes, or SLURM.
 - **Simulation** runs evaluate a workflow with a simulation environment such as SimGrid.
 
-To open a terminal on one resource, follow the [interactive console guide](../operations/interactive-console). Terminal sessions also appear in the run history, but they do not start from a workflow plan.
+To open a terminal on one resource, follow the [interactive console guide](/docs/guides/operations/interactive-console). Terminal sessions also appear in the run history, but they do not start from a workflow plan.
 
 ## Status and timing
 
@@ -50,7 +50,7 @@ Depending on the runtime and available observations, the run detail can include:
 
 ## Using the API
 
-`POST /execution-runs/` accepts a complete execution request. The command below assumes you have a v1.0.8 checkout and have registered the environment, scope, topology, workflow, and plan in the [SimGrid first-run tutorial](./first-run). For Kubernetes, use the separate [Kind example](../../showcase/kubernetes-real-execution) and its own execution request.
+`POST /execution-runs/` accepts a complete execution request. The command below assumes you have a v1.0.8 checkout and have registered the environment, scope, topology, workflow, and plan in the [SimGrid first-run tutorial](/docs/guides/workflows/first-run). For Kubernetes, use the separate [Kind example](/docs/showcase/kubernetes-real-execution) and its own execution request.
 
 ```bash
 curl --fail-with-body \
@@ -60,7 +60,7 @@ curl --fail-with-body \
   "$AKOFLOW_API_URL/execution-runs/"
 ```
 
-The request contains `run`, `plan`, `workflow`, `executionScope`, `resources`, `runtimes`, runtime bindings, the network topology, and activity profiles. Submission is asynchronous and returns `202 Accepted` with the queued job. Read the run by the `run.id` in the request:
+This example submits the saved SimGrid plan with the workflow and environment it uses. The [request reference](/docs/api/endpoints/executions/post-execution-runs) lists the full payload. Submission returns `202 Accepted` with a queued job; use the `run.id` from the example to read the run:
 
 ```bash
 curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \

@@ -25,6 +25,6 @@ A **run** records what happened after the plan was submitted. It tracks activity
 
 ## Where to go next
 
-Start with [the first local workflow in Desktop](./guides/workflows/first-local-run). Then use [Workflow definitions](./guides/workflows/definitions), [Planning](./guides/workflows/planning), and [Execution](./guides/workflows/executions) for the individual tasks. The [SimGrid API tutorial](./guides/workflows/first-run) is a separate simulation example.
+Start with [the first local workflow in Desktop](/docs/guides/workflows/first-local-run). Then use [Workflow definitions](/docs/guides/workflows/definitions), [Planning](/docs/guides/workflows/planning), and [Execution](/docs/guides/workflows/executions) for the individual tasks. The [SimGrid API tutorial](/docs/guides/workflows/first-run) is a separate simulation example.
 
-For exact file fields, use the [workflow specification](./internal/workflow-spec) and [environment reference](./reference/environment-yaml). For implementation details, see [Architecture internals](./modules).
+For exact file fields, use the [workflow specification](/docs/internal/workflow-spec) and [environment reference](/docs/reference/environment-yaml). For implementation details, see [Architecture internals](/docs/modules).

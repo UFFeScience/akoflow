@@ -7,14 +7,14 @@ description: Register the checked-in SimGrid example, execute it, and verify com
 
 This tutorial is for a reader with a separately managed AkôFlow API endpoint. You will submit a three-activity workflow to SimGrid and verify that all activities and both data transfers completed. Nothing is dispatched to Kubernetes, SLURM, or a cloud account.
 
-The example imports a fixed plan so the first result is reproducible. After it succeeds, use [Plan a workflow](./planning.md) to compare automatic scheduling choices.
+The example imports a fixed plan so the first result is reproducible. After it succeeds, use [Plan a workflow](/docs/guides/workflows/planning) to compare automatic scheduling choices.
 
 ## Before you begin
 
 You need Git, Bash, `curl`, `jq`, and an AkôFlow server with the SimGrid runner available.
-Complete [API connection setup](../../tutorials/api-access) first, using a server
+Complete [API connection setup](/docs/tutorials/api-access) first, using a server
 whose URL and token you manage. The graphical Desktop setup does not expose a
-token for these commands; use the [server installation](../operations/server-instance)
+token for these commands; use the [server installation](/docs/guides/operations/server-instance)
 if you need a separately managed API endpoint.
 
 Download the matching example source and enter its directory:
@@ -240,4 +240,4 @@ The run is complete only when the header says `completed` and the activity summa
 | Completed run has zero transferred bytes                | The workflow lacks data dependencies or producer and consumer were placed on the same resource. Recheck `workflow.yaml`, the plan assignments, and topology IDs. |
 | Run remains `pending`                                   | Inspect the run events and server log; the asynchronous command may have failed before the simulation process started.                                           |
 
-Next, use [the edge-to-cloud Showcase](../../showcase/edge-cloud-simulation) to inspect the same model visually, or [Plan a workflow](./planning.md) to compare PRISM Cost, PRISM Time, and HEFT.
+Next, use [the edge-to-cloud Showcase](/docs/showcase/edge-cloud-simulation) to inspect the same model visually, or [Plan a workflow](/docs/guides/workflows/planning) to compare PRISM Cost, PRISM Time, and HEFT.

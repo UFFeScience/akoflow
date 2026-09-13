@@ -5,7 +5,7 @@ description: Search AkôFlow records by name or ID in Desktop or through the API
 
 # Find a record
 
-Use search to open a workflow, run, environment, plan, or other saved record by name or ID. For operations that finished in this Desktop profile, [follow notifications](./follow-notifications).
+Use search to open a workflow, run, environment, plan, or other saved record by name or ID. For operations that finished in this Desktop profile, [follow notifications](/docs/guides/operations/follow-notifications).
 
 ## Search from Desktop
 
@@ -33,7 +33,7 @@ Exact matches appear before partial matches.
 
 ## Search through the API
 
-Complete [API connection setup](../../tutorials/api-access) first.
+Complete [API connection setup](/docs/tutorials/api-access) first.
 
 ```bash
 curl --get --fail-with-body \

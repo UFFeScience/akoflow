@@ -7,7 +7,7 @@ description: How AkôFlow maps planned activities to local, HPC, Kubernetes, clo
 
 A runtime adapter translates an assigned activity into operations on an execution technology. Runtimes belong to an environment version and connect to resources through bindings. Execution resolves the binding for each planned assignment.
 
-This explanation focuses on runtime adapters. Read [Architecture internals](./modules) for the surrounding services and [Execution control plane](./engine) for how the server uses adapters.
+This explanation focuses on runtime adapters. Read [Architecture internals](/docs/modules) for the surrounding services and [Execution control plane](/docs/engine) for how the server uses adapters.
 
 ## Runtime model
 
@@ -70,7 +70,7 @@ Execution is preceded by preparation. Routes may use an existing verified locati
 
 ## User procedures
 
-To connect infrastructure, use [Create and inspect environments](./guides/infrastructure/environments). For the task flow after registration, follow [Define execution scopes](./guides/infrastructure/execution-scopes), [Plan a workflow](./guides/workflows/planning), and [Execute and monitor a workflow](./guides/workflows/executions). Those guides keep the user steps separate from adapter details here.
+To connect infrastructure, use [Create and inspect environments](/docs/guides/infrastructure/environments). For the task flow after registration, follow [Define execution scopes](/docs/guides/infrastructure/execution-scopes), [Plan a workflow](/docs/guides/workflows/planning), and [Execute and monitor a workflow](/docs/guides/workflows/executions). Those guides keep the user steps separate from adapter details here.
 
 ## Provider extension boundary
 

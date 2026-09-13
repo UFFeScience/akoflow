@@ -5,14 +5,14 @@ description: Field-level reference for the environment definition accepted by th
 
 # Environment YAML reference
 
-This reference describes the `EnvironmentDefinition` document accepted by `POST /environments/` and `PUT /environments/{environmentId}/`. JSON and YAML carry the same structure. It is for authors who need a reproducible infrastructure inventory; use the [environment guide](../guides/infrastructure/environments) for the Desktop workflow and the runtime guides for provider-specific setup. “Recommended” fields improve the inventory but are not required by the create handler.
+This reference describes the `EnvironmentDefinition` document accepted by `POST /environments/` and `PUT /environments/{environmentId}/`. JSON and YAML carry the same structure. It is for authors who need a reproducible infrastructure inventory; use the [environment guide](/docs/guides/infrastructure/environments) for the Desktop workflow and the runtime guides for provider-specific setup. “Recommended” fields improve the inventory but are not required by the create handler.
 
 ## Before you write a definition
 
 - Use stable, unique IDs. The environment ID is the identity used by `PUT`; send a complete definition when replacing an unused environment. Replacement can fail once a scope, plan, or other record references its inventory. The version ID is the identity referenced by scopes.
 - Create the environment before an execution scope. A scope refers to the version ID, and its network topology is a separate document.
 - Declare performance values deliberately. The API decodes omitted numeric values as `0`, including `computeSpeedup`, and saves them explicitly. Set a positive speedup and realistic capacity for schedulable resources.
-- Keep secrets out of the file. Connection credential references identify saved credentials. Transfer and storage references have provider-specific behavior; see the [AWS/S3 limits](../guides/infrastructure/aws) before using them.
+- Keep secrets out of the file. Connection credential references identify saved credentials. Transfer and storage references have provider-specific behavior; see the [AWS/S3 limits](/docs/guides/infrastructure/aws) before using them.
 
 The smallest useful simulation definition is versioned in [`examples/simulation/environment.yaml`](https://github.com/UFFeScience/akoflow/blob/v1.0.8/examples/simulation/environment.yaml). It is a better starting point than an empty document because it includes a runtime, schedulable resources, and their bindings.
 
@@ -55,7 +55,7 @@ The create handler returns the submitted document. It may still show omitted nes
 
 ## Runtimes
 
-Each entry in `runtimes` defines how a version can execute or simulate work. `configuration` is a runtime-specific object; see the relevant [SimGrid](../guides/infrastructure/simgrid), [Kubernetes](../guides/infrastructure/kubernetes), or [SLURM/HPC](../guides/infrastructure/hpc-slurm) guide before adding its keys.
+Each entry in `runtimes` defines how a version can execute or simulate work. `configuration` is a runtime-specific object; see the relevant [SimGrid](/docs/guides/infrastructure/simgrid), [Kubernetes](/docs/guides/infrastructure/kubernetes), or [SLURM/HPC](/docs/guides/infrastructure/hpc-slurm) guide before adding its keys.
 
 | Path | Required | Type | Values / default | Notes |
 | --- | --- | --- | --- | --- |
@@ -119,7 +119,7 @@ resourceRuntimeBindings:
 | `connections[].configuration` | No | object | omitted | Connection-type-specific settings. |
 | `connections[].createdAt` | No | timestamp | server-managed | Read-only evidence field. |
 
-Do not author `connectorBindings` or `connectionChecks` in this definition. The Go type includes both fields, but POST and PUT do not save them. GET includes recent connection checks recorded by separate health operations; it does not return a saved connector-binding list from this file. Configure storage or transfer use through the supported runtime and storage paths; see the [AWS/S3 guide](../guides/infrastructure/aws) for the current S3 credential limits. Validate a connection again after import instead of copying a historical check.
+Do not author `connectorBindings` or `connectionChecks` in this definition. The Go type includes both fields, but POST and PUT do not save them. GET includes recent connection checks recorded by separate health operations; it does not return a saved connector-binding list from this file. Configure storage or transfer use through the supported runtime and storage paths; see the [AWS/S3 guide](/docs/guides/infrastructure/aws) for the current S3 credential limits. Validate a connection again after import instead of copying a historical check.
 
 ## Storage
 
@@ -203,7 +203,7 @@ resourceRuntimeBindings:
     enabled: true
 ```
 
-After creating it, retrieve `GET /environments/lab-sim/` and confirm that the runtime, resource, and binding are present. Then create an [execution scope](../guides/infrastructure/execution-scopes) and its network topology before generating a plan.
+After creating it, retrieve `GET /environments/lab-sim/` and confirm that the runtime, resource, and binding are present. Then create an [execution scope](/docs/guides/infrastructure/execution-scopes) and its network topology before generating a plan.
 
 ## Compatibility and common failures
 
@@ -216,4 +216,4 @@ After creating it, retrieve `GET /environments/lab-sim/` and confirm that the ru
 | Two default storages bind to one runtime | The definition is rejected. Keep one default storage for each runtime/version pair. |
 | A scope or plan already uses the environment | Deletion or replacement can fail to preserve existing references. Register the revised inventory as a new environment with new environment and version IDs; the current API has no endpoint to append a version to an existing environment. |
 
-Related reference: [workflow YAML](../internal/workflow-spec), [SimGrid modeling](../guides/infrastructure/simgrid), [storage](../guides/infrastructure/storage), and [execution scopes](../guides/infrastructure/execution-scopes).
+Related reference: [workflow YAML](/docs/internal/workflow-spec), [SimGrid modeling](/docs/guides/infrastructure/simgrid), [storage](/docs/guides/infrastructure/storage), and [execution scopes](/docs/guides/infrastructure/execution-scopes).

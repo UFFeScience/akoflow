@@ -6,7 +6,7 @@ description: What the built-in schedulers optimize, what each prediction include
 
 HEFT, PRISM Time, and PRISM Cost propose different placements for a workflow. Each produces predictions from the same planning-session inputs; none measures a completed run.
 
-This explanation is for readers choosing or interpreting a built-in scheduler. For the procedure, see [Plan a workflow](../guides/workflows/planning). For the meaning of observed timing, see [evidence and provenance](./evidence-and-provenance).
+This explanation is for readers choosing or interpreting a built-in scheduler. For the procedure, see [Plan a workflow](/docs/guides/workflows/planning). For the meaning of observed timing, see [evidence and provenance](/docs/explanations/evidence-and-provenance).
 
 ## What is shared
 
@@ -60,7 +60,7 @@ HEFT and PRISM do **not** pass through one shared evaluator before their predict
 
 ## Related material
 
-- [Planning, candidates, and selected plans](./planning)
-- [Network modeling and data movement](./network-modeling)
-- [Execution scopes and topologies reference](../reference/execution-scopes-and-topologies)
-- [Planning and execution state reference](../reference/planning-and-execution-states)
+- [Planning, candidates, and selected plans](/docs/explanations/planning)
+- [Network modeling and data movement](/docs/explanations/network-modeling)
+- [Execution scopes and topologies reference](/docs/reference/execution-scopes-and-topologies)
+- [Planning and execution state reference](/docs/reference/planning-and-execution-states)

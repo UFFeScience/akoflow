@@ -9,7 +9,7 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 
 A plan records where a workflow's activities should run within an execution scope. You can make one manually or use a planning session to compare predicted placements and costs. Selecting a plan does not start a run or reserve infrastructure.
 
-Use [Plan a workflow](../guides/workflows/planning) for the Desktop or API procedure; this explanation covers the model behind it.
+Use [Plan a workflow](/docs/guides/workflows/planning) for the Desktop or API procedure; this explanation covers the model behind it.
 
 ## A planning session freezes the question
 
@@ -29,15 +29,15 @@ Plan validation checks placement and workflow constraints. The runtime binding f
 
 An algorithm's objective ranks candidates. Deadline and budget determine whether each candidate meets your constraints. A candidate may remain visible even when it misses a limit, so you can inspect the alternatives the planner found.
 
-The built-in schedulers are HEFT, PRISM Time, and PRISM Cost. They rank candidates in different ways; [PRISM and HEFT](./prism-and-heft) explains those differences. A completed run supplies the evidence needed to assess the selected plan's prediction.
+The built-in schedulers are HEFT, PRISM Time, and PRISM Cost. They rank candidates in different ways; [PRISM and HEFT](/docs/explanations/prism-and-heft) explains those differences. A completed run supplies the evidence needed to assess the selected plan's prediction.
 
 ## Why a plan can differ from a completed run
 
-Planning works from snapshots and models. An actual run adds provider queueing, startup behavior, data preparation, runtime availability, and observed transfer behavior. Those are recorded with the execution rather than silently rewritten into the plan. Read [plan-versus-observed evidence](./evidence-and-provenance) for how to interpret the comparison.
+Planning works from snapshots and models. An actual run adds provider queueing, startup behavior, data preparation, runtime availability, and observed transfer behavior. Those are recorded with the execution rather than silently rewritten into the plan. Read [plan-versus-observed evidence](/docs/explanations/evidence-and-provenance) for how to interpret the comparison.
 
 ## Related material
 
-- [Planning and execution state reference](../reference/planning-and-execution-states)
-- [Execution scopes and topologies](../reference/execution-scopes-and-topologies)
-- [Network modeling](./network-modeling)
-- [Execute and monitor a workflow](../guides/workflows/executions)
+- [Planning and execution state reference](/docs/reference/planning-and-execution-states)
+- [Execution scopes and topologies](/docs/reference/execution-scopes-and-topologies)
+- [Network modeling](/docs/explanations/network-modeling)
+- [Execute and monitor a workflow](/docs/guides/workflows/executions)

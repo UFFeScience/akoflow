@@ -14,7 +14,7 @@ Use **Provenance** to find the workflow, run, and data behind a result.
 3. If lineage does not answer the question, use read-only SQL to compare records or planned and observed values.
 4. Export the relevant result with its IDs, query, parameters, and page when you need to share it.
 
-For the API commands below, complete [API connection setup](../../tutorials/api-access) first.
+For the API commands below, complete [API connection setup](/docs/tutorials/api-access) first.
 
 ## Explore provenance in Desktop
 
@@ -116,4 +116,4 @@ curl --fail-with-body -X POST -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
 
 Send the same payload to `/provenance/sql/explain/` to inspect the query plan without running the ordinary result path. SQL results contain typed `columns`, `items`, pagination information, a `truncated` flag, and elapsed milliseconds.
 
-For recorded connection checks, resource discovery, or console actions around the same time, [inspect audit events](./audit-events). Provenance endpoints return `503 Service Unavailable` when the explorer is not configured, `400 Bad Request` for invalid entity, SQL, or lineage requests, and `500 Internal Server Error` if schema discovery fails.
+For recorded connection checks, resource discovery, or console actions around the same time, [inspect audit events](/docs/guides/data/audit-events). Provenance endpoints return `503 Service Unavailable` when the explorer is not configured, `400 Bad Request` for invalid entity, SQL, or lineage requests, and `500 Internal Server Error` if schema discovery fails.

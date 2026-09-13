@@ -131,7 +131,10 @@ function checkTarget(sourceFile, rawTarget, sourceIsShowcase) {
   }
 
   const localPath = resolve(dirname(sourceFile), target);
-  if (candidateDocumentationFiles(localPath).some((candidate) => existsSync(candidate))) return;
+  if (candidateDocumentationFiles(localPath).some((candidate) => existsSync(candidate) && inside(contentDirectory, candidate))) {
+    report(sourceFile, target, "Use an absolute /docs/ route; relative documentation links can navigate to the wrong client-side route");
+    return;
+  }
 
   if (extname(target)) {
     checkRepositoryPath(sourceFile, target, localPath, "Local link");

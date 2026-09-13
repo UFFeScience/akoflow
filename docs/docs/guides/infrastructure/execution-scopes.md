@@ -5,7 +5,7 @@ description: Limit planning to selected environment versions and model routes be
 
 An execution scope tells the planner which environments it may use. If dependent activities may run on different resources, model the links between them so transfer estimates have a route. For a single-machine workflow, an empty topology is enough. The current Desktop creates an empty topology with a scope; use the API procedure below to register one with links.
 
-For the API commands on this page, complete [API connection setup](../../tutorials/api-access) first.
+For the API commands on this page, complete [API connection setup](/docs/tutorials/api-access) first.
 
 ## Create a scope
 
@@ -26,7 +26,7 @@ A scope is not a copy of its environments and does not create connections or res
 
 ### Using the API
 
-Create the scope first. Its optional `networkTopologyId` can name the topology created next; the topology refers back to the scope by `executionScopeId`. Planning selects the topology it will use. The IDs below illustrate the relationship: replace `hpc-v1` and `cloud-v1` with published environment-version IDs in your instance. For a complete runnable set, use the [versioned SimGrid tutorial](../workflows/first-run).
+Create the scope first. Its optional `networkTopologyId` can name the topology created next; the topology refers back to the scope by `executionScopeId`. Planning selects the topology it will use. The IDs below illustrate the relationship: replace `hpc-v1` and `cloud-v1` with published environment-version IDs in your instance. For a complete runnable set, use the [versioned SimGrid tutorial](/docs/guides/workflows/first-run).
 
 ```bash
 curl --fail-with-body \

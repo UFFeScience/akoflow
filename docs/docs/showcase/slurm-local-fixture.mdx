@@ -12,7 +12,7 @@ import {FileList, WorkflowDiagram} from '@site/src/components/WorkflowShowcase';
 
 This local fixture checks AkôFlow's SLURM batch adapter. It starts an isolated daemon, supplies test `sbatch` and `singularity` commands, and runs the generated batch script in a disposable Alpine container. The activity writes `result.txt`; the adapter observes its completion sentinel and saves the artifact manifest.
 
-Use it after changing batch-script generation or artifact observation. It does not validate SSH access, scheduler accounting, shared storage, or site policies on a real cluster. For those checks, follow [Connect an HPC and SLURM cluster](../guides/infrastructure/hpc-slurm).
+Use it after changing batch-script generation or artifact observation. It does not validate SSH access, scheduler accounting, shared storage, or site policies on a real cluster. For those checks, follow [Connect an HPC and SLURM cluster](/docs/guides/infrastructure/hpc-slurm).
 
 ## Prerequisites
 
@@ -98,4 +98,4 @@ rm -f examples/slurm/local-fixture/akoflow-*.status \\
 | The run remains queued | Check that the first terminal is still running and that `sbatch` was invoked from the fixture's `bin` directory. Do not start a second fixture daemon against the same `.runtime` directory. |
 | The artifact is absent | Inspect `examples/slurm/local-fixture/akoflow-*.log` and `.status`; then confirm Docker can pull `alpine:3.20`. |
 
-Related material: [SLURM/HPC connection guide](../guides/infrastructure/hpc-slurm), [local direct execution](./local-direct-execution), and [workflow runs](../guides/workflows/executions).
+Related material: [SLURM/HPC connection guide](/docs/guides/infrastructure/hpc-slurm), [local direct execution](/docs/showcase/local-direct-execution), and [workflow runs](/docs/guides/workflows/executions).

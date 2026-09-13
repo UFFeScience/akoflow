@@ -93,7 +93,7 @@ curl --fail-with-body -X POST \
 
 Check the candidate's `feasible` field before selecting it. Selection returns `201 Created` with the saved schedule plan.
 
-For a manual plan, send the complete validation envelope used by `examples/simulation/plan-request.yaml` to `POST /schedule-plans/`. To import an already assembled plan whose referenced objects are registered, send `{ "plan": ... }` to `POST /schedule-plans/import/`; the server sets its source to `imported` and validates it.
+For a manual plan, send the complete validation envelope used by `examples/simulation/plan-request.yaml` to `POST /schedule-plans/`. To import an already assembled plan whose referenced objects are registered, send `{ "plan": ... }` to `POST /schedule-plans/import/`; the server sets its source to `imported` and validates it. These routes save the predicted metrics you supply rather than recalculating them.
 
 ## Next step
 

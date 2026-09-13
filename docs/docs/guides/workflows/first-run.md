@@ -136,7 +136,7 @@ curl --fail-with-body \
   "$AKOFLOW_API_URL/schedule-plans/"
 ```
 
-The plan assigns `prepare` and `summarize` to the edge and `analyze` to the cloud. The API reevaluates imported plans using the current model, so stored predicted cost or feasibility can differ from the values written in the source envelope. Treat the returned plan as authoritative.
+The plan assigns `prepare` and `summarize` to the edge and `analyze` to the cloud. The API validates the assignments against the registered workflow, scope, topology, and resources, then saves the supplied predicted time, cost, and feasibility. It does not recalculate those predictions on this route. Compare them with the observations in the completed run.
 
 ## 5. Start the simulation
 

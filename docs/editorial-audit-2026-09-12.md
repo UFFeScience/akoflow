@@ -113,6 +113,8 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 
 102. **P0 resolved in artifact location claims:** the task guide and API overview called location records “verified bytes,” although `GET /artifact-locations/` only reads saved rows and does not probe the URI. The guide now distinguishes recorded URI/digest/`available` from a fresh storage check. It also states that a committed materialization requires both status and a matching verified digest, and that listing saved observations does not recheck destination bytes. The artifact task landing was aligned. The claims were checked against the domain `Committed()` predicate, list handlers, and repositories.
 
+103. **P1 resolved in documentation production contract:** the contributor page said every generated endpoint had a cURL command and discussed inferred request JSON as if it were displayed. The current component shows a WebSocket connection for the console stream, only checked request examples, templates where IDs/files are still needed, and illustrative response shapes. The contract now describes that behavior and requires handler plus real-response checks before field-level claims are verified.
+
 ## Page inventory
 
 | Page | Current pass | Next review |
@@ -120,7 +122,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `guides/workflows/first-local-run.md` | Entry-navigation pass; menu paths now match Infrastructure guides; Linux package UI run verified through generated file evidence | Repeat on a clean supported host and other platforms |
 | `src/pages/index.tsx` | Second read; corrected real-local-run narrative and routed download to the pinned selection page | Recheck rendered entry path on mobile |
 | `concepts.md` | Claim reread; distinguishes always-tracked activity status from runtime-dependent timing, transfer, and output observations | Recheck complete new-user path |
-| `contributing/documentation-plan.md` | Second read; editorial contract, source hierarchy, and completion gate still match the active audit | Recheck contract at final audit |
+| `contributing/documentation-plan.md` | Editorial contract and completion gate retained; generated request, response, template, and WebSocket descriptions now match the current component | Recheck contract at final audit |
 | `downloads.md` | Second read; platform limits and verification are explicit, and latest release was `v1.0.8` on 2026-09-12 | Recheck release links when version changes |
 | `engine.md` | Second read; implementation details remain in the developer section | Recheck claims against event-loop code |
 | `explanations/evidence-and-provenance.md` | Second read; plan predictions and optional observations remain distinct | Recheck against execution evidence after P0 fixes |

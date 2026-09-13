@@ -111,7 +111,9 @@ Use the black, white, and neutral-gray visual system established by [`akoflow-co
 
 Run `npm run generate:api` to rebuild the endpoint catalog from `internal/api/httpserver/httpserver.go`. The Docusaurus `prestart` and `prebuild` hooks run this automatically. Generated pages are intentionally ignored by Git; changes to method, path, or handler appear on the next documentation build without copying the router by hand.
 
-Each generated endpoint page includes its HTTP method, registered path, path parameters, authentication example, request-body indication, owning handler, and a cURL command. Inferred JSON shapes are illustrative, not guaranteed valid payloads. Priority endpoints need authored, handler-checked contracts before their commands can be treated as runnable examples.
+Each generated endpoint page shows the registered method and path, parameters, owning handler, and request-body indication. HTTP routes include a cURL command or template; the console stream shows a WebSocket connection instead. A template still needs valid IDs and, for a body, a prepared request file.
+
+The generator shows a request body only when it has a checked example. Otherwise, use the handler-checked notes and linked guide to prepare one. Response JSON shapes are illustrative and may omit fields or show placeholder values. Check a route against its handler and a real response before treating a field-level example as verified.
 
 ## Reproducible media capture
 

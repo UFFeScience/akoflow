@@ -47,6 +47,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 39. **P0 resolved in planning cancellation contract — misleading missing-session status:** the handler maps cancellation failures to `409`, including a missing session, while the service accepts repeated cancellation but rejects completed and failed sessions. The generated endpoint now states those outcomes and that cancellation requests active work to stop.
 40. **P1 resolved in planning how-to — candidate selection broke the API path:** after listing candidates, the guide reverted to an unfilled `<candidate-id>` in its detail and selection requests. It now waits for final ranking, lists returned IDs, asks the reader to choose one, and reuses that value to inspect and select a feasible candidate.
 41. **P0/P1 resolved in provenance/audit API examples — undefined filter IDs:** lineage used `$RUN_ID` without obtaining it, and the audit failure example required an undefined `$ENVIRONMENT_ID`. The page now asks for a run ID from Explore, rejects an empty value, and demonstrates a runnable failure query before showing an optional environment filter. The nearby panel and depth language was shortened.
+42. **P0/P1 resolved in artifact browsing examples — undefined inventory IDs:** the guide used `$ENVIRONMENT_ID`, `$STORAGE_ID`, and `$RUN_ID` without obtaining them. It now takes an existing environment ID, lists its storages, asks for one returned storage ID, and lists materializations without requiring a run filter. Sample file and destination paths are explicitly identified as values to replace.
 
 ## Page inventory
 
@@ -64,7 +65,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `explanations/planning.md` | Second read; linked scheduler comparison and removed abstract separation language | Recheck planning claims against coordinator |
 | `explanations/prism-and-heft.md` | Second read; removed Go request type and condensed bounded-search detail | Recheck algorithm claims against source |
 | `getting-started.md` | Second read; leads to the verified Desktop local run before the API simulation | Recheck the entry flow on a clean supported host |
-| `guides/data/artifacts.md` | Second read; removed fictitious lineage/project IDs, made build ID acquisition explicit, and aligned storage operation states | Recheck API payloads after P0 contracts fix |
+| `guides/data/artifacts.md` | API-path pass; environment and storage IDs now come from inventory, and the materialization query no longer requires an undefined run ID | Recheck API payloads after P0 contracts fix |
 | `guides/data/provenance-and-audit.md` | API-path/plain-language pass; removed undefined run/environment variables, shortened panel/depth language, and kept route limits checked against source | Recheck Desktop interactions against packaged app |
 | `guides/infrastructure/aws.md` | Second read after code audit; partial S3 path and absent EC2 path are explicit | Check provider claims against disposable-bucket evidence |
 | `guides/infrastructure/cloud-capacity.md` | Claim/path pass; aligned environment with GCP tutorial and derived target/operation IDs from responses | Validate with disposable GCP account |

@@ -17,21 +17,27 @@ In Desktop, open **Infrastructure**, select an environment, then open **Storage*
 
 The actions offered for an entry depend on the storage capabilities reported by discovery. The current interface can inspect an entry, download a file, archive a directory for download, calculate a checksum, copy to another storage, promote a file, delete an entry, and start or inspect an index run. A storage may be read-only or visible only from a login node.
 
-List the storage resources for an environment and browse a directory:
+Enter an existing environment ID from **Infrastructure → Environments**. List its storage resources, then choose a storage ID from the response before browsing:
 
 ```bash
-curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+read -r -p 'Environment ID: ' ENVIRONMENT_ID || exit 1
+[ -n "$ENVIRONMENT_ID" ] || exit 1
+
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   "$AKOFLOW_API_URL/environments/$ENVIRONMENT_ID/storages/"
 
-curl -G -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+read -r -p 'Storage ID from the response: ' STORAGE_ID || exit 1
+[ -n "$STORAGE_ID" ] || exit 1
+
+curl --fail-with-body -G -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   --data-urlencode "path=/shared/project" \
   --data-urlencode "limit=100" \
   "$AKOFLOW_API_URL/storages/$STORAGE_ID/entries/"
 ```
 
-Use the returned `nextCursor` as `cursor` to continue when the response is paginated. Paths are interpreted within a root allowed by the storage adapter; do not assume host filesystem semantics.
+Replace `/shared/project` with a path inside one of that storage's declared roots. Use the returned `nextCursor` as `cursor` to continue when the response is paginated. Paths are interpreted within an allowed root, which may differ from a path on your own computer.
 
-Calculate a digest or queue a copy:
+Calculate a digest or queue a copy. Replace the sample file path with an existing file in the selected storage; `storage-archive` must be replaced with a registered, writable destination storage ID:
 
 ```bash
 curl -X POST -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
@@ -117,12 +123,11 @@ A materialization identifies a variant and digest, target resource and destinati
 curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   "$AKOFLOW_API_URL/artifact-locations/"
 
-curl -G -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
-  --data-urlencode "runId=$RUN_ID" \
+curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   "$AKOFLOW_API_URL/artifact-materializations/"
 ```
 
-Execution detail also shows prepared artifacts and transfer activity. Use it to relate catalog identity to the bytes actually made available for an activity.
+Add `--data-urlencode "runId=<your-run-id>"` and `-G` to the second request when you want one run. Execution detail also shows prepared artifacts and transfer activity. Use it to relate catalog identity to the bytes actually made available for an activity.
 
 :::warning Credentials and paths
 Do not put registry credentials, SSH secrets, or cloud secrets in artifact payloads. Use configured credential references. Browser-local file paths are not server build contexts; upload the bytes or register artifact-store metadata.

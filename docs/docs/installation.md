@@ -56,6 +56,10 @@ The runtime has Linux ARM64 archives, but v1.0.8 does not include a Linux ARM64
 Desktop package. Use the [server installation](./guides/operations/server-instance)
 for a supported ARM64 server deployment.
 
+The Linux v1.0.8 package was opened from an extracted copy and completed a local
+workflow. A clean `apt` install and first launch on macOS, Windows, or AppImage
+remain unverified.
+
 If the download is interrupted, retry before opening the file. For a checksum,
 use the [download verification procedure](./downloads#download-through-the-github-api).
 
@@ -187,24 +191,20 @@ passed, and discovery has completed. No workflow has run yet.
 
 ## 4. Installation result
 
-### Check through the interface
-
-| Checkpoint           | Expected result                                      | If it fails                                                                        |
-| -------------------- | ---------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| Application opens    | Welcome screen or Overview appears                   | Read startup error details and confirm Docker/Compose access                       |
-| Local service        | Sidebar connection indicator says **Connected**      | Wait for startup; inspect the service error rather than creating a new identity    |
-| Catalog navigation   | **Infrastructure → Environments** opens              | Use [Troubleshooting](./guides/operations/troubleshooting) for API/instance errors |
-| Infrastructure setup | **Connect environment** opens the connection choices | Continue with the HPC or cloud tutorial below                                      |
+If you chose **Set up later**, open **Overview** and check that the sidebar
+shows **Connected**. Then open **Infrastructure → Environments**. An empty catalog
+is expected until you register an environment; the connection indicator confirms
+only that Desktop reached its local daemon.
 
 ![Overview after first launch with the local AkôFlow service connected](../static/img/interface/onboarding/installation-result.png)
 
-_Overview after choosing Set up later on a fresh installation. If you completed
-the local assistant, your environment is already present; empty execution charts
-are still expected before running workflows._
+_Overview after choosing Set up later. The execution charts stay empty until a
+workflow runs._
 
-An empty catalog is normal on a new installation. **Connected** means Desktop
-can reach its local service. Check each remote environment before using it;
-the connection indicator does not run a workflow.
+If you completed the local assistant, confirm the saved environment as described
+in **Ready** above. If Desktop is not connected, use
+[Troubleshooting](./guides/operations/troubleshooting) before registering a
+remote target.
 
 ### Check through the API
 

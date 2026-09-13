@@ -5,7 +5,7 @@ description: Create a one-activity local workflow, run it, and inspect its outpu
 
 # Run your first workflow in Desktop
 
-This tutorial runs one activity on your local machine. You will create a workflow, choose where it runs, start it, and see the file it produced. It uses the Desktop interface and does not require a cloud or HPC account.
+This tutorial runs one activity on your local machine. You will create a workflow, choose where it runs, start it, and inspect the recorded output file and checksum. It uses the Desktop interface and does not require a cloud or HPC account.
 
 ## Before you begin
 

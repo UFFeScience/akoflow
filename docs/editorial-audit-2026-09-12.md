@@ -191,12 +191,14 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 
 141. **P1 resolved in troubleshooting evidence:** the final checklist asked for Audit events as general operational evidence and labeled `/audit-events/` as durable operational events. Current emitters cover only connection health, resource discovery, and console actions, so the page now sends readers to the run or operation record for the failed step, Provenance for scientific evidence, and Audit only for its actual emitters. The API overview route label uses that same scope. Handler and emitter call sites were checked; the final all-page audit remains open.
 
+142. **P1 resolved in the entry narrative:** Home and Getting Started offered plan comparison before the first Desktop path, which makes a manual plan. They now lead with making and executing a plan, leaving comparison as a later choice. The first local-run introduction now promises the output-file record and checksum actually visible in Desktop, rather than suggesting the file bytes appear in the UI. The Home metadata describes the scientific-workflow task. Installation and Interface Tour were reread as part of the same path; no additional P0/P1 prose issue was found in this pass. Clean-host and cross-platform runs remain unverified.
+
 ## Page inventory
 
 | Page | Current pass | Next review |
 | --- | --- | --- |
-| `guides/workflows/first-local-run.md` | Entry-navigation pass; menu paths now match Infrastructure guides; Linux package UI run verified through generated file evidence | Repeat on a clean supported host and other platforms |
-| `src/pages/index.tsx` | Third read; entry sequence includes the explicit execute action and routes download to the pinned selection page | Recheck rendered entry path on mobile |
+| `guides/workflows/first-local-run.md` | Entry-path reread; introduction now promises the visible file record and checksum; Linux package UI run verified through generated file evidence | Repeat on a clean supported host and other platforms |
+| `src/pages/index.tsx` | Fourth read; first-run sequence says make and execute a plan; page metadata describes the task | Recheck rendered entry path on mobile |
 | `concepts.md` | Second claim reread; plan selection is separate from execution, including diagram alt text; runtime-dependent observations stay qualified | Recheck complete new-user path |
 | `contributing/documentation-plan.md` | Fourth read; link and shell check scope now fits short paragraphs; progressive disclosure and HTTP-failing cURL checks remain explicit | Recheck contract at final audit |
 | `downloads.md` | Second read; platform limits and verification are explicit, and latest release was `v1.0.8` on 2026-09-12 | Recheck release links when version changes |
@@ -206,7 +208,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `explanations/observed-timing.md` | Third read; opening now leads with makespan versus accumulated time | Recheck metrics against trace aggregation |
 | `explanations/planning.md` | Third read; candidate rank follows session completion and selection saves a plan without starting a run | Recheck planning claims against coordinator |
 | `explanations/prism-and-heft.md` | Third read; comparison headings now describe observed-run and experiment tasks | Recheck algorithm claims against source |
-| `getting-started.md` | Fourth entry-path read; plan comparison, execution, and observed run are sequential; support limits remain explicit | Recheck the entry flow on a clean supported host |
+| `getting-started.md` | Fifth entry-path read; a manual first plan precedes optional comparison; support limits remain explicit | Recheck the entry flow on a clean supported host |
 | `guides/data/artifacts.md` | Short choice page preserving the old URL and routing storage, build, and recorded-location tasks | Check destinations in navigation |
 | `guides/data/build-executable.md` | Third read; build-context upload now fails on HTTP errors; asynchronous Docker/SIF flow remains | Verify a live registry pull and SIF conversion |
 | `guides/data/artifact-locations.md` | Cross-page read; catalog and run observations are explicitly saved records, not live byte checks | Recheck materialization payloads after P0 contracts fix |

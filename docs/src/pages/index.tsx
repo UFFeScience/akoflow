@@ -52,7 +52,7 @@ export default function Home(): React.JSX.Element {
   return (
     <Layout
       title={siteConfig.title}
-      description="One Workflow. Multiple Platforms."
+      description="Define, plan, run, and inspect scientific workflows with AkôFlow."
     >
       <main className={styles.page}>
         <BackgroundGraph />
@@ -82,8 +82,8 @@ export default function Home(): React.JSX.Element {
         </h1>
 
         <p className={styles.subheadline}>
-          Define a scientific workflow, choose where it runs, compare plans,
-          execute one, and inspect the results and provenance. Start locally;
+          Define a scientific workflow, choose where it runs, make a plan,
+          execute it, and inspect the results and provenance. Start locally;
           connected environments require their own setup.
         </p>
 

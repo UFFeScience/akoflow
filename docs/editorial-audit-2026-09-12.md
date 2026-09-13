@@ -2,7 +2,7 @@
 
 Date: 2026-09-12. Scope: authored documentation pages in the current branch; generated API endpoint pages are reviewed through their generator and component.
 
-This is an iteration ledger, not a completion certificate. The first pass read all 51 authored pages and corrected confirmed narrative, terminology, API convention, example, and support-claim findings. A Desktop first-workflow path was added as page 52; splitting the provenance and audit procedures now brings the authored tree to 54 pages. A final full audit, priority endpoint contracts, and external-provider validation remain open.
+This is an iteration ledger, not a completion certificate. The first pass read all 51 authored pages and corrected confirmed narrative, terminology, API convention, example, and support-claim findings. A Desktop first-workflow path was added as page 52; splitting the evidence and operations procedures now brings the authored tree to 56 pages. A final full audit, priority endpoint contracts, and external-provider validation remain open.
 
 ## Open P0/P1 findings
 
@@ -87,6 +87,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 79. **P1 resolved in the scheduling path:** the planning how-to led with session states, candidate field inventories, and assignment internals before the user procedure. It now starts with the workflow/scope/candidate action, keeps the Desktop and API steps together, and links to the PRISM/HEFT explanation and state reference when those details become useful. The PRISM/HEFT, planning-model, and observed-timing explanations were read alongside it; their predicted-versus-observed distinctions remain intact. Provider-dependent timing and full request validation are still open.
 80. **P1 resolved in evidence guide scope:** one long guide mixed tracing a scientific result with investigating operational events. The old URL is now a short choice page; separate provenance and audit guides hold their own Desktop/API procedures, screenshots, limits, and investigation steps. Sidebar, Getting Started, Interface Tour, feature coverage, and API-reference links now lead to the relevant task. This preserves the old URL for inbound links while giving each procedure one objective.
 81. **P0 partially resolved in SSH credential assignment example:** the credentials guide said to preserve the saved connection but showed a partial `PUT` body that could drop proxy and port settings. It now reads `GET /environments/{id}/`, selects the existing connection, changes only `credentialRef` with `jq`, sends the full object, and runs a separate health check. A local `jq` check preserved a sample port and proxy command; the repository `UpsertConnection` updates all supplied fields. The exact HTTP sequence still needs a controlled end-to-end submission. The cloud-credential section now links to the complete Google Cloud connection tutorial.
+82. **P1 resolved in search and notification scope:** one operations page mixed record lookup with profile-local operation alerts. Its existing URL is now a short choice page; separate guides hold Desktop/API search, result limits, notification behavior, collection queries, and recovery. The Interface Tour links directly to record search. This keeps the two objectives distinct without losing the old address.
 
 ## Page inventory
 
@@ -121,7 +122,9 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `guides/operations/credentials-and-ssh.md` | Second read; streamed private key and token payloads from protected files; aligned reference wording with connection fields | Recheck current Desktop form and key lifecycle claims |
 | `guides/operations/instance-management.md` | Claim pass; preserves instance identity, derives imported snapshot ID, states reset partial-failure order, and matches the 100,000-entry import limit | Recheck complete snapshot behavior against a local archive |
 | `guides/operations/interactive-console.md` | API-path pass; resource ID is explicit, session ID comes from the creation response, and closure follows streaming/log use | Recheck session behavior against Desktop |
-| `guides/operations/search-and-notifications.md` | API-path pass; operation collections replace undefined detail IDs, while cloud list takes a saved environment ID | Recheck UI behavior against Desktop |
+| `guides/operations/search-and-notifications.md` | Short choice page preserving the old URL and distinguishing lookup from profile-local alerts | Check both destinations in navigation |
+| `guides/operations/find-records.md` | Desktop/API search procedure, result fields, limits, and empty-result recovery | Recheck UI behavior against Desktop |
+| `guides/operations/follow-notifications.md` | Notification behavior, owning API collections, and missing-alert recovery | Recheck UI behavior against Desktop |
 | `guides/operations/server-instance.md` | Second read; corrected invalid tunnel command, simplified server language, and preserved HTTP failure through jq | Recheck release assets when version changes |
 | `guides/operations/troubleshooting.md` | API-path pass; connection history now takes a saved connection ID; bootstrap/authentication and reset limits remain source-checked | Recheck diagnostic claims after P0 fixes |
 | `guides/workflows/definitions.md` | Second read; isolated the portable demo ID, stated its save step and simulation-only scope | Recheck payload against importer after P0 contracts fix |

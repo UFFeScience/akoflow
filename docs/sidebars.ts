@@ -84,6 +84,8 @@ const sidebars: SidebarsConfig = {
             "guides/operations/instance-management",
             "guides/operations/server-instance",
             "guides/operations/search-and-notifications",
+            "guides/operations/find-records",
+            "guides/operations/follow-notifications",
             "guides/operations/interactive-console",
             "guides/operations/credentials-and-ssh",
             "guides/operations/troubleshooting",

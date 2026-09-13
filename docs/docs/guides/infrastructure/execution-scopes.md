@@ -25,7 +25,7 @@ A scope is not a copy of its environments and does not create connections or res
 
 ### Using the API
 
-Create the scope first. The scope refers to the topology by `networkTopologyId`; the topology refers back to the scope by `executionScopeId`. Keep both IDs stable.
+Create the scope first. The scope refers to the topology by `networkTopologyId`; the topology refers back to the scope by `executionScopeId`. Keep both IDs stable. The IDs below illustrate the relationship: replace `hpc-v1` and `cloud-v1` with published environment-version IDs in your instance. For a complete runnable set, use the [versioned SimGrid tutorial](../workflows/first-run).
 
 ```bash
 curl --fail-with-body \
@@ -89,4 +89,4 @@ curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   "$AKOFLOW_API_URL/network-topologies/hybrid-network-v1/"
 ```
 
-Use resource IDs that belong to environment versions in the scope. The API validates persistence constraints but does not measure whether the bandwidth and latency values match the real infrastructure.
+Replace `hpc-cluster` and `cloud-capacity-small` with resource IDs from those environment versions. The API does not check that a link's resources belong to the scope or measure the real bandwidth and latency; verify those values before using the topology for planning.

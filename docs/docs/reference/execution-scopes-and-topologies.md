@@ -115,7 +115,7 @@ The HEFT baseline finds a matching direct link for its transfer estimate. PRISM 
 
 ## API sequence
 
-The checked-in [SimGrid bundle](https://github.com/UFFeScience/akoflow/tree/v1.0.8/examples/simulation) supplies a compatible `scope.yaml` and `topology.yaml`. Submit them in this order after creating the environment:
+The checked-in [SimGrid bundle](https://github.com/UFFeScience/akoflow/tree/v1.0.8/examples/simulation) supplies compatible `scope.yaml` and `topology.yaml` files. Complete [API connection setup](../tutorials/api-access), enter a v1.0.8 repository checkout, and create the bundle's environment first. The [SimGrid first-run tutorial](../guides/workflows/first-run) gives the full setup. Then submit these two files in order:
 
 ```bash
 curl --fail-with-body \

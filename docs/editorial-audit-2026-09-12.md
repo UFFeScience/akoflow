@@ -33,6 +33,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 25. **P1 resolved in the environment how-to — incomplete remote path:** the page tested an SSH connection using `host:port` in `endpoint` and then queried a different connection ID that it never saved. Remote registration now links to complete HPC/GCP tutorials; the health/discovery commands use the actual ID from the HPC template as an explicit precondition. The page also replaces an internal Go type name with the fields readers need.
 26. **P0/P1 resolved in the workflow guides — misleading examples:** the portable YAML guide reused the checked-in first-run workflow name, so following both guides could collide. It now uses its own name and matching read/export paths, says to save the file before the `curl` command, and identifies the empty commands as simulation-only. The execution guide no longer describes command history as a catalog of available console commands, and states the SimGrid setup required by its request example. The first-run guide trims repeated caveats while retaining its verification limit.
 27. **P0 resolved in instance settings — sample overwrote identity:** the `PUT /instance/` example told readers to preserve the current identity but sent hard-coded `id`, `name`, and other metadata instead. It now reads the current object, changes only `transferBufferBytes` with `jq`, and sends the complete result. Handler code confirms the endpoint replaces the saved instance object and requires `id` and `name`.
+28. **P1 resolved in scope/topology guidance — example prerequisites:** the reference submitted checked-in SimGrid files without saying how to get them or register their environment. It now links the versioned first-run setup and states the required checkout and order. The scope guide now identifies its HPC/cloud IDs as illustrative, links the runnable bundle, and states that topology creation does not enforce scope membership for link endpoints.
 
 ## Page inventory
 
@@ -55,7 +56,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `guides/infrastructure/aws.md` | Second read after code audit; partial S3 path and absent EC2 path are explicit | Check provider claims against disposable-bucket evidence |
 | `guides/infrastructure/cloud-capacity.md` | Second read; target example now states CIDR and configuration-version prerequisites; target versus VM remains explicit | Validate with disposable GCP account |
 | `guides/infrastructure/environments.md` | Second read; remote registration now links to complete tutorials and health commands use a saved connection ID | Recheck API payloads after P0 contracts fix |
-| `guides/infrastructure/execution-scopes.md` | Full read; moved reciprocal IDs to API procedure | Recheck API payloads after P0 contracts fix |
+| `guides/infrastructure/execution-scopes.md` | Second read; marked illustrative IDs and linked a runnable, versioned setup | Recheck API payloads after P0 contracts fix |
 | `guides/infrastructure/gcp.md` | Second read; corrected Desktop onboarding, source-audited permissions, and absent live validation remain explicit | Check provider claims against disposable-project evidence |
 | `guides/infrastructure/hpc-slurm.md` | Full read; aligned API setup and retained site-specific limits | Check provider claims against real cluster evidence |
 | `guides/infrastructure/kubernetes.md` | Second read; token example now streams the secret without a shell variable, command argument, or temporary file | Recheck procedure against Kind bundle and shared-cluster RBAC |
@@ -77,7 +78,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `modules.md` | Second read; source map and implementation detail remain in the developer section | Recheck claims against daemon composition |
 | `reference/api-overview.md` | Second read; removed token-in-shell-history setup and an unprovided `workflow.json` example; linked the task guide and versioned tutorial | Check contracts against current handlers and schemas |
 | `reference/environment-yaml.md` | Full read; field-level detail belongs in reference | Check contracts against current handlers and schemas |
-| `reference/execution-scopes-and-topologies.md` | Full read; creation order, units, and validation limits are explicit | Check contracts against current handlers and schemas |
+| `reference/execution-scopes-and-topologies.md` | Second read; linked required API setup, checkout, and environment creation before file submissions | Check contracts against current handlers and schemas |
 | `reference/feature-coverage.md` | Second read; now distinguishes registered but unlinked Desktop network routes from navigable task paths | Check contracts against current handlers and schemas |
 | `reference/planning-and-execution-states.md` | Full read; state limits are explicit | Check contracts against current handlers and schemas |
 | `runtimes.md` | Second read; marked serverless schema value unavailable because no adapter is registered | Recheck other provider claims against adapters |
@@ -95,6 +96,6 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 ## Verification in this pass
 
 - `npm run typecheck`, `npm run build`, `npm run check:links`, and `git diff --check` passed on the editorial branch. All 125 endpoint pages generated; targeted checks confirmed the console-command request, qualified environment and workflow responses, and all six versioned first-run links.
-- The latest link check covered 387 local links/assets and 54 showcase downloads from the `v1.0.8` Git tag on 2026-09-13.
+- The latest link check covered 390 local links/assets and 54 showcase downloads from the `v1.0.8` Git tag on 2026-09-13.
 - Headless Chromium at 390 × 844 loaded Getting Started, Core concepts, the console guide, the new Desktop first-run page, and all seven Showcase pages without page errors or horizontal overflow. Every Showcase API tab displayed its v1.0.8 checkout command; the first-run page's mobile menu opened and showed its tutorial link.
 - These checks establish site integrity for this pass. They do not prove tutorial execution, provider support, or completion of the editorial gate.

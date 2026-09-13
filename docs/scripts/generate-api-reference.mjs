@@ -201,12 +201,20 @@ const verifiedRequestNotes = {
   "POST /akoflow-api/connection-tests/": "Send an `EnvironmentConnection` object with the connection type and its required endpoint or configuration. The route tests the supplied object without saving it. It returns `200 OK` with `healthy` and `message`; `healthy: false` is a failed probe even though the HTTP request succeeded. The current test dispatcher handles local, SSH, agent, and Kubernetes connections, not cloud connections.",
   "POST /akoflow-api/machine-configuration-validations/": "Send `playbookYaml` containing the Ansible playbook text. Valid input returns `200 OK` with `valid: true` and a content hash; invalid input returns `422` with `valid: false` and errors. This validates structure only and does not run a playbook or provision a machine.",
   "POST /akoflow-api/machine-configurations/": "`name` is required. `id` is optional and generated when omitted. The server sets `ownership: user` and `enabled: true`. Create a version separately; this request does not validate or execute a playbook.",
-  "POST /akoflow-api/machine-configurations/{configurationId}/versions/": "The path `configurationId` identifies an existing configuration and overrides any body `machineConfigurationId`. Send a positive `version` and valid `playbookYaml`; `id` is optional and `status` defaults to `draft`. The response is the stored configuration with its versions, not just the new version.",
+  "POST /akoflow-api/machine-configurations/{configurationId}/versions/": "Create the configuration first, then use its returned ID as `configurationId` (the preceding example uses `example-machine-setup`). The path ID overrides any body `machineConfigurationId`. Send a positive `version` and valid `playbookYaml`; `id` is optional and `status` defaults to `draft`. The response is the stored configuration with its versions, not just the new version.",
   "POST /akoflow-api/cloud-credentials/validate/": "Send `provider`, raw provider `credential` JSON, and the project/region fields required by that provider. This route performs a live catalog discovery and does not save the credential. The current server registers only a GCP catalog adapter; AWS or Azure validation returns `422` as unsupported even though those credential records can be stored.",
 };
 
 const verifiedRequestExamples = {
   "POST /akoflow-api/machine-configuration-validations/": {
+    playbookYaml: "- hosts: all\n  tasks:\n    - ansible.builtin.debug:\n        msg: ready\n",
+  },
+  "POST /akoflow-api/machine-configurations/": {
+    id: "example-machine-setup",
+    name: "Example machine setup",
+  },
+  "POST /akoflow-api/machine-configurations/{configurationId}/versions/": {
+    version: 1,
     playbookYaml: "- hosts: all\n  tasks:\n    - ansible.builtin.debug:\n        msg: ready\n",
   },
   "POST /akoflow-api/provenance/sql/": {

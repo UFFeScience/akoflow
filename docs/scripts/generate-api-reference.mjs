@@ -206,6 +206,10 @@ const verifiedRequestNotes = {
 };
 
 const verifiedRequestExamples = {
+  "PUT /akoflow-api/user-preferences/{clientId}/": {
+    theme: "dark",
+    animationsEnabled: false,
+  },
   "POST /akoflow-api/connection-tests/": {
     type: "local",
   },
@@ -275,6 +279,10 @@ const verifiedRequestExamples = {
     algorithms: [{ id: "heft", configuration: {} }],
   },
 };
+
+const requestFromCurrentRecord = new Set([
+  "PUT /akoflow-api/instance/",
+]);
 
 function humanizeHandler(handler) {
   const phrase = handler
@@ -682,7 +690,7 @@ function endpointDocument(endpoint, position) {
     ? `## Handler-checked request notes\n\n${verifiedNote}\n\n`
     : "";
   const requestExample =
-    runnableFile
+    runnableFile || requestFromCurrentRecord.has(`${endpoint.method} ${endpoint.path}`)
       ? null
       : verifiedRequestExamples[`${endpoint.method} ${endpoint.path}`] ??
         endpoint.request?.example;

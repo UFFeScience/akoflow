@@ -48,7 +48,7 @@ In Desktop, add the connection under **Infrastructure → Environments**, assign
 
 ## 2. Describe the SLURM resources
 
-The versioned [`examples/slurm/environment.yaml`](https://github.com/UFFeScience/akoflow/blob/v1.0.8/examples/slurm/environment.yaml) provides the catalog portion: runtime, cluster, partition, representative compute node, storage resources, and runtime bindings. Add a real connection like the preceding one before submitting it. The linked v1.0.8 file opts the login node into direct scheduling; set its `schedulable` field to `false` before institutional registration. The current repository example defaults to `false`.
+The [`examples/slurm/environment.yaml`](https://github.com/UFFeScience/akoflow/blob/main/examples/slurm/environment.yaml) provides the catalog portion: runtime, cluster, partition, representative compute node, storage resources, and runtime bindings. Add a real connection like the preceding one before submitting it. Confirm that the login node has `schedulable: false` before institutional registration.
 
 ```yaml title="Runtime and resource excerpt from environment.yaml"
 runtimes:

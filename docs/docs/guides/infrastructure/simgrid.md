@@ -9,11 +9,11 @@ Use this guide to model resources, activity duration, and network transfers for 
 
 Use SimGrid when the question is about a modeled platform: placement, parallel capacity, transfers, latency, and simulated cost. Do not use it to validate an SSH, Kubernetes, cloud, or Slurm connection; a SimGrid environment has no remote endpoint to test. For a first end-to-end execution, start with [Run your first simulated workflow](/docs/guides/workflows/first-run).
 
-The YAML blocks below show only the fields discussed in each step. Use the [complete versioned files](https://github.com/UFFeScience/akoflow/tree/v1.0.8/examples/simulation) when submitting the example.
+The YAML blocks below show only the fields discussed in each step. Use the [complete example files](https://github.com/UFFeScience/akoflow/tree/main/examples/simulation) when submitting the example.
 
 ## Prerequisites
 
-- A running AkôFlow server with the SimGrid runner available. The server image includes it; source builds can follow [`examples/simulation/README.md`](https://github.com/UFFeScience/akoflow/blob/v1.0.8/examples/simulation/README.md).
+- A running AkôFlow server with the SimGrid runner available. The server image includes it; source builds can follow [`examples/simulation/README.md`](https://github.com/UFFeScience/akoflow/blob/main/examples/simulation/README.md).
 - A local checkout of the repository if you will submit the versioned YAML bundle.
 - A workflow with explicit `simulation.durationSeconds` or `simulation.flops` for every activity whose execution time should be modeled.
 
@@ -133,10 +133,10 @@ environmentVersionIds:
 
 In Desktop, open the workflow, choose **Generate plan**, select **Simulation**, and choose the scope. Use **Generate plans** to compare algorithms, or **Create manually** to reproduce a known placement. Inspect the candidate Gantt before selecting it: the lane count should reflect the selected resource cores, and cross-resource dependency lines should correspond to the modeled data dependencies.
 
-To submit the checked-in manual plan and run it through the API, complete [API connection setup](/docs/tutorials/api-access), use a v1.0.8 checkout, and execute the bundle from its root:
+To submit the checked-in manual plan and run it through the API, complete [API connection setup](/docs/tutorials/api-access), use a repository checkout, and execute the bundle from its root:
 
 ```bash
-git clone --branch v1.0.8 --depth 1 https://github.com/UFFeScience/akoflow.git akoflow-simgrid
+git clone --depth 1 https://github.com/UFFeScience/akoflow.git akoflow-simgrid
 cd akoflow-simgrid
 sh examples/simulation/run.sh
 ```

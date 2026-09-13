@@ -52,13 +52,12 @@ it. The version in the filename must match the release tag.
 | Linux x64, Debian/Ubuntu      | `.deb`           | Install Docker Engine and Compose v2; allow your user to access Docker |
 | Other Linux x64 desktops      | `.AppImage`      | Same Docker prerequisites; allow the file to execute                   |
 
-The runtime has Linux ARM64 archives, but v1.0.8 does not include a Linux ARM64
-Desktop package. Use the [server installation](/docs/guides/operations/server-instance)
-for a supported ARM64 server deployment.
+If your release does not include a Desktop package for your architecture, check
+the [server installation](/docs/guides/operations/server-instance) for a
+supported server deployment.
 
-The Linux v1.0.8 package was opened from an extracted copy and completed a local
-workflow. A clean `apt` install and first launch on macOS, Windows, or AppImage
-remain unverified.
+The Desktop workflow has been exercised on Linux. Confirm requirements and any
+platform-specific limitations in the release notes before installation.
 
 If the download is interrupted, retry before opening the file. For a checksum,
 use the [download verification procedure](/docs/downloads#download-through-the-github-api).
@@ -74,15 +73,15 @@ use the [download verification procedure](/docs/downloads#download-through-the-g
 4. Open **AkôFlow Desktop** from Applications.
 
 If macOS blocks the application, first confirm the download came from the
-[official release](https://github.com/UFFeScience/akoflow/releases/tag/v1.0.8).
+[official release](https://github.com/UFFeScience/akoflow/releases/latest).
 See the release notes for signing limitations and your institution's policy
 before allowing it to run.
 
 </TabItem>
 <TabItem value="windows" label="Windows">
 
-1. Open `Akoflow-Desktop-1.0.8-win-x64.exe` from the browser's download list.
-2. Run the portable executable directly. v1.0.8 does not provide a separate Windows installer asset.
+1. Open the Windows `.exe` from the browser's download list.
+2. Follow that release's notes to run or install the application.
 3. Keep Docker Desktop running with Linux containers enabled.
 
 </TabItem>
@@ -91,14 +90,14 @@ before allowing it to run.
 For Debian/Ubuntu, open a terminal in the directory containing the download:
 
 ```bash
-sudo apt install ./Akoflow-Desktop-1.0.8-linux-amd64.deb
+sudo apt install ./downloaded-file.deb # replace with the downloaded filename
 ```
 
 Open **AkôFlow Desktop** from the application launcher. For the AppImage:
 
 ```bash
-chmod +x Akoflow-Desktop-1.0.8-linux-x86_64.AppImage
-./Akoflow-Desktop-1.0.8-linux-x86_64.AppImage
+chmod +x ./downloaded-file.AppImage # replace with the downloaded filename
+./downloaded-file.AppImage
 ```
 
 </TabItem>
@@ -126,7 +125,7 @@ then follow the relevant remote tutorial; skipping does not register an environm
 
 ![First-use welcome screen with Configure environment and Set up later](./../static/img/interface/onboarding/welcome.png)
 
-_Welcome screen from the official v1.0.8 Linux application._
+_Welcome screen from the Linux Desktop application._
 
 ### Engine checkup
 
@@ -234,4 +233,4 @@ requesting help.
 Export your instance before changing versions; see [Instance management](/docs/guides/operations/instance-management).
 Keep Desktop and its runtime on matching versions.
 
-For the v1.0.8 download digest and verification record, see [Downloads](/docs/downloads#download-verification-result).
+For release-asset verification, see [Downloads](/docs/downloads#verify-your-download).

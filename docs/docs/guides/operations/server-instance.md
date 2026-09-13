@@ -43,11 +43,12 @@ deployment.
 
 ## 1. Select the Release and architecture
 
-On the instance, choose the exact release tag and map the kernel architecture
-to the name used by the Release assets.
+Open the [latest release](https://github.com/UFFeScience/akoflow/releases/latest)
+and choose its exact tag. On the instance, map the kernel architecture to the
+name used by that release's assets.
 
 ```bash
-export AKOFLOW_RELEASE_TAG="v1.0.8" # version documented in Downloads
+export AKOFLOW_RELEASE_TAG="<release-tag>" # replace with the tag on Releases
 
 case "$(uname -m)" in
   x86_64) export AKOFLOW_ARCH="amd64" ;;

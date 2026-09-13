@@ -14,7 +14,7 @@ This reference describes the `EnvironmentDefinition` document accepted by `POST 
 - Declare performance values deliberately. The API decodes omitted numeric values as `0`, including `computeSpeedup`, and saves them explicitly. Set a positive speedup and realistic capacity for schedulable resources.
 - Keep secrets out of the file. Connection credential references identify saved credentials. Transfer and storage references have provider-specific behavior; see the [AWS/S3 limits](/docs/guides/infrastructure/aws) before using them.
 
-The smallest useful simulation definition is versioned in [`examples/simulation/environment.yaml`](https://github.com/UFFeScience/akoflow/blob/v1.0.8/examples/simulation/environment.yaml). It is a better starting point than an empty document because it includes a runtime, schedulable resources, and their bindings.
+The smallest useful simulation definition is versioned in [`examples/simulation/environment.yaml`](https://github.com/UFFeScience/akoflow/blob/main/examples/simulation/environment.yaml). It is a better starting point than an empty document because it includes a runtime, schedulable resources, and their bindings.
 
 ## Document shape
 

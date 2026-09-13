@@ -20,7 +20,7 @@ if you need a separately managed API endpoint.
 Download the matching example source and enter its directory:
 
 ```bash
-git clone --branch v1.0.8 --depth 1 https://github.com/UFFeScience/akoflow.git akoflow-first-run
+git clone --depth 1 https://github.com/UFFeScience/akoflow.git akoflow-first-run
 cd akoflow-first-run
 ```
 
@@ -44,7 +44,7 @@ The files use stable IDs such as `simulation-example` and `simulation-example-ru
 
 ## Understand what will run
 
-The versioned bundle lives in [`examples/simulation`](https://github.com/UFFeScience/akoflow/tree/v1.0.8/examples/simulation):
+The versioned bundle lives in [`examples/simulation`](https://github.com/UFFeScience/akoflow/tree/main/examples/simulation):
 
 | File                     | Purpose                                                                                              |
 | ------------------------ | ---------------------------------------------------------------------------------------------------- |
@@ -196,8 +196,7 @@ A successful run has these invariant results:
 
 On the development stack verified on 2026-09-11, the deterministic run reported a makespan of approximately 21.593 s, 9 s accumulated compute time, and 11.693 s accumulated transfer time. Small model or SimGrid-version changes may alter the decimal values; use the invariants above as the pass criteria.
 
-The same six requests were also exercised against the official v1.0.8 packaged
-runtime on 2026-09-12: all three activities completed, with two transfers,
+The same six requests were also exercised against a packaged runtime: all three activities completed, with two transfers,
 120,000,000 bytes, 9 s compute and approximately 11.693 s transfer time.
 
 ![Completed first simulation in the official Desktop application](../../../static/img/interface/onboarding/first-simulation-result.png)

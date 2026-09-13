@@ -9,7 +9,7 @@ This tutorial runs one activity on your local machine. You will create a workflo
 
 ## Before you begin
 
-[Install AkôFlow Desktop](/docs/installation) and complete its first-start checkup. Docker must be available to your user, and Desktop must show **Connected**. The steps below were verified with the extracted v1.0.8 Linux Desktop package and its bundled runtime. A clean `apt` install and other platforms need their own check.
+[Install AkôFlow Desktop](/docs/installation) and complete its first-start checkup. Docker must be available to your user, and Desktop must show **Connected**. These steps were exercised with a Linux Desktop package and its bundled runtime; confirm any platform-specific differences in the [release notes](https://github.com/UFFeScience/akoflow/releases/latest).
 
 ## 1. Check your local environment
 

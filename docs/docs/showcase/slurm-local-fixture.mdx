@@ -25,14 +25,14 @@ Generated database and run files stay under `examples/slurm/local-fixture/.runti
 ## Download the inputs
 
 <FileList>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/slurm/local-fixture/environment.yaml">Environment YAML ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/slurm/local-fixture/scope.yaml">Execution scope YAML ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/slurm/local-fixture/topology.yaml">Network topology YAML ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/slurm/local-fixture/workflow.yaml">Workflow YAML ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/slurm/local-fixture/plan.yaml">Manual plan YAML ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/slurm/local-fixture/execution-request.yaml">Execution envelope ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/slurm/local-fixture/start-fixture.sh">Fixture daemon script ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/slurm/local-fixture/run.sh">Submission script ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/slurm/local-fixture/environment.yaml">Environment YAML ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/slurm/local-fixture/scope.yaml">Execution scope YAML ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/slurm/local-fixture/topology.yaml">Network topology YAML ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/slurm/local-fixture/workflow.yaml">Workflow YAML ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/slurm/local-fixture/plan.yaml">Manual plan YAML ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/slurm/local-fixture/execution-request.yaml">Execution envelope ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/slurm/local-fixture/start-fixture.sh">Fixture daemon script ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/slurm/local-fixture/run.sh">Submission script ↓</a>
 </FileList>
 
 <InterfaceApiTabs
@@ -43,8 +43,8 @@ Generated database and run files stay under `examples/slurm/local-fixture/.runti
   </div>}
   api={<div>
     <h2>Run the fixture through the API</h2>
-    <p>Clone v1.0.8, or use an existing matching checkout. In one terminal, start the isolated daemon from its root:</p>
-    <pre><code>{`git clone --branch v1.0.8 --depth 1 https://github.com/UFFeScience/akoflow.git akoflow-showcase
+    <p>Clone the repository, or use an existing matching checkout. In one terminal, start the isolated daemon from its root:</p>
+    <pre><code>{`git clone --depth 1 https://github.com/UFFeScience/akoflow.git akoflow-showcase
 cd akoflow-showcase
 sh examples/slurm/local-fixture/start-fixture.sh`}</code></pre>
     <p>Wait until it is listening, then open a second terminal at the root of the same checkout:</p>

@@ -7,36 +7,31 @@ description: Direct official downloads for AkôFlow Desktop, with platform selec
 
 ## Choose your download
 
-These links point to the published **v1.0.8** release, rechecked on **2026-09-13**.
-Choose one package for your workstation. The browser saves it in your configured
-download folder; open the completed download and follow [Installation](/docs/installation).
+Open the [latest official release](https://github.com/UFFeScience/akoflow/releases/latest)
+and choose the asset for your workstation. Check the release notes for supported
+platforms and prerequisites, then follow [Installation](/docs/installation).
 
-| Platform                       | Download                                                                                                                          | What to do next                                                          |
-| ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
-| macOS, Intel and Apple silicon | [Download universal DMG](https://github.com/UFFeScience/akoflow/releases/download/v1.0.8/Akoflow-Desktop-1.0.8-mac-universal.dmg) | Open it and drag AkôFlow Desktop to Applications                         |
-| Windows x64                    | [Download Windows EXE](https://github.com/UFFeScience/akoflow/releases/download/v1.0.8/Akoflow-Desktop-1.0.8-win-x64.exe)         | Run the portable executable directly                                      |
-| Debian/Ubuntu x64              | [Download DEB](https://github.com/UFFeScience/akoflow/releases/download/v1.0.8/Akoflow-Desktop-1.0.8-linux-amd64.deb)             | Install using `sudo apt install ./Akoflow-Desktop-1.0.8-linux-amd64.deb` |
-| Linux x64                      | [Download AppImage](https://github.com/UFFeScience/akoflow/releases/download/v1.0.8/Akoflow-Desktop-1.0.8-linux-x86_64.AppImage)  | Give it execute permission and open it                                   |
+| Platform                       | Asset to select | What to do next |
+| ------------------------------ | --------------- | --------------- |
+| macOS, Intel and Apple silicon | Universal `.dmg` | Open it and drag AkôFlow Desktop to Applications |
+| Windows x64                    | Windows `.exe` | Follow the release notes for that asset |
+| Debian/Ubuntu x64              | Linux `.deb` | Install the downloaded file with `sudo apt install ./downloaded-file.deb` (replace the filename) |
+| Linux x64                      | Linux `.AppImage` | Give the downloaded file execute permission and open it |
 
-[View this release and all assets](https://github.com/UFFeScience/akoflow/releases/tag/v1.0.8)
-· [Check for a newer release](https://github.com/UFFeScience/akoflow/releases/latest)
-
-The direct links above remain pinned to the documented version. If you choose a
-newer release, use the filenames and requirements attached to that release.
-Do not rename an older installer to match a newer tag.
+[View the latest release and all assets](https://github.com/UFFeScience/akoflow/releases/latest).
+Use the filenames and requirements attached to the release you choose; do not
+mix assets from different tags.
 
 ## Which files can I ignore?
 
-For Desktop installation, choose the package in the table. `.blockmap` and
+For Desktop installation, choose the package for your platform. `.blockmap` and
 `latest*.yml` files are updater metadata. Source-code ZIP/TAR downloads are for
 development. Daemon/BuildKit `.tar` archives and runtime `.sha256` manifests are
 service assets, not separate Desktop installers. Operators use them in the
 [self-managed server guide](/docs/guides/operations/server-instance).
 
-v1.0.8 has a single Windows `.exe`. The release build generated the portable
-target last under the same filename as the installer target, so the published
-file is the portable executable; there is no separate installer asset.
-It has no Linux ARM64 Desktop package.
+Asset availability and installer format can change between releases. Read the
+selected release's notes before downloading, especially for Windows and ARM64.
 
 ## Download through the GitHub API
 
@@ -44,11 +39,13 @@ For automation, inspect the release metadata first. This is GitHub's public API,
 not the AkôFlow daemon API. You need Bash, `curl`, and `jq`.
 
 ```bash
-AKOFLOW_RELEASE_TAG=v1.0.8
-AKOFLOW_ASSET=Akoflow-Desktop-1.0.8-linux-amd64.deb
+AKOFLOW_RELEASE_API=https://api.github.com/repos/UFFeScience/akoflow/releases/latest
 curl --fail --location --silent --show-error \
-  "https://api.github.com/repos/UFFeScience/akoflow/releases/tags/$AKOFLOW_RELEASE_TAG" \
+  "$AKOFLOW_RELEASE_API" \
   -o release.json
+
+# Select the exact asset name shown on the release page.
+AKOFLOW_ASSET='<desktop-asset-filename>'
 
 AKOFLOW_DOWNLOAD_URL=$(jq -er --arg name "$AKOFLOW_ASSET" \
   '.assets[] | select(.name == $name) | .browser_download_url' release.json) || exit 1
@@ -68,20 +65,9 @@ printf '%s  %s\n' "${AKOFLOW_DIGEST#sha256:}" "$AKOFLOW_ASSET" | sha256sum --che
 Expect `OK`. If metadata or download requests fail, stop before installation.
 If the checksum differs, discard that download and retrieve it again.
 
-## Download verification result
+## Verify your download
 
-The Linux `.deb` was downloaded in full and verified on 2026-09-12:
-
-```text
-Package: akoflow-desktop
-Version: 1.0.8
-Architecture: amd64
-SHA-256: db73f5efd75789ff82db7aa6338e10ffad80b6c178f8650730c58b3ebb023315
-```
-
-The macOS, Windows, AppImage and runtime checksum URLs were checked with
-redirect-following range requests. Download availability is separate from
-operating-system installation validation.
-
-The extracted Linux application was also opened with a fresh profile and reached
-the successful [daemon, Docker and BuildKit checkup](/docs/installation#3-first-launch-what-happens).
+Use the digest published for the asset in the release metadata, as shown above.
+Download availability and checksum verification are separate from operating-system
+installation validation. After opening Desktop, confirm the
+[daemon, Docker and BuildKit checkup](/docs/installation#3-first-launch-what-happens).

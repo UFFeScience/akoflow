@@ -49,8 +49,7 @@ Open **Infrastructure → Environments → Connect environment** and select
 
 ![HPC connection form showing the hostname, SSH user, port, partition, proxy and key selector](../../static/img/interface/onboarding/hpc-connection.png)
 
-_Captured from the official v1.0.8 Linux application through Chromium DevTools,
-2026-09-12. Host, user and partition are illustrative values; no remote
+_Captured from the Linux application. Host, user and partition are illustrative values; no remote
 connection is claimed._
 
 | Field               | Enter                                                                      |

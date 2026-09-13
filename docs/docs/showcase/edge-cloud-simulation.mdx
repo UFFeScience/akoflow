@@ -28,13 +28,13 @@ The diagram and the workflow YAML show the same topology: `prepare` produces `da
 ## Download the inputs
 
 <FileList>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/simulation/environment.yaml">Environment YAML ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/simulation/scope.yaml">Execution scope YAML ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/simulation/topology.yaml">Network topology YAML ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/simulation/workflow.yaml">Workflow YAML ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/simulation/plan-request.yaml">Manual plan envelope ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/simulation/execution-request.yaml">Execution envelope ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/simulation/run.sh">Submission script ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/simulation/environment.yaml">Environment YAML ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/simulation/scope.yaml">Execution scope YAML ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/simulation/topology.yaml">Network topology YAML ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/simulation/workflow.yaml">Workflow YAML ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/simulation/plan-request.yaml">Manual plan envelope ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/simulation/execution-request.yaml">Execution envelope ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/simulation/run.sh">Submission script ↓</a>
 </FileList>
 
 <InterfaceApiTabs
@@ -50,8 +50,8 @@ The diagram and the workflow YAML show the same topology: `prepare` produces `da
   </div>}
   api={<div>
     <h2>Run through the API</h2>
-    <p>Complete <a href="/docs/tutorials/api-access">API connection setup</a>. Run this in a fresh AkôFlow instance, or change every ID in the six YAML files first. Clone the v1.0.8 files, or use an existing matching checkout, then submit the bundle:</p>
-    <pre><code>{`git clone --branch v1.0.8 --depth 1 https://github.com/UFFeScience/akoflow.git akoflow-showcase
+    <p>Complete <a href="/docs/tutorials/api-access">API connection setup</a>. Run this in a fresh AkôFlow instance, or change every ID in the six YAML files first. Clone the example files, or use an existing matching checkout, then submit the bundle:</p>
+    <pre><code>{`git clone --depth 1 https://github.com/UFFeScience/akoflow.git akoflow-showcase
 cd akoflow-showcase
 sh examples/simulation/run.sh`}</code></pre>
     <p>Submitting <code>execution-runs</code> acknowledges the request; it does not mean the execution has completed. Poll the immutable run projection until <code>status</code> is <code>completed</code>:</p>

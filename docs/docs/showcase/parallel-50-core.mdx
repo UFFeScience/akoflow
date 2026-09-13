@@ -28,13 +28,13 @@ M1 and M3 remain in the shared three-machine SimGrid scope, but no activity uses
 ## Download the complete bundle
 
 <FileList>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/simulation/50core-fanout/environment.yaml">Environment YAML ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/simulation/50core-fanout/scope.yaml">Execution scope YAML ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/simulation/50core-fanout/topology.yaml">Network topology YAML ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/simulation/50core-fanout/workflow.yaml">Workflow YAML ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/simulation/50core-fanout/plan-request.yaml">Plan envelope ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/simulation/50core-fanout/execution-request.yaml">Execution envelope ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/simulation/50core-fanout/run.sh">Runnable shell script ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/simulation/50core-fanout/environment.yaml">Environment YAML ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/simulation/50core-fanout/scope.yaml">Execution scope YAML ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/simulation/50core-fanout/topology.yaml">Network topology YAML ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/simulation/50core-fanout/workflow.yaml">Workflow YAML ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/simulation/50core-fanout/plan-request.yaml">Plan envelope ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/simulation/50core-fanout/execution-request.yaml">Execution envelope ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/simulation/50core-fanout/run.sh">Runnable shell script ↓</a>
 </FileList>
 
 <InterfaceApiTabs
@@ -50,8 +50,8 @@ M1 and M3 remain in the shared three-machine SimGrid scope, but no activity uses
   </div>}
   api={<div>
     <h2>Run through the API</h2>
-    <p>Complete <a href="/docs/tutorials/api-access">API connection setup</a>. The script submits objects in dependency order and stops on the first HTTP error. Use a fresh instance or change every persistent ID in the bundle, then run it from a v1.0.8 checkout:</p>
-    <pre><code>{`git clone --branch v1.0.8 --depth 1 https://github.com/UFFeScience/akoflow.git akoflow-showcase
+    <p>Complete <a href="/docs/tutorials/api-access">API connection setup</a>. The script submits objects in dependency order and stops on the first HTTP error. Use a fresh instance or change every persistent ID in the bundle, then run it from a repository checkout:</p>
+    <pre><code>{`git clone --depth 1 https://github.com/UFFeScience/akoflow.git akoflow-showcase
 cd akoflow-showcase
 bash examples/simulation/50core-fanout/run.sh`}</code></pre>
     <p>Poll the run projection until its status is <code>completed</code>:</p>

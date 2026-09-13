@@ -174,7 +174,7 @@ List queries accept endpoint-specific pagination and filters. For execution runs
 | `GET` | `/build-runs/{runId}/` | Read build-run status and logs |
 | `GET` | `/build-runs/{runId}/output/` | Stream SIF output |
 
-For a build request, see [Build an executable](../guides/data/build-executable). To inspect prepared bytes, see [Artifact locations](../guides/data/artifact-locations). Storage browsing and file registration are covered in [Browse and manage storage](../guides/infrastructure/storage).
+For a build request, see [Build an executable](../guides/data/build-executable). To inspect recorded locations and preparation status, see [Artifact locations](../guides/data/artifact-locations). Storage browsing and file registration are covered in [Browse and manage storage](../guides/infrastructure/storage).
 
 ## Provenance
 

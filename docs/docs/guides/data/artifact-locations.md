@@ -23,4 +23,4 @@ curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   "$AKOFLOW_API_URL/artifact-materializations/"
 ```
 
-Add `--data-urlencode "runId=<your-run-id>"` and `-G` to the second request when you want one run. Execution detail also shows prepared artifacts and transfer activity. Use it to relate catalog identity to the bytes actually made available for an activity.
+Add `--data-urlencode "runId=<your-run-id>"` and `-G` to the second request when you want one run. Execution detail also shows recorded artifact preparation and transfer activity. Use it to relate a catalog artifact to a run's saved observations.

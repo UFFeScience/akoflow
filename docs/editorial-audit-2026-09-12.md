@@ -169,6 +169,8 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 
 130. **P1 resolved in Cloud read-reference behavior:** all 21 generated body examples are marked verified and no inferred body example is displayed, but three Cloud GET pages lacked the distinctions needed to interpret their results. The catalog GET reads synchronized cache and can return `404` before refresh; the target list returns only enabled records; the instance list includes destroyed records. Handler and repository source were checked for all three, and the generator's route guard covers their new notes. This narrows a reference gap without claiming full field-level validation of the 125 endpoints.
 
+131. **P1 resolved in artifact evidence wording:** a cross-page read of all six Data and evidence guides found one contradiction: the artifact-location guide said the API lists saved observations, while the API overview promised to "inspect prepared bytes" and the guide's closing sentence implied a fresh byte check. Both now describe recorded locations, preparation status, and run observations. The list handlers read catalog records; they do not recheck destination bytes. The other Data and evidence pages kept their distinct build, provenance, and audit tasks. The final all-page pass remains open.
+
 ## Page inventory
 
 | Page | Current pass | Next review |
@@ -187,7 +189,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `getting-started.md` | Fourth entry-path read; plan comparison, execution, and observed run are sequential; support limits remain explicit | Recheck the entry flow on a clean supported host |
 | `guides/data/artifacts.md` | Short choice page preserving the old URL and routing storage, build, and recorded-location tasks | Check destinations in navigation |
 | `guides/data/build-executable.md` | Third read; build-context upload now fails on HTTP errors; asynchronous Docker/SIF flow remains | Verify a live registry pull and SIF conversion |
-| `guides/data/artifact-locations.md` | Focused catalog-location and preparation-status procedure; saved flags are distinguished from live byte checks | Recheck materialization payloads after P0 contracts fix |
+| `guides/data/artifact-locations.md` | Cross-page read; catalog and run observations are explicitly saved records, not live byte checks | Recheck materialization payloads after P0 contracts fix |
 | `guides/data/provenance-and-audit.md` | Short choice page preserving the old URL and distinguishing the two record types | Check both destinations in navigation |
 | `guides/data/provenance.md` | Third read; screenshot captions shortened and API examples fail on HTTP errors | Recheck Desktop interactions against packaged app |
 | `guides/data/audit-events.md` | Reading-order reread; event investigation now precedes UI/API controls and duplicate event-category prose was cut | Recheck Desktop interactions against packaged app |
@@ -219,7 +221,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `installation.md` | Third entry-path read; duplicate Windows asset caveat removed; Desktop checkup remains central | Verify clean-host and cross-platform installation |
 | `internal/workflow-spec.md` | Second read; lead example now uses one execution mode and marks script paths as prerequisites | Check every field contract against current importer |
 | `modules.md` | Developer detail remains in the architecture section; planning candidates now distinguish shared inputs from algorithm-specific predictions | Recheck claims against daemon composition |
-| `reference/api-overview.md` | Fifth read; 124 listed method/path pairs match the current Go router | Check field and response contracts against current handlers and schemas |
+| `reference/api-overview.md` | Sixth read; artifact links no longer promise a live byte check; 124 listed method/path pairs match the current Go router | Check field and response contracts against current handlers and schemas |
 | `reference/environment-yaml.md` | Third read; S3 transfer and browser credential exceptions now qualify the generic reference fields | Continue field-level schema contract audit |
 | `reference/execution-scopes-and-topologies.md` | Claim pass; clarified API prerequisites and the actual omitted link direction/sharing values | Check contracts against current handlers and schemas |
 | `reference/feature-coverage.md` | Third read; route map now serves the reader, with its maintainer update rule in the quality plan | Check contracts against current handlers and schemas |

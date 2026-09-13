@@ -25,17 +25,17 @@ Use a SLURM environment for batch work governed by SLURM partitions, accounts, Q
 
 Create or import a service key using [Credentials and SSH service keys](../operations/credentials-and-ssh), then authorize its public key on the login node and any gateway. Store the returned `credentialRef` in the connection; never paste the private key into an environment YAML.
 
-The SLURM runtime accepts SSH, agent, or local connections. A remote HPC cluster normally uses `type: ssh`. The SSH port belongs in `configuration.port`; keep `endpoint` as the host name so the same record is usable by health checks, discovery, the scheduler adapter, artifact operations, and the interactive terminal.
+The SLURM runtime accepts SSH, agent, or local connections. A remote HPC cluster normally uses `type: ssh`. The SSH port belongs in `configuration.port`; keep `endpoint` as the host name so the same record is usable by health checks, discovery, the scheduler adapter, artifact operations, and the interactive terminal. The fragment below illustrates fields to set in the [HPC registration template](../../tutorials/register-hpc); use the credential reference returned by your key registration.
 
 ```yaml
 connections:
-  - id: research-hpc-ssh
+  - id: research-hpc-connection
     environmentId: research-hpc
     name: Research HPC login node
     type: ssh
     endpoint: login.example.org
     username: researcher
-    credentialRef: file:storage/credentials/ssh/research-hpc
+    credentialRef: REPLACE_WITH_RETURNED_CREDENTIAL_REF
     configuration:
       port: 22
       hostKeyAlias: research-hpc-login
@@ -44,19 +44,9 @@ connections:
       scriptDirectory: /scratch/researcher/akoflow/scripts
 ```
 
-`proxyCommand` is passed to every SSH-based path that uses this connection. When the site documents `ProxyJump`, express it as an SSH proxy command—for example, `ssh -J bastion.example.org -W login.example.org:22`—and validate the entire route from the **daemon host**, not only from Desktop. AkôFlow records trusted host keys in the configured known-hosts file; do not disable host-key checking for a production cluster.
+`proxyCommand` is passed to SSH-based paths that use this connection. If the site requires a jump host, configure and test a complete SSH proxy command from the **server host**, not only from Desktop. AkôFlow records trusted host keys in the configured known-hosts file; keep host-key checking enabled for a production cluster.
 
-In Desktop, add the connection under **Infrastructure → Environments**, assign the managed SSH key, and run the connection health check. For the API command below, complete [API connection setup](../../tutorials/api-access). Read the environment definition before updating a connection so unrelated fields remain intact:
-
-```bash
-curl --fail-with-body \
-  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
-  -H 'Content-Type: application/json' \
-  -X PUT "$AKOFLOW_API_URL/environment-connections/research-hpc-ssh/" \
-  --data @research-hpc-connection.json
-```
-
-The exact `PUT` body must contain `id`, `environmentId`, `type`, endpoint, username, credential reference, and the connection configuration above.
+In Desktop, add the connection under **Infrastructure → Environments**, assign the managed SSH key, and run the connection health check. For API registration, follow the [complete connection tutorial](../../tutorials/register-hpc#through-the-api), which creates and tests the JSON payload before saving the environment. To change a saved connection later, read its current fields before sending a complete `PUT /environment-connections/{connectionId}/` body so unrelated settings remain intact.
 
 ## 2. Define the SLURM runtime and the infrastructure boundary
 

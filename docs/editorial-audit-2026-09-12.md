@@ -203,6 +203,8 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 
 147. **P1/P2 resolved across explanations:** the Planning explanation now introduces manual placement as well as automatic session comparison, matching the first Desktop path and the planning guide. The Evidence/Provenance opening sends scientific-result questions to Provenance and limits Audit to its actual emitters. Observed timing no longer repeats the same 10 GiB/10 Gbit/s calculation already worked through in Network modeling; it links to that example. PRISM/HEFT and Network modeling were reread without another P0/P1 prose change. Field-level trace aggregation and full scientific-result validation remain open.
 
+148. **P2 resolved in page descriptions:** a scan of all 61 authored documentation pages found nine without frontmatter descriptions: four infrastructure guides, three workflow guides, Architecture internals, and Runtime adapters. Each now has a one-sentence description naming its task or subject without adding a support claim. A second scan found zero missing descriptions across the 61 pages. This standardizes metadata and previews; it does not prove the body of every page has passed the final editorial gate.
+
 ## Page inventory
 
 | Page | Current pass | Next review |

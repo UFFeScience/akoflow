@@ -1,5 +1,6 @@
 ---
 title: Define a workflow
+description: Create a workflow, inspect its activities, and import a definition.
 ---
 
 # Define a workflow

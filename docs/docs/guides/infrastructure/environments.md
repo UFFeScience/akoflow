@@ -1,5 +1,6 @@
 ---
 title: Create and inspect environments
+description: Register real or simulated environments and inspect their connections and resources.
 ---
 
 An environment describes where AkôFlow can plan or run work. A **real environment** has an execution runtime such as local, SSH, Kubernetes, SLURM, or cloud. A **simulation environment** uses the SimGrid runtime and models resources without connecting to physical infrastructure.

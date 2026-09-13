@@ -2,6 +2,7 @@
 id: runtimes
 title: Runtime adapters
 sidebar_label: Runtime adapters
+description: How AkôFlow maps planned activities to local, HPC, Kubernetes, cloud, and simulated runtimes.
 ---
 
 A runtime adapter translates an assigned activity into operations on an execution technology. Runtimes belong to an environment version and connect to resources through bindings. Workflows do not select a runtime through a legacy top-level YAML `runtime` field; a selected plan assigns resources and execution resolves their bindings.

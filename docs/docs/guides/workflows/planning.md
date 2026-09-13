@@ -1,5 +1,6 @@
 ---
 title: Plan a workflow
+description: Make a manual plan or compare scheduler candidates before execution.
 ---
 
 # Plan a workflow

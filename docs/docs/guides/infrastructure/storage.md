@@ -1,5 +1,6 @@
 ---
 title: Browse and manage storage
+description: Browse approved storage paths and perform supported file operations.
 ---
 
 Use **Storage** to browse approved roots and act on files. Available actions depend on the driver and storage settings. Try the intended path before relying on a catalog status.

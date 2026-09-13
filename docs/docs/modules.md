@@ -3,6 +3,7 @@
 id: modules
 title: Architecture internals
 sidebar_label: Architecture internals
+description: How the AkôFlow server coordinates planning, execution, persistence, and adapters.
 ---
 
 import useBaseUrl from '@docusaurus/useBaseUrl';

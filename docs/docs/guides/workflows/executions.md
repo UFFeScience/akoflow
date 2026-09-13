@@ -1,5 +1,6 @@
 ---
 title: Execute and monitor a workflow
+description: Start a saved plan, follow its activities, and inspect the run's observations.
 ---
 
 # Execute and monitor a workflow

@@ -1,5 +1,6 @@
 ---
 title: Define execution scopes and network links
+description: Limit planning to selected environment versions and model routes between resources.
 ---
 
 An execution scope tells the planner which environments it may use. If dependent activities may run on different resources, model the links between them so transfer estimates have a route. For a single-machine workflow, an empty topology is enough. The current Desktop creates an empty topology with a scope; use the API procedure below to register one with links.

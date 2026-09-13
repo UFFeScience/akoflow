@@ -1,5 +1,6 @@
 ---
 title: Configure cloud capacity
+description: Choose a Google Cloud worker target, save it for planning, and inspect provisioning.
 ---
 
 Use this guide after [connecting Google Cloud](../../tutorials/connect-cloud).

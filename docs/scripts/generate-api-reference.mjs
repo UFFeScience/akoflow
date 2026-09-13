@@ -670,6 +670,7 @@ import ApiEndpoint from '@site/src/components/ApiEndpoint';
   requestExampleVerified={${Boolean(verifiedRequestExamples[`${endpoint.method} ${endpoint.path}`])}}
   requestMediaType={${JSON.stringify(endpoint.request?.mediaType || (body ? "application/json" : null))}}
   requestFileName={${JSON.stringify(endpoint.request?.fileName || null)}}
+  requestMultipartField={${JSON.stringify(endpoint.request?.multipartField || null)}}
   responseExample={${JSON.stringify(endpoint.response.example === null ? null : typeof endpoint.response.example === "string" ? endpoint.response.example : JSON.stringify(endpoint.response.example, null, 2))}}
   responseType=${JSON.stringify(endpoint.response.type)}
   responseMediaType={${JSON.stringify(endpoint.response.mediaType)}}
@@ -711,7 +712,9 @@ for (const match of source.matchAll(routePattern)) {
   };
   endpoints.push({
     ...baseEndpoint,
-    request: handler === "ImportArchiveInstance"
+    request: handler === "SaveBuildContext"
+      ? { type: "uploaded build context", example: null, mediaType: "multipart/form-data", fileName: "context.tar.gz", multipartField: "context" }
+      : handler === "ImportArchiveInstance"
       ? { type: "ZIP instance archive (maximum 8 GiB)", example: null, mediaType: "application/zip", fileName: "instance.zip" }
       : extractRequestContract(handlerBody, structIndex),
     response: extractResponseContract(

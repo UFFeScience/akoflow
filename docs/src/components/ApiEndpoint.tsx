@@ -16,6 +16,7 @@ type ApiEndpointProps = {
   hasRequestBody?: boolean;
   requestMediaType?: string | null;
   requestFileName?: string | null;
+  requestMultipartField?: string | null;
 };
 
 function commandFor(
@@ -24,14 +25,19 @@ function commandFor(
   hasRequestBody: boolean,
   requestMediaType: string | null,
   requestFileName: string | null,
+  requestMultipartField: string | null,
 ) {
   const lines = [
     `curl --fail-with-body \\`,
     `  -H "Authorization: Bearer \${AKOFLOW_API_TOKEN}" \\`,
   ];
   if (hasRequestBody) {
-    lines.push(`  -H "Content-Type: ${requestMediaType || "application/json"}" \\`);
-    lines.push(`  --data-binary @${requestFileName || "request.json"} \\`);
+    if (requestMultipartField) {
+      lines.push(`  -F "${requestMultipartField}=@${requestFileName || "upload.bin"}" \\`);
+    } else {
+      lines.push(`  -H "Content-Type: ${requestMediaType || "application/json"}" \\`);
+      lines.push(`  --data-binary @${requestFileName || "request.json"} \\`);
+    }
   }
   if (method !== "GET") lines.push(`  -X ${method} \\`);
   lines.push(
@@ -56,11 +62,12 @@ export default function ApiEndpoint({
   hasRequestBody = false,
   requestMediaType = null,
   requestFileName = null,
+  requestMultipartField = null,
 }: ApiEndpointProps) {
   const [copied, setCopied] = useState(false);
   const displayPath = path.replace("/akoflow-api", "") || "/";
   const description = handler.replace(/([a-z0-9])([A-Z])/g, "$1 $2");
-  const command = commandFor(method, path, hasRequestBody, requestMediaType, requestFileName);
+  const command = commandFor(method, path, hasRequestBody, requestMediaType, requestFileName, requestMultipartField);
   const commandIsTemplate = hasRequestBody || pathParams.length > 0;
   const requestHeading = requestExample
     ? requestExampleVerified ? "Example request" : "Request field shape"
@@ -119,7 +126,7 @@ export default function ApiEndpoint({
               {hasRequestBody ? "See the request guidance below for a valid body." : "This endpoint does not accept a request body."}
             </p>
           )}
-          {handler === "SaveBuildContext" && <p>Alternatively, upload a file as multipart field <code>context</code>. See the Artifacts guide for the upload procedure.</p>}
+          {handler === "SaveBuildContext" && <p>Upload a context archive as multipart field <code>context</code>. The JSON alternative records metadata only for bytes already in the artifact store.</p>}
         </section>
 
         {queryParams.length > 0 && (

@@ -125,7 +125,7 @@ resourceRuntimeBindings:
 
 ## Storage
 
-`storages` records accessible storage; it does not create a bucket, NFS export, PVC, or filesystem. Each storage entry requires `id`, `environmentVersionId`, `name`, and `type`. Accepted type values are `local`, `pvc`, `nfs`, `s3`, `lustre`, `gcs`, `s3-compatible`, and `ssh-filesystem`. An accepted type does not prove that the running server has a working browser or transfer driver for it; check the storage health and intended operation.
+`storages` records storage that an environment may use; it does not create a bucket, NFS export, PVC, or filesystem. Each storage entry requires `id`, `environmentVersionId`, `name`, and `type`. Accepted type values are `local`, `pvc`, `nfs`, `s3`, `lustre`, `gcs`, `s3-compatible`, and `ssh-filesystem`. An accepted type does not prove that the running server can read its bytes; try the intended browse or transfer operation.
 
 | Path | Required | Type | Default | Notes |
 | --- | --- | --- | --- | --- |
@@ -134,11 +134,26 @@ resourceRuntimeBindings:
 | `storages[].shared`, `readOnly` | No | boolean | `false` | Access semantics. |
 | `storages[].credentialReference` | No | string | `""` | Stored credential reference. |
 | `storages[].configuration`, `metadata` | No | object | omitted | Storage-provider details. |
+| `storages[].configuration.browseRoots[]` | For browsing | array of objects | none | Approved roots, each with a `path`. For local filesystem browsing, include the exact `endpoint` path. |
 | `storages[].runtimeBindings[]` | No | array | none | Makes storage available to a runtime. |
 
 A storage runtime binding requires `runtimeId`. Its `containerPath` defaults to `/akoflow/data` when omitted, and `default`, `readOnly`, `hostPath`, and `configuration` are optional. At most one storage can be `default: true` for a given environment version and runtime.
 
-`browseRoots`, `capabilities`, `health`, `indexPolicy`, and `indexStatus` are inventory/evidence fields returned by the API. Let discovery and indexing populate them; do not rely on an authored health status as proof that storage is reachable.
+For a self-managed daemon browsing its own filesystem, set `AKOFLOW_LOCAL_STORAGE_ROOT` to an approved directory before starting it. Then register a `local` storage with the same absolute path as `endpoint` and in `configuration.browseRoots`:
+
+```yaml
+storages:
+  - id: lab-files
+    environmentVersionId: lab-v1
+    name: Lab files
+    type: local
+    endpoint: /srv/akoflow-lab
+    configuration:
+      browseRoots:
+        - path: /srv/akoflow-lab
+```
+
+Use this excerpt inside a complete environment definition; the directory must exist and be accessible to the daemon. The environment repository persists `configuration`, so a top-level `browseRoots` field alone will not enable browsing. `browseRoots`, `capabilities`, `health`, `indexPolicy`, and `indexStatus` also appear as fields in API responses. A catalog's `healthy` flag means the driver is available; it is not a fresh probe of the storage path or a compute node.
 
 ## Activity resource profiles
 

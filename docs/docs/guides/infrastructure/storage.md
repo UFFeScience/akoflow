@@ -2,12 +2,13 @@
 title: Browse and manage storage
 ---
 
-AkôFlow exposes storage through environment discovery or configured storage connectors. Browsing is constrained to approved roots and operations are capability-driven: a read-only or unavailable storage does not expose the same actions as a healthy writable storage.
+AkôFlow lists discovered or configured storage with the actions available for its driver and read/write settings. Browsing stays within configured roots. A catalog status does not replace trying the operation on the intended path.
 
 For object storage, check the [AWS/S3 limits](./aws) and [cloud support matrix](./cloud-capacity#provider-support-in-v10) before relying on browse or transfer actions. A registered storage type does not guarantee that the current server can authenticate to it.
 
 For the API commands on this page, complete [API connection setup](../../tutorials/api-access) first.
 The IDs `hpc`, `hpc-scratch`, and `archive-store` and the `/scratch/project-a` paths below are examples. Replace them with an environment, storage IDs, and approved paths returned by your own server before running a command.
+For a self-managed daemon browsing local files, first configure the root as shown in the [environment YAML reference](../../reference/environment-yaml#storage).
 
 ## Browse files
 
@@ -18,7 +19,7 @@ The IDs `hpc`, `hpc-scratch`, and `archive-store` and the `/scratch/project-a` p
 3. Select an approved root and navigate folders with the breadcrumb.
 4. Use **Refresh** to reload the current listing. Use **Index** only when indexing is enabled for that storage.
 
-Entries are loaded lazily for the selected path; opening Storage does not scan the entire filesystem. The badges report read/write access and whether access from compute nodes was verified.
+Entries load for the selected path; opening Storage does not scan the entire filesystem. Read/write badges reflect the available driver and storage settings. Compute-node visibility reflects the `shared` setting or a runtime binding, not a fresh access test on a compute node.
 
 ### Using the API
 

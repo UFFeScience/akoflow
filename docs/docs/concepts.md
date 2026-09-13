@@ -11,7 +11,7 @@ AkôFlow keeps the workflow you define, the resources available to it, the plan 
 
 ## From workflow to result
 
-<img src={useBaseUrl('/img/architecture/record-chain.svg')} alt="A workflow and an environment lead to candidate plans; a selected plan leads to a run, artifacts, and provenance." />
+<img src={useBaseUrl('/img/architecture/record-chain.svg')} alt="A workflow and an environment lead to candidate plans; executing a selected plan produces a run, artifacts, and provenance." />
 
 A **workflow** is a set of activities with dependencies. For example, `prepare → analyze → summarize` means that analysis waits for preparation and the summary waits for analysis. The workflow describes the work and required data; it does not choose a machine.
 

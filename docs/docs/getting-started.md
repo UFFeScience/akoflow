@@ -8,7 +8,7 @@ description: Understand AkôFlow, choose a supported path, and find the next wor
 
 # Getting started with AkôFlow
 
-AkôFlow helps you define a scientific workflow, choose where its activities run, compare plans, and inspect the results. A workflow describes activities and their data dependencies. A run records what happened after a plan was selected.
+AkôFlow helps you define a scientific workflow, choose where its activities run, compare plans, and execute one. A workflow describes activities and data dependencies. A run records what happened when you executed the selected plan.
 
 Start with a local environment to learn the interface. Connecting HPC, Kubernetes, or cloud resources requires the access and checks in their own guides.
 

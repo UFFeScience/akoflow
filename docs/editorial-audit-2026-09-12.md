@@ -163,13 +163,15 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 
 127. **P0/P1 resolved in cross-runtime setup reading:** the pinned v1.0.8 SLURM catalog opts its login node into direct workflow scheduling, while current discovery marks a login gateway unschedulable. The current repository example now defaults that login node to unschedulable, and the HPC guide tells readers how to correct the pinned file before institutional registration. It distinguishes a batch compute node from an approved direct target. Its discovery checklist no longer presents compute-allocation workspace access as something a login-host probe can prove; that check belongs to the later batch probe. Kubernetes and SimGrid opening prose was shortened while keeping their real-versus-modeled boundary. A real cluster run remains unverified.
 
+128. **P1/P3 resolved in entry-layer plan/run narrative and diagram:** the authored-page inventory still matches all 61 current source pages. Home, Getting Started, and Core concepts now state the explicit execution action between selecting a plan and recording a run; the record-chain SVG labels that arrow and its accessible description follows the same sequence. Its unclosed arrow paths previously rendered as large filled triangles; the SVG now keeps paths unfilled, verified in a Chromium screenshot. At 390 × 844, the built Home → Getting Started → Installation → first local workflow links opened without page errors or horizontal overflow. The first-workflow tutorial names the separate **Execute plan** and **Start execution** controls. The final all-page new-reader pass remains open.
+
 ## Page inventory
 
 | Page | Current pass | Next review |
 | --- | --- | --- |
 | `guides/workflows/first-local-run.md` | Entry-navigation pass; menu paths now match Infrastructure guides; Linux package UI run verified through generated file evidence | Repeat on a clean supported host and other platforms |
-| `src/pages/index.tsx` | Second read; corrected real-local-run narrative and routed download to the pinned selection page | Recheck rendered entry path on mobile |
-| `concepts.md` | Claim reread; distinguishes always-tracked activity status from runtime-dependent timing, transfer, and output observations | Recheck complete new-user path |
+| `src/pages/index.tsx` | Third read; entry sequence includes the explicit execute action and routes download to the pinned selection page | Recheck rendered entry path on mobile |
+| `concepts.md` | Second claim reread; plan selection is separate from execution, including diagram alt text; runtime-dependent observations stay qualified | Recheck complete new-user path |
 | `contributing/documentation-plan.md` | Third read; remains the single page-level writing contract, with progressive disclosure and HTTP-failing cURL checks explicit | Recheck contract at final audit |
 | `downloads.md` | Second read; platform limits and verification are explicit, and latest release was `v1.0.8` on 2026-09-12 | Recheck release links when version changes |
 | `engine.md` | Second read; implementation details remain in the developer section | Recheck claims against event-loop code |
@@ -178,7 +180,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `explanations/observed-timing.md` | Third read; opening now leads with makespan versus accumulated time | Recheck metrics against trace aggregation |
 | `explanations/planning.md` | Third read; candidate rank follows session completion and selection saves a plan without starting a run | Recheck planning claims against coordinator |
 | `explanations/prism-and-heft.md` | Third read; comparison headings now describe observed-run and experiment tasks | Recheck algorithm claims against source |
-| `getting-started.md` | Third entry-path read; verified Kubernetes example is identified as Kind and support limits remain explicit | Recheck the entry flow on a clean supported host |
+| `getting-started.md` | Fourth entry-path read; plan comparison, execution, and observed run are sequential; support limits remain explicit | Recheck the entry flow on a clean supported host |
 | `guides/data/artifacts.md` | Short choice page preserving the old URL and routing storage, build, and recorded-location tasks | Check destinations in navigation |
 | `guides/data/build-executable.md` | Third read; build-context upload now fails on HTTP errors; asynchronous Docker/SIF flow remains | Verify a live registry pull and SIF conversion |
 | `guides/data/artifact-locations.md` | Focused catalog-location and preparation-status procedure; saved flags are distinguished from live byte checks | Recheck materialization payloads after P0 contracts fix |

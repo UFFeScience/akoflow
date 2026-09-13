@@ -10,7 +10,7 @@ import {FileList, WorkflowDiagram} from '@site/src/components/WorkflowShowcase';
 
 <WorkflowDiagram kind="local" />
 
-This Showcase executes one real activity through the `local` runtime. The daemon starts the activity command on the **same host as the daemon**, then observes its workspace for created or changed files. It is useful for a controlled first real execution or a small trusted host-local tool.
+This Showcase executes one real activity through the `local` runtime. The AkôFlow server starts the command on its own host, then records files created or changed in the activity workspace. Use it for a controlled first real execution or a small trusted tool on the server host.
 
 For a first run entirely in Desktop, follow [Run your first workflow](../guides/workflows/first-local-run). This Showcase reproduces a versioned API bundle.
 
@@ -18,11 +18,11 @@ Do not use this runtime to isolate untrusted workloads. It is not a container sa
 
 ## Prerequisites
 
-- An AkôFlow daemon running on the host that is allowed to execute the command.
-- A POSIX `sh` and `printf` available to that daemon process.
+- An AkôFlow server running on a host that is allowed to execute the command.
+- A POSIX `sh` and `printf` available to the server process.
 - Permission to run a trusted command and to create its temporary activity workspace.
 
-The bundle declares `busybox:1.36` as an executable reference because portable real-workflow imports require one. The local adapter does **not** pull or run that image: it invokes `command.entrypoint` and `command.arguments` on the daemon host.
+The bundle declares `busybox:1.36` as an executable reference because portable real-workflow imports require one. The local adapter does **not** pull or run that image: it invokes `command.entrypoint` and `command.arguments` on the server host.
 
 ## Download the inputs
 

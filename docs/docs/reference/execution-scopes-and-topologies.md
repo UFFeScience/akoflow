@@ -8,7 +8,7 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 
 # Execution scopes and network topology reference
 
-This reference defines the two documents that freeze the infrastructure universe used in planning: an `ExecutionScope` selects environment versions and a `NetworkTopology` describes data-transfer links between their resources. It is intended for API and YAML authors. For the Desktop sequence and a worked setup, use [Execution scopes and network topologies](../guides/infrastructure/execution-scopes).
+This reference defines the two API documents used to choose environment versions and describe data-transfer links for planning. An `ExecutionScope` selects the versions; a `NetworkTopology` defines links between their resources. For the Desktop sequence and a worked setup, use [Execution scopes and network topologies](../guides/infrastructure/execution-scopes).
 
 The API accepts JSON, `application/yaml`, `application/x-yaml`, and `text/yaml` for both documents.
 

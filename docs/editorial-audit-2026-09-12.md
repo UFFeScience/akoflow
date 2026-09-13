@@ -205,6 +205,8 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 
 148. **P2 resolved in page descriptions:** a scan of all 61 authored documentation pages found nine without frontmatter descriptions: four infrastructure guides, three workflow guides, Architecture internals, and Runtime adapters. Each now has a one-sentence description naming its task or subject without adding a support claim. A second scan found zero missing descriptions across the 61 pages. This standardizes metadata and previews; it does not prove the body of every page has passed the final editorial gate.
 
+149. **P2 resolved in first-paragraph language:** all 61 authored-page openings were scanned for whether they state a task or subject early. The scope/topology reference replaced "freeze the infrastructure universe" with the concrete version-and-link relationship. The local direct Showcase now says the server runs the command on its own host and records workspace file changes; prerequisites use the same term. Other openings were left intact because their first paragraph already states a use or audience, or the page is a short choice table. This is an opening scan, not a full-body editorial pass.
+
 ## Page inventory
 
 | Page | Current pass | Next review |
@@ -257,14 +259,14 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `modules.md` | Developer detail remains in the architecture section; planning candidates now distinguish shared inputs from algorithm-specific predictions | Recheck claims against daemon composition |
 | `reference/api-overview.md` | Seventh read; Audit route label now names its actual emitters; 124 listed method/path pairs match the current Go router | Check field and response contracts against current handlers and schemas |
 | `reference/environment-yaml.md` | Fourth read; binding fields are separate from S3/GCS limits, and browser credential exceptions remain qualified | Continue field-level schema contract audit |
-| `reference/execution-scopes-and-topologies.md` | Claim pass; clarified API prerequisites and the actual omitted link direction/sharing values | Check contracts against current handlers and schemas |
+| `reference/execution-scopes-and-topologies.md` | Opening pass; scope version selection and topology links replace abstract infrastructure language; API prerequisites remain explicit | Check contracts against current handlers and schemas |
 | `reference/feature-coverage.md` | Third read; route map now serves the reader, with its maintainer update rule in the quality plan | Check contracts against current handlers and schemas |
 | `reference/planning-and-execution-states.md` | Third read; algorithm lifecycle and progress fields are separate; status claims checked against handlers, coordinator, and domain | Recheck generated endpoint contracts after P0 fixes |
 | `runtimes.md` | Second read; marked serverless schema value unavailable because no adapter is registered | Recheck other provider claims against adapters |
 | `showcase/edge-cloud-simulation.mdx` | Second read; fixed manual plan and scheduler-comparison purpose are direct; authenticated polling now fails on HTTP errors | Check result against pinned bundle |
 | `showcase/index.mdx` | Second read; distinguishes existing-daemon API setup from the self-started SLURM fixture; no unsupported scalability language | Recheck cards after Showcase audit |
 | `showcase/kubernetes-real-execution.mdx` | Second read; checkout precedes Kind setup and inline API submission; Desktop is same-server inspection | Check result against pinned bundle |
-| `showcase/local-direct-execution.mdx` | Second read; uses versioned checkout and shared API setup; final run GET now includes the bearer token | Check result against pinned bundle |
+| `showcase/local-direct-execution.mdx` | Third read; server-host execution leads the page; versioned checkout and bearer-authenticated run GET remain | Check result against pinned bundle |
 | `showcase/network-fanout.mdx` | Second read; model-specific estimate phrased directly; authenticated polling now fails on HTTP errors | Check result against pinned bundle |
 | `showcase/parallel-50-core.mdx` | Second read; compute-capacity purpose stated directly; authenticated polling now fails on HTTP errors | Check result against pinned bundle |
 | `showcase/slurm-local-fixture.mdx` | Second read; local adapter evidence and real-cluster limits stated once; versioned checkout and optional Desktop inspection retained | Check result against pinned bundle |

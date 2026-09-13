@@ -157,4 +157,4 @@ curl --fail-with-body \
   -X POST "$AKOFLOW_API_URL/factory-reset/"
 ```
 
-Success is `204 No Content`. The endpoint returns `503` when reset support is unavailable and `422` when the reset operation fails. It cannot run while a read-only snapshot is active because the read-only guard returns `423` first.
+Success is `204 No Content`. The endpoint returns `503` when reset support is unavailable and `422` when the reset operation fails. The server clears the database before removing managed Kubernetes token files. If that file cleanup fails, a `422` can arrive after the catalog has already been cleared; inspect the instance before retrying. Reset cannot run while a read-only snapshot is active because the read-only guard returns `423` first.

@@ -5,13 +5,9 @@ description: Configure a proxy-aware SSH connection, discover a SLURM cluster, m
 
 # Connect an HPC and SLURM cluster
 
-For a guided first registration with interface screenshots and complete API steps,
-start with [the connection tutorial](../../tutorials/register-hpc). This page provides
-the detailed operational requirements.
+This guide is for an HPC operator or researcher with an approved SLURM account. AkôFlow connects to the **login node** over SSH and submits workflow activities with `sbatch`. For a guided first registration, start with the [connection tutorial](../../tutorials/register-hpc).
 
-This how-to is for an HPC operator or researcher who has an approved account on a SLURM cluster. It connects AkôFlow to the **login node** over SSH and submits workflow activities through `sbatch`. For a safe adapter-only check before involving a cluster, use the [SLURM batch fixture](../../showcase/slurm-local-fixture). The fixture validates AkôFlow's local batch-script, sentinels, and artifact path; it is not a SLURM scheduler emulator and does not validate SSH, allocation, accounting, or site policy.
-
-Use a SLURM environment for batch work governed by SLURM partitions, accounts, QoS, and node allocation. Do not model a login node as a high-capacity compute resource or send ordinary batch work directly to it. For a no-remote-infrastructure experiment, use [SimGrid](./simgrid) instead.
+Use a SLURM environment for work governed by partitions, accounts, QoS, and node allocation. Keep ordinary batch work off the login node. To check the local batch-submission path without a cluster, use the [SLURM batch fixture](../../showcase/slurm-local-fixture); it does not verify SSH, allocation, accounting, or site policy. For an infrastructure simulation, use [SimGrid](./simgrid).
 
 ## Prerequisites
 
@@ -25,7 +21,7 @@ Use a SLURM environment for batch work governed by SLURM partitions, accounts, Q
 
 Create or import a service key using [Credentials and SSH service keys](../operations/credentials-and-ssh), then authorize its public key on the login node and any gateway. Store the returned `credentialRef` in the connection; never paste the private key into an environment YAML.
 
-The SLURM runtime accepts SSH, agent, or local connections. A remote HPC cluster normally uses `type: ssh`. The SSH port belongs in `configuration.port`; keep `endpoint` as the host name so the same record is usable by health checks, discovery, the scheduler adapter, artifact operations, and the interactive terminal. The fragment below illustrates fields to set in the [HPC registration template](../../tutorials/register-hpc); use the credential reference returned by your key registration.
+For a remote cluster, use `type: ssh`. Put the SSH port in `configuration.port` and the login host name in `endpoint`; AkôFlow uses this connection for health checks, discovery, runs, artifacts, and the terminal. Set the fields below in the [HPC registration template](../../tutorials/register-hpc), using the credential reference returned by key registration.
 
 ```yaml
 connections:
@@ -48,7 +44,7 @@ connections:
 
 In Desktop, add the connection under **Infrastructure → Environments**, assign the managed SSH key, and run the connection health check. For API registration, follow the [complete connection tutorial](../../tutorials/register-hpc#through-the-api), which creates and tests the JSON payload before saving the environment. To change a saved connection later, read its current fields before sending a complete `PUT /environment-connections/{connectionId}/` body so unrelated settings remain intact.
 
-## 2. Define the SLURM runtime and the infrastructure boundary
+## 2. Describe the SLURM resources
 
 The versioned [`examples/slurm/environment.yaml`](https://github.com/UFFeScience/akoflow/blob/v1.0.8/examples/slurm/environment.yaml) provides the catalog portion: runtime, cluster, partition, representative compute node, storage resources, and runtime bindings. Add a real connection like the preceding one before submitting it.
 
@@ -88,7 +84,7 @@ resources:
     schedulable: true
 ```
 
-Bind the runtime to the partition and compute resources. The adapter resolves its partition from the selected `hpc_partition` resource's `providerId`, falling back to `configuration.partition`; a selected `hpc_machine` resource becomes an `sbatch` node target. Keep the login node's capacity deliberately small and out of heavy workflow plans. Direct execution is for lightweight approved control or interactive work, not a way to bypass SLURM policy.
+Bind the runtime to the partition and compute resources. AkôFlow uses the selected partition's `providerId` for `sbatch`, or `configuration.partition` if that ID is absent. A selected `hpc_machine` becomes an `sbatch` node target. Keep the login node's capacity small and out of heavy workflow plans; use direct execution there only for approved lightweight or interactive work.
 
 For a remote SSH connection, AkôFlow submits the batch script through standard input to `sbatch`; it keeps the audit copy in the configured `scriptDirectory` on the daemon host. Ensure that directory exists and is writable by the daemon. The remote login node does not need that local audit path for stdin submission.
 

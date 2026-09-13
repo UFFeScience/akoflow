@@ -139,6 +139,8 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 
 115. **Entry/reference consistency check:** all 97 route rows in the API overview expanded to 124 method/path pairs, and every pair matched `internal/api/httpserver/httpserver.go`; the overview is intentionally a summary rather than a list of all 125 endpoint pages. In the new-user layer, Getting Started now names the verified Kubernetes example as Kind, and Installation no longer repeats the Windows asset distinction already stated in Downloads. This check covers route registration and wording, not field or response contracts.
 
+116. **P0 resolved in cloud zone selection claim:** the capacity guide asked readers to choose a zone policy and sent `zonePolicy: "any"`, implying that policy controls provisioning. The target repository stores the field, but the Terraform runner passes only `fixedZone` to its module; without it, the module takes the first active zone returned for the region. The capacity guide, GCP guide, and generated target endpoint note now say this directly, and the example omits the ineffective policy value. This is source-audited behavior; a live project run remains open.
+
 ## Page inventory
 
 | Page | Current pass | Next review |
@@ -162,11 +164,11 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `guides/data/provenance.md` | Third read; screenshot captions shortened and API examples fail on HTTP errors | Recheck Desktop interactions against packaged app |
 | `guides/data/audit-events.md` | Reading-order reread; event investigation now precedes UI/API controls and duplicate event-category prose was cut | Recheck Desktop interactions against packaged app |
 | `guides/infrastructure/aws.md` | Plain-language pass after code audit; server credential setup, partial S3 path, and absent EC2 path are explicit | Check provider claims against disposable-bucket evidence |
-| `guides/infrastructure/cloud-capacity.md` | Request-contract reread; target now supplies Terraform project ID and compatible `amd64`, with account image/CIDR placeholders called out before submission | Validate with disposable GCP account |
+| `guides/infrastructure/cloud-capacity.md` | Third read; project, architecture, CIDR and actual fixed-zone behavior match the Terraform target | Validate with disposable GCP account |
 | `guides/infrastructure/machine-configurations.md` | Focused optional Ansible setup; validation and saved version use one playbook, and the returned version ID is consumed by the capacity example in the same Bash session | Validate against disposable GCP worker |
 | `guides/infrastructure/environments.md` | Plain-language/claim pass; local API definition persisted in a one-off repository test, and in-use revision language matches the API | Recheck remote flows with provider evidence |
 | `guides/infrastructure/execution-scopes.md` | Second read; cross-resource dependencies now prompt link modeling, and the link example omits redundant topologyId | Recheck API payloads after P0 contracts fix |
-| `guides/infrastructure/gcp.md` | Cloud-path reread; API checkpoint now uses the environment created by the connection tutorial; source-audited permissions and absent live validation remain explicit | Check provider claims against disposable-project evidence |
+| `guides/infrastructure/gcp.md` | Third read; target zone choice now matches Terraform's fixed-or-first-active behavior | Check provider claims against disposable-project evidence |
 | `guides/infrastructure/hpc-slurm.md` | Plain-language and claim pass; storage catalog is separated from configured browsing, with real-cluster probes still required | Check provider claims against real cluster evidence |
 | `guides/infrastructure/kubernetes.md` | Credential-path reread; token example remains here and streams the secret without a shell variable, command argument, or temporary file | Recheck procedure against Kind bundle and shared-cluster RBAC |
 | `guides/infrastructure/simgrid.md` | Second read; corrected topology path, uses shared API setup and versioned checkout, and describes route choice and missing-route behavior for PRISM versus HEFT | Recheck procedure against pinned bundle |

@@ -12,7 +12,7 @@ For the API commands on this page, complete [API connection setup](../../tutoria
 | --- | --- | --- |
 | Store provider credentials | Yes | Record accepted; not wired to the S3 transfer connector |
 | Discover compute machines, images, and disks | Yes | Not yet |
-| Choose a zone and estimate prices | Zone lookup runs at provisioning; estimates depend on Cloud Billing access | Not yet |
+| Choose a zone and estimate prices | A fixed zone can be set; otherwise provisioning uses the first active zone returned for the region. Estimates depend on Cloud Billing access | Not yet |
 | Provision compute capacity with Terraform | Yes | Not yet |
 | Transfer artifacts through object storage | Direct `gs://` transfer is unavailable in the current server; use a separately supported route such as signed HTTPS when applicable | S3-compatible connector with server environment credentials; external AWS validation pending |
 
@@ -43,11 +43,13 @@ The GET endpoint returns `404` until a catalog has been synchronized. Provider c
 ### Using AkôFlow Desktop
 
 1. Choose a catalog machine, image, disk, and disk size.
-2. Select a zone policy, provisioning mode, maximum instance count, and lifecycle policy.
+2. Select the region, provisioning mode, maximum instance count, and lifecycle policy.
 3. Optionally attach an additional machine-configuration version.
 4. Save the target. It becomes a capacity option available to planning; saving it does not create a VM.
 
 If you need a machine configuration, [create its version](./machine-configurations) before saving the target and attach that version's actual ID. Provisioning needs the referenced version.
+
+For a required zone, set `fixedZone` through the target API below.
 
 ### Using the API
 
@@ -67,7 +69,6 @@ jq -n --arg project "$AKOFLOW_GCP_PROJECT" \
     provider:"gcp",
     providerMachineType:"e2-standard-4",
     region:"us-central1",
-    zonePolicy:"any",
     imageReference:$image,
     architecture:"amd64",
     vcpu:4,
@@ -99,6 +100,8 @@ AKOFLOW_CAPACITY_TARGET_ID=$(jq -er '.id' cloud-target.json) || exit 1
 ```
 
 The project ID is required by the current Terraform target; it is not copied from the environment connection. The built-in worker configuration requires `amd64`, even when Google Cloud labels a machine `X86_64`. If the CIDR is omitted, the Terraform target defaults SSH ingress to `0.0.0.0/0`.
+
+Set `fixedZone` in the target if the worker must use a particular zone. Without it, the current Terraform module chooses the first active zone returned for the region. The saved `zonePolicy` field does not currently affect that choice.
 
 The server supplies the target ID and environment ID when omitted, enables the target, and creates a schedulable capacity record; no VM is created yet. The command saves the returned ID for provisioning. The machine type must also come from the synchronized catalog.
 

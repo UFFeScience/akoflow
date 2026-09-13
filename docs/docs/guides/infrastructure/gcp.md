@@ -53,7 +53,7 @@ If refresh fails, check the daemon log before changing the credential. A `403` n
 
 ## 3. Define a capacity target
 
-A capacity target is the reproducible template offered to the scheduler. Choose the machine type, image, disk, region/zone policy, maximum instances, provisioning mode, and lifecycle policy. For the first worker, use a standard instance and a common Debian or Ubuntu image.
+A capacity target is the template offered to the scheduler. Choose the machine type, image, disk, region, optional fixed zone, maximum instances, provisioning mode, and lifecycle policy. For the first worker, use a standard instance and a common Debian or Ubuntu image. The current Terraform module uses `fixedZone` when set; otherwise it takes the first active zone returned for the region. A saved `zonePolicy` does not change that selection.
 
 Network settings deserve explicit review:
 

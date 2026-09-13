@@ -4,17 +4,16 @@ title: Execute and monitor a workflow
 
 # Execute and monitor a workflow
 
-Start a run from a saved plan, then follow its activities and inspect the result. AkôFlow records both real and simulated runs with timing, transfer, and cost information so you can compare what happened with the plan's predictions.
+Start a run from a saved plan, follow its activities, and inspect the result. AkôFlow keeps the plan's predictions beside the run's observations so you can compare them when the runtime reports enough data.
 
 For the API commands on this page, complete [API connection setup](../../tutorials/api-access) first.
 
-## Modes and run types
+## Choose real execution or simulation
 
-- **Real** runs dispatch activities through execution runtimes such as a Kubernetes or SLURM adapter configured by the environment.
-- **Simulation** runs dispatch simulation-capable activities through a simulation runtime such as SimGrid.
-- **Interactive** sessions open a terminal against a compatible resource. They are represented in the unified run history, but are opened through the console-session API rather than the planned workflow execution request.
+- **Real** runs send activities to resources configured for execution, such as Kubernetes or SLURM.
+- **Simulation** runs evaluate a workflow with a simulation environment such as SimGrid.
 
-The run history distinguishes `workflow`, `interactive`, and `standalone` kinds.
+To open a terminal on one resource, follow the [interactive console guide](../operations/interactive-console). Terminal sessions also appear in the run history, but they do not start from a workflow plan.
 
 ## Status and timing
 
@@ -22,11 +21,11 @@ A submitted execution first enters the queue. When AkôFlow starts it, the workf
 
 For real runs, submitted time marks when AkôFlow handed work to the runtime; started time marks when the runtime allocated it; container-started time marks when user code could begin inside the container.
 
-The completed trace includes:
+Depending on the runtime and available observations, the run detail can include:
 
-- makespan and total cost;
+- makespan and cost;
 - compute, transfer, queue, interference, and overhead time;
-- activity placement and runtime handles;
+- activity placement and runtime job identifiers;
 - transferred bytes, transfer duration/cost, strategy, and route;
 - observed task intervals alongside predicted assignments.
 
@@ -47,8 +46,6 @@ The completed trace includes:
 <img src={require('@site/static/img/interface/runs/simgrid-run-decomposition.png').default} alt="Completed SimGrid run detail in AkôFlow Desktop with run status, observed makespan, transferred data and the execution-time decomposition chart." />
 
 *In the run detail, **Workflow makespan** is wall-clock completion time. **Accumulated stage time** is the sum of work attributed to stages across activities, so it can be greater than makespan when activities overlap. The decomposition makes transfer, execution, queue, boot and interference visible instead of treating them as a single unexplained duration.*
-
-To open an interactive terminal, use the console action for a compatible resource. The session appears with interactive runs in **Runs** and can be closed or have its log exported.
 
 ## Using the API
 
@@ -75,8 +72,6 @@ The detail response contains `run`, `activities`, `dataTransfers`, `handles`, an
 curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   "$AKOFLOW_API_URL/execution-runs/"
 ```
-
-To open an interactive terminal, select a compatible resource and follow the [interactive console guide](../operations/interactive-console). `GET /console-commands/` lists past one-shot commands; it does not describe available commands or the arguments for opening a session.
 
 ## Investigating a failure
 

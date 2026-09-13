@@ -2,7 +2,7 @@
 title: Define execution scopes and network links
 ---
 
-An execution scope tells the planner which environments it may use. Add network links when transfer time or cost matters between their resources. The current Desktop navigation creates an empty topology with a scope; use the API procedure below to register a topology with links.
+An execution scope tells the planner which environments it may use. If dependent activities may run on different resources, model the links between them so transfer estimates have a route. For a single-machine workflow, an empty topology is enough. The current Desktop creates an empty topology with a scope; use the API procedure below to register one with links.
 
 For the API commands on this page, complete [API connection setup](../../tutorials/api-access) first.
 
@@ -71,7 +71,6 @@ curl --fail-with-body \
     "executionScopeId":"hybrid-research",
     "links":[{
       "id":"hpc-cloud",
-      "topologyId":"hybrid-network-v1",
       "sourceResourceId":"hpc-cluster",
       "targetResourceId":"cloud-capacity-small",
       "bandwidthBitsPerSecond":1000000000,

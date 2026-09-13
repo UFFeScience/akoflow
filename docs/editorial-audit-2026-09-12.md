@@ -115,6 +115,8 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 
 103. **P1 resolved in documentation production contract:** the contributor page said every generated endpoint had a cURL command and discussed inferred request JSON as if it were displayed. The current component shows a WebSocket connection for the console stream, only checked request examples, templates where IDs/files are still needed, and illustrative response shapes. The contract now describes that behavior and requires handler plus real-response checks before field-level claims are verified.
 
+104. **P0 resolved across scope, SimGrid, and network explanations:** the scope guide treated links as optional only when time or cost mattered, and the SimGrid guide said a missing route was not a zero-cost transfer. Source review found that PRISM rejects a cross-resource data dependency without a route, while HEFT `transferSeconds` returns zero when no direct matching link exists. The guides now tell readers to model links for cross-resource dependencies, and the network explanation identifies that HEFT limitation rather than implying a safe free transfer. The scope link example also omits redundant `topologyId`, matching the field reference.
+
 ## Page inventory
 
 | Page | Current pass | Next review |
@@ -126,7 +128,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `downloads.md` | Second read; platform limits and verification are explicit, and latest release was `v1.0.8` on 2026-09-12 | Recheck release links when version changes |
 | `engine.md` | Second read; implementation details remain in the developer section | Recheck claims against event-loop code |
 | `explanations/evidence-and-provenance.md` | Second read; plan predictions and optional observations remain distinct | Recheck against execution evidence after P0 fixes |
-| `explanations/network-modeling.md` | Plain-language/units pass; clarified data versus order, corrected 10 GiB/10 Gbit/s to 8.6 s, and explained the one-byte route-selection rule | Recheck transfer claims against execution paths |
+| `explanations/network-modeling.md` | Plain-language/units pass; clarified data versus order, corrected 10 GiB/10 Gbit/s to 8.6 s, and explained one-byte route selection and HEFT missing-link estimates | Recheck transfer claims against execution paths |
 | `explanations/observed-timing.md` | Plain-language/units pass; uses run language, corrects the 8.6 s example, and preserves optional observed-field limits | Recheck metrics against trace aggregation |
 | `explanations/planning.md` | Second read; linked scheduler comparison and removed abstract separation language | Recheck planning claims against coordinator |
 | `explanations/prism-and-heft.md` | Plain-language pass; cut 27% while preserving search, evaluation, cost, and cross-algorithm limits | Recheck algorithm claims against source |
@@ -141,11 +143,11 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `guides/infrastructure/cloud-capacity.md` | Request-contract reread; target now supplies Terraform project ID and compatible `amd64`, with account image/CIDR placeholders called out before submission | Validate with disposable GCP account |
 | `guides/infrastructure/machine-configurations.md` | Focused optional Ansible setup; validation and saved version use one playbook, and the returned version ID is consumed by the capacity example in the same Bash session | Validate against disposable GCP worker |
 | `guides/infrastructure/environments.md` | Plain-language/claim pass; local API definition persisted in a one-off repository test, and in-use revision language matches the API | Recheck remote flows with provider evidence |
-| `guides/infrastructure/execution-scopes.md` | Second read; marked illustrative IDs and linked a runnable, versioned setup | Recheck API payloads after P0 contracts fix |
+| `guides/infrastructure/execution-scopes.md` | Second read; cross-resource dependencies now prompt link modeling, and the link example omits redundant topologyId | Recheck API payloads after P0 contracts fix |
 | `guides/infrastructure/gcp.md` | Cloud-path reread; API checkpoint now uses the environment created by the connection tutorial; source-audited permissions and absent live validation remain explicit | Check provider claims against disposable-project evidence |
 | `guides/infrastructure/hpc-slurm.md` | Plain-language pass; shortened the opening and resource setup after correcting the API and proxy examples | Check provider claims against real cluster evidence |
 | `guides/infrastructure/kubernetes.md` | Credential-path reread; token example remains here and streams the secret without a shell variable, command argument, or temporary file | Recheck procedure against Kind bundle and shared-cluster RBAC |
-| `guides/infrastructure/simgrid.md` | Second read; corrected topology path, uses shared API setup and versioned checkout, and describes route choice without a false lowest-latency claim | Recheck procedure against pinned bundle |
+| `guides/infrastructure/simgrid.md` | Second read; corrected topology path, uses shared API setup and versioned checkout, and describes route choice and missing-route behavior for PRISM versus HEFT | Recheck procedure against pinned bundle |
 | `guides/infrastructure/storage.md` | Second read; Desktop capability gates match current browser; API IDs and paths are examples, promotion omits fictitious lineage IDs, and operation states match the storage coordinator | Recheck storage payloads against a real registered storage |
 | `guides/interface-tour.mdx` | Plain-language pass; removed repeated Desktop/API framing and shortened search/breadcrumb guidance; rendered page inspected at 390 × 844 | Recheck screenshots and controls during final visual audit |
 | `guides/operations/credentials-and-ssh.md` | Task-scope reread; now covers SSH keys and assignment only, with provider credentials routed to their own tutorials | Recheck current Desktop form and key lifecycle claims |

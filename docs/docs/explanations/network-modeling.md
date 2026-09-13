@@ -26,7 +26,7 @@ A `NetworkLink` is directed. It identifies source and target resources and can c
 
 PRISM precomputes routes from the frozen topology and includes communication in its candidate evaluation. The SimGrid platform and PRISM choose a route by summing each link's latency plus the time to transmit one byte. They apply the transfer's full byte volume after choosing the route. A large payload might therefore transfer faster over a different path.
 
-PRISM can model known overlapping flows on the chosen route. HEFT's baseline scheduling path uses a direct matching link. Neither model guarantees the better observed run.
+PRISM can model known overlapping flows on the chosen route and rejects a cross-resource data transfer without one. HEFT's baseline uses a direct matching link; when none exists, it currently estimates zero transfer time. Supply the links needed by your placements rather than treating that estimate as evidence of a free transfer. Neither model guarantees the better observed run.
 
 ## Planned route versus executed transfer
 

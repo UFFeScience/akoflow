@@ -22,15 +22,15 @@ Open **Provenance**. The **Explore** tab loads a server-defined entity catalog. 
 
 <img src={require('@site/static/img/interface/provenance/explore-runs.png').default} alt="AkôFlow Desktop Provenance Explore view with the trusted-record catalog, Runs projection, search field, filter control, CSV and JSON exports, and lineage actions for each row." />
 
-*The catalog defines the projections available for exploration. In the **Runs** projection, the row action opens the record details and the lineage action follows its relationship to the selected plan; use the search and export controls only after choosing the record type that answers the question.*
+*Choose a record type first. In **Runs**, open a row for details or follow its lineage.*
 
 The API exposes the same server-defined catalog and query:
 
 ```bash
-curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   "$AKOFLOW_API_URL/provenance/entities/"
 
-curl -G -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+curl --fail-with-body -G -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   --data-urlencode "q=completed" \
   --data-urlencode "filterField=status" \
   --data-urlencode "filterValue=completed" \
@@ -49,7 +49,7 @@ From an Explore result, choose **Open lineage**, or open the **Lineage** tab and
 
 <img src={require('@site/static/img/interface/provenance/lineage-fanout.png').default} alt="AkôFlow Desktop Lineage view for the completed SimGrid 30 GB fan-out run, showing record type and ID controls, direction and depth, the grouped lineage graph, graph filters, and the selected run details." />
 
-*The fan-out example starts at the completed run. Distance 1 contains its plan, activity executions, and transfers; distance 2 reaches the workflow version, scope, activities, and allocated resources. Select a card to inspect the fields in the detail panel rather than inferring them from its position in the graph.*
+*This completed run links to its plan, activity executions, transfers, workflow version, scope, and resources. Select a card to inspect its fields.*
 
 ### Read the Lineage screen
 
@@ -83,7 +83,7 @@ The **SQL** tab presents the queryable schema, templates for common investigatio
 
 <img src={require('@site/static/img/interface/provenance/sql-planned-versus-observed.png').default} alt="AkôFlow Desktop Provenance SQL view showing the safe schema, a read-only query that compares planned and observed run durations, query controls, and the result summary." />
 
-*This query joins completed execution runs to their schedule plans. The result summary reports the returned row count, current page, elapsed query time, and whether more rows are available; the values are evidence from the connected local database, not fixed example values.*
+*The query compares completed runs with their plans. The displayed values come from the connected local database.*
 
 ### Read the SQL screen
 
@@ -100,10 +100,10 @@ The **SQL** tab presents the queryable schema, templates for common investigatio
 Only read-only `SELECT` and `WITH` queries are accepted. The Desktop communicates the current service limits as a 10-second execution timeout and 200 rows per page. Fetch the runtime schema instead of assuming table or column names:
 
 ```bash
-curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   "$AKOFLOW_API_URL/provenance/sql/schema/"
 
-curl -X POST -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+curl --fail-with-body -X POST -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
     "sql":"SELECT id, status, created_at FROM execution_runs WHERE status = :status ORDER BY created_at DESC",

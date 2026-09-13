@@ -67,15 +67,15 @@ Useful definition operations are:
 
 ```bash
 # List definitions
-curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   "$AKOFLOW_API_URL/workflow-definitions/"
 
 # Read one definition
-curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   "$AKOFLOW_API_URL/workflow-definitions/portable-simulation-demo/"
 
 # Export portable YAML
-curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -o exported-workflow.yaml \
   "$AKOFLOW_API_URL/workflow-definitions/portable-simulation-demo/export/"
 ```

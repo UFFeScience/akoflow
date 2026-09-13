@@ -49,7 +49,7 @@ curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
 First upload a build context as multipart form data:
 
 ```bash
-curl -X POST -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+curl --fail-with-body -X POST -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -F "context=@context.tar.gz" \
   "$AKOFLOW_API_URL/build-contexts/"
 ```

@@ -38,7 +38,7 @@ Complete [API connection setup](../../tutorials/api-access) before running the c
 First discover the algorithms available in the running instance:
 
 ```bash
-curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   "$AKOFLOW_API_URL/planning-algorithms/"
 ```
 
@@ -67,10 +67,10 @@ curl --fail-with-body \
 Creation returns `202 Accepted`. Poll the session until its status is `completed`, then list its candidates. This lets you compare the final ranks:
 
 ```bash
-curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   "$AKOFLOW_API_URL/planning-sessions/planning-simulation-example/"
 
-curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   "$AKOFLOW_API_URL/planning-sessions/planning-simulation-example/candidates/"
 ```
 

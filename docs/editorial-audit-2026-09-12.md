@@ -133,6 +133,8 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 
 112. **P0 resolved in health diagnostics:** the API overview and troubleshooting guide called the root health route without a bearer token, which returns `401` on a protected daemon because only instance identity and preflight are public bootstrap routes. Both root commands now send the configured token; troubleshooting labels preflight correctly as public. A security regression assertion covers the root route. The generated root endpoint template already supplied the token.
 
+113. **P1/P2 resolved across six task guides:** the provenance page repeated its screen tables in three long screenshot captions, which now identify the relevant result without re-explaining controls. A cross-page scan found 16 authored API `curl` examples without HTTP-error failure behavior across provenance, workflow definitions, planning, executions, build context, and troubleshooting. All now use `--fail-with-body`, so failed lookups and uploads produce failing exit statuses; download examples already used `--fail`. The shell checker now rejects future `curl` lines without either fail option. Syntax, links, and HTTP behavior have separate verification scopes.
+
 ## Page inventory
 
 | Page | Current pass | Next review |
@@ -150,10 +152,10 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `explanations/prism-and-heft.md` | Plain-language pass; cut 27% while preserving search, evaluation, cost, and cross-algorithm limits | Recheck algorithm claims against source |
 | `getting-started.md` | Entry-path reread; leads to Desktop first run and now states verified versus partial provider paths before remote setup | Recheck the entry flow on a clean supported host |
 | `guides/data/artifacts.md` | Short choice page preserving the old URL and routing storage, build, and recorded-location tasks | Check destinations in navigation |
-| `guides/data/build-executable.md` | Docker/SIF API flow now captures build/run IDs, checks asynchronous status, and downloads the completed output; custom context remains qualified | Verify a live registry pull and SIF conversion |
+| `guides/data/build-executable.md` | Third read; build-context upload now fails on HTTP errors; asynchronous Docker/SIF flow remains | Verify a live registry pull and SIF conversion |
 | `guides/data/artifact-locations.md` | Focused catalog-location and preparation-status procedure; saved flags are distinguished from live byte checks | Recheck materialization payloads after P0 contracts fix |
 | `guides/data/provenance-and-audit.md` | Short choice page preserving the old URL and distinguishing the two record types | Check both destinations in navigation |
-| `guides/data/provenance.md` | Reading-order reread; result investigation now precedes detailed Explore/lineage/SQL controls, and SQL is optional | Recheck Desktop interactions against packaged app |
+| `guides/data/provenance.md` | Third read; screenshot captions shortened and API examples fail on HTTP errors | Recheck Desktop interactions against packaged app |
 | `guides/data/audit-events.md` | Reading-order reread; event investigation now precedes UI/API controls and duplicate event-category prose was cut | Recheck Desktop interactions against packaged app |
 | `guides/infrastructure/aws.md` | Plain-language pass after code audit; server credential setup, partial S3 path, and absent EC2 path are explicit | Check provider claims against disposable-bucket evidence |
 | `guides/infrastructure/cloud-capacity.md` | Request-contract reread; target now supplies Terraform project ID and compatible `amd64`, with account image/CIDR placeholders called out before submission | Validate with disposable GCP account |
@@ -174,11 +176,11 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `guides/operations/find-records.md` | Desktop/API search procedure, result fields, limits, and empty-result recovery | Recheck UI behavior against Desktop |
 | `guides/operations/follow-notifications.md` | Notification behavior, owning API collections, and missing-alert recovery | Recheck UI behavior against Desktop |
 | `guides/operations/server-instance.md` | Second read; corrected invalid tunnel command, simplified server language, and preserved HTTP failure through jq | Recheck release assets when version changes |
-| `guides/operations/troubleshooting.md` | Third read; root health now sends the token and public preflight is labeled correctly | Recheck other diagnostic claims after P0 fixes |
-| `guides/workflows/definitions.md` | Progressive-disclosure reread; Desktop creation precedes portable API fields, with exact model details in the reference | Recheck payload against importer after P0 contracts fix |
-| `guides/workflows/executions.md` | Plain-language reread; workflow task is separate from terminal sessions, and trace fields are conditional on observed evidence | Recheck other runtimes against their own guides |
+| `guides/operations/troubleshooting.md` | Fourth read; root health authentication and HTTP-error exits are consistent | Recheck other diagnostic claims after P0 fixes |
+| `guides/workflows/definitions.md` | Third read; API list, detail, and export now fail on HTTP errors | Recheck payload against importer after P0 contracts fix |
+| `guides/workflows/executions.md` | Third read; run detail and list now fail on HTTP errors | Recheck other runtimes against their own guides |
 | `guides/workflows/first-run.md` | Claim reread; fixed-plan submission is described as validation and save, without falsely promising prediction recalculation | Keep the SimGrid API example aligned with its versioned bundle |
-| `guides/workflows/planning.md` | Import-path and prediction reread; isolated HTTP import and GET passed; HEFT/PRISM estimates are identified as model-specific | Verify automatic Desktop planning flow |
+| `guides/workflows/planning.md` | Third read; algorithm and session/candidate reads now fail on HTTP errors | Verify automatic Desktop planning flow |
 | `installation.md` | Entry-path reread; Desktop checkup remains central, self-managed API checks moved to their guides, and platform verification is stated once | Verify clean-host and cross-platform installation |
 | `internal/workflow-spec.md` | Second read; lead example now uses one execution mode and marks script paths as prerequisites | Check every field contract against current importer |
 | `modules.md` | Developer detail remains in the architecture section; planning candidates now distinguish shared inputs from algorithm-specific predictions | Recheck claims against daemon composition |

@@ -137,17 +137,17 @@ Useful endpoints:
 
 ```bash
 # Durable operational events
-curl --get -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+curl --fail-with-body --get -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   --data-urlencode 'outcome=failed' \
   --data-urlencode 'limit=100' \
   "$AKOFLOW_API_URL/audit-events/"
 
 # Available instance modes
-curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   "$AKOFLOW_API_URL/instances/"
 
 # Current server identity
-curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   "$AKOFLOW_API_URL/instance/"
 ```
 

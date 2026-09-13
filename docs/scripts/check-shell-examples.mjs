@@ -28,6 +28,11 @@ for (const file of walk(contentDirectory)) {
     if (result.error || result.status !== 0) {
       errors.push(`${relative(docsDirectory, file)}:${line}: ${(result.stderr || result.error?.message || "invalid Bash").trim()}`);
     }
+    for (const [offset, command] of body.split("\n").entries()) {
+      if (/^\s*curl\b/.test(command) && !/--fail(?:-with-body)?\b/.test(command)) {
+        errors.push(`${relative(docsDirectory, file)}:${line + offset}: curl must fail on HTTP errors`);
+      }
+    }
   };
   for (let index = 0; index < lines.length; index++) {
     if (!/^```(?:bash|sh)\s*$/.test(lines[index])) continue;

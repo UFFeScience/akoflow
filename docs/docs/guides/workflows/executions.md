@@ -62,14 +62,14 @@ curl --fail-with-body \
 The request contains `run`, `plan`, `workflow`, `executionScope`, `resources`, `runtimes`, runtime bindings, the network topology, and activity profiles. Submission is asynchronous and returns `202 Accepted` with the queued job. Read the run by the `run.id` in the request:
 
 ```bash
-curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   "$AKOFLOW_API_URL/execution-runs/simulation-example-run-v1/"
 ```
 
 The detail response contains `run`, `activities`, `dataTransfers`, `handles`, and `events`; it can also include related infrastructure operations. List endpoints support the Desktop's run history and filters:
 
 ```bash
-curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   "$AKOFLOW_API_URL/execution-runs/"
 ```
 

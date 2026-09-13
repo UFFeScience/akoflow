@@ -36,6 +36,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 28. **P1 resolved in scope/topology guidance — example prerequisites:** the reference submitted checked-in SimGrid files without saying how to get them or register their environment. It now links the versioned first-run setup and states the required checkout and order. The scope guide now identifies its HPC/cloud IDs as illustrative, links the runnable bundle, and states that topology creation does not enforce scope membership for link endpoints.
 29. **P1 resolved in workflow specification — mixed-mode example:** the lead “complete” document combined one simulation-only activity with two real-only activities and named image paths without supplying scripts. It now presents a consistent real-execution field example, states the script prerequisite, and links the tested SimGrid sequence for a runnable tutorial.
 30. **P0 resolved in environment reference — unavailable version action:** the common-failure row advised creating a new version within an in-use environment, but no API route appends a version and repository replacement deletes/reinserts the inventory transactionally, failing when references prevent it. The reference now tells readers to register revised inventory under new environment and version IDs and qualifies `PUT` replacement.
+31. **P0/P1 resolved in server and troubleshooting guides — broken tunnel command and basic-path language:** the Linux server guide's `ssh ... <operator>@<instance-host>` line was invalid Bash because `<` starts redirection. It now prompts for SSH user and hostname and quotes the destination. The guide also replaces repeated control-plane language, corrects token creation instructions, and enables `pipefail` for both `curl | jq` checks. Troubleshooting calls reset deletion of local AkôFlow data. The planning/execution state reference was source-checked without a change.
 
 ## Page inventory
 
@@ -44,7 +45,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `guides/workflows/first-local-run.md` | Second read; end-to-end Linux package UI path verified through generated file evidence; built page and open mobile menu inspected at 390 × 844 | Repeat on a clean supported host and other platforms |
 | `src/pages/index.tsx` | Second read; corrected real-local-run narrative and routed download to the pinned selection page | Recheck rendered entry path on mobile |
 | `concepts.md` | Second read; corrected executable/data distinction and made verified Desktop first run the next step | Recheck complete new-user path |
-| `contributing/documentation-plan.md` | Full read; replaced historical production waves with recurring review contract | Recheck contract at final audit |
+| `contributing/documentation-plan.md` | Second read; editorial contract, source hierarchy, and completion gate still match the active audit | Recheck contract at final audit |
 | `downloads.md` | Second read; platform limits and verification are explicit, and latest release was `v1.0.8` on 2026-09-12 | Recheck release links when version changes |
 | `engine.md` | Second read; implementation details remain in the developer section | Recheck claims against event-loop code |
 | `explanations/evidence-and-provenance.md` | Second read; plan predictions and optional observations remain distinct | Recheck against execution evidence after P0 fixes |
@@ -69,8 +70,8 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `guides/operations/instance-management.md` | Second read; preserves instance identity in the relay-size example and checked ZIP import/export routes against handlers | Recheck complete snapshot behavior against a local archive |
 | `guides/operations/interactive-console.md` | Second read; corrected synchronous command failure and successful session creation states against controllers | Recheck session behavior against Desktop |
 | `guides/operations/search-and-notifications.md` | Full read; removed debounce/polling details and aligned API setup | Recheck UI behavior against Desktop |
-| `guides/operations/server-instance.md` | Full read; prerequisites, verification, and removal are explicit | Recheck release assets when version changes |
-| `guides/operations/troubleshooting.md` | Full read; starts with user-visible failure and uses server terminology | Recheck diagnostic claims after P0 fixes |
+| `guides/operations/server-instance.md` | Second read; corrected invalid tunnel command, simplified server language, and preserved HTTP failure through jq | Recheck release assets when version changes |
+| `guides/operations/troubleshooting.md` | Second read; source-checked bootstrap/authentication and clarified reset data loss | Recheck diagnostic claims after P0 fixes |
 | `guides/workflows/definitions.md` | Second read; isolated the portable demo ID, stated its save step and simulation-only scope | Recheck payload against importer after P0 contracts fix |
 | `guides/workflows/executions.md` | Second read; corrected console-history claim and specified prerequisites for SimGrid submission | Recheck other runtimes against their own guides |
 | `guides/workflows/first-run.md` | Second read; shortened fixed-plan and Desktop inspection caveats | Keep the SimGrid API example aligned with its versioned bundle |
@@ -82,7 +83,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `reference/environment-yaml.md` | Second read; corrected the unavailable append-version advice and qualified replacement against current routes/repository | Continue field-level schema contract audit |
 | `reference/execution-scopes-and-topologies.md` | Second read; linked required API setup, checkout, and environment creation before file submissions | Check contracts against current handlers and schemas |
 | `reference/feature-coverage.md` | Second read; now distinguishes registered but unlinked Desktop network routes from navigable task paths | Check contracts against current handlers and schemas |
-| `reference/planning-and-execution-states.md` | Full read; state limits are explicit | Check contracts against current handlers and schemas |
+| `reference/planning-and-execution-states.md` | Second read; session cancellation and run/task status claims checked against handlers, coordinator, and domain | Recheck generated endpoint contracts after P0 fixes |
 | `runtimes.md` | Second read; marked serverless schema value unavailable because no adapter is registered | Recheck other provider claims against adapters |
 | `showcase/edge-cloud-simulation.mdx` | Second read; uses versioned checkout and submission script, shared API setup, and same-server Desktop inspection | Check result against pinned bundle |
 | `showcase/index.mdx` | Second read; instructions fit script and inline API examples; removed unsupported scalability language | Recheck cards after Showcase audit |

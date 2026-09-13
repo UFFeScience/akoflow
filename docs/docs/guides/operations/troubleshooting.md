@@ -149,4 +149,4 @@ curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   "$AKOFLOW_API_URL/instance/"
 ```
 
-Factory reset is a last resort, not a diagnostic step. Export a sanitized snapshot first and use reset only when loss of local control-plane state is intentional.
+Factory reset is a last resort, not a diagnostic step. Export a sanitized snapshot first and use reset only when deleting local AkôFlow data is intentional.

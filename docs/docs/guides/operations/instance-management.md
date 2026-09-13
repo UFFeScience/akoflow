@@ -25,21 +25,19 @@ curl --fail-with-body \
   "$AKOFLOW_API_URL/instance/"
 ```
 
-To change the relay size, first preserve the identity returned by `GET`, then send the complete object:
+To change the relay size, read the current instance, update that field, and send the complete object back:
 
 ```bash
-curl --fail-with-body \
+set -o pipefail
+curl --fail-with-body --silent \
   -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
-  -H 'Content-Type: application/json' \
-  -X PUT "$AKOFLOW_API_URL/instance/" \
-  -d '{
-    "id":"akoflow-lab",
-    "name":"AkôFlow lab",
-    "description":"Research control plane",
-    "organization":"Example Lab",
-    "location":"Niterói",
-    "transferBufferBytes":8388608
-  }'
+  "$AKOFLOW_API_URL/instance/" \
+  | jq '.transferBufferBytes = 8388608' \
+  | curl --fail-with-body \
+      -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+      -H 'Content-Type: application/json' \
+      -X PUT "$AKOFLOW_API_URL/instance/" \
+      --data-binary @-
 ```
 
 `id` and `name` are required. A zero buffer selects the 8 MiB default; values outside 5–64 MiB return `422 Unprocessable Entity`.

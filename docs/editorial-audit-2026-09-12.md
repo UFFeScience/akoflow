@@ -197,6 +197,8 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 
 144. **P1 resolved across data and evidence tasks:** the Audit guide's procedure still said to find any "operation" in Audit and to compare a workflow run ID directly with an Audit event, despite the limited emitters. It now names connection checks, discovery, and console actions and sends workflow-result tracing to Provenance. The chooser includes discovery in the same scope. The Docker-to-SIF guide now states that a live registry pull and conversion remain unverified, matching the audit evidence rather than implying a completed build is already demonstrated. The artifact-location and Provenance guides were reread without another P0/P1 wording change; runtime/provider validation remains open.
 
+145. **P1 resolved in operations page ownership:** the earlier preferences split left a full duplicate Desktop/API procedure in Instance management, despite its link to the dedicated Personal preferences page and an inventory note claiming it had moved. The duplicate is removed; the link, dedicated guide, sidebar entry, and API overview remain. A repository search found no links to the removed heading. The notifications guide now calls its absent server record "server-side" rather than introducing daemon terminology. Search, console, and the remaining instance lifecycle were reread; snapshot/runtime behavior still needs its own validation.
+
 ## Page inventory
 
 | Page | Current pass | Next review |
@@ -232,12 +234,12 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `guides/infrastructure/storage.md` | Third read; opening now states unsigned S3 browsing directly; local API path remains verified | Verify remote/provider storage independently |
 | `guides/interface-tour.mdx` | Plain-language pass; removed repeated Desktop/API framing and shortened search/breadcrumb guidance; rendered page inspected at 390 × 844 | Recheck screenshots and controls during final visual audit |
 | `guides/operations/credentials-and-ssh.md` | Task-scope reread; now covers SSH keys and assignment only, with provider credentials routed to their own tutorials | Recheck current Desktop form and key lifecycle claims |
-| `guides/operations/instance-management.md` | Task-scope reread; browser-profile preferences moved out; identity, export/import, and reset remain grouped as instance lifecycle | Recheck complete snapshot behavior against a local archive |
+| `guides/operations/instance-management.md` | Second task-scope read; duplicate preference procedure removed; identity, export/import, and reset remain | Recheck complete snapshot behavior against a local archive |
 | `guides/operations/personal-preferences.md` | Focused Desktop/API instructions for theme and graph animation, moved from instance management | Recheck current Desktop controls |
 | `guides/operations/interactive-console.md` | Plain-language reread; basic path and diagram now use resource/connection terms, while API retains returned IDs; closure follows streaming/log use | Recheck session behavior against Desktop |
 | `guides/operations/search-and-notifications.md` | Short choice page preserving the old URL and distinguishing lookup from profile-local alerts | Check both destinations in navigation |
 | `guides/operations/find-records.md` | Desktop/API search procedure, result fields, limits, and empty-result recovery | Recheck UI behavior against Desktop |
-| `guides/operations/follow-notifications.md` | Audit-scope reread; recovery uses each operation's owning record, with Audit limited to its actual emitters | Recheck UI behavior against Desktop |
+| `guides/operations/follow-notifications.md` | Second read; recovery uses each operation's owning record, and update notices have no server-side record | Recheck UI behavior against Desktop |
 | `guides/operations/server-instance.md` | Second read; corrected invalid tunnel command, simplified server language, and preserved HTTP failure through jq | Recheck release assets when version changes |
 | `guides/operations/troubleshooting.md` | Fifth read; evidence collection now separates run/operation records, Provenance, and actual Audit emitters | Recheck other diagnostic claims after P0 fixes |
 | `guides/workflows/definitions.md` | Third read; API list, detail, and export now fail on HTTP errors | Recheck payload against importer after P0 contracts fix |

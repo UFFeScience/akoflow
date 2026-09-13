@@ -42,34 +42,6 @@ curl --fail-with-body --silent \
 
 `id` and `name` are required. A zero buffer selects the 8 MiB default; values outside 5–64 MiB return `422 Unprocessable Entity`.
 
-## Personal preferences
-
-Theme and graph animation are associated with a stable browser-profile client ID, not with an authenticated user account. Desktop saves them in local storage immediately and attempts to synchronize them with the server. If the server is offline, local preferences keep the interface usable.
-
-### Using AkôFlow Desktop
-
-1. Open **Settings → General**.
-2. Select **Light** or **Dark**.
-3. Turn **Graph animation** on or off.
-
-### Using the API
-
-The client ID must contain 8–128 characters. The only accepted themes are `light` and `dark`.
-
-```bash
-CLIENT_ID='docs-client-01'
-
-curl --fail-with-body \
-  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
-  -H 'Content-Type: application/json' \
-  -X PUT "$AKOFLOW_API_URL/user-preferences/$CLIENT_ID/" \
-  -d '{"theme":"dark","animationsEnabled":false}'
-
-curl --fail-with-body \
-  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
-  "$AKOFLOW_API_URL/user-preferences/$CLIENT_ID/"
-```
-
 ## Export a sanitized instance
 
 ### Using AkôFlow Desktop

@@ -63,7 +63,7 @@ curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
 ```
 
 Open a returned run or cloud-operation ID for its status and events. Desktop
-application update notices are local to the app; there is no daemon
+application update notices are local to the app; there is no server-side
 notification record to query for them. For connection checks, resource
 discovery, or console actions, query `/audit-events/` with the relevant
 session, connection, resource, or environment filter. It does not reconstruct

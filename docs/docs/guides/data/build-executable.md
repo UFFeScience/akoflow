@@ -5,7 +5,7 @@ description: Register a Docker image and build a versioned SIF executable for la
 
 # Build an executable from a Docker image
 
-Use this guide when a workflow needs a versioned executable built from a Docker image. AkôFlow registers the image as an artifact, then starts a build that produces a SIF file. To register a SIF file already on storage, use [Browse and manage storage](../infrastructure/storage#register-an-existing-file).
+Use this guide when a workflow needs a versioned executable built from a Docker image. AkôFlow registers the image as an artifact, then starts a build for a SIF file. A live registry pull and SIF conversion have not yet been verified. To register a SIF file already on storage, use [Browse and manage storage](../infrastructure/storage#register-an-existing-file).
 
 For the API commands below, complete [API connection setup](../../tutorials/api-access) first.
 

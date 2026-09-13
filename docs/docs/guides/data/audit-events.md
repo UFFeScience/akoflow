@@ -1,6 +1,6 @@
 ---
 title: Inspect audit events
-description: Find operational events and correlate failures with the affected AkôFlow records.
+description: Find recorded connection, discovery, and console events and inspect their outcomes.
 ---
 
 # Inspect audit events
@@ -9,9 +9,9 @@ Use **Audit** to inspect recorded connection health checks, resource discovery, 
 
 ## Investigate an operation
 
-1. Find the operation in **Audit** and note its time, target ID, and outcome.
+1. Find the connection check, resource discovery, or console action in **Audit** and note its time, target ID, and outcome.
 2. Open the target record or use the API filters to narrow events around that ID.
-3. For a workflow result, [follow its provenance](./provenance) and compare the run ID and time with the audit event.
+3. For a workflow result, [follow its provenance](./provenance). Consult nearby Audit events only when a connection, discovery, or console action may explain the result.
 
 ## Inspect the audit trail
 

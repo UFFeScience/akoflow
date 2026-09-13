@@ -195,6 +195,8 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 
 143. **P2 resolved in basic-path terminology:** Getting Started, Installation, API connection setup, and the first SimGrid tutorial called the AkôFlow server a `daemon` in prose where the reader only needs its address, readiness, or log. Those passages now use `server`; exact checkup labels such as **AkôFlow daemon** remain unchanged. This keeps implementation vocabulary out of the entry path without hiding operational prerequisites. The larger user-guide terminology pass remains open.
 
+144. **P1 resolved across data and evidence tasks:** the Audit guide's procedure still said to find any "operation" in Audit and to compare a workflow run ID directly with an Audit event, despite the limited emitters. It now names connection checks, discovery, and console actions and sends workflow-result tracing to Provenance. The chooser includes discovery in the same scope. The Docker-to-SIF guide now states that a live registry pull and conversion remain unverified, matching the audit evidence rather than implying a completed build is already demonstrated. The artifact-location and Provenance guides were reread without another P0/P1 wording change; runtime/provider validation remains open.
+
 ## Page inventory
 
 | Page | Current pass | Next review |
@@ -212,11 +214,11 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `explanations/prism-and-heft.md` | Third read; comparison headings now describe observed-run and experiment tasks | Recheck algorithm claims against source |
 | `getting-started.md` | Sixth read; a manual first plan precedes comparison and server terminology stays user-facing | Recheck the entry flow on a clean supported host |
 | `guides/data/artifacts.md` | Short choice page preserving the old URL and routing storage, build, and recorded-location tasks | Check destinations in navigation |
-| `guides/data/build-executable.md` | Third read; build-context upload now fails on HTTP errors; asynchronous Docker/SIF flow remains | Verify a live registry pull and SIF conversion |
+| `guides/data/build-executable.md` | Fourth read; source-checked Docker/SIF build flow now identifies missing live conversion evidence | Verify a live registry pull and SIF conversion |
 | `guides/data/artifact-locations.md` | Cross-page read; catalog and run observations are explicitly saved records, not live byte checks | Recheck materialization payloads after P0 contracts fix |
-| `guides/data/provenance-and-audit.md` | Scope reread; directs only recorded connection, discovery, and console actions to Audit | Check both destinations in navigation |
+| `guides/data/provenance-and-audit.md` | Second scope read; connection, discovery, and console examples match the Audit guide | Check both destinations in navigation |
 | `guides/data/provenance.md` | Scope reread; no longer routes credential changes to Audit; API examples fail on HTTP errors | Recheck Desktop interactions against packaged app |
-| `guides/data/audit-events.md` | Source-checked scope; current emitters cover connection health, discovery, and console, while other category tabs can be empty | Recheck Desktop interactions against packaged app |
+| `guides/data/audit-events.md` | Second scope read; procedure names actual emitters and routes workflow-result tracing to Provenance | Recheck Desktop interactions against packaged app |
 | `guides/infrastructure/aws.md` | Third read; omitted/`env` transfer credential selection and unsigned S3 browsing are explicit | Check provider claims against disposable-bucket evidence |
 | `guides/infrastructure/cloud-capacity.md` | Fourth read; project, architecture, CIDR, zone choice, and asynchronous provision failures match handlers and Terraform | Validate with disposable GCP account |
 | `guides/infrastructure/cloud-support.md` | First read; GCP/AWS support matrix separated from capacity procedure and linked to provider tasks | Recheck against live GCP/S3 evidence |

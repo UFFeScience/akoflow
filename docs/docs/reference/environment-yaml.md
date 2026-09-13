@@ -34,6 +34,8 @@ connectorBindings: []
 
 `environment` and `version` are required for a persisted definition. The remaining collections may be empty at creation time, but a plan needs at least one schedulable resource, an enabled binding, and a runtime compatible with the selected execution mode.
 
+The create handler returns the submitted document. It may still show omitted nested parent IDs as empty strings. Read `GET /environments/{environmentId}/` to see the IDs actually saved with the environment and version.
+
 ## Identity and version fields
 
 | Path | Required | Type | Accepted values / default | Notes |
@@ -44,7 +46,7 @@ connectorBindings: []
 | `environment.status` | No | string | `defined` | Documented states are `defined`, `connecting`, `connected`, `discovering`, `ready`, `degraded`, and `unreachable`. The create path does not validate this string; use an observed state rather than treating it as a runtime selector. |
 | `environment.createdAt` | No | timestamp | database creation time | Returned by reads; do not author it. |
 | `version.id` | Yes | string | unique ID | The immutable ID referenced by scopes. |
-| `version.environmentId` | Yes | string | `environment.id` | Keep it equal to the enclosing environment ID. The create path persists the enclosing ID. |
+| `version.environmentId` | No | string | saved as `environment.id` | The repository uses the enclosing environment ID when it saves the version. |
 | `version.version` | Yes | integer | sequence chosen by author | Must be unique for an environment. |
 | `version.status` | Recommended | string | `""` if omitted | Documented states are `draft`, `published`, and `retired`; the create path does not validate this string. Use `published` for inventory intended for planning. |
 | `version.networkModel` | No | string | `""` if omitted | Optional model label such as `static-links`. Topology links live in a separate network-topology document. |
@@ -60,7 +62,7 @@ Each entry in `runtimes` defines how a version can execute or simulate work. `co
 | Path | Required | Type | Values / default | Notes |
 | --- | --- | --- | --- | --- |
 | `runtimes[].id` | Yes | string | unique ID | Referenced by resource and storage bindings. |
-| `runtimes[].environmentVersionId` | Yes | string | `version.id` | Keep equal to the enclosing version ID; create persists the enclosing version. |
+| `runtimes[].environmentVersionId` | No | string | saved as `version.id` | The repository uses the enclosing version ID when it saves each runtime. |
 | `runtimes[].name` | Yes | string | unique per version | User-facing runtime name. |
 | `runtimes[].driver` | Yes | enum | `slurm`, `kubernetes`, `ssh`, `local`, `serverless`, `simgrid`, `cloud` | The database validates this list. |
 | `runtimes[].mode` | Yes | enum | `execution`, `simulation` | The database validates this list. A SimGrid runtime uses `simulation`; a remote runtime normally uses `execution`. |
@@ -77,7 +79,7 @@ Resources are the candidates a plan can place activities on. A resource is usabl
 | Path | Required | Type | Values / default | Notes |
 | --- | --- | --- | --- | --- |
 | `resources[].id` | Yes | string | unique ID | Referenced by bindings, relations, profiles, assignments, and topology links. |
-| `resources[].environmentVersionId` | Yes | string | `version.id` | Keep equal to the enclosing version ID; create persists the enclosing version. |
+| `resources[].environmentVersionId` | No | string | saved as `version.id` | The repository uses the enclosing version ID when it saves each resource. |
 | `resources[].type` | Recommended | string | `""` if omitted | Use a known resource type below to classify the resource. The create path does not validate this field against that list. |
 | `resources[].name` | Yes | string | — | Display name. |
 | `resources[].providerId` | Yes | string | unique per version | Provider-facing or modeled identifier. |
@@ -105,7 +107,7 @@ resourceRuntimeBindings:
 
 `resourceRuntimeBindings[].resourceId` and `runtimeId` are required and must reference entries in the same definition. Set `enabled: true` for a usable binding; an omitted value decodes as `false` through the API. Omit `configuration` when the binding needs no settings.
 
-`resourceRelations` is optional. When used, each relation needs `sourceResourceId`, `targetResourceId`, and `type`; `environmentVersionId` should equal `version.id`. The allowed relation types are `contains`, `member_of`, and `accessible_via`. A relation cannot point from a resource to itself.
+`resourceRelations` is optional. When used, each relation needs `sourceResourceId`, `targetResourceId`, and `type`; the repository saves the enclosing `version.id` as its `environmentVersionId`. The allowed relation types are `contains`, `member_of`, and `accessible_via`. A relation cannot point from a resource to itself.
 
 ## Connections and transfer connectors
 
@@ -114,7 +116,7 @@ resourceRuntimeBindings:
 | Path | Required | Type | Values / default | Notes |
 | --- | --- | --- | --- | --- |
 | `connections[].id`, `name`, `type` | Yes for a usable connection | string | Known types: `ssh`, `kubernetes`, `cloud`, `local`, `agent` | `name` is unique within the environment. The create path does not validate `type` against this list. |
-| `connections[].environmentId` | Yes | string | `environment.id` | Keep it equal to the enclosing environment; create persists the enclosing ID. |
+| `connections[].environmentId` | No | string | saved as `environment.id` | The repository uses the enclosing environment ID when it saves each connection. |
 | `connections[].endpoint`, `username`, `credentialRef` | No | string | `""` | Reference stored credentials; never put tokens or private keys here. |
 | `connections[].configuration` | No | object | omitted | Connection-type-specific settings. |
 | `connections[].createdAt` | No | timestamp | server-managed | Read-only evidence field. |
@@ -127,7 +129,7 @@ The direct S3 transfer connector reads server environment credentials when `cred
 
 ## Storage
 
-`storages` records storage that an environment may use; it does not create a bucket, NFS export, PVC, or filesystem. Each storage entry requires `id`, `environmentVersionId`, `name`, and `type`. Accepted type values are `local`, `pvc`, `nfs`, `s3`, `lustre`, `gcs`, `s3-compatible`, and `ssh-filesystem`. An accepted type does not prove that the running server can read its bytes; try the intended browse or transfer operation.
+`storages` records storage that an environment may use; it does not create a bucket, NFS export, PVC, or filesystem. Each storage entry needs an `id`, `name`, and `type`; the repository saves the enclosing `version.id` as its `environmentVersionId`. Database-accepted type values are `local`, `pvc`, `nfs`, `s3`, `lustre`, `gcs`, `s3-compatible`, and `ssh-filesystem`. An accepted type does not prove that the running server can read its bytes; try the intended browse or transfer operation.
 
 | Path | Required | Type | Default | Notes |
 | --- | --- | --- | --- | --- |

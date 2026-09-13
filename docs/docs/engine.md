@@ -3,7 +3,7 @@
 id: engine
 title: Execution control plane
 sidebar_label: Execution control plane
-description: How the daemon persists work, dispatches planning and execution, and recovers runtime state.
+description: How the server queues work, dispatches planning and execution, and records runtime state.
 ---
 
 import useBaseUrl from '@docusaurus/useBaseUrl';

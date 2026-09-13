@@ -151,13 +151,13 @@ The recommended validation sequence is:
 5. a minimal Apptainer job when containers are required;
 6. a one-activity AkôFlow run with persisted logs and artifact evidence.
 
-AkôFlow parses `sbatch --parsable` output, uses `sacct` to observe status, and falls back to `squeue` and `scontrol` when accounting is unavailable. A job that disappears from `squeue` is not automatically failed: completed jobs can leave controller memory before accounting catches up. Inspect the activity's persisted log and status-query warning before retrying or cancelling it.
+AkôFlow parses `sbatch --parsable` output, uses `sacct` to observe status, and falls back to `squeue` and `scontrol` when accounting is unavailable. A job that disappears from `squeue` is not automatically failed: completed jobs can leave controller memory before accounting catches up. Inspect the activity's persisted log and status-query warning before submitting a replacement or asking a site operator to stop the job.
 
 ## Queue time, cancellation, and interactive sessions
 
 For SLURM, queue time is the interval after submission before the allocation starts. It is neither transfer time nor container runtime. Inspect the reason shown by `squeue` or `scontrol`: common reasons include `Resources`, `Priority`, `Dependency`, account limits, and `QOSMax*` limits.
 
-Cancelling an active batch activity calls `scancel <job-id>`. Do not delete scheduler-owned files as a substitute for cancellation.
+The SLURM adapter's internal `Stop` method calls `scancel <job-id>` for a batch job. The current API has no workflow-run cancellation endpoint. If you need to stop a job, follow your site's SLURM procedure; do not delete scheduler-owned files as a substitute.
 
 The interactive console uses the same connection and trust route. Selecting a partition starts `srun --partition=<partition> --pty /bin/bash -l`; selecting a compute machine uses `--nodelist=<node>`. Selecting the login node opens a direct SSH shell. Close the console session when finished so AkôFlow can cancel its named interactive allocation.
 

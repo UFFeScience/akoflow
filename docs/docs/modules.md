@@ -35,7 +35,7 @@ The HTTP server handles authentication, request validation, and representation. 
 
 ## Persistent event loop
 
-Long-running commands are queued rather than completed inside the initiating HTTP request. The daemon dispatches persistent typed jobs for planning sessions, execution runs, activities, cloud operations, and execution/activity domain events. Queue ownership and retries make work recoverable across interruptions. Clients observe the status of the requested operation.
+Long-running commands are queued rather than completed inside the initiating HTTP request. The daemon dispatches persistent typed jobs for planning sessions, execution runs, activities, cloud operations, and execution/activity domain events. An expired queue lease can return a job to the pending state; this does not resume a workflow run already started by the supervisor. Clients observe the status of the requested operation.
 
 ## Planning
 

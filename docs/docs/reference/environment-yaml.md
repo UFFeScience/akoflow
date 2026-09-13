@@ -11,7 +11,7 @@ This reference describes the `EnvironmentDefinition` document accepted by `POST 
 
 - Use stable, unique IDs. The environment ID is the identity used by `PUT`; send a complete definition when replacing an unused environment. Replacement can fail once a scope, plan, or other record references its inventory. The version ID is the identity referenced by scopes.
 - Create the environment before an execution scope. A scope refers to the version ID, and its network topology is a separate document.
-- Declare performance values deliberately. Omitting a numeric value decodes it as `0` (except `computeSpeedup`, which the database defaults to `1`); that is rarely a useful planning model.
+- Declare performance values deliberately. The API decodes omitted numeric values as `0`, including `computeSpeedup`, and saves them explicitly. Set a positive speedup and realistic capacity for schedulable resources.
 - Keep credentials out of the file. `credentialRef` and `credentialReference` name a credential already stored in AkôFlow; they are not the secret itself.
 
 The smallest useful simulation definition is versioned in [`examples/simulation/environment.yaml`](https://github.com/UFFeScience/akoflow/blob/v1.0.8/examples/simulation/environment.yaml). It is a better starting point than an empty document because it includes a runtime, schedulable resources, and their bindings.
@@ -65,7 +65,7 @@ Each entry in `runtimes` defines how a version can execute or simulate work. `co
 | `runtimes[].driver` | Yes | enum | `slurm`, `kubernetes`, `ssh`, `local`, `serverless`, `simgrid`, `cloud` | The database validates this list. |
 | `runtimes[].mode` | Yes | enum | `execution`, `simulation` | The database validates this list. A SimGrid runtime uses `simulation`; a remote runtime normally uses `execution`. |
 | `runtimes[].role` | No | string | `""` | Informational role, such as `simulation`. |
-| `runtimes[].configuration` | No | object | `{}` | Driver-specific settings. |
+| `runtimes[].configuration` | No | object | omitted | Driver-specific settings; supply an object when the driver needs one. |
 | `runtimes[].capabilities` | Recommended | object | all booleans default to `false` when omitted | Declare only capabilities the runtime actually provides. |
 
 `capabilities` accepts these boolean keys: `batch`, `interactive`, `container`, `serverless`, `gpu`, `mpi`, `sharedStorage`, `dataStaging`, `cancellation`, `logStreaming`, and `simulation`.
@@ -87,11 +87,11 @@ Resources are the candidates a plan can place activities on. A resource is usabl
 | `resources[].cpuCores` | Recommended | integer | `0` | Number of modeled cores. Set the actual parallel capacity. |
 | `resources[].cpuCapacity` | Recommended | number | `0` | Schedulable CPU capacity. Keep it coherent with `cpuCores` for a one-unit-per-core model. |
 | `resources[].memoryBytes`, `storageBytes` | Recommended | integer | `0` | Capacity in bytes. |
-| `resources[].computeSpeedup` | Recommended | number | `1` | Relative compute multiplier. The database defaults an omitted value to `1`; set it explicitly in portable YAML. |
+| `resources[].computeSpeedup` | Recommended | number | `0` when omitted from API input | Relative compute multiplier. Set a positive value, commonly `1` for the baseline resource. |
 | `resources[].pricePerSecond` | Recommended | number | `0` | Cost rate used by planning/simulation. |
 | `resources[].bootOverheadSeconds`, `containerOverheadSeconds` | No | number | `0` | Modeled setup delays in seconds. |
-| `resources[].schedulable` | Recommended | boolean | database default `true` | Set explicitly. `false` retains inventory visibility without making a placement target. |
-| `resources[].metadata` | No | object | `{}` | Provider- or experiment-specific metadata. |
+| `resources[].schedulable` | Recommended | boolean | `false` when omitted from API input | Set `true` for a placement target. `false` retains inventory visibility without making a placement target. |
+| `resources[].metadata` | No | object | omitted | Provider- or experiment-specific metadata. |
 
 Accepted resource types are: `cluster`, `node_pool`, `kubernetes_machine`, `hpc_partition`, `hpc_machine`, `cloud_vm`, `fog_device`, `local_machine`, `serverless_platform`, `serverless_function`, `batch_queue`, `kubernetes_namespace`, and `slurm_reservation`.
 
@@ -103,7 +103,7 @@ resourceRuntimeBindings:
     configuration: {}
 ```
 
-`resourceRuntimeBindings[].resourceId` and `runtimeId` are required and must reference entries in the same definition. `enabled` defaults to `true` in the database, but set it explicitly. `configuration` is optional and defaults to `{}`.
+`resourceRuntimeBindings[].resourceId` and `runtimeId` are required and must reference entries in the same definition. Set `enabled: true` for a usable binding; an omitted value decodes as `false` through the API. Omit `configuration` when the binding needs no settings.
 
 `resourceRelations` is optional. When used, each relation needs `sourceResourceId`, `targetResourceId`, and `type`; `environmentVersionId` should equal `version.id`. The allowed relation types are `contains`, `member_of`, and `accessible_via`. A relation cannot point from a resource to itself.
 
@@ -116,7 +116,7 @@ resourceRuntimeBindings:
 | `connections[].id`, `name`, `type` | Yes | string / enum | `ssh`, `kubernetes`, `cloud`, `local`, `agent` | `name` is unique within the environment. |
 | `connections[].environmentId` | Yes | string | `environment.id` | Keep it equal to the enclosing environment; create persists the enclosing ID. |
 | `connections[].endpoint`, `username`, `credentialRef` | No | string | `""` | Reference stored credentials; never put tokens or private keys here. |
-| `connections[].configuration` | No | object | `{}` | Connection-type-specific settings. |
+| `connections[].configuration` | No | object | omitted | Connection-type-specific settings. |
 | `connections[].createdAt` | No | timestamp | server-managed | Read-only evidence field. |
 
 `connectorBindings` declares artifact-transfer capabilities. Its `connector` enum is `rsync`, `scp`, `sftp`, `http`, `s3-compatible`, or `gcs`. The fields `id`, `environmentId`, and `connector` identify the binding; `endpoint`, `credentialRef`, and `configuration` are optional. The schema accepts `gcs`, but the current server's direct `gs://` connector returns an unavailable error. A declared binding alone does not make that transfer usable. `health` is observation data and should be written by a check rather than authored as an assumption.
@@ -133,7 +133,7 @@ resourceRuntimeBindings:
 | `storages[].capacityBytes` | No | integer | `0` | Capacity in bytes; must not be negative. |
 | `storages[].shared`, `readOnly` | No | boolean | `false` | Access semantics. |
 | `storages[].credentialReference` | No | string | `""` | Stored credential reference. |
-| `storages[].configuration`, `metadata` | No | object | `{}` | Storage-provider details. |
+| `storages[].configuration`, `metadata` | No | object | omitted | Storage-provider details. |
 | `storages[].runtimeBindings[]` | No | array | none | Makes storage available to a runtime. |
 
 A storage runtime binding requires `runtimeId`. Its `containerPath` defaults to `/akoflow/data` when omitted, and `default`, `readOnly`, `hostPath`, and `configuration` are optional. At most one storage can be `default: true` for a given environment version and runtime.

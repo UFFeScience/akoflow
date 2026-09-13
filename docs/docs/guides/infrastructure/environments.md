@@ -4,7 +4,7 @@ title: Create and inspect environments
 
 An environment describes where AkôFlow can plan or run work. A **real environment** has an execution runtime such as local, SSH, Kubernetes, SLURM, or cloud. A **simulation environment** uses the SimGrid runtime and models resources without connecting to physical infrastructure.
 
-Environment definitions are versioned. Execution scopes and plans refer to an environment **version**, so changing an environment does not silently change existing planning inputs.
+Each environment has a version ID that an execution scope uses. If a scope or plan already uses that inventory, register a revised environment with new environment and version IDs so the earlier plan keeps its inputs.
 
 ## Create an environment
 
@@ -35,10 +35,10 @@ curl --fail-with-body \
   -X POST "$AKOFLOW_API_URL/environments/" \
   -d '{
     "environment":{"id":"local-lab","name":"Local lab","status":"defined"},
-    "version":{"id":"local-lab-v1","environmentId":"local-lab","version":1,"status":"published"},
+    "version":{"id":"local-lab-v1","environmentId":"local-lab","version":1,"status":"published","networkModel":"local","interferenceModel":"none","costModel":"none","configurationHash":"local-lab-v1"},
     "runtimes":[{"environmentVersionId":"local-lab-v1","id":"local-lab-local","name":"Local execution","driver":"local","mode":"execution","capabilities":{"container":true}}],
-    "resources":[{"id":"local-lab-machine","environmentVersionId":"local-lab-v1","executionTarget":"direct","type":"local_machine","name":"Local machine","cpuCores":4,"memoryBytes":8589934592}],
-    "resourceRuntimeBindings":[{"resourceId":"local-lab-machine","runtimeId":"local-lab-local"}]
+    "resources":[{"id":"local-lab-machine","environmentVersionId":"local-lab-v1","executionTarget":"direct","type":"local_machine","name":"Local machine","providerId":"local-lab-machine","cpuCores":4,"cpuCapacity":4,"memoryBytes":8589934592,"computeSpeedup":1,"schedulable":true}],
+    "resourceRuntimeBindings":[{"resourceId":"local-lab-machine","runtimeId":"local-lab-local","enabled":true}]
   }'
 ```
 

@@ -10,9 +10,9 @@ import {FileList, WorkflowDiagram} from '@site/src/components/WorkflowShowcase';
 
 <WorkflowDiagram kind="slurm" />
 
-This Showcase is a reproducible **adapter fixture**, not a replacement for an HPC cluster. It starts an isolated AkôFlow daemon, puts small `sbatch` and `singularity` fixture commands ahead of the daemon's `PATH`, and runs the generated batch script inside a disposable Alpine container. The activity writes `result.txt`; the normal SLURM adapter observes its completion sentinel and persists the artifact manifest.
+This local fixture checks AkôFlow's SLURM batch adapter. It starts an isolated daemon, supplies test `sbatch` and `singularity` commands, and runs the generated batch script in a disposable Alpine container. The activity writes `result.txt`; the adapter observes its completion sentinel and saves the artifact manifest.
 
-Use it to verify a local checkout after changing the SLURM adapter, batch-script generation, or artifact observation. Do **not** use it as evidence that a real cluster's login node, SSH proxy, allocation, `sacct` accounting, `squeue`, `scancel`, shared filesystem, account, QoS, or partition policy is configured correctly. Use [Connect an HPC and SLURM cluster](../guides/infrastructure/hpc-slurm) for that site-approved procedure.
+Use it after changing batch-script generation or artifact observation. It does not validate SSH access, scheduler accounting, shared storage, or site policies on a real cluster. For those checks, follow [Connect an HPC and SLURM cluster](../guides/infrastructure/hpc-slurm).
 
 ## Prerequisites
 
@@ -20,7 +20,7 @@ Use it to verify a local checkout after changing the SLURM adapter, batch-script
 - Port `18082` unused for the isolated daemon.
 - Permission for Docker to pull and run `alpine:3.20`.
 
-The fixture is intentionally local and disposable. It writes all database and generated state under `examples/slurm/local-fixture/.runtime`, `scripts`, `akoflow-*.status`, `akoflow-*.log`, and `akoflow-workspaces`; those paths are ignored by Git.
+Generated database and run files stay under `examples/slurm/local-fixture/.runtime`, `scripts`, `akoflow-*.status`, `akoflow-*.log`, and `akoflow-workspaces`; Git ignores those paths.
 
 ## Download the inputs
 
@@ -88,8 +88,6 @@ rm -rf examples/slurm/local-fixture/.runtime \\
 rm -f examples/slurm/local-fixture/akoflow-*.status \\
   examples/slurm/local-fixture/akoflow-*.log
 ```
-
-Never apply this cleanup pattern to an actual cluster workspace: those paths are owned by this fixture only.
 
 ## Troubleshooting
 

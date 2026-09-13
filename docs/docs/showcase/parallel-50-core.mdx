@@ -12,7 +12,7 @@ import {FileList, WorkflowDiagram} from '@site/src/components/WorkflowShowcase';
 
 This workload separates *machine capacity* from *activity count*. One hundred independent activities are assigned to M2, a simulated machine with 50 cores. Each activity requests one core and lasts 10 seconds, so the manual plan has two 50-activity waves. The example is useful for checking that a plan uses cores rather than treating a machine as one execution slot.
 
-M1 and M3 are retained only to keep the three-machine SimGrid scope used by the related examples. No activity is assigned to them, and this workflow has no data dependencies. It is deliberately a compute-capacity exercise, not a network experiment.
+M1 and M3 remain in the shared three-machine SimGrid scope, but no activity uses them. The workflow has no data dependencies, so its result shows compute capacity and queueing across cores.
 
 ## Model at a glance
 

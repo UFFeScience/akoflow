@@ -12,7 +12,7 @@ import {FileList, WorkflowDiagram} from '@site/src/components/WorkflowShowcase';
 
 This complete SimGrid experiment makes network sharing visible. `t1` produces three 10 GB dependencies. `t2`, `t3`, and `t4` run concurrently on the three cores of M2, then each sends 10 GB to `t5` on M3. The links are shared: a concurrent flow does not receive the full nominal bandwidth on its own.
 
-Use it to inspect how a placement with parallel tasks can still be limited by its network endpoints. Do not treat the 36-second manual-plan estimate as a universal formula for 10 GB/s networks; the observed trace is the authoritative evidence for the configured sharing model.
+Use it to inspect how network endpoints limit parallel tasks. The manual plan's 36-second estimate applies to this model; compare it with the observed trace.
 
 ## Model at a glance
 

@@ -117,6 +117,8 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 
 104. **P0 resolved across scope, SimGrid, and network explanations:** the scope guide treated links as optional only when time or cost mattered, and the SimGrid guide said a missing route was not a zero-cost transfer. Source review found that PRISM rejects a cross-resource data dependency without a route, while HEFT `transferSeconds` returns zero when no direct matching link exists. The guides now tell readers to model links for cross-resource dependencies, and the network explanation identifies that HEFT limitation rather than implying a safe free transfer. The scope link example also omits redundant `topologyId`, matching the field reference.
 
+105. **P2 resolved in four Showcase narratives:** the SLURM fixture page repeated its local-only warning with a long inventory of untested cluster commands and policies; it now states the tested adapter path and groups the real-cluster limits in one short sentence. The edge-cloud, network fan-out, and 50-core pages now state what their fixed examples demonstrate without defensive “do not” framing. Checked-in evidence, result numbers, prerequisites, and recovery steps remain. Authored text across these files was reduced without removing support limits; the full 60-page final plain-language pass remains open.
+
 ## Page inventory
 
 | Page | Current pass | Next review |
@@ -172,13 +174,13 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `reference/feature-coverage.md` | Second read; now distinguishes registered but unlinked Desktop network routes from navigable task paths | Check contracts against current handlers and schemas |
 | `reference/planning-and-execution-states.md` | Second read; session cancellation and run/task status claims checked against handlers, coordinator, and domain | Recheck generated endpoint contracts after P0 fixes |
 | `runtimes.md` | Second read; marked serverless schema value unavailable because no adapter is registered | Recheck other provider claims against adapters |
-| `showcase/edge-cloud-simulation.mdx` | Second read; uses versioned checkout and submission script, shared API setup, and same-server Desktop inspection | Check result against pinned bundle |
+| `showcase/edge-cloud-simulation.mdx` | Second read; fixed manual plan and scheduler-comparison purpose are stated directly; versioned checkout and same-server inspection retained | Check result against pinned bundle |
 | `showcase/index.mdx` | Second read; instructions fit script and inline API examples; removed unsupported scalability language | Recheck cards after Showcase audit |
 | `showcase/kubernetes-real-execution.mdx` | Second read; checkout precedes Kind setup and inline API submission; Desktop is same-server inspection | Check result against pinned bundle |
 | `showcase/local-direct-execution.mdx` | Second read; uses versioned checkout and shared API setup; removed unsupported cancellation link | Check result against pinned bundle |
-| `showcase/network-fanout.mdx` | Second read; uses versioned checkout and shared API setup; network link creation stays in API | Check result against pinned bundle |
-| `showcase/parallel-50-core.mdx` | Second read; uses versioned checkout and shared API setup; timing explanation links to correct page | Check result against pinned bundle |
-| `showcase/slurm-local-fixture.mdx` | Second read; both terminals use the versioned checkout; Desktop path remains optional inspection | Check result against pinned bundle |
+| `showcase/network-fanout.mdx` | Second read; model-specific estimate phrased directly; versioned checkout and API network setup retained | Check result against pinned bundle |
+| `showcase/parallel-50-core.mdx` | Second read; compute-capacity purpose stated directly; versioned checkout and timing explanation retained | Check result against pinned bundle |
+| `showcase/slurm-local-fixture.mdx` | Second read; local adapter evidence and real-cluster limits stated once; versioned checkout and optional Desktop inspection retained | Check result against pinned bundle |
 | `tutorials/api-access.md` | Second read; API prerequisites and token limits are explicit; Bash blocks parsed | Recheck commands after P0 contracts fix |
 | `tutorials/connect-cloud.md` | Second read; AWS caveat and unvalidated GCP steps are explicit; target project is independent of credential owner | Validate with disposable GCP account |
 | `tutorials/register-hpc.md` | Second read; placeholders and remote-run limit are explicit; removed unrelated cloud next step | Validate on an approved institutional cluster |

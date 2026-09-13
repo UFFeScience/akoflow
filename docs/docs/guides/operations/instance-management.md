@@ -125,7 +125,7 @@ curl --fail-with-body \
   -X POST "$AKOFLOW_API_URL/instance-activations/$SNAPSHOT_ID/"
 ```
 
-Import accepts at most 8 GiB compressed data, at most 10,000 archive entries, and at most 64 GiB expanded data. Symbolic links and unsafe or unsupported archives are rejected with `422`. Activation returns `202 Accepted` with `instance` and a `restarting` boolean.
+Import accepts at most 8 GiB compressed data, at most 100,000 archive entries, and at most 64 GiB expanded data. Symbolic links and unsafe or unsupported archives are rejected with `422`. Activation returns `202 Accepted` with `instance` and a `restarting` boolean.
 
 ## What read-only means
 

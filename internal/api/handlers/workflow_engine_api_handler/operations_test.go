@@ -2,6 +2,7 @@ package workflow_engine_api_handler
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
@@ -14,9 +15,24 @@ import (
 	domainconsole "github.com/UFFeScience/akoflow/internal/domain/console"
 )
 
+func TestMachineConfigurationDocumentationRequest(t *testing.T) {
+	const body = `{"playbookYaml":"- hosts: all\n  tasks:\n    - ansible.builtin.debug:\n        msg: ready\n"}`
+	request := httptest.NewRequest(http.MethodPost, "/machine-configuration-validations/", strings.NewReader(body))
+	request.Header.Set("Content-Type", "application/json")
+	recorder := httptest.NewRecorder()
+	(&Handler{}).ValidateMachineConfiguration(recorder, request)
+	var result domain.MachineConfigurationValidation
+	if err := json.Unmarshal(recorder.Body.Bytes(), &result); err != nil || recorder.Code != http.StatusOK || !result.Valid || result.SHA256 == "" {
+		t.Fatalf("documentation request failed: status=%d result=%#v error=%v", recorder.Code, result, err)
+	}
+}
+
 type storageNavigatorStub struct {
-	err                                     error
-	deleted, promotedData, promotedArtifact bool
+	err                                           error
+	deleted, promotedData, promotedArtifact       bool
+	promotedDataPath, promotedArtifactPath        string
+	promotedArtifactName, promotedArtifactVersion string
+	checksumPath                                  string
 }
 
 func (s *storageNavigatorStub) List(context.Context, string) ([]domain.StorageResource, error) {
@@ -40,7 +56,8 @@ func (s *storageNavigatorStub) OpenDownload(context.Context, string) (io.ReadClo
 func (s *storageNavigatorStub) Download(_ context.Context, id string) (*domain.DownloadRun, error) {
 	return &domain.DownloadRun{ID: id}, s.err
 }
-func (s *storageNavigatorStub) Checksum(context.Context, string, string) (string, error) {
+func (s *storageNavigatorStub) Checksum(_ context.Context, _, path string) (string, error) {
+	s.checksumPath = path
 	return "sha256:abc", s.err
 }
 func (s *storageNavigatorStub) QueueCopy(_ context.Context, _, path, destination, id string) (domain.DownloadRun, error) {
@@ -49,12 +66,16 @@ func (s *storageNavigatorStub) QueueCopy(_ context.Context, _, path, destination
 func (s *storageNavigatorStub) QueueArchive(_ context.Context, _, path, id string) (domain.DownloadRun, error) {
 	return domain.DownloadRun{ID: id, Path: path, Strategy: "archive"}, s.err
 }
-func (s *storageNavigatorStub) PromoteData(context.Context, string, string, string, string, string, string) error {
+func (s *storageNavigatorStub) PromoteData(_ context.Context, _, path, _, _, _, _ string) error {
 	s.promotedData = true
+	s.promotedDataPath = path
 	return s.err
 }
-func (s *storageNavigatorStub) PromoteArtifact(context.Context, string, string, string, string, string, string, string) error {
+func (s *storageNavigatorStub) PromoteArtifact(_ context.Context, _, path, _, name, version, _, _ string) error {
 	s.promotedArtifact = true
+	s.promotedArtifactPath = path
+	s.promotedArtifactName = name
+	s.promotedArtifactVersion = version
 	return s.err
 }
 func (s *storageNavigatorStub) IndexRuns(context.Context, string) ([]domain.IndexRun, error) {
@@ -121,6 +142,44 @@ func TestStorageHTTPHandlers(t *testing.T) {
 	}
 }
 
+func TestStoragePromotionDocumentationRequests(t *testing.T) {
+	storage := &storageNavigatorStub{}
+	handler := &Handler{storage: storage}
+	path := map[string]string{"storageId": "registered-storage"}
+	data := callHandler(t, http.MethodPost, "/", `{"path":"/shared/project/result.csv"}`, path, handler.PromoteStorageData)
+	artifact := callHandler(t, http.MethodPost, "/", `{"path":"/shared/bin/model.sif","name":"model","version":"1.0.0"}`, path, handler.PromoteStorageArtifact)
+	if data.Code != http.StatusCreated || artifact.Code != http.StatusCreated || storage.promotedDataPath != "/shared/project/result.csv" || storage.promotedArtifactPath != "/shared/bin/model.sif" || storage.promotedArtifactName != "model" || storage.promotedArtifactVersion != "1.0.0" {
+		t.Fatalf("promotion request fields: data=%d artifact=%d storage=%#v", data.Code, artifact.Code, storage)
+	}
+}
+
+func TestStorageOperationDocumentationRequests(t *testing.T) {
+	storage := &storageNavigatorStub{}
+	handler := &Handler{storage: storage}
+	path := map[string]string{"storageId": "registered-storage"}
+	for _, test := range []struct {
+		name, body, want string
+		status           int
+		handle           http.HandlerFunc
+	}{
+		{"download", `{"path":"/shared/project/result.csv"}`, "/shared/project/result.csv", http.StatusCreated, handler.CreateDownload},
+		{"checksum", `{"path":"/shared/project/result.csv"}`, "sha256:abc", http.StatusOK, handler.ChecksumStorageEntry},
+		{"copy", `{"path":"/shared/project/result.csv","destinationStorageId":"storage-archive"}`, "copy:storage-archive", http.StatusAccepted, handler.CopyStorageEntry},
+		{"archive", `{"path":"/shared/project/experiment"}`, "/shared/project/experiment", http.StatusAccepted, handler.ArchiveStorageDirectory},
+		{"index", `{"id":"example-index-run-1"}`, "example-index-run-1", http.StatusAccepted, handler.StartStorageIndex},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			response := callHandler(t, http.MethodPost, "/", test.body, path, test.handle)
+			if response.Code != test.status || !strings.Contains(response.Body.String(), test.want) {
+				t.Fatalf("request result: status=%d body=%s", response.Code, response.Body.String())
+			}
+		})
+	}
+	if storage.checksumPath != "/shared/project/result.csv" {
+		t.Fatalf("checksum path was not decoded: %q", storage.checksumPath)
+	}
+}
+
 func TestStorageHTTPHandlersReportUnavailableAndOperationErrors(t *testing.T) {
 	empty := &Handler{}
 	for _, handler := range []http.HandlerFunc{empty.ListStorages, empty.StorageRoots, empty.BrowseStorage, empty.StatStorageEntry, empty.CreateDownload, empty.StreamDownload, empty.GetDownload, empty.ChecksumStorageEntry, empty.DeleteStorageEntry} {
@@ -143,21 +202,27 @@ func TestStorageHTTPHandlersReportUnavailableAndOperationErrors(t *testing.T) {
 	}
 }
 
-type consoleStub struct{ err error }
+type consoleStub struct {
+	err     error
+	request domainconsole.Request
+}
 
-func (s consoleStub) ExecuteCommand(context.Context, domainconsole.Request) (domainconsole.Command, error) {
+func (s *consoleStub) ExecuteCommand(_ context.Context, request domainconsole.Request) (domainconsole.Command, error) {
+	s.request = request
 	return domainconsole.Command{ID: "command"}, s.err
 }
-func (s consoleStub) ListCommands(context.Context, int) ([]domainconsole.Command, error) {
+func (s *consoleStub) ListCommands(context.Context, int) ([]domainconsole.Command, error) {
 	return []domainconsole.Command{{ID: "command"}}, s.err
 }
 
 type terminalStub struct {
 	err      error
 	streamed bool
+	request  domainconsole.SessionRequest
 }
 
-func (s *terminalStub) OpenSession(context.Context, domainconsole.SessionRequest) (domainconsole.Session, error) {
+func (s *terminalStub) OpenSession(_ context.Context, request domainconsole.SessionRequest) (domainconsole.Session, error) {
+	s.request = request
 	return domainconsole.Session{ID: "session"}, s.err
 }
 func (s *terminalStub) ListSessions(context.Context) ([]domainconsole.Session, error) {
@@ -185,7 +250,7 @@ func (s *auditStub) ListAuditEvents(_ context.Context, filter domainaudit.Filter
 
 func TestConsoleTerminalAndAuditHTTPHandlers(t *testing.T) {
 	terminal, audit := &terminalStub{}, &auditStub{}
-	h := &Handler{console: consoleStub{}, terminal: terminal, audit: audit}
+	h := &Handler{console: &consoleStub{}, terminal: terminal, audit: audit}
 	tests := []struct {
 		method, target, body string
 		values               map[string]string
@@ -210,6 +275,16 @@ func TestConsoleTerminalAndAuditHTTPHandlers(t *testing.T) {
 	}
 	if !terminal.streamed || audit.filter.Limit != 3 || audit.filter.EnvironmentID != "env" {
 		t.Fatalf("terminal/audit = %v %#v", terminal.streamed, audit.filter)
+	}
+}
+
+func TestConsoleDocumentationRequestsDecodeMinimalFields(t *testing.T) {
+	console, terminal := &consoleStub{}, &terminalStub{}
+	handler := &Handler{console: console, terminal: terminal}
+	session := callHandler(t, http.MethodPost, "/", `{"resourceId":"my-interactive-resource"}`, nil, handler.OpenConsoleSession)
+	command := callHandler(t, http.MethodPost, "/", `{"resourceId":"my-interactive-resource","command":"hostname"}`, nil, handler.ExecuteConsoleCommand)
+	if session.Code != http.StatusCreated || command.Code != http.StatusCreated || terminal.request.ResourceID != "my-interactive-resource" || console.request.ResourceID != "my-interactive-resource" || console.request.Command != "hostname" {
+		t.Fatalf("console request fields: session=%d command=%d terminal=%#v console=%#v", session.Code, command.Code, terminal.request, console.request)
 	}
 }
 

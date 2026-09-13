@@ -14,7 +14,7 @@ This reference distinguishes the state-bearing records used by AkôFlow planning
 
 <img src={useBaseUrl('/img/architecture/planning-execution-states.svg')} alt="Planning flow from request to selected plan and separate execution flow from request through durable queue job to terminal evidence." />
 
-A planning request is persisted as a session and publishes a queue job. An execution request first publishes a queue job; a workflow `ExecutionRun` is created only when the daemon starts processing that job. Consequently, an accepted execution request may not yet appear in `GET /execution-runs/`.
+A planning request is persisted as a session and publishes a queue job. An execution request first publishes a queue job; the worker validates it before creating an `ExecutionRun`. An accepted request may not yet appear in `GET /execution-runs/`, and an invalid queued request may never produce a run.
 
 ## Planning session
 
@@ -34,7 +34,9 @@ The cancellation endpoint returns a conflict for a completed or failed session, 
 
 Each selected algorithm creates an `AlgorithmRun` within the session. It uses the same status values: `queued`, `running`, `completed`, `failed`, and `cancelled`.
 
-Algorithm runs execute sequentially under the session's coordinator. A session can therefore be `running` while one algorithm run is `running` and later runs remain `queued`. A failed algorithm run does not automatically fail the session: other selected algorithms continue. The session fails only if there are no valid candidates after all work has finished. `progress` is a fraction between the completed algorithm runs; it is not a count of evaluated schedule states. `estimate` carries a predicted planning duration, search-space metadata, and confidence for that one algorithm run.
+Algorithm runs execute sequentially. A session can be `running` while one algorithm run is `running` and later runs remain `queued`. If one algorithm fails, the others continue. The session fails only when none produces a valid candidate.
+
+`progress` is a fraction based on completed algorithm runs, not a count of evaluated schedules. `estimate` carries a predicted planning duration, search-space metadata, and confidence for one algorithm run.
 
 ## Candidates are not state machines
 
@@ -42,7 +44,7 @@ A `PlanCandidate` has no `status` field. It is an immutable generated option ass
 
 | Field | Meaning |
 | --- | --- |
-| `feasible` | The candidate passed plan validation and may be selected. Infeasible candidates cannot be promoted. |
+| `feasible` | The candidate passed plan validation and may be selected. It does not confirm a runtime binding for execution. Infeasible candidates cannot be promoted. |
 | `rank` | Comparison order after session completion. Lower rank is preferred by the common ranking step. |
 | `paretoOptimal` | The candidate is on the non-dominated time/cost frontier. |
 | `dominated` | Another feasible candidate is no worse in both predicted metrics and better in at least one. |
@@ -52,7 +54,7 @@ Candidates may appear while an algorithm run and its parent session are still `r
 
 ## Selecting a candidate and schedule plans
 
-A `SchedulePlan` does **not** have a lifecycle status. It is the canonical persisted plan containing assignments, predicted metrics, algorithm/source information, and lifecycle actions. It can originate from a manual plan, an import, or a selected candidate.
+A `SchedulePlan` does **not** have a lifecycle status. It is the saved plan containing assignments, predicted metrics, algorithm/source information, and lifecycle actions. It can originate from a manual plan, an import, or a selected candidate.
 
 `POST /planning-sessions/{sessionId}/candidates/{candidateId}/select/` promotes a feasible candidate. The API verifies that the candidate belongs to the session and is feasible, stores its embedded plan if it is new, and records `selectedCandidateId` and `selectedPlanId` on the session. It currently does not require the session to be `completed`, so clients should normally wait for completed ranking before selecting unless they deliberately choose an early candidate.
 
@@ -60,7 +62,7 @@ Selecting another feasible candidate updates the session's selected IDs; it does
 
 ## Workflow execution runs
 
-Workflow execution uses a distinct `ExecutionRun` lifecycle. Submit `POST /execution-runs/`; it returns an accepted queue job. Once the daemon consumes that job, the supervisor creates the run and begins execution.
+Workflow execution uses a distinct `ExecutionRun` lifecycle. `POST /execution-runs/` returns an accepted queue job. Once the worker validates that job, the supervisor creates the run and begins execution. If worker validation fails, no run record is created.
 
 | State | How it is reached | Meaning | Terminal? |
 | --- | --- | --- | --- |
@@ -77,7 +79,7 @@ Task records offer finer-grained evidence than the workflow-run badge:
 
 | Record | States | Notes |
 | --- | --- | --- |
-| `TaskExecution` | `blocked`, `ready`, `preparing`, `running`, `completed`, `failed`, `cancelled` | The domain supports all values. The current supervisor persists running and completed task records for normal execution; failure/cancellation can be recorded from runtime outcomes. |
+| `TaskExecution` | `blocked`, `ready`, `preparing`, `running`, `completed`, `failed`, `cancelled` | The domain supports all values. The current workflow supervisor persists `running`, `completed`, and `failed`; a stopped or failed runtime handle produces a failed task. The other values are not a normal workflow-run progression today. |
 | `ActivityHandle` | `starting`, `running`, `completed`, `failed`, `stopped` | Runtime adapter identity, such as a Kubernetes Job, Slurm Job, PID, or simulation event. `stopped` is surfaced as a failed task with the handle failure reason in task reads. |
 
 Task-stage totals such as `queueSeconds`, `transferSeconds`, and `runtimeSeconds` are accumulated over all tasks. They are diagnostic totals, not wall-clock makespan. Use the run's `makespanSeconds` and task timestamps to understand elapsed time.
@@ -92,4 +94,4 @@ Task-stage totals such as `queueSeconds`, `transferSeconds`, and `runtimeSeconds
 | Wait for execution | `GET /execution-runs/{runId}/` after the daemon creates the run | Run is `completed` or `failed`. |
 | Explain an observed result | Run projection tasks, transfers, events, and Plan vs execution view | Task/transfer records account for the observed critical path. |
 
-Related material: [planning a workflow](../guides/workflows/planning), [execution evidence](../guides/workflows/executions), [execution scopes and topologies](./execution-scopes-and-topologies), and [provenance and audit](../guides/data/provenance-and-audit).
+Related material: [planning a workflow](/docs/guides/workflows/planning), [execution evidence](/docs/guides/workflows/executions), [execution scopes and topologies](/docs/reference/execution-scopes-and-topologies), and [provenance and audit](/docs/guides/data/provenance-and-audit).

@@ -10,9 +10,9 @@ import {FileList, WorkflowDiagram} from '@site/src/components/WorkflowShowcase';
 
 <WorkflowDiagram kind="edge-cloud" />
 
-This is a complete, deterministic SimGrid tutorial. It runs `prepare → analyze → summarize`: the 12-second analysis runs on a cloud VM that is four times faster than the edge device, then its result returns to the edge. The placement gains compute time and pays for two network flows and cloud use.
+This is a complete, deterministic SimGrid tutorial. It runs `prepare → analyze → summarize`: the 12-second analysis runs on a modeled cloud resource four times faster than the edge resource, then its result returns to the edge. Faster compute trades against two modeled transfers and resource cost.
 
-Use it when you want a small workflow whose planned and observed values can be inspected end to end. Do not use the checked-in manual plan to compare schedulers: generate a planning session instead when the goal is to compare PRISM and HEFT candidates.
+Use it to inspect planned and observed values for a small workflow. The checked-in manual plan fixes placement; to compare PRISM and HEFT, generate a planning session.
 
 ## What the simulation models
 
@@ -28,47 +28,34 @@ The diagram and the workflow YAML show the same topology: `prepare` produces `da
 ## Download the inputs
 
 <FileList>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/simulation/environment.yaml">Environment YAML ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/simulation/scope.yaml">Execution scope YAML ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/simulation/topology.yaml">Network topology YAML ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/simulation/workflow.yaml">Workflow YAML ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/simulation/plan-request.yaml">Manual plan envelope ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/simulation/execution-request.yaml">Execution envelope ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/simulation/environment.yaml">Environment YAML ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/simulation/scope.yaml">Execution scope YAML ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/simulation/topology.yaml">Network topology YAML ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/simulation/workflow.yaml">Workflow YAML ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/simulation/plan-request.yaml">Manual plan envelope ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/simulation/execution-request.yaml">Execution envelope ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/simulation/run.sh">Submission script ↓</a>
 </FileList>
 
 <InterfaceApiTabs
   desktop={<div>
-    <h2>Run with AkôFlow Desktop</h2>
+    <h2>Inspect the API run in Desktop</h2>
+    <p>Submit the versioned bundle through the API path below. Desktop can inspect its records only when connected to that same server. The packaged Desktop manages a separate local server by default.</p>
     <ol>
-      <li>Open <strong>Infrastructure → Environments</strong> and create a <strong>simulation</strong> environment matching <code>environment.yaml</code>. Add the SimGrid runtime, then bind it to the edge and cloud resources. Set cores, speedup, price, boot, and container values before planning.</li>
-      <li>Open <strong>Infrastructure → Execution scopes</strong> and create the scope from <code>scope.yaml</code>. Attach a topology matching <code>topology.yaml</code>: it must include both directions of the 100 Mbit/s link. A scope without this link cannot predict the cross-resource transfers in this example.</li>
-      <li>Open <strong>Workflows → Definitions</strong> and import <code>workflow.yaml</code>. Open the imported workflow and check the Definition graph: it must contain three activities and the two arrows <code>prepare → analyze → summarize</code>. Select an activity to confirm that it is simulatable and has its own duration profile.</li>
-      <li>To reproduce the documented placement, choose <strong>Generate plan</strong>, select <em>Create manually</em>, choose the simulation scope, then place <code>prepare</code> and <code>summarize</code> on the edge and <code>analyze</code> on cloud. The portable <code>plan-request.yaml</code> is the API equivalent of this choice.</li>
-      <li>To compare algorithms instead, choose <strong>Generate plans</strong>, select the same scope, and run the desired candidates. Expand a candidate to inspect its Gantt chart before selecting it.</li>
-      <li>Start the selected simulation. On the completed run, use <strong>Data</strong> for the two data flows and <strong>Plan vs execution</strong> for predicted versus observed makespan and cost.</li>
+      <li>Open <strong>Infrastructure → Environments</strong> and inspect the saved edge and cloud resources.</li>
+      <li>Open <strong>Workflows → Definitions</strong> and confirm the three-activity graph.</li>
+      <li>Open the completed run. Use <strong>Data</strong> to inspect two transfers and <strong>Plan vs execution</strong> to compare prediction with observation.</li>
     </ol>
+    <p>A Desktop-only submission of this complete bundle has not been verified. The current Desktop navigation does not expose link creation; the verified API path registers the network model supplied here.</p>
   </div>}
   api={<div>
     <h2>Run through the API</h2>
-    <p>Run this in a fresh AkôFlow instance, or change every ID in the six YAML files first. The API treats these identifiers as persistent objects and rejects duplicate IDs. From the repository root, set the daemon address and token, then submit the complete bundle:</p>
-    <pre><code>{`export AKOFLOW_API_URL="http://127.0.0.1:8080/akoflow-api"
-export AKOFLOW_API_TOKEN="<token>"
-
-post_yaml() {
-  curl --fail-with-body \\
-    -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \\
-    -H 'Content-Type: application/yaml' \\
-    --data-binary "@$2" "$AKOFLOW_API_URL/$1/"
-}
-
-post_yaml environments examples/simulation/environment.yaml
-post_yaml execution-scopes examples/simulation/scope.yaml
-post_yaml network-topologies examples/simulation/topology.yaml
-post_yaml workflow-definitions examples/simulation/workflow.yaml
-post_yaml schedule-plans examples/simulation/plan-request.yaml
-post_yaml execution-runs examples/simulation/execution-request.yaml`}</code></pre>
+    <p>Complete <a href="/docs/tutorials/api-access">API connection setup</a>. Run this in a fresh AkôFlow instance, or change every ID in the six YAML files first. Clone the v1.0.8 files, or use an existing matching checkout, then submit the bundle:</p>
+    <pre><code>{`git clone --branch v1.0.8 --depth 1 https://github.com/UFFeScience/akoflow.git akoflow-showcase
+cd akoflow-showcase
+sh examples/simulation/run.sh`}</code></pre>
     <p>Submitting <code>execution-runs</code> acknowledges the request; it does not mean the execution has completed. Poll the immutable run projection until <code>status</code> is <code>completed</code>:</p>
-    <pre><code>{`curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \\
+    <pre><code>{`curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \\
   "$AKOFLOW_API_URL/execution-runs/simulation-example-run-v1/"`}</code></pre>
   </div>}
 />
@@ -87,7 +74,7 @@ post_yaml execution-runs examples/simulation/execution-request.yaml`}</code></pr
 
 The bundle was exercised against the current API on 2026-09-11. Its run projection, `simulation-example-run-v1`, reached `completed` with three settled activities, two transfers, and `120000000` transferred bytes. The observed makespan was `21.593 s`; its accumulated execution time was `9 s`, and its accumulated transfer time was `11.693 s`.
 
-Those stage values are accumulated across activities; they are evidence components, not additional wall-clock makespan. The completed run also stores the selected assignments, predicted values, observed cost, and the SimGrid trace under the daemon's configured simulation workspace.
+Those stage values are accumulated across activities; they are evidence components, not additional wall-clock makespan. The completed run also stores the selected assignments, predicted values, observed cost, and the SimGrid trace under the server's configured simulation workspace.
 
 If any of these checks fails, recover in this order:
 
@@ -96,4 +83,4 @@ If any of these checks fails, recover in this order:
 3. Confirm the scope points to `simulation-example-v1` and the topology is attached to that scope.
 4. Confirm that the activity IDs in the manual plan are the imported IDs: `simulation-example-workflow-prepare`, `simulation-example-workflow-analyze`, and `simulation-example-workflow-summarize`.
 
-For a shorter first execution, use [Run your first simulated workflow](../guides/workflows/first-run). For the semantics behind resources, scopes, and data dependencies, see [Core concepts](../concepts).
+For a first run in Desktop, use [Run your first local workflow](/docs/guides/workflows/first-local-run). For a shorter simulation through the API, use [the SimGrid first-run tutorial](/docs/guides/workflows/first-run). For the meaning of resources, scopes, and data dependencies, see [Core concepts](/docs/concepts).

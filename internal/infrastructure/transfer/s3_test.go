@@ -46,6 +46,10 @@ func TestEnvironmentS3Credentials(t *testing.T) {
 	if err != nil || credentials.AccessKey != "key" || credentials.SecretKey != "secret" || credentials.SessionToken != "token" {
 		t.Fatalf("credentials=%+v err=%v", credentials, err)
 	}
+	fromEnv, err := resolver.Resolve("env")
+	if err != nil || fromEnv != credentials {
+		t.Fatalf("env reference credentials=%+v err=%v", fromEnv, err)
+	}
 }
 
 func TestS3EndpointAndObjectValidation(t *testing.T) {

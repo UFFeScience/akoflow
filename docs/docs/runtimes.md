@@ -2,15 +2,18 @@
 id: runtimes
 title: Runtime adapters
 sidebar_label: Runtime adapters
+description: How AkôFlow maps planned activities to local, HPC, Kubernetes, cloud, and simulated runtimes.
 ---
 
-A runtime adapter translates an assigned activity into operations on an execution technology. Runtimes belong to an environment version and connect to resources through bindings. Workflows do not select a runtime through a legacy top-level YAML `runtime` field; a selected plan assigns resources and execution resolves their bindings.
+A runtime adapter translates an assigned activity into operations on an execution technology. Runtimes belong to an environment version and connect to resources through bindings. Execution resolves the binding for each planned assignment.
 
-This explanation focuses on the adapter boundary. Read [system architecture](./concepts) for the surrounding records and [execution control plane](./engine) for how the supervisor uses adapters.
+This explanation focuses on runtime adapters. Read [Architecture internals](/docs/modules) for the surrounding services and [Execution control plane](/docs/engine) for how the server uses adapters.
 
 ## Runtime model
 
-Each runtime declares `id`, name, driver, `execution` or `simulation` mode, optional role/configuration, and capabilities such as batch, interactive, container, GPU, MPI, shared storage, staging, cancellation, log streaming, and simulation.
+Each runtime has an ID, driver, and `execution` or `simulation` mode. Its configuration and declared capabilities describe what the driver can do. For example, a batch runtime may declare container and shared-storage support; these declarations do not verify a particular cluster or account. The [environment reference](/docs/reference/environment-yaml) lists the fields.
+
+The portable workflow document does not select a runtime through a top-level YAML `runtime` field. A plan assigns resources; execution resolves their runtime bindings.
 
 Adapters implement `Modes`, `Start`, `Inspect`, and `Stop`. A common handle keeps provider identifiers out of orchestration code.
 
@@ -24,9 +27,9 @@ Adapters implement `Modes`, `Start`, `Inspect`, and `Stop`. A common handle keep
 | `slurm` | Batch submission or explicit direct target | real |
 | `simgrid` | Plan/activity simulation | simulation |
 | `cloud` | Capacity resolved to a concrete runtime allocation | real via lifecycle binding |
-| `serverless` | Reserved domain capability | depends on registered provider |
+| `serverless` | Schema value only; no built-in adapter | unavailable |
 
-A driver value in the domain model does not prove that its provider is configured in a particular instance.
+A driver value in the domain model does not prove that its provider is implemented or configured in a particular instance. The current server has no serverless runtime adapter.
 
 ## Local
 
@@ -46,7 +49,7 @@ Slurm renders an `sbatch` script from activity, resource, and preparation contex
 
 ## SimGrid
 
-Simulation is a mode, not a fake infrastructure connection. It uses frozen inventory, profiles, topology, transfer costs, and optional interference data to produce a trace without starting jobs. Participating activities declare the `simulation` capability and simulation definition.
+Simulation uses frozen inventory, profiles, topology, transfer costs, and optional interference data to produce a trace without starting jobs. Participating activities declare the `simulation` capability and simulation definition.
 
 ## Cloud
 
@@ -63,21 +66,12 @@ Inventory refresh must not mutate the frozen inputs of an existing planning sess
 
 ## Data access
 
-Execution is preceded by preparation. Routes may use an existing verified location, shared storage, destination pull, source push, gateway, runtime-local, or direct-runtime transfer. Implementations include artifact store, filesystem, rsync/SSH, Kubernetes exec, HTTP, S3-compatible storage, and GCS. An adapter must reject an uncommitted preparation gate.
+Execution is preceded by preparation. Routes may use an existing verified location, shared storage, destination pull, source push, gateway, runtime-local, or direct-runtime transfer. Implemented connectors include artifact store, filesystem, rsync/SSH, Kubernetes exec, HTTP download, and S3-compatible transfer. Direct `gs://` transfer is unavailable in the current server; the GCS connector returns an error until a deployment supplies a working transfer agent.
 
-## Choose a target
+## User procedures
 
-In Desktop:
-
-1. create an environment and connection;
-2. validate it and run discovery;
-3. review resources, bindings, storage, and capabilities in the inventory;
-4. include the published version in an execution scope;
-5. plan the workflow and inspect candidate assignments;
-6. select a plan and start the required execution mode.
-
-API clients perform the equivalent environment, check, discovery, scope, planning, selection, and execution operations. Use the generated API Reference for exact current routes.
+To connect infrastructure, use [Create and inspect environments](/docs/guides/infrastructure/environments). For the task flow after registration, follow [Define execution scopes](/docs/guides/infrastructure/execution-scopes), [Plan a workflow](/docs/guides/workflows/planning), and [Execute and monitor a workflow](/docs/guides/workflows/executions). Those guides keep the user steps separate from adapter details here.
 
 ## Provider extension boundary
 
-A complete provider generally needs an adapter, resolver/factory registration, probing and discovery for external infrastructure, endpoint/transfer integration, capability declarations, and tests for start, inspect, stop, failures, and artifact observation. Provider behavior stays behind ports; workflow, planning, and execution domain objects remain provider-neutral.
+Adding a provider starts with an adapter registered for its driver and mode. External infrastructure also needs a connection check and discovery. Data access may need a transfer route. Test activity start, inspection, stop, failures, and output observation before documenting the provider as supported. Keep these provider details behind the runtime interface so workflow and plan records remain provider-neutral.

@@ -4,25 +4,22 @@ sidebar_label: Connect cloud / GCP
 description: Validate a GCP credential, register a cloud environment and inspect the compute catalog using Desktop or the API.
 ---
 
-This tutorial connects **Google Cloud**, the compute provider available in the
-current **Cloud on demand** form. Its result is a registered environment and a
-synchronized catalog. It does not provision a VM.
-
-AWS support is currently for S3 data movement, not EC2 discovery/provisioning.
-For that separate task use [Configure AWS](../guides/infrastructure/aws).
+Connect Google Cloud through **Cloud on demand** and inspect its compute
+catalog. You will finish with a registered environment and reviewed machine,
+image, and disk choices. Connecting the account does not provision a VM.
 
 ## Before you begin
 
-Complete [installation checks](../installation). Obtain a GCP project and an
+Complete [installation checks](/docs/installation). Obtain a GCP project and an
 approved service-account JSON credential from your cloud administrator. The
-project needs the APIs and access described in [Configure Google Cloud](../guides/infrastructure/gcp).
+project needs the APIs and access described in [Configure Google Cloud](/docs/guides/infrastructure/gcp).
 Read that guide's access inventory; it distinguishes source-audited calls from
 minimum IAM permissions that still require validation in a disposable project.
 
 The service account belongs to Google Cloud. Creating an AkôFlow environment
 does not create the project, service account, billing configuration or IAM grants.
 
-## Through the interface
+## Using AkôFlow Desktop
 
 ### 1. Open the cloud form
 
@@ -65,36 +62,41 @@ Open the saved environment and inspect **Cloud capacity**. If saving succeeded
 but refresh failed, reopen the existing environment and refresh there; do not
 create a duplicate just to retry synchronization.
 
-## Through the API
+## Using the API
 
-Complete [API connection setup](./api-access). Keep the service-account file
+Complete [API connection setup](/docs/tutorials/api-access). Keep the service-account file
 outside your repository, with access restricted to your account.
 
 ### 1. Validate the service account
 
-The commands read the credential file directly; replace its path and the region.
+The commands read the credential file directly. Set the path, target project ID,
+and region to the values approved for this connection. The target project may
+differ from the project that owns the service account if it has the required
+access.
 Run the following in Bash so `pipefail` also catches a failed JSON preparation:
 
 ```bash
 set -o pipefail
 AKOFLOW_GCP_KEY_FILE='/secure/path/service-account.json'
+AKOFLOW_GCP_PROJECT='your-project-id'
 AKOFLOW_GCP_REGION='us-central1'
-AKOFLOW_GCP_PROJECT=$(jq -er '.project_id' "$AKOFLOW_GCP_KEY_FILE") || exit 1
 
-jq --arg region "$AKOFLOW_GCP_REGION" \
-  '{provider:"gcp", credential:., projectId:.project_id, region:$region}' \
+jq --arg project "$AKOFLOW_GCP_PROJECT" --arg region "$AKOFLOW_GCP_REGION" \
+  '{provider:"gcp", credential:., projectId:$project, region:$region}' \
   "$AKOFLOW_GCP_KEY_FILE" \
   | curl --fail-with-body \
       -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
       -H 'Content-Type: application/json' --data-binary @- \
-      "$AKOFLOW_API_URL/cloud-credentials/validate/" -o gcp-validation.json
+      "$AKOFLOW_API_URL/cloud-credentials/validate/" -o gcp-validation.json || exit 1
 
 jq . gcp-validation.json
-jq -e '.valid == true' gcp-validation.json
+jq -e '.valid == true' gcp-validation.json || exit 1
 ```
 
 Continue only when validation succeeds. Inspect `project`, `region`,
-`machineCount`, `imageCount` and `diskCount` before saving.
+`machineCount`, `imageCount` and `diskCount` before saving. A `valid: true`
+response can still have an empty category; resolve that before choosing cloud
+capacity.
 
 ### 2. Store the credential and prepare the environment
 
@@ -104,7 +106,7 @@ jq '{id:"research-gcp-credential", provider:"gcp", credential:.}' \
   | curl --fail-with-body \
       -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
       -H 'Content-Type: application/json' --data-binary @- \
-      "$AKOFLOW_API_URL/cloud-credentials/" -o gcp-reference.json
+      "$AKOFLOW_API_URL/cloud-credentials/" -o gcp-reference.json || exit 1
 ```
 
 The response contains `credentialRef`, not the original secret. Download
@@ -119,12 +121,12 @@ jq --arg ref "$AKOFLOW_GCP_REF" \
   '.connections[0].credentialRef=$ref |
    .connections[0].configuration.projectId=$project |
    .connections[0].configuration.region=$region' \
-  gcp-environment.template.json > gcp-environment.json
+  gcp-environment.template.json > gcp-environment.json || exit 1
 
 curl --fail-with-body \
   -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -H 'Content-Type: application/json' --data-binary @gcp-environment.json \
-  "$AKOFLOW_API_URL/environments/" | jq
+  "$AKOFLOW_API_URL/environments/" | jq || exit 1
 ```
 
 ### 3. Refresh and inspect the catalog
@@ -149,16 +151,16 @@ A catalog GET may return `404` before the first successful refresh. Inspect
 warnings as well as machines, images and disks: unavailable pricing must not
 be interpreted as free compute.
 
-## Verify the connection result
+## Check the result
 
 | Evidence              | Expected result                                            |
 | --------------------- | ---------------------------------------------------------- |
 | Credential validation | Correct project/region and `valid: true`                   |
 | Environment           | `research-gcp` exists with a cloud connection              |
-| Catalog               | Machines, compatible images and disk choices are available |
+| Catalog               | Machine, image and disk counts are reviewed; any empty category is investigated before provisioning |
 | Capacity              | No VM is expected merely from connecting the account       |
 
-Next, follow [Cloud capacity and machine configuration](../guides/infrastructure/cloud-capacity)
+Next, follow [Configure cloud capacity](/docs/guides/infrastructure/cloud-capacity)
 to choose a target and deliberately provision a worker. That operation can create
 billable resources; its guide covers lifecycle and cleanup. Do not treat catalog
 access as proof that provisioning permissions are complete.

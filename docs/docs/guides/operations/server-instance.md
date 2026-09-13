@@ -2,20 +2,20 @@
 id: server-instance
 title: Run the AkôFlow server on a Linux instance
 sidebar_label: Server on an instance
-description: Install the AkôFlow control plane from a versioned Release on a trusted Linux instance.
+description: Install the AkôFlow server from a versioned Release on a trusted Linux instance.
 ---
 
 # Run the AkôFlow server on a Linux instance
 
-Use this how-to when an operator needs an AkôFlow control plane on a trusted
-Linux instance, rather than the local control plane installed by AkôFlow
-Desktop. It loads the daemon and BuildKit images directly from a versioned
+Use this how-to when an operator needs an AkôFlow server on a trusted
+Linux instance, separate from the local server installed by AkôFlow
+Desktop. It loads the server and BuildKit images directly from a versioned
 GitHub Release. It does not use a container registry and it does not install
 the Desktop application.
 
-Use [Install AkôFlow](../../installation) for a personal workstation. Do not
+Use [Install AkôFlow](/docs/installation) for a personal workstation. Do not
 use this procedure for an untrusted or multi-tenant host: the supplied Compose
-configuration gives the control plane access to the host Docker socket and runs
+configuration gives the server access to the host Docker socket and runs
 BuildKit with Docker privileges.
 
 ## Before you begin
@@ -34,7 +34,7 @@ You need:
 This guide keeps the API bound to `127.0.0.1` on the instance. Reach it through
 an SSH tunnel or terminate TLS at a separately managed reverse proxy. Do not
 change the port mapping to `0.0.0.0` merely to make it convenient: bearer-token
-authentication protects operations, but the service is a control plane with
+authentication protects operations, but the server has
 access to Docker, workflow credentials, and execution targets.
 
 The release must contain matching daemon and BuildKit archives for the instance
@@ -64,7 +64,7 @@ akoflow-buildkit-<tag>-linux-<arch>.tar
 akoflow-runtime-<tag>-linux-<arch>.sha256
 ```
 
-The [Downloads and Releases](../../downloads) page explains the relationship
+The [Downloads and Releases](/docs/downloads) page explains the relationship
 between the Git tag and published artifacts. This procedure deliberately uses
 the two runtime archives; it does not look for a package or a registry image.
 
@@ -107,7 +107,7 @@ docker image inspect \
 The last command must print both versioned image tags. The Compose stack uses
 only those local tags, so it cannot silently pull a newer image.
 
-## 3. Configure the local control plane
+## 3. Configure the local server
 
 Download the versioned Compose file supplied with this documentation:
 
@@ -117,8 +117,8 @@ curl --fail-with-body --location --remote-name \
   "https://akoflow.com/examples/server-instance/compose.yaml"
 ```
 
-Create a private `.env` file. Generate the bearer token on the instance and
-store it in the operator's password manager; it is required by every
+Create a private `.env` file. Create a long random bearer token in the
+operator's password manager, then enter it below; it is required by every
 operational API request. The shell commands below avoid putting the token in
 the shell history.
 
@@ -134,7 +134,7 @@ unset AKOFLOW_API_TOKEN
 The Compose file persists SQLite, managed credentials, simulation workspaces,
 artifacts, and BuildKit state in named Docker volumes. It disables the
 interactive console. It also mounts `/var/run/docker.sock`; retain that mount
-only on a trusted host where the control plane is allowed to create local
+only on a trusted host where the server is allowed to create local
 containers.
 
 If a trusted browser client must call this server directly, set
@@ -157,6 +157,7 @@ The server's public preflight endpoint reports the server and local dependency
 state without exposing operational data:
 
 ```bash
+set -o pipefail
 curl --fail-with-body --silent http://127.0.0.1:8080/akoflow-api/preflight/ | jq .
 ```
 
@@ -164,6 +165,7 @@ Check that `server.available` is `true`. Then prove that the bearer token is
 accepted for an operational request:
 
 ```bash
+set -o pipefail
 read -r -s -p "AkôFlow API token: " AKOFLOW_API_TOKEN
 printf '\n'
 curl --fail-with-body --silent \
@@ -180,21 +182,23 @@ For an operator working from another machine, use a tunnel rather than exposing
 the API port:
 
 ```bash
-ssh -N -L 8080:127.0.0.1:8080 <operator>@<instance-host>
+read -r -p "SSH user: " AKOFLOW_SSH_USER
+read -r -p "Instance hostname: " AKOFLOW_SERVER_HOST
+ssh -N -L 8080:127.0.0.1:8080 "${AKOFLOW_SSH_USER}@${AKOFLOW_SERVER_HOST}"
 ```
 
 Run the same `curl` commands against your local `127.0.0.1:8080` while the
-tunnel is open. Continue with the [API overview](../../reference/api-overview)
-or register infrastructure and execute the [first simulated workflow](../workflows/first-run).
+tunnel is open. Continue with the [API overview](/docs/reference/api-overview)
+or register infrastructure and execute the [first simulated workflow](/docs/guides/workflows/first-run).
 
 ## Operate, update, and remove
 
-Use the exact same steps with a newer release tag to update: download and
-verify its archives, load its versioned images, change only
-`AKOFLOW_RELEASE_TAG` in `.env`, then run `docker compose -f compose.yaml up -d`.
+To update, download and verify the archives for the newer release, then load
+its versioned images. Change only `AKOFLOW_RELEASE_TAG` in `.env` and run
+`docker compose -f compose.yaml up -d`.
 The named volumes remain attached, so plans, runs, artifacts, and managed
 credentials are retained. Export the instance before changing versions if you
-need an additional recovery point; see [Instance management](./instance-management).
+need an additional recovery point; see [Instance management](/docs/guides/operations/instance-management).
 
 To stop the services while retaining their state:
 
@@ -218,4 +222,4 @@ akoflow`.
 | A request needs browser CORS access                  | Configure only the exact trusted origin in `AKOFLOW_API_ALLOWED_ORIGINS`; do not use a wildcard or expose the API port directly.                         |
 
 For server logs, Docker/BuildKit diagnostics, and network checks, see
-[Troubleshooting](./troubleshooting).
+[Troubleshooting](/docs/guides/operations/troubleshooting).

@@ -80,6 +80,18 @@ const config: Config = {
             to: "/docs/reference/api-overview/",
           },
           { from: "/docs/cli", to: "/docs/reference/api-overview/" },
+          ...[
+            "get-environments-environmentid-cloud-capacity-targets",
+            "post-environments-environmentid-cloud-capacity-targets",
+            "get-environments-environmentid-cloud-instances",
+            "post-environments-environmentid-cloud-instances",
+            "get-environments-environmentid-cloud-catalog",
+            "post-environments-environmentid-cloud-catalog-refresh",
+            "post-environments-environmentid-cloud-provisioning",
+          ].map((slug) => ({
+            from: `/docs/api/endpoints/environments/${slug}`,
+            to: `/docs/api/endpoints/cloud/${slug}`,
+          })),
         ],
       },
     ],
@@ -130,7 +142,7 @@ const config: Config = {
           title: "Docs",
           items: [
             { label: "Getting Started", to: "/docs/getting-started" },
-            { label: "Modules", to: "/docs/modules" },
+            { label: "Architecture internals", to: "/docs/modules" },
             { label: "Installation", to: "/docs/installation" },
             { label: "Downloads", to: "/docs/downloads" },
             { label: "Interface Tour", to: "/docs/guides/interface-tour" },

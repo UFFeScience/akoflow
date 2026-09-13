@@ -403,13 +403,6 @@ html {
   line-height: 1.06;
 }
 
-.akoflow-api-lead {
-  margin: 0 0 1.7rem;
-  color: var(--ifm-color-emphasis-700);
-  font-size: 1rem;
-  line-height: 1.55;
-}
-
 .akoflow-endpoint-signature {
   display: flex;
   gap: 0.75rem;
@@ -490,12 +483,10 @@ html {
   font-size: 0.72rem;
 }
 
-.akoflow-api-fields,
 .akoflow-api-parameters {
   margin: 0;
 }
 
-.akoflow-api-fields > div,
 .akoflow-api-parameters > div {
   display: grid;
   grid-template-columns: minmax(180px, 0.4fr) 1fr;
@@ -504,33 +495,11 @@ html {
   border-bottom: 1px solid var(--ifm-color-emphasis-200);
 }
 
-.akoflow-api-fields dt,
 .akoflow-api-parameters dt,
-.akoflow-api-fields dd,
 .akoflow-api-parameters dd { margin: 0; }
 
-.akoflow-api-fields dt {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.3rem;
-  align-items: baseline;
-}
-
-.akoflow-api-fields dt code,
 .akoflow-api-parameters dt code { background: transparent; font-size: 0.82rem; }
 
-.akoflow-api-fields dt span {
-  margin-left: 0;
-  padding: 0.15rem 0.4rem;
-  border-radius: 5px;
-  background: var(--ifm-color-emphasis-100);
-  color: var(--ifm-color-emphasis-600);
-  font-family: var(--ifm-font-family-monospace);
-  font-size: 0.68rem;
-  font-weight: 500;
-}
-
-.akoflow-api-fields dd,
 .akoflow-api-parameters dd,
 .akoflow-api-empty {
   color: var(--ifm-color-emphasis-700);
@@ -560,6 +529,7 @@ html {
   padding: 1rem;
   background: var(--ifm-background-color);
   color: var(--ifm-font-color-base);
+  max-height: 32rem;
   overflow: auto;
   font-size: 0.76rem;
   line-height: 1.55;
@@ -661,7 +631,6 @@ html {
     gap: 1.25rem;
   }
 
-  .akoflow-api-fields > div,
   .akoflow-api-parameters > div { grid-template-columns: 1fr; gap: 0.35rem; }
 }
 

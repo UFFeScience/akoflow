@@ -1,8 +1,11 @@
 ---
-title: Execution scopes and network topologies
+title: Define execution scopes and network links
+description: Limit planning to selected environment versions and model routes between resources.
 ---
 
-An execution scope is a reusable set of environment versions available to planning. A network topology describes transfer links between resources. The scope stores a `networkTopologyId`; the topology stores its `executionScopeId`. Use stable IDs and create the scope before the topology when building them through the current API.
+An execution scope tells the planner which environments it may use. If dependent activities may run on different resources, model the links between them so transfer estimates have a route. For a single-machine workflow, an empty topology is enough. The current Desktop creates an empty topology with a scope; use the API procedure below to register one with links.
+
+For the API commands on this page, complete [API connection setup](/docs/tutorials/api-access) first.
 
 ## Create a scope
 
@@ -23,11 +26,13 @@ A scope is not a copy of its environments and does not create connections or res
 
 ### Using the API
 
+Create the scope first. Its optional `networkTopologyId` can name the topology created next; the topology refers back to the scope by `executionScopeId`. Planning selects the topology it will use. The IDs below illustrate the relationship: replace `hpc-v1` and `cloud-v1` with published environment-version IDs in your instance. For a complete runnable set, use the [versioned SimGrid tutorial](/docs/guides/workflows/first-run).
+
 ```bash
 curl --fail-with-body \
-  -H "Authorization: Bearer $AKOFLOW_TOKEN" \
+  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -H 'Content-Type: application/json' \
-  -X POST "$AKOFLOW_URL/execution-scopes/" \
+  -X POST "$AKOFLOW_API_URL/execution-scopes/" \
   -d '{
     "id":"hybrid-research",
     "name":"Hybrid research",
@@ -39,15 +44,17 @@ curl --fail-with-body \
 List or inspect scopes with:
 
 ```bash
-curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_TOKEN" "$AKOFLOW_URL/execution-scopes/"
-curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_TOKEN" "$AKOFLOW_URL/execution-scopes/hybrid-research/"
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" "$AKOFLOW_API_URL/execution-scopes/"
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" "$AKOFLOW_API_URL/execution-scopes/hybrid-research/"
 ```
 
 ## Add a network topology
 
 ### Using AkôFlow Desktop
 
-The current Desktop scope flow can create an empty initial topology, but it does not provide a link editor. Create a topology containing links through the API. Each link identifies source and target **resource IDs**, bandwidth in bits per second, latency in seconds, transfer price per byte, and whether traffic is bidirectional.
+The scope form can create an empty initial topology. The current Desktop sidebar does not expose the separate topology-creation form, so use the API to register a topology with links. This creates a new topology; it does not edit the empty one. Select the topology with links when planning.
+
+Each API link identifies source and target **resource IDs**, bandwidth in bits per second, latency in seconds, transfer price per byte, and whether traffic is bidirectional.
 
 Topology values affect transfer estimates. They do not test the physical network and are not produced by a connection health check.
 
@@ -55,9 +62,9 @@ Topology values affect transfer estimates. They do not test the physical network
 
 ```bash
 curl --fail-with-body \
-  -H "Authorization: Bearer $AKOFLOW_TOKEN" \
+  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -H 'Content-Type: application/json' \
-  -X POST "$AKOFLOW_URL/network-topologies/" \
+  -X POST "$AKOFLOW_API_URL/network-topologies/" \
   -d '{
     "id":"hybrid-network-v1",
     "name":"HPC to cloud",
@@ -65,7 +72,6 @@ curl --fail-with-body \
     "executionScopeId":"hybrid-research",
     "links":[{
       "id":"hpc-cloud",
-      "topologyId":"hybrid-network-v1",
       "sourceResourceId":"hpc-cluster",
       "targetResourceId":"cloud-capacity-small",
       "bandwidthBitsPerSecond":1000000000,
@@ -79,8 +85,8 @@ curl --fail-with-body \
 Retrieve the stored model before using it for planning:
 
 ```bash
-curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_TOKEN" \
-  "$AKOFLOW_URL/network-topologies/hybrid-network-v1/"
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  "$AKOFLOW_API_URL/network-topologies/hybrid-network-v1/"
 ```
 
-Use resource IDs that belong to environment versions in the scope. The API validates persistence constraints but does not measure whether the bandwidth and latency values match the real infrastructure.
+Replace `hpc-cluster` and `cloud-capacity-small` with resource IDs from those environment versions. The API does not check that a link's resources belong to the scope or measure the real bandwidth and latency; verify those values before using the topology for planning.

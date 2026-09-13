@@ -67,12 +67,12 @@ func TestRepositoryPersistsDownloadLifecycle(t *testing.T) {
 	if err := repository.SaveDownload(ctx, run); err != nil {
 		t.Fatal(err)
 	}
-	run.Status, run.URL, run.TransferredBytes, run.UpdatedAt = domain.DownloadCompleted, "http://download", 42, now.Add(time.Second)
+	run.Path, run.Status, run.URL, run.TransferredBytes, run.UpdatedAt = "/data/result.tar.gz", domain.DownloadCompleted, "http://download", 42, now.Add(time.Second)
 	if err := repository.SaveDownload(ctx, run); err != nil {
 		t.Fatal(err)
 	}
 	found, err := repository.FindDownload(ctx, run.ID)
-	if err != nil || found == nil || found.Status != domain.DownloadCompleted || found.TransferredBytes != 42 || found.URL != run.URL {
+	if err != nil || found == nil || found.Path != run.Path || found.Status != domain.DownloadCompleted || found.TransferredBytes != 42 || found.URL != run.URL {
 		t.Fatalf("FindDownload() = %#v, %v", found, err)
 	}
 	missing, err := repository.FindDownload(ctx, "missing")

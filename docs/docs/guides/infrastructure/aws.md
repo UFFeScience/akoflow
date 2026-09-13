@@ -1,42 +1,22 @@
 ---
-title: Configure AWS
-description: Configure AWS credentials and S3 data transfer without overstating v1.0 compute support.
+title: AWS and S3 support
+description: What AkôFlow currently implements for S3 transfers and where AWS setup remains incomplete.
 ---
 
-# Configure AWS
+# AWS and S3 support
 
-AkôFlow v1.0 accepts AWS credentials and can move artifacts through Amazon S3 or an S3-compatible service. It does **not** yet discover EC2 machine types or provision EC2 workers. Creating an AWS credential therefore enables storage operations; it does not create schedulable cloud capacity.
+AkôFlow can transfer objects to and from an `s3://bucket/prefix` endpoint when its server has `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`. Temporary credentials also require `AWS_SESSION_TOKEN`. You can set an endpoint and region for an S3-compatible service. Local tests cover the transfer code, but a run against an AWS account or test bucket has not yet been verified.
 
-## Configure an S3 credential
+This is **partial AWS support**. AkôFlow does not discover or provision EC2 workers. Saving an AWS cloud credential in AkôFlow does not make it available to S3 transfers; the server needs the environment variables above. For a transfer endpoint, omit `configuration.credentialRef` or set it to `env`. Other values fail with the default server credential resolver.
 
-Create a dedicated IAM principal or short-lived credential for the bucket used by AkôFlow. Grant access only to the required bucket and prefix. Typical operations require listing the bucket prefix and reading, writing, and deleting objects that AkôFlow owns.
+## Before using S3 transfers
 
-In Desktop, open **Settings → Credentials**, create an AWS cloud credential, and provide the access-key material expected by your deployment. Do not paste credentials into workflow, environment, or plan YAML. For temporary credentials, include the session token and replace the record before it expires.
+1. Ask the operator to provide the approved bucket, prefix, region, and server-side credential setup. Limit permissions to the required objects.
+2. Confirm that the server process receives the credentials. Avoid placing access keys in workflow or environment files.
+3. Use an `s3://bucket/prefix` transfer endpoint and check the resulting transfer and object evidence after a small run. A successful credential save or environment registration alone does not prove that data movement works.
 
-## Register S3 storage
+The **Infrastructure → Storage** screen browses storage already registered with an environment; it does not create an S3 storage connection. Its current S3 browser sends unsigned requests, even when the storage record has `credentialReference` or the server has AWS environment variables. Use a small transfer to check the separately configured transfer connector; it does not verify Desktop browsing.
 
-Create storage under **Infrastructure → Storage** and select the S3 adapter. Configure:
+For S3-compatible services, set `endpoint`, `region`, and `secure` in the transfer configuration if needed. The default endpoint is `s3.amazonaws.com`, and `secure` defaults to TLS. See the [environment YAML reference](/docs/reference/environment-yaml#connections-and-transfer-connectors) for the fields and [Storage](/docs/guides/infrastructure/storage) for browsing registered storage.
 
-- the bucket and optional AkôFlow prefix;
-- the AWS region;
-- the stored credential reference;
-- `s3.amazonaws.com` for AWS, or the explicit endpoint for an S3-compatible service;
-- TLS and path-style addressing according to the selected service.
-
-Test the storage connection before using it in an environment. A successful credential save only verifies the document shape; a storage test verifies endpoint reachability and authorization.
-
-## Common failures
-
-| Symptom | What to inspect |
-| --- | --- |
-| `AccessDenied` | IAM action, bucket policy, KMS permission, and prefix restriction |
-| `SignatureDoesNotMatch` | Region, endpoint, system clock, and access/secret pair |
-| Redirect to another region | Bucket region differs from the configured region |
-| TLS or hostname failure | Custom endpoint and certificate chain |
-| Upload succeeds but execution cannot read | Runtime binding uses a different storage or credential |
-
-## Compute capacity
-
-Do not create a nominal AWS execution environment expecting EC2 capacity to appear. Until the EC2 provider is implemented, connect existing AWS-hosted machines through the same SSH/direct-runtime path used for remote workers, or use Kubernetes when those machines belong to a cluster. The scheduler only sees capacity after a real resource and runtime binding are registered.
-
-See [HPC and SLURM clusters](./hpc-slurm) for the SSH connection pattern and [Storage](./storage) for artifact placement. The cloud support matrix is maintained in [Cloud capacity](./cloud-capacity).
+To run compute on existing AWS-hosted machines, connect them through a supported SSH or Kubernetes runtime. [Cloud capacity](/docs/guides/infrastructure/cloud-capacity) lists the provider limits. An end-to-end S3 tutorial remains pending validation with a disposable bucket and cleanup procedure.

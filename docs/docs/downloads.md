@@ -7,14 +7,14 @@ description: Direct official downloads for AkôFlow Desktop, with platform selec
 
 ## Choose your download
 
-These links point to the published **v1.0.8** release, checked on **2026-09-12**.
+These links point to the published **v1.0.8** release, rechecked on **2026-09-13**.
 Choose one package for your workstation. The browser saves it in your configured
-download folder; open the completed download and follow [Installation](./installation).
+download folder; open the completed download and follow [Installation](/docs/installation).
 
 | Platform                       | Download                                                                                                                          | What to do next                                                          |
 | ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
 | macOS, Intel and Apple silicon | [Download universal DMG](https://github.com/UFFeScience/akoflow/releases/download/v1.0.8/Akoflow-Desktop-1.0.8-mac-universal.dmg) | Open it and drag AkôFlow Desktop to Applications                         |
-| Windows x64                    | [Download Windows EXE](https://github.com/UFFeScience/akoflow/releases/download/v1.0.8/Akoflow-Desktop-1.0.8-win-x64.exe)         | Open the executable and follow its prompts                               |
+| Windows x64                    | [Download Windows EXE](https://github.com/UFFeScience/akoflow/releases/download/v1.0.8/Akoflow-Desktop-1.0.8-win-x64.exe)         | Run the portable executable directly                                      |
 | Debian/Ubuntu x64              | [Download DEB](https://github.com/UFFeScience/akoflow/releases/download/v1.0.8/Akoflow-Desktop-1.0.8-linux-amd64.deb)             | Install using `sudo apt install ./Akoflow-Desktop-1.0.8-linux-amd64.deb` |
 | Linux x64                      | [Download AppImage](https://github.com/UFFeScience/akoflow/releases/download/v1.0.8/Akoflow-Desktop-1.0.8-linux-x86_64.AppImage)  | Give it execute permission and open it                                   |
 
@@ -29,11 +29,13 @@ Do not rename an older installer to match a newer tag.
 
 For Desktop installation, choose the package in the table. `.blockmap` and
 `latest*.yml` files are updater metadata. Source-code ZIP/TAR downloads are for
-development. Daemon/BuildKit `.tar` archives and the runtime `.sha256` manifests
-are downloaded by Desktop automatically; operators use them in the
-[self-managed server guide](./guides/operations/server-instance).
+development. Daemon/BuildKit `.tar` archives and runtime `.sha256` manifests are
+service assets, not separate Desktop installers. Operators use them in the
+[self-managed server guide](/docs/guides/operations/server-instance).
 
-v1.0.8 has a single Windows `.exe`, not separate named installer/portable files.
+v1.0.8 has a single Windows `.exe`. The release build generated the portable
+target last under the same filename as the installer target, so the published
+file is the portable executable; there is no separate installer asset.
 It has no Linux ARM64 Desktop package.
 
 ## Download through the GitHub API
@@ -82,4 +84,4 @@ redirect-following range requests. Download availability is separate from
 operating-system installation validation.
 
 The extracted Linux application was also opened with a fresh profile and reached
-the successful [daemon, Docker and BuildKit checkup](./installation#3-first-launch-what-happens).
+the successful [daemon, Docker and BuildKit checkup](/docs/installation#3-first-launch-what-happens).

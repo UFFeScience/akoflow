@@ -5,12 +5,18 @@ on:
     paths:
       - "docs/**"
       - "examples/**"
+      - "internal/api/**"
+      - "internal/domain/**"
+      - "internal/provider/**"
       - ".github/workflows/docs-checks.yaml"
   push:
     branches: [main]
     paths:
       - "docs/**"
       - "examples/**"
+      - "internal/api/**"
+      - "internal/domain/**"
+      - "internal/provider/**"
       - ".github/workflows/docs-checks.yaml"
 
 permissions:
@@ -28,6 +34,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -41,6 +49,8 @@ jobs:
         run: npm run build --prefix docs
       - name: Verify repository-owned documentation links
         run: npm run check:links --prefix docs
+      - name: Check documentation shell examples
+        run: npm run check:shell --prefix docs
       - name: Upload GitHub Pages artifact
         if: github.ref == 'refs/heads/main'
         uses: actions/upload-pages-artifact@v3

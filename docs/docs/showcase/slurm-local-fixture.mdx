@@ -10,9 +10,9 @@ import {FileList, WorkflowDiagram} from '@site/src/components/WorkflowShowcase';
 
 <WorkflowDiagram kind="slurm" />
 
-This Showcase is a reproducible **adapter fixture**, not a replacement for an HPC cluster. It starts an isolated AkôFlow daemon, puts small `sbatch` and `singularity` fixture commands ahead of the daemon's `PATH`, and runs the generated batch script inside a disposable Alpine container. The activity writes `result.txt`; the normal SLURM adapter observes its completion sentinel and persists the artifact manifest.
+This local fixture checks AkôFlow's SLURM batch adapter. It starts an isolated daemon, supplies test `sbatch` and `singularity` commands, and runs the generated batch script in a disposable Alpine container. The activity writes `result.txt`; the adapter observes its completion sentinel and saves the artifact manifest.
 
-Use it to verify a local checkout after changing the SLURM adapter, batch-script generation, or artifact observation. Do **not** use it as evidence that a real cluster's login node, SSH proxy, allocation, `sacct` accounting, `squeue`, `scancel`, shared filesystem, account, QoS, or partition policy is configured correctly. Use [Connect an HPC and SLURM cluster](../guides/infrastructure/hpc-slurm) for that site-approved procedure.
+Use it after changing batch-script generation or artifact observation. It does not validate SSH access, scheduler accounting, shared storage, or site policies on a real cluster. For those checks, follow [Connect an HPC and SLURM cluster](/docs/guides/infrastructure/hpc-slurm).
 
 ## Prerequisites
 
@@ -20,42 +20,39 @@ Use it to verify a local checkout after changing the SLURM adapter, batch-script
 - Port `18082` unused for the isolated daemon.
 - Permission for Docker to pull and run `alpine:3.20`.
 
-The fixture is intentionally local and disposable. It writes all database and generated state under `examples/slurm/local-fixture/.runtime`, `scripts`, `akoflow-*.status`, `akoflow-*.log`, and `akoflow-workspaces`; those paths are ignored by Git.
+Generated database and run files stay under `examples/slurm/local-fixture/.runtime`, `scripts`, `akoflow-*.status`, `akoflow-*.log`, and `akoflow-workspaces`; Git ignores those paths.
 
 ## Download the inputs
 
 <FileList>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/slurm/local-fixture/environment.yaml">Environment YAML ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/slurm/local-fixture/scope.yaml">Execution scope YAML ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/slurm/local-fixture/topology.yaml">Network topology YAML ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/slurm/local-fixture/workflow.yaml">Workflow YAML ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/slurm/local-fixture/plan.yaml">Manual plan YAML ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/slurm/local-fixture/execution-request.yaml">Execution envelope ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/slurm/local-fixture/start-fixture.sh">Fixture daemon script ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/slurm/local-fixture/run.sh">Submission script ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/slurm/local-fixture/environment.yaml">Environment YAML ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/slurm/local-fixture/scope.yaml">Execution scope YAML ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/slurm/local-fixture/topology.yaml">Network topology YAML ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/slurm/local-fixture/workflow.yaml">Workflow YAML ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/slurm/local-fixture/plan.yaml">Manual plan YAML ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/slurm/local-fixture/execution-request.yaml">Execution envelope ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/slurm/local-fixture/start-fixture.sh">Fixture daemon script ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.8/examples/slurm/local-fixture/run.sh">Submission script ↓</a>
 </FileList>
 
 <InterfaceApiTabs
   desktop={<div>
-    <h2>Inspect it with AkôFlow Desktop</h2>
-    <ol>
-      <li>Start the fixture daemon as described below, then configure Desktop to use <code>http://127.0.0.1:18082/akoflow-api</code>.</li>
-      <li>Under <strong>Infrastructure → Environments</strong>, import or recreate <code>environment.yaml</code>. Confirm the <code>slurm</code> runtime is bound to the batch partition.</li>
-      <li>Create the scope and empty topology, then import <code>workflow.yaml</code> under <strong>Workflows → Definitions</strong>.</li>
-      <li>Import the manual plan or create the same one-activity assignment to <code>slurm-fixture-partition</code>. Start a <strong>Real execution</strong>.</li>
-      <li>Open the completed run. The activity's artifacts must list the created <code>result.txt</code> file.</li>
-    </ol>
-    <p>Desktop is optional for this fixture. The API path below submits the same versioned files and is the reproducible verification route.</p>
+    <h2>Inspect the API run in a connected client</h2>
+    <p>Run the fixture through the API path below. If a development Desktop client is configured for that same fixture server, open the completed run and verify that its activity artifacts include <code>result.txt</code>.</p>
+    <p>The packaged Desktop does not automatically connect to the fixture server on port <code>18082</code>. A Desktop-only fixture submission has not been verified.</p>
   </div>}
   api={<div>
     <h2>Run the fixture through the API</h2>
-    <p>In one terminal, start the isolated daemon from the repository root:</p>
-    <pre><code>{`sh examples/slurm/local-fixture/start-fixture.sh`}</code></pre>
-    <p>Wait until it is listening, then use a second terminal:</p>
+    <p>Clone v1.0.8, or use an existing matching checkout. In one terminal, start the isolated daemon from its root:</p>
+    <pre><code>{`git clone --branch v1.0.8 --depth 1 https://github.com/UFFeScience/akoflow.git akoflow-showcase
+cd akoflow-showcase
+sh examples/slurm/local-fixture/start-fixture.sh`}</code></pre>
+    <p>Wait until it is listening, then open a second terminal at the root of the same checkout:</p>
     <pre><code>{`export AKOFLOW_API_URL="http://127.0.0.1:18082/akoflow-api"
 sh examples/slurm/local-fixture/run.sh
 
 curl --fail-with-body \\
+  -H "Authorization: Bearer \${AKOFLOW_API_TOKEN}" \\
   "$AKOFLOW_API_URL/execution-runs/slurm-fixture-run-v1/" \\
   | jq -r '.run.status'`}</code></pre>
     <p>The daemon uses no token by default. If your local configuration requires one, set <code>AKOFLOW_API_TOKEN</code> before running the supplied script.</p>
@@ -92,8 +89,6 @@ rm -f examples/slurm/local-fixture/akoflow-*.status \\
   examples/slurm/local-fixture/akoflow-*.log
 ```
 
-Never apply this cleanup pattern to an actual cluster workspace: those paths are owned by this fixture only.
-
 ## Troubleshooting
 
 | Symptom | Cause and recovery |
@@ -103,4 +98,4 @@ Never apply this cleanup pattern to an actual cluster workspace: those paths are
 | The run remains queued | Check that the first terminal is still running and that `sbatch` was invoked from the fixture's `bin` directory. Do not start a second fixture daemon against the same `.runtime` directory. |
 | The artifact is absent | Inspect `examples/slurm/local-fixture/akoflow-*.log` and `.status`; then confirm Docker can pull `alpine:3.20`. |
 
-Related material: [SLURM/HPC connection guide](../guides/infrastructure/hpc-slurm), [local direct execution](./local-direct-execution), and [workflow runs](../guides/workflows/executions).
+Related material: [SLURM/HPC connection guide](/docs/guides/infrastructure/hpc-slurm), [local direct execution](/docs/showcase/local-direct-execution), and [workflow runs](/docs/guides/workflows/executions).

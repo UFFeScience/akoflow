@@ -3,13 +3,13 @@
 id: interface-tour
 title: Tour the AkôFlow interface
 sidebar_label: Interface tour
-description: Learn how the AkôFlow Desktop navigation maps to the control-plane API.
+description: Find workflows, environments, plans, runs, and results in AkôFlow Desktop.
 ---
 
 import AnnotatedScreenshot from '@site/src/components/AnnotatedScreenshot';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 
-AkôFlow Desktop is the visual client for the AkôFlow daemon. The application does not run infrastructure commands from the browser renderer: it requests the daemon API, and the daemon performs discovery, planning, execution, data movement, and infrastructure operations.
+AkôFlow Desktop lets you see your workflows, environments, plans, runs, and results in one place. Start on **Overview** to check the current instance, then use the sidebar to open the record you need.
 
 <AnnotatedScreenshot
   src="/img/interface/overview.png"
@@ -20,60 +20,47 @@ AkôFlow Desktop is the visual client for the AkôFlow daemon. The application d
     {number: 1, x: 4.8, y: 16.0, label: 'The sidebar groups workflows, infrastructure, runs, artifacts, provenance, and audit.'},
     {number: 2, x: 50.0, y: 7.5, label: 'Global search opens entities without first visiting their list page.'},
     {number: 3, x: 92.1, y: 7.5, label: 'Notifications report operations that need attention.'},
-    {number: 4, x: 8.2, y: 91.5, label: 'The instance indicator confirms which daemon the client is using.'},
+    {number: 4, x: 8.2, y: 91.5, label: 'The instance indicator shows which AkôFlow service Desktop is using.'},
   ]}
 />
 
 ## Main areas
 
-| Area | What you do there | Main API domain |
-|---|---|---|
-| Overview | Check registered environments, workflows, and completed runs | Multiple read endpoints |
-| Workflows | Create versioned definitions and inspect activity DAGs | `/workflow-definitions/` |
-| Planning sessions | compare algorithms and promote a candidate to a plan | `/planning-sessions/` |
-| Infrastructure | Connect environments, discover resources, and define execution scopes | `/environments/`, `/resources/`, `/execution-scopes/` |
-| Runs | Start and inspect workflow, standalone, simulated, and interactive runs | `/execution-runs/` |
-| Artifacts | Register, build, locate, and materialize executable artifacts | `/artifacts/`, `/artifact-builds/` |
-| Provenance | Query evidence and follow lineage | `/provenance/` |
-| Audit | Inspect the operational event history | `/audit-events/` |
+| Area | What you do there |
+|---|---|
+| Overview | Check registered environments, workflows, and completed runs |
+| Workflows | Create workflows and inspect their activities |
+| Planning sessions | Compare candidate plans and select one |
+| Infrastructure | Connect environments and inspect available resources |
+| Runs | Start and inspect workflow, simulation, and interactive runs |
+| Artifacts | Register and build executables for workflows |
+| Provenance | [Follow how a result was produced](/docs/guides/data/provenance) |
+| Audit | [Inspect connection, discovery, and console events](/docs/guides/data/audit-events) |
 
-## Follow the ownership hierarchy
+## Follow a record
 
-AkôFlow pages preserve the relationship between records. An execution belongs to a plan, a plan belongs to a workflow, and a provisioning operation belongs to a cloud resource. Breadcrumbs show that chain; their ancestors are links.
+Breadcrumbs connect a run to its plan and workflow. Select an earlier item to return to that record.
 
 For example:
 
 <img src={useBaseUrl('/img/architecture/interface-ownership-hierarchy.svg')} alt="Workflow pages lead from workflow to plan, execution and activity. Infrastructure pages lead from environment through inventory and resource to provisioning and operation." />
 
-Use the back control below the breadcrumb to return to the logical parent. Its destination remains correct even when the page was opened from search or a notification.
+Use the back control below the breadcrumb to return to the parent record, including when you arrived through search or a notification.
 
-## Desktop and API are two views of the same operation
+## Find a record
 
-Most task guides contain two paths:
+Press <kbd>⌘</kbd>+<kbd>K</kbd> on macOS, <kbd>Ctrl</kbd>+<kbd>K</kbd> on Windows or Linux, or select the search field. An empty search shows shortcuts to areas such as **Workflow definitions**, **Planning sessions**, and **Runs**.
 
-- **AkôFlow Desktop** explains the controls, validation, progress, and resulting detail page.
-- **API** shows the corresponding HTTP request and a minimal payload.
+Enter a name or ID to find records. Select a result or press <kbd>Enter</kbd> to open the first one; press <kbd>Escape</kbd> to close search. See [Find a record](/docs/guides/operations/find-records) for API search and result limits.
 
-The API path is useful for automation and reproducible experiments. The Desktop path is useful for exploration, comparison, and live monitoring. Records created through either path appear in the same interface.
-
-## Use global search deliberately
-
-Press <kbd>⌘</kbd>+<kbd>K</kbd> on macOS, <kbd>Ctrl</kbd>+<kbd>K</kbd> on Windows or Linux, or select the search field in the title bar. With an empty field, Desktop lists navigation shortcuts such as **Workflow definitions**, **Planning sessions**, **Runs**, and **Provenance**. This is the fastest route when you know the product area but not its sidebar location.
-
-Once you enter text, the list changes to matching control-plane entities. A result identifies its record by title and ID, and may show a status and type; select it to open the corresponding record. Press <kbd>Enter</kbd> to open the first available result, or <kbd>Escape</kbd> to close the result list.
-
-Search is a locator, not an investigation surface. It does not replace the filtered lists or the provenance query tools: use the workflow, run, plan, environment, or provenance page after opening a result when you need status history, evidence, or a precise server-side filter. If Desktop says **Search is temporarily unavailable**, the search request failed; retry after confirming that the daemon connection is healthy.
+Open a result's detail page for its status and history. If Desktop says **Search is temporarily unavailable**, check the AkôFlow connection and try again.
 
 ## Global terminal
 
-Interactive commands open in the terminal panel fixed to the bottom of the application. The daemon owns the session and streams its output; closing a page does not make the renderer execute or manage a remote shell itself.
+Interactive sessions open in the terminal panel at the bottom of the application. Closing a page does not close a remote session; close it from the panel when you finish.
 
-Open an interactive session from a resource or runtime-aware operation, then use the terminal panel to inspect its output. The session detail page provides the durable record and log-export control; the panel is a live view, not a replacement for the persisted session evidence. See [Interactive console](./operations/interactive-console) for prerequisites, connection behavior, and recovery.
-
-## Read-only instances
-
-Some instance modes prevent write operations. The interface displays the active mode and guards creation, update, execution, and destructive actions. Read-only exploration, provenance, and audit remain available according to the daemon configuration.
+Open a session from a compatible resource, then use the panel to inspect its output. Export the log from the session detail page when you need a saved record. See [Interactive console](/docs/guides/operations/interactive-console) for prerequisites and recovery.
 
 ## Continue
 
-Start with [your first end-to-end run](./workflows/first-run), or connect [execution infrastructure](./infrastructure/environments).
+To create and run one workflow in Desktop, follow the [first local run](/docs/guides/workflows/first-local-run). For a simulation through a separately managed API, use the [SimGrid tutorial](/docs/guides/workflows/first-run). To connect another target, see [Environments](/docs/guides/infrastructure/environments).

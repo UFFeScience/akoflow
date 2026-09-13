@@ -5,12 +5,26 @@ sidebar_label: Production plan
 description: Source-of-truth, media, and review rules for AkôFlow documentation.
 ---
 
-This plan keeps the documentation aligned with the shipping daemon and Desktop application. It is also the contract for parallel documentation work.
+This page defines the editorial and verification rules for the documentation. Apply them whenever a page, example, screenshot, API route, or supported capability changes.
+
+## Editorial contract
+
+The documentation should show how AkôFlow simplifies scientific workflow execution, not display the complexity of its implementation.
+
+1. Explain the task and expected result first. Give each page one main job and reveal details only when the reader needs them.
+2. Use workflow, environment, plan, run, artifacts, and provenance in user paths. Put supervisors, handlers, adapters, and persistence in developer architecture pages unless a task requires them.
+3. Make support claims only when code and appropriate evidence support them. Label partial features and distinguish code review, local fixtures, and real-environment validation.
+4. Prefer a concrete example over a list of capabilities. Remove repeated caveats and text that does not help a reader act or decide.
+5. Check whether each page quickly answers what it is for, when to use it, how to use it, and what to expect.
+
+For each editorial pass, classify passages as **KEEP**, **SIMPLIFY**, **MOVE**, **DELETE**, or **VERIFY**. Resolve P0 (false claims and broken instructions), then P1 (confusing paths and misplaced concepts), then P2 (length and repetition), then P3 (presentation). Repeat audit → edit → build → link check → claim check → first-time-reader review until a full pass finds no P0 or P1 issues. A successful build alone is not the finish line.
+
+The completion gate is a new user running a first workflow without undocumented knowledge, support claims matching implementation and validation, implementation details outside the basic path, and no P0/P1 findings in the final audit.
 
 ## Documentation principles
 
 1. Teach complete user tasks instead of listing screens in isolation.
-2. Present **AkôFlow Desktop** and **API** as equivalent paths whenever both exist.
+2. Present **AkôFlow Desktop** and **API** paths only where each procedure is documented and verified; state extra prerequisites instead of calling them equivalent by default.
 3. Derive behavior from code, tests, and checked-in examples; never infer an endpoint or field from a label alone.
 4. Use screenshots to explain spatial relationships and short videos to explain motion or multi-step transitions.
 5. Keep a text equivalent for every visual procedure.
@@ -20,55 +34,23 @@ This plan keeps the documentation aligned with the shipping daemon and Desktop a
 
 | Subject | Primary source |
 |---|---|
-| Desktop navigation | `akoflow-admin/src/App.jsx` and `src/components/AppShell.jsx` |
-| Desktop operations | Page, form, and provider components in `akoflow-admin/src` |
-| HTTP methods and paths | `akoflow/internal/api/httpserver/httpserver.go` |
+| Desktop navigation | `akoflow-desktop/src/App.jsx` and `akoflow-desktop/src/components/AppShell.jsx` in the Desktop repository |
+| Desktop operations | Page, form, and provider components in `akoflow-desktop/src` |
+| HTTP methods and paths | `internal/api/httpserver/httpserver.go` in this repository |
 | Request and response contracts | HTTP handlers, application services, and `internal/domain` |
-| Runnable scenarios | `akoflow/examples` and integration tests |
-| Packaged installation | Root README, `releases/`, Electron bootstrap, and release workflows |
+| Runnable scenarios | `examples/` and integration tests in this repository |
+| Packaged installation | Root README, `releases/`, the Desktop repository's `electron/` bootstrap, and release workflows |
 
 Generated site output and old copied Markdown files are not sources of truth.
 
-## Production waves
+## Review a change
 
-### Wave 1 — foundation
-
-- Establish the information architecture and sidebar.
-- Add reusable screenshot, video, and Desktop/API components.
-- Build a feature coverage matrix.
-- Define stable demo data and redact all secrets from captures.
-
-### Wave 2 — task guides
-
-- Infrastructure and execution scopes.
-- Workflow definition, planning, and execution.
-- Artifacts, storage, provenance, and audit.
-- Installation, instance management, and troubleshooting.
-
-Independent guide groups may be authored in parallel after their source inventory is complete. Each group owns separate files.
-
-### Wave 3 — reference
-
-- Replace the legacy workflow specification with the current versioned model.
-- Document API conventions and endpoint groups.
-- Document runtime capabilities, lifecycle states, and compatibility rules.
-
-### Wave 4 — media
-
-- Load a deterministic demonstration instance.
-- Capture a fixed desktop viewport in the light theme.
-- Add numbered callouts and restrained directional arrows.
-- Record one operation per video.
-- Prefer WebM for the site; create an optimized GIF only when a fallback is useful.
-
-### Wave 5 — verification
-
-- Verify every field against the Go contract.
-- Verify every route against the HTTP mux.
-- Run or validate checked-in examples.
-- Build and type-check Docusaurus.
-- Review screenshots for secrets, hostnames, tokens, usernames, and unstable identifiers.
-- Search for removed terminology and stale fixed-port instructions.
+1. Check page purpose, audience, order of concepts, and whether the example solves a concrete task.
+2. Compare affected claims and payloads with current handlers, Desktop behavior, tests, and checked-in examples.
+3. Distinguish local fixtures from real-provider validation, and update support limits when evidence changes.
+4. Check screenshots for secrets, hostnames, tokens, usernames, and unstable identifiers.
+5. Run the documentation type-check, build, and link check; then read the rendered path at desktop and mobile widths.
+6. Record unresolved P0/P1 findings and repeat the pass after corrections.
 
 ## Link verification
 
@@ -77,15 +59,17 @@ Run the repository-owned link check after a documentation build:
 ```bash
 npm run build --prefix docs
 npm run check:links --prefix docs
+npm run check:shell --prefix docs
 ```
 
-The check rejects a missing internal documentation route, a missing file below
-`docs/static/`, and a Showcase download that no longer has its checked-in
-counterpart under `examples/`. It intentionally does not make network requests
-or judge third-party URLs: availability of external services belongs to the
-reader's environment, while these three classes are artifacts maintained in
-this repository. GitHub Actions runs the same type-check, build, and link check
-for documentation or example changes.
+The link check rejects missing documentation routes, files under `docs/static/`,
+and Showcase downloads without a checked-in counterpart under `examples/`.
+It checks repository-owned links, not third-party availability.
+
+The shell check parses fenced Bash/sh examples and Showcase JSX command blocks
+without running them. It requires `curl` examples to fail on HTTP errors, but
+cannot validate named files or API behavior. GitHub Actions runs the type-check,
+build, link check, and shell check for documentation or example changes.
 
 ## Media naming
 
@@ -115,7 +99,7 @@ Use the black, white, and neutral-gray visual system established by [`akoflow-co
 
 ## Definition of done for a guide
 
-- The task has prerequisites, Desktop steps, API steps, expected result, and next steps.
+- The task has prerequisites, a verified procedure for its stated interface, an expected result, and next steps. Add a second interface only when its path has been checked.
 - Screenshot placeholders or final captures cover only moments where the visual adds information.
 - API examples include authentication and use the current `/akoflow-api` prefix.
 - Identifiers in examples are visibly placeholders or come from a documented demo dataset.
@@ -126,7 +110,9 @@ Use the black, white, and neutral-gray visual system established by [`akoflow-co
 
 Run `npm run generate:api` to rebuild the endpoint catalog from `internal/api/httpserver/httpserver.go`. The Docusaurus `prestart` and `prebuild` hooks run this automatically. Generated pages are intentionally ignored by Git; changes to method, path, or handler appear on the next documentation build without copying the router by hand.
 
-Each generated endpoint page includes its HTTP method, registered path, path parameters, authentication example, request-body indication, owning handler, and a copyable cURL command. Domain guides remain responsible for semantic explanations and complete payload examples.
+Each generated endpoint page shows the registered method and path, parameters, owning handler, and request-body indication. HTTP routes include a cURL command or template; the console stream shows a WebSocket connection instead. A template still needs valid IDs and, for a body, a prepared request file.
+
+The generator shows a request body only when it has a checked example. Otherwise, use the handler-checked notes and linked guide to prepare one. Response JSON shapes are illustrative and may omit fields or show placeholder values. Check a route against its handler and a real response before treating a field-level example as verified.
 
 ## Reproducible media capture
 

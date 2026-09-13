@@ -7,43 +7,34 @@ description: The difference between flows, queue and stage totals, makespan, and
 
 import useBaseUrl from '@docusaurus/useBaseUrl';
 
-Execution evidence contains both a wall-clock result and accumulated activity
-measurements. They answer different questions. A large accumulated transfer or
-queue total does not by itself mean that the workflow took that many seconds on
-the clock, because activities and transfers can overlap.
+Execution evidence has a wall-clock result and accumulated activity times. Use
+makespan for elapsed workflow time; use the accumulated values to see where work
+and waiting occurred. Activities and transfers can overlap, so their totals can
+exceed makespan.
 
 Use this page when reading a run detail, a planning-versus-execution comparison,
 or an experiment chart. It explains the current persisted metrics; it does not
-replace [network modeling](./network-modeling) or the [execution state reference](../reference/planning-and-execution-states).
+replace [network modeling](/docs/explanations/network-modeling) or the [execution state reference](/docs/reference/planning-and-execution-states).
 
 ## A flow is a scheduled movement of data
 
-A **network flow** exists when a control dependency also has a data dependency,
-the producer and consumer are assigned to different resources, and the selected
-route requires movement. It has a producer, consumer, source resource, target
-resource, logical byte volume, and a route. During a completed execution,
-AkôFlow persists a `DataTransfer` observation with start/finish time, duration,
-cost, source/target, strategy, route, logical bytes, and network bytes when the
-runtime reports them.
+A **network flow** can occur when a producer and consumer have both an ordering
+and a data dependency and a plan assigns them to different resources. The run
+can record the route, bytes moved, duration, and cost when the runtime reports
+them.
 
-The link bandwidth is in bits per second while dependency size is in bytes. For
-a single 10 GiB flow over a 10 Gbit/s link, the raw payload time is roughly
-eight seconds before latency. A multi-hop route adds latency for its hops and is
-limited by its effective available bandwidth.
+Link bandwidth is in bits per second while dependency size is in bytes. A
+multi-hop route adds latency for its hops and is limited by its effective
+available bandwidth. [Network modeling](/docs/explanations/network-modeling#units-and-a-small-example)
+works through a concrete transfer estimate.
 
 ## Contention means simultaneous users of a bottleneck
 
-Two flows contend when they overlap and use a shared bottleneck. In the current
-PRISM complete-state evaluator, that can be a shared route hop, a shared source
-resource, or a shared target resource. It divides modeled bandwidth among the
-active users. The model is event-based: a flow begins after route latency, then
-its remaining bytes progress at the current shared rate until another task or
-flow event changes the set of active users.
-
-This is not a claim that every real runtime reports network contention as a
-separate observed number. It is a planning-model effect used by PRISM. Inspect
-the actual transfer records to determine whether a completed run moved the
-expected bytes and how long that movement lasted.
+Two flows contend when they overlap at a shared link or endpoint. PRISM models
+that sharing when predicting transfers. A real runtime may not report a separate
+contention value, so use the run's transfer records to see how many bytes moved
+and how long they took. [Network modeling](/docs/explanations/network-modeling) explains the
+routes behind those predictions.
 
 ## Four activity-stage timings
 
@@ -63,13 +54,13 @@ That is different from PRISM's predicted CPU-interference slowdown.
 
 ## Accumulated stage time is not makespan
 
-For a completed workflow run, the control plane calculates observed makespan as:
+For a completed workflow run, AkôFlow calculates observed makespan as:
 
 ```text
 last completed task finish − first completed task start
 ```
 
-The run feed separately sums per-task runtime, queue, interference, and
+The run summary separately sums per-task runtime, queue, interference, and
 overhead, and separately sums observed transfer durations and transferred bytes.
 Those sums are **accumulated stage time**. Parallel work is counted once for each
 activity that experienced it.
@@ -84,14 +75,14 @@ the activity work and waiting occur across the whole run?"
 
 For completed execution traces, task cost is task runtime multiplied by the
 assigned resource's `pricePerSecond`. The trace also includes observed transfer
-cost. For an allocated cloud instance, the control plane adds the idle portion
+cost. For an allocated cloud instance, AkôFlow adds the idle portion
 of the resource active window plus persistent-disk price when the resource
 metadata has `diskPricePerGiBMonth`.
 
 This is an internal cost model. A provider invoice can differ because it may use
 different billing periods, minimum charges, taxes, discounts, network rules, or
 unmodeled services. Compare a plan's predicted cost with the run's observed
-modelled cost only when they use the same resource price and scope.
+modeled cost only when they use the same resource price and scope.
 
 ## Reading a plan-versus-observed gap
 
@@ -108,6 +99,6 @@ modelled cost only when they use the same resource price and scope.
 
 ## Related material
 
-- [PRISM and HEFT: search, objectives, and prediction](./prism-and-heft)
-- [Plan-versus-observed evidence and provenance](./evidence-and-provenance)
-- [30 GB network fan-out Showcase](../showcase/network-fanout)
+- [PRISM and HEFT: search, objectives, and prediction](/docs/explanations/prism-and-heft)
+- [Plan-versus-observed evidence and provenance](/docs/explanations/evidence-and-provenance)
+- [30 GB network fan-out Showcase](/docs/showcase/network-fanout)

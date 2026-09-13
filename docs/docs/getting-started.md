@@ -1,75 +1,56 @@
 ---
 id: getting-started
-title: Choose where to start
+title: Getting started with AkôFlow
 sidebar_label: Getting started
 slug: /getting-started
-description: Choose the shortest AkôFlow documentation path for installation, a first run, operations, concepts, or API integration.
+description: Understand AkôFlow, choose a supported path, and find the next workflow task.
 ---
 
-import useBaseUrl from '@docusaurus/useBaseUrl';
+# Getting started with AkôFlow
 
-# Choose where to start
+AkôFlow helps you define a scientific workflow, choose where its activities run, make a plan, and execute it. A workflow describes activities and data dependencies. A run records what happened when you executed the plan. You can compare planning choices after the first run.
 
-AkôFlow plans and executes scientific workflow DAGs on simulated or connected infrastructure, then preserves the plan, observed execution, data movement, artifacts, audit events, and provenance. This page is a map of the documentation; it does not teach an individual workflow.
+Start with a local environment to learn the interface. Connecting HPC, Kubernetes, or cloud resources requires the access and checks in their own guides.
 
-You do not need prior AkôFlow experience. Choose the path that matches what you want to accomplish.
+## Start with Desktop
 
-## I want to run AkôFlow for the first time
+1. [Install AkôFlow Desktop](/docs/installation) and complete its local environment checkup.
+2. [Run your first local workflow](/docs/guides/workflows/first-local-run) and inspect its result in Desktop.
+3. [Tour the interface](/docs/guides/interface-tour) or continue with [Workflow definitions](/docs/guides/workflows/definitions), [Planning](/docs/guides/workflows/planning), and [Execution](/docs/guides/workflows/executions).
 
-1. [Install AkôFlow](./installation) and verify that its daemon is available.
-2. [Run the first simulated workflow](./guides/workflows/first-run). The tutorial uses checked-in files, requires no cluster or cloud account, and ends with concrete activity and transfer checks.
-3. Use the [interface tour](./guides/interface-tour) when you want to learn where the same records appear in Desktop.
+The [checked-in SimGrid example](/docs/guides/workflows/first-run) verifies three activities and two transfers through a separately managed API endpoint. Use it after the local Desktop run if you want to explore simulation.
 
-Start with the simulation even if your eventual target is Kubernetes or HPC. It separates installation problems from credentials, network access, scheduler policy, and remote storage.
+## What is supported today
 
-## Continue after installation
+The local Desktop workflow has a verified run on Linux. The [Showcase](/docs/showcase) also has verified SimGrid and Kubernetes-on-Kind examples. The SLURM example exercises a local scheduler fixture; a run on an institutional cluster remains unverified.
 
-Follow [installation result checks](./installation#4-installation-result), then
-[register HPC / SLURM](./tutorials/register-hpc) or
-[connect Google Cloud](./tutorials/connect-cloud). Each tutorial includes the
-actual connection form, an API path, and expected results. For automation, start
-with [API connection setup](./tutorials/api-access).
+Google Cloud catalog and worker provisioning are implemented, but a complete live provision-and-destroy cycle has not been verified. AWS EC2 discovery and provisioning are unavailable; S3 transfers have local code tests but no verified AWS-account run. Check [cloud provider support](/docs/guides/infrastructure/cloud-support) before choosing a provider.
+
+## Connect another environment
+
+- [Register HPC / SLURM](/docs/tutorials/register-hpc) after receiving site-approved SSH and scheduler access.
+- [Connect Google Cloud](/docs/tutorials/connect-cloud) with a service account and a project you can inspect.
+- [Configure Kubernetes](/docs/guides/infrastructure/kubernetes) when you have cluster access.
+
+For direct API work, complete [API connection setup](/docs/tutorials/api-access) first.
 
 ## I already have AkôFlow running
 
 | Goal | Continue with |
 | --- | --- |
-| Define or import an activity DAG | [Workflow definitions](./guides/workflows/definitions) |
-| Generate PRISM or HEFT candidates, or place activities manually | [Plan a workflow](./guides/workflows/planning) |
-| Start a selected plan and inspect observed evidence | [Execute and monitor a workflow](./guides/workflows/executions) |
-| Configure simulated or connected infrastructure | [Environments](./guides/infrastructure/environments) |
-| Limit the resources and network offered to planning | [Execution scopes and network topologies](./guides/infrastructure/execution-scopes) |
-| Reproduce a complete example | [Workflow Showcase](./showcase/) |
-| Query lineage, evidence, or audit records | [Provenance and audit](./guides/data/provenance-and-audit) |
+| Define or import an activity DAG | [Workflow definitions](/docs/guides/workflows/definitions) |
+| Generate PRISM or HEFT candidates, or place activities manually | [Plan a workflow](/docs/guides/workflows/planning) |
+| Start a selected plan and inspect observed evidence | [Execute and monitor a workflow](/docs/guides/workflows/executions) |
+| Configure simulated or connected infrastructure | [Environments](/docs/guides/infrastructure/environments) |
+| Limit the resources and network offered to planning | [Execution scopes and network topologies](/docs/guides/infrastructure/execution-scopes) |
+| Reproduce a complete example | [Workflow Showcase](/docs/showcase) |
+| Trace how a result was produced | [Trace a result with provenance](/docs/guides/data/provenance) |
+| Investigate a connection check, resource discovery, or console action | [Inspect audit events](/docs/guides/data/audit-events) |
 
-## I am connecting infrastructure
+## Understand the records
 
-Choose the guide for the actual target. Provider and runtime support are not interchangeable.
-
-- [SimGrid first run](./guides/workflows/first-run): deterministic local simulation.
-- [Kubernetes real execution](./showcase/kubernetes-real-execution): container execution on the checked-in Kind example.
-- [HPC and SLURM](./guides/infrastructure/hpc-slurm): login nodes, partitions, shared storage, SSH proxies, and batch execution.
-- [Google Cloud](./guides/infrastructure/gcp): service-account credentials, catalog discovery, pricing, and Terraform provisioning.
-- [AWS](./guides/infrastructure/aws): S3 and S3-compatible data movement. AkôFlow v1.0 does not discover or provision EC2 capacity.
-
-Review the [cloud support matrix](./guides/infrastructure/cloud-capacity#provider-support-in-v10) before designing a cloud deployment.
-
-## I am automating through the API
-
-Read the [API overview](./reference/api-overview) for the base URL, authentication, content types, asynchronous operations, error envelope, and generated endpoint index. Use the [workflow specification](./internal/workflow-spec) for portable YAML authoring.
-
-The Desktop and HTTP API operate on the same persisted records. The API is preferable for repeatable experiments and integrations; Desktop is preferable for inspecting infrastructure, candidate Gantt charts, live activity state, and plan-versus-observed evidence.
-
-## I need to understand the model first
-
-Read [Core concepts](./concepts) for the vocabulary and record relationships. Continue to [Engine](./engine) for control-plane behavior and [Runtimes](./runtimes) for execution-provider boundaries.
-
-The central lifecycle is shown below.
-
-<img src={useBaseUrl('/img/architecture/lifecycle-overview.svg')} alt="AkôFlow lifecycle: an infrastructure boundary and workflow version produce candidate plans; one selected plan produces an execution run and observed evidence." />
-
-A plan is not an execution. It predicts an assignment within a frozen workflow and infrastructure boundary. A run records what happened when that plan was dispatched.
+Read [Core concepts](/docs/concepts) for workflow, environment, plan, run, artifacts, and provenance. For implementation details, see [Architecture internals](/docs/modules). The [API overview](/docs/reference/api-overview) and [workflow specification](/docs/internal/workflow-spec) are reference material for automation.
 
 ## When something fails
 
-Use [Troubleshooting](./guides/operations/troubleshooting) for daemon readiness, authentication, Docker and BuildKit checks, connection failures, and diagnostic collection. For remote targets, validate credentials and the environment connection before debugging the workflow itself.
+Use [Troubleshooting](/docs/guides/operations/troubleshooting) for server readiness, authentication, Docker and BuildKit checks, connection failures, and diagnostic collection. For remote targets, validate credentials and the environment connection before debugging the workflow itself.

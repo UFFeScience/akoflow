@@ -8,7 +8,7 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 
 # Execution scopes and network topology reference
 
-This reference defines the two documents that freeze the infrastructure universe used in planning: an `ExecutionScope` selects environment versions and a `NetworkTopology` describes data-transfer links between their resources. It is intended for API and YAML authors. For the Desktop sequence and a worked setup, use [Execution scopes and network topologies](../guides/infrastructure/execution-scopes).
+This reference defines the two API documents used to choose environment versions and describe data-transfer links for planning. An `ExecutionScope` selects the versions; a `NetworkTopology` defines links between their resources. For the Desktop sequence and a worked setup, use [Execution scopes and network topologies](/docs/guides/infrastructure/execution-scopes).
 
 The API accepts JSON, `application/yaml`, `application/x-yaml`, and `text/yaml` for both documents.
 
@@ -43,7 +43,7 @@ metadata:
 | `name` | Yes | string | — | Display name. |
 | `networkTopologyId` | No | string | `""` | Optional topology ID recorded with the scope. No database foreign key validates it at scope creation. |
 | `environmentVersionIds` | Yes | array of strings | — | One or more environment-version IDs. Duplicate IDs cause the insert transaction to fail. Each ID must already exist. |
-| `metadata` | No | object | `{}` | Additional descriptive data. |
+| `metadata` | No | object | omitted | Additional descriptive data. |
 
 The repository rejects a scope with an empty `id`, empty `name`, or no environment versions. A scope cannot be deleted after a schedule plan references it; this preserves the infrastructure context of existing plans.
 
@@ -77,7 +77,7 @@ metadata:
 | `version` | Yes | integer | — | Must be greater than zero. |
 | `executionScopeId` | Yes | string | — | Existing scope that owns this topology. |
 | `links` | No | array | `[]` | Directed link declarations. An empty topology is accepted, but it cannot model cross-resource transfer. |
-| `metadata` | No | object | `{}` | Additional model or provenance data. |
+| `metadata` | No | object | omitted | Additional model or provenance data. |
 
 ### Link fields
 
@@ -90,10 +90,10 @@ metadata:
 | `bandwidthBitsPerSecond` | Yes | number | — | Strictly positive bandwidth in **bits per second**. |
 | `latencySeconds` | No | number | `0` | One-link latency in seconds; cannot be negative. |
 | `pricePerByte` | No | number | `0` | Transfer cost per byte; cannot be negative. |
-| `bidirectional` | No | boolean | `true` in the database | Makes the declared link usable in both directions. Set it explicitly in portable YAML. |
-| `sharingPolicy` | No | string | database schema default `independent` | Policy passed to the SimGrid platform: `independent` and `fatpipe` become `FATPIPE`; every other value, including `shared` and an omitted API value, becomes `SHARED`. Use `shared` or `independent` explicitly. |
+| `bidirectional` | No | boolean | `false` when omitted from API input | Makes the declared link usable in both directions. Set it explicitly when reverse transfers are needed. |
+| `sharingPolicy` | No | string | `""` when omitted from API input | Policy passed to the SimGrid platform: `independent` and `fatpipe` become `FATPIPE`; every other value, including `shared` and an omitted API value, becomes `SHARED`. Use `shared` or `independent` explicitly. |
 | `maxConcurrentTransfers` | No | integer | `0` | Cannot be negative. It is stored with the topology; treat it as an explicit model limit when your runtime/planner supports it. |
-| `metadata` | No | object | `{}` | Link provenance or provider-specific context. |
+| `metadata` | No | object | omitted | Link provenance or provider-specific context. |
 
 The API validates topology identity, positive version, scope ID, link identity, different endpoints, positive bandwidth, and non-negative latency, price, and concurrency. SQLite also rejects duplicate source/target pairs in one topology.
 
@@ -115,7 +115,7 @@ The HEFT baseline finds a matching direct link for its transfer estimate. PRISM 
 
 ## API sequence
 
-The checked-in [SimGrid bundle](https://github.com/UFFeScience/akoflow/tree/main/examples/simulation) supplies a compatible `scope.yaml` and `topology.yaml`. Submit them in this order after creating the environment:
+The checked-in [SimGrid bundle](https://github.com/UFFeScience/akoflow/tree/v1.0.8/examples/simulation) supplies compatible `scope.yaml` and `topology.yaml` files. Complete [API connection setup](/docs/tutorials/api-access), enter a v1.0.8 repository checkout, and create the bundle's environment first. The [SimGrid first-run tutorial](/docs/guides/workflows/first-run) gives the full setup. Then submit these two files in order:
 
 ```bash
 curl --fail-with-body \
@@ -149,7 +149,7 @@ curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
 | Topology creation returns 422 | Check that `version >= 1`, `executionScopeId` is present, every link has distinct endpoints and positive bit/s bandwidth, and no value is negative. |
 | A reverse transfer has no modeled route | Set `bidirectional: true` or declare the reverse link explicitly. |
 | Transfer time is eight times too small or large | Verify units: links use bits/s; workflow data uses bytes. |
-| A resource never appears in a candidate plan | Check its environment version is in the scope, it is schedulable, and it has an enabled binding to the selected runtime. |
+| A resource never appears in a candidate plan | Check that its environment version is in the scope and it is schedulable; then inspect workflow constraints and the algorithm's placement. Runtime bindings are checked when execution starts, not by this planning filter. |
 | The scope cannot be deleted | Existing schedule plans reference it. Preserve it for evidence and create a new scope/version for a new experiment. |
 
-Related reference: [Environment YAML](./environment-yaml), [workflow YAML](../internal/workflow-spec), [SimGrid modeling](../guides/infrastructure/simgrid), and [planning](../guides/workflows/planning).
+Related reference: [Environment YAML](/docs/reference/environment-yaml), [workflow YAML](/docs/internal/workflow-spec), [SimGrid modeling](/docs/guides/infrastructure/simgrid), and [planning](/docs/guides/workflows/planning).

@@ -5,9 +5,11 @@ description: Configure a Kubernetes runtime, credential, namespace, resources, s
 
 # Connect a Kubernetes environment
 
-This how-to connects an existing Kubernetes cluster to AkôFlow for real container execution. It is for an operator who controls a namespace and its service account. The [Kind real-execution Showcase](../../showcase/kubernetes-real-execution) is the reproducible local reference implementation; use it before adapting these steps to a shared cluster.
+Use this guide to connect an existing Kubernetes cluster so AkôFlow can run container activities as Jobs. You need access to a namespace and its service account. The [Kind real-execution Showcase](/docs/showcase/kubernetes-real-execution) provides a local example to try before using a shared cluster.
 
-Use this runtime for container workloads that must become Kubernetes Jobs. Do not use it to simulate a cluster: use [SimGrid](./simgrid) for modeled infrastructure. Do not put a bearer token in a workflow, plan, repository, or screenshot.
+Use this runtime when container activities must become Kubernetes Jobs. For a
+modeled cluster, use [SimGrid](/docs/guides/infrastructure/simgrid). Keep bearer tokens out of workflows,
+plans, repositories, and screenshots.
 
 ## Prerequisites
 
@@ -81,22 +83,20 @@ For node discovery, a separate `ClusterRole` and `ClusterRoleBinding` granting `
 
 ## 2. Store the API credential outside the environment definition
 
-Generate a short-lived token and send it to the daemon's local Kubernetes-token endpoint. The example below deliberately avoids printing the token after it has been assigned to the shell variable.
+Complete [API connection setup](/docs/tutorials/api-access). Generate a short-lived Kubernetes token and stream it to the credential endpoint without placing it in a command argument or a temporary file. Run this in Bash so `pipefail` catches a failed token request:
 
 ```bash
-export AKOFLOW_API_URL='http://127.0.0.1:8080/akoflow-api'
-export AKOFLOW_API_TOKEN='<daemon API token>'
-
-KUBE_TOKEN="$(kubectl -n akoflow create token akoflow-runtime --duration=1h)"
-curl --fail-with-body \
-  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
-  -H 'Content-Type: application/json' \
-  --data "{\"id\":\"research-kubernetes\",\"token\":\"$KUBE_TOKEN\"}" \
-  "$AKOFLOW_API_URL/kubernetes-tokens/"
-unset KUBE_TOKEN
+set -o pipefail
+kubectl -n akoflow create token akoflow-runtime --duration=1h \
+  | jq -R '{id:"research-kubernetes",token:.}' \
+  | curl --fail-with-body \
+      -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+      -H 'Content-Type: application/json' --data-binary @- \
+      "$AKOFLOW_API_URL/kubernetes-tokens/" -o kubernetes-reference.json || exit 1
+jq -e '.credentialRef' kubernetes-reference.json
 ```
 
-The Kubernetes client accepts a `credentialRef` using `file:<path>` or `env:<variable>`, or a `bearerToken` in connection configuration. Prefer a daemon-managed local file reference such as `file:storage/credentials/kubernetes/research-kubernetes.token`; it keeps the token out of the versioned environment YAML. See [credentials and SSH service keys](../operations/credentials-and-ssh) for the daemon-side credential flow.
+Use the returned `credentialRef` in the connection you register. The Kubernetes client accepts `file:<path>` or `env:<variable>` references, or a `bearerToken` in connection configuration. The daemon-managed file reference keeps the token out of the versioned environment YAML.
 
 For a production cluster, provide the API server certificate through `configuration.caFile`. `insecureSkipTlsVerify: true` is appropriate for the disposable Kind example only; do not copy it to a trusted cluster configuration.
 
@@ -106,7 +106,7 @@ In Desktop, open **Infrastructure → Environments**, create a real Kubernetes e
 
 The relevant part of `examples/kind/environment.yaml` is:
 
-```yaml title="examples/kind/environment.yaml"
+```yaml title="Connection and resource excerpt from environment.yaml"
 connections:
   - id: kind-akoflow-connection
     type: kubernetes
@@ -152,7 +152,7 @@ For a manually maintained resource, set `metadata.kubernetesNode` or `providerId
 
 Use a PVC or NFS storage resource when the workflow needs a shared workspace. The Kind example defines a PVC and its runtime mount:
 
-```yaml title="examples/kind/environment.yaml"
+```yaml title="Storage excerpt from environment.yaml"
 storages:
   - id: kind-akoflow-data
     type: pvc
@@ -177,7 +177,7 @@ Before launching a production workflow, verify image pull access from the select
 
 In Desktop, test the connection, run discovery, inspect the resource inventory, then import a small workflow. Create a scope containing the environment version, generate or create a plan, choose **Real execution**, and inspect the completed run's activity logs and artifacts.
 
-For an equivalent API validation, follow the complete [Kind README](https://github.com/UFFeScience/akoflow/tree/main/examples/kind). It applies the cluster access and PVC, stores a short-lived token, and submits the environment, scope, topology, workflow, plan, and execution request in that order.
+For an equivalent API validation, follow the complete [Kind README](https://github.com/UFFeScience/akoflow/tree/v1.0.8/examples/kind). It applies the cluster access and PVC, stores a short-lived token, and submits the environment, scope, topology, workflow, plan, and execution request in that order.
 
 The exact Kind bundle completed on 2026-09-11 as `kind-dag-run-v8`. It created two Kubernetes Jobs, transferred 9 bytes through its workspace, and produced matching `result.txt` and `consumed.txt` files with checksum `sha256:cb064c1339ffa3d7777bcb0459de3dceddb9146156dde58065a4ac826b029aa7`.
 
@@ -201,4 +201,4 @@ kubectl -n akoflow get jobs,pods,services,pvc \
 
 Delete only the run resources you intend to remove. For the disposable Kind environment, use the Showcase cleanup command: `kind delete cluster --name akoflow`.
 
-Related material: [Kubernetes real execution](../../showcase/kubernetes-real-execution), [execution scopes](./execution-scopes), [storage](./storage), and [interactive console](../operations/interactive-console).
+Related material: [Kubernetes real execution](/docs/showcase/kubernetes-real-execution), [execution scopes](/docs/guides/infrastructure/execution-scopes), [storage](/docs/guides/infrastructure/storage), and [interactive console](/docs/guides/operations/interactive-console).

@@ -177,10 +177,10 @@ const verifiedRequestNotes = {
   "POST /akoflow-api/resources/": "The example adds an inventory-only resource to the SimGrid environment from the [first-run tutorial](/docs/guides/workflows/first-run); that environment version must already exist. Use a unique `id`: reusing one updates the resource and still returns `201 Created`. This route does not create a runtime binding, so the example is not a runnable planning resource. Add an enabled binding through a complete environment definition before selecting it in a plan.",
   "DELETE /akoflow-api/execution-scopes/{scopeId}/": "No body is required. A missing scope returns `404`; a scope referenced by a saved schedule plan cannot be deleted and returns `422`. Success returns `204 No Content`. Inspect plans before deleting a scope used by planning or execution.",
   "DELETE /akoflow-api/console-sessions/{sessionId}/": "No body is required. Close a session when its terminal work is finished; the route returns `204 No Content` on success and `404` for an unknown session. Closing the Desktop detail page alone does not close a daemon-owned session. See the [interactive console guide](/docs/guides/operations/interactive-console).",
-  "POST /akoflow-api/ssh-keys/": "`id` is required: 1–64 ASCII letters, digits, `_`, or `-`, starting with a letter or digit. `comment` is optional. The ID must not already exist. The daemon needs `ssh-keygen`.",
-  "POST /akoflow-api/ssh-keys/import/": "`id` follows the same SSH key ID rule and must not already exist. `privateKey` must contain a non-empty OpenSSH private key that `ssh-keygen -y` can read. The response returns public metadata, not the private key.",
-  "POST /akoflow-api/kubernetes-tokens/": "`id` is required: 1–63 lowercase letters, digits, or hyphens, starting with a letter or digit. `token` must be non-empty. The response returns a `credentialRef`; it does not echo the token.",
-  "POST /akoflow-api/cloud-credentials/": "`id` follows the Kubernetes credential ID rule. `provider` must be `gcp`, `aws`, or `azure`; `credential` must be valid JSON. Saving a credential does not validate provider access or make every provider operation available. The response returns a `credentialRef`.",
+  "POST /akoflow-api/ssh-keys/": "The tested example creates a new key. Choose an unused `id`: 1–64 ASCII letters, digits, `_`, or `-`, starting with a letter or digit. `comment` is optional. The daemon needs `ssh-keygen`.",
+  "POST /akoflow-api/ssh-keys/import/": "Send a unique `id` and your own `privateKey` as a JSON string. The ID follows the same SSH key ID rule; the key must be a non-empty OpenSSH private key that `ssh-keygen -y` can read. The response returns public metadata, not the private key. No example key is supplied because its bytes must come from your credential store.",
+  "POST /akoflow-api/kubernetes-tokens/": "Send an `id` and your own non-empty `token` as JSON strings. The ID must be 1–63 lowercase letters, digits, or hyphens, starting with a letter or digit. The response returns a `credentialRef`; it does not echo the token. Supply the token from your cluster's credential process.",
+  "POST /akoflow-api/cloud-credentials/": "Send `id`, `provider`, and `credential` with your actual provider credential. The ID follows the Kubernetes credential ID rule; `provider` must be `gcp`, `aws`, or `azure`, and `credential` must be valid JSON. Saving a credential does not validate provider access or make every provider operation available. The response returns a `credentialRef`.",
   "POST /akoflow-api/environments/{environmentId}/cloud-instances/": "`capacityTargetId` must identify an existing capacity target in this environment. This request queues a provisioning operation; inspect the returned operation status before treating a VM as ready.",
   "POST /akoflow-api/environments/{environmentId}/cloud-provisioning/": "`capacityTargetId` must identify an existing capacity target in this environment. This compatibility route queues the same provisioning operation; inspect the returned operation status.",
   "POST /akoflow-api/planning-sessions/": "Required: `id`, an existing `workflowVersionId`, `executionScopeId`, and `networkTopologyId`, plus at least one `algorithms` entry. Each algorithm ID must appear in `GET /planning-algorithms/`; duplicate IDs are rejected. The server sets status and timestamps. The example IDs require the SimGrid environment, scope, topology, and workflow to be registered first.",
@@ -203,10 +203,14 @@ const verifiedRequestNotes = {
   "POST /akoflow-api/machine-configuration-validations/": "Send `playbookYaml` containing the Ansible playbook text. Valid input returns `200 OK` with `valid: true` and a content hash; invalid input returns `422` with `valid: false` and errors. This validates structure only and does not run a playbook or provision a machine.",
   "POST /akoflow-api/machine-configurations/": "`name` is required. `id` is optional and generated when omitted. The server sets `ownership: user` and `enabled: true`. Create a version separately; this request does not validate or execute a playbook.",
   "POST /akoflow-api/machine-configurations/{configurationId}/versions/": "Create the configuration first, then use its returned ID as `configurationId` (the preceding example uses `example-machine-setup`). The path ID overrides any body `machineConfigurationId`. Send a positive `version` and valid `playbookYaml`; `id` is optional and `status` defaults to `draft`. The response is the stored configuration with its versions, not just the new version.",
-  "POST /akoflow-api/cloud-credentials/validate/": "Send `provider`, raw provider `credential` JSON, and the project/region fields required by that provider. This route performs a live catalog discovery and does not save the credential. The current server registers only a GCP catalog adapter; AWS or Azure validation returns `422` as unsupported even though those credential records can be stored.",
+  "POST /akoflow-api/cloud-credentials/validate/": "Send `provider`, your actual provider `credential` JSON, and the project/region fields required by that provider. This route performs a live catalog discovery and does not save the credential. The current server registers only a GCP catalog adapter; AWS or Azure validation returns `422` as unsupported even though those credential records can be stored. No generic credential body can establish access; use the [GCP guide](/docs/guides/infrastructure/gcp) for the current provider path.",
 };
 
 const verifiedRequestExamples = {
+  "POST /akoflow-api/ssh-keys/": {
+    id: "generated",
+    comment: "test",
+  },
   "POST /akoflow-api/resources/": {
     id: "inventory-only-node",
     environmentVersionId: "simulation-example-v1",
@@ -298,6 +302,10 @@ const verifiedRequestExamples = {
 };
 
 const requestWithoutStandaloneExample = new Set([
+  "POST /akoflow-api/ssh-keys/import/",
+  "POST /akoflow-api/kubernetes-tokens/",
+  "POST /akoflow-api/cloud-credentials/",
+  "POST /akoflow-api/cloud-credentials/validate/",
   "PUT /akoflow-api/instance/",
   "PUT /akoflow-api/environments/{environmentId}/",
   "PUT /akoflow-api/environment-connections/{connectionId}/",

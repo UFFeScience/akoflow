@@ -165,6 +165,8 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 
 128. **P1/P3 resolved in entry-layer plan/run narrative and diagram:** the authored-page inventory still matches all 61 current source pages. Home, Getting Started, and Core concepts now state the explicit execution action between selecting a plan and recording a run; the record-chain SVG labels that arrow and its accessible description follows the same sequence. Its unclosed arrow paths previously rendered as large filled triangles; the SVG now keeps paths unfilled, verified in a Chromium screenshot. At 390 × 844, the built Home → Getting Started → Installation → first local workflow links opened without page errors or horizontal overflow. The first-workflow tutorial names the separate **Execute plan** and **Start execution** controls. The final all-page new-reader pass remains open.
 
+129. **P3 resolved across architecture diagrams:** the record-chain inspection exposed the same inherited SVG fill behavior in nine other arrow groups. In particular, the request-dispatch branching paths rendered as large black triangles that obscured the branches. Arrow groups now set `fill="none"`, and the two standalone network arrows do the same. All 13 architecture SVGs parse with a title and description; Chromium previews of request dispatch, planning lifecycle, control-plane components, and network flow were inspected after the fix. The diagrams' wording and topology were not changed in this pass.
+
 ## Page inventory
 
 | Page | Current pass | Next review |

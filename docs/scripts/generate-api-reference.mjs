@@ -184,8 +184,8 @@ const verifiedRequestNotes = {
   "POST /akoflow-api/environments/{environmentId}/cloud-provisioning/": "`capacityTargetId` must identify an existing capacity target in this environment. This compatibility route queues the same provisioning operation; inspect the returned operation status.",
   "POST /akoflow-api/planning-sessions/": "Required: `id`, an existing `workflowVersionId`, `executionScopeId`, and `networkTopologyId`, plus at least one `algorithms` entry. Each algorithm ID must appear in `GET /planning-algorithms/`; duplicate IDs are rejected. The server sets status and timestamps. The example IDs require the SimGrid environment, scope, topology, and workflow to be registered first.",
   "POST /akoflow-api/schedule-plans/import/": "Send `{\"plan\": ...}` with a complete plan. Its workflow version, execution scope, topology, and resources must already exist; the server marks its source as `imported` and validates the schedule before saving it.",
-  "POST /akoflow-api/storages/{storageId}/promote-data/": "`path` must name an existing file within an approved storage root. `id` is optional; the server generates one when omitted. `workflowVersionId`, `runId`, and `activityId` are optional associations and should identify real records when supplied. The [storage guide](/docs/guides/infrastructure/storage) shows a minimal request.",
-  "POST /akoflow-api/storages/{storageId}/promote-artifact/": "`path` must name an existing `.sif` file within an approved storage root. `id`, `name`, `version`, and `scope` have server defaults. The [storage guide](/docs/guides/infrastructure/storage) shows the registration request; no file is uploaded or moved.",
+  "POST /akoflow-api/storages/{storageId}/promote-data/": "Replace the example `path` with an existing file within the selected storage's approved root. `id` is optional; the server generates one when omitted. `workflowVersionId`, `runId`, and `activityId` are optional associations and should identify real records when supplied. The [storage guide](/docs/guides/infrastructure/storage) shows the browsing step.",
+  "POST /akoflow-api/storages/{storageId}/promote-artifact/": "Replace the example `path` with an existing `.sif` file within the selected storage's approved root. `id`, `name`, `version`, and `scope` have server defaults. The [storage guide](/docs/guides/infrastructure/storage) shows the browsing step; no file is uploaded or moved.",
   "POST /akoflow-api/storages/{storageId}/downloads/": "`path` must name an existing file within an approved browse root; directories require the archive route. `id` is optional. The response is a ready download record: use its ID with `GET /storage-downloads/{downloadId}/content/` to stream the file.",
   "POST /akoflow-api/storages/{storageId}/checksum/": "`path` must name an existing file within an approved browse root. The server reads the file and returns a `sha256:`-prefixed checksum; it does not queue a background job.",
   "POST /akoflow-api/storages/{storageId}/copies/": "`path` must exist in the source storage, and `destinationStorageId` must identify a registered, writable storage. `id` is optional. The copy runs in the background at the same path in the destination. Inspect `GET /storage-downloads/{downloadId}/` until its status is `completed` or `failed`; `202 Accepted` does not mean the bytes have arrived.",
@@ -206,6 +206,14 @@ const verifiedRequestNotes = {
 };
 
 const verifiedRequestExamples = {
+  "POST /akoflow-api/storages/{storageId}/promote-data/": {
+    path: "/shared/project/result.csv",
+  },
+  "POST /akoflow-api/storages/{storageId}/promote-artifact/": {
+    path: "/shared/bin/model.sif",
+    name: "model",
+    version: "1.0.0",
+  },
   "POST /akoflow-api/artifacts/docker/": {
     artifactId: "busybox",
     version: "1.36",

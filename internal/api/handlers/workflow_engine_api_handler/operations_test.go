@@ -28,8 +28,10 @@ func TestMachineConfigurationDocumentationRequest(t *testing.T) {
 }
 
 type storageNavigatorStub struct {
-	err                                     error
-	deleted, promotedData, promotedArtifact bool
+	err                                           error
+	deleted, promotedData, promotedArtifact       bool
+	promotedDataPath, promotedArtifactPath        string
+	promotedArtifactName, promotedArtifactVersion string
 }
 
 func (s *storageNavigatorStub) List(context.Context, string) ([]domain.StorageResource, error) {
@@ -62,12 +64,16 @@ func (s *storageNavigatorStub) QueueCopy(_ context.Context, _, path, destination
 func (s *storageNavigatorStub) QueueArchive(_ context.Context, _, path, id string) (domain.DownloadRun, error) {
 	return domain.DownloadRun{ID: id, Path: path, Strategy: "archive"}, s.err
 }
-func (s *storageNavigatorStub) PromoteData(context.Context, string, string, string, string, string, string) error {
+func (s *storageNavigatorStub) PromoteData(_ context.Context, _, path, _, _, _, _ string) error {
 	s.promotedData = true
+	s.promotedDataPath = path
 	return s.err
 }
-func (s *storageNavigatorStub) PromoteArtifact(context.Context, string, string, string, string, string, string, string) error {
+func (s *storageNavigatorStub) PromoteArtifact(_ context.Context, _, path, _, name, version, _, _ string) error {
 	s.promotedArtifact = true
+	s.promotedArtifactPath = path
+	s.promotedArtifactName = name
+	s.promotedArtifactVersion = version
 	return s.err
 }
 func (s *storageNavigatorStub) IndexRuns(context.Context, string) ([]domain.IndexRun, error) {
@@ -131,6 +137,17 @@ func TestStorageHTTPHandlers(t *testing.T) {
 	}
 	if !storage.deleted || !storage.promotedData || !storage.promotedArtifact {
 		t.Fatalf("mutations = %#v", storage)
+	}
+}
+
+func TestStoragePromotionDocumentationRequests(t *testing.T) {
+	storage := &storageNavigatorStub{}
+	handler := &Handler{storage: storage}
+	path := map[string]string{"storageId": "registered-storage"}
+	data := callHandler(t, http.MethodPost, "/", `{"path":"/shared/project/result.csv"}`, path, handler.PromoteStorageData)
+	artifact := callHandler(t, http.MethodPost, "/", `{"path":"/shared/bin/model.sif","name":"model","version":"1.0.0"}`, path, handler.PromoteStorageArtifact)
+	if data.Code != http.StatusCreated || artifact.Code != http.StatusCreated || storage.promotedDataPath != "/shared/project/result.csv" || storage.promotedArtifactPath != "/shared/bin/model.sif" || storage.promotedArtifactName != "model" || storage.promotedArtifactVersion != "1.0.0" {
+		t.Fatalf("promotion request fields: data=%d artifact=%d storage=%#v", data.Code, artifact.Code, storage)
 	}
 }
 

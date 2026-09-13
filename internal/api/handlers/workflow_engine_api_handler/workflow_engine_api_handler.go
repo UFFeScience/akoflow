@@ -540,7 +540,13 @@ func (h *Handler) ArchiveStorageDirectory(w http.ResponseWriter, r *http.Request
 	writeJSON(w, http.StatusAccepted, v)
 }
 func (h *Handler) PromoteStorageData(w http.ResponseWriter, r *http.Request) {
-	var in struct{ Path, WorkflowVersionID, RunID, ActivityID, ID string }
+	var in struct {
+		Path              string `json:"path"`
+		WorkflowVersionID string `json:"workflowVersionId"`
+		RunID             string `json:"runId"`
+		ActivityID        string `json:"activityId"`
+		ID                string `json:"id"`
+	}
 	if !decode(w, r, &in) {
 		return
 	}
@@ -554,7 +560,14 @@ func (h *Handler) PromoteStorageData(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, http.StatusCreated, map[string]string{"id": in.ID})
 }
 func (h *Handler) PromoteStorageArtifact(w http.ResponseWriter, r *http.Request) {
-	var in struct{ Path, ID, Name, Version, Scope, ScopeID string }
+	var in struct {
+		Path    string `json:"path"`
+		ID      string `json:"id"`
+		Name    string `json:"name"`
+		Version string `json:"version"`
+		Scope   string `json:"scope"`
+		ScopeID string `json:"scopeId"`
+	}
 	if !decode(w, r, &in) {
 		return
 	}

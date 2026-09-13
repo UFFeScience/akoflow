@@ -37,36 +37,27 @@ AkôFlow Desktop lets you see your workflows, environments, plans, runs, and res
 | Provenance | Follow how a result was produced |
 | Audit | Inspect the history of operations |
 
-## Follow the ownership hierarchy
+## Follow a record
 
-Breadcrumbs show how records relate. A run belongs to a plan, and a plan belongs to a workflow. Select an earlier item in the breadcrumb to return to it.
+Breadcrumbs connect a run to its plan and workflow. Select an earlier item to return to that record.
 
 For example:
 
 <img src={useBaseUrl('/img/architecture/interface-ownership-hierarchy.svg')} alt="Workflow pages lead from workflow to plan, execution and activity. Infrastructure pages lead from environment through inventory and resource to provisioning and operation." />
 
-Use the back control below the breadcrumb to return to the logical parent. Its destination remains correct even when the page was opened from search or a notification.
-
-## Use Desktop or the API
-
-Some task guides describe both paths:
-
-- **AkôFlow Desktop** explains the controls, validation, progress, and resulting detail page.
-- **API** shows requests for an endpoint you manage directly.
-
-The API is useful for automation and reproducible experiments. Desktop helps you inspect and compare records. Check each guide's prerequisites before switching paths; the packaged Desktop manages its own local API credential.
+Use the back control below the breadcrumb to return to the parent record, including when you arrived through search or a notification.
 
 ## Find a record
 
-Press <kbd>⌘</kbd>+<kbd>K</kbd> on macOS, <kbd>Ctrl</kbd>+<kbd>K</kbd> on Windows or Linux, or select the search field in the title bar. With an empty field, Desktop lists navigation shortcuts such as **Workflow definitions**, **Planning sessions**, **Runs**, and **Provenance**. This is the fastest route when you know the product area but not its sidebar location.
+Press <kbd>⌘</kbd>+<kbd>K</kbd> on macOS, <kbd>Ctrl</kbd>+<kbd>K</kbd> on Windows or Linux, or select the search field. An empty search shows shortcuts to areas such as **Workflow definitions**, **Planning sessions**, and **Runs**.
 
-Once you enter text, the list shows matching records. A result identifies its record by title and ID, and may show a status and type; select it to open the corresponding record. Press <kbd>Enter</kbd> to open the first available result, or <kbd>Escape</kbd> to close the result list.
+Enter a name or ID to find records. Select a result or press <kbd>Enter</kbd> to open the first one; press <kbd>Escape</kbd> to close search.
 
 Open a result's detail page for its status and history. If Desktop says **Search is temporarily unavailable**, check the AkôFlow connection and try again.
 
 ## Global terminal
 
-Interactive commands open in the terminal panel at the bottom of the application. Closing a page does not close a remote session; close it from the panel when you finish.
+Interactive sessions open in the terminal panel at the bottom of the application. Closing a page does not close a remote session; close it from the panel when you finish.
 
 Open a session from a compatible resource, then use the panel to inspect its output. Export the log from the session detail page when you need a saved record. See [Interactive console](./operations/interactive-console) for prerequisites and recovery.
 

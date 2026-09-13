@@ -13,7 +13,7 @@ This tutorial runs one activity on your local machine. You will create a workflo
 
 ## 1. Check your local environment
 
-Open **Environments**. If the first-start checkup already created a local environment, open it. Otherwise, choose **New environment**, select **Local machine**, give it a name such as `Local check`, select **Test connection**, then **Save environment**.
+Open **Infrastructure → Environments**. If the first-start checkup already created a local environment, open it. Otherwise, choose **New environment**, select **Local machine**, give it a name such as `Local check`, select **Test connection**, then **Save environment**.
 
 On the environment page, select **Check now**. Continue when **Local machine** shows **online**. This check also makes the local resource available for planning.
 
@@ -31,7 +31,7 @@ Leave the other activity settings at their defaults and select **Create workflow
 
 ## 3. Choose the local environment
 
-Open **Execution scopes → New execution scope**. Name it `First local scope`, select your local environment, leave **Create the initial network topology** enabled, and select **Create execution scope**. A one-machine workflow needs no network links.
+Open **Infrastructure → Execution scopes** and choose **New execution scope**. Name it `First local scope`, select your local environment, leave **Create the initial network topology** enabled, and select **Create execution scope**. A one-machine workflow needs no network links.
 
 ## 4. Make and run a plan
 

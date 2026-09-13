@@ -1,6 +1,6 @@
 ---
 title: Manage an instance
-description: Configure an AkôFlow instance, export and import sanitized snapshots, switch instances, and reset local state.
+description: Configure an AkôFlow instance, manage sanitized snapshots, and reset its saved catalog.
 ---
 
 # Manage an instance
@@ -112,8 +112,10 @@ with status `423 Locked`. The sole write exception is `POST /instance-activation
 ## Factory reset
 
 :::danger Permanent local deletion
-Factory reset permanently removes the active AkôFlow catalog, environments, workflows, plans, runs, artifacts metadata, managed credentials and personal preferences. Export a snapshot first if any state must be retained. External SSH key files are retained only when they are outside the server-managed credential directory; the Desktop specifically notes that external SSH key files remain.
+Factory reset deletes the active database catalog, including environments, workflows, plans, runs, artifact metadata, and saved credential references. It also removes the server-managed Kubernetes token directory. It does **not** remove SSH private-key files, saved cloud credential files, or artifact files from disk. Export a snapshot first if any catalog state must be retained, and remove retained files separately when retiring the instance.
 :::
+
+The Desktop reset also clears local storage in the current browser profile, including its preferences and saved API token. Calling the API directly does not clear browser storage or other profiles. The Desktop confirmation currently describes all managed credentials as removed; the server behavior above is the limit to rely on.
 
 ### Using AkôFlow Desktop
 

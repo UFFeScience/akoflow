@@ -54,7 +54,7 @@ The authenticated root health check returns `ok`. Public preflight reports serve
 | `GET` | `/instances/default/export/` | Export the default instance |
 | `POST` | `/instances/import/` | Import an instance archive |
 | `POST` | `/instance-activations/{instanceId}/` | Activate an archived instance |
-| `POST` | `/factory-reset/` | Reset the active instance |
+| `POST` | `/factory-reset/` | Clear the active catalog and managed Kubernetes tokens; [retained files need separate cleanup](/docs/guides/operations/instance-management#factory-reset) |
 | `GET`, `PUT` | `/user-preferences/{clientId}/` | Read or save client preferences |
 
 ## Environments, connections, and credentials

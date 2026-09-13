@@ -111,6 +111,8 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 
 101. **P0 resolved in SimGrid route description:** the guide called the chosen path the “lowest-latency” route, implying payload-aware or latency-only choice. The SimGrid platform builder and PRISM compact router both sum link latency plus one-byte transmission time before applying the actual transfer volume. The guide now says route choice uses latency and bandwidth; the network explanation gives the one-byte rule and warns that a large payload could favor another path.
 
+102. **P0 resolved in artifact location claims:** the task guide and API overview called location records “verified bytes,” although `GET /artifact-locations/` only reads saved rows and does not probe the URI. The guide now distinguishes recorded URI/digest/`available` from a fresh storage check. It also states that a committed materialization requires both status and a matching verified digest, and that listing saved observations does not recheck destination bytes. The artifact task landing was aligned. The claims were checked against the domain `Committed()` predicate, list handlers, and repositories.
+
 ## Page inventory
 
 | Page | Current pass | Next review |
@@ -127,9 +129,9 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `explanations/planning.md` | Second read; linked scheduler comparison and removed abstract separation language | Recheck planning claims against coordinator |
 | `explanations/prism-and-heft.md` | Plain-language pass; cut 27% while preserving search, evaluation, cost, and cross-algorithm limits | Recheck algorithm claims against source |
 | `getting-started.md` | Entry-path reread; leads to Desktop first run and now states verified versus partial provider paths before remote setup | Recheck the entry flow on a clean supported host |
-| `guides/data/artifacts.md` | Short choice page preserving the old URL and routing storage, build, and location tasks | Check destinations in navigation |
+| `guides/data/artifacts.md` | Short choice page preserving the old URL and routing storage, build, and recorded-location tasks | Check destinations in navigation |
 | `guides/data/build-executable.md` | Docker/SIF API flow now captures build/run IDs, checks asynchronous status, and downloads the completed output; custom context remains qualified | Verify a live registry pull and SIF conversion |
-| `guides/data/artifact-locations.md` | Focused verified-byte and preparation-status procedure moved from the combined guide | Recheck materialization payloads after P0 contracts fix |
+| `guides/data/artifact-locations.md` | Focused catalog-location and preparation-status procedure; saved flags are distinguished from live byte checks | Recheck materialization payloads after P0 contracts fix |
 | `guides/data/provenance-and-audit.md` | Short choice page preserving the old URL and distinguishing the two record types | Check both destinations in navigation |
 | `guides/data/provenance.md` | Reading-order reread; result investigation now precedes detailed Explore/lineage/SQL controls, and SQL is optional | Recheck Desktop interactions against packaged app |
 | `guides/data/audit-events.md` | Reading-order reread; event investigation now precedes UI/API controls and duplicate event-category prose was cut | Recheck Desktop interactions against packaged app |

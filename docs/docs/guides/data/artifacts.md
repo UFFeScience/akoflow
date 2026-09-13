@@ -8,7 +8,7 @@ description: Build an executable, inspect its locations, or register an existing
 Executable artifacts are versioned definitions that a workflow can use. Choose the task you need:
 
 - [Build an executable from a Docker image](./build-executable) to register an image and produce a SIF file.
-- [Inspect artifact locations](./artifact-locations) to see verified bytes and preparation on a resource.
+- [Inspect artifact locations](./artifact-locations) to see recorded locations and preparation on a resource.
 - [Browse and manage storage](../infrastructure/storage) to find files, transfer them, or register an existing result or executable.
 
 To trace a scientific result back to its workflow activity, use [Trace a result with provenance](./provenance).

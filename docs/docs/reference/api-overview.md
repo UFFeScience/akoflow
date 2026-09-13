@@ -162,7 +162,7 @@ List queries accept endpoint-specific pagination and filters. For execution runs
 |---|---|---|
 | `GET` | `/artifacts/` | List executable artifact versions |
 | `POST` | `/artifacts/docker/` | Register a Docker source and SIF build specification |
-| `GET` | `/artifact-locations/` | List verified artifact locations |
+| `GET` | `/artifact-locations/` | List recorded artifact locations and their availability flags |
 | `GET`, `POST` | `/artifact-materializations/` | List or record materializations (`runId` filters list) |
 | `POST` | `/build-contexts/` | Upload multipart `context`, or register stored metadata |
 | `POST` | `/artifact-builds/` | Create an immutable build specification |

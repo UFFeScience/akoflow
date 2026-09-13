@@ -65,9 +65,35 @@ curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -H 'Content-Type: application/json' -X POST \
   "$AKOFLOW_API_URL/storages/hpc-scratch/checksum/" \
   -d '{"path":"/scratch/project-a/result.csv"}'
+
+# Archive a directory on the same storage
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  -H 'Content-Type: application/json' -X POST \
+  "$AKOFLOW_API_URL/storages/hpc-scratch/archives/" \
+  -d '{"path":"/scratch/project-a","id":"archive-project-a-1"}'
 ```
 
-The file-download request returns a ready record; fetch its ID through `GET /storage-downloads/{downloadId}/content/`. An archive starts as queued, writes a `.tar.gz` beside the directory, and becomes downloadable when `GET /storage-downloads/{downloadId}/` reports `ready`. A copy runs in the background at the same path in the destination storage; check that record for `completed` or `failed` before using the copy. The checksum request reads the file and returns its SHA-256 digest directly.
+The file-download request returns a `ready` record for the path; it does not freeze the file's bytes. The content endpoint opens that path when you fetch it. If the file can change, compare the downloaded file with a fresh checksum from the storage request above.
+
+```bash
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  "$AKOFLOW_API_URL/storage-downloads/download-result-1/content/" -o result.csv
+
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  "$AKOFLOW_API_URL/storage-downloads/copy-result-1/"
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  "$AKOFLOW_API_URL/storage-downloads/archive-project-a-1/"
+```
+
+Compare the downloaded file's SHA-256 with the `checksum` returned by the source request: use `sha256sum result.csv` on Linux, `shasum -a 256 result.csv` on macOS, or `Get-FileHash result.csv -Algorithm SHA256` in Windows PowerShell. The API checksum includes a `sha256:` prefix.
+
+The copy runs in the background at the same path in the destination storage; wait for `completed` before using it. The archive writes a `.tar.gz` beside the directory. When its record reports `ready`, fetch `/storage-downloads/archive-project-a-1/content/` to save the archive.
+
+```bash
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  "$AKOFLOW_API_URL/storage-downloads/archive-project-a-1/content/" \
+  -o project-a.tar.gz
+```
 
 ## Register an existing file
 

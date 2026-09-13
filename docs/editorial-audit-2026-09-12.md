@@ -121,6 +121,8 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 
 106. **P0/P1 resolved in Showcase command coverage:** the local direct API page submitted its bundle with a bearer token but omitted that token on the final run GET, causing `401` on a protected daemon. The GET now uses the shared API credential. The edge-cloud, network fan-out, and 50-core polling commands now fail on HTTP errors; the Showcase index distinguishes existing-daemon API setup from the self-started SLURM fixture. The shell syntax checker now covers the 11 JSX template-literal command blocks as well as 108 fenced blocks (119 total), closing a verifier blind spot; the contributor contract records its exact scope. These checks do not replace HTTP execution or final visual review.
 
+107. **P0/P1 resolved in storage download flow:** the guide created a ready file-download record but did not show how to fetch its bytes, poll copy/archive records, or retrieve the archive. It now follows the example IDs through those steps and gives platform-specific SHA-256 comparison commands. Source review found that `StartDownload` only stats the path, while `OpenDownload` opens it later, so a ready record is not an immutable snapshot; the guide and generated endpoint note now say so. Archive output and status were checked against the coordinator, handler routes, and storage tests. A live registered-storage execution remains open.
+
 ## Page inventory
 
 | Page | Current pass | Next review |
@@ -152,7 +154,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `guides/infrastructure/hpc-slurm.md` | Plain-language pass; shortened the opening and resource setup after correcting the API and proxy examples | Check provider claims against real cluster evidence |
 | `guides/infrastructure/kubernetes.md` | Credential-path reread; token example remains here and streams the secret without a shell variable, command argument, or temporary file | Recheck procedure against Kind bundle and shared-cluster RBAC |
 | `guides/infrastructure/simgrid.md` | Second read; corrected topology path, uses shared API setup and versioned checkout, and describes route choice and missing-route behavior for PRISM versus HEFT | Recheck procedure against pinned bundle |
-| `guides/infrastructure/storage.md` | Second read; Desktop capability gates match current browser; API IDs and paths are examples, promotion omits fictitious lineage IDs, and operation states match the storage coordinator | Recheck storage payloads against a real registered storage |
+| `guides/infrastructure/storage.md` | Second read; API examples now fetch file/archive bytes and poll copy/archive IDs; ready download is described as a path record, not frozen bytes | Recheck storage payloads against a real registered storage |
 | `guides/interface-tour.mdx` | Plain-language pass; removed repeated Desktop/API framing and shortened search/breadcrumb guidance; rendered page inspected at 390 × 844 | Recheck screenshots and controls during final visual audit |
 | `guides/operations/credentials-and-ssh.md` | Task-scope reread; now covers SSH keys and assignment only, with provider credentials routed to their own tutorials | Recheck current Desktop form and key lifecycle claims |
 | `guides/operations/instance-management.md` | Task-scope reread; browser-profile preferences moved out; identity, export/import, and reset remain grouped as instance lifecycle | Recheck complete snapshot behavior against a local archive |

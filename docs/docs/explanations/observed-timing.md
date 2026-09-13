@@ -24,8 +24,8 @@ can record the route, bytes moved, duration, and cost when the runtime reports
 them.
 
 The link bandwidth is in bits per second while dependency size is in bytes. For
-a single 10 GiB flow over a 10 Gbit/s link, the raw payload time is roughly
-eight seconds before latency. A multi-hop route adds latency for its hops and is
+a single 10 GiB flow over a 10 Gbit/s link, the raw payload time is about
+8.6 seconds before latency. A multi-hop route adds latency for its hops and is
 limited by its effective available bandwidth.
 
 ## Contention means simultaneous users of a bottleneck
@@ -54,13 +54,13 @@ That is different from PRISM's predicted CPU-interference slowdown.
 
 ## Accumulated stage time is not makespan
 
-For a completed workflow run, the control plane calculates observed makespan as:
+For a completed workflow run, AkôFlow calculates observed makespan as:
 
 ```text
 last completed task finish − first completed task start
 ```
 
-The run feed separately sums per-task runtime, queue, interference, and
+The run summary separately sums per-task runtime, queue, interference, and
 overhead, and separately sums observed transfer durations and transferred bytes.
 Those sums are **accumulated stage time**. Parallel work is counted once for each
 activity that experienced it.
@@ -82,7 +82,7 @@ metadata has `diskPricePerGiBMonth`.
 This is an internal cost model. A provider invoice can differ because it may use
 different billing periods, minimum charges, taxes, discounts, network rules, or
 unmodeled services. Compare a plan's predicted cost with the run's observed
-modelled cost only when they use the same resource price and scope.
+modeled cost only when they use the same resource price and scope.
 
 ## Reading a plan-versus-observed gap
 

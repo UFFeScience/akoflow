@@ -34,7 +34,7 @@ That distinction matters: the model describes a possible network penalty for a p
 
 ## Units and a small example
 
-For a 10 GiB data dependency over a 10 Gbit/s link, the raw serialization time is roughly eight seconds before latency and sharing. `10 GiB` is a byte volume; `10 Gbit/s` is a bit rate, so the rate is divided by eight before comparing it with bytes. The observed elapsed time can be higher because of setup, route selection, sharing, or provider behavior.
+For a 10 GiB data dependency over a 10 Gbit/s link, the raw serialization time is about 8.6 seconds before latency and sharing. `10 GiB` is a byte volume; `10 Gbit/s` is a bit rate. The observed time can be higher because of setup, routing, sharing, or provider behavior.
 
 Inspect a completed run's transfer records alongside the assignment and plan prediction. The [30 GB network fan-out Showcase](../showcase/network-fanout) provides a checked-in topology and workflow where these effects are intentional.
 

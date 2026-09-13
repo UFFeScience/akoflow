@@ -4,15 +4,15 @@ sidebar_label: PRISM and HEFT
 description: What the built-in schedulers optimize, what each prediction includes, and why neither algorithm is guaranteed to win an observed run.
 ---
 
-HEFT, PRISM Time, and PRISM Cost are alternatives for generating schedule-plan candidates. They are not measurements of a completed execution. Their output is useful only in the context of the frozen workflow, resources, topology, profiles, deadline, and budget of one planning session.
+HEFT, PRISM Time, and PRISM Cost propose different placements for a workflow. Each produces predictions from the same planning-session inputs; none measures a completed run.
 
 This explanation is for readers choosing or interpreting a built-in scheduler. For the procedure, see [Plan a workflow](../guides/workflows/planning). For the meaning of observed timing, see [evidence and provenance](./evidence-and-provenance).
 
 ## What is shared
 
-All three schedulers use the same workflow version, execution scope, resources, topology, activity profiles, deadline, and budget. They only place an activity where its CPU and memory requirements fit. A resource with multiple cores offers multiple scheduling lanes; an HPC partition or batch queue is treated as one slot.
+All three use the session's workflow, scope, topology, profiles, deadline, and budget. They place activities only where CPU and memory fit. A multicore resource offers several lanes; an HPC partition or batch queue counts as one slot.
 
-The base duration for a placement is selected from an activity-resource profile when one matches. Otherwise the planner uses the activity's `simulation.durationSeconds` when present, falling back to one second and then dividing by the resource's compute speedup. These inputs need to be credible before any comparison of algorithm quality is meaningful.
+For each placement, a matching activity-resource profile supplies the base duration. Otherwise the planner uses `simulation.durationSeconds`, or one second if absent, then divides by resource speedup. Poor duration inputs make any scheduler comparison unreliable.
 
 ## The three schedulers
 
@@ -22,41 +22,41 @@ The base duration for a placement is selected from an activity-resource profile 
 | PRISM Time | Beam search over ready activities and feasible resource/core placements; complete states are re-evaluated | Predicted makespan, then transfer time, network cost, used resources, and cost | Routed transfers, active-flow sharing, resource active-window cost, optional CPU interference, queue and frozen overhead metadata |
 | PRISM Cost | The same PRISM search and complete-state re-evaluation | Predicted cost, then network cost, transfer time, used resources, makespan, and queue | The same PRISM model, ranked exclusively for cost |
 
-The later values break ties. PRISM also keeps some alternatives for the other objective and for network-local placements, but its bounded search does not retain every possible placement.
+Later values break ties. PRISM retains some alternatives for the other objective and for network-local placements, but its bounded search cannot keep every placement.
 
 ## Ranking work before placement
 
-HEFT computes an upward rank from average activity duration and the longest successor rank. It then considers every feasible resource and every core for the next ranked activity, choosing the earliest resulting finish; equal makespans are broken by predicted cost.
+HEFT ranks activities by estimated work remaining, then tests feasible resources and cores for each activity. It chooses the earliest predicted finish, using cost to break ties.
 
-PRISM also constructs a rank, but its rank includes average communication time over routes in the frozen topology. Its ready frontier can branch to several ready activities, and each partial state can place the chosen activity on each feasible resource. The beam width and ready-branch limit bound that exploration; the registered defaults are 120 and 3. Larger values can retain more alternatives but increase planning work. The planning-session estimate reports the expected expanded states and calibrated duration before a PRISM run starts.
+PRISM's rank also includes estimated communication over topology routes. It can explore several ready activities and placements at once. Beam width and ready-branch limit cap the search; their defaults are 120 and 3. Raising them considers more alternatives but takes more planning work. The session estimate reports expected expanded states and duration before PRISM starts.
 
 ## Why PRISM has a detailed second evaluation
 
-The compact PRISM search needs to rank partial schedules quickly. After it reaches complete placement states, it removes duplicate placement signatures and re-evaluates each retained state with an event model. The evaluator starts tasks when their inputs and assigned lane are ready, applies frozen boot and container overhead, models active tasks on a resource with optional pairwise CPU-priority interference, and progresses transfer flows along the cached topology routes.
+PRISM ranks partial schedules quickly. For complete placements, it removes duplicates and runs a more detailed evaluation. Tasks start when their inputs and assigned lane are ready. The model includes startup overhead, optional CPU interference, and transfers along topology routes.
 
-For a network flow, the evaluator counts active users of each route hop as well as active flows sharing the sending or receiving resource. Bandwidth is shared among the relevant flows, and link latency is paid before payload movement. This is a prediction model, not an invocation of a real SimGrid process while the candidate is being generated.
+Overlapping flows share bandwidth at route links and resource endpoints; each link also adds latency. This predicts transfer behavior without running SimGrid during candidate generation.
 
-The resulting PRISM plan records evaluator metadata including its prediction confidence, network-path model, network-contention model, active-window cost model, and interference model. Prediction confidence reflects the fraction of activities with a simulation definition or matching activity profile; it does not establish that a future run will match the prediction.
+The plan records the models used and a confidence value. That value reflects how many activities have a simulation definition or matching profile, not how closely a future run will match.
 
 ## Cost and makespan are different quantities
 
-PRISM charges a resource by its active window in the detailed evaluation, then adds modeled transfer byte price. This can differ from HEFT's accumulated per-activity runtime price. Both are estimates derived from the frozen resource prices and assigned placement; neither is an invoice from a cloud provider.
+PRISM estimates resource cost from each active window and adds transfer byte cost. HEFT sums per-activity runtime cost. Both use the session's resource prices; neither is a provider invoice.
 
-PRISM Time ranks candidates by predicted makespan. PRISM Cost ranks by predicted cost. Neither objective asserts that the candidate is globally optimal, because beam search intentionally bounds the set of partial schedules that survive.
+PRISM Time ranks by predicted makespan; PRISM Cost ranks by predicted cost. Beam search does not guarantee a global optimum.
 
 ## Do not infer a winner from the algorithm name
 
-PRISM has a richer current network and interference model, but more modeled inputs do not guarantee a better observed run. A real or simulated execution can differ when activity durations, topology, provider queueing, storage paths, startup overhead, or actual transfer behavior differ from the frozen inputs. HEFT can therefore have a lower observed makespan for a particular scope and workflow. Conversely, PRISM can find a better plan when its additional modeled effects distinguish placements that HEFT treats similarly.
+PRISM models more network and interference effects, but a richer prediction need not lead to a faster run. Durations, queues, storage paths, startup, and transfers can differ from the session's inputs. Either scheduler may perform better for a particular workflow and scope.
 
-The current implementation does **not** send HEFT and PRISM candidates through one shared post-search evaluator before ranking across algorithms. Compare their stored predictions as algorithm-specific estimates, then execute selected plans under the same scope and inspect their observed traces. The evidence, rather than the algorithm label, establishes which plan performed better in that experiment.
+HEFT and PRISM do **not** pass through one shared evaluator before their predictions are compared. Treat their estimates as algorithm-specific. To compare outcomes, run selected plans under comparable conditions and inspect the observed traces.
 
 ## A disciplined comparison
 
 1. Use the same workflow version, scope, topology, activity profiles, deadline, and budget for every algorithm in the session.
-2. Inspect candidate assignments and predicted transfer/cost fields before selecting a plan; different placements may explain different outcomes.
+2. Inspect assignments, predicted transfers, and cost before selecting a plan.
 3. Run the selected alternatives under comparable runtime conditions.
 4. Compare observed makespan, task timing, transfers, and cost with the plan.
-5. Calibrate the workflow profiles or infrastructure model when a recurring prediction gap has a concrete cause; do not treat a single result as proof of algorithm superiority.
+5. Update profiles or infrastructure values when a recurring prediction gap has a known cause.
 
 ## Related material
 

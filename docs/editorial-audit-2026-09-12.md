@@ -109,6 +109,8 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 
 100. **P1 resolved across architecture and planning:** the architecture page called HEFT and PRISM candidates “comparable” although their predictions use different evaluators. The architecture now states that candidates share session inputs but use different prediction models. The planning guide tells readers to inspect estimates for selection and compare observed runs when judging performance. Both now align with the source-audited PRISM/HEFT explanation.
 
+101. **P0 resolved in SimGrid route description:** the guide called the chosen path the “lowest-latency” route, implying payload-aware or latency-only choice. The SimGrid platform builder and PRISM compact router both sum link latency plus one-byte transmission time before applying the actual transfer volume. The guide now says route choice uses latency and bandwidth; the network explanation gives the one-byte rule and warns that a large payload could favor another path.
+
 ## Page inventory
 
 | Page | Current pass | Next review |
@@ -120,7 +122,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `downloads.md` | Second read; platform limits and verification are explicit, and latest release was `v1.0.8` on 2026-09-12 | Recheck release links when version changes |
 | `engine.md` | Second read; implementation details remain in the developer section | Recheck claims against event-loop code |
 | `explanations/evidence-and-provenance.md` | Second read; plan predictions and optional observations remain distinct | Recheck against execution evidence after P0 fixes |
-| `explanations/network-modeling.md` | Plain-language/units pass; clarified data-versus-order dependency and corrected 10 GiB/10 Gbit/s example to 8.6 s | Recheck transfer claims against execution paths |
+| `explanations/network-modeling.md` | Plain-language/units pass; clarified data versus order, corrected 10 GiB/10 Gbit/s to 8.6 s, and explained the one-byte route-selection rule | Recheck transfer claims against execution paths |
 | `explanations/observed-timing.md` | Plain-language/units pass; uses run language, corrects the 8.6 s example, and preserves optional observed-field limits | Recheck metrics against trace aggregation |
 | `explanations/planning.md` | Second read; linked scheduler comparison and removed abstract separation language | Recheck planning claims against coordinator |
 | `explanations/prism-and-heft.md` | Plain-language pass; cut 27% while preserving search, evaluation, cost, and cross-algorithm limits | Recheck algorithm claims against source |
@@ -139,7 +141,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `guides/infrastructure/gcp.md` | Cloud-path reread; API checkpoint now uses the environment created by the connection tutorial; source-audited permissions and absent live validation remain explicit | Check provider claims against disposable-project evidence |
 | `guides/infrastructure/hpc-slurm.md` | Plain-language pass; shortened the opening and resource setup after correcting the API and proxy examples | Check provider claims against real cluster evidence |
 | `guides/infrastructure/kubernetes.md` | Credential-path reread; token example remains here and streams the secret without a shell variable, command argument, or temporary file | Recheck procedure against Kind bundle and shared-cluster RBAC |
-| `guides/infrastructure/simgrid.md` | Second read; corrected unlinked Desktop topology path and now uses shared API setup with a versioned checkout | Recheck procedure against pinned bundle |
+| `guides/infrastructure/simgrid.md` | Second read; corrected topology path, uses shared API setup and versioned checkout, and describes route choice without a false lowest-latency claim | Recheck procedure against pinned bundle |
 | `guides/infrastructure/storage.md` | Second read; Desktop capability gates match current browser; API IDs and paths are examples, promotion omits fictitious lineage IDs, and operation states match the storage coordinator | Recheck storage payloads against a real registered storage |
 | `guides/interface-tour.mdx` | Plain-language pass; removed repeated Desktop/API framing and shortened search/breadcrumb guidance; rendered page inspected at 390 × 844 | Recheck screenshots and controls during final visual audit |
 | `guides/operations/credentials-and-ssh.md` | Task-scope reread; now covers SSH keys and assignment only, with provider credentials routed to their own tutorials | Recheck current Desktop form and key lifecycle claims |

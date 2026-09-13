@@ -24,7 +24,9 @@ The portable workflow importer uses declared bytes in scheduling only when the s
 
 A `NetworkLink` is directed. It identifies source and target resources and can carry bandwidth in **bits per second**, latency in seconds, byte price, whether the reverse direction is available, a sharing group, and a transfer concurrency limit. A bidirectional link makes the same link available in reverse; it does not create a second independently configured route.
 
-PRISM precomputes routes from the frozen topology and includes communication in its candidate evaluation. Its shared-network evaluator can account for known overlapping flows on a route. HEFT's baseline scheduling path uses the direct matching link lookup. Neither behavior alone guarantees that one algorithm will produce the better observed run.
+PRISM precomputes routes from the frozen topology and includes communication in its candidate evaluation. The SimGrid platform and PRISM choose a route by summing each link's latency plus the time to transmit one byte. They apply the transfer's full byte volume after choosing the route. A large payload might therefore transfer faster over a different path.
+
+PRISM can model known overlapping flows on the chosen route. HEFT's baseline scheduling path uses a direct matching link. Neither model guarantees the better observed run.
 
 ## Planned route versus executed transfer
 

@@ -102,7 +102,7 @@ Bandwidth is in **bits per second**, while dependency sizes are in **bytes**. Fo
 
 For example, 100,000,000 bytes over 100,000,000 bit/s with 50 ms latency has a base transfer time of `8.05 s`. The SimGrid platform uses the same bandwidth and latency values. A data dependency creates a transfer only when its producer and consumer are assigned to different resources.
 
-`bidirectional: true` makes the link usable in both directions. `sharingPolicy: shared` is emitted as a shared SimGrid link; use `independent` or `fatpipe` only when the modeled link should not share bandwidth. A topology can contain several links: AkôFlow derives an available path between resources and uses the lowest-latency path according to the configured link latencies and bandwidths. A missing route is not a zero-cost transfer; fix the topology or keep the dependent activities on the same resource.
+`bidirectional: true` makes the link usable in both directions. `sharingPolicy: shared` is emitted as a shared SimGrid link; use `independent` or `fatpipe` only when the modeled link should not share bandwidth. AkôFlow selects a route through the available links using their latency and bandwidth, then models the transfer on that route. A missing route is not a zero-cost transfer; fix the topology or keep the dependent activities on the same resource. [Network modeling](../../explanations/network-modeling) explains how route choice and transfer size differ.
 
 Declare the data itself in the workflow:
 

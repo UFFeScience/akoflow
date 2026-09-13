@@ -166,7 +166,7 @@ export default function ApiEndpoint({
         <section className="akoflow-api-example">
           <div className="akoflow-api-example-title akoflow-api-status-tabs">
             <span>{successStatuses[0]}</span>
-            <span>{responseMediaType || "No content"}</span>
+            <span>{handler === "StreamConsoleSession" ? "WebSocket upgrade" : responseMediaType || "No content"}</span>
           </div>
           {responseExample ? (
             <>

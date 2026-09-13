@@ -632,7 +632,7 @@ function extractResponseContract(
   }
   if (endpoint.handler === "StreamConsoleSession")
     return {
-      mediaType: "application/websocket",
+      mediaType: null,
       type: "bidirectional terminal byte stream",
       example: null,
     };

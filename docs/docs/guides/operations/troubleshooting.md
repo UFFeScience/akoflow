@@ -86,9 +86,9 @@ curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
 
 ## 6. Diagnose terminal access
 
-An interactive terminal needs a resource that resolves to a usable runtime and connection. If opening fails:
+An interactive terminal needs a resource configured for interactive access and a working connection. If opening fails:
 
-1. verify the resource exists and has a runtime binding;
+1. verify the resource exists and supports interactive access;
 2. verify its connection health;
 3. verify SSH key assignment and remote authorization;
 4. check **Audit** for `console.*` events;

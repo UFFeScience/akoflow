@@ -4,14 +4,14 @@ import styles from "./InfrastructureWalkthrough.module.css";
 export function ConnectionPath() {
   return (
     <figure className={styles.figure}>
-      <div className={styles.path} role="img" aria-label="Desktop asks the daemon to open a terminal through a connection and optional bastion to the selected resource">
+      <div className={styles.path} role="img" aria-label="Desktop asks the AkôFlow server to open a terminal on the selected resource through its saved connection">
         <Box eyebrow="Client" title="AkôFlow Desktop" detail="Select resource" />
         <Arrow label="HTTPS / WS" />
-        <Box eyebrow="Control plane" title="AkôFlow daemon" detail="Resolve runtime + connection" />
+        <Box eyebrow="Server" title="AkôFlow server" detail="Use saved connection" />
         <Arrow label="SSH + proxy" />
-        <Box eyebrow="Remote" title="Login node" detail="PTY and audited session" />
+        <Box eyebrow="Remote" title="Selected resource" detail="Terminal session" />
       </div>
-      <figcaption>The Desktop does not SSH directly. The daemon resolves the selected resource and applies its credential, host key, and proxy route.</figcaption>
+      <figcaption>AkôFlow opens the terminal through the selected resource's saved connection, including its SSH key and proxy route when configured.</figcaption>
     </figure>
   );
 }

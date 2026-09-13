@@ -12,7 +12,7 @@ Use the console to inspect a connected resource or run a short diagnostic comman
 - a **console command** runs one command, records stdout, stderr and exit status, and returns a durable command record;
 - an **interactive session** opens a remote terminal for a longer conversation.
 
-Both require a resource with a usable runtime and connection. AkôFlow records these operations in the audit trail.
+Both require a resource configured for interactive access and a working connection. AkôFlow records these operations in the audit trail.
 
 <ConnectionPath />
 
@@ -30,7 +30,7 @@ Switching tabs keeps the remote session open. Use **Close session** when you fin
 
 ### When the terminal action is unavailable
 
-The action appears only after AkôFlow can resolve all three layers: a resource, a runtime binding that supports interactive execution, and a usable connection/credential. Check the resource health and binding first. For an HPC cluster, select the login node rather than an abstract cluster or a batch-only partition. For a proxied site, the daemon must use the connection that contains the proxy route.
+The action appears only for a resource configured for interactive access with a usable connection and credential. Check the resource and connection health first. For an HPC cluster, select the login node rather than the cluster or a batch-only partition. For a proxied site, use the connection with the proxy route.
 
 ## Open and manage a session through the API
 
@@ -132,7 +132,7 @@ Command creation returns `422` for an unknown or unbound resource, missing input
 ## Access and safety
 
 - Authorize the Engine-managed public key on every SSH hop before opening a session.
-- Select a resource with a usable runtime binding and connection. A resource existing in inventory is not by itself sufficient.
+- Select a resource configured for interactive access with a working connection. An inventory record alone is not sufficient.
 - Imported instance snapshots are read-only; opening, writing to, or closing a session is blocked with `423 Locked`.
 - Terminal logs may contain command output and secrets printed by programs. Treat exported logs as sensitive operational data.
 - Close sessions when finished; closing the detail page alone does not close a daemon-owned session.

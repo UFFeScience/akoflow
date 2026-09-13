@@ -131,12 +131,12 @@ If switching says the daemon did not return:
 
 ## 10. Gather evidence safely
 
-Collect IDs, timestamps, status/failure fields, relevant execution logs, connection health history, audit events and provenance queries. Redact Bearer tokens, private keys, provider credential JSON, sensitive environment variables and secrets printed by commands.
+Collect IDs, timestamps, failure details, and the run or operation logs for the failed step. For connection checks, discovery, or console actions, include the relevant Audit events. Use Provenance for workflow and data evidence. Redact bearer tokens, private keys, provider credentials, and secrets printed by commands.
 
 Useful endpoints:
 
 ```bash
-# Durable operational events
+# Failed connection, discovery, and console events
 curl --fail-with-body --get -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   --data-urlencode 'outcome=failed' \
   --data-urlencode 'limit=100' \

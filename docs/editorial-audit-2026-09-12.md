@@ -189,6 +189,8 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 
 140. **P0 resolved in plan-creation response:** `POST /schedule-plans/` displayed `CreatePlanRequest` as its response, including the submitted workflow, resources, scope, and topology. The handler actually saves and returns only `request.Plan`, after filling its topology ID when needed. The generated page now shows `domain.SchedulePlan` and says that prediction values are saved without recalculation. Generation rejects future success-response types ending in `Request`. This fixes one endpoint contract; the field-level review of all 125 pages remains open.
 
+141. **P1 resolved in troubleshooting evidence:** the final checklist asked for Audit events as general operational evidence and labeled `/audit-events/` as durable operational events. Current emitters cover only connection health, resource discovery, and console actions, so the page now sends readers to the run or operation record for the failed step, Provenance for scientific evidence, and Audit only for its actual emitters. The API overview route label uses that same scope. Handler and emitter call sites were checked; the final all-page audit remains open.
+
 ## Page inventory
 
 | Page | Current pass | Next review |
@@ -231,7 +233,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `guides/operations/find-records.md` | Desktop/API search procedure, result fields, limits, and empty-result recovery | Recheck UI behavior against Desktop |
 | `guides/operations/follow-notifications.md` | Audit-scope reread; recovery uses each operation's owning record, with Audit limited to its actual emitters | Recheck UI behavior against Desktop |
 | `guides/operations/server-instance.md` | Second read; corrected invalid tunnel command, simplified server language, and preserved HTTP failure through jq | Recheck release assets when version changes |
-| `guides/operations/troubleshooting.md` | Fourth read; root health authentication and HTTP-error exits are consistent | Recheck other diagnostic claims after P0 fixes |
+| `guides/operations/troubleshooting.md` | Fifth read; evidence collection now separates run/operation records, Provenance, and actual Audit emitters | Recheck other diagnostic claims after P0 fixes |
 | `guides/workflows/definitions.md` | Third read; API list, detail, and export now fail on HTTP errors | Recheck payload against importer after P0 contracts fix |
 | `guides/workflows/executions.md` | Fourth read; run detail now mentions conditional infrastructure/data/artifact families and API requests fail on HTTP errors | Recheck other runtimes against their own guides |
 | `guides/workflows/first-run.md` | Claim reread; fixed-plan submission is described as validation and save, without falsely promising prediction recalculation | Keep the SimGrid API example aligned with its versioned bundle |
@@ -239,7 +241,7 @@ This is an iteration ledger, not a completion certificate. The first pass read a
 | `installation.md` | Third entry-path read; duplicate Windows asset caveat removed; Desktop checkup remains central | Verify clean-host and cross-platform installation |
 | `internal/workflow-spec.md` | Second read; lead example now uses one execution mode and marks script paths as prerequisites | Check every field contract against current importer |
 | `modules.md` | Developer detail remains in the architecture section; planning candidates now distinguish shared inputs from algorithm-specific predictions | Recheck claims against daemon composition |
-| `reference/api-overview.md` | Sixth read; artifact links no longer promise a live byte check; 124 listed method/path pairs match the current Go router | Check field and response contracts against current handlers and schemas |
+| `reference/api-overview.md` | Seventh read; Audit route label now names its actual emitters; 124 listed method/path pairs match the current Go router | Check field and response contracts against current handlers and schemas |
 | `reference/environment-yaml.md` | Fourth read; binding fields are separate from S3/GCS limits, and browser credential exceptions remain qualified | Continue field-level schema contract audit |
 | `reference/execution-scopes-and-topologies.md` | Claim pass; clarified API prerequisites and the actual omitted link direction/sharing values | Check contracts against current handlers and schemas |
 | `reference/feature-coverage.md` | Third read; route map now serves the reader, with its maintainer update rule in the quality plan | Check contracts against current handlers and schemas |

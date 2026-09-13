@@ -49,7 +49,7 @@ The authenticated root health check returns `ok`. Public preflight reports serve
 | `GET`, `PUT` | `/instance/` | Read or save installation identity/configuration |
 | `GET` | `/preflight/` | Report daemon, Docker, and BuildKit readiness |
 | `GET` | `/search/` | Global search |
-| `GET` | `/audit-events/` | Filter operational audit events |
+| `GET` | `/audit-events/` | Filter recorded connection, discovery, and console events |
 | `GET` | `/instances/` | List archived instances |
 | `GET` | `/instances/default/export/` | Export the default instance |
 | `POST` | `/instances/import/` | Import an instance archive |

@@ -153,6 +153,19 @@ func (c *Catalog) Validate(
 	return adapter.Discover(ctx, connection, credential)
 }
 
+func (c *Catalog) CheckAccess(ctx context.Context, connection domain.EnvironmentConnection, credential []byte) error {
+	provider := strings.ToLower(strings.TrimSpace(stringValue(connection.Configuration, "provider")))
+	adapter := c.providers[provider]
+	if adapter == nil {
+		return fmt.Errorf("cloud provider %q is not supported", provider)
+	}
+	validator, ok := adapter.(ports.CloudCredentialValidator)
+	if !ok {
+		return fmt.Errorf("cloud provider %q cannot validate credentials", provider)
+	}
+	return validator.ValidateCredential(ctx, connection, credential)
+}
+
 func stringValue(values map[string]any, key string) string {
 	if values == nil {
 		return ""

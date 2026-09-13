@@ -9,6 +9,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"net/url"
 	"path"
@@ -17,6 +18,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	apirequests "github.com/UFFeScience/akoflow/internal/api/requests"
@@ -150,6 +152,8 @@ type Handler struct {
 	cloud            ports.CloudConfigurationStore
 	cloudOperations  ports.CloudOperationStore
 	cloudCatalog     ports.CloudCatalog
+	cloudRefreshMu   sync.Mutex
+	cloudRefreshing  map[string]bool
 	cloudProvisioner ports.CloudProvisioner
 	cloudCredentials *cloudcredential.Manager
 	instanceArchive  ports.InstanceArchive
@@ -1582,7 +1586,7 @@ func (h *Handler) ValidateCloudCredential(w http.ResponseWriter, r *http.Request
 	if !decode(w, r, &request) {
 		return
 	}
-	result, err := h.cloudCatalog.Validate(r.Context(), domain.EnvironmentConnection{
+	err := h.cloudCatalog.CheckAccess(r.Context(), domain.EnvironmentConnection{
 		Type: domain.ConnectionCloud,
 		Configuration: map[string]any{
 			"provider": request.Provider, "projectId": request.ProjectID, "region": request.Region,
@@ -1593,15 +1597,46 @@ func (h *Handler) ValidateCloudCredential(w http.ResponseWriter, r *http.Request
 		return
 	}
 	writeJSON(w, http.StatusOK, map[string]any{
-		"valid": true, "provider": result.Provider, "project": result.Project,
-		"region": result.Region, "machineCount": len(result.Machines),
-		"imageCount": len(result.Images), "diskCount": len(result.Disks),
+		"valid": true, "provider": request.Provider, "project": request.ProjectID,
+		"region": request.Region, "catalogStatus": "not_discovered",
 	})
 }
 
 func (h *Handler) RefreshCloudCatalog(w http.ResponseWriter, r *http.Request) {
 	if h.cloudCatalog == nil {
 		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("cloud catalog is unavailable"))
+		return
+	}
+	if r.URL.Query().Get("async") == "true" {
+		environmentID := strings.TrimSpace(r.PathValue("environmentId"))
+		if environmentID == "" {
+			writeError(w, http.StatusBadRequest, fmt.Errorf("environment id is required"))
+			return
+		}
+		h.cloudRefreshMu.Lock()
+		if h.cloudRefreshing == nil {
+			h.cloudRefreshing = make(map[string]bool)
+		}
+		alreadyRunning := h.cloudRefreshing[environmentID]
+		if !alreadyRunning {
+			h.cloudRefreshing[environmentID] = true
+		}
+		h.cloudRefreshMu.Unlock()
+		if !alreadyRunning {
+			go func() {
+				defer func() {
+					h.cloudRefreshMu.Lock()
+					delete(h.cloudRefreshing, environmentID)
+					h.cloudRefreshMu.Unlock()
+				}()
+				ctx, cancel := context.WithTimeout(context.Background(), 5*time.Minute)
+				defer cancel()
+				if _, err := h.cloudCatalog.Discover(ctx, environmentID); err != nil {
+					log.Printf("cloud catalog discovery for environment %q failed: %v", environmentID, err)
+				}
+			}()
+		}
+		writeJSON(w, http.StatusAccepted, map[string]any{"status": "running", "environmentId": environmentID})
 		return
 	}
 	result, err := h.cloudCatalog.Discover(r.Context(), r.PathValue("environmentId"))

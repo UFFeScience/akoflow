@@ -47,7 +47,7 @@ The server stores the credential separately and saves its reference with the env
 
 ## 2. Inspect the cloud environment
 
-After saving, open the environment's **Cloud capacity** tab. Check that catalog synchronization returned machines, compatible images, and disks. Refresh the catalog if it is absent or stale. AkôFlow reads machine types from your project and public images from the project itself plus `ubuntu-os-cloud`, `debian-cloud`, and `rocky-linux-cloud`.
+After saving, catalog synchronization runs in the background. Open the environment's **Cloud capacity** tab and check for machines, compatible images, and disks once it completes. Refresh the catalog if it is absent or stale. AkôFlow reads machine types from your project and public images from the project itself plus `ubuntu-os-cloud`, `debian-cloud`, and `rocky-linux-cloud`.
 
 If refresh fails, check the daemon log before changing the credential. A `403` normally identifies a disabled API or missing IAM permission; an empty price field with otherwise valid machines normally points to the Cloud Billing API.
 

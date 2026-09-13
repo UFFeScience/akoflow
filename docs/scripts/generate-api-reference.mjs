@@ -87,6 +87,7 @@ const groupMetadata = {
 };
 
 const queryDescriptions = {
+  async: "Set to `true` to start cloud catalog discovery in the background and return `202 Accepted` immediately. Repeat requests while it is running do not start another discovery.",
   connectionId: "Limit results to this environment connection.",
   cursor: "Opaque cursor returned by the preceding page.",
   depth: "Maximum lineage traversal depth.",
@@ -178,8 +179,8 @@ const checkedResponseShapes = {
     },
   },
   ValidateCloudCredential: {
-    example: { valid: true, provider: "gcp", project: "project-id", region: "region", machineCount: 0, imageCount: 0, diskCount: 0 },
-    note: "A `200 OK` response has `valid: true`, but any catalog count can be zero. Check the returned categories before creating a capacity target.",
+    example: { valid: true, provider: "gcp", project: "project-id", region: "region", catalogStatus: "not_discovered" },
+    note: "A `200 OK` response verifies authentication and access to the Compute Engine project. It does not discover machines, images, disks, or prices. Save the environment and refresh its cloud catalog separately.",
   },
   TestEnvironmentConnection: {
     example: { healthy: true, message: "string" },
@@ -304,7 +305,7 @@ const verifiedRequestNotes = {
   "POST /akoflow-api/workflow-definition-actions/duplicate/{workflowId}/": "Send a non-empty new `name`; `namespace` is optional and otherwise inherited. The source workflow must exist. AkôFlow generates new workflow and activity IDs from the new name and returns the independent definition with `201 Created`; an ID collision or invalid name returns `422`.",
   "POST /akoflow-api/planning-sessions/{sessionId}/candidates/{candidateId}/select/": "The candidate must belong to this session and be feasible. No JSON body is required. A successful selection returns the saved schedule plan with `201 Created` and records the selected IDs on the session. The API permits selecting before the session completes; wait for final ranking unless choosing an early candidate intentionally.",
   "POST /akoflow-api/planning-sessions/{sessionId}/cancel/": "No JSON body is required. Cancelling a queued or running session marks its algorithm runs and session as cancelled and requests cancellation of active work; success returns `204 No Content`. Cancelling an already-cancelled session also returns `204`. A missing, completed, or failed session returns `409 Conflict`, not `404`.",
-  "POST /akoflow-api/environments/{environmentId}/cloud-catalog/refresh/": "Discovers the catalog using the saved cloud connection for this environment and returns the discovered catalog with `200 OK`. This is a live provider call, not a VM provisioning request. A discovery error returns `422`; `GET /environments/{environmentId}/cloud-catalog/` returns `404` until a catalog has been synchronized.",
+  "POST /akoflow-api/environments/{environmentId}/cloud-catalog/refresh/": "Discovers the catalog using the saved cloud connection. Without `async`, returns the catalog with `200 OK` or an error with `422`. With `async=true`, returns `202 Accepted` immediately and runs discovery in the background. Repeated async requests for the same environment while discovery is active do not start another job. `GET /environments/{environmentId}/cloud-catalog/` returns `404` until a catalog has been synchronized. This is not a VM provisioning request.",
   "POST /akoflow-api/environments/{environmentId}/cloud-capacity-targets/": [
     "Use an existing cloud environment with a cloud runtime. Send `name`, `providerMachineType`, and `imageReference`. The server supplies an omitted `id`, sets `environmentId` from the path, and enables the target.",
     "Choose the provider-specific region, image, machine type, and network policy using the [GCP guide](/docs/guides/infrastructure/gcp). Set `configuration.projectId` to the validated project; Terraform reads it from the target, not the connection. The built-in worker requires `amd64`. Set `fixedZone` if needed; otherwise Terraform uses the first active zone in the region. The stored `zonePolicy` does not affect that choice. Set approved `configuration.sshSourceRanges` before provisioning; otherwise the Terraform target defaults SSH ingress to `0.0.0.0/0`.",

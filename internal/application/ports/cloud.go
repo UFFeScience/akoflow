@@ -52,6 +52,7 @@ type CloudCredentialValidator interface {
 type CloudCatalog interface {
 	Discover(context.Context, string) (domain.CloudCatalog, error)
 	Cached(context.Context, string) (*domain.CloudCatalog, error)
+	CheckAccess(context.Context, domain.EnvironmentConnection, []byte) error
 	Validate(context.Context, domain.EnvironmentConnection, []byte) (domain.CloudCatalog, error)
 }
 

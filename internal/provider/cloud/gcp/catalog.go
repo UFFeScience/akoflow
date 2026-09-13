@@ -47,8 +47,23 @@ func (c *Catalog) ValidateCredential(ctx context.Context, connection domain.Envi
 	if err := json.Unmarshal(credential, &account); err != nil {
 		return fmt.Errorf("decode GCP service account: %w", err)
 	}
-	_, err := c.accessToken(ctx, account)
-	return err
+	project := configString(connection.Configuration, "projectId")
+	if project == "" {
+		project = account.ProjectID
+	}
+	if project == "" {
+		return fmt.Errorf("GCP project id is required")
+	}
+	token, err := c.accessToken(ctx, account)
+	if err != nil {
+		return err
+	}
+	var response struct{}
+	endpoint := fmt.Sprintf("%s/projects/%s", c.computeEndpoint, url.PathEscape(project))
+	if err := c.get(ctx, token, endpoint, &response); err != nil {
+		return fmt.Errorf("check Compute Engine access for project %s: %w", project, err)
+	}
+	return nil
 }
 
 type serviceAccount struct {

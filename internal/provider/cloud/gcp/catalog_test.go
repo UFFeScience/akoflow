@@ -62,6 +62,32 @@ func TestDiscoverNormalizesLiveCatalog(t *testing.T) {
 	}
 }
 
+func TestValidateCredentialChecksProjectWithoutDiscoveringCatalog(t *testing.T) {
+	var projectCalls, catalogCalls int
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		switch {
+		case r.URL.Path == "/token":
+			_, _ = w.Write([]byte(`{"access_token":"token"}`))
+		case r.URL.Path == "/projects/science":
+			projectCalls++
+			_, _ = w.Write([]byte(`{}`))
+		default:
+			catalogCalls++
+			http.NotFound(w, r)
+		}
+	}))
+	defer server.Close()
+	catalog := New(server.Client())
+	catalog.computeEndpoint = server.URL
+	err := catalog.ValidateCredential(context.Background(), domain.EnvironmentConnection{
+		Configuration: map[string]any{"projectId": "science"},
+	}, testCredential(t, server.URL+"/token"))
+	if err != nil || projectCalls != 1 || catalogCalls != 0 {
+		t.Fatalf("access check err=%v projectCalls=%d catalogCalls=%d", err, projectCalls, catalogCalls)
+	}
+}
+
 func TestApplyPricesCombinesMachineAndDiskSKUs(t *testing.T) {
 	result := domain.CloudCatalog{
 		Region:   "us-central1",

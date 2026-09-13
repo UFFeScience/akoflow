@@ -47,9 +47,10 @@ screen. Never include the JSON credential in a workflow or a documentation captu
 
 ### 3. Test and save
 
-Choose **Test connection**. The daemon authenticates and reads the compute
-catalog. A successful result reports **GCP access verified**, with machine,
-image and disk-type counts. Review the returned message; saving remains disabled
+Choose **Test connection**. The daemon authenticates the service account and
+checks access to the Compute Engine project without loading the full catalog.
+A successful result reports that authentication and project access were verified.
+Review the returned message; saving remains disabled
 until the test succeeds.
 
 If the test reports a disabled Compute Engine API, use the displayed activation
@@ -57,7 +58,8 @@ link for the correct project, enable it with an authorized account, and retry.
 If it times out or returns an access error, correct the cause before saving.
 
 Choose **Save environment**. The application stores the credential separately,
-saves only its reference in the environment, and requests a catalog refresh.
+saves only its reference in the environment, and starts catalog discovery in the
+background. The save action does not wait for machine, image, disk, or price data.
 Open the saved environment and inspect **Cloud capacity**. If saving succeeded
 but refresh failed, reopen the existing environment and refresh there; do not
 create a duplicate just to retry synchronization.
@@ -93,10 +95,9 @@ jq . gcp-validation.json
 jq -e '.valid == true' gcp-validation.json || exit 1
 ```
 
-Continue only when validation succeeds. Inspect `project`, `region`,
-`machineCount`, `imageCount` and `diskCount` before saving. A `valid: true`
-response can still have an empty category; resolve that before choosing cloud
-capacity.
+Continue only when validation succeeds. Inspect `project` and `region` before
+saving. The response does not include machine, image, or disk counts; those
+are discovered separately after the environment is saved.
 
 ### 2. Store the credential and prepare the environment
 

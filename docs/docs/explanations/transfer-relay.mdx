@@ -1,0 +1,78 @@
+---
+id: transfer-relay
+title: Relay de transferência de dados
+sidebar_label: Relay de transferência
+description: Como AkôFlow seleciona, executa, verifica e registra transferências entre runtimes locais, remotos, HPC, Kubernetes e cloud.
+---
+
+# Relay de transferência de dados
+
+O relay de transferência é a preparação que torna um arquivo de uma atividade produtora disponível no workspace da atividade consumidora. Ele não é necessariamente um servidor intermediário: **relay** é a decisão e execução de uma rota verificável, que pode usar armazenamento compartilhado, uma cópia direta entre runtimes ou um conector mediado.
+
+<img src="/img/architecture/transfer-relay.svg" alt="Fluxo de seleção, transferência e verificação do relay de dados." />
+
+## Definições
+
+| Termo | Significado |
+| --- | --- |
+| **Blob** | Bytes identificados por digest e tamanho esperado. |
+| **Localização** | Onde os bytes existem, incluindo URI, recurso, ambiente, runtime, conexão e domínio de rede quando conhecidos. |
+| **Endpoint** | Um destino que um conector pode abrir, gravar e confirmar. A configuração persiste referências de credencial, não a credencial. |
+| **Rota** | Estratégia escolhida, endereços concretos quando aplicáveis, razão da escolha e fallback. |
+| **Materialização** | Preparação do artefato ou workspace no destino. Só é `committed` quando o digest verificado corresponde ao digest esperado. |
+
+Uma atividade dependente não deve começar apenas porque a cópia foi solicitada. A preparação evolui por `planned → transferring → verifying → committed`; qualquer falha termina em `failed`. A observação da execução registra também bytes lógicos, bytes realmente enviados pela rede, chunks concluídos, tentativas e digests confirmados.
+
+## Estratégias disponíveis
+
+| Estratégia | Quando usar | O que ela evita / exige |
+| --- | --- | --- |
+| `use-existing` | O destino já contém a versão e o digest verificado. | Evita nova cópia; exige disponibilidade ainda válida. |
+| `shared-storage` | Produtor e consumidor veem o mesmo PVC, NFS ou scratch. | Evita duplicação; exige confirmar visibilidade no nó que executará a tarefa. |
+| `destination-pull` | O destino consegue buscar de HTTP, S3 compatível ou outro endpoint exposto. | Evita abrir entrada no produtor; exige saída, URL e credencial válidas no destino. |
+| `source-push` | A origem consegue publicar no destino. | Evita saída no consumidor; exige escrita e autenticação no destino. |
+| `gateway` | Não há rota direta segura; os conectores leem a origem e gravam o destino. | Permite cruzar domínios; mede e verifica toda a transferência. |
+| `runtime-local` | As duas etapas usam a mesma instância concreta. | Evita rede; só vale para a mesma instância, não apenas para o mesmo tipo de cloud. |
+| `direct-runtime` | Dois runtimes concretos podem trocar bytes diretamente. | Evita intermediar payload; exige rota privada e identidade temporária/restrita verificada. |
+
+## Estratégias por runtime
+
+<img src="/img/architecture/transfer-runtime-paths.svg" alt="Tabela visual de estratégias recomendadas para local, Kubernetes, HPC, SSH, cloud e SimGrid." />
+
+### Local
+
+Para processos no host do daemon, prefira `runtime-local` ou filesystem quando o workspace for o mesmo. Não trate o runtime local como sandbox: ele executa processos confiáveis no host. Para mover dados a uma máquina diferente, use uma rota remota explícita, não uma suposição baseada em caminhos locais.
+
+### Kubernetes
+
+Entre Pods que usam o mesmo PVC, `shared-storage` é a rota mais simples. Antes de escolhê-la, confirme claim, namespace, permissões e se o volume é montado pelo Job consumidor. Quando os dados entram ou saem do cluster, o conector Kubernetes exec pode participar de uma rota `gateway`; isso precisa de acesso à API e RBAC adequados.
+
+### HPC e Slurm
+
+Em HPC, o caminho de login não prova que o nó de computação consegue ler ou gravar os mesmos bytes. Prefira scratch ou filesystem compartilhado somente após uma sonda de visibilidade no compute node. Para atravessar o limite do cluster, use `rsync/SSH` como gateway, com conta restrita, host key verificada e espaço temporário suficiente. A submissão `sbatch` e a transferência são operações distintas.
+
+### SSH e hosts remotos
+
+O runtime SSH atual executa Docker diretamente no host remoto; não é um shell remoto genérico. `rsync/SSH` é adequado quando origem e destino têm caminhos e identidades verificadas. Para uma cópia `direct-runtime` entre VMs, AkôFlow usa uma identidade curta para o destino; ele não encaminha a chave permanente da plataforma.
+
+### Cloud sob demanda
+
+Uma capacidade cloud só se torna um runtime depois do lifecycle criar e registrar uma instância concreta. Use `runtime-local` somente dentro dessa mesma instância. Entre duas VMs, `direct-runtime` pode reduzir salto e custo se houver rede privada, ACL e identidade temporária; caso contrário escolha `gateway` ou um artifact store. Não grave credenciais, IDs de projeto ou regras amplas de firewall no workflow.
+
+### SimGrid
+
+SimGrid modela transferências, latência, topologia e custo; ele não move bytes reais. Use-o para comparar planos e validar o modelo de rede. Uma execução simulada não comprova acesso a PVC, SSH, S3, API Kubernetes ou cloud.
+
+## Conectores e limitações atuais
+
+Os conectores implementados incluem artifact store, filesystem local, rsync/SSH, Kubernetes exec, download HTTP e S3 compatível. O conector GCS ainda rejeita uma transferência direta `gs://`; uma implantação deve fornecer outra rota suportada ou um agente de transferência próprio. Declare uma rota alternativa em vez de assumir que um URI GCS funcionará.
+
+## Decisão prática
+
+1. Identifique onde o blob existe e onde o consumidor realmente executará.
+2. Verifique capacidades frescas: conector, saída HTTPS, checksum, caminho, espaço e visibilidade no nó de execução.
+3. Escolha a rota menos invasiva: existente, compartilhada, direta, pull/push, e por último gateway.
+4. Restrinja identidade e rede ao menor escopo necessário; use referências de credencial no ambiente.
+5. Aguarde a verificação do digest e consulte o registro de transferências antes de atribuir uma falha à atividade consumidora.
+
+Para configurar as capacidades do ambiente, consulte [Runtime adapters](/docs/runtimes), [Ambientes](/docs/guides/infrastructure/environments) e [configuração de HPC/SLURM](/docs/guides/infrastructure/hpc-slurm). Para interpretar os registros finais, consulte [Evidência e proveniência](/docs/explanations/evidence-and-provenance).

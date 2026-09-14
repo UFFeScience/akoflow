@@ -1,0 +1,14 @@
+{
+  "showcase": "model-distillation",
+  "digest": "5921c2e4a148fb13fea7be70c1f8d04d78bff26403dff5e5aeb569ec8072dd9c",
+  "stages": [
+    "teacher",
+    "generate-labels",
+    "student"
+  ],
+  "status": "success",
+  "artifacts": [
+    "student.pkl",
+    "distillation-report.json"
+  ]
+}

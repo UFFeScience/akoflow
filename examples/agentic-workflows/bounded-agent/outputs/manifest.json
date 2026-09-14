@@ -1,0 +1,14 @@
+{
+  "showcase": "bounded-agent",
+  "digest": "725f896ef6bc655658c6beacb73a3cf7392ff4b00a18c0d8e95c35b9d7b20953",
+  "stages": [
+    "goal",
+    "agent",
+    "validator"
+  ],
+  "status": "success",
+  "artifacts": [
+    "answer.json",
+    "validation.json"
+  ]
+}

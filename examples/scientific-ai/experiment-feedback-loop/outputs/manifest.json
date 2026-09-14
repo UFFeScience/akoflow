@@ -1,0 +1,14 @@
+{
+  "showcase": "experiment-feedback-loop",
+  "digest": "9a5cd39309fb9e4620e34c5d43f8d443bebdfddb06d3783d2e0febfa500db02f",
+  "stages": [
+    "experiment",
+    "model",
+    "next-batch"
+  ],
+  "status": "success",
+  "artifacts": [
+    "next-batch.json",
+    "feedback-report.json"
+  ]
+}

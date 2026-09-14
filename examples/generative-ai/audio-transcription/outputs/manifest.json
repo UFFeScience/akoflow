@@ -1,0 +1,15 @@
+{
+  "showcase": "audio-transcription",
+  "digest": "8496b5e8321736469ce55180232f30723d6e98de066f70010ad95643ecb86274",
+  "stages": [
+    "audio",
+    "split",
+    "transcribe",
+    "summarize"
+  ],
+  "status": "success",
+  "artifacts": [
+    "transcript.txt",
+    "summary.md"
+  ]
+}

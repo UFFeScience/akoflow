@@ -1,0 +1,15 @@
+{
+  "showcase": "document-extraction",
+  "digest": "ad73c48e5ef5308094fab62ec1c195401c1d63eb0784135868da1598bd84611f",
+  "stages": [
+    "pdf",
+    "ocr",
+    "extract",
+    "json"
+  ],
+  "status": "success",
+  "artifacts": [
+    "extraction.json",
+    "ocr.txt"
+  ]
+}

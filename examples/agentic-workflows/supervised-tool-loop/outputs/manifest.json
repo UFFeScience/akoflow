@@ -1,0 +1,15 @@
+{
+  "showcase": "supervised-tool-loop",
+  "digest": "5aa8f7ad898f4efb7e43aaa685730877580594633efd4913be238411b1193062",
+  "stages": [
+    "proposal",
+    "approval",
+    "execution",
+    "verification"
+  ],
+  "status": "success",
+  "artifacts": [
+    "execution.json",
+    "verification.json"
+  ]
+}

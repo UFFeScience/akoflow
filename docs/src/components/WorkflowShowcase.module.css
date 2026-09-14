@@ -139,6 +139,31 @@
 }
 .exampleBundle h2 { margin: 0 0 0.4rem; }
 .exampleBundle p { margin: 0 0 0.75rem; }
+.executionEvidence {
+  margin: 1.25rem 0;
+  padding: 1rem;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 8px;
+}
+.executionEvidence h2 { margin: 0 0 0.4rem; }
+.evidenceGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin: 1rem 0;
+}
+.evidenceGrid figure { margin: 0; }
+.evidenceGrid img {
+  display: block;
+  width: 100%;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 6px;
+}
+.evidenceGrid figcaption {
+  margin-top: 0.35rem;
+  color: var(--ifm-color-emphasis-700);
+  font-size: 0.75rem;
+}
 .activityTable { overflow-x: auto; }
 .activityTable table { width: 100%; }
 .activityTable td:first-child { width: 28%; white-space: nowrap; }
@@ -149,6 +174,6 @@
 }
 
 @media (max-width: 760px) {
-  .grid, .files, .detailGrid { grid-template-columns: 1fr; }
+  .grid, .files, .detailGrid, .evidenceGrid { grid-template-columns: 1fr; }
   .diagram, .fanout, .dag { overflow-x: auto; justify-content: flex-start; }
 }

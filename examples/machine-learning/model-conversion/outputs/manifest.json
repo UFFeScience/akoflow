@@ -1,0 +1,15 @@
+{
+  "showcase": "model-conversion",
+  "digest": "8706e05b6ffbdbb9c521be968b623b91477edfc75ad5adda15334865aa7e30cb",
+  "stages": [
+    "onnx",
+    "gguf",
+    "tensorrt"
+  ],
+  "status": "success",
+  "artifacts": [
+    "model.onnx",
+    "model.gguf",
+    "model.engine"
+  ]
+}

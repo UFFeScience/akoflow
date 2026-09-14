@@ -147,6 +147,30 @@ export function AIWorkflowPattern({
           </div>
         </section>
       )}
+      {examplePath && (
+        <section className={styles.executionEvidence}>
+          <h2>Verified local execution</h2>
+          <p>
+            These captures and the output manifest were produced by the fixture's local Docker
+            run and validator. They are published with the same bundle as the runnable files.
+          </p>
+          <div className={styles.evidenceGrid}>
+            <figure>
+              <img src={`/examples/showcase/${examplePath}/screenshots/workflow.png`} alt={`${title} workflow execution evidence`} />
+              <figcaption>Workflow evidence</figcaption>
+            </figure>
+            <figure>
+              <img src={`/examples/showcase/${examplePath}/screenshots/execution.png`} alt={`${title} execution evidence`} />
+              <figcaption>Execution evidence</figcaption>
+            </figure>
+            <figure>
+              <img src={`/examples/showcase/${examplePath}/screenshots/outputs.png`} alt={`${title} output evidence`} />
+              <figcaption>Output evidence</figcaption>
+            </figure>
+          </div>
+          <a href={`/examples/showcase/${examplePath}/outputs/manifest.json`}>Open verified output manifest ↓</a>
+        </section>
+      )}
       <h2>Execution considerations</h2>
       <p>{execution}</p>
       <p className={styles.patternNote}><strong>AkôFlow boundary:</strong> the engine schedules, deploys, executes, transfers data, and records evidence. The ML or agent framework remains an implementation choice inside each activity.</p>

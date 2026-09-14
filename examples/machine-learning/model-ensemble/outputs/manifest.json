@@ -1,0 +1,16 @@
+{
+  "showcase": "model-ensemble",
+  "digest": "ea2f47e5b0781d8a48f3a0ccdca486ebf6bb87f1cc17e6590b041aac246e3c45",
+  "stages": [
+    "dataset",
+    "rf",
+    "svm",
+    "xgb",
+    "ensemble"
+  ],
+  "status": "success",
+  "artifacts": [
+    "ensemble.pkl",
+    "metrics.json"
+  ]
+}

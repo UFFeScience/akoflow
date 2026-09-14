@@ -1,0 +1,18 @@
+{
+  "showcase": "batch-inference",
+  "digest": "103739b0cb8fc3c65f840dd0199da95a6adc614b0a0f231c0f30c4301cecd30a",
+  "stages": [
+    "load-model",
+    "split-input",
+    "worker-1",
+    "worker-2",
+    "worker-3",
+    "worker-4",
+    "merge"
+  ],
+  "status": "success",
+  "artifacts": [
+    "predictions.jsonl",
+    "batch-summary.json"
+  ]
+}

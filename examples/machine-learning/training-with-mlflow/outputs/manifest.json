@@ -1,0 +1,17 @@
+{
+  "showcase": "training-with-mlflow",
+  "digest": "3699540a5449ea359f6c48f5081682de12c8f08813c63edae3a30834f4f08b4d",
+  "stages": [
+    "load-data",
+    "preprocess",
+    "train",
+    "evaluate",
+    "register-model"
+  ],
+  "status": "success",
+  "artifacts": [
+    "model.pkl",
+    "metrics.json",
+    "report.html"
+  ]
+}

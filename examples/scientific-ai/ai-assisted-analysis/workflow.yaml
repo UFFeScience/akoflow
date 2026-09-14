@@ -1,0 +1,29 @@
+name: showcase-ai-assisted-analysis
+spec:
+  namespace: showcase
+  # Published by .github/workflows/build-showcase.yml.
+  image: ghcr.io/uffescience/akoflow-showcase-ai-assisted-analysis:v1
+  activities:
+    - name: simulation
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-ai-assisted-analysis:v1 simulation
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+    - name: analysis
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-ai-assisted-analysis:v1 analysis
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - simulation
+    - name: llm-interpretation
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-ai-assisted-analysis:v1 llm-interpretation
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - analysis
+

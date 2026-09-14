@@ -1,0 +1,37 @@
+name: showcase-inference-benchmark
+spec:
+  namespace: showcase
+  # Published by .github/workflows/build-showcase.yml.
+  image: ghcr.io/uffescience/akoflow-showcase-inference-benchmark:v1
+  activities:
+    - name: cpu
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-inference-benchmark:v1 cpu
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+    - name: gpu
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-inference-benchmark:v1 gpu
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - cpu
+    - name: edge
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-inference-benchmark:v1 edge
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - gpu
+    - name: report
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-inference-benchmark:v1 report
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - edge
+

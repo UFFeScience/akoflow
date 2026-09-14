@@ -1,0 +1,29 @@
+name: showcase-computer-vision
+spec:
+  namespace: showcase
+  # Published by .github/workflows/build-showcase.yml.
+  image: ghcr.io/uffescience/akoflow-showcase-computer-vision:v1
+  activities:
+    - name: augment
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-computer-vision:v1 augment
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+    - name: train
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-computer-vision:v1 train
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - augment
+    - name: evaluate
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-computer-vision:v1 evaluate
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - train
+

@@ -1,0 +1,37 @@
+name: showcase-multi-agent-review
+spec:
+  namespace: showcase
+  # Published by .github/workflows/build-showcase.yml.
+  image: ghcr.io/uffescience/akoflow-showcase-multi-agent-review:v1
+  activities:
+    - name: researcher
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-multi-agent-review:v1 researcher
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+    - name: reviewer
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-multi-agent-review:v1 reviewer
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - researcher
+    - name: critic
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-multi-agent-review:v1 critic
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - reviewer
+    - name: synthesis
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-multi-agent-review:v1 synthesis
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - critic
+

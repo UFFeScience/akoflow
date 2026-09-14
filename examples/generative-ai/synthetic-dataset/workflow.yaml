@@ -1,0 +1,29 @@
+name: showcase-synthetic-dataset
+spec:
+  namespace: showcase
+  # Published by .github/workflows/build-showcase.yml.
+  image: ghcr.io/uffescience/akoflow-showcase-synthetic-dataset:v1
+  activities:
+    - name: generate
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-synthetic-dataset:v1 generate
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+    - name: deduplicate
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-synthetic-dataset:v1 deduplicate
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - generate
+    - name: quality-check
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-synthetic-dataset:v1 quality-check
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - deduplicate
+

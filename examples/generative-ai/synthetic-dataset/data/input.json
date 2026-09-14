@@ -1,0 +1,13 @@
+{
+  "slug": "synthetic-dataset",
+  "title": "Synthetic Dataset",
+  "stages": [
+    "generate",
+    "deduplicate",
+    "quality-check"
+  ],
+  "artifacts": [
+    "synthetic-dataset.jsonl",
+    "quality-report.json"
+  ]
+}

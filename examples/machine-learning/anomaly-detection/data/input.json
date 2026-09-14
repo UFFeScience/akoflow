@@ -1,0 +1,15 @@
+{
+  "slug": "anomaly-detection",
+  "title": "Anomaly Detection",
+  "stages": [
+    "generate-data",
+    "feature-engineering",
+    "train",
+    "score",
+    "threshold"
+  ],
+  "artifacts": [
+    "anomalies.json",
+    "metrics.json"
+  ]
+}

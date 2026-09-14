@@ -1,0 +1,29 @@
+name: showcase-bounded-agent
+spec:
+  namespace: showcase
+  # Published by .github/workflows/build-showcase.yml.
+  image: ghcr.io/uffescience/akoflow-showcase-bounded-agent:v1
+  activities:
+    - name: goal
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-bounded-agent:v1 goal
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+    - name: agent
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-bounded-agent:v1 agent
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - goal
+    - name: validator
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-bounded-agent:v1 validator
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - agent
+

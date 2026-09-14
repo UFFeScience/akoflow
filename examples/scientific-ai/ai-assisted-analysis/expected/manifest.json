@@ -1,0 +1,9 @@
+{
+  "showcase": "ai-assisted-analysis",
+  "artifacts": [
+    "analysis.json",
+    "interpretation.md"
+  ],
+  "status": "success"
+}
+

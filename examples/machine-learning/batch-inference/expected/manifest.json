@@ -1,0 +1,9 @@
+{
+  "showcase": "batch-inference",
+  "artifacts": [
+    "predictions.jsonl",
+    "batch-summary.json"
+  ],
+  "status": "success"
+}
+

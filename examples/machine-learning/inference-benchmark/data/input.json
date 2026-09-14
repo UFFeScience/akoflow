@@ -1,0 +1,14 @@
+{
+  "slug": "inference-benchmark",
+  "title": "Inference Benchmark",
+  "stages": [
+    "cpu",
+    "gpu",
+    "edge",
+    "report"
+  ],
+  "artifacts": [
+    "benchmark.csv",
+    "report.html"
+  ]
+}

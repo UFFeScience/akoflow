@@ -1,0 +1,14 @@
+{
+  "slug": "model-conversion",
+  "title": "Model Conversion",
+  "stages": [
+    "onnx",
+    "gguf",
+    "tensorrt"
+  ],
+  "artifacts": [
+    "model.onnx",
+    "model.gguf",
+    "model.engine"
+  ]
+}

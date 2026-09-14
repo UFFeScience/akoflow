@@ -1,0 +1,14 @@
+{
+  "slug": "multi-agent-review",
+  "title": "Multi-Agent Review",
+  "stages": [
+    "researcher",
+    "reviewer",
+    "critic",
+    "synthesis"
+  ],
+  "artifacts": [
+    "synthesis.md",
+    "review.json"
+  ]
+}

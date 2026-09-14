@@ -1,0 +1,6 @@
+id: showcase-supervised-tool-loop-topology
+name: Supervised Tool Loop local topology
+version: 1
+executionScopeId: showcase-supervised-tool-loop-scope
+links: []
+

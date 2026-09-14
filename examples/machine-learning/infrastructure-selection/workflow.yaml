@@ -1,0 +1,37 @@
+name: showcase-infrastructure-selection
+spec:
+  namespace: showcase
+  # Published by .github/workflows/build-showcase.yml.
+  image: ghcr.io/uffescience/akoflow-showcase-infrastructure-selection:v1
+  activities:
+    - name: estimate-local
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-infrastructure-selection:v1 estimate-local
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+    - name: estimate-cloud
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-infrastructure-selection:v1 estimate-cloud
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - estimate-local
+    - name: estimate-hpc
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-infrastructure-selection:v1 estimate-hpc
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - estimate-cloud
+    - name: decision
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-infrastructure-selection:v1 decision
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - estimate-hpc
+

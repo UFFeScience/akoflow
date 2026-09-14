@@ -5,6 +5,7 @@ node_modules/
 build/
 .docusaurus/
 .generated/
+static/examples/showcase/
 
 # Cache
 .cache/

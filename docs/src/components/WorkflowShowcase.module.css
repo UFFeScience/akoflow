@@ -130,6 +130,15 @@
 .detailGrid li { margin: 0.25rem 0; font-size: 0.78rem; }
 
 .patternLead { max-width: 52rem; font-size: 1.02rem; }
+.exampleBundle {
+  margin: 1.25rem 0;
+  padding: 1rem;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 8px;
+  background: var(--ifm-background-surface-color);
+}
+.exampleBundle h2 { margin: 0 0 0.4rem; }
+.exampleBundle p { margin: 0 0 0.75rem; }
 .activityTable { overflow-x: auto; }
 .activityTable table { width: 100%; }
 .activityTable td:first-child { width: 28%; white-space: nowrap; }

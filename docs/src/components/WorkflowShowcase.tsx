@@ -5,6 +5,31 @@ import styles from "./WorkflowShowcase.module.css";
 type DiagramKind = "edge-cloud" | "fanout" | "kubernetes" | "local" | "parallel" | "slurm";
 type DagStage = string | string[];
 
+const runnableExamplePaths: Record<string, string> = {
+  "Training with MLflow": "machine-learning/training-with-mlflow",
+  "Hyperparameter search": "machine-learning/hyperparameter-search",
+  "LoRA fine-tuning": "machine-learning/lora-fine-tuning",
+  "Batch inference": "machine-learning/batch-inference",
+  "Comparative model evaluation": "machine-learning/model-comparison",
+  "Model conversion and quantization": "machine-learning/model-conversion",
+  "Computer vision training": "machine-learning/computer-vision",
+  "Anomaly detection": "machine-learning/anomaly-detection",
+  "Model ensemble": "machine-learning/model-ensemble",
+  "Model distillation": "machine-learning/model-distillation",
+  "Inference benchmark": "machine-learning/inference-benchmark",
+  "Infrastructure selection for training": "machine-learning/infrastructure-selection",
+  "RAG index construction and evaluation": "generative-ai/rag-indexing",
+  "Synthetic dataset generation": "generative-ai/synthetic-dataset",
+  "Audio transcription and summarization": "generative-ai/audio-transcription",
+  "OCR and document extraction": "generative-ai/document-extraction",
+  "Encapsulated agent task": "agentic-workflows/bounded-agent",
+  "Supervised tool loop": "agentic-workflows/supervised-tool-loop",
+  "Multi-agent review": "agentic-workflows/multi-agent-review",
+  "Scientific pipeline with AI interpretation": "scientific-ai/ai-assisted-analysis",
+  "Surrogate model construction": "scientific-ai/surrogate-model",
+  "Model-guided experiment cycle": "scientific-ai/experiment-feedback-loop",
+};
+
 function Arrow() {
   return <span className={styles.arrow} aria-hidden="true">→</span>;
 }
@@ -84,6 +109,7 @@ export function AIWorkflowPattern({
       responsibility: `Execute the ${name} stage and publish its declared outputs for downstream activities.`,
     })),
   );
+  const examplePath = runnableExamplePaths[title];
 
   return (
     <>
@@ -99,6 +125,20 @@ export function AIWorkflowPattern({
         </table>
       </div>
       <WorkflowPatternDetails inputs={inputs} outputs={outputs} evidence={evidence} />
+      {examplePath && (
+        <section className={styles.exampleBundle}>
+          <h2>Runnable example</h2>
+          <p>
+            This page includes the checked-in example used for this pattern. Download its
+            instructions and runner, then use the remaining YAML, source, and test files from
+            the same published bundle.
+          </p>
+          <div className={styles.files}>
+            <a href={`/examples/showcase/${examplePath}/README.md`}>Read setup instructions ↓</a>
+            <a href={`/examples/showcase/${examplePath}/run.sh`}>Download runner ↓</a>
+          </div>
+        </section>
+      )}
       <h2>Execution considerations</h2>
       <p>{execution}</p>
       <p className={styles.patternNote}><strong>AkôFlow boundary:</strong> the engine schedules, deploys, executes, transfers data, and records evidence. The ML or agent framework remains an implementation choice inside each activity.</p>

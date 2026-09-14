@@ -1,0 +1,9 @@
+{
+  "showcase": "multi-agent-review",
+  "artifacts": [
+    "synthesis.md",
+    "review.json"
+  ],
+  "status": "success"
+}
+

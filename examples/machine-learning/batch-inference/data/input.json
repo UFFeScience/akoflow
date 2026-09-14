@@ -1,0 +1,17 @@
+{
+  "slug": "batch-inference",
+  "title": "Batch Inference",
+  "stages": [
+    "load-model",
+    "split-input",
+    "worker-1",
+    "worker-2",
+    "worker-3",
+    "worker-4",
+    "merge"
+  ],
+  "artifacts": [
+    "predictions.jsonl",
+    "batch-summary.json"
+  ]
+}

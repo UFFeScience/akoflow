@@ -1,0 +1,43 @@
+environment:
+  id: showcase-lora-fine-tuning
+  name: Showcase lora-fine-tuning
+  description: Local Docker-backed reproducibility environment
+  status: ready
+version:
+  id: showcase-lora-fine-tuning-v1
+  environmentId: showcase-lora-fine-tuning
+  version: 1
+  status: published
+  networkModel: local
+  interferenceModel: none
+  costModel: free
+  configurationHash: showcase-lora-fine-tuning-v1
+runtimes:
+  - environmentVersionId: showcase-lora-fine-tuning-v1
+    id: local
+    name: Local Docker host
+    driver: local
+    mode: execution
+    role: compute
+    capabilities: {batch: true, container: true}
+resources:
+  - id: local-docker
+    environmentVersionId: showcase-lora-fine-tuning-v1
+    type: machine
+    name: Local Docker host
+    providerId: local-docker
+    cpuCores: 4
+    cpuCapacity: 4
+    memoryBytes: 8589934592
+    storageBytes: 21474836480
+    computeSpeedup: 1
+    pricePerSecond: 0
+    bootOverheadSeconds: 0
+    containerOverheadSeconds: 0
+    schedulable: true
+storages: []
+connections: []
+activityResourceProfiles: []
+resourceRuntimeBindings:
+  - {resourceId: local-docker, runtimeId: local, enabled: true}
+

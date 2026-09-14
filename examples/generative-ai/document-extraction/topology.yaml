@@ -1,0 +1,6 @@
+id: showcase-document-extraction-topology
+name: Document Extraction local topology
+version: 1
+executionScopeId: showcase-document-extraction-scope
+links: []
+

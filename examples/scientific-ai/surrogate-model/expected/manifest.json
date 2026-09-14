@@ -1,0 +1,9 @@
+{
+  "showcase": "surrogate-model",
+  "artifacts": [
+    "surrogate.pkl",
+    "validation.json"
+  ],
+  "status": "success"
+}
+

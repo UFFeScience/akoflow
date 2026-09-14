@@ -1,0 +1,9 @@
+{
+  "showcase": "document-extraction",
+  "artifacts": [
+    "extraction.json",
+    "ocr.txt"
+  ],
+  "status": "success"
+}
+

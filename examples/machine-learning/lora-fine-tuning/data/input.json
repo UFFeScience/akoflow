@@ -1,0 +1,13 @@
+{
+  "slug": "lora-fine-tuning",
+  "title": "LoRA Fine Tuning",
+  "stages": [
+    "prepare",
+    "finetune",
+    "evaluate"
+  ],
+  "artifacts": [
+    "adapter.bin",
+    "evaluation.json"
+  ]
+}

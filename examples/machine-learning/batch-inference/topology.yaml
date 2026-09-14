@@ -1,0 +1,6 @@
+id: showcase-batch-inference-topology
+name: Batch Inference local topology
+version: 1
+executionScopeId: showcase-batch-inference-scope
+links: []
+

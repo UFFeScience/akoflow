@@ -1,0 +1,13 @@
+{
+  "slug": "model-distillation",
+  "title": "Model Distillation",
+  "stages": [
+    "teacher",
+    "generate-labels",
+    "student"
+  ],
+  "artifacts": [
+    "student.pkl",
+    "distillation-report.json"
+  ]
+}

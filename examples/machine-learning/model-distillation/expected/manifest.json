@@ -1,0 +1,9 @@
+{
+  "showcase": "model-distillation",
+  "artifacts": [
+    "student.pkl",
+    "distillation-report.json"
+  ],
+  "status": "success"
+}
+

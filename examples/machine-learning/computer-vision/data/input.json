@@ -1,0 +1,13 @@
+{
+  "slug": "computer-vision",
+  "title": "Computer Vision",
+  "stages": [
+    "augment",
+    "train",
+    "evaluate"
+  ],
+  "artifacts": [
+    "cifar10-metrics.json",
+    "model.pkl"
+  ]
+}

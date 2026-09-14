@@ -1,0 +1,45 @@
+name: showcase-rag-indexing
+spec:
+  namespace: showcase
+  # Published by .github/workflows/build-showcase.yml.
+  image: ghcr.io/uffescience/akoflow-showcase-rag-indexing:v1
+  activities:
+    - name: documents
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-rag-indexing:v1 documents
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+    - name: chunk
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-rag-indexing:v1 chunk
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - documents
+    - name: embed
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-rag-indexing:v1 embed
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - chunk
+    - name: faiss
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-rag-indexing:v1 faiss
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - embed
+    - name: evaluate
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-rag-indexing:v1 evaluate
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - faiss
+

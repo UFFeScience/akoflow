@@ -1,0 +1,9 @@
+{
+  "showcase": "infrastructure-selection",
+  "artifacts": [
+    "decision.json",
+    "cost-comparison.csv"
+  ],
+  "status": "success"
+}
+

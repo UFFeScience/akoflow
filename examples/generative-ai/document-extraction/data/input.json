@@ -1,0 +1,14 @@
+{
+  "slug": "document-extraction",
+  "title": "Document Extraction",
+  "stages": [
+    "pdf",
+    "ocr",
+    "extract",
+    "json"
+  ],
+  "artifacts": [
+    "extraction.json",
+    "ocr.txt"
+  ]
+}

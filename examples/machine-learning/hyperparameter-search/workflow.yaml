@@ -1,0 +1,69 @@
+name: showcase-hyperparameter-search
+spec:
+  namespace: showcase
+  # Published by .github/workflows/build-showcase.yml.
+  image: ghcr.io/uffescience/akoflow-showcase-hyperparameter-search:v1
+  activities:
+    - name: load
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-hyperparameter-search:v1 load
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+    - name: preprocess
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-hyperparameter-search:v1 preprocess
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - load
+    - name: rf-1
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-hyperparameter-search:v1 rf-1
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - preprocess
+    - name: rf-2
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-hyperparameter-search:v1 rf-2
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - rf-1
+    - name: rf-3
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-hyperparameter-search:v1 rf-3
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - rf-2
+    - name: rf-4
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-hyperparameter-search:v1 rf-4
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - rf-3
+    - name: compare
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-hyperparameter-search:v1 compare
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - rf-4
+    - name: best-model
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-hyperparameter-search:v1 best-model
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - compare
+

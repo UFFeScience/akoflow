@@ -1,0 +1,61 @@
+name: showcase-batch-inference
+spec:
+  namespace: showcase
+  # Published by .github/workflows/build-showcase.yml.
+  image: ghcr.io/uffescience/akoflow-showcase-batch-inference:v1
+  activities:
+    - name: load-model
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-batch-inference:v1 load-model
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+    - name: split-input
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-batch-inference:v1 split-input
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - load-model
+    - name: worker-1
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-batch-inference:v1 worker-1
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - split-input
+    - name: worker-2
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-batch-inference:v1 worker-2
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - worker-1
+    - name: worker-3
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-batch-inference:v1 worker-3
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - worker-2
+    - name: worker-4
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-batch-inference:v1 worker-4
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - worker-3
+    - name: merge
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-batch-inference:v1 merge
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - worker-4
+

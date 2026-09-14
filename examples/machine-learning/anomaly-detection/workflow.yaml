@@ -1,0 +1,45 @@
+name: showcase-anomaly-detection
+spec:
+  namespace: showcase
+  # Published by .github/workflows/build-showcase.yml.
+  image: ghcr.io/uffescience/akoflow-showcase-anomaly-detection:v1
+  activities:
+    - name: generate-data
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-anomaly-detection:v1 generate-data
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+    - name: feature-engineering
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-anomaly-detection:v1 feature-engineering
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - generate-data
+    - name: train
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-anomaly-detection:v1 train
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - feature-engineering
+    - name: score
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-anomaly-detection:v1 score
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - train
+    - name: threshold
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-anomaly-detection:v1 threshold
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - score
+

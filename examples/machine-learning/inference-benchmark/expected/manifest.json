@@ -1,0 +1,9 @@
+{
+  "showcase": "inference-benchmark",
+  "artifacts": [
+    "benchmark.csv",
+    "report.html"
+  ],
+  "status": "success"
+}
+

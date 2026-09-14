@@ -1,0 +1,6 @@
+id: showcase-surrogate-model-topology
+name: Surrogate Model local topology
+version: 1
+executionScopeId: showcase-surrogate-model-scope
+links: []
+

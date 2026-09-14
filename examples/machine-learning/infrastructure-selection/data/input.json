@@ -1,0 +1,14 @@
+{
+  "slug": "infrastructure-selection",
+  "title": "Infrastructure Selection",
+  "stages": [
+    "estimate-local",
+    "estimate-cloud",
+    "estimate-hpc",
+    "decision"
+  ],
+  "artifacts": [
+    "decision.json",
+    "cost-comparison.csv"
+  ]
+}

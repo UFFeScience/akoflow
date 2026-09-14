@@ -1,0 +1,6 @@
+id: showcase-inference-benchmark-topology
+name: Inference Benchmark local topology
+version: 1
+executionScopeId: showcase-inference-benchmark-scope
+links: []
+

@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620" role="img" aria-labelledby="title desc">
+  <title id="title">Relay de transferência do AkôFlow</title>
+  <desc id="desc">Um artefato sai de um runtime produtor, tem a rota escolhida, é verificado por digest e chega ao runtime consumidor.</desc>
+  <style>
+    .title{font:700 28px system-ui,sans-serif;fill:#15263d}.label{font:600 18px system-ui,sans-serif;fill:#15263d}.text{font:15px system-ui,sans-serif;fill:#38506a}.small{font:13px system-ui,sans-serif;fill:#38506a}.box{stroke:#285f9e;stroke-width:2;rx:14}.line{stroke:#285f9e;stroke-width:3;fill:none;marker-end:url(#arrow)}.dash{stroke:#71879d;stroke-width:2;stroke-dasharray:7 7;fill:none}.pill{stroke:#8a5d00;stroke-width:2;fill:#fff7df;rx:18}
+  </style>
+  <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L10,3 L0,6Z" fill="#285f9e"/></marker></defs>
+  <rect width="1200" height="620" fill="#f8fbff"/>
+  <text x="54" y="58" class="title">Relay de transferência: seleção, movimentação e verificação</text>
+  <rect x="55" y="145" width="230" height="140" class="box" fill="#e8f2ff"/>
+  <text x="82" y="186" class="label">Runtime produtor</text>
+  <text x="82" y="218" class="text">local · SSH · Slurm</text>
+  <text x="82" y="244" class="text">Kubernetes · cloud</text>
+  <text x="82" y="270" class="small">arquivo + digest + tamanho</text>
+  <rect x="460" y="105" width="285" height="220" class="box" fill="#edf9f2"/>
+  <text x="500" y="148" class="label">Planejador de rota</text>
+  <text x="500" y="181" class="text">capacidade e conectividade</text>
+  <text x="500" y="207" class="text">credencial referenciada</text>
+  <text x="500" y="233" class="text">origem, destino e fallback</text>
+  <text x="500" y="279" class="small">não copia segredos para o workflow</text>
+  <rect x="915" y="145" width="230" height="140" class="box" fill="#e8f2ff"/>
+  <text x="942" y="186" class="label">Runtime consumidor</text>
+  <text x="942" y="218" class="text">workspace preparado</text>
+  <text x="942" y="244" class="text">atividade inicia só após</text>
+  <text x="942" y="270" class="small">digest confirmado</text>
+  <path d="M286 214 H458" class="line"/><path d="M747 214 H913" class="line"/>
+  <rect x="79" y="414" width="205" height="54" class="pill"/><text x="111" y="448" class="label">shared storage</text>
+  <rect x="323" y="414" width="175" height="54" class="pill"/><text x="355" y="448" class="label">pull / push</text>
+  <rect x="538" y="414" width="151" height="54" class="pill"/><text x="570" y="448" class="label">gateway</text>
+  <rect x="729" y="414" width="172" height="54" class="pill"/><text x="756" y="448" class="label">runtime-local</text>
+  <rect x="941" y="414" width="178" height="54" class="pill"/><text x="966" y="448" class="label">direct-runtime</text>
+  <path d="M170 286 V404 M410 325 V404 M615 325 V404 M815 286 V404 M1030 286 V404" class="dash"/>
+  <text x="55" y="546" class="text">A estratégia descreve o caminho lógico. “Gateway” pode transmitir por conectores; “direct-runtime” mantém os bytes entre runtimes quando a rota e a identidade efêmera são verificadas.</text>
+  <text x="55" y="578" class="small">Estados observados: planned → transferring → verifying → committed, ou failed. Registre bytes lógicos, bytes de rede, chunks, tentativas e digests.</text>
+</svg>

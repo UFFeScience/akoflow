@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 // Generates browser screenshots after a successful Docker execution.
-const {execFileSync} = require("node:child_process");
-const fs = require("node:fs");
-const path = require("node:path");
-const root = path.resolve(__dirname, "..");
+import {execFileSync} from "node:child_process";
+import fs from "node:fs";
+import path from "node:path";
+import {fileURLToPath} from "node:url";
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const output = path.join(root, "outputs");
 const shots = path.join(root, "screenshots");
 fs.mkdirSync(shots, {recursive: true});

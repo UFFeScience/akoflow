@@ -1,0 +1,5 @@
+id: showcase-model-comparison-scope
+name: Model Comparison local scope
+environmentVersionIds:
+  - showcase-model-comparison-v1
+

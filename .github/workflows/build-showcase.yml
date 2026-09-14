@@ -1,0 +1,82 @@
+name: Build showcase images
+
+on:
+  push:
+    branches: [main]
+    paths: ["examples/**", ".github/workflows/build-showcase.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - category: machine-learning
+            showcase: training-with-mlflow
+          - category: machine-learning
+            showcase: hyperparameter-search
+          - category: machine-learning
+            showcase: batch-inference
+          - category: machine-learning
+            showcase: model-comparison
+          - category: machine-learning
+            showcase: anomaly-detection
+          - category: machine-learning
+            showcase: computer-vision
+          - category: machine-learning
+            showcase: model-ensemble
+          - category: machine-learning
+            showcase: model-distillation
+          - category: machine-learning
+            showcase: inference-benchmark
+          - category: machine-learning
+            showcase: lora-fine-tuning
+          - category: machine-learning
+            showcase: model-conversion
+          - category: machine-learning
+            showcase: infrastructure-selection
+          - category: generative-ai
+            showcase: rag-indexing
+          - category: generative-ai
+            showcase: synthetic-dataset
+          - category: generative-ai
+            showcase: audio-transcription
+          - category: generative-ai
+            showcase: document-extraction
+          - category: agentic-workflows
+            showcase: bounded-agent
+          - category: agentic-workflows
+            showcase: supervised-tool-loop
+          - category: agentic-workflows
+            showcase: multi-agent-review
+          - category: scientific-ai
+            showcase: ai-assisted-analysis
+          - category: scientific-ai
+            showcase: surrogate-model
+          - category: scientific-ai
+            showcase: experiment-feedback-loop
+    steps:
+      - uses: actions/checkout@v4
+      - name: Execute regression fixture
+        working-directory: examples/${{ matrix.category }}/${{ matrix.showcase }}
+        run: ./run.sh
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@v6
+        with:
+          context: examples/${{ matrix.category }}/${{ matrix.showcase }}
+          file: examples/${{ matrix.category }}/${{ matrix.showcase }}/docker/Dockerfile
+          push: true
+          tags: |
+            ghcr.io/uffescience/akoflow-showcase-${{ matrix.showcase }}:latest
+            ghcr.io/uffescience/akoflow-showcase-${{ matrix.showcase }}:v1
+            ghcr.io/uffescience/akoflow-showcase-${{ matrix.showcase }}:v1.0.0

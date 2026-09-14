@@ -1,0 +1,13 @@
+{
+  "slug": "ai-assisted-analysis",
+  "title": "AI Assisted Analysis",
+  "stages": [
+    "simulation",
+    "analysis",
+    "llm-interpretation"
+  ],
+  "artifacts": [
+    "analysis.json",
+    "interpretation.md"
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "showcase": "supervised-tool-loop",
+  "artifacts": [
+    "execution.json",
+    "verification.json"
+  ],
+  "status": "success"
+}
+

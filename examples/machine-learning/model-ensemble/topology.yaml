@@ -1,0 +1,6 @@
+id: showcase-model-ensemble-topology
+name: Model Ensemble local topology
+version: 1
+executionScopeId: showcase-model-ensemble-scope
+links: []
+

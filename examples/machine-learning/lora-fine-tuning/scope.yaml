@@ -1,0 +1,5 @@
+id: showcase-lora-fine-tuning-scope
+name: LoRA Fine Tuning local scope
+environmentVersionIds:
+  - showcase-lora-fine-tuning-v1
+

@@ -1,0 +1,6 @@
+id: showcase-anomaly-detection-topology
+name: Anomaly Detection local topology
+version: 1
+executionScopeId: showcase-anomaly-detection-scope
+links: []
+

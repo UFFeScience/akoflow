@@ -1,0 +1,15 @@
+{
+  "slug": "model-comparison",
+  "title": "Model Comparison",
+  "stages": [
+    "dataset",
+    "model-a",
+    "model-b",
+    "model-c",
+    "comparison"
+  ],
+  "artifacts": [
+    "comparison.csv",
+    "report.html"
+  ]
+}

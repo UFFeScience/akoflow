@@ -1,0 +1,9 @@
+{
+  "showcase": "anomaly-detection",
+  "artifacts": [
+    "anomalies.json",
+    "metrics.json"
+  ],
+  "status": "success"
+}
+

@@ -1,0 +1,29 @@
+name: showcase-surrogate-model
+spec:
+  namespace: showcase
+  # Published by .github/workflows/build-showcase.yml.
+  image: ghcr.io/uffescience/akoflow-showcase-surrogate-model:v1
+  activities:
+    - name: simulation
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-surrogate-model:v1 simulation
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+    - name: dataset
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-surrogate-model:v1 dataset
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - simulation
+    - name: train-surrogate
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-surrogate-model:v1 train-surrogate
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - dataset
+

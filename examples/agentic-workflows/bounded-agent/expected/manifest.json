@@ -1,0 +1,9 @@
+{
+  "showcase": "bounded-agent",
+  "artifacts": [
+    "answer.json",
+    "validation.json"
+  ],
+  "status": "success"
+}
+

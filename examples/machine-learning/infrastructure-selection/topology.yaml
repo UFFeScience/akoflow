@@ -1,0 +1,6 @@
+id: showcase-infrastructure-selection-topology
+name: Infrastructure Selection local topology
+version: 1
+executionScopeId: showcase-infrastructure-selection-scope
+links: []
+

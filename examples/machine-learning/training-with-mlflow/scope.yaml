@@ -1,0 +1,5 @@
+id: showcase-training-with-mlflow-scope
+name: Training with MLflow local scope
+environmentVersionIds:
+  - showcase-training-with-mlflow-v1
+

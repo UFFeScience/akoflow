@@ -1,0 +1,9 @@
+{
+  "showcase": "model-ensemble",
+  "artifacts": [
+    "ensemble.pkl",
+    "metrics.json"
+  ],
+  "status": "success"
+}
+

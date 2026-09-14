@@ -1,0 +1,14 @@
+{
+  "showcase": "lora-fine-tuning",
+  "digest": "f9f9dfdd83960188ed199252f04315b12c0631b38cdaa113c9cff208ea2350d6",
+  "stages": [
+    "prepare",
+    "finetune",
+    "evaluate"
+  ],
+  "status": "success",
+  "artifacts": [
+    "adapter.bin",
+    "evaluation.json"
+  ]
+}

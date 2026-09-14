@@ -1,0 +1,15 @@
+{
+  "showcase": "inference-benchmark",
+  "digest": "1de929beff1aa0382578428f41ef443443fc8e4e92ee1a7e2695a75d1cc5aeb2",
+  "stages": [
+    "cpu",
+    "gpu",
+    "edge",
+    "report"
+  ],
+  "status": "success",
+  "artifacts": [
+    "benchmark.csv",
+    "report.html"
+  ]
+}

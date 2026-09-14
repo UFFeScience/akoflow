@@ -1,0 +1,16 @@
+{
+  "showcase": "rag-indexing",
+  "digest": "56792f4ed079ed980eec39643401b65f966ad056800369461a7e4908e603c9b0",
+  "stages": [
+    "documents",
+    "chunk",
+    "embed",
+    "faiss",
+    "evaluate"
+  ],
+  "status": "success",
+  "artifacts": [
+    "index.faiss",
+    "evaluation.json"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "showcase": "computer-vision",
+  "digest": "b316f0601fa14f584d78b59838154e3a76134de4e83cf9c328ab39aac6a3e74a",
+  "stages": [
+    "augment",
+    "train",
+    "evaluate"
+  ],
+  "status": "success",
+  "artifacts": [
+    "cifar10-metrics.json",
+    "model.pkl"
+  ]
+}

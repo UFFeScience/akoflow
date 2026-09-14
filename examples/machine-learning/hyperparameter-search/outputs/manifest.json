@@ -1,0 +1,19 @@
+{
+  "showcase": "hyperparameter-search",
+  "digest": "4824cd0263899e6cb89ce3de94436ff13afde39fc80055f756a4ab3b33786770",
+  "stages": [
+    "load",
+    "preprocess",
+    "rf-1",
+    "rf-2",
+    "rf-3",
+    "rf-4",
+    "compare",
+    "best-model"
+  ],
+  "status": "success",
+  "artifacts": [
+    "leaderboard.csv",
+    "best-model.pkl"
+  ]
+}

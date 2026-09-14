@@ -1,0 +1,15 @@
+{
+  "showcase": "multi-agent-review",
+  "digest": "c19183bfdb5e0cb966c7736d4f7926711b279df7f6894b30c796b5e4f7c2d75f",
+  "stages": [
+    "researcher",
+    "reviewer",
+    "critic",
+    "synthesis"
+  ],
+  "status": "success",
+  "artifacts": [
+    "synthesis.md",
+    "review.json"
+  ]
+}

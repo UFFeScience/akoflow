@@ -1,0 +1,15 @@
+{
+  "showcase": "infrastructure-selection",
+  "digest": "02886d3b5904e4967057de64fa092a7c8dd0f9d117f54da2bfd7d64a6e9864ae",
+  "stages": [
+    "estimate-local",
+    "estimate-cloud",
+    "estimate-hpc",
+    "decision"
+  ],
+  "status": "success",
+  "artifacts": [
+    "decision.json",
+    "cost-comparison.csv"
+  ]
+}

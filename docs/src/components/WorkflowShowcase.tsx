@@ -129,13 +129,21 @@ export function AIWorkflowPattern({
         <section className={styles.exampleBundle}>
           <h2>Runnable example</h2>
           <p>
-            This page includes the checked-in example used for this pattern. Download its
-            instructions and runner, then use the remaining YAML, source, and test files from
-            the same published bundle.
+            This is the complete checked-in bundle for this pattern. Download the environment,
+            scope, topology, workflow, input, container recipe, runner, and validation contract
+            from this page before executing it.
           </p>
           <div className={styles.files}>
             <a href={`/examples/showcase/${examplePath}/README.md`}>Read setup instructions ↓</a>
-            <a href={`/examples/showcase/${examplePath}/run.sh`}>Download runner ↓</a>
+            <a href={`/examples/showcase/${examplePath}/environment.yaml`}>Environment YAML ↓</a>
+            <a href={`/examples/showcase/${examplePath}/scope.yaml`}>Execution scope YAML ↓</a>
+            <a href={`/examples/showcase/${examplePath}/topology.yaml`}>Network topology YAML ↓</a>
+            <a href={`/examples/showcase/${examplePath}/workflow.yaml`}>Workflow YAML ↓</a>
+            <a href={`/examples/showcase/${examplePath}/data/input.json`}>Input data ↓</a>
+            <a href={`/examples/showcase/${examplePath}/docker/Dockerfile`}>Container recipe ↓</a>
+            <a href={`/examples/showcase/${examplePath}/run.sh`}>Run the workflow ↓</a>
+            <a href={`/examples/showcase/${examplePath}/validate.sh`}>Validate outputs ↓</a>
+            <a href={`/examples/showcase/${examplePath}/expected/manifest.json`}>Expected output manifest ↓</a>
           </div>
         </section>
       )}

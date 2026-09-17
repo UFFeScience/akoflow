@@ -9,7 +9,7 @@ import (
 	"github.com/UFFeScience/akoflow/internal/infrastructure/database"
 )
 
-func TestMetricExtensionDoesNotInvalidateExistingDatabase(t *testing.T) {
+func TestMetricStorageIsInstalledByCanonicalBootstrap(t *testing.T) {
 	t.Setenv("AKOFLOW_SQLITE_JOURNAL_MODE", "DELETE")
 	ctx := context.Background()
 	path := filepath.Join(t.TempDir(), "existing.db")
@@ -20,11 +20,8 @@ func TestMetricExtensionDoesNotInvalidateExistingDatabase(t *testing.T) {
 	if err := database.Bootstrap(ctx, db); err != nil {
 		t.Fatal(err)
 	}
-	if err := New(db).EnsureMetricSchema(ctx); err != nil {
-		t.Fatal(err)
-	}
 	if err := database.Validate(ctx, db); err != nil {
-		t.Fatalf("metric extension invalidated canonical schema: %v", err)
+		t.Fatalf("canonical schema with metrics is invalid: %v", err)
 	}
 	if err := db.Close(); err != nil {
 		t.Fatal(err)
@@ -101,9 +98,6 @@ func TestMetricSeriesIsBoundedAndKeepsLastSample(t *testing.T) {
 		t.Fatal(err)
 	}
 	repository := New(db)
-	if err := repository.EnsureMetricSchema(ctx); err != nil {
-		t.Fatal(err)
-	}
 	samples := make([]domain.ActivityMetricSample, 3000)
 	for index := range samples {
 		samples[index] = domain.ActivityMetricSample{RunID: "run", ActivityID: "task", Attempt: 1,

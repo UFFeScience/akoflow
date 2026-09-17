@@ -85,10 +85,18 @@ func (f *activityControllerFake) Start(_ context.Context, execution domain.Activ
 type cloudAllocationStoreFake struct {
 	ports.CloudConfigurationStore
 	target    domain.CloudCapacityTarget
+	targets   map[string]domain.CloudCapacityTarget
 	instances []domain.CloudProvisionedInstance
 }
 
-func (f cloudAllocationStoreFake) FindCapacityTarget(context.Context, string) (*domain.CloudCapacityTarget, error) {
+func (f cloudAllocationStoreFake) FindCapacityTarget(_ context.Context, id string) (*domain.CloudCapacityTarget, error) {
+	if f.targets != nil {
+		value, ok := f.targets[id]
+		if !ok {
+			return nil, nil
+		}
+		return &value, nil
+	}
 	value := f.target
 	return &value, nil
 }
@@ -109,6 +117,28 @@ func (f *cloudProvisionerFake) Provision(context.Context, string, domain.CloudPr
 }
 
 func (*cloudProvisionerFake) Release(context.Context, []string) error { return nil }
+
+type parallelPrewarmFake struct {
+	prewarmed []string
+	want      int
+}
+
+func (f *parallelPrewarmFake) Prewarm(_ context.Context, _ string, _ string, target domain.CloudCapacityTarget) error {
+	f.prewarmed = append(f.prewarmed, target.ID)
+	return nil
+}
+
+func (f *parallelPrewarmFake) Allocate(_ context.Context, _ string, _ string, target domain.CloudCapacityTarget) (domain.CloudProvisionedInstance, error) {
+	if len(f.prewarmed) != f.want {
+		return domain.CloudProvisionedInstance{}, fmt.Errorf("allocation began after only %d of %d targets were queued", len(f.prewarmed), f.want)
+	}
+	return domain.CloudProvisionedInstance{ID: "instance-" + target.ID, CapacityTargetID: target.ID, EnvironmentID: target.EnvironmentID, Status: "ready"}, nil
+}
+
+func (*parallelPrewarmFake) Release(context.Context, string, map[string]domain.RuntimeAllocation, bool) error {
+	return nil
+}
+
 func (f *activityControllerFake) Inspect(_ context.Context, id string, _ domain.ExecutionMode) (*domain.ActivityHandle, error) {
 	if f.inspections == nil {
 		f.inspections = map[string]int{}
@@ -356,6 +386,43 @@ func TestSupervisorBindsCloudInstanceBeforeActivityStart(t *testing.T) {
 	}
 	if len(store.tasks) == 0 || store.tasks[0].CloudInstanceID != "instance-a" {
 		t.Fatalf("task did not persist allocation: %#v", store.tasks)
+	}
+}
+
+func TestSupervisorQueuesAllReadyCloudTargetsBeforeWaitingForFirst(t *testing.T) {
+	request := requestFixture(domain.ExecutionModeReal)
+	request.Workflow.Dependencies = nil
+	request.Workflow.Activities = append(request.Workflow.Activities,
+		domain.Activity{ID: "c", Name: "c", Kind: domain.ActivityKindTask, Capabilities: []domain.ActivityCapability{domain.ActivityCapabilityReal}, Command: domain.ActivityCommand{Entrypoint: "true"}},
+		domain.Activity{ID: "d", Name: "d", Kind: domain.ActivityKindTask, Capabilities: []domain.ActivityCapability{domain.ActivityCapabilityReal}, Command: domain.ActivityCommand{Entrypoint: "true"}},
+	)
+	request.Plan.Assignments = nil
+	request.Resources = nil
+	request.RuntimeBindings = nil
+	request.Runtimes = []domain.EnvironmentRuntime{{ID: "cloud-runtime", Driver: domain.RuntimeDriverCloud, Mode: domain.RuntimeModeExecution}}
+	targets := map[string]domain.CloudCapacityTarget{}
+	for index, activity := range request.Workflow.Activities {
+		resourceID := fmt.Sprintf("resource-%d", index)
+		targetID := fmt.Sprintf("target-%d", index)
+		request.Plan.Assignments = append(request.Plan.Assignments, domain.PlanAssignment{ID: "assignment-" + activity.ID, ActivityID: activity.ID, ResourceID: resourceID, Metadata: map[string]any{"runtimeId": "cloud-runtime"}})
+		request.Resources = append(request.Resources, domain.Resource{ID: resourceID, Type: domain.ResourceCloudVM, Metadata: map[string]any{"capacityTargetId": targetID}})
+		request.RuntimeBindings = append(request.RuntimeBindings, domain.ResourceRuntimeBinding{ResourceID: resourceID, RuntimeID: "cloud-runtime", Enabled: true})
+		targets[targetID] = domain.CloudCapacityTarget{ID: targetID, EnvironmentID: "environment"}
+	}
+	allocator := &parallelPrewarmFake{want: 4}
+	activities := &activityControllerFake{}
+	service, err := New(&executionStoreFake{}, activities, &planExecutorFake{}, Config{
+		PollInterval: time.Microsecond, MaxParallel: 4,
+		Cloud: &cloudProvisionerFake{}, CloudStore: cloudAllocationStoreFake{targets: targets}, CloudAllocator: allocator,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := service.Execute(context.Background(), request); err != nil {
+		t.Fatal(err)
+	}
+	if len(allocator.prewarmed) != 4 || len(activities.started) != 4 {
+		t.Fatalf("prewarmed=%v started=%v", allocator.prewarmed, activities.started)
 	}
 }
 

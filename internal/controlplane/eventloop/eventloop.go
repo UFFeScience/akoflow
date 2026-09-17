@@ -22,7 +22,7 @@ type Config struct {
 
 func DefaultConfig(owner string) Config {
 	return Config{
-		Owner: owner, Concurrency: 8, InfrastructureConcurrency: 2, LeaseDuration: 30 * time.Second,
+		Owner: owner, Concurrency: 8, InfrastructureConcurrency: 4, LeaseDuration: 30 * time.Second,
 		PollInterval: time.Second, RetryBaseInterval: 2 * time.Second,
 	}
 }

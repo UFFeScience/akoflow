@@ -178,6 +178,9 @@ func (s *Supervisor) executeActivities(ctx context.Context, request ports.Execut
 		if available > len(ready) {
 			available = len(ready)
 		}
+		if err := s.prewarmReadyCloud(ctx, request, ready[:available], assignments, resources); err != nil {
+			return domain.ExecutionTrace{}, fmt.Errorf("prewarm cloud capacity: %w", err)
+		}
 		if err := s.startReadyActivities(
 			ctx, request, ready[:available], activities, assignments, resources,
 			running, completed, tasks, &transfers,
@@ -196,6 +199,60 @@ func (s *Supervisor) executeActivities(ctx context.Context, request ports.Execut
 		}
 	}
 	return completedTrace(request, tasks, transfers), nil
+}
+
+// Submit every ready cloud target before Allocate waits for the first VM.
+// This preserves on-demand provisioning while allowing independent Terraform
+// operations to run concurrently in the infrastructure queue.
+func (s *Supervisor) prewarmReadyCloud(
+	ctx context.Context,
+	request ports.ExecutionRequest,
+	ready []string,
+	assignments map[string]domain.PlanAssignment,
+	resources map[string]domain.Resource,
+) error {
+	prewarmer, ok := s.config.CloudAllocator.(CloudPrewarmer)
+	if !ok || s.config.CloudStore == nil {
+		return nil
+	}
+	type pendingTarget struct {
+		activityID string
+		target     domain.CloudCapacityTarget
+	}
+	pending := make([]pendingTarget, 0)
+	seen := make(map[string]bool)
+	for _, activityID := range ready {
+		if runtimeDriver(request, activityID) != domain.RuntimeDriverCloud {
+			continue
+		}
+		assignment := assignments[activityID]
+		resource, exists := resources[assignment.ResourceID]
+		if !exists {
+			return fmt.Errorf("resource %q not found", assignment.ResourceID)
+		}
+		targetID := resource.ID
+		if value, _ := resource.Metadata["capacityTargetId"].(string); strings.TrimSpace(value) != "" {
+			targetID = strings.TrimSpace(value)
+		}
+		if seen[targetID] {
+			continue
+		}
+		target, err := s.config.CloudStore.FindCapacityTarget(ctx, targetID)
+		if err != nil {
+			return fmt.Errorf("load cloud capacity target %q: %w", targetID, err)
+		}
+		if target == nil {
+			return fmt.Errorf("cloud capacity target %q not found", targetID)
+		}
+		pending = append(pending, pendingTarget{activityID: activityID, target: *target})
+		seen[targetID] = true
+	}
+	for _, item := range pending {
+		if err := prewarmer.Prewarm(ctx, request.Run.ID, item.activityID, item.target); err != nil {
+			return fmt.Errorf("target %q: %w", item.target.ID, err)
+		}
+	}
+	return nil
 }
 
 func (s *Supervisor) inspectRunning(

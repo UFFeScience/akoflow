@@ -3,36 +3,10 @@ package execution
 import (
 	"context"
 	"database/sql"
-	"fmt"
 	"strings"
 
 	"github.com/UFFeScience/akoflow/internal/domain"
 )
-
-// Metric samples intentionally live outside the canonical bootstrap schema.
-// This additive extension can be installed on an existing instance without
-// recreating its database or interrupting historical runs.
-func (r *Repository) EnsureMetricSchema(ctx context.Context) error {
-	_, err := r.db.ExecContext(ctx, `CREATE TABLE IF NOT EXISTS activity_metric_samples (
-		execution_run_id TEXT NOT NULL,
-		activity_id TEXT NOT NULL,
-		attempt INTEGER NOT NULL,
-		observed_at REAL NOT NULL,
-		cpu_seconds REAL NOT NULL,
-		memory_bytes INTEGER NOT NULL,
-		read_bytes INTEGER NOT NULL,
-		write_bytes INTEGER NOT NULL,
-		source TEXT NOT NULL,
-		scope TEXT NOT NULL,
-		PRIMARY KEY (execution_run_id, activity_id, attempt, observed_at)
-	);
-	CREATE INDEX IF NOT EXISTS activity_metric_samples_run_idx
-		ON activity_metric_samples(execution_run_id, activity_id, attempt);`)
-	if err != nil {
-		return fmt.Errorf("install activity metric storage: %w", err)
-	}
-	return nil
-}
 
 func (r *Repository) SaveActivityMetrics(ctx context.Context, samples []domain.ActivityMetricSample) error {
 	if len(samples) == 0 {

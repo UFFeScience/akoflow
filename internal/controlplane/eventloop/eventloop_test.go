@@ -77,6 +77,72 @@ func TestLoopDispatchesDurableJob(t *testing.T) {
 	}
 }
 
+func TestLoopRunsFourInfrastructureJobsConcurrently(t *testing.T) {
+	db, err := sql.Open("sqlite3", ":memory:")
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer db.Close()
+	db.SetMaxOpenConns(1)
+	if err := database.Bootstrap(context.Background(), db); err != nil {
+		t.Fatal(err)
+	}
+	repository, err := queue.New(db)
+	if err != nil {
+		t.Fatal(err)
+	}
+	started := make(chan struct{}, 4)
+	release := make(chan struct{})
+	dispatcher := NewDispatcher()
+	if err := dispatcher.Register("test.infrastructure", HandlerFunc(func(ctx context.Context, _ domainqueue.Job) error {
+		started <- struct{}{}
+		select {
+		case <-release:
+			return nil
+		case <-ctx.Done():
+			return ctx.Err()
+		}
+	})); err != nil {
+		t.Fatal(err)
+	}
+	for index := 0; index < 4; index++ {
+		job, err := domainqueue.New(domainqueue.CategoryInfrastructure, "test.infrastructure", nil, time.Now())
+		if err != nil {
+			t.Fatal(err)
+		}
+		if _, err := repository.Publish(context.Background(), job); err != nil {
+			t.Fatal(err)
+		}
+	}
+	config := DefaultConfig("parallel-infrastructure-worker")
+	if config.InfrastructureConcurrency < 4 {
+		t.Fatalf("infrastructure concurrency = %d, want at least four", config.InfrastructureConcurrency)
+	}
+	config.PollInterval = 5 * time.Millisecond
+	loop, err := New(repository, dispatcher, config)
+	if err != nil {
+		t.Fatal(err)
+	}
+	ctx, cancel := context.WithCancel(context.Background())
+	done := make(chan error, 1)
+	go func() { done <- loop.Run(ctx) }()
+	for index := 0; index < 4; index++ {
+		select {
+		case <-started:
+		case <-time.After(2 * time.Second):
+			close(release)
+			cancel()
+			<-done
+			t.Fatalf("only %d of four infrastructure jobs started concurrently", index)
+		}
+	}
+	close(release)
+	cancel()
+	if err := <-done; err != nil {
+		t.Fatal(err)
+	}
+}
+
 func TestDispatcherRejectsDuplicatesAndUnknownEvents(t *testing.T) {
 	dispatcher := NewDispatcher()
 	handler := HandlerFunc(func(context.Context, domainqueue.Job) error { return nil })

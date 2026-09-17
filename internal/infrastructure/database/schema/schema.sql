@@ -838,3 +838,18 @@ CREATE TABLE build_runs (
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 CREATE INDEX build_runs_build_idx ON build_runs(artifact_build_id, created_at DESC);
+CREATE TABLE activity_metric_samples (
+    execution_run_id TEXT NOT NULL,
+    activity_id TEXT NOT NULL,
+    attempt INTEGER NOT NULL,
+    observed_at REAL NOT NULL,
+    cpu_seconds REAL NOT NULL,
+    memory_bytes INTEGER NOT NULL,
+    read_bytes INTEGER NOT NULL,
+    write_bytes INTEGER NOT NULL,
+    source TEXT NOT NULL,
+    scope TEXT NOT NULL,
+    PRIMARY KEY (execution_run_id, activity_id, attempt, observed_at)
+);
+CREATE INDEX activity_metric_samples_run_idx
+    ON activity_metric_samples(execution_run_id, activity_id, attempt);

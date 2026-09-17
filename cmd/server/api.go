@@ -11,6 +11,7 @@ import (
 	appbuild "github.com/UFFeScience/akoflow/internal/application/build"
 	applicationcloud "github.com/UFFeScience/akoflow/internal/application/cloudcatalog"
 	cloudprovision "github.com/UFFeScience/akoflow/internal/application/cloudprovision"
+	applicationexecution "github.com/UFFeScience/akoflow/internal/application/execution"
 	"github.com/UFFeScience/akoflow/internal/application/ports"
 	appstorage "github.com/UFFeScience/akoflow/internal/application/storage"
 	"github.com/UFFeScience/akoflow/internal/domain"
@@ -61,6 +62,7 @@ func buildAPI(
 	cloudCredentials *cloudcredential.Manager,
 	cloudProvisioner ports.CloudProvisioner,
 	planning workflow_engine_api_handler.PlanningOrchestrator,
+	activities *applicationexecution.Controller,
 ) (*workflow_engine_api_handler.Handler, error) {
 	cloudCatalog := applicationcloud.New(storage.environments, cloudCredentials, storage.cloud, gcpcloud.New(nil))
 	// Never expose the process filesystem as a storage browser. Local storage is
@@ -95,37 +97,38 @@ func buildAPI(
 		}
 	}
 	return workflow_engine_api_handler.New(workflow_engine_api_handler.Dependencies{
-		Environments:     storage.environments,
-		Workflows:        storage.workflows,
-		Plans:            storage.plans,
-		Events:           storage.events,
-		Validator:        planningplugin.NewValidator(),
-		Executions:       storage.executions,
-		Topologies:       storage.topologies,
-		Scopes:           storage.topologies,
-		Data:             storage.data,
-		Resources:        storage.resources,
-		Instance:         storage.instance,
-		Connections:      connections,
-		Discovery:        discovery,
-		SSHKeys:          sshKeys,
-		KubernetesTokens: token.New(settings.KubernetesTokenDirectory),
-		Audit:            storage.audit,
-		Console:          console,
-		Terminal:         terminal,
-		Storage:          appstorage.NewBrowserCoordinator(storage.storage, browsers),
-		Build:            manager,
-		Planning:         planning,
-		PlanningStore:    storage.plans,
-		Provenance:       databaseprovenance.New(storage.analytics),
-		Cloud:            storage.cloud,
-		CloudOperations:  storage.cloud,
-		CloudCatalog:     cloudCatalog,
-		CloudProvisioner: cloudProvisioner,
-		CloudCredentials: cloudCredentials,
-		InstanceArchive:  archives,
-		ReadOnly:         storage.readOnly,
-		Restart:          restart,
+		Environments:        storage.environments,
+		Workflows:           storage.workflows,
+		Plans:               storage.plans,
+		Events:              storage.events,
+		Validator:           planningplugin.NewValidator(),
+		Executions:          storage.executions,
+		ActivityInterrupter: applicationexecution.Interrupter{Store: storage.executions, Stopper: activities},
+		Topologies:          storage.topologies,
+		Scopes:              storage.topologies,
+		Data:                storage.data,
+		Resources:           storage.resources,
+		Instance:            storage.instance,
+		Connections:         connections,
+		Discovery:           discovery,
+		SSHKeys:             sshKeys,
+		KubernetesTokens:    token.New(settings.KubernetesTokenDirectory),
+		Audit:               storage.audit,
+		Console:             console,
+		Terminal:            terminal,
+		Storage:             appstorage.NewBrowserCoordinator(storage.storage, browsers),
+		Build:               manager,
+		Planning:            planning,
+		PlanningStore:       storage.plans,
+		Provenance:          databaseprovenance.New(storage.analytics),
+		Cloud:               storage.cloud,
+		CloudOperations:     storage.cloud,
+		CloudCatalog:        cloudCatalog,
+		CloudProvisioner:    cloudProvisioner,
+		CloudCredentials:    cloudCredentials,
+		InstanceArchive:     archives,
+		ReadOnly:            storage.readOnly,
+		Restart:             restart,
 		FactoryReset: func(_ context.Context) error {
 			if err := database.ScheduleFactoryReset(instancearchive.ResolveDatabasePath()); err != nil {
 				return err

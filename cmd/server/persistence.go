@@ -93,11 +93,6 @@ func openPersistence(ctx context.Context, recreateOnSchemaChange bool) (persiste
 	cloudRepository := dbcloud.New(db)
 	executionRepository := dbexecution.New(db)
 	if !readOnly {
-		if err := executionRepository.EnsureMetricSchema(ctx); err != nil {
-			_ = analytics.Close()
-			_ = db.Close()
-			return persistence{}, err
-		}
 		if err := ensureSystemInstance(ctx, instanceRepository); err != nil {
 			_ = analytics.Close()
 			_ = db.Close()

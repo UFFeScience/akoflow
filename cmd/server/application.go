@@ -109,7 +109,7 @@ func newApplication(ctx context.Context, settings config.Settings, log *logger.L
 	}
 	api, err := buildAPI(
 		storage, settings, connectionMonitor, discovery, consoleCommands, terminal,
-		sshKeys, cloudCredentials, cloudProvisioner, planningService,
+		sshKeys, cloudCredentials, cloudProvisioner, planningService, activities,
 	)
 	if err != nil {
 		return fail(err)

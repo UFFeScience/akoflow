@@ -1,0 +1,13 @@
+{
+  "slug": "surrogate-model",
+  "title": "Surrogate Model",
+  "stages": [
+    "simulation",
+    "dataset",
+    "train-surrogate"
+  ],
+  "artifacts": [
+    "surrogate.pkl",
+    "validation.json"
+  ]
+}

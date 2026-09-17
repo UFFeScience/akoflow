@@ -1,0 +1,6 @@
+id: showcase-synthetic-dataset-topology
+name: Synthetic Dataset local topology
+version: 1
+executionScopeId: showcase-synthetic-dataset-scope
+links: []
+

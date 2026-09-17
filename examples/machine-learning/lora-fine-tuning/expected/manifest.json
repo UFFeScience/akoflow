@@ -1,0 +1,9 @@
+{
+  "showcase": "lora-fine-tuning",
+  "artifacts": [
+    "adapter.bin",
+    "evaluation.json"
+  ],
+  "status": "success"
+}
+

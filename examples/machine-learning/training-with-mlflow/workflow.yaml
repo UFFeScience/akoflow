@@ -1,0 +1,45 @@
+name: showcase-training-with-mlflow
+spec:
+  namespace: showcase
+  # Published by .github/workflows/build-showcase.yml.
+  image: ghcr.io/uffescience/akoflow-showcase-training-with-mlflow:v1
+  activities:
+    - name: load-data
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-training-with-mlflow:v1 load-data
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+    - name: preprocess
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-training-with-mlflow:v1 preprocess
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - load-data
+    - name: train
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-training-with-mlflow:v1 train
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - preprocess
+    - name: evaluate
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-training-with-mlflow:v1 evaluate
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - train
+    - name: register-model
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-training-with-mlflow:v1 register-model
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - evaluate
+

@@ -1,0 +1,14 @@
+{
+  "slug": "audio-transcription",
+  "title": "Audio Transcription",
+  "stages": [
+    "audio",
+    "split",
+    "transcribe",
+    "summarize"
+  ],
+  "artifacts": [
+    "transcript.txt",
+    "summary.md"
+  ]
+}

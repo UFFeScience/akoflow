@@ -22,5 +22,16 @@ volumes/
 /wf-*.yaml
 /build/
 /.akoflow/
-/examples/
+/examples/*
+!/examples/README.md
+!/examples/machine-learning/
+!/examples/machine-learning/**
+!/examples/generative-ai/
+!/examples/generative-ai/**
+!/examples/agentic-workflows/
+!/examples/agentic-workflows/**
+!/examples/scientific-ai/
+!/examples/scientific-ai/**
 config
+
+__pycache__/

@@ -1,0 +1,9 @@
+{
+  "showcase": "audio-transcription",
+  "artifacts": [
+    "transcript.txt",
+    "summary.md"
+  ],
+  "status": "success"
+}
+

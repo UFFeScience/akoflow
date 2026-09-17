@@ -1,0 +1,5 @@
+id: showcase-experiment-feedback-loop-scope
+name: Experiment Feedback Loop local scope
+environmentVersionIds:
+  - showcase-experiment-feedback-loop-v1
+

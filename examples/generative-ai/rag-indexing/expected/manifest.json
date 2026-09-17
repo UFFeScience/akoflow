@@ -1,0 +1,9 @@
+{
+  "showcase": "rag-indexing",
+  "artifacts": [
+    "index.faiss",
+    "evaluation.json"
+  ],
+  "status": "success"
+}
+

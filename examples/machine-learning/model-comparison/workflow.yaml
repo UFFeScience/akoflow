@@ -1,0 +1,45 @@
+name: showcase-model-comparison
+spec:
+  namespace: showcase
+  # Published by .github/workflows/build-showcase.yml.
+  image: ghcr.io/uffescience/akoflow-showcase-model-comparison:v1
+  activities:
+    - name: dataset
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-model-comparison:v1 dataset
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+    - name: model-a
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-model-comparison:v1 model-a
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - dataset
+    - name: model-b
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-model-comparison:v1 model-b
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - model-a
+    - name: model-c
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-model-comparison:v1 model-c
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - model-b
+    - name: comparison
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-model-comparison:v1 comparison
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - model-c
+

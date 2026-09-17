@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "generate:api": "node scripts/generate-api-reference.mjs",
+    "sync:showcase-examples": "node scripts/sync-showcase-examples.mjs",
     "capture:media": "node scripts/capture-interface-media.mjs",
-    "prestart": "npm run generate:api",
-    "prebuild": "npm run generate:api",
+    "prestart": "npm run sync:showcase-examples && npm run generate:api",
+    "prebuild": "npm run sync:showcase-examples && npm run generate:api",
     "docusaurus": "docusaurus",
     "start": "docusaurus start",
     "build": "docusaurus build",
@@ -17,6 +18,7 @@
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
     "typecheck": "tsc",
+    "precheck:links": "npm run sync:showcase-examples",
     "check:links": "node scripts/check-links.mjs",
     "check:shell": "node scripts/check-shell-examples.mjs"
   },

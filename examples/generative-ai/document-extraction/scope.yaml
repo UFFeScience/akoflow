@@ -1,0 +1,5 @@
+id: showcase-document-extraction-scope
+name: Document Extraction local scope
+environmentVersionIds:
+  - showcase-document-extraction-v1
+

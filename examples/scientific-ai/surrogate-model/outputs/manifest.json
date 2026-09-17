@@ -1,0 +1,14 @@
+{
+  "showcase": "surrogate-model",
+  "digest": "409a653d96b461f4ba1721308be80d77a06ef6f8b16ea2a315741820ac762453",
+  "stages": [
+    "simulation",
+    "dataset",
+    "train-surrogate"
+  ],
+  "status": "success",
+  "artifacts": [
+    "surrogate.pkl",
+    "validation.json"
+  ]
+}

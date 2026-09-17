@@ -1,0 +1,37 @@
+name: showcase-supervised-tool-loop
+spec:
+  namespace: showcase
+  # Published by .github/workflows/build-showcase.yml.
+  image: ghcr.io/uffescience/akoflow-showcase-supervised-tool-loop:v1
+  activities:
+    - name: proposal
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-supervised-tool-loop:v1 proposal
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+    - name: approval
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-supervised-tool-loop:v1 approval
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - proposal
+    - name: execution
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-supervised-tool-loop:v1 execution
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - approval
+    - name: verification
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-supervised-tool-loop:v1 verification
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - execution
+

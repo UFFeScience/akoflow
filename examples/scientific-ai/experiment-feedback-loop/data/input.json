@@ -1,0 +1,13 @@
+{
+  "slug": "experiment-feedback-loop",
+  "title": "Experiment Feedback Loop",
+  "stages": [
+    "experiment",
+    "model",
+    "next-batch"
+  ],
+  "artifacts": [
+    "next-batch.json",
+    "feedback-report.json"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "showcase": "anomaly-detection",
+  "digest": "e8a30b0a4a704841189a4f6aad8d75319e8e2ec1c206a642e1033f2d739351d5",
+  "stages": [
+    "generate-data",
+    "feature-engineering",
+    "train",
+    "score",
+    "threshold"
+  ],
+  "status": "success",
+  "artifacts": [
+    "anomalies.json",
+    "metrics.json"
+  ]
+}

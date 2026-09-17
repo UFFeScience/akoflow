@@ -1,0 +1,15 @@
+{
+  "slug": "model-ensemble",
+  "title": "Model Ensemble",
+  "stages": [
+    "dataset",
+    "rf",
+    "svm",
+    "xgb",
+    "ensemble"
+  ],
+  "artifacts": [
+    "ensemble.pkl",
+    "metrics.json"
+  ]
+}

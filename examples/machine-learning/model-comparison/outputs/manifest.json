@@ -1,0 +1,16 @@
+{
+  "showcase": "model-comparison",
+  "digest": "ead48728bd3f599458eedec8292b1756742d9c05a900d51982fb320aedab3156",
+  "stages": [
+    "dataset",
+    "model-a",
+    "model-b",
+    "model-c",
+    "comparison"
+  ],
+  "status": "success",
+  "artifacts": [
+    "comparison.csv",
+    "report.html"
+  ]
+}

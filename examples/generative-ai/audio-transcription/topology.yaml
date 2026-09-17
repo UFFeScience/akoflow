@@ -1,0 +1,6 @@
+id: showcase-audio-transcription-topology
+name: Audio Transcription local topology
+version: 1
+executionScopeId: showcase-audio-transcription-scope
+links: []
+

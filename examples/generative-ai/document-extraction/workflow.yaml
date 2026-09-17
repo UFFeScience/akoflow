@@ -1,0 +1,37 @@
+name: showcase-document-extraction
+spec:
+  namespace: showcase
+  # Published by .github/workflows/build-showcase.yml.
+  image: ghcr.io/uffescience/akoflow-showcase-document-extraction:v1
+  activities:
+    - name: pdf
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-document-extraction:v1 pdf
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+    - name: ocr
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-document-extraction:v1 ocr
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - pdf
+    - name: extract
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-document-extraction:v1 extract
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - ocr
+    - name: json
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-document-extraction:v1 json
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - extract
+

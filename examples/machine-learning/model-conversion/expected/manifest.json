@@ -1,0 +1,10 @@
+{
+  "showcase": "model-conversion",
+  "artifacts": [
+    "model.onnx",
+    "model.gguf",
+    "model.engine"
+  ],
+  "status": "success"
+}
+

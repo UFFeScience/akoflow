@@ -1,0 +1,85 @@
+---
+id: transfer-relay
+title: Data transfer relay
+sidebar_label: Transfer relay
+description: How AkôFlow selects, executes, verifies, and records transfers across local, remote, HPC, Kubernetes, and cloud runtimes.
+---
+
+import useBaseUrl from '@docusaurus/useBaseUrl';
+
+A data transfer relay is the preparation that makes a producer activity's file available in a consumer activity's workspace. A relay is not necessarily an intermediary server: it is the decision and execution of a verifiable route, which can use shared storage, a direct runtime-to-runtime copy, or a connector-mediated path.
+
+Use [Network modeling](/docs/explanations/network-modeling) for the planned network cost of a dependency. This page explains how bytes are made available during an actual execution.
+
+## Relay model
+
+<img src={useBaseUrl('/img/architecture/transfer-relay.svg')} alt="A producer runtime, route planner, and consumer runtime with transfer strategies and verification states." />
+
+| Term | Meaning |
+| --- | --- |
+| **Blob** | Bytes identified by an expected digest and size. |
+| **Location** | Where bytes exist, including URI, resource, environment, runtime, connection, and network domain when known. |
+| **Endpoint** | A target a connector can open, write, and commit. Configuration stores credential references, not credential material. |
+| **Route** | The selected strategy, concrete addresses when applicable, selection reason, and fallback. |
+| **Materialization** | Preparing an artifact or workspace at the destination. It is committed only when the verified digest matches the expected digest. |
+
+A dependent activity must not start merely because a copy was requested. Preparation progresses through `planned → transferring → verifying → committed`; a failure ends in `failed`. Execution evidence can also record logical bytes, network bytes, completed chunks, attempts, and verified digests.
+
+## Strategies
+
+| Strategy | Use it when | It avoids or requires |
+| --- | --- | --- |
+| `use-existing` | The destination already has the verified version and digest. | Avoids a new copy; availability must still be valid. |
+| `shared-storage` | Producer and consumer can see the same PVC, NFS, or scratch path. | Avoids duplication; confirm visibility from the node that will execute the activity. |
+| `destination-pull` | The destination can fetch HTTP, S3-compatible, or another exposed endpoint. | Avoids inbound access at the producer; requires valid egress, URL, and destination credentials. |
+| `source-push` | The source can publish to the destination. | Avoids consumer egress; requires write permission and destination authentication. |
+| `gateway` | No safe direct path is available; connectors read the source and write the destination. | Crosses domains while measuring and verifying the transfer. |
+| `runtime-local` | Both activities run on the same concrete instance. | Avoids a network copy; it applies to one instance, not merely to one cloud provider. |
+| `direct-runtime` | Two concrete runtimes can exchange bytes directly. | Avoids an intermediary payload hop; requires a verified private route and restricted temporary identity. |
+
+## Runtime-specific paths
+
+<img src={useBaseUrl('/img/architecture/transfer-runtime-paths.svg')} alt="A matrix of preferred and controlled transfer paths for local, Kubernetes, HPC, SSH, cloud, and SimGrid environments." />
+
+### Local
+
+For processes on the daemon host, prefer `runtime-local` or filesystem access when the workspace is the same. The local runtime is not a sandbox: it runs trusted processes on the host. Move data to a different machine through an explicit remote route, not by assuming local paths are shared.
+
+### Kubernetes
+
+For Pods using the same PVC, `shared-storage` is the simplest route. Confirm the claim, namespace, permissions, and Job mount before selecting it. When data enters or leaves the cluster, Kubernetes exec can participate in a `gateway` route; this requires API access and appropriate RBAC.
+
+### HPC and Slurm
+
+On HPC, visibility from the login node does not establish that a compute node can read or write the same path. Prefer shared scratch only after a compute-node visibility probe. To cross the cluster boundary, use `rsync/SSH` as a gateway with a restricted account, verified host key, and enough temporary space. `sbatch` submission and data transfer are separate operations.
+
+### SSH and remote hosts
+
+The current SSH runtime executes Docker directly on a remote host; it is not a general remote-shell runtime. `rsync/SSH` is appropriate when both endpoints have verified paths and identities. For a `direct-runtime` copy between VMs, AkôFlow uses a short-lived destination identity and does not forward the platform's permanent key.
+
+### On-demand cloud
+
+Cloud capacity becomes a runtime only after lifecycle actions create and register a concrete instance. Use `runtime-local` only inside that same instance. Between VMs, `direct-runtime` can reduce hops and cost when private networking, ACLs, and a temporary identity are available; otherwise use `gateway` or an artifact store. Do not put credentials, project IDs, or broad firewall rules in a workflow.
+
+### SimGrid
+
+SimGrid models transfers, latency, topology, and cost; it does not move real bytes. Use it to compare plans and validate a network model. A simulated execution does not prove PVC, SSH, S3, Kubernetes API, or cloud access.
+
+## Connectors and current limitations
+
+Implemented connectors include the artifact store, local filesystem, rsync/SSH, Kubernetes exec, HTTP download, and S3-compatible transfer. The GCS connector currently rejects direct `gs://` transfer; a deployment needs another supported route or its own transfer agent. Configure a fallback rather than assuming a GCS URI will work.
+
+## Safe operating sequence
+
+1. Identify where the blob exists and where the consumer will actually run.
+2. Verify fresh capabilities: connector, HTTPS egress, checksum, path, capacity, and execution-node visibility.
+3. Choose the least invasive route: existing, shared, direct, pull/push, then gateway.
+4. Restrict identity and network access to the smallest necessary scope; use environment credential references.
+5. Wait for digest verification and inspect transfer records before attributing a failure to the consumer activity.
+
+## Related material
+
+- [Runtime adapters](/docs/runtimes)
+- [Create and inspect environments](/docs/guides/infrastructure/environments)
+- [Connect an HPC and SLURM cluster](/docs/guides/infrastructure/hpc-slurm)
+- [Evidence and provenance](/docs/explanations/evidence-and-provenance)

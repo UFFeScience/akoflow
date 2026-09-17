@@ -1,0 +1,13 @@
+{
+  "slug": "bounded-agent",
+  "title": "Bounded Agent",
+  "stages": [
+    "goal",
+    "agent",
+    "validator"
+  ],
+  "artifacts": [
+    "answer.json",
+    "validation.json"
+  ]
+}

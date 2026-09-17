@@ -1,0 +1,29 @@
+name: showcase-lora-fine-tuning
+spec:
+  namespace: showcase
+  # Published by .github/workflows/build-showcase.yml.
+  image: ghcr.io/uffescience/akoflow-showcase-lora-fine-tuning:v1
+  activities:
+    - name: prepare
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-lora-fine-tuning:v1 prepare
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+    - name: finetune
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-lora-fine-tuning:v1 finetune
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - prepare
+    - name: evaluate
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-lora-fine-tuning:v1 evaluate
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - finetune
+

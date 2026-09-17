@@ -1,0 +1,29 @@
+name: showcase-experiment-feedback-loop
+spec:
+  namespace: showcase
+  # Published by .github/workflows/build-showcase.yml.
+  image: ghcr.io/uffescience/akoflow-showcase-experiment-feedback-loop:v1
+  activities:
+    - name: experiment
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-experiment-feedback-loop:v1 experiment
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+    - name: model
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-experiment-feedback-loop:v1 model
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - experiment
+    - name: next-batch
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-experiment-feedback-loop:v1 next-batch
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - model
+

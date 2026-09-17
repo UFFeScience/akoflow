@@ -1,0 +1,16 @@
+{
+  "slug": "training-with-mlflow",
+  "title": "Training with MLflow",
+  "stages": [
+    "load-data",
+    "preprocess",
+    "train",
+    "evaluate",
+    "register-model"
+  ],
+  "artifacts": [
+    "model.pkl",
+    "metrics.json",
+    "report.html"
+  ]
+}

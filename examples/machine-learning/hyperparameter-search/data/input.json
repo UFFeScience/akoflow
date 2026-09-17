@@ -1,0 +1,18 @@
+{
+  "slug": "hyperparameter-search",
+  "title": "Hyperparameter Search",
+  "stages": [
+    "load",
+    "preprocess",
+    "rf-1",
+    "rf-2",
+    "rf-3",
+    "rf-4",
+    "compare",
+    "best-model"
+  ],
+  "artifacts": [
+    "leaderboard.csv",
+    "best-model.pkl"
+  ]
+}

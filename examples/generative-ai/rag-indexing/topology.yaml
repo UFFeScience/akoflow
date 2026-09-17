@@ -1,0 +1,6 @@
+id: showcase-rag-indexing-topology
+name: RAG Indexing local topology
+version: 1
+executionScopeId: showcase-rag-indexing-scope
+links: []
+

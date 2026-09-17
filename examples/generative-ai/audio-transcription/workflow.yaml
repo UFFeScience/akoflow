@@ -1,0 +1,37 @@
+name: showcase-audio-transcription
+spec:
+  namespace: showcase
+  # Published by .github/workflows/build-showcase.yml.
+  image: ghcr.io/uffescience/akoflow-showcase-audio-transcription:v1
+  activities:
+    - name: audio
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-audio-transcription:v1 audio
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+    - name: split
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-audio-transcription:v1 split
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - audio
+    - name: transcribe
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-audio-transcription:v1 transcribe
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - split
+    - name: summarize
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-audio-transcription:v1 summarize
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - transcribe
+

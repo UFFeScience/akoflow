@@ -1,0 +1,29 @@
+name: showcase-model-distillation
+spec:
+  namespace: showcase
+  # Published by .github/workflows/build-showcase.yml.
+  image: ghcr.io/uffescience/akoflow-showcase-model-distillation:v1
+  activities:
+    - name: teacher
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-model-distillation:v1 teacher
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+    - name: generate-labels
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-model-distillation:v1 generate-labels
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - teacher
+    - name: student
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-model-distillation:v1 student
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - generate-labels
+

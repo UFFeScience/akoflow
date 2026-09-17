@@ -1,0 +1,14 @@
+{
+  "slug": "supervised-tool-loop",
+  "title": "Supervised Tool Loop",
+  "stages": [
+    "proposal",
+    "approval",
+    "execution",
+    "verification"
+  ],
+  "artifacts": [
+    "execution.json",
+    "verification.json"
+  ]
+}

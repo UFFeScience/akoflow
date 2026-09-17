@@ -1,0 +1,49 @@
+---
+title: Materialized showcases
+sidebar_label: Materialized showcases
+description: Docker-backed executable showcase regression fixtures.
+---
+
+# Materialized showcases
+
+The 22 showcase directories under `examples/` are deterministic Docker-backed workflow fixtures. Each one contains its AkôFlow YAML definition, local environment/scope/topology, input data, expected-output contract, OCI Dockerfile, runner, validator, and screenshot automation. Their source bundles are published with this documentation: open an AI showcase to download its instructions and runner without leaving the site.
+
+## Run and validate
+
+From an individual directory, run `./run.sh`. It builds the local image, executes it, writes `outputs/`, takes `workflow.png`, `execution.png`, and `outputs.png`, then checks the expected manifest. CI publishes the same image to GHCR under `ghcr.io/uffescience/akoflow-showcase-<name>` with `latest`, `v1`, and `v1.0.0`.
+
+## Catalog
+
+### machine-learning
+
+- [Training with MLflow](https://github.com/UFFeScience/akoflow/tree/main/examples/machine-learning/training-with-mlflow)
+- [Hyperparameter Search](https://github.com/UFFeScience/akoflow/tree/main/examples/machine-learning/hyperparameter-search)
+- [Batch Inference](https://github.com/UFFeScience/akoflow/tree/main/examples/machine-learning/batch-inference)
+- [Model Comparison](https://github.com/UFFeScience/akoflow/tree/main/examples/machine-learning/model-comparison)
+- [Anomaly Detection](https://github.com/UFFeScience/akoflow/tree/main/examples/machine-learning/anomaly-detection)
+- [Computer Vision](https://github.com/UFFeScience/akoflow/tree/main/examples/machine-learning/computer-vision)
+- [Model Ensemble](https://github.com/UFFeScience/akoflow/tree/main/examples/machine-learning/model-ensemble)
+- [Model Distillation](https://github.com/UFFeScience/akoflow/tree/main/examples/machine-learning/model-distillation)
+- [Inference Benchmark](https://github.com/UFFeScience/akoflow/tree/main/examples/machine-learning/inference-benchmark)
+- [LoRA Fine Tuning](https://github.com/UFFeScience/akoflow/tree/main/examples/machine-learning/lora-fine-tuning)
+- [Model Conversion](https://github.com/UFFeScience/akoflow/tree/main/examples/machine-learning/model-conversion)
+- [Infrastructure Selection](https://github.com/UFFeScience/akoflow/tree/main/examples/machine-learning/infrastructure-selection)
+
+### generative-ai
+
+- [RAG Indexing](https://github.com/UFFeScience/akoflow/tree/main/examples/generative-ai/rag-indexing)
+- [Synthetic Dataset](https://github.com/UFFeScience/akoflow/tree/main/examples/generative-ai/synthetic-dataset)
+- [Audio Transcription](https://github.com/UFFeScience/akoflow/tree/main/examples/generative-ai/audio-transcription)
+- [Document Extraction](https://github.com/UFFeScience/akoflow/tree/main/examples/generative-ai/document-extraction)
+
+### agentic-workflows
+
+- [Bounded Agent](https://github.com/UFFeScience/akoflow/tree/main/examples/agentic-workflows/bounded-agent)
+- [Supervised Tool Loop](https://github.com/UFFeScience/akoflow/tree/main/examples/agentic-workflows/supervised-tool-loop)
+- [Multi-Agent Review](https://github.com/UFFeScience/akoflow/tree/main/examples/agentic-workflows/multi-agent-review)
+
+### scientific-ai
+
+- [AI Assisted Analysis](https://github.com/UFFeScience/akoflow/tree/main/examples/scientific-ai/ai-assisted-analysis)
+- [Surrogate Model](https://github.com/UFFeScience/akoflow/tree/main/examples/scientific-ai/surrogate-model)
+- [Experiment Feedback Loop](https://github.com/UFFeScience/akoflow/tree/main/examples/scientific-ai/experiment-feedback-loop)

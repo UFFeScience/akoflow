@@ -1,0 +1,6 @@
+id: showcase-bounded-agent-topology
+name: Bounded Agent local topology
+version: 1
+executionScopeId: showcase-bounded-agent-scope
+links: []
+

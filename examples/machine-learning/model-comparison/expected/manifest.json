@@ -1,0 +1,9 @@
+{
+  "showcase": "model-comparison",
+  "artifacts": [
+    "comparison.csv",
+    "report.html"
+  ],
+  "status": "success"
+}
+

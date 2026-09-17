@@ -1,0 +1,15 @@
+{
+  "slug": "rag-indexing",
+  "title": "RAG Indexing",
+  "stages": [
+    "documents",
+    "chunk",
+    "embed",
+    "faiss",
+    "evaluate"
+  ],
+  "artifacts": [
+    "index.faiss",
+    "evaluation.json"
+  ]
+}

@@ -1,0 +1,5 @@
+id: showcase-rag-indexing-scope
+name: RAG Indexing local scope
+environmentVersionIds:
+  - showcase-rag-indexing-v1
+

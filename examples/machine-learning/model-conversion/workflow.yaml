@@ -1,0 +1,29 @@
+name: showcase-model-conversion
+spec:
+  namespace: showcase
+  # Published by .github/workflows/build-showcase.yml.
+  image: ghcr.io/uffescience/akoflow-showcase-model-conversion:v1
+  activities:
+    - name: onnx
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-model-conversion:v1 onnx
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+    - name: gguf
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-model-conversion:v1 gguf
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - onnx
+    - name: tensorrt
+      runtime: local
+      # The local executor launches this OCI image through Docker in run.sh.
+      run: docker run --rm ghcr.io/uffescience/akoflow-showcase-model-conversion:v1 tensorrt
+      cpuLimit: "1"
+      memoryLimit: 256Mi
+      dependsOn:
+        - gguf
+

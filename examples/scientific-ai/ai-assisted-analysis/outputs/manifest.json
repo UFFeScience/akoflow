@@ -1,0 +1,14 @@
+{
+  "showcase": "ai-assisted-analysis",
+  "digest": "ec17bf80c538d02d6c6d025e1e3d1b3a7d187ac3015ab4814c0ffb80f30bedf3",
+  "stages": [
+    "simulation",
+    "analysis",
+    "llm-interpretation"
+  ],
+  "status": "success",
+  "artifacts": [
+    "analysis.json",
+    "interpretation.md"
+  ]
+}

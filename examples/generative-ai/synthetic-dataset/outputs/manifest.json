@@ -1,0 +1,14 @@
+{
+  "showcase": "synthetic-dataset",
+  "digest": "13d945957482c45cf891ebd14cce0f613f77e6c46432763d5694e39d4b1dd5e9",
+  "stages": [
+    "generate",
+    "deduplicate",
+    "quality-check"
+  ],
+  "status": "success",
+  "artifacts": [
+    "synthetic-dataset.jsonl",
+    "quality-report.json"
+  ]
+}

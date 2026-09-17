@@ -269,7 +269,19 @@ func (a *Adapter) Inspect(ctx context.Context, handle domain.ActivityHandle) (do
 		}
 	}
 	if log, logErr := a.activityLog(ctx, handle.ExternalID); logErr == nil {
-		handle.Log = string(log)
+		visible, samples := extractActivityMetrics(string(log), handle.RunID, handle.ActivityID)
+		handle.Log = visible
+		previous, _ := handle.Metadata["metricsSampleCount"].(float64)
+		if count, ok := handle.Metadata["metricsSampleCount"].(int); ok {
+			previous = float64(count)
+		}
+		if int(previous) < len(samples) {
+			handle.Metrics = samples[int(previous):]
+			if handle.Metadata == nil {
+				handle.Metadata = make(map[string]any)
+			}
+			handle.Metadata["metricsSampleCount"] = len(samples)
+		}
 	}
 	if handle.Status == domain.HandleCompleted || handle.Status == domain.HandleFailed {
 		manifest, observationErr := a.collectArtifacts(ctx, handle.ExternalID)

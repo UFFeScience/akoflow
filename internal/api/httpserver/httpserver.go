@@ -185,10 +185,18 @@ func NewMux(workflowEngine *workflow_engine_api_handler.Handler) *http.ServeMux 
 	mux.HandleFunc("GET /akoflow-api/planning-sessions/{sessionId}/candidates/", http_config.KernelHandler(workflowEngine.ListPlanningCandidates))
 	mux.HandleFunc("GET /akoflow-api/planning-sessions/{sessionId}/candidates/{candidateId}/", http_config.KernelHandler(workflowEngine.GetPlanningCandidate))
 	mux.HandleFunc("POST /akoflow-api/planning-sessions/{sessionId}/candidates/{candidateId}/select/", http_config.KernelHandler(workflowEngine.SelectPlanningCandidate))
+	registerExecutionRoutes(mux, workflowEngine)
+	return mux
+}
+
+func registerExecutionRoutes(mux *http.ServeMux, workflowEngine *workflow_engine_api_handler.Handler) {
 	mux.HandleFunc("POST /akoflow-api/execution-runs/", http_config.KernelHandler(workflowEngine.CreateExecution))
 	mux.HandleFunc("GET /akoflow-api/execution-runs/", http_config.KernelHandler(workflowEngine.ListExecutions))
 	mux.HandleFunc("GET /akoflow-api/execution-runs/{runId}/", http_config.KernelHandler(workflowEngine.GetExecution))
-	return mux
+	mux.HandleFunc("POST /akoflow-api/execution-runs/{runId}/activities/{activityId}/interrupt/", http_config.KernelHandler(workflowEngine.InterruptExecutionActivity))
+	mux.HandleFunc("GET /akoflow-api/execution-runs/{runId}/activity-metrics/", http_config.KernelHandler(workflowEngine.ListActivityMetricSummaries))
+	mux.HandleFunc("GET /akoflow-api/execution-runs/{runId}/activities/{activityId}/metrics/", http_config.KernelHandler(workflowEngine.ListActivityMetricSamples))
+	mux.HandleFunc("GET /akoflow-api/execution-runs/{runId}/activities/{activityId}/metrics/summary/", http_config.KernelHandler(workflowEngine.GetActivityMetricSummary))
 }
 
 func Serve(ctx context.Context, address string, workflowEngine *workflow_engine_api_handler.Handler) error {

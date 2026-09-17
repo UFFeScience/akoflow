@@ -108,6 +108,7 @@ func (a *Adapter) Start(ctx context.Context, execution domain.ActivityExecutionC
 		Metadata: map[string]any{"executionTarget": string(domain.ExecutionTargetBatch), "scriptPath": scriptPath,
 			"logPath":                   slurmLogPath(execution.Run.ID, activity.ID, jobID),
 			"sentinelPath":              slurmSentinelPath(execution.Run.ID, activity.ID, jobID),
+			"metricsPath":               slurmSentinelPath(execution.Run.ID, activity.ID, jobID) + ".metrics.tsv",
 			domain.TimingSubmittedAt:    submittedAt,
 			"artifactObservationDriver": "filesystem-diff", "artifactObservationRoot": activity.Command.WorkingDirectory}}, nil
 }
@@ -136,6 +137,7 @@ func (a *Adapter) Inspect(ctx context.Context, handle domain.ActivityHandle) (do
 			handle.Log = string(log)
 		}
 	}
+	a.inspectMetrics(ctx, &handle)
 	if observed, found := a.sentinelStatus(ctx, handle); found {
 		return observed, nil
 	}
@@ -453,7 +455,15 @@ func batchScript(runID string, activity domain.Activity, partition, node string)
 	script.WriteString(shellQuote(activity.Command.WorkingDirectory))
 	script.WriteString("\ncontainer_start_marker=\"${sentinel}.container-started\"\nrm -f \"$container_start_marker\"\nmkdir -p \"$artifact_root\"\nartifact_root=$(cd \"$artifact_root\" && pwd -P)\nartifact_before=$(mktemp)\nfind \"$artifact_root\" -type f -print 2>/dev/null | sort > \"$artifact_before\"\n")
 	script.WriteString("started_at=$(date +%s.%N)\nallocated_node=$(hostname -s)\ncontainer_epoch_anchor=$(date +%s.%N)\ncontainer_uptime_anchor=$(awk '{print $1}' /proc/uptime)\nprintf 'state=running\\nstarted_at=%s\\nallocated_node=%s\\nartifact_root=%s\\n' \"$started_at\" \"$allocated_node\" \"$artifact_root\" > \"$sentinel\"\n")
+	if interval := activity.Command.Environment["AKOFLOW_METRIC_INTERVAL_SECONDS"]; interval != "" {
+		script.WriteString("AKOFLOW_METRIC_INTERVAL_SECONDS=")
+		script.WriteString(shellQuote(interval))
+		script.WriteByte('\n')
+	}
+	script.WriteString(metricSamplerScript)
 	script.WriteString("finish() { code=$?; state=completed; [ \"$code\" -eq 0 ] || state=failed; ")
+	script.WriteString("[ -z \"$metric_pid\" ] || { kill \"$metric_pid\" 2>/dev/null || true; wait \"$metric_pid\" 2>/dev/null || true; }; ")
+	script.WriteString("[ -z \"$metric_pid\" ] || sample_metrics; ")
 	script.WriteString("container_started_at=0; if [ -f \"$container_start_marker\" ]; then container_uptime=$(cat \"$container_start_marker\"); container_started_at=$(awk -v epoch=\"$container_epoch_anchor\" -v anchor=\"$container_uptime_anchor\" -v current=\"$container_uptime\" 'BEGIN { printf \"%.9f\", epoch + current - anchor }'); fi; ")
 	script.WriteString("{ printf 'state=%s\\nexit_code=%s\\nstarted_at=%s\\nallocated_node=%s\\ncontainer_started_at=%s\\nartifact_root=%s\\n' \"$state\" \"$code\" \"$started_at\" \"$allocated_node\" \"$container_started_at\" \"$artifact_root\"; ")
 	script.WriteString("find \"$artifact_root\" -type f -print 2>/dev/null | sort | comm -13 \"$artifact_before\" - | ")

@@ -14,6 +14,7 @@ import (
 
 	"github.com/UFFeScience/akoflow/internal/domain"
 	runtimecommon "github.com/UFFeScience/akoflow/internal/provider"
+	"github.com/UFFeScience/akoflow/internal/provider/telemetry"
 )
 
 type processResult struct {
@@ -139,7 +140,7 @@ func (a *Adapter) Start(_ context.Context, execution domain.ActivityExecutionCon
 	return handle, nil
 }
 
-func (a *Adapter) Inspect(_ context.Context, handle domain.ActivityHandle) (domain.ActivityHandle, error) {
+func (a *Adapter) Inspect(ctx context.Context, handle domain.ActivityHandle) (domain.ActivityHandle, error) {
 	a.mu.RLock()
 	result, done := a.results[handle.ID]
 	a.mu.RUnlock()
@@ -161,6 +162,12 @@ func (a *Adapter) Inspect(_ context.Context, handle domain.ActivityHandle) (doma
 			handle.Status = domain.HandleCompleted
 		}
 		return handle, nil
+	}
+	if containerName, _ := handle.Metadata["localContainerName"].(string); containerName != "" {
+		telemetry.ObserveDocker(ctx, &handle, containerName,
+			func(ctx context.Context, command string, args []string, _ []byte) ([]byte, error) {
+				return exec.CommandContext(ctx, command, args...).CombinedOutput()
+			})
 	}
 	a.mu.RLock()
 	output := a.logs[handle.ID]

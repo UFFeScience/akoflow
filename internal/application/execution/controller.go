@@ -107,6 +107,27 @@ func (s *Controller) Inspect(ctx context.Context, handleID string, mode domain.E
 		return s.persistInspectionFailure(ctx, handle, err)
 	}
 	updated.Log = mergeLogs(handle.Log, updated.Log)
+	if len(updated.Metrics) > 0 {
+		if metrics, ok := s.handles.(interface {
+			SaveActivityMetrics(context.Context, []domain.ActivityMetricSample) error
+		}); ok {
+			if metricErr := metrics.SaveActivityMetrics(ctx, updated.Metrics); metricErr != nil {
+				if updated.Metadata == nil {
+					updated.Metadata = make(map[string]any)
+				}
+				// Keep the previous cursor so the next inspection retries the
+				// same file rows instead of silently losing observations.
+				if previous, exists := handle.Metadata["metricsSampleCount"]; exists {
+					updated.Metadata["metricsSampleCount"] = previous
+				} else {
+					delete(updated.Metadata, "metricsSampleCount")
+				}
+				updated.Metadata["metricCollectionError"] = metricErr.Error()
+			} else {
+				delete(updated.Metadata, "metricCollectionError")
+			}
+		}
+	}
 	if updated.Status != handle.Status {
 		switch updated.Status {
 		case domain.HandleCompleted:

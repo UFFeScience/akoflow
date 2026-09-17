@@ -14,6 +14,7 @@ import (
 	"github.com/UFFeScience/akoflow/internal/application/ports"
 	"github.com/UFFeScience/akoflow/internal/domain"
 	runtimecommon "github.com/UFFeScience/akoflow/internal/provider"
+	"github.com/UFFeScience/akoflow/internal/provider/telemetry"
 )
 
 type Factory struct{ Executor runtimecommon.CommandExecutor }
@@ -116,6 +117,7 @@ func (a *Adapter) Inspect(ctx context.Context, handle domain.ActivityHandle) (do
 	switch parts[0] {
 	case "running", "created":
 		handle.Status = domain.HandleRunning
+		telemetry.ObserveDocker(ctx, &handle, handle.ExternalID, a.executor.Run)
 	case "exited":
 		code, _ := strconv.Atoi(parts[1])
 		handle.ExitCode = &code

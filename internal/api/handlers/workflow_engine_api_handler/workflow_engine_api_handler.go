@@ -51,6 +51,16 @@ type ExecutionQuery interface {
 	ListHandles(context.Context, string) ([]domain.ActivityHandle, error)
 	ListEvents(context.Context, string) ([]domainevents.Event, error)
 }
+
+type ActivityMetricQuery interface {
+	ListActivityMetricSummaries(context.Context, string) ([]domain.ActivityMetricSummary, error)
+	ListActivityMetricSamples(context.Context, string, string, int) ([]domain.ActivityMetricSample, error)
+	GetActivityMetricSummary(context.Context, string, string, int) (*domain.ActivityMetricSummary, error)
+}
+
+type ActivityInterrupter interface {
+	Interrupt(context.Context, string, string) (*domain.TaskExecution, error)
+}
 type StorageNavigator interface {
 	List(context.Context, string) ([]domain.StorageResource, error)
 	Roots(context.Context, string) ([]domain.StorageBrowseRoot, error)
@@ -90,77 +100,79 @@ type DockerArtifactRequest struct {
 }
 
 type Dependencies struct {
-	Environments     ports.EnvironmentCatalog
-	Workflows        ports.WorkflowStore
-	Plans            ports.PlanStore
-	Events           ports.EventPublisher
-	Validator        ports.PlanValidator
-	Executions       ExecutionQuery
-	Topologies       ports.NetworkTopologyStore
-	Scopes           ports.ExecutionScopeStore
-	Data             ports.DataCatalog
-	Resources        ports.ResourceInventory
-	Instance         ports.InstanceStore
-	Connections      ports.ConnectionHealthMonitor
-	Discovery        ports.EnvironmentDiscovery
-	SSHKeys          *sshkey.Manager
-	KubernetesTokens *token.Manager
-	Audit            ports.AuditStore
-	Console          ports.ConsoleCommands
-	Terminal         ports.InteractiveConsole
-	Storage          StorageNavigator
-	Build            BuildOrchestrator
-	Planning         PlanningOrchestrator
-	PlanningStore    ports.PlanningStore
-	Provenance       ports.ProvenanceExplorer
-	Cloud            ports.CloudConfigurationStore
-	CloudOperations  ports.CloudOperationStore
-	CloudCatalog     ports.CloudCatalog
-	CloudProvisioner ports.CloudProvisioner
-	CloudCredentials *cloudcredential.Manager
-	InstanceArchive  ports.InstanceArchive
-	ReadOnly         bool
-	Restart          func()
-	FactoryReset     func(context.Context) error
-	ConnectionTest   func(context.Context, domain.EnvironmentConnection) ports.ConnectionHealth
+	Environments        ports.EnvironmentCatalog
+	Workflows           ports.WorkflowStore
+	Plans               ports.PlanStore
+	Events              ports.EventPublisher
+	Validator           ports.PlanValidator
+	Executions          ExecutionQuery
+	ActivityInterrupter ActivityInterrupter
+	Topologies          ports.NetworkTopologyStore
+	Scopes              ports.ExecutionScopeStore
+	Data                ports.DataCatalog
+	Resources           ports.ResourceInventory
+	Instance            ports.InstanceStore
+	Connections         ports.ConnectionHealthMonitor
+	Discovery           ports.EnvironmentDiscovery
+	SSHKeys             *sshkey.Manager
+	KubernetesTokens    *token.Manager
+	Audit               ports.AuditStore
+	Console             ports.ConsoleCommands
+	Terminal            ports.InteractiveConsole
+	Storage             StorageNavigator
+	Build               BuildOrchestrator
+	Planning            PlanningOrchestrator
+	PlanningStore       ports.PlanningStore
+	Provenance          ports.ProvenanceExplorer
+	Cloud               ports.CloudConfigurationStore
+	CloudOperations     ports.CloudOperationStore
+	CloudCatalog        ports.CloudCatalog
+	CloudProvisioner    ports.CloudProvisioner
+	CloudCredentials    *cloudcredential.Manager
+	InstanceArchive     ports.InstanceArchive
+	ReadOnly            bool
+	Restart             func()
+	FactoryReset        func(context.Context) error
+	ConnectionTest      func(context.Context, domain.EnvironmentConnection) ports.ConnectionHealth
 }
 
 type Handler struct {
-	environments     ports.EnvironmentCatalog
-	workflows        ports.WorkflowStore
-	plans            ports.PlanStore
-	events           ports.EventPublisher
-	validator        ports.PlanValidator
-	executions       ExecutionQuery
-	topologies       ports.NetworkTopologyStore
-	scopes           ports.ExecutionScopeStore
-	data             ports.DataCatalog
-	resources        ports.ResourceInventory
-	instance         ports.InstanceStore
-	connections      ports.ConnectionHealthMonitor
-	discovery        ports.EnvironmentDiscovery
-	sshKeys          *sshkey.Manager
-	kubernetesTokens *token.Manager
-	audit            ports.AuditStore
-	console          ports.ConsoleCommands
-	terminal         ports.InteractiveConsole
-	storage          StorageNavigator
-	build            BuildOrchestrator
-	planning         PlanningOrchestrator
-	planningStore    ports.PlanningStore
-	provenance       ports.ProvenanceExplorer
-	cloud            ports.CloudConfigurationStore
-	cloudOperations  ports.CloudOperationStore
-	cloudCatalog     ports.CloudCatalog
-	cloudRefreshMu   sync.Mutex
-	cloudRefreshing  map[string]bool
-	cloudProvisioner ports.CloudProvisioner
-	cloudCredentials *cloudcredential.Manager
-	instanceArchive  ports.InstanceArchive
-	readOnly         bool
-	restart          func()
-	factoryReset     func(context.Context) error
-	connectionTest   func(context.Context, domain.EnvironmentConnection) ports.ConnectionHealth
+	environments        ports.EnvironmentCatalog
+	workflows           ports.WorkflowStore
+	plans               ports.PlanStore
+	events              ports.EventPublisher
+	validator           ports.PlanValidator
+	executions          ExecutionQuery
+	activityInterrupter ActivityInterrupter
+	topologies          ports.NetworkTopologyStore
+	scopes              ports.ExecutionScopeStore
+	data                ports.DataCatalog
+	resources           ports.ResourceInventory
+	instance            ports.InstanceStore
+	connections         ports.ConnectionHealthMonitor
+	discovery           ports.EnvironmentDiscovery
+	sshKeys             *sshkey.Manager
+	kubernetesTokens    *token.Manager
+	audit               ports.AuditStore
+	console             ports.ConsoleCommands
+	terminal            ports.InteractiveConsole
+	storage             StorageNavigator
+	build               BuildOrchestrator
+	planning            PlanningOrchestrator
+	planningStore       ports.PlanningStore
+	provenance          ports.ProvenanceExplorer
+	cloud               ports.CloudConfigurationStore
+	cloudOperations     ports.CloudOperationStore
+	cloudCatalog        ports.CloudCatalog
+	cloudRefreshMu      sync.Mutex
+	cloudRefreshing     map[string]bool
+	cloudProvisioner    ports.CloudProvisioner
+	cloudCredentials    *cloudcredential.Manager
+	instanceArchive     ports.InstanceArchive
+	readOnly            bool
+	restart             func()
+	factoryReset        func(context.Context) error
+	connectionTest      func(context.Context, domain.EnvironmentConnection) ports.ConnectionHealth
 }
 
 // SearchResult is a compact, navigable projection of a control-plane entity.
@@ -183,33 +195,34 @@ func New(dependencies Dependencies) (*Handler, error) {
 		environments: dependencies.Environments, workflows: dependencies.Workflows,
 		plans: dependencies.Plans, events: dependencies.Events,
 		validator: dependencies.Validator, executions: dependencies.Executions,
-		topologies:       dependencies.Topologies,
-		scopes:           dependencies.Scopes,
-		data:             dependencies.Data,
-		resources:        dependencies.Resources,
-		instance:         dependencies.Instance,
-		connections:      dependencies.Connections,
-		discovery:        dependencies.Discovery,
-		sshKeys:          dependencies.SSHKeys,
-		kubernetesTokens: dependencies.KubernetesTokens,
-		audit:            dependencies.Audit,
-		console:          dependencies.Console,
-		terminal:         dependencies.Terminal,
-		storage:          dependencies.Storage,
-		build:            dependencies.Build,
-		planning:         dependencies.Planning,
-		planningStore:    dependencies.PlanningStore,
-		provenance:       dependencies.Provenance,
-		cloud:            dependencies.Cloud,
-		cloudOperations:  dependencies.CloudOperations,
-		cloudCatalog:     dependencies.CloudCatalog,
-		cloudProvisioner: dependencies.CloudProvisioner,
-		cloudCredentials: dependencies.CloudCredentials,
-		instanceArchive:  dependencies.InstanceArchive,
-		readOnly:         dependencies.ReadOnly,
-		restart:          dependencies.Restart,
-		factoryReset:     dependencies.FactoryReset,
-		connectionTest:   dependencies.ConnectionTest,
+		activityInterrupter: dependencies.ActivityInterrupter,
+		topologies:          dependencies.Topologies,
+		scopes:              dependencies.Scopes,
+		data:                dependencies.Data,
+		resources:           dependencies.Resources,
+		instance:            dependencies.Instance,
+		connections:         dependencies.Connections,
+		discovery:           dependencies.Discovery,
+		sshKeys:             dependencies.SSHKeys,
+		kubernetesTokens:    dependencies.KubernetesTokens,
+		audit:               dependencies.Audit,
+		console:             dependencies.Console,
+		terminal:            dependencies.Terminal,
+		storage:             dependencies.Storage,
+		build:               dependencies.Build,
+		planning:            dependencies.Planning,
+		planningStore:       dependencies.PlanningStore,
+		provenance:          dependencies.Provenance,
+		cloud:               dependencies.Cloud,
+		cloudOperations:     dependencies.CloudOperations,
+		cloudCatalog:        dependencies.CloudCatalog,
+		cloudProvisioner:    dependencies.CloudProvisioner,
+		cloudCredentials:    dependencies.CloudCredentials,
+		instanceArchive:     dependencies.InstanceArchive,
+		readOnly:            dependencies.ReadOnly,
+		restart:             dependencies.Restart,
+		factoryReset:        dependencies.FactoryReset,
+		connectionTest:      dependencies.ConnectionTest,
 	}, nil
 }
 
@@ -1323,6 +1336,71 @@ func (h *Handler) GetExecution(w http.ResponseWriter, r *http.Request) {
 		response["artifactTransferRuns"] = transferRuns
 	}
 	writeJSON(w, http.StatusOK, response)
+}
+
+func (h *Handler) InterruptExecutionActivity(w http.ResponseWriter, r *http.Request) {
+	if h.readOnly {
+		writeError(w, http.StatusForbidden, fmt.Errorf("read-only instances cannot interrupt activities"))
+		return
+	}
+	if h.activityInterrupter == nil {
+		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("activity interruption is unavailable"))
+		return
+	}
+	task, err := h.activityInterrupter.Interrupt(r.Context(), r.PathValue("runId"), r.PathValue("activityId"))
+	if err != nil {
+		writeError(w, http.StatusConflict, err)
+		return
+	}
+	writeJSON(w, http.StatusOK, task)
+}
+
+func (h *Handler) ListActivityMetricSummaries(w http.ResponseWriter, r *http.Request) {
+	metrics, ok := h.executions.(ActivityMetricQuery)
+	if !ok {
+		writeJSON(w, http.StatusOK, map[string]any{"items": []domain.ActivityMetricSummary{}})
+		return
+	}
+	items, err := metrics.ListActivityMetricSummaries(r.Context(), r.PathValue("runId"))
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, err)
+		return
+	}
+	writeJSON(w, http.StatusOK, map[string]any{"items": items})
+}
+
+func (h *Handler) ListActivityMetricSamples(w http.ResponseWriter, r *http.Request) {
+	metrics, ok := h.executions.(ActivityMetricQuery)
+	if !ok {
+		writeJSON(w, http.StatusOK, map[string]any{"items": []domain.ActivityMetricSample{}})
+		return
+	}
+	attempt, _ := strconv.Atoi(r.URL.Query().Get("attempt"))
+	items, err := metrics.ListActivityMetricSamples(r.Context(), r.PathValue("runId"), r.PathValue("activityId"), attempt)
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, err)
+		return
+	}
+	writeJSON(w, http.StatusOK, map[string]any{"items": items})
+}
+
+func (h *Handler) GetActivityMetricSummary(w http.ResponseWriter, r *http.Request) {
+	metrics, ok := h.executions.(ActivityMetricQuery)
+	if !ok {
+		writeError(w, http.StatusNotFound, nil)
+		return
+	}
+	attempt, _ := strconv.Atoi(r.URL.Query().Get("attempt"))
+	item, err := metrics.GetActivityMetricSummary(r.Context(), r.PathValue("runId"), r.PathValue("activityId"), attempt)
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, err)
+		return
+	}
+	if item == nil {
+		writeError(w, http.StatusNotFound, nil)
+		return
+	}
+	writeJSON(w, http.StatusOK, item)
 }
 
 func (h *Handler) infrastructureRuns(ctx context.Context, executionRunID string) ([]map[string]any, error) {

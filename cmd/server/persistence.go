@@ -91,7 +91,13 @@ func openPersistence(ctx context.Context, recreateOnSchemaChange bool) (persiste
 	}
 	instanceRepository := dbinstance.New(db)
 	cloudRepository := dbcloud.New(db)
+	executionRepository := dbexecution.New(db)
 	if !readOnly {
+		if err := executionRepository.EnsureMetricSchema(ctx); err != nil {
+			_ = analytics.Close()
+			_ = db.Close()
+			return persistence{}, err
+		}
 		if err := ensureSystemInstance(ctx, instanceRepository); err != nil {
 			_ = analytics.Close()
 			_ = db.Close()
@@ -105,7 +111,7 @@ func openPersistence(ctx context.Context, recreateOnSchemaChange bool) (persiste
 	}
 	return persistence{
 		database: db, analytics: analytics, readOnly: readOnly,
-		environments: dbenvironment.New(db), executions: dbexecution.New(db),
+		environments: dbenvironment.New(db), executions: executionRepository,
 		data:       dbdata.New(db),
 		topologies: dbnetwork.New(db), plans: dbplanning.New(db), events: events,
 		workflows: dbworkflow.New(db),

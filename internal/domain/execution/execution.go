@@ -202,4 +202,7 @@ type ActivityHandle struct {
 	Log        string               `json:"log,omitempty"`
 	Artifacts  *ArtifactManifest    `json:"artifacts,omitempty"`
 	Metadata   map[string]any       `json:"metadata,omitempty"`
+	// Metrics are fresh adapter observations, persisted separately from the
+	// handle so run-detail responses never contain a large time series.
+	Metrics []ActivityMetricSample `json:"-"`
 }

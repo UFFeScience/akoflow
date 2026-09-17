@@ -1,6 +1,6 @@
 {
-  "id": "montage-58-four-vm-local-scope-v1",
+  "id": "montage-58-four-vm-local-050d-scope-v1",
   "name": "Montage 58 four GCP e2-medium machines and local",
-  "networkTopologyId": "montage-58-four-vm-local-network-v1",
+  "networkTopologyId": "montage-58-four-vm-local-050d-network-v1",
   "environmentVersionIds": ["goal-gcp-v1", "local-environment-initial"]
 }

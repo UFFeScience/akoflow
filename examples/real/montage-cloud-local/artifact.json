@@ -1,0 +1,6 @@
+{
+  "artifactId": "montage-050d",
+  "version": "050d",
+  "image": "ovvesley/akoflow-wf-montage@sha256:26b060b83b990557ea86ab40503cc8f17ab6016b5973e7e6f9201100a96440c9",
+  "architecture": "amd64"
+}

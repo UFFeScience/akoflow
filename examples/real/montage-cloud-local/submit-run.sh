@@ -9,10 +9,10 @@ get() {
   curl --fail-with-body -sS -H "Authorization: Bearer $api_token" "$api_base/$1/"
 }
 
-plan_json=$(get schedule-plans/montage-58-four-vm-local-manual-v1)
-definition_json=$(get workflow-definitions/montage-58-four-vm-local)
-scope_json=$(get execution-scopes/montage-58-four-vm-local-scope-v1)
-network_json=$(get network-topologies/montage-58-four-vm-local-network-v1)
+plan_json=$(get schedule-plans/montage-58-four-vm-local-050d-manual-v1)
+definition_json=$(get workflow-definitions/montage-58-four-vm-local-050d)
+scope_json=$(get execution-scopes/montage-58-four-vm-local-050d-scope-v1)
+network_json=$(get network-topologies/montage-58-four-vm-local-050d-network-v1)
 local_environment_json=$(get environments/local-environment)
 cloud_environment_json=$(get environments/goal-gcp)
 local_resource_json=$(get resources/local-environment-entrypoint)

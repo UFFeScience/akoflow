@@ -16,6 +16,8 @@ activities are split into four groups of three on separate on-demand GCP
 execution resource. The image `ovvesley/akoflow-wf-montage:050d` carries the
 input FITS images, headers, lookup tables, and Montage executables. AkôFlow
 transfers the projected FITS outputs into the local activities' workspaces.
+The workflow pins the published image by digest, and the bundle registers it
+as an artifact with an additional SIF build for Apptainer environments.
 
 :::warning Cloud cost and validation
 This plan can create four billable GCP VMs. Its predicted time is a sum of historical
@@ -30,6 +32,7 @@ runtime before submitting.
 <FileList>
   <a href="https://github.com/UFFeScience/akoflow/tree/main/examples/real/montage-cloud-local">Complete source and instructions ↗</a>
   <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/real/montage-cloud-local/workflow.json">Workflow with 58 commands and named data handoffs ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/real/montage-cloud-local/artifact.json">Pinned image artifact request ↓</a>
   <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/real/montage-cloud-local/plan.json">Manual GCP/local plan ↓</a>
   <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/real/montage-cloud-local/source-workflow.yaml">Original Montage DAG ↓</a>
   <a href="https://raw.githubusercontent.com/UFFeScience/akoflow/main/examples/real/montage-cloud-local/reference-runtimes.csv">Historical activity runtimes ↓</a>
@@ -42,13 +45,14 @@ order, submission command, and post-run checks.
 <InterfaceApiTabs
   desktop={<div>
     <h2>Use Desktop</h2>
-    <p>First verify that the GCP environment has discovered an <code>e2-medium</code> capacity target and that the local daemon can launch the Montage image. Import the workflow and manual plan using the downloaded files, then inspect all 58 assignments before starting a real run. The expected final file is <code>mosaic-color.png</code>. In the run view, check the activity DAG, Data tab, transfer records, and cloud instance lifecycle.</p>
+    <p>Register the Montage image in Artifacts and start its SIF build. Verify that the GCP environment has an <code>e2-medium</code> capacity target and that the local daemon can launch the pinned Docker image. Import the workflow and manual plan using the downloaded files, then inspect all 58 assignments before starting a real run. The expected final file is <code>mosaic-color.png</code>. In the run view, check the activity DAG, Data tab, transfer records, and cloud instance lifecycle.</p>
   </div>}
   api={<div>
     <h2>Use the API</h2>
-    <p>Follow the <a href="/docs/tutorials/api-access">API access guide</a> and the bundle README. First create four one-instance cloud targets with <code>prepare-capacity.sh</code>, then import <code>scope.json</code>, <code>network.json</code>, <code>workflow.json</code>, and <code>plan.json</code> in that order. Submit exactly one run. The example IDs refer to a particular AkôFlow instance and must be reviewed before reuse.</p>
-    <pre><code>{`sh examples/real/montage-cloud-local/prepare-capacity.sh
-sh examples/real/montage-cloud-local/submit-run.sh montage-58-four-vm-local-run-v1`}</code></pre>
+    <p>Follow the <a href="/docs/tutorials/api-access">API access guide</a> and the bundle README. Register the pinned image with <code>register-artifact.sh</code>, then create four one-instance cloud targets with <code>prepare-capacity.sh</code>. Import <code>scope.json</code>, <code>network.json</code>, <code>workflow.json</code>, and <code>plan.json</code> in that order. Submit exactly one run. The example IDs refer to a particular AkôFlow instance and must be reviewed before reuse.</p>
+    <pre><code>{`sh examples/real/montage-cloud-local/register-artifact.sh
+sh examples/real/montage-cloud-local/prepare-capacity.sh
+sh examples/real/montage-cloud-local/submit-run.sh montage-58-four-vm-local-050d-run-v1`}</code></pre>
   </div>}
 />
 

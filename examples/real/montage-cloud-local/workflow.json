@@ -1,15 +1,15 @@
 {
-  "name": "montage-58-four-vm-local",
+  "name": "montage-58-four-vm-local-050d",
   "spec": {
     "namespace": "showcase",
-    "image": "ovvesley/akoflow-wf-montage:050d",
+    "image": "ovvesley/akoflow-wf-montage@sha256:26b060b83b990557ea86ab40503cc8f17ab6016b5973e7e6f9201100a96440c9",
     "activities": [
       {
         "name": "mprojectid0000001",
         "runtime": "cloud",
         "run": "mProject -X poss2ukstu_blue_001_001.fits pposs2ukstu_blue_001_001.fits region-oversized.hdr",
         "workspaceSeedPath": "/akoflow-wfa-shared",
-        "cpuLimit": "1",
+        "cpuLimit": "500m",
         "memoryLimit": "256Mi",
         "dependsOn": [
 
@@ -20,7 +20,7 @@
         "runtime": "cloud",
         "run": "mProject -X poss2ukstu_blue_001_002.fits pposs2ukstu_blue_001_002.fits region-oversized.hdr",
         "workspaceSeedPath": "/akoflow-wfa-shared",
-        "cpuLimit": "1",
+        "cpuLimit": "500m",
         "memoryLimit": "256Mi",
         "dependsOn": [
 
@@ -31,7 +31,7 @@
         "runtime": "cloud",
         "run": "mProject -X poss2ukstu_blue_002_001.fits pposs2ukstu_blue_002_001.fits region-oversized.hdr",
         "workspaceSeedPath": "/akoflow-wfa-shared",
-        "cpuLimit": "1",
+        "cpuLimit": "500m",
         "memoryLimit": "256Mi",
         "dependsOn": [
 
@@ -42,7 +42,7 @@
         "runtime": "cloud",
         "run": "mProject -X poss2ukstu_blue_002_002.fits pposs2ukstu_blue_002_002.fits region-oversized.hdr",
         "workspaceSeedPath": "/akoflow-wfa-shared",
-        "cpuLimit": "1",
+        "cpuLimit": "500m",
         "memoryLimit": "256Mi",
         "dependsOn": [
 
@@ -53,7 +53,7 @@
         "runtime": "local",
         "run": "mDiffFit -d -s 1-fit.000001.000002.txt pposs2ukstu_blue_001_001.fits pposs2ukstu_blue_001_002.fits 1-diff.000001.000002.fits region-oversized.hdr",
         "workspaceSeedPath": "/akoflow-wfa-shared",
-        "cpuLimit": "1",
+        "cpuLimit": "500m",
         "memoryLimit": "256Mi",
         "dependsOn": [
           "mprojectid0000001",
@@ -65,7 +65,7 @@
         "runtime": "local",
         "run": "mDiffFit -d -s 1-fit.000001.000003.txt pposs2ukstu_blue_001_001.fits pposs2ukstu_blue_002_001.fits 1-diff.000001.000003.fits region-oversized.hdr",
         "workspaceSeedPath": "/akoflow-wfa-shared",
-        "cpuLimit": "1",
+        "cpuLimit": "500m",
         "memoryLimit": "256Mi",
         "dependsOn": [
           "mprojectid0000001",
@@ -77,7 +77,7 @@
         "runtime": "local",
         "run": "mDiffFit -d -s 1-fit.000001.000004.txt pposs2ukstu_blue_001_001.fits pposs2ukstu_blue_002_002.fits 1-diff.000001.000004.fits region-oversized.hdr",
         "workspaceSeedPath": "/akoflow-wfa-shared",
-        "cpuLimit": "1",
+        "cpuLimit": "500m",
         "memoryLimit": "256Mi",
         "dependsOn": [
           "mprojectid0000001",
@@ -89,7 +89,7 @@
         "runtime": "local",
         "run": "mDiffFit -d -s 1-fit.000002.000003.txt pposs2ukstu_blue_001_002.fits pposs2ukstu_blue_002_001.fits 1-diff.000002.000003.fits region-oversized.hdr",
         "workspaceSeedPath": "/akoflow-wfa-shared",
-        "cpuLimit": "1",
+        "cpuLimit": "500m",
         "memoryLimit": "256Mi",
         "dependsOn": [
           "mprojectid0000002",
@@ -101,7 +101,7 @@
         "runtime": "local",
         "run": "mDiffFit -d -s 1-fit.000002.000004.txt pposs2ukstu_blue_001_002.fits pposs2ukstu_blue_002_002.fits 1-diff.000002.000004.fits region-oversized.hdr",
         "workspaceSeedPath": "/akoflow-wfa-shared",
-        "cpuLimit": "1",
+        "cpuLimit": "500m",
         "memoryLimit": "256Mi",
         "dependsOn": [
           "mprojectid0000002",
@@ -113,7 +113,7 @@
         "runtime": "local",
         "run": "mDiffFit -d -s 1-fit.000003.000004.txt pposs2ukstu_blue_002_001.fits pposs2ukstu_blue_002_002.fits 1-diff.000003.000004.fits region-oversized.hdr",
         "workspaceSeedPath": "/akoflow-wfa-shared",
-        "cpuLimit": "1",
+        "cpuLimit": "500m",
         "memoryLimit": "256Mi",
         "dependsOn": [
           "mprojectid0000003",
@@ -125,7 +125,7 @@
         "runtime": "local",
         "run": "mConcatFit 1-stat.tbl 1-fits.tbl .",
         "workspaceSeedPath": "/akoflow-wfa-shared",
-        "cpuLimit": "1",
+        "cpuLimit": "500m",
         "memoryLimit": "256Mi",
         "dependsOn": [
           "mdifffitid0000005",
@@ -141,7 +141,7 @@
         "runtime": "local",
         "run": "mBgModel -i 100000 1-images.tbl 1-fits.tbl 1-corrections.tbl",
         "workspaceSeedPath": "/akoflow-wfa-shared",
-        "cpuLimit": "1",
+        "cpuLimit": "500m",
         "memoryLimit": "256Mi",
         "dependsOn": [
           "mconcatfitid0000011"
@@ -152,7 +152,7 @@
         "runtime": "local",
         "run": "mBackground -t pposs2ukstu_blue_001_001.fits cposs2ukstu_blue_001_001.fits 1-projected.tbl 1-corrections.tbl",
         "workspaceSeedPath": "/akoflow-wfa-shared",
-        "cpuLimit": "1",
+        "cpuLimit": "500m",
         "memoryLimit": "256Mi",
         "dependsOn": [
           "mprojectid0000001",
@@ -164,7 +164,7 @@
         "runtime": "local",
         "run": "mBackground -t pposs2ukstu_blue_001_002.fits cposs2ukstu_blue_001_002.fits 1-projected.tbl 1-corrections.tbl",
         "workspaceSeedPath": "/akoflow-wfa-shared",
-        "cpuLimit": "1",
+        "cpuLimit": "500m",
         "memoryLimit": "256Mi",
         "dependsOn": [
           "mprojectid0000002",
@@ -176,7 +176,7 @@
         "runtime": "local",
         "run": "mBackground -t pposs2ukstu_blue_002_001.fits cposs2ukstu_blue_002_001.fits 1-projected.tbl 1-corrections.tbl",
         "workspaceSeedPath": "/akoflow-wfa-shared",
-        "cpuLimit": "1",
+        "cpuLimit": "500m",
         "memoryLimit": "256Mi",
         "dependsOn": [
           "mprojectid0000003",
@@ -188,7 +188,7 @@
         "runtime": "local",
         "run": "mBackground -t pposs2ukstu_blue_002_002.fits cposs2ukstu_blue_002_002.fits 1-projected.tbl 1-corrections.tbl",
         "workspaceSeedPath": "/akoflow-wfa-shared",
-        "cpuLimit": "1",
+        "cpuLimit": "500m",
         "memoryLimit": "256Mi",
         "dependsOn": [
           "mprojectid0000004",
@@ -200,7 +200,7 @@
         "runtime": "local",
         "run": "mImgtbl . -t 1-corrected.tbl 1-updated-corrected.tbl",
         "workspaceSeedPath": "/akoflow-wfa-shared",
-        "cpuLimit": "1",
+        "cpuLimit": "500m",
         "memoryLimit": "256Mi",
         "dependsOn": [
           "mbackgroundid0000013",
@@ -214,7 +214,7 @@
         "runtime": "local",
         "run": "mAdd -e 1-updated-corrected.tbl region.hdr 1-mosaic.fits",
         "workspaceSeedPath": "/akoflow-wfa-shared",
-        "cpuLimit": "1",
+        "cpuLimit": "500m",
         "memoryLimit": "256Mi",
         "dependsOn": [
           "mbackgroundid0000013",
@@ -229,7 +229,7 @@
         "runtime": "local",
         "run": "mViewer -ct 1 -gray 1-mosaic.fits -1s max gaussian -png 1-mosaic.png",
         "workspaceSeedPath": "/akoflow-wfa-shared",
-        "cpuLimit": "1",
+        "cpuLimit": "500m",
         "memoryLimit": "256Mi",
         "dependsOn": [
           "maddid0000018"
@@ -240,7 +240,7 @@
         "runtime": "cloud",
         "run": "mProject -X poss2ukstu_red_001_001.fits pposs2ukstu_red_001_001.fits region-oversized.hdr",
         "workspaceSeedPath": "/akoflow-wfa-shared",
-        "cpuLimit": "1",
+        "cpuLimit": "500m",
         "memoryLimit": "256Mi",
         "dependsOn": [
 
@@ -251,7 +251,7 @@
         "runtime": "cloud",
         "run": "mProject -X poss2ukstu_red_001_002.fits pposs2ukstu_red_001_002.fits region-oversized.hdr",
         "workspaceSeedPath": "/akoflow-wfa-shared",
-        "cpuLimit": "1",
+        "cpuLimit": "500m",
         "memoryLimit": "256Mi",
         "dependsOn": [
 
@@ -262,7 +262,7 @@
         "runtime": "cloud",
         "run": "mProject -X poss2ukstu_red_002_001.fits pposs2ukstu_red_002_001.fits region-oversized.hdr",
         "workspaceSeedPath": "/akoflow-wfa-shared",
-        "cpuLimit": "1",
+        "cpuLimit": "500m",
         "memoryLimit": "256Mi",
         "dependsOn": [
 
@@ -273,7 +273,7 @@
         "runtime": "cloud",
         "run": "mProject -X poss2ukstu_red_002_002.fits pposs2ukstu_red_002_002.fits region-oversized.hdr",
         "workspaceSeedPath": "/akoflow-wfa-shared",
-        "cpuLimit": "1",
+        "cpuLimit": "500m",
         "memoryLimit": "256Mi",
         "dependsOn": [
 
@@ -284,7 +284,7 @@
         "runtime": "local",
         "run": "mDiffFit -d -s 2-fit.000001.000002.txt pposs2ukstu_red_001_001.fits pposs2ukstu_red_001_002.fits 2-diff.000001.000002.fits region-oversized.hdr",
         "workspaceSeedPath": "/akoflow-wfa-shared",
-        "cpuLimit": "1",
+        "cpuLimit": "500m",
         "memoryLimit": "256Mi",
         "dependsOn": [
           "mprojectid0000020",
@@ -296,7 +296,7 @@
         "runtime": "local",
         "run": "mDiffFit -d -s 2-fit.000001.000003.txt pposs2ukstu_red_001_001.fits pposs2ukstu_red_002_001.fits 2-diff.000001.000003.fits region-oversized.hdr",
         "workspaceSeedPath": "/akoflow-wfa-shared",
-        "cpuLimit": "1",
+        "cpuLimit": "500m",
         "memoryLimit": "256Mi",
         "dependsOn": [
           "mprojectid0000020",
@@ -308,7 +308,7 @@
         "runtime": "local",
         "run": "mDiffFit -d -s 2-fit.000001.000004.txt pposs2ukstu_red_001_001.fits pposs2ukstu_red_002_002.fits 2-diff.000001.000004.fits region-oversized.hdr",
         "workspaceSeedPath": "/akoflow-wfa-shared",
-        "cpuLimit": "1",
+        "cpuLimit": "500m",
         "memoryLimit": "256Mi",
         "dependsOn": [
           "mprojectid0000020",
@@ -320,7 +320,7 @@
         "runtime": "local",
         "run": "mDiffFit -d -s 2-fit.000002.000003.txt pposs2ukstu_red_001_002.fits pposs2ukstu_red_002_001.fits 2-diff.000002.000003.fits region-oversized.hdr",
         "workspaceSeedPath": "/akoflow-wfa-shared",
-        "cpuLimit": "1",
+        "cpuLimit": "500m",
         "memoryLimit": "256Mi",
         "dependsOn": [
           "mprojectid0000021",
@@ -332,7 +332,7 @@
         "runtime": "local",
         "run": "mDiffFit -d -s 2-fit.000002.000004.txt pposs2ukstu_red_001_002.fits pposs2ukstu_red_002_002.fits 2-diff.000002.000004.fits region-oversized.hdr",
         "workspaceSeedPath": "/akoflow-wfa-shared",
-        "cpuLimit": "1",
+        "cpuLimit": "500m",
         "memoryLimit": "256Mi",
         "dependsOn": [
           "mprojectid0000021",
@@ -344,7 +344,7 @@
         "runtime": "local",
         "run": "mDiffFit -d -s 2-fit.000003.000004.txt pposs2ukstu_red_002_001.fits pposs2ukstu_red_002_002.fits 2-diff.000003.000004.fits region-oversized.hdr",
         "workspaceSeedPath": "/akoflow-wfa-shared",
-        "cpuLimit": "1",
+        "cpuLimit": "500m",
         "memoryLimit": "256Mi",
         "dependsOn": [
           "mprojectid0000022",
@@ -356,7 +356,7 @@
         "runtime": "local",
         "run": "mConcatFit 2-stat.tbl 2-fits.tbl .",
         "workspaceSeedPath": "/akoflow-wfa-shared",
-        "cpuLimit": "1",
+        "cpuLimit": "500m",
         "memoryLimit": "256Mi",
         "dependsOn": [
           "mdifffitid0000024",
@@ -372,7 +372,7 @@
         "runtime": "local",
         "run": "mBgModel -i 100000 2-images.tbl 2-fits.tbl 2-corrections.tbl",
         "workspaceSeedPath": "/akoflow-wfa-shared",
-        "cpuLimit": "1",
+        "cpuLimit": "500m",
         "memoryLimit": "256Mi",
         "dependsOn": [
           "mconcatfitid0000030"
@@ -383,7 +383,7 @@
         "runtime": "local",
         "run": "mBackground -t pposs2ukstu_red_001_001.fits cposs2ukstu_red_001_001.fits 2-projected.tbl 2-corrections.tbl",
         "workspaceSeedPath": "/akoflow-wfa-shared",
-        "cpuLimit": "1",
+        "cpuLimit": "500m",
         "memoryLimit": "256Mi",
         "dependsOn": [
           "mprojectid0000020",
@@ -395,7 +395,7 @@
         "runtime": "local",
         "run": "mBackground -t pposs2ukstu_red_001_002.fits cposs2ukstu_red_001_002.fits 2-projected.tbl 2-corrections.tbl",
         "workspaceSeedPath": "/akoflow-wfa-shared",
-        "cpuLimit": "1",
+        "cpuLimit": "500m",
         "memoryLimit": "256Mi",
         "dependsOn": [
           "mprojectid0000021",
@@ -407,7 +407,7 @@
         "runtime": "local",
         "run": "mBackground -t pposs2ukstu_red_002_001.fits cposs2ukstu_red_002_001.fits 2-projected.tbl 2-corrections.tbl",
         "workspaceSeedPath": "/akoflow-wfa-shared",
-        "cpuLimit": "1",
+        "cpuLimit": "500m",
         "memoryLimit": "256Mi",
         "dependsOn": [
           "mprojectid0000022",
@@ -419,7 +419,7 @@
         "runtime": "local",
         "run": "mBackground -t pposs2ukstu_red_002_002.fits cposs2ukstu_red_002_002.fits 2-projected.tbl 2-corrections.tbl",
         "workspaceSeedPath": "/akoflow-wfa-shared",
-        "cpuLimit": "1",
+        "cpuLimit": "500m",
         "memoryLimit": "256Mi",
         "dependsOn": [
           "mprojectid0000023",
@@ -431,7 +431,7 @@
         "runtime": "local",
         "run": "mImgtbl . -t 2-corrected.tbl 2-updated-corrected.tbl",
         "workspaceSeedPath": "/akoflow-wfa-shared",
-        "cpuLimit": "1",
+        "cpuLimit": "500m",
         "memoryLimit": "256Mi",
         "dependsOn": [
           "mbackgroundid0000032",
@@ -445,7 +445,7 @@
         "runtime": "local",
         "run": "mAdd -e 2-updated-corrected.tbl region.hdr 2-mosaic.fits",
         "workspaceSeedPath": "/akoflow-wfa-shared",
-        "cpuLimit": "1",
+        "cpuLimit": "500m",
         "memoryLimit": "256Mi",
         "dependsOn": [
           "mbackgroundid0000032",
@@ -460,7 +460,7 @@
         "runtime": "local",
         "run": "mViewer -ct 1 -gray 2-mosaic.fits -1s max gaussian -png 2-mosaic.png",
         "workspaceSeedPath": "/akoflow-wfa-shared",
-        "cpuLimit": "1",
+        "cpuLimit": "500m",
         "memoryLimit": "256Mi",
         "dependsOn": [
           "maddid0000037"
@@ -471,7 +471,7 @@
         "runtime": "cloud",
         "run": "mProject -X poss2ukstu_ir_001_001.fits pposs2ukstu_ir_001_001.fits region-oversized.hdr",
         "workspaceSeedPath": "/akoflow-wfa-shared",
-        "cpuLimit": "1",
+        "cpuLimit": "500m",
         "memoryLimit": "256Mi",
         "dependsOn": [
 
@@ -482,7 +482,7 @@
         "runtime": "cloud",
         "run": "mProject -X poss2ukstu_ir_001_002.fits pposs2ukstu_ir_001_002.fits region-oversized.hdr",
         "workspaceSeedPath": "/akoflow-wfa-shared",
-        "cpuLimit": "1",
+        "cpuLimit": "500m",
         "memoryLimit": "256Mi",
         "dependsOn": [
 
@@ -493,7 +493,7 @@
         "runtime": "cloud",
         "run": "mProject -X poss2ukstu_ir_002_001.fits pposs2ukstu_ir_002_001.fits region-oversized.hdr",
         "workspaceSeedPath": "/akoflow-wfa-shared",
-        "cpuLimit": "1",
+        "cpuLimit": "500m",
         "memoryLimit": "256Mi",
         "dependsOn": [
 
@@ -504,7 +504,7 @@
         "runtime": "cloud",
         "run": "mProject -X poss2ukstu_ir_002_002.fits pposs2ukstu_ir_002_002.fits region-oversized.hdr",
         "workspaceSeedPath": "/akoflow-wfa-shared",
-        "cpuLimit": "1",
+        "cpuLimit": "500m",
         "memoryLimit": "256Mi",
         "dependsOn": [
 
@@ -515,7 +515,7 @@
         "runtime": "local",
         "run": "mDiffFit -d -s 3-fit.000001.000002.txt pposs2ukstu_ir_001_001.fits pposs2ukstu_ir_001_002.fits 3-diff.000001.000002.fits region-oversized.hdr",
         "workspaceSeedPath": "/akoflow-wfa-shared",
-        "cpuLimit": "1",
+        "cpuLimit": "500m",
         "memoryLimit": "256Mi",
         "dependsOn": [
           "mprojectid0000039",
@@ -527,7 +527,7 @@
         "runtime": "local",
         "run": "mDiffFit -d -s 3-fit.000001.000003.txt pposs2ukstu_ir_001_001.fits pposs2ukstu_ir_002_001.fits 3-diff.000001.000003.fits region-oversized.hdr",
         "workspaceSeedPath": "/akoflow-wfa-shared",
-        "cpuLimit": "1",
+        "cpuLimit": "500m",
         "memoryLimit": "256Mi",
         "dependsOn": [
           "mprojectid0000039",
@@ -539,7 +539,7 @@
         "runtime": "local",
         "run": "mDiffFit -d -s 3-fit.000001.000004.txt pposs2ukstu_ir_001_001.fits pposs2ukstu_ir_002_002.fits 3-diff.000001.000004.fits region-oversized.hdr",
         "workspaceSeedPath": "/akoflow-wfa-shared",
-        "cpuLimit": "1",
+        "cpuLimit": "500m",
         "memoryLimit": "256Mi",
         "dependsOn": [
           "mprojectid0000039",
@@ -551,7 +551,7 @@
         "runtime": "local",
         "run": "mDiffFit -d -s 3-fit.000002.000003.txt pposs2ukstu_ir_001_002.fits pposs2ukstu_ir_002_001.fits 3-diff.000002.000003.fits region-oversized.hdr",
         "workspaceSeedPath": "/akoflow-wfa-shared",
-        "cpuLimit": "1",
+        "cpuLimit": "500m",
         "memoryLimit": "256Mi",
         "dependsOn": [
           "mprojectid0000040",
@@ -563,7 +563,7 @@
         "runtime": "local",
         "run": "mDiffFit -d -s 3-fit.000002.000004.txt pposs2ukstu_ir_001_002.fits pposs2ukstu_ir_002_002.fits 3-diff.000002.000004.fits region-oversized.hdr",
         "workspaceSeedPath": "/akoflow-wfa-shared",
-        "cpuLimit": "1",
+        "cpuLimit": "500m",
         "memoryLimit": "256Mi",
         "dependsOn": [
           "mprojectid0000040",
@@ -575,7 +575,7 @@
         "runtime": "local",
         "run": "mDiffFit -d -s 3-fit.000003.000004.txt pposs2ukstu_ir_002_001.fits pposs2ukstu_ir_002_002.fits 3-diff.000003.000004.fits region-oversized.hdr",
         "workspaceSeedPath": "/akoflow-wfa-shared",
-        "cpuLimit": "1",
+        "cpuLimit": "500m",
         "memoryLimit": "256Mi",
         "dependsOn": [
           "mprojectid0000041",
@@ -587,7 +587,7 @@
         "runtime": "local",
         "run": "mConcatFit 3-stat.tbl 3-fits.tbl .",
         "workspaceSeedPath": "/akoflow-wfa-shared",
-        "cpuLimit": "1",
+        "cpuLimit": "500m",
         "memoryLimit": "256Mi",
         "dependsOn": [
           "mdifffitid0000043",
@@ -603,7 +603,7 @@
         "runtime": "local",
         "run": "mBgModel -i 100000 3-images.tbl 3-fits.tbl 3-corrections.tbl",
         "workspaceSeedPath": "/akoflow-wfa-shared",
-        "cpuLimit": "1",
+        "cpuLimit": "500m",
         "memoryLimit": "256Mi",
         "dependsOn": [
           "mconcatfitid0000049"
@@ -614,7 +614,7 @@
         "runtime": "local",
         "run": "mBackground -t pposs2ukstu_ir_001_001.fits cposs2ukstu_ir_001_001.fits 3-projected.tbl 3-corrections.tbl",
         "workspaceSeedPath": "/akoflow-wfa-shared",
-        "cpuLimit": "1",
+        "cpuLimit": "500m",
         "memoryLimit": "256Mi",
         "dependsOn": [
           "mprojectid0000039",
@@ -626,7 +626,7 @@
         "runtime": "local",
         "run": "mBackground -t pposs2ukstu_ir_001_002.fits cposs2ukstu_ir_001_002.fits 3-projected.tbl 3-corrections.tbl",
         "workspaceSeedPath": "/akoflow-wfa-shared",
-        "cpuLimit": "1",
+        "cpuLimit": "500m",
         "memoryLimit": "256Mi",
         "dependsOn": [
           "mprojectid0000040",
@@ -638,7 +638,7 @@
         "runtime": "local",
         "run": "mBackground -t pposs2ukstu_ir_002_001.fits cposs2ukstu_ir_002_001.fits 3-projected.tbl 3-corrections.tbl",
         "workspaceSeedPath": "/akoflow-wfa-shared",
-        "cpuLimit": "1",
+        "cpuLimit": "500m",
         "memoryLimit": "256Mi",
         "dependsOn": [
           "mprojectid0000041",
@@ -650,7 +650,7 @@
         "runtime": "local",
         "run": "mBackground -t pposs2ukstu_ir_002_002.fits cposs2ukstu_ir_002_002.fits 3-projected.tbl 3-corrections.tbl",
         "workspaceSeedPath": "/akoflow-wfa-shared",
-        "cpuLimit": "1",
+        "cpuLimit": "500m",
         "memoryLimit": "256Mi",
         "dependsOn": [
           "mprojectid0000042",
@@ -662,7 +662,7 @@
         "runtime": "local",
         "run": "mImgtbl . -t 3-corrected.tbl 3-updated-corrected.tbl",
         "workspaceSeedPath": "/akoflow-wfa-shared",
-        "cpuLimit": "1",
+        "cpuLimit": "500m",
         "memoryLimit": "256Mi",
         "dependsOn": [
           "mbackgroundid0000051",
@@ -676,7 +676,7 @@
         "runtime": "local",
         "run": "mAdd -e 3-updated-corrected.tbl region.hdr 3-mosaic.fits",
         "workspaceSeedPath": "/akoflow-wfa-shared",
-        "cpuLimit": "1",
+        "cpuLimit": "500m",
         "memoryLimit": "256Mi",
         "dependsOn": [
           "mbackgroundid0000051",
@@ -691,7 +691,7 @@
         "runtime": "local",
         "run": "mViewer -ct 1 -gray 3-mosaic.fits -1s max gaussian -png 3-mosaic.png",
         "workspaceSeedPath": "/akoflow-wfa-shared",
-        "cpuLimit": "1",
+        "cpuLimit": "500m",
         "memoryLimit": "256Mi",
         "dependsOn": [
           "maddid0000056"
@@ -702,7 +702,7 @@
         "runtime": "local",
         "run": "mViewer -red 3-mosaic.fits -0.5s max gaussian-log -green 2-mosaic.fits -0.5s max gaussian-log -blue 1-mosaic.fits -0.5s max gaussian-log -png mosaic-color.png",
         "workspaceSeedPath": "/akoflow-wfa-shared",
-        "cpuLimit": "1",
+        "cpuLimit": "500m",
         "memoryLimit": "256Mi",
         "dependsOn": [
           "maddid0000018",

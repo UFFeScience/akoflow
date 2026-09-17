@@ -6,9 +6,10 @@ require 'shellwords'
 require 'yaml'
 
 ROOT = __dir__
-IMAGE = 'ovvesley/akoflow-wf-montage:050d'
-NAME = 'montage-58-four-vm-local'
+IMAGE = 'ovvesley/akoflow-wf-montage@sha256:26b060b83b990557ea86ab40503cc8f17ab6016b5973e7e6f9201100a96440c9'
+NAME = 'montage-58-four-vm-local-050d'
 source = YAML.load_file(File.join(ROOT, 'source-workflow.yaml'))
+abort 'source image does not match the pinned Montage release' unless source.fetch('spec').fetch('image') == 'ovvesley/akoflow-wf-montage:050d'
 original = source.fetch('spec').fetch('activities')
 runtimes = CSV.read(File.join(ROOT, 'reference-runtimes.csv'), headers: true)
 seconds = runtimes.to_h { |row| [row.fetch('activity_id'), row.fetch('duration_seconds').to_f] }
@@ -56,7 +57,8 @@ activities = original.map do |activity|
   runtime = command.start_with?('mProject') ? 'cloud' : 'local'
   { 'name' => activity['name'], 'runtime' => runtime, 'run' => command,
     'workspaceSeedPath' => '/akoflow-wfa-shared',
-    'cpuLimit' => '1', 'memoryLimit' => '256Mi', 'dependsOn' => activity.fetch('dependsOn', []) }
+    'cpuLimit' => activity.fetch('cpuLimit'), 'memoryLimit' => activity.fetch('memoryLimit'),
+    'dependsOn' => activity.fetch('dependsOn', []) }
 end
 
 workflow = { 'name' => NAME, 'spec' => { 'namespace' => 'showcase', 'image' => IMAGE,

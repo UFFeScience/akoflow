@@ -413,6 +413,7 @@ resource "google_compute_firewall" "ssh" {
   }
 }
 output "instance_id" { value = google_compute_instance.worker.instance_id }
+output "creation_timestamp" { value = google_compute_instance.worker.creation_timestamp }
 output "public_ip" { value = google_compute_instance.worker.network_interface[0].access_config[0].nat_ip }
 output "private_ip" { value = google_compute_instance.worker.network_interface[0].network_ip }
 output "network_domain" { value = "${var.project}:${var.region}:${var.network}:${var.subnetwork}" }

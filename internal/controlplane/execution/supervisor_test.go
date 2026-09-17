@@ -63,15 +63,21 @@ func (f *executionStoreFake) ListHandles(_ context.Context, runID string) ([]dom
 }
 
 type activityControllerFake struct {
-	started     []string
-	contexts    []domain.ActivityExecutionContext
-	inspections map[string]int
-	startErr    error
+	started                    []string
+	contexts                   []domain.ActivityExecutionContext
+	inspections                map[string]int
+	startErr                   error
+	startEvents                chan string
+	minimumStartsBeforeInspect int
+	firstInspectStarts         int
 }
 
 func (f *activityControllerFake) Start(_ context.Context, execution domain.ActivityExecutionContext) (domain.ActivityHandle, error) {
 	f.started = append(f.started, execution.Activity.ID)
 	f.contexts = append(f.contexts, execution)
+	if f.startEvents != nil {
+		f.startEvents <- execution.Activity.ID
+	}
 	if f.startErr != nil {
 		return domain.ActivityHandle{}, f.startErr
 	}
@@ -123,6 +129,29 @@ type parallelPrewarmFake struct {
 	want      int
 }
 
+type staggeredCloudAllocatorFake struct {
+	slowReady <-chan struct{}
+}
+
+func (f *staggeredCloudAllocatorFake) Prewarm(context.Context, string, string, domain.CloudCapacityTarget) error {
+	return nil
+}
+
+func (f *staggeredCloudAllocatorFake) Allocate(ctx context.Context, _ string, _ string, target domain.CloudCapacityTarget) (domain.CloudProvisionedInstance, error) {
+	if target.ID == "target-0" {
+		select {
+		case <-f.slowReady:
+		case <-ctx.Done():
+			return domain.CloudProvisionedInstance{}, ctx.Err()
+		}
+	}
+	return domain.CloudProvisionedInstance{ID: "instance-" + target.ID, CapacityTargetID: target.ID, EnvironmentID: target.EnvironmentID, Status: "ready"}, nil
+}
+
+func (*staggeredCloudAllocatorFake) Release(context.Context, string, map[string]domain.RuntimeAllocation, bool) error {
+	return nil
+}
+
 func (f *parallelPrewarmFake) Prewarm(_ context.Context, _ string, _ string, target domain.CloudCapacityTarget) error {
 	f.prewarmed = append(f.prewarmed, target.ID)
 	return nil
@@ -140,6 +169,12 @@ func (*parallelPrewarmFake) Release(context.Context, string, map[string]domain.R
 }
 
 func (f *activityControllerFake) Inspect(_ context.Context, id string, _ domain.ExecutionMode) (*domain.ActivityHandle, error) {
+	if f.inspections == nil && f.firstInspectStarts > 0 && len(f.started) != f.firstInspectStarts {
+		return nil, fmt.Errorf("first inspection saw %d starts, want %d", len(f.started), f.firstInspectStarts)
+	}
+	if len(f.started) < f.minimumStartsBeforeInspect {
+		return nil, fmt.Errorf("inspected after starting only %d activities", len(f.started))
+	}
 	if f.inspections == nil {
 		f.inspections = map[string]int{}
 	}
@@ -333,7 +368,7 @@ func TestSupervisorExecutesDAGInDependencyOrder(t *testing.T) {
 	store := &executionStoreFake{}
 	activities := &activityControllerFake{}
 	simulator := &planExecutorFake{}
-	service, err := New(store, activities, simulator, Config{PollInterval: time.Microsecond, MaxParallel: 2})
+	service, err := New(store, activities, simulator, Config{PollInterval: time.Microsecond})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -346,6 +381,111 @@ func TestSupervisorExecutesDAGInDependencyOrder(t *testing.T) {
 	}
 	if trace.RunID != "run" || store.trace.RunID != "run" {
 		t.Fatal("trace was not completed")
+	}
+}
+
+func TestSupervisorStartsTwelveActivitiesOnPlannedCapacity(t *testing.T) {
+	request := requestFixture(domain.ExecutionModeReal)
+	request.Workflow.Activities = nil
+	request.Workflow.Dependencies = nil
+	request.Plan.Assignments = nil
+	for index := range 12 {
+		id := fmt.Sprintf("activity-%02d", index)
+		request.Workflow.Activities = append(request.Workflow.Activities, domain.Activity{
+			ID: id, Name: id, Kind: domain.ActivityKindTask,
+			Capabilities: []domain.ActivityCapability{domain.ActivityCapabilityReal},
+			Command:      domain.ActivityCommand{Entrypoint: "true"},
+			Resources:    domain.ActivityResources{CPU: 1},
+		})
+		request.Plan.Assignments = append(request.Plan.Assignments, domain.PlanAssignment{
+			ID: "assignment-" + id, ActivityID: id, ResourceID: "r", CoreID: id,
+		})
+	}
+	request.Resources[0].CPUCapacity = 12
+	controller := &activityControllerFake{minimumStartsBeforeInspect: 12}
+	service, err := New(&executionStoreFake{}, controller, &planExecutorFake{}, Config{
+		PollInterval: time.Microsecond,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := service.Execute(context.Background(), request); err != nil {
+		t.Fatal(err)
+	}
+	if len(controller.started) != 12 {
+		t.Fatalf("started %d activities, want 12", len(controller.started))
+	}
+}
+
+func TestSupervisorStartsIndependentActivitiesDespitePlanOrder(t *testing.T) {
+	request := requestFixture(domain.ExecutionModeReal)
+	request.Workflow.Dependencies = nil
+	request.Plan.Assignments[1].OrderOnResource = 1
+	controller := &activityControllerFake{firstInspectStarts: 2}
+	store := &executionStoreFake{}
+	service, err := New(store, controller, &planExecutorFake{}, Config{PollInterval: time.Microsecond})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := service.Execute(context.Background(), request); err != nil {
+		t.Fatal(err)
+	}
+	if len(controller.started) != 2 || controller.started[0] != "a" || controller.started[1] != "b" {
+		t.Fatalf("start order=%v", controller.started)
+	}
+	for _, task := range store.tasks {
+		if task.ActivityID == "b" && task.Metadata["queueReason"] == "waiting for previous activity in planned lane" {
+			t.Fatal("plan order must not become a dependency")
+		}
+	}
+}
+
+func TestSupervisorStartsReadyActivityAheadOfBlockedPlanOrder(t *testing.T) {
+	request := requestFixture(domain.ExecutionModeReal)
+	producer := request.Workflow.Activities[0]
+	producer.ID, producer.Name = "c", "c"
+	request.Workflow.Activities = append(request.Workflow.Activities, producer)
+	request.Workflow.Dependencies = []domain.ActivityDependency{{
+		ActivityID: "a", DependsOnActivityID: "c",
+	}}
+	request.Plan.Assignments[1].OrderOnResource = 1
+	request.Plan.Assignments = append(request.Plan.Assignments, domain.PlanAssignment{
+		ID: "pc", ActivityID: "c", ResourceID: "other",
+	})
+	request.Resources = append(request.Resources, domain.Resource{ID: "other"})
+	request.RuntimeBindings = append(request.RuntimeBindings, domain.ResourceRuntimeBinding{
+		ResourceID: "other", RuntimeID: "local", Enabled: true,
+	})
+	controller := &activityControllerFake{firstInspectStarts: 2}
+	service, err := New(&executionStoreFake{}, controller, &planExecutorFake{}, Config{
+		PollInterval: time.Microsecond,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := service.Execute(context.Background(), request); err != nil {
+		t.Fatal(err)
+	}
+	if len(controller.started) != 3 || controller.started[0] == "a" || controller.started[1] == "a" || controller.started[2] != "a" {
+		t.Fatalf("blocked activity ran before its dependency; starts=%v", controller.started)
+	}
+}
+
+func TestSupervisorFollowsParallelPlanLanesDespiteOvercommit(t *testing.T) {
+	request := requestFixture(domain.ExecutionModeReal)
+	request.Workflow.Dependencies = nil
+	request.Workflow.Activities[0].Resources.CPU = 1
+	request.Workflow.Activities[1].Resources.CPU = 1
+	request.Resources[0].CPUCapacity = 1
+	request.Plan.Assignments[0].SlotID = "slot-a"
+	request.Plan.Assignments[1].SlotID = "slot-b"
+	controller := &activityControllerFake{firstInspectStarts: 2}
+	service, err := New(&executionStoreFake{}, controller, &planExecutorFake{}, Config{PollInterval: time.Microsecond})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := service.Execute(context.Background(), request); err != nil {
+		t.Fatal(err)
 	}
 }
 
@@ -368,7 +508,7 @@ func TestSupervisorBindsCloudInstanceBeforeActivityStart(t *testing.T) {
 	store := &executionStoreFake{}
 	activities := &activityControllerFake{}
 	service, err := New(store, activities, &planExecutorFake{}, Config{
-		PollInterval: time.Microsecond, MaxParallel: 1, Cloud: cloud,
+		PollInterval: time.Microsecond, Cloud: cloud,
 		CloudStore: cloudAllocationStoreFake{target: domain.CloudCapacityTarget{ID: "capacity", EnvironmentID: "environment"}},
 	})
 	if err != nil {
@@ -384,7 +524,7 @@ func TestSupervisorBindsCloudInstanceBeforeActivityStart(t *testing.T) {
 	if allocation.CloudInstanceID != "instance-a" || allocation.RuntimeID != "cloud-runtime" || allocation.ConnectionID != "cloud-connection" {
 		t.Fatalf("unexpected concrete allocation: %#v", allocation)
 	}
-	if len(store.tasks) == 0 || store.tasks[0].CloudInstanceID != "instance-a" {
+	if len(store.tasks) == 0 || store.tasks[len(store.tasks)-1].CloudInstanceID != "instance-a" {
 		t.Fatalf("task did not persist allocation: %#v", store.tasks)
 	}
 }
@@ -412,8 +552,8 @@ func TestSupervisorQueuesAllReadyCloudTargetsBeforeWaitingForFirst(t *testing.T)
 	allocator := &parallelPrewarmFake{want: 4}
 	activities := &activityControllerFake{}
 	service, err := New(&executionStoreFake{}, activities, &planExecutorFake{}, Config{
-		PollInterval: time.Microsecond, MaxParallel: 4,
-		Cloud: &cloudProvisionerFake{}, CloudStore: cloudAllocationStoreFake{targets: targets}, CloudAllocator: allocator,
+		PollInterval: time.Microsecond,
+		Cloud:        &cloudProvisionerFake{}, CloudStore: cloudAllocationStoreFake{targets: targets}, CloudAllocator: allocator,
 	})
 	if err != nil {
 		t.Fatal(err)
@@ -423,6 +563,54 @@ func TestSupervisorQueuesAllReadyCloudTargetsBeforeWaitingForFirst(t *testing.T)
 	}
 	if len(allocator.prewarmed) != 4 || len(activities.started) != 4 {
 		t.Fatalf("prewarmed=%v started=%v", allocator.prewarmed, activities.started)
+	}
+}
+
+func TestSupervisorStartsReadyMachineWhileAnotherIsConfiguring(t *testing.T) {
+	request := requestFixture(domain.ExecutionModeReal)
+	request.Workflow.Dependencies = nil
+	request.Plan.Assignments = nil
+	request.Resources = nil
+	request.RuntimeBindings = nil
+	request.Runtimes = []domain.EnvironmentRuntime{{ID: "cloud-runtime", Driver: domain.RuntimeDriverCloud, Mode: domain.RuntimeModeExecution}}
+	targets := map[string]domain.CloudCapacityTarget{}
+	for index, activity := range request.Workflow.Activities {
+		resourceID := fmt.Sprintf("resource-%d", index)
+		targetID := fmt.Sprintf("target-%d", index)
+		request.Plan.Assignments = append(request.Plan.Assignments, domain.PlanAssignment{ID: "assignment-" + activity.ID, ActivityID: activity.ID, ResourceID: resourceID, Metadata: map[string]any{"runtimeId": "cloud-runtime"}})
+		request.Resources = append(request.Resources, domain.Resource{ID: resourceID, Type: domain.ResourceCloudVM, Metadata: map[string]any{"capacityTargetId": targetID}})
+		request.RuntimeBindings = append(request.RuntimeBindings, domain.ResourceRuntimeBinding{ResourceID: resourceID, RuntimeID: "cloud-runtime", Enabled: true})
+		targets[targetID] = domain.CloudCapacityTarget{ID: targetID, EnvironmentID: "environment"}
+	}
+	slowReady := make(chan struct{})
+	starts := make(chan string, 2)
+	controller := &activityControllerFake{startEvents: starts}
+	service, err := New(&executionStoreFake{}, controller, &planExecutorFake{}, Config{
+		PollInterval: time.Millisecond,
+		Cloud:        &cloudProvisionerFake{}, CloudStore: cloudAllocationStoreFake{targets: targets},
+		CloudAllocator: &staggeredCloudAllocatorFake{slowReady: slowReady},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	done := make(chan error, 1)
+	go func() {
+		_, executeErr := service.Execute(ctx, request)
+		done <- executeErr
+	}()
+	select {
+	case started := <-starts:
+		if started != "b" {
+			t.Fatalf("activity %q started before its machine was ready", started)
+		}
+	case <-ctx.Done():
+		t.Fatal("ready machine did not start while another allocation was pending")
+	}
+	close(slowReady)
+	if err := <-done; err != nil {
+		t.Fatal(err)
 	}
 }
 
@@ -519,11 +707,12 @@ func TestSupervisorMarksActivityFailedWhenStartIsRejected(t *testing.T) {
 	if store.failed == "" {
 		t.Fatal("run was not marked failed")
 	}
-	if len(store.tasks) != 1 || store.tasks[0].Status != domain.TaskFailed {
-		t.Fatalf("tasks=%+v, want one failed task", store.tasks)
+	failedTask := store.tasks[len(store.tasks)-1]
+	if failedTask.Status != domain.TaskFailed {
+		t.Fatalf("tasks=%+v, want a failed task", store.tasks)
 	}
-	if store.tasks[0].FailureReason != "start activity: activity image is required for Kubernetes" {
-		t.Fatalf("failure=%q", store.tasks[0].FailureReason)
+	if failedTask.FailureReason != "start activity: activity image is required for Kubernetes" {
+		t.Fatalf("failure=%q", failedTask.FailureReason)
 	}
 	handle := store.handles["run:a"]
 	if handle.Status != domain.HandleFailed {

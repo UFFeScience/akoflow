@@ -83,6 +83,31 @@ func TestSchedulePlanSaveAndFind(t *testing.T) {
 	}
 }
 
+func TestSchedulePlanAllowsParallelSlotsAtSameResourceOrder(t *testing.T) {
+	repository := setup(t)
+	_, err := repository.db.Exec(`INSERT INTO activity_definitions(
+		id, workflow_version_id, activity_type_id, external_id, name, kind,
+		capabilities, command_spec, resource_requirements, policy
+	) VALUES ('task-two', 'w1', 'type', 'task-two', 'task-two', 'task', '{}', '{}', '{}', '{}')`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	plan := domain.SchedulePlan{
+		ID: "parallel", WorkflowVersionID: "w1", ExecutionScopeID: "scope", Source: domain.PlanningSourceImported,
+		Assignments: []domain.PlanAssignment{
+			{ID: "first", ActivityID: "task", ResourceID: "r1", SlotID: "slot-a", OrderOnResource: 0},
+			{ID: "second", ActivityID: "task-two", ResourceID: "r1", SlotID: "slot-b", OrderOnResource: 0},
+		},
+	}
+	if err := repository.Save(context.Background(), plan); err != nil {
+		t.Fatal(err)
+	}
+	stored, err := repository.Find(context.Background(), plan.ID)
+	if err != nil || stored == nil || len(stored.Assignments) != 2 {
+		t.Fatalf("parallel assignments were not saved: %+v %v", stored, err)
+	}
+}
+
 func TestSchedulePlanListIncludesAssignmentCounts(t *testing.T) {
 	repository := setup(t)
 	ctx := context.Background()

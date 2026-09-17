@@ -21,7 +21,8 @@
         "orderOnResource": 0,
         "metadata": {
           "runtimeId": "gcp-environment-cloud"
-        }
+        },
+        "slotId": "parallel-1"
       },
       {
         "id": "montage-58-four-vm-local-050d-assignment-mprojectid0000002",
@@ -30,7 +31,8 @@
         "orderOnResource": 0,
         "metadata": {
           "runtimeId": "gcp-environment-cloud"
-        }
+        },
+        "slotId": "parallel-1"
       },
       {
         "id": "montage-58-four-vm-local-050d-assignment-mprojectid0000003",
@@ -39,7 +41,8 @@
         "orderOnResource": 0,
         "metadata": {
           "runtimeId": "gcp-environment-cloud"
-        }
+        },
+        "slotId": "parallel-1"
       },
       {
         "id": "montage-58-four-vm-local-050d-assignment-mprojectid0000004",
@@ -48,7 +51,8 @@
         "orderOnResource": 0,
         "metadata": {
           "runtimeId": "gcp-environment-cloud"
-        }
+        },
+        "slotId": "parallel-1"
       },
       {
         "id": "montage-58-four-vm-local-050d-assignment-mdifffitid0000005",
@@ -189,37 +193,41 @@
         "id": "montage-58-four-vm-local-050d-assignment-mprojectid0000020",
         "activityId": "montage-58-four-vm-local-050d-mprojectid0000020",
         "resourceId": "montage-gcp-e2-medium-1",
-        "orderOnResource": 1,
+        "orderOnResource": 0,
         "metadata": {
           "runtimeId": "gcp-environment-cloud"
-        }
+        },
+        "slotId": "parallel-2"
       },
       {
         "id": "montage-58-four-vm-local-050d-assignment-mprojectid0000021",
         "activityId": "montage-58-four-vm-local-050d-mprojectid0000021",
         "resourceId": "montage-gcp-e2-medium-2",
-        "orderOnResource": 1,
+        "orderOnResource": 0,
         "metadata": {
           "runtimeId": "gcp-environment-cloud"
-        }
+        },
+        "slotId": "parallel-2"
       },
       {
         "id": "montage-58-four-vm-local-050d-assignment-mprojectid0000022",
         "activityId": "montage-58-four-vm-local-050d-mprojectid0000022",
         "resourceId": "montage-gcp-e2-medium-3",
-        "orderOnResource": 1,
+        "orderOnResource": 0,
         "metadata": {
           "runtimeId": "gcp-environment-cloud"
-        }
+        },
+        "slotId": "parallel-2"
       },
       {
         "id": "montage-58-four-vm-local-050d-assignment-mprojectid0000023",
         "activityId": "montage-58-four-vm-local-050d-mprojectid0000023",
         "resourceId": "montage-gcp-e2-medium-4",
-        "orderOnResource": 1,
+        "orderOnResource": 0,
         "metadata": {
           "runtimeId": "gcp-environment-cloud"
-        }
+        },
+        "slotId": "parallel-2"
       },
       {
         "id": "montage-58-four-vm-local-050d-assignment-mdifffitid0000024",
@@ -360,37 +368,41 @@
         "id": "montage-58-four-vm-local-050d-assignment-mprojectid0000039",
         "activityId": "montage-58-four-vm-local-050d-mprojectid0000039",
         "resourceId": "montage-gcp-e2-medium-1",
-        "orderOnResource": 2,
+        "orderOnResource": 0,
         "metadata": {
           "runtimeId": "gcp-environment-cloud"
-        }
+        },
+        "slotId": "parallel-3"
       },
       {
         "id": "montage-58-four-vm-local-050d-assignment-mprojectid0000040",
         "activityId": "montage-58-four-vm-local-050d-mprojectid0000040",
         "resourceId": "montage-gcp-e2-medium-2",
-        "orderOnResource": 2,
+        "orderOnResource": 0,
         "metadata": {
           "runtimeId": "gcp-environment-cloud"
-        }
+        },
+        "slotId": "parallel-3"
       },
       {
         "id": "montage-58-four-vm-local-050d-assignment-mprojectid0000041",
         "activityId": "montage-58-four-vm-local-050d-mprojectid0000041",
         "resourceId": "montage-gcp-e2-medium-3",
-        "orderOnResource": 2,
+        "orderOnResource": 0,
         "metadata": {
           "runtimeId": "gcp-environment-cloud"
-        }
+        },
+        "slotId": "parallel-3"
       },
       {
         "id": "montage-58-four-vm-local-050d-assignment-mprojectid0000042",
         "activityId": "montage-58-four-vm-local-050d-mprojectid0000042",
         "resourceId": "montage-gcp-e2-medium-4",
-        "orderOnResource": 2,
+        "orderOnResource": 0,
         "metadata": {
           "runtimeId": "gcp-environment-cloud"
-        }
+        },
+        "slotId": "parallel-3"
       },
       {
         "id": "montage-58-four-vm-local-050d-assignment-mdifffitid0000043",

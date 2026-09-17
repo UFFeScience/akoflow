@@ -141,23 +141,54 @@ type Catalog struct {
 }
 
 type ProvisionedInstance struct {
-	ID               string         `json:"id"`
-	CapacityTargetID string         `json:"capacityTargetId"`
-	EnvironmentID    string         `json:"environmentId"`
-	Provider         string         `json:"provider"`
-	ProviderID       string         `json:"providerId,omitempty"`
-	Name             string         `json:"name"`
-	Status           string         `json:"status"`
-	PublicAddress    string         `json:"publicAddress,omitempty"`
-	PrivateAddress   string         `json:"privateAddress,omitempty"`
-	SSHUsername      string         `json:"sshUsername,omitempty"`
-	SSHCredentialRef string         `json:"sshCredentialRef,omitempty"`
-	Disk             map[string]any `json:"disk,omitempty"`
-	TerraformOutput  map[string]any `json:"terraformOutput,omitempty"`
-	FailureReason    string         `json:"failureReason,omitempty"`
-	CreatedAt        time.Time      `json:"createdAt"`
-	ReadyAt          *time.Time     `json:"readyAt,omitempty"`
-	DestroyedAt      *time.Time     `json:"destroyedAt,omitempty"`
+	ID               string           `json:"id"`
+	CapacityTargetID string           `json:"capacityTargetId"`
+	EnvironmentID    string           `json:"environmentId"`
+	Provider         string           `json:"provider"`
+	ProviderID       string           `json:"providerId,omitempty"`
+	Name             string           `json:"name"`
+	Status           string           `json:"status"`
+	PublicAddress    string           `json:"publicAddress,omitempty"`
+	PrivateAddress   string           `json:"privateAddress,omitempty"`
+	SSHUsername      string           `json:"sshUsername,omitempty"`
+	SSHCredentialRef string           `json:"sshCredentialRef,omitempty"`
+	Disk             map[string]any   `json:"disk,omitempty"`
+	TerraformOutput  map[string]any   `json:"terraformOutput,omitempty"`
+	FailureReason    string           `json:"failureReason,omitempty"`
+	CreatedAt        time.Time        `json:"createdAt"`
+	ReadyAt          *time.Time       `json:"readyAt,omitempty"`
+	DestroyedAt      *time.Time       `json:"destroyedAt,omitempty"`
+	Billing          *InstanceBilling `json:"billing,omitempty"`
+}
+
+// InstanceBilling is a rate snapshot and an accumulated compute clock. Disk
+// continues to accrue while the VM is stopped; compute does not.
+type InstanceBilling struct {
+	StartedAt                 time.Time  `json:"startedAt"`
+	FinishedAt                *time.Time `json:"finishedAt,omitempty"`
+	ComputeStartedAt          *time.Time `json:"computeStartedAt,omitempty"`
+	AccumulatedComputeSeconds float64    `json:"accumulatedComputeSeconds"`
+	ComputePricePerSecond     float64    `json:"computePricePerSecond"`
+	DiskPricePerSecond        float64    `json:"diskPricePerSecond"`
+	AsOf                      *time.Time `json:"asOf,omitempty"`
+	CurrentCost               float64    `json:"currentCost"`
+}
+
+func (billing *InstanceBilling) RefreshCost(now time.Time) {
+	if billing == nil {
+		return
+	}
+	end := now
+	if billing.FinishedAt != nil {
+		end = *billing.FinishedAt
+	}
+	computeSeconds := billing.AccumulatedComputeSeconds
+	if billing.ComputeStartedAt != nil {
+		computeSeconds += max(0, end.Sub(*billing.ComputeStartedAt).Seconds())
+	}
+	diskSeconds := max(0, end.Sub(billing.StartedAt).Seconds())
+	billing.CurrentCost = computeSeconds*billing.ComputePricePerSecond + diskSeconds*billing.DiskPricePerSecond
+	billing.AsOf = &now
 }
 
 type ProvisionRequest struct {

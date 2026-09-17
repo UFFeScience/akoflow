@@ -88,7 +88,7 @@ func registerExecutionHandlers(
 	supervisor, err := controlexecution.New(
 		executions, activities, simulator,
 		controlexecution.Config{
-			PollInterval: time.Second, MaxParallel: 8, Preparer: preparer,
+			PollInterval: time.Second, Preparer: preparer,
 			Data: data, Cloud: cloudProvisioner, CloudStore: cloud,
 			CloudAllocator: controlexecution.QueuedCloudAllocator{Cloud: cloud, Operations: cloud, Queue: events, PollInterval: 500 * time.Millisecond},
 		},

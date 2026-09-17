@@ -17,6 +17,15 @@ type allocatorStore struct {
 	mu         sync.Mutex
 	operations map[string]domain.CloudOperationRun
 	instances  map[string]domain.CloudProvisionedInstance
+	targets    map[string]domain.CloudCapacityTarget
+}
+
+func (s *allocatorStore) FindCapacityTarget(_ context.Context, id string) (*domain.CloudCapacityTarget, error) {
+	value, ok := s.targets[id]
+	if !ok {
+		return nil, nil
+	}
+	return &value, nil
 }
 
 func (s *allocatorStore) ListProvisionedInstances(context.Context, string) ([]domain.CloudProvisionedInstance, error) {
@@ -123,7 +132,7 @@ func TestQueuedCloudAllocatorPrewarmsWithoutWaitingForActivity(t *testing.T) {
 		t.Fatalf("prewarm jobs=%#v", queue.jobs)
 	}
 	time.Sleep(5 * time.Millisecond)
-	if _, err := allocator.Allocate(context.Background(), "run", "future-activity", target); err != nil {
+	if _, err := allocator.Allocate(context.Background(), "run", "another-activity", target); err != nil {
 		t.Fatal(err)
 	}
 	if len(queue.jobs) != 1 {
@@ -164,5 +173,34 @@ func TestQueuedCloudAllocatorStartsAndValidatesStoppedInstance(t *testing.T) {
 	}
 	if !kinds["start"] || !kinds["validate"] {
 		t.Fatalf("operation kinds=%#v", kinds)
+	}
+}
+
+func TestQueuedCloudAllocatorStopPreservesInstanceAndIsIdempotent(t *testing.T) {
+	store := &allocatorStore{
+		operations: map[string]domain.CloudOperationRun{},
+		instances: map[string]domain.CloudProvisionedInstance{
+			"vm": {ID: "vm", CapacityTargetID: "target", EnvironmentID: "environment", Status: "ready"},
+		},
+		targets: map[string]domain.CloudCapacityTarget{
+			"target": {ID: "target", EnvironmentID: "environment"},
+		},
+	}
+	queue := &allocatorQueue{store: store}
+	allocator := QueuedCloudAllocator{Cloud: store, Operations: store, Queue: queue}
+	allocations := map[string]domain.RuntimeAllocation{
+		"activity": {CloudInstanceID: "vm", ResourceID: "resource"},
+	}
+	for range 2 {
+		if err := allocator.Stop(context.Background(), "run", allocations); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if len(queue.jobs) != 1 {
+		t.Fatalf("stop jobs=%d, want 1", len(queue.jobs))
+	}
+	operations, err := store.ListCloudOperations(context.Background())
+	if err != nil || len(operations) != 1 || operations[0].Kind != "stop" {
+		t.Fatalf("operations=%v err=%v", operations, err)
 	}
 }

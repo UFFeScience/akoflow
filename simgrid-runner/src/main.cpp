@@ -201,12 +201,21 @@ static void run_simulation(sg4::Engine& engine, const json& input,
                        [task_model, id, &incoming_dependencies, &outgoing_dependency_signals,
                         &incoming_lanes, &outgoing_lanes, &tasks, &active_by_resource,
                         &interference, run_id]() {
-      for (const auto& [producer_id, mailbox] : incoming_dependencies[id]) {
+      const auto& dependencies = incoming_dependencies[id];
+      std::vector<void*> received_payloads(dependencies.size(), nullptr);
+      std::vector<sg4::CommPtr> incoming_transfers;
+      incoming_transfers.reserve(dependencies.size());
+      for (size_t index = 0; index < dependencies.size(); ++index) {
+        const auto& [producer_id, mailbox] = dependencies[index];
+        if (tasks.at(producer_id).resource_id != task_model->resource_id)
+          incoming_transfers.push_back(sg4::Mailbox::by_name(mailbox)->get_async(&received_payloads[index]));
+      }
+      for (const auto& [producer_id, mailbox] : dependencies) {
         if (tasks.at(producer_id).resource_id == task_model->resource_id)
           sg4::Mailbox::by_name(mailbox_name(run_id, "ready", producer_id, id))->get<void>();
-        else
-          sg4::Mailbox::by_name(mailbox)->get<void>();
       }
+      for (const auto& transfer : incoming_transfers)
+        transfer->wait();
       for (const auto& mailbox : incoming_lanes[id])
         sg4::Mailbox::by_name(mailbox)->get<void>();
       task_model->started_at = sg4::Engine::get_clock();

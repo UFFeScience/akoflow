@@ -466,7 +466,7 @@ func (r *Repository) FindCapacityTarget(ctx context.Context, id string) (*domain
 
 func (r *Repository) CreateProvisionedInstance(ctx context.Context, value domain.CloudProvisionedInstance) error {
 	disk, _ := json.Marshal(value.Disk)
-	output, _ := json.Marshal(value.TerraformOutput)
+	output, _ := marshalInstanceOutput(value)
 	_, err := r.db.ExecContext(ctx, `INSERT INTO cloud_provisioned_instances(
 		id,capacity_target_id,environment_id,provider,provider_id,name,status,public_address,
 		private_address,ssh_username,ssh_credential_ref,disk,terraform_output,failure_reason,
@@ -480,7 +480,7 @@ func (r *Repository) CreateProvisionedInstance(ctx context.Context, value domain
 
 func (r *Repository) UpdateProvisionedInstance(ctx context.Context, value domain.CloudProvisionedInstance) error {
 	disk, _ := json.Marshal(value.Disk)
-	output, _ := json.Marshal(value.TerraformOutput)
+	output, _ := marshalInstanceOutput(value)
 	_, err := r.db.ExecContext(ctx, `UPDATE cloud_provisioned_instances SET provider_id=?,name=?,status=?,
 		public_address=?,private_address=?,ssh_username=?,ssh_credential_ref=?,disk=?,
 		terraform_output=?,failure_reason=?,ready_at=?,destroyed_at=? WHERE id=?`,
@@ -538,7 +538,28 @@ func scanProvisionedInstance(scan scanner) (*domain.CloudProvisionedInstance, er
 	}
 	_ = json.Unmarshal(disk, &value.Disk)
 	_ = json.Unmarshal(output, &value.TerraformOutput)
+	if raw, ok := value.TerraformOutput["_akoflowBilling"]; ok {
+		encoded, err := json.Marshal(raw)
+		if err == nil {
+			var billing domain.InstanceBilling
+			if json.Unmarshal(encoded, &billing) == nil {
+				value.Billing = &billing
+			}
+		}
+		delete(value.TerraformOutput, "_akoflowBilling")
+	}
 	return &value, nil
+}
+
+func marshalInstanceOutput(value domain.CloudProvisionedInstance) ([]byte, error) {
+	output := make(map[string]any, len(value.TerraformOutput)+1)
+	for key, item := range value.TerraformOutput {
+		output[key] = item
+	}
+	if value.Billing != nil {
+		output["_akoflowBilling"] = value.Billing
+	}
+	return json.Marshal(output)
 }
 
 func (r *Repository) CreateCloudOperation(ctx context.Context, value domain.CloudOperationRun) error {

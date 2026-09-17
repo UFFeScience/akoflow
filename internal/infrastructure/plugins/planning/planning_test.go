@@ -41,6 +41,15 @@ func TestValidatePlanAcceptsCompleteCompatiblePlan(t *testing.T) {
 	require.NoError(t, NewValidator().Validate(plan, workflow, resources, validScope(), domain.NetworkTopology{ExecutionScopeID: "scope"}))
 }
 
+func TestValidatePlanAllowsOversubscription(t *testing.T) {
+	workflow, resources, plan := validPlanFixture()
+	workflow.Activities[0].Resources.CPU = resources[0].CPUCapacity + 1
+	workflow.Activities[0].Resources.MemoryBytes = resources[0].MemoryBytes + 1
+	require.NoError(t, NewValidator().Validate(
+		plan, workflow, resources, validScope(), domain.NetworkTopology{ExecutionScopeID: "scope"},
+	))
+}
+
 func TestValidatePlanRejectsInvalidCases(t *testing.T) {
 	tests := []struct {
 		name   string
@@ -69,12 +78,6 @@ func TestValidatePlanRejectsInvalidCases(t *testing.T) {
 			w.Activities[0].Metadata = map[string]any{"resourceSelector": "r2"}
 			p.Assignments[0].ResourceID = "r1"
 		}, "requires resource"},
-		{"insufficient cpu", func(w *domain.WorkflowVersion, _ *[]domain.Resource, _ *domain.SchedulePlan) {
-			w.Activities[0].Resources.CPU = 3
-		}, "lacks CPU"},
-		{"insufficient memory", func(w *domain.WorkflowVersion, _ *[]domain.Resource, _ *domain.SchedulePlan) {
-			w.Activities[0].Resources.MemoryBytes = 3
-		}, "lacks memory"},
 		{"negative interval", func(_ *domain.WorkflowVersion, _ *[]domain.Resource, p *domain.SchedulePlan) {
 			p.Assignments[0].PredictedStartAt = 2
 			p.Assignments[0].PredictedFinishAt = 1

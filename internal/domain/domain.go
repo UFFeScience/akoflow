@@ -25,6 +25,7 @@ type CloudMachineOffering = cloud.MachineOffering
 type CloudImageOffering = cloud.ImageOffering
 type CloudDiskOffering = cloud.DiskOffering
 type CloudProvisionedInstance = cloud.ProvisionedInstance
+type InstanceBilling = cloud.InstanceBilling
 type CloudProvisionRequest = cloud.ProvisionRequest
 type CloudOperationRun = cloud.OperationRun
 type CloudOperationEvent = cloud.OperationEvent
@@ -265,6 +266,7 @@ const (
 	TimingContainerStartedAt    = execution.TimingContainerStartedAt
 	TaskBlocked                 = execution.TaskBlocked
 	TaskReady                   = execution.TaskReady
+	TaskQueued                  = execution.TaskQueued
 	TaskPreparing               = execution.TaskPreparing
 	TaskRunning                 = execution.TaskRunning
 	TaskCompleted               = execution.TaskCompleted

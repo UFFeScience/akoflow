@@ -19,6 +19,33 @@ func (workspaceEndpointResolver) ResolveTransferEndpoint(_ context.Context, loca
 
 func workspaceURL(path string) string { return (&url.URL{Scheme: "file", Path: path}).String() }
 
+func TestWorkspaceRsyncSSHArgumentsKeepRemotePathAbsolute(t *testing.T) {
+	remote := domain.TransferEndpoint{URI: "ssh://akoflow@example.test/akoflow/workspace/runs/run-1/producer"}
+	local := domain.TransferEndpoint{URI: workspaceURL(t.TempDir())}
+	for _, endpoints := range [][2]domain.TransferEndpoint{{remote, local}, {local, remote}} {
+		args, err := rsyncArgs(endpoints[0], endpoints[1])
+		if err != nil {
+			t.Fatal(err)
+		}
+		if !containsArgument(args, "--secluded-args") {
+			t.Fatalf("rsync SSH arguments lack --secluded-args: %q", args)
+		}
+		want := "akoflow@example.test:/akoflow/workspace/runs/run-1/producer/"
+		if !containsArgument(args, want) {
+			t.Fatalf("remote path was quoted or changed: %q", args)
+		}
+	}
+}
+
+func containsArgument(args []string, want string) bool {
+	for _, arg := range args {
+		if arg == want {
+			return true
+		}
+	}
+	return false
+}
+
 func TestWorkspaceRsyncMergesPredecessorsBeforeSuccessorStarts(t *testing.T) {
 	root := t.TempDir()
 	first, second, target := filepath.Join(root, "first"), filepath.Join(root, "second"), filepath.Join(root, "target")

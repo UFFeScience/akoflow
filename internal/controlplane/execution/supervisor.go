@@ -23,7 +23,6 @@ type ActivityController interface {
 
 type Config struct {
 	PollInterval   time.Duration
-	MaxParallel    int
 	Preparer       ports.PreparationCoordinator
 	Data           ports.DataCatalog
 	Cloud          ports.CloudProvisioner
@@ -44,9 +43,6 @@ func New(executions ports.ExecutionStore, activities ActivityController, simulat
 	}
 	if config.PollInterval <= 0 {
 		config.PollInterval = time.Second
-	}
-	if config.MaxParallel <= 0 {
-		config.MaxParallel = 8
 	}
 	return &Supervisor{executions: executions, activities: activities, simulation: simulation, config: config}, nil
 }
@@ -108,6 +104,31 @@ func (s *Supervisor) releaseCloud(ctx context.Context, request ports.ExecutionRe
 			}
 			allocations, retained = retainCloudSourcesWithEphemeralOutputs(allocations, locations)
 		}
+		if !failed {
+			if stopper, ok := s.config.CloudAllocator.(CloudStopper); ok {
+				selected := plannedStopResources(request.Plan, indexResources(request.Resources))
+				toStop := make(map[string]domain.RuntimeAllocation)
+				toRelease := make(map[string]domain.RuntimeAllocation)
+				assignments := indexAssignments(request.Plan.Assignments)
+				stopInstances := make(map[string]bool)
+				for activityID, allocation := range allocations {
+					if selected[assignments[activityID].ResourceID] {
+						stopInstances[allocation.CloudInstanceID] = true
+					}
+				}
+				for activityID, allocation := range allocations {
+					if stopInstances[allocation.CloudInstanceID] {
+						toStop[activityID] = allocation
+					} else {
+						toRelease[activityID] = allocation
+					}
+				}
+				if err := stopper.Stop(ctx, request.Run.ID, toStop); err != nil {
+					return retained, err
+				}
+				allocations = toRelease
+			}
+		}
 		return retained, s.config.CloudAllocator.Release(ctx, request.Run.ID, allocations, failed)
 	}
 	if s.config.Cloud == nil {
@@ -162,6 +183,15 @@ func (s *Supervisor) executeActivities(ctx context.Context, request ports.Execut
 	running := make(map[string]domain.ActivityHandle)
 	tasks := make(map[string]domain.TaskExecution)
 	transfers := make([]domain.DataTransfer, 0)
+	type allocationResult struct {
+		activityID string
+		allocation domain.RuntimeAllocation
+		err        error
+	}
+	allocationResults := make(chan allocationResult, len(activities))
+	pendingAllocations := make(map[string]bool)
+	readyAllocations := make(map[string]domain.RuntimeAllocation)
+	stoppingInstances := make(map[string]bool)
 
 	for len(completed) < len(activities) {
 		if err := ctx.Err(); err != nil {
@@ -174,26 +204,90 @@ func (s *Supervisor) executeActivities(ctx context.Context, request ports.Execut
 			return runningTrace(request, tasks, transfers), nil
 		}
 		ready := readyActivities(activities, predecessors, completed, running, tasks)
-		available := s.config.MaxParallel - len(running)
-		if available > len(ready) {
-			available = len(ready)
+		admitted := plannedReadyActivities(
+			ready, assignments, pendingAllocations,
+		)
+		for _, activityID := range ready {
+			queueReason := "awaiting assigned runtime"
+			if queued, exists := tasks[activityID]; exists {
+				if queued.Metadata["queueReason"] != queueReason {
+					if queued.Metadata == nil {
+						queued.Metadata = make(map[string]any)
+					}
+					queued.Metadata["queueReason"] = queueReason
+					if err := s.executions.SaveTask(ctx, queued); err != nil {
+						return domain.ExecutionTrace{}, fmt.Errorf("update queue for activity %q: %w", activityID, err)
+					}
+					tasks[activityID] = queued
+				}
+				continue
+			}
+			now := unixNow()
+			assignment := assignments[activityID]
+			queued := domain.TaskExecution{
+				ID: request.Run.ID + ":" + activityID, ExecutionRunID: request.Run.ID,
+				PlanAssignmentID: assignment.ID, ActivityID: activityID,
+				PlannedResourceID: assignment.ResourceID, Attempt: 1,
+				Status: domain.TaskQueued, ReadyAt: now, QueuedAt: now,
+				Metadata: map[string]any{"queueReason": queueReason},
+			}
+			if err := s.executions.SaveTask(ctx, queued); err != nil {
+				return domain.ExecutionTrace{}, fmt.Errorf("queue activity %q: %w", activityID, err)
+			}
+			tasks[activityID] = queued
 		}
-		if err := s.prewarmReadyCloud(ctx, request, ready[:available], assignments, resources); err != nil {
+		candidates := make([]string, 0)
+		immediate := make([]string, 0)
+		for _, activityID := range admitted {
+			if runtimeDriver(request, activityID) != domain.RuntimeDriverCloud {
+				immediate = append(immediate, activityID)
+				continue
+			}
+			if _, allocated := readyAllocations[activityID]; allocated {
+				immediate = append(immediate, activityID)
+				continue
+			}
+			candidates = append(candidates, activityID)
+		}
+		if err := s.prewarmReadyCloud(ctx, request, candidates, assignments, resources); err != nil {
 			return domain.ExecutionTrace{}, fmt.Errorf("prewarm cloud capacity: %w", err)
 		}
+		for _, activityID := range candidates {
+			assignment := assignments[activityID]
+			resource := resources[assignment.ResourceID]
+			pendingAllocations[activityID] = true
+			go func(activityID string, assignment domain.PlanAssignment, resource domain.Resource) {
+				allocation, err := s.ensureRuntimeAllocation(ctx, request, activityID, assignment, resource)
+				allocationResults <- allocationResult{activityID: activityID, allocation: allocation, err: err}
+			}(activityID, assignment, resource)
+		}
 		if err := s.startReadyActivities(
-			ctx, request, ready[:available], activities, assignments, resources,
-			running, completed, tasks, &transfers,
+			ctx, request, immediate, activities, assignments, resources,
+			running, completed, tasks, &transfers, readyAllocations,
 		); err != nil {
 			return domain.ExecutionTrace{}, err
 		}
-		if len(running) == 0 && len(ready) == 0 && len(completed) < len(activities) {
+		for _, activityID := range immediate {
+			delete(readyAllocations, activityID)
+		}
+		s.stopIdleCloud(ctx, request, completed, tasks, stoppingInstances)
+		if len(running) == 0 && len(pendingAllocations) == 0 && len(immediate) == 0 && len(completed) < len(activities) {
 			return domain.ExecutionTrace{}, fmt.Errorf("execution cannot progress: dependency cycle or incomplete plan")
 		}
-		if len(running) > 0 {
+		if len(running) > 0 || len(pendingAllocations) > 0 {
 			select {
 			case <-ctx.Done():
 				return domain.ExecutionTrace{}, ctx.Err()
+			case result := <-allocationResults:
+				delete(pendingAllocations, result.activityID)
+				if result.err != nil {
+					failure := fmt.Errorf("allocate runtime for activity %q: %w", result.activityID, result.err)
+					assignment := assignments[result.activityID]
+					resource := resources[assignment.ResourceID]
+					_ = s.recordStartFailure(ctx, request.Run.ID, result.activityID, assignment, resource, selectRuntime(request, assignment), failure)
+					return domain.ExecutionTrace{}, failure
+				}
+				readyAllocations[result.activityID] = result.allocation
 			case <-time.After(s.config.PollInterval):
 			}
 		}
@@ -348,6 +442,7 @@ func (s *Supervisor) startReadyActivities(
 	completed map[string]domain.TaskExecution,
 	tasks map[string]domain.TaskExecution,
 	transfers *[]domain.DataTransfer,
+	readyAllocations map[string]domain.RuntimeAllocation,
 ) error {
 	for _, activityID := range ready {
 		readyAt := unixNow()
@@ -367,7 +462,11 @@ func (s *Supervisor) startReadyActivities(
 			return fmt.Errorf("resource %q not found", assignment.ResourceID)
 		}
 		var preparation *domain.PreparationGate
-		allocation, allocationErr := s.ensureRuntimeAllocation(ctx, request, activityID, assignment, resource)
+		allocation, allocated := readyAllocations[activityID]
+		var allocationErr error
+		if !allocated {
+			allocation, allocationErr = s.ensureRuntimeAllocation(ctx, request, activityID, assignment, resource)
+		}
 		if allocationErr != nil {
 			failure := fmt.Errorf("allocate runtime for activity %q: %w", activityID, allocationErr)
 			_ = s.recordStartFailure(ctx, request.Run.ID, activityID, assignment, resource, selectRuntime(request, assignment), failure)
@@ -417,6 +516,11 @@ func (s *Supervisor) startReadyActivities(
 			return fmt.Errorf("start activity %q: %w", activityID, err)
 		}
 		task := newRunningTask(request.Run.ID, activityID, assignment, resource, allocation, handle, readyAt, preparation)
+		if queued, exists := tasks[activityID]; exists && queued.Status == domain.TaskQueued {
+			task.ReadyAt = queued.ReadyAt
+			task.QueuedAt = queued.QueuedAt
+			task.QueueSeconds = maxFloat(0, task.StartedAt-queued.QueuedAt)
+		}
 		tasks[activityID], running[activityID] = task, handle
 		if handle.Status == domain.HandleCompleted {
 			completeTask(&task, handle)
@@ -1042,7 +1146,7 @@ func readyActivities(activities map[string]domain.Activity, predecessors map[str
 		if _, ok := running[id]; ok {
 			continue
 		}
-		if _, attempted := tasks[id]; attempted {
+		if task, attempted := tasks[id]; attempted && task.Status != domain.TaskQueued && task.Status != domain.TaskReady {
 			continue
 		}
 		all := true

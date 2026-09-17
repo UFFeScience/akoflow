@@ -5,6 +5,7 @@ import (
 	"crypto/sha256"
 	"encoding/json"
 	"fmt"
+	"strconv"
 	"strings"
 	"time"
 
@@ -136,6 +137,15 @@ func (s *Provisioner) finishProvision(
 	instance.Disk = result.Disk
 	instance.TerraformOutput = result.Output
 	instance.Status = "configuring"
+	if instance.Billing == nil {
+		startedAt := time.Now().UTC()
+		if raw, ok := result.Output["creation_timestamp"].(string); ok {
+			if providerTime, err := time.Parse(time.RFC3339Nano, raw); err == nil && !providerTime.After(startedAt) {
+				startedAt = providerTime
+			}
+		}
+		instance.Billing = billingForTarget(target, startedAt)
+	}
 	if err := s.store.UpdateProvisionedInstance(ctx, instance); err != nil {
 		return instance, err
 	}
@@ -181,6 +191,7 @@ func (s *Provisioner) reuseCapacity(
 		instance.Status, instance.FailureReason = "configuring", ""
 		instance.PublicAddress, instance.PrivateAddress = result.PublicAddress, result.PrivateAddress
 		instance.TerraformOutput, instance.Disk = result.Output, result.Disk
+		resumeBilling(instance, time.Now().UTC())
 		if configureErr := s.configure(ctx, instance, target, target.MachineConfigurations); configureErr != nil {
 			instance.Status, instance.FailureReason = "failed", configureErr.Error()
 			_ = s.store.UpdateProvisionedInstance(ctx, *instance)
@@ -367,6 +378,10 @@ func (s *Provisioner) Destroy(ctx context.Context, instanceID string) (domain.Cl
 	instance.Status = "destroyed"
 	instance.FailureReason = ""
 	instance.DestroyedAt = &now
+	pauseBilling(instance, now)
+	if instance.Billing != nil {
+		instance.Billing.FinishedAt = &now
+	}
 	instance.PublicAddress = ""
 	instance.PrivateAddress = ""
 	if err := s.store.UpdateProvisionedInstance(ctx, *instance); err != nil {
@@ -386,6 +401,7 @@ func (s *Provisioner) Start(ctx context.Context, instanceID string) (domain.Clou
 	if instance.Status != "stopped" {
 		return *instance, fmt.Errorf("cloud instance %q cannot start from status %q", instanceID, instance.Status)
 	}
+	startedAt := time.Now().UTC()
 	result, err := s.terraform.Start(ctx, instanceID)
 	if err != nil {
 		return *instance, err
@@ -401,6 +417,7 @@ func (s *Provisioner) Start(ctx context.Context, instanceID string) (domain.Clou
 	}
 	instance.Disk, instance.TerraformOutput, instance.Status = result.Disk, result.Output, "ready"
 	now := time.Now().UTC()
+	resumeBilling(instance, startedAt)
 	instance.ReadyAt = &now
 	return *instance, s.store.UpdateProvisionedInstance(ctx, *instance)
 }
@@ -420,6 +437,7 @@ func (s *Provisioner) Stop(ctx context.Context, instanceID string) (domain.Cloud
 		return *instance, err
 	}
 	instance.Status, instance.PublicAddress = "stopped", ""
+	pauseBilling(instance, time.Now().UTC())
 	return *instance, s.store.UpdateProvisionedInstance(ctx, *instance)
 }
 
@@ -475,6 +493,48 @@ func (s *Provisioner) Release(ctx context.Context, capacityTargetIDs []string) e
 		}
 	}
 	return nil
+}
+
+func billingForTarget(target domain.CloudCapacityTarget, now time.Time) *domain.InstanceBilling {
+	computeHourly := configurationNumber(target.Configuration, "pricePerHour")
+	diskGiB := configurationNumber(target.Configuration, "diskSizeGiB")
+	diskMonthly := configurationNumber(target.Configuration, "diskPricePerGiBMonth")
+	return &domain.InstanceBilling{
+		StartedAt: now, ComputeStartedAt: &now,
+		ComputePricePerSecond: max(0, computeHourly/3600),
+		DiskPricePerSecond:    max(0, diskGiB*diskMonthly/(730*3600)),
+	}
+}
+
+func configurationNumber(values map[string]any, key string) float64 {
+	switch value := values[key].(type) {
+	case float64:
+		return value
+	case int:
+		return float64(value)
+	case int64:
+		return float64(value)
+	case string:
+		parsed, _ := strconv.ParseFloat(value, 64)
+		return parsed
+	default:
+		return 0
+	}
+}
+
+func pauseBilling(instance *domain.CloudProvisionedInstance, now time.Time) {
+	if instance.Billing == nil || instance.Billing.ComputeStartedAt == nil {
+		return
+	}
+	instance.Billing.AccumulatedComputeSeconds += now.Sub(*instance.Billing.ComputeStartedAt).Seconds()
+	instance.Billing.ComputeStartedAt = nil
+}
+
+func resumeBilling(instance *domain.CloudProvisionedInstance, now time.Time) {
+	if instance.Billing == nil || instance.Billing.ComputeStartedAt != nil {
+		return
+	}
+	instance.Billing.ComputeStartedAt = &now
 }
 
 func (s *Provisioner) Log(ctx context.Context, instanceID string) ([]byte, error) {

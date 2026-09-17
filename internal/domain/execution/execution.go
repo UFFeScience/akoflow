@@ -37,6 +37,7 @@ const (
 
 	TaskBlocked   TaskExecutionStatus = "blocked"
 	TaskReady     TaskExecutionStatus = "ready"
+	TaskQueued    TaskExecutionStatus = "queued"
 	TaskPreparing TaskExecutionStatus = "preparing"
 	TaskRunning   TaskExecutionStatus = "running"
 	TaskCompleted TaskExecutionStatus = "completed"

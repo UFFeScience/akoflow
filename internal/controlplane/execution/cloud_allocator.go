@@ -23,6 +23,10 @@ type CloudPrewarmer interface {
 	Prewarm(context.Context, string, string, domain.CloudCapacityTarget) error
 }
 
+type CloudStopper interface {
+	Stop(context.Context, string, map[string]domain.RuntimeAllocation) error
+}
+
 // QueuedCloudAllocator is the execution-to-infrastructure boundary. It never
 // invokes Terraform itself: it persists an operation, publishes a durable
 // message, then waits for the infrastructure worker to settle it.
@@ -133,8 +137,10 @@ func (a QueuedCloudAllocator) findOrCreate(ctx context.Context, executionRunID, 
 	if err != nil {
 		return domain.CloudOperationRun{}, err
 	}
+	// Several ready activities can share one capacity target. Reuse its
+	// infrastructure operation so each activity does not request another VM.
 	for _, operation := range operations {
-		if operation.Kind == kind && operation.ExecutionRunID == executionRunID && operation.ActivityID == activityID && operation.CapacityTargetID == target.ID {
+		if operation.Kind == kind && operation.ExecutionRunID == executionRunID && operation.CapacityTargetID == target.ID && (instanceID == "" || operation.InstanceID == instanceID) {
 			return operation, nil
 		}
 	}
@@ -149,7 +155,7 @@ func (a QueuedCloudAllocator) findOrCreate(ctx context.Context, executionRunID, 
 	job, err := domainqueue.New(domainqueue.CategoryInfrastructure, eventloop.CloudOperationEventType(kind), payload, time.Now().UTC())
 	if err == nil {
 		job.AggregateType, job.AggregateID = "cloud_operation", operation.ID
-		job.IdempotencyKey = "cloud-allocation:" + executionRunID + ":" + activityID + ":" + target.ID + ":" + kind
+		job.IdempotencyKey = "cloud-allocation:" + executionRunID + ":" + target.ID + ":" + instanceID + ":" + kind
 		job.Priority, job.MaxAttempts = 100, 3
 		_, err = a.Queue.Publish(ctx, job)
 	}
@@ -214,6 +220,46 @@ func (a QueuedCloudAllocator) Release(ctx context.Context, executionRunID string
 		job.AggregateType, job.AggregateID, job.IdempotencyKey, job.Priority = "cloud_operation", operation.ID, "cloud-release:"+executionRunID+":"+instance.ID+":"+kind, 100
 		if _, err := a.Queue.Publish(ctx, job); err != nil {
 			return err
+		}
+	}
+	return nil
+}
+
+// Stop preserves the provisioned instance and its disk. Repeated calls for the
+// same run and instance reuse the durable stop operation.
+func (a QueuedCloudAllocator) Stop(ctx context.Context, executionRunID string, allocations map[string]domain.RuntimeAllocation) error {
+	seen := make(map[string]bool)
+	for activityID, allocation := range allocations {
+		if allocation.CloudInstanceID == "" || seen[allocation.CloudInstanceID] {
+			continue
+		}
+		seen[allocation.CloudInstanceID] = true
+		instance, err := a.Cloud.FindProvisionedInstance(ctx, allocation.CloudInstanceID)
+		if err != nil {
+			return err
+		}
+		if instance == nil {
+			return fmt.Errorf("cloud stop instance %q was not found", allocation.CloudInstanceID)
+		}
+		if instance.Status == "stopped" {
+			continue
+		}
+		if instance.Status != "ready" {
+			return fmt.Errorf("cloud stop instance %q is %s", instance.ID, instance.Status)
+		}
+		target, err := a.Cloud.FindCapacityTarget(ctx, instance.CapacityTargetID)
+		if err != nil {
+			return err
+		}
+		if target == nil {
+			return fmt.Errorf("cloud stop capacity target %q was not found", instance.CapacityTargetID)
+		}
+		operation, err := a.findOrCreate(ctx, executionRunID, activityID, *target, "stop", instance.ID)
+		if err != nil {
+			return err
+		}
+		if operation.Status == "failed" || operation.Status == "cancelled" {
+			return fmt.Errorf("cloud stop %q %s: %s", operation.ID, operation.Status, operation.FailureReason)
 		}
 	}
 	return nil

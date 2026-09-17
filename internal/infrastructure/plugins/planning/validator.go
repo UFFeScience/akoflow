@@ -69,14 +69,6 @@ func (Validator) Validate(
 		if selector, _ := activity.Metadata["resourceSelector"].(string); selector != "" && selector != resource.ID && !overrideSelector {
 			return fmt.Errorf("activity %q requires resource %q, not %q", activity.ID, selector, resource.ID)
 		}
-		if !isSchedulerTarget(resource) {
-			if resource.CPUCapacity < activity.Resources.CPU {
-				return fmt.Errorf("resource %q lacks CPU for activity %q", resource.ID, activity.ID)
-			}
-			if resource.MemoryBytes < activity.Resources.MemoryBytes {
-				return fmt.Errorf("resource %q lacks memory for activity %q", resource.ID, activity.ID)
-			}
-		}
 		if assignment.PredictedFinishAt < assignment.PredictedStartAt {
 			return fmt.Errorf("assignment %q finishes before it starts", assignment.ID)
 		}
@@ -89,17 +81,6 @@ func (Validator) Validate(
 		return err
 	}
 	return validateResourceOrders(plan.Assignments, workflow.Dependencies)
-}
-
-// Scheduler targets represent a queue, partition or reservation rather than a
-// single machine. Their capacity is managed by the scheduler at submission
-// time, so a plan can request CPU and memory without requiring those aggregate
-// values to be duplicated on the logical resource record.
-func isSchedulerTarget(resource domain.Resource) bool {
-	return resource.ExecutionTarget == domain.ExecutionTargetBatch &&
-		(resource.Type == domain.ResourceHPCPartition ||
-			resource.Type == domain.ResourceBatchQueue ||
-			resource.Type == domain.ResourceSlurmReservation)
 }
 
 func validateDAG(workflow domain.WorkflowVersion) error {

@@ -213,6 +213,10 @@ func rsyncArgs(source, destination domain.TransferEndpoint) ([]string, error) {
 	}
 	args := []string{"-r", "--links", "--checksum", "--stats", "--out-format=%i %n", "--no-perms", "--no-owner", "--no-group", "--no-times"}
 	if strings.HasPrefix(remote.URI, "ssh://") {
+		// Send remote paths through the rsync protocol instead of the remote
+		// shell. Newer rsync versions otherwise treat shell quotes as literal
+		// characters in the path.
+		args = append(args, "--secluded-args")
 		ssh := []string{"ssh", "-o", "BatchMode=yes"}
 		ssh = append(ssh, sshArgs(remote)...)
 		for i := range ssh {
@@ -239,7 +243,7 @@ func rsyncLocation(endpoint domain.TransferEndpoint) (string, error) {
 		if strings.ContainsAny(host, " \t\r\n") || strings.ContainsAny(path, "\r\n") {
 			return "", fmt.Errorf("invalid rsync SSH location")
 		}
-		return host + ":" + shell(path+"/"), nil
+		return host + ":" + path + "/", nil
 	}
 	return "", fmt.Errorf("rsync workspace endpoint %q is unsupported", u.Scheme)
 }

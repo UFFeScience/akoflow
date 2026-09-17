@@ -271,7 +271,7 @@ CREATE TABLE schedule_plan_assignments (
 		predicted_cost REAL NOT NULL DEFAULT 0,
 		metadata TEXT NOT NULL DEFAULT '{}',
 		UNIQUE(schedule_plan_id, activity_id),
-		UNIQUE(schedule_plan_id, resource_id, core_id, order_on_resource)
+		UNIQUE(schedule_plan_id, resource_id, core_id, slot_id, order_on_resource)
 	);
 CREATE TABLE planning_sessions (
 		id TEXT PRIMARY KEY,

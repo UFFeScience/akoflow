@@ -1836,6 +1836,33 @@ func (h *Handler) CreateCloudCapacityTarget(w http.ResponseWriter, r *http.Reque
 	if strings.TrimSpace(value.ID) == "" {
 		value.ID = "cloud-capacity-" + uuid.NewString()
 	}
+	if value.Provider == "gcp" && h.cloudCatalog != nil {
+		catalog, err := h.cloudCatalog.Cached(r.Context(), value.EnvironmentID)
+		if err != nil {
+			writeError(w, http.StatusUnprocessableEntity, fmt.Errorf("load cloud pricing catalog: %w", err))
+			return
+		}
+		if catalog != nil {
+			if value.Configuration == nil {
+				value.Configuration = make(map[string]any)
+			}
+			for _, machine := range catalog.Machines {
+				if machine.ProviderTypeID == value.ProviderMachineType && machine.PricePerHour > 0 {
+					value.Configuration["pricePerHour"] = machine.PricePerHour
+					value.Configuration["priceCurrency"] = machine.PriceCurrency
+					value.Configuration["priceSource"] = machine.PriceSource
+					break
+				}
+			}
+			diskType, _ := value.Configuration["diskType"].(string)
+			for _, disk := range catalog.Disks {
+				if disk.ProviderTypeID == diskType && disk.PricePerGiBMonth > 0 {
+					value.Configuration["diskPricePerGiBMonth"] = disk.PricePerGiBMonth
+					break
+				}
+			}
+		}
+	}
 	value.Enabled = true
 	if err := h.cloud.CreateCapacityTarget(r.Context(), value); err != nil {
 		writeError(w, http.StatusUnprocessableEntity, err)
@@ -1968,6 +1995,12 @@ func (h *Handler) ListCloudInstances(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	values, err := h.cloud.ListProvisionedInstances(r.Context(), r.PathValue("environmentId"))
+	if err == nil {
+		now := time.Now().UTC()
+		for index := range values {
+			values[index].Billing.RefreshCost(now)
+		}
+	}
 	writeList(w, values, err)
 }
 

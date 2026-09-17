@@ -73,17 +73,20 @@ cloud_index = 0
 assignments = original.map do |a|
   cloud = a.fetch('run').start_with?('mProject')
   slot = cloud ? cloud_index % 4 : nil
-  order = cloud ? cloud_order[slot] : local_order
+  order = cloud ? 0 : local_order
+  parallel_slot = cloud ? cloud_order[slot] + 1 : nil
   if cloud
     cloud_order[slot] += 1
     cloud_index += 1
   else
     local_order += 1
   end
-  { 'id' => "#{NAME}-assignment-#{a['name']}", 'activityId' => "#{NAME}-#{a['name']}",
+  assignment = { 'id' => "#{NAME}-assignment-#{a['name']}", 'activityId' => "#{NAME}-#{a['name']}",
     'resourceId' => cloud ? "montage-gcp-e2-medium-#{slot + 1}" : 'local-environment-entrypoint',
     'orderOnResource' => order,
     'metadata' => { 'runtimeId' => cloud ? 'gcp-environment-cloud' : 'local-environment-local' } }
+  assignment['slotId'] = "parallel-#{parallel_slot}" if cloud
+  assignment
 end
 reference_cloud_cost = original.select { |a| a.fetch('run').start_with?('mProject') }.sum { |a| seconds.fetch(a.fetch('name')) } * 0.000015365916666666668
 plan = { 'plan' => { 'id' => "#{NAME}-gcp-manual-v1", 'workflowVersionId' => "#{NAME}-v1",

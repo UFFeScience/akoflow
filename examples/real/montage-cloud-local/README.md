@@ -4,7 +4,7 @@ This bundle derives its 58 real Montage commands from `source-workflow.yaml`.
 The original image `ovvesley/akoflow-wf-montage:050d` contains the twelve input
 FITS files, headers, lookup tables, and Montage binaries. The twelve `mProject`
 activities are distributed three per GCP `e2-medium` worker; the remaining 46 run on the AkôFlow server's
-local execution resource. `workflow.json` declares 138 named file handoffs,
+local execution resource. Each activity requests `1000m` (one CPU). `workflow.json` declares 138 named file handoffs,
 including the projected FITS files sent from GCP to local activities.
 `workflow.json` pins that image by its registry digest. `artifact.json` registers
 the same OCI image in the AkôFlow catalog and requests an `amd64` SIF build.
@@ -76,7 +76,10 @@ lifecycle.
 Before submitting, verify the imported plan has three `mProject` assignments
 to each of the four `montage-gcp-e2-medium-*` targets and 46 assignments to
 `local-environment-entrypoint`. The four targets represent four separate VMs;
-the local workspace volume is not shared between them. AkôFlow transfers
+the three `mProject` activities on each VM occupy separate plan slots and may
+start together. This intentionally exceeds the target's declared CPU capacity,
+so Desktop displays a resource-overcommit warning before execution. The
+local workspace volume is not shared between them. AkôFlow transfers
 declared outputs across resources. Run only one
 copy at a time. A successful run ends with `mosaic-color.png`; inspect the
 run's activity records, transferred bytes and file checksums. After the run,

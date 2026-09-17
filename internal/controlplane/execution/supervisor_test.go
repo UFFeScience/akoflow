@@ -177,50 +177,30 @@ func TestSelectRuntimeHonorsPlannedRuntime(t *testing.T) {
 	}
 }
 
-func TestWorkspaceBlobsUseOnlyDirectProducerRoute(t *testing.T) {
-	workflow := domain.WorkflowVersion{Dependencies: []domain.ActivityDependency{
-		{ActivityID: "k2", DependsOnActivityID: "k1"},
-		{ActivityID: "k3", DependsOnActivityID: "k2"},
-		{ActivityID: "k7", DependsOnActivityID: "k3"},
-	}}
+func TestExpectedOutputsRequireObservedChecksummedFiles(t *testing.T) {
 	instances := []domain.DataObjectInstance{
-		{ProducerActivityID: "k1", RelativePath: "k1.txt", Checksum: "sha-k1", SizeBytes: 1},
-		{ProducerActivityID: "k2", RelativePath: "k2.txt", Checksum: "sha-k2", SizeBytes: 2},
-		{ProducerActivityID: "k3", RelativePath: "k3.txt", Checksum: "sha-k3", SizeBytes: 3},
+		{ProducerActivityID: "producer", RelativePath: "result.fits", Checksum: "sha256:valid"},
+		{ProducerActivityID: "other", RelativePath: "missing.fits", Checksum: "sha256:other"},
 	}
-	groups, err := workspaceBlobsByDirectProducer(workflow, []string{"k3"}, instances)
-	if err != nil {
+	if err := validateExpectedOutputInstances("producer", []string{"result.fits"}, instances); err != nil {
 		t.Fatal(err)
 	}
-	if len(groups) != 1 || groups[0].producerActivityID != "k3" {
-		t.Fatalf("groups=%+v, want one direct route from k3", groups)
-	}
-	if len(groups[0].blobs) != 3 {
-		t.Fatalf("blobs=%+v, want cumulative k1/k2/k3 snapshot", groups[0].blobs)
+	if err := validateExpectedOutputInstances("producer", []string{"missing.fits"}, instances); err == nil {
+		t.Fatal("a required output on another resource must not satisfy this producer")
 	}
 }
 
-func TestWorkspaceBlobsDeduplicateCommonJoinAncestors(t *testing.T) {
-	workflow := domain.WorkflowVersion{Dependencies: []domain.ActivityDependency{
-		{ActivityID: "k4", DependsOnActivityID: "k3"},
-		{ActivityID: "k5", DependsOnActivityID: "k3"},
-		{ActivityID: "k6", DependsOnActivityID: "k4"},
-		{ActivityID: "k6", DependsOnActivityID: "k5"},
-	}}
-	instances := []domain.DataObjectInstance{
-		{ProducerActivityID: "k3", RelativePath: "common.txt", Checksum: "sha-common", SizeBytes: 1},
-		{ProducerActivityID: "k4", RelativePath: "k4.txt", Checksum: "sha-k4", SizeBytes: 1},
-		{ProducerActivityID: "k5", RelativePath: "k5.txt", Checksum: "sha-k5", SizeBytes: 1},
+func TestFailedRunRetainsCloudInstanceHoldingEphemeralOutputs(t *testing.T) {
+	allocations := map[string]domain.RuntimeAllocation{
+		"producer": {ResourceID: "cloud-a", CloudInstanceID: "vm-a"},
+		"sibling":  {ResourceID: "cloud-a", CloudInstanceID: "vm-a"},
+		"other":    {ResourceID: "cloud-b", CloudInstanceID: "vm-b"},
 	}
-	groups, err := workspaceBlobsByDirectProducer(workflow, []string{"k4", "k5"}, instances)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if len(groups) != 2 || groups[0].producerActivityID != "k4" || groups[1].producerActivityID != "k5" {
-		t.Fatalf("groups=%+v, want routes k4 and k5", groups)
-	}
-	if len(groups[0].blobs) != 2 || len(groups[1].blobs) != 1 {
-		t.Fatalf("groups=%+v, common ancestor should be transferred only once", groups)
+	remaining, retained := retainCloudSourcesWithEphemeralOutputs(allocations, []domain.DataLocation{
+		{ResourceID: "cloud-a", Status: domain.DataLocationEphemeral},
+	})
+	if retained != 1 || len(remaining) != 1 || remaining["other"].CloudInstanceID != "vm-b" {
+		t.Fatalf("remaining=%+v retained=%d", remaining, retained)
 	}
 }
 
@@ -308,13 +288,13 @@ func TestTransferObservationsPreserveDirectWorkspaceRoute(t *testing.T) {
 		SourceResourceID: "source", TargetResourceID: "target", PricePerByte: 0.5,
 	}}}
 	transfers := transferObservations("run", "k7", "target", []string{"k6"}, requirement, []domain.DataTransferRun{{
-		ID: "transfer", PlanID: "workspace-plan", TransferredBytes: 42, StartedAt: 5, FinishedAt: 8,
+		ID: "transfer", PlanID: "workspace-plan", TransferredBytes: 42, FilesTransferred: 2, StartedAt: 5, FinishedAt: 8,
 	}}, topology)
 	if len(transfers) != 1 {
 		t.Fatalf("transfers=%+v", transfers)
 	}
 	got := transfers[0]
-	if got.ProducerActivityID != "k6" || got.ConsumerActivityID != "k7" || got.SourceResourceID != "source" || got.TargetResourceID != "target" || got.DurationSeconds != 3 || got.Bytes != 42 || got.Cost != 21 {
+	if got.ProducerActivityID != "k6" || got.ConsumerActivityID != "k7" || got.SourceResourceID != "source" || got.TargetResourceID != "target" || got.DurationSeconds != 3 || got.Bytes != 42 || got.FilesTransferred != 2 || got.Cost != 21 {
 		t.Fatalf("unexpected transfer observation: %+v", got)
 	}
 }

@@ -65,18 +65,48 @@ func localPath(e domain.TransferEndpoint, name string) (string, error) {
 		}
 		parent = next
 	}
-	realParent, err := filepath.EvalSymlinks(parent)
+	realParent, err := resolvedPathAllowMissing(parent)
 	if err != nil {
 		return "", err
 	}
-	realBase, err := filepath.EvalSymlinks(base)
+	realBase, err := resolvedPathAllowMissing(base)
 	if err != nil {
 		return "", err
 	}
-	if realParent != realBase && !strings.HasPrefix(realParent, realBase+string(filepath.Separator)) {
+	if realParent != realBase &&
+		!strings.HasPrefix(realParent, realBase+string(filepath.Separator)) &&
+		!strings.HasPrefix(realBase, realParent+string(filepath.Separator)) {
 		return "", fmt.Errorf("transfer path escapes endpoint via symlink")
 	}
 	return full, nil
+}
+
+// Resolve all existing path components while allowing a new transfer workspace
+// to be created by Put. Existing symlinks must still be checked before writing.
+func resolvedPathAllowMissing(value string) (string, error) {
+	current := value
+	for {
+		_, err := os.Lstat(current)
+		if err == nil {
+			resolved, resolveErr := filepath.EvalSymlinks(current)
+			if resolveErr != nil {
+				return "", resolveErr
+			}
+			relative, relativeErr := filepath.Rel(current, value)
+			if relativeErr != nil {
+				return "", relativeErr
+			}
+			return filepath.Join(resolved, relative), nil
+		}
+		if !os.IsNotExist(err) {
+			return "", err
+		}
+		next := filepath.Dir(current)
+		if next == current {
+			return "", fmt.Errorf("endpoint has no existing parent")
+		}
+		current = next
+	}
 }
 func (LocalFilesystem) Exists(_ context.Context, e domain.TransferEndpoint, name string) (bool, error) {
 	p, err := localPath(e, name)

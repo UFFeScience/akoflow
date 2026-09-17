@@ -60,3 +60,22 @@ func TestLocalFilesystemRejectsTraversalAndSymlinkEscape(t *testing.T) {
 		t.Fatal("symlink escape must fail")
 	}
 }
+
+func TestLocalFilesystemCreatesMissingWorkspaceWithoutWeakeningPathChecks(t *testing.T) {
+	root := filepath.Join(t.TempDir(), "workspace", "runs", "run-1", "activity-1")
+	endpoint := domain.TransferEndpoint{URI: "file://" + root}
+	connector := LocalFilesystem{}
+	exists, err := connector.Exists(context.Background(), endpoint, "output.txt")
+	if err != nil || exists {
+		t.Fatalf("missing destination exists=%v err=%v", exists, err)
+	}
+	if err := connector.Put(context.Background(), endpoint, "output.txt.partial", bytes.NewBufferString("result"), 0); err != nil {
+		t.Fatal(err)
+	}
+	if err := connector.Commit(context.Background(), endpoint, "output.txt.partial", "output.txt"); err != nil {
+		t.Fatal(err)
+	}
+	if contents, err := os.ReadFile(filepath.Join(root, "output.txt")); err != nil || string(contents) != "result" {
+		t.Fatalf("contents=%q err=%v", contents, err)
+	}
+}

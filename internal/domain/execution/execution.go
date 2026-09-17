@@ -166,6 +166,7 @@ type DataTransfer struct {
 	Route              TransferRoute    `json:"route,omitempty"`
 	LogicalBytes       int64            `json:"logicalBytes,omitempty"`
 	NetworkBytes       int64            `json:"networkBytes,omitempty"`
+	FilesTransferred   int64            `json:"filesTransferred,omitempty"`
 }
 
 type ActivityExecutionContext struct {

@@ -115,6 +115,7 @@ type WorkflowActivity struct {
 	KeepDisk          bool                       `json:"keepDisk,omitempty"`
 	MountPath         string                     `json:"mountPath,omitempty"`
 	WorkspaceSeedPath string                     `json:"workspaceSeedPath,omitempty"`
+	ExpectedOutputs   []string                   `json:"expectedOutputs,omitempty"`
 	Simulation        *domain.ActivitySimulation `json:"simulation,omitempty"`
 }
 
@@ -222,7 +223,8 @@ func activityDomain(value WorkflowActivity, activityID, defaultImage, versionID,
 		Simulation:   value.Simulation,
 		Policy:       domain.ActivityPolicy{TimeoutSeconds: 3600, MaxAttempts: 1}, Priority: len(value.DependsOn) + index,
 		Metadata: map[string]any{"runtime": value.Runtime, "resourceSelector": value.ResourceSelector,
-			"keepDisk": value.KeepDisk, "mountPath": value.MountPath, "workspaceSeedPath": value.WorkspaceSeedPath},
+			"keepDisk": value.KeepDisk, "mountPath": value.MountPath, "workspaceSeedPath": value.WorkspaceSeedPath,
+			"expectedOutputs": value.ExpectedOutputs},
 	}, nil
 }
 

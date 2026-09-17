@@ -68,7 +68,13 @@ func (s *Supervisor) Execute(ctx context.Context, request ports.ExecutionRequest
 			// Lifecycle cleanup belongs to the infrastructure result, not the
 			// scientific result. Release records its own failed instance status;
 			// a teardown failure must not turn completed computation into failure.
-			_ = s.releaseCloud(context.WithoutCancel(ctx), request, err != nil)
+			retained, releaseErr := s.releaseCloud(context.WithoutCancel(ctx), request, err != nil)
+			if err != nil && retained > 0 {
+				err = fmt.Errorf("%w; retained %d cloud instance(s) with ephemeral outputs for recovery", err, retained)
+			}
+			if releaseErr != nil && err != nil {
+				err = fmt.Errorf("%w; cloud cleanup: %v", err, releaseErr)
+			}
 		}
 		if err != nil {
 			_ = s.executions.FailRun(context.WithoutCancel(ctx), request.Run.ID, err.Error())
@@ -91,12 +97,21 @@ func (s *Supervisor) Execute(ctx context.Context, request ports.ExecutionRequest
 	return trace, nil
 }
 
-func (s *Supervisor) releaseCloud(ctx context.Context, request ports.ExecutionRequest, failed bool) error {
+func (s *Supervisor) releaseCloud(ctx context.Context, request ports.ExecutionRequest, failed bool) (int, error) {
 	if s.config.CloudAllocator != nil {
-		return s.config.CloudAllocator.Release(ctx, request.Run.ID, request.RuntimeAllocations, failed)
+		allocations := request.RuntimeAllocations
+		retained := 0
+		if failed && s.config.Data != nil {
+			locations, err := s.config.Data.ListLocations(ctx, request.Run.ID)
+			if err != nil {
+				return 0, fmt.Errorf("inspect ephemeral outputs before cloud cleanup: %w", err)
+			}
+			allocations, retained = retainCloudSourcesWithEphemeralOutputs(allocations, locations)
+		}
+		return retained, s.config.CloudAllocator.Release(ctx, request.Run.ID, allocations, failed)
 	}
 	if s.config.Cloud == nil {
-		return nil
+		return 0, nil
 	}
 	resourceIDs := make([]string, 0, len(request.Plan.Assignments))
 	for _, assignment := range request.Plan.Assignments {
@@ -105,9 +120,31 @@ func (s *Supervisor) releaseCloud(ctx context.Context, request ports.ExecutionRe
 		}
 	}
 	if err := s.config.Cloud.Release(ctx, resourceIDs); err != nil {
-		return fmt.Errorf("release cloud capacity: %w", err)
+		return 0, fmt.Errorf("release cloud capacity: %w", err)
 	}
-	return nil
+	return 0, nil
+}
+
+func retainCloudSourcesWithEphemeralOutputs(allocations map[string]domain.RuntimeAllocation, locations []domain.DataLocation) (map[string]domain.RuntimeAllocation, int) {
+	protectedResources := make(map[string]bool)
+	for _, location := range locations {
+		if location.Status == domain.DataLocationEphemeral {
+			protectedResources[location.ResourceID] = true
+		}
+	}
+	protectedInstances := make(map[string]bool)
+	for _, allocation := range allocations {
+		if allocation.CloudInstanceID != "" && protectedResources[allocation.ResourceID] {
+			protectedInstances[allocation.CloudInstanceID] = true
+		}
+	}
+	remaining := make(map[string]domain.RuntimeAllocation, len(allocations))
+	for activityID, allocation := range allocations {
+		if !protectedInstances[allocation.CloudInstanceID] {
+			remaining[activityID] = allocation
+		}
+	}
+	return remaining, len(protectedInstances)
 }
 
 func (s *Supervisor) executeActivities(ctx context.Context, request ports.ExecutionRequest) (domain.ExecutionTrace, error) {
@@ -118,8 +155,8 @@ func (s *Supervisor) executeActivities(ctx context.Context, request ports.Execut
 	resources := indexResources(request.Resources)
 	assignments := indexAssignments(request.Plan.Assignments)
 	predecessors := make(map[string][]string)
-	for _, dependency := range request.Workflow.Dependencies {
-		predecessors[dependency.ActivityID] = append(predecessors[dependency.ActivityID], dependency.DependsOnActivityID)
+	for activityID := range activities {
+		predecessors[activityID] = workspaceProducers(request.Workflow, activityID)
 	}
 	completed := make(map[string]domain.TaskExecution)
 	running := make(map[string]domain.ActivityHandle)
@@ -130,7 +167,7 @@ func (s *Supervisor) executeActivities(ctx context.Context, request ports.Execut
 		if err := ctx.Err(); err != nil {
 			return domain.ExecutionTrace{}, err
 		}
-		if err := s.inspectRunning(ctx, request.Run.Mode, running, completed, tasks); err != nil {
+		if err := s.inspectRunning(ctx, request.Run.Mode, request.Workflow, request.Run.ID, running, completed, tasks); err != nil {
 			return domain.ExecutionTrace{}, err
 		}
 		if request.Run.Mode == domain.ExecutionModeInteractive && len(running) > 0 {
@@ -164,6 +201,8 @@ func (s *Supervisor) executeActivities(ctx context.Context, request ports.Execut
 func (s *Supervisor) inspectRunning(
 	ctx context.Context,
 	mode domain.ExecutionMode,
+	workflow domain.WorkflowVersion,
+	runID string,
 	running map[string]domain.ActivityHandle,
 	completed map[string]domain.TaskExecution,
 	tasks map[string]domain.TaskExecution,
@@ -179,6 +218,11 @@ func (s *Supervisor) inspectRunning(
 		task := tasks[activityID]
 		switch observed.Status {
 		case domain.HandleCompleted:
+			if err := s.validateExpectedOutputs(ctx, workflow, runID, activityID); err != nil {
+				task.Status, task.FailureReason = domain.TaskFailed, err.Error()
+				_ = s.executions.SaveTask(ctx, task)
+				return fmt.Errorf("activity %q outputs: %w", activityID, err)
+			}
 			completeTask(&task, *observed)
 			if err := s.executions.SaveTask(ctx, task); err != nil {
 				return err
@@ -189,6 +233,48 @@ func (s *Supervisor) inspectRunning(
 			task.Status, task.FailureReason = domain.TaskFailed, observed.Failure
 			_ = s.executions.SaveTask(ctx, task)
 			return fmt.Errorf("activity %q failed: %s", activityID, observed.Failure)
+		}
+	}
+	return nil
+}
+
+func (s *Supervisor) validateExpectedOutputs(ctx context.Context, workflow domain.WorkflowVersion, runID, activityID string) error {
+	if s.config.Data == nil {
+		return nil
+	}
+	activity := indexActivities(workflow.Activities)[activityID]
+	raw := activity.Metadata["expectedOutputs"]
+	values := make([]string, 0)
+	switch typed := raw.(type) {
+	case []string:
+		values = typed
+	case []any:
+		for _, value := range typed {
+			if name, ok := value.(string); ok {
+				values = append(values, name)
+			}
+		}
+	}
+	if len(values) == 0 {
+		return nil
+	}
+	instances, err := s.config.Data.ListInstances(ctx, runID)
+	if err != nil {
+		return fmt.Errorf("load observed outputs: %w", err)
+	}
+	return validateExpectedOutputInstances(activityID, values, instances)
+}
+
+func validateExpectedOutputInstances(activityID string, values []string, instances []domain.DataObjectInstance) error {
+	observed := make(map[string]bool)
+	for _, instance := range instances {
+		if instance.ProducerActivityID == activityID && instance.Checksum != "" {
+			observed[instance.RelativePath] = true
+		}
+	}
+	for _, expected := range values {
+		if !observed[expected] {
+			return fmt.Errorf("required output %q was not observed with a checksum", expected)
 		}
 	}
 	return nil
@@ -373,59 +459,32 @@ func (s *Supervisor) addWorkspacePreparation(
 	if s.config.Data == nil || (len(producerIDs) == 0 && driver != domain.RuntimeDriverKubernetes && driver != domain.RuntimeDriverCloud && driver != domain.RuntimeDriverLocal) {
 		return nil
 	}
-	instances, err := s.config.Data.ListInstances(ctx, request.Run.ID)
-	if err != nil {
-		return err
-	}
-	blobGroups, err := workspaceBlobsByDirectProducer(request.Workflow, producerIDs, instances)
-	if err != nil {
-		return err
-	}
 	destination, err := workspaceDestination(*request, activityID, resource, 0)
-	if err != nil {
-		return err
-	}
-	type sourceGroup struct {
-		location           domain.TransferLocation
-		producerActivityID string
-		blobs              []domain.BlobDescriptor
-	}
-	groups := make([]sourceGroup, 0, len(producerIDs))
-	allBlobs := make([]domain.BlobDescriptor, 0)
-	var totalBytes int64
-	for _, blobGroup := range blobGroups {
-		source, sourceErr := workspaceSourceForActivity(*request, blobGroup.producerActivityID)
-		if sourceErr != nil {
-			return sourceErr
-		}
-		group := sourceGroup{location: source, producerActivityID: blobGroup.producerActivityID, blobs: blobGroup.blobs}
-		for _, blob := range blobGroup.blobs {
-			allBlobs = append(allBlobs, blob)
-			totalBytes += blob.SizeBytes
-		}
-		groups = append(groups, group)
-	}
-	destination, err = workspaceDestination(*request, activityID, resource, totalBytes)
 	if err != nil {
 		return err
 	}
 	requirement := request.PreparationRequirementsByActivity[activityID]
 	requirement.Workspace = &domain.WorkspaceMaterialization{
 		ID: "workspace-" + request.Run.ID + "-" + activityID, RevisionID: request.Run.ID,
-		Destination: destination, Status: domain.MaterializationPlanned, Missing: allBlobs,
+		Destination: destination, Status: domain.MaterializationPlanned,
 	}
 	requirement.WorkspaceTransfer = nil
 	requirement.WorkspaceTransfers = nil
-	groupIndex := 0
-	for _, group := range groups {
+	for index, producerID := range producerIDs {
+		if err := s.checkEphemeralCloudSource(ctx, *request, producerID); err != nil {
+			return err
+		}
+		source, sourceErr := workspaceSourceForActivity(*request, producerID)
+		if sourceErr != nil {
+			return sourceErr
+		}
 		requirement.WorkspaceTransfers = append(requirement.WorkspaceTransfers, domain.DataTransferPlan{
-			ID:                 fmt.Sprintf("transfer-workspace-%s-%s-%d", request.Run.ID, activityID, groupIndex),
+			ID:                 fmt.Sprintf("transfer-workspace-%s-%s-%d", request.Run.ID, activityID, index),
 			ExecutionRunID:     request.Run.ID,
-			ProducerActivityID: group.producerActivityID,
+			ProducerActivityID: producerID,
 			ConsumerActivityID: activityID,
-			Source:             group.location, Destination: destination, Blobs: group.blobs,
+			Source:             source, Destination: destination, SyncWorkspace: true,
 		})
-		groupIndex++
 	}
 	if request.PreparationRequirementsByActivity == nil {
 		request.PreparationRequirementsByActivity = make(map[string]domain.PreparationRequirement)
@@ -434,47 +493,23 @@ func (s *Supervisor) addWorkspacePreparation(
 	return nil
 }
 
-type workspaceBlobGroup struct {
-	producerActivityID string
-	blobs              []domain.BlobDescriptor
-}
-
-func workspaceBlobsByDirectProducer(workflow domain.WorkflowVersion, producerIDs []string, instances []domain.DataObjectInstance) ([]workspaceBlobGroup, error) {
-	instancesByProducer := make(map[string][]domain.DataObjectInstance)
-	for _, instance := range instances {
-		if instance.Checksum != "" {
-			instancesByProducer[instance.ProducerActivityID] = append(instancesByProducer[instance.ProducerActivityID], instance)
-		}
+func (s *Supervisor) checkEphemeralCloudSource(ctx context.Context, request ports.ExecutionRequest, producerID string) error {
+	instanceID := request.RuntimeAllocations[producerID].CloudInstanceID
+	if instanceID == "" || s.config.CloudStore == nil {
+		return nil
 	}
-	groups := make([]workspaceBlobGroup, 0, len(producerIDs))
-	paths := make(map[string]string)
-	for _, producerID := range producerIDs {
-		group := workspaceBlobGroup{producerActivityID: producerID}
-		branchPaths := make(map[string]bool)
-		// A producer workspace is cumulative. Ancestors identify which blobs are
-		// present in that snapshot; they do not create additional transfer routes.
-		for _, ancestorID := range workspaceAncestors(workflow, []string{producerID}) {
-			for _, instance := range instancesByProducer[ancestorID] {
-				// The nearest producer wins when a branch overwrote an inherited path.
-				if branchPaths[instance.RelativePath] {
-					continue
-				}
-				branchPaths[instance.RelativePath] = true
-				if prior, exists := paths[instance.RelativePath]; exists {
-					if prior != instance.Checksum {
-						return nil, fmt.Errorf("workspace path %q is produced with conflicting contents across direct dependencies", instance.RelativePath)
-					}
-					continue
-				}
-				paths[instance.RelativePath] = instance.Checksum
-				group.blobs = append(group.blobs, domain.BlobDescriptor{Digest: instance.Checksum, SizeBytes: instance.SizeBytes, Path: instance.RelativePath})
-			}
-		}
-		if len(group.blobs) > 0 {
-			groups = append(groups, group)
-		}
+	instance, err := s.config.CloudStore.FindProvisionedInstance(ctx, instanceID)
+	if err != nil {
+		return fmt.Errorf("check source instance %q for producer %q: %w", instanceID, producerID, err)
 	}
-	return groups, nil
+	if instance != nil && instance.Status == "ready" {
+		return nil
+	}
+	status := "not found"
+	if instance != nil {
+		status = instance.Status
+	}
+	return fmt.Errorf("source instance %q for producer %q is unavailable (%s); ephemeral outputs cannot be transferred", instanceID, producerID, status)
 }
 
 func workspaceSourceForActivity(request ports.ExecutionRequest, activityID string) (domain.TransferLocation, error) {
@@ -527,23 +562,6 @@ func workspaceSourceForActivity(request ports.ExecutionRequest, activityID strin
 	default:
 		return domain.TransferLocation{}, fmt.Errorf("runtime for producer %q does not support workspace transfer", activityID)
 	}
-}
-
-func workspaceAncestors(workflow domain.WorkflowVersion, initial []string) []string {
-	result := make([]string, 0, len(initial))
-	seen := make(map[string]bool)
-	queue := append([]string(nil), initial...)
-	for len(queue) > 0 {
-		activityID := queue[0]
-		queue = queue[1:]
-		if seen[activityID] {
-			continue
-		}
-		seen[activityID] = true
-		result = append(result, activityID)
-		queue = append(queue, workspaceProducers(workflow, activityID)...)
-	}
-	return result
 }
 
 func workspaceDestination(request ports.ExecutionRequest, activityID string, resource domain.Resource, totalBytes int64) (domain.TransferLocation, error) {
@@ -765,6 +783,7 @@ func transferObservations(
 			Route:              observation.Route,
 			LogicalBytes:       observation.LogicalBytes,
 			NetworkBytes:       observation.NetworkBytes,
+			FilesTransferred:   observation.FilesTransferred,
 		})
 	}
 	return transfers

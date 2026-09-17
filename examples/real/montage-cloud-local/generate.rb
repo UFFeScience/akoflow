@@ -8,6 +8,8 @@ require 'yaml'
 ROOT = __dir__
 IMAGE = 'ovvesley/akoflow-wf-montage@sha256:26b060b83b990557ea86ab40503cc8f17ab6016b5973e7e6f9201100a96440c9'
 NAME = 'montage-58-four-vm-local-050d'
+SCOPE_ID = "#{NAME}-gcp-scope-v1"
+NETWORK_ID = "#{NAME}-gcp-network-v1"
 source = YAML.load_file(File.join(ROOT, 'source-workflow.yaml'))
 abort 'source image does not match the pinned Montage release' unless source.fetch('spec').fetch('image') == 'ovvesley/akoflow-wf-montage:050d'
 original = source.fetch('spec').fetch('activities')
@@ -81,11 +83,11 @@ assignments = original.map do |a|
   { 'id' => "#{NAME}-assignment-#{a['name']}", 'activityId' => "#{NAME}-#{a['name']}",
     'resourceId' => cloud ? "montage-gcp-e2-medium-#{slot + 1}" : 'local-environment-entrypoint',
     'orderOnResource' => order,
-    'metadata' => { 'runtimeId' => cloud ? 'goal-gcp-cloud' : 'local-environment-local' } }
+    'metadata' => { 'runtimeId' => cloud ? 'gcp-environment-cloud' : 'local-environment-local' } }
 end
 reference_cloud_cost = original.select { |a| a.fetch('run').start_with?('mProject') }.sum { |a| seconds.fetch(a.fetch('name')) } * 0.000015365916666666668
-plan = { 'plan' => { 'id' => "#{NAME}-manual-v1", 'workflowVersionId' => "#{NAME}-v1",
-  'executionScopeId' => "#{NAME}-scope-v1", 'networkTopologyId' => "#{NAME}-network-v1",
+plan = { 'plan' => { 'id' => "#{NAME}-gcp-manual-v1", 'workflowVersionId' => "#{NAME}-v1",
+  'executionScopeId' => SCOPE_ID, 'networkTopologyId' => NETWORK_ID,
   'source' => 'imported', 'algorithm' => 'manual', 'algorithmVersion' => '1',
   'objective' => 'custom',
   # Upper-bound-like sum of reference activity runtimes, not a calibrated

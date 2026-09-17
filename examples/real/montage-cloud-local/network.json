@@ -1,8 +1,8 @@
 {
-  "id": "montage-58-four-vm-local-050d-network-v1",
+  "id": "montage-58-four-vm-local-050d-gcp-network-v1",
   "name": "Montage four GCP machines to local transfers",
   "version": 1,
-  "executionScopeId": "montage-58-four-vm-local-050d-scope-v1",
+  "executionScopeId": "montage-58-four-vm-local-050d-gcp-scope-v1",
   "links": [
     {
       "id": "montage-050d-gcp-1-local-link",

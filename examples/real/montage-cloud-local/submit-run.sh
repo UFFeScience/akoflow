@@ -9,12 +9,12 @@ get() {
   curl --fail-with-body -sS -H "Authorization: Bearer $api_token" "$api_base/$1/"
 }
 
-plan_json=$(get schedule-plans/montage-58-four-vm-local-050d-manual-v1)
+plan_json=$(get schedule-plans/montage-58-four-vm-local-050d-gcp-manual-v1)
 definition_json=$(get workflow-definitions/montage-58-four-vm-local-050d)
-scope_json=$(get execution-scopes/montage-58-four-vm-local-050d-scope-v1)
-network_json=$(get network-topologies/montage-58-four-vm-local-050d-network-v1)
+scope_json=$(get execution-scopes/montage-58-four-vm-local-050d-gcp-scope-v1)
+network_json=$(get network-topologies/montage-58-four-vm-local-050d-gcp-network-v1)
 local_environment_json=$(get environments/local-environment)
-cloud_environment_json=$(get environments/goal-gcp)
+cloud_environment_json=$(get environments/gcp-environment)
 local_resource_json=$(get resources/local-environment-entrypoint)
 cloud_resources_json='[]'
 for slot in 1 2 3 4; do

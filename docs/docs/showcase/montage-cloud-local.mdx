@@ -45,11 +45,11 @@ order, submission command, and post-run checks.
 <InterfaceApiTabs
   desktop={<div>
     <h2>Use Desktop</h2>
-    <p>Register the Montage image in Artifacts and start its SIF build. Verify that the GCP environment has an <code>e2-medium</code> capacity target and that the local daemon can launch the pinned Docker image. Import the workflow and manual plan using the downloaded files, then inspect all 58 assignments before starting a real run. The expected final file is <code>mosaic-color.png</code>. In the run view, check the activity DAG, Data tab, transfer records, and cloud instance lifecycle.</p>
+    <p>Register the Montage image in Artifacts and start its SIF build. In <code>gcp-environment</code>, check the four <code>e2-medium</code> capacity targets and the online cloud connection. These are schedulable resources; no VM exists until execution needs one. Import the workflow and manual plan using the downloaded files, then inspect all 58 assignments before starting a real run. The expected final file is <code>mosaic-color.png</code>. In the run view, check the activity DAG, Data tab, transfer records, and cloud instance lifecycle.</p>
   </div>}
   api={<div>
     <h2>Use the API</h2>
-    <p>Follow the <a href="/docs/tutorials/api-access">API access guide</a> and the bundle README. Register the pinned image with <code>register-artifact.sh</code>, then create four one-instance cloud targets with <code>prepare-capacity.sh</code>. Import <code>scope.json</code>, <code>network.json</code>, <code>workflow.json</code>, and <code>plan.json</code> in that order. Submit exactly one run. The example IDs refer to a particular AkôFlow instance and must be reviewed before reuse.</p>
+    <p>Follow the <a href="/docs/tutorials/api-access">API access guide</a> and the bundle README. Register the pinned image with <code>register-artifact.sh</code>, set the daemon's approved public IP in <code>AKOFLOW_SSH_CIDR</code>, then create four one-instance cloud targets with <code>prepare-capacity.sh</code>. Import <code>scope.json</code>, <code>network.json</code>, <code>workflow.json</code>, and <code>plan.json</code> in that order. Submit exactly one run. The example IDs refer to a particular AkôFlow instance and must be reviewed before reuse.</p>
     <pre><code>{`sh examples/real/montage-cloud-local/register-artifact.sh
 sh examples/real/montage-cloud-local/prepare-capacity.sh
 sh examples/real/montage-cloud-local/submit-run.sh montage-58-four-vm-local-050d-run-v1`}</code></pre>

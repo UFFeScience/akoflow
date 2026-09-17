@@ -19,9 +19,10 @@ calibrated forecast or an observed result.
 
 ## Requirements
 
-- A GCP connection with the `goal-gcp-e2-medium` capacity target as a template,
-  quota for four `e2-medium` instances, and a working SSH/Docker cloud runtime.
-  `prepare-capacity.sh` clones four distinct one-instance targets with
+- A connected `gcp-environment` with an online GCP connection and a synchronized
+  catalog containing `e2-medium` and an `amd64` Ubuntu 24.04 image. The GCP
+  project needs quota for four `e2-medium` instances. `prepare-capacity.sh`
+  creates four distinct one-instance targets from the catalog with
   `destroy-after-run` lifecycle; it does not provision a VM.
 - The local AkôFlow daemon needs Docker CLI and access to the Docker daemon.
   The local runtime mounts the shared workspace volume into the activity
@@ -49,6 +50,7 @@ is asynchronous and is independent from the four-VM Docker run.
 ```sh
 export AKOFLOW_API_URL=http://127.0.0.1:8080/akoflow-api
 read -rsp 'AkôFlow API token: ' AKOFLOW_API_TOKEN; printf '\n'; export AKOFLOW_API_TOKEN
+export AKOFLOW_SSH_CIDR=YOUR_APPROVED_PUBLIC_IP/32
 base=examples/real/montage-cloud-local
 sh "$base/register-artifact.sh"
 sh "$base/prepare-capacity.sh"
@@ -61,6 +63,15 @@ for pair in 'execution-scopes scope.json' 'network-topologies network.json' \
 done
 sh "$base/submit-run.sh" montage-58-four-vm-local-050d-run-v1
 ```
+
+Set `AKOFLOW_SSH_CIDR` to the daemon's approved public egress address before
+creating capacity targets. The target uses the connected environment's project,
+the catalog's `e2-medium` offering, a catalog Ubuntu `amd64` image, and a
+30 GiB balanced boot disk. The scope references `gcp-environment-initial`
+and `local-environment-initial`. If the daemon's egress IP changes, update the
+target's SSH source range before running; the current script rejects existing
+targets with a different SSH range, machine type, project, instance limit, or
+lifecycle.
 
 Before submitting, verify the imported plan has three `mProject` assignments
 to each of the four `montage-gcp-e2-medium-*` targets and 46 assignments to

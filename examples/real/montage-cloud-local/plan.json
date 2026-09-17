@@ -1,9 +1,9 @@
 {
   "plan": {
-    "id": "montage-58-four-vm-local-050d-manual-v1",
+    "id": "montage-58-four-vm-local-050d-gcp-manual-v1",
     "workflowVersionId": "montage-58-four-vm-local-050d-v1",
-    "executionScopeId": "montage-58-four-vm-local-050d-scope-v1",
-    "networkTopologyId": "montage-58-four-vm-local-050d-network-v1",
+    "executionScopeId": "montage-58-four-vm-local-050d-gcp-scope-v1",
+    "networkTopologyId": "montage-58-four-vm-local-050d-gcp-network-v1",
     "source": "imported",
     "algorithm": "manual",
     "algorithmVersion": "1",
@@ -20,7 +20,7 @@
         "resourceId": "montage-gcp-e2-medium-1",
         "orderOnResource": 0,
         "metadata": {
-          "runtimeId": "goal-gcp-cloud"
+          "runtimeId": "gcp-environment-cloud"
         }
       },
       {
@@ -29,7 +29,7 @@
         "resourceId": "montage-gcp-e2-medium-2",
         "orderOnResource": 0,
         "metadata": {
-          "runtimeId": "goal-gcp-cloud"
+          "runtimeId": "gcp-environment-cloud"
         }
       },
       {
@@ -38,7 +38,7 @@
         "resourceId": "montage-gcp-e2-medium-3",
         "orderOnResource": 0,
         "metadata": {
-          "runtimeId": "goal-gcp-cloud"
+          "runtimeId": "gcp-environment-cloud"
         }
       },
       {
@@ -47,7 +47,7 @@
         "resourceId": "montage-gcp-e2-medium-4",
         "orderOnResource": 0,
         "metadata": {
-          "runtimeId": "goal-gcp-cloud"
+          "runtimeId": "gcp-environment-cloud"
         }
       },
       {
@@ -191,7 +191,7 @@
         "resourceId": "montage-gcp-e2-medium-1",
         "orderOnResource": 1,
         "metadata": {
-          "runtimeId": "goal-gcp-cloud"
+          "runtimeId": "gcp-environment-cloud"
         }
       },
       {
@@ -200,7 +200,7 @@
         "resourceId": "montage-gcp-e2-medium-2",
         "orderOnResource": 1,
         "metadata": {
-          "runtimeId": "goal-gcp-cloud"
+          "runtimeId": "gcp-environment-cloud"
         }
       },
       {
@@ -209,7 +209,7 @@
         "resourceId": "montage-gcp-e2-medium-3",
         "orderOnResource": 1,
         "metadata": {
-          "runtimeId": "goal-gcp-cloud"
+          "runtimeId": "gcp-environment-cloud"
         }
       },
       {
@@ -218,7 +218,7 @@
         "resourceId": "montage-gcp-e2-medium-4",
         "orderOnResource": 1,
         "metadata": {
-          "runtimeId": "goal-gcp-cloud"
+          "runtimeId": "gcp-environment-cloud"
         }
       },
       {
@@ -362,7 +362,7 @@
         "resourceId": "montage-gcp-e2-medium-1",
         "orderOnResource": 2,
         "metadata": {
-          "runtimeId": "goal-gcp-cloud"
+          "runtimeId": "gcp-environment-cloud"
         }
       },
       {
@@ -371,7 +371,7 @@
         "resourceId": "montage-gcp-e2-medium-2",
         "orderOnResource": 2,
         "metadata": {
-          "runtimeId": "goal-gcp-cloud"
+          "runtimeId": "gcp-environment-cloud"
         }
       },
       {
@@ -380,7 +380,7 @@
         "resourceId": "montage-gcp-e2-medium-3",
         "orderOnResource": 2,
         "metadata": {
-          "runtimeId": "goal-gcp-cloud"
+          "runtimeId": "gcp-environment-cloud"
         }
       },
       {
@@ -389,7 +389,7 @@
         "resourceId": "montage-gcp-e2-medium-4",
         "orderOnResource": 2,
         "metadata": {
-          "runtimeId": "goal-gcp-cloud"
+          "runtimeId": "gcp-environment-cloud"
         }
       },
       {

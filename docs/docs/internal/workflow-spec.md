@@ -23,6 +23,7 @@ spec:
       cpuLimit: "0.5"
       memoryLimit: 256Mi
       run: python /app/prepare.py
+      expectedOutputs: [prepared.csv] # optional assertion; not required for transfer
 
     - name: analyze-a
       cpuLimit: "1"
@@ -67,6 +68,8 @@ In the current portable importer, an activity with `simulation` is simulation-ca
 | `spec.storageClassName`, `storageSize`, `storagePolicy`, `mountPath` | object/string | no | Accepted legacy portable fields. The current portable importer does not persist or apply them; configure storage through the environment and runtime instead. |
 
 The importer derives a lowercase, hyphenated workflow ID from `name`, creates version `1`, and generates activity IDs inside that workflow namespace. Names that normalize to the same identifier can fail persistence; use distinct lowercase-hyphenated names when portability matters.
+
+`expectedOutputs` is optional. When present, it asserts that listed relative workspace paths exist after the activity; a missing output fails the run. It is not used to decide which files to transfer. Before a dependent activity starts, AkôFlow uses `rsync` to stage each predecessor's complete workspace, skips files already present with identical contents, and rejects conflicting contents at the same relative path instead of overwriting them. The successor remains blocked until every required synchronization succeeds. `dataDependencies.logicalName` is a planning label and need not be a file path. Transfer records include the run, producer, consumer, source and destination resources, state, timestamps, effective bytes, file count, and errors. A failed transfer leaves the successor unstarted; rerun after correcting the issue. On a failed run, cloud instances holding ephemeral outputs are retained for recovery and may incur charges until removed.
 
 ## Activity fields
 

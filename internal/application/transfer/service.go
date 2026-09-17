@@ -69,6 +69,7 @@ func (m Materializer) Materialize(ctx context.Context, plan domain.DataTransferP
 		ActivityID: plan.ConsumerActivityID, Strategy: plan.Strategy, Route: plan.Route,
 		Status: domain.TransferPlanned,
 	}
+	run.Route = routeWithEndpoints(run.Route, plan)
 	source, err := m.endpoint(ctx, plan.Source)
 	if err != nil {
 		return failed(target, run, err)
@@ -93,9 +94,8 @@ func (m Materializer) Materialize(ctx context.Context, plan domain.DataTransferP
 	} else if route.Strategy == "" {
 		route = domain.TransferRoute{Strategy: strategy, Fallback: domain.TransferGateway, Reason: "strategy explicitly selected by the transfer plan"}
 	}
-	// This process is a gateway executor. A destination pull may only be run by
-	// a destination agent; never silently turn a registry/HTTP reference into a
-	// pull during Slurm submission.
+	route = routeWithEndpoints(route, plan)
+	// Destination pull requires an agent on the destination.
 	if strategy == domain.TransferDestinationPull {
 		run.Strategy, run.Route = strategy, route
 		return failed(target, run, fmt.Errorf("destination-pull requires a destination transfer agent"))
@@ -208,6 +208,22 @@ func (m Materializer) Materialize(ctx context.Context, plan domain.DataTransferP
 	target.Status = domain.MaterializationCommitted
 	target.VerifiedDigest = target.Digest
 	return target, run, nil
+}
+
+func routeWithEndpoints(route domain.TransferRoute, plan domain.DataTransferPlan) domain.TransferRoute {
+	if route.SourceResourceID == "" {
+		route.SourceResourceID = plan.Source.ResourceID
+	}
+	if route.TargetResourceID == "" {
+		route.TargetResourceID = plan.Destination.ResourceID
+	}
+	if route.SourceEnvironmentID == "" {
+		route.SourceEnvironmentID = plan.Source.EnvironmentID
+	}
+	if route.TargetEnvironmentID == "" {
+		route.TargetEnvironmentID = plan.Destination.EnvironmentID
+	}
+	return route
 }
 
 func (m Materializer) chunkSize(ctx context.Context) int64 {

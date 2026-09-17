@@ -87,6 +87,17 @@ func TestStrategyResolverReportsPrivateAddressForDirectCloudRoute(t *testing.T) 
 	}
 }
 
+func TestStrategyResolverRecordsBothSidesForProvenance(t *testing.T) {
+	source := endpoint("ssh://cloud/work", "vm-1", "gcp")
+	source.ResourceID, source.EnvironmentID = "cloud-resource", "gcp-environment"
+	destination := endpoint("file:///local/work", "", "local")
+	destination.ResourceID, destination.EnvironmentID = "local-resource", "local-environment"
+	route := (StrategyResolver{}).Resolve(source, destination)
+	if route.SourceResourceID != source.ResourceID || route.TargetResourceID != destination.ResourceID || route.SourceEnvironmentID != source.EnvironmentID || route.TargetEnvironmentID != destination.EnvironmentID {
+		t.Fatalf("missing transfer provenance: %+v", route)
+	}
+}
+
 func endpoint(uri, instance, network string) domain.TransferEndpoint {
 	return domain.TransferEndpoint{URI: uri, CloudInstanceID: instance, NetworkDomain: network, Configuration: map[string]string{}}
 }

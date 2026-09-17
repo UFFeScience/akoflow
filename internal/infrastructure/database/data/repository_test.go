@@ -194,7 +194,7 @@ func TestMaterializationAndTransferLifecycle(t *testing.T) {
 		Status: domain.TransferRunning, VerifiedBlobs: []string{digest}, CompletedChunks: []int{1},
 		StartedAt: 1, TransferredBytes: 50, LogicalBytes: 100, NetworkBytes: 50,
 		Route: domain.TransferRoute{Strategy: domain.TransferDirectRuntime, SourceAddress: "10.0.0.1",
-			TargetAddress: "10.0.0.2", Reason: "private network"}}
+			TargetAddress: "10.0.0.2", FilesTransferred: 3, Reason: "private network"}}
 	if err = repository.SaveTransferRun(ctx, transfer); err != nil {
 		t.Fatal(err)
 	}
@@ -205,7 +205,7 @@ func TestMaterializationAndTransferLifecycle(t *testing.T) {
 	found, err := repository.FindTransferRun(ctx, transfer.ID)
 	if err != nil || found == nil || found.ExecutionRunID != "run" || found.ActivityID != "activity" ||
 		len(found.VerifiedBlobs) != 1 || len(found.CompletedChunks) != 1 || found.TransferredBytes != 100 ||
-		found.LogicalBytes != 100 || found.NetworkBytes != 50 || found.Route.TargetAddress != "10.0.0.2" {
+		found.LogicalBytes != 100 || found.NetworkBytes != 50 || found.Route.TargetAddress != "10.0.0.2" || found.FilesTransferred != 3 || found.DurationSeconds != 1 {
 		t.Fatalf("transfer = %#v, %v", found, err)
 	}
 	workspaceTransfer := domain.DataTransferRun{ID: "workspace-route", PlanID: "workspace-plan",

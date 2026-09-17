@@ -119,6 +119,32 @@ func TestMaterializerClassifiesRouteAndUsesOneConnectorSession(t *testing.T) {
 	}
 }
 
+func TestMaterializerTransfersIntoMissingLocalWorkspaceAndRecordsRoute(t *testing.T) {
+	source := t.TempDir()
+	destination := filepath.Join(t.TempDir(), "workspace", "runs", "run-1", "consumer")
+	content := []byte("output from another environment")
+	if err := os.WriteFile(filepath.Join(source, "result.txt"), content, 0o600); err != nil {
+		t.Fatal(err)
+	}
+	digest := digestOf(content)
+	plan := domain.DataTransferPlan{
+		ID: "cross-environment", ExecutionRunID: "run-1", ConsumerActivityID: "consumer",
+		Source:      domain.TransferLocation{URI: "file://" + source, ResourceID: "cloud-vm", EnvironmentID: "cloud"},
+		Destination: domain.TransferLocation{URI: "file://" + destination, ResourceID: "local", EnvironmentID: "desktop"},
+		Blobs:       []domain.BlobDescriptor{{Digest: digest, Path: "result.txt", SizeBytes: int64(len(content))}},
+	}
+	_, run, err := (Materializer{Connectors: []ports.TransferConnector{infra.LocalFilesystem{}}}).Materialize(context.Background(), plan, domain.ArtifactMaterialization{Digest: digest})
+	if err != nil || run.Status != domain.TransferCompleted || run.TransferredBytes != int64(len(content)) || len(run.VerifiedBlobs) != 1 {
+		t.Fatalf("run=%+v err=%v", run, err)
+	}
+	if run.Route.SourceResourceID != "cloud-vm" || run.Route.TargetResourceID != "local" || run.Route.SourceEnvironmentID != "cloud" || run.Route.TargetEnvironmentID != "desktop" {
+		t.Fatalf("route=%+v", run.Route)
+	}
+	if stored, err := os.ReadFile(filepath.Join(destination, "result.txt")); err != nil || string(stored) != string(content) {
+		t.Fatalf("stored=%q err=%v", stored, err)
+	}
+}
+
 func TestMaterializerPersistsBoundedChunkProgress(t *testing.T) {
 	source, destination := t.TempDir(), t.TempDir()
 	content := []byte("0123456789")

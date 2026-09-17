@@ -350,6 +350,8 @@ func (r *Repository) ListArtifactTransferRuns(ctx context.Context, runID string)
 		if err := json.Unmarshal([]byte(route), &value.Route); err != nil {
 			return nil, err
 		}
+		value.FilesTransferred = value.Route.FilesTransferred
+		value.DurationSeconds = max(0, value.FinishedAt-value.StartedAt)
 		values = append(values, value)
 	}
 	return values, rows.Err()
@@ -377,6 +379,8 @@ func (r *Repository) FindTransferRun(ctx context.Context, id string) (*domain.Da
 	if err := json.Unmarshal([]byte(route), &value.Route); err != nil {
 		return nil, fmt.Errorf("decode transfer route: %w", err)
 	}
+	value.FilesTransferred = value.Route.FilesTransferred
+	value.DurationSeconds = max(0, value.FinishedAt-value.StartedAt)
 	return &value, nil
 }
 

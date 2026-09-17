@@ -16,6 +16,10 @@ func (StrategyResolver) Resolve(source, destination domain.TransferEndpoint) dom
 	sourceAddress := endpointAddress(source)
 	targetAddress := endpointAddress(destination)
 	route := domain.TransferRoute{
+		SourceResourceID:      source.ResourceID,
+		TargetResourceID:      destination.ResourceID,
+		SourceEnvironmentID:   source.EnvironmentID,
+		TargetEnvironmentID:   destination.EnvironmentID,
 		SourceAddress:         sourceAddress,
 		TargetAddress:         targetAddress,
 		SourceCloudInstanceID: source.CloudInstanceID,

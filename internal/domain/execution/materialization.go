@@ -110,10 +110,17 @@ type TransferEndpoint struct {
 
 type TransferRoute struct {
 	Strategy              TransferStrategy `json:"strategy"`
+	ProducerActivityID    string           `json:"producerActivityId,omitempty"`
+	ConsumerActivityID    string           `json:"consumerActivityId,omitempty"`
+	SourceResourceID      string           `json:"sourceResourceId,omitempty"`
+	TargetResourceID      string           `json:"targetResourceId,omitempty"`
+	SourceEnvironmentID   string           `json:"sourceEnvironmentId,omitempty"`
+	TargetEnvironmentID   string           `json:"targetEnvironmentId,omitempty"`
 	SourceAddress         string           `json:"sourceAddress,omitempty"`
 	TargetAddress         string           `json:"targetAddress,omitempty"`
 	SourceCloudInstanceID string           `json:"sourceCloudInstanceId,omitempty"`
 	TargetCloudInstanceID string           `json:"targetCloudInstanceId,omitempty"`
+	FilesTransferred      int64            `json:"filesTransferred,omitempty"`
 	NetworkDomain         string           `json:"networkDomain,omitempty"`
 	Fallback              TransferStrategy `json:"fallback,omitempty"`
 	Reason                string           `json:"reason"`
@@ -158,6 +165,7 @@ type DataTransferPlan struct {
 	Chunks             []TransferChunk  `json:"chunks,omitempty"`
 	ResumeFrom         []int            `json:"resumeFrom,omitempty"`
 	Route              TransferRoute    `json:"route,omitempty"`
+	SyncWorkspace      bool             `json:"syncWorkspace,omitempty"`
 }
 type DataTransferRun struct {
 	ID               string           `json:"id"`
@@ -170,11 +178,13 @@ type DataTransferRun struct {
 	CompletedChunks  []int            `json:"completedChunks,omitempty"`
 	StartedAt        float64          `json:"startedAt,omitempty"`
 	FinishedAt       float64          `json:"finishedAt,omitempty"`
+	DurationSeconds  float64          `json:"durationSeconds,omitempty"`
 	TransferredBytes int64            `json:"transferredBytes,omitempty"`
 	Error            string           `json:"error,omitempty"`
 	Route            TransferRoute    `json:"route,omitempty"`
 	LogicalBytes     int64            `json:"logicalBytes,omitempty"`
 	NetworkBytes     int64            `json:"networkBytes,omitempty"`
+	FilesTransferred int64            `json:"filesTransferred,omitempty"`
 }
 
 // ArtifactBuild is an immutable build specification. Context and recipe are

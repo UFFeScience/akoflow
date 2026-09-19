@@ -452,6 +452,7 @@ func TestGetExecutionReturnsActivitiesAndEvents(t *testing.T) {
 	require.Contains(t, recorder.Body.String(), `"eventType":"activity.started"`)
 	require.Contains(t, recorder.Body.String(), `"schemaVersion":1`)
 	require.Contains(t, recorder.Body.String(), `"dataTransfers":[{"id":"transfer"`)
+	require.Contains(t, recorder.Body.String(), `"timeline":`)
 }
 
 func TestCreateExecutionPublishesPersistentCommand(t *testing.T) {

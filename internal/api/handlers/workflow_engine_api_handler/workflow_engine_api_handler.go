@@ -23,6 +23,7 @@ import (
 
 	apirequests "github.com/UFFeScience/akoflow/internal/api/requests"
 	applicationbuild "github.com/UFFeScience/akoflow/internal/application/build"
+	applicationexecution "github.com/UFFeScience/akoflow/internal/application/execution"
 	applicationconfiguration "github.com/UFFeScience/akoflow/internal/application/machineconfiguration"
 	"github.com/UFFeScience/akoflow/internal/application/ports"
 	"github.com/UFFeScience/akoflow/internal/controlplane/eventloop"
@@ -1302,14 +1303,15 @@ func (h *Handler) GetExecution(w http.ResponseWriter, r *http.Request) {
 		"run": run, "activities": tasks, "dataTransfers": transfers,
 		"handles": handles, "events": events,
 	}
+	operations, infrastructureRuns, infrastructureErr := h.executionInfrastructure(r.Context(), run.ID)
+	if infrastructureErr != nil {
+		writeError(w, http.StatusInternalServerError, infrastructureErr)
+		return
+	}
 	if h.cloudOperations != nil {
-		infrastructureRuns, infrastructureErr := h.infrastructureRuns(r.Context(), run.ID)
-		if infrastructureErr != nil {
-			writeError(w, http.StatusInternalServerError, infrastructureErr)
-			return
-		}
 		response["infrastructureRuns"] = infrastructureRuns
 	}
+	response["timeline"] = applicationexecution.BuildTimeline(*run, tasks, transfers, operations)
 	if h.data != nil {
 		instances, dataErr := h.data.ListInstances(r.Context(), run.ID)
 		if dataErr != nil {
@@ -1403,16 +1405,9 @@ func (h *Handler) GetActivityMetricSummary(w http.ResponseWriter, r *http.Reques
 	writeJSON(w, http.StatusOK, item)
 }
 
-func (h *Handler) infrastructureRuns(ctx context.Context, executionRunID string) ([]map[string]any, error) {
-	operations, err := h.cloudOperations.ListCloudOperations(ctx)
-	if err != nil {
-		return nil, err
-	}
+func (h *Handler) infrastructureRuns(ctx context.Context, operations []domain.CloudOperationRun) ([]map[string]any, error) {
 	result := make([]map[string]any, 0)
 	for _, operation := range operations {
-		if operation.ExecutionRunID != executionRunID {
-			continue
-		}
 		events, eventErr := h.cloudOperations.ListCloudOperationEvents(ctx, operation.ID)
 		if eventErr != nil {
 			return nil, eventErr
@@ -1423,6 +1418,24 @@ func (h *Handler) infrastructureRuns(ctx context.Context, executionRunID string)
 		})
 	}
 	return result, nil
+}
+
+func (h *Handler) executionInfrastructure(ctx context.Context, runID string) ([]domain.CloudOperationRun, []map[string]any, error) {
+	if h.cloudOperations == nil {
+		return []domain.CloudOperationRun{}, nil, nil
+	}
+	all, err := h.cloudOperations.ListCloudOperations(ctx)
+	if err != nil {
+		return nil, nil, err
+	}
+	operations := make([]domain.CloudOperationRun, 0)
+	for _, operation := range all {
+		if operation.ExecutionRunID == runID {
+			operations = append(operations, operation)
+		}
+	}
+	runs, err := h.infrastructureRuns(ctx, operations)
+	return operations, runs, err
 }
 
 func (h *Handler) ListArtifactLocations(w http.ResponseWriter, r *http.Request) {

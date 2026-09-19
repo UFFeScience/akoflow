@@ -71,3 +71,21 @@ than the cloud task cost.
   cloud operation, or environment lease from the matrix remained active.
 - SQLite `PRAGMA integrity_check` returned `ok`.
 
+## Retroactive normalized timeline
+
+The execution detail API now derives a normalized `timeline` from the original
+task, transfer, runtime-handle, and cloud-operation timestamps. Existing rows
+are not rewritten. The misleading legacy queue values remain available for
+compatibility, while `timeline.totals.resourceQueueSeconds` contains only the
+uncovered wait for capacity or scheduling.
+
+| Validation | Legacy queue (s) | Normalized queue (s) | Provision (s) | Workspace transfer (s) | Launch (s) | Runtime work (s) | Stop (s) | Unclassified wall (s) |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| local → cloud `r3` | 166.632 | 0.779 | 144.269 | 14.948 | 6.666 | 2.987 | 67.734 | 4.826 |
+| roundtrip `r4` | 133.835 | 0.342 | 108.715 | 49.249 | 21.848 | 30.778 | 76.336 | 5.280 |
+| local → cloud `r5` | 139.112 | 0.543 | 120.487 | 10.727 | 7.364 | 4.467 | 67.664 | 5.748 |
+
+`coveredWallSeconds` is computed from the union of all observed intervals, so
+parallel phases are never counted twice. Category totals intentionally measure
+accumulated work and may overlap. The remaining unclassified wall time reflects
+control-loop gaps and the second-level precision of execution-run timestamps.

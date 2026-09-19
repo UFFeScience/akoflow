@@ -151,6 +151,43 @@ type ExecutionTrace struct {
 	Transfers []DataTransfer            `json:"transfers"`
 }
 
+type ExecutionTimeline struct {
+	StartedAt               float64                  `json:"startedAt"`
+	FinishedAt              float64                  `json:"finishedAt"`
+	WallSeconds             float64                  `json:"wallSeconds"`
+	ComputeMakespanSeconds  float64                  `json:"computeMakespanSeconds"`
+	CoveredWallSeconds      float64                  `json:"coveredWallSeconds"`
+	UnclassifiedWallSeconds float64                  `json:"unclassifiedWallSeconds"`
+	Totals                  ExecutionTimelineTotals  `json:"totals"`
+	Phases                  []ExecutionTimelinePhase `json:"phases"`
+}
+
+type ExecutionTimelineTotals struct {
+	ResourceQueueSeconds         float64 `json:"resourceQueueSeconds"`
+	ProvisionSeconds             float64 `json:"provisionSeconds"`
+	StartSeconds                 float64 `json:"startSeconds"`
+	ValidationSeconds            float64 `json:"validationSeconds"`
+	ExecutablePreparationSeconds float64 `json:"executablePreparationSeconds"`
+	WorkspaceTransferSeconds     float64 `json:"workspaceTransferSeconds"`
+	LaunchSeconds                float64 `json:"launchSeconds"`
+	RuntimeSeconds               float64 `json:"runtimeSeconds"`
+	StopSeconds                  float64 `json:"stopSeconds"`
+	DestroySeconds               float64 `json:"destroySeconds"`
+}
+
+type ExecutionTimelinePhase struct {
+	ID              string  `json:"id"`
+	Category        string  `json:"category"`
+	ActivityID      string  `json:"activityId,omitempty"`
+	OperationID     string  `json:"operationId,omitempty"`
+	TransferID      string  `json:"transferId,omitempty"`
+	Status          string  `json:"status"`
+	Source          string  `json:"source"`
+	StartedAt       float64 `json:"startedAt"`
+	FinishedAt      float64 `json:"finishedAt"`
+	DurationSeconds float64 `json:"durationSeconds"`
+}
+
 type DataTransfer struct {
 	ID                 string           `json:"id"`
 	ExecutionRunID     string           `json:"executionRunId"`

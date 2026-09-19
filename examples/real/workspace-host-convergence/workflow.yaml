@@ -1,0 +1,86 @@
+name: Workspace Host Convergence
+spec:
+  namespace: science
+  image: docker.io/library/busybox:1.36
+  activities:
+    - name: k1
+      cpuLimit: "0.1"
+      memoryLimit: 16Mi
+      run: |
+        set -eu
+        printf '{"activity":"k1","environment":"kubernetes","host":"%s","user":"%s","timestampUtc":"%s","workingDirectory":"%s","system":"%s","message":"Executado no Kubernetes"}\n' \
+          "$(hostname)" "$(id -un)" "$(date -u '+%Y-%m-%dT%H:%M:%SZ')" "$(pwd)" "$(uname -a)" > k1.txt
+
+    - name: k2
+      cpuLimit: "0.1"
+      memoryLimit: 16Mi
+      run: |
+        set -eu
+        printf '{"activity":"k2","environment":"plafrim","host":"%s","user":"%s","timestampUtc":"%s","workingDirectory":"%s","system":"%s","message":"Executado no Plafrim"}\n' \
+          "$(hostname)" "$(id -un)" "$(date -u '+%Y-%m-%dT%H:%M:%SZ')" "$(pwd)" "$(uname -a)" > k2.txt
+
+    - name: k3
+      cpuLimit: "0.1"
+      memoryLimit: 16Mi
+      dependsOn: [k1, k2]
+      run: |
+        set -eu
+        test -s k1.txt
+        test -s k2.txt
+        grep -q '"activity":"k1"' k1.txt
+        grep -q '"activity":"k2"' k2.txt
+        {
+          printf '{"activity":"k3","environment":"plafrim","host":"%s","user":"%s","timestampUtc":"%s","workingDirectory":"%s","system":"%s","inputs":["k1.txt","k2.txt"],"message":"Consolidou k1 e k2 no Plafrim"}\n' \
+            "$(hostname)" "$(id -un)" "$(date -u '+%Y-%m-%dT%H:%M:%SZ')" "$(pwd)" "$(uname -a)"
+          cat k1.txt k2.txt
+        } > k3.txt
+
+    - name: k4
+      cpuLimit: "0.1"
+      memoryLimit: 16Mi
+      dependsOn: [k3]
+      run: |
+        set -eu
+        for activity in k1 k2 k3; do grep -q "\"activity\":\"$activity\"" k3.txt; done
+        printf '{"activity":"k4","environment":"kubernetes","host":"%s","user":"%s","timestampUtc":"%s","workingDirectory":"%s","system":"%s","inputs":["k1.txt","k2.txt","k3.txt"],"message":"Validou a primeira convergencia no Kubernetes"}\n' \
+          "$(hostname)" "$(id -un)" "$(date -u '+%Y-%m-%dT%H:%M:%SZ')" "$(pwd)" "$(uname -a)" > k4.txt
+
+    - name: k5
+      cpuLimit: "0.1"
+      memoryLimit: 16Mi
+      dependsOn: [k3]
+      run: |
+        set -eu
+        for activity in k1 k2 k3; do grep -q "\"activity\":\"$activity\"" k3.txt; done
+        printf '{"activity":"k5","environment":"plafrim","host":"%s","user":"%s","timestampUtc":"%s","workingDirectory":"%s","system":"%s","inputs":["k1.txt","k2.txt","k3.txt"],"message":"Validou a primeira convergencia no Plafrim"}\n' \
+          "$(hostname)" "$(id -un)" "$(date -u '+%Y-%m-%dT%H:%M:%SZ')" "$(pwd)" "$(uname -a)" > k5.txt
+
+    - name: k6
+      cpuLimit: "0.1"
+      memoryLimit: 16Mi
+      dependsOn: [k4, k5]
+      run: |
+        set -eu
+        for file in k1.txt k2.txt k3.txt k4.txt k5.txt; do test -s "$file"; done
+        printf '{"activity":"k6","environment":"kubernetes","host":"%s","user":"%s","timestampUtc":"%s","workingDirectory":"%s","system":"%s","inputs":["k1.txt","k2.txt","k3.txt","k4.txt","k5.txt"],"message":"Reuniu os dois ramos no Kubernetes"}\n' \
+          "$(hostname)" "$(id -un)" "$(date -u '+%Y-%m-%dT%H:%M:%SZ')" "$(pwd)" "$(uname -a)" > k6.txt
+
+    - name: k7
+      cpuLimit: "0.1"
+      memoryLimit: 16Mi
+      dependsOn: [k6]
+      run: |
+        set -eu
+        for file in k1.txt k2.txt k3.txt k4.txt k5.txt k6.txt; do test -s "$file"; done
+        grep -q '"activity":"k1"' k1.txt
+        grep -q '"activity":"k2"' k2.txt
+        for activity in k1 k2 k3; do grep -q "\"activity\":\"$activity\"" k3.txt; done
+        grep -q '"activity":"k4"' k4.txt
+        grep -q '"activity":"k5"' k5.txt
+        grep -q '"activity":"k6"' k6.txt
+        {
+          printf '{"activity":"k7","environment":"plafrim","host":"%s","user":"%s","timestampUtc":"%s","workingDirectory":"%s","system":"%s","inputs":["k1.txt","k2.txt","k3.txt","k4.txt","k5.txt","k6.txt"],"message":"Consolidacao final concluida"}\n' \
+            "$(hostname)" "$(id -un)" "$(date -u '+%Y-%m-%dT%H:%M:%SZ')" "$(pwd)" "$(uname -a)"
+          cat k1.txt k2.txt k3.txt k4.txt k5.txt k6.txt
+        } > k7.txt
+

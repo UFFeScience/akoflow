@@ -1,0 +1,19 @@
+{
+  "plan": {
+    "id": "transfer-matrix-roundtrip-plan",
+    "workflowVersionId": "transfer-matrix-roundtrip-v1",
+    "executionScopeId": "transfer-matrix-scope-v1",
+    "networkTopologyId": "transfer-matrix-network-v1",
+    "source": "imported",
+    "algorithm": "manual",
+    "algorithmVersion": "1",
+    "objective": "transfer-validation",
+    "predicted": {"makespanSeconds": 600, "cost": 0.02, "feasible": true},
+    "assignments": [
+      {"id": "transfer-matrix-roundtrip-plan-hpc-produce", "activityId": "transfer-matrix-roundtrip-hpc-produce", "resourceId": "hpc-environment-ssh-connection-partition-testing", "orderOnResource": 0, "metadata": {"runtimeId": "hpc-environment-slurm"}},
+      {"id": "transfer-matrix-roundtrip-plan-cloud-transform", "activityId": "transfer-matrix-roundtrip-cloud-transform", "resourceId": "montage-gcp-e2-medium-1", "orderOnResource": 0, "metadata": {"runtimeId": "gcp-environment-cloud"}},
+      {"id": "transfer-matrix-roundtrip-plan-local-validate", "activityId": "transfer-matrix-roundtrip-local-validate", "resourceId": "local-environment-entrypoint", "orderOnResource": 0, "metadata": {"runtimeId": "local-environment-local"}},
+      {"id": "transfer-matrix-roundtrip-plan-hpc-finalize", "activityId": "transfer-matrix-roundtrip-hpc-finalize", "resourceId": "hpc-environment-ssh-connection-partition-testing", "orderOnResource": 1, "metadata": {"runtimeId": "hpc-environment-slurm"}}
+    ]
+  }
+}

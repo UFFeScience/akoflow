@@ -32,6 +32,9 @@ volumes/
 !/examples/agentic-workflows/**
 !/examples/scientific-ai/
 !/examples/scientific-ai/**
+!/examples/real/
+!/examples/real/transfer-strategy-matrix/
+!/examples/real/transfer-strategy-matrix/**
 config
 
 __pycache__/

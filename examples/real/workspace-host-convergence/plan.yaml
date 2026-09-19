@@ -1,0 +1,42 @@
+id: workspace-host-convergence-plan
+workflowVersionId: workspace-host-convergence-v1
+executionScopeId: my-scope
+networkTopologyId: my-scope-network
+source: imported
+algorithm: manual
+algorithmVersion: "1"
+objective: custom
+predicted:
+  makespanSeconds: 50
+  cost: 0
+  feasible: true
+assignments:
+  - activityId: workspace-host-convergence-k1
+    resourceId: kubernetes-environment-entrypoint
+    runtimeId: kubernetes-environment-kubernetes
+    orderOnResource: 0
+  - activityId: workspace-host-convergence-k2
+    resourceId: hpc-environment-ssh-connection-partition-preempt
+    runtimeId: hpc-environment-slurm
+    orderOnResource: 0
+  - activityId: workspace-host-convergence-k3
+    resourceId: hpc-environment-ssh-connection-partition-preempt
+    runtimeId: hpc-environment-slurm
+    orderOnResource: 1
+  - activityId: workspace-host-convergence-k4
+    resourceId: kubernetes-environment-entrypoint
+    runtimeId: kubernetes-environment-kubernetes
+    orderOnResource: 1
+  - activityId: workspace-host-convergence-k5
+    resourceId: hpc-environment-ssh-connection-partition-preempt
+    runtimeId: hpc-environment-slurm
+    orderOnResource: 2
+  - activityId: workspace-host-convergence-k6
+    resourceId: kubernetes-environment-entrypoint
+    runtimeId: kubernetes-environment-kubernetes
+    orderOnResource: 2
+  - activityId: workspace-host-convergence-k7
+    resourceId: hpc-environment-ssh-connection-partition-preempt
+    runtimeId: hpc-environment-slurm
+    orderOnResource: 3
+

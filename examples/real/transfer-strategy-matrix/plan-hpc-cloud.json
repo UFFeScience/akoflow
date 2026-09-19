@@ -1,0 +1,37 @@
+{
+  "plan": {
+    "id": "transfer-matrix-hpc-cloud-plan",
+    "workflowVersionId": "transfer-matrix-hpc-cloud-v1",
+    "executionScopeId": "transfer-matrix-scope-v1",
+    "networkTopologyId": "transfer-matrix-network-v1",
+    "source": "imported",
+    "algorithm": "manual",
+    "algorithmVersion": "1",
+    "objective": "transfer-validation",
+    "predicted": {
+      "makespanSeconds": 300,
+      "cost": 0.01,
+      "feasible": true
+    },
+    "assignments": [
+      {
+        "id": "transfer-matrix-hpc-cloud-plan-produce",
+        "activityId": "transfer-matrix-hpc-cloud-produce",
+        "resourceId": "hpc-environment-ssh-connection-partition-testing",
+        "orderOnResource": 0,
+        "metadata": {
+          "runtimeId": "hpc-environment-slurm"
+        }
+      },
+      {
+        "id": "transfer-matrix-hpc-cloud-plan-consume",
+        "activityId": "transfer-matrix-hpc-cloud-consume",
+        "resourceId": "montage-gcp-e2-medium-1",
+        "orderOnResource": 0,
+        "metadata": {
+          "runtimeId": "gcp-environment-cloud"
+        }
+      }
+    ]
+  }
+}

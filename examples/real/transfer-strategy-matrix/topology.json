@@ -1,0 +1,35 @@
+{
+  "id": "transfer-matrix-network-v1",
+  "name": "Transfer strategy matrix network",
+  "version": 1,
+  "executionScopeId": "transfer-matrix-scope-v1",
+  "links": [
+    {
+      "id": "transfer-matrix-local-hpc",
+      "sourceResourceId": "local-environment-entrypoint",
+      "targetResourceId": "hpc-environment-ssh-connection-partition-testing",
+      "bandwidthBitsPerSecond": 100000000,
+      "latencySeconds": 0.05,
+      "pricePerByte": 0,
+      "bidirectional": true
+    },
+    {
+      "id": "transfer-matrix-local-cloud",
+      "sourceResourceId": "local-environment-entrypoint",
+      "targetResourceId": "montage-gcp-e2-medium-1",
+      "bandwidthBitsPerSecond": 100000000,
+      "latencySeconds": 0.05,
+      "pricePerByte": 0,
+      "bidirectional": true
+    },
+    {
+      "id": "transfer-matrix-hpc-cloud",
+      "sourceResourceId": "hpc-environment-ssh-connection-partition-testing",
+      "targetResourceId": "montage-gcp-e2-medium-1",
+      "bandwidthBitsPerSecond": 100000000,
+      "latencySeconds": 0.1,
+      "pricePerByte": 0,
+      "bidirectional": true
+    }
+  ]
+}

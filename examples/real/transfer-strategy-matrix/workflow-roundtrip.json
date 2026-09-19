@@ -1,0 +1,48 @@
+{
+  "name": "transfer-matrix-roundtrip",
+  "spec": {
+    "namespace": "transfer-matrix",
+    "image": "docker.io/library/busybox:1.36",
+    "activities": [
+      {
+        "name": "hpc-produce",
+	        "runtime": "slurm",
+        "cpuLimit": "0.1",
+        "memoryLimit": "16Mi",
+        "run": "set -eu\nprintf 'origin=hpc\\n' > journey.txt\nsha256sum journey.txt > journey.sha256"
+      },
+      {
+        "name": "cloud-transform",
+        "runtime": "cloud",
+        "cpuLimit": "0.1",
+        "memoryLimit": "16Mi",
+        "dependsOn": ["hpc-produce"],
+        "run": "set -eu\nsha256sum -c journey.sha256\nprintf 'processed=cloud\\n' >> journey.txt\nsha256sum journey.txt > journey.sha256"
+      },
+      {
+        "name": "local-validate",
+        "runtime": "local",
+        "cpuLimit": "0.1",
+        "memoryLimit": "16Mi",
+        "dependsOn": ["cloud-transform"],
+        "run": "set -eu\nsha256sum -c journey.sha256\ngrep -qx 'origin=hpc' journey.txt\ngrep -qx 'processed=cloud' journey.txt\nprintf 'validated=local\\n' >> journey.txt\nsha256sum journey.txt > journey.sha256"
+      },
+      {
+        "name": "hpc-finalize",
+	        "runtime": "slurm",
+        "cpuLimit": "0.1",
+        "memoryLimit": "16Mi",
+        "dependsOn": ["local-validate"],
+        "run": "set -eu\nsha256sum -c journey.sha256\ngrep -qx 'origin=hpc' journey.txt\ngrep -qx 'processed=cloud' journey.txt\ngrep -qx 'validated=local' journey.txt\nprintf 'finalized=hpc\\n' >> journey.txt"
+      }
+    ],
+    "dataDependencies": [
+      {"producerActivity": "hpc-produce", "consumerActivity": "cloud-transform", "logicalName": "journey.txt", "sizeBytes": 11},
+      {"producerActivity": "hpc-produce", "consumerActivity": "cloud-transform", "logicalName": "journey.sha256", "sizeBytes": 78},
+      {"producerActivity": "cloud-transform", "consumerActivity": "local-validate", "logicalName": "journey.txt", "sizeBytes": 27},
+      {"producerActivity": "cloud-transform", "consumerActivity": "local-validate", "logicalName": "journey.sha256", "sizeBytes": 78},
+      {"producerActivity": "local-validate", "consumerActivity": "hpc-finalize", "logicalName": "journey.txt", "sizeBytes": 43},
+      {"producerActivity": "local-validate", "consumerActivity": "hpc-finalize", "logicalName": "journey.sha256", "sizeBytes": 78}
+    ]
+  }
+}

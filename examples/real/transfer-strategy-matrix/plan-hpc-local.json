@@ -1,0 +1,37 @@
+{
+  "plan": {
+    "id": "transfer-matrix-hpc-local-plan",
+    "workflowVersionId": "transfer-matrix-hpc-local-v1",
+    "executionScopeId": "transfer-matrix-scope-v1",
+    "networkTopologyId": "transfer-matrix-network-v1",
+    "source": "imported",
+    "algorithm": "manual",
+    "algorithmVersion": "1",
+    "objective": "transfer-validation",
+    "predicted": {
+      "makespanSeconds": 300,
+      "cost": 0.01,
+      "feasible": true
+    },
+    "assignments": [
+      {
+        "id": "transfer-matrix-hpc-local-plan-produce",
+        "activityId": "transfer-matrix-hpc-local-produce",
+        "resourceId": "hpc-environment-ssh-connection-partition-testing",
+        "orderOnResource": 0,
+        "metadata": {
+          "runtimeId": "hpc-environment-slurm"
+        }
+      },
+      {
+        "id": "transfer-matrix-hpc-local-plan-consume",
+        "activityId": "transfer-matrix-hpc-local-consume",
+        "resourceId": "local-environment-entrypoint",
+        "orderOnResource": 0,
+        "metadata": {
+          "runtimeId": "local-environment-local"
+        }
+      }
+    ]
+  }
+}

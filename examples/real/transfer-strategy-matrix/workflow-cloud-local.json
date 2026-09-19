@@ -1,0 +1,40 @@
+{
+  "name": "transfer-matrix-cloud-local",
+  "spec": {
+    "namespace": "transfer-matrix",
+    "image": "docker.io/library/busybox:1.36",
+    "activities": [
+      {
+        "name": "produce",
+        "runtime": "cloud",
+        "cpuLimit": "0.1",
+        "memoryLimit": "16Mi",
+        "run": "set -eu\nprintf route=+cloud+-+local+\nsequence=1\n > payload.txt\nsha256sum payload.txt > payload.sha256\ntest -s payload.txt"
+      },
+      {
+        "name": "consume",
+        "runtime": "local",
+        "cpuLimit": "0.1",
+        "memoryLimit": "16Mi",
+        "dependsOn": [
+          "produce"
+        ],
+        "run": "set -eu\ntest -s payload.txt\nsha256sum -c payload.sha256\ngrep -qx route=+cloud+-+local+ payload.txt\nprintf consumed=+local+\n > receipt.txt"
+      }
+    ],
+    "dataDependencies": [
+      {
+        "producerActivity": "produce",
+        "consumerActivity": "consume",
+        "logicalName": "payload.txt",
+        "sizeBytes": 29
+      },
+      {
+        "producerActivity": "produce",
+        "consumerActivity": "consume",
+        "logicalName": "payload.sha256",
+        "sizeBytes": 78
+      }
+    ]
+  }
+}

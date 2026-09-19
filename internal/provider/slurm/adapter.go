@@ -461,7 +461,10 @@ func batchScript(runID string, activity domain.Activity, partition, node string)
 		script.WriteByte('\n')
 	}
 	script.WriteString(metricSamplerScript)
-	script.WriteString("finish() { code=$?; state=completed; [ \"$code\" -eq 0 ] || state=failed; ")
+	// The activity runs with set -e, but sentinel publication must remain
+	// best-effort even when final metric sampling or artifact inspection fails.
+	// Capture the activity result first, then disable errexit inside the trap.
+	script.WriteString("finish() { code=$?; set +e; state=completed; [ \"$code\" -eq 0 ] || state=failed; ")
 	script.WriteString("[ -z \"$metric_pid\" ] || { kill \"$metric_pid\" 2>/dev/null || true; wait \"$metric_pid\" 2>/dev/null || true; }; ")
 	script.WriteString("[ -z \"$metric_pid\" ] || sample_metrics; ")
 	script.WriteString("container_started_at=0; if [ -f \"$container_start_marker\" ]; then container_uptime=$(cat \"$container_start_marker\"); container_started_at=$(awk -v epoch=\"$container_epoch_anchor\" -v anchor=\"$container_uptime_anchor\" -v current=\"$container_uptime\" 'BEGIN { printf \"%.9f\", epoch + current - anchor }'); fi; ")

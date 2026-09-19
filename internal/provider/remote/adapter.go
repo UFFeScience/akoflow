@@ -100,12 +100,14 @@ func (a *Adapter) Start(ctx context.Context, execution domain.ActivityExecutionC
 		return domain.ActivityHandle{}, fmt.Errorf("start remote Docker container: missing container ID")
 	}
 	now := runtimecommon.UnixSeconds(time.Now())
-	return domain.ActivityHandle{ID: runtimecommon.NewID("activity"), RunID: execution.Run.ID, ActivityID: activity.ID,
+	handle := domain.ActivityHandle{ID: runtimecommon.NewID("activity"), RunID: execution.Run.ID, ActivityID: activity.ID,
 		ResourceID: execution.Resource.ID, RuntimeID: execution.RuntimeID, ExternalID: containerID,
 		Status: domain.HandleStarting, StartedAt: now, Metadata: map[string]any{
 			"containerName": name, "executionTarget": "remote-docker", "artifactObservationRoot": workingDirectory,
 			"artifactObservationBefore": string(beforeJSON),
-		}}, nil
+		}}
+	telemetry.ObserveDocker(ctx, &handle, containerID, a.executor.Run)
+	return handle, nil
 }
 
 func (a *Adapter) Inspect(ctx context.Context, handle domain.ActivityHandle) (domain.ActivityHandle, error) {
@@ -262,6 +264,11 @@ func indexRemoteFiles(files []remoteArtifactFile) map[string]remoteArtifactFile 
 }
 
 func (a *Adapter) Stop(ctx context.Context, handle domain.ActivityHandle) error {
+	_, err := a.executor.Run(ctx, "docker", []string{"rm", "--force", handle.ExternalID}, nil)
+	return err
+}
+
+func (a *Adapter) Release(ctx context.Context, handle domain.ActivityHandle) error {
 	_, err := a.executor.Run(ctx, "docker", []string{"rm", "--force", handle.ExternalID}, nil)
 	return err
 }

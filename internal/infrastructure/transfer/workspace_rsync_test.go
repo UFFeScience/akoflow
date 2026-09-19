@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/url"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -33,6 +34,85 @@ func TestWorkspaceRsyncSSHArgumentsKeepRemotePathAbsolute(t *testing.T) {
 		want := "akoflow@example.test:/akoflow/workspace/runs/run-1/producer/"
 		if !containsArgument(args, want) {
 			t.Fatalf("remote path was quoted or changed: %q", args)
+		}
+	}
+}
+
+func TestWorkspaceRsyncSSHRemoteShellKeepsProxyCommandInOneArgument(t *testing.T) {
+	remote := domain.TransferEndpoint{URI: "ssh://researcher@plafrim/scratch/run?" + url.Values{
+		"identityFile":   {"storage/credentials/ssh/ovvesley-personal"},
+		"knownHostsFile": {"storage/credentials/ssh/known_hosts"},
+		"port":           {"22"},
+		"proxyCommand":   {"ssh -A -l wferreir ssh.plafrim.fr -W plafrim:22"},
+		"forwardAgent":   {"true"},
+	}.Encode()}
+	local := domain.TransferEndpoint{URI: workspaceURL(t.TempDir())}
+	args, err := rsyncArgs(remote, local)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var remoteShell string
+	for index, argument := range args {
+		if argument == "-e" && index+1 < len(args) {
+			remoteShell = args[index+1]
+			break
+		}
+	}
+	if remoteShell == "" {
+		t.Fatalf("rsync arguments lack remote shell: %q", args)
+	}
+	for _, expected := range []string{
+		"ssh -o BatchMode=yes -i storage/credentials/ssh/ovvesley-personal",
+		`-o "ProxyCommand=ssh `,
+		` -W plafrim:22" -A`,
+	} {
+		if !strings.Contains(remoteShell, expected) {
+			t.Fatalf("remote shell %q does not contain %q", remoteShell, expected)
+		}
+	}
+	if strings.Contains(remoteShell, `' -A'`) {
+		t.Fatalf("forward-agent option was absorbed by a quoted argument: %q", remoteShell)
+	}
+}
+
+func TestWorkspaceRsyncRemoteShellIsParsedIntoExactSSHArguments(t *testing.T) {
+	if _, err := exec.LookPath("rsync"); err != nil {
+		t.Skip("rsync is unavailable")
+	}
+	temporary := t.TempDir()
+	argumentLog := filepath.Join(temporary, "arguments")
+	fakeSSH := filepath.Join(temporary, "ssh")
+	script := "#!/bin/sh\nprintf '%s\\n' \"$@\" > " + shell(argumentLog) + "\nexit 1\n"
+	if err := os.WriteFile(fakeSSH, []byte(script), 0700); err != nil {
+		t.Fatal(err)
+	}
+	remote := domain.TransferEndpoint{URI: "ssh://researcher@plafrim/scratch/run?" + url.Values{
+		"identityFile":   {"storage/credentials/ssh/ovvesley-personal"},
+		"knownHostsFile": {"storage/credentials/ssh/known_hosts"},
+		"port":           {"22"},
+		"proxyCommand":   {"ssh -A -l wferreir ssh.plafrim.fr -W plafrim:22"},
+		"forwardAgent":   {"true"},
+	}.Encode()}
+	args, err := rsyncArgs(remote, domain.TransferEndpoint{URI: workspaceURL(t.TempDir())})
+	if err != nil {
+		t.Fatal(err)
+	}
+	command := exec.Command("rsync", args...)
+	command.Env = append(os.Environ(), "PATH="+temporary+string(os.PathListSeparator)+os.Getenv("PATH"))
+	output, runErr := command.CombinedOutput()
+	contents, err := os.ReadFile(argumentLog)
+	if err != nil {
+		t.Skipf("installed rsync did not invoke the PATH-provided remote shell (%v): %v: %s", err, runErr, strings.TrimSpace(string(output)))
+	}
+	arguments := strings.Split(strings.TrimSpace(string(contents)), "\n")
+	for _, expected := range []string{
+		"-i",
+		"storage/credentials/ssh/ovvesley-personal",
+		"ProxyCommand=ssh -o UserKnownHostsFile='storage/credentials/ssh/known_hosts' -o StrictHostKeyChecking=accept-new -i 'storage/credentials/ssh/ovvesley-personal' -A -l wferreir ssh.plafrim.fr -W plafrim:22",
+		"-A",
+	} {
+		if !containsArgument(arguments, expected) {
+			t.Fatalf("SSH arguments lack %q: %q", expected, arguments)
 		}
 	}
 }

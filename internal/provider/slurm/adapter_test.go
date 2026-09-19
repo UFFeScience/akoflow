@@ -140,11 +140,12 @@ func TestAdapterSubmitsSafeBatchScript(t *testing.T) {
 		t.Fatalf("script=%s err=%v", script, err)
 	}
 	hasTrap := strings.Contains(string(script), "trap finish EXIT")
+	hasResilientTrap := strings.Contains(string(script), "finish() { code=$?; set +e;")
 	hasRunningState := strings.Contains(string(script), "state=running")
 	hasAbsoluteArtifactRoot := strings.Contains(string(script), `artifact_root=$(cd "$artifact_root" && pwd -P)`)
 	hasLogPath := strings.Contains(string(script), "akoflow-run-analysis-%j.log")
 	hasSentinelPath := handle.Metadata["sentinelPath"] == "akoflow-run-analysis-123.status"
-	if !hasTrap || !hasRunningState || !hasAbsoluteArtifactRoot || !hasLogPath || !hasSentinelPath {
+	if !hasTrap || !hasResilientTrap || !hasRunningState || !hasAbsoluteArtifactRoot || !hasLogPath || !hasSentinelPath {
 		t.Fatalf("missing execution sentinel: script=%s metadata=%+v", script, handle.Metadata)
 	}
 }

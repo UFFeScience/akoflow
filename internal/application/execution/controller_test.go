@@ -49,6 +49,7 @@ func (f *runtimeFake) Stop(context.Context, domain.ActivityHandle) error {
 
 type handlesFake struct {
 	handle  *domain.ActivityHandle
+	metrics []domain.ActivityMetricSample
 	findErr error
 	saveErr error
 }
@@ -74,6 +75,10 @@ func (f *handlesFake) Save(_ context.Context, handle domain.ActivityHandle) erro
 func (f *handlesFake) Find(context.Context, string) (*domain.ActivityHandle, error) {
 	return f.handle, f.findErr
 }
+func (f *handlesFake) SaveActivityMetrics(_ context.Context, metrics []domain.ActivityMetricSample) error {
+	f.metrics = append(f.metrics, metrics...)
+	return nil
+}
 
 func executionFixture() domain.ActivityExecutionContext {
 	return domain.ActivityExecutionContext{
@@ -91,6 +96,20 @@ func TestStartPersistsRuntimeIndependentHandle(t *testing.T) {
 	got, err := New(resolverFake{adapter: runtime}, handles).Start(context.Background(), executionFixture())
 	if err != nil || got.ID != "run:activity" || handles.handle == nil {
 		t.Fatalf("unexpected start: %+v %v", got, err)
+	}
+}
+
+func TestStartPersistsInitialRuntimeMetrics(t *testing.T) {
+	runtime := &runtimeFake{handle: domain.ActivityHandle{
+		RunID: "run", ActivityID: "activity", RuntimeID: "local", Status: domain.HandleRunning,
+		Metrics: []domain.ActivityMetricSample{{RunID: "run", ActivityID: "activity", Attempt: 1, ObservedAt: 10}},
+	}}
+	handles := &handlesFake{}
+	if _, err := New(resolverFake{adapter: runtime}, handles).Start(context.Background(), executionFixture()); err != nil {
+		t.Fatal(err)
+	}
+	if len(handles.metrics) != 1 || handles.metrics[0].ObservedAt != 10 {
+		t.Fatalf("initial metrics were not persisted: %+v", handles.metrics)
 	}
 }
 

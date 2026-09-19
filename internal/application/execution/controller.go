@@ -86,6 +86,18 @@ func (s *Controller) Start(ctx context.Context, execution domain.ActivityExecuti
 	if handle.Status == domain.HandleFailed {
 		handle.Log = appendLog(handle.Log, "error", failureMessage(handle.Failure))
 	}
+	if len(handle.Metrics) > 0 {
+		if metrics, ok := s.handles.(interface {
+			SaveActivityMetrics(context.Context, []domain.ActivityMetricSample) error
+		}); ok {
+			if metricErr := metrics.SaveActivityMetrics(ctx, handle.Metrics); metricErr != nil {
+				if handle.Metadata == nil {
+					handle.Metadata = make(map[string]any)
+				}
+				handle.Metadata["metricCollectionError"] = metricErr.Error()
+			}
+		}
+	}
 	if err := s.handles.Save(ctx, handle); err != nil {
 		_ = runtime.Stop(ctx, handle)
 		return domain.ActivityHandle{}, fmt.Errorf("persist activity handle: %w", err)
@@ -153,6 +165,21 @@ func (s *Controller) Inspect(ctx context.Context, handleID string, mode domain.E
 	}
 	if err := s.handles.Save(ctx, updated); err != nil {
 		return nil, err
+	}
+	if updated.Status == domain.HandleCompleted || updated.Status == domain.HandleFailed || updated.Status == domain.HandleStopped {
+		if releaser, ok := runtime.(interface {
+			Release(context.Context, domain.ActivityHandle) error
+		}); ok {
+			if releaseErr := releaser.Release(ctx, updated); releaseErr != nil {
+				if updated.Metadata == nil {
+					updated.Metadata = make(map[string]any)
+				}
+				updated.Metadata["runtimeCleanupError"] = releaseErr.Error()
+				if saveErr := s.handles.Save(ctx, updated); saveErr != nil {
+					return nil, saveErr
+				}
+			}
+		}
 	}
 	return &updated, nil
 }

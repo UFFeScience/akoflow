@@ -3,12 +3,55 @@ package local
 import (
 	"context"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"testing"
 	"time"
 
 	"github.com/UFFeScience/akoflow/internal/domain"
 )
+
+func TestAdapterRunsDockerActivityDetached(t *testing.T) {
+	if os.Getenv("AKOFLOW_LOCAL_WORKSPACE_VOLUME") != "" {
+		t.Skip("containerized test process cannot bind its temporary directory into the sibling Docker daemon")
+	}
+	if _, err := exec.LookPath("docker"); err != nil {
+		t.Skip("docker is unavailable")
+	}
+	if err := exec.Command("docker", "image", "inspect", "busybox:1.36").Run(); err != nil {
+		t.Skip("busybox:1.36 is unavailable")
+	}
+	root := t.TempDir()
+	adapter := New()
+	handle, err := adapter.Start(context.Background(), domain.ActivityExecutionContext{
+		Run: domain.ExecutionRun{ID: "docker-run"},
+		Activity: domain.Activity{ID: "activity", Command: domain.ActivityCommand{
+			Image: "busybox:1.36", Entrypoint: "sh", Arguments: []string{"-c", "printf result > output.txt"}, WorkingDirectory: root,
+		}},
+		Resource: domain.Resource{ID: "local"}, RuntimeID: "local",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer exec.Command("docker", "rm", "--force", handle.ExternalID).Run()
+	if handle.ExternalID == "" || handle.Metadata["executionTarget"] != "local-docker" {
+		t.Fatalf("handle=%+v", handle)
+	}
+	deadline := time.Now().Add(5 * time.Second)
+	for handle.Status == domain.HandleRunning && time.Now().Before(deadline) {
+		time.Sleep(50 * time.Millisecond)
+		handle, err = adapter.Inspect(context.Background(), handle)
+		if err != nil {
+			t.Fatal(err)
+		}
+	}
+	if handle.Status != domain.HandleCompleted || handle.ExitCode == nil || *handle.ExitCode != 0 {
+		t.Fatalf("handle=%+v", handle)
+	}
+	if handle.Artifacts == nil || len(handle.Artifacts.Files) != 1 || handle.Artifacts.Files[0].Path != "output.txt" {
+		t.Fatalf("artifacts=%+v", handle.Artifacts)
+	}
+}
 
 func TestAdapterRunsLocalActivity(t *testing.T) {
 	adapter := New()

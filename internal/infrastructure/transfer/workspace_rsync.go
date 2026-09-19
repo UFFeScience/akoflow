@@ -220,11 +220,24 @@ func rsyncArgs(source, destination domain.TransferEndpoint) ([]string, error) {
 		ssh := []string{"ssh", "-o", "BatchMode=yes"}
 		ssh = append(ssh, sshArgs(remote)...)
 		for i := range ssh {
-			ssh[i] = shell(ssh[i])
+			ssh[i] = rsyncRemoteShellArgument(ssh[i])
 		}
 		args = append(args, "-e", strings.Join(ssh, " "))
 	}
 	return append(args, from, to), nil
+}
+
+// rsync parses the value passed to -e itself. Quoting every token with shell()
+// breaks nested ProxyCommand values because those values already contain
+// single-quoted paths. Keep ordinary SSH arguments untouched and quote only
+// the values that rsync must preserve as one argument.
+func rsyncRemoteShellArgument(value string) string {
+	if value != "" && !strings.ContainsAny(value, " \t\r\n\"\\") {
+		return value
+	}
+	value = strings.ReplaceAll(value, `\`, `\\`)
+	value = strings.ReplaceAll(value, `"`, `\"`)
+	return `"` + value + `"`
 }
 
 func rsyncLocation(endpoint domain.TransferEndpoint) (string, error) {

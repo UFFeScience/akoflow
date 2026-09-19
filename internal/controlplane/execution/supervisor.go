@@ -1027,21 +1027,42 @@ func newRunningTask(
 	readyAt float64,
 	preparation *domain.PreparationGate,
 ) domain.TaskExecution {
+	dataReadyAt := handle.StartedAt
 	task := domain.TaskExecution{
 		ID: runID + ":" + activityID, ExecutionRunID: runID,
 		PlanAssignmentID: assignment.ID, ActivityID: activityID,
 		PlannedResourceID: assignment.ResourceID, AllocatedResourceID: resource.ID,
 		RuntimeID: allocation.RuntimeID, ConnectionID: allocation.ConnectionID,
 		CloudInstanceID: allocation.CloudInstanceID,
-		Attempt:         1, Status: domain.TaskRunning, ReadyAt: readyAt, DataReadyAt: unixNow(),
+		Attempt:         1, Status: domain.TaskRunning, ReadyAt: readyAt, DataReadyAt: dataReadyAt,
 		QueuedAt: handle.StartedAt, StartedAt: handle.StartedAt,
 		Metadata: map[string]any{"pricePerSecond": resource.PricePerSecond},
 	}
 	if preparation != nil {
+		var preparationStartedAt, preparationFinishedAt float64
 		for _, transfer := range preparation.TransferRuns {
 			task.TransferSeconds += maxFloat(0, transfer.FinishedAt-transfer.StartedAt)
 			task.TransferBytes += transfer.TransferredBytes
+			if transfer.StartedAt > 0 && (preparationStartedAt == 0 || transfer.StartedAt < preparationStartedAt) {
+				preparationStartedAt = transfer.StartedAt
+			}
+			if transfer.FinishedAt > preparationFinishedAt {
+				preparationFinishedAt = transfer.FinishedAt
+			}
 		}
+		if preparationFinishedAt > 0 {
+			task.DataReadyAt = preparationFinishedAt
+			task.Metadata["preparationStartedAt"] = preparationStartedAt
+			task.Metadata["preparationFinishedAt"] = preparationFinishedAt
+			task.Metadata["transferElapsedSeconds"] = maxFloat(0, preparationFinishedAt-preparationStartedAt)
+			task.Metadata["transferWorkSeconds"] = task.TransferSeconds
+			task.Metadata["readyWaitSeconds"] = maxFloat(0, preparationStartedAt-readyAt)
+			task.Metadata["launchWaitSeconds"] = maxFloat(0, handle.StartedAt-preparationFinishedAt)
+		}
+	}
+	if preparation == nil {
+		task.Metadata["readyWaitSeconds"] = maxFloat(0, handle.StartedAt-readyAt)
+		task.Metadata["launchWaitSeconds"] = 0.0
 	}
 	return task
 }

@@ -650,6 +650,29 @@ func TestCompletedTaskSeparatesContainerOverheadFromCompute(t *testing.T) {
 	}
 }
 
+func TestRunningTaskSeparatesTransferElapsedWorkAndWaits(t *testing.T) {
+	task := newRunningTask(
+		"run",
+		"activity",
+		domain.PlanAssignment{ID: "assignment", ResourceID: "resource"},
+		domain.Resource{ID: "resource"},
+		domain.RuntimeAllocation{},
+		domain.ActivityHandle{StartedAt: 30},
+		10,
+		&domain.PreparationGate{TransferRuns: []domain.DataTransferRun{
+			{StartedAt: 12, FinishedAt: 20, TransferredBytes: 100},
+			{StartedAt: 14, FinishedAt: 24, TransferredBytes: 200},
+		}},
+	)
+	if task.DataReadyAt != 24 || task.TransferSeconds != 18 || task.TransferBytes != 300 {
+		t.Fatalf("transfer timing=%+v", task)
+	}
+	if task.Metadata["transferElapsedSeconds"] != 12.0 || task.Metadata["transferWorkSeconds"] != 18.0 ||
+		task.Metadata["readyWaitSeconds"] != 2.0 || task.Metadata["launchWaitSeconds"] != 6.0 {
+		t.Fatalf("timing metadata=%+v", task.Metadata)
+	}
+}
+
 func TestCompletedTaskAccountsForObservedRuntimeCost(t *testing.T) {
 	task := domain.TaskExecution{
 		Metadata: map[string]any{"pricePerSecond": 0.25},

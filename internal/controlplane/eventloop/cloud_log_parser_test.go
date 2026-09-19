@@ -29,3 +29,20 @@ fatal: [10.0.0.2]: FAILED! => {"msg":"docker missing"}
 		t.Fatalf("failed Ansible task = %#v", events[9])
 	}
 }
+
+func TestParseCloudOperationLogUsesRecordedTimestampsAndPhaseDurations(t *testing.T) {
+	raw := []byte(`[2026-09-17T06:10:40Z] [Terraform] terraform apply -no-color
+[2026-09-17T06:12:10Z] [Terraform] completed in 90s
+[2026-09-17T06:12:11Z] [Ansible] waiting for SSH connectivity
+[2026-09-17T06:12:26Z] [Ansible] SSH ready in 15s
+[2026-09-17T06:12:27Z] [Ansible] applying playbook.yaml
+[2026-09-17T06:13:07Z] [Ansible] playbook completed in 40s; running validation checks
+`)
+	events := ParseCloudOperationLog("operation", raw)
+	if events[1].DurationSeconds != 90 || events[3].DurationSeconds != 15 || events[5].DurationSeconds != 40 {
+		t.Fatalf("durations=%v,%v,%v", events[1].DurationSeconds, events[3].DurationSeconds, events[5].DurationSeconds)
+	}
+	if events[0].Timestamp.Format("15:04:05") != "06:10:40" {
+		t.Fatalf("timestamp=%v", events[0].Timestamp)
+	}
+}

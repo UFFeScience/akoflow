@@ -11,6 +11,7 @@ import (
 )
 
 var ansibleTaskLine = regexp.MustCompile(`^TASK \[(.+)]`)
+var timestampedLogLine = regexp.MustCompile(`^\[([^]]+)]\s+(.*)$`)
 
 // ParseCloudOperationLog creates stable, line-addressed events from the raw
 // append-only log. Re-parsing while an operation is active is idempotent
@@ -21,28 +22,40 @@ func ParseCloudOperationLog(operationID string, raw []byte) []domain.CloudOperat
 	scanner := bufio.NewScanner(bytes.NewReader(raw))
 	sequence := 0
 	tool, phase, task := "", "", ""
+	var terraformStartedAt, sshStartedAt, configurationStartedAt time.Time
 	for scanner.Scan() {
 		sequence++
 		line := strings.TrimSpace(scanner.Text())
 		if line == "" {
 			continue
 		}
-		event := domain.CloudOperationEvent{OperationID: operationID, Sequence: sequence, Timestamp: time.Now().UTC(), Level: "info", Event: "log", Raw: line, Message: line}
+		timestamp, content, timestamped := parseLogTimestamp(line)
+		event := domain.CloudOperationEvent{OperationID: operationID, Sequence: sequence, Timestamp: timestamp, Level: "info", Event: "log", Raw: line, Message: content}
+		line = content
 		switch {
 		case strings.HasPrefix(line, "[Terraform]"):
 			tool, phase, event.Tool, event.Phase = "terraform", "provisioning", "terraform", "provisioning"
 			event.Message = strings.TrimSpace(strings.TrimPrefix(line, "[Terraform]"))
 			if strings.Contains(line, " completed") {
 				event.Event = "command.completed"
+				event.DurationSeconds = observedDuration(terraformStartedAt, timestamp, timestamped)
 			} else if strings.Contains(line, " failed") {
 				event.Event, event.Level = "command.failed", "error"
+				event.DurationSeconds = observedDuration(terraformStartedAt, timestamp, timestamped)
 			} else {
 				event.Event = "command.started"
+				if timestamped {
+					terraformStartedAt = timestamp
+				}
 			}
 		case strings.HasPrefix(line, "[Ansible] waiting for SSH"):
 			tool, phase, event.Tool, event.Phase, event.Event = "ansible", "waiting-for-ssh", "ansible", "waiting-for-ssh", "ssh.waiting"
+			if timestamped {
+				sshStartedAt = timestamp
+			}
 		case strings.HasPrefix(line, "[Ansible] SSH ready"):
 			tool, phase, event.Tool, event.Phase, event.Event = "ansible", "waiting-for-ssh", "ansible", "waiting-for-ssh", "ssh.ready"
+			event.DurationSeconds = observedDuration(sshStartedAt, timestamp, timestamped)
 		case strings.HasPrefix(line, "[Ansible]"):
 			tool, phase, event.Tool, event.Phase = "ansible", "configuration", "ansible", "configuration"
 			event.Message = strings.TrimSpace(strings.TrimPrefix(line, "[Ansible]"))
@@ -50,6 +63,14 @@ func ParseCloudOperationLog(operationID string, raw []byte) []domain.CloudOperat
 				event.Event, event.Level = "configuration.failed", "error"
 			} else if strings.Contains(line, "validated") || strings.Contains(line, " passed") {
 				event.Event = "validation.completed"
+			} else if strings.Contains(line, "applying ") {
+				event.Event = "configuration.started"
+				if timestamped {
+					configurationStartedAt = timestamp
+				}
+			} else if strings.Contains(line, "playbook completed") {
+				event.Event = "configuration.completed"
+				event.DurationSeconds = observedDuration(configurationStartedAt, timestamp, timestamped)
 			}
 		case ansibleTaskLine.MatchString(line):
 			tool, phase, event.Tool, event.Phase, event.Event = "ansible", "configuration", "ansible", "configuration", "task.started"
@@ -73,6 +94,23 @@ func ParseCloudOperationLog(operationID string, raw []byte) []domain.CloudOperat
 		result = append(result, event)
 	}
 	return result
+}
+
+func observedDuration(startedAt, finishedAt time.Time, timestamped bool) float64 {
+	if !timestamped || startedAt.IsZero() {
+		return 0
+	}
+	return finishedAt.Sub(startedAt).Seconds()
+}
+
+func parseLogTimestamp(line string) (time.Time, string, bool) {
+	match := timestampedLogLine.FindStringSubmatch(line)
+	if len(match) == 3 {
+		if value, err := time.Parse(time.RFC3339Nano, match[1]); err == nil {
+			return value.UTC(), strings.TrimSpace(match[2]), true
+		}
+	}
+	return time.Now().UTC(), line, false
 }
 
 func bracketHost(line string) string {

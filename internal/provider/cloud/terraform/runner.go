@@ -217,20 +217,25 @@ func (r Runner) run(ctx context.Context, workspace string, arguments ...string) 
 		return nil, logErr
 	}
 	defer logFile.Close()
-	_, _ = fmt.Fprintf(logFile, "\n[Terraform] terraform %s\n", strings.Join(arguments, " "))
+	startedAt := time.Now().UTC()
+	writeProvisionLog(logFile, "Terraform", "terraform %s", strings.Join(arguments, " "))
 	_ = logFile.Sync()
 	var output bytes.Buffer
 	command.Stdout = io.MultiWriter(&output, logFile)
 	command.Stderr = io.MultiWriter(&output, logFile)
 	err := command.Run()
 	if err != nil {
-		_, _ = fmt.Fprintf(logFile, "[Terraform] failed: %v\n", err)
+		writeProvisionLog(logFile, "Terraform", "failed after %.3fs: %v", time.Since(startedAt).Seconds(), err)
 		_ = logFile.Sync()
 		return nil, fmt.Errorf("terraform %s: %w: %s", arguments[0], err, strings.TrimSpace(output.String()))
 	}
-	_, _ = fmt.Fprintln(logFile, "[Terraform] completed")
+	writeProvisionLog(logFile, "Terraform", "completed in %.3fs", time.Since(startedAt).Seconds())
 	_ = logFile.Sync()
 	return output.Bytes(), nil
+}
+
+func writeProvisionLog(logFile *os.File, tool, format string, values ...any) {
+	_, _ = fmt.Fprintf(logFile, "[%s] [%s] %s\n", time.Now().UTC().Format(time.RFC3339Nano), tool, fmt.Sprintf(format, values...))
 }
 
 func (r Runner) Log(_ context.Context, instanceID string) ([]byte, error) {

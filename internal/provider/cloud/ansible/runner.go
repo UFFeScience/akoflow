@@ -53,14 +53,15 @@ func (r Runner) Configure(ctx context.Context, spec ports.MachineConfigurationSp
 		return logErr
 	}
 	defer logFile.Close()
-	_, _ = fmt.Fprintln(logFile, "\n[Ansible] waiting for SSH connectivity")
+	sshStartedAt := time.Now().UTC()
+	writeProvisionLog(logFile, "waiting for SSH connectivity")
 	_ = logFile.Sync()
 	if err := waitForSSH(ctx, spec, keyPath, logFile); err != nil {
-		_, _ = fmt.Fprintf(logFile, "[Ansible] SSH failed: %v\n", err)
+		writeProvisionLog(logFile, "SSH failed after %.3fs: %v", time.Since(sshStartedAt).Seconds(), err)
 		_ = logFile.Sync()
 		return err
 	}
-	_, _ = fmt.Fprintln(logFile, "[Ansible] SSH ready")
+	writeProvisionLog(logFile, "SSH ready in %.3fs", time.Since(sshStartedAt).Seconds())
 	_ = logFile.Sync()
 	binary := r.Binary
 	if strings.TrimSpace(binary) == "" {
@@ -73,33 +74,46 @@ func (r Runner) Configure(ctx context.Context, spec ports.MachineConfigurationSp
 	)
 	command.Dir = workspace
 	command.Env = append(os.Environ(), "ANSIBLE_HOST_KEY_CHECKING=False")
-	_, _ = fmt.Fprintf(logFile, "\n[Ansible] applying %s\n", filepath.Base(playbookPath))
+	playbookStartedAt := time.Now().UTC()
+	writeProvisionLog(logFile, "applying %s", filepath.Base(playbookPath))
 	_ = logFile.Sync()
 	var output bytes.Buffer
 	command.Stdout = io.MultiWriter(&output, logFile)
 	command.Stderr = io.MultiWriter(&output, logFile)
 	err = command.Run()
 	if err != nil {
-		_, _ = fmt.Fprintf(logFile, "[Ansible] failed: %v\n", err)
+		writeProvisionLog(logFile, "failed after %.3fs: %v", time.Since(playbookStartedAt).Seconds(), err)
 		_ = logFile.Sync()
 		return fmt.Errorf("ansible-playbook: %w: %s", err, strings.TrimSpace(output.String()))
 	}
-	_, _ = fmt.Fprintln(logFile, "[Ansible] playbook completed; running validation checks")
+	writeProvisionLog(logFile, "playbook completed in %.3fs; running validation checks", time.Since(playbookStartedAt).Seconds())
 	_ = logFile.Sync()
+	if err := validateConfiguration(ctx, spec, keyPath, logFile); err != nil {
+		return err
+	}
+	writeProvisionLog(logFile, "configuration validated")
+	_ = logFile.Sync()
+	return nil
+}
+
+func validateConfiguration(ctx context.Context, spec ports.MachineConfigurationSpec, keyPath string, logFile *os.File) error {
 	for _, check := range spec.Checks {
-		_, _ = fmt.Fprintf(logFile, "[Ansible] validating %s\n", check.Name)
+		startedAt := time.Now().UTC()
+		writeProvisionLog(logFile, "validating %s", check.Name)
 		_ = logFile.Sync()
 		if err := runCheck(ctx, spec, keyPath, check.Command); err != nil {
-			_, _ = fmt.Fprintf(logFile, "[Ansible] validation %s failed: %v\n", check.Name, err)
+			writeProvisionLog(logFile, "validation %s failed after %.3fs: %v", check.Name, time.Since(startedAt).Seconds(), err)
 			_ = logFile.Sync()
 			return fmt.Errorf("validation %q: %w", check.Name, err)
 		}
-		_, _ = fmt.Fprintf(logFile, "[Ansible] validation %s passed\n", check.Name)
+		writeProvisionLog(logFile, "validation %s passed in %.3fs", check.Name, time.Since(startedAt).Seconds())
 		_ = logFile.Sync()
 	}
-	_, _ = fmt.Fprintln(logFile, "[Ansible] configuration validated")
-	_ = logFile.Sync()
 	return nil
+}
+
+func writeProvisionLog(logFile *os.File, format string, values ...any) {
+	_, _ = fmt.Fprintf(logFile, "[%s] [Ansible] %s\n", time.Now().UTC().Format(time.RFC3339Nano), fmt.Sprintf(format, values...))
 }
 
 func (r Runner) Validate(ctx context.Context, spec ports.MachineConfigurationSpec) error {
@@ -117,14 +131,15 @@ func (r Runner) Validate(ctx context.Context, spec ports.MachineConfigurationSpe
 	}
 	defer logFile.Close()
 	for _, check := range spec.Checks {
-		_, _ = fmt.Fprintf(logFile, "[Ansible] validating %s\n", check.Name)
+		startedAt := time.Now().UTC()
+		writeProvisionLog(logFile, "validating %s", check.Name)
 		_ = logFile.Sync()
 		if err := runCheck(ctx, spec, keyPath, check.Command); err != nil {
-			_, _ = fmt.Fprintf(logFile, "[Ansible] validation %s failed: %v\n", check.Name, err)
+			writeProvisionLog(logFile, "validation %s failed after %.3fs: %v", check.Name, time.Since(startedAt).Seconds(), err)
 			_ = logFile.Sync()
 			return fmt.Errorf("validation %q: %w", check.Name, err)
 		}
-		_, _ = fmt.Fprintf(logFile, "[Ansible] validation %s passed\n", check.Name)
+		writeProvisionLog(logFile, "validation %s passed in %.3fs", check.Name, time.Since(startedAt).Seconds())
 		_ = logFile.Sync()
 	}
 	return nil
@@ -139,7 +154,7 @@ func waitForSSH(ctx context.Context, spec ports.MachineConfigurationSpec, keyPat
 		if err := runCheck(ctx, spec, keyPath, "true"); err == nil {
 			return nil
 		} else {
-			_, _ = fmt.Fprintf(logFile, "[Ansible] SSH attempt %d not ready: %v\n", attempt, err)
+			writeProvisionLog(logFile, "SSH attempt %d not ready: %v", attempt, err)
 			_ = logFile.Sync()
 		}
 		select {

@@ -90,43 +90,19 @@ func (h *CloudOperationHandler) Handle(ctx context.Context, job domainqueue.Job)
 	if err := h.store.UpdateCloudOperation(ctx, *operation); err != nil {
 		return err
 	}
-	sequenceBase := job.Attempts * 1_000_000
-	_ = h.store.AppendCloudOperationEvent(ctx, domain.CloudOperationEvent{OperationID: operation.ID, Sequence: sequenceBase, Timestamp: now, Tool: operationTool(operation.Kind), Phase: operation.Phase, Event: "operation.started", Message: operation.Kind + " started"})
-	var instance domain.CloudProvisionedInstance
-	switch operation.Kind {
-	case "provision":
-		instance, err = h.provisioner.Provision(ctx, operation.EnvironmentID, operation.Request)
-	case "configure":
-		instance, err = h.provisioner.Configure(ctx, operation.InstanceID)
-	case "destroy":
-		instance, err = h.provisioner.Destroy(ctx, operation.InstanceID)
-	case "start", "stop", "validate":
-		lifecycle, ok := h.provisioner.(ports.CloudLifecycleProvisioner)
-		if !ok {
-			err = fmt.Errorf("cloud lifecycle operation %q is unavailable", operation.Kind)
-			break
-		}
-		switch operation.Kind {
-		case "start":
-			instance, err = lifecycle.Start(ctx, operation.InstanceID)
-		case "stop":
-			instance, err = lifecycle.Stop(ctx, operation.InstanceID)
-		case "validate":
-			instance, err = lifecycle.Validate(ctx, operation.InstanceID)
-		}
-	default:
-		err = fmt.Errorf("unsupported cloud operation %q", operation.Kind)
-	}
+	// Log events use their physical line number as the durable sequence. The
+	// provision log is append-only and is read in full after every attempt, so
+	// offsetting those line numbers by the attempt used to duplicate the complete
+	// history on every retry. Keep lifecycle markers in a separate high range and
+	// let repeated physical lines conflict idempotently in the repository.
+	attemptSequence := 900_000_000 + job.Attempts*2
+	_ = h.store.AppendCloudOperationEvent(ctx, domain.CloudOperationEvent{OperationID: operation.ID, Sequence: attemptSequence, Timestamp: now, Tool: operationTool(operation.Kind), Phase: operation.Phase, Event: "operation.started", Message: operation.Kind + " started"})
+	instance, err := h.execute(ctx, *operation)
 	if instance.ID != "" {
 		operation.InstanceID = instance.ID
 	}
 	if operation.InstanceID != "" {
-		if raw, logErr := h.provisioner.Log(ctx, operation.InstanceID); logErr == nil {
-			for _, event := range ParseCloudOperationLog(operation.ID, raw) {
-				event.Sequence += sequenceBase
-				_ = h.store.AppendCloudOperationEvent(ctx, event)
-			}
-		}
+		h.appendProvisionLog(ctx, operation.ID, operation.InstanceID)
 	}
 	finished := time.Now().UTC()
 	operation.FinishedAt = &finished
@@ -136,13 +112,63 @@ func (h *CloudOperationHandler) Handle(ctx context.Context, job domainqueue.Job)
 		if job.Attempts >= job.MaxAttempts {
 			operation.Status, operation.Phase, operation.FinishedAt = "failed", "failed", &finished
 		}
-		_ = h.store.AppendCloudOperationEvent(context.Background(), domain.CloudOperationEvent{OperationID: operation.ID, Sequence: sequenceBase + 999_999, Timestamp: finished, Tool: operationTool(operation.Kind), Phase: operation.Phase, Level: "error", Event: "operation.failed", Message: err.Error()})
+		_ = h.store.AppendCloudOperationEvent(context.Background(), domain.CloudOperationEvent{
+			OperationID:     operation.ID,
+			Sequence:        attemptSequence + 1,
+			Timestamp:       finished,
+			Tool:            operationTool(operation.Kind),
+			Phase:           operation.Phase,
+			Level:           "error",
+			Event:           "operation.failed",
+			Message:         err.Error(),
+			DurationSeconds: finished.Sub(now).Seconds(),
+		})
 		_ = h.store.UpdateCloudOperation(context.Background(), *operation)
 		return err
 	}
 	operation.Status, operation.Phase = "completed", "ready"
 	_ = h.store.AppendCloudOperationEvent(ctx, domain.CloudOperationEvent{OperationID: operation.ID, Sequence: 1_000_000_000, Timestamp: finished, Tool: operationTool(operation.Kind), Phase: "ready", Event: "operation.completed", Message: operation.Kind + " completed", DurationSeconds: finished.Sub(*operation.StartedAt).Seconds()})
 	return h.store.UpdateCloudOperation(ctx, *operation)
+}
+
+func (h *CloudOperationHandler) execute(ctx context.Context, operation domain.CloudOperationRun) (domain.CloudProvisionedInstance, error) {
+	switch operation.Kind {
+	case "provision":
+		return h.provisioner.Provision(ctx, operation.EnvironmentID, operation.Request)
+	case "configure":
+		return h.provisioner.Configure(ctx, operation.InstanceID)
+	case "destroy":
+		return h.provisioner.Destroy(ctx, operation.InstanceID)
+	case "start", "stop", "validate":
+		return h.executeLifecycle(ctx, operation)
+	default:
+		return domain.CloudProvisionedInstance{}, fmt.Errorf("unsupported cloud operation %q", operation.Kind)
+	}
+}
+
+func (h *CloudOperationHandler) executeLifecycle(ctx context.Context, operation domain.CloudOperationRun) (domain.CloudProvisionedInstance, error) {
+	lifecycle, ok := h.provisioner.(ports.CloudLifecycleProvisioner)
+	if !ok {
+		return domain.CloudProvisionedInstance{}, fmt.Errorf("cloud lifecycle operation %q is unavailable", operation.Kind)
+	}
+	switch operation.Kind {
+	case "start":
+		return lifecycle.Start(ctx, operation.InstanceID)
+	case "stop":
+		return lifecycle.Stop(ctx, operation.InstanceID)
+	default:
+		return lifecycle.Validate(ctx, operation.InstanceID)
+	}
+}
+
+func (h *CloudOperationHandler) appendProvisionLog(ctx context.Context, operationID, instanceID string) {
+	raw, err := h.provisioner.Log(ctx, instanceID)
+	if err != nil {
+		return
+	}
+	for _, event := range ParseCloudOperationLog(operationID, raw) {
+		_ = h.store.AppendCloudOperationEvent(ctx, event)
+	}
 }
 
 func operationPhase(kind string) string {

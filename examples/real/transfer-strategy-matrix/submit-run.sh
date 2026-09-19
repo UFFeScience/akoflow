@@ -8,13 +8,13 @@ api_base=${AKOFLOW_API_URL:-http://127.0.0.1:8080/akoflow-api}
 api_token=${AKOFLOW_API_TOKEN:?API token required}
 
 if [ "$case_id" = roundtrip ]; then
-  workflow_id=transfer-matrix-roundtrip
+  workflow_id=transfer-matrix-roundtrip-v2
 else
   if ! awk -F '\t' -v wanted="$case_id" '$1 == wanted {found=1} END {exit !found}' "$base/cases.tsv"; then
     echo "unknown case: $case_id" >&2
     exit 2
   fi
-  workflow_id="transfer-matrix-$case_id"
+  workflow_id="transfer-matrix-$case_id-v2"
 fi
 plan_id="$workflow_id-plan"
 
@@ -26,8 +26,8 @@ get() {
 
 plan_json=$(get "schedule-plans/$plan_id")
 definition_json=$(get "workflow-definitions/$workflow_id")
-scope_json=$(get execution-scopes/transfer-matrix-scope-v1)
-network_json=$(get network-topologies/transfer-matrix-network-v1)
+scope_json=$(get execution-scopes/transfer-matrix-scope-v2)
+network_json=$(get network-topologies/transfer-matrix-network-v2)
 local_environment_json=$(get environments/local-environment)
 hpc_environment_json=$(get environments/hpc-environment)
 cloud_environment_json=$(get environments/gcp-environment)

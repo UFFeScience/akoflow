@@ -1,5 +1,5 @@
 {
-  "name": "transfer-matrix-roundtrip",
+  "name": "transfer-matrix-roundtrip-v2",
   "spec": {
     "namespace": "transfer-matrix",
     "image": "docker.io/library/busybox:1.36",
@@ -33,7 +33,7 @@
         "cpuLimit": "0.1",
         "memoryLimit": "16Mi",
         "dependsOn": ["local-validate"],
-        "run": "set -eu\nsha256sum -c journey.sha256\ngrep -qx 'origin=hpc' journey.txt\ngrep -qx 'processed=cloud' journey.txt\ngrep -qx 'validated=local' journey.txt\nprintf 'finalized=hpc\\n' >> journey.txt"
+        "run": "set -eu\nsha256sum -c journey.sha256\ngrep -qx 'origin=hpc' journey.txt\ngrep -qx 'processed=cloud' journey.txt\ngrep -qx 'validated=local' journey.txt\nprintf 'finalized=hpc\\n' >> journey.txt\nsha256sum journey.txt > journey.sha256\nprintf 'roundtrip=verified\\n' > final.receipt\ntest -s final.receipt"
       }
     ],
     "dataDependencies": [

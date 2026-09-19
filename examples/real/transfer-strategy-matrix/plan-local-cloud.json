@@ -1,12 +1,12 @@
 {
   "plan": {
-    "id": "transfer-matrix-local-cloud-plan",
-    "workflowVersionId": "transfer-matrix-local-cloud-v1",
-    "executionScopeId": "transfer-matrix-scope-v1",
-    "networkTopologyId": "transfer-matrix-network-v1",
+    "id": "transfer-matrix-local-cloud-v2-plan",
+    "workflowVersionId": "transfer-matrix-local-cloud-v2-v1",
+    "executionScopeId": "transfer-matrix-scope-v2",
+    "networkTopologyId": "transfer-matrix-network-v2",
     "source": "imported",
     "algorithm": "manual",
-    "algorithmVersion": "1",
+    "algorithmVersion": "2",
     "objective": "transfer-validation",
     "predicted": {
       "makespanSeconds": 300,
@@ -15,8 +15,8 @@
     },
     "assignments": [
       {
-        "id": "transfer-matrix-local-cloud-plan-produce",
-        "activityId": "transfer-matrix-local-cloud-produce",
+        "id": "transfer-matrix-local-cloud-v2-plan-produce",
+        "activityId": "transfer-matrix-local-cloud-v2-produce",
         "resourceId": "local-environment-entrypoint",
         "orderOnResource": 0,
         "metadata": {
@@ -24,8 +24,8 @@
         }
       },
       {
-        "id": "transfer-matrix-local-cloud-plan-consume",
-        "activityId": "transfer-matrix-local-cloud-consume",
+        "id": "transfer-matrix-local-cloud-v2-plan-consume",
+        "activityId": "transfer-matrix-local-cloud-v2-consume",
         "resourceId": "montage-gcp-e2-medium-1",
         "orderOnResource": 0,
         "metadata": {

@@ -1,7 +1,7 @@
 {
-  "id": "transfer-matrix-scope-v1",
+  "id": "transfer-matrix-scope-v2",
   "name": "Transfer strategy matrix: local, HPC and GCP",
-  "networkTopologyId": "transfer-matrix-network-v1",
+  "networkTopologyId": "transfer-matrix-network-v2",
   "environmentVersionIds": [
     "local-environment-initial",
     "hpc-environment-initial",

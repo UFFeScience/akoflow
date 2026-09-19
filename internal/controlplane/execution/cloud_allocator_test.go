@@ -92,7 +92,13 @@ func (q *allocatorQueue) Publish(_ context.Context, job domainqueue.Job) (domain
 		for id, operation := range q.store.operations {
 			operation.Status, operation.InstanceID = "completed", operation.Request.InstanceID
 			q.store.operations[id] = operation
-			q.store.instances[operation.InstanceID] = domain.CloudProvisionedInstance{ID: operation.InstanceID, CapacityTargetID: operation.CapacityTargetID, EnvironmentID: operation.EnvironmentID, Status: "ready"}
+			status := "ready"
+			if operation.Kind == "stop" {
+				status = "stopped"
+			} else if operation.Kind == "destroy" {
+				status = "destroyed"
+			}
+			q.store.instances[operation.InstanceID] = domain.CloudProvisionedInstance{ID: operation.InstanceID, CapacityTargetID: operation.CapacityTargetID, EnvironmentID: operation.EnvironmentID, Status: status}
 		}
 	}()
 	return job, nil
@@ -187,7 +193,7 @@ func TestQueuedCloudAllocatorStopPreservesInstanceAndIsIdempotent(t *testing.T) 
 		},
 	}
 	queue := &allocatorQueue{store: store}
-	allocator := QueuedCloudAllocator{Cloud: store, Operations: store, Queue: queue}
+	allocator := QueuedCloudAllocator{Cloud: store, Operations: store, Queue: queue, PollInterval: time.Millisecond}
 	allocations := map[string]domain.RuntimeAllocation{
 		"activity": {CloudInstanceID: "vm", ResourceID: "resource"},
 	}

@@ -3,7 +3,9 @@ package queue
 import (
 	"context"
 	"database/sql"
+	"encoding/json"
 	"errors"
+	"fmt"
 	"testing"
 	"time"
 
@@ -27,6 +29,33 @@ func setup(t *testing.T) (*Repository, *sql.DB) {
 		t.Fatal(err)
 	}
 	return repository, db
+}
+
+func executionJob(t *testing.T, key, mode string, environments ...string) domainqueue.Job {
+	t.Helper()
+	resources := make([]map[string]string, 0, len(environments))
+	assignments := make([]map[string]string, 0, len(environments))
+	for index, environmentID := range environments {
+		resourceID := fmt.Sprintf("resource-%s-%d", key, index)
+		resources = append(resources, map[string]string{
+			"id": resourceID, "environmentVersionId": environmentID,
+		})
+		assignments = append(assignments, map[string]string{"resourceId": resourceID})
+	}
+	payload, err := json.Marshal(map[string]any{
+		"run":       map[string]string{"id": key, "mode": mode},
+		"plan":      map[string]any{"assignments": assignments},
+		"resources": resources,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	job, err := domainqueue.New(domainqueue.CategoryExecution, executionRunRequested, payload, time.Now().UTC())
+	if err != nil {
+		t.Fatal(err)
+	}
+	job.IdempotencyKey = key
+	return job
 }
 
 func TestRepositoryConstructionAndClose(t *testing.T) {
@@ -194,5 +223,102 @@ func TestRenewCancelAndRetryWithoutCause(t *testing.T) {
 	}
 	if err := repository.Cancel(ctx, "missing", time.Now()); err == nil {
 		t.Fatal("missing job cancel must fail")
+	}
+}
+
+func TestLeaseSerializesRealExecutionsByEnvironment(t *testing.T) {
+	repository, db := setup(t)
+	defer db.Close()
+	ctx := context.Background()
+	for _, job := range []domainqueue.Job{
+		executionJob(t, "first-a", "real", "environment-a"),
+		executionJob(t, "second-a", "real", "environment-a"),
+		executionJob(t, "first-b", "real", "environment-b"),
+	} {
+		if _, err := repository.Publish(ctx, job); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	leased, err := repository.Lease(ctx, "worker", []string{domainqueue.CategoryExecution}, 3, time.Minute)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(leased) != 2 || leased[0].IdempotencyKey != "first-a" || leased[1].IdempotencyKey != "first-b" {
+		t.Fatalf("leased=%+v", leased)
+	}
+	if err := repository.Complete(ctx, leased[0].ID, "worker", time.Now().UTC()); err != nil {
+		t.Fatal(err)
+	}
+
+	next, err := repository.Lease(ctx, "worker-2", []string{domainqueue.CategoryExecution}, 3, time.Minute)
+	if err != nil || len(next) != 1 || next[0].IdempotencyKey != "second-a" {
+		t.Fatalf("next=%+v err=%v", next, err)
+	}
+}
+
+func TestLeaseAcquiresAllExecutionEnvironmentsAtomically(t *testing.T) {
+	repository, db := setup(t)
+	defer db.Close()
+	ctx := context.Background()
+	jobs := []domainqueue.Job{
+		executionJob(t, "multi", "real", "environment-a", "environment-b"),
+		executionJob(t, "only-a", "real", "environment-a"),
+		executionJob(t, "only-c", "real", "environment-c"),
+	}
+	for _, job := range jobs {
+		if _, err := repository.Publish(ctx, job); err != nil {
+			t.Fatal(err)
+		}
+	}
+	leased, err := repository.Lease(ctx, "worker", []string{domainqueue.CategoryExecution}, 3, time.Minute)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(leased) != 2 || leased[0].IdempotencyKey != "multi" || leased[1].IdempotencyKey != "only-c" {
+		t.Fatalf("leased=%+v", leased)
+	}
+}
+
+func TestLeaseDoesNotSerializeSimulationExecutions(t *testing.T) {
+	repository, db := setup(t)
+	defer db.Close()
+	ctx := context.Background()
+	for _, key := range []string{"simulation-a", "simulation-b"} {
+		if _, err := repository.Publish(ctx, executionJob(t, key, "simulation", "environment-a")); err != nil {
+			t.Fatal(err)
+		}
+	}
+	leased, err := repository.Lease(ctx, "worker", []string{domainqueue.CategoryExecution}, 2, time.Minute)
+	if err != nil || len(leased) != 2 {
+		t.Fatalf("leased=%+v err=%v", leased, err)
+	}
+}
+
+func TestLeaseSerializesDifferentVersionsOfSameEnvironment(t *testing.T) {
+	repository, db := setup(t)
+	defer db.Close()
+	ctx := context.Background()
+	if _, err := db.ExecContext(ctx, `INSERT INTO environments(id,name) VALUES('environment','Environment')`); err != nil {
+		t.Fatal(err)
+	}
+	for version, id := range []string{"environment-v1", "environment-v2"} {
+		if _, err := db.ExecContext(ctx, `INSERT INTO environment_versions(
+			id,environment_id,version,status,network_model,interference_model,cost_model,configuration_hash
+		) VALUES(?,'environment',?,'published','measured','none','none',?)`, id, version+1, id); err != nil {
+			t.Fatal(err)
+		}
+	}
+	for _, job := range []domainqueue.Job{
+		executionJob(t, "version-1", "real", "environment-v1"),
+		executionJob(t, "version-2", "real", "environment-v2"),
+	} {
+		if _, err := repository.Publish(ctx, job); err != nil {
+			t.Fatal(err)
+		}
+	}
+	leased, err := repository.Lease(ctx, "worker", []string{domainqueue.CategoryExecution}, 2, time.Minute)
+	if err != nil || len(leased) != 1 || leased[0].IdempotencyKey != "version-1" {
+		t.Fatalf("leased=%+v err=%v", leased, err)
 	}
 }

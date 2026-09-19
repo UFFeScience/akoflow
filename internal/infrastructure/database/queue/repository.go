@@ -3,6 +3,7 @@ package queue
 import (
 	"context"
 	"database/sql"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"strings"
@@ -14,6 +15,11 @@ import (
 type Repository struct {
 	db    *sql.DB
 	owned bool
+}
+
+type leaseCandidate struct {
+	id, category, eventType string
+	payload                 []byte
 }
 
 func New(db *sql.DB) (*Repository, error) {
@@ -79,40 +85,27 @@ func (r *Repository) Lease(ctx context.Context, owner string, categories []strin
 	}
 	defer tx.Rollback()
 
-	query := `SELECT id FROM queue_jobs WHERE status = 'pending' AND available_at <= ?`
-	args := []any{now}
-	if len(categories) > 0 {
-		query += ` AND category IN (` + strings.TrimRight(strings.Repeat("?,", len(categories)), ",") + `)`
-		for _, category := range categories {
-			args = append(args, category)
-		}
-	}
-	query += ` ORDER BY priority DESC, available_at, created_at LIMIT ?`
-	args = append(args, limit)
-	rows, err := tx.QueryContext(ctx, query, args...)
+	candidates, err := pendingLeaseCandidates(ctx, tx, now, categories)
 	if err != nil {
 		return nil, err
 	}
-	ids := make([]string, 0, limit)
-	for rows.Next() {
-		var id string
-		if err := rows.Scan(&id); err != nil {
-			rows.Close()
-			return nil, err
-		}
-		ids = append(ids, id)
-	}
-	if err := rows.Close(); err != nil {
+	owners, err := environmentVersionOwners(ctx, tx)
+	if err != nil {
 		return nil, err
 	}
+	occupied, err := leasedExecutionEnvironments(ctx, tx, now, owners)
+	if err != nil {
+		return nil, err
+	}
+	selected := selectAdmissionCandidates(candidates, occupied, owners, limit)
 
-	leased := make([]domainqueue.Job, 0, len(ids))
-	for _, id := range ids {
+	leased := make([]domainqueue.Job, 0, len(selected))
+	for _, value := range selected {
 		expires := now.Add(duration)
 		result, err := tx.ExecContext(ctx, `UPDATE queue_jobs SET status = 'leased',
 			lease_owner = ?, lease_expires_at = ?, attempts = attempts + 1,
 			started_at = COALESCE(started_at, ?) WHERE id = ? AND status = 'pending'`,
-			owner, expires, now, id)
+			owner, expires, now, value.id)
 		if err != nil {
 			return nil, err
 		}
@@ -120,7 +113,7 @@ func (r *Repository) Lease(ctx context.Context, owner string, categories []strin
 		if count != 1 {
 			continue
 		}
-		job, err := scanJob(tx.QueryRowContext(ctx, `SELECT `+columns+` FROM queue_jobs WHERE id = ?`, id))
+		job, err := scanJob(tx.QueryRowContext(ctx, `SELECT `+columns+` FROM queue_jobs WHERE id = ?`, value.id))
 		if err != nil {
 			return nil, err
 		}
@@ -130,6 +123,165 @@ func (r *Repository) Lease(ctx context.Context, owner string, categories []strin
 		return nil, err
 	}
 	return leased, nil
+}
+
+func pendingLeaseCandidates(ctx context.Context, tx *sql.Tx, now time.Time, categories []string) ([]leaseCandidate, error) {
+	query := `SELECT id,category,event_type,payload FROM queue_jobs WHERE status='pending' AND available_at <= ?`
+	args := []any{now}
+	if len(categories) > 0 {
+		query += ` AND category IN (` + strings.TrimRight(strings.Repeat("?,", len(categories)), ",") + `)`
+		for _, category := range categories {
+			args = append(args, category)
+		}
+	}
+	rows, err := tx.QueryContext(ctx, query+` ORDER BY priority DESC,available_at,created_at`, args...)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	candidates := make([]leaseCandidate, 0)
+	for rows.Next() {
+		var value leaseCandidate
+		if err := rows.Scan(&value.id, &value.category, &value.eventType, &value.payload); err != nil {
+			return nil, err
+		}
+		candidates = append(candidates, value)
+	}
+	return candidates, rows.Err()
+}
+
+func selectAdmissionCandidates(candidates []leaseCandidate, occupied map[string]bool, owners map[string]string, limit int) []leaseCandidate {
+	selected := make([]leaseCandidate, 0, limit)
+	for _, value := range candidates {
+		if len(selected) >= limit {
+			break
+		}
+		keys, err := executionEnvironmentKeys(value.category, value.eventType, value.payload)
+		if err != nil {
+			// Lease malformed payloads so the handler can send them through the
+			// normal retry/dead-letter path instead of leaving them pending.
+			keys = nil
+		}
+		keys = environmentOwnerKeys(keys, owners)
+		if environmentConflict(occupied, keys) {
+			continue
+		}
+		selected = append(selected, value)
+		for _, key := range keys {
+			occupied[key] = true
+		}
+	}
+	return selected
+}
+
+const executionRunRequested = "execution.run.requested"
+
+type executionAdmissionPayload struct {
+	Run struct {
+		Mode string `json:"mode"`
+	} `json:"run"`
+	Plan struct {
+		Assignments []struct {
+			ResourceID string `json:"resourceId"`
+		} `json:"assignments"`
+	} `json:"plan"`
+	Resources []struct {
+		ID                   string `json:"id"`
+		EnvironmentVersionID string `json:"environmentVersionId"`
+	} `json:"resources"`
+}
+
+func executionEnvironmentKeys(category, eventType string, payload []byte) ([]string, error) {
+	if category != domainqueue.CategoryExecution || eventType != executionRunRequested {
+		return nil, nil
+	}
+	var request executionAdmissionPayload
+	if err := json.Unmarshal(payload, &request); err != nil {
+		return nil, err
+	}
+	if request.Run.Mode == "simulation" {
+		return nil, nil
+	}
+	resources := make(map[string]string, len(request.Resources))
+	for _, resource := range request.Resources {
+		resources[resource.ID] = resource.EnvironmentVersionID
+	}
+	unique := make(map[string]bool)
+	for _, assignment := range request.Plan.Assignments {
+		if environmentID := strings.TrimSpace(resources[assignment.ResourceID]); environmentID != "" {
+			unique[environmentID] = true
+		}
+	}
+	keys := make([]string, 0, len(unique))
+	for key := range unique {
+		keys = append(keys, key)
+	}
+	return keys, nil
+}
+
+func leasedExecutionEnvironments(ctx context.Context, tx *sql.Tx, now time.Time, owners map[string]string) (map[string]bool, error) {
+	rows, err := tx.QueryContext(ctx, `SELECT category,event_type,payload FROM queue_jobs
+		WHERE status='leased' AND lease_expires_at > ? AND category=? AND event_type=?`,
+		now, domainqueue.CategoryExecution, executionRunRequested)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	occupied := make(map[string]bool)
+	for rows.Next() {
+		var category, eventType string
+		var payload []byte
+		if err := rows.Scan(&category, &eventType, &payload); err != nil {
+			return nil, err
+		}
+		keys, err := executionEnvironmentKeys(category, eventType, payload)
+		if err != nil {
+			continue
+		}
+		keys = environmentOwnerKeys(keys, owners)
+		for _, key := range keys {
+			occupied[key] = true
+		}
+	}
+	return occupied, rows.Err()
+}
+
+func environmentVersionOwners(ctx context.Context, tx *sql.Tx) (map[string]string, error) {
+	rows, err := tx.QueryContext(ctx, `SELECT id,environment_id FROM environment_versions`)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	owners := make(map[string]string)
+	for rows.Next() {
+		var versionID, environmentID string
+		if err := rows.Scan(&versionID, &environmentID); err != nil {
+			return nil, err
+		}
+		owners[versionID] = environmentID
+	}
+	return owners, rows.Err()
+}
+
+func environmentOwnerKeys(versionIDs []string, owners map[string]string) []string {
+	result := make([]string, 0, len(versionIDs))
+	for _, versionID := range versionIDs {
+		owner := owners[versionID]
+		if owner == "" {
+			owner = versionID
+		}
+		result = append(result, owner)
+	}
+	return result
+}
+
+func environmentConflict(occupied map[string]bool, keys []string) bool {
+	for _, key := range keys {
+		if occupied[key] {
+			return true
+		}
+	}
+	return false
 }
 
 func (r *Repository) Complete(ctx context.Context, id, owner string, at time.Time) error {

@@ -100,6 +100,18 @@ func (a QueuedCloudAllocator) Allocate(ctx context.Context, executionRunID, acti
 }
 
 func (a QueuedCloudAllocator) wait(ctx context.Context, operation domain.CloudOperationRun) (domain.CloudProvisionedInstance, error) {
+	stored, err := a.waitOperation(ctx, operation)
+	if err != nil {
+		return domain.CloudProvisionedInstance{}, err
+	}
+	instance, err := a.Cloud.FindProvisionedInstance(ctx, stored.InstanceID)
+	if err != nil || instance == nil || instance.Status != "ready" {
+		return domain.CloudProvisionedInstance{}, fmt.Errorf("cloud allocation %q completed without a ready instance: %w", stored.ID, err)
+	}
+	return *instance, nil
+}
+
+func (a QueuedCloudAllocator) waitOperation(ctx context.Context, operation domain.CloudOperationRun) (domain.CloudOperationRun, error) {
 	interval := a.PollInterval
 	if interval <= 0 {
 		interval = time.Second
@@ -109,24 +121,20 @@ func (a QueuedCloudAllocator) wait(ctx context.Context, operation domain.CloudOp
 	for {
 		stored, err := a.Operations.FindCloudOperation(ctx, operation.ID)
 		if err != nil {
-			return domain.CloudProvisionedInstance{}, err
+			return domain.CloudOperationRun{}, err
 		}
 		if stored == nil {
-			return domain.CloudProvisionedInstance{}, fmt.Errorf("cloud allocation operation %q disappeared", operation.ID)
+			return domain.CloudOperationRun{}, fmt.Errorf("cloud operation %q disappeared", operation.ID)
 		}
 		switch stored.Status {
 		case "completed":
-			instance, err := a.Cloud.FindProvisionedInstance(ctx, stored.InstanceID)
-			if err != nil || instance == nil || instance.Status != "ready" {
-				return domain.CloudProvisionedInstance{}, fmt.Errorf("cloud allocation %q completed without a ready instance: %w", stored.ID, err)
-			}
-			return *instance, nil
+			return *stored, nil
 		case "failed", "cancelled":
-			return domain.CloudProvisionedInstance{}, fmt.Errorf("cloud allocation %q %s: %s", stored.ID, stored.Status, stored.FailureReason)
+			return domain.CloudOperationRun{}, fmt.Errorf("cloud operation %q %s: %s", stored.ID, stored.Status, stored.FailureReason)
 		}
 		select {
 		case <-ctx.Done():
-			return domain.CloudProvisionedInstance{}, ctx.Err()
+			return domain.CloudOperationRun{}, ctx.Err()
 		case <-ticker.C:
 		}
 	}
@@ -221,6 +229,9 @@ func (a QueuedCloudAllocator) Release(ctx context.Context, executionRunID string
 		if _, err := a.Queue.Publish(ctx, job); err != nil {
 			return err
 		}
+		if _, err := a.waitOperation(ctx, operation); err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -260,6 +271,18 @@ func (a QueuedCloudAllocator) Stop(ctx context.Context, executionRunID string, a
 		}
 		if operation.Status == "failed" || operation.Status == "cancelled" {
 			return fmt.Errorf("cloud stop %q %s: %s", operation.ID, operation.Status, operation.FailureReason)
+		}
+		if operation.Status != "completed" {
+			if _, err := a.waitOperation(ctx, operation); err != nil {
+				return err
+			}
+		}
+		stopped, err := a.Cloud.FindProvisionedInstance(ctx, instance.ID)
+		if err != nil {
+			return err
+		}
+		if stopped == nil || stopped.Status != "stopped" {
+			return fmt.Errorf("cloud stop %q completed without stopping instance %q", operation.ID, instance.ID)
 		}
 	}
 	return nil

@@ -486,7 +486,7 @@ func directScript(activity domain.Activity) (string, error) {
 	}
 	var script strings.Builder
 	script.WriteString("#!/bin/sh\nset -eu\n")
-	if err := writeActivityCommand(&script, activity, ""); err != nil {
+	if err := writeActivityCommand(&script, activity, "", ""); err != nil {
 		return "", err
 	}
 	return script.String(), nil
@@ -529,7 +529,7 @@ func batchScript(runID string, activity domain.Activity, partition, node string)
 	script.WriteString(")\nsentinel=\"${sentinel}${SLURM_JOB_ID}.status\"\n")
 	script.WriteString("artifact_root=")
 	script.WriteString(shellQuote(activity.Command.WorkingDirectory))
-	script.WriteString("\ncontainer_start_marker=\"${sentinel}.container-started\"\nrm -f \"$container_start_marker\"\nmkdir -p \"$artifact_root\"\nartifact_root=$(cd \"$artifact_root\" && pwd -P)\nartifact_before=$(mktemp)\nfind \"$artifact_root\" -type f -print 2>/dev/null | sort > \"$artifact_before\"\n")
+	script.WriteString("\ncontainer_start_marker=\"${sentinel}.container-started\"\nrm -f \"$container_start_marker\"\nmkdir -p \"$artifact_root\"\nartifact_root=$(cd \"$artifact_root\" && pwd -P)\nartifact_before=$(mktemp)\nseed_links=$(mktemp)\nseed_list=$(mktemp)\n")
 	script.WriteString("started_at=$(date +%s.%N)\nallocated_node=$(hostname -s)\ncontainer_epoch_anchor=$(date +%s.%N)\ncontainer_uptime_anchor=$(awk '{print $1}' /proc/uptime)\nprintf 'state=running\\nstarted_at=%s\\nallocated_node=%s\\nartifact_root=%s\\n' \"$started_at\" \"$allocated_node\" \"$artifact_root\" > \"$sentinel\"\n")
 	if interval := activity.Command.Environment["AKOFLOW_METRIC_INTERVAL_SECONDS"]; interval != "" {
 		script.WriteString("AKOFLOW_METRIC_INTERVAL_SECONDS=")
@@ -544,6 +544,7 @@ func batchScript(runID string, activity domain.Activity, partition, node string)
 	script.WriteString("[ -z \"$metric_pid\" ] || { kill \"$metric_pid\" 2>/dev/null || true; wait \"$metric_pid\" 2>/dev/null || true; }; ")
 	script.WriteString("[ -z \"$metric_pid\" ] || sample_metrics; ")
 	script.WriteString("container_started_at=0; if [ -f \"$container_start_marker\" ]; then container_uptime=$(cat \"$container_start_marker\"); container_started_at=$(awk -v epoch=\"$container_epoch_anchor\" -v anchor=\"$container_uptime_anchor\" -v current=\"$container_uptime\" 'BEGIN { printf \"%.9f\", epoch + current - anchor }'); fi; ")
+	script.WriteString("while IFS= read -r seed_link; do [ -L \"$seed_link\" ] && rm -f -- \"$seed_link\"; done < \"$seed_links\"; ")
 	script.WriteString("finished_at=$(date +%s.%N); { printf 'state=%s\\nexit_code=%s\\nstarted_at=%s\\nfinished_at=%s\\nallocated_node=%s\\ncontainer_started_at=%s\\nartifact_root=%s\\n' \"$state\" \"$code\" \"$started_at\" \"$finished_at\" \"$allocated_node\" \"$container_started_at\" \"$artifact_root\"; ")
 	script.WriteString("find \"$artifact_root\" -type f -print 2>/dev/null | sort | comm -13 \"$artifact_before\" - | ")
 	script.WriteString("while IFS= read -r file; do relative=${file#\"$artifact_root\"/}; ")
@@ -551,12 +552,38 @@ func batchScript(runID string, activity domain.Activity, partition, node string)
 	script.WriteString("checksum=$(sha256sum \"$file\" 2>/dev/null | awk '{print $1}') || continue; ")
 	script.WriteString("encoded=$(printf '%s' \"$relative\" | base64 | tr -d '\\n'); ")
 	script.WriteString("printf 'artifact=%s|%s|%s\\n' \"$encoded\" \"$size\" \"$checksum\"; done; ")
-	script.WriteString("} > \"$sentinel\" || true; rm -f \"$artifact_before\" \"$container_start_marker\"; exit \"$code\"; }\n")
+	script.WriteString("} > \"$sentinel\" || true; rm -f \"$artifact_before\" \"$container_start_marker\" \"$seed_links\" \"$seed_list\"; exit \"$code\"; }\n")
 	script.WriteString("trap finish EXIT\nset -eu\n")
-	if err := writeActivityCommand(&script, activity, "$container_start_marker"); err != nil {
+	image, err := slurmExecutable(activity.Command)
+	if err != nil {
+		return "", err
+	}
+	if image != "" {
+		writeSharedImageSeedPreparation(&script, image)
+	}
+	script.WriteString("find \"$artifact_root\" -type f -print 2>/dev/null | sort > \"$artifact_before\"\n")
+	if err := writeActivityCommand(&script, activity, "$container_start_marker", "$artifact_root"); err != nil {
 		return "", err
 	}
 	return script.String(), nil
+}
+
+func writeSharedImageSeedPreparation(script *strings.Builder, image string) {
+	script.WriteString("container_runtime=$(command -v apptainer || command -v singularity)\n")
+	script.WriteString("image=")
+	script.WriteString(shellQuote(image))
+	script.WriteByte('\n')
+	script.WriteString("if \"$container_runtime\" exec \"$image\" test -d /akoflow-wfa-shared; then\n")
+	script.WriteString("  \"$container_runtime\" exec \"$image\" find /akoflow-wfa-shared -mindepth 1 \\( -type f -o -type l \\) -print > \"$seed_list\" || { echo 'AkôFlow shared seed preparation failed while listing image inputs.' >&2; exit 70; }\n")
+	script.WriteString("  while IFS= read -r seed_source; do\n")
+	script.WriteString("    seed_relative=${seed_source#/akoflow-wfa-shared/}\n")
+	script.WriteString("    seed_target=$artifact_root/$seed_relative\n")
+	script.WriteString("    if [ -e \"$seed_target\" ] || [ -L \"$seed_target\" ]; then continue; fi\n")
+	script.WriteString("    mkdir -p -- \"$(dirname \"$seed_target\")\" || { echo \"AkôFlow shared seed preparation could not create the directory for $seed_relative.\" >&2; exit 70; }\n")
+	script.WriteString("    ln -s -- \"$seed_source\" \"$seed_target\" || { echo \"AkôFlow shared seed preparation could not link $seed_relative.\" >&2; exit 70; }\n")
+	script.WriteString("    printf '%s\\n' \"$seed_target\" >> \"$seed_links\"\n")
+	script.WriteString("  done < \"$seed_list\"\n")
+	script.WriteString("fi\n")
 }
 
 func slurmLogPath(runID, activityID, jobID string) string {
@@ -575,7 +602,7 @@ func slurmArtifactRoot(runID, activityID string) string {
 	return "akoflow-workspaces/" + shellToken(runID) + "/" + shellToken(activityID)
 }
 
-func writeActivityCommand(script *strings.Builder, activity domain.Activity, containerStartMarker string) error {
+func writeActivityCommand(script *strings.Builder, activity domain.Activity, containerStartMarker, containerBindRoot string) error {
 	for key, value := range activity.Command.Environment {
 		script.WriteString("export ")
 		script.WriteString(shellToken(key))
@@ -585,7 +612,13 @@ func writeActivityCommand(script *strings.Builder, activity domain.Activity, con
 	}
 	if activity.Command.WorkingDirectory != "" {
 		script.WriteString("cd ")
-		script.WriteString(shellQuote(activity.Command.WorkingDirectory))
+		if containerBindRoot != "" {
+			script.WriteString("\"")
+			script.WriteString(containerBindRoot)
+			script.WriteString("\"")
+		} else {
+			script.WriteString(shellQuote(activity.Command.WorkingDirectory))
+		}
 		script.WriteByte('\n')
 	}
 	image, err := slurmExecutable(activity.Command)
@@ -593,7 +626,14 @@ func writeActivityCommand(script *strings.Builder, activity domain.Activity, con
 		return err
 	}
 	if image != "" {
-		script.WriteString("singularity exec ")
+		script.WriteString("${container_runtime:-singularity} exec ")
+		if containerBindRoot != "" {
+			script.WriteString("--bind \"")
+			script.WriteString(containerBindRoot)
+			script.WriteString(":")
+			script.WriteString(containerBindRoot)
+			script.WriteString("\" ")
+		}
 		script.WriteString(shellQuote(image))
 		if containerStartMarker != "" {
 			script.WriteString(" /bin/sh -c ")

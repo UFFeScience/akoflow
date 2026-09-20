@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"testing"
 	"time"
@@ -182,6 +183,151 @@ func TestBatchScriptObservesFilesAfterChangingIntoRelativeWorkspace(t *testing.T
 	if len(manifest.Files) != 1 || manifest.Files[0].Path != "result.txt" || manifest.Files[0].SizeBytes != 6 {
 		t.Fatalf("manifest=%+v sentinel=%s", manifest, sentinel)
 	}
+}
+
+func TestBatchScriptMakesSharedImageSeedAvailableWithoutCopying(t *testing.T) {
+	root := t.TempDir()
+	installFakeContainerRuntime(t, true, []string{
+		"/akoflow-wfa-shared/input.fits",
+		"/akoflow-wfa-shared/nested/catalog.tbl",
+	})
+	workspace := filepath.Join(root, "workspace with spaces [seed]")
+	if err := os.MkdirAll(filepath.Join(workspace, "nested"), 0o750); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(workspace, "nested", "catalog.tbl"), []byte("materialized"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	activity := domain.Activity{ID: "seeded", Command: domain.ActivityCommand{
+		Image: "montage.sif", WorkingDirectory: workspace, Entrypoint: "sh",
+		Arguments: []string{"-c", `test -L input.fits && test "$(readlink input.fits)" = /akoflow-wfa-shared/input.fits && test "$(cat nested/catalog.tbl)" = materialized && printf output > result.txt`},
+	}}
+	values, runErr := runBatchScript(t, root, activity)
+	if runErr != nil {
+		t.Fatal(runErr)
+	}
+	if _, err := os.Lstat(filepath.Join(workspace, "input.fits")); !os.IsNotExist(err) {
+		t.Fatalf("temporary seed link remains: %v", err)
+	}
+	if content, err := os.ReadFile(filepath.Join(workspace, "nested", "catalog.tbl")); err != nil || string(content) != "materialized" {
+		t.Fatalf("existing input changed: content=%q err=%v", content, err)
+	}
+	manifest := slurmArtifacts(domain.ActivityHandle{RunID: "run", ActivityID: "seeded", RuntimeID: "slurm"}, values)
+	if len(manifest.Files) != 1 || manifest.Files[0].Path != "result.txt" {
+		t.Fatalf("seed leaked into outputs: %+v", manifest.Files)
+	}
+}
+
+func TestBatchScriptCleansSharedSeedLinksAfterFailure(t *testing.T) {
+	root := t.TempDir()
+	installFakeContainerRuntime(t, true, []string{"/akoflow-wfa-shared/nested/input.fits"})
+	workspace := filepath.Join(root, "failed workspace")
+	activity := domain.Activity{ID: "failed-seed", Command: domain.ActivityCommand{
+		Image: "montage.sif", WorkingDirectory: workspace, Entrypoint: "sh",
+		Arguments: []string{"-c", "test -L nested/input.fits; exit 9"},
+	}}
+	values, runErr := runBatchScript(t, root, activity)
+	if runErr == nil || values["state"] != "failed" || values["exit_code"] != "9" {
+		t.Fatalf("state=%v err=%v", values, runErr)
+	}
+	if links, err := filepath.Glob(filepath.Join(workspace, "**", "*.fits")); err != nil || len(links) != 0 {
+		t.Fatalf("temporary links remain: %v err=%v", links, err)
+	}
+}
+
+func TestBatchScriptIgnoresImageWithoutSharedSeed(t *testing.T) {
+	root := t.TempDir()
+	installFakeContainerRuntime(t, false, nil)
+	workspace := filepath.Join(root, "ordinary")
+	activity := domain.Activity{ID: "ordinary", Command: domain.ActivityCommand{
+		Image: "ordinary.sif", WorkingDirectory: workspace, Entrypoint: "sh",
+		Arguments: []string{"-c", "printf normal > output.txt"},
+	}}
+	values, runErr := runBatchScript(t, root, activity)
+	if runErr != nil || values["state"] != "completed" {
+		t.Fatalf("values=%v err=%v", values, runErr)
+	}
+	manifest := slurmArtifacts(domain.ActivityHandle{RunID: "run", ActivityID: "ordinary", RuntimeID: "slurm"}, values)
+	if len(manifest.Files) != 1 || manifest.Files[0].Path != "output.txt" {
+		t.Fatalf("manifest=%+v", manifest)
+	}
+}
+
+func TestBatchScriptPreparesSeedBeforeSnapshotAndBindsWorkspace(t *testing.T) {
+	script, err := batchScript("run", domain.Activity{ID: "ordered", Command: domain.ActivityCommand{
+		Image: "image.sif", WorkingDirectory: "workspace", Entrypoint: "true",
+	}}, "", "")
+	if err != nil {
+		t.Fatal(err)
+	}
+	seed := strings.Index(script, "test -d /akoflow-wfa-shared")
+	snapshot := seed + strings.Index(script[seed:], `find "$artifact_root" -type f`)
+	cleanup := strings.Index(script, `while IFS= read -r seed_link`)
+	finished := strings.Index(script, `finished_at=$(date`)
+	if seed < 0 || snapshot < seed || cleanup < 0 || finished < cleanup {
+		t.Fatalf("invalid seed lifecycle ordering:\n%s", script)
+	}
+	for _, expected := range []string{
+		`container_runtime=$(command -v apptainer || command -v singularity)`,
+		`${container_runtime:-singularity} exec --bind "$artifact_root:$artifact_root" 'image.sif'`,
+	} {
+		if !strings.Contains(script, expected) {
+			t.Fatalf("script lacks %q:\n%s", expected, script)
+		}
+	}
+}
+
+func installFakeContainerRuntime(t *testing.T, hasSeed bool, seedPaths []string) {
+	t.Helper()
+	directory := t.TempDir()
+	script := `#!/bin/sh
+test "$1" = exec || exit 64
+shift
+while [ "$1" = --bind ]; do shift 2; done
+image=$1
+shift
+if [ "$1" = test ] && [ "$2" = -d ] && [ "$3" = /akoflow-wfa-shared ]; then
+  [ "${AKOFLOW_TEST_HAS_SEED:-false}" = true ]
+  exit
+fi
+if [ "$1" = find ] && [ "$2" = /akoflow-wfa-shared ]; then
+  printf '%s\n' ${AKOFLOW_TEST_SEED_PATHS:-}
+  exit
+fi
+exec "$@"
+`
+	for _, name := range []string{"singularity", "apptainer"} {
+		if err := os.WriteFile(filepath.Join(directory, name), []byte(script), 0o755); err != nil {
+			t.Fatal(err)
+		}
+	}
+	t.Setenv("PATH", directory+string(os.PathListSeparator)+os.Getenv("PATH"))
+	t.Setenv("AKOFLOW_TEST_HAS_SEED", strconv.FormatBool(hasSeed))
+	t.Setenv("AKOFLOW_TEST_SEED_PATHS", strings.Join(seedPaths, " "))
+}
+
+func runBatchScript(t *testing.T, root string, activity domain.Activity) (map[string]string, error) {
+	t.Helper()
+	script, err := batchScript("run", activity, "", "")
+	if err != nil {
+		return nil, err
+	}
+	command := exec.Command("sh", "-c", script)
+	command.Dir = root
+	command.Env = append(os.Environ(), "SLURM_JOB_ID=42")
+	output, runErr := command.CombinedOutput()
+	sentinels, globErr := filepath.Glob(filepath.Join(root, "akoflow-*.status"))
+	if globErr != nil || len(sentinels) != 1 {
+		return nil, fmt.Errorf("sentinels=%v glob=%v output=%s", sentinels, globErr, output)
+	}
+	payload, readErr := os.ReadFile(sentinels[0])
+	if readErr != nil {
+		return nil, readErr
+	}
+	if runErr != nil {
+		runErr = fmt.Errorf("run batch script: %w: %s", runErr, output)
+	}
+	return sentinelValues(string(payload)), runErr
 }
 
 func TestAdapterParsesJobIDAfterSSHWarning(t *testing.T) {

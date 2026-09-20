@@ -102,6 +102,12 @@ type executionQueryStub struct {
 	events    []domainevents.Event
 }
 
+type executionCommandStub struct{}
+
+func (executionCommandStub) CreateRun(context.Context, domain.ExecutionRun) error { return nil }
+func (executionCommandStub) CancelRun(context.Context, string, string) error      { return nil }
+func (executionCommandStub) FailRun(context.Context, string, string) error        { return nil }
+
 type topologyStoreStub struct {
 	topology *domain.NetworkTopology
 	created  *domain.NetworkTopology
@@ -210,7 +216,7 @@ func newTestHandler() *Handler {
 	handler, err := New(Dependencies{
 		Environments: environmentRepositoryStub{}, Workflows: &workflowRepositoryStub{},
 		Plans: planRepositoryStub{}, Events: &eventPublisherStub{}, Validator: validatorStub{},
-		Executions: executionQueryStub{},
+		Executions: executionQueryStub{}, ExecutionCommands: executionCommandStub{},
 		Topologies: &topologyStoreStub{},
 		Scopes:     &topologyStoreStub{},
 		Resources:  resourceInventoryStub{},

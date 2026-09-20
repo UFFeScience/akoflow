@@ -34,6 +34,7 @@ const (
 	ExecutionRunRunning   ExecutionRunStatus = "running"
 	ExecutionRunCompleted ExecutionRunStatus = "completed"
 	ExecutionRunFailed    ExecutionRunStatus = "failed"
+	ExecutionRunCancelled ExecutionRunStatus = "cancelled"
 
 	TaskBlocked   TaskExecutionStatus = "blocked"
 	TaskReady     TaskExecutionStatus = "ready"

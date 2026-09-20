@@ -62,6 +62,16 @@ type ActivityMetricQuery interface {
 type ActivityInterrupter interface {
 	Interrupt(context.Context, string, string) (*domain.TaskExecution, error)
 }
+
+type ExecutionCommandStore interface {
+	CreateRun(context.Context, domain.ExecutionRun) error
+	CancelRun(context.Context, string, string) error
+	FailRun(context.Context, string, string) error
+}
+
+type QueueCancellationStore interface {
+	CancelByAggregate(context.Context, string, string, time.Time) (int64, error)
+}
 type StorageNavigator interface {
 	List(context.Context, string) ([]domain.StorageResource, error)
 	Roots(context.Context, string) ([]domain.StorageBrowseRoot, error)
@@ -107,6 +117,8 @@ type Dependencies struct {
 	Events              ports.EventPublisher
 	Validator           ports.PlanValidator
 	Executions          ExecutionQuery
+	ExecutionCommands   ExecutionCommandStore
+	Queue               QueueCancellationStore
 	ActivityInterrupter ActivityInterrupter
 	Topologies          ports.NetworkTopologyStore
 	Scopes              ports.ExecutionScopeStore
@@ -144,6 +156,8 @@ type Handler struct {
 	events              ports.EventPublisher
 	validator           ports.PlanValidator
 	executions          ExecutionQuery
+	executionCommands   ExecutionCommandStore
+	queue               QueueCancellationStore
 	activityInterrupter ActivityInterrupter
 	topologies          ports.NetworkTopologyStore
 	scopes              ports.ExecutionScopeStore
@@ -196,6 +210,7 @@ func New(dependencies Dependencies) (*Handler, error) {
 		environments: dependencies.Environments, workflows: dependencies.Workflows,
 		plans: dependencies.Plans, events: dependencies.Events,
 		validator: dependencies.Validator, executions: dependencies.Executions,
+		executionCommands: dependencies.ExecutionCommands, queue: dependencies.Queue,
 		activityInterrupter: dependencies.ActivityInterrupter,
 		topologies:          dependencies.Topologies,
 		scopes:              dependencies.Scopes,
@@ -2499,8 +2514,18 @@ func (h *Handler) CreateExecution(w http.ResponseWriter, r *http.Request) {
 	}
 	resolveDirectOCIImages(&request.Workflow)
 	request.Run.SchedulePlanID = request.Plan.ID
+	request.Run.Status = domain.ExecutionRunCreated
+	if h.executionCommands == nil {
+		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("execution commands are unavailable"))
+		return
+	}
+	if err := h.executionCommands.CreateRun(r.Context(), request.Run); err != nil {
+		writeError(w, http.StatusUnprocessableEntity, err)
+		return
+	}
 	payload, err := json.Marshal(request)
 	if err != nil {
+		_ = h.executionCommands.FailRun(context.WithoutCancel(r.Context()), request.Run.ID, err.Error())
 		writeError(w, http.StatusBadRequest, err)
 		return
 	}
@@ -2513,10 +2538,68 @@ func (h *Handler) CreateExecution(w http.ResponseWriter, r *http.Request) {
 	job.IdempotencyKey = "execution-run:" + request.Run.ID
 	stored, err := h.events.Publish(r.Context(), job)
 	if err != nil {
+		_ = h.executionCommands.FailRun(context.WithoutCancel(r.Context()), request.Run.ID, err.Error())
 		writeError(w, http.StatusUnprocessableEntity, err)
 		return
 	}
 	writeJSON(w, http.StatusAccepted, stored)
+}
+
+func (h *Handler) CancelExecution(w http.ResponseWriter, r *http.Request) {
+	if h.readOnly {
+		writeError(w, http.StatusForbidden, fmt.Errorf("read-only instances cannot cancel executions"))
+		return
+	}
+	if h.executionCommands == nil || h.queue == nil {
+		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("execution cancellation is unavailable"))
+		return
+	}
+	runID := r.PathValue("runId")
+	run, err := h.executions.FindRun(r.Context(), runID)
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, err)
+		return
+	}
+	if run == nil {
+		writeError(w, http.StatusNotFound, nil)
+		return
+	}
+	if run.Status == domain.ExecutionRunCancelled {
+		writeJSON(w, http.StatusOK, run)
+		return
+	}
+	if run.Status != domain.ExecutionRunCreated && run.Status != domain.ExecutionRunRunning {
+		writeError(w, http.StatusConflict, fmt.Errorf("execution run %q is already %s", runID, run.Status))
+		return
+	}
+	if _, err := h.queue.CancelByAggregate(r.Context(), "execution_run", runID, time.Now().UTC()); err != nil {
+		writeError(w, http.StatusInternalServerError, err)
+		return
+	}
+	tasks, err := h.executions.ListTasks(r.Context(), runID)
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, err)
+		return
+	}
+	for _, task := range tasks {
+		if task.Status != domain.TaskRunning && task.Status != domain.TaskPreparing {
+			continue
+		}
+		if h.activityInterrupter != nil {
+			_, _ = h.activityInterrupter.Interrupt(r.Context(), runID, task.ActivityID)
+		}
+	}
+	const reason = "Cancelled by user"
+	if err := h.executionCommands.CancelRun(r.Context(), runID, reason); err != nil {
+		writeError(w, http.StatusConflict, err)
+		return
+	}
+	cancelled, err := h.executions.FindRun(r.Context(), runID)
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, err)
+		return
+	}
+	writeJSON(w, http.StatusOK, cancelled)
 }
 
 // Kubernetes accepts OCI references directly. Preserve the executable contract

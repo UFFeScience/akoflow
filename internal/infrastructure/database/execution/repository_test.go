@@ -283,6 +283,49 @@ func TestFailRunAndStoppedHandleOverrideRunningTask(t *testing.T) {
 	}
 }
 
+func TestCancelRunCancelsEveryUnfinishedTaskAndWinsTerminalRace(t *testing.T) {
+	repository := setup(t)
+	ctx := context.Background()
+	if err := repository.CreateRun(ctx, domain.ExecutionRun{ID: "run", SchedulePlanID: "plan", Mode: domain.ExecutionModeReal, Status: domain.ExecutionRunRunning}); err != nil {
+		t.Fatal(err)
+	}
+	for _, value := range []struct {
+		id, activity string
+		status       domain.TaskExecutionStatus
+	}{
+		{id: "running", activity: "activity", status: domain.TaskRunning},
+		{id: "queued", activity: "activity", status: domain.TaskQueued},
+	} {
+		attempt := 1
+		if value.id == "queued" {
+			attempt = 2
+		}
+		task := domain.TaskExecution{ID: value.id, ExecutionRunID: "run", PlanAssignmentID: "assignment", ActivityID: value.activity, PlannedResourceID: "resource", Attempt: attempt, Status: value.status}
+		if err := repository.SaveTask(ctx, task); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if err := repository.CancelRun(ctx, "run", "Cancelled by user"); err != nil {
+		t.Fatal(err)
+	}
+	if err := repository.FailRun(ctx, "run", "late supervisor failure"); err != nil {
+		t.Fatal(err)
+	}
+	run, err := repository.FindRun(ctx, "run")
+	if err != nil || run == nil || run.Status != domain.ExecutionRunCancelled {
+		t.Fatalf("run=%+v err=%v", run, err)
+	}
+	tasks, err := repository.ListTasks(ctx, "run")
+	if err != nil || len(tasks) != 2 {
+		t.Fatalf("tasks=%+v err=%v", tasks, err)
+	}
+	for _, task := range tasks {
+		if task.Status != domain.TaskCancelled || task.FailureReason != "Cancelled by user" {
+			t.Fatalf("task=%+v", task)
+		}
+	}
+}
+
 func TestHandleUpsertAndMalformedPayload(t *testing.T) {
 	repository := setup(t)
 	ctx := context.Background()

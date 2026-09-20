@@ -319,6 +319,17 @@ func (r *Repository) Cancel(ctx context.Context, id string, at time.Time) error 
 		WHERE id=? AND status IN ('pending','leased')`, at, id)
 }
 
+func (r *Repository) CancelByAggregate(ctx context.Context, aggregateType, aggregateID string, at time.Time) (int64, error) {
+	result, err := r.db.ExecContext(ctx, `UPDATE queue_jobs SET status='cancelled', completed_at=?,
+		lease_owner='', lease_expires_at=NULL
+		WHERE aggregate_type=? AND aggregate_id=? AND status IN ('pending','leased')`,
+		at, aggregateType, aggregateID)
+	if err != nil {
+		return 0, err
+	}
+	return result.RowsAffected()
+}
+
 func (r *Repository) ReleaseExpired(ctx context.Context, now time.Time) (int64, error) {
 	result, err := r.db.ExecContext(ctx, `UPDATE queue_jobs SET status='pending', lease_owner='', lease_expires_at=NULL,
 		available_at=? WHERE status='leased' AND lease_expires_at <= ?`, now, now)

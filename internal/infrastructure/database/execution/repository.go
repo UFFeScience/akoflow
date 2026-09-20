@@ -29,12 +29,14 @@ func (r *Repository) CreateRun(ctx context.Context, run domain.ExecutionRun) err
 	result, err := tx.ExecContext(ctx, `INSERT INTO execution_runs (
 		id, schedule_plan_id, mode, seed, status, environment_snapshot_id, started_at
 	) VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
-	ON CONFLICT(id) DO NOTHING`, run.ID, run.SchedulePlanID, run.Mode, run.Seed,
+	ON CONFLICT(id) DO UPDATE SET status=excluded.status,
+		started_at=CASE WHEN excluded.status='running' THEN CURRENT_TIMESTAMP ELSE execution_runs.started_at END
+		WHERE execution_runs.status='created'`, run.ID, run.SchedulePlanID, run.Mode, run.Seed,
 		run.Status, run.EnvironmentSnapshotID)
 	if err != nil {
 		return err
 	}
-	if changed, _ := result.RowsAffected(); changed == 1 {
+	if changed, _ := result.RowsAffected(); changed == 1 && run.Status == domain.ExecutionRunRunning {
 		if err := dbevents.Append(ctx, tx, domainevents.Event{
 			Type: domainevents.ExecutionStarted, AggregateType: "execution_run", AggregateID: run.ID,
 			Payload: map[string]any{"mode": run.Mode, "schedulePlanId": run.SchedulePlanID},
@@ -346,6 +348,13 @@ func (r *Repository) SaveTask(ctx context.Context, task domain.TaskExecution) er
 		return err
 	}
 	defer tx.Rollback()
+	cancelled, err := runIsCancelled(ctx, tx, task.ExecutionRunID)
+	if err != nil {
+		return err
+	}
+	if cancelled {
+		return nil
+	}
 	previous, err := taskStatus(ctx, tx, task.ExecutionRunID, task.ActivityID, task.Attempt)
 	if err != nil {
 		return err
@@ -367,6 +376,13 @@ func (r *Repository) CompleteRun(ctx context.Context, trace domain.ExecutionTrac
 		return err
 	}
 	defer tx.Rollback()
+	cancelled, err := runIsCancelled(ctx, tx, trace.RunID)
+	if err != nil {
+		return err
+	}
+	if cancelled {
+		return nil
+	}
 	for _, task := range trace.Tasks {
 		var previous string
 		if trace.Mode != domain.ExecutionModeSimulation {
@@ -409,11 +425,15 @@ func (r *Repository) CompleteRun(ctx context.Context, trace domain.ExecutionTrac
 	}
 	result, err := tx.ExecContext(ctx, `UPDATE execution_runs SET status='completed',
 		finished_at=CURRENT_TIMESTAMP, makespan_seconds=?, cost=?, failure_reason=''
-		WHERE id=?`, trace.Executed.MakespanSeconds, trace.Executed.Cost, trace.RunID)
+		WHERE id=? AND status!='cancelled'`, trace.Executed.MakespanSeconds, trace.Executed.Cost, trace.RunID)
 	if err != nil {
 		return err
 	}
 	if changed, _ := result.RowsAffected(); changed != 1 {
+		var status string
+		if scanErr := tx.QueryRowContext(ctx, `SELECT status FROM execution_runs WHERE id=?`, trace.RunID).Scan(&status); scanErr == nil && status == string(domain.ExecutionRunCancelled) {
+			return tx.Commit()
+		}
 		return fmt.Errorf("execution run %q not found", trace.RunID)
 	}
 	if err := dbevents.Append(ctx, tx, domainevents.Event{
@@ -432,15 +452,50 @@ func (r *Repository) FailRun(ctx context.Context, id, reason string) error {
 	}
 	defer tx.Rollback()
 	result, err := tx.ExecContext(ctx, `UPDATE execution_runs SET status='failed',
-		finished_at=CURRENT_TIMESTAMP, failure_reason=? WHERE id=?`, reason, id)
+		finished_at=CURRENT_TIMESTAMP, failure_reason=? WHERE id=? AND status!='cancelled'`, reason, id)
 	if err != nil {
 		return err
 	}
 	if changed, _ := result.RowsAffected(); changed != 1 {
+		var status string
+		if scanErr := tx.QueryRowContext(ctx, `SELECT status FROM execution_runs WHERE id=?`, id).Scan(&status); scanErr == nil && status == string(domain.ExecutionRunCancelled) {
+			return tx.Commit()
+		}
 		return fmt.Errorf("execution run %q not found", id)
 	}
 	if err := dbevents.Append(ctx, tx, domainevents.Event{
 		Type: domainevents.ExecutionFailed, AggregateType: "execution_run", AggregateID: id,
+		Payload: map[string]any{"reason": reason},
+	}); err != nil {
+		return err
+	}
+	return tx.Commit()
+}
+
+func (r *Repository) CancelRun(ctx context.Context, id, reason string) error {
+	tx, err := r.db.BeginTx(ctx, nil)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+	result, err := tx.ExecContext(ctx, `UPDATE execution_runs SET status='cancelled',
+		finished_at=CURRENT_TIMESTAMP, failure_reason=?
+		WHERE id=? AND status IN ('created','running')`, reason, id)
+	if err != nil {
+		return err
+	}
+	if changed, _ := result.RowsAffected(); changed != 1 {
+		return fmt.Errorf("execution run %q is not active", id)
+	}
+	if _, err := tx.ExecContext(ctx, `UPDATE task_executions SET status='cancelled',
+		finished_at=CASE WHEN finished_at=0 THEN ? ELSE finished_at END,
+		failure_reason=CASE WHEN failure_reason='' THEN ? ELSE failure_reason END
+		WHERE execution_run_id=? AND status IN ('blocked','ready','queued','preparing','running')`,
+		float64(time.Now().UnixNano())/float64(time.Second), reason, id); err != nil {
+		return err
+	}
+	if err := dbevents.Append(ctx, tx, domainevents.Event{
+		Type: domainevents.ExecutionCancelled, AggregateType: "execution_run", AggregateID: id,
 		Payload: map[string]any{"reason": reason},
 	}); err != nil {
 		return err
@@ -456,6 +511,15 @@ func taskStatus(ctx context.Context, tx *sql.Tx, runID, activityID string, attem
 		return "", nil
 	}
 	return status, err
+}
+
+func runIsCancelled(ctx context.Context, tx *sql.Tx, runID string) (bool, error) {
+	var status string
+	err := tx.QueryRowContext(ctx, `SELECT status FROM execution_runs WHERE id=?`, runID).Scan(&status)
+	if err == sql.ErrNoRows {
+		return false, nil
+	}
+	return status == string(domain.ExecutionRunCancelled), err
 }
 
 func appendTaskEvent(ctx context.Context, tx *sql.Tx, task domain.TaskExecution) error {

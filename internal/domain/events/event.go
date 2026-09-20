@@ -6,6 +6,7 @@ const (
 	ExecutionStarted   = "execution.run.started"
 	ExecutionCompleted = "execution.run.completed"
 	ExecutionFailed    = "execution.run.failed"
+	ExecutionCancelled = "execution.run.cancelled"
 	ActivityStarted    = "activity.started"
 	ActivityCompleted  = "activity.completed"
 	ActivityFailed     = "activity.failed"

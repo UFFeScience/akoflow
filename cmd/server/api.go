@@ -103,6 +103,8 @@ func buildAPI(
 		Events:              storage.events,
 		Validator:           planningplugin.NewValidator(),
 		Executions:          storage.executions,
+		ExecutionCommands:   storage.executions,
+		Queue:               storage.events,
 		ActivityInterrupter: applicationexecution.Interrupter{Store: storage.executions, Stopper: activities},
 		Topologies:          storage.topologies,
 		Scopes:              storage.topologies,

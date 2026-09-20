@@ -55,3 +55,12 @@ type ExecutionStore interface {
 	CompleteRun(context.Context, domain.ExecutionTrace) error
 	FailRun(context.Context, string, string) error
 }
+
+type WorkspaceStore interface {
+	SaveWorkspace(context.Context, domain.ActivityWorkspace) error
+	FindWorkspace(context.Context, string) (*domain.ActivityWorkspace, error)
+	ListWorkspaces(context.Context, string) ([]domain.ActivityWorkspace, error)
+	ListWorkspaceCandidates(context.Context) ([]domain.ActivityWorkspace, error)
+	SaveWorkspaceLease(context.Context, domain.WorkspaceLease) error
+	ListWorkspaceLeases(context.Context, string) ([]domain.WorkspaceLease, error)
+}

@@ -35,6 +35,13 @@ type Config struct {
 	Cloud          ports.CloudProvisioner
 	CloudStore     ports.CloudConfigurationStore
 	CloudAllocator CloudAllocator
+	Workspaces     WorkspaceManager
+}
+
+type WorkspaceManager interface {
+	Ensure(context.Context, domain.ActivityWorkspace) error
+	Inspect(context.Context, domain.ActivityWorkspace) (domain.WorkspaceUsage, error)
+	Release(context.Context, domain.ActivityWorkspace) (domain.WorkspaceReleaseResult, error)
 }
 
 type Supervisor struct {
@@ -201,6 +208,9 @@ func (s *Supervisor) executeActivities(ctx context.Context, request ports.Execut
 	activities := indexActivities(request.Workflow.Activities)
 	resources := indexResources(request.Resources)
 	assignments := indexAssignments(request.Plan.Assignments)
+	if err := s.initializeWorkspaces(ctx, request, activities, assignments, resources); err != nil {
+		return domain.ExecutionTrace{}, fmt.Errorf("initialize activity workspaces: %w", err)
+	}
 	predecessors := make(map[string][]string)
 	for activityID := range activities {
 		predecessors[activityID] = workspaceProducers(request.Workflow, activityID)
@@ -457,6 +467,12 @@ func (s *Supervisor) applyInspectionResult(
 			return firstErr
 		}
 		completeTask(&task, *observed)
+		if err := s.sealWorkspace(ctx, runID, activityID, observed.Artifacts); err != nil {
+			if firstErr == nil {
+				firstErr = fmt.Errorf("seal workspace for activity %q: %w", activityID, err)
+			}
+			return firstErr
+		}
 		if err := s.executions.SaveTask(ctx, task); err != nil {
 			if firstErr == nil {
 				firstErr = err
@@ -621,6 +637,9 @@ func (s *Supervisor) startReadyActivities(
 		tasks[activityID], running[activityID] = task, result.handle
 		if result.handle.Status == domain.HandleCompleted {
 			completeTask(&task, result.handle)
+			if err := s.sealWorkspace(ctx, request.Run.ID, activityID, result.handle.Artifacts); err != nil {
+				return fmt.Errorf("seal workspace for activity %q: %w", activityID, err)
+			}
 			tasks[activityID], completed[activityID] = task, task
 			delete(running, activityID)
 		}
@@ -675,8 +694,16 @@ func (s *Supervisor) startReadyActivity(
 		}
 		result.preparation = preparation
 		result.transfers = transferObservations(request.Run.ID, activityID, resource.ID, workspaceProducers(request.Workflow, activityID), requirement, preparation.TransferRuns, request.NetworkTopology)
+		if err := s.releaseProducerWorkspaceLeases(ctx, request.Run.ID, activityID); err != nil {
+			result.err = fmt.Errorf("release workspace leases for activity %q: %w", activityID, err)
+			return result
+		}
 	} else if activity.Command.Executable != nil && activity.Command.Executable.Source.Type == domain.ExecutableSourceType("build") {
 		result.err = fmt.Errorf("activity %q has an executable reference but no preparation requirement", activityID)
+		return result
+	}
+	if err := s.activateWorkspace(ctx, request.Run.ID, activityID); err != nil {
+		result.err = fmt.Errorf("activate workspace for activity %q: %w", activityID, err)
 		return result
 	}
 	handle, err := s.activities.Start(ctx, domain.ActivityExecutionContext{

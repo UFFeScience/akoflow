@@ -59,6 +59,11 @@ type ActivityMetricQuery interface {
 	GetActivityMetricSummary(context.Context, string, string, int) (*domain.ActivityMetricSummary, error)
 }
 
+type WorkspaceQuery interface {
+	ListWorkspaces(context.Context, string) ([]domain.ActivityWorkspace, error)
+	ListWorkspaceLeases(context.Context, string) ([]domain.WorkspaceLease, error)
+}
+
 type ActivityInterrupter interface {
 	Interrupt(context.Context, string, string) (*domain.TaskExecution, error)
 }
@@ -1318,6 +1323,10 @@ func (h *Handler) GetExecution(w http.ResponseWriter, r *http.Request) {
 		"run": run, "activities": tasks, "dataTransfers": transfers,
 		"handles": handles, "events": events,
 	}
+	if err := h.addExecutionWorkspaces(r.Context(), run.ID, response); err != nil {
+		writeError(w, http.StatusInternalServerError, err)
+		return
+	}
 	operations, infrastructureRuns, infrastructureErr := h.executionInfrastructure(r.Context(), run.ID)
 	if infrastructureErr != nil {
 		writeError(w, http.StatusInternalServerError, infrastructureErr)
@@ -1353,6 +1362,23 @@ func (h *Handler) GetExecution(w http.ResponseWriter, r *http.Request) {
 		response["artifactTransferRuns"] = transferRuns
 	}
 	writeJSON(w, http.StatusOK, response)
+}
+
+func (h *Handler) addExecutionWorkspaces(ctx context.Context, runID string, response map[string]any) error {
+	workspaces, ok := h.executions.(WorkspaceQuery)
+	if !ok {
+		return nil
+	}
+	workspaceRows, err := workspaces.ListWorkspaces(ctx, runID)
+	if err != nil {
+		return err
+	}
+	leases, err := workspaces.ListWorkspaceLeases(ctx, runID)
+	if err != nil {
+		return err
+	}
+	response["workspaces"], response["workspaceLeases"] = workspaceRows, leases
+	return nil
 }
 
 func (h *Handler) InterruptExecutionActivity(w http.ResponseWriter, r *http.Request) {

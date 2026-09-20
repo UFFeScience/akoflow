@@ -27,6 +27,9 @@ func Bootstrap(ctx context.Context, db *sql.DB) error {
 	if empty {
 		return installSchema(ctx, db)
 	}
+	if err := applyMigrations(ctx, db); err != nil {
+		return err
+	}
 	if err := Validate(ctx, db); err != nil {
 		return fmt.Errorf("%w; recreate the database from the canonical bootstrap: %v", ErrIncompatibleSchema, err)
 	}

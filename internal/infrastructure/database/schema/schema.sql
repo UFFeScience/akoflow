@@ -797,6 +797,49 @@ CREATE TABLE transfer_chunk_runs (
     attempts INTEGER NOT NULL DEFAULT 0, updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY(transfer_run_id, chunk_index)
 );
+CREATE TABLE activity_workspaces (
+    id TEXT PRIMARY KEY,
+    execution_run_id TEXT NOT NULL REFERENCES execution_runs(id) ON DELETE CASCADE,
+    activity_id TEXT NOT NULL,
+    environment_id TEXT NOT NULL DEFAULT '',
+    resource_id TEXT NOT NULL,
+    runtime_id TEXT NOT NULL,
+    connection_id TEXT NOT NULL DEFAULT '',
+    uri TEXT NOT NULL,
+    execution_path TEXT NOT NULL,
+    observation_path TEXT NOT NULL,
+    driver TEXT NOT NULL,
+    state TEXT NOT NULL CHECK(state IN ('planned','active','sealed','releasable','releasing','released','failed')),
+    retention TEXT NOT NULL CHECK(retention IN ('intermediate','final','pinned')),
+    is_final INTEGER NOT NULL DEFAULT 0,
+    pinned INTEGER NOT NULL DEFAULT 0,
+    manifest TEXT NOT NULL DEFAULT '{}',
+    file_count INTEGER NOT NULL DEFAULT 0,
+    size_bytes INTEGER NOT NULL DEFAULT 0,
+    input_bytes INTEGER NOT NULL DEFAULT 0,
+    output_bytes INTEGER NOT NULL DEFAULT 0,
+    reclaimed_bytes INTEGER NOT NULL DEFAULT 0,
+    release_reason TEXT NOT NULL DEFAULT '',
+    last_error TEXT NOT NULL DEFAULT '',
+    created_at DATETIME NOT NULL,
+    sealed_at DATETIME,
+    released_at DATETIME,
+    UNIQUE(execution_run_id, activity_id)
+);
+CREATE INDEX activity_workspaces_run_idx ON activity_workspaces(execution_run_id, activity_id);
+CREATE INDEX activity_workspaces_state_idx ON activity_workspaces(state, created_at);
+CREATE TABLE workspace_leases (
+    id TEXT PRIMARY KEY,
+    workspace_id TEXT NOT NULL REFERENCES activity_workspaces(id) ON DELETE CASCADE,
+    execution_run_id TEXT NOT NULL REFERENCES execution_runs(id) ON DELETE CASCADE,
+    producer_activity_id TEXT NOT NULL,
+    consumer_activity_id TEXT NOT NULL,
+    released INTEGER NOT NULL DEFAULT 0,
+    released_at DATETIME,
+    release_reason TEXT NOT NULL DEFAULT '',
+    UNIQUE(execution_run_id, producer_activity_id, consumer_activity_id)
+);
+CREATE INDEX workspace_leases_workspace_idx ON workspace_leases(workspace_id, released);
 CREATE TABLE planned_lifecycle_actions (
     id TEXT PRIMARY KEY, schedule_plan_id TEXT NOT NULL REFERENCES schedule_plans(id) ON DELETE CASCADE,
     capacity_target_id TEXT NOT NULL, cloud_instance_id TEXT NOT NULL DEFAULT '',

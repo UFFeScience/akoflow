@@ -17,8 +17,157 @@ import (
 type Repository struct{ db *sql.DB }
 
 var _ ports.ExecutionStore = (*Repository)(nil)
+var _ ports.WorkspaceStore = (*Repository)(nil)
 
 func New(db *sql.DB) *Repository { return &Repository{db: db} }
+
+func (r *Repository) SaveWorkspace(ctx context.Context, workspace domain.ActivityWorkspace) error {
+	manifest, err := json.Marshal(workspace.Manifest)
+	if err != nil {
+		return fmt.Errorf("marshal workspace manifest: %w", err)
+	}
+	if workspace.CreatedAt.IsZero() {
+		workspace.CreatedAt = time.Now().UTC()
+	}
+	_, err = r.db.ExecContext(ctx, `INSERT INTO activity_workspaces (
+		id, execution_run_id, activity_id, environment_id, resource_id, runtime_id,
+		connection_id, uri, execution_path, observation_path, driver, state,
+		retention, is_final, pinned, manifest, file_count, size_bytes, input_bytes,
+		output_bytes, reclaimed_bytes, release_reason, last_error, created_at,
+		sealed_at, released_at
+	) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+	ON CONFLICT(id) DO UPDATE SET environment_id=excluded.environment_id,
+		resource_id=excluded.resource_id, runtime_id=excluded.runtime_id,
+		connection_id=excluded.connection_id, uri=excluded.uri,
+		execution_path=excluded.execution_path, observation_path=excluded.observation_path,
+		driver=excluded.driver, state=excluded.state, retention=excluded.retention,
+		is_final=excluded.is_final, pinned=excluded.pinned, manifest=excluded.manifest,
+		file_count=excluded.file_count, size_bytes=excluded.size_bytes,
+		input_bytes=excluded.input_bytes, output_bytes=excluded.output_bytes,
+		reclaimed_bytes=excluded.reclaimed_bytes, release_reason=excluded.release_reason,
+		last_error=excluded.last_error, sealed_at=excluded.sealed_at,
+		released_at=excluded.released_at`,
+		workspace.ID, workspace.RunID, workspace.ActivityID, workspace.EnvironmentID,
+		workspace.ResourceID, workspace.RuntimeID, workspace.ConnectionID, workspace.URI,
+		workspace.ExecutionPath, workspace.ObservationPath, workspace.Driver, workspace.State,
+		workspace.Retention, workspace.IsFinal, workspace.Pinned, string(manifest),
+		workspace.FileCount, workspace.SizeBytes, workspace.InputBytes, workspace.OutputBytes,
+		workspace.ReclaimedBytes, workspace.ReleaseReason, workspace.LastError,
+		workspace.CreatedAt, workspace.SealedAt, workspace.ReleasedAt)
+	return err
+}
+
+func (r *Repository) FindWorkspace(ctx context.Context, id string) (*domain.ActivityWorkspace, error) {
+	workspace, err := scanWorkspace(r.db.QueryRowContext(ctx, workspaceSelect+` WHERE id=?`, id))
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
+	return workspace, err
+}
+
+func (r *Repository) ListWorkspaces(ctx context.Context, runID string) ([]domain.ActivityWorkspace, error) {
+	rows, err := r.db.QueryContext(ctx, workspaceSelect+` WHERE execution_run_id=? ORDER BY activity_id`, runID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	workspaces := make([]domain.ActivityWorkspace, 0)
+	for rows.Next() {
+		workspace, scanErr := scanWorkspace(rows)
+		if scanErr != nil {
+			return nil, scanErr
+		}
+		workspaces = append(workspaces, *workspace)
+	}
+	return workspaces, rows.Err()
+}
+
+func (r *Repository) ListWorkspaceCandidates(ctx context.Context) ([]domain.ActivityWorkspace, error) {
+	rows, err := r.db.QueryContext(ctx, workspaceSelect+` WHERE state IN ('sealed','releasable','releasing') AND pinned=0 AND is_final=0 ORDER BY created_at`)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	workspaces := make([]domain.ActivityWorkspace, 0)
+	for rows.Next() {
+		workspace, scanErr := scanWorkspace(rows)
+		if scanErr != nil {
+			return nil, scanErr
+		}
+		workspaces = append(workspaces, *workspace)
+	}
+	return workspaces, rows.Err()
+}
+
+const workspaceSelect = `SELECT id, execution_run_id, activity_id, environment_id,
+	resource_id, runtime_id, connection_id, uri, execution_path, observation_path,
+	driver, state, retention, is_final, pinned, manifest, file_count, size_bytes,
+	input_bytes, output_bytes, reclaimed_bytes, release_reason, last_error, created_at,
+	sealed_at, released_at FROM activity_workspaces`
+
+func scanWorkspace(scanner interface{ Scan(...any) error }) (*domain.ActivityWorkspace, error) {
+	var workspace domain.ActivityWorkspace
+	var manifest []byte
+	var sealedAt, releasedAt sql.NullTime
+	if err := scanner.Scan(&workspace.ID, &workspace.RunID, &workspace.ActivityID,
+		&workspace.EnvironmentID, &workspace.ResourceID, &workspace.RuntimeID,
+		&workspace.ConnectionID, &workspace.URI, &workspace.ExecutionPath,
+		&workspace.ObservationPath, &workspace.Driver, &workspace.State,
+		&workspace.Retention, &workspace.IsFinal, &workspace.Pinned, &manifest,
+		&workspace.FileCount, &workspace.SizeBytes, &workspace.InputBytes,
+		&workspace.OutputBytes, &workspace.ReclaimedBytes, &workspace.ReleaseReason,
+		&workspace.LastError, &workspace.CreatedAt, &sealedAt, &releasedAt); err != nil {
+		return nil, err
+	}
+	if err := json.Unmarshal(manifest, &workspace.Manifest); err != nil {
+		return nil, fmt.Errorf("decode workspace manifest: %w", err)
+	}
+	if sealedAt.Valid {
+		workspace.SealedAt = &sealedAt.Time
+	}
+	if releasedAt.Valid {
+		workspace.ReleasedAt = &releasedAt.Time
+	}
+	return &workspace, nil
+}
+
+func (r *Repository) SaveWorkspaceLease(ctx context.Context, lease domain.WorkspaceLease) error {
+	_, err := r.db.ExecContext(ctx, `INSERT INTO workspace_leases (
+		id, workspace_id, execution_run_id, producer_activity_id,
+		consumer_activity_id, released, released_at, release_reason
+	) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+	ON CONFLICT(id) DO UPDATE SET released=excluded.released,
+		released_at=excluded.released_at, release_reason=excluded.release_reason`,
+		lease.ID, lease.WorkspaceID, lease.RunID, lease.ProducerActivityID,
+		lease.ConsumerActivityID, lease.Released, lease.ReleasedAt, lease.ReleaseReason)
+	return err
+}
+
+func (r *Repository) ListWorkspaceLeases(ctx context.Context, runID string) ([]domain.WorkspaceLease, error) {
+	rows, err := r.db.QueryContext(ctx, `SELECT id, workspace_id, execution_run_id,
+		producer_activity_id, consumer_activity_id, released, released_at, release_reason
+		FROM workspace_leases WHERE execution_run_id=?
+		ORDER BY producer_activity_id, consumer_activity_id`, runID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	leases := make([]domain.WorkspaceLease, 0)
+	for rows.Next() {
+		var lease domain.WorkspaceLease
+		var releasedAt sql.NullTime
+		if err := rows.Scan(&lease.ID, &lease.WorkspaceID, &lease.RunID,
+			&lease.ProducerActivityID, &lease.ConsumerActivityID, &lease.Released,
+			&releasedAt, &lease.ReleaseReason); err != nil {
+			return nil, err
+		}
+		if releasedAt.Valid {
+			lease.ReleasedAt = &releasedAt.Time
+		}
+		leases = append(leases, lease)
+	}
+	return leases, rows.Err()
+}
 
 func (r *Repository) CreateRun(ctx context.Context, run domain.ExecutionRun) error {
 	tx, err := r.db.BeginTx(ctx, nil)
@@ -478,14 +627,16 @@ func (r *Repository) CancelRun(ctx context.Context, id, reason string) error {
 		return err
 	}
 	defer tx.Rollback()
-	result, err := tx.ExecContext(ctx, `UPDATE execution_runs SET status='cancelled',
-		finished_at=CURRENT_TIMESTAMP, failure_reason=?
-		WHERE id=? AND status IN ('created','running')`, reason, id)
+	result, err := tx.ExecContext(ctx, `UPDATE execution_runs SET
+		status=CASE WHEN status IN ('created','running') THEN 'cancelled' ELSE status END,
+		finished_at=CASE WHEN status IN ('created','running') THEN CURRENT_TIMESTAMP ELSE finished_at END,
+		failure_reason=CASE WHEN status IN ('created','running') THEN ? ELSE failure_reason END
+		WHERE id=? AND status IN ('created','running','failed')`, reason, id)
 	if err != nil {
 		return err
 	}
 	if changed, _ := result.RowsAffected(); changed != 1 {
-		return fmt.Errorf("execution run %q is not active", id)
+		return fmt.Errorf("execution run %q cannot cancel unfinished activities", id)
 	}
 	if _, err := tx.ExecContext(ctx, `UPDATE task_executions SET status='cancelled',
 		finished_at=CASE WHEN finished_at=0 THEN ? ELSE finished_at END,

@@ -220,6 +220,28 @@ type WorkspaceRevision = execution.WorkspaceRevision
 type WorkspaceBlob = execution.WorkspaceBlob
 type WorkspaceInventory = execution.WorkspaceInventory
 type WorkspaceMaterialization = execution.WorkspaceMaterialization
+type ActivityWorkspace = execution.ActivityWorkspace
+type WorkspaceLease = execution.WorkspaceLease
+type WorkspaceManifest = execution.WorkspaceManifest
+type WorkspaceEntry = execution.WorkspaceEntry
+type WorkspaceState = execution.WorkspaceState
+type WorkspaceRetention = execution.WorkspaceRetention
+type WorkspaceUsage = execution.WorkspaceUsage
+type WorkspaceReleaseResult = execution.WorkspaceReleaseResult
+
+const (
+	WorkspacePlanned      = execution.WorkspacePlanned
+	WorkspaceActive       = execution.WorkspaceActive
+	WorkspaceSealed       = execution.WorkspaceSealed
+	WorkspaceReleasable   = execution.WorkspaceReleasable
+	WorkspaceReleasing    = execution.WorkspaceReleasing
+	WorkspaceReleased     = execution.WorkspaceReleased
+	WorkspaceFailed       = execution.WorkspaceFailed
+	WorkspaceIntermediate = execution.WorkspaceIntermediate
+	WorkspaceFinal        = execution.WorkspaceFinal
+	WorkspacePinned       = execution.WorkspacePinned
+)
+
 type DataTransferPlan = execution.DataTransferPlan
 type DataTransferRun = execution.DataTransferRun
 type TransferChunkRun = execution.TransferChunkRun

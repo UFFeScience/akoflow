@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"time"
@@ -90,11 +91,15 @@ func registerExecutionHandlers(
 		controlexecution.Config{
 			PollInterval: time.Second, Preparer: preparer,
 			Data: data, Cloud: cloudProvisioner, CloudStore: cloud,
+			Workspaces:     infratransfer.ActivityWorkspaceManager{Resolver: resolver},
 			CloudAllocator: controlexecution.QueuedCloudAllocator{Cloud: cloud, Operations: cloud, Queue: events, PollInterval: 500 * time.Millisecond},
 		},
 	)
 	if err != nil {
 		return err
+	}
+	if err := supervisor.RecoverWorkspaces(context.Background()); err != nil {
+		return fmt.Errorf("recover activity workspaces: %w", err)
 	}
 	return dispatcher.Register(eventloop.EventExecutionRunRequested,
 		eventloop.NewExecutionRunHandler(supervisor))

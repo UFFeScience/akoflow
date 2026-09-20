@@ -197,6 +197,18 @@ func (r *Repository) CreateRun(ctx context.Context, run domain.ExecutionRun) err
 	return tx.Commit()
 }
 
+func (r *Repository) ResumeRun(ctx context.Context, id string) error {
+	result, err := r.db.ExecContext(ctx, `UPDATE execution_runs SET status='created',
+		finished_at=NULL, failure_reason='' WHERE id=? AND status IN ('failed','cancelled')`, id)
+	if err != nil {
+		return err
+	}
+	if changed, _ := result.RowsAffected(); changed != 1 {
+		return fmt.Errorf("execution run %q is not recoverable", id)
+	}
+	return nil
+}
+
 func (r *Repository) FindRun(ctx context.Context, id string) (*domain.ExecutionRun, error) {
 	run, err := scanRunFeed(r.db.QueryRowContext(ctx, `SELECT * FROM (`+runFeedSelect+`) WHERE id=?`, id))
 	if err == sql.ErrNoRows {

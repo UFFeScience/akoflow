@@ -18,6 +18,13 @@ type ExecutionRequest struct {
 	ActivityProfiles                  []domain.ActivityResourceProfile
 	PreparationRequirementsByActivity map[string]domain.PreparationRequirement
 	RuntimeAllocations                map[string]domain.RuntimeAllocation
+	Recovery                          *ExecutionRecovery `json:"recovery,omitempty"`
+}
+
+type ExecutionRecovery struct {
+	Mode             string   `json:"mode"`
+	ReuseActivityIDs []string `json:"reuseActivityIds,omitempty"`
+	RetryActivityIDs []string `json:"retryActivityIds,omitempty"`
 }
 
 type PreparationCoordinator interface {

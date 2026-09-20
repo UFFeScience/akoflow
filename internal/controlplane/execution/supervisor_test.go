@@ -776,6 +776,7 @@ func TestRunningTaskSeparatesTransferElapsedWorkAndWaits(t *testing.T) {
 		domain.Resource{ID: "resource"},
 		domain.RuntimeAllocation{},
 		domain.ActivityHandle{StartedAt: 30},
+		1,
 		10,
 		&domain.PreparationGate{TransferRuns: []domain.DataTransferRun{
 			{StartedAt: 12, FinishedAt: 20, TransferredBytes: 100},

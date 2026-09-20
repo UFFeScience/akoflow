@@ -36,6 +36,16 @@ func (r *Repository) Close() error {
 	return nil
 }
 
+func (r *Repository) FindLatestByAggregate(ctx context.Context, aggregateType, aggregateID, eventType string) (*domainqueue.Job, error) {
+	job, err := scanJob(r.db.QueryRowContext(ctx, `SELECT `+columns+` FROM queue_jobs
+		WHERE aggregate_type=? AND aggregate_id=? AND event_type=? ORDER BY created_at DESC LIMIT 1`,
+		aggregateType, aggregateID, eventType))
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
+	return job, err
+}
+
 func (r *Repository) Publish(ctx context.Context, job domainqueue.Job) (domainqueue.Job, error) {
 	if err := job.Validate(); err != nil {
 		return domainqueue.Job{}, err

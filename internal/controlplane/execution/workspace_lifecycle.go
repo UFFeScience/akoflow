@@ -46,6 +46,15 @@ func (s *Supervisor) initializeWorkspaces(ctx context.Context, request ports.Exe
 	}
 	now := time.Now().UTC()
 	for activityID := range activities {
+		if request.Recovery != nil {
+			existing, err := store.FindWorkspace(ctx, "workspace-"+request.Run.ID+"-"+activityID)
+			if err != nil {
+				return err
+			}
+			if existing != nil {
+				continue
+			}
+		}
 		assignment, assigned := assignments[activityID]
 		resource, available := resources[assignment.ResourceID]
 		if !assigned || !available {

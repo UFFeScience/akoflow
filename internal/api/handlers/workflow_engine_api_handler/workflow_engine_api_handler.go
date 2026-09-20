@@ -78,8 +78,16 @@ type ExecutionCommandStore interface {
 	FailRun(context.Context, string, string) error
 }
 
+type ExecutionRecoveryCommandStore interface {
+	ResumeRun(context.Context, string) error
+}
+
 type QueueCancellationStore interface {
 	CancelByAggregate(context.Context, string, string, time.Time) (int64, error)
+}
+
+type ExecutionRecoveryQueueStore interface {
+	FindLatestByAggregate(context.Context, string, string, string) (*domainqueue.Job, error)
 }
 type StorageNavigator interface {
 	List(context.Context, string) ([]domain.StorageResource, error)
@@ -1308,6 +1316,8 @@ func (h *Handler) GetExecution(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusInternalServerError, err)
 		return
 	}
+	activityAttempts := tasks
+	tasks = latestTaskAttempts(tasks)
 	transfers, err := h.executions.ListTransfers(r.Context(), run.ID)
 	if err != nil {
 		writeError(w, http.StatusInternalServerError, err)
@@ -1325,7 +1335,7 @@ func (h *Handler) GetExecution(w http.ResponseWriter, r *http.Request) {
 	}
 	response := map[string]any{
 		"run": run, "activities": tasks, "dataTransfers": transfers,
-		"handles": handles, "events": events,
+		"activityAttempts": activityAttempts, "handles": handles, "events": events,
 	}
 	if err := h.addExecutionWorkspaces(r.Context(), run.ID, response); err != nil {
 		writeError(w, http.StatusInternalServerError, err)
@@ -1374,6 +1384,26 @@ func (h *Handler) GetExecution(w http.ResponseWriter, r *http.Request) {
 		response["artifactTransferRuns"] = transferRuns
 	}
 	writeJSON(w, http.StatusOK, response)
+}
+
+func latestTaskAttempts(tasks []domain.TaskExecution) []domain.TaskExecution {
+	latest := make(map[string]domain.TaskExecution, len(tasks))
+	for _, task := range tasks {
+		if current, exists := latest[task.ActivityID]; !exists || task.Attempt > current.Attempt {
+			latest[task.ActivityID] = task
+		}
+	}
+	result := make([]domain.TaskExecution, 0, len(latest))
+	for _, task := range latest {
+		result = append(result, task)
+	}
+	sort.Slice(result, func(i, j int) bool {
+		if result[i].StartedAt == result[j].StartedAt {
+			return result[i].ActivityID < result[j].ActivityID
+		}
+		return result[i].StartedAt < result[j].StartedAt
+	})
+	return result
 }
 
 func (h *Handler) addExecutionWorkspaces(ctx context.Context, runID string, response map[string]any) error {
@@ -2612,7 +2642,13 @@ func (h *Handler) CancelExecution(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	hasUnfinishedTasks := false
+	latest := make(map[string]domain.TaskExecution)
 	for _, task := range tasks {
+		if current, exists := latest[task.ActivityID]; !exists || task.Attempt > current.Attempt {
+			latest[task.ActivityID] = task
+		}
+	}
+	for _, task := range latest {
 		if task.Status == domain.TaskBlocked || task.Status == domain.TaskReady ||
 			task.Status == domain.TaskQueued || task.Status == domain.TaskPreparing ||
 			task.Status == domain.TaskRunning {
@@ -2648,6 +2684,158 @@ func (h *Handler) CancelExecution(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	writeJSON(w, http.StatusOK, cancelled)
+}
+
+type executionRecoveryPreview struct {
+	RunID          string   `json:"runId"`
+	Recoverable    bool     `json:"recoverable"`
+	Reusable       []string `json:"reusableActivityIds"`
+	Failed         []string `json:"failedActivityIds"`
+	Interrupted    []string `json:"interruptedActivityIds"`
+	CleanupPending []string `json:"cleanupPendingActivityIds"`
+}
+
+func (h *Handler) GetExecutionRecovery(w http.ResponseWriter, r *http.Request) {
+	preview, err := h.executionRecoveryPreview(r.Context(), r.PathValue("runId"))
+	if err != nil {
+		writeError(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+	writeJSON(w, http.StatusOK, preview)
+}
+
+func (h *Handler) executionRecoveryPreview(ctx context.Context, runID string) (executionRecoveryPreview, error) {
+	run, err := h.executions.FindRun(ctx, runID)
+	if err != nil || run == nil {
+		if err == nil {
+			err = fmt.Errorf("execution run %q was not found", runID)
+		}
+		return executionRecoveryPreview{}, err
+	}
+	tasks, err := h.executions.ListTasks(ctx, runID)
+	if err != nil {
+		return executionRecoveryPreview{}, err
+	}
+	preview := executionRecoveryPreview{RunID: runID, Recoverable: run.Status == domain.ExecutionRunFailed || run.Status == domain.ExecutionRunCancelled}
+	latest := latestTaskAttempts(tasks)
+	observed := make(map[string]bool, len(latest))
+	for _, task := range latest {
+		observed[task.ActivityID] = true
+		switch task.Status {
+		case domain.TaskCompleted:
+			preview.Reusable = append(preview.Reusable, task.ActivityID)
+		case domain.TaskFailed:
+			preview.Failed = append(preview.Failed, task.ActivityID)
+		default:
+			preview.Interrupted = append(preview.Interrupted, task.ActivityID)
+		}
+	}
+	if recoveryQueue, ok := h.queue.(ExecutionRecoveryQueueStore); ok {
+		original, requestErr := recoveryQueue.FindLatestByAggregate(ctx, "execution_run", runID, eventloop.EventExecutionRunRequested)
+		if requestErr != nil {
+			return executionRecoveryPreview{}, requestErr
+		}
+		if original != nil {
+			var request ports.ExecutionRequest
+			if json.Unmarshal(original.Payload, &request) == nil {
+				for _, activity := range request.Workflow.Activities {
+					if !observed[activity.ID] {
+						preview.Interrupted = append(preview.Interrupted, activity.ID)
+					}
+				}
+			}
+		}
+	}
+	if workspaces, ok := h.executions.(WorkspaceQuery); ok {
+		items, workspaceErr := workspaces.ListWorkspaces(ctx, runID)
+		if workspaceErr != nil {
+			return executionRecoveryPreview{}, workspaceErr
+		}
+		for _, workspace := range items {
+			if workspace.LastError != "" {
+				preview.CleanupPending = append(preview.CleanupPending, workspace.ActivityID)
+			}
+		}
+	}
+	sort.Strings(preview.Reusable)
+	sort.Strings(preview.Failed)
+	sort.Strings(preview.Interrupted)
+	sort.Strings(preview.CleanupPending)
+	return preview, nil
+}
+
+func (h *Handler) RecoverExecution(w http.ResponseWriter, r *http.Request) {
+	if h.readOnly {
+		writeError(w, http.StatusForbidden, fmt.Errorf("read-only instances cannot recover executions"))
+		return
+	}
+	recoveryCommands, supportsRecovery := h.executionCommands.(ExecutionRecoveryCommandStore)
+	recoveryQueue, supportsRecoveryQueue := h.queue.(ExecutionRecoveryQueueStore)
+	if h.executionCommands == nil || !supportsRecovery || h.queue == nil || !supportsRecoveryQueue || h.events == nil {
+		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("execution recovery is unavailable"))
+		return
+	}
+	runID := r.PathValue("runId")
+	preview, err := h.executionRecoveryPreview(r.Context(), runID)
+	if err != nil {
+		writeError(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+	if !preview.Recoverable {
+		writeError(w, http.StatusConflict, fmt.Errorf("execution run %q is not recoverable", runID))
+		return
+	}
+	var input struct {
+		Mode string `json:"mode"`
+	}
+	if !decode(w, r, &input) {
+		return
+	}
+	if input.Mode == "" {
+		input.Mode = "continue"
+	}
+	if input.Mode != "continue" && input.Mode != "retry_failures" {
+		writeError(w, http.StatusBadRequest, fmt.Errorf("unsupported recovery mode %q", input.Mode))
+		return
+	}
+	original, err := recoveryQueue.FindLatestByAggregate(r.Context(), "execution_run", runID, eventloop.EventExecutionRunRequested)
+	if err != nil || original == nil {
+		if err == nil {
+			err = fmt.Errorf("the original execution request for %q is unavailable", runID)
+		}
+		writeError(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+	var request ports.ExecutionRequest
+	if err := json.Unmarshal(original.Payload, &request); err != nil {
+		writeError(w, http.StatusUnprocessableEntity, fmt.Errorf("decode original execution request: %w", err))
+		return
+	}
+	request.Recovery = &ports.ExecutionRecovery{Mode: input.Mode, ReuseActivityIDs: preview.Reusable}
+	request.Recovery.RetryActivityIDs = append(append([]string{}, preview.Failed...), preview.Interrupted...)
+	payload, err := json.Marshal(request)
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, err)
+		return
+	}
+	if err := recoveryCommands.ResumeRun(r.Context(), runID); err != nil {
+		writeError(w, http.StatusConflict, err)
+		return
+	}
+	job, err := domainqueue.New(domainqueue.CategoryExecution, eventloop.EventExecutionRunRequested, payload, time.Now().UTC())
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, err)
+		return
+	}
+	job.AggregateType, job.AggregateID = "execution_run", runID
+	job.IdempotencyKey = fmt.Sprintf("execution-recovery:%s:%d", runID, time.Now().UTC().UnixNano())
+	stored, err := h.events.Publish(r.Context(), job)
+	if err != nil {
+		_ = h.executionCommands.FailRun(context.WithoutCancel(r.Context()), runID, err.Error())
+		writeError(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+	writeJSON(w, http.StatusAccepted, map[string]any{"job": stored, "preview": preview})
 }
 
 // Kubernetes accepts OCI references directly. Preserve the executable contract

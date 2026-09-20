@@ -93,6 +93,11 @@ func (s *Supervisor) Execute(ctx context.Context, request ports.ExecutionRequest
 	if err := s.executions.CreateRun(ctx, request.Run); err != nil {
 		return domain.ExecutionTrace{}, fmt.Errorf("create execution run: %w", err)
 	}
+	if request.Recovery != nil {
+		if recoverErr := s.RecoverWorkspaces(ctx); recoverErr != nil {
+			return domain.ExecutionTrace{}, fmt.Errorf("reconcile workspaces before recovery: %w", recoverErr)
+		}
+	}
 	defer func() {
 		if request.Run.Mode != domain.ExecutionModeSimulation && request.Run.Mode != domain.ExecutionModeInteractive {
 			// Lifecycle cleanup belongs to the infrastructure result, not the
@@ -219,6 +224,35 @@ func (s *Supervisor) executeActivities(ctx context.Context, request ports.Execut
 	completed := make(map[string]domain.TaskExecution)
 	running := make(map[string]domain.ActivityHandle)
 	tasks := make(map[string]domain.TaskExecution)
+	attempts := make(map[string]int)
+	if request.Recovery != nil {
+		reader, ok := s.executions.(interface {
+			ListTasks(context.Context, string) ([]domain.TaskExecution, error)
+		})
+		if !ok {
+			return domain.ExecutionTrace{}, fmt.Errorf("execution repository does not support recovery")
+		}
+		previous, loadErr := reader.ListTasks(ctx, request.Run.ID)
+		if loadErr != nil {
+			return domain.ExecutionTrace{}, fmt.Errorf("load prior activity attempts: %w", loadErr)
+		}
+		reusable := make(map[string]bool, len(request.Recovery.ReuseActivityIDs))
+		for _, activityID := range request.Recovery.ReuseActivityIDs {
+			reusable[activityID] = true
+		}
+		latest := make(map[string]domain.TaskExecution)
+		for _, task := range previous {
+			if task.Attempt > attempts[task.ActivityID] {
+				attempts[task.ActivityID] = task.Attempt
+				latest[task.ActivityID] = task
+			}
+		}
+		for _, task := range latest {
+			if task.Status == domain.TaskCompleted && reusable[task.ActivityID] {
+				tasks[task.ActivityID], completed[task.ActivityID] = task, task
+			}
+		}
+	}
 	transfers := make([]domain.DataTransfer, 0)
 	type allocationResult struct {
 		activityID string
@@ -261,10 +295,11 @@ func (s *Supervisor) executeActivities(ctx context.Context, request ports.Execut
 			}
 			now := unixNow()
 			assignment := assignments[activityID]
+			attempt := attempts[activityID] + 1
 			queued := domain.TaskExecution{
-				ID: request.Run.ID + ":" + activityID, ExecutionRunID: request.Run.ID,
+				ID: taskExecutionID(request.Run.ID, activityID, attempt), ExecutionRunID: request.Run.ID,
 				PlanAssignmentID: assignment.ID, ActivityID: activityID,
-				PlannedResourceID: assignment.ResourceID, Attempt: 1,
+				PlannedResourceID: assignment.ResourceID, Attempt: attempt,
 				Status: domain.TaskQueued, ReadyAt: now, QueuedAt: now,
 				Metadata: map[string]any{"queueReason": queueReason},
 			}
@@ -321,7 +356,7 @@ func (s *Supervisor) executeActivities(ctx context.Context, request ports.Execut
 					failure := fmt.Errorf("allocate runtime for activity %q: %w", result.activityID, result.err)
 					assignment := assignments[result.activityID]
 					resource := resources[assignment.ResourceID]
-					_ = s.recordStartFailure(ctx, request.Run.ID, result.activityID, assignment, resource, selectRuntime(request, assignment), failure)
+					_ = s.recordStartFailure(ctx, request.Run.ID, result.activityID, assignment, resource, selectRuntime(request, assignment), tasks[result.activityID].Attempt, failure)
 					return domain.ExecutionTrace{}, failure
 				}
 				readyAllocations[result.activityID] = result.allocation
@@ -624,13 +659,15 @@ func (s *Supervisor) startReadyActivities(
 	for _, result := range results {
 		activityID := result.activityID
 		if result.err != nil {
-			_ = s.recordStartFailure(ctx, request.Run.ID, activityID, result.assignment, result.resource, selectRuntime(request, result.assignment), result.err)
+			attempt := tasks[activityID].Attempt
+			_ = s.recordStartFailure(ctx, request.Run.ID, activityID, result.assignment, result.resource, selectRuntime(request, result.assignment), attempt, result.err)
 			return result.err
 		}
 		request.RuntimeAllocations[activityID] = result.allocation
 		*transfers = append(*transfers, result.transfers...)
-		task := newRunningTask(request.Run.ID, activityID, result.assignment, result.resource, result.allocation, result.handle, result.readyAt, result.preparation)
-		if queued, exists := tasks[activityID]; exists && queued.Status == domain.TaskQueued {
+		queued := tasks[activityID]
+		task := newRunningTask(request.Run.ID, activityID, result.assignment, result.resource, result.allocation, result.handle, queued.Attempt, result.readyAt, result.preparation)
+		if queued.Attempt > 0 {
 			task.ReadyAt = queued.ReadyAt
 			task.QueuedAt = queued.QueuedAt
 			task.QueueSeconds = maxFloat(0, task.StartedAt-queued.QueuedAt)
@@ -1168,6 +1205,7 @@ func (s *Supervisor) recordStartFailure(
 	assignment domain.PlanAssignment,
 	resource domain.Resource,
 	runtimeID string,
+	attempt int,
 	err error,
 ) error {
 	now := float64(time.Now().UnixNano()) / float64(time.Second)
@@ -1186,7 +1224,7 @@ func (s *Supervisor) recordStartFailure(
 	if saveErr := s.executions.Save(ctx, handle); saveErr != nil {
 		return saveErr
 	}
-	task := newRunningTask(runID, activityID, assignment, resource, domain.RuntimeAllocation{ResourceID: resource.ID, RuntimeID: runtimeID}, handle, now, nil)
+	task := newRunningTask(runID, activityID, assignment, resource, domain.RuntimeAllocation{ResourceID: resource.ID, RuntimeID: runtimeID}, handle, attempt, now, nil)
 	task.Status, task.FinishedAt, task.FailureReason = domain.TaskFailed, now, message
 	return s.executions.SaveTask(ctx, task)
 }
@@ -1225,17 +1263,18 @@ func newRunningTask(
 	resource domain.Resource,
 	allocation domain.RuntimeAllocation,
 	handle domain.ActivityHandle,
+	attempt int,
 	readyAt float64,
 	preparation *domain.PreparationGate,
 ) domain.TaskExecution {
 	dataReadyAt := handle.StartedAt
 	task := domain.TaskExecution{
-		ID: runID + ":" + activityID, ExecutionRunID: runID,
+		ID: taskExecutionID(runID, activityID, attempt), ExecutionRunID: runID,
 		PlanAssignmentID: assignment.ID, ActivityID: activityID,
 		PlannedResourceID: assignment.ResourceID, AllocatedResourceID: resource.ID,
 		RuntimeID: allocation.RuntimeID, ConnectionID: allocation.ConnectionID,
 		CloudInstanceID: allocation.CloudInstanceID,
-		Attempt:         1, Status: domain.TaskRunning, ReadyAt: readyAt, DataReadyAt: dataReadyAt,
+		Attempt:         attempt, Status: domain.TaskRunning, ReadyAt: readyAt, DataReadyAt: dataReadyAt,
 		QueuedAt: handle.StartedAt, StartedAt: handle.StartedAt,
 		Metadata: map[string]any{"pricePerSecond": resource.PricePerSecond},
 	}
@@ -1266,6 +1305,13 @@ func newRunningTask(
 		task.Metadata["launchWaitSeconds"] = 0.0
 	}
 	return task
+}
+
+func taskExecutionID(runID, activityID string, attempt int) string {
+	if attempt <= 1 {
+		return runID + ":" + activityID
+	}
+	return fmt.Sprintf("%s:%s:attempt-%d", runID, activityID, attempt)
 }
 
 func completeTask(task *domain.TaskExecution, handle domain.ActivityHandle) {

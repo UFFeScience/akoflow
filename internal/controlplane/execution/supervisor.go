@@ -247,6 +247,17 @@ func (s *Supervisor) executeActivities(ctx context.Context, request ports.Execut
 				latest[task.ActivityID] = task
 			}
 		}
+		if store := s.workspaceStore(); store != nil {
+			workspaces, workspaceErr := store.ListWorkspaces(ctx, request.Run.ID)
+			if workspaceErr != nil {
+				return domain.ExecutionTrace{}, fmt.Errorf("load prior activity workspaces: %w", workspaceErr)
+			}
+			available := make(map[string]bool, len(workspaces))
+			for _, workspace := range workspaces {
+				available[workspace.ActivityID] = workspace.State != domain.WorkspaceReleased && workspace.State != domain.WorkspaceFailed
+			}
+			reconcileReusableWorkspaces(activities, predecessors, reusable, available)
+		}
 		for _, task := range latest {
 			if task.Status == domain.TaskCompleted && reusable[task.ActivityID] {
 				tasks[task.ActivityID], completed[task.ActivityID] = task, task
@@ -365,6 +376,29 @@ func (s *Supervisor) executeActivities(ctx context.Context, request ports.Execut
 		}
 	}
 	return completedTrace(request, tasks, transfers), nil
+}
+
+func reconcileReusableWorkspaces(
+	activities map[string]domain.Activity,
+	predecessors map[string][]string,
+	reusable map[string]bool,
+	available map[string]bool,
+) {
+	changed := true
+	for changed {
+		changed = false
+		for activityID := range activities {
+			if reusable[activityID] {
+				continue
+			}
+			for _, producerID := range predecessors[activityID] {
+				if reusable[producerID] && !available[producerID] {
+					delete(reusable, producerID)
+					changed = true
+				}
+			}
+		}
+	}
 }
 
 // Submit every ready cloud target before Allocate waits for the first VM.

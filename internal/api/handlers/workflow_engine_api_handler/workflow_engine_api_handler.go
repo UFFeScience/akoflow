@@ -2718,16 +2718,32 @@ func (h *Handler) executionRecoveryPreview(ctx context.Context, runID string) (e
 	}
 	preview := executionRecoveryPreview{RunID: runID, Recoverable: run.Status == domain.ExecutionRunFailed || run.Status == domain.ExecutionRunCancelled}
 	latest := latestTaskAttempts(tasks)
-	observed := make(map[string]bool, len(latest))
+	latestByActivity := make(map[string]domain.TaskExecution, len(latest))
+	reusable := make(map[string]bool, len(latest))
+	failed := make(map[string]bool)
+	interrupted := make(map[string]bool)
 	for _, task := range latest {
-		observed[task.ActivityID] = true
+		latestByActivity[task.ActivityID] = task
 		switch task.Status {
 		case domain.TaskCompleted:
-			preview.Reusable = append(preview.Reusable, task.ActivityID)
+			reusable[task.ActivityID] = true
 		case domain.TaskFailed:
-			preview.Failed = append(preview.Failed, task.ActivityID)
+			failed[task.ActivityID] = true
 		default:
-			preview.Interrupted = append(preview.Interrupted, task.ActivityID)
+			interrupted[task.ActivityID] = true
+		}
+	}
+	available := make(map[string]bool)
+	if workspaces, ok := h.executions.(WorkspaceQuery); ok {
+		items, workspaceErr := workspaces.ListWorkspaces(ctx, runID)
+		if workspaceErr != nil {
+			return executionRecoveryPreview{}, workspaceErr
+		}
+		for _, workspace := range items {
+			available[workspace.ActivityID] = workspace.State != domain.WorkspaceReleased && workspace.State != domain.WorkspaceFailed
+			if workspace.LastError != "" {
+				preview.CleanupPending = append(preview.CleanupPending, workspace.ActivityID)
+			}
 		}
 	}
 	if recoveryQueue, ok := h.queue.(ExecutionRecoveryQueueStore); ok {
@@ -2739,29 +2755,61 @@ func (h *Handler) executionRecoveryPreview(ctx context.Context, runID string) (e
 			var request ports.ExecutionRequest
 			if json.Unmarshal(original.Payload, &request) == nil {
 				for _, activity := range request.Workflow.Activities {
-					if !observed[activity.ID] {
-						preview.Interrupted = append(preview.Interrupted, activity.ID)
+					if _, observed := latestByActivity[activity.ID]; !observed {
+						interrupted[activity.ID] = true
+					}
+				}
+				changed := true
+				for changed {
+					changed = false
+					for _, activity := range request.Workflow.Activities {
+						if reusable[activity.ID] {
+							continue
+						}
+						for _, producerID := range recoveryProducerIDs(request.Workflow, activity.ID) {
+							if reusable[producerID] && !available[producerID] {
+								delete(reusable, producerID)
+								interrupted[producerID] = true
+								changed = true
+							}
+						}
 					}
 				}
 			}
 		}
 	}
-	if workspaces, ok := h.executions.(WorkspaceQuery); ok {
-		items, workspaceErr := workspaces.ListWorkspaces(ctx, runID)
-		if workspaceErr != nil {
-			return executionRecoveryPreview{}, workspaceErr
-		}
-		for _, workspace := range items {
-			if workspace.LastError != "" {
-				preview.CleanupPending = append(preview.CleanupPending, workspace.ActivityID)
-			}
-		}
+	for activityID := range reusable {
+		preview.Reusable = append(preview.Reusable, activityID)
+	}
+	for activityID := range failed {
+		preview.Failed = append(preview.Failed, activityID)
+	}
+	for activityID := range interrupted {
+		preview.Interrupted = append(preview.Interrupted, activityID)
 	}
 	sort.Strings(preview.Reusable)
 	sort.Strings(preview.Failed)
 	sort.Strings(preview.Interrupted)
 	sort.Strings(preview.CleanupPending)
 	return preview, nil
+}
+
+func recoveryProducerIDs(workflow domain.WorkflowVersion, activityID string) []string {
+	seen := make(map[string]bool)
+	result := make([]string, 0)
+	for _, dependency := range workflow.DataDependencies {
+		if dependency.ConsumerActivityID == activityID && !seen[dependency.ProducerActivityID] {
+			seen[dependency.ProducerActivityID] = true
+			result = append(result, dependency.ProducerActivityID)
+		}
+	}
+	for _, dependency := range workflow.Dependencies {
+		if dependency.ActivityID == activityID && !seen[dependency.DependsOnActivityID] {
+			seen[dependency.DependsOnActivityID] = true
+			result = append(result, dependency.DependsOnActivityID)
+		}
+	}
+	return result
 }
 
 func (h *Handler) RecoverExecution(w http.ResponseWriter, r *http.Request) {

@@ -792,6 +792,21 @@ func TestRunningTaskSeparatesTransferElapsedWorkAndWaits(t *testing.T) {
 	}
 }
 
+func TestRecoveryReopensReleasedProducerNeededByUnfinishedConsumer(t *testing.T) {
+	activities := map[string]domain.Activity{
+		"producer": {ID: "producer"},
+		"consumer": {ID: "consumer"},
+	}
+	predecessors := map[string][]string{"consumer": {"producer"}}
+	reusable := map[string]bool{"producer": true}
+
+	reconcileReusableWorkspaces(activities, predecessors, reusable, map[string]bool{"producer": false})
+
+	if reusable["producer"] {
+		t.Fatal("released producer remained reusable for an unfinished consumer")
+	}
+}
+
 func TestCompletedTaskAccountsForObservedRuntimeCost(t *testing.T) {
 	task := domain.TaskExecution{
 		Metadata: map[string]any{"pricePerSecond": 0.25},

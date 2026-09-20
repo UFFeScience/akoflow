@@ -3,9 +3,11 @@ package provenance
 import (
 	"context"
 	"database/sql"
+	"strings"
 	"testing"
 
 	"github.com/UFFeScience/akoflow/internal/application/ports"
+	"github.com/UFFeScience/akoflow/internal/infrastructure/database/schema"
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -98,6 +100,102 @@ func TestSchemaRemainsAvailableAfterReadOnlySQL(t *testing.T) {
 		}
 	}
 	t.Fatalf("activity_definitions missing from schema: %#v", tables)
+}
+
+func TestSchemaOmitsProtectedColumnsAndAdvertisedColumnsCanBeQueried(t *testing.T) {
+	db, err := sql.Open("sqlite3", ":memory:")
+	if err != nil {
+		t.Fatal(err)
+	}
+	db.SetMaxOpenConns(1)
+	defer db.Close()
+	if _, err := db.Exec(`
+		CREATE TABLE activity_resource_profiles (
+			id TEXT,
+			activity_type_id TEXT,
+			metadata TEXT
+		);
+		INSERT INTO activity_resource_profiles VALUES ('profile-1', 'type-1', '{"secret":true}');
+	`); err != nil {
+		t.Fatal(err)
+	}
+
+	repository := New(db)
+	tables, err := repository.Schema(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, table := range tables {
+		if table.Name != "activity_resource_profiles" {
+			continue
+		}
+		if len(table.Columns) != 2 || table.Columns[0].Name != "id" || table.Columns[1].Name != "activity_type_id" {
+			t.Fatalf("protected columns leaked into safe schema: %#v", table.Columns)
+		}
+		result, err := repository.SQL(context.Background(), ports.ProvenanceSQLQuery{
+			SQL: `SELECT "id", "activity_type_id" FROM "activity_resource_profiles"`,
+		})
+		if err != nil {
+			t.Fatalf("query advertised columns: %v", err)
+		}
+		if len(result.Items) != 1 || result.Items[0]["id"] != "profile-1" {
+			t.Fatalf("unexpected SQL result: %#v", result)
+		}
+		if _, exists := result.Items[0]["metadata"]; exists {
+			t.Fatalf("protected metadata returned: %#v", result.Items[0])
+		}
+		return
+	}
+	t.Fatal("activity_resource_profiles missing from safe schema")
+}
+
+func TestSafeSQLSchemaMatchesCanonicalSchema(t *testing.T) {
+	db, err := sql.Open("sqlite3", ":memory:")
+	if err != nil {
+		t.Fatal(err)
+	}
+	db.SetMaxOpenConns(1)
+	defer db.Close()
+	if _, err := db.Exec(schema.SQL); err != nil {
+		t.Fatal(err)
+	}
+
+	repository := New(db)
+	tables, err := repository.Schema(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(tables) != len(safeSQLSchema) {
+		t.Fatalf("safe schema returned %d tables, want %d", len(tables), len(safeSQLSchema))
+	}
+	for _, table := range tables {
+		if len(table.Columns) == 0 {
+			t.Fatalf("safe table %q has no columns", table.Name)
+		}
+		columns := make([]string, 0, len(table.Columns))
+		for _, column := range table.Columns {
+			columns = append(columns, quotedIdentifier(column.Name))
+		}
+		if _, err := repository.SQL(context.Background(), ports.ProvenanceSQLQuery{
+			SQL: "SELECT " + strings.Join(columns, ", ") + " FROM " + quotedIdentifier(table.Name) + " LIMIT 0",
+		}); err != nil {
+			t.Fatalf("query advertised columns from %q: %v", table.Name, err)
+		}
+	}
+
+	blockedQueries := []string{
+		"SELECT metadata FROM activity_resource_profiles",
+		"SELECT credential_reference FROM storage_resources",
+		"SELECT request FROM cloud_operation_runs",
+		"SELECT raw FROM cloud_operation_events",
+		"SELECT terraform_output FROM cloud_provisioned_instances",
+		"SELECT logs FROM build_runs",
+	}
+	for _, query := range blockedQueries {
+		if _, err := repository.SQL(context.Background(), ports.ProvenanceSQLQuery{SQL: query}); err == nil {
+			t.Fatalf("protected query was allowed: %s", query)
+		}
+	}
 }
 
 func TestLineageTraversesCatalogRelationships(t *testing.T) {

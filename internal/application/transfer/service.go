@@ -41,11 +41,12 @@ type TransferProgressStore interface {
 }
 
 type Materializer struct {
-	Connectors []ports.TransferConnector
-	Resolver   EndpointResolver
-	Strategies StrategyResolver
-	Progress   TransferProgressStore
-	ChunkSize  func(context.Context) int64
+	Connectors        []ports.TransferConnector
+	Resolver          EndpointResolver
+	Strategies        StrategyResolver
+	Progress          TransferProgressStore
+	ChunkSize         func(context.Context) int64
+	VerifiedArtifacts *VerifiedArtifactCache
 }
 
 const defaultTransferChunkBytes int64 = 512 << 20
@@ -138,8 +139,20 @@ func (m Materializer) Materialize(ctx context.Context, plan domain.DataTransferP
 			finalName = blob.Path
 		}
 		final := destinationName(plan.Destination.Path, finalName)
+		if m.VerifiedArtifacts.Has(destination, final, blob.Digest) {
+			run.Strategy = domain.TransferUseExisting
+			run.Route.Strategy = domain.TransferUseExisting
+			run.Route.Reason = "verified artifact cache hit; destination file already exists"
+			run.VerifiedBlobs = append(run.VerifiedBlobs, blob.Digest)
+			nextChunkIndex += chunkCount(blob.SizeBytes, m.chunkSize(ctx))
+			continue
+		}
 		// A complete matching object is an idempotent, no-copy materialization.
 		if ok, verifyErr := m.verify(ctx, dc, destination, final, blob.Digest); verifyErr == nil && ok {
+			run.Strategy = domain.TransferUseExisting
+			run.Route.Strategy = domain.TransferUseExisting
+			run.Route.Reason = "destination file already exists; checksum verified and cached"
+			m.VerifiedArtifacts.Remember(destination, final, blob.Digest)
 			run.VerifiedBlobs = append(run.VerifiedBlobs, blob.Digest)
 			nextChunkIndex += chunkCount(blob.SizeBytes, m.chunkSize(ctx))
 			continue
@@ -201,6 +214,7 @@ func (m Materializer) Materialize(ctx context.Context, plan domain.DataTransferP
 		if err = dc.Commit(ctx, destination, partial, final); err != nil {
 			return failed(target, run, err)
 		}
+		m.VerifiedArtifacts.Remember(destination, final, blob.Digest)
 		run.VerifiedBlobs = append(run.VerifiedBlobs, blob.Digest)
 	}
 	run.Status, run.FinishedAt = domain.TransferCompleted, unixNow()

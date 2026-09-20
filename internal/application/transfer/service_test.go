@@ -4,8 +4,10 @@ import (
 	"context"
 	"crypto/sha256"
 	"fmt"
+	"io"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/UFFeScience/akoflow/internal/application/ports"
@@ -23,6 +25,17 @@ type sessionFilesystem struct {
 	infra.LocalFilesystem
 	begins int
 	ends   int
+	opens  int
+}
+
+func (s *sessionFilesystem) Open(
+	ctx context.Context,
+	endpoint domain.TransferEndpoint,
+	name string,
+	offset int64,
+) (io.ReadCloser, error) {
+	s.opens++
+	return s.LocalFilesystem.Open(ctx, endpoint, name, offset)
 }
 
 type transferProgressStub struct {
@@ -207,6 +220,47 @@ func TestMaterializerResumesPartialAndSkipsVerifiedDestination(t *testing.T) {
 	_, second, err := m.Materialize(context.Background(), plan, domain.ArtifactMaterialization{Digest: digest})
 	if err != nil || second.Status != domain.TransferCompleted || len(second.VerifiedBlobs) != 1 {
 		t.Fatalf("run=%+v err=%v", second, err)
+	}
+}
+
+func TestMaterializerUsesInMemoryHitForVerifiedArtifact(t *testing.T) {
+	source, destination := t.TempDir(), t.TempDir()
+	content := []byte("shared executable artifact")
+	if err := os.WriteFile(filepath.Join(source, "input"), content, 0o600); err != nil {
+		t.Fatal(err)
+	}
+	digest := digestOf(content)
+	connector := &sessionFilesystem{}
+	cache := &VerifiedArtifactCache{}
+	materializer := Materializer{
+		Connectors:        []ports.TransferConnector{connector},
+		VerifiedArtifacts: cache,
+	}
+	plan := domain.DataTransferPlan{
+		ID:          "cached-artifact",
+		Source:      domain.TransferLocation{URI: "file://" + source, Path: "input"},
+		Destination: domain.TransferLocation{URI: "file://" + destination},
+		Blobs:       []domain.BlobDescriptor{{Digest: digest, SizeBytes: int64(len(content))}},
+	}
+	if _, _, err := materializer.Materialize(
+		context.Background(),
+		plan,
+		domain.ArtifactMaterialization{Digest: digest},
+	); err != nil {
+		t.Fatal(err)
+	}
+	firstOpenCount := connector.opens
+	_, hit, err := materializer.Materialize(
+		context.Background(),
+		plan,
+		domain.ArtifactMaterialization{Digest: digest},
+	)
+	if err != nil || hit.TransferredBytes != 0 || len(hit.VerifiedBlobs) != 1 ||
+		hit.Strategy != domain.TransferUseExisting || !strings.Contains(hit.Route.Reason, "cache hit") {
+		t.Fatalf("cache hit=%+v err=%v", hit, err)
+	}
+	if connector.opens != firstOpenCount {
+		t.Fatalf("cache hit performed remote reads: before=%d after=%d", firstOpenCount, connector.opens)
 	}
 }
 

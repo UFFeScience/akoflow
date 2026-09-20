@@ -1,6 +1,8 @@
 package provider
 
 import (
+	"fmt"
+	"os"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -45,5 +47,24 @@ func TestSSHMultiplexingCanBeDisabled(t *testing.T) {
 	arguments, path, err := SSHMultiplexArguments(SSHSessionKey{Host: "host"})
 	if err != nil || len(arguments) != 0 || path != "" {
 		t.Fatalf("arguments=%v path=%q err=%v", arguments, path, err)
+	}
+}
+
+func TestSSHMultiplexingDefaultsToDaemonLocalAbsolutePath(t *testing.T) {
+	t.Setenv("AKOFLOW_SSH_CONTROL_DIRECTORY", "")
+	_, path, err := SSHMultiplexArguments(SSHSessionKey{Host: "host"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	wantDirectory := filepath.Join(os.TempDir(), "akoflow-ssh-control")
+	if !filepath.IsAbs(path) || filepath.Dir(path) != wantDirectory {
+		t.Fatalf("control path=%q, want directory %q", path, wantDirectory)
+	}
+}
+
+func TestSSHControlSocketErrorRecognizesMuxListenerFailure(t *testing.T) {
+	err := fmt.Errorf("ssh: exit status 255: muxserver_listen: link mux listener /tmp/a.tmp => /tmp/a: Bad file descriptor")
+	if !isSSHControlSocketError(err, nil) {
+		t.Fatalf("mux listener failure was not recognized: %v", err)
 	}
 }

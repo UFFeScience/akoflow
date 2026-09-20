@@ -11,7 +11,7 @@ services:
       AKOFLOW_SSH_KEY_DIRECTORY: /var/lib/akoflow/credentials/ssh
       AKOFLOW_SSH_MULTIPLEXING_ENABLED: "true"
       AKOFLOW_SSH_CONTROL_PERSIST_SECONDS: "180"
-      AKOFLOW_SSH_CONTROL_DIRECTORY: /var/lib/akoflow/runtime/ssh-control
+      AKOFLOW_SSH_CONTROL_DIRECTORY: /tmp/akoflow-ssh-control
       AKOFLOW_KUBERNETES_TOKEN_DIRECTORY: /var/lib/akoflow/credentials/kubernetes
       AKOFLOW_CLOUD_CREDENTIAL_DIRECTORY: /var/lib/akoflow/credentials/cloud
       AKOFLOW_TERRAFORM_WORKSPACE: /var/lib/akoflow/terraform

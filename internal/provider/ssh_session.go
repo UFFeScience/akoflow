@@ -42,7 +42,14 @@ func SSHMultiplexArguments(key SSHSessionKey) ([]string, string, error) {
 	}
 	directory := strings.TrimSpace(os.Getenv("AKOFLOW_SSH_CONTROL_DIRECTORY"))
 	if directory == "" {
-		directory = filepath.Join("storage", "runtime", "ssh-control")
+		// Control sockets must live on a daemon-local filesystem. Repository
+		// bind mounts (notably Docker Desktop/virtiofs) may support regular files
+		// but reject OpenSSH's atomic link of a temporary Unix socket.
+		directory = filepath.Join(os.TempDir(), "akoflow-ssh-control")
+	}
+	directory, err := filepath.Abs(directory)
+	if err != nil {
+		return nil, "", fmt.Errorf("resolve SSH control directory: %w", err)
 	}
 	if err := os.MkdirAll(directory, 0o700); err != nil {
 		return nil, "", fmt.Errorf("create SSH control directory: %w", err)
@@ -123,6 +130,8 @@ func isSSHControlSocketError(err error, output []byte) bool {
 	message := strings.ToLower(err.Error() + " " + string(output))
 	return strings.Contains(message, "control socket") ||
 		strings.Contains(message, "mux_client") ||
+		strings.Contains(message, "muxserver_listen") ||
 		strings.Contains(message, "master is dead") ||
+		(strings.Contains(message, "mux listener") && strings.Contains(message, "bad file descriptor")) ||
 		(strings.Contains(message, "controlpath") && strings.Contains(message, "refused"))
 }

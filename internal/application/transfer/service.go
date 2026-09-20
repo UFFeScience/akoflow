@@ -139,82 +139,57 @@ func (m Materializer) Materialize(ctx context.Context, plan domain.DataTransferP
 			finalName = blob.Path
 		}
 		final := destinationName(plan.Destination.Path, finalName)
-		if m.VerifiedArtifacts.Has(destination, final, blob.Digest) {
-			run.Strategy = domain.TransferUseExisting
-			run.Route.Strategy = domain.TransferUseExisting
-			run.Route.Reason = "verified artifact cache hit; destination file already exists"
-			run.VerifiedBlobs = append(run.VerifiedBlobs, blob.Digest)
-			nextChunkIndex += chunkCount(blob.SizeBytes, m.chunkSize(ctx))
-			continue
-		}
-		// A complete matching object is an idempotent, no-copy materialization.
-		if ok, verifyErr := m.verify(ctx, dc, destination, final, blob.Digest); verifyErr == nil && ok {
-			run.Strategy = domain.TransferUseExisting
-			run.Route.Strategy = domain.TransferUseExisting
-			run.Route.Reason = "destination file already exists; checksum verified and cached"
-			m.VerifiedArtifacts.Remember(destination, final, blob.Digest)
-			run.VerifiedBlobs = append(run.VerifiedBlobs, blob.Digest)
-			nextChunkIndex += chunkCount(blob.SizeBytes, m.chunkSize(ctx))
-			continue
-		}
-		partial := final + ".partial"
-		offset, err := m.size(ctx, dc, destination, partial)
-		if err != nil {
-			return failed(target, run, err)
-		}
-		sourceName := sourceName(plan.Source.Path, blob, len(plan.Blobs))
-		// The transfer plan is content-addressed, so SizeBytes is the verified
-		// object length. A resumed copy transfers only the remaining bytes.
 		sizeBytes := blob.SizeBytes
-		if sizeBytes <= 0 {
-			sizeBytes, err = m.size(ctx, sc, source, sourceName)
-			if err != nil {
-				return failed(target, run, err)
+		usedExisting := false
+		shared, materializeErr := m.VerifiedArtifacts.Do(ctx, destination, final, blob.Digest, func() error {
+			// Re-check after taking ownership: another request may have committed
+			// the same immutable object while this caller was waiting.
+			if ok, verifyErr := m.verify(ctx, dc, destination, final, blob.Digest); verifyErr == nil && ok {
+				usedExisting = true
+				return nil
 			}
-		}
-		routed := false
-		if strategy == domain.TransferRuntimeLocal || strategy == domain.TransferDirectRuntime || strategy == domain.TransferSharedStorage {
-			if routeConnector, ok := sc.(ports.TransferRouteConnector); ok {
-				networkBytes, routeErr := routeConnector.TransferRoute(ctx, strategy, source, destination, sourceName, partial, offset)
-				if routeErr == nil {
-					if networkBytes < 0 && sizeBytes > offset {
-						networkBytes = sizeBytes - offset
-					}
-					run.NetworkBytes += networkBytes
-					routed = true
-				} else if route.Fallback != domain.TransferGateway {
-					return failed(target, run, routeErr)
-				} else {
-					run.Strategy = domain.TransferGateway
-					run.Route.Strategy = domain.TransferGateway
-					run.Route.Reason = fmt.Sprintf("%s; direct operation failed (%v), used bounded Akoflow relay", route.Reason, routeErr)
+			partial := final + ".partial"
+			offset, sizeErr := m.size(ctx, dc, destination, partial)
+			if sizeErr != nil {
+				return sizeErr
+			}
+			sourceName := sourceName(plan.Source.Path, blob, len(plan.Blobs))
+			if sizeBytes <= 0 {
+				sizeBytes, sizeErr = m.size(ctx, sc, source, sourceName)
+				if sizeErr != nil {
+					return sizeErr
 				}
-			} else if route.Fallback == domain.TransferGateway {
-				run.Strategy = domain.TransferGateway
-				run.Route.Strategy = domain.TransferGateway
-				run.Route.Reason = route.Reason + "; connector has no runtime route support, used bounded Akoflow relay"
 			}
+			routed, routeErr := m.transferBlob(ctx, sc, dc, source, destination, sourceName,
+				partial, blob, offset, sizeBytes, nextChunkIndex, chunkRuns, strategy, route, &run)
+			if routeErr != nil {
+				return routeErr
+			}
+			if routed && sizeBytes > offset {
+				run.TransferredBytes += sizeBytes - offset
+			}
+			ok, verifyErr := m.verify(ctx, dc, destination, partial, blob.Digest)
+			if verifyErr != nil {
+				return verifyErr
+			}
+			if !ok {
+				return fmt.Errorf("checksum mismatch for %s", blob.Digest)
+			}
+			return dc.Commit(ctx, destination, partial, final)
+		})
+		if materializeErr != nil {
+			return failed(target, run, materializeErr)
 		}
-		if !routed {
-			if err = m.copyGatewayChunks(ctx, sc, dc, source, destination, sourceName, partial, blob, offset, sizeBytes, nextChunkIndex, chunkRuns, &run); err != nil {
-				return failed(target, run, err)
+		if shared || usedExisting {
+			run.Strategy = domain.TransferUseExisting
+			run.Route.Strategy = domain.TransferUseExisting
+			if shared {
+				run.Route.Reason = "waited for in-flight artifact transfer; verified cache hit"
+			} else {
+				run.Route.Reason = "destination file already exists; checksum verified and cached"
 			}
 		}
 		nextChunkIndex += chunkCount(sizeBytes, m.chunkSize(ctx))
-		if routed && sizeBytes > offset {
-			run.TransferredBytes += sizeBytes - offset
-		}
-		ok, err := m.verify(ctx, dc, destination, partial, blob.Digest)
-		if err != nil || !ok {
-			if err == nil {
-				err = fmt.Errorf("checksum mismatch for %s", blob.Digest)
-			}
-			return failed(target, run, err)
-		}
-		if err = dc.Commit(ctx, destination, partial, final); err != nil {
-			return failed(target, run, err)
-		}
-		m.VerifiedArtifacts.Remember(destination, final, blob.Digest)
 		run.VerifiedBlobs = append(run.VerifiedBlobs, blob.Digest)
 	}
 	run.Status, run.FinishedAt = domain.TransferCompleted, unixNow()
@@ -249,6 +224,52 @@ func (m Materializer) chunkSize(ctx context.Context) int64 {
 		}
 	}
 	return defaultTransferChunkBytes
+}
+
+func (m Materializer) transferBlob(
+	ctx context.Context,
+	sourceConnector ports.TransferConnector,
+	destinationConnector ports.TransferConnector,
+	source domain.TransferEndpoint,
+	destination domain.TransferEndpoint,
+	sourceName string,
+	partial string,
+	blob domain.BlobDescriptor,
+	offset int64,
+	sizeBytes int64,
+	baseIndex int,
+	persisted map[int]domain.TransferChunkRun,
+	strategy domain.TransferStrategy,
+	route domain.TransferRoute,
+	run *domain.DataTransferRun,
+) (bool, error) {
+	if strategy == domain.TransferRuntimeLocal || strategy == domain.TransferDirectRuntime || strategy == domain.TransferSharedStorage {
+		if routeConnector, ok := sourceConnector.(ports.TransferRouteConnector); ok {
+			networkBytes, err := routeConnector.TransferRoute(ctx, strategy, source, destination, sourceName, partial, offset)
+			if err == nil {
+				if networkBytes < 0 && sizeBytes > offset {
+					networkBytes = sizeBytes - offset
+				}
+				run.NetworkBytes += networkBytes
+				return true, nil
+			}
+			if route.Fallback != domain.TransferGateway {
+				return false, err
+			}
+			run.Strategy = domain.TransferGateway
+			run.Route.Strategy = domain.TransferGateway
+			run.Route.Reason = fmt.Sprintf("%s; direct operation failed (%v), used bounded Akoflow relay", route.Reason, err)
+		} else if route.Fallback == domain.TransferGateway {
+			run.Strategy = domain.TransferGateway
+			run.Route.Strategy = domain.TransferGateway
+			run.Route.Reason = route.Reason + "; connector has no runtime route support, used bounded Akoflow relay"
+		}
+	}
+	if err := m.copyGatewayChunks(ctx, sourceConnector, destinationConnector, source, destination,
+		sourceName, partial, blob, offset, sizeBytes, baseIndex, persisted, run); err != nil {
+		return false, err
+	}
+	return false, nil
 }
 
 func chunkCount(size, chunkSize int64) int {

@@ -797,6 +797,24 @@ CREATE TABLE transfer_chunk_runs (
     attempts INTEGER NOT NULL DEFAULT 0, updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY(transfer_run_id, chunk_index)
 );
+CREATE TABLE workflow_operation_events (
+    id TEXT PRIMARY KEY,
+    execution_run_id TEXT NOT NULL REFERENCES execution_runs(id) ON DELETE CASCADE,
+    activity_id TEXT NOT NULL DEFAULT '', operation_id TEXT NOT NULL,
+    parent_operation_id TEXT NOT NULL DEFAULT '', transfer_run_id TEXT NOT NULL DEFAULT '',
+    command_id TEXT NOT NULL DEFAULT '', sequence INTEGER NOT NULL,
+    level TEXT NOT NULL CHECK(level IN ('debug','info','warning','error')),
+    category TEXT NOT NULL, phase TEXT NOT NULL,
+    message TEXT NOT NULL, command_sanitized TEXT NOT NULL DEFAULT '',
+    progress_bytes INTEGER NOT NULL DEFAULT 0, total_bytes INTEGER NOT NULL DEFAULT 0,
+    throughput_bps REAL NOT NULL DEFAULT 0, exit_code INTEGER,
+    stdout_excerpt TEXT NOT NULL DEFAULT '', stderr_excerpt TEXT NOT NULL DEFAULT '',
+    metadata TEXT NOT NULL DEFAULT '{}', occurred_at DATETIME NOT NULL,
+    UNIQUE(operation_id, sequence)
+);
+CREATE INDEX workflow_operation_events_run_idx ON workflow_operation_events(execution_run_id, occurred_at, sequence);
+CREATE INDEX workflow_operation_events_activity_idx ON workflow_operation_events(execution_run_id, activity_id, occurred_at);
+CREATE INDEX workflow_operation_events_operation_idx ON workflow_operation_events(operation_id, sequence);
 CREATE TABLE activity_workspaces (
     id TEXT PRIMARY KEY,
     execution_run_id TEXT NOT NULL REFERENCES execution_runs(id) ON DELETE CASCADE,

@@ -245,6 +245,7 @@ const (
 
 type DataTransferPlan = execution.DataTransferPlan
 type DataTransferRun = execution.DataTransferRun
+type WorkflowOperationEvent = execution.WorkflowOperationEvent
 type TransferChunkRun = execution.TransferChunkRun
 type ArtifactBuild = execution.ArtifactBuild
 type BuildRun = execution.BuildRun

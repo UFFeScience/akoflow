@@ -392,6 +392,60 @@ func (r *Repository) SaveTransferChunkRun(ctx context.Context, value domain.Tran
 	return err
 }
 
+func (r *Repository) AppendWorkflowOperationEvent(ctx context.Context, event domain.WorkflowOperationEvent) error {
+	metadata, err := json.Marshal(event.Metadata)
+	if err != nil {
+		return fmt.Errorf("encode workflow operation metadata: %w", err)
+	}
+	_, err = r.db.ExecContext(ctx, `INSERT INTO workflow_operation_events (
+		id,execution_run_id,activity_id,operation_id,parent_operation_id,transfer_run_id,
+		command_id,sequence,level,category,phase,message,command_sanitized,
+		progress_bytes,total_bytes,throughput_bps,exit_code,stdout_excerpt,stderr_excerpt,
+		metadata,occurred_at
+	) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`, event.ID, event.ExecutionRunID,
+		event.ActivityID, event.OperationID, event.ParentOperationID, event.TransferRunID,
+		event.CommandID, event.Sequence, event.Level, event.Category, event.Phase, event.Message,
+		event.CommandSanitized, event.ProgressBytes, event.TotalBytes, event.ThroughputBPS,
+		event.ExitCode, event.StdoutExcerpt, event.StderrExcerpt, string(metadata), event.OccurredAt)
+	return err
+}
+
+func (r *Repository) ListWorkflowOperationEvents(ctx context.Context, runID string) ([]domain.WorkflowOperationEvent, error) {
+	rows, err := r.db.QueryContext(ctx, `SELECT id,execution_run_id,activity_id,operation_id,
+		parent_operation_id,transfer_run_id,command_id,sequence,level,category,phase,message,
+		command_sanitized,progress_bytes,total_bytes,throughput_bps,exit_code,stdout_excerpt,
+		stderr_excerpt,metadata,occurred_at FROM workflow_operation_events
+		WHERE execution_run_id=? ORDER BY occurred_at,sequence,id`, runID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	result := make([]domain.WorkflowOperationEvent, 0)
+	for rows.Next() {
+		var event domain.WorkflowOperationEvent
+		var metadata []byte
+		var exitCode sql.NullInt64
+		if err := rows.Scan(&event.ID, &event.ExecutionRunID, &event.ActivityID, &event.OperationID,
+			&event.ParentOperationID, &event.TransferRunID, &event.CommandID, &event.Sequence,
+			&event.Level, &event.Category, &event.Phase, &event.Message, &event.CommandSanitized,
+			&event.ProgressBytes, &event.TotalBytes, &event.ThroughputBPS, &exitCode,
+			&event.StdoutExcerpt, &event.StderrExcerpt, &metadata, &event.OccurredAt); err != nil {
+			return nil, err
+		}
+		if exitCode.Valid {
+			value := int(exitCode.Int64)
+			event.ExitCode = &value
+		}
+		if len(metadata) > 0 {
+			if err := json.Unmarshal(metadata, &event.Metadata); err != nil {
+				return nil, fmt.Errorf("decode workflow operation metadata: %w", err)
+			}
+		}
+		result = append(result, event)
+	}
+	return result, rows.Err()
+}
+
 func (r *Repository) ListTransferChunkRuns(ctx context.Context, transferRunID string) ([]domain.TransferChunkRun, error) {
 	rows, err := r.db.QueryContext(ctx, `SELECT transfer_run_id,chunk_index,offset_bytes,size_bytes,digest,status,attempts
 		FROM transfer_chunk_runs WHERE transfer_run_id=? ORDER BY chunk_index`, transferRunID)

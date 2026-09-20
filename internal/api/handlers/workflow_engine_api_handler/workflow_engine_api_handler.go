@@ -64,6 +64,10 @@ type WorkspaceQuery interface {
 	ListWorkspaceLeases(context.Context, string) ([]domain.WorkspaceLease, error)
 }
 
+type WorkflowOperationEventQuery interface {
+	ListWorkflowOperationEvents(context.Context, string) ([]domain.WorkflowOperationEvent, error)
+}
+
 type ActivityInterrupter interface {
 	Interrupt(context.Context, string, string) (*domain.TaskExecution, error)
 }
@@ -1337,6 +1341,14 @@ func (h *Handler) GetExecution(w http.ResponseWriter, r *http.Request) {
 	}
 	response["timeline"] = applicationexecution.BuildTimeline(*run, tasks, transfers, operations)
 	if h.data != nil {
+		if operationEvents, ok := h.data.(WorkflowOperationEventQuery); ok {
+			events, eventsErr := operationEvents.ListWorkflowOperationEvents(r.Context(), run.ID)
+			if eventsErr != nil {
+				writeError(w, http.StatusInternalServerError, eventsErr)
+				return
+			}
+			response["operationEvents"] = events
+		}
 		instances, dataErr := h.data.ListInstances(r.Context(), run.ID)
 		if dataErr != nil {
 			writeError(w, http.StatusInternalServerError, dataErr)

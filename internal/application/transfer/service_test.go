@@ -41,6 +41,12 @@ func (s *sessionFilesystem) Open(
 type transferProgressStub struct {
 	runs   []domain.DataTransferRun
 	chunks map[int]domain.TransferChunkRun
+	events []domain.WorkflowOperationEvent
+}
+
+func (s *transferProgressStub) AppendWorkflowOperationEvent(_ context.Context, event domain.WorkflowOperationEvent) error {
+	s.events = append(s.events, event)
+	return nil
 }
 
 func (s *transferProgressStub) SaveTransferRun(_ context.Context, value domain.DataTransferRun) error {
@@ -166,13 +172,16 @@ func TestMaterializerPersistsBoundedChunkProgress(t *testing.T) {
 	}
 	progress := &transferProgressStub{}
 	digest := digestOf(content)
-	plan := domain.DataTransferPlan{ID: "chunks", Strategy: domain.TransferGateway, Source: domain.TransferLocation{URI: "file://" + source, Path: "input"}, Destination: domain.TransferLocation{URI: "file://" + destination}, Blobs: []domain.BlobDescriptor{{Digest: digest, SizeBytes: int64(len(content))}}}
+	plan := domain.DataTransferPlan{ID: "chunks", ExecutionRunID: "run", ConsumerActivityID: "activity", Strategy: domain.TransferGateway, Source: domain.TransferLocation{URI: "file://" + source, Path: "input"}, Destination: domain.TransferLocation{URI: "file://" + destination}, Blobs: []domain.BlobDescriptor{{Digest: digest, SizeBytes: int64(len(content))}}}
 	_, run, err := (Materializer{Connectors: []ports.TransferConnector{infra.LocalFilesystem{}}, Progress: progress, ChunkSize: func(context.Context) int64 { return 4 }}).Materialize(context.Background(), plan, domain.ArtifactMaterialization{Digest: digest})
 	if err != nil {
 		t.Fatal(err)
 	}
 	if len(progress.chunks) != 3 || len(run.CompletedChunks) != 3 || len(progress.runs) < 4 {
 		t.Fatalf("chunks=%#v run=%#v snapshots=%d", progress.chunks, run, len(progress.runs))
+	}
+	if len(progress.events) < 4 || progress.events[0].Phase != "started" || progress.events[len(progress.events)-1].Phase != "completed" {
+		t.Fatalf("operation events=%+v", progress.events)
 	}
 	for index, chunk := range progress.chunks {
 		if chunk.Status != domain.TransferCompleted || chunk.Index != index || chunk.Digest == "" {

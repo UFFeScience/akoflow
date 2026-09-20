@@ -55,7 +55,9 @@ func sshTarget(e domain.TransferEndpoint, name string) (string, string, error) {
 }
 func sshArgs(e domain.TransferEndpoint) []string {
 	args := []string{}
-	identity, knownHosts := "", ""
+	identity, knownHosts, proxy, alias := "", "", "", ""
+	extraOptions := e.Configuration["sshOptions"]
+	port, forward := 0, false
 	if key := e.Configuration["identityFile"]; key != "" {
 		identity = key
 		args = append(args, "-i", key)
@@ -63,7 +65,7 @@ func sshArgs(e domain.TransferEndpoint) []string {
 	if options := e.Configuration["sshOptions"]; options != "" {
 		args = append(args, strings.Fields(options)...)
 	}
-	if uri, err := url.Parse(e.URI); err == nil {
+	if uri, err := url.Parse(e.URI); err == nil && uri.Scheme == "ssh" && uri.Host != "" {
 		query := uri.Query()
 		if queryIdentity := query.Get("identityFile"); queryIdentity != "" {
 			identity = queryIdentity
@@ -78,16 +80,37 @@ func sshArgs(e domain.TransferEndpoint) []string {
 			args = append(args, "-o", "UserKnownHostsFile="+queryKnownHosts, "-o", "StrictHostKeyChecking="+policy)
 		}
 		if port := query.Get("port"); port != "" {
-			args = append(args, "-p", port)
+			parsedPort, _ := strconv.Atoi(port)
+			if parsedPort > 0 {
+				args = append(args, "-p", port)
+			}
 		}
-		if proxy := query.Get("proxyCommand"); proxy != "" {
+		port, _ = strconv.Atoi(query.Get("port"))
+		if proxy = query.Get("proxyCommand"); proxy != "" {
 			args = append(args, "-o", "ProxyCommand="+provider.ProxyCommandWithKnownHosts(proxy, knownHosts, identity))
 		}
-		if alias := query.Get("hostKeyAlias"); alias != "" {
+		if alias = query.Get("hostKeyAlias"); alias != "" {
 			args = append(args, "-o", "HostKeyAlias="+alias)
 		}
-		if forward, _ := strconv.ParseBool(query.Get("forwardAgent")); forward {
+		forward, _ = strconv.ParseBool(query.Get("forwardAgent"))
+		if forward {
 			args = append(args, "-A")
+		}
+		username := ""
+		if uri.User != nil {
+			username = uri.User.Username()
+		}
+		connectionID := e.Configuration["connectionId"]
+		if connectionID == "" {
+			connectionID = query.Get("connectionId")
+		}
+		multiplex, _, err := provider.SSHMultiplexArguments(provider.SSHSessionKey{
+			ConnectionID: connectionID, Username: username, Host: uri.Hostname(), Port: port,
+			IdentityFile: identity, ProxyCommand: proxy, KnownHostsFile: knownHosts,
+			HostKeyAlias: alias, ForwardAgent: forward, ExtraOptions: extraOptions,
+		})
+		if err == nil {
+			args = append(args, multiplex...)
 		}
 	}
 	return args

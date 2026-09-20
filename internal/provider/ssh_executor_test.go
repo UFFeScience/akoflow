@@ -17,10 +17,16 @@ type sshExecutorStub struct {
 	input  []byte
 	output []byte
 	err    error
+	calls  int
+	errors []error
 }
 
 func (s *sshExecutorStub) Run(_ context.Context, name string, args []string, input []byte) ([]byte, error) {
+	s.calls++
 	s.name, s.args, s.input = name, append([]string(nil), args...), append([]byte(nil), input...)
+	if len(s.errors) >= s.calls {
+		return s.output, s.errors[s.calls-1]
+	}
 	return s.output, s.err
 }
 
@@ -54,6 +60,7 @@ func TestProxyCommandUsesManagedCredential(t *testing.T) {
 }
 
 func TestSSHCommandExecutorBuildsSafeTransportCommand(t *testing.T) {
+	t.Setenv("AKOFLOW_SSH_CONTROL_DIRECTORY", t.TempDir())
 	stub := &sshExecutorStub{output: []byte("ok")}
 	knownHosts := filepath.Join(t.TempDir(), "ssh", "known_hosts")
 	executor := SSHCommandExecutor{Executor: stub, Endpoint: "host", Username: "user", Port: 2222, IdentityFile: "/keys/id", KnownHostsFile: knownHosts, ProxyCommand: "ssh gateway -W host:22", HostKeyAlias: "alias", ForwardAgent: true}
@@ -62,13 +69,28 @@ func TestSSHCommandExecutorBuildsSafeTransportCommand(t *testing.T) {
 		t.Fatalf("Run() = %q, %v", output, err)
 	}
 	joined := strings.Join(stub.args, " ")
-	for _, expected := range []string{"BatchMode=yes", "UserKnownHostsFile=" + knownHosts, "-p 2222", "-i /keys/id", "ProxyCommand=ssh", "HostKeyAlias=alias", "-A", "user@host", `'sh' '-c' 'echo '`} {
+	expectedArguments := []string{
+		"BatchMode=yes", "UserKnownHostsFile=" + knownHosts, "-p 2222", "-i /keys/id",
+		"ProxyCommand=ssh", "HostKeyAlias=alias", "-A", "ControlMaster=auto",
+		"ControlPath=", "ControlPersist=180", "user@host", `'sh' '-c' 'echo '`,
+	}
+	for _, expected := range expectedArguments {
 		if !strings.Contains(joined, expected) {
 			t.Fatalf("args %q lack %q", joined, expected)
 		}
 	}
 	if string(stub.input) != "input" || stub.name != "ssh" {
 		t.Fatalf("invocation = %s %q", stub.name, stub.input)
+	}
+}
+
+func TestSSHCommandExecutorRetriesOneBrokenControlSocket(t *testing.T) {
+	directory := t.TempDir()
+	t.Setenv("AKOFLOW_SSH_CONTROL_DIRECTORY", directory)
+	stub := &sshExecutorStub{output: []byte("Control socket connect: Connection refused"), errors: []error{fmt.Errorf("mux_client_request_session: master is dead"), nil}}
+	executor := SSHCommandExecutor{Executor: stub, ConnectionID: "hpc", Endpoint: "host", Username: "user"}
+	if _, err := executor.Run(context.Background(), "true", nil, nil); err != nil || stub.calls != 2 {
+		t.Fatalf("calls=%d err=%v", stub.calls, err)
 	}
 }
 

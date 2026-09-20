@@ -17,6 +17,7 @@ import (
 // stored in the environment definition.
 type SSHCommandExecutor struct {
 	Executor       CommandExecutor
+	ConnectionID   string
 	Endpoint       string
 	Username       string
 	Port           int
@@ -43,7 +44,7 @@ func NewSSHCommandExecutor(executor CommandExecutor, connection domain.Environme
 		identity = strings.TrimSpace(strings.TrimPrefix(connection.CredentialRef, "file:"))
 	}
 	return SSHCommandExecutor{
-		Executor: executor, Endpoint: connection.Endpoint, Username: connection.Username,
+		Executor: executor, ConnectionID: connection.ID, Endpoint: connection.Endpoint, Username: connection.Username,
 		Port:           connectionInt(connection.Configuration, "port"),
 		IdentityFile:   identity,
 		ProxyCommand:   connectionString(connection.Configuration, "proxyCommand"),
@@ -89,6 +90,15 @@ func (e SSHCommandExecutor) Run(ctx context.Context, name string, args []string,
 	if e.ForwardAgent {
 		sshArgs = append(sshArgs, "-A")
 	}
+	multiplex, controlPath, err := SSHMultiplexArguments(SSHSessionKey{
+		ConnectionID: e.ConnectionID, Username: e.Username, Host: e.Endpoint, Port: e.Port,
+		IdentityFile: e.IdentityFile, ProxyCommand: e.ProxyCommand, KnownHostsFile: e.KnownHostsFile,
+		HostKeyAlias: e.HostKeyAlias, ForwardAgent: e.ForwardAgent,
+	})
+	if err != nil {
+		return nil, err
+	}
+	sshArgs = append(sshArgs, multiplex...)
 	// ssh serializes the remote command as shell text. Quote every argument so
 	// a script passed to `sh -c` remains one argument on the login node (and so
 	// paths or values with spaces cannot change the remote command structure).
@@ -98,6 +108,17 @@ func (e SSHCommandExecutor) Run(ctx context.Context, name string, args []string,
 		remote = append(remote, shellQuote(arg))
 	}
 	sshArgs = append(sshArgs, target, strings.Join(remote, " "))
+	unlock := sharedSSHSessions.lockForCreation(controlPath)
+	output, runErr := e.Executor.Run(ctx, "ssh", sshArgs, input)
+	unlock()
+	if !isSSHControlSocketError(runErr, output) || controlPath == "" {
+		return output, runErr
+	}
+	unlockRecovery := sharedSSHSessions.lock(controlPath)
+	defer unlockRecovery()
+	if removeErr := os.Remove(controlPath); removeErr != nil && !os.IsNotExist(removeErr) {
+		return output, runErr
+	}
 	return e.Executor.Run(ctx, "ssh", sshArgs, input)
 }
 

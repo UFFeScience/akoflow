@@ -40,6 +40,7 @@ func sshTestEndpoint() domain.TransferEndpoint {
 }
 
 func TestSSHTargetAndArguments(t *testing.T) {
+	t.Setenv("AKOFLOW_SSH_CONTROL_DIRECTORY", t.TempDir())
 	endpoint := sshTestEndpoint()
 	host, target, err := sshTarget(endpoint, "runs/result.dat")
 	if err != nil || host != "researcher@example.test" || target != "/scratch/project/runs/result.dat" {
@@ -58,7 +59,12 @@ func TestSSHTargetAndArguments(t *testing.T) {
 	endpoint.URI += "?identityFile=/query/key&knownHostsFile=/known&port=2222&proxyCommand=ssh%20jump&hostKeyAlias=alias&forwardAgent=true"
 	args := sshArgs(endpoint)
 	joined := strings.Join(args, " ")
-	for _, expected := range []string{"-i /keys/id", "BatchMode=yes", "-i /query/key", "UserKnownHostsFile=/known", "StrictHostKeyChecking=yes", "-p 2222", "ProxyCommand=", "HostKeyAlias=alias", "-A"} {
+	expectedArguments := []string{
+		"-i /keys/id", "BatchMode=yes", "-i /query/key", "UserKnownHostsFile=/known",
+		"StrictHostKeyChecking=yes", "-p 2222", "ProxyCommand=", "HostKeyAlias=alias",
+		"-A", "ControlMaster=auto", "ControlPath=", "ControlPersist=180",
+	}
+	for _, expected := range expectedArguments {
 		if !strings.Contains(joined, expected) {
 			t.Fatalf("args=%q missing %q", joined, expected)
 		}

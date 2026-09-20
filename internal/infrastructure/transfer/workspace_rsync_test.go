@@ -2,6 +2,7 @@ package transfer
 
 import (
 	"context"
+	"fmt"
 	"net/url"
 	"os"
 	"os/exec"
@@ -124,6 +125,34 @@ func containsArgument(args []string, want string) bool {
 		}
 	}
 	return false
+}
+
+func TestRemoteSymlinkCheckIgnoresSuccessfulSSHWarnings(t *testing.T) {
+	installWorkspaceSSHCheck(t, "", "mux_client_request_session: session request failed: Session open refused by peer\nControlSocket /tmp/control already exists, disabling multiplexing\n", 0)
+	endpoint := domain.TransferEndpoint{URI: "ssh://researcher@example.test/workspace"}
+	if err := rejectWorkspaceSymlinks(context.Background(), endpoint); err != nil {
+		t.Fatalf("successful SSH warning was interpreted as a symlink: %v", err)
+	}
+}
+
+func TestRemoteSymlinkCheckUsesOnlyFindStdout(t *testing.T) {
+	installWorkspaceSSHCheck(t, "/workspace/input-link\n", "SSH diagnostic\n", 0)
+	endpoint := domain.TransferEndpoint{URI: "ssh://researcher@example.test/workspace"}
+	err := rejectWorkspaceSymlinks(context.Background(), endpoint)
+	if err == nil || !strings.Contains(err.Error(), "/workspace/input-link") || strings.Contains(err.Error(), "SSH diagnostic") {
+		t.Fatalf("unexpected symlink result: %v", err)
+	}
+}
+
+func installWorkspaceSSHCheck(t *testing.T, stdout, stderr string, exitCode int) {
+	t.Helper()
+	directory := t.TempDir()
+	script := "#!/bin/sh\nprintf '%s' " + shell(stdout) + "\nprintf '%s' " + shell(stderr) + " >&2\nexit " + fmt.Sprint(exitCode) + "\n"
+	if err := os.WriteFile(filepath.Join(directory, "ssh"), []byte(script), 0o700); err != nil {
+		t.Fatal(err)
+	}
+	t.Setenv("PATH", directory+string(os.PathListSeparator)+os.Getenv("PATH"))
+	t.Setenv("AKOFLOW_SSH_CONTROL_DIRECTORY", t.TempDir())
 }
 
 func TestWorkspaceRsyncMergesPredecessorsBeforeSuccessorStarts(t *testing.T) {

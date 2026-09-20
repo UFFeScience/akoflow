@@ -306,9 +306,16 @@ func rejectWorkspaceSymlinks(ctx context.Context, endpoint domain.TransferEndpoi
 	if err != nil {
 		return err
 	}
-	output, err := exec.CommandContext(ctx, "ssh", append(sshArgs(endpoint), host, "find "+shell(path)+" -type l -print -quit")...).CombinedOutput()
+	command := exec.CommandContext(ctx, "ssh", append(sshArgs(endpoint), host, "find "+shell(path)+" -type l -print -quit")...)
+	var stderr strings.Builder
+	command.Stderr = &stderr
+	output, err := command.Output()
 	if err != nil {
-		return fmt.Errorf("inspect remote workspace symlinks: %w: %s", err, strings.TrimSpace(string(output)))
+		message := strings.TrimSpace(stderr.String())
+		if message == "" {
+			message = strings.TrimSpace(string(output))
+		}
+		return fmt.Errorf("inspect remote workspace symlinks: %w: %s", err, message)
 	}
 	if name := strings.TrimSpace(string(output)); name != "" {
 		return fmt.Errorf("destination workspace contains symlink %q", name)

@@ -21,6 +21,8 @@ volumes/
 /hybrid.yaml
 /wf-*.yaml
 /build/
+/outputs/
+/other-algorithms/generated/
 /.akoflow/
 /examples/*
 !/examples/README.md

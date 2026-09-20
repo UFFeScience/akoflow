@@ -10,15 +10,22 @@ import (
 	"path/filepath"
 	"sort"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/UFFeScience/akoflow/internal/application/ports"
 	"github.com/UFFeScience/akoflow/internal/domain"
 )
 
+const (
+	readyActivityConcurrency  = 8
+	runningInspectConcurrency = 16
+)
+
 type ActivityController interface {
 	Start(context.Context, domain.ActivityExecutionContext) (domain.ActivityHandle, error)
 	Inspect(context.Context, string, domain.ExecutionMode) (*domain.ActivityHandle, error)
+	Stop(context.Context, string, domain.ExecutionMode) error
 }
 
 type Config struct {
@@ -35,6 +42,25 @@ type Supervisor struct {
 	activities ActivityController
 	simulation ports.PlanExecutor
 	config     Config
+}
+
+type startResult struct {
+	activityID  string
+	assignment  domain.PlanAssignment
+	resource    domain.Resource
+	allocation  domain.RuntimeAllocation
+	preparation *domain.PreparationGate
+	handle      domain.ActivityHandle
+	transfers   []domain.DataTransfer
+	readyAt     float64
+	err         error
+}
+
+type inspectionResult struct {
+	activityID string
+	handle     domain.ActivityHandle
+	observed   *domain.ActivityHandle
+	err        error
 }
 
 func New(executions ports.ExecutionStore, activities ActivityController, simulation ports.PlanExecutor, config Config) (*Supervisor, error) {
@@ -358,35 +384,141 @@ func (s *Supervisor) inspectRunning(
 	completed map[string]domain.TaskExecution,
 	tasks map[string]domain.TaskExecution,
 ) error {
+	results := s.inspectActivities(ctx, mode, running)
+	var firstErr error
+	for _, result := range results {
+		firstErr = s.applyInspectionResult(ctx, workflow, runID, result, running, completed, tasks, firstErr)
+	}
+	if firstErr != nil {
+		s.cancelRunningActivities(ctx, mode, running, tasks, firstErr)
+	}
+	return firstErr
+}
+
+func (s *Supervisor) inspectActivities(
+	ctx context.Context,
+	mode domain.ExecutionMode,
+	running map[string]domain.ActivityHandle,
+) []inspectionResult {
+	results := make(chan inspectionResult, len(running))
+	semaphore := make(chan struct{}, runningInspectConcurrency)
+	var group sync.WaitGroup
 	for activityID, handle := range running {
-		observed, err := s.activities.Inspect(ctx, handle.ID, mode)
-		if err != nil {
-			return fmt.Errorf("inspect activity %q: %w", activityID, err)
+		group.Add(1)
+		go func(activityID string, handle domain.ActivityHandle) {
+			defer group.Done()
+			semaphore <- struct{}{}
+			defer func() { <-semaphore }()
+			observed, err := s.activities.Inspect(ctx, handle.ID, mode)
+			results <- inspectionResult{activityID: activityID, handle: handle, observed: observed, err: err}
+		}(activityID, handle)
+	}
+	group.Wait()
+	close(results)
+	collected := make([]inspectionResult, 0, len(running))
+	for result := range results {
+		collected = append(collected, result)
+	}
+	return collected
+}
+
+func (s *Supervisor) applyInspectionResult(
+	ctx context.Context,
+	workflow domain.WorkflowVersion,
+	runID string,
+	result inspectionResult,
+	running map[string]domain.ActivityHandle,
+	completed map[string]domain.TaskExecution,
+	tasks map[string]domain.TaskExecution,
+	firstErr error,
+) error {
+	activityID, observed := result.activityID, result.observed
+	if result.err != nil {
+		if firstErr == nil {
+			return fmt.Errorf("inspect activity %q: %w", activityID, result.err)
 		}
-		if observed == nil {
-			return fmt.Errorf("inspect activity %q: runtime returned no handle for %q", activityID, handle.ID)
+		return firstErr
+	}
+	if observed == nil {
+		if firstErr == nil {
+			return fmt.Errorf("inspect activity %q: runtime returned no handle for %q", activityID, result.handle.ID)
 		}
-		task := tasks[activityID]
-		switch observed.Status {
-		case domain.HandleCompleted:
-			if err := s.validateExpectedOutputs(ctx, workflow, runID, activityID); err != nil {
-				task.Status, task.FailureReason = domain.TaskFailed, err.Error()
-				_ = s.executions.SaveTask(ctx, task)
-				return fmt.Errorf("activity %q outputs: %w", activityID, err)
-			}
-			completeTask(&task, *observed)
-			if err := s.executions.SaveTask(ctx, task); err != nil {
-				return err
-			}
-			tasks[activityID], completed[activityID] = task, task
-			delete(running, activityID)
-		case domain.HandleFailed, domain.HandleStopped:
-			task.Status, task.FailureReason = domain.TaskFailed, observed.Failure
+		return firstErr
+	}
+	task := tasks[activityID]
+	switch observed.Status {
+	case domain.HandleCompleted:
+		if err := s.validateExpectedOutputs(ctx, workflow, runID, activityID); err != nil {
+			task.Status, task.FailureReason = domain.TaskFailed, err.Error()
 			_ = s.executions.SaveTask(ctx, task)
-			return fmt.Errorf("activity %q failed: %s", activityID, observed.Failure)
+			if firstErr == nil {
+				firstErr = fmt.Errorf("activity %q outputs: %w", activityID, err)
+			}
+			return firstErr
+		}
+		completeTask(&task, *observed)
+		if err := s.executions.SaveTask(ctx, task); err != nil {
+			if firstErr == nil {
+				firstErr = err
+			}
+			return firstErr
+		}
+		tasks[activityID], completed[activityID] = task, task
+		delete(running, activityID)
+	case domain.HandleFailed, domain.HandleStopped:
+		task.Status, task.FailureReason = domain.TaskFailed, observed.Failure
+		task.FinishedAt = observed.FinishedAt
+		applyHandleTiming(&task, *observed)
+		task.RuntimeSeconds = maxFloat(0, observed.FinishedAt-executionStartedAt(*observed))
+		_ = s.executions.SaveTask(ctx, task)
+		tasks[activityID] = task
+		delete(running, activityID)
+		if firstErr == nil {
+			firstErr = fmt.Errorf("activity %q failed: %s", activityID, observed.Failure)
 		}
 	}
-	return nil
+	return firstErr
+}
+
+func (s *Supervisor) cancelRunningActivities(
+	ctx context.Context,
+	mode domain.ExecutionMode,
+	running map[string]domain.ActivityHandle,
+	tasks map[string]domain.TaskExecution,
+	cause error,
+) {
+	type stopResult struct {
+		activityID string
+		err        error
+	}
+	results := make(chan stopResult, len(running))
+	var group sync.WaitGroup
+	semaphore := make(chan struct{}, runningInspectConcurrency)
+	for activityID, handle := range running {
+		group.Add(1)
+		go func(activityID, handleID string) {
+			defer group.Done()
+			semaphore <- struct{}{}
+			defer func() { <-semaphore }()
+			results <- stopResult{activityID: activityID, err: s.activities.Stop(ctx, handleID, mode)}
+		}(activityID, handle.ID)
+	}
+	group.Wait()
+	close(results)
+	for result := range results {
+		task := tasks[result.activityID]
+		task.FinishedAt = unixNow()
+		if result.err == nil {
+			task.Status = domain.TaskCancelled
+			task.FailureReason = "cancelled after execution failure: " + cause.Error()
+			delete(running, result.activityID)
+		} else {
+			task.Status = domain.TaskFailed
+			task.FailureReason = "failed to cancel after execution failure: " + result.err.Error()
+		}
+		tasks[result.activityID] = task
+		_ = s.executions.SaveTask(context.WithoutCancel(ctx), task)
+	}
 }
 
 func (s *Supervisor) validateExpectedOutputs(ctx context.Context, workflow domain.WorkflowVersion, runID, activityID string) error {
@@ -444,86 +576,36 @@ func (s *Supervisor) startReadyActivities(
 	transfers *[]domain.DataTransfer,
 	readyAllocations map[string]domain.RuntimeAllocation,
 ) error {
-	for _, activityID := range ready {
-		readyAt := unixNow()
-		activity, assignment := activities[activityID], assignments[activityID]
-		resource, ok := resources[assignment.ResourceID]
-		if !ok {
-			failure := fmt.Errorf("resource %q not found", assignment.ResourceID)
-			_ = s.recordStartFailure(
-				ctx,
-				request.Run.ID,
-				activityID,
-				assignment,
-				domain.Resource{ID: assignment.ResourceID},
-				selectRuntime(request, assignment),
-				failure,
-			)
-			return fmt.Errorf("resource %q not found", assignment.ResourceID)
+	results := make([]startResult, len(ready))
+	semaphore := make(chan struct{}, readyActivityConcurrency)
+	var group sync.WaitGroup
+	for index, activityID := range ready {
+		group.Add(1)
+		go func(index int, activityID string) {
+			defer group.Done()
+			semaphore <- struct{}{}
+			defer func() { <-semaphore }()
+			results[index] = s.startReadyActivity(ctx, request, activityID, activities, assignments, resources, readyAllocations)
+		}(index, activityID)
+	}
+	group.Wait()
+	for _, result := range results {
+		activityID := result.activityID
+		if result.err != nil {
+			_ = s.recordStartFailure(ctx, request.Run.ID, activityID, result.assignment, result.resource, selectRuntime(request, result.assignment), result.err)
+			return result.err
 		}
-		var preparation *domain.PreparationGate
-		allocation, allocated := readyAllocations[activityID]
-		var allocationErr error
-		if !allocated {
-			allocation, allocationErr = s.ensureRuntimeAllocation(ctx, request, activityID, assignment, resource)
-		}
-		if allocationErr != nil {
-			failure := fmt.Errorf("allocate runtime for activity %q: %w", activityID, allocationErr)
-			_ = s.recordStartFailure(ctx, request.Run.ID, activityID, assignment, resource, selectRuntime(request, assignment), failure)
-			return failure
-		}
-		request.RuntimeAllocations[activityID] = allocation
-		if err := s.addWorkspacePreparation(ctx, &request, activityID, resource, workspaceProducers(request.Workflow, activityID)); err != nil {
-			return fmt.Errorf("prepare workspace for activity %q: %w", activityID, err)
-		}
-		if requirement, required := request.PreparationRequirementsByActivity[activityID]; required {
-			var prepareErr error
-			preparation, prepareErr = s.prepareActivity(ctx, request.Run.ID, activityID, requirement)
-			if prepareErr != nil {
-				failure := fmt.Errorf("prepare activity %q: %w", activityID, prepareErr)
-				_ = s.recordStartFailure(ctx, request.Run.ID, activityID, assignment, resource, selectRuntime(request, assignment), failure)
-				return failure
-			}
-			*transfers = append(*transfers, transferObservations(
-				request.Run.ID, activityID, resource.ID,
-				workspaceProducers(request.Workflow, activityID), requirement,
-				preparation.TransferRuns, request.NetworkTopology,
-			)...)
-		} else if activity.Command.Executable != nil && activity.Command.Executable.Source.Type == domain.ExecutableSourceType("build") {
-			// Authored executable references are location-independent contracts.
-			// Running them without a generated preparation requirement would let a
-			// provider fall back to a caller supplied path/image and bypass the
-			// materialization gate.
-			failure := fmt.Errorf("activity %q has an executable reference but no preparation requirement", activityID)
-			_ = s.recordStartFailure(ctx, request.Run.ID, activityID, assignment, resource, selectRuntime(request, assignment), failure)
-			return failure
-		}
-		handle, err := s.activities.Start(ctx, domain.ActivityExecutionContext{
-			Run: request.Run, Workflow: request.Workflow, Activity: activity,
-			Assignment: assignment, Resource: resource,
-			RuntimeID: selectRuntime(request, assignment), Allocation: allocation, Preparation: preparation,
-		})
-		if err != nil {
-			_ = s.recordStartFailure(
-				ctx,
-				request.Run.ID,
-				activityID,
-				assignment,
-				resource,
-				selectRuntime(request, assignment),
-				err,
-			)
-			return fmt.Errorf("start activity %q: %w", activityID, err)
-		}
-		task := newRunningTask(request.Run.ID, activityID, assignment, resource, allocation, handle, readyAt, preparation)
+		request.RuntimeAllocations[activityID] = result.allocation
+		*transfers = append(*transfers, result.transfers...)
+		task := newRunningTask(request.Run.ID, activityID, result.assignment, result.resource, result.allocation, result.handle, result.readyAt, result.preparation)
 		if queued, exists := tasks[activityID]; exists && queued.Status == domain.TaskQueued {
 			task.ReadyAt = queued.ReadyAt
 			task.QueuedAt = queued.QueuedAt
 			task.QueueSeconds = maxFloat(0, task.StartedAt-queued.QueuedAt)
 		}
-		tasks[activityID], running[activityID] = task, handle
-		if handle.Status == domain.HandleCompleted {
-			completeTask(&task, handle)
+		tasks[activityID], running[activityID] = task, result.handle
+		if result.handle.Status == domain.HandleCompleted {
+			completeTask(&task, result.handle)
 			tasks[activityID], completed[activityID] = task, task
 			delete(running, activityID)
 		}
@@ -532,6 +614,82 @@ func (s *Supervisor) startReadyActivities(
 		}
 	}
 	return nil
+}
+
+func (s *Supervisor) startReadyActivity(
+	ctx context.Context,
+	request ports.ExecutionRequest,
+	activityID string,
+	activities map[string]domain.Activity,
+	assignments map[string]domain.PlanAssignment,
+	resources map[string]domain.Resource,
+	readyAllocations map[string]domain.RuntimeAllocation,
+) startResult {
+	result := startResult{activityID: activityID, readyAt: unixNow()}
+	activity, assignment := activities[activityID], assignments[activityID]
+	result.assignment = assignment
+	resource, ok := resources[assignment.ResourceID]
+	if !ok {
+		result.resource = domain.Resource{ID: assignment.ResourceID}
+		result.err = fmt.Errorf("resource %q not found", assignment.ResourceID)
+		return result
+	}
+	result.resource = resource
+	allocation, allocated := readyAllocations[activityID]
+	if !allocated {
+		var err error
+		allocation, err = s.ensureRuntimeAllocation(ctx, request, activityID, assignment, resource)
+		if err != nil {
+			result.err = fmt.Errorf("allocate runtime for activity %q: %w", activityID, err)
+			return result
+		}
+	}
+	result.allocation = allocation
+	request.RuntimeAllocations = cloneRuntimeAllocations(request.RuntimeAllocations)
+	request.RuntimeAllocations[activityID] = allocation
+	request.PreparationRequirementsByActivity = clonePreparationRequirements(request.PreparationRequirementsByActivity)
+	if err := s.addWorkspacePreparation(ctx, &request, activityID, resource, workspaceProducers(request.Workflow, activityID)); err != nil {
+		result.err = fmt.Errorf("prepare workspace for activity %q: %w", activityID, err)
+		return result
+	}
+	if requirement, required := request.PreparationRequirementsByActivity[activityID]; required {
+		preparation, err := s.prepareActivity(ctx, request.Run.ID, activityID, requirement)
+		if err != nil {
+			result.err = fmt.Errorf("prepare activity %q: %w", activityID, err)
+			return result
+		}
+		result.preparation = preparation
+		result.transfers = transferObservations(request.Run.ID, activityID, resource.ID, workspaceProducers(request.Workflow, activityID), requirement, preparation.TransferRuns, request.NetworkTopology)
+	} else if activity.Command.Executable != nil && activity.Command.Executable.Source.Type == domain.ExecutableSourceType("build") {
+		result.err = fmt.Errorf("activity %q has an executable reference but no preparation requirement", activityID)
+		return result
+	}
+	handle, err := s.activities.Start(ctx, domain.ActivityExecutionContext{
+		Run: request.Run, Workflow: request.Workflow, Activity: activity, Assignment: assignment,
+		Resource: resource, RuntimeID: selectRuntime(request, assignment), Allocation: allocation, Preparation: result.preparation,
+	})
+	if err != nil {
+		result.err = err
+		return result
+	}
+	result.handle = handle
+	return result
+}
+
+func cloneRuntimeAllocations(source map[string]domain.RuntimeAllocation) map[string]domain.RuntimeAllocation {
+	result := make(map[string]domain.RuntimeAllocation, len(source)+1)
+	for key, value := range source {
+		result[key] = value
+	}
+	return result
+}
+
+func clonePreparationRequirements(source map[string]domain.PreparationRequirement) map[string]domain.PreparationRequirement {
+	result := make(map[string]domain.PreparationRequirement, len(source)+1)
+	for key, value := range source {
+		result[key] = value
+	}
+	return result
 }
 
 func (s *Supervisor) ensureRuntimeAllocation(

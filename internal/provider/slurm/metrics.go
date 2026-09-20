@@ -1,7 +1,6 @@
 package slurm
 
 import (
-	"context"
 	"strconv"
 	"strings"
 
@@ -43,23 +42,16 @@ if [ -n "$metric_cgroup" ] && [ "$metric_cgroup" != "/" ] && [ -f "$metric_root/
 fi
 `
 
-func (a *Adapter) inspectMetrics(ctx context.Context, handle *domain.ActivityHandle) {
-	path, _ := handle.Metadata["metricsPath"].(string)
-	if path == "" {
-		return
-	}
+func applyMetricSamples(handle *domain.ActivityHandle, payload string) {
 	previous, _ := handle.Metadata["metricsSampleCount"].(float64)
 	if value, ok := handle.Metadata["metricsSampleCount"].(int); ok {
 		previous = float64(value)
 	}
-	output, err := a.executor.Run(ctx, "tail", []string{"-n", "+" + strconv.Itoa(int(previous)+1), path}, nil)
-	if err != nil {
-		return // the first sample may not have been written yet
-	}
-	samples := parseMetricSamples(string(output), handle.RunID, handle.ActivityID)
-	if len(samples) == 0 {
+	samples := parseMetricSamples(payload, handle.RunID, handle.ActivityID)
+	if int(previous) >= len(samples) {
 		return
 	}
+	samples = samples[int(previous):]
 	handle.Metrics = samples
 	handle.Metadata["metricsSampleCount"] = int(previous) + len(samples)
 }

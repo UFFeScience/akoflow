@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"strings"
+	"sync"
 	"testing"
 	"time"
 
@@ -63,6 +64,7 @@ func (f *executionStoreFake) ListHandles(_ context.Context, runID string) ([]dom
 }
 
 type activityControllerFake struct {
+	mu                         sync.Mutex
 	started                    []string
 	contexts                   []domain.ActivityExecutionContext
 	inspections                map[string]int
@@ -70,16 +72,37 @@ type activityControllerFake struct {
 	startEvents                chan string
 	minimumStartsBeforeInspect int
 	firstInspectStarts         int
+	delay                      time.Duration
+	activeStarts               int
+	maxStarts                  int
+	activeInspections          int
+	maxInspections             int
+	inspectStatuses            map[string]domain.ActivityHandleStatus
+	stopped                    []string
 }
 
 func (f *activityControllerFake) Start(_ context.Context, execution domain.ActivityExecutionContext) (domain.ActivityHandle, error) {
+	f.mu.Lock()
 	f.started = append(f.started, execution.Activity.ID)
 	f.contexts = append(f.contexts, execution)
-	if f.startEvents != nil {
-		f.startEvents <- execution.Activity.ID
+	startEvents, startErr := f.startEvents, f.startErr
+	f.activeStarts++
+	if f.activeStarts > f.maxStarts {
+		f.maxStarts = f.activeStarts
 	}
-	if f.startErr != nil {
-		return domain.ActivityHandle{}, f.startErr
+	delay := f.delay
+	f.mu.Unlock()
+	if delay > 0 {
+		time.Sleep(delay)
+	}
+	f.mu.Lock()
+	f.activeStarts--
+	f.mu.Unlock()
+	if startEvents != nil {
+		startEvents <- execution.Activity.ID
+	}
+	if startErr != nil {
+		return domain.ActivityHandle{}, startErr
 	}
 	return domain.ActivityHandle{
 		ID: "h-" + execution.Activity.ID, RunID: execution.Run.ID,
@@ -169,17 +192,47 @@ func (*parallelPrewarmFake) Release(context.Context, string, map[string]domain.R
 }
 
 func (f *activityControllerFake) Inspect(_ context.Context, id string, _ domain.ExecutionMode) (*domain.ActivityHandle, error) {
+	f.mu.Lock()
 	if f.inspections == nil && f.firstInspectStarts > 0 && len(f.started) != f.firstInspectStarts {
+		f.mu.Unlock()
 		return nil, fmt.Errorf("first inspection saw %d starts, want %d", len(f.started), f.firstInspectStarts)
 	}
 	if len(f.started) < f.minimumStartsBeforeInspect {
+		f.mu.Unlock()
 		return nil, fmt.Errorf("inspected after starting only %d activities", len(f.started))
 	}
 	if f.inspections == nil {
 		f.inspections = map[string]int{}
 	}
 	f.inspections[id]++
-	return &domain.ActivityHandle{ID: id, Status: domain.HandleCompleted, StartedAt: 1, FinishedAt: 2}, nil
+	f.activeInspections++
+	if f.activeInspections > f.maxInspections {
+		f.maxInspections = f.activeInspections
+	}
+	delay := f.delay
+	f.mu.Unlock()
+	if delay > 0 {
+		time.Sleep(delay)
+	}
+	f.mu.Lock()
+	f.activeInspections--
+	f.mu.Unlock()
+	status := domain.HandleCompleted
+	if configured, ok := f.inspectStatuses[id]; ok {
+		status = configured
+	}
+	failure := ""
+	if status == domain.HandleFailed {
+		failure = "job failed"
+	}
+	return &domain.ActivityHandle{ID: id, Status: status, StartedAt: 1, FinishedAt: 2, Failure: failure}, nil
+}
+
+func (f *activityControllerFake) Stop(_ context.Context, id string, _ domain.ExecutionMode) error {
+	f.mu.Lock()
+	defer f.mu.Unlock()
+	f.stopped = append(f.stopped, id)
+	return nil
 }
 
 type planExecutorFake struct{ called bool }
@@ -417,6 +470,67 @@ func TestSupervisorStartsTwelveActivitiesOnPlannedCapacity(t *testing.T) {
 	}
 }
 
+func TestSupervisorBoundsStartAndInspectionConcurrency(t *testing.T) {
+	request := requestFixture(domain.ExecutionModeReal)
+	request.Workflow.Activities = nil
+	request.Workflow.Dependencies = nil
+	request.Plan.Assignments = nil
+	for index := range 20 {
+		id := fmt.Sprintf("activity-%02d", index)
+		request.Workflow.Activities = append(request.Workflow.Activities, domain.Activity{
+			ID: id, Name: id, Kind: domain.ActivityKindTask,
+			Capabilities: []domain.ActivityCapability{domain.ActivityCapabilityReal},
+			Command:      domain.ActivityCommand{Entrypoint: "true"},
+			Resources:    domain.ActivityResources{CPU: 1},
+		})
+		request.Plan.Assignments = append(request.Plan.Assignments, domain.PlanAssignment{
+			ID: "assignment-" + id, ActivityID: id, ResourceID: "r", CoreID: id,
+		})
+	}
+	request.Resources[0].CPUCapacity = 20
+	controller := &activityControllerFake{minimumStartsBeforeInspect: 20, delay: 5 * time.Millisecond}
+	service, err := New(&executionStoreFake{}, controller, &planExecutorFake{}, Config{PollInterval: time.Microsecond})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := service.Execute(context.Background(), request); err != nil {
+		t.Fatal(err)
+	}
+	if controller.maxStarts < 2 || controller.maxStarts > readyActivityConcurrency {
+		t.Fatalf("start concurrency=%d, want 2..%d", controller.maxStarts, readyActivityConcurrency)
+	}
+	if controller.maxInspections < 2 || controller.maxInspections > runningInspectConcurrency {
+		t.Fatalf("inspection concurrency=%d, want 2..%d", controller.maxInspections, runningInspectConcurrency)
+	}
+}
+
+func TestInspectRunningPersistsFailureAndCancelsPeers(t *testing.T) {
+	store := &executionStoreFake{}
+	controller := &activityControllerFake{inspectStatuses: map[string]domain.ActivityHandleStatus{
+		"h-a": domain.HandleFailed,
+		"h-b": domain.HandleRunning,
+	}}
+	service, err := New(store, controller, &planExecutorFake{}, Config{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	running := map[string]domain.ActivityHandle{
+		"a": {ID: "h-a", ActivityID: "a"},
+		"b": {ID: "h-b", ActivityID: "b"},
+	}
+	tasks := map[string]domain.TaskExecution{
+		"a": {ID: "task-a", ActivityID: "a", Status: domain.TaskRunning},
+		"b": {ID: "task-b", ActivityID: "b", Status: domain.TaskRunning},
+	}
+	err = service.inspectRunning(context.Background(), domain.ExecutionModeReal, domain.WorkflowVersion{}, "run", running, map[string]domain.TaskExecution{}, tasks)
+	if err == nil || tasks["a"].Status != domain.TaskFailed || tasks["a"].FinishedAt != 2 {
+		t.Fatalf("failure was not persisted: err=%v task=%+v", err, tasks["a"])
+	}
+	if tasks["b"].Status != domain.TaskCancelled || len(running) != 0 || len(controller.stopped) != 1 || controller.stopped[0] != "h-b" {
+		t.Fatalf("peer was not cancelled: task=%+v running=%+v stopped=%v", tasks["b"], running, controller.stopped)
+	}
+}
+
 func TestSupervisorStartsIndependentActivitiesDespitePlanOrder(t *testing.T) {
 	request := requestFixture(domain.ExecutionModeReal)
 	request.Workflow.Dependencies = nil
@@ -430,7 +544,11 @@ func TestSupervisorStartsIndependentActivitiesDespitePlanOrder(t *testing.T) {
 	if _, err := service.Execute(context.Background(), request); err != nil {
 		t.Fatal(err)
 	}
-	if len(controller.started) != 2 || controller.started[0] != "a" || controller.started[1] != "b" {
+	started := map[string]bool{}
+	for _, activityID := range controller.started {
+		started[activityID] = true
+	}
+	if len(controller.started) != 2 || !started["a"] || !started["b"] {
 		t.Fatalf("start order=%v", controller.started)
 	}
 	for _, task := range store.tasks {

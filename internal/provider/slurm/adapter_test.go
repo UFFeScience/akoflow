@@ -2,6 +2,7 @@ package slurm
 
 import (
 	"context"
+	"encoding/base64"
 	"fmt"
 	"os"
 	"os/exec"
@@ -17,6 +18,7 @@ type executorFake struct {
 	output, input []byte
 	name          string
 	args          []string
+	calls         int
 }
 
 type failingStatusExecutor struct{}
@@ -26,6 +28,7 @@ func (failingStatusExecutor) Run(_ context.Context, name string, _ []string, _ [
 }
 
 func (f *executorFake) Run(_ context.Context, name string, args []string, input []byte) ([]byte, error) {
+	f.calls++
 	f.name = name
 	f.args = args
 	f.input = input
@@ -92,7 +95,7 @@ func TestSlurmAccountingOutageDoesNotCreateFalseJobFailure(t *testing.T) {
 	if err != nil || observed.Status != domain.HandleRunning || observed.Failure != "" {
 		t.Fatalf("handle=%+v err=%v", observed, err)
 	}
-	if !strings.Contains(fmt.Sprint(observed.Metadata["statusQueryWarning"]), "sacct unavailable") {
+	if !strings.Contains(fmt.Sprint(observed.Metadata["statusQueryWarning"]), "inspection unavailable") {
 		t.Fatalf("missing accounting warning: %+v", observed.Metadata)
 	}
 }
@@ -197,6 +200,27 @@ func TestAdapterMapsSlurmStatus(t *testing.T) {
 	handle, err := New(executor, "").Inspect(context.Background(), domain.ActivityHandle{ExternalID: "1"})
 	if err != nil || handle.Status != domain.HandleCompleted || handle.ExitCode == nil || *handle.ExitCode != 0 {
 		t.Fatalf("handle=%+v err=%v", handle, err)
+	}
+}
+
+func TestAdapterInspectsSlurmWithSingleCommand(t *testing.T) {
+	encode := func(value string) string {
+		return base64.StdEncoding.EncodeToString([]byte(value))
+	}
+	executor := &executorFake{output: []byte(
+		"LOG=" + encode("done\n") + "\n" +
+			"METRICS=\n" +
+			"SENTINEL=" + encode("state=completed\nexit_code=0\nstarted_at=100\nfinished_at=104\n") + "\n" +
+			"SACCT=\nSQUEUE=\nSCONTROL=\n",
+	)}
+	handle, err := New(executor, "").Inspect(context.Background(), domain.ActivityHandle{
+		ExternalID: "1",
+		Metadata: map[string]any{
+			"logPath": "job.log", "metricsPath": "metrics.tsv", "sentinelPath": "job.status",
+		},
+	})
+	if err != nil || executor.calls != 1 || executor.name != "sh" || handle.Status != domain.HandleCompleted || handle.FinishedAt != 104 || handle.Log != "done\n" {
+		t.Fatalf("handle=%+v calls=%d command=%s err=%v", handle, executor.calls, executor.name, err)
 	}
 }
 

@@ -55,15 +55,13 @@ func (*Adapter) Modes() []domain.ExecutionMode {
 }
 
 func (a *Adapter) Start(ctx context.Context, execution domain.ActivityExecutionContext) (domain.ActivityHandle, error) {
-	if execution.Preparation != nil {
-		if err := execution.Preparation.Ready(); err != nil {
-			return domain.ActivityHandle{}, fmt.Errorf("activity %q is not ready for Slurm: %w", execution.Activity.ID, err)
-		}
-	}
 	if err := validateSlurmPrerequisites(execution.Activity); err != nil {
 		return domain.ActivityHandle{}, err
 	}
 	if execution.Resource.ExecutionTarget == domain.ExecutionTargetDirect {
+		if err := validatePreparation(execution); err != nil {
+			return domain.ActivityHandle{}, err
+		}
 		return a.startDirect(ctx, execution)
 	}
 	if a.executor == nil {
@@ -92,6 +90,12 @@ func (a *Adapter) Start(ctx context.Context, execution domain.ActivityExecutionC
 	if a.submitFromStdin {
 		arguments, input = []string{"--parsable"}, []byte(script)
 	}
+	// Re-check the materialization gate immediately before submission. The
+	// workspace manifest is the authoritative proof that every required input
+	// was verified; no job may cross the sbatch boundary without it.
+	if err := validatePreparation(execution); err != nil {
+		return domain.ActivityHandle{}, err
+	}
 	output, err := a.executor.Run(ctx, "sbatch", arguments, input)
 	if err != nil {
 		return domain.ActivityHandle{}, err
@@ -113,6 +117,16 @@ func (a *Adapter) Start(ctx context.Context, execution domain.ActivityExecutionC
 			"artifactObservationDriver": "filesystem-diff", "artifactObservationRoot": activity.Command.WorkingDirectory}}, nil
 }
 
+func validatePreparation(execution domain.ActivityExecutionContext) error {
+	if execution.Preparation == nil {
+		return nil
+	}
+	if err := execution.Preparation.Ready(); err != nil {
+		return fmt.Errorf("activity %q is not ready for Slurm: %w", execution.Activity.ID, err)
+	}
+	return nil
+}
+
 func parseJobID(output []byte) (string, error) {
 	lines := strings.Split(string(output), "\n")
 	for index := len(lines) - 1; index >= 0; index-- {
@@ -132,21 +146,72 @@ func (a *Adapter) Inspect(ctx context.Context, handle domain.ActivityHandle) (do
 	if handle.Metadata["executionTarget"] == string(domain.ExecutionTargetDirect) {
 		return a.inspectDirect(handle), nil
 	}
-	if logPath, ok := handle.Metadata["logPath"].(string); ok && logPath != "" {
-		if log, logErr := a.executor.Run(ctx, "cat", []string{logPath}, nil); logErr == nil {
-			handle.Log = string(log)
+	output, err := a.executor.Run(ctx, "sh", []string{"-s", "--",
+		metadataString(handle, "logPath"), metadataString(handle, "metricsPath"),
+		metadataString(handle, "sentinelPath"), handle.ExternalID}, []byte(slurmInspectionScript))
+	if err != nil {
+		if handle.Metadata == nil {
+			handle.Metadata = make(map[string]any)
 		}
+		handle.Metadata["statusQueryWarning"] = "Slurm inspection unavailable: " + err.Error()
+		return handle, nil
 	}
-	a.inspectMetrics(ctx, &handle)
-	if observed, found := a.sentinelStatus(ctx, handle); found {
+	sections := inspectionSections(string(output))
+	if len(sections) == 0 {
+		// Compatibility for command executors and older tests that return the
+		// accounting row directly.
+		return applySlurmStatus(handle, string(output)), nil
+	}
+	handle.Log = sections["LOG"]
+	applyMetricSamples(&handle, sections["METRICS"])
+	if observed, found := applySentinelStatus(handle, sections["SENTINEL"]); found {
 		return observed, nil
 	}
-	output, err := a.executor.Run(ctx, "sacct", []string{"-j", handle.ExternalID,
-		"--noheader", "--parsable2", "--format=State,ExitCode"}, nil)
-	if err != nil {
-		return a.fallbackStatus(ctx, handle, err)
+	if accounting := strings.TrimSpace(sections["SACCT"]); accounting != "" {
+		return applySlurmStatus(handle, accounting), nil
 	}
-	return applySlurmStatus(handle, string(output)), nil
+	if queued := strings.TrimSpace(sections["SQUEUE"]); queued != "" {
+		return applySlurmStatus(handle, queued), nil
+	}
+	if state := slurmControlState(sections["SCONTROL"]); state != "" {
+		return applySlurmStatus(handle, state+"|"), nil
+	}
+	if handle.Metadata == nil {
+		handle.Metadata = make(map[string]any)
+	}
+	handle.Metadata["statusQueryWarning"] = "job absent from sentinel, sacct, squeue and scontrol"
+	return handle, nil
+}
+
+const slurmInspectionScript = `
+encode_file() { [ -n "$2" ] && [ -f "$2" ] && base64 < "$2" | tr -d '\n'; }
+encode_command() { shift; "$@" 2>/dev/null | base64 | tr -d '\n' || true; }
+printf 'LOG='; encode_file LOG "$1"; printf '\n'
+printf 'METRICS='; encode_file METRICS "$2"; printf '\n'
+printf 'SENTINEL='; encode_file SENTINEL "$3"; printf '\n'
+printf 'SACCT='; encode_command SACCT sacct -j "$4" --noheader --parsable2 --format=State,ExitCode; printf '\n'
+printf 'SQUEUE='; encode_command SQUEUE squeue --noheader --jobs "$4" --format=%T; printf '\n'
+printf 'SCONTROL='; encode_command SCONTROL scontrol show job "$4" --oneliner; printf '\n'
+`
+
+func metadataString(handle domain.ActivityHandle, key string) string {
+	value, _ := handle.Metadata[key].(string)
+	return value
+}
+
+func inspectionSections(payload string) map[string]string {
+	result := make(map[string]string)
+	for _, line := range strings.Split(payload, "\n") {
+		key, encoded, found := strings.Cut(line, "=")
+		if !found || (key != "LOG" && key != "METRICS" && key != "SENTINEL" && key != "SACCT" && key != "SQUEUE" && key != "SCONTROL") {
+			continue
+		}
+		decoded, err := base64.StdEncoding.DecodeString(encoded)
+		if err == nil {
+			result[key] = string(decoded)
+		}
+	}
+	return result
 }
 
 func (a *Adapter) sentinelStatus(ctx context.Context, handle domain.ActivityHandle) (domain.ActivityHandle, bool) {
@@ -158,7 +223,11 @@ func (a *Adapter) sentinelStatus(ctx context.Context, handle domain.ActivityHand
 	if err != nil {
 		return handle, false
 	}
-	values := sentinelValues(string(payload))
+	return applySentinelStatus(handle, string(payload))
+}
+
+func applySentinelStatus(handle domain.ActivityHandle, payload string) (domain.ActivityHandle, bool) {
+	values := sentinelValues(payload)
 	if startedAt, err := strconv.ParseFloat(values["started_at"], 64); err == nil && startedAt > 0 {
 		handle.StartedAt = startedAt
 	}
@@ -179,10 +248,10 @@ func (a *Adapter) sentinelStatus(ctx context.Context, handle domain.ActivityHand
 		handle.Status = domain.HandleRunning
 	case "completed":
 		handle.Status = domain.HandleCompleted
-		handle.FinishedAt = runtimecommon.UnixSeconds(time.Now())
+		handle.FinishedAt = sentinelFinishedAt(values)
 	case "failed":
 		handle.Status = domain.HandleFailed
-		handle.FinishedAt = runtimecommon.UnixSeconds(time.Now())
+		handle.FinishedAt = sentinelFinishedAt(values)
 		handle.Failure = "Slurm job exited with code " + values["exit_code"]
 	default:
 		return handle, false
@@ -194,6 +263,13 @@ func (a *Adapter) sentinelStatus(ctx context.Context, handle domain.ActivityHand
 		handle.Artifacts = slurmArtifacts(handle, values)
 	}
 	return handle, true
+}
+
+func sentinelFinishedAt(values map[string]string) float64 {
+	if finishedAt, err := strconv.ParseFloat(values["finished_at"], 64); err == nil && finishedAt > 0 {
+		return finishedAt
+	}
+	return runtimecommon.UnixSeconds(time.Now())
 }
 
 func slurmArtifacts(handle domain.ActivityHandle, values map[string]string) *domain.ArtifactManifest {
@@ -468,7 +544,7 @@ func batchScript(runID string, activity domain.Activity, partition, node string)
 	script.WriteString("[ -z \"$metric_pid\" ] || { kill \"$metric_pid\" 2>/dev/null || true; wait \"$metric_pid\" 2>/dev/null || true; }; ")
 	script.WriteString("[ -z \"$metric_pid\" ] || sample_metrics; ")
 	script.WriteString("container_started_at=0; if [ -f \"$container_start_marker\" ]; then container_uptime=$(cat \"$container_start_marker\"); container_started_at=$(awk -v epoch=\"$container_epoch_anchor\" -v anchor=\"$container_uptime_anchor\" -v current=\"$container_uptime\" 'BEGIN { printf \"%.9f\", epoch + current - anchor }'); fi; ")
-	script.WriteString("{ printf 'state=%s\\nexit_code=%s\\nstarted_at=%s\\nallocated_node=%s\\ncontainer_started_at=%s\\nartifact_root=%s\\n' \"$state\" \"$code\" \"$started_at\" \"$allocated_node\" \"$container_started_at\" \"$artifact_root\"; ")
+	script.WriteString("finished_at=$(date +%s.%N); { printf 'state=%s\\nexit_code=%s\\nstarted_at=%s\\nfinished_at=%s\\nallocated_node=%s\\ncontainer_started_at=%s\\nartifact_root=%s\\n' \"$state\" \"$code\" \"$started_at\" \"$finished_at\" \"$allocated_node\" \"$container_started_at\" \"$artifact_root\"; ")
 	script.WriteString("find \"$artifact_root\" -type f -print 2>/dev/null | sort | comm -13 \"$artifact_before\" - | ")
 	script.WriteString("while IFS= read -r file; do relative=${file#\"$artifact_root\"/}; ")
 	script.WriteString("size=$(wc -c < \"$file\" 2>/dev/null) || continue; ")

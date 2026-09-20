@@ -168,6 +168,20 @@ func TestMaterializerPersistsBoundedChunkProgress(t *testing.T) {
 	}
 }
 
+func TestMaterializerUsesLargeChunksWithoutIncreasingRelayBuffer(t *testing.T) {
+	materializer := Materializer{}
+	size := materializer.chunkSize(context.Background())
+	if size != 512<<20 {
+		t.Fatalf("default transfer chunk size = %d", size)
+	}
+	if chunks := chunkCount(340_992_000, size); chunks != 1 {
+		t.Fatalf("325 MiB artifact chunks = %d", chunks)
+	}
+	if chunks := chunkCount(600<<20, size); chunks != 2 {
+		t.Fatalf("600 MiB artifact chunks = %d", chunks)
+	}
+}
+
 func TestMaterializerResumesPartialAndSkipsVerifiedDestination(t *testing.T) {
 	source, destination := t.TempDir(), t.TempDir()
 	content := []byte("portable artifact with a resumable tail")

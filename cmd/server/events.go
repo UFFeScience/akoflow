@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"os"
 	"time"
@@ -82,7 +81,7 @@ func registerExecutionHandlers(
 	resolver := infratransfer.EnvironmentEndpointResolver{
 		Connections: connections, Cloud: cloud, Provisioner: cloudProvisioner,
 	}
-	preparer := applicationtransfer.Coordinator{Catalog: data, WorkspaceSyncer: infratransfer.WorkspaceRsync{Resolver: resolver}, Materializer: applicationtransfer.Materializer{Resolver: resolver, Progress: data, ChunkSize: func(ctx context.Context) int64 { return int64(bufferSize(ctx)) }, Connectors: []ports.TransferConnector{
+	preparer := applicationtransfer.Coordinator{Catalog: data, WorkspaceSyncer: infratransfer.WorkspaceRsync{Resolver: resolver}, Materializer: applicationtransfer.Materializer{Resolver: resolver, Progress: data, Connectors: []ports.TransferConnector{
 		infratransfer.ArtifactStore{Root: artifactStoreRoot}, infratransfer.LocalFilesystem{BufferSize: bufferSize}, infratransfer.RsyncSSH{BufferSize: bufferSize}, &infratransfer.KubernetesExec{BufferSize: bufferSize}, infratransfer.HTTPDownload{}, infratransfer.S3Compatible{BufferSize: bufferSize}, infratransfer.GCS{},
 	}}}
 	supervisor, err := controlexecution.New(

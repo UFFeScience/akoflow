@@ -48,6 +48,8 @@ type Materializer struct {
 	ChunkSize  func(context.Context) int64
 }
 
+const defaultTransferChunkBytes int64 = 512 << 20
+
 func (m Materializer) endpoint(ctx context.Context, location domain.TransferLocation) (domain.TransferEndpoint, error) {
 	if m.Resolver != nil {
 		return m.Resolver.ResolveTransferEndpoint(ctx, location)
@@ -232,7 +234,7 @@ func (m Materializer) chunkSize(ctx context.Context) int64 {
 			return size
 		}
 	}
-	return 8 << 20
+	return defaultTransferChunkBytes
 }
 
 func chunkCount(size, chunkSize int64) int {

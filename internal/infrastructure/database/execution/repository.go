@@ -83,7 +83,8 @@ func (r *Repository) ListWorkspaces(ctx context.Context, runID string) ([]domain
 }
 
 func (r *Repository) ListWorkspaceCandidates(ctx context.Context) ([]domain.ActivityWorkspace, error) {
-	rows, err := r.db.QueryContext(ctx, workspaceSelect+` WHERE state IN ('sealed','releasable','releasing') AND pinned=0 AND is_final=0 ORDER BY created_at`)
+	rows, err := r.db.QueryContext(ctx, workspaceSelect+` WHERE state IN ('sealed','releasable','releasing') AND pinned=0
+		AND (is_final=0 OR release_reason!='inherited inputs pruned') ORDER BY created_at`)
 	if err != nil {
 		return nil, err
 	}

@@ -26,7 +26,7 @@ func (s *Supervisor) RecoverWorkspaces(ctx context.Context) error {
 		return err
 	}
 	for _, workspace := range workspaces {
-		if workspace.State == domain.WorkspaceReleasing || workspace.State == domain.WorkspaceReleasable {
+		if !workspace.IsFinal && (workspace.State == domain.WorkspaceReleasing || workspace.State == domain.WorkspaceReleasable) {
 			workspace.State = domain.WorkspaceSealed
 			if err := store.SaveWorkspace(ctx, workspace); err != nil {
 				return err
@@ -209,14 +209,7 @@ func (s *Supervisor) sealWorkspace(ctx context.Context, runID, activityID string
 		}
 	}
 	if manifest != nil {
-		workspace.FileCount = int64(manifest.Summary.FinalFiles)
-		workspace.OutputBytes = manifest.Summary.OutputBytes
-		for _, file := range manifest.Files {
-			entry := domain.WorkspaceEntry{Path: file.Path, Digest: file.Checksum, SizeBytes: file.SizeBytes}
-			if file.Change == domain.ArtifactCreated || file.Change == domain.ArtifactModified {
-				workspace.Manifest.Outputs = append(workspace.Manifest.Outputs, entry)
-			}
-		}
+		applyArtifactManifest(workspace, manifest)
 	}
 	if err := store.SaveWorkspace(ctx, *workspace); err != nil {
 		return err
@@ -230,8 +223,11 @@ func (s *Supervisor) reconcileWorkspace(ctx context.Context, workspaceID string)
 		return nil
 	}
 	workspace, err := store.FindWorkspace(ctx, workspaceID)
-	if err != nil || workspace == nil || workspace.State != domain.WorkspaceSealed || workspace.Pinned || workspace.IsFinal {
+	if err != nil || workspace == nil || workspace.State != domain.WorkspaceSealed || workspace.Pinned {
 		return err
+	}
+	if workspace.IsFinal {
+		return s.pruneFinalWorkspace(ctx, store, workspace)
 	}
 	leases, err := store.ListWorkspaceLeases(ctx, workspace.RunID)
 	if err != nil {
@@ -260,5 +256,70 @@ func (s *Supervisor) reconcileWorkspace(ctx context.Context, workspaceID string)
 	now := time.Now().UTC()
 	workspace.State, workspace.ReleasedAt = domain.WorkspaceReleased, &now
 	workspace.ReclaimedBytes = result.ReclaimedBytes
+	return store.SaveWorkspace(context.WithoutCancel(ctx), *workspace)
+}
+
+func applyArtifactManifest(workspace *domain.ActivityWorkspace, manifest *domain.ArtifactManifest) {
+	workspace.FileCount = int64(manifest.Summary.FinalFiles)
+	workspace.OutputBytes = manifest.Summary.OutputBytes
+	workspace.InputBytes = 0
+	workspace.Manifest = domain.WorkspaceManifest{}
+	initial := make(map[string]domain.WorkspaceEntry, len(manifest.InitialSnapshot))
+	final := make(map[string]domain.WorkspaceEntry, len(manifest.FinalSnapshot))
+	for _, file := range manifest.InitialSnapshot {
+		entry := domain.WorkspaceEntry{Path: file.Path, Digest: file.Checksum, SizeBytes: file.SizeBytes}
+		workspace.Manifest.Initial = append(workspace.Manifest.Initial, entry)
+		initial[file.Path] = entry
+	}
+	for _, file := range manifest.FinalSnapshot {
+		entry := domain.WorkspaceEntry{Path: file.Path, Digest: file.Checksum, SizeBytes: file.SizeBytes}
+		workspace.Manifest.Final = append(workspace.Manifest.Final, entry)
+		final[file.Path] = entry
+		before, existed := initial[file.Path]
+		if existed && before.Digest == entry.Digest && before.SizeBytes == entry.SizeBytes {
+			workspace.Manifest.Inputs = append(workspace.Manifest.Inputs, entry)
+			workspace.InputBytes += entry.SizeBytes
+		} else {
+			workspace.Manifest.Outputs = append(workspace.Manifest.Outputs, entry)
+		}
+	}
+	for _, file := range manifest.InitialSnapshot {
+		if _, exists := final[file.Path]; !exists {
+			workspace.Manifest.Removed = append(workspace.Manifest.Removed, initial[file.Path])
+		}
+	}
+	// Compatibility with observations recorded before complete snapshots were
+	// available. They remain output-safe, but are deliberately not prunable.
+	if len(manifest.InitialSnapshot) == 0 && len(manifest.FinalSnapshot) == 0 {
+		for _, file := range manifest.Files {
+			if file.Change == domain.ArtifactCreated || file.Change == domain.ArtifactModified {
+				workspace.Manifest.Outputs = append(workspace.Manifest.Outputs, domain.WorkspaceEntry{
+					Path: file.Path, Digest: file.Checksum, SizeBytes: file.SizeBytes,
+				})
+			}
+		}
+	}
+}
+
+func (s *Supervisor) pruneFinalWorkspace(ctx context.Context, store ports.WorkspaceStore, workspace *domain.ActivityWorkspace) error {
+	if workspace.ReleaseReason == "inherited inputs pruned" || len(workspace.Manifest.Inputs) == 0 || s.config.Workspaces == nil {
+		return nil
+	}
+	result, err := s.config.Workspaces.PruneInputs(ctx, *workspace)
+	if err != nil {
+		workspace.LastError = err.Error()
+		_ = store.SaveWorkspace(context.WithoutCancel(ctx), *workspace)
+		return err
+	}
+	usage, err := s.config.Workspaces.Inspect(ctx, *workspace)
+	if err != nil {
+		workspace.LastError = err.Error()
+		_ = store.SaveWorkspace(context.WithoutCancel(ctx), *workspace)
+		return err
+	}
+	workspace.FileCount, workspace.SizeBytes = usage.FileCount, usage.SizeBytes
+	workspace.ReclaimedBytes += result.ReclaimedBytes
+	workspace.ReleaseReason = "inherited inputs pruned"
+	workspace.LastError = ""
 	return store.SaveWorkspace(context.WithoutCancel(ctx), *workspace)
 }

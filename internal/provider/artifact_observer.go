@@ -70,6 +70,8 @@ func ArtifactManifestFor(runID, activityID, runtime string, startedAt, finishedA
 	manifest := &domain.ArtifactManifest{SchemaVersion: 1, RunID: runID, ActivityID: activityID,
 		Attempt: 1, Runtime: runtime, Root: after.Root, StartedAt: startedAt, FinishedAt: finishedAt,
 		ExitCode: exitCode, Files: make([]domain.ArtifactObservation, 0)}
+	manifest.InitialSnapshot = snapshotEntries(before)
+	manifest.FinalSnapshot = snapshotEntries(after)
 	paths := make([]string, 0, len(before.Files)+len(after.Files))
 	seen := make(map[string]bool)
 	for path := range before.Files {
@@ -112,6 +114,21 @@ func ArtifactManifestFor(runID, activityID, runtime string, startedAt, finishedA
 	manifest.Summary.FinalFiles = len(after.Files)
 	manifest.Phases = []domain.LifecycleObservation{{Phase: "execution", Status: artifactPhase(exitCode), StartedAt: startedAt, FinishedAt: finishedAt, DurationSeconds: maxDuration(finishedAt - startedAt)}}
 	return manifest
+}
+
+func snapshotEntries(snapshot ArtifactSnapshot) []domain.ArtifactSnapshotEntry {
+	paths := make([]string, 0, len(snapshot.Files))
+	for path := range snapshot.Files {
+		paths = append(paths, path)
+	}
+	sort.Strings(paths)
+	entries := make([]domain.ArtifactSnapshotEntry, 0, len(paths))
+	for _, path := range paths {
+		file := snapshot.Files[path]
+		entries = append(entries, domain.ArtifactSnapshotEntry{Path: path, SizeBytes: file.size,
+			Checksum: "sha256:" + file.checksum, ModifiedUnixNano: file.modified})
+	}
+	return entries
 }
 
 func fileChecksum(path string) (string, error) {

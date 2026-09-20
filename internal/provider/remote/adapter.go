@@ -218,6 +218,8 @@ func remoteArtifactManifest(handle domain.ActivityHandle, root string, exitCode 
 	manifest := &domain.ArtifactManifest{SchemaVersion: 1, RunID: handle.RunID, ActivityID: handle.ActivityID,
 		Attempt: 1, Runtime: handle.RuntimeID, Root: root, StartedAt: handle.StartedAt, FinishedAt: handle.FinishedAt,
 		ExitCode: exitCode, Files: []domain.ArtifactObservation{}}
+	manifest.InitialSnapshot = remoteSnapshotEntries(before)
+	manifest.FinalSnapshot = remoteSnapshotEntries(after)
 	manifest.Summary.InitialFiles, manifest.Summary.FinalFiles = len(initial), len(final)
 	for _, path := range paths {
 		old, hadOld := initial[path]
@@ -253,6 +255,16 @@ func remoteArtifactManifest(handle domain.ActivityHandle, root string, exitCode 
 	manifest.Phases = []domain.LifecycleObservation{{Phase: "execution", Status: status, StartedAt: handle.StartedAt,
 		FinishedAt: handle.FinishedAt, DurationSeconds: duration}}
 	return manifest
+}
+
+func remoteSnapshotEntries(files []remoteArtifactFile) []domain.ArtifactSnapshotEntry {
+	entries := make([]domain.ArtifactSnapshotEntry, 0, len(files))
+	for _, file := range files {
+		entries = append(entries, domain.ArtifactSnapshotEntry{Path: file.Path, SizeBytes: file.Size,
+			Checksum: "sha256:" + file.Checksum, ModifiedUnixNano: file.Modified})
+	}
+	sort.Slice(entries, func(i, j int) bool { return entries[i].Path < entries[j].Path })
+	return entries
 }
 
 func indexRemoteFiles(files []remoteArtifactFile) map[string]remoteArtifactFile {

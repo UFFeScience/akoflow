@@ -169,6 +169,9 @@ func TestAdapterCatalogsOnlyRemoteWorkspaceChanges(t *testing.T) {
 		manifest.Files[1].Path != "input.txt" || manifest.Files[2].Path != "result.txt" {
 		t.Fatalf("files = %#v", manifest.Files)
 	}
+	if len(manifest.InitialSnapshot) != 2 || len(manifest.FinalSnapshot) != 2 {
+		t.Fatalf("snapshots = %#v -> %#v", manifest.InitialSnapshot, manifest.FinalSnapshot)
+	}
 }
 
 func TestAdapterInspectAndStopPropagateExecutorErrors(t *testing.T) {

@@ -41,6 +41,7 @@ type Config struct {
 type WorkspaceManager interface {
 	Ensure(context.Context, domain.ActivityWorkspace) error
 	Inspect(context.Context, domain.ActivityWorkspace) (domain.WorkspaceUsage, error)
+	PruneInputs(context.Context, domain.ActivityWorkspace) (domain.WorkspaceReleaseResult, error)
 	Release(context.Context, domain.ActivityWorkspace) (domain.WorkspaceReleaseResult, error)
 }
 

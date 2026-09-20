@@ -29,8 +29,11 @@ type WorkspaceEntry struct {
 }
 
 type WorkspaceManifest struct {
+	Initial   []WorkspaceEntry `json:"initial,omitempty"`
+	Final     []WorkspaceEntry `json:"final,omitempty"`
 	Inputs    []WorkspaceEntry `json:"inputs,omitempty"`
 	Outputs   []WorkspaceEntry `json:"outputs,omitempty"`
+	Removed   []WorkspaceEntry `json:"removed,omitempty"`
 	Temporary []WorkspaceEntry `json:"temporary,omitempty"`
 }
 
@@ -81,4 +84,6 @@ type WorkspaceUsage struct {
 
 type WorkspaceReleaseResult struct {
 	ReclaimedBytes int64 `json:"reclaimedBytes"`
+	RemovedFiles   int64 `json:"removedFiles"`
+	PreservedFiles int64 `json:"preservedFiles"`
 }

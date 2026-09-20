@@ -33,6 +33,9 @@ func TestArtifactSnapshotsProduceCreatedModifiedAndDeletedManifest(t *testing.T)
 		t.Fatal(err)
 	}
 	manifest := ArtifactManifestFor("run", "activity", "local", 10, 14.5, 0, before, after)
+	if len(manifest.InitialSnapshot) != 3 || len(manifest.FinalSnapshot) != 3 {
+		t.Fatalf("snapshots=%#v -> %#v", manifest.InitialSnapshot, manifest.FinalSnapshot)
+	}
 	if manifest.Summary.InitialFiles != 3 || manifest.Summary.FinalFiles != 3 || manifest.Summary.CreatedFiles != 1 || manifest.Summary.ModifiedFiles != 1 || manifest.Summary.DeletedFiles != 1 {
 		t.Fatalf("summary = %#v", manifest.Summary)
 	}

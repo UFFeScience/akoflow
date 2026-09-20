@@ -83,15 +83,16 @@ func registerExecutionHandlers(
 		Connections: connections, Cloud: cloud, Provisioner: cloudProvisioner,
 	}
 	verifiedArtifacts := &applicationtransfer.VerifiedArtifactCache{}
+	kubernetesTransfer := &infratransfer.KubernetesExec{BufferSize: bufferSize}
 	preparer := applicationtransfer.Coordinator{Catalog: data, WorkspaceSyncer: infratransfer.WorkspaceRsync{Resolver: resolver}, Materializer: applicationtransfer.Materializer{Resolver: resolver, Progress: data, VerifiedArtifacts: verifiedArtifacts, Connectors: []ports.TransferConnector{
-		infratransfer.ArtifactStore{Root: artifactStoreRoot}, infratransfer.LocalFilesystem{BufferSize: bufferSize}, infratransfer.RsyncSSH{BufferSize: bufferSize}, &infratransfer.KubernetesExec{BufferSize: bufferSize}, infratransfer.HTTPDownload{}, infratransfer.S3Compatible{BufferSize: bufferSize}, infratransfer.GCS{},
+		infratransfer.ArtifactStore{Root: artifactStoreRoot}, infratransfer.LocalFilesystem{BufferSize: bufferSize}, infratransfer.RsyncSSH{BufferSize: bufferSize}, kubernetesTransfer, infratransfer.HTTPDownload{}, infratransfer.S3Compatible{BufferSize: bufferSize}, infratransfer.GCS{},
 	}}}
 	supervisor, err := controlexecution.New(
 		executions, activities, simulator,
 		controlexecution.Config{
 			PollInterval: time.Second, Preparer: preparer,
 			Data: data, Cloud: cloudProvisioner, CloudStore: cloud,
-			Workspaces:     infratransfer.ActivityWorkspaceManager{Resolver: resolver},
+			Workspaces:     infratransfer.ActivityWorkspaceManager{Resolver: resolver, Kubernetes: kubernetesTransfer},
 			CloudAllocator: controlexecution.QueuedCloudAllocator{Cloud: cloud, Operations: cloud, Queue: events, PollInterval: 500 * time.Millisecond},
 		},
 	)

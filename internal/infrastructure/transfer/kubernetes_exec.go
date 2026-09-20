@@ -29,6 +29,28 @@ type KubernetesExec struct {
 	sessions   map[string]kubernetesTransferSession
 }
 
+// RunWorkspaceScript executes a lifecycle operation in the short-lived helper
+// pod mounted on the endpoint PVC. It keeps workspace ownership and pruning in
+// the control plane while supporting the same contract as local and SSH roots.
+func (connector *KubernetesExec) RunWorkspaceScript(ctx context.Context, endpoint domain.TransferEndpoint, script string, input io.Reader) ([]byte, error) {
+	target, _, err := kubernetesTarget(endpoint, "")
+	if err != nil {
+		return nil, err
+	}
+	pod, cleanup, err := connector.pod(ctx, target, endpoint)
+	if err != nil {
+		return nil, err
+	}
+	defer cleanup()
+	command := target.exec(ctx, pod, script)
+	command.Stdin = input
+	output, err := command.CombinedOutput()
+	if err != nil {
+		return output, fmt.Errorf("execute Kubernetes workspace lifecycle: %w: %s", err, strings.TrimSpace(string(output)))
+	}
+	return output, nil
+}
+
 type kubernetesTransferSession struct {
 	pod     string
 	cleanup func()

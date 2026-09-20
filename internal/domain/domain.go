@@ -209,6 +209,7 @@ type ActivityHandle = execution.ActivityHandle
 type ActivityHandleStatus = execution.ActivityHandleStatus
 type ArtifactChange = execution.ArtifactChange
 type ArtifactObservation = execution.ArtifactObservation
+type ArtifactSnapshotEntry = execution.ArtifactSnapshotEntry
 type ArtifactManifest = execution.ArtifactManifest
 
 // ArtifactManifest remains the backwards-compatible name for observed output.

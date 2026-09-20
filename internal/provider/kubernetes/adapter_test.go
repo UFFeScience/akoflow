@@ -211,7 +211,7 @@ func TestShellLifecycleExecutesActivityAndPublishesManifest(t *testing.T) {
 	}
 	if manifest.ExitCode != 0 || manifest.RunID != "run" || manifest.Summary.FinalFiles < 1 ||
 		manifest.Summary.CreatedFiles != 1 || len(manifest.Files) != 1 ||
-		manifest.Files[0].Checksum == "" {
+		manifest.Files[0].Checksum == "" || len(manifest.FinalSnapshot) != 1 {
 		t.Fatalf("manifest=%+v", manifest)
 	}
 }

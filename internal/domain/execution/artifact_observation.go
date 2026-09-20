@@ -38,20 +38,32 @@ type ArtifactSummary struct {
 	OutputBytes   int64 `json:"outputBytes"`
 }
 
+// ArtifactSnapshotEntry is a complete, content-addressed workspace entry.
+// Runtimes persist both sides of the execution boundary so workspace retention
+// can distinguish inherited inputs from outputs without guessing from paths.
+type ArtifactSnapshotEntry struct {
+	Path             string `json:"path"`
+	SizeBytes        int64  `json:"sizeBytes"`
+	Checksum         string `json:"checksum"`
+	ModifiedUnixNano int64  `json:"modifiedUnixNano,omitempty"`
+}
+
 // ArtifactManifest is the portable JSON document produced by a runtime
 // observer for one concrete activity attempt.
 type ArtifactManifest struct {
-	SchemaVersion int                    `json:"schemaVersion"`
-	RunID         string                 `json:"runId"`
-	ActivityID    string                 `json:"activityId"`
-	Attempt       int                    `json:"attempt"`
-	Runtime       string                 `json:"runtime"`
-	Hostname      string                 `json:"hostname,omitempty"`
-	Root          string                 `json:"root"`
-	StartedAt     float64                `json:"startedAt"`
-	FinishedAt    float64                `json:"finishedAt"`
-	ExitCode      int                    `json:"exitCode"`
-	Files         []ArtifactObservation  `json:"files"`
-	Phases        []LifecycleObservation `json:"phases,omitempty"`
-	Summary       ArtifactSummary        `json:"summary"`
+	SchemaVersion   int                     `json:"schemaVersion"`
+	RunID           string                  `json:"runId"`
+	ActivityID      string                  `json:"activityId"`
+	Attempt         int                     `json:"attempt"`
+	Runtime         string                  `json:"runtime"`
+	Hostname        string                  `json:"hostname,omitempty"`
+	Root            string                  `json:"root"`
+	StartedAt       float64                 `json:"startedAt"`
+	FinishedAt      float64                 `json:"finishedAt"`
+	ExitCode        int                     `json:"exitCode"`
+	Files           []ArtifactObservation   `json:"files"`
+	InitialSnapshot []ArtifactSnapshotEntry `json:"initialSnapshot,omitempty"`
+	FinalSnapshot   []ArtifactSnapshotEntry `json:"finalSnapshot,omitempty"`
+	Phases          []LifecycleObservation  `json:"phases,omitempty"`
+	Summary         ArtifactSummary         `json:"summary"`
 }

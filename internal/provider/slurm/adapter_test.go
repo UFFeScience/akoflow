@@ -261,7 +261,7 @@ func TestBatchScriptPreparesSeedBeforeSnapshotAndBindsWorkspace(t *testing.T) {
 		t.Fatal(err)
 	}
 	seed := strings.Index(script, "test -d /akoflow-wfa-shared")
-	snapshot := seed + strings.Index(script[seed:], `find "$artifact_root" -type f`)
+	snapshot := seed + strings.Index(script[seed:], `snapshot_artifacts "$artifact_before"`)
 	cleanup := strings.Index(script, `while IFS= read -r seed_link`)
 	finished := strings.Index(script, `finished_at=$(date`)
 	if seed < 0 || snapshot < seed || cleanup < 0 || finished < cleanup {

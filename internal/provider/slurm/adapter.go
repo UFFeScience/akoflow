@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"sort"
 	"strconv"
 	"strings"
 	"sync"
@@ -283,6 +284,11 @@ func slurmArtifacts(handle domain.ActivityHandle, values map[string]string) *dom
 	if handle.ExitCode != nil {
 		manifest.ExitCode = *handle.ExitCode
 	}
+	manifest.InitialSnapshot = slurmSnapshotEntries(values, "initial.")
+	manifest.FinalSnapshot = slurmSnapshotEntries(values, "final.")
+	if len(manifest.InitialSnapshot) > 0 || len(manifest.FinalSnapshot) > 0 {
+		populateSlurmArtifactDelta(manifest)
+	}
 	for key, value := range values {
 		if !strings.HasPrefix(key, "artifact.") {
 			continue
@@ -303,7 +309,9 @@ func slurmArtifacts(handle domain.ActivityHandle, values map[string]string) *dom
 		manifest.Summary.CreatedFiles++
 		manifest.Summary.OutputBytes += size
 	}
-	manifest.Summary.FinalFiles = len(manifest.Files)
+	if len(manifest.FinalSnapshot) == 0 {
+		manifest.Summary.FinalFiles = len(manifest.Files)
+	}
 	phase := "completed"
 	if manifest.ExitCode != 0 {
 		phase = "failed"
@@ -314,6 +322,72 @@ func slurmArtifacts(handle domain.ActivityHandle, values map[string]string) *dom
 	}
 	manifest.Phases = []domain.LifecycleObservation{{Phase: "execution", Status: phase, StartedAt: handle.StartedAt, FinishedAt: handle.FinishedAt, DurationSeconds: duration}}
 	return manifest
+}
+
+func slurmSnapshotEntries(values map[string]string, prefix string) []domain.ArtifactSnapshotEntry {
+	entries := make([]domain.ArtifactSnapshotEntry, 0)
+	for key, value := range values {
+		if !strings.HasPrefix(key, prefix) {
+			continue
+		}
+		parts := strings.SplitN(value, "|", 3)
+		if len(parts) != 3 {
+			continue
+		}
+		path, pathErr := base64.StdEncoding.DecodeString(parts[0])
+		size, sizeErr := strconv.ParseInt(strings.TrimSpace(parts[1]), 10, 64)
+		if pathErr != nil || sizeErr != nil {
+			continue
+		}
+		entries = append(entries, domain.ArtifactSnapshotEntry{Path: string(path), SizeBytes: size,
+			Checksum: "sha256:" + strings.TrimSpace(parts[2])})
+	}
+	sort.Slice(entries, func(i, j int) bool { return entries[i].Path < entries[j].Path })
+	return entries
+}
+
+func populateSlurmArtifactDelta(manifest *domain.ArtifactManifest) {
+	initial := make(map[string]domain.ArtifactSnapshotEntry, len(manifest.InitialSnapshot))
+	final := make(map[string]domain.ArtifactSnapshotEntry, len(manifest.FinalSnapshot))
+	paths := make([]string, 0, len(manifest.InitialSnapshot)+len(manifest.FinalSnapshot))
+	seen := make(map[string]bool)
+	for _, entry := range manifest.InitialSnapshot {
+		initial[entry.Path] = entry
+		seen[entry.Path] = true
+		paths = append(paths, entry.Path)
+	}
+	for _, entry := range manifest.FinalSnapshot {
+		final[entry.Path] = entry
+		if !seen[entry.Path] {
+			paths = append(paths, entry.Path)
+		}
+	}
+	sort.Strings(paths)
+	manifest.Summary.InitialFiles = len(initial)
+	manifest.Summary.FinalFiles = len(final)
+	for _, path := range paths {
+		before, hadBefore := initial[path]
+		after, hasAfter := final[path]
+		change := domain.ArtifactCreated
+		switch {
+		case !hadBefore:
+			manifest.Summary.CreatedFiles++
+		case !hasAfter:
+			change = domain.ArtifactDeleted
+			manifest.Summary.DeletedFiles++
+			after = before
+		case before.Checksum == after.Checksum && before.SizeBytes == after.SizeBytes:
+			continue
+		default:
+			change = domain.ArtifactModified
+			manifest.Summary.ModifiedFiles++
+		}
+		manifest.Files = append(manifest.Files, domain.ArtifactObservation{Path: path, Change: change,
+			SizeBytes: after.SizeBytes, Checksum: after.Checksum})
+		if change != domain.ArtifactDeleted {
+			manifest.Summary.OutputBytes += after.SizeBytes
+		}
+	}
 }
 
 func (a *Adapter) fallbackStatus(ctx context.Context, handle domain.ActivityHandle, sacctErr error) (domain.ActivityHandle, error) {
@@ -376,8 +450,13 @@ func sentinelValues(payload string) map[string]string {
 	for _, line := range strings.Split(payload, "\n") {
 		key, value, found := strings.Cut(line, "=")
 		if found {
-			if key == "artifact" {
+			if key == "artifact" || key == "initial" || key == "final" {
 				key = "artifact." + strconv.Itoa(len(values))
+				if strings.HasPrefix(line, "initial=") {
+					key = "initial." + strconv.Itoa(len(values))
+				} else if strings.HasPrefix(line, "final=") {
+					key = "final." + strconv.Itoa(len(values))
+				}
 			}
 			values[strings.TrimSpace(key)] = strings.TrimSpace(value)
 		}
@@ -529,7 +608,12 @@ func batchScript(runID string, activity domain.Activity, partition, node string)
 	script.WriteString(")\nsentinel=\"${sentinel}${SLURM_JOB_ID}.status\"\n")
 	script.WriteString("artifact_root=")
 	script.WriteString(shellQuote(activity.Command.WorkingDirectory))
-	script.WriteString("\ncontainer_start_marker=\"${sentinel}.container-started\"\nrm -f \"$container_start_marker\"\nmkdir -p \"$artifact_root\"\nartifact_root=$(cd \"$artifact_root\" && pwd -P)\nartifact_before=$(mktemp)\nseed_links=$(mktemp)\nseed_list=$(mktemp)\n")
+	script.WriteString("\ncontainer_start_marker=\"${sentinel}.container-started\"\nrm -f \"$container_start_marker\"\nmkdir -p \"$artifact_root\"\nartifact_root=$(cd \"$artifact_root\" && pwd -P)\nartifact_before=$(mktemp)\nartifact_after=$(mktemp)\nseed_links=$(mktemp)\nseed_list=$(mktemp)\n")
+	script.WriteString(`snapshot_artifacts() { destination=$1; : > "$destination"; find "$artifact_root" -type f -exec sh -c '
+root=$1; destination=$2; shift 2
+for file do relative=${file#"$root"/}; size=$(wc -c < "$file") || exit 1; checksum=$(sha256sum "$file" | awk "{print \$1}") || exit 1; encoded=$(printf "%s" "$relative" | base64 | tr -d "\\n"); printf "%s|%s|%s\\n" "$encoded" "$size" "$checksum" >> "$destination"; done
+' snapshot "$artifact_root" "$destination" {} +; sort -o "$destination" "$destination"; }
+`)
 	script.WriteString("started_at=$(date +%s.%N)\nallocated_node=$(hostname -s)\ncontainer_epoch_anchor=$(date +%s.%N)\ncontainer_uptime_anchor=$(awk '{print $1}' /proc/uptime)\nprintf 'state=running\\nstarted_at=%s\\nallocated_node=%s\\nartifact_root=%s\\n' \"$started_at\" \"$allocated_node\" \"$artifact_root\" > \"$sentinel\"\n")
 	if interval := activity.Command.Environment["AKOFLOW_METRIC_INTERVAL_SECONDS"]; interval != "" {
 		script.WriteString("AKOFLOW_METRIC_INTERVAL_SECONDS=")
@@ -545,14 +629,11 @@ func batchScript(runID string, activity domain.Activity, partition, node string)
 	script.WriteString("[ -z \"$metric_pid\" ] || sample_metrics; ")
 	script.WriteString("container_started_at=0; if [ -f \"$container_start_marker\" ]; then container_uptime=$(cat \"$container_start_marker\"); container_started_at=$(awk -v epoch=\"$container_epoch_anchor\" -v anchor=\"$container_uptime_anchor\" -v current=\"$container_uptime\" 'BEGIN { printf \"%.9f\", epoch + current - anchor }'); fi; ")
 	script.WriteString("while IFS= read -r seed_link; do [ -L \"$seed_link\" ] && rm -f -- \"$seed_link\"; done < \"$seed_links\"; ")
+	script.WriteString("snapshot_artifacts \"$artifact_after\" || true; ")
 	script.WriteString("finished_at=$(date +%s.%N); { printf 'state=%s\\nexit_code=%s\\nstarted_at=%s\\nfinished_at=%s\\nallocated_node=%s\\ncontainer_started_at=%s\\nartifact_root=%s\\n' \"$state\" \"$code\" \"$started_at\" \"$finished_at\" \"$allocated_node\" \"$container_started_at\" \"$artifact_root\"; ")
-	script.WriteString("find \"$artifact_root\" -type f -print 2>/dev/null | sort | comm -13 \"$artifact_before\" - | ")
-	script.WriteString("while IFS= read -r file; do relative=${file#\"$artifact_root\"/}; ")
-	script.WriteString("size=$(wc -c < \"$file\" 2>/dev/null) || continue; ")
-	script.WriteString("checksum=$(sha256sum \"$file\" 2>/dev/null | awk '{print $1}') || continue; ")
-	script.WriteString("encoded=$(printf '%s' \"$relative\" | base64 | tr -d '\\n'); ")
-	script.WriteString("printf 'artifact=%s|%s|%s\\n' \"$encoded\" \"$size\" \"$checksum\"; done; ")
-	script.WriteString("} > \"$sentinel\" || true; rm -f \"$artifact_before\" \"$container_start_marker\" \"$seed_links\" \"$seed_list\"; exit \"$code\"; }\n")
+	script.WriteString("while IFS= read -r entry; do printf 'initial=%s\\n' \"$entry\"; done < \"$artifact_before\"; ")
+	script.WriteString("while IFS= read -r entry; do printf 'final=%s\\n' \"$entry\"; done < \"$artifact_after\"; ")
+	script.WriteString("} > \"$sentinel\" || true; rm -f \"$artifact_before\" \"$artifact_after\" \"$container_start_marker\" \"$seed_links\" \"$seed_list\"; exit \"$code\"; }\n")
 	script.WriteString("trap finish EXIT\nset -eu\n")
 	image, err := slurmExecutable(activity.Command)
 	if err != nil {
@@ -561,7 +642,7 @@ func batchScript(runID string, activity domain.Activity, partition, node string)
 	if image != "" {
 		writeSharedImageSeedPreparation(&script, image)
 	}
-	script.WriteString("find \"$artifact_root\" -type f -print 2>/dev/null | sort > \"$artifact_before\"\n")
+	script.WriteString("snapshot_artifacts \"$artifact_before\"\n")
 	if err := writeActivityCommand(&script, activity, "$container_start_marker", "$artifact_root"); err != nil {
 		return "", err
 	}

@@ -16,7 +16,7 @@ fi
 snapshot() {
   destination=$1
   printf '#\t0\t-\n' > "$destination"
-  find "$root" -type f -exec sh -c '
+  find "$root" -type f ! -name .akoflow-owner -exec sh -c '
     root=$1
     destination=$2
     shift 2
@@ -115,16 +115,32 @@ while IFS="$tab" read -r change size checksum relative; do
 done < "$changes"
 files_json=$files_json']'
 
+snapshot_json() {
+  source=$1
+  result='['
+  separator=''
+  tab=$(printf '\t')
+  while IFS="$tab" read -r relative size checksum; do
+    [ -n "$relative" ] && [ "$relative" != "#" ] || continue
+    escaped_path=$(printf '%s' "$relative" | sed 's/\\/\\\\/g; s/"/\\"/g')
+    result=$result$separator'{"path":"'$escaped_path'","sizeBytes":'$size',"checksum":"sha256:'$checksum'"}'
+    separator=','
+  done < "$source"
+  printf '%s]' "$result"
+}
+initial_snapshot=$(snapshot_json "$before")
+final_snapshot=$(snapshot_json "$after")
+
 manifest_format='{"schemaVersion":1,"runId":"%s","activityId":"%s","attempt":1,'
 manifest_format=$manifest_format'"runtime":"kubernetes","root":"%s","startedAt":%s,'
-manifest_format=$manifest_format'"finishedAt":%s,"exitCode":%s,"files":%s,"phases":['
+manifest_format=$manifest_format'"finishedAt":%s,"exitCode":%s,"files":%s,"initialSnapshot":%s,"finalSnapshot":%s,"phases":['
 manifest_format=$manifest_format'{"phase":"execution","status":"%s","startedAt":%s,'
 manifest_format=$manifest_format'"finishedAt":%s,"durationSeconds":%s}],"summary":{'
 manifest_format=$manifest_format'"initialFiles":%s,"finalFiles":%s,"createdFiles":%s,'
 manifest_format=$manifest_format'"modifiedFiles":%s,"deletedFiles":%s,"outputBytes":%s}}'
 manifest=$(printf "$manifest_format" \
   "$AKOFLOW_RUN_ID" "$AKOFLOW_ACTIVITY_ID" "$root" "$started_at" "$finished_at" \
-  "$activity_exit_code" "$files_json" \
+  "$activity_exit_code" "$files_json" "$initial_snapshot" "$final_snapshot" \
   "$(if [ "$activity_exit_code" -eq 0 ]; then printf completed; else printf failed; fi)" \
   "$started_at" "$finished_at" "$duration" "$initial_files" "$final_files" \
   "$created_files" "$modified_files" "$deleted_files" "$output_bytes")

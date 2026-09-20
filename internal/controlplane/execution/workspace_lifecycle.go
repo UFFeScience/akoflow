@@ -309,13 +309,13 @@ func (s *Supervisor) pruneFinalWorkspace(ctx context.Context, store ports.Worksp
 	if err != nil {
 		workspace.LastError = err.Error()
 		_ = store.SaveWorkspace(context.WithoutCancel(ctx), *workspace)
-		return err
+		return nil
 	}
 	usage, err := s.config.Workspaces.Inspect(ctx, *workspace)
 	if err != nil {
 		workspace.LastError = err.Error()
 		_ = store.SaveWorkspace(context.WithoutCancel(ctx), *workspace)
-		return err
+		return nil
 	}
 	workspace.FileCount, workspace.SizeBytes = usage.FileCount, usage.SizeBytes
 	workspace.ReclaimedBytes += result.ReclaimedBytes

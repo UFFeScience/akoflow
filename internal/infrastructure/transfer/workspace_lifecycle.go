@@ -1,7 +1,6 @@
 package transfer
 
 import (
-	"bytes"
 	"context"
 	"crypto/sha256"
 	"encoding/base64"
@@ -123,25 +122,21 @@ func (m ActivityWorkspaceManager) PruneInputs(ctx context.Context, workspace dom
 	if strings.HasPrefix(endpoint.URI, "file://") {
 		return pruneLocalWorkspaceInputs(workspace, path)
 	}
-	payload, err := json.Marshal(workspace.Manifest.Inputs)
-	if err != nil {
-		return domain.WorkspaceReleaseResult{}, fmt.Errorf("encode workspace inputs: %w", err)
-	}
-	command := "python3 -c " + shell(remotePruneInputsScript) + " " + shell(path) + " " +
-		shell(workspaceMarkerFor(workspace, path)) + " " + shell(strings.TrimSpace(string(markerContents(workspace))))
+	payload := workspacePrunePayload(workspace.Manifest.Inputs)
+	command := workspacePruneCommand(path, workspace)
 	if isKubernetesEndpoint(endpoint) {
 		if m.Kubernetes == nil {
 			return domain.WorkspaceReleaseResult{}, fmt.Errorf("Kubernetes workspace lifecycle runner is unavailable")
 		}
 		output, runErr := m.Kubernetes.RunWorkspaceScript(ctx, endpoint,
-			kubernetesPruneCommand(path, workspace), strings.NewReader(kubernetesPrunePayload(workspace.Manifest.Inputs)))
+			command, strings.NewReader(payload))
 		return decodeWorkspacePruneResult(output, runErr)
 	}
 	host, _, err := sshTarget(endpoint, "")
 	if err != nil {
 		return domain.WorkspaceReleaseResult{}, err
 	}
-	output, err := runSSHCombinedOutput(ctx, endpoint, append(sshArgs(endpoint), host, command), bytes.NewReader(payload))
+	output, err := runSSHCombinedOutput(ctx, endpoint, append(sshArgs(endpoint), host, command), strings.NewReader(payload))
 	if err != nil {
 		return domain.WorkspaceReleaseResult{}, fmt.Errorf("prune remote workspace inputs: %w: %s", err, strings.TrimSpace(string(output)))
 	}
@@ -410,32 +405,7 @@ func removeEmptyWorkspaceDirectories(root string) {
 	}
 }
 
-const remotePruneInputsScript = `import hashlib,json,os,sys
-root,marker,expected=sys.argv[1:4]
-with open(marker,'r',encoding='utf-8') as stream:
-  if stream.read().strip()!=expected: raise SystemExit('workspace marker does not match persisted ownership')
-root_real=os.path.realpath(root)
-removed=preserved=reclaimed=0
-for entry in json.load(sys.stdin):
-  relative=entry.get('path','')
-  if not relative or os.path.isabs(relative): raise SystemExit('unsafe workspace input: '+relative)
-  target=os.path.normpath(os.path.join(root_real,relative))
-  if os.path.commonpath([root_real,target])!=root_real: raise SystemExit('workspace input escapes root: '+relative)
-  try: stat=os.lstat(target)
-  except FileNotFoundError: continue
-  if not os.path.isfile(target) or os.path.islink(target) or stat.st_size!=entry.get('sizeBytes'): preserved+=1; continue
-  digest=hashlib.sha256()
-  with open(target,'rb') as stream:
-    for chunk in iter(lambda: stream.read(1024*1024),b''): digest.update(chunk)
-  if 'sha256:'+digest.hexdigest()!=entry.get('digest'): preserved+=1; continue
-  os.unlink(target); removed+=1; reclaimed+=stat.st_size
-for base,dirs,files in os.walk(root_real,topdown=False):
-  if base!=root_real:
-    try: os.rmdir(base)
-    except OSError: pass
-print(json.dumps({'reclaimedBytes':reclaimed,'removedFiles':removed,'preservedFiles':preserved},separators=(',',':')))`
-
-func kubernetesPrunePayload(entries []domain.WorkspaceEntry) string {
+func workspacePrunePayload(entries []domain.WorkspaceEntry) string {
 	var payload strings.Builder
 	for _, entry := range entries {
 		encoded := base64.StdEncoding.EncodeToString([]byte(entry.Path))
@@ -444,7 +414,7 @@ func kubernetesPrunePayload(entries []domain.WorkspaceEntry) string {
 	return payload.String()
 }
 
-func kubernetesPruneCommand(path string, workspace domain.ActivityWorkspace) string {
+func workspacePruneCommand(path string, workspace domain.ActivityWorkspace) string {
 	marker := workspaceMarkerFor(workspace, path)
 	expected := strings.TrimSpace(string(markerContents(workspace)))
 	return "set -eu; test -f " + shell(marker) + "; test \"$(cat -- " + shell(marker) + ")\" = " + shell(expected) + `; ` +

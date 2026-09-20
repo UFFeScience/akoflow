@@ -4,8 +4,11 @@ import (
 	"context"
 	"crypto/sha256"
 	"encoding/hex"
+	"encoding/json"
 	"os"
+	"os/exec"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/UFFeScience/akoflow/internal/domain"
@@ -120,4 +123,43 @@ func TestPruneLocalWorkspaceInputsRejectsEscapingPath(t *testing.T) {
 func digestForTest(value []byte) string {
 	hash := sha256.Sum256(value)
 	return hex.EncodeToString(hash[:])
+}
+
+func TestWorkspacePruneShellCommandRemovesOnlyVerifiedInputs(t *testing.T) {
+	root := t.TempDir()
+	path := filepath.Join(root, "run-1", "activity-1")
+	workspace := domain.ActivityWorkspace{ID: "workspace-run-1-activity-1", RunID: "run-1",
+		ActivityID: "activity-1", ExecutionPath: path}
+	manager := ActivityWorkspaceManager{}
+	if err := manager.Ensure(context.Background(), workspace); err != nil {
+		t.Fatal(err)
+	}
+	input := []byte("input")
+	output := []byte("output")
+	if err := os.WriteFile(filepath.Join(path, "input.fits"), input, 0o600); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(path, "output.fits"), output, 0o600); err != nil {
+		t.Fatal(err)
+	}
+	workspace.Manifest.Inputs = []domain.WorkspaceEntry{{Path: "input.fits", SizeBytes: int64(len(input)), Digest: "sha256:" + digestForTest(input)}}
+	command := exec.Command("sh", "-c", workspacePruneCommand(path, workspace))
+	command.Stdin = strings.NewReader(workspacePrunePayload(workspace.Manifest.Inputs))
+	resultJSON, err := command.CombinedOutput()
+	if err != nil {
+		t.Fatalf("shell pruning failed: %v: %s", err, resultJSON)
+	}
+	var result domain.WorkspaceReleaseResult
+	if err := json.Unmarshal(resultJSON, &result); err != nil {
+		t.Fatal(err)
+	}
+	if result.RemovedFiles != 1 || result.ReclaimedBytes != int64(len(input)) {
+		t.Fatalf("result=%+v", result)
+	}
+	if _, err := os.Stat(filepath.Join(path, "input.fits")); !os.IsNotExist(err) {
+		t.Fatalf("input remains: %v", err)
+	}
+	if content, err := os.ReadFile(filepath.Join(path, "output.fits")); err != nil || string(content) != string(output) {
+		t.Fatalf("output changed: %q %v", content, err)
+	}
 }

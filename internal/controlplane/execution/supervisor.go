@@ -579,6 +579,21 @@ func (s *Supervisor) startReadyActivities(
 	results := make([]startResult, len(ready))
 	semaphore := make(chan struct{}, readyActivityConcurrency)
 	var group sync.WaitGroup
+	for _, activityID := range ready {
+		task, exists := tasks[activityID]
+		if !exists {
+			continue
+		}
+		task.Status = domain.TaskPreparing
+		if task.Metadata == nil {
+			task.Metadata = make(map[string]any)
+		}
+		task.Metadata["queueReason"] = "synchronizing predecessor workspaces and preparing runtime"
+		if err := s.executions.SaveTask(ctx, task); err != nil {
+			return fmt.Errorf("mark activity %q preparing: %w", activityID, err)
+		}
+		tasks[activityID] = task
+	}
 	for index, activityID := range ready {
 		group.Add(1)
 		go func(index int, activityID string) {

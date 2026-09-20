@@ -19,6 +19,12 @@ func (workspaceEndpointResolver) ResolveTransferEndpoint(_ context.Context, loca
 	return domain.TransferEndpoint{URI: location.URI}, nil
 }
 
+type directWorkspaceEndpointResolver struct{}
+
+func (directWorkspaceEndpointResolver) ResolveTransferEndpoint(_ context.Context, location domain.TransferLocation) (domain.TransferEndpoint, error) {
+	return domain.TransferEndpoint{URI: location.URI, ConnectionID: "shared-hpc"}, nil
+}
+
 func workspaceURL(path string) string { return (&url.URL{Scheme: "file", Path: path}).String() }
 
 func TestWorkspaceRsyncSSHArgumentsKeepRemotePathAbsolute(t *testing.T) {
@@ -195,6 +201,78 @@ func TestWorkspaceRsyncMergesPredecessorsBeforeSuccessorStarts(t *testing.T) {
 		if run.FilesTransferred != 0 || run.TransferredBytes != 0 {
 			t.Fatalf("retry sent unchanged content: %+v", run)
 		}
+	}
+}
+
+func TestWorkspaceRsyncCopiesDirectlyInsideSharedHPC(t *testing.T) {
+	if _, err := exec.LookPath("rsync"); err != nil {
+		t.Skip("rsync is unavailable")
+	}
+	bin := t.TempDir()
+	fakeSSH := filepath.Join(bin, "ssh")
+	if err := os.WriteFile(fakeSSH, []byte("#!/bin/sh\nwhile [ \"$#\" -gt 1 ]; do shift; done\nexec sh -c \"$1\"\n"), 0o700); err != nil {
+		t.Fatal(err)
+	}
+	t.Setenv("PATH", bin+string(os.PathListSeparator)+os.Getenv("PATH"))
+	t.Setenv("AKOFLOW_SSH_CONTROL_DIRECTORY", t.TempDir())
+	root := t.TempDir()
+	first, second, target := filepath.Join(root, "first"), filepath.Join(root, "second"), filepath.Join(root, "target")
+	for _, directory := range []string{first, second, target} {
+		if err := os.Mkdir(directory, 0o700); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if err := os.WriteFile(filepath.Join(first, "one.fits"), []byte("one"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(second, "two.fits"), []byte("two"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	remote := func(path string) string { return (&url.URL{Scheme: "ssh", Host: "hpc.test", Path: path}).String() }
+	plans := []domain.DataTransferPlan{
+		{ID: "one", ProducerActivityID: "first", ConsumerActivityID: "consumer", Source: domain.TransferLocation{URI: remote(first)}, Destination: domain.TransferLocation{URI: remote(target)}},
+		{ID: "two", ProducerActivityID: "second", ConsumerActivityID: "consumer", Source: domain.TransferLocation{URI: remote(second)}, Destination: domain.TransferLocation{URI: remote(target)}},
+	}
+	runs, err := (WorkspaceRsync{Resolver: directWorkspaceEndpointResolver{}}).Sync(context.Background(), plans)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, name := range []string{"one.fits", "two.fits"} {
+		if _, err := os.Stat(filepath.Join(target, name)); err != nil {
+			t.Fatal(err)
+		}
+	}
+	for _, run := range runs {
+		if run.Status != domain.TransferCompleted || run.Strategy != domain.TransferDirectRuntime || run.NetworkBytes != 0 || run.FilesTransferred != 1 {
+			t.Fatalf("unexpected direct transfer: %+v", run)
+		}
+	}
+	runs, err = (WorkspaceRsync{Resolver: directWorkspaceEndpointResolver{}}).Sync(context.Background(), plans)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, run := range runs {
+		if run.TransferredBytes != 0 || run.FilesTransferred != 0 || run.NetworkBytes != 0 {
+			t.Fatalf("direct retry was not a cache hit: %+v", run)
+		}
+	}
+	if err := os.WriteFile(filepath.Join(target, "one.fits"), []byte("conflict"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := (WorkspaceRsync{Resolver: directWorkspaceEndpointResolver{}}).Sync(context.Background(), plans); err == nil || !strings.Contains(err.Error(), "workspace content conflict") {
+		t.Fatalf("direct synchronization must reject conflicting content: %v", err)
+	}
+}
+
+func TestSameSSHWorkspaceEndpointRequiresSameConnection(t *testing.T) {
+	first := domain.TransferEndpoint{URI: "ssh://researcher@hpc.test/work/one", ConnectionID: "hpc-a"}
+	second := domain.TransferEndpoint{URI: "ssh://researcher@hpc.test/work/two", ConnectionID: "hpc-a"}
+	if !sameSSHWorkspaceEndpoint(first, second) {
+		t.Fatal("shared SSH connection should use direct workspace synchronization")
+	}
+	second.ConnectionID = "hpc-b"
+	if sameSSHWorkspaceEndpoint(first, second) {
+		t.Fatal("different SSH connections must retain the gateway fallback")
 	}
 }
 

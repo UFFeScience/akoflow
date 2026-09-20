@@ -56,6 +56,13 @@ func (s WorkspaceRsync) Sync(ctx context.Context, plans []domain.DataTransferPla
 	if s.Resolver == nil {
 		return fail(fmt.Errorf("workspace endpoint resolver is unavailable"))
 	}
+	sources, destination, direct, err := s.directRemoteEndpoints(ctx, plans)
+	if err != nil {
+		return fail(err)
+	}
+	if direct {
+		return syncRemoteWorkspaceDirect(ctx, plans, sources, destination, runs)
+	}
 	root, err := os.MkdirTemp("", "akoflow-workspace-sync-")
 	if err != nil {
 		return fail(err)
@@ -64,10 +71,6 @@ func (s WorkspaceRsync) Sync(ctx context.Context, plans []domain.DataTransferPla
 	stages, ingress, err := s.stageProducers(ctx, plans, root, runs)
 	if err != nil {
 		return fail(err)
-	}
-	destination, err := s.Resolver.ResolveTransferEndpoint(ctx, plans[0].Destination)
-	if err != nil {
-		return fail(fmt.Errorf("resolve successor workspace: %w", err))
 	}
 	if err := makeWorkspaceDirectory(ctx, destination); err != nil {
 		return fail(err)
@@ -79,6 +82,111 @@ func (s WorkspaceRsync) Sync(ctx context.Context, plans []domain.DataTransferPla
 		return fail(err)
 	}
 	return runs, nil
+}
+
+func (s WorkspaceRsync) directRemoteEndpoints(ctx context.Context, plans []domain.DataTransferPlan) ([]domain.TransferEndpoint, domain.TransferEndpoint, bool, error) {
+	destination, err := s.Resolver.ResolveTransferEndpoint(ctx, plans[0].Destination)
+	if err != nil {
+		return nil, domain.TransferEndpoint{}, false, fmt.Errorf("resolve successor workspace: %w", err)
+	}
+	if !strings.HasPrefix(destination.URI, "ssh://") || destination.ConnectionID == "" {
+		return nil, destination, false, nil
+	}
+	sources := make([]domain.TransferEndpoint, len(plans))
+	for index, plan := range plans {
+		source, resolveErr := s.Resolver.ResolveTransferEndpoint(ctx, plan.Source)
+		if resolveErr != nil {
+			return nil, destination, false, fmt.Errorf("resolve producer %q: %w", plan.ProducerActivityID, resolveErr)
+		}
+		sources[index] = source
+		if !sameSSHWorkspaceEndpoint(source, destination) {
+			return sources, destination, false, nil
+		}
+	}
+	return sources, destination, true, nil
+}
+
+func sameSSHWorkspaceEndpoint(source, destination domain.TransferEndpoint) bool {
+	if source.ConnectionID == "" || source.ConnectionID != destination.ConnectionID {
+		return false
+	}
+	sourceURL, sourceErr := url.Parse(source.URI)
+	destinationURL, destinationErr := url.Parse(destination.URI)
+	if sourceErr != nil || destinationErr != nil || sourceURL.Scheme != "ssh" || destinationURL.Scheme != "ssh" {
+		return false
+	}
+	return sourceURL.Host == destinationURL.Host && sourceURL.User.String() == destinationURL.User.String()
+}
+
+func syncRemoteWorkspaceDirect(ctx context.Context, plans []domain.DataTransferPlan, sources []domain.TransferEndpoint, destination domain.TransferEndpoint, runs []domain.DataTransferRun) ([]domain.DataTransferRun, error) {
+	host, destinationPath, err := sshTarget(destination, "")
+	if err != nil {
+		return runs, err
+	}
+	sourcePaths := make([]string, len(sources))
+	for index, source := range sources {
+		_, sourcePath, sourceErr := sshTarget(source, "")
+		if sourceErr != nil {
+			return runs, sourceErr
+		}
+		sourcePaths[index] = sourcePath
+	}
+	script := remoteWorkspaceScript(sourcePaths, destinationPath)
+	command := exec.CommandContext(ctx, "ssh", append(sshArgs(destination), host, "bash -s")...)
+	command.Stdin = strings.NewReader(script)
+	output, err := command.CombinedOutput()
+	if err != nil {
+		return runs, fmt.Errorf("direct remote workspace sync: %w: %s", err, strings.TrimSpace(string(output)))
+	}
+	now := float64(time.Now().UnixNano()) / 1e9
+	for index := range runs {
+		stats := parseRsyncStats(remoteWorkspaceStats(string(output), index), false)
+		runs[index].Strategy = domain.TransferDirectRuntime
+		runs[index].Route.Strategy = domain.TransferDirectRuntime
+		runs[index].Route.Reason = "direct workspace copy on shared HPC filesystem"
+		runs[index].LogicalBytes = stats.fileBytes
+		runs[index].TransferredBytes = stats.fileBytes
+		runs[index].FilesTransferred = stats.files
+		runs[index].NetworkBytes = 0
+		runs[index].FinishedAt = now
+		runs[index].DurationSeconds = max(0, now-runs[index].StartedAt)
+		runs[index].Status = domain.TransferCompleted
+	}
+	return runs, nil
+}
+
+func remoteWorkspaceScript(sources []string, destination string) string {
+	var script strings.Builder
+	script.WriteString("set -euo pipefail\n")
+	script.WriteString("workspace_manifest=$(mktemp -d); trap 'rm -rf -- \"$workspace_manifest\"' EXIT\n")
+	script.WriteString("check_tree() { local root=$1 label=$2 file rel digest key previous origin; while IFS= read -r -d '' file; do rel=${file#\"$root\"/}; digest=$(sha256sum -- \"$file\"); digest=${digest%% *}; key=$(printf '%s' \"$rel\" | sha256sum); key=${key%% *}; if [[ -f $workspace_manifest/$key.digest ]]; then previous=$(cat \"$workspace_manifest/$key.digest\"); if [[ $previous != \"$digest\" ]]; then origin=$(cat \"$workspace_manifest/$key.origin\"); echo \"workspace content conflict at $rel between $origin and $label\" >&2; exit 44; fi; else printf '%s' \"$digest\" >\"$workspace_manifest/$key.digest\"; printf '%s' \"$label\" >\"$workspace_manifest/$key.origin\"; fi; done < <(find \"$root\" -type f -print0); }\n")
+	script.WriteString("destination=" + shell(destination) + "\n")
+	script.WriteString("mkdir -p -- \"$destination\"\n")
+	script.WriteString("link=$(find \"$destination\" -type l -print -quit); test -z \"$link\" || { echo \"destination workspace contains symlink: $link\" >&2; exit 41; }\n")
+	script.WriteString("check_tree \"$destination\" destination\n")
+	for _, source := range sources {
+		script.WriteString("test -d " + shell(source) + " || { echo " + shell("source workspace disappeared: "+source) + " >&2; exit 42; }\n")
+		script.WriteString("link=$(find " + shell(source) + " -type l -print -quit); test -z \"$link\" || { echo \"source workspace contains symlink: $link\" >&2; exit 43; }\n")
+		script.WriteString("check_tree " + shell(source) + " " + shell(source) + "\n")
+	}
+	for index, source := range sources {
+		script.WriteString(fmt.Sprintf("echo __AKOFLOW_WORKSPACE_BEGIN_%d__\n", index))
+		script.WriteString("rsync --ignore-existing -r --checksum --stats --out-format='%i %n' --no-perms --no-owner --no-group --no-times -- " + shell(filepath.Clean(source)+"/") + " " + shell(filepath.Clean(destination)+"/") + "\n")
+		script.WriteString(fmt.Sprintf("echo __AKOFLOW_WORKSPACE_END_%d__\n", index))
+	}
+	return script.String()
+}
+
+func remoteWorkspaceStats(output string, index int) string {
+	begin := fmt.Sprintf("__AKOFLOW_WORKSPACE_BEGIN_%d__", index)
+	end := fmt.Sprintf("__AKOFLOW_WORKSPACE_END_%d__", index)
+	start := strings.Index(output, begin)
+	if start < 0 {
+		return ""
+	}
+	after := output[start+len(begin):]
+	section, _, _ := strings.Cut(after, end)
+	return section
 }
 
 func (s WorkspaceRsync) stageProducers(ctx context.Context, plans []domain.DataTransferPlan, root string, runs []domain.DataTransferRun) ([]string, []rsyncStats, error) {

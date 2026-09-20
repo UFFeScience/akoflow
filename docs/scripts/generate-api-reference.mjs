@@ -88,6 +88,7 @@ const groupMetadata = {
 
 const queryDescriptions = {
   async: "Set to `true` to start cloud catalog discovery in the background and return `202 Accepted` immediately. Repeat requests while it is running do not start another discovery.",
+  attempt: "Select the activity execution attempt whose metric samples or summary should be returned. Defaults to the first attempt.",
   connectionId: "Limit results to this environment connection.",
   cursor: "Opaque cursor returned by the preceding page.",
   depth: "Maximum lineage traversal depth.",
@@ -276,6 +277,9 @@ const runnableSimulationRequests = {
 // not from JSON tags alone. Keep them scoped to fields the service validates.
 const verifiedRequestNotes = {
   "POST /akoflow-api/execution-runs/": "`202 Accepted` publishes a queue job. The returned `id` is the job ID, while `aggregateId` is the submitted `run.id`. The worker validates the request before saving a run; `GET /execution-runs/{runId}/` can return `404` until then, or remain `404` if validation fails. Use the original `run.id` to read the run, and do not treat the queue job's status as the run's status. Repeating the same `run.id` returns the existing idempotent job rather than creating a second one.",
+  "POST /akoflow-api/execution-runs/{runId}/cancel/": "No JSON body is required. The run must exist and the instance must be writable. AkôFlow interrupts unfinished activities, cancels queued execution work, marks the run cancelled, and returns the updated run with `200 OK`. Cancelling an already-cancelled run is idempotent and also returns `200`; an unknown run returns `404`.",
+  "POST /akoflow-api/execution-runs/{runId}/recovery/": "The run must be failed or cancelled and its original queued execution request must still be available. Send `mode` as `continue` or `retry_failures`; omission defaults to `continue`. AkôFlow reuses completed activities whose workspaces remain available, queues the remaining activities, and returns the recovery job plus preview with `202 Accepted`. Inspect the run until it reaches a terminal status.",
+  "POST /akoflow-api/execution-runs/{runId}/activities/{activityId}/interrupt/": "No JSON body is required. The instance must be writable and the activity must belong to an interruptible active execution. Success returns the updated task with `200 OK`; an unavailable interrupter returns `503`, while an activity that cannot be interrupted returns `409`.",
   "POST /akoflow-api/environments/": "The response echoes the submitted definition. The repository saves the environment, version, inventory, storage, and connections, but ignores `connectionChecks` and `connectorBindings` if they appear in the body. Read `GET /environments/{environmentId}/` for saved IDs and separately recorded connection checks. See the [environment YAML reference](/docs/reference/environment-yaml).",
   "GET /akoflow-api/environments/": "Each item is a saved environment definition. `connectionChecks` can include recent health records for its connections; these were recorded separately from the environment YAML. The repository does not populate `connectorBindings` from a submitted definition.",
   "GET /akoflow-api/environments/{environmentId}/": "Returns the saved definition, including IDs filled from the enclosing environment/version. `connectionChecks` comes from recent connection-health records, not from the submitted YAML. The repository does not populate `connectorBindings` from that document.",

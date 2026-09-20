@@ -2606,16 +2606,26 @@ func (h *Handler) CancelExecution(w http.ResponseWriter, r *http.Request) {
 		writeJSON(w, http.StatusOK, run)
 		return
 	}
-	if run.Status != domain.ExecutionRunCreated && run.Status != domain.ExecutionRunRunning {
+	tasks, err := h.executions.ListTasks(r.Context(), runID)
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, err)
+		return
+	}
+	hasUnfinishedTasks := false
+	for _, task := range tasks {
+		if task.Status == domain.TaskBlocked || task.Status == domain.TaskReady ||
+			task.Status == domain.TaskQueued || task.Status == domain.TaskPreparing ||
+			task.Status == domain.TaskRunning {
+			hasUnfinishedTasks = true
+			break
+		}
+	}
+	failedWithUnfinishedTasks := run.Status == domain.ExecutionRunFailed && hasUnfinishedTasks
+	if run.Status != domain.ExecutionRunCreated && run.Status != domain.ExecutionRunRunning && !failedWithUnfinishedTasks {
 		writeError(w, http.StatusConflict, fmt.Errorf("execution run %q is already %s", runID, run.Status))
 		return
 	}
 	if _, err := h.queue.CancelByAggregate(r.Context(), "execution_run", runID, time.Now().UTC()); err != nil {
-		writeError(w, http.StatusInternalServerError, err)
-		return
-	}
-	tasks, err := h.executions.ListTasks(r.Context(), runID)
-	if err != nil {
 		writeError(w, http.StatusInternalServerError, err)
 		return
 	}

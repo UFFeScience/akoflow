@@ -326,6 +326,32 @@ func TestCancelRunCancelsEveryUnfinishedTaskAndWinsTerminalRace(t *testing.T) {
 	}
 }
 
+func TestCancelRunReconcilesUnfinishedTasksAfterRunFailure(t *testing.T) {
+	repository := setup(t)
+	ctx := context.Background()
+	if err := repository.CreateRun(ctx, domain.ExecutionRun{ID: "run", SchedulePlanID: "plan", Mode: domain.ExecutionModeReal, Status: domain.ExecutionRunRunning}); err != nil {
+		t.Fatal(err)
+	}
+	task := domain.TaskExecution{ID: "running", ExecutionRunID: "run", PlanAssignmentID: "assignment", ActivityID: "activity", PlannedResourceID: "resource", Attempt: 1, Status: domain.TaskRunning}
+	if err := repository.SaveTask(ctx, task); err != nil {
+		t.Fatal(err)
+	}
+	if err := repository.FailRun(ctx, "run", "workspace synchronization failed"); err != nil {
+		t.Fatal(err)
+	}
+	if err := repository.CancelRun(ctx, "run", "Cancelled by user"); err != nil {
+		t.Fatal(err)
+	}
+	run, err := repository.FindRun(ctx, "run")
+	if err != nil || run == nil || run.Status != domain.ExecutionRunFailed || run.FailureReason != "workspace synchronization failed" {
+		t.Fatalf("run=%+v err=%v", run, err)
+	}
+	tasks, err := repository.ListTasks(ctx, "run")
+	if err != nil || len(tasks) != 1 || tasks[0].Status != domain.TaskCancelled || tasks[0].FailureReason != "Cancelled by user" {
+		t.Fatalf("tasks=%+v err=%v", tasks, err)
+	}
+}
+
 func TestHandleUpsertAndMalformedPayload(t *testing.T) {
 	repository := setup(t)
 	ctx := context.Background()

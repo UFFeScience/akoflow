@@ -1,6 +1,7 @@
 package provider
 
 import (
+	"context"
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
@@ -12,6 +13,7 @@ import (
 )
 
 const defaultSSHControlPersistSeconds = 180
+const SSHChannelLimit = 4
 
 // SSHSessionKey contains every setting that changes the effective SSH
 // transport. Its digest is safe to use as a Unix socket name and does not
@@ -30,11 +32,44 @@ type SSHSessionKey struct {
 }
 
 type sshSessionManager struct {
-	mu    sync.Mutex
-	locks map[string]*sync.Mutex
+	mu       sync.Mutex
+	locks    map[string]*sync.Mutex
+	channels map[string]chan struct{}
 }
 
-var sharedSSHSessions = sshSessionManager{locks: make(map[string]*sync.Mutex)}
+var sharedSSHSessions = sshSessionManager{
+	locks:    make(map[string]*sync.Mutex),
+	channels: make(map[string]chan struct{}),
+}
+
+// AcquireSSHChannel reserves one remote command session on a multiplexed SSH
+// transport. HPC installations commonly enforce a small MaxSessions value.
+// Queueing here prevents OpenSSH from silently falling back to additional TCP
+// connections when the shared master is full.
+func AcquireSSHChannel(ctx context.Context, controlPath string) (func(), error) {
+	if strings.TrimSpace(controlPath) == "" {
+		return func() {}, nil
+	}
+	queue := sharedSSHSessions.channelQueue(controlPath)
+	select {
+	case queue <- struct{}{}:
+		var once sync.Once
+		return func() { once.Do(func() { <-queue }) }, nil
+	case <-ctx.Done():
+		return nil, ctx.Err()
+	}
+}
+
+func (m *sshSessionManager) channelQueue(path string) chan struct{} {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	queue := m.channels[path]
+	if queue == nil {
+		queue = make(chan struct{}, SSHChannelLimit)
+		m.channels[path] = queue
+	}
+	return queue
+}
 
 func SSHMultiplexArguments(key SSHSessionKey) ([]string, string, error) {
 	if !sshMultiplexingEnabled() {

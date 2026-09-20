@@ -108,6 +108,11 @@ func (e SSHCommandExecutor) Run(ctx context.Context, name string, args []string,
 		remote = append(remote, shellQuote(arg))
 	}
 	sshArgs = append(sshArgs, target, strings.Join(remote, " "))
+	releaseChannel, err := AcquireSSHChannel(ctx, controlPath)
+	if err != nil {
+		return nil, fmt.Errorf("wait for SSH channel: %w", err)
+	}
+	defer releaseChannel()
 	unlock := sharedSSHSessions.lockForCreation(controlPath)
 	output, runErr := e.Executor.Run(ctx, "ssh", sshArgs, input)
 	unlock()

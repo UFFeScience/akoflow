@@ -1,12 +1,76 @@
 package provider
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
+	"sync"
+	"sync/atomic"
 	"testing"
+	"time"
 )
+
+func TestSSHChannelQueueLimitsConcurrentSessionsPerMaster(t *testing.T) {
+	controlPath := filepath.Join(t.TempDir(), "master")
+	var active atomic.Int32
+	var maximum atomic.Int32
+	releaseWorkers := make(chan struct{})
+	var workers sync.WaitGroup
+
+	for range 8 {
+		workers.Add(1)
+		go func() {
+			defer workers.Done()
+			release, err := AcquireSSHChannel(context.Background(), controlPath)
+			if err != nil {
+				t.Errorf("acquire channel: %v", err)
+				return
+			}
+			current := active.Add(1)
+			for {
+				observed := maximum.Load()
+				if current <= observed || maximum.CompareAndSwap(observed, current) {
+					break
+				}
+			}
+			<-releaseWorkers
+			active.Add(-1)
+			release()
+		}()
+	}
+
+	deadline := time.Now().Add(time.Second)
+	for maximum.Load() < SSHChannelLimit && time.Now().Before(deadline) {
+		time.Sleep(time.Millisecond)
+	}
+	if got := maximum.Load(); got != SSHChannelLimit {
+		t.Fatalf("maximum concurrent channels = %d, want %d", got, SSHChannelLimit)
+	}
+	close(releaseWorkers)
+	workers.Wait()
+}
+
+func TestSSHChannelQueueHonorsContextCancellation(t *testing.T) {
+	controlPath := filepath.Join(t.TempDir(), "master")
+	releases := make([]func(), 0, SSHChannelLimit)
+	for range SSHChannelLimit {
+		release, err := AcquireSSHChannel(context.Background(), controlPath)
+		if err != nil {
+			t.Fatal(err)
+		}
+		releases = append(releases, release)
+	}
+	ctx, cancel := context.WithCancel(context.Background())
+	cancel()
+	if _, err := AcquireSSHChannel(ctx, controlPath); err == nil {
+		t.Fatal("cancelled waiter acquired an SSH channel")
+	}
+	for _, release := range releases {
+		release()
+	}
+}
 
 func TestSSHSessionPathUsesAllEffectiveConnectionSettings(t *testing.T) {
 	directory := t.TempDir()

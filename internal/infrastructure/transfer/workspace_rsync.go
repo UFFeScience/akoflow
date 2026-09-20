@@ -15,6 +15,7 @@ import (
 	"time"
 
 	"github.com/UFFeScience/akoflow/internal/domain"
+	"github.com/UFFeScience/akoflow/internal/provider"
 )
 
 // WorkspaceRsync stages complete predecessor snapshots before publishing them.
@@ -132,9 +133,7 @@ func syncRemoteWorkspaceDirect(ctx context.Context, plans []domain.DataTransferP
 		sourcePaths[index] = sourcePath
 	}
 	script := remoteWorkspaceScript(sourcePaths, destinationPath)
-	command := exec.CommandContext(ctx, "ssh", append(sshArgs(destination), host, "bash -s")...)
-	command.Stdin = strings.NewReader(script)
-	output, err := command.CombinedOutput()
+	output, err := runSSHCombinedOutput(ctx, destination, append(sshArgs(destination), host, "bash -s"), strings.NewReader(script))
 	if err != nil {
 		return runs, fmt.Errorf("direct remote workspace sync: %w: %s", err, strings.TrimSpace(string(output)))
 	}
@@ -159,7 +158,20 @@ func remoteWorkspaceScript(sources []string, destination string) string {
 	var script strings.Builder
 	script.WriteString("set -euo pipefail\n")
 	script.WriteString("workspace_manifest=$(mktemp -d); trap 'rm -rf -- \"$workspace_manifest\"' EXIT\n")
-	script.WriteString("check_tree() { local root=$1 label=$2 file rel digest key previous origin; while IFS= read -r -d '' file; do rel=${file#\"$root\"/}; digest=$(sha256sum -- \"$file\"); digest=${digest%% *}; key=$(printf '%s' \"$rel\" | sha256sum); key=${key%% *}; if [[ -f $workspace_manifest/$key.digest ]]; then previous=$(cat \"$workspace_manifest/$key.digest\"); if [[ $previous != \"$digest\" ]]; then origin=$(cat \"$workspace_manifest/$key.origin\"); echo \"workspace content conflict at $rel between $origin and $label\" >&2; exit 44; fi; else printf '%s' \"$digest\" >\"$workspace_manifest/$key.digest\"; printf '%s' \"$label\" >\"$workspace_manifest/$key.origin\"; fi; done < <(find \"$root\" -type f -print0); }\n")
+	script.WriteString(
+		"check_tree() { local root=$1 label=$2 file rel digest key previous origin; " +
+			"while IFS= read -r -d '' file; do rel=${file#\"$root\"/}; " +
+			"digest=$(sha256sum -- \"$file\"); digest=${digest%% *}; " +
+			"key=$(printf '%s' \"$rel\" | sha256sum); key=${key%% *}; " +
+			"if [[ -f $workspace_manifest/$key.digest ]]; then " +
+			"previous=$(cat \"$workspace_manifest/$key.digest\"); " +
+			"if [[ $previous != \"$digest\" ]]; then " +
+			"origin=$(cat \"$workspace_manifest/$key.origin\"); " +
+			"echo \"workspace content conflict at $rel between $origin and $label\" >&2; exit 44; fi; " +
+			"else printf '%s' \"$digest\" >\"$workspace_manifest/$key.digest\"; " +
+			"printf '%s' \"$label\" >\"$workspace_manifest/$key.origin\"; fi; " +
+			"done < <(find \"$root\" -type f -print0); }\n",
+	)
 	script.WriteString("destination=" + shell(destination) + "\n")
 	script.WriteString("mkdir -p -- \"$destination\"\n")
 	script.WriteString("link=$(find \"$destination\" -type l -print -quit); test -z \"$link\" || { echo \"destination workspace contains symlink: $link\" >&2; exit 41; }\n")
@@ -296,6 +308,11 @@ func syncDirectory(ctx context.Context, source, destination domain.TransferEndpo
 	if ignoreExisting {
 		args = append([]string{"--ignore-existing"}, args...)
 	}
+	release, err := acquireRsyncSSHChannel(ctx, source, destination)
+	if err != nil {
+		return rsyncStats{}, err
+	}
+	defer release()
 	output, err := exec.CommandContext(ctx, "rsync", args...).CombinedOutput()
 	if err != nil {
 		return rsyncStats{}, fmt.Errorf("rsync: %w: %s", err, strings.TrimSpace(string(output)))
@@ -384,7 +401,7 @@ func makeWorkspaceDirectory(ctx context.Context, endpoint domain.TransferEndpoin
 	if err != nil {
 		return err
 	}
-	output, err := exec.CommandContext(ctx, "ssh", append(sshArgs(endpoint), host, "mkdir -p -- "+shell(path))...).CombinedOutput()
+	output, err := runSSHCombinedOutput(ctx, endpoint, append(sshArgs(endpoint), host, "mkdir -p -- "+shell(path)), nil)
 	if err != nil {
 		return fmt.Errorf("create remote workspace: %w: %s", err, strings.TrimSpace(string(output)))
 	}
@@ -414,7 +431,11 @@ func rejectWorkspaceSymlinks(ctx context.Context, endpoint domain.TransferEndpoi
 	if err != nil {
 		return err
 	}
-	command := exec.CommandContext(ctx, "ssh", append(sshArgs(endpoint), host, "find "+shell(path)+" -type l -print -quit")...)
+	command, release, err := queuedSSHCommand(ctx, endpoint, append(sshArgs(endpoint), host, "find "+shell(path)+" -type l -print -quit"))
+	if err != nil {
+		return err
+	}
+	defer release()
 	var stderr strings.Builder
 	command.Stderr = &stderr
 	output, err := command.Output()
@@ -436,13 +457,23 @@ func checkDestinationConflicts(ctx context.Context, source, destination domain.T
 	if err != nil {
 		return err
 	}
+	release, err := acquireRsyncSSHChannel(ctx, source, destination)
+	if err != nil {
+		return err
+	}
 	output, err := exec.CommandContext(ctx, "rsync", append([]string{"--dry-run"}, args...)...).CombinedOutput()
+	release()
 	if err != nil {
 		return fmt.Errorf("inspect destination: %w: %s", err, strings.TrimSpace(string(output)))
 	}
 	fullOutput := string(output)
 	all := changedRsyncFiles(fullOutput)
+	release, err = acquireRsyncSSHChannel(ctx, source, destination)
+	if err != nil {
+		return err
+	}
 	output, err = exec.CommandContext(ctx, "rsync", append([]string{"--dry-run", "--ignore-existing"}, args...)...).CombinedOutput()
+	release()
 	if err != nil {
 		return fmt.Errorf("inspect existing destination: %w: %s", err, strings.TrimSpace(string(output)))
 	}
@@ -453,6 +484,17 @@ func checkDestinationConflicts(ctx context.Context, source, destination domain.T
 		}
 	}
 	return nil
+}
+
+func acquireRsyncSSHChannel(ctx context.Context, source, destination domain.TransferEndpoint) (func(), error) {
+	remote := source
+	if strings.HasPrefix(destination.URI, "ssh://") {
+		remote = destination
+	}
+	if !strings.HasPrefix(remote.URI, "ssh://") {
+		return func() {}, nil
+	}
+	return provider.AcquireSSHChannel(ctx, sshControlPath(sshArgs(remote)))
 }
 
 func changedRsyncFiles(output string) map[string]bool {

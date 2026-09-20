@@ -24,16 +24,26 @@ type TerminalRunner struct{}
 
 var _ ports.InteractiveConsoleRunner = TerminalRunner{}
 
-func (TerminalRunner) StartInteractive(_ context.Context, connection domain.EnvironmentConnection, resource domain.Resource) (ports.InteractiveTerminal, error) {
+func (TerminalRunner) StartInteractive(ctx context.Context, connection domain.EnvironmentConnection, resource domain.Resource) (ports.InteractiveTerminal, error) {
 	command, cleanup, err := interactiveCommandForJob(connection, resource, fmt.Sprintf("akoflow-console-%d", time.Now().UnixNano()))
 	if err != nil {
 		return nil, err
 	}
+	releaseChannel, err := provider.AcquireSSHChannel(ctx, commandSSHControlPath(command))
+	if err != nil {
+		return nil, fmt.Errorf("wait for SSH console channel: %w", err)
+	}
 	terminal, err := pty.Start(command)
 	if err != nil {
+		releaseChannel()
 		return nil, fmt.Errorf("start interactive terminal: %w", err)
 	}
-	return &terminalHandle{file: terminal, command: command, cleanup: cleanup}, nil
+	return &terminalHandle{file: terminal, command: command, cleanup: func() {
+		releaseChannel()
+		if cleanup != nil {
+			cleanup()
+		}
+	}}, nil
 }
 
 func interactiveCommand(connection domain.EnvironmentConnection, resource domain.Resource) (*exec.Cmd, error) {
@@ -55,29 +65,9 @@ func interactiveCommandForJob(connection domain.EnvironmentConnection, resource 
 	if connection.Type != domain.ConnectionSSH {
 		return nil, nil, fmt.Errorf("interactive terminals are not supported for connection type %q", connection.Type)
 	}
-	args := []string{"-tt", "-o", "BatchMode=yes", "-o", "ConnectionAttempts=1", "-o", "ConnectTimeout=10", "-o", "CheckHostIP=no"}
-	if port := configInt(connection.Configuration, "port"); port > 0 {
-		args = append(args, "-p", fmt.Sprintf("%d", port))
-	}
-	if identityFile := credentialFile(connection.CredentialRef); identityFile != "" {
-		args = append(args, "-i", identityFile)
-	}
-	if proxy := configString(connection.Configuration, "proxyCommand"); proxy != "" {
-		args = append(args, "-o", "ProxyCommand="+provider.ProxyCommandWithKnownHosts(proxy, knownHostsFile(connection), credentialFile(connection.CredentialRef)))
-	}
-	if alias := configString(connection.Configuration, "hostKeyAlias"); alias != "" {
-		args = append(args, "-o", "HostKeyAlias="+alias)
-	}
-	// Reuse the daemon-managed known_hosts file populated during the connection
-	// test. Interactive terminals must verify that same host identity instead of
-	// falling back to the container user's transient SSH configuration.
-	hostKeyPolicy := "yes"
-	if configBool(connection.Configuration, "dynamicHost", false) {
-		hostKeyPolicy = "accept-new"
-	}
-	args = append(args, "-o", "UserKnownHostsFile="+knownHostsFile(connection), "-o", "StrictHostKeyChecking="+hostKeyPolicy)
-	if configBool(connection.Configuration, "forwardAgent", false) {
-		args = append(args, "-A")
+	args, controlPath, err := interactiveSSHArgs(connection)
+	if err != nil {
+		return nil, nil, err
 	}
 	target := strings.TrimSpace(connection.Endpoint)
 	if username := strings.TrimSpace(connection.Username); username != "" {
@@ -110,16 +100,74 @@ func interactiveCommandForJob(connection domain.EnvironmentConnection, resource 
 		return nil, nil, fmt.Errorf("resource type %q cannot host an interactive terminal", resource.Type)
 	}
 	command := exec.Command("ssh", append(args, jobArgs...)...)
-	cleanup := func() {
+	return command, terminalCleanup(args, controlPath, jobName), nil
+}
+
+func interactiveSSHArgs(connection domain.EnvironmentConnection) ([]string, string, error) {
+	args := []string{"-tt", "-o", "BatchMode=yes", "-o", "ConnectionAttempts=1", "-o", "ConnectTimeout=10", "-o", "CheckHostIP=no"}
+	if port := configInt(connection.Configuration, "port"); port > 0 {
+		args = append(args, "-p", fmt.Sprintf("%d", port))
+	}
+	if identityFile := credentialFile(connection.CredentialRef); identityFile != "" {
+		args = append(args, "-i", identityFile)
+	}
+	if proxy := configString(connection.Configuration, "proxyCommand"); proxy != "" {
+		args = append(args, "-o", "ProxyCommand="+provider.ProxyCommandWithKnownHosts(proxy, knownHostsFile(connection), credentialFile(connection.CredentialRef)))
+	}
+	if alias := configString(connection.Configuration, "hostKeyAlias"); alias != "" {
+		args = append(args, "-o", "HostKeyAlias="+alias)
+	}
+	// Reuse the daemon-managed known_hosts file populated during the connection
+	// test. Interactive terminals must verify that same host identity instead of
+	// falling back to the container user's transient SSH configuration.
+	hostKeyPolicy := "yes"
+	if configBool(connection.Configuration, "dynamicHost", false) {
+		hostKeyPolicy = "accept-new"
+	}
+	args = append(args, "-o", "UserKnownHostsFile="+knownHostsFile(connection), "-o", "StrictHostKeyChecking="+hostKeyPolicy)
+	if configBool(connection.Configuration, "forwardAgent", false) {
+		args = append(args, "-A")
+	}
+	multiplex, controlPath, err := provider.SSHMultiplexArguments(provider.SSHSessionKey{
+		ConnectionID: connection.ID, Username: connection.Username, Host: connection.Endpoint,
+		Port: configInt(connection.Configuration, "port"), IdentityFile: credentialFile(connection.CredentialRef),
+		ProxyCommand: configString(connection.Configuration, "proxyCommand"), KnownHostsFile: knownHostsFile(connection),
+		HostKeyAlias: configString(connection.Configuration, "hostKeyAlias"), ForwardAgent: configBool(connection.Configuration, "forwardAgent", false),
+	})
+	if err != nil {
+		return nil, "", err
+	}
+	args = append(args, multiplex...)
+	return args, controlPath, nil
+}
+
+func terminalCleanup(args []string, controlPath, jobName string) func() {
+	return func() {
 		if jobName == "" {
 			return
 		}
 		cancelArgs := append(append([]string{}, args...), "scancel", "--name="+jobName)
 		ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 		defer cancel()
+		release, acquireErr := provider.AcquireSSHChannel(ctx, controlPath)
+		if acquireErr != nil {
+			return
+		}
+		defer release()
 		_ = exec.CommandContext(ctx, "ssh", cancelArgs...).Run()
 	}
-	return command, cleanup, nil
+}
+
+func commandSSHControlPath(command *exec.Cmd) string {
+	if command == nil {
+		return ""
+	}
+	for _, argument := range command.Args {
+		if strings.HasPrefix(argument, "ControlPath=") {
+			return strings.TrimPrefix(argument, "ControlPath=")
+		}
+	}
+	return ""
 }
 
 type terminalHandle struct {

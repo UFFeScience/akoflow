@@ -121,7 +121,7 @@ func (RsyncSSH) Exists(ctx context.Context, e domain.TransferEndpoint, name stri
 		return false, err
 	}
 	args := append(sshArgs(e), host, "test -f "+shell(path))
-	output, err := exec.CommandContext(ctx, "ssh", args...).CombinedOutput()
+	output, err := runSSHCombinedOutput(ctx, e, args, nil)
 	if err == nil {
 		return true, nil
 	}
@@ -144,17 +144,24 @@ func (RsyncSSH) Open(ctx context.Context, e domain.TransferEndpoint, name string
 		command = fmt.Sprintf("tail -c +%d -- %s", offset+1, shell(path))
 	}
 	args := append(sshArgs(e), host, command)
-	cmd := exec.CommandContext(ctx, "ssh", args...)
-	out, err := cmd.StdoutPipe()
+	cmd, release, err := queuedSSHCommand(ctx, e, args)
 	if err != nil {
 		return nil, err
 	}
+	out, err := cmd.StdoutPipe()
+	if err != nil {
+		release()
+		return nil, err
+	}
 	if err = cmd.Start(); err != nil {
+		release()
 		return nil, err
 	}
 	return readCloser{Reader: out, close: func() error {
 		_ = out.Close()
-		return waitSSHCommand(cmd)
+		err := waitSSHCommand(cmd)
+		release()
+		return err
 	}}, nil
 }
 
@@ -179,14 +186,18 @@ func (connector RsyncSSH) Put(ctx context.Context, e domain.TransferEndpoint, na
 	if err != nil {
 		return err
 	}
-	if output, mkdirErr := exec.CommandContext(ctx, "ssh", append(sshArgs(e), host, "mkdir -p -- "+shell(filepath.Dir(path)))...).CombinedOutput(); mkdirErr != nil {
+	if output, mkdirErr := runSSHCombinedOutput(ctx, e, append(sshArgs(e), host, "mkdir -p -- "+shell(filepath.Dir(path))), nil); mkdirErr != nil {
 		return fmt.Errorf("create SSH staging directory: %w: %s", mkdirErr, strings.TrimSpace(string(output)))
 	}
 	command := "cat > " + shell(path)
 	if offset > 0 {
 		command = fmt.Sprintf("test $(wc -c < %s) -eq %d && cat >> %s", shell(path), offset, shell(path))
 	}
-	cmd := exec.CommandContext(ctx, "ssh", append(sshArgs(e), host, command)...)
+	cmd, release, err := queuedSSHCommand(ctx, e, append(sshArgs(e), host, command))
+	if err != nil {
+		return err
+	}
+	defer release()
 	stdin, err := cmd.StdinPipe()
 	if err != nil {
 		return err
@@ -220,7 +231,8 @@ func (RsyncSSH) Commit(ctx context.Context, e domain.TransferEndpoint, partial, 
 		return err
 	}
 	args := append(sshArgs(e), host, "mkdir -p -- "+shell(filepath.Dir(f))+" && mv -- "+shell(p)+" "+shell(f))
-	return exec.CommandContext(ctx, "ssh", args...).Run()
+	_, err = runSSHCombinedOutput(ctx, e, args, nil)
+	return err
 }
 
 // TransferRoute keeps payload bytes on the runtime side. For different VMs a
@@ -246,7 +258,7 @@ func (RsyncSSH) TransferRoute(ctx context.Context, strategy domain.TransferStrat
 		} else {
 			remoteCommand = "mkdir -p -- " + shell(filepath.Dir(destinationPath)) + " && (cp --reflink=auto -- " + shell(sourcePath) + " " + shell(destinationPath) + " 2>/dev/null || cp -- " + shell(sourcePath) + " " + shell(destinationPath) + ")"
 		}
-		output, runErr := exec.CommandContext(ctx, "ssh", append(sshArgs(source), sourceHost, remoteCommand)...).CombinedOutput()
+		output, runErr := runSSHCombinedOutput(ctx, source, append(sshArgs(source), sourceHost, remoteCommand), nil)
 		if runErr != nil {
 			return 0, fmt.Errorf("copy workspace inside cloud instance: %w: %s", runErr, strings.TrimSpace(string(output)))
 		}
@@ -279,7 +291,7 @@ func (RsyncSSH) TransferRoute(ctx context.Context, strategy domain.TransferStrat
 			readCommand = fmt.Sprintf("tail -c +%d -- %s", offset+1, shell(sourcePath))
 		}
 		remoteCommand = readCommand + " | " + strings.Join(remoteSSH, " ") + " " + shell(destinationHost) + " " + shell(writeCommand)
-		output, runErr := exec.CommandContext(ctx, "ssh", append(sshArgs(source), sourceHost, remoteCommand)...).CombinedOutput()
+		output, runErr := runSSHCombinedOutput(ctx, source, append(sshArgs(source), sourceHost, remoteCommand), nil)
 		if runErr != nil {
 			return 0, fmt.Errorf("stream directly between cloud instances: %w: %s", runErr, strings.TrimSpace(string(output)))
 		}
@@ -315,15 +327,15 @@ func prepareDirectCredential(ctx context.Context, source, destination domain.Tra
 	}
 	authorizedLine := "no-agent-forwarding,no-port-forwarding,no-X11-forwarding,no-pty " + strings.TrimSpace(string(publicKey)) + " " + token
 	installDestination := "umask 077; mkdir -p ~/.ssh; touch ~/.ssh/authorized_keys; printf '%s\\n' " + shell(authorizedLine) + " >> ~/.ssh/authorized_keys"
-	if output, installErr := exec.CommandContext(ctx, "ssh", append(sshArgs(destination), destinationHost, installDestination)...).CombinedOutput(); installErr != nil {
+	if output, installErr := runSSHCombinedOutput(ctx, destination, append(sshArgs(destination), destinationHost, installDestination), nil); installErr != nil {
 		return "", "", func() {}, fmt.Errorf("install temporary destination credential: %w: %s", installErr, strings.TrimSpace(string(output)))
 	}
 	cleanup := func() {
 		cleanupCtx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 		defer cancel()
 		removeDestination := "grep -v -- " + shell(token) + " ~/.ssh/authorized_keys > ~/.ssh/authorized_keys.akoflow && mv ~/.ssh/authorized_keys.akoflow ~/.ssh/authorized_keys"
-		_, _ = exec.CommandContext(cleanupCtx, "ssh", append(sshArgs(destination), destinationHost, removeDestination)...).CombinedOutput()
-		_, _ = exec.CommandContext(cleanupCtx, "ssh", append(sshArgs(source), sourceHost, "rm -f -- "+shell(identity)+" "+shell(knownHosts))...).CombinedOutput()
+		_, _ = runSSHCombinedOutput(cleanupCtx, destination, append(sshArgs(destination), destinationHost, removeDestination), nil)
+		_, _ = runSSHCombinedOutput(cleanupCtx, source, append(sshArgs(source), sourceHost, "rm -f -- "+shell(identity)+" "+shell(knownHosts)), nil)
 	}
 	installSource := "umask 077; cat > " + shell(identity)
 	if err := runSSHInput(ctx, source, sourceHost, installSource, privateKey); err != nil {
@@ -340,7 +352,7 @@ func prepareDirectCredential(ctx context.Context, source, destination domain.Tra
 		port = "22"
 	}
 	scan := "ssh-keyscan -p " + shell(port) + " -- " + shell(directAddress) + " > " + shell(knownHosts)
-	if output, scanErr := exec.CommandContext(ctx, "ssh", append(sshArgs(source), sourceHost, scan)...).CombinedOutput(); scanErr != nil {
+	if output, scanErr := runSSHCombinedOutput(ctx, source, append(sshArgs(source), sourceHost, scan), nil); scanErr != nil {
 		cleanup()
 		return "", "", func() {}, fmt.Errorf("capture direct destination host key: %w: %s", scanErr, strings.TrimSpace(string(output)))
 	}
@@ -364,13 +376,38 @@ func ephemeralSSHKey() ([]byte, []byte, error) {
 }
 
 func runSSHInput(ctx context.Context, endpoint domain.TransferEndpoint, host, command string, input []byte) error {
-	cmd := exec.CommandContext(ctx, "ssh", append(sshArgs(endpoint), host, command)...)
-	cmd.Stdin = strings.NewReader(string(input))
-	output, err := cmd.CombinedOutput()
+	output, err := runSSHCombinedOutput(ctx, endpoint, append(sshArgs(endpoint), host, command), strings.NewReader(string(input)))
 	if err != nil {
 		return fmt.Errorf("ssh command: %w: %s", err, strings.TrimSpace(string(output)))
 	}
 	return nil
+}
+
+func queuedSSHCommand(ctx context.Context, endpoint domain.TransferEndpoint, args []string) (*exec.Cmd, func(), error) {
+	release, err := provider.AcquireSSHChannel(ctx, sshControlPath(args))
+	if err != nil {
+		return nil, nil, fmt.Errorf("wait for SSH channel: %w", err)
+	}
+	return exec.CommandContext(ctx, "ssh", args...), release, nil
+}
+
+func runSSHCombinedOutput(ctx context.Context, endpoint domain.TransferEndpoint, args []string, input io.Reader) ([]byte, error) {
+	command, release, err := queuedSSHCommand(ctx, endpoint, args)
+	if err != nil {
+		return nil, err
+	}
+	defer release()
+	command.Stdin = input
+	return command.CombinedOutput()
+}
+
+func sshControlPath(args []string) string {
+	for _, argument := range args {
+		if strings.HasPrefix(argument, "ControlPath=") {
+			return strings.TrimPrefix(argument, "ControlPath=")
+		}
+	}
+	return ""
 }
 
 type readCloser struct {

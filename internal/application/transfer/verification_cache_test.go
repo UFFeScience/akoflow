@@ -83,3 +83,48 @@ func TestVerifiedArtifactCacheReleasesFailedMaterialization(t *testing.T) {
 		t.Fatalf("retry shared=%v calls=%d err=%v", shared, calls, err)
 	}
 }
+
+func TestVerifiedArtifactCacheReportsInFlightOwnerBeforeWaiting(t *testing.T) {
+	cache := &VerifiedArtifactCache{}
+	endpoint := domain.TransferEndpoint{URI: "ssh://cluster/artifacts"}
+	ownerStarted := make(chan struct{})
+	releaseOwner := make(chan struct{})
+	ownerDone := make(chan error, 1)
+	go func() {
+		_, err := cache.DoObserved(context.Background(), endpoint, "artifact.sif", "sha256:digest",
+			"activity-owner", nil, func() error {
+				close(ownerStarted)
+				<-releaseOwner
+				return nil
+			})
+		ownerDone <- err
+	}()
+	<-ownerStarted
+	waitObserved := make(chan string, 1)
+	followerDone := make(chan error, 1)
+	go func() {
+		shared, err := cache.DoObserved(context.Background(), endpoint, "artifact.sif", "sha256:digest",
+			"activity-follower", func(owner string) { waitObserved <- owner }, func() error {
+				return errors.New("follower unexpectedly became owner")
+			})
+		if err == nil && !shared {
+			err = errors.New("follower result was not shared")
+		}
+		followerDone <- err
+	}()
+	select {
+	case owner := <-waitObserved:
+		if owner != "activity-owner" {
+			t.Fatalf("owner=%q", owner)
+		}
+	case <-time.After(time.Second):
+		t.Fatal("follower did not report waiting")
+	}
+	close(releaseOwner)
+	if err := <-ownerDone; err != nil {
+		t.Fatal(err)
+	}
+	if err := <-followerDone; err != nil {
+		t.Fatal(err)
+	}
+}

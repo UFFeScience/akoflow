@@ -18,8 +18,9 @@ type VerifiedArtifactCache struct {
 }
 
 type artifactFlight struct {
-	done chan struct{}
-	err  error
+	done  chan struct{}
+	owner string
+	err   error
 }
 
 func (c *VerifiedArtifactCache) Has(endpoint domain.TransferEndpoint, name, digest string) bool {
@@ -54,6 +55,20 @@ func (c *VerifiedArtifactCache) Do(
 	digest string,
 	materialize func() error,
 ) (bool, error) {
+	return c.DoObserved(ctx, endpoint, name, digest, "", nil, materialize)
+}
+
+// DoObserved is Do with ownership metadata and a callback invoked immediately
+// before a follower waits for an existing transfer.
+func (c *VerifiedArtifactCache) DoObserved(
+	ctx context.Context,
+	endpoint domain.TransferEndpoint,
+	name string,
+	digest string,
+	owner string,
+	onWait func(string),
+	materialize func() error,
+) (bool, error) {
 	if c == nil {
 		return false, materialize()
 	}
@@ -64,7 +79,11 @@ func (c *VerifiedArtifactCache) Do(
 		return true, nil
 	}
 	if flight := c.inFlight[key]; flight != nil {
+		flightOwner := flight.owner
 		c.mu.Unlock()
+		if onWait != nil {
+			onWait(flightOwner)
+		}
 		select {
 		case <-ctx.Done():
 			return true, ctx.Err()
@@ -75,7 +94,7 @@ func (c *VerifiedArtifactCache) Do(
 	if c.inFlight == nil {
 		c.inFlight = make(map[string]*artifactFlight)
 	}
-	flight := &artifactFlight{done: make(chan struct{})}
+	flight := &artifactFlight{done: make(chan struct{}), owner: owner}
 	c.inFlight[key] = flight
 	c.mu.Unlock()
 

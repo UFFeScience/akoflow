@@ -146,44 +146,51 @@ func (m Materializer) Materialize(ctx context.Context, plan domain.DataTransferP
 		usedExisting := false
 		m.operationEvent(ctx, plan, "queued", "info", "Artifact transfer queued", 0, sizeBytes,
 			map[string]any{"artifactDigest": blob.Digest, "destination": final})
-		shared, materializeErr := m.VerifiedArtifacts.Do(ctx, destination, final, blob.Digest, func() error {
-			// Re-check after taking ownership: another request may have committed
-			// the same immutable object while this caller was waiting.
-			if ok, verifyErr := m.verify(ctx, dc, destination, final, blob.Digest); verifyErr == nil && ok {
-				usedExisting = true
-				return nil
-			}
-			m.operationEvent(ctx, plan, "started", "info", "Artifact upload started", 0, sizeBytes,
-				map[string]any{"artifactDigest": blob.Digest, "destination": final, "startedAt": unixNow()})
-			partial := final + ".partial"
-			offset, sizeErr := m.size(ctx, dc, destination, partial)
-			if sizeErr != nil {
-				return sizeErr
-			}
-			sourceName := sourceName(plan.Source.Path, blob, len(plan.Blobs))
-			if sizeBytes <= 0 {
-				sizeBytes, sizeErr = m.size(ctx, sc, source, sourceName)
+		shared, materializeErr := m.VerifiedArtifacts.DoObserved(ctx, destination, final, blob.Digest,
+			plan.ConsumerActivityID, func(ownerActivity string) {
+				m.operationEvent(ctx, plan, "waiting_shared_transfer", "info",
+					fmt.Sprintf("Artifact with checksum %s is already being transferred by %s; waiting for shared upload",
+						shortArtifactDigest(blob.Digest), ownerActivity), 0, sizeBytes,
+					map[string]any{"artifactDigest": blob.Digest, "destination": final,
+						"ownerActivity": ownerActivity, "waitingForSharedTransfer": true})
+			}, func() error {
+				// Re-check after taking ownership: another request may have committed
+				// the same immutable object while this caller was waiting.
+				if ok, verifyErr := m.verify(ctx, dc, destination, final, blob.Digest); verifyErr == nil && ok {
+					usedExisting = true
+					return nil
+				}
+				m.operationEvent(ctx, plan, "started", "info", "Artifact upload started", 0, sizeBytes,
+					map[string]any{"artifactDigest": blob.Digest, "destination": final, "startedAt": unixNow()})
+				partial := final + ".partial"
+				offset, sizeErr := m.size(ctx, dc, destination, partial)
 				if sizeErr != nil {
 					return sizeErr
 				}
-			}
-			routed, routeErr := m.transferBlob(ctx, plan, sc, dc, source, destination, sourceName,
-				partial, blob, offset, sizeBytes, nextChunkIndex, chunkRuns, strategy, route, &run)
-			if routeErr != nil {
-				return routeErr
-			}
-			if routed && sizeBytes > offset {
-				run.TransferredBytes += sizeBytes - offset
-			}
-			ok, verifyErr := m.verify(ctx, dc, destination, partial, blob.Digest)
-			if verifyErr != nil {
-				return verifyErr
-			}
-			if !ok {
-				return fmt.Errorf("checksum mismatch for %s", blob.Digest)
-			}
-			return dc.Commit(ctx, destination, partial, final)
-		})
+				sourceName := sourceName(plan.Source.Path, blob, len(plan.Blobs))
+				if sizeBytes <= 0 {
+					sizeBytes, sizeErr = m.size(ctx, sc, source, sourceName)
+					if sizeErr != nil {
+						return sizeErr
+					}
+				}
+				routed, routeErr := m.transferBlob(ctx, plan, sc, dc, source, destination, sourceName,
+					partial, blob, offset, sizeBytes, nextChunkIndex, chunkRuns, strategy, route, &run)
+				if routeErr != nil {
+					return routeErr
+				}
+				if routed && sizeBytes > offset {
+					run.TransferredBytes += sizeBytes - offset
+				}
+				ok, verifyErr := m.verify(ctx, dc, destination, partial, blob.Digest)
+				if verifyErr != nil {
+					return verifyErr
+				}
+				if !ok {
+					return fmt.Errorf("checksum mismatch for %s", blob.Digest)
+				}
+				return dc.Commit(ctx, destination, partial, final)
+			})
 		if materializeErr != nil {
 			m.operationEvent(ctx, plan, "failed", "error", "Artifact transfer failed", run.TransferredBytes, sizeBytes,
 				map[string]any{"artifactDigest": blob.Digest, "error": materializeErr.Error()})
@@ -194,8 +201,9 @@ func (m Materializer) Materialize(ctx context.Context, plan domain.DataTransferP
 			run.Route.Strategy = domain.TransferUseExisting
 			if shared {
 				run.Route.Reason = "waited for in-flight artifact transfer; verified cache hit"
-				m.operationEvent(ctx, plan, "completed", "info", "Waited for in-flight transfer and reused the verified artifact", sizeBytes, sizeBytes,
-					map[string]any{"artifactDigest": blob.Digest, "destination": final, "cacheHit": true, "waitedForInFlight": true})
+				m.operationEvent(ctx, plan, "cache_hit", "info", "Shared artifact available; cache hit", sizeBytes, sizeBytes,
+					map[string]any{"artifactDigest": blob.Digest, "destination": final, "cacheHit": true,
+						"waitedForSharedTransfer": true, "networkBytes": 0})
 			} else {
 				run.Route.Reason = "destination file already exists; checksum verified and cached"
 				m.operationEvent(ctx, plan, "completed", "info", "Destination artifact already exists; cache hit", sizeBytes, sizeBytes,
@@ -214,6 +222,14 @@ func (m Materializer) Materialize(ctx context.Context, plan domain.DataTransferP
 	target.Status = domain.MaterializationCommitted
 	target.VerifiedDigest = target.Digest
 	return target, run, nil
+}
+
+func shortArtifactDigest(digest string) string {
+	const visible = 12
+	if len(digest) <= visible {
+		return digest
+	}
+	return digest[:visible] + "…"
 }
 
 func blobsTotalBytes(blobs []domain.BlobDescriptor) int64 {

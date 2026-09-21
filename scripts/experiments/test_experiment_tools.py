@@ -15,6 +15,8 @@ from create_interference_campaign import (
 )
 from create_reference_campaign import build_reference_sessions
 from launch_campaign_simulations import choose_candidate, run_id, session_algorithms
+from launch_frontier_simulations import bounded_candidates, nondominated_candidates
+from analyze_frontiers import analyze, hypervolume, multiplicative_epsilon, pareto_records
 
 
 class SimulationCollectionTests(unittest.TestCase):
@@ -359,6 +361,60 @@ class SearchCampaignTests(unittest.TestCase):
             self.assertEqual(session["configuration"]["beamWidth"], 120)
             self.assertEqual(session["configuration"]["optionCount"], 250)
             self.assertEqual(session["configuration"]["readyBranchLimit"], 16)
+
+
+class FrontierTests(unittest.TestCase):
+    def candidate(self, identifier, time, cost, algorithm="prism-time"):
+        return {
+            "id": identifier,
+            "fingerprint": identifier,
+            "algorithm": algorithm,
+            "feasible": True,
+            "predicted": {"makespanSeconds": time, "cost": cost},
+        }
+
+    def record(self, identifier, time, cost, algorithm="prism-time"):
+        return {
+            "executionRunId": identifier,
+            "workflowVersionId": "workflow",
+            "algorithm": algorithm,
+            "status": "completed",
+            "observedMakespanSeconds": time,
+            "observedCost": cost,
+        }
+
+    def test_predicted_frontier_removes_dominated_candidates_and_bounds_sample(self):
+        candidates = [
+            self.candidate("fast", 1, 10),
+            self.candidate("middle", 5, 5),
+            self.candidate("cheap", 10, 1),
+            self.candidate("dominated", 10, 10),
+        ]
+        self.assertEqual(
+            [item["id"] for item in nondominated_candidates(candidates)],
+            ["fast", "middle", "cheap"],
+        )
+        bounded = bounded_candidates(candidates, 2)
+        self.assertEqual([item["id"] for item in bounded], ["fast", "cheap"])
+
+    def test_common_simulator_frontier_metrics(self):
+        records = [
+            self.record("fast", 1, 10, "prism-time"),
+            self.record("middle", 5, 5, "prism-time"),
+            self.record("cheap", 10, 1, "prism-cost"),
+            self.record("dominated", 10, 10, "prism-cost"),
+        ]
+        frontier = pareto_records(records)
+        self.assertEqual([item["executionRunId"] for item in frontier], ["fast", "middle", "cheap"])
+        self.assertEqual(hypervolume(frontier, (11, 11)), 44)
+        epsilon = multiplicative_epsilon(
+            [record for record in frontier if record["algorithm"] == "prism-time"],
+            frontier,
+        )
+        self.assertEqual(epsilon, 5)
+        result = analyze(records)
+        self.assertEqual(len(result["workflows"]), 1)
+        self.assertEqual(len(result["metrics"]), 2)
 
 
 if __name__ == "__main__":

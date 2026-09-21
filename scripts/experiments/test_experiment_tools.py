@@ -1,5 +1,6 @@
 import unittest
 from unittest.mock import patch
+import gzip
 import json
 import os
 import sys
@@ -17,7 +18,7 @@ from create_reference_campaign import build_reference_sessions
 from launch_campaign_simulations import choose_candidate, run_id, session_algorithms
 from launch_frontier_simulations import bounded_candidates, nondominated_candidates
 from analyze_frontiers import analyze, hypervolume, multiplicative_epsilon, pareto_records
-from analyze_campaign_results import analyze_campaign
+from analyze_campaign_results import analyze_campaign, read_json
 
 
 class SimulationCollectionTests(unittest.TestCase):
@@ -63,6 +64,14 @@ class SimulationCollectionTests(unittest.TestCase):
             result = json.loads(output.read_text())
             self.assertEqual(result["statusCounts"], {"completed": 1})
             self.assertEqual(result["activities"], [])
+
+    def test_analysis_reader_accepts_gzip_json(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "results.json.gz"
+            expected = {"records": [{"id": "run-1"}]}
+            with gzip.open(path, "wt", encoding="utf-8") as output:
+                json.dump(expected, output)
+            self.assertEqual(read_json(path), expected)
 
 
 class CandidateSelectionTests(unittest.TestCase):

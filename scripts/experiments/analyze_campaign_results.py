@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import gzip
 import json
 import math
 import statistics
@@ -37,6 +38,13 @@ def numeric_summary(values: list[float | None]) -> dict:
 
 def first_defined(*values):
     return next((value for value in values if value is not None), None)
+
+
+def read_json(path: Path) -> dict:
+    if path.suffix == ".gz":
+        with gzip.open(path, "rt", encoding="utf-8") as source:
+            return json.load(source)
+    return json.loads(path.read_text(encoding="utf-8"))
 
 
 def analyze_campaign(planning: dict, simulations: dict) -> dict:
@@ -393,8 +401,8 @@ def main() -> None:
     parser.add_argument("--simulations", required=True, type=Path)
     parser.add_argument("--output", required=True, type=Path)
     args = parser.parse_args()
-    planning = json.loads(args.planning.read_text(encoding="utf-8"))
-    simulations = json.loads(args.simulations.read_text(encoding="utf-8"))
+    planning = read_json(args.planning)
+    simulations = read_json(args.simulations)
     result = {
         "schemaVersion": "1",
         "capturedAt": dt.datetime.now(dt.timezone.utc).isoformat(),

@@ -5,8 +5,10 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import gzip
 import json
 import os
+import time
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -14,19 +16,27 @@ from collections import Counter
 from pathlib import Path
 
 
-def get_json(base_url: str, token: str, path: str):
-    request = urllib.request.Request(
-        base_url.rstrip("/") + path,
-        headers={"Authorization": "Bearer " + token},
-    )
-    try:
-        with urllib.request.urlopen(request, timeout=300) as response:
-            return json.load(response)
-    except urllib.error.HTTPError as error:
-        if error.code == 404:
-            return None
-        body = error.read().decode("utf-8", errors="replace")
-        raise RuntimeError(f"GET {path} returned {error.code}: {body}") from error
+def get_json(base_url: str, token: str, path: str, attempts: int = 5):
+    for attempt in range(attempts):
+        request = urllib.request.Request(
+            base_url.rstrip("/") + path,
+            headers={"Authorization": "Bearer " + token},
+        )
+        try:
+            with urllib.request.urlopen(request, timeout=300) as response:
+                return json.load(response)
+        except urllib.error.HTTPError as error:
+            if error.code == 404:
+                return None
+            if error.code not in (502, 503, 504) or attempt + 1 == attempts:
+                body = error.read().decode("utf-8", errors="replace")
+                raise RuntimeError(
+                    f"GET {path} returned {error.code}: {body}"
+                ) from error
+        except (ConnectionError, TimeoutError, urllib.error.URLError):
+            if attempt + 1 == attempts:
+                raise
+        time.sleep(2**attempt)
 
 
 def main() -> None:
@@ -130,9 +140,13 @@ def main() -> None:
         "events": event_records,
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(
-        json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8"
-    )
+    if args.output.suffix == ".gz":
+        with gzip.open(args.output, "wt", encoding="utf-8", compresslevel=1) as output:
+            json.dump(result, output, ensure_ascii=False, separators=(",", ":"))
+    else:
+        args.output.write_text(
+            json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8"
+        )
     print(
         json.dumps(
             {

@@ -2,6 +2,7 @@ import unittest
 
 from derive_sla_thresholds import derive_thresholds
 from create_sla_campaign import build_session_definitions
+from create_interference_campaign import build_interference_sessions
 from launch_campaign_simulations import choose_candidate
 
 
@@ -153,6 +154,64 @@ class SLACampaignTests(unittest.TestCase):
             {definition["executionScopeId"] for definition in definitions},
             {"scheduler-a-scope-v1", "scheduler-b-scope-v1"},
         )
+
+
+class InterferenceCampaignTests(unittest.TestCase):
+    def test_builds_informed_uninformed_lambda_matrix(self):
+        workflows = {
+            "workflow-v1": {
+                "id": "workflow-v1",
+                "activities": [
+                    {"id": "a", "activityTypeId": "family-a"},
+                    {"id": "b", "activityTypeId": "family-b"},
+                ],
+            }
+        }
+        thresholds = {
+            "thresholds": [
+                {
+                    "workflowVersionId": "workflow-v1",
+                    "factor": 1.2,
+                    "deadlineSeconds": 120,
+                    "budget": 12,
+                    "executionRunId": "reference",
+                }
+            ]
+        }
+        sessions = build_interference_sessions(
+            "interference",
+            workflows,
+            thresholds,
+            "hybrid-scope",
+            "hybrid-topology",
+            1.2,
+            1.5,
+            (0.0, 2.0),
+        )
+        self.assertEqual(len(sessions), 4)
+        self.assertEqual(sum(len(session["algorithms"]) for session in sessions), 10)
+        informed = next(
+            session
+            for session in sessions
+            if session["configuration"]["lambda"] == 2
+            and session["configuration"]["knowledgeCondition"] == "informed"
+        )
+        rules = informed["configuration"]["interferenceMatrix"]["rules"]
+        self.assertEqual(len(rules), 4)
+        self.assertTrue(all(rule["slowdownFactor"] == 2 for rule in rules))
+        self.assertTrue(
+            all(
+                algorithm["configuration"]["interferenceAware"]
+                for algorithm in informed["algorithms"]
+            )
+        )
+        uninformed = next(
+            session
+            for session in sessions
+            if session["configuration"]["knowledgeCondition"] == "uninformed"
+            and session["configuration"]["lambda"] == 2
+        )
+        self.assertEqual([item["id"] for item in uninformed["algorithms"]][-1], "heft")
 
 
 if __name__ == "__main__":

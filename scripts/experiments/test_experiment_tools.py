@@ -617,6 +617,71 @@ class CampaignAnalysisTests(unittest.TestCase):
         self.assertAlmostEqual(half["costDegradationPercent"]["mean"], 22.5)
         self.assertEqual(half["observedInterferenceSeconds"]["median"], 2.5)
 
+    def test_selects_smallest_beam_that_meets_quality_rule(self):
+        cases = (
+            ("small-b1", "small", 1, 12),
+            ("small-b4", "small", 4, 10),
+            ("large-b1", "large", 1, 23),
+            ("large-b4", "large", 4, 20),
+        )
+        planning = {
+            "records": [
+                {
+                    "session": {
+                        "session": {
+                            "id": session_id,
+                            "configuration": {"experiment": "4-beam-calibration"},
+                        },
+                        "algorithmRuns": [
+                            {
+                                "algorithm": "prism-time",
+                                "status": "completed",
+                                "configuration": {"beamWidth": beam},
+                                "startedAt": "2026-01-01T00:00:00Z",
+                                "completedAt": "2026-01-01T00:00:02Z",
+                            }
+                        ],
+                    }
+                }
+                for session_id, _, beam, _ in cases
+            ]
+        }
+        simulations = {
+            "records": [
+                {
+                    "sessionId": session_id,
+                    "executionRunId": session_id + "-prism-time",
+                    "workflowVersionId": workflow,
+                    "executionScopeId": "scope",
+                    "algorithm": "prism-time",
+                    "status": "completed",
+                    "observedMakespanSeconds": makespan,
+                    "observedCost": 1,
+                }
+                for session_id, workflow, _, makespan in cases
+            ]
+        }
+
+        result = analyze_campaign(planning, simulations)
+
+        self.assertEqual(result["selectedBeams"], {"prism-time": 4})
+        beam_one = next(
+            row for row in result["beamSummaries"] if row["beamWidth"] == 1
+        )
+        beam_four = next(
+            row for row in result["beamSummaries"] if row["beamWidth"] == 4
+        )
+        self.assertFalse(beam_one["qualifiesByRule"])
+        self.assertTrue(beam_four["selectedByRule"])
+        small_four = next(
+            row
+            for row in result["beamComparisons"]
+            if row["workflowVersionId"] == "small" and row["beamWidth"] == 4
+        )
+        self.assertAlmostEqual(
+            small_four["marginalObjectiveImprovementPercent"], 100 / 6
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

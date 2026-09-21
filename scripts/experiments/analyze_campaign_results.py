@@ -288,11 +288,101 @@ def analyze_campaign(planning: dict, simulations: dict) -> dict:
                 ),
             }
         )
+
+    beam_rows = [
+        row
+        for row in rows
+        if row.get("experiment") == "4-beam-calibration"
+        and row.get("beamWidth") is not None
+        and row.get("status") == "completed"
+    ]
+    beam_groups: dict[tuple[str, str], list[dict]] = defaultdict(list)
+    for row in beam_rows:
+        beam_groups[(row["workflowVersionId"], row["algorithm"])].append(row)
+    beam_comparisons = []
+    for (workflow_id, algorithm), group_rows in sorted(beam_groups.items()):
+        ordered = sorted(group_rows, key=lambda row: int(row["beamWidth"]))
+        objective_key = (
+            "observedCost" if algorithm == "prism-cost" else "observedMakespanSeconds"
+        )
+        best_objective = min(float(row[objective_key]) for row in ordered)
+        previous = None
+        for row in ordered:
+            objective = float(row[objective_key])
+            gap = (objective / max(best_objective, 1e-12) - 1) * 100
+            previous_objective = float(previous[objective_key]) if previous else None
+            beam_comparisons.append(
+                {
+                    "workflowVersionId": workflow_id,
+                    "algorithm": algorithm,
+                    "beamWidth": int(row["beamWidth"]),
+                    "planningElapsedSeconds": row.get("planningElapsedSeconds"),
+                    "observedMakespanSeconds": row.get("observedMakespanSeconds"),
+                    "observedCost": row.get("observedCost"),
+                    "objective": "cost" if algorithm == "prism-cost" else "time",
+                    "objectiveValue": objective,
+                    "bestObjectiveAcrossBeams": best_objective,
+                    "objectiveGapPercent": gap,
+                    "previousBeamWidth": int(previous["beamWidth"])
+                    if previous
+                    else None,
+                    "marginalObjectiveImprovementPercent": (
+                        (previous_objective - objective)
+                        / max(abs(previous_objective), 1e-12)
+                        * 100
+                        if previous_objective is not None
+                        else None
+                    ),
+                    "slaSatisfied": row.get("slaSatisfied"),
+                }
+            )
+            previous = row
+
+    by_algorithm_beam: dict[tuple[str, int], list[dict]] = defaultdict(list)
+    for comparison in beam_comparisons:
+        by_algorithm_beam[
+            (comparison["algorithm"], comparison["beamWidth"])
+        ].append(comparison)
+    beam_summaries = []
+    qualifying_by_algorithm: dict[str, list[int]] = defaultdict(list)
+    for (algorithm, beam_width), comparisons in sorted(by_algorithm_beam.items()):
+        gaps = [float(item["objectiveGapPercent"]) for item in comparisons]
+        median_gap = statistics.median(gaps)
+        worst_gap = max(gaps)
+        qualifies = median_gap < 2 and worst_gap < 5
+        if qualifies:
+            qualifying_by_algorithm[algorithm].append(beam_width)
+        beam_summaries.append(
+            {
+                "algorithm": algorithm,
+                "beamWidth": beam_width,
+                "workflowCount": len(comparisons),
+                "medianObjectiveGapPercent": median_gap,
+                "worstObjectiveGapPercent": worst_gap,
+                "planningElapsedSeconds": numeric_summary(
+                    [item.get("planningElapsedSeconds") for item in comparisons]
+                ),
+                "qualifiesByRule": qualifies,
+                "selectedByRule": False,
+            }
+        )
+    selected_beams = {
+        algorithm: min(widths)
+        for algorithm, widths in qualifying_by_algorithm.items()
+        if widths
+    }
+    for summary in beam_summaries:
+        summary["selectedByRule"] = (
+            selected_beams.get(summary["algorithm"]) == summary["beamWidth"]
+        )
     return {
         "runRows": rows,
         "algorithmSummaries": algorithm_summaries,
         "instanceComparisons": instance_comparisons,
         "interferenceSummaries": interference_summaries,
+        "beamComparisons": beam_comparisons,
+        "beamSummaries": beam_summaries,
+        "selectedBeams": selected_beams,
         "winnerCounts": {name: dict(counts) for name, counts in winner_counts.items()},
     }
 

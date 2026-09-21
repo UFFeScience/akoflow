@@ -8,10 +8,12 @@ from pathlib import Path
 
 from derive_sla_thresholds import derive_thresholds
 from create_sla_campaign import build_session_definitions
+from create_beam_campaign import build_beam_sessions
 from create_interference_campaign import (
     build_interference_sessions,
     selected_activity_ids,
 )
+from create_reference_campaign import build_reference_sessions
 from launch_campaign_simulations import choose_candidate, run_id, session_algorithms
 
 
@@ -316,6 +318,47 @@ class InterferenceCampaignTests(unittest.TestCase):
             ten,
             set(selected_activity_ids("workflow", activity_ids, 43, 10)),
         )
+
+
+class SearchCampaignTests(unittest.TestCase):
+    def setUp(self):
+        self.thresholds = {
+            "thresholds": [
+                {
+                    "workflowVersionId": workflow,
+                    "factor": 1.2,
+                    "deadlineSeconds": 120,
+                    "budget": 12,
+                    "executionRunId": f"reference-{workflow}",
+                }
+                for workflow in ("montage-58-v1", "montage-6448-v1")
+            ]
+        }
+
+    def test_beam_campaign_varies_only_beam_across_montage_sizes(self):
+        sessions = build_beam_sessions(
+            "beam",
+            self.thresholds,
+            beams=(1, 20, 120),
+        )
+        self.assertEqual(len(sessions), 6)
+        self.assertEqual(sum(len(session["algorithms"]) for session in sessions), 12)
+        self.assertEqual(
+            {session["configuration"]["beamWidth"] for session in sessions},
+            {1, 20, 120},
+        )
+        self.assertEqual(
+            {algorithm["id"] for session in sessions for algorithm in session["algorithms"]},
+            {"prism-time", "prism-cost"},
+        )
+
+    def test_reference_campaign_uses_high_search_budget(self):
+        sessions = build_reference_sessions("reference", self.thresholds)
+        self.assertEqual(len(sessions), 2)
+        for session in sessions:
+            self.assertEqual(session["configuration"]["beamWidth"], 120)
+            self.assertEqual(session["configuration"]["optionCount"], 250)
+            self.assertEqual(session["configuration"]["readyBranchLimit"], 16)
 
 
 if __name__ == "__main__":

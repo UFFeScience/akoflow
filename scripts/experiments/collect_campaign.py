@@ -7,18 +7,30 @@ import argparse
 import datetime as dt
 import json
 import os
+import time
 import subprocess
+import urllib.error
 import urllib.request
 from pathlib import Path
 
 
-def get_json(base_url: str, token: str, path: str):
-    request = urllib.request.Request(
-        base_url.rstrip("/") + path,
-        headers={"Authorization": "Bearer " + token},
-    )
-    with urllib.request.urlopen(request, timeout=60) as response:
-        return json.load(response)
+def get_json(base_url: str, token: str, path: str, attempts: int = 5):
+    for attempt in range(attempts):
+        request = urllib.request.Request(
+            base_url.rstrip("/") + path,
+            headers={"Authorization": "Bearer " + token},
+        )
+        try:
+            with urllib.request.urlopen(request, timeout=60) as response:
+                return json.load(response)
+        except (
+            ConnectionError,
+            TimeoutError,
+            urllib.error.URLError,
+        ):
+            if attempt + 1 == attempts:
+                raise
+            time.sleep(2**attempt)
 
 
 def main() -> None:

@@ -7,6 +7,7 @@ import argparse
 import datetime as dt
 import json
 import os
+import time
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -22,50 +23,96 @@ class Client:
             "Content-Type": "application/json",
         }
 
-    def request(self, method: str, path: str, payload=None):
+    def request(self, method: str, path: str, payload=None, attempts: int = 1):
         data = None if payload is None else json.dumps(payload).encode("utf-8")
-        request = urllib.request.Request(
-            self.base_url + path,
-            data=data,
-            method=method,
-            headers=self.headers,
-        )
-        try:
-            with urllib.request.urlopen(request, timeout=300) as response:
-                if response.status == 204:
-                    return None
-                return json.load(response)
-        except urllib.error.HTTPError as error:
-            body = error.read().decode("utf-8", errors="replace")
-            raise RuntimeError(
-                f"{method} {path} returned {error.code}: {body}"
-            ) from error
+        for attempt in range(attempts):
+            request = urllib.request.Request(
+                self.base_url + path,
+                data=data,
+                method=method,
+                headers=self.headers,
+            )
+            try:
+                with urllib.request.urlopen(request, timeout=300) as response:
+                    if response.status == 204:
+                        return None
+                    return json.load(response)
+            except urllib.error.HTTPError as error:
+                body = error.read().decode("utf-8", errors="replace")
+                raise RuntimeError(
+                    f"{method} {path} returned {error.code}: {body}"
+                ) from error
+            except (ConnectionError, TimeoutError, urllib.error.URLError):
+                if attempt + 1 == attempts:
+                    raise
+                time.sleep(2**attempt)
 
     def get(self, path: str):
-        return self.request("GET", path)
+        return self.request("GET", path, attempts=5)
 
     def post(self, path: str, payload=None):
         return self.request("POST", path, payload)
 
-    def exists(self, path: str) -> bool:
+    def post_discard(self, path: str, payload=None) -> None:
+        data = None if payload is None else json.dumps(payload).encode("utf-8")
         request = urllib.request.Request(
             self.base_url + path,
-            method="GET",
+            data=data,
+            method="POST",
             headers=self.headers,
         )
         try:
-            with urllib.request.urlopen(request, timeout=60):
-                return True
+            # Promotion endpoints return the entire schedule plan. Waiting for
+            # and decoding that large duplicate payload dominates campaigns;
+            # receiving the response headers is sufficient to prove success.
+            with urllib.request.urlopen(request, timeout=300):
+                return
         except urllib.error.HTTPError as error:
-            if error.code == 404:
-                return False
-            raise
+            body = error.read().decode("utf-8", errors="replace")
+            raise RuntimeError(
+                f"POST {path} returned {error.code}: {body}"
+            ) from error
+
+    def exists(self, path: str) -> bool:
+        for attempt in range(5):
+            request = urllib.request.Request(
+                self.base_url + path,
+                method="GET",
+                headers=self.headers,
+            )
+            try:
+                with urllib.request.urlopen(request, timeout=60):
+                    return True
+            except urllib.error.HTTPError as error:
+                if error.code == 404:
+                    return False
+                raise
+            except (ConnectionError, TimeoutError, urllib.error.URLError):
+                if attempt + 1 == 5:
+                    raise
+                time.sleep(2**attempt)
 
 
 def unwrap_list(value):
     if isinstance(value, list):
         return value
     return value.get("results", value.get("items", []))
+
+
+def existing_execution_run_ids(client: Client, page_size: int = 100) -> set[str]:
+    identifiers: set[str] = set()
+    page = 1
+    while True:
+        result = client.get(
+            f"/execution-runs/?page={page}&pageSize={page_size}"
+        )
+        for item in result.get("items", []):
+            run = item.get("run", item)
+            if run.get("id"):
+                identifiers.add(run["id"])
+        if not result.get("hasNext"):
+            return identifiers
+        page += 1
 
 
 def choose_candidate(candidates: list[dict], algorithm: str) -> dict:
@@ -184,6 +231,7 @@ def main() -> None:
         item["version"]["id"]: item["version"]
         for item in workflow_definitions
     }
+    existing_run_ids = existing_execution_run_ids(client) if args.submit else set()
 
     manifest = {
         "schemaVersion": "1",
@@ -272,15 +320,38 @@ def main() -> None:
                 "action": "planned",
             }
             if args.submit:
-                if client.exists(
-                    f"/execution-runs/{urllib.parse.quote(expected_run_id)}/"
-                ):
+                if expected_run_id in existing_run_ids:
                     record["action"] = "existing"
                 else:
-                    persisted = client.post(
-                        f"/planning-sessions/{urllib.parse.quote(session_id)}/candidates/"
-                        f"{urllib.parse.quote(candidate_id)}/select/"
-                    )
+                    if candidate.get("feasible"):
+                        client.post_discard(
+                            f"/planning-sessions/{urllib.parse.quote(session_id)}/candidates/"
+                            f"{urllib.parse.quote(candidate_id)}/select/"
+                        )
+                        persisted = plan
+                    else:
+                        # Infeasible candidates cannot become the session's
+                        # operational selection. Materialize their plans in
+                        # the plan catalog without updating the session's
+                        # selected candidate so the common simulator can
+                        # still measure observed SLA violations.
+                        plan_path = (
+                            f"/schedule-plans/{urllib.parse.quote(plan['id'])}/"
+                        )
+                        if client.exists(plan_path):
+                            persisted = client.get(plan_path)
+                        else:
+                            client.post_discard(
+                                "/schedule-plans/",
+                                {
+                                    "plan": plan,
+                                    "workflow": workflow,
+                                    "resources": resources,
+                                    "executionScope": scope,
+                                    "networkTopology": topology,
+                                },
+                            )
+                            persisted = plan
                     if persisted["id"] != plan["id"]:
                         raise RuntimeError(
                             f"selected plan ID mismatch for {candidate_id}: "
@@ -308,6 +379,7 @@ def main() -> None:
                         "runtimeAllocations": {},
                     }
                     job = client.post("/execution-runs/", payload)
+                    existing_run_ids.add(expected_run_id)
                     record["action"] = "submitted"
                     record["queueJobId"] = job.get("id")
             manifest["records"].append(record)

@@ -433,6 +433,10 @@ func (s *Coordinator) Select(
 	if !candidate.Feasible {
 		return nil, fmt.Errorf("an infeasible candidate cannot be selected")
 	}
+	// Candidates persisted before lifecycle identity normalization may still
+	// carry scheduler-temporary action IDs. Normalize again at promotion time
+	// so historical candidates can coexist as independent schedule plans.
+	reidentifyCandidatePlan(&candidate.Plan, candidate.Plan.ID)
 	if err := s.Store.SelectCandidate(ctx, sessionID, *candidate); err != nil {
 		return nil, err
 	}

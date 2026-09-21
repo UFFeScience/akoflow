@@ -489,11 +489,7 @@ func (s *candidateSink) Emit(ctx context.Context, plan domain.SchedulePlan) erro
 	}
 	fingerprint := candidateFingerprint(s.run.ID, planHash)
 	s.count++
-	plan.ID = fmt.Sprintf("%s-%s", s.sessionID, fingerprint[:12])
-	for index := range plan.Assignments {
-		plan.Assignments[index].PlanID = plan.ID
-		plan.Assignments[index].ID = plan.ID + "-" + plan.Assignments[index].ActivityID
-	}
+	reidentifyCandidatePlan(&plan, fmt.Sprintf("%s-%s", s.sessionID, fingerprint[:12]))
 	candidate := domain.PlanCandidate{
 		ID:                "candidate-" + fingerprint[:20],
 		PlanningSessionID: s.sessionID,
@@ -507,6 +503,36 @@ func (s *candidateSink) Emit(ctx context.Context, plan domain.SchedulePlan) erro
 		CreatedAt:         time.Now().UTC(),
 	}
 	return s.store.SaveCandidate(ctx, candidate)
+}
+
+func reidentifyCandidatePlan(plan *domain.SchedulePlan, planID string) {
+	plan.ID = planID
+	assignmentIDs := make(map[string]string, len(plan.Assignments))
+	for index := range plan.Assignments {
+		oldID := plan.Assignments[index].ID
+		plan.Assignments[index].PlanID = plan.ID
+		plan.Assignments[index].ID = plan.ID + "-" + plan.Assignments[index].ActivityID
+		assignmentIDs[oldID] = plan.Assignments[index].ID
+	}
+	lifecycleIDs := make(map[string]string, len(plan.LifecycleActions))
+	for index := range plan.LifecycleActions {
+		oldID := plan.LifecycleActions[index].ID
+		newID := fmt.Sprintf("%s-lifecycle-%d", plan.ID, index+1)
+		lifecycleIDs[oldID] = newID
+		plan.LifecycleActions[index].ID = newID
+		plan.LifecycleActions[index].SchedulePlanID = plan.ID
+	}
+	for index := range plan.LifecycleActions {
+		for dependencyIndex, dependencyID := range plan.LifecycleActions[index].DependsOn {
+			if rewritten, exists := lifecycleIDs[dependencyID]; exists {
+				plan.LifecycleActions[index].DependsOn[dependencyIndex] = rewritten
+				continue
+			}
+			if rewritten, exists := assignmentIDs[dependencyID]; exists {
+				plan.LifecycleActions[index].DependsOn[dependencyIndex] = rewritten
+			}
+		}
+	}
 }
 
 func planFingerprint(plan domain.SchedulePlan) (string, error) {

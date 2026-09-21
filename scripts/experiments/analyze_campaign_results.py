@@ -55,9 +55,11 @@ def analyze_campaign(planning: dict, simulations: dict) -> dict:
         budget = float(session.get("budget") or 0)
         observed_time = simulation.get("observedMakespanSeconds")
         observed_cost = simulation.get("observedCost")
+        experiment = session.get("configuration") or {}
         rows.append(
             {
                 **simulation,
+                "slaFactor": experiment.get("slaFactor"),
                 "deadlineSeconds": deadline,
                 "budget": budget,
                 "deadlineSatisfied": deadline <= 0
@@ -83,10 +85,10 @@ def analyze_campaign(planning: dict, simulations: dict) -> dict:
         )
 
     by_algorithm: dict[str, list[dict]] = defaultdict(list)
-    by_instance: dict[tuple[str, str], list[dict]] = defaultdict(list)
+    by_instance: dict[str, list[dict]] = defaultdict(list)
     for row in rows:
         by_algorithm[row["algorithm"]].append(row)
-        by_instance[(row["workflowVersionId"], row["executionScopeId"])].append(row)
+        by_instance[row["sessionId"]].append(row)
 
     winner_counts = {
         "makespan": Counter(),
@@ -94,10 +96,12 @@ def analyze_campaign(planning: dict, simulations: dict) -> dict:
         "sla": Counter(),
     }
     instance_comparisons = []
-    for (workflow_id, scope_id), instance_rows in sorted(by_instance.items()):
+    for session_id, instance_rows in sorted(by_instance.items()):
         completed = [row for row in instance_rows if row.get("status") == "completed"]
         if not completed:
             continue
+        workflow_id = instance_rows[0]["workflowVersionId"]
+        scope_id = instance_rows[0]["executionScopeId"]
         best_time = min(float(row["observedMakespanSeconds"]) for row in completed)
         best_cost = min(float(row["observedCost"]) for row in completed)
         time_winners = sorted(
@@ -119,8 +123,10 @@ def analyze_campaign(planning: dict, simulations: dict) -> dict:
                 winner_counts["sla"][row["algorithm"]] += 1
         instance_comparisons.append(
             {
+                "sessionId": session_id,
                 "workflowVersionId": workflow_id,
                 "executionScopeId": scope_id,
+                "slaFactor": instance_rows[0].get("slaFactor"),
                 "bestMakespanSeconds": best_time,
                 "bestCost": best_cost,
                 "makespanWinners": time_winners,
@@ -137,6 +143,8 @@ def analyze_campaign(planning: dict, simulations: dict) -> dict:
                         if best_cost > 0
                         else (1.0 if float(row["observedCost"]) == 0 else None),
                         "slaSatisfied": row["slaSatisfied"],
+                        "candidateFeasible": row.get("candidateFeasible"),
+                        "selectionPolicy": row.get("selectionPolicy"),
                     }
                     for row in sorted(completed, key=lambda item: item["algorithm"])
                 ],
@@ -152,6 +160,12 @@ def analyze_campaign(planning: dict, simulations: dict) -> dict:
                 "runCount": len(algorithm_rows),
                 "completedCount": len(completed),
                 "failedCount": len(algorithm_rows) - len(completed),
+                "predictedFeasibleCount": sum(
+                    row.get("candidateFeasible") is True for row in algorithm_rows
+                ),
+                "predictedInfeasibleCount": sum(
+                    row.get("candidateFeasible") is False for row in algorithm_rows
+                ),
                 "slaSatisfiedCount": sum(bool(row["slaSatisfied"]) for row in completed),
                 "planningElapsedSeconds": numeric_summary(
                     [row["planningElapsedSeconds"] for row in algorithm_rows]

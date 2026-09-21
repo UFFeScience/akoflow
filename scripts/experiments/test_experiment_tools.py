@@ -478,6 +478,8 @@ class CampaignAnalysisTests(unittest.TestCase):
                     "observedCost": 5,
                     "predictionErrorMakespan": 0.1,
                     "predictionErrorCost": 0.1,
+                    "candidateFeasible": False,
+                    "selectionPolicy": "best-available-infeasible",
                 },
                 {
                     "sessionId": "session",
@@ -499,6 +501,52 @@ class CampaignAnalysisTests(unittest.TestCase):
         self.assertFalse(result["runRows"][1]["slaSatisfied"])
         self.assertEqual(result["winnerCounts"]["makespan"], {"prism-time": 1.0})
         self.assertEqual(result["winnerCounts"]["cost"], {"heft": 1.0})
+        self.assertFalse(result["instanceComparisons"][0]["runs"][0]["candidateFeasible"])
+
+    def test_does_not_mix_sla_variants_of_the_same_workflow_and_scope(self):
+        planning = {
+            "records": [
+                {
+                    "session": {
+                        "session": {
+                            "id": session_id,
+                            "deadlineSeconds": deadline,
+                            "budget": 10,
+                            "configuration": {"slaFactor": factor},
+                        },
+                        "algorithmRuns": [],
+                    }
+                }
+                for session_id, deadline, factor in (
+                    ("session-f110", 11, 1.1),
+                    ("session-f120", 12, 1.2),
+                )
+            ]
+        }
+        simulations = {
+            "records": [
+                {
+                    "sessionId": session_id,
+                    "executionRunId": session_id + "-heft",
+                    "workflowVersionId": "workflow",
+                    "executionScopeId": "scope",
+                    "algorithm": "heft",
+                    "status": "completed",
+                    "observedMakespanSeconds": observed,
+                    "observedCost": 1,
+                }
+                for session_id, observed in (
+                    ("session-f110", 11.5),
+                    ("session-f120", 11.5),
+                )
+            ]
+        }
+
+        result = analyze_campaign(planning, simulations)
+
+        self.assertEqual(len(result["instanceComparisons"]), 2)
+        self.assertFalse(result["instanceComparisons"][0]["runs"][0]["slaSatisfied"])
+        self.assertTrue(result["instanceComparisons"][1]["runs"][0]["slaSatisfied"])
 
 
 if __name__ == "__main__":

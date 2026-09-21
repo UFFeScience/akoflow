@@ -69,13 +69,16 @@ def unwrap_list(value):
 
 
 def choose_candidate(candidates: list[dict], algorithm: str) -> dict:
-    feasible = [
+    matching = [
         candidate
         for candidate in candidates
-        if candidate.get("algorithm") == algorithm and candidate.get("feasible")
+        if candidate.get("algorithm") == algorithm
     ]
-    if not feasible:
-        raise RuntimeError(f"no feasible candidate for {algorithm}")
+    if not matching:
+        raise RuntimeError(f"no candidate for {algorithm}")
+
+    feasible = [candidate for candidate in matching if candidate.get("feasible")]
+    selectable = feasible or matching
 
     def number(candidate: dict, key: str) -> float:
         return float(candidate.get("predicted", {}).get(key, float("inf")))
@@ -94,7 +97,7 @@ def choose_candidate(candidates: list[dict], algorithm: str) -> dict:
             candidate.get("rank", 1_000_000),
             candidate["id"],
         )
-    return min(feasible, key=key)
+    return min(selectable, key=key)
 
 
 def session_algorithms(session: dict) -> list[str]:
@@ -253,6 +256,12 @@ def main() -> None:
                 "candidateId": candidate_id,
                 "candidateRank": candidate.get("rank"),
                 "candidateParetoOptimal": candidate.get("paretoOptimal"),
+                "candidateFeasible": bool(candidate.get("feasible")),
+                "selectionPolicy": (
+                    "best-feasible"
+                    if candidate.get("feasible")
+                    else "best-available-infeasible"
+                ),
                 "planId": plan["id"],
                 "executionRunId": expected_run_id,
                 "predicted": candidate.get("predicted", {}),

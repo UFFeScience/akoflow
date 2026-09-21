@@ -100,7 +100,7 @@ class CandidateSelectionTests(unittest.TestCase):
         self.assertEqual(choose_candidate(candidates, "prism-time")["id"], "fast")
         self.assertEqual(choose_candidate(candidates, "prism-cost")["id"], "cheap")
 
-    def test_infeasible_candidate_is_never_selected(self):
+    def test_feasible_candidate_is_preferred_over_infeasible_candidate(self):
         candidates = [
             {
                 "id": "invalid",
@@ -116,6 +116,21 @@ class CandidateSelectionTests(unittest.TestCase):
             },
         ]
         self.assertEqual(choose_candidate(candidates, "heft")["id"], "valid")
+
+    def test_infeasible_candidate_is_selected_when_it_is_the_only_plan(self):
+        candidates = [
+            {
+                "id": "heft-standard-plan",
+                "algorithm": "heft",
+                "feasible": False,
+                "predicted": {"makespanSeconds": 12, "cost": 3},
+            }
+        ]
+
+        self.assertEqual(
+            choose_candidate(candidates, "heft")["id"],
+            "heft-standard-plan",
+        )
 
     def test_algorithms_and_session_run_ids_follow_session_definition(self):
         session = {

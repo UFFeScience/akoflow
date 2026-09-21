@@ -490,6 +490,17 @@ func prismInterferencePriority(search compactPRISMContext, affected, interferer 
 			return math.Max(slowdown, 1), true
 		}
 	}
+	groupFactor := 1.0
+	matchedGroup := false
+	for index, members := range search.interferenceGroups {
+		if members[affected] && members[interferer] {
+			groupFactor = math.Max(groupFactor, search.interferenceGroupFactors[index])
+			matchedGroup = true
+		}
+	}
+	if matchedGroup {
+		return groupFactor, true
+	}
 	return 1, false
 }
 

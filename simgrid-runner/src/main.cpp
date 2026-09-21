@@ -43,6 +43,7 @@ struct InterferenceModel {
   std::string model = "pairwise-cpu-priority";
   InterferenceFactors factors;
   InterferenceFactors rules;
+  std::map<std::string, std::map<std::string, double>> groups_by_activity;
 };
 
 static InterferenceModel create_interference(const json& input)
@@ -77,6 +78,15 @@ static InterferenceModel create_interference(const json& input)
     if (factor < 1)
       throw std::runtime_error("invalid interference rule slowdownFactor");
     interference.rules[affected][interferer] = factor;
+  }
+  for (const auto& group : matrix.value("groups", json::array())) {
+    const auto id = group.at("id").get<std::string>();
+    const double factor = group.at("slowdownFactor").get<double>();
+    const auto members = group.at("activityIds").get<std::set<std::string>>();
+    if (id.empty() || factor < 1)
+      throw std::runtime_error("invalid interference group");
+    for (const auto& activity_id : members)
+      interference.groups_by_activity[activity_id][id] = factor;
   }
   return interference;
 }
@@ -249,16 +259,19 @@ static void run_simulation(sg4::Engine& engine, const json& input,
       active_by_resource[task_model->resource_id].insert(id);
       const auto affected = interference.factors.find(id);
       const auto affected_rule = interference.rules.find(task_model->activity_type_id);
+      const auto affected_groups = interference.groups_by_activity.find(id);
       const bool needs_sampling =
           (affected != interference.factors.end() && !affected->second.empty()) ||
-          (affected_rule != interference.rules.end() && !affected_rule->second.empty());
+          (affected_rule != interference.rules.end() && !affected_rule->second.empty()) ||
+          (affected_groups != interference.groups_by_activity.end() && !affected_groups->second.empty());
       const int slices = needs_sampling ? 64 : 1;
       double remaining = task_model->flops;
       for (int slice = 0; slice < slices && remaining > 0; ++slice) {
         const double baseline_work = slice + 1 == slices ? remaining : std::min(remaining, task_model->flops / slices);
         double priority = 1.0;
         bool matched = false;
-        if (affected != interference.factors.end() || affected_rule != interference.rules.end()) {
+        if (affected != interference.factors.end() || affected_rule != interference.rules.end() ||
+            affected_groups != interference.groups_by_activity.end()) {
           for (const auto& peer : active_by_resource[task_model->resource_id]) {
             if (peer == id)
               continue;
@@ -277,6 +290,17 @@ static void run_simulation(sg4::Engine& engine, const json& input,
               if (rule != affected_rule->second.end()) {
                 factor = rule->second;
                 pair_matched = true;
+              }
+            }
+            if (!pair_matched && affected_groups != interference.groups_by_activity.end()) {
+              const auto peer_groups = interference.groups_by_activity.find(peer);
+              for (const auto& [group_id, group_factor] : affected_groups->second) {
+                if (peer_groups != interference.groups_by_activity.end() &&
+                    peer_groups->second.count(group_id) > 0) {
+                  factor = group_factor;
+                  pair_matched = true;
+                  break;
+                }
               }
             }
             if (pair_matched) {

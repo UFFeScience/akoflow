@@ -105,6 +105,16 @@ type InterferenceMatrix struct {
 	Aggregation   string              `json:"aggregation"`
 	Entries       []InterferenceEntry `json:"entries"`
 	Rules         []InterferenceRule  `json:"rules,omitempty"`
+	Groups        []InterferenceGroup `json:"groups,omitempty"`
+}
+
+// InterferenceGroup applies the same pairwise slowdown between distinct
+// activities in ActivityIDs. It represents a sampled experiment cohort in
+// O(|V|) space instead of materializing every directed pair in O(|V|²).
+type InterferenceGroup struct {
+	ID             string   `json:"id"`
+	ActivityIDs    []string `json:"activityIds"`
+	SlowdownFactor float64  `json:"slowdownFactor"`
 }
 
 type InterferenceEntry struct {

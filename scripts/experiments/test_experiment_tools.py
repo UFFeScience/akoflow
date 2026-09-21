@@ -1,9 +1,63 @@
 import unittest
+from unittest.mock import patch
+import json
+import os
+import sys
+import tempfile
+from pathlib import Path
 
 from derive_sla_thresholds import derive_thresholds
 from create_sla_campaign import build_session_definitions
-from create_interference_campaign import build_interference_sessions
-from launch_campaign_simulations import choose_candidate
+from create_interference_campaign import (
+    build_interference_sessions,
+    selected_activity_ids,
+)
+from launch_campaign_simulations import choose_candidate, run_id, session_algorithms
+
+
+class SimulationCollectionTests(unittest.TestCase):
+    def test_null_detail_collections_are_treated_as_empty(self):
+        from collect_simulation_results import main
+
+        with tempfile.TemporaryDirectory() as directory:
+            directory_path = Path(directory)
+            manifest = directory_path / "manifest.json"
+            output = directory_path / "results.json"
+            manifest.write_text(
+                json.dumps(
+                    {
+                        "records": [
+                            {
+                                "executionRunId": "run-1",
+                                "predicted": {},
+                            }
+                        ]
+                    }
+                )
+            )
+            detail = {
+                "run": {"id": "run-1", "status": "completed"},
+                "activities": None,
+                "dataTransfers": None,
+                "handles": None,
+                "events": None,
+            }
+            arguments = [
+                "collect_simulation_results.py",
+                "--manifest",
+                str(manifest),
+                "--output",
+                str(output),
+            ]
+            with (
+                patch.dict(os.environ, {"AKOFLOW_API_TOKEN": "test"}),
+                patch("collect_simulation_results.get_json", return_value=detail),
+                patch.object(sys, "argv", arguments),
+            ):
+                main()
+            result = json.loads(output.read_text())
+            self.assertEqual(result["statusCounts"], {"completed": 1})
+            self.assertEqual(result["activities"], [])
 
 
 class CandidateSelectionTests(unittest.TestCase):
@@ -58,6 +112,26 @@ class CandidateSelectionTests(unittest.TestCase):
         ]
         self.assertEqual(choose_candidate(candidates, "heft")["id"], "valid")
 
+    def test_algorithms_and_session_run_ids_follow_session_definition(self):
+        session = {
+            "id": "experiment-s001-c010-workflow-v1",
+            "workflowVersionId": "workflow-v1",
+            "executionScopeId": "scheduler-hybrid_hetero-scope-v1",
+            "algorithms": [
+                {"id": "prism-time"},
+                {"id": "prism-cost"},
+                {"id": "heft"},
+            ],
+        }
+        self.assertEqual(
+            session_algorithms(session),
+            ["prism-time", "prism-cost", "heft"],
+        )
+        self.assertEqual(
+            run_id("simulation", session, "heft", "session"),
+            "simulation-experiment-s001-c010-workflow-v1-heft",
+        )
+
 
 class SLAThresholdTests(unittest.TestCase):
     def test_thresholds_use_common_simulator_heft_reference(self):
@@ -106,6 +180,35 @@ class SLAThresholdTests(unittest.TestCase):
         }
         with self.assertRaisesRegex(RuntimeError, "zero would disable budget"):
             derive_thresholds(results, "hybrid", [1.2])
+
+    def test_zero_cost_uses_explicit_cloud_fallback(self):
+        results = {
+            "records": [
+                {
+                    "executionRunId": "heft-hybrid",
+                    "workflowVersionId": "workflow-v1",
+                    "executionScopeId": "hybrid",
+                    "algorithm": "heft",
+                    "status": "completed",
+                    "observedMakespanSeconds": 100,
+                    "observedCost": 0,
+                },
+                {
+                    "executionRunId": "heft-cloud",
+                    "workflowVersionId": "workflow-v1",
+                    "executionScopeId": "cloud",
+                    "algorithm": "heft",
+                    "status": "completed",
+                    "observedMakespanSeconds": 500,
+                    "observedCost": 10,
+                },
+            ]
+        }
+        thresholds = derive_thresholds(results, "hybrid", [1.2], "cloud")
+        self.assertEqual(thresholds[0]["deadlineSeconds"], 120)
+        self.assertEqual(thresholds[0]["budget"], 12)
+        self.assertEqual(thresholds[0]["referenceScopeId"], "hybrid")
+        self.assertEqual(thresholds[0]["costReferenceScopeId"], "cloud")
 
 
 class SLACampaignTests(unittest.TestCase):
@@ -157,61 +260,62 @@ class SLACampaignTests(unittest.TestCase):
 
 
 class InterferenceCampaignTests(unittest.TestCase):
-    def test_builds_informed_uninformed_lambda_matrix(self):
-        workflows = {
-            "workflow-v1": {
-                "id": "workflow-v1",
-                "activities": [
-                    {"id": "a", "activityTypeId": "family-a"},
-                    {"id": "b", "activityTypeId": "family-b"},
-                ],
-            }
+    def test_builds_seeded_coverage_matrix_for_three_algorithms(self):
+        workflow = {
+            "id": "workflow-v1",
+            "activities": [
+                {"id": f"activity-{index}", "activityTypeId": "family"}
+                for index in range(10)
+            ],
         }
-        thresholds = {
-            "thresholds": [
-                {
-                    "workflowVersionId": "workflow-v1",
-                    "factor": 1.2,
-                    "deadlineSeconds": 120,
-                    "budget": 12,
-                    "executionRunId": "reference",
-                }
-            ]
+        threshold = {
+            "workflowVersionId": "workflow-v1",
+            "factor": 1.2,
+            "deadlineSeconds": 120,
+            "budget": 12,
+            "executionRunId": "reference",
         }
         sessions = build_interference_sessions(
             "interference",
-            workflows,
-            thresholds,
+            workflow,
+            threshold,
             "hybrid-scope",
             "hybrid-topology",
-            1.2,
             1.5,
-            (0.0, 2.0),
+            (0, 20, 100),
+            (7, 11),
         )
-        self.assertEqual(len(sessions), 4)
-        self.assertEqual(sum(len(session["algorithms"]) for session in sessions), 10)
-        informed = next(
+        self.assertEqual(len(sessions), 6)
+        self.assertEqual(sum(len(session["algorithms"]) for session in sessions), 18)
+        twenty = next(
             session
             for session in sessions
-            if session["configuration"]["lambda"] == 2
-            and session["configuration"]["knowledgeCondition"] == "informed"
+            if session["configuration"]["selectionSeed"] == 7
+            and session["configuration"]["coveragePercent"] == 20
         )
-        rules = informed["configuration"]["interferenceMatrix"]["rules"]
-        self.assertEqual(len(rules), 4)
-        self.assertTrue(all(rule["slowdownFactor"] == 2 for rule in rules))
-        self.assertTrue(
-            all(
-                algorithm["configuration"]["interferenceAware"]
-                for algorithm in informed["algorithms"]
-            )
+        group = twenty["configuration"]["interferenceMatrix"]["groups"][0]
+        self.assertEqual(len(group["activityIds"]), 2)
+        self.assertEqual(group["slowdownFactor"], 1.5)
+        self.assertEqual(
+            [algorithm["id"] for algorithm in twenty["algorithms"]],
+            ["prism-time", "prism-cost", "heft"],
         )
-        uninformed = next(
-            session
-            for session in sessions
-            if session["configuration"]["knowledgeCondition"] == "uninformed"
-            and session["configuration"]["lambda"] == 2
+        zero = next(
+            session for session in sessions if session["configuration"]["coveragePercent"] == 0
         )
-        self.assertEqual([item["id"] for item in uninformed["algorithms"]][-1], "heft")
+        self.assertEqual(zero["configuration"]["interferenceMatrix"]["groups"], [])
+
+    def test_coverage_prefixes_are_nested_for_same_seed(self):
+        activity_ids = [f"activity-{index}" for index in range(100)]
+        ten = set(selected_activity_ids("workflow", activity_ids, 42, 10))
+        twenty = set(selected_activity_ids("workflow", activity_ids, 42, 20))
+        fifty = set(selected_activity_ids("workflow", activity_ids, 42, 50))
+        self.assertLess(ten, twenty)
+        self.assertLess(twenty, fifty)
+        self.assertNotEqual(
+            ten,
+            set(selected_activity_ids("workflow", activity_ids, 43, 10)),
+        )
 
 
 if __name__ == "__main__":

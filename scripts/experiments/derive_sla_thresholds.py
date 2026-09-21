@@ -9,7 +9,17 @@ import json
 from pathlib import Path
 
 
-def derive_thresholds(results: dict, reference_scope: str, factors: list[float]) -> list[dict]:
+def derive_thresholds(
+    results: dict,
+    reference_scope: str,
+    factors: list[float],
+    budget_fallback_scope: str | None = None,
+) -> list[dict]:
+    completed_heft = {
+        (record.get("workflowVersionId"), record.get("executionScopeId")): record
+        for record in results.get("records", [])
+        if record.get("algorithm") == "heft" and record.get("status") == "completed"
+    }
     references = {}
     for record in results.get("records", []):
         if (
@@ -24,14 +34,24 @@ def derive_thresholds(results: dict, reference_scope: str, factors: list[float])
             cost = record.get("observedCost")
             if makespan is None or float(makespan) <= 0:
                 raise RuntimeError(f"invalid HEFT makespan reference for {workflow_id}")
+            cost_scope = reference_scope
+            cost_run_id = record["executionRunId"]
             if cost is None or float(cost) <= 0:
-                raise RuntimeError(
-                    f"invalid HEFT cost reference for {workflow_id}; zero would disable budget enforcement"
-                )
+                fallback = completed_heft.get((workflow_id, budget_fallback_scope))
+                fallback_cost = None if fallback is None else fallback.get("observedCost")
+                if fallback_cost is None or float(fallback_cost) <= 0:
+                    raise RuntimeError(
+                        f"invalid HEFT cost reference for {workflow_id}; zero would disable budget enforcement"
+                    )
+                cost = fallback_cost
+                cost_scope = budget_fallback_scope
+                cost_run_id = fallback["executionRunId"]
             references[workflow_id] = {
                 "workflowVersionId": workflow_id,
                 "executionRunId": record["executionRunId"],
                 "referenceScopeId": reference_scope,
+                "costReferenceScopeId": cost_scope,
+                "costReferenceExecutionRunId": cost_run_id,
                 "referenceMakespanSeconds": float(makespan),
                 "referenceCost": float(cost),
             }
@@ -74,6 +94,11 @@ def main() -> None:
         default="1.1,1.2,1.5",
         help="Comma-separated sensitivity factors",
     )
+    parser.add_argument(
+        "--budget-fallback-scope",
+        default="scheduler-cloud_hetero-scope-v1",
+        help="HEFT scope used only when the primary reference has zero cost",
+    )
     args = parser.parse_args()
 
     results = json.loads(args.results.read_text(encoding="utf-8"))
@@ -81,7 +106,12 @@ def main() -> None:
     if not factors or any(factor <= 1 for factor in factors):
         raise RuntimeError("all SLA factors must be greater than one")
 
-    thresholds = derive_thresholds(results, args.reference_scope, factors)
+    thresholds = derive_thresholds(
+        results,
+        args.reference_scope,
+        factors,
+        args.budget_fallback_scope,
+    )
     workflows = sorted({item["workflowVersionId"] for item in thresholds})
 
     payload = {
@@ -91,6 +121,7 @@ def main() -> None:
         "referenceAlgorithm": "heft",
         "referenceEvaluator": "simgrid-common-simulator",
         "referenceScopeId": args.reference_scope,
+        "budgetFallbackScopeId": args.budget_fallback_scope,
         "factors": factors,
         "workflowCount": len(workflows),
         "thresholds": thresholds,

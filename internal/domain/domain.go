@@ -160,6 +160,7 @@ type PlanningRequest = planning.PlanningRequest
 type InterferenceMatrix = planning.InterferenceMatrix
 type InterferenceEntry = planning.InterferenceEntry
 type InterferenceRule = planning.InterferenceRule
+type InterferenceGroup = planning.InterferenceGroup
 type AlgorithmSelection = planning.AlgorithmSelection
 type PlanningSession = planning.PlanningSession
 type AlgorithmRun = planning.AlgorithmRun

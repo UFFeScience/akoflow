@@ -54,3 +54,34 @@ func TestNormalizePairwiseSlowdownFamilyRules(t *testing.T) {
 		t.Fatalf("unexpected normalized rules: %#v", matrix.Rules)
 	}
 }
+
+func TestNormalizePairwiseSlowdownActivityGroup(t *testing.T) {
+	workflow := domain.WorkflowVersion{ID: "workflow", Activities: []domain.Activity{
+		{ID: "a"}, {ID: "b"}, {ID: "c"},
+	}}
+	matrix, err := normalizeInterferenceMatrix(&domain.InterferenceMatrix{
+		SchemaVersion: "3", Model: "pairwise-slowdown", Aggregation: "maximum",
+		Groups: []domain.InterferenceGroup{{
+			ID: "selected", ActivityIDs: []string{"b", "a"}, SlowdownFactor: 1.5,
+		}},
+	}, workflow)
+	if err != nil {
+		t.Fatalf("normalize activity group: %v", err)
+	}
+	if len(matrix.Groups) != 1 || matrix.Groups[0].ActivityIDs[0] != "a" {
+		t.Fatalf("unexpected normalized groups: %#v", matrix.Groups)
+	}
+}
+
+func TestNormalizePairwiseSlowdownActivityGroupRejectsUnknownMember(t *testing.T) {
+	workflow := domain.WorkflowVersion{ID: "workflow", Activities: []domain.Activity{{ID: "a"}}}
+	_, err := normalizeInterferenceMatrix(&domain.InterferenceMatrix{
+		SchemaVersion: "3", Model: "pairwise-slowdown", Aggregation: "maximum",
+		Groups: []domain.InterferenceGroup{{
+			ID: "selected", ActivityIDs: []string{"missing"}, SlowdownFactor: 1.5,
+		}},
+	}, workflow)
+	if err == nil {
+		t.Fatal("expected unknown group activity to be rejected")
+	}
+}

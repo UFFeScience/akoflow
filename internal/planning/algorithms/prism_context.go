@@ -21,24 +21,26 @@ type compactPRISMResource struct {
 }
 
 type compactPRISMContext struct {
-	request           domain.PlanningRequest
-	activities        []domain.Activity
-	activityOrdinal   map[string]int
-	predecessors      [][]compactPRISMDependency
-	successors        [][]int
-	resources         []compactPRISMResource
-	router            compactPRISMRouter
-	durations         [][]float64
-	feasible          [][]bool
-	minimumCosts      []float64
-	averageDurations  []float64
-	ranks             []float64
-	interference      []map[int]float64
-	interferenceModel string
-	interferenceRules map[string]map[string]float64
-	readyBranchLimit  int
-	beamWidth         int
-	coreCount         int
+	request                  domain.PlanningRequest
+	activities               []domain.Activity
+	activityOrdinal          map[string]int
+	predecessors             [][]compactPRISMDependency
+	successors               [][]int
+	resources                []compactPRISMResource
+	router                   compactPRISMRouter
+	durations                [][]float64
+	feasible                 [][]bool
+	minimumCosts             []float64
+	averageDurations         []float64
+	ranks                    []float64
+	interference             []map[int]float64
+	interferenceModel        string
+	interferenceRules        map[string]map[string]float64
+	interferenceGroups       []map[int]bool
+	interferenceGroupFactors []float64
+	readyBranchLimit         int
+	beamWidth                int
+	coreCount                int
 }
 
 func newCompactPRISMContext(
@@ -123,6 +125,16 @@ func (search *compactPRISMContext) buildInterference() {
 			search.interferenceRules[rule.AffectedActivityTypeID] = map[string]float64{}
 		}
 		search.interferenceRules[rule.AffectedActivityTypeID][rule.InterferingActivityTypeID] = rule.SlowdownFactor
+	}
+	for _, group := range search.request.Interference.Groups {
+		members := make(map[int]bool, len(group.ActivityIDs))
+		for _, activityID := range group.ActivityIDs {
+			if ordinal, exists := search.activityOrdinal[activityID]; exists {
+				members[ordinal] = true
+			}
+		}
+		search.interferenceGroups = append(search.interferenceGroups, members)
+		search.interferenceGroupFactors = append(search.interferenceGroupFactors, group.SlowdownFactor)
 	}
 }
 

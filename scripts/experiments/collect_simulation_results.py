@@ -105,7 +105,7 @@ def main() -> None:
             ("handles", handle_records),
             ("events", event_records),
         ):
-            for item in detail.get(key, []):
+            for item in detail.get(key) or []:
                 target.append(
                     {
                         "executionRunId": run_id,

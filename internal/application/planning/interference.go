@@ -32,7 +32,7 @@ func normalizeInterferenceMatrix(matrix *domain.InterferenceMatrix, workflow dom
 	if matrix.SchemaVersion == "" {
 		matrix.SchemaVersion = "1"
 	}
-	if matrix.SchemaVersion != "1" && matrix.SchemaVersion != "2" {
+	if matrix.SchemaVersion != "1" && matrix.SchemaVersion != "2" && matrix.SchemaVersion != "3" {
 		return nil, fmt.Errorf("unsupported interference matrix schemaVersion %q", matrix.SchemaVersion)
 	}
 	if matrix.Model == "" {
@@ -95,6 +95,14 @@ func normalizeInterferenceMatrix(matrix *domain.InterferenceMatrix, workflow dom
 		}
 		ruleSeen[key] = true
 	}
+	if err := normalizeInterferenceGroups(matrix, activities, workflow.ID); err != nil {
+		return nil, err
+	}
+	sortInterferenceMatrix(matrix)
+	return matrix, nil
+}
+
+func sortInterferenceMatrix(matrix *domain.InterferenceMatrix) {
 	sort.Slice(matrix.Entries, func(i, j int) bool {
 		left := matrix.Entries[i].AffectedActivityID + "\x00" + matrix.Entries[i].InterferingActivityID
 		right := matrix.Entries[j].AffectedActivityID + "\x00" + matrix.Entries[j].InterferingActivityID
@@ -105,5 +113,37 @@ func normalizeInterferenceMatrix(matrix *domain.InterferenceMatrix, workflow dom
 		right := matrix.Rules[j].AffectedActivityTypeID + "\x00" + matrix.Rules[j].InterferingActivityTypeID
 		return left < right
 	})
-	return matrix, nil
+	sort.Slice(matrix.Groups, func(i, j int) bool { return matrix.Groups[i].ID < matrix.Groups[j].ID })
+}
+
+func normalizeInterferenceGroups(matrix *domain.InterferenceMatrix, activities map[string]bool, workflowID string) error {
+	groupSeen := make(map[string]bool, len(matrix.Groups))
+	for groupIndex := range matrix.Groups {
+		group := &matrix.Groups[groupIndex]
+		if matrix.Model != "pairwise-slowdown" {
+			return fmt.Errorf("activity interference groups require pairwise-slowdown")
+		}
+		if group.ID == "" {
+			return fmt.Errorf("interference group id is required")
+		}
+		if groupSeen[group.ID] {
+			return fmt.Errorf("duplicate interference group %q", group.ID)
+		}
+		groupSeen[group.ID] = true
+		if group.SlowdownFactor < 1 {
+			return fmt.Errorf("interference group %q must have slowdownFactor >= 1", group.ID)
+		}
+		memberSeen := make(map[string]bool, len(group.ActivityIDs))
+		for _, activityID := range group.ActivityIDs {
+			if !activities[activityID] {
+				return fmt.Errorf("interference group %q references activity %q outside workflow %q", group.ID, activityID, workflowID)
+			}
+			if memberSeen[activityID] {
+				return fmt.Errorf("interference group %q contains duplicate activity %q", group.ID, activityID)
+			}
+			memberSeen[activityID] = true
+		}
+		sort.Strings(group.ActivityIDs)
+	}
+	return nil
 }

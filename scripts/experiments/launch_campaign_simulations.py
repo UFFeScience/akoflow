@@ -14,9 +14,6 @@ from pathlib import Path
 
 
 TERMINAL_PLANNING = {"completed", "failed", "cancelled"}
-ALGORITHMS = ("heft", "prism-time", "prism-cost")
-
-
 class Client:
     def __init__(self, base_url: str, token: str) -> None:
         self.base_url = base_url.rstrip("/")
@@ -100,7 +97,20 @@ def choose_candidate(candidates: list[dict], algorithm: str) -> dict:
     return min(feasible, key=key)
 
 
-def run_id(prefix: str, session: dict, algorithm: str) -> str:
+def session_algorithms(session: dict) -> list[str]:
+    algorithms = []
+    for selection in session.get("algorithms") or []:
+        algorithm = selection.get("id")
+        if algorithm and algorithm not in algorithms:
+            algorithms.append(algorithm)
+    if not algorithms:
+        raise RuntimeError(f"session {session.get('id')} has no algorithms")
+    return algorithms
+
+
+def run_id(prefix: str, session: dict, algorithm: str, style: str = "scope") -> str:
+    if style == "session":
+        return f"{prefix}-{session['id']}-{algorithm}".replace("_", "-")
     workflow = session["workflowVersionId"].replace("_", "-")
     scope = session["executionScopeId"].removeprefix("scheduler-")
     scope = scope.removesuffix("-scope-v1").replace("_", "-")
@@ -115,6 +125,12 @@ def main() -> None:
     parser.add_argument("--expected-sessions", type=int, default=49)
     parser.add_argument("--submit", action="store_true")
     parser.add_argument("--allow-incomplete", action="store_true")
+    parser.add_argument(
+        "--run-id-style",
+        choices=("scope", "session"),
+        default="scope",
+        help="Use session style when one workflow/scope has multiple experimental variants",
+    )
     parser.add_argument(
         "--base-url",
         default="http://127.0.0.1:8080/akoflow-api",
@@ -214,7 +230,8 @@ def main() -> None:
         if not resources or not runtimes or not bindings:
             raise RuntimeError(f"incomplete execution inventory for {session_id}")
 
-        for algorithm in ALGORITHMS:
+        configuration = session.get("configuration") or {}
+        for algorithm in session_algorithms(session):
             candidate = choose_candidate(candidates, algorithm)
             candidate_id = candidate["id"]
             detail = client.get(
@@ -222,7 +239,12 @@ def main() -> None:
                 f"{urllib.parse.quote(candidate_id)}/"
             )
             plan = detail["plan"]
-            expected_run_id = run_id(args.run_prefix, session, algorithm)
+            expected_run_id = run_id(
+                args.run_prefix,
+                session,
+                algorithm,
+                args.run_id_style,
+            )
             record = {
                 "sessionId": session_id,
                 "workflowVersionId": session["workflowVersionId"],
@@ -234,6 +256,10 @@ def main() -> None:
                 "planId": plan["id"],
                 "executionRunId": expected_run_id,
                 "predicted": candidate.get("predicted", {}),
+                "experiment": configuration.get("experiment"),
+                "selectionSeed": configuration.get("selectionSeed"),
+                "coveragePercent": configuration.get("coveragePercent"),
+                "slowdownFactor": configuration.get("slowdownFactor"),
                 "action": "planned",
             }
             if args.submit:
@@ -256,10 +282,10 @@ def main() -> None:
                             "id": expected_run_id,
                             "schedulePlanId": plan["id"],
                             "mode": "simulation",
-                            "seed": 1,
+                            "seed": configuration.get("selectionSeed", 1),
                             "status": "created",
                             "kind": "workflow",
-                            "title": f"Baseline {algorithm}: {session['workflowVersionId']} / {session['executionScopeId']}",
+                            "title": f"Simulation {algorithm}: {session['workflowVersionId']} / {session['executionScopeId']}",
                         },
                         "plan": persisted,
                         "workflow": workflow,

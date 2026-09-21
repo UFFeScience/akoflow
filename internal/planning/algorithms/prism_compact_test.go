@@ -228,6 +228,46 @@ func TestDetailedPRISMEvaluatorAppliesPairwiseSlowdown(t *testing.T) {
 	}
 }
 
+func TestDetailedPRISMEvaluatorAppliesActivityGroupSlowdown(t *testing.T) {
+	request := domain.PlanningRequest{
+		Workflow: domain.WorkflowVersion{Activities: []domain.Activity{
+			planningActivity("a", 10), planningActivity("b", 10), planningActivity("c", 10),
+		}},
+		ExecutionScope: domain.ExecutionScope{EnvironmentVersionIDs: []string{"environment"}},
+		Resources:      []domain.Resource{planningResource("machine", 3, 1, 0)},
+		Interference: &domain.InterferenceMatrix{
+			SchemaVersion: "3", Model: "pairwise-slowdown", Aggregation: "maximum",
+			Groups: []domain.InterferenceGroup{{
+				ID: "selected", ActivityIDs: []string{"a", "b"}, SlowdownFactor: 1.5,
+			}},
+		},
+	}
+	search, err := newCompactPRISMContext(request, nil)
+	if err != nil {
+		t.Fatalf("build compact context: %v", err)
+	}
+	assignments := []domain.PlanAssignment{
+		{ActivityID: "a", ResourceID: "machine", CoreID: "machine-core-1", PredictedRuntimeSeconds: 10},
+		{ActivityID: "b", ResourceID: "machine", CoreID: "machine-core-2", PredictedRuntimeSeconds: 10},
+		{ActivityID: "c", ResourceID: "machine", CoreID: "machine-core-3", PredictedRuntimeSeconds: 10},
+	}
+	state := compactPRISMStateFromEvaluation(compactPRISMState{}, assignments, 0, 0)
+	evaluated, err := evaluateCompleteCompactPRISMState(search, state)
+	if err != nil {
+		t.Fatalf("evaluate candidate: %v", err)
+	}
+	evaluatedAssignments := compactPRISMAssignments(search, evaluated)
+	for _, assignment := range evaluatedAssignments {
+		want := 15.0
+		if assignment.ActivityID == "c" {
+			want = 10
+		}
+		if math.Abs(assignment.PredictedRuntimeSeconds-want) > 1e-6 {
+			t.Fatalf("activity %s runtime got %.2f, want %.2f", assignment.ActivityID, assignment.PredictedRuntimeSeconds, want)
+		}
+	}
+}
+
 func TestDetailedPRISMEvaluatorAppliesActivityFamilySlowdown(t *testing.T) {
 	activityA := planningActivity("a", 10)
 	activityA.ActivityTypeID = "type-a"

@@ -35,6 +35,10 @@ def numeric_summary(values: list[float | None]) -> dict:
     }
 
 
+def first_defined(*values):
+    return next((value for value in values if value is not None), None)
+
+
 def analyze_campaign(planning: dict, simulations: dict) -> dict:
     sessions = {}
     algorithm_runs = {}
@@ -59,6 +63,18 @@ def analyze_campaign(planning: dict, simulations: dict) -> dict:
         rows.append(
             {
                 **simulation,
+                "experiment": first_defined(
+                    simulation.get("experiment"), experiment.get("experiment")
+                ),
+                "selectionSeed": first_defined(
+                    simulation.get("selectionSeed"), experiment.get("selectionSeed")
+                ),
+                "coveragePercent": first_defined(
+                    simulation.get("coveragePercent"), experiment.get("coveragePercent")
+                ),
+                "slowdownFactor": first_defined(
+                    simulation.get("slowdownFactor"), experiment.get("slowdownFactor")
+                ),
                 "slaFactor": experiment.get("slaFactor"),
                 "deadlineSeconds": deadline,
                 "budget": budget,
@@ -83,6 +99,43 @@ def analyze_campaign(planning: dict, simulations: dict) -> dict:
                 "optionCount": (algorithm_run.get("configuration") or {}).get("optionCount"),
             }
         )
+
+    interference_controls = {
+        (
+            row.get("workflowVersionId"),
+            row.get("executionScopeId"),
+            row.get("algorithm"),
+            row.get("selectionSeed"),
+        ): row
+        for row in rows
+        if row.get("status") == "completed" and row.get("coveragePercent") == 0
+    }
+    for row in rows:
+        control = interference_controls.get(
+            (
+                row.get("workflowVersionId"),
+                row.get("executionScopeId"),
+                row.get("algorithm"),
+                row.get("selectionSeed"),
+            )
+        )
+        observed_time = row.get("observedMakespanSeconds")
+        control_time = control.get("observedMakespanSeconds") if control else None
+        observed_cost = row.get("observedCost")
+        control_cost = control.get("observedCost") if control else None
+        row["makespanDegradationPercent"] = (
+            (float(observed_time) / float(control_time) - 1) * 100
+            if observed_time is not None and control_time not in (None, 0)
+            else None
+        )
+        row["costDegradationPercent"] = (
+            (float(observed_cost) / float(control_cost) - 1) * 100
+            if observed_cost is not None and control_cost not in (None, 0)
+            else None
+        )
+        row["observedInterferenceSeconds"] = (
+            row.get("breakdown") or {}
+        ).get("interferenceSeconds")
 
     by_algorithm: dict[str, list[dict]] = defaultdict(list)
     by_instance: dict[str, list[dict]] = defaultdict(list)
@@ -186,10 +239,60 @@ def analyze_campaign(planning: dict, simulations: dict) -> dict:
                 "costWinnerCredits": winner_counts["cost"][algorithm],
             }
         )
+
+    interference_groups: dict[tuple[str, float], list[dict]] = defaultdict(list)
+    for row in rows:
+        coverage = row.get("coveragePercent")
+        if coverage is not None:
+            interference_groups[(row["algorithm"], float(coverage))].append(row)
+    interference_summaries = []
+    for (algorithm, coverage), group_rows in sorted(interference_groups.items()):
+        completed = [row for row in group_rows if row.get("status") == "completed"]
+        interference_summaries.append(
+            {
+                "algorithm": algorithm,
+                "coveragePercent": coverage,
+                "runCount": len(group_rows),
+                "completedCount": len(completed),
+                "failedCount": len(group_rows) - len(completed),
+                "seedCount": len(
+                    {
+                        row.get("selectionSeed")
+                        for row in completed
+                        if row.get("selectionSeed") is not None
+                    }
+                ),
+                "slaSatisfiedCount": sum(bool(row["slaSatisfied"]) for row in completed),
+                "slaSatisfiedRate": (
+                    sum(bool(row["slaSatisfied"]) for row in completed) / len(completed)
+                    if completed
+                    else None
+                ),
+                "planningElapsedSeconds": numeric_summary(
+                    [row.get("planningElapsedSeconds") for row in completed]
+                ),
+                "observedMakespanSeconds": numeric_summary(
+                    [row.get("observedMakespanSeconds") for row in completed]
+                ),
+                "observedCost": numeric_summary(
+                    [row.get("observedCost") for row in completed]
+                ),
+                "observedInterferenceSeconds": numeric_summary(
+                    [row.get("observedInterferenceSeconds") for row in completed]
+                ),
+                "makespanDegradationPercent": numeric_summary(
+                    [row.get("makespanDegradationPercent") for row in completed]
+                ),
+                "costDegradationPercent": numeric_summary(
+                    [row.get("costDegradationPercent") for row in completed]
+                ),
+            }
+        )
     return {
         "runRows": rows,
         "algorithmSummaries": algorithm_summaries,
         "instanceComparisons": instance_comparisons,
+        "interferenceSummaries": interference_summaries,
         "winnerCounts": {name: dict(counts) for name, counts in winner_counts.items()},
     }
 

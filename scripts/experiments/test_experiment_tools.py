@@ -548,6 +548,75 @@ class CampaignAnalysisTests(unittest.TestCase):
         self.assertFalse(result["instanceComparisons"][0]["runs"][0]["slaSatisfied"])
         self.assertTrue(result["instanceComparisons"][1]["runs"][0]["slaSatisfied"])
 
+    def test_summarizes_seeded_interference_against_matching_control(self):
+        planning = {
+            "records": [
+                {
+                    "session": {
+                        "session": {
+                            "id": session_id,
+                            "deadlineSeconds": 20,
+                            "budget": 20,
+                            "configuration": {
+                                "experiment": "2-seeded-activity-coverage-slowdown",
+                                "selectionSeed": seed,
+                                "coveragePercent": coverage,
+                                "slowdownFactor": 1.5,
+                            },
+                        },
+                        "algorithmRuns": [
+                            {
+                                "algorithm": "prism-time",
+                                "status": "completed",
+                                "startedAt": "2026-01-01T00:00:00Z",
+                                "completedAt": "2026-01-01T00:00:02Z",
+                            }
+                        ],
+                    }
+                }
+                for session_id, seed, coverage in (
+                    ("seed-1-control", 1, 0),
+                    ("seed-1-half", 1, 50),
+                    ("seed-2-control", 2, 0),
+                    ("seed-2-half", 2, 50),
+                )
+            ]
+        }
+        simulations = {
+            "records": [
+                {
+                    "sessionId": session_id,
+                    "executionRunId": session_id + "-prism-time",
+                    "workflowVersionId": "workflow",
+                    "executionScopeId": "scope",
+                    "algorithm": "prism-time",
+                    "status": "completed",
+                    "observedMakespanSeconds": makespan,
+                    "observedCost": cost,
+                    "breakdown": {"interferenceSeconds": interference},
+                }
+                for session_id, makespan, cost, interference in (
+                    ("seed-1-control", 10, 5, 0),
+                    ("seed-1-half", 15, 6, 3),
+                    ("seed-2-control", 8, 4, 0),
+                    ("seed-2-half", 10, 5, 2),
+                )
+            ]
+        }
+
+        result = analyze_campaign(planning, simulations)
+
+        half = next(
+            row
+            for row in result["interferenceSummaries"]
+            if row["coveragePercent"] == 50
+        )
+        self.assertEqual(half["seedCount"], 2)
+        self.assertEqual(half["completedCount"], 2)
+        self.assertAlmostEqual(half["makespanDegradationPercent"]["mean"], 37.5)
+        self.assertAlmostEqual(half["costDegradationPercent"]["mean"], 22.5)
+        self.assertEqual(half["observedInterferenceSeconds"]["median"], 2.5)
+
 
 if __name__ == "__main__":
     unittest.main()

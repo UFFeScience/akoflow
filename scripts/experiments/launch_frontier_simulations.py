@@ -166,6 +166,8 @@ def main() -> None:
                 "algorithm": candidate["algorithm"],
                 "candidateId": candidate_id,
                 "candidateRank": candidate.get("rank"),
+                "candidateCreatedAt": candidate.get("createdAt"),
+                "planningSessionStartedAt": session.get("startedAt"),
                 "planId": plan["id"],
                 "executionRunId": run_id,
                 "predicted": candidate.get("predicted") or {},

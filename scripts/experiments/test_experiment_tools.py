@@ -431,6 +431,13 @@ class FrontierTests(unittest.TestCase):
         result = analyze(records)
         self.assertEqual(len(result["workflows"]), 1)
         self.assertEqual(len(result["metrics"]), 2)
+        prism_time = next(
+            row for row in result["metrics"] if row["algorithm"] == "prism-time"
+        )
+        self.assertEqual(prism_time["bestMakespanGapPercent"], 0)
+        self.assertEqual(prism_time["bestCostGapPercent"], 400)
+        self.assertEqual(prism_time["meanDistanceToReference"], 0)
+        self.assertGreater(prism_time["frontierSpan"], 0)
 
 
 class CampaignAnalysisTests(unittest.TestCase):

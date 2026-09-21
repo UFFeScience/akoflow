@@ -1,0 +1,21 @@
+{
+  "runId": "simgrid-slowdown-run",
+  "planId": "simgrid-slowdown-plan",
+  "deadlineSeconds": 0,
+  "budget": 0,
+  "tasks": [
+    {"id": "one", "assignmentId": "assignment-one", "resourceId": "edge", "flops": 60000000000, "pricePerSecond": 0},
+    {"id": "two", "assignmentId": "assignment-two", "resourceId": "edge", "flops": 60000000000, "pricePerSecond": 0}
+  ],
+  "dependencies": [],
+  "resourceLaneOrders": [],
+  "interference": {
+    "schemaVersion": "2",
+    "model": "pairwise-slowdown",
+    "aggregation": "maximum",
+    "entries": [
+      {"affectedActivityId": "one", "interferingActivityId": "two", "slowdownFactor": 1.5},
+      {"affectedActivityId": "two", "interferingActivityId": "one", "slowdownFactor": 1.5}
+    ]
+  }
+}

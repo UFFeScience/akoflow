@@ -80,3 +80,32 @@ func TestRunnerInputCarriesPlanInterferenceMatrix(t *testing.T) {
 	require.NotNil(t, input.Interference)
 	require.Equal(t, "pairwise-cpu-priority", input.Interference.Model)
 }
+
+func TestRunnerInputCarriesPairwiseSlowdownMatrix(t *testing.T) {
+	request := ports.ExecutionRequest{
+		Run: domain.ExecutionRun{ID: "run"},
+		Plan: domain.SchedulePlan{
+			ID: "plan",
+			Assignments: []domain.PlanAssignment{
+				{ID: "assignment-a", ActivityID: "a", ResourceID: "resource"},
+				{ID: "assignment-b", ActivityID: "b", ResourceID: "resource"},
+			},
+			Metadata: map[string]any{"interferenceMatrix": map[string]any{
+				"schemaVersion": "2", "model": "pairwise-slowdown",
+				"aggregation": "maximum", "entries": []any{map[string]any{
+					"affectedActivityId": "a", "interferingActivityId": "b", "slowdownFactor": 1.5,
+				}},
+			}},
+		},
+		Workflow:  domain.WorkflowVersion{Activities: []domain.Activity{{ID: "a"}, {ID: "b"}}},
+		Resources: []domain.Resource{{ID: "resource"}},
+	}
+
+	payload, err := buildRunnerInput(request, 1e9)
+	require.NoError(t, err)
+	var input runnerInput
+	require.NoError(t, json.Unmarshal(payload, &input))
+	require.NotNil(t, input.Interference)
+	require.Equal(t, "pairwise-slowdown", input.Interference.Model)
+	require.InDelta(t, 1.5, input.Interference.Entries[0].SlowdownFactor, 1e-9)
+}

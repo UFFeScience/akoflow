@@ -109,7 +109,8 @@ type InterferenceMatrix struct {
 type InterferenceEntry struct {
 	AffectedActivityID    string  `json:"affectedActivityId"`
 	InterferingActivityID string  `json:"interferingActivityId"`
-	PriorityWeight        float64 `json:"priorityWeight"`
+	PriorityWeight        float64 `json:"priorityWeight,omitempty"`
+	SlowdownFactor        float64 `json:"slowdownFactor,omitempty"`
 }
 
 type AlgorithmSelection struct {

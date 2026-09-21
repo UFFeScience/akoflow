@@ -38,24 +38,35 @@ struct TaskModel {
 
 using InterferenceFactors = std::map<std::string, std::map<std::string, double>>;
 
-static InterferenceFactors create_interference(const json& input)
-{
+struct InterferenceModel {
+  std::string model = "pairwise-cpu-priority";
   InterferenceFactors factors;
+};
+
+static InterferenceModel create_interference(const json& input)
+{
+  InterferenceModel interference;
   if (!input.contains("interference") || input.at("interference").is_null())
-    return factors;
+    return interference;
   const auto& matrix = input.at("interference");
-  if (matrix.value("model", "pairwise-cpu-priority") != "pairwise-cpu-priority" ||
-      matrix.value("aggregation", "minimum") != "minimum")
+  interference.model = matrix.value("model", "pairwise-cpu-priority");
+  const auto aggregation = matrix.value("aggregation", interference.model == "pairwise-slowdown" ? "maximum" : "minimum");
+  if ((interference.model == "pairwise-cpu-priority" && aggregation != "minimum") ||
+      (interference.model == "pairwise-slowdown" && aggregation != "maximum") ||
+      (interference.model != "pairwise-cpu-priority" && interference.model != "pairwise-slowdown"))
     throw std::runtime_error("unsupported interference matrix model");
   for (const auto& entry : matrix.value("entries", json::array())) {
     const auto affected = entry.at("affectedActivityId").get<std::string>();
     const auto interferer = entry.at("interferingActivityId").get<std::string>();
-    const double priority = entry.at("priorityWeight").get<double>();
-    if (priority <= 0)
-      throw std::runtime_error("interference priorityWeight must be > 0");
-    factors[affected][interferer] = priority;
+    const double factor = interference.model == "pairwise-slowdown"
+                              ? entry.at("slowdownFactor").get<double>()
+                              : entry.at("priorityWeight").get<double>();
+    if ((interference.model == "pairwise-slowdown" && factor < 1) ||
+        (interference.model == "pairwise-cpu-priority" && factor <= 0))
+      throw std::runtime_error("invalid interference factor");
+    interference.factors[affected][interferer] = factor;
   }
-  return factors;
+  return interference;
 }
 
 struct TransferModel {
@@ -156,7 +167,7 @@ static std::string mailbox_name(const std::string& run_id, const std::string& ki
 static void run_simulation(sg4::Engine& engine, const json& input,
                            std::map<std::string, TaskModel>& tasks,
                            std::vector<TransferModel>& transfers,
-                           const InterferenceFactors& interference)
+                           const InterferenceModel& interference)
 {
   const auto run_id = input.at("runId").get<std::string>();
   std::map<std::string, std::vector<std::pair<std::string, std::string>>> incoming_dependencies;
@@ -223,29 +234,40 @@ static void run_simulation(sg4::Engine& engine, const json& input,
         sg4::this_actor::sleep_for(task_model->overhead_seconds);
       task_model->compute_started_at = sg4::Engine::get_clock();
       active_by_resource[task_model->resource_id].insert(id);
-      const auto affected = interference.find(id);
-      const bool needs_sampling = affected != interference.end() && !affected->second.empty();
+      const auto affected = interference.factors.find(id);
+      const bool needs_sampling = affected != interference.factors.end() && !affected->second.empty();
       const int slices = needs_sampling ? 64 : 1;
       double remaining = task_model->flops;
       for (int slice = 0; slice < slices && remaining > 0; ++slice) {
         const double baseline_work = slice + 1 == slices ? remaining : std::min(remaining, task_model->flops / slices);
         double priority = 1.0;
         bool matched = false;
-        if (affected != interference.end()) {
+        if (affected != interference.factors.end()) {
           for (const auto& peer : active_by_resource[task_model->resource_id]) {
             if (peer == id)
               continue;
             const auto pair = affected->second.find(peer);
             if (pair != affected->second.end()) {
-              priority = matched ? std::min(priority, pair->second) : pair->second;
+              if (!matched)
+                priority = pair->second;
+              else if (interference.model == "pairwise-slowdown")
+                priority = std::max(priority, pair->second);
+              else
+                priority = std::min(priority, pair->second);
               matched = true;
             }
           }
         }
+        const double slowdown = interference.model == "pairwise-slowdown" && matched ? priority : 1.0;
+        const double execution_work = baseline_work * slowdown;
+        const double execution_priority = interference.model == "pairwise-cpu-priority" ? priority : 1.0;
         const double before = sg4::Engine::get_clock();
-        sg4::this_actor::execute(baseline_work, priority);
+        sg4::this_actor::execute(execution_work, execution_priority);
         const double elapsed = sg4::Engine::get_clock() - before;
-        task_model->interference_seconds += elapsed * std::abs(priority - 1.0) / std::max(priority, 1.0);
+        if (interference.model == "pairwise-slowdown")
+          task_model->interference_seconds += elapsed * (slowdown - 1.0) / slowdown;
+        else
+          task_model->interference_seconds += elapsed * std::abs(priority - 1.0) / std::max(priority, 1.0);
         remaining -= baseline_work;
       }
       active_by_resource[task_model->resource_id].erase(id);

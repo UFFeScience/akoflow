@@ -190,6 +190,44 @@ func TestDetailedPRISMEvaluatorAppliesPairwiseInterferenceOnSameResource(t *test
 	}
 }
 
+func TestDetailedPRISMEvaluatorAppliesPairwiseSlowdown(t *testing.T) {
+	request := domain.PlanningRequest{
+		Workflow: domain.WorkflowVersion{Activities: []domain.Activity{
+			planningActivity("a", 10), planningActivity("b", 10),
+		}},
+		ExecutionScope: domain.ExecutionScope{EnvironmentVersionIDs: []string{"environment"}},
+		Resources:      []domain.Resource{planningResource("machine", 2, 1, 0)},
+		Interference: &domain.InterferenceMatrix{
+			SchemaVersion: "2", Model: "pairwise-slowdown", Aggregation: "maximum",
+			Entries: []domain.InterferenceEntry{
+				{AffectedActivityID: "a", InterferingActivityID: "b", SlowdownFactor: 1.5},
+				{AffectedActivityID: "b", InterferingActivityID: "a", SlowdownFactor: 1.5},
+			},
+		},
+	}
+	search, err := newCompactPRISMContext(request, nil)
+	if err != nil {
+		t.Fatalf("build compact context: %v", err)
+	}
+	assignments := []domain.PlanAssignment{
+		{ActivityID: "a", ResourceID: "machine", CoreID: "machine-core-1", PredictedRuntimeSeconds: 10},
+		{ActivityID: "b", ResourceID: "machine", CoreID: "machine-core-2", PredictedRuntimeSeconds: 10},
+	}
+	state := compactPRISMStateFromEvaluation(compactPRISMState{}, assignments, 0, 0)
+	evaluated, err := evaluateCompleteCompactPRISMState(search, state)
+	if err != nil {
+		t.Fatalf("evaluate candidate: %v", err)
+	}
+	if math.Abs(evaluated.makespan-15) > 1e-6 {
+		t.Fatalf("expected a 1.5x slowdown to produce a 15 second makespan, got %.2f", evaluated.makespan)
+	}
+	for _, assignment := range compactPRISMAssignments(search, evaluated) {
+		if math.Abs(assignment.PredictedRuntimeSeconds-15) > 1e-6 {
+			t.Fatalf("expected a 15 second slowed runtime, got %.2f", assignment.PredictedRuntimeSeconds)
+		}
+	}
+}
+
 func TestCompactPRISMCostIncludesFrozenOverheads(t *testing.T) {
 	request := domain.PlanningRequest{
 		Workflow:       domain.WorkflowVersion{Activities: []domain.Activity{planningActivity("a", 10)}},

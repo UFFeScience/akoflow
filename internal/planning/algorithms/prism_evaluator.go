@@ -495,6 +495,34 @@ func prismRecomputePriorityRates(search compactPRISMContext, tasks []prismEvalua
 	if len(active) == 0 {
 		return
 	}
+	if search.interferenceModel == "pairwise-slowdown" {
+		for index := range active {
+			task := &tasks[index]
+			slowdown := 1.0
+			for peer := range active {
+				if peer == index {
+					continue
+				}
+				if candidate, exists := prismInterferencePriority(search, index, peer); exists {
+					slowdown = math.Max(slowdown, candidate)
+				}
+			}
+			capacity := math.Max(1, float64(task.resource.CPUCores))
+			baseRate := math.Min(1, capacity/float64(len(active)))
+			task.rate = baseRate / slowdown
+			task.slowdown = 1 / math.Max(task.rate, 1e-12)
+			task.rateUpdatedAt = clock
+			task.assignment.PredictedFinishAt = clock + task.remainingRuntime/math.Max(task.rate, 1e-12)
+			task.assignment.PredictedRuntimeSeconds = task.assignment.PredictedFinishAt - task.assignment.PredictedStartAt
+			if task.assignment.Metadata == nil {
+				task.assignment.Metadata = map[string]any{}
+			}
+			task.assignment.Metadata["pairwiseSlowdownFactor"] = slowdown
+			task.assignment.Metadata["interferenceSlowdown"] = task.slowdown
+			heap.Push(events, prismEvaluationTaskEvent{activity: index, finishAt: task.assignment.PredictedFinishAt})
+		}
+		return
+	}
 	weights := make(map[int]float64, len(active))
 	total := 0.0
 	for index := range active {

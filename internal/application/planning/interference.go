@@ -32,19 +32,24 @@ func normalizeInterferenceMatrix(matrix *domain.InterferenceMatrix, workflow dom
 	if matrix.SchemaVersion == "" {
 		matrix.SchemaVersion = "1"
 	}
-	if matrix.SchemaVersion != "1" {
+	if matrix.SchemaVersion != "1" && matrix.SchemaVersion != "2" {
 		return nil, fmt.Errorf("unsupported interference matrix schemaVersion %q", matrix.SchemaVersion)
 	}
 	if matrix.Model == "" {
 		matrix.Model = "pairwise-cpu-priority"
 	}
-	if matrix.Model != "pairwise-cpu-priority" {
+	if matrix.Model != "pairwise-cpu-priority" && matrix.Model != "pairwise-slowdown" {
 		return nil, fmt.Errorf("unsupported interference model %q", matrix.Model)
 	}
 	if matrix.Aggregation == "" {
-		matrix.Aggregation = "minimum"
+		if matrix.Model == "pairwise-slowdown" {
+			matrix.Aggregation = "maximum"
+		} else {
+			matrix.Aggregation = "minimum"
+		}
 	}
-	if matrix.Aggregation != "minimum" {
+	if (matrix.Model == "pairwise-cpu-priority" && matrix.Aggregation != "minimum") ||
+		(matrix.Model == "pairwise-slowdown" && matrix.Aggregation != "maximum") {
 		return nil, fmt.Errorf("unsupported interference aggregation %q", matrix.Aggregation)
 	}
 	activities := make(map[string]bool, len(workflow.Activities))
@@ -59,8 +64,11 @@ func normalizeInterferenceMatrix(matrix *domain.InterferenceMatrix, workflow dom
 		if entry.AffectedActivityID == entry.InterferingActivityID {
 			return nil, fmt.Errorf("interference pair cannot reference the same activity %q", entry.AffectedActivityID)
 		}
-		if entry.PriorityWeight <= 0 {
+		if matrix.Model == "pairwise-cpu-priority" && entry.PriorityWeight <= 0 {
 			return nil, fmt.Errorf("interference pair %q -> %q must have priorityWeight > 0", entry.InterferingActivityID, entry.AffectedActivityID)
+		}
+		if matrix.Model == "pairwise-slowdown" && entry.SlowdownFactor < 1 {
+			return nil, fmt.Errorf("interference pair %q -> %q must have slowdownFactor >= 1", entry.InterferingActivityID, entry.AffectedActivityID)
 		}
 		key := entry.AffectedActivityID + "\x00" + entry.InterferingActivityID
 		if seen[key] {

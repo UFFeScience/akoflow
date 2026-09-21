@@ -112,6 +112,7 @@ def main() -> None:
     parser.add_argument("--campaign-prefix", required=True)
     parser.add_argument("--run-prefix", required=True)
     parser.add_argument("--output", required=True, type=Path)
+    parser.add_argument("--expected-sessions", type=int, default=49)
     parser.add_argument("--submit", action="store_true")
     parser.add_argument("--allow-incomplete", action="store_true")
     parser.add_argument(
@@ -131,8 +132,10 @@ def main() -> None:
         if str(session.get("id", "")).startswith(args.campaign_prefix)
     ]
     sessions.sort(key=lambda session: session["id"])
-    if len(sessions) != 49:
-        raise RuntimeError(f"expected 49 campaign sessions, found {len(sessions)}")
+    if len(sessions) != args.expected_sessions:
+        raise RuntimeError(
+            f"expected {args.expected_sessions} campaign sessions, found {len(sessions)}"
+        )
 
     nonterminal = [
         session for session in sessions if session.get("status") not in TERMINAL_PLANNING

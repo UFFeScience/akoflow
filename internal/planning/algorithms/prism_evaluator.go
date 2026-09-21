@@ -34,8 +34,9 @@ type prismEvaluationTask struct {
 }
 
 type prismEvaluationTaskEvent struct {
-	activity int
-	finishAt float64
+	activity   int
+	finishAt   float64
+	startsTask bool
 }
 
 type prismEvaluationTaskQueue []prismEvaluationTaskEvent
@@ -241,6 +242,11 @@ func evaluateCompleteCompactPRISMState(
 
 		for taskEvents.Len() > 0 && (*taskEvents)[0].finishAt <= clock+1e-9 {
 			event := heap.Pop(taskEvents).(prismEvaluationTaskEvent)
+			if prismHandleEvaluationStartEvent(
+				search, tasks, event, taskEvents, clock, resourceFinish, activeByResource,
+			) {
+				continue
+			}
 			if tasks[event.activity].completed || event.finishAt+1e-9 < tasks[event.activity].assignment.PredictedFinishAt {
 				continue
 			}
@@ -316,16 +322,54 @@ func evaluateCompleteCompactPRISMState(
 		flows = activeFlows
 	}
 
+	return compactPRISMFinishEvaluation(
+		state, assignments, assignmentOrdinal, tasks, resourceByID,
+		resourceStart, resourceFinish, clock, transferCost,
+	), nil
+}
+
+func compactPRISMFinishEvaluation(
+	state compactPRISMState,
+	assignments []domain.PlanAssignment,
+	assignmentOrdinal map[string]int,
+	tasks []prismEvaluationTask,
+	resourceByID map[string]domain.Resource,
+	resourceStart map[string]float64,
+	resourceFinish map[string]float64,
+	clock float64,
+	transferCost float64,
+) compactPRISMState {
 	cost := transferCost
 	for resourceID, start := range resourceStart {
 		cost += math.Max(0, resourceFinish[resourceID]-start) * resourceByID[resourceID].PricePerSecond
 	}
 	evaluatedAssignments := make([]domain.PlanAssignment, len(assignments))
 	for index, assignment := range assignments {
-		ordinal := assignmentOrdinal[assignment.ActivityID]
-		evaluatedAssignments[index] = tasks[ordinal].assignment
+		evaluatedAssignments[index] = tasks[assignmentOrdinal[assignment.ActivityID]].assignment
 	}
-	return compactPRISMStateFromEvaluation(state, evaluatedAssignments, clock, cost), nil
+	return compactPRISMStateFromEvaluation(state, evaluatedAssignments, clock, cost)
+}
+
+func prismHandleEvaluationStartEvent(
+	search compactPRISMContext,
+	tasks []prismEvaluationTask,
+	event prismEvaluationTaskEvent,
+	events *prismEvaluationTaskQueue,
+	clock float64,
+	resourceFinish map[string]float64,
+	activeByResource map[string]map[int]bool,
+) bool {
+	if !event.startsTask {
+		return false
+	}
+	resourceID := tasks[event.activity].assignment.ResourceID
+	if tasks[event.activity].completed || activeByResource[resourceID][event.activity] {
+		return true
+	}
+	prismActivateEvaluationTask(
+		search, tasks, event.activity, events, clock, resourceFinish, activeByResource,
+	)
+	return true
 }
 
 func clonePRISMEvaluationMetadata(metadata map[string]any) map[string]any {
@@ -364,7 +408,6 @@ func prismStartReadyTasks(
 		task.assignment.PredictedReadyAt = task.dataReadyAt
 		task.assignment.PredictedStartAt = clock + overhead
 		resourceID := task.assignment.ResourceID
-		prismAdvanceActiveTasks(tasks, activeByResource[resourceID], clock)
 		task.remainingRuntime = task.baseRuntime
 		task.rate = 1
 		task.rateUpdatedAt = task.assignment.PredictedStartAt
@@ -377,18 +420,49 @@ func prismStartReadyTasks(
 		task.assignment.Metadata["queueSeconds"] = math.Max(0, clock-task.dataReadyAt)
 		task.assignment.Metadata["networkContentionModel"] = "simgrid-shared-link-events"
 		task.assignment.Metadata["cpuPriorityWeight"] = 1.0
-		if activeByResource[resourceID] == nil {
-			activeByResource[resourceID] = map[int]bool{}
-		}
-		activeByResource[resourceID][index] = true
-		prismRecomputePriorityRates(search, tasks, activeByResource[resourceID], events, clock)
 		if !resourceUsed[resourceID] {
 			resourceStart[resourceID] = clock
 			resourceUsed[resourceID] = true
 		}
 		resourceFinish[resourceID] = math.Max(resourceFinish[resourceID], task.assignment.PredictedFinishAt)
+		if task.assignment.PredictedStartAt > clock+1e-9 {
+			heap.Push(events, prismEvaluationTaskEvent{
+				activity: index, finishAt: task.assignment.PredictedStartAt, startsTask: true,
+			})
+			continue
+		}
+		prismActivateEvaluationTask(
+			search,
+			tasks,
+			index,
+			events,
+			clock,
+			resourceFinish,
+			activeByResource,
+		)
 	}
 	return started
+}
+
+func prismActivateEvaluationTask(
+	search compactPRISMContext,
+	tasks []prismEvaluationTask,
+	index int,
+	events *prismEvaluationTaskQueue,
+	clock float64,
+	resourceFinish map[string]float64,
+	activeByResource map[string]map[int]bool,
+) {
+	task := &tasks[index]
+	resourceID := task.assignment.ResourceID
+	prismAdvanceActiveTasks(tasks, activeByResource[resourceID], clock)
+	task.rateUpdatedAt = clock
+	if activeByResource[resourceID] == nil {
+		activeByResource[resourceID] = map[int]bool{}
+	}
+	activeByResource[resourceID][index] = true
+	prismRecomputePriorityRates(search, tasks, activeByResource[resourceID], events, clock)
+	resourceFinish[resourceID] = math.Max(resourceFinish[resourceID], task.assignment.PredictedFinishAt)
 }
 
 func compactPRISMResourceOrdinal(search compactPRISMContext, resourceID string) int {

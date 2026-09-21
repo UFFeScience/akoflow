@@ -220,6 +220,45 @@ func TestCompactPRISMCostIncludesFrozenOverheads(t *testing.T) {
 	}
 }
 
+func TestDetailedPRISMEvaluatorStartsCPUWorkAfterOverhead(t *testing.T) {
+	request := domain.PlanningRequest{
+		Workflow:       domain.WorkflowVersion{Activities: []domain.Activity{planningActivity("short", 1)}},
+		ExecutionScope: domain.ExecutionScope{EnvironmentVersionIDs: []string{"environment"}},
+		Resources:      []domain.Resource{planningResource("cloud", 1, 1, 0)},
+	}
+	request.Resources[0].BootOverheadSeconds = 12
+	search, err := newCompactPRISMContext(request, nil)
+	if err != nil {
+		t.Fatalf("build compact context: %v", err)
+	}
+	state := compactPRISMPlace(
+		search,
+		initialCompactPRISMState(search),
+		search.activityOrdinal["short"],
+		0,
+		0,
+		true,
+	)
+	evaluated, err := evaluateCompleteCompactPRISMState(search, state)
+	if err != nil {
+		t.Fatalf("evaluate candidate: %v", err)
+	}
+	assignments := compactPRISMAssignments(search, evaluated)
+	if len(assignments) != 1 {
+		t.Fatalf("assignments = %d, want 1", len(assignments))
+	}
+	assignment := assignments[0]
+	if math.Abs(assignment.PredictedStartAt-12) > 1e-9 {
+		t.Fatalf("start = %.3f, want 12", assignment.PredictedStartAt)
+	}
+	if math.Abs(assignment.PredictedFinishAt-13) > 1e-9 {
+		t.Fatalf("finish = %.3f, want 13", assignment.PredictedFinishAt)
+	}
+	if assignment.PredictedFinishAt < assignment.PredictedStartAt {
+		t.Fatalf("assignment finishes before it starts: %#v", assignment)
+	}
+}
+
 func TestDetailedPRISMEvaluatorRedistributesSharedLinkBandwidth(t *testing.T) {
 	request := domain.PlanningRequest{
 		Workflow: domain.WorkflowVersion{

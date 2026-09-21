@@ -11,7 +11,11 @@ import os
 import urllib.parse
 from pathlib import Path
 
-from launch_campaign_simulations import Client, unwrap_list
+from launch_campaign_simulations import (
+    Client,
+    existing_execution_run_ids,
+    unwrap_list,
+)
 
 
 def predicted_point(candidate: dict) -> tuple[float, float]:
@@ -105,6 +109,7 @@ def main() -> None:
         item["version"]["id"]: item["version"]
         for item in unwrap_list(client.get("/workflow-definitions/"))
     }
+    existing_run_ids = existing_execution_run_ids(client) if args.submit else set()
     manifest = {
         "schemaVersion": "1",
         "campaignPrefix": args.campaign_prefix,
@@ -169,24 +174,24 @@ def main() -> None:
                 "action": "planned",
             }
             if args.submit:
-                if client.exists(f"/execution-runs/{urllib.parse.quote(run_id)}/"):
+                if run_id in existing_run_ids:
                     record["action"] = "existing"
                 else:
-                    persisted = client.post(
+                    client.post_discard(
                         f"/planning-sessions/{urllib.parse.quote(session_id)}/candidates/"
                         f"{urllib.parse.quote(candidate_id)}/select/"
                     )
                     payload = {
                         "run": {
                             "id": run_id,
-                            "schedulePlanId": persisted["id"],
+                            "schedulePlanId": plan["id"],
                             "mode": "simulation",
                             "seed": 1,
                             "status": "created",
                             "kind": "workflow",
                             "title": f"Reference frontier {candidate['algorithm']}: {session['workflowVersionId']}",
                         },
-                        "plan": persisted,
+                        "plan": plan,
                         "workflow": workflows[session["workflowVersionId"]],
                         "resources": resources,
                         "executionScope": scope,
@@ -198,6 +203,7 @@ def main() -> None:
                         "runtimeAllocations": {},
                     }
                     job = client.post("/execution-runs/", payload)
+                    existing_run_ids.add(run_id)
                     record["action"] = "submitted"
                     record["queueJobId"] = job.get("id")
             manifest["records"].append(record)

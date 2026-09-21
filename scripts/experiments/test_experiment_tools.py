@@ -1,6 +1,7 @@
 import unittest
 
 from derive_sla_thresholds import derive_thresholds
+from create_sla_campaign import build_session_definitions
 from launch_campaign_simulations import choose_candidate
 
 
@@ -104,6 +105,54 @@ class SLAThresholdTests(unittest.TestCase):
         }
         with self.assertRaisesRegex(RuntimeError, "zero would disable budget"):
             derive_thresholds(results, "hybrid", [1.2])
+
+
+class SLACampaignTests(unittest.TestCase):
+    def test_builds_one_session_per_threshold_and_environment(self):
+        baseline = {
+            "records": [
+                {
+                    "session": {
+                        "session": {
+                            "workflowVersionId": "workflow-v1",
+                            "executionScopeId": "scheduler-a-scope-v1",
+                            "networkTopologyId": "scheduler-a-network-v1",
+                        }
+                    }
+                },
+                {
+                    "session": {
+                        "session": {
+                            "workflowVersionId": "workflow-v1",
+                            "executionScopeId": "scheduler-b-scope-v1",
+                            "networkTopologyId": "scheduler-b-network-v1",
+                        }
+                    }
+                },
+            ]
+        }
+        thresholds = {
+            "thresholds": [
+                {
+                    "workflowVersionId": "workflow-v1",
+                    "factor": 1.2,
+                    "deadlineSeconds": 120,
+                    "budget": 12,
+                    "referenceScopeId": "scheduler-a-scope-v1",
+                    "executionRunId": "heft-reference",
+                    "referenceMakespanSeconds": 100,
+                    "referenceCost": 10,
+                }
+            ]
+        }
+        definitions = build_session_definitions("sla-campaign", baseline, thresholds)
+        self.assertEqual(len(definitions), 2)
+        self.assertEqual(definitions[0]["deadlineSeconds"], 120)
+        self.assertEqual(definitions[1]["budget"], 12)
+        self.assertEqual(
+            {definition["executionScopeId"] for definition in definitions},
+            {"scheduler-a-scope-v1", "scheduler-b-scope-v1"},
+        )
 
 
 if __name__ == "__main__":

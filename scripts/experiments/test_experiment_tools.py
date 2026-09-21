@@ -17,6 +17,7 @@ from create_reference_campaign import build_reference_sessions
 from launch_campaign_simulations import choose_candidate, run_id, session_algorithms
 from launch_frontier_simulations import bounded_candidates, nondominated_candidates
 from analyze_frontiers import analyze, hypervolume, multiplicative_epsilon, pareto_records
+from analyze_campaign_results import analyze_campaign
 
 
 class SimulationCollectionTests(unittest.TestCase):
@@ -415,6 +416,74 @@ class FrontierTests(unittest.TestCase):
         result = analyze(records)
         self.assertEqual(len(result["workflows"]), 1)
         self.assertEqual(len(result["metrics"]), 2)
+
+
+class CampaignAnalysisTests(unittest.TestCase):
+    def test_joins_planning_and_scores_observed_results(self):
+        planning = {
+            "records": [
+                {
+                    "session": {
+                        "session": {
+                            "id": "session",
+                            "deadlineSeconds": 12,
+                            "budget": 6,
+                        },
+                        "algorithmRuns": [
+                            {
+                                "algorithm": "heft",
+                                "status": "completed",
+                                "candidateCount": 1,
+                                "startedAt": "2026-01-01T00:00:00Z",
+                                "completedAt": "2026-01-01T00:00:02Z",
+                            },
+                            {
+                                "algorithm": "prism-time",
+                                "status": "completed",
+                                "candidateCount": 2,
+                                "configuration": {"beamWidth": 20},
+                                "startedAt": "2026-01-01T00:00:00Z",
+                                "completedAt": "2026-01-01T00:00:05Z",
+                            },
+                        ],
+                    }
+                }
+            ]
+        }
+        simulations = {
+            "records": [
+                {
+                    "sessionId": "session",
+                    "executionRunId": "heft",
+                    "workflowVersionId": "workflow",
+                    "executionScopeId": "scope",
+                    "algorithm": "heft",
+                    "status": "completed",
+                    "observedMakespanSeconds": 10,
+                    "observedCost": 5,
+                    "predictionErrorMakespan": 0.1,
+                    "predictionErrorCost": 0.1,
+                },
+                {
+                    "sessionId": "session",
+                    "executionRunId": "prism-time",
+                    "workflowVersionId": "workflow",
+                    "executionScopeId": "scope",
+                    "algorithm": "prism-time",
+                    "status": "completed",
+                    "observedMakespanSeconds": 8,
+                    "observedCost": 7,
+                    "predictionErrorMakespan": 0.2,
+                    "predictionErrorCost": 0.2,
+                },
+            ]
+        }
+        result = analyze_campaign(planning, simulations)
+        self.assertEqual(len(result["runRows"]), 2)
+        self.assertTrue(result["runRows"][0]["slaSatisfied"])
+        self.assertFalse(result["runRows"][1]["slaSatisfied"])
+        self.assertEqual(result["winnerCounts"]["makespan"], {"prism-time": 1.0})
+        self.assertEqual(result["winnerCounts"]["cost"], {"heft": 1.0})
 
 
 if __name__ == "__main__":

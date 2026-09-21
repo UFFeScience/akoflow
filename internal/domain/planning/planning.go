@@ -104,6 +104,7 @@ type InterferenceMatrix struct {
 	Model         string              `json:"model"`
 	Aggregation   string              `json:"aggregation"`
 	Entries       []InterferenceEntry `json:"entries"`
+	Rules         []InterferenceRule  `json:"rules,omitempty"`
 }
 
 type InterferenceEntry struct {
@@ -111,6 +112,14 @@ type InterferenceEntry struct {
 	InterferingActivityID string  `json:"interferingActivityId"`
 	PriorityWeight        float64 `json:"priorityWeight,omitempty"`
 	SlowdownFactor        float64 `json:"slowdownFactor,omitempty"`
+}
+
+// InterferenceRule applies a slowdown to every matching activity-family pair.
+// It avoids materializing an O(|V|²) activity matrix for large workflows.
+type InterferenceRule struct {
+	AffectedActivityTypeID    string  `json:"affectedActivityTypeId"`
+	InterferingActivityTypeID string  `json:"interferingActivityTypeId"`
+	SlowdownFactor            float64 `json:"slowdownFactor"`
 }
 
 type AlgorithmSelection struct {

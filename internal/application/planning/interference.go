@@ -53,8 +53,10 @@ func normalizeInterferenceMatrix(matrix *domain.InterferenceMatrix, workflow dom
 		return nil, fmt.Errorf("unsupported interference aggregation %q", matrix.Aggregation)
 	}
 	activities := make(map[string]bool, len(workflow.Activities))
+	activityTypes := make(map[string]bool)
 	for _, activity := range workflow.Activities {
 		activities[activity.ID] = true
+		activityTypes[activity.ActivityTypeID] = true
 	}
 	seen := make(map[string]bool, len(matrix.Entries))
 	for _, entry := range matrix.Entries {
@@ -76,9 +78,31 @@ func normalizeInterferenceMatrix(matrix *domain.InterferenceMatrix, workflow dom
 		}
 		seen[key] = true
 	}
+	ruleSeen := make(map[string]bool, len(matrix.Rules))
+	for _, rule := range matrix.Rules {
+		if matrix.Model != "pairwise-slowdown" {
+			return nil, fmt.Errorf("activity-family interference rules require pairwise-slowdown")
+		}
+		if !activityTypes[rule.AffectedActivityTypeID] || !activityTypes[rule.InterferingActivityTypeID] {
+			return nil, fmt.Errorf("interference rule %q -> %q references an activity type outside workflow %q", rule.InterferingActivityTypeID, rule.AffectedActivityTypeID, workflow.ID)
+		}
+		if rule.SlowdownFactor < 1 {
+			return nil, fmt.Errorf("interference rule %q -> %q must have slowdownFactor >= 1", rule.InterferingActivityTypeID, rule.AffectedActivityTypeID)
+		}
+		key := rule.AffectedActivityTypeID + "\x00" + rule.InterferingActivityTypeID
+		if ruleSeen[key] {
+			return nil, fmt.Errorf("duplicate interference rule %q -> %q", rule.InterferingActivityTypeID, rule.AffectedActivityTypeID)
+		}
+		ruleSeen[key] = true
+	}
 	sort.Slice(matrix.Entries, func(i, j int) bool {
 		left := matrix.Entries[i].AffectedActivityID + "\x00" + matrix.Entries[i].InterferingActivityID
 		right := matrix.Entries[j].AffectedActivityID + "\x00" + matrix.Entries[j].InterferingActivityID
+		return left < right
+	})
+	sort.Slice(matrix.Rules, func(i, j int) bool {
+		left := matrix.Rules[i].AffectedActivityTypeID + "\x00" + matrix.Rules[i].InterferingActivityTypeID
+		right := matrix.Rules[j].AffectedActivityTypeID + "\x00" + matrix.Rules[j].InterferingActivityTypeID
 		return left < right
 	})
 	return matrix, nil

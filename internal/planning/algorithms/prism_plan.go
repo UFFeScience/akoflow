@@ -78,6 +78,10 @@ func compactPRISMPlan(
 		(request.Budget <= 0 || state.cost <= request.Budget)
 	breakdown := compactPRISMPredictionBreakdown(assignments)
 	confidence, confidenceScore := compactPRISMPredictionConfidence(request)
+	interferenceModel := "none"
+	if request.Interference != nil {
+		interferenceModel = request.Interference.Model + "-" + request.Interference.Aggregation
+	}
 	plan := domain.SchedulePlan{
 		ID: id, WorkflowVersionID: request.Workflow.ID,
 		ExecutionScopeID:  request.ExecutionScope.ID,
@@ -102,7 +106,8 @@ func compactPRISMPlan(
 			"containerOverheadSeconds":  breakdown.ContainerSeconds,
 			"costModel":                 "resource-active-window",
 			"networkPathModel":          "simgrid-route-shared-link-events",
-			"interferenceModel":         "pairwise-cpu-priority-minimum",
+			"interferenceModel":         interferenceModel,
+			"interferenceAware":         request.Interference != nil,
 		},
 	}
 	addCloudLifecycle(&plan, request)

@@ -21,6 +21,7 @@ type runnerInput struct {
 
 type runnerTask struct {
 	ID              string  `json:"id"`
+	ActivityTypeID  string  `json:"activityTypeId"`
 	AssignmentID    string  `json:"assignmentId"`
 	ResourceID      string  `json:"resourceId"`
 	FLOPs           float64 `json:"flops"`
@@ -73,7 +74,8 @@ func buildRunnerInput(request ports.ExecutionRequest, referenceFLOPS float64) ([
 			flops = runtimeSeconds * resourceFLOPS(resource, referenceFLOPS)
 		}
 		input.Tasks = append(input.Tasks, runnerTask{
-			ID: activity.ID, AssignmentID: assignment.ID, ResourceID: resource.ID,
+			ID: activity.ID, ActivityTypeID: activity.ActivityTypeID,
+			AssignmentID: assignment.ID, ResourceID: resource.ID,
 			FLOPs: flops, OverheadSeconds: overhead,
 			PricePerSecond: resource.PricePerSecond,
 		})

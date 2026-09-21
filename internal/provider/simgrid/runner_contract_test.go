@@ -109,3 +109,25 @@ func TestRunnerInputCarriesPairwiseSlowdownMatrix(t *testing.T) {
 	require.Equal(t, "pairwise-slowdown", input.Interference.Model)
 	require.InDelta(t, 1.5, input.Interference.Entries[0].SlowdownFactor, 1e-9)
 }
+
+func TestRunnerInputCarriesActivityTypeForFamilySlowdown(t *testing.T) {
+	request := ports.ExecutionRequest{
+		Run: domain.ExecutionRun{ID: "run"},
+		Plan: domain.SchedulePlan{
+			ID: "plan",
+			Assignments: []domain.PlanAssignment{{
+				ID: "assignment", ActivityID: "activity", ResourceID: "resource",
+			}},
+		},
+		Workflow: domain.WorkflowVersion{Activities: []domain.Activity{{
+			ID: "activity", ActivityTypeID: "activity-family",
+		}}},
+		Resources: []domain.Resource{{ID: "resource"}},
+	}
+
+	payload, err := buildRunnerInput(request, 1e9)
+	require.NoError(t, err)
+	var input runnerInput
+	require.NoError(t, json.Unmarshal(payload, &input))
+	require.Equal(t, "activity-family", input.Tasks[0].ActivityTypeID)
+}

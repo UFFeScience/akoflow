@@ -35,6 +35,7 @@ type compactPRISMContext struct {
 	ranks             []float64
 	interference      []map[int]float64
 	interferenceModel string
+	interferenceRules map[string]map[string]float64
 	readyBranchLimit  int
 	beamWidth         int
 	coreCount         int
@@ -78,6 +79,7 @@ func newCompactPRISMContext(
 		ranks:             make([]float64, len(ranked)),
 		interference:      make([]map[int]float64, len(ranked)),
 		interferenceModel: "pairwise-cpu-priority",
+		interferenceRules: make(map[string]map[string]float64),
 		router:            router,
 		readyBranchLimit:  intOption(configuration, "readyBranchLimit", 3, 1, 16),
 		beamWidth:         intOption(configuration, "beamWidth", 120, 1, 10000),
@@ -112,6 +114,15 @@ func (search *compactPRISMContext) buildInterference() {
 			search.interference[affected] = map[int]float64{}
 		}
 		search.interference[affected][interferer] = value
+	}
+	for _, rule := range search.request.Interference.Rules {
+		if rule.SlowdownFactor < 1 {
+			continue
+		}
+		if search.interferenceRules[rule.AffectedActivityTypeID] == nil {
+			search.interferenceRules[rule.AffectedActivityTypeID] = map[string]float64{}
+		}
+		search.interferenceRules[rule.AffectedActivityTypeID][rule.InterferingActivityTypeID] = rule.SlowdownFactor
 	}
 }
 

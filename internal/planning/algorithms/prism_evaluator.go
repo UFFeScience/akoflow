@@ -475,11 +475,22 @@ func compactPRISMResourceOrdinal(search compactPRISMContext, resourceID string) 
 }
 
 func prismInterferencePriority(search compactPRISMContext, affected, interferer int) (float64, bool) {
-	if affected < 0 || affected >= len(search.interference) || search.interference[affected] == nil {
+	if affected < 0 || affected >= len(search.interference) || interferer < 0 || interferer >= len(search.interference) {
 		return 1, false
 	}
-	priority, exists := search.interference[affected][interferer]
-	return math.Max(priority, 1e-12), exists
+	if search.interference[affected] != nil {
+		if priority, exists := search.interference[affected][interferer]; exists {
+			return math.Max(priority, 1e-12), true
+		}
+	}
+	affectedType := search.activities[affected].ActivityTypeID
+	interfererType := search.activities[interferer].ActivityTypeID
+	if rules := search.interferenceRules[affectedType]; rules != nil {
+		if slowdown, exists := rules[interfererType]; exists {
+			return math.Max(slowdown, 1), true
+		}
+	}
+	return 1, false
 }
 
 func prismAdvanceActiveTasks(tasks []prismEvaluationTask, active map[int]bool, clock float64) {

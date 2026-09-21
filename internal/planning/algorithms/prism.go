@@ -27,6 +27,7 @@ func (p PRISM) Descriptor() ports.SchedulerDescriptor {
 		Description: description,
 		Defaults: map[string]any{
 			"beamWidth": 120, "optionCount": 25, "readyBranchLimit": 3,
+			"interferenceAware": true,
 		},
 	}
 }
@@ -38,7 +39,13 @@ func (p PRISM) Schedule(
 	progress ports.ProgressReporter,
 	sink ports.CandidateSink,
 ) error {
-	search, err := newCompactPRISMContext(request, configuration)
+	searchRequest := request
+	if aware, exists := configuration["interferenceAware"].(bool); exists && !aware {
+		// Keep the immutable session matrix on the candidate sink so execution
+		// still suffers interference, but hide it from this planner run.
+		searchRequest.Interference = nil
+	}
+	search, err := newCompactPRISMContext(searchRequest, configuration)
 	if err != nil {
 		return err
 	}

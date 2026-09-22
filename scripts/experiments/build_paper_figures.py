@@ -228,23 +228,157 @@ fig.text(0.5, -0.01, "Green band marks the recommended operating region; beam 12
 save(fig, "fig05-beam-elbow")
 
 
-# 6. Reference frontier: complementary operating regions on Montage 6448.
-wf_frontier = next(w for w in frontier["workflows"] if w["workflowVersionId"] == "montage-6448-v1")
-fig, ax = plt.subplots(figsize=(8.1, 5.4), constrained_layout=True)
-for alg in ["prism-cost", "prism-time"]:
-    subset = [r for r in wf_frontier["frontier"] if r["algorithm"] == alg]
-    xvals = np.array([r["observedMakespanSeconds"] for r in subset])
-    yvals = np.array([r["observedCost"] for r in subset])
-    ax.scatter(xvals, yvals, s=45, marker="s" if alg == "prism-cost" else "^", color=COLORS[alg], alpha=0.72, edgecolor="white", linewidth=0.45, label=LABELS[alg])
+# 6. Empirical Pareto frontier on the Cartesian objective plane.
+wf_frontier = next(
+    w for w in frontier["workflows"] if w["workflowVersionId"] == "montage-6448-v1"
+)
+unique_points = {}
+for row in wf_frontier["frontier"]:
+    key = (
+        row["algorithm"],
+        row["observedMakespanSeconds"],
+        row["observedCost"],
+    )
+    unique_points[key] = row
+points = sorted(
+    unique_points.values(),
+    key=lambda row: row["observedMakespanSeconds"],
+)
+reference = wf_frontier["referencePoint"]
+
+fig, ax = plt.subplots(figsize=(9.4, 5.8), constrained_layout=True)
+x_front = [row["observedMakespanSeconds"] for row in points]
+y_front = [row["observedCost"] for row in points]
+
+# The shaded staircase is the region dominated by at least one observed
+# nondominated solution. A step, instead of interpolation, avoids claiming
+# that unobserved mixtures between the two schedules are feasible.
+x_boundary = x_front + [reference["makespanSeconds"]]
+y_boundary = y_front + [y_front[-1]]
+ax.fill_between(
+    x_boundary,
+    y_boundary,
+    reference["cost"],
+    step="post",
+    color="#DCE6F2",
+    alpha=0.82,
+    label="Empirically dominated region",
+)
+ax.step(
+    x_boundary,
+    y_boundary,
+    where="post",
+    color=COLORS["ink"],
+    linewidth=2.4,
+    label="Empirical Pareto envelope",
+)
+
+for row in points:
+    alg = row["algorithm"]
+    marker = "s" if alg == "prism-cost" else "^"
+    ax.scatter(
+        row["observedMakespanSeconds"],
+        row["observedCost"],
+        s=150,
+        marker=marker,
+        color=COLORS[alg],
+        edgecolor="white",
+        linewidth=1.2,
+        zorder=5,
+        label=LABELS[alg],
+    )
+
+ax.scatter(
+    reference["makespanSeconds"],
+    reference["cost"],
+    marker="X",
+    s=85,
+    color="#98A2B3",
+    zorder=4,
+    label="Hypervolume reference",
+)
 ax.set_xscale("log")
-ax.set_yscale("symlog", linthresh=0.002)
-ax.set_xlabel("Executed makespan (s, log scale)")
-ax.set_ylabel("Executed cost (symlog; zero retained)")
-ax.set_title("PRISM Time and Cost occupy complementary frontier regions", fontsize=14, color=COLORS["ink"], pad=12)
-ax.legend(loc="upper center", ncol=2)
+ax.set_xlim(x_front[0] * 0.72, reference["makespanSeconds"] * 1.08)
+ax.set_ylim(-0.012, reference["cost"] * 1.12)
+ax.set_xlabel("Executed makespan (s, log scale) — lower is better →")
+ax.set_ylabel("Executed cost — lower is better →")
+ax.set_title(
+    "Empirical Pareto frontier: time and cost define two nondominated extremes",
+    fontsize=14,
+    color=COLORS["ink"],
+    pad=12,
+)
 style(ax, grid="both")
-ax.annotate("Fast extreme", xy=(72.25, 0.1576), xytext=(115, 0.11), arrowprops=dict(arrowstyle="->", color=COLORS["prism-time"]), color=COLORS["prism-time"], fontweight="bold")
-ax.annotate("Zero-cost extreme", xy=(4755, 0), xytext=(1100, 0.006), arrowprops=dict(arrowstyle="->", color=COLORS["prism-cost"]), color=COLORS["prism-cost"], fontweight="bold")
+
+fast, cheap = points[0], points[-1]
+ax.annotate(
+    f"Fast extreme\n{fast['observedMakespanSeconds']:.1f} s · ${fast['observedCost']:.3f}",
+    xy=(fast["observedMakespanSeconds"], fast["observedCost"]),
+    xytext=(105, 0.137),
+    arrowprops=dict(arrowstyle="->", color=COLORS[fast["algorithm"]], lw=1.4),
+    color=COLORS[fast["algorithm"]],
+    fontweight="bold",
+)
+ax.annotate(
+    f"Zero-cost extreme\n{cheap['observedMakespanSeconds']:.0f} s · $0",
+    xy=(cheap["observedMakespanSeconds"], cheap["observedCost"]),
+    xytext=(1050, 0.035),
+    arrowprops=dict(arrowstyle="->", color=COLORS[cheap["algorithm"]], lw=1.4),
+    color=COLORS[cheap["algorithm"]],
+    fontweight="bold",
+)
+ax.text(
+    900,
+    0.112,
+    "UNOBSERVED TRADE-OFF SPACE\nno measured schedules between the extremes",
+    ha="center",
+    va="center",
+    color="#52657A",
+    fontsize=10,
+    fontweight="bold",
+)
+ax.text(
+    580,
+    reference["cost"] + 0.002,
+    "DOMINATED",
+    ha="center",
+    va="center",
+    color="#52657A",
+    fontsize=8.5,
+    fontweight="bold",
+)
+ax.text(
+    175,
+    0.026,
+    "Preferred direction",
+    color=COLORS["accent"],
+    fontsize=10,
+    fontweight="bold",
+)
+ax.annotate(
+    "",
+    xy=(85, 0.008),
+    xytext=(250, 0.043),
+    arrowprops=dict(arrowstyle="->", color=COLORS["accent"], lw=2),
+)
+
+handles, labels = ax.get_legend_handles_labels()
+deduplicated = dict(zip(labels, handles))
+ax.legend(
+    deduplicated.values(),
+    deduplicated.keys(),
+    loc="upper center",
+    bbox_to_anchor=(0.5, -0.13),
+    ncol=3,
+)
+fig.text(
+    0.5,
+    -0.035,
+    "The staircase connects only observed nondominated schedules; it does not imply feasible intermediate schedules.",
+    ha="center",
+    color=COLORS["ink"],
+    fontsize=8.5,
+)
 save(fig, "fig06-reference-frontier")
 
 

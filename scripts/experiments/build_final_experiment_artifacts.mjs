@@ -50,6 +50,12 @@ function table(s, startRow, headers, rows, name) {
 
 function stat(x, key = "mean") { return x?.[key] ?? null; }
 function algLabel(x) { return ({ heft: "HEFT", "prism-time": "PRISM Time", "prism-cost": "PRISM Cost" })[x] ?? x; }
+function environmentLabel(scopeId) {
+  return String(scopeId ?? "")
+    .replace(/^scheduler-/, "")
+    .replace(/-scope-v\d+$/, "")
+    .replaceAll("_", " ");
+}
 
 const resumo = sheet("Resumo", C.navy);
 title(resumo, "Experimentos simulados PRISM × HEFT", "J");
@@ -103,6 +109,60 @@ bsl.getRange(`H6:I${algRows.length + 5}`).setNumberFormat("#,##0.00");
 bsl.getRange(`J6:K${algRows.length + 5}`).setNumberFormat("0.0000");
 bsl.getRange(`L6:M${algRows.length + 5}`).setNumberFormat("0.00%");
 bsl.freezePanes.freezeRows(5);
+
+const env = sheet("Por Ambiente", "#5B9BD5");
+title(env, "Planejado versus executado por workflow e ambiente", "Q");
+env.getRange("A4:Q4").merge();
+env.getRange("A4").values = [["Baseline sem SLA. Cada gráfico compara o mesmo workflow nos sete ambientes e nos três algoritmos."]];
+env.getRange("A4").format = { font: { name: font, size: 10, italic: true, color: "#595959" } };
+const workflowIds = [...new Set(baseline.runRows.map(x => x.workflowVersionId))].sort();
+let envRow = 6;
+for (let workflowIndex = 0; workflowIndex < workflowIds.length; workflowIndex += 1) {
+  const workflowId = workflowIds[workflowIndex];
+  const workflowRuns = baseline.runRows
+    .filter(x => x.workflowVersionId === workflowId)
+    .sort((a, b) => `${environmentLabel(a.executionScopeId)}-${algLabel(a.algorithm)}`.localeCompare(`${environmentLabel(b.executionScopeId)}-${algLabel(b.algorithm)}`));
+  env.getRange(`A${envRow}:Q${envRow}`).merge();
+  env.getRange(`A${envRow}`).values = [[workflowId]];
+  env.getRange(`A${envRow}`).format = { fill: C.navy, font: { name: font, size: 11, bold: true, color: C.white } };
+  const rows = workflowRuns.map(x => [
+    environmentLabel(x.executionScopeId),
+    algLabel(x.algorithm),
+    `${environmentLabel(x.executionScopeId)} · ${algLabel(x.algorithm)}`,
+    x.predicted?.makespanSeconds ?? null,
+    x.observedMakespanSeconds,
+    x.predicted?.cost ?? null,
+    x.observedCost,
+    x.predictionErrorMakespan,
+    x.predictionErrorCost,
+  ]);
+  table(env, envRow + 2, ["ambiente","algoritmo","série","makespan planejado (s)","makespan executado (s)","custo planejado","custo executado","erro makespan","erro custo"], rows, `EnvironmentWorkflow${workflowIndex + 1}`);
+  env.getRange(`D${envRow + 3}:E${envRow + 23}`).setNumberFormat("#,##0.00");
+  env.getRange(`F${envRow + 3}:G${envRow + 23}`).setNumberFormat("0.0000");
+  env.getRange(`H${envRow + 3}:I${envRow + 23}`).setNumberFormat("0.00%");
+  const makespanChart = env.charts.add("column", env.getRange(`C${envRow + 2}:E${envRow + 23}`));
+  makespanChart.title = `${workflowId}: makespan planejado × executado`;
+  makespanChart.hasLegend = true;
+  makespanChart.setPosition(`K${envRow + 2}`, `Q${envRow + 13}`);
+  const costChart = env.charts.add("column", env.getRange(`C${envRow + 2}:C${envRow + 23}`));
+  costChart.delete();
+  const costHelperStart = envRow + 26;
+  env.getRange(`K${costHelperStart}:M${costHelperStart + 21}`).values = [
+    ["série", "custo planejado", "custo executado"],
+    ...rows.map(row => [row[2], row[5], row[6]]),
+  ];
+  const costComparisonChart = env.charts.add("column", env.getRange(`K${costHelperStart}:M${costHelperStart + 21}`));
+  costComparisonChart.title = `${workflowId}: custo planejado × executado`;
+  costComparisonChart.hasLegend = true;
+  costComparisonChart.setPosition(`K${envRow + 14}`, `Q${envRow + 25}`);
+  envRow += 50;
+}
+env.getRange("A:A").format.columnWidth = 29;
+env.getRange("B:B").format.columnWidth = 16;
+env.getRange("C:C").format.columnWidth = 47;
+env.getRange("D:I").format.columnWidth = 20;
+env.getRange("K:M").format.columnWidth = 22;
+env.freezePanes.freezeRows(4);
 
 const intf = sheet("Interferencia", "#ED7D31");
 title(intf, "Interferência por cobertura e algoritmo", "N");
@@ -165,11 +225,11 @@ const allRuns = [
   ...baseline.runRows.map(x => ["baseline", x]), ...sla.runRows.map(x => ["sla", x]),
   ...interference.runRows.map(x => ["interferência", x]), ...beam.runRows.map(x => ["beam", x]),
 ];
-const runRows = allRuns.map(([exp,x]) => [exp,x.executionRunId,x.workflowVersionId,x.executionScopeId,algLabel(x.algorithm),x.status,x.seed,x.coveragePercent,x.beamWidth,x.planningElapsedSeconds,x.planningCandidateCount,x.predicted?.makespanSeconds,x.observedMakespanSeconds,x.predicted?.cost,x.observedCost,x.predictionErrorMakespan,x.predictionErrorCost,x.slaSatisfied,x.failureReason]);
-table(runs, 5, ["experimento","run_id","workflow","scope","algoritmo","status","seed","cobertura (%)","beam","planejamento (s)","candidatos","makespan previsto (s)","makespan observado (s)","custo previsto","custo observado","erro makespan","erro custo","SLA atendido","falha"], runRows, "RunsTable");
-runs.getRange(`P6:Q${runRows.length + 5}`).setNumberFormat("0.00%");
-runs.freezePanes.freezeRows(5); runs.freezePanes.freezeColumns(5);
-runs.getRange("A:A").format.columnWidth = 16; runs.getRange("B:D").format.columnWidth = 34; runs.getRange("S:S").format.columnWidth = 28;
+const runRows = allRuns.map(([exp,x]) => [exp,x.executionRunId,x.workflowVersionId,x.executionScopeId,environmentLabel(x.executionScopeId),algLabel(x.algorithm),x.status,x.seed,x.coveragePercent,x.beamWidth,x.planningElapsedSeconds,x.planningCandidateCount,x.predicted?.makespanSeconds,x.observedMakespanSeconds,x.predicted?.cost,x.observedCost,x.predictionErrorMakespan,x.predictionErrorCost,x.slaSatisfied,x.failureReason]);
+table(runs, 5, ["experimento","run_id","workflow","scope","ambiente","algoritmo","status","seed","cobertura (%)","beam","planejamento (s)","candidatos","makespan previsto (s)","makespan observado (s)","custo previsto","custo observado","erro makespan","erro custo","SLA atendido","falha"], runRows, "RunsTable");
+runs.getRange(`Q6:R${runRows.length + 5}`).setNumberFormat("0.00%");
+runs.freezePanes.freezeRows(5); runs.freezePanes.freezeColumns(6);
+runs.getRange("A:A").format.columnWidth = 16; runs.getRange("B:D").format.columnWidth = 34; runs.getRange("E:E").format.columnWidth = 28; runs.getRange("T:T").format.columnWidth = 28;
 
 const proto = sheet("Protocolo", "#7F8C8D");
 title(proto, "Protocolo, fontes e limitações", "F");
@@ -193,7 +253,7 @@ proto.getRange("A:A").format.columnWidth = 24; proto.getRange("B:B").format.colu
 
 wb.recalculate();
 const checks = [];
-for (const [name, range] of [["Resumo","A1:J28"],["Baseline SLA","A1:O12"],["Interferencia","A1:N45"],["Fronteira","A1:O15"],["Beam","A1:L48"],["Execucoes","A1:S20"],["Protocolo","A1:C20"]]) {
+for (const [name, range] of [["Resumo","A1:J28"],["Baseline SLA","A1:O12"],["Por Ambiente","A1:Q356"],["Interferencia","A1:N45"],["Fronteira","A1:O15"],["Beam","A1:L48"],["Execucoes","A1:T20"],["Protocolo","A1:C20"]]) {
   checks.push((await wb.inspect({ kind: "table", range: `${name}!${range}`, include: "values,formulas", tableMaxRows: 20, tableMaxCols: 20, maxChars: 6000 })).ndjson);
 }
 checks.push((await wb.inspect({ kind: "match", searchTerm: "#REF!|#DIV/0!|#VALUE!|#NAME\\?|#N/A|#NUM!|#NULL!|#SPILL!|#CALC!", options: { useRegex: true, maxResults: 300 }, summary: "final formula error scan" })).ndjson);
@@ -201,7 +261,7 @@ await fs.writeFile(path.join(out, "experimentos-prism-heft.xlsx.inspect.ndjson")
 
 const previewDir = path.join(out, "previews-final");
 await fs.mkdir(previewDir, { recursive: true });
-for (const name of ["Resumo","Baseline SLA","Interferencia","Fronteira","Beam","Execucoes","Protocolo"]) {
+for (const name of ["Resumo","Baseline SLA","Por Ambiente","Interferencia","Fronteira","Beam","Execucoes","Protocolo"]) {
   const p = await wb.render({ sheetName: name, autoCrop: "all", scale: 1, format: "png" });
   await fs.writeFile(path.join(previewDir, `${name.replaceAll(" ", "-").toLowerCase()}.png`), new Uint8Array(await p.arrayBuffer()));
 }

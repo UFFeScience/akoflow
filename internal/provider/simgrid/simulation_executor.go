@@ -282,6 +282,13 @@ func resolveRuntime(activity domain.Activity, assignment domain.PlanAssignment, 
 	if profile, ok := profiles[activity.ActivityTypeID+"\x00"+resource.ID]; ok {
 		return profile.RuntimeSeconds
 	}
+	// Interference-aware planning stores a slowed predicted duration. Execution
+	// must start from the resource-specific clean runtime and let the execution
+	// interference matrix apply slowdown once. Falling back to the prediction
+	// remains necessary for old and manually authored plans.
+	if base, ok := numberMetadata(assignment.Metadata, "executionBaseRuntimeSeconds"); ok && base > 0 {
+		return base
+	}
 	// The selected plan freezes the resource-specific runtime. Reusing the
 	// activity's reference duration here would apply ComputeSpeedup a second
 	// time when the runner converts this duration back to FLOPs.

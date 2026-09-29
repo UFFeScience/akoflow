@@ -526,7 +526,11 @@ func prismRecomputePriorityRates(search compactPRISMContext, tasks []prismEvalua
 					continue
 				}
 				if candidate, exists := prismInterferencePriority(search, index, peer); exists {
-					slowdown = math.Max(slowdown, candidate)
+					if search.request.Interference.Aggregation == "additive-excess" {
+						slowdown += math.Max(0, candidate-1)
+					} else {
+						slowdown = math.Max(slowdown, candidate)
+					}
 				}
 			}
 			capacity := math.Max(1, float64(task.resource.CPUCores))

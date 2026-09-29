@@ -37,6 +37,7 @@ volumes/
 !/examples/real/
 !/examples/real/transfer-strategy-matrix/
 !/examples/real/transfer-strategy-matrix/**
+/examples/simulation/
 config
 
 __pycache__/

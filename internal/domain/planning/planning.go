@@ -93,6 +93,10 @@ type PlanningRequest struct {
 	DeadlineSeconds  float64                            `json:"deadlineSeconds"`
 	Budget           float64                            `json:"budget"`
 	Interference     *InterferenceMatrix                `json:"interference,omitempty"`
+	// InterferenceKnowledge is the partial model exposed to an interference-aware
+	// planner. Interference remains the immutable execution truth carried into
+	// the selected plan and the simulator.
+	InterferenceKnowledge *InterferenceMatrix `json:"interferenceKnowledge,omitempty"`
 }
 
 // InterferenceMatrix is an immutable planning-session input. Entries are

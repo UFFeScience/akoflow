@@ -8,7 +8,10 @@ import (
 	"github.com/UFFeScience/akoflow/internal/domain"
 )
 
-const interferenceConfigurationKey = "interferenceMatrix"
+const (
+	interferenceConfigurationKey          = "interferenceMatrix"
+	interferenceKnowledgeConfigurationKey = "interferenceKnowledgeMatrix"
+)
 
 func decodeInterferenceMatrix(value any) (*domain.InterferenceMatrix, error) {
 	if value == nil {
@@ -32,7 +35,7 @@ func normalizeInterferenceMatrix(matrix *domain.InterferenceMatrix, workflow dom
 	if matrix.SchemaVersion == "" {
 		matrix.SchemaVersion = "1"
 	}
-	if matrix.SchemaVersion != "1" && matrix.SchemaVersion != "2" && matrix.SchemaVersion != "3" {
+	if matrix.SchemaVersion != "1" && matrix.SchemaVersion != "2" && matrix.SchemaVersion != "3" && matrix.SchemaVersion != "4" {
 		return nil, fmt.Errorf("unsupported interference matrix schemaVersion %q", matrix.SchemaVersion)
 	}
 	if matrix.Model == "" {
@@ -49,7 +52,7 @@ func normalizeInterferenceMatrix(matrix *domain.InterferenceMatrix, workflow dom
 		}
 	}
 	if (matrix.Model == "pairwise-cpu-priority" && matrix.Aggregation != "minimum") ||
-		(matrix.Model == "pairwise-slowdown" && matrix.Aggregation != "maximum") {
+		(matrix.Model == "pairwise-slowdown" && matrix.Aggregation != "maximum" && matrix.Aggregation != "additive-excess") {
 		return nil, fmt.Errorf("unsupported interference aggregation %q", matrix.Aggregation)
 	}
 	activities := make(map[string]bool, len(workflow.Activities))

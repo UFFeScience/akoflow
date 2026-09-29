@@ -79,8 +79,8 @@ func compactPRISMPlan(
 	breakdown := compactPRISMPredictionBreakdown(assignments)
 	confidence, confidenceScore := compactPRISMPredictionConfidence(request)
 	interferenceModel := "none"
-	if request.Interference != nil {
-		interferenceModel = request.Interference.Model + "-" + request.Interference.Aggregation
+	if prismInterferencePresent(search.request.Interference) {
+		interferenceModel = search.request.Interference.Model + "-" + search.request.Interference.Aggregation
 	}
 	plan := domain.SchedulePlan{
 		ID: id, WorkflowVersionID: request.Workflow.ID,
@@ -107,11 +107,16 @@ func compactPRISMPlan(
 			"costModel":                 "resource-active-window",
 			"networkPathModel":          "simgrid-route-shared-link-events",
 			"interferenceModel":         interferenceModel,
-			"interferenceAware":         request.Interference != nil,
+			"interferenceAware":         prismInterferencePresent(search.request.Interference),
+			"executionInterference":     prismInterferencePresent(request.Interference),
 		},
 	}
 	addCloudLifecycle(&plan, request)
 	return plan
+}
+
+func prismInterferencePresent(matrix *domain.InterferenceMatrix) bool {
+	return matrix != nil && (len(matrix.Entries) > 0 || len(matrix.Rules) > 0 || len(matrix.Groups) > 0)
 }
 
 func compactPRISMPredictionBreakdown(assignments []domain.PlanAssignment) prismPredictionBreakdown {

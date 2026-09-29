@@ -14,11 +14,138 @@ from create_interference_campaign import (
     build_interference_sessions,
     selected_activity_ids,
 )
+from create_interference_knowledge_campaign import build_knowledge_sessions
+from create_interference_ablation_campaign import (
+    build_ablation_sessions,
+    interference_activity_ids,
+)
 from create_reference_campaign import build_reference_sessions
 from launch_campaign_simulations import choose_candidate, run_id, session_algorithms
 from launch_frontier_simulations import bounded_candidates, nondominated_candidates
 from analyze_frontiers import analyze, hypervolume, multiplicative_epsilon, pareto_records
 from analyze_campaign_results import analyze_campaign, read_json
+from analyze_interference_ablation import overlap_metrics
+
+
+class InterferenceAblationTests(unittest.TestCase):
+    def test_activity_family_limits_matrix_without_changing_workflow(self):
+        workflow = {
+            "id": "montage-v1",
+            "activities": [
+                {"id": "project-1", "externalId": "mProjectID0001"},
+                {"id": "project-2", "name": "mProjectID0002"},
+                {"id": "diff-1", "externalId": "mDiffFitID0003"},
+            ],
+        }
+        self.assertEqual(
+            interference_activity_ids(workflow, "mProject"),
+            ["project-1", "project-2"],
+        )
+
+        threshold = {
+            "deadlineSeconds": 100,
+            "budget": 10,
+            "factor": 1.2,
+            "executionRunId": "reference",
+        }
+        sessions = build_ablation_sessions(
+            "campaign",
+            workflow,
+            threshold,
+            "scope",
+            "topology",
+            3,
+            (1,),
+            100,
+            ("blind", "aware"),
+            20,
+            "mProject",
+            ("prism-time", "prism-cost", "heft"),
+            "additive-excess",
+        )
+        blind, aware = [item["configuration"] for item in sessions]
+        expected = ["project-1", "project-2"]
+        self.assertEqual(
+            blind["interferenceMatrix"]["groups"][0]["activityIds"], expected
+        )
+        self.assertEqual(blind["interferenceMatrix"], aware["interferenceMatrix"])
+        self.assertEqual(blind["interferenceKnowledgeMatrix"]["groups"], [])
+        self.assertEqual(
+            aware["interferenceKnowledgeMatrix"]["groups"][0]["activityIds"],
+            expected,
+        )
+        self.assertEqual(aware["interferenceEligibleActivityCount"], 2)
+        self.assertEqual(aware["interferenceSelectedActivityCount"], 2)
+        self.assertEqual(
+            aware["interferenceMatrix"]["aggregation"], "additive-excess"
+        )
+        self.assertEqual(aware["interferenceMatrix"]["schemaVersion"], "4")
+
+    def test_builds_control_blind_and_aware_with_fixed_execution_truth(self):
+        workflow = {
+            "id": "workflow-v1",
+            "activities": [
+                {"id": "a", "activityTypeId": "type"},
+                {"id": "b", "activityTypeId": "type"},
+            ],
+        }
+        threshold = {
+            "deadlineSeconds": 100,
+            "budget": 10,
+            "factor": 1.2,
+            "executionRunId": "reference",
+        }
+        sessions = build_ablation_sessions(
+            "campaign", workflow, threshold, "scope", "topology", 1.5, (7,)
+        )
+        self.assertEqual([item["configuration"]["scenario"] for item in sessions], ["control", "blind", "aware"])
+        control, blind, aware = [item["configuration"] for item in sessions]
+        self.assertEqual(control["executionTruthCoveragePercent"], 0)
+        self.assertEqual(blind["executionTruthCoveragePercent"], 100)
+        self.assertEqual(blind["knowledgeCoveragePercent"], 0)
+        self.assertEqual(aware["executionTruthCoveragePercent"], 100)
+        self.assertEqual(aware["knowledgeCoveragePercent"], 100)
+        self.assertEqual(blind["interferenceMatrix"], aware["interferenceMatrix"])
+
+    def test_overlap_metrics_count_pairwise_duration_on_same_resource(self):
+        count, seconds, affected = overlap_metrics(
+            [
+                {"activityId": "a", "plannedResourceId": "r", "startedAt": 0, "finishedAt": 10},
+                {"activityId": "b", "plannedResourceId": "r", "startedAt": 5, "finishedAt": 12},
+                {"activityId": "c", "plannedResourceId": "other", "startedAt": 5, "finishedAt": 12},
+            ]
+        )
+        self.assertEqual(count, 1)
+        self.assertEqual(seconds, 5)
+        self.assertEqual(affected, {"a", "b"})
+
+    def test_overlap_metrics_only_counts_selected_interfering_activities(self):
+        count, seconds, affected = overlap_metrics(
+            [
+                {
+                    "activityId": "a",
+                    "allocatedResourceId": "r1",
+                    "startedAt": 0,
+                    "finishedAt": 10,
+                },
+                {
+                    "activityId": "b",
+                    "allocatedResourceId": "r1",
+                    "startedAt": 2,
+                    "finishedAt": 8,
+                },
+                {
+                    "activityId": "unrelated",
+                    "allocatedResourceId": "r1",
+                    "startedAt": 1,
+                    "finishedAt": 9,
+                },
+            ],
+            {"a", "b"},
+        )
+        self.assertEqual(count, 1)
+        self.assertEqual(seconds, 6)
+        self.assertEqual(affected, {"a", "b"})
 
 
 class SimulationCollectionTests(unittest.TestCase):
@@ -289,6 +416,38 @@ class SLACampaignTests(unittest.TestCase):
 
 
 class InterferenceCampaignTests(unittest.TestCase):
+    def test_knowledge_campaign_keeps_execution_truth_fixed(self):
+        workflow = {
+            "id": "workflow-v1",
+            "activities": [
+                {"id": f"activity-{index}", "activityTypeId": "montage"}
+                for index in range(10)
+            ],
+        }
+        threshold = {
+            "factor": 1.2,
+            "deadlineSeconds": 120,
+            "budget": 12,
+            "executionRunId": "reference",
+        }
+        sessions = build_knowledge_sessions(
+            "knowledge", workflow, threshold, "scope", "topology", 1.5, (0, 20, 100), (7,)
+        )
+        self.assertEqual(len(sessions), 3)
+        for session in sessions:
+            truth = session["configuration"]["interferenceMatrix"]["rules"][0]
+            self.assertEqual(truth["affectedActivityTypeId"], "montage")
+            self.assertEqual(truth["interferingActivityTypeId"], "montage")
+            self.assertEqual(truth["slowdownFactor"], 1.5)
+        zero, twenty, full = sessions
+        self.assertEqual(zero["configuration"]["interferenceKnowledgeMatrix"]["groups"], [])
+        self.assertEqual(
+            len(twenty["configuration"]["interferenceKnowledgeMatrix"]["groups"][0]["activityIds"]), 2
+        )
+        self.assertEqual(
+            len(full["configuration"]["interferenceKnowledgeMatrix"]["groups"][0]["activityIds"]), 10
+        )
+
     def test_builds_seeded_coverage_matrix_for_three_algorithms(self):
         workflow = {
             "id": "workflow-v1",
@@ -632,6 +791,63 @@ class CampaignAnalysisTests(unittest.TestCase):
         self.assertAlmostEqual(half["makespanDegradationPercent"]["mean"], 37.5)
         self.assertAlmostEqual(half["costDegradationPercent"]["mean"], 22.5)
         self.assertEqual(half["observedInterferenceSeconds"]["median"], 2.5)
+
+    def test_summarizes_progressive_knowledge_against_same_seed_oracle(self):
+        planning = {
+            "records": [
+                {
+                    "session": {
+                        "session": {
+                            "id": session_id,
+                            "configuration": {
+                                "experiment": "3-fixed-truth-progressive-knowledge",
+                                "selectionSeed": seed,
+                                "knowledgeCoveragePercent": coverage,
+                                "executionTruthCoveragePercent": 100,
+                            },
+                        },
+                        "algorithmRuns": [{"algorithm": "prism-time", "status": "completed"}],
+                    }
+                }
+                for session_id, seed, coverage in (
+                    ("seed-1-blind", 1, 0),
+                    ("seed-1-oracle", 1, 100),
+                    ("seed-2-blind", 2, 0),
+                    ("seed-2-oracle", 2, 100),
+                )
+            ]
+        }
+        simulations = {
+            "records": [
+                {
+                    "sessionId": session_id,
+                    "workflowVersionId": "workflow",
+                    "executionScopeId": "scope",
+                    "algorithm": "prism-time",
+                    "status": "completed",
+                    "observedMakespanSeconds": makespan,
+                    "observedCost": cost,
+                    "breakdown": {"interferenceSeconds": 2},
+                }
+                for session_id, makespan, cost in (
+                    ("seed-1-blind", 12, 6),
+                    ("seed-1-oracle", 10, 5),
+                    ("seed-2-blind", 18, 9),
+                    ("seed-2-oracle", 15, 6),
+                )
+            ]
+        }
+
+        result = analyze_campaign(planning, simulations)
+
+        blind = next(
+            row
+            for row in result["knowledgeSummaries"]
+            if row["knowledgeCoveragePercent"] == 0
+        )
+        self.assertEqual(blind["seedCount"], 2)
+        self.assertAlmostEqual(blind["makespanRegretVsOraclePercent"]["mean"], 20)
+        self.assertAlmostEqual(blind["costRegretVsOraclePercent"]["mean"], 35)
 
     def test_selects_smallest_beam_that_meets_quality_rule(self):
         cases = (

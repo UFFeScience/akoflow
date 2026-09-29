@@ -222,7 +222,7 @@ func expandCompactPRISMState(
 			if !search.feasible[activityOrdinal][resourceOrdinal] {
 				continue
 			}
-			children = append(children, compactPRISMPlacePrepared(
+			children = append(children, compactPRISMPlacePreparedAlternatives(
 				search,
 				state,
 				activityOrdinal,
@@ -230,7 +230,7 @@ func expandCompactPRISMState(
 				step,
 				true,
 				prepared,
-			))
+			)...)
 		}
 	}
 	return children
@@ -249,11 +249,25 @@ func selectCompactPRISMBeam(
 	// objective, while dedicated lanes retain concrete partial schedules and
 	// data-local placements that would otherwise disappear on early heuristic ties.
 	primaryWidth := max(1, width*7/10)
-	localityWidth := max(1, width*15/100)
-	secondaryWidth := width - primaryWidth - localityWidth
+	localityWidth := max(1, width*10/100)
+	diversityWidth := 0
+	for _, state := range states {
+		if len(state.resourceAssignments) > 1 {
+			diversityWidth = max(1, width*20/100)
+			break
+		}
+	}
+	if diversityWidth > 0 {
+		// Interference avoidance commonly requires a sequence of placements that
+		// looks locally slower before the extra resource capacity pays off. Keep a
+		// dedicated lane of resource-balanced states so a bounded beam does not
+		// collapse to one fast (or free) machine before that benefit is visible.
+		diversityWidth = max(1, width*20/100)
+	}
+	secondaryWidth := width - primaryWidth - localityWidth - diversityWidth
 	if secondaryWidth < 1 {
 		secondaryWidth = 1
-		primaryWidth = max(1, width-localityWidth-secondaryWidth)
+		primaryWidth = max(1, width-localityWidth-diversityWidth-secondaryWidth)
 	}
 	primary := compactPRISMTopStates(states, primaryWidth, objective)
 	secondaryObjective := "cost"
@@ -267,6 +281,7 @@ func selectCompactPRISMBeam(
 	}
 	secondary := compactPRISMTopStates(states, width, secondaryObjective)
 	locality := compactPRISMTopStates(states, width, "network-locality")
+	diversity := compactPRISMTopStates(states, width, "resource-diversity")
 	selected := append([]compactPRISMState(nil), primary...)
 	seen := make(map[uint64]bool, width)
 	for _, state := range selected {
@@ -291,6 +306,7 @@ func selectCompactPRISMBeam(
 	}
 	appendLane(secondary, secondaryWidth)
 	appendLane(locality, localityWidth)
+	appendLane(diversity, diversityWidth)
 	// Overlap between lanes can leave spare capacity. Fill it by the primary
 	// objective so the effective beam width remains stable.
 	for _, state := range compactPRISMTopStates(states, width, objective) {
@@ -341,6 +357,28 @@ func compactPRISMStateLess(
 		}
 		if left.projectedCost != right.projectedCost {
 			return left.projectedCost < right.projectedCost
+		}
+		return left.signature < right.signature
+	}
+	if objective == "resource-diversity" {
+		if left.usedResourceCount != right.usedResourceCount {
+			return left.usedResourceCount > right.usedResourceCount
+		}
+		leftMax, rightMax := uint32(0), uint32(0)
+		for _, count := range left.resourceAssignments {
+			leftMax = max(leftMax, count)
+		}
+		for _, count := range right.resourceAssignments {
+			rightMax = max(rightMax, count)
+		}
+		if leftMax != rightMax {
+			return leftMax < rightMax
+		}
+		if left.projectedMakespan != right.projectedMakespan {
+			return left.projectedMakespan < right.projectedMakespan
+		}
+		if left.transferSeconds != right.transferSeconds {
+			return left.transferSeconds < right.transferSeconds
 		}
 		return left.signature < right.signature
 	}

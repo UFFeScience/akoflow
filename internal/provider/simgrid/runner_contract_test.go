@@ -56,6 +56,28 @@ func TestRunnerInputUsesFrozenPlannedRuntimeForProfileSimulation(t *testing.T) {
 	require.InDelta(t, 10e9, input.Tasks[0].FLOPs, 1)
 }
 
+func TestRunnerInputUsesCleanRuntimeBeforeApplyingExecutionInterference(t *testing.T) {
+	request := ports.ExecutionRequest{
+		Run: domain.ExecutionRun{ID: "run"},
+		Plan: domain.SchedulePlan{ID: "plan", Assignments: []domain.PlanAssignment{{
+			ID: "assignment", ActivityID: "activity", ResourceID: "resource",
+			PredictedRuntimeSeconds: 6,
+			Metadata:                map[string]any{"executionBaseRuntimeSeconds": 2.0},
+		}}},
+		Workflow: domain.WorkflowVersion{Activities: []domain.Activity{{
+			ID: "activity", Simulation: &domain.ActivitySimulation{DurationSeconds: 10},
+		}}},
+		Resources: []domain.Resource{{ID: "resource", ComputeSpeedup: 5}},
+	}
+
+	payload, err := buildRunnerInput(request, 1e9)
+	require.NoError(t, err)
+	var input runnerInput
+	require.NoError(t, json.Unmarshal(payload, &input))
+	require.Len(t, input.Tasks, 1)
+	require.InDelta(t, 10e9, input.Tasks[0].FLOPs, 1)
+}
+
 func TestRunnerInputCarriesPlanInterferenceMatrix(t *testing.T) {
 	request := ports.ExecutionRequest{
 		Run: domain.ExecutionRun{ID: "run"},
@@ -108,6 +130,33 @@ func TestRunnerInputCarriesPairwiseSlowdownMatrix(t *testing.T) {
 	require.NotNil(t, input.Interference)
 	require.Equal(t, "pairwise-slowdown", input.Interference.Model)
 	require.InDelta(t, 1.5, input.Interference.Entries[0].SlowdownFactor, 1e-9)
+}
+
+func TestRunnerInputCarriesAdditivePairwiseSlowdownAggregation(t *testing.T) {
+	request := ports.ExecutionRequest{
+		Run: domain.ExecutionRun{ID: "run"},
+		Plan: domain.SchedulePlan{
+			ID: "plan",
+			Assignments: []domain.PlanAssignment{
+				{ID: "assignment-a", ActivityID: "a", ResourceID: "resource"},
+				{ID: "assignment-b", ActivityID: "b", ResourceID: "resource"},
+				{ID: "assignment-c", ActivityID: "c", ResourceID: "resource"},
+			},
+			Metadata: map[string]any{"interferenceMatrix": map[string]any{
+				"schemaVersion": "4", "model": "pairwise-slowdown",
+				"aggregation": "additive-excess", "entries": []any{},
+			}},
+		},
+		Workflow:  domain.WorkflowVersion{Activities: []domain.Activity{{ID: "a"}, {ID: "b"}, {ID: "c"}}},
+		Resources: []domain.Resource{{ID: "resource"}},
+	}
+
+	payload, err := buildRunnerInput(request, 1e9)
+	require.NoError(t, err)
+	var input runnerInput
+	require.NoError(t, json.Unmarshal(payload, &input))
+	require.NotNil(t, input.Interference)
+	require.Equal(t, "additive-excess", input.Interference.Aggregation)
 }
 
 func TestRunnerInputCarriesActivityTypeForFamilySlowdown(t *testing.T) {

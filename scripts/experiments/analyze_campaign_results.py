@@ -80,6 +80,14 @@ def analyze_campaign(planning: dict, simulations: dict) -> dict:
                 "coveragePercent": first_defined(
                     simulation.get("coveragePercent"), experiment.get("coveragePercent")
                 ),
+                "knowledgeCoveragePercent": first_defined(
+                    simulation.get("knowledgeCoveragePercent"),
+                    experiment.get("knowledgeCoveragePercent"),
+                ),
+                "executionTruthCoveragePercent": first_defined(
+                    simulation.get("executionTruthCoveragePercent"),
+                    experiment.get("executionTruthCoveragePercent"),
+                ),
                 "slowdownFactor": first_defined(
                     simulation.get("slowdownFactor"), experiment.get("slowdownFactor")
                 ),
@@ -144,6 +152,41 @@ def analyze_campaign(planning: dict, simulations: dict) -> dict:
         row["observedInterferenceSeconds"] = (
             row.get("breakdown") or {}
         ).get("interferenceSeconds")
+
+    knowledge_oracles = {
+        (
+            row.get("workflowVersionId"),
+            row.get("executionScopeId"),
+            row.get("algorithm"),
+            row.get("selectionSeed"),
+        ): row
+        for row in rows
+        if row.get("status") == "completed"
+        and row.get("knowledgeCoveragePercent") == 100
+    }
+    for row in rows:
+        oracle = knowledge_oracles.get(
+            (
+                row.get("workflowVersionId"),
+                row.get("executionScopeId"),
+                row.get("algorithm"),
+                row.get("selectionSeed"),
+            )
+        )
+        observed_time = row.get("observedMakespanSeconds")
+        oracle_time = oracle.get("observedMakespanSeconds") if oracle else None
+        observed_cost = row.get("observedCost")
+        oracle_cost = oracle.get("observedCost") if oracle else None
+        row["makespanRegretVsOraclePercent"] = (
+            (float(observed_time) / float(oracle_time) - 1) * 100
+            if observed_time is not None and oracle_time not in (None, 0)
+            else None
+        )
+        row["costRegretVsOraclePercent"] = (
+            (float(observed_cost) / float(oracle_cost) - 1) * 100
+            if observed_cost is not None and oracle_cost not in (None, 0)
+            else None
+        )
 
     by_algorithm: dict[str, list[dict]] = defaultdict(list)
     by_instance: dict[str, list[dict]] = defaultdict(list)
@@ -297,6 +340,42 @@ def analyze_campaign(planning: dict, simulations: dict) -> dict:
             }
         )
 
+    knowledge_groups: dict[tuple[str, float], list[dict]] = defaultdict(list)
+    for row in rows:
+        coverage = row.get("knowledgeCoveragePercent")
+        if coverage is not None:
+            knowledge_groups[(row["algorithm"], float(coverage))].append(row)
+    knowledge_summaries = []
+    for (algorithm, coverage), group_rows in sorted(knowledge_groups.items()):
+        completed = [row for row in group_rows if row.get("status") == "completed"]
+        knowledge_summaries.append(
+            {
+                "algorithm": algorithm,
+                "knowledgeCoveragePercent": coverage,
+                "runCount": len(group_rows),
+                "completedCount": len(completed),
+                "seedCount": len({row.get("selectionSeed") for row in completed}),
+                "observedMakespanSeconds": numeric_summary(
+                    [row.get("observedMakespanSeconds") for row in completed]
+                ),
+                "observedCost": numeric_summary(
+                    [row.get("observedCost") for row in completed]
+                ),
+                "predictionErrorMakespan": numeric_summary(
+                    [row.get("predictionErrorMakespan") for row in completed]
+                ),
+                "observedInterferenceSeconds": numeric_summary(
+                    [row.get("observedInterferenceSeconds") for row in completed]
+                ),
+                "makespanRegretVsOraclePercent": numeric_summary(
+                    [row.get("makespanRegretVsOraclePercent") for row in completed]
+                ),
+                "costRegretVsOraclePercent": numeric_summary(
+                    [row.get("costRegretVsOraclePercent") for row in completed]
+                ),
+            }
+        )
+
     beam_rows = [
         row
         for row in rows
@@ -388,6 +467,7 @@ def analyze_campaign(planning: dict, simulations: dict) -> dict:
         "algorithmSummaries": algorithm_summaries,
         "instanceComparisons": instance_comparisons,
         "interferenceSummaries": interference_summaries,
+        "knowledgeSummaries": knowledge_summaries,
         "beamComparisons": beam_comparisons,
         "beamSummaries": beam_summaries,
         "selectedBeams": selected_beams,

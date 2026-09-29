@@ -314,8 +314,19 @@ def main() -> None:
                 "executionRunId": expected_run_id,
                 "predicted": candidate.get("predicted", {}),
                 "experiment": configuration.get("experiment"),
+                "scenario": configuration.get("scenario"),
+                "executionHasInterference": configuration.get(
+                    "executionHasInterference"
+                ),
+                "plannerHasInterferenceKnowledge": configuration.get(
+                    "plannerHasInterferenceKnowledge"
+                ),
                 "selectionSeed": configuration.get("selectionSeed"),
                 "coveragePercent": configuration.get("coveragePercent"),
+                "knowledgeCoveragePercent": configuration.get("knowledgeCoveragePercent"),
+                "executionTruthCoveragePercent": configuration.get(
+                    "executionTruthCoveragePercent"
+                ),
                 "slowdownFactor": configuration.get("slowdownFactor"),
                 "action": "planned",
             }

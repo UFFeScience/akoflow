@@ -13,9 +13,11 @@ type compactPRISMState struct {
 	evaluatedAssignments []domain.PlanAssignment
 	coreAvailable        []*compactPRISMCoreNode
 	coreOrder            *compactPRISMIntNode
+	coreLastActivity     *compactPRISMIntNode
 	networkIntervals     *compactPRISMIntervalIndexNode
 	resourceActiveFrom   []float64
 	resourceActiveTo     []float64
+	resourceAssignments  []uint32
 	pendingPredChunks    [][]uint16
 	readyTaskBits        []uint64
 	makespan             float64
@@ -50,13 +52,14 @@ type compactPRISMFanIn struct {
 func initialCompactPRISMState(search compactPRISMContext) compactPRISMState {
 	chunkCount := (len(search.activities) + prismPendingChunkSize - 1) / prismPendingChunkSize
 	state := compactPRISMState{
-		coreAvailable:      compactPRISMInitialCoreRoots(search),
-		assignmentChunks:   make([][]compactPRISMAssignment, chunkCount),
-		pendingPredChunks:  make([][]uint16, chunkCount),
-		readyTaskBits:      make([]uint64, (len(search.activities)+63)/64),
-		signature:          14695981039346656037,
-		resourceActiveFrom: make([]float64, len(search.resources)),
-		resourceActiveTo:   make([]float64, len(search.resources)),
+		coreAvailable:       compactPRISMInitialCoreRoots(search),
+		assignmentChunks:    make([][]compactPRISMAssignment, chunkCount),
+		pendingPredChunks:   make([][]uint16, chunkCount),
+		readyTaskBits:       make([]uint64, (len(search.activities)+63)/64),
+		signature:           14695981039346656037,
+		resourceActiveFrom:  make([]float64, len(search.resources)),
+		resourceActiveTo:    make([]float64, len(search.resources)),
+		resourceAssignments: make([]uint32, len(search.resources)),
 	}
 	for index := range state.resourceActiveFrom {
 		state.resourceActiveFrom[index] = math.Inf(1)
@@ -161,6 +164,26 @@ func compactPRISMPlacePrepared(
 	contention bool,
 	prepared compactPRISMFanIn,
 ) compactPRISMState {
+	return compactPRISMPlacePreparedAlternatives(
+		search, state, activityOrdinal, resourceOrdinal, sequence, contention, prepared,
+	)[0]
+}
+
+// compactPRISMPlacePreparedAlternatives keeps both useful temporal decisions
+// in the search frontier: start as soon as the resource is available and
+// accept the predicted slowdown, or wait until the currently conflicting work
+// has finished. Moving the activity is already represented by the caller's
+// expansion over every feasible resource. This makes interference a routing
+// signal instead of an implicit prohibition on concurrency.
+func compactPRISMPlacePreparedAlternatives(
+	search compactPRISMContext,
+	state compactPRISMState,
+	activityOrdinal int,
+	resourceOrdinal int,
+	sequence int,
+	contention bool,
+	prepared compactPRISMFanIn,
+) []compactPRISMState {
 	resource := search.resources[resourceOrdinal]
 	coreRoot := state.coreAvailable[resourceOrdinal]
 	coreOrdinal := coreRoot.bestKey
@@ -180,9 +203,11 @@ func compactPRISMPlacePrepared(
 	}
 	container := resource.resource.ContainerOverhead
 	start += container
-	runtime := search.durations[activityOrdinal][resourceOrdinal]
-	runtime *= compactPRISMInterferenceFactor(search, state, activityOrdinal, resourceOrdinal, start, start+runtime)
-	assignment := compactPRISMBuildAssignment(
+	baseRuntime := search.durations[activityOrdinal][resourceOrdinal]
+	factor, waitUntil := compactPRISMInterferenceDecision(
+		search, state, activityOrdinal, resourceOrdinal, start, baseRuntime,
+	)
+	immediate := compactPRISMBuildAssignment(
 		activityOrdinal,
 		resourceOrdinal,
 		coreOrdinal,
@@ -191,11 +216,11 @@ func compactPRISMPlacePrepared(
 		search.activities[activityOrdinal].Priority,
 		transfer,
 		start,
-		runtime,
+		baseRuntime*factor,
 		boot,
 		container,
 	)
-	return compactPRISMCommitPlacement(
+	children := []compactPRISMState{compactPRISMCommitPlacement(
 		search,
 		state,
 		transfer.state,
@@ -203,18 +228,76 @@ func compactPRISMPlacePrepared(
 		resourceOrdinal,
 		coreOrdinal,
 		sequence,
-		assignment,
+		immediate,
+	)}
+	if waitUntil <= start+1e-9 {
+		return children
+	}
+	delayedStart := waitUntil
+	delayedFactor, _ := compactPRISMInterferenceDecision(
+		search, state, activityOrdinal, resourceOrdinal, delayedStart, baseRuntime,
 	)
+	delayed := compactPRISMBuildAssignment(
+		activityOrdinal, resourceOrdinal, coreOrdinal, sequence, order,
+		search.activities[activityOrdinal].Priority, transfer, delayedStart,
+		baseRuntime*delayedFactor, boot, container,
+	)
+	children = append(children, compactPRISMCommitPlacement(
+		search, state, transfer.state, activityOrdinal, resourceOrdinal,
+		coreOrdinal, sequence, delayed,
+	))
+	return children
 }
 
-func compactPRISMInterferenceFactor(
+func compactPRISMInterferenceDecision(
 	search compactPRISMContext,
 	state compactPRISMState,
 	activityOrdinal int,
 	resourceOrdinal int,
 	start float64,
-	finish float64,
-) float64 {
+	baseRuntime float64,
+) (float64, float64) {
+	finish := start + baseRuntime
+	if search.request.Interference == nil {
+		return 1, start
+	}
+	if search.interferenceModel == "pairwise-slowdown" {
+		factor, waitUntil := 1.0, start
+		// Re-evaluate the window when slowdown extends it. A later activity that
+		// was outside the base window can become a real interferer.
+		for iteration := 0; iteration < 4; iteration++ {
+			previous := factor
+			factor = 1
+			waitUntil = start
+			resource := search.resources[resourceOrdinal]
+			for localCore := range resource.cores {
+				coreOrdinal := resource.coreOffset + localCore
+				encoded := compactPRISMIntLookup(state.coreLastActivity, coreOrdinal)
+				if encoded == 0 {
+					continue
+				}
+				interferer := encoded - 1
+				assignment, exists := compactPRISMAssignmentChunkLookup(state.assignmentChunks, interferer)
+				if !exists || assignment.startAt >= finish || start >= assignment.finishAt {
+					continue
+				}
+				if slowdown, affected := prismInterferencePriority(search, activityOrdinal, interferer); affected {
+					if search.request.Interference.Aggregation == "additive-excess" {
+						factor += math.Max(0, slowdown-1)
+					} else {
+						factor = math.Max(factor, slowdown)
+					}
+					waitUntil = math.Max(waitUntil, assignment.finishAt)
+				}
+			}
+			finish = start + baseRuntime*factor
+			if math.Abs(factor-previous) <= 1e-12 {
+				break
+			}
+		}
+		return factor, waitUntil
+	}
+
 	priority := math.Inf(1)
 	totalPriority := 0.0
 	concurrent := 0
@@ -234,14 +317,14 @@ func compactPRISMInterferenceFactor(
 		}
 	}
 	if concurrent == 0 {
-		return 1
+		return 1, start
 	}
 	if math.IsInf(priority, 1) {
 		priority = 1
 	}
 	totalPriority += priority
 	cores := math.Max(1, float64(search.resources[resourceOrdinal].resource.CPUCores))
-	return math.Max(1, totalPriority/(cores*priority))
+	return math.Max(1, totalPriority/(cores*priority)), start
 }
 
 func compactPRISMPrepareFanIn(
@@ -387,6 +470,8 @@ func compactPRISMCommitPlacement(
 	activity := search.activities[activityOrdinal]
 	out.resourceActiveFrom = append([]float64(nil), previous.resourceActiveFrom...)
 	out.resourceActiveTo = append([]float64(nil), previous.resourceActiveTo...)
+	out.resourceAssignments = append([]uint32(nil), previous.resourceAssignments...)
+	out.resourceAssignments[resourceOrdinal]++
 	previousWindow := 0.0
 	resourceWasUnused := math.IsInf(out.resourceActiveFrom[resourceOrdinal], 1)
 	if !resourceWasUnused {
@@ -421,6 +506,7 @@ func compactPRISMCommitPlacement(
 		assignment.finishAt,
 	)
 	out.coreOrder = compactPRISMIntInsert(previous.coreOrder, coreOrdinal, assignment.order+1)
+	out.coreLastActivity = compactPRISMIntInsert(previous.coreLastActivity, coreOrdinal, activityOrdinal+1)
 	out.makespan = math.Max(previous.makespan, assignment.finishAt)
 	out.queueSeconds = previous.queueSeconds + assignment.queueSeconds
 	out.transferSeconds = previous.transferSeconds + assignment.transferSeconds
@@ -493,10 +579,11 @@ func compactPRISMAssignments(search compactPRISMContext, state compactPRISMState
 			PredictedCost:            assignment.cost,
 			Metadata: map[string]any{
 				"scheduleBasis": "algorithm", "expectedDurationSeconds": assignment.runtimeSeconds,
-				"networkContentionModel":   "known-active-flows",
-				"bootOverheadSeconds":      assignment.bootSeconds,
-				"containerOverheadSeconds": assignment.containerSeconds,
-				"queueSeconds":             assignment.queueSeconds, "transferCost": assignment.transferCost,
+				"executionBaseRuntimeSeconds": search.durations[assignment.activityOrdinal][assignment.resourceOrdinal],
+				"networkContentionModel":      "known-active-flows",
+				"bootOverheadSeconds":         assignment.bootSeconds,
+				"containerOverheadSeconds":    assignment.containerSeconds,
+				"queueSeconds":                assignment.queueSeconds, "transferCost": assignment.transferCost,
 				"interferenceSlowdown": assignment.runtimeSeconds / math.Max(search.durations[assignment.activityOrdinal][assignment.resourceOrdinal], 1e-12),
 			},
 		}

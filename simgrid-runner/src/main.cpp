@@ -41,6 +41,7 @@ using InterferenceFactors = std::map<std::string, std::map<std::string, double>>
 
 struct InterferenceModel {
   std::string model = "pairwise-cpu-priority";
+  std::string aggregation = "minimum";
   InterferenceFactors factors;
   InterferenceFactors rules;
   std::map<std::string, std::map<std::string, double>> groups_by_activity;
@@ -53,9 +54,10 @@ static InterferenceModel create_interference(const json& input)
     return interference;
   const auto& matrix = input.at("interference");
   interference.model = matrix.value("model", "pairwise-cpu-priority");
-  const auto aggregation = matrix.value("aggregation", interference.model == "pairwise-slowdown" ? "maximum" : "minimum");
-  if ((interference.model == "pairwise-cpu-priority" && aggregation != "minimum") ||
-      (interference.model == "pairwise-slowdown" && aggregation != "maximum") ||
+  interference.aggregation = matrix.value("aggregation", interference.model == "pairwise-slowdown" ? "maximum" : "minimum");
+  if ((interference.model == "pairwise-cpu-priority" && interference.aggregation != "minimum") ||
+      (interference.model == "pairwise-slowdown" && interference.aggregation != "maximum" &&
+       interference.aggregation != "additive-excess") ||
       (interference.model != "pairwise-cpu-priority" && interference.model != "pairwise-slowdown"))
     throw std::runtime_error("unsupported interference matrix model");
   for (const auto& entry : matrix.value("entries", json::array())) {
@@ -306,8 +308,12 @@ static void run_simulation(sg4::Engine& engine, const json& input,
             if (pair_matched) {
               if (!matched)
                 priority = factor;
-              else if (interference.model == "pairwise-slowdown")
-                priority = std::max(priority, factor);
+              else if (interference.model == "pairwise-slowdown") {
+                if (interference.aggregation == "additive-excess")
+                  priority += factor - 1.0;
+                else
+                  priority = std::max(priority, factor);
+              }
               else
                 priority = std::min(priority, factor);
               matched = true;

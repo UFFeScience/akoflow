@@ -178,6 +178,38 @@ func TestPRISMTimeIsEvaluatedIndependentlyFromCanonicalHEFT(t *testing.T) {
 	assertCompletePlan(t, prismSink.plans[0], request)
 }
 
+func TestPRISMPlansWithPartialKnowledgeWhileExecutionTruthRemainsExternal(t *testing.T) {
+	request := planningRequestFixture()
+	request.Interference = &domain.InterferenceMatrix{
+		SchemaVersion: "3", Model: "pairwise-slowdown", Aggregation: "maximum",
+		Groups: []domain.InterferenceGroup{{
+			ID: "truth", ActivityIDs: []string{"t1", "t2", "t3"}, SlowdownFactor: 1.5,
+		}},
+	}
+	request.InterferenceKnowledge = &domain.InterferenceMatrix{
+		SchemaVersion: "3", Model: "pairwise-slowdown", Aggregation: "maximum",
+	}
+	sink := &testSink{}
+	if err := NewPRISMTime().Schedule(
+		context.Background(), request,
+		map[string]any{"beamWidth": 20, "optionCount": 2}, nil, sink,
+	); err != nil {
+		t.Fatalf("schedule PRISM with partial knowledge: %v", err)
+	}
+	if len(sink.plans) == 0 {
+		t.Fatal("expected a PRISM plan")
+	}
+	if aware, _ := sink.plans[0].Metadata["interferenceAware"].(bool); aware {
+		t.Fatal("zero-percent knowledge must be reported as interference unaware")
+	}
+	if execution, _ := sink.plans[0].Metadata["executionInterference"].(bool); !execution {
+		t.Fatal("execution truth must remain present when planner knowledge is empty")
+	}
+	if request.Interference == nil || len(request.Interference.Groups) != 1 {
+		t.Fatal("scheduling mutated execution interference truth")
+	}
+}
+
 func TestPRISMReturnsBestEffortAnchorWhenSLAPrunesEverySearchState(t *testing.T) {
 	request := planningRequestFixture()
 	request.DeadlineSeconds = 0.001

@@ -23,6 +23,22 @@ func TestNormalizePairwiseSlowdownMatrix(t *testing.T) {
 	}
 }
 
+func TestNormalizePairwiseSlowdownAdditiveExcess(t *testing.T) {
+	workflow := domain.WorkflowVersion{ID: "workflow", Activities: []domain.Activity{{ID: "a"}, {ID: "b"}}}
+	matrix, err := normalizeInterferenceMatrix(&domain.InterferenceMatrix{
+		SchemaVersion: "4", Model: "pairwise-slowdown", Aggregation: "additive-excess",
+		Entries: []domain.InterferenceEntry{{
+			AffectedActivityID: "a", InterferingActivityID: "b", SlowdownFactor: 2,
+		}},
+	}, workflow)
+	if err != nil {
+		t.Fatalf("normalize additive slowdown matrix: %v", err)
+	}
+	if matrix.Aggregation != "additive-excess" {
+		t.Fatalf("expected additive-excess aggregation, got %q", matrix.Aggregation)
+	}
+}
+
 func TestNormalizePairwiseSlowdownRejectsSpeedup(t *testing.T) {
 	workflow := domain.WorkflowVersion{ID: "workflow", Activities: []domain.Activity{{ID: "a"}, {ID: "b"}}}
 	_, err := normalizeInterferenceMatrix(&domain.InterferenceMatrix{

@@ -77,6 +77,20 @@ func (s *Coordinator) Create(
 		}
 		session.Configuration[interferenceConfigurationKey] = interference
 	}
+	knowledge, err := decodeInterferenceMatrix(session.Configuration[interferenceKnowledgeConfigurationKey])
+	if err != nil {
+		return nil, fmt.Errorf("decode interference knowledge: %w", err)
+	}
+	knowledge, err = normalizeInterferenceMatrix(knowledge, *workflow)
+	if err != nil {
+		return nil, fmt.Errorf("normalize interference knowledge: %w", err)
+	}
+	if knowledge != nil {
+		if interference == nil {
+			return nil, fmt.Errorf("interference knowledge requires an execution interference matrix")
+		}
+		session.Configuration[interferenceKnowledgeConfigurationKey] = knowledge
+	}
 	scope, err := s.Scopes.FindScope(ctx, session.ExecutionScopeID)
 	if err != nil || scope == nil {
 		if err == nil {
@@ -402,16 +416,21 @@ func (s *Coordinator) buildRequest(
 	if err != nil {
 		return domain.PlanningRequest{}, err
 	}
+	knowledge, err := decodeInterferenceMatrix(session.Configuration[interferenceKnowledgeConfigurationKey])
+	if err != nil {
+		return domain.PlanningRequest{}, fmt.Errorf("decode interference knowledge: %w", err)
+	}
 	return domain.PlanningRequest{
-		Workflow:         *workflow,
-		ExecutionScope:   *scope,
-		Environments:     environments,
-		Resources:        resources,
-		NetworkTopology:  *topology,
-		ActivityProfiles: profiles,
-		DeadlineSeconds:  session.DeadlineSeconds,
-		Budget:           session.Budget,
-		Interference:     interference,
+		Workflow:              *workflow,
+		ExecutionScope:        *scope,
+		Environments:          environments,
+		Resources:             resources,
+		NetworkTopology:       *topology,
+		ActivityProfiles:      profiles,
+		DeadlineSeconds:       session.DeadlineSeconds,
+		Budget:                session.Budget,
+		Interference:          interference,
+		InterferenceKnowledge: knowledge,
 	}, nil
 }
 

@@ -40,6 +40,9 @@ func (p PRISM) Schedule(
 	sink ports.CandidateSink,
 ) error {
 	searchRequest := request
+	if request.InterferenceKnowledge != nil {
+		searchRequest.Interference = request.InterferenceKnowledge
+	}
 	if aware, exists := configuration["interferenceAware"].(bool); exists && !aware {
 		// Keep the immutable session matrix on the candidate sink so execution
 		// still suffers interference, but hide it from this planner run.

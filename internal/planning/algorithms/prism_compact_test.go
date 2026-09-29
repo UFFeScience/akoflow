@@ -228,6 +228,44 @@ func TestDetailedPRISMEvaluatorAppliesPairwiseSlowdown(t *testing.T) {
 	}
 }
 
+func TestDetailedPRISMEvaluatorAddsSlowdownFromEveryActivePair(t *testing.T) {
+	request := domain.PlanningRequest{
+		Workflow: domain.WorkflowVersion{Activities: []domain.Activity{
+			planningActivity("a", 10), planningActivity("b", 10), planningActivity("c", 10),
+		}},
+		ExecutionScope: domain.ExecutionScope{EnvironmentVersionIDs: []string{"environment"}},
+		Resources:      []domain.Resource{planningResource("machine", 3, 1, 0)},
+		Interference: &domain.InterferenceMatrix{
+			SchemaVersion: "4", Model: "pairwise-slowdown", Aggregation: "additive-excess",
+			Groups: []domain.InterferenceGroup{{
+				ID: "mproject", ActivityIDs: []string{"a", "b", "c"}, SlowdownFactor: 2,
+			}},
+		},
+	}
+	search, err := newCompactPRISMContext(request, nil)
+	if err != nil {
+		t.Fatalf("build compact context: %v", err)
+	}
+	assignments := []domain.PlanAssignment{
+		{ActivityID: "a", ResourceID: "machine", CoreID: "machine-core-1", PredictedRuntimeSeconds: 10},
+		{ActivityID: "b", ResourceID: "machine", CoreID: "machine-core-2", PredictedRuntimeSeconds: 10},
+		{ActivityID: "c", ResourceID: "machine", CoreID: "machine-core-3", PredictedRuntimeSeconds: 10},
+	}
+	state := compactPRISMStateFromEvaluation(compactPRISMState{}, assignments, 0, 0)
+	evaluated, err := evaluateCompleteCompactPRISMState(search, state)
+	if err != nil {
+		t.Fatalf("evaluate additive candidate: %v", err)
+	}
+	if math.Abs(evaluated.makespan-30) > 1e-6 {
+		t.Fatalf("expected two active peers to produce 3x slowdown and 30s makespan, got %.2f", evaluated.makespan)
+	}
+	for _, assignment := range compactPRISMAssignments(search, evaluated) {
+		if math.Abs(assignment.PredictedRuntimeSeconds-30) > 1e-6 {
+			t.Fatalf("activity %s runtime got %.2f, want 30", assignment.ActivityID, assignment.PredictedRuntimeSeconds)
+		}
+	}
+}
+
 func TestDetailedPRISMEvaluatorAppliesActivityGroupSlowdown(t *testing.T) {
 	request := domain.PlanningRequest{
 		Workflow: domain.WorkflowVersion{Activities: []domain.Activity{
@@ -265,6 +303,171 @@ func TestDetailedPRISMEvaluatorAppliesActivityGroupSlowdown(t *testing.T) {
 		if math.Abs(assignment.PredictedRuntimeSeconds-want) > 1e-6 {
 			t.Fatalf("activity %s runtime got %.2f, want %.2f", assignment.ActivityID, assignment.PredictedRuntimeSeconds, want)
 		}
+	}
+}
+
+func TestCompactPRISMKeepsProfitableInterferenceOverlap(t *testing.T) {
+	request := domain.PlanningRequest{
+		Workflow: domain.WorkflowVersion{Activities: []domain.Activity{
+			planningActivity("a", 10), planningActivity("b", 10),
+		}},
+		ExecutionScope: domain.ExecutionScope{EnvironmentVersionIDs: []string{"environment"}},
+		Resources:      []domain.Resource{planningResource("machine", 2, 1, 0)},
+		Interference: &domain.InterferenceMatrix{
+			SchemaVersion: "3", Model: "pairwise-slowdown", Aggregation: "maximum",
+			Groups: []domain.InterferenceGroup{{
+				ID: "selected", ActivityIDs: []string{"a", "b"}, SlowdownFactor: 1.5,
+			}},
+		},
+	}
+	search, err := newCompactPRISMContext(request, nil)
+	if err != nil {
+		t.Fatalf("build compact context: %v", err)
+	}
+	state := initialCompactPRISMState(search)
+	state = compactPRISMPlace(search, state, search.activityOrdinal["a"], 0, 0, true)
+	alternatives := compactPRISMPlacePreparedAlternatives(
+		search, state, search.activityOrdinal["b"], 0, 1, true,
+		compactPRISMPrepareFanIn(search, state, search.activityOrdinal["b"]),
+	)
+	if len(alternatives) != 2 {
+		t.Fatalf("expected overlap and wait alternatives, got %d", len(alternatives))
+	}
+	if math.Abs(alternatives[0].makespan-15) > 1e-9 {
+		t.Fatalf("expected profitable 1.5x overlap to finish at 15s, got %.2f", alternatives[0].makespan)
+	}
+	if math.Abs(alternatives[1].makespan-20) > 1e-9 {
+		t.Fatalf("expected wait alternative to finish at 20s, got %.2f", alternatives[1].makespan)
+	}
+	selected := selectCompactPRISMBeam(alternatives, 1, "time")
+	if math.Abs(selected[0].makespan-15) > 1e-9 {
+		t.Fatalf("expected time objective to preserve profitable overlap, got %.2f", selected[0].makespan)
+	}
+}
+
+func TestCompactPRISMWaitsWhenInterferenceCostsMoreThanSerialization(t *testing.T) {
+	request := domain.PlanningRequest{
+		Workflow: domain.WorkflowVersion{Activities: []domain.Activity{
+			planningActivity("a", 10), planningActivity("b", 10),
+		}},
+		ExecutionScope: domain.ExecutionScope{EnvironmentVersionIDs: []string{"environment"}},
+		Resources:      []domain.Resource{planningResource("machine", 2, 1, 0)},
+		Interference: &domain.InterferenceMatrix{
+			SchemaVersion: "2", Model: "pairwise-slowdown", Aggregation: "maximum",
+			Rules: []domain.InterferenceRule{
+				{AffectedActivityTypeID: "activity-type", InterferingActivityTypeID: "activity-type", SlowdownFactor: 3},
+			},
+		},
+	}
+	for index := range request.Workflow.Activities {
+		request.Workflow.Activities[index].ActivityTypeID = "activity-type"
+	}
+	search, err := newCompactPRISMContext(request, nil)
+	if err != nil {
+		t.Fatalf("build compact context: %v", err)
+	}
+	state := initialCompactPRISMState(search)
+	state = compactPRISMPlace(search, state, search.activityOrdinal["a"], 0, 0, true)
+	alternatives := compactPRISMPlacePreparedAlternatives(
+		search, state, search.activityOrdinal["b"], 0, 1, true,
+		compactPRISMPrepareFanIn(search, state, search.activityOrdinal["b"]),
+	)
+	if len(alternatives) != 2 {
+		t.Fatalf("expected overlap and wait alternatives, got %d", len(alternatives))
+	}
+	if math.Abs(alternatives[0].makespan-30) > 1e-9 {
+		t.Fatalf("expected 3x overlap to finish at 30s, got %.2f", alternatives[0].makespan)
+	}
+	selected := selectCompactPRISMBeam(alternatives, 1, "time")
+	if math.Abs(selected[0].makespan-20) > 1e-9 {
+		t.Fatalf("expected time objective to serialize at 20s, got %.2f", selected[0].makespan)
+	}
+}
+
+func TestCompactPRISMRoutesAroundExpensiveInterference(t *testing.T) {
+	request := domain.PlanningRequest{
+		Workflow: domain.WorkflowVersion{Activities: []domain.Activity{
+			planningActivity("a", 10), planningActivity("b", 10),
+		}},
+		ExecutionScope: domain.ExecutionScope{EnvironmentVersionIDs: []string{"environment"}},
+		Resources: []domain.Resource{
+			planningResource("fast-shared", 2, 1, 0),
+			planningResource("isolated", 1, 0.8, 0),
+		},
+		Interference: &domain.InterferenceMatrix{
+			SchemaVersion: "3", Model: "pairwise-slowdown", Aggregation: "maximum",
+			Groups: []domain.InterferenceGroup{{
+				ID: "selected", ActivityIDs: []string{"a", "b"}, SlowdownFactor: 3,
+			}},
+		},
+	}
+	search, err := newCompactPRISMContext(request, map[string]any{"beamWidth": 1})
+	if err != nil {
+		t.Fatalf("build compact context: %v", err)
+	}
+	state := initialCompactPRISMState(search)
+	state = compactPRISMPlace(search, state, search.activityOrdinal["a"], 0, 0, true)
+	children := expandCompactPRISMState(search, state, 1)
+	selected := selectCompactPRISMBeam(children, 1, "time")
+	assignments := compactPRISMAssignments(search, selected[0])
+	if len(assignments) != 2 {
+		t.Fatalf("expected two assignments, got %d", len(assignments))
+	}
+	for _, assignment := range assignments {
+		if assignment.ActivityID == "b" && assignment.ResourceID != "isolated" {
+			t.Fatalf("expected b to route around expensive interference, got resource %q", assignment.ResourceID)
+		}
+	}
+	if math.Abs(selected[0].makespan-12.5) > 1e-9 {
+		t.Fatalf("expected isolated route to finish at 12.5s, got %.2f", selected[0].makespan)
+	}
+}
+
+func TestCompactPRISMInterferenceKnowledgeChangesPlacement(t *testing.T) {
+	request := domain.PlanningRequest{
+		Workflow: domain.WorkflowVersion{Activities: []domain.Activity{
+			planningActivity("a", 10), planningActivity("b", 10),
+		}},
+		ExecutionScope: domain.ExecutionScope{EnvironmentVersionIDs: []string{"environment"}},
+		Resources: []domain.Resource{
+			planningResource("fast-shared", 2, 1, 0),
+			planningResource("isolated", 1, 0.8, 0),
+		},
+		Interference: &domain.InterferenceMatrix{
+			SchemaVersion: "3", Model: "pairwise-slowdown", Aggregation: "maximum",
+			Groups: []domain.InterferenceGroup{{
+				ID: "selected", ActivityIDs: []string{"a", "b"}, SlowdownFactor: 3,
+			}},
+		},
+	}
+
+	placementOfB := func(t *testing.T, knowledge *domain.InterferenceMatrix) (string, float64) {
+		t.Helper()
+		plannerRequest := request
+		plannerRequest.Interference = knowledge
+		search, err := newCompactPRISMContext(plannerRequest, map[string]any{"beamWidth": 1})
+		if err != nil {
+			t.Fatalf("build compact context: %v", err)
+		}
+		state := initialCompactPRISMState(search)
+		state = compactPRISMPlace(search, state, search.activityOrdinal["a"], 0, 0, true)
+		selected := selectCompactPRISMBeam(expandCompactPRISMState(search, state, 1), 1, "time")[0]
+		for _, assignment := range compactPRISMAssignments(search, selected) {
+			if assignment.ActivityID == "b" {
+				return assignment.ResourceID, selected.makespan
+			}
+		}
+		t.Fatal("missing assignment for b")
+		return "", 0
+	}
+
+	blindResource, blindMakespan := placementOfB(t, nil)
+	awareResource, awareMakespan := placementOfB(t, request.Interference)
+	if blindResource != "fast-shared" || math.Abs(blindMakespan-10) > 1e-9 {
+		t.Fatalf("blind placement = %q at %.2fs; want fast-shared at 10s", blindResource, blindMakespan)
+	}
+	if awareResource != "isolated" || math.Abs(awareMakespan-12.5) > 1e-9 {
+		t.Fatalf("aware placement = %q at %.2fs; want isolated at 12.5s", awareResource, awareMakespan)
 	}
 }
 
@@ -340,6 +543,41 @@ func TestPRISMCanIgnoreInterferenceWhileExecutionMatrixRemainsExternal(t *testin
 	}
 	if request.Interference == nil {
 		t.Fatal("expected original execution request to retain its interference matrix")
+	}
+}
+
+func TestPRISMUsesKnowledgeMatrixWithoutReplacingExecutionTruth(t *testing.T) {
+	activityA := planningActivity("a", 10)
+	activityB := planningActivity("b", 10)
+	truth := &domain.InterferenceMatrix{
+		SchemaVersion: "3", Model: "pairwise-slowdown", Aggregation: "maximum",
+		Groups: []domain.InterferenceGroup{{
+			ID: "truth", ActivityIDs: []string{"a", "b"}, SlowdownFactor: 1.5,
+		}},
+	}
+	knowledge := &domain.InterferenceMatrix{
+		SchemaVersion: "3", Model: "pairwise-slowdown", Aggregation: "maximum",
+		Groups: []domain.InterferenceGroup{},
+	}
+	request := domain.PlanningRequest{
+		Workflow:              domain.WorkflowVersion{Activities: []domain.Activity{activityA, activityB}},
+		ExecutionScope:        domain.ExecutionScope{EnvironmentVersionIDs: []string{"environment"}},
+		Resources:             []domain.Resource{planningResource("machine", 2, 1, 0)},
+		Interference:          truth,
+		InterferenceKnowledge: knowledge,
+	}
+
+	searchRequest := request
+	searchRequest.Interference = request.InterferenceKnowledge
+	search, err := newCompactPRISMContext(searchRequest, nil)
+	if err != nil {
+		t.Fatalf("build compact context: %v", err)
+	}
+	if search.request.Interference == truth {
+		t.Fatal("planner received execution truth instead of the knowledge snapshot")
+	}
+	if request.Interference != truth {
+		t.Fatal("execution truth was replaced while preparing planner knowledge")
 	}
 }
 
@@ -642,6 +880,34 @@ func TestCompactPRISMBeamPreservesConsolidatedLocalityState(t *testing.T) {
 	}
 	if !found {
 		t.Fatalf("expected consolidated state to survive the locality lane: %#v", got)
+	}
+}
+
+func TestCompactPRISMBeamPreservesResourceBalancedState(t *testing.T) {
+	states := make([]compactPRISMState, 20)
+	for index := range states {
+		states[index] = compactPRISMState{
+			projectedMakespan:   10 + float64(index)/10,
+			projectedCost:       1,
+			usedResourceCount:   1,
+			resourceAssignments: []uint32{10, 0, 0, 0},
+			signature:           uint64(index + 1),
+		}
+	}
+	// A mixed placement can look worse before the extra resource capacity has
+	// repaid boot, transfer, or slower-core costs. It must survive long enough
+	// for the complete interference-aware schedule to be evaluated.
+	states[19].projectedMakespan = 50
+	states[19].usedResourceCount = 4
+	states[19].resourceAssignments = []uint32{3, 3, 2, 2}
+
+	got := selectCompactPRISMBeam(states, 10, "time")
+	found := false
+	for _, state := range got {
+		found = found || state.signature == states[19].signature
+	}
+	if !found {
+		t.Fatalf("expected balanced state to survive the diversity lane: %#v", got)
 	}
 }
 

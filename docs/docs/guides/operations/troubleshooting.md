@@ -12,6 +12,32 @@ Start at the first failing boundary. Desktop is a client of the Engine API; the 
 
 <img src={useBaseUrl('/img/architecture/troubleshooting-boundary.svg')} alt="Troubleshoot from the Desktop through the Engine API, credentials and connections, then the runtime or provider and workload or data." />
 
+Use the decision tree below to pick the section that matches the first failing boundary; the numbered headings later in this page correspond to the branches.
+
+```mermaid
+flowchart TD
+  Start([Symptom appears]) --> Q1{Desktop or API?}
+  Q1 -->|Desktop does not reach Overview| S1[1. Engine and prerequisites]
+  Q1 -->|API call returns 401 or 403| S2[2. Authentication]
+  Q1 -->|Write returns 423 Locked| S3[3. Read-only mode]
+  Q1 -->|Runtime / storage error| Q4{Which boundary?}
+  Q4 -->|Saved connection or discovery| S4[4. Connection, health, discovery]
+  Q4 -->|Missing record in search or feed| S5[5. Search and missing data]
+  Q4 -->|Interactive terminal fails| S6[6. Terminal access]
+  Q4 -->|Storage disabled or read-only| S7[7. Storage]
+  Q4 -->|Plan or run fails| S8[8. Planning and execution]
+  Q4 -->|Import or activation error| S9[9. Instance import or switching]
+  S1 --> Collect[10. Gather evidence safely]
+  S2 --> Collect
+  S3 --> Collect
+  S4 --> Collect
+  S5 --> Collect
+  S6 --> Collect
+  S7 --> Collect
+  S8 --> Collect
+  S9 --> Collect
+```
+
 Set the endpoint and token before using the checks below:
 
 ```bash

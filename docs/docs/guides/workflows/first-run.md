@@ -39,6 +39,37 @@ Continue only when `server.available` is `true`. For this tutorial, the SimGrid 
 The files use stable IDs such as `simulation-example` and `simulation-example-run-v1`. Run them against a fresh instance. If those IDs already exist, use another instance or change the IDs consistently across all six files; repeating only part of the sequence returns `422` or a foreign-key error.
 :::
 
+## The API flow at a glance
+
+The six requests are submitted in a fixed order because every later object references an earlier ID. The diagram below shows the same flow that the rest of this tutorial walks through step by step.
+
+```mermaid
+sequenceDiagram
+  participant U as Reader
+  participant API as Engine API
+  participant DB as Persisted catalog
+  participant SIM as SimGrid runner
+  U->>API: POST /environments/ (environment.yaml)
+  API->>DB: persist environment, version, runtimes, resources
+  U->>API: POST /execution-scopes/ (scope.yaml)
+  API->>DB: persist scope referencing environment version
+  U->>API: POST /network-topologies/ (topology.yaml)
+  API->>DB: persist directed links between resources
+  U->>API: POST /workflow-definitions/ (workflow.yaml)
+  API->>DB: persist immutable workflow version
+  U->>API: POST /schedule-plans/ (plan-request.yaml)
+  API->>DB: persist selected plan assignments
+  U->>API: POST /execution-runs/ (execution-request.yaml)
+  API->>DB: queue run with snapshot of inputs
+  API->>SIM: dispatch simulation
+  SIM-->>API: activity and transfer events
+  API->>DB: persist task attempts, transfers, manifests
+  U->>API: GET /execution-runs/{runId}/ (poll)
+  API-->>U: completed run projection
+```
+
+The persistence arrows describe durable records; the dispatch arrow is the asynchronous command that the supervisor carries out. The reader only waits on the final `GET` until the run reaches a terminal status.
+
 ## Understand what will run
 
 The versioned bundle lives in [`examples/simulation`](https://github.com/UFFeScience/akoflow/tree/main/examples/simulation):

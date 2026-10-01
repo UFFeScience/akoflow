@@ -12,6 +12,37 @@ AkôFlow exposes two complementary records:
 
 Use provenance to answer “how was this result produced?” Use audit to answer “what operation happened, when, to which target, and with what outcome?”
 
+## How the two records are produced
+
+```mermaid
+flowchart LR
+  subgraph Production
+    WF[Workflow execution] --> Tasks[Task attempts]
+    WF --> Transfers[Data transfers]
+    WF --> Artifacts[Artifact manifests]
+    Plan[Schedule plan] --> Pred[Plan predictions]
+    Supervisor[Execution supervisor] --> Tasks
+    Supervisor --> Transfers
+    Supervisor --> Artifacts
+  end
+  subgraph Records
+    Tasks --> Prov[Provenance entities]
+    Transfers --> Prov
+    Artifacts --> Prov
+    Pred --> Prov
+    Ops[Connection / discovery / console / credential events] --> Audit[Audit events]
+    Supervisor --> Audit
+  end
+  subgraph Surfaces
+    Prov --> Explore[Explore catalog]
+    Prov --> Lineage[Lineage graph]
+    Prov --> SQL[Read-only SQL]
+    Audit --> AuditList[Audit timeline]
+  end
+```
+
+The diagram highlights a deliberate separation: provenance is grounded in the workflow execution and its plan, while audit is grounded in operational events. Provenance and audit are not interchangeable views of one log; they answer different questions and are stored independently.
+
 ## Explore provenance in Desktop
 
 Open **Provenance**. The **Explore** tab loads a server-defined entity catalog. Select an entity, search across its safe projection, apply a field filter, sort a column, and page through the result. The current page can be exported as CSV or JSON.

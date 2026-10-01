@@ -1,18 +1,18 @@
 ---
-title: Use the interactive console
+title: Interactive console and commands
 description: Run one-shot remote commands and open streamed terminal sessions on AkôFlow resources.
 ---
 
 import {ConnectionPath, TerminalPanelGuide} from '@site/src/components/InfrastructureWalkthrough';
 
-# Use the interactive console
+# Interactive console and commands
 
-Use the console to inspect a connected resource or run a short diagnostic command. Choose the action that fits the task:
+AkôFlow exposes two related mechanisms:
 
 - a **console command** runs one command, records stdout, stderr and exit status, and returns a durable command record;
-- an **interactive session** opens a remote terminal for a longer conversation.
+- an **interactive session** opens a remote terminal owned by the Engine and streams terminal bytes over WebSocket.
 
-Both require a resource configured for interactive access and a working connection. AkôFlow records these operations in the audit trail.
+Both resolve the selected resource to a runtime and connection. They are operational access paths and produce audit events.
 
 <ConnectionPath />
 
@@ -26,43 +26,43 @@ Both require a resource configured for interactive access and a working connecti
 
 <TerminalPanelGuide />
 
-Switching tabs keeps the remote session open. Use **Close session** when you finish. If the active stream disappears unexpectedly, Desktop requests closure; check the session list before opening a replacement.
+The panel polls active sessions every three seconds. Switching tabs closes only the local WebSocket for the previous view; it does not intentionally close that remote session. If the active stream disappears unexpectedly, Desktop requests session closure so the remote terminal is not left consuming resources.
 
 ### When the terminal action is unavailable
 
-The action appears only for a resource configured for interactive access with a usable connection and credential. Check the resource and connection health first. For an HPC cluster, select the login node rather than the cluster or a batch-only partition. For a proxied site, use the connection with the proxy route.
+The action appears only after AkôFlow can resolve all three layers: a resource, a runtime binding that supports interactive execution, and a usable connection/credential. Check the resource health and binding first. For an HPC cluster, select the login node rather than an abstract cluster or a batch-only partition. For a proxied site, the daemon must use the connection that contains the proxy route.
 
 ## Open and manage a session through the API
 
-Complete [API connection setup](/docs/tutorials/api-access) first.
-Choose an interactive-capable resource in Desktop and use its saved ID below. Keep these commands in the same Bash session.
-
 ```bash
-read -r -p 'Interactive resource ID: ' AKOFLOW_CONSOLE_RESOURCE_ID || exit 1
-[ -n "$AKOFLOW_CONSOLE_RESOURCE_ID" ] || exit 1
+export AKOFLOW_API_URL='http://127.0.0.1:<daemon-port>/akoflow-api'
+export AKOFLOW_API_TOKEN='<daemon-token>'
 
-jq -n --arg id "$AKOFLOW_CONSOLE_RESOURCE_ID" '{resourceId:$id}' | \
-  curl --fail-with-body \
-    -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
-    -H 'Content-Type: application/json' \
-    --data-binary @- "$AKOFLOW_API_URL/console-sessions/" \
-    -o console-session.json || exit 1
-
-SESSION_ID=$(jq -er '.id' console-session.json) || exit 1
+curl --fail-with-body \
+  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  -H 'Content-Type: application/json' \
+  -X POST "$AKOFLOW_API_URL/console-sessions/" \
+  -d '{"resourceId":"hpc-login","actorId":"researcher@example.org"}'
 ```
 
-A successful creation returns a `connected` session with its resolved `runtimeId` and `connectionId`. The command saves that response in `console-session.json` and sets `SESSION_ID` for the following requests. `resourceId` is required. Creation returns `422` when resolution or terminal startup fails and `503` when interactive console support is unavailable. Session records can later be `closed` or `failed`.
+The created session has `starting`, `connected`, `closed`, or `failed` status and returns the resolved `runtimeId` and `connectionId`. `resourceId` is required. Creation returns `422` when resolution or terminal startup fails and `503` when interactive console support is unavailable.
 
-List sessions while you work:
+List and close sessions:
 
 ```bash
-curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   "$AKOFLOW_API_URL/console-sessions/"
+
+curl --fail-with-body \
+  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  -X DELETE "$AKOFLOW_API_URL/console-sessions/$SESSION_ID/"
 ```
+
+Closure succeeds with `204 No Content`; an unknown session returns `404`.
 
 ### Stream protocol
 
-Connect a WebSocket client to the daemon, replacing the port and session ID with your values (`SESSION_ID` holds the ID returned above):
+Connect a WebSocket client to:
 
 ```text
 ws://127.0.0.1:<daemon-port>/akoflow-api/console-sessions/<session-id>/stream/
@@ -87,36 +87,28 @@ curl --fail-with-body \
 
 The response is UTF-8 text. A missing session log returns `404`; unavailable console support returns `503`.
 
-Close the session when finished:
-
-```bash
-curl --fail-with-body -X DELETE \
-  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
-  "$AKOFLOW_API_URL/console-sessions/$SESSION_ID/"
-```
-
-Closure succeeds with `204 No Content`; an unknown session returns `404`.
-
 ## Run a one-shot command
 
-The current Desktop focuses on the interactive terminal. Use the same resource ID for a repeatable one-shot diagnostic through the API:
+The current Desktop focuses on the interactive terminal. Use the HTTP API for repeatable one-shot diagnostics:
 
 ```bash
-jq -n --arg id "$AKOFLOW_CONSOLE_RESOURCE_ID" '{
-  resourceId:$id,
-  command:"hostname && uname -a",
-  workingDirectory:"/tmp",
-  environment:{LC_ALL:"C"},
-  cpuCores:1,
-  memoryBytes:268435456,
-  timeoutSeconds:30
-}' | curl --fail-with-body \
+curl --fail-with-body \
   -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -H 'Content-Type: application/json' \
-  --data-binary @- "$AKOFLOW_API_URL/console-commands/"
+  -X POST "$AKOFLOW_API_URL/console-commands/" \
+  -d '{
+    "resourceId":"hpc-login",
+    "actorId":"researcher@example.org",
+    "command":"hostname && uname -a",
+    "workingDirectory":"/tmp",
+    "environment":{"LC_ALL":"C"},
+    "cpuCores":1,
+    "memoryBytes":268435456,
+    "timeoutSeconds":30
+  }'
 ```
 
-`resourceId` and `command` are required. The default timeout is 30 seconds and the maximum is 3,600 seconds. The request waits for the runner and returns a `completed` or `failed` record with `stdout`, `stderr`, `exitCode`, `failure`, and provider `externalId` when available. Check the record's `status`; HTTP `201 Created` alone does not mean the command succeeded.
+`resourceId` and `command` are required. The default timeout is 30 seconds and the maximum is 3,600 seconds. The returned record has `running`, `completed`, or `failed` status and may include `stdout`, `stderr`, `exitCode`, `failure` and the provider `externalId`.
 
 List recent commands:
 
@@ -127,12 +119,12 @@ curl --get --fail-with-body \
   "$AKOFLOW_API_URL/console-commands/"
 ```
 
-Command creation returns `422` for an unknown or unbound resource, missing input, or an excessive timeout. A runner failure is recorded as `status: failed` in the `201 Created` response. The route returns `503` if console commands are unavailable.
+Command creation returns `422` for an unknown/unbound resource, invalid input, an excessive timeout, or runner failure. It returns `503` if console commands are unavailable.
 
 ## Access and safety
 
 - Authorize the Engine-managed public key on every SSH hop before opening a session.
-- Select a resource configured for interactive access with a working connection. An inventory record alone is not sufficient.
+- Select a resource with a usable runtime binding and connection. A resource existing in inventory is not by itself sufficient.
 - Imported instance snapshots are read-only; opening, writing to, or closing a session is blocked with `423 Locked`.
 - Terminal logs may contain command output and secrets printed by programs. Treat exported logs as sensitive operational data.
 - Close sessions when finished; closing the detail page alone does not close a daemon-owned session.

@@ -1,15 +1,13 @@
 ---
 title: Connect an HPC and SLURM cluster
-description: Configure SSH access, discover SLURM resources, and prepare a small site-approved batch validation.
+description: Configure a proxy-aware SSH connection, discover a SLURM cluster, model partitions and storage, and validate a safe batch submission.
 ---
 
 # Connect an HPC and SLURM cluster
 
-This guide is for an HPC operator or researcher with an approved SLURM account. AkôFlow connects to the **login node** over SSH and submits workflow activities with `sbatch`. For a guided first registration, start with the [connection tutorial](/docs/tutorials/register-hpc).
+This how-to is for an HPC operator or researcher who has an approved account on a SLURM cluster. It connects AkôFlow to the **login node** over SSH and submits workflow activities through `sbatch`. For a safe adapter-only check before involving a cluster, use the [SLURM batch fixture](../../showcase/slurm-local-fixture). The fixture validates AkôFlow's local batch-script, sentinels, and artifact path; it is not a SLURM scheduler emulator and does not validate SSH, allocation, accounting, or site policy.
 
-Use a SLURM environment for work governed by partitions, accounts, QoS, and node allocation. Keep ordinary batch work off the login node. To check the local batch-submission path without a cluster, use the [SLURM batch fixture](/docs/showcase/slurm-local-fixture); it does not verify SSH, allocation, accounting, or site policy. For an infrastructure simulation, use [SimGrid](/docs/guides/infrastructure/simgrid).
-
-The YAML blocks below are excerpts for discussion. Use the linked versioned files as a starting catalog, then supply your site's connection, paths, permissions, and scheduler settings. An institutional cluster run has not been verified by this documentation.
+Use a SLURM environment for batch work governed by SLURM partitions, accounts, QoS, and node allocation. Do not model a login node as a high-capacity compute resource or send ordinary batch work directly to it. For a no-remote-infrastructure experiment, use [SimGrid](./simgrid) instead.
 
 ## Prerequisites
 
@@ -21,19 +19,19 @@ The YAML blocks below are excerpts for discussion. Use the linked versioned file
 
 ## 1. Create the SSH credential and proxy-aware connection
 
-Create or import a service key using [Manage SSH service keys](/docs/guides/operations/credentials-and-ssh), then authorize its public key on the login node and any gateway. Store the returned `credentialRef` in the connection; never paste the private key into an environment YAML.
+Create or import a service key using [Credentials and SSH service keys](../operations/credentials-and-ssh), then authorize its public key on the login node and any gateway. Store the returned `credentialRef` in the connection; never paste the private key into an environment YAML.
 
-For a remote cluster, use `type: ssh`. Put the SSH port in `configuration.port` and the login host name in `endpoint`; AkôFlow uses this connection for health checks, discovery, runs, artifacts, and the terminal. Set the fields below in the [HPC registration template](/docs/tutorials/register-hpc), using the credential reference returned by key registration.
+The SLURM runtime accepts SSH, agent, or local connections. A remote HPC cluster normally uses `type: ssh`. The SSH port belongs in `configuration.port`; keep `endpoint` as the host name so the same record is usable by health checks, discovery, the scheduler adapter, artifact operations, and the interactive terminal.
 
 ```yaml
 connections:
-  - id: research-hpc-connection
+  - id: research-hpc-ssh
     environmentId: research-hpc
     name: Research HPC login node
     type: ssh
     endpoint: login.example.org
     username: researcher
-    credentialRef: REPLACE_WITH_RETURNED_CREDENTIAL_REF
+    credentialRef: file:storage/credentials/ssh/research-hpc
     configuration:
       port: 22
       hostKeyAlias: research-hpc-login
@@ -42,15 +40,25 @@ connections:
       scriptDirectory: /scratch/researcher/akoflow/scripts
 ```
 
-`proxyCommand` is passed to SSH-based paths that use this connection. If the site requires a jump host, configure and test a complete SSH proxy command from the **server host**, not only from Desktop. SSH uses `accept-new` for the connection test: an unknown host key is saved in the configured known-hosts file on first contact, while a changed key is rejected. Verify the login host's fingerprint against the value supplied by your administrator before treating that saved key as trusted. Do the same for each SSH gateway hop.
+`proxyCommand` is passed to every SSH-based path that uses this connection. When the site documents `ProxyJump`, express it as an SSH proxy command—for example, `ssh -J bastion.example.org -W login.example.org:22`—and validate the entire route from the **daemon host**, not only from Desktop. AkôFlow records trusted host keys in the configured known-hosts file; do not disable host-key checking for a production cluster.
 
-In Desktop, add the connection under **Infrastructure → Environments**, assign the managed SSH key, and run the connection health check. For API registration, follow the [complete connection tutorial](/docs/tutorials/register-hpc#using-the-api), which creates and tests the JSON payload before saving the environment. To change a saved connection later, read its current fields before sending a complete `PUT /environment-connections/{connectionId}/` body so unrelated settings remain intact.
+In Desktop, add the connection under **Infrastructure → Environments**, assign the managed SSH key, and run the connection health check. Through the API, update the connection after first reading the environment definition so unrelated connection fields remain intact:
 
-## 2. Describe the SLURM resources
+```bash
+curl --fail-with-body \
+  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  -H 'Content-Type: application/json' \
+  -X PUT "$AKOFLOW_API_URL/environment-connections/research-hpc-ssh/" \
+  --data @research-hpc-connection.json
+```
 
-The [`akoflow-examples/slurm/environment.yaml`](https://github.com/UFFeScience/akoflow-examples/blob/main/slurm/environment.yaml) provides the catalog portion: runtime, cluster, partition, representative compute node, storage resources, and runtime bindings. Add a real connection like the preceding one before submitting it. Confirm that the login node has `schedulable: false` before institutional registration.
+The exact `PUT` body must contain `id`, `environmentId`, `type`, endpoint, username, credential reference, and the connection configuration above.
 
-```yaml title="Runtime and resource excerpt from environment.yaml"
+## 2. Define the SLURM runtime and the infrastructure boundary
+
+The versioned [`examples/slurm/environment.yaml`](https://github.com/UFFeScience/akoflow/blob/main/examples/slurm/environment.yaml) provides the catalog portion: runtime, cluster, partition, representative compute node, storage resources, and runtime bindings. Add a real connection like the preceding one before submitting it.
+
+```yaml title="examples/slurm/environment.yaml"
 runtimes:
   - id: slurm
     driver: slurm
@@ -83,10 +91,10 @@ resources:
     providerId: login
     cpuCores: 1
     cpuCapacity: 1
-    schedulable: false
+    schedulable: true
 ```
 
-Bind the runtime to the partition and compute resources. AkôFlow uses the selected partition's `providerId` for `sbatch`, or `configuration.partition` if that ID is absent. A selected batch `hpc_machine` becomes an `sbatch` node target. The login node in the example has a `direct` execution target; leave it unschedulable for workflow planning unless your site explicitly permits lightweight direct work. Interactive console access does not require scheduling workflow activities there.
+Bind the runtime to the partition and compute resources. The adapter resolves its partition from the selected `hpc_partition` resource's `providerId`, falling back to `configuration.partition`; a selected `hpc_machine` resource becomes an `sbatch` node target. Keep the login node's capacity deliberately small and out of heavy workflow plans. Direct execution is for lightweight approved control or interactive work, not a way to bypass SLURM policy.
 
 For a remote SSH connection, AkôFlow submits the batch script through standard input to `sbatch`; it keeps the audit copy in the configured `scriptDirectory` on the daemon host. Ensure that directory exists and is writable by the daemon. The remote login node does not need that local audit path for stdin submission.
 
@@ -99,7 +107,7 @@ Compare discovery with the initial catalog:
 1. Confirm the intended partition is available and its name has no trailing `*` in the stored `providerId`.
 2. Confirm cores and memory are appropriate for the activities' requests.
 3. Confirm the login host is represented separately from compute nodes.
-4. Record the required scratch, archive, or project path for the compute-allocation probe in the next step.
+4. Confirm the required scratch, archive, or project path is writable and visible from a compute allocation.
 5. Review the discovered transfer capabilities before selecting a staging strategy.
 
 Discovery is inventory evidence, not a reservation. A partition shown as available can still queue a job because of account, QoS, dependency, priority, or resource constraints.
@@ -108,7 +116,7 @@ Discovery is inventory evidence, not a reservation. A partition shown as availab
 
 The example registers a Lustre workspace and an NFS archive separately:
 
-```yaml title="Storage excerpt from environment.yaml"
+```yaml title="examples/slurm/environment.yaml"
 storages:
   - id: slurm-default-lustre
     name: cluster-scratch
@@ -127,13 +135,13 @@ storages:
     shared: true
 ```
 
-These paths must be valid from the allocated compute node, not merely from the login shell. Submit a small site-approved probe that writes a file to the intended workspace and reads it back from a second allocation. Check ownership, quota, purge policy, and the path exposed inside Apptainer before relying on artifacts or inter-activity data. The catalog entries alone do not enable Desktop file browsing; that also needs a configured browser and [approved roots](/docs/guides/infrastructure/storage).
+These paths must be valid from the allocated compute node, not merely from the login shell. Submit a small site-approved probe that writes a file to the intended workspace and reads it back from a second allocation. Check ownership, quota, purge policy, and the path exposed inside Apptainer before relying on artifacts or inter-activity data.
 
 ## 5. Scope, validate, and submit a small real execution
 
 Create an execution scope containing the environment version. The versioned example uses:
 
-```yaml title="akoflow-examples/slurm/scope.yaml"
+```yaml title="examples/slurm/scope.yaml"
 id: example-slurm-v1-scope
 name: Example Slurm scope
 environmentVersionIds:
@@ -144,20 +152,20 @@ In Desktop, choose **Infrastructure → Execution scopes**, select the environme
 
 The recommended validation sequence is:
 
-1. connection health through the configured proxy route, followed by host-key fingerprint verification;
+1. connection health with the configured host key and proxy route;
 2. SLURM discovery and partition review;
 3. a short `sbatch` probe in the intended partition;
 4. a compute-node storage write/read probe;
 5. a minimal Apptainer job when containers are required;
 6. a one-activity AkôFlow run with persisted logs and artifact evidence.
 
-AkôFlow parses `sbatch --parsable` output, uses `sacct` to observe status, and falls back to `squeue` and `scontrol` when accounting is unavailable. A job that disappears from `squeue` is not automatically failed: completed jobs can leave controller memory before accounting catches up. Inspect the activity's persisted log and status-query warning before submitting a replacement or asking a site operator to stop the job.
+AkôFlow parses `sbatch --parsable` output, uses `sacct` to observe status, and falls back to `squeue` and `scontrol` when accounting is unavailable. A job that disappears from `squeue` is not automatically failed: completed jobs can leave controller memory before accounting catches up. Inspect the activity's persisted log and status-query warning before retrying or cancelling it.
 
 ## Queue time, cancellation, and interactive sessions
 
 For SLURM, queue time is the interval after submission before the allocation starts. It is neither transfer time nor container runtime. Inspect the reason shown by `squeue` or `scontrol`: common reasons include `Resources`, `Priority`, `Dependency`, account limits, and `QOSMax*` limits.
 
-The SLURM adapter's internal `Stop` method calls `scancel <job-id>` for a batch job. The current API has no workflow-run cancellation endpoint. If you need to stop a job, follow your site's SLURM procedure; do not delete scheduler-owned files as a substitute.
+Cancelling an active batch activity calls `scancel <job-id>`. Do not delete scheduler-owned files as a substitute for cancellation.
 
 The interactive console uses the same connection and trust route. Selecting a partition starts `srun --partition=<partition> --pty /bin/bash -l`; selecting a compute machine uses `--nodelist=<node>`. Selecting the login node opens a direct SSH shell. Close the console session when finished so AkôFlow can cancel its named interactive allocation.
 
@@ -172,4 +180,4 @@ The interactive console uses the same connection and trust route. Selecting a pa
 | Status looks stale after completion | Check the sentinel/log path and wait for `sacct`; AkôFlow preserves a warning rather than converting missing accounting data into a false failure. |
 | Interactive allocation remains after closing the browser view | Close the AkôFlow console session explicitly; it owns the `srun` allocation and cleanup path. |
 
-After a site-approved run, use [Execute and monitor a workflow](/docs/guides/workflows/executions) to inspect its activity status and evidence. Related setup: [SSH service keys](/docs/guides/operations/credentials-and-ssh), [interactive console and commands](/docs/guides/operations/interactive-console), [execution scopes](/docs/guides/infrastructure/execution-scopes), and [storage](/docs/guides/infrastructure/storage).
+Related material: [Credentials and SSH service keys](../operations/credentials-and-ssh), [interactive console and commands](../operations/interactive-console), [execution scopes](./execution-scopes), and [storage](./storage).

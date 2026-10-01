@@ -9,10 +9,13 @@ The AkôFlow Desktop uses the same API available to automation. Paths in the tab
 
 ## Connect and authenticate
 
-Follow [API connection setup](/docs/tutorials/api-access) to set the base URL and enter the token without putting it in shell history. The base URL includes `/akoflow-api`. Then check a protected catalog:
+Set the API base URL (including `/akoflow-api`) and token in your shell:
 
 ```bash
-curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+export AKOFLOW_API_URL="http://127.0.0.1:8080/akoflow-api"
+export AKOFLOW_API_TOKEN="replace-with-the-configured-token"
+
+curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   "$AKOFLOW_API_URL/environments/"
 ```
 
@@ -28,19 +31,17 @@ Browser origins are controlled by the daemon's allowed-origin configuration. Aut
 - Many collection paths retain a trailing slash; use the route exactly as shown.
 - Successful creates generally return `201 Created`; queued work commonly returns `202 Accepted`; deletes commonly return `204 No Content`.
 - Errors from kernel-wrapped routes use a JSON `error` message. Validation failures commonly return `400` or `422`; missing records return `404`; unavailable capabilities return `503`.
-- An activated archive snapshot is read-only. Requests other than `GET` return `423 Locked`, except instance activation itself.
+- An activated archive snapshot is read-only. Mutating requests return `423 Locked`, except instance activation itself.
 - Export, download, build output, and console stream routes return non-JSON content.
 
 Check daemon and local build capabilities:
 
 ```bash
-curl --fail-with-body \
-  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
-  "${AKOFLOW_API_URL%/akoflow-api}/"
-curl --fail-with-body "$AKOFLOW_API_URL/preflight/"
+curl "${AKOFLOW_API_URL%/akoflow-api}/"
+curl "$AKOFLOW_API_URL/preflight/"
 ```
 
-The authenticated root health check returns `ok`. Public preflight reports server, Docker, and BuildKit availability.
+The root health check returns `ok`. Preflight reports server, Docker, and BuildKit availability.
 
 ## Instance, search, and operations
 
@@ -49,12 +50,12 @@ The authenticated root health check returns `ok`. Public preflight reports serve
 | `GET`, `PUT` | `/instance/` | Read or save installation identity/configuration |
 | `GET` | `/preflight/` | Report daemon, Docker, and BuildKit readiness |
 | `GET` | `/search/` | Global search |
-| `GET` | `/audit-events/` | Filter recorded connection, discovery, and console events |
+| `GET` | `/audit-events/` | Filter operational audit events |
 | `GET` | `/instances/` | List archived instances |
 | `GET` | `/instances/default/export/` | Export the default instance |
 | `POST` | `/instances/import/` | Import an instance archive |
 | `POST` | `/instance-activations/{instanceId}/` | Activate an archived instance |
-| `POST` | `/factory-reset/` | Clear the active catalog and managed Kubernetes tokens; [retained files need separate cleanup](/docs/guides/operations/instance-management#factory-reset) |
+| `POST` | `/factory-reset/` | Reset the active instance |
 | `GET`, `PUT` | `/user-preferences/{clientId}/` | Read or save client preferences |
 
 ## Environments, connections, and credentials
@@ -93,8 +94,6 @@ The authenticated root health check returns `ok`. Public preflight reports serve
 | `POST` | `/machine-configuration-validations/` | Validate playbook YAML |
 | `GET` | `/environments/{environmentId}/cloud-catalog/` | Read cached provider catalog |
 | `POST` | `/environments/{environmentId}/cloud-catalog/refresh/` | Refresh provider catalog |
-
-See [Configure cloud capacity](/docs/guides/infrastructure/cloud-capacity) for target and provisioning steps, and [Machine configurations](/docs/guides/infrastructure/machine-configurations) for the optional Ansible setup.
 
 ## Resources, topology, and execution scopes
 
@@ -147,7 +146,14 @@ See [Configure cloud capacity](/docs/guides/infrastructure/cloud-capacity) for t
 | `GET` | `/planning-sessions/{sessionId}/candidates/{candidateId}/` | Read a candidate |
 | `POST` | `/planning-sessions/{sessionId}/candidates/{candidateId}/select/` | Select a candidate and produce a plan |
 
-For a complete workflow request and the required registration order, use [Workflow definitions](/docs/guides/workflows/definitions) or the [SimGrid first-run tutorial](/docs/guides/workflows/first-run).
+Create a workflow by posting the current workflow definition document:
+
+```bash
+curl -X POST -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  -H "Content-Type: application/json" \
+  --data-binary @workflow.json \
+  "$AKOFLOW_API_URL/workflow-definitions/"
+```
 
 ## Executions
 
@@ -164,7 +170,7 @@ List queries accept endpoint-specific pagination and filters. For execution runs
 |---|---|---|
 | `GET` | `/artifacts/` | List executable artifact versions |
 | `POST` | `/artifacts/docker/` | Register a Docker source and SIF build specification |
-| `GET` | `/artifact-locations/` | List recorded artifact locations and their availability flags |
+| `GET` | `/artifact-locations/` | List verified artifact locations |
 | `GET`, `POST` | `/artifact-materializations/` | List or record materializations (`runId` filters list) |
 | `POST` | `/build-contexts/` | Upload multipart `context`, or register stored metadata |
 | `POST` | `/artifact-builds/` | Create an immutable build specification |
@@ -174,17 +180,20 @@ List queries accept endpoint-specific pagination and filters. For execution runs
 | `GET` | `/build-runs/{runId}/` | Read build-run status and logs |
 | `GET` | `/build-runs/{runId}/output/` | Stream SIF output |
 
-For a build request, see [Build an executable](/docs/guides/data/build-executable). To inspect recorded locations and preparation status, see [Artifact locations](/docs/guides/data/artifact-locations). Storage browsing and file registration are covered in [Browse and manage storage](/docs/guides/infrastructure/storage).
+See [Artifacts, storage, and builds](../guides/data/artifacts.md) for payload examples and lifecycle semantics.
 
 ## Provenance
 
 | Method | Path | Purpose |
 |---|---|---|
+| `GET` | `/provenance/entities/` | List safe entity projections |
+| `GET` | `/provenance/entities/{entity}/` | Search, filter, sort, and page an entity |
 | `GET` | `/provenance/sql/schema/` | Read the queryable schema |
 | `POST` | `/provenance/sql/` | Execute parameterized read-only SQL |
 | `POST` | `/provenance/sql/explain/` | Explain read-only SQL |
+| `GET` | `/provenance/lineage/{entity}/{id}/` | Traverse lineage |
 
-See [Trace a result with provenance](/docs/guides/data/provenance) for query examples.
+See [Provenance and audit](../guides/data/provenance-and-audit.md) for query parameters and examples.
 
 ## Console
 

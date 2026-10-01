@@ -1,17 +1,16 @@
 ---
-title: Create and inspect environments
-description: Register real or simulated environments and inspect their connections and resources.
+title: Environments
 ---
 
 An environment describes where AkôFlow can plan or run work. A **real environment** has an execution runtime such as local, SSH, Kubernetes, SLURM, or cloud. A **simulation environment** uses the SimGrid runtime and models resources without connecting to physical infrastructure.
 
-Each environment has a version ID that an execution scope uses. If a scope or plan already uses that inventory, register a revised environment with new environment and version IDs so the earlier plan keeps its inputs.
+Environment definitions are versioned. Execution scopes and plans refer to an environment **version**, so changing an environment does not silently change existing planning inputs.
 
 ## Create an environment
 
 ### Using AkôFlow Desktop
 
-1. Open **Infrastructure → Environments** and select **Connect environment** for a real target or **Create simulation** for a modeled platform.
+1. Open **Infrastructure → Environments** and select **Create environment**.
 2. Choose the environment type. Use a simulation environment when you need modeled resources only; use a real environment when AkôFlow must connect to infrastructure.
 3. Enter the environment name and the fields shown for the selected runtime.
 4. For a real remote environment, configure its connection and credential reference. Secrets are stored by the daemon; the environment keeps a reference rather than the secret value.
@@ -25,9 +24,14 @@ Simulation creation collects a SimGrid platform model and can also define an exe
 
 ### Using the API
 
-Complete [API connection setup](/docs/tutorials/api-access) before running these commands.
+Set the daemon address and token once:
 
-The creation body needs more than an environment name. This local example includes a version, runtime, resource, and runtime binding:
+```bash
+export AKOFLOW_API_URL='http://127.0.0.1:<daemon-port>/akoflow-api'
+export AKOFLOW_API_TOKEN='<daemon-token>'
+```
+
+The creation body is an `EnvironmentDefinition`, not only an environment name. This minimal local example includes one version, runtime, resource, and runtime binding:
 
 ```bash
 curl --fail-with-body \
@@ -36,14 +40,24 @@ curl --fail-with-body \
   -X POST "$AKOFLOW_API_URL/environments/" \
   -d '{
     "environment":{"id":"local-lab","name":"Local lab","status":"defined"},
-    "version":{"id":"local-lab-v1","environmentId":"local-lab","version":1,"status":"published","networkModel":"local","interferenceModel":"none","costModel":"none","configurationHash":"local-lab-v1"},
+    "version":{"id":"local-lab-v1","environmentId":"local-lab","version":1,"status":"published"},
     "runtimes":[{"environmentVersionId":"local-lab-v1","id":"local-lab-local","name":"Local execution","driver":"local","mode":"execution","capabilities":{"container":true}}],
-    "resources":[{"id":"local-lab-machine","environmentVersionId":"local-lab-v1","executionTarget":"direct","type":"local_machine","name":"Local machine","providerId":"local-lab-machine","cpuCores":4,"cpuCapacity":4,"memoryBytes":8589934592,"computeSpeedup":1,"schedulable":true}],
-    "resourceRuntimeBindings":[{"resourceId":"local-lab-machine","runtimeId":"local-lab-local","enabled":true}]
+    "resources":[{"id":"local-lab-machine","environmentVersionId":"local-lab-v1","executionTarget":"direct","type":"local_machine","name":"Local machine","cpuCores":4,"memoryBytes":8589934592}],
+    "resourceRuntimeBindings":[{"resourceId":"local-lab-machine","runtimeId":"local-lab-local"}]
   }'
 ```
 
-For a remote connection, follow the complete [HPC registration](/docs/tutorials/register-hpc) or [Google Cloud connection](/docs/tutorials/connect-cloud) tutorial. Each shows how to obtain a credential reference, test the connection, and save the environment.
+Before storing a remote connection, test the same connection object independently:
+
+```bash
+curl --fail-with-body \
+  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  -H 'Content-Type: application/json' \
+  -X POST "$AKOFLOW_API_URL/connection-tests/" \
+  -d '{"id":"hpc-ssh","name":"HPC login","type":"ssh","endpoint":"login.example.org:22","username":"researcher","credentialRef":"<ssh-key-reference>"}'
+```
+
+The response contains `healthy` and `message`. Testing does not create an environment.
 
 ## Validate health and discover infrastructure
 
@@ -58,21 +72,18 @@ Health and discovery are different operations: health verifies access; discovery
 
 ### Using the API
 
-Use the ID of a connection already saved in the environment. For the HPC tutorial's template, that ID is `research-hpc-connection`.
-
 ```bash
-AKOFLOW_CONNECTION_ID='research-hpc-connection'
-# Check the connection
+# Persisted connection health check
 curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
-  -X POST "$AKOFLOW_API_URL/environment-connections/$AKOFLOW_CONNECTION_ID/health/"
+  -X POST "$AKOFLOW_API_URL/environment-connections/hpc-ssh/health/"
 
 # Discovery through that connection
 curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
-  -X POST "$AKOFLOW_API_URL/environment-connections/$AKOFLOW_CONNECTION_ID/discover/"
+  -X POST "$AKOFLOW_API_URL/environment-connections/hpc-ssh/discover/"
 
 # Recent health history
 curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
-  "$AKOFLOW_API_URL/environment-connections/$AKOFLOW_CONNECTION_ID/history/?limit=20"
+  "$AKOFLOW_API_URL/environment-connections/hpc-ssh/history/?limit=20"
 ```
 
 Discovery returns a `snapshots` array. A successful request does not imply that every possible resource type was found; inspect the returned snapshots and the environment inventory.

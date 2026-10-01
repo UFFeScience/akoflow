@@ -7,13 +7,13 @@ slug: /tutorials/compare-plans
 
 # Compare PRISM and HEFT plans
 
-The [SimGrid first-run tutorial](../guides/workflows/first-run.md) ends with a single, fixed plan. This tutorial uses the same workflow and infrastructure but lets AkôFlow propose alternatives. You will run PRISM Time, PRISM Cost, and HEFT against the same inputs, compare their predictions, execute two candidates, and read the predicted-versus-observed evidence that AkôFlow records for each run.
+The [SimGrid first-run tutorial](/docs/guides/workflows/first-run) ends with a single, fixed plan. This tutorial uses the same workflow and infrastructure but lets AkôFlow propose alternatives. You will run PRISM Time, PRISM Cost, and HEFT against the same inputs, compare their predictions, execute two candidates, and read the predicted-versus-observed evidence that AkôFlow records for each run.
 
 The goal is to learn how AkôFlow separates *predicting* from *executing*, how the same workflow looks different under different objectives, and what the recorded evidence actually allows you to conclude.
 
 ## Before you begin
 
-You need the same prerequisites as the [SimGrid first-run tutorial](../guides/workflows/first-run.md):
+You need the same prerequisites as the [SimGrid first-run tutorial](/docs/guides/workflows/first-run):
 
 - A clone of the AkôFlow repository.
 - The AkôFlow daemon running with the SimGrid runner available.
@@ -60,7 +60,7 @@ flowchart LR
 
 ## 1. Register the same example
 
-If you have already run the [first-run tutorial](../guides/workflows/first-run.md), the catalog objects exist. Submit the bundle once more for a fresh start:
+If you have already run the [first-run tutorial](/docs/guides/workflows/first-run), the catalog objects exist. Submit the bundle once more for a fresh start:
 
 ```bash
 for endpoint in environments execution-scopes network-topologies workflow-definitions; do
@@ -112,11 +112,11 @@ You should see three activities: `prepare`, `analyze`, and `summarize`. A workfl
 The available algorithms are reported by the server, not hard-coded in this guide:
 
 ```bash
-curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   "$AKOFLOW_API_URL/planning-algorithms/" | jq
 ```
 
-The PRISM algorithms accept `optionCount` and `beamWidth`. The HEFT algorithm does not. A session that lists an algorithm the server does not return will be rejected. See [PRISM and HEFT](../explanations/prism-and-heft.md) for what each algorithm optimises and why they can disagree.
+The PRISM algorithms accept `optionCount` and `beamWidth`. The HEFT algorithm does not. A session that lists an algorithm the server does not return will be rejected. See [PRISM and HEFT](/docs/explanations/prism-and-heft) for what each algorithm optimises and why they can disagree.
 
 ## 3. Open a planning session
 
@@ -161,7 +161,7 @@ A `failed` status means the daemon could not finish planning; check the session 
 List the candidates the session produced:
 
 ```bash
-curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   "$AKOFLOW_API_URL/planning-sessions/tutorial-compare-plans/candidates/" |
   jq '.candidates
       | map({algorithm: .algorithm,
@@ -183,7 +183,7 @@ Each candidate carries:
 Read the detailed candidate for the algorithm you want to inspect:
 
 ```bash
-curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   "$AKOFLOW_API_URL/planning-sessions/tutorial-compare-plans/candidates/<candidate-id>/" |
   jq '.candidate.schedule.assignments
       | map({activity: .activityName,
@@ -281,10 +281,10 @@ done
 
 The Desktop draws the same comparison in the **Plan vs execution** tab. A small predicted-versus-observed gap is normal; the SimGrid model does not include scheduler wake-up latency and the kernel command path adds a few milliseconds. Compare the activity placement and the bytes transferred rather than the seconds, because the example transfers 100 MB to the cloud and 20 MB back regardless of placement.
 
-You can also export the run evidence from the [Provenance and audit guide](../guides/data/provenance-and-audit.md). The provenance SQL endpoint lets you query both runs in one statement:
+You can also export the run evidence from the [Provenance and audit guide](/docs/guides/data/provenance-and-audit). The provenance SQL endpoint lets you query both runs in one statement:
 
 ```bash
-curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -H 'Content-Type: application/json' \
   -d '{
     "statement": "SELECT id, makespan_seconds, transferred_bytes FROM execution_runs WHERE id IN (?, ?) ORDER BY id",
@@ -325,4 +325,4 @@ Apply one change at a time, regenerate the candidates, and re-run. The SimGrid r
 
 ## Next step
 
-Read [Observed timing](../explanations/observed-timing.md) to understand how AkôFlow computes the breakdown fields, or return to the [Planning a workflow](../guides/workflows/planning.md) reference to learn how to attach a deadline, budget, or interference matrix to a session.
+Read [Observed timing](/docs/explanations/observed-timing) to understand how AkôFlow computes the breakdown fields, or return to the [Planning a workflow](/docs/guides/workflows/planning) reference to learn how to attach a deadline, budget, or interference matrix to a session.

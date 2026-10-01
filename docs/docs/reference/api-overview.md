@@ -15,7 +15,7 @@ Set the API base URL (including `/akoflow-api`) and token in your shell:
 export AKOFLOW_API_URL="http://127.0.0.1:8080/akoflow-api"
 export AKOFLOW_API_TOKEN="replace-with-the-configured-token"
 
-curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   "$AKOFLOW_API_URL/environments/"
 ```
 
@@ -37,8 +37,8 @@ Browser origins are controlled by the daemon's allowed-origin configuration. Aut
 Check daemon and local build capabilities:
 
 ```bash
-curl "${AKOFLOW_API_URL%/akoflow-api}/"
-curl "$AKOFLOW_API_URL/preflight/"
+curl --fail-with-body "${AKOFLOW_API_URL%/akoflow-api}/"
+curl --fail-with-body "$AKOFLOW_API_URL/preflight/"
 ```
 
 The root health check returns `ok`. Preflight reports server, Docker, and BuildKit availability.
@@ -149,7 +149,7 @@ The root health check returns `ok`. Preflight reports server, Docker, and BuildK
 Create a workflow by posting the current workflow definition document:
 
 ```bash
-curl -X POST -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+curl --fail-with-body -X POST -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -H "Content-Type: application/json" \
   --data-binary @workflow.json \
   "$AKOFLOW_API_URL/workflow-definitions/"
@@ -180,7 +180,7 @@ List queries accept endpoint-specific pagination and filters. For execution runs
 | `GET` | `/build-runs/{runId}/` | Read build-run status and logs |
 | `GET` | `/build-runs/{runId}/output/` | Stream SIF output |
 
-See [Artifacts, storage, and builds](../guides/data/artifacts.md) for payload examples and lifecycle semantics.
+See [Artifacts, storage, and builds](/docs/guides/data/artifacts) for payload examples and lifecycle semantics.
 
 ## Provenance
 
@@ -193,7 +193,7 @@ See [Artifacts, storage, and builds](../guides/data/artifacts.md) for payload ex
 | `POST` | `/provenance/sql/explain/` | Explain read-only SQL |
 | `GET` | `/provenance/lineage/{entity}/{id}/` | Traverse lineage |
 
-See [Provenance and audit](../guides/data/provenance-and-audit.md) for query parameters and examples.
+See [Provenance and audit](/docs/guides/data/provenance-and-audit) for query parameters and examples.
 
 ## Console
 
@@ -271,7 +271,7 @@ curl --fail-with-body \
   "$AKOFLOW_API_URL/workflow-definitions/"
 ```
 
-The `POST /workflow-definitions/import/` route accepts the same body and is the endpoint the Desktop calls when the user imports a YAML file. The handler validates the workflow version against the registered activities, runtimes, capabilities, and simulation profiles; missing required fields, unsupported capabilities, and unknown activity IDs return `422`. See [Workflow definitions](../guides/workflows/definitions.md) for the schema.
+The `POST /workflow-definitions/import/` route accepts the same body and is the endpoint the Desktop calls when the user imports a YAML file. The handler validates the workflow version against the registered activities, runtimes, capabilities, and simulation profiles; missing required fields, unsupported capabilities, and unknown activity IDs return `422`. See [Workflow definitions](/docs/guides/workflows/definitions) for the schema.
 
 ### Create an execution run
 

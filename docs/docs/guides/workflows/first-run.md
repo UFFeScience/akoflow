@@ -7,7 +7,7 @@ description: Register the checked-in SimGrid example, execute it, and verify com
 
 This tutorial is for a reader with the AkôFlow development stack and API access. You will submit a three-activity workflow to SimGrid and verify that all activities and both data transfers completed. Nothing is dispatched to Kubernetes, SLURM, or a cloud account.
 
-Use this tutorial to confirm a new installation. Do not use it to learn automatic scheduling—the example imports a fixed plan so that the first result is reproducible. Continue to [Plan a workflow](./planning.md) after this run succeeds.
+Use this tutorial to confirm a new installation. Do not use it to learn automatic scheduling—the example imports a fixed plan so that the first result is reproducible. Continue to [Plan a workflow](/docs/guides/workflows/planning) after this run succeeds.
 
 ## Before you begin
 
@@ -260,4 +260,4 @@ The run is complete only when the header says `completed` and the activity summa
 | Completed run has zero transferred bytes | The workflow lacks data dependencies or producer and consumer were placed on the same resource. Recheck `workflow.yaml`, the plan assignments, and topology IDs. |
 | Run remains `pending` | Inspect the run events and daemon log; the asynchronous command may have failed before the simulation process started. |
 
-Next, use [the edge-to-cloud Showcase](../../showcase/edge-cloud-simulation) to inspect the same model visually, or [Plan a workflow](./planning.md) to compare PRISM Cost, PRISM Time, and HEFT.
+Next, use [the edge-to-cloud Showcase](/docs/showcase/edge-cloud-simulation) to inspect the same model visually, or [Plan a workflow](/docs/guides/workflows/planning) to compare PRISM Cost, PRISM Time, and HEFT.

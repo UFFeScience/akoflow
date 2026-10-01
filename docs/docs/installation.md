@@ -36,7 +36,7 @@ token into the application.
 
 Desktop is the installation path for an individual workstation. If an operator
 needs a control plane on a Linux instance, follow [Run the AkôFlow server on a
-Linux instance](./guides/operations/server-instance). That separate how-to
+Linux instance](/docs/guides/operations/server-instance). That separate how-to
 uses the daemon and BuildKit runtime archives from a named Release and keeps
 the server API off the public network by default.
 
@@ -47,6 +47,6 @@ before changing versions so it can be restored if needed.
 
 ## Verify the installation
 
-After Desktop shows a connected service, use the [interface tour](./guides/interface-tour).
-The [SimGrid example](./guides/workflows/first-run) verifies a full workflow,
+After Desktop shows a connected service, use the [interface tour](/docs/guides/interface-tour).
+The [SimGrid example](/docs/guides/workflows/first-run) verifies a full workflow,
 but currently requires the development stack, repository files, and API access.

@@ -140,7 +140,7 @@ The response is `{"credentialRef":"..."}`. Empty/invalid values return `422`; un
 
 ## Cloud credentials
 
-Cloud onboarding similarly sends provider credential JSON to `/cloud-credentials/` and stores only the returned reference. Validation is a separate operation at `/cloud-credentials/validate/`; see [Cloud capacity](../infrastructure/cloud-capacity.md) for provider-specific fields and the complete flow.
+Cloud onboarding similarly sends provider credential JSON to `/cloud-credentials/` and stores only the returned reference. Validation is a separate operation at `/cloud-credentials/validate/`; see [Cloud capacity](/docs/guides/infrastructure/cloud-capacity) for provider-specific fields and the complete flow.
 
 ## Security boundaries
 

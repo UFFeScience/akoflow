@@ -18,7 +18,7 @@ A cloud environment separates four concerns:
 | Provision compute capacity with Terraform | Yes | Not yet |
 | Transfer artifacts through object storage | GCS through configured storage adapters | S3 and S3-compatible endpoints |
 
-For a runnable Google Cloud setup, continue with [Configure Google Cloud](./gcp). For AWS, read [Configure AWS](./aws) before creating an environment: v1.0 can use AWS credentials for S3 data movement, but cannot create or discover EC2 workers. This distinction prevents a stored credential from being mistaken for a working compute provider.
+For a runnable Google Cloud setup, continue with [Configure Google Cloud](/docs/guides/infrastructure/gcp). For AWS, read [Configure AWS](/docs/guides/infrastructure/aws) before creating an environment: v1.0 can use AWS credentials for S3 data movement, but cannot create or discover EC2 workers. This distinction prevents a stored credential from being mistaken for a working compute provider.
 
 ## Synchronize the provider catalog
 

@@ -35,7 +35,7 @@ authorized for your account on the login host and required gateways. If the
 institution requires an existing key, use the separate import action described
 in [Manage SSH service keys](/docs/guides/operations/credentials-and-ssh).
 
-![SSH service keys settings with import and generation actions](../../static/img/interface/onboarding/ssh-service-keys.png)
+![SSH service keys settings with import and generation actions](/img/interface/onboarding/ssh-service-keys.png)
 
 _Choose the gear icon labeled Settings, then the SSH service keys tab. This
 capture shows the empty key catalog before generation._
@@ -47,7 +47,7 @@ Generating a key in AkôFlow does not grant access to the cluster.
 Open **Infrastructure → Environments → Connect environment** and select
 **HPC / Slurm**.
 
-![HPC connection form showing the hostname, SSH user, port, partition, proxy and key selector](../../static/img/interface/onboarding/hpc-connection.png)
+![HPC connection form showing the hostname, SSH user, port, partition, proxy and key selector](/img/interface/onboarding/hpc-connection.png)
 
 _Captured from the Linux application. Host, user and partition are illustrative values; no remote
 connection is claimed._

@@ -9,7 +9,7 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 
 AkôFlow keeps the workflow you define, the environment available to it, the plan you choose, and the observed run as separate records. You can compare plans for the same workflow without changing its definition.
 
-For exact YAML fields, use the [workflow specification](./internal/workflow-spec) and [environment reference](./reference/environment-yaml). For an example you can run, use the [SimGrid API tutorial](./guides/workflows/first-run). Developers can continue to [Architecture internals](./modules).
+For exact YAML fields, use the [workflow specification](/docs/internal/workflow-spec) and [environment reference](/docs/reference/environment-yaml). For an example you can run, use the [SimGrid API tutorial](/docs/guides/workflows/first-run). Developers can continue to [Architecture internals](/docs/modules).
 
 ## The record chain
 
@@ -43,7 +43,7 @@ The arrows express references, not a single mutable object. A planning session p
 
 An **environment** names an infrastructure boundary: a local host, Kubernetes cluster, SSH/SLURM system, modeled SimGrid platform, or cloud configuration. Its published version can contain runtimes, resources and their hierarchy, runtime bindings, storage, connection observations, and capability observations.
 
-A **resource** is capacity that may be assigned by a plan. A **runtime** says how an activity is launched and observed. A binding states which runtime may use which resource. The [runtime adapters explanation](./runtimes) describes that boundary in more detail.
+A **resource** is capacity that may be assigned by a plan. A **runtime** says how an activity is launched and observed. A binding states which runtime may use which resource. The [runtime adapters explanation](/docs/runtimes) describes that boundary in more detail.
 
 An **execution scope** chooses the published environment versions that an algorithm may consider. Its network topology supplies directed links between resources. This means a plan answers a constrained question—"place this workflow on this frozen universe"—rather than a claim about every resource the daemon may ever discover.
 
@@ -57,7 +57,7 @@ Control dependencies establish ordering. Data dependencies identify the producer
 
 A planning session may produce several **candidates**. They are alternatives, not runnable plans in their own right. Selecting a candidate promotes its placement to a canonical **schedule plan** with assignments and predicted ready, start, finish, runtime, transfer, and cost values. Manual and imported plans use the same plan aggregate after validation.
 
-Planning does not start work. The [planning explanation](./explanations/planning) explains why candidates, objectives, and a selected plan are different records.
+Planning does not start work. The [planning explanation](/docs/explanations/planning) explains why candidates, objectives, and a selected plan are different records.
 
 ## Execution creates observations
 
@@ -65,4 +65,4 @@ An **execution run** binds one selected plan to real, simulation, or interactive
 
 An executable artifact is immutable runnable input. An artifact manifest is an observed output from an activity. They are deliberately different: an input can be materialized before a task starts, while an output can become a scientific data object only after the activity has been observed.
 
-Read [execution and control-plane behavior](./engine) for orchestration, [network modeling](./explanations/network-modeling) for movement assumptions, and [evidence and provenance](./explanations/evidence-and-provenance) for the records used to compare a plan with a completed run.
+Read [execution and control-plane behavior](/docs/engine) for orchestration, [network modeling](/docs/explanations/network-modeling) for movement assumptions, and [evidence and provenance](/docs/explanations/evidence-and-provenance) for the records used to compare a plan with a completed run.

@@ -102,7 +102,7 @@ Typical SSH causes are an unauthorized public key, wrong user/port, missing gate
 For historical evidence:
 
 ```bash
-curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   "$AKOFLOW_API_URL/environment-connections/$CONNECTION_ID/history/?limit=20"
 ```
 
@@ -166,17 +166,17 @@ Useful endpoints:
 
 ```bash
 # Durable operational events
-curl --get -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+curl --fail-with-body --get -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   --data-urlencode 'outcome=failed' \
   --data-urlencode 'limit=100' \
   "$AKOFLOW_API_URL/audit-events/"
 
 # Available instance modes
-curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   "$AKOFLOW_API_URL/instances/"
 
 # Current Engine identity
-curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   "$AKOFLOW_API_URL/instance/"
 ```
 

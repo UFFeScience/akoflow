@@ -91,4 +91,4 @@ curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   "$AKOFLOW_API_URL/environments/gcp-lab/cloud-catalog/"
 ```
 
-Continue with [Cloud capacity and machine configuration](./cloud-capacity) for the target and provisioning payloads, and [Interactive console and commands](../operations/interactive-console) to open a shell after validation.
+Continue with [Cloud capacity and machine configuration](/docs/guides/infrastructure/cloud-capacity) for the target and provisioning payloads, and [Interactive console and commands](/docs/guides/operations/interactive-console) to open a shell after validation.

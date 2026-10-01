@@ -26,7 +26,7 @@ does not create the project, service account, billing configuration or IAM grant
 Go to **Infrastructure → Environments → Connect environment** and select
 **Cloud on demand**. Keep **Provider** set to **Google Cloud**.
 
-![Google Cloud connection form with project ID, region, service account JSON and Test connection](../../static/img/interface/onboarding/gcp-connection.png)
+![Google Cloud connection form with project ID, region, service account JSON and Test connection](/img/interface/onboarding/gcp-connection.png)
 
 _Captured from the Linux application through Chromium DevTools,
 2026-09-12. The project is a placeholder and the credential field is empty;

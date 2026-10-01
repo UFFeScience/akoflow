@@ -10,7 +10,7 @@ import {ShowcaseCard, ShowcaseGrid} from '@site/src/components/WorkflowShowcase'
 
 Start from a checked-in example instead of assembling isolated payloads. Each showcase states its prerequisites, the level at which it has been verified, and the parts of the run that have **not** been independently verified. Some use local simulation, some run real workloads, and the SLURM fixture checks only the local adapter path. Desktop and API steps are included where they have been documented and verified.
 
-For Docker-backed, deterministic regression fixtures, use the [materialized showcase catalog](./materialized). It contains 22 runnable examples across machine learning, generative AI, agentic workflows, and scientific AI.
+For Docker-backed, deterministic regression fixtures, use the [materialized showcase catalog](/docs/showcase/materialized). It contains 22 runnable examples across machine learning, generative AI, agentic workflows, and scientific AI.
 
 <ShowcaseGrid>
   <ShowcaseCard
@@ -61,13 +61,13 @@ For Docker-backed, deterministic regression fixtures, use the [materialized show
 
 | If you want to… | Start with | Why |
 | --- | --- | --- |
-| Verify a new installation without external accounts | [Edge to cloud simulation](./edge-cloud-simulation) | Deterministic SimGrid, no Kubernetes, SLURM, or cloud credentials required |
-| See real container execution with persistent data | [Kubernetes real execution](./kubernetes-real-execution) | A disposable Kind cluster exercises the Kubernetes adapter end to end |
-| Confirm the local adapter writes files where you expect | [Local direct execution](./local-direct-execution) | One activity, observed output file with checksum |
-| Stress the scheduler with parallel work | [100 activities on 50 cores](./parallel-50-core) | Per-core placement, queueing, and capacity |
-| Study data movement under contention | [30 GB network fan-out](./network-fanout) | Shared link, fan-in, and total transferred bytes |
-| Validate the SLURM adapter without a real cluster | [SLURM batch fixture](./slurm-local-fixture) | The adapter boundary only; not a real cluster submission |
-| Compare scheduling algorithms on the same workflow | [Compare PRISM and HEFT plans](../tutorials/compare-plans.md) | Reuses the SimGrid example, executes two candidates |
+| Verify a new installation without external accounts | [Edge to cloud simulation](/docs/showcase/edge-cloud-simulation) | Deterministic SimGrid, no Kubernetes, SLURM, or cloud credentials required |
+| See real container execution with persistent data | [Kubernetes real execution](/docs/showcase/kubernetes-real-execution) | A disposable Kind cluster exercises the Kubernetes adapter end to end |
+| Confirm the local adapter writes files where you expect | [Local direct execution](/docs/showcase/local-direct-execution) | One activity, observed output file with checksum |
+| Stress the scheduler with parallel work | [100 activities on 50 cores](/docs/showcase/parallel-50-core) | Per-core placement, queueing, and capacity |
+| Study data movement under contention | [30 GB network fan-out](/docs/showcase/network-fanout) | Shared link, fan-in, and total transferred bytes |
+| Validate the SLURM adapter without a real cluster | [SLURM batch fixture](/docs/showcase/slurm-local-fixture) | The adapter boundary only; not a real cluster submission |
+| Compare scheduling algorithms on the same workflow | [Compare PRISM and HEFT plans](/docs/tutorials/compare-plans) | Reuses the SimGrid example, executes two candidates |
 
 ## Validation level for each showcase
 
@@ -75,12 +75,12 @@ A showcase label reflects the level at which it has been independently verified.
 
 | Showcase | Validation level | Real infrastructure | Scheduler exercised | What is **not** verified |
 | --- | --- | --- | --- | --- |
-| [Edge to cloud simulation](./edge-cloud-simulation) | Simulation | SimGrid runner | HEFT/PRISM prediction, fixed plan | Real cloud, real Kubernetes, real SLURM |
-| [30 GB network fan-out](./network-fanout) | Simulation | SimGrid runner | PRISM sharing trace | Real network contention, real disk throughput |
-| [100 activities on 50 cores](./parallel-50-core) | Simulation | SimGrid runner | 50-core scheduling | Real 50-core host behaviour |
-| [Kubernetes real execution](./kubernetes-real-execution) | Real run | Kind cluster | Kubernetes adapter, namespace RBAC | Production cluster, multi-tenant quotas, real image registry load |
-| [Local direct execution](./local-direct-execution) | Real run | Daemon host | Local adapter | Sandbox isolation, multi-tenant execution, remote dispatch |
-| [SLURM batch fixture](./slurm-local-fixture) | Fixture | Local SLURM adapter boundary | `sbatch` script, completion sentinel | Real SLURM cluster, real SSH, allocation, accounting |
+| [Edge to cloud simulation](/docs/showcase/edge-cloud-simulation) | Simulation | SimGrid runner | HEFT/PRISM prediction, fixed plan | Real cloud, real Kubernetes, real SLURM |
+| [30 GB network fan-out](/docs/showcase/network-fanout) | Simulation | SimGrid runner | PRISM sharing trace | Real network contention, real disk throughput |
+| [100 activities on 50 cores](/docs/showcase/parallel-50-core) | Simulation | SimGrid runner | 50-core scheduling | Real 50-core host behaviour |
+| [Kubernetes real execution](/docs/showcase/kubernetes-real-execution) | Real run | Kind cluster | Kubernetes adapter, namespace RBAC | Production cluster, multi-tenant quotas, real image registry load |
+| [Local direct execution](/docs/showcase/local-direct-execution) | Real run | Daemon host | Local adapter | Sandbox isolation, multi-tenant execution, remote dispatch |
+| [SLURM batch fixture](/docs/showcase/slurm-local-fixture) | Fixture | Local SLURM adapter boundary | `sbatch` script, completion sentinel | Real SLURM cluster, real SSH, allocation, accounting |
 
 Use the table above to choose an example that matches what you need to demonstrate. Mixing the columns is the most common source of misleading claims: a fixture is not a real-cluster validation, and a simulation is not a real-execution validation.
 
@@ -111,4 +111,4 @@ These files model infrastructure inputs, but are not end-to-end showcases. In pa
 
 | Infrastructure | Files | Scope and next step |
 | --- | --- | --- |
-| SLURM cluster | [`examples/slurm`](https://github.com/UFFeScience/akoflow/tree/main/examples/slurm) | A catalog for a partition, login node, shared storage, and runtime bindings. Pair it with an approved SLURM cluster and follow [Connect an HPC and SLURM cluster](../guides/infrastructure/hpc-slurm) before submitting a site-approved probe. The separate [SLURM batch fixture](./slurm-local-fixture) validates only the local adapter path. |
+| SLURM cluster | [`examples/slurm`](https://github.com/UFFeScience/akoflow/tree/main/examples/slurm) | A catalog for a partition, login node, shared storage, and runtime bindings. Pair it with an approved SLURM cluster and follow [Connect an HPC and SLURM cluster](/docs/guides/infrastructure/hpc-slurm) before submitting a site-approved probe. The separate [SLURM batch fixture](/docs/showcase/slurm-local-fixture) validates only the local adapter path. |

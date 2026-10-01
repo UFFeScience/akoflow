@@ -5,9 +5,9 @@ description: Configure a proxy-aware SSH connection, discover a SLURM cluster, m
 
 # Connect an HPC and SLURM cluster
 
-This how-to is for an HPC operator or researcher who has an approved account on a SLURM cluster. It connects AkôFlow to the **login node** over SSH and submits workflow activities through `sbatch`. For a safe adapter-only check before involving a cluster, use the [SLURM batch fixture](../../showcase/slurm-local-fixture). The fixture validates AkôFlow's local batch-script, sentinels, and artifact path; it is not a SLURM scheduler emulator and does not validate SSH, allocation, accounting, or site policy.
+This how-to is for an HPC operator or researcher who has an approved account on a SLURM cluster. It connects AkôFlow to the **login node** over SSH and submits workflow activities through `sbatch`. For a safe adapter-only check before involving a cluster, use the [SLURM batch fixture](/docs/showcase/slurm-local-fixture). The fixture validates AkôFlow's local batch-script, sentinels, and artifact path; it is not a SLURM scheduler emulator and does not validate SSH, allocation, accounting, or site policy.
 
-Use a SLURM environment for batch work governed by SLURM partitions, accounts, QoS, and node allocation. Do not model a login node as a high-capacity compute resource or send ordinary batch work directly to it. For a no-remote-infrastructure experiment, use [SimGrid](./simgrid) instead.
+Use a SLURM environment for batch work governed by SLURM partitions, accounts, QoS, and node allocation. Do not model a login node as a high-capacity compute resource or send ordinary batch work directly to it. For a no-remote-infrastructure experiment, use [SimGrid](/docs/guides/infrastructure/simgrid) instead.
 
 ## Prerequisites
 
@@ -19,7 +19,7 @@ Use a SLURM environment for batch work governed by SLURM partitions, accounts, Q
 
 ## 1. Create the SSH credential and proxy-aware connection
 
-Create or import a service key using [Credentials and SSH service keys](../operations/credentials-and-ssh), then authorize its public key on the login node and any gateway. Store the returned `credentialRef` in the connection; never paste the private key into an environment YAML.
+Create or import a service key using [Credentials and SSH service keys](/docs/guides/operations/credentials-and-ssh), then authorize its public key on the login node and any gateway. Store the returned `credentialRef` in the connection; never paste the private key into an environment YAML.
 
 The SLURM runtime accepts SSH, agent, or local connections. A remote HPC cluster normally uses `type: ssh`. The SSH port belongs in `configuration.port`; keep `endpoint` as the host name so the same record is usable by health checks, discovery, the scheduler adapter, artifact operations, and the interactive terminal.
 
@@ -180,4 +180,4 @@ The interactive console uses the same connection and trust route. Selecting a pa
 | Status looks stale after completion | Check the sentinel/log path and wait for `sacct`; AkôFlow preserves a warning rather than converting missing accounting data into a false failure. |
 | Interactive allocation remains after closing the browser view | Close the AkôFlow console session explicitly; it owns the `srun` allocation and cleanup path. |
 
-Related material: [Credentials and SSH service keys](../operations/credentials-and-ssh), [interactive console and commands](../operations/interactive-console), [execution scopes](./execution-scopes), and [storage](./storage).
+Related material: [Credentials and SSH service keys](/docs/guides/operations/credentials-and-ssh), [interactive console and commands](/docs/guides/operations/interactive-console), [execution scopes](/docs/guides/infrastructure/execution-scopes), and [storage](/docs/guides/infrastructure/storage).

@@ -93,19 +93,19 @@ There is no `/notifications/` endpoint. Automation should query the resource tha
 
 ```bash
 # Planning session
-curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   "$AKOFLOW_API_URL/planning-sessions/$PLANNING_SESSION_ID/"
 
 # Execution run
-curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   "$AKOFLOW_API_URL/execution-runs/$RUN_ID/"
 
 # Active interactive sessions
-curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   "$AKOFLOW_API_URL/console-sessions/"
 
 # Provisioned cloud instances for one environment
-curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   "$AKOFLOW_API_URL/environments/$ENVIRONMENT_ID/cloud-instances/"
 ```
 

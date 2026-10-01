@@ -50,7 +50,7 @@ The created session has `starting`, `connected`, `closed`, or `failed` status an
 List and close sessions:
 
 ```bash
-curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   "$AKOFLOW_API_URL/console-sessions/"
 
 curl --fail-with-body \

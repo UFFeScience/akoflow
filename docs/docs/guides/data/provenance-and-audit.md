@@ -54,10 +54,10 @@ Open **Provenance**. The **Explore** tab loads a server-defined entity catalog. 
 The API exposes the same server-defined catalog and query:
 
 ```bash
-curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   "$AKOFLOW_API_URL/provenance/entities/"
 
-curl -G -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+curl --fail-with-body -G -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   --data-urlencode "q=completed" \
   --data-urlencode "filterField=status" \
   --data-urlencode "filterValue=completed" \
@@ -90,7 +90,7 @@ From an Explore result, choose **Open lineage**, or open the **Lineage** tab and
 | **Export JSON** | Preserve the exact lineage response for an investigation or a report. | The export is a snapshot of the current root, direction, and depth; record those choices with the file. |
 
 ```bash
-curl -G -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+curl --fail-with-body -G -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   --data-urlencode "direction=both" \
   --data-urlencode "depth=2" \
   --data-urlencode "maxNodes=300" \
@@ -122,10 +122,10 @@ The **SQL** tab presents the queryable schema, templates for common investigatio
 Only read-only `SELECT` and `WITH` queries are accepted. The Desktop communicates the current service limits as a 10-second execution timeout and 200 rows per page. Fetch the runtime schema instead of assuming table or column names:
 
 ```bash
-curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   "$AKOFLOW_API_URL/provenance/sql/schema/"
 
-curl -X POST -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+curl --fail-with-body -X POST -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
     "sql":"SELECT id, status, created_at FROM execution_runs WHERE status = :status ORDER BY created_at DESC",
@@ -164,7 +164,7 @@ Open **Audit** for a chronological record of infrastructure discovery, connectio
 The API supports server-side filtering:
 
 ```bash
-curl -G -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+curl --fail-with-body -G -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   --data-urlencode "environmentId=$ENVIRONMENT_ID" \
   --data-urlencode "outcome=failed" \
   --data-urlencode "limit=100" \

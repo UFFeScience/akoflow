@@ -11,6 +11,7 @@ import (
 type capacityStoreStub struct {
 	instances []domain.CloudProvisionedInstance
 	updated   []domain.CloudProvisionedInstance
+	target    *domain.CloudCapacityTarget
 }
 
 func (*capacityStoreStub) EnsureDefaults(context.Context) error { return nil }
@@ -35,7 +36,10 @@ func (*capacityStoreStub) CreateCapacityTarget(context.Context, domain.CloudCapa
 func (*capacityStoreStub) ListCapacityTargets(context.Context, string) ([]domain.CloudCapacityTarget, error) {
 	return nil, nil
 }
-func (*capacityStoreStub) FindCapacityTarget(context.Context, string) (*domain.CloudCapacityTarget, error) {
+func (s *capacityStoreStub) FindCapacityTarget(_ context.Context, id string) (*domain.CloudCapacityTarget, error) {
+	if s.target != nil && s.target.ID == id {
+		return s.target, nil
+	}
 	return nil, nil
 }
 func (*capacityStoreStub) DeleteCapacityTarget(context.Context, string) error { return nil }
@@ -44,9 +48,22 @@ func (*capacityStoreStub) CreateProvisionedInstance(context.Context, domain.Clou
 }
 func (s *capacityStoreStub) UpdateProvisionedInstance(_ context.Context, instance domain.CloudProvisionedInstance) error {
 	s.updated = append(s.updated, instance)
+	for index := range s.instances {
+		if s.instances[index].ID == instance.ID {
+			s.instances[index] = instance
+			return nil
+		}
+	}
+	s.instances = append(s.instances, instance)
 	return nil
 }
-func (*capacityStoreStub) FindProvisionedInstance(context.Context, string) (*domain.CloudProvisionedInstance, error) {
+func (s *capacityStoreStub) FindProvisionedInstance(_ context.Context, id string) (*domain.CloudProvisionedInstance, error) {
+	for index := range s.instances {
+		if s.instances[index].ID == id {
+			instance := s.instances[index]
+			return &instance, nil
+		}
+	}
 	return nil, nil
 }
 func (s *capacityStoreStub) ListProvisionedInstances(context.Context, string) ([]domain.CloudProvisionedInstance, error) {
@@ -54,8 +71,10 @@ func (s *capacityStoreStub) ListProvisionedInstances(context.Context, string) ([
 }
 
 type terraformStub struct {
-	started []string
-	result  ports.TerraformResult
+	started   []string
+	stopped   []string
+	destroyed []string
+	result    ports.TerraformResult
 }
 
 func (*terraformStub) Apply(context.Context, ports.TerraformProvisionSpec) (ports.TerraformResult, error) {
@@ -65,8 +84,14 @@ func (s *terraformStub) Start(_ context.Context, id string) (ports.TerraformResu
 	s.started = append(s.started, id)
 	return s.result, nil
 }
-func (*terraformStub) Destroy(context.Context, string) error       { return nil }
-func (*terraformStub) Stop(context.Context, string) error          { return nil }
+func (s *terraformStub) Destroy(_ context.Context, id string) error {
+	s.destroyed = append(s.destroyed, id)
+	return nil
+}
+func (s *terraformStub) Stop(_ context.Context, id string) error {
+	s.stopped = append(s.stopped, id)
+	return nil
+}
 func (*terraformStub) Log(context.Context, string) ([]byte, error) { return nil, nil }
 
 func TestReuseCapacityResumesStoppedTerraformInstance(t *testing.T) {
@@ -121,6 +146,33 @@ func TestRequiredConfigurationMustMatchProviderAndArchitecture(t *testing.T) {
 		Provider: "gcp", Architecture: "arm64",
 	}, true); err == nil {
 		t.Fatal("expected incompatible architecture to be rejected")
+	}
+}
+
+func TestLifecycleTransitionsPersistTerraformState(t *testing.T) {
+	instance := domain.CloudProvisionedInstance{
+		ID: "instance", CapacityTargetID: "target", Status: "ready",
+		PublicAddress: "203.0.113.20", PrivateAddress: "10.0.0.20",
+		TerraformOutput: map[string]any{"zone": "us-central1-a"},
+	}
+	store := &capacityStoreStub{instances: []domain.CloudProvisionedInstance{instance}, target: &domain.CloudCapacityTarget{ID: "target"}}
+	terra := &terraformStub{result: ports.TerraformResult{
+		PublicAddress: "203.0.113.21", PrivateAddress: "10.0.0.21",
+		Output: map[string]any{"instance_id": "provider-1"},
+	}}
+	service := &Provisioner{store: store, terraform: terra}
+
+	stopped, err := service.Stop(context.Background(), "instance")
+	if err != nil || stopped.Status != "stopped" || len(terra.stopped) != 1 {
+		t.Fatalf("stop = %#v, err = %v, calls = %#v", stopped, err, terra.stopped)
+	}
+	started, err := service.Start(context.Background(), "instance")
+	if err != nil || started.Status != "ready" || started.PublicAddress != "203.0.113.21" || started.TerraformOutput["zone"] != "us-central1-a" {
+		t.Fatalf("start = %#v, err = %v", started, err)
+	}
+	destroyed, err := service.Destroy(context.Background(), "instance")
+	if err != nil || destroyed.Status != "destroyed" || destroyed.PublicAddress != "" || len(terra.destroyed) != 1 {
+		t.Fatalf("destroy = %#v, err = %v, calls = %#v", destroyed, err, terra.destroyed)
 	}
 }
 

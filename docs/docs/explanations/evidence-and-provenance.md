@@ -6,15 +6,26 @@ sidebar_label: Evidence and provenance
 description: How AkôFlow preserves predictions, runtime observations, artifacts, lineage, and audit history.
 ---
 
-import useBaseUrl from '@docusaurus/useBaseUrl';
-
 AkôFlow keeps a plan's predictions alongside what happened during the run. Compare them to see whether activities took longer than expected, used different resources, or moved data differently.
 
 Use [Trace a result with provenance](/docs/guides/data/provenance) for the scientific records. [Inspect audit events](/docs/guides/data/audit-events) only when a connection check, resource discovery, or console action is relevant. This explanation shows how those records differ.
 
 ## Two timelines for one selected plan
 
-<img src={useBaseUrl('/img/architecture/evidence-provenance-timeline.svg')} alt="A selected plan holds predictions; the execution run produces runtime observations; those observations form the execution trace and provenance records." />
+```mermaid
+flowchart LR
+  Plan["Selected plan<br/>assignments · predictions"] -->|dispatch boundary| Run["Execution run"]
+  Run --> Observations["Runtime observations<br/>tasks · handles · data · logs"]
+  Observations --> Evidence["Trace and lineage<br/>metrics · provenance"]
+
+  classDef prediction fill:#ffffff,stroke:#151515,color:#151515,stroke-width:2px
+  classDef execution fill:#151515,stroke:#151515,color:#ffffff,stroke-width:2px
+  classDef observed fill:#f2f2f2,stroke:#151515,color:#151515,stroke-width:2px
+  class Plan prediction
+  class Run execution
+  class Observations,Evidence observed
+  linkStyle default stroke:#151515,stroke-width:2px,color:#151515
+```
 
 The plan retains predicted duration and cost. A task attempt can record its planned and actual resource, runtime, queue time, transfers, and startup time, depending on what the runtime reports. The execution trace combines these observations into run metrics. A completed run does not mean the prediction was accurate.
 

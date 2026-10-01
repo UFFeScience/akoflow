@@ -1,9 +1,10 @@
 ---
-title: Run the SimGrid example through the API
+title: Your first workflow with SimGrid
+sidebar_label: Run through the API
 description: Register the checked-in SimGrid example, execute it, and verify computation and network evidence.
 ---
 
-# Run the SimGrid example through the API
+# Your first workflow with SimGrid
 
 This tutorial is for a reader with the AkôFlow development stack and API access. You will submit a three-activity workflow to SimGrid and verify that all activities and both data transfers completed. Nothing is dispatched to Kubernetes, SLURM, or a cloud account.
 

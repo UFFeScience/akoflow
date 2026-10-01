@@ -11,8 +11,12 @@ const sidebars: SidebarsConfig = {
         "installation",
         "downloads",
         "guides/interface-tour",
-        "guides/workflows/first-run",
-        "tutorials/compare-plans",
+        {
+          type: "category",
+          label: "First workflow",
+          collapsed: false,
+          items: ["guides/workflows/first-run"],
+        },
         {
           type: "category",
           label: "Showcases",

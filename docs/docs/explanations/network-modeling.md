@@ -6,15 +6,34 @@ sidebar_label: Network modeling
 description: How data dependencies, topology links, routes, and observed transfers relate to a workflow plan.
 ---
 
-import useBaseUrl from '@docusaurus/useBaseUrl';
-
 Network modeling lets planning distinguish a local dependency from data that must cross a resource boundary. It starts with bytes declared by the workflow, but its result depends on the selected resource assignments and the directed topology chosen for the planning session.
 
 This is an explanation of the model. Use [SimGrid modeling](/docs/guides/infrastructure/simgrid) to configure bandwidth and latency, or the [topology reference](/docs/reference/execution-scopes-and-topologies) for the exact document fields.
 
 ## From dependency to possible flow
 
-<img src={useBaseUrl('/img/architecture/network-flow-model.svg')} alt="A control dependency orders producer and consumer activities, a data dependency declares logical bytes, and a directed topology route is considered when their selected resources differ." />
+```mermaid
+flowchart LR
+  subgraph Workflow["Workflow dependencies"]
+    Producer["Producer activity"] -->|control dependency| Consumer["Consumer activity"]
+    Producer -.->|data dependency · logical bytes| Consumer
+  end
+
+  subgraph Placement["Selected placement"]
+    ProducerResource["Producer resource"] -->|directed topology route| ConsumerResource["Consumer resource"]
+  end
+
+  Producer -->|assigned to| ProducerResource
+  Consumer -->|assigned to| ConsumerResource
+
+  classDef activity fill:#ffffff,stroke:#151515,color:#151515,stroke-width:2px
+  classDef resource fill:#f2f2f2,stroke:#151515,color:#151515,stroke-width:2px
+  class Producer,Consumer activity
+  class ProducerResource,ConsumerResource resource
+  style Workflow fill:#ffffff,stroke:#151515,color:#151515
+  style Placement fill:#f2f2f2,stroke:#151515,color:#151515
+  linkStyle default stroke:#151515,stroke-width:2px,color:#151515
+```
 
 The control dependency makes the consumer wait for the producer. The matching data dependency gives the planner a logical byte volume. If a selected plan puts both activities on the same resource, no network transfer time is added for that edge. If they are on different resources, the topology is consulted for a route.
 

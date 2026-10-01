@@ -1,9 +1,0 @@
-{
-  "showcase": "synthetic-dataset",
-  "artifacts": [
-    "synthetic-dataset.jsonl",
-    "quality-report.json"
-  ],
-  "status": "success"
-}
-

@@ -115,19 +115,19 @@ The HEFT baseline finds a matching direct link for its transfer estimate. PRISM 
 
 ## API sequence
 
-The checked-in [SimGrid bundle](https://github.com/UFFeScience/akoflow/tree/main/examples/simulation) supplies compatible `scope.yaml` and `topology.yaml` files. Complete [API connection setup](/docs/tutorials/api-access), enter a repository checkout, and create the bundle's environment first. The [SimGrid first-run tutorial](/docs/guides/workflows/first-run) gives the full setup. Then submit these two files in order:
+The checked-in [SimGrid bundle](https://github.com/UFFeScience/akoflow-examples/tree/main/simulation) supplies compatible `scope.yaml` and `topology.yaml` files. Complete [API connection setup](/docs/tutorials/api-access), enter a repository checkout, and create the bundle's environment first. The [SimGrid first-run tutorial](/docs/guides/workflows/first-run) gives the full setup. Then submit these two files in order:
 
 ```bash
 curl --fail-with-body \
   -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -H 'Content-Type: application/yaml' \
-  --data-binary @examples/simulation/scope.yaml \
+  --data-binary @akoflow-examples/simulation/scope.yaml \
   "$AKOFLOW_API_URL/execution-scopes/"
 
 curl --fail-with-body \
   -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -H 'Content-Type: application/yaml' \
-  --data-binary @examples/simulation/topology.yaml \
+  --data-binary @akoflow-examples/simulation/topology.yaml \
   "$AKOFLOW_API_URL/network-topologies/"
 ```
 

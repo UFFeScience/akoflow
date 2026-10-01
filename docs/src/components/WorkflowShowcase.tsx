@@ -110,6 +110,7 @@ export function AIWorkflowPattern({
     })),
   );
   const examplePath = runnableExamplePaths[title];
+  const rawExample = `https://raw.githubusercontent.com/UFFeScience/akoflow-examples/main/${examplePath}`;
 
   return (
     <>
@@ -134,16 +135,16 @@ export function AIWorkflowPattern({
             from this page before executing it.
           </p>
           <div className={styles.files}>
-            <a href={`/examples/showcase/${examplePath}/README.md`}>Read setup instructions ↓</a>
-            <a href={`/examples/showcase/${examplePath}/environment.yaml`}>Environment YAML ↓</a>
-            <a href={`/examples/showcase/${examplePath}/scope.yaml`}>Execution scope YAML ↓</a>
-            <a href={`/examples/showcase/${examplePath}/topology.yaml`}>Network topology YAML ↓</a>
-            <a href={`/examples/showcase/${examplePath}/workflow.yaml`}>Workflow YAML ↓</a>
-            <a href={`/examples/showcase/${examplePath}/data/input.json`}>Input data ↓</a>
-            <a href={`/examples/showcase/${examplePath}/docker/Dockerfile`}>Container recipe ↓</a>
-            <a href={`/examples/showcase/${examplePath}/run.sh`}>Run the workflow ↓</a>
-            <a href={`/examples/showcase/${examplePath}/validate.sh`}>Validate outputs ↓</a>
-            <a href={`/examples/showcase/${examplePath}/expected/manifest.json`}>Expected output manifest ↓</a>
+            <a href={`${rawExample}/README.md`}>Read setup instructions ↓</a>
+            <a href={`${rawExample}/environment.yaml`}>Environment YAML ↓</a>
+            <a href={`${rawExample}/scope.yaml`}>Execution scope YAML ↓</a>
+            <a href={`${rawExample}/topology.yaml`}>Network topology YAML ↓</a>
+            <a href={`${rawExample}/workflow.yaml`}>Workflow YAML ↓</a>
+            <a href={`${rawExample}/data/input.json`}>Input data ↓</a>
+            <a href={`${rawExample}/docker/Dockerfile`}>Container recipe ↓</a>
+            <a href={`${rawExample}/run.sh`}>Run the workflow ↓</a>
+            <a href={`${rawExample}/validate.sh`}>Validate outputs ↓</a>
+            <a href={`${rawExample}/expected/manifest.json`}>Expected output manifest ↓</a>
           </div>
         </section>
       )}
@@ -156,19 +157,19 @@ export function AIWorkflowPattern({
           </p>
           <div className={styles.evidenceGrid}>
             <figure>
-              <img src={`/examples/showcase/${examplePath}/screenshots/workflow.png`} alt={`${title} workflow execution evidence`} />
+              <img src={`${rawExample}/screenshots/workflow.png`} alt={`${title} workflow execution evidence`} />
               <figcaption>Workflow evidence</figcaption>
             </figure>
             <figure>
-              <img src={`/examples/showcase/${examplePath}/screenshots/execution.png`} alt={`${title} execution evidence`} />
+              <img src={`${rawExample}/screenshots/execution.png`} alt={`${title} execution evidence`} />
               <figcaption>Execution evidence</figcaption>
             </figure>
             <figure>
-              <img src={`/examples/showcase/${examplePath}/screenshots/outputs.png`} alt={`${title} output evidence`} />
+              <img src={`${rawExample}/screenshots/outputs.png`} alt={`${title} output evidence`} />
               <figcaption>Output evidence</figcaption>
             </figure>
           </div>
-          <a href={`/examples/showcase/${examplePath}/outputs/manifest.json`}>Open verified output manifest ↓</a>
+          <a href={`${rawExample}/outputs/manifest.json`}>Open verified output manifest ↓</a>
         </section>
       )}
       <h2>Execution considerations</h2>

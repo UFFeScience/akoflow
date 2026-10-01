@@ -56,7 +56,7 @@ Depending on the runtime and available observations, the run detail can include:
 curl --fail-with-body \
   -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -H 'Content-Type: application/yaml' \
-  --data-binary @examples/simulation/execution-request.yaml \
+  --data-binary @akoflow-examples/simulation/execution-request.yaml \
   "$AKOFLOW_API_URL/execution-runs/"
 ```
 

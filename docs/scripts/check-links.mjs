@@ -4,11 +4,10 @@
  * Checks links that are owned by this repository. Docusaurus deliberately
  * treats broken links as warnings so that a stale external URL cannot stop a
  * local preview. This check is stricter for things we can verify locally:
- * documentation routes, static media, and the checked-in files advertised by
- * the Workflow Showcase.
+ * documentation routes and static media. Runnable examples live in the
+ * dedicated akoflow-examples repository and are validated by its own CI.
  */
 import { existsSync, readdirSync, readFileSync } from "node:fs";
-import { spawnSync } from "node:child_process";
 import { dirname, extname, join, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -95,19 +94,11 @@ function checkTarget(sourceFile, rawTarget, sourceIsShowcase) {
   const target = cleanTarget(rawTarget);
   if (!target || target.startsWith("#") || /^(mailto:|tel:|data:|javascript:)/i.test(target)) return;
 
-  const githubMatch = target.match(
-    /^https:\/\/(?:raw\.githubusercontent\.com\/UFFeScience\/akoflow\/(v[0-9]+\.[0-9]+\.[0-9]+|main)\/|github\.com\/UFFeScience\/akoflow\/(?:blob|tree)\/(v[0-9]+\.[0-9]+\.[0-9]+|main)\/)(examples\/.+)$/,
+  const showcaseExample = target.match(
+    /^https:\/\/(?:raw\.githubusercontent\.com\/UFFeScience\/akoflow-examples\/main\/|github\.com\/UFFeScience\/akoflow-examples\/(?:blob|tree)\/main\/)(.+)$/,
   );
-  if (githubMatch && sourceIsShowcase) {
+  if (showcaseExample && sourceIsShowcase) {
     checkedShowcaseDownloads += 1;
-    const ref = githubMatch[1] || githubMatch[2];
-    const examplePath = githubMatch[3];
-    if (ref === "main") {
-      checkRepositoryPath(sourceFile, target, resolve(repositoryDirectory, examplePath), "Showcase download");
-    } else {
-      const result = spawnSync("git", ["cat-file", "-e", `${ref}:${examplePath}`], { cwd: repositoryDirectory });
-      if (result.status !== 0) report(sourceFile, target, `Showcase download is missing from ${ref}`);
-    }
     return;
   }
 
@@ -119,7 +110,7 @@ function checkTarget(sourceFile, rawTarget, sourceIsShowcase) {
     return;
   }
 
-  if (target.startsWith("/examples/") || target.startsWith("/img/") || target.startsWith("/media/") || target.startsWith("/downloads/") || target.startsWith("/showcase/")) {
+  if (target.startsWith("/img/") || target.startsWith("/media/") || target.startsWith("/downloads/") || target.startsWith("/showcase/")) {
     checkRepositoryPath(sourceFile, target, resolve(staticDirectory, target.slice(1)), "Static asset");
     return;
   }

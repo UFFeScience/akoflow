@@ -1,6 +1,0 @@
-local-hpc	local	hpc
-hpc-local	hpc	local
-local-cloud	local	cloud
-cloud-local	cloud	local
-hpc-cloud	hpc	cloud
-cloud-hpc	cloud	hpc

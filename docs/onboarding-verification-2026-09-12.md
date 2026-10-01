@@ -74,7 +74,8 @@ and `git diff --check`. Headless Chrome loaded all five routes and their images
 without page errors. Installation, downloads, HPC and cloud pages had no
 horizontal document overflow at 390px. Browser clicks downloaded both templates
 with their documented `.template.json` filenames and the Linux DEB with the
-expected SHA-256. The link checker now also recognizes `/examples/` static assets.
+expected SHA-256. Runnable examples are now maintained and validated by the
+dedicated `UFFeScience/akoflow-examples` repository.
 
 ## Complete installation walkthrough follow-up
 

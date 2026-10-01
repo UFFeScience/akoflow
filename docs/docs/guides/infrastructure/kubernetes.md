@@ -104,7 +104,7 @@ For a production cluster, provide the API server certificate through `configurat
 
 In Desktop, open **Infrastructure → Environments**, create a real Kubernetes environment, add the connection, test it, and run discovery. Create or confirm a Kubernetes runtime whose configuration names the connection and namespace. Bind that runtime to every schedulable Kubernetes machine.
 
-The relevant part of `examples/kind/environment.yaml` is:
+The relevant part of `akoflow-examples/kind/environment.yaml` is:
 
 ```yaml title="Connection and resource excerpt from environment.yaml"
 connections:
@@ -177,7 +177,7 @@ Before launching a production workflow, verify image pull access from the select
 
 In Desktop, test the connection, run discovery, inspect the resource inventory, then import a small workflow. Create a scope containing the environment version, generate or create a plan, choose **Real execution**, and inspect the completed run's activity logs and artifacts.
 
-For an equivalent API validation, follow the complete [Kind README](https://github.com/UFFeScience/akoflow/tree/main/examples/kind). It applies the cluster access and PVC, stores a short-lived token, and submits the environment, scope, topology, workflow, plan, and execution request in that order.
+For an equivalent API validation, follow the complete [Kind README](https://github.com/UFFeScience/akoflow-examples/tree/main/kind). It applies the cluster access and PVC, stores a short-lived token, and submits the environment, scope, topology, workflow, plan, and execution request in that order.
 
 The exact Kind bundle completed on 2026-09-11 as `kind-dag-run-v8`. It created two Kubernetes Jobs, transferred 9 bytes through its workspace, and produced matching `result.txt` and `consumed.txt` files with checksum `sha256:cb064c1339ffa3d7777bcb0459de3dceddb9146156dde58065a4ac826b029aa7`.
 

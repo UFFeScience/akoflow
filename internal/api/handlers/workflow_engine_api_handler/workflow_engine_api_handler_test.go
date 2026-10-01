@@ -6,8 +6,6 @@ import (
 	"errors"
 	"net/http"
 	"net/http/httptest"
-	"os"
-	"path/filepath"
 	"testing"
 
 	"github.com/UFFeScience/akoflow/internal/domain"
@@ -293,9 +291,22 @@ func TestDuplicateWorkflowDocumentationJSON(t *testing.T) {
 	require.Equal(t, "copied", store.created.Namespace)
 }
 
-func TestWorkflowImportCompatibilityRouteAcceptsVersionedExample(t *testing.T) {
-	file, err := os.ReadFile(filepath.Join("..", "..", "..", "..", "examples", "simulation", "workflow.yaml"))
-	require.NoError(t, err)
+func TestWorkflowImportCompatibilityRouteAcceptsPortableYAML(t *testing.T) {
+	file := []byte(`
+name: simulation-example-workflow
+spec:
+  namespace: examples
+  image: busybox:1.36
+  activities:
+    - name: prepare
+      runtime: simgrid
+      run: echo prepare
+      cpuLimit: "1"
+      memoryLimit: 128Mi
+      simulation:
+        model: deterministic
+        durationSeconds: 1
+`)
 	store := &workflowRepositoryStub{}
 	handler := newTestHandler()
 	handler.workflows = store

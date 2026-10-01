@@ -17,14 +17,13 @@ whose URL and token you manage. The graphical Desktop setup does not expose a
 token for these commands; use the [server installation](/docs/guides/operations/server-instance)
 if you need a separately managed API endpoint.
 
-Download the matching example source and enter its directory:
+Clone the examples repository and enter its parent directory:
 
 ```bash
-git clone --depth 1 https://github.com/UFFeScience/akoflow.git akoflow-first-run
-cd akoflow-first-run
+git clone --depth 1 https://github.com/UFFeScience/akoflow-examples.git
 ```
 
-If you already have a matching checkout, enter that repository instead. Run the
+If you already have a checkout, update or enter its parent directory instead. Run the
 commands below in the same Bash session where you configured `AKOFLOW_API_URL`
 and `AKOFLOW_API_TOKEN`.
 
@@ -44,7 +43,7 @@ The files use stable IDs such as `simulation-example` and `simulation-example-ru
 
 ## Understand what will run
 
-The versioned bundle lives in [`examples/simulation`](https://github.com/UFFeScience/akoflow/tree/main/examples/simulation):
+The versioned bundle lives in [`akoflow-examples/simulation`](https://github.com/UFFeScience/akoflow-examples/tree/main/simulation):
 
 | File                     | Purpose                                                                                              |
 | ------------------------ | ---------------------------------------------------------------------------------------------------- |
@@ -65,7 +64,7 @@ Submit the environment first because every later object refers to its version an
 curl --fail-with-body \
   -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -H 'Content-Type: application/yaml' \
-  --data-binary @examples/simulation/environment.yaml \
+  --data-binary @akoflow-examples/simulation/environment.yaml \
   "$AKOFLOW_API_URL/environments/"
 ```
 
@@ -90,13 +89,13 @@ The topology must reference an existing scope, so submit them in this order:
 curl --fail-with-body \
   -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -H 'Content-Type: application/yaml' \
-  --data-binary @examples/simulation/scope.yaml \
+  --data-binary @akoflow-examples/simulation/scope.yaml \
   "$AKOFLOW_API_URL/execution-scopes/"
 
 curl --fail-with-body \
   -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -H 'Content-Type: application/yaml' \
-  --data-binary @examples/simulation/topology.yaml \
+  --data-binary @akoflow-examples/simulation/topology.yaml \
   "$AKOFLOW_API_URL/network-topologies/"
 ```
 
@@ -108,7 +107,7 @@ At this point AkôFlow knows which resources are eligible and how data moves bet
 curl --fail-with-body \
   -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -H 'Content-Type: application/yaml' \
-  --data-binary @examples/simulation/workflow.yaml \
+  --data-binary @akoflow-examples/simulation/workflow.yaml \
   "$AKOFLOW_API_URL/workflow-definitions/"
 ```
 
@@ -132,7 +131,7 @@ You should see three activities with the `simulation` capability, durations 4, 1
 curl --fail-with-body \
   -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -H 'Content-Type: application/yaml' \
-  --data-binary @examples/simulation/plan-request.yaml \
+  --data-binary @akoflow-examples/simulation/plan-request.yaml \
   "$AKOFLOW_API_URL/schedule-plans/"
 ```
 
@@ -144,7 +143,7 @@ The plan assigns `prepare` and `summarize` to the edge and `analyze` to the clou
 curl --fail-with-body \
   -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -H 'Content-Type: application/yaml' \
-  --data-binary @examples/simulation/execution-request.yaml \
+  --data-binary @akoflow-examples/simulation/execution-request.yaml \
   "$AKOFLOW_API_URL/execution-runs/"
 ```
 
@@ -212,7 +211,7 @@ After reviewing the individual requests, a fresh instance can run the same seque
 ```bash
 AKOFLOW_API_URL="$AKOFLOW_API_URL" \
 AKOFLOW_API_TOKEN="$AKOFLOW_API_TOKEN" \
-sh examples/simulation/run.sh
+sh akoflow-examples/simulation/run.sh
 ```
 
 The script stops at the first HTTP failure. It does not erase or overwrite existing catalog objects.

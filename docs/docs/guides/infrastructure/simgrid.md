@@ -9,11 +9,11 @@ Use this guide to model resources, activity duration, and network transfers for 
 
 Use SimGrid when the question is about a modeled platform: placement, parallel capacity, transfers, latency, and simulated cost. Do not use it to validate an SSH, Kubernetes, cloud, or Slurm connection; a SimGrid environment has no remote endpoint to test. For a first end-to-end execution, start with [Run your first simulated workflow](/docs/guides/workflows/first-run).
 
-The YAML blocks below show only the fields discussed in each step. Use the [complete example files](https://github.com/UFFeScience/akoflow/tree/main/examples/simulation) when submitting the example.
+The YAML blocks below show only the fields discussed in each step. Use the [complete example files](https://github.com/UFFeScience/akoflow-examples/tree/main/simulation) when submitting the example.
 
 ## Prerequisites
 
-- A running AkôFlow server with the SimGrid runner available. The server image includes it; source builds can follow [`examples/simulation/README.md`](https://github.com/UFFeScience/akoflow/blob/main/examples/simulation/README.md).
+- A running AkôFlow server with the SimGrid runner available. The server image includes it; source builds can follow [`akoflow-examples/simulation/README.md`](https://github.com/UFFeScience/akoflow-examples/blob/main/simulation/README.md).
 - A local checkout of the repository if you will submit the versioned YAML bundle.
 - A workflow with explicit `simulation.durationSeconds` or `simulation.flops` for every activity whose execution time should be modeled.
 
@@ -124,7 +124,7 @@ dataDependencies:
 
 Create an execution scope containing the environment version, then attach the topology to that scope. A plan is evaluated against this frozen combination of workflow, scope, resources, and topology.
 
-```yaml title="examples/simulation/scope.yaml"
+```yaml title="akoflow-examples/simulation/scope.yaml"
 id: simulation-example-v1-scope
 name: Edge cloud simulation scope
 environmentVersionIds:
@@ -138,7 +138,7 @@ To submit the checked-in manual plan and run it through the API, complete [API c
 ```bash
 git clone --depth 1 https://github.com/UFFeScience/akoflow.git akoflow-simgrid
 cd akoflow-simgrid
-sh examples/simulation/run.sh
+sh akoflow-examples/simulation/run.sh
 ```
 
 Use a fresh instance or change all object IDs first. The example script submits the environment, scope, topology, workflow, plan, and execution request in dependency order.

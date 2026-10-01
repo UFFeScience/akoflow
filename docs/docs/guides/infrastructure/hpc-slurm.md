@@ -48,7 +48,7 @@ In Desktop, add the connection under **Infrastructure → Environments**, assign
 
 ## 2. Describe the SLURM resources
 
-The [`examples/slurm/environment.yaml`](https://github.com/UFFeScience/akoflow/blob/main/examples/slurm/environment.yaml) provides the catalog portion: runtime, cluster, partition, representative compute node, storage resources, and runtime bindings. Add a real connection like the preceding one before submitting it. Confirm that the login node has `schedulable: false` before institutional registration.
+The [`akoflow-examples/slurm/environment.yaml`](https://github.com/UFFeScience/akoflow-examples/blob/main/slurm/environment.yaml) provides the catalog portion: runtime, cluster, partition, representative compute node, storage resources, and runtime bindings. Add a real connection like the preceding one before submitting it. Confirm that the login node has `schedulable: false` before institutional registration.
 
 ```yaml title="Runtime and resource excerpt from environment.yaml"
 runtimes:
@@ -133,7 +133,7 @@ These paths must be valid from the allocated compute node, not merely from the l
 
 Create an execution scope containing the environment version. The versioned example uses:
 
-```yaml title="examples/slurm/scope.yaml"
+```yaml title="akoflow-examples/slurm/scope.yaml"
 id: example-slurm-v1-scope
 name: Example Slurm scope
 environmentVersionIds:

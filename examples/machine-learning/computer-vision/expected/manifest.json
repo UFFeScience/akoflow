@@ -1,9 +1,0 @@
-{
-  "showcase": "computer-vision",
-  "artifacts": [
-    "cifar10-metrics.json",
-    "model.pkl"
-  ],
-  "status": "success"
-}
-

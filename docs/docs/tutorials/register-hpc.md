@@ -99,7 +99,7 @@ key. Compare the host key separately as described in the
 
 ### 2. Prepare the environment and test its connection
 
-Download <a href="/examples/onboarding/hpc-environment.template.json" download="hpc-environment.template.json">the HPC environment template</a>
+Download <a href="https://raw.githubusercontent.com/UFFeScience/akoflow-examples/main/onboarding/hpc-environment.template.json" download="hpc-environment.template.json">the HPC environment template</a>
 and save it as `hpc-environment.template.json`. This is a complete registration
 envelope with an empty inventory; discovery supplies actual cluster resources.
 

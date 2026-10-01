@@ -38,7 +38,7 @@ The completion gate is a new user running a first workflow without undocumented 
 | Desktop operations | Page, form, and provider components in `akoflow-desktop/src` |
 | HTTP methods and paths | `internal/api/httpserver/httpserver.go` in this repository |
 | Request and response contracts | HTTP handlers, application services, and `internal/domain` |
-| Runnable scenarios | `examples/` and integration tests in this repository |
+| Runnable scenarios | [`UFFeScience/akoflow-examples`](https://github.com/UFFeScience/akoflow-examples); engine integration tests remain in this repository |
 | Packaged installation | Root README, `releases/`, the Desktop repository's `electron/` bootstrap, and release workflows |
 
 Generated site output and old copied Markdown files are not sources of truth.
@@ -63,13 +63,14 @@ npm run check:shell --prefix docs
 ```
 
 The link check rejects missing documentation routes, files under `docs/static/`,
-and Showcase downloads without a checked-in counterpart under `examples/`.
+and invalid local assets or documentation routes. Showcase bundles are external links;
+the examples repository validates their files and runnable checks in its own CI.
 It checks repository-owned links, not third-party availability.
 
 The shell check parses fenced Bash/sh examples and Showcase JSX command blocks
 without running them. It requires `curl` examples to fail on HTTP errors, but
 cannot validate named files or API behavior. GitHub Actions runs the type-check,
-build, link check, and shell check for documentation or example changes.
+build, link check, and shell check for documentation changes.
 
 ## Media naming
 

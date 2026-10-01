@@ -30,16 +30,16 @@ runtime before submitting.
 ## Download the complete bundle
 
 <FileList>
-  <a href="/examples/showcase/real/montage-cloud-local/README.md">Bundle README and prerequisites ↓</a>
-  <a href="/examples/showcase/real/montage-cloud-local/scope.json">Execution scope ↓</a>
-  <a href="/examples/showcase/real/montage-cloud-local/network.json">Network topology ↓</a>
-  <a href="/examples/showcase/real/montage-cloud-local/workflow.json">Workflow with 58 commands and named data handoffs ↓</a>
-  <a href="/examples/showcase/real/montage-cloud-local/plan.json">Manual GCP/local plan ↓</a>
-  <a href="/examples/showcase/real/montage-cloud-local/source-workflow.yaml">Original Montage DAG ↓</a>
-  <a href="/examples/showcase/real/montage-cloud-local/reference-runtimes.csv">Historical activity runtimes ↓</a>
-  <a href="/examples/showcase/real/montage-cloud-local/generate.rb">Workflow generator ↓</a>
-  <a href="/examples/showcase/real/montage-cloud-local/prepare-capacity.sh">Cloud-capacity preparation ↓</a>
-  <a href="/examples/showcase/real/montage-cloud-local/submit-run.sh">Submission script ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow-examples/main/real/montage-cloud-local/README.md">Bundle README and prerequisites ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow-examples/main/real/montage-cloud-local/scope.json">Execution scope ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow-examples/main/real/montage-cloud-local/network.json">Network topology ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow-examples/main/real/montage-cloud-local/workflow.json">Workflow with 58 commands and named data handoffs ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow-examples/main/real/montage-cloud-local/plan.json">Manual GCP/local plan ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow-examples/main/real/montage-cloud-local/source-workflow.yaml">Original Montage DAG ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow-examples/main/real/montage-cloud-local/reference-runtimes.csv">Historical activity runtimes ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow-examples/main/real/montage-cloud-local/generate.rb">Workflow generator ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow-examples/main/real/montage-cloud-local/prepare-capacity.sh">Cloud-capacity preparation ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow-examples/main/real/montage-cloud-local/submit-run.sh">Submission script ↓</a>
 </FileList>
 
 The bundle README explains the instance-specific resource IDs, local Docker requirement, import order, submission command, and post-run checks.
@@ -52,9 +52,9 @@ The bundle README explains the instance-specific resource IDs, local Docker requ
   api={<div>
     <h2>Use the API</h2>
     <p>Follow the <a href="/docs/tutorials/api-access">API access guide</a> and the bundle README. Register the pinned image with <code>register-artifact.sh</code>, set the daemon's approved public IP in <code>AKOFLOW_SSH_CIDR</code>, then create four one-instance cloud targets with <code>prepare-capacity.sh</code>. Import <code>scope.json</code>, <code>network.json</code>, <code>workflow.json</code>, and <code>plan.json</code> in that order. Submit exactly one run. The example IDs refer to a particular AkôFlow instance and must be reviewed before reuse.</p>
-    <pre><code>{`sh examples/real/montage-cloud-local/register-artifact.sh
-sh examples/real/montage-cloud-local/prepare-capacity.sh
-sh examples/real/montage-cloud-local/submit-run.sh montage-58-four-vm-local-050d-run-v1`}</code></pre>
+    <pre><code>{`sh akoflow-examples/real/montage-cloud-local/register-artifact.sh
+sh akoflow-examples/real/montage-cloud-local/prepare-capacity.sh
+sh akoflow-examples/real/montage-cloud-local/submit-run.sh montage-58-four-vm-local-050d-run-v1`}</code></pre>
   </div>}
 />
 

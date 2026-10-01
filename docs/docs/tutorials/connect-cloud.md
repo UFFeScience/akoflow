@@ -111,7 +111,7 @@ jq '{id:"research-gcp-credential", provider:"gcp", credential:.}' \
 ```
 
 The response contains `credentialRef`, not the original secret. Download
-<a href="/examples/onboarding/gcp-environment.template.json" download="gcp-environment.template.json">the cloud environment template</a>
+<a href="https://raw.githubusercontent.com/UFFeScience/akoflow-examples/main/onboarding/gcp-environment.template.json" download="gcp-environment.template.json">the cloud environment template</a>
 and save it as `gcp-environment.template.json`. Apply your validated settings:
 
 ```bash

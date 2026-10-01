@@ -1,9 +1,0 @@
-{
-  "showcase": "hyperparameter-search",
-  "artifacts": [
-    "leaderboard.csv",
-    "best-model.pkl"
-  ],
-  "status": "success"
-}
-

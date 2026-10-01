@@ -19,17 +19,17 @@ The checked-in access manifest intentionally grants broad permissions for a disp
 ## Download the inputs
 
 <FileList>
-  <a href="/examples/showcase/kind/README.md">Bundle README and setup order ↓</a>
-  <a href="/examples/showcase/kind/cluster.yaml">Kind cluster ↓</a>
-  <a href="/examples/showcase/kind/akoflow-access.yaml">AkôFlow access ↓</a>
-  <a href="/examples/showcase/kind/storage.yaml">Persistent storage YAML ↓</a>
-  <a href="/examples/showcase/kind/environment.yaml">Environment YAML ↓</a>
-  <a href="/examples/showcase/kind/scope.yaml">Execution scope YAML ↓</a>
-  <a href="/examples/showcase/kind/topology.yaml">Network topology YAML ↓</a>
-  <a href="/examples/showcase/kind/dag.yaml">Workflow YAML ↓</a>
-  <a href="/examples/showcase/kind/plan.yaml">Planner configuration ↓</a>
-  <a href="/examples/showcase/kind/requests/plan-request.yaml">Plan envelope ↓</a>
-  <a href="/examples/showcase/kind/requests/execution-request.yaml">Execution envelope ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow-examples/main/kind/README.md">Bundle README and setup order ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow-examples/main/kind/cluster.yaml">Kind cluster ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow-examples/main/kind/akoflow-access.yaml">AkôFlow access ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow-examples/main/kind/storage.yaml">Persistent storage YAML ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow-examples/main/kind/environment.yaml">Environment YAML ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow-examples/main/kind/scope.yaml">Execution scope YAML ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow-examples/main/kind/topology.yaml">Network topology YAML ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow-examples/main/kind/dag.yaml">Workflow YAML ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow-examples/main/kind/plan.yaml">Planner configuration ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow-examples/main/kind/requests/plan-request.yaml">Plan envelope ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow-examples/main/kind/requests/execution-request.yaml">Execution envelope ↓</a>
 </FileList>
 
 <InterfaceApiTabs
@@ -48,14 +48,14 @@ The checked-in access manifest intentionally grants broad permissions for a disp
     <p>Complete <a href="/docs/tutorials/api-access">API connection setup</a> and clone the repository, or use an existing matching checkout:</p>
     <pre><code>{`git clone --depth 1 https://github.com/UFFeScience/akoflow.git akoflow-showcase
 cd akoflow-showcase`}</code></pre>
-    <p>From that checkout, follow <a href="https://github.com/UFFeScience/akoflow/tree/main/examples/kind">the Kind README</a> to create the cluster and token. Then use a fresh instance and submit:</p>
+    <p>From that checkout, follow <a href="https://github.com/UFFeScience/akoflow-examples/tree/main/kind">the Kind README</a> to create the cluster and token. Then use a fresh instance and submit:</p>
     <pre><code>{`for pair in \\
-  "environments examples/kind/environment.yaml" \\
-  "execution-scopes examples/kind/scope.yaml" \\
-  "network-topologies examples/kind/topology.yaml" \\
-  "workflow-definitions examples/kind/dag.yaml" \\
-  "schedule-plans examples/kind/requests/plan-request.yaml" \\
-  "execution-runs examples/kind/requests/execution-request.yaml"
+  "environments akoflow-examples/kind/environment.yaml" \\
+  "execution-scopes akoflow-examples/kind/scope.yaml" \\
+  "network-topologies akoflow-examples/kind/topology.yaml" \\
+  "workflow-definitions akoflow-examples/kind/dag.yaml" \\
+  "schedule-plans akoflow-examples/kind/requests/plan-request.yaml" \\
+  "execution-runs akoflow-examples/kind/requests/execution-request.yaml"
 do
   set -- $pair
   curl --fail-with-body \\
@@ -72,4 +72,4 @@ A successful run produces two Kubernetes Jobs, a workspace PVC for each activity
 
 The checked-in bundle was executed from a clean Kind cluster on 2026-09-11 as `kind-dag-run-v8`: both activities completed, 9 bytes were transferred, and both files had checksum `sha256:cb064c1339ffa3d7777bcb0459de3dceddb9146156dde58065a4ac826b029aa7`. Its observed makespan was 17.776 s. Kubernetes scheduling and Pod startup are included in that wall-clock result.
 
-If the consumer Job remains `Pending`, use `kubectl describe pod <pod-name>` to inspect PVC/node affinity. The full setup, verification, and cleanup procedure is in the [Kind README](https://github.com/UFFeScience/akoflow/tree/main/examples/kind).
+If the consumer Job remains `Pending`, use `kubectl describe pod <pod-name>` to inspect PVC/node affinity. The full setup, verification, and cleanup procedure is in the [Kind README](https://github.com/UFFeScience/akoflow-examples/tree/main/kind).

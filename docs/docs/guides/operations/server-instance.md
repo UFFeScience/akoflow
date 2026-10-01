@@ -115,7 +115,7 @@ Download the versioned Compose file supplied with this documentation:
 ```bash
 cd ~/akoflow-server
 curl --fail-with-body --location --remote-name \
-  "https://akoflow.com/examples/server-instance/compose.yaml"
+  "https://raw.githubusercontent.com/UFFeScience/akoflow-examples/main/server-instance/compose.yaml"
 ```
 
 Create a private `.env` file. Create a long random bearer token in the

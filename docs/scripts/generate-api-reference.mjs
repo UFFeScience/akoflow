@@ -895,8 +895,8 @@ function endpointDocument(endpoint, position) {
     runnableSimulationRequests[`${endpoint.method} ${endpoint.path}`];
   const runnableSection = runnableFile
     ? endpoint.path === "/akoflow-api/workflow-definitions/import/"
-      ? `## Runnable SimGrid request\n\nUse [\`examples/simulation/workflow.yaml\`](https://github.com/UFFeScience/akoflow/blob/v1.0.8/examples/simulation/workflow.yaml) **instead of** the create-workflow request in the [first-run tutorial](/docs/guides/workflows/first-run). Keep the other five requests in order so their referenced IDs exist. Do not submit the same workflow through both routes.\n\n`
-      : `## Runnable SimGrid request\n\nThe [first-run tutorial](/docs/guides/workflows/first-run) submits [\`examples/simulation/${runnableFile}\`](https://github.com/UFFeScience/akoflow/blob/v1.0.8/examples/simulation/${runnableFile}) in a six-request sequence. Follow that order so referenced IDs exist.\n\n`
+      ? `## Runnable SimGrid request\n\nUse [\`akoflow-examples/simulation/workflow.yaml\`](https://github.com/UFFeScience/akoflow-examples/blob/main/simulation/workflow.yaml) **instead of** the create-workflow request in the [first-run tutorial](/docs/guides/workflows/first-run). Keep the other five requests in order so their referenced IDs exist. Do not submit the same workflow through both routes.\n\n`
+      : `## Runnable SimGrid request\n\nThe [first-run tutorial](/docs/guides/workflows/first-run) submits [\`akoflow-examples/simulation/${runnableFile}\`](https://github.com/UFFeScience/akoflow-examples/blob/main/simulation/${runnableFile}) in a six-request sequence. Follow that order so referenced IDs exist.\n\n`
     : "";
   const verifiedNote = verifiedRequestNotes[`${endpoint.method} ${endpoint.path}`];
   const verifiedSection = verifiedNote

@@ -28,14 +28,14 @@ The diagram and the workflow YAML show the same topology: `prepare` produces `da
 ## Download the inputs
 
 <FileList>
-  <a href="/examples/showcase/simulation/README.md">Bundle README and prerequisites ↓</a>
-  <a href="/examples/showcase/simulation/environment.yaml">Environment YAML ↓</a>
-  <a href="/examples/showcase/simulation/scope.yaml">Execution scope YAML ↓</a>
-  <a href="/examples/showcase/simulation/topology.yaml">Network topology YAML ↓</a>
-  <a href="/examples/showcase/simulation/workflow.yaml">Workflow YAML ↓</a>
-  <a href="/examples/showcase/simulation/plan-request.yaml">Manual plan envelope ↓</a>
-  <a href="/examples/showcase/simulation/execution-request.yaml">Execution envelope ↓</a>
-  <a href="/examples/showcase/simulation/run.sh">Submission script ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow-examples/main/simulation/README.md">Bundle README and prerequisites ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow-examples/main/simulation/environment.yaml">Environment YAML ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow-examples/main/simulation/scope.yaml">Execution scope YAML ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow-examples/main/simulation/topology.yaml">Network topology YAML ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow-examples/main/simulation/workflow.yaml">Workflow YAML ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow-examples/main/simulation/plan-request.yaml">Manual plan envelope ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow-examples/main/simulation/execution-request.yaml">Execution envelope ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow-examples/main/simulation/run.sh">Submission script ↓</a>
 </FileList>
 
 <InterfaceApiTabs
@@ -54,7 +54,7 @@ The diagram and the workflow YAML show the same topology: `prepare` produces `da
     <p>Complete <a href="/docs/tutorials/api-access">API connection setup</a>. Run this in a fresh AkôFlow instance, or change every ID in the six YAML files first. Clone the example files, or use an existing matching checkout, then submit the bundle:</p>
     <pre><code>{`git clone --depth 1 https://github.com/UFFeScience/akoflow.git akoflow-showcase
 cd akoflow-showcase
-sh examples/simulation/run.sh`}</code></pre>
+sh akoflow-examples/simulation/run.sh`}</code></pre>
     <p>Submitting <code>execution-runs</code> acknowledges the request; it does not mean the execution has completed. Poll the immutable run projection until <code>status</code> is <code>completed</code>:</p>
     <pre><code>{`curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \\
   "$AKOFLOW_API_URL/execution-runs/simulation-example-run-v1/"`}</code></pre>

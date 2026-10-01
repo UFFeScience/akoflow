@@ -9,6 +9,26 @@ AkôFlow separates **scientific data** from **executable artifacts**. Files prod
 
 The Desktop is the easiest way to perform these operations. Every view described below uses the same HTTP API, so the API examples are suitable for scripts and integrations.
 
+## How artifacts and storage relate
+
+```mermaid
+flowchart LR
+  Build["Build run"] --> Catalog["Artifact catalog"]
+  Catalog --> Verified["Verified location"]
+  Catalog --> Materialize["Materialize on target resource"]
+  Verified --> Run["Execution run"]
+  Materialize --> Run
+  Storage["Storage browse"] --> Promote["Promote data"]
+  Promote --> Sci["Scientific record"]
+  Storage --> Promote2["Promote artifact"]
+  Promote2 --> Catalog
+  Run --> Produced["Produced files"]
+  Produced --> Manifest["Artifact manifest"]
+  Manifest --> Sci
+```
+
+The diagram highlights two distinct paths. A build run produces an artifact whose bytes are either already at a verified location or are materialized on the target resource before execution. A storage browse can also promote an existing file directly into the artifact catalog or the scientific record. Produced files from an execution become evidence through the artifact manifest; that manifest is what makes a run scientifically citable.
+
 ## Browse storage
 
 In Desktop, open **Infrastructure**, select an environment, then open **Storage**. Choose a storage card and one of its declared roots. Entries are loaded lazily; opening this view does not scan an entire filesystem.

@@ -4,6 +4,25 @@ title: Execution scopes and network topologies
 
 An execution scope is a reusable set of environment versions available to planning. A network topology describes transfer links between resources. The scope stores a `networkTopologyId`; the topology stores its `executionScopeId`. Use stable IDs and create the scope before the topology when building them through the current API.
 
+## Scope, environments, and topology
+
+```mermaid
+flowchart LR
+  EnvA["Environment version A"] --> Scope[Execution scope]
+  EnvB["Environment version B"] --> Scope
+  EnvC["Environment version C"] --> Scope
+  Scope --> Topo["Network topology"]
+  Topo --> Link1["Link: A → B"]
+  Topo --> Link2["Link: B → C"]
+  Topo --> Link3["Link: A → C (bidirectional)"]
+  Scope --> Session["Planning session"]
+  Link1 --> Session
+  Link2 --> Session
+  Link3 --> Session
+```
+
+The diagram highlights a deliberate constraint: a planning session reads the scope as a single frozen universe. Adding a new environment version to a scope after a session has started does not retroactively change the candidates that session evaluated. Create a new session if you want to add resources.
+
 ## Create a scope
 
 ### Using AkôFlow Desktop

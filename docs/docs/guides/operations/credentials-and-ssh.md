@@ -7,6 +7,25 @@ description: Store credentials in the Engine, assign SSH service keys, and keep 
 
 AkôFlow stores secret material in the Engine and places a `credentialRef` in connection definitions. The renderer sends a secret only when it is first saved or imported; list operations return references or public metadata, never the original private key or bearer token.
 
+## How credentials flow between Desktop and the Engine
+
+```mermaid
+flowchart LR
+  User["Operator in Desktop"] -->|Submit form| Desktop["Desktop UI"]
+  Desktop -->|Send secret once| Engine["Engine API"]
+  Engine -->|Validate with ssh-keygen| Validator["Validator"]
+  Validator --> Engine
+  Engine -->|Store with mode 0600| Vault["Credential directory"]
+  Vault -->|Return credentialRef| Engine
+  Engine -->|Reference only| Connection["Connection definition"]
+  Connection -->|List operations| Engine
+  Engine -->|Public metadata| Desktop
+  Connection -->|Use at runtime| Runtime["Runtime adapter"]
+  Vault -->|Private material| Runtime
+```
+
+The diagram shows the one-way path for secrets. The secret is uploaded once during generation or import, validated by the Engine, stored with restricted file permissions, and never displayed again. Subsequent list operations return only references and public metadata, while runtime adapters read the stored material when they need it.
+
 ## Generate an SSH service key
 
 ### Using AkôFlow Desktop

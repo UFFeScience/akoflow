@@ -16,6 +16,9 @@ const docsDirectory = resolve(scriptDirectory, "..");
 const repositoryDirectory = resolve(docsDirectory, "..");
 const contentDirectory = join(docsDirectory, "docs");
 const staticDirectory = join(docsDirectory, "static");
+const examplesDirectory = process.env.AKOFLOW_EXAMPLES_DIR
+  ? resolve(process.env.AKOFLOW_EXAMPLES_DIR)
+  : undefined;
 const documentationExtensions = [".md", ".mdx"];
 const localErrors = [];
 let checkedLinks = 0;
@@ -82,8 +85,14 @@ function candidateDocumentationFiles(path) {
   return candidates;
 }
 
-function checkRepositoryPath(sourceFile, target, path, label) {
-  if (!inside(repositoryDirectory, path) || !existsSync(path)) {
+function checkRepositoryPath(
+  sourceFile,
+  target,
+  path,
+  label,
+  allowedRoot = repositoryDirectory,
+) {
+  if (!inside(allowedRoot, path) || !existsSync(path)) {
     report(sourceFile, target, `${label} does not exist in this checkout`);
     return false;
   }
@@ -99,6 +108,15 @@ function checkTarget(sourceFile, rawTarget, sourceIsShowcase) {
   );
   if (showcaseExample && sourceIsShowcase) {
     checkedShowcaseDownloads += 1;
+    if (examplesDirectory) {
+      checkRepositoryPath(
+        sourceFile,
+        target,
+        resolve(examplesDirectory, showcaseExample[1]),
+        "Example repository path",
+        examplesDirectory,
+      );
+    }
     return;
   }
 

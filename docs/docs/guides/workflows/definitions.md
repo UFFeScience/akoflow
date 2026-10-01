@@ -86,3 +86,21 @@ The create response contains the saved definition. Use its `version.id` when cre
 ## Next step
 
 Once the workflow, execution scope, resources, and network topology exist, [create a planning session](/docs/guides/workflows/planning).
+
+## Inspect workflow definitions in Desktop
+
+The workflow catalog is where definitions are imported or created. Version and activity counts help distinguish similarly named workflows.
+
+![Workflow definitions catalog](/img/interface/workflows/definitions-current.png)
+
+The detail page combines the activity graph with the actions that lead into planning. Its **Plans** and **Runs** sections keep downstream records under the workflow that produced them.
+
+![Workflow detail with activity graph](/img/interface/workflows/workflow-detail.png)
+
+![Plans owned by the workflow](/img/interface/workflows/workflow-plans.png)
+
+![Runs associated with the workflow](/img/interface/workflows/workflow-runs.png)
+
+During creation, the form and DAG preview should agree before the definition is saved.
+
+![Create workflow form with DAG preview](/img/interface/workflows/new-workflow.png)

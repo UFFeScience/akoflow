@@ -131,3 +131,23 @@ Expect `source: "imported"` and the new ID. The copied lifecycle dependencies mu
 ## Next step
 
 Review the selected plan and [start and monitor an execution](/docs/guides/workflows/executions).
+
+## Review planning records in Desktop
+
+Planning starts under the selected workflow. Choose generated planning when algorithms should compare alternatives, or manual planning when placements are already known.
+
+![Create an execution plan with generated and manual paths](/img/interface/planning/planning-create.png)
+
+Saved plans remain available in the plan catalog. A plan detail shows the selected target and schedule, while its executions section lists runs created from that immutable plan.
+
+![Saved plans catalog](/img/interface/planning/plans.png)
+
+![Plan detail with target and scheduled activities](/img/interface/planning/plan-detail.png)
+
+![Executions created from a plan](/img/interface/planning/plan-executions.png)
+
+Planning sessions retain candidate comparisons before promotion. Open a session to compare algorithm runs and select a feasible candidate.
+
+![Planning sessions catalog](/img/interface/planning/sessions.png)
+
+![Planning session candidate comparison](/img/interface/planning/session-detail.png)

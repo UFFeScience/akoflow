@@ -104,3 +104,37 @@ curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
 ## Investigating a failure
 
 Start with `run.failureReason`, then inspect the failed activity, its handle `failure`, exit code and log, and the ordered run events. If failure happened during preparation, inspect executable/workspace preparation and transfer records; a runtime log may not exist yet.
+
+## Read an execution in Desktop
+
+The run catalog provides status, mode, target, start time, and activity progress. **Start run** creates a standalone execution after its plan and target are selected.
+
+![Execution history](/img/interface/runs/executions.png)
+
+![Start a new execution](/img/interface/runs/new-execution.png)
+
+The run overview summarizes observed timing and status. Use the owned sections below it to investigate one dimension at a time.
+
+![Completed run overview](/img/interface/runs/run-detail.png)
+
+**Activities** exposes per-activity status; opening one activity reveals placement and measured time components.
+
+![Run activity list](/img/interface/runs/run-activities.png)
+
+![Activity execution detail](/img/interface/runs/activity-detail.png)
+
+**Timeline** preserves ordering and overlap. **Resources** shows actual placement, and **Plan comparison** contrasts predicted and observed outcomes.
+
+![Observed activity timeline](/img/interface/runs/run-timeline.png)
+
+![Resources used by the run](/img/interface/runs/run-resources.png)
+
+![Predicted plan compared with observed execution](/img/interface/runs/run-plan-comparison.png)
+
+Use **Data**, **Prerequisites**, and **Events** when execution depends on transfers, preparation, or lifecycle transitions.
+
+![Run data objects and transfers](/img/interface/runs/run-data.png)
+
+![Run prerequisite checks](/img/interface/runs/run-prerequisites.png)
+
+![Ordered run lifecycle events](/img/interface/runs/run-events.png)

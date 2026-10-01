@@ -160,11 +160,6 @@ for (const sourceFile of documentationFiles) {
   for (const match of source.matchAll(/!?\[[^\]]*\]\(([^)]+)\)/g)) targets.add(match[1]);
   for (const match of source.matchAll(/<(?:a|img)\b[^>]+(?:href|src)=["']([^"']+)["']/gi)) targets.add(match[1]);
   for (const match of source.matchAll(/require\(['"](@site\/static\/[^'"]+)['"]\)/g)) targets.add(match[1]);
-  if (sourceFile.endsWith("interface-screens.mdx")) {
-    for (const match of source.matchAll(/\bpath:\s*'([^']+\.png)'/g)) {
-      targets.add(`/img/interface/${match[1]}`);
-    }
-  }
   for (const target of targets) checkTarget(sourceFile, target, sourceIsShowcase);
 }
 

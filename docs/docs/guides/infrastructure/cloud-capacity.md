@@ -126,3 +126,31 @@ curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" "$AKOFLOW_AP
 ```
 
 The provisioning request queues an operation; it does not wait for the instance to become ready. Lifecycle endpoints also exist for configure, validate, start, stop, and destroy. Before destructive lifecycle actions, inspect the instance and active operation state in Desktop or through the API.
+
+## Follow cloud capacity in Desktop
+
+A cloud environment remains the parent record for catalog synchronization, capacity targets, and provisioning history.
+
+![Cloud environment detail with capacity and provisioning navigation](/img/interface/infrastructure/cloud-environment-detail.png)
+
+**Cloud capacity** summarizes the selected machine, image, disk, network, and estimated provider pricing before any instance is created.
+
+![Cloud capacity target and provider catalog controls](/img/interface/infrastructure/environment-cloud-capacity.png)
+
+![Cloud capacity resource with machine profile and provisioning history](/img/interface/infrastructure/cloud-resource-detail.png)
+
+Reusable machine configurations are managed separately and can be associated with a target before provisioning.
+
+![Machine configurations catalog](/img/interface/infrastructure/machine-configurations.png)
+
+The environment's **Provisioning** section lists its operations. Open one operation to separate infrastructure creation from machine configuration.
+
+![Environment provisioning history](/img/interface/infrastructure/environment-provisioning.png)
+
+![Provisioning operation overview](/img/interface/infrastructure/cloud-operation-detail.png)
+
+Terraform and Ansible have independent logs and progress. A Terraform success means the infrastructure exists; Ansible success means the selected machine configuration was applied.
+
+![Terraform provisioning log and interpreted stages](/img/interface/infrastructure/cloud-operation-terraform.png)
+
+![Ansible configuration log and task progress](/img/interface/infrastructure/cloud-operation-ansible.png)

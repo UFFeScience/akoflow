@@ -11,7 +11,6 @@ const sidebars: SidebarsConfig = {
         "installation",
         "downloads",
         "guides/interface-tour",
-        "guides/interface-screens",
         "guides/workflows/first-run",
         "tutorials/compare-plans",
         {

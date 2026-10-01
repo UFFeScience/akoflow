@@ -104,3 +104,9 @@ curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
 ```
 
 Promotion registers the existing path; it does not upload or move the file.
+
+## Desktop storage view
+
+Open an environment's **Storage** section to select a registered storage and browse only its approved roots. This is the same context used by download, checksum, copy, archive, and promotion operations.
+
+![Environment storage browser with registered roots](/img/interface/infrastructure/environment-storage.png)

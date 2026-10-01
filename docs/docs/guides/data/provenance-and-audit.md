@@ -184,3 +184,21 @@ For a failed or surprising result:
 5. Export the relevant Explore page when evidence must be shared; preserve IDs so another investigator can reproduce the query.
 
 Provenance endpoints return `503 Service Unavailable` when the explorer is not configured, `400 Bad Request` for invalid entity, SQL, or lineage requests, and `500 Internal Server Error` if schema discovery fails.
+
+## Desktop provenance views
+
+The provenance landing view is the entry point for trusted records, SQL, and lineage. Use the view that matches the question instead of treating them as interchangeable visualizations.
+
+![Provenance trusted-record explorer](/img/interface/data/provenance.png)
+
+The SQL workspace is appropriate for aggregate or cross-record questions. It exposes only the safe read-only schema.
+
+![Read-only provenance SQL workspace](/img/interface/data/provenance-sql.png)
+
+Lineage is appropriate when the question starts from one record and follows its relationships.
+
+![Provenance lineage graph](/img/interface/data/provenance-lineage.png)
+
+Audit remains the operational complement to scientific provenance.
+
+![Operational audit event list](/img/interface/operations/audit.png)

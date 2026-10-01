@@ -179,3 +179,19 @@ curl --fail-with-body \
 ```
 
 Success is `204 No Content`. The endpoint returns `503` when reset support is unavailable and `422` when the reset operation fails. It cannot run while a read-only snapshot is active because the read-only guard returns `423` first.
+
+## Instance settings in Desktop
+
+Settings groups ordinary preferences separately from instance data and destructive controls.
+
+![Desktop settings overview](/img/interface/operations/settings.png)
+
+Use **Data management** for instance data and transfer settings. Use **Danger zone** only for high-impact operations such as reset, after reviewing the confirmation text.
+
+![Instance data management settings](/img/interface/operations/settings-data.png)
+
+![Danger zone with protected instance actions](/img/interface/operations/settings-danger.png)
+
+Project and contributor information is available under **Credits** and does not affect instance state.
+
+![Desktop credits and project information](/img/interface/operations/settings-credits.png)

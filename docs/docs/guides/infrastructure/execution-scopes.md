@@ -109,3 +109,21 @@ curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
 ```
 
 Replace `hpc-cluster` and `cloud-capacity-small` with resource IDs from those environment versions. The API does not check that a link's resources belong to the scope or measure the real bandwidth and latency; verify those values before using the topology for planning.
+
+## Inspect scopes and topologies in Desktop
+
+The scope catalog shows the planning boundaries already available. The detail page makes membership explicit before a workflow is planned.
+
+![Execution scopes catalog](/img/interface/infrastructure/execution-scopes-current.png)
+
+![Execution scope detail with member environment versions](/img/interface/infrastructure/scope-detail.png)
+
+![Create execution scope form](/img/interface/infrastructure/new-scope.png)
+
+Network topologies are separate records because the same scope can be evaluated under different connectivity assumptions. Inspect the nodes and links before selecting a topology for planning.
+
+![Network topologies catalog](/img/interface/infrastructure/network.png)
+
+![Network topology detail with links and nodes](/img/interface/infrastructure/topology-detail.png)
+
+![Create network topology form](/img/interface/infrastructure/new-topology.png)

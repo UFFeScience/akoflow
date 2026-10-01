@@ -149,3 +149,9 @@ Cloud onboarding similarly sends provider credential JSON to `/cloud-credentials
 - Instance export redacts credentials and credential references. Imported snapshots therefore cannot reconnect until you return to a writable instance and configure credentials there.
 - If SSH uses a gateway or proxy command, authorize and validate every hop. `forwardAgent` and proxy settings are connection configuration, not substitutes for an Engine-managed key.
 - A leaked public key does not reveal the private key, but remote `authorized_keys` entries still determine where that key can authenticate.
+
+## SSH service keys in Desktop
+
+The **SSH service keys** settings section is where a private key is generated or imported into the protected credential store. The screen displays public metadata and the protected reference, not the private key material.
+
+![SSH service key settings](/img/interface/operations/settings-ssh.png)

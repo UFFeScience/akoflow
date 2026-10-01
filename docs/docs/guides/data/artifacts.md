@@ -151,3 +151,23 @@ Execution detail also shows prepared artifacts and transfer activity. Use it to 
 :::warning Credentials and paths
 Do not put registry credentials, SSH secrets, or cloud secrets in artifact payloads. Use configured credential references. Browser-local file paths are not server build contexts; upload the bytes or register artifact-store metadata.
 :::
+
+## Follow artifacts in Desktop
+
+The **Data** entry point separates executable artifacts from observed scientific data. Open **Artifacts** to inspect build identity and readiness.
+
+![Data catalog entry point](/img/interface/data/catalog.png)
+
+![Executable artifacts catalog](/img/interface/data/artifacts.png)
+
+An artifact detail shows the registered source and build specification. Registration creates identity and configuration; it does not by itself prove that a build completed.
+
+![Artifact detail with source and build specification](/img/interface/data/artifact-detail.png)
+
+![Register an artifact or build source](/img/interface/data/new-artifact.png)
+
+Locations and materializations answer different questions: locations show where copies are known, while materializations track delivery to an execution target.
+
+![Artifact locations](/img/interface/data/artifact-locations.png)
+
+![Artifact materializations](/img/interface/data/materializations.png)

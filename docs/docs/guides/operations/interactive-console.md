@@ -128,3 +128,9 @@ Command creation returns `422` for an unknown/unbound resource, invalid input, a
 - Imported instance snapshots are read-only; opening, writing to, or closing a session is blocked with `423 Locked`.
 - Terminal logs may contain command output and secrets printed by programs. Treat exported logs as sensitive operational data.
 - Close sessions when finished; closing the detail page alone does not close a daemon-owned session.
+
+## Desktop console view
+
+The Console page lists daemon-owned interactive sessions and their persisted output. Opening the fixed terminal panel does not change ownership of the session; close it explicitly when work is complete.
+
+![Interactive console sessions and output](/img/interface/operations/console.png)

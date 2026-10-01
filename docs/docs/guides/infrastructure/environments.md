@@ -121,3 +121,31 @@ curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
 ```
 
 The response is the full definition, including the current version and related runtimes, resources, connections, and discovered storage when present.
+
+## Desktop views in the environment lifecycle
+
+The catalog separates execution infrastructure from simulation models. Health and runtime badges help you choose the correct environment before opening it.
+
+![Environment catalog with execution environments](/img/interface/infrastructure/environments-current.png)
+
+![Environment catalog with simulation environments](/img/interface/infrastructure/environments-simulation.png)
+
+The detail page is the navigation boundary for one environment. Use its owned sections instead of treating inventory, storage, or provisioning as global records.
+
+![Environment detail with availability and owned sections](/img/interface/infrastructure/environment-detail.png)
+
+Discovery results appear in **Inventory**. Editing preserves the environment identity while changing its configuration.
+
+![Environment inventory summary](/img/interface/infrastructure/environment-inventory.png)
+
+![Environment edit form](/img/interface/infrastructure/environment-edit.png)
+
+The creation form establishes the provider and connection model before discovery.
+
+![Create environment form](/img/interface/infrastructure/new-environment.png)
+
+Resources remain individually inspectable while retaining their owning environment and runtime context.
+
+![Resources catalog across environments](/img/interface/infrastructure/resources.png)
+
+![Resource detail with runtime and capacity](/img/interface/infrastructure/resource-detail.png)

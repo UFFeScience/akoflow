@@ -5,7 +5,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -17,8 +16,9 @@ import (
 )
 
 type Runner struct {
-	Root   string
-	Binary string
+	Root    string
+	Binary  string
+	Execute func(context.Context, string, []string, ...string) ([]byte, error)
 }
 
 var safeID = regexp.MustCompile(`[^a-z0-9-]+`)
@@ -209,9 +209,6 @@ func (r Runner) run(ctx context.Context, workspace string, arguments ...string) 
 	if binary == "" {
 		binary = "terraform"
 	}
-	command := exec.CommandContext(ctx, binary, arguments...)
-	command.Dir = workspace
-	command.Env = append(os.Environ(), "TF_IN_AUTOMATION=1")
 	logFile, logErr := os.OpenFile(filepath.Join(workspace, "provision.log"), os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0600)
 	if logErr != nil {
 		return nil, logErr
@@ -220,18 +217,35 @@ func (r Runner) run(ctx context.Context, workspace string, arguments ...string) 
 	startedAt := time.Now().UTC()
 	writeProvisionLog(logFile, "Terraform", "terraform %s", strings.Join(arguments, " "))
 	_ = logFile.Sync()
-	var output bytes.Buffer
-	command.Stdout = io.MultiWriter(&output, logFile)
-	command.Stderr = io.MultiWriter(&output, logFile)
-	err := command.Run()
+	output, err := r.execute(ctx, workspace, append([]string{binary}, arguments...)...)
+	if len(output) > 0 {
+		_, _ = logFile.Write(output)
+		if output[len(output)-1] != '\n' {
+			_, _ = logFile.WriteString("\n")
+		}
+	}
 	if err != nil {
 		writeProvisionLog(logFile, "Terraform", "failed after %.3fs: %v", time.Since(startedAt).Seconds(), err)
 		_ = logFile.Sync()
-		return nil, fmt.Errorf("terraform %s: %w: %s", arguments[0], err, strings.TrimSpace(output.String()))
+		return nil, fmt.Errorf("terraform %s: %w: %s", arguments[0], err, strings.TrimSpace(string(output)))
 	}
 	writeProvisionLog(logFile, "Terraform", "completed in %.3fs", time.Since(startedAt).Seconds())
 	_ = logFile.Sync()
-	return output.Bytes(), nil
+	return output, nil
+}
+
+func (r Runner) execute(ctx context.Context, workspace string, commandAndArguments ...string) ([]byte, error) {
+	if r.Execute != nil {
+		return r.Execute(ctx, workspace, append(os.Environ(), "TF_IN_AUTOMATION=1"), commandAndArguments...)
+	}
+	command := exec.CommandContext(ctx, commandAndArguments[0], commandAndArguments[1:]...)
+	command.Dir = workspace
+	command.Env = append(os.Environ(), "TF_IN_AUTOMATION=1")
+	var output bytes.Buffer
+	command.Stdout = &output
+	command.Stderr = &output
+	err := command.Run()
+	return output.Bytes(), err
 }
 
 func writeProvisionLog(logFile *os.File, tool, format string, values ...any) {

@@ -89,6 +89,52 @@ func TestParseOutputRejectsInvalidJSON(t *testing.T) {
 	}
 }
 
+func TestApplyUsesInjectedExecutorAndWritesPhaseLogs(t *testing.T) {
+	var calls [][]string
+	runner := Runner{Root: t.TempDir(), Execute: func(_ context.Context, _ string, _ []string, commandAndArguments ...string) ([]byte, error) {
+		calls = append(calls, commandAndArguments)
+		switch commandAndArguments[1] {
+		case "output":
+			return []byte(`{"instance_id":{"value":"provider-1"},"public_ip":{"value":"203.0.113.10"}}`), nil
+		default:
+			return []byte("ok"), nil
+		}
+	}}
+	result, err := runner.Apply(context.Background(), ports.TerraformProvisionSpec{
+		InstanceID: "cloud-instance-test-executor",
+		Target:     domain.CloudCapacityTarget{Provider: "gcp", ProviderMachineType: "e2-micro", Region: "us-central1"},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if result.ProviderID != "provider-1" || result.PublicAddress != "203.0.113.10" {
+		t.Fatalf("unexpected terraform result: %#v", result)
+	}
+	if len(calls) != 4 || calls[0][1] != "fmt" || calls[1][1] != "init" || calls[2][1] != "apply" || calls[3][1] != "output" {
+		t.Fatalf("unexpected terraform phases: %#v", calls)
+	}
+	logData, err := os.ReadFile(filepath.Join(runner.Root, "cloud-instance-test-executor", "provision.log"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(string(logData), "terraform init") || !strings.Contains(string(logData), "completed") {
+		t.Fatalf("expected phase logs, got %q", logData)
+	}
+}
+
+func TestApplySurfacesInjectedCommandFailure(t *testing.T) {
+	runner := Runner{Root: t.TempDir(), Execute: func(_ context.Context, _ string, _ []string, commandAndArguments ...string) ([]byte, error) {
+		if commandAndArguments[1] == "init" {
+			return []byte("provider download failed"), os.ErrNotExist
+		}
+		return nil, nil
+	}}
+	_, err := runner.Apply(context.Background(), ports.TerraformProvisionSpec{InstanceID: "cloud-instance-test-failure", Target: domain.CloudCapacityTarget{Provider: "gcp"}})
+	if err == nil || !strings.Contains(err.Error(), "terraform init") || !strings.Contains(err.Error(), "provider download failed") {
+		t.Fatalf("expected init failure with command output, got %v", err)
+	}
+}
+
 func TestPrepareUsesCompatibleDiskForE2Machine(t *testing.T) {
 	runner := Runner{Root: t.TempDir()}
 	workspace, err := runner.prepare(ports.TerraformProvisionSpec{

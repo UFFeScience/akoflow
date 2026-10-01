@@ -8,6 +8,7 @@
   <a href="https://github.com/UFFeScience/akoflow/releases/latest"><img src="https://img.shields.io/github/v/release/UFFeScience/akoflow?display_name=tag&label=Desktop&color=111111" alt="Latest Desktop release" /></a>
   <a href="https://akoflow.com/docs/"><img src="https://img.shields.io/badge/docs-Read%20the%20guide-111111" alt="AkôFlow documentation" /></a>
   <a href="https://github.com/UFFeScience/akoflow/actions/workflows/docs-checks.yaml"><img src="https://github.com/UFFeScience/akoflow/actions/workflows/docs-checks.yaml/badge.svg?branch=main" alt="Documentation checks" /></a>
+  <a href="https://codecov.io/gh/UFFeScience/akoflow"><img src="https://codecov.io/gh/UFFeScience/akoflow/branch/main/graph/badge.svg" alt="Backend test coverage" /></a>
 </div>
 
 <br />

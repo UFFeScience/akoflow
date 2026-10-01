@@ -42,6 +42,31 @@ jobs:
         with:
           repository: UFFeScience/akoflow-examples
           ref: ${{ inputs.examples_ref }}
+      - name: Verify runtime-owned showcase execution
+        shell: bash
+        run: |
+          mapfile -t workflows < <(
+            find machine-learning generative-ai agentic-workflows scientific-ai \
+              -mindepth 2 -maxdepth 2 -type f -name workflow.yaml | sort
+          )
+          if [ "${#workflows[@]}" -eq 0 ]; then
+            echo "No showcase workflow documents were found" >&2
+            exit 1
+          fi
+          if grep --line-number --fixed-strings "docker run" "${workflows[@]}"; then
+            echo "Showcases must not start containers; AkôFlow owns OCI image execution" >&2
+            exit 1
+          fi
+          for workflow in "${workflows[@]}"; do
+            grep --quiet --extended-regexp '^[[:space:]]+image:[[:space:]]+[^[:space:]]+' "$workflow" || {
+              echo "$workflow does not declare its OCI image" >&2
+              exit 1
+            }
+            grep --quiet --extended-regexp '^[[:space:]]+command:[[:space:]]*$' "$workflow" || {
+              echo "$workflow does not declare structured activity commands" >&2
+              exit 1
+            }
+          done
       - name: Build showcase matrix
         id: catalog
         shell: bash

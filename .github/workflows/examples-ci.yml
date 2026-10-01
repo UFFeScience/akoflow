@@ -131,6 +131,6 @@ jobs:
           file: ${{ matrix.category }}/${{ matrix.showcase }}/docker/Dockerfile
           push: ${{ inputs.publish }}
           tags: |
-            ghcr.io/uffescience/akoflow-showcase-${{ matrix.showcase }}:latest
-            ghcr.io/uffescience/akoflow-showcase-${{ matrix.showcase }}:v1
-            ghcr.io/uffescience/akoflow-showcase-${{ matrix.showcase }}:v1.0.0
+            ghcr.io/uffescience/akoflow-examples/showcase-${{ matrix.showcase }}:latest
+            ghcr.io/uffescience/akoflow-examples/showcase-${{ matrix.showcase }}:v1
+            ghcr.io/uffescience/akoflow-examples/showcase-${{ matrix.showcase }}:v1.0.0

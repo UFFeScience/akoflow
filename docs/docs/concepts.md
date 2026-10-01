@@ -15,6 +15,28 @@ For exact YAML fields, use the [workflow specification](./internal/workflow-spec
 
 <img src={useBaseUrl('/img/architecture/record-chain.svg')} alt="Environment definitions become published versions and scopes; immutable workflow versions join planning sessions; selected plans lead to execution runs and observed task, transfer, artifact, provenance and audit records." />
 
+The same chain is available as a text diagram for readers using assistive technology or a plain-text feed:
+
+```mermaid
+flowchart LR
+  EnvDef["Environment definition"] --> EnvVer["Published environment version"]
+  EnvVer --> Scope["Execution scope"]
+  EnvVer --> Net["Network topology"]
+  WF["Workflow definition"] --> WFVer["Immutable workflow version"]
+  WFVer --> Session["Planning session"]
+  Scope --> Session
+  Net --> Session
+  Session --> Cand["Candidate"]
+  Cand -->|Select| Plan["Schedule plan"]
+  WFVer --> Plan
+  Plan --> Run["Execution run"]
+  Run --> Task["Observed task"]
+  Run --> Trans["Observed transfer"]
+  Run --> Art["Artifact manifest"]
+  Run --> Prov["Provenance records"]
+  Run --> Audit["Audit events"]
+```
+
 The arrows express references, not a single mutable object. A planning session preserves a snapshot of the workflow, scope, inventory, topology, profiles, constraints, and selected algorithms. A later discovery refresh can create new inventory for future sessions, but it does not change that earlier comparison.
 
 ## Infrastructure is a versioned boundary

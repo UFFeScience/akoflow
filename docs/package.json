@@ -5,6 +5,8 @@
   "scripts": {
     "generate:api": "node scripts/generate-api-reference.mjs",
     "capture:media": "node scripts/capture-interface-media.mjs",
+    "test:examples:list": "go run ../scripts/validation",
+    "test:examples:playwright": "node scripts/playwright/akoflow-desktop-journey.mjs",
     "prestart": "npm run generate:api",
     "prebuild": "npm run generate:api",
     "docusaurus": "docusaurus",

@@ -44,6 +44,7 @@ const sidebars: SidebarsConfig = {
             "guides/workflows/definitions",
             "guides/workflows/planning",
             "guides/workflows/executions",
+            "guides/api-recipes-yaml",
           ],
         },
         {
@@ -79,6 +80,7 @@ const sidebars: SidebarsConfig = {
             "guides/operations/interactive-console",
             "guides/operations/credentials-and-ssh",
             "guides/operations/troubleshooting",
+            "guides/validation",
           ],
         },
       ],

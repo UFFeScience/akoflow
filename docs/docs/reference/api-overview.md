@@ -217,3 +217,89 @@ This overview intentionally does not duplicate every domain schema. Use these so
 4. Treat identifiers, immutable digests, credential references, and capability flags as opaque unless a specific guide defines them.
 
 Do not send secrets in general resource objects. Credential endpoints store secrets separately, while environment and connector records refer to them.
+
+## Priority contract recipes
+
+The endpoints below are the entry points that most readers copy from this page. Each recipe shows a minimal, runnable request, the success status, and the most common failure. The generated endpoint pages list every other field; use them for fields not shown here.
+
+### Import an instance archive
+
+The handler reads the request body as an `application/zip` stream, not JSON. The ZIP must contain the manifest, the database snapshot, and the redaction marker written by `GET /instances/default/export/`. Symbolic links, archives larger than 8 GiB compressed, archives with more than 10,000 entries, and archives whose checksum or schema version does not match are rejected with `422`.
+
+```bash
+curl --fail-with-body \
+  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  -H 'Content-Type: application/zip' \
+  --data-binary @akoflow-instance.zip \
+  "$AKOFLOW_API_URL/instances/import/"
+```
+
+Success returns `201 Created` with the new instance projection. Activation is a separate request:
+
+```bash
+curl --fail-with-body -X POST \
+  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  "$AKOFLOW_API_URL/instance-activations/<snapshot-id>/"
+```
+
+Activation returns `202 Accepted` with `{ "instance": ..., "restarting": true|false }`.
+
+### Upload a build context
+
+The handler accepts either an `application/json` envelope or a `multipart/form-data` upload. The multipart path is the recommended way to send large build contexts because the JSON envelope requires a `storageUri` that already points at bytes the daemon has stored.
+
+```bash
+curl --fail-with-body \
+  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  -F "context=@./context.tgz" \
+  "$AKOFLOW_API_URL/build-contexts/"
+```
+
+The multipart field name is `context`. The handler enforces a maximum body size plus one extra megabyte; an oversized upload returns `413 Request Entity Too Large`. A missing `context` field returns `422 Unprocessable Entity`.
+
+For the JSON envelope path, the required fields are `digest`, `storageUri`, and a positive `sizeBytes`. Any missing required field returns `422`.
+
+### Create a workflow definition
+
+The handler accepts either the canonical JSON shape or a YAML document whose top-level keys match the JSON. The Desktop sends YAML for the upload path; the API examples in the workflow guide use `application/yaml` because the checked-in fixtures are YAML.
+
+```bash
+curl --fail-with-body \
+  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  -H 'Content-Type: application/json' \
+  --data-binary @workflow.json \
+  "$AKOFLOW_API_URL/workflow-definitions/"
+```
+
+The `POST /workflow-definitions/import/` route accepts the same body and is the endpoint the Desktop calls when the user imports a YAML file. The handler validates the workflow version against the registered activities, runtimes, capabilities, and simulation profiles; missing required fields, unsupported capabilities, and unknown activity IDs return `422`. See [Workflow definitions](../guides/workflows/definitions.md) for the schema.
+
+### Create an execution run
+
+The handler accepts an `application/json` or `application/yaml` envelope that contains the run id, the referenced plan id, the mode, and a snapshot of the workflow and infrastructure that the supervisor will use. The versioned files under `examples/simulation/execution-request.yaml` and `examples/kind/requests/execution-request.yaml` are the canonical envelopes.
+
+```bash
+curl --fail-with-body \
+  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  -H 'Content-Type: application/yaml' \
+  --data-binary @examples/simulation/execution-request.yaml \
+  "$AKOFLOW_API_URL/execution-runs/"
+```
+
+Submission is asynchronous. The success status is `202 Accepted` with the queued run projection. Validation failures from the supervisor (unknown plan id, missing required profile field, runtime not bound) return `422`. A run id that already exists returns `409 Conflict`.
+
+### Query provenance with read-only SQL
+
+The handler accepts a single read-only statement with positional parameters. Statements that touch more than one entity or that are not parseable as a read return `400`.
+
+```bash
+curl --fail-with-body \
+  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "statement": "SELECT id, makespan_seconds, transferred_bytes FROM execution_runs WHERE id = ?",
+    "params": ["simulation-example-run-v1"]
+  }' \
+  "$AKOFLOW_API_URL/provenance/sql/"
+```
+
+Use `POST /provenance/sql/explain/` to inspect the planned query before running it. The result is a JSON projection of the rows; there is no envelope.

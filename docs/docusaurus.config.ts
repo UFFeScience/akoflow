@@ -111,6 +111,7 @@ const config: Config = {
         dark: "base",
       },
       options: {
+        look: "classic",
         themeVariables: {
           background: "#ffffff",
           primaryColor: "#ffffff",
@@ -130,7 +131,42 @@ const config: Config = {
           clusterBorder: "#151515",
           edgeLabelBackground: "#ffffff",
           fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, sans-serif",
+          fontSize: "15px",
         },
+        themeCSS: `
+          .node rect,
+          .node polygon,
+          .node circle,
+          .node ellipse,
+          .stateGroup rect,
+          .statediagram-state rect {
+            filter: drop-shadow(0 2px 0 rgba(21, 21, 21, 0.12));
+          }
+          .nodeLabel,
+          .stateLabel,
+          .label {
+            font-weight: 600;
+            letter-spacing: -0.01em;
+          }
+          .edgeLabel,
+          .edgeLabel p {
+            color: #151515 !important;
+            font-size: 13px;
+            font-weight: 600;
+          }
+          .edgeLabel rect,
+          .labelBkg {
+            fill: #ffffff !important;
+            opacity: 0.96 !important;
+            rx: 4px;
+            ry: 4px;
+          }
+          .flowchart-link,
+          .transition {
+            stroke-linecap: round;
+            stroke-linejoin: round;
+          }
+        `,
         flowchart: {
           useMaxWidth: true,
           htmlLabels: true,

@@ -666,13 +666,20 @@ html {
 .docusaurus-mermaid-container {
   display: flex;
   justify-content: center;
-  width: 100%;
-  margin: 1.5rem auto;
-  padding: 1.25rem;
+  width: fit-content;
+  min-width: min(100%, 36rem);
+  max-width: 100%;
+  margin: 1.75rem auto;
+  padding: clamp(1.25rem, 3vw, 2.25rem);
   overflow-x: auto;
-  border: 1px solid #d7d7d2;
-  border-radius: 0.75rem;
-  background: #ffffff;
+  border: 1px solid #cfcfca;
+  border-radius: 1rem;
+  background-color: #ffffff;
+  background-image: radial-gradient(circle, rgba(21, 21, 21, 0.09) 0.75px, transparent 0.8px);
+  background-size: 18px 18px;
+  box-shadow:
+    0 1px 2px rgba(21, 21, 21, 0.06),
+    0 12px 30px rgba(21, 21, 21, 0.06);
 }
 
 .docusaurus-mermaid-container > svg {
@@ -681,11 +688,14 @@ html {
   max-width: 100%;
   height: auto;
   margin: 0 auto;
+  overflow: visible;
 }
 
 @media (max-width: 576px) {
   .docusaurus-mermaid-container {
     justify-content: flex-start;
+    min-width: 100%;
     padding: 0.75rem;
+    border-radius: 0.75rem;
   }
 }

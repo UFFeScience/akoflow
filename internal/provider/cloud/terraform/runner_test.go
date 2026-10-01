@@ -61,6 +61,34 @@ func TestProviderNameIsSafe(t *testing.T) {
 	}
 }
 
+func TestApplyRejectsUnsupportedProviderBeforeCreatingWorkspace(t *testing.T) {
+	runner := Runner{Root: t.TempDir()}
+	_, err := runner.Apply(context.Background(), ports.TerraformProvisionSpec{InstanceID: "cloud-instance-unsupported", Target: domain.CloudCapacityTarget{Provider: "azure"}})
+	if err == nil || !strings.Contains(err.Error(), `Terraform provider "azure" is not implemented`) {
+		t.Fatalf("expected unsupported provider error, got %v", err)
+	}
+	entries, readErr := os.ReadDir(runner.Root)
+	if readErr != nil {
+		t.Fatal(readErr)
+	}
+	if len(entries) != 0 {
+		t.Fatalf("unsupported provider should not create workspace, got %d entries", len(entries))
+	}
+}
+
+func TestWorkspaceRejectsUnsafeIdentifiers(t *testing.T) {
+	runner := Runner{Root: t.TempDir()}
+	if _, err := runner.workspace("../escape"); err == nil {
+		t.Fatal("expected unsafe instance id to be rejected")
+	}
+}
+
+func TestParseOutputRejectsInvalidJSON(t *testing.T) {
+	if _, err := parseOutput([]byte("not-json")); err == nil {
+		t.Fatal("expected malformed terraform output to fail")
+	}
+}
+
 func TestPrepareUsesCompatibleDiskForE2Machine(t *testing.T) {
 	runner := Runner{Root: t.TempDir()}
 	workspace, err := runner.prepare(ports.TerraformProvisionSpec{

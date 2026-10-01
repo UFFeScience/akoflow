@@ -2,9 +2,11 @@ package ansible
 
 import (
 	"context"
+	"errors"
 	"io"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 	"time"
 
@@ -60,6 +62,50 @@ func TestWaitForSSHHonorsContextCancellation(t *testing.T) {
 	content, err := io.ReadAll(logFile)
 	if err != nil || len(content) == 0 {
 		t.Fatalf("expected retry details in provision log, got %q (%v)", content, err)
+	}
+}
+
+func TestRunPlaybookUsesInjectedExecutorAndLogsOutput(t *testing.T) {
+	root := t.TempDir()
+	workspace := filepath.Join(root, "ansible")
+	if err := os.MkdirAll(workspace, 0700); err != nil {
+		t.Fatal(err)
+	}
+	logFile, err := os.CreateTemp(root, "provision-*.log")
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer logFile.Close()
+	runner := Runner{Binary: "fake-ansible", Execute: func(_ context.Context, _ string, _ []string, commandAndArguments ...string) ([]byte, error) {
+		if commandAndArguments[0] != "fake-ansible" || commandAndArguments[1] != "-i" {
+			t.Fatalf("unexpected command: %#v", commandAndArguments)
+		}
+		return []byte("TASK [Gathering Facts] ok"), nil
+	}}
+	if err := runner.runPlaybook(context.Background(), workspace, ports.MachineConfigurationSpec{Address: "192.0.2.10", SSHUser: "akoflow"}, "/tmp/key", "/tmp/vars", filepath.Join(workspace, "playbook.yaml"), logFile); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := logFile.Seek(0, io.SeekStart); err != nil {
+		t.Fatal(err)
+	}
+	content, _ := io.ReadAll(logFile)
+	if !strings.Contains(string(content), "TASK [Gathering Facts] ok") || !strings.Contains(string(content), "playbook completed") {
+		t.Fatalf("expected command output and phase log, got %q", content)
+	}
+}
+
+func TestRunPlaybookReturnsCommandOutputOnFailure(t *testing.T) {
+	logFile, err := os.CreateTemp(t.TempDir(), "provision-*.log")
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer logFile.Close()
+	runner := Runner{Execute: func(context.Context, string, []string, ...string) ([]byte, error) {
+		return []byte("playbook syntax error"), errors.New("exit status 2")
+	}}
+	err = runner.runPlaybook(context.Background(), t.TempDir(), ports.MachineConfigurationSpec{Address: "192.0.2.10", SSHUser: "akoflow"}, "/tmp/key", "/tmp/vars", "/tmp/playbook.yaml", logFile)
+	if err == nil || !strings.Contains(err.Error(), "playbook syntax error") {
+		t.Fatalf("expected command output in error, got %v", err)
 	}
 }
 

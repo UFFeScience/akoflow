@@ -5,7 +5,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -16,8 +15,9 @@ import (
 )
 
 type Runner struct {
-	Root   string
-	Binary string
+	Root    string
+	Binary  string
+	Execute func(context.Context, string, []string, ...string) ([]byte, error)
 }
 
 func (r Runner) Configure(ctx context.Context, spec ports.MachineConfigurationSpec) error {
@@ -63,37 +63,55 @@ func (r Runner) Configure(ctx context.Context, spec ports.MachineConfigurationSp
 	}
 	writeProvisionLog(logFile, "SSH ready in %.3fs", time.Since(sshStartedAt).Seconds())
 	_ = logFile.Sync()
-	binary := r.Binary
-	if strings.TrimSpace(binary) == "" {
-		binary = "ansible-playbook"
+	if err := r.runPlaybook(ctx, workspace, spec, keyPath, variablesPath, playbookPath, logFile); err != nil {
+		return err
 	}
-	inventory := spec.Address + ","
-	command := exec.CommandContext(
-		ctx, binary, "-i", inventory, "-u", spec.SSHUser,
-		"--private-key", keyPath, "--extra-vars", "@"+variablesPath, playbookPath,
-	)
-	command.Dir = workspace
-	command.Env = append(os.Environ(), "ANSIBLE_HOST_KEY_CHECKING=False")
-	playbookStartedAt := time.Now().UTC()
-	writeProvisionLog(logFile, "applying %s", filepath.Base(playbookPath))
-	_ = logFile.Sync()
-	var output bytes.Buffer
-	command.Stdout = io.MultiWriter(&output, logFile)
-	command.Stderr = io.MultiWriter(&output, logFile)
-	err = command.Run()
-	if err != nil {
-		writeProvisionLog(logFile, "failed after %.3fs: %v", time.Since(playbookStartedAt).Seconds(), err)
-		_ = logFile.Sync()
-		return fmt.Errorf("ansible-playbook: %w: %s", err, strings.TrimSpace(output.String()))
-	}
-	writeProvisionLog(logFile, "playbook completed in %.3fs; running validation checks", time.Since(playbookStartedAt).Seconds())
-	_ = logFile.Sync()
 	if err := validateConfiguration(ctx, spec, keyPath, logFile); err != nil {
 		return err
 	}
 	writeProvisionLog(logFile, "configuration validated")
 	_ = logFile.Sync()
 	return nil
+}
+
+func (r Runner) runPlaybook(ctx context.Context, workspace string, spec ports.MachineConfigurationSpec, keyPath, variablesPath, playbookPath string, logFile *os.File) error {
+	binary := r.Binary
+	if strings.TrimSpace(binary) == "" {
+		binary = "ansible-playbook"
+	}
+	arguments := []string{"-i", spec.Address + ",", "-u", spec.SSHUser, "--private-key", keyPath, "--extra-vars", "@" + variablesPath, playbookPath}
+	playbookStartedAt := time.Now().UTC()
+	writeProvisionLog(logFile, "applying %s", filepath.Base(playbookPath))
+	_ = logFile.Sync()
+	output, err := r.execute(ctx, workspace, append([]string{binary}, arguments...)...)
+	if len(output) > 0 {
+		_, _ = logFile.Write(output)
+		if output[len(output)-1] != '\n' {
+			_, _ = logFile.WriteString("\n")
+		}
+	}
+	if err != nil {
+		writeProvisionLog(logFile, "failed after %.3fs: %v", time.Since(playbookStartedAt).Seconds(), err)
+		_ = logFile.Sync()
+		return fmt.Errorf("ansible-playbook: %w: %s", err, strings.TrimSpace(string(output)))
+	}
+	writeProvisionLog(logFile, "playbook completed in %.3fs; running validation checks", time.Since(playbookStartedAt).Seconds())
+	_ = logFile.Sync()
+	return nil
+}
+
+func (r Runner) execute(ctx context.Context, workspace string, commandAndArguments ...string) ([]byte, error) {
+	if r.Execute != nil {
+		return r.Execute(ctx, workspace, append(os.Environ(), "ANSIBLE_HOST_KEY_CHECKING=False"), commandAndArguments...)
+	}
+	command := exec.CommandContext(ctx, commandAndArguments[0], commandAndArguments[1:]...)
+	command.Dir = workspace
+	command.Env = append(os.Environ(), "ANSIBLE_HOST_KEY_CHECKING=False")
+	var output bytes.Buffer
+	command.Stdout = &output
+	command.Stderr = &output
+	err := command.Run()
+	return output.Bytes(), err
 }
 
 func validateConfiguration(ctx context.Context, spec ports.MachineConfigurationSpec, keyPath string, logFile *os.File) error {

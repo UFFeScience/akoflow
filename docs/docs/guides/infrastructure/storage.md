@@ -4,6 +4,25 @@ title: Browse and manage storage
 
 AkôFlow exposes storage through environment discovery or configured storage connectors. Browsing is constrained to approved roots and operations are capability-driven: a read-only or unavailable storage does not expose the same actions as a healthy writable storage.
 
+## How a storage browse becomes a download
+
+```mermaid
+flowchart LR
+  Discover["Environment discovery"] --> Roots["Approved roots"]
+  Roots --> Browse["Browse entries"]
+  Browse --> Capability{"Capability check"}
+  Capability -->|Read| View["View metadata"]
+  Capability -->|Write| Mutate["Mutate action"]
+  Capability -->|Read + checksum| Sum["Calculate digest"]
+  Capability -->|Cross-storage| Copy["Queue copy"]
+  Capability -->|Archive| Arch["Archive and download"]
+  Browse --> DL["Prepare download"]
+  DL --> Poll["Poll download status"]
+  Poll --> DL2["Fetch content"]
+```
+
+The capability check is the gate every storage action passes through. When a storage reports read-only or its discovery has not verified compute-node access, write-class actions are disabled in the interface and rejected by the API. Downloads are prepared as separate operations and polled until the content is ready, rather than streamed synchronously, so the same flow works for very large files.
+
 ## Browse files
 
 ### Using AkôFlow Desktop

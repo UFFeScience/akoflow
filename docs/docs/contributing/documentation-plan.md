@@ -118,13 +118,14 @@ Every media item must have descriptive alternative text. Videos need a written p
 
 ## Architecture-diagram system
 
-Use the black, white, and neutral-gray visual system established by [`akoflow-control-plane.svg`](/img/architecture/akoflow-control-plane.svg) for new architecture, lifecycle, and relationship diagrams. It is a reusable visual reference, not a claim that every diagram has the same topology.
+Use Mermaid as the source for architecture, lifecycle, hierarchy, relationship, state, and flow diagrams. Apply the AkôFlow black, white, and neutral-gray visual system explicitly instead of Mermaid's default colored palette.
 
-- Use a white page or card, black rules, light-gray responsibility groups, and restrained rounded corners.
+- Use `#ffffff` for the page and primary nodes, `#151515` for text, borders, arrows, and emphasized fills, and `#f2f2f2` for neutral secondary nodes.
+- Give emphasized `#151515` nodes `#ffffff` text. Set default links to `stroke:#151515,stroke-width:2px,color:#151515`.
 - Use the checked-in AkôFlow logo rather than recreating or tracing it.
 - Group by responsibility, runtime boundary, or lifecycle stage; do not draw application-service cards as separate microservices unless they are independently deployed and evidenced as such.
 - Draw only directional arrows that communicate a real request, dispatch, observation, or ownership relationship. Keep labels beside the line rather than on top of the arrowhead.
-- Keep every diagram as a versioned SVG below `static/img/architecture/`, include a `<title>` and `<desc>`, and provide equivalent explanatory text in the page.
+- Keep one Mermaid source in the Markdown or MDX page; do not maintain an SVG duplicate. Use a static SVG only for visuals Mermaid cannot faithfully express, such as branded illustrations or precise quantitative graphics, and document why the exception is necessary.
 - Review each new diagram in the rendered documentation at desktop and narrow widths before merging.
 
 ## Definition of done for a guide

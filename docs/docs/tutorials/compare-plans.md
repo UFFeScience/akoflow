@@ -56,6 +56,18 @@ flowchart LR
   C3 -->|Select| Plan3[Schedule plan]
   Plan1 --> Run1[Execution run]
   Plan2 --> Run2[Execution run]
+
+  classDef source fill:#ffffff,stroke:#151515,color:#151515,stroke-width:2px
+  classDef session fill:#151515,stroke:#151515,color:#ffffff,stroke-width:2px
+  classDef candidate fill:#f2f2f2,stroke:#151515,color:#151515,stroke-width:2px
+  classDef plan fill:#ffffff,stroke:#151515,color:#151515,stroke-width:2px
+  classDef run fill:#f2f2f2,stroke:#151515,color:#151515,stroke-width:2px
+  class WF,Scope,Net source
+  class Session session
+  class C1,C2,C3 candidate
+  class Plan1,Plan2,Plan3 plan
+  class Run1,Run2 run
+  linkStyle default stroke:#151515,stroke-width:2px,color:#151515
 ```
 
 ## 1. Register the same example

@@ -5,17 +5,11 @@ sidebar_label: Core concepts
 description: The workflow, environment, plan, run, artifact, and provenance records you meet while using AkôFlow.
 ---
 
-import useBaseUrl from '@docusaurus/useBaseUrl';
-
 AkôFlow keeps the workflow you define, the environment available to it, the plan you choose, and the observed run as separate records. You can compare plans for the same workflow without changing its definition.
 
 For exact YAML fields, use the [workflow specification](/docs/internal/workflow-spec) and [environment reference](/docs/reference/environment-yaml). For an example you can run, use the [SimGrid API tutorial](/docs/guides/workflows/first-run). Developers can continue to [Architecture internals](/docs/modules).
 
 ## The record chain
-
-<img src={useBaseUrl('/img/architecture/record-chain.svg')} alt="Environment definitions become published versions and scopes; immutable workflow versions join planning sessions; selected plans lead to execution runs and observed task, transfer, artifact, provenance and audit records." />
-
-The same chain is available as a text diagram for readers using assistive technology or a plain-text feed:
 
 ```mermaid
 flowchart LR
@@ -35,6 +29,14 @@ flowchart LR
   Run --> Art["Artifact manifest"]
   Run --> Prov["Provenance records"]
   Run --> Audit["Audit events"]
+
+  classDef primary fill:#ffffff,stroke:#151515,color:#151515,stroke-width:2px
+  classDef focus fill:#151515,stroke:#151515,color:#ffffff,stroke-width:2px
+  classDef observed fill:#f2f2f2,stroke:#151515,color:#151515,stroke-width:2px
+  class EnvDef,EnvVer,Scope,Net,WF,WFVer,Cand,Plan primary
+  class Session,Run focus
+  class Task,Trans,Art,Prov,Audit observed
+  linkStyle default stroke:#151515,stroke-width:2px,color:#151515
 ```
 
 The arrows express references, not a single mutable object. A planning session preserves a snapshot of the workflow, scope, inventory, topology, profiles, constraints, and selected algorithms. A later discovery refresh can create new inventory for future sessions, but it does not change that earlier comparison.

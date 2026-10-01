@@ -7,7 +7,6 @@ description: Learn how the AkôFlow Desktop navigation maps to the control-plane
 ---
 
 import AnnotatedScreenshot from '@site/src/components/AnnotatedScreenshot';
-import useBaseUrl from '@docusaurus/useBaseUrl';
 
 AkôFlow Desktop lets you see your workflows, environments, plans, runs, and results in one place. Start on **Overview** to check the current instance, then use the sidebar to open the record you need.
 
@@ -45,7 +44,17 @@ AkôFlow pages preserve the relationship between records. An execution belongs t
 
 For example:
 
-<img src={useBaseUrl('/img/architecture/interface-ownership-hierarchy.svg')} alt="Workflow pages lead from workflow to plan, execution and activity. Infrastructure pages lead from environment through inventory and resource to provisioning and operation." />
+```mermaid
+flowchart LR
+  Workflow --> Plan --> Execution --> Activity
+  Environment --> Inventory --> Resource --> Provisioning --> Operation
+
+  classDef primary fill:#ffffff,stroke:#151515,color:#151515,stroke-width:2px
+  classDef secondary fill:#f2f2f2,stroke:#151515,color:#151515,stroke-width:2px
+  class Workflow,Plan,Execution,Activity primary
+  class Environment,Inventory,Resource,Provisioning,Operation secondary
+  linkStyle default stroke:#151515,stroke-width:2px,color:#151515
+```
 
 Use the back control below the breadcrumb to return to the logical parent. Its destination remains correct even when the page was opened from search or a notification.
 

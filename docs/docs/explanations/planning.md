@@ -5,8 +5,6 @@ sidebar_label: Planning and plans
 description: Why planning sessions produce candidates before one placement becomes a saved plan.
 ---
 
-import useBaseUrl from '@docusaurus/useBaseUrl';
-
 A plan records where a workflow's activities should run within an execution scope. You can make one manually or use a planning session to compare predicted placements and costs. Selecting a plan does not start a run or reserve infrastructure.
 
 Use [Plan a workflow](/docs/guides/workflows/planning) for the Desktop or API procedure; this explanation covers the model behind it.
@@ -14,10 +12,6 @@ Use [Plan a workflow](/docs/guides/workflows/planning) for the Desktop or API pr
 ## A planning session freezes the question
 
 A planning session records the workflow version, available resources, network topology, deadline, budget, and selected algorithms. It also keeps the profiles and environment data used for prediction. This lets you compare candidates against the same inputs, even if the environment changes later.
-
-<img src={useBaseUrl('/img/architecture/planning-session-lifecycle.svg')} alt="Frozen workflow and infrastructure input create a planning session. Independent algorithm runs produce candidate sets, from which one candidate becomes a schedule plan." />
-
-The same lifecycle is available as an accessible text diagram:
 
 ```mermaid
 flowchart LR
@@ -32,6 +26,14 @@ flowchart LR
   A3 --> C
   C -->|Select one| Plan["Schedule plan"]
   Plan --> Run["Execution run"]
+
+  classDef source fill:#ffffff,stroke:#151515,color:#151515,stroke-width:2px
+  classDef focus fill:#151515,stroke:#151515,color:#ffffff,stroke-width:2px
+  classDef neutral fill:#f2f2f2,stroke:#151515,color:#151515,stroke-width:2px
+  class WF,Scope,Net,Plan source
+  class Session focus
+  class A1,A2,A3,C,Run neutral
+  linkStyle default stroke:#151515,stroke-width:2px,color:#151515
 ```
 
 Every step is a recorded state. The session is not deleted when candidates are rejected; it remains a durable record of the question that was asked. The schedule plan is the only object that crosses the boundary into execution.

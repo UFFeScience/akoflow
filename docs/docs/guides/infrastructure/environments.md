@@ -6,6 +6,25 @@ An environment describes where AkôFlow can plan or run work. A **real environme
 
 Environment definitions are versioned. Execution scopes and plans refer to an environment **version**, so changing an environment does not silently change existing planning inputs.
 
+## The environment lifecycle
+
+```mermaid
+stateDiagram-v2
+  [*] --> defined
+  defined --> connecting
+  connecting --> connected
+  connected --> discovering
+  discovering --> ready
+  ready --> degraded
+  degraded --> ready
+  ready --> discovering: new discovery
+  ready --> unreachable
+  unreachable --> connecting: retry
+  ready --> [*]: retired version
+```
+
+The states above mirror the persisted `environment.status` field. Planning and execution wait on `ready`; a degraded environment is still usable, but its catalog should be re-checked before committing to a new plan. Unreachable environments should be reconnected rather than restarted manually; the supervisor retries on the saved schedule.
+
 ## Create an environment
 
 ### Using AkôFlow Desktop

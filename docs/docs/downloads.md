@@ -6,12 +6,15 @@ description: Direct official downloads for AkôFlow Desktop, with platform selec
 ---
 
 <div className="download-release-callout">
+  <div className="download-release-callout__icon" aria-hidden="true">
+    ↓
+  </div>
   <div className="download-release-callout__content">
     <span className="download-release-callout__eyebrow">Official release</span>
-    <h2>Get the latest AkôFlow Desktop</h2>
+    <strong className="download-release-callout__title">Get AkôFlow Desktop</strong>
     <p>
-      Open the latest stable release and select the installer for your operating
-      system. All Desktop packages and release notes are published on GitHub.
+      Select the installer for macOS, Windows, or Linux from the latest stable
+      release on GitHub.
     </p>
   </div>
   <a
@@ -20,7 +23,8 @@ description: Direct official downloads for AkôFlow Desktop, with platform selec
     target="_blank"
     rel="noopener noreferrer"
   >
-    Download latest release ↗
+    Download latest release
+    <span aria-hidden="true">↗</span>
   </a>
 </div>
 

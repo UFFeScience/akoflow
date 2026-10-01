@@ -62,34 +62,11 @@ func (s *Provisioner) Provision(
 			return instance, reuseErr
 		}
 	}
-	credential, err := s.credentials.Resolve(connection.CredentialRef)
+	instance, credential, key, err := s.prepareInstance(environmentID, *target, *connection, request)
 	if err != nil {
 		return domain.CloudProvisionedInstance{}, err
 	}
-	instanceID := strings.TrimSpace(request.InstanceID)
-	if instanceID == "" {
-		instanceID = "cloud-instance-" + uuid.NewString()
-	}
-	if !strings.HasPrefix(instanceID, "cloud-instance-") {
-		return domain.CloudProvisionedInstance{}, fmt.Errorf("invalid cloud instance id")
-	}
-	sshUser := strings.TrimSpace(request.SSHUsername)
-	if sshUser == "" {
-		sshUser = "akoflow"
-	}
-	key, err := s.sshKeys.Ensure(instanceID, "akoflow "+instanceID)
-	if err != nil {
-		return domain.CloudProvisionedInstance{}, fmt.Errorf("prepare SSH identity: %w", err)
-	}
-	name := strings.TrimSpace(request.Name)
-	if name == "" {
-		name = instanceID
-	}
-	instance := domain.CloudProvisionedInstance{
-		ID: instanceID, CapacityTargetID: target.ID, EnvironmentID: environmentID,
-		Provider: target.Provider, Name: name, Status: "provisioning", SSHUsername: sshUser,
-		SSHCredentialRef: key.CredentialRef, CreatedAt: time.Now().UTC(),
-	}
+	instanceID := instance.ID
 	existing, err := s.store.FindProvisionedInstance(ctx, instanceID)
 	if err != nil {
 		return domain.CloudProvisionedInstance{}, err
@@ -114,7 +91,7 @@ func (s *Provisioner) Provision(
 	}
 	result, err := s.terraform.Apply(ctx, ports.TerraformProvisionSpec{
 		InstanceID: instanceID, Target: *target, Credential: credential,
-		PublicKey: key.PublicKey, SSHUser: sshUser,
+		PublicKey: key.PublicKey, SSHUser: instance.SSHUsername,
 	})
 	if err != nil {
 		instance.Status = "failed"
@@ -123,6 +100,42 @@ func (s *Provisioner) Provision(
 		return instance, err
 	}
 	return s.finishProvision(ctx, instance, *target, result)
+}
+
+func (s *Provisioner) prepareInstance(
+	environmentID string,
+	target domain.CloudCapacityTarget,
+	connection domain.EnvironmentConnection,
+	request domain.CloudProvisionRequest,
+) (domain.CloudProvisionedInstance, []byte, ports.CloudSSHKey, error) {
+	credential, err := s.credentials.Resolve(connection.CredentialRef)
+	if err != nil {
+		return domain.CloudProvisionedInstance{}, nil, ports.CloudSSHKey{}, err
+	}
+	instanceID := strings.TrimSpace(request.InstanceID)
+	if instanceID == "" {
+		instanceID = "cloud-instance-" + uuid.NewString()
+	}
+	if !strings.HasPrefix(instanceID, "cloud-instance-") {
+		return domain.CloudProvisionedInstance{}, nil, ports.CloudSSHKey{}, fmt.Errorf("invalid cloud instance id")
+	}
+	sshUser := strings.TrimSpace(request.SSHUsername)
+	if sshUser == "" {
+		sshUser = "akoflow"
+	}
+	key, err := s.sshKeys.Ensure(instanceID, "akoflow "+instanceID)
+	if err != nil {
+		return domain.CloudProvisionedInstance{}, nil, ports.CloudSSHKey{}, fmt.Errorf("prepare SSH identity: %w", err)
+	}
+	name := strings.TrimSpace(request.Name)
+	if name == "" {
+		name = instanceID
+	}
+	return domain.CloudProvisionedInstance{
+		ID: instanceID, CapacityTargetID: target.ID, EnvironmentID: environmentID,
+		Provider: target.Provider, Name: name, Status: "provisioning", SSHUsername: sshUser,
+		SSHCredentialRef: key.CredentialRef, CreatedAt: time.Now().UTC(),
+	}, credential, key, nil
 }
 
 func (s *Provisioner) finishProvision(

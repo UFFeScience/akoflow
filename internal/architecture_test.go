@@ -62,7 +62,6 @@ var legacyFunctionLineLimits = map[string]int{
 	"api/handlers/workflow_engine_api_handler/workflow_engine_api_handler.go:executionRecoveryPreview":  89,
 	"api/handlers/workflow_engine_api_handler/workflow_engine_api_handler.go:resolveBuildPreparations":  90,
 	"api/httpserver/httpserver.go:NewMux":                                                               130,
-	"application/cloudprovision/service.go:Provision":                                                   87,
 	"application/transfer/coordinator.go:Prepare":                                                       90,
 	"application/transfer/service.go:Materialize":                                                       157,
 	"controlplane/eventloop/cloud_operation_handler.go:Handle":                                          89,

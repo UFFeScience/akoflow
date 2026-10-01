@@ -8,7 +8,7 @@ import {ShowcaseCard, ShowcaseGrid} from '@site/src/components/WorkflowShowcase'
 
 # Workflow showcase
 
-Start from a checked-in example instead of assembling isolated payloads. Each showcase states its prerequisites and expected evidence. Some use local simulation, some run real workloads, and the SLURM fixture checks only the local adapter path. Desktop and API steps are included where they have been documented and verified.
+Start from a checked-in example instead of assembling isolated payloads. Each showcase states its prerequisites, the level at which it has been verified, and the parts of the run that have **not** been independently verified. Some use local simulation, some run real workloads, and the SLURM fixture checks only the local adapter path. Desktop and API steps are included where they have been documented and verified.
 
 For Docker-backed, deterministic regression fixtures, use the [materialized showcase catalog](./materialized). It contains 22 runnable examples across machine learning, generative AI, agentic workflows, and scientific AI.
 
@@ -57,9 +57,36 @@ For Docker-backed, deterministic regression fixtures, use the [materialized show
   />
 </ShowcaseGrid>
 
+## Choose a showcase by objective
+
+| If you want to… | Start with | Why |
+| --- | --- | --- |
+| Verify a new installation without external accounts | [Edge to cloud simulation](./edge-cloud-simulation) | Deterministic SimGrid, no Kubernetes, SLURM, or cloud credentials required |
+| See real container execution with persistent data | [Kubernetes real execution](./kubernetes-real-execution) | A disposable Kind cluster exercises the Kubernetes adapter end to end |
+| Confirm the local adapter writes files where you expect | [Local direct execution](./local-direct-execution) | One activity, observed output file with checksum |
+| Stress the scheduler with parallel work | [100 activities on 50 cores](./parallel-50-core) | Per-core placement, queueing, and capacity |
+| Study data movement under contention | [30 GB network fan-out](./network-fanout) | Shared link, fan-in, and total transferred bytes |
+| Validate the SLURM adapter without a real cluster | [SLURM batch fixture](./slurm-local-fixture) | The adapter boundary only; not a real cluster submission |
+| Compare scheduling algorithms on the same workflow | [Compare PRISM and HEFT plans](../tutorials/compare-plans.md) | Reuses the SimGrid example, executes two candidates |
+
+## Validation level for each showcase
+
+A showcase label reflects the level at which it has been independently verified. The columns are read as a decreasing hierarchy: a *Real run* implies the adapter, scheduler, and observed evidence are exercised against real infrastructure; a *Fixture* exercises only the local adapter path.
+
+| Showcase | Validation level | Real infrastructure | Scheduler exercised | What is **not** verified |
+| --- | --- | --- | --- | --- |
+| [Edge to cloud simulation](./edge-cloud-simulation) | Simulation | SimGrid runner | HEFT/PRISM prediction, fixed plan | Real cloud, real Kubernetes, real SLURM |
+| [30 GB network fan-out](./network-fanout) | Simulation | SimGrid runner | PRISM sharing trace | Real network contention, real disk throughput |
+| [100 activities on 50 cores](./parallel-50-core) | Simulation | SimGrid runner | 50-core scheduling | Real 50-core host behaviour |
+| [Kubernetes real execution](./kubernetes-real-execution) | Real run | Kind cluster | Kubernetes adapter, namespace RBAC | Production cluster, multi-tenant quotas, real image registry load |
+| [Local direct execution](./local-direct-execution) | Real run | Daemon host | Local adapter | Sandbox isolation, multi-tenant execution, remote dispatch |
+| [SLURM batch fixture](./slurm-local-fixture) | Fixture | Local SLURM adapter boundary | `sbatch` script, completion sentinel | Real SLURM cluster, real SSH, allocation, accounting |
+
+Use the table above to choose an example that matches what you need to demonstrate. Mixing the columns is the most common source of misleading claims: a fixture is not a real-cluster validation, and a simulation is not a real-execution validation.
+
 ## How to use a showcase
 
-1. Choose a scenario and download its checked-in YAML files.
+1. Choose a scenario from the table above and download its checked-in YAML files.
 2. Follow the procedure provided for that example; check its prerequisites before choosing Desktop or API.
 3. Generate or register a plan, start the run, and wait for a terminal status.
 4. Compare planned and observed makespan, cost, activity placement, transfers, and provenance.

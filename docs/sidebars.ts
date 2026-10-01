@@ -13,6 +13,7 @@ const sidebars: SidebarsConfig = {
         "guides/interface-tour",
         "guides/interface-screens",
         "guides/workflows/first-run",
+        "tutorials/compare-plans",
         {
           type: "category",
           label: "Workflow showcases",

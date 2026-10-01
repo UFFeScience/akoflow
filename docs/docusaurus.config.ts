@@ -105,6 +105,39 @@ const config: Config = {
   ],
 
   themeConfig: {
+    mermaid: {
+      theme: {
+        light: "base",
+        dark: "base",
+      },
+      options: {
+        themeVariables: {
+          background: "#ffffff",
+          primaryColor: "#ffffff",
+          primaryTextColor: "#151515",
+          primaryBorderColor: "#151515",
+          secondaryColor: "#f2f2f2",
+          secondaryTextColor: "#151515",
+          secondaryBorderColor: "#151515",
+          tertiaryColor: "#ffffff",
+          tertiaryTextColor: "#151515",
+          tertiaryBorderColor: "#151515",
+          lineColor: "#151515",
+          textColor: "#151515",
+          mainBkg: "#ffffff",
+          nodeBorder: "#151515",
+          clusterBkg: "#f2f2f2",
+          clusterBorder: "#151515",
+          edgeLabelBackground: "#ffffff",
+          fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, sans-serif",
+        },
+        flowchart: {
+          useMaxWidth: true,
+          htmlLabels: true,
+          curve: "basis",
+        },
+      },
+    },
     image: "img/akoflow-social-card.png",
     colorMode: {
       defaultMode: "light",

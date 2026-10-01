@@ -661,3 +661,31 @@ html {
 [data-theme='dark'] .bg-particle {
   fill: rgba(160, 160, 255, 0.25);
 }
+
+/* Mermaid diagrams share the AkôFlow monochrome visual language. */
+.docusaurus-mermaid-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin: 1.5rem auto;
+  padding: 1.25rem;
+  overflow-x: auto;
+  border: 1px solid #d7d7d2;
+  border-radius: 0.75rem;
+  background: #ffffff;
+}
+
+.docusaurus-mermaid-container > svg {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+}
+
+@media (max-width: 576px) {
+  .docusaurus-mermaid-container {
+    justify-content: flex-start;
+    padding: 0.75rem;
+  }
+}

@@ -35,15 +35,13 @@ function DesktopCard() {
         Native client for macOS, Windows, and Linux, distributed through
         versioned GitHub Releases.
       </p>
-      <a
-        href="https://github.com/UFFeScience/akoflow/releases/latest"
-        target="_blank"
-        rel="noopener noreferrer"
+      <Link
+        to="/docs/downloads"
         className={styles.downloadBtn}
       >
         <DownloadIcon />
-        Download
-      </a>
+        Download AkôFlow Desktop
+      </Link>
       <Link to="/docs/installation" className={styles.docsLink}>
         Installation guide
       </Link>

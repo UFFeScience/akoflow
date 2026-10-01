@@ -5,11 +5,30 @@ sidebar_label: Downloads
 description: Direct official downloads for AkôFlow Desktop, with platform selection and release verification.
 ---
 
+<div className="download-release-callout">
+  <div className="download-release-callout__content">
+    <span className="download-release-callout__eyebrow">Official release</span>
+    <h2>Get the latest AkôFlow Desktop</h2>
+    <p>
+      Open the latest stable release and select the installer for your operating
+      system. All Desktop packages and release notes are published on GitHub.
+    </p>
+  </div>
+  <a
+    className="button button--primary button--lg download-release-callout__button"
+    href="https://github.com/UFFeScience/akoflow/releases/latest"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    Download latest release ↗
+  </a>
+</div>
+
 ## Choose your download
 
-Open the [latest official release](https://github.com/UFFeScience/akoflow/releases/latest)
-and choose the asset for your workstation. Check the release notes for supported
-platforms and prerequisites, then follow [Installation](/docs/installation).
+Use the highlighted button above to open the latest official release and choose
+the asset for your workstation. Check the release notes for supported platforms
+and prerequisites, then follow [Installation](/docs/installation).
 
 | Platform                       | Asset to select | What to do next |
 | ------------------------------ | --------------- | --------------- |
@@ -18,9 +37,9 @@ platforms and prerequisites, then follow [Installation](/docs/installation).
 | Debian/Ubuntu x64              | Linux `.deb` | Install the downloaded file with `sudo apt install ./downloaded-file.deb` (replace the filename) |
 | Linux x64                      | Linux `.AppImage` | Give the downloaded file execute permission and open it |
 
-[View the latest release and all assets](https://github.com/UFFeScience/akoflow/releases/latest).
 Use the filenames and requirements attached to the release you choose; do not
-mix assets from different tags.
+mix assets from different tags. If you need to return to the asset list, use
+[Download latest release](https://github.com/UFFeScience/akoflow/releases/latest).
 
 ## Which files can I ignore?
 

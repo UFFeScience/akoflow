@@ -1,0 +1,31 @@
+---
+title: AI Video Studio
+description: Turn a creative brief into an offline storyboard, illustrated scenes, narration, and a validated video.
+---
+
+import {WorkflowDag, WorkflowPatternDetails} from '@site/src/components/WorkflowShowcase';
+
+# AI Video Studio
+
+This runnable example turns a versioned creative brief into a complete short video without a hosted model or API. Python creates the storyboard, deterministic illustrations, and narration waveform; FFmpeg produces the MP4 inside the provided image.
+
+<WorkflowDag title="AI Video Studio" stages={['storyboard',['scenes','narration'],'compose','quality control']} />
+
+<WorkflowPatternDetails
+  inputs={['Creative brief with captions, colors, and narration tones','Smoke or demo profile']}
+  outputs={['Storyboard JSON','Rendered frame sequence','Narration WAV','MP4 or portable YUV4MPEG video','Quality report and manifest']}
+  evidence={['Brief revision','Per-stage generated files','Frame count and frame rate','Final artifact sizes']}
+/>
+
+## Run locally
+
+```bash
+git clone https://github.com/UFFeScience/akoflow-examples.git
+cd akoflow-examples/generative-ai/video-studio
+./run.sh
+```
+
+The default smoke profile is CPU-compatible. Set `AKOFLOW_PROFILE=demo` for a longer render. FFmpeg is optional for the host fixture; the OCI image includes it and creates an H.264/AAC MP4.
+
+[Open the source bundle](https://github.com/UFFeScience/akoflow-examples/tree/main/generative-ai/video-studio) · [Workflow YAML](https://raw.githubusercontent.com/UFFeScience/akoflow-examples/main/generative-ai/video-studio/workflow.yaml)
+

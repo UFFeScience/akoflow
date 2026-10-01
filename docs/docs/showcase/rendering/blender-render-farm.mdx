@@ -1,0 +1,31 @@
+---
+title: Blender Render Farm
+description: Render disjoint frame shards concurrently and compose a validated animation.
+---
+
+import {WorkflowDag, WorkflowPatternDetails} from '@site/src/components/WorkflowShowcase';
+
+# Blender Render Farm
+
+This example creates a procedural Blender scene, divides frames into even and odd shards, renders both activities independently, and composes the complete sequence. The fan-out makes resource placement and parallel makespan visible in an AkôFlow plan.
+
+<WorkflowDag title="Blender Render Farm" stages={['setup',['render even frames','render odd frames'],'compose','verify']} />
+
+<WorkflowPatternDetails
+  inputs={['Procedural scene definition','Smoke or demo frame profile']}
+  outputs={['Blender scene','Complete frame sequence','MP4 or portable YUV4MPEG animation','Render report']}
+  evidence={['Render plan and engine','Frame ownership by shard','Expected and observed frame counts','Final animation']}
+/>
+
+## Run locally
+
+```bash
+git clone https://github.com/UFFeScience/akoflow-examples.git
+cd akoflow-examples/rendering/blender-render-farm
+./run.sh
+```
+
+The OCI image contains Blender and FFmpeg. A deterministic CPU software-render fixture keeps validation possible on minimal CI machines; set `AKOFLOW_REQUIRE_BLENDER=1` when Blender execution is mandatory.
+
+[Open the source bundle](https://github.com/UFFeScience/akoflow-examples/tree/main/rendering/blender-render-farm) · [Workflow YAML](https://raw.githubusercontent.com/UFFeScience/akoflow-examples/main/rendering/blender-render-farm/workflow.yaml)
+

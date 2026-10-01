@@ -51,7 +51,27 @@ const sidebars: SidebarsConfig = {
                 "showcase/ai/generative-ai/synthetic-dataset",
                 "showcase/ai/generative-ai/audio-transcription",
                 "showcase/ai/generative-ai/document-extraction",
+                "showcase/ai/generative-ai/ai-video-studio",
+                "showcase/ai/generative-ai/local-rag-factory",
               ],
+            },
+            {
+              type: "category",
+              label: "Document AI",
+              collapsed: true,
+              items: ["showcase/document-ai/document-intelligence"],
+            },
+            {
+              type: "category",
+              label: "Media intelligence",
+              collapsed: true,
+              items: ["showcase/media/video-intelligence"],
+            },
+            {
+              type: "category",
+              label: "Rendering",
+              collapsed: true,
+              items: ["showcase/rendering/blender-render-farm"],
             },
             {
               type: "category",

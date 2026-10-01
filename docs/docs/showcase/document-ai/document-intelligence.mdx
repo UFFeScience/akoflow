@@ -1,0 +1,31 @@
+---
+title: Document Intelligence
+description: Extract and reconcile auditable procurement records from an offline document corpus.
+---
+
+import {WorkflowDag, WorkflowPatternDetails} from '@site/src/components/WorkflowShowcase';
+
+# Document Intelligence
+
+This example processes synthetic invoices and a purchase order through explicit ingestion, classification, extraction, reconciliation, and reporting activities. It verifies totals and duplicate invoice identifiers rather than stopping after text extraction.
+
+<WorkflowDag title="Document Intelligence" stages={['ingest','classify','extract','reconcile','report']} />
+
+<WorkflowPatternDetails
+  inputs={['Versioned semi-structured invoices','Purchase-order fixture']}
+  outputs={['Document inventory','Classifications','Extracted fields and line items','Reconciliation JSON and CSV','Aggregate report']}
+  evidence={['Source hashes','Document-to-record mapping','Balance checks','Duplicate checks','Gross total']}
+/>
+
+## Run locally
+
+```bash
+git clone https://github.com/UFFeScience/akoflow-examples.git
+cd akoflow-examples/document-ai/document-intelligence
+./run.sh
+```
+
+The fixture is intentionally small and private-data-free. Replace `data/documents` with a larger local corpus while preserving the same artifact contract.
+
+[Open the source bundle](https://github.com/UFFeScience/akoflow-examples/tree/main/document-ai/document-intelligence) · [Workflow YAML](https://raw.githubusercontent.com/UFFeScience/akoflow-examples/main/document-ai/document-intelligence/workflow.yaml)
+

@@ -72,7 +72,6 @@ var legacyFunctionLineLimits = map[string]int{
 	"infrastructure/instancearchive/service.go:Import":                                                  82,
 	"infrastructure/transfer/endpoint_resolver.go:ResolveTransferEndpoint":                              93,
 	"planning/algorithms/prism_evaluator.go:evaluateCompleteCompactPRISMState":                          195,
-	"provider/cloud/ansible/runner.go:Configure":                                                        81,
 }
 
 func TestRequiredArchitectureDirectoriesExist(t *testing.T) {

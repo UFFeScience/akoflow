@@ -2,6 +2,7 @@ package cloudprovision
 
 import (
 	"context"
+	"errors"
 	"testing"
 
 	"github.com/UFFeScience/akoflow/internal/application/ports"
@@ -78,8 +79,49 @@ type terraformStub struct {
 	err       error
 }
 
-func (*terraformStub) Apply(context.Context, ports.TerraformProvisionSpec) (ports.TerraformResult, error) {
-	return ports.TerraformResult{}, nil
+type environmentCatalogStub struct {
+	definition domain.EnvironmentDefinition
+}
+
+func (s *environmentCatalogStub) Find(context.Context, string) (*domain.EnvironmentDefinition, error) {
+	return &s.definition, nil
+}
+func (*environmentCatalogStub) Create(context.Context, domain.EnvironmentDefinition) error {
+	return nil
+}
+func (*environmentCatalogStub) Replace(context.Context, domain.EnvironmentDefinition) error {
+	return nil
+}
+func (*environmentCatalogStub) Delete(context.Context, string) error { return nil }
+func (*environmentCatalogStub) List(context.Context) ([]domain.EnvironmentDefinition, error) {
+	return nil, nil
+}
+func (*environmentCatalogStub) ListConnections(context.Context, string) ([]domain.EnvironmentConnection, error) {
+	return nil, nil
+}
+func (*environmentCatalogStub) UpdateStatus(context.Context, string, domain.EnvironmentStatus) error {
+	return nil
+}
+func (*environmentCatalogStub) UpsertConnection(context.Context, domain.EnvironmentConnection) error {
+	return nil
+}
+
+type credentialStub struct{}
+
+func (credentialStub) Resolve(string) ([]byte, error) { return []byte("credential"), nil }
+
+type sshKeyStub struct{}
+
+func (sshKeyStub) Ensure(instanceID, _ string) (ports.CloudSSHKey, error) {
+	return ports.CloudSSHKey{CredentialRef: "file:/tmp/key", PublicKey: "ssh-ed25519 test"}, nil
+}
+
+type configuratorStub struct{}
+
+func (configuratorStub) Configure(context.Context, ports.MachineConfigurationSpec) error { return nil }
+
+func (s *terraformStub) Apply(context.Context, ports.TerraformProvisionSpec) (ports.TerraformResult, error) {
+	return s.result, s.err
 }
 func (s *terraformStub) Start(_ context.Context, id string) (ports.TerraformResult, error) {
 	s.started = append(s.started, id)
@@ -188,6 +230,36 @@ func TestLifecycleGuardsRejectInvalidStates(t *testing.T) {
 	}
 	if _, err := service.Start(context.Background(), "busy"); err == nil {
 		t.Fatal("expected non-stopped start to be rejected")
+	}
+}
+
+func TestProvisionRunsTerraformAndPersistsReadyInstance(t *testing.T) {
+	store := &capacityStoreStub{target: &domain.CloudCapacityTarget{ID: "target", EnvironmentID: "environment", Provider: "gcp"}}
+	terraform := &terraformStub{result: ports.TerraformResult{ProviderID: "provider-1", PublicAddress: "203.0.113.30", PrivateAddress: "10.0.0.30"}}
+	environment := &environmentCatalogStub{definition: domain.EnvironmentDefinition{Connections: []domain.EnvironmentConnection{{Type: domain.ConnectionCloud, CredentialRef: "credential-ref"}}}}
+	service := New(store, environment, credentialStub{}, sshKeyStub{}, terraform, configuratorStub{})
+
+	instance, err := service.Provision(context.Background(), "environment", domain.CloudProvisionRequest{CapacityTargetID: "target"})
+	if err != nil {
+		t.Fatalf("provision failed: %v", err)
+	}
+	if instance.Status != "ready" || instance.ProviderID != "provider-1" || instance.PublicAddress != "203.0.113.30" {
+		t.Fatalf("unexpected provisioned instance: %#v", instance)
+	}
+	if len(store.updated) < 2 {
+		t.Fatalf("expected provisioning and ready persistence updates, got %d", len(store.updated))
+	}
+}
+
+func TestProvisionMarksInstanceFailedWhenTerraformFails(t *testing.T) {
+	store := &capacityStoreStub{target: &domain.CloudCapacityTarget{ID: "target", EnvironmentID: "environment", Provider: "gcp"}}
+	terraform := &terraformStub{err: errors.New("terraform unavailable")}
+	environment := &environmentCatalogStub{definition: domain.EnvironmentDefinition{Connections: []domain.EnvironmentConnection{{Type: domain.ConnectionCloud, CredentialRef: "credential-ref"}}}}
+	service := New(store, environment, credentialStub{}, sshKeyStub{}, terraform, configuratorStub{})
+
+	instance, err := service.Provision(context.Background(), "environment", domain.CloudProvisionRequest{CapacityTargetID: "target", InstanceID: "cloud-instance-fixed"})
+	if err == nil || instance.Status != "failed" || instance.FailureReason != "terraform unavailable" {
+		t.Fatalf("expected failed provision, got %#v, %v", instance, err)
 	}
 }
 

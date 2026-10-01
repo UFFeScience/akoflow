@@ -75,6 +75,7 @@ type terraformStub struct {
 	stopped   []string
 	destroyed []string
 	result    ports.TerraformResult
+	err       error
 }
 
 func (*terraformStub) Apply(context.Context, ports.TerraformProvisionSpec) (ports.TerraformResult, error) {
@@ -82,15 +83,15 @@ func (*terraformStub) Apply(context.Context, ports.TerraformProvisionSpec) (port
 }
 func (s *terraformStub) Start(_ context.Context, id string) (ports.TerraformResult, error) {
 	s.started = append(s.started, id)
-	return s.result, nil
+	return s.result, s.err
 }
 func (s *terraformStub) Destroy(_ context.Context, id string) error {
 	s.destroyed = append(s.destroyed, id)
-	return nil
+	return s.err
 }
 func (s *terraformStub) Stop(_ context.Context, id string) error {
 	s.stopped = append(s.stopped, id)
-	return nil
+	return s.err
 }
 func (*terraformStub) Log(context.Context, string) ([]byte, error) { return nil, nil }
 
@@ -173,6 +174,20 @@ func TestLifecycleTransitionsPersistTerraformState(t *testing.T) {
 	destroyed, err := service.Destroy(context.Background(), "instance")
 	if err != nil || destroyed.Status != "destroyed" || destroyed.PublicAddress != "" || len(terra.destroyed) != 1 {
 		t.Fatalf("destroy = %#v, err = %v, calls = %#v", destroyed, err, terra.destroyed)
+	}
+}
+
+func TestLifecycleGuardsRejectInvalidStates(t *testing.T) {
+	store := &capacityStoreStub{instances: []domain.CloudProvisionedInstance{{ID: "ready", Status: "ready"}, {ID: "busy", Status: "configuring"}, {ID: "stopped", Status: "stopped"}}}
+	service := &Provisioner{store: store, terraform: &terraformStub{}}
+	if instance, err := service.Start(context.Background(), "ready"); err != nil || instance.Status != "ready" {
+		t.Fatalf("expected ready start to be idempotent, got %#v, %v", instance, err)
+	}
+	if _, err := service.Stop(context.Background(), "busy"); err == nil {
+		t.Fatal("expected non-ready stop to be rejected")
+	}
+	if _, err := service.Start(context.Background(), "busy"); err == nil {
+		t.Fatal("expected non-stopped start to be rejected")
 	}
 }
 

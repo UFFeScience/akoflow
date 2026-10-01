@@ -23,10 +23,10 @@ Open **Provenance**. The **Explore** tab loads a server-defined entity catalog. 
 The API exposes the same server-defined catalog and query:
 
 ```bash
-curl -H "Authorization: Bearer $AKOFLOW_TOKEN" \
-  "$AKOFLOW_URL/akoflow-api/provenance/entities/"
+curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  "$AKOFLOW_API_URL/provenance/entities/"
 
-curl -G -H "Authorization: Bearer $AKOFLOW_TOKEN" \
+curl -G -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   --data-urlencode "q=completed" \
   --data-urlencode "filterField=status" \
   --data-urlencode "filterValue=completed" \
@@ -34,7 +34,7 @@ curl -G -H "Authorization: Bearer $AKOFLOW_TOKEN" \
   --data-urlencode "pageSize=50" \
   --data-urlencode "sortField=created_at" \
   --data-urlencode "sortOrder=desc" \
-  "$AKOFLOW_URL/akoflow-api/provenance/entities/runs/"
+  "$AKOFLOW_API_URL/provenance/entities/runs/"
 ```
 
 Entity names and fields are supplied by `/provenance/entities/`; clients should not invent them. Query responses include entity metadata, `items`, `page`, `pageSize`, `total`, and `hasNext`.
@@ -59,11 +59,11 @@ From an Explore result, choose **Open lineage**, or open the **Lineage** tab and
 | **Export JSON** | Preserve the exact lineage response for an investigation or a report. | The export is a snapshot of the current root, direction, and depth; record those choices with the file. |
 
 ```bash
-curl -G -H "Authorization: Bearer $AKOFLOW_TOKEN" \
+curl -G -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   --data-urlencode "direction=both" \
   --data-urlencode "depth=2" \
   --data-urlencode "maxNodes=300" \
-  "$AKOFLOW_URL/akoflow-api/provenance/lineage/runs/$RUN_ID/"
+  "$AKOFLOW_API_URL/provenance/lineage/runs/$RUN_ID/"
 ```
 
 The response contains a `root` key, `nodes`, directed `edges`, and `truncated`. Increase depth deliberately: the graph may expand quickly, and the interface caps a request at 300 nodes.
@@ -91,10 +91,10 @@ The **SQL** tab presents the queryable schema, templates for common investigatio
 Only read-only `SELECT` and `WITH` queries are accepted. The Desktop communicates the current service limits as a 10-second execution timeout and 200 rows per page. Fetch the runtime schema instead of assuming table or column names:
 
 ```bash
-curl -H "Authorization: Bearer $AKOFLOW_TOKEN" \
-  "$AKOFLOW_URL/akoflow-api/provenance/sql/schema/"
+curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  "$AKOFLOW_API_URL/provenance/sql/schema/"
 
-curl -X POST -H "Authorization: Bearer $AKOFLOW_TOKEN" \
+curl -X POST -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
     "sql":"SELECT id, status, created_at FROM execution_runs WHERE status = :status ORDER BY created_at DESC",
@@ -102,7 +102,7 @@ curl -X POST -H "Authorization: Bearer $AKOFLOW_TOKEN" \
     "page":1,
     "pageSize":200
   }' \
-  "$AKOFLOW_URL/akoflow-api/provenance/sql/"
+  "$AKOFLOW_API_URL/provenance/sql/"
 ```
 
 Send the same payload to `/provenance/sql/explain/` to inspect the query plan without running the ordinary result path. SQL results contain typed `columns`, `items`, pagination information, a `truncated` flag, and elapsed milliseconds.
@@ -133,11 +133,11 @@ Open **Audit** for a chronological record of infrastructure discovery, connectio
 The API supports server-side filtering:
 
 ```bash
-curl -G -H "Authorization: Bearer $AKOFLOW_TOKEN" \
+curl -G -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   --data-urlencode "environmentId=$ENVIRONMENT_ID" \
   --data-urlencode "outcome=failed" \
   --data-urlencode "limit=100" \
-  "$AKOFLOW_URL/akoflow-api/audit-events/"
+  "$AKOFLOW_API_URL/audit-events/"
 ```
 
 Available filter parameters are `eventType`, `environmentId`, `resourceId`, `connectionId`, `sessionId`, `executionId`, `outcome`, and `limit`. Outcomes currently include `started`, `succeeded`, and `failed`. The Desktop currently loads the audit list and applies its category tabs locally; use API filters for precise automation.

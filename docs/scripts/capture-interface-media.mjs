@@ -33,30 +33,86 @@ async function captureToken() {
 
 const apiToken = await captureToken();
 
-const captures = [
-  {
-    name: "desktop-overview",
-    url: process.env.AKOFLOW_DESKTOP_URL || "http://127.0.0.1:5173/",
-    output: "static/img/interface/overview/desktop-overview.png",
-  },
-  {
-    name: "desktop-environments",
-    url: `${process.env.AKOFLOW_DESKTOP_URL || "http://127.0.0.1:5173"}/environments`,
-    output: "static/img/interface/infrastructure/environments.png",
-  },
-  {
-    name: "desktop-workflows",
-    url: `${process.env.AKOFLOW_DESKTOP_URL || "http://127.0.0.1:5173"}/workflows`,
-    output: "static/img/interface/workflows/definitions.png",
-  },
-  {
-    name: "generated-api-endpoint",
-    url:
-      process.env.AKOFLOW_DOCS_ENDPOINT_URL ||
-      "http://localhost:3000/akoflow/docs/api/endpoints/workflows/get-workflow-definitions-workflowid",
-    output: "static/img/interface/api/generated-endpoint.png",
-  },
+const desktopBase = (process.env.AKOFLOW_DESKTOP_URL || "http://127.0.0.1:5173").replace(/\/$/, "");
+const cloudOperations = await fetch(`${desktopBase}/akoflow-api/cloud-operations/`)
+  .then((response) => response.ok ? response.json() : [])
+  .catch(() => []);
+const cloudOperation = cloudOperations.find((operation) => operation.environmentId === "documentation-cloud");
+const desktopPages = [
+  ["environments", "/environments", "infrastructure/environments-current.png"],
+  ["environments-simulation", "/environments", "infrastructure/environments-simulation.png", "Simulation infrastructure"],
+  ["resources", "/resources", "infrastructure/resources.png"],
+  ["execution-scopes", "/execution-scopes", "infrastructure/execution-scopes-current.png"],
+  ["machine-configurations", "/machine-configurations", "infrastructure/machine-configurations.png"],
+  ["network", "/network", "infrastructure/network.png"],
+  ["workflows", "/workflows", "workflows/definitions-current.png"],
+  ["plans", "/plans", "planning/plans.png"],
+  ["planning-sessions", "/planning-sessions", "planning/sessions.png"],
+  ["executions", "/executions", "runs/executions.png"],
+  ["new-execution", "/executions/new", "runs/new-execution.png"],
+  ["data-catalog", "/data", "data/catalog.png"],
+  ["artifacts", "/artifacts", "data/artifacts.png"],
+  ["artifact-locations", "/artifact-locations", "data/artifact-locations.png"],
+  ["materializations", "/materializations", "data/materializations.png"],
+  ["provenance", "/provenance", "data/provenance.png"],
+  ["provenance-sql", "/provenance", "data/provenance-sql.png", "SQL"],
+  ["provenance-lineage", "/provenance", "data/provenance-lineage.png", "Lineage"],
+  ["audit", "/audit", "operations/audit.png"],
+  ["console", "/console", "operations/console.png"],
+  ["settings", "/settings", "operations/settings.png"],
+  ["settings-ssh", "/settings?section=ssh", "operations/settings-ssh.png"],
+  ["settings-data", "/settings?section=data", "operations/settings-data.png"],
+  ["settings-credits", "/settings?section=credits", "operations/settings-credits.png"],
+  ["settings-danger", "/settings?section=reset", "operations/settings-danger.png"],
+  ["new-environment", "/environments/new", "infrastructure/new-environment.png"],
+  ["new-workflow", "/workflows/new", "workflows/new-workflow.png"],
+  ["new-scope", "/execution-scopes/new", "infrastructure/new-scope.png"],
+  ["new-topology", "/network/new", "infrastructure/new-topology.png"],
+  ["new-artifact", "/artifacts/new", "data/new-artifact.png"],
+  ["environment-detail", "/environments/simulation-example", "infrastructure/environment-detail.png"],
+  ["environment-inventory", "/environments/simulation-example/inventory", "infrastructure/environment-inventory.png"],
+  ["environment-storage", "/environments/simulation-example/storages", "infrastructure/environment-storage.png"],
+  ["cloud-environment-detail", "/environments/documentation-cloud", "infrastructure/cloud-environment-detail.png"],
+  ["environment-cloud-capacity", "/environments/documentation-cloud/cloud-capacity", "infrastructure/environment-cloud-capacity.png"],
+  ["environment-provisioning", "/environments/documentation-cloud/provisioning", "infrastructure/environment-provisioning.png"],
+  ["cloud-resource-detail", "/resources/documentation-capacity", "infrastructure/cloud-resource-detail.png"],
+  ...(cloudOperation ? [["cloud-operation-detail", `/resources/documentation-capacity/provisioning/${cloudOperation.instanceId}`, "infrastructure/cloud-operation-detail.png"]] : []),
+  ...(cloudOperation ? [["cloud-operation-terraform", `/resources/documentation-capacity/provisioning/${cloudOperation.instanceId}`, "infrastructure/cloud-operation-terraform.png", "Provisioning (Terraform)"]] : []),
+  ...(cloudOperation ? [["cloud-operation-ansible", `/resources/documentation-capacity/provisioning/${cloudOperation.instanceId}`, "infrastructure/cloud-operation-ansible.png", "Configuration (Ansible)"]] : []),
+  ["environment-edit", "/environments/simulation-example/edit", "infrastructure/environment-edit.png"],
+  ["resource-detail", "/resources/simulated-edge", "infrastructure/resource-detail.png"],
+  ["scope-detail", "/execution-scopes/simulation-example-v1-scope", "infrastructure/scope-detail.png"],
+  ["topology-detail", "/network/simulation-network-v1", "infrastructure/topology-detail.png"],
+  ["workflow-detail", "/workflows/simulation-example-workflow", "workflows/workflow-detail.png"],
+  ["workflow-plans", "/workflows/simulation-example-workflow", "workflows/workflow-plans.png", "Plans"],
+  ["workflow-runs", "/workflows/simulation-example-workflow", "workflows/workflow-runs.png", "Runs"],
+  ["planning-create", "/workflows/simulation-example-workflow/plans/new", "planning/planning-create.png"],
+  ["plan-detail", "/workflows/simulation-example-workflow/plans/simulation-example-plan-v1", "planning/plan-detail.png"],
+  ["plan-executions", "/workflows/simulation-example-workflow/plans/simulation-example-plan-v1", "planning/plan-executions.png", "Executions"],
+  ["run-detail", "/workflows/simulation-example-workflow/plans/simulation-example-plan-v1/executions/simulation-example-run-v2", "runs/run-detail.png"],
+  ["run-activities", "/workflows/simulation-example-workflow/plans/simulation-example-plan-v1/executions/simulation-example-run-v2", "runs/run-activities.png", "Activities"],
+  ["run-timeline", "/workflows/simulation-example-workflow/plans/simulation-example-plan-v1/executions/simulation-example-run-v2", "runs/run-timeline.png", "Timeline"],
+  ["run-resources", "/workflows/simulation-example-workflow/plans/simulation-example-plan-v1/executions/simulation-example-run-v2", "runs/run-resources.png", "Resources"],
+  ["run-plan-comparison", "/workflows/simulation-example-workflow/plans/simulation-example-plan-v1/executions/simulation-example-run-v2", "runs/run-plan-comparison.png", "Plan vs execution"],
+  ["run-data", "/workflows/simulation-example-workflow/plans/simulation-example-plan-v1/executions/simulation-example-run-v2", "runs/run-data.png", "Data"],
+  ["run-prerequisites", "/workflows/simulation-example-workflow/plans/simulation-example-plan-v1/executions/simulation-example-run-v2", "runs/run-prerequisites.png", "Prerequisites"],
+  ["run-events", "/workflows/simulation-example-workflow/plans/simulation-example-plan-v1/executions/simulation-example-run-v2", "runs/run-events.png", "Events"],
+  ["activity-detail", "/workflows/simulation-example-workflow/plans/simulation-example-plan-v1/executions/simulation-example-run-v2/activities/simulation-example-workflow-analyze", "runs/activity-detail.png"],
+  ["planning-session-detail", "/planning-sessions/planning-simulation-example", "planning/session-detail.png"],
+  ["artifact-detail", "/artifacts/busybox", "data/artifact-detail.png"],
 ];
+
+const captures = [
+  ...desktopPages.map(([name, route, output, click]) => ({
+    name,
+    url: `${desktopBase}${route || "/"}`,
+    output: `static/img/interface/${output}`,
+    click,
+  })),
+];
+const selectedCaptures = process.env.AKOFLOW_CAPTURE_ONLY
+  ? captures.filter((item) => process.env.AKOFLOW_CAPTURE_ONLY.split(",").includes(item.name))
+  : captures;
 
 function delay(milliseconds) {
   return new Promise((resolve) => setTimeout(resolve, milliseconds));
@@ -87,7 +143,7 @@ async function createTarget(url) {
   return response.json();
 }
 
-async function capture(target, output) {
+async function capture(target, output, click) {
   const socket = new WebSocket(target.webSocketDebuggerUrl);
   const pending = new Map();
   let sequence = 0;
@@ -124,13 +180,35 @@ async function capture(target, output) {
   await command("Emulation.setEmulatedMedia", {
     features: [{ name: "prefers-reduced-motion", value: "reduce" }],
   });
-  if (apiToken && target.url.includes("127.0.0.1:5173")) {
+  const page = await fetch(target.url);
+  if (!page.ok) throw new Error(`Page unavailable: ${target.url} (${page.status})`);
+  if (target.url.startsWith(desktopBase)) {
     await command("Runtime.evaluate", {
-      expression: `localStorage.setItem('akoflow-api-token', ${JSON.stringify(apiToken)})`,
+      expression: `localStorage.setItem('akoflow-environment-onboarding-dismissed', 'true'); ${apiToken ? `localStorage.setItem('akoflow-api-token', ${JSON.stringify(apiToken)})` : ""}`,
     });
     await command("Page.reload", { ignoreCache: true });
   }
-  await delay(target.url.includes("127.0.0.1:5173") ? 7000 : 2500);
+  await delay(target.url.includes("127.0.0.1:5173") ? 1800 : 1200);
+  if (click) {
+    const selection = await command("Runtime.evaluate", {
+      expression: `(() => { const label = ${JSON.stringify(click)}; const buttons = [...document.querySelectorAll('button')]; const button = buttons.find((item) => item.textContent.trim() === label) || buttons.find((item) => item.textContent.trim().startsWith(label)); if (!button) return false; button.click(); return true; })()`,
+      returnByValue: true,
+    });
+    if (!selection.result.value) throw new Error(`Tab ${click} was not found on ${target.url}`);
+    await delay(450);
+  }
+  const state = await command("Runtime.evaluate", {
+    expression: "({title: document.title, text: document.body?.innerText?.slice(0, 1200) || ''})",
+    returnByValue: true,
+  });
+  const visible = state.result.value;
+  if (/This site can.t be reached|Instance identity unavailable|Loading AkôFlow|Welcome to AkôFlow|Unable to load this page|Loading operation…/.test(visible.text))
+    throw new Error(`Invalid capture for ${target.url}: ${visible.text.slice(0, 120)}`);
+  if (target.url.startsWith(desktopBase)) {
+    await command("Runtime.evaluate", {
+      expression: `(() => { const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT); while (walker.nextNode()) walker.currentNode.textContent = walker.currentNode.textContent.replace(/srv[0-9]+/g, 'demo-instance').replace(/run-[0-9]{10,}/g, 'demo-run').replace(/cloud-instance-[0-9a-f-]{36}/g, 'demo-cloud-instance'); for (const input of document.querySelectorAll('input')) if (/^run-[0-9]{10,}$/.test(input.value)) { const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set; setter.call(input, 'demo-run'); input.dispatchEvent(new Event('input', {bubbles: true})); } })()`,
+    });
+  }
   const result = await command("Page.captureScreenshot", {
     format: "png",
     captureBeyondViewport: false,
@@ -145,6 +223,7 @@ const chrome = spawn(
   chromeExecutable,
   [
     "--headless=new",
+    "--no-sandbox",
     "--disable-gpu",
     "--hide-scrollbars",
     `--remote-debugging-port=${debuggingPort}`,
@@ -156,16 +235,16 @@ const chrome = spawn(
 
 try {
   await waitForDebugger();
-  for (const item of captures) {
+  for (const item of selectedCaptures) {
     const target = await createTarget(item.url);
     const output = path.resolve(docsDirectory, item.output);
-    await capture(target, output);
+    await capture(target, output, item.click);
     console.log(
       `Captured ${item.name} -> ${path.relative(docsDirectory, output)}`,
     );
   }
 } finally {
-  if (chrome.exitCode === null) {
+  if (chrome.exitCode === null && chrome.signalCode === null) {
     const exited = new Promise((resolve) => chrome.once("exit", resolve));
     chrome.kill("SIGTERM");
     await exited;

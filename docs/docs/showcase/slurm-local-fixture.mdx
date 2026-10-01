@@ -56,6 +56,7 @@ The fixture is intentionally local and disposable. It writes all database and ge
 sh examples/slurm/local-fixture/run.sh
 
 curl --fail-with-body \\
+  -H "Authorization: Bearer \${AKOFLOW_API_TOKEN}" \\
   "$AKOFLOW_API_URL/execution-runs/slurm-fixture-run-v1/" \\
   | jq -r '.run.status'`}</code></pre>
     <p>The daemon uses no token by default. If your local configuration requires one, set <code>AKOFLOW_API_TOKEN</code> before running the supplied script.</p>

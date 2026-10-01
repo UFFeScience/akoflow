@@ -1,14 +1,16 @@
 ---
 title: Workflow showcase
 sidebar_label: Overview
-description: Complete AkôFlow workflows with downloadable files and Desktop and API walkthroughs.
+description: Workflow examples with downloadable files, prerequisites, and stated validation scope.
 ---
 
 import {ShowcaseCard, ShowcaseGrid} from '@site/src/components/WorkflowShowcase';
 
 # Workflow showcase
 
-Start from a complete, runnable workflow instead of assembling isolated payloads. Every showcase includes the workflow graph, infrastructure inputs, planning data, execution request, expected evidence, and two equivalent paths: **AkôFlow Desktop** and **API**.
+Start from a checked-in example instead of assembling isolated payloads. Each showcase states its prerequisites and expected evidence. Some use local simulation, some run real workloads, and the SLURM fixture checks only the local adapter path. Desktop and API steps are included where they have been documented and verified.
+
+For Docker-backed, deterministic regression fixtures, use the [materialized showcase catalog](./materialized). It contains 22 runnable examples across machine learning, generative AI, agentic workflows, and scientific AI.
 
 <ShowcaseGrid>
   <ShowcaseCard
@@ -58,7 +60,7 @@ Start from a complete, runnable workflow instead of assembling isolated payloads
 ## How to use a showcase
 
 1. Choose a scenario and download its checked-in YAML files.
-2. Follow the **Desktop** tab to import and inspect each object visually, or the **API** tab to submit the same files.
+2. Follow the procedure provided for that example; check its prerequisites before choosing Desktop or API.
 3. Generate or register a plan, start the run, and wait for a terminal status.
 4. Compare planned and observed makespan, cost, activity placement, transfers, and provenance.
 

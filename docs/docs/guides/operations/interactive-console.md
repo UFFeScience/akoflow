@@ -35,13 +35,13 @@ The action appears only after AkôFlow can resolve all three layers: a resource,
 ## Open and manage a session through the API
 
 ```bash
-export AKOFLOW_URL='http://127.0.0.1:<daemon-port>/akoflow-api'
-export AKOFLOW_TOKEN='<daemon-token>'
+export AKOFLOW_API_URL='http://127.0.0.1:<daemon-port>/akoflow-api'
+export AKOFLOW_API_TOKEN='<daemon-token>'
 
 curl --fail-with-body \
-  -H "Authorization: Bearer $AKOFLOW_TOKEN" \
+  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -H 'Content-Type: application/json' \
-  -X POST "$AKOFLOW_URL/console-sessions/" \
+  -X POST "$AKOFLOW_API_URL/console-sessions/" \
   -d '{"resourceId":"hpc-login","actorId":"researcher@example.org"}'
 ```
 
@@ -50,12 +50,12 @@ The created session has `starting`, `connected`, `closed`, or `failed` status an
 List and close sessions:
 
 ```bash
-curl -H "Authorization: Bearer $AKOFLOW_TOKEN" \
-  "$AKOFLOW_URL/console-sessions/"
+curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  "$AKOFLOW_API_URL/console-sessions/"
 
 curl --fail-with-body \
-  -H "Authorization: Bearer $AKOFLOW_TOKEN" \
-  -X DELETE "$AKOFLOW_URL/console-sessions/$SESSION_ID/"
+  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  -X DELETE "$AKOFLOW_API_URL/console-sessions/$SESSION_ID/"
 ```
 
 Closure succeeds with `204 No Content`; an unknown session returns `404`.
@@ -80,8 +80,8 @@ Download the archived session log:
 
 ```bash
 curl --fail-with-body \
-  -H "Authorization: Bearer $AKOFLOW_TOKEN" \
-  "$AKOFLOW_URL/console-sessions/$SESSION_ID/log/" \
+  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  "$AKOFLOW_API_URL/console-sessions/$SESSION_ID/log/" \
   --output "akoflow-$SESSION_ID.log"
 ```
 
@@ -93,9 +93,9 @@ The current Desktop focuses on the interactive terminal. Use the HTTP API for re
 
 ```bash
 curl --fail-with-body \
-  -H "Authorization: Bearer $AKOFLOW_TOKEN" \
+  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -H 'Content-Type: application/json' \
-  -X POST "$AKOFLOW_URL/console-commands/" \
+  -X POST "$AKOFLOW_API_URL/console-commands/" \
   -d '{
     "resourceId":"hpc-login",
     "actorId":"researcher@example.org",
@@ -114,9 +114,9 @@ List recent commands:
 
 ```bash
 curl --get --fail-with-body \
-  -H "Authorization: Bearer $AKOFLOW_TOKEN" \
+  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   --data-urlencode 'limit=50' \
-  "$AKOFLOW_URL/console-commands/"
+  "$AKOFLOW_API_URL/console-commands/"
 ```
 
 Command creation returns `422` for an unknown/unbound resource, invalid input, an excessive timeout, or runner failure. It returns `503` if console commands are unavailable.

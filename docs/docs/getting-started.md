@@ -1,26 +1,32 @@
 ---
 id: getting-started
-title: Choose where to start
+title: Getting started with AkôFlow
 sidebar_label: Getting started
 slug: /getting-started
-description: Choose the shortest AkôFlow documentation path for installation, a first run, operations, concepts, or API integration.
+description: Understand AkôFlow, its current paths, and how to run a first workflow.
 ---
 
-import useBaseUrl from '@docusaurus/useBaseUrl';
+# Getting started with AkôFlow
 
-# Choose where to start
+AkôFlow helps you define a scientific workflow, decide where its activities run, and inspect what happened. A workflow describes activities and their data dependencies. AkôFlow can compare plans, run a selected plan, and keep its results and provenance together.
 
-AkôFlow plans and executes scientific workflow DAGs on simulated or connected infrastructure, then preserves the plan, observed execution, data movement, artifacts, audit events, and provenance. This page is a map of the documentation; it does not teach an individual workflow.
+The simplest place to begin is a local simulation. It lets you follow a workflow from definition to results without access to a cluster or cloud account.
 
-You do not need prior AkôFlow experience. Choose the path that matches what you want to accomplish.
+## What can I do today?
+
+- **Simulate a workflow locally** with SimGrid and inspect activity and transfer results.
+- **Run on connected infrastructure** using the documented Kubernetes or HPC/SLURM paths, after configuring that environment.
+- **Explore cloud integration** with the limits described in the [cloud support matrix](./guides/infrastructure/cloud-capacity#provider-support-in-v10). AWS EC2 discovery and provisioning are not implemented.
+
+These paths have different prerequisites and levels of validation. Consult the relevant guide before using a real environment.
 
 ## I want to run AkôFlow for the first time
 
-1. [Install AkôFlow](./installation) and verify that its daemon is available.
-2. [Run the first simulated workflow](./guides/workflows/first-run). The tutorial uses checked-in files, requires no cluster or cloud account, and ends with concrete activity and transfer checks.
-3. Use the [interface tour](./guides/interface-tour) when you want to learn where the same records appear in Desktop.
+1. [Install AkôFlow Desktop](./installation) and confirm that it connects.
+2. [Tour the interface](./guides/interface-tour) to find workflows, plans, runs, and results.
+3. If you have the development stack and API credentials, [run the checked-in SimGrid example](./guides/workflows/first-run). It verifies three activities and two transfers.
 
-Start with the simulation even if your eventual target is Kubernetes or HPC. It separates installation problems from credentials, network access, scheduler policy, and remote storage.
+The SimGrid tutorial currently uses repository files and the API. It is **not** a Desktop-only first-run tutorial. A complete Desktop walkthrough remains to be validated and documented.
 
 ## I already have AkôFlow running
 
@@ -52,15 +58,9 @@ Read the [API overview](./reference/api-overview) for the base URL, authenticati
 
 The Desktop and HTTP API operate on the same persisted records. The API is preferable for repeatable experiments and integrations; Desktop is preferable for inspecting infrastructure, candidate Gantt charts, live activity state, and plan-versus-observed evidence.
 
-## I need to understand the model first
+## I want to understand the results
 
-Read [Core concepts](./concepts) for the vocabulary and record relationships. Continue to [Engine](./engine) for control-plane behavior and [Runtimes](./runtimes) for execution-provider boundaries.
-
-The central lifecycle is shown below.
-
-<img src={useBaseUrl('/img/architecture/lifecycle-overview.svg')} alt="AkôFlow lifecycle: an infrastructure boundary and workflow version produce candidate plans; one selected plan produces an execution run and observed evidence." />
-
-A plan is not an execution. It predicts an assignment within a frozen workflow and infrastructure boundary. A run records what happened when that plan was dispatched.
+Start with [Core concepts](./concepts) for workflow, environment, plan, run, artifacts, and provenance. A plan describes a proposed execution; a run records the observed one. For implementation details, see [Architecture internals](./modules).
 
 ## When something fails
 

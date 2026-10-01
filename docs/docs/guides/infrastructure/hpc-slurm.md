@@ -46,9 +46,9 @@ In Desktop, add the connection under **Infrastructure → Environments**, assign
 
 ```bash
 curl --fail-with-body \
-  -H "Authorization: Bearer $AKOFLOW_TOKEN" \
+  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -H 'Content-Type: application/json' \
-  -X PUT "$AKOFLOW_URL/environment-connections/research-hpc-ssh/" \
+  -X PUT "$AKOFLOW_API_URL/environment-connections/research-hpc-ssh/" \
   --data @research-hpc-connection.json
 ```
 

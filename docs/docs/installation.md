@@ -5,11 +5,9 @@ sidebar_label: Installation
 description: Install the AkôFlow Desktop application from a versioned GitHub Release.
 ---
 
-The packaged **AkôFlow Desktop** application is the end-user installation path.
-GitHub Releases contain the Desktop installers and runtime archives, and a
-semantic Git tag identifies the source revision used to create each release.
-Desktop loads the matching daemon and BuildKit archives into local Docker; the
-project does not publish them to a container registry.
+Install **AkôFlow Desktop** to run AkôFlow on your workstation. The installer
+and matching runtime files are available from GitHub Releases. Desktop loads
+the runtime into local Docker on first launch.
 
 ## Requirements
 
@@ -19,29 +17,8 @@ project does not publish them to a container registry.
 | Windows | Docker Desktop using Linux containers and a matching Desktop installer |
 | Linux | Docker Engine, the Docker Compose v2 plugin, and a matching Desktop installer |
 
-The renderer does not receive the daemon token and does not execute Docker,
-shell, SSH, Kubernetes, or infrastructure commands.
-
-## Verify a release before installing
-
-Run this read-only preflight before downloading a Desktop installer. It lists
-the assets attached to the exact GitHub Release tag.
-
-```bash
-export AKOFLOW_RELEASE_TAG="v1.0.3" # replace with the tag you intend to install
-
-curl --fail-with-body --silent --show-error \
-  "https://api.github.com/repos/UFFeScience/akoflow/releases/tags/${AKOFLOW_RELEASE_TAG}" \
-  | jq -r '.assets[].name' | sort
-
-```
-
-Continue only when a listed Desktop installer filename contains the release
-version — for example, `1.0.4` for tag `v1.0.4` — and the release also includes
-`akoflow-daemon-${AKOFLOW_RELEASE_TAG}-linux-<arch>.tar`,
-`akoflow-buildkit-${AKOFLOW_RELEASE_TAG}-linux-<arch>.tar`, and the matching
-`.sha256` file for your architecture. Missing or mismatched assets mean the
-release is incomplete; wait for a corrected release.
+Docker must be running before you open AkôFlow. Choose an installer that
+matches your operating system and architecture.
 
 ## Install the Desktop application
 
@@ -70,4 +47,6 @@ before changing versions so it can be restored if needed.
 
 ## Verify the installation
 
-After Desktop shows a connected daemon, complete the [first end-to-end run](./guides/workflows/first-run). That tutorial verifies a real lifecycle boundary: registered infrastructure, workflow, plan, execution, activity records, and data-transfer evidence.
+After Desktop shows a connected service, use the [interface tour](./guides/interface-tour).
+The [SimGrid example](./guides/workflows/first-run) verifies a full workflow,
+but currently requires the development stack, repository files, and API access.

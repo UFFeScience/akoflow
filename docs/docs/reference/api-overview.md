@@ -5,18 +5,18 @@ description: Authentication, conventions, and current AkôFlow HTTP endpoint gro
 
 # API overview
 
-The AkôFlow Desktop is an HTTP client of the same API available to automation. API paths below are relative to the daemon origin and begin with `/akoflow-api/`.
+The AkôFlow Desktop uses the same API available to automation. Paths in the tables below are relative to `AKOFLOW_API_URL`, which includes `/akoflow-api`.
 
 ## Connect and authenticate
 
-Set the daemon URL and token in your shell:
+Set the API base URL (including `/akoflow-api`) and token in your shell:
 
 ```bash
-export AKOFLOW_URL="http://127.0.0.1:8080"
-export AKOFLOW_TOKEN="replace-with-the-configured-token"
+export AKOFLOW_API_URL="http://127.0.0.1:8080/akoflow-api"
+export AKOFLOW_API_TOKEN="replace-with-the-configured-token"
 
-curl -H "Authorization: Bearer $AKOFLOW_TOKEN" \
-  "$AKOFLOW_URL/akoflow-api/environments/"
+curl -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  "$AKOFLOW_API_URL/environments/"
 ```
 
 The listen address is configuration-dependent; do not assume the example port in production. When an API token is configured, send `Authorization: Bearer <token>`. `GET` or `HEAD` requests for `/akoflow-api/instance/` and `GET /akoflow-api/preflight/` are public bootstrap operations. All other operations require the token. A daemon without a token is restricted to loopback access.
@@ -37,8 +37,8 @@ Browser origins are controlled by the daemon's allowed-origin configuration. Aut
 Check daemon and local build capabilities:
 
 ```bash
-curl "$AKOFLOW_URL/"
-curl "$AKOFLOW_URL/akoflow-api/preflight/"
+curl "${AKOFLOW_API_URL%/akoflow-api}/"
+curl "$AKOFLOW_API_URL/preflight/"
 ```
 
 The root health check returns `ok`. Preflight reports server, Docker, and BuildKit availability.
@@ -149,10 +149,10 @@ The root health check returns `ok`. Preflight reports server, Docker, and BuildK
 Create a workflow by posting the current workflow definition document:
 
 ```bash
-curl -X POST -H "Authorization: Bearer $AKOFLOW_TOKEN" \
+curl -X POST -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   -H "Content-Type: application/json" \
   --data-binary @workflow.json \
-  "$AKOFLOW_URL/akoflow-api/workflow-definitions/"
+  "$AKOFLOW_API_URL/workflow-definitions/"
 ```
 
 ## Executions

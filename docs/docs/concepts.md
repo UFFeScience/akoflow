@@ -1,19 +1,15 @@
 ---
 id: concepts
-title: System architecture
-sidebar_label: System architecture
-description: How AkôFlow keeps infrastructure, workflow intent, planning decisions, and execution evidence separate.
+title: Core concepts
+sidebar_label: Core concepts
+description: The workflow, environment, plan, run, artifact, and provenance records you meet while using AkôFlow.
 ---
 
 import useBaseUrl from '@docusaurus/useBaseUrl';
 
-AkôFlow is a control plane for scientific workflows. It keeps the description of the available infrastructure separate from the workflow definition, the scheduling decision, and the evidence produced by an execution. That separation lets the same immutable workflow version be compared on different infrastructure scopes without rewriting the workflow.
+AkôFlow keeps the workflow you define, the environment available to it, the plan you choose, and the observed run as separate records. You can compare plans for the same workflow without changing its definition.
 
-This is an explanation of the records and their boundaries. For the exact YAML fields, use the [workflow specification](./internal/workflow-spec) and the [environment reference](./reference/environment-yaml). For an end-to-end task, start with [the first simulated workflow](./guides/workflows/first-run).
-
-<img src={useBaseUrl('/img/architecture/akoflow-control-plane.svg')} alt="AkôFlow control-plane architecture: Desktop and API clients call the daemon; its workflow, planning, and execution services preserve scientific evidence in SQLite and dispatch work through SimGrid, Kubernetes, SSH/Slurm, cloud, and local adapters." />
-
-*The diagram groups responsibilities rather than deployment units. AkôFlow is one daemon with application services and adapters; the cards do not imply separately deployable microservices.*
+For exact YAML fields, use the [workflow specification](./internal/workflow-spec) and [environment reference](./reference/environment-yaml). For an example you can run, use the [SimGrid API tutorial](./guides/workflows/first-run). Developers can continue to [Architecture internals](./modules).
 
 ## The record chain
 

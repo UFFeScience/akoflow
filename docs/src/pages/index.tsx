@@ -87,15 +87,16 @@ export default function Home(): React.JSX.Element {
         </h1>
 
         <p className={styles.subheadline}>
-          Model, compare, and execute container-based scientific workflows
-          across local, simulated, cloud, Kubernetes, and HPC environments.
+          Define a scientific workflow, choose where it runs, compare plans,
+          and inspect the results and provenance. Start with a local simulation;
+          connected environments require their own setup.
         </p>
 
         <div className={styles.platformSection}>
           <DesktopCard />
 
           <p className={styles.hint}>
-            Desktop runs the local control plane through Docker &middot;{" "}
+            Desktop starts the local AkôFlow service through Docker &middot;{" "}
             <Link to="/docs/installation">Full installation guide</Link>
           </p>
         </div>

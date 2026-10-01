@@ -57,6 +57,18 @@ func (resolver EnvironmentEndpointResolver) ResolveTransferEndpoint(ctx context.
 	}
 	endpoint.Configuration = make(map[string]string)
 	switch connection.Type {
+	case domain.ConnectionLocal:
+		if u.Scheme != "file" {
+			return endpoint, fmt.Errorf("connection %q of type %q cannot resolve URI scheme %q", connectionID, connection.Type, u.Scheme)
+		}
+		// A local connection is metadata identifying the host on which the
+		// daemon runs. Keep the file endpoint local instead of translating it
+		// into a remote transport. Remove the resolver-only connection hint so
+		// filesystem consumers receive a canonical file URI.
+		query := u.Query()
+		query.Del("connectionId")
+		u.RawQuery = query.Encode()
+		endpoint.URI = u.String()
 	case domain.ConnectionKubernetes:
 		endpoint.Configuration["server"] = connection.Endpoint
 		endpoint.Configuration["tokenFile"] = strings.TrimPrefix(connection.CredentialRef, "file:")

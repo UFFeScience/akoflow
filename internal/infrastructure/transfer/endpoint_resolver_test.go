@@ -68,9 +68,34 @@ func TestEnvironmentEndpointResolverReportsLookupAndTypeErrors(t *testing.T) {
 	if _, err := (EnvironmentEndpointResolver{Connections: connectionStoreStub{missing: true}}).ResolveTransferEndpoint(context.Background(), location); err == nil {
 		t.Fatal("missing connection error expected")
 	}
-	resolver := EnvironmentEndpointResolver{Connections: connectionStoreStub{connection: domain.EnvironmentConnection{ID: "connection", Type: domain.ConnectionLocal}}}
+	resolver := EnvironmentEndpointResolver{Connections: connectionStoreStub{connection: domain.EnvironmentConnection{ID: "connection", Type: domain.ConnectionType("unsupported")}}}
 	if _, err := resolver.ResolveTransferEndpoint(context.Background(), location); err == nil {
 		t.Fatal("unsupported connection type must fail")
+	}
+}
+
+func TestEnvironmentEndpointResolverKeepsLocalFileEndpoint(t *testing.T) {
+	connection := domain.EnvironmentConnection{
+		ID: "local-environment-local-connection", EnvironmentID: "local-environment",
+		Type: domain.ConnectionLocal,
+	}
+	resolver := EnvironmentEndpointResolver{Connections: connectionStoreStub{connection: connection}}
+	endpoint, err := resolver.ResolveTransferEndpoint(context.Background(), domain.TransferLocation{
+		URI: "file:///tmp/akoflow/run/workflow-a?connectionId=local-environment-local-connection",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if endpoint.URI != "file:///tmp/akoflow/run/workflow-a" {
+		t.Fatalf("unexpected local endpoint URI: %q", endpoint.URI)
+	}
+	if endpoint.ConnectionID != connection.ID || endpoint.EnvironmentID != connection.EnvironmentID {
+		t.Fatalf("unexpected local endpoint metadata: %+v", endpoint)
+	}
+	if _, err := resolver.ResolveTransferEndpoint(context.Background(), domain.TransferLocation{
+		URI: "ssh:///tmp/akoflow/run/workflow-a?connectionId=local-environment-local-connection",
+	}); err == nil {
+		t.Fatal("local connection must reject non-file URI schemes")
 	}
 }
 func (connectionStoreStub) ListAllConnections(context.Context) ([]domain.EnvironmentConnection, error) {

@@ -40,7 +40,7 @@ not the AkôFlow daemon API. You need Bash, `curl`, and `jq`.
 
 ```bash
 AKOFLOW_RELEASE_API=https://api.github.com/repos/UFFeScience/akoflow/releases/latest
-curl --fail --location --silent --show-error \
+curl --fail-with-body --fail --location --silent --show-error \
   "$AKOFLOW_RELEASE_API" \
   -o release.json
 
@@ -49,7 +49,7 @@ AKOFLOW_ASSET='<desktop-asset-filename>'
 
 AKOFLOW_DOWNLOAD_URL=$(jq -er --arg name "$AKOFLOW_ASSET" \
   '.assets[] | select(.name == $name) | .browser_download_url' release.json) || exit 1
-curl --fail --location --show-error \
+curl --fail-with-body --fail --location --show-error \
   "$AKOFLOW_DOWNLOAD_URL" -o "$AKOFLOW_ASSET"
 ```
 
@@ -70,4 +70,4 @@ If the checksum differs, discard that download and retrieve it again.
 Use the digest published for the asset in the release metadata, as shown above.
 Download availability and checksum verification are separate from operating-system
 installation validation. After opening Desktop, confirm the
-[daemon, Docker and BuildKit checkup](/docs/installation#3-first-launch-what-happens).
+[daemon, Docker and BuildKit checkup](/docs/installation#install-the-desktop-application).

@@ -9,9 +9,12 @@ The AkôFlow Desktop uses the same API available to automation. Paths in the tab
 
 ## Connect and authenticate
 
-Follow [API connection setup](/docs/tutorials/api-access) to set the base URL and enter the token without putting it in shell history. The base URL includes `/akoflow-api`. Then check a protected catalog:
+Set the API base URL (including `/akoflow-api`) and token in your shell:
 
 ```bash
+export AKOFLOW_API_URL="http://127.0.0.1:8080/akoflow-api"
+export AKOFLOW_API_TOKEN="replace-with-the-configured-token"
+
 curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
   "$AKOFLOW_API_URL/environments/"
 ```
@@ -28,19 +31,17 @@ Browser origins are controlled by the daemon's allowed-origin configuration. Aut
 - Many collection paths retain a trailing slash; use the route exactly as shown.
 - Successful creates generally return `201 Created`; queued work commonly returns `202 Accepted`; deletes commonly return `204 No Content`.
 - Errors from kernel-wrapped routes use a JSON `error` message. Validation failures commonly return `400` or `422`; missing records return `404`; unavailable capabilities return `503`.
-- An activated archive snapshot is read-only. Requests other than `GET` return `423 Locked`, except instance activation itself.
+- An activated archive snapshot is read-only. Mutating requests return `423 Locked`, except instance activation itself.
 - Export, download, build output, and console stream routes return non-JSON content.
 
 Check daemon and local build capabilities:
 
 ```bash
-curl --fail-with-body \
-  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
-  "${AKOFLOW_API_URL%/akoflow-api}/"
+curl --fail-with-body "${AKOFLOW_API_URL%/akoflow-api}/"
 curl --fail-with-body "$AKOFLOW_API_URL/preflight/"
 ```
 
-The authenticated root health check returns `ok`. Public preflight reports server, Docker, and BuildKit availability.
+The root health check returns `ok`. Preflight reports server, Docker, and BuildKit availability.
 
 ## Instance, search, and operations
 
@@ -49,12 +50,12 @@ The authenticated root health check returns `ok`. Public preflight reports serve
 | `GET`, `PUT` | `/instance/` | Read or save installation identity/configuration |
 | `GET` | `/preflight/` | Report daemon, Docker, and BuildKit readiness |
 | `GET` | `/search/` | Global search |
-| `GET` | `/audit-events/` | Filter recorded connection, discovery, and console events |
+| `GET` | `/audit-events/` | Filter operational audit events |
 | `GET` | `/instances/` | List archived instances |
 | `GET` | `/instances/default/export/` | Export the default instance |
 | `POST` | `/instances/import/` | Import an instance archive |
 | `POST` | `/instance-activations/{instanceId}/` | Activate an archived instance |
-| `POST` | `/factory-reset/` | Clear the active catalog and managed Kubernetes tokens; [retained files need separate cleanup](/docs/guides/operations/instance-management#factory-reset) |
+| `POST` | `/factory-reset/` | Reset the active instance |
 | `GET`, `PUT` | `/user-preferences/{clientId}/` | Read or save client preferences |
 
 ## Environments, connections, and credentials
@@ -93,8 +94,6 @@ The authenticated root health check returns `ok`. Public preflight reports serve
 | `POST` | `/machine-configuration-validations/` | Validate playbook YAML |
 | `GET` | `/environments/{environmentId}/cloud-catalog/` | Read cached provider catalog |
 | `POST` | `/environments/{environmentId}/cloud-catalog/refresh/` | Refresh provider catalog |
-
-See [Configure cloud capacity](/docs/guides/infrastructure/cloud-capacity) for target and provisioning steps, and [Machine configurations](/docs/guides/infrastructure/machine-configurations) for the optional Ansible setup.
 
 ## Resources, topology, and execution scopes
 
@@ -147,7 +146,14 @@ See [Configure cloud capacity](/docs/guides/infrastructure/cloud-capacity) for t
 | `GET` | `/planning-sessions/{sessionId}/candidates/{candidateId}/` | Read a candidate |
 | `POST` | `/planning-sessions/{sessionId}/candidates/{candidateId}/select/` | Select a candidate and produce a plan |
 
-For a complete workflow request and the required registration order, use [Workflow definitions](/docs/guides/workflows/definitions) or the [SimGrid first-run tutorial](/docs/guides/workflows/first-run).
+Create a workflow by posting the current workflow definition document:
+
+```bash
+curl --fail-with-body -X POST -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  -H "Content-Type: application/json" \
+  --data-binary @workflow.json \
+  "$AKOFLOW_API_URL/workflow-definitions/"
+```
 
 ## Executions
 
@@ -164,7 +170,7 @@ List queries accept endpoint-specific pagination and filters. For execution runs
 |---|---|---|
 | `GET` | `/artifacts/` | List executable artifact versions |
 | `POST` | `/artifacts/docker/` | Register a Docker source and SIF build specification |
-| `GET` | `/artifact-locations/` | List recorded artifact locations and their availability flags |
+| `GET` | `/artifact-locations/` | List verified artifact locations |
 | `GET`, `POST` | `/artifact-materializations/` | List or record materializations (`runId` filters list) |
 | `POST` | `/build-contexts/` | Upload multipart `context`, or register stored metadata |
 | `POST` | `/artifact-builds/` | Create an immutable build specification |
@@ -174,17 +180,20 @@ List queries accept endpoint-specific pagination and filters. For execution runs
 | `GET` | `/build-runs/{runId}/` | Read build-run status and logs |
 | `GET` | `/build-runs/{runId}/output/` | Stream SIF output |
 
-For a build request, see [Build an executable](/docs/guides/data/build-executable). To inspect recorded locations and preparation status, see [Artifact locations](/docs/guides/data/artifact-locations). Storage browsing and file registration are covered in [Browse and manage storage](/docs/guides/infrastructure/storage).
+See [Artifacts, storage, and builds](/docs/guides/data/artifacts) for payload examples and lifecycle semantics.
 
 ## Provenance
 
 | Method | Path | Purpose |
 |---|---|---|
+| `GET` | `/provenance/entities/` | List safe entity projections |
+| `GET` | `/provenance/entities/{entity}/` | Search, filter, sort, and page an entity |
 | `GET` | `/provenance/sql/schema/` | Read the queryable schema |
 | `POST` | `/provenance/sql/` | Execute parameterized read-only SQL |
 | `POST` | `/provenance/sql/explain/` | Explain read-only SQL |
+| `GET` | `/provenance/lineage/{entity}/{id}/` | Traverse lineage |
 
-See [Trace a result with provenance](/docs/guides/data/provenance) for query examples.
+See [Provenance and audit](/docs/guides/data/provenance-and-audit) for query parameters and examples.
 
 ## Console
 
@@ -208,3 +217,89 @@ This overview intentionally does not duplicate every domain schema. Use these so
 4. Treat identifiers, immutable digests, credential references, and capability flags as opaque unless a specific guide defines them.
 
 Do not send secrets in general resource objects. Credential endpoints store secrets separately, while environment and connector records refer to them.
+
+## Priority contract recipes
+
+The endpoints below are the entry points that most readers copy from this page. Each recipe shows a minimal, runnable request, the success status, and the most common failure. The generated endpoint pages list every other field; use them for fields not shown here.
+
+### Import an instance archive
+
+The handler reads the request body as an `application/zip` stream, not JSON. The ZIP must contain the manifest, the database snapshot, and the redaction marker written by `GET /instances/default/export/`. Symbolic links, archives larger than 8 GiB compressed, archives with more than 10,000 entries, and archives whose checksum or schema version does not match are rejected with `422`.
+
+```bash
+curl --fail-with-body \
+  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  -H 'Content-Type: application/zip' \
+  --data-binary @akoflow-instance.zip \
+  "$AKOFLOW_API_URL/instances/import/"
+```
+
+Success returns `201 Created` with the new instance projection. Activation is a separate request:
+
+```bash
+curl --fail-with-body -X POST \
+  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  "$AKOFLOW_API_URL/instance-activations/<snapshot-id>/"
+```
+
+Activation returns `202 Accepted` with `{ "instance": ..., "restarting": true|false }`.
+
+### Upload a build context
+
+The handler accepts either an `application/json` envelope or a `multipart/form-data` upload. The multipart path is the recommended way to send large build contexts because the JSON envelope requires a `storageUri` that already points at bytes the daemon has stored.
+
+```bash
+curl --fail-with-body \
+  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  -F "context=@./context.tgz" \
+  "$AKOFLOW_API_URL/build-contexts/"
+```
+
+The multipart field name is `context`. The handler enforces a maximum body size plus one extra megabyte; an oversized upload returns `413 Request Entity Too Large`. A missing `context` field returns `422 Unprocessable Entity`.
+
+For the JSON envelope path, the required fields are `digest`, `storageUri`, and a positive `sizeBytes`. Any missing required field returns `422`.
+
+### Create a workflow definition
+
+The handler accepts either the canonical JSON shape or a YAML document whose top-level keys match the JSON. The Desktop sends YAML for the upload path; the API examples in the workflow guide use `application/yaml` because the checked-in fixtures are YAML.
+
+```bash
+curl --fail-with-body \
+  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  -H 'Content-Type: application/json' \
+  --data-binary @workflow.json \
+  "$AKOFLOW_API_URL/workflow-definitions/"
+```
+
+The `POST /workflow-definitions/import/` route accepts the same body and is the endpoint the Desktop calls when the user imports a YAML file. The handler validates the workflow version against the registered activities, runtimes, capabilities, and simulation profiles; missing required fields, unsupported capabilities, and unknown activity IDs return `422`. See [Workflow definitions](/docs/guides/workflows/definitions) for the schema.
+
+### Create an execution run
+
+The handler accepts an `application/json` or `application/yaml` envelope that contains the run id, the referenced plan id, the mode, and a snapshot of the workflow and infrastructure that the supervisor will use. The versioned files under `examples/simulation/execution-request.yaml` and `examples/kind/requests/execution-request.yaml` are the canonical envelopes.
+
+```bash
+curl --fail-with-body \
+  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  -H 'Content-Type: application/yaml' \
+  --data-binary @examples/simulation/execution-request.yaml \
+  "$AKOFLOW_API_URL/execution-runs/"
+```
+
+Submission is asynchronous. The success status is `202 Accepted` with the queued run projection. Validation failures from the supervisor (unknown plan id, missing required profile field, runtime not bound) return `422`. A run id that already exists returns `409 Conflict`.
+
+### Query provenance with read-only SQL
+
+The handler accepts a single read-only statement with positional parameters. Statements that touch more than one entity or that are not parseable as a read return `400`.
+
+```bash
+curl --fail-with-body \
+  -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "statement": "SELECT id, makespan_seconds, transferred_bytes FROM execution_runs WHERE id = ?",
+    "params": ["simulation-example-run-v1"]
+  }' \
+  "$AKOFLOW_API_URL/provenance/sql/"
+```
+
+Use `POST /provenance/sql/explain/` to inspect the planned query before running it. The result is a JSON projection of the rows; there is no envelope.

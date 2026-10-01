@@ -5,13 +5,13 @@ sidebar_label: Production plan
 description: Source-of-truth, media, and review rules for AkôFlow documentation.
 ---
 
-This page defines the editorial and verification rules for the documentation. Apply them whenever a page, example, screenshot, API route, or supported capability changes.
+This plan keeps the documentation aligned with the shipping daemon and Desktop application. It is also the contract for parallel documentation work.
 
 ## Editorial contract
 
 The documentation should show how AkôFlow simplifies scientific workflow execution, not display the complexity of its implementation.
 
-1. Explain the task and expected result first. Give each page one main job and reveal details only when the reader needs them.
+1. Explain the task and expected result before implementation details. Give each page one main job.
 2. Use workflow, environment, plan, run, artifacts, and provenance in user paths. Put supervisors, handlers, adapters, and persistence in developer architecture pages unless a task requires them.
 3. Make support claims only when code and appropriate evidence support them. Label partial features and distinguish code review, local fixtures, and real-environment validation.
 4. Prefer a concrete example over a list of capabilities. Remove repeated caveats and text that does not help a reader act or decide.
@@ -34,23 +34,55 @@ The completion gate is a new user running a first workflow without undocumented 
 
 | Subject | Primary source |
 |---|---|
-| Desktop navigation | `akoflow-desktop/src/App.jsx` and `akoflow-desktop/src/components/AppShell.jsx` in the Desktop repository |
-| Desktop operations | Page, form, and provider components in `akoflow-desktop/src` |
-| HTTP methods and paths | `internal/api/httpserver/httpserver.go` in this repository |
+| Desktop navigation | `akoflow-admin/src/App.jsx` and `src/components/AppShell.jsx` |
+| Desktop operations | Page, form, and provider components in `akoflow-admin/src` |
+| HTTP methods and paths | `akoflow/internal/api/httpserver/httpserver.go` |
 | Request and response contracts | HTTP handlers, application services, and `internal/domain` |
-| Runnable scenarios | [`UFFeScience/akoflow-examples`](https://github.com/UFFeScience/akoflow-examples); engine integration tests remain in this repository |
-| Packaged installation | Root README, `releases/`, the Desktop repository's `electron/` bootstrap, and release workflows |
+| Runnable scenarios | `akoflow/examples` and integration tests |
+| Packaged installation | Root README, `releases/`, Electron bootstrap, and release workflows |
 
 Generated site output and old copied Markdown files are not sources of truth.
 
-## Review a change
+## Production waves
 
-1. Check page purpose, audience, order of concepts, and whether the example solves a concrete task.
-2. Compare affected claims and payloads with current handlers, Desktop behavior, tests, and checked-in examples.
-3. Distinguish local fixtures from real-provider validation, and update support limits when evidence changes.
-4. Check screenshots for secrets, hostnames, tokens, usernames, and unstable identifiers.
-5. Run the documentation type-check, build, and link check; then read the rendered path at desktop and mobile widths.
-6. Record unresolved P0/P1 findings and repeat the pass after corrections.
+### Wave 1 — foundation
+
+- Establish the information architecture and sidebar.
+- Add reusable screenshot, video, and Desktop/API components.
+- Build a feature coverage matrix.
+- Define stable demo data and redact all secrets from captures.
+
+### Wave 2 — task guides
+
+- Infrastructure and execution scopes.
+- Workflow definition, planning, and execution.
+- Artifacts, storage, provenance, and audit.
+- Installation, instance management, and troubleshooting.
+
+Independent guide groups may be authored in parallel after their source inventory is complete. Each group owns separate files.
+
+### Wave 3 — reference
+
+- Replace the legacy workflow specification with the current versioned model.
+- Document API conventions and endpoint groups.
+- Document runtime capabilities, lifecycle states, and compatibility rules.
+
+### Wave 4 — media
+
+- Load a deterministic demonstration instance.
+- Capture a fixed desktop viewport in the light theme.
+- Add numbered callouts and restrained directional arrows.
+- Record one operation per video.
+- Prefer WebM for the site; create an optimized GIF only when a fallback is useful.
+
+### Wave 5 — verification
+
+- Verify every field against the Go contract.
+- Verify every route against the HTTP mux.
+- Run or validate checked-in examples.
+- Build and type-check Docusaurus.
+- Review screenshots for secrets, hostnames, tokens, usernames, and unstable identifiers.
+- Search for removed terminology and stale fixed-port instructions.
 
 ## Link verification
 
@@ -59,18 +91,15 @@ Run the repository-owned link check after a documentation build:
 ```bash
 npm run build --prefix docs
 npm run check:links --prefix docs
-npm run check:shell --prefix docs
 ```
 
-The link check rejects missing documentation routes, files under `docs/static/`,
-and invalid local assets or documentation routes. Showcase bundles are external links;
-the examples repository validates their files and runnable checks in its own CI.
-It checks repository-owned links, not third-party availability.
-
-The shell check parses fenced Bash/sh examples and Showcase JSX command blocks
-without running them. It requires `curl` examples to fail on HTTP errors, but
-cannot validate named files or API behavior. GitHub Actions runs the type-check,
-build, link check, and shell check for documentation changes.
+The check rejects a missing internal documentation route, a missing file below
+`docs/static/`, and a Showcase download that no longer has its checked-in
+counterpart under `examples/`. It intentionally does not make network requests
+or judge third-party URLs: availability of external services belongs to the
+reader's environment, while these three classes are artifacts maintained in
+this repository. GitHub Actions runs the same type-check, build, and link check
+for documentation or example changes.
 
 ## Media naming
 
@@ -89,7 +118,7 @@ Every media item must have descriptive alternative text. Videos need a written p
 
 ## Architecture-diagram system
 
-Use the black, white, and neutral-gray visual system established by [`akoflow-control-plane.svg`](../../static/img/architecture/akoflow-control-plane.svg) for new architecture, lifecycle, and relationship diagrams. It is a reusable visual reference, not a claim that every diagram has the same topology.
+Use the black, white, and neutral-gray visual system established by [`akoflow-control-plane.svg`](/img/architecture/akoflow-control-plane.svg) for new architecture, lifecycle, and relationship diagrams. It is a reusable visual reference, not a claim that every diagram has the same topology.
 
 - Use a white page or card, black rules, light-gray responsibility groups, and restrained rounded corners.
 - Use the checked-in AkôFlow logo rather than recreating or tracing it.
@@ -111,16 +140,15 @@ Use the black, white, and neutral-gray visual system established by [`akoflow-co
 
 Run `npm run generate:api` to rebuild the endpoint catalog from `internal/api/httpserver/httpserver.go`. The Docusaurus `prestart` and `prebuild` hooks run this automatically. Generated pages are intentionally ignored by Git; changes to method, path, or handler appear on the next documentation build without copying the router by hand.
 
-Each generated endpoint page shows the registered method and path, parameters, owning handler, and request-body indication. HTTP routes include a cURL command or template; the console stream shows a WebSocket connection instead. A template still needs valid IDs and, for a body, a prepared request file.
-
-The generator shows a request body only when it has a checked example. Otherwise, use the handler-checked notes and linked guide to prepare one. Response JSON shapes are illustrative and may omit fields or show placeholder values. Check a route against its handler and a real response before treating a field-level example as verified.
+Each generated endpoint page includes its HTTP method, registered path, path parameters, authentication example, request-body indication, owning handler, and a cURL command. Inferred JSON shapes are illustrative, not guaranteed valid payloads. Priority endpoints need authored, handler-checked contracts before their commands can be treated as runnable examples.
 
 ## Reproducible media capture
 
-With the AkôFlow Desktop development server on port `5173` and the documentation server on port `3000`, run:
+Start an isolated engine with `AKOFLOW_SIMULATION_BACKEND=deterministic`, then start AkôFlow Desktop on port `5173`. Load the checked-in simulation example before capturing its detail pages:
 
 ```bash
+AKOFLOW_API_URL=http://127.0.0.1:8080/akoflow-api sh examples/simulation/run.sh
 npm run capture:media
 ```
 
-The script opens an isolated headless Chrome profile, applies a fixed `1440 × 900` viewport and reduced-motion preference, waits for each page, and stores captures below `static/img/interface/`. It can read the local development API token without printing or embedding it; the temporary browser profile is removed after capture. Use `AKOFLOW_CAPTURE_TOKEN`, `AKOFLOW_DESKTOP_URL`, or `AKOFLOW_DOCS_ENDPOINT_URL` to override local defaults.
+The example supplies the environment, resource, workflow, and plan used by detail-page captures. The completed-run images use a second execution with ID `simulation-example-run-v2`, created by changing the example request's run ID before posting it to `/execution-runs/`. Artifact and planning-session images use the API examples in their respective guides. Cloud screens use a separate local, credential-free fixture; its failed operation is a demonstration state, not a request to a provider. The script opens an isolated headless Chrome profile, applies a fixed `1440 × 900` viewport and reduced-motion preference, waits for each page, and stores captures below `static/img/interface/`. It can read the local development API token without printing or embedding it; the temporary browser profile is removed after capture. Use `CHROME_BIN` to select Chrome, `AKOFLOW_DESKTOP_URL` to override the Desktop address, or `AKOFLOW_CAPTURE_ONLY` with comma-separated capture names to update selected screens.

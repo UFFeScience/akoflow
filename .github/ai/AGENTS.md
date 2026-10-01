@@ -41,3 +41,10 @@ Simulation follows the same request and trace contracts. Interactive runs keep t
 - `internal/provider/simgrid`
 
 New runtimes implement the same adapter contract and register their supported modes. Do not add provider conditionals to application services.
+
+## Documentation Repository Rules
+
+- All versioned user-facing and contributor documentation must be written in English.
+- Do not commit temporary reviews, audits, work summaries, planning notes, handoff reports, or dated analysis files. Keep that material in the issue, pull request, or agent conversation instead.
+- Documentation changes must contribute directly to the maintained product documentation. Screenshots and examples belong only when they teach or verify a supported AkôFlow workflow.
+- Before committing documentation, inspect every newly added Markdown or MDX file and remove internal working artifacts.

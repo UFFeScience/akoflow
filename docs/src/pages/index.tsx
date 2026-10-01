@@ -3,7 +3,6 @@ import Link from "@docusaurus/Link";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import Layout from "@theme/Layout";
 import BackgroundGraph from "../components/BackgroundGraph";
-import WorkflowCatalog from "../components/WorkflowCatalog";
 import styles from "./index.module.css";
 
 function DownloadIcon() {
@@ -36,10 +35,15 @@ function DesktopCard() {
         Native client for macOS, Windows, and Linux, distributed through
         versioned GitHub Releases.
       </p>
-      <Link to="/docs/downloads" className={styles.downloadBtn}>
+      <a
+        href="https://github.com/UFFeScience/akoflow/releases/latest"
+        target="_blank"
+        rel="noopener noreferrer"
+        className={styles.downloadBtn}
+      >
         <DownloadIcon />
-        Choose download
-      </Link>
+        Download
+      </a>
       <Link to="/docs/installation" className={styles.docsLink}>
         Installation guide
       </Link>
@@ -47,67 +51,13 @@ function DesktopCard() {
   );
 }
 
-const documentationSections = [
-  {
-    title: "Tutorials",
-    description: "Install Desktop, make a first run, connect infrastructure, and follow complete examples.",
-    links: [
-      ["Getting started", "/docs/getting-started"],
-      ["Installation", "/docs/installation"],
-      ["Workflow showcase", "/docs/showcase/"],
-    ],
-  },
-  {
-    title: "How-to guides",
-    description: "Task-focused instructions for workflows, environments, artifacts, and operations.",
-    links: [
-      ["Workflows", "/docs/guides/workflows/definitions"],
-      ["Infrastructure", "/docs/guides/infrastructure/environments"],
-      ["Data and evidence", "/docs/guides/data/artifacts"],
-      ["Operations", "/docs/guides/operations/instance-management"],
-    ],
-  },
-  {
-    title: "Explanations",
-    description: "Understand planning, runtimes, network estimates, and the evidence left by a run.",
-    links: [
-      ["Core concepts", "/docs/concepts"],
-      ["Planning and plans", "/docs/explanations/planning"],
-      ["Observed timing", "/docs/explanations/observed-timing"],
-    ],
-  },
-  {
-    title: "Developing AkôFlow",
-    description: "Explore the engine, runtime adapters, and module boundaries.",
-    links: [
-      ["Architecture", "/docs/modules"],
-      ["Engine", "/docs/engine"],
-      ["Runtimes", "/docs/runtimes"],
-    ],
-  },
-  {
-    title: "Reference",
-    description: "Find API endpoints, payloads, environment formats, and execution states.",
-    links: [
-      ["API overview", "/docs/reference/api-overview"],
-      ["Environment YAML", "/docs/reference/environment-yaml"],
-      ["Planning and execution states", "/docs/reference/planning-and-execution-states"],
-    ],
-  },
-  {
-    title: "Contributing",
-    description: "Improve the documentation and keep examples aligned with verified behavior.",
-    links: [["Documentation plan", "/docs/contributing/documentation-plan"]],
-  },
-] as const;
-
 export default function Home(): React.JSX.Element {
   const { siteConfig } = useDocusaurusContext();
 
   return (
     <Layout
       title={siteConfig.title}
-      description="Define, plan, run, and inspect scientific workflows with AkôFlow."
+      description="One Workflow. Multiple Platforms."
     >
       <main className={styles.page}>
         <BackgroundGraph />
@@ -137,8 +87,8 @@ export default function Home(): React.JSX.Element {
         </h1>
 
         <p className={styles.subheadline}>
-          Define a scientific workflow, choose where it runs, make a plan,
-          execute it, and inspect the result. Start locally;
+          Define a scientific workflow, choose where it runs, compare plans,
+          and inspect the results and provenance. Start with a local simulation;
           connected environments require their own setup.
         </p>
 
@@ -169,34 +119,6 @@ export default function Home(): React.JSX.Element {
             GitHub
           </a>
         </div>
-
-        <section className={styles.directory} aria-labelledby="documentation-sections">
-          <div className={styles.directoryHeading}>
-            <h2 id="documentation-sections">Explore the documentation</h2>
-            <p>Browse by purpose. These sections match the documentation sidebar.</p>
-          </div>
-          <div className={styles.sectionGrid}>
-            {documentationSections.map((section) => (
-              <section className={styles.sectionCard} key={section.title}>
-                <h3>{section.title}</h3>
-                <p>{section.description}</p>
-                <ul>
-                  {section.links.map(([label, href]) => (
-                    <li key={href}><Link to={href}>{label} <span aria-hidden="true">→</span></Link></li>
-                  ))}
-                </ul>
-              </section>
-            ))}
-          </div>
-        </section>
-
-        <section className={styles.catalogSection} aria-labelledby="example-workflows">
-          <div className={styles.directoryHeading}>
-            <h2 id="example-workflows">Example workflows</h2>
-            <p>Preview every workflow graph by section. Select a card to open its walkthrough or pattern.</p>
-          </div>
-          <WorkflowCatalog />
-        </section>
       </main>
     </Layout>
   );

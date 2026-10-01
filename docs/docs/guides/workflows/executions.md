@@ -22,7 +22,29 @@ A submitted execution first enters the queue. When AkôFlow starts it, the workf
 
 For real runs, submitted time marks when AkôFlow handed work to the runtime; started time marks when the runtime allocated it; container-started time marks when user code could begin inside the container.
 
-Depending on the runtime and available observations, the run detail can include:
+```mermaid
+stateDiagram-v2
+  [*] --> created
+  created --> running
+  running --> completed
+  running --> failed
+  failed --> [*]
+  completed --> [*]
+  note right of created
+    POST /execution-runs/ returns 202 Accepted.
+    The run enters created before the supervisor
+    claims the job.
+  end note
+  note right of running
+    Activities move through blocked → ready →
+    preparing → running → completed (or failed).
+    Cancellation only succeeds before completion.
+  end note
+```
+
+The persisted run projection, audit trail, and provenance entities record the supervisor state. Treat the run status as authoritative when comparing Desktop and API responses: both surfaces read the same supervisor state.
+
+Depending on the runtime and available observations, the completed trace can include:
 
 - makespan and cost;
 - compute, transfer, queue, interference, and overhead time;

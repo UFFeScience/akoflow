@@ -2,29 +2,67 @@
 id: concepts
 title: Core concepts
 sidebar_label: Core concepts
-description: Understand workflows, environments, plans, runs, artifacts, and provenance in AkôFlow.
+description: The workflow, environment, plan, run, artifact, and provenance records you meet while using AkôFlow.
 ---
 
 import useBaseUrl from '@docusaurus/useBaseUrl';
 
-AkôFlow keeps the workflow you define, the resources available to it, the plan you choose, and the result you observe as separate records. That lets you try a different plan without rewriting the workflow.
+AkôFlow keeps the workflow you define, the environment available to it, the plan you choose, and the observed run as separate records. You can compare plans for the same workflow without changing its definition.
 
-## From workflow to result
+For exact YAML fields, use the [workflow specification](/docs/internal/workflow-spec) and [environment reference](/docs/reference/environment-yaml). For an example you can run, use the [SimGrid API tutorial](/docs/guides/workflows/first-run). Developers can continue to [Architecture internals](/docs/modules).
 
-<img src={useBaseUrl('/img/architecture/record-chain.svg')} alt="A workflow and an environment lead to candidate plans; executing a selected plan produces a run, artifacts, and provenance." />
+## The record chain
 
-A **workflow** is a set of activities with dependencies. For example, `prepare → analyze → summarize` means that analysis waits for preparation and the summary waits for analysis. The workflow describes the work and required data; it does not choose a machine.
+<img src={useBaseUrl('/img/architecture/record-chain.svg')} alt="Environment definitions become published versions and scopes; immutable workflow versions join planning sessions; selected plans lead to execution runs and observed task, transfer, artifact, provenance and audit records." />
 
-An **environment** describes where work could run: a local host, a modeled simulation platform, a Kubernetes cluster, or an HPC system. Its **resources** are the available machines or capacity. An **execution scope** limits which environment versions and network links a planning experiment can use.
+The same chain is available as a text diagram for readers using assistive technology or a plain-text feed:
 
-A **plan** assigns activities to resources and predicts timing, transfers, and possibly cost. AkôFlow can produce several candidates, or you can supply a manual plan. Selecting one does not start a run; it records the choice you want to execute.
+```mermaid
+flowchart LR
+  EnvDef["Environment definition"] --> EnvVer["Published environment version"]
+  EnvVer --> Scope["Execution scope"]
+  EnvVer --> Net["Network topology"]
+  WF["Workflow definition"] --> WFVer["Immutable workflow version"]
+  WFVer --> Session["Planning session"]
+  Scope --> Session
+  Net --> Session
+  Session --> Cand["Candidate"]
+  Cand -->|Select| Plan["Schedule plan"]
+  WFVer --> Plan
+  Plan --> Run["Execution run"]
+  Run --> Task["Observed task"]
+  Run --> Trans["Observed transfer"]
+  Run --> Art["Artifact manifest"]
+  Run --> Prov["Provenance records"]
+  Run --> Audit["Audit events"]
+```
 
-A **run** records what happened after the plan was submitted. It tracks activity status and stores timing, transfers, and output evidence when those observations are available. Compare them with the plan's predictions to see where they differ.
+The arrows express references, not a single mutable object. A planning session preserves a snapshot of the workflow, scope, inventory, topology, profiles, constraints, and selected algorithms. A later discovery refresh can create new inventory for future sessions, but it does not change that earlier comparison.
 
-**Executable artifacts** are the versioned programs or images used by activities. **Scientific data** includes inputs and outputs associated with the work. **Provenance** links the workflow, plan, run, activities, and data so you can trace how a result was produced. Audit separately records connection checks, resource discovery, and console actions.
+## Infrastructure is a versioned boundary
 
-## Where to go next
+An **environment** names an infrastructure boundary: a local host, Kubernetes cluster, SSH/SLURM system, modeled SimGrid platform, or cloud configuration. Its published version can contain runtimes, resources and their hierarchy, runtime bindings, storage, connection observations, and capability observations.
 
-Start with [the first local workflow in Desktop](/docs/guides/workflows/first-local-run). Then use [Workflow definitions](/docs/guides/workflows/definitions), [Planning](/docs/guides/workflows/planning), and [Execution](/docs/guides/workflows/executions) for the individual tasks. The [SimGrid API tutorial](/docs/guides/workflows/first-run) is a separate simulation example.
+A **resource** is capacity that may be assigned by a plan. A **runtime** says how an activity is launched and observed. A binding states which runtime may use which resource. The [runtime adapters explanation](/docs/runtimes) describes that boundary in more detail.
 
-For exact file fields, use the [workflow specification](/docs/internal/workflow-spec) and [environment reference](/docs/reference/environment-yaml). For implementation details, see [Architecture internals](/docs/modules).
+An **execution scope** chooses the published environment versions that an algorithm may consider. Its network topology supplies directed links between resources. This means a plan answers a constrained question—"place this workflow on this frozen universe"—rather than a claim about every resource the daemon may ever discover.
+
+## A workflow describes intent, not placement
+
+A workflow definition owns identity and namespace. Its immutable version has activities plus control and data dependencies. Activities carry executable and resource requirements and may carry a simulation profile. They do not name a target resource; that is a planning decision.
+
+Control dependencies establish ordering. Data dependencies identify the producer, consumer, logical data, and byte volume used for movement modeling. In the current portable importer, a data dependency contributes to scheduling only when its producer/consumer pair also has the matching control dependency. This protects the DAG semantics from a data declaration that has no ordering edge.
+
+## A plan is a prediction and a decision
+
+A planning session may produce several **candidates**. They are alternatives, not runnable plans in their own right. Selecting a candidate promotes its placement to a canonical **schedule plan** with assignments and predicted ready, start, finish, runtime, transfer, and cost values. Manual and imported plans use the same plan aggregate after validation.
+
+Planning does not start work. The [planning explanation](/docs/explanations/planning) explains why candidates, objectives, and a selected plan are different records.
+
+## Execution creates observations
+
+An **execution run** binds one selected plan to real, simulation, or interactive mode. The supervisor persists task attempts, runtime handles, transfer routes, logs, artifact manifests, and timing. Those records are observations of a run; they do not retroactively alter the plan prediction.
+
+An executable artifact is immutable runnable input. An artifact manifest is an observed output from an activity. They are deliberately different: an input can be materialized before a task starts, while an output can become a scientific data object only after the activity has been observed.
+
+Read [execution and control-plane behavior](/docs/engine) for orchestration, [network modeling](/docs/explanations/network-modeling) for movement assumptions, and [evidence and provenance](/docs/explanations/evidence-and-provenance) for the records used to compare a plan with a completed run.

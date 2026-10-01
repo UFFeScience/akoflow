@@ -20,6 +20,28 @@ A workflow run moves through `created`, `running`, and either `completed` or `fa
 
 Runtime handles distinguish `starting`, `running`, `completed`, `failed`, and `stopped`. For real runtimes, submitted time means the control plane handed work to the runtime; started time means the runtime allocated it; container-started time marks when user code could begin inside the container.
 
+```mermaid
+stateDiagram-v2
+  [*] --> created
+  created --> running
+  running --> completed
+  running --> failed
+  failed --> [*]
+  completed --> [*]
+  note right of created
+    POST /execution-runs/ returns 202 Accepted.
+    The run enters created before the supervisor
+    claims the job.
+  end note
+  note right of running
+    Activities move through blocked → ready →
+    preparing → running → completed (or failed).
+    Cancellation only succeeds before completion.
+  end note
+```
+
+The same state names are recorded in the persisted run projection, the audit trail, and the provenance entities. Treat the run status as authoritative when comparing Desktop and API responses: the response is generated from the same supervisor state.
+
 The completed trace includes:
 
 - makespan and total cost;

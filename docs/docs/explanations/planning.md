@@ -17,6 +17,25 @@ The session stores the workflow version, execution scope, network topology, envi
 
 <img src={useBaseUrl('/img/architecture/planning-session-lifecycle.svg')} alt="Frozen workflow and infrastructure input create a planning session. Independent algorithm runs produce candidate sets, from which one candidate becomes a schedule plan." />
 
+The same lifecycle is available as an accessible text diagram:
+
+```mermaid
+flowchart LR
+  WF["Workflow version"] --> Session["Planning session"]
+  Scope["Execution scope"] --> Session
+  Net["Network topology"] --> Session
+  Session --> A1["PRISM Time candidates"]
+  Session --> A2["PRISM Cost candidates"]
+  Session --> A3["HEFT candidates"]
+  A1 --> C["Candidate set"]
+  A2 --> C
+  A3 --> C
+  C -->|Select one| Plan["Schedule plan"]
+  Plan --> Run["Execution run"]
+```
+
+Every step is a recorded state. The session is not deleted when candidates are rejected; it remains a durable record of the question that was asked. The schedule plan is the only object that crosses the boundary into execution.
+
 ## Candidates are alternatives, not executions
 
 A candidate has a predicted makespan and cost, feasibility flags, rank and Pareto metadata, and an embedded prospective plan. Several candidates can have the same algorithm and objective. They exist so the user can inspect trade-offs before committing to one placement.

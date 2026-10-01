@@ -2,9 +2,11 @@ package ansible
 
 import (
 	"context"
+	"io"
 	"os"
 	"path/filepath"
 	"testing"
+	"time"
 
 	"github.com/UFFeScience/akoflow/internal/application/ports"
 )
@@ -32,6 +34,32 @@ func TestRunnerValidateSucceedsWithoutChecks(t *testing.T) {
 	}
 	if _, err := os.Stat(filepath.Join(root, "instance-1", "provision.log")); err != nil {
 		t.Fatalf("expected validation log: %v", err)
+	}
+}
+
+func TestWaitForSSHHonorsContextCancellation(t *testing.T) {
+	logFile, err := os.CreateTemp(t.TempDir(), "provision-*.log")
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer logFile.Close()
+
+	ctx, cancel := context.WithCancel(context.Background())
+	cancel()
+	started := time.Now()
+	err = waitForSSH(ctx, ports.MachineConfigurationSpec{Address: "192.0.2.1", SSHUser: "akoflow"}, "/missing/key", logFile)
+	if err == nil || err != context.Canceled {
+		t.Fatalf("expected context cancellation, got %v", err)
+	}
+	if time.Since(started) > time.Second {
+		t.Fatal("cancellation should not wait for the SSH retry timer")
+	}
+	if _, err := logFile.Seek(0, io.SeekStart); err != nil {
+		t.Fatal(err)
+	}
+	content, err := io.ReadAll(logFile)
+	if err != nil || len(content) == 0 {
+		t.Fatalf("expected retry details in provision log, got %q (%v)", content, err)
 	}
 }
 

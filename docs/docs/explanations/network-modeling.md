@@ -38,7 +38,7 @@ That distinction matters: the model describes a possible network penalty for a p
 
 For a 10 GiB data dependency over a 10 Gbit/s link, the raw serialization time is about 8.6 seconds before latency and sharing. `10 GiB` is a byte volume; `10 Gbit/s` is a bit rate. The observed time can be higher because of setup, routing, sharing, or provider behavior.
 
-Inspect a completed run's transfer records alongside the assignment and plan prediction. The [30 GB network fan-out Showcase](/docs/showcase/network-fanout) provides a checked-in topology and workflow where these effects are intentional.
+Inspect a completed run's transfer records alongside the assignment and plan prediction. Use the [SimGrid guide](/docs/guides/infrastructure/simgrid) to construct a topology where these effects are intentional.
 
 ## Related material
 

@@ -72,7 +72,7 @@ Depending on the runtime and available observations, the completed trace can inc
 
 ## Using the API
 
-`POST /execution-runs/` accepts a complete execution request. The command below assumes you have a repository checkout and have registered the environment, scope, topology, workflow, and plan in the [SimGrid first-run tutorial](/docs/guides/workflows/first-run). For Kubernetes, use the separate [Kind example](/docs/showcase/kubernetes-real-execution) and its own execution request.
+`POST /execution-runs/` accepts a complete execution request. The command below assumes you have a repository checkout and have registered the environment, scope, topology, workflow, and plan in the [SimGrid first-run tutorial](/docs/guides/workflows/first-run). For Kubernetes, follow the [Kubernetes infrastructure guide](/docs/guides/infrastructure/kubernetes) and use an execution request that targets its registered resources.
 
 ```bash
 curl --fail-with-body \

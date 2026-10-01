@@ -5,7 +5,7 @@ description: Configure a Kubernetes runtime, credential, namespace, resources, s
 
 # Connect a Kubernetes environment
 
-Use this guide to connect an existing Kubernetes cluster so AkôFlow can run container activities as Jobs. You need access to a namespace and its service account. The [Kind real-execution Showcase](/docs/showcase/kubernetes-real-execution) provides a local example to try before using a shared cluster.
+Use this guide to connect an existing Kubernetes cluster so AkôFlow can run container activities as Jobs. You need access to a namespace and its service account. Start with a disposable local Kind cluster before using a shared cluster.
 
 Use this runtime when container activities must become Kubernetes Jobs. For a
 modeled cluster, use [SimGrid](/docs/guides/infrastructure/simgrid). Keep bearer tokens out of workflows,
@@ -201,4 +201,4 @@ kubectl -n akoflow get jobs,pods,services,pvc \
 
 Delete only the run resources you intend to remove. For the disposable Kind environment, use the Showcase cleanup command: `kind delete cluster --name akoflow`.
 
-Related material: [Kubernetes real execution](/docs/showcase/kubernetes-real-execution), [execution scopes](/docs/guides/infrastructure/execution-scopes), [storage](/docs/guides/infrastructure/storage), and [interactive console](/docs/guides/operations/interactive-console).
+Related material: [workflow execution](/docs/guides/workflows/executions), [execution scopes](/docs/guides/infrastructure/execution-scopes), [storage](/docs/guides/infrastructure/storage), and [interactive console](/docs/guides/operations/interactive-console).

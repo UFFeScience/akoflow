@@ -101,4 +101,4 @@ modeled cost only when they use the same resource price and scope.
 
 - [PRISM and HEFT: search, objectives, and prediction](/docs/explanations/prism-and-heft)
 - [Plan-versus-observed evidence and provenance](/docs/explanations/evidence-and-provenance)
-- [30 GB network fan-out Showcase](/docs/showcase/network-fanout)
+- [SimGrid infrastructure and transfer modeling](/docs/guides/infrastructure/simgrid)

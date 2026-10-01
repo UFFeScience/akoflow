@@ -260,4 +260,4 @@ The run is complete only when the header says `completed` and the activity summa
 | Completed run has zero transferred bytes | The workflow lacks data dependencies or producer and consumer were placed on the same resource. Recheck `workflow.yaml`, the plan assignments, and topology IDs. |
 | Run remains `pending` | Inspect the run events and daemon log; the asynchronous command may have failed before the simulation process started. |
 
-Next, use [the edge-to-cloud Showcase](/docs/showcase/edge-cloud-simulation) to inspect the same model visually, or [Plan a workflow](/docs/guides/workflows/planning) to compare PRISM Cost, PRISM Time, and HEFT.
+Next, use the [SimGrid infrastructure guide](/docs/guides/infrastructure/simgrid) to adapt the same model, or [Plan a workflow](/docs/guides/workflows/planning) to compare PRISM Cost, PRISM Time, and HEFT.

@@ -111,6 +111,7 @@ export function AIWorkflowPattern({
   );
   const examplePath = runnableExamplePaths[title];
   const rawExample = `https://raw.githubusercontent.com/UFFeScience/akoflow-examples/main/${examplePath}`;
+  const exampleRepository = `https://github.com/UFFeScience/akoflow-examples/tree/main/${examplePath}`;
 
   return (
     <>
@@ -128,24 +129,13 @@ export function AIWorkflowPattern({
       <WorkflowPatternDetails inputs={inputs} outputs={outputs} evidence={evidence} />
       {examplePath && (
         <section className={styles.exampleBundle}>
-          <h2>Runnable example</h2>
+          <h2>Source bundle</h2>
           <p>
-            This is the complete checked-in bundle for this pattern. Download the environment,
-            scope, topology, workflow, input, container recipe, runner, and validation contract
-            from this page before executing it.
+            The executable workflow and its implementation files are maintained in the separate
+            AkôFlow examples repository. The documentation intentionally keeps code, container
+            recipes, generators, and validation scripts out of the narrative page.
           </p>
-          <div className={styles.files}>
-            <a href={`${rawExample}/README.md`}>Read setup instructions ↓</a>
-            <a href={`${rawExample}/environment.yaml`}>Environment YAML ↓</a>
-            <a href={`${rawExample}/scope.yaml`}>Execution scope YAML ↓</a>
-            <a href={`${rawExample}/topology.yaml`}>Network topology YAML ↓</a>
-            <a href={`${rawExample}/workflow.yaml`}>Workflow YAML ↓</a>
-            <a href={`${rawExample}/data/input.json`}>Input data ↓</a>
-            <a href={`${rawExample}/docker/Dockerfile`}>Container recipe ↓</a>
-            <a href={`${rawExample}/run.sh`}>Run the workflow ↓</a>
-            <a href={`${rawExample}/validate.sh`}>Validate outputs ↓</a>
-            <a href={`${rawExample}/expected/manifest.json`}>Expected output manifest ↓</a>
-          </div>
+          <a href={exampleRepository}>Open the complete source bundle ↗</a>
         </section>
       )}
       {examplePath && (
@@ -169,7 +159,6 @@ export function AIWorkflowPattern({
               <figcaption>Output evidence</figcaption>
             </figure>
           </div>
-          <a href={`${rawExample}/outputs/manifest.json`}>Open verified output manifest ↓</a>
         </section>
       )}
       <h2>Execution considerations</h2>

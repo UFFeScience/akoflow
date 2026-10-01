@@ -5,7 +5,7 @@ description: Configure a reproducible simulated environment with resources, netw
 
 # Model a SimGrid environment
 
-Use this guide to model resources, activity duration, and network transfers for a simulated workflow. It draws on the checked-in [edge-to-cloud bundle](/docs/showcase/edge-cloud-simulation), which includes a complete runnable plan.
+Use this guide to model resources, activity duration, and network transfers for a simulated workflow. The [first-run tutorial](/docs/guides/workflows/first-run) provides the complete runnable model used below.
 
 Use SimGrid when the question is about a modeled platform: placement, parallel capacity, transfers, latency, and simulated cost. Do not use it to validate an SSH, Kubernetes, cloud, or Slurm connection; a SimGrid environment has no remote endpoint to test. For a first end-to-end execution, start with [Run your first simulated workflow](/docs/guides/workflows/first-run).
 
@@ -51,7 +51,7 @@ The fields have different jobs:
 | `bootOverheadSeconds` and `containerOverheadSeconds` | Add modeled setup time. A plan assignment may override these values when it freezes the selected placement. |
 | `schedulable` | Makes the resource available to a scope and to planning. Keep non-execution resources out of a placement by setting it to `false`. |
 
-Do not raise `cpuCores` merely to make a predicted makespan smaller. A 50-core resource models 50 simultaneous execution lanes only when the workflow and the resulting plan can use them. The [50-core fan-out Showcase](/docs/showcase/parallel-50-core) is the worked example for that case.
+Do not raise `cpuCores` merely to make a predicted makespan smaller. A 50-core resource models 50 simultaneous execution lanes only when the workflow and the resulting plan can use them.
 
 ## 2. Give each activity its own compute profile
 
@@ -171,4 +171,4 @@ The run's execution, transfer, queue, and overhead totals are accumulated across
 | Parallel activities appear in one lane | Check `cpuCores`, activity CPU requirements, and the plan's `coreId` assignments. Then regenerate the plan. |
 | A resource is absent from candidate plans | Confirm `schedulable: true` and that its environment version belongs to the scope; then inspect the activity requirements and algorithm placement. An enabled `simgrid` runtime binding is needed to execute a selected plan, but it is not part of the planning resource filter. |
 
-Related material: [execution scopes](/docs/guides/infrastructure/execution-scopes), [network fan-out](/docs/showcase/network-fanout), [parallel 50-core fan-out](/docs/showcase/parallel-50-core), and [the execution evidence guide](/docs/guides/workflows/executions).
+Related material: [execution scopes](/docs/guides/infrastructure/execution-scopes), [network modeling](/docs/explanations/network-modeling), [observed timing](/docs/explanations/observed-timing), and [the execution evidence guide](/docs/guides/workflows/executions).

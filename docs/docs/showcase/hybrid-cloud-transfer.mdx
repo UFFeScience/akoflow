@@ -19,7 +19,7 @@ Running this example provisions a GCP VM and may incur charges. The checked-in p
 ## Prerequisites
 
 1. [Connect and test a GCP environment](/docs/guides/infrastructure/gcp). Save it, then wait for asynchronous resource discovery to complete and confirm the cloud target is usable.
-2. For the Kind variant, [prepare a Kind cluster and AkôFlow access](/docs/showcase/kubernetes-real-execution). The local variant runs its producer on the AkôFlow server host.
+2. For the Kind variant, [prepare a Kind cluster and AkôFlow access](/docs/guides/infrastructure/kubernetes). The local variant runs its producer on the AkôFlow server host.
 3. Register an execution scope, network topology, and resources that cover both the producer and GCP worker. In the checked-in plans these are `goal-hybrid-scope`, `goal-hybrid-network`, and `goal-gcp-worker-e2-small`. The instance's environment, resource, and runtime IDs must match the plans and submission script, or you must edit those files for your instance.
 4. Install `curl` and `jq` on the submission host, obtain API access, and allow the server's transfer path to reach the GCP worker. Use only the network access required by your deployment.
 

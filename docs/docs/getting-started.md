@@ -45,7 +45,7 @@ The SimGrid tutorial currently uses repository files and the API. It is **not** 
 Choose the guide for the actual target. Provider and runtime support are not interchangeable.
 
 - [SimGrid first run](/docs/guides/workflows/first-run): deterministic local simulation.
-- [Kubernetes real execution](/docs/showcase/kubernetes-real-execution): container execution on the checked-in Kind example.
+- [Kubernetes infrastructure](/docs/guides/infrastructure/kubernetes): connect a cluster and execute container activities as Jobs.
 - [HPC and SLURM](/docs/guides/infrastructure/hpc-slurm): login nodes, partitions, shared storage, SSH proxies, and batch execution.
 - [Google Cloud](/docs/guides/infrastructure/gcp): service-account credentials, catalog discovery, pricing, and Terraform provisioning.
 - [AWS](/docs/guides/infrastructure/aws): S3 and S3-compatible data movement. AkôFlow v1.0 does not discover or provision EC2 capacity.

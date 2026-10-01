@@ -33,6 +33,29 @@ const sections: Section[] = [
       {title: "Synthetic dataset generation", href: "/docs/showcase/ai/generative-ai/synthetic-dataset", stages: ["define schema", ["batch A", "batch B", "batch N"], "filter", "deduplicate", "quality review", "publish"]},
       {title: "Audio transcription and summarization", href: "/docs/showcase/ai/generative-ai/audio-transcription", stages: ["ingest audio", "segment", ["segment 1", "segment N"], "merge transcript", "summarize", "publish"]},
       {title: "OCR and document extraction", href: "/docs/showcase/ai/generative-ai/document-extraction", stages: ["ingest documents", ["OCR", "native text"], "classify", "extract fields", "validate schema", "publish"]},
+      {title: "AI Video Studio", href: "/docs/showcase/ai/generative-ai/ai-video-studio", stages: ["storyboard", ["scenes", "narration"], "compose", "quality control"]},
+      {title: "Local RAG Factory", href: "/docs/showcase/ai/generative-ai/local-rag-factory", stages: ["ingest", "chunk", "index", "retrieve", "answer", "evaluate"]},
+    ],
+  },
+  {
+    title: "Document AI",
+    description: "Executable extraction and reconciliation workflows over auditable document corpora.",
+    examples: [
+      {title: "Document Intelligence", href: "/docs/showcase/document-ai/document-intelligence", stages: ["ingest", "classify", "extract", "reconcile", "report"]},
+    ],
+  },
+  {
+    title: "Media intelligence",
+    description: "Offline audiovisual inspection, segmentation, measurement, and timeline workflows.",
+    examples: [
+      {title: "Video Intelligence", href: "/docs/showcase/media/video-intelligence", stages: ["prepare", ["probe", "scenes", "audio"], "timeline", "report"]},
+    ],
+  },
+  {
+    title: "Rendering",
+    description: "Procedural scene construction and parallel frame rendering workflows.",
+    examples: [
+      {title: "Blender Render Farm", href: "/docs/showcase/rendering/blender-render-farm", stages: ["setup", ["even frames", "odd frames"], "compose", "verify"]},
     ],
   },
   {

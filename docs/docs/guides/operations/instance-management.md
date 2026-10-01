@@ -7,6 +7,22 @@ description: Configure an AkôFlow instance, export and import sanitized snapsho
 
 An AkôFlow **instance** is one control-plane installation and its catalog. Its identity contains an ID, name, optional description, organization and location, plus the transfer relay buffer. The Engine creates an identity automatically from the machine hostname during startup; the Desktop cannot proceed when `GET /instance/` is unavailable.
 
+## Instance states
+
+```mermaid
+stateDiagram-v2
+  [*] --> writable
+  writable --> snapshot: export
+  snapshot --> writable: activate default
+  writable --> read_only: switch
+  read_only --> writable: activate default
+  writable --> resetting: factory reset
+  resetting --> writable
+  snapshot --> [*]: import to another Engine
+```
+
+The states above correspond to the activation endpoints returned by `GET /instances/`. The writable state is the normal one. A snapshot is read-only by design; switch back to the writable default through the activation endpoint when you want to continue editing. Factory reset is irreversible; export a sanitized snapshot before you trigger it.
+
 Set these variables for the API examples:
 
 ```bash

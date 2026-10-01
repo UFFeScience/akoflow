@@ -1,0 +1,111 @@
+name: AkôFlow example CI
+
+on:
+  workflow_call:
+    inputs:
+      examples_ref:
+        description: Commit, branch, or tag from UFFeScience/akoflow-examples.
+        required: false
+        type: string
+        default: main
+      publish:
+        description: Publish validated OCI images to GHCR.
+        required: false
+        type: boolean
+        default: false
+  workflow_dispatch:
+    inputs:
+      examples_ref:
+        description: Commit, branch, or tag from UFFeScience/akoflow-examples.
+        required: true
+        type: string
+        default: main
+      publish:
+        description: Publish validated OCI images to GHCR.
+        required: true
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  discover:
+    name: Discover examples
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.catalog.outputs.matrix }}
+    steps:
+      - name: Checkout examples
+        uses: actions/checkout@v4
+        with:
+          repository: UFFeScience/akoflow-examples
+          ref: ${{ inputs.examples_ref }}
+      - name: Build showcase matrix
+        id: catalog
+        shell: bash
+        run: |
+          mapfile -t showcases < <(
+            find . -mindepth 4 -maxdepth 4 -type f -path '*/docker/Dockerfile' -printf '%h\n' |
+              sed 's#^./##; s#/docker$##' |
+              sort
+          )
+          if [ "${#showcases[@]}" -eq 0 ]; then
+            echo "No runnable showcases were found" >&2
+            exit 1
+          fi
+          matrix=$(jq --compact-output --null-input --args \
+            '$ARGS.positional | map(split("/") | {category: .[0], showcase: .[1]})' \
+            "${showcases[@]}")
+          echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
+
+  experiment-tools:
+    name: Test experiment tools
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout examples
+        uses: actions/checkout@v4
+        with:
+          repository: UFFeScience/akoflow-examples
+          ref: ${{ inputs.examples_ref }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run Python tests
+        run: python -m unittest discover -s experiments -p 'test_*.py'
+
+  showcase:
+    name: Validate ${{ matrix.showcase }}
+    needs: discover
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJSON(needs.discover.outputs.matrix) }}
+    steps:
+      - name: Checkout examples
+        uses: actions/checkout@v4
+        with:
+          repository: UFFeScience/akoflow-examples
+          ref: ${{ inputs.examples_ref }}
+      - name: Execute regression fixture
+        working-directory: ${{ matrix.category }}/${{ matrix.showcase }}
+        run: ./run.sh
+      - name: Authenticate with GHCR
+        if: inputs.publish
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and optionally publish image
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ matrix.category }}/${{ matrix.showcase }}
+          file: ${{ matrix.category }}/${{ matrix.showcase }}/docker/Dockerfile
+          push: ${{ inputs.publish }}
+          tags: |
+            ghcr.io/uffescience/akoflow-showcase-${{ matrix.showcase }}:latest
+            ghcr.io/uffescience/akoflow-showcase-${{ matrix.showcase }}:v1
+            ghcr.io/uffescience/akoflow-showcase-${{ matrix.showcase }}:v1.0.0

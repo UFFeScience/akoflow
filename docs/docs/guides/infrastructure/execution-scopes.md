@@ -7,6 +7,25 @@ An execution scope tells the planner which environments it may use. If dependent
 
 For the API commands on this page, complete [API connection setup](/docs/tutorials/api-access) first.
 
+## Scope, environments, and topology
+
+```mermaid
+flowchart LR
+  EnvA["Environment version A"] --> Scope[Execution scope]
+  EnvB["Environment version B"] --> Scope
+  EnvC["Environment version C"] --> Scope
+  Scope --> Topo["Network topology"]
+  Topo --> Link1["Link: A → B"]
+  Topo --> Link2["Link: B → C"]
+  Topo --> Link3["Link: A → C (bidirectional)"]
+  Scope --> Session["Planning session"]
+  Link1 --> Session
+  Link2 --> Session
+  Link3 --> Session
+```
+
+The diagram highlights a deliberate constraint: a planning session reads the scope as a single frozen universe. Adding a new environment version to a scope after a session has started does not retroactively change the candidates that session evaluated. Create a new session if you want to add resources.
+
 ## Create a scope
 
 ### Using AkôFlow Desktop

@@ -63,33 +63,8 @@ func (s *Coordinator) Create(
 		}
 		return nil, err
 	}
-	interference, err := decodeInterferenceMatrix(session.Configuration[interferenceConfigurationKey])
-	if err != nil {
+	if err := normalizeInterferenceConfiguration(&session, *workflow); err != nil {
 		return nil, err
-	}
-	interference, err = normalizeInterferenceMatrix(interference, *workflow)
-	if err != nil {
-		return nil, err
-	}
-	if interference != nil {
-		if session.Configuration == nil {
-			session.Configuration = map[string]any{}
-		}
-		session.Configuration[interferenceConfigurationKey] = interference
-	}
-	knowledge, err := decodeInterferenceMatrix(session.Configuration[interferenceKnowledgeConfigurationKey])
-	if err != nil {
-		return nil, fmt.Errorf("decode interference knowledge: %w", err)
-	}
-	knowledge, err = normalizeInterferenceMatrix(knowledge, *workflow)
-	if err != nil {
-		return nil, fmt.Errorf("normalize interference knowledge: %w", err)
-	}
-	if knowledge != nil {
-		if interference == nil {
-			return nil, fmt.Errorf("interference knowledge requires an execution interference matrix")
-		}
-		session.Configuration[interferenceKnowledgeConfigurationKey] = knowledge
 	}
 	scope, err := s.Scopes.FindScope(ctx, session.ExecutionScopeID)
 	if err != nil || scope == nil {
@@ -135,6 +110,41 @@ func (s *Coordinator) Create(
 		return nil, err
 	}
 	return &session, nil
+}
+
+func normalizeInterferenceConfiguration(session *domain.PlanningSession, workflow domain.WorkflowVersion) error {
+	interference, err := decodeInterferenceMatrix(session.Configuration[interferenceConfigurationKey])
+	if err != nil {
+		return err
+	}
+	interference, err = normalizeInterferenceMatrix(interference, workflow)
+	if err != nil {
+		return err
+	}
+	knowledge, err := decodeInterferenceMatrix(session.Configuration[interferenceKnowledgeConfigurationKey])
+	if err != nil {
+		return fmt.Errorf("decode interference knowledge: %w", err)
+	}
+	knowledge, err = normalizeInterferenceMatrix(knowledge, workflow)
+	if err != nil {
+		return fmt.Errorf("normalize interference knowledge: %w", err)
+	}
+	if interference == nil && knowledge == nil {
+		return nil
+	}
+	if session.Configuration == nil {
+		session.Configuration = map[string]any{}
+	}
+	if interference != nil {
+		session.Configuration[interferenceConfigurationKey] = interference
+	}
+	if knowledge != nil {
+		if interference == nil {
+			return fmt.Errorf("interference knowledge requires an execution interference matrix")
+		}
+		session.Configuration[interferenceKnowledgeConfigurationKey] = knowledge
+	}
+	return nil
 }
 
 func validatePlanningSession(session domain.PlanningSession) error {

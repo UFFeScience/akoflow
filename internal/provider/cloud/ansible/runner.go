@@ -125,6 +125,9 @@ func (r Runner) Validate(ctx context.Context, spec ports.MachineConfigurationSpe
 	if err != nil {
 		return err
 	}
+	if err := os.MkdirAll(filepath.Join(root, spec.InstanceID), 0700); err != nil {
+		return err
+	}
 	logFile, err := os.OpenFile(filepath.Join(root, spec.InstanceID, "provision.log"), os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0o600)
 	if err != nil {
 		return err

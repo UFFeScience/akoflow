@@ -56,6 +56,10 @@ func (resolver EnvironmentEndpointResolver) ResolveTransferEndpoint(ctx context.
 		endpoint.NetworkDomain = value
 	}
 	endpoint.Configuration = make(map[string]string)
+	return resolver.resolveConnectionEndpoint(endpoint, u, connectionID, *connection)
+}
+
+func (resolver EnvironmentEndpointResolver) resolveConnectionEndpoint(endpoint domain.TransferEndpoint, u *url.URL, connectionID string, connection domain.EnvironmentConnection) (domain.TransferEndpoint, error) {
 	switch connection.Type {
 	case domain.ConnectionLocal:
 		if u.Scheme != "file" {

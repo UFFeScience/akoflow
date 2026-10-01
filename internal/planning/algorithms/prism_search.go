@@ -287,26 +287,9 @@ func selectCompactPRISMBeam(
 	for _, state := range selected {
 		seen[state.signature] = true
 	}
-	appendLane := func(lane []compactPRISMState, limit int) {
-		if limit <= 0 || len(selected) >= width {
-			return
-		}
-		added := 0
-		for _, state := range lane {
-			if seen[state.signature] {
-				continue
-			}
-			selected = append(selected, state)
-			seen[state.signature] = true
-			added++
-			if added == limit || len(selected) == width {
-				return
-			}
-		}
-	}
-	appendLane(secondary, secondaryWidth)
-	appendLane(locality, localityWidth)
-	appendLane(diversity, diversityWidth)
+	selected = appendCompactPRISMLane(selected, seen, secondary, secondaryWidth, width)
+	selected = appendCompactPRISMLane(selected, seen, locality, localityWidth, width)
+	selected = appendCompactPRISMLane(selected, seen, diversity, diversityWidth, width)
 	// Overlap between lanes can leave spare capacity. Fill it by the primary
 	// objective so the effective beam width remains stable.
 	for _, state := range compactPRISMTopStates(states, width, objective) {
@@ -322,106 +305,92 @@ func selectCompactPRISMBeam(
 	return selected
 }
 
+func appendCompactPRISMLane(selected []compactPRISMState, seen map[uint64]bool, lane []compactPRISMState, limit, width int) []compactPRISMState {
+	for _, state := range lane {
+		if limit <= 0 || len(selected) >= width {
+			return selected
+		}
+		if seen[state.signature] {
+			continue
+		}
+		selected = append(selected, state)
+		seen[state.signature] = true
+		limit--
+	}
+	return selected
+}
+
 func compactPRISMStateLess(
 	left compactPRISMState,
 	right compactPRISMState,
 	objective string,
 ) bool {
-	if objective == "network-locality" {
-		if left.transferSeconds != right.transferSeconds {
-			return left.transferSeconds < right.transferSeconds
-		}
-		if left.networkCost != right.networkCost {
-			return left.networkCost < right.networkCost
-		}
-		if left.usedResourceCount != right.usedResourceCount {
-			return left.usedResourceCount < right.usedResourceCount
-		}
-		if left.projectedMakespan != right.projectedMakespan {
-			return left.projectedMakespan < right.projectedMakespan
-		}
-		if left.projectedCost != right.projectedCost {
-			return left.projectedCost < right.projectedCost
-		}
-		return left.signature < right.signature
-	}
-	if objective == "earliest-finish" {
-		if left.makespan != right.makespan {
-			return left.makespan < right.makespan
-		}
-		if left.queueSeconds != right.queueSeconds {
-			return left.queueSeconds < right.queueSeconds
-		}
-		if left.projectedMakespan != right.projectedMakespan {
-			return left.projectedMakespan < right.projectedMakespan
-		}
-		if left.projectedCost != right.projectedCost {
-			return left.projectedCost < right.projectedCost
-		}
-		return left.signature < right.signature
-	}
-	if objective == "resource-diversity" {
-		if left.usedResourceCount != right.usedResourceCount {
-			return left.usedResourceCount > right.usedResourceCount
-		}
-		leftMax, rightMax := uint32(0), uint32(0)
-		for _, count := range left.resourceAssignments {
-			leftMax = max(leftMax, count)
-		}
-		for _, count := range right.resourceAssignments {
-			rightMax = max(rightMax, count)
-		}
-		if leftMax != rightMax {
-			return leftMax < rightMax
-		}
-		if left.projectedMakespan != right.projectedMakespan {
-			return left.projectedMakespan < right.projectedMakespan
-		}
-		if left.transferSeconds != right.transferSeconds {
-			return left.transferSeconds < right.transferSeconds
-		}
-		return left.signature < right.signature
-	}
-	if objective == "cost" {
-		if left.projectedCost != right.projectedCost {
-			return left.projectedCost < right.projectedCost
-		}
-		if left.networkCost != right.networkCost {
-			return left.networkCost < right.networkCost
-		}
-		if left.transferSeconds != right.transferSeconds {
-			return left.transferSeconds < right.transferSeconds
-		}
-		if left.usedResourceCount != right.usedResourceCount {
-			return left.usedResourceCount < right.usedResourceCount
-		}
-		if left.projectedMakespan != right.projectedMakespan {
-			return left.projectedMakespan < right.projectedMakespan
-		}
-		if left.queueSeconds != right.queueSeconds {
-			return left.queueSeconds < right.queueSeconds
-		}
-	} else {
-		if left.projectedMakespan != right.projectedMakespan {
-			return left.projectedMakespan < right.projectedMakespan
-		}
-		if left.transferSeconds != right.transferSeconds {
-			return left.transferSeconds < right.transferSeconds
-		}
-		if left.networkCost != right.networkCost {
-			return left.networkCost < right.networkCost
-		}
-		if left.usedResourceCount != right.usedResourceCount {
-			return left.usedResourceCount < right.usedResourceCount
-		}
-		if left.queueSeconds != right.queueSeconds {
-			return left.queueSeconds < right.queueSeconds
-		}
-		if left.projectedCost != right.projectedCost {
-			return left.projectedCost < right.projectedCost
+	priorities := compactPRISMPriorities(left, right, objective)
+	for _, priority := range priorities {
+		if priority != 0 {
+			return priority < 0
 		}
 	}
 	return left.signature < right.signature
+}
+
+func compactPRISMPriorities(left, right compactPRISMState, objective string) []int {
+	leftMax, rightMax := compactPRISMMaxAssignments(left), compactPRISMMaxAssignments(right)
+	ascending := func(a, b uint64) int {
+		if a < b {
+			return -1
+		}
+		if a > b {
+			return 1
+		}
+		return 0
+	}
+	priority := func(a, b float64) int {
+		if a < b {
+			return -1
+		}
+		if a > b {
+			return 1
+		}
+		return 0
+	}
+	if objective == "network-locality" {
+		return []int{
+			priority(left.transferSeconds, right.transferSeconds), priority(left.networkCost, right.networkCost),
+			ascending(uint64(left.usedResourceCount), uint64(right.usedResourceCount)),
+			priority(left.projectedMakespan, right.projectedMakespan), priority(left.projectedCost, right.projectedCost),
+		}
+	}
+	if objective == "earliest-finish" {
+		return []int{
+			priority(left.makespan, right.makespan), priority(left.queueSeconds, right.queueSeconds),
+			priority(left.projectedMakespan, right.projectedMakespan), priority(left.projectedCost, right.projectedCost),
+		}
+	}
+	if objective == "resource-diversity" {
+		return []int{
+			ascending(uint64(right.usedResourceCount), uint64(left.usedResourceCount)), ascending(uint64(leftMax), uint64(rightMax)),
+			priority(left.projectedMakespan, right.projectedMakespan), priority(left.transferSeconds, right.transferSeconds),
+		}
+	}
+	if objective == "cost" {
+		return []int{
+			priority(left.projectedCost, right.projectedCost), priority(left.networkCost, right.networkCost), priority(left.transferSeconds, right.transferSeconds),
+			ascending(uint64(left.usedResourceCount), uint64(right.usedResourceCount)), priority(left.projectedMakespan, right.projectedMakespan), priority(left.queueSeconds, right.queueSeconds),
+		}
+	}
+	return []int{
+		priority(left.projectedMakespan, right.projectedMakespan), priority(left.transferSeconds, right.transferSeconds), priority(left.networkCost, right.networkCost),
+		ascending(uint64(left.usedResourceCount), uint64(right.usedResourceCount)), priority(left.queueSeconds, right.queueSeconds), priority(left.projectedCost, right.projectedCost),
+	}
+}
+
+func compactPRISMMaxAssignments(state compactPRISMState) uint32 {
+	var maxValue uint32
+	for _, count := range state.resourceAssignments {
+		maxValue = max(maxValue, count)
+	}
+	return maxValue
 }
 
 func dedupeCompactPRISMStates(

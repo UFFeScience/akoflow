@@ -114,6 +114,12 @@ func (c *VerifiedArtifactCache) DoObserved(
 }
 
 func verificationCacheKey(endpoint domain.TransferEndpoint, name, digest string) string {
+	// SSH artifacts are addressed on the connection host, not on the
+	// scheduler node. Different HPC nodes can share the same destination file.
+	if strings.HasPrefix(endpoint.URI, "ssh://") {
+		endpoint.ResourceID = ""
+		endpoint.RuntimeID = ""
+	}
 	return strings.Join([]string{
 		endpoint.URI,
 		endpoint.ResourceID,

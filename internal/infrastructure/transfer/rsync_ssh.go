@@ -216,7 +216,7 @@ func (connector RsyncSSH) Put(ctx context.Context, e domain.TransferEndpoint, na
 	closeErr := stdin.Close()
 	waitErr := cmd.Wait()
 	if copyErr != nil {
-		return fmt.Errorf("stream to SSH staging: %w", copyErr)
+		return fmt.Errorf("stream to SSH staging: %w (SSH exit: %v): %s", copyErr, waitErr, strings.TrimSpace(stderr.String()))
 	}
 	if closeErr != nil {
 		return fmt.Errorf("close SSH stream: %w", closeErr)

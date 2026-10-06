@@ -21,6 +21,7 @@ func installFakeSSH(t *testing.T) {
 command=""
 for argument in "$@"; do command="$argument"; done
 case "$command" in
+  *"cat >"*upload-rejected*) echo 'remote filesystem quota exceeded' >&2; exit 23 ;;
   *missing*) exit 1 ;;
   *transport-error*) echo 'remote unavailable' >&2; exit 2 ;;
   *"cat --"*|*"tail -c"*) printf payload; exit 0 ;;
@@ -79,7 +80,7 @@ func TestTransferSharesCanonicalConnectionSession(t *testing.T) {
 	t.Setenv("AKOFLOW_SSH_CONTROL_DIRECTORY", t.TempDir())
 	endpoint := domain.TransferEndpoint{
 		ConnectionID: "cloud-connection-instance-a",
-		URI: "ssh://worker@example.test/workspace?port=22&identityFile=/keys/id&knownHostsFile=/known&hostKeyAlias=instance-a",
+		URI:          "ssh://worker@example.test/workspace?port=22&identityFile=/keys/id&knownHostsFile=/known&hostKeyAlias=instance-a",
 	}
 	_, expected, err := provider.SSHMultiplexArguments(provider.SSHSessionKey{
 		ConnectionID: endpoint.ConnectionID, Username: "worker", Host: "example.test", Port: 22,
@@ -132,6 +133,14 @@ func TestRsyncSSHCommandLifecycle(t *testing.T) {
 	}
 	if err := connector.Commit(context.Background(), endpoint, "partial", "final"); err != nil {
 		t.Fatal(err)
+	}
+}
+
+func TestSSHUploadPreservesEarlyExitDiagnostic(t *testing.T) {
+	installFakeSSH(t)
+	err := (RsyncSSH{}).Put(context.Background(), sshTestEndpoint(), "upload-rejected", bytes.NewReader(bytes.Repeat([]byte("x"), 1024*1024)), 0)
+	if err == nil || !strings.Contains(err.Error(), "remote filesystem quota exceeded") || !strings.Contains(err.Error(), "exit status 23") {
+		t.Fatalf("remote upload diagnostic lost: %v", err)
 	}
 }
 

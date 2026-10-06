@@ -186,7 +186,7 @@ func (m Materializer) Materialize(ctx context.Context, plan domain.DataTransferP
 				if routed && sizeBytes > offset {
 					run.TransferredBytes += sizeBytes - offset
 				}
-				ok, verifyErr := m.verify(ctx, dc, destination, partial, blob.Digest)
+				ok, verifyErr = m.verify(ctx, dc, destination, partial, blob.Digest)
 				if verifyErr != nil {
 					return verifyErr
 				}

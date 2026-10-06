@@ -250,7 +250,13 @@ func (s *Supervisor) executeActivities(ctx context.Context, request ports.Execut
 			available := make(map[string]bool, len(workspaces))
 			for _, workspace := range workspaces {
 				available[workspace.ActivityID] = workspace.State != domain.WorkspaceReleased && workspace.State != domain.WorkspaceFailed
-				if available[workspace.ActivityID] && s.config.Workspaces != nil {
+				if reusable[workspace.ActivityID] && available[workspace.ActivityID] && s.config.Workspaces != nil {
+					if err := bindWorkspaceAllocation(&workspace, recoveredAllocation(latest[workspace.ActivityID])); err != nil {
+						return domain.ExecutionTrace{}, err
+					}
+					if err := store.SaveWorkspace(ctx, workspace); err != nil {
+						return domain.ExecutionTrace{}, err
+					}
 					usage, inspectErr := s.config.Workspaces.Inspect(ctx, workspace)
 					if inspectErr != nil {
 						return domain.ExecutionTrace{}, fmt.Errorf("inspect recovery workspace %q: %w", workspace.ID, inspectErr)

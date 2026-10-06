@@ -21,6 +21,8 @@ func installFakeSSH(t *testing.T) {
 command=""
 for argument in "$@"; do command="$argument"; done
 case "$command" in
+  *"sha256sum --"*checksum-error*) echo 'checksum unavailable' >&2; exit 2 ;;
+  *"sha256sum --"*) printf '%064d  artifact\n' 0; exit 0 ;;
   *"cat >"*upload-rejected*) echo 'remote filesystem quota exceeded' >&2; exit 23 ;;
   *missing*) exit 1 ;;
   *transport-error*) echo 'remote unavailable' >&2; exit 2 ;;
@@ -141,6 +143,26 @@ func TestSSHUploadPreservesEarlyExitDiagnostic(t *testing.T) {
 	err := (RsyncSSH{}).Put(context.Background(), sshTestEndpoint(), "upload-rejected", bytes.NewReader(bytes.Repeat([]byte("x"), 1024*1024)), 0)
 	if err == nil || !strings.Contains(err.Error(), "remote filesystem quota exceeded") || !strings.Contains(err.Error(), "exit status 23") {
 		t.Fatalf("remote upload diagnostic lost: %v", err)
+	}
+}
+
+func TestSSHRemoteChecksumMatchAndMismatch(t *testing.T) {
+	installFakeSSH(t)
+	connector := RsyncSSH{}
+	for _, tc := range []struct {
+		digest  string
+		matches bool
+	}{
+		{"sha256:" + strings.Repeat("0", 64), true},
+		{"sha256:" + strings.Repeat("1", 64), false},
+	} {
+		matches, err := connector.VerifyDigest(context.Background(), sshTestEndpoint(), "present", tc.digest)
+		if err != nil || matches != tc.matches {
+			t.Fatalf("matches=%v expected=%v err=%v", matches, tc.matches, err)
+		}
+	}
+	if _, err := connector.VerifyDigest(context.Background(), sshTestEndpoint(), "checksum-error", strings.Repeat("0", 64)); err == nil || !strings.Contains(err.Error(), "checksum unavailable") {
+		t.Fatalf("checksum failure lost: %v", err)
 	}
 }
 

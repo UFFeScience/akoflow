@@ -186,6 +186,26 @@ func waitSSHCommand(command *exec.Cmd) error {
 		return nil
 	}
 }
+
+// VerifyDigest avoids downloading an intact artifact just to validate its cache.
+func (RsyncSSH) VerifyDigest(ctx context.Context, e domain.TransferEndpoint, name, expected string) (bool, error) {
+	host, path, err := sshTarget(e, name)
+	if err != nil {
+		return false, err
+	}
+	output, err := retrySSHRead(ctx, time.Second, func() ([]byte, error) {
+		return runSSHCombinedOutput(ctx, e, append(sshArgs(e), host, "sha256sum -- "+shell(path)), nil)
+	})
+	if err != nil {
+		return false, fmt.Errorf("verify SSH artifact checksum: %w: %s", err, strings.TrimSpace(string(output)))
+	}
+	fields := strings.Fields(string(output))
+	if len(fields) < 2 || len(fields[0]) != 64 {
+		return false, fmt.Errorf("invalid remote SHA-256 response")
+	}
+	return fields[0] == strings.TrimPrefix(expected, "sha256:"), nil
+}
+
 func (connector RsyncSSH) Put(ctx context.Context, e domain.TransferEndpoint, name string, input io.Reader, offset int64) error {
 	host, path, err := sshTarget(e, name)
 	if err != nil {

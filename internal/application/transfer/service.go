@@ -156,7 +156,11 @@ func (m Materializer) Materialize(ctx context.Context, plan domain.DataTransferP
 			}, func() error {
 				// Re-check after taking ownership: another request may have committed
 				// the same immutable object while this caller was waiting.
-				if ok, verifyErr := m.verify(ctx, dc, destination, final, blob.Digest); verifyErr == nil && ok {
+				ok, verifyErr := m.verify(ctx, dc, destination, final, blob.Digest)
+				if verifyErr != nil {
+					return fmt.Errorf("verify existing artifact: %w", verifyErr)
+				}
+				if ok {
 					usedExisting = true
 					return nil
 				}
@@ -473,6 +477,11 @@ func (m Materializer) verify(ctx context.Context, c ports.TransferConnector, end
 	exists, err := c.Exists(ctx, endpoint, name)
 	if err != nil || !exists {
 		return false, err
+	}
+	if verifier, ok := c.(interface {
+		VerifyDigest(context.Context, domain.TransferEndpoint, string, string) (bool, error)
+	}); ok {
+		return verifier.VerifyDigest(ctx, endpoint, name, expected)
 	}
 	r, err := c.Open(ctx, endpoint, name, 0)
 	if err != nil {

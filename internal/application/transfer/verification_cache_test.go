@@ -3,6 +3,7 @@ package transfer
 import (
 	"context"
 	"errors"
+	"fmt"
 	"sync"
 	"sync/atomic"
 	"testing"
@@ -21,11 +22,13 @@ func TestVerifiedArtifactCacheCoalescesConcurrentMaterializations(t *testing.T) 
 	results := make(chan bool, 8)
 	errorsFound := make(chan error, 8)
 	var group sync.WaitGroup
-	for range 8 {
+	for node := range 8 {
 		group.Add(1)
 		go func() {
 			defer group.Done()
-			shared, err := cache.Do(context.Background(), endpoint, "artifact.sif", "sha256:digest", func() error {
+			nodeEndpoint := endpoint
+			nodeEndpoint.ResourceID = fmt.Sprintf("scheduler-node-%d", node)
+			shared, err := cache.Do(context.Background(), nodeEndpoint, "artifact.sif", "sha256:digest", func() error {
 				if calls.Add(1) == 1 {
 					close(started)
 				}

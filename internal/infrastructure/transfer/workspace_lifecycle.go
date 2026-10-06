@@ -174,11 +174,12 @@ func (m ActivityWorkspaceManager) Release(ctx context.Context, workspace domain.
 	}
 	marker := workspaceMarkerFor(workspace, path)
 	expected := strings.TrimSpace(string(markerContents(workspace)))
+	removeCommand := workspaceRemovalCommand(workspace)
 	command := "set -eu; if test ! -e " + shell(path) + "; then rm -f -- " + shell(marker) + "; exit 0; fi; " +
 		"test ! -L " + shell(path) + "; canonical=$(realpath -- " + shell(path) + "); " +
 		"test \"$canonical\" = " + shell(filepath.Clean(path)) + "; test -f " + shell(marker) + "; " +
 		"test \"$(cat -- " + shell(marker) + ")\" = " + shell(expected) + "; " +
-		"rm -rf --one-file-system -- \"$canonical\"; rm -f -- " + shell(marker)
+		removeCommand + " -rf --one-file-system -- \"$canonical\"; rm -f -- " + shell(marker)
 	if isKubernetesEndpoint(endpoint) {
 		if m.Kubernetes == nil {
 			return domain.WorkspaceReleaseResult{}, fmt.Errorf("Kubernetes workspace lifecycle runner is unavailable")
@@ -200,6 +201,15 @@ func (m ActivityWorkspaceManager) Release(ctx context.Context, workspace domain.
 		return domain.WorkspaceReleaseResult{}, fmt.Errorf("release remote workspace: %w: %s", err, strings.TrimSpace(string(output)))
 	}
 	return domain.WorkspaceReleaseResult{ReclaimedBytes: usage.SizeBytes}, nil
+}
+
+func workspaceRemovalCommand(workspace domain.ActivityWorkspace) string {
+	// Cloud Docker runs may produce root-owned bind-mounted files. Privilege is
+	// limited to the canonical, ownership-validated activity directory above.
+	if workspace.Driver == "cloud-ssh" {
+		return "sudo -n rm"
+	}
+	return "rm"
 }
 
 func (m ActivityWorkspaceManager) endpoint(ctx context.Context, workspace domain.ActivityWorkspace) (domain.TransferEndpoint, string, error) {

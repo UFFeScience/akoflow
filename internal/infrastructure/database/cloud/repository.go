@@ -671,7 +671,14 @@ func (r *Repository) CheckCloudLifecycle(ctx context.Context, instanceID, exclud
 		args    []any
 	}{
 		{
-			query:   `SELECT COUNT(*) FROM task_executions WHERE json_extract(metadata,'$.cloudInstanceId')=? AND status IN ('blocked','ready','preparing','running')`,
+			query: `SELECT COUNT(*) FROM task_executions t
+				WHERE json_extract(t.metadata,'$.cloudInstanceId')=?
+				AND t.status IN ('blocked','ready','preparing','running')
+				AND NOT EXISTS (
+					SELECT 1 FROM task_executions newer
+					WHERE newer.execution_run_id=t.execution_run_id
+					AND newer.activity_id=t.activity_id AND newer.attempt>t.attempt
+					AND newer.status='completed')`,
 			message: "workflow activities are still active", args: []any{instanceID},
 		},
 		{
@@ -695,6 +702,12 @@ func (r *Repository) CheckCloudLifecycle(ctx context.Context, instanceID, exclud
 		var count int
 		err := r.db.QueryRowContext(ctx, check.query, check.args...).Scan(&count)
 		if err != nil {
+		{
+			query: `SELECT COUNT(*) FROM activity_handles h
+				JOIN cloud_provisioned_instances i ON i.capacity_target_id=h.resource_id
+				WHERE i.id=? AND h.status IN ('starting','running')`,
+			message: "workflow execution handles are still active", args: []any{instanceID},
+		},
 			return fmt.Errorf("inspect cloud lifecycle safety: %w", err)
 		}
 		if count > 0 {

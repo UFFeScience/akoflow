@@ -56,6 +56,9 @@ func (a *Adapter) Start(ctx context.Context, execution domain.ActivityExecutionC
 		return domain.ActivityHandle{}, fmt.Errorf("activity image is required for remote Docker execution")
 	}
 	name := "akoflow-" + safeName(execution.Run.ID) + "-" + safeName(activity.ID)
+	if execution.Attempt > 1 {
+		name += "-attempt-" + strconv.Itoa(execution.Attempt)
+	}
 	workingDirectory := strings.TrimSpace(activity.Command.WorkingDirectory)
 	if workingDirectory == "" {
 		workingDirectory = "/akoflow/workspace/runs/" + safeName(execution.Run.ID) + "/" + safeName(activity.ID)

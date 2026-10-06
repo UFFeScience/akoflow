@@ -49,6 +49,16 @@ func executionFixture() domain.ActivityExecutionContext {
 	}
 }
 
+func TestRecoveryUsesAttemptScopedContainerName(t *testing.T) {
+	executor := &commandExecutorStub{responses: [][]byte{nil, []byte("[]"), []byte("container-id\n")}}
+	execution := executionFixture()
+	execution.Attempt = 2
+	handle, err := (&Adapter{executor: executor}).Start(context.Background(), execution)
+	if err != nil || handle.Metadata["containerName"] != "akoflow-run-one-activity-one-attempt-2" {
+		t.Fatalf("handle=%+v err=%v", handle, err)
+	}
+}
+
 func TestFactoryValidatesDirectDockerConnection(t *testing.T) {
 	factory := Factory{}
 	if factory.Driver() != domain.RuntimeDriverSSH {

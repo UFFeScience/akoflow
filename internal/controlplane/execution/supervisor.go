@@ -261,6 +261,7 @@ func (s *Supervisor) executeActivities(ctx context.Context, request ports.Execut
 		for _, task := range latest {
 			if task.Status == domain.TaskCompleted && reusable[task.ActivityID] {
 				tasks[task.ActivityID], completed[task.ActivityID] = task, task
+				request.RuntimeAllocations[task.ActivityID] = recoveredAllocation(task)
 			}
 		}
 	}

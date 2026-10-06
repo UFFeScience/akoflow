@@ -51,9 +51,6 @@ func (s Interrupter) Interrupt(ctx context.Context, runID, activityID string) (*
 	if task == nil {
 		return nil, fmt.Errorf("activity %q has no execution record in run %q", activityID, runID)
 	}
-	if task.Status == domain.TaskCancelled {
-		return task, nil
-	}
 	if task.Status == domain.TaskCompleted || task.Status == domain.TaskFailed {
 		return nil, fmt.Errorf("activity %q is already %s", activityID, task.Status)
 	}
@@ -69,6 +66,9 @@ func (s Interrupter) Interrupt(ctx context.Context, runID, activityID string) (*
 		}
 	}
 	if handle == nil {
+		if task.Status == domain.TaskCancelled {
+			return task, nil
+		}
 		if run.Status == domain.ExecutionRunRunning {
 			return nil, fmt.Errorf("activity %q has no runtime handle while the run is active; wait for the scheduler before interrupting", activityID)
 		}
@@ -81,6 +81,9 @@ func (s Interrupter) Interrupt(ctx context.Context, runID, activityID string) (*
 		case domain.HandleStopped:
 			// A prior request stopped the runtime; reconcile the task record.
 		default:
+			if task.Status == domain.TaskCancelled && (handle.Status == domain.HandleCompleted || handle.Status == domain.HandleFailed) {
+				return task, nil
+			}
 			return nil, fmt.Errorf("activity %q has a %s runtime handle; inspect it before interrupting", activityID, handle.Status)
 		}
 	}

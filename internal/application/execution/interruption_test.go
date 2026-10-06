@@ -66,6 +66,19 @@ func TestInterruptKeepsTaskActiveWhenRuntimeStopFails(t *testing.T) {
 	}
 }
 
+func TestInterruptStopsHandleEvenWhenTaskWasAlreadyCancelled(t *testing.T) {
+	store := &interruptionStoreFake{
+		run:     &domain.ExecutionRun{ID: "run", Status: domain.ExecutionRunFailed, Mode: domain.ExecutionModeReal},
+		task:    domain.TaskExecution{ID: "task", ActivityID: "activity", Status: domain.TaskCancelled},
+		handles: []domain.ActivityHandle{{ID: "run:activity", ActivityID: "activity", Status: domain.HandleStarting}},
+	}
+	stopper := &interruptionStopperFake{}
+	_, err := (Interrupter{Store: store, Stopper: stopper}).Interrupt(context.Background(), "run", "activity")
+	if err != nil || !stopper.called {
+		t.Fatalf("stop called=%v err=%v", stopper.called, err)
+	}
+}
+
 func TestInterruptRequiresHandleWhileRunIsActive(t *testing.T) {
 	store := &interruptionStoreFake{
 		run:  &domain.ExecutionRun{ID: "run", Status: domain.ExecutionRunRunning},

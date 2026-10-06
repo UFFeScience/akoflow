@@ -33,6 +33,14 @@ func TestRecoveryRejectsSealedButEmptyWorkspace(t *testing.T) {
 	}
 }
 
+func TestRecoveryRejectsUnsealedEmptyWorkspace(t *testing.T) {
+	for _, state := range []domain.WorkspaceState{domain.WorkspacePlanned, domain.WorkspaceActive, domain.WorkspaceReleased, domain.WorkspaceFailed} {
+		if recoveryWorkspacePresent(domain.ActivityWorkspace{State: state}, domain.WorkspaceUsage{}) {
+			t.Fatalf("unsealed %s workspace reused because zero counts matched", state)
+		}
+	}
+}
+
 func TestRecoveryRearmsOnlyPendingConsumerLeases(t *testing.T) {
 	now := time.Now()
 	store := &recoveryLeaseStore{leases: []domain.WorkspaceLease{

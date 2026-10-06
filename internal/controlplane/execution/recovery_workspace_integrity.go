@@ -11,7 +11,7 @@ import (
 // A sealed catalog entry does not prove its files still exist after cleanup or
 // an interrupted recovery. Missing data requires recomputing the producer.
 func recoveryWorkspacePresent(workspace domain.ActivityWorkspace, usage domain.WorkspaceUsage) bool {
-	return usage.FileCount == workspace.FileCount && usage.SizeBytes == workspace.SizeBytes
+	return workspace.State == domain.WorkspaceSealed && usage.FileCount == workspace.FileCount && usage.SizeBytes == workspace.SizeBytes
 }
 
 // A regenerated producer must not be reclaimed using leases released by a

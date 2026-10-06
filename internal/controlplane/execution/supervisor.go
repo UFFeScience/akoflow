@@ -93,11 +93,6 @@ func (s *Supervisor) Execute(ctx context.Context, request ports.ExecutionRequest
 	if err := s.executions.CreateRun(ctx, request.Run); err != nil {
 		return domain.ExecutionTrace{}, fmt.Errorf("create execution run: %w", err)
 	}
-	if request.Recovery != nil {
-		if recoverErr := s.RecoverWorkspaces(ctx); recoverErr != nil {
-			return domain.ExecutionTrace{}, fmt.Errorf("reconcile workspaces before recovery: %w", recoverErr)
-		}
-	}
 	defer func() {
 		if request.Run.Mode != domain.ExecutionModeSimulation && request.Run.Mode != domain.ExecutionModeInteractive {
 			// Lifecycle cleanup belongs to the infrastructure result, not the
@@ -255,8 +250,18 @@ func (s *Supervisor) executeActivities(ctx context.Context, request ports.Execut
 			available := make(map[string]bool, len(workspaces))
 			for _, workspace := range workspaces {
 				available[workspace.ActivityID] = workspace.State != domain.WorkspaceReleased && workspace.State != domain.WorkspaceFailed
+				if available[workspace.ActivityID] && s.config.Workspaces != nil {
+					usage, inspectErr := s.config.Workspaces.Inspect(ctx, workspace)
+					if inspectErr != nil {
+						return domain.ExecutionTrace{}, fmt.Errorf("inspect recovery workspace %q: %w", workspace.ID, inspectErr)
+					}
+					available[workspace.ActivityID] = recoveryWorkspacePresent(workspace, usage)
+				}
 			}
 			reconcileReusableWorkspaces(activities, predecessors, reusable, available)
+			if err := restoreRecoveryWorkspaceLeases(ctx, store, request.Run.ID, reusable); err != nil {
+				return domain.ExecutionTrace{}, err
+			}
 		}
 		for _, task := range latest {
 			if task.Status == domain.TaskCompleted && reusable[task.ActivityID] {

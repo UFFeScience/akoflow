@@ -687,7 +687,7 @@ func (s *Supervisor) startReadyActivities(
 			defer group.Done()
 			semaphore <- struct{}{}
 			defer func() { <-semaphore }()
-			results[index] = s.startReadyActivity(ctx, request, activityID, activities, assignments, resources, readyAllocations)
+			results[index] = s.startReadyActivity(ctx, request, activityID, tasks[activityID].Attempt, activities, assignments, resources, readyAllocations)
 		}(index, activityID)
 	}
 	group.Wait()
@@ -727,6 +727,7 @@ func (s *Supervisor) startReadyActivity(
 	ctx context.Context,
 	request ports.ExecutionRequest,
 	activityID string,
+	attempt int,
 	activities map[string]domain.Activity,
 	assignments map[string]domain.PlanAssignment,
 	resources map[string]domain.Resource,
@@ -780,6 +781,7 @@ func (s *Supervisor) startReadyActivity(
 		return result
 	}
 	handle, err := s.activities.Start(ctx, domain.ActivityExecutionContext{
+		Attempt: attempt,
 		Run: request.Run, Workflow: request.Workflow, Activity: activity, Assignment: assignment,
 		Resource: resource, RuntimeID: selectRuntime(request, assignment), Allocation: allocation, Preparation: result.preparation,
 	})
@@ -1245,8 +1247,9 @@ func (s *Supervisor) recordStartFailure(
 ) error {
 	now := float64(time.Now().UnixNano()) / float64(time.Second)
 	message := "start activity: " + err.Error()
+	handleID := (domain.ActivityExecutionContext{Run: domain.ExecutionRun{ID: runID}, Activity: domain.Activity{ID: activityID}, Attempt: attempt}).HandleID()
 	handle := domain.ActivityHandle{
-		ID:         runID + ":" + activityID,
+		ID:         handleID,
 		RunID:      runID,
 		ActivityID: activityID,
 		ResourceID: resource.ID,

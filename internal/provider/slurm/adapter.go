@@ -502,7 +502,7 @@ func (a *Adapter) startDirect(ctx context.Context, execution domain.ActivityExec
 		return domain.ActivityHandle{}, err
 	}
 	startedAt := runtimecommon.UnixSeconds(time.Now())
-	handle := domain.ActivityHandle{ID: execution.Run.ID + ":" + activity.ID, RunID: execution.Run.ID,
+	handle := domain.ActivityHandle{ID: execution.HandleID(), RunID: execution.Run.ID,
 		ActivityID: activity.ID, ResourceID: execution.Resource.ID, RuntimeID: execution.RuntimeID,
 		Status: domain.HandleRunning, StartedAt: startedAt, Metadata: map[string]any{
 			"executionTarget": string(domain.ExecutionTargetDirect), "slurmSubmission": "login-node",

@@ -85,7 +85,7 @@ func (a *Adapter) Start(ctx context.Context, execution domain.ActivityExecutionC
 		return domain.ActivityHandle{}, fmt.Errorf("start local activity: %w", err)
 	}
 	startedAt := runtimecommon.UnixSeconds(time.Now())
-	handle := domain.ActivityHandle{ID: execution.Run.ID + ":" + activity.ID, RunID: execution.Run.ID,
+	handle := domain.ActivityHandle{ID: execution.HandleID(), RunID: execution.Run.ID,
 		ActivityID: activity.ID, ResourceID: execution.Resource.ID,
 		RuntimeID: execution.RuntimeID, ExternalID: strconv.Itoa(command.Process.Pid),
 		Status: domain.HandleRunning, StartedAt: startedAt,
@@ -121,6 +121,9 @@ func (a *Adapter) Start(ctx context.Context, execution domain.ActivityExecutionC
 func (a *Adapter) startContainer(ctx context.Context, execution domain.ActivityExecutionContext, root string, before runtimecommon.ArtifactSnapshot, image string) (domain.ActivityHandle, error) {
 	activity := execution.Activity
 	name := "akoflow-" + strings.NewReplacer(":", "-", "/", "-").Replace(execution.Run.ID+"-"+activity.ID)
+	if execution.Attempt > 1 {
+		name += fmt.Sprintf("-attempt-%d", execution.Attempt)
+	}
 	args := []string{"run", "--detach", "--name", name, "--label", "akoflow.run=" + execution.Run.ID}
 	if volume := os.Getenv("AKOFLOW_LOCAL_WORKSPACE_VOLUME"); volume != "" {
 		mountRoot := os.Getenv("AKOFLOW_LOCAL_WORKSPACE_ROOT")
@@ -151,7 +154,7 @@ func (a *Adapter) startContainer(ctx context.Context, execution domain.ActivityE
 		return domain.ActivityHandle{}, fmt.Errorf("start local activity: missing container ID")
 	}
 	startedAt := runtimecommon.UnixSeconds(time.Now())
-	handle := domain.ActivityHandle{ID: execution.Run.ID + ":" + activity.ID, RunID: execution.Run.ID,
+	handle := domain.ActivityHandle{ID: execution.HandleID(), RunID: execution.Run.ID,
 		ActivityID: activity.ID, ResourceID: execution.Resource.ID, RuntimeID: execution.RuntimeID,
 		ExternalID: containerID, Status: domain.HandleRunning, StartedAt: startedAt,
 		Endpoints: localEndpoints(activity), Metadata: map[string]any{

@@ -56,7 +56,7 @@ func (s *Controller) Start(ctx context.Context, execution domain.ActivityExecuti
 	if !execution.Activity.Supports(capability) {
 		return domain.ActivityHandle{}, fmt.Errorf("activity %q does not support %q execution", execution.Activity.ID, execution.Run.Mode)
 	}
-	handleID := execution.Run.ID + ":" + execution.Activity.ID
+	handleID := execution.HandleID()
 	existing, err := s.handles.Find(ctx, handleID)
 	if err != nil {
 		return domain.ActivityHandle{}, fmt.Errorf("find activity handle: %w", err)

@@ -311,7 +311,7 @@ func releaseLocalWorkspace(workspace domain.ActivityWorkspace, path string) erro
 	}
 	info, err := os.Lstat(path)
 	if os.IsNotExist(err) {
-		return os.Remove(marker)
+		return removeWorkspaceMarker(marker)
 	}
 	if err != nil {
 		return err
@@ -322,7 +322,17 @@ func releaseLocalWorkspace(workspace domain.ActivityWorkspace, path string) erro
 	if err := os.RemoveAll(path); err != nil {
 		return err
 	}
-	return os.Remove(marker)
+	return removeWorkspaceMarker(marker)
+}
+
+// Ownership has already been checked. Another releaser may remove the marker
+// after that check; an absent marker is the intended terminal cleanup state.
+func removeWorkspaceMarker(marker string) error {
+	err := os.Remove(marker)
+	if os.IsNotExist(err) {
+		return nil
+	}
+	return err
 }
 
 func pruneLocalWorkspaceInputs(workspace domain.ActivityWorkspace, path string) (domain.WorkspaceReleaseResult, error) {

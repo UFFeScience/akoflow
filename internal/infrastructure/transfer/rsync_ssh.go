@@ -104,6 +104,9 @@ func sshArgs(e domain.TransferEndpoint) []string {
 		if connectionID == "" {
 			connectionID = query.Get("connectionId")
 		}
+		if connectionID == "" {
+			connectionID = e.ConnectionID
+		}
 		multiplex, _, err := provider.SSHMultiplexArguments(provider.SSHSessionKey{
 			ConnectionID: connectionID, Username: username, Host: uri.Hostname(), Port: port,
 			IdentityFile: identity, ProxyCommand: proxy, KnownHostsFile: knownHosts,

@@ -11,6 +11,7 @@ import (
 	"testing"
 
 	"github.com/UFFeScience/akoflow/internal/domain"
+	"github.com/UFFeScience/akoflow/internal/provider"
 )
 
 func installFakeSSH(t *testing.T) {
@@ -71,6 +72,28 @@ func TestSSHTargetAndArguments(t *testing.T) {
 	}
 	if shell("a'b") != `'a'\"'\"'b'` || !reflect.DeepEqual(sshArgs(domain.TransferEndpoint{}), []string{}) {
 		t.Fatalf("SSH helper output mismatch: shell=%q args=%#v", shell("a'b"), sshArgs(domain.TransferEndpoint{}))
+	}
+}
+
+func TestTransferSharesCanonicalConnectionSession(t *testing.T) {
+	t.Setenv("AKOFLOW_SSH_CONTROL_DIRECTORY", t.TempDir())
+	endpoint := domain.TransferEndpoint{
+		ConnectionID: "cloud-connection-instance-a",
+		URI: "ssh://worker@example.test/workspace?port=22&identityFile=/keys/id&knownHostsFile=/known&hostKeyAlias=instance-a",
+	}
+	_, expected, err := provider.SSHMultiplexArguments(provider.SSHSessionKey{
+		ConnectionID: endpoint.ConnectionID, Username: "worker", Host: "example.test", Port: 22,
+		IdentityFile: "/keys/id", KnownHostsFile: "/known", HostKeyAlias: "instance-a",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if actual := sshControlPath(sshArgs(endpoint)); actual != expected {
+		t.Fatalf("transfer session %q differs from canonical connection session %q", actual, expected)
+	}
+	endpoint.ConnectionID = "cloud-connection-instance-b"
+	if actual := sshControlPath(sshArgs(endpoint)); actual == expected {
+		t.Fatal("distinct connections must retain distinct channel limits")
 	}
 }
 

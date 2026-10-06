@@ -231,8 +231,11 @@ func (RsyncSSH) Commit(ctx context.Context, e domain.TransferEndpoint, partial, 
 		return err
 	}
 	args := append(sshArgs(e), host, "mkdir -p -- "+shell(filepath.Dir(f))+" && mv -- "+shell(p)+" "+shell(f))
-	_, err = runSSHCombinedOutput(ctx, e, args, nil)
-	return err
+	output, err := runSSHCombinedOutput(ctx, e, args, nil)
+	if err != nil {
+		return fmt.Errorf("commit SSH artifact: %w: %s", err, strings.TrimSpace(string(output)))
+	}
+	return nil
 }
 
 // TransferRoute keeps payload bytes on the runtime side. For different VMs a

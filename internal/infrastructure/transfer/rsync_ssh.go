@@ -121,7 +121,9 @@ func (RsyncSSH) Exists(ctx context.Context, e domain.TransferEndpoint, name stri
 		return false, err
 	}
 	args := append(sshArgs(e), host, "test -f "+shell(path))
-	output, err := runSSHCombinedOutput(ctx, e, args, nil)
+	output, err := retrySSHRead(ctx, time.Second, func() ([]byte, error) {
+		return runSSHCombinedOutput(ctx, e, args, nil)
+	})
 	if err == nil {
 		return true, nil
 	}

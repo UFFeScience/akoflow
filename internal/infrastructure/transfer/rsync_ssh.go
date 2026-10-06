@@ -54,7 +54,7 @@ func sshTarget(e domain.TransferEndpoint, name string) (string, string, error) {
 	return host, full, nil
 }
 func sshArgs(e domain.TransferEndpoint) []string {
-	args := []string{}
+	args := []string{"-o", "BatchMode=yes", "-o", "ConnectionAttempts=1", "-o", "ConnectTimeout=10"}
 	identity, knownHosts, proxy, alias := "", "", "", ""
 	extraOptions := e.Configuration["sshOptions"]
 	port, forward := 0, false
@@ -416,7 +416,9 @@ func queuedSSHCommand(ctx context.Context, endpoint domain.TransferEndpoint, arg
 	if err != nil {
 		return nil, nil, fmt.Errorf("wait for SSH channel: %w", err)
 	}
-	return exec.CommandContext(ctx, "ssh", args...), release, nil
+	command := exec.CommandContext(ctx, "ssh", args...)
+	command.WaitDelay = 5 * time.Second
+	return command, release, nil
 }
 
 func runSSHCombinedOutput(ctx context.Context, endpoint domain.TransferEndpoint, args []string, input io.Reader) ([]byte, error) {

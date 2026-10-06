@@ -73,7 +73,7 @@ func TestSSHTargetAndArguments(t *testing.T) {
 			t.Fatalf("args=%q missing %q", joined, expected)
 		}
 	}
-	if shell("a'b") != `'a'\"'\"'b'` || !reflect.DeepEqual(sshArgs(domain.TransferEndpoint{}), []string{}) {
+	if shell("a'b") != `'a'\"'\"'b'` || !reflect.DeepEqual(sshArgs(domain.TransferEndpoint{}), []string{"-o", "BatchMode=yes", "-o", "ConnectionAttempts=1", "-o", "ConnectTimeout=10"}) {
 		t.Fatalf("SSH helper output mismatch: shell=%q args=%#v", shell("a'b"), sshArgs(domain.TransferEndpoint{}))
 	}
 }
@@ -163,6 +163,23 @@ func TestSSHRemoteChecksumMatchAndMismatch(t *testing.T) {
 	}
 	if _, err := connector.VerifyDigest(context.Background(), sshTestEndpoint(), "checksum-error", strings.Repeat("0", 64)); err == nil || !strings.Contains(err.Error(), "checksum unavailable") {
 		t.Fatalf("checksum failure lost: %v", err)
+	}
+}
+
+func TestTransferSSHConnectionIsBounded(t *testing.T) {
+	args := strings.Join(sshArgs(sshTestEndpoint()), " ")
+	for _, option := range []string{"BatchMode=yes", "ConnectionAttempts=1", "ConnectTimeout=10"} {
+		if !strings.Contains(args, option) {
+			t.Fatalf("missing %s in %s", option, args)
+		}
+	}
+	command, release, err := queuedSSHCommand(context.Background(), domain.TransferEndpoint{}, []string{"host", "true"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer release()
+	if command.WaitDelay <= 0 {
+		t.Fatal("pipe cleanup is unbounded")
 	}
 }
 

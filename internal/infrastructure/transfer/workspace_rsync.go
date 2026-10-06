@@ -342,7 +342,7 @@ func rsyncArgs(source, destination domain.TransferEndpoint) ([]string, error) {
 		// shell. Newer rsync versions otherwise treat shell quotes as literal
 		// characters in the path.
 		args = append(args, "--secluded-args")
-		ssh := []string{"ssh", "-o", "BatchMode=yes"}
+		ssh := []string{"ssh"}
 		ssh = append(ssh, sshArgs(remote)...)
 		for i := range ssh {
 			ssh[i] = rsyncRemoteShellArgument(ssh[i])

@@ -13,6 +13,7 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/UFFeScience/akoflow/internal/domain"
 )
@@ -88,7 +89,9 @@ func (m ActivityWorkspaceManager) Inspect(ctx context.Context, workspace domain.
 	}
 	command := "test -d " + shell(path) + " || exit 0; find " + shell(path) +
 		" -type f ! -name .akoflow-owner -exec wc -c {} \\; | awk '{bytes += $1; files += 1} END {printf \"%d %d\\n\", files, bytes}'"
-	output, err := runSSHCombinedOutput(ctx, endpoint, append(sshArgs(endpoint), host, command), nil)
+	output, err := retrySSHRead(ctx, time.Second, func() ([]byte, error) {
+		return runSSHCombinedOutput(ctx, endpoint, append(sshArgs(endpoint), host, command), nil)
+	})
 	if err != nil {
 		return domain.WorkspaceUsage{}, fmt.Errorf("inspect remote workspace: %w: %s", err, strings.TrimSpace(string(output)))
 	}

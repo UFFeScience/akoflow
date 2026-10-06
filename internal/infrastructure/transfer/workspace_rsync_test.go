@@ -69,7 +69,7 @@ func TestWorkspaceRsyncSSHRemoteShellKeepsProxyCommandInOneArgument(t *testing.T
 		t.Fatalf("rsync arguments lack remote shell: %q", args)
 	}
 	for _, expected := range []string{
-		"ssh -o BatchMode=yes -i storage/credentials/ssh/ovvesley-personal",
+		"ssh -o BatchMode=yes -o ConnectionAttempts=1 -o ConnectTimeout=10 -i storage/credentials/ssh/ovvesley-personal",
 		`-o "ProxyCommand=ssh `,
 		` -W plafrim:22" -A`,
 	} {

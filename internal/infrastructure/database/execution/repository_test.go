@@ -81,7 +81,7 @@ func TestRepositoryOwnsCompleteExecutionAggregate(t *testing.T) {
 		len(handles) != 1 || handles[0].Artifacts.Files[0].Path != "result.csv" {
 		t.Fatalf("handles=%+v err=%v", handles, err)
 	}
-	task := domain.TaskExecution{ID: "run:activity", ExecutionRunID: "run", PlanAssignmentID: "assignment", ActivityID: "activity", PlannedResourceID: "resource", Attempt: 1, Status: domain.TaskRunning}
+	task := domain.TaskExecution{ID: "task", ExecutionRunID: "run", PlanAssignmentID: "assignment", ActivityID: "activity", PlannedResourceID: "resource", Attempt: 1, Status: domain.TaskRunning}
 	if err := repository.SaveTask(ctx, task); err != nil {
 		t.Fatal(err)
 	}
@@ -262,7 +262,7 @@ func TestFailRunAndStoppedHandleOverrideRunningTask(t *testing.T) {
 	if err := repository.CreateRun(ctx, domain.ExecutionRun{ID: "run", SchedulePlanID: "plan", Mode: domain.ExecutionModeReal, Status: domain.ExecutionRunRunning}); err != nil {
 		t.Fatal(err)
 	}
-	task := domain.TaskExecution{ID: "task", ExecutionRunID: "run", PlanAssignmentID: "assignment", ActivityID: "activity", PlannedResourceID: "resource", Attempt: 1, Status: domain.TaskRunning}
+	task := domain.TaskExecution{ID: "run:activity", ExecutionRunID: "run", PlanAssignmentID: "assignment", ActivityID: "activity", PlannedResourceID: "resource", Attempt: 1, Status: domain.TaskRunning}
 	if err := repository.SaveTask(ctx, task); err != nil {
 		t.Fatal(err)
 	}

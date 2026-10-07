@@ -162,8 +162,9 @@ func (l *Loop) keepLeaseAlive(ctx context.Context, job domainqueue.Job, cancel c
 		select {
 		case <-ctx.Done():
 			return
-		case now := <-ticker.C:
-			if err := l.queue.RenewLease(ctx, job.ID, l.config.Owner, now.UTC().Add(l.config.LeaseDuration)); err != nil {
+		case <-ticker.C:
+			// A buffered tick can predate a stalled worker; never renew from that stale time.
+			if err := l.queue.RenewLease(ctx, job.ID, l.config.Owner, time.Now().UTC().Add(l.config.LeaseDuration)); err != nil {
 				cancel(fmt.Errorf("renew lease for queue job %q: %w", job.ID, err))
 				return
 			}

@@ -305,7 +305,15 @@ func (r *Repository) RenewLease(ctx context.Context, id, owner string, expiresAt
 	if err != nil {
 		return err
 	}
-	return requireOne(result, "renew queue job lease")
+	if err := requireOne(result, "renew queue job lease"); err != nil {
+		var status, lastError string
+		var sameOwner bool
+		if diagnosticErr := r.db.QueryRowContext(ctx, `SELECT status, lease_owner = ?, last_error FROM queue_jobs WHERE id = ?`, owner, id).Scan(&status, &sameOwner, &lastError); diagnosticErr != nil {
+			return fmt.Errorf("%w; lease state unavailable: %v", err, diagnosticErr)
+		}
+		return fmt.Errorf("%w; status=%s ownerMatches=%t lastError=%q", err, status, sameOwner, lastError)
+	}
+	return nil
 }
 
 func (r *Repository) Retry(ctx context.Context, id, owner string, cause error, availableAt time.Time) error {

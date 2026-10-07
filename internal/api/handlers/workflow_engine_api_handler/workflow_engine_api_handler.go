@@ -2576,6 +2576,10 @@ func (h *Handler) CreateExecution(w http.ResponseWriter, r *http.Request) {
 	if !decode(w, r, &request) {
 		return
 	}
+	if err := h.resolveWorkspaceHomes(r.Context(), &request); err != nil {
+		writeError(w, http.StatusUnprocessableEntity, err)
+		return
+	}
 	if err := h.resolveBuildPreparations(r.Context(), &request); err != nil {
 		writeError(w, http.StatusUnprocessableEntity, err)
 		return
@@ -2873,6 +2877,10 @@ func (h *Handler) RecoverExecution(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	request.Recovery = &ports.ExecutionRecovery{Mode: input.Mode, ReuseActivityIDs: preview.Reusable}
+	if err := h.resolveWorkspaceHomes(r.Context(), &request); err != nil {
+		writeError(w, http.StatusUnprocessableEntity, err)
+		return
+	}
 	request.Recovery.RetryActivityIDs = append(append([]string{}, preview.Failed...), preview.Interrupted...)
 	payload, err := json.Marshal(request)
 	if err != nil {

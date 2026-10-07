@@ -1210,10 +1210,7 @@ func transferObservations(
 		// Artifact stores are not execution resources in the current transfer
 		// schema. Attribute ingress to the selected resource until the schema
 		// includes a storage endpoint dimension.
-		bytes := observation.NetworkBytes
-		if bytes <= 0 {
-			bytes = observation.TransferredBytes
-		}
+		bytes := observedNetworkBytes(observation)
 		transfers = append(transfers, domain.DataTransfer{
 			ID:                 runID + ":" + activityID + ":" + observation.ID,
 			ExecutionRunID:     runID,
@@ -1331,7 +1328,7 @@ func newRunningTask(
 		var preparationStartedAt, preparationFinishedAt float64
 		for _, transfer := range preparation.TransferRuns {
 			task.TransferSeconds += maxFloat(0, transfer.FinishedAt-transfer.StartedAt)
-			task.TransferBytes += transfer.TransferredBytes
+			task.TransferBytes += observedNetworkBytes(transfer)
 			if transfer.StartedAt > 0 && (preparationStartedAt == 0 || transfer.StartedAt < preparationStartedAt) {
 				preparationStartedAt = transfer.StartedAt
 			}

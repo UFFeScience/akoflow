@@ -8,8 +8,9 @@ import (
 )
 
 type placementExecutor struct {
-	script string
-	proof  bool
+	script      string
+	proof       bool
+	proofScript string
 }
 
 func (e *placementExecutor) Run(_ context.Context, name string, _ []string, input []byte) ([]byte, error) {
@@ -20,6 +21,7 @@ func (e *placementExecutor) Run(_ context.Context, name string, _ []string, inpu
 		return []byte("bora003|36|191000|bora,intel,cascadelake,omnipath|idle\nbora006|36|191000|bora,intel,cascadelake,omnipath|idle"), nil
 	case "sh":
 		e.proof = true
+		e.proofScript = string(input)
 		return nil, nil
 	case "sbatch":
 		e.script = string(input)
@@ -49,6 +51,9 @@ func TestFallbackSubmissionKeepsRequestsAndGuardsBeforeCommand(t *testing.T) {
 	}
 	if !executor.proof || handle.Metadata["plannedNode"] != "bora001" || handle.Metadata["eligibleNodes"] != "bora003,bora006" {
 		t.Fatalf("missing proof or provenance: %+v", handle)
+	}
+	if !strings.Contains(executor.proofScript, "mkdir -p -- '/shared/workspace'") {
+		t.Fatal("new root activity workspace must be initialized before shared access proof")
 	}
 	if strings.Index(executor.script, "fallback workspace is not accessible") > strings.LastIndex(executor.script, "/bin/true") {
 		t.Fatal("workspace guard runs after activity")

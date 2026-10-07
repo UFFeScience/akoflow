@@ -104,7 +104,7 @@ func (a *Adapter) Start(ctx context.Context, execution domain.ActivityExecutionC
 		// or invoking the activity. The marker proves shared filesystem access.
 		marker := filepath.Join(activity.Command.WorkingDirectory, ".akoflow-placement-"+shellToken(execution.HandleID()))
 		proof := runtimecommon.NewID("placement")
-		check := "set -eu\ntest -d " + shellQuote(activity.Command.WorkingDirectory) + "\nprintf '%s' " + shellQuote(proof) + " > " + shellQuote(marker) + "\n"
+		check := "set -eu\nmkdir -p -- " + shellQuote(activity.Command.WorkingDirectory) + "\ntest -d " + shellQuote(activity.Command.WorkingDirectory) + " || { echo 'Fallback workspace directory unavailable' >&2; exit 70; }\nprintf '%s' " + shellQuote(proof) + " > " + shellQuote(marker) + "\n"
 		if _, err := a.executor.Run(ctx, "sh", []string{"-s"}, []byte(check)); err != nil {
 			return domain.ActivityHandle{}, fmt.Errorf("prepare fallback workspace proof: %w", err)
 		}

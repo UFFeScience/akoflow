@@ -122,6 +122,8 @@ type TransferRoute struct {
 	TargetCloudInstanceID string           `json:"targetCloudInstanceId,omitempty"`
 	FilesTransferred      int64            `json:"filesTransferred,omitempty"`
 	NetworkDomain         string           `json:"networkDomain,omitempty"`
+	SharedFilesystem      string           `json:"sharedFilesystem,omitempty"`
+	SharedFilesystemID    string           `json:"sharedFilesystemId,omitempty"`
 	Fallback              TransferStrategy `json:"fallback,omitempty"`
 	Reason                string           `json:"reason"`
 }

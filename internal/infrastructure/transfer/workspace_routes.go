@@ -69,8 +69,13 @@ func (s WorkspaceRsync) syncDependencyRoutes(ctx context.Context, plans []domain
 		}
 	}()
 	for i, source := range sources {
+		runs[i].Route.SourceAddress = workspaceRouteAddress(source.URI)
+		runs[i].Route.TargetAddress = workspaceRouteAddress(destination.URI)
 		if proof, ok := sharedWorkspaceProof(ctx, source, destination); ok {
 			proofs[i] = proof
+			identity := strings.Fields(proof)
+			runs[i].Route.SharedFilesystem = identity[0]
+			runs[i].Route.SharedFilesystemID = identity[1]
 			runs[i].Strategy, runs[i].Route.Strategy = domain.TransferDirectRuntime, domain.TransferDirectRuntime
 			runs[i].Route.Reason = "verified shared filesystem: " + proof
 			continue
@@ -126,6 +131,7 @@ func (s WorkspaceRsync) syncDependencyRoutes(ctx context.Context, plans []domain
 	result, err := syncRemoteWorkspaceDirect(ctx, plans, prepared, destination, runs)
 	for i := range result {
 		result[i].NetworkBytes = network[i].bytes
+		result[i].Route.FilesTransferred = result[i].FilesTransferred
 		if proofs[i] != "" {
 			result[i].Route.Reason = "verified shared filesystem: " + proofs[i]
 		} else {
@@ -138,4 +144,16 @@ func (s WorkspaceRsync) syncDependencyRoutes(ctx context.Context, plans []domain
 		}
 	}
 	return result, err
+}
+
+// Route evidence must never serialize SSH credentials or URI query options.
+func workspaceRouteAddress(raw string) string {
+	address, err := url.Parse(raw)
+	if err != nil {
+		return ""
+	}
+	address.User = nil
+	address.RawQuery = ""
+	address.Fragment = ""
+	return address.String()
 }

@@ -78,6 +78,9 @@ func TestMixedWorkspaceRoutesConflictAndRecovery(t *testing.T) {
 	if runs[0].NetworkBytes != 0 || !strings.Contains(runs[0].Route.Reason, "verified shared") || runs[1].NetworkBytes <= 0 {
 		t.Fatalf("mixed routes: %+v", runs)
 	}
+	if runs[0].Route.SharedFilesystem != "lustre" || runs[0].Route.SharedFilesystemID == "" || runs[1].Route.SharedFilesystem != "" || runs[0].Route.FilesTransferred != runs[0].FilesTransferred {
+		t.Fatalf("missing or incorrect route evidence: %+v", runs)
+	}
 	for _, name := range []string{"hpc.fits", "fog.fits"} {
 		if _, err := os.Stat(filepath.Join(target, name)); err != nil {
 			t.Fatal(err)
@@ -109,5 +112,12 @@ func TestMixedWorkspaceRoutesConflictAndRecovery(t *testing.T) {
 	}
 	if _, err := os.Stat(filepath.Join(target, "not-published")); !os.IsNotExist(err) {
 		t.Fatal("published before aggregate validation")
+	}
+}
+
+func TestWorkspaceRouteAddressRedactsCredentials(t *testing.T) {
+	got := workspaceRouteAddress("ssh://user:secret@hpc.test/workspace?identityFile=/secret/key#secret")
+	if got != "ssh://hpc.test/workspace" {
+		t.Fatalf("unsafe route address: %q", got)
 	}
 }

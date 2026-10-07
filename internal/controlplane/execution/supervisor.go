@@ -50,6 +50,7 @@ type Supervisor struct {
 	activities ActivityController
 	simulation ports.PlanExecutor
 	config     Config
+	activeRuns sync.Map
 }
 
 type startResult struct {
@@ -82,6 +83,10 @@ func New(executions ports.ExecutionStore, activities ActivityController, simulat
 }
 
 func (s *Supervisor) Execute(ctx context.Context, request ports.ExecutionRequest) (trace domain.ExecutionTrace, err error) {
+	if _, active := s.activeRuns.LoadOrStore(request.Run.ID, struct{}{}); active {
+		return domain.ExecutionTrace{}, fmt.Errorf("execution run %q already has an active supervisor; duplicate command rejected", request.Run.ID)
+	}
+	defer s.activeRuns.Delete(request.Run.ID)
 	if request.RuntimeAllocations == nil {
 		request.RuntimeAllocations = make(map[string]domain.RuntimeAllocation)
 	}

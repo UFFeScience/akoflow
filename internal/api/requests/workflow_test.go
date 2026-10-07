@@ -111,3 +111,22 @@ func TestSimulationWorkflowPreservesDurationsAndDataDependencies(t *testing.T) {
 	exported := FromDomain(definition)
 	require.Equal(t, int64(10_000_000_000), exported.Spec.DataDependencies[0].SizeBytes)
 }
+
+func TestWorkflowWithExecutableAndSimulationSupportsRealAndSimulatedRuns(t *testing.T) {
+	definition, err := (Workflow{Name: "calibrated-real-flow", Spec: WorkflowSpec{
+		Namespace: "science", Image: "docker.io/library/busybox:1.36",
+		Activities: []WorkflowActivity{{
+			Name: "compute", Run: "echo ready",
+			Simulation: &domain.ActivitySimulation{Model: "deterministic", DurationSeconds: 12},
+		}},
+	}}).Domain()
+	require.NoError(t, err)
+	activity := definition.Version.Activities[0]
+	require.Equal(t, []domain.ActivityCapability{
+		domain.ActivityCapabilityReal,
+		domain.ActivityCapabilitySimulation,
+	}, activity.Capabilities)
+	require.NotNil(t, activity.Command.Executable)
+	require.Equal(t, "docker.io/library/busybox:1.36", activity.Command.Executable.Source.Reference)
+	require.Equal(t, 12.0, activity.Simulation.DurationSeconds)
+}

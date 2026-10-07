@@ -190,7 +190,7 @@ func activityDomain(value WorkflowActivity, activityID, defaultImage, versionID,
 		command.Arguments = []string{"-c", value.Run}
 	}
 	simulationActivity := value.Simulation != nil
-	if command.Executable == nil && !simulationActivity {
+	if command.Executable == nil {
 		image := value.Image
 		if image == "" {
 			image = defaultImage
@@ -210,9 +210,12 @@ func activityDomain(value WorkflowActivity, activityID, defaultImage, versionID,
 			return domain.Activity{}, fmt.Errorf("activity %q: %w", value.Name, err)
 		}
 	}
-	capabilities := []domain.ActivityCapability{domain.ActivityCapabilityReal}
+	capabilities := make([]domain.ActivityCapability, 0, 2)
+	if command.Entrypoint != "" && command.Executable != nil {
+		capabilities = append(capabilities, domain.ActivityCapabilityReal)
+	}
 	if simulationActivity {
-		capabilities = []domain.ActivityCapability{domain.ActivityCapabilitySimulation}
+		capabilities = append(capabilities, domain.ActivityCapabilitySimulation)
 	}
 	return domain.Activity{
 		ID: activityID, WorkflowVersionID: versionID, ActivityTypeID: typeID,

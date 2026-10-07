@@ -2,6 +2,7 @@ package eventloop
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"sync"
 	"time"
@@ -130,12 +131,15 @@ func splitCategories(configured []string) ([]string, []string) {
 }
 
 func (l *Loop) handle(ctx context.Context, job domainqueue.Job) {
-	jobCtx, cancel := context.WithCancel(ctx)
-	defer cancel()
+	jobCtx, cancel := context.WithCancelCause(ctx)
+	defer cancel(nil)
 	leaseDone := make(chan struct{})
 	go l.keepLeaseAlive(jobCtx, job, cancel, leaseDone)
 	err := l.dispatcher.Dispatch(jobCtx, job)
-	cancel()
+	if errors.Is(err, context.Canceled) && context.Cause(jobCtx) != nil {
+		err = fmt.Errorf("queue handler cancelled: %w", context.Cause(jobCtx))
+	}
+	cancel(nil)
 	<-leaseDone
 	now := time.Now().UTC()
 	if err == nil {
@@ -146,7 +150,7 @@ func (l *Loop) handle(ctx context.Context, job domainqueue.Job) {
 	_ = l.queue.Retry(ctx, job.ID, l.config.Owner, err, now.Add(backoff))
 }
 
-func (l *Loop) keepLeaseAlive(ctx context.Context, job domainqueue.Job, cancel context.CancelFunc, done chan<- struct{}) {
+func (l *Loop) keepLeaseAlive(ctx context.Context, job domainqueue.Job, cancel context.CancelCauseFunc, done chan<- struct{}) {
 	defer close(done)
 	interval := l.config.LeaseDuration / 3
 	if interval < 10*time.Millisecond {
@@ -160,7 +164,7 @@ func (l *Loop) keepLeaseAlive(ctx context.Context, job domainqueue.Job, cancel c
 			return
 		case now := <-ticker.C:
 			if err := l.queue.RenewLease(ctx, job.ID, l.config.Owner, now.UTC().Add(l.config.LeaseDuration)); err != nil {
-				cancel()
+				cancel(fmt.Errorf("renew lease for queue job %q: %w", job.ID, err))
 				return
 			}
 		}

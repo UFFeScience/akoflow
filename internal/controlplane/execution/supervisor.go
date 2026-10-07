@@ -3,6 +3,7 @@ package execution
 import (
 	"context"
 	"crypto/sha256"
+	"errors"
 	"fmt"
 	"net/url"
 	"os"
@@ -99,6 +100,11 @@ func (s *Supervisor) Execute(ctx context.Context, request ports.ExecutionRequest
 		return domain.ExecutionTrace{}, fmt.Errorf("create execution run: %w", err)
 	}
 	defer func() {
+		if errors.Is(err, context.Canceled) {
+			if cause := context.Cause(ctx); cause != nil && !errors.Is(cause, context.Canceled) {
+				err = fmt.Errorf("%w; cancellation cause: %v", err, cause)
+			}
+		}
 		if request.Run.Mode != domain.ExecutionModeSimulation && request.Run.Mode != domain.ExecutionModeInteractive {
 			// Lifecycle cleanup belongs to the infrastructure result, not the
 			// scientific result. Release records its own failed instance status;

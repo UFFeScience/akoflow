@@ -42,7 +42,7 @@ func TestMixedWorkspaceRoutesConflictAndRecovery(t *testing.T) {
 	}
 	bin := t.TempDir()
 	ssh := "#!/bin/sh\nwhile [ \"$#\" -gt 1 ]; do shift; done\ncase \"$1\" in *'stat -f'*) printf 'lustre fixture\\nlustre fixture\\n'; exit 0;; esac\nexec sh -c \"$1\"\n"
-	rsync := fmt.Sprintf("#!/bin/bash\nargs=(); skip=0\nfor arg in \"$@\"; do if ((skip)); then skip=0; continue; fi; case \"$arg\" in -e) skip=1;; --secluded-args) ;; hpc.test:*) args+=(\"${arg#hpc.test:}\");; *) args+=(\"$arg\");; esac; done\nexec %s \"${args[@]}\"\n", shell(realRsync))
+	rsync := fmt.Sprintf("#!/bin/bash\nif [[ -n ${AKOFLOW_TEST_FAIL_ONCE:-} && ! -e $AKOFLOW_TEST_FAIL_ONCE ]]; then touch \"$AKOFLOW_TEST_FAIL_ONCE\"; echo 'injected network interruption' >&2; exit 12; fi\nargs=(); skip=0\nfor arg in \"$@\"; do if ((skip)); then skip=0; continue; fi; case \"$arg\" in -e) skip=1;; --secluded-args) ;; hpc.test:*) args+=(\"${arg#hpc.test:}\");; *) args+=(\"$arg\");; esac; done\nexec %s \"${args[@]}\"\n", shell(realRsync))
 	for name, body := range map[string]string{"ssh": ssh, "rsync": rsync} {
 		if err := os.WriteFile(filepath.Join(bin, name), []byte(body), 0700); err != nil {
 			t.Fatal(err)
@@ -102,6 +102,24 @@ func TestMixedWorkspaceRoutesConflictAndRecovery(t *testing.T) {
 	}
 	if runs[0].FilesTransferred != 0 || runs[1].FilesTransferred != 0 {
 		t.Fatalf("valid destination recopied: %+v", runs)
+	}
+	// An interrupted network route must not release the merge barrier. A retry
+	// preserves producer data and reuses files already validated at destination.
+	write(filepath.Join(fog, "after-interruption"), "new")
+	t.Setenv("AKOFLOW_TEST_FAIL_ONCE", filepath.Join(root, "failure-injected"))
+	failed, err := syncer.Sync(context.Background(), plans)
+	if err == nil || failed[1].Status != domain.TransferFailed || failed[1].Error == "" {
+		t.Fatalf("interruption not recorded: runs=%+v err=%v", failed, err)
+	}
+	if _, err := os.Stat(filepath.Join(target, "after-interruption")); !os.IsNotExist(err) {
+		t.Fatal("published after failed network preparation")
+	}
+	runs, err = syncer.Sync(context.Background(), plans)
+	if err != nil || runs[0].FilesTransferred != 0 || runs[1].FilesTransferred != 1 {
+		t.Fatalf("recovery did not reuse valid publication: runs=%+v err=%v", runs, err)
+	}
+	if content, err := os.ReadFile(filepath.Join(fog, "after-interruption")); err != nil || string(content) != "new" {
+		t.Fatal("producer data lost during recovery")
 	}
 	// A conflict between mixed producers blocks publication of a new file.
 	write(filepath.Join(hpc, "collision"), "one")

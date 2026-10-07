@@ -83,9 +83,10 @@ func (a *Adapter) Start(ctx context.Context, execution domain.ActivityExecutionC
 		activity.Command.WorkingDirectory = slurmArtifactRoot(execution.Run.ID, activity.ID)
 	}
 	plannedNode := node
+	fallbackFeatures := ""
 	if a.eligibleNodeFallback && node != "" {
 		var err error
-		node, err = a.eligibleNodes(ctx, partition, node, execution.Resource)
+		node, fallbackFeatures, err = a.eligibleNodes(ctx, partition, node, execution.Resource)
 		if err != nil {
 			return domain.ActivityHandle{}, err
 		}
@@ -95,6 +96,10 @@ func (a *Adapter) Start(ctx context.Context, execution domain.ActivityExecutionC
 		return domain.ActivityHandle{}, err
 	}
 	if a.eligibleNodeFallback && plannedNode != "" {
+		// Slurm's nodelist requests every listed node; it is not an alternatives
+		// list. Use feature constraints and exactly one node, then validate the
+		// allocated node against the verified eligible inventory before execution.
+		script = strings.Replace(script, "#SBATCH --nodelist="+node+"\n", "#SBATCH --nodes=1\n#SBATCH --constraint="+strings.ReplaceAll(fallbackFeatures, ",", "&")+"\n", 1)
 		// Fail closed on the allocated node before creating a missing workspace
 		// or invoking the activity. The marker proves shared filesystem access.
 		marker := filepath.Join(activity.Command.WorkingDirectory, ".akoflow-placement-"+shellToken(execution.HandleID()))
@@ -103,7 +108,7 @@ func (a *Adapter) Start(ctx context.Context, execution domain.ActivityExecutionC
 		if _, err := a.executor.Run(ctx, "sh", []string{"-s"}, []byte(check)); err != nil {
 			return domain.ActivityHandle{}, fmt.Errorf("prepare fallback workspace proof: %w", err)
 		}
-		guard := "set -eu\n[ \"$(cat " + shellQuote(marker) + ")\" = " + shellQuote(proof) + " ] || { echo '[AKOFLOW ERROR] fallback workspace is not accessible'; exit 70; }\n"
+		guard := "set -eu\ncase \"$(hostname -s)\" in " + strings.ReplaceAll(node, ",", "|") + ") ;; *) echo '[AKOFLOW ERROR] allocated fallback node is not eligible'; exit 70 ;; esac\n[ \"$(cat " + shellQuote(marker) + ")\" = " + shellQuote(proof) + " ] || { echo '[AKOFLOW ERROR] fallback workspace is not accessible'; exit 70; }\n"
 		image, _ := slurmExecutable(activity.Command)
 		if image != "" {
 			guard += "test -r " + shellQuote(image) + "\ncommand -v apptainer >/dev/null || command -v singularity >/dev/null\n"

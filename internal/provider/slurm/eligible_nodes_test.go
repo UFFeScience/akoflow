@@ -39,10 +39,13 @@ func TestFallbackSubmissionKeepsRequestsAndGuardsBeforeCommand(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	for _, expected := range []string{"#SBATCH --partition=routage", "#SBATCH --nodelist=bora003,bora006", "#SBATCH --cpus-per-task=1", "#SBATCH --mem=256M", "fallback workspace is not accessible", "Eligible-node fallback"} {
+	for _, expected := range []string{"#SBATCH --partition=routage", "#SBATCH --nodes=1", "#SBATCH --constraint=bora&intel&cascadelake&omnipath", "#SBATCH --cpus-per-task=1", "#SBATCH --mem=256M", "fallback workspace is not accessible", "Eligible-node fallback"} {
 		if !strings.Contains(executor.script, expected) {
 			t.Fatalf("missing %q", expected)
 		}
+	}
+	if strings.Contains(executor.script, "#SBATCH --nodelist=") {
+		t.Fatal("fallback must not request all eligible nodes")
 	}
 	if !executor.proof || handle.Metadata["plannedNode"] != "bora001" || handle.Metadata["eligibleNodes"] != "bora003,bora006" {
 		t.Fatalf("missing proof or provenance: %+v", handle)

@@ -17,13 +17,14 @@ import (
 )
 
 type Adapter struct {
-	executor        runtimecommon.CommandExecutor
-	partition       string
-	scriptDirectory string
-	submitFromStdin bool
-	directMu        sync.RWMutex
-	directResults   map[string]directResult
-	directCancels   map[string]context.CancelFunc
+	executor             runtimecommon.CommandExecutor
+	partition            string
+	scriptDirectory      string
+	submitFromStdin      bool
+	eligibleNodeFallback bool
+	directMu             sync.RWMutex
+	directResults        map[string]directResult
+	directCancels        map[string]context.CancelFunc
 }
 
 type directResult struct {
@@ -39,6 +40,8 @@ type Config struct {
 	// the script stays with the engine while sbatch receives its contents on the
 	// remote login node's stdin.
 	SubmitFromStdin bool
+	// EligibleNodeFallback is opt-in and keeps the original node's feature set.
+	EligibleNodeFallback bool
 }
 
 func New(executor runtimecommon.CommandExecutor, partition string) *Adapter {
@@ -47,7 +50,7 @@ func New(executor runtimecommon.CommandExecutor, partition string) *Adapter {
 
 func NewWithConfig(executor runtimecommon.CommandExecutor, config Config) *Adapter {
 	return &Adapter{executor: executor, partition: config.Partition,
-		scriptDirectory: config.ScriptDirectory, submitFromStdin: config.SubmitFromStdin,
+		scriptDirectory: config.ScriptDirectory, submitFromStdin: config.SubmitFromStdin, eligibleNodeFallback: config.EligibleNodeFallback,
 		directResults: make(map[string]directResult), directCancels: make(map[string]context.CancelFunc)}
 }
 
@@ -79,9 +82,35 @@ func (a *Adapter) Start(ctx context.Context, execution domain.ActivityExecutionC
 	if activity.Command.WorkingDirectory == "" {
 		activity.Command.WorkingDirectory = slurmArtifactRoot(execution.Run.ID, activity.ID)
 	}
+	plannedNode := node
+	if a.eligibleNodeFallback && node != "" {
+		var err error
+		node, err = a.eligibleNodes(ctx, partition, node, execution.Resource)
+		if err != nil {
+			return domain.ActivityHandle{}, err
+		}
+	}
 	script, err := batchScript(execution.Run.ID, activity, partition, node)
 	if err != nil {
 		return domain.ActivityHandle{}, err
+	}
+	if a.eligibleNodeFallback && plannedNode != "" {
+		// Fail closed on the allocated node before creating a missing workspace
+		// or invoking the activity. The marker proves shared filesystem access.
+		marker := filepath.Join(activity.Command.WorkingDirectory, ".akoflow-placement-"+shellToken(execution.HandleID()))
+		proof := runtimecommon.NewID("placement")
+		check := "set -eu\ntest -d " + shellQuote(activity.Command.WorkingDirectory) + "\nprintf '%s' " + shellQuote(proof) + " > " + shellQuote(marker) + "\n"
+		if _, err := a.executor.Run(ctx, "sh", []string{"-s"}, []byte(check)); err != nil {
+			return domain.ActivityHandle{}, fmt.Errorf("prepare fallback workspace proof: %w", err)
+		}
+		guard := "set -eu\n[ \"$(cat " + shellQuote(marker) + ")\" = " + shellQuote(proof) + " ] || { echo '[AKOFLOW ERROR] fallback workspace is not accessible'; exit 70; }\n"
+		image, _ := slurmExecutable(activity.Command)
+		if image != "" {
+			guard += "test -r " + shellQuote(image) + "\ncommand -v apptainer >/dev/null || command -v singularity >/dev/null\n"
+		}
+		guard += "printf '[AKOFLOW INFO] Eligible-node fallback: planned=%s allocated=%s partition=%s workspace verified\\n' " + shellQuote(plannedNode) + " \"$(hostname -s)\" " + shellQuote(partition) + "\n"
+		guard += "rm -f -- " + shellQuote(marker) + "\n"
+		script = strings.Replace(script, "trap finish EXIT\nset -eu\n", "trap finish EXIT\nset -eu\n"+guard, 1)
 	}
 	scriptPath, err := a.saveScript(execution.Run.ID, activity.ID, ".sbatch", script)
 	if err != nil {
@@ -111,6 +140,7 @@ func (a *Adapter) Start(ctx context.Context, execution domain.ActivityExecutionC
 		RuntimeID: execution.RuntimeID, ExternalID: jobID,
 		Status: domain.HandleStarting, StartedAt: submittedAt,
 		Metadata: map[string]any{"executionTarget": string(domain.ExecutionTargetBatch), "scriptPath": scriptPath,
+			"plannedNode": plannedNode, "eligibleNodes": node, "partition": partition, "eligibleNodeFallback": a.eligibleNodeFallback,
 			"logPath":                   slurmLogPath(execution.Run.ID, activity.ID, jobID),
 			"sentinelPath":              slurmSentinelPath(execution.Run.ID, activity.ID, jobID),
 			"metricsPath":               slurmSentinelPath(execution.Run.ID, activity.ID, jobID) + ".metrics.tsv",
@@ -590,7 +620,12 @@ func batchScript(runID string, activity domain.Activity, partition, node string)
 	}
 	if node != "" {
 		script.WriteString("#SBATCH --nodelist=")
-		script.WriteString(shellToken(node))
+		for index, candidate := range strings.Split(node, ",") {
+			if index > 0 {
+				script.WriteByte(',')
+			}
+			script.WriteString(shellToken(candidate))
+		}
 		script.WriteByte('\n')
 	}
 	if activity.Resources.CPU > 0 {

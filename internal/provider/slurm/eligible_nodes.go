@@ -1,0 +1,80 @@
+package slurm
+
+import (
+	"context"
+	"fmt"
+	"sort"
+	"strconv"
+	"strings"
+
+	"github.com/UFFeScience/akoflow/internal/domain"
+)
+
+// Discover within the requested partition, never across heterogeneous families.
+func (a *Adapter) eligibleNodes(ctx context.Context, partition, original string, resource domain.Resource) (string, error) {
+	if partition == "" {
+		return "", fmt.Errorf("eligible-node fallback requires an explicit partition")
+	}
+	originalOutput, err := a.executor.Run(ctx, "scontrol", []string{"show", "node", original, "--oneliner"}, nil)
+	if err != nil {
+		return "", fmt.Errorf("inspect planned node: %w", err)
+	}
+	fields := slurmFields(string(originalOutput))
+	features := fields["AvailableFeatures"]
+	if fields["NodeName"] != original || features == "" || features == "(null)" {
+		return "", fmt.Errorf("planned node %q has no verified feature set", original)
+	}
+	output, err := a.executor.Run(ctx, "sinfo", []string{"--partition", partition, "--Node", "--noheader", "--format=%N|%c|%m|%f|%t"}, nil)
+	if err != nil {
+		return "", fmt.Errorf("discover eligible nodes: %w", err)
+	}
+	return selectEligibleNodes(string(output), features, resource)
+}
+
+func slurmFields(output string) map[string]string {
+	result := map[string]string{}
+	for _, field := range strings.Fields(output) {
+		key, value, ok := strings.Cut(field, "=")
+		if ok {
+			result[key] = value
+		}
+	}
+	return result
+}
+
+func selectEligibleNodes(output, features string, resource domain.Resource) (string, error) {
+	nodes := map[string]bool{}
+	for _, row := range strings.Split(output, "\n") {
+		cells := strings.Split(strings.TrimSpace(row), "|")
+		if len(cells) != 5 {
+			continue
+		}
+		cpus, errCPU := strconv.Atoi(cells[1])
+		memory, errMemory := strconv.ParseInt(cells[2], 10, 64)
+		if errCPU != nil || errMemory != nil || cpus < resource.CPUCores || memory < (resource.MemoryBytes+(1<<20)-1)/(1<<20) {
+			continue
+		}
+		state := strings.TrimRight(cells[4], "~#$@+")
+		if state != "idle" && state != "mix" && state != "alloc" {
+			continue
+		}
+		compatible := true
+		for _, feature := range strings.Split(features, ",") {
+			if !strings.Contains(","+cells[3]+",", ","+feature+",") {
+				compatible = false
+			}
+		}
+		if compatible && shellToken(cells[0]) == cells[0] && cells[0] != "" {
+			nodes[cells[0]] = true
+		}
+	}
+	selected := []string{}
+	for node := range nodes {
+		selected = append(selected, node)
+	}
+	sort.Strings(selected)
+	if len(selected) == 0 {
+		return "", fmt.Errorf("no eligible nodes preserve the planned resource characteristics")
+	}
+	return strings.Join(selected, ","), nil
+}

@@ -339,7 +339,7 @@ func (r *Repository) ListTasks(ctx context.Context, runID string) ([]domain.Task
 		t.metadata
 		FROM task_executions t
 		LEFT JOIN activity_handles h ON h.execution_run_id=t.execution_run_id
-			AND h.activity_id=t.activity_id AND h.status IN ('failed', 'stopped')
+			AND h.activity_id=t.activity_id AND h.id=t.id AND h.status IN ('failed', 'stopped')
 		WHERE t.execution_run_id=? ORDER BY t.started_at, t.activity_id`, runID)
 	if err != nil {
 		return nil, err

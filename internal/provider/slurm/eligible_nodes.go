@@ -24,6 +24,11 @@ func (a *Adapter) eligibleNodes(ctx context.Context, partition, original string,
 	if fields["NodeName"] != original || features == "" || features == "(null)" {
 		return "", "", fmt.Errorf("planned node %q has no verified feature set", original)
 	}
+	for _, feature := range strings.Split(features, ",") {
+		if feature == "" || shellToken(feature) != feature {
+			return "", "", fmt.Errorf("planned node %q has unsupported feature syntax", original)
+		}
+	}
 	output, err := a.executor.Run(ctx, "sinfo", []string{"--partition", partition, "--Node", "--noheader", "--format=%N|%c|%m|%f|%t"}, nil)
 	if err != nil {
 		return "", "", fmt.Errorf("discover eligible nodes: %w", err)

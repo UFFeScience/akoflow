@@ -14,6 +14,32 @@ import (
 	"github.com/UFFeScience/akoflow/internal/domain"
 )
 
+type workspaceEndpointResolverStub struct {
+	location domain.TransferLocation
+}
+
+func (stub *workspaceEndpointResolverStub) ResolveTransferEndpoint(_ context.Context, location domain.TransferLocation) (domain.TransferEndpoint, error) {
+	stub.location = location
+	return domain.TransferEndpoint{URI: "ssh://worker/" + strings.TrimPrefix(location.URI, "file://")}, nil
+}
+
+func TestWorkspaceEndpointCarriesPersistedCloudInstanceAllocation(t *testing.T) {
+	resolver := &workspaceEndpointResolverStub{}
+	manager := ActivityWorkspaceManager{Resolver: resolver}
+	workspace := domain.ActivityWorkspace{
+		ID: "workspace-run-1-activity-1", RunID: "run-1", ActivityID: "activity-1",
+		ResourceID: "capacity-1", RuntimeID: "cloud-runtime", ConnectionID: "cloud-connection",
+		URI:           "ssh://cloud-connection/akoflow/workspace/runs/run-1/activity-1?cloudInstanceId=instance-1",
+		ExecutionPath: "/akoflow/workspace/runs/run-1/activity-1",
+	}
+	if _, _, err := manager.endpoint(context.Background(), workspace); err != nil {
+		t.Fatal(err)
+	}
+	if resolver.location.CloudInstanceID != "instance-1" {
+		t.Fatalf("cloud instance allocation was lost: %+v", resolver.location)
+	}
+}
+
 func TestLocalWorkspaceLifecycleRequiresOwnershipMarker(t *testing.T) {
 	root := t.TempDir()
 	path := filepath.Join(root, "run-1", "activity-1")

@@ -798,7 +798,7 @@ func (s *Supervisor) startReadyActivity(
 		result.err = fmt.Errorf("activity %q has an executable reference but no preparation requirement", activityID)
 		return result
 	}
-	if err := s.activateWorkspace(ctx, request.Run.ID, activityID); err != nil {
+	if err := s.activateWorkspace(ctx, request.Run.ID, activityID, allocation); err != nil {
 		result.err = fmt.Errorf("activate workspace for activity %q: %w", activityID, err)
 		return result
 	}

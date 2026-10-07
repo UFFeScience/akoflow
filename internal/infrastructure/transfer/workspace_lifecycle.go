@@ -217,8 +217,13 @@ func (m ActivityWorkspaceManager) endpoint(ctx context.Context, workspace domain
 		return domain.TransferEndpoint{}, "", err
 	}
 	u := &url.URL{Scheme: "file", Path: workspace.ExecutionPath}
-	if parsed, parseErr := url.Parse(workspace.URI); parseErr == nil && parsed.Scheme == "kubernetes" {
-		u = parsed
+	parsedWorkspaceURI, parseErr := url.Parse(workspace.URI)
+	if parseErr == nil && parsedWorkspaceURI.Scheme == "kubernetes" {
+		u = parsedWorkspaceURI
+	}
+	cloudInstanceID := ""
+	if parseErr == nil {
+		cloudInstanceID = parsedWorkspaceURI.Query().Get("cloudInstanceId")
 	}
 	if workspace.ConnectionID != "" {
 		query := u.Query()
@@ -228,6 +233,7 @@ func (m ActivityWorkspaceManager) endpoint(ctx context.Context, workspace domain
 	location := domain.TransferLocation{
 		URI: u.String(), ResourceID: workspace.ResourceID, EnvironmentID: workspace.EnvironmentID,
 		RuntimeID: workspace.RuntimeID, ConnectionID: workspace.ConnectionID,
+		CloudInstanceID: cloudInstanceID,
 	}
 	if workspace.ConnectionID == "" {
 		return domain.TransferEndpoint{URI: location.URI}, workspace.ExecutionPath, nil

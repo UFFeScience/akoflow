@@ -105,8 +105,14 @@ func (a QueuedCloudAllocator) wait(ctx context.Context, operation domain.CloudOp
 		return domain.CloudProvisionedInstance{}, err
 	}
 	instance, err := a.Cloud.FindProvisionedInstance(ctx, stored.InstanceID)
-	if err != nil || instance == nil || instance.Status != "ready" {
-		return domain.CloudProvisionedInstance{}, fmt.Errorf("cloud allocation %q completed without a ready instance: %w", stored.ID, err)
+	if err != nil {
+		return domain.CloudProvisionedInstance{}, fmt.Errorf("inspect cloud allocation %q: %w", stored.ID, err)
+	}
+	if instance == nil {
+		return domain.CloudProvisionedInstance{}, fmt.Errorf("cloud allocation %q completed but instance %q is missing", stored.ID, stored.InstanceID)
+	}
+	if instance.Status != "ready" {
+		return domain.CloudProvisionedInstance{}, fmt.Errorf("cloud allocation %q completed but instance %q has status %q", stored.ID, instance.ID, instance.Status)
 	}
 	return *instance, nil
 }
@@ -149,6 +155,17 @@ func (a QueuedCloudAllocator) findOrCreate(ctx context.Context, executionRunID, 
 	// infrastructure operation so each activity does not request another VM.
 	for _, operation := range operations {
 		if operation.Kind == kind && operation.ExecutionRunID == executionRunID && operation.CapacityTargetID == target.ID && (instanceID == "" || operation.InstanceID == instanceID) {
+			if kind == "provision" && operation.Status == "completed" {
+				instance, inspectErr := a.Cloud.FindProvisionedInstance(ctx, operation.InstanceID)
+				if inspectErr != nil {
+					return domain.CloudOperationRun{}, inspectErr
+				}
+				// An old provision command is not capacity after its VM has
+				// been destroyed. Preserve history and create a new generation.
+				if instance == nil || instance.Status == "destroyed" {
+					continue
+				}
+			}
 			return operation, nil
 		}
 	}

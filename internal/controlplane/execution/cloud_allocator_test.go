@@ -90,6 +90,9 @@ func (q *allocatorQueue) Publish(_ context.Context, job domainqueue.Job) (domain
 		q.store.mu.Lock()
 		defer q.store.mu.Unlock()
 		for id, operation := range q.store.operations {
+			if operation.Status != "queued" {
+				continue
+			}
 			operation.Status, operation.InstanceID = "completed", operation.Request.InstanceID
 			q.store.operations[id] = operation
 			status := "ready"
@@ -102,6 +105,27 @@ func (q *allocatorQueue) Publish(_ context.Context, job domainqueue.Job) (domain
 		}
 	}()
 	return job, nil
+}
+
+func TestQueuedCloudAllocatorReplacesDestroyedProvisionGeneration(t *testing.T) {
+	store := &allocatorStore{
+		operations: map[string]domain.CloudOperationRun{"old-operation": {ID: "old-operation", Kind: "provision", Status: "completed", ExecutionRunID: "run", CapacityTargetID: "target", InstanceID: "old-vm"}},
+		instances:  map[string]domain.CloudProvisionedInstance{"old-vm": {ID: "old-vm", CapacityTargetID: "target", EnvironmentID: "environment", Status: "destroyed"}},
+	}
+	queue := &allocatorQueue{store: store}
+	allocator := QueuedCloudAllocator{Cloud: store, Operations: store, Queue: queue, PollInterval: time.Millisecond}
+	target := domain.CloudCapacityTarget{ID: "target", EnvironmentID: "environment"}
+	if err := allocator.Prewarm(context.Background(), "run", "activity", target); err != nil {
+		t.Fatal(err)
+	}
+	instance, err := allocator.Allocate(context.Background(), "run", "activity", target)
+	if err != nil || instance.ID == "old-vm" || instance.Status != "ready" || len(queue.jobs) != 1 {
+		t.Fatalf("obsolete allocation reused or duplicated: instance=%+v err=%v jobs=%d", instance, err, len(queue.jobs))
+	}
+	old, _ := store.FindProvisionedInstance(context.Background(), "old-vm")
+	if old.Status != "destroyed" {
+		t.Fatal("old instance history mutated")
+	}
 }
 
 func TestQueuedCloudAllocatorAssociatesDurableOperationWithActivity(t *testing.T) {

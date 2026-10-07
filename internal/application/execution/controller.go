@@ -99,7 +99,11 @@ func (s *Controller) Start(ctx context.Context, execution domain.ActivityExecuti
 		}
 	}
 	if err := s.handles.Save(ctx, handle); err != nil {
-		_ = runtime.Stop(ctx, handle)
+		cleanupCtx, cancel := context.WithTimeout(context.WithoutCancel(ctx), 30*time.Second)
+		defer cancel()
+		if stopErr := runtime.Stop(cleanupCtx, handle); stopErr != nil {
+			return domain.ActivityHandle{}, fmt.Errorf("persist activity handle: %w; stop submitted runtime %q: %v", err, handle.ExternalID, stopErr)
+		}
 		return domain.ActivityHandle{}, fmt.Errorf("persist activity handle: %w", err)
 	}
 	return handle, nil

@@ -20,12 +20,13 @@ func (f resolverFake) Resolve(domain.ExecutionMode, string) (ports.RuntimeAdapte
 }
 
 type runtimeFake struct {
-	handle     domain.ActivityHandle
-	stopped    bool
-	starts     int
-	startErr   error
-	inspectErr error
-	stopErr    error
+	handle         domain.ActivityHandle
+	stopped        bool
+	starts         int
+	startErr       error
+	inspectErr     error
+	stopErr        error
+	stopContextErr error
 }
 
 func (f *runtimeFake) Modes() []domain.ExecutionMode {
@@ -42,8 +43,9 @@ func (f *runtimeFake) Inspect(context.Context, domain.ActivityHandle) (domain.Ac
 	f.handle.Status = domain.HandleCompleted
 	return f.handle, nil
 }
-func (f *runtimeFake) Stop(context.Context, domain.ActivityHandle) error {
+func (f *runtimeFake) Stop(ctx context.Context, _ domain.ActivityHandle) error {
 	f.stopped = true
+	f.stopContextErr = ctx.Err()
 	return f.stopErr
 }
 
@@ -127,6 +129,24 @@ func TestStartStopsRuntimeWhenHandleCannotBePersisted(t *testing.T) {
 	_, err := New(resolverFake{adapter: runtime}, &handlesFake{saveErr: errors.New("database")}).Start(context.Background(), executionFixture())
 	if err == nil || !runtime.stopped {
 		t.Fatal("runtime must be stopped after persistence failure")
+	}
+}
+
+func TestStartCleanupSurvivesCancelledPersistenceContext(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	cancel()
+	runtime := &runtimeFake{handle: domain.ActivityHandle{RunID: "run", ActivityID: "activity", ExternalID: "123"}}
+	_, err := New(resolverFake{adapter: runtime}, &handlesFake{saveErr: context.Canceled}).Start(ctx, executionFixture())
+	if err == nil || !runtime.stopped || runtime.stopContextErr != nil {
+		t.Fatalf("cleanup did not detach cancellation: %v %+v", err, runtime)
+	}
+}
+
+func TestStartReportsCleanupFailure(t *testing.T) {
+	runtime := &runtimeFake{handle: domain.ActivityHandle{RunID: "run", ActivityID: "activity", ExternalID: "123"}, stopErr: errors.New("SSH unavailable")}
+	_, err := New(resolverFake{adapter: runtime}, &handlesFake{saveErr: context.Canceled}).Start(context.Background(), executionFixture())
+	if err == nil || !strings.Contains(err.Error(), "SSH unavailable") || !strings.Contains(err.Error(), "123") {
+		t.Fatal(err)
 	}
 }
 

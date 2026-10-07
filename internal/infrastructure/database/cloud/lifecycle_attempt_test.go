@@ -17,7 +17,7 @@ func TestLifecycleSupersededAttemptStillProtectsLiveWork(t *testing.T) {
 	defer db.Close()
 	_, err = db.Exec(`
 	CREATE TABLE task_executions(execution_run_id TEXT, activity_id TEXT, attempt INTEGER, status TEXT, metadata TEXT);
-	CREATE TABLE activity_handles(resource_id TEXT, status TEXT);
+	CREATE TABLE activity_handles(resource_id TEXT, status TEXT, metadata TEXT);
 	CREATE TABLE cloud_provisioned_instances(id TEXT, capacity_target_id TEXT);
 	CREATE TABLE transfer_runs(status TEXT, route TEXT);
 	CREATE TABLE artifact_materializations(run_id TEXT, resource_id TEXT, status TEXT);
@@ -39,7 +39,13 @@ func TestLifecycleSupersededAttemptStillProtectsLiveWork(t *testing.T) {
 	if err := r.CheckCloudLifecycle(ctx, "vm", "destroy"); err != nil {
 		t.Fatalf("completed replacement: %v", err)
 	}
-	if _, err := db.Exec(`INSERT INTO activity_handles VALUES('target','running')`); err != nil {
+	if _, err := db.Exec(`INSERT INTO activity_handles VALUES('target','running','{"cloudInstanceId":"old-vm"}')`); err != nil {
+		t.Fatal(err)
+	}
+	if err := r.CheckCloudLifecycle(ctx, "vm", "destroy"); err != nil {
+		t.Fatalf("another instance's handle must not block cleanup: %v", err)
+	}
+	if _, err := db.Exec(`INSERT INTO activity_handles VALUES('target','running','{"cloudInstanceId":"vm"}')`); err != nil {
 		t.Fatal(err)
 	}
 	if err := r.CheckCloudLifecycle(ctx, "vm", "destroy"); err == nil {

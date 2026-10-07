@@ -682,6 +682,14 @@ func (r *Repository) CheckCloudLifecycle(ctx context.Context, instanceID, exclud
 			message: "workflow activities are still active", args: []any{instanceID},
 		},
 		{
+			query: `SELECT COUNT(*) FROM activity_handles h
+				JOIN cloud_provisioned_instances i ON i.capacity_target_id=h.resource_id
+				WHERE i.id=? AND h.status IN ('starting','running')
+				AND (json_extract(h.metadata,'$.cloudInstanceId')=i.id
+					OR COALESCE(json_extract(h.metadata,'$.cloudInstanceId'),'')='')`,
+			message: "workflow execution handles are still active", args: []any{instanceID},
+		},
+		{
 			query:   `SELECT COUNT(*) FROM transfer_runs WHERE status IN ('planned','running') AND (json_extract(route,'$.sourceCloudInstanceId')=? OR json_extract(route,'$.targetCloudInstanceId')=?)`,
 			message: "data transfers are still active", args: []any{instanceID, instanceID},
 		},
@@ -702,12 +710,6 @@ func (r *Repository) CheckCloudLifecycle(ctx context.Context, instanceID, exclud
 		var count int
 		err := r.db.QueryRowContext(ctx, check.query, check.args...).Scan(&count)
 		if err != nil {
-		{
-			query: `SELECT COUNT(*) FROM activity_handles h
-				JOIN cloud_provisioned_instances i ON i.capacity_target_id=h.resource_id
-				WHERE i.id=? AND h.status IN ('starting','running')`,
-			message: "workflow execution handles are still active", args: []any{instanceID},
-		},
 			return fmt.Errorf("inspect cloud lifecycle safety: %w", err)
 		}
 		if count > 0 {

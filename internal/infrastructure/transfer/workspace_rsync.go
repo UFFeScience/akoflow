@@ -62,7 +62,11 @@ func (s WorkspaceRsync) Sync(ctx context.Context, plans []domain.DataTransferPla
 		return fail(err)
 	}
 	if direct {
-		return syncRemoteWorkspaceDirect(ctx, plans, sources, destination, runs)
+		result, syncErr := s.syncDependencyRoutes(ctx, plans, sources, destination, runs)
+		if syncErr != nil {
+			return fail(syncErr)
+		}
+		return result, nil
 	}
 	root, err := os.MkdirTemp("", "akoflow-workspace-sync-")
 	if err != nil {
@@ -100,10 +104,9 @@ func (s WorkspaceRsync) directRemoteEndpoints(ctx context.Context, plans []domai
 			return nil, destination, false, fmt.Errorf("resolve producer %q: %w", plan.ProducerActivityID, resolveErr)
 		}
 		sources[index] = source
-		if !sameSSHWorkspaceEndpoint(source, destination) {
-			return sources, destination, false, nil
-		}
 	}
+	// Remote merge can combine independently prepared network snapshots with
+	// proven shared-filesystem sources; a mixed origin never downgrades all routes.
 	return sources, destination, true, nil
 }
 
@@ -185,6 +188,9 @@ func remoteWorkspaceScript(sources []string, destination string) string {
 		script.WriteString(fmt.Sprintf("echo __AKOFLOW_WORKSPACE_BEGIN_%d__\n", index))
 		script.WriteString("rsync --ignore-existing -r --checksum --stats --out-format='%i %n' --no-perms --no-owner --no-group --no-times -- " + shell(filepath.Clean(source)+"/") + " " + shell(filepath.Clean(destination)+"/") + "\n")
 		script.WriteString(fmt.Sprintf("echo __AKOFLOW_WORKSPACE_END_%d__\n", index))
+	}
+	for _, source := range sources {
+		script.WriteString("while IFS= read -r -d '' file; do rel=${file#" + shell(filepath.Clean(source)+"/") + "}; cmp -s -- \"$file\" \"$destination/$rel\" || { echo \"workspace verification failed at $rel\" >&2; exit 45; }; done < <(find " + shell(source) + " -type f -print0)\n")
 	}
 	return script.String()
 }

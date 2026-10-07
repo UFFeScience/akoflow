@@ -14,7 +14,8 @@ import (
 )
 
 // sharedWorkspaceProof verifies access and filesystem identity at execution
-// time. A matching SSH connection alone is not evidence of shared Lustre.
+// time. A matching SSH connection or a zero filesystem ID alone is not proof
+// of shared storage: the mounted source and mount path must also match.
 func sharedWorkspaceProof(ctx context.Context, source, destination domain.TransferEndpoint) (string, bool) {
 	if !sameSSHWorkspaceEndpoint(source, destination) {
 		return "", false
@@ -27,13 +28,20 @@ func sharedWorkspaceProof(ctx context.Context, source, destination domain.Transf
 	if err != nil {
 		return "", false
 	}
-	command := "test -d " + shell(origin) + " && test -r " + shell(origin) +
-		" && stat -f -c '%T %i' -- " + shell(origin) + " " + shell(target)
+	command := sharedWorkspaceProofCommand(origin, target)
 	output, err := runSSHCombinedOutput(ctx, destination, append(sshArgs(destination), host, command), nil)
 	if err != nil {
 		return "", false
 	}
 	return parseSharedWorkspaceProof(string(output))
+}
+
+func sharedWorkspaceProofCommand(origin, target string) string {
+	return "set -eu; test -d " + shell(origin) + "; test -r " + shell(origin) +
+		"; test -x " + shell(origin) + "; test -d " + shell(target) + "; test -w " + shell(target) +
+		"; for workspace in " + shell(origin) + " " + shell(target) + "; do " +
+		"stat -f -c '%T %i' -- \"$workspace\" | tr '\\n' ' '; " +
+		"findmnt -rn -T \"$workspace\" -o FSTYPE,SOURCE,TARGET; done"
 }
 
 func parseSharedWorkspaceProof(output string) (string, bool) {
@@ -42,10 +50,22 @@ func parseSharedWorkspaceProof(output string) (string, bool) {
 		return "", false
 	}
 	fields := strings.Fields(lines[0])
-	if len(fields) != 2 || fields[0] != "lustre" || fields[1] == "" {
+	if len(fields) != 5 || fields[1] == "" || fields[3] == "" || !strings.HasPrefix(fields[4], "/") {
 		return "", false
 	}
-	return lines[0], true
+	compatible := false
+	switch fields[0] {
+	case "lustre":
+		compatible = fields[2] == "lustre"
+	case "nfs", "nfs4":
+		compatible = fields[2] == "nfs" || fields[2] == "nfs4"
+	case "beegfs", "fhgfs":
+		compatible = fields[2] == "beegfs" || fields[2] == "fhgfs"
+	}
+	if !compatible {
+		return "", false
+	}
+	return fields[0] + " " + strings.Join(fields[1:], "|"), true
 }
 
 func (s WorkspaceRsync) syncDependencyRoutes(ctx context.Context, plans []domain.DataTransferPlan, sources []domain.TransferEndpoint, destination domain.TransferEndpoint, runs []domain.DataTransferRun) ([]domain.DataTransferRun, error) {

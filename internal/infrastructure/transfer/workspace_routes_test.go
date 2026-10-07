@@ -13,13 +13,19 @@ import (
 	"github.com/UFFeScience/akoflow/internal/domain"
 )
 
-func TestSharedWorkspaceProofRequiresMatchingLustreIdentity(t *testing.T) {
+func TestSharedWorkspaceProofRequiresMatchingFilesystemAndMount(t *testing.T) {
 	for _, test := range []struct {
 		name, output string
 		want         bool
 	}{
-		{"shared", "lustre a12\nlustre a12\n", true},
-		{"different mount", "lustre a12\nlustre b34\n", false},
+		{"shared Lustre", "lustre a12 lustre server:/lustre /home\nlustre a12 lustre server:/lustre /home\n", true},
+		{"shared NFS zero ID", "nfs 0 nfs4 server:/home /home\nnfs 0 nfs4 server:/home /home\n", true},
+		{"shared BeeGFS", "fhgfs 0 beegfs beegfs_nodev /beegfs\nfhgfs 0 beegfs beegfs_nodev /beegfs\n", true},
+		{"different mount source", "nfs 0 nfs server:/a /home\nnfs 0 nfs server:/b /home\n", false},
+		{"different mount path", "nfs 0 nfs server:/a /home\nnfs 0 nfs server:/a /scratch\n", false},
+		{"different filesystem identity", "lustre a12 lustre server:/a /home\nlustre b34 lustre server:/a /home\n", false},
+		{"local filesystem", "ext4 a12 ext4 /dev/sda /home\next4 a12 ext4 /dev/sda /home\n", false},
+		{"filesystem type mismatch", "nfs 0 ext4 /dev/sda /home\nnfs 0 ext4 /dev/sda /home\n", false},
 		{"not Lustre", "ext4 a12\next4 a12\n", false},
 		{"missing destination", "lustre a12\n", false},
 		{"missing identity", "lustre\nlustre\n", false},
@@ -41,7 +47,7 @@ func TestMixedWorkspaceRoutesConflictAndRecovery(t *testing.T) {
 		t.Skip("rsync unavailable")
 	}
 	bin := t.TempDir()
-	ssh := "#!/bin/sh\nwhile [ \"$#\" -gt 1 ]; do shift; done\ncase \"$1\" in *'stat -f'*) printf 'lustre fixture\\nlustre fixture\\n'; exit 0;; esac\nexec sh -c \"$1\"\n"
+	ssh := "#!/bin/sh\nwhile [ \"$#\" -gt 1 ]; do shift; done\ncase \"$1\" in *'stat -f'*) printf 'nfs 0 nfs4 server:/fixture /home\\nnfs 0 nfs4 server:/fixture /home\\n'; exit 0;; esac\nexec sh -c \"$1\"\n"
 	rsync := fmt.Sprintf("#!/bin/bash\nif [[ -n ${AKOFLOW_TEST_FAIL_ONCE:-} && ! -e $AKOFLOW_TEST_FAIL_ONCE ]]; then touch \"$AKOFLOW_TEST_FAIL_ONCE\"; echo 'injected network interruption' >&2; exit 12; fi\nargs=(); skip=0\nfor arg in \"$@\"; do if ((skip)); then skip=0; continue; fi; case \"$arg\" in -e) skip=1;; --secluded-args) ;; hpc.test:*) args+=(\"${arg#hpc.test:}\");; *) args+=(\"$arg\");; esac; done\nexec %s \"${args[@]}\"\n", shell(realRsync))
 	for name, body := range map[string]string{"ssh": ssh, "rsync": rsync} {
 		if err := os.WriteFile(filepath.Join(bin, name), []byte(body), 0700); err != nil {
@@ -78,7 +84,7 @@ func TestMixedWorkspaceRoutesConflictAndRecovery(t *testing.T) {
 	if runs[0].NetworkBytes != 0 || !strings.Contains(runs[0].Route.Reason, "verified shared") || runs[1].NetworkBytes <= 0 {
 		t.Fatalf("mixed routes: %+v", runs)
 	}
-	if runs[0].Route.SharedFilesystem != "lustre" || runs[0].Route.SharedFilesystemID == "" || runs[1].Route.SharedFilesystem != "" || runs[0].Route.FilesTransferred != runs[0].FilesTransferred {
+	if runs[0].Route.SharedFilesystem != "nfs" || !strings.Contains(runs[0].Route.SharedFilesystemID, "server:/fixture") || runs[1].Route.SharedFilesystem != "" || runs[0].Route.FilesTransferred != runs[0].FilesTransferred {
 		t.Fatalf("missing or incorrect route evidence: %+v", runs)
 	}
 	for _, name := range []string{"hpc.fits", "fog.fits"} {

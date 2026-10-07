@@ -210,7 +210,7 @@ func TestWorkspaceRsyncCopiesDirectlyInsideSharedHPC(t *testing.T) {
 	}
 	bin := t.TempDir()
 	fakeSSH := filepath.Join(bin, "ssh")
-	if err := os.WriteFile(fakeSSH, []byte("#!/bin/sh\nwhile [ \"$#\" -gt 1 ]; do shift; done\ncase \"$1\" in *'stat -f'*) printf 'lustre test-fsid\\nlustre test-fsid\\n'; exit 0;; esac\nexec sh -c \"$1\"\n"), 0o700); err != nil {
+	if err := os.WriteFile(fakeSSH, []byte("#!/bin/sh\nwhile [ \"$#\" -gt 1 ]; do shift; done\ncase \"$1\" in *'stat -f'*) printf 'lustre test-fsid lustre server:/fixture /home\\nlustre test-fsid lustre server:/fixture /home\\n'; exit 0;; esac\nexec sh -c \"$1\"\n"), 0o700); err != nil {
 		t.Fatal(err)
 	}
 	t.Setenv("PATH", bin+string(os.PathListSeparator)+os.Getenv("PATH"))

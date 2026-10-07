@@ -2718,6 +2718,18 @@ func (h *Handler) executionRecoveryPreview(ctx context.Context, runID string) (e
 		return executionRecoveryPreview{}, err
 	}
 	preview := executionRecoveryPreview{RunID: runID, Recoverable: run.Status == domain.ExecutionRunFailed || run.Status == domain.ExecutionRunCancelled}
+	// A terminal task is not proof that an earlier external job has stopped.
+	// Inspect every handle, including superseded attempts, before recovery.
+	handles, err := h.executions.ListHandles(ctx, runID)
+	if err != nil {
+		return executionRecoveryPreview{}, err
+	}
+	for _, handle := range handles {
+		if handle.Status == domain.HandleStarting || handle.Status == domain.HandleRunning {
+			preview.Recoverable = false
+			preview.CleanupPending = append(preview.CleanupPending, handle.ActivityID)
+		}
+	}
 	latest := latestTaskAttempts(tasks)
 	latestByActivity := make(map[string]domain.TaskExecution, len(latest))
 	reusable := make(map[string]bool, len(latest))

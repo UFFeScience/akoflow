@@ -2180,6 +2180,19 @@ func (h *Handler) enqueueExistingCloudInstanceOperation(w http.ResponseWriter, r
 }
 
 func (h *Handler) enqueueCloudOperation(w http.ResponseWriter, r *http.Request, kind, environmentID, instanceID, targetID string, request domain.CloudProvisionRequest) {
+	if kind == "provision" && strings.TrimSpace(request.InstanceID) != "" {
+		requestedID := strings.TrimSpace(request.InstanceID)
+		if instanceID != "" && instanceID != requestedID {
+			writeError(w, http.StatusUnprocessableEntity, fmt.Errorf("conflicting cloud instance identities"))
+			return
+		}
+		instance, err := h.cloud.FindProvisionedInstance(r.Context(), requestedID)
+		if err != nil || instance == nil || instance.EnvironmentID != environmentID || instance.CapacityTargetID != targetID {
+			writeError(w, http.StatusUnprocessableEntity, fmt.Errorf("requested cloud instance does not belong to target and environment"))
+			return
+		}
+		instanceID = requestedID
+	}
 	operations, err := h.cloudOperations.ListCloudOperations(r.Context())
 	if err != nil {
 		writeError(w, http.StatusInternalServerError, err)
@@ -2202,8 +2215,8 @@ func (h *Handler) enqueueCloudOperation(w http.ResponseWriter, r *http.Request, 
 		writeError(w, http.StatusConflict, fmt.Errorf("cloud resource already has an active %s run", existing.Kind))
 		return
 	}
-	if kind == "provision" && instanceID == "" {
-		instanceID = "cloud-instance-" + uuid.NewString()
+	if kind == "provision" {
+		instanceID = provisionOperationInstanceID(instanceID, request.InstanceID)
 		request.InstanceID = instanceID
 	}
 	operation := domain.CloudOperationRun{ID: "cloud-run-" + uuid.NewString(), Kind: kind,
@@ -2230,6 +2243,16 @@ func (h *Handler) enqueueCloudOperation(w http.ResponseWriter, r *http.Request, 
 		return
 	}
 	writeJSON(w, http.StatusAccepted, operation)
+}
+
+func provisionOperationInstanceID(instanceID, requestedID string) string {
+	if instanceID != "" {
+		return instanceID
+	}
+	if requestedID = strings.TrimSpace(requestedID); requestedID != "" {
+		return requestedID
+	}
+	return "cloud-instance-" + uuid.NewString()
 }
 
 func (h *Handler) ListCloudOperations(w http.ResponseWriter, r *http.Request) {

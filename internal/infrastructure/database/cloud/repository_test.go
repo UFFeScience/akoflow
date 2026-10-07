@@ -58,11 +58,19 @@ func TestRepositoryStoresConfigurationsAndTargets(t *testing.T) {
 		t.Fatalf("removed target remains visible: %#v", targets)
 	}
 	if err := repository.CreateCapacityTarget(ctx, domain.CloudCapacityTarget{
-		ID: "cpu-8-replacement", EnvironmentID: "gcp-env", Name: "CPU 8", Provider: "gcp",
+		ID: "cpu-8", EnvironmentID: "gcp-env", Name: "CPU 8 replacement", Provider: "gcp",
 		ProviderMachineType: "c3-standard-8", Region: "us-central1", ImageReference: "ubuntu-2404",
 		VCPU: 8, MemoryMiB: 32768, Enabled: true,
+		Configuration: map[string]any{"diskType": "hyperdisk-balanced"},
 	}); err != nil {
-		t.Fatalf("reuse removed target name: %v", err)
+		t.Fatalf("restore removed target id: %v", err)
+	}
+	targets, err = repository.ListCapacityTargets(ctx, "gcp-env")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(targets) != 1 || targets[0].ID != "cpu-8" || targets[0].Name != "CPU 8 replacement" || targets[0].Configuration["diskType"] != "hyperdisk-balanced" {
+		t.Fatalf("restored target = %#v", targets)
 	}
 }
 

@@ -337,12 +337,33 @@ func (r *Repository) CreateCapacityTarget(ctx context.Context, value domain.Clou
 		id,environment_id,name,provider,provider_machine_type,region,zone_policy,fixed_zone,
 		image_reference,architecture,vcpu,memory_mib,provisioning_mode,maximum_instances,
 		lifecycle_policy,configuration,enabled,created_at
-	) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`, value.ID, value.EnvironmentID, value.Name,
+	) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+	ON CONFLICT(id) DO UPDATE SET
+		environment_id=excluded.environment_id,
+		name=excluded.name,
+		provider=excluded.provider,
+		provider_machine_type=excluded.provider_machine_type,
+		region=excluded.region,
+		zone_policy=excluded.zone_policy,
+		fixed_zone=excluded.fixed_zone,
+		image_reference=excluded.image_reference,
+		architecture=excluded.architecture,
+		vcpu=excluded.vcpu,
+		memory_mib=excluded.memory_mib,
+		provisioning_mode=excluded.provisioning_mode,
+		maximum_instances=excluded.maximum_instances,
+		lifecycle_policy=excluded.lifecycle_policy,
+		configuration=excluded.configuration,
+		enabled=excluded.enabled`, value.ID, value.EnvironmentID, value.Name,
 		value.Provider, value.ProviderMachineType, value.Region, value.ZonePolicy, value.FixedZone,
 		value.ImageReference, value.Architecture, value.VCPU, value.MemoryMiB,
 		value.ProvisioningMode, value.MaximumInstances, value.LifecyclePolicy, configuration,
 		value.Enabled, value.CreatedAt)
 	if err != nil {
+		return err
+	}
+	if _, err = tx.ExecContext(ctx, `DELETE FROM cloud_capacity_target_configurations
+		WHERE capacity_target_id=?`, value.ID); err != nil {
 		return err
 	}
 	configurations := value.MachineConfigurations

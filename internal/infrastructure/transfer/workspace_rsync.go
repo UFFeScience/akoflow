@@ -225,11 +225,9 @@ func (s WorkspaceRsync) stageProducers(ctx context.Context, plans []domain.DataT
 		}
 		stages[i] = stage
 		stats, err := syncDirectory(ctx, source, domain.TransferEndpoint{URI: (&url.URL{Scheme: "file", Path: stage}).String()}, false)
+		recordWorkspaceRsyncStats(&runs[i], stats, strings.HasPrefix(source.URI, "ssh://"))
 		if err != nil {
 			return nil, nil, fmt.Errorf("stage producer %q: %w", plan.ProducerActivityID, err)
-		}
-		if strings.HasPrefix(source.URI, "ssh://") {
-			runs[i].NetworkBytes += stats.bytes
 		}
 		ingress[i] = stats
 		if err := inspectWorkspace(stage, seen); err != nil {
@@ -246,6 +244,7 @@ func publishWorkspace(ctx context.Context, plans []domain.DataTransferPlan, stag
 			return fmt.Errorf("producer %q: %w", plans[i].ProducerActivityID, err)
 		}
 		stats, copyErr := syncDirectory(ctx, source, destination, true)
+		recordWorkspaceRsyncStats(&runs[i], stats, strings.HasPrefix(destination.URI, "ssh://"))
 		if copyErr != nil {
 			return fmt.Errorf("publish producer %q: %w", plans[i].ProducerActivityID, copyErr)
 		}
@@ -259,9 +258,6 @@ func publishWorkspace(ctx context.Context, plans []domain.DataTransferPlan, stag
 			runs[i].FilesTransferred = ingress[i].files
 		}
 		runs[i].Route.FilesTransferred = runs[i].FilesTransferred
-		if strings.HasPrefix(destination.URI, "ssh://") {
-			runs[i].NetworkBytes += stats.bytes
-		}
 		runs[i].FinishedAt = float64(time.Now().UnixNano()) / 1e9
 		runs[i].DurationSeconds = max(0, runs[i].FinishedAt-runs[i].StartedAt)
 		runs[i].Status = domain.TransferCompleted
@@ -304,7 +300,12 @@ func inspectWorkspace(root string, seen map[string][32]byte) error {
 	})
 }
 
-type rsyncStats struct{ bytes, fileBytes, files int64 }
+type rsyncStats struct {
+	bytes, fileBytes, files int64
+	retries                 int
+	lastRetryError          string
+	networkBytesIncomplete  bool
+}
 
 func syncDirectory(ctx context.Context, source, destination domain.TransferEndpoint, ignoreExisting bool) (rsyncStats, error) {
 	args, err := rsyncArgs(source, destination)
@@ -319,11 +320,9 @@ func syncDirectory(ctx context.Context, source, destination domain.TransferEndpo
 		return rsyncStats{}, err
 	}
 	defer release()
-	output, err := exec.CommandContext(ctx, "rsync", args...).CombinedOutput()
-	if err != nil {
-		return rsyncStats{}, fmt.Errorf("rsync: %w: %s", err, strings.TrimSpace(string(output)))
-	}
-	return parseRsyncStats(string(output), strings.HasPrefix(destination.URI, "ssh://")), nil
+	return retryWorkspaceRsync(ctx, time.Second, strings.HasPrefix(destination.URI, "ssh://"), func() ([]byte, error) {
+		return exec.CommandContext(ctx, "rsync", args...).CombinedOutput()
+	})
 }
 
 func rsyncArgs(source, destination domain.TransferEndpoint) ([]string, error) {

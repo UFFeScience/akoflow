@@ -113,19 +113,19 @@ func (s WorkspaceRsync) syncDependencyRoutes(ctx context.Context, plans []domain
 			defer os.RemoveAll(localRoot)
 			copySource = domain.TransferEndpoint{URI: (&url.URL{Scheme: "file", Path: localRoot}).String()}
 			stats, err := syncDirectory(ctx, source, copySource, false)
+			recordWorkspaceRsyncStats(&runs[i], stats, true)
+			network[i].bytes = runs[i].NetworkBytes
 			if err != nil {
 				return runs, err
 			}
-			network[i].bytes += stats.bytes
-			runs[i].NetworkBytes = network[i].bytes
 		}
 		stats, err := syncDirectory(ctx, copySource, prepared[i], false)
+		recordWorkspaceRsyncStats(&runs[i], stats, true)
+		network[i].bytes = runs[i].NetworkBytes
 		if err != nil {
 			return runs, err
 		}
-		network[i].bytes += stats.bytes
 		network[i].fileBytes = stats.fileBytes
-		runs[i].NetworkBytes = network[i].bytes
 	}
 	// Validate all paths/content together before any successor publication.
 	result, err := syncRemoteWorkspaceDirect(ctx, plans, prepared, destination, runs)

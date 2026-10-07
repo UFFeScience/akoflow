@@ -108,23 +108,27 @@ func (q *allocatorQueue) Publish(_ context.Context, job domainqueue.Job) (domain
 }
 
 func TestQueuedCloudAllocatorReplacesDestroyedProvisionGeneration(t *testing.T) {
-	store := &allocatorStore{
-		operations: map[string]domain.CloudOperationRun{"old-operation": {ID: "old-operation", Kind: "provision", Status: "completed", ExecutionRunID: "run", CapacityTargetID: "target", InstanceID: "old-vm"}},
-		instances:  map[string]domain.CloudProvisionedInstance{"old-vm": {ID: "old-vm", CapacityTargetID: "target", EnvironmentID: "environment", Status: "destroyed"}},
-	}
-	queue := &allocatorQueue{store: store}
-	allocator := QueuedCloudAllocator{Cloud: store, Operations: store, Queue: queue, PollInterval: time.Millisecond}
-	target := domain.CloudCapacityTarget{ID: "target", EnvironmentID: "environment"}
-	if err := allocator.Prewarm(context.Background(), "run", "activity", target); err != nil {
-		t.Fatal(err)
-	}
-	instance, err := allocator.Allocate(context.Background(), "run", "activity", target)
-	if err != nil || instance.ID == "old-vm" || instance.Status != "ready" || len(queue.jobs) != 1 {
-		t.Fatalf("obsolete allocation reused or duplicated: instance=%+v err=%v jobs=%d", instance, err, len(queue.jobs))
-	}
-	old, _ := store.FindProvisionedInstance(context.Background(), "old-vm")
-	if old.Status != "destroyed" {
-		t.Fatal("old instance history mutated")
+	for _, status := range []string{"completed", "failed", "cancelled"} {
+		t.Run(status, func(t *testing.T) {
+			store := &allocatorStore{
+				operations: map[string]domain.CloudOperationRun{"old-operation": {ID: "old-operation", Kind: "provision", Status: status, ExecutionRunID: "run", CapacityTargetID: "target", InstanceID: "old-vm"}},
+				instances:  map[string]domain.CloudProvisionedInstance{"old-vm": {ID: "old-vm", CapacityTargetID: "target", EnvironmentID: "environment", Status: "destroyed"}},
+			}
+			queue := &allocatorQueue{store: store}
+			allocator := QueuedCloudAllocator{Cloud: store, Operations: store, Queue: queue, PollInterval: time.Millisecond}
+			target := domain.CloudCapacityTarget{ID: "target", EnvironmentID: "environment"}
+			if err := allocator.Prewarm(context.Background(), "run", "activity", target); err != nil {
+				t.Fatal(err)
+			}
+			instance, err := allocator.Allocate(context.Background(), "run", "activity", target)
+			if err != nil || instance.ID == "old-vm" || instance.Status != "ready" || len(queue.jobs) != 1 {
+				t.Fatalf("obsolete allocation reused or duplicated: instance=%+v err=%v jobs=%d", instance, err, len(queue.jobs))
+			}
+			old, _ := store.FindProvisionedInstance(context.Background(), "old-vm")
+			if old.Status != "destroyed" {
+				t.Fatal("old instance history mutated")
+			}
+		})
 	}
 }
 

@@ -155,7 +155,7 @@ func (a QueuedCloudAllocator) findOrCreate(ctx context.Context, executionRunID, 
 	// infrastructure operation so each activity does not request another VM.
 	for _, operation := range operations {
 		if operation.Kind == kind && operation.ExecutionRunID == executionRunID && operation.CapacityTargetID == target.ID && (instanceID == "" || operation.InstanceID == instanceID) {
-			if kind == "provision" && operation.Status == "completed" {
+			if kind == "provision" && (operation.Status == "completed" || operation.Status == "failed" || operation.Status == "cancelled") {
 				instance, inspectErr := a.Cloud.FindProvisionedInstance(ctx, operation.InstanceID)
 				if inspectErr != nil {
 					return domain.CloudOperationRun{}, inspectErr

@@ -1,0 +1,38 @@
+{
+  "runId": "montage-micro-hpc-e2-real-20261008-single-lane-v1",
+  "status": "partial_running_measurement",
+  "consumerActivityId": "montage-58-fog-hpc-e2-20261006-mdifffitid0000025",
+  "source": "Daemon API completed transfer routes and consumer execution timestamps",
+  "sameInstanceDependency": {
+    "producerActivityId": "montage-58-fog-hpc-e2-20261006-mprojectid0000020",
+    "strategy": "runtime-local",
+    "exactConcreteInstanceIdsMatch": true,
+    "verifiedFilesystem": "ext4",
+    "serverNetworkBytes": 0,
+    "archivePackagingUsed": false,
+    "evidence": "Independently trusted same-instance filesystem proof, runtime-local strategy, absent pack/upload phases; zero-valued network field is omitted in API JSON"
+  },
+  "otherInstanceDependency": {
+    "producerActivityId": "montage-58-fog-hpc-e2-20261006-mprojectid0000022",
+    "strategy": "gateway",
+    "archiveBytes": 143458892,
+    "serverNetworkBytes": 286952942,
+    "packAndReceiveSeconds": 18.017085467,
+    "archiveValidationSeconds": 1.003890333,
+    "archiveUploadSeconds": 69.197414698,
+    "receiverVerificationSeconds": 3.095867335
+  },
+  "jointPreparationBarrierSeconds": 92.230612876,
+  "jointConflictCheckCopyVerifySeconds": 8.024644670,
+  "allRoutesFinishedAtUnixSeconds": 1791447708.7832112,
+  "consumerStartedAtUnixSeconds": 1791447712.9259932,
+  "consumerFinishedAtUnixSeconds": 1791447714.8598275,
+  "barrierSatisfied": true,
+  "plannedTransferSeconds": 0.241,
+  "limitations": [
+    "Shared barrier and merge phases are repeated in route records; do not sum them across dependencies.",
+    "The runtime-local route duration includes waiting for the gateway dependency, not only internal copying.",
+    "Whole-workspace bytes and uncalibrated network predictions differ from the small planned transfer estimate.",
+    "The overall run includes recovery and is not an uninterrupted makespan benchmark."
+  ]
+}

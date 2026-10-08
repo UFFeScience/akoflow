@@ -114,7 +114,7 @@ func (a *Adapter) Start(ctx context.Context, execution domain.ActivityExecutionC
 }
 
 func (a *Adapter) Inspect(ctx context.Context, handle domain.ActivityHandle) (domain.ActivityHandle, error) {
-	output, err := a.executor.Run(ctx, "docker", []string{"inspect", "--format", "{{.State.Status}}|{{.State.ExitCode}}", handle.ExternalID}, nil)
+	output, err := a.executor.Run(ctx, "docker", []string{"inspect", "--format", "{{.State.Status}}|{{.State.ExitCode}}|{{.State.FinishedAt}}", handle.ExternalID}, nil)
 	if err != nil {
 		return handle, err
 	}
@@ -127,6 +127,18 @@ func (a *Adapter) Inspect(ctx context.Context, handle domain.ActivityHandle) (do
 		code, _ := strconv.Atoi(parts[1])
 		handle.ExitCode = &code
 		handle.FinishedAt = runtimecommon.UnixSeconds(time.Now())
+		if handle.Metadata == nil {
+			handle.Metadata = map[string]any{}
+		}
+		handle.Metadata["terminalObservedAt"] = handle.FinishedAt
+		if len(parts) > 2 {
+			if finished, parseErr := time.Parse(time.RFC3339Nano, parts[2]); parseErr == nil && !finished.IsZero() {
+				native := runtimecommon.UnixSeconds(finished)
+				if native >= handle.StartedAt {
+					handle.FinishedAt = native
+				}
+			}
+		}
 		if code == 0 {
 			handle.Status = domain.HandleCompleted
 		} else {

@@ -5,10 +5,24 @@ import (
 	"fmt"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/UFFeScience/akoflow/internal/domain"
 	provider "github.com/UFFeScience/akoflow/internal/provider"
 )
+
+func TestRemoteCompletionUsesNativeTimeNotInspectionDelay(t *testing.T) {
+	finished := time.Now().UTC().Add(-time.Minute)
+	executor := &commandExecutorStub{responses: [][]byte{[]byte("exited|0|" + finished.Format(time.RFC3339Nano))}}
+	adapter := &Adapter{executor: executor}
+	handle, err := adapter.Inspect(context.Background(), domain.ActivityHandle{ExternalID: "container", StartedAt: float64(finished.UnixNano())/1e9 - 10})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if handle.FinishedAt != float64(finished.UnixNano())/1e9 || handle.Metadata["terminalObservedAt"].(float64) <= handle.FinishedAt {
+		t.Fatalf("native/observed completion conflated: %+v", handle)
+	}
+}
 
 type commandExecutorStub struct {
 	calls     []commandCall

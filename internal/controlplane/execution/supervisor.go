@@ -602,6 +602,8 @@ func (s *Supervisor) cancelRunningActivities(
 	tasks map[string]domain.TaskExecution,
 	cause error,
 ) {
+	cleanupCtx, cancel := context.WithTimeout(context.WithoutCancel(ctx), 60*time.Second)
+	defer cancel()
 	type stopResult struct {
 		activityID string
 		err        error
@@ -615,7 +617,7 @@ func (s *Supervisor) cancelRunningActivities(
 			defer group.Done()
 			semaphore <- struct{}{}
 			defer func() { <-semaphore }()
-			results <- stopResult{activityID: activityID, err: s.activities.Stop(ctx, handleID, mode)}
+			results <- stopResult{activityID: activityID, err: s.activities.Stop(cleanupCtx, handleID, mode)}
 		}(activityID, handle.ID)
 	}
 	group.Wait()

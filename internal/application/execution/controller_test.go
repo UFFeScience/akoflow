@@ -167,8 +167,8 @@ func TestInspectAndStop(t *testing.T) {
 	if err != nil || updated.Status != domain.HandleCompleted {
 		t.Fatal("inspect failed")
 	}
-	if err := service.Stop(context.Background(), "handle", domain.ExecutionModeReal); err != nil || !runtime.stopped || handles.handle.Status != domain.HandleStopped {
-		t.Fatal("stop failed")
+	if err := service.Stop(context.Background(), "handle", domain.ExecutionModeReal); err != nil || runtime.stopped || handles.handle.Status != domain.HandleCompleted {
+		t.Fatal("stop must preserve completed scientific result")
 	}
 }
 

@@ -3,8 +3,10 @@ package execution
 import (
 	"context"
 	"fmt"
+	"hash/fnv"
 	"net/url"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/UFFeScience/akoflow/internal/application/ports"
@@ -15,6 +17,17 @@ type Controller struct {
 	runtimes ports.RuntimeResolver
 	handles  ports.ActivityExecutionStore
 	data     ports.DataCatalog
+	// Fixed stripes serialize lifecycle operations on the same handle without
+	// retaining an unbounded lock entry for every scientific activity.
+	handleLocks [256]sync.Mutex
+}
+
+func (s *Controller) lockHandle(id string) func() {
+	h := fnv.New32a()
+	_, _ = h.Write([]byte(id))
+	lock := &s.handleLocks[h.Sum32()%uint32(len(s.handleLocks))]
+	lock.Lock()
+	return lock.Unlock
 }
 
 func New(runtimes ports.RuntimeResolver, handles ports.ActivityExecutionStore, catalogs ...ports.DataCatalog) *Controller {
@@ -57,6 +70,8 @@ func (s *Controller) Start(ctx context.Context, execution domain.ActivityExecuti
 		return domain.ActivityHandle{}, fmt.Errorf("activity %q does not support %q execution", execution.Activity.ID, execution.Run.Mode)
 	}
 	handleID := execution.HandleID()
+	unlock := s.lockHandle(handleID)
+	defer unlock()
 	existing, err := s.handles.Find(ctx, handleID)
 	if err != nil {
 		return domain.ActivityHandle{}, fmt.Errorf("find activity handle: %w", err)
@@ -110,9 +125,14 @@ func (s *Controller) Start(ctx context.Context, execution domain.ActivityExecuti
 }
 
 func (s *Controller) Inspect(ctx context.Context, handleID string, mode domain.ExecutionMode) (*domain.ActivityHandle, error) {
+	unlock := s.lockHandle(handleID)
+	defer unlock()
 	handle, err := s.handles.Find(ctx, handleID)
 	if err != nil || handle == nil {
 		return handle, err
+	}
+	if handle.Status == domain.HandleStopped || handle.Status == domain.HandleCompleted || handle.Status == domain.HandleFailed {
+		return handle, nil
 	}
 	runtime, err := s.runtimes.Resolve(mode, handle.RuntimeID)
 	if err != nil {
@@ -189,6 +209,10 @@ func (s *Controller) Inspect(ctx context.Context, handleID string, mode domain.E
 }
 
 func (s *Controller) persistInspectionFailure(ctx context.Context, handle *domain.ActivityHandle, err error) (*domain.ActivityHandle, error) {
+	if ctx.Err() != nil {
+		// Observation cancellation is not evidence that computation failed.
+		return handle, ctx.Err()
+	}
 	handle.Status = domain.HandleFailed
 	handle.FinishedAt = float64(time.Now().UnixNano()) / float64(time.Second)
 	handle.Failure = "inspect activity: " + err.Error()
@@ -254,12 +278,17 @@ func failureMessage(failure string) string {
 }
 
 func (s *Controller) Stop(ctx context.Context, handleID string, mode domain.ExecutionMode) error {
+	unlock := s.lockHandle(handleID)
+	defer unlock()
 	handle, err := s.handles.Find(ctx, handleID)
 	if err != nil {
 		return err
 	}
 	if handle == nil {
 		return fmt.Errorf("activity handle %q not found", handleID)
+	}
+	if handle.Status == domain.HandleStopped || handle.Status == domain.HandleCompleted {
+		return nil
 	}
 	runtime, err := s.runtimes.Resolve(mode, handle.RuntimeID)
 	if err != nil {

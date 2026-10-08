@@ -1,0 +1,29 @@
+{
+  "issue": "AKO-129",
+  "runId": "montage-micro-hpc-e2-real-20261008-single-lane-v1",
+  "source": "Daemon API transfer phases and latest activity attempt records, 2026-10-08",
+  "producer": "montage-58-fog-hpc-e2-20261006-mprojectid0000004",
+  "producerResource": "montage-gcp-fog-e2-micro-10",
+  "transfers": [
+    {"consumerSuffix": "mdifffitid0000007", "archiveBytes": 144937223, "packHashSeconds": 101.026189296, "privateUploadSeconds": 32.782604931, "receiverVerifyExtractSeconds": 4.201669461, "serverPayloadBytes": 0},
+    {"consumerSuffix": "mdifffitid0000010", "archiveBytes": 144937223, "packHashSeconds": 100.912997962, "privateUploadSeconds": 35.194665975, "receiverVerifyExtractSeconds": 3.991413586, "serverPayloadBytes": 0}
+  ],
+  "comparison": {
+    "mediumProducerArchiveBytes": 142937977,
+    "mediumProducerPackHashSeconds": 7.97850542,
+    "mediumProducerPrivateUploadSeconds": 3.827686085
+  },
+  "confirmed": "Current peer implementation independently packs and hashes a whole-workspace archive for each consumer; the same micro producer repeated this work for two similarly sized archive transfers.",
+  "notYetProven": "The relative contributions of micro shared CPU, concurrent compression, disk contention and network throughput require separate validation. Size equality alone does not prove immutable content identity.",
+  "safePoint": {
+    "runStatus": "cancelled",
+    "activeHandleCount": 0,
+    "activeCloudOperationCount": 0,
+    "recoverable": true,
+    "reusableActivityCount": 25,
+    "cleanupPendingActivityCount": 0
+  },
+  "preservation": "Required producer workspaces remain retained; no required output was intentionally destroyed. Runtime response is preserved in ignored local storage.",
+  "requiredFix": "Coordinate sealed immutable snapshots by exact cloud generation and workspace identity, preserving full-workspace content validation, independent dependency routing and the joint consumer barrier. Do not reuse mutable content or remove an archive while a reader owns it.",
+  "limitations": ["Recovered experiment, not an uninterrupted benchmark.", "Public-cloud pricing and micro speedup remain uncalibrated.", "Goal remains incomplete until 58 activities, physical final product, comparative metrics and paid-resource cleanup are verified."]
+}

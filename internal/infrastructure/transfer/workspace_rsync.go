@@ -182,6 +182,7 @@ func remoteWorkspaceScript(sources []string, destination string) string {
 			"origin=$(cat \"$workspace_manifest/$key.origin\"); " +
 			"echo \"workspace content conflict at $rel between $origin and $label\" >&2; exit 44; fi; " +
 			"else printf '%s' \"$digest\" >\"$workspace_manifest/$key.digest\"; " +
+			"printf '%s\\0' \"$rel\" >\"$workspace_manifest/$key.path\"; " +
 			"printf '%s' \"$label\" >\"$workspace_manifest/$key.origin\"; fi; " +
 			"done < <(find \"$root\" -type f -print0); }\n",
 	)
@@ -199,9 +200,13 @@ func remoteWorkspaceScript(sources []string, destination string) string {
 		script.WriteString("rsync --ignore-existing -r --checksum --stats --out-format='%i %n' --no-perms --no-owner --no-group --no-times -- " + shell(filepath.Clean(source)+"/") + " " + shell(filepath.Clean(destination)+"/") + "\n")
 		script.WriteString(fmt.Sprintf("echo __AKOFLOW_WORKSPACE_END_%d__\n", index))
 	}
-	for _, source := range sources {
-		script.WriteString("while IFS= read -r -d '' file; do rel=${file#" + shell(filepath.Clean(source)+"/") + "}; cmp -s -- \"$file\" \"$destination/$rel\" || { echo \"workspace verification failed at $rel\" >&2; exit 45; }; done < <(find " + shell(source) + " -type f -print0)\n")
-	}
+	// Sources were hashed and checked for conflicts before publication. Verify
+	// each unique destination against that immutable expectation once, rather
+	// than rereading it once per predecessor that contains the same path.
+	script.WriteString("while IFS= read -r -d '' record; do key=${record%.digest}; IFS= read -r -d '' rel <\"$key.path\"; expected=$(cat \"$record\"); file=$destination/$rel; " +
+		"[[ -f $file && ! -L $file ]] || { echo \"workspace verification failed at $rel\" >&2; exit 45; }; " +
+		"actual=$(sha256sum -- \"$file\"); actual=${actual%% *}; [[ $actual == \"$expected\" ]] || { echo \"workspace verification failed at $rel\" >&2; exit 45; }; " +
+		"done < <(find \"$workspace_manifest\" -name '*.digest' -type f -print0)\n")
 	return script.String()
 }
 

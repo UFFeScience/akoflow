@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"io"
 	"net/url"
+	"os"
 	"os/exec"
 	"path/filepath"
 	"strconv"
@@ -67,6 +68,9 @@ func sshArgs(e domain.TransferEndpoint) []string {
 	}
 	if uri, err := url.Parse(e.URI); err == nil && uri.Scheme == "ssh" && uri.Host != "" {
 		query := uri.Query()
+		if strict, _ := strconv.ParseBool(query.Get("strictHostKeyChecking")); strict {
+			args = append(args, "-o", "HostKeyAlgorithms=ssh-ed25519")
+		}
 		if queryIdentity := query.Get("identityFile"); queryIdentity != "" {
 			identity = queryIdentity
 			args = append(args, "-i", queryIdentity)
@@ -307,6 +311,9 @@ func (RsyncSSH) TransferRoute(ctx context.Context, strategy domain.TransferStrat
 		}
 		remoteSSH := []string{"ssh", "-i", shell(identity), "-o", "BatchMode=yes", "-o", "IdentitiesOnly=yes"}
 		remoteSSH = append(remoteSSH, "-o", shell("UserKnownHostsFile="+knownHosts), "-o", "StrictHostKeyChecking=yes")
+		if uri, parseErr := url.Parse(destination.URI); parseErr == nil && uri.Query().Get("strictHostKeyChecking") == "true" {
+			remoteSSH = append(remoteSSH, "-o", "HostKeyAlgorithms=ssh-ed25519", "-o", shell("HostKeyAlias="+uri.Query().Get("hostKeyAlias")))
+		}
 		if uri, parseErr := url.Parse(destination.URI); parseErr == nil && uri.Port() != "" {
 			remoteSSH = append(remoteSSH, "-p", shell(uri.Port()))
 		}
@@ -378,6 +385,18 @@ func prepareDirectCredential(ctx context.Context, source, destination domain.Tra
 	port := destinationURL.Port()
 	if port == "" {
 		port = "22"
+	}
+	if destinationURL.Query().Get("strictHostKeyChecking") == "true" {
+		pinned, readErr := os.ReadFile(destinationURL.Query().Get("knownHostsFile"))
+		if readErr != nil || len(pinned) == 0 {
+			cleanup()
+			return "", "", func() {}, fmt.Errorf("read verified direct destination host key: %v", readErr)
+		}
+		if writeErr := runSSHInput(ctx, source, sourceHost, "umask 077; cat > "+shell(knownHosts), pinned); writeErr != nil {
+			cleanup()
+			return "", "", func() {}, fmt.Errorf("install verified direct destination host key: %w", writeErr)
+		}
+		return identity, knownHosts, cleanup, nil
 	}
 	scan := "ssh-keyscan -p " + shell(port) + " -- " + shell(directAddress) + " > " + shell(knownHosts)
 	if output, scanErr := runSSHCombinedOutput(ctx, source, append(sshArgs(source), sourceHost, scan), nil); scanErr != nil {

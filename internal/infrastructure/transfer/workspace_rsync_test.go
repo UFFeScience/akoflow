@@ -22,7 +22,7 @@ func (workspaceEndpointResolver) ResolveTransferEndpoint(_ context.Context, loca
 type directWorkspaceEndpointResolver struct{}
 
 func (directWorkspaceEndpointResolver) ResolveTransferEndpoint(_ context.Context, location domain.TransferLocation) (domain.TransferEndpoint, error) {
-	return domain.TransferEndpoint{URI: location.URI, ConnectionID: "shared-hpc"}, nil
+	return domain.TransferEndpoint{URI: location.URI, ConnectionID: "shared-hpc", CloudInstanceID: location.CloudInstanceID}, nil
 }
 
 func workspaceURL(path string) string { return (&url.URL{Scheme: "file", Path: path}).String() }

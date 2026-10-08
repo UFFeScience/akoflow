@@ -155,6 +155,12 @@ func TestSameCloudWorkspaceLocalFilesystemProof(t *testing.T) {
 // Exercise real rsync and the remote shell script, with transport redirected
 // into temporary directories. This is not a live Lustre integration test.
 func TestMixedWorkspaceRoutesConflictAndRecovery(t *testing.T) {
+	for _, sameCloud := range []bool{false, true} {
+		t.Run(fmt.Sprintf("sameCloud=%v", sameCloud), func(t *testing.T) { testMixedWorkspaceRoutesConflictAndRecovery(t, sameCloud) })
+	}
+}
+
+func testMixedWorkspaceRoutesConflictAndRecovery(t *testing.T, sameCloud bool) {
 	realRsync, err := exec.LookPath("rsync")
 	if err != nil {
 		t.Skip("rsync unavailable")
@@ -162,6 +168,9 @@ func TestMixedWorkspaceRoutesConflictAndRecovery(t *testing.T) {
 	bin := t.TempDir()
 	// Strip the GNU-only archive option in this local BSD-tar transport fixture.
 	ssh := "#!/bin/sh\nwhile [ \"$#\" -gt 1 ]; do shift; done\ncase \"$1\" in *'stat -f'*) printf 'nfs 0 nfs4 server:/fixture /home\\nnfs 0 nfs4 server:/fixture /home\\n'; exit 0;; esac\ncommand=$(printf '%s' \"$1\" | sed 's/--hard-dereference //g'); exec sh -c \"$command\"\n"
+	if sameCloud {
+		ssh = strings.ReplaceAll(ssh, "nfs 0 nfs4 server:/fixture /home", "ext2/ext3 a12 ext4 /dev/sda /akoflow")
+	}
 	rsync := fmt.Sprintf("#!/bin/bash\nif [[ -n ${AKOFLOW_TEST_FAIL_ONCE:-} && ! -e $AKOFLOW_TEST_FAIL_ONCE ]]; then touch \"$AKOFLOW_TEST_FAIL_ONCE\"; echo 'injected network interruption' >&2; exit 12; fi\nargs=(); skip=0\nfor arg in \"$@\"; do if ((skip)); then skip=0; continue; fi; case \"$arg\" in -e) skip=1;; --secluded-args) ;; hpc.test:*) args+=(\"${arg#hpc.test:}\");; *) args+=(\"$arg\");; esac; done\nexec %s \"${args[@]}\"\n", shell(realRsync))
 	for name, body := range map[string]string{"ssh": ssh, "rsync": rsync} {
 		if err := os.WriteFile(filepath.Join(bin, name), []byte(body), 0700); err != nil {
@@ -186,18 +195,37 @@ func TestMixedWorkspaceRoutesConflictAndRecovery(t *testing.T) {
 	write(filepath.Join(hpc, "hpc.fits"), "HPC")
 	write(filepath.Join(fog, "fog.fits"), "FOG")
 	write(filepath.Join(fog2, "fog2.fits"), "FOG2")
-	remote := func(path string) string { return (&url.URL{Scheme: "ssh", Host: "hpc.test", Path: path}).String() }
+	remote := func(path string) string {
+		u := &url.URL{Scheme: "ssh", Host: "hpc.test", Path: path}
+		if sameCloud {
+			u.RawQuery = "strictHostKeyChecking=true&hostKeyAlias=verified-generation&knownHostsFile=/trusted/hosts"
+		}
+		return u.String()
+	}
 	plans := []domain.DataTransferPlan{
 		{ID: "hpc", Source: domain.TransferLocation{URI: remote(hpc)}, Destination: domain.TransferLocation{URI: remote(target)}},
 		{ID: "fog", Source: domain.TransferLocation{URI: workspaceURL(fog)}, Destination: domain.TransferLocation{URI: remote(target)}},
 		{ID: "fog2", Source: domain.TransferLocation{URI: (&url.URL{Scheme: "ssh", Host: "cloud.test", Path: fog2}).String()}, Destination: domain.TransferLocation{URI: remote(target)}},
+	}
+	if sameCloud {
+		for i := range plans {
+			plans[i].Destination.CloudInstanceID = "verified-instance"
+		}
+		plans[0].Source.CloudInstanceID = "verified-instance"
 	}
 	syncer := WorkspaceRsync{Resolver: directWorkspaceEndpointResolver{}}
 	runs, err := syncer.Sync(context.Background(), plans)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if runs[0].NetworkBytes != 0 || !strings.Contains(runs[0].Route.Reason, "verified shared") || runs[1].NetworkBytes <= 0 {
+	expectedReason, expectedFS, expectedMount := "verified shared", "nfs", "server:/fixture"
+	if sameCloud {
+		expectedReason, expectedFS, expectedMount = "verified same concrete cloud", "ext2/ext3", "/dev/sda"
+		if runs[0].Strategy != domain.TransferRuntimeLocal {
+			t.Fatalf("same cloud did not use runtime-local: %+v", runs[0])
+		}
+	}
+	if runs[0].NetworkBytes != 0 || !strings.Contains(runs[0].Route.Reason, expectedReason) || runs[1].NetworkBytes <= 0 {
 		t.Fatalf("mixed routes: %+v", runs)
 	}
 	for _, run := range runs[1:] {
@@ -211,7 +239,7 @@ func TestMixedWorkspaceRoutesConflictAndRecovery(t *testing.T) {
 	if len(runs[0].Route.Phases) != 2 || runs[0].Route.ArchiveBytes != 0 {
 		t.Fatalf("shared origin incorrectly attributed archive work: %+v", runs[0].Route)
 	}
-	if runs[0].Route.SharedFilesystem != "nfs" || !strings.Contains(runs[0].Route.SharedFilesystemID, "server:/fixture") || runs[1].Route.SharedFilesystem != "" || runs[0].Route.FilesTransferred != runs[0].FilesTransferred {
+	if runs[0].Route.SharedFilesystem != expectedFS || !strings.Contains(runs[0].Route.SharedFilesystemID, expectedMount) || runs[1].Route.SharedFilesystem != "" || runs[0].Route.FilesTransferred != runs[0].FilesTransferred {
 		t.Fatalf("missing or incorrect route evidence: %+v", runs)
 	}
 	for _, name := range []string{"hpc.fits", "fog.fits", "fog2.fits"} {

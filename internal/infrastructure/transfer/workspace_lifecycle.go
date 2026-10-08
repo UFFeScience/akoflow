@@ -446,13 +446,14 @@ func workspacePrunePayload(entries []domain.WorkspaceEntry) string {
 func workspacePruneCommand(path string, workspace domain.ActivityWorkspace) string {
 	marker := workspaceMarkerFor(workspace, path)
 	expected := strings.TrimSpace(string(markerContents(workspace)))
-	return "set -eu; test -f " + shell(marker) + "; test \"$(cat -- " + shell(marker) + ")\" = " + shell(expected) + `; ` +
+	return "set -eu; test ! -L " + shell(path) + "; test \"$(realpath -- " + shell(path) + ")\" = " + shell(filepath.Clean(path)) + "; test -f " + shell(marker) + "; test \"$(cat -- " + shell(marker) + ")\" = " + shell(expected) + `; ` +
 		`removed=0; preserved=0; reclaimed=0; while IFS='|' read -r encoded size digest; do ` +
 		`relative=$(printf '%s' "$encoded" | base64 -d); case "$relative" in ''|/*|..|../*|*/../*) echo "unsafe workspace input: $relative" >&2; exit 65;; esac; ` +
 		"target=" + shell(path) + `/"$relative"; [ -e "$target" ] || continue; ` +
+		`test "$(realpath -- "$target")" = "$target" || { echo 'non-canonical workspace input' >&2; exit 65; }; ` +
 		`if [ -L "$target" ] || [ ! -f "$target" ] || [ "$(wc -c < "$target")" -ne "$size" ]; then preserved=$((preserved+1)); continue; fi; ` +
 		`actual=$(sha256sum "$target" | awk '{print $1}'); if [ "$actual" != "$digest" ]; then preserved=$((preserved+1)); continue; fi; ` +
-		`rm -f -- "$target"; removed=$((removed+1)); reclaimed=$((reclaimed+size)); done; ` +
+		workspaceRemovalCommand(workspace) + ` -f -- "$target"; removed=$((removed+1)); reclaimed=$((reclaimed+size)); done; ` +
 		`printf '{"reclaimedBytes":%s,"removedFiles":%s,"preservedFiles":%s}\n' "$reclaimed" "$removed" "$preserved"`
 }
 

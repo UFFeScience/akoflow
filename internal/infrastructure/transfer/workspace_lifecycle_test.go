@@ -18,6 +18,23 @@ type workspaceEndpointResolverStub struct {
 	location domain.TransferLocation
 }
 
+func TestPruneCommandScopesCloudPrivilegeToCanonicalVerifiedInputs(t *testing.T) {
+	workspace := domain.ActivityWorkspace{ID: "workspace-run-1-activity-1", RunID: "run-1", ActivityID: "activity-1", Driver: "cloud-ssh"}
+	command := workspacePruneCommand("/akoflow/workspace/runs/run-1/activity-1", workspace)
+	for _, required := range []string{"realpath --", "non-canonical workspace input", "sha256sum", "sudo -n rm -f --"} {
+		if !strings.Contains(command, required) {
+			t.Fatalf("missing pruning guard %q", required)
+		}
+	}
+	if strings.Index(command, "sha256sum") > strings.Index(command, "sudo -n rm") {
+		t.Fatal("privileged removal precedes content verification")
+	}
+	workspace.Driver = "ssh"
+	if strings.Contains(workspacePruneCommand("/home/user/run-1/activity-1", workspace), "sudo") {
+		t.Fatal("non-cloud pruning escalated privileges")
+	}
+}
+
 func (stub *workspaceEndpointResolverStub) ResolveTransferEndpoint(_ context.Context, location domain.TransferLocation) (domain.TransferEndpoint, error) {
 	stub.location = location
 	return domain.TransferEndpoint{URI: "ssh://worker/" + strings.TrimPrefix(location.URI, "file://")}, nil
@@ -153,6 +170,10 @@ func digestForTest(value []byte) string {
 
 func TestWorkspacePruneShellCommandRemovesOnlyVerifiedInputs(t *testing.T) {
 	root := t.TempDir()
+	root, err := filepath.EvalSymlinks(root)
+	if err != nil {
+		t.Fatal(err)
+	}
 	path := filepath.Join(root, "run-1", "activity-1")
 	workspace := domain.ActivityWorkspace{ID: "workspace-run-1-activity-1", RunID: "run-1",
 		ActivityID: "activity-1", ExecutionPath: path}

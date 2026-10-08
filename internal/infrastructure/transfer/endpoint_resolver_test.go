@@ -24,13 +24,21 @@ func TestCloudWorkspaceEndpointUsesVerifiedGenerationTrust(t *testing.T) {
 		"verifiedHostGeneration": "generation", "verifiedHostKeyAlias": "verified-alias", "verifiedKnownHostsFile": "/verified/known_hosts",
 	}}
 	connection := domain.EnvironmentConnection{ID: "cloud", Type: domain.ConnectionCloud}
-	location := domain.TransferLocation{URI: "file:///workspace?connectionId=cloud", ResourceID: "target", CloudInstanceID: "vm"}
+	location := domain.TransferLocation{URI: "file:///workspace?connectionId=cloud", ResourceID: "target", CloudInstanceID: "vm",
+		WorkspaceSnapshotID: "sealed-manifest", WorkspaceSnapshotEntries: []domain.WorkspaceEntry{{Path: "input.fits", SizeBytes: 10, Digest: "sha256:content"}}}
 	resolve := func() (domain.TransferEndpoint, error) {
 		return (EnvironmentEndpointResolver{Connections: connectionStoreStub{connection: connection}, Cloud: verifiedCloudStore{instance: instance}}).ResolveTransferEndpoint(context.Background(), location)
 	}
 	endpoint, err := resolve()
 	if err != nil {
 		t.Fatal(err)
+	}
+	if endpoint.WorkspaceSnapshotID != location.WorkspaceSnapshotID || len(endpoint.WorkspaceSnapshotEntries) != 1 {
+		t.Fatal("generation resolution discarded sealed snapshot identity")
+	}
+	endpoint.WorkspaceSnapshotEntries[0].Path = "changed"
+	if location.WorkspaceSnapshotEntries[0].Path != "input.fits" {
+		t.Fatal("resolved endpoint aliases producer manifest entries")
 	}
 	args := strings.Join(sshArgs(endpoint), " ")
 	for _, want := range []string{"StrictHostKeyChecking=yes", "HostKeyAlgorithms=ssh-ed25519", "HostKeyAlias=verified-alias", "UserKnownHostsFile=/verified/known_hosts"} {

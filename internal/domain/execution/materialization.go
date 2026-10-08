@@ -69,14 +69,18 @@ func (m ArtifactMaterialization) Committed() bool {
 }
 
 type TransferLocation struct {
-	ResourceID      string `json:"resourceId,omitempty"`
-	EnvironmentID   string `json:"environmentId,omitempty"`
-	RuntimeID       string `json:"runtimeId,omitempty"`
-	ConnectionID    string `json:"connectionId,omitempty"`
-	CloudInstanceID string `json:"cloudInstanceId,omitempty"`
-	NetworkDomain   string `json:"networkDomain,omitempty"`
-	URI             string `json:"uri"`
-	Path            string `json:"path,omitempty"`
+	// Snapshot identity is issued only for a fully checksummed, sealed producer
+	// workspace. Missing identity disables archive reuse, not synchronization.
+	WorkspaceSnapshotID      string           `json:"workspaceSnapshotId,omitempty"`
+	WorkspaceSnapshotEntries []WorkspaceEntry `json:"workspaceSnapshotEntries,omitempty"`
+	ResourceID               string           `json:"resourceId,omitempty"`
+	EnvironmentID            string           `json:"environmentId,omitempty"`
+	RuntimeID                string           `json:"runtimeId,omitempty"`
+	ConnectionID             string           `json:"connectionId,omitempty"`
+	CloudInstanceID          string           `json:"cloudInstanceId,omitempty"`
+	NetworkDomain            string           `json:"networkDomain,omitempty"`
+	URI                      string           `json:"uri"`
+	Path                     string           `json:"path,omitempty"`
 }
 type ArtifactVersion struct {
 	ID         string       `json:"id"`
@@ -96,16 +100,18 @@ type ArtifactLocation struct {
 	Available  bool         `json:"available"`
 }
 type TransferEndpoint struct {
-	ID              string            `json:"id"`
-	Kind            string            `json:"kind"`
-	URI             string            `json:"uri"`
-	ResourceID      string            `json:"resourceId,omitempty"`
-	EnvironmentID   string            `json:"environmentId,omitempty"`
-	RuntimeID       string            `json:"runtimeId,omitempty"`
-	ConnectionID    string            `json:"connectionId,omitempty"`
-	CloudInstanceID string            `json:"cloudInstanceId,omitempty"`
-	NetworkDomain   string            `json:"networkDomain,omitempty"`
-	Configuration   map[string]string `json:"configuration,omitempty"`
+	WorkspaceSnapshotID      string            `json:"workspaceSnapshotId,omitempty"`
+	WorkspaceSnapshotEntries []WorkspaceEntry  `json:"workspaceSnapshotEntries,omitempty"`
+	ID                       string            `json:"id"`
+	Kind                     string            `json:"kind"`
+	URI                      string            `json:"uri"`
+	ResourceID               string            `json:"resourceId,omitempty"`
+	EnvironmentID            string            `json:"environmentId,omitempty"`
+	RuntimeID                string            `json:"runtimeId,omitempty"`
+	ConnectionID             string            `json:"connectionId,omitempty"`
+	CloudInstanceID          string            `json:"cloudInstanceId,omitempty"`
+	NetworkDomain            string            `json:"networkDomain,omitempty"`
+	Configuration            map[string]string `json:"configuration,omitempty"`
 }
 
 type TransferRoute struct {

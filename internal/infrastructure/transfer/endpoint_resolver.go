@@ -19,7 +19,9 @@ type EnvironmentEndpointResolver struct {
 
 func (resolver EnvironmentEndpointResolver) ResolveTransferEndpoint(ctx context.Context, location domain.TransferLocation) (domain.TransferEndpoint, error) {
 	endpoint := domain.TransferEndpoint{
-		URI: location.URI, ResourceID: location.ResourceID, EnvironmentID: location.EnvironmentID,
+		WorkspaceSnapshotID:      location.WorkspaceSnapshotID,
+		WorkspaceSnapshotEntries: append([]domain.WorkspaceEntry(nil), location.WorkspaceSnapshotEntries...),
+		URI:                      location.URI, ResourceID: location.ResourceID, EnvironmentID: location.EnvironmentID,
 		RuntimeID: location.RuntimeID, ConnectionID: location.ConnectionID,
 		CloudInstanceID: location.CloudInstanceID, NetworkDomain: location.NetworkDomain,
 	}

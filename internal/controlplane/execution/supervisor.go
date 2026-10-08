@@ -986,6 +986,13 @@ func (s *Supervisor) addWorkspacePreparation(
 		if sourceErr != nil {
 			return sourceErr
 		}
+		if store := s.workspaceStore(); store != nil {
+			workspace, err := store.FindWorkspace(ctx, "workspace-"+request.Run.ID+"-"+producerID)
+			if err != nil {
+				return fmt.Errorf("read producer snapshot identity: %w", err)
+			}
+			source.WorkspaceSnapshotID, source.WorkspaceSnapshotEntries = sealedWorkspaceSnapshot(workspace, source.CloudInstanceID)
+		}
 		requirement.WorkspaceTransfers = append(requirement.WorkspaceTransfers, domain.DataTransferPlan{
 			ID:                 fmt.Sprintf("transfer-workspace-%s-%s-%d", request.Run.ID, activityID, index),
 			ExecutionRunID:     request.Run.ID,

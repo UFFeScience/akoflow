@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -87,12 +88,9 @@ func (r Runner) runPlaybook(ctx context.Context, workspace string, spec ports.Ma
 	playbookStartedAt := time.Now().UTC()
 	writeProvisionLog(logFile, "applying %s", filepath.Base(playbookPath))
 	_ = logFile.Sync()
-	output, err := r.execute(ctx, workspace, append([]string{binary}, arguments...)...)
-	if len(output) > 0 {
-		_, _ = logFile.Write(output)
-		if output[len(output)-1] != '\n' {
-			_, _ = logFile.WriteString("\n")
-		}
+	output, err := r.execute(ctx, workspace, logFile, append([]string{binary}, arguments...)...)
+	if len(output) > 0 && output[len(output)-1] != '\n' {
+		_, _ = logFile.WriteString("\n")
 	}
 	if err != nil {
 		writeProvisionLog(logFile, "failed after %.3fs: %v", time.Since(playbookStartedAt).Seconds(), err)
@@ -104,16 +102,24 @@ func (r Runner) runPlaybook(ctx context.Context, workspace string, spec ports.Ma
 	return nil
 }
 
-func (r Runner) execute(ctx context.Context, workspace string, commandAndArguments ...string) ([]byte, error) {
+func (r Runner) execute(ctx context.Context, workspace string, logFile io.Writer, commandAndArguments ...string) ([]byte, error) {
+	environment := append(os.Environ(), "ANSIBLE_HOST_KEY_CHECKING=False", "PYTHONUNBUFFERED=1")
 	if r.Execute != nil {
-		return r.Execute(ctx, workspace, append(os.Environ(), "ANSIBLE_HOST_KEY_CHECKING=False"), commandAndArguments...)
+		output, err := r.Execute(ctx, workspace, environment, commandAndArguments...)
+		if _, writeErr := logFile.Write(output); err == nil {
+			err = writeErr
+		}
+		return output, err
 	}
 	command := exec.CommandContext(ctx, commandAndArguments[0], commandAndArguments[1:]...)
 	command.Dir = workspace
-	command.Env = append(os.Environ(), "ANSIBLE_HOST_KEY_CHECKING=False")
+	command.Env = environment
 	var output bytes.Buffer
-	command.Stdout = &output
-	command.Stderr = &output
+	// Both streams share one writer, so os/exec serializes writes. Keep the
+	// existing failure diagnostics while publishing progress before process exit.
+	writer := io.MultiWriter(logFile, &output)
+	command.Stdout = writer
+	command.Stderr = writer
 	err := command.Run()
 	return output.Bytes(), err
 }

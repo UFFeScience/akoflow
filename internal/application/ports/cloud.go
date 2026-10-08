@@ -104,18 +104,29 @@ type CloudSSHKey struct {
 	PublicKey     string
 }
 
+type CloudHostTrust struct {
+	Alias          string
+	KnownHostsFile string
+}
+
+type CloudHostTrustVerifier interface {
+	Verify(context.Context, domain.EnvironmentConnection, []byte, domain.CloudProvisionedInstance) (CloudHostTrust, error)
+}
+
 type CloudSSHKeyManager interface {
 	Ensure(string, string) (CloudSSHKey, error)
 }
 
 type MachineConfigurationSpec struct {
-	InstanceID    string
-	Address       string
-	SSHUser       string
-	CredentialRef string
-	PlaybookYAML  string
-	Variables     map[string]any
-	Checks        []domain.MachineConfigurationValidationCheck
+	HostKeyAlias   string
+	KnownHostsFile string
+	InstanceID     string
+	Address        string
+	SSHUser        string
+	CredentialRef  string
+	PlaybookYAML   string
+	Variables      map[string]any
+	Checks         []domain.MachineConfigurationValidationCheck
 }
 
 type MachineConfigurator interface {

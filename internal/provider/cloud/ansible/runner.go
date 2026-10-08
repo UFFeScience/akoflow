@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"time"
 
@@ -80,6 +81,9 @@ func (r Runner) runPlaybook(ctx context.Context, workspace string, spec ports.Ma
 		binary = "ansible-playbook"
 	}
 	arguments := []string{"-i", spec.Address + ",", "-u", spec.SSHUser, "--private-key", keyPath, "--extra-vars", "@" + variablesPath, playbookPath}
+	if spec.KnownHostsFile != "" && spec.HostKeyAlias != "" {
+		arguments = append(arguments, "--ssh-common-args", "-o StrictHostKeyChecking=yes -o HostKeyAlgorithms=ssh-ed25519 -o UserKnownHostsFile="+strconv.Quote(spec.KnownHostsFile)+" -o HostKeyAlias="+strconv.Quote(spec.HostKeyAlias))
+	}
 	playbookStartedAt := time.Now().UTC()
 	writeProvisionLog(logFile, "applying %s", filepath.Base(playbookPath))
 	_ = logFile.Sync()
@@ -193,6 +197,9 @@ func runCheck(ctx context.Context, spec ports.MachineConfigurationSpec, keyPath,
 		"-o", "BatchMode=yes", "-o", "StrictHostKeyChecking=no",
 		"-o", "UserKnownHostsFile=/dev/null", "-o", "ConnectTimeout=10",
 		"-i", keyPath, spec.SSHUser + "@" + spec.Address, command,
+	}
+	if spec.KnownHostsFile != "" && spec.HostKeyAlias != "" {
+		arguments = []string{"-o", "BatchMode=yes", "-o", "StrictHostKeyChecking=yes", "-o", "HostKeyAlgorithms=ssh-ed25519", "-o", "UserKnownHostsFile=" + spec.KnownHostsFile, "-o", "HostKeyAlias=" + spec.HostKeyAlias, "-o", "ConnectTimeout=10", "-i", keyPath, spec.SSHUser + "@" + spec.Address, command}
 	}
 	output, err := exec.CommandContext(ctx, "ssh", arguments...).CombinedOutput()
 	if err != nil {

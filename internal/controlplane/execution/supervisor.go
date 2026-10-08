@@ -262,6 +262,14 @@ func (s *Supervisor) executeActivities(ctx context.Context, request ports.Execut
 			for _, workspace := range workspaces {
 				available[workspace.ActivityID] = workspace.State != domain.WorkspaceReleased && workspace.State != domain.WorkspaceFailed
 				if reusable[workspace.ActivityID] && available[workspace.ActivityID] && s.config.Workspaces != nil {
+					allocation := recoveredAllocation(latest[workspace.ActivityID])
+					if allocation.CloudInstanceID != "" {
+						if readier, ok := s.config.CloudAllocator.(CloudRecoveryReadier); ok {
+							if err := readier.ReadyRecoveryInstance(ctx, request.Run.ID, workspace.ActivityID, allocation.CloudInstanceID); err != nil {
+								return domain.ExecutionTrace{}, fmt.Errorf("ready recovery producer: %w", err)
+							}
+						}
+					}
 					if err := bindWorkspaceAllocation(&workspace, recoveredAllocation(latest[workspace.ActivityID])); err != nil {
 						return domain.ExecutionTrace{}, err
 					}

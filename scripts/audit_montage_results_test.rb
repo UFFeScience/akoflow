@@ -53,6 +53,21 @@ class MontageAuditTest < Minitest::Test
     refute report[:limitations].any? { |text| text.start_with?('Multiple attempts:') }
   end
 
+  def test_single_lane_micro_requires_non_overlapping_execution_intervals
+    args = fixture
+    args[0]['resources'] = [{'id'=>'micro', 'cpuCapacity'=>1}]
+    args[1]['activityAttempts'].each_with_index do |task, index|
+      task['startedAt'] = 20 + index * 10
+      task['finishedAt'] = 25 + index * 10
+    end
+    assert_equal 0, montage_audit(*args)[:audit][:single_lane_micro_overlap_count]
+    args[1]['activityAttempts'][1]['startedAt'] = 24
+    assert_raises(RuntimeError) { montage_audit(*args) }
+    args[1]['activityAttempts'][1]['startedAt'] = 30
+    args[1]['activityAttempts'][1].delete('finishedAt')
+    assert_raises(RuntimeError) { montage_audit(*args) }
+  end
+
   def test_native_timing_requires_exact_attempt_and_valid_timestamps
     args = fixture
     handle = {'activityId'=>'activity-1', 'startedAt'=>20, 'finishedAt'=>25, 'metadata'=>{'executionAttempt'=>2, 'terminalObservedAt'=>28, 'address'=>'never-export'}}

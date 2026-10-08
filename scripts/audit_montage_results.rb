@@ -13,6 +13,19 @@ def montage_audit(request, response, simulation)
     attempts.max_by { |a| [a.fetch('attempt'), a['startedAt'].to_f] }
   end
   transfers = response.fetch('artifactTransferRuns')
+  single_lane_micros = request.fetch('resources', []).select do |r|
+    r.fetch('id').include?('micro') && r['cpuCapacity'].to_f == 1
+  end.map { |r| r.fetch('id') }
+  micro_overlap_count = 0
+  single_lane_micros.each do |resource|
+    intervals = latest.values.select { |task| assignments[task['activityId']]&.fetch('resourceId') == resource }
+    intervals.each do |task|
+      raise 'Missing or invalid micro execution timestamps' unless task['startedAt'] && task['finishedAt'] && task['finishedAt'].to_f >= task['startedAt'].to_f
+    end
+    intervals.sort_by { |task| task['startedAt'].to_f }.each_cons(2) do |left, right|
+      micro_overlap_count += 1 if left['finishedAt'].to_f > right['startedAt'].to_f
+    end
+  end
   barriers = transfers.select do |t|
     task = latest[t['activityId']]
     task && t['finishedAt'].to_f > task['startedAt'].to_f
@@ -24,7 +37,8 @@ def montage_audit(request, response, simulation)
     not_completed: expected.reject { |id| latest[id] && latest[id]['status'] == 'completed' },
     incomplete_transfer_count: transfers.count { |t| t['status'] != 'completed' },
     barrier_violation_count: barriers.length,
-    unreleased_lease_count: response.fetch('workspaceLeases').count { |l| !l['released'] }
+    unreleased_lease_count: response.fetch('workspaceLeases').count { |l| !l['released'] },
+    single_lane_micro_overlap_count: micro_overlap_count
   }
   raise 'Activity/transfer audit failed' unless audit[:expected_count] == 58 && audit.values.drop(1).all? { |v| v == 0 || v == [] }
   metric_keys = %w[makespanSeconds cost transferredBytes breakdown]

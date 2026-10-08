@@ -90,6 +90,7 @@ func (a *Adapter) Start(ctx context.Context, execution domain.ActivityExecutionC
 		RuntimeID: execution.RuntimeID, ExternalID: strconv.Itoa(command.Process.Pid),
 		Status: domain.HandleRunning, StartedAt: startedAt,
 		Endpoints: localEndpoints(activity), Metadata: map[string]any{
+			"executionAttempt":          execution.Attempt,
 			domain.TimingSubmittedAt:    startedAt,
 			"artifactObservationDriver": "filesystem-diff",
 			"artifactObservationRoot":   root,

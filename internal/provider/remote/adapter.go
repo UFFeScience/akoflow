@@ -106,7 +106,8 @@ func (a *Adapter) Start(ctx context.Context, execution domain.ActivityExecutionC
 	handle := domain.ActivityHandle{ID: runtimecommon.NewID("activity"), RunID: execution.Run.ID, ActivityID: activity.ID,
 		ResourceID: execution.Resource.ID, RuntimeID: execution.RuntimeID, ExternalID: containerID,
 		Status: domain.HandleStarting, StartedAt: now, Metadata: map[string]any{
-			"containerName": name, "executionTarget": "remote-docker", "artifactObservationRoot": workingDirectory,
+			"executionAttempt": execution.Attempt,
+			"containerName":    name, "executionTarget": "remote-docker", "artifactObservationRoot": workingDirectory,
 			"artifactObservationBefore": string(beforeJSON),
 		}}
 	telemetry.ObserveDocker(ctx, &handle, containerID, a.executor.Run)

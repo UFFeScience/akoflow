@@ -49,7 +49,7 @@ func buildPeerSnapshot(ctx context.Context, source domain.TransferEndpoint) (_ *
 	if err != nil {
 		return nil, err
 	}
-	output, err := runSSHCombinedOutput(ctx, source, append(sshArgs(source), host, "mktemp -d /tmp/akoflow-peer-snapshot-XXXXXX"), nil)
+	output, err := runSSHProtocol(ctx, source, append(sshArgs(source), host, "mktemp -d /tmp/akoflow-peer-snapshot-XXXXXX"))
 	if err != nil {
 		return nil, err
 	}
@@ -79,7 +79,7 @@ func buildPeerSnapshot(ctx context.Context, source domain.TransferEndpoint) (_ *
 	command := "set -eu; umask 077; " + verify + "bad=$(find " + shell(origin) + " ! -type d ! -type f -print -quit); test -z \"$bad\"; " +
 		"bash -o pipefail -c " + shell("tar --hard-dereference -C \"$1\" -cf - . | gzip -1 > \"$2\"") + " archive " + shell(origin) + " " + shell(archive) + "; " + verify +
 		"sha256sum -- " + shell(archive) + "; wc -c < " + shell(archive)
-	metadata, err := runSSHCombinedOutput(ctx, source, append(sshArgs(source), host, command), nil)
+	metadata, err := runSSHProtocol(ctx, source, append(sshArgs(source), host, command))
 	if err != nil {
 		return nil, fmt.Errorf("build sealed peer snapshot: %w", err)
 	}

@@ -491,6 +491,33 @@ func runSSHStdout(ctx context.Context, endpoint domain.TransferEndpoint, args []
 	return stdout.Bytes(), nil
 }
 
+// runSSHProtocol exposes only bounded failure categories, never remote stderr.
+// Successful machine-readable stdout remains separate from transport diagnostics.
+func runSSHProtocol(ctx context.Context, endpoint domain.TransferEndpoint, args []string) ([]byte, error) {
+	output, err := runSSHStdout(ctx, endpoint, args, nil)
+	if err == nil {
+		return output, nil
+	}
+	category := peerProbeFailureCategory(err)
+	message := strings.ToLower(err.Error())
+	for _, diagnostic := range []struct{ text, category string }{
+		{"connection closed", "connection_closed"},
+		{"connection reset", "connection_reset"},
+		{"broken pipe", "broken_pipe"},
+		{"no space left", "disk_full"},
+		{"sealed snapshot", "manifest_validation_failed"},
+	} {
+		if strings.Contains(message, diagnostic.text) {
+			category = diagnostic.category
+			break
+		}
+	}
+	if ctx.Err() != nil {
+		return nil, fmt.Errorf("SSH protocol failure [%s]: %w", category, ctx.Err())
+	}
+	return nil, fmt.Errorf("SSH protocol failure [%s]", category)
+}
+
 func sshControlPath(args []string) string {
 	for _, argument := range args {
 		if strings.HasPrefix(argument, "ControlPath=") {

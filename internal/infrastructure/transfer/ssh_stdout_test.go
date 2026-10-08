@@ -30,3 +30,16 @@ func TestSSHStdoutSeparatesDiagnostics(t *testing.T) {
 		t.Fatalf("missing failure diagnostic: %v", err)
 	}
 }
+
+func TestSSHProtocolFailureIsCategorizedWithoutSensitiveDiagnostics(t *testing.T) {
+	bin := t.TempDir()
+	script := "#!/bin/sh\nprintf 'Connection closed by secret-host; private-key secret-value\\n' >&2\nexit 255\n"
+	if err := os.WriteFile(filepath.Join(bin, "ssh"), []byte(script), 0700); err != nil {
+		t.Fatal(err)
+	}
+	t.Setenv("PATH", bin+string(os.PathListSeparator)+os.Getenv("PATH"))
+	_, err := runSSHProtocol(context.Background(), domain.TransferEndpoint{}, nil)
+	if err == nil || !strings.Contains(err.Error(), "connection_closed") || strings.Contains(err.Error(), "secret") {
+		t.Fatalf("unsafe or missing diagnostic category: %v", err)
+	}
+}

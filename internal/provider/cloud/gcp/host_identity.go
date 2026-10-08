@@ -3,12 +3,15 @@ package gcp
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/url"
 	"strings"
 
 	"golang.org/x/crypto/ssh"
 )
+
+var errHostKeyPublicationPending = errors.New("provider-backed host key publication pending")
 
 // HostIdentity contains only public evidence obtained through authenticated
 // Compute API reads. It does not enroll a key or relax existing SSH trust.
@@ -47,6 +50,10 @@ func (c *Catalog) VerifyHostIdentity(ctx context.Context, credential []byte, pro
 		} `json:"queryValue"`
 	}
 	if err := c.get(ctx, token, endpoint+"/getGuestAttributes?queryPath=hostkeys/", &attributes); err != nil {
+		var apiError *APIError
+		if errors.As(err, &apiError) && apiError.StatusCode == 404 {
+			return HostIdentity{}, errHostKeyPublicationPending
+		}
 		return HostIdentity{}, fmt.Errorf("read provider-backed host keys: %w", err)
 	}
 	var publicKey ssh.PublicKey
@@ -64,7 +71,7 @@ func (c *Catalog) VerifyHostIdentity(ctx context.Context, credential []byte, pro
 		publicKey = key
 	}
 	if publicKey == nil {
-		return HostIdentity{}, fmt.Errorf("provider-backed ED25519 host key is unavailable")
+		return HostIdentity{}, errHostKeyPublicationPending
 	}
 	// Fence replacement between the identity and guest-attribute reads.
 	var after struct {

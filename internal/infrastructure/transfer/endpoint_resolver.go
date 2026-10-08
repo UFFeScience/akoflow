@@ -104,6 +104,9 @@ func (resolver EnvironmentEndpointResolver) resolveConnectionEndpoint(endpoint d
 			knownHosts = "storage/credentials/ssh/known_hosts"
 		}
 		query.Set("knownHostsFile", knownHosts)
+		if strict, _ := connection.Configuration["strictHostKeyChecking"].(bool); strict {
+			query.Set("strictHostKeyChecking", "true")
+		}
 		if value, _ := connection.Configuration["acceptNewHostKey"].(bool); value {
 			query.Set("acceptNewHostKey", "true")
 		}
@@ -158,13 +161,17 @@ func (resolver EnvironmentEndpointResolver) cloudConnection(
 		address = selected.PrivateAddress
 	}
 	networkDomain, _ := selected.TerraformOutput["network_domain"].(string)
+	alias, knownHosts, err := selected.VerifiedSSHTrust()
+	if err != nil {
+		return nil, fmt.Errorf("cloud workspace SSH trust: %w", err)
+	}
 	return &domain.EnvironmentConnection{
 		ID: connection.ID + "-" + selected.ID, EnvironmentID: connection.EnvironmentID,
 		Name: selected.Name, Type: domain.ConnectionSSH, Endpoint: address,
 		Username: selected.SSHUsername, CredentialRef: selected.SSHCredentialRef,
 		Configuration: map[string]any{
-			"port": 22, "acceptNewHostKey": true,
-			"hostKeyAlias": selected.ID, "networkDomain": networkDomain,
+			"port": 22, "acceptNewHostKey": false, "strictHostKeyChecking": true,
+			"hostKeyAlias": alias, "knownHostsFile": knownHosts, "networkDomain": networkDomain,
 			"directAddress": selected.PrivateAddress,
 		},
 	}, nil

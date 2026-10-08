@@ -301,9 +301,13 @@ func (RsyncSSH) TransferRoute(ctx context.Context, strategy domain.TransferStrat
 		}
 		identity := destination.Configuration["directIdentityFile"]
 		knownHosts := destination.Configuration["directKnownHostsFile"]
+		writeCommand := "mkdir -p -- " + shell(filepath.Dir(destinationPath)) + " && cat > " + shell(destinationPath)
+		if offset > 0 {
+			writeCommand = fmt.Sprintf("test $(wc -c < %s) -eq %d && cat >> %s", shell(destinationPath), offset, shell(destinationPath))
+		}
 		cleanup := func() {}
 		if identity == "" || knownHosts == "" {
-			identity, knownHosts, cleanup, err = prepareDirectCredential(ctx, source, destination)
+			identity, knownHosts, cleanup, err = prepareDirectCredential(ctx, source, destination, writeCommand)
 			if err != nil {
 				return 0, err
 			}
@@ -316,10 +320,6 @@ func (RsyncSSH) TransferRoute(ctx context.Context, strategy domain.TransferStrat
 		}
 		if uri, parseErr := url.Parse(destination.URI); parseErr == nil && uri.Port() != "" {
 			remoteSSH = append(remoteSSH, "-p", shell(uri.Port()))
-		}
-		writeCommand := "mkdir -p -- " + shell(filepath.Dir(destinationPath)) + " && cat > " + shell(destinationPath)
-		if offset > 0 {
-			writeCommand = fmt.Sprintf("test $(wc -c < %s) -eq %d && cat >> %s", shell(destinationPath), offset, shell(destinationPath))
 		}
 		readCommand := "cat -- " + shell(sourcePath)
 		if offset > 0 {
@@ -344,7 +344,7 @@ func destinationUserHost(endpoint domain.TransferEndpoint, address string) strin
 	return address
 }
 
-func prepareDirectCredential(ctx context.Context, source, destination domain.TransferEndpoint) (string, string, func(), error) {
+func prepareDirectCredential(ctx context.Context, source, destination domain.TransferEndpoint, forcedCommand string) (string, string, func(), error) {
 	publicKey, privateKey, err := ephemeralSSHKey()
 	if err != nil {
 		return "", "", func() {}, err
@@ -360,15 +360,18 @@ func prepareDirectCredential(ctx context.Context, source, destination domain.Tra
 	if err != nil {
 		return "", "", func() {}, err
 	}
-	authorizedLine := "no-agent-forwarding,no-port-forwarding,no-X11-forwarding,no-pty " + strings.TrimSpace(string(publicKey)) + " " + token
-	installDestination := "umask 077; mkdir -p ~/.ssh; touch ~/.ssh/authorized_keys; printf '%s\\n' " + shell(authorizedLine) + " >> ~/.ssh/authorized_keys"
+	authorizedLine, err := scopedDirectAuthorizedKey(publicKey, token, forcedCommand, time.Now().Add(30*time.Minute))
+	if err != nil {
+		return "", "", func() {}, err
+	}
+	installDestination := "umask 077; mkdir -p ~/.ssh; touch ~/.ssh/authorized_keys; flock ~/.ssh/.akoflow-transfer-lock sh -c " + shell("printf '%s\\n' "+shell(authorizedLine)+" >> ~/.ssh/authorized_keys")
 	if output, installErr := runSSHCombinedOutput(ctx, destination, append(sshArgs(destination), destinationHost, installDestination), nil); installErr != nil {
 		return "", "", func() {}, fmt.Errorf("install temporary destination credential: %w: %s", installErr, strings.TrimSpace(string(output)))
 	}
 	cleanup := func() {
 		cleanupCtx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 		defer cancel()
-		removeDestination := "grep -v -- " + shell(token) + " ~/.ssh/authorized_keys > ~/.ssh/authorized_keys.akoflow && mv ~/.ssh/authorized_keys.akoflow ~/.ssh/authorized_keys"
+		removeDestination := directCredentialRemovalCommand(authorizedLine)
 		_, _ = runSSHCombinedOutput(cleanupCtx, destination, append(sshArgs(destination), destinationHost, removeDestination), nil)
 		_, _ = runSSHCombinedOutput(cleanupCtx, source, append(sshArgs(source), sourceHost, "rm -f -- "+shell(identity)+" "+shell(knownHosts)), nil)
 	}
@@ -404,6 +407,23 @@ func prepareDirectCredential(ctx context.Context, source, destination domain.Tra
 		return "", "", func() {}, fmt.Errorf("capture direct destination host key: %w: %s", scanErr, strings.TrimSpace(string(output)))
 	}
 	return identity, knownHosts, cleanup, nil
+}
+
+func scopedDirectAuthorizedKey(publicKey []byte, token, forcedCommand string, expires time.Time) (string, error) {
+	key, _, _, rest, err := ssh.ParseAuthorizedKey(publicKey)
+	if err != nil || key.Type() != "ssh-ed25519" || len(strings.TrimSpace(string(rest))) != 0 || strings.TrimSpace(forcedCommand) == "" || token == "" || strings.ContainsAny(forcedCommand, "\r\n\x00") || strings.ContainsAny(token, " \t\r\n\x00") {
+		return "", fmt.Errorf("invalid scoped direct transfer authorization")
+	}
+	return "restrict,command=" + strconv.Quote(forcedCommand) + ",expiry-time=" + strconv.Quote(expires.UTC().Format("20060102T150405Z")) + " " + strings.TrimSpace(string(ssh.MarshalAuthorizedKey(key))) + " " + token, nil
+}
+
+// Serialize append/revocation across simultaneous transfers. Remove the exact
+// authorization, not every line containing a substring, and keep user keys.
+func directCredentialRemovalCommand(authorizedLine string) string {
+	remove := "umask 077; tmp=$(mktemp ~/.ssh/.akoflow-keys-XXXXXX); trap 'rm -f -- \"$tmp\"' EXIT; " +
+		"grep -F -x -v -- " + shell(authorizedLine) + " ~/.ssh/authorized_keys > \"$tmp\" || test \"$?\" -eq 1; " +
+		"chmod 600 \"$tmp\"; mv -- \"$tmp\" ~/.ssh/authorized_keys"
+	return "flock ~/.ssh/.akoflow-transfer-lock sh -c " + shell("set -eu; "+remove)
 }
 
 func ephemeralSSHKey() ([]byte, []byte, error) {

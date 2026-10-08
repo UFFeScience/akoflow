@@ -9,10 +9,40 @@ import (
 	"reflect"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/UFFeScience/akoflow/internal/domain"
 	"github.com/UFFeScience/akoflow/internal/provider"
+	"golang.org/x/crypto/ssh"
 )
+
+func TestDirectCredentialIsForcedAndExpiring(t *testing.T) {
+	publicKey, _, err := ephemeralSSHKey()
+	if err != nil {
+		t.Fatal(err)
+	}
+	command := "cat > '/tmp/preparation/archive'"
+	line, err := scopedDirectAuthorizedKey(publicKey, "transfer-token", command, time.Date(2026, 10, 8, 9, 0, 0, 0, time.UTC))
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, comment, options, rest, err := ssh.ParseAuthorizedKey([]byte(line))
+	if err != nil || len(rest) != 0 || comment != "transfer-token" {
+		t.Fatalf("invalid authorized key syntax: %v", err)
+	}
+	if !reflect.DeepEqual(options, []string{"restrict", `command="cat > '/tmp/preparation/archive'"`, `expiry-time="20261008T090000Z"`}) {
+		t.Fatalf("authorization must not allow arbitrary commands: %#v", options)
+	}
+	for _, invalid := range []string{"", "cat > file\nother-command", "cat\x00"} {
+		if _, err := scopedDirectAuthorizedKey(publicKey, "token", invalid, time.Now()); err == nil {
+			t.Fatal("unsafe forced command accepted")
+		}
+	}
+	remove := directCredentialRemovalCommand(line)
+	if !strings.Contains(remove, "flock") || !strings.Contains(remove, "grep -F -x -v") || !strings.Contains(remove, "chmod 600") {
+		t.Fatal("revocation must serialize exact-line removal and preserve permissions")
+	}
+}
 
 func installFakeSSH(t *testing.T) {
 	t.Helper()

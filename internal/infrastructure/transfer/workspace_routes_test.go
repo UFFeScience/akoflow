@@ -104,7 +104,7 @@ func TestMixedWorkspaceRoutesConflictAndRecovery(t *testing.T) {
 		if run.Route.ArchiveBytes <= 0 || len(run.Route.Phases) != 6 {
 			t.Fatalf("missing phase/archive evidence: %+v", run.Route)
 		}
-		if run.Route.Packaging != "tar-uncompressed" || run.Route.PreparationSeconds <= 0 || run.NetworkBytes <= 0 {
+		if run.Route.Packaging != "tar-gzip" || run.Route.PreparationSeconds <= 0 || run.NetworkBytes <= 0 {
 			t.Fatalf("missing archive preparation evidence: %+v", run)
 		}
 	}

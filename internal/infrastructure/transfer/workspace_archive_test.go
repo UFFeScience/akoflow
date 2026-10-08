@@ -140,7 +140,7 @@ func TestWorkspaceArchiveRejectsUnsafeMembers(t *testing.T) {
 	}
 }
 
-func TestUncompressedWorkspaceArchiveRoundtripDigest(t *testing.T) {
+func TestCompressedWorkspaceArchiveRoundtripDigest(t *testing.T) {
 	root := t.TempDir()
 	if err := os.Mkdir(filepath.Join(root, "nested"), 0700); err != nil {
 		t.Fatal(err)
@@ -163,7 +163,20 @@ func TestUncompressedWorkspaceArchiveRoundtripDigest(t *testing.T) {
 	if digest != fmt.Sprintf("%x", sha256.Sum256(data)) {
 		t.Fatal("archive digest does not cover full transmitted file")
 	}
-	if len(data) < 1024 {
-		t.Fatal("not an uncompressed tar archive")
+	if err := os.WriteFile(filename, data[:len(data)-4], 0600); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := validateWorkspaceArchive(filename); err == nil {
+		t.Fatal("truncated gzip trailer accepted")
+	}
+	if len(data) < 2 || data[0] != 0x1f || data[1] != 0x8b {
+		t.Fatal("not a gzip archive")
+	}
+	data[len(data)-1] ^= 1
+	if err := os.WriteFile(filename, data, 0600); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := validateWorkspaceArchive(filename); err == nil {
+		t.Fatal("corrupted gzip trailer accepted")
 	}
 }

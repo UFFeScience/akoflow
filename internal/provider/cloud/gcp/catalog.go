@@ -27,6 +27,14 @@ const (
 	billingEndpoint = "https://cloudbilling.googleapis.com/v1/services/6F81-5844-456A/skus"
 )
 
+type APIError struct {
+	StatusCode int
+	Status     string
+	Body       string
+}
+
+func (e *APIError) Error() string { return fmt.Sprintf("GCP API returned %s: %s", e.Status, e.Body) }
+
 type Catalog struct {
 	client          *http.Client
 	computeEndpoint string
@@ -336,7 +344,7 @@ func (c *Catalog) get(ctx context.Context, token, endpoint string, output any) e
 	defer response.Body.Close()
 	data, _ := io.ReadAll(io.LimitReader(response.Body, 64<<20))
 	if response.StatusCode/100 != 2 {
-		return fmt.Errorf("GCP API returned %s: %s", response.Status, strings.TrimSpace(string(data)))
+		return &APIError{StatusCode: response.StatusCode, Status: response.Status, Body: strings.TrimSpace(string(data))}
 	}
 	if err := json.Unmarshal(data, output); err != nil {
 		return fmt.Errorf("decode GCP response: %w", err)

@@ -85,6 +85,30 @@ func TestShellQuotingRoundTripsThroughNestedPOSIXCommands(t *testing.T) {
 	}
 }
 
+func TestEphemeralTransferKeyIsReadableByOpenSSH(t *testing.T) {
+	keygen, err := exec.LookPath("ssh-keygen")
+	if err != nil {
+		t.Fatal("OpenSSH is required for transfer credential integration")
+	}
+	publicKey, privateKey, err := ephemeralSSHKey()
+	if err != nil {
+		t.Fatal(err)
+	}
+	path := filepath.Join(t.TempDir(), "identity")
+	if err := os.WriteFile(path, privateKey, 0600); err != nil {
+		t.Fatal(err)
+	}
+	output, err := exec.Command(keygen, "-y", "-f", path).CombinedOutput()
+	if err != nil {
+		t.Fatalf("OpenSSH cannot load ephemeral identity: %v %s", err, output)
+	}
+	expected, _, _, _, expectedErr := ssh.ParseAuthorizedKey(publicKey)
+	actual, _, _, _, actualErr := ssh.ParseAuthorizedKey(output)
+	if expectedErr != nil || actualErr != nil || !bytes.Equal(expected.Marshal(), actual.Marshal()) {
+		t.Fatal("OpenSSH identity does not match installed authorization")
+	}
+}
+
 func TestDirectCredentialIsForcedAndExpiring(t *testing.T) {
 	publicKey, _, err := ephemeralSSHKey()
 	if err != nil {
@@ -99,7 +123,7 @@ func TestDirectCredentialIsForcedAndExpiring(t *testing.T) {
 	if err != nil || len(rest) != 0 || comment != "transfer-token" {
 		t.Fatalf("invalid authorized key syntax: %v", err)
 	}
-	if !reflect.DeepEqual(options, []string{"restrict", `command="cat > '/tmp/preparation/archive'"`, `expiry-time="20261008T090000Z"`}) {
+	if !reflect.DeepEqual(options, []string{"restrict", `command="cat > '/tmp/preparation/archive'"`, `expiry-time="20261008090000Z"`}) {
 		t.Fatalf("authorization must not allow arbitrary commands: %#v", options)
 	}
 	for _, invalid := range []string{"", "cat > file\nother-command", "cat\x00"} {

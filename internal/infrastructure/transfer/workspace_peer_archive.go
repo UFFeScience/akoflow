@@ -2,6 +2,7 @@ package transfer
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net/url"
 	"path/filepath"
@@ -61,6 +62,7 @@ func preparePeerWorkspaceArchive(ctx context.Context, source, destination domain
 	})
 	cancel()
 	if probeErr != nil {
+		run.Route.PeerProbeFailure = peerProbeFailureCategory(probeErr)
 		cleanupCtx, release := context.WithTimeout(context.WithoutCancel(ctx), 30*time.Second)
 		_, cleanupErr := runSSHCombinedOutput(cleanupCtx, destination, append(sshArgs(destination), targetHost, "rm -f -- "+shell(filepath.Join(target, "peer-probe"))), nil)
 		release()
@@ -124,6 +126,32 @@ func preparePeerWorkspaceArchive(ctx context.Context, source, destination domain
 		return true, fmt.Errorf("verify private peer archive: %w", err)
 	}
 	return true, rejectWorkspaceSymlinks(ctx, destination)
+}
+
+// Persist only bounded categories: SSH stderr may contain addresses, paths or
+// remote diagnostic text that must not be promoted into scientific metadata.
+func peerProbeFailureCategory(err error) string {
+	if errors.Is(err, context.DeadlineExceeded) {
+		return "probe_timeout"
+	}
+	message := strings.ToLower(err.Error())
+	for _, stage := range []struct{ fragment, category string }{
+		{"install temporary destination credential", "destination_credential_installation_failed"},
+		{"install temporary source credential", "source_credential_installation_failed"},
+		{"install verified direct destination host key", "source_host_key_installation_failed"},
+		{"read verified direct destination host key", "verified_host_key_unavailable"},
+		{"host key verification failed", "host_key_rejected"},
+		{"invalid format", "identity_format_rejected"},
+		{"error in libcrypto", "identity_format_rejected"},
+		{"permission denied", "authentication_rejected"},
+		{"connection refused", "connection_refused"},
+		{"timed out", "probe_timeout"},
+	} {
+		if strings.Contains(message, stage.fragment) {
+			return stage.category
+		}
+	}
+	return "ssh_probe_failed"
 }
 
 // Validate every member before publishing even a single extracted file. Only

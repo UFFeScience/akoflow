@@ -136,6 +136,7 @@ type TransferRoute struct {
 	ServerNetworkBytes     *int64           `json:"serverNetworkBytes,omitempty"`
 	Fallback               TransferStrategy `json:"fallback,omitempty"`
 	Reason                 string           `json:"reason"`
+	PeerProbeFailure       string           `json:"peerProbeFailure,omitempty"`
 }
 
 // TransferPhase is elapsed wall time, not exclusive work: concurrent origins

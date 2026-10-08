@@ -4,6 +4,7 @@ import (
 	"archive/tar"
 	"bytes"
 	"compress/gzip"
+	"context"
 	"crypto/sha256"
 	"fmt"
 	"os"
@@ -11,6 +12,24 @@ import (
 	"path/filepath"
 	"testing"
 )
+
+func TestPeerProbeDiagnosticsDoNotPublishRawSSHText(t *testing.T) {
+	for _, tc := range []struct {
+		err  error
+		want string
+	}{
+		{context.DeadlineExceeded, "probe_timeout"},
+		{fmt.Errorf("stream directly between cloud instances: worker@private.example: Permission denied (publickey)."), "authentication_rejected"},
+		{fmt.Errorf("install temporary destination credential: Permission denied secret-path"), "destination_credential_installation_failed"},
+		{fmt.Errorf("Host key verification failed for private.example"), "host_key_rejected"},
+		{fmt.Errorf("Load key secret-path: invalid format"), "identity_format_rejected"},
+		{fmt.Errorf("unexpected SSH text containing credential-data"), "ssh_probe_failed"},
+	} {
+		if got := peerProbeFailureCategory(tc.err); got != tc.want {
+			t.Fatalf("diagnostic category %q want %q", got, tc.want)
+		}
+	}
+}
 
 func TestPeerArchiveRejectsDamagedGzipBeforePublishing(t *testing.T) {
 	python, err := exec.LookPath("python3")

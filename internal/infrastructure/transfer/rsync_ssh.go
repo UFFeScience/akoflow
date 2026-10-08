@@ -4,7 +4,6 @@ import (
 	"context"
 	"crypto/ed25519"
 	"crypto/rand"
-	"crypto/x509"
 	"encoding/pem"
 	"fmt"
 	"io"
@@ -418,7 +417,7 @@ func scopedDirectAuthorizedKey(publicKey []byte, token, forcedCommand string, ex
 	if err != nil || key.Type() != "ssh-ed25519" || len(strings.TrimSpace(string(rest))) != 0 || strings.TrimSpace(forcedCommand) == "" || token == "" || strings.ContainsAny(forcedCommand, "\r\n\x00") || strings.ContainsAny(token, " \t\r\n\x00") {
 		return "", fmt.Errorf("invalid scoped direct transfer authorization")
 	}
-	return "restrict,command=" + strconv.Quote(forcedCommand) + ",expiry-time=" + strconv.Quote(expires.UTC().Format("20060102T150405Z")) + " " + strings.TrimSpace(string(ssh.MarshalAuthorizedKey(key))) + " " + token, nil
+	return "restrict,command=" + strconv.Quote(forcedCommand) + ",expiry-time=" + strconv.Quote(expires.UTC().Format("20060102150405Z")) + " " + strings.TrimSpace(string(ssh.MarshalAuthorizedKey(key))) + " " + token, nil
 }
 
 // Serialize append/revocation across simultaneous transfers. Remove the exact
@@ -439,11 +438,11 @@ func ephemeralSSHKey() ([]byte, []byte, error) {
 	if err != nil {
 		return nil, nil, fmt.Errorf("encode temporary transfer public key: %w", err)
 	}
-	encodedPrivate, err := x509.MarshalPKCS8PrivateKey(private)
+	encodedPrivate, err := ssh.MarshalPrivateKey(private, "temporary-workspace-transfer")
 	if err != nil {
 		return nil, nil, fmt.Errorf("encode temporary transfer private key: %w", err)
 	}
-	return ssh.MarshalAuthorizedKey(sshPublic), pem.EncodeToMemory(&pem.Block{Type: "PRIVATE KEY", Bytes: encodedPrivate}), nil
+	return ssh.MarshalAuthorizedKey(sshPublic), pem.EncodeToMemory(encodedPrivate), nil
 }
 
 func runSSHInput(ctx context.Context, endpoint domain.TransferEndpoint, host, command string, input []byte) error {

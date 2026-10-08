@@ -313,7 +313,7 @@ func (RsyncSSH) TransferRoute(ctx context.Context, strategy domain.TransferStrat
 			}
 			defer cleanup()
 		}
-		remoteSSH := []string{"ssh", "-i", shell(identity), "-o", "BatchMode=yes", "-o", "IdentitiesOnly=yes"}
+		remoteSSH := []string{"ssh", "-F", "/dev/null", "-i", shell(identity), "-o", "BatchMode=yes", "-o", "IdentitiesOnly=yes", "-o", "ForwardAgent=no", "-o", "ConnectTimeout=10", "-o", "ServerAliveInterval=5", "-o", "ServerAliveCountMax=2"}
 		remoteSSH = append(remoteSSH, "-o", shell("UserKnownHostsFile="+knownHosts), "-o", "StrictHostKeyChecking=yes")
 		if uri, parseErr := url.Parse(destination.URI); parseErr == nil && uri.Query().Get("strictHostKeyChecking") == "true" {
 			remoteSSH = append(remoteSSH, "-o", "HostKeyAlgorithms=ssh-ed25519", "-o", shell("HostKeyAlias="+uri.Query().Get("hostKeyAlias")))
@@ -325,7 +325,7 @@ func (RsyncSSH) TransferRoute(ctx context.Context, strategy domain.TransferStrat
 		if offset > 0 {
 			readCommand = fmt.Sprintf("tail -c +%d -- %s", offset+1, shell(sourcePath))
 		}
-		remoteCommand = readCommand + " | " + strings.Join(remoteSSH, " ") + " " + shell(destinationHost) + " " + shell(writeCommand)
+		remoteCommand = "bash -o pipefail -c " + shell(readCommand+" | "+strings.Join(remoteSSH, " ")+" "+shell(destinationHost)+" "+shell(writeCommand))
 		output, runErr := runSSHCombinedOutput(ctx, source, append(sshArgs(source), sourceHost, remoteCommand), nil)
 		if runErr != nil {
 			return 0, fmt.Errorf("stream directly between cloud instances: %w: %s", runErr, strings.TrimSpace(string(output)))
@@ -349,7 +349,11 @@ func prepareDirectCredential(ctx context.Context, source, destination domain.Tra
 	if err != nil {
 		return "", "", func() {}, err
 	}
-	token := fmt.Sprintf("akoflow-transfer-%d", time.Now().UnixNano())
+	var nonce [16]byte
+	if _, err := rand.Read(nonce[:]); err != nil {
+		return "", "", func() {}, fmt.Errorf("generate transfer credential identity: %w", err)
+	}
+	token := fmt.Sprintf("akoflow-transfer-%x", nonce)
 	identity := "/tmp/" + token
 	knownHosts := identity + ".known_hosts"
 	destinationHost, _, err := sshTarget(destination, "")

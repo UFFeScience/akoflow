@@ -122,6 +122,7 @@ func (s WorkspaceRsync) syncDependencyRoutes(ctx context.Context, plans []domain
 	prepared := append([]domain.TransferEndpoint(nil), sources...)
 	proofs := make([]string, len(plans))
 	localCloud := make([]bool, len(plans))
+	privatePeers := make([]bool, len(plans))
 	network := make([]rsyncStats, len(plans))
 	var remoteRoot string
 	defer func() {
@@ -186,7 +187,15 @@ func (s WorkspaceRsync) syncDependencyRoutes(ctx context.Context, plans []domain
 		runs[i].StartedAt = start
 		runs[i].Route.PreparationStartedAt = start
 		runs[i].Route.Packaging = "tar-gzip"
-		err := relayWorkspaceArchive(ctx, sources[i], prepared[i], &runs[i])
+		usedPeer, err := preparePeerWorkspaceArchive(ctx, sources[i], prepared[i], &runs[i])
+		if usedPeer && err == nil {
+			privatePeers[i] = true
+			preparedURL, _ := url.Parse(prepared[i].URI)
+			preparedURL.Path = filepath.Join(preparedURL.Path, "contents")
+			prepared[i].URI = preparedURL.String()
+		} else if !usedPeer && err == nil {
+			err = relayWorkspaceArchive(ctx, sources[i], prepared[i], &runs[i])
+		}
 		end := float64(time.Now().UnixNano()) / 1e9
 		runs[i].Route.PreparationFinishedAt = end
 		runs[i].Route.PreparationSeconds = end - start
@@ -207,6 +216,11 @@ func (s WorkspaceRsync) syncDependencyRoutes(ctx context.Context, plans []domain
 	for i := range result {
 		result[i].NetworkBytes = network[i].bytes
 		result[i].Route.FilesTransferred = result[i].FilesTransferred
+		serverBytes := network[i].bytes
+		if proofs[i] != "" || privatePeers[i] {
+			serverBytes = 0
+		}
+		result[i].Route.ServerNetworkBytes = &serverBytes
 		if proofs[i] != "" {
 			result[i].Route.Reason = "verified shared filesystem: " + proofs[i]
 			if localCloud[i] {
@@ -216,6 +230,11 @@ func (s WorkspaceRsync) syncDependencyRoutes(ctx context.Context, plans []domain
 		} else {
 			result[i].Strategy, result[i].Route.Strategy = domain.TransferGateway, domain.TransferGateway
 			result[i].Route.Reason = "per-dependency staging fallback; shared storage access not proven"
+			if privatePeers[i] {
+				result[i].Strategy, result[i].Route.Strategy = domain.TransferDirectRuntime, domain.TransferDirectRuntime
+				result[i].Route.NetworkDomain = sources[i].NetworkDomain
+				result[i].Route.Reason = "verified private cloud peer generation and authenticated whole-workspace archive transfer"
+			}
 			if strings.HasPrefix(sources[i].URI, "file://") {
 				result[i].Strategy, result[i].Route.Strategy = domain.TransferDirectRuntime, domain.TransferDirectRuntime
 				result[i].Route.Reason = "network rsync from local producer to remote merge preparation"

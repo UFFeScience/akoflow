@@ -133,6 +133,7 @@ type TransferRoute struct {
 	RetryCount             int              `json:"retryCount,omitempty"`
 	LastRetryError         string           `json:"lastRetryError,omitempty"`
 	NetworkBytesIncomplete bool             `json:"networkBytesIncomplete,omitempty"`
+	ServerNetworkBytes     *int64           `json:"serverNetworkBytes,omitempty"`
 	Fallback               TransferStrategy `json:"fallback,omitempty"`
 	Reason                 string           `json:"reason"`
 }

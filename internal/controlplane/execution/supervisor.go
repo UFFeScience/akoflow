@@ -372,6 +372,7 @@ func (s *Supervisor) executeActivities(ctx context.Context, request ports.Execut
 		admitted := plannedReadyActivities(
 			ready, assignments, pendingAllocations,
 		)
+		admitted = restrictedCapacityReady(admitted, assignments, resources, tasks, pendingAllocations)
 		for _, activityID := range ready {
 			queueReason := "awaiting assigned runtime"
 			if queued, exists := tasks[activityID]; exists {
@@ -1480,7 +1481,19 @@ func validateRequest(request ports.ExecutionRequest) error {
 	if len(request.Plan.Assignments) != len(request.Workflow.Activities) {
 		return fmt.Errorf("plan must assign every activity exactly once")
 	}
+	resources := indexResources(request.Resources)
+	lanes := make(map[string]map[string]bool)
 	for _, assignment := range request.Plan.Assignments {
+		resource := resources[assignment.ResourceID]
+		if resource.ExecutionTarget != domain.ExecutionTargetBatch && resource.CPUCapacity > 0 && resource.CPUCapacity < float64(resource.CPUCores) && assignment.CoreID != "" {
+			if lanes[resource.ID] == nil {
+				lanes[resource.ID] = make(map[string]bool)
+			}
+			lanes[resource.ID][assignment.CoreID] = true
+			if len(lanes[resource.ID]) > resource.SchedulingCPUCores() {
+				return fmt.Errorf("plan exceeds explicit CPU capacity for resource %q: %d lanes, capacity %d", resource.ID, len(lanes[resource.ID]), resource.SchedulingCPUCores())
+			}
+		}
 		if selectRuntime(request, assignment) == "" {
 			return fmt.Errorf("resource %q has no enabled runtime for %q mode",
 				assignment.ResourceID, request.Run.Mode)

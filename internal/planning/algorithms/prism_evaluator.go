@@ -533,7 +533,7 @@ func prismRecomputePriorityRates(search compactPRISMContext, tasks []prismEvalua
 					}
 				}
 			}
-			capacity := math.Max(1, float64(task.resource.CPUCores))
+			capacity := float64(task.resource.SchedulingCPUCores())
 			baseRate := math.Min(1, capacity/float64(len(active)))
 			task.rate = baseRate / slowdown
 			task.slowdown = 1 / math.Max(task.rate, 1e-12)
@@ -569,7 +569,7 @@ func prismRecomputePriorityRates(search compactPRISMContext, tasks []prismEvalua
 	}
 	for index := range active {
 		task := &tasks[index]
-		capacity := math.Max(1, float64(task.resource.CPUCores))
+		capacity := float64(task.resource.SchedulingCPUCores())
 		task.rate = math.Min(1, capacity*weights[index]/math.Max(total, 1e-12))
 		task.slowdown = 1 / math.Max(task.rate, 1e-12)
 		task.rateUpdatedAt = clock

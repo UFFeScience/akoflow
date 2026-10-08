@@ -173,7 +173,7 @@ func opaqueBatchTarget(resource domain.Resource) bool {
 }
 
 func cores(resource domain.Resource) []string {
-	count := resource.CPUCores
+	count := resource.SchedulingCPUCores()
 	if count < 1 {
 		count = 1
 	}

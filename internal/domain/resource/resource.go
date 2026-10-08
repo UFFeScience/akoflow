@@ -1,6 +1,9 @@
 package resource
 
-import "time"
+import (
+	"math"
+	"time"
+)
 
 type ResourceType string
 type ResourceExecutionTarget string
@@ -54,6 +57,17 @@ type Resource struct {
 	ContainerOverhead    float64                 `json:"containerOverheadSeconds"`
 	Schedulable          bool                    `json:"schedulable"`
 	Metadata             map[string]any          `json:"metadata,omitempty"`
+}
+
+// SchedulingCPUCores limits physical lanes to the explicitly available CPU
+// capacity. Fractional capacity still has one lane; activity compatibility
+// independently rejects requests exceeding that fractional capacity.
+func (r Resource) SchedulingCPUCores() int {
+	count := max(1, r.CPUCores)
+	if r.CPUCapacity > 0 && r.CPUCapacity < float64(count) {
+		count = max(1, int(math.Floor(r.CPUCapacity)))
+	}
+	return count
 }
 
 type ResourceRuntimeBinding struct {

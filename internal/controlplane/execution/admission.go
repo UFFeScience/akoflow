@@ -35,3 +35,27 @@ func plannedReadyActivities(
 	}
 	return eligible
 }
+
+// Preserve intentional plan overcommit for unrestricted resources, but never
+// exceed an explicit reduction of the physical lane capacity.
+func restrictedCapacityReady(ready []string, assignments map[string]domain.PlanAssignment, resources map[string]domain.Resource, tasks map[string]domain.TaskExecution, pending map[string]bool) []string {
+	occupied := make(map[string]int)
+	for id, task := range tasks {
+		if task.Status == domain.TaskPreparing || task.Status == domain.TaskRunning || pending[id] {
+			occupied[assignments[id].ResourceID]++
+		}
+	}
+	eligible := make([]string, 0, len(ready))
+	for _, id := range ready {
+		resourceID := assignments[id].ResourceID
+		r := resources[resourceID]
+		if r.ExecutionTarget != domain.ExecutionTargetBatch && r.CPUCapacity > 0 && r.CPUCapacity < float64(r.CPUCores) {
+			if occupied[resourceID] >= r.SchedulingCPUCores() {
+				continue
+			}
+			occupied[resourceID]++
+		}
+		eligible = append(eligible, id)
+	}
+	return eligible
+}

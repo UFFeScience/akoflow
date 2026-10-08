@@ -29,7 +29,7 @@ func buildPlatformXML(resources []domain.Resource, topology domain.NetworkTopolo
 		if resource.ID == "" {
 			return nil, fmt.Errorf("SimGrid resource id is required")
 		}
-		cores := resource.CPUCores
+		cores := resource.SchedulingCPUCores()
 		if cores < 1 {
 			cores = 1
 		}

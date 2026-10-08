@@ -2,6 +2,7 @@ package transfer
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net/url"
 	"os"
@@ -12,6 +13,18 @@ import (
 
 	"github.com/UFFeScience/akoflow/internal/domain"
 )
+
+func TestWorkspacePhaseRecordsFailureWithoutChangingError(t *testing.T) {
+	var run domain.DataTransferRun
+	want := errors.New("transport interrupted")
+	if got := measureWorkspacePhase(&run, "archive-upload", func() error { return want }); got != want {
+		t.Fatalf("error changed: %v", got)
+	}
+	phase := run.Route.Phases[0]
+	if !phase.Failed || phase.Name != "archive-upload" || phase.FinishedAt < phase.StartedAt || phase.DurationSeconds < 0 {
+		t.Fatalf("invalid phase: %+v", phase)
+	}
+}
 
 func TestSharedWorkspaceProofRequiresMatchingFilesystemAndMount(t *testing.T) {
 	for _, test := range []struct {
@@ -88,9 +101,15 @@ func TestMixedWorkspaceRoutesConflictAndRecovery(t *testing.T) {
 		t.Fatalf("mixed routes: %+v", runs)
 	}
 	for _, run := range runs[1:] {
+		if run.Route.ArchiveBytes <= 0 || len(run.Route.Phases) != 6 {
+			t.Fatalf("missing phase/archive evidence: %+v", run.Route)
+		}
 		if run.Route.Packaging != "tar-uncompressed" || run.Route.PreparationSeconds <= 0 || run.NetworkBytes <= 0 {
 			t.Fatalf("missing archive preparation evidence: %+v", run)
 		}
+	}
+	if len(runs[0].Route.Phases) != 2 || runs[0].Route.ArchiveBytes != 0 {
+		t.Fatalf("shared origin incorrectly attributed archive work: %+v", runs[0].Route)
 	}
 	if runs[0].Route.SharedFilesystem != "nfs" || !strings.Contains(runs[0].Route.SharedFilesystemID, "server:/fixture") || runs[1].Route.SharedFilesystem != "" || runs[0].Route.FilesTransferred != runs[0].FilesTransferred {
 		t.Fatalf("missing or incorrect route evidence: %+v", runs)

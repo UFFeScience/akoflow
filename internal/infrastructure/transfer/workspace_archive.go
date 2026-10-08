@@ -14,9 +14,22 @@ import (
 	"path/filepath"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/UFFeScience/akoflow/internal/domain"
 )
+
+func measureWorkspacePhase(run *domain.DataTransferRun, name string, operation func() error) error {
+	start := time.Now()
+	err := operation()
+	end := time.Now()
+	run.Route.Phases = append(run.Route.Phases, domain.TransferPhase{
+		Name: name, StartedAt: float64(start.UnixNano()) / 1e9,
+		FinishedAt:      float64(end.UnixNano()) / 1e9,
+		DurationSeconds: end.Sub(start).Seconds(), Failed: err != nil,
+	})
+	return err
+}
 
 func parallelWorkspacePreparation(ctx context.Context, count, limit int, prepare func(context.Context, int) error) error {
 	if limit <= 0 {
@@ -66,7 +79,7 @@ func relayWorkspaceArchive(ctx context.Context, source, destination domain.Trans
 	}
 	defer os.RemoveAll(root)
 	archivePath := filepath.Join(root, "workspace.tar")
-	if err := packWorkspaceArchive(ctx, source, archivePath); err != nil {
+	if err := measureWorkspacePhase(run, "pack-and-receive", func() error { return packWorkspaceArchive(ctx, source, archivePath) }); err != nil {
 		if strings.HasPrefix(source.URI, "ssh://") {
 			if partial, statErr := os.Stat(archivePath); statErr == nil {
 				run.NetworkBytes += partial.Size()
@@ -75,7 +88,12 @@ func relayWorkspaceArchive(ctx context.Context, source, destination domain.Trans
 		}
 		return err
 	}
-	digest, err := validateWorkspaceArchive(archivePath)
+	var digest string
+	err = measureWorkspacePhase(run, "archive-validation", func() error {
+		var validationErr error
+		digest, validationErr = validateWorkspaceArchive(archivePath)
+		return validationErr
+	})
 	if err != nil {
 		return err
 	}
@@ -86,6 +104,7 @@ func relayWorkspaceArchive(ctx context.Context, source, destination domain.Trans
 	if strings.HasPrefix(source.URI, "ssh://") {
 		run.NetworkBytes += info.Size()
 	}
+	run.Route.ArchiveBytes = info.Size()
 	remoteURL, err := url.Parse(destination.URI)
 	if err != nil {
 		return err
@@ -97,7 +116,12 @@ func relayWorkspaceArchive(ctx context.Context, source, destination domain.Trans
 		return err
 	}
 	local := domain.TransferEndpoint{URI: (&url.URL{Scheme: "file", Path: root}).String()}
-	stats, err := syncDirectory(ctx, local, spool, false)
+	var stats rsyncStats
+	err = measureWorkspacePhase(run, "archive-upload", func() error {
+		var uploadErr error
+		stats, uploadErr = syncDirectory(ctx, local, spool, false)
+		return uploadErr
+	})
 	recordWorkspaceRsyncStats(run, stats, true)
 	if err != nil {
 		return err
@@ -116,7 +140,12 @@ func relayWorkspaceArchive(ctx context.Context, source, destination domain.Trans
 	remoteArchive := filepath.Join(spoolPath, "workspace.tar")
 	command := "set -eu; actual=$(sha256sum -- " + shell(remoteArchive) + "); test \"${actual%% *}\" = " + shell(digest) +
 		"; tar --extract --file=" + shell(remoteArchive) + " --directory=" + shell(target) + " --no-same-owner --no-same-permissions"
-	output, err := runSSHCombinedOutput(ctx, destination, append(sshArgs(destination), host, command), nil)
+	var output []byte
+	err = measureWorkspacePhase(run, "receiver-verify-and-extract", func() error {
+		var extractErr error
+		output, extractErr = runSSHCombinedOutput(ctx, destination, append(sshArgs(destination), host, command), nil)
+		return extractErr
+	})
 	if err != nil {
 		return fmt.Errorf("verify/extract workspace archive: %w: %s", err, strings.TrimSpace(string(output)))
 	}

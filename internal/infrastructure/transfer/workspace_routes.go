@@ -123,6 +123,7 @@ func (s WorkspaceRsync) syncDependencyRoutes(ctx context.Context, plans []domain
 	}
 	// Separate staging directories allow concurrent preparation without concurrent
 	// writes into the consumer workspace. Cancellation waits for every worker.
+	barrierStart := time.Now()
 	if err := parallelWorkspacePreparation(ctx, len(sources), s.Parallelism, func(ctx context.Context, i int) error {
 		if proofs[i] != "" {
 			return nil
@@ -139,6 +140,13 @@ func (s WorkspaceRsync) syncDependencyRoutes(ctx context.Context, plans []domain
 		return err
 	}); err != nil {
 		return runs, err
+	}
+	barrierEnd := time.Now()
+	for i := range runs {
+		runs[i].Route.Phases = append(runs[i].Route.Phases, domain.TransferPhase{
+			Name: "shared-preparation-barrier", StartedAt: float64(barrierStart.UnixNano()) / 1e9,
+			FinishedAt: float64(barrierEnd.UnixNano()) / 1e9, DurationSeconds: barrierEnd.Sub(barrierStart).Seconds(),
+		})
 	}
 	// Validate all paths/content together before any successor publication.
 	result, err := syncRemoteWorkspaceDirect(ctx, plans, prepared, destination, runs)

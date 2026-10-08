@@ -109,6 +109,8 @@ type TransferEndpoint struct {
 }
 
 type TransferRoute struct {
+	Phases                 []TransferPhase  `json:"phases,omitempty"`
+	ArchiveBytes           int64            `json:"archiveBytes,omitempty"`
 	Packaging              string           `json:"packaging,omitempty"`
 	PreparationStartedAt   float64          `json:"preparationStartedAt,omitempty"`
 	PreparationFinishedAt  float64          `json:"preparationFinishedAt,omitempty"`
@@ -133,6 +135,16 @@ type TransferRoute struct {
 	NetworkBytesIncomplete bool             `json:"networkBytesIncomplete,omitempty"`
 	Fallback               TransferStrategy `json:"fallback,omitempty"`
 	Reason                 string           `json:"reason"`
+}
+
+// TransferPhase is elapsed wall time, not exclusive work: concurrent origins
+// and the shared publication barrier must not be summed as consumer latency.
+type TransferPhase struct {
+	Name            string  `json:"name"`
+	StartedAt       float64 `json:"startedAt"`
+	FinishedAt      float64 `json:"finishedAt"`
+	DurationSeconds float64 `json:"durationSeconds"`
+	Failed          bool    `json:"failed,omitempty"`
 }
 type ConnectorBinding struct {
 	ID            string `json:"id"`

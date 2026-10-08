@@ -138,7 +138,15 @@ func syncRemoteWorkspaceDirect(ctx context.Context, plans []domain.DataTransferP
 		sourcePaths[index] = sourcePath
 	}
 	script := remoteWorkspaceScript(sourcePaths, destinationPath)
+	mergeStart := time.Now()
 	output, err := runSSHCombinedOutput(ctx, destination, append(sshArgs(destination), host, "bash -s"), strings.NewReader(script))
+	mergeEnd := time.Now()
+	for i := range runs {
+		runs[i].Route.Phases = append(runs[i].Route.Phases, domain.TransferPhase{
+			Name: "shared-conflict-check-copy-and-verify", StartedAt: float64(mergeStart.UnixNano()) / 1e9,
+			FinishedAt: float64(mergeEnd.UnixNano()) / 1e9, DurationSeconds: mergeEnd.Sub(mergeStart).Seconds(), Failed: err != nil,
+		})
+	}
 	if err != nil {
 		return runs, fmt.Errorf("direct remote workspace sync: %w: %s", err, strings.TrimSpace(string(output)))
 	}

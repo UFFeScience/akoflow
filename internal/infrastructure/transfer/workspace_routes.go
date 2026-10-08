@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"net/url"
-	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -121,31 +120,25 @@ func (s WorkspaceRsync) syncDependencyRoutes(ctx context.Context, plans []domain
 		remoteURL.Path = filepath.Join(remoteRoot, strconv.Itoa(i))
 		prepared[i] = destination
 		prepared[i].URI = remoteURL.String()
-		if err := makeWorkspaceDirectory(ctx, prepared[i]); err != nil {
-			return runs, err
+	}
+	// Separate staging directories allow concurrent preparation without concurrent
+	// writes into the consumer workspace. Cancellation waits for every worker.
+	if err := parallelWorkspacePreparation(ctx, len(sources), s.Parallelism, func(ctx context.Context, i int) error {
+		if proofs[i] != "" {
+			return nil
 		}
-		copySource := source
-		if !strings.HasPrefix(source.URI, "file://") {
-			localRoot, err := os.MkdirTemp("", "akoflow-dependency-")
-			if err != nil {
-				return runs, err
-			}
-			defer os.RemoveAll(localRoot)
-			copySource = domain.TransferEndpoint{URI: (&url.URL{Scheme: "file", Path: localRoot}).String()}
-			stats, err := syncDirectory(ctx, source, copySource, false)
-			recordWorkspaceRsyncStats(&runs[i], stats, true)
-			network[i].bytes = runs[i].NetworkBytes
-			if err != nil {
-				return runs, err
-			}
-		}
-		stats, err := syncDirectory(ctx, copySource, prepared[i], false)
-		recordWorkspaceRsyncStats(&runs[i], stats, true)
+		start := float64(time.Now().UnixNano()) / 1e9
+		runs[i].StartedAt = start
+		runs[i].Route.PreparationStartedAt = start
+		runs[i].Route.Packaging = "tar-uncompressed"
+		err := relayWorkspaceArchive(ctx, sources[i], prepared[i], &runs[i])
+		end := float64(time.Now().UnixNano()) / 1e9
+		runs[i].Route.PreparationFinishedAt = end
+		runs[i].Route.PreparationSeconds = end - start
 		network[i].bytes = runs[i].NetworkBytes
-		if err != nil {
-			return runs, err
-		}
-		network[i].fileBytes = stats.fileBytes
+		return err
+	}); err != nil {
+		return runs, err
 	}
 	// Validate all paths/content together before any successor publication.
 	result, err := syncRemoteWorkspaceDirect(ctx, plans, prepared, destination, runs)

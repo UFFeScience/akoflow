@@ -22,7 +22,9 @@ import (
 // In particular, no predecessor is allowed to overwrite a different file from
 // another predecessor or an already populated successor workspace.
 type WorkspaceRsync struct {
-	Resolver interface {
+	// Parallelism bounds independent preparations; merge remains a single barrier.
+	Parallelism int
+	Resolver    interface {
 		ResolveTransferEndpoint(context.Context, domain.TransferLocation) (domain.TransferEndpoint, error)
 	}
 }

@@ -20,6 +20,8 @@
     "makespanSeconds": 3567.8707086633945,
     "cost": 0
   },
+  "plan_assignment_compute_work_seconds": 27666.338780192465,
+  "plan_assignment_transfer_work_seconds": 24.256941990412088,
   "simulation": {
     "makespanSeconds": 3567.8162834323634,
     "cost": 0,
@@ -44,6 +46,7 @@
     },
     "transferredBytes": 26801976910
   },
+  "real_api_run_timestamp_wall_seconds": 9324.0,
   "real_network_bytes_from_routes": 59724006790,
   "transfer_route_count": 122,
   "activities": [
@@ -807,6 +810,7 @@
     "API runtime includes delayed terminal observation; native Docker durations differ.",
     "API aggregate counters can contain older attempts; audit uses latest distinct IDs.",
     "Transfer work is summed overlapping route time, not wall-clock preparation.",
+    "Plan assignment work sums are not makespan; API timestamp wall and recovered makespan can differ.",
     "Cost zero is uncalibrated, not free cloud execution.",
     "e2-medium interference extrapolated to HPC/micro; micro speedup 0.25 is approximate.",
     "Whole-workspace real traffic differs from estimated plan edge volumes.",

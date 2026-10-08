@@ -47,7 +47,8 @@ func TestMixedWorkspaceRoutesConflictAndRecovery(t *testing.T) {
 		t.Skip("rsync unavailable")
 	}
 	bin := t.TempDir()
-	ssh := "#!/bin/sh\nwhile [ \"$#\" -gt 1 ]; do shift; done\ncase \"$1\" in *'stat -f'*) printf 'nfs 0 nfs4 server:/fixture /home\\nnfs 0 nfs4 server:/fixture /home\\n'; exit 0;; esac\nexec sh -c \"$1\"\n"
+	// Strip the GNU-only archive option in this local BSD-tar transport fixture.
+	ssh := "#!/bin/sh\nwhile [ \"$#\" -gt 1 ]; do shift; done\ncase \"$1\" in *'stat -f'*) printf 'nfs 0 nfs4 server:/fixture /home\\nnfs 0 nfs4 server:/fixture /home\\n'; exit 0;; esac\ncommand=$(printf '%s' \"$1\" | sed 's/--hard-dereference //g'); exec sh -c \"$command\"\n"
 	rsync := fmt.Sprintf("#!/bin/bash\nif [[ -n ${AKOFLOW_TEST_FAIL_ONCE:-} && ! -e $AKOFLOW_TEST_FAIL_ONCE ]]; then touch \"$AKOFLOW_TEST_FAIL_ONCE\"; echo 'injected network interruption' >&2; exit 12; fi\nargs=(); skip=0\nfor arg in \"$@\"; do if ((skip)); then skip=0; continue; fi; case \"$arg\" in -e) skip=1;; --secluded-args) ;; hpc.test:*) args+=(\"${arg#hpc.test:}\");; *) args+=(\"$arg\");; esac; done\nexec %s \"${args[@]}\"\n", shell(realRsync))
 	for name, body := range map[string]string{"ssh": ssh, "rsync": rsync} {
 		if err := os.WriteFile(filepath.Join(bin, name), []byte(body), 0700); err != nil {
@@ -57,8 +58,8 @@ func TestMixedWorkspaceRoutesConflictAndRecovery(t *testing.T) {
 	t.Setenv("PATH", bin+string(os.PathListSeparator)+os.Getenv("PATH"))
 	t.Setenv("AKOFLOW_SSH_CONTROL_DIRECTORY", t.TempDir())
 	root := t.TempDir()
-	hpc, fog, target := filepath.Join(root, "hpc"), filepath.Join(root, "fog"), filepath.Join(root, "target")
-	for _, path := range []string{hpc, fog, target} {
+	hpc, fog, fog2, target := filepath.Join(root, "hpc"), filepath.Join(root, "fog"), filepath.Join(root, "fog2"), filepath.Join(root, "target")
+	for _, path := range []string{hpc, fog, fog2, target} {
 		if err := os.Mkdir(path, 0700); err != nil {
 			t.Fatal(err)
 		}
@@ -71,10 +72,12 @@ func TestMixedWorkspaceRoutesConflictAndRecovery(t *testing.T) {
 	}
 	write(filepath.Join(hpc, "hpc.fits"), "HPC")
 	write(filepath.Join(fog, "fog.fits"), "FOG")
+	write(filepath.Join(fog2, "fog2.fits"), "FOG2")
 	remote := func(path string) string { return (&url.URL{Scheme: "ssh", Host: "hpc.test", Path: path}).String() }
 	plans := []domain.DataTransferPlan{
 		{ID: "hpc", Source: domain.TransferLocation{URI: remote(hpc)}, Destination: domain.TransferLocation{URI: remote(target)}},
 		{ID: "fog", Source: domain.TransferLocation{URI: workspaceURL(fog)}, Destination: domain.TransferLocation{URI: remote(target)}},
+		{ID: "fog2", Source: domain.TransferLocation{URI: (&url.URL{Scheme: "ssh", Host: "cloud.test", Path: fog2}).String()}, Destination: domain.TransferLocation{URI: remote(target)}},
 	}
 	syncer := WorkspaceRsync{Resolver: directWorkspaceEndpointResolver{}}
 	runs, err := syncer.Sync(context.Background(), plans)
@@ -84,10 +87,15 @@ func TestMixedWorkspaceRoutesConflictAndRecovery(t *testing.T) {
 	if runs[0].NetworkBytes != 0 || !strings.Contains(runs[0].Route.Reason, "verified shared") || runs[1].NetworkBytes <= 0 {
 		t.Fatalf("mixed routes: %+v", runs)
 	}
+	for _, run := range runs[1:] {
+		if run.Route.Packaging != "tar-uncompressed" || run.Route.PreparationSeconds <= 0 || run.NetworkBytes <= 0 {
+			t.Fatalf("missing archive preparation evidence: %+v", run)
+		}
+	}
 	if runs[0].Route.SharedFilesystem != "nfs" || !strings.Contains(runs[0].Route.SharedFilesystemID, "server:/fixture") || runs[1].Route.SharedFilesystem != "" || runs[0].Route.FilesTransferred != runs[0].FilesTransferred {
 		t.Fatalf("missing or incorrect route evidence: %+v", runs)
 	}
-	for _, name := range []string{"hpc.fits", "fog.fits"} {
+	for _, name := range []string{"hpc.fits", "fog.fits", "fog2.fits"} {
 		if _, err := os.Stat(filepath.Join(target, name)); err != nil {
 			t.Fatal(err)
 		}

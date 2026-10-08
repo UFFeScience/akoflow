@@ -109,6 +109,10 @@ type TransferEndpoint struct {
 }
 
 type TransferRoute struct {
+	Packaging              string           `json:"packaging,omitempty"`
+	PreparationStartedAt   float64          `json:"preparationStartedAt,omitempty"`
+	PreparationFinishedAt  float64          `json:"preparationFinishedAt,omitempty"`
+	PreparationSeconds     float64          `json:"preparationSeconds,omitempty"`
 	Strategy               TransferStrategy `json:"strategy"`
 	ProducerActivityID     string           `json:"producerActivityId,omitempty"`
 	ConsumerActivityID     string           `json:"consumerActivityId,omitempty"`

@@ -55,6 +55,44 @@ func TestArchivePreparationRunsTwoWorkersAndWaitsForBarrier(t *testing.T) {
 	}
 }
 
+func TestArchivePreparationDefaultAndMaximumEight(t *testing.T) {
+	for _, limit := range []int{0, 8, 100} {
+		t.Run(fmt.Sprint(limit), func(t *testing.T) {
+			entered := make(chan struct{}, 9)
+			release := make(chan struct{})
+			done := make(chan error, 1)
+			go func() {
+				done <- parallelWorkspacePreparation(context.Background(), 9, limit, func(context.Context, int) error {
+					entered <- struct{}{}
+					<-release
+					return nil
+				})
+			}()
+			for i := 0; i < 8; i++ {
+				select {
+				case <-entered:
+				case <-time.After(3 * time.Second):
+					close(release)
+					t.Fatal("eight workers did not overlap")
+				}
+			}
+			select {
+			case <-entered:
+				close(release)
+				t.Fatal("exceeded eight workers")
+			case <-done:
+				close(release)
+				t.Fatal("barrier released early")
+			case <-time.After(30 * time.Millisecond):
+			}
+			close(release)
+			if err := <-done; err != nil {
+				t.Fatal(err)
+			}
+		})
+	}
+}
+
 func TestArchivePreparationCancelsAndJoinsWorkersOnFailure(t *testing.T) {
 	started := make(chan struct{})
 	var stopped atomic.Bool

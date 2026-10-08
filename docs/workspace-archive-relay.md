@@ -1,8 +1,13 @@
 # Workspace archive relay
 
 Independent dependencies with an SSH destination are prepared concurrently,
-with two workers by default and a maximum of four. `WorkspaceRsync.Parallelism`
-can select a smaller limit. Proven shared NFS/Lustre/BeeGFS routes remain internal
+with eight workers by default and a maximum of eight. Set
+`AKOFLOW_WORKSPACE_TRANSFER_PARALLELISM` (1–8) on the daemon to select a smaller
+limit; `WorkspaceRsync.Parallelism` controls the same bound internally. This is
+a per-consumer preparation limit, not a global process or CPU-count limit.
+Eight workers can increase contention on shared disks, links and small VMs;
+it is a configured experiment limit, not a measured optimal value.
+Proven shared NFS/Lustre/BeeGFS routes remain internal
 and are not archived or counted as relay network traffic.
 
 Other routes pack a complete uncompressed tar snapshot, relay it through a

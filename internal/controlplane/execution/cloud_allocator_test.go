@@ -83,6 +83,32 @@ type allocatorQueue struct {
 	jobs  []domainqueue.Job
 }
 
+type deduplicatingAllocatorQueue struct {
+	ports.QueueStore
+	store *allocatorStore
+}
+
+func (q deduplicatingAllocatorQueue) Publish(_ context.Context, job domainqueue.Job) (domainqueue.Job, error) {
+	// Simulate another caller winning between List and Publish.
+	q.store.operations["canonical"] = domain.CloudOperationRun{ID: "canonical", Kind: "start", Status: "completed", InstanceID: "vm", ExecutionRunID: "run", CapacityTargetID: "target"}
+	job.AggregateID = "canonical"
+	return job, nil
+}
+
+func TestQueuedCloudAllocatorReturnsCanonicalDeduplicatedOperation(t *testing.T) {
+	store := &allocatorStore{operations: map[string]domain.CloudOperationRun{}}
+	a := QueuedCloudAllocator{Cloud: store, Operations: store, Queue: deduplicatingAllocatorQueue{store: store}}
+	op, err := a.findOrCreate(context.Background(), "run", "activity", domain.CloudCapacityTarget{ID: "target"}, "start", "vm")
+	if err != nil || op.ID != "canonical" {
+		t.Fatalf("op=%+v err=%v", op, err)
+	}
+	for id, value := range store.operations {
+		if id != "canonical" && (value.Status != "cancelled" || value.Phase != "deduplicated" || value.FinishedAt == nil) {
+			t.Fatalf("orphan left live: %+v", value)
+		}
+	}
+}
+
 func (q *allocatorQueue) Publish(_ context.Context, job domainqueue.Job) (domainqueue.Job, error) {
 	q.jobs = append(q.jobs, job)
 	go func() {

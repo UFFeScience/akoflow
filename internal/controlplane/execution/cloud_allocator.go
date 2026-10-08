@@ -182,12 +182,26 @@ func (a QueuedCloudAllocator) findOrCreate(ctx context.Context, executionRunID, 
 		job.AggregateType, job.AggregateID = "cloud_operation", operation.ID
 		job.IdempotencyKey = "cloud-allocation:" + executionRunID + ":" + target.ID + ":" + instanceID + ":" + kind
 		job.Priority, job.MaxAttempts = 100, 3
-		_, err = a.Queue.Publish(ctx, job)
+		var published domainqueue.Job
+		published, err = a.Queue.Publish(ctx, job)
+		if err == nil && published.AggregateID != "" && published.AggregateID != operation.ID {
+			canonical, lookupErr := a.Operations.FindCloudOperation(ctx, published.AggregateID)
+			if lookupErr != nil || canonical == nil {
+				err = fmt.Errorf("resolve canonical cloud operation %q: %v", published.AggregateID, lookupErr)
+			} else {
+				now := time.Now().UTC()
+				operation.Status, operation.Phase, operation.FailureReason, operation.FinishedAt = "cancelled", "deduplicated", "Superseded by cloud operation "+canonical.ID, &now
+				if updateErr := a.Operations.UpdateCloudOperation(context.WithoutCancel(ctx), operation); updateErr != nil {
+					return operation, updateErr
+				}
+				return *canonical, nil
+			}
+		}
 	}
 	if err != nil {
 		now := time.Now().UTC()
 		operation.Status, operation.Phase, operation.FailureReason, operation.FinishedAt = "failed", "failed", err.Error(), &now
-		_ = a.Operations.UpdateCloudOperation(ctx, operation)
+		_ = a.Operations.UpdateCloudOperation(context.WithoutCancel(ctx), operation)
 		return operation, err
 	}
 	return operation, nil

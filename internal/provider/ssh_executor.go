@@ -16,16 +16,17 @@ import (
 // to SSH configuration, an agent, or a configured identity file; no secret is
 // stored in the environment definition.
 type SSHCommandExecutor struct {
-	Executor       CommandExecutor
-	ConnectionID   string
-	Endpoint       string
-	Username       string
-	Port           int
-	IdentityFile   string
-	ProxyCommand   string
-	HostKeyAlias   string
-	KnownHostsFile string
-	ForwardAgent   bool
+	Executor              CommandExecutor
+	ConnectionID          string
+	Endpoint              string
+	Username              string
+	Port                  int
+	IdentityFile          string
+	ProxyCommand          string
+	HostKeyAlias          string
+	KnownHostsFile        string
+	ForwardAgent          bool
+	StrictHostKeyChecking bool
 }
 
 // NewSSHCommandExecutor builds the canonical daemon-side SSH transport for an
@@ -45,12 +46,13 @@ func NewSSHCommandExecutor(executor CommandExecutor, connection domain.Environme
 	}
 	return SSHCommandExecutor{
 		Executor: executor, ConnectionID: connection.ID, Endpoint: connection.Endpoint, Username: connection.Username,
-		Port:           connectionInt(connection.Configuration, "port"),
-		IdentityFile:   identity,
-		ProxyCommand:   connectionString(connection.Configuration, "proxyCommand"),
-		HostKeyAlias:   connectionString(connection.Configuration, "hostKeyAlias"),
-		KnownHostsFile: knownHosts,
-		ForwardAgent:   connectionBool(connection.Configuration, "forwardAgent"),
+		Port:                  connectionInt(connection.Configuration, "port"),
+		IdentityFile:          identity,
+		ProxyCommand:          connectionString(connection.Configuration, "proxyCommand"),
+		HostKeyAlias:          connectionString(connection.Configuration, "hostKeyAlias"),
+		KnownHostsFile:        knownHosts,
+		ForwardAgent:          connectionBool(connection.Configuration, "forwardAgent"),
+		StrictHostKeyChecking: connectionBool(connection.Configuration, "strictHostKeyChecking"),
 	}
 }
 
@@ -73,7 +75,12 @@ func (e SSHCommandExecutor) Run(ctx context.Context, name string, args []string,
 		if err := os.MkdirAll(filepath.Dir(e.KnownHostsFile), 0o700); err != nil {
 			return nil, fmt.Errorf("create SSH known-hosts directory: %w", err)
 		}
-		sshArgs = append(sshArgs, "-o", "UserKnownHostsFile="+e.KnownHostsFile, "-o", "StrictHostKeyChecking=accept-new")
+		policy := "accept-new"
+		if e.StrictHostKeyChecking {
+			policy = "yes"
+			sshArgs = append(sshArgs, "-o", "HostKeyAlgorithms=ssh-ed25519")
+		}
+		sshArgs = append(sshArgs, "-o", "UserKnownHostsFile="+e.KnownHostsFile, "-o", "StrictHostKeyChecking="+policy)
 	}
 	if e.Port > 0 {
 		sshArgs = append(sshArgs, "-p", strconv.Itoa(e.Port))

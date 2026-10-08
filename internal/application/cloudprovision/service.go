@@ -56,6 +56,7 @@ func (s *Provisioner) verifyHostTrust(ctx context.Context, instance *domain.Clou
 		instance.TerraformOutput = map[string]any{}
 	}
 	instance.TerraformOutput["verifiedHostKeyAlias"] = trust.Alias
+	instance.TerraformOutput["verifiedHostGeneration"] = instance.ProviderID
 	instance.TerraformOutput["verifiedKnownHostsFile"] = trust.KnownHostsFile
 	return nil
 }
@@ -505,11 +506,17 @@ func (s *Provisioner) Validate(ctx context.Context, instanceID string) (domain.C
 	if err != nil || instance == nil {
 		return domain.CloudProvisionedInstance{}, fmt.Errorf("cloud instance %q was not found", instanceID)
 	}
+	if err := s.verifyHostTrust(ctx, instance); err != nil {
+		return *instance, err
+	}
 	target, err := s.store.FindCapacityTarget(ctx, instance.CapacityTargetID)
 	if err != nil || target == nil {
 		return *instance, targetError(instance.CapacityTargetID, err)
 	}
 	if err := s.validate(ctx, instance, *target, target.MachineConfigurations); err != nil {
+		return *instance, err
+	}
+	if err := s.store.UpdateProvisionedInstance(ctx, *instance); err != nil {
 		return *instance, err
 	}
 	return *instance, nil

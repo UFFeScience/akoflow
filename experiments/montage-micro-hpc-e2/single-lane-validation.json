@@ -1,0 +1,21 @@
+{
+  "issue": "AKO-120",
+  "implementationCommit": "a2ac846",
+  "planningSessionId": "montage-micro-hpc-e2-planning-20261008-single-lane-v1",
+  "planId": "montage-micro-hpc-e2-planning-20261008-single-lane-v1-dd4cb4119a0d",
+  "activityCount": 58,
+  "assignmentCounts": {"e2Micro": 40, "e2Medium": 10, "hpc": 8},
+  "microSchedulingLanesPerVm": 1,
+  "plannedMakespanSeconds": 3617.9382322026677,
+  "simulationRunId": "montage-micro-hpc-e2-simulation-20261008-single-lane-v2",
+  "simulationStatus": "completed",
+  "simulationCompletedActivities": 58,
+  "simulationMakespanSeconds": 3617.4981106317523,
+  "realValidationStatus": "pending",
+  "limitations": [
+    "Price is not calibrated; predicted zero cost does not mean free cloud execution.",
+    "Micro computeSpeedup 0.25 is an uncalibrated approximation.",
+    "Measured e2-medium interference is extrapolated to micro and HPC resources.",
+    "Earlier two-lane micro plans are not valid baselines for the single-activity-per-micro contract."
+  ]
+}

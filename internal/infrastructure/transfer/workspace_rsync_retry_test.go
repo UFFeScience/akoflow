@@ -21,6 +21,19 @@ func TestRsyncStageTimingAccumulatesSeparatelyFromBytes(t *testing.T) {
 	}
 }
 
+func TestSyncDirectoryMeasuresCommandExecutionSeparately(t *testing.T) {
+	bin := t.TempDir()
+	script := "#!/bin/sh\nsleep 0.05\nprintf 'Total bytes sent: 100\\n'\n"
+	if err := os.WriteFile(filepath.Join(bin, "rsync"), []byte(script), 0o700); err != nil {
+		t.Fatal(err)
+	}
+	t.Setenv("PATH", bin+string(os.PathListSeparator)+os.Getenv("PATH"))
+	stats, err := syncDirectory(context.Background(), domain.TransferEndpoint{URI: "file:///source"}, domain.TransferEndpoint{URI: "file:///target"}, false)
+	if err != nil || stats.executionSeconds < 0.04 || stats.channelWaitSeconds >= stats.executionSeconds {
+		t.Fatalf("command timing must exclude channel acquisition: stats=%+v err=%v", stats, err)
+	}
+}
+
 func TestWorkspaceRsyncRetriesTransientFailureAndAccountsReportedBytes(t *testing.T) {
 	calls := 0
 	stats, err := retryWorkspaceRsync(context.Background(), 0, false, func() ([]byte, error) {

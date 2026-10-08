@@ -1,0 +1,18 @@
+{
+  "runId": "montage-micro-hpc-e2-real-20261008-single-lane-v1",
+  "status": "partial_running_measurement",
+  "source": "Daemon API cloud operation timestamps and allowlisted provisioning log milestones",
+  "resourceId": "montage-gcp-fog-e2-micro-02",
+  "provisionElapsedSeconds": 349.332897,
+  "sshReadinessSeconds": 3.466,
+  "configurationPlaybookSeconds": 269.335,
+  "dockerValidationSeconds": 2.774,
+  "workspaceValidationSeconds": 1.640,
+  "inference": "Configuration playbook is the largest measured component of this instance's initial provisioning delay; this is not dependency-transfer elapsed time.",
+  "limitations": [
+    "No per-task playbook timing available in these milestones; package installation is not individually attributed.",
+    "Unattributed remainder includes infrastructure creation, trust verification and orchestration; do not label it entirely Terraform.",
+    "Single instance observation; do not extrapolate to all machines or final makespan.",
+    "Workflow not yet completed; no final performance conclusion."
+  ]
+}

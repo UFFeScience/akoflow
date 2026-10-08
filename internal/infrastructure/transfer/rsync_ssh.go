@@ -431,7 +431,7 @@ func runSSHInput(ctx context.Context, endpoint domain.TransferEndpoint, host, co
 }
 
 func queuedSSHCommand(ctx context.Context, endpoint domain.TransferEndpoint, args []string) (*exec.Cmd, func(), error) {
-	release, err := provider.AcquireSSHChannel(ctx, sshControlPath(args))
+	release, err := provider.AcquireSSHBulkChannel(ctx, sshControlPath(args))
 	if err != nil {
 		return nil, nil, fmt.Errorf("wait for SSH channel: %w", err)
 	}

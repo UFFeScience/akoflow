@@ -455,7 +455,7 @@ func TestSupervisorStartsTwelveActivitiesOnPlannedCapacity(t *testing.T) {
 		})
 	}
 	request.Resources[0].CPUCapacity = 12
-	controller := &activityControllerFake{minimumStartsBeforeInspect: 12}
+	controller := &activityControllerFake{}
 	service, err := New(&executionStoreFake{}, controller, &planExecutorFake{}, Config{
 		PollInterval: time.Microsecond,
 	})
@@ -488,7 +488,7 @@ func TestSupervisorBoundsStartAndInspectionConcurrency(t *testing.T) {
 		})
 	}
 	request.Resources[0].CPUCapacity = 20
-	controller := &activityControllerFake{minimumStartsBeforeInspect: 20, delay: 5 * time.Millisecond}
+	controller := &activityControllerFake{delay: 5 * time.Millisecond}
 	service, err := New(&executionStoreFake{}, controller, &planExecutorFake{}, Config{PollInterval: time.Microsecond})
 	if err != nil {
 		t.Fatal(err)
@@ -535,7 +535,7 @@ func TestSupervisorStartsIndependentActivitiesDespitePlanOrder(t *testing.T) {
 	request := requestFixture(domain.ExecutionModeReal)
 	request.Workflow.Dependencies = nil
 	request.Plan.Assignments[1].OrderOnResource = 1
-	controller := &activityControllerFake{firstInspectStarts: 2}
+	controller := &activityControllerFake{}
 	store := &executionStoreFake{}
 	service, err := New(store, controller, &planExecutorFake{}, Config{PollInterval: time.Microsecond})
 	if err != nil {
@@ -574,7 +574,7 @@ func TestSupervisorStartsReadyActivityAheadOfBlockedPlanOrder(t *testing.T) {
 	request.RuntimeBindings = append(request.RuntimeBindings, domain.ResourceRuntimeBinding{
 		ResourceID: "other", RuntimeID: "local", Enabled: true,
 	})
-	controller := &activityControllerFake{firstInspectStarts: 2}
+	controller := &activityControllerFake{}
 	service, err := New(&executionStoreFake{}, controller, &planExecutorFake{}, Config{
 		PollInterval: time.Microsecond,
 	})
@@ -597,13 +597,16 @@ func TestSupervisorFollowsParallelPlanLanesDespiteOvercommit(t *testing.T) {
 	request.Resources[0].CPUCapacity = 1
 	request.Plan.Assignments[0].SlotID = "slot-a"
 	request.Plan.Assignments[1].SlotID = "slot-b"
-	controller := &activityControllerFake{firstInspectStarts: 2}
+	controller := &activityControllerFake{}
 	service, err := New(&executionStoreFake{}, controller, &planExecutorFake{}, Config{PollInterval: time.Microsecond})
 	if err != nil {
 		t.Fatal(err)
 	}
 	if _, err := service.Execute(context.Background(), request); err != nil {
 		t.Fatal(err)
+	}
+	if len(controller.started) != 2 {
+		t.Fatalf("started=%v, want both planned lanes", controller.started)
 	}
 }
 

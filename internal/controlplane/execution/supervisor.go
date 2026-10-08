@@ -213,7 +213,7 @@ func retainCloudSourcesWithEphemeralOutputs(allocations map[string]domain.Runtim
 	return remaining, len(protectedInstances)
 }
 
-func (s *Supervisor) executeActivities(ctx context.Context, request ports.ExecutionRequest) (domain.ExecutionTrace, error) {
+func (s *Supervisor) executeActivities(ctx context.Context, request ports.ExecutionRequest) (trace domain.ExecutionTrace, executionErr error) {
 	if request.RuntimeAllocations == nil {
 		request.RuntimeAllocations = make(map[string]domain.RuntimeAllocation)
 	}
@@ -302,6 +302,39 @@ func (s *Supervisor) executeActivities(ctx context.Context, request ports.Execut
 	stoppingInstances := make(map[string]bool)
 	idleStops := newIdleCloudStops(ctx)
 	defer idleStops.close()
+	startCtx, cancelStarts := context.WithCancel(ctx)
+	startResults := make(chan startResult, len(activities))
+	pendingStarts := make(map[string]bool)
+	var startWorkers sync.WaitGroup
+	consumeStart := func(result startResult) error {
+		delete(pendingStarts, result.activityID)
+		return s.applyStartResult(ctx, request, result, running, completed, tasks, &transfers)
+	}
+	// Join preparation workers before the caller releases cloud allocations.
+	// A Start that succeeds concurrently with cancellation still belongs to us.
+	defer func() {
+		cancelStarts()
+		startWorkers.Wait()
+		cleanupCtx, cancel := context.WithTimeout(context.WithoutCancel(ctx), 60*time.Second)
+		defer cancel()
+		for len(pendingAllocations) > 0 {
+			result := <-allocationResults
+			delete(pendingAllocations, result.activityID)
+			if result.allocation.ResourceID != "" {
+				request.RuntimeAllocations[result.activityID] = result.allocation
+			}
+		}
+		for len(pendingStarts) > 0 {
+			result := <-startResults
+			delete(pendingStarts, result.activityID)
+			if err := s.applyStartResult(cleanupCtx, request, result, running, completed, tasks, &transfers); executionErr == nil && err != nil {
+				executionErr = err
+			}
+		}
+		if executionErr != nil {
+			s.cancelRunningActivities(cleanupCtx, request.Run.Mode, running, tasks, executionErr)
+		}
+	}()
 	consumeAllocation := func(result allocationResult) error {
 		delete(pendingAllocations, result.activityID)
 		if result.err != nil {
@@ -318,6 +351,11 @@ func (s *Supervisor) executeActivities(ctx context.Context, request ports.Execut
 	for len(completed) < len(activities) {
 		if err := ctx.Err(); err != nil {
 			return domain.ExecutionTrace{}, err
+		}
+		for len(startResults) > 0 {
+			if err := consumeStart(<-startResults); err != nil {
+				return domain.ExecutionTrace{}, err
+			}
 		}
 		// Admit all completed allocations before launching a batch. Waiting for
 		// one runtime Start must not serialize other already-ready cloud hosts.
@@ -384,28 +422,52 @@ func (s *Supervisor) executeActivities(ctx context.Context, request ports.Execut
 			assignment := assignments[activityID]
 			resource := resources[assignment.ResourceID]
 			pendingAllocations[activityID] = true
+			allocationRequest := request
+			allocationRequest.RuntimeAllocations = cloneRuntimeAllocations(request.RuntimeAllocations)
+			startWorkers.Add(1)
 			go func(activityID string, assignment domain.PlanAssignment, resource domain.Resource) {
-				allocation, err := s.ensureRuntimeAllocation(ctx, request, activityID, assignment, resource)
+				defer startWorkers.Done()
+				allocation, err := s.ensureRuntimeAllocation(startCtx, allocationRequest, activityID, assignment, resource)
 				allocationResults <- allocationResult{activityID: activityID, allocation: allocation, err: err}
 			}(activityID, assignment, resource)
 		}
-		if err := s.startReadyActivities(
-			ctx, request, immediate, activities, assignments, resources,
-			running, completed, tasks, &transfers, readyAllocations,
-		); err != nil {
-			return domain.ExecutionTrace{}, err
-		}
 		for _, activityID := range immediate {
+			if len(pendingStarts) >= readyActivityConcurrency {
+				break
+			}
+			task := tasks[activityID]
+			task.Status = domain.TaskPreparing
+			if task.Metadata == nil {
+				task.Metadata = make(map[string]any)
+			}
+			task.Metadata["queueReason"] = "synchronizing predecessor workspaces and preparing runtime"
+			if err := s.executions.SaveTask(ctx, task); err != nil {
+				return domain.ExecutionTrace{}, fmt.Errorf("mark activity %q preparing: %w", activityID, err)
+			}
+			tasks[activityID] = task
+			startRequest := request
+			startRequest.RuntimeAllocations = cloneRuntimeAllocations(request.RuntimeAllocations)
+			allocated := cloneRuntimeAllocations(readyAllocations)
+			pendingStarts[activityID] = true
+			startWorkers.Add(1)
+			go func(activityID string, attempt int) {
+				defer startWorkers.Done()
+				startResults <- s.startReadyActivity(startCtx, startRequest, activityID, attempt, activities, assignments, resources, allocated)
+			}(activityID, task.Attempt)
 			delete(readyAllocations, activityID)
 		}
 		s.scheduleIdleCloudStops(request, completed, tasks, stoppingInstances, idleStops)
-		if len(running) == 0 && len(pendingAllocations) == 0 && len(immediate) == 0 && len(completed) < len(activities) {
+		if len(running) == 0 && len(pendingStarts) == 0 && len(pendingAllocations) == 0 && len(immediate) == 0 && len(completed) < len(activities) {
 			return domain.ExecutionTrace{}, fmt.Errorf("execution cannot progress: dependency cycle or incomplete plan")
 		}
-		if len(running) > 0 || len(pendingAllocations) > 0 {
+		if len(running) > 0 || len(pendingStarts) > 0 || len(pendingAllocations) > 0 {
 			select {
 			case <-ctx.Done():
 				return domain.ExecutionTrace{}, ctx.Err()
+			case result := <-startResults:
+				if err := consumeStart(result); err != nil {
+					return domain.ExecutionTrace{}, err
+				}
 			case result := <-allocationResults:
 				if err := consumeAllocation(result); err != nil {
 					return domain.ExecutionTrace{}, err
@@ -690,75 +752,44 @@ func validateExpectedOutputInstances(activityID string, values []string, instanc
 	return nil
 }
 
-func (s *Supervisor) startReadyActivities(
+func (s *Supervisor) applyStartResult(
 	ctx context.Context,
 	request ports.ExecutionRequest,
-	ready []string,
-	activities map[string]domain.Activity,
-	assignments map[string]domain.PlanAssignment,
-	resources map[string]domain.Resource,
+	result startResult,
 	running map[string]domain.ActivityHandle,
 	completed map[string]domain.TaskExecution,
 	tasks map[string]domain.TaskExecution,
 	transfers *[]domain.DataTransfer,
-	readyAllocations map[string]domain.RuntimeAllocation,
 ) error {
-	results := make([]startResult, len(ready))
-	semaphore := make(chan struct{}, readyActivityConcurrency)
-	var group sync.WaitGroup
-	for _, activityID := range ready {
-		task, exists := tasks[activityID]
-		if !exists {
-			continue
-		}
-		task.Status = domain.TaskPreparing
-		if task.Metadata == nil {
-			task.Metadata = make(map[string]any)
-		}
-		task.Metadata["queueReason"] = "synchronizing predecessor workspaces and preparing runtime"
-		if err := s.executions.SaveTask(ctx, task); err != nil {
-			return fmt.Errorf("mark activity %q preparing: %w", activityID, err)
-		}
-		tasks[activityID] = task
-	}
-	for index, activityID := range ready {
-		group.Add(1)
-		go func(index int, activityID string) {
-			defer group.Done()
-			semaphore <- struct{}{}
-			defer func() { <-semaphore }()
-			results[index] = s.startReadyActivity(ctx, request, activityID, tasks[activityID].Attempt, activities, assignments, resources, readyAllocations)
-		}(index, activityID)
-	}
-	group.Wait()
-	for _, result := range results {
-		activityID := result.activityID
-		if result.err != nil {
-			attempt := tasks[activityID].Attempt
-			_ = s.recordStartFailure(ctx, request.Run.ID, activityID, result.assignment, result.resource, selectRuntime(request, result.assignment), attempt, result.err)
-			return result.err
-		}
+	activityID := result.activityID
+	if result.allocation.ResourceID != "" {
 		request.RuntimeAllocations[activityID] = result.allocation
-		*transfers = append(*transfers, result.transfers...)
-		queued := tasks[activityID]
-		task := newRunningTask(request.Run.ID, activityID, result.assignment, result.resource, result.allocation, result.handle, queued.Attempt, result.readyAt, result.preparation)
-		if queued.Attempt > 0 {
-			task.ReadyAt = queued.ReadyAt
-			task.QueuedAt = queued.QueuedAt
-			task.QueueSeconds = maxFloat(0, task.StartedAt-queued.QueuedAt)
+	}
+	if result.err != nil {
+		attempt := tasks[activityID].Attempt
+		_ = s.recordStartFailure(ctx, request.Run.ID, activityID, result.assignment, result.resource, selectRuntime(request, result.assignment), attempt, result.err)
+		return result.err
+	}
+	request.RuntimeAllocations[activityID] = result.allocation
+	*transfers = append(*transfers, result.transfers...)
+	queued := tasks[activityID]
+	task := newRunningTask(request.Run.ID, activityID, result.assignment, result.resource, result.allocation, result.handle, queued.Attempt, result.readyAt, result.preparation)
+	if queued.Attempt > 0 {
+		task.ReadyAt = queued.ReadyAt
+		task.QueuedAt = queued.QueuedAt
+		task.QueueSeconds = maxFloat(0, task.StartedAt-queued.QueuedAt)
+	}
+	tasks[activityID], running[activityID] = task, result.handle
+	if result.handle.Status == domain.HandleCompleted {
+		completeTask(&task, result.handle)
+		if err := s.sealWorkspace(ctx, request.Run.ID, activityID, result.handle.Artifacts); err != nil {
+			return fmt.Errorf("seal workspace for activity %q: %w", activityID, err)
 		}
-		tasks[activityID], running[activityID] = task, result.handle
-		if result.handle.Status == domain.HandleCompleted {
-			completeTask(&task, result.handle)
-			if err := s.sealWorkspace(ctx, request.Run.ID, activityID, result.handle.Artifacts); err != nil {
-				return fmt.Errorf("seal workspace for activity %q: %w", activityID, err)
-			}
-			tasks[activityID], completed[activityID] = task, task
-			delete(running, activityID)
-		}
-		if err := s.executions.SaveTask(ctx, task); err != nil {
-			return err
-		}
+		tasks[activityID], completed[activityID] = task, task
+		delete(running, activityID)
+	}
+	if err := s.executions.SaveTask(ctx, task); err != nil {
+		return err
 	}
 	return nil
 }

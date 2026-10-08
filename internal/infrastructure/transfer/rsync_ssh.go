@@ -1,6 +1,7 @@
 package transfer
 
 import (
+	"bytes"
 	"context"
 	"crypto/ed25519"
 	"crypto/rand"
@@ -471,6 +472,23 @@ func runSSHCombinedOutput(ctx context.Context, endpoint domain.TransferEndpoint,
 	defer release()
 	command.Stdin = input
 	return command.CombinedOutput()
+}
+
+// runSSHStdout keeps transport diagnostics out of machine-readable responses.
+func runSSHStdout(ctx context.Context, endpoint domain.TransferEndpoint, args []string, input io.Reader) ([]byte, error) {
+	command, release, err := queuedSSHCommand(ctx, endpoint, args)
+	if err != nil {
+		return nil, err
+	}
+	defer release()
+	var stdout, stderr bytes.Buffer
+	command.Stdin = input
+	command.Stdout = &stdout
+	command.Stderr = &stderr
+	if err := command.Run(); err != nil {
+		return stdout.Bytes(), fmt.Errorf("ssh command: %w: %s", err, strings.TrimSpace(stderr.String()))
+	}
+	return stdout.Bytes(), nil
 }
 
 func sshControlPath(args []string) string {

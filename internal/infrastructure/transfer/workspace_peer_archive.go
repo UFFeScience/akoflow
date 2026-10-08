@@ -31,7 +31,7 @@ func preparePeerWorkspaceArchive(ctx context.Context, source, destination domain
 	if err != nil {
 		return true, err
 	}
-	output, err := runSSHCombinedOutput(ctx, source, append(sshArgs(source), sourceHost, "mktemp -d /tmp/akoflow-peer-XXXXXX"), nil)
+	output, err := runSSHStdout(ctx, source, append(sshArgs(source), sourceHost, "mktemp -d /tmp/akoflow-peer-XXXXXX"), nil)
 	if err != nil {
 		return false, nil
 	}

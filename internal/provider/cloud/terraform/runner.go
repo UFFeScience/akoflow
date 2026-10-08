@@ -115,10 +115,27 @@ func (r Runner) setDesiredStatus(ctx context.Context, instanceID, status string)
 	if err := os.WriteFile(variablesPath, encoded, 0600); err != nil {
 		return ports.TerraformResult{}, err
 	}
-	if _, err = r.run(
-		ctx, workspace, "apply", "-auto-approve", "-no-color", "-input=false",
-		"-var-file=terraform.tfvars.json",
-	); err != nil {
+	plan, err := os.CreateTemp(workspace, "lifecycle-*.tfplan")
+	if err != nil {
+		return ports.TerraformResult{}, err
+	}
+	planPath := plan.Name()
+	if err = plan.Close(); err != nil {
+		os.Remove(planPath)
+		return ports.TerraformResult{}, err
+	}
+	defer os.Remove(planPath)
+	if _, err = r.run(ctx, workspace, "plan", "-no-color", "-input=false", "-out="+planPath, "-var-file=terraform.tfvars.json"); err != nil {
+		return ports.TerraformResult{}, err
+	}
+	planJSON, err := r.run(ctx, workspace, "show", "-json", planPath)
+	if err != nil {
+		return ports.TerraformResult{}, err
+	}
+	if err = validateLifecyclePlan(planJSON); err != nil {
+		return ports.TerraformResult{}, err
+	}
+	if _, err = r.run(ctx, workspace, "apply", "-auto-approve", "-no-color", "-input=false", planPath); err != nil {
 		return ports.TerraformResult{}, err
 	}
 	output, err := r.run(ctx, workspace, "output", "-json")
@@ -126,6 +143,39 @@ func (r Runner) setDesiredStatus(ctx context.Context, instanceID, status string)
 		return ports.TerraformResult{}, err
 	}
 	return parseOutput(output)
+}
+
+// Lifecycle operations must never silently replace a configured worker or its
+// disk. Apply the inspected saved plan, rather than planning again at apply time.
+func validateLifecyclePlan(encoded []byte) error {
+	var plan struct {
+		ResourceChanges []struct {
+			Address string `json:"address"`
+			Mode    string `json:"mode"`
+			Change  struct {
+				Actions []string `json:"actions"`
+			} `json:"change"`
+		} `json:"resource_changes"`
+	}
+	if err := json.Unmarshal(encoded, &plan); err != nil {
+		return fmt.Errorf("decode cloud lifecycle plan: %w", err)
+	}
+	worker := false
+	for _, resource := range plan.ResourceChanges {
+		if resource.Mode == "data" {
+			continue
+		}
+		if resource.Address == "google_compute_instance.worker" {
+			worker = true
+		}
+		if len(resource.Change.Actions) != 1 || (resource.Change.Actions[0] != "no-op" && !(resource.Address == "google_compute_instance.worker" && resource.Change.Actions[0] == "update")) {
+			return fmt.Errorf("unsafe cloud lifecycle plan for %s: actions %v; explicit provision/configuration required", resource.Address, resource.Change.Actions)
+		}
+	}
+	if !worker {
+		return fmt.Errorf("cloud lifecycle plan has no existing worker; explicit provision/configuration required")
+	}
+	return nil
 }
 
 func (r Runner) prepare(spec ports.TerraformProvisionSpec) (string, error) {
@@ -218,7 +268,8 @@ func (r Runner) run(ctx context.Context, workspace string, arguments ...string) 
 	writeProvisionLog(logFile, "Terraform", "terraform %s", strings.Join(arguments, " "))
 	_ = logFile.Sync()
 	output, err := r.execute(ctx, workspace, append([]string{binary}, arguments...)...)
-	if len(output) > 0 {
+	privatePlan := len(arguments) > 1 && arguments[0] == "show" && arguments[1] == "-json"
+	if len(output) > 0 && !privatePlan {
 		_, _ = logFile.Write(output)
 		if output[len(output)-1] != '\n' {
 			_, _ = logFile.WriteString("\n")
@@ -227,6 +278,9 @@ func (r Runner) run(ctx context.Context, workspace string, arguments ...string) 
 	if err != nil {
 		writeProvisionLog(logFile, "Terraform", "failed after %.3fs: %v", time.Since(startedAt).Seconds(), err)
 		_ = logFile.Sync()
+		if privatePlan {
+			return nil, fmt.Errorf("terraform show plan: %w", err)
+		}
 		return nil, fmt.Errorf("terraform %s: %w: %s", arguments[0], err, strings.TrimSpace(string(output)))
 	}
 	writeProvisionLog(logFile, "Terraform", "completed in %.3fs", time.Since(startedAt).Seconds())

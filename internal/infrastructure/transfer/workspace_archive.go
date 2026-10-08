@@ -2,6 +2,8 @@ package transfer
 
 import (
 	"archive/tar"
+	"bufio"
+	"compress/gzip"
 	"context"
 	"crypto/sha256"
 	"fmt"
@@ -78,7 +80,7 @@ func relayWorkspaceArchive(ctx context.Context, source, destination domain.Trans
 		return err
 	}
 	defer os.RemoveAll(root)
-	archivePath := filepath.Join(root, "workspace.tar")
+	archivePath := filepath.Join(root, "workspace.tar.gz")
 	if err := measureWorkspacePhase(run, "pack-and-receive", func() error { return packWorkspaceArchive(ctx, source, archivePath) }); err != nil {
 		if strings.HasPrefix(source.URI, "ssh://") {
 			if partial, statErr := os.Stat(archivePath); statErr == nil {
@@ -137,7 +139,7 @@ func relayWorkspaceArchive(ctx context.Context, source, destination domain.Trans
 	if err != nil {
 		return err
 	}
-	remoteArchive := filepath.Join(spoolPath, "workspace.tar")
+	remoteArchive := filepath.Join(spoolPath, "workspace.tar.gz")
 	command := "set -eu; actual=$(sha256sum -- " + shell(remoteArchive) + "); test \"${actual%% *}\" = " + shell(digest) +
 		"; tar --extract --file=" + shell(remoteArchive) + " --directory=" + shell(target) + " --no-same-owner --no-same-permissions"
 	var output []byte
@@ -171,7 +173,7 @@ func packWorkspaceArchive(ctx context.Context, source domain.TransferEndpoint, a
 			return err
 		}
 		command, release, err = queuedSSHCommand(ctx, source, append(sshArgs(source), host,
-			"set -eu; bad=$(find "+shell(origin)+" ! -type d ! -type f -print -quit); test -z \"$bad\"; tar --hard-dereference -C "+shell(origin)+" -cf - ."))
+			"set -eu; bad=$(find "+shell(origin)+" ! -type d ! -type f -print -quit); test -z \"$bad\"; bash -o pipefail -c "+shell("tar --hard-dereference -C \"$1\" -cf - . | gzip -1")+" archive "+shell(origin)))
 		if err != nil {
 			return err
 		}
@@ -198,7 +200,12 @@ func packLocalWorkspaceArchive(ctx context.Context, root, filename string) error
 		return err
 	}
 	defer file.Close()
-	writer := tar.NewWriter(file)
+	compressed, err := gzip.NewWriterLevel(file, gzip.BestSpeed)
+	if err != nil {
+		return err
+	}
+	defer compressed.Close()
+	writer := tar.NewWriter(compressed)
 	defer writer.Close()
 	err = filepath.WalkDir(root, func(name string, entry fs.DirEntry, walkErr error) error {
 		if walkErr != nil {
@@ -246,6 +253,9 @@ func packLocalWorkspaceArchive(ctx context.Context, root, filename string) error
 	if err := writer.Close(); err != nil {
 		return err
 	}
+	if err := compressed.Close(); err != nil {
+		return err
+	}
 	return file.Close()
 }
 
@@ -256,7 +266,20 @@ func validateWorkspaceArchive(filename string) (string, error) {
 	}
 	defer file.Close()
 	hash := sha256.New()
-	reader := io.TeeReader(file, hash)
+	transport := bufio.NewReader(io.TeeReader(file, hash))
+	var reader io.Reader = transport
+	magic, _ := transport.Peek(2)
+	if len(magic) == 2 && magic[0] == 0x1f && magic[1] == 0x8b {
+		compressed, err := gzip.NewReader(transport)
+		if err != nil {
+			return "", fmt.Errorf("invalid compressed workspace archive: %w", err)
+		}
+		defer compressed.Close()
+		// BSD tar pads a gzip transport with zero blocks. Do not interpret this
+		// padding as a second gzip stream or accept unvalidated extra members.
+		compressed.Multistream(false)
+		reader = compressed
+	}
 	archive := tar.NewReader(reader)
 	seen := make(map[string]byte)
 	for {
@@ -287,9 +310,22 @@ func validateWorkspaceArchive(filename string) (string, error) {
 		}
 		seen[name] = header.Typeflag
 	}
-	// Include trailing padding in the digest matched on the receiver.
-	if _, err := io.Copy(hash, file); err != nil {
-		return "", err
+	// Drain the decompressor to validate its checksum/trailer, then include any
+	// remaining transport bytes in the digest verified before remote extraction.
+	if _, err := io.Copy(io.Discard, reader); err != nil {
+		return "", fmt.Errorf("invalid archive trailer: %w", err)
+	}
+	for {
+		b, err := transport.ReadByte()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			return "", err
+		}
+		if b != 0 {
+			return "", fmt.Errorf("unexpected data after workspace archive")
+		}
 	}
 	return fmt.Sprintf("%x", hash.Sum(nil)), nil
 }

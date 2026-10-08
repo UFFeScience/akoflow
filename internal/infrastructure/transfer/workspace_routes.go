@@ -131,7 +131,7 @@ func (s WorkspaceRsync) syncDependencyRoutes(ctx context.Context, plans []domain
 		start := float64(time.Now().UnixNano()) / 1e9
 		runs[i].StartedAt = start
 		runs[i].Route.PreparationStartedAt = start
-		runs[i].Route.Packaging = "tar-uncompressed"
+		runs[i].Route.Packaging = "tar-gzip"
 		err := relayWorkspaceArchive(ctx, sources[i], prepared[i], &runs[i])
 		end := float64(time.Now().UnixNano()) / 1e9
 		runs[i].Route.PreparationFinishedAt = end

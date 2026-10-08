@@ -1,0 +1,21 @@
+{
+  "issue": "AKO-130",
+  "executionRunId": "montage-micro-hpc-e2-real-20261008-single-lane-v1",
+  "consumer": "mconcatfitid0000049",
+  "dependencies": [
+    {"producer": "mdifffitid0000045", "archiveBytes": 201488310, "packAndReceiveSeconds": 122.883186014, "sshChannelWaitSeconds": 0.0007745, "rsyncExecutionSeconds": 235.721634609, "uploadSeconds": 235.722517859},
+    {"producer": "mdifffitid0000046", "archiveBytes": 202642917, "packAndReceiveSeconds": 123.280823721, "sshChannelWaitSeconds": 0.000172042, "rsyncExecutionSeconds": 238.480644068, "uploadSeconds": 238.48131236}
+  ],
+  "sharedPreparationSeconds": 371.602997795,
+  "sharedMergeSeconds": 33.281667057,
+  "mergeCheckSeconds": 12.408034978000046,
+  "mergeCopySeconds": 16.593500748999986,
+  "mergeVerifySeconds": 3.7013017250000075,
+  "reusableActivitiesAfterSafeCancellation": 37,
+  "conclusions": [
+    "SSH channel acquisition does not explain the measured upload delay.",
+    "Rsync invocation dominates upload; transport, subprocess execution and execution retries require diagnosis.",
+    "Shared preparation and merge timings must be counted once, not summed per dependency.",
+    "Different workspace from earlier mConcatFit30: no controlled merge speedup claim."
+  ]
+}

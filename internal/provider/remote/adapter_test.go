@@ -28,6 +28,7 @@ type commandExecutorStub struct {
 	calls     []commandCall
 	responses [][]byte
 	errors    []error
+	delays    []time.Duration
 }
 type commandCall struct {
 	name string
@@ -37,6 +38,9 @@ type commandCall struct {
 func (s *commandExecutorStub) Run(_ context.Context, name string, args []string, _ []byte) ([]byte, error) {
 	s.calls = append(s.calls, commandCall{name: name, args: append([]string(nil), args...)})
 	index := len(s.calls) - 1
+	if index < len(s.delays) {
+		time.Sleep(s.delays[index])
+	}
 	var response []byte
 	var err error
 	if index < len(s.responses) {
@@ -74,15 +78,18 @@ func TestRecoveryUsesAttemptScopedContainerName(t *testing.T) {
 }
 
 func TestStartRecordsIndependentRemoteLaunchStages(t *testing.T) {
-	executor := &commandExecutorStub{responses: [][]byte{nil, []byte("[]"), []byte("container-id\n")}}
+	executor := &commandExecutorStub{
+		responses: [][]byte{nil, []byte("[]"), []byte("container-id\n")},
+		delays:    []time.Duration{5 * time.Millisecond, 10 * time.Millisecond, 15 * time.Millisecond, 20 * time.Millisecond},
+	}
 	handle, err := (&Adapter{executor: executor}).Start(context.Background(), executionFixture())
 	if err != nil {
 		t.Fatal(err)
 	}
-	for _, key := range []string{"remoteWorkspacePrepareSeconds", "remoteWorkspaceSnapshotSeconds", "remoteContainerLaunchSeconds", "remoteInitialTelemetrySeconds"} {
+	for index, key := range []string{"remoteWorkspacePrepareSeconds", "remoteWorkspaceSnapshotSeconds", "remoteContainerLaunchSeconds", "remoteInitialTelemetrySeconds"} {
 		seconds, ok := handle.Metadata[key].(float64)
-		if !ok || seconds < 0 {
-			t.Fatalf("stage %s must have a nonnegative duration, got %v", key, handle.Metadata[key])
+		if !ok || seconds < executor.delays[index].Seconds() {
+			t.Fatalf("stage %s did not account for its own executor delay: %v", key, handle.Metadata[key])
 		}
 	}
 }

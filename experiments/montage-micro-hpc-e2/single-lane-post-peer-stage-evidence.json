@@ -1,0 +1,20 @@
+{
+  "issue": "AKO-128",
+  "runId": "montage-micro-hpc-e2-real-20261008-single-lane-v1",
+  "observedAt": "2026-10-08T09:37:45Z",
+  "source": "Execution-runs API latest activity attempts and original real request plan assignments",
+  "activities": [
+    {"activitySuffix": "mdifffitid0000005", "attempt": 3, "status": "completed", "plannedComputeSeconds": 120, "apiRuntimeSeconds": 31.22002100944519, "plannedTransferSeconds": 0.4425, "transferElapsedSeconds": 86.53249669075012, "overlappingTransferWorkSeconds": 173.064523935318, "postTransferLaunchWaitSeconds": 196.33128261566162},
+    {"activitySuffix": "mdifffitid0000006", "attempt": 3, "status": "completed", "plannedComputeSeconds": 112, "apiRuntimeSeconds": 22.749738931655884, "plannedTransferSeconds": 0.4425, "transferElapsedSeconds": 32.084054946899414, "overlappingTransferWorkSeconds": 64.16807198524475, "postTransferLaunchWaitSeconds": 13.554718732833862},
+    {"activitySuffix": "mdifffitid0000026", "attempt": 3, "status": "completed", "plannedComputeSeconds": 64, "apiRuntimeSeconds": 7.965739727020264, "plannedTransferSeconds": 0.402, "transferElapsedSeconds": 92.44837427139282, "overlappingTransferWorkSeconds": 184.89670491218567, "postTransferLaunchWaitSeconds": 9.323382139205933}
+  ],
+  "finding": "Private uploads are approximately four seconds; whole-workspace receiver verification/merge and the variable post-transfer launch interval remain substantially larger than estimated edge transfer time. The 196-second launch interval is not network upload time.",
+  "nextMeasurement": "Separate remote directory preparation, full workspace snapshot, Docker launch (which can include image pull), and initial telemetry. Instrumentation is committed locally but not deployed into the healthy running daemon.",
+  "limitations": [
+    "API runtime is an observed task interval; these entries do not independently prove pure application compute duration.",
+    "Transfer work sums overlapping dependency records and must not be interpreted as elapsed preparation time.",
+    "Reported queue time includes waits before launch and is not evidence of Slurm queue duration for these cloud tasks.",
+    "Recovered execution, potentially warm workspaces/images, approximate micro speedup and uncalibrated prices preclude claiming an uninterrupted calibrated benchmark.",
+    "Estimated plan edge volume and real whole-workspace bytes are different contracts. No scope or integrity reduction was made."
+  ]
+}

@@ -29,13 +29,20 @@ def montage_audit(request, response, simulation)
   raise 'Activity/transfer audit failed' unless audit[:expected_count] == 58 && audit.values.drop(1).all? { |v| v == 0 || v == [] }
   metric_keys = %w[makespanSeconds cost transferredBytes breakdown]
   metrics = ->(run) { run.select { |k, _| metric_keys.include?(k) } }
+  run = response.fetch('run')
+  wall_seconds = if run['startedAt'] && run['finishedAt']
+    Time.parse(run['finishedAt']) - Time.parse(run['startedAt'])
+  end
   {
     schema_version: 1,
     run_id: response.fetch('run').fetch('id'),
     audit: audit,
     plan: metrics.call(request.fetch('plan').fetch('predicted')),
+    plan_assignment_compute_work_seconds: assignments.values.sum { |a| a['predictedRuntimeSeconds'].to_f },
+    plan_assignment_transfer_work_seconds: assignments.values.sum { |a| a['predictedTransferSeconds'].to_f },
     simulation: metrics.call(simulation.fetch('run')),
     real_api_reported: metrics.call(response.fetch('run')),
+    real_api_run_timestamp_wall_seconds: wall_seconds,
     real_network_bytes_from_routes: transfers.sum { |t| t['networkBytes'].to_i },
     transfer_route_count: transfers.length,
     activities: expected.sort.map do |id|
@@ -58,6 +65,7 @@ def montage_audit(request, response, simulation)
       'API runtime includes delayed terminal observation; native Docker durations differ.',
       'API aggregate counters can contain older attempts; audit uses latest distinct IDs.',
       'Transfer work is summed overlapping route time, not wall-clock preparation.',
+      'Plan assignment work sums are not makespan; API timestamp wall and recovered makespan can differ.',
       'Cost zero is uncalibrated, not free cloud execution.',
       'e2-medium interference extrapolated to HPC/micro; micro speedup 0.25 is approximate.',
       'Whole-workspace real traffic differs from estimated plan edge volumes.',

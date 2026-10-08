@@ -490,7 +490,11 @@ func (s *Provisioner) Stop(ctx context.Context, instanceID string) (domain.Cloud
 	if instance.Status == "stopped" {
 		return *instance, nil
 	}
-	if instance.Status != "ready" {
+	// A required configuration can fail after a real VM has been created.
+	// Suspension preserves its disk; the operation handler still enforces
+	// concurrent-operation and activity/lease lifecycle guards before calling us.
+	failedConfiguration := instance.Status == "failed" && strings.TrimSpace(instance.ProviderID) != ""
+	if instance.Status != "ready" && !failedConfiguration {
 		return *instance, fmt.Errorf("cloud instance %q cannot stop from status %q", instanceID, instance.Status)
 	}
 	if err := s.terraform.Stop(ctx, instanceID); err != nil {

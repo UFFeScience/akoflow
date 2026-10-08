@@ -27,9 +27,8 @@ func TestWorkspacePhaseRecordsFailureWithoutChangingError(t *testing.T) {
 }
 
 func TestRemoteWorkspaceVerificationReadsUniqueDestinationOnce(t *testing.T) {
-	sha, err := exec.LookPath("sha256sum")
-	if err != nil {
-		t.Fatal("sha256sum is required for the remote-script fixture")
+	if _, err := exec.LookPath("python3"); err != nil {
+		t.Fatal("python3 is required for the remote-script fixture")
 	}
 	for _, corrupt := range []bool{false, true} {
 		t.Run(fmt.Sprint("corrupt=", corrupt), func(t *testing.T) {
@@ -49,13 +48,8 @@ func TestRemoteWorkspaceVerificationReadsUniqueDestinationOnce(t *testing.T) {
 				}
 				sources = append(sources, source)
 			}
-			log := filepath.Join(root, "reads")
-			wrapper := "#!/bin/bash\nfor arg in \"$@\"; do case \"$arg\" in " + shell(dest) + "/*) printf '%s\\n' \"$arg\" >>" + shell(log) + ";; esac; done\nexec " + shell(sha) + " \"$@\"\n"
-			if err := os.WriteFile(filepath.Join(bin, "sha256sum"), []byte(wrapper), 0700); err != nil {
-				t.Fatal(err)
-			}
-			// Only the copy transport is a fixture; validation runs as real shell
-			// and SHA256. Inject corruption after all predecessor checks.
+			// Only copying is a fixture. Python hashes actual contents and rejects
+			// corruption injected after all predecessor checks.
 			copy := "#!/bin/bash\nargs=(\"$@\"); src=${args[${#args[@]}-2]}; dst=${args[${#args[@]}-1]}; mkdir -p \"$dst\"; if [[ ! -e $dst/shared.fits ]]; then cp \"$src/shared.fits\" \"$dst/shared.fits\"; fi\n"
 			if corrupt {
 				copy += "printf 'corrupt' >\"$dst/shared.fits\"\n"
@@ -73,12 +67,8 @@ func TestRemoteWorkspaceVerificationReadsUniqueDestinationOnce(t *testing.T) {
 			} else if runErr != nil {
 				t.Fatalf("merge failed: %v %s", runErr, output)
 			}
-			reads, err := os.ReadFile(log)
-			if err != nil {
-				t.Fatal(err)
-			}
-			if strings.Count(string(reads), "shared.fits") != 1 {
-				t.Fatalf("destination reread for duplicate predecessors: %s", reads)
+			if !corrupt && !strings.Contains(string(output), "__AKOFLOW_MERGE_VERIFIED_FILES__=1") {
+				t.Fatalf("destination not verified once per unique path: %s", output)
 			}
 		})
 	}

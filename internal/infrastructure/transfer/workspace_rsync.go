@@ -142,6 +142,9 @@ func syncRemoteWorkspaceDirect(ctx context.Context, plans []domain.DataTransferP
 	output, err := runSSHCombinedOutput(ctx, destination, append(sshArgs(destination), host, "bash -s"), strings.NewReader(script))
 	mergeEnd := time.Now()
 	for i := range runs {
+		runs[i].Route.MergeCheckSeconds = remoteMergeSeconds(string(output), "CHECK")
+		runs[i].Route.MergeCopySeconds = remoteMergeSeconds(string(output), "COPY")
+		runs[i].Route.MergeVerifySeconds = remoteMergeSeconds(string(output), "VERIFY")
 		runs[i].Route.Phases = append(runs[i].Route.Phases, domain.TransferPhase{
 			Name: "shared-conflict-check-copy-and-verify", StartedAt: float64(mergeStart.UnixNano()) / 1e9,
 			FinishedAt: float64(mergeEnd.UnixNano()) / 1e9, DurationSeconds: mergeEnd.Sub(mergeStart).Seconds(), Failed: err != nil,
@@ -165,49 +168,6 @@ func syncRemoteWorkspaceDirect(ctx context.Context, plans []domain.DataTransferP
 		runs[index].Status = domain.TransferCompleted
 	}
 	return runs, nil
-}
-
-func remoteWorkspaceScript(sources []string, destination string) string {
-	var script strings.Builder
-	script.WriteString("set -euo pipefail\n")
-	script.WriteString("workspace_manifest=$(mktemp -d); trap 'rm -rf -- \"$workspace_manifest\"' EXIT\n")
-	script.WriteString(
-		"check_tree() { local root=$1 label=$2 file rel digest key previous origin; " +
-			"while IFS= read -r -d '' file; do rel=${file#\"$root\"/}; " +
-			"digest=$(sha256sum -- \"$file\"); digest=${digest%% *}; " +
-			"key=$(printf '%s' \"$rel\" | sha256sum); key=${key%% *}; " +
-			"if [[ -f $workspace_manifest/$key.digest ]]; then " +
-			"previous=$(cat \"$workspace_manifest/$key.digest\"); " +
-			"if [[ $previous != \"$digest\" ]]; then " +
-			"origin=$(cat \"$workspace_manifest/$key.origin\"); " +
-			"echo \"workspace content conflict at $rel between $origin and $label\" >&2; exit 44; fi; " +
-			"else printf '%s' \"$digest\" >\"$workspace_manifest/$key.digest\"; " +
-			"printf '%s\\0' \"$rel\" >\"$workspace_manifest/$key.path\"; " +
-			"printf '%s' \"$label\" >\"$workspace_manifest/$key.origin\"; fi; " +
-			"done < <(find \"$root\" -type f -print0); }\n",
-	)
-	script.WriteString("destination=" + shell(destination) + "\n")
-	script.WriteString("mkdir -p -- \"$destination\"\n")
-	script.WriteString("link=$(find \"$destination\" -type l -print -quit); test -z \"$link\" || { echo \"destination workspace contains symlink: $link\" >&2; exit 41; }\n")
-	script.WriteString("check_tree \"$destination\" destination\n")
-	for _, source := range sources {
-		script.WriteString("test -d " + shell(source) + " || { echo " + shell("source workspace disappeared: "+source) + " >&2; exit 42; }\n")
-		script.WriteString("link=$(find " + shell(source) + " -type l -print -quit); test -z \"$link\" || { echo \"source workspace contains symlink: $link\" >&2; exit 43; }\n")
-		script.WriteString("check_tree " + shell(source) + " " + shell(source) + "\n")
-	}
-	for index, source := range sources {
-		script.WriteString(fmt.Sprintf("echo __AKOFLOW_WORKSPACE_BEGIN_%d__\n", index))
-		script.WriteString("rsync --ignore-existing -r --checksum --stats --out-format='%i %n' --no-perms --no-owner --no-group --no-times -- " + shell(filepath.Clean(source)+"/") + " " + shell(filepath.Clean(destination)+"/") + "\n")
-		script.WriteString(fmt.Sprintf("echo __AKOFLOW_WORKSPACE_END_%d__\n", index))
-	}
-	// Sources were hashed and checked for conflicts before publication. Verify
-	// each unique destination against that immutable expectation once, rather
-	// than rereading it once per predecessor that contains the same path.
-	script.WriteString("while IFS= read -r -d '' record; do key=${record%.digest}; IFS= read -r -d '' rel <\"$key.path\"; expected=$(cat \"$record\"); file=$destination/$rel; " +
-		"[[ -f $file && ! -L $file ]] || { echo \"workspace verification failed at $rel\" >&2; exit 45; }; " +
-		"actual=$(sha256sum -- \"$file\"); actual=${actual%% *}; [[ $actual == \"$expected\" ]] || { echo \"workspace verification failed at $rel\" >&2; exit 45; }; " +
-		"done < <(find \"$workspace_manifest\" -name '*.digest' -type f -print0)\n")
-	return script.String()
 }
 
 func remoteWorkspaceStats(output string, index int) string {

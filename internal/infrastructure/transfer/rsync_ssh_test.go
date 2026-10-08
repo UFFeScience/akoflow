@@ -3,11 +3,14 @@ package transfer
 import (
 	"bytes"
 	"context"
+	"fmt"
 	"io"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"reflect"
 	"strings"
+	"sync"
 	"testing"
 	"time"
 
@@ -15,6 +18,72 @@ import (
 	"github.com/UFFeScience/akoflow/internal/provider"
 	"golang.org/x/crypto/ssh"
 )
+
+func TestConcurrentDirectCredentialRevocationPreservesUnrelatedKeys(t *testing.T) {
+	if _, err := exec.LookPath("flock"); err != nil {
+		t.Skip("worker credential integration requires Linux flock; run this test in the worker-compatible container")
+	}
+	directory := t.TempDir()
+	if strings.ContainsAny(directory, " '\"\n\t") {
+		t.Fatal("fixture path must be shell-safe")
+	}
+	publicKey, _, err := ephemeralSSHKey()
+	if err != nil {
+		t.Fatal(err)
+	}
+	lines := []string{"unrelated-user-key", "unrelated-transfer-token-suffix"}
+	var revoked []string
+	for i := 0; i < 8; i++ {
+		line, err := scopedDirectAuthorizedKey(publicKey, fmt.Sprintf("transfer-%d", i), "cat > /tmp/private-archive", time.Now().Add(time.Minute))
+		if err != nil {
+			t.Fatal(err)
+		}
+		lines = append(lines, line)
+		revoked = append(revoked, line)
+	}
+	keys := filepath.Join(directory, "authorized_keys")
+	if err := os.WriteFile(keys, []byte(strings.Join(lines, "\n")+"\n"), 0600); err != nil {
+		t.Fatal(err)
+	}
+	var wait sync.WaitGroup
+	for _, line := range revoked {
+		wait.Add(1)
+		go func(line string) {
+			defer wait.Done()
+			command := strings.ReplaceAll(directCredentialRemovalCommand(line), "~/.ssh", directory)
+			if output, err := exec.Command("sh", "-c", command).CombinedOutput(); err != nil {
+				t.Errorf("revoke: %v %s", err, output)
+			}
+		}(line)
+	}
+	wait.Wait()
+	content, err := os.ReadFile(keys)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if string(content) != strings.Join(lines[:2], "\n")+"\n" {
+		t.Fatalf("unrelated keys lost or credentials retained: %s", content)
+	}
+	info, err := os.Stat(keys)
+	if err != nil || info.Mode().Perm() != 0600 {
+		t.Fatal("unsafe final authorized_keys permissions")
+	}
+}
+
+func TestShellQuotingRoundTripsThroughNestedPOSIXCommands(t *testing.T) {
+	for _, value := range []string{"", "plain", "worker's file", "'\"$HOME; $(false)\nsecond line", "back\\slash"} {
+		for _, nested := range []bool{false, true} {
+			command := "printf '%s' " + shell(value)
+			if nested {
+				command = "sh -c " + shell(command)
+			}
+			output, err := exec.Command("sh", "-c", command).CombinedOutput()
+			if err != nil || string(output) != value {
+				t.Fatalf("nested=%v roundtrip failed: %v %q", nested, err, output)
+			}
+		}
+	}
+}
 
 func TestDirectCredentialIsForcedAndExpiring(t *testing.T) {
 	publicKey, _, err := ephemeralSSHKey()
@@ -103,7 +172,7 @@ func TestSSHTargetAndArguments(t *testing.T) {
 			t.Fatalf("args=%q missing %q", joined, expected)
 		}
 	}
-	if shell("a'b") != `'a'\"'\"'b'` || !reflect.DeepEqual(sshArgs(domain.TransferEndpoint{}), []string{"-o", "BatchMode=yes", "-o", "ConnectionAttempts=1", "-o", "ConnectTimeout=10"}) {
+	if shell("a'b") != `'a'"'"'b'` || !reflect.DeepEqual(sshArgs(domain.TransferEndpoint{}), []string{"-o", "BatchMode=yes", "-o", "ConnectionAttempts=1", "-o", "ConnectTimeout=10"}) {
 		t.Fatalf("SSH helper output mismatch: shell=%q args=%#v", shell("a'b"), sshArgs(domain.TransferEndpoint{}))
 	}
 }

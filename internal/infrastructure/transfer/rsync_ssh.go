@@ -489,4 +489,4 @@ type readCloser struct {
 }
 
 func (r readCloser) Close() error { return r.close() }
-func shell(v string) string       { return "'" + strings.ReplaceAll(v, "'", "'\\\"'\\\"'") + "'" }
+func shell(v string) string       { return "'" + strings.ReplaceAll(v, "'", "'\"'\"'") + "'" }

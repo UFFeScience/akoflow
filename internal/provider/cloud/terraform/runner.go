@@ -468,6 +468,26 @@ resource "google_compute_instance" "worker" {
   metadata = {
     ssh-keys = "${var.ssh_user}:${var.ssh_public_key}"
     enable-guest-attributes = "TRUE"
+  # Existing images might not publish hostkeys automatically when guest
+  # attributes were enabled after their first boot. Publish only the public
+  # ED25519 key through the instance metadata channel on startup.
+    startup-script = <<-SCRIPT
+    #!/bin/sh
+    set -eu
+    key_file=/etc/ssh/ssh_host_ed25519_key.pub
+    attempt=0
+    while [ ! -s "$key_file" ] && [ "$attempt" -lt 30 ]; do
+      attempt=$((attempt + 1))
+      sleep 1
+    done
+    test -s "$key_file"
+    key=$(awk '$1 == "ssh-ed25519" {print $2}' "$key_file")
+    test -n "$key"
+    curl --fail --silent --show-error --connect-timeout 5 --max-time 15 \
+      --retry 5 --retry-delay 2 -X PUT -H 'Metadata-Flavor: Google' \
+      --data "$key" \
+      http://metadata.google.internal/computeMetadata/v1/instance/guest-attributes/hostkeys/ssh-ed25519
+  SCRIPT
   }
   scheduling {
     provisioning_model = var.spot ? "SPOT" : "STANDARD"

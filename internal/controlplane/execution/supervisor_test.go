@@ -668,7 +668,7 @@ func TestSupervisorQueuesAllReadyCloudTargetsBeforeWaitingForFirst(t *testing.T)
 		targets[targetID] = domain.CloudCapacityTarget{ID: targetID, EnvironmentID: "environment"}
 	}
 	allocator := &parallelPrewarmFake{want: 4}
-	activities := &activityControllerFake{}
+	activities := &activityControllerFake{delay: 20 * time.Millisecond}
 	service, err := New(&executionStoreFake{}, activities, &planExecutorFake{}, Config{
 		PollInterval: time.Microsecond,
 		Cloud:        &cloudProvisionerFake{}, CloudStore: cloudAllocationStoreFake{targets: targets}, CloudAllocator: allocator,
@@ -681,6 +681,9 @@ func TestSupervisorQueuesAllReadyCloudTargetsBeforeWaitingForFirst(t *testing.T)
 	}
 	if len(allocator.prewarmed) != 4 || len(activities.started) != 4 {
 		t.Fatalf("prewarmed=%v started=%v", allocator.prewarmed, activities.started)
+	}
+	if activities.maxStarts < 2 {
+		t.Fatalf("already-ready cloud allocations launched serially: max concurrent starts=%d", activities.maxStarts)
 	}
 }
 

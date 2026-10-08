@@ -288,18 +288,30 @@ func (s *Supervisor) executeActivities(ctx context.Context, request ports.Execut
 		}
 	}
 	transfers := make([]domain.DataTransfer, 0)
-	type allocationResult struct {
-		activityID string
-		allocation domain.RuntimeAllocation
-		err        error
-	}
 	allocationResults := make(chan allocationResult, len(activities))
 	pendingAllocations := make(map[string]bool)
 	readyAllocations := make(map[string]domain.RuntimeAllocation)
 	stoppingInstances := make(map[string]bool)
+	consumeAllocation := func(result allocationResult) error {
+		delete(pendingAllocations, result.activityID)
+		if result.err != nil {
+			failure := fmt.Errorf("allocate runtime for activity %q: %w", result.activityID, result.err)
+			assignment := assignments[result.activityID]
+			resource := resources[assignment.ResourceID]
+			_ = s.recordStartFailure(ctx, request.Run.ID, result.activityID, assignment, resource, selectRuntime(request, assignment), tasks[result.activityID].Attempt, failure)
+			return failure
+		}
+		readyAllocations[result.activityID] = result.allocation
+		return nil
+	}
 
 	for len(completed) < len(activities) {
 		if err := ctx.Err(); err != nil {
+			return domain.ExecutionTrace{}, err
+		}
+		// Admit all completed allocations before launching a batch. Waiting for
+		// one runtime Start must not serialize other already-ready cloud hosts.
+		if err := drainReadyAllocations(allocationResults, consumeAllocation); err != nil {
 			return domain.ExecutionTrace{}, err
 		}
 		if err := s.inspectRunning(ctx, request.Run.Mode, request.Workflow, request.Run.ID, running, completed, tasks); err != nil {
@@ -385,15 +397,9 @@ func (s *Supervisor) executeActivities(ctx context.Context, request ports.Execut
 			case <-ctx.Done():
 				return domain.ExecutionTrace{}, ctx.Err()
 			case result := <-allocationResults:
-				delete(pendingAllocations, result.activityID)
-				if result.err != nil {
-					failure := fmt.Errorf("allocate runtime for activity %q: %w", result.activityID, result.err)
-					assignment := assignments[result.activityID]
-					resource := resources[assignment.ResourceID]
-					_ = s.recordStartFailure(ctx, request.Run.ID, result.activityID, assignment, resource, selectRuntime(request, assignment), tasks[result.activityID].Attempt, failure)
-					return domain.ExecutionTrace{}, failure
+				if err := consumeAllocation(result); err != nil {
+					return domain.ExecutionTrace{}, err
 				}
-				readyAllocations[result.activityID] = result.allocation
 			case <-time.After(s.config.PollInterval):
 			}
 		}
@@ -804,7 +810,7 @@ func (s *Supervisor) startReadyActivity(
 	}
 	handle, err := s.activities.Start(ctx, domain.ActivityExecutionContext{
 		Attempt: attempt,
-		Run: request.Run, Workflow: request.Workflow, Activity: activity, Assignment: assignment,
+		Run:     request.Run, Workflow: request.Workflow, Activity: activity, Assignment: assignment,
 		Resource: resource, RuntimeID: selectRuntime(request, assignment), Allocation: allocation, Preparation: result.preparation,
 	})
 	if err != nil {

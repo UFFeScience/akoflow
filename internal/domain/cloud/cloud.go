@@ -1,8 +1,19 @@
 package cloud
 
 import (
+	"fmt"
 	"time"
 )
+
+func (instance ProvisionedInstance) VerifiedSSHTrust() (string, string, error) {
+	alias, _ := instance.TerraformOutput["verifiedHostKeyAlias"].(string)
+	path, _ := instance.TerraformOutput["verifiedKnownHostsFile"].(string)
+	generation, _ := instance.TerraformOutput["verifiedHostGeneration"].(string)
+	if alias == "" || path == "" || generation == "" || generation != instance.ProviderID {
+		return "", "", fmt.Errorf("cloud instance has no verified SSH trust for its provider generation")
+	}
+	return alias, path, nil
+}
 
 const DefaultConfigurationID = "akoflow-scientific-worker"
 const DefaultConfigurationVersionID = "akoflow-scientific-worker-v7"

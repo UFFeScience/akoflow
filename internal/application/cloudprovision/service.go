@@ -21,6 +21,44 @@ type Provisioner struct {
 	sshKeys      ports.CloudSSHKeyManager
 	terraform    ports.TerraformRunner
 	configurator ports.MachineConfigurator
+	hostVerifier ports.CloudHostTrustVerifier
+}
+
+func (s *Provisioner) WithHostTrustVerifier(verifier ports.CloudHostTrustVerifier) *Provisioner {
+	s.hostVerifier = verifier
+	return s
+}
+
+func (s *Provisioner) verifyHostTrust(ctx context.Context, instance *domain.CloudProvisionedInstance) error {
+	if s.hostVerifier == nil {
+		return nil
+	}
+	definition, err := s.environments.Find(ctx, instance.EnvironmentID)
+	if err != nil || definition == nil {
+		return fmt.Errorf("load environment for host verification: %w", err)
+	}
+	connection := cloudConnection(definition.Connections)
+	if connection == nil {
+		return fmt.Errorf("cloud connection unavailable for host verification")
+	}
+	credential, err := s.credentials.Resolve(connection.CredentialRef)
+	if err != nil {
+		return err
+	}
+	trust, err := s.hostVerifier.Verify(ctx, *connection, credential, *instance)
+	if err != nil {
+		return fmt.Errorf("verify cloud SSH identity: %w", err)
+	}
+	if trust.Alias == "" || trust.KnownHostsFile == "" {
+		return fmt.Errorf("cloud SSH identity verifier returned incomplete trust")
+	}
+	if instance.TerraformOutput == nil {
+		instance.TerraformOutput = map[string]any{}
+	}
+	instance.TerraformOutput["verifiedHostKeyAlias"] = trust.Alias
+	instance.TerraformOutput["verifiedHostGeneration"] = instance.ProviderID
+	instance.TerraformOutput["verifiedKnownHostsFile"] = trust.KnownHostsFile
+	return nil
 }
 
 func New(
@@ -236,6 +274,9 @@ func (s *Provisioner) configure(
 	configurations []domain.CloudTargetConfiguration,
 ) error {
 	fingerprint := configurationFingerprint(configurations)
+	if err := s.verifyHostTrust(ctx, instance); err != nil {
+		return err
+	}
 	if current, _ := instance.TerraformOutput["configurationFingerprint"].(string); current != "" && current == fingerprint {
 		if err := s.validate(ctx, instance, target, configurations); err == nil {
 			return nil
@@ -260,6 +301,7 @@ func (s *Provisioner) configure(
 			variables[key] = value
 		}
 		err = s.configurator.Configure(ctx, ports.MachineConfigurationSpec{
+			HostKeyAlias: hostTrustString(instance, "verifiedHostKeyAlias"), KnownHostsFile: hostTrustString(instance, "verifiedKnownHostsFile"),
 			InstanceID: instance.ID, Address: instance.PublicAddress,
 			SSHUser: instance.SSHUsername, CredentialRef: instance.SSHCredentialRef,
 			PlaybookYAML: version.PlaybookYAML, Variables: variables,
@@ -306,11 +348,16 @@ func (s *Provisioner) validate(ctx context.Context, instance *domain.CloudProvis
 		if err := validateCompatibility(*version, target, assignment.Required); err != nil {
 			return err
 		}
-		if err := validator.Validate(ctx, ports.MachineConfigurationSpec{InstanceID: instance.ID, Address: instance.PublicAddress, SSHUser: instance.SSHUsername, CredentialRef: instance.SSHCredentialRef, Checks: version.ValidationChecks}); err != nil && assignment.Required {
+		if err := validator.Validate(ctx, ports.MachineConfigurationSpec{HostKeyAlias: hostTrustString(instance, "verifiedHostKeyAlias"), KnownHostsFile: hostTrustString(instance, "verifiedKnownHostsFile"), InstanceID: instance.ID, Address: instance.PublicAddress, SSHUser: instance.SSHUsername, CredentialRef: instance.SSHCredentialRef, Checks: version.ValidationChecks}); err != nil && assignment.Required {
 			return err
 		}
 	}
 	return nil
+}
+
+func hostTrustString(instance *domain.CloudProvisionedInstance, key string) string {
+	value, _ := instance.TerraformOutput[key].(string)
+	return value
 }
 
 func (s *Provisioner) Configure(ctx context.Context, instanceID string) (domain.CloudProvisionedInstance, error) {
@@ -459,11 +506,17 @@ func (s *Provisioner) Validate(ctx context.Context, instanceID string) (domain.C
 	if err != nil || instance == nil {
 		return domain.CloudProvisionedInstance{}, fmt.Errorf("cloud instance %q was not found", instanceID)
 	}
+	if err := s.verifyHostTrust(ctx, instance); err != nil {
+		return *instance, err
+	}
 	target, err := s.store.FindCapacityTarget(ctx, instance.CapacityTargetID)
 	if err != nil || target == nil {
 		return *instance, targetError(instance.CapacityTargetID, err)
 	}
 	if err := s.validate(ctx, instance, *target, target.MachineConfigurations); err != nil {
+		return *instance, err
+	}
+	if err := s.store.UpdateProvisionedInstance(ctx, *instance); err != nil {
 		return *instance, err
 	}
 	return *instance, nil

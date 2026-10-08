@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -48,7 +49,7 @@ func buildCloudProvisioner(
 		sshKeys,
 		terraformcloud.Runner{Root: settings.TerraformWorkspace, Binary: settings.TerraformBinary},
 		ansiblecloud.Runner{Root: settings.TerraformWorkspace, Binary: settings.AnsiblePlaybookBinary},
-	)
+	).WithHostTrustVerifier(gcpcloud.HostVerifier{Catalog: gcpcloud.New(nil), Root: filepath.Join("storage", "credentials", "ssh", "cloud-generations")})
 }
 
 func buildAPI(

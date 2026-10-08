@@ -465,7 +465,10 @@ resource "google_compute_instance" "worker" {
     subnetwork = var.subnetwork == "" ? null : var.subnetwork
     access_config {}
   }
-  metadata = { ssh-keys = "${var.ssh_user}:${var.ssh_public_key}" }
+  metadata = {
+    ssh-keys = "${var.ssh_user}:${var.ssh_public_key}"
+    enable-guest-attributes = "TRUE"
+  }
   scheduling {
     provisioning_model = var.spot ? "SPOT" : "STANDARD"
     preemptible         = var.spot

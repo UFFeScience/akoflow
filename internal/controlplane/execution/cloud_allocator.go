@@ -27,6 +27,42 @@ type CloudStopper interface {
 	Stop(context.Context, string, map[string]domain.RuntimeAllocation) error
 }
 
+type CloudRecoveryReadier interface {
+	ReadyRecoveryInstance(context.Context, string, string, string) error
+}
+
+// Recovery must not replace a stopped producer with another generation: its
+// completed outputs belong to this exact disk and instance.
+func (a QueuedCloudAllocator) ReadyRecoveryInstance(ctx context.Context, runID, activityID, instanceID string) error {
+	instance, err := a.Cloud.FindProvisionedInstance(ctx, instanceID)
+	if err != nil {
+		return err
+	}
+	if instance == nil || (instance.Status != "ready" && instance.Status != "stopped") {
+		return fmt.Errorf("recovery producer instance %q is unavailable", instanceID)
+	}
+	if instance.Status == "ready" {
+		return nil
+	}
+	target, err := a.Cloud.FindCapacityTarget(ctx, instance.CapacityTargetID)
+	if err != nil {
+		return err
+	}
+	if target == nil || target.EnvironmentID != instance.EnvironmentID {
+		return fmt.Errorf("recovery producer instance %q has invalid capacity target", instanceID)
+	}
+	for _, kind := range []string{"start", "validate"} {
+		op, err := a.findOrCreate(ctx, runID, activityID, *target, kind, instanceID)
+		if err != nil {
+			return err
+		}
+		if _, err := a.wait(ctx, op); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 // QueuedCloudAllocator is the execution-to-infrastructure boundary. It never
 // invokes Terraform itself: it persists an operation, publishes a durable
 // message, then waits for the infrastructure worker to settle it.
@@ -151,10 +187,24 @@ func (a QueuedCloudAllocator) findOrCreate(ctx context.Context, executionRunID, 
 	if err != nil {
 		return domain.CloudOperationRun{}, err
 	}
+	// Start/validation idempotency is scoped to a stop/start cycle, not the
+	// lifetime of the workflow. A completed start before a later stop is history.
+	var cycle domain.CloudOperationRun
+	if kind == "start" || kind == "validate" {
+		for _, candidate := range operations {
+			if candidate.Kind == "stop" && candidate.Status == "completed" && candidate.InstanceID == instanceID &&
+				(cycle.ID == "" || candidate.CreatedAt.After(cycle.CreatedAt)) {
+				cycle = candidate
+			}
+		}
+	}
 	// Several ready activities can share one capacity target. Reuse its
 	// infrastructure operation so each activity does not request another VM.
 	for _, operation := range operations {
 		if operation.Kind == kind && operation.ExecutionRunID == executionRunID && operation.CapacityTargetID == target.ID && (instanceID == "" || operation.InstanceID == instanceID) {
+			if cycle.ID != "" && operation.CreatedAt.Before(cycle.CreatedAt) {
+				continue
+			}
 			if kind == "provision" && (operation.Status == "completed" || operation.Status == "failed" || operation.Status == "cancelled") {
 				instance, inspectErr := a.Cloud.FindProvisionedInstance(ctx, operation.InstanceID)
 				if inspectErr != nil {
@@ -181,6 +231,9 @@ func (a QueuedCloudAllocator) findOrCreate(ctx context.Context, executionRunID, 
 	if err == nil {
 		job.AggregateType, job.AggregateID = "cloud_operation", operation.ID
 		job.IdempotencyKey = "cloud-allocation:" + executionRunID + ":" + target.ID + ":" + instanceID + ":" + kind
+		if cycle.ID != "" {
+			job.IdempotencyKey += ":after-stop:" + cycle.ID
+		}
 		job.Priority, job.MaxAttempts = 100, 3
 		var published domainqueue.Job
 		published, err = a.Queue.Publish(ctx, job)

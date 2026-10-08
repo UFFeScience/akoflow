@@ -2,6 +2,7 @@ package execution
 
 import (
 	"context"
+	"strings"
 	"sync"
 	"testing"
 	"time"
@@ -233,6 +234,33 @@ func TestQueuedCloudAllocatorStartsAndValidatesStoppedInstance(t *testing.T) {
 	}
 	if !kinds["start"] || !kinds["validate"] {
 		t.Fatalf("operation kinds=%#v", kinds)
+	}
+}
+
+func TestRecoveryStartsExactProducerAfterLaterStop(t *testing.T) {
+	now := time.Now().UTC()
+	store := &allocatorStore{operations: map[string]domain.CloudOperationRun{
+		"old-start":  {ID: "old-start", Kind: "start", Status: "completed", InstanceID: "producer", ExecutionRunID: "run", CapacityTargetID: "target", CreatedAt: now.Add(-time.Hour)},
+		"stop-cycle": {ID: "stop-cycle", Kind: "stop", Status: "completed", InstanceID: "producer", CreatedAt: now},
+	}, instances: map[string]domain.CloudProvisionedInstance{
+		"producer": {ID: "producer", CapacityTargetID: "target", EnvironmentID: "environment", Status: "stopped"},
+		"other":    {ID: "other", CapacityTargetID: "target", EnvironmentID: "environment", Status: "ready"},
+	}, targets: map[string]domain.CloudCapacityTarget{"target": {ID: "target", EnvironmentID: "environment"}}}
+	queue := &allocatorQueue{store: store}
+	a := QueuedCloudAllocator{Cloud: store, Operations: store, Queue: queue, PollInterval: time.Millisecond}
+	if err := a.ReadyRecoveryInstance(context.Background(), "run", "activity", "producer"); err != nil {
+		t.Fatal(err)
+	}
+	if len(queue.jobs) != 2 {
+		t.Fatalf("expected exact start and validation, got %d", len(queue.jobs))
+	}
+	for _, job := range queue.jobs {
+		if !strings.Contains(job.IdempotencyKey, ":after-stop:stop-cycle") {
+			t.Fatalf("stale idempotency cycle: %s", job.IdempotencyKey)
+		}
+	}
+	if err := a.ReadyRecoveryInstance(context.Background(), "run", "activity", "missing"); err == nil {
+		t.Fatal("missing producer replaced")
 	}
 }
 

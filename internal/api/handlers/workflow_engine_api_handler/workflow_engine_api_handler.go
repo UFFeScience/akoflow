@@ -2260,6 +2260,42 @@ func (h *Handler) ListCloudOperations(w http.ResponseWriter, r *http.Request) {
 	writeList(w, values, err)
 }
 
+// ReconcileOrphanCloudOperation never cancels a queued or leased job. It only
+// terminalizes an unpublished operation whose owning workflow has stopped.
+func (h *Handler) ReconcileOrphanCloudOperation(w http.ResponseWriter, r *http.Request) {
+	q, ok := h.queue.(ExecutionRecoveryQueueStore)
+	if !ok || h.cloudOperations == nil || h.executions == nil {
+		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("orphan reconciliation unavailable"))
+		return
+	}
+	op, err := h.cloudOperations.FindCloudOperation(r.Context(), r.PathValue("operationId"))
+	if err != nil || op == nil {
+		writeError(w, http.StatusNotFound, fmt.Errorf("cloud operation not found"))
+		return
+	}
+	if op.Status != "queued" || op.StartedAt != nil || op.ExecutionRunID == "" {
+		writeError(w, http.StatusConflict, fmt.Errorf("operation is not an unstarted workflow operation"))
+		return
+	}
+	job, err := q.FindLatestByAggregate(r.Context(), "cloud_operation", op.ID, eventloop.CloudOperationEventType(op.Kind))
+	if err != nil || job != nil {
+		writeError(w, http.StatusConflict, fmt.Errorf("operation has a queue job or queue lookup failed"))
+		return
+	}
+	run, err := h.executions.FindRun(r.Context(), op.ExecutionRunID)
+	if err != nil || run == nil || (run.Status != domain.ExecutionRunFailed && run.Status != domain.ExecutionRunCancelled && run.Status != domain.ExecutionRunCompleted) {
+		writeError(w, http.StatusConflict, fmt.Errorf("owning workflow is not terminal"))
+		return
+	}
+	now := time.Now().UTC()
+	op.Status, op.Phase, op.FailureReason, op.FinishedAt = "cancelled", "orphan-reconciled", "Unpublished operation reconciled after terminal workflow", &now
+	if err := h.cloudOperations.UpdateCloudOperation(r.Context(), *op); err != nil {
+		writeError(w, http.StatusInternalServerError, err)
+		return
+	}
+	writeJSON(w, http.StatusOK, op)
+}
+
 func (h *Handler) GetCloudOperation(w http.ResponseWriter, r *http.Request) {
 	value, err := h.cloudOperations.FindCloudOperation(r.Context(), r.PathValue("operationId"))
 	if err != nil {

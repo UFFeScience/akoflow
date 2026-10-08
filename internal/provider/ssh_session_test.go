@@ -72,6 +72,75 @@ func TestSSHChannelQueueHonorsContextCancellation(t *testing.T) {
 	}
 }
 
+func TestSSHBulkChannelsReserveControlCapacity(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "master")
+	var releases []func()
+	for range SSHBulkChannelLimit {
+		release, err := AcquireSSHBulkChannel(context.Background(), path)
+		if err != nil {
+			t.Fatal(err)
+		}
+		releases = append(releases, release)
+		defer release()
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	control, err := AcquireSSHChannel(ctx, path)
+	if err != nil {
+		t.Fatalf("bulk starved control: %v", err)
+	}
+	control()
+	blocked, stop := context.WithCancel(context.Background())
+	stop()
+	if release, err := AcquireSSHBulkChannel(blocked, path); err == nil {
+		release()
+		t.Fatal("bulk exceeded reserved limit")
+	}
+	other, err := AcquireSSHBulkChannel(ctx, filepath.Join(t.TempDir(), "other"))
+	if err != nil {
+		t.Fatalf("independent transport blocked: %v", err)
+	}
+	other()
+	releases[0]()
+	releases[0]() // Release must remain idempotent.
+	replacement, err := AcquireSSHBulkChannel(ctx, path)
+	if err != nil {
+		t.Fatalf("released bulk slot unavailable: %v", err)
+	}
+	replacement()
+}
+
+func TestSSHBulkCancellationReleasesReservationWhileTotalFull(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "master")
+	var controls []func()
+	for range SSHChannelLimit {
+		release, err := AcquireSSHChannel(context.Background(), path)
+		if err != nil {
+			t.Fatal(err)
+		}
+		controls = append(controls, release)
+		defer release()
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Millisecond)
+	defer cancel()
+	if release, err := AcquireSSHBulkChannel(ctx, path); err == nil {
+		release()
+		t.Fatal("bulk acquired a full transport")
+	}
+	for _, release := range controls {
+		release()
+	}
+	available, stop := context.WithTimeout(context.Background(), time.Second)
+	defer stop()
+	for range SSHBulkChannelLimit {
+		release, err := AcquireSSHBulkChannel(available, path)
+		if err != nil {
+			t.Fatalf("cancelled bulk reservation leaked: %v", err)
+		}
+		defer release()
+	}
+}
+
 func TestSSHSessionPathUsesAllEffectiveConnectionSettings(t *testing.T) {
 	directory := t.TempDir()
 	t.Setenv("AKOFLOW_SSH_CONTROL_DIRECTORY", directory)

@@ -30,12 +30,16 @@ def montage_audit(request, response, simulation)
   metric_keys = %w[makespanSeconds cost transferredBytes breakdown]
   metrics = ->(run) { run.select { |k, _| metric_keys.include?(k) } }
   run = response.fetch('run')
+  multiple_attempts = response.fetch('activityAttempts').group_by { |a| a.fetch('activityId') }.any? do |_, attempts|
+    attempts.length > 1 || attempts.any? { |a| a.fetch('attempt') > 1 }
+  end
   wall_seconds = if run['startedAt'] && run['finishedAt']
     Time.parse(run['finishedAt']) - Time.parse(run['startedAt'])
   end
   {
     schema_version: 1,
     run_id: response.fetch('run').fetch('id'),
+    attempt_history: multiple_attempts ? 'multiple_attempts' : 'single_observed_attempt_per_activity',
     audit: audit,
     plan: metrics.call(request.fetch('plan').fetch('predicted')),
     plan_assignment_compute_work_seconds: assignments.values.sum { |a| a['predictedRuntimeSeconds'].to_f },
@@ -49,11 +53,20 @@ def montage_audit(request, response, simulation)
       task = latest.fetch(id)
       plan = assignments.fetch(id)
       metadata = task.fetch('metadata', {})
+      handle = response.fetch('handles', []).select do |h|
+        h['activityId'] == id && h.fetch('metadata', {}).to_h['executionAttempt'] == task.fetch('attempt')
+      end.max_by { |h| h['startedAt'].to_f }
+      observed = handle && handle.fetch('metadata', {}).to_h['terminalObservedAt']
+      native_seconds = if observed && handle['finishedAt'] && handle['startedAt'] && observed.to_f >= handle['finishedAt'].to_f && handle['finishedAt'].to_f >= handle['startedAt'].to_f
+        handle['finishedAt'].to_f - handle['startedAt'].to_f
+      end
       {
         activity_id: id, resource_id: plan.fetch('resourceId'), attempt: task.fetch('attempt'),
         planned_compute_seconds: plan['predictedRuntimeSeconds'],
         planned_transfer_seconds: plan['predictedTransferSeconds'],
         observed_runtime_seconds: task['runtimeSeconds'],
+        validated_handle_runtime_seconds: native_seconds,
+        terminal_observation_delay_seconds: native_seconds && observed.to_f - handle['finishedAt'].to_f,
         preparation_elapsed_seconds: metadata['transferElapsedSeconds'],
         overlapping_transfer_work_seconds: metadata['transferWorkSeconds'],
         launch_wait_seconds: metadata['launchWaitSeconds'],
@@ -61,8 +74,8 @@ def montage_audit(request, response, simulation)
       }
     end,
     limitations: [
-      'Recovered run: not a clean uninterrupted performance benchmark.',
-      'API runtime includes delayed terminal observation; native Docker durations differ.',
+      multiple_attempts ? 'Multiple attempts: performance can be contaminated by recovery.' : 'No multiple attempts observed; this alone does not prove an uninterrupted benchmark.',
+      'Runtime finish semantics depend on the driver; observation delay is exported only for exact-attempt handles with validated terminal timestamps.',
       'API aggregate counters can contain older attempts; audit uses latest distinct IDs.',
       'Transfer work is summed overlapping route time, not wall-clock preparation.',
       'Plan assignment work sums are not makespan; API timestamp wall and recovered makespan can differ.',

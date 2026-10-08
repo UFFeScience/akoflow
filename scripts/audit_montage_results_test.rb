@@ -43,4 +43,28 @@ class MontageAuditTest < Minitest::Test
     assert_equal 7, report[:plan_assignment_compute_work_seconds]
     assert_equal 3, report[:plan_assignment_transfer_work_seconds]
   end
+
+  def test_attempt_history_is_evidence_based
+    args = fixture
+    assert_equal 'multiple_attempts', montage_audit(*args)[:attempt_history]
+    args[1]['activityAttempts'].each { |task| task['attempt'] = 1 }
+    report = montage_audit(*args)
+    assert_equal 'single_observed_attempt_per_activity', report[:attempt_history]
+    refute report[:limitations].any? { |text| text.start_with?('Multiple attempts:') }
+  end
+
+  def test_native_timing_requires_exact_attempt_and_valid_timestamps
+    args = fixture
+    handle = {'activityId'=>'activity-1', 'startedAt'=>20, 'finishedAt'=>25, 'metadata'=>{'executionAttempt'=>2, 'terminalObservedAt'=>28, 'address'=>'never-export'}}
+    args[1]['handles'] = [handle]
+    task = montage_audit(*args)[:activities].find { |a| a[:activity_id] == 'activity-1' }
+    assert_equal 5, task[:validated_handle_runtime_seconds]
+    assert_equal 3, task[:terminal_observation_delay_seconds]
+    handle['metadata']['executionAttempt'] = 1
+    assert_nil montage_audit(*args)[:activities].first[:validated_handle_runtime_seconds]
+    handle['metadata']['executionAttempt'] = 2
+    handle['metadata']['terminalObservedAt'] = 24
+    assert_nil montage_audit(*args)[:activities].first[:validated_handle_runtime_seconds]
+    refute_match(/never-export/, JSON.generate(montage_audit(*args)))
+  end
 end

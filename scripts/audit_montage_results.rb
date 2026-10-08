@@ -13,6 +13,22 @@ def montage_audit(request, response, simulation)
     attempts.max_by { |a| [a.fetch('attempt'), a['startedAt'].to_f] }
   end
   transfers = response.fetch('artifactTransferRuns')
+  dependency_routes = transfers.select { |t| t.fetch('route', {})['producerActivityId'] }
+  dependencies = request.fetch('workflow').fetch('dependencies', [])
+  missing_routes = dependencies.reject do |edge|
+    dependency_routes.any? do |t|
+      route = t.fetch('route')
+      route['producerActivityId'] == edge['dependsOnActivityId'] && route['consumerActivityId'] == edge['activityId']
+    end
+  end
+  resource_types = request.fetch('resources', []).to_h { |r| [r.fetch('id'), r.fetch('type', '')] }
+  cross_routes = dependency_routes.select do |t|
+    route = t.fetch('route')
+    source = assignments.fetch(route.fetch('producerActivityId')).fetch('resourceId')
+    target = assignments.fetch(route.fetch('consumerActivityId')).fetch('resourceId')
+    types = [resource_types[source], resource_types[target]]
+    types.any? { |type| type == 'cloud_vm' } && types.any? { |type| %w[hpc_machine hpc_partition].include?(type) }
+  end
   single_lane_micros = request.fetch('resources', []).select do |r|
     r.fetch('id').include?('micro') && r['cpuCapacity'].to_f == 1
   end.map { |r| r.fetch('id') }
@@ -40,6 +56,8 @@ def montage_audit(request, response, simulation)
     unreleased_lease_count: response.fetch('workspaceLeases').count { |l| !l['released'] },
     single_lane_micro_overlap_count: micro_overlap_count
   }
+  audit[:missing_dependency_route_count] = missing_routes.length
+  audit[:cross_cloud_hpc_non_relay_count] = cross_routes.count { |t| t['strategy'] != 'gateway' }
   raise 'Activity/transfer audit failed' unless audit[:expected_count] == 58 && audit.values.drop(1).all? { |v| v == 0 || v == [] }
   metric_keys = %w[makespanSeconds cost transferredBytes breakdown]
   metrics = ->(run) { run.select { |k, _| metric_keys.include?(k) } }
@@ -63,6 +81,36 @@ def montage_audit(request, response, simulation)
     real_api_run_timestamp_wall_seconds: wall_seconds,
     real_network_bytes_from_routes: transfers.sum { |t| t['networkBytes'].to_i },
     transfer_route_count: transfers.length,
+    dependency_route_count: dependency_routes.length,
+    cross_cloud_hpc_relay_count: cross_routes.length,
+    relay_server_network_bytes: transfers.sum { |t| t.fetch('route', {})['serverNetworkBytes'].to_i },
+    routes: transfers.map do |t|
+      route = t.fetch('route', {})
+      {
+        consumer_activity_id: t['activityId'], producer_activity_id: route['producerActivityId'],
+        strategy: t['strategy'], duration_seconds: t['durationSeconds'], logical_bytes: t['logicalBytes'],
+        network_bytes: t['networkBytes'], relay_server_network_bytes: route['serverNetworkBytes'],
+        archive_bytes: route['archiveBytes'], files: route['filesTransferred'], snapshot_reused: route['snapshotReused'],
+        ssh_channel_wait_seconds: route['sshChannelWaitSeconds'], rsync_execution_seconds: route['rsyncExecutionSeconds'],
+        phases: route.fetch('phases', []).map { |p| p.select { |k, _| %w[name durationSeconds].include?(k) } }
+      }
+    end,
+    # Joint phases are repeated on each predecessor route. Group by exact consumer
+    # and preparation interval, not by route, to avoid multiplying merge work.
+    shared_preparations: dependency_routes.group_by do |t|
+      r = t.fetch('route')
+      phase = r.fetch('phases', []).find { |p| p['name'] == 'shared-preparation-barrier' } || {}
+      [r['consumerActivityId'], phase['startedAt'], phase['finishedAt']]
+    end.map do |key, group|
+      next unless key[1] && key[2]
+      r = group.first.fetch('route')
+      phase = r.fetch('phases').find { |p| p['name'] == 'shared-preparation-barrier' }
+      merge = r.fetch('phases').find { |p| p['name'] == 'shared-conflict-check-copy-and-verify' }
+      {consumer_activity_id: key[0], barrier_seconds: phase['durationSeconds'],
+       merge_seconds: merge && merge['durationSeconds'],
+       merge_check_seconds: r['mergeCheckSeconds'], merge_copy_seconds: r['mergeCopySeconds'],
+       merge_verify_seconds: r['mergeVerifySeconds']}
+    end.compact,
     activities: expected.sort.map do |id|
       task = latest.fetch(id)
       plan = assignments.fetch(id)

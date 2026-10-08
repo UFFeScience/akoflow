@@ -2,6 +2,30 @@ require 'minitest/autorun'
 require_relative 'audit_montage_results'
 
 class MontageAuditTest < Minitest::Test
+  def test_dependency_coverage_relay_policy_and_joint_stage_deduplication
+    args = fixture
+    cloud = 'montage-gcp-e2-medium-1'
+    args[0]['resources'] = [{'id'=>cloud, 'type'=>'cloud_vm'}, {'id'=>'micro', 'type'=>'hpc_machine'}]
+    args[0]['plan']['assignments'][0]['resourceId'] = cloud
+    args[0]['workflow']['dependencies'] = [{'activityId'=>'activity-2', 'dependsOnActivityId'=>'activity-1'}]
+    route = {'producerActivityId'=>'activity-1', 'consumerActivityId'=>'activity-2',
+      'serverNetworkBytes'=>100, 'address'=>'never-export', 'mergeCopySeconds'=>2,
+      'phases'=>[{'name'=>'shared-preparation-barrier', 'startedAt'=>1, 'finishedAt'=>4, 'durationSeconds'=>3},
+        {'name'=>'shared-conflict-check-copy-and-verify', 'startedAt'=>4, 'finishedAt'=>6, 'durationSeconds'=>2}]}
+    transfer = {'activityId'=>'activity-2', 'status'=>'completed', 'strategy'=>'gateway', 'finishedAt'=>19, 'route'=>route}
+    args[1]['artifactTransferRuns'] = [transfer, Marshal.load(Marshal.dump(transfer))]
+    report = montage_audit(*args)
+    assert_equal 1, report[:shared_preparations].length
+    assert_equal 3, report[:shared_preparations].first[:barrier_seconds]
+    assert_equal 2, report[:shared_preparations].first[:merge_seconds]
+    assert_equal 200, report[:relay_server_network_bytes]
+    refute_match(/never-export/, JSON.generate(report))
+    args[1]['artifactTransferRuns'][0]['strategy'] = 'direct-runtime'
+    assert_raises(RuntimeError) { montage_audit(*args) }
+    args[1]['artifactTransferRuns'] = []
+    assert_raises(RuntimeError) { montage_audit(*args) }
+  end
+
   def fixture
     ids = (1..58).map { |i| "activity-#{i}" }
     request = {'workflow'=>{'activities'=>ids.map { |id| {'id'=>id} }}, 'plan'=>{'predicted'=>{'makespanSeconds'=>10, 'secret'=>'never-export'}, 'assignments'=>ids.map { |id| {'activityId'=>id, 'resourceId'=>'micro'} }}}

@@ -300,6 +300,8 @@ func (s *Supervisor) executeActivities(ctx context.Context, request ports.Execut
 	pendingAllocations := make(map[string]bool)
 	readyAllocations := make(map[string]domain.RuntimeAllocation)
 	stoppingInstances := make(map[string]bool)
+	idleStops := newIdleCloudStops(ctx)
+	defer idleStops.close()
 	consumeAllocation := func(result allocationResult) error {
 		delete(pendingAllocations, result.activityID)
 		if result.err != nil {
@@ -396,7 +398,7 @@ func (s *Supervisor) executeActivities(ctx context.Context, request ports.Execut
 		for _, activityID := range immediate {
 			delete(readyAllocations, activityID)
 		}
-		s.stopIdleCloud(ctx, request, completed, tasks, stoppingInstances)
+		s.scheduleIdleCloudStops(request, completed, tasks, stoppingInstances, idleStops)
 		if len(running) == 0 && len(pendingAllocations) == 0 && len(immediate) == 0 && len(completed) < len(activities) {
 			return domain.ExecutionTrace{}, fmt.Errorf("execution cannot progress: dependency cycle or incomplete plan")
 		}

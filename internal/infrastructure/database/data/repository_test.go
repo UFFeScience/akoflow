@@ -210,9 +210,14 @@ func TestMaterializationAndTransferLifecycle(t *testing.T) {
 	}
 	workspaceTransfer := domain.DataTransferRun{ID: "workspace-route", PlanID: "workspace-plan",
 		ExecutionRunID: "run", ActivityID: "activity", Strategy: domain.TransferGateway,
-		Status: domain.TransferCompleted}
+		Status: domain.TransferCompleted, Route: domain.TransferRoute{ArchiveBytes: 10240,
+			Phases: []domain.TransferPhase{{Name: "archive-upload", StartedAt: 1, FinishedAt: 3, DurationSeconds: 2}}}}
 	if err := repository.SaveTransferRun(ctx, workspaceTransfer); err != nil {
 		t.Fatal(err)
+	}
+	workspaceFound, err := repository.FindTransferRun(ctx, workspaceTransfer.ID)
+	if err != nil || workspaceFound == nil || workspaceFound.Route.ArchiveBytes != 10240 || len(workspaceFound.Route.Phases) != 1 || workspaceFound.Route.Phases[0].DurationSeconds != 2 {
+		t.Fatalf("phase persistence = %#v, %v", workspaceFound, err)
 	}
 	chunk := domain.TransferChunkRun{TransferRunID: transfer.ID, Index: 1, Offset: 50, SizeBytes: 50, Digest: digest, Status: domain.TransferCompleted, Attempts: 2}
 	if err := repository.SaveTransferChunkRun(ctx, chunk); err != nil {

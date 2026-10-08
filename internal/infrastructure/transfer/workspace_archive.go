@@ -20,10 +20,10 @@ import (
 
 func parallelWorkspacePreparation(ctx context.Context, count, limit int, prepare func(context.Context, int) error) error {
 	if limit <= 0 {
-		limit = 2
+		limit = 8
 	}
-	if limit > 4 {
-		limit = 4
+	if limit > 8 {
+		limit = 8
 	}
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()

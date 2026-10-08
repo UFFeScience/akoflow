@@ -323,7 +323,7 @@ func compactPRISMInterferenceDecision(
 		priority = 1
 	}
 	totalPriority += priority
-	cores := math.Max(1, float64(search.resources[resourceOrdinal].resource.CPUCores))
+	cores := float64(search.resources[resourceOrdinal].resource.SchedulingCPUCores())
 	return math.Max(1, totalPriority/(cores*priority)), start
 }
 

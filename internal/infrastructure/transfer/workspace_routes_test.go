@@ -110,6 +110,48 @@ func TestSharedWorkspaceProofRequiresMatchingFilesystemAndMount(t *testing.T) {
 	}
 }
 
+func TestSameCloudWorkspaceRequiresExactGenerationAndTrust(t *testing.T) {
+	u := "ssh://worker.test/workspace?strictHostKeyChecking=true&hostKeyAlias=generation-a&knownHostsFile=/trusted/hosts"
+	a := domain.TransferEndpoint{URI: u, ConnectionID: "cloud-instance-a", CloudInstanceID: "instance-a"}
+	b := a
+	if !sameVerifiedCloudWorkspaceEndpoint(a, b) {
+		t.Fatal("verified same generation rejected")
+	}
+	b.CloudInstanceID = "instance-b"
+	if sameVerifiedCloudWorkspaceEndpoint(a, b) {
+		t.Fatal("different instance accepted")
+	}
+	b = a
+	b.CloudInstanceID = ""
+	if sameVerifiedCloudWorkspaceEndpoint(a, b) {
+		t.Fatal("missing instance accepted")
+	}
+	b = a
+	b.URI = "ssh://worker.test/workspace"
+	if sameVerifiedCloudWorkspaceEndpoint(a, b) {
+		t.Fatal("untrusted endpoint accepted")
+	}
+	b = a
+	b.URI = strings.Replace(u, "generation-a", "generation-b", 1)
+	if sameVerifiedCloudWorkspaceEndpoint(a, b) {
+		t.Fatal("different trust generation accepted")
+	}
+}
+
+func TestSameCloudWorkspaceLocalFilesystemProof(t *testing.T) {
+	bin := t.TempDir()
+	if err := os.WriteFile(filepath.Join(bin, "ssh"), []byte("#!/bin/sh\nprintf 'ext2/ext3 a12 ext4 /dev/sda /akoflow\\next2/ext3 a12 ext4 /dev/sda /akoflow\\n'\n"), 0700); err != nil {
+		t.Fatal(err)
+	}
+	t.Setenv("PATH", bin+string(os.PathListSeparator)+os.Getenv("PATH"))
+	t.Setenv("AKOFLOW_SSH_CONTROL_DIRECTORY", t.TempDir())
+	u := "ssh://worker.test/workspace?strictHostKeyChecking=true&hostKeyAlias=generation-a&knownHostsFile=/trusted/hosts"
+	a := domain.TransferEndpoint{URI: u, ConnectionID: "cloud-a", CloudInstanceID: "instance-a"}
+	if proof, ok := sameCloudWorkspaceProof(context.Background(), a, a); !ok || !strings.HasPrefix(proof, "ext2/ext3 ") {
+		t.Fatalf("local filesystem proof rejected: %q %v", proof, ok)
+	}
+}
+
 // Exercise real rsync and the remote shell script, with transport redirected
 // into temporary directories. This is not a live Lustre integration test.
 func TestMixedWorkspaceRoutesConflictAndRecovery(t *testing.T) {

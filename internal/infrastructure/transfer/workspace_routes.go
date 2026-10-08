@@ -12,6 +12,50 @@ import (
 	"github.com/UFFeScience/akoflow/internal/domain"
 )
 
+// A same-instance route requires independently resolved generation trust, not
+// merely equal public addresses or a shared capacity target.
+func sameVerifiedCloudWorkspaceEndpoint(source, destination domain.TransferEndpoint) bool {
+	if source.CloudInstanceID == "" || source.CloudInstanceID != destination.CloudInstanceID || !sameSSHWorkspaceEndpoint(source, destination) {
+		return false
+	}
+	a, errA := url.Parse(source.URI)
+	b, errB := url.Parse(destination.URI)
+	if errA != nil || errB != nil {
+		return false
+	}
+	x, y := a.Query(), b.Query()
+	return x.Get("strictHostKeyChecking") == "true" && y.Get("strictHostKeyChecking") == "true" &&
+		x.Get("hostKeyAlias") != "" && x.Get("hostKeyAlias") == y.Get("hostKeyAlias") &&
+		x.Get("knownHostsFile") != "" && x.Get("knownHostsFile") == y.Get("knownHostsFile")
+}
+
+func sameCloudWorkspaceProof(ctx context.Context, source, destination domain.TransferEndpoint) (string, bool) {
+	if !sameVerifiedCloudWorkspaceEndpoint(source, destination) {
+		return "", false
+	}
+	host, target, err := sshTarget(destination, "")
+	if err != nil {
+		return "", false
+	}
+	_, origin, err := sshTarget(source, "")
+	if err != nil {
+		return "", false
+	}
+	output, err := runSSHCombinedOutput(ctx, destination, append(sshArgs(destination), host, sharedWorkspaceProofCommand(origin, target)), nil)
+	if err != nil {
+		return "", false
+	}
+	lines := strings.Split(strings.TrimSpace(string(output)), "\n")
+	if len(lines) != 2 || lines[0] != lines[1] {
+		return "", false
+	}
+	fields := strings.Fields(lines[0])
+	if len(fields) != 5 || fields[1] == "" || fields[3] == "" || !strings.HasPrefix(fields[4], "/") {
+		return "", false
+	}
+	return fields[0] + " " + strings.Join(fields[1:], "|"), true
+}
+
 // sharedWorkspaceProof verifies access and filesystem identity at execution
 // time. A matching SSH connection or a zero filesystem ID alone is not proof
 // of shared storage: the mounted source and mount path must also match.
@@ -77,6 +121,7 @@ func (s WorkspaceRsync) syncDependencyRoutes(ctx context.Context, plans []domain
 	}
 	prepared := append([]domain.TransferEndpoint(nil), sources...)
 	proofs := make([]string, len(plans))
+	localCloud := make([]bool, len(plans))
 	network := make([]rsyncStats, len(plans))
 	var remoteRoot string
 	defer func() {
@@ -90,13 +135,22 @@ func (s WorkspaceRsync) syncDependencyRoutes(ctx context.Context, plans []domain
 	for i, source := range sources {
 		runs[i].Route.SourceAddress = workspaceRouteAddress(source.URI)
 		runs[i].Route.TargetAddress = workspaceRouteAddress(destination.URI)
-		if proof, ok := sharedWorkspaceProof(ctx, source, destination); ok {
+		proof, ok := sameCloudWorkspaceProof(ctx, source, destination)
+		localCloud[i] = ok
+		if !ok {
+			proof, ok = sharedWorkspaceProof(ctx, source, destination)
+		}
+		if ok {
 			proofs[i] = proof
 			identity := strings.Fields(proof)
 			runs[i].Route.SharedFilesystem = identity[0]
 			runs[i].Route.SharedFilesystemID = identity[1]
 			runs[i].Strategy, runs[i].Route.Strategy = domain.TransferDirectRuntime, domain.TransferDirectRuntime
 			runs[i].Route.Reason = "verified shared filesystem: " + proof
+			if localCloud[i] {
+				runs[i].Strategy, runs[i].Route.Strategy = domain.TransferRuntimeLocal, domain.TransferRuntimeLocal
+				runs[i].Route.Reason = "verified same concrete cloud instance and accessible workspace filesystem: " + proof
+			}
 			continue
 		}
 		runs[i].Route.Reason = "per-dependency staging fallback; shared storage access not proven"
@@ -155,6 +209,10 @@ func (s WorkspaceRsync) syncDependencyRoutes(ctx context.Context, plans []domain
 		result[i].Route.FilesTransferred = result[i].FilesTransferred
 		if proofs[i] != "" {
 			result[i].Route.Reason = "verified shared filesystem: " + proofs[i]
+			if localCloud[i] {
+				result[i].Strategy, result[i].Route.Strategy = domain.TransferRuntimeLocal, domain.TransferRuntimeLocal
+				result[i].Route.Reason = "verified same concrete cloud instance and accessible workspace filesystem: " + proofs[i]
+			}
 		} else {
 			result[i].Strategy, result[i].Route.Strategy = domain.TransferGateway, domain.TransferGateway
 			result[i].Route.Reason = "per-dependency staging fallback; shared storage access not proven"

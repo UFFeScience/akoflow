@@ -63,14 +63,18 @@ func (a *Adapter) Start(ctx context.Context, execution domain.ActivityExecutionC
 	if workingDirectory == "" {
 		workingDirectory = "/akoflow/workspace/runs/" + safeName(execution.Run.ID) + "/" + safeName(activity.ID)
 	}
+	workspaceStart := time.Now()
 	if _, err := a.executor.Run(ctx, "mkdir", []string{"-p", workingDirectory}, nil); err != nil {
 		return domain.ActivityHandle{}, fmt.Errorf("prepare remote workspace: %w", err)
 	}
+	workspaceSeconds := time.Since(workspaceStart).Seconds()
+	snapshotStart := time.Now()
 	before, err := a.snapshot(ctx, workingDirectory)
 	if err != nil {
 		return domain.ActivityHandle{}, fmt.Errorf("snapshot remote workspace: %w", err)
 	}
 	beforeJSON, _ := json.Marshal(before)
+	snapshotSeconds := time.Since(snapshotStart).Seconds()
 	args := []string{"run", "--detach", "--name", name, "--label", "akoflow.run=" + execution.Run.ID}
 	for key, value := range activity.Command.Environment {
 		args = append(args, "--env", key+"="+value)
@@ -90,6 +94,7 @@ func (a *Adapter) Start(ctx context.Context, execution domain.ActivityExecutionC
 		args = append(args, activity.Command.Entrypoint)
 	}
 	args = append(args, activity.Command.Arguments...)
+	containerLaunchStart := time.Now()
 	output, err := a.executor.Run(ctx, "docker", args, nil)
 	if err != nil {
 		return domain.ActivityHandle{}, fmt.Errorf("start remote Docker container: %w", err)
@@ -103,14 +108,20 @@ func (a *Adapter) Start(ctx context.Context, execution domain.ActivityExecutionC
 		return domain.ActivityHandle{}, fmt.Errorf("start remote Docker container: missing container ID")
 	}
 	now := runtimecommon.UnixSeconds(time.Now())
+	containerLaunchSeconds := time.Since(containerLaunchStart).Seconds()
 	handle := domain.ActivityHandle{ID: runtimecommon.NewID("activity"), RunID: execution.Run.ID, ActivityID: activity.ID,
 		ResourceID: execution.Resource.ID, RuntimeID: execution.RuntimeID, ExternalID: containerID,
 		Status: domain.HandleStarting, StartedAt: now, Metadata: map[string]any{
 			"executionAttempt": execution.Attempt,
 			"containerName":    name, "executionTarget": "remote-docker", "artifactObservationRoot": workingDirectory,
-			"artifactObservationBefore": string(beforeJSON),
+			"artifactObservationBefore":      string(beforeJSON),
+			"remoteWorkspacePrepareSeconds":  workspaceSeconds,
+			"remoteWorkspaceSnapshotSeconds": snapshotSeconds,
+			"remoteContainerLaunchSeconds":   containerLaunchSeconds,
 		}}
+	telemetryStart := time.Now()
 	telemetry.ObserveDocker(ctx, &handle, containerID, a.executor.Run)
+	handle.Metadata["remoteInitialTelemetrySeconds"] = time.Since(telemetryStart).Seconds()
 	return handle, nil
 }
 

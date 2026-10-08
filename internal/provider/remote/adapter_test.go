@@ -73,6 +73,20 @@ func TestRecoveryUsesAttemptScopedContainerName(t *testing.T) {
 	}
 }
 
+func TestStartRecordsIndependentRemoteLaunchStages(t *testing.T) {
+	executor := &commandExecutorStub{responses: [][]byte{nil, []byte("[]"), []byte("container-id\n")}}
+	handle, err := (&Adapter{executor: executor}).Start(context.Background(), executionFixture())
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, key := range []string{"remoteWorkspacePrepareSeconds", "remoteWorkspaceSnapshotSeconds", "remoteContainerLaunchSeconds", "remoteInitialTelemetrySeconds"} {
+		seconds, ok := handle.Metadata[key].(float64)
+		if !ok || seconds < 0 {
+			t.Fatalf("stage %s must have a nonnegative duration, got %v", key, handle.Metadata[key])
+		}
+	}
+}
+
 func TestFactoryValidatesDirectDockerConnection(t *testing.T) {
 	factory := Factory{}
 	if factory.Driver() != domain.RuntimeDriverSSH {

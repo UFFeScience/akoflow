@@ -320,6 +320,8 @@ type rsyncStats struct {
 	retries                 int
 	lastRetryError          string
 	networkBytesIncomplete  bool
+	channelWaitSeconds      float64
+	executionSeconds        float64
 }
 
 func syncDirectory(ctx context.Context, source, destination domain.TransferEndpoint, ignoreExisting bool) (rsyncStats, error) {
@@ -330,14 +332,23 @@ func syncDirectory(ctx context.Context, source, destination domain.TransferEndpo
 	if ignoreExisting {
 		args = append([]string{"--ignore-existing"}, args...)
 	}
+	waitStarted := time.Now()
 	release, err := acquireRsyncSSHChannel(ctx, source, destination)
+	waitSeconds := time.Since(waitStarted).Seconds()
 	if err != nil {
-		return rsyncStats{}, err
+		return rsyncStats{channelWaitSeconds: waitSeconds}, err
 	}
 	defer release()
-	return retryWorkspaceRsync(ctx, time.Second, strings.HasPrefix(destination.URI, "ssh://"), func() ([]byte, error) {
-		return exec.CommandContext(ctx, "rsync", args...).CombinedOutput()
+	var executionSeconds float64
+	stats, err := retryWorkspaceRsync(ctx, time.Second, strings.HasPrefix(destination.URI, "ssh://"), func() ([]byte, error) {
+		started := time.Now()
+		output, copyErr := exec.CommandContext(ctx, "rsync", args...).CombinedOutput()
+		executionSeconds += time.Since(started).Seconds()
+		return output, copyErr
 	})
+	stats.channelWaitSeconds = waitSeconds
+	stats.executionSeconds = executionSeconds
+	return stats, err
 }
 
 func rsyncArgs(source, destination domain.TransferEndpoint) ([]string, error) {

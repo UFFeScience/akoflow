@@ -137,6 +137,8 @@ type TransferRoute struct {
 	SharedFilesystem       string           `json:"sharedFilesystem,omitempty"`
 	SharedFilesystemID     string           `json:"sharedFilesystemId,omitempty"`
 	RetryCount             int              `json:"retryCount,omitempty"`
+	SSHChannelWaitSeconds  float64          `json:"sshChannelWaitSeconds,omitempty"`
+	RsyncExecutionSeconds  float64          `json:"rsyncExecutionSeconds,omitempty"`
 	LastRetryError         string           `json:"lastRetryError,omitempty"`
 	NetworkBytesIncomplete bool             `json:"networkBytesIncomplete,omitempty"`
 	ServerNetworkBytes     *int64           `json:"serverNetworkBytes,omitempty"`

@@ -76,6 +76,8 @@ func interruptedRsyncBytes(output string) int64 {
 }
 
 func recordWorkspaceRsyncStats(run *domain.DataTransferRun, stats rsyncStats, network bool) {
+	run.Route.SSHChannelWaitSeconds += stats.channelWaitSeconds
+	run.Route.RsyncExecutionSeconds += stats.executionSeconds
 	if network {
 		run.NetworkBytes += stats.bytes
 		run.Route.NetworkBytesIncomplete = run.Route.NetworkBytesIncomplete || stats.networkBytesIncomplete

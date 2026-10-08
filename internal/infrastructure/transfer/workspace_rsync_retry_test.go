@@ -12,6 +12,15 @@ import (
 	"github.com/UFFeScience/akoflow/internal/domain"
 )
 
+func TestRsyncStageTimingAccumulatesSeparatelyFromBytes(t *testing.T) {
+	run := domain.DataTransferRun{}
+	recordWorkspaceRsyncStats(&run, rsyncStats{channelWaitSeconds: 12, executionSeconds: 3, bytes: 100}, true)
+	recordWorkspaceRsyncStats(&run, rsyncStats{channelWaitSeconds: 2, executionSeconds: 5, bytes: 50}, true)
+	if run.Route.SSHChannelWaitSeconds != 14 || run.Route.RsyncExecutionSeconds != 8 || run.NetworkBytes != 150 {
+		t.Fatalf("distinct stage accounting: %+v", run)
+	}
+}
+
 func TestWorkspaceRsyncRetriesTransientFailureAndAccountsReportedBytes(t *testing.T) {
 	calls := 0
 	stats, err := retryWorkspaceRsync(context.Background(), 0, false, func() ([]byte, error) {

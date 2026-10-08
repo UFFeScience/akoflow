@@ -7,7 +7,6 @@ import (
 	"net/url"
 	"path/filepath"
 	"regexp"
-	"strconv"
 	"strings"
 	"time"
 
@@ -24,7 +23,7 @@ func preparePeerWorkspaceArchive(ctx context.Context, source, destination domain
 	if !cloudWorkspacePeerEligible(source, destination) {
 		return false, nil
 	}
-	sourceHost, origin, err := sshTarget(source, "")
+	sourceHost, _, err := sshTarget(source, "")
 	if err != nil {
 		return true, err
 	}
@@ -79,32 +78,29 @@ func preparePeerWorkspaceArchive(ctx context.Context, source, destination domain
 	if err := rejectWorkspaceSymlinks(ctx, source); err != nil {
 		return true, err
 	}
-	archive := filepath.Join(root, "workspace.tar.gz")
-	var digest string
-	var size int64
-	err = measureWorkspacePhase(run, "peer-pack-and-hash", func() error {
-		command := "set -eu; umask 077; bad=$(find " + shell(origin) + " ! -type d ! -type f -print -quit); test -z \"$bad\"; " +
-			"bash -o pipefail -c " + shell("tar --hard-dereference -C \"$1\" -cf - . | gzip -1 > \"$2\"") + " archive " + shell(origin) + " " + shell(archive) +
-			"; sha256sum -- " + shell(archive) + "; wc -c < " + shell(archive)
-		metadata, err := runSSHCombinedOutput(ctx, source, append(sshArgs(source), sourceHost, command), nil)
-		if err != nil {
-			return fmt.Errorf("pack private peer workspace: %w", err)
-		}
-		lines := strings.Split(strings.TrimSpace(string(metadata)), "\n")
-		if len(lines) != 2 || len(strings.Fields(lines[0])) < 1 {
-			return fmt.Errorf("invalid peer archive metadata")
-		}
-		digest = strings.Fields(lines[0])[0]
-		size, err = strconv.ParseInt(strings.TrimSpace(lines[1]), 10, 64)
-		if err != nil || size <= 0 || !peerArchiveDigest.MatchString(digest) {
-			return fmt.Errorf("invalid peer archive digest or size")
-		}
-		return nil
+	var snapshot *peerSnapshot
+	var release func()
+	err = measureWorkspacePhase(run, "peer-snapshot-acquire", func() error {
+		var reused bool
+		var acquireErr error
+		snapshot, reused, release, acquireErr = sharedPeerSnapshots.acquire(ctx, peerSnapshotKey(source), func(buildCtx context.Context) (*peerSnapshot, error) {
+			return buildPeerSnapshot(buildCtx, source)
+		})
+		run.Route.SnapshotReused = reused
+		return acquireErr
 	})
 	if err != nil {
 		return true, err
 	}
-	run.Route.ArchiveBytes = size
+	defer release()
+	if run.Route.SnapshotReused {
+		if err := measureWorkspacePhase(run, "peer-reused-source-manifest-check", func() error { return verifyPeerSnapshotSource(ctx, source) }); err != nil {
+			return true, err
+		}
+	}
+	u.Path = snapshot.root
+	archiveSource.URI = u.String()
+	run.Route.ArchiveBytes = snapshot.size
 	err = measureWorkspacePhase(run, "peer-private-upload", func() error {
 		_, err := (RsyncSSH{}).TransferRoute(ctx, domain.TransferDirectRuntime, archiveSource, destination, "workspace.tar.gz", "peer-workspace.tar.gz", 0)
 		return err
@@ -113,9 +109,9 @@ func preparePeerWorkspaceArchive(ctx context.Context, source, destination domain
 		run.Route.NetworkBytesIncomplete = true
 		return true, err
 	}
-	run.NetworkBytes = size
+	run.NetworkBytes = snapshot.size
 	err = measureWorkspacePhase(run, "peer-receiver-verify-and-extract", func() error {
-		command := "python3 -c " + shell(peerArchiveVerifyScript) + " " + shell(filepath.Join(target, "peer-workspace.tar.gz")) + " " + shell(target) + " " + shell(digest)
+		command := "python3 -c " + shell(peerArchiveVerifyScript) + " " + shell(filepath.Join(target, "peer-workspace.tar.gz")) + " " + shell(target) + " " + shell(snapshot.digest)
 		output, err := runSSHCombinedOutput(ctx, destination, append(sshArgs(destination), targetHost, command), nil)
 		if err != nil {
 			return fmt.Errorf("peer archive validation: %w: %s", err, strings.TrimSpace(string(output)))

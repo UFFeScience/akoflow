@@ -273,7 +273,9 @@ func skuUnitPrice(sku billingSKU) (float64, string) {
 }
 
 func diskSKUDescription(diskType, description string) bool {
-	if !strings.Contains(description, "capacity") || strings.Contains(description, "snapshot") {
+	// Capacity targets use zonal PD boot disks. Regional replicas, Extreme
+	// PD and Hyperdisk have distinct rates despite matching broad keywords.
+	if !strings.Contains(description, "capacity") || strings.Contains(description, "snapshot") || strings.Contains(description, "regional") || strings.Contains(description, "extreme") || strings.Contains(description, "hyperdisk") {
 		return false
 	}
 	switch diskType {

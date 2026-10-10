@@ -545,6 +545,13 @@ func (s *Provisioner) Release(ctx context.Context, capacityTargetIDs []string) e
 			if instance.CapacityTargetID != targetID || instance.Status != "ready" {
 				continue
 			}
+			// Direct releases (including console closure) must honor the same
+			// lifecycle barrier as queued infrastructure operations.
+			if guard, ok := s.store.(ports.CloudLifecycleGuard); ok {
+				if err := guard.CheckCloudLifecycle(ctx, instance.ID, ""); err != nil {
+					return fmt.Errorf("release cloud capacity: %w", err)
+				}
+			}
 			switch target.LifecyclePolicy {
 			case "destroy-after-run", "destroy-after-execution":
 				if _, err := s.Destroy(ctx, instance.ID); err != nil {

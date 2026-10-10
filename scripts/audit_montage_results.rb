@@ -4,13 +4,23 @@ require 'time'
 require 'digest'
 
 # Explicit allowlist: never copy runtime metadata, addresses, credentials or logs.
-def montage_audit(request, response, simulation)
+def montage_audit(request, response, simulation, require_fresh: false)
   expected = request.fetch('workflow').fetch('activities').map { |a| a.fetch('id') }
   raise 'Run is not completed' unless response.fetch('run').fetch('status') == 'completed'
   raise 'Duplicate expected activity IDs' unless expected.uniq.length == expected.length
   assignments = request.fetch('plan').fetch('assignments').to_h { |a| [a.fetch('activityId'), a] }
   latest = response.fetch('activityAttempts').group_by { |a| a.fetch('activityId') }.transform_values do |attempts|
     attempts.max_by { |a| [a.fetch('attempt'), a['startedAt'].to_f] }
+  end
+  if require_fresh
+    attempts = response.fetch('activityAttempts')
+    raise 'Fresh experiment contains retries or failed attempts' unless attempts.length == 58 && attempts.all? { |task| task['attempt'] == 1 && task['status'] == 'completed' }
+    expected.each do |id|
+      handles = response.fetch('handles').select { |handle| handle['activityId'] == id && handle.fetch('metadata', {})['executionAttempt'] == 1 }
+      raise "Missing successful exact-attempt handle: #{id}" unless handles.length == 1 && handles.first['status'] == 'completed' && handles.first['exitCode'] == 0
+    end
+    billing = response.fetch('cloudBilling')
+    raise 'Cloud lifecycle prices are incomplete' unless billing['status'] == 'estimated' && billing['currency'] == 'USD' && billing['estimatedCost'].is_a?(Numeric) && billing['estimatedCost'] > 0
   end
   transfers = response.fetch('artifactTransferRuns')
   dependency_routes = transfers.select { |t| t.fetch('route', {})['producerActivityId'] }
@@ -78,6 +88,10 @@ def montage_audit(request, response, simulation)
     plan_assignment_transfer_work_seconds: assignments.values.sum { |a| a['predictedTransferSeconds'].to_f },
     simulation: metrics.call(simulation.fetch('run')),
     real_api_reported: metrics.call(response.fetch('run')),
+    real_cloud_lifecycle_estimate: response.fetch('cloudBilling', {}).select { |key, _| %w[status currency estimatedCost knownCost costBasis excludedCosts asOf].include?(key) },
+    real_cloud_generations: response.fetch('cloudBilling', {}).fetch('instances', []).map do |instance|
+      {instance_id: instance['instanceId'], status: instance['status'], billing: instance.fetch('billing', {}).select { |key, _| %w[pricingStatus priceCurrency priceSource priceObservedAt priceRegion priceMachineType startedAt finishedAt computeStartedAt accumulatedComputeSeconds computePricePerSecond diskPricePerSecond asOf currentCost missingPrices].include?(key) }}
+    end,
     real_api_run_timestamp_wall_seconds: wall_seconds,
     real_network_bytes_from_routes: transfers.sum { |t| t['networkBytes'].to_i },
     transfer_route_count: transfers.length,
@@ -141,7 +155,7 @@ def montage_audit(request, response, simulation)
       'API aggregate counters can contain older attempts; audit uses latest distinct IDs.',
       'Transfer work is summed overlapping route time, not wall-clock preparation.',
       'Plan assignment work sums are not makespan; API timestamp wall and recovered makespan can differ.',
-      'Cost zero is uncalibrated, not free cloud execution.',
+      response.fetch('cloudBilling', {})['status'] == 'estimated' ? 'Cloud lifecycle cost is a list-rate estimate with explicit exclusions, not the provider invoice. The task/window API cost and plan retention-window cost have different bases.' : 'Cloud prices are incomplete; cost zero does not mean free cloud execution.',
       'e2-medium interference extrapolated to HPC/micro; micro speedup 0.25 is approximate.',
       'Whole-workspace real traffic differs from estimated plan edge volumes.',
       'Zero reported interference does not prove absence of physical contention.'
@@ -152,7 +166,7 @@ end
 if $PROGRAM_NAME == __FILE__
   abort 'Usage: audit_montage_results.rb request.json real.json sim.json product.png' unless ARGV.length == 4
   request, real, sim = ARGV.take(3).map { |path| JSON.parse(File.read(path)) }
-  report = montage_audit(request, real, sim)
+  report = montage_audit(request, real, sim, require_fresh: ENV['MONTAGE_REQUIRE_FRESH'] == '1')
   report[:product] = {filename: File.basename(ARGV[3]), bytes: File.size(ARGV[3]), sha256: Digest::SHA256.file(ARGV[3]).hexdigest}
   puts JSON.pretty_generate(report)
 end

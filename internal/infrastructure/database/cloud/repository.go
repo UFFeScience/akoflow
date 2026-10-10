@@ -366,15 +366,30 @@ func (r *Repository) CreateCapacityTarget(ctx context.Context, value domain.Clou
 		WHERE capacity_target_id=?`, value.ID); err != nil {
 		return err
 	}
-	configurations := value.MachineConfigurations
+	configurations := append([]domain.CloudTargetConfiguration(nil), value.MachineConfigurations...)
 	hasDefault := false
-	for _, configuration := range configurations {
+	for index, configuration := range configurations {
+		// A published required version of the worker baseline replaces the
+		// default version, not the safety requirement. This supports immutable
+		// preinstalled images without silently appending the installation recipe.
+		var configurationID, status string
+		if err := tx.QueryRowContext(ctx, `SELECT machine_configuration_id,status
+			FROM machine_configuration_versions WHERE id=?`, configuration.ConfigurationVersionID).Scan(&configurationID, &status); err != nil {
+			return fmt.Errorf("load target configuration version: %w", err)
+		}
 		if configuration.ConfigurationVersionID == domain.DefaultMachineConfigurationVersionID {
+			configurations[index].Required, configurations[index].Enabled = true, true
 			hasDefault = true
-			break
+		} else if configurationID == domain.DefaultMachineConfigurationID && status == "published" && configuration.Required && configuration.Enabled {
+			hasDefault = true
 		}
 	}
 	if !hasDefault {
+		// Reserve nonnegative order zero for the mandatory baseline while
+		// preserving the relative order of explicitly supplied configurations.
+		for index := range configurations {
+			configurations[index].ExecutionOrder++
+		}
 		configurations = append([]domain.CloudTargetConfiguration{{
 			ConfigurationVersionID: domain.DefaultMachineConfigurationVersionID,
 			ExecutionOrder:         0, Required: true, Enabled: true,

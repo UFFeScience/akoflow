@@ -74,6 +74,52 @@ func TestRepositoryStoresConfigurationsAndTargets(t *testing.T) {
 	}
 }
 
+func TestCapacityTargetHonorsPublishedRequiredWorkerVersion(t *testing.T) {
+	ctx := context.Background()
+	db, err := database.Open(filepath.Join(t.TempDir(), "cloud.db"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer db.Close()
+	if err := database.Bootstrap(ctx, db); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := db.Exec(`INSERT INTO environments(id,name) VALUES('gcp-env','GCP')`); err != nil {
+		t.Fatal(err)
+	}
+	repository := dbcloud.New(db)
+	if err := repository.EnsureDefaults(ctx); err != nil {
+		t.Fatal(err)
+	}
+	version := domain.MachineConfigurationVersion{ID: "preinstalled-v8", MachineConfigurationID: domain.DefaultMachineConfigurationID,
+		Version: 8, Status: "published", PlaybookYAML: "---\n- hosts: all\n  tasks:\n    - name: Verify Docker\n      ansible.builtin.command: docker --version\n      changed_when: false\n"}
+	if err := repository.CreateMachineConfigurationVersion(ctx, version); err != nil {
+		t.Fatal(err)
+	}
+	for _, required := range []bool{true, false} {
+		target := domain.CloudCapacityTarget{ID: "preinstalled", EnvironmentID: "gcp-env", Name: "Preinstalled worker",
+			Provider: "gcp", ProviderMachineType: "e2-micro", ImageReference: "worker-image", VCPU: 1, MemoryMiB: 1024, Enabled: true,
+			MachineConfigurations: []domain.CloudTargetConfiguration{{ConfigurationVersionID: version.ID, ExecutionOrder: 0, Required: required, Enabled: true}}}
+		if err := repository.CreateCapacityTarget(ctx, target); err != nil {
+			t.Fatal(err)
+		}
+		stored, err := repository.ListCapacityTargets(ctx, "gcp-env")
+		if err != nil {
+			t.Fatal(err)
+		}
+		configs := stored[0].MachineConfigurations
+		if required {
+			if len(configs) != 1 || configs[0].ConfigurationVersionID != version.ID {
+				t.Fatalf("explicit baseline not honored: %#v", configs)
+			}
+		} else {
+			if len(configs) != 2 || configs[0].ConfigurationVersionID != domain.DefaultMachineConfigurationVersionID || configs[0].ExecutionOrder >= configs[1].ExecutionOrder {
+				t.Fatalf("optional version bypassed baseline or collided: %#v", configs)
+			}
+		}
+	}
+}
+
 func TestRepositoryStoresCloudOperationEventsAndExecutionBinding(t *testing.T) {
 	ctx := context.Background()
 	db, err := database.Open(filepath.Join(t.TempDir(), "cloud.db"))

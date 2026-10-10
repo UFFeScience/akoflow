@@ -344,12 +344,13 @@ target="$parent/$(basename -- "$candidate")"
 tmp="$target.akoflow-copy-part"
 cat > "$tmp" && mv -f -- "$tmp" "$target"`
 
-const archiveScript = commonScript + "\n" + `test -d "$candidate" || exit 5
+const archiveScript = commonScript + "\n" + `safe_existing || exit 3
+test -d "$candidate" || exit 5
 test -z "$(find "$candidate" -type l -print -quit)" || exit 6
 target="$candidate.tar.gz"
 tmp=$(mktemp "$target.part.XXXXXXXX") || exit 7
 trap 'rm -f -- "$tmp"' EXIT HUP INT TERM
-GZIP=-1 tar -C "$root" -czf "$tmp" -- "$relative" || exit 8
+tar -C "$root" -czf "$tmp" -- "$rel" || exit 8
 test -s "$tmp" && gzip -t "$tmp" && tar -tzf "$tmp" >/dev/null || exit 9
 mv -f -- "$tmp" "$target"`
 

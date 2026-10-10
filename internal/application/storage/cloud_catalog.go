@@ -32,9 +32,17 @@ func (c CloudWorkspaceCatalog) FindStorage(ctx context.Context, id string) (*dom
 	if _, _, err := instance.VerifiedSSHTrust(); err != nil {
 		return nil, fmt.Errorf("cloud workspace trust: %w", err)
 	}
-	return &domain.StorageResource{
+	storage := &domain.StorageResource{
 		ID: id, Type: domain.StorageSSH, Endpoint: "/akoflow/workspace",
 		BrowseRoots: []domain.StorageBrowseRoot{{Path: "/akoflow/workspace"}},
 		Metadata:    map[string]any{"cloudInstanceId": instance.ID},
-	}, nil
+	}
+	if registrar, ok := c.Catalog.(interface {
+		EnsureCloudWorkspaceStorage(context.Context, string, domain.StorageResource) error
+	}); ok {
+		if err := registrar.EnsureCloudWorkspaceStorage(ctx, instance.EnvironmentID, *storage); err != nil {
+			return nil, fmt.Errorf("register concrete cloud storage: %w", err)
+		}
+	}
+	return storage, nil
 }

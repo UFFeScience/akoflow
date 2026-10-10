@@ -148,6 +148,23 @@ func (d *Driver) Write(ctx context.Context, storage domain.StorageResource, valu
 	return err
 }
 
+// ArchiveDirectory packs within the verified source filesystem, avoiding one
+// SSH round trip per file. It publishes only a validated, nonempty archive.
+func (d *Driver) ArchiveDirectory(ctx context.Context, storage domain.StorageResource, value string) (string, error) {
+	if storage.ReadOnly {
+		return "", fmt.Errorf("storage is read-only")
+	}
+	root, relative, err := browseRoot(storage, value)
+	if err != nil || relative == "" {
+		return "", fmt.Errorf("archive requires a bounded subdirectory")
+	}
+	_, err = d.run(ctx, storage, archiveScript, root, relative)
+	if err != nil {
+		return "", err
+	}
+	return relative + ".tar.gz", nil
+}
+
 func (d *Driver) run(ctx context.Context, storage domain.StorageResource, script string, root, relative string) ([]byte, error) {
 	return d.runInput(ctx, storage, script, nil, root, relative)
 }
@@ -326,5 +343,14 @@ case "$parent" in "$root"|"$root"/*) ;; *) exit 4;; esac
 target="$parent/$(basename -- "$candidate")"
 tmp="$target.akoflow-copy-part"
 cat > "$tmp" && mv -f -- "$tmp" "$target"`
+
+const archiveScript = commonScript + "\n" + `test -d "$candidate" || exit 5
+test -z "$(find "$candidate" -type l -print -quit)" || exit 6
+target="$candidate.tar.gz"
+tmp=$(mktemp "$target.part.XXXXXXXX") || exit 7
+trap 'rm -f -- "$tmp"' EXIT HUP INT TERM
+GZIP=-1 tar -C "$root" -czf "$tmp" -- "$relative" || exit 8
+test -s "$tmp" && gzip -t "$tmp" && tar -tzf "$tmp" >/dev/null || exit 9
+mv -f -- "$tmp" "$target"`
 
 var _ ports.StorageBrowser = (*Driver)(nil)

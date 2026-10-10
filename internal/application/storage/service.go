@@ -433,7 +433,11 @@ func (s *BrowserCoordinator) archive(ctx context.Context, run domain.DownloadRun
 		return
 	}
 	b, err := s.usable(&storage, true)
-	if err == nil {
+	if native, ok := b.(interface {
+		ArchiveDirectory(context.Context, domain.StorageResource, string) (string, error)
+	}); err == nil && ok {
+		run.Path, err = native.ArchiveDirectory(ctx, storage, run.Path)
+	} else if err == nil {
 		reader, writer := io.Pipe()
 		done := make(chan error, 1)
 		go func() { done <- s.writeArchive(ctx, b, storage, run.Path, writer); _ = writer.Close() }()

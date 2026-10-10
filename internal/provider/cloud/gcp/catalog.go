@@ -210,7 +210,18 @@ func applyPrices(skus []billingSKU, result *domain.CloudCatalog) {
 		if price == nil || (price.core == 0 && price.memory == 0) {
 			continue
 		}
-		machine.PricePerHour = price.core*float64(machine.VCPU) + price.memory*(float64(machine.MemoryMiB)/1024)
+		billableCPU := float64(machine.VCPU)
+		// Shared-core E2 exposes two guest CPUs but bills its fractional
+		// sustained allocation, not both guest CPUs as dedicated cores.
+		switch machine.ProviderTypeID {
+		case "e2-micro":
+			billableCPU = 0.25
+		case "e2-small":
+			billableCPU = 0.5
+		case "e2-medium":
+			billableCPU = 1
+		}
+		machine.PricePerHour = price.core*billableCPU + price.memory*(float64(machine.MemoryMiB)/1024)
 		machine.PricePerMinute = machine.PricePerHour / 60
 		machine.PriceCurrency = "USD"
 		machine.PriceSource = "gcp-public-catalog"

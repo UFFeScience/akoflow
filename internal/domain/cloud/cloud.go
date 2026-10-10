@@ -175,6 +175,10 @@ type ProvisionedInstance struct {
 // InstanceBilling is a rate snapshot and an accumulated compute clock. Disk
 // continues to accrue while the VM is stopped; compute does not.
 type InstanceBilling struct {
+	PricingStatus             string     `json:"pricingStatus,omitempty"`
+	PriceCurrency             string     `json:"priceCurrency,omitempty"`
+	PriceSource               string     `json:"priceSource,omitempty"`
+	MissingPrices             []string   `json:"missingPrices,omitempty"`
 	StartedAt                 time.Time  `json:"startedAt"`
 	FinishedAt                *time.Time `json:"finishedAt,omitempty"`
 	ComputeStartedAt          *time.Time `json:"computeStartedAt,omitempty"`

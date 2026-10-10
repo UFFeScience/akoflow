@@ -576,11 +576,28 @@ func billingForTarget(target domain.CloudCapacityTarget, now time.Time) *domain.
 	computeHourly := configurationNumber(target.Configuration, "pricePerHour")
 	diskGiB := configurationNumber(target.Configuration, "diskSizeGiB")
 	diskMonthly := configurationNumber(target.Configuration, "diskPricePerGiBMonth")
-	return &domain.InstanceBilling{
+	billing := &domain.InstanceBilling{
 		StartedAt: now, ComputeStartedAt: &now,
 		ComputePricePerSecond: max(0, computeHourly/3600),
 		DiskPricePerSecond:    max(0, diskGiB*diskMonthly/(730*3600)),
+		PricingStatus:         "estimated", PriceCurrency: configurationString(target.Configuration, "priceCurrency"),
+		PriceSource: configurationString(target.Configuration, "priceSource"),
 	}
+	if computeHourly <= 0 {
+		billing.MissingPrices = append(billing.MissingPrices, "compute")
+	}
+	if diskGiB > 0 && diskMonthly <= 0 {
+		billing.MissingPrices = append(billing.MissingPrices, "disk")
+	}
+	if len(billing.MissingPrices) > 0 {
+		billing.PricingStatus = "incomplete"
+	}
+	return billing
+}
+
+func configurationString(values map[string]any, key string) string {
+	value, _ := values[key].(string)
+	return value
 }
 
 func configurationNumber(values map[string]any, key string) float64 {

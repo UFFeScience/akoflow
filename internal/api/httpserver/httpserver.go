@@ -197,6 +197,7 @@ func registerExecutionRoutes(mux *http.ServeMux, workflowEngine *workflow_engine
 	mux.HandleFunc("POST /akoflow-api/execution-runs/{runId}/cancel/", http_config.KernelHandler(workflowEngine.CancelExecution))
 	mux.HandleFunc("GET /akoflow-api/execution-runs/{runId}/recovery/", http_config.KernelHandler(workflowEngine.GetExecutionRecovery))
 	mux.HandleFunc("POST /akoflow-api/execution-runs/{runId}/recovery/", http_config.KernelHandler(workflowEngine.RecoverExecution))
+	mux.HandleFunc("POST /akoflow-api/execution-runs/{runId}/preserve-cloud-workspaces/", http_config.KernelHandler(workflowEngine.PreserveCancelledCloudWorkspaces))
 	mux.HandleFunc("POST /akoflow-api/execution-runs/{runId}/activities/{activityId}/interrupt/", http_config.KernelHandler(workflowEngine.InterruptExecutionActivity))
 	mux.HandleFunc("GET /akoflow-api/execution-runs/{runId}/activity-metrics/", http_config.KernelHandler(workflowEngine.ListActivityMetricSummaries))
 	mux.HandleFunc("GET /akoflow-api/execution-runs/{runId}/activities/{activityId}/metrics/", http_config.KernelHandler(workflowEngine.ListActivityMetricSamples))

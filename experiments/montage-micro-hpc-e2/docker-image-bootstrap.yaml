@@ -1,0 +1,31 @@
+---
+- name: Validate preinstalled Montage worker image and prepare fresh workspace
+  hosts: all
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Require Docker already installed
+      ansible.builtin.command: docker --version
+      changed_when: false
+    - name: Require whole-workspace runtime tools
+      ansible.builtin.shell: command -v rsync && command -v tar && command -v python3 && command -v sha256sum
+      changed_when: false
+    - name: Enable preinstalled Docker service
+      ansible.builtin.service:
+        name: docker
+        state: started
+        enabled: true
+    - name: Grant runtime user Docker access
+      ansible.builtin.user:
+        name: "{{ ansible_user }}"
+        groups: docker
+        append: true
+    - name: Require baked image manifest
+      ansible.builtin.command: test -s /etc/akoflow-worker-image.json
+      changed_when: false
+    - name: Create isolated worker workspace
+      ansible.builtin.file:
+        path: "{{ akoflow_workspace_path }}"
+        state: directory
+        owner: "{{ ansible_user }}"
+        mode: "0770"

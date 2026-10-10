@@ -34,7 +34,7 @@ func (r *Repository) EnsureCloudWorkspaceStorage(ctx context.Context, environmen
 	result, err := r.db.ExecContext(ctx, `INSERT INTO storage_resources
 		(id,environment_version_id,name,type,endpoint,configuration,metadata)
 		SELECT ?,id,?,'ssh-filesystem',?,?,? FROM environment_versions
-		WHERE environment_id=? AND status='published' ORDER BY version DESC LIMIT 1
+		WHERE environment_id=? ORDER BY (status='published') DESC,version DESC LIMIT 1
 		ON CONFLICT(id) DO NOTHING`, storage.ID, storage.ID, storage.Endpoint, string(configuration), string(metadata), environmentID)
 	if err != nil {
 		return err
@@ -42,7 +42,7 @@ func (r *Repository) EnsureCloudWorkspaceStorage(ctx context.Context, environmen
 	if count, _ := result.RowsAffected(); count == 0 {
 		existing, err := r.FindStorage(ctx, storage.ID)
 		if err != nil || existing == nil || existing.Type != storage.Type || existing.Endpoint != storage.Endpoint || existing.Metadata["cloudInstanceId"] != storage.Metadata["cloudInstanceId"] {
-			return fmt.Errorf("cloud storage identity conflict or missing published environment")
+			return fmt.Errorf("cloud storage identity conflict or missing environment version")
 		}
 	}
 	return nil

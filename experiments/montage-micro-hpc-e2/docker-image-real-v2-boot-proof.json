@@ -4,7 +4,7 @@
   "imageName": "akoflow-montage-docker-20261010-v1",
   "immutableProviderImageId": "6709737537929682262",
   "evidence": "Read-only Compute API instance and actual boot-disk sourceImage comparison",
-  "scope": "Eight initial VM generations and two later lifecycle allocations; remaining allocations must be verified separately",
+  "scope": "Eight initial VM generations and three later lifecycle allocations; remaining allocation must be verified separately",
   "diskSizeGiB": 30,
   "instances": [
     {"id": "cloud-instance-d6a26713-f981-4f6d-875b-8219483d631b", "createdAt": "2026-10-10T15:04:19.704-07:00", "imageMatches": true},
@@ -16,6 +16,7 @@
     {"id": "cloud-instance-781541a5-1c95-4eba-804f-6a081fa38951", "createdAt": "2026-10-10T15:02:58.731-07:00", "imageMatches": true},
     {"id": "cloud-instance-4abc60f3-a9ce-4205-b12a-de58ca26a949", "createdAt": "2026-10-10T15:02:59.741-07:00", "imageMatches": true},
     {"id": "cloud-instance-9d21c71f-287c-4223-b6ad-fac6ab2c4420", "createdAt": "2026-10-10T15:18:33.633-07:00", "imageMatches": true},
-    {"id": "cloud-instance-8f7323e2-de19-4eff-bbe0-e4372d11e6a5", "createdAt": "2026-10-10T15:37:29.536-07:00", "imageMatches": true}
+    {"id": "cloud-instance-8f7323e2-de19-4eff-bbe0-e4372d11e6a5", "createdAt": "2026-10-10T15:37:29.536-07:00", "imageMatches": true},
+    {"id": "cloud-instance-dd166459-34ff-497e-a60f-f28e37a9f4a2", "createdAt": "2026-10-10T15:38:11.071-07:00", "imageMatches": true}
   ]
 }

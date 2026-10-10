@@ -581,7 +581,9 @@ func billingForTarget(target domain.CloudCapacityTarget, now time.Time) *domain.
 		ComputePricePerSecond: max(0, computeHourly/3600),
 		DiskPricePerSecond:    max(0, diskGiB*diskMonthly/(730*3600)),
 		PricingStatus:         "estimated", PriceCurrency: configurationString(target.Configuration, "priceCurrency"),
-		PriceSource: configurationString(target.Configuration, "priceSource"),
+		PriceSource:     configurationString(target.Configuration, "priceSource"),
+		PriceObservedAt: configurationString(target.Configuration, "priceObservedAt"),
+		PriceRegion:     target.Region, PriceMachineType: target.ProviderMachineType,
 	}
 	if computeHourly <= 0 {
 		billing.MissingPrices = append(billing.MissingPrices, "compute")

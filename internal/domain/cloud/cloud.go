@@ -178,6 +178,9 @@ type InstanceBilling struct {
 	PricingStatus             string     `json:"pricingStatus,omitempty"`
 	PriceCurrency             string     `json:"priceCurrency,omitempty"`
 	PriceSource               string     `json:"priceSource,omitempty"`
+	PriceObservedAt           string     `json:"priceObservedAt,omitempty"`
+	PriceRegion               string     `json:"priceRegion,omitempty"`
+	PriceMachineType          string     `json:"priceMachineType,omitempty"`
 	MissingPrices             []string   `json:"missingPrices,omitempty"`
 	StartedAt                 time.Time  `json:"startedAt"`
 	FinishedAt                *time.Time `json:"finishedAt,omitempty"`

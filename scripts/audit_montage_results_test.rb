@@ -5,7 +5,7 @@ class MontageAuditTest < Minitest::Test
   def test_strict_fresh_audit_requires_exact_attempt_success_and_prices
     args = fixture
     args[1]['activityAttempts'].each { |task| task['attempt'] = 1 }
-    args[1]['handles'] = args[1]['activityAttempts'].map { |task| {'activityId'=>task['activityId'], 'status'=>'completed', 'exitCode'=>0, 'metadata'=>{'executionAttempt'=>1}} }
+    args[1]['handles'] = args[1]['activityAttempts'].map { |task| {'id'=>"run:#{task['activityId']}", 'runId'=>'run', 'activityId'=>task['activityId'], 'status'=>'completed', 'exitCode'=>0, 'metadata'=>{'executionAttempt'=>1}} }
     args[1]['cloudBilling'] = {'status'=>'estimated', 'currency'=>'USD', 'estimatedCost'=>0.2, 'instances'=>[{'instanceId'=>'vm-1', 'billing'=>{'priceCurrency'=>'USD', 'currentCost'=>0.2, 'privateKey'=>'never-export'}}]}
     report = montage_audit(*args, require_fresh: true)
     assert_equal 0.2, report[:real_cloud_lifecycle_estimate]['estimatedCost']
@@ -13,6 +13,11 @@ class MontageAuditTest < Minitest::Test
     args[1]['handles'][0]['exitCode'] = nil
     assert_raises(RuntimeError) { montage_audit(*args, require_fresh: true) }
     args[1]['handles'][0]['exitCode'] = 0
+    args[1]['handles'][0]['metadata'].delete('executionAttempt')
+    montage_audit(*args, require_fresh: true)
+    args[1]['handles'][0]['id'] += ':attempt-2'
+    assert_raises(RuntimeError) { montage_audit(*args, require_fresh: true) }
+    args[1]['handles'][0]['id'] = 'run:activity-1'
     args[1]['activityAttempts'][0]['attempt'] = 2
     assert_raises(RuntimeError) { montage_audit(*args, require_fresh: true) }
     args[1]['activityAttempts'][0]['attempt'] = 1

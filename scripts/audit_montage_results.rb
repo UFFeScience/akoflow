@@ -15,8 +15,14 @@ def montage_audit(request, response, simulation, require_fresh: false)
   if require_fresh
     attempts = response.fetch('activityAttempts')
     raise 'Fresh experiment contains retries or failed attempts' unless attempts.length == 58 && attempts.all? { |task| task['attempt'] == 1 && task['status'] == 'completed' }
+    raise 'Unexpected runtime handles in fresh experiment' unless response.fetch('handles').length == 58
     expected.each do |id|
-      handles = response.fetch('handles').select { |handle| handle['activityId'] == id && handle.fetch('metadata', {})['executionAttempt'] == 1 }
+      # Domain HandleID binds the first attempt as run:activity, with an
+      # :attempt-N suffix for later attempts. Some adapters omit metadata.
+      handles = response.fetch('handles').select do |handle|
+        attempt = handle.fetch('metadata', {})['executionAttempt']
+        handle['id'] == "#{response.fetch('run').fetch('id')}:#{id}" && handle['runId'] == response.fetch('run').fetch('id') && handle['activityId'] == id && (attempt.nil? || attempt == 1)
+      end
       raise "Missing successful exact-attempt handle: #{id}" unless handles.length == 1 && handles.first['status'] == 'completed' && handles.first['exitCode'] == 0
     end
     billing = response.fetch('cloudBilling')

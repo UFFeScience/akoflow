@@ -1995,7 +1995,13 @@ func (h *Handler) CreateCloudCapacityTarget(w http.ResponseWriter, r *http.Reque
 			"capacityTargetId": value.ID, "providerMachineType": value.ProviderMachineType, "maximumInstances": value.MaximumInstances,
 			"lifecyclePolicy": value.LifecyclePolicy, "provisioningMode": value.ProvisioningMode,
 			"diskPricePerGiBMonth": configurationFloat64(value.Configuration, "diskPricePerGiBMonth"),
+			"priceCurrency":        value.Configuration["priceCurrency"],
+			"priceSource":          value.Configuration["priceSource"],
 		},
+	}
+	resource.Metadata["pricingStatus"] = "estimated"
+	if resource.PricePerSecond <= 0 || (resource.StorageBytes > 0 && configurationFloat64(value.Configuration, "diskPricePerGiBMonth") <= 0) {
+		resource.Metadata["pricingStatus"] = "incomplete"
 	}
 	if err := h.resources.Upsert(r.Context(), resource); err != nil {
 		writeError(w, http.StatusUnprocessableEntity, err)

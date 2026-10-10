@@ -136,7 +136,10 @@ def montage_audit(request, response, simulation, require_fresh: false)
       plan = assignments.fetch(id)
       metadata = task.fetch('metadata', {})
       handle = response.fetch('handles', []).select do |h|
-        h['activityId'] == id && h.fetch('metadata', {}).to_h['executionAttempt'] == task.fetch('attempt')
+        attempt = h.fetch('metadata', {}).to_h['executionAttempt']
+        canonical = "#{run.fetch('id')}:#{id}"
+        canonical += ":attempt-#{task.fetch('attempt')}" if task.fetch('attempt') > 1
+        h['activityId'] == id && (attempt == task.fetch('attempt') || (attempt.nil? && h['id'] == canonical && h['runId'] == run.fetch('id')))
       end.max_by { |h| h['startedAt'].to_f }
       observed = handle && handle.fetch('metadata', {}).to_h['terminalObservedAt']
       native_seconds = if observed && handle['finishedAt'] && handle['startedAt'] && observed.to_f >= handle['finishedAt'].to_f && handle['finishedAt'].to_f >= handle['startedAt'].to_f

@@ -79,6 +79,17 @@ class MontageAuditTest < Minitest::Test
     assert_raises(RuntimeError) { montage_audit(*args) }
   end
 
+  def test_canonical_hpc_handle_preserves_validated_runtime_without_attempt_metadata
+    args = fixture
+    args[1]['activityAttempts'].each { |task| task['attempt'] = 1 }
+    args[1]['handles'] = [{'id'=>'run:activity-1', 'runId'=>'run', 'activityId'=>'activity-1', 'startedAt'=>20, 'finishedAt'=>25, 'metadata'=>{'terminalObservedAt'=>28}}]
+    report = montage_audit(*args)
+    assert_equal 5, report[:activities].first[:validated_handle_runtime_seconds]
+    assert_equal 3, report[:activities].first[:terminal_observation_delay_seconds]
+    args[1]['handles'].first['id'] = 'run:activity-1:attempt-2'
+    assert_nil montage_audit(*args)[:activities].first[:validated_handle_runtime_seconds]
+  end
+
   def test_timestamp_wall_is_separate_from_reported_makespan
     args = fixture
     args[1]['run'].merge!('startedAt'=>'2026-10-08T00:00:00Z', 'finishedAt'=>'2026-10-08T00:01:00Z', 'makespanSeconds'=>100)

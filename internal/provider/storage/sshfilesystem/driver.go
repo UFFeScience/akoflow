@@ -164,7 +164,9 @@ func (d *Driver) runInput(ctx context.Context, storage domain.StorageResource, s
 	// remote command through a shell, so this avoids a second round of parsing
 	// for function declarations, quotes, and newlines in the fixed program.
 	program := base64.StdEncoding.EncodeToString([]byte(prefix + "\n" + script))
-	return exec.Run(ctx, "sh", []string{"-c", "printf %s " + program + " | base64 -d | sh"}, input)
+	// Decode the program into the command argument, not the child's stdin:
+	// writeScript must receive the caller's binary payload on stdin.
+	return exec.Run(ctx, "sh", []string{"-c", "sh -c \"$(printf %s " + program + " | base64 -d)\""}, input)
 }
 
 func (d *Driver) connectionExecutor(ctx context.Context, storage domain.StorageResource) (provider.CommandExecutor, error) {

@@ -1349,6 +1349,12 @@ func (h *Handler) GetExecution(w http.ResponseWriter, r *http.Request) {
 	if h.cloudOperations != nil {
 		response["infrastructureRuns"] = infrastructureRuns
 	}
+	billing, billingErr := h.executionCloudBilling(r.Context(), activityAttempts, operations)
+	if billingErr != nil {
+		writeError(w, http.StatusInternalServerError, billingErr)
+		return
+	}
+	response["cloudBilling"] = billing
 	response["timeline"] = applicationexecution.BuildTimeline(*run, tasks, transfers, operations)
 	if h.data != nil {
 		if operationEvents, ok := h.data.(WorkflowOperationEventQuery); ok {

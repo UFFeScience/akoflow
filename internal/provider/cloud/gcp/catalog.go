@@ -267,9 +267,17 @@ func skuUnitPrice(sku billingSKU) (float64, string) {
 	if len(rates) == 0 {
 		return 0, ""
 	}
-	price := rates[0].UnitPrice
-	units, _ := strconv.ParseFloat(price.Units, 64)
-	return units + float64(price.Nanos)/1e9, price.CurrencyCode
+	// Standard PD can start with a free-tier allowance. A zero first tier
+	// is not an unlimited free disk: estimate the first paid marginal tier.
+	for _, rate := range rates {
+		price := rate.UnitPrice
+		units, _ := strconv.ParseFloat(price.Units, 64)
+		value := units + float64(price.Nanos)/1e9
+		if value > 0 {
+			return value, price.CurrencyCode
+		}
+	}
+	return 0, rates[0].UnitPrice.CurrencyCode
 }
 
 func diskSKUDescription(diskType, description string) bool {

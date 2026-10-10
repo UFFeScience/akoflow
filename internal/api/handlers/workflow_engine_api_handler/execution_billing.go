@@ -11,6 +11,8 @@ import (
 // These are lifecycle estimates, not activity charges or a provider invoice.
 // One concrete generation contributes once, even when many tasks share it.
 type executionCloudBilling struct {
+	CostBasis     string                     `json:"costBasis"`
+	ExcludedCosts []string                   `json:"excludedCosts"`
 	Status        string                     `json:"status"`
 	Currency      string                     `json:"currency,omitempty"`
 	EstimatedCost *float64                   `json:"estimatedCost"`
@@ -36,7 +38,7 @@ func (h *Handler) executionCloudBilling(ctx context.Context, tasks []domain.Task
 			ids[operation.InstanceID] = true
 		}
 	}
-	result := executionCloudBilling{Status: "estimated", AsOf: time.Now().UTC(), Instances: []executionInstanceBilling{}}
+	result := executionCloudBilling{Status: "estimated", AsOf: time.Now().UTC(), Instances: []executionInstanceBilling{}, CostBasis: "VM compute and boot-disk lifecycle at on-demand marginal rates; not a provider invoice", ExcludedCosts: []string{"network-egress", "public-ipv4", "image-storage", "discounts-and-tax"}}
 	ordered := make([]string, 0, len(ids))
 	for id := range ids {
 		ordered = append(ordered, id)

@@ -1,6 +1,9 @@
 package gcp
 
-import "testing"
+import (
+	"encoding/json"
+	"testing"
+)
 
 func TestZonalBootDiskPricesRejectOtherStorageProducts(t *testing.T) {
 	for _, pair := range [][2]string{
@@ -17,5 +20,16 @@ func TestZonalBootDiskPricesRejectOtherStorageProducts(t *testing.T) {
 		if !diskSKUDescription(pair[0], pair[1]) {
 			t.Fatalf("rejected zonal disk: %v", pair)
 		}
+	}
+}
+
+func TestDiskFreeAllowanceDoesNotHidePaidMarginalRate(t *testing.T) {
+	var sku billingSKU
+	if err := json.Unmarshal([]byte(`{"pricingInfo":[{"pricingExpression":{"usageUnit":"GiBy.mo","tieredRates":[{"startUsageAmount":0,"unitPrice":{"currencyCode":"USD","units":"0","nanos":0}},{"startUsageAmount":30,"unitPrice":{"currencyCode":"USD","units":"0","nanos":40000000}}]}}]}`), &sku); err != nil {
+		t.Fatal(err)
+	}
+	price, currency := skuUnitPrice(sku)
+	if price != 0.04 || currency != "USD" {
+		t.Fatalf("free allowance treated as unlimited: %v %s", price, currency)
 	}
 }

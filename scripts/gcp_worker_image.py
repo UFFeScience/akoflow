@@ -35,14 +35,14 @@ def image_payload(project, zone, instance, vm, image_name):
             "storageLocations": [zone.rsplit("-", 1)[0]]}
 
 
-def token(credential):
+def token(credential, scope="https://www.googleapis.com/auth/compute"):
     from cryptography.hazmat.primitives import hashes, serialization
     from cryptography.hazmat.primitives.asymmetric import padding
     def b64(data):
         return base64.urlsafe_b64encode(data).rstrip(b"=")
     now = int(time.time())
     claims = {"iss": credential["client_email"], "aud": credential["token_uri"],
-              "scope": "https://www.googleapis.com/auth/compute", "iat": now, "exp": now + 3600}
+              "scope": scope, "iat": now, "exp": now + 3600}
     unsigned = b64(b'{"alg":"RS256","typ":"JWT"}') + b"." + b64(json.dumps(claims).encode())
     key = serialization.load_pem_private_key(credential["private_key"].encode(), None)
     assertion = unsigned + b"." + b64(key.sign(unsigned, padding.PKCS1v15(), hashes.SHA256()))

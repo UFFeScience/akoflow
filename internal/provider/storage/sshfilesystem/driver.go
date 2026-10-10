@@ -26,6 +26,12 @@ type ConnectionStore interface {
 type Driver struct {
 	connections ConnectionStore
 	executor    provider.CommandExecutor
+	cloud       ports.CloudConfigurationStore
+}
+
+func (d *Driver) WithCloudStore(store ports.CloudConfigurationStore) *Driver {
+	d.cloud = store
+	return d
 }
 
 func New(connections ConnectionStore, executor provider.CommandExecutor) *Driver {
@@ -162,6 +168,28 @@ func (d *Driver) runInput(ctx context.Context, storage domain.StorageResource, s
 }
 
 func (d *Driver) connectionExecutor(ctx context.Context, storage domain.StorageResource) (provider.CommandExecutor, error) {
+	if instanceID := metadataString(storage.Metadata, "cloudInstanceId"); instanceID != "" {
+		if d.cloud == nil {
+			return nil, fmt.Errorf("cloud storage identity resolver is unavailable")
+		}
+		instance, err := d.cloud.FindProvisionedInstance(ctx, instanceID)
+		if err != nil || instance == nil || instance.Status != "ready" {
+			return nil, fmt.Errorf("cloud storage instance is not ready")
+		}
+		alias, knownHosts, err := instance.VerifiedSSHTrust()
+		if err != nil {
+			return nil, fmt.Errorf("cloud storage trust: %w", err)
+		}
+		connection := domain.EnvironmentConnection{
+			ID: instance.ID, Type: domain.ConnectionSSH, Endpoint: instance.PublicAddress,
+			Username: instance.SSHUsername, CredentialRef: instance.SSHCredentialRef,
+			Configuration: map[string]any{"port": 22, "hostKeyAlias": alias, "knownHostsFile": knownHosts, "strictHostKeyChecking": true},
+		}
+		if connection.Endpoint == "" {
+			return nil, fmt.Errorf("cloud storage has no relay-accessible address")
+		}
+		return provider.NewSSHCommandExecutor(d.executor, connection), nil
+	}
 	if d.connections == nil {
 		return nil, fmt.Errorf("SSH storage connection store is required")
 	}

@@ -76,7 +76,7 @@ func buildAPI(
 		}
 		browsers[domain.StorageLocal], browsers[domain.StoragePVC], browsers[domain.StorageNFS], browsers[domain.StorageLustre] = fs, fs, fs, fs
 	}
-	ssh := sshfilesystem.New(storage.environments, provider.OSCommandExecutor{})
+	ssh := sshfilesystem.New(storage.environments, provider.OSCommandExecutor{}).WithCloudStore(storage.cloud)
 	browsers[domain.StorageSSH] = ssh
 	manager := appbuild.Manager{Root: settings.ArtifactStoreRoot, MaxBytes: settings.BuildContextMaxBytes, Catalog: storage.data}
 	manager.Executor = appbuild.Executor{Catalog: storage.data, Contexts: manager, Runner: provider.OSCommandExecutor{}, Buildctl: settings.Buildctl, Apptainer: settings.Apptainer, ArtifactStoreRoot: settings.ArtifactStoreRoot}
@@ -119,7 +119,7 @@ func buildAPI(
 		Audit:               storage.audit,
 		Console:             console,
 		Terminal:            terminal,
-		Storage:             appstorage.NewBrowserCoordinator(storage.storage, browsers),
+		Storage:             appstorage.NewBrowserCoordinator(appstorage.CloudWorkspaceCatalog{Catalog: storage.storage, Cloud: storage.cloud}, browsers),
 		Build:               manager,
 		Planning:            planning,
 		PlanningStore:       storage.plans,

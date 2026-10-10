@@ -707,6 +707,14 @@ func (r *Repository) CheckCloudLifecycle(ctx context.Context, instanceID, exclud
 		args    []any
 	}{
 		{
+			query: `SELECT COUNT(*) FROM activity_workspaces w
+				JOIN workspace_leases l ON l.workspace_id=w.id
+				WHERE w.state<>'released' AND l.released=0
+				AND instr('&'||substr(w.uri,instr(w.uri,'?')+1)||'&',
+					'&cloudInstanceId='||?||'&')>0`,
+			message: "producer workspaces still have pending consumers", args: []any{instanceID},
+		},
+		{
 			query: `SELECT COUNT(*) FROM task_executions t
 				WHERE json_extract(t.metadata,'$.cloudInstanceId')=?
 				AND t.status IN ('blocked','ready','preparing','running')

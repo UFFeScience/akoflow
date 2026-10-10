@@ -23,6 +23,8 @@ func TestLifecycleSupersededAttemptStillProtectsLiveWork(t *testing.T) {
 	CREATE TABLE artifact_materializations(run_id TEXT, resource_id TEXT, status TEXT);
 	CREATE TABLE cloud_operation_runs(id TEXT, instance_id TEXT, execution_run_id TEXT, status TEXT);
 	CREATE TABLE console_sessions(resource_id TEXT, status TEXT);
+	CREATE TABLE activity_workspaces(id TEXT, state TEXT, uri TEXT);
+	CREATE TABLE workspace_leases(workspace_id TEXT, released INTEGER);
 	INSERT INTO cloud_provisioned_instances VALUES('vm','target');
 	INSERT INTO task_executions VALUES('run','activity',1,'running','{"cloudInstanceId":"vm"}');`)
 	if err != nil {
@@ -38,6 +40,19 @@ func TestLifecycleSupersededAttemptStillProtectsLiveWork(t *testing.T) {
 	}
 	if err := r.CheckCloudLifecycle(ctx, "vm", "destroy"); err != nil {
 		t.Fatalf("completed replacement: %v", err)
+	}
+	if _, err := db.Exec(`INSERT INTO activity_workspaces VALUES('producer','sealed','cloud://target/path?cloudInstanceId=vm&runtime=x');
+		INSERT INTO workspace_leases VALUES('producer',0)`); err != nil {
+		t.Fatal(err)
+	}
+	if err := r.CheckCloudLifecycle(ctx, "vm", "destroy"); err == nil {
+		t.Fatal("completed producer with pending consumers must block cleanup")
+	}
+	if _, err := db.Exec(`UPDATE workspace_leases SET released=1`); err != nil {
+		t.Fatal(err)
+	}
+	if err := r.CheckCloudLifecycle(ctx, "vm", "destroy"); err != nil {
+		t.Fatalf("released consumer lease: %v", err)
 	}
 	if _, err := db.Exec(`INSERT INTO activity_handles VALUES('target','running','{"cloudInstanceId":"old-vm"}')`); err != nil {
 		t.Fatal(err)

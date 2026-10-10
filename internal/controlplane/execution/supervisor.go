@@ -142,12 +142,27 @@ func (s *Supervisor) releaseCloud(ctx context.Context, request ports.ExecutionRe
 	if s.config.CloudAllocator != nil {
 		allocations := request.RuntimeAllocations
 		retained := 0
+		if failed {
+			if store := s.workspaceStore(); store != nil {
+				workspaces, err := store.ListWorkspaces(ctx, request.Run.ID)
+				if err != nil {
+					return 0, fmt.Errorf("inspect producer workspaces before cloud cleanup: %w", err)
+				}
+				leases, err := store.ListWorkspaceLeases(ctx, request.Run.ID)
+				if err != nil {
+					return 0, fmt.Errorf("inspect producer leases before cloud cleanup: %w", err)
+				}
+				allocations, retained = retainCloudSourcesWithWorkspaceLeases(allocations, workspaces, leases)
+			}
+		}
 		if failed && s.config.Data != nil {
 			locations, err := s.config.Data.ListLocations(ctx, request.Run.ID)
 			if err != nil {
 				return 0, fmt.Errorf("inspect ephemeral outputs before cloud cleanup: %w", err)
 			}
-			allocations, retained = retainCloudSourcesWithEphemeralOutputs(allocations, locations)
+			var additional int
+			allocations, additional = retainCloudSourcesWithEphemeralOutputs(allocations, locations)
+			retained += additional
 		}
 		if !failed {
 			if stopper, ok := s.config.CloudAllocator.(CloudStopper); ok {
@@ -189,6 +204,34 @@ func (s *Supervisor) releaseCloud(ctx context.Context, request ports.ExecutionRe
 		return 0, fmt.Errorf("release cloud capacity: %w", err)
 	}
 	return 0, nil
+}
+
+func retainCloudSourcesWithWorkspaceLeases(allocations map[string]domain.RuntimeAllocation, workspaces []domain.ActivityWorkspace, leases []domain.WorkspaceLease) (map[string]domain.RuntimeAllocation, int) {
+	needed := make(map[string]bool)
+	for _, lease := range leases {
+		if !lease.Released {
+			needed[lease.WorkspaceID] = true
+		}
+	}
+	protected := make(map[string]bool)
+	for _, workspace := range workspaces {
+		if workspace.State == domain.WorkspaceReleased || !needed[workspace.ID] {
+			continue
+		}
+		uri, err := url.Parse(workspace.URI)
+		if err == nil {
+			if id := uri.Query().Get("cloudInstanceId"); id != "" {
+				protected[id] = true
+			}
+		}
+	}
+	remaining := make(map[string]domain.RuntimeAllocation)
+	for activity, allocation := range allocations {
+		if !protected[allocation.CloudInstanceID] {
+			remaining[activity] = allocation
+		}
+	}
+	return remaining, len(protected)
 }
 
 func retainCloudSourcesWithEphemeralOutputs(allocations map[string]domain.RuntimeAllocation, locations []domain.DataLocation) (map[string]domain.RuntimeAllocation, int) {

@@ -83,10 +83,22 @@ func preparePeerWorkspaceArchive(ctx context.Context, source, destination domain
 	err = measureWorkspacePhase(run, "peer-snapshot-acquire", func() error {
 		var reused bool
 		var acquireErr error
+		acquireStarted := time.Now()
 		snapshot, reused, release, acquireErr = sharedPeerSnapshots.acquire(ctx, peerSnapshotKey(source), func(buildCtx context.Context) (*peerSnapshot, error) {
 			return buildPeerSnapshot(buildCtx, source)
 		})
 		run.Route.SnapshotReused = reused
+		if acquireErr == nil && snapshot != nil {
+			run.Route.SnapshotBuildWallSeconds = snapshot.buildWallSeconds
+			wait := time.Since(acquireStarted).Seconds()
+			if !reused {
+				wait -= snapshot.buildWallSeconds
+			}
+			if wait < 0 {
+				wait = 0
+			}
+			run.Route.SnapshotAcquireWaitSeconds = wait
+		}
 		return acquireErr
 	})
 	if err != nil {

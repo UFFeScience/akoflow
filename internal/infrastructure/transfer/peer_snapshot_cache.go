@@ -8,9 +8,10 @@ import (
 )
 
 type peerSnapshot struct {
-	root, digest string
-	size         int64
-	cleanup      func()
+	root, digest     string
+	size             int64
+	cleanup          func()
+	buildWallSeconds float64
 }
 
 type peerSnapshotEntry struct {
@@ -53,7 +54,11 @@ func (c *peerSnapshotCache) acquire(ctx context.Context, key string, build func(
 			c.entries[key] = e
 		}
 		go func() {
+			started := time.Now()
 			snapshot, err := build(buildCtx)
+			if snapshot != nil {
+				snapshot.buildWallSeconds = time.Since(started).Seconds()
+			}
 			cancel()
 			c.mu.Lock()
 			e.snapshot, e.err = snapshot, err

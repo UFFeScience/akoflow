@@ -158,6 +158,10 @@ type TransferRoute struct {
 	Reason                                   string           `json:"reason"`
 	PeerProbeFailure                         string           `json:"peerProbeFailure,omitempty"`
 	SnapshotReused                           bool             `json:"snapshotReused,omitempty"`
+	// Diagnostics, not additive phases. Build wall time includes SSH admission;
+	// a reused caller's acquisition wait may overlap that same shared build.
+	SnapshotBuildWallSeconds   float64 `json:"snapshotBuildWallSeconds,omitempty"`
+	SnapshotAcquireWaitSeconds float64 `json:"snapshotAcquireWaitSeconds,omitempty"`
 }
 
 // TransferPhase is elapsed wall time, not exclusive work: concurrent origins

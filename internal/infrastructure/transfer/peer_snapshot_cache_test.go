@@ -29,6 +29,9 @@ func TestPeerSnapshotCacheSharesBuildAndProtectsReaders(t *testing.T) {
 				t.Errorf("acquire: %v", err)
 				return
 			}
+			if snapshot.buildWallSeconds <= 0 {
+				t.Error("shared snapshot must publish measured build wall time before readers receive it")
+			}
 			releases <- release
 		}()
 	}

@@ -23,8 +23,9 @@ func main() {
 	outputPath := flag.String("output", "", "new private case directory (must not exist)")
 	replan := flag.Bool("prism-time", false, "generate a new offline PRISM-time placement before exporting")
 	speedup := flag.Bool("speedup-fallback", false, "fill missing compute profiles with explicit speedup-derived estimates")
+	fixed := flag.Bool("evaluate-fixed", false, "reevaluate predicted metrics without changing placement or order")
 	flag.Parse()
-	if err := exportCaseWithSpeedup(*requestPath, *outputPath, *replan, *speedup); err != nil {
+	if err := exportCaseWithOptions(*requestPath, *outputPath, *replan, *speedup, *fixed); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
@@ -46,6 +47,13 @@ func exportCase(requestPath, outputPath string, replan bool) error {
 }
 
 func exportCaseWithSpeedup(requestPath, outputPath string, replan, speedup bool) error {
+	return exportCaseWithOptions(requestPath, outputPath, replan, speedup, false)
+}
+
+func exportCaseWithOptions(requestPath, outputPath string, replan, speedup, fixed bool) error {
+	if replan && fixed {
+		return fmt.Errorf("replan and fixed evaluation are mutually exclusive")
+	}
 	if requestPath == "" || outputPath == "" {
 		return fmt.Errorf("--request and --output required")
 	}
@@ -67,6 +75,13 @@ func exportCaseWithSpeedup(requestPath, outputPath string, replan, speedup bool)
 		}
 	}
 	var candidates []domain.SchedulePlan
+	if fixed {
+		planning := domain.PlanningRequest{Workflow: request.Workflow, ExecutionScope: request.ExecutionScope, Resources: request.Resources, NetworkTopology: request.NetworkTopology, ActivityProfiles: request.ActivityProfiles, DeadlineSeconds: request.Plan.DeadlineSeconds, Budget: request.Plan.Budget}
+		request.Plan, err = algorithms.EvaluateFixedPlan(planning, request.Plan)
+		if err != nil {
+			return err
+		}
+	}
 	if replan {
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Minute)
 		defer cancel()
@@ -92,7 +107,7 @@ func exportCaseWithSpeedup(requestPath, outputPath string, replan, speedup bool)
 		return err
 	}
 	files := map[string][]byte{"platform.xml": platform, "simulation.json": input}
-	if replan || speedup {
+	if replan || speedup || fixed {
 		files["request.json"], err = json.MarshalIndent(request, "", "  ")
 		if err != nil {
 			return err

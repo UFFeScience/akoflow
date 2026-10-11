@@ -2,10 +2,12 @@ package montagetools
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/UFFeScience/akoflow/internal/application/ports"
 	"github.com/UFFeScience/akoflow/internal/domain/workflow"
 	"math"
 	"sort"
+	"strings"
 	"time"
 )
 
@@ -21,16 +23,56 @@ func calibrateRuntimeStages(request, training Object, sha, targetClass string) O
 	check(obj(training["run"])["status"] == "completed", "completed training reference required")
 	var typed ports.ExecutionRequest
 	check(json.Unmarshal(encode(request), &typed) == nil, "invalid request")
-	types := map[string]string{}
-	for _, a := range typed.Plan.Assignments {
-		for _, r := range typed.Resources {
-			if r.ID == a.ResourceID {
-				types[a.ActivityID] = string(r.Type)
+	// Accept historical API envelopes with lower-case keys, but export the
+	// canonical offline request and force simulation mode. Never submit here.
+	request = Object{}
+	check(json.Unmarshal(encode(typed), &request) == nil, "cannot normalize request")
+	obj(request["Run"])["mode"] = "simulation"
+	training = clone(training)
+	// Historical catalog prefixes differ; align only exact canonical activity
+	// names, never family-only matches. Event/task attempt IDs remain unchanged.
+	names := map[string]string{}
+	for _, a := range typed.Workflow.Activities {
+		check(names[a.Name] == "", "duplicate canonical activity name")
+		names[a.Name] = a.ID
+	}
+	remap := map[string]string{}
+	for _, t := range rows(training["activities"]) {
+		id := str(t["activityId"])
+		name := id[strings.LastIndex(id, "-")+1:]
+		mapped := names[name]
+		check(mapped != "", "training workflow canonical names mismatch")
+		remap[id] = mapped
+	}
+	for _, key := range []string{"activities", "handles", "artifactTransferRuns", "workspaces"} {
+		for _, r := range rows(training[key]) {
+			original, _ := r["activityId"].(string)
+			if mapped := remap[original]; mapped != "" {
+				r["activityId"] = mapped
+			}
+			route := obj(r["route"])
+			for _, field := range []string{"consumerActivityId", "producerActivityId"} {
+				original, _ := route[field].(string)
+				if mapped := remap[original]; mapped != "" {
+					route[field] = mapped
+				}
 			}
 		}
 	}
+	types := map[string]string{}
+	for _, t := range rows(training["activities"]) {
+		if t["status"] != "completed" {
+			continue
+		}
+		class := resourceClass(str(t["allocatedResourceId"]))
+		kind := "cloud_vm"
+		if class == "hpc" {
+			kind = "hpc_machine"
+		}
+		types[str(t["activityId"])] = kind
+	}
 	projected, err := workflow.ProjectWorkspaceDependenciesForResourceTypes(typed.Workflow, types)
-	check(err == nil, "projection failed")
+	check(err == nil, fmt.Sprintf("projection failed: %v", err))
 	vol := map[string]workflow.WorkspaceProjectionVolumes{}
 	for _, a := range projected.Activities {
 		var v workflow.WorkspaceProjectionVolumes
@@ -61,7 +103,9 @@ func calibrateRuntimeStages(request, training Object, sha, targetClass string) O
 			gateway[id] = true
 		}
 		r := obj(t["route"])
-		if (t["strategy"] == "direct-runtime" || t["strategy"] == "runtime-local") && r["sharedFilesystem"] != nil && r["sharedFilesystem"] != "" && r["mergeCheckSeconds"] != nil {
+		// These named fields measure the single consumer merge, independent
+		// of peer/relay transfer time. They can be reused across route types.
+		if r["mergeCheckSeconds"] != nil {
 			if merge[id] == nil || num(t["startedAt"]) > num(merge[id]["at"]) {
 				merge[id] = Object{"at": t["startedAt"], "route": r}
 			}
@@ -84,12 +128,19 @@ func calibrateRuntimeStages(request, training Object, sha, targetClass string) O
 		}
 		runtimeIDs[str(t["runtimeId"])] = true
 		v := vol[id]
-		overhead = append(overhead, num(m["launchWaitSeconds"])+num(t["overheadSeconds"]))
+		hm := obj(hs[0]["metadata"])
+		snapshot := num(hm["remoteWorkspaceSnapshotSeconds"])
+		// Initial scan is moved into preparation below, not charged twice.
+		overhead = append(overhead, num(m["launchWaitSeconds"])+math.Max(0, num(t["overheadSeconds"])-snapshot))
+		if snapshot > 0 && v.InputUniqueBytes > 0 {
+			prepX = append(prepX, float64(v.InputUniqueBytes))
+			prepY = append(prepY, snapshot)
+		}
 		if finish, ok := completed[str(t["id"])]; ok && finish >= num(t["finishedAt"]) {
 			pubX = append(pubX, float64(v.PreExecutionBytes+v.CreatedOutputBytes))
 			pubY = append(pubY, finish-num(t["finishedAt"]))
 		}
-		if row := merge[id]; row != nil && !gateway[id] {
+		if row := merge[id]; row != nil {
 			r := obj(row["route"])
 			checkTime += num(r["mergeCheckSeconds"])
 			copyTime += num(r["mergeCopySeconds"])
@@ -98,12 +149,17 @@ func calibrateRuntimeStages(request, training Object, sha, targetClass string) O
 			totalBytes += float64(v.InputTotalBytes)
 			uniqueBytes += float64(v.InputUniqueBytes)
 			mergeN++
-			residual := num(m["transferElapsedSeconds"]) - num(r["mergeExecutionSeconds"]) - num(r["mergeSshChannelWaitSeconds"])
-			prepX = append(prepX, float64(v.InputUniqueBytes))
-			prepY = append(prepY, math.Max(0, residual))
+			// Without a separately timed scan, residual inference is permitted
+			// only for proven internal storage. A cloud peer/relay residual
+			// includes network/receiver work already modeled by its route.
+			if snapshot == 0 && !gateway[id] && r["sharedFilesystem"] != nil && r["sharedFilesystem"] != "" {
+				residual := num(m["transferElapsedSeconds"]) - num(r["mergeExecutionSeconds"]) - num(r["mergeSshChannelWaitSeconds"])
+				prepX = append(prepX, float64(v.InputUniqueBytes))
+				prepY = append(prepY, math.Max(0, residual))
+			}
 		}
 	}
-	check(mergeN > 0 && uniqueBytes > 0 && len(pubX) > 0 && len(overhead) > 0, "insufficient single-attempt runtime evidence")
+	check(mergeN > 0 && uniqueBytes > 0 && len(pubX) > 0 && len(overhead) > 0 && len(prepX) > 0, "insufficient single-attempt runtime evidence")
 	check(len(runtimeIDs) == 1, "cannot mix runtime drivers in one class calibration")
 	prepFixed, prepRate := positiveLine(prepX, prepY)
 	pubFixed, pubRate := positiveLine(pubX, pubY)
@@ -138,7 +194,7 @@ func calibrateRuntimeStages(request, training Object, sha, targetClass string) O
 		m := obj(a["metadata"])
 		m["containerOverheadSeconds"] = fixedOverhead
 	}
-	obj(obj(request["NetworkTopology"])["metadata"])["runtimeStageCalibration"] = Object{"issue": "AKO-165", "targetClass": targetClass, "runtimeIds": runtimeIDs, "trainingRunId": obj(training["run"])["id"], "trainingSHA256": sha, "mergeSamples": mergeN, "preparationResidualSamples": len(prepX), "publicationSamples": len(pubX), "fixedLaunchAndRuntimeOverheadSeconds": fixedOverhead, "holdoutUsed": false, "limitations": list("Recovered/multi-handle training activities excluded.", "Preparation residual and publication contain unidentified waiting/poll delay; exploratory effective-wall fit, not queue-free service.", "Scheduler wait and gateway fallback not injected into the internal-route baseline; evaluate residuals separately.", "Fixed overhead median does not capture family-specific wrapper cost.", "Classes without same-storage evidence are rejected, not borrowed from HPC; per-route network service remains independently calibrated.")}
+	obj(obj(request["NetworkTopology"])["metadata"])["runtimeStageCalibration"] = Object{"issue": "AKO-166", "targetClass": targetClass, "runtimeIds": runtimeIDs, "trainingRunId": obj(training["run"])["id"], "trainingSHA256": sha, "mergeSamples": mergeN, "preparationResidualSamples": len(prepX), "publicationSamples": len(pubX), "fixedLaunchAndRuntimeOverheadSeconds": fixedOverhead, "holdoutUsed": false, "limitations": list("Recovered/multi-handle training activities excluded.", "Preparation scans/residuals and publication contain unidentified waiting/poll delay; exploratory effective-wall fit, not queue-free service.", "Scheduler wait and gateway fallback not injected into the internal-route baseline; evaluate residuals separately.", "Fixed overhead median does not capture family-specific wrapper cost.", "Merge is fitted from component timings for every route. Residual inference requires proven same-storage; cloud uses direct scan telemetry and excludes network residual. Coefficients are not borrowed across runtimes.")}
 	return request
 }
 

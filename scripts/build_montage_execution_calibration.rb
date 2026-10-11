@@ -30,6 +30,19 @@ module MontageExecutionCalibration
     { 'samples' => values.length, 'median' => median, 'minimum' => values.first, 'maximum' => values.last }
   end
 
+  # Fit a class-level service coefficient using byte-weighted work, not the
+  # arithmetic median of speeds. Summed service seconds are deliberately not
+  # wall time or aggregate link bandwidth: queues remain modeled separately.
+  def pooled_service_rate(samples, byte_key)
+    usable = samples.select { |p| p[byte_key] && p[byte_key] > 0 && p['seconds'] > 0 }
+    return nil if usable.empty?
+    bytes = usable.sum { |p| p.fetch(byte_key) }
+    seconds = usable.sum { |p| p.fetch('seconds') }
+    {'samples'=>usable.length, 'bytes'=>bytes, 'serviceSeconds'=>seconds,
+     'bytesPerSecond'=>bytes.to_f / seconds,
+     'interpretation'=>'byte-weighted per-command service coefficient; summed service is not concurrent wall time'}
+  end
+
   def build(data, digest, projection = nil)
     if projection && (projection.fetch('baselineRunId') != data.fetch('run_id') || projection.fetch('auditedEvidenceSHA256') != digest)
       raise 'Workspace projection baseline provenance mismatch'
@@ -81,6 +94,8 @@ module MontageExecutionCalibration
       { 'strategy' => strategy, 'sourceClass' => source, 'targetClass' => target, 'phase' => phase,
         'seconds' => summary(samples.map { |p| p['seconds'] }),
         'secondsBases' => samples.map { |p| p['secondsBasis'] }.uniq.sort,
+        'pooledArchiveServiceRate' => pooled_service_rate(samples, 'archiveBytes'),
+        'pooledWorkspaceServiceRate' => pooled_service_rate(samples, 'workspaceBytes'),
         'phaseChannelWaitSeconds' => summary(samples.map { |p| p['phaseChannelWaitSeconds'] }),
         'sourceChannelWaitSeconds' => phase == 'pack-and-receive' ? summary(samples.map { |p| p['sourceChannelWaitSeconds'] }) : nil,
         'sourcePreflightSeconds' => phase == 'pack-and-receive' ? summary(samples.map { |p| p['sourcePreflightSeconds'] }) : nil,

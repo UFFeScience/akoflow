@@ -16,7 +16,15 @@ module MontageMaterializationFreeze
   end
 
   def seconds_per_byte(row)
-    1.0 / median(row, 'effectiveWorkspaceBytesPerSecond', positive: true)
+    1.0 / service_rate(row, 'pooledWorkspaceServiceRate', 'effectiveWorkspaceBytesPerSecond')
+  end
+
+  def service_rate(row, pooled_key, legacy_key)
+    pooled = row[pooled_key]
+    return median(row, legacy_key, positive: true) unless pooled
+    value = Float(pooled.fetch('bytesPerSecond'))
+    raise 'Invalid pooled measured service rate' unless pooled.fetch('samples') > 0 && value.finite? && value > 0
+    value
   end
 
   def build(calibration, calibration_digest, resources, relay_id)
@@ -37,7 +45,7 @@ module MontageMaterializationFreeze
       profile = { 'strategy'=>strategy, 'sourceClass'=>from, 'targetClass'=>to, 'source'=>source,
         'samples'=>upload.fetch('seconds').fetch('samples'),
         'archiveToWorkspaceRatio'=>median(upload, 'archiveToWorkspaceRatio', positive: true),
-        'uploadArchiveBytesPerSecond'=>median(upload, 'effectiveArchiveBytesPerSecond', positive: true) }
+        'uploadArchiveBytesPerSecond'=>service_rate(upload, 'pooledArchiveServiceRate', 'effectiveArchiveBytesPerSecond') }
       if strategy == 'gateway'
         pack = phases.fetch('pack-and-receive')
         source_pool = resources.values.any? { |r| r.fetch('class') == from && !r.fetch('bulkServiceGroupId', '').empty? }
@@ -47,7 +55,7 @@ module MontageMaterializationFreeze
         if source_pool && !pack['sourcePreflightServiceSeconds']
           raise "Gateway #{from}->#{to} requires separately measured preflight service"
         end
-        profile['ingressArchiveBytesPerSecond'] = median(pack, 'effectiveArchiveBytesPerSecond', positive: true)
+        profile['ingressArchiveBytesPerSecond'] = service_rate(pack, 'pooledArchiveServiceRate', 'effectiveArchiveBytesPerSecond')
         if pack['sourcePreflightServiceSeconds']
           profile['probeSeconds'] = median(pack, 'sourcePreflightServiceSeconds')
         end

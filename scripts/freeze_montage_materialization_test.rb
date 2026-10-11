@@ -83,4 +83,14 @@ class MontageMaterializationFreezeTest < Minitest::Test
     frozen = MontageMaterializationFreeze.build(calibration, 'digest', pooled, 'relay')
     assert_equal 3, frozen.fetch('resources').fetch('micro').fetch('bulkServiceSlots')
   end
+
+  def test_pooled_service_rate_is_used_without_rewriting_legacy_observations
+    row = {'pooledArchiveServiceRate'=>{'samples'=>2, 'bytesPerSecond'=>36.5},
+           'effectiveArchiveBytesPerSecond'=>{'samples'=>2, 'median'=>999}}
+    assert_equal 36.5, MontageMaterializationFreeze.service_rate(row, 'pooledArchiveServiceRate', 'effectiveArchiveBytesPerSecond')
+    row.delete('pooledArchiveServiceRate')
+    assert_equal 999, MontageMaterializationFreeze.service_rate(row, 'pooledArchiveServiceRate', 'effectiveArchiveBytesPerSecond')
+    row['pooledArchiveServiceRate'] = {'samples'=>2, 'bytesPerSecond'=>0}
+    assert_raises(RuntimeError) { MontageMaterializationFreeze.service_rate(row, 'pooledArchiveServiceRate', 'effectiveArchiveBytesPerSecond') }
+  end
 end

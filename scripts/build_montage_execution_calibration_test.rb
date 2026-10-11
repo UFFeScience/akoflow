@@ -32,6 +32,17 @@ class MontageExecutionCalibrationTest < Minitest::Test
     assert_raises(RuntimeError) { MontageExecutionCalibration.summary([Float::INFINITY]) }
   end
 
+  def test_pooled_service_coefficient_weights_byte_work_not_flow_speeds
+    rate = MontageExecutionCalibration.pooled_service_rate([
+      {'archiveBytes'=>100, 'seconds'=>10}, {'archiveBytes'=>1000, 'seconds'=>20},
+      {'archiveBytes'=>nil, 'seconds'=>999}], 'archiveBytes')
+    assert_equal 2, rate.fetch('samples')
+    assert_equal 1100, rate.fetch('bytes')
+    assert_equal 30, rate.fetch('serviceSeconds')
+    assert_in_delta 1100.0 / 30, rate.fetch('bytesPerSecond'), 1e-9
+    assert_nil MontageExecutionCalibration.pooled_service_rate([], 'archiveBytes')
+  end
+
   def test_source_command_service_excludes_measured_channel_queue
     data = baseline
     gateway = data.fetch('routes').select { |r| r['strategy'] == 'gateway' && r['producer_activity_id'] }

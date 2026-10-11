@@ -104,6 +104,7 @@ func (e *ProcessExecutor) Execute(ctx context.Context, request ports.ExecutionRe
 		return domain.ExecutionTrace{}, fmt.Errorf("SimGrid returned trace for run %q and plan %q", trace.RunID, trace.PlanID)
 	}
 	trace.Mode, trace.Predicted = request.Run.Mode, request.Plan.Predicted
+	normalizeWorkspaceQueue(&trace)
 	applyCloudLifecycleCosts(trace.Tasks, request.Resources, request.Plan.LifecycleActions)
 	trace.Executed.Cost = 0
 	for _, task := range trace.Tasks {

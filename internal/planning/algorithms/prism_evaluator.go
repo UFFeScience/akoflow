@@ -3,6 +3,7 @@ package algorithms
 import (
 	"container/heap"
 	"context"
+	"encoding/json"
 	"fmt"
 	"math"
 	"runtime"
@@ -10,6 +11,7 @@ import (
 	"sync"
 
 	"github.com/UFFeScience/akoflow/internal/domain"
+	"github.com/UFFeScience/akoflow/internal/domain/materializationmodel"
 	domainworkflow "github.com/UFFeScience/akoflow/internal/domain/workflow"
 )
 
@@ -19,19 +21,20 @@ type prismEvaluationDependency struct {
 }
 
 type prismEvaluationTask struct {
-	assignment       domain.PlanAssignment
-	resource         domain.Resource
-	remainingInputs  int
-	dataReadyAt      float64
-	transferSeconds  float64
-	laneReady        bool
-	started          bool
-	completed        bool
-	baseRuntime      float64
-	slowdown         float64
-	remainingRuntime float64
-	rate             float64
-	rateUpdatedAt    float64
+	assignment         domain.PlanAssignment
+	resource           domain.Resource
+	remainingInputs    int
+	dataReadyAt        float64
+	transferSeconds    float64
+	laneReady          bool
+	started            bool
+	completed          bool
+	baseRuntime        float64
+	preparationSeconds float64
+	slowdown           float64
+	remainingRuntime   float64
+	rate               float64
+	rateUpdatedAt      float64
 }
 
 type prismEvaluationTaskEvent struct {
@@ -73,15 +76,19 @@ func (queue *prismEvaluationReadyQueue) Pop() any {
 }
 
 type prismEvaluationFlow struct {
-	consumer  int
-	source    string
-	target    string
-	bytes     int64
-	remaining float64
-	startedAt float64
-	payloadAt float64
-	route     compactPRISMRoute
-	active    bool
+	consumer   int
+	source     string
+	target     string
+	bytes      int64
+	remaining  float64
+	startedAt  float64
+	payloadAt  float64
+	route      compactPRISMRoute
+	active     bool
+	stages     []materializationmodel.Stage
+	stageIndex int
+	postStage  bool
+	rateLimit  float64
 }
 
 func reevaluateCompleteCompactPRISMStates(
@@ -171,6 +178,40 @@ func evaluateCompleteCompactPRISMState(
 		return state, fmt.Errorf("evaluate PRISM workspace projection: %w", err)
 	}
 	data := dataBytes(projectedWorkflow)
+	preparationModel, err := materializationmodel.Decode(search.request.NetworkTopology.Metadata)
+	if err != nil {
+		return state, err
+	}
+	if preparationModel != nil {
+		for _, activity := range projectedWorkflow.Activities {
+			ordinal := assignmentOrdinal[activity.ID]
+			var volume domainworkflow.WorkspaceProjectionVolumes
+			if activity.Metadata["workspaceProjectionVolumes"] == nil {
+				return state, fmt.Errorf("materialized candidate requires workspace volumes for %s", activity.ID)
+			}
+			payload, marshalErr := json.Marshal(activity.Metadata["workspaceProjectionVolumes"])
+			if marshalErr != nil {
+				return state, marshalErr
+			}
+			if err = json.Unmarshal(payload, &volume); err != nil {
+				return state, err
+			}
+			tasks[ordinal].preparationSeconds, err = preparationModel.MergeSeconds(tasks[ordinal].resource.ID, volume.InputTotalBytes, volume.InputUniqueBytes)
+			if err != nil {
+				return state, err
+			}
+			if tasks[ordinal].assignment.Metadata == nil {
+				tasks[ordinal].assignment.Metadata = map[string]any{}
+			}
+			tasks[ordinal].assignment.Metadata["workspaceMaterializationModelSource"] = preparationModel.Source
+			tasks[ordinal].assignment.Metadata["workspaceMaterializationModelVersion"] = preparationModel.SchemaVersion
+		}
+	}
+	type incomingDependency struct {
+		producer int
+		bytes    int64
+	}
+	incoming := make([][]incomingDependency, len(tasks))
 	for _, dependency := range search.request.Workflow.Dependencies {
 		producer := assignmentOrdinal[dependency.DependsOnActivityID]
 		consumer := assignmentOrdinal[dependency.ActivityID]
@@ -179,6 +220,11 @@ func evaluateCompleteCompactPRISMState(
 			bytes:    data[dependency.ActivityID][dependency.DependsOnActivityID],
 		})
 		tasks[consumer].remainingInputs++
+		incoming[consumer] = append(incoming[consumer], incomingDependency{producer, data[dependency.ActivityID][dependency.DependsOnActivityID]})
+	}
+	remainingProducers := make([]int, len(tasks))
+	for index := range tasks {
+		remainingProducers[index] = tasks[index].remainingInputs
 	}
 	laneSuccessor := make([]int, len(tasks))
 	for index := range laneSuccessor {
@@ -274,6 +320,32 @@ func evaluateCompleteCompactPRISMState(
 				prismQueueEvaluationTaskIfReady(tasks, readyTasks, successor)
 			}
 			for _, dependency := range outgoing[event.activity] {
+				if preparationModel != nil {
+					remainingProducers[dependency.consumer]--
+					if remainingProducers[dependency.consumer] > 0 {
+						continue
+					}
+					consumer := &tasks[dependency.consumer]
+					for _, input := range incoming[dependency.consumer] {
+						route, routeErr := preparationModel.Route(tasks[input.producer].resource.ID, consumer.resource.ID, input.bytes)
+						if routeErr != nil {
+							return state, routeErr
+						}
+						if len(route.Stages) == 0 {
+							prismSatisfyEvaluationInput(consumer, clock, 0)
+							continue
+						}
+						flow := prismEvaluationFlow{consumer: dependency.consumer, startedAt: clock, stages: route.Stages, active: true}
+						cost, stageErr := prismInitializeMaterializationStage(&flow, search.router, clock)
+						if stageErr != nil {
+							return state, stageErr
+						}
+						transferCost += cost
+						flows = append(flows, flow)
+					}
+					prismQueueEvaluationTaskIfReady(tasks, readyTasks, dependency.consumer)
+					continue
+				}
 				producer := tasks[event.activity]
 				consumer := &tasks[dependency.consumer]
 				if dependency.bytes <= 0 || producer.assignment.ResourceID == consumer.assignment.ResourceID {
@@ -310,6 +382,25 @@ func evaluateCompleteCompactPRISMState(
 		for index := range flows {
 			if !flows[index].active || flows[index].payloadAt > clock+1e-9 || flows[index].remaining > 1e-6 {
 				continue
+			}
+			if len(flows[index].stages) > 0 {
+				flow := &flows[index]
+				if !flow.postStage {
+					flow.postStage = true
+					flow.payloadAt = clock + flow.stages[flow.stageIndex].AfterSeconds
+					if flow.payloadAt > clock+1e-9 {
+						continue
+					}
+				}
+				flow.stageIndex++
+				if flow.stageIndex < len(flow.stages) {
+					cost, stageErr := prismInitializeMaterializationStage(flow, search.router, clock)
+					if stageErr != nil {
+						return state, stageErr
+					}
+					transferCost += cost
+					continue
+				}
 			}
 			flows[index].active = false
 			prismSatisfyEvaluationInput(
@@ -415,7 +506,7 @@ func prismStartReadyTasks(
 		overhead := prismMetadataNumber(task.assignment.Metadata, "bootOverheadSeconds") +
 			prismMetadataNumber(task.assignment.Metadata, "containerOverheadSeconds")
 		task.assignment.PredictedReadyAt = task.dataReadyAt
-		task.assignment.PredictedStartAt = clock + overhead
+		task.assignment.PredictedStartAt = clock + overhead + task.preparationSeconds
 		resourceID := task.assignment.ResourceID
 		task.remainingRuntime = task.baseRuntime
 		task.rate = 1
@@ -427,6 +518,9 @@ func prismStartReadyTasks(
 			task.assignment.Metadata = map[string]any{}
 		}
 		task.assignment.Metadata["queueSeconds"] = math.Max(0, clock-task.dataReadyAt)
+		if task.preparationSeconds > 0 {
+			task.assignment.Metadata["workspacePreparationSeconds"] = task.preparationSeconds
+		}
 		task.assignment.Metadata["networkContentionModel"] = "simgrid-shared-link-events"
 		task.assignment.Metadata["cpuPriorityWeight"] = 1.0
 		if !resourceUsed[resourceID] {
@@ -619,6 +713,10 @@ func prismEvaluationFlowRates(flows []prismEvaluationFlow, clock float64) ([]flo
 			nextAt = math.Min(nextAt, flow.payloadAt)
 			continue
 		}
+		if flow.postStage || flow.remaining == 0 {
+			nextAt = math.Min(nextAt, clock)
+			continue
+		}
 		for _, hop := range flow.route.hops {
 			linkUsers[hop.key]++
 		}
@@ -628,10 +726,13 @@ func prismEvaluationFlowRates(flows []prismEvaluationFlow, clock float64) ([]flo
 		_ = index
 	}
 	for index, flow := range flows {
-		if !flow.active || flow.payloadAt > clock {
+		if !flow.active || flow.payloadAt > clock || flow.postStage || flow.remaining == 0 {
 			continue
 		}
 		rate := math.Inf(1)
+		if flow.rateLimit > 0 {
+			rate = flow.rateLimit
+		}
 		// Distinct routes can still contend at their sending or receiving
 		// resource. Count the flow itself once, even when source and target are
 		// shared by the same set of active flows.

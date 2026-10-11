@@ -21,6 +21,18 @@ func Run(args []string) (err error) {
 	load := func(i int) Object { m, _ := read(args[i]); return m }
 	arity := func(n int, usage string) { check(len(args) == n, usage) }
 	switch command {
+	case "transfer_wall_sensitivity":
+		arity(3, "transfer_wall_sensitivity REQUEST REAL OUTPUT")
+		real, raw := read(args[1])
+		write(args[2], transferWallSensitivity(load(0), real, digest(raw)))
+	case "compare_activity_times":
+		arity(4, "compare_activity_times REQUEST REAL SIM OUTPUT")
+		write(args[3], compareActivityTimes(load(0), load(1), load(2)))
+	case "prepare_instrumented_round":
+		arity(5, "prepare_instrumented_round REQUEST SIM RUN_ID PLAN_ID OUTPUT_DIR")
+		request, rawRequest := read(args[0])
+		simulation, rawSimulation := read(args[1])
+		writeInstrumentedRound(request, simulation, rawRequest, rawSimulation, args[2], args[3], args[4])
 	case "compare_completed_dependency_reference":
 		arity(3, "compare_completed_dependency_reference REAL SIM OUTPUT")
 		write(args[2], dependencyReference(load(0), load(1)))

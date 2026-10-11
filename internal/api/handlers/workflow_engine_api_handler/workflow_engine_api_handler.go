@@ -2691,11 +2691,16 @@ func (h *Handler) CreateExecution(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusUnprocessableEntity, err)
 		return
 	}
+	storageResources, overrideErr := preflightStorageResources(request)
+	if overrideErr != nil {
+		writeError(w, http.StatusUnprocessableEntity, overrideErr)
+		return
+	}
 	storageTimings := []storagebudget.Timing{}
 	for _, assignment := range request.Plan.Assignments {
 		storageTimings = append(storageTimings, storagebudget.Timing{ActivityID: assignment.ActivityID, ResourceID: assignment.ResourceID, Start: assignment.PredictedStartAt, Finish: assignment.PredictedFinishAt})
 	}
-	if _, _, err := storagebudget.CheckScheduled(request.Workflow, request.Resources, storageTimings); err != nil {
+	if _, _, err := storagebudget.CheckScheduled(request.Workflow, storageResources, storageTimings); err != nil {
 		writeError(w, http.StatusUnprocessableEntity, err)
 		return
 	}

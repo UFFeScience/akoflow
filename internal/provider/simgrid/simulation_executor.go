@@ -295,7 +295,7 @@ func allCompleted(ids []string, completed map[string]domain.TaskExecution) bool 
 }
 
 func resolveRuntime(activity domain.Activity, assignment domain.PlanAssignment, resource domain.Resource, profiles map[string]domain.ActivityResourceProfile) float64 {
-	if profile, ok := profiles[activity.ActivityTypeID+"\x00"+resource.ID]; ok && profile.ModelVersion == "reference-work-v1" {
+	if profile, ok := profiles[activity.ActivityTypeID+"\x00"+resource.ID]; ok && profile.UsesWorkUnits() {
 		return profile.RuntimeFor(activity)
 	}
 	if base, ok := numberMetadata(activity.Metadata, "baseRuntimeSeconds"); ok && resource.ComputeSpeedup > 0 {

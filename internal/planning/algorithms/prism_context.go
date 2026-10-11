@@ -213,7 +213,7 @@ func (search *compactPRISMContext) buildExecutionMatrices() {
 			if search.requireMeasuredProfiles {
 				measured := false
 				for _, profile := range search.request.ActivityProfiles {
-					if profile.ActivityTypeID == activity.ActivityTypeID && profile.ResourceID == resource.resource.ID && profile.ModelVersion == "reference-work-v1" && profile.RuntimeFor(activity) > 0 {
+					if profile.ActivityTypeID == activity.ActivityTypeID && profile.ResourceID == resource.resource.ID && profile.UsesWorkUnits() && profile.RuntimeFor(activity) > 0 {
 						measured = true
 						break
 					}

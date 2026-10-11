@@ -49,4 +49,20 @@ class MontageMaterializationFreezeTest < Minitest::Test
     assert_equal 2.5, profile.fetch('commandOverheadSeconds')
     refute profile.key?('channelWaitSeconds')
   end
+
+  def test_bulk_pool_rejects_unseparated_or_mixed_historical_pack_queue
+    calibration = observations
+    pooled = resources
+    pooled['hpc'].merge!('bulkServiceGroupId'=>'hpc-transport', 'bulkServiceSlots'=>3, 'bulkServiceSource'=>'fixture')
+    assert_raises(RuntimeError) { MontageMaterializationFreeze.build(calibration, 'digest', pooled, 'relay') }
+    packs = calibration.fetch('materializationPhaseObservations').select { |r| r.fetch('sourceClass') == 'hpc' && r.fetch('phase') == 'pack-and-receive' }
+    packs.each do |pack|
+      pack['secondsBases'] = ['source-command-execution-excludes-channel-queue']
+      pack['sourcePreflightServiceSeconds'] = {'samples'=>2, 'median'=>0.4}
+    end
+    frozen = MontageMaterializationFreeze.build(calibration, 'digest', pooled, 'relay')
+    assert_equal 3, frozen.fetch('resources').fetch('hpc').fetch('bulkServiceSlots')
+    packs.first['secondsBases'] << 'combined-phase-wall-includes-unseparated-service-queue'
+    assert_raises(RuntimeError) { MontageMaterializationFreeze.build(calibration, 'digest', pooled, 'relay') }
+  end
 end

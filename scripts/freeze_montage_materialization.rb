@@ -33,6 +33,13 @@ module MontageMaterializationFreeze
         'uploadArchiveBytesPerSecond'=>median(upload, 'effectiveArchiveBytesPerSecond', positive: true) }
       if strategy == 'gateway'
         pack = phases.fetch('pack-and-receive')
+        source_pool = resources.values.any? { |r| r.fetch('class') == from && !r.fetch('bulkServiceGroupId', '').empty? }
+        if source_pool && pack.fetch('secondsBases', []) != ['source-command-execution-excludes-channel-queue']
+          raise "Gateway #{from}->#{to} requires queue-free source service measurements before adding a bulk pool"
+        end
+        if source_pool && !pack['sourcePreflightServiceSeconds']
+          raise "Gateway #{from}->#{to} requires separately measured preflight service"
+        end
         profile['ingressArchiveBytesPerSecond'] = median(pack, 'effectiveArchiveBytesPerSecond', positive: true)
         if pack['sourcePreflightServiceSeconds']
           profile['probeSeconds'] = median(pack, 'sourcePreflightServiceSeconds')

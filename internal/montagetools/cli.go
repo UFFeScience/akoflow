@@ -21,6 +21,10 @@ func Run(args []string) (err error) {
 	load := func(i int) Object { m, _ := read(args[i]); return m }
 	arity := func(n int, usage string) { check(len(args) == n, usage) }
 	switch command {
+	case "publication_observation_reference":
+		arity(2, "publication_observation_reference REAL OUTPUT")
+		real, raw := read(args[0])
+		write(args[1], publicationReference(real, digest(raw)))
 	case "input_observation_sensitivity":
 		arity(3, "input_observation_sensitivity REQUEST REAL OUTPUT")
 		real, raw := read(args[1])

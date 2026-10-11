@@ -1,0 +1,17 @@
+{
+  "issue":"AKO-158",
+  "referenceRunId":"montage-prism-transfer-real-20261011-v2",
+  "role":"publication-wall-reference-not-queue-free-service-fit",
+  "samples":40,
+  "weightedWallSecondsPerScanByte":3.845388864356909e-8,
+  "summedWorkSecondsNotMakespan":1133.2548651695251,
+  "finalViewerPublicationWallSeconds":298.7341306209564,
+  "finalViewerTerminalScanBytes":3144545877,
+  "finalViewerExcludedPollDelaySeconds":3.1423821449279785,
+  "limitations":[
+    "Time is completion event minus terminal observation, matched to the latest completed task and handle attempt.",
+    "Observation transport, sealing, inherited-input pruning and scheduling are combined; admission wait has not been separated.",
+    "The recovered run is a reference, not independent validation.",
+    "Parallel publication durations must not be summed as elapsed workflow time."
+  ]
+}

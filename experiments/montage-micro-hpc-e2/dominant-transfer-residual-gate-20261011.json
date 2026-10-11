@@ -1,0 +1,22 @@
+{
+  "issue":"AKO-158",
+  "referenceRunId":"montage-prism-transfer-real-20261011-v2",
+  "role":"recovered-reference-residuals-not-independent-validation",
+  "dependencyCount":114,
+  "dominantProducer":"montage-independent-work-v1-mimgtblid0000017",
+  "dominantConsumer":"montage-independent-work-v1-maddid0000018",
+  "predictedDependencySeconds":288.8601371575005,
+  "observedDependencyWallSeconds":1294.134133049,
+  "durationErrorPercent":-77.67927374908646,
+  "observedProbeSeconds":6.731303795,
+  "observedSnapshotAcquireSeconds":746.63980359,
+  "observedUploadSeconds":206.247699719,
+  "observedReceiverSeconds":334.515325945,
+  "dominantTransferGatePassed":false,
+  "limitations":[
+    "Shared consumer barrier and merge were excluded from this dependency comparison.",
+    "Snapshot acquisition, transport and extraction include possible admission/contention; a slower network alone is not a demonstrated cause.",
+    "Recovered copy reuse is excluded from fresh transfer-duration comparisons.",
+    "Improved makespan sensitivity does not establish an adequate transfer model."
+  ]
+}

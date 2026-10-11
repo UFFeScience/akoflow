@@ -21,6 +21,9 @@ func Run(args []string) (err error) {
 	load := func(i int) Object { m, _ := read(args[i]); return m }
 	arity := func(n int, usage string) { check(len(args) == n, usage) }
 	switch command {
+	case "compare_completed_dependency_reference":
+		arity(3, "compare_completed_dependency_reference REAL SIM OUTPUT")
+		write(args[2], dependencyReference(load(0), load(1)))
 	case "combined_observation_sensitivity":
 		arity(3, "combined_observation_sensitivity REQUEST REAL OUTPUT")
 		real, raw := read(args[1])

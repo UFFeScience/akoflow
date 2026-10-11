@@ -18,7 +18,7 @@ func (e *placementExecutor) Run(_ context.Context, name string, _ []string, inpu
 	case "scontrol":
 		return []byte("NodeName=bora001 AvailableFeatures=bora,intel,cascadelake,omnipath"), nil
 	case "sinfo":
-		return []byte("bora003|36|191000|bora,intel,cascadelake,omnipath|idle\nbora006|36|191000|bora,intel,cascadelake,omnipath|idle\nbora021|36|191000|bora,intel,cascadelake,omnipath|drain\nbora022|16|191000|bora,intel,cascadelake,omnipath|idle"), nil
+		return []byte("SSH diagnostic: merged stderr line\nbora003|36|191000|bora,intel,cascadelake,omnipath|idle\nbora006|36|191000|bora,intel,cascadelake,omnipath|idle\nbora021|36|191000|bora,intel,cascadelake,omnipath|drain\nbora022|16|191000|bora,intel,cascadelake,omnipath|idle"), nil
 	case "sh":
 		e.proof = true
 		e.proofScript = string(input)

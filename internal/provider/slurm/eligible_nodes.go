@@ -44,7 +44,14 @@ func (a *Adapter) eligibleNodes(ctx context.Context, partition, original string,
 	excluded := []string{}
 	seen := map[string]bool{}
 	for _, row := range strings.Split(string(output), "\n") {
-		name := strings.TrimSpace(strings.SplitN(row, "|", 2)[0])
+		cells := strings.Split(strings.TrimSpace(row), "|")
+		// The SSH executor merges stderr into stdout. Ignore diagnostic lines,
+		// just as selectEligibleNodes does; only complete inventory rows name
+		// nodes. A malformed name within an inventory row still fails closed.
+		if len(cells) != 5 {
+			continue
+		}
+		name := strings.TrimSpace(cells[0])
 		if name == "" {
 			continue
 		}

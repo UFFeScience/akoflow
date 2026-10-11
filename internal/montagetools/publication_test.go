@@ -1,6 +1,20 @@
 package montagetools
 
-import "testing"
+import (
+	"math"
+	"testing"
+)
+
+func TestPublicationFitSeparatesScanAndCleanupWithoutNegativeRates(t *testing.T) {
+	scan, cleanup := fitPublicationWall([]Object{
+		{"terminalScanBytes": 1e9, "publicationCleanupBytes": 0.0, "publicationWallSeconds": 2.0},
+		{"terminalScanBytes": 1e9, "publicationCleanupBytes": 1e9, "publicationWallSeconds": 5.0},
+		{"terminalScanBytes": 2e9, "publicationCleanupBytes": 1e9, "publicationWallSeconds": 7.0},
+	})
+	if scan != 2e-9 || cleanup != 3e-9 {
+		t.Fatalf("fit %g %g", scan, cleanup)
+	}
+}
 
 func TestPublicationReferenceExcludesPollingAndRejectsWrongAttempt(t *testing.T) {
 	handle := Object{"activityId": "a", "status": "completed", "resourceId": "montage-gcp-fog-e2-micro-01", "startedAt": 90.0, "finishedAt": 98.0, "metadata": Object{"executionTarget": "remote-docker", "terminalObservedAt": 100.0}, "artifacts": Object{"finalSnapshot": []any{Object{"sizeBytes": 100.0}}}}
@@ -17,7 +31,7 @@ func TestPublicationReferenceExcludesPollingAndRejectsWrongAttempt(t *testing.T)
 	model := Object{}
 	request := Object{"Workflow": Object{"activities": []any{Object{"id": "a", "metadata": Object{"workspaceProjection": projection}}}}, "NetworkTopology": Object{"metadata": Object{"workspaceMaterializationModel": model}}}
 	combinedObservationSensitivity(request, real, "digest")
-	if projection["terminalObservationBytes"] != int64(100) || rows(model["publicationProfiles"])[0]["scanSecondsPerWorkspaceByte"] != .05 {
+	if projection["terminalObservationBytes"] != int64(100) || math.Abs(num(rows(model["publicationProfiles"])[0]["scanSecondsPerWorkspaceByte"])-.05) > 1e-10 {
 		t.Fatal("publication scan used exported size or wrong wall coefficient")
 	}
 	task["startedAt"] = 89.0

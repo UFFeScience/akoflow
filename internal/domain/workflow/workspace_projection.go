@@ -19,6 +19,7 @@ type WorkspaceProjection struct {
 	RemovedPaths []string        `json:"removedPaths,omitempty"`
 	// A measured pre-prune snapshot can be larger than the exported manifest.
 	TerminalObservationBytes *int64 `json:"terminalObservationBytes,omitempty"`
+	PublicationCleanupBytes  *int64 `json:"publicationCleanupBytes,omitempty"`
 	// Runtime packaging can put additional files into a cloud workspace while
 	// an HPC image reads those files outside the exported workspace. Inputs is
 	// the conservative search default; a complete assignment selects a variant.
@@ -40,6 +41,7 @@ type WorkspaceProjectionVolumes struct {
 	OutputBytes              int64 `json:"outputBytes"`
 	OutputFiles              int   `json:"outputFiles"`
 	TerminalObservationBytes int64 `json:"terminalObservationBytes"`
+	PublicationCleanupBytes  int64 `json:"publicationCleanupBytes"`
 }
 
 // ProjectWorkspaceDependencies preserves legacy edge semantics unless an
@@ -79,6 +81,9 @@ func ProjectWorkspaceDependenciesForResourceTypes(version WorkflowVersion, resou
 		}
 		if model.TerminalObservationBytes != nil && *model.TerminalObservationBytes < 0 {
 			return version, fmt.Errorf("negative terminal observation bytes for %q", activity.ID)
+		}
+		if model.PublicationCleanupBytes != nil && *model.PublicationCleanupBytes < 0 {
+			return version, fmt.Errorf("negative publication cleanup bytes for %q", activity.ID)
 		}
 		if resourceTypes != nil && len(model.InputsByResourceType) > 0 {
 			resourceType, exists := resourceTypes[activity.ID]
@@ -194,6 +199,9 @@ func ProjectWorkspaceDependenciesForResourceTypes(version WorkflowVersion, resou
 			}
 			volume.OutputFiles = len(manifest)
 			volume.TerminalObservationBytes = volume.OutputBytes
+			if model.PublicationCleanupBytes != nil {
+				volume.PublicationCleanupBytes = *model.PublicationCleanupBytes
+			}
 			if model.TerminalObservationBytes != nil {
 				volume.TerminalObservationBytes = *model.TerminalObservationBytes
 			}

@@ -68,6 +68,8 @@ func TestRunnerContractIncludesInputObservationOnce(t *testing.T) {
 	projection := request.Workflow.Activities[1].Metadata["workspaceProjection"].(domainworkflow.WorkspaceProjection)
 	terminalBytes := int64(300)
 	projection.TerminalObservationBytes = &terminalBytes
+	cleanupBytes := int64(100)
+	projection.PublicationCleanupBytes = &cleanupBytes
 	request.Workflow.Activities[1].Metadata["workspaceProjection"] = projection
 	model := request.NetworkTopology.Metadata["workspaceMaterializationModel"].(materializationmodel.Model)
 	model.InputObservationProfiles = []materializationmodel.InputObservationProfile{{TargetClass: "micro", Source: "queue-free-fixture", Samples: 1, SecondsPerUniqueByte: .1}}

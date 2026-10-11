@@ -217,7 +217,7 @@ func compactPRISMPlacePreparedAlternatives(
 		if err != nil || json.Unmarshal(encoded, &volume) != nil {
 			return nil
 		}
-		publication, err = search.materializationModel.PublicationSeconds(resource.resource.ID, volume.TerminalObservationBytes, volume.InputUniqueBytes)
+		publication, err = search.materializationModel.PublicationSeconds(resource.resource.ID, volume.TerminalObservationBytes, volume.PublicationCleanupBytes)
 		if err != nil {
 			return nil
 		}

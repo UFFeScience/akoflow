@@ -122,7 +122,7 @@ func buildRunnerInput(request ports.ExecutionRequest, referenceFLOPS float64) ([
 			if err != nil {
 				return nil, fmt.Errorf("consumer %q merge: %w", activity.ID, err)
 			}
-			publicationSeconds, err = preparationModel.PublicationSeconds(resource.ID, volume.TerminalObservationBytes, volume.InputUniqueBytes)
+			publicationSeconds, err = preparationModel.PublicationSeconds(resource.ID, volume.TerminalObservationBytes, volume.PublicationCleanupBytes)
 			if err != nil {
 				return nil, err
 			}

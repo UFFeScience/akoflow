@@ -69,7 +69,7 @@ func (a *Adapter) Start(ctx context.Context, execution domain.ActivityExecutionC
 	}
 	workspaceSeconds := time.Since(workspaceStart).Seconds()
 	snapshotStart := time.Now()
-	before, err := a.snapshot(ctx, workingDirectory)
+	before, snapshotServiceSeconds, err := a.measuredSnapshot(ctx, workingDirectory)
 	if err != nil {
 		return domain.ActivityHandle{}, fmt.Errorf("snapshot remote workspace: %w", err)
 	}
@@ -114,10 +114,11 @@ func (a *Adapter) Start(ctx context.Context, execution domain.ActivityExecutionC
 		Status: domain.HandleStarting, StartedAt: now, Metadata: map[string]any{
 			"executionAttempt": execution.Attempt,
 			"containerName":    name, "executionTarget": "remote-docker", "artifactObservationRoot": workingDirectory,
-			"artifactObservationBefore":      string(beforeJSON),
-			"remoteWorkspacePrepareSeconds":  workspaceSeconds,
-			"remoteWorkspaceSnapshotSeconds": snapshotSeconds,
-			"remoteContainerLaunchSeconds":   containerLaunchSeconds,
+			"artifactObservationBefore":             string(beforeJSON),
+			"remoteWorkspacePrepareSeconds":         workspaceSeconds,
+			"remoteWorkspaceSnapshotSeconds":        snapshotSeconds,
+			"remoteWorkspaceSnapshotServiceSeconds": snapshotServiceSeconds,
+			"remoteContainerLaunchSeconds":          containerLaunchSeconds,
 		}}
 	telemetryStart := time.Now()
 	telemetry.ObserveDocker(ctx, &handle, containerID, a.executor.Run)
@@ -190,7 +191,15 @@ func (a *Adapter) Inspect(ctx context.Context, handle domain.ActivityHandle) (do
 }
 
 func (a *Adapter) snapshot(ctx context.Context, root string) ([]remoteArtifactFile, error) {
-	const script = `import hashlib,json,os,sys
+	files, _, err := a.measuredSnapshot(ctx, root)
+	return files, err
+}
+
+// Service time is measured on the remote host, excluding SSH admission and
+// connection establishment. Outer wall time remains a separate diagnostic.
+func (a *Adapter) measuredSnapshot(ctx context.Context, root string) ([]remoteArtifactFile, float64, error) {
+	const script = `import hashlib,json,os,sys,time
+started=time.monotonic()
 root=sys.argv[1]
 result=[]
 for base,dirs,files in os.walk(root):
@@ -203,16 +212,28 @@ for base,dirs,files in os.walk(root):
       for chunk in iter(lambda: stream.read(1024*1024),b''): h.update(chunk)
     stat=os.stat(full)
     result.append({'path':os.path.relpath(full,root).replace(os.sep,'/'),'size':stat.st_size,'checksum':h.hexdigest(),'modified':stat.st_mtime_ns})
-print(json.dumps(result,separators=(',',':')))`
+print(json.dumps({'files':result,'serviceSeconds':time.monotonic()-started},separators=(',',':')))`
 	output, err := a.executor.Run(ctx, "python3", []string{"-c", script, root}, nil)
 	if err != nil {
-		return nil, err
+		return nil, 0, err
 	}
 	var files []remoteArtifactFile
-	if err := json.Unmarshal(output, &files); err != nil {
-		return nil, fmt.Errorf("decode remote artifact snapshot: %w", err)
+	// Accept legacy array responses for existing executors and fixtures; only
+	// the envelope carries independently measured service time.
+	if strings.HasPrefix(strings.TrimSpace(string(output)), "[") {
+		if err := json.Unmarshal(output, &files); err != nil {
+			return nil, 0, fmt.Errorf("decode remote artifact snapshot: %w", err)
+		}
+		return files, 0, nil
 	}
-	return files, nil
+	var measured struct {
+		Files          []remoteArtifactFile `json:"files"`
+		ServiceSeconds float64              `json:"serviceSeconds"`
+	}
+	if err := json.Unmarshal(output, &measured); err != nil {
+		return nil, 0, fmt.Errorf("decode remote artifact snapshot: %w", err)
+	}
+	return measured.Files, measured.ServiceSeconds, nil
 }
 
 func (a *Adapter) collectArtifacts(ctx context.Context, handle domain.ActivityHandle, exitCode int) (*domain.ArtifactManifest, error) {

@@ -1487,6 +1487,7 @@ func applyHandleTiming(task *domain.TaskExecution, handle domain.ActivityHandle)
 	// These diagnostics overlap launch wait and must not be added to it again.
 	for _, key := range []string{
 		"remoteWorkspacePrepareSeconds", "remoteWorkspaceSnapshotSeconds",
+		"remoteWorkspaceSnapshotServiceSeconds",
 		"remoteContainerLaunchSeconds", "remoteInitialTelemetrySeconds",
 		"remoteArtifactObservationStartedAt", "remoteArtifactObservationFinishedAt",
 		"remoteArtifactObservationSeconds", "remoteArtifactsReadyAt", "terminalObservedAt",

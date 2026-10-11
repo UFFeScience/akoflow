@@ -11,6 +11,16 @@ import (
 	provider "github.com/UFFeScience/akoflow/internal/provider"
 )
 
+func TestMeasuredSnapshotSeparatesRemoteServiceFromTransportWall(t *testing.T) {
+	executor := &commandExecutorStub{responses: [][]byte{[]byte(`{"files":[],"serviceSeconds":0.001}`)}, delays: []time.Duration{20 * time.Millisecond}}
+	adapter := &Adapter{executor: executor}
+	started := time.Now()
+	files, service, err := adapter.measuredSnapshot(context.Background(), "/workspace")
+	if err != nil || len(files) != 0 || service != .001 || time.Since(started).Seconds() <= service {
+		t.Fatalf("service and transport wall conflated: %v %g %v", files, service, err)
+	}
+}
+
 func TestRemoteCompletionUsesNativeTimeNotInspectionDelay(t *testing.T) {
 	finished := time.Now().UTC().Add(-time.Minute)
 	executor := &commandExecutorStub{responses: [][]byte{[]byte("exited|0|" + finished.Format(time.RFC3339Nano))}}

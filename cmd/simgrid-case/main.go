@@ -13,6 +13,7 @@ import (
 
 	"github.com/UFFeScience/akoflow/internal/application/ports"
 	"github.com/UFFeScience/akoflow/internal/domain"
+	"github.com/UFFeScience/akoflow/internal/domain/workflow"
 	"github.com/UFFeScience/akoflow/internal/planning/algorithms"
 	"github.com/UFFeScience/akoflow/internal/provider/simgrid"
 )
@@ -21,8 +22,9 @@ func main() {
 	requestPath := flag.String("request", "", "private simulation request JSON")
 	outputPath := flag.String("output", "", "new private case directory (must not exist)")
 	replan := flag.Bool("prism-time", false, "generate a new offline PRISM-time placement before exporting")
+	speedup := flag.Bool("speedup-fallback", false, "fill missing compute profiles with explicit speedup-derived estimates")
 	flag.Parse()
-	if err := exportCase(*requestPath, *outputPath, *replan); err != nil {
+	if err := exportCaseWithSpeedup(*requestPath, *outputPath, *replan, *speedup); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
@@ -40,6 +42,10 @@ func (s *planSink) Emit(_ context.Context, plan domain.SchedulePlan) error {
 }
 
 func exportCase(requestPath, outputPath string, replan bool) error {
+	return exportCaseWithSpeedup(requestPath, outputPath, replan, false)
+}
+
+func exportCaseWithSpeedup(requestPath, outputPath string, replan, speedup bool) error {
 	if requestPath == "" || outputPath == "" {
 		return fmt.Errorf("--request and --output required")
 	}
@@ -53,6 +59,12 @@ func exportCase(requestPath, outputPath string, replan bool) error {
 	}
 	if request.Run.Mode != domain.ExecutionModeSimulation {
 		return fmt.Errorf("offline replanning/export requires simulation mode")
+	}
+	if speedup {
+		request.ActivityProfiles, err = workflow.CompleteSpeedupProfiles(request.Workflow.Activities, request.Resources, request.ActivityProfiles)
+		if err != nil {
+			return err
+		}
 	}
 	var candidates []domain.SchedulePlan
 	if replan {
@@ -80,7 +92,7 @@ func exportCase(requestPath, outputPath string, replan bool) error {
 		return err
 	}
 	files := map[string][]byte{"platform.xml": platform, "simulation.json": input}
-	if replan {
+	if replan || speedup {
 		files["request.json"], err = json.MarshalIndent(request, "", "  ")
 		if err != nil {
 			return err

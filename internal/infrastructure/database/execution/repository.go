@@ -222,7 +222,7 @@ func (r *Repository) ListRuns(ctx context.Context) ([]domain.ExecutionRun, error
 	return page.Items, err
 }
 
-func (r *Repository) ListRunsPage(ctx context.Context, page, pageSize int, kind, mode, status string) (domain.ExecutionRunPage, error) {
+func (r *Repository) ListRunsPage(ctx context.Context, page, pageSize int, kind, mode, status string, workflowVersionIDs ...string) (domain.ExecutionRunPage, error) {
 	if page < 1 {
 		page = 1
 	}
@@ -230,6 +230,15 @@ func (r *Repository) ListRunsPage(ctx context.Context, page, pageSize int, kind,
 		pageSize = 20
 	}
 	conditions, arguments := runFeedFilters(kind, mode, status)
+	if len(workflowVersionIDs) > 0 && strings.TrimSpace(workflowVersionIDs[0]) != "" {
+		if conditions == "" {
+			conditions = " WHERE "
+		} else {
+			conditions += " AND "
+		}
+		conditions += "schedule_plan_id IN (SELECT id FROM schedule_plans WHERE workflow_version_id=?)"
+		arguments = append(arguments, strings.TrimSpace(workflowVersionIDs[0]))
+	}
 	filteredFeed := `SELECT * FROM (` + runFeedSelect + `)` + conditions
 	var total int
 	if err := r.db.QueryRowContext(ctx, `SELECT COUNT(*) FROM (`+filteredFeed+`)`, arguments...).Scan(&total); err != nil {

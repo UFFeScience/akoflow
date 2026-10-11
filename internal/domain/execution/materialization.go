@@ -145,6 +145,9 @@ type TransferRoute struct {
 	MergeCheckSeconds               float64          `json:"mergeCheckSeconds,omitempty"`
 	MergeCopySeconds                float64          `json:"mergeCopySeconds,omitempty"`
 	MergeVerifySeconds              float64          `json:"mergeVerifySeconds,omitempty"`
+	MergeSSHChannelWaitSeconds      float64          `json:"mergeSshChannelWaitSeconds,omitempty"`
+	MergeExecutionSeconds           float64          `json:"mergeExecutionSeconds,omitempty"`
+	MergeCommandOverheadSeconds     float64          `json:"mergeCommandOverheadSeconds,omitempty"`
 	LastRetryError                  string           `json:"lastRetryError,omitempty"`
 	NetworkBytesIncomplete          bool             `json:"networkBytesIncomplete,omitempty"`
 	ServerNetworkBytes              *int64           `json:"serverNetworkBytes,omitempty"`

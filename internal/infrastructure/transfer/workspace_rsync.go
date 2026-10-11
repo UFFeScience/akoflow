@@ -139,12 +139,27 @@ func syncRemoteWorkspaceDirect(ctx context.Context, plans []domain.DataTransferP
 	}
 	script := remoteWorkspaceScript(sourcePaths, destinationPath)
 	mergeStart := time.Now()
-	output, err := runSSHCombinedOutput(ctx, destination, append(sshArgs(destination), host, "bash -s"), strings.NewReader(script))
+	command, release, err := queuedSSHCommand(ctx, destination, append(sshArgs(destination), host, "bash -s"))
+	admittedAt := time.Now()
+	var output []byte
+	if err == nil {
+		command.Stdin = strings.NewReader(script)
+		output, err = command.CombinedOutput()
+		release()
+	}
 	mergeEnd := time.Now()
 	for i := range runs {
+		runs[i].Route.MergeSSHChannelWaitSeconds = admittedAt.Sub(mergeStart).Seconds()
+		if command != nil {
+			runs[i].Route.MergeExecutionSeconds = mergeEnd.Sub(admittedAt).Seconds()
+		}
 		runs[i].Route.MergeCheckSeconds = remoteMergeSeconds(string(output), "CHECK")
 		runs[i].Route.MergeCopySeconds = remoteMergeSeconds(string(output), "COPY")
 		runs[i].Route.MergeVerifySeconds = remoteMergeSeconds(string(output), "VERIFY")
+		// Residual command wall time includes transport/remote startup and
+		// untimed script work; it is not network throughput or service queue.
+		runs[i].Route.MergeCommandOverheadSeconds = max(0, runs[i].Route.MergeExecutionSeconds-
+			runs[i].Route.MergeCheckSeconds-runs[i].Route.MergeCopySeconds-runs[i].Route.MergeVerifySeconds)
 		runs[i].Route.Phases = append(runs[i].Route.Phases, domain.TransferPhase{
 			Name: "shared-conflict-check-copy-and-verify", StartedAt: float64(mergeStart.UnixNano()) / 1e9,
 			FinishedAt: float64(mergeEnd.UnixNano()) / 1e9, DurationSeconds: mergeEnd.Sub(mergeStart).Seconds(), Failed: err != nil,

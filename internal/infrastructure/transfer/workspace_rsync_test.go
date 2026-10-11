@@ -246,6 +246,17 @@ func TestWorkspaceRsyncCopiesDirectlyInsideSharedHPC(t *testing.T) {
 		if run.Status != domain.TransferCompleted || run.Strategy != domain.TransferDirectRuntime || run.NetworkBytes != 0 || run.FilesTransferred != 1 {
 			t.Fatalf("unexpected direct transfer: %+v", run)
 		}
+		if run.Route.MergeExecutionSeconds <= 0 || run.Route.MergeSSHChannelWaitSeconds < 0 || run.Route.MergeCommandOverheadSeconds < 0 {
+			t.Fatalf("missing separated remote merge timings: %+v", run.Route)
+		}
+		for _, phase := range run.Route.Phases {
+			if phase.Name == "shared-conflict-check-copy-and-verify" {
+				difference := phase.DurationSeconds - run.Route.MergeSSHChannelWaitSeconds - run.Route.MergeExecutionSeconds
+				if difference < -1e-6 || difference > 1e-6 {
+					t.Fatalf("queue and command do not account for merge wall time: %g", difference)
+				}
+			}
+		}
 	}
 	runs, err = (WorkspaceRsync{Resolver: directWorkspaceEndpointResolver{}}).Sync(context.Background(), plans)
 	if err != nil {

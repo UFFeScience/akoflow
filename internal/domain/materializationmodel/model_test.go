@@ -20,6 +20,20 @@ func TestPublicationServiceUsesWorkspaceAndInheritedInputs(t *testing.T) {
 	require.Error(t, m.Validate())
 }
 
+func TestFixedStageServiceIsCommonAndClassScoped(t *testing.T) {
+	m := testModel()
+	m.InputObservationProfiles = []InputObservationProfile{{TargetClass: "micro", Source: "fixture", Samples: 1, FixedSeconds: 3, SecondsPerUniqueByte: .01}}
+	m.PublicationProfiles = []PublicationProfile{{TargetClass: "micro", Source: "fixture", Samples: 1, FixedSeconds: 5, ScanSecondsPerWorkspaceByte: .02}}
+	p, err := m.PreparationSeconds("cloud-a", 0, 0)
+	require.NoError(t, err)
+	require.Equal(t, 3.0, p)
+	p, err = m.PublicationSeconds("cloud-a", 100, 0)
+	require.NoError(t, err)
+	require.Equal(t, 7.0, p)
+	m.InputObservationProfiles[0].FixedSeconds = -1
+	require.Error(t, m.Validate())
+}
+
 func TestFrozenMontageMeasuredModelDecodesAndRejectsUnobservedPair(t *testing.T) {
 	payload, err := os.ReadFile("../../../experiments/montage-micro-hpc-e2/materialization-model-v2.json")
 	require.NoError(t, err)

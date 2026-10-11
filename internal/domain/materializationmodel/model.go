@@ -23,6 +23,7 @@ type Model struct {
 // Publication follows scientific compute and gates both dependencies and lane
 // release. Scan and inherited-input cleanup are service, not compute or network.
 type PublicationProfile struct {
+	FixedSeconds                float64 `json:"fixedSeconds,omitempty"`
 	TargetClass                 string  `json:"targetClass"`
 	Source                      string  `json:"source"`
 	Samples                     int     `json:"samples"`
@@ -33,6 +34,7 @@ type PublicationProfile struct {
 // Input observation occurs after merge and before the command. Its measured
 // service must exclude admission wait and must not already be in merge/compute.
 type InputObservationProfile struct {
+	FixedSeconds         float64 `json:"fixedSeconds,omitempty"`
 	TargetClass          string  `json:"targetClass"`
 	Source               string  `json:"source"`
 	Samples              int     `json:"samples"`
@@ -194,14 +196,14 @@ func (m Model) Validate() error {
 	}
 	seen = map[string]bool{}
 	for _, p := range m.InputObservationProfiles {
-		if p.TargetClass == "" || p.Source == "" || p.Samples < 1 || seen[p.TargetClass] || !validNonnegative(p.SecondsPerUniqueByte) {
+		if p.TargetClass == "" || p.Source == "" || p.Samples < 1 || seen[p.TargetClass] || !validNonnegative(p.FixedSeconds, p.SecondsPerUniqueByte) {
 			return fmt.Errorf("invalid input observation profile %q", p.TargetClass)
 		}
 		seen[p.TargetClass] = true
 	}
 	seen = map[string]bool{}
 	for _, p := range m.PublicationProfiles {
-		if p.TargetClass == "" || p.Source == "" || p.Samples < 1 || seen[p.TargetClass] || !validNonnegative(p.ScanSecondsPerWorkspaceByte, p.CleanupSecondsPerInputByte) {
+		if p.TargetClass == "" || p.Source == "" || p.Samples < 1 || seen[p.TargetClass] || !validNonnegative(p.FixedSeconds, p.ScanSecondsPerWorkspaceByte, p.CleanupSecondsPerInputByte) {
 			return fmt.Errorf("invalid publication profile %q", p.TargetClass)
 		}
 		seen[p.TargetClass] = true
@@ -215,7 +217,7 @@ func (m Model) PublicationSeconds(targetID string, workspaceBytes, inputBytes in
 	}
 	for _, p := range m.PublicationProfiles {
 		if p.TargetClass == m.Resources[targetID].Class {
-			seconds := float64(workspaceBytes)*p.ScanSecondsPerWorkspaceByte + float64(inputBytes)*p.CleanupSecondsPerInputByte
+			seconds := p.FixedSeconds + float64(workspaceBytes)*p.ScanSecondsPerWorkspaceByte + float64(inputBytes)*p.CleanupSecondsPerInputByte
 			if !validNonnegative(seconds) {
 				return 0, fmt.Errorf("publication estimate overflow")
 			}
@@ -234,7 +236,7 @@ func (m Model) PreparationSeconds(targetID string, totalBytes, uniqueBytes int64
 	}
 	for _, p := range m.InputObservationProfiles {
 		if p.TargetClass == m.Resources[targetID].Class {
-			seconds := merge + float64(uniqueBytes)*p.SecondsPerUniqueByte
+			seconds := merge + p.FixedSeconds + float64(uniqueBytes)*p.SecondsPerUniqueByte
 			if !validNonnegative(seconds) {
 				return 0, fmt.Errorf("input observation estimate overflow")
 			}

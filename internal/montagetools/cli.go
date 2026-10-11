@@ -21,6 +21,14 @@ func Run(args []string) (err error) {
 	load := func(i int) Object { m, _ := read(args[i]); return m }
 	arity := func(n int, usage string) { check(len(args) == n, usage) }
 	switch command {
+	case "calibrate_runtime_stages":
+		arity(4, "calibrate_runtime_stages CLASS REQUEST TRAINING_REAL OUTPUT")
+		training, raw := read(args[2])
+		write(args[3], calibrateRuntimeStages(load(1), training, digest(raw), args[0]))
+	case "calibrate_hpc_stages":
+		arity(3, "calibrate_hpc_stages REQUEST TRAINING_REAL OUTPUT")
+		training, raw := read(args[1])
+		write(args[2], calibrateHPCStages(load(0), training, digest(raw)))
 	case "transfer_wall_sensitivity":
 		arity(3, "transfer_wall_sensitivity REQUEST REAL OUTPUT")
 		real, raw := read(args[1])

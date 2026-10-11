@@ -1,0 +1,19 @@
+{
+  "issue": "AKO-158",
+  "referenceRunId": "montage-prism-transfer-real-20261011-v2",
+  "role": "recovered-reference-not-independent-validation",
+  "measurement": "remoteWorkspaceSnapshotSeconds / artifactObservationBefore unique file bytes",
+  "completedCloudSamples": 40,
+  "weightedEffectiveSecondsPerByte": 2.6495730268133445e-8,
+  "minimumEffectiveSecondsPerByte": 2.377949579117742e-9,
+  "maximumEffectiveSecondsPerByte": 7.50483825275962e-8,
+  "summedWorkSecondsNotMakespan": 707.4212270280001,
+  "serviceCalibrationAccepted": false,
+  "limitations": [
+    "Snapshot wall time may include SSH admission and fixed command overhead; this is not yet a queue-free service coefficient.",
+    "The approximately 32-fold range requires examination by operation, file count, cache and resource before selecting a service profile.",
+    "Parallel sample durations are work totals, not elapsed workflow time.",
+    "Terminal artifact observation and inherited-input pruning remain separate from this pre-command snapshot measurement.",
+    "A fresh independent run is required after calibration and forecast freezing."
+  ]
+}

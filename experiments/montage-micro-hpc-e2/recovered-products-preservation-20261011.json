@@ -12,6 +12,6 @@
   "activeTransfers": 0,
   "unreleasedWorkspaceLeases": 0,
   "allTenInstancesDestroyedInInventory": true,
-  "destroyOperationsTerminalConfirmed": false,
+  "destroyOperationsTerminalConfirmed": true,
   "predictionValidated": false
 }

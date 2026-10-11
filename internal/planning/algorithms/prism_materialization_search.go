@@ -64,7 +64,7 @@ func compactPRISMResolveMaterializedFanIn(search compactPRISMContext, state comp
 		if err != nil || json.Unmarshal(encoded, &volume) != nil {
 			return invalid()
 		}
-		merge, err := search.materializationModel.MergeSeconds(target, volume.InputTotalBytes, volume.InputUniqueBytes)
+		merge, err := search.materializationModel.PreparationSeconds(target, volume.InputTotalBytes, volume.InputUniqueBytes)
 		if err != nil {
 			return invalid()
 		}

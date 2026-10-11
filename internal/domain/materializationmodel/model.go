@@ -10,12 +10,22 @@ import (
 )
 
 type Model struct {
-	SchemaVersion   int                 `json:"schemaVersion"`
-	Source          string              `json:"source"`
-	RelayResourceID string              `json:"relayResourceId"`
-	Resources       map[string]Resource `json:"resources"`
-	Profiles        []Profile           `json:"profiles"`
-	MergeProfiles   []MergeProfile      `json:"mergeProfiles"`
+	SchemaVersion            int                       `json:"schemaVersion"`
+	Source                   string                    `json:"source"`
+	RelayResourceID          string                    `json:"relayResourceId"`
+	Resources                map[string]Resource       `json:"resources"`
+	Profiles                 []Profile                 `json:"profiles"`
+	MergeProfiles            []MergeProfile            `json:"mergeProfiles"`
+	InputObservationProfiles []InputObservationProfile `json:"inputObservationProfiles,omitempty"`
+}
+
+// Input observation occurs after merge and before the command. Its measured
+// service must exclude admission wait and must not already be in merge/compute.
+type InputObservationProfile struct {
+	TargetClass          string  `json:"targetClass"`
+	Source               string  `json:"source"`
+	Samples              int     `json:"samples"`
+	SecondsPerUniqueByte float64 `json:"secondsPerUniqueByte"`
 }
 
 type Resource struct {
@@ -171,7 +181,33 @@ func (m Model) Validate() error {
 		}
 		seen[profile.TargetClass] = true
 	}
+	seen = map[string]bool{}
+	for _, p := range m.InputObservationProfiles {
+		if p.TargetClass == "" || p.Source == "" || p.Samples < 1 || seen[p.TargetClass] || !validNonnegative(p.SecondsPerUniqueByte) {
+			return fmt.Errorf("invalid input observation profile %q", p.TargetClass)
+		}
+		seen[p.TargetClass] = true
+	}
 	return nil
+}
+
+// PreparationSeconds charges the consumer's unique input scan once, never
+// once per predecessor. Absence of an evidenced profile preserves legacy data.
+func (m Model) PreparationSeconds(targetID string, totalBytes, uniqueBytes int64) (float64, error) {
+	merge, err := m.MergeSeconds(targetID, totalBytes, uniqueBytes)
+	if err != nil {
+		return 0, err
+	}
+	for _, p := range m.InputObservationProfiles {
+		if p.TargetClass == m.Resources[targetID].Class {
+			seconds := merge + float64(uniqueBytes)*p.SecondsPerUniqueByte
+			if !validNonnegative(seconds) {
+				return 0, fmt.Errorf("input observation estimate overflow")
+			}
+			return seconds, nil
+		}
+	}
+	return merge, nil
 }
 
 func (m Model) Route(sourceID, targetID string, workspaceBytes int64) (Route, error) {

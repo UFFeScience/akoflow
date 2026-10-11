@@ -116,7 +116,7 @@ func buildRunnerInput(request ports.ExecutionRequest, referenceFLOPS float64) ([
 			if err = json.Unmarshal(encoded, &volume); err != nil {
 				return nil, err
 			}
-			preparationSeconds, err = preparationModel.MergeSeconds(resource.ID, volume.InputTotalBytes, volume.InputUniqueBytes)
+			preparationSeconds, err = preparationModel.PreparationSeconds(resource.ID, volume.InputTotalBytes, volume.InputUniqueBytes)
 			if err != nil {
 				return nil, fmt.Errorf("consumer %q merge: %w", activity.ID, err)
 			}

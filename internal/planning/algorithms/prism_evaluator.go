@@ -234,7 +234,7 @@ func evaluateCompleteCompactPRISMState(
 			if err = json.Unmarshal(payload, &volume); err != nil {
 				return state, err
 			}
-			tasks[ordinal].preparationSeconds, err = preparationModel.MergeSeconds(tasks[ordinal].resource.ID, volume.InputTotalBytes, volume.InputUniqueBytes)
+			tasks[ordinal].preparationSeconds, err = preparationModel.PreparationSeconds(tasks[ordinal].resource.ID, volume.InputTotalBytes, volume.InputUniqueBytes)
 			tasks[ordinal].preparationGroup = preparationModel.Resources[tasks[ordinal].resource.ID].BulkServiceGroupID
 			if err != nil {
 				return state, err

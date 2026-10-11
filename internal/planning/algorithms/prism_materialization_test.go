@@ -57,6 +57,20 @@ func TestPRISMMaterializationMatchesNativeMixedOriginBarrier(t *testing.T) {
 			t.Fatalf("incorrect consumer barrier: %+v", assignment)
 		}
 	}
+	model.InputObservationProfiles = []materializationmodel.InputObservationProfile{{TargetClass: "micro", Source: "queue-free-fixture", Samples: 1, SecondsPerUniqueByte: .1}}
+	request.NetworkTopology.Metadata["workspaceMaterializationModel"] = model
+	observedSearch, err := newCompactPRISMContext(request, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	observed, err := evaluateCompleteCompactPRISMState(observedSearch, compactPRISMStateFromEvaluation(compactPRISMState{}, assignments, 0, 0))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if math.Abs(observed.makespan-33) > 1e-8 {
+		t.Fatalf("input union observation must add 20 seconds once, got %g", observed.makespan)
+	}
+	model.InputObservationProfiles = nil
 	// Independently measured 2s source preparation is charged before ingress,
 	// not as extra network bytes or a second observed queue.
 	model.Profiles[1].IngressIncludesSourcePreparation = false

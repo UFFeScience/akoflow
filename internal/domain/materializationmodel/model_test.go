@@ -35,6 +35,21 @@ func testModel() Model {
 	}, MergeProfiles: []MergeProfile{{TargetClass: "micro", Source: "baseline", Samples: 3, CheckSecondsPerInputByte: .01, CopySecondsPerUniqueByte: .02, VerifySecondsPerUniqueByte: .03}}}
 }
 
+func TestInputObservationIsChargedOnceOnUniqueInputs(t *testing.T) {
+	m := testModel()
+	m.InputObservationProfiles = []InputObservationProfile{{TargetClass: "micro", Source: "measured-snapshot-service", Samples: 3, SecondsPerUniqueByte: .5}}
+	merge, err := m.MergeSeconds("cloud-a", 200, 100)
+	require.NoError(t, err)
+	preparation, err := m.PreparationSeconds("cloud-a", 200, 100)
+	require.NoError(t, err)
+	require.Equal(t, merge+50, preparation)
+	root, err := m.PreparationSeconds("cloud-a", 0, 0)
+	require.NoError(t, err)
+	require.Zero(t, root)
+	m.InputObservationProfiles[0].Source = ""
+	require.Error(t, m.Validate())
+}
+
 func TestSeparatedIngressUsesIndependentPreparationWithoutExtraNetworkBytes(t *testing.T) {
 	m := testModel()
 	p := &m.Profiles[2]

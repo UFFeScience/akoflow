@@ -201,7 +201,24 @@ func check(version workflow.WorkflowVersion, resources []resource.Resource, assi
 					hasConsumer = true
 				}
 			}
-			if hasConsumer {
+			rolling, _ := r.Metadata["workspaceStorageLifecycle"].(string)
+			if rolling == "consumer-barrier-v1" {
+				// Runtime removes preparation scratch before successful preparation
+				// returns, then releases producer leases before starting commands.
+				// Keep scratch until the command barrier conservatively; leaves are
+				// retained from creation, not incorrectly allocated at run time zero.
+				events[b.StorageID] = append(events[b.StorageID], event{begin, workspaceBytes})
+				if hasConsumer {
+					events[b.StorageID] = append(events[b.StorageID], event{end, -workspaceBytes})
+				}
+				for _, staging := range bytesToReserve[1:] {
+					if staging < 0 {
+						return nil, missingIDs, fmt.Errorf("negative staging reservation")
+					}
+					events[b.StorageID] = append(events[b.StorageID], event{begin, staging}, event{timings[activity.ID].Start, -staging})
+				}
+				bytesToReserve = nil
+			} else if hasConsumer {
 				events[b.StorageID] = append(events[b.StorageID], event{begin, workspaceBytes}, event{end, -workspaceBytes})
 				bytesToReserve = bytesToReserve[1:]
 			}

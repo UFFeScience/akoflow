@@ -86,3 +86,27 @@ func TestScheduledFanoutWaitsForLastConsumerAndRejectsInvalidTiming(t *testing.T
 	_, _, err = CheckScheduled(v, r, timings[:2])
 	require.ErrorContains(t, err, "missing storage schedule")
 }
+
+func TestRollingLifecycleBoundsScratchAndRetainsLeaf(t *testing.T) {
+	v, r, _ := fixture(40)
+	model := v.Activities[1].Metadata["workspaceProjection"].(workflow.WorkspaceProjection)
+	v.Activities = append(v.Activities, workflow.Activity{ID: "c", Metadata: map[string]any{"workspaceProjection": model}}, workflow.Activity{ID: "d", Metadata: map[string]any{"workspaceProjection": model}})
+	v.Dependencies = append(v.Dependencies, workflow.ActivityDependency{ActivityID: "c", DependsOnActivityID: "b"}, workflow.ActivityDependency{ActivityID: "d", DependsOnActivityID: "c"})
+	for i := range r {
+		r[i].Metadata["workspaceStorageLifecycle"] = "consumer-barrier-v1"
+	}
+	timings := []Timing{{"a", "node1", 0, 1}, {"b", "node2", 2, 3}, {"c", "node1", 4, 5}, {"d", "node2", 6, 7}}
+	rows, missing, err := CheckScheduled(v, r, timings)
+	require.NoError(t, err)
+	require.Empty(t, missing)
+	// Producer + consumer + two input scratch copies coexist at the barrier.
+	// Scratch does not accumulate, but final leaf remains retained.
+	require.Equal(t, int64(40), rows[0].ReservedUpperBoundBytes)
+	for i := range r {
+		b := r[i].Metadata["workspaceStorageBudget"].(Snapshot)
+		b.AvailableBytes = 39
+		r[i].Metadata["workspaceStorageBudget"] = b
+	}
+	_, _, err = CheckScheduled(v, r, timings)
+	require.ErrorContains(t, err, "insufficient")
+}

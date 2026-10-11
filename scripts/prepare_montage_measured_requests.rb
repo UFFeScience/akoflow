@@ -17,11 +17,14 @@ dependencies = workflow.fetch('dependencies').group_by { |dependency| dependency
 activities = workflow.fetch('activities').map do |activity|
   id = activity.fetch('id')
   family = id.match(/-([a-z]+)id\d+$/)&.captures&.first
+  work = projection['activityComputeWork'] && projection.fetch('activityComputeWork').fetch(id)
+  family = work.fetch('activityFamily') if work
   raise "Unclassified family #{id}" unless family && compute.fetch('activityFamilyTypeIds').fetch(family) == "#{workflow_name}-#{family}"
   command = Marshal.load(Marshal.dump(activity.fetch('command')))
   command.delete('resolvedExecutable')
   metadata = activity.fetch('metadata', {}).merge('workspaceProjection'=>projection.fetch('activityModels').fetch(id), 'calibrationSource'=>compute.fetch('source'))
   metadata.delete('workspaceProjectionVolumes')
+  metadata = metadata.merge('computeWorkUnits'=>work.fetch('computeWorkUnits'),'computeWorkUnit'=>work.fetch('unit'),'computeWorkSource'=>work.fetch('sourceImageSHA256')) if work
   { 'name'=>activity.fetch('name'), 'activityType'=>family, 'metadata'=>metadata,
     'command'=>command, 'simulation'=>activity.fetch('simulation'),
     'cpuLimit'=>activity.fetch('resources').fetch('cpu').to_s,
@@ -65,6 +68,6 @@ save.call('planning-session', {'id'=>ENV.fetch('MONTAGE_PLANNING_ID', 'montage-r
   'networkTopologyId'=>network.fetch('id'), 'algorithms'=>[{'id'=>'prism-time','configuration'=>{'requireMeasuredProfiles'=>true}}],
   'configuration'=>{'calibrationSource'=>compute.fetch('source'),
     'activityProfileSnapshot'=>compute.fetch('activityProfiles'), 'requireMeasuredProfiles'=>true,
-    'computeCalibrationUnits'=>'reference-work-v1', 'computeCalibrationIncludesPhysicalSharing'=>true,
+    'computeCalibrationUnits'=>projection['activityComputeWork'] ? 'compute-work-v1' : 'reference-work-v1', 'computeCalibrationIncludesPhysicalSharing'=>true,
     'additionalPairwiseSlowdown'=>'not-applied-to-contention-conditioned-wall-profiles'}})
 puts 'Prepared 58 activities, class-level compute profiles and explicit non-schedulable relay. No run submitted.'

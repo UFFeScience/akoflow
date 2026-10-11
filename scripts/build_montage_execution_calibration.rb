@@ -41,12 +41,13 @@ module MontageExecutionCalibration
     activities = data.fetch('activities')
     raise 'Duplicate or missing baseline activity' unless activities.length == 58 && activities.map { |a| a.fetch('activity_id') }.uniq.length == 58
     indexed = activities.each_with_object({}) { |activity, map| map[activity.fetch('activity_id')] = activity }
-    compute = activities.group_by { |a| [family(a.fetch('activity_id')), resource_class(a.fetch('resource_id'))] }.map do |(program, machine), samples|
+    independent = projection && projection['activityComputeWork']
+    compute = activities.group_by { |a| [independent ? independent.fetch(a.fetch('activity_id')).fetch('activityFamily') : family(a.fetch('activity_id')), resource_class(a.fetch('resource_id'))] }.map do |(program, machine), samples|
       { 'activityFamily' => program, 'resourceClass' => machine,
         'runtimeSeconds' => summary(samples.map { |a| a.fetch('validated_handle_runtime_seconds') || a.fetch('observed_runtime_seconds') }),
         'taskRuntimeFallbackSamples' => samples.count { |a| a['validated_handle_runtime_seconds'].nil? },
         'wallSecondsPerReferenceSecond' => projection && summary(samples.map do |a|
-          reference = Float(projection.fetch('activityReferenceDurations').fetch(a.fetch('activity_id')))
+          reference = Float(independent ? independent.fetch(a.fetch('activity_id')).fetch('computeWorkUnits') : projection.fetch('activityReferenceDurations').fetch(a.fetch('activity_id')))
           raise 'Invalid reference work' unless reference.finite? && reference > 0
           (a.fetch('validated_handle_runtime_seconds') || a.fetch('observed_runtime_seconds')) / reference
         end),
@@ -102,6 +103,7 @@ module MontageExecutionCalibration
       end
     end
     { 'schemaVersion' => 1, 'baselineRunId' => data.fetch('run_id'), 'baselineSHA256' => digest,
+      'computeWorkBasis'=>projection && projection['computeWorkBasis'],
       'synchronizationContract' => 'whole-workspace-v1', 'workspaceVolumeBasis' => projection ? 'producer-final-snapshot-manifest' : 'unavailable-do-not-use-logical-output-bytes-as-workspace-volume', 'computeObservations' => compute,
       'materializationPhaseObservations' => grouped, 'consumerMergeObservations' => merges,
       'mergeRateObservations'=>merge_rates,

@@ -6,6 +6,7 @@ module MontageComputeFreeze
   module_function
 
   def build(calibration, digest, resources, namespace)
+    independent = calibration['computeWorkBasis'] == 'immutable-dataset-independent-work-v1'
     source = "#{calibration.fetch('baselineRunId')}:sha256:#{digest}"
     type_ids = calibration.fetch('computeObservations').map { |row| row.fetch('activityFamily') }.uniq.sort.to_h { |family| [family, "#{namespace}-#{family}"] }
     profiles = calibration.fetch('computeObservations').flat_map do |row|
@@ -15,11 +16,12 @@ module MontageComputeFreeze
       raise 'Invalid compute coefficient' unless coefficient.finite? && coefficient > 0
       resources.map do |id, resource|
         next if resource.fetch('class') != row.fetch('resourceClass')
+        next if row['allowedResourceIds'] && !row.fetch('allowedResourceIds').include?(id)
         { 'id'=>"#{namespace}-#{row.fetch('activityFamily')}-#{id}",
           'activityTypeId'=>type_ids.fetch(row.fetch('activityFamily')), 'resourceId'=>id,
-          'runtimeSeconds'=>coefficient, 'modelVersion'=>'reference-work-v1',
-          'source'=>source, 'sampleSize'=>stats.fetch('samples'),
-          'metadata'=>{'units'=>'wall-seconds-per-reference-second',
+          'runtimeSeconds'=>coefficient, 'modelVersion'=>independent ? 'compute-work-v1' : 'reference-work-v1',
+          'source'=>row.fetch('source',source), 'sampleSize'=>stats.fetch('samples'),
+          'metadata'=>{'units'=>independent ? 'wall-seconds-per-independent-work-unit' : 'wall-seconds-per-reference-second',
             'observedRange'=>stats.values_at('minimum','maximum'),
             'includesPhysicalSharing'=>true, 'taskRuntimeFallbackSamples'=>row.fetch('taskRuntimeFallbackSamples')} }
       end.compact
@@ -37,5 +39,5 @@ if $PROGRAM_NAME == __FILE__
   raw = File.binread(ARGV[0])
   result = MontageComputeFreeze.build(JSON.parse(raw), Digest::SHA256.hexdigest(raw), JSON.parse(File.binread(ARGV[1])), ARGV[2])
   File.write(ARGV[3], JSON.pretty_generate(result) + "\n")
-  puts "Frozen #{result.fetch('activityProfiles').length} resource profiles in reference-work-v1 units."
+  puts "Frozen #{result.fetch('activityProfiles').length} resource profiles in #{result.fetch('activityProfiles').map { |p| p.fetch('modelVersion') }.uniq.join(', ')} units."
 end

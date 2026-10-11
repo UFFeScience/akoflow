@@ -98,6 +98,9 @@ func Run(args []string) (err error) {
 	case "export_cloud_workspace":
 		arity(3, "export_cloud_workspace TARGET RUN OUTPUT.tar.gz")
 		exportCloud(args[0], args[1], args[2])
+	case "export_hpc_workspace":
+		arity(3, "export_hpc_workspace TARGET RUN OUTPUT.tar.gz")
+		exportHPC(args[0], args[1], args[2])
 	case "validate_montage_transfer_model":
 		check(len(args) > 0, "validation mode required")
 		mode := args[0]

@@ -23,6 +23,15 @@ func shellQuote(s string) string { return "'" + strings.ReplaceAll(s, "'", "'\"'
 // token or private console output in an error, and existing archives are safe.
 func exportCloud(target, run, output string) {
 	check(targetPattern.MatchString(target) && runPattern.MatchString(run), "invalid target or run identity")
+	exportRemoteWorkspace(target, run, output, "/akoflow/workspace/runs/"+run)
+}
+
+func exportHPC(target, run, output string) {
+	check((target == "plafrim-execution-ssh-node-diablo03" || target == "plafrim-execution-ssh-node-bora001") && runPattern.MatchString(run), "invalid HPC target or run identity")
+	exportRemoteWorkspace(target, run, output, "/home/wferreir/akoflow-workspaces/"+run)
+}
+
+func exportRemoteWorkspace(target, run, output, sourcePath string) {
 	token, ok := os.LookupEnv("AKOFLOW_API_TOKEN")
 	check(ok && token != "", "AKOFLOW_API_TOKEN required")
 	client := http.Client{Timeout: 660 * time.Second}
@@ -41,7 +50,7 @@ func exportCloud(target, run, output string) {
 		check(result["status"] == "completed" && result["exitCode"] != nil && num(result["exitCode"]) == 0, "remote archive command failed")
 		return str(get(result, "stdout"))
 	}
-	source := shellQuote("/akoflow/workspace/runs/" + run)
+	source := shellQuote(sourcePath)
 	archive := shellQuote("/tmp/akoflow-preserve-" + run + ".tar.gz")
 	metadata := strings.Fields(console("set -eu; test -d " + source + "; tar -czf " + archive + " -C " + source + " .; stat -c %s " + archive + "; sha256sum " + archive))
 	check(len(metadata) >= 2, "invalid archive metadata")

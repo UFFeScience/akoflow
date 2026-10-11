@@ -6,6 +6,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"math"
 	"sort"
 	"strconv"
 	"strings"
@@ -114,12 +115,14 @@ func (a *Adapter) Start(ctx context.Context, execution domain.ActivityExecutionC
 		Status: domain.HandleStarting, StartedAt: now, Metadata: map[string]any{
 			"executionAttempt": execution.Attempt,
 			"containerName":    name, "executionTarget": "remote-docker", "artifactObservationRoot": workingDirectory,
-			"artifactObservationBefore":             string(beforeJSON),
-			"remoteWorkspacePrepareSeconds":         workspaceSeconds,
-			"remoteWorkspaceSnapshotSeconds":        snapshotSeconds,
-			"remoteWorkspaceSnapshotServiceSeconds": snapshotServiceSeconds,
-			"remoteContainerLaunchSeconds":          containerLaunchSeconds,
+			"artifactObservationBefore":      string(beforeJSON),
+			"remoteWorkspacePrepareSeconds":  workspaceSeconds,
+			"remoteWorkspaceSnapshotSeconds": snapshotSeconds,
+			"remoteContainerLaunchSeconds":   containerLaunchSeconds,
 		}}
+	if snapshotServiceSeconds > 0 {
+		handle.Metadata["remoteWorkspaceSnapshotServiceSeconds"] = snapshotServiceSeconds
+	}
 	telemetryStart := time.Now()
 	telemetry.ObserveDocker(ctx, &handle, containerID, a.executor.Run)
 	handle.Metadata["remoteInitialTelemetrySeconds"] = time.Since(telemetryStart).Seconds()
@@ -228,12 +231,15 @@ print(json.dumps({'files':result,'serviceSeconds':time.monotonic()-started},sepa
 	}
 	var measured struct {
 		Files          []remoteArtifactFile `json:"files"`
-		ServiceSeconds float64              `json:"serviceSeconds"`
+		ServiceSeconds *float64             `json:"serviceSeconds"`
 	}
 	if err := json.Unmarshal(output, &measured); err != nil {
 		return nil, 0, fmt.Errorf("decode remote artifact snapshot: %w", err)
 	}
-	return measured.Files, measured.ServiceSeconds, nil
+	if measured.Files == nil || measured.ServiceSeconds == nil || *measured.ServiceSeconds < 0 || math.IsNaN(*measured.ServiceSeconds) || math.IsInf(*measured.ServiceSeconds, 0) {
+		return nil, 0, fmt.Errorf("invalid remote artifact snapshot measurement")
+	}
+	return measured.Files, *measured.ServiceSeconds, nil
 }
 
 func (a *Adapter) collectArtifacts(ctx context.Context, handle domain.ActivityHandle, exitCode int) (*domain.ArtifactManifest, error) {

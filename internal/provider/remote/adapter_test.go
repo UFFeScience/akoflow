@@ -21,6 +21,15 @@ func TestMeasuredSnapshotSeparatesRemoteServiceFromTransportWall(t *testing.T) {
 	}
 }
 
+func TestMeasuredSnapshotRejectsIncompleteOrNegativeService(t *testing.T) {
+	for _, response := range []string{`{}`, `{"files":[]}`, `{"files":[],"serviceSeconds":-1}`} {
+		adapter := &Adapter{executor: &commandExecutorStub{responses: [][]byte{[]byte(response)}}}
+		if _, _, err := adapter.measuredSnapshot(context.Background(), "/workspace"); err == nil {
+			t.Fatalf("accepted invalid measurement %s", response)
+		}
+	}
+}
+
 func TestRemoteCompletionUsesNativeTimeNotInspectionDelay(t *testing.T) {
 	finished := time.Now().UTC().Add(-time.Minute)
 	executor := &commandExecutorStub{responses: [][]byte{[]byte("exited|0|" + finished.Format(time.RFC3339Nano))}}

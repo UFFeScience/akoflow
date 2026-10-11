@@ -56,6 +56,26 @@ func TestBulkServiceGroupsFollowControlTransportNotRelayHost(t *testing.T) {
 	require.Error(t, m.Validate(), "one transport cannot have conflicting slot capacities")
 }
 
+func TestPeerReceiverUsesDestinationServicePoolWithoutExtraNetworkCopy(t *testing.T) {
+	m := testModel()
+	for _, id := range []string{"cloud-a", "cloud-b"} {
+		r := m.Resources[id]
+		r.BulkServiceGroupID, r.BulkServiceSlots, r.BulkServiceSource = id+"-session", 3, "provider-config"
+		m.Resources[id] = r
+	}
+	route, err := m.Route("cloud-a", "cloud-b", 100)
+	require.NoError(t, err)
+	require.Len(t, route.Stages, 2)
+	require.Equal(t, "cloud-a-session", route.Stages[0].ServiceGroupID)
+	require.Equal(t, "cloud-b-session", route.Stages[1].ServiceGroupID)
+	require.EqualValues(t, 50, route.Stages[0].Bytes)
+	require.Zero(t, route.Stages[1].Bytes)
+	require.Zero(t, route.Stages[0].AfterSeconds)
+	require.Equal(t, 2.0, route.Stages[1].BeforeSeconds)
+	require.EqualValues(t, 50, route.NetworkBytes)
+	require.Zero(t, route.RelayNetworkBytes)
+}
+
 func TestRelayIsMandatoryInBothDirectionsAndHasTwoSerialStages(t *testing.T) {
 	m := testModel()
 	for _, pair := range [][2]string{{"cloud-a", "hpc-a"}, {"hpc-a", "cloud-a"}} {

@@ -107,6 +107,23 @@ class NativeMaterializationTest(unittest.TestCase):
         self.assertEqual(waits, [0, 0, 0, 10, 10, 10])
         self.assertAlmostEqual(result["executed"]["makespanSeconds"], 30, places=5)
 
+    def test_peer_extraction_contends_on_destination_not_source_session(self):
+        model = self.fixture()
+        model["tasks"] = [{"id": f"p{i}", "assignmentId": f"p{i}", "resourceId": "cloud-a", "flops": 0} for i in range(6)]
+        model["tasks"].append({"id": "b", "assignmentId": "b", "resourceId": "cloud-b", "flops": 1000000000,
+                               "preparationSeconds": 2, "preparationServiceGroupId": "destination", "preparationServiceSlots": 3})
+        model["dependencies"] = [{"producerId": f"p{i}", "consumerId": "b", "bytes": 100, "networkBytes": 100,
+            "strategy": "direct-runtime", "stages": [
+                {"name": "peer-upload", "sourceResourceId": "cloud-a", "targetResourceId": "cloud-b",
+                 "bytes": 100, "effectiveBytesPerSecond": 100, "serviceGroupId": "source", "serviceSlots": 6},
+                {"name": "peer-extract", "sourceResourceId": "cloud-b", "targetResourceId": "cloud-b",
+                 "bytes": 0, "beforeSeconds": 10, "serviceGroupId": "destination", "serviceSlots": 3}
+            ]} for i in range(6)]
+        result = self.run_model(model)
+        self.assertAlmostEqual(result["executed"]["makespanSeconds"], 24, places=5)
+        self.assertEqual(sum(flow["networkBytes"] for flow in result["transfers"]), 600)
+        self.assertEqual(sum(flow["route"]["serverNetworkBytes"] for flow in result["transfers"]), 0)
+
     def test_legacy_zero_byte_control_dependency_does_not_deadlock(self):
         model = self.fixture()
         model.pop("materializationModelVersion")

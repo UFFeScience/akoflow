@@ -212,6 +212,13 @@ func (m Model) Route(sourceID, targetID string, workspaceBytes int64) (Route, er
 	if strategy == "direct-runtime" {
 		result.NetworkBytes = archiveBytes
 		result.Stages = []Stage{{Name: "peer-snapshot-upload-and-extract", SourceResourceID: sourceID, TargetResourceID: targetID, Bytes: archiveBytes, EffectiveBytesPerSecond: p.UploadArchiveBytesPerSecond, BeforeSeconds: p.ProbeSeconds + bytes*p.SnapshotSecondsPerByte, AfterSeconds: bytes * p.ReceiverSecondsPerByte}}
+		if source.BulkServiceGroupID != "" || target.BulkServiceGroupID != "" {
+			// The source SSH command uploads through the private peer route;
+			// receiver verification is a separate command on the target session.
+			result.Stages[0].Name = "peer-snapshot-and-upload"
+			result.Stages[0].AfterSeconds = 0
+			result.Stages = append(result.Stages, Stage{Name: "peer-receiver-verify-and-extract", SourceResourceID: targetID, TargetResourceID: targetID, BeforeSeconds: bytes * p.ReceiverSecondsPerByte})
+		}
 	} else {
 		result.NetworkBytes = 2 * archiveBytes
 		result.RelayNetworkBytes = result.NetworkBytes

@@ -17,6 +17,8 @@ type WorkspaceProjection struct {
 	Inputs       []ProjectedFile `json:"inputs,omitempty"`
 	Outputs      []ProjectedFile `json:"outputs,omitempty"`
 	RemovedPaths []string        `json:"removedPaths,omitempty"`
+	// A measured pre-prune snapshot can be larger than the exported manifest.
+	TerminalObservationBytes *int64 `json:"terminalObservationBytes,omitempty"`
 	// Runtime packaging can put additional files into a cloud workspace while
 	// an HPC image reads those files outside the exported workspace. Inputs is
 	// the conservative search default; a complete assignment selects a variant.
@@ -30,13 +32,14 @@ type ProjectedFile struct {
 }
 
 type WorkspaceProjectionVolumes struct {
-	PreExecutionBytes  int64 `json:"preExecutionBytes"`
-	CreatedOutputBytes int64 `json:"createdOutputBytes"`
-	InputTotalBytes    int64 `json:"inputTotalBytes"`
-	InputUniqueBytes   int64 `json:"inputUniqueBytes"`
-	InputFiles         int   `json:"inputFiles"`
-	OutputBytes        int64 `json:"outputBytes"`
-	OutputFiles        int   `json:"outputFiles"`
+	PreExecutionBytes        int64 `json:"preExecutionBytes"`
+	CreatedOutputBytes       int64 `json:"createdOutputBytes"`
+	InputTotalBytes          int64 `json:"inputTotalBytes"`
+	InputUniqueBytes         int64 `json:"inputUniqueBytes"`
+	InputFiles               int   `json:"inputFiles"`
+	OutputBytes              int64 `json:"outputBytes"`
+	OutputFiles              int   `json:"outputFiles"`
+	TerminalObservationBytes int64 `json:"terminalObservationBytes"`
 }
 
 // ProjectWorkspaceDependencies preserves legacy edge semantics unless an
@@ -73,6 +76,9 @@ func ProjectWorkspaceDependenciesForResourceTypes(version WorkflowVersion, resou
 		}
 		if model.Contract != "whole-workspace-v1" || strings.TrimSpace(model.Source) == "" {
 			return version, fmt.Errorf("workspace projection %q requires whole-workspace-v1 and provenance", activity.ID)
+		}
+		if model.TerminalObservationBytes != nil && *model.TerminalObservationBytes < 0 {
+			return version, fmt.Errorf("negative terminal observation bytes for %q", activity.ID)
 		}
 		if resourceTypes != nil && len(model.InputsByResourceType) > 0 {
 			resourceType, exists := resourceTypes[activity.ID]
@@ -187,6 +193,10 @@ func ProjectWorkspaceDependenciesForResourceTypes(version WorkflowVersion, resou
 				volume.OutputBytes += file.SizeBytes
 			}
 			volume.OutputFiles = len(manifest)
+			volume.TerminalObservationBytes = volume.OutputBytes
+			if model.TerminalObservationBytes != nil {
+				volume.TerminalObservationBytes = *model.TerminalObservationBytes
+			}
 			volumes[activity.ID] = volume
 			progress = true
 		}

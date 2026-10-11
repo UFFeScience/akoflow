@@ -65,6 +65,10 @@ func TestRunnerContractIncludesFixedMergeCommandServiceOnce(t *testing.T) {
 
 func TestRunnerContractIncludesInputObservationOnce(t *testing.T) {
 	request := materializedRequestFixture()
+	projection := request.Workflow.Activities[1].Metadata["workspaceProjection"].(domainworkflow.WorkspaceProjection)
+	terminalBytes := int64(300)
+	projection.TerminalObservationBytes = &terminalBytes
+	request.Workflow.Activities[1].Metadata["workspaceProjection"] = projection
 	model := request.NetworkTopology.Metadata["workspaceMaterializationModel"].(materializationmodel.Model)
 	model.InputObservationProfiles = []materializationmodel.InputObservationProfile{{TargetClass: "micro", Source: "queue-free-fixture", Samples: 1, SecondsPerUniqueByte: .1}}
 	model.PublicationProfiles = []materializationmodel.PublicationProfile{{TargetClass: "micro", Source: "queue-free-fixture", Samples: 1, ScanSecondsPerWorkspaceByte: .02, CleanupSecondsPerInputByte: .01}}
@@ -75,7 +79,7 @@ func TestRunnerContractIncludesInputObservationOnce(t *testing.T) {
 	require.NoError(t, json.Unmarshal(payload, &input))
 	require.Zero(t, input.Tasks[0].PreparationSeconds)
 	require.InDelta(t, 16, input.Tasks[1].PreparationSeconds, 1e-9)
-	require.InDelta(t, 3, input.Tasks[1].PublicationSeconds, 1e-9)
+	require.InDelta(t, 7, input.Tasks[1].PublicationSeconds, 1e-9)
 	require.EqualValues(t, 100, input.Dependencies[0].NetworkBytes)
 }
 

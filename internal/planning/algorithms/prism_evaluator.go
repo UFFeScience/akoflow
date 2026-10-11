@@ -240,7 +240,7 @@ func evaluateCompleteCompactPRISMState(
 			if err != nil {
 				return state, err
 			}
-			tasks[ordinal].publicationSeconds, err = preparationModel.PublicationSeconds(tasks[ordinal].resource.ID, volume.OutputBytes, volume.InputUniqueBytes)
+			tasks[ordinal].publicationSeconds, err = preparationModel.PublicationSeconds(tasks[ordinal].resource.ID, volume.TerminalObservationBytes, volume.InputUniqueBytes)
 			tasks[ordinal].preparationGroup = preparationModel.Resources[tasks[ordinal].resource.ID].BulkServiceGroupID
 			if err != nil {
 				return state, err

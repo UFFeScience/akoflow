@@ -12,6 +12,7 @@ import (
 
 	"github.com/UFFeScience/akoflow/internal/domain"
 	"github.com/UFFeScience/akoflow/internal/domain/materializationmodel"
+	"github.com/UFFeScience/akoflow/internal/domain/storagebudget"
 	domainworkflow "github.com/UFFeScience/akoflow/internal/domain/workflow"
 )
 
@@ -150,8 +151,17 @@ func evaluateCompleteCompactPRISMState(
 		return state, nil
 	}
 	resourceByID := make(map[string]domain.Resource, len(search.resources))
+	storageResources := make([]domain.Resource, 0, len(search.resources))
 	for _, resource := range search.resources {
 		resourceByID[resource.resource.ID] = resource.resource
+		storageResources = append(storageResources, resource.resource)
+	}
+	storageAssignments := map[string]string{}
+	for _, assignment := range assignments {
+		storageAssignments[assignment.ActivityID] = assignment.ResourceID
+	}
+	if _, _, err := storagebudget.Check(search.request.Workflow, storageResources, storageAssignments); err != nil {
+		return state, fmt.Errorf("evaluate PRISM storage budget: %w", err)
 	}
 	tasks := make([]prismEvaluationTask, len(search.activities))
 	assignmentOrdinal := make(map[string]int, len(assignments))

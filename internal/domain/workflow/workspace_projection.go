@@ -30,11 +30,13 @@ type ProjectedFile struct {
 }
 
 type WorkspaceProjectionVolumes struct {
-	InputTotalBytes  int64 `json:"inputTotalBytes"`
-	InputUniqueBytes int64 `json:"inputUniqueBytes"`
-	InputFiles       int   `json:"inputFiles"`
-	OutputBytes      int64 `json:"outputBytes"`
-	OutputFiles      int   `json:"outputFiles"`
+	PreExecutionBytes  int64 `json:"preExecutionBytes"`
+	CreatedOutputBytes int64 `json:"createdOutputBytes"`
+	InputTotalBytes    int64 `json:"inputTotalBytes"`
+	InputUniqueBytes   int64 `json:"inputUniqueBytes"`
+	InputFiles         int   `json:"inputFiles"`
+	OutputBytes        int64 `json:"outputBytes"`
+	OutputFiles        int   `json:"outputFiles"`
 }
 
 // ProjectWorkspaceDependencies preserves legacy edge semantics unless an
@@ -151,6 +153,12 @@ func ProjectWorkspaceDependenciesForResourceTypes(version WorkflowVersion, resou
 					return version, err
 				}
 			}
+			for _, file := range manifest {
+				if file.SizeBytes > math.MaxInt64-volume.PreExecutionBytes {
+					return version, fmt.Errorf("workspace preparation size overflow for %q", activity.ID)
+				}
+				volume.PreExecutionBytes += file.SizeBytes
+			}
 			for _, removed := range model.RemovedPaths {
 				if _, exists := manifest[removed]; !exists {
 					return version, fmt.Errorf("removed path %q absent in %q", removed, activity.ID)
@@ -159,6 +167,10 @@ func ProjectWorkspaceDependenciesForResourceTypes(version WorkflowVersion, resou
 			}
 			outputPaths := map[string]bool{}
 			for _, file := range model.Outputs {
+				if file.SizeBytes > math.MaxInt64-volume.CreatedOutputBytes || file.SizeBytes < 0 {
+					return version, fmt.Errorf("workspace created output size overflow for %q", activity.ID)
+				}
+				volume.CreatedOutputBytes += file.SizeBytes
 				if outputPaths[file.Path] {
 					return version, fmt.Errorf("duplicate projected output %q in %q", file.Path, activity.ID)
 				}

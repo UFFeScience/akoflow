@@ -33,6 +33,7 @@ import (
 	domainevents "github.com/UFFeScience/akoflow/internal/domain/events"
 	domaininstance "github.com/UFFeScience/akoflow/internal/domain/instance"
 	domainqueue "github.com/UFFeScience/akoflow/internal/domain/queue"
+	"github.com/UFFeScience/akoflow/internal/domain/storagebudget"
 	cloudcredential "github.com/UFFeScience/akoflow/internal/infrastructure/credentials/cloud"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/credentials/sshkey"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/credentials/token"
@@ -2645,6 +2646,14 @@ func (h *Handler) GetPlan(w http.ResponseWriter, r *http.Request) {
 func (h *Handler) CreateExecution(w http.ResponseWriter, r *http.Request) {
 	var request ports.ExecutionRequest
 	if !decode(w, r, &request) {
+		return
+	}
+	storageAssignments := map[string]string{}
+	for _, assignment := range request.Plan.Assignments {
+		storageAssignments[assignment.ActivityID] = assignment.ResourceID
+	}
+	if _, _, err := storagebudget.Check(request.Workflow, request.Resources, storageAssignments); err != nil {
+		writeError(w, http.StatusUnprocessableEntity, err)
 		return
 	}
 	if err := h.resolveWorkspaceHomes(r.Context(), &request); err != nil {

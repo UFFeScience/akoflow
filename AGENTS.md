@@ -1,5 +1,11 @@
 # AkôFlow repository guidance
 
+## Auxiliary tooling language
+
+- Use Go for repository tooling, scientific analysis, calibration, data exports, and their tests.
+- Do not introduce new Ruby scripts or require Ruby to run these tools. Maintain or migrate existing functionality in Go while preserving scientific contracts, provenance, and safety checks.
+- This is the user's persistent repository preference; do not replace Go tooling with Ruby in future work.
+
 ## Contribution workflow
 
 - Every repository change follows `ISSUE -> BRANCH -> PR`.

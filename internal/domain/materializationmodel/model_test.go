@@ -1,10 +1,27 @@
 package materializationmodel
 
 import (
+	"encoding/json"
 	"github.com/stretchr/testify/require"
 	"math"
+	"os"
 	"testing"
 )
+
+func TestFrozenMontageMeasuredModelDecodesAndRejectsUnobservedPair(t *testing.T) {
+	payload, err := os.ReadFile("../../../experiments/montage-micro-hpc-e2/materialization-model-v2.json")
+	require.NoError(t, err)
+	var model Model
+	require.NoError(t, json.Unmarshal(payload, &model))
+	require.NoError(t, model.Validate())
+	route, err := model.Route("plafrim-execution-ssh-node-diablo03", "montage-gcp-fog-e2-micro-01", 200_000_000)
+	require.NoError(t, err)
+	require.Len(t, route.Stages, 2)
+	require.Equal(t, "montage-relay-controller", route.Stages[0].TargetResourceID)
+	require.Equal(t, route.NetworkBytes, route.RelayNetworkBytes)
+	_, err = model.Route("plafrim-execution-ssh-node-diablo03", "montage-gcp-e2-medium-1", 200_000_000)
+	require.ErrorContains(t, err, "no evidenced")
+}
 
 func testModel() Model {
 	return Model{SchemaVersion: 1, Source: "completed-baseline", RelayResourceID: "relay", Resources: map[string]Resource{

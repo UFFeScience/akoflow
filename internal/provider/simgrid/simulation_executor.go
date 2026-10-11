@@ -294,11 +294,14 @@ func allCompleted(ids []string, completed map[string]domain.TaskExecution) bool 
 }
 
 func resolveRuntime(activity domain.Activity, assignment domain.PlanAssignment, resource domain.Resource, profiles map[string]domain.ActivityResourceProfile) float64 {
+	if profile, ok := profiles[activity.ActivityTypeID+"\x00"+resource.ID]; ok && profile.ModelVersion == "reference-work-v1" {
+		return profile.RuntimeFor(activity)
+	}
 	if base, ok := numberMetadata(activity.Metadata, "baseRuntimeSeconds"); ok && resource.ComputeSpeedup > 0 {
 		return base / resource.ComputeSpeedup
 	}
 	if profile, ok := profiles[activity.ActivityTypeID+"\x00"+resource.ID]; ok {
-		return profile.RuntimeSeconds
+		return profile.RuntimeFor(activity)
 	}
 	// Interference-aware planning stores a slowed predicted duration. Execution
 	// must start from the resource-specific clean runtime and let the execution

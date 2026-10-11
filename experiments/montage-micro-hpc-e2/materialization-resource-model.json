@@ -1,0 +1,17 @@
+{
+  "montage-relay-controller": {"class": "relay", "domain": "relay"},
+  "montage-gcp-e2-medium-1": {"class": "e2-medium", "domain": "cloud"},
+  "montage-gcp-e2-medium-2": {"class": "e2-medium", "domain": "cloud"},
+  "montage-gcp-fog-e2-micro-01": {"class": "e2-micro", "domain": "cloud"},
+  "montage-gcp-fog-e2-micro-02": {"class": "e2-micro", "domain": "cloud"},
+  "montage-gcp-fog-e2-micro-03": {"class": "e2-micro", "domain": "cloud"},
+  "montage-gcp-fog-e2-micro-04": {"class": "e2-micro", "domain": "cloud"},
+  "montage-gcp-fog-e2-micro-05": {"class": "e2-micro", "domain": "cloud"},
+  "montage-gcp-fog-e2-micro-06": {"class": "e2-micro", "domain": "cloud"},
+  "montage-gcp-fog-e2-micro-07": {"class": "e2-micro", "domain": "cloud"},
+  "montage-gcp-fog-e2-micro-08": {"class": "e2-micro", "domain": "cloud"},
+  "montage-gcp-fog-e2-micro-09": {"class": "e2-micro", "domain": "cloud"},
+  "montage-gcp-fog-e2-micro-10": {"class": "e2-micro", "domain": "cloud"},
+  "plafrim-execution-ssh-node-bora001": {"class": "hpc", "domain": "hpc"},
+  "plafrim-execution-ssh-node-diablo03": {"class": "hpc", "domain": "hpc"}
+}

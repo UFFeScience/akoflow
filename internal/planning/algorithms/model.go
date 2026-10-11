@@ -139,7 +139,7 @@ func dataBytes(workflow domain.WorkflowVersion) map[string]map[string]int64 {
 func duration(activity domain.Activity, resource domain.Resource, profiles []domain.ActivityResourceProfile) float64 {
 	for _, profile := range profiles {
 		if profile.ActivityTypeID == activity.ActivityTypeID && profile.ResourceID == resource.ID && profile.RuntimeSeconds > 0 {
-			return profile.RuntimeSeconds
+			return profile.RuntimeFor(activity)
 		}
 	}
 	base := 1.0

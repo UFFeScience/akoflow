@@ -1,0 +1,46 @@
+{
+  "runId": "montage-docker-image-real-20261010-v2",
+  "status": "completed",
+  "activitiesCompleted": 58,
+  "failedActivities": 0,
+  "activityAttempts": 1,
+  "successfulRuntimeHandles": 58,
+  "dockerImageBootVerifiedInstances": 12,
+  "topology": {"e2Micro": 10, "e2Medium": 2, "hpcAssignments": 8},
+  "audit": {
+    "missingDependencyRoutes": 0,
+    "transferBarrierViolations": 0,
+    "unreleasedConsumerLeases": 0,
+    "overlappingActivitiesOnMicro": 0,
+    "cloudHpcRoutesWithoutRelay": 0
+  },
+  "makespanSeconds": {"plan": 3617.9382322026677, "simgrid": 3617.4981106317523, "realReported": 6924.248950242996, "realRunTimestampWall": 6949.0},
+  "estimatedCostsUSD": {
+    "planRetentionWindows": 0.17934833120896376,
+    "simgridTaskWindows": 0.12258985813176235,
+    "realReportedTaskWindows": 0.3014926393284796,
+    "realComputeAndBootDiskLifecycle": 0.35320463779140077
+  },
+  "cleanup": {
+    "runInstancesDestroyed": 12,
+    "apiNonDestroyedInstances": 0,
+    "apiActiveCloudOperations": 0,
+    "gcpManagedInstancesRemaining": 0,
+    "gcpManagedBootDisksRemaining": 0,
+    "runFirewallRulesRemaining": 0,
+    "unrelatedHistoricalFirewallRulesObserved": 3,
+    "hpcUserSqueueJobs": 0,
+    "hpcDiagnosticConnectionRestoredExactly": true,
+    "reusableDockerImageRetainedIntentionally": true
+  },
+  "product": {"filename": "docker-image-real-v2-mosaic-color.png", "width": 1800, "height": 1800, "bytes": 4920451, "sha256": "63fa4d8447274bdb8a44f6be8cf5a23c0a2f0baa479bd2ae1ec3b541df4e19f2"},
+  "limitations": [
+    "Costs use distinct lifecycle/window bases and must not be compared as identical billing scopes.",
+    "Cloud lifecycle estimate excludes network egress, public IPv4, reusable image storage, discounts and tax; it is not a provider invoice.",
+    "No PlaFRIM monetary tariff is calibrated.",
+    "Micro speedup 0.25 is approximate; e2-medium interference is extrapolated to micro/HPC.",
+    "Whole-workspace real traffic is larger than planned dependency edge volumes; overlapping work totals are not makespan.",
+    "Zero reported real interference does not establish absence of physical contention.",
+    "Historical firewall rules outside the run were observed but not modified."
+  ]
+}

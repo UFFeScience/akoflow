@@ -27,6 +27,13 @@ module MontageMaterializationFreeze
       phases = rows.to_h { |row| [row.fetch('phase'), row] }
       raise 'Unsupported measured strategy' unless %w[gateway direct-runtime].include?(strategy)
       upload = phases.fetch(strategy == 'gateway' ? 'archive-upload' : 'peer-private-upload')
+      target_pool = resources.values.any? { |r| r.fetch('class') == to && !r.fetch('bulkServiceGroupId', '').empty? }
+      if target_pool
+        receiver = phases.fetch(strategy == 'gateway' ? 'receiver-verify-and-extract' : 'peer-receiver-verify-and-extract')
+        unless receiver.fetch('secondsBases', []) == ['phase-command-execution-excludes-channel-queue']
+          raise "Receiver #{from}->#{to} requires queue-free command service before adding a bulk pool"
+        end
+      end
       profile = { 'strategy'=>strategy, 'sourceClass'=>from, 'targetClass'=>to, 'source'=>source,
         'samples'=>upload.fetch('seconds').fetch('samples'),
         'archiveToWorkspaceRatio'=>median(upload, 'archiveToWorkspaceRatio', positive: true),

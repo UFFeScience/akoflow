@@ -60,9 +60,27 @@ class MontageMaterializationFreezeTest < Minitest::Test
       pack['secondsBases'] = ['source-command-execution-excludes-channel-queue']
       pack['sourcePreflightServiceSeconds'] = {'samples'=>2, 'median'=>0.4}
     end
+    calibration.fetch('materializationPhaseObservations').select { |r| r.fetch('targetClass') == 'hpc' && r.fetch('phase').end_with?('receiver-verify-and-extract') }.each do |receiver|
+      receiver['secondsBases'] = ['phase-command-execution-excludes-channel-queue']
+    end
     frozen = MontageMaterializationFreeze.build(calibration, 'digest', pooled, 'relay')
     assert_equal 3, frozen.fetch('resources').fetch('hpc').fetch('bulkServiceSlots')
     packs.first['secondsBases'] << 'combined-phase-wall-includes-unseparated-service-queue'
     assert_raises(RuntimeError) { MontageMaterializationFreeze.build(calibration, 'digest', pooled, 'relay') }
+  end
+
+  def test_receiver_pool_requires_queue_free_receiver_command_measurements
+    calibration = observations
+    pooled = resources
+    pooled['micro'].merge!('bulkServiceGroupId'=>'cloud-transport', 'bulkServiceSlots'=>3, 'bulkServiceSource'=>'fixture')
+    assert_raises(RuntimeError) { MontageMaterializationFreeze.build(calibration, 'digest', pooled, 'relay') }
+    receivers = calibration.fetch('materializationPhaseObservations').select { |r| r.fetch('targetClass') == 'e2-micro' && r.fetch('phase').end_with?('receiver-verify-and-extract') }
+    receivers.each { |receiver| receiver['secondsBases'] = ['phase-command-execution-excludes-channel-queue'] }
+    calibration.fetch('materializationPhaseObservations').select { |r| r.fetch('sourceClass') == 'e2-micro' && r.fetch('phase') == 'pack-and-receive' }.each do |pack|
+      pack['secondsBases'] = ['source-command-execution-excludes-channel-queue']
+      pack['sourcePreflightServiceSeconds'] = {'samples'=>2, 'median'=>0.4}
+    end
+    frozen = MontageMaterializationFreeze.build(calibration, 'digest', pooled, 'relay')
+    assert_equal 3, frozen.fetch('resources').fetch('micro').fetch('bulkServiceSlots')
   end
 end

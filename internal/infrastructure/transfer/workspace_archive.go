@@ -162,6 +162,11 @@ func relayWorkspaceArchive(ctx context.Context, source, destination domain.Trans
 		stats, uploadErr = syncDirectory(ctx, local, spool, false)
 		return uploadErr
 	})
+	if stats.executionSeconds > 0 {
+		phase := &run.Route.Phases[len(run.Route.Phases)-1]
+		phase.SSHChannelWaitSeconds = &stats.channelWaitSeconds
+		phase.ExecutionSeconds = &stats.executionSeconds
+	}
 	recordWorkspaceRsyncStats(run, stats, true)
 	if err != nil {
 		return err

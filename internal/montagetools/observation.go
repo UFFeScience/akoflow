@@ -31,7 +31,7 @@ func observationSensitivity(request, real Object, evidenceDigest string) Object 
 	network := obj(get(request, "NetworkTopology"))
 	metadata := obj(get(network, "metadata"))
 	model := obj(get(metadata, "workspaceMaterializationModel"))
-	model["inputObservationProfiles"] = []any{Object{"targetClass": "micro", "source": "exploratory-observed-wall:" + evidenceDigest, "samples": samples, "secondsPerUniqueByte": seconds / bytes}}
+	model["inputObservationProfiles"] = []any{Object{"targetClass": "e2-micro", "source": "exploratory-observed-wall:" + evidenceDigest, "samples": samples, "secondsPerUniqueByte": seconds / bytes}}
 	metadata["inputObservationSensitivity"] = Object{"referenceSHA256": evidenceDigest, "role": "exploratory-wall-time-sensitivity-not-service-calibration", "samples": samples, "limitations": list("Includes unknown SSH wait and command overhead; not an accepted queue-free calibration.", "Recovered reference is not independent validation.", "Terminal observation and pruning are not represented by this input-only sensitivity.")}
 	return request
 }

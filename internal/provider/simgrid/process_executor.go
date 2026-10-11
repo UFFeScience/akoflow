@@ -12,6 +12,7 @@ import (
 
 	"github.com/UFFeScience/akoflow/internal/application/ports"
 	"github.com/UFFeScience/akoflow/internal/domain"
+	"github.com/UFFeScience/akoflow/internal/domain/materializationmodel"
 	"github.com/UFFeScience/akoflow/internal/provider"
 )
 
@@ -62,6 +63,21 @@ func (e *ProcessExecutor) Execute(ctx context.Context, request ports.ExecutionRe
 		return domain.ExecutionTrace{}, err
 	}
 	defer e.release()
+	preparationModel, err := materializationmodel.Decode(request.NetworkTopology.Metadata)
+	if err != nil {
+		return domain.ExecutionTrace{}, err
+	}
+	if preparationModel != nil {
+		probeCtx, cancel := context.WithTimeout(ctx, 10*time.Second)
+		payload, probeErr := e.commands.Run(probeCtx, e.config.BinaryPath, []string{"--capabilities"}, nil)
+		cancel()
+		var capabilities struct {
+			Version int `json:"workspaceMaterializationModelVersion"`
+		}
+		if probeErr != nil || json.Unmarshal(payload, &capabilities) != nil || capabilities.Version != preparationModel.SchemaVersion {
+			return domain.ExecutionTrace{}, fmt.Errorf("SimGrid runner does not confirm workspace materialization model version %d", preparationModel.SchemaVersion)
+		}
+	}
 
 	bundle, err := e.createBundle(request)
 	if err != nil {

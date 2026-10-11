@@ -6,9 +6,48 @@ import (
 
 	"github.com/UFFeScience/akoflow/internal/application/ports"
 	"github.com/UFFeScience/akoflow/internal/domain"
+	"github.com/UFFeScience/akoflow/internal/domain/materializationmodel"
 	domainworkflow "github.com/UFFeScience/akoflow/internal/domain/workflow"
 	"github.com/stretchr/testify/require"
 )
+
+func materializedRequestFixture() Request {
+	request := processRequestFixture()
+	request.Workflow.Activities[0].Metadata = map[string]any{"workspaceProjection": domainworkflow.WorkspaceProjection{Contract: "whole-workspace-v1", Source: "baseline", Outputs: []domainworkflow.ProjectedFile{{Path: "data", SizeBytes: 100, ContentID: "output"}}}}
+	request.Workflow.Activities[1].Metadata = map[string]any{"workspaceProjection": domainworkflow.WorkspaceProjection{Contract: "whole-workspace-v1", Source: "baseline"}}
+	request.Resources = append(request.Resources, domain.Resource{ID: "relay", ComputeSpeedup: 1})
+	request.NetworkTopology.Links = []domain.NetworkLink{
+		{SourceResourceID: "edge", TargetResourceID: "relay", BandwidthBitsPerSecond: 8000, PricePerByte: .01},
+		{SourceResourceID: "relay", TargetResourceID: "cloud", BandwidthBitsPerSecond: 8000, PricePerByte: .02},
+	}
+	request.NetworkTopology.Metadata = map[string]any{"workspaceMaterializationModel": materializationmodel.Model{
+		SchemaVersion: 1, Source: "baseline", RelayResourceID: "relay", Resources: map[string]materializationmodel.Resource{"edge": {Class: "hpc", Domain: "hpc"}, "cloud": {Class: "micro", Domain: "cloud"}, "relay": {Class: "relay", Domain: "relay"}},
+		Profiles:      []materializationmodel.Profile{{Strategy: "gateway", SourceClass: "hpc", TargetClass: "micro", Source: "baseline", Samples: 2, ArchiveToWorkspaceRatio: .5, IngressArchiveBytesPerSecond: 50, UploadArchiveBytesPerSecond: 25, IngressIncludesSourcePreparation: true}},
+		MergeProfiles: []materializationmodel.MergeProfile{{TargetClass: "micro", Source: "baseline", Samples: 2, CheckSecondsPerInputByte: .01, CopySecondsPerUniqueByte: .02, VerifySecondsPerUniqueByte: .03}},
+	}}
+	return request
+}
+
+func TestRunnerContractMaterializationStagesAndConsumerMerge(t *testing.T) {
+	request := materializedRequestFixture()
+	payload, err := buildRunnerInput(request, 1e9)
+	require.NoError(t, err)
+	var input runnerInput
+	require.NoError(t, json.Unmarshal(payload, &input))
+	require.Equal(t, 1, input.MaterializationModelVersion)
+	require.Len(t, input.Dependencies, 1)
+	dependency := input.Dependencies[0]
+	require.Equal(t, "gateway", dependency.Strategy)
+	require.Len(t, dependency.Stages, 2)
+	require.EqualValues(t, 50, dependency.Stages[0].Bytes)
+	require.EqualValues(t, 100, dependency.NetworkBytes)
+	require.EqualValues(t, 100, dependency.RelayNetworkBytes)
+	require.InDelta(t, 1.5, float64(dependency.Bytes)*dependency.PricePerByte, 1e-9)
+	require.InDelta(t, 6, input.Tasks[1].PreparationSeconds, 1e-9)
+	request.Resources = request.Resources[:2]
+	_, err = buildRunnerInput(request, 1e9)
+	require.ErrorContains(t, err, "absent from platform")
+}
 
 func TestRunnerInputUsesWholeProducerWorkspaceNotDeclaredEdge(t *testing.T) {
 	request := ports.ExecutionRequest{

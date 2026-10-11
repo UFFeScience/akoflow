@@ -56,6 +56,16 @@ func TestProcessExecutorBuildsBundleWaitsAndReadsTrace(t *testing.T) {
 	require.Contains(t, string(platformPayload), `<route src="cloud" dst="edge" symmetrical="NO">`)
 }
 
+func TestProcessExecutorRejectsUnconfirmedNativeMaterializationCapability(t *testing.T) {
+	request := materializedRequestFixture()
+	command := &runnerCommandFake{}
+	executor, err := NewProcessExecutor(command, ProcessConfig{BinaryPath: "legacy-runner", Workspace: t.TempDir()})
+	require.NoError(t, err)
+	_, err = executor.Execute(context.Background(), request)
+	require.ErrorContains(t, err, "does not confirm workspace materialization model")
+	require.Equal(t, []string{"--capabilities"}, command.args)
+}
+
 func TestPlatformBuildsMultiHopRoutes(t *testing.T) {
 	resources := []domain.Resource{
 		{ID: "edge", ComputeSpeedup: 1}, {ID: "gateway", ComputeSpeedup: 2}, {ID: "cloud", ComputeSpeedup: 4},

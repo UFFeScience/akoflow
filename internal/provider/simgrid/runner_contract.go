@@ -43,7 +43,7 @@ type runnerLaneOrder struct {
 }
 
 func buildRunnerInput(request ports.ExecutionRequest, referenceFLOPS float64) ([]byte, error) {
-	projected, err := domainworkflow.ProjectWorkspaceDependencies(request.Workflow)
+	projected, err := domainworkflow.ProjectWorkspaceDependenciesForResourceTypes(request.Workflow, assignedResourceTypes(request))
 	if err != nil {
 		return nil, fmt.Errorf("project workspace dependencies: %w", err)
 	}

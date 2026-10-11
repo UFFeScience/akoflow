@@ -19,7 +19,7 @@ func NewSimulationExecutor() *SimulationExecutor {
 }
 
 func (e *SimulationExecutor) Execute(ctx context.Context, request Request) (domain.ExecutionTrace, error) {
-	projected, err := domainworkflow.ProjectWorkspaceDependencies(request.Workflow)
+	projected, err := domainworkflow.ProjectWorkspaceDependenciesForResourceTypes(request.Workflow, assignedResourceTypes(request))
 	if err != nil {
 		return domain.ExecutionTrace{}, fmt.Errorf("project workspace dependencies: %w", err)
 	}
@@ -42,6 +42,18 @@ func (e *SimulationExecutor) Execute(ctx context.Context, request Request) (doma
 		return domain.ExecutionTrace{}, err
 	}
 	return buildTrace(request, completed, transfers), nil
+}
+
+func assignedResourceTypes(request Request) map[string]string {
+	resources := map[string]string{}
+	for _, resource := range request.Resources {
+		resources[resource.ID] = string(resource.Type)
+	}
+	assigned := map[string]string{}
+	for _, assignment := range request.Plan.Assignments {
+		assigned[assignment.ActivityID] = resources[assignment.ResourceID]
+	}
+	return assigned
 }
 
 type indexedRequest struct {

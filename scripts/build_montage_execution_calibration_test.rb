@@ -31,4 +31,15 @@ class MontageExecutionCalibrationTest < Minitest::Test
     assert_nil MontageExecutionCalibration.summary([nil])
     assert_raises(RuntimeError) { MontageExecutionCalibration.summary([Float::INFINITY]) }
   end
+
+  def test_manifest_volume_is_distinct_from_output_logical_bytes
+    data = baseline
+    projection = JSON.parse(File.read(File.expand_path('../experiments/montage-micro-hpc-e2/workspace-projection-v2.json', __dir__)))
+    result = MontageExecutionCalibration.build(data, projection.fetch('auditedEvidenceSHA256'), projection)
+    assert_equal 'producer-final-snapshot-manifest', result['workspaceVolumeBasis']
+    assert result['materializationPhaseObservations'].all? { |phase| phase['workspaceBytes'] }
+    assert result['materializationPhaseObservations'].any? { |phase| phase['workspaceBytes']['median'] > phase['logicalBytes']['median'] }
+    projection['baselineRunId'] = 'another-run'
+    assert_raises(RuntimeError) { MontageExecutionCalibration.build(data, projection.fetch('auditedEvidenceSHA256'), projection) }
+  end
 end

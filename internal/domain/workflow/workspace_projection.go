@@ -17,6 +17,10 @@ type WorkspaceProjection struct {
 	Inputs       []ProjectedFile `json:"inputs,omitempty"`
 	Outputs      []ProjectedFile `json:"outputs,omitempty"`
 	RemovedPaths []string        `json:"removedPaths,omitempty"`
+	// Runtime packaging can put additional files into a cloud workspace while
+	// an HPC image reads those files outside the exported workspace. Inputs is
+	// the conservative search default; a complete assignment selects a variant.
+	InputsByResourceType map[string][]ProjectedFile `json:"inputsByResourceType,omitempty"`
 }
 
 type ProjectedFile struct {
@@ -30,6 +34,10 @@ type ProjectedFile struct {
 // missing producer manifest must not silently turn into zero transfer bytes.
 // This pure transformation is shared by planning and both simulation adapters.
 func ProjectWorkspaceDependencies(version WorkflowVersion) (WorkflowVersion, error) {
+	return ProjectWorkspaceDependenciesForResourceTypes(version, nil)
+}
+
+func ProjectWorkspaceDependenciesForResourceTypes(version WorkflowVersion, resourceTypes map[string]string) (WorkflowVersion, error) {
 	enabled := false
 	for _, activity := range version.Activities {
 		if activity.Metadata["workspaceProjection"] != nil {
@@ -55,6 +63,17 @@ func ProjectWorkspaceDependencies(version WorkflowVersion) (WorkflowVersion, err
 		}
 		if model.Contract != "whole-workspace-v1" || strings.TrimSpace(model.Source) == "" {
 			return version, fmt.Errorf("workspace projection %q requires whole-workspace-v1 and provenance", activity.ID)
+		}
+		if resourceTypes != nil && len(model.InputsByResourceType) > 0 {
+			resourceType, exists := resourceTypes[activity.ID]
+			if !exists {
+				return version, fmt.Errorf("workspace projection resource type missing for %q", activity.ID)
+			}
+			inputs, exists := model.InputsByResourceType[resourceType]
+			if !exists {
+				return version, fmt.Errorf("workspace projection has no %q runtime inputs for %q", resourceType, activity.ID)
+			}
+			model.Inputs = inputs
 		}
 		if _, exists := models[activity.ID]; exists {
 			return version, fmt.Errorf("duplicate activity %q", activity.ID)

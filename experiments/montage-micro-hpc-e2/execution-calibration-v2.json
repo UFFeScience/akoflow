@@ -3,6 +3,7 @@
   "baselineRunId": "montage-docker-image-real-20261010-v2",
   "baselineSHA256": "ce8343153d9016ce2149fa5e70b3624ca148c4747e6dd9887dae1fa2b6ab46c6",
   "synchronizationContract": "whole-workspace-v1",
+  "workspaceVolumeBasis": "producer-final-snapshot-manifest",
   "computeObservations": [
     {
       "activityFamily": "madd",
@@ -14,6 +15,12 @@
         "maximum": 8.437352895736694
       },
       "taskRuntimeFallbackSamples": 0,
+      "wallSecondsPerReferenceSecond": {
+        "samples": 3,
+        "median": 0.9374836550818549,
+        "minimum": 0.10642316606309679,
+        "maximum": 4.108689546585083
+      },
       "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
     },
     {
@@ -26,6 +33,12 @@
         "maximum": 0.6267998218536377
       },
       "taskRuntimeFallbackSamples": 0,
+      "wallSecondsPerReferenceSecond": {
+        "samples": 2,
+        "median": 0.32499454332434613,
+        "minimum": 0.02318926479505456,
+        "maximum": 0.6267998218536377
+      },
       "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
     },
     {
@@ -38,6 +51,12 @@
         "maximum": 23.867364168167114
       },
       "taskRuntimeFallbackSamples": 0,
+      "wallSecondsPerReferenceSecond": {
+        "samples": 8,
+        "median": 0.13403182718488904,
+        "minimum": 0.09645940860112508,
+        "maximum": 13.19267725944519
+      },
       "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
     },
     {
@@ -50,6 +69,12 @@
         "maximum": 3.9223642349243164
       },
       "taskRuntimeFallbackSamples": 2,
+      "wallSecondsPerReferenceSecond": {
+        "samples": 2,
+        "median": 2.042281486093998,
+        "minimum": 0.1621987372636795,
+        "maximum": 3.9223642349243164
+      },
       "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
     },
     {
@@ -62,6 +87,12 @@
         "maximum": 0.6214001178741455
       },
       "taskRuntimeFallbackSamples": 0,
+      "wallSecondsPerReferenceSecond": {
+        "samples": 2,
+        "median": 0.07053212135557144,
+        "minimum": 0.05229279730055067,
+        "maximum": 0.08877144541059222
+      },
       "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
     },
     {
@@ -74,6 +105,12 @@
         "maximum": 0.5198588371276855
       },
       "taskRuntimeFallbackSamples": 0,
+      "wallSecondsPerReferenceSecond": {
+        "samples": 1,
+        "median": 0.025992941856384278,
+        "minimum": 0.025992941856384278,
+        "maximum": 0.025992941856384278
+      },
       "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
     },
     {
@@ -86,6 +123,12 @@
         "maximum": 2.8328795433044434
       },
       "taskRuntimeFallbackSamples": 1,
+      "wallSecondsPerReferenceSecond": {
+        "samples": 1,
+        "median": 0.16663997313555548,
+        "minimum": 0.16663997313555548,
+        "maximum": 0.16663997313555548
+      },
       "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
     },
     {
@@ -98,6 +141,12 @@
         "maximum": 4.70743465423584
       },
       "taskRuntimeFallbackSamples": 0,
+      "wallSecondsPerReferenceSecond": {
+        "samples": 2,
+        "median": 0.5174553818172878,
+        "minimum": 0.5118624687194824,
+        "maximum": 0.5230482949150933
+      },
       "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
     },
     {
@@ -110,6 +159,12 @@
         "maximum": 52.214394092559814
       },
       "taskRuntimeFallbackSamples": 0,
+      "wallSecondsPerReferenceSecond": {
+        "samples": 14,
+        "median": 0.5160782317320506,
+        "minimum": 0.02842045823733012,
+        "maximum": 2.6107197046279906
+      },
       "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
     },
     {
@@ -122,6 +177,12 @@
         "maximum": 2.9261977672576904
       },
       "taskRuntimeFallbackSamples": 3,
+      "wallSecondsPerReferenceSecond": {
+        "samples": 3,
+        "median": 0.15401040880303635,
+        "minimum": 0.08495262265205383,
+        "maximum": 0.20197521556507458
+      },
       "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
     },
     {
@@ -134,6 +195,12 @@
         "maximum": 4.188046932220459
       },
       "taskRuntimeFallbackSamples": 0,
+      "wallSecondsPerReferenceSecond": {
+        "samples": 1,
+        "median": 0.3221574563246507,
+        "minimum": 0.3221574563246507,
+        "maximum": 0.3221574563246507
+      },
       "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
     },
     {
@@ -146,6 +213,12 @@
         "maximum": 1.9225947856903076
       },
       "taskRuntimeFallbackSamples": 0,
+      "wallSecondsPerReferenceSecond": {
+        "samples": 3,
+        "median": 0.06577382304451683,
+        "minimum": 0.01489914788140191,
+        "maximum": 0.0769037914276123
+      },
       "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
     },
     {
@@ -158,6 +231,12 @@
         "maximum": 1009.9635989665985
       },
       "taskRuntimeFallbackSamples": 0,
+      "wallSecondsPerReferenceSecond": {
+        "samples": 4,
+        "median": 0.5422618222257024,
+        "minimum": 0.482687460737569,
+        "maximum": 0.6058569879823626
+      },
       "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
     },
     {
@@ -170,6 +249,12 @@
         "maximum": 3373.3067605495453
       },
       "taskRuntimeFallbackSamples": 0,
+      "wallSecondsPerReferenceSecond": {
+        "samples": 6,
+        "median": 4.142489493875232,
+        "minimum": 2.4189968622063263,
+        "maximum": 7.97978781444439
+      },
       "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
     },
     {
@@ -182,6 +267,12 @@
         "maximum": 434.79141211509705
       },
       "taskRuntimeFallbackSamples": 2,
+      "wallSecondsPerReferenceSecond": {
+        "samples": 2,
+        "median": 0.280406867515572,
+        "minimum": 0.2784816492421198,
+        "maximum": 0.2823320857890241
+      },
       "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
     },
     {
@@ -194,6 +285,12 @@
         "maximum": 2.885821580886841
       },
       "taskRuntimeFallbackSamples": 0,
+      "wallSecondsPerReferenceSecond": {
+        "samples": 2,
+        "median": 0.24281440161857284,
+        "minimum": 0.07336857739616842,
+        "maximum": 0.41226022584097727
+      },
       "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
     },
     {
@@ -206,6 +303,12 @@
         "maximum": 26.41062831878662
       },
       "taskRuntimeFallbackSamples": 0,
+      "wallSecondsPerReferenceSecond": {
+        "samples": 2,
+        "median": 13.308445498347282,
+        "minimum": 0.20626267790794373,
+        "maximum": 26.41062831878662
+      },
       "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
     }
   ],
@@ -232,6 +335,24 @@
         "median": 143339660.0,
         "minimum": 142917128.0,
         "maximum": 426325775.0
+      },
+      "workspaceBytes": {
+        "samples": 20,
+        "median": 196938502.0,
+        "minimum": 195579142.0,
+        "maximum": 740939386.0
+      },
+      "archiveToWorkspaceRatio": {
+        "samples": 20,
+        "median": 0.7256941966584066,
+        "minimum": 0.5719966097845853,
+        "maximum": 0.7333948473912417
+      },
+      "effectiveWorkspaceBytesPerSecond": {
+        "samples": 20,
+        "median": 83676394.3242459,
+        "minimum": 35750036.62047911,
+        "maximum": 311227613.81359726
       },
       "files": {
         "samples": 18,
@@ -270,6 +391,24 @@
         "minimum": 142917128.0,
         "maximum": 426325775.0
       },
+      "workspaceBytes": {
+        "samples": 20,
+        "median": 196938502.0,
+        "minimum": 195579142.0,
+        "maximum": 740939386.0
+      },
+      "archiveToWorkspaceRatio": {
+        "samples": 20,
+        "median": 0.7256941966584066,
+        "minimum": 0.5719966097845853,
+        "maximum": 0.7333948473912417
+      },
+      "effectiveWorkspaceBytesPerSecond": {
+        "samples": 20,
+        "median": 30510114.773531586,
+        "minimum": 18470614.9184961,
+        "maximum": 17811951886553.56
+      },
       "files": {
         "samples": 18,
         "median": 47.0,
@@ -306,6 +445,24 @@
         "median": 143339660.0,
         "minimum": 142917128.0,
         "maximum": 426325775.0
+      },
+      "workspaceBytes": {
+        "samples": 20,
+        "median": 196938502.0,
+        "minimum": 195579142.0,
+        "maximum": 740939386.0
+      },
+      "archiveToWorkspaceRatio": {
+        "samples": 20,
+        "median": 0.7256941966584066,
+        "minimum": 0.5719966097845853,
+        "maximum": 0.7333948473912417
+      },
+      "effectiveWorkspaceBytesPerSecond": {
+        "samples": 20,
+        "median": 54899955.45290358,
+        "minimum": 7649470.226514639,
+        "maximum": 113099800.15949468
       },
       "files": {
         "samples": 18,
@@ -344,6 +501,24 @@
         "minimum": 142917128.0,
         "maximum": 426325775.0
       },
+      "workspaceBytes": {
+        "samples": 20,
+        "median": 196938502.0,
+        "minimum": 195579142.0,
+        "maximum": 740939386.0
+      },
+      "archiveToWorkspaceRatio": {
+        "samples": 20,
+        "median": 0.7256941966584066,
+        "minimum": 0.5719966097845853,
+        "maximum": 0.7333948473912417
+      },
+      "effectiveWorkspaceBytesPerSecond": {
+        "samples": 20,
+        "median": 45867943.07818958,
+        "minimum": 3123110.768651568,
+        "maximum": 73402810.59221035
+      },
       "files": {
         "samples": 18,
         "median": 47.0,
@@ -380,6 +555,24 @@
         "median": 363111632.0,
         "minimum": 141375291.0,
         "maximum": 619720534.0
+      },
+      "workspaceBytes": {
+        "samples": 45,
+        "median": 627864822.0,
+        "minimum": 195625222.0,
+        "maximum": 1109057816.0
+      },
+      "archiveToWorkspaceRatio": {
+        "samples": 45,
+        "median": 0.578327721631775,
+        "minimum": 0.5587810888300886,
+        "maximum": 0.7368636801329126
+      },
+      "effectiveWorkspaceBytesPerSecond": {
+        "samples": 45,
+        "median": 134248084.80919027,
+        "minimum": 26694732.13031702,
+        "maximum": 481931462.75104815
       },
       "files": {
         "samples": 44,
@@ -418,6 +611,24 @@
         "minimum": 141375291.0,
         "maximum": 619720534.0
       },
+      "workspaceBytes": {
+        "samples": 45,
+        "median": 627864822.0,
+        "minimum": 195625222.0,
+        "maximum": 1109057816.0
+      },
+      "archiveToWorkspaceRatio": {
+        "samples": 45,
+        "median": 0.578327721631775,
+        "minimum": 0.5587810888300886,
+        "maximum": 0.7368636801329126
+      },
+      "effectiveWorkspaceBytesPerSecond": {
+        "samples": 45,
+        "median": 13591501.74435183,
+        "minimum": 1446547.9612862365,
+        "maximum": 998293581632.6531
+      },
       "files": {
         "samples": 44,
         "median": 2.5,
@@ -454,6 +665,24 @@
         "median": 363111632.0,
         "minimum": 141375291.0,
         "maximum": 619720534.0
+      },
+      "workspaceBytes": {
+        "samples": 45,
+        "median": 627864822.0,
+        "minimum": 195625222.0,
+        "maximum": 1109057816.0
+      },
+      "archiveToWorkspaceRatio": {
+        "samples": 45,
+        "median": 0.578327721631775,
+        "minimum": 0.5587810888300886,
+        "maximum": 0.7368636801329126
+      },
+      "effectiveWorkspaceBytesPerSecond": {
+        "samples": 45,
+        "median": 27154065.76248039,
+        "minimum": 5056332.734069341,
+        "maximum": 127839669.3181365
       },
       "files": {
         "samples": 44,
@@ -492,6 +721,24 @@
         "minimum": 141375291.0,
         "maximum": 619720534.0
       },
+      "workspaceBytes": {
+        "samples": 45,
+        "median": 627864822.0,
+        "minimum": 195625222.0,
+        "maximum": 1109057816.0
+      },
+      "archiveToWorkspaceRatio": {
+        "samples": 45,
+        "median": 0.578327721631775,
+        "minimum": 0.5587810888300886,
+        "maximum": 0.7368636801329126
+      },
+      "effectiveWorkspaceBytesPerSecond": {
+        "samples": 45,
+        "median": 45018555.18656611,
+        "minimum": 1584029.7270111442,
+        "maximum": 71755111.32852522
+      },
       "files": {
         "samples": 44,
         "median": 2.5,
@@ -528,6 +775,24 @@
         "median": 208894084.0,
         "minimum": 51992429.0,
         "maximum": 426351589.0
+      },
+      "workspaceBytes": {
+        "samples": 11,
+        "median": 321020707.0,
+        "minimum": 106018560.0,
+        "maximum": 740899066.0
+      },
+      "archiveToWorkspaceRatio": {
+        "samples": 11,
+        "median": 0.5736604862310096,
+        "minimum": 0.4904087454121241,
+        "maximum": 0.6507184098874967
+      },
+      "effectiveWorkspaceBytesPerSecond": {
+        "samples": 11,
+        "median": 7633347.82034076,
+        "minimum": 2678102.132784162,
+        "maximum": 12998257.441814132
       },
       "files": {
         "samples": 10,
@@ -566,6 +831,24 @@
         "minimum": 51992429.0,
         "maximum": 426351589.0
       },
+      "workspaceBytes": {
+        "samples": 11,
+        "median": 321020707.0,
+        "minimum": 106018560.0,
+        "maximum": 740899066.0
+      },
+      "archiveToWorkspaceRatio": {
+        "samples": 11,
+        "median": 0.5736604862310096,
+        "minimum": 0.4904087454121241,
+        "maximum": 0.6507184098874967
+      },
+      "effectiveWorkspaceBytesPerSecond": {
+        "samples": 11,
+        "median": 193524669.92053956,
+        "minimum": 164995666.03024346,
+        "maximum": 211170336.30037928
+      },
       "files": {
         "samples": 10,
         "median": 2.5,
@@ -602,6 +885,24 @@
         "median": 208894084.0,
         "minimum": 51992429.0,
         "maximum": 426351589.0
+      },
+      "workspaceBytes": {
+        "samples": 11,
+        "median": 321020707.0,
+        "minimum": 106018560.0,
+        "maximum": 740899066.0
+      },
+      "archiveToWorkspaceRatio": {
+        "samples": 11,
+        "median": 0.5736604862310096,
+        "minimum": 0.4904087454121241,
+        "maximum": 0.6507184098874967
+      },
+      "effectiveWorkspaceBytesPerSecond": {
+        "samples": 11,
+        "median": 15118301.022502018,
+        "minimum": 2078065.4066888622,
+        "maximum": 20852671.868023537
       },
       "files": {
         "samples": 10,
@@ -640,6 +941,24 @@
         "minimum": 51992429.0,
         "maximum": 426351589.0
       },
+      "workspaceBytes": {
+        "samples": 11,
+        "median": 321020707.0,
+        "minimum": 106018560.0,
+        "maximum": 740899066.0
+      },
+      "archiveToWorkspaceRatio": {
+        "samples": 11,
+        "median": 0.5736604862310096,
+        "minimum": 0.4904087454121241,
+        "maximum": 0.6507184098874967
+      },
+      "effectiveWorkspaceBytesPerSecond": {
+        "samples": 11,
+        "median": 46798115.17037942,
+        "minimum": 3528297.392366206,
+        "maximum": 98548224.98363979
+      },
       "files": {
         "samples": 10,
         "median": 2.5,
@@ -676,6 +995,24 @@
         "median": 615130007.0,
         "minimum": 363111632.0,
         "maximum": 624504559.0
+      },
+      "workspaceBytes": {
+        "samples": 7,
+        "median": 1100003102.0,
+        "minimum": 627864822.0,
+        "maximum": 1111828392.0
+      },
+      "archiveToWorkspaceRatio": {
+        "samples": 7,
+        "median": 0.5616915015784198,
+        "minimum": 0.5587810888300886,
+        "maximum": 0.5824735682180756
+      },
+      "effectiveWorkspaceBytesPerSecond": {
+        "samples": 7,
+        "median": 333062072.17141193,
+        "minimum": 109249939.94113939,
+        "maximum": 471436381.27734333
       },
       "files": {
         "samples": 7,
@@ -714,6 +1051,24 @@
         "minimum": 363111632.0,
         "maximum": 624504559.0
       },
+      "workspaceBytes": {
+        "samples": 7,
+        "median": 1100003102.0,
+        "minimum": 627864822.0,
+        "maximum": 1111828392.0
+      },
+      "archiveToWorkspaceRatio": {
+        "samples": 7,
+        "median": 0.5616915015784198,
+        "minimum": 0.5587810888300886,
+        "maximum": 0.5824735682180756
+      },
+      "effectiveWorkspaceBytesPerSecond": {
+        "samples": 7,
+        "median": 3071406.804890141,
+        "minimum": 1914116.5272692032,
+        "maximum": 14754584006279.354
+      },
       "files": {
         "samples": 7,
         "median": 73.0,
@@ -750,6 +1105,24 @@
         "median": 619720534.0,
         "minimum": 369609876.0,
         "maximum": 624504559.0
+      },
+      "workspaceBytes": {
+        "samples": 3,
+        "median": 1109057816.0,
+        "minimum": 634552186.0,
+        "maximum": 1111828392.0
+      },
+      "archiveToWorkspaceRatio": {
+        "samples": 3,
+        "median": 0.5616915015784198,
+        "minimum": 0.5587810888300886,
+        "maximum": 0.5824735682180756
+      },
+      "effectiveWorkspaceBytesPerSecond": {
+        "samples": 3,
+        "median": 43049138.43399705,
+        "minimum": 20387585.271435726,
+        "maximum": 136529838.79339692
       },
       "files": {
         "samples": 3,
@@ -788,6 +1161,24 @@
         "minimum": 363111632.0,
         "maximum": 624504559.0
       },
+      "workspaceBytes": {
+        "samples": 7,
+        "median": 1100003102.0,
+        "minimum": 627864822.0,
+        "maximum": 1111828392.0
+      },
+      "archiveToWorkspaceRatio": {
+        "samples": 7,
+        "median": 0.5616915015784198,
+        "minimum": 0.5587810888300886,
+        "maximum": 0.5824735682180756
+      },
+      "effectiveWorkspaceBytesPerSecond": {
+        "samples": 7,
+        "median": 40249663.77593501,
+        "minimum": 6385358.159650593,
+        "maximum": 146580146.80314106
+      },
       "files": {
         "samples": 7,
         "median": 73.0,
@@ -825,6 +1216,24 @@
         "minimum": 363111632.0,
         "maximum": 624504559.0
       },
+      "workspaceBytes": {
+        "samples": 7,
+        "median": 1100003102.0,
+        "minimum": 627864822.0,
+        "maximum": 1111828392.0
+      },
+      "archiveToWorkspaceRatio": {
+        "samples": 7,
+        "median": 0.5616915015784198,
+        "minimum": 0.5587810888300886,
+        "maximum": 0.5824735682180756
+      },
+      "effectiveWorkspaceBytesPerSecond": {
+        "samples": 7,
+        "median": 94960134.68711175,
+        "minimum": 83793313.37409675,
+        "maximum": 110897097.53162962
+      },
       "files": {
         "samples": 7,
         "median": 73.0,
@@ -856,6 +1265,24 @@
         "median": 203193258.0,
         "minimum": 143696217.0,
         "maximum": 369609876.0
+      },
+      "workspaceBytes": {
+        "samples": 10,
+        "median": 312516065.5,
+        "minimum": 196610182.0,
+        "maximum": 634552186.0
+      },
+      "archiveToWorkspaceRatio": {
+        "samples": 10,
+        "median": 0.6522022259028002,
+        "minimum": 0.5824735682180756,
+        "maximum": 0.7368636801329126
+      },
+      "effectiveWorkspaceBytesPerSecond": {
+        "samples": 10,
+        "median": 12514547.202893108,
+        "minimum": 1678160.6127510006,
+        "maximum": 19765033.306060687
       },
       "files": {
         "samples": 9,
@@ -889,6 +1316,24 @@
         "minimum": 143696217.0,
         "maximum": 369609876.0
       },
+      "workspaceBytes": {
+        "samples": 10,
+        "median": 312516065.5,
+        "minimum": 196610182.0,
+        "maximum": 634552186.0
+      },
+      "archiveToWorkspaceRatio": {
+        "samples": 10,
+        "median": 0.6522022259028002,
+        "minimum": 0.5824735682180756,
+        "maximum": 0.7368636801329126
+      },
+      "effectiveWorkspaceBytesPerSecond": {
+        "samples": 10,
+        "median": 179804359.97152635,
+        "minimum": 167484361.96237248,
+        "maximum": 189915880.28073013
+      },
       "files": {
         "samples": 9,
         "median": 5.0,
@@ -921,6 +1366,24 @@
         "minimum": 143696217.0,
         "maximum": 369609876.0
       },
+      "workspaceBytes": {
+        "samples": 10,
+        "median": 312516065.5,
+        "minimum": 196610182.0,
+        "maximum": 634552186.0
+      },
+      "archiveToWorkspaceRatio": {
+        "samples": 10,
+        "median": 0.6522022259028002,
+        "minimum": 0.5824735682180756,
+        "maximum": 0.7368636801329126
+      },
+      "effectiveWorkspaceBytesPerSecond": {
+        "samples": 10,
+        "median": 5540595.869932596,
+        "minimum": 1852593.7579577223,
+        "maximum": 8000759.757536158
+      },
       "files": {
         "samples": 9,
         "median": 5.0,
@@ -952,6 +1415,24 @@
         "median": 203193258.0,
         "minimum": 143696217.0,
         "maximum": 369609876.0
+      },
+      "workspaceBytes": {
+        "samples": 10,
+        "median": 312516065.5,
+        "minimum": 196610182.0,
+        "maximum": 634552186.0
+      },
+      "archiveToWorkspaceRatio": {
+        "samples": 10,
+        "median": 0.6522022259028002,
+        "minimum": 0.5824735682180756,
+        "maximum": 0.7368636801329126
+      },
+      "effectiveWorkspaceBytesPerSecond": {
+        "samples": 10,
+        "median": 46164951.51762764,
+        "minimum": 34201395.10569445,
+        "maximum": 63443294.40743881
       },
       "files": {
         "samples": 9,
@@ -990,6 +1471,24 @@
         "minimum": 142278066.0,
         "maximum": 363111632.0
       },
+      "workspaceBytes": {
+        "samples": 6,
+        "median": 412381502.0,
+        "minimum": 195665542.0,
+        "maximum": 627864822.0
+      },
+      "archiveToWorkspaceRatio": {
+        "samples": 6,
+        "median": 0.6527385212944301,
+        "minimum": 0.578327721631775,
+        "maximum": 0.7359930118603126
+      },
+      "effectiveWorkspaceBytesPerSecond": {
+        "samples": 6,
+        "median": 25591306.483499434,
+        "minimum": 12472647.888770213,
+        "maximum": 412481846.3377085
+      },
       "files": {
         "samples": 6,
         "median": 60.0,
@@ -1021,6 +1520,24 @@
         "median": 367883152.0,
         "minimum": 367883152.0,
         "maximum": 367883152.0
+      },
+      "workspaceBytes": {
+        "samples": 1,
+        "median": 633054582.0,
+        "minimum": 633054582.0,
+        "maximum": 633054582.0
+      },
+      "archiveToWorkspaceRatio": {
+        "samples": 1,
+        "median": 0.5811239069429878,
+        "minimum": 0.5811239069429878,
+        "maximum": 0.5811239069429878
+      },
+      "effectiveWorkspaceBytesPerSecond": {
+        "samples": 1,
+        "median": 20811555.651732583,
+        "minimum": 20811555.651732583,
+        "maximum": 20811555.651732583
       },
       "files": {
         "samples": 1,
@@ -1054,6 +1571,24 @@
         "minimum": 367883152.0,
         "maximum": 367883152.0
       },
+      "workspaceBytes": {
+        "samples": 1,
+        "median": 633054582.0,
+        "minimum": 633054582.0,
+        "maximum": 633054582.0
+      },
+      "archiveToWorkspaceRatio": {
+        "samples": 1,
+        "median": 0.5811239069429878,
+        "minimum": 0.5811239069429878,
+        "maximum": 0.5811239069429878
+      },
+      "effectiveWorkspaceBytesPerSecond": {
+        "samples": 1,
+        "median": 188971481.64623314,
+        "minimum": 188971481.64623314,
+        "maximum": 188971481.64623314
+      },
       "files": {
         "samples": 1,
         "median": 73.0,
@@ -1086,6 +1621,24 @@
         "minimum": 367883152.0,
         "maximum": 367883152.0
       },
+      "workspaceBytes": {
+        "samples": 1,
+        "median": 633054582.0,
+        "minimum": 633054582.0,
+        "maximum": 633054582.0
+      },
+      "archiveToWorkspaceRatio": {
+        "samples": 1,
+        "median": 0.5811239069429878,
+        "minimum": 0.5811239069429878,
+        "maximum": 0.5811239069429878
+      },
+      "effectiveWorkspaceBytesPerSecond": {
+        "samples": 1,
+        "median": 5796436.06793241,
+        "minimum": 5796436.06793241,
+        "maximum": 5796436.06793241
+      },
       "files": {
         "samples": 1,
         "median": 73.0,
@@ -1117,6 +1670,24 @@
         "median": 367883152.0,
         "minimum": 367883152.0,
         "maximum": 367883152.0
+      },
+      "workspaceBytes": {
+        "samples": 1,
+        "median": 633054582.0,
+        "minimum": 633054582.0,
+        "maximum": 633054582.0
+      },
+      "archiveToWorkspaceRatio": {
+        "samples": 1,
+        "median": 0.5811239069429878,
+        "minimum": 0.5811239069429878,
+        "maximum": 0.5811239069429878
+      },
+      "effectiveWorkspaceBytesPerSecond": {
+        "samples": 1,
+        "median": 61291131.02600426,
+        "minimum": 61291131.02600426,
+        "maximum": 61291131.02600426
       },
       "files": {
         "samples": 1,
@@ -1155,6 +1726,24 @@
         "minimum": 142917128.0,
         "maximum": 367883152.0
       },
+      "workspaceBytes": {
+        "samples": 4,
+        "median": 414996542.0,
+        "minimum": 195579142.0,
+        "maximum": 633054582.0
+      },
+      "archiveToWorkspaceRatio": {
+        "samples": 4,
+        "median": 0.6534090518006972,
+        "minimum": 0.5811239069429878,
+        "maximum": 0.7333948473912417
+      },
+      "effectiveWorkspaceBytesPerSecond": {
+        "samples": 4,
+        "median": 579489154.6585486,
+        "minimum": 392106576.9312505,
+        "maximum": 765512906.0901998
+      },
       "files": {
         "samples": 4,
         "median": 60.0,
@@ -1191,6 +1780,24 @@
         "median": 143436735.0,
         "minimum": 143436735.0,
         "maximum": 143436735.0
+      },
+      "workspaceBytes": {
+        "samples": 1,
+        "median": 195579142.0,
+        "minimum": 195579142.0,
+        "maximum": 195579142.0
+      },
+      "archiveToWorkspaceRatio": {
+        "samples": 1,
+        "median": 0.7333948473912417,
+        "minimum": 0.7333948473912417,
+        "maximum": 0.7333948473912417
+      },
+      "effectiveWorkspaceBytesPerSecond": {
+        "samples": 1,
+        "median": 44934005.479191385,
+        "minimum": 44934005.479191385,
+        "maximum": 44934005.479191385
       },
       "files": {
         "samples": 1,
@@ -1229,6 +1836,24 @@
         "minimum": 143436735.0,
         "maximum": 143436735.0
       },
+      "workspaceBytes": {
+        "samples": 1,
+        "median": 195579142.0,
+        "minimum": 195579142.0,
+        "maximum": 195579142.0
+      },
+      "archiveToWorkspaceRatio": {
+        "samples": 1,
+        "median": 0.7333948473912417,
+        "minimum": 0.7333948473912417,
+        "maximum": 0.7333948473912417
+      },
+      "effectiveWorkspaceBytesPerSecond": {
+        "samples": 1,
+        "median": 12590811.310318973,
+        "minimum": 12590811.310318973,
+        "maximum": 12590811.310318973
+      },
       "files": {
         "samples": 1,
         "median": 47.0,
@@ -1266,6 +1891,24 @@
         "minimum": 143436735.0,
         "maximum": 143436735.0
       },
+      "workspaceBytes": {
+        "samples": 1,
+        "median": 195579142.0,
+        "minimum": 195579142.0,
+        "maximum": 195579142.0
+      },
+      "archiveToWorkspaceRatio": {
+        "samples": 1,
+        "median": 0.7333948473912417,
+        "minimum": 0.7333948473912417,
+        "maximum": 0.7333948473912417
+      },
+      "effectiveWorkspaceBytesPerSecond": {
+        "samples": 1,
+        "median": 33620392.07135249,
+        "minimum": 33620392.07135249,
+        "maximum": 33620392.07135249
+      },
       "files": {
         "samples": 1,
         "median": 47.0,
@@ -1302,6 +1945,24 @@
         "median": 143436735.0,
         "minimum": 143436735.0,
         "maximum": 143436735.0
+      },
+      "workspaceBytes": {
+        "samples": 1,
+        "median": 195579142.0,
+        "minimum": 195579142.0,
+        "maximum": 195579142.0
+      },
+      "archiveToWorkspaceRatio": {
+        "samples": 1,
+        "median": 0.7333948473912417,
+        "minimum": 0.7333948473912417,
+        "maximum": 0.7333948473912417
+      },
+      "effectiveWorkspaceBytesPerSecond": {
+        "samples": 1,
+        "median": 32988153.510625146,
+        "minimum": 32988153.510625146,
+        "maximum": 32988153.510625146
       },
       "files": {
         "samples": 1,

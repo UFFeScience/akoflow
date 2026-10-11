@@ -30,7 +30,10 @@ module MontageExecutionCalibration
     { 'samples' => values.length, 'median' => median, 'minimum' => values.first, 'maximum' => values.last }
   end
 
-  def build(data, digest)
+  def build(data, digest, projection = nil)
+    if projection && (projection.fetch('baselineRunId') != data.fetch('run_id') || projection.fetch('auditedEvidenceSHA256') != digest)
+      raise 'Workspace projection baseline provenance mismatch'
+    end
     audit = data.fetch('audit')
     raise 'Baseline must contain 58 single-attempt completed activities' unless audit.fetch('expected_count') == 58 && data.fetch('attempt_history') == 'single_observed_attempt_per_activity'
     %w[missing unexpected not_completed].each { |key| raise "Unsafe baseline #{key}" unless audit.fetch(key).empty? }
@@ -42,6 +45,11 @@ module MontageExecutionCalibration
       { 'activityFamily' => program, 'resourceClass' => machine,
         'runtimeSeconds' => summary(samples.map { |a| a.fetch('validated_handle_runtime_seconds') || a.fetch('observed_runtime_seconds') }),
         'taskRuntimeFallbackSamples' => samples.count { |a| a['validated_handle_runtime_seconds'].nil? },
+        'wallSecondsPerReferenceSecond' => projection && summary(samples.map do |a|
+          reference = Float(projection.fetch('activityReferenceDurations').fetch(a.fetch('activity_id')))
+          raise 'Invalid reference work' unless reference.finite? && reference > 0
+          (a.fetch('validated_handle_runtime_seconds') || a.fetch('observed_runtime_seconds')) / reference
+        end),
         'interpretation' => 'observed wall runtime; includes physical sharing, not clean CPU service demand' }
     end
     routes = data.fetch('routes').select { |route| route['producer_activity_id'] }
@@ -56,7 +64,8 @@ module MontageExecutionCalibration
         phases << { 'strategy' => route.fetch('strategy'), 'sourceClass' => resource_class(source.fetch('resource_id')),
           'targetClass' => resource_class(target.fetch('resource_id')), 'phase' => phase.fetch('name'),
           'seconds' => phase.fetch('durationSeconds'), 'logicalBytes' => route['logical_bytes'],
-          'archiveBytes' => route['archive_bytes'], 'files' => route['files'] }
+          'archiveBytes' => route['archive_bytes'], 'files' => route['files'],
+          'workspaceBytes' => projection && projection.fetch('observedProducerWorkspaceBytes').fetch(route.fetch('producer_activity_id')) }
       end
     end
     grouped = phases.group_by { |p| p.values_at('strategy','sourceClass','targetClass','phase') }.map do |(strategy, source, target, phase), samples|
@@ -64,6 +73,9 @@ module MontageExecutionCalibration
         'seconds' => summary(samples.map { |p| p['seconds'] }),
         'logicalBytes' => summary(samples.map { |p| p['logicalBytes'] }),
         'archiveBytes' => summary(samples.map { |p| p['archiveBytes'] }),
+        'workspaceBytes' => summary(samples.map { |p| p['workspaceBytes'] }),
+        'archiveToWorkspaceRatio' => summary(samples.map { |p| p['archiveBytes'].to_f / p['workspaceBytes'] if p['archiveBytes'] && p['workspaceBytes'] && p['workspaceBytes'] > 0 }.compact),
+        'effectiveWorkspaceBytesPerSecond' => summary(samples.map { |p| p['workspaceBytes'].to_f / p['seconds'] if p['workspaceBytes'] && p['seconds'] > 0 }.compact),
         'files' => summary(samples.map { |p| p['files'] }),
         'effectiveArchiveBytesPerSecond' => summary(samples.map { |p| p['archiveBytes'].to_f / p['seconds'] if p['archiveBytes'] && p['seconds'] > 0 }.compact),
         'interpretation' => 'concurrency-conditioned effective phase rates; not isolated link bandwidth' }
@@ -76,7 +88,7 @@ module MontageExecutionCalibration
         'verifySeconds' => summary(samples.map { |p| p.fetch('merge_verify_seconds') }) }
     end
     { 'schemaVersion' => 1, 'baselineRunId' => data.fetch('run_id'), 'baselineSHA256' => digest,
-      'synchronizationContract' => 'whole-workspace-v1', 'computeObservations' => compute,
+      'synchronizationContract' => 'whole-workspace-v1', 'workspaceVolumeBasis' => projection ? 'producer-final-snapshot-manifest' : 'unavailable-do-not-use-logical-output-bytes-as-workspace-volume', 'computeObservations' => compute,
       'materializationPhaseObservations' => grouped, 'consumerMergeObservations' => merges,
       'limitations' => ['Single baseline; ranges are observations, not confidence intervals.',
         'Do not replay per-activity durations or total makespan as a holdout prediction.',
@@ -87,9 +99,10 @@ module MontageExecutionCalibration
 end
 
 if $PROGRAM_NAME == __FILE__
-  abort 'Usage: build_montage_execution_calibration.rb AUDITED_RESULTS_JSON OUTPUT_JSON' unless ARGV.length == 2
+  abort 'Usage: build_montage_execution_calibration.rb AUDITED_RESULTS_JSON OUTPUT_JSON [WORKSPACE_PROJECTION_JSON]' unless [2,3].include?(ARGV.length)
   payload = File.binread(ARGV[0])
-  result = MontageExecutionCalibration.build(JSON.parse(payload), Digest::SHA256.hexdigest(payload))
+  projection = JSON.parse(File.binread(ARGV[2])) if ARGV[2]
+  result = MontageExecutionCalibration.build(JSON.parse(payload), Digest::SHA256.hexdigest(payload), projection)
   File.write(ARGV[1], JSON.pretty_generate(result) + "\n")
   puts "Calibration observations: #{result['computeObservations'].length} compute groups, #{result['materializationPhaseObservations'].length} route-phase groups."
 end

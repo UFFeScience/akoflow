@@ -1,9 +1,50 @@
 package workflow
 
 import (
+	"encoding/json"
 	"github.com/stretchr/testify/require"
+	"os"
 	"testing"
 )
+
+func TestWorkspaceProjectionReconstructsAuditedMontageBaseline(t *testing.T) {
+	payload, err := os.ReadFile("../../../experiments/montage-micro-hpc-e2/workspace-projection-v2.json")
+	require.NoError(t, err)
+	var evidence struct {
+		ActivityModels map[string]WorkspaceProjection `json:"activityModels"`
+		Dependencies   []ActivityDependency           `json:"dependencies"`
+		ObservedBytes  map[string]int64               `json:"observedProducerWorkspaceBytes"`
+		ResourceTypes  map[string]string              `json:"baselineAssignedResourceTypes"`
+	}
+	require.NoError(t, json.Unmarshal(payload, &evidence))
+	require.Len(t, evidence.ActivityModels, 58)
+	version := WorkflowVersion{Dependencies: evidence.Dependencies}
+	for id, model := range evidence.ActivityModels {
+		version.Activities = append(version.Activities, Activity{ID: id, Metadata: map[string]any{"workspaceProjection": model}})
+	}
+	projected, err := ProjectWorkspaceDependenciesForResourceTypes(version, evidence.ResourceTypes)
+	require.NoError(t, err)
+	require.Len(t, projected.DataDependencies, 114)
+	for _, edge := range projected.DataDependencies {
+		require.Equal(t, evidence.ObservedBytes[edge.ProducerActivityID], edge.SizeBytes, "producer %s consumer %s", edge.ProducerActivityID, edge.ConsumerActivityID)
+	}
+	// Change a root's future placement: inherited image packaging must change
+	// the downstream predictions, not replay the previous assignment's bytes.
+	for id, model := range evidence.ActivityModels {
+		if len(model.InputsByResourceType) == 0 || evidence.ResourceTypes[id] != "hpc_machine" {
+			continue
+		}
+		evidence.ResourceTypes[id] = "cloud_vm"
+		swapped, err := ProjectWorkspaceDependenciesForResourceTypes(version, evidence.ResourceTypes)
+		require.NoError(t, err)
+		for _, edge := range swapped.DataDependencies {
+			if edge.ProducerActivityID == id {
+				require.Greater(t, edge.SizeBytes, evidence.ObservedBytes[id])
+			}
+		}
+		break
+	}
+}
 
 func projectedActivity(id string, inputs, outputs []ProjectedFile) Activity {
 	return Activity{ID: id, Metadata: map[string]any{"workspaceProjection": WorkspaceProjection{Contract: "whole-workspace-v1", Source: "completed-baseline", Inputs: inputs, Outputs: outputs}}}
@@ -53,4 +94,22 @@ func TestWorkspaceProjectionLegacyUnchanged(t *testing.T) {
 	actual, err := ProjectWorkspaceDependencies(version)
 	require.NoError(t, err)
 	require.Equal(t, version, actual)
+}
+
+func TestWorkspaceProjectionRuntimePackagingUsesAssignedType(t *testing.T) {
+	output := ProjectedFile{Path: "projected.fits", SizeBytes: 100, ContentID: "science-output"}
+	asset := ProjectedFile{Path: "image-input.fits", SizeBytes: 90, ContentID: "image-input"}
+	a := projectedActivity("a", []ProjectedFile{asset}, []ProjectedFile{output})
+	model := a.Metadata["workspaceProjection"].(WorkspaceProjection)
+	model.InputsByResourceType = map[string][]ProjectedFile{"cloud_vm": {asset}, "hpc_machine": {}}
+	a.Metadata["workspaceProjection"] = model
+	version := WorkflowVersion{Activities: []Activity{a, projectedActivity("b", nil, nil)}, Dependencies: []ActivityDependency{{ActivityID: "b", DependsOnActivityID: "a"}}}
+	search, err := ProjectWorkspaceDependencies(version)
+	require.NoError(t, err)
+	require.EqualValues(t, 190, search.DataDependencies[0].SizeBytes)
+	hpc, err := ProjectWorkspaceDependenciesForResourceTypes(version, map[string]string{"a": "hpc_machine", "b": "cloud_vm"})
+	require.NoError(t, err)
+	require.EqualValues(t, 100, hpc.DataDependencies[0].SizeBytes)
+	_, err = ProjectWorkspaceDependenciesForResourceTypes(version, map[string]string{"a": "unknown"})
+	require.ErrorContains(t, err, "runtime inputs")
 }

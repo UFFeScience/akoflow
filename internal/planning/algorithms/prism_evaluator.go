@@ -10,6 +10,7 @@ import (
 	"sync"
 
 	"github.com/UFFeScience/akoflow/internal/domain"
+	domainworkflow "github.com/UFFeScience/akoflow/internal/domain/workflow"
 )
 
 type prismEvaluationDependency struct {
@@ -161,7 +162,15 @@ func evaluateCompleteCompactPRISMState(
 		assignmentOrdinal[assignment.ActivityID] = ordinal
 	}
 	outgoing := make([][]prismEvaluationDependency, len(tasks))
-	data := dataBytes(search.request.Workflow)
+	assignedTypes := map[string]string{}
+	for _, assignment := range assignments {
+		assignedTypes[assignment.ActivityID] = string(resourceByID[assignment.ResourceID].Type)
+	}
+	projectedWorkflow, err := domainworkflow.ProjectWorkspaceDependenciesForResourceTypes(search.request.Workflow, assignedTypes)
+	if err != nil {
+		return state, fmt.Errorf("evaluate PRISM workspace projection: %w", err)
+	}
+	data := dataBytes(projectedWorkflow)
 	for _, dependency := range search.request.Workflow.Dependencies {
 		producer := assignmentOrdinal[dependency.DependsOnActivityID]
 		consumer := assignmentOrdinal[dependency.ActivityID]

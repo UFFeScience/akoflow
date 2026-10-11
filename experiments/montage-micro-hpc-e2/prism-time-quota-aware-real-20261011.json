@@ -1,0 +1,92 @@
+{
+  "issue": "AKO-154",
+  "realRunId": "montage-prism-transfer-real-20261011-v2",
+  "statusAtSubmission": "running",
+  "startedAt": "2026-10-11T17:17:35Z",
+  "forecastFrozenBeforeReal": true,
+  "previousForecastBlockedByStorageQuota": true,
+  "previousPlanSeconds": 2321.6725360502005,
+  "previousSimulationSeconds": 2368.118319561188,
+  "quotaAwarePlan": {
+    "makespanSeconds": 3127.9222412902786,
+    "cost": 0.03860991076813537,
+    "feasible": true
+  },
+  "quotaAwareSimulation": {
+    "computeSeconds": 5108.837997198106,
+    "cost": 0.022520250649858534,
+    "feasible": true,
+    "interferenceSeconds": 0.0,
+    "makespanSeconds": 3163.497678841343,
+    "overheadSeconds": 0.0,
+    "queueSeconds": 4735.875838555146,
+    "transferSeconds": 25382.247772585157
+  },
+  "storageBudget": {
+    "storageId": "ssh-user-quota-dc75389d01af9cf7565a99bb2940c556c7ce1ac8df5c859a8ac82c59f3801d6a",
+    "availableBytes": 20091539456,
+    "observedAt": "2026-10-11T17:15:11.253167252Z",
+    "source": "live-posix-filesystem-and-user-quota-v1"
+  },
+  "completedSimulationTasks": 58,
+  "distribution": [
+    {
+      "resource": "montage-gcp-fog-e2-micro-01",
+      "activities": 1
+    },
+    {
+      "resource": "montage-gcp-fog-e2-micro-02",
+      "activities": 1
+    },
+    {
+      "resource": "montage-gcp-fog-e2-micro-03",
+      "activities": 1
+    },
+    {
+      "resource": "montage-gcp-fog-e2-micro-04",
+      "activities": 9
+    },
+    {
+      "resource": "montage-gcp-fog-e2-micro-05",
+      "activities": 2
+    },
+    {
+      "resource": "montage-gcp-fog-e2-micro-06",
+      "activities": 2
+    },
+    {
+      "resource": "montage-gcp-fog-e2-micro-07",
+      "activities": 9
+    },
+    {
+      "resource": "montage-gcp-fog-e2-micro-08",
+      "activities": 4
+    },
+    {
+      "resource": "montage-gcp-fog-e2-micro-09",
+      "activities": 2
+    },
+    {
+      "resource": "montage-gcp-fog-e2-micro-10",
+      "activities": 9
+    },
+    {
+      "resource": "plafrim-execution-ssh-node-bora001",
+      "activities": 9
+    },
+    {
+      "resource": "plafrim-execution-ssh-node-diablo03",
+      "activities": 9
+    }
+  ],
+  "physicalNetworkBytes": 11366975738,
+  "limitations": [
+    "Real result pending; not yet a completed comparison.",
+    "Whole-workspace model retains combined pack/ingress where separate measurements are unavailable.",
+    "A live effective HPC storage quota changes feasible placement and must accompany planning.",
+    "Previous calibration fit is not validation of this independent execution.",
+    "Planner active-window and native task costs use different billing bases.",
+    "Native task queue currently includes workspace preparation; final audit must separate service, admission and execution waiting rather than adding aggregate totals.",
+    "Micro and HPC class-profile extrapolations and missing route-class coverage remain explicit."
+  ]
+}

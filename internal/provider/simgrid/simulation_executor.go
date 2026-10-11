@@ -214,6 +214,7 @@ func buildTrace(
 		tasks = append(tasks, task)
 	}
 	applyResourceActiveCosts(tasks, request.Resources)
+	applyCloudLifecycleCosts(tasks, request.Resources, request.Plan.LifecycleActions)
 	for _, task := range tasks {
 		metrics.MakespanSeconds = max(metrics.MakespanSeconds, task.FinishedAt)
 		metrics.ComputeSeconds += task.RuntimeSeconds

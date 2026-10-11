@@ -8,7 +8,8 @@ baseline, projection, compute, materialization, gcp, hpc, scope, network = ARGV[
 out = ARGV[8]
 FileUtils.mkdir_p(out)
 save = ->(name, value) { File.write(File.join(out, name + '.json'), JSON.pretty_generate(value) + "\n") }
-workflow_name = 'montage-reference-work-v1'
+workflow_name = ENV.fetch('MONTAGE_WORKFLOW_NAME', 'montage-reference-work-v1')
+revision = ENV.fetch('MONTAGE_MODEL_REVISION', 'v1')
 workflow = baseline.fetch('workflow')
 raise 'Expected complete Montage58' unless workflow.fetch('activities').length == 58
 names = workflow.fetch('activities').to_h { |activity| [activity.fetch('id'), activity.fetch('name')] }
@@ -35,7 +36,7 @@ relay = {'id'=>materialization.fetch('relayResourceId'), 'environmentVersionId'=
   'cpuCores'=>8, 'cpuCapacity'=>8, 'memoryBytes'=>8*1024**3, 'computeSpeedup'=>1,
   'schedulable'=>false, 'metadata'=>{'modelOnly'=>true,'role'=>'transfer-relay','provision'=>false}}
 save.call('relay-resource', relay)
-network['id'] = 'montage-reference-network-20261011-v1'
+network['id'] = "montage-reference-network-20261011-#{revision}"
 network['name'] = 'Measured workspace materialization with explicit controller relay'
 network['metadata'] = (network['metadata'] || {}).merge('workspaceMaterializationModel'=>materialization,
   'calibrationSource'=>materialization.fetch('source'), 'linkBandwidthBasis'=>'Inherited topology assumptions; phase flow caps use measured historical effective rates')
@@ -54,12 +55,12 @@ materialization.fetch('resources').each do |id, resource|
     'bandwidthBitsPerSecond'=>bandwidth, 'latencySeconds'=>0.05, 'pricePerByte'=>0,
     'bidirectional'=>true, 'sharingPolicy'=>'SHARED', 'metadata'=>{'measurementStatus'=>'assumed-inherited-200Mbps','networkCostCalibrated'=>false} }
 end
-scope['id'] = 'montage-reference-scope-20261011-v1'
+scope['id'] = "montage-reference-scope-20261011-#{revision}"
 scope['networkTopologyId'] = network.fetch('id')
 network['executionScopeId'] = scope.fetch('id')
 save.call('scope', scope)
 save.call('network', network)
-save.call('planning-session', {'id'=>'montage-reference-planning-20261011-v2',
+save.call('planning-session', {'id'=>ENV.fetch('MONTAGE_PLANNING_ID', 'montage-reference-planning-20261011-v2'),
   'workflowVersionId'=>workflow_name+'-v1', 'executionScopeId'=>scope.fetch('id'),
   'networkTopologyId'=>network.fetch('id'), 'algorithms'=>[{'id'=>'prism-time','configuration'=>{'requireMeasuredProfiles'=>true}}],
   'configuration'=>{'calibrationSource'=>compute.fetch('source'),

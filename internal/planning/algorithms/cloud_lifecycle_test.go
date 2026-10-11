@@ -1,10 +1,20 @@
 package algorithms
 
 import (
+	"math"
 	"testing"
 
 	"github.com/UFFeScience/akoflow/internal/domain"
 )
+
+func TestLifecycleReplacesAlreadyBilledIdleWindow(t *testing.T) {
+	resource := domain.Resource{ID: "cloud", Type: domain.ResourceCloudVM, PricePerSecond: 0.01}
+	plan := domain.SchedulePlan{ID: "plan", Predicted: domain.PredictedMetrics{Cost: 0.8}, Metadata: map[string]any{"costModel": "resource-active-window"}, Assignments: []domain.PlanAssignment{{ResourceID: "cloud", PredictedStartAt: 20, PredictedFinishAt: 30, PredictedRuntimeSeconds: 10}, {ResourceID: "cloud", PredictedStartAt: 80, PredictedFinishAt: 100, PredictedRuntimeSeconds: 20}}}
+	addCloudLifecycle(&plan, domain.PlanningRequest{Resources: []domain.Resource{resource}})
+	if math.Abs(plan.Predicted.Cost-1.2) > 1e-12 {
+		t.Fatalf("cost=%g; window 0..120 should be billed once", plan.Predicted.Cost)
+	}
+}
 
 func TestAddCloudLifecycleAccountsForPreparationIdleAndDisk(t *testing.T) {
 	resource := planningResource("cloud", 2, 1, 0.001)

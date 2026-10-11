@@ -4,7 +4,8 @@ mode=${1:?simulation or real}
 case "$mode" in simulation|real) ;; *) exit 2 ;; esac
 : "${AKOFLOW_API_TOKEN:?Load token without printing it}"
 : "${RUN_ID:?Use a new holdout run identity}"
-base=storage/montage-measured-20261011
+base=${MONTAGE_EXPERIMENT_DIR:-storage/montage-measured-20261011}
+compute_model=${MONTAGE_COMPUTE_MODEL:-experiments/montage-micro-hpc-e2/compute-model-v2.json}
 api=${AKOFLOW_API_URL:-http://127.0.0.1:8080/akoflow-api}
 get() { curl -fsS -H "Authorization: Bearer $AKOFLOW_API_TOKEN" "$api/$1/"; }
 get execution-runs > "$base/runs-before-$RUN_ID.json"
@@ -21,7 +22,7 @@ jq -n --arg mode "$mode" --arg id "$RUN_ID" \
   --slurpfile plan "$base/selected-plan.json" --slurpfile workflow "$base/workflow-created.json" \
   --slurpfile scope "$base/scope.json" --slurpfile network "$base/network.json" \
   --slurpfile relay "$base/relay-resource.json" \
-  --slurpfile compute experiments/montage-micro-hpc-e2/compute-model-v2.json \
+  --slurpfile compute "$compute_model" \
   --slurpfile baseline storage/montage-fog-20261006/real-request.json '
   ($plan[0].assignments|map(.resourceId)|unique) as $ids |
   ($baseline[0].runtimes[]|select(.id=="montage-simgrid")) as $simulation |

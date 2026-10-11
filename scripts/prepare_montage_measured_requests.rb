@@ -66,7 +66,7 @@ save.call('network', network)
 save.call('planning-session', {'id'=>ENV.fetch('MONTAGE_PLANNING_ID', 'montage-reference-planning-20261011-v2'),
   'workflowVersionId'=>workflow_name+'-v1', 'executionScopeId'=>scope.fetch('id'),
   'networkTopologyId'=>network.fetch('id'), 'algorithms'=>[{'id'=>'prism-time','configuration'=>{'requireMeasuredProfiles'=>true}}],
-  'configuration'=>{'calibrationSource'=>compute.fetch('source'),
+  'configuration'=>{'calibrationSource'=>compute.fetch('source'), 'observeWorkspaceStorageBudgets'=>true,
     'activityProfileSnapshot'=>compute.fetch('activityProfiles'), 'requireMeasuredProfiles'=>true,
     'computeCalibrationUnits'=>projection['activityComputeWork'] ? 'compute-work-v1' : 'reference-work-v1', 'computeCalibrationIncludesPhysicalSharing'=>true,
     'additionalPairwiseSlowdown'=>'not-applied-to-contention-conditioned-wall-profiles'}})

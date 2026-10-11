@@ -7,6 +7,7 @@ import (
 
 	"github.com/UFFeScience/akoflow/internal/application/ports"
 	"github.com/UFFeScience/akoflow/internal/domain"
+	"github.com/UFFeScience/akoflow/internal/domain/storagebudget"
 )
 
 // Resolve execution paths from the discovered catalog, without changing the
@@ -16,6 +17,14 @@ func (h *Handler) resolveWorkspaceHomes(ctx context.Context, request *ports.Exec
 	if !ok {
 		return nil
 	}
+	needsBudget := false
+	for _, activity := range request.Workflow.Activities {
+		needsBudget = needsBudget || activity.Metadata["workspaceProjection"] != nil
+	}
+	observer, canObserve := h.storage.(interface {
+		WorkspaceBudget(context.Context, string, string) (storagebudget.Snapshot, error)
+	})
+	budgets := map[string]storagebudget.Snapshot{}
 	for i := range request.Resources {
 		resource := &request.Resources[i]
 		connectionID, _ := resource.Metadata["connectionId"].(string)
@@ -45,7 +54,7 @@ func (h *Handler) resolveWorkspaceHomes(ctx context.Context, request *ports.Exec
 		if !isSlurm {
 			continue
 		}
-		home := ""
+		home, homeStorageID := "", ""
 		for _, storage := range definition.Storages {
 			id, _ := storage.Metadata["connectionId"].(string)
 			if id != connectionID {
@@ -63,6 +72,7 @@ func (h *Handler) resolveWorkspaceHomes(ctx context.Context, request *ports.Exec
 					return fmt.Errorf("ambiguous discovered home for connection %q", connectionID)
 				}
 				home = candidate
+				homeStorageID = storage.ID
 			}
 		}
 		if home != "" {
@@ -71,6 +81,17 @@ func (h *Handler) resolveWorkspaceHomes(ctx context.Context, request *ports.Exec
 				metadata[key] = value
 			}
 			metadata["homeDirectory"] = home
+			if needsBudget && canObserve {
+				budget, exists := budgets[homeStorageID]
+				if !exists {
+					budget, err = observer.WorkspaceBudget(ctx, homeStorageID, "")
+					if err != nil {
+						return fmt.Errorf("discover workspace quota: %w", err)
+					}
+					budgets[homeStorageID] = budget
+				}
+				metadata["workspaceStorageBudget"] = budget
+			}
 			resource.Metadata = metadata
 		}
 	}

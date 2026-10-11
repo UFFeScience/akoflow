@@ -411,6 +411,26 @@ func (s *Coordinator) buildRequest(
 			resources = append(resources, resource)
 		}
 	}
+	if raw := session.Configuration["workspaceStorageBudgetSnapshot"]; raw != nil {
+		payload, err := json.Marshal(raw)
+		if err != nil {
+			return domain.PlanningRequest{}, err
+		}
+		var snapshots map[string]any
+		if err := json.Unmarshal(payload, &snapshots); err != nil {
+			return domain.PlanningRequest{}, fmt.Errorf("decode workspace storage budgets: %w", err)
+		}
+		for i := range resources {
+			if budget, exists := snapshots[resources[i].ID]; exists {
+				metadata := map[string]any{}
+				for key, value := range resources[i].Metadata {
+					metadata[key] = value
+				}
+				metadata["workspaceStorageBudget"] = budget
+				resources[i].Metadata = metadata
+			}
+		}
+	}
 	definitions, err := s.Environments.List(ctx)
 	if err != nil {
 		return domain.PlanningRequest{}, err

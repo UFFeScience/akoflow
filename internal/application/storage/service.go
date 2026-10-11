@@ -16,6 +16,7 @@ import (
 
 	"github.com/UFFeScience/akoflow/internal/application/ports"
 	"github.com/UFFeScience/akoflow/internal/domain"
+	"github.com/UFFeScience/akoflow/internal/domain/storagebudget"
 )
 
 type Catalog interface {
@@ -216,6 +217,24 @@ func (s *BrowserCoordinator) Roots(ctx context.Context, id string) ([]domain.Sto
 		return nil, notFound(e)
 	}
 	return v.BrowseRoots, nil
+}
+
+func (s *BrowserCoordinator) WorkspaceBudget(ctx context.Context, id, path string) (storagebudget.Snapshot, error) {
+	value, err := s.catalog.FindStorage(ctx, id)
+	if err != nil || value == nil {
+		return storagebudget.Snapshot{}, notFound(err)
+	}
+	browser, err := s.usable(value, false)
+	if err != nil {
+		return storagebudget.Snapshot{}, err
+	}
+	observer, ok := browser.(interface {
+		WorkspaceBudget(context.Context, domain.StorageResource, string) (storagebudget.Snapshot, error)
+	})
+	if !ok {
+		return storagebudget.Snapshot{}, fmt.Errorf("storage driver does not expose an effective workspace quota observer")
+	}
+	return observer.WorkspaceBudget(ctx, *value, path)
 }
 
 func (s *BrowserCoordinator) usable(v *domain.StorageResource, write bool) (ports.StorageBrowser, error) {

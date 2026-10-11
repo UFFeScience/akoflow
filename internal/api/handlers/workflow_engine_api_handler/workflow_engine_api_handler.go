@@ -2536,6 +2536,45 @@ func (h *Handler) CreatePlanningSession(w http.ResponseWriter, r *http.Request) 
 	if !decode(w, r, &session) {
 		return
 	}
+	if observe, _ := session.Configuration["observeWorkspaceStorageBudgets"].(bool); observe {
+		if h.resources == nil || h.scopes == nil {
+			writeError(w, http.StatusServiceUnavailable, fmt.Errorf("resource inventory unavailable for quota observations"))
+			return
+		}
+		resources, err := h.resources.List(r.Context())
+		if err != nil {
+			writeError(w, http.StatusUnprocessableEntity, err)
+			return
+		}
+		scope, err := h.scopes.FindScope(r.Context(), session.ExecutionScopeID)
+		if err != nil || scope == nil {
+			writeError(w, http.StatusUnprocessableEntity, fmt.Errorf("execution scope unavailable for quota observations"))
+			return
+		}
+		allowed := map[string]bool{}
+		for _, id := range scope.EnvironmentVersionIDs {
+			allowed[id] = true
+		}
+		selected := []domain.Resource{}
+		for _, resource := range resources {
+			if allowed[resource.EnvironmentVersionID] {
+				selected = append(selected, resource)
+			}
+		}
+		resources = selected
+		request := ports.ExecutionRequest{Resources: resources, Workflow: domain.WorkflowVersion{Activities: []domain.Activity{{Metadata: map[string]any{"workspaceProjection": true}}}}}
+		if err := h.resolveWorkspaceHomes(r.Context(), &request); err != nil {
+			writeError(w, http.StatusUnprocessableEntity, err)
+			return
+		}
+		snapshots := map[string]any{}
+		for _, resource := range request.Resources {
+			if budget := resource.Metadata["workspaceStorageBudget"]; budget != nil {
+				snapshots[resource.ID] = budget
+			}
+		}
+		session.Configuration["workspaceStorageBudgetSnapshot"] = snapshots
+	}
 	created, err := h.planning.Create(r.Context(), session)
 	if err != nil {
 		writeError(w, http.StatusUnprocessableEntity, err)
@@ -2648,15 +2687,15 @@ func (h *Handler) CreateExecution(w http.ResponseWriter, r *http.Request) {
 	if !decode(w, r, &request) {
 		return
 	}
+	if err := h.resolveWorkspaceHomes(r.Context(), &request); err != nil {
+		writeError(w, http.StatusUnprocessableEntity, err)
+		return
+	}
 	storageAssignments := map[string]string{}
 	for _, assignment := range request.Plan.Assignments {
 		storageAssignments[assignment.ActivityID] = assignment.ResourceID
 	}
 	if _, _, err := storagebudget.Check(request.Workflow, request.Resources, storageAssignments); err != nil {
-		writeError(w, http.StatusUnprocessableEntity, err)
-		return
-	}
-	if err := h.resolveWorkspaceHomes(r.Context(), &request); err != nil {
 		writeError(w, http.StatusUnprocessableEntity, err)
 		return
 	}

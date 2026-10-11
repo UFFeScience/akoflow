@@ -210,3 +210,16 @@ func TestWorkspacePruneShellCommandRemovesOnlyVerifiedInputs(t *testing.T) {
 		t.Fatalf("output changed: %q %v", content, err)
 	}
 }
+func TestInspectRemoteWorkspaceSeparatesSSHWarningsFromUsage(t *testing.T) {
+	installWorkspaceSSHCheck(t, "2 106346880\n", "mux_client_request_session: session request failed: Session open refused by peer\nControlSocket already exists, disabling multiplexing\n", 0)
+	m := ActivityWorkspaceManager{Resolver: &workspaceEndpointResolverStub{}}
+	w := domain.ActivityWorkspace{ID: "workspace-run-1-activity-1", RunID: "run-1", ActivityID: "activity-1", ConnectionID: "ssh", URI: "ssh://worker/home/user/run-1/activity-1", ExecutionPath: "/home/user/run-1/activity-1"}
+	u, err := m.Inspect(context.Background(), w)
+	if err != nil || u.FileCount != 2 || u.SizeBytes != 106346880 {
+		t.Fatalf("usage=%+v err=%v", u, err)
+	}
+	installWorkspaceSSHCheck(t, "2 106346880\n", "remote failure\n", 1)
+	if _, err = m.Inspect(context.Background(), w); err == nil {
+		t.Fatal("nonzero SSH exit was accepted")
+	}
+}

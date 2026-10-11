@@ -159,9 +159,15 @@ func (a *Adapter) Inspect(ctx context.Context, handle domain.ActivityHandle) (do
 		}
 		root, _ := handle.Metadata["artifactObservationRoot"].(string)
 		if root != "" {
+			observationStart := time.Now()
+			handle.Metadata["remoteArtifactObservationStartedAt"] = runtimecommon.UnixSeconds(observationStart)
 			artifacts, observeErr := a.collectArtifacts(ctx, handle, code)
+			observationFinish := time.Now()
+			handle.Metadata["remoteArtifactObservationFinishedAt"] = runtimecommon.UnixSeconds(observationFinish)
+			handle.Metadata["remoteArtifactObservationSeconds"] = observationFinish.Sub(observationStart).Seconds()
 			if observeErr == nil {
 				handle.Artifacts = artifacts
+				handle.Metadata["remoteArtifactsReadyAt"] = runtimecommon.UnixSeconds(observationFinish)
 			} else {
 				if handle.Metadata == nil {
 					handle.Metadata = map[string]any{}

@@ -24,6 +24,31 @@ func TestRemoteCompletionUsesNativeTimeNotInspectionDelay(t *testing.T) {
 	}
 }
 
+func TestRemoteObservationTimingDoesNotExtendNativeCompute(t *testing.T) {
+	finished := time.Now().UTC().Add(-time.Minute)
+	executor := &commandExecutorStub{
+		responses: [][]byte{[]byte("exited|0|" + finished.Format(time.RFC3339Nano)), []byte("[]"), nil},
+		delays:    []time.Duration{0, 20 * time.Millisecond},
+	}
+	adapter := &Adapter{executor: executor}
+	handle, err := adapter.Inspect(context.Background(), domain.ActivityHandle{
+		ExternalID: "container", StartedAt: float64(finished.UnixNano())/1e9 - 10,
+		Metadata: map[string]any{"artifactObservationRoot": "/workspace", "artifactObservationBefore": "[]"},
+	})
+	if err != nil || handle.Status != domain.HandleCompleted {
+		t.Fatalf("inspect: %+v %v", handle, err)
+	}
+	if handle.FinishedAt != float64(finished.UnixNano())/1e9 {
+		t.Fatal("observation inflated command runtime")
+	}
+	if handle.Metadata["remoteArtifactObservationSeconds"].(float64) < .02 {
+		t.Fatal("missing observation service duration")
+	}
+	if handle.Metadata["remoteArtifactsReadyAt"].(float64) <= handle.FinishedAt {
+		t.Fatal("publication must remain separate from native completion")
+	}
+}
+
 type commandExecutorStub struct {
 	calls     []commandCall
 	responses [][]byte

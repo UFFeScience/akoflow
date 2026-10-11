@@ -77,11 +77,12 @@ module MontageExecutionCalibration
         next if phase.fetch('name').start_with?('shared-')
         measured_service = phase.fetch('name') == 'pack-and-receive' && !route['source_pack_execution_seconds'].nil?
         phase_service = !phase['executionSeconds'].nil?
-        seconds = phase_service ? phase.fetch('executionSeconds') : measured_service ? route.fetch('source_pack_execution_seconds') : phase.fetch('durationSeconds')
+        upload_service = phase.fetch('name') == 'archive-upload' && !route['rsync_execution_seconds'].nil?
+        seconds = phase_service ? phase.fetch('executionSeconds') : upload_service ? route.fetch('rsync_execution_seconds') : measured_service ? route.fetch('source_pack_execution_seconds') : phase.fetch('durationSeconds')
         phases << { 'strategy' => route.fetch('strategy'), 'sourceClass' => resource_class(source.fetch('resource_id')),
           'targetClass' => resource_class(target.fetch('resource_id')), 'phase' => phase.fetch('name'),
-          'seconds' => seconds, 'secondsBasis' => phase_service ? 'phase-command-execution-excludes-channel-queue' : measured_service ? 'source-command-execution-excludes-channel-queue' : 'combined-phase-wall-includes-unseparated-service-queue',
-          'phaseChannelWaitSeconds' => phase_service ? phase['sshChannelWaitSeconds'].to_f : nil,
+          'seconds' => seconds, 'secondsBasis' => phase_service || upload_service ? 'phase-command-execution-excludes-channel-queue' : measured_service ? 'source-command-execution-excludes-channel-queue' : 'combined-phase-wall-includes-unseparated-service-queue',
+          'phaseChannelWaitSeconds' => phase_service ? phase['sshChannelWaitSeconds'].to_f : upload_service ? route['ssh_channel_wait_seconds'].to_f : nil,
           'sourceChannelWaitSeconds' => measured_service ? route['source_pack_ssh_channel_wait_seconds'].to_f : nil,
           'sourcePreflightServiceSeconds' => route['source_pack_preflight_service_seconds'],
           'sourcePreflightChannelWaitSeconds' => route['source_pack_preflight_service_seconds'].nil? ? nil : route['source_pack_preflight_ssh_channel_wait_seconds'].to_f,

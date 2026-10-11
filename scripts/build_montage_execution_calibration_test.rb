@@ -2,6 +2,20 @@ require 'minitest/autorun'
 require_relative 'build_montage_execution_calibration'
 
 class MontageExecutionCalibrationTest < Minitest::Test
+  def test_archive_upload_service_uses_rsync_execution_not_channel_wait
+    data = baseline
+    data.fetch('routes').select { |r| r['strategy'] == 'gateway' && r['producer_activity_id'] }.each do |r|
+      r['rsync_execution_seconds'] = 7
+      r['ssh_channel_wait_seconds'] = 19
+    end
+    uploads = MontageExecutionCalibration.build(data, 'digest').fetch('materializationPhaseObservations').select { |p| p['phase'] == 'archive-upload' }
+    refute_empty uploads
+    uploads.each do |p|
+      assert_equal 7, p.fetch('seconds').fetch('median')
+      assert_equal 19, p.fetch('phaseChannelWaitSeconds').fetch('median')
+      assert_equal ['phase-command-execution-excludes-channel-queue'], p.fetch('secondsBases')
+    end
+  end
   def baseline
     JSON.parse(File.read(File.expand_path('../experiments/montage-micro-hpc-e2/docker-image-real-v2-results.json', __dir__)))
   end

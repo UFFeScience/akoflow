@@ -134,7 +134,17 @@ func TestPeerArchiveVerifiesBeforeExtraction(t *testing.T) {
 			if err := os.WriteFile(filepath.Join(root, "peer-probe"), nil, 0600); err != nil {
 				t.Fatal(err)
 			}
-			output, err := exec.Command(python, "-c", peerArchiveVerifyScript, archive, root, digest).CombinedOutput()
+			// Reject random-access extraction: a regression would repeatedly seek
+			// through gzip after the complete validation pass.
+			streamGuard := `import tarfile
+original_extractfile = tarfile.TarFile.extractfile
+def streaming_extractfile(self, member):
+    if not isinstance(self.fileobj, tarfile._Stream):
+        raise AssertionError('extraction must use sequential streaming')
+    return original_extractfile(self, member)
+tarfile.TarFile.extractfile = streaming_extractfile
+`
+			output, err := exec.Command(python, "-c", streamGuard+peerArchiveVerifyScript, archive, root, digest).CombinedOutput()
 			if tc.wantError {
 				if err == nil {
 					t.Fatal("unsafe archive accepted")

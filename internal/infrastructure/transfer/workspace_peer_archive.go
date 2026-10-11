@@ -175,7 +175,10 @@ with gzip.open(archive, 'rb') as stream:
         # become scientific workspace inputs.
         output = os.path.join(root, 'contents')
         os.mkdir(output, 0o700)
-        for member in members:
+        # Reopen sequentially after complete validation. Random extractfile
+        # access on gzip otherwise replays decompression after the scan.
+with tarfile.open(archive, mode='r|gz') as tar:
+        for member in tar:
             name = posixpath.normpath(member.name)
             if name == '.': continue
             destination = os.path.join(output, name)

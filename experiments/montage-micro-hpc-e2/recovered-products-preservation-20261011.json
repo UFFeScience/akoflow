@@ -1,0 +1,17 @@
+{
+  "issue": "AKO-158",
+  "runId": "montage-prism-transfer-real-20261011-v2",
+  "products": [
+    {"name":"1-mosaic.png","sha256":"90b53e98f8de8ba50db292fb7727c1698a8f0139ba53ca877f05b34f7e4a75cb"},
+    {"name":"2-mosaic.png","sha256":"3ac1c8aee8f6f96813ffa29cddee00d9a632a5626d75feb36853671379d37082"},
+    {"name":"3-mosaic.png","sha256":"407f7524a7c3644731f39743990c9debc28f03e1eda4c21545a190a7fead104f"},
+    {"name":"mosaic-color.png","sha256":"63fa4d8447274bdb8a44f6be8cf5a23c0a2f0baa479bd2ae1ec3b541df4e19f2"}
+  ],
+  "preservation": "API console export; archive digest verified before product hashes were read from local archives",
+  "activeHandles": 0,
+  "activeTransfers": 0,
+  "unreleasedWorkspaceLeases": 0,
+  "allTenInstancesDestroyedInInventory": true,
+  "destroyOperationsTerminalConfirmed": false,
+  "predictionValidated": false
+}

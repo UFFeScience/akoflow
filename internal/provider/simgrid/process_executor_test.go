@@ -9,17 +9,22 @@ import (
 	"time"
 
 	"github.com/UFFeScience/akoflow/internal/domain"
+	"github.com/UFFeScience/akoflow/internal/domain/materializationmodel"
 	"github.com/stretchr/testify/require"
 )
 
 type runnerCommandFake struct {
-	name  string
-	args  []string
-	trace domain.ExecutionTrace
+	name         string
+	args         []string
+	trace        domain.ExecutionTrace
+	capabilities []byte
 }
 
 func (f *runnerCommandFake) Run(_ context.Context, name string, args []string, _ []byte) ([]byte, error) {
 	f.name, f.args = name, append([]string(nil), args...)
+	if len(args) == 1 && args[0] == "--capabilities" && f.capabilities != nil {
+		return f.capabilities, nil
+	}
 	output := argumentValue(args, "--output")
 	payload, err := json.Marshal(f.trace)
 	if err != nil {
@@ -63,6 +68,21 @@ func TestProcessExecutorRejectsUnconfirmedNativeMaterializationCapability(t *tes
 	require.NoError(t, err)
 	_, err = executor.Execute(context.Background(), request)
 	require.ErrorContains(t, err, "does not confirm workspace materialization model")
+	require.Equal(t, []string{"--capabilities"}, command.args)
+}
+
+func TestProcessExecutorRejectsRunnerThatIgnoresBulkServicePools(t *testing.T) {
+	request := materializedRequestFixture()
+	model := request.NetworkTopology.Metadata["workspaceMaterializationModel"].(materializationmodel.Model)
+	r := model.Resources["edge"]
+	r.BulkServiceGroupID, r.BulkServiceSlots, r.BulkServiceSource = "hpc-session", 3, "provider-config"
+	model.Resources["edge"] = r
+	request.NetworkTopology.Metadata["workspaceMaterializationModel"] = model
+	command := &runnerCommandFake{capabilities: []byte(`{"workspaceMaterializationModelVersion":1}`)}
+	executor, err := NewProcessExecutor(command, ProcessConfig{BinaryPath: "old-materialization-runner", Workspace: t.TempDir()})
+	require.NoError(t, err)
+	_, err = executor.Execute(context.Background(), request)
+	require.ErrorContains(t, err, "does not confirm bulk service pool")
 	require.Equal(t, []string{"--capabilities"}, command.args)
 }
 

@@ -2,6 +2,7 @@ package slurm
 
 import (
 	"context"
+	"crypto/sha256"
 	"encoding/base64"
 	"fmt"
 	"os"
@@ -96,6 +97,10 @@ func (a *Adapter) Start(ctx context.Context, execution domain.ActivityExecutionC
 	if err != nil {
 		return domain.ActivityHandle{}, err
 	}
+	// Bind reconciliation to this exact run/activity/attempt, never an activity
+	// name shared by another run. The bounded hash also fits Slurm name limits.
+	jobName := fmt.Sprintf("akoflow-%x", sha256.Sum256([]byte(execution.HandleID())))
+	script = strings.Replace(script, "#SBATCH --job-name="+shellToken("akoflow-"+activity.ID), "#SBATCH --job-name="+jobName, 1)
 	if a.eligibleNodeFallback && plannedNode != "" {
 		// Slurm's nodelist requests every listed node; it is not an alternatives
 		// list. Use feature constraints and exactly one node, then validate the
@@ -140,11 +145,11 @@ func (a *Adapter) Start(ctx context.Context, execution domain.ActivityExecutionC
 	}
 	output, err := a.executor.Run(ctx, "sbatch", arguments, input)
 	if err != nil {
-		return domain.ActivityHandle{}, err
+		return domain.ActivityHandle{}, a.reconcileSubmission(ctx, jobName, err)
 	}
 	jobID, err := parseJobID(output)
 	if err != nil {
-		return domain.ActivityHandle{}, err
+		return domain.ActivityHandle{}, a.reconcileSubmission(ctx, jobName, err)
 	}
 	submittedAt := runtimecommon.UnixSeconds(time.Now())
 	return domain.ActivityHandle{ID: runtimecommon.NewID("activity"), RunID: execution.Run.ID,
@@ -158,6 +163,35 @@ func (a *Adapter) Start(ctx context.Context, execution domain.ActivityExecutionC
 			"metricsPath":               slurmSentinelPath(execution.Run.ID, activity.ID, jobID) + ".metrics.tsv",
 			domain.TimingSubmittedAt:    submittedAt,
 			"artifactObservationDriver": "filesystem-diff", "artifactObservationRoot": activity.Command.WorkingDirectory}}, nil
+}
+
+// An SSH failure does not prove sbatch failed remotely. Cancel only jobs whose
+// exact attempt-bound name matches, using a fresh bounded context even when
+// the workflow context was cancelled. Never resubmit an uncertain submission.
+func (a *Adapter) reconcileSubmission(ctx context.Context, jobName string, cause error) error {
+	cleanup, cancel := context.WithTimeout(context.WithoutCancel(ctx), 30*time.Second)
+	defer cancel()
+	output, err := a.executor.Run(cleanup, "squeue", []string{"--me", "--noheader", "--format=%i|%j"}, nil)
+	if err != nil {
+		return fmt.Errorf("submission outcome uncertain; reconciliation unavailable: %v; original: %w", err, cause)
+	}
+	var jobs []string
+	for _, line := range strings.Split(string(output), "\n") {
+		id, name, ok := strings.Cut(strings.TrimSpace(line), "|")
+		if !ok || name != jobName {
+			continue
+		}
+		if _, err := strconv.ParseUint(id, 10, 64); err != nil {
+			return fmt.Errorf("submission outcome uncertain; invalid matching job ID; original: %w", cause)
+		}
+		jobs = append(jobs, id)
+	}
+	if len(jobs) > 0 {
+		if _, err := a.executor.Run(cleanup, "scancel", jobs, nil); err != nil {
+			return fmt.Errorf("submission outcome uncertain; cancellation failed: %v; original: %w", err, cause)
+		}
+	}
+	return fmt.Errorf("submission failed; exact-attempt reconciliation requested cancellation of %d jobs: %w", len(jobs), cause)
 }
 
 func validatePreparation(execution domain.ActivityExecutionContext) error {

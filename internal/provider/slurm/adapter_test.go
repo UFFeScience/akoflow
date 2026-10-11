@@ -2,6 +2,7 @@ package slurm
 
 import (
 	"context"
+	"crypto/sha256"
 	"encoding/base64"
 	"fmt"
 	"os"
@@ -23,6 +24,38 @@ type executorFake struct {
 }
 
 type failingStatusExecutor struct{}
+
+type lostSubmissionExecutor struct {
+	jobName          string
+	cancelled        []string
+	cleanupCancelled bool
+}
+
+func (f *lostSubmissionExecutor) Run(ctx context.Context, name string, args []string, input []byte) ([]byte, error) {
+	switch name {
+	case "sbatch":
+		return nil, context.Canceled
+	case "squeue":
+		f.cleanupCancelled = ctx.Err() != nil
+		return []byte("123|" + f.jobName + "\n456|another-attempt\n"), nil
+	case "scancel":
+		f.cancelled = append(f.cancelled, args...)
+		return nil, nil
+	}
+	return nil, fmt.Errorf("unexpected command %s", name)
+}
+
+func TestLostSubmissionCancelsOnlyExactAttemptWithFreshContext(t *testing.T) {
+	execution := domain.ActivityExecutionContext{Run: domain.ExecutionRun{ID: "run"}, Activity: domain.Activity{ID: "analysis", Command: domain.ActivityCommand{Entrypoint: "true"}}, Attempt: 2}
+	f := &lostSubmissionExecutor{jobName: fmt.Sprintf("akoflow-%x", sha256.Sum256([]byte(execution.HandleID())))}
+	a := NewWithConfig(f, Config{ScriptDirectory: t.TempDir(), SubmitFromStdin: true})
+	ctx, cancel := context.WithCancel(context.Background())
+	cancel()
+	_, err := a.Start(ctx, execution)
+	if err == nil || f.cleanupCancelled || len(f.cancelled) != 1 || f.cancelled[0] != "123" {
+		t.Fatalf("err=%v cleanupCancelled=%v cancelled=%v", err, f.cleanupCancelled, f.cancelled)
+	}
+}
 
 func (failingStatusExecutor) Run(_ context.Context, name string, _ []string, _ []byte) ([]byte, error) {
 	return nil, fmt.Errorf("%s unavailable", name)

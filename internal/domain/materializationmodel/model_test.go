@@ -35,6 +35,23 @@ func testModel() Model {
 	}, MergeProfiles: []MergeProfile{{TargetClass: "micro", Source: "baseline", Samples: 3, CheckSecondsPerInputByte: .01, CopySecondsPerUniqueByte: .02, VerifySecondsPerUniqueByte: .03}}}
 }
 
+func TestSeparatedIngressUsesIndependentPreparationWithoutExtraNetworkBytes(t *testing.T) {
+	m := testModel()
+	p := &m.Profiles[2]
+	p.IngressIncludesSourcePreparation = false
+	p.SeparatedIngressServiceSource = "queue-free-independent-snapshot-and-ingress"
+	p.SnapshotSecondsPerByte = .03
+	route, err := m.Route("hpc-a", "cloud-a", 100)
+	require.NoError(t, err)
+	require.Len(t, route.Stages, 2)
+	require.Equal(t, "relay-source-preparation-and-ingress", route.Stages[0].Name)
+	require.Equal(t, 4.0, route.Stages[0].BeforeSeconds)
+	require.Equal(t, 50.0, route.Stages[0].EffectiveBytesPerSecond)
+	require.EqualValues(t, 100, route.NetworkBytes)
+	p.IngressIncludesSourcePreparation = true
+	require.ErrorContains(t, m.Validate(), "cannot also charge")
+}
+
 func TestBulkServiceGroupsFollowControlTransportNotRelayHost(t *testing.T) {
 	m := testModel()
 	hpc := m.Resources["hpc-a"]

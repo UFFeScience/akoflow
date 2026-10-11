@@ -68,6 +68,16 @@ class NativeMaterializationTest(unittest.TestCase):
         for flow in result["transfers"]:
             self.assertGreater(flow["durationSeconds"], 3.9)  # 200B ingress then 200B egress sharing.
 
+    def test_independent_source_preparation_matches_planner_without_extra_bytes(self):
+        model = self.fixture()
+        stage = model["dependencies"][1]["stages"][0]
+        stage["beforeSeconds"] = 2
+        result = self.run_model(model)
+        self.assertAlmostEqual(result["executed"]["makespanSeconds"], 15, places=5)
+        flow = next(f for f in result["transfers"] if f["producerActivityId"] == "c")
+        self.assertEqual(flow["networkBytes"], 200)
+        self.assertEqual(flow["route"]["phases"][0]["serviceWaitSeconds"], 0)
+
     def test_shared_service_slot_serializes_distinct_routes_and_merge(self):
         model = self.fixture()
         # Both routes and the final merge use one control transport slot.

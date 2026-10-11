@@ -57,6 +57,26 @@ func TestPRISMMaterializationMatchesNativeMixedOriginBarrier(t *testing.T) {
 			t.Fatalf("incorrect consumer barrier: %+v", assignment)
 		}
 	}
+	// Independently measured 2s source preparation is charged before ingress,
+	// not as extra network bytes or a second observed queue.
+	model.Profiles[1].IngressIncludesSourcePreparation = false
+	model.Profiles[1].SeparatedIngressServiceSource = "queue-free-fixture"
+	model.Profiles[1].SnapshotSecondsPerByte = .02
+	request.NetworkTopology.Metadata["workspaceMaterializationModel"] = model
+	separated, err := newCompactPRISMContext(request, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	withPreparation, err := evaluateCompleteCompactPRISMState(separated, compactPRISMStateFromEvaluation(compactPRISMState{}, assignments, 0, 0))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if math.Abs(withPreparation.makespan-15) > 1e-8 {
+		t.Fatalf("separated native parity expected 15, got %g", withPreparation.makespan)
+	}
+	model.Profiles[1].IngressIncludesSourcePreparation = true
+	model.Profiles[1].SeparatedIngressServiceSource = ""
+	model.Profiles[1].SnapshotSecondsPerByte = 0
 	// Same native fixture with a single shared transport slot: peer (1s),
 	// relay ingress (2s), egress (3s), then one merge (2s). Roots end at 5.
 	for id, resource := range model.Resources {

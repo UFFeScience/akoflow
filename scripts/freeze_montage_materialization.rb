@@ -60,6 +60,22 @@ module MontageMaterializationFreeze
           profile['probeSeconds'] = median(pack, 'sourcePreflightServiceSeconds')
         end
         profile['ingressIncludesSourcePreparation'] = true
+        # A pack-and-receive wall time cannot identify either CPU/disk or NIC
+        # service independently. Only explicitly separate, queue-free samples
+        # may replace the combined profile; never subtract guessed overhead.
+        if phases.key?('source-snapshot') || phases.key?('archive-ingress')
+          snapshot = phases.fetch('source-snapshot')
+          ingress = phases.fetch('archive-ingress')
+          [snapshot, ingress].each do |service|
+            unless service.fetch('secondsBases', []) == ['phase-command-execution-excludes-channel-queue']
+              raise 'Separated ingress requires independently measured queue-free services'
+            end
+          end
+          profile['snapshotSecondsPerByte'] = seconds_per_byte(snapshot)
+          profile['ingressArchiveBytesPerSecond'] = service_rate(ingress, 'pooledArchiveServiceRate', 'effectiveArchiveBytesPerSecond')
+          profile['ingressIncludesSourcePreparation'] = false
+          profile['separatedIngressServiceSource'] = source + ':source-snapshot+archive-ingress:queue-free'
+        end
         profile['validationSecondsPerByte'] = seconds_per_byte(phases.fetch('archive-validation'))
         profile['receiverSecondsPerByte'] = seconds_per_byte(phases.fetch('receiver-verify-and-extract'))
       else

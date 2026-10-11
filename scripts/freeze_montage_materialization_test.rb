@@ -21,6 +21,30 @@ class MontageMaterializationFreezeTest < Minitest::Test
     assert_includes frozen.fetch('source'), 'baseline-digest'
   end
 
+  def test_separate_services_require_both_independent_queue_free_observations
+    calibration = observations
+    rows = calibration.fetch('materializationPhaseObservations')
+    pack = rows.find { |r| r.values_at('sourceClass','targetClass','phase') == ['hpc','e2-micro','pack-and-receive'] }
+    snapshot = Marshal.load(Marshal.dump(pack))
+    snapshot['phase'] = 'source-snapshot'
+    snapshot['secondsBases'] = ['phase-command-execution-excludes-channel-queue']
+    snapshot['pooledWorkspaceServiceRate'] = {'samples'=>3,'bytesPerSecond'=>100}
+    ingress = Marshal.load(Marshal.dump(snapshot))
+    ingress['phase'] = 'archive-ingress'
+    ingress['pooledArchiveServiceRate'] = {'samples'=>3,'bytesPerSecond'=>200}
+    rows.concat([snapshot, ingress])
+    frozen = MontageMaterializationFreeze.build(calibration, 'digest', resources, 'relay')
+    profile = frozen.fetch('profiles').find { |r| r.values_at('sourceClass','targetClass') == ['hpc','e2-micro'] }
+    refute profile.fetch('ingressIncludesSourcePreparation')
+    assert_equal 0.01, profile.fetch('snapshotSecondsPerByte')
+    assert_equal 200, profile.fetch('ingressArchiveBytesPerSecond')
+    assert_includes profile.fetch('separatedIngressServiceSource'), 'queue-free'
+    ingress['secondsBases'] = ['combined-phase-wall-includes-unseparated-service-queue']
+    assert_raises(RuntimeError) { MontageMaterializationFreeze.build(calibration, 'digest', resources, 'relay') }
+    rows.delete(ingress)
+    assert_raises(KeyError) { MontageMaterializationFreeze.build(calibration, 'digest', resources, 'relay') }
+  end
+
   def test_rejects_missing_measured_rate_and_wrong_volume_basis
     calibration = observations
     calibration.fetch('materializationPhaseObservations').find { |r| r.fetch('phase') == 'archive-upload' }['effectiveArchiveBytesPerSecond'] = nil

@@ -45,6 +45,9 @@ type Profile struct {
 	// Pack-and-receive is measured as one combined phase in real telemetry.
 	// Do not add source CPU preparation a second time to this effective rate.
 	IngressIncludesSourcePreparation bool `json:"ingressIncludesSourcePreparation,omitempty"`
+	// Independent service measurements must exclude admission queue. Without
+	// this evidence, ingress remains a combined pack-and-receive measurement.
+	SeparatedIngressServiceSource string `json:"separatedIngressServiceSource,omitempty"`
 }
 
 type MergeProfile struct {
@@ -148,8 +151,17 @@ func (m Model) Validate() error {
 		if profile.Strategy != "shared-storage" && (profile.ArchiveToWorkspaceRatio <= 0 || profile.UploadArchiveBytesPerSecond <= 0) {
 			return fmt.Errorf("materialization profile lacks archive ratio or upload rate")
 		}
-		if profile.Strategy == "gateway" && (profile.IngressArchiveBytesPerSecond <= 0 || !profile.IngressIncludesSourcePreparation) {
-			return fmt.Errorf("gateway profile must identify combined measured pack-and-receive rate")
+		if profile.Strategy == "gateway" {
+			if profile.IngressArchiveBytesPerSecond <= 0 {
+				return fmt.Errorf("gateway profile requires measured ingress rate")
+			}
+			if profile.IngressIncludesSourcePreparation {
+				if profile.SnapshotSecondsPerByte != 0 || profile.SeparatedIngressServiceSource != "" {
+					return fmt.Errorf("combined ingress cannot also charge separate source preparation")
+				}
+			} else if profile.SeparatedIngressServiceSource == "" {
+				return fmt.Errorf("gateway separated ingress requires queue-free service provenance")
+			}
 		}
 	}
 	seen = map[string]bool{}
@@ -224,8 +236,11 @@ func (m Model) Route(sourceID, targetID string, workspaceBytes int64) (Route, er
 		result.NetworkBytes = 2 * archiveBytes
 		result.RelayNetworkBytes = result.NetworkBytes
 		result.Stages = []Stage{
-			{Name: "relay-pack-and-receive", SourceResourceID: sourceID, TargetResourceID: m.RelayResourceID, Bytes: archiveBytes, EffectiveBytesPerSecond: p.IngressArchiveBytesPerSecond, BeforeSeconds: p.ProbeSeconds, AfterSeconds: bytes * p.ValidationSecondsPerByte},
+			{Name: "relay-pack-and-receive", SourceResourceID: sourceID, TargetResourceID: m.RelayResourceID, Bytes: archiveBytes, EffectiveBytesPerSecond: p.IngressArchiveBytesPerSecond, BeforeSeconds: p.ProbeSeconds + bytes*p.SnapshotSecondsPerByte, AfterSeconds: bytes * p.ValidationSecondsPerByte},
 			{Name: "relay-upload-and-extract", SourceResourceID: m.RelayResourceID, TargetResourceID: targetID, Bytes: archiveBytes, EffectiveBytesPerSecond: p.UploadArchiveBytesPerSecond, AfterSeconds: bytes * p.ReceiverSecondsPerByte},
+		}
+		if !p.IngressIncludesSourcePreparation {
+			result.Stages[0].Name = "relay-source-preparation-and-ingress"
 		}
 	}
 	return m.withBulkServices(result), nil

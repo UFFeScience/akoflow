@@ -63,10 +63,12 @@ module MontageExecutionCalibration
         # records. Use shared_preparations once instead of fitting them here.
         next if phase.fetch('name').start_with?('shared-')
         measured_service = phase.fetch('name') == 'pack-and-receive' && !route['source_pack_execution_seconds'].nil?
-        seconds = measured_service ? route.fetch('source_pack_execution_seconds') : phase.fetch('durationSeconds')
+        phase_service = !phase['executionSeconds'].nil?
+        seconds = phase_service ? phase.fetch('executionSeconds') : measured_service ? route.fetch('source_pack_execution_seconds') : phase.fetch('durationSeconds')
         phases << { 'strategy' => route.fetch('strategy'), 'sourceClass' => resource_class(source.fetch('resource_id')),
           'targetClass' => resource_class(target.fetch('resource_id')), 'phase' => phase.fetch('name'),
-          'seconds' => seconds, 'secondsBasis' => measured_service ? 'source-command-execution-excludes-channel-queue' : 'combined-phase-wall-includes-unseparated-service-queue',
+          'seconds' => seconds, 'secondsBasis' => phase_service ? 'phase-command-execution-excludes-channel-queue' : measured_service ? 'source-command-execution-excludes-channel-queue' : 'combined-phase-wall-includes-unseparated-service-queue',
+          'phaseChannelWaitSeconds' => phase_service ? phase['sshChannelWaitSeconds'].to_f : nil,
           'sourceChannelWaitSeconds' => measured_service ? route['source_pack_ssh_channel_wait_seconds'].to_f : nil,
           'sourcePreflightServiceSeconds' => route['source_pack_preflight_service_seconds'],
           'sourcePreflightChannelWaitSeconds' => route['source_pack_preflight_service_seconds'].nil? ? nil : route['source_pack_preflight_ssh_channel_wait_seconds'].to_f,
@@ -79,6 +81,7 @@ module MontageExecutionCalibration
       { 'strategy' => strategy, 'sourceClass' => source, 'targetClass' => target, 'phase' => phase,
         'seconds' => summary(samples.map { |p| p['seconds'] }),
         'secondsBases' => samples.map { |p| p['secondsBasis'] }.uniq.sort,
+        'phaseChannelWaitSeconds' => summary(samples.map { |p| p['phaseChannelWaitSeconds'] }),
         'sourceChannelWaitSeconds' => phase == 'pack-and-receive' ? summary(samples.map { |p| p['sourceChannelWaitSeconds'] }) : nil,
         'sourcePreflightSeconds' => phase == 'pack-and-receive' ? summary(samples.map { |p| p['sourcePreflightSeconds'] }) : nil,
         'sourcePreflightServiceSeconds' => phase == 'pack-and-receive' ? summary(samples.map { |p| p['sourcePreflightServiceSeconds'] }) : nil,

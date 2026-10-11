@@ -33,6 +33,34 @@ func measureWorkspacePhase(run *domain.DataTransferRun, name string, operation f
 	return err
 }
 
+// Record admission separately from destination command service. A zero-valued
+// pointer proves the queue was measured; absence keeps legacy wall-time data
+// distinguishable, so calibration cannot silently double-count contention.
+func measureWorkspaceSSHPhase(ctx context.Context, run *domain.DataTransferRun, name string, endpoint domain.TransferEndpoint, args []string) ([]byte, error) {
+	var output []byte
+	var queue, execution float64
+	var executed bool
+	err := measureWorkspacePhase(run, name, func() error {
+		queuedAt := time.Now()
+		command, release, err := queuedSSHCommand(ctx, endpoint, args)
+		queue = time.Since(queuedAt).Seconds()
+		if err != nil {
+			return err
+		}
+		defer release()
+		startedAt := time.Now()
+		output, err = command.CombinedOutput()
+		execution, executed = time.Since(startedAt).Seconds(), true
+		return err
+	})
+	phase := &run.Route.Phases[len(run.Route.Phases)-1]
+	phase.SSHChannelWaitSeconds = &queue
+	if executed {
+		phase.ExecutionSeconds = &execution
+	}
+	return output, err
+}
+
 func parallelWorkspacePreparation(ctx context.Context, count, limit int, prepare func(context.Context, int) error) error {
 	if limit <= 0 {
 		limit = 8
@@ -153,11 +181,7 @@ func relayWorkspaceArchive(ctx context.Context, source, destination domain.Trans
 	command := "set -eu; actual=$(sha256sum -- " + shell(remoteArchive) + "); test \"${actual%% *}\" = " + shell(digest) +
 		"; tar --extract --file=" + shell(remoteArchive) + " --directory=" + shell(target) + " --no-same-owner --no-same-permissions"
 	var output []byte
-	err = measureWorkspacePhase(run, "receiver-verify-and-extract", func() error {
-		var extractErr error
-		output, extractErr = runSSHCombinedOutput(ctx, destination, append(sshArgs(destination), host, command), nil)
-		return extractErr
-	})
+	output, err = measureWorkspaceSSHPhase(ctx, run, "receiver-verify-and-extract", destination, append(sshArgs(destination), host, command))
 	if err != nil {
 		return fmt.Errorf("verify/extract workspace archive: %w: %s", err, strings.TrimSpace(string(output)))
 	}

@@ -26,6 +26,28 @@ func TestWorkspacePhaseRecordsFailureWithoutChangingError(t *testing.T) {
 	}
 }
 
+func TestReceiverPhaseSeparatesSSHAdmissionAndCommandService(t *testing.T) {
+	bin := t.TempDir()
+	if err := os.WriteFile(filepath.Join(bin, "ssh"), []byte("#!/bin/sh\nprintf 'receiver-fixture'\nexit \"$1\"\n"), 0700); err != nil {
+		t.Fatal(err)
+	}
+	t.Setenv("PATH", bin+string(os.PathListSeparator)+os.Getenv("PATH"))
+	for _, code := range []string{"0", "7"} {
+		var run domain.DataTransferRun
+		output, err := measureWorkspaceSSHPhase(context.Background(), &run, "receiver-verify-and-extract", domain.TransferEndpoint{}, []string{code})
+		phase := run.Route.Phases[0]
+		if string(output) != "receiver-fixture" || (err != nil) != (code == "7") || phase.Failed != (code == "7") {
+			t.Fatalf("lost command output or failure: phase=%+v err=%v", phase, err)
+		}
+		if phase.ExecutionSeconds == nil || phase.SSHChannelWaitSeconds == nil || *phase.ExecutionSeconds <= 0 || *phase.SSHChannelWaitSeconds < 0 {
+			t.Fatalf("missing measured receiver service: %+v", phase)
+		}
+		if *phase.ExecutionSeconds+*phase.SSHChannelWaitSeconds > phase.DurationSeconds+0.001 {
+			t.Fatalf("service and queue exceed phase wall: %+v", phase)
+		}
+	}
+}
+
 func TestRemoteWorkspaceVerificationReadsUniqueDestinationOnce(t *testing.T) {
 	if _, err := exec.LookPath("python3"); err != nil {
 		t.Fatal("python3 is required for the remote-script fixture")

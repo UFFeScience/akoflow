@@ -110,16 +110,10 @@ func preparePeerWorkspaceArchive(ctx context.Context, source, destination domain
 		return true, err
 	}
 	run.NetworkBytes = snapshot.size
-	err = measureWorkspacePhase(run, "peer-receiver-verify-and-extract", func() error {
-		command := "python3 -c " + shell(peerArchiveVerifyScript) + " " + shell(filepath.Join(target, "peer-workspace.tar.gz")) + " " + shell(target) + " " + shell(snapshot.digest)
-		output, err := runSSHCombinedOutput(ctx, destination, append(sshArgs(destination), targetHost, command), nil)
-		if err != nil {
-			return fmt.Errorf("peer archive validation: %w: %s", err, strings.TrimSpace(string(output)))
-		}
-		return nil
-	})
+	command := "python3 -c " + shell(peerArchiveVerifyScript) + " " + shell(filepath.Join(target, "peer-workspace.tar.gz")) + " " + shell(target) + " " + shell(snapshot.digest)
+	output, err = measureWorkspaceSSHPhase(ctx, run, "peer-receiver-verify-and-extract", destination, append(sshArgs(destination), targetHost, command))
 	if err != nil {
-		return true, fmt.Errorf("verify private peer archive: %w", err)
+		return true, fmt.Errorf("verify private peer archive: %w: %s", err, strings.TrimSpace(string(output)))
 	}
 	return true, rejectWorkspaceSymlinks(ctx, destination)
 }

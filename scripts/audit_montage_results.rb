@@ -117,7 +117,7 @@ def montage_audit(request, response, simulation, require_fresh: false)
         source_pack_preflight_service_seconds: route['sourcePackPreflightServiceSeconds'],
         source_pack_ssh_channel_wait_seconds: route['sourcePackSshChannelWaitSeconds'],
         source_pack_execution_seconds: route['sourcePackExecutionSeconds'],
-        phases: route.fetch('phases', []).map { |p| p.select { |k, _| %w[name durationSeconds].include?(k) } }
+        phases: route.fetch('phases', []).map { |p| p.select { |k, _| %w[name durationSeconds sshChannelWaitSeconds executionSeconds].include?(k) } }
       }
     end,
     # Joint phases are repeated on each predecessor route. Group by exact consumer

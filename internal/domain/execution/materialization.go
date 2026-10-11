@@ -162,11 +162,13 @@ type TransferRoute struct {
 // TransferPhase is elapsed wall time, not exclusive work: concurrent origins
 // and the shared publication barrier must not be summed as consumer latency.
 type TransferPhase struct {
-	Name            string  `json:"name"`
-	StartedAt       float64 `json:"startedAt"`
-	FinishedAt      float64 `json:"finishedAt"`
-	DurationSeconds float64 `json:"durationSeconds"`
-	Failed          bool    `json:"failed,omitempty"`
+	Name                  string   `json:"name"`
+	StartedAt             float64  `json:"startedAt"`
+	FinishedAt            float64  `json:"finishedAt"`
+	DurationSeconds       float64  `json:"durationSeconds"`
+	SSHChannelWaitSeconds *float64 `json:"sshChannelWaitSeconds,omitempty"`
+	ExecutionSeconds      *float64 `json:"executionSeconds,omitempty"`
+	Failed                bool     `json:"failed,omitempty"`
 }
 type ConnectorBinding struct {
 	ID            string `json:"id"`

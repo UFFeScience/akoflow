@@ -62,4 +62,23 @@ class MontageExecutionCalibrationTest < Minitest::Test
     projection['baselineRunId'] = 'another-run'
     assert_raises(RuntimeError) { MontageExecutionCalibration.build(data, projection.fetch('auditedEvidenceSHA256'), projection) }
   end
+
+  def test_receiver_command_service_not_phase_wall_or_queue
+    data = baseline
+    data.fetch('routes').each do |route|
+      route.fetch('phases').select { |phase| phase.fetch('name').end_with?('receiver-verify-and-extract') }.each do |phase|
+        phase['executionSeconds'] = 3
+        phase['sshChannelWaitSeconds'] = 12
+        phase['durationSeconds'] = 15
+      end
+    end
+    result = MontageExecutionCalibration.build(data, 'digest')
+    receivers = result.fetch('materializationPhaseObservations').select { |phase| phase.fetch('phase').end_with?('receiver-verify-and-extract') }
+    refute_empty receivers
+    receivers.each do |phase|
+      assert_equal 3, phase.fetch('seconds').fetch('median')
+      assert_equal 12, phase.fetch('phaseChannelWaitSeconds').fetch('median')
+      assert_equal ['phase-command-execution-excludes-channel-queue'], phase.fetch('secondsBases')
+    end
+  end
 end

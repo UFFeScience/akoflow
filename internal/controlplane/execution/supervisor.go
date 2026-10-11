@@ -1491,6 +1491,7 @@ func applyHandleTiming(task *domain.TaskExecution, handle domain.ActivityHandle)
 		"remoteContainerLaunchSeconds", "remoteInitialTelemetrySeconds",
 		"remoteArtifactObservationStartedAt", "remoteArtifactObservationFinishedAt",
 		"remoteArtifactObservationSeconds", "remoteArtifactsReadyAt", "terminalObservedAt",
+		"remoteArtifactObservationServiceSeconds",
 	} {
 		if value, ok := metadataFloat(handle.Metadata, key); ok && value >= 0 {
 			if task.Metadata == nil {

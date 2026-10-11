@@ -30,6 +30,19 @@ func TestMeasuredSnapshotRejectsIncompleteOrNegativeService(t *testing.T) {
 	}
 }
 
+func TestTerminalArtifactObservationPublishesQueueFreeService(t *testing.T) {
+	finished := time.Now().UTC().Add(-time.Minute)
+	executor := &commandExecutorStub{responses: [][]byte{
+		[]byte("exited|0|" + finished.Format(time.RFC3339Nano)),
+		[]byte(`{"files":[],"serviceSeconds":0.001}`), nil,
+	}, delays: []time.Duration{0, 20 * time.Millisecond}}
+	adapter := &Adapter{executor: executor}
+	handle, err := adapter.Inspect(context.Background(), domain.ActivityHandle{ExternalID: "container", StartedAt: float64(finished.UnixNano())/1e9 - 10, Metadata: map[string]any{"artifactObservationRoot": "/workspace", "artifactObservationBefore": "[]"}})
+	if err != nil || handle.Metadata["remoteArtifactObservationServiceSeconds"] != .001 || handle.Metadata["remoteArtifactObservationSeconds"].(float64) <= .001 {
+		t.Fatalf("terminal service/wall evidence: %+v %v", handle, err)
+	}
+}
+
 func TestRemoteCompletionUsesNativeTimeNotInspectionDelay(t *testing.T) {
 	finished := time.Now().UTC().Add(-time.Minute)
 	executor := &commandExecutorStub{responses: [][]byte{[]byte("exited|0|" + finished.Format(time.RFC3339Nano))}}

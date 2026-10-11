@@ -254,9 +254,12 @@ func (a *Adapter) collectArtifacts(ctx context.Context, handle domain.ActivityHa
 			return nil, fmt.Errorf("decode initial remote snapshot: %w", err)
 		}
 	}
-	after, err := a.snapshot(ctx, root)
+	after, serviceSeconds, err := a.measuredSnapshot(ctx, root)
 	if err != nil {
 		return nil, err
+	}
+	if handle.Metadata != nil && serviceSeconds > 0 {
+		handle.Metadata["remoteArtifactObservationServiceSeconds"] = serviceSeconds
 	}
 	return remoteArtifactManifest(handle, root, exitCode, before, after), nil
 }

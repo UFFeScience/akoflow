@@ -112,6 +112,9 @@ def montage_audit(request, response, simulation, require_fresh: false)
         network_bytes: t['networkBytes'], relay_server_network_bytes: route['serverNetworkBytes'],
         archive_bytes: route['archiveBytes'], files: route['filesTransferred'], snapshot_reused: route['snapshotReused'],
         ssh_channel_wait_seconds: route['sshChannelWaitSeconds'], rsync_execution_seconds: route['rsyncExecutionSeconds'],
+        source_pack_preflight_seconds: route['sourcePackPreflightSeconds'],
+        source_pack_ssh_channel_wait_seconds: route['sourcePackSshChannelWaitSeconds'],
+        source_pack_execution_seconds: route['sourcePackExecutionSeconds'],
         phases: route.fetch('phases', []).map { |p| p.select { |k, _| %w[name durationSeconds].include?(k) } }
       }
     end,
@@ -129,7 +132,10 @@ def montage_audit(request, response, simulation, require_fresh: false)
       {consumer_activity_id: key[0], barrier_seconds: phase['durationSeconds'],
        merge_seconds: merge && merge['durationSeconds'],
        merge_check_seconds: r['mergeCheckSeconds'], merge_copy_seconds: r['mergeCopySeconds'],
-       merge_verify_seconds: r['mergeVerifySeconds']}
+       merge_verify_seconds: r['mergeVerifySeconds'],
+       merge_ssh_channel_wait_seconds: r['mergeSshChannelWaitSeconds'],
+       merge_execution_seconds: r['mergeExecutionSeconds'],
+       merge_command_overhead_seconds: r['mergeCommandOverheadSeconds']}
     end.compact,
     activities: expected.sort.map do |id|
       task = latest.fetch(id)

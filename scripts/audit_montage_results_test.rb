@@ -33,6 +33,8 @@ class MontageAuditTest < Minitest::Test
     args[0]['workflow']['dependencies'] = [{'activityId'=>'activity-2', 'dependsOnActivityId'=>'activity-1'}]
     route = {'producerActivityId'=>'activity-1', 'consumerActivityId'=>'activity-2',
       'serverNetworkBytes'=>100, 'address'=>'never-export', 'mergeCopySeconds'=>2,
+      'sourcePackSshChannelWaitSeconds'=>7, 'sourcePackExecutionSeconds'=>8,
+      'mergeSshChannelWaitSeconds'=>0.1, 'mergeExecutionSeconds'=>1.9, 'mergeCommandOverheadSeconds'=>0.2,
       'phases'=>[{'name'=>'shared-preparation-barrier', 'startedAt'=>1, 'finishedAt'=>4, 'durationSeconds'=>3},
         {'name'=>'shared-conflict-check-copy-and-verify', 'startedAt'=>4, 'finishedAt'=>6, 'durationSeconds'=>2}]}
     transfer = {'activityId'=>'activity-2', 'status'=>'completed', 'strategy'=>'gateway', 'finishedAt'=>19, 'route'=>route}
@@ -41,6 +43,10 @@ class MontageAuditTest < Minitest::Test
     assert_equal 1, report[:shared_preparations].length
     assert_equal 3, report[:shared_preparations].first[:barrier_seconds]
     assert_equal 2, report[:shared_preparations].first[:merge_seconds]
+    assert_equal 0.1, report[:shared_preparations].first[:merge_ssh_channel_wait_seconds]
+    assert_equal 0.2, report[:shared_preparations].first[:merge_command_overhead_seconds]
+    assert_equal 7, report[:routes].first[:source_pack_ssh_channel_wait_seconds]
+    assert_equal 8, report[:routes].first[:source_pack_execution_seconds]
     assert_equal 200, report[:relay_server_network_bytes]
     refute_match(/never-export/, JSON.generate(report))
     args[1]['artifactTransferRuns'][0]['strategy'] = 'direct-runtime'

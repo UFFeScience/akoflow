@@ -94,3 +94,48 @@ func TestMaterializationRateLimitAndReceiverAreSeparateEvents(t *testing.T) {
 		t.Fatalf("receiver work consumed bandwidth: %v %g", rates, at)
 	}
 }
+
+func TestPRISMSixSourceFanInUsesTwoBulkServiceWaves(t *testing.T) {
+	model := materializationmodel.Model{SchemaVersion: 1, Source: "service-fixture", RelayResourceID: "relay",
+		Resources: map[string]materializationmodel.Resource{
+			"hpc":    {Class: "hpc", Domain: "hpc", BulkServiceGroupID: "hpc-session", BulkServiceSlots: 3, BulkServiceSource: "fixture"},
+			"target": {Class: "micro", Domain: "cloud", BulkServiceGroupID: "cloud-session", BulkServiceSlots: 3, BulkServiceSource: "fixture"},
+			"relay":  {Class: "relay", Domain: "relay"},
+		},
+		Profiles: []materializationmodel.Profile{{Strategy: "gateway", SourceClass: "hpc", TargetClass: "micro", Source: "fixture", Samples: 1,
+			ArchiveToWorkspaceRatio: 1, IngressArchiveBytesPerSecond: 10, UploadArchiveBytesPerSecond: 100, IngressIncludesSourcePreparation: true}},
+		MergeProfiles: []materializationmodel.MergeProfile{{TargetClass: "micro", Source: "fixture", Samples: 1, CheckSecondsPerInputByte: 1.0 / 300}},
+	}
+	request := domain.PlanningRequest{ExecutionScope: domain.ExecutionScope{EnvironmentVersionIDs: []string{"environment"}},
+		Resources: []domain.Resource{planningResource("hpc", 1, 1, 0), planningResource("target", 1, 1, 0), planningResource("relay", 1, 1, 0)},
+		NetworkTopology: domain.NetworkTopology{Metadata: map[string]any{"workspaceMaterializationModel": model}, Links: []domain.NetworkLink{
+			{ID: "ingress", SourceResourceID: "hpc", TargetResourceID: "relay", BandwidthBitsPerSecond: 8e9, SharingPolicy: "SHARED"},
+			{ID: "egress", SourceResourceID: "relay", TargetResourceID: "target", BandwidthBitsPerSecond: 8e9, SharingPolicy: "SHARED"},
+		}},
+	}
+	assignments := []domain.PlanAssignment{}
+	for i := 0; i < 6; i++ {
+		id := string(rune('a' + i))
+		activity := planningActivity(id, 1)
+		activity.Metadata = map[string]any{"workspaceProjection": domainworkflow.WorkspaceProjection{Contract: "whole-workspace-v1", Source: "fixture",
+			Outputs: []domainworkflow.ProjectedFile{{Path: id, SizeBytes: 100, ContentID: id}}}}
+		request.Workflow.Activities = append(request.Workflow.Activities, activity)
+		request.Workflow.Dependencies = append(request.Workflow.Dependencies, domain.ActivityDependency{ActivityID: "consumer", DependsOnActivityID: id})
+		assignments = append(assignments, domain.PlanAssignment{ActivityID: id, ResourceID: "hpc", CoreID: "hpc-core-1"})
+	}
+	consumer := planningActivity("consumer", 1)
+	consumer.Metadata = map[string]any{"workspaceProjection": domainworkflow.WorkspaceProjection{Contract: "whole-workspace-v1", Source: "fixture"}}
+	request.Workflow.Activities = append(request.Workflow.Activities, consumer)
+	assignments = append(assignments, domain.PlanAssignment{ActivityID: "consumer", ResourceID: "target", CoreID: "target-core-1"})
+	search, err := newCompactPRISMContext(request, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	evaluated, err := evaluateCompleteCompactPRISMState(search, compactPRISMStateFromEvaluation(compactPRISMState{}, assignments, 0, 0))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if math.Abs(evaluated.makespan-30) > 1e-8 {
+		t.Fatalf("expected six serial roots plus two waves, merge and compute: 30s; got %g", evaluated.makespan)
+	}
+}

@@ -85,6 +85,28 @@ class NativeMaterializationTest(unittest.TestCase):
         model["dependencies"][0]["stages"][0]["serviceSlots"] = 2
         self.assertIn("conflicting shared service capacities", self.run_model(model, success=False))
 
+    def test_six_predecessors_use_two_waves_of_three_transport_slots(self):
+        model = self.fixture()
+        model["tasks"] = [{"id": f"p{i}", "assignmentId": f"p{i}",
+                           "resourceId": "hpc", "flops": 1000000000} for i in range(6)]
+        model["resourceLaneOrders"] = [{"predecessorId": f"p{i-1}", "successorId": f"p{i}"} for i in range(1, 6)]
+        model["tasks"].append({"id": "b", "assignmentId": "b", "resourceId": "cloud-b",
+                               "flops": 1000000000, "preparationSeconds": 2,
+                               "preparationServiceGroupId": "cloud-session", "preparationServiceSlots": 3})
+        model["dependencies"] = [{"producerId": f"p{i}", "consumerId": "b", "bytes": 100,
+            "networkBytes": 0, "relayNetworkBytes": 0, "strategy": "gateway", "stages": [
+                {"name": "source-pack", "sourceResourceId": "hpc", "targetResourceId": "relay",
+                 "bytes": 0, "beforeSeconds": 10, "serviceGroupId": "hpc-session", "serviceSlots": 3},
+                {"name": "target-extract", "sourceResourceId": "relay", "targetResourceId": "cloud-b",
+                 "bytes": 0, "afterSeconds": 1, "serviceGroupId": "cloud-session", "serviceSlots": 3}
+            ]} for i in range(6)]
+        result = self.run_model(model)
+        starts = sorted(flow["route"]["phases"][0]["startedAt"] for flow in result["transfers"])
+        self.assertEqual(starts, [6, 6, 6, 16, 16, 16])
+        waits = sorted(flow["route"]["phases"][0]["serviceWaitSeconds"] for flow in result["transfers"])
+        self.assertEqual(waits, [0, 0, 0, 10, 10, 10])
+        self.assertAlmostEqual(result["executed"]["makespanSeconds"], 30, places=5)
+
     def test_legacy_zero_byte_control_dependency_does_not_deadlock(self):
         model = self.fixture()
         model.pop("materializationModelVersion")

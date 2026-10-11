@@ -102,6 +102,8 @@ static InterferenceModel create_interference(const json& input)
 struct TransferStage {
   std::string service_group;
   int service_slots = 0;
+  double service_queued_at = 0;
+  double service_wait_seconds = 0;
   std::string name;
   std::string source;
   std::string target;
@@ -340,7 +342,9 @@ static void run_simulation(sg4::Engine& engine, const json& input,
       if (!transfer_model->stages.empty()) {
         for (size_t stage_index=0; stage_index<transfer_model->stages.size(); ++stage_index) {
           auto& stage=transfer_model->stages[stage_index];
+          stage.service_queued_at = sg4::Engine::get_clock();
           if (!stage.service_group.empty()) service_pools.at(stage.service_group)->acquire();
+          stage.service_wait_seconds = sg4::Engine::get_clock() - stage.service_queued_at;
           stage.started_at = sg4::Engine::get_clock();
           if (stage.bytes > 0) {
             auto* stage_model=&stage;
@@ -627,7 +631,9 @@ static json build_result(const json& input, const std::map<std::string, TaskMode
     total_cost += cost;
     json phases=json::array();
     for (const auto& stage : transfer.stages)
-      phases.push_back({{"name",stage.name},{"startedAt",stage.started_at},{"finishedAt",stage.finished_at},{"durationSeconds",stage.finished_at-stage.started_at}});
+      phases.push_back({{"name",stage.name},{"startedAt",stage.started_at},{"finishedAt",stage.finished_at},{"durationSeconds",stage.finished_at-stage.started_at},
+                       {"serviceGroupId",stage.service_group},{"serviceSlots",stage.service_slots},
+                       {"serviceQueuedAt",stage.service_queued_at},{"serviceWaitSeconds",stage.service_wait_seconds}});
     result["transfers"].push_back({
         {"id", input.at("runId").get<std::string>() + ":" + transfer.producer_id + ":" + transfer.consumer_id},
         {"executionRunId", input.at("runId")}, {"producerActivityId", transfer.producer_id},

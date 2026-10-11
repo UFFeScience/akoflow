@@ -49,9 +49,13 @@ module MontageMaterializationFreeze
     end
     merges = calibration.fetch('mergeRateObservations').map do |row|
       rates = row.fetch('observations')
-      { 'targetClass'=>row.fetch('targetClass'), 'source'=>source,
+      profile = { 'targetClass'=>row.fetch('targetClass'), 'source'=>source,
         'samples'=>rates.fetch('checkSecondsPerInputByte').fetch('samples') }.merge(
           rates.to_h { |key, _| [key, median(rates, key)] })
+      # Execution residual excludes CHECK/COPY/VERIFY and SSH admission queue.
+      # Charge it once per consumer, not once per predecessor or per byte.
+      profile['commandOverheadSeconds'] = median(row, 'commandOverheadSeconds') if row['commandOverheadSeconds']
+      profile
     end
     { 'schemaVersion'=>1, 'source'=>source, 'relayResourceId'=>relay_id,
       'resources'=>resources, 'profiles'=>profiles, 'mergeProfiles'=>merges }

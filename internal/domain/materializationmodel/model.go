@@ -51,6 +51,7 @@ type MergeProfile struct {
 	TargetClass                string  `json:"targetClass"`
 	Source                     string  `json:"source"`
 	Samples                    int     `json:"samples"`
+	CommandOverheadSeconds     float64 `json:"commandOverheadSeconds,omitempty"`
 	CheckSecondsPerInputByte   float64 `json:"checkSecondsPerInputByte"`
 	CopySecondsPerUniqueByte   float64 `json:"copySecondsPerUniqueByte"`
 	VerifySecondsPerUniqueByte float64 `json:"verifySecondsPerUniqueByte"`
@@ -153,7 +154,7 @@ func (m Model) Validate() error {
 	}
 	seen = map[string]bool{}
 	for _, profile := range m.MergeProfiles {
-		if seen[profile.TargetClass] || profile.TargetClass == "" || profile.Source == "" || profile.Samples < 1 || !validNonnegative(profile.CheckSecondsPerInputByte, profile.CopySecondsPerUniqueByte, profile.VerifySecondsPerUniqueByte) {
+		if seen[profile.TargetClass] || profile.TargetClass == "" || profile.Source == "" || profile.Samples < 1 || !validNonnegative(profile.CommandOverheadSeconds, profile.CheckSecondsPerInputByte, profile.CopySecondsPerUniqueByte, profile.VerifySecondsPerUniqueByte) {
 			return fmt.Errorf("invalid or duplicate merge profile %q", profile.TargetClass)
 		}
 		seen[profile.TargetClass] = true
@@ -261,7 +262,7 @@ func (m Model) MergeSeconds(targetID string, inputTotalBytes, inputUniqueBytes i
 	}
 	for _, profile := range m.MergeProfiles {
 		if profile.TargetClass == resource.Class {
-			seconds := float64(inputTotalBytes)*profile.CheckSecondsPerInputByte + float64(inputUniqueBytes)*(profile.CopySecondsPerUniqueByte+profile.VerifySecondsPerUniqueByte)
+			seconds := profile.CommandOverheadSeconds + float64(inputTotalBytes)*profile.CheckSecondsPerInputByte + float64(inputUniqueBytes)*(profile.CopySecondsPerUniqueByte+profile.VerifySecondsPerUniqueByte)
 			if !validNonnegative(seconds) {
 				return 0, fmt.Errorf("merge estimate overflow")
 			}

@@ -49,6 +49,20 @@ func TestRunnerContractMaterializationStagesAndConsumerMerge(t *testing.T) {
 	require.ErrorContains(t, err, "absent from platform")
 }
 
+func TestRunnerContractIncludesFixedMergeCommandServiceOnce(t *testing.T) {
+	request := materializedRequestFixture()
+	model := request.NetworkTopology.Metadata["workspaceMaterializationModel"].(materializationmodel.Model)
+	model.MergeProfiles[0].CommandOverheadSeconds = 2.5
+	request.NetworkTopology.Metadata["workspaceMaterializationModel"] = model
+	payload, err := buildRunnerInput(request, 1e9)
+	require.NoError(t, err)
+	var input runnerInput
+	require.NoError(t, json.Unmarshal(payload, &input))
+	require.Zero(t, input.Tasks[0].PreparationSeconds)
+	require.InDelta(t, 8.5, input.Tasks[1].PreparationSeconds, 1e-9)
+	require.EqualValues(t, 100, input.Dependencies[0].NetworkBytes)
+}
+
 func TestRunnerInputUsesWholeProducerWorkspaceNotDeclaredEdge(t *testing.T) {
 	request := ports.ExecutionRequest{
 		Run:       domain.ExecutionRun{ID: "run"},

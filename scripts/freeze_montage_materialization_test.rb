@@ -38,4 +38,15 @@ class MontageMaterializationFreezeTest < Minitest::Test
     profile = frozen.fetch('profiles').find { |r| r.values_at('sourceClass', 'targetClass') == ['hpc', 'e2-micro'] }
     assert_equal 0.4, profile.fetch('probeSeconds')
   end
+
+  def test_merge_command_overhead_preserves_service_not_channel_queue
+    calibration = observations
+    row = calibration.fetch('mergeRateObservations').find { |r| r.fetch('targetClass') == 'hpc' }
+    row['commandOverheadSeconds'] = {'samples'=>3, 'median'=>2.5}
+    row['channelWaitSeconds'] = {'samples'=>3, 'median'=>30}
+    frozen = MontageMaterializationFreeze.build(calibration, 'digest', resources, 'relay')
+    profile = frozen.fetch('mergeProfiles').find { |r| r.fetch('targetClass') == 'hpc' }
+    assert_equal 2.5, profile.fetch('commandOverheadSeconds')
+    refute profile.key?('channelWaitSeconds')
+  end
 end

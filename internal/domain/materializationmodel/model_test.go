@@ -143,6 +143,19 @@ func TestMergeChecksAllInputButCopiesUnionOnce(t *testing.T) {
 	require.Error(t, err)
 }
 
+func TestMergeCommandOverheadChargedOnceAndNotForRoots(t *testing.T) {
+	m := testModel()
+	m.MergeProfiles[0].CommandOverheadSeconds = 7
+	seconds, err := m.MergeSeconds("cloud-b", 250, 150)
+	require.NoError(t, err)
+	require.InDelta(t, 17, seconds, 1e-9)
+	zero, err := m.MergeSeconds("cloud-b", 0, 0)
+	require.NoError(t, err)
+	require.Zero(t, zero)
+	m.MergeProfiles[0].CommandOverheadSeconds = -1
+	require.Error(t, m.Validate())
+}
+
 func TestModelRejectsUnknownRatesAndNonfiniteInputs(t *testing.T) {
 	m := testModel()
 	_, err := m.Route("unknown", "cloud-a", 100)

@@ -66,6 +66,17 @@ func TestWorkspaceProjectionInheritedDiamond(t *testing.T) {
 	}
 	// Both parent snapshots include input; the merged child has it only once.
 	require.Equal(t, []int64{100, 100, 120, 130, 150}, sizes)
+	for _, activity := range projected.Activities {
+		if activity.ID == "d" {
+			volume := activity.Metadata["workspaceProjectionVolumes"].(WorkspaceProjectionVolumes)
+			require.EqualValues(t, 250, volume.InputTotalBytes)
+			require.EqualValues(t, 150, volume.InputUniqueBytes)
+			require.Equal(t, 3, volume.InputFiles)
+		}
+	}
+	for _, activity := range version.Activities {
+		require.NotContains(t, activity.Metadata, "workspaceProjectionVolumes")
+	}
 	require.Empty(t, version.DataDependencies, "must not mutate the catalog snapshot")
 	second, err := ProjectWorkspaceDependencies(projected)
 	require.NoError(t, err)

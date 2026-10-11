@@ -2373,6 +2373,80 @@
       }
     }
   ],
+  "mergeRateObservations": [
+    {
+      "targetClass": "e2-micro",
+      "source": "baseline:montage-docker-image-real-20261010-v2",
+      "observations": {
+        "checkSecondsPerInputByte": {
+          "samples": 34,
+          "median": 6.35527429607893e-09,
+          "minimum": 2.8968348057689955e-09,
+          "maximum": 7.236672806194324e-08
+        },
+        "copySecondsPerUniqueByte": {
+          "samples": 34,
+          "median": 1.699528122472209e-08,
+          "minimum": 7.844377436225745e-09,
+          "maximum": 6.452023672950758e-08
+        },
+        "verifySecondsPerUniqueByte": {
+          "samples": 34,
+          "median": 6.138832298139974e-09,
+          "minimum": 3.5569571742792556e-09,
+          "maximum": 7.073291666499625e-08
+        }
+      }
+    },
+    {
+      "targetClass": "e2-medium",
+      "source": "baseline:montage-docker-image-real-20261010-v2",
+      "observations": {
+        "checkSecondsPerInputByte": {
+          "samples": 6,
+          "median": 1.912526350228284e-09,
+          "minimum": 7.876752557337657e-10,
+          "maximum": 2.5742072137899076e-09
+        },
+        "copySecondsPerUniqueByte": {
+          "samples": 6,
+          "median": 4.454356662161575e-09,
+          "minimum": 2.3675786107344793e-09,
+          "maximum": 9.610568101437293e-09
+        },
+        "verifySecondsPerUniqueByte": {
+          "samples": 6,
+          "median": 8.04424495753747e-10,
+          "minimum": 7.83635464283875e-10,
+          "maximum": 4.434950997591924e-09
+        }
+      }
+    },
+    {
+      "targetClass": "hpc",
+      "source": "baseline:montage-docker-image-real-20261010-v2",
+      "observations": {
+        "checkSecondsPerInputByte": {
+          "samples": 6,
+          "median": 9.649068875587286e-09,
+          "minimum": 5.653559042397685e-09,
+          "maximum": 1.5362090273490482e-08
+        },
+        "copySecondsPerUniqueByte": {
+          "samples": 6,
+          "median": 7.94870229763006e-09,
+          "minimum": 6.085461673088312e-09,
+          "maximum": 1.718957664580683e-08
+        },
+        "verifySecondsPerUniqueByte": {
+          "samples": 6,
+          "median": 1.1464509411470224e-08,
+          "minimum": 8.721156347585568e-09,
+          "maximum": 1.4687200077643863e-08
+        }
+      }
+    }
+  ],
   "limitations": [
     "Single baseline; ranges are observations, not confidence intervals.",
     "Do not replay per-activity durations or total makespan as a holdout prediction.",

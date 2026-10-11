@@ -7297,6 +7297,298 @@
     "montage-58-fog-hpc-e2-20261006-mviewerid0000057": 1111200088,
     "montage-58-fog-hpc-e2-20261006-mviewerid0000058": 3144707157
   },
+  "observedConsumerInputVolumes": {
+    "montage-58-fog-hpc-e2-20261006-maddid0000018": {
+      "inputTotalBytes": 4023619216,
+      "inputUniqueBytes": 1059982632,
+      "inputFiles": 82
+    },
+    "montage-58-fog-hpc-e2-20261006-maddid0000037": {
+      "inputTotalBytes": 3979906550,
+      "inputUniqueBytes": 1048157342,
+      "inputFiles": 82
+    },
+    "montage-58-fog-hpc-e2-20261006-maddid0000056": {
+      "inputTotalBytes": 4013585264,
+      "inputUniqueBytes": 1057212056,
+      "inputFiles": 82
+    },
+    "montage-58-fog-hpc-e2-20261006-mbackgroundid0000013": {
+      "inputTotalBytes": 831490688,
+      "inputUniqueBytes": 634552186,
+      "inputFiles": 73
+    },
+    "montage-58-fog-hpc-e2-20261006-mbackgroundid0000014": {
+      "inputTotalBytes": 831450368,
+      "inputUniqueBytes": 634552186,
+      "inputFiles": 73
+    },
+    "montage-58-fog-hpc-e2-20261006-mbackgroundid0000015": {
+      "inputTotalBytes": 831450368,
+      "inputUniqueBytes": 634552186,
+      "inputFiles": 73
+    },
+    "montage-58-fog-hpc-e2-20261006-mbackgroundid0000016": {
+      "inputTotalBytes": 831450368,
+      "inputUniqueBytes": 634552186,
+      "inputFiles": 73
+    },
+    "montage-58-fog-hpc-e2-20261006-mbackgroundid0000032": {
+      "inputTotalBytes": 823490044,
+      "inputUniqueBytes": 627864822,
+      "inputFiles": 73
+    },
+    "montage-58-fog-hpc-e2-20261006-mbackgroundid0000033": {
+      "inputTotalBytes": 823530364,
+      "inputUniqueBytes": 627864822,
+      "inputFiles": 73
+    },
+    "montage-58-fog-hpc-e2-20261006-mbackgroundid0000034": {
+      "inputTotalBytes": 823443964,
+      "inputUniqueBytes": 627864822,
+      "inputFiles": 73
+    },
+    "montage-58-fog-hpc-e2-20261006-mbackgroundid0000035": {
+      "inputTotalBytes": 823490044,
+      "inputUniqueBytes": 627864822,
+      "inputFiles": 73
+    },
+    "montage-58-fog-hpc-e2-20261006-mbackgroundid0000051": {
+      "inputTotalBytes": 739073142,
+      "inputUniqueBytes": 633054582,
+      "inputFiles": 73
+    },
+    "montage-58-fog-hpc-e2-20261006-mbackgroundid0000052": {
+      "inputTotalBytes": 829664764,
+      "inputUniqueBytes": 633054582,
+      "inputFiles": 73
+    },
+    "montage-58-fog-hpc-e2-20261006-mbackgroundid0000053": {
+      "inputTotalBytes": 829664764,
+      "inputUniqueBytes": 633054582,
+      "inputFiles": 73
+    },
+    "montage-58-fog-hpc-e2-20261006-mbackgroundid0000054": {
+      "inputTotalBytes": 739073142,
+      "inputUniqueBytes": 633054582,
+      "inputFiles": 73
+    },
+    "montage-58-fog-hpc-e2-20261006-mbgmodelid0000012": {
+      "inputTotalBytes": 634551910,
+      "inputUniqueBytes": 634551910,
+      "inputFiles": 72
+    },
+    "montage-58-fog-hpc-e2-20261006-mbgmodelid0000031": {
+      "inputTotalBytes": 627864546,
+      "inputUniqueBytes": 627864546,
+      "inputFiles": 72
+    },
+    "montage-58-fog-hpc-e2-20261006-mbgmodelid0000050": {
+      "inputTotalBytes": 633054306,
+      "inputUniqueBytes": 633054306,
+      "inputFiles": 72
+    },
+    "montage-58-fog-hpc-e2-20261006-mconcatfitid0000011": {
+      "inputTotalBytes": 1938162643,
+      "inputUniqueBytes": 634550453,
+      "inputFiles": 71
+    },
+    "montage-58-fog-hpc-e2-20261006-mconcatfitid0000030": {
+      "inputTotalBytes": 1921199439,
+      "inputUniqueBytes": 627863089,
+      "inputFiles": 71
+    },
+    "montage-58-fog-hpc-e2-20261006-mconcatfitid0000049": {
+      "inputTotalBytes": 1843567817,
+      "inputUniqueBytes": 633052849,
+      "inputFiles": 71
+    },
+    "montage-58-fog-hpc-e2-20261006-mdifffitid0000005": {
+      "inputTotalBytes": 393836684,
+      "inputUniqueBytes": 303285382,
+      "inputFiles": 49
+    },
+    "montage-58-fog-hpc-e2-20261006-mdifffitid0000006": {
+      "inputTotalBytes": 393836684,
+      "inputUniqueBytes": 303285382,
+      "inputFiles": 49
+    },
+    "montage-58-fog-hpc-e2-20261006-mdifffitid0000007": {
+      "inputTotalBytes": 393836684,
+      "inputUniqueBytes": 303285382,
+      "inputFiles": 49
+    },
+    "montage-58-fog-hpc-e2-20261006-mdifffitid0000008": {
+      "inputTotalBytes": 393796364,
+      "inputUniqueBytes": 303245062,
+      "inputFiles": 49
+    },
+    "montage-58-fog-hpc-e2-20261006-mdifffitid0000009": {
+      "inputTotalBytes": 393796364,
+      "inputUniqueBytes": 303245062,
+      "inputFiles": 49
+    },
+    "montage-58-fog-hpc-e2-20261006-mdifffitid0000010": {
+      "inputTotalBytes": 393796364,
+      "inputUniqueBytes": 303245062,
+      "inputFiles": 49
+    },
+    "montage-58-fog-hpc-e2-20261006-mdifffitid0000024": {
+      "inputTotalBytes": 391290764,
+      "inputUniqueBytes": 300739462,
+      "inputFiles": 49
+    },
+    "montage-58-fog-hpc-e2-20261006-mdifffitid0000025": {
+      "inputTotalBytes": 391204364,
+      "inputUniqueBytes": 300653062,
+      "inputFiles": 49
+    },
+    "montage-58-fog-hpc-e2-20261006-mdifffitid0000026": {
+      "inputTotalBytes": 391250444,
+      "inputUniqueBytes": 300699142,
+      "inputFiles": 49
+    },
+    "montage-58-fog-hpc-e2-20261006-mdifffitid0000027": {
+      "inputTotalBytes": 391244684,
+      "inputUniqueBytes": 300693382,
+      "inputFiles": 49
+    },
+    "montage-58-fog-hpc-e2-20261006-mdifffitid0000028": {
+      "inputTotalBytes": 391290764,
+      "inputUniqueBytes": 300739462,
+      "inputFiles": 49
+    },
+    "montage-58-fog-hpc-e2-20261006-mdifffitid0000029": {
+      "inputTotalBytes": 391204364,
+      "inputUniqueBytes": 300653062,
+      "inputFiles": 49
+    },
+    "montage-58-fog-hpc-e2-20261006-mdifffitid0000043": {
+      "inputTotalBytes": 302628742,
+      "inputUniqueBytes": 302628742,
+      "inputFiles": 49
+    },
+    "montage-58-fog-hpc-e2-20261006-mdifffitid0000044": {
+      "inputTotalBytes": 302628742,
+      "inputUniqueBytes": 302628742,
+      "inputFiles": 49
+    },
+    "montage-58-fog-hpc-e2-20261006-mdifffitid0000045": {
+      "inputTotalBytes": 212037120,
+      "inputUniqueBytes": 212037120,
+      "inputFiles": 4
+    },
+    "montage-58-fog-hpc-e2-20261006-mdifffitid0000046": {
+      "inputTotalBytes": 393220364,
+      "inputUniqueBytes": 302669062,
+      "inputFiles": 49
+    },
+    "montage-58-fog-hpc-e2-20261006-mdifffitid0000047": {
+      "inputTotalBytes": 302628742,
+      "inputUniqueBytes": 302628742,
+      "inputFiles": 49
+    },
+    "montage-58-fog-hpc-e2-20261006-mdifffitid0000048": {
+      "inputTotalBytes": 302628742,
+      "inputUniqueBytes": 302628742,
+      "inputFiles": 49
+    },
+    "montage-58-fog-hpc-e2-20261006-mimgtblid0000017": {
+      "inputTotalBytes": 2963636584,
+      "inputUniqueBytes": 1059980026,
+      "inputFiles": 81
+    },
+    "montage-58-fog-hpc-e2-20261006-mimgtblid0000036": {
+      "inputTotalBytes": 2931749208,
+      "inputUniqueBytes": 1048154742,
+      "inputFiles": 81
+    },
+    "montage-58-fog-hpc-e2-20261006-mimgtblid0000055": {
+      "inputTotalBytes": 2956373208,
+      "inputUniqueBytes": 1057209462,
+      "inputFiles": 81
+    },
+    "montage-58-fog-hpc-e2-20261006-mprojectid0000001": {
+      "inputTotalBytes": 0,
+      "inputUniqueBytes": 0,
+      "inputFiles": 0
+    },
+    "montage-58-fog-hpc-e2-20261006-mprojectid0000002": {
+      "inputTotalBytes": 0,
+      "inputUniqueBytes": 0,
+      "inputFiles": 0
+    },
+    "montage-58-fog-hpc-e2-20261006-mprojectid0000003": {
+      "inputTotalBytes": 0,
+      "inputUniqueBytes": 0,
+      "inputFiles": 0
+    },
+    "montage-58-fog-hpc-e2-20261006-mprojectid0000004": {
+      "inputTotalBytes": 0,
+      "inputUniqueBytes": 0,
+      "inputFiles": 0
+    },
+    "montage-58-fog-hpc-e2-20261006-mprojectid0000020": {
+      "inputTotalBytes": 0,
+      "inputUniqueBytes": 0,
+      "inputFiles": 0
+    },
+    "montage-58-fog-hpc-e2-20261006-mprojectid0000021": {
+      "inputTotalBytes": 0,
+      "inputUniqueBytes": 0,
+      "inputFiles": 0
+    },
+    "montage-58-fog-hpc-e2-20261006-mprojectid0000022": {
+      "inputTotalBytes": 0,
+      "inputUniqueBytes": 0,
+      "inputFiles": 0
+    },
+    "montage-58-fog-hpc-e2-20261006-mprojectid0000023": {
+      "inputTotalBytes": 0,
+      "inputUniqueBytes": 0,
+      "inputFiles": 0
+    },
+    "montage-58-fog-hpc-e2-20261006-mprojectid0000039": {
+      "inputTotalBytes": 0,
+      "inputUniqueBytes": 0,
+      "inputFiles": 0
+    },
+    "montage-58-fog-hpc-e2-20261006-mprojectid0000040": {
+      "inputTotalBytes": 0,
+      "inputUniqueBytes": 0,
+      "inputFiles": 0
+    },
+    "montage-58-fog-hpc-e2-20261006-mprojectid0000041": {
+      "inputTotalBytes": 0,
+      "inputUniqueBytes": 0,
+      "inputFiles": 0
+    },
+    "montage-58-fog-hpc-e2-20261006-mprojectid0000042": {
+      "inputTotalBytes": 0,
+      "inputUniqueBytes": 0,
+      "inputFiles": 0
+    },
+    "montage-58-fog-hpc-e2-20261006-mviewerid0000019": {
+      "inputTotalBytes": 1111828392,
+      "inputUniqueBytes": 1111828392,
+      "inputFiles": 84
+    },
+    "montage-58-fog-hpc-e2-20261006-mviewerid0000038": {
+      "inputTotalBytes": 1100003102,
+      "inputUniqueBytes": 1100003102,
+      "inputFiles": 84
+    },
+    "montage-58-fog-hpc-e2-20261006-mviewerid0000057": {
+      "inputTotalBytes": 1109057816,
+      "inputUniqueBytes": 1109057816,
+      "inputFiles": 84
+    },
+    "montage-58-fog-hpc-e2-20261006-mviewerid0000058": {
+      "inputTotalBytes": 3320889310,
+      "inputUniqueBytes": 3139786706,
+      "inputFiles": 162
+    }
+  },
   "baselineAssignedResourceTypes": {
     "montage-58-fog-hpc-e2-20261006-mprojectid0000042": "hpc_machine",
     "montage-58-fog-hpc-e2-20261006-mprojectid0000039": "hpc_machine",

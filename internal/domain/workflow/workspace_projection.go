@@ -29,6 +29,14 @@ type ProjectedFile struct {
 	ContentID string `json:"contentId"`
 }
 
+type WorkspaceProjectionVolumes struct {
+	InputTotalBytes  int64 `json:"inputTotalBytes"`
+	InputUniqueBytes int64 `json:"inputUniqueBytes"`
+	InputFiles       int   `json:"inputFiles"`
+	OutputBytes      int64 `json:"outputBytes"`
+	OutputFiles      int   `json:"outputFiles"`
+}
+
 // ProjectWorkspaceDependencies preserves legacy edge semantics unless an
 // explicit whole-workspace model is supplied. Partial models fail closed: a
 // missing producer manifest must not silently turn into zero transfer bytes.
@@ -91,6 +99,7 @@ func ProjectWorkspaceDependenciesForResourceTypes(version WorkflowVersion, resou
 		preds[edge.ActivityID] = append(preds[edge.ActivityID], edge.DependsOnActivityID)
 	}
 	manifests := map[string]map[string]ProjectedFile{}
+	volumes := map[string]WorkspaceProjectionVolumes{}
 	for len(manifests) < len(models) {
 		progress := false
 		for _, activity := range version.Activities {
@@ -107,6 +116,7 @@ func ProjectWorkspaceDependenciesForResourceTypes(version WorkflowVersion, resou
 				continue
 			}
 			manifest := map[string]ProjectedFile{}
+			volume := WorkspaceProjectionVolumes{}
 			merge := func(file ProjectedFile, replace bool) error {
 				if file.Path == "" || strings.ContainsRune(file.Path, '\x00') || path.IsAbs(file.Path) || path.Clean(file.Path) != file.Path || file.Path == "." || file.Path == ".." || strings.HasPrefix(file.Path, "../") || strings.Contains(file.Path, "\\") || file.SizeBytes < 0 || file.ContentID == "" {
 					return fmt.Errorf("invalid projected file %q in %q", file.Path, activity.ID)
@@ -119,11 +129,22 @@ func ProjectWorkspaceDependenciesForResourceTypes(version WorkflowVersion, resou
 			}
 			for _, producer := range preds[activity.ID] {
 				for _, file := range manifests[producer] {
+					if file.SizeBytes > math.MaxInt64-volume.InputTotalBytes {
+						return version, fmt.Errorf("workspace input size overflow for %q", activity.ID)
+					}
+					volume.InputTotalBytes += file.SizeBytes
 					if err := merge(file, false); err != nil {
 						return version, err
 					}
 				}
 			}
+			for _, file := range manifest {
+				if file.SizeBytes > math.MaxInt64-volume.InputUniqueBytes {
+					return version, fmt.Errorf("workspace input union overflow for %q", activity.ID)
+				}
+				volume.InputUniqueBytes += file.SizeBytes
+			}
+			volume.InputFiles = len(manifest)
 			model := models[activity.ID]
 			for _, file := range model.Inputs {
 				if err := merge(file, false); err != nil {
@@ -147,6 +168,14 @@ func ProjectWorkspaceDependenciesForResourceTypes(version WorkflowVersion, resou
 				}
 			}
 			manifests[activity.ID] = manifest
+			for _, file := range manifest {
+				if file.SizeBytes > math.MaxInt64-volume.OutputBytes {
+					return version, fmt.Errorf("workspace output size overflow for %q", activity.ID)
+				}
+				volume.OutputBytes += file.SizeBytes
+			}
+			volume.OutputFiles = len(manifest)
+			volumes[activity.ID] = volume
 			progress = true
 		}
 		if !progress {
@@ -166,6 +195,15 @@ func ProjectWorkspaceDependenciesForResourceTypes(version WorkflowVersion, resou
 			bytes += file.SizeBytes
 		}
 		version.DataDependencies = append(version.DataDependencies, ActivityDataDependency{ProducerActivityID: edge.DependsOnActivityID, ConsumerActivityID: edge.ActivityID, LogicalName: "whole-workspace-v1", SizeBytes: bytes})
+	}
+	version.Activities = append([]Activity(nil), version.Activities...)
+	for index := range version.Activities {
+		metadata := map[string]any{}
+		for key, value := range version.Activities[index].Metadata {
+			metadata[key] = value
+		}
+		metadata["workspaceProjectionVolumes"] = volumes[version.Activities[index].ID]
+		version.Activities[index].Metadata = metadata
 	}
 	return version, nil
 }

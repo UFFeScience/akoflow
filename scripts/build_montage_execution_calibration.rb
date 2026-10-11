@@ -87,9 +87,24 @@ module MontageExecutionCalibration
         'copySeconds' => summary(samples.map { |p| p.fetch('merge_copy_seconds') }),
         'verifySeconds' => summary(samples.map { |p| p.fetch('merge_verify_seconds') }) }
     end
+    merge_rates = if projection
+      data.fetch('shared_preparations').group_by { |p| resource_class(indexed.fetch(p.fetch('consumer_activity_id')).fetch('resource_id')) }.map do |machine, samples|
+        rates = {}
+        {'checkSecondsPerInputByte'=>['merge_check_seconds','inputTotalBytes'],
+          'copySecondsPerUniqueByte'=>['merge_copy_seconds','inputUniqueBytes'],
+          'verifySecondsPerUniqueByte'=>['merge_verify_seconds','inputUniqueBytes']}.each do |key,(seconds_key,bytes_key)|
+          rates[key] = summary(samples.map do |sample|
+            bytes = projection.fetch('observedConsumerInputVolumes').fetch(sample.fetch('consumer_activity_id')).fetch(bytes_key)
+            sample.fetch(seconds_key) / bytes if bytes > 0
+          end.compact)
+        end
+        {'targetClass'=>machine,'source'=>"baseline:#{data.fetch('run_id')}",'observations'=>rates}
+      end
+    end
     { 'schemaVersion' => 1, 'baselineRunId' => data.fetch('run_id'), 'baselineSHA256' => digest,
       'synchronizationContract' => 'whole-workspace-v1', 'workspaceVolumeBasis' => projection ? 'producer-final-snapshot-manifest' : 'unavailable-do-not-use-logical-output-bytes-as-workspace-volume', 'computeObservations' => compute,
       'materializationPhaseObservations' => grouped, 'consumerMergeObservations' => merges,
+      'mergeRateObservations'=>merge_rates,
       'limitations' => ['Single baseline; ranges are observations, not confidence intervals.',
         'Do not replay per-activity durations or total makespan as a holdout prediction.',
         'No destination cache hit or shared-storage route may be assumed without evidence.',

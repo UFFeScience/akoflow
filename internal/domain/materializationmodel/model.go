@@ -1,0 +1,235 @@
+// Package materializationmodel describes a frozen causal preparation estimate.
+// It does not select live SSH routes or grant shared-storage trust. Those remain
+// executor decisions; the model must carry evidence for the matching strategy.
+package materializationmodel
+
+import (
+	"encoding/json"
+	"fmt"
+	"math"
+)
+
+type Model struct {
+	SchemaVersion   int                 `json:"schemaVersion"`
+	Source          string              `json:"source"`
+	RelayResourceID string              `json:"relayResourceId"`
+	Resources       map[string]Resource `json:"resources"`
+	Profiles        []Profile           `json:"profiles"`
+	MergeProfiles   []MergeProfile      `json:"mergeProfiles"`
+}
+
+type Resource struct {
+	Class  string `json:"class"`
+	Domain string `json:"domain"` // cloud, hpc or relay
+	// An equal nonempty identity is usable only with explicit proof on both.
+	SharedStorageID     string `json:"sharedStorageId,omitempty"`
+	SharedStorageProven bool   `json:"sharedStorageProven,omitempty"`
+}
+
+type Profile struct {
+	Strategy                     string  `json:"strategy"`
+	SourceClass                  string  `json:"sourceClass"`
+	TargetClass                  string  `json:"targetClass"`
+	Source                       string  `json:"source"`
+	Samples                      int     `json:"samples"`
+	ArchiveToWorkspaceRatio      float64 `json:"archiveToWorkspaceRatio"`
+	ProbeSeconds                 float64 `json:"probeSeconds"`
+	SnapshotSecondsPerByte       float64 `json:"snapshotSecondsPerByte"`
+	IngressArchiveBytesPerSecond float64 `json:"ingressArchiveBytesPerSecond"`
+	ValidationSecondsPerByte     float64 `json:"validationSecondsPerByte"`
+	UploadArchiveBytesPerSecond  float64 `json:"uploadArchiveBytesPerSecond"`
+	ReceiverSecondsPerByte       float64 `json:"receiverSecondsPerByte"`
+	// Pack-and-receive is measured as one combined phase in real telemetry.
+	// Do not add source CPU preparation a second time to this effective rate.
+	IngressIncludesSourcePreparation bool `json:"ingressIncludesSourcePreparation,omitempty"`
+}
+
+type MergeProfile struct {
+	TargetClass                string  `json:"targetClass"`
+	Source                     string  `json:"source"`
+	Samples                    int     `json:"samples"`
+	CheckSecondsPerInputByte   float64 `json:"checkSecondsPerInputByte"`
+	CopySecondsPerUniqueByte   float64 `json:"copySecondsPerUniqueByte"`
+	VerifySecondsPerUniqueByte float64 `json:"verifySecondsPerUniqueByte"`
+}
+
+type Stage struct {
+	Name                    string  `json:"name"`
+	SourceResourceID        string  `json:"sourceResourceId"`
+	TargetResourceID        string  `json:"targetResourceId"`
+	Bytes                   int64   `json:"bytes"`
+	EffectiveBytesPerSecond float64 `json:"effectiveBytesPerSecond,omitempty"`
+	BeforeSeconds           float64 `json:"beforeSeconds,omitempty"`
+	AfterSeconds            float64 `json:"afterSeconds,omitempty"`
+}
+
+type Route struct {
+	Strategy          string  `json:"strategy"`
+	LogicalBytes      int64   `json:"logicalBytes"`
+	NetworkBytes      int64   `json:"networkBytes"`
+	RelayNetworkBytes int64   `json:"relayNetworkBytes"`
+	Stages            []Stage `json:"stages"`
+}
+
+func Decode(metadata map[string]any) (*Model, error) {
+	raw := metadata["workspaceMaterializationModel"]
+	if raw == nil {
+		return nil, nil
+	}
+	payload, err := json.Marshal(raw)
+	if err != nil {
+		return nil, err
+	}
+	var model Model
+	if err = json.Unmarshal(payload, &model); err != nil {
+		return nil, fmt.Errorf("decode workspace materialization model: %w", err)
+	}
+	if err = model.Validate(); err != nil {
+		return nil, err
+	}
+	return &model, nil
+}
+
+func validNonnegative(values ...float64) bool {
+	for _, value := range values {
+		if math.IsNaN(value) || math.IsInf(value, 0) || value < 0 {
+			return false
+		}
+	}
+	return true
+}
+
+func (m Model) Validate() error {
+	if m.SchemaVersion != 1 || m.Source == "" {
+		return fmt.Errorf("materialization model requires version 1 and provenance")
+	}
+	if relay, exists := m.Resources[m.RelayResourceID]; !exists || relay.Domain != "relay" {
+		return fmt.Errorf("materialization model requires an explicit relay resource")
+	}
+	for id, resource := range m.Resources {
+		if id == "" || resource.Class == "" || (resource.Domain != "cloud" && resource.Domain != "hpc" && resource.Domain != "relay") {
+			return fmt.Errorf("invalid materialization resource %q", id)
+		}
+		if resource.SharedStorageProven && resource.SharedStorageID == "" {
+			return fmt.Errorf("shared storage proof requires identity for %q", id)
+		}
+	}
+	seen := map[string]bool{}
+	for _, profile := range m.Profiles {
+		key := profile.Strategy + "\x00" + profile.SourceClass + "\x00" + profile.TargetClass
+		if seen[key] {
+			return fmt.Errorf("duplicate materialization profile %q", key)
+		}
+		seen[key] = true
+		if profile.Source == "" || profile.Samples < 1 || profile.SourceClass == "" || profile.TargetClass == "" || !validNonnegative(profile.ArchiveToWorkspaceRatio, profile.ProbeSeconds, profile.SnapshotSecondsPerByte, profile.IngressArchiveBytesPerSecond, profile.ValidationSecondsPerByte, profile.UploadArchiveBytesPerSecond, profile.ReceiverSecondsPerByte) {
+			return fmt.Errorf("invalid materialization profile %q", key)
+		}
+		if profile.Strategy != "gateway" && profile.Strategy != "direct-runtime" && profile.Strategy != "shared-storage" {
+			return fmt.Errorf("unknown materialization strategy %q", profile.Strategy)
+		}
+		if profile.Strategy != "shared-storage" && (profile.ArchiveToWorkspaceRatio <= 0 || profile.UploadArchiveBytesPerSecond <= 0) {
+			return fmt.Errorf("materialization profile lacks archive ratio or upload rate")
+		}
+		if profile.Strategy == "gateway" && (profile.IngressArchiveBytesPerSecond <= 0 || !profile.IngressIncludesSourcePreparation) {
+			return fmt.Errorf("gateway profile must identify combined measured pack-and-receive rate")
+		}
+	}
+	seen = map[string]bool{}
+	for _, profile := range m.MergeProfiles {
+		if seen[profile.TargetClass] || profile.TargetClass == "" || profile.Source == "" || profile.Samples < 1 || !validNonnegative(profile.CheckSecondsPerInputByte, profile.CopySecondsPerUniqueByte, profile.VerifySecondsPerUniqueByte) {
+			return fmt.Errorf("invalid or duplicate merge profile %q", profile.TargetClass)
+		}
+		seen[profile.TargetClass] = true
+	}
+	return nil
+}
+
+func (m Model) Route(sourceID, targetID string, workspaceBytes int64) (Route, error) {
+	if err := m.Validate(); err != nil {
+		return Route{}, err
+	}
+	if workspaceBytes < 0 {
+		return Route{}, fmt.Errorf("negative workspace bytes")
+	}
+	source, sourceOK := m.Resources[sourceID]
+	target, targetOK := m.Resources[targetID]
+	if !sourceOK || !targetOK || source.Domain == "relay" || target.Domain == "relay" {
+		return Route{}, fmt.Errorf("materialization route resource missing or invalid")
+	}
+	result := Route{LogicalBytes: workspaceBytes}
+	if sourceID == targetID {
+		result.Strategy = "runtime-local"
+		return result, nil
+	}
+	strategy := "gateway"
+	if source.Domain == "cloud" && target.Domain == "cloud" {
+		strategy = "direct-runtime"
+	}
+	if source.Domain == "hpc" && target.Domain == "hpc" && source.SharedStorageProven && target.SharedStorageProven && source.SharedStorageID == target.SharedStorageID {
+		strategy = "shared-storage"
+	}
+	var selected *Profile
+	for index := range m.Profiles {
+		profile := &m.Profiles[index]
+		if profile.Strategy == strategy && profile.SourceClass == source.Class && profile.TargetClass == target.Class {
+			selected = profile
+			break
+		}
+	}
+	if selected == nil {
+		return result, fmt.Errorf("no evidenced %s profile for %s -> %s", strategy, source.Class, target.Class)
+	}
+	p := *selected
+	result.Strategy = strategy
+	bytes := float64(workspaceBytes)
+	if strategy == "shared-storage" {
+		result.Stages = []Stage{{Name: "shared-storage-copy-and-verify", SourceResourceID: sourceID, TargetResourceID: targetID, BeforeSeconds: p.ProbeSeconds + bytes*p.SnapshotSecondsPerByte, AfterSeconds: bytes * p.ReceiverSecondsPerByte}}
+		return result, nil
+	}
+	compressed := math.Ceil(bytes * p.ArchiveToWorkspaceRatio)
+	// Reserve room for both relay hops without overflowing integer counters.
+	if compressed >= float64(math.MaxInt64/2) {
+		return result, fmt.Errorf("archive byte estimate overflow")
+	}
+	archiveBytes := int64(compressed)
+	if strategy == "direct-runtime" {
+		result.NetworkBytes = archiveBytes
+		result.Stages = []Stage{{Name: "peer-snapshot-upload-and-extract", SourceResourceID: sourceID, TargetResourceID: targetID, Bytes: archiveBytes, EffectiveBytesPerSecond: p.UploadArchiveBytesPerSecond, BeforeSeconds: p.ProbeSeconds + bytes*p.SnapshotSecondsPerByte, AfterSeconds: bytes * p.ReceiverSecondsPerByte}}
+	} else {
+		result.NetworkBytes = 2 * archiveBytes
+		result.RelayNetworkBytes = result.NetworkBytes
+		result.Stages = []Stage{
+			{Name: "relay-pack-and-receive", SourceResourceID: sourceID, TargetResourceID: m.RelayResourceID, Bytes: archiveBytes, EffectiveBytesPerSecond: p.IngressArchiveBytesPerSecond, BeforeSeconds: p.ProbeSeconds, AfterSeconds: bytes * p.ValidationSecondsPerByte},
+			{Name: "relay-upload-and-extract", SourceResourceID: m.RelayResourceID, TargetResourceID: targetID, Bytes: archiveBytes, EffectiveBytesPerSecond: p.UploadArchiveBytesPerSecond, AfterSeconds: bytes * p.ReceiverSecondsPerByte},
+		}
+	}
+	return result, nil
+}
+
+// MergeSeconds is charged once per consumer after every dependency completes.
+// Checking scans all parents; copy and final verification use the unique union.
+func (m Model) MergeSeconds(targetID string, inputTotalBytes, inputUniqueBytes int64) (float64, error) {
+	if err := m.Validate(); err != nil {
+		return 0, err
+	}
+	if inputTotalBytes < 0 || inputUniqueBytes < 0 || inputUniqueBytes > inputTotalBytes {
+		return 0, fmt.Errorf("invalid merge volume")
+	}
+	resource, exists := m.Resources[targetID]
+	if !exists {
+		return 0, fmt.Errorf("merge resource missing")
+	}
+	if inputTotalBytes == 0 {
+		return 0, nil
+	}
+	for _, profile := range m.MergeProfiles {
+		if profile.TargetClass == resource.Class {
+			seconds := float64(inputTotalBytes)*profile.CheckSecondsPerInputByte + float64(inputUniqueBytes)*(profile.CopySecondsPerUniqueByte+profile.VerifySecondsPerUniqueByte)
+			if !validNonnegative(seconds) {
+				return 0, fmt.Errorf("merge estimate overflow")
+			}
+			return seconds, nil
+		}
+	}
+	return 0, fmt.Errorf("no evidenced merge profile for %s", resource.Class)
+}

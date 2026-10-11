@@ -47,6 +47,7 @@ module MontageWorkspaceProjection
     hpc_roots = roots.select { |id| assignments.fetch(id) == 'hpc_machine' }
     raise 'HPC packaging evidence missing' if hpc_roots.empty?
     hpc_roots.each { |id| raise 'OCI packaging unexpectedly present on HPC root' if common.keys.any? { |path| manifests.fetch(id).key?(path) } }
+    input_volumes = {}
     models = ids.each_with_object({}) do |id, result|
       inherited = {}
       preds[id].each do |parent|
@@ -56,6 +57,8 @@ module MontageWorkspaceProjection
         end
       end
       final = manifests.fetch(id)
+      input_volumes[id] = {'inputTotalBytes'=>preds[id].sum { |parent| manifests.fetch(parent).values.sum { |file| file.fetch('sizeBytes') } },
+        'inputUniqueBytes'=>inherited.values.sum { |file| file.fetch('sizeBytes') },'inputFiles'=>inherited.length}
       model = {'contract'=>'whole-workspace-v1','source'=>"baseline:#{audited.fetch('run_id')}",
         'inputs'=>[],'outputs'=>final.values.select { |file| inherited[file.fetch('path')] != file },
         'removedPaths'=>inherited.keys.reject { |path| final.key?(path) }}
@@ -71,6 +74,7 @@ module MontageWorkspaceProjection
       'activityModels'=>models,
       'dependencies'=>workflow.fetch('dependencies').map { |edge| {'activityId'=>edge.fetch('activityId'),'dependsOnActivityId'=>edge.fetch('dependsOnActivityId')} },
       'observedProducerWorkspaceBytes'=>manifests.transform_values { |manifest| manifest.values.sum { |file| file.fetch('sizeBytes') } },
+      'observedConsumerInputVolumes'=>input_volumes,
       'baselineAssignedResourceTypes'=>assignments,
       'activityReferenceDurations'=>workflow.fetch('activities').each_with_object({}) { |activity, map| map[activity.fetch('id')] = activity.fetch('simulation').fetch('durationSeconds') },
       'limitations'=>['File sizes and identities are previous-run observations for the same immutable image and dataset, not future observations.',

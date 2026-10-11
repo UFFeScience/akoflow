@@ -49,6 +49,23 @@ func TestRunnerContractMaterializationStagesAndConsumerMerge(t *testing.T) {
 	require.ErrorContains(t, err, "absent from platform")
 }
 
+func TestRunnerContractKeepsRuntimeAdmissionSeparate(t *testing.T) {
+	r := materializedRequestFixture()
+	m := r.NetworkTopology.Metadata["workspaceMaterializationModel"].(materializationmodel.Model)
+	resource := m.Resources["cloud"]
+	resource.ExecutionRuntimeID = "native-cloud"
+	m.Resources["cloud"] = resource
+	m.AdmissionProfiles = []materializationmodel.AdmissionProfile{{TargetClass: "micro", RuntimeID: "native-cloud", Source: "fixture", Samples: 1, FixedSeconds: 7}}
+	r.NetworkTopology.Metadata["workspaceMaterializationModel"] = m
+	payload, err := buildRunnerInput(r, 1e9)
+	require.NoError(t, err)
+	var input runnerInput
+	require.NoError(t, json.Unmarshal(payload, &input))
+	require.Equal(t, 7.0, input.Tasks[1].AdmissionSeconds)
+	require.Equal(t, 6.0, input.Tasks[1].PreparationSeconds)
+	require.Zero(t, input.Tasks[0].AdmissionSeconds)
+}
+
 func TestRunnerContractIncludesFixedMergeCommandServiceOnce(t *testing.T) {
 	request := materializedRequestFixture()
 	model := request.NetworkTopology.Metadata["workspaceMaterializationModel"].(materializationmodel.Model)

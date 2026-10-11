@@ -58,6 +58,15 @@ func EvaluateFixedPlan(request domain.PlanningRequest, plan domain.SchedulePlan)
 		metadata = map[string]any{}
 	}
 	metadata["evaluationMode"] = "fixed-placement-production-stage-evaluator"
+	stages := map[string]float64{"computeSeconds": 0, "preparationSeconds": 0, "externalAdmissionSeconds": 0, "runtimeOverheadSeconds": 0, "publicationSeconds": 0}
+	for _, a := range plan.Assignments {
+		stages["computeSeconds"] += a.PredictedRuntimeSeconds
+		stages["preparationSeconds"] += prismMetadataNumber(a.Metadata, "workspacePreparationSeconds")
+		stages["externalAdmissionSeconds"] += prismMetadataNumber(a.Metadata, "externalAdmissionSeconds")
+		stages["runtimeOverheadSeconds"] += prismMetadataNumber(a.Metadata, "containerOverheadSeconds") + prismMetadataNumber(a.Metadata, "bootOverheadSeconds")
+		stages["publicationSeconds"] += prismMetadataNumber(a.Metadata, "workspacePublicationSeconds")
+	}
+	metadata["stageWorkTotalsNotElapsedWall"] = stages
 	plan.Metadata = metadata
 	return plan, nil
 }

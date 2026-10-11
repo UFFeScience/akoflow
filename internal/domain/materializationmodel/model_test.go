@@ -20,6 +20,25 @@ func TestPublicationServiceUsesWorkspaceAndInheritedInputs(t *testing.T) {
 	require.Error(t, m.Validate())
 }
 
+func TestAdmissionIsRuntimeScopedAndNotPreparationOrCompute(t *testing.T) {
+	m := testModel()
+	r := m.Resources["cloud-a"]
+	r.ExecutionRuntimeID = "cloud-runtime"
+	m.Resources["cloud-a"] = r
+	m.AdmissionProfiles = []AdmissionProfile{{TargetClass: "micro", RuntimeID: "cloud-runtime", Source: "native-submission", Samples: 3, FixedSeconds: 7}}
+	a, err := m.AdmissionSeconds("cloud-a")
+	require.NoError(t, err)
+	require.Equal(t, 7.0, a)
+	a, err = m.AdmissionSeconds("cloud-b")
+	require.NoError(t, err)
+	require.Zero(t, a)
+	p, err := m.PreparationSeconds("cloud-a", 0, 0)
+	require.NoError(t, err)
+	require.Zero(t, p)
+	m.AdmissionProfiles[0].FixedSeconds = -1
+	require.Error(t, m.Validate())
+}
+
 func TestFixedStageServiceIsCommonAndClassScoped(t *testing.T) {
 	m := testModel()
 	m.InputObservationProfiles = []InputObservationProfile{{TargetClass: "micro", Source: "fixture", Samples: 1, FixedSeconds: 3, SecondsPerUniqueByte: .01}}

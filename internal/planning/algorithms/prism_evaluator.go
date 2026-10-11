@@ -34,6 +34,7 @@ type prismEvaluationTask struct {
 	baseRuntime        float64
 	preparationSeconds float64
 	publicationSeconds float64
+	admissionSeconds   float64
 	publishing         bool
 	preparationGroup   string
 	preparationHeld    bool
@@ -245,11 +246,16 @@ func evaluateCompleteCompactPRISMState(
 			if err != nil {
 				return state, err
 			}
+			tasks[ordinal].admissionSeconds, err = preparationModel.AdmissionSeconds(tasks[ordinal].resource.ID)
+			if err != nil {
+				return state, err
+			}
 			if tasks[ordinal].assignment.Metadata == nil {
 				tasks[ordinal].assignment.Metadata = map[string]any{}
 			}
 			tasks[ordinal].assignment.Metadata["workspaceMaterializationModelSource"] = preparationModel.Source
 			tasks[ordinal].assignment.Metadata["workspaceMaterializationModelVersion"] = preparationModel.SchemaVersion
+			tasks[ordinal].assignment.Metadata["workspacePublicationSeconds"] = tasks[ordinal].publicationSeconds
 		}
 	}
 	type incomingDependency struct {
@@ -606,7 +612,7 @@ func prismStartReadyTasks(
 		overhead := prismMetadataNumber(task.assignment.Metadata, "bootOverheadSeconds") +
 			prismMetadataNumber(task.assignment.Metadata, "containerOverheadSeconds")
 		task.assignment.PredictedReadyAt = task.dataReadyAt
-		task.assignment.PredictedStartAt = clock + overhead + task.preparationSeconds
+		task.assignment.PredictedStartAt = clock + overhead + task.preparationSeconds + task.admissionSeconds
 		resourceID := task.assignment.ResourceID
 		task.remainingRuntime = task.baseRuntime
 		task.rate = 1
@@ -618,6 +624,7 @@ func prismStartReadyTasks(
 			task.assignment.Metadata = map[string]any{}
 		}
 		task.assignment.Metadata["queueSeconds"] = math.Max(0, clock-task.dataReadyAt)
+		task.assignment.Metadata["externalAdmissionSeconds"] = task.admissionSeconds
 		if task.preparationSeconds > 0 {
 			task.assignment.Metadata["workspacePreparationSeconds"] = task.preparationSeconds
 		}

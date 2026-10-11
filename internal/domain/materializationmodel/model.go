@@ -18,6 +18,16 @@ type Model struct {
 	MergeProfiles            []MergeProfile            `json:"mergeProfiles"`
 	InputObservationProfiles []InputObservationProfile `json:"inputObservationProfiles,omitempty"`
 	PublicationProfiles      []PublicationProfile      `json:"publicationProfiles,omitempty"`
+	AdmissionProfiles        []AdmissionProfile        `json:"admissionProfiles,omitempty"`
+}
+
+// Admission is external submit-to-job-start wall, not CPU service or merge.
+type AdmissionProfile struct {
+	TargetClass  string  `json:"targetClass"`
+	RuntimeID    string  `json:"runtimeId"`
+	Source       string  `json:"source"`
+	Samples      int     `json:"samples"`
+	FixedSeconds float64 `json:"fixedSeconds"`
 }
 
 // Publication follows scientific compute and gates both dependencies and lane
@@ -42,8 +52,9 @@ type InputObservationProfile struct {
 }
 
 type Resource struct {
-	Class  string `json:"class"`
-	Domain string `json:"domain"` // cloud, hpc or relay
+	ExecutionRuntimeID string `json:"executionRuntimeId,omitempty"`
+	Class              string `json:"class"`
+	Domain             string `json:"domain"` // cloud, hpc or relay
 	// An equal nonempty identity is usable only with explicit proof on both.
 	SharedStorageID     string `json:"sharedStorageId,omitempty"`
 	SharedStorageProven bool   `json:"sharedStorageProven,omitempty"`
@@ -208,7 +219,35 @@ func (m Model) Validate() error {
 		}
 		seen[p.TargetClass] = true
 	}
+	return m.validateAdmissionProfiles()
+}
+
+func (m Model) validateAdmissionProfiles() error {
+	seen := map[string]bool{}
+	for _, p := range m.AdmissionProfiles {
+		key := p.TargetClass + "\x00" + p.RuntimeID
+		if p.Source == "" || p.Samples < 1 || p.TargetClass == "" || p.RuntimeID == "" || seen[key] || !validNonnegative(p.FixedSeconds) {
+			return fmt.Errorf("invalid runtime admission profile")
+		}
+		seen[key] = true
+	}
 	return nil
+}
+
+func (m Model) AdmissionSeconds(targetID string) (float64, error) {
+	if err := m.validateAdmissionProfiles(); err != nil {
+		return 0, err
+	}
+	r, ok := m.Resources[targetID]
+	if !ok {
+		return 0, fmt.Errorf("admission resource missing")
+	}
+	for _, p := range m.AdmissionProfiles {
+		if p.TargetClass == r.Class && p.RuntimeID == r.ExecutionRuntimeID {
+			return p.FixedSeconds, nil
+		}
+	}
+	return 0, nil
 }
 
 func (m Model) PublicationSeconds(targetID string, workspaceBytes, inputBytes int64) (float64, error) {

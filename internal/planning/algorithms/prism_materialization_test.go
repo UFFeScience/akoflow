@@ -70,6 +70,23 @@ func TestPRISMMaterializationMatchesNativeMixedOriginBarrier(t *testing.T) {
 	if math.Abs(published.makespan-15) > 1e-8 {
 		t.Fatalf("publication barrier expected 15, got %g", published.makespan)
 	}
+	targetResource := model.Resources["target"]
+	targetResource.ExecutionRuntimeID = "fixture-runtime"
+	model.Resources["target"] = targetResource
+	model.AdmissionProfiles = []materializationmodel.AdmissionProfile{{TargetClass: "micro", RuntimeID: "fixture-runtime", Source: "native-submit-fixture", Samples: 1, FixedSeconds: 7}}
+	request.NetworkTopology.Metadata["workspaceMaterializationModel"] = model
+	admissionSearch, err := newCompactPRISMContext(request, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	admitted, err := evaluateCompleteCompactPRISMState(admissionSearch, compactPRISMStateFromEvaluation(compactPRISMState{}, assignments, 0, 0))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if math.Abs(admitted.makespan-22) > 1e-8 {
+		t.Fatalf("admission+publication parity expected22, got%g", admitted.makespan)
+	}
+	model.AdmissionProfiles = nil
 	model.PublicationProfiles = nil
 	model.InputObservationProfiles = []materializationmodel.InputObservationProfile{{TargetClass: "micro", Source: "queue-free-fixture", Samples: 1, SecondsPerUniqueByte: .1}}
 	request.NetworkTopology.Metadata["workspaceMaterializationModel"] = model

@@ -32,6 +32,7 @@ struct TaskModel {
   double flops            = 0;
   double overhead_seconds = 0;
   double preparation_seconds = 0;
+  double admission_seconds = 0;
 	 double publication_seconds = 0;
   std::string preparation_service_group;
   int preparation_service_slots = 0;
@@ -182,6 +183,9 @@ static std::map<std::string, TaskModel> create_tasks(sg4::Engine& engine, const 
     task.flops = std::max(0.0, value.at("flops").get<double>());
     task.overhead_seconds = std::max(0.0, value.value("overheadSeconds", 0.0));
     task.preparation_seconds = value.value("preparationSeconds", 0.0);
+    task.admission_seconds = value.value("admissionSeconds", 0.0);
+    if (!std::isfinite(task.admission_seconds) || task.admission_seconds < 0)
+      throw std::runtime_error("invalid external admission delay");
 	 task.publication_seconds = value.value("publicationSeconds",0.0);
 	 if (!std::isfinite(task.publication_seconds) || task.publication_seconds < 0)
 	   throw std::runtime_error("invalid publication service");
@@ -429,6 +433,8 @@ static void run_simulation(sg4::Engine& engine, const json& input,
       if (task_model->preparation_seconds > 0 && !task_model->preparation_service_group.empty())
         service_pools.at(task_model->preparation_service_group)->release();
       task_model->preparation_finished_at = sg4::Engine::get_clock();
+      if (task_model->admission_seconds > 0)
+        sg4::this_actor::sleep_for(task_model->admission_seconds);
       task_model->started_at = sg4::Engine::get_clock();
       if (task_model->overhead_seconds > 0)
         sg4::this_actor::sleep_for(task_model->overhead_seconds);
@@ -627,6 +633,7 @@ static json build_result(const json& input, const std::map<std::string, TaskMode
         {"runtimeSeconds", duration}, {"queueSeconds", queued}, {"transferSeconds", inbound_transfer[id]},
         {"interferenceSeconds", task.interference_seconds}, {"overheadSeconds", task.overhead_seconds}, {"cost", costs.at(id)},
         {"metadata", {{"workspacePublicationSeconds",task.publication_seconds},{"workspacePreparationSeconds",task.preparation_seconds},
+                      {"externalAdmissionSeconds",task.admission_seconds},
                       {"workspaceMaterializationModelSource",input.value("materializationModelSource",std::string{})},
                       {"workspaceRouteReadyAt",ready},
                       {"workspacePreparationStartedAt",task.preparation_started_at},

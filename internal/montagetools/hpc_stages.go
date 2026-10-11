@@ -115,6 +115,7 @@ func calibrateRuntimeStages(request, training Object, sha, targetClass string) O
 	mergeN := 0
 	prepX, prepY, pubX, pubY := []float64{}, []float64{}, []float64{}, []float64{}
 	overhead := []float64{}
+	admission := []float64{}
 	runtimeIDs := map[string]bool{}
 	for _, t := range rows(training["activities"]) {
 		id := str(t["activityId"])
@@ -129,6 +130,9 @@ func calibrateRuntimeStages(request, training Object, sha, targetClass string) O
 		runtimeIDs[str(t["runtimeId"])] = true
 		v := vol[id]
 		hm := obj(hs[0]["metadata"])
+		if submitted := num(hm["submittedAt"]); submitted > 0 && num(hs[0]["startedAt"]) >= submitted {
+			admission = append(admission, num(hs[0]["startedAt"])-submitted)
+		}
 		snapshot := num(hm["remoteWorkspaceSnapshotSeconds"])
 		// Initial scan is moved into preparation below, not charged twice.
 		overhead = append(overhead, num(m["launchWaitSeconds"])+math.Max(0, num(t["overheadSeconds"])-snapshot))
@@ -166,6 +170,25 @@ func calibrateRuntimeStages(request, training Object, sha, targetClass string) O
 	sort.Float64s(overhead)
 	fixedOverhead := overhead[len(overhead)/2]
 	model := obj(obj(obj(request["NetworkTopology"])["metadata"])["workspaceMaterializationModel"])
+	if len(admission) > 0 {
+		sort.Float64s(admission)
+		var runtimeID string
+		for id := range runtimeIDs {
+			runtimeID = id
+		}
+		profiles := []any{}
+		for _, p := range rows(model["admissionProfiles"]) {
+			if p["targetClass"] != targetClass || p["runtimeId"] != runtimeID {
+				profiles = append(profiles, p)
+			}
+		}
+		model["admissionProfiles"] = append(profiles, Object{"targetClass": targetClass, "runtimeId": runtimeID, "source": "training-native-submit-to-start:" + sha, "samples": len(admission), "fixedSeconds": admission[len(admission)/2]})
+		for _, r := range rows(request["Resources"]) {
+			if r["schedulable"] == true && resourceClass(str(r["id"])) == targetClass {
+				obj(obj(model["resources"])[str(r["id"])])["executionRuntimeId"] = runtimeID
+			}
+		}
+	}
 	replace := func(key string, profile Object) {
 		p := []any{}
 		for _, old := range rows(model[key]) {

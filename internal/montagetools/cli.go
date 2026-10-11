@@ -21,6 +21,10 @@ func Run(args []string) (err error) {
 	load := func(i int) Object { m, _ := read(args[i]); return m }
 	arity := func(n int, usage string) { check(len(args) == n, usage) }
 	switch command {
+	case "input_observation_sensitivity":
+		arity(3, "input_observation_sensitivity REQUEST REAL OUTPUT")
+		real, raw := read(args[1])
+		write(args[2], observationSensitivity(load(0), real, digest(raw)))
 	case "audit_montage_results":
 		check(len(args) == 4 || len(args) == 5, "audit_montage_results REQUEST REAL SIM PRODUCT [OUTPUT]")
 		result := audit(load(0), load(1), load(2), os.Getenv("MONTAGE_REQUIRE_FRESH") == "1")

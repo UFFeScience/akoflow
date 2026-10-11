@@ -681,12 +681,12 @@ int main(int argc, char** argv)
 {
   try {
     if (argc==2 && std::string(argv[1])=="--capabilities") {
-      std::cout << json({{"workspaceMaterializationModelVersion",1},{"bulkServicePoolModelVersion",1}}).dump() << '\n';
+      std::cout << json({{"workspaceMaterializationModelVersion",1},{"workspaceMaterializationModelMaxVersion",2},{"bulkServicePoolModelVersion",1},{"runtimeAdmissionModelVersion",1}}).dump() << '\n';
       return 0;
     }
     const Arguments arguments = parse_arguments(argc, argv);
     const json input           = read_json(arguments.input);
-    if (input.value("materializationModelVersion",0) != 0 && input.value("materializationModelVersion",0) != 1)
+    if (input.value("materializationModelVersion",0) != 0 && input.value("materializationModelVersion",0) != 1 && input.value("materializationModelVersion",0) != 2)
       throw std::runtime_error("unsupported materialization model version");
     sg4::Engine engine(&argc, argv);
     engine.load_platform(arguments.platform);

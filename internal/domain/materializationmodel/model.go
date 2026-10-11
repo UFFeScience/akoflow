@@ -143,8 +143,23 @@ func validNonnegative(values ...float64) bool {
 }
 
 func (m Model) Validate() error {
-	if m.SchemaVersion != 1 || m.Source == "" {
-		return fmt.Errorf("materialization model requires version 1 and provenance")
+	if (m.SchemaVersion != 1 && m.SchemaVersion != 2) || m.Source == "" {
+		return fmt.Errorf("materialization model requires supported version and provenance")
+	}
+	if m.SchemaVersion == 1 {
+		if len(m.AdmissionProfiles) > 0 {
+			return fmt.Errorf("runtime admission requires materialization schema version 2")
+		}
+		for _, p := range m.InputObservationProfiles {
+			if p.FixedSeconds != 0 {
+				return fmt.Errorf("fixed stage service requires materialization schema version 2")
+			}
+		}
+		for _, p := range m.PublicationProfiles {
+			if p.FixedSeconds != 0 {
+				return fmt.Errorf("fixed stage service requires materialization schema version 2")
+			}
+		}
 	}
 	if relay, exists := m.Resources[m.RelayResourceID]; !exists || relay.Domain != "relay" {
 		return fmt.Errorf("materialization model requires an explicit relay resource")

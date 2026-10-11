@@ -56,6 +56,7 @@ func TestRunnerContractKeepsRuntimeAdmissionSeparate(t *testing.T) {
 	resource.ExecutionRuntimeID = "native-cloud"
 	m.Resources["cloud"] = resource
 	m.AdmissionProfiles = []materializationmodel.AdmissionProfile{{TargetClass: "micro", RuntimeID: "native-cloud", Source: "fixture", Samples: 1, FixedSeconds: 7}}
+	m.SchemaVersion = 2
 	r.NetworkTopology.Metadata["workspaceMaterializationModel"] = m
 	payload, err := buildRunnerInput(r, 1e9)
 	require.NoError(t, err)

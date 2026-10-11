@@ -74,6 +74,7 @@ func TestPRISMMaterializationMatchesNativeMixedOriginBarrier(t *testing.T) {
 	targetResource.ExecutionRuntimeID = "fixture-runtime"
 	model.Resources["target"] = targetResource
 	model.AdmissionProfiles = []materializationmodel.AdmissionProfile{{TargetClass: "micro", RuntimeID: "fixture-runtime", Source: "native-submit-fixture", Samples: 1, FixedSeconds: 7}}
+	model.SchemaVersion = 2
 	request.NetworkTopology.Metadata["workspaceMaterializationModel"] = model
 	admissionSearch, err := newCompactPRISMContext(request, nil)
 	if err != nil {

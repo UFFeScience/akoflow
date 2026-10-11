@@ -26,6 +26,7 @@ func TestAdmissionIsRuntimeScopedAndNotPreparationOrCompute(t *testing.T) {
 	r.ExecutionRuntimeID = "cloud-runtime"
 	m.Resources["cloud-a"] = r
 	m.AdmissionProfiles = []AdmissionProfile{{TargetClass: "micro", RuntimeID: "cloud-runtime", Source: "native-submission", Samples: 3, FixedSeconds: 7}}
+	m.SchemaVersion = 2
 	a, err := m.AdmissionSeconds("cloud-a")
 	require.NoError(t, err)
 	require.Equal(t, 7.0, a)
@@ -42,6 +43,7 @@ func TestAdmissionIsRuntimeScopedAndNotPreparationOrCompute(t *testing.T) {
 func TestFixedStageServiceIsCommonAndClassScoped(t *testing.T) {
 	m := testModel()
 	m.InputObservationProfiles = []InputObservationProfile{{TargetClass: "micro", Source: "fixture", Samples: 1, FixedSeconds: 3, SecondsPerUniqueByte: .01}}
+	m.SchemaVersion = 2
 	m.PublicationProfiles = []PublicationProfile{{TargetClass: "micro", Source: "fixture", Samples: 1, FixedSeconds: 5, ScanSecondsPerWorkspaceByte: .02}}
 	p, err := m.PreparationSeconds("cloud-a", 0, 0)
 	require.NoError(t, err)

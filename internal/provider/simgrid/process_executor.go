@@ -73,14 +73,25 @@ func (e *ProcessExecutor) Execute(ctx context.Context, request ports.ExecutionRe
 		cancel()
 		var capabilities struct {
 			Version            int `json:"workspaceMaterializationModelVersion"`
+			MaxVersion         int `json:"workspaceMaterializationModelMaxVersion"`
 			BulkServiceVersion int `json:"bulkServicePoolModelVersion"`
+			AdmissionVersion   int `json:"runtimeAdmissionModelVersion"`
 		}
-		if probeErr != nil || json.Unmarshal(payload, &capabilities) != nil || capabilities.Version != preparationModel.SchemaVersion {
+		if probeErr != nil || json.Unmarshal(payload, &capabilities) != nil || (capabilities.Version != preparationModel.SchemaVersion && capabilities.MaxVersion < preparationModel.SchemaVersion) {
 			return domain.ExecutionTrace{}, fmt.Errorf("SimGrid runner does not confirm workspace materialization model version %d", preparationModel.SchemaVersion)
 		}
 		for _, resource := range preparationModel.Resources {
 			if resource.BulkServiceGroupID != "" && capabilities.BulkServiceVersion != 1 {
 				return domain.ExecutionTrace{}, fmt.Errorf("SimGrid runner does not confirm bulk service pool model version 1")
+			}
+		}
+		for _, a := range request.Plan.Assignments {
+			delay, err := preparationModel.AdmissionSeconds(a.ResourceID)
+			if err != nil {
+				return domain.ExecutionTrace{}, err
+			}
+			if delay > 0 && capabilities.AdmissionVersion != 1 {
+				return domain.ExecutionTrace{}, fmt.Errorf("SimGrid runner does not confirm runtime admission model version 1")
 			}
 		}
 	}
@@ -108,6 +119,9 @@ func (e *ProcessExecutor) Execute(ctx context.Context, request ports.ExecutionRe
 	}
 	if trace.RunID != request.Run.ID || trace.PlanID != request.Plan.ID {
 		return domain.ExecutionTrace{}, fmt.Errorf("SimGrid returned trace for run %q and plan %q", trace.RunID, trace.PlanID)
+	}
+	if err := validateAdmissionTrace(request, preparationModel, trace); err != nil {
+		return domain.ExecutionTrace{}, err
 	}
 	trace.Mode, trace.Predicted = request.Run.Mode, request.Plan.Predicted
 	normalizeWorkspaceQueue(&trace)

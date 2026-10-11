@@ -170,6 +170,7 @@ func calibrateRuntimeStages(request, training Object, sha, targetClass string) O
 	sort.Float64s(overhead)
 	fixedOverhead := overhead[len(overhead)/2]
 	model := obj(obj(obj(request["NetworkTopology"])["metadata"])["workspaceMaterializationModel"])
+	model["schemaVersion"] = 2
 	if len(admission) > 0 {
 		sort.Float64s(admission)
 		var runtimeID string

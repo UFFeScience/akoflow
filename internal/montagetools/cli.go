@@ -21,6 +21,20 @@ func Run(args []string) (err error) {
 	load := func(i int) Object { m, _ := read(args[i]); return m }
 	arity := func(n int, usage string) { check(len(args) == n, usage) }
 	switch command {
+	case "verify_native_case":
+		arity(4, "verify_native_case REQUEST IMAGE BINARY_IN_CASE NEW_OUTPUT_DIR")
+		verifyNativeCase(args[0], args[1], args[2], args[3])
+	case "prepare_class_holdout":
+		arity(6, "prepare_class_holdout TEMPLATE CALIBRATION TARGET RUN_ID PLAN_ID OUTPUT")
+		write(args[5], prepareClassHoldout(load(0), load(1), args[2], args[3], args[4]))
+	case "runtime_reference_coverage":
+		check(len(args) >= 2, "runtime_reference_coverage OUTPUT REAL...")
+		references := []Object{}
+		for _, path := range args[1:] {
+			r, _ := read(path)
+			references = append(references, r)
+		}
+		write(args[0], runtimeReferenceCoverage(references))
 	case "calibrate_runtime_stages":
 		arity(4, "calibrate_runtime_stages CLASS REQUEST TRAINING_REAL OUTPUT")
 		training, raw := read(args[2])

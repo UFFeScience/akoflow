@@ -60,13 +60,14 @@ module MontageWorkspaceProjection
       input_volumes[id] = {'inputTotalBytes'=>preds[id].sum { |parent| manifests.fetch(parent).values.sum { |file| file.fetch('sizeBytes') } },
         'inputUniqueBytes'=>inherited.values.sum { |file| file.fetch('sizeBytes') },'inputFiles'=>inherited.length}
       model = {'contract'=>'whole-workspace-v1','source'=>"baseline:#{audited.fetch('run_id')}",
-        'inputs'=>[],'outputs'=>final.values.select { |file| inherited[file.fetch('path')] != file },
+        'inputs'=>common.values,
+        'inputsByResourceType'=>{'cloud_vm'=>common.values,'hpc_machine'=>[]},
+        'outputs'=>final.values.select { |file| inherited[file.fetch('path')] != file && common[file.fetch('path')] != file },
         'removedPaths'=>inherited.keys.reject { |path| final.key?(path) }}
-      if preds[id].empty?
-        model['inputs'] = common.values
-        model['inputsByResourceType'] = {'cloud_vm'=>common.values,'hpc_machine'=>[]}
-        model['outputs'] = final.values.reject { |file| common[file.fetch('path')] == file }
-      end
+      # The remote Docker adapter seeds every activity, not just roots. Exact
+      # immutable packaging identities are inputs; changed contents at the same
+      # paths remain scientific outputs. Inherited files remain in the workspace
+      # even when the consumer is moved to HPC.
       result[id] = model
     end
     {'schemaVersion'=>1,'baselineRunId'=>audited.fetch('run_id'),'auditedEvidenceSHA256'=>digest,

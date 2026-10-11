@@ -39,13 +39,17 @@ network['id'] = 'montage-reference-network-20261011-v1'
 network['name'] = 'Measured workspace materialization with explicit controller relay'
 network['metadata'] = (network['metadata'] || {}).merge('workspaceMaterializationModel'=>materialization,
   'calibrationSource'=>materialization.fetch('source'), 'linkBandwidthBasis'=>'Inherited topology assumptions; phase flow caps use measured historical effective rates')
-network.fetch('links').each { |link| link['topologyId'] = network.fetch('id') }
+network.fetch('links').each do |link|
+  link['metadata'] = (link['metadata'] || {}).merge('sourceTopologyLinkId'=>link.fetch('id'))
+  link['id'] = "#{network.fetch('id')}-#{link.fetch('id')}"
+  link['topologyId'] = network.fetch('id')
+end
 materialization.fetch('resources').each do |id, resource|
   next if id == relay.fetch('id')
   # Keep the original physical link assumptions rather than claiming a new
   # NIC benchmark. Phase rates are separately frozen and provenance-tagged.
   bandwidth = resource.fetch('domain') == 'cloud' ? 200_000_000 : 200_000_000
-  network.fetch('links') << { 'id'=>"relay-#{id}", 'topologyId'=>network.fetch('id'),
+  network.fetch('links') << { 'id'=>"#{network.fetch('id')}-relay-#{id}", 'topologyId'=>network.fetch('id'),
     'sourceResourceId'=>relay.fetch('id'), 'targetResourceId'=>id,
     'bandwidthBitsPerSecond'=>bandwidth, 'latencySeconds'=>0.05, 'pricePerByte'=>0,
     'bidirectional'=>true, 'sharingPolicy'=>'SHARED', 'metadata'=>{'measurementStatus'=>'assumed-inherited-200Mbps','networkCostCalibrated'=>false} }
@@ -55,9 +59,9 @@ scope['networkTopologyId'] = network.fetch('id')
 network['executionScopeId'] = scope.fetch('id')
 save.call('scope', scope)
 save.call('network', network)
-save.call('planning-session', {'id'=>'montage-reference-planning-20261011-v1',
+save.call('planning-session', {'id'=>'montage-reference-planning-20261011-v2',
   'workflowVersionId'=>workflow_name+'-v1', 'executionScopeId'=>scope.fetch('id'),
-  'networkTopologyId'=>network.fetch('id'), 'algorithms'=>[{'id'=>'prism-time'}],
+  'networkTopologyId'=>network.fetch('id'), 'algorithms'=>[{'id'=>'prism-time','configuration'=>{'requireMeasuredProfiles'=>true}}],
   'configuration'=>{'calibrationSource'=>compute.fetch('source'),
     'activityProfileSnapshot'=>compute.fetch('activityProfiles'), 'requireMeasuredProfiles'=>true,
     'computeCalibrationUnits'=>'reference-work-v1', 'computeCalibrationIncludesPhysicalSharing'=>true,

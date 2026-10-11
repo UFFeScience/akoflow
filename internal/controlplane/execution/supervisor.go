@@ -1483,6 +1483,21 @@ func completeTask(task *domain.TaskExecution, handle domain.ActivityHandle) {
 }
 
 func applyHandleTiming(task *domain.TaskExecution, handle domain.ActivityHandle) {
+	// Publish bounded timing evidence, not observation paths or file manifests.
+	// These diagnostics overlap launch wait and must not be added to it again.
+	for _, key := range []string{
+		"remoteWorkspacePrepareSeconds", "remoteWorkspaceSnapshotSeconds",
+		"remoteContainerLaunchSeconds", "remoteInitialTelemetrySeconds",
+		"remoteArtifactObservationStartedAt", "remoteArtifactObservationFinishedAt",
+		"remoteArtifactObservationSeconds", "remoteArtifactsReadyAt", "terminalObservedAt",
+	} {
+		if value, ok := metadataFloat(handle.Metadata, key); ok && value >= 0 {
+			if task.Metadata == nil {
+				task.Metadata = map[string]any{}
+			}
+			task.Metadata[key] = value
+		}
+	}
 	if submittedAt, ok := metadataFloat(handle.Metadata, domain.TimingSubmittedAt); ok {
 		task.QueuedAt = submittedAt
 		task.QueueSeconds = maxFloat(0, handle.StartedAt-submittedAt)

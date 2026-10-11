@@ -57,6 +57,29 @@ func TestPRISMMaterializationMatchesNativeMixedOriginBarrier(t *testing.T) {
 			t.Fatalf("incorrect consumer barrier: %+v", assignment)
 		}
 	}
+	// Same native fixture with a single shared transport slot: peer (1s),
+	// relay ingress (2s), egress (3s), then one merge (2s). Roots end at 5.
+	for id, resource := range model.Resources {
+		if resource.Domain == "relay" {
+			continue
+		}
+		resource.BulkServiceGroupID = "control-transport"
+		resource.BulkServiceSlots = 1
+		resource.BulkServiceSource = "fixture-provider-config"
+		model.Resources[id] = resource
+	}
+	request.NetworkTopology.Metadata["workspaceMaterializationModel"] = model
+	search, err = newCompactPRISMContext(request, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	evaluated, err = evaluateCompleteCompactPRISMState(search, compactPRISMStateFromEvaluation(compactPRISMState{}, assignments, 0, 0))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if math.Abs(evaluated.makespan-14) > 1e-8 {
+		t.Fatalf("shared service pool native parity expected 14 seconds, got %g", evaluated.makespan)
+	}
 }
 
 func TestMaterializationRateLimitAndReceiverAreSeparateEvents(t *testing.T) {

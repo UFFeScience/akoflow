@@ -25,14 +25,16 @@ type runnerInput struct {
 }
 
 type runnerTask struct {
-	ID                 string  `json:"id"`
-	ActivityTypeID     string  `json:"activityTypeId"`
-	AssignmentID       string  `json:"assignmentId"`
-	ResourceID         string  `json:"resourceId"`
-	FLOPs              float64 `json:"flops"`
-	OverheadSeconds    float64 `json:"overheadSeconds"`
-	PricePerSecond     float64 `json:"pricePerSecond"`
-	PreparationSeconds float64 `json:"preparationSeconds,omitempty"`
+	ID                        string  `json:"id"`
+	ActivityTypeID            string  `json:"activityTypeId"`
+	AssignmentID              string  `json:"assignmentId"`
+	ResourceID                string  `json:"resourceId"`
+	FLOPs                     float64 `json:"flops"`
+	OverheadSeconds           float64 `json:"overheadSeconds"`
+	PricePerSecond            float64 `json:"pricePerSecond"`
+	PreparationSeconds        float64 `json:"preparationSeconds,omitempty"`
+	PreparationServiceGroupID string  `json:"preparationServiceGroupId,omitempty"`
+	PreparationServiceSlots   int     `json:"preparationServiceSlots,omitempty"`
 }
 
 type runnerDependency struct {
@@ -99,7 +101,10 @@ func buildRunnerInput(request ports.ExecutionRequest, referenceFLOPS float64) ([
 			flops = runtimeSeconds * resourceFLOPS(resource, referenceFLOPS)
 		}
 		preparationSeconds := 0.0
+		preparationServiceGroupID, preparationServiceSlots := "", 0
 		if preparationModel != nil {
+			service := preparationModel.Resources[resource.ID]
+			preparationServiceGroupID, preparationServiceSlots = service.BulkServiceGroupID, service.BulkServiceSlots
 			encoded, err := json.Marshal(activity.Metadata["workspaceProjectionVolumes"])
 			if err != nil {
 				return nil, err
@@ -120,8 +125,10 @@ func buildRunnerInput(request ports.ExecutionRequest, referenceFLOPS float64) ([
 			ID: activity.ID, ActivityTypeID: activity.ActivityTypeID,
 			AssignmentID: assignment.ID, ResourceID: resource.ID,
 			FLOPs: flops, OverheadSeconds: overhead,
-			PricePerSecond:     resource.PricePerSecond,
-			PreparationSeconds: preparationSeconds,
+			PricePerSecond:            resource.PricePerSecond,
+			PreparationSeconds:        preparationSeconds,
+			PreparationServiceGroupID: preparationServiceGroupID,
+			PreparationServiceSlots:   preparationServiceSlots,
 		})
 	}
 	dataBytes := make(map[string]int64)

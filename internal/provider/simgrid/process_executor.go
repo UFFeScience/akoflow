@@ -72,10 +72,16 @@ func (e *ProcessExecutor) Execute(ctx context.Context, request ports.ExecutionRe
 		payload, probeErr := e.commands.Run(probeCtx, e.config.BinaryPath, []string{"--capabilities"}, nil)
 		cancel()
 		var capabilities struct {
-			Version int `json:"workspaceMaterializationModelVersion"`
+			Version            int `json:"workspaceMaterializationModelVersion"`
+			BulkServiceVersion int `json:"bulkServicePoolModelVersion"`
 		}
 		if probeErr != nil || json.Unmarshal(payload, &capabilities) != nil || capabilities.Version != preparationModel.SchemaVersion {
 			return domain.ExecutionTrace{}, fmt.Errorf("SimGrid runner does not confirm workspace materialization model version %d", preparationModel.SchemaVersion)
+		}
+		for _, resource := range preparationModel.Resources {
+			if resource.BulkServiceGroupID != "" && capabilities.BulkServiceVersion != 1 {
+				return domain.ExecutionTrace{}, fmt.Errorf("SimGrid runner does not confirm bulk service pool model version 1")
+			}
 		}
 	}
 

@@ -24,6 +24,9 @@ type Resource struct {
 	// An equal nonempty identity is usable only with explicit proof on both.
 	SharedStorageID     string `json:"sharedStorageId,omitempty"`
 	SharedStorageProven bool   `json:"sharedStorageProven,omitempty"`
+	BulkServiceGroupID  string `json:"bulkServiceGroupId,omitempty"`
+	BulkServiceSlots    int    `json:"bulkServiceSlots,omitempty"`
+	BulkServiceSource   string `json:"bulkServiceSource,omitempty"`
 }
 
 type Profile struct {
@@ -61,6 +64,8 @@ type Stage struct {
 	EffectiveBytesPerSecond float64 `json:"effectiveBytesPerSecond,omitempty"`
 	BeforeSeconds           float64 `json:"beforeSeconds,omitempty"`
 	AfterSeconds            float64 `json:"afterSeconds,omitempty"`
+	ServiceGroupID          string  `json:"serviceGroupId,omitempty"`
+	ServiceSlots            int     `json:"serviceSlots,omitempty"`
 }
 
 type Route struct {
@@ -106,12 +111,24 @@ func (m Model) Validate() error {
 	if relay, exists := m.Resources[m.RelayResourceID]; !exists || relay.Domain != "relay" {
 		return fmt.Errorf("materialization model requires an explicit relay resource")
 	}
+	serviceLimits := map[string]int{}
 	for id, resource := range m.Resources {
 		if id == "" || resource.Class == "" || (resource.Domain != "cloud" && resource.Domain != "hpc" && resource.Domain != "relay") {
 			return fmt.Errorf("invalid materialization resource %q", id)
 		}
 		if resource.SharedStorageProven && resource.SharedStorageID == "" {
 			return fmt.Errorf("shared storage proof requires identity for %q", id)
+		}
+		if resource.BulkServiceGroupID != "" {
+			if resource.Domain == "relay" || resource.BulkServiceSlots < 1 || resource.BulkServiceSource == "" {
+				return fmt.Errorf("bulk service %q requires positive slots and evidence", id)
+			}
+			if n, ok := serviceLimits[resource.BulkServiceGroupID]; ok && n != resource.BulkServiceSlots {
+				return fmt.Errorf("inconsistent bulk service slots")
+			}
+			serviceLimits[resource.BulkServiceGroupID] = resource.BulkServiceSlots
+		} else if resource.BulkServiceSlots != 0 || resource.BulkServiceSource != "" {
+			return fmt.Errorf("bulk service resource %q lacks group identity", id)
 		}
 	}
 	seen := map[string]bool{}
@@ -184,7 +201,7 @@ func (m Model) Route(sourceID, targetID string, workspaceBytes int64) (Route, er
 	bytes := float64(workspaceBytes)
 	if strategy == "shared-storage" {
 		result.Stages = []Stage{{Name: "shared-storage-copy-and-verify", SourceResourceID: sourceID, TargetResourceID: targetID, BeforeSeconds: p.ProbeSeconds + bytes*p.SnapshotSecondsPerByte, AfterSeconds: bytes * p.ReceiverSecondsPerByte}}
-		return result, nil
+		return m.withBulkServices(result), nil
 	}
 	compressed := math.Ceil(bytes * p.ArchiveToWorkspaceRatio)
 	// Reserve room for both relay hops without overflowing integer counters.
@@ -203,7 +220,20 @@ func (m Model) Route(sourceID, targetID string, workspaceBytes int64) (Route, er
 			{Name: "relay-upload-and-extract", SourceResourceID: m.RelayResourceID, TargetResourceID: targetID, Bytes: archiveBytes, EffectiveBytesPerSecond: p.UploadArchiveBytesPerSecond, AfterSeconds: bytes * p.ReceiverSecondsPerByte},
 		}
 	}
-	return result, nil
+	return m.withBulkServices(result), nil
+}
+
+func (m Model) withBulkServices(route Route) Route {
+	for i := range route.Stages {
+		stage := &route.Stages[i]
+		owner := stage.SourceResourceID
+		if route.Strategy == "gateway" && i == 1 {
+			owner = stage.TargetResourceID
+		}
+		r := m.Resources[owner]
+		stage.ServiceGroupID, stage.ServiceSlots = r.BulkServiceGroupID, r.BulkServiceSlots
+	}
+	return route
 }
 
 // MergeSeconds is charged once per consumer after every dependency completes.

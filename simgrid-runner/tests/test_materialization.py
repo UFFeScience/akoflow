@@ -68,6 +68,23 @@ class NativeMaterializationTest(unittest.TestCase):
         for flow in result["transfers"]:
             self.assertGreater(flow["durationSeconds"], 3.9)  # 200B ingress then 200B egress sharing.
 
+    def test_shared_service_slot_serializes_distinct_routes_and_merge(self):
+        model = self.fixture()
+        # Both routes and the final merge use one control transport slot.
+        # There is no network bottleneck in this fixture.
+        for flow in model["dependencies"]:
+            for stage in flow["stages"]:
+                stage["serviceGroupId"] = "control-transport"
+                stage["serviceSlots"] = 1
+        consumer = next(task for task in model["tasks"] if task["id"] == "b")
+        consumer["preparationServiceGroupId"] = "control-transport"
+        consumer["preparationServiceSlots"] = 1
+        result = self.run_model(model)
+        # roots 5 + peer 1 + relay 2+3 + merge 2 + compute 1.
+        self.assertAlmostEqual(result["executed"]["makespanSeconds"], 14, places=5)
+        model["dependencies"][0]["stages"][0]["serviceSlots"] = 2
+        self.assertIn("conflicting shared service capacities", self.run_model(model, success=False))
+
     def test_legacy_zero_byte_control_dependency_does_not_deadlock(self):
         model = self.fixture()
         model.pop("materializationModelVersion")

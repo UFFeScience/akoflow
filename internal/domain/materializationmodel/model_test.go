@@ -35,6 +35,27 @@ func testModel() Model {
 	}, MergeProfiles: []MergeProfile{{TargetClass: "micro", Source: "baseline", Samples: 3, CheckSecondsPerInputByte: .01, CopySecondsPerUniqueByte: .02, VerifySecondsPerUniqueByte: .03}}}
 }
 
+func TestBulkServiceGroupsFollowControlTransportNotRelayHost(t *testing.T) {
+	m := testModel()
+	hpc := m.Resources["hpc-a"]
+	hpc.BulkServiceGroupID, hpc.BulkServiceSlots, hpc.BulkServiceSource = "hpc-connection", 3, "provider-config"
+	m.Resources["hpc-a"] = hpc
+	cloud := m.Resources["cloud-a"]
+	cloud.BulkServiceGroupID, cloud.BulkServiceSlots, cloud.BulkServiceSource = "cloud-instance", 3, "provider-config"
+	m.Resources["cloud-a"] = cloud
+	require.NoError(t, m.Validate())
+	route, err := m.Route("hpc-a", "cloud-a", 100)
+	require.NoError(t, err)
+	require.Equal(t, "hpc-connection", route.Stages[0].ServiceGroupID)
+	require.Equal(t, "cloud-instance", route.Stages[1].ServiceGroupID)
+	require.Equal(t, 3, route.Stages[0].ServiceSlots)
+	require.Equal(t, 3, route.Stages[1].ServiceSlots)
+	other := m.Resources["hpc-b"]
+	other.BulkServiceGroupID, other.BulkServiceSlots, other.BulkServiceSource = "hpc-connection", 2, "provider-config"
+	m.Resources["hpc-b"] = other
+	require.Error(t, m.Validate(), "one transport cannot have conflicting slot capacities")
+}
+
 func TestRelayIsMandatoryInBothDirectionsAndHasTwoSerialStages(t *testing.T) {
 	m := testModel()
 	for _, pair := range [][2]string{{"cloud-a", "hpc-a"}, {"hpc-a", "cloud-a"}} {

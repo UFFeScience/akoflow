@@ -32,6 +32,8 @@ struct TaskModel {
   double flops            = 0;
   double overhead_seconds = 0;
   double preparation_seconds = 0;
+  std::string preparation_service_group;
+  int preparation_service_slots = 0;
   double preparation_started_at = 0;
   double preparation_finished_at = 0;
   double started_at       = 0;
@@ -98,6 +100,8 @@ static InterferenceModel create_interference(const json& input)
 }
 
 struct TransferStage {
+  std::string service_group;
+  int service_slots = 0;
   std::string name;
   std::string source;
   std::string target;
@@ -175,6 +179,8 @@ static std::map<std::string, TaskModel> create_tasks(sg4::Engine& engine, const 
     task.flops = std::max(0.0, value.at("flops").get<double>());
     task.overhead_seconds = std::max(0.0, value.value("overheadSeconds", 0.0));
     task.preparation_seconds = value.value("preparationSeconds", 0.0);
+    task.preparation_service_group = value.value("preparationServiceGroupId", "");
+    task.preparation_service_slots = value.value("preparationServiceSlots", 0);
     if (!std::isfinite(task.preparation_seconds) || task.preparation_seconds < 0)
       throw std::runtime_error("invalid consumer preparation duration");
     if (!tasks.emplace(task.id, task).second)
@@ -208,6 +214,8 @@ static std::vector<TransferModel> create_transfers(const json& input, const std:
     transfer.relay_network_bytes = value.value("relayNetworkBytes", 0LL);
     for (const auto& stage_value : value.value("stages", json::array())) {
       TransferStage stage;
+      stage.service_group = stage_value.value("serviceGroupId", "");
+      stage.service_slots = stage_value.value("serviceSlots", 0);
       stage.name = stage_value.at("name").get<std::string>();
       stage.source = stage_value.at("sourceResourceId").get<std::string>();
       stage.target = stage_value.at("targetResourceId").get<std::string>();
@@ -264,6 +272,27 @@ static void run_simulation(sg4::Engine& engine, const json& input,
                            const InterferenceModel& interference)
 {
   const auto run_id = input.at("runId").get<std::string>();
+  std::map<std::string, sg4::SemaphorePtr> service_pools;
+  std::map<std::string, int> service_capacities;
+  auto register_service = [&](const std::string& group, int slots) {
+    if (group.empty()) {
+      if (slots != 0) throw std::runtime_error("service capacity without group");
+      return;
+    }
+    if (slots < 1) throw std::runtime_error("invalid service capacity");
+    auto existing = service_capacities.find(group);
+    if (existing != service_capacities.end() && existing->second != slots)
+      throw std::runtime_error("conflicting shared service capacities");
+    if (existing == service_capacities.end()) {
+      service_capacities[group] = slots;
+      service_pools[group] = sg4::Semaphore::create(slots);
+    }
+  };
+  for (const auto& [id, task] : tasks)
+    register_service(task.preparation_service_group, task.preparation_service_slots);
+  for (const auto& transfer : transfers)
+    for (const auto& stage : transfer.stages)
+      register_service(stage.service_group, stage.service_slots);
   std::map<std::string, std::vector<std::pair<std::string, std::string>>> incoming_dependencies;
   std::map<std::string, std::vector<std::string>> outgoing_dependency_signals;
   std::map<std::string, std::vector<std::string>> outgoing_consumers;
@@ -302,7 +331,7 @@ static void run_simulation(sg4::Engine& engine, const json& input,
     auto* transfer_model = &transfer;
     auto* source_host = engine.host_by_name(transfer.source_resource_id);
     engine.add_actor("transfer-" + transfer.producer_id + "-" + transfer.consumer_id, source_host,
-                       [transfer_model, run_id, &engine, &preparation_gates, materialization_enabled]() {
+                       [transfer_model, run_id, &engine, &preparation_gates, &service_pools, materialization_enabled]() {
       sg4::Mailbox::by_name(mailbox_name(run_id, "ready", transfer_model->producer_id,
                                          transfer_model->consumer_id))->get<void>();
       if (materialization_enabled)
@@ -311,6 +340,7 @@ static void run_simulation(sg4::Engine& engine, const json& input,
       if (!transfer_model->stages.empty()) {
         for (size_t stage_index=0; stage_index<transfer_model->stages.size(); ++stage_index) {
           auto& stage=transfer_model->stages[stage_index];
+          if (!stage.service_group.empty()) service_pools.at(stage.service_group)->acquire();
           stage.started_at = sg4::Engine::get_clock();
           if (stage.bytes > 0) {
             auto* stage_model=&stage;
@@ -334,6 +364,7 @@ static void run_simulation(sg4::Engine& engine, const json& input,
               sg4::this_actor::sleep_for(stage.before_seconds+stage.after_seconds);
           }
           stage.finished_at = sg4::Engine::get_clock();
+          if (!stage.service_group.empty()) service_pools.at(stage.service_group)->release();
         }
         transfer_model->finished_at = sg4::Engine::get_clock();
         // Notify on the destination host after all stages. This zero-byte
@@ -359,7 +390,7 @@ static void run_simulation(sg4::Engine& engine, const json& input,
                        [task_model, id, &incoming_dependencies, &outgoing_dependency_signals,
                         &incoming_lanes, &outgoing_lanes, &tasks, &active_by_resource,
                         &interference, &data_edges, &remaining_producers, &inbound_flow_count,
-                        &preparation_gates, &outgoing_consumers, materialization_enabled, run_id]() {
+                        &preparation_gates, &service_pools, &outgoing_consumers, materialization_enabled, run_id]() {
       const auto& dependencies = incoming_dependencies[id];
       std::vector<void*> received_payloads(dependencies.size(), nullptr);
       std::vector<sg4::CommPtr> incoming_transfers;
@@ -378,8 +409,12 @@ static void run_simulation(sg4::Engine& engine, const json& input,
       for (const auto& mailbox : incoming_lanes[id])
         sg4::Mailbox::by_name(mailbox)->get<void>();
       task_model->preparation_started_at = sg4::Engine::get_clock();
+      if (task_model->preparation_seconds > 0 && !task_model->preparation_service_group.empty())
+        service_pools.at(task_model->preparation_service_group)->acquire();
       if (task_model->preparation_seconds > 0)
         sg4::this_actor::sleep_for(task_model->preparation_seconds);
+      if (task_model->preparation_seconds > 0 && !task_model->preparation_service_group.empty())
+        service_pools.at(task_model->preparation_service_group)->release();
       task_model->preparation_finished_at = sg4::Engine::get_clock();
       task_model->started_at = sg4::Engine::get_clock();
       if (task_model->overhead_seconds > 0)
@@ -622,7 +657,7 @@ int main(int argc, char** argv)
 {
   try {
     if (argc==2 && std::string(argv[1])=="--capabilities") {
-      std::cout << json({{"workspaceMaterializationModelVersion",1}}).dump() << '\n';
+      std::cout << json({{"workspaceMaterializationModelVersion",1},{"bulkServicePoolModelVersion",1}}).dump() << '\n';
       return 0;
     }
     const Arguments arguments = parse_arguments(argc, argv);

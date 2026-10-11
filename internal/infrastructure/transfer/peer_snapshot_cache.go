@@ -8,10 +8,12 @@ import (
 )
 
 type peerSnapshot struct {
-	root, digest     string
-	size             int64
-	cleanup          func()
-	buildWallSeconds float64
+	root, digest        string
+	size                int64
+	cleanup             func()
+	buildWallSeconds    float64
+	buildSSHWaitSeconds float64
+	buildCommandSeconds float64
 }
 
 type peerSnapshotEntry struct {

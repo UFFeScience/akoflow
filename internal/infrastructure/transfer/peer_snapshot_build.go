@@ -49,7 +49,8 @@ func buildPeerSnapshot(ctx context.Context, source domain.TransferEndpoint) (_ *
 	if err != nil {
 		return nil, err
 	}
-	output, err := runSSHProtocol(ctx, source, append(sshArgs(source), host, "mktemp -d /tmp/akoflow-peer-snapshot-XXXXXX"))
+	var sshWait, commandSeconds float64
+	output, err := runSSHProtocolMeasured(ctx, source, append(sshArgs(source), host, "mktemp -d /tmp/akoflow-peer-snapshot-XXXXXX"), &sshWait, &commandSeconds)
 	if err != nil {
 		return nil, err
 	}
@@ -79,7 +80,7 @@ func buildPeerSnapshot(ctx context.Context, source domain.TransferEndpoint) (_ *
 	command := "set -eu; umask 077; " + verify + "bad=$(find " + shell(origin) + " ! -type d ! -type f -print -quit); test -z \"$bad\"; " +
 		"bash -o pipefail -c " + shell("tar --hard-dereference -C \"$1\" -cf - . | gzip -1 > \"$2\"") + " archive " + shell(origin) + " " + shell(archive) + "; " + verify +
 		"sha256sum -- " + shell(archive) + "; wc -c < " + shell(archive)
-	metadata, err := runSSHProtocol(ctx, source, append(sshArgs(source), host, command))
+	metadata, err := runSSHProtocolMeasured(ctx, source, append(sshArgs(source), host, command), &sshWait, &commandSeconds)
 	if err != nil {
 		return nil, fmt.Errorf("build sealed peer snapshot: %w", err)
 	}
@@ -92,7 +93,7 @@ func buildPeerSnapshot(ctx context.Context, source domain.TransferEndpoint) (_ *
 	if parseErr != nil || size <= 0 || !peerArchiveDigest.MatchString(digest) {
 		return nil, fmt.Errorf("invalid peer snapshot digest or size")
 	}
-	return &peerSnapshot{root: root, digest: digest, size: size, cleanup: cleanup}, nil
+	return &peerSnapshot{root: root, digest: digest, size: size, cleanup: cleanup, buildSSHWaitSeconds: sshWait, buildCommandSeconds: commandSeconds}, nil
 }
 
 // Validate the entire file set before AND after snapshot creation. A sealed

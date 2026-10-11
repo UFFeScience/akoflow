@@ -476,7 +476,15 @@ func runSSHCombinedOutput(ctx context.Context, endpoint domain.TransferEndpoint,
 
 // runSSHStdout keeps transport diagnostics out of machine-readable responses.
 func runSSHStdout(ctx context.Context, endpoint domain.TransferEndpoint, args []string, input io.Reader) ([]byte, error) {
+	return runSSHStdoutMeasured(ctx, endpoint, args, input, nil, nil)
+}
+
+func runSSHStdoutMeasured(ctx context.Context, endpoint domain.TransferEndpoint, args []string, input io.Reader, wait, execution *float64) ([]byte, error) {
+	queuedAt := time.Now()
 	command, release, err := queuedSSHCommand(ctx, endpoint, args)
+	if wait != nil {
+		*wait += time.Since(queuedAt).Seconds()
+	}
 	if err != nil {
 		return nil, err
 	}
@@ -485,7 +493,12 @@ func runSSHStdout(ctx context.Context, endpoint domain.TransferEndpoint, args []
 	command.Stdin = input
 	command.Stdout = &stdout
 	command.Stderr = &stderr
-	if err := command.Run(); err != nil {
+	startedAt := time.Now()
+	err = command.Run()
+	if execution != nil {
+		*execution += time.Since(startedAt).Seconds()
+	}
+	if err != nil {
 		return stdout.Bytes(), fmt.Errorf("ssh command: %w: %s", err, strings.TrimSpace(stderr.String()))
 	}
 	return stdout.Bytes(), nil
@@ -494,7 +507,11 @@ func runSSHStdout(ctx context.Context, endpoint domain.TransferEndpoint, args []
 // runSSHProtocol exposes only bounded failure categories, never remote stderr.
 // Successful machine-readable stdout remains separate from transport diagnostics.
 func runSSHProtocol(ctx context.Context, endpoint domain.TransferEndpoint, args []string) ([]byte, error) {
-	output, err := runSSHStdout(ctx, endpoint, args, nil)
+	return runSSHProtocolMeasured(ctx, endpoint, args, nil, nil)
+}
+
+func runSSHProtocolMeasured(ctx context.Context, endpoint domain.TransferEndpoint, args []string, wait, execution *float64) ([]byte, error) {
+	output, err := runSSHStdoutMeasured(ctx, endpoint, args, nil, wait, execution)
 	if err == nil {
 		return output, nil
 	}

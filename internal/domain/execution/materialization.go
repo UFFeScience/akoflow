@@ -160,8 +160,10 @@ type TransferRoute struct {
 	SnapshotReused                           bool             `json:"snapshotReused,omitempty"`
 	// Diagnostics, not additive phases. Build wall time includes SSH admission;
 	// a reused caller's acquisition wait may overlap that same shared build.
-	SnapshotBuildWallSeconds   float64 `json:"snapshotBuildWallSeconds,omitempty"`
-	SnapshotAcquireWaitSeconds float64 `json:"snapshotAcquireWaitSeconds,omitempty"`
+	SnapshotBuildWallSeconds    float64  `json:"snapshotBuildWallSeconds,omitempty"`
+	SnapshotBuildSSHWaitSeconds *float64 `json:"snapshotBuildSshWaitSeconds,omitempty"`
+	SnapshotBuildCommandSeconds *float64 `json:"snapshotBuildCommandSeconds,omitempty"`
+	SnapshotAcquireWaitSeconds  float64  `json:"snapshotAcquireWaitSeconds,omitempty"`
 }
 
 // TransferPhase is elapsed wall time, not exclusive work: concurrent origins

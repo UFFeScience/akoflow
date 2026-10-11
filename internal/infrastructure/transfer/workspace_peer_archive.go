@@ -90,6 +90,9 @@ func preparePeerWorkspaceArchive(ctx context.Context, source, destination domain
 		run.Route.SnapshotReused = reused
 		if acquireErr == nil && snapshot != nil {
 			run.Route.SnapshotBuildWallSeconds = snapshot.buildWallSeconds
+			waitSeconds, commandSeconds := snapshot.buildSSHWaitSeconds, snapshot.buildCommandSeconds
+			run.Route.SnapshotBuildSSHWaitSeconds = &waitSeconds
+			run.Route.SnapshotBuildCommandSeconds = &commandSeconds
 			wait := time.Since(acquireStarted).Seconds()
 			if !reused {
 				wait -= snapshot.buildWallSeconds

@@ -11,30 +11,53 @@ import (
 )
 
 // Discover within the requested partition, never across heterogeneous families.
-func (a *Adapter) eligibleNodes(ctx context.Context, partition, original string, resource domain.Resource) (string, string, error) {
+func (a *Adapter) eligibleNodes(ctx context.Context, partition, original string, resource domain.Resource) (string, string, string, error) {
 	if partition == "" {
-		return "", "", fmt.Errorf("eligible-node fallback requires an explicit partition")
+		return "", "", "", fmt.Errorf("eligible-node fallback requires an explicit partition")
 	}
 	originalOutput, err := a.executor.Run(ctx, "scontrol", []string{"show", "node", original, "--oneliner"}, nil)
 	if err != nil {
-		return "", "", fmt.Errorf("inspect planned node: %w", err)
+		return "", "", "", fmt.Errorf("inspect planned node: %w", err)
 	}
 	fields := slurmFields(string(originalOutput))
 	features := fields["AvailableFeatures"]
 	if fields["NodeName"] != original || features == "" || features == "(null)" {
-		return "", "", fmt.Errorf("planned node %q has no verified feature set", original)
+		return "", "", "", fmt.Errorf("planned node %q has no verified feature set", original)
 	}
 	for _, feature := range strings.Split(features, ",") {
 		if feature == "" || shellToken(feature) != feature {
-			return "", "", fmt.Errorf("planned node %q has unsupported feature syntax", original)
+			return "", "", "", fmt.Errorf("planned node %q has unsupported feature syntax", original)
 		}
 	}
 	output, err := a.executor.Run(ctx, "sinfo", []string{"--partition", partition, "--Node", "--noheader", "--format=%N|%c|%m|%f|%t"}, nil)
 	if err != nil {
-		return "", "", fmt.Errorf("discover eligible nodes: %w", err)
+		return "", "", "", fmt.Errorf("discover eligible nodes: %w", err)
 	}
 	nodes, err := selectEligibleNodes(string(output), features, resource)
-	return nodes, features, err
+	if err != nil {
+		return "", "", "", err
+	}
+	allowed := map[string]bool{}
+	for _, node := range strings.Split(nodes, ",") {
+		allowed[node] = true
+	}
+	excluded := []string{}
+	seen := map[string]bool{}
+	for _, row := range strings.Split(string(output), "\n") {
+		name := strings.TrimSpace(strings.SplitN(row, "|", 2)[0])
+		if name == "" {
+			continue
+		}
+		if shellToken(name) != name {
+			return "", "", "", fmt.Errorf("invalid node inventory name")
+		}
+		if !allowed[name] && !seen[name] {
+			excluded = append(excluded, name)
+			seen[name] = true
+		}
+	}
+	sort.Strings(excluded)
+	return nodes, features, strings.Join(excluded, ","), nil
 }
 
 func slurmFields(output string) map[string]string {

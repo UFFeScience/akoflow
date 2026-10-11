@@ -84,9 +84,10 @@ func (a *Adapter) Start(ctx context.Context, execution domain.ActivityExecutionC
 	}
 	plannedNode := node
 	fallbackFeatures := ""
+	fallbackExcluded := ""
 	if a.eligibleNodeFallback && node != "" {
 		var err error
-		node, fallbackFeatures, err = a.eligibleNodes(ctx, partition, node, execution.Resource)
+		node, fallbackFeatures, fallbackExcluded, err = a.eligibleNodes(ctx, partition, node, execution.Resource)
 		if err != nil {
 			return domain.ActivityHandle{}, err
 		}
@@ -100,6 +101,12 @@ func (a *Adapter) Start(ctx context.Context, execution domain.ActivityExecutionC
 		// list. Use feature constraints and exactly one node, then validate the
 		// allocated node against the verified eligible inventory before execution.
 		script = strings.Replace(script, "#SBATCH --nodelist="+node+"\n", "#SBATCH --nodes=1\n#SBATCH --constraint="+strings.ReplaceAll(fallbackFeatures, ",", "&")+"\n", 1)
+		// Feature matching alone admits nodes rejected by capacity/state checks.
+		// Exclude the inventory complement so Slurm cannot allocate such a node
+		// and fail the strict eligibility guard after the job has already started.
+		if fallbackExcluded != "" {
+			script = strings.Replace(script, "#SBATCH --nodes=1\n", "#SBATCH --nodes=1\n#SBATCH --exclude="+fallbackExcluded+"\n", 1)
+		}
 		// Fail closed on the allocated node before creating a missing workspace
 		// or invoking the activity. The marker proves shared filesystem access.
 		marker := filepath.Join(activity.Command.WorkingDirectory, ".akoflow-placement-"+shellToken(execution.HandleID()))

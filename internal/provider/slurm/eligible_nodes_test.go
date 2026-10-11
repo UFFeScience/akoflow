@@ -18,7 +18,7 @@ func (e *placementExecutor) Run(_ context.Context, name string, _ []string, inpu
 	case "scontrol":
 		return []byte("NodeName=bora001 AvailableFeatures=bora,intel,cascadelake,omnipath"), nil
 	case "sinfo":
-		return []byte("bora003|36|191000|bora,intel,cascadelake,omnipath|idle\nbora006|36|191000|bora,intel,cascadelake,omnipath|idle"), nil
+		return []byte("bora003|36|191000|bora,intel,cascadelake,omnipath|idle\nbora006|36|191000|bora,intel,cascadelake,omnipath|idle\nbora021|36|191000|bora,intel,cascadelake,omnipath|drain\nbora022|16|191000|bora,intel,cascadelake,omnipath|idle"), nil
 	case "sh":
 		e.proof = true
 		e.proofScript = string(input)
@@ -41,7 +41,7 @@ func TestFallbackSubmissionKeepsRequestsAndGuardsBeforeCommand(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	for _, expected := range []string{"#SBATCH --partition=routage", "#SBATCH --nodes=1", "#SBATCH --constraint=bora&intel&cascadelake&omnipath", "#SBATCH --cpus-per-task=1", "#SBATCH --mem=256M", "fallback workspace is not accessible", "Eligible-node fallback"} {
+	for _, expected := range []string{"#SBATCH --partition=routage", "#SBATCH --nodes=1", "#SBATCH --exclude=bora021,bora022", "#SBATCH --constraint=bora&intel&cascadelake&omnipath", "#SBATCH --cpus-per-task=1", "#SBATCH --mem=256M", "fallback workspace is not accessible", "Eligible-node fallback"} {
 		if !strings.Contains(executor.script, expected) {
 			t.Fatalf("missing %q", expected)
 		}

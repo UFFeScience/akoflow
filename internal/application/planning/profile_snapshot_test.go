@@ -6,6 +6,17 @@ import (
 	"testing"
 )
 
+func TestIndependentProfileSnapshotNeedsWorkRatherThanLegacySimulationDuration(t *testing.T) {
+	workflow := domain.WorkflowVersion{Activities: []domain.Activity{{ID: "a", ActivityTypeID: "family", Metadata: map[string]any{"computeWorkUnits": 6.0}}}}
+	profile := domain.ActivityResourceProfile{ID: "measured", ActivityTypeID: "family", ResourceID: "hpc", Source: "input-hash", ModelVersion: "compute-work-v1", RuntimeSeconds: 50, SampleSize: 4}
+	decoded, err := calibratedProfileSnapshot([]domain.ActivityResourceProfile{profile}, workflow, []domain.Resource{{ID: "hpc"}})
+	require.NoError(t, err)
+	require.Equal(t, 300.0, decoded[0].RuntimeFor(workflow.Activities[0]))
+	delete(workflow.Activities[0].Metadata, "computeWorkUnits")
+	_, err = calibratedProfileSnapshot([]domain.ActivityResourceProfile{profile}, workflow, []domain.Resource{{ID: "hpc"}})
+	require.Error(t, err)
+}
+
 func TestProfileSnapshotRejectsStaleResourcesDuplicatePairsAndLegacyUnits(t *testing.T) {
 	workflow := domain.WorkflowVersion{Activities: []domain.Activity{{ID: "a", ActivityTypeID: "family", Simulation: &domain.ActivitySimulation{DurationSeconds: 10}}}}
 	resources := []domain.Resource{{ID: "micro"}}

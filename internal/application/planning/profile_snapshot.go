@@ -25,9 +25,6 @@ func calibratedProfileSnapshot(raw any, workflow domain.WorkflowVersion, resourc
 	}
 	types, ids, pairs := map[string]bool{}, map[string]bool{}, map[string]bool{}
 	for _, activity := range workflow.Activities {
-		if activity.Simulation == nil || activity.Simulation.DurationSeconds <= 0 {
-			return nil, fmt.Errorf("reference-work snapshot requires positive activity reference work: %s", activity.ID)
-		}
 		types[activity.ActivityTypeID] = true
 	}
 	for _, resource := range resources {
@@ -37,6 +34,11 @@ func calibratedProfileSnapshot(raw any, workflow domain.WorkflowVersion, resourc
 		pair := profile.ActivityTypeID + "\x00" + profile.ResourceID
 		if !types[profile.ActivityTypeID] || !ids[profile.ResourceID] || pairs[pair] || profile.ID == "" || profile.Source == "" || profile.SampleSize < 1 || !profile.UsesWorkUnits() || profile.RuntimeSeconds <= 0 || math.IsInf(profile.RuntimeSeconds, 0) || math.IsNaN(profile.RuntimeSeconds) {
 			return nil, fmt.Errorf("invalid or duplicate calibrated profile %q", profile.ID)
+		}
+		for _, activity := range workflow.Activities {
+			if activity.ActivityTypeID == profile.ActivityTypeID && profile.RuntimeFor(activity) <= 0 {
+				return nil, fmt.Errorf("calibrated profile requires valid %s work for activity %s", profile.ModelVersion, activity.ID)
+			}
 		}
 		pairs[pair] = true
 	}

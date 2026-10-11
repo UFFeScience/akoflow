@@ -8,7 +8,7 @@ module MontageComputeFreeze
   def build(calibration, digest, resources, namespace)
     independent = calibration['computeWorkBasis'] == 'immutable-dataset-independent-work-v1'
     source = "#{calibration.fetch('baselineRunId')}:sha256:#{digest}"
-    type_ids = calibration.fetch('computeObservations').map { |row| row.fetch('activityFamily') }.uniq.sort.to_h { |family| [family, "#{namespace}-#{family}"] }
+    type_ids = calibration.fetch('computeObservations').map { |row| row.fetch('activityFamily') }.uniq.sort.to_h { |family| [family, "#{namespace}-#{family.tr('_','-')}"] }
     profiles = calibration.fetch('computeObservations').flat_map do |row|
       stats = row.fetch('wallSecondsPerReferenceSecond')
       raise 'Reference-normalized compute observations required' unless stats && stats.fetch('samples') > 0

@@ -2,6 +2,17 @@ require 'minitest/autorun'
 require_relative 'freeze_montage_compute_profiles'
 
 class MontageComputeFreezeTest < Minitest::Test
+  def test_independent_band_family_matches_imported_type_identity
+    data = {'baselineRunId'=>'baseline','computeWorkBasis'=>'immutable-dataset-independent-work-v1','computeObservations'=>[
+      {'activityFamily'=>'mproject_red','resourceClass'=>'hpc','allowedResourceIds'=>['bora'],'taskRuntimeFallbackSamples'=>1,
+        'wallSecondsPerReferenceSecond'=>{'samples'=>1,'median'=>50,'minimum'=>50,'maximum'=>50}}]}
+    result = MontageComputeFreeze.build(data,'digest',{'bora'=>{'class'=>'hpc'},'diablo'=>{'class'=>'hpc'}},'test')
+    assert_equal 1,result.fetch('activityProfiles').length
+    profile = result.fetch('activityProfiles').first
+    assert_equal 'test-mproject-red',profile.fetch('activityTypeId')
+    assert_equal 'compute-work-v1',profile.fetch('modelVersion')
+    assert_equal 'bora',profile.fetch('resourceId')
+  end
   def test_normalizes_by_work_and_never_fills_unmeasured_classes
     data = {'baselineRunId'=>'baseline', 'computeObservations'=>[
       {'activityFamily'=>'mproject', 'resourceClass'=>'e2-micro', 'taskRuntimeFallbackSamples'=>0,

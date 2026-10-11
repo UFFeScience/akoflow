@@ -19,7 +19,7 @@ activities = workflow.fetch('activities').map do |activity|
   family = id.match(/-([a-z]+)id\d+$/)&.captures&.first
   work = projection['activityComputeWork'] && projection.fetch('activityComputeWork').fetch(id)
   family = work.fetch('activityFamily') if work
-  raise "Unclassified family #{id}" unless family && compute.fetch('activityFamilyTypeIds').fetch(family) == "#{workflow_name}-#{family}"
+  raise "Unclassified family #{id}" unless family && compute.fetch('activityFamilyTypeIds').fetch(family) == "#{workflow_name}-#{family.tr('_','-')}"
   command = Marshal.load(Marshal.dump(activity.fetch('command')))
   command.delete('resolvedExecutable')
   metadata = activity.fetch('metadata', {}).merge('workspaceProjection'=>projection.fetch('activityModels').fetch(id), 'calibrationSource'=>compute.fetch('source'))

@@ -81,7 +81,15 @@ func relayWorkspaceArchive(ctx context.Context, source, destination domain.Trans
 	}
 	defer os.RemoveAll(root)
 	archivePath := filepath.Join(root, "workspace.tar.gz")
-	if err := measureWorkspacePhase(run, "pack-and-receive", func() error { return packWorkspaceArchive(ctx, source, archivePath) }); err != nil {
+	if err := measureWorkspacePhase(run, "pack-and-receive", func() error {
+		var timing workspaceArchiveTiming
+		defer func() {
+			run.Route.SourcePackPreflightSeconds = timing.PreflightSeconds
+			run.Route.SourcePackSSHChannelWaitSeconds = timing.ChannelWaitSeconds
+			run.Route.SourcePackExecutionSeconds = timing.ExecutionSeconds
+		}()
+		return packWorkspaceArchiveWithTiming(ctx, source, archivePath, &timing)
+	}); err != nil {
 		if strings.HasPrefix(source.URI, "ssh://") {
 			if partial, statErr := os.Stat(archivePath); statErr == nil {
 				run.NetworkBytes += partial.Size()
@@ -155,8 +163,21 @@ func relayWorkspaceArchive(ctx context.Context, source, destination domain.Trans
 }
 
 func packWorkspaceArchive(ctx context.Context, source domain.TransferEndpoint, archivePath string) error {
-	if err := rejectWorkspaceSymlinks(ctx, source); err != nil {
-		return err
+	return packWorkspaceArchiveWithTiming(ctx, source, archivePath, &workspaceArchiveTiming{})
+}
+
+type workspaceArchiveTiming struct {
+	PreflightSeconds   float64
+	ChannelWaitSeconds float64
+	ExecutionSeconds   float64
+}
+
+func packWorkspaceArchiveWithTiming(ctx context.Context, source domain.TransferEndpoint, archivePath string, timing *workspaceArchiveTiming) error {
+	preflightStarted := time.Now()
+	preflightErr := rejectWorkspaceSymlinks(ctx, source)
+	timing.PreflightSeconds = time.Since(preflightStarted).Seconds()
+	if preflightErr != nil {
+		return preflightErr
 	}
 	u, err := url.Parse(source.URI)
 	if err != nil {
@@ -166,14 +187,18 @@ func packWorkspaceArchive(ctx context.Context, source domain.TransferEndpoint, a
 	release := func() {}
 	switch u.Scheme {
 	case "file":
+		started := time.Now()
+		defer func() { timing.ExecutionSeconds = time.Since(started).Seconds() }()
 		return packLocalWorkspaceArchive(ctx, u.Path, archivePath)
 	case "ssh":
 		host, origin, err := sshTarget(source, "")
 		if err != nil {
 			return err
 		}
+		queuedAt := time.Now()
 		command, release, err = queuedSSHCommand(ctx, source, append(sshArgs(source), host,
 			"set -eu; bad=$(find "+shell(origin)+" ! -type d ! -type f -print -quit); test -z \"$bad\"; bash -o pipefail -c "+shell("tar --hard-dereference -C \"$1\" -cf - . | gzip -1")+" archive "+shell(origin)))
+		timing.ChannelWaitSeconds = time.Since(queuedAt).Seconds()
 		if err != nil {
 			return err
 		}
@@ -188,6 +213,8 @@ func packWorkspaceArchive(ctx context.Context, source domain.TransferEndpoint, a
 	defer file.Close()
 	var stderr strings.Builder
 	command.Stdout, command.Stderr = file, &stderr
+	executionStarted := time.Now()
+	defer func() { timing.ExecutionSeconds = time.Since(executionStarted).Seconds() }()
 	if err := command.Run(); err != nil {
 		return fmt.Errorf("pack workspace archive: %w: %s", err, strings.TrimSpace(stderr.String()))
 	}

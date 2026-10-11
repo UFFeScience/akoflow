@@ -5,12 +5,42 @@ import (
 	"context"
 	"crypto/sha256"
 	"fmt"
+	"net/url"
 	"os"
 	"path/filepath"
 	"sync/atomic"
 	"testing"
 	"time"
+
+	"github.com/UFFeScience/akoflow/internal/domain"
 )
+
+func TestSourcePackTimingSeparatesLocalWorkFromSSHQueue(t *testing.T) {
+	root := t.TempDir()
+	if err := os.WriteFile(filepath.Join(root, "data"), []byte("verified input"), 0600); err != nil {
+		t.Fatal(err)
+	}
+	archive := filepath.Join(t.TempDir(), "snapshot.tar.gz")
+	endpoint := domain.TransferEndpoint{URI: (&url.URL{Scheme: "file", Path: root}).String()}
+	var timing workspaceArchiveTiming
+	if err := packWorkspaceArchiveWithTiming(context.Background(), endpoint, archive, &timing); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := validateWorkspaceArchive(archive); err != nil {
+		t.Fatal(err)
+	}
+	if timing.PreflightSeconds <= 0 || timing.ExecutionSeconds <= 0 || timing.ChannelWaitSeconds != 0 {
+		t.Fatalf("invalid local phase attribution: %+v", timing)
+	}
+	if err := os.Symlink("data", filepath.Join(root, "unsafe-link")); err != nil {
+		t.Fatal(err)
+	}
+	timing = workspaceArchiveTiming{}
+	err := packWorkspaceArchiveWithTiming(context.Background(), endpoint, filepath.Join(t.TempDir(), "blocked.tar.gz"), &timing)
+	if err == nil || timing.PreflightSeconds <= 0 || timing.ExecutionSeconds != 0 {
+		t.Fatalf("failed preflight attribution: %+v %v", timing, err)
+	}
+}
 
 func TestArchivePreparationRunsTwoWorkersAndWaitsForBarrier(t *testing.T) {
 	entered := make(chan int, 4)

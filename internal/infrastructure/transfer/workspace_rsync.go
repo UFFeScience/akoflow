@@ -415,6 +415,10 @@ func makeWorkspaceDirectory(ctx context.Context, endpoint domain.TransferEndpoin
 }
 
 func rejectWorkspaceSymlinks(ctx context.Context, endpoint domain.TransferEndpoint) error {
+	return rejectWorkspaceSymlinksWithWait(ctx, endpoint, nil)
+}
+
+func rejectWorkspaceSymlinksWithWait(ctx context.Context, endpoint domain.TransferEndpoint, channelWait *float64) error {
 	u, err := url.Parse(endpoint.URI)
 	if err != nil {
 		return err
@@ -437,7 +441,11 @@ func rejectWorkspaceSymlinks(ctx context.Context, endpoint domain.TransferEndpoi
 	if err != nil {
 		return err
 	}
+	waitStarted := time.Now()
 	command, release, err := queuedSSHCommand(ctx, endpoint, append(sshArgs(endpoint), host, "find "+shell(path)+" -type l -print -quit"))
+	if channelWait != nil {
+		*channelWait = time.Since(waitStarted).Seconds()
+	}
 	if err != nil {
 		return err
 	}

@@ -32,7 +32,11 @@ module MontageMaterializationFreeze
         'archiveToWorkspaceRatio'=>median(upload, 'archiveToWorkspaceRatio', positive: true),
         'uploadArchiveBytesPerSecond'=>median(upload, 'effectiveArchiveBytesPerSecond', positive: true) }
       if strategy == 'gateway'
-        profile['ingressArchiveBytesPerSecond'] = median(phases.fetch('pack-and-receive'), 'effectiveArchiveBytesPerSecond', positive: true)
+        pack = phases.fetch('pack-and-receive')
+        profile['ingressArchiveBytesPerSecond'] = median(pack, 'effectiveArchiveBytesPerSecond', positive: true)
+        if pack['sourcePreflightServiceSeconds']
+          profile['probeSeconds'] = median(pack, 'sourcePreflightServiceSeconds')
+        end
         profile['ingressIncludesSourcePreparation'] = true
         profile['validationSecondsPerByte'] = seconds_per_byte(phases.fetch('archive-validation'))
         profile['receiverSecondsPerByte'] = seconds_per_byte(phases.fetch('receiver-verify-and-extract'))

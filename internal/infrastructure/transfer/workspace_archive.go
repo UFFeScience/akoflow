@@ -85,6 +85,8 @@ func relayWorkspaceArchive(ctx context.Context, source, destination domain.Trans
 		var timing workspaceArchiveTiming
 		defer func() {
 			run.Route.SourcePackPreflightSeconds = timing.PreflightSeconds
+			run.Route.SourcePackPreflightSSHChannelWaitSeconds = timing.PreflightChannelWaitSeconds
+			run.Route.SourcePackPreflightServiceSeconds = max(0, timing.PreflightSeconds-timing.PreflightChannelWaitSeconds)
 			run.Route.SourcePackSSHChannelWaitSeconds = timing.ChannelWaitSeconds
 			run.Route.SourcePackExecutionSeconds = timing.ExecutionSeconds
 		}()
@@ -167,14 +169,15 @@ func packWorkspaceArchive(ctx context.Context, source domain.TransferEndpoint, a
 }
 
 type workspaceArchiveTiming struct {
-	PreflightSeconds   float64
-	ChannelWaitSeconds float64
-	ExecutionSeconds   float64
+	PreflightSeconds            float64
+	PreflightChannelWaitSeconds float64
+	ChannelWaitSeconds          float64
+	ExecutionSeconds            float64
 }
 
 func packWorkspaceArchiveWithTiming(ctx context.Context, source domain.TransferEndpoint, archivePath string, timing *workspaceArchiveTiming) error {
 	preflightStarted := time.Now()
-	preflightErr := rejectWorkspaceSymlinks(ctx, source)
+	preflightErr := rejectWorkspaceSymlinksWithWait(ctx, source, &timing.PreflightChannelWaitSeconds)
 	timing.PreflightSeconds = time.Since(preflightStarted).Seconds()
 	if preflightErr != nil {
 		return preflightErr

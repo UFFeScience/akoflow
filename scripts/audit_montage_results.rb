@@ -113,6 +113,8 @@ def montage_audit(request, response, simulation, require_fresh: false)
         archive_bytes: route['archiveBytes'], files: route['filesTransferred'], snapshot_reused: route['snapshotReused'],
         ssh_channel_wait_seconds: route['sshChannelWaitSeconds'], rsync_execution_seconds: route['rsyncExecutionSeconds'],
         source_pack_preflight_seconds: route['sourcePackPreflightSeconds'],
+        source_pack_preflight_ssh_channel_wait_seconds: route['sourcePackPreflightSshChannelWaitSeconds'],
+        source_pack_preflight_service_seconds: route['sourcePackPreflightServiceSeconds'],
         source_pack_ssh_channel_wait_seconds: route['sourcePackSshChannelWaitSeconds'],
         source_pack_execution_seconds: route['sourcePackExecutionSeconds'],
         phases: route.fetch('phases', []).map { |p| p.select { |k, _| %w[name durationSeconds].include?(k) } }
@@ -179,9 +181,10 @@ def montage_audit(request, response, simulation, require_fresh: false)
 end
 
 if $PROGRAM_NAME == __FILE__
-  abort 'Usage: audit_montage_results.rb request.json real.json sim.json product.png' unless ARGV.length == 4
+  abort 'Usage: audit_montage_results.rb request.json real.json sim.json product.png [OUTPUT_JSON]' unless [4,5].include?(ARGV.length)
   request, real, sim = ARGV.take(3).map { |path| JSON.parse(File.read(path)) }
   report = montage_audit(request, real, sim, require_fresh: ENV['MONTAGE_REQUIRE_FRESH'] == '1')
   report[:product] = {filename: File.basename(ARGV[3]), bytes: File.size(ARGV[3]), sha256: Digest::SHA256.file(ARGV[3]).hexdigest}
-  puts JSON.pretty_generate(report)
+  encoded = JSON.pretty_generate(report) + "\n"
+  ARGV[4] ? File.write(ARGV[4], encoded) : puts(encoded)
 end

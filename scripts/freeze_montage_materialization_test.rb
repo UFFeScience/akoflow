@@ -28,4 +28,14 @@ class MontageMaterializationFreezeTest < Minitest::Test
     calibration['workspaceVolumeBasis'] = 'changed-output-only'
     assert_raises(RuntimeError) { MontageMaterializationFreeze.build(calibration, 'digest', resources, 'relay') }
   end
+
+  def test_source_preflight_service_is_preserved_without_queue_double_count
+    calibration = observations
+    pack = calibration.fetch('materializationPhaseObservations').find { |r| r.values_at('sourceClass', 'targetClass', 'phase') == ['hpc', 'e2-micro', 'pack-and-receive'] }
+    pack['sourcePreflightServiceSeconds'] = {'samples'=>2, 'median'=>0.4}
+    pack['sourcePreflightChannelWaitSeconds'] = {'samples'=>2, 'median'=>9}
+    frozen = MontageMaterializationFreeze.build(calibration, 'digest', resources, 'relay')
+    profile = frozen.fetch('profiles').find { |r| r.values_at('sourceClass', 'targetClass') == ['hpc', 'e2-micro'] }
+    assert_equal 0.4, profile.fetch('probeSeconds')
+  end
 end

@@ -33,6 +33,8 @@ type prismEvaluationTask struct {
 	completed          bool
 	baseRuntime        float64
 	preparationSeconds float64
+	publicationSeconds float64
+	publishing         bool
 	preparationGroup   string
 	preparationHeld    bool
 	slowdown           float64
@@ -235,6 +237,10 @@ func evaluateCompleteCompactPRISMState(
 				return state, err
 			}
 			tasks[ordinal].preparationSeconds, err = preparationModel.PreparationSeconds(tasks[ordinal].resource.ID, volume.InputTotalBytes, volume.InputUniqueBytes)
+			if err != nil {
+				return state, err
+			}
+			tasks[ordinal].publicationSeconds, err = preparationModel.PublicationSeconds(tasks[ordinal].resource.ID, volume.OutputBytes, volume.InputUniqueBytes)
 			tasks[ordinal].preparationGroup = preparationModel.Resources[tasks[ordinal].resource.ID].BulkServiceGroupID
 			if err != nil {
 				return state, err
@@ -368,6 +374,18 @@ func evaluateCompleteCompactPRISMState(
 			prismAdvanceActiveTasks(tasks, activeByResource[resourceID], clock)
 			if tasks[event.activity].remainingRuntime > 1e-9 {
 				prismRecomputePriorityRates(search, tasks, activeByResource[resourceID], taskEvents, clock)
+				continue
+			}
+			if !tasks[event.activity].publishing && tasks[event.activity].publicationSeconds > 0 {
+				task := &tasks[event.activity]
+				task.publishing = true
+				delete(activeByResource[resourceID], event.activity)
+				prismRecomputePriorityRates(search, tasks, activeByResource[resourceID], taskEvents, clock)
+				task.assignment.Metadata["nativeComputeFinishedAt"] = clock
+				task.assignment.Metadata["workspacePublicationSeconds"] = task.publicationSeconds
+				task.assignment.PredictedFinishAt = clock + task.publicationSeconds
+				resourceFinish[resourceID] = math.Max(resourceFinish[resourceID], task.assignment.PredictedFinishAt)
+				heap.Push(taskEvents, prismEvaluationTaskEvent{activity: event.activity, finishAt: task.assignment.PredictedFinishAt})
 				continue
 			}
 			tasks[event.activity].completed = true

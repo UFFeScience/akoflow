@@ -32,6 +32,7 @@ struct TaskModel {
   double flops            = 0;
   double overhead_seconds = 0;
   double preparation_seconds = 0;
+	 double publication_seconds = 0;
   std::string preparation_service_group;
   int preparation_service_slots = 0;
   double preparation_started_at = 0;
@@ -181,6 +182,9 @@ static std::map<std::string, TaskModel> create_tasks(sg4::Engine& engine, const 
     task.flops = std::max(0.0, value.at("flops").get<double>());
     task.overhead_seconds = std::max(0.0, value.value("overheadSeconds", 0.0));
     task.preparation_seconds = value.value("preparationSeconds", 0.0);
+	 task.publication_seconds = value.value("publicationSeconds",0.0);
+	 if (!std::isfinite(task.publication_seconds) || task.publication_seconds < 0)
+	   throw std::runtime_error("invalid publication service");
     task.preparation_service_group = value.value("preparationServiceGroupId", "");
     task.preparation_service_slots = value.value("preparationServiceSlots", 0);
     if (!std::isfinite(task.preparation_seconds) || task.preparation_seconds < 0)
@@ -505,6 +509,8 @@ static void run_simulation(sg4::Engine& engine, const json& input,
       }
       active_by_resource[task_model->resource_id].erase(id);
       task_model->compute_finished_at = sg4::Engine::get_clock();
+	  if (task_model->publication_seconds > 0)
+	    sg4::this_actor::sleep_for(task_model->publication_seconds);
       task_model->finished_at = sg4::Engine::get_clock();
       if (materialization_enabled) {
         for (const auto& consumer : outgoing_consumers[id]) {
@@ -620,7 +626,7 @@ static json build_result(const json& input, const std::map<std::string, TaskMode
         {"queuedAt", ready}, {"startedAt", start}, {"finishedAt", finish},
         {"runtimeSeconds", duration}, {"queueSeconds", queued}, {"transferSeconds", inbound_transfer[id]},
         {"interferenceSeconds", task.interference_seconds}, {"overheadSeconds", task.overhead_seconds}, {"cost", costs.at(id)},
-        {"metadata", {{"workspacePreparationSeconds",task.preparation_seconds},
+        {"metadata", {{"workspacePublicationSeconds",task.publication_seconds},{"workspacePreparationSeconds",task.preparation_seconds},
                       {"workspaceMaterializationModelSource",input.value("materializationModelSource",std::string{})},
                       {"workspaceRouteReadyAt",ready},
                       {"workspacePreparationStartedAt",task.preparation_started_at},

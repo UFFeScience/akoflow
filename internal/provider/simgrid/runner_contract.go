@@ -33,6 +33,7 @@ type runnerTask struct {
 	OverheadSeconds           float64 `json:"overheadSeconds"`
 	PricePerSecond            float64 `json:"pricePerSecond"`
 	PreparationSeconds        float64 `json:"preparationSeconds,omitempty"`
+	PublicationSeconds        float64 `json:"publicationSeconds,omitempty"`
 	PreparationServiceGroupID string  `json:"preparationServiceGroupId,omitempty"`
 	PreparationServiceSlots   int     `json:"preparationServiceSlots,omitempty"`
 }
@@ -101,6 +102,7 @@ func buildRunnerInput(request ports.ExecutionRequest, referenceFLOPS float64) ([
 			flops = runtimeSeconds * resourceFLOPS(resource, referenceFLOPS)
 		}
 		preparationSeconds := 0.0
+		publicationSeconds := 0.0
 		preparationServiceGroupID, preparationServiceSlots := "", 0
 		if preparationModel != nil {
 			service := preparationModel.Resources[resource.ID]
@@ -120,6 +122,10 @@ func buildRunnerInput(request ports.ExecutionRequest, referenceFLOPS float64) ([
 			if err != nil {
 				return nil, fmt.Errorf("consumer %q merge: %w", activity.ID, err)
 			}
+			publicationSeconds, err = preparationModel.PublicationSeconds(resource.ID, volume.OutputBytes, volume.InputUniqueBytes)
+			if err != nil {
+				return nil, err
+			}
 		}
 		input.Tasks = append(input.Tasks, runnerTask{
 			ID: activity.ID, ActivityTypeID: activity.ActivityTypeID,
@@ -127,6 +133,7 @@ func buildRunnerInput(request ports.ExecutionRequest, referenceFLOPS float64) ([
 			FLOPs: flops, OverheadSeconds: overhead,
 			PricePerSecond:            resource.PricePerSecond,
 			PreparationSeconds:        preparationSeconds,
+			PublicationSeconds:        publicationSeconds,
 			PreparationServiceGroupID: preparationServiceGroupID,
 			PreparationServiceSlots:   preparationServiceSlots,
 		})

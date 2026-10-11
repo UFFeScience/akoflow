@@ -67,6 +67,7 @@ func TestRunnerContractIncludesInputObservationOnce(t *testing.T) {
 	request := materializedRequestFixture()
 	model := request.NetworkTopology.Metadata["workspaceMaterializationModel"].(materializationmodel.Model)
 	model.InputObservationProfiles = []materializationmodel.InputObservationProfile{{TargetClass: "micro", Source: "queue-free-fixture", Samples: 1, SecondsPerUniqueByte: .1}}
+	model.PublicationProfiles = []materializationmodel.PublicationProfile{{TargetClass: "micro", Source: "queue-free-fixture", Samples: 1, ScanSecondsPerWorkspaceByte: .02, CleanupSecondsPerInputByte: .01}}
 	request.NetworkTopology.Metadata["workspaceMaterializationModel"] = model
 	payload, err := buildRunnerInput(request, 1e9)
 	require.NoError(t, err)
@@ -74,6 +75,7 @@ func TestRunnerContractIncludesInputObservationOnce(t *testing.T) {
 	require.NoError(t, json.Unmarshal(payload, &input))
 	require.Zero(t, input.Tasks[0].PreparationSeconds)
 	require.InDelta(t, 16, input.Tasks[1].PreparationSeconds, 1e-9)
+	require.InDelta(t, 3, input.Tasks[1].PublicationSeconds, 1e-9)
 	require.EqualValues(t, 100, input.Dependencies[0].NetworkBytes)
 }
 

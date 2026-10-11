@@ -17,6 +17,17 @@ type Model struct {
 	Profiles                 []Profile                 `json:"profiles"`
 	MergeProfiles            []MergeProfile            `json:"mergeProfiles"`
 	InputObservationProfiles []InputObservationProfile `json:"inputObservationProfiles,omitempty"`
+	PublicationProfiles      []PublicationProfile      `json:"publicationProfiles,omitempty"`
+}
+
+// Publication follows scientific compute and gates both dependencies and lane
+// release. Scan and inherited-input cleanup are service, not compute or network.
+type PublicationProfile struct {
+	TargetClass                 string  `json:"targetClass"`
+	Source                      string  `json:"source"`
+	Samples                     int     `json:"samples"`
+	ScanSecondsPerWorkspaceByte float64 `json:"scanSecondsPerWorkspaceByte"`
+	CleanupSecondsPerInputByte  float64 `json:"cleanupSecondsPerInputByte"`
 }
 
 // Input observation occurs after merge and before the command. Its measured
@@ -188,7 +199,30 @@ func (m Model) Validate() error {
 		}
 		seen[p.TargetClass] = true
 	}
+	seen = map[string]bool{}
+	for _, p := range m.PublicationProfiles {
+		if p.TargetClass == "" || p.Source == "" || p.Samples < 1 || seen[p.TargetClass] || !validNonnegative(p.ScanSecondsPerWorkspaceByte, p.CleanupSecondsPerInputByte) {
+			return fmt.Errorf("invalid publication profile %q", p.TargetClass)
+		}
+		seen[p.TargetClass] = true
+	}
 	return nil
+}
+
+func (m Model) PublicationSeconds(targetID string, workspaceBytes, inputBytes int64) (float64, error) {
+	if workspaceBytes < 0 || inputBytes < 0 {
+		return 0, fmt.Errorf("negative publication volume")
+	}
+	for _, p := range m.PublicationProfiles {
+		if p.TargetClass == m.Resources[targetID].Class {
+			seconds := float64(workspaceBytes)*p.ScanSecondsPerWorkspaceByte + float64(inputBytes)*p.CleanupSecondsPerInputByte
+			if !validNonnegative(seconds) {
+				return 0, fmt.Errorf("publication estimate overflow")
+			}
+			return seconds, nil
+		}
+	}
+	return 0, nil
 }
 
 // PreparationSeconds charges the consumer's unique input scan once, never

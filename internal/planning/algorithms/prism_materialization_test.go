@@ -57,6 +57,20 @@ func TestPRISMMaterializationMatchesNativeMixedOriginBarrier(t *testing.T) {
 			t.Fatalf("incorrect consumer barrier: %+v", assignment)
 		}
 	}
+	model.PublicationProfiles = []materializationmodel.PublicationProfile{{TargetClass: "micro", Source: "queue-free-fixture", Samples: 1, ScanSecondsPerWorkspaceByte: .01}}
+	request.NetworkTopology.Metadata["workspaceMaterializationModel"] = model
+	publicationSearch, err := newCompactPRISMContext(request, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	published, err := evaluateCompleteCompactPRISMState(publicationSearch, compactPRISMStateFromEvaluation(compactPRISMState{}, assignments, 0, 0))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if math.Abs(published.makespan-15) > 1e-8 {
+		t.Fatalf("publication barrier expected 15, got %g", published.makespan)
+	}
+	model.PublicationProfiles = nil
 	model.InputObservationProfiles = []materializationmodel.InputObservationProfile{{TargetClass: "micro", Source: "queue-free-fixture", Samples: 1, SecondsPerUniqueByte: .1}}
 	request.NetworkTopology.Metadata["workspaceMaterializationModel"] = model
 	observedSearch, err := newCompactPRISMContext(request, nil)

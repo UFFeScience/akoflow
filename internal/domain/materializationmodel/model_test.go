@@ -8,6 +8,18 @@ import (
 	"testing"
 )
 
+func TestPublicationServiceUsesWorkspaceAndInheritedInputs(t *testing.T) {
+	m := testModel()
+	m.PublicationProfiles = []PublicationProfile{{TargetClass: "micro", Source: "measured-fixture", Samples: 1, ScanSecondsPerWorkspaceByte: .02, CleanupSecondsPerInputByte: .01}}
+	seconds, err := m.PublicationSeconds("cloud-a", 100, 50)
+	require.NoError(t, err)
+	require.InDelta(t, 2.5, seconds, 1e-9)
+	_, err = m.PublicationSeconds("cloud", -1, 0)
+	require.Error(t, err)
+	m.PublicationProfiles[0].Source = ""
+	require.Error(t, m.Validate())
+}
+
 func TestFrozenMontageMeasuredModelDecodesAndRejectsUnobservedPair(t *testing.T) {
 	payload, err := os.ReadFile("../../../experiments/montage-micro-hpc-e2/materialization-model-v2.json")
 	require.NoError(t, err)

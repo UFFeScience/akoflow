@@ -1,10 +1,12 @@
 package algorithms
 
 import (
+	"encoding/json"
 	"math"
 	"math/bits"
 
 	"github.com/UFFeScience/akoflow/internal/domain"
+	domainworkflow "github.com/UFFeScience/akoflow/internal/domain/workflow"
 )
 
 type compactPRISMState struct {
@@ -208,6 +210,18 @@ func compactPRISMPlacePreparedAlternatives(
 	container := resource.resource.ContainerOverhead
 	start += container
 	baseRuntime := search.durations[activityOrdinal][resourceOrdinal]
+	publication := 0.0
+	if search.materializationModel != nil {
+		var volume domainworkflow.WorkspaceProjectionVolumes
+		encoded, err := json.Marshal(search.activities[activityOrdinal].Metadata["workspaceProjectionVolumes"])
+		if err != nil || json.Unmarshal(encoded, &volume) != nil {
+			return nil
+		}
+		publication, err = search.materializationModel.PublicationSeconds(resource.resource.ID, volume.OutputBytes, volume.InputUniqueBytes)
+		if err != nil {
+			return nil
+		}
+	}
 	factor, waitUntil := compactPRISMInterferenceDecision(
 		search, state, activityOrdinal, resourceOrdinal, start, baseRuntime,
 	)
@@ -224,6 +238,7 @@ func compactPRISMPlacePreparedAlternatives(
 		boot,
 		container,
 	)
+	immediate.finishAt += publication
 	children := []compactPRISMState{compactPRISMCommitPlacement(
 		search,
 		state,
@@ -246,6 +261,7 @@ func compactPRISMPlacePreparedAlternatives(
 		search.activities[activityOrdinal].Priority, transfer, delayedStart,
 		baseRuntime*delayedFactor, boot, container,
 	)
+	delayed.finishAt += publication
 	children = append(children, compactPRISMCommitPlacement(
 		search, state, transfer.state, activityOrdinal, resourceOrdinal,
 		coreOrdinal, sequence, delayed,

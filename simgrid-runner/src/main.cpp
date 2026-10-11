@@ -250,8 +250,13 @@ static std::vector<TransferModel> create_transfers(const json& input, const std:
         const auto relay=input.value("materializationRelayResourceId",std::string{});
         if (relay.empty() || transfer.stages.size()!=2 || transfer.stages[0].target != relay || transfer.stages[1].source != relay || transfer.relay_network_bytes != network_bytes)
           throw std::runtime_error("gateway materialization must use both relay hops");
-      } else if (transfer.strategy == "direct-runtime" || transfer.strategy == "shared-storage") {
-        if (transfer.stages.size()!=1 || transfer.relay_network_bytes!=0 || (transfer.strategy=="shared-storage" && network_bytes!=0))
+      } else if (transfer.strategy == "direct-runtime") {
+        const bool receiver_stage = transfer.stages.size()==2 && transfer.stages[1].bytes==0 &&
+            transfer.stages[1].source==consumer.resource_id && transfer.stages[1].target==consumer.resource_id;
+        if ((transfer.stages.size()!=1 && !receiver_stage) || transfer.relay_network_bytes!=0)
+          throw std::runtime_error("invalid peer/shared materialization stages");
+      } else if (transfer.strategy == "shared-storage") {
+        if (transfer.stages.size()!=1 || transfer.relay_network_bytes!=0 || network_bytes!=0)
           throw std::runtime_error("invalid peer/shared materialization stages");
       } else {
         throw std::runtime_error("unsupported materialization strategy");

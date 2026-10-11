@@ -417,6 +417,27 @@ func TestTransferObservationsPreserveDirectWorkspaceRoute(t *testing.T) {
 	}
 }
 
+func TestTransferObservationsUseNetworkBytesForComparableTotals(t *testing.T) {
+	for _, test := range []struct {
+		name        string
+		observation domain.DataTransferRun
+		want        int64
+	}{
+		{"compressed relay two hops", domain.DataTransferRun{TransferredBytes: 1000, LogicalBytes: 1000, NetworkBytes: 600}, 600},
+		{"private peer archive", domain.DataTransferRun{TransferredBytes: 1000, LogicalBytes: 1000, NetworkBytes: 300}, 300},
+		{"same instance copy", domain.DataTransferRun{TransferredBytes: 1000, LogicalBytes: 1000, Route: domain.TransferRoute{SharedFilesystem: "ext2/ext3"}}, 0},
+		{"HPC internal copy", domain.DataTransferRun{TransferredBytes: 1000, LogicalBytes: 1000, Route: domain.TransferRoute{SharedFilesystem: "nfs"}}, 0},
+		{"legacy evidence absent", domain.DataTransferRun{TransferredBytes: 1000, LogicalBytes: 1000}, 1000},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			transfers := transferObservations("run", "consumer", "target", nil, domain.PreparationRequirement{}, []domain.DataTransferRun{test.observation}, domain.NetworkTopology{})
+			if len(transfers) != 1 || transfers[0].Bytes != test.want || transfers[0].LogicalBytes != 1000 {
+				t.Fatalf("physical total or logical evidence lost: %+v", transfers)
+			}
+		})
+	}
+}
+
 func TestSupervisorExecutesDAGInDependencyOrder(t *testing.T) {
 	store := &executionStoreFake{}
 	activities := &activityControllerFake{}

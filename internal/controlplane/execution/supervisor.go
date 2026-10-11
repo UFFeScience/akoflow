@@ -1329,16 +1329,18 @@ func transferObservations(
 			ConsumerActivityID: activityID,
 			SourceResourceID:   sourceResourceID,
 			TargetResourceID:   targetResourceID,
-			Bytes:              observation.TransferredBytes,
-			StartedAt:          observation.StartedAt,
-			FinishedAt:         observation.FinishedAt,
-			DurationSeconds:    maxFloat(0, observation.FinishedAt-observation.StartedAt),
-			Cost:               transferPrice(topology, sourceResourceID, targetResourceID) * float64(bytes),
-			Strategy:           observation.Strategy,
-			Route:              observation.Route,
-			LogicalBytes:       observation.LogicalBytes,
-			NetworkBytes:       observation.NetworkBytes,
-			FilesTransferred:   observation.FilesTransferred,
+			// Comparable with native SimGrid: physical traffic, not the
+			// uncompressed filesystem copy work retained in LogicalBytes.
+			Bytes:            bytes,
+			StartedAt:        observation.StartedAt,
+			FinishedAt:       observation.FinishedAt,
+			DurationSeconds:  maxFloat(0, observation.FinishedAt-observation.StartedAt),
+			Cost:             transferPrice(topology, sourceResourceID, targetResourceID) * float64(bytes),
+			Strategy:         observation.Strategy,
+			Route:            observation.Route,
+			LogicalBytes:     observation.LogicalBytes,
+			NetworkBytes:     observation.NetworkBytes,
+			FilesTransferred: observation.FilesTransferred,
 		})
 	}
 	return transfers

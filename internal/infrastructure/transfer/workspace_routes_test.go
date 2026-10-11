@@ -26,6 +26,24 @@ func TestWorkspacePhaseRecordsFailureWithoutChangingError(t *testing.T) {
 	}
 }
 
+func TestSharedStorageProofFailureIsBoundedAndDoesNotRelaxTrust(t *testing.T) {
+	a := domain.TransferEndpoint{URI: "ssh://user@host-a/workspace", ConnectionID: "fixture"}
+	b := domain.TransferEndpoint{URI: "ssh://user@host-b/workspace", ConnectionID: "fixture"}
+	proof, ok, category := sharedWorkspaceProofDiagnostic(context.Background(), a, b)
+	if proof != "" || ok || category != "different_ssh_endpoints" {
+		t.Fatalf("unsafe endpoint proof: %q %v %q", proof, ok, category)
+	}
+	bin := t.TempDir()
+	if err := os.WriteFile(filepath.Join(bin, "ssh"), []byte("#!/bin/sh\nprintf 'private diagnostic' >&2\nexit 7\n"), 0700); err != nil {
+		t.Fatal(err)
+	}
+	t.Setenv("PATH", bin+string(os.PathListSeparator)+os.Getenv("PATH"))
+	proof, ok, category = sharedWorkspaceProofDiagnostic(context.Background(), a, a)
+	if proof != "" || ok || category != "proof_command_failed" {
+		t.Fatalf("command failure leaked or accepted: %q %v %q", proof, ok, category)
+	}
+}
+
 func TestReceiverPhaseSeparatesSSHAdmissionAndCommandService(t *testing.T) {
 	bin := t.TempDir()
 	if err := os.WriteFile(filepath.Join(bin, "ssh"), []byte("#!/bin/sh\nprintf 'receiver-fixture'\nexit \"$1\"\n"), 0700); err != nil {

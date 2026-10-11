@@ -111,6 +111,7 @@ def montage_audit(request, response, simulation, require_fresh: false)
         strategy: t['strategy'], duration_seconds: t['durationSeconds'], logical_bytes: t['logicalBytes'],
         network_bytes: t['networkBytes'], relay_server_network_bytes: route['serverNetworkBytes'],
         archive_bytes: route['archiveBytes'], files: route['filesTransferred'], snapshot_reused: route['snapshotReused'],
+        shared_storage_proof_failure: route['sharedStorageProofFailure'],
         ssh_channel_wait_seconds: route['sshChannelWaitSeconds'], rsync_execution_seconds: route['rsyncExecutionSeconds'],
         source_pack_preflight_seconds: route['sourcePackPreflightSeconds'],
         source_pack_preflight_ssh_channel_wait_seconds: route['sourcePackPreflightSshChannelWaitSeconds'],

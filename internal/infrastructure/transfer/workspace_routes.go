@@ -60,23 +60,33 @@ func sameCloudWorkspaceProof(ctx context.Context, source, destination domain.Tra
 // time. A matching SSH connection or a zero filesystem ID alone is not proof
 // of shared storage: the mounted source and mount path must also match.
 func sharedWorkspaceProof(ctx context.Context, source, destination domain.TransferEndpoint) (string, bool) {
+	proof, ok, _ := sharedWorkspaceProofDiagnostic(ctx, source, destination)
+	return proof, ok
+}
+
+// Never persist command output, addresses, or paths in proof failure metadata.
+func sharedWorkspaceProofDiagnostic(ctx context.Context, source, destination domain.TransferEndpoint) (string, bool, string) {
 	if !sameSSHWorkspaceEndpoint(source, destination) {
-		return "", false
+		return "", false, "different_ssh_endpoints"
 	}
 	host, target, err := sshTarget(destination, "")
 	if err != nil {
-		return "", false
+		return "", false, "invalid_target_endpoint"
 	}
 	_, origin, err := sshTarget(source, "")
 	if err != nil {
-		return "", false
+		return "", false, "invalid_source_endpoint"
 	}
 	command := sharedWorkspaceProofCommand(origin, target)
 	output, err := runSSHCombinedOutput(ctx, destination, append(sshArgs(destination), host, command), nil)
 	if err != nil {
-		return "", false
+		return "", false, "proof_command_failed"
 	}
-	return parseSharedWorkspaceProof(string(output))
+	proof, ok := parseSharedWorkspaceProof(string(output))
+	if !ok {
+		return "", false, "filesystem_identity_or_format_rejected"
+	}
+	return proof, true, ""
 }
 
 func sharedWorkspaceProofCommand(origin, target string) string {
@@ -139,7 +149,7 @@ func (s WorkspaceRsync) syncDependencyRoutes(ctx context.Context, plans []domain
 		proof, ok := sameCloudWorkspaceProof(ctx, source, destination)
 		localCloud[i] = ok
 		if !ok {
-			proof, ok = sharedWorkspaceProof(ctx, source, destination)
+			proof, ok, runs[i].Route.SharedStorageProofFailure = sharedWorkspaceProofDiagnostic(ctx, source, destination)
 		}
 		if ok {
 			proofs[i] = proof

@@ -136,6 +136,7 @@ type TransferRoute struct {
 	NetworkDomain                            string           `json:"networkDomain,omitempty"`
 	SharedFilesystem                         string           `json:"sharedFilesystem,omitempty"`
 	SharedFilesystemID                       string           `json:"sharedFilesystemId,omitempty"`
+	SharedStorageProofFailure                string           `json:"sharedStorageProofFailure,omitempty"`
 	RetryCount                               int              `json:"retryCount,omitempty"`
 	SSHChannelWaitSeconds                    float64          `json:"sshChannelWaitSeconds,omitempty"`
 	SourcePackPreflightSeconds               float64          `json:"sourcePackPreflightSeconds,omitempty"`

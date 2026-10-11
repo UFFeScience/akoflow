@@ -2691,11 +2691,11 @@ func (h *Handler) CreateExecution(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusUnprocessableEntity, err)
 		return
 	}
-	storageAssignments := map[string]string{}
+	storageTimings := []storagebudget.Timing{}
 	for _, assignment := range request.Plan.Assignments {
-		storageAssignments[assignment.ActivityID] = assignment.ResourceID
+		storageTimings = append(storageTimings, storagebudget.Timing{ActivityID: assignment.ActivityID, ResourceID: assignment.ResourceID, Start: assignment.PredictedStartAt, Finish: assignment.PredictedFinishAt})
 	}
-	if _, _, err := storagebudget.Check(request.Workflow, request.Resources, storageAssignments); err != nil {
+	if _, _, err := storagebudget.CheckScheduled(request.Workflow, request.Resources, storageTimings); err != nil {
 		writeError(w, http.StatusUnprocessableEntity, err)
 		return
 	}

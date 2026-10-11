@@ -56,3 +56,33 @@ func TestRootInputRemovedStillReservesPreparationBytes(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, int64(10), rows[0].ReservedUpperBoundBytes)
 }
+
+func TestScheduledBoundCreditsOnlyReleasedProducersAndRetainsStaging(t *testing.T) {
+	v, r, _ := fixture(90)
+	model := v.Activities[1].Metadata["workspaceProjection"].(workflow.WorkspaceProjection)
+	v.Activities = append(v.Activities, workflow.Activity{ID: "c", Metadata: map[string]any{"workspaceProjection": model}}, workflow.Activity{ID: "d", Metadata: map[string]any{"workspaceProjection": model}})
+	v.Dependencies = append(v.Dependencies, workflow.ActivityDependency{ActivityID: "c", DependsOnActivityID: "b"}, workflow.ActivityDependency{ActivityID: "d", DependsOnActivityID: "c"})
+	timings := []Timing{{"a", "node1", 0, 1}, {"b", "node2", 2, 3}, {"c", "node1", 4, 5}, {"d", "node2", 6, 7}}
+	rows, _, err := CheckScheduled(v, r, timings)
+	require.NoError(t, err)
+	// 60 staging + retained final 10 + at most two intermediate 10-byte
+	// workspaces at equal-time allocation/release barriers = 90.
+	require.Equal(t, int64(90), rows[0].ReservedUpperBoundBytes)
+	_, _, err = Check(v, r, map[string]string{"a": "node1", "b": "node2", "c": "node1", "d": "node2"})
+	require.Error(t, err)
+}
+
+func TestScheduledFanoutWaitsForLastConsumerAndRejectsInvalidTiming(t *testing.T) {
+	v, r, _ := fixture(1000)
+	v.Activities = append(v.Activities, workflow.Activity{ID: "c", Metadata: v.Activities[1].Metadata})
+	v.DataDependencies = []workflow.ActivityDataDependency{{ProducerActivityID: "a", ConsumerActivityID: "c"}}
+	timings := []Timing{{"a", "node1", 0, 1}, {"b", "node2", 2, 3}, {"c", "node1", 8, 9}}
+	rows, _, err := CheckScheduled(v, r, timings)
+	require.NoError(t, err)
+	require.Equal(t, int64(70), rows[0].ReservedUpperBoundBytes)
+	timings[2].Start = .5
+	_, _, err = CheckScheduled(v, r, timings)
+	require.ErrorContains(t, err, "noncausal")
+	_, _, err = CheckScheduled(v, r, timings[:2])
+	require.ErrorContains(t, err, "missing storage schedule")
+}

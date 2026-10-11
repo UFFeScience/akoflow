@@ -4,6 +4,7 @@ import (
 	"container/heap"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"math"
 	"runtime"
@@ -108,6 +109,8 @@ func reevaluateCompleteCompactPRISMStates(
 	var workers sync.WaitGroup
 	var firstErr error
 	var errOnce sync.Once
+	valid := make([]bool, len(states))
+	quotaErrors := make([]error, len(states))
 	workers.Add(workerCount)
 	for worker := 0; worker < workerCount; worker++ {
 		go func() {
@@ -118,6 +121,11 @@ func reevaluateCompleteCompactPRISMStates(
 				}
 				evaluated, err := evaluateCompleteCompactPRISMState(search, states[job.index])
 				if err != nil {
+					var quota *storagebudget.InsufficientQuota
+					if errors.As(err, &quota) {
+						quotaErrors[job.index] = err
+						continue
+					}
 					errOnce.Do(func() {
 						firstErr = err
 						cancel()
@@ -125,6 +133,7 @@ func reevaluateCompleteCompactPRISMStates(
 					continue
 				}
 				result[job.index] = evaluated
+				valid[job.index] = true
 			}
 		}()
 	}
@@ -139,7 +148,20 @@ func reevaluateCompleteCompactPRISMStates(
 	if firstErr != nil {
 		return nil, firstErr
 	}
-	return result, nil
+	filtered := result[:0]
+	for i := range result {
+		if valid[i] {
+			filtered = append(filtered, result[i])
+		}
+	}
+	if len(filtered) == 0 {
+		for _, err := range quotaErrors {
+			if err != nil {
+				return nil, err
+			}
+		}
+	}
+	return filtered, nil
 }
 
 func evaluateCompleteCompactPRISMState(
@@ -155,13 +177,6 @@ func evaluateCompleteCompactPRISMState(
 	for _, resource := range search.resources {
 		resourceByID[resource.resource.ID] = resource.resource
 		storageResources = append(storageResources, resource.resource)
-	}
-	storageAssignments := map[string]string{}
-	for _, assignment := range assignments {
-		storageAssignments[assignment.ActivityID] = assignment.ResourceID
-	}
-	if _, _, err := storagebudget.Check(search.request.Workflow, storageResources, storageAssignments); err != nil {
-		return state, fmt.Errorf("evaluate PRISM storage budget: %w", err)
 	}
 	tasks := make([]prismEvaluationTask, len(search.activities))
 	assignmentOrdinal := make(map[string]int, len(assignments))
@@ -432,6 +447,14 @@ func evaluateCompleteCompactPRISMState(
 		flows = activeFlows
 	}
 
+	timings := make([]storagebudget.Timing, 0, len(tasks))
+	for _, task := range tasks {
+		a := task.assignment
+		timings = append(timings, storagebudget.Timing{ActivityID: a.ActivityID, ResourceID: a.ResourceID, Start: a.PredictedStartAt, Finish: a.PredictedFinishAt})
+	}
+	if _, _, err := storagebudget.CheckScheduled(search.request.Workflow, storageResources, timings); err != nil {
+		return state, fmt.Errorf("evaluate PRISM storage budget: %w", err)
+	}
 	return compactPRISMFinishEvaluation(
 		state, assignments, assignmentOrdinal, tasks, resourceByID,
 		resourceStart, resourceFinish, clock, transferCost,

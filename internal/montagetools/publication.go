@@ -52,3 +52,26 @@ func publicationReference(real Object, referenceDigest string) Object {
 	check(len(observations) > 0, "no publication observations")
 	return Object{"runId": obj(real["run"])["id"], "referenceSHA256": referenceDigest, "role": "publication-wall-reference-not-queue-free-service-fit", "samples": len(observations), "weightedWallSecondsPerScanByte": totalSeconds / totalBytes, "summedWorkSecondsNotMakespan": totalSeconds, "observations": observations, "limitations": list("Includes observation SSH transport, sealing, pruning and scheduling between terminal observation and completion event.", "Excludes initial polling delay but does not prove zero admission wait.", "Recovered reference is not independent validation; no global makespan multiplier is applied.")}
 }
+
+func combinedObservationSensitivity(request, real Object, digest string) Object {
+	request = observationSensitivity(request, real, digest)
+	reference := publicationReference(real, digest)
+	volumes := map[string]float64{}
+	for _, row := range rows(reference["observations"]) {
+		volumes[str(get(row, "activityId"))] = num(get(row, "terminalScanBytes"))
+	}
+	for _, activity := range rows(get(obj(get(request, "Workflow")), "activities")) {
+		bytes, ok := volumes[str(get(activity, "id"))]
+		if !ok {
+			continue
+		}
+		projection := obj(get(obj(get(activity, "metadata")), "workspaceProjection"))
+		projection["terminalObservationBytes"] = int64(bytes)
+		projection["terminalObservationSource"] = "observed-pre-prune-snapshot:" + digest
+	}
+	metadata := obj(get(obj(get(request, "NetworkTopology")), "metadata"))
+	model := obj(get(metadata, "workspaceMaterializationModel"))
+	model["publicationProfiles"] = []any{Object{"targetClass": "e2-micro", "source": "combined-observed-publication-wall:" + digest, "samples": reference["samples"], "scanSecondsPerWorkspaceByte": reference["weightedWallSecondsPerScanByte"], "cleanupSecondsPerInputByte": 0}}
+	metadata["publicationObservationSensitivity"] = reference
+	return request
+}

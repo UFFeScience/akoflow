@@ -11,6 +11,15 @@ func TestPublicationReferenceExcludesPollingAndRejectsWrongAttempt(t *testing.T)
 	if row["publicationWallSeconds"] != 5.0 || row["pollDelayExcludedSeconds"] != 2.0 {
 		t.Fatal("poll wait counted as publication")
 	}
+	obj(handle["metadata"])["remoteWorkspaceSnapshotSeconds"] = 2.0
+	obj(handle["metadata"])["artifactObservationBefore"] = `[{"size":100}]`
+	projection := Object{}
+	model := Object{}
+	request := Object{"Workflow": Object{"activities": []any{Object{"id": "a", "metadata": Object{"workspaceProjection": projection}}}}, "NetworkTopology": Object{"metadata": Object{"workspaceMaterializationModel": model}}}
+	combinedObservationSensitivity(request, real, "digest")
+	if projection["terminalObservationBytes"] != int64(100) || rows(model["publicationProfiles"])[0]["scanSecondsPerWorkspaceByte"] != .05 {
+		t.Fatal("publication scan used exported size or wrong wall coefficient")
+	}
 	task["startedAt"] = 89.0
 	defer func() {
 		if recover() == nil {

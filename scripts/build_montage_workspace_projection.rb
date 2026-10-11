@@ -17,6 +17,14 @@ module MontageWorkspaceProjection
     end
   end
 
+  def activity_model(inherited, final, packaging, source)
+    {'contract'=>'whole-workspace-v1','source'=>source,
+      'inputs'=>packaging.values,
+      'inputsByResourceType'=>{'cloud_vm'=>packaging.values,'hpc_machine'=>[]},
+      'outputs'=>final.values.select { |file| inherited[file.fetch('path')] != file && packaging[file.fetch('path')] != file },
+      'removedPaths'=>inherited.keys.reject { |path| final.key?(path) }}
+  end
+
   def build(audited, raw, request, digest)
     MontageExecutionCalibration.build(audited, digest) # Require the full audit.
     raise 'Baseline identity mismatch' unless raw.fetch('run').fetch('id') == audited.fetch('run_id')
@@ -59,11 +67,7 @@ module MontageWorkspaceProjection
       final = manifests.fetch(id)
       input_volumes[id] = {'inputTotalBytes'=>preds[id].sum { |parent| manifests.fetch(parent).values.sum { |file| file.fetch('sizeBytes') } },
         'inputUniqueBytes'=>inherited.values.sum { |file| file.fetch('sizeBytes') },'inputFiles'=>inherited.length}
-      model = {'contract'=>'whole-workspace-v1','source'=>"baseline:#{audited.fetch('run_id')}",
-        'inputs'=>common.values,
-        'inputsByResourceType'=>{'cloud_vm'=>common.values,'hpc_machine'=>[]},
-        'outputs'=>final.values.select { |file| inherited[file.fetch('path')] != file && common[file.fetch('path')] != file },
-        'removedPaths'=>inherited.keys.reject { |path| final.key?(path) }}
+      model = activity_model(inherited, final, common, "baseline:#{audited.fetch('run_id')}")
       # The remote Docker adapter seeds every activity, not just roots. Exact
       # immutable packaging identities are inputs; changed contents at the same
       # paths remain scientific outputs. Inherited files remain in the workspace

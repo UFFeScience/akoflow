@@ -46,7 +46,8 @@ type compactPRISMFanInDependency struct {
 }
 
 type compactPRISMFanIn struct {
-	dependencies []compactPRISMFanInDependency
+	activityOrdinal int
+	dependencies    []compactPRISMFanInDependency
 }
 
 func initialCompactPRISMState(search compactPRISMContext) compactPRISMState {
@@ -194,6 +195,9 @@ func compactPRISMPlacePreparedAlternatives(
 		contention,
 		prepared,
 	)
+	if search.materializationModel != nil && math.IsInf(transfer.readyAt, 1) {
+		return nil
+	}
 	start := math.Max(transfer.readyAt, coreRoot.bestValue)
 	order := compactPRISMIntLookup(state.coreOrder, coreOrdinal)
 	boot := 0.0
@@ -334,7 +338,8 @@ func compactPRISMPrepareFanIn(
 ) compactPRISMFanIn {
 	predecessors := search.predecessors[activityOrdinal]
 	prepared := compactPRISMFanIn{
-		dependencies: make([]compactPRISMFanInDependency, 0, len(predecessors)),
+		activityOrdinal: activityOrdinal,
+		dependencies:    make([]compactPRISMFanInDependency, 0, len(predecessors)),
 	}
 	for _, dependency := range predecessors {
 		assignment, exists := compactPRISMAssignmentChunkLookup(
@@ -375,6 +380,9 @@ func compactPRISMResolvePreparedTransfers(
 	contention bool,
 	prepared compactPRISMFanIn,
 ) compactPRISMTransferResult {
+	if search.materializationModel != nil {
+		return compactPRISMResolveMaterializedFanIn(search, state, resourceID, contention, prepared)
+	}
 	result := compactPRISMTransferResult{state: state}
 	var networkBatch *compactPRISMNetworkBatch
 	if contention {

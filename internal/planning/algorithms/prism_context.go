@@ -5,6 +5,8 @@ import (
 	"sort"
 
 	"github.com/UFFeScience/akoflow/internal/domain"
+	"github.com/UFFeScience/akoflow/internal/domain/materializationmodel"
+	domainworkflow "github.com/UFFeScience/akoflow/internal/domain/workflow"
 )
 
 const prismPendingChunkSize = 64
@@ -21,6 +23,8 @@ type compactPRISMResource struct {
 }
 
 type compactPRISMContext struct {
+	materializationModel     *materializationmodel.Model
+	requireMeasuredProfiles  bool
 	request                  domain.PlanningRequest
 	activities               []domain.Activity
 	activityOrdinal          map[string]int
@@ -47,6 +51,11 @@ func newCompactPRISMContext(
 	request domain.PlanningRequest,
 	configuration map[string]any,
 ) (compactPRISMContext, error) {
+	projected, projectionErr := domainworkflow.ProjectWorkspaceDependencies(request.Workflow)
+	if projectionErr != nil {
+		return compactPRISMContext{}, projectionErr
+	}
+	request.Workflow = projected
 	topological, err := topologicalOrder(request.Workflow)
 	if err != nil {
 		return compactPRISMContext{}, err
@@ -55,7 +64,20 @@ func newCompactPRISMContext(
 	if len(resources) == 0 {
 		return compactPRISMContext{}, fmt.Errorf("execution scope has no schedulable resources")
 	}
-	router := newCompactPRISMRouter(request.NetworkTopology, resources)
+	materialization, err := materializationmodel.Decode(request.NetworkTopology.Metadata)
+	if err != nil {
+		return compactPRISMContext{}, err
+	}
+	routingResources := resources
+	if materialization != nil {
+		for _, resource := range request.Resources {
+			if resource.ID == materialization.RelayResourceID && !resource.Schedulable {
+				routingResources = append(append([]domain.Resource(nil), resources...), resource)
+				break
+			}
+		}
+	}
+	router := newCompactPRISMRouter(request.NetworkTopology, routingResources)
 	rankByID, err := prismCommunicationRanksWithRouter(request, topological, resources, router)
 	if err != nil {
 		return compactPRISMContext{}, err
@@ -69,23 +91,25 @@ func newCompactPRISMContext(
 		return ranked[i].ID < ranked[j].ID
 	})
 	search := compactPRISMContext{
-		request:           request,
-		activities:        ranked,
-		activityOrdinal:   make(map[string]int, len(ranked)),
-		predecessors:      make([][]compactPRISMDependency, len(ranked)),
-		successors:        make([][]int, len(ranked)),
-		durations:         make([][]float64, len(ranked)),
-		feasible:          make([][]bool, len(ranked)),
-		minimumCosts:      make([]float64, len(ranked)),
-		averageDurations:  make([]float64, len(ranked)),
-		ranks:             make([]float64, len(ranked)),
-		interference:      make([]map[int]float64, len(ranked)),
-		interferenceModel: "pairwise-cpu-priority",
-		interferenceRules: make(map[string]map[string]float64),
-		router:            router,
-		readyBranchLimit:  intOption(configuration, "readyBranchLimit", 3, 1, 16),
-		beamWidth:         intOption(configuration, "beamWidth", 120, 1, 10000),
+		materializationModel: materialization,
+		request:              request,
+		activities:           ranked,
+		activityOrdinal:      make(map[string]int, len(ranked)),
+		predecessors:         make([][]compactPRISMDependency, len(ranked)),
+		successors:           make([][]int, len(ranked)),
+		durations:            make([][]float64, len(ranked)),
+		feasible:             make([][]bool, len(ranked)),
+		minimumCosts:         make([]float64, len(ranked)),
+		averageDurations:     make([]float64, len(ranked)),
+		ranks:                make([]float64, len(ranked)),
+		interference:         make([]map[int]float64, len(ranked)),
+		interferenceModel:    "pairwise-cpu-priority",
+		interferenceRules:    make(map[string]map[string]float64),
+		router:               router,
+		readyBranchLimit:     intOption(configuration, "readyBranchLimit", 3, 1, 16),
+		beamWidth:            intOption(configuration, "beamWidth", 120, 1, 10000),
 	}
+	search.requireMeasuredProfiles, _ = configuration["requireMeasuredProfiles"].(bool)
 	for ordinal, activity := range ranked {
 		search.activityOrdinal[activity.ID] = ordinal
 		search.ranks[ordinal] = rankByID[activity.ID]
@@ -186,6 +210,16 @@ func (search *compactPRISMContext) buildExecutionMatrices() {
 				activity,
 				resource.resource,
 			)
+			if search.requireMeasuredProfiles {
+				measured := false
+				for _, profile := range search.request.ActivityProfiles {
+					if profile.ActivityTypeID == activity.ActivityTypeID && profile.ResourceID == resource.resource.ID && profile.ModelVersion == "reference-work-v1" && profile.RuntimeFor(activity) > 0 {
+						measured = true
+						break
+					}
+				}
+				search.feasible[activityOrdinal][resourceOrdinal] = search.feasible[activityOrdinal][resourceOrdinal] && measured
+			}
 			search.durations[activityOrdinal][resourceOrdinal] = duration(
 				activity,
 				resource.resource,

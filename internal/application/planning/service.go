@@ -435,6 +435,11 @@ func (s *Coordinator) buildRequest(
 	if err != nil {
 		return domain.PlanningRequest{}, fmt.Errorf("project workspace dependencies: %w", err)
 	}
+	if snapshot, snapshotErr := calibratedProfileSnapshot(session.Configuration["activityProfileSnapshot"], projectedWorkflow, resources); snapshotErr != nil {
+		return domain.PlanningRequest{}, snapshotErr
+	} else if snapshot != nil {
+		profiles = snapshot
+	}
 	return domain.PlanningRequest{
 		Workflow:              projectedWorkflow,
 		ExecutionScope:        *scope,

@@ -6,6 +6,7 @@ import (
 
 	"github.com/UFFeScience/akoflow/internal/application/ports"
 	"github.com/UFFeScience/akoflow/internal/domain"
+	domainworkflow "github.com/UFFeScience/akoflow/internal/domain/workflow"
 )
 
 type runnerInput struct {
@@ -42,6 +43,11 @@ type runnerLaneOrder struct {
 }
 
 func buildRunnerInput(request ports.ExecutionRequest, referenceFLOPS float64) ([]byte, error) {
+	projected, err := domainworkflow.ProjectWorkspaceDependencies(request.Workflow)
+	if err != nil {
+		return nil, fmt.Errorf("project workspace dependencies: %w", err)
+	}
+	request.Workflow = projected
 	model := indexRequest(request)
 	input := runnerInput{
 		RunID: request.Run.ID, PlanID: request.Plan.ID,

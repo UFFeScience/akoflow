@@ -15,6 +15,7 @@ import (
 	"github.com/UFFeScience/akoflow/internal/application/ports"
 	"github.com/UFFeScience/akoflow/internal/domain"
 	domainqueue "github.com/UFFeScience/akoflow/internal/domain/queue"
+	domainworkflow "github.com/UFFeScience/akoflow/internal/domain/workflow"
 )
 
 const EventPlanningSessionRequested = "planning.session.requested"
@@ -430,8 +431,12 @@ func (s *Coordinator) buildRequest(
 	if err != nil {
 		return domain.PlanningRequest{}, fmt.Errorf("decode interference knowledge: %w", err)
 	}
+	projectedWorkflow, err := domainworkflow.ProjectWorkspaceDependencies(*workflow)
+	if err != nil {
+		return domain.PlanningRequest{}, fmt.Errorf("project workspace dependencies: %w", err)
+	}
 	return domain.PlanningRequest{
-		Workflow:              *workflow,
+		Workflow:              projectedWorkflow,
 		ExecutionScope:        *scope,
 		Environments:          environments,
 		Resources:             resources,

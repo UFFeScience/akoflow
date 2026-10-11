@@ -1,0 +1,1722 @@
+{
+  "schemaVersion": 1,
+  "baselineRunId": "montage-docker-image-real-20261010-v2",
+  "baselineSHA256": "ce8343153d9016ce2149fa5e70b3624ca148c4747e6dd9887dae1fa2b6ab46c6",
+  "synchronizationContract": "whole-workspace-v1",
+  "computeObservations": [
+    {
+      "activityFamily": "madd",
+      "resourceClass": "e2-micro",
+      "runtimeSeconds": {
+        "samples": 3,
+        "median": 8.217379093170166,
+        "minimum": 0.9578084945678711,
+        "maximum": 8.437352895736694
+      },
+      "taskRuntimeFallbackSamples": 0,
+      "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
+    },
+    {
+      "activityFamily": "mbackground",
+      "resourceClass": "e2-medium",
+      "runtimeSeconds": {
+        "samples": 2,
+        "median": 0.5800764560699463,
+        "minimum": 0.5333530902862549,
+        "maximum": 0.6267998218536377
+      },
+      "taskRuntimeFallbackSamples": 0,
+      "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
+    },
+    {
+      "activityFamily": "mbackground",
+      "resourceClass": "e2-micro",
+      "runtimeSeconds": {
+        "samples": 8,
+        "median": 2.1703304052352905,
+        "minimum": 0.9790773391723633,
+        "maximum": 23.867364168167114
+      },
+      "taskRuntimeFallbackSamples": 0,
+      "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
+    },
+    {
+      "activityFamily": "mbackground",
+      "resourceClass": "hpc",
+      "runtimeSeconds": {
+        "samples": 2,
+        "median": 3.2587720155715942,
+        "minimum": 2.595179796218872,
+        "maximum": 3.9223642349243164
+      },
+      "taskRuntimeFallbackSamples": 2,
+      "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
+    },
+    {
+      "activityFamily": "mbgmodel",
+      "resourceClass": "e2-micro",
+      "runtimeSeconds": {
+        "samples": 2,
+        "median": 0.5460176467895508,
+        "minimum": 0.47063517570495605,
+        "maximum": 0.6214001178741455
+      },
+      "taskRuntimeFallbackSamples": 0,
+      "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
+    },
+    {
+      "activityFamily": "mbgmodel",
+      "resourceClass": "e2-medium",
+      "runtimeSeconds": {
+        "samples": 1,
+        "median": 0.5198588371276855,
+        "minimum": 0.5198588371276855,
+        "maximum": 0.5198588371276855
+      },
+      "taskRuntimeFallbackSamples": 0,
+      "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
+    },
+    {
+      "activityFamily": "mconcatfit",
+      "resourceClass": "hpc",
+      "runtimeSeconds": {
+        "samples": 1,
+        "median": 2.8328795433044434,
+        "minimum": 2.8328795433044434,
+        "maximum": 2.8328795433044434
+      },
+      "taskRuntimeFallbackSamples": 1,
+      "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
+    },
+    {
+      "activityFamily": "mconcatfit",
+      "resourceClass": "e2-micro",
+      "runtimeSeconds": {
+        "samples": 2,
+        "median": 3.633373498916626,
+        "minimum": 2.559312343597412,
+        "maximum": 4.70743465423584
+      },
+      "taskRuntimeFallbackSamples": 0,
+      "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
+    },
+    {
+      "activityFamily": "mdifffit",
+      "resourceClass": "e2-micro",
+      "runtimeSeconds": {
+        "samples": 14,
+        "median": 7.9425482749938965,
+        "minimum": 0.6820909976959229,
+        "maximum": 52.214394092559814
+      },
+      "taskRuntimeFallbackSamples": 0,
+      "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
+    },
+    {
+      "activityFamily": "mdifffit",
+      "resourceClass": "hpc",
+      "runtimeSeconds": {
+        "samples": 3,
+        "median": 2.2217273712158203,
+        "minimum": 1.3592419624328613,
+        "maximum": 2.9261977672576904
+      },
+      "taskRuntimeFallbackSamples": 3,
+      "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
+    },
+    {
+      "activityFamily": "mdifffit",
+      "resourceClass": "e2-medium",
+      "runtimeSeconds": {
+        "samples": 1,
+        "median": 4.188046932220459,
+        "minimum": 4.188046932220459,
+        "maximum": 4.188046932220459
+      },
+      "taskRuntimeFallbackSamples": 0,
+      "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
+    },
+    {
+      "activityFamily": "mimgtbl",
+      "resourceClass": "e2-micro",
+      "runtimeSeconds": {
+        "samples": 3,
+        "median": 1.4470241069793701,
+        "minimum": 0.1340923309326172,
+        "maximum": 1.9225947856903076
+      },
+      "taskRuntimeFallbackSamples": 0,
+      "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
+    },
+    {
+      "activityFamily": "mproject",
+      "resourceClass": "e2-medium",
+      "runtimeSeconds": {
+        "samples": 4,
+        "median": 723.2229771614075,
+        "minimum": 540.6099560260773,
+        "maximum": 1009.9635989665985
+      },
+      "taskRuntimeFallbackSamples": 0,
+      "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
+    },
+    {
+      "activityFamily": "mproject",
+      "resourceClass": "e2-micro",
+      "runtimeSeconds": {
+        "samples": 6,
+        "median": 2135.8616498708725,
+        "minimum": 1800.6897740364075,
+        "maximum": 3373.3067605495453
+      },
+      "taskRuntimeFallbackSamples": 0,
+      "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
+    },
+    {
+      "activityFamily": "mproject",
+      "resourceClass": "hpc",
+      "runtimeSeconds": {
+        "samples": 2,
+        "median": 432.66202092170715,
+        "minimum": 430.53262972831726,
+        "maximum": 434.79141211509705
+      },
+      "taskRuntimeFallbackSamples": 2,
+      "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
+    },
+    {
+      "activityFamily": "mviewer",
+      "resourceClass": "e2-medium",
+      "runtimeSeconds": {
+        "samples": 2,
+        "median": 2.066543698310852,
+        "minimum": 1.2472658157348633,
+        "maximum": 2.885821580886841
+      },
+      "taskRuntimeFallbackSamples": 0,
+      "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
+    },
+    {
+      "activityFamily": "mviewer",
+      "resourceClass": "e2-micro",
+      "runtimeSeconds": {
+        "samples": 2,
+        "median": 14.030364871025085,
+        "minimum": 1.6501014232635498,
+        "maximum": 26.41062831878662
+      },
+      "taskRuntimeFallbackSamples": 0,
+      "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
+    }
+  ],
+  "materializationPhaseObservations": [
+    {
+      "strategy": "direct-runtime",
+      "sourceClass": "e2-medium",
+      "targetClass": "e2-micro",
+      "phase": "peer-authenticated-connectivity-probe",
+      "seconds": {
+        "samples": 20,
+        "median": 2.4162210225000003,
+        "minimum": 2.286490792,
+        "maximum": 13.712441924
+      },
+      "logicalBytes": {
+        "samples": 18,
+        "median": 196610182.0,
+        "minimum": 18236443.0,
+        "maximum": 740939386.0
+      },
+      "archiveBytes": {
+        "samples": 20,
+        "median": 143339660.0,
+        "minimum": 142917128.0,
+        "maximum": 426325775.0
+      },
+      "files": {
+        "samples": 18,
+        "median": 47.0,
+        "minimum": 2.0,
+        "maximum": 75.0
+      },
+      "effectiveArchiveBytesPerSecond": {
+        "samples": 20,
+        "median": 60827976.14251813,
+        "minimum": 26046095.920719363,
+        "maximum": 179075854.47277406
+      },
+      "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+    },
+    {
+      "strategy": "direct-runtime",
+      "sourceClass": "e2-medium",
+      "targetClass": "e2-micro",
+      "phase": "peer-snapshot-acquire",
+      "seconds": {
+        "samples": 20,
+        "median": 6.8133940655,
+        "minimum": 3.5541e-05,
+        "maximum": 23.889355677
+      },
+      "logicalBytes": {
+        "samples": 18,
+        "median": 196610182.0,
+        "minimum": 18236443.0,
+        "maximum": 740939386.0
+      },
+      "archiveBytes": {
+        "samples": 20,
+        "median": 143339660.0,
+        "minimum": 142917128.0,
+        "maximum": 426325775.0
+      },
+      "files": {
+        "samples": 18,
+        "median": 47.0,
+        "minimum": 2.0,
+        "maximum": 75.0
+      },
+      "effectiveArchiveBytesPerSecond": {
+        "samples": 20,
+        "median": 21221299.827622443,
+        "minimum": 13456976.645619227,
+        "maximum": 10350951070594.525
+      },
+      "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+    },
+    {
+      "strategy": "direct-runtime",
+      "sourceClass": "e2-medium",
+      "targetClass": "e2-micro",
+      "phase": "peer-private-upload",
+      "seconds": {
+        "samples": 20,
+        "median": 6.318401003,
+        "minimum": 3.399642126,
+        "maximum": 50.113527148
+      },
+      "logicalBytes": {
+        "samples": 18,
+        "median": 196610182.0,
+        "minimum": 18236443.0,
+        "maximum": 740939386.0
+      },
+      "archiveBytes": {
+        "samples": 20,
+        "median": 143339660.0,
+        "minimum": 142917128.0,
+        "maximum": 426325775.0
+      },
+      "files": {
+        "samples": 18,
+        "median": 47.0,
+        "minimum": 2.0,
+        "maximum": 75.0
+      },
+      "effectiveArchiveBytesPerSecond": {
+        "samples": 20,
+        "median": 39840579.06897718,
+        "minimum": 5610082.049398552,
+        "maximum": 64692702.25854507
+      },
+      "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+    },
+    {
+      "strategy": "direct-runtime",
+      "sourceClass": "e2-medium",
+      "targetClass": "e2-micro",
+      "phase": "peer-receiver-verify-and-extract",
+      "seconds": {
+        "samples": 20,
+        "median": 11.3101169635,
+        "minimum": 2.66509171,
+        "maximum": 237.244030355
+      },
+      "logicalBytes": {
+        "samples": 18,
+        "median": 196610182.0,
+        "minimum": 18236443.0,
+        "maximum": 740939386.0
+      },
+      "archiveBytes": {
+        "samples": 20,
+        "median": 143339660.0,
+        "minimum": 142917128.0,
+        "maximum": 426325775.0
+      },
+      "files": {
+        "samples": 18,
+        "median": 47.0,
+        "minimum": 2.0,
+        "maximum": 75.0
+      },
+      "effectiveArchiveBytesPerSecond": {
+        "samples": 20,
+        "median": 29496458.305427484,
+        "minimum": 1796992.633964562,
+        "maximum": 53733886.32843708
+      },
+      "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+    },
+    {
+      "strategy": "direct-runtime",
+      "sourceClass": "e2-micro",
+      "targetClass": "e2-micro",
+      "phase": "peer-authenticated-connectivity-probe",
+      "seconds": {
+        "samples": 45,
+        "median": 2.444578959,
+        "minimum": 2.267388085,
+        "maximum": 14.119102382
+      },
+      "logicalBytes": {
+        "samples": 44,
+        "median": 106346880.0,
+        "minimum": 2594.0,
+        "maximum": 1109057816.0
+      },
+      "archiveBytes": {
+        "samples": 45,
+        "median": 363111632.0,
+        "minimum": 141375291.0,
+        "maximum": 619720534.0
+      },
+      "files": {
+        "samples": 44,
+        "median": 2.5,
+        "minimum": 1.0,
+        "maximum": 84.0
+      },
+      "effectiveArchiveBytesPerSecond": {
+        "samples": 45,
+        "median": 85519694.35317792,
+        "minimum": 19647136.301396284,
+        "maximum": 269499698.2431896
+      },
+      "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+    },
+    {
+      "strategy": "direct-runtime",
+      "sourceClass": "e2-micro",
+      "targetClass": "e2-micro",
+      "phase": "peer-snapshot-acquire",
+      "seconds": {
+        "samples": 45,
+        "median": 47.297451689,
+        "minimum": 0.000196,
+        "maximum": 724.592180869
+      },
+      "logicalBytes": {
+        "samples": 44,
+        "median": 106346880.0,
+        "minimum": 2594.0,
+        "maximum": 1109057816.0
+      },
+      "archiveBytes": {
+        "samples": 45,
+        "median": 363111632.0,
+        "minimum": 141375291.0,
+        "maximum": 619720534.0
+      },
+      "files": {
+        "samples": 44,
+        "median": 2.5,
+        "minimum": 1.0,
+        "maximum": 84.0
+      },
+      "effectiveArchiveBytesPerSecond": {
+        "samples": 45,
+        "median": 7600469.9877143195,
+        "minimum": 810355.8022055948,
+        "maximum": 725908500000.0
+      },
+      "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+    },
+    {
+      "strategy": "direct-runtime",
+      "sourceClass": "e2-micro",
+      "targetClass": "e2-micro",
+      "phase": "peer-private-upload",
+      "seconds": {
+        "samples": 45,
+        "median": 21.295400718,
+        "minimum": 3.692133835,
+        "maximum": 204.790461176
+      },
+      "logicalBytes": {
+        "samples": 44,
+        "median": 106346880.0,
+        "minimum": 2594.0,
+        "maximum": 1109057816.0
+      },
+      "archiveBytes": {
+        "samples": 45,
+        "median": 363111632.0,
+        "minimum": 141375291.0,
+        "maximum": 619720534.0
+      },
+      "files": {
+        "samples": 44,
+        "median": 2.5,
+        "minimum": 1.0,
+        "maximum": 84.0
+      },
+      "effectiveArchiveBytesPerSecond": {
+        "samples": 45,
+        "median": 17623724.802639503,
+        "minimum": 2912047.4390039076,
+        "maximum": 71566066.50891274
+      },
+      "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+    },
+    {
+      "strategy": "direct-runtime",
+      "sourceClass": "e2-micro",
+      "targetClass": "e2-micro",
+      "phase": "peer-receiver-verify-and-extract",
+      "seconds": {
+        "samples": 45,
+        "median": 12.808673423,
+        "minimum": 2.726851626,
+        "maximum": 467.73053142
+      },
+      "logicalBytes": {
+        "samples": 44,
+        "median": 106346880.0,
+        "minimum": 2594.0,
+        "maximum": 1109057816.0
+      },
+      "archiveBytes": {
+        "samples": 45,
+        "median": 363111632.0,
+        "minimum": 141375291.0,
+        "maximum": 619720534.0
+      },
+      "files": {
+        "samples": 44,
+        "median": 2.5,
+        "minimum": 1.0,
+        "maximum": 84.0
+      },
+      "effectiveArchiveBytesPerSecond": {
+        "samples": 45,
+        "median": 28348867.599979248,
+        "minimum": 911255.8500425805,
+        "maximum": 52176680.47773714
+      },
+      "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+    },
+    {
+      "strategy": "gateway",
+      "sourceClass": "hpc",
+      "targetClass": "e2-micro",
+      "phase": "pack-and-receive",
+      "seconds": {
+        "samples": 11,
+        "median": 42.532719728000004,
+        "minimum": 11.220321047,
+        "maximum": 102.588095879
+      },
+      "logicalBytes": {
+        "samples": 10,
+        "median": 106346880.0,
+        "minimum": 18391965.0,
+        "maximum": 739073142.0
+      },
+      "archiveBytes": {
+        "samples": 11,
+        "median": 208894084.0,
+        "minimum": 51992429.0,
+        "maximum": 426351589.0
+      },
+      "files": {
+        "samples": 10,
+        "median": 2.5,
+        "minimum": 2.0,
+        "maximum": 75.0
+      },
+      "effectiveArchiveBytesPerSecond": {
+        "samples": 11,
+        "median": 4565984.029781632,
+        "minimum": 1313364.7070242148,
+        "maximum": 7479868.674241965
+      },
+      "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+    },
+    {
+      "strategy": "gateway",
+      "sourceClass": "hpc",
+      "targetClass": "e2-micro",
+      "phase": "archive-validation",
+      "seconds": {
+        "samples": 11,
+        "median": 1.732665959,
+        "minimum": 0.502052333,
+        "maximum": 3.854221543
+      },
+      "logicalBytes": {
+        "samples": 10,
+        "median": 106346880.0,
+        "minimum": 18391965.0,
+        "maximum": 739073142.0
+      },
+      "archiveBytes": {
+        "samples": 11,
+        "median": 208894084.0,
+        "minimum": 51992429.0,
+        "maximum": 426351589.0
+      },
+      "files": {
+        "samples": 10,
+        "median": 2.5,
+        "minimum": 2.0,
+        "maximum": 75.0
+      },
+      "effectiveArchiveBytesPerSecond": {
+        "samples": 11,
+        "median": 108211123.48062727,
+        "minimum": 89732925.24604906,
+        "maximum": 120562237.00531535
+      },
+      "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+    },
+    {
+      "strategy": "gateway",
+      "sourceClass": "hpc",
+      "targetClass": "e2-micro",
+      "phase": "archive-upload",
+      "seconds": {
+        "samples": 11,
+        "median": 33.195026598,
+        "minimum": 5.756016586,
+        "maximum": 88.28292704
+      },
+      "logicalBytes": {
+        "samples": 10,
+        "median": 106346880.0,
+        "minimum": 18391965.0,
+        "maximum": 739073142.0
+      },
+      "archiveBytes": {
+        "samples": 11,
+        "median": 208894084.0,
+        "minimum": 51992429.0,
+        "maximum": 426351589.0
+      },
+      "files": {
+        "samples": 10,
+        "median": 2.5,
+        "minimum": 2.0,
+        "maximum": 75.0
+      },
+      "effectiveArchiveBytesPerSecond": {
+        "samples": 11,
+        "median": 8139313.38762742,
+        "minimum": 1064873.9603471688,
+        "maximum": 11962353.883026078
+      },
+      "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+    },
+    {
+      "strategy": "gateway",
+      "sourceClass": "hpc",
+      "targetClass": "e2-micro",
+      "phase": "receiver-verify-and-extract",
+      "seconds": {
+        "samples": 11,
+        "median": 7.516678671,
+        "minimum": 1.272753501,
+        "maximum": 209.987703305
+      },
+      "logicalBytes": {
+        "samples": 10,
+        "median": 106346880.0,
+        "minimum": 18391965.0,
+        "maximum": 739073142.0
+      },
+      "archiveBytes": {
+        "samples": 11,
+        "median": 208894084.0,
+        "minimum": 51992429.0,
+        "maximum": 426351589.0
+      },
+      "files": {
+        "samples": 10,
+        "median": 2.5,
+        "minimum": 2.0,
+        "maximum": 75.0
+      },
+      "effectiveArchiveBytesPerSecond": {
+        "samples": 11,
+        "median": 23981003.71521475,
+        "minimum": 2030364.5513029818,
+        "maximum": 57403030.977419436
+      },
+      "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+    },
+    {
+      "strategy": "direct-runtime",
+      "sourceClass": "e2-micro",
+      "targetClass": "e2-medium",
+      "phase": "peer-authenticated-connectivity-probe",
+      "seconds": {
+        "samples": 7,
+        "median": 3.238551043,
+        "minimum": 2.347021292,
+        "maximum": 5.747049585
+      },
+      "logicalBytes": {
+        "samples": 7,
+        "median": 1009451800.0,
+        "minimum": 627864822.0,
+        "maximum": 1111828392.0
+      },
+      "archiveBytes": {
+        "samples": 7,
+        "median": 615130007.0,
+        "minimum": 363111632.0,
+        "maximum": 624504559.0
+      },
+      "files": {
+        "samples": 7,
+        "median": 73.0,
+        "minimum": 39.0,
+        "maximum": 84.0
+      },
+      "effectiveArchiveBytesPerSecond": {
+        "samples": 7,
+        "median": 186108787.3359471,
+        "minimum": 63182268.8545674,
+        "maximum": 264801808.89836743
+      },
+      "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+    },
+    {
+      "strategy": "direct-runtime",
+      "sourceClass": "e2-micro",
+      "targetClass": "e2-medium",
+      "phase": "peer-snapshot-acquire",
+      "seconds": {
+        "samples": 7,
+        "median": 222.943990226,
+        "minimum": 7.5167e-05,
+        "maximum": 362.706896956
+      },
+      "logicalBytes": {
+        "samples": 7,
+        "median": 1009451800.0,
+        "minimum": 627864822.0,
+        "maximum": 1111828392.0
+      },
+      "archiveBytes": {
+        "samples": 7,
+        "median": 615130007.0,
+        "minimum": 363111632.0,
+        "maximum": 624504559.0
+      },
+      "files": {
+        "samples": 7,
+        "median": 73.0,
+        "minimum": 39.0,
+        "maximum": 84.0
+      },
+      "effectiveArchiveBytesPerSecond": {
+        "samples": 7,
+        "median": 1725183.10019692,
+        "minimum": 1106986.6501533238,
+        "maximum": 8244582516263.787
+      },
+      "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+    },
+    {
+      "strategy": "direct-runtime",
+      "sourceClass": "e2-micro",
+      "targetClass": "e2-medium",
+      "phase": "peer-reused-source-manifest-check",
+      "seconds": {
+        "samples": 3,
+        "median": 14.740183174,
+        "minimum": 8.123189962,
+        "maximum": 54.534579608
+      },
+      "logicalBytes": {
+        "samples": 3,
+        "median": 1018506514.0,
+        "minimum": 634552186.0,
+        "maximum": 1111828392.0
+      },
+      "archiveBytes": {
+        "samples": 3,
+        "median": 619720534.0,
+        "minimum": 369609876.0,
+        "maximum": 624504559.0
+      },
+      "files": {
+        "samples": 3,
+        "median": 73.0,
+        "minimum": 39.0,
+        "maximum": 84.0
+      },
+      "effectiveArchiveBytesPerSecond": {
+        "samples": 3,
+        "median": 25074985.27236416,
+        "minimum": 11451533.38467081,
+        "maximum": 76290291.97877079
+      },
+      "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+    },
+    {
+      "strategy": "direct-runtime",
+      "sourceClass": "e2-micro",
+      "targetClass": "e2-medium",
+      "phase": "peer-private-upload",
+      "seconds": {
+        "samples": 7,
+        "median": 27.623296388,
+        "minimum": 7.566221212,
+        "maximum": 98.32883392
+      },
+      "logicalBytes": {
+        "samples": 7,
+        "median": 1009451800.0,
+        "minimum": 627864822.0,
+        "maximum": 1111828392.0
+      },
+      "archiveBytes": {
+        "samples": 7,
+        "median": 615130007.0,
+        "minimum": 363111632.0,
+        "maximum": 624504559.0
+      },
+      "files": {
+        "samples": 7,
+        "median": 73.0,
+        "minimum": 39.0,
+        "maximum": 84.0
+      },
+      "effectiveArchiveBytesPerSecond": {
+        "samples": 7,
+        "median": 22607894.084331468,
+        "minimum": 3692829.636273592,
+        "maximum": 81906214.03153339
+      },
+      "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+    },
+    {
+      "strategy": "direct-runtime",
+      "sourceClass": "e2-micro",
+      "targetClass": "e2-medium",
+      "phase": "peer-receiver-verify-and-extract",
+      "seconds": {
+        "samples": 7,
+        "median": 10.862616296,
+        "minimum": 5.661688502,
+        "maximum": 12.127251798
+      },
+      "logicalBytes": {
+        "samples": 7,
+        "median": 1009451800.0,
+        "minimum": 627864822.0,
+        "maximum": 1111828392.0
+      },
+      "archiveBytes": {
+        "samples": 7,
+        "median": 615130007.0,
+        "minimum": 363111632.0,
+        "maximum": 624504559.0
+      },
+      "files": {
+        "samples": 7,
+        "median": 73.0,
+        "minimum": 39.0,
+        "maximum": 84.0
+      },
+      "effectiveArchiveBytesPerSecond": {
+        "samples": 7,
+        "median": 53061927.45591616,
+        "minimum": 48807390.23382553,
+        "maximum": 64134865.75104411
+      },
+      "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+    },
+    {
+      "strategy": "gateway",
+      "sourceClass": "e2-micro",
+      "targetClass": "hpc",
+      "phase": "pack-and-receive",
+      "seconds": {
+        "samples": 10,
+        "median": 38.603155225500004,
+        "minimum": 11.782335589,
+        "maximum": 199.5754098
+      },
+      "logicalBytes": null,
+      "archiveBytes": {
+        "samples": 10,
+        "median": 203193258.0,
+        "minimum": 143696217.0,
+        "maximum": 369609876.0
+      },
+      "files": {
+        "samples": 9,
+        "median": 5.0,
+        "minimum": 2.0,
+        "maximum": 73.0
+      },
+      "effectiveArchiveBytesPerSecond": {
+        "samples": 10,
+        "median": 7741110.27791067,
+        "minimum": 1075263.5668645387,
+        "maximum": 12819134.471322034
+      },
+      "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+    },
+    {
+      "strategy": "gateway",
+      "sourceClass": "e2-micro",
+      "targetClass": "hpc",
+      "phase": "archive-validation",
+      "seconds": {
+        "samples": 10,
+        "median": 1.6895398135000002,
+        "minimum": 1.133418042,
+        "maximum": 3.341227627
+      },
+      "logicalBytes": null,
+      "archiveBytes": {
+        "samples": 10,
+        "median": 203193258.0,
+        "minimum": 143696217.0,
+        "maximum": 369609876.0
+      },
+      "files": {
+        "samples": 9,
+        "median": 5.0,
+        "minimum": 2.0,
+        "maximum": 73.0
+      },
+      "effectiveArchiveBytesPerSecond": {
+        "samples": 10,
+        "median": 120277383.91281037,
+        "minimum": 110620980.44839375,
+        "maximum": 127857225.33963335
+      },
+      "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+    },
+    {
+      "strategy": "gateway",
+      "sourceClass": "e2-micro",
+      "targetClass": "hpc",
+      "phase": "archive-upload",
+      "seconds": {
+        "samples": 10,
+        "median": 76.619061473,
+        "minimum": 24.609935552,
+        "maximum": 171.383783244
+      },
+      "logicalBytes": null,
+      "archiveBytes": {
+        "samples": 10,
+        "median": 203193258.0,
+        "minimum": 143696217.0,
+        "maximum": 369609876.0
+      },
+      "files": {
+        "samples": 9,
+        "median": 5.0,
+        "minimum": 2.0,
+        "maximum": 73.0
+      },
+      "effectiveArchiveBytesPerSecond": {
+        "samples": 10,
+        "median": 3704139.690952878,
+        "minimum": 1207508.998558948,
+        "maximum": 5895469.278797403
+      },
+      "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+    },
+    {
+      "strategy": "gateway",
+      "sourceClass": "e2-micro",
+      "targetClass": "hpc",
+      "phase": "receiver-verify-and-extract",
+      "seconds": {
+        "samples": 10,
+        "median": 7.1363985240000005,
+        "minimum": 3.683395543,
+        "maximum": 10.001879504
+      },
+      "logicalBytes": null,
+      "archiveBytes": {
+        "samples": 10,
+        "median": 203193258.0,
+        "minimum": 143696217.0,
+        "maximum": 369609876.0
+      },
+      "files": {
+        "samples": 9,
+        "median": 5.0,
+        "minimum": 2.0,
+        "maximum": 73.0
+      },
+      "effectiveArchiveBytesPerSecond": {
+        "samples": 10,
+        "median": 31838848.70171778,
+        "minimum": 21772903.484861646,
+        "maximum": 39342960.6753477
+      },
+      "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+    },
+    {
+      "strategy": "direct-runtime",
+      "sourceClass": "e2-micro",
+      "targetClass": "e2-micro",
+      "phase": "peer-reused-source-manifest-check",
+      "seconds": {
+        "samples": 6,
+        "median": 27.712840638,
+        "minimum": 0.474361584,
+        "maximum": 50.339336731
+      },
+      "logicalBytes": {
+        "samples": 6,
+        "median": 411765182.0,
+        "minimum": 106346880.0,
+        "maximum": 627864822.0
+      },
+      "archiveBytes": {
+        "samples": 6,
+        "median": 254013659.0,
+        "minimum": 142278066.0,
+        "maximum": 363111632.0
+      },
+      "files": {
+        "samples": 6,
+        "median": 60.0,
+        "minimum": 2.0,
+        "maximum": 73.0
+      },
+      "effectiveArchiveBytesPerSecond": {
+        "samples": 6,
+        "median": 17731894.794842176,
+        "minimum": 7213278.0362278465,
+        "maximum": 299935894.47158945
+      },
+      "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+    },
+    {
+      "strategy": "gateway",
+      "sourceClass": "e2-medium",
+      "targetClass": "hpc",
+      "phase": "pack-and-receive",
+      "seconds": {
+        "samples": 1,
+        "median": 30.418417181,
+        "minimum": 30.418417181,
+        "maximum": 30.418417181
+      },
+      "logicalBytes": null,
+      "archiveBytes": {
+        "samples": 1,
+        "median": 367883152.0,
+        "minimum": 367883152.0,
+        "maximum": 367883152.0
+      },
+      "files": {
+        "samples": 1,
+        "median": 73.0,
+        "minimum": 73.0,
+        "maximum": 73.0
+      },
+      "effectiveArchiveBytesPerSecond": {
+        "samples": 1,
+        "median": 12094092.529896256,
+        "minimum": 12094092.529896256,
+        "maximum": 12094092.529896256
+      },
+      "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+    },
+    {
+      "strategy": "gateway",
+      "sourceClass": "e2-medium",
+      "targetClass": "hpc",
+      "phase": "archive-validation",
+      "seconds": {
+        "samples": 1,
+        "median": 3.350000627,
+        "minimum": 3.350000627,
+        "maximum": 3.350000627
+      },
+      "logicalBytes": null,
+      "archiveBytes": {
+        "samples": 1,
+        "median": 367883152.0,
+        "minimum": 367883152.0,
+        "maximum": 367883152.0
+      },
+      "files": {
+        "samples": 1,
+        "median": 73.0,
+        "minimum": 73.0,
+        "maximum": 73.0
+      },
+      "effectiveArchiveBytesPerSecond": {
+        "samples": 1,
+        "median": 109815845.7150641,
+        "minimum": 109815845.7150641,
+        "maximum": 109815845.7150641
+      },
+      "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+    },
+    {
+      "strategy": "gateway",
+      "sourceClass": "e2-medium",
+      "targetClass": "hpc",
+      "phase": "archive-upload",
+      "seconds": {
+        "samples": 1,
+        "median": 109.214450842,
+        "minimum": 109.214450842,
+        "maximum": 109.214450842
+      },
+      "logicalBytes": null,
+      "archiveBytes": {
+        "samples": 1,
+        "median": 367883152.0,
+        "minimum": 367883152.0,
+        "maximum": 367883152.0
+      },
+      "files": {
+        "samples": 1,
+        "median": 73.0,
+        "minimum": 73.0,
+        "maximum": 73.0
+      },
+      "effectiveArchiveBytesPerSecond": {
+        "samples": 1,
+        "median": 3368447.5741421315,
+        "minimum": 3368447.5741421315,
+        "maximum": 3368447.5741421315
+      },
+      "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+    },
+    {
+      "strategy": "gateway",
+      "sourceClass": "e2-medium",
+      "targetClass": "hpc",
+      "phase": "receiver-verify-and-extract",
+      "seconds": {
+        "samples": 1,
+        "median": 10.328649046,
+        "minimum": 10.328649046,
+        "maximum": 10.328649046
+      },
+      "logicalBytes": null,
+      "archiveBytes": {
+        "samples": 1,
+        "median": 367883152.0,
+        "minimum": 367883152.0,
+        "maximum": 367883152.0
+      },
+      "files": {
+        "samples": 1,
+        "median": 73.0,
+        "minimum": 73.0,
+        "maximum": 73.0
+      },
+      "effectiveArchiveBytesPerSecond": {
+        "samples": 1,
+        "median": 35617741.52278617,
+        "minimum": 35617741.52278617,
+        "maximum": 35617741.52278617
+      },
+      "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+    },
+    {
+      "strategy": "direct-runtime",
+      "sourceClass": "e2-medium",
+      "targetClass": "e2-micro",
+      "phase": "peer-reused-source-manifest-check",
+      "seconds": {
+        "samples": 4,
+        "median": 0.66461273,
+        "minimum": 0.495965208,
+        "maximum": 0.82791425
+      },
+      "logicalBytes": {
+        "samples": 4,
+        "median": 414996542.0,
+        "minimum": 105027840.0,
+        "maximum": 633054582.0
+      },
+      "archiveBytes": {
+        "samples": 4,
+        "median": 255659943.5,
+        "minimum": 142917128.0,
+        "maximum": 367883152.0
+      },
+      "files": {
+        "samples": 4,
+        "median": 60.0,
+        "minimum": 2.0,
+        "maximum": 73.0
+      },
+      "effectiveArchiveBytesPerSecond": {
+        "samples": 4,
+        "median": 366778296.9747619,
+        "minimum": 284549467.35060155,
+        "maximum": 444857850.8024174
+      },
+      "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+    },
+    {
+      "strategy": "direct-runtime",
+      "sourceClass": "e2-medium",
+      "targetClass": "e2-medium",
+      "phase": "peer-authenticated-connectivity-probe",
+      "seconds": {
+        "samples": 1,
+        "median": 4.352586419,
+        "minimum": 4.352586419,
+        "maximum": 4.352586419
+      },
+      "logicalBytes": {
+        "samples": 1,
+        "median": 195579142.0,
+        "minimum": 195579142.0,
+        "maximum": 195579142.0
+      },
+      "archiveBytes": {
+        "samples": 1,
+        "median": 143436735.0,
+        "minimum": 143436735.0,
+        "maximum": 143436735.0
+      },
+      "files": {
+        "samples": 1,
+        "median": 47.0,
+        "minimum": 47.0,
+        "maximum": 47.0
+      },
+      "effectiveArchiveBytesPerSecond": {
+        "samples": 1,
+        "median": 32954368.091088787,
+        "minimum": 32954368.091088787,
+        "maximum": 32954368.091088787
+      },
+      "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+    },
+    {
+      "strategy": "direct-runtime",
+      "sourceClass": "e2-medium",
+      "targetClass": "e2-medium",
+      "phase": "peer-snapshot-acquire",
+      "seconds": {
+        "samples": 1,
+        "median": 15.533482091,
+        "minimum": 15.533482091,
+        "maximum": 15.533482091
+      },
+      "logicalBytes": {
+        "samples": 1,
+        "median": 195579142.0,
+        "minimum": 195579142.0,
+        "maximum": 195579142.0
+      },
+      "archiveBytes": {
+        "samples": 1,
+        "median": 143436735.0,
+        "minimum": 143436735.0,
+        "maximum": 143436735.0
+      },
+      "files": {
+        "samples": 1,
+        "median": 47.0,
+        "minimum": 47.0,
+        "maximum": 47.0
+      },
+      "effectiveArchiveBytesPerSecond": {
+        "samples": 1,
+        "median": 9234036.139463304,
+        "minimum": 9234036.139463304,
+        "maximum": 9234036.139463304
+      },
+      "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+    },
+    {
+      "strategy": "direct-runtime",
+      "sourceClass": "e2-medium",
+      "targetClass": "e2-medium",
+      "phase": "peer-private-upload",
+      "seconds": {
+        "samples": 1,
+        "median": 5.817277252,
+        "minimum": 5.817277252,
+        "maximum": 5.817277252
+      },
+      "logicalBytes": {
+        "samples": 1,
+        "median": 195579142.0,
+        "minimum": 195579142.0,
+        "maximum": 195579142.0
+      },
+      "archiveBytes": {
+        "samples": 1,
+        "median": 143436735.0,
+        "minimum": 143436735.0,
+        "maximum": 143436735.0
+      },
+      "files": {
+        "samples": 1,
+        "median": 47.0,
+        "minimum": 47.0,
+        "maximum": 47.0
+      },
+      "effectiveArchiveBytesPerSecond": {
+        "samples": 1,
+        "median": 24657022.312403273,
+        "minimum": 24657022.312403273,
+        "maximum": 24657022.312403273
+      },
+      "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+    },
+    {
+      "strategy": "direct-runtime",
+      "sourceClass": "e2-medium",
+      "targetClass": "e2-medium",
+      "phase": "peer-receiver-verify-and-extract",
+      "seconds": {
+        "samples": 1,
+        "median": 5.928769003,
+        "minimum": 5.928769003,
+        "maximum": 5.928769003
+      },
+      "logicalBytes": {
+        "samples": 1,
+        "median": 195579142.0,
+        "minimum": 195579142.0,
+        "maximum": 195579142.0
+      },
+      "archiveBytes": {
+        "samples": 1,
+        "median": 143436735.0,
+        "minimum": 143436735.0,
+        "maximum": 143436735.0
+      },
+      "files": {
+        "samples": 1,
+        "median": 47.0,
+        "minimum": 47.0,
+        "maximum": 47.0
+      },
+      "effectiveArchiveBytesPerSecond": {
+        "samples": 1,
+        "median": 24193341.809643783,
+        "minimum": 24193341.809643783,
+        "maximum": 24193341.809643783
+      },
+      "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+    }
+  ],
+  "consumerMergeObservations": [
+    {
+      "activityFamily": "madd",
+      "resourceClass": "e2-micro",
+      "mergeSeconds": {
+        "samples": 3,
+        "median": 236.587417607,
+        "minimum": 66.450399947,
+        "maximum": 243.573326361
+      },
+      "checkSeconds": {
+        "samples": 3,
+        "median": 142.49716386900036,
+        "minimum": 25.46066779800003,
+        "maximum": 145.75149784399946
+      },
+      "copySeconds": {
+        "samples": 3,
+        "median": 53.56884224699934,
+        "minimum": 33.81956537900078,
+        "maximum": 63.3139910280006
+      },
+      "verifySeconds": {
+        "samples": 3,
+        "median": 35.92816998099988,
+        "minimum": 6.668966102999548,
+        "maximum": 37.1964132789999
+      }
+    },
+    {
+      "activityFamily": "mbackground",
+      "resourceClass": "e2-medium",
+      "mergeSeconds": {
+        "samples": 2,
+        "median": 4.83583319,
+        "minimum": 4.176778294,
+        "maximum": 5.494888086
+      },
+      "checkSeconds": {
+        "samples": 2,
+        "median": 1.6694268080004804,
+        "minimum": 1.6326302810002744,
+        "maximum": 1.7062233350006863
+      },
+      "copySeconds": {
+        "samples": 2,
+        "median": 2.1372344224996596,
+        "minimum": 1.4865193229998113,
+        "maximum": 2.787949521999508
+      },
+      "verifySeconds": {
+        "samples": 2,
+        "median": 0.5077693425000689,
+        "minimum": 0.5032371529996453,
+        "maximum": 0.5123015320004924
+      }
+    },
+    {
+      "activityFamily": "mbackground",
+      "resourceClass": "e2-micro",
+      "mergeSeconds": {
+        "samples": 8,
+        "median": 19.92376553,
+        "minimum": 19.626282426,
+        "maximum": 138.21304698
+      },
+      "checkSeconds": {
+        "samples": 8,
+        "median": 5.024046718499903,
+        "minimum": 4.7745690230003675,
+        "maximum": 53.48430508499996
+      },
+      "copySeconds": {
+        "samples": 8,
+        "median": 10.670739221000076,
+        "minimum": 10.32359564699982,
+        "maximum": 40.23239413300007
+      },
+      "verifySeconds": {
+        "samples": 8,
+        "median": 3.8808005935002257,
+        "minimum": 3.5650197659997502,
+        "maximum": 44.77779699300004
+      }
+    },
+    {
+      "activityFamily": "mbackground",
+      "resourceClass": "hpc",
+      "mergeSeconds": {
+        "samples": 2,
+        "median": 22.751472198000002,
+        "minimum": 21.729738135,
+        "maximum": 23.773206261
+      },
+      "checkSeconds": {
+        "samples": 2,
+        "median": 9.362968396861106,
+        "minimum": 8.317466377280653,
+        "maximum": 10.40847041644156
+      },
+      "copySeconds": {
+        "samples": 2,
+        "median": 5.138671131338924,
+        "minimum": 4.891942439600825,
+        "maximum": 5.385399823077023
+      },
+      "verifySeconds": {
+        "samples": 2,
+        "median": 7.284067759755999,
+        "minimum": 7.006542180664837,
+        "maximum": 7.56159333884716
+      }
+    },
+    {
+      "activityFamily": "mbgmodel",
+      "resourceClass": "e2-micro",
+      "mergeSeconds": {
+        "samples": 2,
+        "median": 16.8738145285,
+        "minimum": 16.747609883,
+        "maximum": 17.000019174
+      },
+      "checkSeconds": {
+        "samples": 2,
+        "median": 3.261755618000052,
+        "minimum": 2.698455793999983,
+        "maximum": 3.825055442000121
+      },
+      "copySeconds": {
+        "samples": 2,
+        "median": 9.35986830599984,
+        "minimum": 9.022188792999941,
+        "maximum": 9.697547818999738
+      },
+      "verifySeconds": {
+        "samples": 2,
+        "median": 3.6908348800000113,
+        "minimum": 3.6229606209999474,
+        "maximum": 3.758709139000075
+      }
+    },
+    {
+      "activityFamily": "mbgmodel",
+      "resourceClass": "e2-medium",
+      "mergeSeconds": {
+        "samples": 1,
+        "median": 3.603590835,
+        "minimum": 3.603590835,
+        "maximum": 3.603590835
+      },
+      "checkSeconds": {
+        "samples": 1,
+        "median": 0.5051906540002165,
+        "minimum": 0.5051906540002165,
+        "maximum": 0.5051906540002165
+      },
+      "copySeconds": {
+        "samples": 1,
+        "median": 2.142047676000402,
+        "minimum": 2.142047676000402,
+        "maximum": 2.142047676000402
+      },
+      "verifySeconds": {
+        "samples": 1,
+        "median": 0.4960838049992162,
+        "minimum": 0.4960838049992162,
+        "maximum": 0.4960838049992162
+      }
+    },
+    {
+      "activityFamily": "mconcatfit",
+      "resourceClass": "hpc",
+      "mergeSeconds": {
+        "samples": 1,
+        "median": 51.168297815,
+        "minimum": 51.168297815,
+        "maximum": 51.168297815
+      },
+      "checkSeconds": {
+        "samples": 1,
+        "median": 29.774229486472905,
+        "minimum": 29.774229486472905,
+        "maximum": 29.774229486472905
+      },
+      "copySeconds": {
+        "samples": 1,
+        "median": 10.907653647474945,
+        "minimum": 10.907653647474945,
+        "maximum": 10.907653647474945
+      },
+      "verifySeconds": {
+        "samples": 1,
+        "median": 9.319769462570548,
+        "minimum": 9.319769462570548,
+        "maximum": 9.319769462570548
+      }
+    },
+    {
+      "activityFamily": "mconcatfit",
+      "resourceClass": "e2-micro",
+      "mergeSeconds": {
+        "samples": 2,
+        "median": 129.158736309,
+        "minimum": 114.001598677,
+        "maximum": 144.315873941
+      },
+      "checkSeconds": {
+        "samples": 2,
+        "median": 65.35185085299986,
+        "minimum": 64.67154081999979,
+        "maximum": 66.03216088599993
+      },
+      "copySeconds": {
+        "samples": 2,
+        "median": 33.53280334749991,
+        "minimum": 26.555731558999923,
+        "maximum": 40.50987513599989
+      },
+      "verifySeconds": {
+        "samples": 2,
+        "median": 29.360318618000065,
+        "minimum": 22.22765749600012,
+        "maximum": 36.49297974000001
+      }
+    },
+    {
+      "activityFamily": "mdifffit",
+      "resourceClass": "e2-micro",
+      "mergeSeconds": {
+        "samples": 14,
+        "median": 8.3427407115,
+        "minimum": 5.830948001,
+        "maximum": 38.347655976
+      },
+      "checkSeconds": {
+        "samples": 14,
+        "median": 2.511359688500079,
+        "minimum": 1.1038579400000117,
+        "maximum": 15.438960124000005
+      },
+      "copySeconds": {
+        "samples": 14,
+        "median": 4.124673134000005,
+        "minimum": 2.378768721999677,
+        "maximum": 13.515580894999857
+      },
+      "verifySeconds": {
+        "samples": 14,
+        "median": 1.6997197335000465,
+        "minimum": 1.0764374750000059,
+        "maximum": 13.448123979999764
+      }
+    },
+    {
+      "activityFamily": "mdifffit",
+      "resourceClass": "hpc",
+      "mergeSeconds": {
+        "samples": 3,
+        "median": 7.47857792,
+        "minimum": 6.511636503,
+        "maximum": 10.95796063
+      },
+      "checkSeconds": {
+        "samples": 3,
+        "median": 1.7308137826621532,
+        "minimum": 1.710929460823536,
+        "maximum": 3.6601696284487844
+      },
+      "copySeconds": {
+        "samples": 3,
+        "median": 2.0938274255022407,
+        "minimum": 1.2903437670320272,
+        "maximum": 2.483007412403822
+      },
+      "verifySeconds": {
+        "samples": 3,
+        "median": 2.644647597335279,
+        "minimum": 2.5150117529556155,
+        "maximum": 2.732031609863043
+      }
+    },
+    {
+      "activityFamily": "mdifffit",
+      "resourceClass": "e2-medium",
+      "mergeSeconds": {
+        "samples": 1,
+        "median": 3.536212793,
+        "minimum": 3.536212793,
+        "maximum": 3.536212793
+      },
+      "checkSeconds": {
+        "samples": 1,
+        "median": 0.7207421489999888,
+        "minimum": 0.7207421489999888,
+        "maximum": 0.7207421489999888
+      },
+      "copySeconds": {
+        "samples": 1,
+        "median": 1.7899585740000248,
+        "minimum": 1.7899585740000248,
+        "maximum": 1.7899585740000248
+      },
+      "verifySeconds": {
+        "samples": 1,
+        "median": 0.5052870060000032,
+        "minimum": 0.5052870060000032,
+        "maximum": 0.5052870060000032
+      }
+    },
+    {
+      "activityFamily": "mimgtbl",
+      "resourceClass": "e2-micro",
+      "mergeSeconds": {
+        "samples": 3,
+        "median": 53.028995149,
+        "minimum": 52.357549732,
+        "maximum": 131.204556309
+      },
+      "checkSeconds": {
+        "samples": 3,
+        "median": 18.724648188000174,
+        "minimum": 18.695452503000524,
+        "maximum": 55.52439420599967
+      },
+      "copySeconds": {
+        "samples": 3,
+        "median": 27.288482144000227,
+        "minimum": 27.0868461150003,
+        "maximum": 57.700238978000016
+      },
+      "verifySeconds": {
+        "samples": 3,
+        "median": 6.4975390220006375,
+        "minimum": 6.045547994999652,
+        "maximum": 16.76125427399984
+      }
+    },
+    {
+      "activityFamily": "mviewer",
+      "resourceClass": "e2-medium",
+      "mergeSeconds": {
+        "samples": 2,
+        "median": 30.185459264000002,
+        "minimum": 7.251629086,
+        "maximum": 53.119289442
+      },
+      "checkSeconds": {
+        "samples": 2,
+        "median": 4.712208465500225,
+        "minimum": 0.8757597130006616,
+        "maximum": 8.54865721799979
+      },
+      "copySeconds": {
+        "samples": 2,
+        "median": 17.59759918700047,
+        "minimum": 5.020064412000465,
+        "maximum": 30.175133962000473
+      },
+      "verifySeconds": {
+        "samples": 2,
+        "median": 7.402032238000174,
+        "minimum": 0.8792642919997888,
+        "maximum": 13.92480018400056
+      }
+    },
+    {
+      "activityFamily": "mviewer",
+      "resourceClass": "e2-micro",
+      "mergeSeconds": {
+        "samples": 2,
+        "median": 42.396445477,
+        "minimum": 30.327887263,
+        "maximum": 54.465003691
+      },
+      "checkSeconds": {
+        "samples": 2,
+        "median": 7.072915739999644,
+        "minimum": 6.825928993999696,
+        "maximum": 7.319902485999592
+      },
+      "copySeconds": {
+        "samples": 2,
+        "median": 16.937191215999974,
+        "minimum": 16.770350947000225,
+        "maximum": 17.104031484999723
+      },
+      "verifySeconds": {
+        "samples": 2,
+        "median": 17.893067211000016,
+        "minimum": 6.250859729000695,
+        "maximum": 29.535274692999337
+      }
+    }
+  ],
+  "limitations": [
+    "Single baseline; ranges are observations, not confidence intervals.",
+    "Do not replay per-activity durations or total makespan as a holdout prediction.",
+    "No destination cache hit or shared-storage route may be assumed without evidence.",
+    "Workspace manifests and topology-specific contention are required before applying these observations.",
+    "Compute samples are contention-conditioned; do not apply interference slowdown a second time."
+  ]
+}

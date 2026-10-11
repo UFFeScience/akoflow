@@ -1,0 +1,95 @@
+#!/usr/bin/env ruby
+require 'json'
+require 'digest'
+
+# Consume only the audited allowlisted scientific export, never raw API logs.
+# Estimates retain their sample count and range; one run is not a confidence
+# interval and concurrent route durations are not aggregate wall-clock time.
+module MontageExecutionCalibration
+  module_function
+
+  def resource_class(id)
+    return 'e2-micro' if id.include?('fog-e2-micro')
+    return 'e2-medium' if id.include?('e2-medium')
+    return 'hpc' if id.include?('bora') || id.include?('diablo')
+    raise "Unclassified resource #{id.inspect}"
+  end
+
+  def family(id)
+    match = id.match(/-([a-z]+)id\d+$/)
+    raise "Unclassified activity #{id.inspect}" unless match
+    match[1]
+  end
+
+  def summary(values)
+    values = values.compact.map { |value| Float(value) }.sort
+    raise 'Invalid non-finite or negative measurement' if values.any? { |v| !v.finite? || v < 0 }
+    return nil if values.empty?
+    middle = values.length / 2
+    median = values.length.odd? ? values[middle] : (values[middle - 1] + values[middle]) / 2
+    { 'samples' => values.length, 'median' => median, 'minimum' => values.first, 'maximum' => values.last }
+  end
+
+  def build(data, digest)
+    audit = data.fetch('audit')
+    raise 'Baseline must contain 58 single-attempt completed activities' unless audit.fetch('expected_count') == 58 && data.fetch('attempt_history') == 'single_observed_attempt_per_activity'
+    %w[missing unexpected not_completed].each { |key| raise "Unsafe baseline #{key}" unless audit.fetch(key).empty? }
+    %w[incomplete_transfer_count barrier_violation_count unreleased_lease_count single_lane_micro_overlap_count missing_dependency_route_count cross_cloud_hpc_non_relay_count].each { |key| raise "Unsafe baseline #{key}" unless audit.fetch(key).zero? }
+    activities = data.fetch('activities')
+    raise 'Duplicate or missing baseline activity' unless activities.length == 58 && activities.map { |a| a.fetch('activity_id') }.uniq.length == 58
+    indexed = activities.each_with_object({}) { |activity, map| map[activity.fetch('activity_id')] = activity }
+    compute = activities.group_by { |a| [family(a.fetch('activity_id')), resource_class(a.fetch('resource_id'))] }.map do |(program, machine), samples|
+      { 'activityFamily' => program, 'resourceClass' => machine,
+        'runtimeSeconds' => summary(samples.map { |a| a.fetch('validated_handle_runtime_seconds') || a.fetch('observed_runtime_seconds') }),
+        'taskRuntimeFallbackSamples' => samples.count { |a| a['validated_handle_runtime_seconds'].nil? },
+        'interpretation' => 'observed wall runtime; includes physical sharing, not clean CPU service demand' }
+    end
+    routes = data.fetch('routes').select { |route| route['producer_activity_id'] }
+    phases = []
+    routes.each do |route|
+      source = indexed.fetch(route.fetch('producer_activity_id'))
+      target = indexed.fetch(route.fetch('consumer_activity_id'))
+      route.fetch('phases').each do |phase|
+        # Consumer barrier and final merge appear in multiple dependency route
+        # records. Use shared_preparations once instead of fitting them here.
+        next if phase.fetch('name').start_with?('shared-')
+        phases << { 'strategy' => route.fetch('strategy'), 'sourceClass' => resource_class(source.fetch('resource_id')),
+          'targetClass' => resource_class(target.fetch('resource_id')), 'phase' => phase.fetch('name'),
+          'seconds' => phase.fetch('durationSeconds'), 'logicalBytes' => route['logical_bytes'],
+          'archiveBytes' => route['archive_bytes'], 'files' => route['files'] }
+      end
+    end
+    grouped = phases.group_by { |p| p.values_at('strategy','sourceClass','targetClass','phase') }.map do |(strategy, source, target, phase), samples|
+      { 'strategy' => strategy, 'sourceClass' => source, 'targetClass' => target, 'phase' => phase,
+        'seconds' => summary(samples.map { |p| p['seconds'] }),
+        'logicalBytes' => summary(samples.map { |p| p['logicalBytes'] }),
+        'archiveBytes' => summary(samples.map { |p| p['archiveBytes'] }),
+        'files' => summary(samples.map { |p| p['files'] }),
+        'effectiveArchiveBytesPerSecond' => summary(samples.map { |p| p['archiveBytes'].to_f / p['seconds'] if p['archiveBytes'] && p['seconds'] > 0 }.compact),
+        'interpretation' => 'concurrency-conditioned effective phase rates; not isolated link bandwidth' }
+    end
+    merges = data.fetch('shared_preparations').group_by { |p| [family(p.fetch('consumer_activity_id')),resource_class(indexed.fetch(p.fetch('consumer_activity_id')).fetch('resource_id'))] }.map do |(program, machine), samples|
+      { 'activityFamily' => program, 'resourceClass' => machine,
+        'mergeSeconds' => summary(samples.map { |p| p.fetch('merge_seconds') }),
+        'checkSeconds' => summary(samples.map { |p| p.fetch('merge_check_seconds') }),
+        'copySeconds' => summary(samples.map { |p| p.fetch('merge_copy_seconds') }),
+        'verifySeconds' => summary(samples.map { |p| p.fetch('merge_verify_seconds') }) }
+    end
+    { 'schemaVersion' => 1, 'baselineRunId' => data.fetch('run_id'), 'baselineSHA256' => digest,
+      'synchronizationContract' => 'whole-workspace-v1', 'computeObservations' => compute,
+      'materializationPhaseObservations' => grouped, 'consumerMergeObservations' => merges,
+      'limitations' => ['Single baseline; ranges are observations, not confidence intervals.',
+        'Do not replay per-activity durations or total makespan as a holdout prediction.',
+        'No destination cache hit or shared-storage route may be assumed without evidence.',
+        'Workspace manifests and topology-specific contention are required before applying these observations.',
+        'Compute samples are contention-conditioned; do not apply interference slowdown a second time.'] }
+  end
+end
+
+if $PROGRAM_NAME == __FILE__
+  abort 'Usage: build_montage_execution_calibration.rb AUDITED_RESULTS_JSON OUTPUT_JSON' unless ARGV.length == 2
+  payload = File.binread(ARGV[0])
+  result = MontageExecutionCalibration.build(JSON.parse(payload), Digest::SHA256.hexdigest(payload))
+  File.write(ARGV[1], JSON.pretty_generate(result) + "\n")
+  puts "Calibration observations: #{result['computeObservations'].length} compute groups, #{result['materializationPhaseObservations'].length} route-phase groups."
+end

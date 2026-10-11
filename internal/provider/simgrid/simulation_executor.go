@@ -6,6 +6,7 @@ import (
 	"sort"
 
 	"github.com/UFFeScience/akoflow/internal/domain"
+	domainworkflow "github.com/UFFeScience/akoflow/internal/domain/workflow"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/plugins/planning"
 )
 
@@ -18,6 +19,11 @@ func NewSimulationExecutor() *SimulationExecutor {
 }
 
 func (e *SimulationExecutor) Execute(ctx context.Context, request Request) (domain.ExecutionTrace, error) {
+	projected, err := domainworkflow.ProjectWorkspaceDependencies(request.Workflow)
+	if err != nil {
+		return domain.ExecutionTrace{}, fmt.Errorf("project workspace dependencies: %w", err)
+	}
+	request.Workflow = projected
 	if request.Run.Mode != domain.ExecutionModeSimulation {
 		return domain.ExecutionTrace{}, fmt.Errorf("simulation executor cannot execute mode %q", request.Run.Mode)
 	}

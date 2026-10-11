@@ -6,8 +6,32 @@ import (
 
 	"github.com/UFFeScience/akoflow/internal/application/ports"
 	"github.com/UFFeScience/akoflow/internal/domain"
+	domainworkflow "github.com/UFFeScience/akoflow/internal/domain/workflow"
 	"github.com/stretchr/testify/require"
 )
+
+func TestRunnerInputUsesWholeProducerWorkspaceNotDeclaredEdge(t *testing.T) {
+	request := ports.ExecutionRequest{
+		Run:       domain.ExecutionRun{ID: "run"},
+		Plan:      domain.SchedulePlan{Assignments: []domain.PlanAssignment{{ActivityID: "a", ResourceID: "source"}, {ActivityID: "b", ResourceID: "target"}}},
+		Resources: []domain.Resource{{ID: "source", ComputeSpeedup: 1}, {ID: "target", ComputeSpeedup: 1}},
+		Workflow: domain.WorkflowVersion{
+			Activities: []domain.Activity{
+				{ID: "a", Metadata: map[string]any{"workspaceProjection": domainworkflow.WorkspaceProjection{Contract: "whole-workspace-v1", Source: "baseline", Inputs: []domainworkflow.ProjectedFile{{Path: "in.fits", SizeBytes: 1000, ContentID: "in"}}, Outputs: []domainworkflow.ProjectedFile{{Path: "out.fits", SizeBytes: 2000, ContentID: "estimated-output"}}}}},
+				{ID: "b", Metadata: map[string]any{"workspaceProjection": domainworkflow.WorkspaceProjection{Contract: "whole-workspace-v1", Source: "baseline"}}},
+			},
+			Dependencies:     []domain.ActivityDependency{{ActivityID: "b", DependsOnActivityID: "a"}},
+			DataDependencies: []domain.ActivityDataDependency{{ProducerActivityID: "a", ConsumerActivityID: "b", SizeBytes: 12}},
+		},
+	}
+	payload, err := buildRunnerInput(request, 1e9)
+	require.NoError(t, err)
+	var input runnerInput
+	require.NoError(t, json.Unmarshal(payload, &input))
+	require.Len(t, input.Dependencies, 1)
+	require.EqualValues(t, 3000, input.Dependencies[0].Bytes)
+	require.EqualValues(t, 12, request.Workflow.DataDependencies[0].SizeBytes)
+}
 
 func TestRunnerInputPrefersActivityRuntimeAndSeparatesOverhead(t *testing.T) {
 	request := ports.ExecutionRequest{

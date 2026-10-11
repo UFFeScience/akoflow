@@ -62,9 +62,13 @@ module MontageExecutionCalibration
         # Consumer barrier and final merge appear in multiple dependency route
         # records. Use shared_preparations once instead of fitting them here.
         next if phase.fetch('name').start_with?('shared-')
+        measured_service = phase.fetch('name') == 'pack-and-receive' && !route['source_pack_execution_seconds'].nil?
+        seconds = measured_service ? route.fetch('source_pack_execution_seconds') : phase.fetch('durationSeconds')
         phases << { 'strategy' => route.fetch('strategy'), 'sourceClass' => resource_class(source.fetch('resource_id')),
           'targetClass' => resource_class(target.fetch('resource_id')), 'phase' => phase.fetch('name'),
-          'seconds' => phase.fetch('durationSeconds'), 'logicalBytes' => route['logical_bytes'],
+          'seconds' => seconds, 'secondsBasis' => measured_service ? 'source-command-execution-excludes-channel-queue' : 'combined-phase-wall-includes-unseparated-service-queue',
+          'sourceChannelWaitSeconds' => route['source_pack_ssh_channel_wait_seconds'],
+          'sourcePreflightSeconds' => route['source_pack_preflight_seconds'], 'logicalBytes' => route['logical_bytes'],
           'archiveBytes' => route['archive_bytes'], 'files' => route['files'],
           'workspaceBytes' => projection && projection.fetch('observedProducerWorkspaceBytes').fetch(route.fetch('producer_activity_id')) }
       end
@@ -72,6 +76,9 @@ module MontageExecutionCalibration
     grouped = phases.group_by { |p| p.values_at('strategy','sourceClass','targetClass','phase') }.map do |(strategy, source, target, phase), samples|
       { 'strategy' => strategy, 'sourceClass' => source, 'targetClass' => target, 'phase' => phase,
         'seconds' => summary(samples.map { |p| p['seconds'] }),
+        'secondsBases' => samples.map { |p| p['secondsBasis'] }.uniq.sort,
+        'sourceChannelWaitSeconds' => phase == 'pack-and-receive' ? summary(samples.map { |p| p['sourceChannelWaitSeconds'] }) : nil,
+        'sourcePreflightSeconds' => phase == 'pack-and-receive' ? summary(samples.map { |p| p['sourcePreflightSeconds'] }) : nil,
         'logicalBytes' => summary(samples.map { |p| p['logicalBytes'] }),
         'archiveBytes' => summary(samples.map { |p| p['archiveBytes'] }),
         'workspaceBytes' => summary(samples.map { |p| p['workspaceBytes'] }),
@@ -99,7 +106,9 @@ module MontageExecutionCalibration
             sample.fetch(seconds_key) / bytes if bytes > 0
           end.compact)
         end
-        {'targetClass'=>machine,'source'=>"baseline:#{data.fetch('run_id')}",'observations'=>rates}
+        {'targetClass'=>machine,'source'=>"baseline:#{data.fetch('run_id')}",'observations'=>rates,
+         'commandOverheadSeconds'=>summary(samples.map { |p| p['merge_command_overhead_seconds'] }),
+         'channelWaitSeconds'=>summary(samples.map { |p| p['merge_ssh_channel_wait_seconds'] })}
       end
     end
     { 'schemaVersion' => 1, 'baselineRunId' => data.fetch('run_id'), 'baselineSHA256' => digest,

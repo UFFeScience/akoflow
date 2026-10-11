@@ -32,6 +32,26 @@ class MontageExecutionCalibrationTest < Minitest::Test
     assert_raises(RuntimeError) { MontageExecutionCalibration.summary([Float::INFINITY]) }
   end
 
+  def test_source_command_service_excludes_measured_channel_queue
+    data = baseline
+    gateway = data.fetch('routes').select { |r| r['strategy'] == 'gateway' && r['producer_activity_id'] }
+    gateway.each do |r|
+      r['source_pack_execution_seconds'] = 10
+      r['source_pack_ssh_channel_wait_seconds'] = 20
+      r['source_pack_preflight_seconds'] = 2
+    end
+    result = MontageExecutionCalibration.build(data, 'digest')
+    packs = result.fetch('materializationPhaseObservations').select { |p| p['phase'] == 'pack-and-receive' }
+    refute_empty packs
+    packs.each do |p|
+      assert_equal 10, p.fetch('seconds').fetch('median')
+      assert_equal 20, p.fetch('sourceChannelWaitSeconds').fetch('median')
+      assert_equal ['source-command-execution-excludes-channel-queue'], p.fetch('secondsBases')
+    end
+    legacy = MontageExecutionCalibration.build(baseline, 'digest')
+    assert legacy.fetch('materializationPhaseObservations').select { |p| p['phase'] == 'pack-and-receive' }.all? { |p| p['sourceChannelWaitSeconds'].nil? }
+  end
+
   def test_manifest_volume_is_distinct_from_output_logical_bytes
     data = baseline
     projection = JSON.parse(File.read(File.expand_path('../experiments/montage-micro-hpc-e2/workspace-projection-v2.json', __dir__)))

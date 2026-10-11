@@ -14,6 +14,7 @@ type peerSnapshot struct {
 	buildWallSeconds    float64
 	buildSSHWaitSeconds float64
 	buildCommandSeconds float64
+	serviceTiming       *peerSnapshotServiceTiming
 }
 
 type peerSnapshotEntry struct {

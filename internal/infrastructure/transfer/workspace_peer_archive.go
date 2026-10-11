@@ -93,6 +93,11 @@ func preparePeerWorkspaceArchive(ctx context.Context, source, destination domain
 			waitSeconds, commandSeconds := snapshot.buildSSHWaitSeconds, snapshot.buildCommandSeconds
 			run.Route.SnapshotBuildSSHWaitSeconds = &waitSeconds
 			run.Route.SnapshotBuildCommandSeconds = &commandSeconds
+			if snapshot.serviceTiming != nil {
+				serviceSeconds, cpuSeconds := snapshot.serviceTiming.WallSeconds, snapshot.serviceTiming.CPUSeconds
+				run.Route.SnapshotBuildServiceSeconds = &serviceSeconds
+				run.Route.SnapshotBuildCPUSeconds = &cpuSeconds
+			}
 			wait := time.Since(acquireStarted).Seconds()
 			if !reused {
 				wait -= snapshot.buildWallSeconds
@@ -126,9 +131,26 @@ func preparePeerWorkspaceArchive(ctx context.Context, source, destination domain
 	}
 	run.NetworkBytes = snapshot.size
 	command := "python3 -c " + shell(peerArchiveVerifyScript) + " " + shell(filepath.Join(target, "peer-workspace.tar.gz")) + " " + shell(target) + " " + shell(snapshot.digest)
-	output, err = measureWorkspaceSSHPhase(ctx, run, "peer-receiver-verify-and-extract", destination, append(sshArgs(destination), targetHost, command))
+	command = "python3 -c " + shell(peerSnapshotTimingScript) + " " + shell(command)
+	var receiverWait, receiverCommand float64
+	err = measureWorkspacePhase(run, "peer-receiver-verify-and-extract", func() error {
+		var commandErr error
+		output, commandErr = runSSHProtocolMeasured(ctx, destination, append(sshArgs(destination), targetHost, command), &receiverWait, &receiverCommand)
+		return commandErr
+	})
+	phase := &run.Route.Phases[len(run.Route.Phases)-1]
+	phase.SSHChannelWaitSeconds = &receiverWait
+	phase.ExecutionSeconds = &receiverCommand
 	if err != nil {
 		return true, fmt.Errorf("verify private peer archive: %w: %s", err, strings.TrimSpace(string(output)))
+	}
+	if len(strings.TrimSpace(string(output))) > 0 {
+		timing, timingErr := parsePeerSnapshotServiceTiming(strings.TrimSpace(string(output)))
+		if timingErr != nil {
+			return true, timingErr
+		}
+		run.Route.PeerReceiverServiceSeconds = &timing.WallSeconds
+		run.Route.PeerReceiverCPUSeconds = &timing.CPUSeconds
 	}
 	return true, rejectWorkspaceSymlinks(ctx, destination)
 }

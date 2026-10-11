@@ -6,6 +6,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"math"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -80,12 +81,13 @@ func buildPeerSnapshot(ctx context.Context, source domain.TransferEndpoint) (_ *
 	command := "set -eu; umask 077; " + verify + "bad=$(find " + shell(origin) + " ! -type d ! -type f -print -quit); test -z \"$bad\"; " +
 		"bash -o pipefail -c " + shell("tar --hard-dereference -C \"$1\" -cf - . | gzip -1 > \"$2\"") + " archive " + shell(origin) + " " + shell(archive) + "; " + verify +
 		"sha256sum -- " + shell(archive) + "; wc -c < " + shell(archive)
+	command = "python3 -c " + shell(peerSnapshotTimingScript) + " " + shell(command)
 	metadata, err := runSSHProtocolMeasured(ctx, source, append(sshArgs(source), host, command), &sshWait, &commandSeconds)
 	if err != nil {
 		return nil, fmt.Errorf("build sealed peer snapshot: %w", err)
 	}
 	lines := strings.Split(strings.TrimSpace(string(metadata)), "\n")
-	if len(lines) != 2 || len(strings.Fields(lines[0])) < 1 {
+	if (len(lines) != 2 && len(lines) != 3) || len(strings.Fields(lines[0])) < 1 {
 		return nil, fmt.Errorf("invalid peer snapshot metadata")
 	}
 	digest := strings.Fields(lines[0])[0]
@@ -93,8 +95,51 @@ func buildPeerSnapshot(ctx context.Context, source domain.TransferEndpoint) (_ *
 	if parseErr != nil || size <= 0 || !peerArchiveDigest.MatchString(digest) {
 		return nil, fmt.Errorf("invalid peer snapshot digest or size")
 	}
-	return &peerSnapshot{root: root, digest: digest, size: size, cleanup: cleanup, buildSSHWaitSeconds: sshWait, buildCommandSeconds: commandSeconds}, nil
+	var service *peerSnapshotServiceTiming
+	if len(lines) == 3 {
+		service, err = parsePeerSnapshotServiceTiming(lines[2])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return &peerSnapshot{root: root, digest: digest, size: size, cleanup: cleanup, buildSSHWaitSeconds: sshWait, buildCommandSeconds: commandSeconds, serviceTiming: service}, nil
 }
+
+type peerSnapshotServiceTiming struct {
+	WallSeconds float64 `json:"wallSeconds"`
+	CPUSeconds  float64 `json:"cpuSeconds"`
+}
+
+func parsePeerSnapshotServiceTiming(line string) (*peerSnapshotServiceTiming, error) {
+	var timing struct {
+		WallSeconds *float64 `json:"wallSeconds"`
+		CPUSeconds  *float64 `json:"cpuSeconds"`
+	}
+	if err := json.Unmarshal([]byte(line), &timing); err != nil || timing.WallSeconds == nil || timing.CPUSeconds == nil {
+		return nil, fmt.Errorf("invalid peer snapshot service timing")
+	}
+	for _, value := range []float64{*timing.WallSeconds, *timing.CPUSeconds} {
+		if value < 0 || math.IsNaN(value) || math.IsInf(value, 0) {
+			return nil, fmt.Errorf("invalid peer snapshot service timing")
+		}
+	}
+	return &peerSnapshotServiceTiming{WallSeconds: *timing.WallSeconds, CPUSeconds: *timing.CPUSeconds}, nil
+}
+
+// Measured on the source: excludes local SSH admission and handshake. Wall
+// still includes remote scheduling and IO contention; CPU is child-process
+// user + system time, not a claim that the source was exclusively occupied.
+const peerSnapshotTimingScript = `
+import json, os, subprocess, sys, time
+before = os.times()
+started = time.monotonic()
+result = subprocess.run(['sh', '-c', sys.argv[1]])
+elapsed = time.monotonic() - started
+after = os.times()
+if result.returncode:
+    sys.exit(result.returncode)
+print(json.dumps({'wallSeconds': elapsed, 'cpuSeconds': after.children_user + after.children_system - before.children_user - before.children_system}), flush=True)
+`
 
 // Validate the entire file set before AND after snapshot creation. A sealed
 // manifest is not permission to reuse bytes from a workspace that has mutated.

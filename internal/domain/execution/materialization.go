@@ -163,7 +163,11 @@ type TransferRoute struct {
 	SnapshotBuildWallSeconds    float64  `json:"snapshotBuildWallSeconds,omitempty"`
 	SnapshotBuildSSHWaitSeconds *float64 `json:"snapshotBuildSshWaitSeconds,omitempty"`
 	SnapshotBuildCommandSeconds *float64 `json:"snapshotBuildCommandSeconds,omitempty"`
+	SnapshotBuildServiceSeconds *float64 `json:"snapshotBuildServiceSeconds,omitempty"`
+	SnapshotBuildCPUSeconds     *float64 `json:"snapshotBuildCpuSeconds,omitempty"`
 	SnapshotAcquireWaitSeconds  float64  `json:"snapshotAcquireWaitSeconds,omitempty"`
+	PeerReceiverServiceSeconds  *float64 `json:"peerReceiverServiceSeconds,omitempty"`
+	PeerReceiverCPUSeconds      *float64 `json:"peerReceiverCpuSeconds,omitempty"`
 }
 
 // TransferPhase is elapsed wall time, not exclusive work: concurrent origins

@@ -223,6 +223,10 @@ func (a *Adapter) Inspect(ctx context.Context, handle domain.ActivityHandle) (do
 	if handle.Metadata["executionTarget"] == string(domain.ExecutionTargetDirect) {
 		return a.inspectDirect(handle), nil
 	}
+	// Observation is read-only. A stuck accounting service or transport must
+	// not hold the supervisor's entire inspection batch indefinitely.
+	ctx, cancel := context.WithTimeout(ctx, 30*time.Second)
+	defer cancel()
 	output, err := a.executor.Run(ctx, "sh", []string{"-s", "--",
 		metadataString(handle, "logPath"), metadataString(handle, "metricsPath"),
 		metadataString(handle, "sentinelPath"), handle.ExternalID}, []byte(slurmInspectionScript))
@@ -262,10 +266,14 @@ func (a *Adapter) Inspect(ctx context.Context, handle domain.ActivityHandle) (do
 
 const slurmInspectionScript = `
 encode_file() { [ -n "$2" ] && [ -f "$2" ] && base64 < "$2" | tr -d '\n'; }
-encode_command() { shift; "$@" 2>/dev/null | base64 | tr -d '\n' || true; }
+encode_command() { shift; if command -v timeout >/dev/null 2>&1; then timeout 5 "$@" 2>/dev/null | base64 | tr -d '\n' || true; fi; }
 printf 'LOG='; encode_file LOG "$1"; printf '\n'
 printf 'METRICS='; encode_file METRICS "$2"; printf '\n'
 printf 'SENTINEL='; encode_file SENTINEL "$3"; printf '\n'
+if [ -f "$3" ] && grep -q '^publication_complete=1$' "$3" && grep -Eq '^state=(completed|failed)$' "$3"; then
+    printf 'SACCT=\nSQUEUE=\nSCONTROL=\n'
+    exit 0
+fi
 printf 'SACCT='; encode_command SACCT sacct -j "$4" --noheader --parsable2 --format=State,ExitCode; printf '\n'
 printf 'SQUEUE='; encode_command SQUEUE squeue --noheader --jobs "$4" --format=%T; printf '\n'
 printf 'SCONTROL='; encode_command SCONTROL scontrol show job "$4" --oneliner; printf '\n'
@@ -714,7 +722,8 @@ for file do relative=${file#"$root"/}; size=$(wc -c < "$file") || exit 1; checks
 	script.WriteString("finished_at=$(date +%s.%N); { printf 'state=%s\\nexit_code=%s\\nstarted_at=%s\\nfinished_at=%s\\nallocated_node=%s\\ncontainer_started_at=%s\\nartifact_root=%s\\n' \"$state\" \"$code\" \"$started_at\" \"$finished_at\" \"$allocated_node\" \"$container_started_at\" \"$artifact_root\"; ")
 	script.WriteString("while IFS= read -r entry; do printf 'initial=%s\\n' \"$entry\"; done < \"$artifact_before\"; ")
 	script.WriteString("while IFS= read -r entry; do printf 'final=%s\\n' \"$entry\"; done < \"$artifact_after\"; ")
-	script.WriteString("} > \"$sentinel\" || true; rm -f \"$artifact_before\" \"$artifact_after\" \"$container_start_marker\" \"$seed_links\" \"$seed_list\"; exit \"$code\"; }\n")
+	// Publish the complete manifest atomically before readers skip accounting.
+	script.WriteString("printf 'publication_complete=1\\n'; } > \"${sentinel}.publishing.$$\" && mv -f -- \"${sentinel}.publishing.$$\" \"$sentinel\"; rm -f \"${sentinel}.publishing.$$\" \"$artifact_before\" \"$artifact_after\" \"$container_start_marker\" \"$seed_links\" \"$seed_list\"; exit \"$code\"; }\n")
 	script.WriteString("trap finish EXIT\nset -eu\n")
 	image, err := slurmExecutable(activity.Command)
 	if err != nil {

@@ -41,3 +41,19 @@ func TestRequestRejectsPlanExceedingExplicitMicroCapacity(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+func TestRestrictedCapacityReservesOneBatchLane(t *testing.T) {
+	assignments := map[string]domain.PlanAssignment{"a": {ResourceID: "hpc"}, "b": {ResourceID: "hpc"}}
+	resources := map[string]domain.Resource{"hpc": {CPUCores: 64, CPUCapacity: 1, ExecutionTarget: domain.ExecutionTargetBatch}}
+	if got := restrictedCapacityReady([]string{"a", "b"}, assignments, resources, nil, nil); len(got) != 1 {
+		t.Fatalf("batch admission exceeded explicit capacity: %v", got)
+	}
+	for _, status := range []domain.TaskExecutionStatus{domain.TaskPreparing, domain.TaskRunning} {
+		if got := restrictedCapacityReady([]string{"b"}, assignments, resources, map[string]domain.TaskExecution{"a": {Status: status}}, nil); len(got) != 0 {
+			t.Fatalf("occupied batch lane admitted another activity: %v", got)
+		}
+	}
+	if got := restrictedCapacityReady([]string{"b"}, assignments, resources, map[string]domain.TaskExecution{"a": {Status: domain.TaskCompleted}}, nil); len(got) != 1 {
+		t.Fatalf("completed batch lane was not released: %v", got)
+	}
+}

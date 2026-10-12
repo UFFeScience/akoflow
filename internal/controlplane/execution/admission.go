@@ -49,7 +49,7 @@ func restrictedCapacityReady(ready []string, assignments map[string]domain.PlanA
 	for _, id := range ready {
 		resourceID := assignments[id].ResourceID
 		r := resources[resourceID]
-		if r.ExecutionTarget != domain.ExecutionTargetBatch && r.CPUCapacity > 0 && r.CPUCapacity < float64(r.CPUCores) {
+		if r.CPUCapacity > 0 && r.CPUCapacity < float64(r.CPUCores) {
 			if occupied[resourceID] >= r.SchedulingCPUCores() {
 				continue
 			}

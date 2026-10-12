@@ -57,3 +57,19 @@ func TestRestrictedCapacityReservesOneBatchLane(t *testing.T) {
 		t.Fatalf("completed batch lane was not released: %v", got)
 	}
 }
+
+func TestCloudCapacityEqualToPhysicalCoresStillLimitsAdmission(t *testing.T) {
+	assignments := map[string]domain.PlanAssignment{"a": {ResourceID: "vm"}, "b": {ResourceID: "vm"}, "c": {ResourceID: "vm"}}
+	resources := map[string]domain.Resource{"vm": {Type: domain.ResourceCloudVM, CPUCores: 2, CPUCapacity: 2}}
+	if got := restrictedCapacityReady([]string{"a", "b", "c"}, assignments, resources, nil, nil); len(got) != 2 {
+		t.Fatalf("cloud admission=%v, want two slots", got)
+	}
+	tasks := map[string]domain.TaskExecution{"a": {Status: domain.TaskPreparing}, "b": {Status: domain.TaskRunning}}
+	if got := restrictedCapacityReady([]string{"c"}, assignments, resources, tasks, nil); len(got) != 0 {
+		t.Fatalf("busy cloud admitted=%v", got)
+	}
+	tasks["b"] = domain.TaskExecution{Status: domain.TaskCompleted}
+	if got := restrictedCapacityReady([]string{"c"}, assignments, resources, tasks, nil); len(got) != 1 {
+		t.Fatalf("released cloud slot admission=%v", got)
+	}
+}

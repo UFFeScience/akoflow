@@ -76,25 +76,7 @@ func (a *Adapter) Start(ctx context.Context, execution domain.ActivityExecutionC
 	}
 	beforeJSON, _ := json.Marshal(before)
 	snapshotSeconds := time.Since(snapshotStart).Seconds()
-	args := []string{"run", "--detach", "--name", name, "--label", "akoflow.run=" + execution.Run.ID}
-	for key, value := range activity.Command.Environment {
-		args = append(args, "--env", key+"="+value)
-	}
-	if activity.Resources.CPU > 0 {
-		args = append(args, "--cpus", strconv.FormatFloat(activity.Resources.CPU, 'f', -1, 64))
-	}
-	if activity.Resources.MemoryBytes > 0 {
-		args = append(args, "--memory", strconv.FormatInt(activity.Resources.MemoryBytes, 10))
-	}
-	args = append(args, "--volume", workingDirectory+":"+workingDirectory, "--workdir", workingDirectory)
-	args = append(args, activity.Command.Image)
-	if seed, _ := activity.Metadata["workspaceSeedPath"].(string); seed != "" {
-		args = append(args, "sh", "-c", `cp -an "$1"/. "$2"/ && cd "$2" && shift 2 && exec "$@"`, "akoflow-seed", seed, workingDirectory)
-	}
-	if activity.Command.Entrypoint != "" {
-		args = append(args, activity.Command.Entrypoint)
-	}
-	args = append(args, activity.Command.Arguments...)
+	args := remoteDockerArguments(execution, name, workingDirectory)
 	containerLaunchStart := time.Now()
 	output, err := a.executor.Run(ctx, "docker", args, nil)
 	if err != nil {
@@ -127,6 +109,29 @@ func (a *Adapter) Start(ctx context.Context, execution domain.ActivityExecutionC
 	telemetry.ObserveDocker(ctx, &handle, containerID, a.executor.Run)
 	handle.Metadata["remoteInitialTelemetrySeconds"] = time.Since(telemetryStart).Seconds()
 	return handle, nil
+}
+
+func remoteDockerArguments(execution domain.ActivityExecutionContext, name, workingDirectory string) []string {
+	activity := execution.Activity
+	args := []string{"run", "--detach", "--name", name, "--label", "akoflow.run=" + execution.Run.ID}
+	for key, value := range activity.Command.Environment {
+		args = append(args, "--env", key+"="+value)
+	}
+	if activity.Resources.CPU > 0 {
+		args = append(args, "--cpus", strconv.FormatFloat(activity.Resources.CPU, 'f', -1, 64))
+	}
+	if activity.Resources.MemoryBytes > 0 {
+		args = append(args, "--memory", strconv.FormatInt(activity.Resources.MemoryBytes, 10))
+	}
+	args = append(args, "--volume", workingDirectory+":"+workingDirectory, "--workdir", workingDirectory)
+	args = append(args, activity.Command.Image)
+	if seed, _ := activity.Metadata["workspaceSeedPath"].(string); seed != "" {
+		args = append(args, "sh", "-c", `cp -an "$1"/. "$2"/ && cd "$2" && shift 2 && exec "$@"`, "akoflow-seed", seed, workingDirectory)
+	}
+	if activity.Command.Entrypoint != "" {
+		args = append(args, activity.Command.Entrypoint)
+	}
+	return append(args, activity.Command.Arguments...)
 }
 
 func (a *Adapter) Inspect(ctx context.Context, handle domain.ActivityHandle) (domain.ActivityHandle, error) {

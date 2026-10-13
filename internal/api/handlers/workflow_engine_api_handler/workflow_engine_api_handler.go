@@ -1988,32 +1988,9 @@ func (h *Handler) CreateCloudCapacityTarget(w http.ResponseWriter, r *http.Reque
 	if strings.TrimSpace(value.ID) == "" {
 		value.ID = "cloud-capacity-" + uuid.NewString()
 	}
-	if value.Provider == "gcp" && h.cloudCatalog != nil {
-		catalog, err := h.cloudCatalog.Cached(r.Context(), value.EnvironmentID)
-		if err != nil {
-			writeError(w, http.StatusUnprocessableEntity, fmt.Errorf("load cloud pricing catalog: %w", err))
-			return
-		}
-		if catalog != nil {
-			if value.Configuration == nil {
-				value.Configuration = make(map[string]any)
-			}
-			for _, machine := range catalog.Machines {
-				if machine.ProviderTypeID == value.ProviderMachineType && machine.PricePerHour > 0 {
-					value.Configuration["pricePerHour"] = machine.PricePerHour
-					value.Configuration["priceCurrency"] = machine.PriceCurrency
-					value.Configuration["priceSource"] = machine.PriceSource
-					break
-				}
-			}
-			diskType, _ := value.Configuration["diskType"].(string)
-			for _, disk := range catalog.Disks {
-				if disk.ProviderTypeID == diskType && disk.PricePerGiBMonth > 0 {
-					value.Configuration["diskPricePerGiBMonth"] = disk.PricePerGiBMonth
-					break
-				}
-			}
-		}
+	if err := h.enrichCapacityTargetPricing(r.Context(), &value); err != nil {
+		writeError(w, http.StatusUnprocessableEntity, err)
+		return
 	}
 	value.Enabled = true
 	if err := h.cloud.CreateCapacityTarget(r.Context(), value); err != nil {
@@ -2070,6 +2047,38 @@ func (h *Handler) CreateCloudCapacityTarget(w http.ResponseWriter, r *http.Reque
 		return
 	}
 	writeJSON(w, http.StatusCreated, value)
+}
+
+func (h *Handler) enrichCapacityTargetPricing(ctx context.Context, target *domain.CloudCapacityTarget) error {
+	if target.Provider != "gcp" || h.cloudCatalog == nil {
+		return nil
+	}
+	catalog, err := h.cloudCatalog.Cached(ctx, target.EnvironmentID)
+	if err != nil {
+		return fmt.Errorf("load cloud pricing catalog: %w", err)
+	}
+	if catalog == nil {
+		return nil
+	}
+	if target.Configuration == nil {
+		target.Configuration = make(map[string]any)
+	}
+	for _, machine := range catalog.Machines {
+		if machine.ProviderTypeID == target.ProviderMachineType && machine.PricePerHour > 0 {
+			target.Configuration["pricePerHour"] = machine.PricePerHour
+			target.Configuration["priceCurrency"] = machine.PriceCurrency
+			target.Configuration["priceSource"] = machine.PriceSource
+			break
+		}
+	}
+	diskType, _ := target.Configuration["diskType"].(string)
+	for _, disk := range catalog.Disks {
+		if disk.ProviderTypeID == diskType && disk.PricePerGiBMonth > 0 {
+			target.Configuration["diskPricePerGiBMonth"] = disk.PricePerGiBMonth
+			break
+		}
+	}
+	return nil
 }
 
 func (h *Handler) DeleteCloudCapacityTarget(w http.ResponseWriter, r *http.Request) {

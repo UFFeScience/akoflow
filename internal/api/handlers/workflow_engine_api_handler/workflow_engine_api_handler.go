@@ -1390,40 +1390,44 @@ func (h *Handler) GetExecution(w http.ResponseWriter, r *http.Request) {
 	}
 	response["cloudBilling"] = billing
 	response["timeline"] = applicationexecution.BuildTimeline(*run, tasks, transfers, operations)
-	if h.data != nil {
-		if operationEvents, ok := h.data.(WorkflowOperationEventQuery); ok {
-			events, eventsErr := operationEvents.ListWorkflowOperationEvents(r.Context(), run.ID)
-			if eventsErr != nil {
-				writeError(w, http.StatusInternalServerError, eventsErr)
-				return
-			}
-			response["operationEvents"] = events
-		}
-		instances, dataErr := h.data.ListInstances(r.Context(), run.ID)
-		if dataErr != nil {
-			writeError(w, http.StatusInternalServerError, dataErr)
-			return
-		}
-		locations, locationErr := h.data.ListLocations(r.Context(), run.ID)
-		if locationErr != nil {
-			writeError(w, http.StatusInternalServerError, locationErr)
-			return
-		}
-		response["dataObjects"], response["dataLocations"] = instances, locations
-		materializations, materializationErr := h.data.ListArtifactMaterializations(r.Context(), run.ID)
-		if materializationErr != nil {
-			writeError(w, http.StatusInternalServerError, materializationErr)
-			return
-		}
-		response["artifactMaterializations"] = materializations
-		transferRuns, transferErr := h.data.ListArtifactTransferRuns(r.Context(), run.ID)
-		if transferErr != nil {
-			writeError(w, http.StatusInternalServerError, transferErr)
-			return
-		}
-		response["artifactTransferRuns"] = transferRuns
+	if err := h.addExecutionData(r.Context(), run.ID, response); err != nil {
+		writeError(w, http.StatusInternalServerError, err)
+		return
 	}
 	writeJSON(w, http.StatusOK, response)
+}
+
+func (h *Handler) addExecutionData(ctx context.Context, runID string, response map[string]any) error {
+	if h.data == nil {
+		return nil
+	}
+	if operationEvents, ok := h.data.(WorkflowOperationEventQuery); ok {
+		events, err := operationEvents.ListWorkflowOperationEvents(ctx, runID)
+		if err != nil {
+			return err
+		}
+		response["operationEvents"] = events
+	}
+	instances, err := h.data.ListInstances(ctx, runID)
+	if err != nil {
+		return err
+	}
+	locations, err := h.data.ListLocations(ctx, runID)
+	if err != nil {
+		return err
+	}
+	response["dataObjects"], response["dataLocations"] = instances, locations
+	materializations, err := h.data.ListArtifactMaterializations(ctx, runID)
+	if err != nil {
+		return err
+	}
+	response["artifactMaterializations"] = materializations
+	transfers, err := h.data.ListArtifactTransferRuns(ctx, runID)
+	if err != nil {
+		return err
+	}
+	response["artifactTransferRuns"] = transfers
+	return nil
 }
 
 func latestTaskAttempts(tasks []domain.TaskExecution) []domain.TaskExecution {

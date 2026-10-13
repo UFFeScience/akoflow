@@ -65,7 +65,9 @@ func TestSchedulePlanSaveAndFind(t *testing.T) {
 			PredictedTransferSeconds: .5, PredictedCost: .2,
 			Metadata: map[string]any{"reason": "best"},
 		}},
-		LifecycleActions: []domain.PlannedLifecycleAction{{ID: "lifecycle", CapacityTargetID: "r1", Action: "provision", EarliestStart: 1, ExpectedDuration: 30, DependsOn: []string{"dependency"}, Metadata: map[string]any{"phase": "provisioning"}}},
+		LifecycleActions: []domain.PlannedLifecycleAction{
+			{ID: "lifecycle", CapacityTargetID: "r1", Action: "provision", EarliestStart: 1, ExpectedDuration: 30, DependsOn: []string{"dependency"}, Metadata: map[string]any{"phase": "provisioning"}},
+		},
 	}
 	if err := repository.Save(context.Background(), plan); err != nil {
 		t.Fatal(err)
@@ -74,7 +76,11 @@ func TestSchedulePlanSaveAndFind(t *testing.T) {
 	if err != nil || got == nil {
 		t.Fatalf("find failed: %+v %v", got, err)
 	}
-	if got.Algorithm != "prism" || got.Source != domain.PlanningSourcePlugin || got.NetworkTopologyID != "network-v1" || len(got.Assignments) != 1 || got.Assignments[0].PlanID != "p1" || got.Assignments[0].Metadata["reason"] != "best" || got.Metadata["strategy"] != "fastest" || len(got.LifecycleActions) != 1 || got.LifecycleActions[0].SchedulePlanID != "p1" || got.LifecycleActions[0].DependsOn[0] != "dependency" {
+	if got.Algorithm != "prism" || got.Source != domain.PlanningSourcePlugin || got.NetworkTopologyID != "network-v1" || len(
+		got.Assignments,
+	) != 1 || got.Assignments[0].PlanID != "p1" || got.Assignments[0].Metadata["reason"] != "best" || got.Metadata["strategy"] != "fastest" || len(
+		got.LifecycleActions,
+	) != 1 || got.LifecycleActions[0].SchedulePlanID != "p1" || got.LifecycleActions[0].DependsOn[0] != "dependency" {
 		t.Fatalf("unexpected plan: %+v", got)
 	}
 	missing, err := repository.Find(context.Background(), "missing")
@@ -112,7 +118,18 @@ func TestSchedulePlanListIncludesAssignmentCounts(t *testing.T) {
 	repository := setup(t)
 	ctx := context.Background()
 	plans := []domain.SchedulePlan{
-		{ID: "p1", WorkflowVersionID: "w1", ExecutionScopeID: "scope", NetworkTopologyID: "network-v1", Source: domain.PlanningSourcePlugin, Algorithm: "prism", AlgorithmVersion: "1", Objective: "time", Predicted: domain.PredictedMetrics{MakespanSeconds: 8, Cost: 1, Feasible: true}, Assignments: []domain.PlanAssignment{{ID: "a1", ActivityID: "task", ResourceID: "r1", OrderOnResource: 1}}},
+		{
+			ID:                "p1",
+			WorkflowVersionID: "w1",
+			ExecutionScopeID:  "scope",
+			NetworkTopologyID: "network-v1",
+			Source:            domain.PlanningSourcePlugin,
+			Algorithm:         "prism",
+			AlgorithmVersion:  "1",
+			Objective:         "time",
+			Predicted:         domain.PredictedMetrics{MakespanSeconds: 8, Cost: 1, Feasible: true},
+			Assignments:       []domain.PlanAssignment{{ID: "a1", ActivityID: "task", ResourceID: "r1", OrderOnResource: 1}},
+		},
 		{ID: "p2", WorkflowVersionID: "w1", ExecutionScopeID: "scope", Source: domain.PlanningSourceImported, Algorithm: "manual", Objective: "custom"},
 	}
 	for _, plan := range plans {

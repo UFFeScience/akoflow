@@ -96,7 +96,15 @@ func (h *CloudOperationHandler) Handle(ctx context.Context, job domainqueue.Job)
 	// history on every retry. Keep lifecycle markers in a separate high range and
 	// let repeated physical lines conflict idempotently in the repository.
 	attemptSequence := 900_000_000 + job.Attempts*2
-	_ = h.store.AppendCloudOperationEvent(ctx, domain.CloudOperationEvent{OperationID: operation.ID, Sequence: attemptSequence, Timestamp: now, Tool: operationTool(operation.Kind), Phase: operation.Phase, Event: "operation.started", Message: operation.Kind + " started"})
+	_ = h.store.AppendCloudOperationEvent(ctx, domain.CloudOperationEvent{
+		OperationID: operation.ID,
+		Sequence:    attemptSequence,
+		Timestamp:   now,
+		Tool:        operationTool(operation.Kind),
+		Phase:       operation.Phase,
+		Event:       "operation.started",
+		Message:     operation.Kind + " started",
+	})
 	instance, err := h.execute(ctx, *operation)
 	if instance.ID != "" {
 		operation.InstanceID = instance.ID
@@ -127,7 +135,16 @@ func (h *CloudOperationHandler) Handle(ctx context.Context, job domainqueue.Job)
 		return err
 	}
 	operation.Status, operation.Phase = "completed", "ready"
-	_ = h.store.AppendCloudOperationEvent(ctx, domain.CloudOperationEvent{OperationID: operation.ID, Sequence: 1_000_000_000, Timestamp: finished, Tool: operationTool(operation.Kind), Phase: "ready", Event: "operation.completed", Message: operation.Kind + " completed", DurationSeconds: finished.Sub(*operation.StartedAt).Seconds()})
+	_ = h.store.AppendCloudOperationEvent(ctx, domain.CloudOperationEvent{
+		OperationID:     operation.ID,
+		Sequence:        1_000_000_000,
+		Timestamp:       finished,
+		Tool:            operationTool(operation.Kind),
+		Phase:           "ready",
+		Event:           "operation.completed",
+		Message:         operation.Kind + " completed",
+		DurationSeconds: finished.Sub(*operation.StartedAt).Seconds(),
+	})
 	return h.store.UpdateCloudOperation(ctx, *operation)
 }
 

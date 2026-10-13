@@ -74,14 +74,22 @@ func (d *Discovery) DiscoverConnection(ctx context.Context, connection domain.En
 }
 
 func discoverDirectMachine(ctx context.Context, executor runtimecommon.CommandExecutor) (ports.ConnectionDiscovery, error) {
-	script := strings.Join([]string{
-		`printf 'FACT|architecture|'; uname -m`,
-		`printf 'FACT|hostname|'; hostname -f 2>/dev/null || hostname`,
-		`printf 'FACT|cpuCores|'; (getconf _NPROCESSORS_ONLN 2>/dev/null || sysctl -n hw.ncpu 2>/dev/null || printf '0')`,
-		`printf 'FACT|memoryBytes|'; if [ -r /proc/meminfo ]; then awk '/^MemTotal:/ {print $2 * 1024; exit}' /proc/meminfo; else sysctl -n hw.memsize 2>/dev/null || printf '0'; fi`,
-		`printf 'FACT|storageBytes|'; df -Pk / | awk 'NR==2 {print $2 * 1024}'`,
-		`docker_bin="$(command -v docker 2>/dev/null || true)"; if [ -z "$docker_bin" ]; then for candidate in /usr/local/bin/docker /opt/homebrew/bin/docker /Applications/Docker.app/Contents/Resources/bin/docker; do if [ -x "$candidate" ]; then docker_bin="$candidate"; break; fi; done; fi; if [ -n "$docker_bin" ]; then printf 'FACT|docker|available\n'; printf 'FACT|dockerPath|%s\n' "$docker_bin"; printf 'FACT|dockerVersion|'; "$docker_bin" version --format '{{.Server.Version}}' 2>/dev/null || printf 'unknown\n'; else printf 'FACT|docker|unavailable\n'; fi`,
-	}, "; ")
+	script := strings.Join(
+		[]string{
+			`printf 'FACT|architecture|'; uname -m`,
+			`printf 'FACT|hostname|'; hostname -f 2>/dev/null || hostname`,
+			`printf 'FACT|cpuCores|'; (getconf _NPROCESSORS_ONLN 2>/dev/null || sysctl -n hw.ncpu 2>/dev/null || printf '0')`,
+			`printf 'FACT|memoryBytes|'; if [ -r /proc/meminfo ]; then awk '/^MemTotal:/ {print $2 * 1024; exit}' /proc/meminfo; else sysctl -n hw.memsize 2>/dev/null || printf '0'; fi`,
+			`printf 'FACT|storageBytes|'; df -Pk / | awk 'NR==2 {print $2 * 1024}'`,
+			("docker_bin=\"$(command -v docker 2>/dev/null || true)\"; if [ -z \"$docker_bin\" ]; then for candidate i" +
+				"n /usr/local/bin/docker /opt/homebrew/bin/docker /Applications/Docker.app/Contents/Resources/bin/doc" +
+				"ker; do if [ -x \"$candidate\" ]; then docker_bin=\"$candidate\"; break; fi; done; fi; if [ -n \"$docker_" +
+				"bin\" ]; then printf 'FACT|docker|available\\n'; printf 'FACT|dockerPath|%s\\n' \"$docker_bin\"; printf '" +
+				"FACT|dockerVersion|'; \"$docker_bin\" version --format '{{.Server.Version}}' 2>/dev/null || printf 'un" +
+				"known\\n'; else printf 'FACT|docker|unavailable\\n'; fi"),
+		},
+		"; ",
+	)
 	encodedScript := base64.StdEncoding.EncodeToString([]byte(script))
 	output, err := executor.Run(ctx, "/bin/sh", []string{"-c", "printf %s " + encodedScript + " | base64 -d | /bin/sh"}, nil)
 	if err != nil {

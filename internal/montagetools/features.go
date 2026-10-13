@@ -189,7 +189,13 @@ func extractWork(container, image string, p Object) Object {
 		feature["band"] = strings.Split(path, "_")[1]
 		features = append(features, feature)
 	}
-	return Object{"schemaVersion": 1, "sourceImageSHA256": hashFields[0], "basis": "immutable-input-FITS-header", "inputs": features, "limitations": list("Pixel count is input work, not measured CPU service demand; band and hardware may need separate calibrated coefficients.")}
+	return Object{
+		"schemaVersion":     1,
+		"sourceImageSHA256": hashFields[0],
+		"basis":             "immutable-input-FITS-header",
+		"inputs":            features,
+		"limitations":       list("Pixel count is input work, not measured CPU service demand; band and hardware may need separate calibrated coefficients."),
+	}
 }
 func supplementRoots(c, p, request, response Object, d string) Object {
 	check(get(c, "computeWorkBasis") == "immutable-dataset-independent-work-v1", "Independent compute units required")
@@ -241,7 +247,16 @@ func supplementRoots(c, p, request, response Object, d string) Object {
 		}
 	}
 	for _, g := range groups(samples, "activityFamily", "resourceId") {
-		observations = append(observations, Object{"activityFamily": g.key[0], "resourceClass": "hpc", "allowedResourceIds": list(g.key[1]), "source": source, "taskRuntimeFallbackSamples": len(g.rows), "runtimeSeconds": summary(vals(g.rows, "runtimeSeconds")), "wallSecondsPerReferenceSecond": summary(vals(g.rows, "secondsPerWorkUnit")), "interpretation": "Completed single-attempt root observations only; source run failed later and is not end-to-end validation."})
+		observations = append(observations, Object{
+			"activityFamily":                g.key[0],
+			"resourceClass":                 "hpc",
+			"allowedResourceIds":            list(g.key[1]),
+			"source":                        source,
+			"taskRuntimeFallbackSamples":    len(g.rows),
+			"runtimeSeconds":                summary(vals(g.rows, "runtimeSeconds")),
+			"wallSecondsPerReferenceSecond": summary(vals(g.rows, "secondsPerWorkUnit")),
+			"interpretation":                "Completed single-attempt root observations only; source run failed later and is not end-to-end validation.",
+		})
 	}
 	result["computeObservations"] = observations
 	return result

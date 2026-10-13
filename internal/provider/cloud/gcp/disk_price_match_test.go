@@ -25,7 +25,14 @@ func TestZonalBootDiskPricesRejectOtherStorageProducts(t *testing.T) {
 
 func TestDiskFreeAllowanceDoesNotHidePaidMarginalRate(t *testing.T) {
 	var sku billingSKU
-	if err := json.Unmarshal([]byte(`{"pricingInfo":[{"pricingExpression":{"usageUnit":"GiBy.mo","tieredRates":[{"startUsageAmount":0,"unitPrice":{"currencyCode":"USD","units":"0","nanos":0}},{"startUsageAmount":30,"unitPrice":{"currencyCode":"USD","units":"0","nanos":40000000}}]}}]}`), &sku); err != nil {
+	if err := json.Unmarshal(
+		[]byte(
+			("{\"pricingInfo\":[{\"pricingExpression\":{\"usageUnit\":\"GiBy.mo\",\"tieredRates\":[{\"startUsageAmount\":0,\"un" +
+				"itPrice\":{\"currencyCode\":\"USD\",\"units\":\"0\",\"nanos\":0}},{\"startUsageAmount\":30,\"unitPrice\":{\"currency" +
+				"Code\":\"USD\",\"units\":\"0\",\"nanos\":40000000}}]}}]}"),
+		),
+		&sku,
+	); err != nil {
 		t.Fatal(err)
 	}
 	price, currency := skuUnitPrice(sku)

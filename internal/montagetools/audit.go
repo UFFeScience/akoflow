@@ -147,7 +147,18 @@ func audit(request, response, simulation Object, fresh bool) Object {
 			unexpected = append(unexpected, id)
 		}
 	}
-	reportAudit := Object{"expected_count": len(expected), "missing": missing, "unexpected": unexpected, "not_completed": notCompleted, "incomplete_transfer_count": incomplete, "barrier_violation_count": barriers, "unreleased_lease_count": leases, "single_lane_micro_overlap_count": overlaps, "missing_dependency_route_count": missingRoutes, "cross_cloud_hpc_non_relay_count": nonRelay}
+	reportAudit := Object{
+		"expected_count":                  len(expected),
+		"missing":                         missing,
+		"unexpected":                      unexpected,
+		"not_completed":                   notCompleted,
+		"incomplete_transfer_count":       incomplete,
+		"barrier_violation_count":         barriers,
+		"unreleased_lease_count":          leases,
+		"single_lane_micro_overlap_count": overlaps,
+		"missing_dependency_route_count":  missingRoutes,
+		"cross_cloud_hpc_non_relay_count": nonRelay,
+	}
 	check(len(expected) == 58 && len(missing) == 0 && len(unexpected) == 0 && len(notCompleted) == 0 && incomplete+barriers+leases+overlaps+missingRoutes+nonRelay == 0, "Activity/transfer audit failed")
 	metrics := func(m Object) Object { return pick(m, "makespanSeconds", "cost", "transferredBytes", "breakdown") }
 	network, relay := 0.0, 0.0
@@ -156,7 +167,26 @@ func audit(request, response, simulation Object, fresh bool) Object {
 		r := obj(t["route"])
 		network += num(t["networkBytes"])
 		relay += num(r["serverNetworkBytes"])
-		o := Object{"consumer_activity_id": t["activityId"], "producer_activity_id": r["producerActivityId"], "strategy": t["strategy"], "duration_seconds": t["durationSeconds"], "logical_bytes": t["logicalBytes"], "network_bytes": t["networkBytes"], "relay_server_network_bytes": r["serverNetworkBytes"], "archive_bytes": r["archiveBytes"], "files": r["filesTransferred"], "snapshot_reused": r["snapshotReused"], "shared_storage_proof_failure": r["sharedStorageProofFailure"], "ssh_channel_wait_seconds": r["sshChannelWaitSeconds"], "rsync_execution_seconds": r["rsyncExecutionSeconds"], "source_pack_preflight_seconds": r["sourcePackPreflightSeconds"], "source_pack_preflight_ssh_channel_wait_seconds": r["sourcePackPreflightSshChannelWaitSeconds"], "source_pack_preflight_service_seconds": r["sourcePackPreflightServiceSeconds"], "source_pack_ssh_channel_wait_seconds": r["sourcePackSshChannelWaitSeconds"], "source_pack_execution_seconds": r["sourcePackExecutionSeconds"]}
+		o := Object{
+			"consumer_activity_id":          t["activityId"],
+			"producer_activity_id":          r["producerActivityId"],
+			"strategy":                      t["strategy"],
+			"duration_seconds":              t["durationSeconds"],
+			"logical_bytes":                 t["logicalBytes"],
+			"network_bytes":                 t["networkBytes"],
+			"relay_server_network_bytes":    r["serverNetworkBytes"],
+			"archive_bytes":                 r["archiveBytes"],
+			"files":                         r["filesTransferred"],
+			"snapshot_reused":               r["snapshotReused"],
+			"shared_storage_proof_failure":  r["sharedStorageProofFailure"],
+			"ssh_channel_wait_seconds":      r["sshChannelWaitSeconds"],
+			"rsync_execution_seconds":       r["rsyncExecutionSeconds"],
+			"source_pack_preflight_seconds": r["sourcePackPreflightSeconds"],
+			"source_pack_preflight_ssh_channel_wait_seconds": r["sourcePackPreflightSshChannelWaitSeconds"],
+			"source_pack_preflight_service_seconds":          r["sourcePackPreflightServiceSeconds"],
+			"source_pack_ssh_channel_wait_seconds":           r["sourcePackSshChannelWaitSeconds"],
+			"source_pack_execution_seconds":                  r["sourcePackExecutionSeconds"],
+		}
 		phases := []any{}
 		for _, p := range rows(r["phases"]) {
 			phases = append(phases, pick(p, "name", "durationSeconds", "sshChannelWaitSeconds", "executionSeconds"))
@@ -185,7 +215,17 @@ func audit(request, response, simulation Object, fresh bool) Object {
 			continue
 		}
 		seen[key] = true
-		shared = append(shared, Object{"consumer_activity_id": r["consumerActivityId"], "barrier_seconds": barrier["durationSeconds"], "merge_seconds": merge["durationSeconds"], "merge_check_seconds": r["mergeCheckSeconds"], "merge_copy_seconds": r["mergeCopySeconds"], "merge_verify_seconds": r["mergeVerifySeconds"], "merge_ssh_channel_wait_seconds": r["mergeSshChannelWaitSeconds"], "merge_execution_seconds": r["mergeExecutionSeconds"], "merge_command_overhead_seconds": r["mergeCommandOverheadSeconds"]})
+		shared = append(shared, Object{
+			"consumer_activity_id":           r["consumerActivityId"],
+			"barrier_seconds":                barrier["durationSeconds"],
+			"merge_seconds":                  merge["durationSeconds"],
+			"merge_check_seconds":            r["mergeCheckSeconds"],
+			"merge_copy_seconds":             r["mergeCopySeconds"],
+			"merge_verify_seconds":           r["mergeVerifySeconds"],
+			"merge_ssh_channel_wait_seconds": r["mergeSshChannelWaitSeconds"],
+			"merge_execution_seconds":        r["mergeExecutionSeconds"],
+			"merge_command_overhead_seconds": r["mergeCommandOverheadSeconds"],
+		})
 	}
 	activityRows := []any{}
 	for _, id := range sortedKeys(expected) {
@@ -198,7 +238,21 @@ func audit(request, response, simulation Object, fresh bool) Object {
 			runtime = num(h["finishedAt"]) - num(h["startedAt"])
 			delay = num(observed) - num(h["finishedAt"])
 		}
-		activityRows = append(activityRows, Object{"activity_id": id, "resource_id": a["resourceId"], "attempt": t["attempt"], "planned_compute_seconds": a["predictedRuntimeSeconds"], "planned_transfer_seconds": a["predictedTransferSeconds"], "observed_runtime_seconds": t["runtimeSeconds"], "validated_handle_runtime_seconds": runtime, "terminal_observation_delay_seconds": delay, "preparation_elapsed_seconds": metadata["transferElapsedSeconds"], "overlapping_transfer_work_seconds": metadata["transferWorkSeconds"], "launch_wait_seconds": metadata["launchWaitSeconds"], "queue_seconds": t["queueSeconds"], "network_bytes": t["transferBytes"]})
+		activityRows = append(activityRows, Object{
+			"activity_id":                        id,
+			"resource_id":                        a["resourceId"],
+			"attempt":                            t["attempt"],
+			"planned_compute_seconds":            a["predictedRuntimeSeconds"],
+			"planned_transfer_seconds":           a["predictedTransferSeconds"],
+			"observed_runtime_seconds":           t["runtimeSeconds"],
+			"validated_handle_runtime_seconds":   runtime,
+			"terminal_observation_delay_seconds": delay,
+			"preparation_elapsed_seconds":        metadata["transferElapsedSeconds"],
+			"overlapping_transfer_work_seconds":  metadata["transferWorkSeconds"],
+			"launch_wait_seconds":                metadata["launchWaitSeconds"],
+			"queue_seconds":                      t["queueSeconds"],
+			"network_bytes":                      t["transferBytes"],
+		})
 	}
 	history, attemptLimitation := "single_observed_attempt_per_activity", "No multiple attempts observed; this alone does not prove an uninterrupted benchmark."
 	if multiple {
@@ -215,11 +269,67 @@ func audit(request, response, simulation Object, fresh bool) Object {
 	billing := obj(response["cloudBilling"])
 	generations := []any{}
 	for _, i := range rows(billing["instances"]) {
-		generations = append(generations, Object{"instance_id": i["instanceId"], "status": i["status"], "billing": pick(obj(i["billing"]), "pricingStatus", "priceCurrency", "priceSource", "priceObservedAt", "priceRegion", "priceMachineType", "startedAt", "finishedAt", "computeStartedAt", "accumulatedComputeSeconds", "computePricePerSecond", "diskPricePerSecond", "asOf", "currentCost", "missingPrices")})
+		generations = append(
+			generations,
+			Object{
+				"instance_id": i["instanceId"],
+				"status":      i["status"],
+				"billing": pick(
+					obj(i["billing"]),
+					"pricingStatus",
+					"priceCurrency",
+					"priceSource",
+					"priceObservedAt",
+					"priceRegion",
+					"priceMachineType",
+					"startedAt",
+					"finishedAt",
+					"computeStartedAt",
+					"accumulatedComputeSeconds",
+					"computePricePerSecond",
+					"diskPricePerSecond",
+					"asOf",
+					"currentCost",
+					"missingPrices",
+				),
+			},
+		)
 	}
 	costLimitation := "Cloud prices are incomplete; cost zero does not mean free cloud execution."
 	if billing["status"] == "estimated" {
 		costLimitation = "Cloud lifecycle cost is a list-rate estimate with explicit exclusions, not the provider invoice. The task/window API cost and plan retention-window cost have different bases."
 	}
-	return Object{"schema_version": 1, "run_id": run["id"], "attempt_history": history, "audit": reportAudit, "plan": metrics(obj(get(obj(request["plan"]), "predicted"))), "plan_assignment_compute_work_seconds": sum(rows(fileValues(assignments)), "predictedRuntimeSeconds"), "plan_assignment_transfer_work_seconds": sum(rows(fileValues(assignments)), "predictedTransferSeconds"), "simulation": metrics(obj(get(simulation, "run"))), "real_api_reported": metrics(run), "real_cloud_lifecycle_estimate": pick(billing, "status", "currency", "estimatedCost", "knownCost", "costBasis", "excludedCosts", "asOf"), "real_cloud_generations": generations, "real_api_run_timestamp_wall_seconds": wall, "real_network_bytes_from_routes": network, "transfer_route_count": len(transfers), "dependency_route_count": len(deps), "cross_cloud_hpc_relay_count": cross, "relay_server_network_bytes": relay, "routes": routeRows, "shared_preparations": shared, "activities": activityRows, "limitations": list(attemptLimitation, "Runtime finish semantics depend on the driver; observation delay is exported only for exact-attempt handles with validated terminal timestamps.", "API aggregate counters can contain older attempts; audit uses latest distinct IDs.", "Transfer work is summed overlapping route time, not wall-clock preparation.", "Plan assignment work sums are not makespan; API timestamp wall and recovered makespan can differ.", costLimitation, "e2-medium interference extrapolated to HPC/micro; micro speedup 0.25 is approximate.", "Whole-workspace real traffic differs from estimated plan edge volumes.", "Zero reported interference does not prove absence of physical contention.")}
+	return Object{
+		"schema_version":                        1,
+		"run_id":                                run["id"],
+		"attempt_history":                       history,
+		"audit":                                 reportAudit,
+		"plan":                                  metrics(obj(get(obj(request["plan"]), "predicted"))),
+		"plan_assignment_compute_work_seconds":  sum(rows(fileValues(assignments)), "predictedRuntimeSeconds"),
+		"plan_assignment_transfer_work_seconds": sum(rows(fileValues(assignments)), "predictedTransferSeconds"),
+		"simulation":                            metrics(obj(get(simulation, "run"))),
+		"real_api_reported":                     metrics(run),
+		"real_cloud_lifecycle_estimate":         pick(billing, "status", "currency", "estimatedCost", "knownCost", "costBasis", "excludedCosts", "asOf"),
+		"real_cloud_generations":                generations,
+		"real_api_run_timestamp_wall_seconds":   wall,
+		"real_network_bytes_from_routes":        network,
+		"transfer_route_count":                  len(transfers),
+		"dependency_route_count":                len(deps),
+		"cross_cloud_hpc_relay_count":           cross,
+		"relay_server_network_bytes":            relay,
+		"routes":                                routeRows,
+		"shared_preparations":                   shared,
+		"activities":                            activityRows,
+		"limitations": list(
+			attemptLimitation,
+			"Runtime finish semantics depend on the driver; observation delay is exported only for exact-attempt handles with validated terminal timestamps.",
+			"API aggregate counters can contain older attempts; audit uses latest distinct IDs.",
+			"Transfer work is summed overlapping route time, not wall-clock preparation.",
+			"Plan assignment work sums are not makespan; API timestamp wall and recovered makespan can differ.",
+			costLimitation,
+			"e2-medium interference extrapolated to HPC/micro; micro speedup 0.25 is approximate.",
+			"Whole-workspace real traffic differs from estimated plan edge volumes.",
+			"Zero reported interference does not prove absence of physical contention.",
+		),
+	}
 }

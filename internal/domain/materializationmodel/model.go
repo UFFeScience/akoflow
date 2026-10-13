@@ -191,7 +191,15 @@ func (m Model) Validate() error {
 			return fmt.Errorf("duplicate materialization profile %q", key)
 		}
 		seen[key] = true
-		if profile.Source == "" || profile.Samples < 1 || profile.SourceClass == "" || profile.TargetClass == "" || !validNonnegative(profile.ArchiveToWorkspaceRatio, profile.ProbeSeconds, profile.SnapshotSecondsPerByte, profile.IngressArchiveBytesPerSecond, profile.ValidationSecondsPerByte, profile.UploadArchiveBytesPerSecond, profile.ReceiverSecondsPerByte) {
+		if profile.Source == "" || profile.Samples < 1 || profile.SourceClass == "" || profile.TargetClass == "" || !validNonnegative(
+			profile.ArchiveToWorkspaceRatio,
+			profile.ProbeSeconds,
+			profile.SnapshotSecondsPerByte,
+			profile.IngressArchiveBytesPerSecond,
+			profile.ValidationSecondsPerByte,
+			profile.UploadArchiveBytesPerSecond,
+			profile.ReceiverSecondsPerByte,
+		) {
 			return fmt.Errorf("invalid materialization profile %q", key)
 		}
 		if profile.Strategy != "gateway" && profile.Strategy != "direct-runtime" && profile.Strategy != "shared-storage" {
@@ -215,7 +223,12 @@ func (m Model) Validate() error {
 	}
 	seen = map[string]bool{}
 	for _, profile := range m.MergeProfiles {
-		if seen[profile.TargetClass] || profile.TargetClass == "" || profile.Source == "" || profile.Samples < 1 || !validNonnegative(profile.CommandOverheadSeconds, profile.CheckSecondsPerInputByte, profile.CopySecondsPerUniqueByte, profile.VerifySecondsPerUniqueByte) {
+		if seen[profile.TargetClass] || profile.TargetClass == "" || profile.Source == "" || profile.Samples < 1 || !validNonnegative(
+			profile.CommandOverheadSeconds,
+			profile.CheckSecondsPerInputByte,
+			profile.CopySecondsPerUniqueByte,
+			profile.VerifySecondsPerUniqueByte,
+		) {
 			return fmt.Errorf("invalid or duplicate merge profile %q", profile.TargetClass)
 		}
 		seen[profile.TargetClass] = true
@@ -350,7 +363,17 @@ func (m Model) Route(sourceID, targetID string, workspaceBytes int64) (Route, er
 	archiveBytes := int64(compressed)
 	if strategy == "direct-runtime" {
 		result.NetworkBytes = archiveBytes
-		result.Stages = []Stage{{Name: "peer-snapshot-upload-and-extract", SourceResourceID: sourceID, TargetResourceID: targetID, Bytes: archiveBytes, EffectiveBytesPerSecond: p.UploadArchiveBytesPerSecond, BeforeSeconds: p.ProbeSeconds + bytes*p.SnapshotSecondsPerByte, AfterSeconds: bytes * p.ReceiverSecondsPerByte}}
+		result.Stages = []Stage{
+			{
+				Name:                    "peer-snapshot-upload-and-extract",
+				SourceResourceID:        sourceID,
+				TargetResourceID:        targetID,
+				Bytes:                   archiveBytes,
+				EffectiveBytesPerSecond: p.UploadArchiveBytesPerSecond,
+				BeforeSeconds:           p.ProbeSeconds + bytes*p.SnapshotSecondsPerByte,
+				AfterSeconds:            bytes * p.ReceiverSecondsPerByte,
+			},
+		}
 		if source.BulkServiceGroupID != "" || target.BulkServiceGroupID != "" {
 			// The source SSH command uploads through the private peer route;
 			// receiver verification is a separate command on the target session.
@@ -362,7 +385,15 @@ func (m Model) Route(sourceID, targetID string, workspaceBytes int64) (Route, er
 		result.NetworkBytes = 2 * archiveBytes
 		result.RelayNetworkBytes = result.NetworkBytes
 		result.Stages = []Stage{
-			{Name: "relay-pack-and-receive", SourceResourceID: sourceID, TargetResourceID: m.RelayResourceID, Bytes: archiveBytes, EffectiveBytesPerSecond: p.IngressArchiveBytesPerSecond, BeforeSeconds: p.ProbeSeconds + bytes*p.SnapshotSecondsPerByte, AfterSeconds: bytes * p.ValidationSecondsPerByte},
+			{
+				Name:                    "relay-pack-and-receive",
+				SourceResourceID:        sourceID,
+				TargetResourceID:        m.RelayResourceID,
+				Bytes:                   archiveBytes,
+				EffectiveBytesPerSecond: p.IngressArchiveBytesPerSecond,
+				BeforeSeconds:           p.ProbeSeconds + bytes*p.SnapshotSecondsPerByte,
+				AfterSeconds:            bytes * p.ValidationSecondsPerByte,
+			},
 			{Name: "relay-upload-and-extract", SourceResourceID: m.RelayResourceID, TargetResourceID: targetID, Bytes: archiveBytes, EffectiveBytesPerSecond: p.UploadArchiveBytesPerSecond, AfterSeconds: bytes * p.ReceiverSecondsPerByte},
 		}
 		if !p.IngressIncludesSourcePreparation {

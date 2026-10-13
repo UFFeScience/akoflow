@@ -96,7 +96,13 @@ func TestTopologyAndScopeValidation(t *testing.T) {
 		{ID: "topology", Name: "Topology", Version: 1, ExecutionScopeID: "scope", Links: []domain.NetworkLink{{}}},
 		{ID: "topology", Name: "Topology", Version: 1, ExecutionScopeID: "scope", Links: []domain.NetworkLink{{ID: "link", SourceResourceID: "same", TargetResourceID: "same", BandwidthBitsPerSecond: 1}}},
 		{ID: "topology", Name: "Topology", Version: 1, ExecutionScopeID: "scope", Links: []domain.NetworkLink{{ID: "link", SourceResourceID: "a", TargetResourceID: "b", BandwidthBitsPerSecond: 1, LatencySeconds: -1}}},
-		{ID: "topology", Name: "Topology", Version: 1, ExecutionScopeID: "scope", Links: []domain.NetworkLink{{ID: "link", SourceResourceID: "a", TargetResourceID: "b", BandwidthBitsPerSecond: 1}, {ID: "link", SourceResourceID: "b", TargetResourceID: "a", BandwidthBitsPerSecond: 1}}},
+		{
+			ID:               "topology",
+			Name:             "Topology",
+			Version:          1,
+			ExecutionScopeID: "scope",
+			Links:            []domain.NetworkLink{{ID: "link", SourceResourceID: "a", TargetResourceID: "b", BandwidthBitsPerSecond: 1}, {ID: "link", SourceResourceID: "b", TargetResourceID: "a", BandwidthBitsPerSecond: 1}},
+		},
 	}
 	for _, topology := range invalidTopologies {
 		require.Error(t, validate(topology))

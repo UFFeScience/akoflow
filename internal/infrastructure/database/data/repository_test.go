@@ -76,7 +76,19 @@ func TestArtifactBuildCatalogLifecycle(t *testing.T) {
 	if err != nil || foundContext == nil || foundContext.StorageURI != contextArtifact.StorageURI {
 		t.Fatalf("context = %#v, %v", foundContext, err)
 	}
-	build := domain.ArtifactBuild{ID: "build", ArtifactVersionID: version.ID, SourceType: "docker-image", ContextDigest: contextArtifact.Digest, RecipePath: "ubuntu:latest", RecipeDigest: digest, TargetFormat: "sif", TargetOS: "linux", TargetArchitecture: "amd64", BuildArguments: "{}", CacheKey: "cache"}
+	build := domain.ArtifactBuild{
+		ID:                 "build",
+		ArtifactVersionID:  version.ID,
+		SourceType:         "docker-image",
+		ContextDigest:      contextArtifact.Digest,
+		RecipePath:         "ubuntu:latest",
+		RecipeDigest:       digest,
+		TargetFormat:       "sif",
+		TargetOS:           "linux",
+		TargetArchitecture: "amd64",
+		BuildArguments:     "{}",
+		CacheKey:           "cache",
+	}
 	if err = repository.SaveArtifactBuild(ctx, build); err != nil {
 		t.Fatal(err)
 	}
@@ -168,7 +180,17 @@ func TestMaterializationAndTransferLifecycle(t *testing.T) {
 	if _, err := repository.db.Exec(`INSERT INTO artifact_variants(id,artifact_version_id,digest,format) VALUES('variant','version',?,'sif')`, digest); err != nil {
 		t.Fatal(err)
 	}
-	materialization := domain.ArtifactMaterialization{ID: "materialization", RunID: "run", ActivityID: "activity", VariantID: "variant", Digest: digest, ResourceID: "resource", EnvironmentID: "env", DestinationPath: "/work/tool.sif", Status: domain.MaterializationPlanned}
+	materialization := domain.ArtifactMaterialization{
+		ID:              "materialization",
+		RunID:           "run",
+		ActivityID:      "activity",
+		VariantID:       "variant",
+		Digest:          digest,
+		ResourceID:      "resource",
+		EnvironmentID:   "env",
+		DestinationPath: "/work/tool.sif",
+		Status:          domain.MaterializationPlanned,
+	}
 	wrongEnvironment := materialization
 	wrongEnvironment.EnvironmentID = "environment" // The public field stores an environment version ID.
 	if err := repository.SaveArtifactMaterialization(ctx, wrongEnvironment); err == nil {

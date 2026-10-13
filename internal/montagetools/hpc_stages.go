@@ -200,7 +200,15 @@ func calibrateRuntimeStages(request, training Object, sha, targetClass string) O
 		model[key] = append(p, profile)
 	}
 	source := "runtime-stage-training:" + sha
-	replace("mergeProfiles", Object{"targetClass": targetClass, "source": source, "samples": mergeN, "commandOverheadSeconds": commandTime / float64(mergeN), "checkSecondsPerInputByte": checkTime / totalBytes, "copySecondsPerUniqueByte": copyTime / uniqueBytes, "verifySecondsPerUniqueByte": verifyTime / uniqueBytes})
+	replace("mergeProfiles", Object{
+		"targetClass":                targetClass,
+		"source":                     source,
+		"samples":                    mergeN,
+		"commandOverheadSeconds":     commandTime / float64(mergeN),
+		"checkSecondsPerInputByte":   checkTime / totalBytes,
+		"copySecondsPerUniqueByte":   copyTime / uniqueBytes,
+		"verifySecondsPerUniqueByte": verifyTime / uniqueBytes,
+	})
 	replace("inputObservationProfiles", Object{"targetClass": targetClass, "source": source + ":effective-preparation-residual-not-queue-free", "samples": len(prepX), "fixedSeconds": prepFixed, "secondsPerUniqueByte": prepRate})
 	replace("publicationProfiles", Object{"targetClass": targetClass, "source": source + ":publication-and-poll-wall", "samples": len(pubX), "fixedSeconds": pubFixed, "scanSecondsPerWorkspaceByte": pubRate, "cleanupSecondsPerInputByte": 0})
 	for _, r := range rows(request["Resources"]) {
@@ -218,7 +226,25 @@ func calibrateRuntimeStages(request, training Object, sha, targetClass string) O
 		m := obj(a["metadata"])
 		m["containerOverheadSeconds"] = fixedOverhead
 	}
-	obj(obj(request["NetworkTopology"])["metadata"])["runtimeStageCalibration"] = Object{"issue": "AKO-166", "targetClass": targetClass, "runtimeIds": runtimeIDs, "trainingRunId": obj(training["run"])["id"], "trainingSHA256": sha, "mergeSamples": mergeN, "preparationResidualSamples": len(prepX), "publicationSamples": len(pubX), "fixedLaunchAndRuntimeOverheadSeconds": fixedOverhead, "holdoutUsed": false, "limitations": list("Recovered/multi-handle training activities excluded.", "Preparation scans/residuals and publication contain unidentified waiting/poll delay; exploratory effective-wall fit, not queue-free service.", "Scheduler wait and gateway fallback not injected into the internal-route baseline; evaluate residuals separately.", "Fixed overhead median does not capture family-specific wrapper cost.", "Merge is fitted from component timings for every route. Residual inference requires proven same-storage; cloud uses direct scan telemetry and excludes network residual. Coefficients are not borrowed across runtimes.")}
+	obj(obj(request["NetworkTopology"])["metadata"])["runtimeStageCalibration"] = Object{
+		"issue":                                "AKO-166",
+		"targetClass":                          targetClass,
+		"runtimeIds":                           runtimeIDs,
+		"trainingRunId":                        obj(training["run"])["id"],
+		"trainingSHA256":                       sha,
+		"mergeSamples":                         mergeN,
+		"preparationResidualSamples":           len(prepX),
+		"publicationSamples":                   len(pubX),
+		"fixedLaunchAndRuntimeOverheadSeconds": fixedOverhead,
+		"holdoutUsed":                          false,
+		"limitations": list(
+			"Recovered/multi-handle training activities excluded.",
+			"Preparation scans/residuals and publication contain unidentified waiting/poll delay; exploratory effective-wall fit, not queue-free service.",
+			"Scheduler wait and gateway fallback not injected into the internal-route baseline; evaluate residuals separately.",
+			"Fixed overhead median does not capture family-specific wrapper cost.",
+			"Merge is fitted from component timings for every route. Residual inference requires proven same-storage; cloud uses direct scan telemetry and excludes network residual. Coefficients are not borrowed across runtimes.",
+		),
+	}
 	return request
 }
 

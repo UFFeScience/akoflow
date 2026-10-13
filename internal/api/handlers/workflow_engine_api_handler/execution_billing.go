@@ -38,7 +38,13 @@ func (h *Handler) executionCloudBilling(ctx context.Context, tasks []domain.Task
 			ids[operation.InstanceID] = true
 		}
 	}
-	result := executionCloudBilling{Status: "estimated", AsOf: time.Now().UTC(), Instances: []executionInstanceBilling{}, CostBasis: "VM compute and boot-disk lifecycle at on-demand marginal rates; not a provider invoice", ExcludedCosts: []string{"network-egress", "public-ipv4", "image-storage", "discounts-and-tax"}}
+	result := executionCloudBilling{
+		Status:        "estimated",
+		AsOf:          time.Now().UTC(),
+		Instances:     []executionInstanceBilling{},
+		CostBasis:     "VM compute and boot-disk lifecycle at on-demand marginal rates; not a provider invoice",
+		ExcludedCosts: []string{"network-egress", "public-ipv4", "image-storage", "discounts-and-tax"},
+	}
 	ordered := make([]string, 0, len(ids))
 	for id := range ids {
 		ordered = append(ordered, id)

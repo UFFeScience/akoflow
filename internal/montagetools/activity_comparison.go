@@ -90,10 +90,23 @@ func compareActivityTimes(request, real, simulation Object) Object {
 		}
 		return n
 	}
-	return Object{"referenceRunId": obj(real["run"])["id"], "role": "per-activity-historical-comparison-not-independent-validation",
-		"activityCount": len(results), "singleAttemptComparableCount": len(computeErrors),
-		"samePlacementWallComparableCount": len(wallErrors),
-		"computeWithin20PercentCount":      within(computeErrors), "readyToPublishedWithin20PercentCount": within(wallErrors),
-		"absoluteComputeErrorPercent": summary(computeErrors), "absoluteReadyToPublishedErrorPercent": summary(wallErrors),
-		"activities": results, "limitations": list("Queue overlaps preparation; these counters must not be added.", "Transfer work sums parallel dependencies and is not consumer elapsed time.", "Ready-to-published includes preparation, lane waiting, launch, compute and publication, but not time before readiness.", "Recovered activities are excluded from single-attempt wall comparisons.", "Publication and input-observation coefficients were fitted on this reference; their agreement is in-sample, not independent validation.")}
+	return Object{
+		"referenceRunId":                       obj(real["run"])["id"],
+		"role":                                 "per-activity-historical-comparison-not-independent-validation",
+		"activityCount":                        len(results),
+		"singleAttemptComparableCount":         len(computeErrors),
+		"samePlacementWallComparableCount":     len(wallErrors),
+		"computeWithin20PercentCount":          within(computeErrors),
+		"readyToPublishedWithin20PercentCount": within(wallErrors),
+		"absoluteComputeErrorPercent":          summary(computeErrors),
+		"absoluteReadyToPublishedErrorPercent": summary(wallErrors),
+		"activities":                           results,
+		"limitations": list(
+			"Queue overlaps preparation; these counters must not be added.",
+			"Transfer work sums parallel dependencies and is not consumer elapsed time.",
+			"Ready-to-published includes preparation, lane waiting, launch, compute and publication, but not time before readiness.",
+			"Recovered activities are excluded from single-attempt wall comparisons.",
+			"Publication and input-observation coefficients were fitted on this reference; their agreement is in-sample, not independent validation.",
+		),
+	}
 }

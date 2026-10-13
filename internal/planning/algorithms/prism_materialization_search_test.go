@@ -12,13 +12,29 @@ import (
 func TestSearchModelsRelayBeforeRankingAndRoutesNonSchedulableController(t *testing.T) {
 	model := materializationmodel.Model{SchemaVersion: 1, Source: "fixture", RelayResourceID: "relay", Resources: map[string]materializationmodel.Resource{
 		"source": {Class: "hpc", Domain: "hpc"}, "target": {Class: "micro", Domain: "cloud"}, "bad": {Class: "unmeasured", Domain: "cloud"}, "relay": {Class: "relay", Domain: "relay"},
-	}, Profiles: []materializationmodel.Profile{{Strategy: "gateway", SourceClass: "hpc", TargetClass: "micro", Source: "fixture", Samples: 1, ArchiveToWorkspaceRatio: 1, IngressIncludesSourcePreparation: true, IngressArchiveBytesPerSecond: 100, UploadArchiveBytesPerSecond: 50}}, MergeProfiles: []materializationmodel.MergeProfile{{TargetClass: "micro", Source: "fixture", Samples: 1, CheckSecondsPerInputByte: .01}}}
+	}, Profiles: []materializationmodel.Profile{
+		{Strategy: "gateway", SourceClass: "hpc", TargetClass: "micro", Source: "fixture", Samples: 1, ArchiveToWorkspaceRatio: 1, IngressIncludesSourcePreparation: true, IngressArchiveBytesPerSecond: 100, UploadArchiveBytesPerSecond: 50},
+	}, MergeProfiles: []materializationmodel.MergeProfile{
+		{TargetClass: "micro", Source: "fixture", Samples: 1, CheckSecondsPerInputByte: .01},
+	}}
 	a, b := planningActivity("a", 1), planningActivity("b", 1)
 	a.Metadata = map[string]any{"workspaceProjection": domainworkflow.WorkspaceProjection{Contract: "whole-workspace-v1", Source: "fixture", Outputs: []domainworkflow.ProjectedFile{{Path: "file", SizeBytes: 100, ContentID: "file"}}}}
 	b.Metadata = map[string]any{"workspaceProjection": domainworkflow.WorkspaceProjection{Contract: "whole-workspace-v1", Source: "fixture"}}
 	relay := planningResource("relay", 1, 1, 0)
 	relay.Schedulable = false
-	request := domain.PlanningRequest{Workflow: domain.WorkflowVersion{Activities: []domain.Activity{a, b}, Dependencies: []domain.ActivityDependency{{ActivityID: "b", DependsOnActivityID: "a"}}}, ExecutionScope: domain.ExecutionScope{EnvironmentVersionIDs: []string{"environment"}}, Resources: []domain.Resource{planningResource("source", 1, 1, 0), planningResource("target", 1, 1, 0), planningResource("bad", 1, 1, 0), relay}, NetworkTopology: domain.NetworkTopology{Metadata: map[string]any{"workspaceMaterializationModel": model}, Links: []domain.NetworkLink{
+	request := domain.PlanningRequest{Workflow: domain.WorkflowVersion{
+		Activities:   []domain.Activity{a, b},
+		Dependencies: []domain.ActivityDependency{{ActivityID: "b", DependsOnActivityID: "a"}},
+	}, ExecutionScope: domain.ExecutionScope{
+		EnvironmentVersionIDs: []string{"environment"},
+	}, Resources: []domain.Resource{
+		planningResource("source", 1, 1, 0),
+		planningResource("target", 1, 1, 0),
+		planningResource("bad", 1, 1, 0),
+		relay,
+	}, NetworkTopology: domain.NetworkTopology{Metadata: map[string]any{
+		"workspaceMaterializationModel": model,
+	}, Links: []domain.NetworkLink{
 		{ID: "in", SourceResourceID: "source", TargetResourceID: "relay", BandwidthBitsPerSecond: 8e9, SharingPolicy: "SHARED"},
 		{ID: "out", SourceResourceID: "relay", TargetResourceID: "target", BandwidthBitsPerSecond: 8e9, SharingPolicy: "SHARED"},
 	}}}

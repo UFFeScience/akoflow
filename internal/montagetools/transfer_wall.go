@@ -57,7 +57,17 @@ func transferWallSensitivity(request, real Object, provenance string) Object {
 			g = Object{"strategy": strategy, "sourceClass": from, "targetClass": to}
 			groups[key] = g
 		}
-		for name, value := range map[string]float64{"workspace": workspace, "archive": archive, "samples": 1, "probe": phaseSeconds["peer-authenticated-connectivity-probe"], "snapshot": phaseSeconds["peer-snapshot-acquire"], "upload": phaseSeconds["peer-private-upload"] + phaseSeconds["archive-upload"], "receiver": phaseSeconds["peer-receiver-verify-and-extract"] + phaseSeconds["receiver-verify-and-extract"], "ingress": phaseSeconds["pack-and-receive"], "validation": phaseSeconds["archive-validation"]} {
+		for name, value := range map[string]float64{
+			"workspace":  workspace,
+			"archive":    archive,
+			"samples":    1,
+			"probe":      phaseSeconds["peer-authenticated-connectivity-probe"],
+			"snapshot":   phaseSeconds["peer-snapshot-acquire"],
+			"upload":     phaseSeconds["peer-private-upload"] + phaseSeconds["archive-upload"],
+			"receiver":   phaseSeconds["peer-receiver-verify-and-extract"] + phaseSeconds["receiver-verify-and-extract"],
+			"ingress":    phaseSeconds["pack-and-receive"],
+			"validation": phaseSeconds["archive-validation"],
+		} {
 			g[name] = num(g[name]) + value
 		}
 	}
@@ -93,6 +103,17 @@ func transferWallSensitivity(request, real Object, provenance string) Object {
 		delete(resource, "bulkServiceSlots")
 		delete(resource, "bulkServiceSource")
 	}
-	metadata["transferWallSensitivity"] = Object{"referenceSHA256": provenance, "profiles": updated, "role": "effective-wall-route-sensitivity-not-independent-validation", "limitations": list("Unknown SSH/cache waiting and CPU/IO contention remain in effective wall coefficients.", "Explicit SSH admission groups are disabled for this offline sensitivity to avoid adding another queue on wall-fit samples.", "Network sharing remains simulated; upload wall samples may already contain sharing, so double-counting risk is not eliminated.", "Shared merge is retained once per consumer, not replicated per predecessor.", "No real execution is authorized or submitted.")}
+	metadata["transferWallSensitivity"] = Object{
+		"referenceSHA256": provenance,
+		"profiles":        updated,
+		"role":            "effective-wall-route-sensitivity-not-independent-validation",
+		"limitations": list(
+			"Unknown SSH/cache waiting and CPU/IO contention remain in effective wall coefficients.",
+			"Explicit SSH admission groups are disabled for this offline sensitivity to avoid adding another queue on wall-fit samples.",
+			"Network sharing remains simulated; upload wall samples may already contain sharing, so double-counting risk is not eliminated.",
+			"Shared merge is retained once per consumer, not replicated per predecessor.",
+			"No real execution is authorized or submitted.",
+		),
+	}
 	return request
 }

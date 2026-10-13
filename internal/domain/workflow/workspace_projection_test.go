@@ -57,7 +57,13 @@ func TestWorkspaceProjectionInheritedDiamond(t *testing.T) {
 		projectedActivity("b", nil, []ProjectedFile{{Path: "b.fits", SizeBytes: 20, ContentID: "expected-b"}}),
 		projectedActivity("c", nil, []ProjectedFile{{Path: "c.fits", SizeBytes: 30, ContentID: "expected-c"}}),
 		projectedActivity("d", nil, nil), projectedActivity("e", nil, nil),
-	}, Dependencies: []ActivityDependency{{ActivityID: "b", DependsOnActivityID: "a"}, {ActivityID: "c", DependsOnActivityID: "a"}, {ActivityID: "d", DependsOnActivityID: "b"}, {ActivityID: "d", DependsOnActivityID: "c"}, {ActivityID: "e", DependsOnActivityID: "d"}}}
+	}, Dependencies: []ActivityDependency{
+		{ActivityID: "b", DependsOnActivityID: "a"},
+		{ActivityID: "c", DependsOnActivityID: "a"},
+		{ActivityID: "d", DependsOnActivityID: "b"},
+		{ActivityID: "d", DependsOnActivityID: "c"},
+		{ActivityID: "e", DependsOnActivityID: "d"},
+	}}
 	projected, err := ProjectWorkspaceDependencies(version)
 	require.NoError(t, err)
 	var sizes []int64
@@ -84,7 +90,14 @@ func TestWorkspaceProjectionInheritedDiamond(t *testing.T) {
 }
 
 func TestWorkspaceProjectionRejectsConflictingParents(t *testing.T) {
-	version := WorkflowVersion{Activities: []Activity{projectedActivity("a", nil, []ProjectedFile{{Path: "same", SizeBytes: 1, ContentID: "a"}}), projectedActivity("b", nil, []ProjectedFile{{Path: "same", SizeBytes: 1, ContentID: "b"}}), projectedActivity("c", nil, nil)}, Dependencies: []ActivityDependency{{ActivityID: "c", DependsOnActivityID: "a"}, {ActivityID: "c", DependsOnActivityID: "b"}}}
+	version := WorkflowVersion{
+		Activities: []Activity{
+			projectedActivity("a", nil, []ProjectedFile{{Path: "same", SizeBytes: 1, ContentID: "a"}}),
+			projectedActivity("b", nil, []ProjectedFile{{Path: "same", SizeBytes: 1, ContentID: "b"}}),
+			projectedActivity("c", nil, nil),
+		},
+		Dependencies: []ActivityDependency{{ActivityID: "c", DependsOnActivityID: "a"}, {ActivityID: "c", DependsOnActivityID: "b"}},
+	}
 	_, err := ProjectWorkspaceDependencies(version)
 	require.ErrorContains(t, err, "conflict")
 }

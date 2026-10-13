@@ -201,5 +201,28 @@ func validationReport(base string) Object {
 		_, p := read(filepath.Join(base, name))
 		previous[name] = digest(p)
 	}
-	return Object{"schemaVersion": 1, "issue": "AKO-151", "realExecutionStarted": false, "daemonRestarted": false, "validationMode": "native SimGrid offline; exact production export; fixed frozen observed placement and compute", "previousForecastFilesSHA256": previous, "cases": cases, "provenance": provenance, "gate": Object{"accepted": false, "newPlanningReleased": false, "independentRealPrepared": false, "reason": "Shared source-capacity fit meets makespan tolerance but dominant dependency residuals still exceed 100%; do not accept compensating errors."}, "remainingLimitations": list("Receiver command service is not identifiable separately from queue in completed references. No destination pool is added to those mixed samples.", "Nine completed source commands and measured HPC merges from an interrupted diagnostic are auxiliary calibration evidence, not a completed-run benchmark.", "Aggregate source capacity varies with workload/concurrency; constant-rate fit cannot explain every dominant dependency.", "New planning must retain only evidenced route classes. Unobserved placement/storage identity must not be silently inferred.", "Provisioning and orchestration timing retained from the frozen original forecast; not yet independently validated.", "Compute and lifecycle cost bases unchanged; e2-medium interference remains extrapolated and network/public-IP billing remains incomplete.")}
+	return Object{
+		"schemaVersion":               1,
+		"issue":                       "AKO-151",
+		"realExecutionStarted":        false,
+		"daemonRestarted":             false,
+		"validationMode":              "native SimGrid offline; exact production export; fixed frozen observed placement and compute",
+		"previousForecastFilesSHA256": previous,
+		"cases":                       cases,
+		"provenance":                  provenance,
+		"gate": Object{
+			"accepted":                false,
+			"newPlanningReleased":     false,
+			"independentRealPrepared": false,
+			"reason":                  "Shared source-capacity fit meets makespan tolerance but dominant dependency residuals still exceed 100%; do not accept compensating errors.",
+		},
+		"remainingLimitations": list(
+			"Receiver command service is not identifiable separately from queue in completed references. No destination pool is added to those mixed samples.",
+			"Nine completed source commands and measured HPC merges from an interrupted diagnostic are auxiliary calibration evidence, not a completed-run benchmark.",
+			"Aggregate source capacity varies with workload/concurrency; constant-rate fit cannot explain every dominant dependency.",
+			"New planning must retain only evidenced route classes. Unobserved placement/storage identity must not be silently inferred.",
+			"Provisioning and orchestration timing retained from the frozen original forecast; not yet independently validated.",
+			"Compute and lifecycle cost bases unchanged; e2-medium interference remains extrapolated and network/public-IP billing remains incomplete.",
+		),
+	}
 }

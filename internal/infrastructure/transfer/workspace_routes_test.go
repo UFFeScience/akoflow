@@ -197,11 +197,19 @@ func testMixedWorkspaceRoutesConflictAndRecovery(t *testing.T, sameCloud bool) {
 	}
 	bin := t.TempDir()
 	// Strip the GNU-only archive option in this local BSD-tar transport fixture.
-	ssh := "#!/bin/sh\nwhile [ \"$#\" -gt 1 ]; do shift; done\ncase \"$1\" in *'stat -f'*) printf 'nfs 0 nfs4 server:/fixture /home\\nnfs 0 nfs4 server:/fixture /home\\n'; exit 0;; esac\ncommand=$(printf '%s' \"$1\" | sed 's/--hard-dereference //g'); exec sh -c \"$command\"\n"
+	ssh := ("#!/bin/sh\nwhile [ \"$#\" -gt 1 ]; do shift; done\ncase \"$1\" in *'stat -f'*) printf 'nfs 0 nfs4 server:/" +
+		"fixture /home\\nnfs 0 nfs4 server:/fixture /home\\n'; exit 0;; esac\ncommand=$(printf '%s' \"$1\" | sed '" +
+		"s/--hard-dereference //g'); exec sh -c \"$command\"\n")
 	if sameCloud {
 		ssh = strings.ReplaceAll(ssh, "nfs 0 nfs4 server:/fixture /home", "ext2/ext3 a12 ext4 /dev/sda /akoflow")
 	}
-	rsync := fmt.Sprintf("#!/bin/bash\nif [[ -n ${AKOFLOW_TEST_FAIL_ONCE:-} && ! -e $AKOFLOW_TEST_FAIL_ONCE ]]; then touch \"$AKOFLOW_TEST_FAIL_ONCE\"; echo 'injected network interruption' >&2; exit 12; fi\nargs=(); skip=0\nfor arg in \"$@\"; do if ((skip)); then skip=0; continue; fi; case \"$arg\" in -e) skip=1;; --secluded-args) ;; hpc.test:*) args+=(\"${arg#hpc.test:}\");; *) args+=(\"$arg\");; esac; done\nexec %s \"${args[@]}\"\n", shell(realRsync))
+	rsync := fmt.Sprintf(
+		("#!/bin/bash\nif [[ -n ${AKOFLOW_TEST_FAIL_ONCE:-} && ! -e $AKOFLOW_TEST_FAIL_ONCE ]]; then touch \"$AK" +
+			"OFLOW_TEST_FAIL_ONCE\"; echo 'injected network interruption' >&2; exit 12; fi\nargs=(); skip=0\nfor arg" +
+			" in \"$@\"; do if ((skip)); then skip=0; continue; fi; case \"$arg\" in -e) skip=1;; --secluded-args) ;;" +
+			" hpc.test:*) args+=(\"${arg#hpc.test:}\");; *) args+=(\"$arg\");; esac; done\nexec %s \"${args[@]}\"\n"),
+		shell(realRsync),
+	)
 	for name, body := range map[string]string{"ssh": ssh, "rsync": rsync} {
 		if err := os.WriteFile(filepath.Join(bin, name), []byte(body), 0700); err != nil {
 			t.Fatal(err)

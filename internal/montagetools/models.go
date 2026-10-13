@@ -49,7 +49,15 @@ func freezeMaterialization(c Object, d string, resources Object, relay string) O
 		if targetPool {
 			check(eq(obj(get(phases, receiverName))["secondsBases"], list("phase-command-execution-excludes-channel-queue")), "Receiver "+from+"->"+to+" requires queue-free command service before adding a bulk pool")
 		}
-		p := Object{"strategy": strategy, "sourceClass": from, "targetClass": to, "source": source, "samples": get(obj(get(upload, "seconds")), "samples"), "archiveToWorkspaceRatio": median(upload, "archiveToWorkspaceRatio", true), "uploadArchiveBytesPerSecond": serviceRate(upload, "pooledArchiveServiceRate", "effectiveArchiveBytesPerSecond")}
+		p := Object{
+			"strategy":                    strategy,
+			"sourceClass":                 from,
+			"targetClass":                 to,
+			"source":                      source,
+			"samples":                     get(obj(get(upload, "seconds")), "samples"),
+			"archiveToWorkspaceRatio":     median(upload, "archiveToWorkspaceRatio", true),
+			"uploadArchiveBytesPerSecond": serviceRate(upload, "pooledArchiveServiceRate", "effectiveArchiveBytesPerSecond"),
+		}
 		if strategy == "gateway" {
 			pack := obj(get(phases, "pack-and-receive"))
 			if sourcePool {
@@ -121,8 +129,27 @@ func freezeCompute(c Object, d string, resources Object, namespace string) Objec
 				s = source
 			}
 			f := str(r["activityFamily"])
-			profiles = append(profiles, Object{"id": namespace + "-" + f + "-" + id, "activityTypeId": typeIDs[f], "resourceId": id, "runtimeSeconds": coefficient, "modelVersion": modelVersion, "source": s, "sampleSize": get(stats, "samples"), "metadata": Object{"units": units, "observedRange": []any{stats["minimum"], stats["maximum"]}, "includesPhysicalSharing": true, "taskRuntimeFallbackSamples": get(r, "taskRuntimeFallbackSamples")}})
+			profiles = append(profiles, Object{
+				"id":             namespace + "-" + f + "-" + id,
+				"activityTypeId": typeIDs[f],
+				"resourceId":     id,
+				"runtimeSeconds": coefficient,
+				"modelVersion":   modelVersion,
+				"source":         s,
+				"sampleSize":     get(stats, "samples"),
+				"metadata":       Object{"units": units, "observedRange": []any{stats["minimum"], stats["maximum"]}, "includesPhysicalSharing": true, "taskRuntimeFallbackSamples": get(r, "taskRuntimeFallbackSamples")},
+			})
 		}
 	}
-	return Object{"schemaVersion": 1, "source": source, "activityFamilyTypeIds": typeIDs, "activityProfiles": profiles, "limitations": list("Class-level historical wall rates; no per-activity replay.", "Unobserved family/class pairs have no measured profile.", "Includes physical sharing: additional interference factors require separate evidence.")}
+	return Object{
+		"schemaVersion":         1,
+		"source":                source,
+		"activityFamilyTypeIds": typeIDs,
+		"activityProfiles":      profiles,
+		"limitations": list(
+			"Class-level historical wall rates; no per-activity replay.",
+			"Unobserved family/class pairs have no measured profile.",
+			"Includes physical sharing: additional interference factors require separate evidence.",
+		),
+	}
 }

@@ -1100,7 +1100,14 @@ func (h *Handler) Search(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		for _, item := range items {
-			add(SearchResult{Type: "execution", ID: item.ID, Title: firstNonEmpty(item.Title, item.ID), Subtitle: firstNonEmpty(item.FailureReason, item.ResourceID, item.RuntimeID), Status: string(item.Status), Path: "/executions/" + url.PathEscape(item.ID)}, item.ID, item.Title, item.ResourceID, item.RuntimeID, item.FailureReason, string(item.Status))
+			add(SearchResult{
+				Type:     "execution",
+				ID:       item.ID,
+				Title:    firstNonEmpty(item.Title, item.ID),
+				Subtitle: firstNonEmpty(item.FailureReason, item.ResourceID, item.RuntimeID),
+				Status:   string(item.Status),
+				Path:     "/executions/" + url.PathEscape(item.ID),
+			}, item.ID, item.Title, item.ResourceID, item.RuntimeID, item.FailureReason, string(item.Status))
 		}
 	}
 	if types["artifact"] {
@@ -1121,7 +1128,14 @@ func (h *Handler) Search(w http.ResponseWriter, r *http.Request) {
 		}
 		for _, item := range items {
 			value := item.Environment
-			add(SearchResult{Type: "environment", ID: value.ID, Title: value.Name, Subtitle: value.Description, Status: string(value.Status), Path: "/environments/" + url.PathEscape(value.ID)}, value.ID, value.Name, value.Description, string(value.Status))
+			add(SearchResult{
+				Type:     "environment",
+				ID:       value.ID,
+				Title:    value.Name,
+				Subtitle: value.Description,
+				Status:   string(value.Status),
+				Path:     "/environments/" + url.PathEscape(value.ID),
+			}, value.ID, value.Name, value.Description, string(value.Status))
 		}
 	}
 	if types["resource"] {
@@ -1131,7 +1145,13 @@ func (h *Handler) Search(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		for _, item := range items {
-			add(SearchResult{Type: "resource", ID: item.ID, Title: item.Name, Subtitle: string(item.Type), Path: "/resources/" + url.PathEscape(item.ID)}, item.ID, item.Name, item.ProviderID, item.Region, item.Zone, string(item.Type), item.EnvironmentVersionID)
+			add(SearchResult{
+				Type:     "resource",
+				ID:       item.ID,
+				Title:    item.Name,
+				Subtitle: string(item.Type),
+				Path:     "/resources/" + url.PathEscape(item.ID),
+			}, item.ID, item.Name, item.ProviderID, item.Region, item.Zone, string(item.Type), item.EnvironmentVersionID)
 		}
 	}
 	if types["plan"] {
@@ -1151,7 +1171,13 @@ func (h *Handler) Search(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		for _, item := range items {
-			add(SearchResult{Type: "scope", ID: item.ID, Title: item.Name, Subtitle: item.NetworkTopologyID, Path: "/execution-scopes/" + url.PathEscape(item.ID)}, item.ID, item.Name, item.NetworkTopologyID, strings.Join(item.EnvironmentVersionIDs, " "))
+			add(SearchResult{
+				Type:     "scope",
+				ID:       item.ID,
+				Title:    item.Name,
+				Subtitle: item.NetworkTopologyID,
+				Path:     "/execution-scopes/" + url.PathEscape(item.ID),
+			}, item.ID, item.Name, item.NetworkTopologyID, strings.Join(item.EnvironmentVersionIDs, " "))
 		}
 	}
 	if types["materialization"] {
@@ -1161,7 +1187,14 @@ func (h *Handler) Search(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		for _, item := range items {
-			add(SearchResult{Type: "materialization", ID: item.ID, Title: item.VariantID, Subtitle: firstNonEmpty(item.DestinationPath, item.ResourceID), Status: string(item.Status), Path: "/materializations?runId=" + url.QueryEscape(item.RunID)}, item.ID, item.VariantID, item.Digest, item.ResourceID, item.RunID, item.ActivityID, item.DestinationPath, string(item.Status))
+			add(SearchResult{
+				Type:     "materialization",
+				ID:       item.ID,
+				Title:    item.VariantID,
+				Subtitle: firstNonEmpty(item.DestinationPath, item.ResourceID),
+				Status:   string(item.Status),
+				Path:     "/materializations?runId=" + url.QueryEscape(item.RunID),
+			}, item.ID, item.VariantID, item.Digest, item.ResourceID, item.RunID, item.ActivityID, item.DestinationPath, string(item.Status))
 		}
 	}
 	sort.SliceStable(results, func(i, j int) bool { return results[i].Score > results[j].Score })
@@ -1644,7 +1677,19 @@ func (h *Handler) RegisterDockerArtifact(w http.ResponseWriter, r *http.Request)
 	}
 	sum := sha256.Sum256([]byte("docker://" + image))
 	digest := "sha256:" + hex.EncodeToString(sum[:])
-	build := domain.ArtifactBuild{ID: fmt.Sprintf("build-%d", now), ArtifactVersionID: version.ID, SourceType: "docker-image", ContextDigest: digest, RecipePath: image, RecipeDigest: digest, TargetFormat: "sif", TargetOS: "linux", TargetArchitecture: input.Architecture, BuildArguments: "{}", CacheKey: "docker-image:" + digest + ":" + version.ID}
+	build := domain.ArtifactBuild{
+		ID:                 fmt.Sprintf("build-%d", now),
+		ArtifactVersionID:  version.ID,
+		SourceType:         "docker-image",
+		ContextDigest:      digest,
+		RecipePath:         image,
+		RecipeDigest:       digest,
+		TargetFormat:       "sif",
+		TargetOS:           "linux",
+		TargetArchitecture: input.Architecture,
+		BuildArguments:     "{}",
+		CacheKey:           "docker-image:" + digest + ":" + version.ID,
+	}
 	if err := h.data.SaveArtifactBuild(r.Context(), build); err != nil {
 		writeError(w, http.StatusUnprocessableEntity, fmt.Errorf("create Docker artifact build: %w", err))
 		return

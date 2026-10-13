@@ -32,7 +32,12 @@ func calibratedProfileSnapshot(raw any, workflow domain.WorkflowVersion, resourc
 	}
 	for _, profile := range profiles {
 		pair := profile.ActivityTypeID + "\x00" + profile.ResourceID
-		if !types[profile.ActivityTypeID] || !ids[profile.ResourceID] || pairs[pair] || profile.ID == "" || profile.Source == "" || profile.SampleSize < 1 || !profile.UsesWorkUnits() || profile.RuntimeSeconds <= 0 || math.IsInf(profile.RuntimeSeconds, 0) || math.IsNaN(profile.RuntimeSeconds) {
+		if !types[profile.ActivityTypeID] || !ids[profile.ResourceID] || pairs[pair] || profile.ID == "" || profile.Source == "" || profile.SampleSize < 1 || !profile.UsesWorkUnits() || profile.RuntimeSeconds <= 0 || math.IsInf(
+			profile.RuntimeSeconds,
+			0,
+		) || math.IsNaN(
+			profile.RuntimeSeconds,
+		) {
 			return nil, fmt.Errorf("invalid or duplicate calibrated profile %q", profile.ID)
 		}
 		for _, activity := range workflow.Activities {

@@ -57,5 +57,15 @@ func dependencyReference(real, sim Object) Object {
 	sort.Slice(records, func(i, j int) bool {
 		return num(obj(records[i])["observedDependencyWallSeconds"]) > num(obj(records[j])["observedDependencyWallSeconds"])
 	})
-	return Object{"referenceRunId": obj(real["run"])["id"], "role": "recovered-reference-residuals-not-independent-validation", "dependencies": records, "limitations": list("Shared consumer barrier and merge phases are excluded from each dependency to avoid duplicate counting.", "Observed phase wall time can contain admission wait; this is not queue-free service calibration.", "Recovery copy reuse is explicitly excluded from fresh duration comparisons.", "No parallel dependency durations are summed as makespan.")}
+	return Object{
+		"referenceRunId": obj(real["run"])["id"],
+		"role":           "recovered-reference-residuals-not-independent-validation",
+		"dependencies":   records,
+		"limitations": list(
+			"Shared consumer barrier and merge phases are excluded from each dependency to avoid duplicate counting.",
+			"Observed phase wall time can contain admission wait; this is not queue-free service calibration.",
+			"Recovery copy reuse is explicitly excluded from fresh duration comparisons.",
+			"No parallel dependency durations are summed as makespan.",
+		),
+	}
 }

@@ -53,7 +53,14 @@ func calibration(data Object, d string, projection Object) Object {
 				normalized = append(normalized, num(runtime)/reference)
 			}
 		}
-		compute = append(compute, Object{"activityFamily": g.key[0], "resourceClass": g.key[1], "runtimeSeconds": summary(times), "taskRuntimeFallbackSamples": fallback, "wallSecondsPerReferenceSecond": summary(normalized), "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"})
+		compute = append(compute, Object{
+			"activityFamily":                g.key[0],
+			"resourceClass":                 g.key[1],
+			"runtimeSeconds":                summary(times),
+			"taskRuntimeFallbackSamples":    fallback,
+			"wallSecondsPerReferenceSecond": summary(normalized),
+			"interpretation":                "observed wall runtime; includes physical sharing, not clean CPU service demand",
+		})
 	}
 	phases := []Object{}
 	for _, r := range rows(get(data, "routes")) {
@@ -94,7 +101,23 @@ func calibration(data Object, d string, projection Object) Object {
 			if r["source_pack_preflight_service_seconds"] != nil {
 				preflightWait = num(r["source_pack_preflight_ssh_channel_wait_seconds"])
 			}
-			phases = append(phases, Object{"strategy": get(r, "strategy"), "sourceClass": resourceClass(str(source["resource_id"])), "targetClass": resourceClass(str(target["resource_id"])), "phase": name, "seconds": seconds, "secondsBasis": basis, "phaseChannelWaitSeconds": phaseWait, "sourceChannelWaitSeconds": sourceWait, "sourcePreflightServiceSeconds": r["source_pack_preflight_service_seconds"], "sourcePreflightChannelWaitSeconds": preflightWait, "sourcePreflightSeconds": r["source_pack_preflight_seconds"], "logicalBytes": r["logical_bytes"], "archiveBytes": r["archive_bytes"], "files": r["files"], "workspaceBytes": workspace})
+			phases = append(phases, Object{
+				"strategy":                          get(r, "strategy"),
+				"sourceClass":                       resourceClass(str(source["resource_id"])),
+				"targetClass":                       resourceClass(str(target["resource_id"])),
+				"phase":                             name,
+				"seconds":                           seconds,
+				"secondsBasis":                      basis,
+				"phaseChannelWaitSeconds":           phaseWait,
+				"sourceChannelWaitSeconds":          sourceWait,
+				"sourcePreflightServiceSeconds":     r["source_pack_preflight_service_seconds"],
+				"sourcePreflightChannelWaitSeconds": preflightWait,
+				"sourcePreflightSeconds":            r["source_pack_preflight_seconds"],
+				"logicalBytes":                      r["logical_bytes"],
+				"archiveBytes":                      r["archive_bytes"],
+				"files":                             r["files"],
+				"workspaceBytes":                    workspace,
+			})
 		}
 	}
 	observations := []any{}
@@ -115,7 +138,21 @@ func calibration(data Object, d string, projection Object) Object {
 				}
 			}
 		}
-		row := Object{"strategy": g.key[0], "sourceClass": g.key[1], "targetClass": g.key[2], "phase": g.key[3], "seconds": summary(vals(g.rows, "seconds")), "secondsBases": list(sortedKeys(bases)...), "pooledArchiveServiceRate": pooledRate(g.rows, "archiveBytes"), "pooledWorkspaceServiceRate": pooledRate(g.rows, "workspaceBytes"), "phaseChannelWaitSeconds": summary(vals(g.rows, "phaseChannelWaitSeconds")), "archiveToWorkspaceRatio": summary(ratio), "effectiveWorkspaceBytesPerSecond": summary(workspaceRate), "effectiveArchiveBytesPerSecond": summary(archiveRate), "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"}
+		row := Object{
+			"strategy":                         g.key[0],
+			"sourceClass":                      g.key[1],
+			"targetClass":                      g.key[2],
+			"phase":                            g.key[3],
+			"seconds":                          summary(vals(g.rows, "seconds")),
+			"secondsBases":                     list(sortedKeys(bases)...),
+			"pooledArchiveServiceRate":         pooledRate(g.rows, "archiveBytes"),
+			"pooledWorkspaceServiceRate":       pooledRate(g.rows, "workspaceBytes"),
+			"phaseChannelWaitSeconds":          summary(vals(g.rows, "phaseChannelWaitSeconds")),
+			"archiveToWorkspaceRatio":          summary(ratio),
+			"effectiveWorkspaceBytesPerSecond": summary(workspaceRate),
+			"effectiveArchiveBytesPerSecond":   summary(archiveRate),
+			"interpretation":                   "concurrency-conditioned effective phase rates; not isolated link bandwidth",
+		}
 		for _, k := range []string{"sourceChannelWaitSeconds", "sourcePreflightSeconds", "sourcePreflightServiceSeconds", "sourcePreflightChannelWaitSeconds"} {
 			row[k] = nil
 			if g.key[3] == "pack-and-receive" {
@@ -137,14 +174,25 @@ func calibration(data Object, d string, projection Object) Object {
 	}
 	merges := []any{}
 	for _, g := range groups(mergeRows, "family", "class") {
-		merges = append(merges, Object{"activityFamily": g.key[0], "resourceClass": g.key[1], "mergeSeconds": summary(vals(g.rows, "merge_seconds")), "checkSeconds": summary(vals(g.rows, "merge_check_seconds")), "copySeconds": summary(vals(g.rows, "merge_copy_seconds")), "verifySeconds": summary(vals(g.rows, "merge_verify_seconds"))})
+		merges = append(merges, Object{
+			"activityFamily": g.key[0],
+			"resourceClass":  g.key[1],
+			"mergeSeconds":   summary(vals(g.rows, "merge_seconds")),
+			"checkSeconds":   summary(vals(g.rows, "merge_check_seconds")),
+			"copySeconds":    summary(vals(g.rows, "merge_copy_seconds")),
+			"verifySeconds":  summary(vals(g.rows, "merge_verify_seconds")),
+		})
 	}
 	var mergeRates any
 	if projection != nil {
 		rates := []any{}
 		for _, g := range groups(mergeRows, "class") {
 			o := Object{}
-			for key, pair := range map[string][2]string{"checkSecondsPerInputByte": {"merge_check_seconds", "inputTotalBytes"}, "copySecondsPerUniqueByte": {"merge_copy_seconds", "inputUniqueBytes"}, "verifySecondsPerUniqueByte": {"merge_verify_seconds", "inputUniqueBytes"}} {
+			for key, pair := range map[string][2]string{
+				"checkSecondsPerInputByte":   {"merge_check_seconds", "inputTotalBytes"},
+				"copySecondsPerUniqueByte":   {"merge_copy_seconds", "inputUniqueBytes"},
+				"verifySecondsPerUniqueByte": {"merge_verify_seconds", "inputUniqueBytes"},
+			} {
 				values := []any{}
 				for _, r := range g.rows {
 					bytes := num(get(obj(get(obj(get(projection, "observedConsumerInputVolumes")), str(r["consumer_activity_id"]))), pair[1]))
@@ -154,7 +202,13 @@ func calibration(data Object, d string, projection Object) Object {
 				}
 				o[key] = summary(values)
 			}
-			rates = append(rates, Object{"targetClass": g.key[0], "source": "baseline:" + str(data["run_id"]), "observations": o, "commandOverheadSeconds": summary(vals(g.rows, "merge_command_overhead_seconds")), "channelWaitSeconds": summary(vals(g.rows, "merge_ssh_channel_wait_seconds"))})
+			rates = append(rates, Object{
+				"targetClass":            g.key[0],
+				"source":                 "baseline:" + str(data["run_id"]),
+				"observations":           o,
+				"commandOverheadSeconds": summary(vals(g.rows, "merge_command_overhead_seconds")),
+				"channelWaitSeconds":     summary(vals(g.rows, "merge_ssh_channel_wait_seconds")),
+			})
 		}
 		mergeRates = rates
 	}
@@ -162,5 +216,23 @@ func calibration(data Object, d string, projection Object) Object {
 	if projection != nil {
 		basis = "producer-final-snapshot-manifest"
 	}
-	return Object{"schemaVersion": 1, "baselineRunId": data["run_id"], "baselineSHA256": d, "computeWorkBasis": projection["computeWorkBasis"], "synchronizationContract": "whole-workspace-v1", "workspaceVolumeBasis": basis, "computeObservations": compute, "materializationPhaseObservations": observations, "consumerMergeObservations": merges, "mergeRateObservations": mergeRates, "limitations": list("Single baseline; ranges are observations, not confidence intervals.", "Do not replay per-activity durations or total makespan as a holdout prediction.", "No destination cache hit or shared-storage route may be assumed without evidence.", "Workspace manifests and topology-specific contention are required before applying these observations.", "Compute samples are contention-conditioned; do not apply interference slowdown a second time.")}
+	return Object{
+		"schemaVersion":                    1,
+		"baselineRunId":                    data["run_id"],
+		"baselineSHA256":                   d,
+		"computeWorkBasis":                 projection["computeWorkBasis"],
+		"synchronizationContract":          "whole-workspace-v1",
+		"workspaceVolumeBasis":             basis,
+		"computeObservations":              compute,
+		"materializationPhaseObservations": observations,
+		"consumerMergeObservations":        merges,
+		"mergeRateObservations":            mergeRates,
+		"limitations": list(
+			"Single baseline; ranges are observations, not confidence intervals.",
+			"Do not replay per-activity durations or total makespan as a holdout prediction.",
+			"No destination cache hit or shared-storage route may be assumed without evidence.",
+			"Workspace manifests and topology-specific contention are required before applying these observations.",
+			"Compute samples are contention-conditioned; do not apply interference slowdown a second time.",
+		),
+	}
 }

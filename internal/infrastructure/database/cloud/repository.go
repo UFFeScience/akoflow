@@ -738,8 +738,11 @@ func (r *Repository) CheckCloudLifecycle(ctx context.Context, instanceID, exclud
 			message: "data transfers are still active", args: []any{instanceID, instanceID},
 		},
 		{
-			query:   `SELECT COUNT(*) FROM artifact_materializations m JOIN cloud_operation_runs o ON o.execution_run_id=m.run_id JOIN cloud_provisioned_instances i ON i.id=o.instance_id AND i.capacity_target_id=m.resource_id WHERE o.id=? AND i.id=? AND m.status<>'committed'`,
-			message: "required outputs have not been committed", args: []any{excludedOperationID, instanceID},
+			query: ("SELECT COUNT(*) FROM artifact_materializations m JOIN cloud_operation_runs o ON o.execution_run_id=m" +
+				".run_id JOIN cloud_provisioned_instances i ON i.id=o.instance_id AND i.capacity_target_id=m.resource" +
+				"_id WHERE o.id=? AND i.id=? AND m.status<>'committed'"),
+			message: "required outputs have not been committed",
+			args:    []any{excludedOperationID, instanceID},
 		},
 		{
 			query:   `SELECT COUNT(*) FROM console_sessions s JOIN cloud_provisioned_instances i ON i.capacity_target_id=s.resource_id WHERE i.id=? AND s.status IN ('starting','connected')`,

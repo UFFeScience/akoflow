@@ -131,7 +131,20 @@ func ProjectWorkspaceDependenciesForResourceTypes(version WorkflowVersion, resou
 			manifest := map[string]ProjectedFile{}
 			volume := WorkspaceProjectionVolumes{}
 			merge := func(file ProjectedFile, replace bool) error {
-				if file.Path == "" || strings.ContainsRune(file.Path, '\x00') || path.IsAbs(file.Path) || path.Clean(file.Path) != file.Path || file.Path == "." || file.Path == ".." || strings.HasPrefix(file.Path, "../") || strings.Contains(file.Path, "\\") || file.SizeBytes < 0 || file.ContentID == "" {
+				if file.Path == "" || strings.ContainsRune(
+					file.Path,
+					'\x00',
+				) || path.IsAbs(
+					file.Path,
+				) || path.Clean(
+					file.Path,
+				) != file.Path || file.Path == "." || file.Path == ".." || strings.HasPrefix(
+					file.Path,
+					"../",
+				) || strings.Contains(
+					file.Path,
+					"\\",
+				) || file.SizeBytes < 0 || file.ContentID == "" {
 					return fmt.Errorf("invalid projected file %q in %q", file.Path, activity.ID)
 				}
 				if previous, exists := manifest[file.Path]; exists && !replace && (previous.ContentID != file.ContentID || previous.SizeBytes != file.SizeBytes) {

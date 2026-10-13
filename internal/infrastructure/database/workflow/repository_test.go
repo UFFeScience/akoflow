@@ -73,7 +73,13 @@ func TestWorkflowDefinitionCreateAndFind(t *testing.T) {
 	if err != nil || got == nil {
 		t.Fatalf("find failed: %+v %v", got, err)
 	}
-	if got.WorkflowID != "workflow" || len(got.Activities) != 3 || len(got.Dependencies) != 1 || len(got.DataDependencies) != 1 || got.DataDependencies[0].SizeBytes != 10_000_000_000 || got.Activities[0].Metadata["x"] != "y" || got.Activities[2].Simulation != nil || got.Activities[2].Service != nil {
+	if got.WorkflowID != "workflow" || len(
+		got.Activities,
+	) != 3 || len(
+		got.Dependencies,
+	) != 1 || len(
+		got.DataDependencies,
+	) != 1 || got.DataDependencies[0].SizeBytes != 10_000_000_000 || got.Activities[0].Metadata["x"] != "y" || got.Activities[2].Simulation != nil || got.Activities[2].Service != nil {
 		t.Fatalf("unexpected workflow: %+v", got)
 	}
 	missing, err := repository.FindVersion(context.Background(), "missing")
@@ -101,14 +107,26 @@ func TestWorkflowListAndFindHydrateLatestVersionAndTypes(t *testing.T) {
 		Types: []domain.ActivityType{{ID: "type", Name: "Compute", Application: "simulation", DefaultImage: "ubuntu", CPUIntensity: 1, MemoryIntensity: 2, IOIntensity: 3, NetworkIntensity: 4, Metadata: map[string]any{"category": "science"}}},
 		Version: domain.WorkflowVersion{ID: "version", WorkflowID: "workflow", Version: 1, DefinitionHash: "hash", Activities: []domain.Activity{{
 			ID: "activity", WorkflowVersionID: "version", ActivityTypeID: "type", ExternalID: "activity", Name: "Service", Kind: domain.ActivityKindService,
-			Capabilities: []domain.ActivityCapability{domain.ActivityCapabilityReal}, Command: domain.ActivityCommand{Image: "ubuntu", Entrypoint: "server"}, Resources: domain.ActivityResources{CPU: 2, MemoryBytes: 1024}, Service: service, Policy: domain.ActivityPolicy{TimeoutSeconds: 30}, Priority: 4,
+			Capabilities: []domain.ActivityCapability{
+				domain.ActivityCapabilityReal,
+			}, Command: domain.ActivityCommand{
+				Image:      "ubuntu",
+				Entrypoint: "server",
+			}, Resources: domain.ActivityResources{
+				CPU:         2,
+				MemoryBytes: 1024,
+			}, Service: service, Policy: domain.ActivityPolicy{
+				TimeoutSeconds: 30,
+			}, Priority: 4,
 		}}},
 	}
 	if err := repository.Create(context.Background(), definition); err != nil {
 		t.Fatal(err)
 	}
 	found, err := repository.Find(context.Background(), definition.ID)
-	if err != nil || found == nil || found.Version.ID != "version" || len(found.Types) != 1 || found.Types[0].Metadata["category"] != "science" || found.Version.Activities[0].Service == nil || found.Version.Activities[0].Service.Ports[0] != 8080 {
+	if err != nil || found == nil || found.Version.ID != "version" || len(
+		found.Types,
+	) != 1 || found.Types[0].Metadata["category"] != "science" || found.Version.Activities[0].Service == nil || found.Version.Activities[0].Service.Ports[0] != 8080 {
 		t.Fatalf("Find() = %#v, %v", found, err)
 	}
 	values, err := repository.List(context.Background())

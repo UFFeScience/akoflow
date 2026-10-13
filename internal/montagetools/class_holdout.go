@@ -107,8 +107,20 @@ func prepareClassHoldout(template, calibration Object, target, runID, planID str
 	plan["lifecycleActions"] = []any{}
 	plan["source"] = "manual"
 	plan["algorithm"] = "fixed-class-holdout"
-	plan["metadata"] = Object{"reviewOnly": true, "realExecutionAuthorized": false, "experimentRole": "independent-class-holdout-preparation-only", "targetClass": class, "oneVmOneExecutionLane": true, "trainingEvidence": provenance, "priceStatus": "historical-estimate-revalidate-before-real"}
-	plan["metadata"].(map[string]any)["remainingRealPreflight"] = list("User approval required.", "Register/freeze lifecycle actions and include provisioning/disk costs before real.", "Revalidate quota, SSH, runtime and physical disk availability.")
+	plan["metadata"] = Object{
+		"reviewOnly":              true,
+		"realExecutionAuthorized": false,
+		"experimentRole":          "independent-class-holdout-preparation-only",
+		"targetClass":             class,
+		"oneVmOneExecutionLane":   true,
+		"trainingEvidence":        provenance,
+		"priceStatus":             "historical-estimate-revalidate-before-real",
+	}
+	plan["metadata"].(map[string]any)["remainingRealPreflight"] = list(
+		"User approval required.",
+		"Register/freeze lifecycle actions and include provisioning/disk costs before real.",
+		"Revalidate quota, SSH, runtime and physical disk availability.",
+	)
 	out["Run"] = Object{"id": runID, "schedulePlanId": planID, "mode": "simulation", "seed": 1}
 	out["RuntimeAllocations"] = Object{}
 	return out

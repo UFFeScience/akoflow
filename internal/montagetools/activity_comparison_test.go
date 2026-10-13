@@ -5,7 +5,24 @@ import "testing"
 func comparisonFixture() (Object, Object, Object) {
 	id, resource := "montage-mprojectid0000001", "montage-gcp-fog-e2-micro-01"
 	request := Object{"Plan": Object{"assignments": []any{Object{"activityId": id, "resourceId": resource, "predictedRuntimeSeconds": 10.0}}}}
-	real := Object{"run": Object{"id": "reference"}, "activities": []any{Object{"id": "task-1", "activityId": id, "status": "completed", "allocatedResourceId": resource, "runtimeSeconds": 10.0, "readyAt": 100.0, "transferSeconds": 1000.0, "queueSeconds": 7.0, "metadata": Object{"transferElapsedSeconds": 3.0}}}, "handles": []any{Object{"activityId": id}}, "events": []any{Object{"aggregateId": "task-1", "eventType": "activity.completed", "occurredAt": "1970-01-01T00:01:56Z"}}}
+	real := Object{
+		"run": Object{"id": "reference"},
+		"activities": []any{
+			Object{
+				"id":                  "task-1",
+				"activityId":          id,
+				"status":              "completed",
+				"allocatedResourceId": resource,
+				"runtimeSeconds":      10.0,
+				"readyAt":             100.0,
+				"transferSeconds":     1000.0,
+				"queueSeconds":        7.0,
+				"metadata":            Object{"transferElapsedSeconds": 3.0},
+			},
+		},
+		"handles": []any{Object{"activityId": id}},
+		"events":  []any{Object{"aggregateId": "task-1", "eventType": "activity.completed", "occurredAt": "1970-01-01T00:01:56Z"}},
+	}
 	sim := Object{"tasks": []any{Object{"activityId": id, "allocatedResourceId": resource, "status": "completed", "readyAt": 0.0, "finishedAt": 14.0, "runtimeSeconds": 10.0}}}
 	return request, real, sim
 }

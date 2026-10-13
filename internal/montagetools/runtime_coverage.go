@@ -73,7 +73,23 @@ func runtimeReferenceCoverage(references []Object) Object {
 		for _, key := range keys {
 			classes = append(classes, groups[key])
 		}
-		result = append(result, Object{"runId": run["id"], "status": run["status"], "distinctActivities": len(latest), "completedDistinctActivities": completed, "handleCount": len(rows(reference["handles"])), "eligibleCleanWholeRunReference": run["status"] == "completed" && completed == 58 && len(latest) == 58 && len(rows(reference["handles"])) == 58 && terminalHandles, "classes": classes})
+		result = append(result, Object{
+			"runId":                          run["id"],
+			"status":                         run["status"],
+			"distinctActivities":             len(latest),
+			"completedDistinctActivities":    completed,
+			"handleCount":                    len(rows(reference["handles"])),
+			"eligibleCleanWholeRunReference": run["status"] == "completed" && completed == 58 && len(latest) == 58 && len(rows(reference["handles"])) == 58 && terminalHandles,
+			"classes":                        classes,
+		})
 	}
-	return Object{"issue": "AKO-168", "references": result, "limitations": list("Eligibility is not independence: a holdout cannot be the same run used to calibrate its case.", "Recovered references may supply single-attempt stage samples but not a clean whole-run makespan.", "Unknown resources remain explicitly unclassified rather than receiving borrowed coefficients.")}
+	return Object{
+		"issue":      "AKO-168",
+		"references": result,
+		"limitations": list(
+			"Eligibility is not independence: a holdout cannot be the same run used to calibrate its case.",
+			"Recovered references may supply single-attempt stage samples but not a clean whole-run makespan.",
+			"Unknown resources remain explicitly unclassified rather than receiving borrowed coefficients.",
+		),
+	}
 }

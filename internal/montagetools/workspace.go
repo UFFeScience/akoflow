@@ -160,6 +160,10 @@ func projection(audit, raw, request Object, d string) Object {
 	result["activityModels"] = models
 	result["dependencies"] = workflow["dependencies"]
 	result["baselineAssignedResourceTypes"] = assignments
-	result["limitations"] = list("File sizes and identities are previous-run observations for the same immutable image and dataset, not future observations.", "Runtime packaging variant is supported only for evidenced cloud_vm and hpc_machine types.", "No transfer deduplication, snapshot reuse or shared storage is inferred by this manifest model.")
+	result["limitations"] = list(
+		"File sizes and identities are previous-run observations for the same immutable image and dataset, not future observations.",
+		"Runtime packaging variant is supported only for evidenced cloud_vm and hpc_machine types.",
+		"No transfer deduplication, snapshot reuse or shared storage is inferred by this manifest model.",
+	)
 	return result
 }

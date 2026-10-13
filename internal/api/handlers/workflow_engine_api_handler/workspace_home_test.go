@@ -50,10 +50,22 @@ func (s *budgetNavigatorStub) WorkspaceBudget(_ context.Context, id, path string
 }
 
 func TestResolveWorkspaceBudgetRefreshesAndSharesExactObservation(t *testing.T) {
-	definition := domain.EnvironmentDefinition{Version: domain.EnvironmentVersion{ID: "v1"}, Runtimes: []domain.EnvironmentRuntime{{Driver: domain.RuntimeDriverSlurm}}, Storages: []domain.StorageResource{{ID: "home", Endpoint: "/home/scientist", Metadata: map[string]any{"connectionId": "ssh"}, Configuration: map[string]any{"browseRoots": []any{map[string]any{"label": "home", "path": "/home/scientist"}}}}}}
+	definition := domain.EnvironmentDefinition{
+		Version:  domain.EnvironmentVersion{ID: "v1"},
+		Runtimes: []domain.EnvironmentRuntime{{Driver: domain.RuntimeDriverSlurm}},
+		Storages: []domain.StorageResource{
+			{ID: "home", Endpoint: "/home/scientist", Metadata: map[string]any{"connectionId": "ssh"}, Configuration: map[string]any{"browseRoots": []any{map[string]any{"label": "home", "path": "/home/scientist"}}}},
+		},
+	}
 	navigator := &budgetNavigatorStub{}
 	h := Handler{storage: navigator, environments: &environmentCatalogRichStub{found: &definition, connection: &domain.EnvironmentConnection{ID: "ssh", EnvironmentID: "hpc"}}}
-	request := ports.ExecutionRequest{Workflow: domain.WorkflowVersion{Activities: []domain.Activity{{Metadata: map[string]any{"workspaceProjection": true}}}}, Resources: []domain.Resource{{ID: "node1", EnvironmentVersionID: "v1", Metadata: map[string]any{"connectionId": "ssh", "workspaceStorageBudget": "stale"}}, {ID: "node2", EnvironmentVersionID: "v1", Metadata: map[string]any{"connectionId": "ssh"}}}}
+	request := ports.ExecutionRequest{
+		Workflow: domain.WorkflowVersion{Activities: []domain.Activity{{Metadata: map[string]any{"workspaceProjection": true}}}},
+		Resources: []domain.Resource{
+			{ID: "node1", EnvironmentVersionID: "v1", Metadata: map[string]any{"connectionId": "ssh", "workspaceStorageBudget": "stale"}},
+			{ID: "node2", EnvironmentVersionID: "v1", Metadata: map[string]any{"connectionId": "ssh"}},
+		},
+	}
 	require.NoError(t, h.resolveWorkspaceHomes(context.Background(), &request))
 	require.Equal(t, 1, navigator.calls)
 	require.Equal(t, request.Resources[0].Metadata["workspaceStorageBudget"], request.Resources[1].Metadata["workspaceStorageBudget"])

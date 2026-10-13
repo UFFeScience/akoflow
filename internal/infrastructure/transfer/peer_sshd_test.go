@@ -57,7 +57,13 @@ func TestScopedPeerCredentialAuthenticatesWithOpenSSHServer(t *testing.T) {
 	}
 	port := listener.Addr().(*net.TCPAddr).Port
 	listener.Close()
-	config := fmt.Sprintf("ListenAddress 127.0.0.1\nPort %d\nHostKey %s\nAuthorizedKeysFile %s\nPidFile %s\nUsePAM yes\nPasswordAuthentication no\nKbdInteractiveAuthentication no\nPermitRootLogin yes\nStrictModes yes\nLogLevel VERBOSE\n", port, hostKey, authorizedPath, filepath.Join(root, "pid"))
+	config := fmt.Sprintf(
+		"ListenAddress 127.0.0.1\nPort %d\nHostKey %s\nAuthorizedKeysFile %s\nPidFile %s\nUsePAM yes\nPasswordAuthentication no\nKbdInteractiveAuthentication no\nPermitRootLogin yes\nStrictModes yes\nLogLevel VERBOSE\n",
+		port,
+		hostKey,
+		authorizedPath,
+		filepath.Join(root, "pid"),
+	)
 	server := exec.Command(sshd, "-D", "-e", "-f", write("sshd_config", []byte(config)))
 	log, err := os.Create(filepath.Join(root, "server-log"))
 	if err != nil {
@@ -87,7 +93,28 @@ func TestScopedPeerCredentialAuthenticatesWithOpenSSHServer(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	args := []string{"-F", "/dev/null", "-p", fmt.Sprint(port), "-i", clientKey, "-o", "BatchMode=yes", "-o", "IdentitiesOnly=yes", "-o", "StrictHostKeyChecking=yes", "-o", "HostKeyAlias=integration-host", "-o", "UserKnownHostsFile=" + knownHosts, "-o", "ConnectTimeout=3", current.Username + "@127.0.0.1", "printf '%s' UNAUTHORIZED"}
+	args := []string{
+		"-F",
+		"/dev/null",
+		"-p",
+		fmt.Sprint(port),
+		"-i",
+		clientKey,
+		"-o",
+		"BatchMode=yes",
+		"-o",
+		"IdentitiesOnly=yes",
+		"-o",
+		"StrictHostKeyChecking=yes",
+		"-o",
+		"HostKeyAlias=integration-host",
+		"-o",
+		"UserKnownHostsFile=" + knownHosts,
+		"-o",
+		"ConnectTimeout=3",
+		current.Username + "@127.0.0.1",
+		"printf '%s' UNAUTHORIZED",
+	}
 	output, err := exec.Command("ssh", args...).CombinedOutput()
 	if err != nil || string(output) != "AUTHORIZED" {
 		serverLog, _ := os.ReadFile(filepath.Join(root, "server-log"))

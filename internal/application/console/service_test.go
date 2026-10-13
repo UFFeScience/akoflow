@@ -106,7 +106,16 @@ func consoleTarget() (domain.Resource, domain.EnvironmentDefinition) {
 func TestCommandControllerExecutesAndAuditsCommands(t *testing.T) {
 	resource, definition := consoleTarget()
 	store, audit := &commandStoreStub{}, &auditStoreStub{}
-	controller := NewCommandController(environmentCatalogStub{definitions: []domain.EnvironmentDefinition{definition}}, resourceInventoryStub{resource: &resource}, store, commandRunnerStub{stdout: "done", stderr: "warning", exit: 2, external: "job-1"}, audit)
+	controller := NewCommandController(environmentCatalogStub{
+		definitions: []domain.EnvironmentDefinition{definition},
+	}, resourceInventoryStub{
+		resource: &resource,
+	}, store, commandRunnerStub{
+		stdout:   "done",
+		stderr:   "warning",
+		exit:     2,
+		external: "job-1",
+	}, audit)
 	command, err := controller.ExecuteCommand(context.Background(), domainconsole.Request{ResourceID: resource.ID, ActorID: "user", Command: "hostname"})
 	if err != nil {
 		t.Fatal(err)
@@ -140,7 +149,11 @@ func TestCommandControllerFailureAndValidation(t *testing.T) {
 	if _, err = missing.ExecuteCommand(context.Background(), domainconsole.Request{ResourceID: "missing", Command: "x"}); err == nil {
 		t.Fatal("expected resource error")
 	}
-	unbound := NewCommandController(environmentCatalogStub{definitions: []domain.EnvironmentDefinition{definition}}, resourceInventoryStub{resource: &domain.Resource{ID: "other", EnvironmentVersionID: "version"}}, store, commandRunnerStub{}, nil)
+	unbound := NewCommandController(environmentCatalogStub{
+		definitions: []domain.EnvironmentDefinition{definition},
+	}, resourceInventoryStub{
+		resource: &domain.Resource{ID: "other", EnvironmentVersionID: "version"},
+	}, store, commandRunnerStub{}, nil)
 	if _, err = unbound.ExecuteCommand(context.Background(), domainconsole.Request{ResourceID: "other", Command: "x"}); err == nil {
 		t.Fatal("expected target error")
 	}

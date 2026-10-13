@@ -348,7 +348,15 @@ func (s *Provisioner) validate(ctx context.Context, instance *domain.CloudProvis
 		if err := validateCompatibility(*version, target, assignment.Required); err != nil {
 			return err
 		}
-		if err := validator.Validate(ctx, ports.MachineConfigurationSpec{HostKeyAlias: hostTrustString(instance, "verifiedHostKeyAlias"), KnownHostsFile: hostTrustString(instance, "verifiedKnownHostsFile"), InstanceID: instance.ID, Address: instance.PublicAddress, SSHUser: instance.SSHUsername, CredentialRef: instance.SSHCredentialRef, Checks: version.ValidationChecks}); err != nil && assignment.Required {
+		if err := validator.Validate(ctx, ports.MachineConfigurationSpec{
+			HostKeyAlias:   hostTrustString(instance, "verifiedHostKeyAlias"),
+			KnownHostsFile: hostTrustString(instance, "verifiedKnownHostsFile"),
+			InstanceID:     instance.ID,
+			Address:        instance.PublicAddress,
+			SSHUser:        instance.SSHUsername,
+			CredentialRef:  instance.SSHCredentialRef,
+			Checks:         version.ValidationChecks,
+		}); err != nil && assignment.Required {
 			return err
 		}
 	}

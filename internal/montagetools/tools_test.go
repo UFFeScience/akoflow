@@ -167,7 +167,11 @@ func TestQueueSeparation(t *testing.T) {
 	}
 }
 func TestFreezeRejectsUnmeasuredAndMixedQueue(t *testing.T) {
-	resources := Object{"relay": Object{"domain": "relay", "class": "relay"}, "hpc": Object{"domain": "hpc", "class": "hpc", "bulkServiceGroupId": "group", "bulkServiceSlots": 3, "bulkServiceSource": "fixture"}, "micro": Object{"domain": "cloud", "class": "e2-micro"}}
+	resources := Object{
+		"relay": Object{"domain": "relay", "class": "relay"},
+		"hpc":   Object{"domain": "hpc", "class": "hpc", "bulkServiceGroupId": "group", "bulkServiceSlots": 3, "bulkServiceSource": "fixture"},
+		"micro": Object{"domain": "cloud", "class": "e2-micro"},
+	}
 	c := scientific(t, "execution-calibration-v2.json")
 	bad(t, func() Object { return freezeMaterialization(c, "d", resources, "relay") })
 	for _, p := range rows(c["materializationPhaseObservations"]) {
@@ -258,7 +262,17 @@ func auditFixture() (Object, Object, Object) {
 		assignments = append(assignments, Object{"activityId": id, "resourceId": "micro"})
 		tasks = append(tasks, Object{"activityId": id, "attempt": 2, "status": "completed", "startedAt": 20, "metadata": Object{"address": "secret-address"}})
 	}
-	return Object{"workflow": Object{"activities": activities, "dependencies": []any{}}, "plan": Object{"predicted": Object{"makespanSeconds": 10, "secret": "never-export"}, "assignments": assignments}}, Object{"run": Object{"id": "run", "status": "completed"}, "activityAttempts": tasks, "artifactTransferRuns": []any{Object{"activityId": "activity-1", "status": "completed", "finishedAt": 19}}, "workspaceLeases": []any{Object{"released": true}}}, Object{"run": Object{}}
+	return Object{
+		"workflow": Object{"activities": activities, "dependencies": []any{}},
+		"plan":     Object{"predicted": Object{"makespanSeconds": 10, "secret": "never-export"}, "assignments": assignments},
+	}, Object{
+		"run":                  Object{"id": "run", "status": "completed"},
+		"activityAttempts":     tasks,
+		"artifactTransferRuns": []any{Object{"activityId": "activity-1", "status": "completed", "finishedAt": 19}},
+		"workspaceLeases":      []any{Object{"released": true}},
+	}, Object{
+		"run": Object{},
+	}
 }
 func TestAuditAllowlistBarrierLatestAndTimes(t *testing.T) {
 	request, response, sim := auditFixture()
@@ -318,7 +332,14 @@ func TestNativeTimingExactAttempt(t *testing.T) {
 	require.Nil(t, rows(audit(request, response, sim, false)["activities"])[0]["validated_handle_runtime_seconds"])
 }
 func TestFixedPlacementAndLocalComparison(t *testing.T) {
-	observed := Object{"run_id": "observed", "activities": []any{Object{"activity_id": "a", "resource_id": "vm"}, Object{"activity_id": "b", "resource_id": "vm"}}, "routes": []any{Object{"producer_activity_id": "a", "consumer_activity_id": "b", "strategy": "direct-runtime", "network_bytes": 0, "phases": []any{Object{"name": "shared-conflict-check-copy-and-verify", "durationSeconds": 1000}}}}, "real_api_reported": Object{"makespanSeconds": 100}}
+	observed := Object{
+		"run_id":     "observed",
+		"activities": []any{Object{"activity_id": "a", "resource_id": "vm"}, Object{"activity_id": "b", "resource_id": "vm"}},
+		"routes": []any{
+			Object{"producer_activity_id": "a", "consumer_activity_id": "b", "strategy": "direct-runtime", "network_bytes": 0, "phases": []any{Object{"name": "shared-conflict-check-copy-and-verify", "durationSeconds": 1000}}},
+		},
+		"real_api_reported": Object{"makespanSeconds": 100},
+	}
 	request := Object{"run": Object{"mode": "simulation"}, "plan": Object{"assignments": []any{Object{"activityId": "a", "resourceId": "vm"}, Object{"activityId": "b", "resourceId": "vm"}}}, "networkTopology": Object{"metadata": Object{}}}
 	prepared := fixedRequest(request, Object{"source": "old"}, observed, "sim-only")
 	require.Equal(t, normal(request["plan"]), normal(prepared["plan"]))
@@ -339,13 +360,29 @@ func TestFixedPlacementAndLocalComparison(t *testing.T) {
 func TestSourceCapacityNotNICOrQueue(t *testing.T) {
 	flows := []any{}
 	for i := 0; i < 3; i++ {
-		flows = append(flows, Object{"status": "completed", "route": Object{"strategy": "gateway", "sourceResourceId": "hpc", "targetResourceId": "montage-gcp-fog-e2-micro-02", "archiveBytes": 100, "sourcePackExecutionSeconds": 10, "sourcePackSshChannelWaitSeconds": 999, "phases": []any{Object{"name": "pack-and-receive", "finishedAt": 20}}}})
+		flows = append(flows, Object{
+			"status": "completed",
+			"route": Object{
+				"strategy":                        "gateway",
+				"sourceResourceId":                "hpc",
+				"targetResourceId":                "montage-gcp-fog-e2-micro-02",
+				"archiveBytes":                    100,
+				"sourcePackExecutionSeconds":      10,
+				"sourcePackSshChannelWaitSeconds": 999,
+				"phases":                          []any{Object{"name": "pack-and-receive", "finishedAt": 20}},
+			},
+		})
 	}
 	c := sourceCapacity(Object{"artifactTransferRuns": flows}, "hpc", "e2-micro")
 	require.Equal(t, 3, c["concurrentCommandsMaximum"])
 	require.Equal(t, 10.0, c["busySeconds"])
 	require.Equal(t, 30.0, c["durationWeightedMedianBytesPerSecond"])
-	request := Object{"networkTopology": Object{"metadata": Object{"workspaceMaterializationModel": Object{"relayResourceId": "relay"}}, "links": []any{Object{"id": "physical", "sourceResourceId": "relay", "targetResourceId": "hpc", "bidirectional": true, "bandwidthBitsPerSecond": 8000}}}}
+	request := Object{
+		"networkTopology": Object{
+			"metadata": Object{"workspaceMaterializationModel": Object{"relayResourceId": "relay"}},
+			"links":    []any{Object{"id": "physical", "sourceResourceId": "relay", "targetResourceId": "hpc", "bidirectional": true, "bandwidthBitsPerSecond": 8000}},
+		},
+	}
 	r := applyCapacity(request, "hpc", c)
 	links := rows(obj(r["networkTopology"])["links"])
 	require.Equal(t, false, links[0]["bidirectional"])

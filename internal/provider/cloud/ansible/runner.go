@@ -205,7 +205,24 @@ func runCheck(ctx context.Context, spec ports.MachineConfigurationSpec, keyPath,
 		"-i", keyPath, spec.SSHUser + "@" + spec.Address, command,
 	}
 	if spec.KnownHostsFile != "" && spec.HostKeyAlias != "" {
-		arguments = []string{"-o", "BatchMode=yes", "-o", "StrictHostKeyChecking=yes", "-o", "HostKeyAlgorithms=ssh-ed25519", "-o", "UserKnownHostsFile=" + spec.KnownHostsFile, "-o", "HostKeyAlias=" + spec.HostKeyAlias, "-o", "ConnectTimeout=10", "-i", keyPath, spec.SSHUser + "@" + spec.Address, command}
+		arguments = []string{
+			"-o",
+			"BatchMode=yes",
+			"-o",
+			"StrictHostKeyChecking=yes",
+			"-o",
+			"HostKeyAlgorithms=ssh-ed25519",
+			"-o",
+			"UserKnownHostsFile=" + spec.KnownHostsFile,
+			"-o",
+			"HostKeyAlias=" + spec.HostKeyAlias,
+			"-o",
+			"ConnectTimeout=10",
+			"-i",
+			keyPath,
+			spec.SSHUser + "@" + spec.Address,
+			command,
+		}
 	}
 	output, err := exec.CommandContext(ctx, "ssh", arguments...).CombinedOutput()
 	if err != nil {

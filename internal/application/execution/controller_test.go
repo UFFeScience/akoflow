@@ -189,8 +189,17 @@ func TestStartAppliesCommittedPreparation(t *testing.T) {
 	runtime := &runtimeFake{handle: domain.ActivityHandle{RunID: "run", ActivityID: "activity", RuntimeID: "local", Status: domain.HandleCompleted}}
 	execution := executionFixture()
 	execution.Preparation = &domain.PreparationGate{
-		Executable: &domain.ArtifactMaterialization{ID: "materialization", VariantID: "variant", Digest: "sha256:digest", DestinationPath: "/work/bin/tool", EnvironmentID: "env", ResourceID: "node", Status: domain.MaterializationCommitted, VerifiedDigest: "sha256:digest"},
-		Workspace:  &domain.WorkspaceMaterialization{Destination: domain.TransferLocation{URI: "file:///work/run"}, Status: domain.MaterializationCommitted},
+		Executable: &domain.ArtifactMaterialization{
+			ID:              "materialization",
+			VariantID:       "variant",
+			Digest:          "sha256:digest",
+			DestinationPath: "/work/bin/tool",
+			EnvironmentID:   "env",
+			ResourceID:      "node",
+			Status:          domain.MaterializationCommitted,
+			VerifiedDigest:  "sha256:digest",
+		},
+		Workspace: &domain.WorkspaceMaterialization{Destination: domain.TransferLocation{URI: "file:///work/run"}, Status: domain.MaterializationCommitted},
 	}
 
 	handle, err := New(resolverFake{adapter: runtime}, &handlesFake{}).Start(context.Background(), execution)

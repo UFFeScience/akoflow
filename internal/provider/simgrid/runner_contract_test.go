@@ -13,7 +13,9 @@ import (
 
 func materializedRequestFixture() Request {
 	request := processRequestFixture()
-	request.Workflow.Activities[0].Metadata = map[string]any{"workspaceProjection": domainworkflow.WorkspaceProjection{Contract: "whole-workspace-v1", Source: "baseline", Outputs: []domainworkflow.ProjectedFile{{Path: "data", SizeBytes: 100, ContentID: "output"}}}}
+	request.Workflow.Activities[0].Metadata = map[string]any{
+		"workspaceProjection": domainworkflow.WorkspaceProjection{Contract: "whole-workspace-v1", Source: "baseline", Outputs: []domainworkflow.ProjectedFile{{Path: "data", SizeBytes: 100, ContentID: "output"}}},
+	}
 	request.Workflow.Activities[1].Metadata = map[string]any{"workspaceProjection": domainworkflow.WorkspaceProjection{Contract: "whole-workspace-v1", Source: "baseline"}}
 	request.Resources = append(request.Resources, domain.Resource{ID: "relay", ComputeSpeedup: 1})
 	request.NetworkTopology.Links = []domain.NetworkLink{
@@ -21,8 +23,14 @@ func materializedRequestFixture() Request {
 		{SourceResourceID: "relay", TargetResourceID: "cloud", BandwidthBitsPerSecond: 8000, PricePerByte: .02},
 	}
 	request.NetworkTopology.Metadata = map[string]any{"workspaceMaterializationModel": materializationmodel.Model{
-		SchemaVersion: 1, Source: "baseline", RelayResourceID: "relay", Resources: map[string]materializationmodel.Resource{"edge": {Class: "hpc", Domain: "hpc"}, "cloud": {Class: "micro", Domain: "cloud"}, "relay": {Class: "relay", Domain: "relay"}},
-		Profiles:      []materializationmodel.Profile{{Strategy: "gateway", SourceClass: "hpc", TargetClass: "micro", Source: "baseline", Samples: 2, ArchiveToWorkspaceRatio: .5, IngressArchiveBytesPerSecond: 50, UploadArchiveBytesPerSecond: 25, IngressIncludesSourcePreparation: true}},
+		SchemaVersion: 1, Source: "baseline", RelayResourceID: "relay", Resources: map[string]materializationmodel.Resource{
+			"edge":  {Class: "hpc", Domain: "hpc"},
+			"cloud": {Class: "micro", Domain: "cloud"},
+			"relay": {Class: "relay", Domain: "relay"},
+		},
+		Profiles: []materializationmodel.Profile{
+			{Strategy: "gateway", SourceClass: "hpc", TargetClass: "micro", Source: "baseline", Samples: 2, ArchiveToWorkspaceRatio: .5, IngressArchiveBytesPerSecond: 50, UploadArchiveBytesPerSecond: 25, IngressIncludesSourcePreparation: true},
+		},
 		MergeProfiles: []materializationmodel.MergeProfile{{TargetClass: "micro", Source: "baseline", Samples: 2, CheckSecondsPerInputByte: .01, CopySecondsPerUniqueByte: .02, VerifySecondsPerUniqueByte: .03}},
 	}}
 	return request
@@ -110,7 +118,17 @@ func TestRunnerInputUsesWholeProducerWorkspaceNotDeclaredEdge(t *testing.T) {
 		Resources: []domain.Resource{{ID: "source", ComputeSpeedup: 1}, {ID: "target", ComputeSpeedup: 1}},
 		Workflow: domain.WorkflowVersion{
 			Activities: []domain.Activity{
-				{ID: "a", Metadata: map[string]any{"workspaceProjection": domainworkflow.WorkspaceProjection{Contract: "whole-workspace-v1", Source: "baseline", Inputs: []domainworkflow.ProjectedFile{{Path: "in.fits", SizeBytes: 1000, ContentID: "in"}}, Outputs: []domainworkflow.ProjectedFile{{Path: "out.fits", SizeBytes: 2000, ContentID: "estimated-output"}}}}},
+				{
+					ID: "a",
+					Metadata: map[string]any{
+						"workspaceProjection": domainworkflow.WorkspaceProjection{
+							Contract: "whole-workspace-v1",
+							Source:   "baseline",
+							Inputs:   []domainworkflow.ProjectedFile{{Path: "in.fits", SizeBytes: 1000, ContentID: "in"}},
+							Outputs:  []domainworkflow.ProjectedFile{{Path: "out.fits", SizeBytes: 2000, ContentID: "estimated-output"}},
+						},
+					},
+				},
 				{ID: "b", Metadata: map[string]any{"workspaceProjection": domainworkflow.WorkspaceProjection{Contract: "whole-workspace-v1", Source: "baseline"}}},
 			},
 			Dependencies:     []domain.ActivityDependency{{ActivityID: "b", DependsOnActivityID: "a"}},

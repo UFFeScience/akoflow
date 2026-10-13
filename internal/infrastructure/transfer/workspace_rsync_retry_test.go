@@ -64,7 +64,13 @@ func TestWorkspaceRsyncRetryReusesRealChecksumValidFiles(t *testing.T) {
 		t.Fatal(err)
 	}
 	marker := filepath.Join(root, "interrupted")
-	script := fmt.Sprintf("#!/bin/sh\nif test ! -e %s; then %s \"$@\" || exit $?; touch %s; echo 'connection unexpectedly closed (100 bytes received so far)' >&2; exit 255; fi\nexec %s \"$@\"\n", shell(marker), shell(realRsync), shell(marker), shell(realRsync))
+	script := fmt.Sprintf(
+		"#!/bin/sh\nif test ! -e %s; then %s \"$@\" || exit $?; touch %s; echo 'connection unexpectedly closed (100 bytes received so far)' >&2; exit 255; fi\nexec %s \"$@\"\n",
+		shell(marker),
+		shell(realRsync),
+		shell(marker),
+		shell(realRsync),
+	)
 	if err := os.WriteFile(filepath.Join(bin, "rsync"), []byte(script), 0700); err != nil {
 		t.Fatal(err)
 	}

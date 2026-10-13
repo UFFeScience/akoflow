@@ -52,7 +52,9 @@ func TestPeerSnapshotManifestRejectsMutableOrIncompleteContents(t *testing.T) {
 }
 
 func TestPeerSnapshotKeyInvalidatesGenerationPathAndManifest(t *testing.T) {
-	source := domain.TransferEndpoint{URI: "ssh://worker/workspace?hostKeyAlias=generation", ConnectionID: "ssh-vm", CloudInstanceID: "vm", WorkspaceSnapshotID: strings.Repeat("a", 64), WorkspaceSnapshotEntries: []domain.WorkspaceEntry{{Path: "file", Digest: "sha256:" + strings.Repeat("b", 64), SizeBytes: 1}}}
+	source := domain.TransferEndpoint{URI: "ssh://worker/workspace?hostKeyAlias=generation", ConnectionID: "ssh-vm", CloudInstanceID: "vm", WorkspaceSnapshotID: strings.Repeat("a", 64), WorkspaceSnapshotEntries: []domain.WorkspaceEntry{
+		{Path: "file", Digest: "sha256:" + strings.Repeat("b", 64), SizeBytes: 1},
+	}}
 	key := peerSnapshotKey(source)
 	if key == "" {
 		t.Fatal("complete snapshot has no identity")

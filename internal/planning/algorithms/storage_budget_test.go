@@ -30,7 +30,11 @@ func TestQuotaInfeasibleCandidateDoesNotAbortOtherCandidates(t *testing.T) {
 	r.Metadata = map[string]any{"workspaceStorageBudget": storagebudget.Snapshot{StorageID: "full", AvailableBytes: 0, Source: "quota-api", ObservedAt: time.Now()}}
 	r2 := planningResource("available", 1, 1, 0)
 	r2.Metadata = map[string]any{"workspaceStorageBudget": storagebudget.Snapshot{StorageID: "available", AvailableBytes: 1000, Source: "quota-api", ObservedAt: time.Now()}}
-	search, err := newCompactPRISMContext(domain.PlanningRequest{Workflow: domain.WorkflowVersion{Activities: []domain.Activity{a}}, Resources: []domain.Resource{r, r2}, ExecutionScope: domain.ExecutionScope{EnvironmentVersionIDs: []string{"environment"}}}, nil)
+	search, err := newCompactPRISMContext(domain.PlanningRequest{
+		Workflow:       domain.WorkflowVersion{Activities: []domain.Activity{a}},
+		Resources:      []domain.Resource{r, r2},
+		ExecutionScope: domain.ExecutionScope{EnvironmentVersionIDs: []string{"environment"}},
+	}, nil)
 	require.NoError(t, err)
 	states := []compactPRISMState{}
 	for _, id := range []string{"full", "available"} {

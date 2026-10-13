@@ -45,22 +45,8 @@ func (s *Controller) Start(ctx context.Context, execution domain.ActivityExecuti
 	// This is intentionally enforced at the final execution boundary as well as
 	// by the supervisor. A caller cannot bypass a failed materialization by
 	// constructing an ActivityExecutionContext directly.
-	if execution.Preparation != nil {
-		if err := execution.Preparation.Ready(); err != nil {
-			return domain.ActivityHandle{}, fmt.Errorf("activity preparation is not ready: %w", err)
-		}
-		if executable := execution.Preparation.Executable; executable != nil {
-			execution.Activity.Command.ResolvedExecutable = &domain.ResolvedExecutable{
-				VariantID: executable.VariantID, Digest: executable.Digest, LocalPath: executable.DestinationPath,
-				EnvironmentID: executable.EnvironmentID, ResourceID: executable.ResourceID,
-				MaterializationID: executable.ID, MaterializationDone: executable.Committed(),
-			}
-		}
-		if workspace := execution.Preparation.Workspace; workspace != nil && execution.Activity.Command.WorkingDirectory == "" {
-			if destination, parseErr := url.Parse(workspace.Destination.URI); parseErr == nil && destination.Path != "" {
-				execution.Activity.Command.WorkingDirectory = destination.Path
-			}
-		}
+	if err := prepareActivityCommand(&execution); err != nil {
+		return domain.ActivityHandle{}, err
 	}
 	capability, err := capabilityFor(execution.Run.Mode)
 	if err != nil {
@@ -143,27 +129,7 @@ func (s *Controller) Inspect(ctx context.Context, handleID string, mode domain.E
 		return s.persistInspectionFailure(ctx, handle, err)
 	}
 	updated.Log = mergeLogs(handle.Log, updated.Log)
-	if len(updated.Metrics) > 0 {
-		if metrics, ok := s.handles.(interface {
-			SaveActivityMetrics(context.Context, []domain.ActivityMetricSample) error
-		}); ok {
-			if metricErr := metrics.SaveActivityMetrics(ctx, updated.Metrics); metricErr != nil {
-				if updated.Metadata == nil {
-					updated.Metadata = make(map[string]any)
-				}
-				// Keep the previous cursor so the next inspection retries the
-				// same file rows instead of silently losing observations.
-				if previous, exists := handle.Metadata["metricsSampleCount"]; exists {
-					updated.Metadata["metricsSampleCount"] = previous
-				} else {
-					delete(updated.Metadata, "metricsSampleCount")
-				}
-				updated.Metadata["metricCollectionError"] = metricErr.Error()
-			} else {
-				delete(updated.Metadata, "metricCollectionError")
-			}
-		}
-	}
+	s.saveInspectionMetrics(ctx, handle, &updated)
 	if updated.Status != handle.Status {
 		switch updated.Status {
 		case domain.HandleCompleted:
@@ -206,6 +172,52 @@ func (s *Controller) Inspect(ctx context.Context, handleID string, mode domain.E
 		}
 	}
 	return &updated, nil
+}
+
+func prepareActivityCommand(execution *domain.ActivityExecutionContext) error {
+	if execution.Preparation == nil {
+		return nil
+	}
+	if err := execution.Preparation.Ready(); err != nil {
+		return fmt.Errorf("activity preparation is not ready: %w", err)
+	}
+	if executable := execution.Preparation.Executable; executable != nil {
+		execution.Activity.Command.ResolvedExecutable = &domain.ResolvedExecutable{
+			VariantID: executable.VariantID, Digest: executable.Digest,
+			LocalPath: executable.DestinationPath, EnvironmentID: executable.EnvironmentID,
+			ResourceID: executable.ResourceID, MaterializationID: executable.ID,
+			MaterializationDone: executable.Committed(),
+		}
+	}
+	if workspace := execution.Preparation.Workspace; workspace != nil && execution.Activity.Command.WorkingDirectory == "" {
+		if destination, err := url.Parse(workspace.Destination.URI); err == nil && destination.Path != "" {
+			execution.Activity.Command.WorkingDirectory = destination.Path
+		}
+	}
+	return nil
+}
+
+func (s *Controller) saveInspectionMetrics(ctx context.Context, previous *domain.ActivityHandle, updated *domain.ActivityHandle) {
+	metrics, ok := s.handles.(interface {
+		SaveActivityMetrics(context.Context, []domain.ActivityMetricSample) error
+	})
+	if !ok || len(updated.Metrics) == 0 {
+		return
+	}
+	if err := metrics.SaveActivityMetrics(ctx, updated.Metrics); err != nil {
+		if updated.Metadata == nil {
+			updated.Metadata = make(map[string]any)
+		}
+		// Preserve the cursor so the next inspection retries the same rows.
+		if cursor, exists := previous.Metadata["metricsSampleCount"]; exists {
+			updated.Metadata["metricsSampleCount"] = cursor
+		} else {
+			delete(updated.Metadata, "metricsSampleCount")
+		}
+		updated.Metadata["metricCollectionError"] = err.Error()
+	} else {
+		delete(updated.Metadata, "metricCollectionError")
+	}
 }
 
 func (s *Controller) persistInspectionFailure(ctx context.Context, handle *domain.ActivityHandle, err error) (*domain.ActivityHandle, error) {

@@ -74,7 +74,19 @@ func compare(observed, simulated Object, role string, model Object) Object {
 		if canonical != strategy {
 			mismatch++
 		}
-		resultRows = append(resultRows, Object{"producer": producer, "consumer": consumer, "observedStrategy": canonical, "executorStrategy": r["strategy"], "predictedStrategy": strategy, "observedNetworkBytes": num(r["network_bytes"]), "predictedNetworkBytes": network, "observedDependencyPhaseSeconds": service, "predictedDependencySeconds": duration, "durationErrorPercent": percent, "predictedServiceWaitSeconds": wait})
+		resultRows = append(resultRows, Object{
+			"producer":                       producer,
+			"consumer":                       consumer,
+			"observedStrategy":               canonical,
+			"executorStrategy":               r["strategy"],
+			"predictedStrategy":              strategy,
+			"observedNetworkBytes":           num(r["network_bytes"]),
+			"predictedNetworkBytes":          network,
+			"observedDependencyPhaseSeconds": service,
+			"predictedDependencySeconds":     duration,
+			"durationErrorPercent":           percent,
+			"predictedServiceWaitSeconds":    wait,
+		})
 	}
 	makespan, real := num(get(obj(get(simulated, "executed")), "makespanSeconds")), num(get(obj(get(observed, "real_api_reported")), "makespanSeconds"))
 	percent := errorPercent(makespan, real)
@@ -90,7 +102,30 @@ func compare(observed, simulated Object, role string, model Object) Object {
 	if role == "calibration-fit-not-independent-validation" {
 		limitation = "This comparison reuses calibration data and is not independent validation."
 	}
-	return Object{"schemaVersion": 1, "comparisonRole": role, "observedRunId": get(observed, "run_id"), "modelSource": get(model, "source"), "simulatedMakespanSeconds": makespan, "observedMakespanSeconds": real, "makespanErrorPercent": percent, "withinInitialMakespanTolerance": percent != nil && math.Abs(num(percent)) <= 20, "predictedNetworkBytes": predBytes, "observedNetworkBytes": realBytes, "networkBytesErrorPercent": errorPercent(predBytes, realBytes), "routeMismatchCount": mismatch, "dominantTransfers": dominant, "dependencies": resultRows, "accepted": false, "limitations": list("Makespan tolerance alone is insufficient; dominant transfer residuals must also be reviewed.", "Historical receiver phases may include unseparated queues; destination bulk pools must remain disabled until service is separately identified.", "No summed parallel phase durations are treated as makespan.", "Compute, ordering and provisioning assumptions retained from the frozen original request.", limitation)}
+	return Object{
+		"schemaVersion":                  1,
+		"comparisonRole":                 role,
+		"observedRunId":                  get(observed, "run_id"),
+		"modelSource":                    get(model, "source"),
+		"simulatedMakespanSeconds":       makespan,
+		"observedMakespanSeconds":        real,
+		"makespanErrorPercent":           percent,
+		"withinInitialMakespanTolerance": percent != nil && math.Abs(num(percent)) <= 20,
+		"predictedNetworkBytes":          predBytes,
+		"observedNetworkBytes":           realBytes,
+		"networkBytesErrorPercent":       errorPercent(predBytes, realBytes),
+		"routeMismatchCount":             mismatch,
+		"dominantTransfers":              dominant,
+		"dependencies":                   resultRows,
+		"accepted":                       false,
+		"limitations": list(
+			"Makespan tolerance alone is insufficient; dominant transfer residuals must also be reviewed.",
+			"Historical receiver phases may include unseparated queues; destination bulk pools must remain disabled until service is separately identified.",
+			"No summed parallel phase durations are treated as makespan.",
+			"Compute, ordering and provisioning assumptions retained from the frozen original request.",
+			limitation,
+		),
+	}
 }
 func sourceCapacity(diagnostic Object, sourceID, targetClass string) Object {
 	intervals := []Object{}
@@ -149,7 +184,16 @@ func sourceCapacity(diagnostic Object, sourceID, targetClass string) Object {
 			break
 		}
 	}
-	return Object{"samples": len(intervals), "busySeconds": total, "concurrentCommandsMaximum": maximum, "durationWeightedMedianBytesPerSecond": median, "minimumBytesPerSecond": windows[0]["bytesPerSecond"], "maximumBytesPerSecond": windows[len(windows)-1]["bytesPerSecond"], "interpretation": "Aggregate source pack/ingress service, NOT NIC bandwidth; assumes uniform byte progress within each queue-free command.", "limitations": list("Small auxiliary diagnostic sample; capacity is conditioned on workload and concurrent source work.", "Admission queue excluded from command intervals.")}
+	return Object{
+		"samples":                              len(intervals),
+		"busySeconds":                          total,
+		"concurrentCommandsMaximum":            maximum,
+		"durationWeightedMedianBytesPerSecond": median,
+		"minimumBytesPerSecond":                windows[0]["bytesPerSecond"],
+		"maximumBytesPerSecond":                windows[len(windows)-1]["bytesPerSecond"],
+		"interpretation":                       "Aggregate source pack/ingress service, NOT NIC bandwidth; assumes uniform byte progress within each queue-free command.",
+		"limitations":                          list("Small auxiliary diagnostic sample; capacity is conditioned on workload and concurrent source work.", "Admission queue excluded from command intervals."),
+	}
 }
 func applyCapacity(request Object, source string, capacity Object) Object {
 	r := clone(request)
@@ -203,7 +247,13 @@ func supplementSource(c, diagnostic Object, d string) Object {
 		if resourceClass(str(r["sourceResourceId"])) != "hpc" || resourceClass(str(r["targetResourceId"])) != "e2-micro" {
 			continue
 		}
-		samples = append(samples, Object{"seconds": r["sourcePackExecutionSeconds"], "archiveBytes": r["archiveBytes"], "workspaceBytes": snapshots[str(r["producerActivityId"])], "wait": num(r["sourcePackSshChannelWaitSeconds"]), "preflight": r["sourcePackPreflightServiceSeconds"]})
+		samples = append(samples, Object{
+			"seconds":        r["sourcePackExecutionSeconds"],
+			"archiveBytes":   r["archiveBytes"],
+			"workspaceBytes": snapshots[str(r["producerActivityId"])],
+			"wait":           num(r["sourcePackSshChannelWaitSeconds"]),
+			"preflight":      r["sourcePackPreflightServiceSeconds"],
+		})
 	}
 	check(len(samples) > 0, "No successful separately measured source service")
 	updated := clone(c)
@@ -221,7 +271,13 @@ func supplementSource(c, diagnostic Object, d string) Object {
 	phase["pooledWorkspaceServiceRate"] = pooledRate(samples, "workspaceBytes")
 	phase["sourceChannelWaitSeconds"] = summary(vals(samples, "wait"))
 	phase["sourcePreflightServiceSeconds"] = summary(vals(samples, "preflight"))
-	evidence := Object{"runId": get(obj(get(diagnostic, "run")), "id"), "sha256": d, "completedTransferSamples": len(samples), "role": "completed commands from interrupted diagnostic; not independent validation", "queueNotAddedToService": true}
+	evidence := Object{
+		"runId":                    get(obj(get(diagnostic, "run")), "id"),
+		"sha256":                   d,
+		"completedTransferSamples": len(samples),
+		"role":                     "completed commands from interrupted diagnostic; not independent validation",
+		"queueNotAddedToService":   true,
+	}
 	updated["auxiliarySourceServiceEvidence"] = evidence
 	merges := []Object{}
 	for _, g := range groups(completed, "consumerActivityId") {
@@ -253,7 +309,13 @@ func supplementSource(c, diagnostic Object, d string) Object {
 		if total <= 0 || unique <= 0 {
 			continue
 		}
-		merges = append(merges, Object{"checkSecondsPerInputByte": num(get(r, "mergeCheckSeconds")) / total, "copySecondsPerUniqueByte": num(get(r, "mergeCopySeconds")) / unique, "verifySecondsPerUniqueByte": num(get(r, "mergeVerifySeconds")) / unique, "overhead": r["mergeCommandOverheadSeconds"], "wait": r["mergeSshChannelWaitSeconds"]})
+		merges = append(merges, Object{
+			"checkSecondsPerInputByte":   num(get(r, "mergeCheckSeconds")) / total,
+			"copySecondsPerUniqueByte":   num(get(r, "mergeCopySeconds")) / unique,
+			"verifySecondsPerUniqueByte": num(get(r, "mergeVerifySeconds")) / unique,
+			"overhead":                   r["mergeCommandOverheadSeconds"],
+			"wait":                       r["mergeSshChannelWaitSeconds"],
+		})
 	}
 	check(len(merges) > 0, "Queue-free auxiliary HPC merge service missing")
 	var merge Object

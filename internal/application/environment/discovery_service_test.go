@@ -141,9 +141,25 @@ func TestDiscoveryMaterializesSlurmNodesAndPartitionRelations(t *testing.T) {
 }
 
 func TestDiscoveryMaterializesPartitionsReportedBySlurm(t *testing.T) {
-	definition := domain.EnvironmentDefinition{Version: domain.EnvironmentVersion{ID: "env-v1"}, Connections: []domain.EnvironmentConnection{{ID: "hpc", Type: domain.ConnectionSSH}}, Runtimes: []domain.EnvironmentRuntime{{ID: "slurm", Configuration: map[string]any{"connectionId": "hpc"}}}, Resources: []domain.Resource{{ID: "cluster", Type: domain.ResourceCluster, ProviderID: "cluster"}}, RuntimeBindings: []domain.ResourceRuntimeBinding{{ResourceID: "cluster", RuntimeID: "slurm", Enabled: true}}}
+	definition := domain.EnvironmentDefinition{
+		Version:         domain.EnvironmentVersion{ID: "env-v1"},
+		Connections:     []domain.EnvironmentConnection{{ID: "hpc", Type: domain.ConnectionSSH}},
+		Runtimes:        []domain.EnvironmentRuntime{{ID: "slurm", Configuration: map[string]any{"connectionId": "hpc"}}},
+		Resources:       []domain.Resource{{ID: "cluster", Type: domain.ResourceCluster, ProviderID: "cluster"}},
+		RuntimeBindings: []domain.ResourceRuntimeBinding{{ResourceID: "cluster", RuntimeID: "slurm", Enabled: true}},
+	}
 	inventory := &discoveryInventory{}
-	coordinator := NewDiscoveryCoordinator(discoveryCatalog{definition: definition}, inventory, map[domain.ConnectionType]ports.ConnectionDiscoverer{domain.ConnectionSSH: connectionDiscovererStub{observation: ports.ConnectionDiscovery{Available: true, LoginNode: &ports.DiscoveredLoginNode{Name: "login"}, Metadata: map[string]any{"partitions": []map[string]any{{"name": "cpu", "cpuCoresPerNode": int64(64), "memoryMiBPerNode": int64(256)}}}}}})
+	coordinator := NewDiscoveryCoordinator(discoveryCatalog{
+		definition: definition,
+	}, inventory, map[domain.ConnectionType]ports.ConnectionDiscoverer{
+		domain.ConnectionSSH: connectionDiscovererStub{
+			observation: ports.ConnectionDiscovery{
+				Available: true,
+				LoginNode: &ports.DiscoveredLoginNode{Name: "login"},
+				Metadata:  map[string]any{"partitions": []map[string]any{{"name": "cpu", "cpuCoresPerNode": int64(64), "memoryMiBPerNode": int64(256)}}},
+			},
+		},
+	})
 	if _, err := coordinator.DiscoverConnection(context.Background(), "hpc"); err != nil {
 		t.Fatal(err)
 	}

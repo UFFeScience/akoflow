@@ -18,7 +18,14 @@ func TestPreparedHoldoutIsSimulationOnlyAndTopologicallySerialized(t *testing.T)
 	rows(r["Resources"])[0]["computeSpeedup"] = 1
 	r["ActivityProfiles"] = []any{Object{"id": "measured", "activityTypeId": "fixture", "resourceId": rid, "runtimeSeconds": 1, "modelVersion": "reference-work-v1", "sampleSize": 1}}
 	p := Object{"targetClass": "e2-micro", "source": "fixture", "samples": 1}
-	cal := Object{"NetworkTopology": Object{"metadata": Object{"runtimeStageCalibration": Object{"targetClass": "e2-micro", "fixedLaunchAndRuntimeOverheadSeconds": 2}, "workspaceMaterializationModel": Object{"mergeProfiles": []any{p}, "inputObservationProfiles": []any{p}, "publicationProfiles": []any{p}}}}}
+	cal := Object{
+		"NetworkTopology": Object{
+			"metadata": Object{
+				"runtimeStageCalibration":       Object{"targetClass": "e2-micro", "fixedLaunchAndRuntimeOverheadSeconds": 2},
+				"workspaceMaterializationModel": Object{"mergeProfiles": []any{p}, "inputObservationProfiles": []any{p}, "publicationProfiles": []any{p}},
+			},
+		},
+	}
 	out := prepareClassHoldout(r, cal, rid, "montage-holdout-sim", "montage-holdout-plan")
 	require.Equal(t, "simulation", obj(out["Run"])["mode"])
 	require.Equal(t, false, obj(obj(out["Plan"])["metadata"])["realExecutionAuthorized"])

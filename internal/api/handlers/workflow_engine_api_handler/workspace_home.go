@@ -45,35 +45,9 @@ func (h *Handler) resolveWorkspaceHomes(ctx context.Context, request *ports.Exec
 		if definition == nil || definition.Version.ID != resource.EnvironmentVersionID {
 			continue
 		}
-		isSlurm := false
-		for _, runtime := range definition.Runtimes {
-			if runtime.Driver == domain.RuntimeDriverSlurm {
-				isSlurm = true
-			}
-		}
-		if !isSlurm {
-			continue
-		}
-		home, homeStorageID := "", ""
-		for _, storage := range definition.Storages {
-			id, _ := storage.Metadata["connectionId"].(string)
-			if id != connectionID {
-				continue
-			}
-			roots, _ := storage.Configuration["browseRoots"].([]any)
-			for _, raw := range roots {
-				root, _ := raw.(map[string]any)
-				label, _ := root["label"].(string)
-				candidate, _ := root["path"].(string)
-				if label != "home" || !path.IsAbs(candidate) || candidate == "/" || candidate != storage.Endpoint {
-					continue
-				}
-				if home != "" && home != candidate {
-					return fmt.Errorf("ambiguous discovered home for connection %q", connectionID)
-				}
-				home = candidate
-				homeStorageID = storage.ID
-			}
+		home, homeStorageID, err := discoveredWorkspaceHome(definition, connectionID)
+		if err != nil {
+			return err
 		}
 		if home != "" {
 			metadata := make(map[string]any, len(resource.Metadata)+1)
@@ -96,4 +70,37 @@ func (h *Handler) resolveWorkspaceHomes(ctx context.Context, request *ports.Exec
 		}
 	}
 	return nil
+}
+
+// A home is eligible only when the same catalog connection discovers a Slurm
+// runtime and an absolute home browse root matching its storage endpoint.
+func discoveredWorkspaceHome(definition *domain.EnvironmentDefinition, connectionID string) (string, string, error) {
+	isSlurm := false
+	for _, runtime := range definition.Runtimes {
+		isSlurm = isSlurm || runtime.Driver == domain.RuntimeDriverSlurm
+	}
+	if !isSlurm {
+		return "", "", nil
+	}
+	home, storageID := "", ""
+	for _, storage := range definition.Storages {
+		id, _ := storage.Metadata["connectionId"].(string)
+		if id != connectionID {
+			continue
+		}
+		roots, _ := storage.Configuration["browseRoots"].([]any)
+		for _, raw := range roots {
+			root, _ := raw.(map[string]any)
+			label, _ := root["label"].(string)
+			candidate, _ := root["path"].(string)
+			if label != "home" || !path.IsAbs(candidate) || candidate == "/" || candidate != storage.Endpoint {
+				continue
+			}
+			if home != "" && home != candidate {
+				return "", "", fmt.Errorf("ambiguous discovered home for connection %q", connectionID)
+			}
+			home, storageID = candidate, storage.ID
+		}
+	}
+	return home, storageID, nil
 }

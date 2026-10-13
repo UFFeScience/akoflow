@@ -55,10 +55,30 @@ func publicationReference(real Object, referenceDigest string) Object {
 		wall := at - observed
 		totalSeconds += wall
 		totalBytes += scanBytes
-		observations = append(observations, Object{"activityId": task["activityId"], "targetClass": resourceClass(str(get(handle, "resourceId"))), "terminalScanBytes": scanBytes, "publicationCleanupBytes": cleanup[str(task["activityId"])], "publicationWallSeconds": wall, "pollDelayExcludedSeconds": observed - num(get(handle, "finishedAt"))})
+		observations = append(observations, Object{
+			"activityId":               task["activityId"],
+			"targetClass":              resourceClass(str(get(handle, "resourceId"))),
+			"terminalScanBytes":        scanBytes,
+			"publicationCleanupBytes":  cleanup[str(task["activityId"])],
+			"publicationWallSeconds":   wall,
+			"pollDelayExcludedSeconds": observed - num(get(handle, "finishedAt")),
+		})
 	}
 	check(len(observations) > 0, "no publication observations")
-	return Object{"runId": obj(real["run"])["id"], "referenceSHA256": referenceDigest, "role": "publication-wall-reference-not-queue-free-service-fit", "samples": len(observations), "weightedWallSecondsPerScanByte": totalSeconds / totalBytes, "summedWorkSecondsNotMakespan": totalSeconds, "observations": observations, "limitations": list("Includes observation SSH transport, sealing, pruning and scheduling between terminal observation and completion event.", "Excludes initial polling delay but does not prove zero admission wait.", "Recovered reference is not independent validation; no global makespan multiplier is applied.")}
+	return Object{
+		"runId":                          obj(real["run"])["id"],
+		"referenceSHA256":                referenceDigest,
+		"role":                           "publication-wall-reference-not-queue-free-service-fit",
+		"samples":                        len(observations),
+		"weightedWallSecondsPerScanByte": totalSeconds / totalBytes,
+		"summedWorkSecondsNotMakespan":   totalSeconds,
+		"observations":                   observations,
+		"limitations": list(
+			"Includes observation SSH transport, sealing, pruning and scheduling between terminal observation and completion event.",
+			"Excludes initial polling delay but does not prove zero admission wait.",
+			"Recovered reference is not independent validation; no global makespan multiplier is applied.",
+		),
+	}
 }
 
 func combinedObservationSensitivity(request, real Object, digest string) Object {

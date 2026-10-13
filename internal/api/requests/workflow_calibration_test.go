@@ -8,7 +8,13 @@ import (
 
 func TestWorkflowCalibrationFamiliesAndProjectionSurvivePortableRoundTrip(t *testing.T) {
 	request := Workflow{Name: "Measured Montage", Spec: WorkflowSpec{Namespace: "experiment", Activities: []WorkflowActivity{
-		{Name: "project", ActivityType: "mproject", Simulation: &domain.ActivitySimulation{DurationSeconds: 100}, Metadata: map[string]any{"workspaceProjection": map[string]any{"contract": "whole-workspace-v1"}, "workspaceProjectionVolumes": "stale", "workspaceSeedPath": "untrusted"}, WorkspaceSeedPath: "verified"},
+		{
+			Name:              "project",
+			ActivityType:      "mproject",
+			Simulation:        &domain.ActivitySimulation{DurationSeconds: 100},
+			Metadata:          map[string]any{"workspaceProjection": map[string]any{"contract": "whole-workspace-v1"}, "workspaceProjectionVolumes": "stale", "workspaceSeedPath": "untrusted"},
+			WorkspaceSeedPath: "verified",
+		},
 		{Name: "diff", ActivityType: "mdifffit", Simulation: &domain.ActivitySimulation{DurationSeconds: 10}, DependsOn: []string{"project"}},
 	}}}
 	definition, err := request.Domain()

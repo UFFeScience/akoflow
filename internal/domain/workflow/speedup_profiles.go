@@ -50,9 +50,27 @@ func CompleteSpeedupProfiles(activities []Activity, resources []resource.Resourc
 			if !valid(seconds) {
 				return nil, fmt.Errorf("invalid speedup estimate: %s", key)
 			}
-			out = append(out, ActivityResourceProfile{ID: "speedup-estimate-" + a.ActivityTypeID + "-" + r.ID, ActivityTypeID: a.ActivityTypeID, ResourceID: r.ID, RuntimeSeconds: seconds, ModelVersion: d.ModelVersion, Source: "speedup-estimate-v1:" + d.ID, Metadata: map[string]any{
-				"estimated": true, "calibrationStatus": "extrapolated-not-measured", "donorProfileId": d.ID, "donorSource": d.Source, "donorSampleSize": d.SampleSize, "sourceSpeedup": sourceSpeed, "targetSpeedup": r.ComputeSpeedup, "formula": "donorSecondsPerWorkUnit * sourceSpeedup / targetSpeedup",
-			}})
+			out = append(
+				out,
+				ActivityResourceProfile{
+					ID:             "speedup-estimate-" + a.ActivityTypeID + "-" + r.ID,
+					ActivityTypeID: a.ActivityTypeID,
+					ResourceID:     r.ID,
+					RuntimeSeconds: seconds,
+					ModelVersion:   d.ModelVersion,
+					Source:         "speedup-estimate-v1:" + d.ID,
+					Metadata: map[string]any{
+						"estimated":         true,
+						"calibrationStatus": "extrapolated-not-measured",
+						"donorProfileId":    d.ID,
+						"donorSource":       d.Source,
+						"donorSampleSize":   d.SampleSize,
+						"sourceSpeedup":     sourceSpeed,
+						"targetSpeedup":     r.ComputeSpeedup,
+						"formula":           "donorSecondsPerWorkUnit * sourceSpeedup / targetSpeedup",
+					},
+				},
+			)
 			pairs[key] = true
 		}
 	}

@@ -415,7 +415,17 @@ func prepareDirectCredential(ctx context.Context, source, destination domain.Tra
 
 func scopedDirectAuthorizedKey(publicKey []byte, token, forcedCommand string, expires time.Time) (string, error) {
 	key, _, _, rest, err := ssh.ParseAuthorizedKey(publicKey)
-	if err != nil || key.Type() != "ssh-ed25519" || len(strings.TrimSpace(string(rest))) != 0 || strings.TrimSpace(forcedCommand) == "" || token == "" || strings.ContainsAny(forcedCommand, "\r\n\x00") || strings.ContainsAny(token, " \t\r\n\x00") {
+	if err != nil || key.Type() != "ssh-ed25519" || len(
+		strings.TrimSpace(string(rest)),
+	) != 0 || strings.TrimSpace(
+		forcedCommand,
+	) == "" || token == "" || strings.ContainsAny(
+		forcedCommand,
+		"\r\n\x00",
+	) || strings.ContainsAny(
+		token,
+		" \t\r\n\x00",
+	) {
 		return "", fmt.Errorf("invalid scoped direct transfer authorization")
 	}
 	return "restrict,command=" + strconv.Quote(forcedCommand) + ",expiry-time=" + strconv.Quote(expires.UTC().Format("20060102150405Z")) + " " + strings.TrimSpace(string(ssh.MarshalAuthorizedKey(key))) + " " + token, nil

@@ -222,7 +222,19 @@ func (a QueuedCloudAllocator) findOrCreate(ctx context.Context, executionRunID, 
 	if kind == "provision" && instanceID == "" {
 		instanceID = "cloud-instance-" + uuid.NewString()
 	}
-	operation := domain.CloudOperationRun{ID: "cloud-run-" + uuid.NewString(), Kind: kind, Status: "queued", Phase: "queued", EnvironmentID: target.EnvironmentID, CapacityTargetID: target.ID, InstanceID: instanceID, ExecutionRunID: executionRunID, ActivityID: activityID, Request: domain.CloudProvisionRequest{CapacityTargetID: target.ID, InstanceID: instanceID}, CreatedAt: time.Now().UTC()}
+	operation := domain.CloudOperationRun{
+		ID:               "cloud-run-" + uuid.NewString(),
+		Kind:             kind,
+		Status:           "queued",
+		Phase:            "queued",
+		EnvironmentID:    target.EnvironmentID,
+		CapacityTargetID: target.ID,
+		InstanceID:       instanceID,
+		ExecutionRunID:   executionRunID,
+		ActivityID:       activityID,
+		Request:          domain.CloudProvisionRequest{CapacityTargetID: target.ID, InstanceID: instanceID},
+		CreatedAt:        time.Now().UTC(),
+	}
 	if err := a.Operations.CreateCloudOperation(ctx, operation); err != nil {
 		return domain.CloudOperationRun{}, err
 	}
@@ -300,7 +312,18 @@ func (a QueuedCloudAllocator) Release(ctx context.Context, executionRunID string
 		if kind == "" {
 			continue
 		}
-		operation := domain.CloudOperationRun{ID: "cloud-run-" + uuid.NewString(), Kind: kind, Status: "queued", Phase: "queued", EnvironmentID: instance.EnvironmentID, CapacityTargetID: instance.CapacityTargetID, InstanceID: instance.ID, ExecutionRunID: executionRunID, ActivityID: activityID, CreatedAt: time.Now().UTC()}
+		operation := domain.CloudOperationRun{
+			ID:               "cloud-run-" + uuid.NewString(),
+			Kind:             kind,
+			Status:           "queued",
+			Phase:            "queued",
+			EnvironmentID:    instance.EnvironmentID,
+			CapacityTargetID: instance.CapacityTargetID,
+			InstanceID:       instance.ID,
+			ExecutionRunID:   executionRunID,
+			ActivityID:       activityID,
+			CreatedAt:        time.Now().UTC(),
+		}
 		if err := a.Operations.CreateCloudOperation(ctx, operation); err != nil {
 			return err
 		}

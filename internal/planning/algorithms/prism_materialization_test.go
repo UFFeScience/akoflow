@@ -19,7 +19,19 @@ func TestPRISMMaterializationMatchesNativeMixedOriginBarrier(t *testing.T) {
 		},
 		Profiles: []materializationmodel.Profile{
 			{Strategy: "direct-runtime", SourceClass: "micro", TargetClass: "micro", Source: "fixture", Samples: 1, ArchiveToWorkspaceRatio: 1, UploadArchiveBytesPerSecond: 100},
-			{Strategy: "gateway", SourceClass: "hpc", TargetClass: "micro", Source: "fixture", Samples: 1, ArchiveToWorkspaceRatio: 1, IngressArchiveBytesPerSecond: 100, UploadArchiveBytesPerSecond: 100, IngressIncludesSourcePreparation: true, ValidationSecondsPerByte: .01, ReceiverSecondsPerByte: .02},
+			{
+				Strategy:                         "gateway",
+				SourceClass:                      "hpc",
+				TargetClass:                      "micro",
+				Source:                           "fixture",
+				Samples:                          1,
+				ArchiveToWorkspaceRatio:          1,
+				IngressArchiveBytesPerSecond:     100,
+				UploadArchiveBytesPerSecond:      100,
+				IngressIncludesSourcePreparation: true,
+				ValidationSecondsPerByte:         .01,
+				ReceiverSecondsPerByte:           .02,
+			},
 		}, MergeProfiles: []materializationmodel.MergeProfile{{TargetClass: "micro", Source: "fixture", Samples: 1, CheckSecondsPerInputByte: .01}},
 	}
 	activities := []domain.Activity{planningActivity("a", 1), planningActivity("c", 5), planningActivity("b", 1)}
@@ -37,7 +49,14 @@ func TestPRISMMaterializationMatchesNativeMixedOriginBarrier(t *testing.T) {
 		NetworkTopology: domain.NetworkTopology{Metadata: map[string]any{"workspaceMaterializationModel": model}},
 	}
 	for index, pair := range [][2]string{{"peer", "target"}, {"hpc", "relay"}, {"relay", "target"}} {
-		request.NetworkTopology.Links = append(request.NetworkTopology.Links, domain.NetworkLink{ID: string(rune('a' + index)), SourceResourceID: pair[0], TargetResourceID: pair[1], BandwidthBitsPerSecond: 8e9, SharingPolicy: "SHARED", PricePerByte: .001})
+		request.NetworkTopology.Links = append(request.NetworkTopology.Links, domain.NetworkLink{
+			ID:                     string(rune('a' + index)),
+			SourceResourceID:       pair[0],
+			TargetResourceID:       pair[1],
+			BandwidthBitsPerSecond: 8e9,
+			SharingPolicy:          "SHARED",
+			PricePerByte:           .001,
+		})
 	}
 	search, err := newCompactPRISMContext(request, nil)
 	if err != nil {

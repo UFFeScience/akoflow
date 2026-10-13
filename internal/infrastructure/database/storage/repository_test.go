@@ -26,7 +26,10 @@ func testRepository(t *testing.T) *Repository {
 	statements := []string{
 		`INSERT INTO environments(id,name) VALUES('environment','Environment')`,
 		`INSERT INTO environment_versions(id,environment_id,version,status,network_model,interference_model,cost_model,configuration_hash) VALUES('version','environment',1,'published','{}','{}','{}','hash')`,
-		`INSERT INTO storage_resources(id,environment_version_id,name,type,endpoint,capacity_bytes,shared,read_only,configuration,credential_reference,metadata) VALUES('storage','version','Results','local','/data',1000,1,0,'{"browseRoots":[{"path":"/data","label":"Data"}],"indexPolicy":{"enabled":true,"maxDepth":3}}','credential','{"owner":"lab"}')`,
+		("INSERT INTO storage_resources(id,environment_version_id,name,type,endpoint,capacity_bytes,shared,rea" +
+			"d_only,configuration,credential_reference,metadata) VALUES('storage','version','Results','local','/d" +
+			"ata',1000,1,0,'{\"browseRoots\":[{\"path\":\"/data\",\"label\":\"Data\"}],\"indexPolicy\":{\"enabled\":true,\"maxDe" +
+			"pth\":3}}','credential','{\"owner\":\"lab\"}')"),
 	}
 	for _, statement := range statements {
 		if _, err = db.Exec(statement); err != nil {
@@ -121,7 +124,11 @@ func TestRepositoryPromotesDataTransactionally(t *testing.T) {
 		t.Fatal(err)
 	}
 	var objectID, checksum, uri string
-	if err := repository.db.QueryRow(`SELECT d.id,i.checksum,l.uri FROM data_objects d JOIN data_object_instances i ON i.data_object_id=d.id JOIN data_locations l ON l.data_object_instance_id=i.id`).Scan(&objectID, &checksum, &uri); err != nil {
+	if err := repository.db.QueryRow(`SELECT d.id,i.checksum,l.uri FROM data_objects d JOIN data_object_instances i ON i.data_object_id=d.id JOIN data_locations l ON l.data_object_instance_id=i.id`).Scan(
+		&objectID,
+		&checksum,
+		&uri,
+	); err != nil {
 		t.Fatal(err)
 	}
 	if objectID != "data-"+strings.Repeat("a", 64) || checksum != digest || uri != "storage://storage//data/result.txt" {

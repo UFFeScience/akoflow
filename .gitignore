@@ -1,4 +1,5 @@
 db.sqlite
+/server
 storage/database.sqlite
 storage/*
 */.DS_Store

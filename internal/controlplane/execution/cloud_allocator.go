@@ -189,15 +189,7 @@ func (a QueuedCloudAllocator) findOrCreate(ctx context.Context, executionRunID, 
 	}
 	// Start/validation idempotency is scoped to a stop/start cycle, not the
 	// lifetime of the workflow. A completed start before a later stop is history.
-	var cycle domain.CloudOperationRun
-	if kind == "start" || kind == "validate" {
-		for _, candidate := range operations {
-			if candidate.Kind == "stop" && candidate.Status == "completed" && candidate.InstanceID == instanceID &&
-				(cycle.ID == "" || candidate.CreatedAt.After(cycle.CreatedAt)) {
-				cycle = candidate
-			}
-		}
-	}
+	cycle := cloudAllocationCycle(operations, kind, instanceID)
 	// Several ready activities can share one capacity target. Reuse its
 	// infrastructure operation so each activity does not request another VM.
 	for _, operation := range operations {
@@ -270,6 +262,20 @@ func (a QueuedCloudAllocator) findOrCreate(ctx context.Context, executionRunID, 
 		return operation, err
 	}
 	return operation, nil
+}
+
+func cloudAllocationCycle(operations []domain.CloudOperationRun, kind, instanceID string) domain.CloudOperationRun {
+	var cycle domain.CloudOperationRun
+	if kind != "start" && kind != "validate" {
+		return cycle
+	}
+	for _, candidate := range operations {
+		if candidate.Kind == "stop" && candidate.Status == "completed" && candidate.InstanceID == instanceID &&
+			(cycle.ID == "" || candidate.CreatedAt.After(cycle.CreatedAt)) {
+			cycle = candidate
+		}
+	}
+	return cycle
 }
 
 func (a QueuedCloudAllocator) Release(ctx context.Context, executionRunID string, allocations map[string]domain.RuntimeAllocation, failed bool) error {

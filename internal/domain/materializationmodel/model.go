@@ -184,6 +184,39 @@ func (m Model) Validate() error {
 			return fmt.Errorf("bulk service resource %q lacks group identity", id)
 		}
 	}
+	if err := m.validateTransferProfiles(); err != nil {
+		return err
+	}
+	seen := map[string]bool{}
+	for _, profile := range m.MergeProfiles {
+		if seen[profile.TargetClass] || profile.TargetClass == "" || profile.Source == "" || profile.Samples < 1 || !validNonnegative(
+			profile.CommandOverheadSeconds,
+			profile.CheckSecondsPerInputByte,
+			profile.CopySecondsPerUniqueByte,
+			profile.VerifySecondsPerUniqueByte,
+		) {
+			return fmt.Errorf("invalid or duplicate merge profile %q", profile.TargetClass)
+		}
+		seen[profile.TargetClass] = true
+	}
+	seen = map[string]bool{}
+	for _, p := range m.InputObservationProfiles {
+		if p.TargetClass == "" || p.Source == "" || p.Samples < 1 || seen[p.TargetClass] || !validNonnegative(p.FixedSeconds, p.SecondsPerUniqueByte) {
+			return fmt.Errorf("invalid input observation profile %q", p.TargetClass)
+		}
+		seen[p.TargetClass] = true
+	}
+	seen = map[string]bool{}
+	for _, p := range m.PublicationProfiles {
+		if p.TargetClass == "" || p.Source == "" || p.Samples < 1 || seen[p.TargetClass] || !validNonnegative(p.FixedSeconds, p.ScanSecondsPerWorkspaceByte, p.CleanupSecondsPerInputByte) {
+			return fmt.Errorf("invalid publication profile %q", p.TargetClass)
+		}
+		seen[p.TargetClass] = true
+	}
+	return m.validateAdmissionProfiles()
+}
+
+func (m Model) validateTransferProfiles() error {
 	seen := map[string]bool{}
 	for _, profile := range m.Profiles {
 		key := profile.Strategy + "\x00" + profile.SourceClass + "\x00" + profile.TargetClass
@@ -221,33 +254,7 @@ func (m Model) Validate() error {
 			}
 		}
 	}
-	seen = map[string]bool{}
-	for _, profile := range m.MergeProfiles {
-		if seen[profile.TargetClass] || profile.TargetClass == "" || profile.Source == "" || profile.Samples < 1 || !validNonnegative(
-			profile.CommandOverheadSeconds,
-			profile.CheckSecondsPerInputByte,
-			profile.CopySecondsPerUniqueByte,
-			profile.VerifySecondsPerUniqueByte,
-		) {
-			return fmt.Errorf("invalid or duplicate merge profile %q", profile.TargetClass)
-		}
-		seen[profile.TargetClass] = true
-	}
-	seen = map[string]bool{}
-	for _, p := range m.InputObservationProfiles {
-		if p.TargetClass == "" || p.Source == "" || p.Samples < 1 || seen[p.TargetClass] || !validNonnegative(p.FixedSeconds, p.SecondsPerUniqueByte) {
-			return fmt.Errorf("invalid input observation profile %q", p.TargetClass)
-		}
-		seen[p.TargetClass] = true
-	}
-	seen = map[string]bool{}
-	for _, p := range m.PublicationProfiles {
-		if p.TargetClass == "" || p.Source == "" || p.Samples < 1 || seen[p.TargetClass] || !validNonnegative(p.FixedSeconds, p.ScanSecondsPerWorkspaceByte, p.CleanupSecondsPerInputByte) {
-			return fmt.Errorf("invalid publication profile %q", p.TargetClass)
-		}
-		seen[p.TargetClass] = true
-	}
-	return m.validateAdmissionProfiles()
+	return nil
 }
 
 func (m Model) validateAdmissionProfiles() error {
@@ -330,25 +337,11 @@ func (m Model) Route(sourceID, targetID string, workspaceBytes int64) (Route, er
 		result.Strategy = "runtime-local"
 		return result, nil
 	}
-	strategy := "gateway"
-	if source.Domain == "cloud" && target.Domain == "cloud" {
-		strategy = "direct-runtime"
+	strategy := materializationRouteStrategy(source, target)
+	p, err := m.findRouteProfile(strategy, source.Class, target.Class)
+	if err != nil {
+		return result, err
 	}
-	if source.Domain == "hpc" && target.Domain == "hpc" && source.SharedStorageProven && target.SharedStorageProven && source.SharedStorageID == target.SharedStorageID {
-		strategy = "shared-storage"
-	}
-	var selected *Profile
-	for index := range m.Profiles {
-		profile := &m.Profiles[index]
-		if profile.Strategy == strategy && profile.SourceClass == source.Class && profile.TargetClass == target.Class {
-			selected = profile
-			break
-		}
-	}
-	if selected == nil {
-		return result, fmt.Errorf("no evidenced %s profile for %s -> %s", strategy, source.Class, target.Class)
-	}
-	p := *selected
 	result.Strategy = strategy
 	bytes := float64(workspaceBytes)
 	if strategy == "shared-storage" {
@@ -401,6 +394,25 @@ func (m Model) Route(sourceID, targetID string, workspaceBytes int64) (Route, er
 		}
 	}
 	return m.withBulkServices(result), nil
+}
+
+func materializationRouteStrategy(source, target Resource) string {
+	if source.Domain == "cloud" && target.Domain == "cloud" {
+		return "direct-runtime"
+	}
+	if source.Domain == "hpc" && target.Domain == "hpc" && source.SharedStorageProven && target.SharedStorageProven && source.SharedStorageID == target.SharedStorageID {
+		return "shared-storage"
+	}
+	return "gateway"
+}
+
+func (m Model) findRouteProfile(strategy, sourceClass, targetClass string) (Profile, error) {
+	for _, profile := range m.Profiles {
+		if profile.Strategy == strategy && profile.SourceClass == sourceClass && profile.TargetClass == targetClass {
+			return profile, nil
+		}
+	}
+	return Profile{}, fmt.Errorf("no evidenced %s profile for %s -> %s", strategy, sourceClass, targetClass)
 }
 
 func (m Model) withBulkServices(route Route) Route {

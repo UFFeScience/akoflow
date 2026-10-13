@@ -146,9 +146,7 @@ func TestMaterializerClassifiesRouteAndUsesOneConnectorSession(t *testing.T) {
 	}
 	connector := &sessionFilesystem{}
 	digest := digestOf(content)
-	plan := domain.DataTransferPlan{ID: "session", Source: domain.TransferLocation{URI: "file://" + source, Path: "input"}, Destination: domain.TransferLocation{URI: "file://" + destination}, Blobs: []domain.BlobDescriptor{
-		{Digest: digest, SizeBytes: int64(len(content))},
-	}}
+	plan := domain.DataTransferPlan{ID: "session", Source: domain.TransferLocation{URI: "file://" + source, Path: "input"}, Destination: domain.TransferLocation{URI: "file://" + destination}, Blobs: []domain.BlobDescriptor{{Digest: digest, SizeBytes: int64(len(content))}}}
 	_, run, err := (Materializer{Connectors: []ports.TransferConnector{connector}}).Materialize(context.Background(), plan, domain.ArtifactMaterialization{Digest: digest})
 	if err != nil {
 		t.Fatal(err)
@@ -195,24 +193,8 @@ func TestMaterializerPersistsBoundedChunkProgress(t *testing.T) {
 	}
 	progress := &transferProgressStub{}
 	digest := digestOf(content)
-	plan := domain.DataTransferPlan{
-		ID:                 "chunks",
-		ExecutionRunID:     "run",
-		ConsumerActivityID: "activity",
-		Strategy:           domain.TransferGateway,
-		Source:             domain.TransferLocation{URI: "file://" + source, Path: "input"},
-		Destination:        domain.TransferLocation{URI: "file://" + destination},
-		Blobs: []domain.BlobDescriptor{
-			{Digest: digest, SizeBytes: int64(len(content))},
-		},
-	}
-	_, run, err := (Materializer{
-		Connectors: []ports.TransferConnector{infra.LocalFilesystem{}},
-		Progress:   progress,
-		ChunkSize:  func(context.Context) int64 { return 4 },
-	}).Materialize(context.Background(), plan, domain.ArtifactMaterialization{
-		Digest: digest,
-	})
+	plan := domain.DataTransferPlan{ID: "chunks", ExecutionRunID: "run", ConsumerActivityID: "activity", Strategy: domain.TransferGateway, Source: domain.TransferLocation{URI: "file://" + source, Path: "input"}, Destination: domain.TransferLocation{URI: "file://" + destination}, Blobs: []domain.BlobDescriptor{{Digest: digest, SizeBytes: int64(len(content))}}}
+	_, run, err := (Materializer{Connectors: []ports.TransferConnector{infra.LocalFilesystem{}}, Progress: progress, ChunkSize: func(context.Context) int64 { return 4 }}).Materialize(context.Background(), plan, domain.ArtifactMaterialization{Digest: digest})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -406,24 +388,10 @@ func TestCoordinatorPreparesArtifactAndWorkspace(t *testing.T) {
 	catalog := &materializationCatalogStub{}
 	coordinator := Coordinator{Materializer: Materializer{Connectors: []ports.TransferConnector{infra.LocalFilesystem{}}}, Catalog: catalog}
 	requirement := domain.PreparationRequirement{
-		Artifact: &domain.ArtifactMaterialization{ID: "artifact", Digest: artifactDigest},
-		ArtifactTransfer: &domain.DataTransferPlan{
-			ID:          "artifact-transfer",
-			Source:      domain.TransferLocation{URI: "file://" + source, Path: "artifact.sif"},
-			Destination: domain.TransferLocation{URI: "file://" + destination},
-			Blobs: []domain.BlobDescriptor{
-				{Digest: artifactDigest, SizeBytes: int64(len(artifactContent))},
-			},
-		},
-		Workspace: &domain.WorkspaceMaterialization{ID: "workspace", RevisionID: "run", Missing: []domain.BlobDescriptor{{Digest: workspaceDigest, Path: "input.txt", SizeBytes: int64(len(workspaceContent))}}},
-		WorkspaceTransfer: &domain.DataTransferPlan{
-			ID:          "workspace-transfer",
-			Source:      domain.TransferLocation{URI: "file://" + source},
-			Destination: domain.TransferLocation{URI: "file://" + destination, Path: "workspace"},
-			Blobs: []domain.BlobDescriptor{
-				{Digest: workspaceDigest, Path: "input.txt", SizeBytes: int64(len(workspaceContent))},
-			},
-		},
+		Artifact:          &domain.ArtifactMaterialization{ID: "artifact", Digest: artifactDigest},
+		ArtifactTransfer:  &domain.DataTransferPlan{ID: "artifact-transfer", Source: domain.TransferLocation{URI: "file://" + source, Path: "artifact.sif"}, Destination: domain.TransferLocation{URI: "file://" + destination}, Blobs: []domain.BlobDescriptor{{Digest: artifactDigest, SizeBytes: int64(len(artifactContent))}}},
+		Workspace:         &domain.WorkspaceMaterialization{ID: "workspace", RevisionID: "run", Missing: []domain.BlobDescriptor{{Digest: workspaceDigest, Path: "input.txt", SizeBytes: int64(len(workspaceContent))}}},
+		WorkspaceTransfer: &domain.DataTransferPlan{ID: "workspace-transfer", Source: domain.TransferLocation{URI: "file://" + source}, Destination: domain.TransferLocation{URI: "file://" + destination, Path: "workspace"}, Blobs: []domain.BlobDescriptor{{Digest: workspaceDigest, Path: "input.txt", SizeBytes: int64(len(workspaceContent))}}},
 	}
 	gate, err := coordinator.Prepare(context.Background(), "activity", requirement)
 	if err != nil {
@@ -464,9 +432,7 @@ func TestMaterializerReportsMissingConnectorAndChecksumMismatch(t *testing.T) {
 	if err := os.WriteFile(filepath.Join(source, "input"), []byte("wrong"), 0600); err != nil {
 		t.Fatal(err)
 	}
-	plan = domain.DataTransferPlan{ID: "checksum", Source: domain.TransferLocation{URI: "file://" + source, Path: "input"}, Destination: domain.TransferLocation{URI: "file://" + destination}, Blobs: []domain.BlobDescriptor{
-		{Digest: digestOf([]byte("expected")), SizeBytes: 5},
-	}}
+	plan = domain.DataTransferPlan{ID: "checksum", Source: domain.TransferLocation{URI: "file://" + source, Path: "input"}, Destination: domain.TransferLocation{URI: "file://" + destination}, Blobs: []domain.BlobDescriptor{{Digest: digestOf([]byte("expected")), SizeBytes: 5}}}
 	_, run, err := (Materializer{Connectors: []ports.TransferConnector{infra.LocalFilesystem{}}}).Materialize(context.Background(), plan, domain.ArtifactMaterialization{})
 	if err == nil || run.Status != domain.TransferFailed {
 		t.Fatalf("checksum run = %#v, %v", run, err)

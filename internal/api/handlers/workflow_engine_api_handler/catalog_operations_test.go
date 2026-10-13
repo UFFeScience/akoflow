@@ -284,97 +284,9 @@ func TestCatalogAndResourceHTTPHandlers(t *testing.T) {
 		contains           string
 	}{
 		{"environments", http.MethodGet, "", nil, h.ListEnvironments, 200, "Science"}, {"environment", http.MethodGet, "", map[string]string{"environmentId": "environment"}, h.GetEnvironment, 200, "Science"},
-		{
-			"resources",
-			http.MethodGet,
-			"",
-			nil,
-			h.ListResources,
-			200,
-			"Node",
-		}, {
-			"resource",
-			http.MethodGet,
-			"",
-			map[string]string{"resourceId": "resource"},
-			h.GetResource,
-			200,
-			"Node",
-		}, {
-			"snapshot",
-			http.MethodGet,
-			"",
-			map[string]string{"resourceId": "resource"},
-			h.GetResourceSnapshot,
-			200,
-			"snapshot",
-		}, {
-			"create resource",
-			http.MethodPost,
-			`{"id":"new","name":"New"}`,
-			nil,
-			h.CreateResource,
-			201,
-			"New",
-		},
-		{
-			"workflows",
-			http.MethodGet,
-			"",
-			nil,
-			h.ListWorkflows,
-			200,
-			"Source",
-		}, {
-			"workflow",
-			http.MethodGet,
-			"",
-			map[string]string{"workflowId": "source"},
-			h.GetWorkflow,
-			200,
-			"Source",
-		}, {
-			"plans",
-			http.MethodGet,
-			"",
-			nil,
-			h.ListPlans,
-			200,
-			"plan",
-		},
-		{
-			"create scope",
-			http.MethodPost,
-			`{"id":"new-scope","name":"New scope"}`,
-			nil,
-			h.CreateExecutionScope,
-			201,
-			"new-scope",
-		}, {
-			"scopes",
-			http.MethodGet,
-			"",
-			nil,
-			h.ListExecutionScopes,
-			200,
-			"Scope",
-		}, {
-			"scope",
-			http.MethodGet,
-			"",
-			map[string]string{"scopeId": "scope"},
-			h.GetExecutionScope,
-			200,
-			"Scope",
-		}, {
-			"delete scope",
-			http.MethodDelete,
-			"",
-			map[string]string{"scopeId": "scope"},
-			h.DeleteExecutionScope,
-			204,
-			"",
-		},
+		{"resources", http.MethodGet, "", nil, h.ListResources, 200, "Node"}, {"resource", http.MethodGet, "", map[string]string{"resourceId": "resource"}, h.GetResource, 200, "Node"}, {"snapshot", http.MethodGet, "", map[string]string{"resourceId": "resource"}, h.GetResourceSnapshot, 200, "snapshot"}, {"create resource", http.MethodPost, `{"id":"new","name":"New"}`, nil, h.CreateResource, 201, "New"},
+		{"workflows", http.MethodGet, "", nil, h.ListWorkflows, 200, "Source"}, {"workflow", http.MethodGet, "", map[string]string{"workflowId": "source"}, h.GetWorkflow, 200, "Source"}, {"plans", http.MethodGet, "", nil, h.ListPlans, 200, "plan"},
+		{"create scope", http.MethodPost, `{"id":"new-scope","name":"New scope"}`, nil, h.CreateExecutionScope, 201, "new-scope"}, {"scopes", http.MethodGet, "", nil, h.ListExecutionScopes, 200, "Scope"}, {"scope", http.MethodGet, "", map[string]string{"scopeId": "scope"}, h.GetExecutionScope, 200, "Scope"}, {"delete scope", http.MethodDelete, "", map[string]string{"scopeId": "scope"}, h.DeleteExecutionScope, 204, ""},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
@@ -402,43 +314,8 @@ func TestInstancePreferencesEnvironmentReplacementAndReset(t *testing.T) {
 		status             int
 	}{
 		{"get instance", http.MethodGet, "", nil, h.GetInstance, 200}, {"save instance", http.MethodPut, `{"id":"instance","name":"Updated"}`, nil, h.SaveInstance, 200},
-		{
-			"save preferences",
-			http.MethodPut,
-			`{"theme":"dark"}`,
-			map[string]string{"clientId": "client-123"},
-			h.SaveUserPreferences,
-			200,
-		}, {
-			"get preferences",
-			http.MethodGet,
-			"",
-			map[string]string{"clientId": "client-123"},
-			h.GetUserPreferences,
-			200,
-		},
-		{
-			"replace environment",
-			http.MethodPut,
-			`{"environment":{"id":"environment","name":"Updated"},"version":{"id":"v1"}}`,
-			map[string]string{"environmentId": "environment"},
-			h.ReplaceEnvironment,
-			200,
-		}, {
-			"delete environment",
-			http.MethodDelete,
-			"",
-			map[string]string{"environmentId": "environment"},
-			h.DeleteEnvironment,
-			204,
-		}, {
-			"factory reset",
-			http.MethodPost,
-			"",
-			nil,
-			h.FactoryReset,
-			202,
-		},
+		{"save preferences", http.MethodPut, `{"theme":"dark"}`, map[string]string{"clientId": "client-123"}, h.SaveUserPreferences, 200}, {"get preferences", http.MethodGet, "", map[string]string{"clientId": "client-123"}, h.GetUserPreferences, 200},
+		{"replace environment", http.MethodPut, `{"environment":{"id":"environment","name":"Updated"},"version":{"id":"v1"}}`, map[string]string{"environmentId": "environment"}, h.ReplaceEnvironment, 200}, {"delete environment", http.MethodDelete, "", map[string]string{"environmentId": "environment"}, h.DeleteEnvironment, 204}, {"factory reset", http.MethodPost, "", nil, h.FactoryReset, 202},
 	}
 	for _, test := range tests {
 		response := callHandler(t, test.method, "/", test.body, test.values, test.handler)
@@ -453,16 +330,7 @@ func TestInstancePreferencesEnvironmentReplacementAndReset(t *testing.T) {
 
 func TestArtifactAndBuildHTTPHandlers(t *testing.T) {
 	build := domain.ArtifactBuild{ID: "build", ArtifactVersionID: "version", ContextDigest: "sha256:context", RecipeDigest: "sha256:recipe", CacheKey: "cache"}
-	data := &dataCatalogRichStub{
-		artifacts:        []domain.ExecutableArtifact{{ID: "artifact"}},
-		locations:        []domain.ArtifactLocation{{ID: "location"}},
-		materializations: []domain.ArtifactMaterialization{{ID: "materialization"}},
-		builds:           []domain.ArtifactBuild{build},
-		buildRuns:        []domain.BuildRun{{ID: "run"}},
-		build:            &build,
-		buildRun:         &domain.BuildRun{ID: "run"},
-		contextArtifact:  &domain.BuildContextArtifact{Digest: "sha256:context"},
-	}
+	data := &dataCatalogRichStub{artifacts: []domain.ExecutableArtifact{{ID: "artifact"}}, locations: []domain.ArtifactLocation{{ID: "location"}}, materializations: []domain.ArtifactMaterialization{{ID: "materialization"}}, builds: []domain.ArtifactBuild{build}, buildRuns: []domain.BuildRun{{ID: "run"}}, build: &build, buildRun: &domain.BuildRun{ID: "run"}, contextArtifact: &domain.BuildContextArtifact{Digest: "sha256:context"}}
 	h := &Handler{data: data, build: buildOrchestratorStub{}}
 	tests := []struct {
 		name, method, body string
@@ -471,105 +339,9 @@ func TestArtifactAndBuildHTTPHandlers(t *testing.T) {
 		status             int
 		contains           string
 	}{
-		{
-			"artifacts",
-			http.MethodGet,
-			"",
-			nil,
-			h.ListArtifacts,
-			200,
-			"artifact",
-		}, {
-			"locations",
-			http.MethodGet,
-			"",
-			nil,
-			h.ListArtifactLocations,
-			200,
-			"location",
-		}, {
-			"materializations",
-			http.MethodGet,
-			"",
-			nil,
-			h.ListArtifactMaterializations,
-			200,
-			"materialization",
-		}, {
-			"save materialization",
-			http.MethodPost,
-			`{"id":"new"}`,
-			nil,
-			h.SaveArtifactMaterialization,
-			201,
-			"new",
-		},
-		{"save context", http.MethodPost, `{"digest":"sha256:context","storageUri":"artifact://context","sizeBytes":10}`, nil, h.SaveBuildContext, 201, "sha256:context"}, {
-			"create build",
-			http.MethodPost,
-			`{"id":"build-2","artifactVersionId":"version","contextDigest":"sha256:context","recipeDigest":"sha256:recipe","cacheKey":"cache-2"}`,
-			nil,
-			h.CreateArtifactBuild,
-			201,
-			"build-2",
-		},
-		{
-			"register docker",
-			http.MethodPost,
-			`{"artifactId":"tool","version":"1","image":"ubuntu:latest"}`,
-			nil,
-			h.RegisterDockerArtifact,
-			201,
-			"docker-image",
-		}, {
-			"get build",
-			http.MethodGet,
-			"",
-			map[string]string{"buildId": "build"},
-			h.GetArtifactBuild,
-			200,
-			"build",
-		}, {
-			"list builds",
-			http.MethodGet,
-			"",
-			map[string]string{"artifactId": "artifact"},
-			h.ListArtifactBuilds,
-			200,
-			"build",
-		}, {
-			"list runs",
-			http.MethodGet,
-			"",
-			map[string]string{"buildId": "build"},
-			h.ListBuildRuns,
-			200,
-			"run",
-		}, {
-			"get run",
-			http.MethodGet,
-			"",
-			map[string]string{"runId": "run"},
-			h.GetBuildRun,
-			200,
-			"run",
-		}, {
-			"start",
-			http.MethodPost,
-			"",
-			map[string]string{"buildId": "build"},
-			h.StartArtifactBuildRun,
-			202,
-			"run",
-		}, {
-			"output",
-			http.MethodGet,
-			"",
-			map[string]string{"runId": "run"},
-			h.StreamBuildOutput,
-			200,
-			"sif",
-		},
+		{"artifacts", http.MethodGet, "", nil, h.ListArtifacts, 200, "artifact"}, {"locations", http.MethodGet, "", nil, h.ListArtifactLocations, 200, "location"}, {"materializations", http.MethodGet, "", nil, h.ListArtifactMaterializations, 200, "materialization"}, {"save materialization", http.MethodPost, `{"id":"new"}`, nil, h.SaveArtifactMaterialization, 201, "new"},
+		{"save context", http.MethodPost, `{"digest":"sha256:context","storageUri":"artifact://context","sizeBytes":10}`, nil, h.SaveBuildContext, 201, "sha256:context"}, {"create build", http.MethodPost, `{"id":"build-2","artifactVersionId":"version","contextDigest":"sha256:context","recipeDigest":"sha256:recipe","cacheKey":"cache-2"}`, nil, h.CreateArtifactBuild, 201, "build-2"},
+		{"register docker", http.MethodPost, `{"artifactId":"tool","version":"1","image":"ubuntu:latest"}`, nil, h.RegisterDockerArtifact, 201, "docker-image"}, {"get build", http.MethodGet, "", map[string]string{"buildId": "build"}, h.GetArtifactBuild, 200, "build"}, {"list builds", http.MethodGet, "", map[string]string{"artifactId": "artifact"}, h.ListArtifactBuilds, 200, "build"}, {"list runs", http.MethodGet, "", map[string]string{"buildId": "build"}, h.ListBuildRuns, 200, "run"}, {"get run", http.MethodGet, "", map[string]string{"runId": "run"}, h.GetBuildRun, 200, "run"}, {"start", http.MethodPost, "", map[string]string{"buildId": "build"}, h.StartArtifactBuildRun, 202, "run"}, {"output", http.MethodGet, "", map[string]string{"runId": "run"}, h.StreamBuildOutput, 200, "sif"},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
@@ -615,19 +387,8 @@ func TestSearchAcrossControlPlaneCatalogs(t *testing.T) {
 	plan := domain.SchedulePlan{ID: "science-plan", Algorithm: "science-scheduler"}
 	scope := domain.ExecutionScope{ID: "science-scope", Name: "Science scope"}
 	run := domain.ExecutionRun{ID: "science-run", Title: "Science execution"}
-	data := &dataCatalogRichStub{
-		artifacts:        []domain.ExecutableArtifact{{ID: "science-artifact", Name: "Science artifact", Version: "1"}},
-		materializations: []domain.ArtifactMaterialization{{ID: "science-materialization", VariantID: "Science variant", RunID: run.ID}},
-	}
-	h := &Handler{
-		workflows:    &workflowStoreRichStub{values: []domain.WorkflowDefinition{workflow}},
-		environments: &environmentCatalogRichStub{definitions: []domain.EnvironmentDefinition{environment}},
-		resources:    &resourceInventoryRichStub{values: []domain.Resource{resource}},
-		plans:        &planStoreRichStub{values: []domain.SchedulePlan{plan}},
-		scopes:       &scopeStoreRichStub{values: []domain.ExecutionScope{scope}},
-		executions:   executionQueryStub{run: &run},
-		data:         data,
-	}
+	data := &dataCatalogRichStub{artifacts: []domain.ExecutableArtifact{{ID: "science-artifact", Name: "Science artifact", Version: "1"}}, materializations: []domain.ArtifactMaterialization{{ID: "science-materialization", VariantID: "Science variant", RunID: run.ID}}}
+	h := &Handler{workflows: &workflowStoreRichStub{values: []domain.WorkflowDefinition{workflow}}, environments: &environmentCatalogRichStub{definitions: []domain.EnvironmentDefinition{environment}}, resources: &resourceInventoryRichStub{values: []domain.Resource{resource}}, plans: &planStoreRichStub{values: []domain.SchedulePlan{plan}}, scopes: &scopeStoreRichStub{values: []domain.ExecutionScope{scope}}, executions: executionQueryStub{run: &run}, data: data}
 	response := callHandler(t, http.MethodGet, "/?q=science&limit=100", "", nil, h.Search)
 	if response.Code != 200 {
 		t.Fatalf("search=%d %q", response.Code, response.Body.String())
@@ -660,14 +421,7 @@ func TestSearchAcrossControlPlaneCatalogs(t *testing.T) {
 func TestExecutionListingAndConnectionOperations(t *testing.T) {
 	run := domain.ExecutionRun{ID: "run"}
 	environments := &environmentCatalogRichStub{}
-	h := &Handler{executions: executionQueryStub{
-		run: &run,
-	}, connections: connectionMonitorStub{
-		check:   domain.ConnectionCheck{ID: "check"},
-		history: []domain.ConnectionCheck{{ID: "history"}},
-	}, discovery: discoveryStub{
-		snapshots: []domain.ResourceSnapshot{{ID: "snapshot"}},
-	}, environments: environments, connectionTest: func(context.Context, domain.EnvironmentConnection) ports.ConnectionHealth {
+	h := &Handler{executions: executionQueryStub{run: &run}, connections: connectionMonitorStub{check: domain.ConnectionCheck{ID: "check"}, history: []domain.ConnectionCheck{{ID: "history"}}}, discovery: discoveryStub{snapshots: []domain.ResourceSnapshot{{ID: "snapshot"}}}, environments: environments, connectionTest: func(context.Context, domain.EnvironmentConnection) ports.ConnectionHealth {
 		return ports.ConnectionHealth{Healthy: true, Message: "ok"}
 	}}
 	tests := []struct {
@@ -678,52 +432,7 @@ func TestExecutionListingAndConnectionOperations(t *testing.T) {
 		contains                   string
 	}{
 		{"executions", http.MethodGet, "/", "", nil, h.ListExecutions, 200, "run"}, {"executions page", http.MethodGet, "/?page=1&pageSize=10", "", nil, h.ListExecutions, 200, "pageSize"},
-		{
-			"test connection",
-			http.MethodPost,
-			"/",
-			`{"id":"connection"}`,
-			nil,
-			h.TestEnvironmentConnection,
-			200,
-			"healthy",
-		}, {
-			"check",
-			http.MethodPost,
-			"/",
-			"",
-			map[string]string{"connectionId": "connection"},
-			h.CheckEnvironmentConnection,
-			200,
-			"check",
-		}, {
-			"history",
-			http.MethodGet,
-			"/?limit=5",
-			"",
-			map[string]string{"connectionId": "connection"},
-			h.ListEnvironmentConnectionHistory,
-			200,
-			"history",
-		}, {
-			"discover",
-			http.MethodPost,
-			"/",
-			"",
-			map[string]string{"connectionId": "connection"},
-			h.DiscoverEnvironmentConnection,
-			200,
-			"snapshot",
-		}, {
-			"update",
-			http.MethodPut,
-			"/",
-			`{"id":"connection","environmentId":"environment"}`,
-			map[string]string{"connectionId": "connection"},
-			h.UpdateEnvironmentConnection,
-			200,
-			"environment",
-		},
+		{"test connection", http.MethodPost, "/", `{"id":"connection"}`, nil, h.TestEnvironmentConnection, 200, "healthy"}, {"check", http.MethodPost, "/", "", map[string]string{"connectionId": "connection"}, h.CheckEnvironmentConnection, 200, "check"}, {"history", http.MethodGet, "/?limit=5", "", map[string]string{"connectionId": "connection"}, h.ListEnvironmentConnectionHistory, 200, "history"}, {"discover", http.MethodPost, "/", "", map[string]string{"connectionId": "connection"}, h.DiscoverEnvironmentConnection, 200, "snapshot"}, {"update", http.MethodPut, "/", `{"id":"connection","environmentId":"environment"}`, map[string]string{"connectionId": "connection"}, h.UpdateEnvironmentConnection, 200, "environment"},
 	}
 	for _, test := range tests {
 		response := callHandler(t, test.method, test.target, test.body, test.values, test.handler)
@@ -742,11 +451,7 @@ func TestDirectOCIResolutionRuntimeSelectionAndGatewayHelpers(t *testing.T) {
 	if workflow.Activities[0].Command.Image != "ubuntu:latest" || workflow.Activities[1].Command.Image != "set" {
 		t.Fatalf("workflow=%#v", workflow)
 	}
-	request := ports.ExecutionRequest{
-		Run:             domain.ExecutionRun{Mode: domain.ExecutionModeReal},
-		Runtimes:        []domain.EnvironmentRuntime{{ID: "slurm", Driver: domain.RuntimeDriverSlurm, Mode: domain.RuntimeModeExecution}},
-		RuntimeBindings: []domain.ResourceRuntimeBinding{{ResourceID: "resource", RuntimeID: "slurm", Enabled: true}},
-	}
+	request := ports.ExecutionRequest{Run: domain.ExecutionRun{Mode: domain.ExecutionModeReal}, Runtimes: []domain.EnvironmentRuntime{{ID: "slurm", Driver: domain.RuntimeDriverSlurm, Mode: domain.RuntimeModeExecution}}, RuntimeBindings: []domain.ResourceRuntimeBinding{{ResourceID: "resource", RuntimeID: "slurm", Enabled: true}}}
 	if got := executionRuntimeDriver(request, domain.PlanAssignment{ResourceID: "resource"}); got != domain.RuntimeDriverSlurm {
 		t.Fatalf("driver=%s", got)
 	}
@@ -771,42 +476,20 @@ func TestGatewayArtifactTransferConfigurationForKubernetesAndSSH(t *testing.T) {
 	if err := h.configureGatewayArtifactTransfer(context.Background(), &value, domain.Resource{Metadata: map[string]any{"connectionId": "k8s"}}, activity); err != nil {
 		t.Fatal(err)
 	}
-	if value.ArtifactTransfer.Strategy != domain.TransferGateway || !strings.Contains(
-		value.ArtifactTransfer.Destination.URI,
-		"kubernetes://k8s/workspace/.akoflow/artifacts",
-	) || !strings.Contains(
-		value.ArtifactTransfer.Destination.URI,
-		"claim=workspace",
-	) {
+	if value.ArtifactTransfer.Strategy != domain.TransferGateway || !strings.Contains(value.ArtifactTransfer.Destination.URI, "kubernetes://k8s/workspace/.akoflow/artifacts") || !strings.Contains(value.ArtifactTransfer.Destination.URI, "claim=workspace") {
 		t.Fatalf("kubernetes requirement=%#v", value)
 	}
 	value = requirement()
 	if err := h.configureGatewayArtifactTransfer(context.Background(), &value, domain.Resource{Metadata: map[string]any{"connectionId": "k8s"}}, domain.Activity{ID: "missing"}); err == nil {
 		t.Fatal("expected PVC error")
 	}
-	ssh := domain.EnvironmentConnection{
-		ID:            "ssh",
-		Type:          domain.ConnectionSSH,
-		Endpoint:      "hpc.example",
-		Username:      "researcher",
-		CredentialRef: "file:/keys/id",
-		Configuration: map[string]any{"port": "2222", "proxyCommand": "ssh gateway", "hostKeyAlias": "hpc", "forwardAgent": true},
-	}
+	ssh := domain.EnvironmentConnection{ID: "ssh", Type: domain.ConnectionSSH, Endpoint: "hpc.example", Username: "researcher", CredentialRef: "file:/keys/id", Configuration: map[string]any{"port": "2222", "proxyCommand": "ssh gateway", "hostKeyAlias": "hpc", "forwardAgent": true}}
 	environments.connection = &ssh
 	value = requirement()
 	if err := h.configureGatewayArtifactTransfer(context.Background(), &value, domain.Resource{Metadata: map[string]any{"connectionId": "ssh"}}, domain.Activity{}); err != nil {
 		t.Fatal(err)
 	}
-	if value.ArtifactTransfer.Strategy != domain.TransferSourcePush || !strings.Contains(
-		value.ArtifactTransfer.Destination.URI,
-		"ssh://researcher@hpc.example",
-	) || !strings.Contains(
-		value.ArtifactTransfer.Destination.URI,
-		"port=2222",
-	) || !strings.HasSuffix(
-		value.Artifact.DestinationPath,
-		digest,
-	) {
+	if value.ArtifactTransfer.Strategy != domain.TransferSourcePush || !strings.Contains(value.ArtifactTransfer.Destination.URI, "ssh://researcher@hpc.example") || !strings.Contains(value.ArtifactTransfer.Destination.URI, "port=2222") || !strings.HasSuffix(value.Artifact.DestinationPath, digest) {
 		t.Fatalf("ssh requirement=%#v", value)
 	}
 	value = domain.PreparationRequirement{}
@@ -897,12 +580,7 @@ func TestResolveBuildPreparationsReportsInvalidAssignmentsAndReferences(t *testi
 
 func TestExecutionDetailIncludesDataPlaneObservations(t *testing.T) {
 	run := domain.ExecutionRun{ID: "run"}
-	data := &dataCatalogRichStub{
-		instances:        []domain.DataObjectInstance{{ID: "object"}},
-		dataLocations:    []domain.DataLocation{{ID: "data-location"}},
-		materializations: []domain.ArtifactMaterialization{{ID: "materialization"}},
-		transferRuns:     []domain.DataTransferRun{{ID: "transfer-run"}},
-	}
+	data := &dataCatalogRichStub{instances: []domain.DataObjectInstance{{ID: "object"}}, dataLocations: []domain.DataLocation{{ID: "data-location"}}, materializations: []domain.ArtifactMaterialization{{ID: "materialization"}}, transferRuns: []domain.DataTransferRun{{ID: "transfer-run"}}}
 	h := &Handler{executions: executionQueryStub{run: &run, tasks: []domain.TaskExecution{{ID: "task"}}, transfers: []domain.DataTransfer{{ID: "transfer"}}, handles: []domain.ActivityHandle{{ID: "handle"}}}, data: data}
 	response := callHandler(t, http.MethodGet, "/", "", map[string]string{"runId": "run"}, h.GetExecution)
 	if response.Code != 200 {

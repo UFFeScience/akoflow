@@ -46,36 +46,9 @@ func addCloudLifecycle(plan *domain.SchedulePlan, request domain.PlanningRequest
 		prefix := plan.ID + "-lifecycle-" + resourceID
 		plan.LifecycleActions = append(plan.LifecycleActions,
 			domain.PlannedLifecycleAction{ID: prefix + "-provision", SchedulePlanID: plan.ID, CapacityTargetID: resourceID, Action: "provision", EarliestStart: start, ExpectedDuration: provision, Metadata: map[string]any{"phase": "provisioning"}},
-			domain.PlannedLifecycleAction{
-				ID:               prefix + "-configure",
-				SchedulePlanID:   plan.ID,
-				CapacityTargetID: resourceID,
-				Action:           "configure",
-				EarliestStart:    start + provision + sshWait,
-				ExpectedDuration: configure,
-				DependsOn:        []string{prefix + "-provision"},
-				Metadata:         map[string]any{"phase": "configuration", "sshWaitSeconds": sshWait},
-			},
-			domain.PlannedLifecycleAction{
-				ID:               prefix + "-validate",
-				SchedulePlanID:   plan.ID,
-				CapacityTargetID: resourceID,
-				Action:           "validate",
-				EarliestStart:    start + provision + sshWait + configure,
-				ExpectedDuration: validate,
-				DependsOn:        []string{prefix + "-configure"},
-				Metadata:         map[string]any{"phase": "validation"},
-			},
-			domain.PlannedLifecycleAction{
-				ID:               prefix + "-stop",
-				SchedulePlanID:   plan.ID,
-				CapacityTargetID: resourceID,
-				Action:           "stop",
-				EarliestStart:    last,
-				ExpectedDuration: stop,
-				DependsOn:        activityIDs,
-				Metadata:         map[string]any{"phase": "stop", "safetyGate": true},
-			},
+			domain.PlannedLifecycleAction{ID: prefix + "-configure", SchedulePlanID: plan.ID, CapacityTargetID: resourceID, Action: "configure", EarliestStart: start + provision + sshWait, ExpectedDuration: configure, DependsOn: []string{prefix + "-provision"}, Metadata: map[string]any{"phase": "configuration", "sshWaitSeconds": sshWait}},
+			domain.PlannedLifecycleAction{ID: prefix + "-validate", SchedulePlanID: plan.ID, CapacityTargetID: resourceID, Action: "validate", EarliestStart: start + provision + sshWait + configure, ExpectedDuration: validate, DependsOn: []string{prefix + "-configure"}, Metadata: map[string]any{"phase": "validation"}},
+			domain.PlannedLifecycleAction{ID: prefix + "-stop", SchedulePlanID: plan.ID, CapacityTargetID: resourceID, Action: "stop", EarliestStart: last, ExpectedDuration: stop, DependsOn: activityIDs, Metadata: map[string]any{"phase": "stop", "safetyGate": true}},
 		)
 		activeSeconds := math.Max(0, last+stop-start)
 		vmCost := activeSeconds * resource.PricePerSecond

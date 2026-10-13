@@ -116,27 +116,11 @@ func (a *Adapter) Start(ctx context.Context, execution domain.ActivityExecutionC
 		// or invoking the activity. The marker proves shared filesystem access.
 		marker := filepath.Join(activity.Command.WorkingDirectory, ".akoflow-placement-"+shellToken(execution.HandleID()))
 		proof := runtimecommon.NewID("placement")
-		check := "set -eu\nmkdir -p -- " + shellQuote(
-			activity.Command.WorkingDirectory,
-		) + "\ntest -d " + shellQuote(
-			activity.Command.WorkingDirectory,
-		) + " || { echo 'Fallback workspace directory unavailable' >&2; exit 70; }\nprintf '%s' " + shellQuote(
-			proof,
-		) + " > " + shellQuote(
-			marker,
-		) + "\n"
+		check := "set -eu\nmkdir -p -- " + shellQuote(activity.Command.WorkingDirectory) + "\ntest -d " + shellQuote(activity.Command.WorkingDirectory) + " || { echo 'Fallback workspace directory unavailable' >&2; exit 70; }\nprintf '%s' " + shellQuote(proof) + " > " + shellQuote(marker) + "\n"
 		if _, err := a.executor.Run(ctx, "sh", []string{"-s"}, []byte(check)); err != nil {
 			return domain.ActivityHandle{}, fmt.Errorf("prepare fallback workspace proof: %w", err)
 		}
-		guard := "set -eu\ncase \"$(hostname -s)\" in " + strings.ReplaceAll(
-			node,
-			",",
-			"|",
-		) + ") ;; *) echo '[AKOFLOW ERROR] allocated fallback node is not eligible'; exit 70 ;; esac\n[ \"$(cat " + shellQuote(
-			marker,
-		) + ")\" = " + shellQuote(
-			proof,
-		) + " ] || { echo '[AKOFLOW ERROR] fallback workspace is not accessible'; exit 70; }\n"
+		guard := "set -eu\ncase \"$(hostname -s)\" in " + strings.ReplaceAll(node, ",", "|") + ") ;; *) echo '[AKOFLOW ERROR] allocated fallback node is not eligible'; exit 70 ;; esac\n[ \"$(cat " + shellQuote(marker) + ")\" = " + shellQuote(proof) + " ] || { echo '[AKOFLOW ERROR] fallback workspace is not accessible'; exit 70; }\n"
 		image, _ := slurmExecutable(activity.Command)
 		if image != "" {
 			guard += "test -r " + shellQuote(image) + "\ncommand -v apptainer >/dev/null || command -v singularity >/dev/null\n"
@@ -713,23 +697,13 @@ func batchScript(runID string, activity domain.Activity, partition, node string)
 	script.WriteString(")\nsentinel=\"${sentinel}${SLURM_JOB_ID}.status\"\n")
 	script.WriteString("artifact_root=")
 	script.WriteString(shellQuote(activity.Command.WorkingDirectory))
-	script.WriteString(
-		("\ncontainer_start_marker=\"${sentinel}.container-started\"\nrm -f \"$container_start_marker\"\nmkdir -p \"$a" +
-			"rtifact_root\"\nartifact_root=$(cd \"$artifact_root\" && pwd -P)\nartifact_before=$(mktemp)\nartifact_afte" +
-			"r=$(mktemp)\nseed_links=$(mktemp)\nseed_list=$(mktemp)\n"),
-	)
-	script.WriteString(
-		`snapshot_artifacts() { destination=$1; : > "$destination"; find "$artifact_root" -type f -exec sh -c '
+	script.WriteString("\ncontainer_start_marker=\"${sentinel}.container-started\"\nrm -f \"$container_start_marker\"\nmkdir -p \"$artifact_root\"\nartifact_root=$(cd \"$artifact_root\" && pwd -P)\nartifact_before=$(mktemp)\nartifact_after=$(mktemp)\nseed_links=$(mktemp)\nseed_list=$(mktemp)\n")
+	script.WriteString(`snapshot_artifacts() { destination=$1; : > "$destination"; find "$artifact_root" -type f -exec sh -c '
 root=$1; destination=$2; shift 2
 for file do relative=${file#"$root"/}; size=$(wc -c < "$file") || exit 1; checksum=$(sha256sum "$file" | awk "{print \$1}") || exit 1; encoded=$(printf "%s" "$relative" | base64 | tr -d "\\n"); printf "%s|%s|%s\\n" "$encoded" "$size" "$checksum" >> "$destination"; done
 ' snapshot "$artifact_root" "$destination" {} +; sort -o "$destination" "$destination"; }
-`,
-	)
-	script.WriteString(
-		("started_at=$(date +%s.%N)\nallocated_node=$(hostname -s)\ncontainer_epoch_anchor=$(date +%s.%N)\ncontai" +
-			"ner_uptime_anchor=$(awk '{print $1}' /proc/uptime)\nprintf 'state=running\\nstarted_at=%s\\nallocated_n" +
-			"ode=%s\\nartifact_root=%s\\n' \"$started_at\" \"$allocated_node\" \"$artifact_root\" > \"$sentinel\"\n"),
-	)
+`)
+	script.WriteString("started_at=$(date +%s.%N)\nallocated_node=$(hostname -s)\ncontainer_epoch_anchor=$(date +%s.%N)\ncontainer_uptime_anchor=$(awk '{print $1}' /proc/uptime)\nprintf 'state=running\\nstarted_at=%s\\nallocated_node=%s\\nartifact_root=%s\\n' \"$started_at\" \"$allocated_node\" \"$artifact_root\" > \"$sentinel\"\n")
 	if interval := activity.Command.Environment["AKOFLOW_METRIC_INTERVAL_SECONDS"]; interval != "" {
 		script.WriteString("AKOFLOW_METRIC_INTERVAL_SECONDS=")
 		script.WriteString(shellQuote(interval))
@@ -742,27 +716,14 @@ for file do relative=${file#"$root"/}; size=$(wc -c < "$file") || exit 1; checks
 	script.WriteString("finish() { code=$?; set +e; state=completed; [ \"$code\" -eq 0 ] || state=failed; ")
 	script.WriteString("[ -z \"$metric_pid\" ] || { kill \"$metric_pid\" 2>/dev/null || true; wait \"$metric_pid\" 2>/dev/null || true; }; ")
 	script.WriteString("[ -z \"$metric_pid\" ] || sample_metrics; ")
-	script.WriteString(
-		("container_started_at=0; if [ -f \"$container_start_marker\" ]; then container_uptime=$(cat \"$container" +
-			"_start_marker\"); container_started_at=$(awk -v epoch=\"$container_epoch_anchor\" -v anchor=\"$container" +
-			"_uptime_anchor\" -v current=\"$container_uptime\" 'BEGIN { printf \"%.9f\", epoch + current - anchor }');" +
-			" fi; "),
-	)
+	script.WriteString("container_started_at=0; if [ -f \"$container_start_marker\" ]; then container_uptime=$(cat \"$container_start_marker\"); container_started_at=$(awk -v epoch=\"$container_epoch_anchor\" -v anchor=\"$container_uptime_anchor\" -v current=\"$container_uptime\" 'BEGIN { printf \"%.9f\", epoch + current - anchor }'); fi; ")
 	script.WriteString("while IFS= read -r seed_link; do [ -L \"$seed_link\" ] && rm -f -- \"$seed_link\"; done < \"$seed_links\"; ")
 	script.WriteString("snapshot_artifacts \"$artifact_after\" || true; ")
-	script.WriteString(
-		("finished_at=$(date +%s.%N); { printf 'state=%s\\nexit_code=%s\\nstarted_at=%s\\nfinished_at=%s\\nallocat" +
-			"ed_node=%s\\ncontainer_started_at=%s\\nartifact_root=%s\\n' \"$state\" \"$code\" \"$started_at\" \"$finished_a" +
-			"t\" \"$allocated_node\" \"$container_started_at\" \"$artifact_root\"; "),
-	)
+	script.WriteString("finished_at=$(date +%s.%N); { printf 'state=%s\\nexit_code=%s\\nstarted_at=%s\\nfinished_at=%s\\nallocated_node=%s\\ncontainer_started_at=%s\\nartifact_root=%s\\n' \"$state\" \"$code\" \"$started_at\" \"$finished_at\" \"$allocated_node\" \"$container_started_at\" \"$artifact_root\"; ")
 	script.WriteString("while IFS= read -r entry; do printf 'initial=%s\\n' \"$entry\"; done < \"$artifact_before\"; ")
 	script.WriteString("while IFS= read -r entry; do printf 'final=%s\\n' \"$entry\"; done < \"$artifact_after\"; ")
 	// Publish the complete manifest atomically before readers skip accounting.
-	script.WriteString(
-		("printf 'publication_complete=1\\n'; } > \"${sentinel}.publishing.$$\" && mv -f -- \"${sentinel}.publishi" +
-			"ng.$$\" \"$sentinel\"; rm -f \"${sentinel}.publishing.$$\" \"$artifact_before\" \"$artifact_after\" \"$contain" +
-			"er_start_marker\" \"$seed_links\" \"$seed_list\"; exit \"$code\"; }\n"),
-	)
+	script.WriteString("printf 'publication_complete=1\\n'; } > \"${sentinel}.publishing.$$\" && mv -f -- \"${sentinel}.publishing.$$\" \"$sentinel\"; rm -f \"${sentinel}.publishing.$$\" \"$artifact_before\" \"$artifact_after\" \"$container_start_marker\" \"$seed_links\" \"$seed_list\"; exit \"$code\"; }\n")
 	script.WriteString("trap finish EXIT\nset -eu\n")
 	image, err := slurmExecutable(activity.Command)
 	if err != nil {
@@ -784,9 +745,7 @@ func writeSharedImageSeedPreparation(script *strings.Builder, image string) {
 	script.WriteString(shellQuote(image))
 	script.WriteByte('\n')
 	script.WriteString("if \"$container_runtime\" exec \"$image\" test -d /akoflow-wfa-shared; then\n")
-	script.WriteString(
-		"  \"$container_runtime\" exec \"$image\" find /akoflow-wfa-shared -mindepth 1 \\( -type f -o -type l \\) -print > \"$seed_list\" || { echo 'AkôFlow shared seed preparation failed while listing image inputs.' >&2; exit 70; }\n",
-	)
+	script.WriteString("  \"$container_runtime\" exec \"$image\" find /akoflow-wfa-shared -mindepth 1 \\( -type f -o -type l \\) -print > \"$seed_list\" || { echo 'AkôFlow shared seed preparation failed while listing image inputs.' >&2; exit 70; }\n")
 	script.WriteString("  while IFS= read -r seed_source; do\n")
 	script.WriteString("    seed_relative=${seed_source#/akoflow-wfa-shared/}\n")
 	script.WriteString("    seed_target=$artifact_root/$seed_relative\n")

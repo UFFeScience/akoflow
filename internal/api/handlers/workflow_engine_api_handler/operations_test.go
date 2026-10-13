@@ -182,17 +182,7 @@ func TestStorageOperationDocumentationRequests(t *testing.T) {
 
 func TestStorageHTTPHandlersReportUnavailableAndOperationErrors(t *testing.T) {
 	empty := &Handler{}
-	for _, handler := range []http.HandlerFunc{
-		empty.ListStorages,
-		empty.StorageRoots,
-		empty.BrowseStorage,
-		empty.StatStorageEntry,
-		empty.CreateDownload,
-		empty.StreamDownload,
-		empty.GetDownload,
-		empty.ChecksumStorageEntry,
-		empty.DeleteStorageEntry,
-	} {
+	for _, handler := range []http.HandlerFunc{empty.ListStorages, empty.StorageRoots, empty.BrowseStorage, empty.StatStorageEntry, empty.CreateDownload, empty.StreamDownload, empty.GetDownload, empty.ChecksumStorageEntry, empty.DeleteStorageEntry} {
 		if response := callHandler(t, http.MethodGet, "/", "", nil, handler); response.Code != http.StatusServiceUnavailable {
 			t.Fatalf("unavailable = %d", response.Code)
 		}
@@ -203,55 +193,7 @@ func TestStorageHTTPHandlersReportUnavailableAndOperationErrors(t *testing.T) {
 		method, body string
 		handler      http.HandlerFunc
 	}{
-		{
-			http.MethodGet,
-			"",
-			h.BrowseStorage,
-		}, {
-			http.MethodGet,
-			"",
-			h.StatStorageEntry,
-		}, {
-			http.MethodPost,
-			`{"path":"x"}`,
-			h.CreateDownload,
-		}, {
-			http.MethodGet,
-			"",
-			h.StreamDownload,
-		}, {
-			http.MethodGet,
-			"",
-			h.GetDownload,
-		}, {
-			http.MethodPost,
-			`{"path":"x"}`,
-			h.ChecksumStorageEntry,
-		}, {
-			http.MethodDelete,
-			"",
-			h.DeleteStorageEntry,
-		}, {
-			http.MethodPost,
-			`{"path":"x"}`,
-			h.CopyStorageEntry,
-		}, {
-			http.MethodPost,
-			`{"path":"x"}`,
-			h.ArchiveStorageDirectory,
-		}, {
-			http.MethodPost,
-			`{"Path":"x"}`,
-			h.PromoteStorageData,
-		}, {
-			http.MethodPost,
-			`{"Path":"x"}`,
-			h.PromoteStorageArtifact,
-		}, {
-			http.MethodPost,
-			`{}`,
-			h.StartStorageIndex,
-		},
+		{http.MethodGet, "", h.BrowseStorage}, {http.MethodGet, "", h.StatStorageEntry}, {http.MethodPost, `{"path":"x"}`, h.CreateDownload}, {http.MethodGet, "", h.StreamDownload}, {http.MethodGet, "", h.GetDownload}, {http.MethodPost, `{"path":"x"}`, h.ChecksumStorageEntry}, {http.MethodDelete, "", h.DeleteStorageEntry}, {http.MethodPost, `{"path":"x"}`, h.CopyStorageEntry}, {http.MethodPost, `{"path":"x"}`, h.ArchiveStorageDirectory}, {http.MethodPost, `{"Path":"x"}`, h.PromoteStorageData}, {http.MethodPost, `{"Path":"x"}`, h.PromoteStorageArtifact}, {http.MethodPost, `{}`, h.StartStorageIndex},
 	}
 	for _, call := range calls {
 		if response := callHandler(t, call.method, "/?path=x", call.body, map[string]string{"storageId": "storage", "downloadId": "download"}, call.handler); response.Code < 400 {
@@ -352,15 +294,7 @@ func TestConsoleTerminalAndAuditUnavailableResponses(t *testing.T) {
 		method  string
 		handler http.HandlerFunc
 		status  int
-	}{
-		{http.MethodPost, h.ExecuteConsoleCommand, 503},
-		{http.MethodGet, h.ListConsoleCommands, 503},
-		{http.MethodPost, h.OpenConsoleSession, 503},
-		{http.MethodGet, h.StreamConsoleSession, 503},
-		{http.MethodDelete, h.CloseConsoleSession, 503},
-		{http.MethodGet, h.ExportConsoleSessionLog, 503},
-		{http.MethodGet, h.ListAuditEvents, 503},
-	} {
+	}{{http.MethodPost, h.ExecuteConsoleCommand, 503}, {http.MethodGet, h.ListConsoleCommands, 503}, {http.MethodPost, h.OpenConsoleSession, 503}, {http.MethodGet, h.StreamConsoleSession, 503}, {http.MethodDelete, h.CloseConsoleSession, 503}, {http.MethodGet, h.ExportConsoleSessionLog, 503}, {http.MethodGet, h.ListAuditEvents, 503}} {
 		if response := callHandler(t, call.method, "/", `{}`, nil, call.handler); response.Code != call.status {
 			t.Fatalf("unavailable = %d", response.Code)
 		}

@@ -104,24 +104,9 @@ func (r *Repository) Delete(ctx context.Context, environmentID string) error {
 		{"execution scope", `SELECT EXISTS(SELECT 1 FROM execution_scope_environments ese JOIN environment_versions ev ON ev.id=ese.environment_version_id WHERE ev.environment_id=?)`},
 		{"network topology", `SELECT EXISTS(SELECT 1 FROM network_links nl JOIN resources r ON r.id=nl.source_resource_id OR r.id=nl.target_resource_id JOIN environment_versions ev ON ev.id=r.environment_version_id WHERE ev.environment_id=?)`},
 		{"schedule plan", `SELECT EXISTS(SELECT 1 FROM schedule_plan_assignments spa JOIN resources r ON r.id=spa.resource_id JOIN environment_versions ev ON ev.id=r.environment_version_id WHERE ev.environment_id=?)`},
-		{
-			"execution data",
-			("SELECT EXISTS(SELECT 1 FROM data_locations dl LEFT JOIN resources r ON r.id=dl.resource_id LEFT JOIN" +
-				" storage_resources sr ON sr.id=dl.storage_resource_id LEFT JOIN environment_versions rv ON rv.id=r.e" +
-				"nvironment_version_id LEFT JOIN environment_versions sv ON sv.id=sr.environment_version_id WHERE rv." +
-				"environment_id=? OR sv.environment_id=?)"),
-		},
-		{
-			"transfer observation",
-			`SELECT EXISTS(SELECT 1 FROM data_transfer_observations dto JOIN resources r ON r.id=dto.source_resource_id OR r.id=dto.target_resource_id JOIN environment_versions ev ON ev.id=r.environment_version_id WHERE ev.environment_id=?)`,
-		},
-		{
-			"console activity",
-			("SELECT EXISTS(SELECT 1 FROM console_commands cc JOIN resources r ON r.id=cc.resource_id JOIN environ" +
-				"ment_versions ev ON ev.id=r.environment_version_id WHERE ev.environment_id=?) OR EXISTS(SELECT 1 FRO" +
-				"M console_sessions cs JOIN resources r ON r.id=cs.resource_id JOIN environment_versions ev ON ev.id=" +
-				"r.environment_version_id WHERE ev.environment_id=?)"),
-		},
+		{"execution data", `SELECT EXISTS(SELECT 1 FROM data_locations dl LEFT JOIN resources r ON r.id=dl.resource_id LEFT JOIN storage_resources sr ON sr.id=dl.storage_resource_id LEFT JOIN environment_versions rv ON rv.id=r.environment_version_id LEFT JOIN environment_versions sv ON sv.id=sr.environment_version_id WHERE rv.environment_id=? OR sv.environment_id=?)`},
+		{"transfer observation", `SELECT EXISTS(SELECT 1 FROM data_transfer_observations dto JOIN resources r ON r.id=dto.source_resource_id OR r.id=dto.target_resource_id JOIN environment_versions ev ON ev.id=r.environment_version_id WHERE ev.environment_id=?)`},
+		{"console activity", `SELECT EXISTS(SELECT 1 FROM console_commands cc JOIN resources r ON r.id=cc.resource_id JOIN environment_versions ev ON ev.id=r.environment_version_id WHERE ev.environment_id=?) OR EXISTS(SELECT 1 FROM console_sessions cs JOIN resources r ON r.id=cs.resource_id JOIN environment_versions ev ON ev.id=r.environment_version_id WHERE ev.environment_id=?)`},
 		{"simulation scenario", `SELECT EXISTS(SELECT 1 FROM simulation_scenarios ss JOIN environment_versions ev ON ev.id=ss.environment_version_id WHERE ev.environment_id=?)`},
 	} {
 		args := []any{environmentID}

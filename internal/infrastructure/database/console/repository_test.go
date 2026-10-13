@@ -22,11 +22,7 @@ func testRepository(t *testing.T) *Repository {
 	if err = database.Bootstrap(context.Background(), db); err != nil {
 		t.Fatal(err)
 	}
-	for _, statement := range []string{
-		`INSERT INTO environments(id,name) VALUES('environment','Environment')`,
-		`INSERT INTO environment_versions(id,environment_id,version,status,network_model,interference_model,cost_model,configuration_hash) VALUES('version','environment',1,'published','{}','{}','{}','hash')`,
-		`INSERT INTO resources(id,environment_version_id,type,name,provider_id,schedulable) VALUES('resource','version','hpc_machine','Node','node',1)`,
-	} {
+	for _, statement := range []string{`INSERT INTO environments(id,name) VALUES('environment','Environment')`, `INSERT INTO environment_versions(id,environment_id,version,status,network_model,interference_model,cost_model,configuration_hash) VALUES('version','environment',1,'published','{}','{}','{}','hash')`, `INSERT INTO resources(id,environment_version_id,type,name,provider_id,schedulable) VALUES('resource','version','hpc_machine','Node','node',1)`} {
 		if _, err = db.Exec(statement); err != nil {
 			t.Fatal(err)
 		}
@@ -37,22 +33,7 @@ func testRepository(t *testing.T) *Repository {
 func TestConsoleCommandLifecycleAndListing(t *testing.T) {
 	repository, ctx := testRepository(t), context.Background()
 	now := time.Now().UTC().Truncate(time.Second)
-	command := domainconsole.Command{
-		ID:               "command",
-		ResourceID:       "resource",
-		RuntimeID:        "runtime",
-		ConnectionID:     "connection",
-		ActorID:          "user",
-		Command:          "hostname",
-		WorkingDirectory: "/work",
-		Environment:      map[string]string{"A": "B"},
-		CPUCores:         2,
-		MemoryBytes:      1024,
-		TimeoutSeconds:   30,
-		Status:           domainconsole.CommandRunning,
-		CreatedAt:        now,
-		StartedAt:        now,
-	}
+	command := domainconsole.Command{ID: "command", ResourceID: "resource", RuntimeID: "runtime", ConnectionID: "connection", ActorID: "user", Command: "hostname", WorkingDirectory: "/work", Environment: map[string]string{"A": "B"}, CPUCores: 2, MemoryBytes: 1024, TimeoutSeconds: 30, Status: domainconsole.CommandRunning, CreatedAt: now, StartedAt: now}
 	if err := repository.SaveConsoleCommand(ctx, command); err != nil {
 		t.Fatal(err)
 	}

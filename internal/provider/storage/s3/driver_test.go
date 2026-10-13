@@ -88,40 +88,30 @@ func TestBrowseUsesPrefixAndDelimiter(t *testing.T) {
 
 func TestBrowseOpenWriteRemoveAndStatEntry(t *testing.T) {
 	content := []byte("payload")
-	server := httptest.NewServer(
-		http.HandlerFunc(
-			func(w http.ResponseWriter, r *http.Request) {
-				if r.Header.Get("Authorization") != "test" {
-					t.Error("request was not authorized")
-				}
-				switch r.Method {
-				case http.MethodHead:
-					w.Header().Set("Content-Length", "7")
-					w.Header().Set("ETag", `"etag"`)
-				case http.MethodGet:
-					if r.URL.Query().Get("list-type") == "2" {
-						_, _ = w.Write(
-							[]byte(
-								("<ListBucketResult><Contents><Key>root/</Key><Size>0</Size></Contents><Contents><Key>root/file.txt</K" +
-									"ey><Size>7</Size><ETag>\"etag\"</ETag></Contents><NextContinuationToken>next</NextContinuationToken><I" +
-									"sTruncated>true</IsTruncated></ListBucketResult>"),
-							),
-						)
-						return
-					}
-					_, _ = w.Write(content)
-				case http.MethodPut:
-					body, _ := io.ReadAll(r.Body)
-					if !bytes.Equal(body, content) {
-						t.Errorf("body=%q", body)
-					}
-					w.WriteHeader(http.StatusCreated)
-				case http.MethodDelete:
-					w.WriteHeader(http.StatusNoContent)
-				}
-			},
-		),
-	)
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Header.Get("Authorization") != "test" {
+			t.Error("request was not authorized")
+		}
+		switch r.Method {
+		case http.MethodHead:
+			w.Header().Set("Content-Length", "7")
+			w.Header().Set("ETag", `"etag"`)
+		case http.MethodGet:
+			if r.URL.Query().Get("list-type") == "2" {
+				_, _ = w.Write([]byte(`<ListBucketResult><Contents><Key>root/</Key><Size>0</Size></Contents><Contents><Key>root/file.txt</Key><Size>7</Size><ETag>"etag"</ETag></Contents><NextContinuationToken>next</NextContinuationToken><IsTruncated>true</IsTruncated></ListBucketResult>`))
+				return
+			}
+			_, _ = w.Write(content)
+		case http.MethodPut:
+			body, _ := io.ReadAll(r.Body)
+			if !bytes.Equal(body, content) {
+				t.Errorf("body=%q", body)
+			}
+			w.WriteHeader(http.StatusCreated)
+		case http.MethodDelete:
+			w.WriteHeader(http.StatusNoContent)
+		}
+	}))
 	defer server.Close()
 	credentials := &credentialStub{}
 	driver := New(server.Client(), credentials)

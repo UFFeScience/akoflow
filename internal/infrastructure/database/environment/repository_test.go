@@ -55,11 +55,7 @@ func TestEnvironmentDefinitionCreate(t *testing.T) {
 			DiskReadBytes: 10, DiskWriteBytes: 20, EnergyJoules: 3, Source: "measured",
 			SampleSize: 4, ModelVersion: "1", Metadata: map[string]any{"host": "node"},
 		}},
-		Connections: []domain.EnvironmentConnection{{ID: "c1", Name: "cluster", Type: domain.ConnectionKubernetes, Endpoint: "https://cluster.example", Configuration: map[string]any{
-			"namespace":             "science",
-			"bearerToken":           "saved-token",
-			"insecureSkipTlsVerify": true,
-		}}},
+		Connections: []domain.EnvironmentConnection{{ID: "c1", Name: "cluster", Type: domain.ConnectionKubernetes, Endpoint: "https://cluster.example", Configuration: map[string]any{"namespace": "science", "bearerToken": "saved-token", "insecureSkipTlsVerify": true}}},
 	}
 	if err := repository.Create(context.Background(), definition); err != nil {
 		t.Fatal(err)

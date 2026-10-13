@@ -129,16 +129,7 @@ func TestAdapterFailureValidationEndpointsAndStop(t *testing.T) {
 	if _, err := adapter.Start(context.Background(), domain.ActivityExecutionContext{Run: domain.ExecutionRun{ID: "run"}, Activity: domain.Activity{ID: "bad", Command: domain.ActivityCommand{Entrypoint: "/missing/program"}}}); err == nil {
 		t.Fatal("expected start error")
 	}
-	handle, err := adapter.Start(context.Background(), domain.ActivityExecutionContext{
-		Run: domain.ExecutionRun{ID: "run"},
-		Activity: domain.Activity{
-			ID:      "failed",
-			Command: domain.ActivityCommand{Entrypoint: "sh", Arguments: []string{"-c", "echo failure; exit 7"}, Environment: map[string]string{"VALUE": "set"}},
-			Service: &domain.ServiceSpec{Ports: []int{8080, 9090}},
-		},
-		Resource:  domain.Resource{ID: "local"},
-		RuntimeID: "local",
-	})
+	handle, err := adapter.Start(context.Background(), domain.ActivityExecutionContext{Run: domain.ExecutionRun{ID: "run"}, Activity: domain.Activity{ID: "failed", Command: domain.ActivityCommand{Entrypoint: "sh", Arguments: []string{"-c", "echo failure; exit 7"}, Environment: map[string]string{"VALUE": "set"}}, Service: &domain.ServiceSpec{Ports: []int{8080, 9090}}}, Resource: domain.Resource{ID: "local"}, RuntimeID: "local"})
 	if err != nil {
 		t.Fatal(err)
 	}

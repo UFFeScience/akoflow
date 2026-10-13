@@ -11,23 +11,15 @@ import (
 )
 
 func TestDiscoveryReadsNodesAndKindLoginTarget(t *testing.T) {
-	server := httptest.NewServer(
-		http.HandlerFunc(
-			func(w http.ResponseWriter, r *http.Request) {
-				if r.URL.Path != "/api/v1/nodes" || r.Header.Get("Authorization") != "Bearer token" {
-					t.Errorf("path=%q authorization=%q", r.URL.Path, r.Header.Get("Authorization"))
-				}
-				_, _ = w.Write(
-					[]byte(
-						`{"items":[
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path != "/api/v1/nodes" || r.Header.Get("Authorization") != "Bearer token" {
+			t.Errorf("path=%q authorization=%q", r.URL.Path, r.Header.Get("Authorization"))
+		}
+		_, _ = w.Write([]byte(`{"items":[
 			{"metadata":{"name":"kind-control-plane","labels":{"role":"control"}},"status":{"nodeInfo":{"architecture":"amd64","containerRuntimeVersion":"containerd://1"},"allocatable":{"cpu":"3500m","memory":"2Gi"},"conditions":[{"Type":"Ready","Status":"True"}]}},
 			{"metadata":{"name":"kind-worker"},"status":{"nodeInfo":{"architecture":"arm64","containerRuntimeVersion":"containerd://1"},"allocatable":{"cpu":"2","memory":"512Mi"},"conditions":[{"Type":"Ready","Status":"False"}]}}
-		]}`,
-					),
-				)
-			},
-		),
-	)
+		]}`))
+	}))
 	defer server.Close()
 	discovery := NewDiscovery()
 	result, err := discovery.DiscoverConnection(context.Background(), domain.EnvironmentConnection{
@@ -58,10 +50,7 @@ func TestDiscoveryReportsConfigurationAPIAndDecodeErrors(t *testing.T) {
 	}
 	badJSON := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) { _, _ = w.Write([]byte("{")) }))
 	defer badJSON.Close()
-	if _, err := discovery.DiscoverConnection(context.Background(), domain.EnvironmentConnection{
-		Endpoint:      badJSON.URL,
-		Configuration: map[string]any{"bearerToken": "token"},
-	}); err == nil || !strings.Contains(err.Error(), "decode Kubernetes nodes") {
+	if _, err := discovery.DiscoverConnection(context.Background(), domain.EnvironmentConnection{Endpoint: badJSON.URL, Configuration: map[string]any{"bearerToken": "token"}}); err == nil || !strings.Contains(err.Error(), "decode Kubernetes nodes") {
 		t.Fatalf("decode error=%v", err)
 	}
 }

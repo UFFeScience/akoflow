@@ -45,16 +45,7 @@ func (r TerminalRunner) StartInteractive(ctx context.Context, connection domain.
 	if nodeName == "" && !strings.Contains(resource.ProviderID, "://") {
 		nodeName = resource.ProviderID
 	}
-	spec := map[string]any{
-		"apiVersion": "v1",
-		"kind":       "Pod",
-		"metadata":   map[string]any{"name": pod, "labels": map[string]string{"app.kubernetes.io/managed-by": "akoflow", "akoflow.io/purpose": "interactive-console"}},
-		"spec": map[string]any{
-			"restartPolicy": "Never",
-			"nodeName":      resource.ProviderID,
-			"containers":    []map[string]any{{"name": "console", "image": "busybox:1.36", "command": []string{"/bin/sh", "-c", "trap : TERM INT; sleep infinity & wait"}, "stdin": true, "tty": true}},
-		},
-	}
+	spec := map[string]any{"apiVersion": "v1", "kind": "Pod", "metadata": map[string]any{"name": pod, "labels": map[string]string{"app.kubernetes.io/managed-by": "akoflow", "akoflow.io/purpose": "interactive-console"}}, "spec": map[string]any{"restartPolicy": "Never", "nodeName": resource.ProviderID, "containers": []map[string]any{{"name": "console", "image": "busybox:1.36", "command": []string{"/bin/sh", "-c", "trap : TERM INT; sleep infinity & wait"}, "stdin": true, "tty": true}}}}
 	if nodeName == "" {
 		delete(spec["spec"].(map[string]any), "nodeName")
 	} else {

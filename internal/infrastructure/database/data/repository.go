@@ -360,11 +360,7 @@ func (r *Repository) ListArtifactTransferRuns(ctx context.Context, runID string)
 func (r *Repository) FindTransferRun(ctx context.Context, id string) (*domain.DataTransferRun, error) {
 	var value domain.DataTransferRun
 	var verified, chunks, route string
-	err := r.db.QueryRowContext(
-		ctx,
-		`SELECT id,plan_id,execution_run_id,activity_id,strategy,status,verified_blobs,completed_chunks,started_at,finished_at,transferred_bytes,error,logical_bytes,network_bytes,route FROM transfer_runs WHERE id=?`,
-		id,
-	).
+	err := r.db.QueryRowContext(ctx, `SELECT id,plan_id,execution_run_id,activity_id,strategy,status,verified_blobs,completed_chunks,started_at,finished_at,transferred_bytes,error,logical_bytes,network_bytes,route FROM transfer_runs WHERE id=?`, id).
 		Scan(&value.ID, &value.PlanID, &value.ExecutionRunID, &value.ActivityID, &value.Strategy,
 			&value.Status, &verified, &chunks, &value.StartedAt, &value.FinishedAt,
 			&value.TransferredBytes, &value.Error, &value.LogicalBytes, &value.NetworkBytes, &route)
@@ -505,19 +501,7 @@ func (r *Repository) ListArtifactBuilds(ctx context.Context, artifactID string) 
 	values := []domain.ArtifactBuild{}
 	for rows.Next() {
 		var value domain.ArtifactBuild
-		if err := rows.Scan(
-			&value.ID,
-			&value.ArtifactVersionID,
-			&value.SourceType,
-			&value.ContextDigest,
-			&value.RecipePath,
-			&value.RecipeDigest,
-			&value.TargetFormat,
-			&value.TargetOS,
-			&value.TargetArchitecture,
-			&value.BuildArguments,
-			&value.CacheKey,
-		); err != nil {
+		if err := rows.Scan(&value.ID, &value.ArtifactVersionID, &value.SourceType, &value.ContextDigest, &value.RecipePath, &value.RecipeDigest, &value.TargetFormat, &value.TargetOS, &value.TargetArchitecture, &value.BuildArguments, &value.CacheKey); err != nil {
 			return nil, err
 		}
 		values = append(values, value)

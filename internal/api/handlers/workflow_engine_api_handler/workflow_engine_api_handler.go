@@ -1083,119 +1083,14 @@ func (h *Handler) Search(w http.ResponseWriter, r *http.Request) {
 			results = append(results, item)
 		}
 	}
-	if types["workflow"] {
-		items, err := h.workflows.List(r.Context())
-		if err != nil {
-			writeError(w, http.StatusInternalServerError, err)
-			return
-		}
-		for _, item := range items {
-			add(SearchResult{Type: "workflow", ID: item.ID, Title: item.Name, Subtitle: item.Namespace, Path: "/workflows/" + url.PathEscape(item.ID)}, item.ID, item.ExternalID, item.Name, item.Namespace)
-		}
+	if !h.searchExecutionRecords(w, r, types, add) {
+		return
 	}
-	if types["execution"] {
-		items, err := h.executions.ListRuns(r.Context())
-		if err != nil {
-			writeError(w, http.StatusInternalServerError, err)
-			return
-		}
-		for _, item := range items {
-			add(SearchResult{
-				Type:     "execution",
-				ID:       item.ID,
-				Title:    firstNonEmpty(item.Title, item.ID),
-				Subtitle: firstNonEmpty(item.FailureReason, item.ResourceID, item.RuntimeID),
-				Status:   string(item.Status),
-				Path:     "/executions/" + url.PathEscape(item.ID),
-			}, item.ID, item.Title, item.ResourceID, item.RuntimeID, item.FailureReason, string(item.Status))
-		}
+	if !h.searchInfrastructureRecords(w, r, types, add) {
+		return
 	}
-	if types["artifact"] {
-		items, err := h.data.ListArtifacts(r.Context(), false)
-		if err != nil {
-			writeError(w, http.StatusInternalServerError, err)
-			return
-		}
-		for _, item := range items {
-			add(SearchResult{Type: "artifact", ID: item.ID, Title: firstNonEmpty(item.Name, item.ID), Subtitle: item.Version, Path: "/artifacts/" + url.PathEscape(item.ID)}, item.ID, item.Name, item.Version)
-		}
-	}
-	if types["environment"] {
-		items, err := h.environments.List(r.Context())
-		if err != nil {
-			writeError(w, http.StatusInternalServerError, err)
-			return
-		}
-		for _, item := range items {
-			value := item.Environment
-			add(SearchResult{
-				Type:     "environment",
-				ID:       value.ID,
-				Title:    value.Name,
-				Subtitle: value.Description,
-				Status:   string(value.Status),
-				Path:     "/environments/" + url.PathEscape(value.ID),
-			}, value.ID, value.Name, value.Description, string(value.Status))
-		}
-	}
-	if types["resource"] {
-		items, err := h.resources.List(r.Context())
-		if err != nil {
-			writeError(w, http.StatusInternalServerError, err)
-			return
-		}
-		for _, item := range items {
-			add(SearchResult{
-				Type:     "resource",
-				ID:       item.ID,
-				Title:    item.Name,
-				Subtitle: string(item.Type),
-				Path:     "/resources/" + url.PathEscape(item.ID),
-			}, item.ID, item.Name, item.ProviderID, item.Region, item.Zone, string(item.Type), item.EnvironmentVersionID)
-		}
-	}
-	if types["plan"] {
-		items, err := h.plans.List(r.Context())
-		if err != nil {
-			writeError(w, http.StatusInternalServerError, err)
-			return
-		}
-		for _, item := range items {
-			add(SearchResult{Type: "plan", ID: item.ID, Title: item.ID, Subtitle: item.Algorithm, Path: "/plans/" + url.PathEscape(item.ID)}, item.ID, item.Algorithm, item.Objective, item.WorkflowVersionID, item.ExecutionScopeID)
-		}
-	}
-	if types["scope"] {
-		items, err := h.scopes.ListScopes(r.Context())
-		if err != nil {
-			writeError(w, http.StatusInternalServerError, err)
-			return
-		}
-		for _, item := range items {
-			add(SearchResult{
-				Type:     "scope",
-				ID:       item.ID,
-				Title:    item.Name,
-				Subtitle: item.NetworkTopologyID,
-				Path:     "/execution-scopes/" + url.PathEscape(item.ID),
-			}, item.ID, item.Name, item.NetworkTopologyID, strings.Join(item.EnvironmentVersionIDs, " "))
-		}
-	}
-	if types["materialization"] {
-		items, err := h.data.ListArtifactMaterializations(r.Context(), "")
-		if err != nil {
-			writeError(w, http.StatusInternalServerError, err)
-			return
-		}
-		for _, item := range items {
-			add(SearchResult{
-				Type:     "materialization",
-				ID:       item.ID,
-				Title:    item.VariantID,
-				Subtitle: firstNonEmpty(item.DestinationPath, item.ResourceID),
-				Status:   string(item.Status),
-				Path:     "/materializations?runId=" + url.QueryEscape(item.RunID),
-			}, item.ID, item.VariantID, item.Digest, item.ResourceID, item.RunID, item.ActivityID, item.DestinationPath, string(item.Status))
-		}
+	if !h.searchPlanningRecords(w, r, types, add) {
+		return
 	}
 	sort.SliceStable(results, func(i, j int) bool { return results[i].Score > results[j].Score })
 	if len(results) > limit {
@@ -2945,37 +2840,8 @@ func (h *Handler) executionRecoveryPreview(ctx context.Context, runID string) (e
 			}
 		}
 	}
-	if recoveryQueue, ok := h.queue.(ExecutionRecoveryQueueStore); ok {
-		original, requestErr := recoveryQueue.FindLatestByAggregate(ctx, "execution_run", runID, eventloop.EventExecutionRunRequested)
-		if requestErr != nil {
-			return executionRecoveryPreview{}, requestErr
-		}
-		if original != nil {
-			var request ports.ExecutionRequest
-			if json.Unmarshal(original.Payload, &request) == nil {
-				for _, activity := range request.Workflow.Activities {
-					if _, observed := latestByActivity[activity.ID]; !observed {
-						interrupted[activity.ID] = true
-					}
-				}
-				changed := true
-				for changed {
-					changed = false
-					for _, activity := range request.Workflow.Activities {
-						if reusable[activity.ID] {
-							continue
-						}
-						for _, producerID := range recoveryProducerIDs(request.Workflow, activity.ID) {
-							if reusable[producerID] && !available[producerID] {
-								delete(reusable, producerID)
-								interrupted[producerID] = true
-								changed = true
-							}
-						}
-					}
-				}
-			}
-		}
+	if err := h.reconcileRecoveryPreview(ctx, runID, latestByActivity, reusable, available, interrupted); err != nil {
+		return executionRecoveryPreview{}, err
 	}
 	for activityID := range reusable {
 		preview.Reusable = append(preview.Reusable, activityID)
@@ -3358,4 +3224,166 @@ func writeError(w http.ResponseWriter, status int, err error) {
 		message = err.Error()
 	}
 	writeJSON(w, status, map[string]string{"error": message})
+}
+
+func (h *Handler) searchExecutionRecords(w http.ResponseWriter, r *http.Request, types map[string]bool, add func(SearchResult, ...string)) bool {
+	if types["workflow"] {
+		items, err := h.workflows.List(r.Context())
+		if err != nil {
+			writeError(w, http.StatusInternalServerError, err)
+			return false
+		}
+		for _, item := range items {
+			add(SearchResult{Type: "workflow", ID: item.ID, Title: item.Name, Subtitle: item.Namespace, Path: "/workflows/" + url.PathEscape(item.ID)}, item.ID, item.ExternalID, item.Name, item.Namespace)
+		}
+	}
+	if types["execution"] {
+		items, err := h.executions.ListRuns(r.Context())
+		if err != nil {
+			writeError(w, http.StatusInternalServerError, err)
+			return false
+		}
+		for _, item := range items {
+			add(SearchResult{
+				Type:     "execution",
+				ID:       item.ID,
+				Title:    firstNonEmpty(item.Title, item.ID),
+				Subtitle: firstNonEmpty(item.FailureReason, item.ResourceID, item.RuntimeID),
+				Status:   string(item.Status),
+				Path:     "/executions/" + url.PathEscape(item.ID),
+			}, item.ID, item.Title, item.ResourceID, item.RuntimeID, item.FailureReason, string(item.Status))
+		}
+	}
+	if types["artifact"] {
+		items, err := h.data.ListArtifacts(r.Context(), false)
+		if err != nil {
+			writeError(w, http.StatusInternalServerError, err)
+			return false
+		}
+		for _, item := range items {
+			add(SearchResult{Type: "artifact", ID: item.ID, Title: firstNonEmpty(item.Name, item.ID), Subtitle: item.Version, Path: "/artifacts/" + url.PathEscape(item.ID)}, item.ID, item.Name, item.Version)
+		}
+	}
+	return true
+}
+
+func (h *Handler) searchInfrastructureRecords(w http.ResponseWriter, r *http.Request, types map[string]bool, add func(SearchResult, ...string)) bool {
+	if types["environment"] {
+		items, err := h.environments.List(r.Context())
+		if err != nil {
+			writeError(w, http.StatusInternalServerError, err)
+			return false
+		}
+		for _, item := range items {
+			value := item.Environment
+			add(SearchResult{
+				Type:     "environment",
+				ID:       value.ID,
+				Title:    value.Name,
+				Subtitle: value.Description,
+				Status:   string(value.Status),
+				Path:     "/environments/" + url.PathEscape(value.ID),
+			}, value.ID, value.Name, value.Description, string(value.Status))
+		}
+	}
+	if types["resource"] {
+		items, err := h.resources.List(r.Context())
+		if err != nil {
+			writeError(w, http.StatusInternalServerError, err)
+			return false
+		}
+		for _, item := range items {
+			add(SearchResult{
+				Type:     "resource",
+				ID:       item.ID,
+				Title:    item.Name,
+				Subtitle: string(item.Type),
+				Path:     "/resources/" + url.PathEscape(item.ID),
+			}, item.ID, item.Name, item.ProviderID, item.Region, item.Zone, string(item.Type), item.EnvironmentVersionID)
+		}
+	}
+	return true
+}
+
+func (h *Handler) searchPlanningRecords(w http.ResponseWriter, r *http.Request, types map[string]bool, add func(SearchResult, ...string)) bool {
+	if types["plan"] {
+		items, err := h.plans.List(r.Context())
+		if err != nil {
+			writeError(w, http.StatusInternalServerError, err)
+			return false
+		}
+		for _, item := range items {
+			add(SearchResult{Type: "plan", ID: item.ID, Title: item.ID, Subtitle: item.Algorithm, Path: "/plans/" + url.PathEscape(item.ID)}, item.ID, item.Algorithm, item.Objective, item.WorkflowVersionID, item.ExecutionScopeID)
+		}
+	}
+	if types["scope"] {
+		items, err := h.scopes.ListScopes(r.Context())
+		if err != nil {
+			writeError(w, http.StatusInternalServerError, err)
+			return false
+		}
+		for _, item := range items {
+			add(SearchResult{
+				Type:     "scope",
+				ID:       item.ID,
+				Title:    item.Name,
+				Subtitle: item.NetworkTopologyID,
+				Path:     "/execution-scopes/" + url.PathEscape(item.ID),
+			}, item.ID, item.Name, item.NetworkTopologyID, strings.Join(item.EnvironmentVersionIDs, " "))
+		}
+	}
+	if types["materialization"] {
+		items, err := h.data.ListArtifactMaterializations(r.Context(), "")
+		if err != nil {
+			writeError(w, http.StatusInternalServerError, err)
+			return false
+		}
+		for _, item := range items {
+			add(SearchResult{
+				Type:     "materialization",
+				ID:       item.ID,
+				Title:    item.VariantID,
+				Subtitle: firstNonEmpty(item.DestinationPath, item.ResourceID),
+				Status:   string(item.Status),
+				Path:     "/materializations?runId=" + url.QueryEscape(item.RunID),
+			}, item.ID, item.VariantID, item.Digest, item.ResourceID, item.RunID, item.ActivityID, item.DestinationPath, string(item.Status))
+		}
+	}
+	return true
+}
+
+func (h *Handler) reconcileRecoveryPreview(ctx context.Context, runID string, latestByActivity map[string]domain.TaskExecution, reusable, available, interrupted map[string]bool) error {
+	if recoveryQueue, ok := h.queue.(ExecutionRecoveryQueueStore); ok {
+		original, requestErr := recoveryQueue.FindLatestByAggregate(ctx, "execution_run", runID, eventloop.EventExecutionRunRequested)
+		if requestErr != nil {
+			return requestErr
+		}
+		if original != nil {
+			var request ports.ExecutionRequest
+			if json.Unmarshal(original.Payload, &request) == nil {
+				for _, activity := range request.Workflow.Activities {
+					if _, observed := latestByActivity[activity.ID]; !observed {
+						interrupted[activity.ID] = true
+					}
+				}
+				changed := true
+				for changed {
+					changed = false
+					for _, activity := range request.Workflow.Activities {
+						if reusable[activity.ID] {
+							continue
+						}
+						for _, producerID := range recoveryProducerIDs(request.Workflow, activity.ID) {
+							if reusable[producerID] && !available[producerID] {
+								delete(reusable, producerID)
+								interrupted[producerID] = true
+								changed = true
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	return nil
 }

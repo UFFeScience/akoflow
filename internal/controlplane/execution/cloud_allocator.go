@@ -242,17 +242,7 @@ func (a QueuedCloudAllocator) findOrCreate(ctx context.Context, executionRunID, 
 		var published domainqueue.Job
 		published, err = a.Queue.Publish(ctx, job)
 		if err == nil && published.AggregateID != "" && published.AggregateID != operation.ID {
-			canonical, lookupErr := a.Operations.FindCloudOperation(ctx, published.AggregateID)
-			if lookupErr != nil || canonical == nil {
-				err = fmt.Errorf("resolve canonical cloud operation %q: %v", published.AggregateID, lookupErr)
-			} else {
-				now := time.Now().UTC()
-				operation.Status, operation.Phase, operation.FailureReason, operation.FinishedAt = "cancelled", "deduplicated", "Superseded by cloud operation "+canonical.ID, &now
-				if updateErr := a.Operations.UpdateCloudOperation(context.WithoutCancel(ctx), operation); updateErr != nil {
-					return operation, updateErr
-				}
-				return *canonical, nil
-			}
+			return a.canonicalAllocation(ctx, operation, published.AggregateID)
 		}
 	}
 	if err != nil {
@@ -399,4 +389,22 @@ func (a QueuedCloudAllocator) Stop(ctx context.Context, executionRunID string, a
 		}
 	}
 	return nil
+}
+
+func (a QueuedCloudAllocator) canonicalAllocation(ctx context.Context, operation domain.CloudOperationRun, canonicalID string) (domain.CloudOperationRun, error) {
+	canonical, lookupErr := a.Operations.FindCloudOperation(ctx, canonicalID)
+	if lookupErr != nil || canonical == nil {
+		cause := fmt.Errorf("resolve canonical cloud operation %q: %v", canonicalID, lookupErr)
+		now := time.Now().UTC()
+		operation.Status, operation.Phase, operation.FailureReason, operation.FinishedAt = "failed", "failed", cause.Error(), &now
+		_ = a.Operations.UpdateCloudOperation(context.WithoutCancel(ctx), operation)
+		return operation, cause
+	} else {
+		now := time.Now().UTC()
+		operation.Status, operation.Phase, operation.FailureReason, operation.FinishedAt = "cancelled", "deduplicated", "Superseded by cloud operation "+canonical.ID, &now
+		if updateErr := a.Operations.UpdateCloudOperation(context.WithoutCancel(ctx), operation); updateErr != nil {
+			return operation, updateErr
+		}
+		return *canonical, nil
+	}
 }

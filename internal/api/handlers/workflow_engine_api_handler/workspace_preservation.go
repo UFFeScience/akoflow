@@ -60,11 +60,9 @@ func (h *Handler) PreserveCancelledCloudWorkspaces(w http.ResponseWriter, r *htt
 		writeError(w, http.StatusInternalServerError, err)
 		return
 	}
-	for _, handle := range handles {
-		if handle.Status != domain.HandleCompleted && handle.Status != domain.HandleFailed && handle.Status != domain.HandleStopped {
-			writeError(w, http.StatusConflict, fmt.Errorf("execution handles are still active"))
-			return
-		}
+	if !preservationHandlesTerminal(handles) {
+		writeError(w, http.StatusConflict, fmt.Errorf("execution handles are still active"))
+		return
 	}
 	download, err := h.storage.Download(r.Context(), input.DownloadID)
 	archivePath := "runs/" + runID + ".tar.gz"
@@ -82,19 +80,9 @@ func (h *Handler) PreserveCancelledCloudWorkspaces(w http.ResponseWriter, r *htt
 		writeError(w, http.StatusInternalServerError, err)
 		return
 	}
-	selected := []domain.ActivityWorkspace{}
-	for _, workspace := range workspaces {
-		location, parseErr := url.Parse(workspace.URI)
-		if parseErr == nil && location.Query().Get("cloudInstanceId") == input.InstanceID && workspace.State != domain.WorkspaceReleased {
-			if workspace.Pinned || path.Base(workspace.ActivityID) != workspace.ActivityID {
-				writeError(w, http.StatusConflict, fmt.Errorf("workspace cannot be released"))
-				return
-			}
-			selected = append(selected, workspace)
-		}
-	}
-	if len(selected) == 0 {
-		writeError(w, http.StatusConflict, fmt.Errorf("no retained workspaces match this generation"))
+	selected, err := releasablePreservedWorkspaces(workspaces, input.InstanceID)
+	if err != nil {
+		writeError(w, http.StatusConflict, err)
 		return
 	}
 	reader, _, err := h.storage.OpenDownload(r.Context(), download.ID)
@@ -108,15 +96,46 @@ func (h *Handler) PreserveCancelledCloudWorkspaces(w http.ResponseWriter, r *htt
 		writeError(w, http.StatusUnprocessableEntity, err)
 		return
 	}
-	ids := make([]string, 0, len(selected))
-	for _, workspace := range selected {
-		ids = append(ids, workspace.ID)
-	}
+	ids := preservedWorkspaceIDs(selected)
 	if err := store.ReleasePreservedWorkspaces(r.Context(), runID, input.InstanceID, ids, relayPath+" sha256:"+want); err != nil {
 		writeError(w, http.StatusConflict, err)
 		return
 	}
 	writeJSON(w, http.StatusOK, map[string]any{"status": "preserved", "archive": relayPath, "sha256": want, "workspaceIds": ids, "instanceId": input.InstanceID})
+}
+
+func preservedWorkspaceIDs(workspaces []domain.ActivityWorkspace) []string {
+	ids := make([]string, 0, len(workspaces))
+	for _, workspace := range workspaces {
+		ids = append(ids, workspace.ID)
+	}
+	return ids
+}
+
+func preservationHandlesTerminal(handles []domain.ActivityHandle) bool {
+	for _, handle := range handles {
+		if handle.Status != domain.HandleCompleted && handle.Status != domain.HandleFailed && handle.Status != domain.HandleStopped {
+			return false
+		}
+	}
+	return true
+}
+
+func releasablePreservedWorkspaces(workspaces []domain.ActivityWorkspace, instanceID string) ([]domain.ActivityWorkspace, error) {
+	selected := []domain.ActivityWorkspace{}
+	for _, workspace := range workspaces {
+		location, parseErr := url.Parse(workspace.URI)
+		if parseErr == nil && location.Query().Get("cloudInstanceId") == instanceID && workspace.State != domain.WorkspaceReleased {
+			if workspace.Pinned || path.Base(workspace.ActivityID) != workspace.ActivityID {
+				return nil, fmt.Errorf("workspace cannot be released")
+			}
+			selected = append(selected, workspace)
+		}
+	}
+	if len(selected) == 0 {
+		return nil, fmt.Errorf("no retained workspaces match this generation")
+	}
+	return selected, nil
 }
 
 func preserveArchive(reader io.Reader, directory, digest, runID string, workspaces []domain.ActivityWorkspace) (string, error) {

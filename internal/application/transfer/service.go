@@ -89,15 +89,7 @@ func (m Materializer) Materialize(ctx context.Context, plan domain.DataTransferP
 	if err != nil {
 		return failed(target, run, err)
 	}
-	strategy := plan.Strategy
-	route := plan.Route
-	if strategy == "" {
-		route = m.Strategies.Resolve(source, destination)
-		strategy = route.Strategy
-	} else if route.Strategy == "" {
-		route = domain.TransferRoute{Strategy: strategy, Fallback: domain.TransferGateway, Reason: "strategy explicitly selected by the transfer plan"}
-	}
-	route = routeWithEndpoints(route, plan)
+	strategy, route := m.materializationRoute(plan, source, destination)
 	// Destination pull requires an agent on the destination.
 	if strategy == domain.TransferDestinationPull {
 		run.Strategy, run.Route = strategy, route
@@ -226,6 +218,17 @@ func (m Materializer) Materialize(ctx context.Context, plan domain.DataTransferP
 	target.Status = domain.MaterializationCommitted
 	target.VerifiedDigest = target.Digest
 	return target, run, nil
+}
+
+func (m Materializer) materializationRoute(plan domain.DataTransferPlan, source, destination domain.TransferEndpoint) (domain.TransferStrategy, domain.TransferRoute) {
+	strategy, route := plan.Strategy, plan.Route
+	if strategy == "" {
+		route = m.Strategies.Resolve(source, destination)
+		strategy = route.Strategy
+	} else if route.Strategy == "" {
+		route = domain.TransferRoute{Strategy: strategy, Fallback: domain.TransferGateway, Reason: "strategy explicitly selected by the transfer plan"}
+	}
+	return strategy, routeWithEndpoints(route, plan)
 }
 
 func shortArtifactDigest(digest string) string {

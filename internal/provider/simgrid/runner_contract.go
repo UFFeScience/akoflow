@@ -87,6 +87,60 @@ func buildRunnerInput(request ports.ExecutionRequest, referenceFLOPS float64) ([
 		}
 		input.Interference = &matrix
 	}
+	input.Tasks, err = buildRunnerTasks(request, referenceFLOPS, model, preparationModel)
+	if err != nil {
+		return nil, err
+	}
+	input.Dependencies, err = buildRunnerDependencies(request, model, preparationModel)
+	if err != nil {
+		return nil, err
+	}
+	for successor, predecessor := range model.lanePrevious {
+		input.ResourceLaneOrders = append(input.ResourceLaneOrders, runnerLaneOrder{
+			PredecessorID: predecessor, SuccessorID: successor,
+		})
+	}
+	return json.MarshalIndent(input, "", "  ")
+}
+
+func activityFLOPS(activity domain.Activity) float64 {
+	if activity.Simulation != nil {
+		if activity.Simulation.FLOPs > 0 {
+			return activity.Simulation.FLOPs
+		}
+		if value, ok := numberMetadata(activity.Simulation.Parameters, "flops"); ok && value > 0 {
+			return value
+		}
+	}
+	if value, ok := numberMetadata(activity.Metadata, "flops"); ok && value > 0 {
+		return value
+	}
+	return 0
+}
+
+func resourceFLOPS(resource domain.Resource, reference float64) float64 {
+	if value, ok := numberMetadata(resource.Metadata, "flopsPerSecond"); ok && value > 0 {
+		return value
+	}
+	if resource.ComputeSpeedup > 0 {
+		return reference * resource.ComputeSpeedup
+	}
+	return reference
+}
+
+func transferPrice(links []domain.NetworkLink, source, target string) float64 {
+	if source == target {
+		return 0
+	}
+	_, cost, ok := resolveNetworkPath(links, source, target, 1)
+	if !ok {
+		return 0
+	}
+	return cost
+}
+
+func buildRunnerTasks(request ports.ExecutionRequest, referenceFLOPS float64, model indexedRequest, preparationModel *materializationmodel.Model) ([]runnerTask, error) {
+	var tasks []runnerTask
 	for _, activity := range request.Workflow.Activities {
 		assignment, exists := model.assignments[activity.ID]
 		if !exists {
@@ -133,7 +187,7 @@ func buildRunnerInput(request ports.ExecutionRequest, referenceFLOPS float64) ([
 				return nil, err
 			}
 		}
-		input.Tasks = append(input.Tasks, runnerTask{
+		tasks = append(tasks, runnerTask{
 			ID: activity.ID, ActivityTypeID: activity.ActivityTypeID,
 			AssignmentID: assignment.ID, ResourceID: resource.ID,
 			FLOPs: flops, OverheadSeconds: overhead,
@@ -145,6 +199,11 @@ func buildRunnerInput(request ports.ExecutionRequest, referenceFLOPS float64) ([
 			PreparationServiceSlots:   preparationServiceSlots,
 		})
 	}
+	return tasks, nil
+}
+
+func buildRunnerDependencies(request ports.ExecutionRequest, model indexedRequest, preparationModel *materializationmodel.Model) ([]runnerDependency, error) {
+	var dependencies []runnerDependency
 	dataBytes := make(map[string]int64)
 	for _, dependency := range request.Workflow.DataDependencies {
 		key := dependency.ProducerActivityID + "\x00" + dependency.ConsumerActivityID
@@ -185,48 +244,7 @@ func buildRunnerInput(request ports.ExecutionRequest, referenceFLOPS float64) ([
 				entry.PricePerByte = transferCost / float64(bytes)
 			}
 		}
-		input.Dependencies = append(input.Dependencies, entry)
+		dependencies = append(dependencies, entry)
 	}
-	for successor, predecessor := range model.lanePrevious {
-		input.ResourceLaneOrders = append(input.ResourceLaneOrders, runnerLaneOrder{
-			PredecessorID: predecessor, SuccessorID: successor,
-		})
-	}
-	return json.MarshalIndent(input, "", "  ")
-}
-
-func activityFLOPS(activity domain.Activity) float64 {
-	if activity.Simulation != nil {
-		if activity.Simulation.FLOPs > 0 {
-			return activity.Simulation.FLOPs
-		}
-		if value, ok := numberMetadata(activity.Simulation.Parameters, "flops"); ok && value > 0 {
-			return value
-		}
-	}
-	if value, ok := numberMetadata(activity.Metadata, "flops"); ok && value > 0 {
-		return value
-	}
-	return 0
-}
-
-func resourceFLOPS(resource domain.Resource, reference float64) float64 {
-	if value, ok := numberMetadata(resource.Metadata, "flopsPerSecond"); ok && value > 0 {
-		return value
-	}
-	if resource.ComputeSpeedup > 0 {
-		return reference * resource.ComputeSpeedup
-	}
-	return reference
-}
-
-func transferPrice(links []domain.NetworkLink, source, target string) float64 {
-	if source == target {
-		return 0
-	}
-	_, cost, ok := resolveNetworkPath(links, source, target, 1)
-	if !ok {
-		return 0
-	}
-	return cost
+	return dependencies, nil
 }

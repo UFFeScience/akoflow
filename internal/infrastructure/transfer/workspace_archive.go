@@ -109,23 +109,7 @@ func relayWorkspaceArchive(ctx context.Context, source, destination domain.Trans
 	}
 	defer os.RemoveAll(root)
 	archivePath := filepath.Join(root, "workspace.tar.gz")
-	if err := measureWorkspacePhase(run, "pack-and-receive", func() error {
-		var timing workspaceArchiveTiming
-		defer func() {
-			run.Route.SourcePackPreflightSeconds = timing.PreflightSeconds
-			run.Route.SourcePackPreflightSSHChannelWaitSeconds = timing.PreflightChannelWaitSeconds
-			run.Route.SourcePackPreflightServiceSeconds = max(0, timing.PreflightSeconds-timing.PreflightChannelWaitSeconds)
-			run.Route.SourcePackSSHChannelWaitSeconds = timing.ChannelWaitSeconds
-			run.Route.SourcePackExecutionSeconds = timing.ExecutionSeconds
-		}()
-		return packWorkspaceArchiveWithTiming(ctx, source, archivePath, &timing)
-	}); err != nil {
-		if strings.HasPrefix(source.URI, "ssh://") {
-			if partial, statErr := os.Stat(archivePath); statErr == nil {
-				run.NetworkBytes += partial.Size()
-			}
-			run.Route.NetworkBytesIncomplete = true
-		}
+	if err := receiveRelayWorkspaceArchive(ctx, source, archivePath, run); err != nil {
 		return err
 	}
 	var digest string
@@ -387,4 +371,27 @@ func validateWorkspaceArchive(filename string) (string, error) {
 		}
 	}
 	return fmt.Sprintf("%x", hash.Sum(nil)), nil
+}
+
+func receiveRelayWorkspaceArchive(ctx context.Context, source domain.TransferEndpoint, archivePath string, run *domain.DataTransferRun) error {
+	if err := measureWorkspacePhase(run, "pack-and-receive", func() error {
+		var timing workspaceArchiveTiming
+		defer func() {
+			run.Route.SourcePackPreflightSeconds = timing.PreflightSeconds
+			run.Route.SourcePackPreflightSSHChannelWaitSeconds = timing.PreflightChannelWaitSeconds
+			run.Route.SourcePackPreflightServiceSeconds = max(0, timing.PreflightSeconds-timing.PreflightChannelWaitSeconds)
+			run.Route.SourcePackSSHChannelWaitSeconds = timing.ChannelWaitSeconds
+			run.Route.SourcePackExecutionSeconds = timing.ExecutionSeconds
+		}()
+		return packWorkspaceArchiveWithTiming(ctx, source, archivePath, &timing)
+	}); err != nil {
+		if strings.HasPrefix(source.URI, "ssh://") {
+			if partial, statErr := os.Stat(archivePath); statErr == nil {
+				run.NetworkBytes += partial.Size()
+			}
+			run.Route.NetworkBytesIncomplete = true
+		}
+		return err
+	}
+	return nil
 }

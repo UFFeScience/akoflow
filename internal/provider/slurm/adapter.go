@@ -72,13 +72,7 @@ func (a *Adapter) Start(ctx context.Context, execution domain.ActivityExecutionC
 	if a.executor == nil {
 		return domain.ActivityHandle{}, fmt.Errorf("slurm command executor is required")
 	}
-	partition, node := a.partition, ""
-	if execution.Resource.Type == domain.ResourceHPCPartition && execution.Resource.ProviderID != "" {
-		partition = execution.Resource.ProviderID
-	}
-	if execution.Resource.Type == domain.ResourceHPCMachine && execution.Resource.ProviderID != "" {
-		node = execution.Resource.ProviderID
-	}
+	partition, node := slurmPlacement(a.partition, execution.Resource)
 	activity := execution.Activity
 	if activity.Command.WorkingDirectory == "" {
 		activity.Command.WorkingDirectory = slurmArtifactRoot(execution.Run.ID, activity.ID)
@@ -102,32 +96,10 @@ func (a *Adapter) Start(ctx context.Context, execution domain.ActivityExecutionC
 	jobName := fmt.Sprintf("akoflow-%x", sha256.Sum256([]byte(execution.HandleID())))
 	script = strings.Replace(script, "#SBATCH --job-name="+shellToken("akoflow-"+activity.ID), "#SBATCH --job-name="+jobName, 1)
 	if a.eligibleNodeFallback && plannedNode != "" {
-		// Slurm's nodelist requests every listed node; it is not an alternatives
-		// list. Use feature constraints and exactly one node, then validate the
-		// allocated node against the verified eligible inventory before execution.
-		script = strings.Replace(script, "#SBATCH --nodelist="+node+"\n", "#SBATCH --nodes=1\n#SBATCH --constraint="+strings.ReplaceAll(fallbackFeatures, ",", "&")+"\n", 1)
-		// Feature matching alone admits nodes rejected by capacity/state checks.
-		// Exclude the inventory complement so Slurm cannot allocate such a node
-		// and fail the strict eligibility guard after the job has already started.
-		if fallbackExcluded != "" {
-			script = strings.Replace(script, "#SBATCH --nodes=1\n", "#SBATCH --nodes=1\n#SBATCH --exclude="+fallbackExcluded+"\n", 1)
+		script, err = a.applyEligibleNodeGuard(ctx, execution, activity, script, plannedNode, node, partition, fallbackFeatures, fallbackExcluded)
+		if err != nil {
+			return domain.ActivityHandle{}, err
 		}
-		// Fail closed on the allocated node before creating a missing workspace
-		// or invoking the activity. The marker proves shared filesystem access.
-		marker := filepath.Join(activity.Command.WorkingDirectory, ".akoflow-placement-"+shellToken(execution.HandleID()))
-		proof := runtimecommon.NewID("placement")
-		check := "set -eu\nmkdir -p -- " + shellQuote(activity.Command.WorkingDirectory) + "\ntest -d " + shellQuote(activity.Command.WorkingDirectory) + " || { echo 'Fallback workspace directory unavailable' >&2; exit 70; }\nprintf '%s' " + shellQuote(proof) + " > " + shellQuote(marker) + "\n"
-		if _, err := a.executor.Run(ctx, "sh", []string{"-s"}, []byte(check)); err != nil {
-			return domain.ActivityHandle{}, fmt.Errorf("prepare fallback workspace proof: %w", err)
-		}
-		guard := "set -eu\ncase \"$(hostname -s)\" in " + strings.ReplaceAll(node, ",", "|") + ") ;; *) echo '[AKOFLOW ERROR] allocated fallback node is not eligible'; exit 70 ;; esac\n[ \"$(cat " + shellQuote(marker) + ")\" = " + shellQuote(proof) + " ] || { echo '[AKOFLOW ERROR] fallback workspace is not accessible'; exit 70; }\n"
-		image, _ := slurmExecutable(activity.Command)
-		if image != "" {
-			guard += "test -r " + shellQuote(image) + "\ncommand -v apptainer >/dev/null || command -v singularity >/dev/null\n"
-		}
-		guard += "printf '[AKOFLOW INFO] Eligible-node fallback: planned=%s allocated=%s partition=%s workspace verified\\n' " + shellQuote(plannedNode) + " \"$(hostname -s)\" " + shellQuote(partition) + "\n"
-		guard += "rm -f -- " + shellQuote(marker) + "\n"
-		script = strings.Replace(script, "trap finish EXIT\nset -eu\n", "trap finish EXIT\nset -eu\n"+guard, 1)
 	}
 	scriptPath, err := a.saveScript(execution.Run.ID, activity.ID, ".sbatch", script)
 	if err != nil {
@@ -163,6 +135,17 @@ func (a *Adapter) Start(ctx context.Context, execution domain.ActivityExecutionC
 			"metricsPath":               slurmSentinelPath(execution.Run.ID, activity.ID, jobID) + ".metrics.tsv",
 			domain.TimingSubmittedAt:    submittedAt,
 			"artifactObservationDriver": "filesystem-diff", "artifactObservationRoot": activity.Command.WorkingDirectory}}, nil
+}
+
+func slurmPlacement(defaultPartition string, resource domain.Resource) (string, string) {
+	partition, node := defaultPartition, ""
+	if resource.Type == domain.ResourceHPCPartition && resource.ProviderID != "" {
+		partition = resource.ProviderID
+	}
+	if resource.Type == domain.ResourceHPCMachine && resource.ProviderID != "" {
+		node = resource.ProviderID
+	}
+	return partition, node
 }
 
 // An SSH failure does not prove sbatch failed remotely. Cancel only jobs whose
@@ -660,34 +643,7 @@ func batchScript(runID string, activity domain.Activity, partition, node string)
 		return "", fmt.Errorf("activity entrypoint is required")
 	}
 	var script strings.Builder
-	script.WriteString("#!/bin/sh\n")
-	script.WriteString("#SBATCH --job-name=")
-	script.WriteString(shellToken("akoflow-" + activity.ID))
-	script.WriteByte('\n')
-	script.WriteString("#SBATCH --output=")
-	script.WriteString(slurmLogPath(runID, activity.ID, "%j"))
-	script.WriteByte('\n')
-	if partition != "" {
-		script.WriteString("#SBATCH --partition=")
-		script.WriteString(shellToken(partition))
-		script.WriteByte('\n')
-	}
-	if node != "" {
-		script.WriteString("#SBATCH --nodelist=")
-		for index, candidate := range strings.Split(node, ",") {
-			if index > 0 {
-				script.WriteByte(',')
-			}
-			script.WriteString(shellToken(candidate))
-		}
-		script.WriteByte('\n')
-	}
-	if activity.Resources.CPU > 0 {
-		script.WriteString(fmt.Sprintf("#SBATCH --cpus-per-task=%d\n", int(activity.Resources.CPU+0.999)))
-	}
-	if activity.Resources.MemoryBytes > 0 {
-		script.WriteString(fmt.Sprintf("#SBATCH --mem=%dM\n", (activity.Resources.MemoryBytes+(1<<20)-1)/(1<<20)))
-	}
+	writeBatchDirectives(&script, runID, activity, partition, node)
 	sentinelPrefix := slurmSentinelPrefix(runID, activity.ID)
 	// Keep the sentinel in the submission directory. The activity command may
 	// change into its workspace, and a relative sentinel path would otherwise
@@ -874,3 +830,64 @@ func shellToken(value string) string {
 	}, value)
 }
 func shellQuote(value string) string { return "'" + strings.ReplaceAll(value, "'", "'\"'\"'") + "'" }
+
+func (a *Adapter) applyEligibleNodeGuard(ctx context.Context, execution domain.ActivityExecutionContext, activity domain.Activity, script, plannedNode, node, partition, fallbackFeatures, fallbackExcluded string) (string, error) {
+	// Slurm's nodelist requests every listed node; it is not an alternatives
+	// list. Use feature constraints and exactly one node, then validate the
+	// allocated node against the verified eligible inventory before execution.
+	script = strings.Replace(script, "#SBATCH --nodelist="+node+"\n", "#SBATCH --nodes=1\n#SBATCH --constraint="+strings.ReplaceAll(fallbackFeatures, ",", "&")+"\n", 1)
+	// Feature matching alone admits nodes rejected by capacity/state checks.
+	// Exclude the inventory complement so Slurm cannot allocate such a node
+	// and fail the strict eligibility guard after the job has already started.
+	if fallbackExcluded != "" {
+		script = strings.Replace(script, "#SBATCH --nodes=1\n", "#SBATCH --nodes=1\n#SBATCH --exclude="+fallbackExcluded+"\n", 1)
+	}
+	// Fail closed on the allocated node before creating a missing workspace
+	// or invoking the activity. The marker proves shared filesystem access.
+	marker := filepath.Join(activity.Command.WorkingDirectory, ".akoflow-placement-"+shellToken(execution.HandleID()))
+	proof := runtimecommon.NewID("placement")
+	check := "set -eu\nmkdir -p -- " + shellQuote(activity.Command.WorkingDirectory) + "\ntest -d " + shellQuote(activity.Command.WorkingDirectory) + " || { echo 'Fallback workspace directory unavailable' >&2; exit 70; }\nprintf '%s' " + shellQuote(proof) + " > " + shellQuote(marker) + "\n"
+	if _, err := a.executor.Run(ctx, "sh", []string{"-s"}, []byte(check)); err != nil {
+		return "", fmt.Errorf("prepare fallback workspace proof: %w", err)
+	}
+	guard := "set -eu\ncase \"$(hostname -s)\" in " + strings.ReplaceAll(node, ",", "|") + ") ;; *) echo '[AKOFLOW ERROR] allocated fallback node is not eligible'; exit 70 ;; esac\n[ \"$(cat " + shellQuote(marker) + ")\" = " + shellQuote(proof) + " ] || { echo '[AKOFLOW ERROR] fallback workspace is not accessible'; exit 70; }\n"
+	image, _ := slurmExecutable(activity.Command)
+	if image != "" {
+		guard += "test -r " + shellQuote(image) + "\ncommand -v apptainer >/dev/null || command -v singularity >/dev/null\n"
+	}
+	guard += "printf '[AKOFLOW INFO] Eligible-node fallback: planned=%s allocated=%s partition=%s workspace verified\\n' " + shellQuote(plannedNode) + " \"$(hostname -s)\" " + shellQuote(partition) + "\n"
+	guard += "rm -f -- " + shellQuote(marker) + "\n"
+	script = strings.Replace(script, "trap finish EXIT\nset -eu\n", "trap finish EXIT\nset -eu\n"+guard, 1)
+	return script, nil
+}
+
+func writeBatchDirectives(script *strings.Builder, runID string, activity domain.Activity, partition, node string) {
+	script.WriteString("#!/bin/sh\n")
+	script.WriteString("#SBATCH --job-name=")
+	script.WriteString(shellToken("akoflow-" + activity.ID))
+	script.WriteByte('\n')
+	script.WriteString("#SBATCH --output=")
+	script.WriteString(slurmLogPath(runID, activity.ID, "%j"))
+	script.WriteByte('\n')
+	if partition != "" {
+		script.WriteString("#SBATCH --partition=")
+		script.WriteString(shellToken(partition))
+		script.WriteByte('\n')
+	}
+	if node != "" {
+		script.WriteString("#SBATCH --nodelist=")
+		for index, candidate := range strings.Split(node, ",") {
+			if index > 0 {
+				script.WriteByte(',')
+			}
+			script.WriteString(shellToken(candidate))
+		}
+		script.WriteByte('\n')
+	}
+	if activity.Resources.CPU > 0 {
+		script.WriteString(fmt.Sprintf("#SBATCH --cpus-per-task=%d\n", int(activity.Resources.CPU+0.999)))
+	}
+	if activity.Resources.MemoryBytes > 0 {
+		script.WriteString(fmt.Sprintf("#SBATCH --mem=%dM\n", (activity.Resources.MemoryBytes+(1<<20)-1)/(1<<20)))
+	}
+}

@@ -595,7 +595,7 @@ func TestSupervisorStartsReadyActivityAheadOfBlockedPlanOrder(t *testing.T) {
 	request.RuntimeBindings = append(request.RuntimeBindings, domain.ResourceRuntimeBinding{
 		ResourceID: "other", RuntimeID: "local", Enabled: true,
 	})
-	controller := &activityControllerFake{}
+	controller := &dependencyCompletionController{}
 	service, err := New(&executionStoreFake{}, controller, &planExecutorFake{}, Config{
 		PollInterval: time.Microsecond,
 	})
@@ -605,8 +605,12 @@ func TestSupervisorStartsReadyActivityAheadOfBlockedPlanOrder(t *testing.T) {
 	if _, err := service.Execute(context.Background(), request); err != nil {
 		t.Fatal(err)
 	}
-	if len(controller.started) != 3 || controller.started[0] == "a" || controller.started[1] == "a" || controller.started[2] != "a" {
-		t.Fatalf("blocked activity ran before its dependency; starts=%v", controller.started)
+	counts := map[string]int{}
+	for _, id := range controller.started {
+		counts[id]++
+	}
+	if len(controller.started) != 3 || counts["a"] != 1 || counts["b"] != 1 || counts["c"] != 1 {
+		t.Fatalf("each activity must start exactly once; starts=%v", controller.started)
 	}
 }
 

@@ -82,6 +82,8 @@ const groupMetadata = {
 };
 
 const queryDescriptions = {
+  workflowVersionId:
+    "Filter execution runs by saved plan workflow version before pagination and total counting. Supplying this filter selects the paginated response, even without page/pageSize.",
   async:
     "Set to `true` to start cloud catalog discovery in the background and return `202 Accepted` immediately. Repeat requests while it is running do not start another discovery.",
   attempt:
@@ -258,7 +260,7 @@ const checkedResponseShapes = {
   ListExecutions: {
     type: "JSON array or paginated object",
     example: null,
-    note: 'Without `page` or `pageSize`, the response is an array of `{ "run": ... }` items. Supplying either pagination parameter returns `{ "items": [...], "page": number, "pageSize": number, "total": number, "hasNext": boolean }`.',
+    note: 'Without `page`, `pageSize` or `workflowVersionId`, the response is an array of `{ "run": ... }` items. Supplying any of these parameters returns `{ "items": [...], "page": number, "pageSize": number, "total": number, "hasNext": boolean, "workflowVersionId": string }`. The workflow filter is applied before pagination and total counting; unrelated workflow runs and standalone commands are excluded.',
   },
   Search: { example: { query: "string", results: [], total: 0 } },
   ActivateArchiveInstance: {

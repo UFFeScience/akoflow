@@ -63,6 +63,9 @@ func (s *Controller) Start(ctx context.Context, execution domain.ActivityExecuti
 		return domain.ActivityHandle{}, fmt.Errorf("find activity handle: %w", err)
 	}
 	if existing != nil {
+		if existing.Metadata[ports.RuntimeReconciliationPending] == true {
+			return *existing, ports.NewRuntimeReconciliationError(fmt.Errorf("runtime cleanup is not confirmed"), existing.Metadata)
+		}
 		return *existing, nil
 	}
 	if execution.RuntimeID == "" {
@@ -74,7 +77,7 @@ func (s *Controller) Start(ctx context.Context, execution domain.ActivityExecuti
 	}
 	handle, err := runtime.Start(ctx, execution)
 	if err != nil {
-		return domain.ActivityHandle{}, err
+		return s.persistUncertainStart(ctx, execution, err)
 	}
 	if handle.ActivityID != execution.Activity.ID || handle.RunID != execution.Run.ID {
 		return domain.ActivityHandle{}, fmt.Errorf("runtime returned an invalid activity handle")
@@ -309,8 +312,15 @@ func (s *Controller) Stop(ctx context.Context, handleID string, mode domain.Exec
 	if err := runtime.Stop(ctx, *handle); err != nil {
 		return err
 	}
-	handle.Status = domain.HandleStopped
-	return s.handles.Save(ctx, *handle)
+	stopped := *handle
+	stopped.Status = domain.HandleStopped
+	stopped.Metadata = make(map[string]any, len(handle.Metadata))
+	for key, value := range handle.Metadata {
+		if key != ports.RuntimeReconciliationPending {
+			stopped.Metadata[key] = value
+		}
+	}
+	return s.handles.Save(ctx, stopped)
 }
 
 func capabilityFor(mode domain.ExecutionMode) (domain.ActivityCapability, error) {

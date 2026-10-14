@@ -729,7 +729,12 @@ func (s *Supervisor) applyStartResult(
 	}
 	if result.err != nil {
 		attempt := tasks[activityID].Attempt
-		_ = s.recordStartFailure(ctx, request.Run.ID, activityID, result.assignment, result.resource, selectRuntime(request, result.assignment), attempt, result.err)
+		if result.handle.Metadata[ports.RuntimeReconciliationPending] == true {
+			running[activityID] = result.handle
+		}
+		if err := s.recordStartFailure(ctx, request.Run.ID, activityID, result.assignment, result.resource, selectRuntime(request, result.assignment), attempt, result.err); err != nil {
+			return fmt.Errorf("record startup failure: %v: %w", err, result.err)
+		}
 		return result.err
 	}
 	request.RuntimeAllocations[activityID] = result.allocation
@@ -818,6 +823,7 @@ func (s *Supervisor) startReadyActivity(
 		Run:     request.Run, Workflow: request.Workflow, Activity: activity, Assignment: assignment,
 		Resource: resource, RuntimeID: selectRuntime(request, assignment), Allocation: allocation, Preparation: result.preparation,
 	})
+	result.handle = handle
 	if err != nil {
 		result.err = err
 		return result
@@ -1298,6 +1304,14 @@ func (s *Supervisor) recordStartFailure(
 		FinishedAt: now,
 		Failure:    message, Log: "[AKOFLOW ERROR] " + message + "\n",
 	}
+	var uncertain ports.RuntimeReconciliationFailure
+	if errors.As(err, &uncertain) {
+		handle.Status, handle.FinishedAt = domain.HandleStarting, 0
+		handle.Metadata = uncertain.RuntimeReconciliationMetadata()
+		handle.Metadata[ports.RuntimeReconciliationPending] = true
+	}
+	ctx, cancel := context.WithTimeout(context.WithoutCancel(ctx), 30*time.Second)
+	defer cancel()
 	if saveErr := s.executions.Save(ctx, handle); saveErr != nil {
 		return saveErr
 	}

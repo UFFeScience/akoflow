@@ -13,6 +13,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/UFFeScience/akoflow/internal/application/ports"
 	"github.com/UFFeScience/akoflow/internal/domain"
 	runtimecommon "github.com/UFFeScience/akoflow/internal/provider"
 )
@@ -154,25 +155,15 @@ func slurmPlacement(defaultPartition string, resource domain.Resource) (string, 
 func (a *Adapter) reconcileSubmission(ctx context.Context, jobName string, cause error) error {
 	cleanup, cancel := context.WithTimeout(context.WithoutCancel(ctx), 30*time.Second)
 	defer cancel()
-	output, err := a.executor.Run(cleanup, "squeue", []string{"--me", "--noheader", "--format=%i|%j"}, nil)
+	jobs, err := a.matchingSubmissionJobs(cleanup, jobName)
 	if err != nil {
-		return fmt.Errorf("submission outcome uncertain; reconciliation unavailable: %v; original: %w", err, cause)
-	}
-	var jobs []string
-	for _, line := range strings.Split(string(output), "\n") {
-		id, name, ok := strings.Cut(strings.TrimSpace(line), "|")
-		if !ok || name != jobName {
-			continue
-		}
-		if _, err := strconv.ParseUint(id, 10, 64); err != nil {
-			return fmt.Errorf("submission outcome uncertain; invalid matching job ID; original: %w", cause)
-		}
-		jobs = append(jobs, id)
+		return uncertainSubmission(jobName, fmt.Errorf("submission outcome uncertain; reconciliation unavailable: %v; original: %w", err, cause))
 	}
 	if len(jobs) > 0 {
 		if _, err := a.executor.Run(cleanup, "scancel", jobs, nil); err != nil {
-			return fmt.Errorf("submission outcome uncertain; cancellation failed: %v; original: %w", err, cause)
+			return uncertainSubmission(jobName, fmt.Errorf("submission outcome uncertain; cancellation failed: %v; original: %w", err, cause))
 		}
+		return uncertainSubmission(jobName, fmt.Errorf("submission failed; cancellation of %d exact-attempt jobs is not yet confirmed: %w", len(jobs), cause))
 	}
 	return fmt.Errorf("submission failed; exact-attempt reconciliation requested cancellation of %d jobs: %w", len(jobs), cause)
 }
@@ -203,6 +194,10 @@ func parseJobID(output []byte) (string, error) {
 }
 
 func (a *Adapter) Inspect(ctx context.Context, handle domain.ActivityHandle) (domain.ActivityHandle, error) {
+	if pending, _ := handle.Metadata[ports.RuntimeReconciliationPending].(bool); pending {
+		handle.Status = domain.HandleStarting
+		return handle, nil
+	}
 	if handle.Metadata["executionTarget"] == string(domain.ExecutionTargetDirect) {
 		return a.inspectDirect(handle), nil
 	}
@@ -541,6 +536,9 @@ func slurmControlState(payload string) string {
 }
 
 func (a *Adapter) Stop(ctx context.Context, handle domain.ActivityHandle) error {
+	if pending, _ := handle.Metadata[ports.RuntimeReconciliationPending].(bool); pending {
+		return a.stopUncertainSubmission(ctx, handle)
+	}
 	if handle.Metadata["executionTarget"] == string(domain.ExecutionTargetDirect) {
 		a.directMu.Lock()
 		cancel := a.directCancels[handle.ID]

@@ -72,7 +72,8 @@ jobs:
         shell: bash
         run: |
           mapfile -t showcases < <(
-            find . -mindepth 4 -maxdepth 4 -type f -path '*/docker/Dockerfile' -printf '%h\n' |
+            find machine-learning generative-ai agentic-workflows scientific-ai \
+              -mindepth 3 -maxdepth 3 -type f -path '*/docker/Dockerfile' -printf '%h\n' |
               sed 's#^./##; s#/docker$##' |
               sort
           )
@@ -80,6 +81,12 @@ jobs:
             echo "No runnable showcases were found" >&2
             exit 1
           fi
+          for showcase in "${showcases[@]}"; do
+            if [ ! -x "$showcase/run.sh" ] || [ ! -f "$showcase/workflow.yaml" ]; then
+              echo "Malformed runnable showcase: $showcase" >&2
+              exit 1
+            fi
+          done
           matrix=$(jq --compact-output --null-input --args \
             '$ARGS.positional | map(split("/") | {category: .[0], showcase: .[1]})' \
             "${showcases[@]}")

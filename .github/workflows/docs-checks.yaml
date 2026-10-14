@@ -56,6 +56,8 @@ jobs:
         run: npm run typecheck --prefix docs
       - name: Test API handler contract extraction
         run: npm run test:api-generator --prefix docs
+      - name: Verify patched dependency security regressions
+        run: npm run check:dependency-security --prefix docs
       - name: Build the documentation site
         run: npm run build --prefix docs
       - name: Verify repository-owned documentation links

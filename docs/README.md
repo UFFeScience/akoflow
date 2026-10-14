@@ -22,3 +22,24 @@ Example validation and image publication are implemented once in
 `.github/workflows/examples-ci.yml`. The examples repository calls that reusable
 workflow with the exact source commit. This keeps example files independently
 versioned while CI/CD and documentation deployment remain controlled by AkôFlow.
+
+## Dependency security
+
+Install dependencies with `npm ci` from this directory. Do not use
+`--ignore-scripts`: the postinstall step applies the reviewed, version-bound
+`patches/braces+3.0.3.patch` and fails if the patch cannot be applied.
+
+The upstream advisory
+[GHSA-vfj7-8cjw-p6xm](https://github.com/advisories/GHSA-vfj7-8cjw-p6xm)
+has no published patched version. The local patch bounds parser nesting and
+all recursive AST walkers at 128 levels, including direct AST entry points.
+It preserves the original package version; `npm audit` therefore still reports
+this advisory and its transitive dependants. This is a documented local
+mitigation, not a claim that the upstream advisory disappeared.
+
+Run `npm run test:dependency-security` after installation. CI checks malicious
+patterns below the existing input-length limit, excessive direct AST depth,
+normal nested patterns, ranges, and micromatch compatibility before building
+the site. Other advisories must be fixed independently; this patch is not a
+blanket audit exemption. Remove it only after an upstream depth-safe release
+is available and the regression tests still pass.

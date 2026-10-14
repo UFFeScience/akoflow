@@ -1,0 +1,373 @@
+{
+  "issue": "AKO-154",
+  "provenanceSHA256": {
+    "planningInput": "c865f0d5da403d268121c4b2b77040add6f498abbe84d94b5e5b160f38824073",
+    "nativeSimulationInput": "fae259a4751f26ba8dc2f7258ab99caa32742d6c84ce2c8025dadde490625c55",
+    "nativePlatform": "fec229513ff8618bbdcca0180a4b0a7999f168508743ab352221f3bc2b23b9f3",
+    "nativeResult": "4615d429057e0df8ad9570e3c2beaa73e33dd91ac28d81b23dad34f58198b7f3"
+  },
+  "missingActivityIds": [],
+  "duplicateTasks": 0,
+  "microActivityOverlaps": 0,
+  "experimental": true,
+  "realExecutionStarted": false,
+  "daemonRestarted": false,
+  "algorithm": "prism-time",
+  "beamWidth": 120,
+  "candidateCount": 25,
+  "scopeSchedulableResources": 14,
+  "planPredicted": {
+    "makespanSeconds": 2321.6725360502005,
+    "cost": 0.008595049929251326,
+    "feasible": true
+  },
+  "simulated": {
+    "computeSeconds": 5038.7502698898315,
+    "cost": 0.005018118661143563,
+    "feasible": true,
+    "interferenceSeconds": 0.0,
+    "makespanSeconds": 2368.118319561188,
+    "overheadSeconds": 0.0,
+    "queueSeconds": 1489.6036462550921,
+    "transferSeconds": 6783.000817146088
+  },
+  "previousPlacementSimulation": 2835.6021967566785,
+  "observedPreviousPlacementReal": 3150.6341450214386,
+  "simVsPlanPercent": 2.000531202820044,
+  "simVsPreviousPlacementPercent": -16.48622919428515,
+  "activities": 58,
+  "completed": 58,
+  "distribution": [
+    {
+      "resource": "montage-gcp-fog-e2-micro-01",
+      "activities": 8
+    },
+    {
+      "resource": "montage-gcp-fog-e2-micro-02",
+      "activities": 9
+    },
+    {
+      "resource": "montage-gcp-fog-e2-micro-03",
+      "activities": 8
+    },
+    {
+      "resource": "plafrim-execution-ssh-node-bora001",
+      "activities": 33
+    }
+  ],
+  "physicalNetworkBytes": 4150785071,
+  "previousPlacementPhysicalNetworkBytes": 4383304054,
+  "routes": [
+    {
+      "strategy": "direct-runtime",
+      "count": 2
+    },
+    {
+      "strategy": "gateway",
+      "count": 15
+    }
+  ],
+  "barrierViolations": 0,
+  "assignments": [
+    {
+      "activityId": "montage-independent-work-v1-mprojectid0000003",
+      "resourceId": "plafrim-execution-ssh-node-bora001",
+      "coreId": "plafrim-execution-ssh-node-bora001-core-1"
+    },
+    {
+      "activityId": "montage-independent-work-v1-mprojectid0000004",
+      "resourceId": "plafrim-execution-ssh-node-bora001",
+      "coreId": "plafrim-execution-ssh-node-bora001-core-2"
+    },
+    {
+      "activityId": "montage-independent-work-v1-mprojectid0000001",
+      "resourceId": "plafrim-execution-ssh-node-bora001",
+      "coreId": "plafrim-execution-ssh-node-bora001-core-3"
+    },
+    {
+      "activityId": "montage-independent-work-v1-mprojectid0000002",
+      "resourceId": "plafrim-execution-ssh-node-bora001",
+      "coreId": "plafrim-execution-ssh-node-bora001-core-4"
+    },
+    {
+      "activityId": "montage-independent-work-v1-mprojectid0000022",
+      "resourceId": "plafrim-execution-ssh-node-bora001",
+      "coreId": "plafrim-execution-ssh-node-bora001-core-5"
+    },
+    {
+      "activityId": "montage-independent-work-v1-mprojectid0000023",
+      "resourceId": "plafrim-execution-ssh-node-bora001",
+      "coreId": "plafrim-execution-ssh-node-bora001-core-6"
+    },
+    {
+      "activityId": "montage-independent-work-v1-mprojectid0000020",
+      "resourceId": "plafrim-execution-ssh-node-bora001",
+      "coreId": "plafrim-execution-ssh-node-bora001-core-7"
+    },
+    {
+      "activityId": "montage-independent-work-v1-mprojectid0000021",
+      "resourceId": "plafrim-execution-ssh-node-bora001",
+      "coreId": "plafrim-execution-ssh-node-bora001-core-8"
+    },
+    {
+      "activityId": "montage-independent-work-v1-mprojectid0000041",
+      "resourceId": "plafrim-execution-ssh-node-bora001",
+      "coreId": "plafrim-execution-ssh-node-bora001-core-9"
+    },
+    {
+      "activityId": "montage-independent-work-v1-mprojectid0000039",
+      "resourceId": "plafrim-execution-ssh-node-bora001",
+      "coreId": "plafrim-execution-ssh-node-bora001-core-10"
+    },
+    {
+      "activityId": "montage-independent-work-v1-mprojectid0000040",
+      "resourceId": "plafrim-execution-ssh-node-bora001",
+      "coreId": "plafrim-execution-ssh-node-bora001-core-11"
+    },
+    {
+      "activityId": "montage-independent-work-v1-mprojectid0000042",
+      "resourceId": "plafrim-execution-ssh-node-bora001",
+      "coreId": "plafrim-execution-ssh-node-bora001-core-12"
+    },
+    {
+      "activityId": "montage-independent-work-v1-mdifffitid0000005",
+      "resourceId": "plafrim-execution-ssh-node-bora001",
+      "coreId": "plafrim-execution-ssh-node-bora001-core-13"
+    },
+    {
+      "activityId": "montage-independent-work-v1-mdifffitid0000009",
+      "resourceId": "plafrim-execution-ssh-node-bora001",
+      "coreId": "plafrim-execution-ssh-node-bora001-core-14"
+    },
+    {
+      "activityId": "montage-independent-work-v1-mdifffitid0000010",
+      "resourceId": "plafrim-execution-ssh-node-bora001",
+      "coreId": "plafrim-execution-ssh-node-bora001-core-15"
+    },
+    {
+      "activityId": "montage-independent-work-v1-mdifffitid0000007",
+      "resourceId": "plafrim-execution-ssh-node-bora001",
+      "coreId": "plafrim-execution-ssh-node-bora001-core-16"
+    },
+    {
+      "activityId": "montage-independent-work-v1-mdifffitid0000008",
+      "resourceId": "plafrim-execution-ssh-node-bora001",
+      "coreId": "plafrim-execution-ssh-node-bora001-core-17"
+    },
+    {
+      "activityId": "montage-independent-work-v1-mdifffitid0000024",
+      "resourceId": "plafrim-execution-ssh-node-bora001",
+      "coreId": "plafrim-execution-ssh-node-bora001-core-18"
+    },
+    {
+      "activityId": "montage-independent-work-v1-mdifffitid0000025",
+      "resourceId": "plafrim-execution-ssh-node-bora001",
+      "coreId": "plafrim-execution-ssh-node-bora001-core-19"
+    },
+    {
+      "activityId": "montage-independent-work-v1-mdifffitid0000029",
+      "resourceId": "plafrim-execution-ssh-node-bora001",
+      "coreId": "plafrim-execution-ssh-node-bora001-core-20"
+    },
+    {
+      "activityId": "montage-independent-work-v1-mdifffitid0000028",
+      "resourceId": "plafrim-execution-ssh-node-bora001",
+      "coreId": "plafrim-execution-ssh-node-bora001-core-21"
+    },
+    {
+      "activityId": "montage-independent-work-v1-mdifffitid0000026",
+      "resourceId": "plafrim-execution-ssh-node-bora001",
+      "coreId": "plafrim-execution-ssh-node-bora001-core-22"
+    },
+    {
+      "activityId": "montage-independent-work-v1-mdifffitid0000027",
+      "resourceId": "plafrim-execution-ssh-node-bora001",
+      "coreId": "plafrim-execution-ssh-node-bora001-core-23"
+    },
+    {
+      "activityId": "montage-independent-work-v1-mdifffitid0000043",
+      "resourceId": "plafrim-execution-ssh-node-bora001",
+      "coreId": "plafrim-execution-ssh-node-bora001-core-24"
+    },
+    {
+      "activityId": "montage-independent-work-v1-mdifffitid0000047",
+      "resourceId": "plafrim-execution-ssh-node-bora001",
+      "coreId": "plafrim-execution-ssh-node-bora001-core-25"
+    },
+    {
+      "activityId": "montage-independent-work-v1-mdifffitid0000048",
+      "resourceId": "plafrim-execution-ssh-node-bora001",
+      "coreId": "plafrim-execution-ssh-node-bora001-core-26"
+    },
+    {
+      "activityId": "montage-independent-work-v1-mdifffitid0000046",
+      "resourceId": "plafrim-execution-ssh-node-bora001",
+      "coreId": "plafrim-execution-ssh-node-bora001-core-27"
+    },
+    {
+      "activityId": "montage-independent-work-v1-mdifffitid0000045",
+      "resourceId": "plafrim-execution-ssh-node-bora001",
+      "coreId": "plafrim-execution-ssh-node-bora001-core-28"
+    },
+    {
+      "activityId": "montage-independent-work-v1-mconcatfitid0000030",
+      "resourceId": "plafrim-execution-ssh-node-bora001",
+      "coreId": "plafrim-execution-ssh-node-bora001-core-29"
+    },
+    {
+      "activityId": "montage-independent-work-v1-mdifffitid0000044",
+      "resourceId": "plafrim-execution-ssh-node-bora001",
+      "coreId": "plafrim-execution-ssh-node-bora001-core-30"
+    },
+    {
+      "activityId": "montage-independent-work-v1-mconcatfitid0000049",
+      "resourceId": "plafrim-execution-ssh-node-bora001",
+      "coreId": "plafrim-execution-ssh-node-bora001-core-31"
+    },
+    {
+      "activityId": "montage-independent-work-v1-mdifffitid0000006",
+      "resourceId": "plafrim-execution-ssh-node-bora001",
+      "coreId": "plafrim-execution-ssh-node-bora001-core-32"
+    },
+    {
+      "activityId": "montage-independent-work-v1-mconcatfitid0000011",
+      "resourceId": "plafrim-execution-ssh-node-bora001",
+      "coreId": "plafrim-execution-ssh-node-bora001-core-33"
+    },
+    {
+      "activityId": "montage-independent-work-v1-mbgmodelid0000031",
+      "resourceId": "montage-gcp-fog-e2-micro-01",
+      "coreId": "montage-gcp-fog-e2-micro-01-core-1"
+    },
+    {
+      "activityId": "montage-independent-work-v1-mbackgroundid0000033",
+      "resourceId": "montage-gcp-fog-e2-micro-01",
+      "coreId": "montage-gcp-fog-e2-micro-01-core-1"
+    },
+    {
+      "activityId": "montage-independent-work-v1-mbackgroundid0000032",
+      "resourceId": "montage-gcp-fog-e2-micro-01",
+      "coreId": "montage-gcp-fog-e2-micro-01-core-1"
+    },
+    {
+      "activityId": "montage-independent-work-v1-mbackgroundid0000035",
+      "resourceId": "montage-gcp-fog-e2-micro-01",
+      "coreId": "montage-gcp-fog-e2-micro-01-core-1"
+    },
+    {
+      "activityId": "montage-independent-work-v1-mbackgroundid0000034",
+      "resourceId": "montage-gcp-fog-e2-micro-01",
+      "coreId": "montage-gcp-fog-e2-micro-01-core-1"
+    },
+    {
+      "activityId": "montage-independent-work-v1-mimgtblid0000036",
+      "resourceId": "montage-gcp-fog-e2-micro-01",
+      "coreId": "montage-gcp-fog-e2-micro-01-core-1"
+    },
+    {
+      "activityId": "montage-independent-work-v1-maddid0000037",
+      "resourceId": "montage-gcp-fog-e2-micro-01",
+      "coreId": "montage-gcp-fog-e2-micro-01-core-1"
+    },
+    {
+      "activityId": "montage-independent-work-v1-mbgmodelid0000012",
+      "resourceId": "montage-gcp-fog-e2-micro-02",
+      "coreId": "montage-gcp-fog-e2-micro-02-core-1"
+    },
+    {
+      "activityId": "montage-independent-work-v1-mbgmodelid0000050",
+      "resourceId": "montage-gcp-fog-e2-micro-03",
+      "coreId": "montage-gcp-fog-e2-micro-03-core-1"
+    },
+    {
+      "activityId": "montage-independent-work-v1-mbackgroundid0000014",
+      "resourceId": "montage-gcp-fog-e2-micro-02",
+      "coreId": "montage-gcp-fog-e2-micro-02-core-1"
+    },
+    {
+      "activityId": "montage-independent-work-v1-mbackgroundid0000015",
+      "resourceId": "montage-gcp-fog-e2-micro-02",
+      "coreId": "montage-gcp-fog-e2-micro-02-core-1"
+    },
+    {
+      "activityId": "montage-independent-work-v1-mbackgroundid0000052",
+      "resourceId": "montage-gcp-fog-e2-micro-03",
+      "coreId": "montage-gcp-fog-e2-micro-03-core-1"
+    },
+    {
+      "activityId": "montage-independent-work-v1-mbackgroundid0000053",
+      "resourceId": "montage-gcp-fog-e2-micro-03",
+      "coreId": "montage-gcp-fog-e2-micro-03-core-1"
+    },
+    {
+      "activityId": "montage-independent-work-v1-mbackgroundid0000051",
+      "resourceId": "montage-gcp-fog-e2-micro-03",
+      "coreId": "montage-gcp-fog-e2-micro-03-core-1"
+    },
+    {
+      "activityId": "montage-independent-work-v1-mbackgroundid0000054",
+      "resourceId": "montage-gcp-fog-e2-micro-03",
+      "coreId": "montage-gcp-fog-e2-micro-03-core-1"
+    },
+    {
+      "activityId": "montage-independent-work-v1-mimgtblid0000055",
+      "resourceId": "montage-gcp-fog-e2-micro-03",
+      "coreId": "montage-gcp-fog-e2-micro-03-core-1"
+    },
+    {
+      "activityId": "montage-independent-work-v1-maddid0000056",
+      "resourceId": "montage-gcp-fog-e2-micro-03",
+      "coreId": "montage-gcp-fog-e2-micro-03-core-1"
+    },
+    {
+      "activityId": "montage-independent-work-v1-mviewerid0000038",
+      "resourceId": "montage-gcp-fog-e2-micro-01",
+      "coreId": "montage-gcp-fog-e2-micro-01-core-1"
+    },
+    {
+      "activityId": "montage-independent-work-v1-mviewerid0000057",
+      "resourceId": "montage-gcp-fog-e2-micro-03",
+      "coreId": "montage-gcp-fog-e2-micro-03-core-1"
+    },
+    {
+      "activityId": "montage-independent-work-v1-mbackgroundid0000016",
+      "resourceId": "montage-gcp-fog-e2-micro-02",
+      "coreId": "montage-gcp-fog-e2-micro-02-core-1"
+    },
+    {
+      "activityId": "montage-independent-work-v1-mbackgroundid0000013",
+      "resourceId": "montage-gcp-fog-e2-micro-02",
+      "coreId": "montage-gcp-fog-e2-micro-02-core-1"
+    },
+    {
+      "activityId": "montage-independent-work-v1-mimgtblid0000017",
+      "resourceId": "montage-gcp-fog-e2-micro-02",
+      "coreId": "montage-gcp-fog-e2-micro-02-core-1"
+    },
+    {
+      "activityId": "montage-independent-work-v1-maddid0000018",
+      "resourceId": "montage-gcp-fog-e2-micro-02",
+      "coreId": "montage-gcp-fog-e2-micro-02-core-1"
+    },
+    {
+      "activityId": "montage-independent-work-v1-mviewerid0000019",
+      "resourceId": "montage-gcp-fog-e2-micro-02",
+      "coreId": "montage-gcp-fog-e2-micro-02-core-1"
+    },
+    {
+      "activityId": "montage-independent-work-v1-mviewerid0000058",
+      "resourceId": "montage-gcp-fog-e2-micro-02",
+      "coreId": "montage-gcp-fog-e2-micro-02-core-1"
+    }
+  ],
+  "limitations": [
+    "Experimental calibration fit; not independent real validation.",
+    "Only two materialization route classes evidenced in the current calibrated profile; missing route classes are not silently filled.",
+    "Source packing and ingress remain combined; shared capacity is auxiliary fitted service, not measured NIC bandwidth.",
+    "Compute micro profiles extrapolate to equivalent micro targets; physical interference is not independently calibrated.",
+    "PRISM raw confidence label does not validate empirical transfer model accuracy.",
+    "Planner active-window compute/disk cost and simulator task cost are different billing bases; network/IP/HPC billing incomplete.",
+    "Transfer and queue totals sum parallel work and must not be added to makespan.",
+    "No new real run, VM provisioning, daemon restart or database access."
+  ]
+}

@@ -15,6 +15,7 @@ import (
 	"github.com/UFFeScience/akoflow/internal/application/ports"
 	"github.com/UFFeScience/akoflow/internal/domain"
 	domainqueue "github.com/UFFeScience/akoflow/internal/domain/queue"
+	domainworkflow "github.com/UFFeScience/akoflow/internal/domain/workflow"
 )
 
 const EventPlanningSessionRequested = "planning.session.requested"
@@ -410,6 +411,9 @@ func (s *Coordinator) buildRequest(
 			resources = append(resources, resource)
 		}
 	}
+	if err := applyWorkspaceBudgetSnapshot(resources, session.Configuration["workspaceStorageBudgetSnapshot"]); err != nil {
+		return domain.PlanningRequest{}, err
+	}
 	definitions, err := s.Environments.List(ctx)
 	if err != nil {
 		return domain.PlanningRequest{}, err
@@ -430,8 +434,17 @@ func (s *Coordinator) buildRequest(
 	if err != nil {
 		return domain.PlanningRequest{}, fmt.Errorf("decode interference knowledge: %w", err)
 	}
+	projectedWorkflow, err := domainworkflow.ProjectWorkspaceDependencies(*workflow)
+	if err != nil {
+		return domain.PlanningRequest{}, fmt.Errorf("project workspace dependencies: %w", err)
+	}
+	if snapshot, snapshotErr := calibratedProfileSnapshot(session.Configuration["activityProfileSnapshot"], projectedWorkflow, resources); snapshotErr != nil {
+		return domain.PlanningRequest{}, snapshotErr
+	} else if snapshot != nil {
+		profiles = snapshot
+	}
 	return domain.PlanningRequest{
-		Workflow:              *workflow,
+		Workflow:              projectedWorkflow,
 		ExecutionScope:        *scope,
 		Environments:          environments,
 		Resources:             resources,
@@ -442,6 +455,31 @@ func (s *Coordinator) buildRequest(
 		Interference:          interference,
 		InterferenceKnowledge: knowledge,
 	}, nil
+}
+
+func applyWorkspaceBudgetSnapshot(resources []domain.Resource, raw any) error {
+	if raw == nil {
+		return nil
+	}
+	payload, err := json.Marshal(raw)
+	if err != nil {
+		return err
+	}
+	var snapshots map[string]any
+	if err := json.Unmarshal(payload, &snapshots); err != nil {
+		return fmt.Errorf("decode workspace storage budgets: %w", err)
+	}
+	for i := range resources {
+		if budget, exists := snapshots[resources[i].ID]; exists {
+			metadata := map[string]any{}
+			for key, value := range resources[i].Metadata {
+				metadata[key] = value
+			}
+			metadata["workspaceStorageBudget"] = budget
+			resources[i].Metadata = metadata
+		}
+	}
+	return nil
 }
 
 func (s *Coordinator) Select(

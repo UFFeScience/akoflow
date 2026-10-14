@@ -6,8 +6,58 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/UFFeScience/akoflow/internal/application/ports"
 	"github.com/UFFeScience/akoflow/internal/domain"
 )
+
+type verifiedCloudStore struct {
+	ports.CloudConfigurationStore
+	instance domain.CloudProvisionedInstance
+}
+
+func (s verifiedCloudStore) ListProvisionedInstances(context.Context, string) ([]domain.CloudProvisionedInstance, error) {
+	return []domain.CloudProvisionedInstance{s.instance}, nil
+}
+
+func TestCloudWorkspaceEndpointUsesVerifiedGenerationTrust(t *testing.T) {
+	instance := domain.CloudProvisionedInstance{ID: "vm", Status: "ready", CapacityTargetID: "target", ProviderID: "generation", PublicAddress: "cloud.example", TerraformOutput: map[string]any{
+		"verifiedHostGeneration": "generation", "verifiedHostKeyAlias": "verified-alias", "verifiedKnownHostsFile": "/verified/known_hosts",
+	}}
+	connection := domain.EnvironmentConnection{ID: "cloud", Type: domain.ConnectionCloud}
+	location := domain.TransferLocation{URI: "file:///workspace?connectionId=cloud", ResourceID: "target", CloudInstanceID: "vm",
+		WorkspaceSnapshotID: "sealed-manifest", WorkspaceSnapshotEntries: []domain.WorkspaceEntry{{Path: "input.fits", SizeBytes: 10, Digest: "sha256:content"}}}
+	resolve := func() (domain.TransferEndpoint, error) {
+		return (EnvironmentEndpointResolver{Connections: connectionStoreStub{connection: connection}, Cloud: verifiedCloudStore{instance: instance}}).ResolveTransferEndpoint(context.Background(), location)
+	}
+	endpoint, err := resolve()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if endpoint.WorkspaceSnapshotID != location.WorkspaceSnapshotID || len(endpoint.WorkspaceSnapshotEntries) != 1 {
+		t.Fatal("generation resolution discarded sealed snapshot identity")
+	}
+	endpoint.WorkspaceSnapshotEntries[0].Path = "changed"
+	if location.WorkspaceSnapshotEntries[0].Path != "input.fits" {
+		t.Fatal("resolved endpoint aliases producer manifest entries")
+	}
+	args := strings.Join(sshArgs(endpoint), " ")
+	for _, want := range []string{"StrictHostKeyChecking=yes", "HostKeyAlgorithms=ssh-ed25519", "HostKeyAlias=verified-alias", "UserKnownHostsFile=/verified/known_hosts"} {
+		if !strings.Contains(args, want) {
+			t.Fatalf("missing %s in %s", want, args)
+		}
+	}
+	if strings.Contains(args, "accept-new") {
+		t.Fatal("must not enroll via SSH")
+	}
+	instance.ProviderID = "replaced"
+	if _, err := resolve(); err == nil {
+		t.Fatal("stale generation accepted")
+	}
+	instance.TerraformOutput = nil
+	if _, err := resolve(); err == nil {
+		t.Fatal("missing verification accepted")
+	}
+}
 
 type connectionStoreStub struct {
 	connection domain.EnvironmentConnection

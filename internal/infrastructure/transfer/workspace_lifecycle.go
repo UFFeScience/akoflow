@@ -13,6 +13,7 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/UFFeScience/akoflow/internal/domain"
 )
@@ -88,7 +89,9 @@ func (m ActivityWorkspaceManager) Inspect(ctx context.Context, workspace domain.
 	}
 	command := "test -d " + shell(path) + " || exit 0; find " + shell(path) +
 		" -type f ! -name .akoflow-owner -exec wc -c {} \\; | awk '{bytes += $1; files += 1} END {printf \"%d %d\\n\", files, bytes}'"
-	output, err := runSSHCombinedOutput(ctx, endpoint, append(sshArgs(endpoint), host, command), nil)
+	output, err := retrySSHRead(ctx, time.Second, func() ([]byte, error) {
+		return runSSHStdout(ctx, endpoint, append(sshArgs(endpoint), host, command), nil)
+	})
 	if err != nil {
 		return domain.WorkspaceUsage{}, fmt.Errorf("inspect remote workspace: %w: %s", err, strings.TrimSpace(string(output)))
 	}
@@ -136,7 +139,7 @@ func (m ActivityWorkspaceManager) PruneInputs(ctx context.Context, workspace dom
 	if err != nil {
 		return domain.WorkspaceReleaseResult{}, err
 	}
-	output, err := runSSHCombinedOutput(ctx, endpoint, append(sshArgs(endpoint), host, command), strings.NewReader(payload))
+	output, err := runSSHStdout(ctx, endpoint, append(sshArgs(endpoint), host, command), strings.NewReader(payload))
 	if err != nil {
 		return domain.WorkspaceReleaseResult{}, fmt.Errorf("prune remote workspace inputs: %w: %s", err, strings.TrimSpace(string(output)))
 	}
@@ -171,11 +174,12 @@ func (m ActivityWorkspaceManager) Release(ctx context.Context, workspace domain.
 	}
 	marker := workspaceMarkerFor(workspace, path)
 	expected := strings.TrimSpace(string(markerContents(workspace)))
+	removeCommand := workspaceRemovalCommand(workspace)
 	command := "set -eu; if test ! -e " + shell(path) + "; then rm -f -- " + shell(marker) + "; exit 0; fi; " +
 		"test ! -L " + shell(path) + "; canonical=$(realpath -- " + shell(path) + "); " +
 		"test \"$canonical\" = " + shell(filepath.Clean(path)) + "; test -f " + shell(marker) + "; " +
 		"test \"$(cat -- " + shell(marker) + ")\" = " + shell(expected) + "; " +
-		"rm -rf --one-file-system -- \"$canonical\"; rm -f -- " + shell(marker)
+		removeCommand + " -rf --one-file-system -- \"$canonical\"; rm -f -- " + shell(marker)
 	if isKubernetesEndpoint(endpoint) {
 		if m.Kubernetes == nil {
 			return domain.WorkspaceReleaseResult{}, fmt.Errorf("Kubernetes workspace lifecycle runner is unavailable")
@@ -199,13 +203,27 @@ func (m ActivityWorkspaceManager) Release(ctx context.Context, workspace domain.
 	return domain.WorkspaceReleaseResult{ReclaimedBytes: usage.SizeBytes}, nil
 }
 
+func workspaceRemovalCommand(workspace domain.ActivityWorkspace) string {
+	// Cloud Docker runs may produce root-owned bind-mounted files. Privilege is
+	// limited to the canonical, ownership-validated activity directory above.
+	if workspace.Driver == "cloud-ssh" {
+		return "sudo -n rm"
+	}
+	return "rm"
+}
+
 func (m ActivityWorkspaceManager) endpoint(ctx context.Context, workspace domain.ActivityWorkspace) (domain.TransferEndpoint, string, error) {
 	if err := validateWorkspaceIdentity(workspace, workspace.ExecutionPath); err != nil {
 		return domain.TransferEndpoint{}, "", err
 	}
 	u := &url.URL{Scheme: "file", Path: workspace.ExecutionPath}
-	if parsed, parseErr := url.Parse(workspace.URI); parseErr == nil && parsed.Scheme == "kubernetes" {
-		u = parsed
+	parsedWorkspaceURI, parseErr := url.Parse(workspace.URI)
+	if parseErr == nil && parsedWorkspaceURI.Scheme == "kubernetes" {
+		u = parsedWorkspaceURI
+	}
+	cloudInstanceID := ""
+	if parseErr == nil {
+		cloudInstanceID = parsedWorkspaceURI.Query().Get("cloudInstanceId")
 	}
 	if workspace.ConnectionID != "" {
 		query := u.Query()
@@ -215,6 +233,7 @@ func (m ActivityWorkspaceManager) endpoint(ctx context.Context, workspace domain
 	location := domain.TransferLocation{
 		URI: u.String(), ResourceID: workspace.ResourceID, EnvironmentID: workspace.EnvironmentID,
 		RuntimeID: workspace.RuntimeID, ConnectionID: workspace.ConnectionID,
+		CloudInstanceID: cloudInstanceID,
 	}
 	if workspace.ConnectionID == "" {
 		return domain.TransferEndpoint{URI: location.URI}, workspace.ExecutionPath, nil
@@ -308,7 +327,7 @@ func releaseLocalWorkspace(workspace domain.ActivityWorkspace, path string) erro
 	}
 	info, err := os.Lstat(path)
 	if os.IsNotExist(err) {
-		return os.Remove(marker)
+		return removeWorkspaceMarker(marker)
 	}
 	if err != nil {
 		return err
@@ -319,7 +338,17 @@ func releaseLocalWorkspace(workspace domain.ActivityWorkspace, path string) erro
 	if err := os.RemoveAll(path); err != nil {
 		return err
 	}
-	return os.Remove(marker)
+	return removeWorkspaceMarker(marker)
+}
+
+// Ownership has already been checked. Another releaser may remove the marker
+// after that check; an absent marker is the intended terminal cleanup state.
+func removeWorkspaceMarker(marker string) error {
+	err := os.Remove(marker)
+	if os.IsNotExist(err) {
+		return nil
+	}
+	return err
 }
 
 func pruneLocalWorkspaceInputs(workspace domain.ActivityWorkspace, path string) (domain.WorkspaceReleaseResult, error) {
@@ -417,13 +446,14 @@ func workspacePrunePayload(entries []domain.WorkspaceEntry) string {
 func workspacePruneCommand(path string, workspace domain.ActivityWorkspace) string {
 	marker := workspaceMarkerFor(workspace, path)
 	expected := strings.TrimSpace(string(markerContents(workspace)))
-	return "set -eu; test -f " + shell(marker) + "; test \"$(cat -- " + shell(marker) + ")\" = " + shell(expected) + `; ` +
+	return "set -eu; test ! -L " + shell(path) + "; test \"$(realpath -- " + shell(path) + ")\" = " + shell(filepath.Clean(path)) + "; test -f " + shell(marker) + "; test \"$(cat -- " + shell(marker) + ")\" = " + shell(expected) + `; ` +
 		`removed=0; preserved=0; reclaimed=0; while IFS='|' read -r encoded size digest; do ` +
 		`relative=$(printf '%s' "$encoded" | base64 -d); case "$relative" in ''|/*|..|../*|*/../*) echo "unsafe workspace input: $relative" >&2; exit 65;; esac; ` +
 		"target=" + shell(path) + `/"$relative"; [ -e "$target" ] || continue; ` +
+		`test "$(realpath -- "$target")" = "$target" || { echo 'non-canonical workspace input' >&2; exit 65; }; ` +
 		`if [ -L "$target" ] || [ ! -f "$target" ] || [ "$(wc -c < "$target")" -ne "$size" ]; then preserved=$((preserved+1)); continue; fi; ` +
 		`actual=$(sha256sum "$target" | awk '{print $1}'); if [ "$actual" != "$digest" ]; then preserved=$((preserved+1)); continue; fi; ` +
-		`rm -f -- "$target"; removed=$((removed+1)); reclaimed=$((reclaimed+size)); done; ` +
+		workspaceRemovalCommand(workspace) + ` -f -- "$target"; removed=$((removed+1)); reclaimed=$((reclaimed+size)); done; ` +
 		`printf '{"reclaimedBytes":%s,"removedFiles":%s,"preservedFiles":%s}\n' "$reclaimed" "$removed" "$preserved"`
 }
 

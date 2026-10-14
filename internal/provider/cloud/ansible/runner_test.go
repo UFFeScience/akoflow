@@ -109,6 +109,54 @@ func TestRunPlaybookReturnsCommandOutputOnFailure(t *testing.T) {
 	}
 }
 
+func TestExecutePublishesOutputBeforeProcessExit(t *testing.T) {
+	root := t.TempDir()
+	logPath := filepath.Join(root, "provision.log")
+	logFile, err := os.OpenFile(logPath, os.O_CREATE|os.O_WRONLY, 0600)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer logFile.Close()
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	gate := filepath.Join(root, "finish")
+	result := make(chan error, 1)
+	go func() {
+		output, err := (Runner{}).execute(ctx, root, logFile, "sh", "-c", `printf 'TASK progress\n'; while [ ! -f "$1" ]; do sleep 0.01; done; printf 'failure detail\n' >&2; exit 2`, "sh", gate)
+		if err == nil || !strings.Contains(string(output), "failure detail") {
+			result <- errors.New("missing process failure diagnostics")
+			return
+		}
+		result <- nil
+	}()
+	for {
+		content, err := os.ReadFile(logPath)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if strings.Contains(string(content), "TASK progress") {
+			break
+		}
+		select {
+		case <-ctx.Done():
+			t.Fatal("progress was not published before process exit")
+		case err := <-result:
+			t.Fatalf("process exited before gate release: %v", err)
+		case <-time.After(10 * time.Millisecond):
+		}
+	}
+	if err := os.WriteFile(gate, nil, 0600); err != nil {
+		t.Fatal(err)
+	}
+	if err := <-result; err != nil {
+		t.Fatal(err)
+	}
+	content, err := os.ReadFile(logPath)
+	if err != nil || strings.Count(string(content), "TASK progress") != 1 || strings.Count(string(content), "failure detail") != 1 {
+		t.Fatalf("expected both streams exactly once, got %q (%v)", content, err)
+	}
+}
+
 func TestPrivateKeyPathRejectsExternalSchemes(t *testing.T) {
 	if _, err := privateKeyPath("vault:key"); err == nil {
 		t.Fatal("expected unsupported credential reference")

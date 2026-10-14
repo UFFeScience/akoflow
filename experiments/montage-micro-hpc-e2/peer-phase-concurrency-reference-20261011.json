@@ -1,0 +1,16 @@
+{
+  "issue":"AKO-158",
+  "referenceRunId":"montage-prism-transfer-real-20261011-v2",
+  "sourceResource":"montage-gcp-fog-e2-micro-07",
+  "sourceSnapshotAcquirePhases":5,
+  "maximumOverlappingSourceSnapshotAcquirePhases":4,
+  "targetResource":"montage-gcp-fog-e2-micro-08",
+  "targetReceiverPhases":7,
+  "maximumOverlappingTargetReceiverPhases":4,
+  "limitations":[
+    "Overlap is based on observed phase intervals, not proof of simultaneous CPU execution.",
+    "Snapshot acquire includes cache waits, SSH admission and command execution; existing wall time cannot identify these separately.",
+    "Snapshot build now records SSH admission and command wall time separately for prospective measurements.",
+    "Command wall time still includes SSH connection, remote CPU and I/O; it is not a CPU service measurement."
+  ]
+}

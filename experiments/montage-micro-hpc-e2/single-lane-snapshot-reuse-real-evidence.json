@@ -1,0 +1,35 @@
+{
+  "issues": ["AKO-128", "AKO-129"],
+  "runId": "montage-micro-hpc-e2-real-20261008-single-lane-v1",
+  "consumerActivity": "mdifffitid0000024",
+  "consumerAttempt": 2,
+  "consumerStatus": "completed",
+  "transferStatus": "completed",
+  "snapshotReused": true,
+  "serverNetworkBytes": 0,
+  "transferFinishedAt": 1791455261.1301634,
+  "consumerStartedAt": 1791455265.9831588,
+  "consumerFinishedAt": 1791455268.3057332,
+  "transferPhasesSeconds": {
+    "peer-authenticated-connectivity-probe": 2.463686126,
+    "peer-snapshot-acquire": 9.799630963,
+    "peer-reused-source-manifest-check": 1.221616334,
+    "peer-private-upload": 6.49630642,
+    "peer-receiver-verify-and-extract": 5.173608419,
+    "shared-preparation-barrier": 26.942102221,
+    "shared-conflict-check-copy-and-verify": 9.005693212
+  },
+  "consumerRemoteStagesSeconds": {
+    "remoteWorkspacePrepareSeconds": 1.674723126,
+    "remoteWorkspaceSnapshotSeconds": 1.463208042,
+    "remoteContainerLaunchSeconds": 1.080457,
+    "remoteInitialTelemetrySeconds": 1.349214667
+  },
+  "limitations": [
+    "Evidence covers one completed reused snapshot transfer and its consumer, not the full workflow.",
+    "Snapshot acquisition includes waiting for another reader's build; it is not exclusive compression time.",
+    "Shared barrier and merge are joint preparation metrics; do not sum duplicated values across dependencies.",
+    "The run includes recoveries and preserved workspaces; this is not a controlled cold-start benchmark.",
+    "Server network bytes exclude control traffic and describe payload routing only."
+  ]
+}

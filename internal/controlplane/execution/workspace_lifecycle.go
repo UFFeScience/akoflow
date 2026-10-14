@@ -152,13 +152,23 @@ func workspacePath(rawURI string) string {
 	return strings.TrimSpace(rawURI)
 }
 
-func (s *Supervisor) activateWorkspace(ctx context.Context, runID, activityID string) error {
+func (s *Supervisor) activateWorkspace(ctx context.Context, runID, activityID string, allocation domain.RuntimeAllocation) error {
 	store := s.workspaceStore()
 	if store == nil {
 		return nil
 	}
 	workspace, err := store.FindWorkspace(ctx, "workspace-"+runID+"-"+activityID)
 	if err != nil || workspace == nil {
+		return err
+	}
+	if err := bindWorkspaceAllocation(workspace, allocation); err != nil {
+		return err
+	}
+	// Persist the concrete cloud allocation before touching the remote
+	// workspace. Inspect, seal, release and recovery load this same record after
+	// the activity start call has returned, so the binding cannot live only in
+	// the in-memory execution request.
+	if err := store.SaveWorkspace(ctx, *workspace); err != nil {
 		return err
 	}
 	if s.config.Workspaces != nil {
@@ -170,6 +180,30 @@ func (s *Supervisor) activateWorkspace(ctx context.Context, runID, activityID st
 	}
 	workspace.State = domain.WorkspaceActive
 	return store.SaveWorkspace(ctx, *workspace)
+}
+
+func bindWorkspaceAllocation(workspace *domain.ActivityWorkspace, allocation domain.RuntimeAllocation) error {
+	if workspace == nil {
+		return nil
+	}
+	if allocation.RuntimeID != "" {
+		workspace.RuntimeID = allocation.RuntimeID
+	}
+	if allocation.ConnectionID != "" {
+		workspace.ConnectionID = allocation.ConnectionID
+	}
+	if allocation.CloudInstanceID == "" {
+		return nil
+	}
+	parsed, err := url.Parse(workspace.URI)
+	if err != nil {
+		return fmt.Errorf("parse workspace URI %q: %w", workspace.URI, err)
+	}
+	query := parsed.Query()
+	query.Set("cloudInstanceId", allocation.CloudInstanceID)
+	parsed.RawQuery = query.Encode()
+	workspace.URI = parsed.String()
+	return nil
 }
 
 func (s *Supervisor) releaseProducerWorkspaceLeases(ctx context.Context, runID, consumerID string) error {

@@ -6,6 +6,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"math"
 	"sort"
 	"strconv"
 	"strings"
@@ -56,18 +57,62 @@ func (a *Adapter) Start(ctx context.Context, execution domain.ActivityExecutionC
 		return domain.ActivityHandle{}, fmt.Errorf("activity image is required for remote Docker execution")
 	}
 	name := "akoflow-" + safeName(execution.Run.ID) + "-" + safeName(activity.ID)
+	if execution.Attempt > 1 {
+		name += "-attempt-" + strconv.Itoa(execution.Attempt)
+	}
 	workingDirectory := strings.TrimSpace(activity.Command.WorkingDirectory)
 	if workingDirectory == "" {
 		workingDirectory = "/akoflow/workspace/runs/" + safeName(execution.Run.ID) + "/" + safeName(activity.ID)
 	}
+	workspaceStart := time.Now()
 	if _, err := a.executor.Run(ctx, "mkdir", []string{"-p", workingDirectory}, nil); err != nil {
 		return domain.ActivityHandle{}, fmt.Errorf("prepare remote workspace: %w", err)
 	}
-	before, err := a.snapshot(ctx, workingDirectory)
+	workspaceSeconds := time.Since(workspaceStart).Seconds()
+	snapshotStart := time.Now()
+	before, snapshotServiceSeconds, err := a.measuredSnapshot(ctx, workingDirectory)
 	if err != nil {
 		return domain.ActivityHandle{}, fmt.Errorf("snapshot remote workspace: %w", err)
 	}
 	beforeJSON, _ := json.Marshal(before)
+	snapshotSeconds := time.Since(snapshotStart).Seconds()
+	args := remoteDockerArguments(execution, name, workingDirectory)
+	containerLaunchStart := time.Now()
+	output, err := a.executor.Run(ctx, "docker", args, nil)
+	if err != nil {
+		return domain.ActivityHandle{}, fmt.Errorf("start remote Docker container: %w", err)
+	}
+	// The SSH executor combines stdout and stderr. On a first run Docker may
+	// print image-pull progress before the container ID; only the final line is
+	// accepted by docker inspect, logs and rm.
+	lines := strings.Split(strings.TrimSpace(string(output)), "\n")
+	containerID := strings.TrimSpace(lines[len(lines)-1])
+	if containerID == "" {
+		return domain.ActivityHandle{}, fmt.Errorf("start remote Docker container: missing container ID")
+	}
+	now := runtimecommon.UnixSeconds(time.Now())
+	containerLaunchSeconds := time.Since(containerLaunchStart).Seconds()
+	handle := domain.ActivityHandle{ID: runtimecommon.NewID("activity"), RunID: execution.Run.ID, ActivityID: activity.ID,
+		ResourceID: execution.Resource.ID, RuntimeID: execution.RuntimeID, ExternalID: containerID,
+		Status: domain.HandleStarting, StartedAt: now, Metadata: map[string]any{
+			"executionAttempt": execution.Attempt,
+			"containerName":    name, "executionTarget": "remote-docker", "artifactObservationRoot": workingDirectory,
+			"artifactObservationBefore":      string(beforeJSON),
+			"remoteWorkspacePrepareSeconds":  workspaceSeconds,
+			"remoteWorkspaceSnapshotSeconds": snapshotSeconds,
+			"remoteContainerLaunchSeconds":   containerLaunchSeconds,
+		}}
+	if snapshotServiceSeconds > 0 {
+		handle.Metadata["remoteWorkspaceSnapshotServiceSeconds"] = snapshotServiceSeconds
+	}
+	telemetryStart := time.Now()
+	telemetry.ObserveDocker(ctx, &handle, containerID, a.executor.Run)
+	handle.Metadata["remoteInitialTelemetrySeconds"] = time.Since(telemetryStart).Seconds()
+	return handle, nil
+}
+
+func remoteDockerArguments(execution domain.ActivityExecutionContext, name, workingDirectory string) []string {
+	activity := execution.Activity
 	args := []string{"run", "--detach", "--name", name, "--label", "akoflow.run=" + execution.Run.ID}
 	for key, value := range activity.Command.Environment {
 		args = append(args, "--env", key+"="+value)
@@ -86,32 +131,11 @@ func (a *Adapter) Start(ctx context.Context, execution domain.ActivityExecutionC
 	if activity.Command.Entrypoint != "" {
 		args = append(args, activity.Command.Entrypoint)
 	}
-	args = append(args, activity.Command.Arguments...)
-	output, err := a.executor.Run(ctx, "docker", args, nil)
-	if err != nil {
-		return domain.ActivityHandle{}, fmt.Errorf("start remote Docker container: %w", err)
-	}
-	// The SSH executor combines stdout and stderr. On a first run Docker may
-	// print image-pull progress before the container ID; only the final line is
-	// accepted by docker inspect, logs and rm.
-	lines := strings.Split(strings.TrimSpace(string(output)), "\n")
-	containerID := strings.TrimSpace(lines[len(lines)-1])
-	if containerID == "" {
-		return domain.ActivityHandle{}, fmt.Errorf("start remote Docker container: missing container ID")
-	}
-	now := runtimecommon.UnixSeconds(time.Now())
-	handle := domain.ActivityHandle{ID: runtimecommon.NewID("activity"), RunID: execution.Run.ID, ActivityID: activity.ID,
-		ResourceID: execution.Resource.ID, RuntimeID: execution.RuntimeID, ExternalID: containerID,
-		Status: domain.HandleStarting, StartedAt: now, Metadata: map[string]any{
-			"containerName": name, "executionTarget": "remote-docker", "artifactObservationRoot": workingDirectory,
-			"artifactObservationBefore": string(beforeJSON),
-		}}
-	telemetry.ObserveDocker(ctx, &handle, containerID, a.executor.Run)
-	return handle, nil
+	return append(args, activity.Command.Arguments...)
 }
 
 func (a *Adapter) Inspect(ctx context.Context, handle domain.ActivityHandle) (domain.ActivityHandle, error) {
-	output, err := a.executor.Run(ctx, "docker", []string{"inspect", "--format", "{{.State.Status}}|{{.State.ExitCode}}", handle.ExternalID}, nil)
+	output, err := a.executor.Run(ctx, "docker", []string{"inspect", "--format", "{{.State.Status}}|{{.State.ExitCode}}|{{.State.FinishedAt}}", handle.ExternalID}, nil)
 	if err != nil {
 		return handle, err
 	}
@@ -124,6 +148,18 @@ func (a *Adapter) Inspect(ctx context.Context, handle domain.ActivityHandle) (do
 		code, _ := strconv.Atoi(parts[1])
 		handle.ExitCode = &code
 		handle.FinishedAt = runtimecommon.UnixSeconds(time.Now())
+		if handle.Metadata == nil {
+			handle.Metadata = map[string]any{}
+		}
+		handle.Metadata["terminalObservedAt"] = handle.FinishedAt
+		if len(parts) > 2 {
+			if finished, parseErr := time.Parse(time.RFC3339Nano, parts[2]); parseErr == nil && !finished.IsZero() {
+				native := runtimecommon.UnixSeconds(finished)
+				if native >= handle.StartedAt {
+					handle.FinishedAt = native
+				}
+			}
+		}
 		if code == 0 {
 			handle.Status = domain.HandleCompleted
 		} else {
@@ -132,9 +168,15 @@ func (a *Adapter) Inspect(ctx context.Context, handle domain.ActivityHandle) (do
 		}
 		root, _ := handle.Metadata["artifactObservationRoot"].(string)
 		if root != "" {
+			observationStart := time.Now()
+			handle.Metadata["remoteArtifactObservationStartedAt"] = runtimecommon.UnixSeconds(observationStart)
 			artifacts, observeErr := a.collectArtifacts(ctx, handle, code)
+			observationFinish := time.Now()
+			handle.Metadata["remoteArtifactObservationFinishedAt"] = runtimecommon.UnixSeconds(observationFinish)
+			handle.Metadata["remoteArtifactObservationSeconds"] = observationFinish.Sub(observationStart).Seconds()
 			if observeErr == nil {
 				handle.Artifacts = artifacts
+				handle.Metadata["remoteArtifactsReadyAt"] = runtimecommon.UnixSeconds(observationFinish)
 			} else {
 				if handle.Metadata == nil {
 					handle.Metadata = map[string]any{}
@@ -157,7 +199,15 @@ func (a *Adapter) Inspect(ctx context.Context, handle domain.ActivityHandle) (do
 }
 
 func (a *Adapter) snapshot(ctx context.Context, root string) ([]remoteArtifactFile, error) {
-	const script = `import hashlib,json,os,sys
+	files, _, err := a.measuredSnapshot(ctx, root)
+	return files, err
+}
+
+// Service time is measured on the remote host, excluding SSH admission and
+// connection establishment. Outer wall time remains a separate diagnostic.
+func (a *Adapter) measuredSnapshot(ctx context.Context, root string) ([]remoteArtifactFile, float64, error) {
+	const script = `import hashlib,json,os,sys,time
+started=time.monotonic()
 root=sys.argv[1]
 result=[]
 for base,dirs,files in os.walk(root):
@@ -170,16 +220,31 @@ for base,dirs,files in os.walk(root):
       for chunk in iter(lambda: stream.read(1024*1024),b''): h.update(chunk)
     stat=os.stat(full)
     result.append({'path':os.path.relpath(full,root).replace(os.sep,'/'),'size':stat.st_size,'checksum':h.hexdigest(),'modified':stat.st_mtime_ns})
-print(json.dumps(result,separators=(',',':')))`
+print(json.dumps({'files':result,'serviceSeconds':time.monotonic()-started},separators=(',',':')))`
 	output, err := a.executor.Run(ctx, "python3", []string{"-c", script, root}, nil)
 	if err != nil {
-		return nil, err
+		return nil, 0, err
 	}
 	var files []remoteArtifactFile
-	if err := json.Unmarshal(output, &files); err != nil {
-		return nil, fmt.Errorf("decode remote artifact snapshot: %w", err)
+	// Accept legacy array responses for existing executors and fixtures; only
+	// the envelope carries independently measured service time.
+	if strings.HasPrefix(strings.TrimSpace(string(output)), "[") {
+		if err := json.Unmarshal(output, &files); err != nil {
+			return nil, 0, fmt.Errorf("decode remote artifact snapshot: %w", err)
+		}
+		return files, 0, nil
 	}
-	return files, nil
+	var measured struct {
+		Files          []remoteArtifactFile `json:"files"`
+		ServiceSeconds *float64             `json:"serviceSeconds"`
+	}
+	if err := json.Unmarshal(output, &measured); err != nil {
+		return nil, 0, fmt.Errorf("decode remote artifact snapshot: %w", err)
+	}
+	if measured.Files == nil || measured.ServiceSeconds == nil || *measured.ServiceSeconds < 0 || math.IsNaN(*measured.ServiceSeconds) || math.IsInf(*measured.ServiceSeconds, 0) {
+		return nil, 0, fmt.Errorf("invalid remote artifact snapshot measurement")
+	}
+	return measured.Files, *measured.ServiceSeconds, nil
 }
 
 func (a *Adapter) collectArtifacts(ctx context.Context, handle domain.ActivityHandle, exitCode int) (*domain.ArtifactManifest, error) {
@@ -194,9 +259,12 @@ func (a *Adapter) collectArtifacts(ctx context.Context, handle domain.ActivityHa
 			return nil, fmt.Errorf("decode initial remote snapshot: %w", err)
 		}
 	}
-	after, err := a.snapshot(ctx, root)
+	after, serviceSeconds, err := a.measuredSnapshot(ctx, root)
 	if err != nil {
 		return nil, err
+	}
+	if handle.Metadata != nil && serviceSeconds > 0 {
+		handle.Metadata["remoteArtifactObservationServiceSeconds"] = serviceSeconds
 	}
 	return remoteArtifactManifest(handle, root, exitCode, before, after), nil
 }

@@ -48,7 +48,7 @@ func (f ConnectionFactory) Build(runtime domain.EnvironmentRuntime, connection d
 		partition = configString(connection.Configuration, "partition")
 	}
 	return NewWithConfig(executor, Config{Partition: partition, ScriptDirectory: scriptDirectory,
-		SubmitFromStdin: remote}), nil
+		SubmitFromStdin: remote, EligibleNodeFallback: configBool(runtime.Configuration, "eligibleNodeFallback", configBool(connection.Configuration, "eligibleNodeFallback", false))}), nil
 }
 
 func knownHostsFile(connection domain.EnvironmentConnection) string {

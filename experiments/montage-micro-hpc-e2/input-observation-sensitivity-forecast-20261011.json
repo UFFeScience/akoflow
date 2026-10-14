@@ -1,0 +1,18 @@
+{
+  "issue":"AKO-158",
+  "role":"exploratory-wall-time-sensitivity-not-service-calibration",
+  "baselinePrismSeconds":3127.9222412902786,
+  "baselineSimGridSeconds":3163.497678841343,
+  "inputObservationPrismSeconds":3310.94542475303,
+  "inputObservationSimGridSeconds":3376.197861747659,
+  "fixedOriginalPlacementInputObservationSimGridSeconds":3376.197861747659,
+  "fixedPlacementDeltaSeconds":212.700182906316,
+  "simulatedActivityCount":58,
+  "independentRealValidation":false,
+  "limitations":[
+    "Input scan coefficient includes unknown SSH wait; this is sensitivity, not an accepted service fit.",
+    "PRISM was allowed to choose a new placement, so delta is not solely a fixed-position cost comparison.",
+    "Terminal observation, pruning and residual transfer preparation must still be modeled and calibrated.",
+    "No real run was launched from this sensitivity forecast."
+  ]
+}

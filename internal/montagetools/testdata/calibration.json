@@ -1,0 +1,3161 @@
+{
+  "schemaVersion": 1,
+  "baselineRunId": "montage-docker-image-real-20261010-v2",
+  "baselineSHA256": "ce8343153d9016ce2149fa5e70b3624ca148c4747e6dd9887dae1fa2b6ab46c6",
+  "computeWorkBasis": null,
+  "synchronizationContract": "whole-workspace-v1",
+  "workspaceVolumeBasis": "producer-final-snapshot-manifest",
+  "computeObservations": [
+    {
+      "activityFamily": "madd",
+      "resourceClass": "e2-micro",
+      "runtimeSeconds": {
+        "samples": 3,
+        "median": 8.217379093170166,
+        "minimum": 0.9578084945678711,
+        "maximum": 8.437352895736694
+      },
+      "taskRuntimeFallbackSamples": 0,
+      "wallSecondsPerReferenceSecond": {
+        "samples": 3,
+        "median": 0.9374836550818549,
+        "minimum": 0.10642316606309679,
+        "maximum": 4.108689546585083
+      },
+      "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
+    },
+    {
+      "activityFamily": "mbackground",
+      "resourceClass": "e2-medium",
+      "runtimeSeconds": {
+        "samples": 2,
+        "median": 0.5800764560699463,
+        "minimum": 0.5333530902862549,
+        "maximum": 0.6267998218536377
+      },
+      "taskRuntimeFallbackSamples": 0,
+      "wallSecondsPerReferenceSecond": {
+        "samples": 2,
+        "median": 0.32499454332434613,
+        "minimum": 0.02318926479505456,
+        "maximum": 0.6267998218536377
+      },
+      "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
+    },
+    {
+      "activityFamily": "mbackground",
+      "resourceClass": "e2-micro",
+      "runtimeSeconds": {
+        "samples": 8,
+        "median": 2.1703304052352905,
+        "minimum": 0.9790773391723633,
+        "maximum": 23.867364168167114
+      },
+      "taskRuntimeFallbackSamples": 0,
+      "wallSecondsPerReferenceSecond": {
+        "samples": 8,
+        "median": 0.13403182718488904,
+        "minimum": 0.09645940860112508,
+        "maximum": 13.19267725944519
+      },
+      "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
+    },
+    {
+      "activityFamily": "mbackground",
+      "resourceClass": "hpc",
+      "runtimeSeconds": {
+        "samples": 2,
+        "median": 3.2587720155715942,
+        "minimum": 2.595179796218872,
+        "maximum": 3.9223642349243164
+      },
+      "taskRuntimeFallbackSamples": 2,
+      "wallSecondsPerReferenceSecond": {
+        "samples": 2,
+        "median": 2.042281486093998,
+        "minimum": 0.1621987372636795,
+        "maximum": 3.9223642349243164
+      },
+      "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
+    },
+    {
+      "activityFamily": "mbgmodel",
+      "resourceClass": "e2-micro",
+      "runtimeSeconds": {
+        "samples": 2,
+        "median": 0.5460176467895508,
+        "minimum": 0.47063517570495605,
+        "maximum": 0.6214001178741455
+      },
+      "taskRuntimeFallbackSamples": 0,
+      "wallSecondsPerReferenceSecond": {
+        "samples": 2,
+        "median": 0.07053212135557144,
+        "minimum": 0.05229279730055067,
+        "maximum": 0.08877144541059222
+      },
+      "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
+    },
+    {
+      "activityFamily": "mbgmodel",
+      "resourceClass": "e2-medium",
+      "runtimeSeconds": {
+        "samples": 1,
+        "median": 0.5198588371276855,
+        "minimum": 0.5198588371276855,
+        "maximum": 0.5198588371276855
+      },
+      "taskRuntimeFallbackSamples": 0,
+      "wallSecondsPerReferenceSecond": {
+        "samples": 1,
+        "median": 0.025992941856384278,
+        "minimum": 0.025992941856384278,
+        "maximum": 0.025992941856384278
+      },
+      "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
+    },
+    {
+      "activityFamily": "mconcatfit",
+      "resourceClass": "hpc",
+      "runtimeSeconds": {
+        "samples": 1,
+        "median": 2.8328795433044434,
+        "minimum": 2.8328795433044434,
+        "maximum": 2.8328795433044434
+      },
+      "taskRuntimeFallbackSamples": 1,
+      "wallSecondsPerReferenceSecond": {
+        "samples": 1,
+        "median": 0.16663997313555548,
+        "minimum": 0.16663997313555548,
+        "maximum": 0.16663997313555548
+      },
+      "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
+    },
+    {
+      "activityFamily": "mconcatfit",
+      "resourceClass": "e2-micro",
+      "runtimeSeconds": {
+        "samples": 2,
+        "median": 3.633373498916626,
+        "minimum": 2.559312343597412,
+        "maximum": 4.70743465423584
+      },
+      "taskRuntimeFallbackSamples": 0,
+      "wallSecondsPerReferenceSecond": {
+        "samples": 2,
+        "median": 0.5174553818172878,
+        "minimum": 0.5118624687194824,
+        "maximum": 0.5230482949150933
+      },
+      "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
+    },
+    {
+      "activityFamily": "mdifffit",
+      "resourceClass": "e2-micro",
+      "runtimeSeconds": {
+        "samples": 14,
+        "median": 7.9425482749938965,
+        "minimum": 0.6820909976959229,
+        "maximum": 52.214394092559814
+      },
+      "taskRuntimeFallbackSamples": 0,
+      "wallSecondsPerReferenceSecond": {
+        "samples": 14,
+        "median": 0.5160782317320506,
+        "minimum": 0.02842045823733012,
+        "maximum": 2.6107197046279906
+      },
+      "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
+    },
+    {
+      "activityFamily": "mdifffit",
+      "resourceClass": "hpc",
+      "runtimeSeconds": {
+        "samples": 3,
+        "median": 2.2217273712158203,
+        "minimum": 1.3592419624328613,
+        "maximum": 2.9261977672576904
+      },
+      "taskRuntimeFallbackSamples": 3,
+      "wallSecondsPerReferenceSecond": {
+        "samples": 3,
+        "median": 0.15401040880303635,
+        "minimum": 0.08495262265205383,
+        "maximum": 0.20197521556507458
+      },
+      "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
+    },
+    {
+      "activityFamily": "mdifffit",
+      "resourceClass": "e2-medium",
+      "runtimeSeconds": {
+        "samples": 1,
+        "median": 4.188046932220459,
+        "minimum": 4.188046932220459,
+        "maximum": 4.188046932220459
+      },
+      "taskRuntimeFallbackSamples": 0,
+      "wallSecondsPerReferenceSecond": {
+        "samples": 1,
+        "median": 0.3221574563246507,
+        "minimum": 0.3221574563246507,
+        "maximum": 0.3221574563246507
+      },
+      "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
+    },
+    {
+      "activityFamily": "mimgtbl",
+      "resourceClass": "e2-micro",
+      "runtimeSeconds": {
+        "samples": 3,
+        "median": 1.4470241069793701,
+        "minimum": 0.1340923309326172,
+        "maximum": 1.9225947856903076
+      },
+      "taskRuntimeFallbackSamples": 0,
+      "wallSecondsPerReferenceSecond": {
+        "samples": 3,
+        "median": 0.06577382304451683,
+        "minimum": 0.01489914788140191,
+        "maximum": 0.0769037914276123
+      },
+      "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
+    },
+    {
+      "activityFamily": "mproject",
+      "resourceClass": "e2-medium",
+      "runtimeSeconds": {
+        "samples": 4,
+        "median": 723.2229771614075,
+        "minimum": 540.6099560260773,
+        "maximum": 1009.9635989665985
+      },
+      "taskRuntimeFallbackSamples": 0,
+      "wallSecondsPerReferenceSecond": {
+        "samples": 4,
+        "median": 0.5422618222257024,
+        "minimum": 0.482687460737569,
+        "maximum": 0.6058569879823626
+      },
+      "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
+    },
+    {
+      "activityFamily": "mproject",
+      "resourceClass": "e2-micro",
+      "runtimeSeconds": {
+        "samples": 6,
+        "median": 2135.8616498708725,
+        "minimum": 1800.6897740364075,
+        "maximum": 3373.3067605495453
+      },
+      "taskRuntimeFallbackSamples": 0,
+      "wallSecondsPerReferenceSecond": {
+        "samples": 6,
+        "median": 4.142489493875232,
+        "minimum": 2.4189968622063263,
+        "maximum": 7.97978781444439
+      },
+      "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
+    },
+    {
+      "activityFamily": "mproject",
+      "resourceClass": "hpc",
+      "runtimeSeconds": {
+        "samples": 2,
+        "median": 432.66202092170715,
+        "minimum": 430.53262972831726,
+        "maximum": 434.79141211509705
+      },
+      "taskRuntimeFallbackSamples": 2,
+      "wallSecondsPerReferenceSecond": {
+        "samples": 2,
+        "median": 0.280406867515572,
+        "minimum": 0.2784816492421198,
+        "maximum": 0.2823320857890241
+      },
+      "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
+    },
+    {
+      "activityFamily": "mviewer",
+      "resourceClass": "e2-medium",
+      "runtimeSeconds": {
+        "samples": 2,
+        "median": 2.066543698310852,
+        "minimum": 1.2472658157348633,
+        "maximum": 2.885821580886841
+      },
+      "taskRuntimeFallbackSamples": 0,
+      "wallSecondsPerReferenceSecond": {
+        "samples": 2,
+        "median": 0.24281440161857284,
+        "minimum": 0.07336857739616842,
+        "maximum": 0.41226022584097727
+      },
+      "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
+    },
+    {
+      "activityFamily": "mviewer",
+      "resourceClass": "e2-micro",
+      "runtimeSeconds": {
+        "samples": 2,
+        "median": 14.030364871025085,
+        "minimum": 1.6501014232635498,
+        "maximum": 26.41062831878662
+      },
+      "taskRuntimeFallbackSamples": 0,
+      "wallSecondsPerReferenceSecond": {
+        "samples": 2,
+        "median": 13.308445498347282,
+        "minimum": 0.20626267790794373,
+        "maximum": 26.41062831878662
+      },
+      "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
+    }
+  ],
+  "materializationPhaseObservations": [
+    {
+      "strategy": "direct-runtime",
+      "sourceClass": "e2-medium",
+      "targetClass": "e2-micro",
+      "phase": "peer-authenticated-connectivity-probe",
+      "seconds": {
+        "samples": 20,
+        "median": 2.4162210225000003,
+        "minimum": 2.286490792,
+        "maximum": 13.712441924
+      },
+      "secondsBases": [
+        "combined-phase-wall-includes-unseparated-service-queue"
+      ],
+      "pooledArchiveServiceRate": {
+        "samples": 20,
+        "bytes": 4719444744,
+        "serviceSeconds": 82.095890459,
+        "bytesPerSecond": 57486979.16075307,
+        "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+      },
+      "pooledWorkspaceServiceRate": {
+        "samples": 20,
+        "bytes": 7521007531,
+        "serviceSeconds": 82.095890459,
+        "bytesPerSecond": 91612472.79187636,
+        "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+      },
+      "phaseChannelWaitSeconds": null,
+      "sourceChannelWaitSeconds": null,
+      "sourcePreflightSeconds": null,
+      "sourcePreflightServiceSeconds": null,
+      "sourcePreflightChannelWaitSeconds": null,
+      "logicalBytes": {
+        "samples": 18,
+        "median": 196610182.0,
+        "minimum": 18236443.0,
+        "maximum": 740939386.0
+      },
+      "archiveBytes": {
+        "samples": 20,
+        "median": 143339660.0,
+        "minimum": 142917128.0,
+        "maximum": 426325775.0
+      },
+      "workspaceBytes": {
+        "samples": 20,
+        "median": 196938502.0,
+        "minimum": 195579142.0,
+        "maximum": 740939386.0
+      },
+      "archiveToWorkspaceRatio": {
+        "samples": 20,
+        "median": 0.7256941966584066,
+        "minimum": 0.5719966097845853,
+        "maximum": 0.7333948473912417
+      },
+      "effectiveWorkspaceBytesPerSecond": {
+        "samples": 20,
+        "median": 83676394.3242459,
+        "minimum": 35750036.62047911,
+        "maximum": 311227613.81359726
+      },
+      "files": {
+        "samples": 18,
+        "median": 47.0,
+        "minimum": 2.0,
+        "maximum": 75.0
+      },
+      "effectiveArchiveBytesPerSecond": {
+        "samples": 20,
+        "median": 60827976.14251813,
+        "minimum": 26046095.920719363,
+        "maximum": 179075854.47277406
+      },
+      "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+    },
+    {
+      "strategy": "direct-runtime",
+      "sourceClass": "e2-medium",
+      "targetClass": "e2-micro",
+      "phase": "peer-snapshot-acquire",
+      "seconds": {
+        "samples": 20,
+        "median": 6.8133940655,
+        "minimum": 3.5541e-05,
+        "maximum": 23.889355677
+      },
+      "secondsBases": [
+        "combined-phase-wall-includes-unseparated-service-queue"
+      ],
+      "pooledArchiveServiceRate": {
+        "samples": 20,
+        "bytes": 4719444744,
+        "serviceSeconds": 196.708563674,
+        "bytesPerSecond": 23992065.49960587,
+        "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+      },
+      "pooledWorkspaceServiceRate": {
+        "samples": 20,
+        "bytes": 7521007531,
+        "serviceSeconds": 196.708563674,
+        "bytesPerSecond": 38234265.91363033,
+        "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+      },
+      "phaseChannelWaitSeconds": null,
+      "sourceChannelWaitSeconds": null,
+      "sourcePreflightSeconds": null,
+      "sourcePreflightServiceSeconds": null,
+      "sourcePreflightChannelWaitSeconds": null,
+      "logicalBytes": {
+        "samples": 18,
+        "median": 196610182.0,
+        "minimum": 18236443.0,
+        "maximum": 740939386.0
+      },
+      "archiveBytes": {
+        "samples": 20,
+        "median": 143339660.0,
+        "minimum": 142917128.0,
+        "maximum": 426325775.0
+      },
+      "workspaceBytes": {
+        "samples": 20,
+        "median": 196938502.0,
+        "minimum": 195579142.0,
+        "maximum": 740939386.0
+      },
+      "archiveToWorkspaceRatio": {
+        "samples": 20,
+        "median": 0.7256941966584066,
+        "minimum": 0.5719966097845853,
+        "maximum": 0.7333948473912417
+      },
+      "effectiveWorkspaceBytesPerSecond": {
+        "samples": 20,
+        "median": 30510114.773531586,
+        "minimum": 18470614.9184961,
+        "maximum": 17811951886553.56
+      },
+      "files": {
+        "samples": 18,
+        "median": 47.0,
+        "minimum": 2.0,
+        "maximum": 75.0
+      },
+      "effectiveArchiveBytesPerSecond": {
+        "samples": 20,
+        "median": 21221299.827622443,
+        "minimum": 13456976.645619227,
+        "maximum": 10350951070594.525
+      },
+      "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+    },
+    {
+      "strategy": "direct-runtime",
+      "sourceClass": "e2-medium",
+      "targetClass": "e2-micro",
+      "phase": "peer-private-upload",
+      "seconds": {
+        "samples": 20,
+        "median": 6.318401003,
+        "minimum": 3.399642126,
+        "maximum": 50.113527148
+      },
+      "secondsBases": [
+        "combined-phase-wall-includes-unseparated-service-queue"
+      ],
+      "pooledArchiveServiceRate": {
+        "samples": 20,
+        "bytes": 4719444744,
+        "serviceSeconds": 204.741662843,
+        "bytesPerSecond": 23050729.775595132,
+        "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+      },
+      "pooledWorkspaceServiceRate": {
+        "samples": 20,
+        "bytes": 7521007531,
+        "serviceSeconds": 204.741662843,
+        "bytesPerSecond": 36734133.28076396,
+        "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+      },
+      "phaseChannelWaitSeconds": null,
+      "sourceChannelWaitSeconds": null,
+      "sourcePreflightSeconds": null,
+      "sourcePreflightServiceSeconds": null,
+      "sourcePreflightChannelWaitSeconds": null,
+      "logicalBytes": {
+        "samples": 18,
+        "median": 196610182.0,
+        "minimum": 18236443.0,
+        "maximum": 740939386.0
+      },
+      "archiveBytes": {
+        "samples": 20,
+        "median": 143339660.0,
+        "minimum": 142917128.0,
+        "maximum": 426325775.0
+      },
+      "workspaceBytes": {
+        "samples": 20,
+        "median": 196938502.0,
+        "minimum": 195579142.0,
+        "maximum": 740939386.0
+      },
+      "archiveToWorkspaceRatio": {
+        "samples": 20,
+        "median": 0.7256941966584066,
+        "minimum": 0.5719966097845853,
+        "maximum": 0.7333948473912417
+      },
+      "effectiveWorkspaceBytesPerSecond": {
+        "samples": 20,
+        "median": 54899955.45290358,
+        "minimum": 7649470.226514639,
+        "maximum": 113099800.15949468
+      },
+      "files": {
+        "samples": 18,
+        "median": 47.0,
+        "minimum": 2.0,
+        "maximum": 75.0
+      },
+      "effectiveArchiveBytesPerSecond": {
+        "samples": 20,
+        "median": 39840579.06897718,
+        "minimum": 5610082.049398552,
+        "maximum": 64692702.25854507
+      },
+      "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+    },
+    {
+      "strategy": "direct-runtime",
+      "sourceClass": "e2-medium",
+      "targetClass": "e2-micro",
+      "phase": "peer-receiver-verify-and-extract",
+      "seconds": {
+        "samples": 20,
+        "median": 11.3101169635,
+        "minimum": 2.66509171,
+        "maximum": 237.244030355
+      },
+      "secondsBases": [
+        "combined-phase-wall-includes-unseparated-service-queue"
+      ],
+      "pooledArchiveServiceRate": {
+        "samples": 20,
+        "bytes": 4719444744,
+        "serviceSeconds": 703.761369402,
+        "bytesPerSecond": 6706029.84078283,
+        "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+      },
+      "pooledWorkspaceServiceRate": {
+        "samples": 20,
+        "bytes": 7521007531,
+        "serviceSeconds": 703.761369402,
+        "bytesPerSecond": 10686871.797738414,
+        "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+      },
+      "phaseChannelWaitSeconds": null,
+      "sourceChannelWaitSeconds": null,
+      "sourcePreflightSeconds": null,
+      "sourcePreflightServiceSeconds": null,
+      "sourcePreflightChannelWaitSeconds": null,
+      "logicalBytes": {
+        "samples": 18,
+        "median": 196610182.0,
+        "minimum": 18236443.0,
+        "maximum": 740939386.0
+      },
+      "archiveBytes": {
+        "samples": 20,
+        "median": 143339660.0,
+        "minimum": 142917128.0,
+        "maximum": 426325775.0
+      },
+      "workspaceBytes": {
+        "samples": 20,
+        "median": 196938502.0,
+        "minimum": 195579142.0,
+        "maximum": 740939386.0
+      },
+      "archiveToWorkspaceRatio": {
+        "samples": 20,
+        "median": 0.7256941966584066,
+        "minimum": 0.5719966097845853,
+        "maximum": 0.7333948473912417
+      },
+      "effectiveWorkspaceBytesPerSecond": {
+        "samples": 20,
+        "median": 45867943.07818958,
+        "minimum": 3123110.768651568,
+        "maximum": 73402810.59221035
+      },
+      "files": {
+        "samples": 18,
+        "median": 47.0,
+        "minimum": 2.0,
+        "maximum": 75.0
+      },
+      "effectiveArchiveBytesPerSecond": {
+        "samples": 20,
+        "median": 29496458.305427484,
+        "minimum": 1796992.633964562,
+        "maximum": 53733886.32843708
+      },
+      "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+    },
+    {
+      "strategy": "direct-runtime",
+      "sourceClass": "e2-micro",
+      "targetClass": "e2-micro",
+      "phase": "peer-authenticated-connectivity-probe",
+      "seconds": {
+        "samples": 45,
+        "median": 2.444578959,
+        "minimum": 2.267388085,
+        "maximum": 14.119102382
+      },
+      "secondsBases": [
+        "combined-phase-wall-includes-unseparated-service-queue"
+      ],
+      "pooledArchiveServiceRate": {
+        "samples": 45,
+        "bytes": 14768952722,
+        "serviceSeconds": 176.824679621,
+        "bytesPerSecond": 83523141.41699716,
+        "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+      },
+      "pooledWorkspaceServiceRate": {
+        "samples": 45,
+        "bytes": 24933404926,
+        "serviceSeconds": 176.824679621,
+        "bytesPerSecond": 141006362.79642305,
+        "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+      },
+      "phaseChannelWaitSeconds": null,
+      "sourceChannelWaitSeconds": null,
+      "sourcePreflightSeconds": null,
+      "sourcePreflightServiceSeconds": null,
+      "sourcePreflightChannelWaitSeconds": null,
+      "logicalBytes": {
+        "samples": 44,
+        "median": 106346880.0,
+        "minimum": 2594.0,
+        "maximum": 1109057816.0
+      },
+      "archiveBytes": {
+        "samples": 45,
+        "median": 363111632.0,
+        "minimum": 141375291.0,
+        "maximum": 619720534.0
+      },
+      "workspaceBytes": {
+        "samples": 45,
+        "median": 627864822.0,
+        "minimum": 195625222.0,
+        "maximum": 1109057816.0
+      },
+      "archiveToWorkspaceRatio": {
+        "samples": 45,
+        "median": 0.578327721631775,
+        "minimum": 0.5587810888300886,
+        "maximum": 0.7368636801329126
+      },
+      "effectiveWorkspaceBytesPerSecond": {
+        "samples": 45,
+        "median": 134248084.80919027,
+        "minimum": 26694732.13031702,
+        "maximum": 481931462.75104815
+      },
+      "files": {
+        "samples": 44,
+        "median": 2.5,
+        "minimum": 1.0,
+        "maximum": 84.0
+      },
+      "effectiveArchiveBytesPerSecond": {
+        "samples": 45,
+        "median": 85519694.35317792,
+        "minimum": 19647136.301396284,
+        "maximum": 269499698.2431896
+      },
+      "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+    },
+    {
+      "strategy": "direct-runtime",
+      "sourceClass": "e2-micro",
+      "targetClass": "e2-micro",
+      "phase": "peer-snapshot-acquire",
+      "seconds": {
+        "samples": 45,
+        "median": 47.297451689,
+        "minimum": 0.000196,
+        "maximum": 724.592180869
+      },
+      "secondsBases": [
+        "combined-phase-wall-includes-unseparated-service-queue"
+      ],
+      "pooledArchiveServiceRate": {
+        "samples": 45,
+        "bytes": 14768952722,
+        "serviceSeconds": 4994.773932149,
+        "bytesPerSecond": 2956881.1166686104,
+        "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+      },
+      "pooledWorkspaceServiceRate": {
+        "samples": 45,
+        "bytes": 24933404926,
+        "serviceSeconds": 4994.773932149,
+        "bytesPerSecond": 4991898.585342462,
+        "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+      },
+      "phaseChannelWaitSeconds": null,
+      "sourceChannelWaitSeconds": null,
+      "sourcePreflightSeconds": null,
+      "sourcePreflightServiceSeconds": null,
+      "sourcePreflightChannelWaitSeconds": null,
+      "logicalBytes": {
+        "samples": 44,
+        "median": 106346880.0,
+        "minimum": 2594.0,
+        "maximum": 1109057816.0
+      },
+      "archiveBytes": {
+        "samples": 45,
+        "median": 363111632.0,
+        "minimum": 141375291.0,
+        "maximum": 619720534.0
+      },
+      "workspaceBytes": {
+        "samples": 45,
+        "median": 627864822.0,
+        "minimum": 195625222.0,
+        "maximum": 1109057816.0
+      },
+      "archiveToWorkspaceRatio": {
+        "samples": 45,
+        "median": 0.578327721631775,
+        "minimum": 0.5587810888300886,
+        "maximum": 0.7368636801329126
+      },
+      "effectiveWorkspaceBytesPerSecond": {
+        "samples": 45,
+        "median": 13591501.74435183,
+        "minimum": 1446547.9612862365,
+        "maximum": 998293581632.6531
+      },
+      "files": {
+        "samples": 44,
+        "median": 2.5,
+        "minimum": 1.0,
+        "maximum": 84.0
+      },
+      "effectiveArchiveBytesPerSecond": {
+        "samples": 45,
+        "median": 7600469.9877143195,
+        "minimum": 810355.8022055948,
+        "maximum": 725908500000.0
+      },
+      "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+    },
+    {
+      "strategy": "direct-runtime",
+      "sourceClass": "e2-micro",
+      "targetClass": "e2-micro",
+      "phase": "peer-private-upload",
+      "seconds": {
+        "samples": 45,
+        "median": 21.295400718,
+        "minimum": 3.692133835,
+        "maximum": 204.790461176
+      },
+      "secondsBases": [
+        "combined-phase-wall-includes-unseparated-service-queue"
+      ],
+      "pooledArchiveServiceRate": {
+        "samples": 45,
+        "bytes": 14768952722,
+        "serviceSeconds": 1391.840169336,
+        "bytesPerSecond": 10611098.204649296,
+        "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+      },
+      "pooledWorkspaceServiceRate": {
+        "samples": 45,
+        "bytes": 24933404926,
+        "serviceSeconds": 1391.840169336,
+        "bytesPerSecond": 17913985.72574241,
+        "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+      },
+      "phaseChannelWaitSeconds": null,
+      "sourceChannelWaitSeconds": null,
+      "sourcePreflightSeconds": null,
+      "sourcePreflightServiceSeconds": null,
+      "sourcePreflightChannelWaitSeconds": null,
+      "logicalBytes": {
+        "samples": 44,
+        "median": 106346880.0,
+        "minimum": 2594.0,
+        "maximum": 1109057816.0
+      },
+      "archiveBytes": {
+        "samples": 45,
+        "median": 363111632.0,
+        "minimum": 141375291.0,
+        "maximum": 619720534.0
+      },
+      "workspaceBytes": {
+        "samples": 45,
+        "median": 627864822.0,
+        "minimum": 195625222.0,
+        "maximum": 1109057816.0
+      },
+      "archiveToWorkspaceRatio": {
+        "samples": 45,
+        "median": 0.578327721631775,
+        "minimum": 0.5587810888300886,
+        "maximum": 0.7368636801329126
+      },
+      "effectiveWorkspaceBytesPerSecond": {
+        "samples": 45,
+        "median": 27154065.76248039,
+        "minimum": 5056332.734069341,
+        "maximum": 127839669.3181365
+      },
+      "files": {
+        "samples": 44,
+        "median": 2.5,
+        "minimum": 1.0,
+        "maximum": 84.0
+      },
+      "effectiveArchiveBytesPerSecond": {
+        "samples": 45,
+        "median": 17623724.802639503,
+        "minimum": 2912047.4390039076,
+        "maximum": 71566066.50891274
+      },
+      "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+    },
+    {
+      "strategy": "direct-runtime",
+      "sourceClass": "e2-micro",
+      "targetClass": "e2-micro",
+      "phase": "peer-receiver-verify-and-extract",
+      "seconds": {
+        "samples": 45,
+        "median": 12.808673423,
+        "minimum": 2.726851626,
+        "maximum": 467.73053142
+      },
+      "secondsBases": [
+        "combined-phase-wall-includes-unseparated-service-queue"
+      ],
+      "pooledArchiveServiceRate": {
+        "samples": 45,
+        "bytes": 14768952722,
+        "serviceSeconds": 2264.991643906,
+        "bytesPerSecond": 6520532.983746818,
+        "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+      },
+      "pooledWorkspaceServiceRate": {
+        "samples": 45,
+        "bytes": 24933404926,
+        "serviceSeconds": 2264.991643906,
+        "bytesPerSecond": 11008166.406743163,
+        "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+      },
+      "phaseChannelWaitSeconds": null,
+      "sourceChannelWaitSeconds": null,
+      "sourcePreflightSeconds": null,
+      "sourcePreflightServiceSeconds": null,
+      "sourcePreflightChannelWaitSeconds": null,
+      "logicalBytes": {
+        "samples": 44,
+        "median": 106346880.0,
+        "minimum": 2594.0,
+        "maximum": 1109057816.0
+      },
+      "archiveBytes": {
+        "samples": 45,
+        "median": 363111632.0,
+        "minimum": 141375291.0,
+        "maximum": 619720534.0
+      },
+      "workspaceBytes": {
+        "samples": 45,
+        "median": 627864822.0,
+        "minimum": 195625222.0,
+        "maximum": 1109057816.0
+      },
+      "archiveToWorkspaceRatio": {
+        "samples": 45,
+        "median": 0.578327721631775,
+        "minimum": 0.5587810888300886,
+        "maximum": 0.7368636801329126
+      },
+      "effectiveWorkspaceBytesPerSecond": {
+        "samples": 45,
+        "median": 45018555.18656611,
+        "minimum": 1584029.7270111442,
+        "maximum": 71755111.32852522
+      },
+      "files": {
+        "samples": 44,
+        "median": 2.5,
+        "minimum": 1.0,
+        "maximum": 84.0
+      },
+      "effectiveArchiveBytesPerSecond": {
+        "samples": 45,
+        "median": 28348867.599979248,
+        "minimum": 911255.8500425805,
+        "maximum": 52176680.47773714
+      },
+      "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+    },
+    {
+      "strategy": "gateway",
+      "sourceClass": "hpc",
+      "targetClass": "e2-micro",
+      "phase": "pack-and-receive",
+      "seconds": {
+        "samples": 11,
+        "median": 42.532719728000004,
+        "minimum": 11.220321047,
+        "maximum": 102.588095879
+      },
+      "secondsBases": [
+        "combined-phase-wall-includes-unseparated-service-queue"
+      ],
+      "pooledArchiveServiceRate": {
+        "samples": 11,
+        "bytes": 2603160156,
+        "serviceSeconds": 535.036846578,
+        "bytesPerSecond": 4865384.828445642,
+        "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+      },
+      "pooledWorkspaceServiceRate": {
+        "samples": 11,
+        "bytes": 4560861956,
+        "serviceSeconds": 535.036846578,
+        "bytesPerSecond": 8524388.526080882,
+        "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+      },
+      "phaseChannelWaitSeconds": null,
+      "sourceChannelWaitSeconds": null,
+      "sourcePreflightSeconds": null,
+      "sourcePreflightServiceSeconds": null,
+      "sourcePreflightChannelWaitSeconds": null,
+      "logicalBytes": {
+        "samples": 10,
+        "median": 106346880.0,
+        "minimum": 18391965.0,
+        "maximum": 739073142.0
+      },
+      "archiveBytes": {
+        "samples": 11,
+        "median": 208894084.0,
+        "minimum": 51992429.0,
+        "maximum": 426351589.0
+      },
+      "workspaceBytes": {
+        "samples": 11,
+        "median": 321020707.0,
+        "minimum": 106018560.0,
+        "maximum": 740899066.0
+      },
+      "archiveToWorkspaceRatio": {
+        "samples": 11,
+        "median": 0.5736604862310096,
+        "minimum": 0.4904087454121241,
+        "maximum": 0.6507184098874967
+      },
+      "effectiveWorkspaceBytesPerSecond": {
+        "samples": 11,
+        "median": 7633347.82034076,
+        "minimum": 2678102.132784162,
+        "maximum": 12998257.441814132
+      },
+      "files": {
+        "samples": 10,
+        "median": 2.5,
+        "minimum": 2.0,
+        "maximum": 75.0
+      },
+      "effectiveArchiveBytesPerSecond": {
+        "samples": 11,
+        "median": 4565984.029781632,
+        "minimum": 1313364.7070242148,
+        "maximum": 7479868.674241965
+      },
+      "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+    },
+    {
+      "strategy": "gateway",
+      "sourceClass": "hpc",
+      "targetClass": "e2-micro",
+      "phase": "archive-validation",
+      "seconds": {
+        "samples": 11,
+        "median": 1.732665959,
+        "minimum": 0.502052333,
+        "maximum": 3.854221543
+      },
+      "secondsBases": [
+        "combined-phase-wall-includes-unseparated-service-queue"
+      ],
+      "pooledArchiveServiceRate": {
+        "samples": 11,
+        "bytes": 2603160156,
+        "serviceSeconds": 24.244881968,
+        "bytesPerSecond": 107369471.19131464,
+        "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+      },
+      "pooledWorkspaceServiceRate": {
+        "samples": 11,
+        "bytes": 4560861956,
+        "serviceSeconds": 24.244881968,
+        "bytesPerSecond": 188116484.21385294,
+        "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+      },
+      "phaseChannelWaitSeconds": null,
+      "sourceChannelWaitSeconds": null,
+      "sourcePreflightSeconds": null,
+      "sourcePreflightServiceSeconds": null,
+      "sourcePreflightChannelWaitSeconds": null,
+      "logicalBytes": {
+        "samples": 10,
+        "median": 106346880.0,
+        "minimum": 18391965.0,
+        "maximum": 739073142.0
+      },
+      "archiveBytes": {
+        "samples": 11,
+        "median": 208894084.0,
+        "minimum": 51992429.0,
+        "maximum": 426351589.0
+      },
+      "workspaceBytes": {
+        "samples": 11,
+        "median": 321020707.0,
+        "minimum": 106018560.0,
+        "maximum": 740899066.0
+      },
+      "archiveToWorkspaceRatio": {
+        "samples": 11,
+        "median": 0.5736604862310096,
+        "minimum": 0.4904087454121241,
+        "maximum": 0.6507184098874967
+      },
+      "effectiveWorkspaceBytesPerSecond": {
+        "samples": 11,
+        "median": 193524669.92053956,
+        "minimum": 164995666.03024346,
+        "maximum": 211170336.30037928
+      },
+      "files": {
+        "samples": 10,
+        "median": 2.5,
+        "minimum": 2.0,
+        "maximum": 75.0
+      },
+      "effectiveArchiveBytesPerSecond": {
+        "samples": 11,
+        "median": 108211123.48062727,
+        "minimum": 89732925.24604906,
+        "maximum": 120562237.00531535
+      },
+      "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+    },
+    {
+      "strategy": "gateway",
+      "sourceClass": "hpc",
+      "targetClass": "e2-micro",
+      "phase": "archive-upload",
+      "seconds": {
+        "samples": 11,
+        "median": 33.194828307,
+        "minimum": 5.755920378,
+        "maximum": 88.282822748
+      },
+      "secondsBases": [
+        "phase-command-execution-excludes-channel-queue"
+      ],
+      "pooledArchiveServiceRate": {
+        "samples": 11,
+        "bytes": 2603160156,
+        "serviceSeconds": 384.441166964,
+        "bytesPerSecond": 6771283.566111343,
+        "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+      },
+      "pooledWorkspaceServiceRate": {
+        "samples": 11,
+        "bytes": 4560861956,
+        "serviceSeconds": 384.441166964,
+        "bytesPerSecond": 11863614.898523837,
+        "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+      },
+      "phaseChannelWaitSeconds": {
+        "samples": 11,
+        "median": 9.708e-06,
+        "minimum": 6.75e-06,
+        "maximum": 0.00033975
+      },
+      "sourceChannelWaitSeconds": null,
+      "sourcePreflightSeconds": null,
+      "sourcePreflightServiceSeconds": null,
+      "sourcePreflightChannelWaitSeconds": null,
+      "logicalBytes": {
+        "samples": 10,
+        "median": 106346880.0,
+        "minimum": 18391965.0,
+        "maximum": 739073142.0
+      },
+      "archiveBytes": {
+        "samples": 11,
+        "median": 208894084.0,
+        "minimum": 51992429.0,
+        "maximum": 426351589.0
+      },
+      "workspaceBytes": {
+        "samples": 11,
+        "median": 321020707.0,
+        "minimum": 106018560.0,
+        "maximum": 740899066.0
+      },
+      "archiveToWorkspaceRatio": {
+        "samples": 11,
+        "median": 0.5736604862310096,
+        "minimum": 0.4904087454121241,
+        "maximum": 0.6507184098874967
+      },
+      "effectiveWorkspaceBytesPerSecond": {
+        "samples": 11,
+        "median": 15118533.681912266,
+        "minimum": 2078076.62672509,
+        "maximum": 20852720.505293377
+      },
+      "files": {
+        "samples": 10,
+        "median": 2.5,
+        "minimum": 2.0,
+        "maximum": 75.0
+      },
+      "effectiveArchiveBytesPerSecond": {
+        "samples": 11,
+        "median": 8139339.578303657,
+        "minimum": 1064879.7098892068,
+        "maximum": 11962381.784305941
+      },
+      "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+    },
+    {
+      "strategy": "gateway",
+      "sourceClass": "hpc",
+      "targetClass": "e2-micro",
+      "phase": "receiver-verify-and-extract",
+      "seconds": {
+        "samples": 11,
+        "median": 7.516678671,
+        "minimum": 1.272753501,
+        "maximum": 209.987703305
+      },
+      "secondsBases": [
+        "combined-phase-wall-includes-unseparated-service-queue"
+      ],
+      "pooledArchiveServiceRate": {
+        "samples": 11,
+        "bytes": 2603160156,
+        "serviceSeconds": 505.157891857,
+        "bytesPerSecond": 5153161.413415872,
+        "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+      },
+      "pooledWorkspaceServiceRate": {
+        "samples": 11,
+        "bytes": 4560861956,
+        "serviceSeconds": 505.157891857,
+        "bytesPerSecond": 9028586.96166047,
+        "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+      },
+      "phaseChannelWaitSeconds": null,
+      "sourceChannelWaitSeconds": null,
+      "sourcePreflightSeconds": null,
+      "sourcePreflightServiceSeconds": null,
+      "sourcePreflightChannelWaitSeconds": null,
+      "logicalBytes": {
+        "samples": 10,
+        "median": 106346880.0,
+        "minimum": 18391965.0,
+        "maximum": 739073142.0
+      },
+      "archiveBytes": {
+        "samples": 11,
+        "median": 208894084.0,
+        "minimum": 51992429.0,
+        "maximum": 426351589.0
+      },
+      "workspaceBytes": {
+        "samples": 11,
+        "median": 321020707.0,
+        "minimum": 106018560.0,
+        "maximum": 740899066.0
+      },
+      "archiveToWorkspaceRatio": {
+        "samples": 11,
+        "median": 0.5736604862310096,
+        "minimum": 0.4904087454121241,
+        "maximum": 0.6507184098874967
+      },
+      "effectiveWorkspaceBytesPerSecond": {
+        "samples": 11,
+        "median": 46798115.17037942,
+        "minimum": 3528297.392366206,
+        "maximum": 98548224.98363979
+      },
+      "files": {
+        "samples": 10,
+        "median": 2.5,
+        "minimum": 2.0,
+        "maximum": 75.0
+      },
+      "effectiveArchiveBytesPerSecond": {
+        "samples": 11,
+        "median": 23981003.71521475,
+        "minimum": 2030364.5513029818,
+        "maximum": 57403030.977419436
+      },
+      "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+    },
+    {
+      "strategy": "direct-runtime",
+      "sourceClass": "e2-micro",
+      "targetClass": "e2-medium",
+      "phase": "peer-authenticated-connectivity-probe",
+      "seconds": {
+        "samples": 7,
+        "median": 3.238551043,
+        "minimum": 2.347021292,
+        "maximum": 5.747049585
+      },
+      "secondsBases": [
+        "combined-phase-wall-includes-unseparated-service-queue"
+      ],
+      "pooledArchiveServiceRate": {
+        "samples": 7,
+        "bytes": 3584464125,
+        "serviceSeconds": 23.434317592,
+        "bytesPerSecond": 152957905.04365543,
+        "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+      },
+      "pooledWorkspaceServiceRate": {
+        "samples": 7,
+        "bytes": 6328189016,
+        "serviceSeconds": 23.434317592,
+        "bytesPerSecond": 270039398.0390671,
+        "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+      },
+      "phaseChannelWaitSeconds": null,
+      "sourceChannelWaitSeconds": null,
+      "sourcePreflightSeconds": null,
+      "sourcePreflightServiceSeconds": null,
+      "sourcePreflightChannelWaitSeconds": null,
+      "logicalBytes": {
+        "samples": 7,
+        "median": 1009451800.0,
+        "minimum": 627864822.0,
+        "maximum": 1111828392.0
+      },
+      "archiveBytes": {
+        "samples": 7,
+        "median": 615130007.0,
+        "minimum": 363111632.0,
+        "maximum": 624504559.0
+      },
+      "workspaceBytes": {
+        "samples": 7,
+        "median": 1100003102.0,
+        "minimum": 627864822.0,
+        "maximum": 1111828392.0
+      },
+      "archiveToWorkspaceRatio": {
+        "samples": 7,
+        "median": 0.5616915015784198,
+        "minimum": 0.5587810888300886,
+        "maximum": 0.5824735682180756
+      },
+      "effectiveWorkspaceBytesPerSecond": {
+        "samples": 7,
+        "median": 333062072.17141193,
+        "minimum": 109249939.94113939,
+        "maximum": 471436381.27734333
+      },
+      "files": {
+        "samples": 7,
+        "median": 73.0,
+        "minimum": 39.0,
+        "maximum": 84.0
+      },
+      "effectiveArchiveBytesPerSecond": {
+        "samples": 7,
+        "median": 186108787.3359471,
+        "minimum": 63182268.8545674,
+        "maximum": 264801808.89836743
+      },
+      "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+    },
+    {
+      "strategy": "direct-runtime",
+      "sourceClass": "e2-micro",
+      "targetClass": "e2-medium",
+      "phase": "peer-snapshot-acquire",
+      "seconds": {
+        "samples": 7,
+        "median": 222.943990226,
+        "minimum": 7.5167e-05,
+        "maximum": 362.706896956
+      },
+      "secondsBases": [
+        "combined-phase-wall-includes-unseparated-service-queue"
+      ],
+      "pooledArchiveServiceRate": {
+        "samples": 7,
+        "bytes": 3584464125,
+        "serviceSeconds": 1370.467591624,
+        "bytesPerSecond": 2615504.4795713997,
+        "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+      },
+      "pooledWorkspaceServiceRate": {
+        "samples": 7,
+        "bytes": 6328189016,
+        "serviceSeconds": 1370.467591624,
+        "bytesPerSecond": 4617540.067839995,
+        "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+      },
+      "phaseChannelWaitSeconds": null,
+      "sourceChannelWaitSeconds": null,
+      "sourcePreflightSeconds": null,
+      "sourcePreflightServiceSeconds": null,
+      "sourcePreflightChannelWaitSeconds": null,
+      "logicalBytes": {
+        "samples": 7,
+        "median": 1009451800.0,
+        "minimum": 627864822.0,
+        "maximum": 1111828392.0
+      },
+      "archiveBytes": {
+        "samples": 7,
+        "median": 615130007.0,
+        "minimum": 363111632.0,
+        "maximum": 624504559.0
+      },
+      "workspaceBytes": {
+        "samples": 7,
+        "median": 1100003102.0,
+        "minimum": 627864822.0,
+        "maximum": 1111828392.0
+      },
+      "archiveToWorkspaceRatio": {
+        "samples": 7,
+        "median": 0.5616915015784198,
+        "minimum": 0.5587810888300886,
+        "maximum": 0.5824735682180756
+      },
+      "effectiveWorkspaceBytesPerSecond": {
+        "samples": 7,
+        "median": 3071406.804890141,
+        "minimum": 1914116.5272692032,
+        "maximum": 14754584006279.354
+      },
+      "files": {
+        "samples": 7,
+        "median": 73.0,
+        "minimum": 39.0,
+        "maximum": 84.0
+      },
+      "effectiveArchiveBytesPerSecond": {
+        "samples": 7,
+        "median": 1725183.10019692,
+        "minimum": 1106986.6501533238,
+        "maximum": 8244582516263.787
+      },
+      "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+    },
+    {
+      "strategy": "direct-runtime",
+      "sourceClass": "e2-micro",
+      "targetClass": "e2-medium",
+      "phase": "peer-reused-source-manifest-check",
+      "seconds": {
+        "samples": 3,
+        "median": 14.740183174,
+        "minimum": 8.123189962,
+        "maximum": 54.534579608
+      },
+      "secondsBases": [
+        "combined-phase-wall-includes-unseparated-service-queue"
+      ],
+      "pooledArchiveServiceRate": {
+        "samples": 3,
+        "bytes": 1613834969,
+        "serviceSeconds": 77.39795274400001,
+        "bytesPerSecond": 20851132.514291298,
+        "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+      },
+      "pooledWorkspaceServiceRate": {
+        "samples": 3,
+        "bytes": 2855438394,
+        "serviceSeconds": 77.39795274400001,
+        "bytesPerSecond": 36892944.745510176,
+        "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+      },
+      "phaseChannelWaitSeconds": null,
+      "sourceChannelWaitSeconds": null,
+      "sourcePreflightSeconds": null,
+      "sourcePreflightServiceSeconds": null,
+      "sourcePreflightChannelWaitSeconds": null,
+      "logicalBytes": {
+        "samples": 3,
+        "median": 1018506514.0,
+        "minimum": 634552186.0,
+        "maximum": 1111828392.0
+      },
+      "archiveBytes": {
+        "samples": 3,
+        "median": 619720534.0,
+        "minimum": 369609876.0,
+        "maximum": 624504559.0
+      },
+      "workspaceBytes": {
+        "samples": 3,
+        "median": 1109057816.0,
+        "minimum": 634552186.0,
+        "maximum": 1111828392.0
+      },
+      "archiveToWorkspaceRatio": {
+        "samples": 3,
+        "median": 0.5616915015784198,
+        "minimum": 0.5587810888300886,
+        "maximum": 0.5824735682180756
+      },
+      "effectiveWorkspaceBytesPerSecond": {
+        "samples": 3,
+        "median": 43049138.43399705,
+        "minimum": 20387585.271435726,
+        "maximum": 136529838.79339692
+      },
+      "files": {
+        "samples": 3,
+        "median": 73.0,
+        "minimum": 39.0,
+        "maximum": 84.0
+      },
+      "effectiveArchiveBytesPerSecond": {
+        "samples": 3,
+        "median": 25074985.27236416,
+        "minimum": 11451533.38467081,
+        "maximum": 76290291.97877079
+      },
+      "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+    },
+    {
+      "strategy": "direct-runtime",
+      "sourceClass": "e2-micro",
+      "targetClass": "e2-medium",
+      "phase": "peer-private-upload",
+      "seconds": {
+        "samples": 7,
+        "median": 27.623296388,
+        "minimum": 7.566221212,
+        "maximum": 98.32883392
+      },
+      "secondsBases": [
+        "combined-phase-wall-includes-unseparated-service-queue"
+      ],
+      "pooledArchiveServiceRate": {
+        "samples": 7,
+        "bytes": 3584464125,
+        "serviceSeconds": 277.584645627,
+        "bytesPerSecond": 12913048.979721189,
+        "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+      },
+      "pooledWorkspaceServiceRate": {
+        "samples": 7,
+        "bytes": 6328189016,
+        "serviceSeconds": 277.584645627,
+        "bytesPerSecond": 22797330.888767548,
+        "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+      },
+      "phaseChannelWaitSeconds": null,
+      "sourceChannelWaitSeconds": null,
+      "sourcePreflightSeconds": null,
+      "sourcePreflightServiceSeconds": null,
+      "sourcePreflightChannelWaitSeconds": null,
+      "logicalBytes": {
+        "samples": 7,
+        "median": 1009451800.0,
+        "minimum": 627864822.0,
+        "maximum": 1111828392.0
+      },
+      "archiveBytes": {
+        "samples": 7,
+        "median": 615130007.0,
+        "minimum": 363111632.0,
+        "maximum": 624504559.0
+      },
+      "workspaceBytes": {
+        "samples": 7,
+        "median": 1100003102.0,
+        "minimum": 627864822.0,
+        "maximum": 1111828392.0
+      },
+      "archiveToWorkspaceRatio": {
+        "samples": 7,
+        "median": 0.5616915015784198,
+        "minimum": 0.5587810888300886,
+        "maximum": 0.5824735682180756
+      },
+      "effectiveWorkspaceBytesPerSecond": {
+        "samples": 7,
+        "median": 40249663.77593501,
+        "minimum": 6385358.159650593,
+        "maximum": 146580146.80314106
+      },
+      "files": {
+        "samples": 7,
+        "median": 73.0,
+        "minimum": 39.0,
+        "maximum": 84.0
+      },
+      "effectiveArchiveBytesPerSecond": {
+        "samples": 7,
+        "median": 22607894.084331468,
+        "minimum": 3692829.636273592,
+        "maximum": 81906214.03153339
+      },
+      "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+    },
+    {
+      "strategy": "direct-runtime",
+      "sourceClass": "e2-micro",
+      "targetClass": "e2-medium",
+      "phase": "peer-receiver-verify-and-extract",
+      "seconds": {
+        "samples": 7,
+        "median": 10.862616296,
+        "minimum": 5.661688502,
+        "maximum": 12.127251798
+      },
+      "secondsBases": [
+        "combined-phase-wall-includes-unseparated-service-queue"
+      ],
+      "pooledArchiveServiceRate": {
+        "samples": 7,
+        "bytes": 3584464125,
+        "serviceSeconds": 66.142443239,
+        "bytesPerSecond": 54193101.27459079,
+        "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+      },
+      "pooledWorkspaceServiceRate": {
+        "samples": 7,
+        "bytes": 6328189016,
+        "serviceSeconds": 66.142443239,
+        "bytesPerSecond": 95675162.6657279,
+        "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+      },
+      "phaseChannelWaitSeconds": null,
+      "sourceChannelWaitSeconds": null,
+      "sourcePreflightSeconds": null,
+      "sourcePreflightServiceSeconds": null,
+      "sourcePreflightChannelWaitSeconds": null,
+      "logicalBytes": {
+        "samples": 7,
+        "median": 1009451800.0,
+        "minimum": 627864822.0,
+        "maximum": 1111828392.0
+      },
+      "archiveBytes": {
+        "samples": 7,
+        "median": 615130007.0,
+        "minimum": 363111632.0,
+        "maximum": 624504559.0
+      },
+      "workspaceBytes": {
+        "samples": 7,
+        "median": 1100003102.0,
+        "minimum": 627864822.0,
+        "maximum": 1111828392.0
+      },
+      "archiveToWorkspaceRatio": {
+        "samples": 7,
+        "median": 0.5616915015784198,
+        "minimum": 0.5587810888300886,
+        "maximum": 0.5824735682180756
+      },
+      "effectiveWorkspaceBytesPerSecond": {
+        "samples": 7,
+        "median": 94960134.68711175,
+        "minimum": 83793313.37409675,
+        "maximum": 110897097.53162962
+      },
+      "files": {
+        "samples": 7,
+        "median": 73.0,
+        "minimum": 39.0,
+        "maximum": 84.0
+      },
+      "effectiveArchiveBytesPerSecond": {
+        "samples": 7,
+        "median": 53061927.45591616,
+        "minimum": 48807390.23382553,
+        "maximum": 64134865.75104411
+      },
+      "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+    },
+    {
+      "strategy": "gateway",
+      "sourceClass": "e2-micro",
+      "targetClass": "hpc",
+      "phase": "pack-and-receive",
+      "seconds": {
+        "samples": 10,
+        "median": 38.603155225500004,
+        "minimum": 11.782335589,
+        "maximum": 199.5754098
+      },
+      "secondsBases": [
+        "combined-phase-wall-includes-unseparated-service-queue"
+      ],
+      "pooledArchiveServiceRate": {
+        "samples": 10,
+        "bytes": 1991885972,
+        "serviceSeconds": 595.318555566,
+        "bytesPerSecond": 3345916.154261665,
+        "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+      },
+      "pooledWorkspaceServiceRate": {
+        "samples": 10,
+        "bytes": 3038347972,
+        "serviceSeconds": 595.318555566,
+        "bytesPerSecond": 5103734.704038053,
+        "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+      },
+      "phaseChannelWaitSeconds": null,
+      "sourceChannelWaitSeconds": null,
+      "sourcePreflightSeconds": null,
+      "sourcePreflightServiceSeconds": null,
+      "sourcePreflightChannelWaitSeconds": null,
+      "logicalBytes": null,
+      "archiveBytes": {
+        "samples": 10,
+        "median": 203193258.0,
+        "minimum": 143696217.0,
+        "maximum": 369609876.0
+      },
+      "workspaceBytes": {
+        "samples": 10,
+        "median": 312516065.5,
+        "minimum": 196610182.0,
+        "maximum": 634552186.0
+      },
+      "archiveToWorkspaceRatio": {
+        "samples": 10,
+        "median": 0.6522022259028002,
+        "minimum": 0.5824735682180756,
+        "maximum": 0.7368636801329126
+      },
+      "effectiveWorkspaceBytesPerSecond": {
+        "samples": 10,
+        "median": 12514547.202893108,
+        "minimum": 1678160.6127510006,
+        "maximum": 19765033.306060687
+      },
+      "files": {
+        "samples": 9,
+        "median": 5.0,
+        "minimum": 2.0,
+        "maximum": 73.0
+      },
+      "effectiveArchiveBytesPerSecond": {
+        "samples": 10,
+        "median": 7741110.27791067,
+        "minimum": 1075263.5668645387,
+        "maximum": 12819134.471322034
+      },
+      "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+    },
+    {
+      "strategy": "gateway",
+      "sourceClass": "e2-micro",
+      "targetClass": "hpc",
+      "phase": "archive-validation",
+      "seconds": {
+        "samples": 10,
+        "median": 1.6895398135000002,
+        "minimum": 1.133418042,
+        "maximum": 3.341227627
+      },
+      "secondsBases": [
+        "combined-phase-wall-includes-unseparated-service-queue"
+      ],
+      "pooledArchiveServiceRate": {
+        "samples": 10,
+        "bytes": 1991885972,
+        "serviceSeconds": 16.802207758999998,
+        "bytesPerSecond": 118549062.1572072,
+        "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+      },
+      "pooledWorkspaceServiceRate": {
+        "samples": 10,
+        "bytes": 3038347972,
+        "serviceSeconds": 16.802207758999998,
+        "bytesPerSecond": 180830282.28076324,
+        "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+      },
+      "phaseChannelWaitSeconds": null,
+      "sourceChannelWaitSeconds": null,
+      "sourcePreflightSeconds": null,
+      "sourcePreflightServiceSeconds": null,
+      "sourcePreflightChannelWaitSeconds": null,
+      "logicalBytes": null,
+      "archiveBytes": {
+        "samples": 10,
+        "median": 203193258.0,
+        "minimum": 143696217.0,
+        "maximum": 369609876.0
+      },
+      "workspaceBytes": {
+        "samples": 10,
+        "median": 312516065.5,
+        "minimum": 196610182.0,
+        "maximum": 634552186.0
+      },
+      "archiveToWorkspaceRatio": {
+        "samples": 10,
+        "median": 0.6522022259028002,
+        "minimum": 0.5824735682180756,
+        "maximum": 0.7368636801329126
+      },
+      "effectiveWorkspaceBytesPerSecond": {
+        "samples": 10,
+        "median": 179804359.97152635,
+        "minimum": 167484361.96237248,
+        "maximum": 189915880.28073013
+      },
+      "files": {
+        "samples": 9,
+        "median": 5.0,
+        "minimum": 2.0,
+        "maximum": 73.0
+      },
+      "effectiveArchiveBytesPerSecond": {
+        "samples": 10,
+        "median": 120277383.91281037,
+        "minimum": 110620980.44839375,
+        "maximum": 127857225.33963335
+      },
+      "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+    },
+    {
+      "strategy": "gateway",
+      "sourceClass": "e2-micro",
+      "targetClass": "hpc",
+      "phase": "archive-upload",
+      "seconds": {
+        "samples": 10,
+        "median": 76.61885259799999,
+        "minimum": 24.609660678,
+        "maximum": 171.383548828
+      },
+      "secondsBases": [
+        "phase-command-execution-excludes-channel-queue"
+      ],
+      "pooledArchiveServiceRate": {
+        "samples": 10,
+        "bytes": 1991885972,
+        "serviceSeconds": 952.487866393,
+        "bytesPerSecond": 2091245.5079801935,
+        "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+      },
+      "pooledWorkspaceServiceRate": {
+        "samples": 10,
+        "bytes": 3038347972,
+        "serviceSeconds": 952.487866393,
+        "bytesPerSecond": 3189907.272526206,
+        "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+      },
+      "phaseChannelWaitSeconds": {
+        "samples": 10,
+        "median": 1.72295e-05,
+        "minimum": 6.959e-06,
+        "maximum": 4.3083e-05
+      },
+      "sourceChannelWaitSeconds": null,
+      "sourcePreflightSeconds": null,
+      "sourcePreflightServiceSeconds": null,
+      "sourcePreflightChannelWaitSeconds": null,
+      "logicalBytes": null,
+      "archiveBytes": {
+        "samples": 10,
+        "median": 203193258.0,
+        "minimum": 143696217.0,
+        "maximum": 369609876.0
+      },
+      "workspaceBytes": {
+        "samples": 10,
+        "median": 312516065.5,
+        "minimum": 196610182.0,
+        "maximum": 634552186.0
+      },
+      "archiveToWorkspaceRatio": {
+        "samples": 10,
+        "median": 0.6522022259028002,
+        "minimum": 0.5824735682180756,
+        "maximum": 0.7368636801329126
+      },
+      "effectiveWorkspaceBytesPerSecond": {
+        "samples": 10,
+        "median": 5540640.911608172,
+        "minimum": 1852594.8200816612,
+        "maximum": 8000849.12085028
+      },
+      "files": {
+        "samples": 9,
+        "median": 5.0,
+        "minimum": 2.0,
+        "maximum": 73.0
+      },
+      "effectiveArchiveBytesPerSecond": {
+        "samples": 10,
+        "median": 3704148.753778026,
+        "minimum": 1207509.6908446734,
+        "maximum": 5895535.127377915
+      },
+      "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+    },
+    {
+      "strategy": "gateway",
+      "sourceClass": "e2-micro",
+      "targetClass": "hpc",
+      "phase": "receiver-verify-and-extract",
+      "seconds": {
+        "samples": 10,
+        "median": 7.1363985240000005,
+        "minimum": 3.683395543,
+        "maximum": 10.001879504
+      },
+      "secondsBases": [
+        "combined-phase-wall-includes-unseparated-service-queue"
+      ],
+      "pooledArchiveServiceRate": {
+        "samples": 10,
+        "bytes": 1991885972,
+        "serviceSeconds": 65.596834363,
+        "bytesPerSecond": 30365580.76838425,
+        "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+      },
+      "pooledWorkspaceServiceRate": {
+        "samples": 10,
+        "bytes": 3038347972,
+        "serviceSeconds": 65.596834363,
+        "bytesPerSecond": 46318515.23789058,
+        "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+      },
+      "phaseChannelWaitSeconds": null,
+      "sourceChannelWaitSeconds": null,
+      "sourcePreflightSeconds": null,
+      "sourcePreflightServiceSeconds": null,
+      "sourcePreflightChannelWaitSeconds": null,
+      "logicalBytes": null,
+      "archiveBytes": {
+        "samples": 10,
+        "median": 203193258.0,
+        "minimum": 143696217.0,
+        "maximum": 369609876.0
+      },
+      "workspaceBytes": {
+        "samples": 10,
+        "median": 312516065.5,
+        "minimum": 196610182.0,
+        "maximum": 634552186.0
+      },
+      "archiveToWorkspaceRatio": {
+        "samples": 10,
+        "median": 0.6522022259028002,
+        "minimum": 0.5824735682180756,
+        "maximum": 0.7368636801329126
+      },
+      "effectiveWorkspaceBytesPerSecond": {
+        "samples": 10,
+        "median": 46164951.51762764,
+        "minimum": 34201395.10569445,
+        "maximum": 63443294.40743881
+      },
+      "files": {
+        "samples": 9,
+        "median": 5.0,
+        "minimum": 2.0,
+        "maximum": 73.0
+      },
+      "effectiveArchiveBytesPerSecond": {
+        "samples": 10,
+        "median": 31838848.70171778,
+        "minimum": 21772903.484861646,
+        "maximum": 39342960.6753477
+      },
+      "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+    },
+    {
+      "strategy": "direct-runtime",
+      "sourceClass": "e2-micro",
+      "targetClass": "e2-micro",
+      "phase": "peer-reused-source-manifest-check",
+      "seconds": {
+        "samples": 6,
+        "median": 27.712840638,
+        "minimum": 0.474361584,
+        "maximum": 50.339336731
+      },
+      "secondsBases": [
+        "combined-phase-wall-includes-unseparated-service-queue"
+      ],
+      "pooledArchiveServiceRate": {
+        "samples": 6,
+        "bytes": 1520224865,
+        "serviceSeconds": 159.848747074,
+        "bytesPerSecond": 9510395.876273155,
+        "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+      },
+      "pooledWorkspaceServiceRate": {
+        "samples": 6,
+        "bytes": 2473056372,
+        "serviceSeconds": 159.848747074,
+        "bytesPerSecond": 15471227.752915256,
+        "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+      },
+      "phaseChannelWaitSeconds": null,
+      "sourceChannelWaitSeconds": null,
+      "sourcePreflightSeconds": null,
+      "sourcePreflightServiceSeconds": null,
+      "sourcePreflightChannelWaitSeconds": null,
+      "logicalBytes": {
+        "samples": 6,
+        "median": 411765182.0,
+        "minimum": 106346880.0,
+        "maximum": 627864822.0
+      },
+      "archiveBytes": {
+        "samples": 6,
+        "median": 254013659.0,
+        "minimum": 142278066.0,
+        "maximum": 363111632.0
+      },
+      "workspaceBytes": {
+        "samples": 6,
+        "median": 412381502.0,
+        "minimum": 195665542.0,
+        "maximum": 627864822.0
+      },
+      "archiveToWorkspaceRatio": {
+        "samples": 6,
+        "median": 0.6527385212944301,
+        "minimum": 0.578327721631775,
+        "maximum": 0.7359930118603126
+      },
+      "effectiveWorkspaceBytesPerSecond": {
+        "samples": 6,
+        "median": 25591306.483499434,
+        "minimum": 12472647.888770213,
+        "maximum": 412481846.3377085
+      },
+      "files": {
+        "samples": 6,
+        "median": 60.0,
+        "minimum": 2.0,
+        "maximum": 73.0
+      },
+      "effectiveArchiveBytesPerSecond": {
+        "samples": 6,
+        "median": 17731894.794842176,
+        "minimum": 7213278.0362278465,
+        "maximum": 299935894.47158945
+      },
+      "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+    },
+    {
+      "strategy": "gateway",
+      "sourceClass": "e2-medium",
+      "targetClass": "hpc",
+      "phase": "pack-and-receive",
+      "seconds": {
+        "samples": 1,
+        "median": 30.418417181,
+        "minimum": 30.418417181,
+        "maximum": 30.418417181
+      },
+      "secondsBases": [
+        "combined-phase-wall-includes-unseparated-service-queue"
+      ],
+      "pooledArchiveServiceRate": {
+        "samples": 1,
+        "bytes": 367883152,
+        "serviceSeconds": 30.418417181,
+        "bytesPerSecond": 12094092.529896256,
+        "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+      },
+      "pooledWorkspaceServiceRate": {
+        "samples": 1,
+        "bytes": 633054582,
+        "serviceSeconds": 30.418417181,
+        "bytesPerSecond": 20811555.651732583,
+        "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+      },
+      "phaseChannelWaitSeconds": null,
+      "sourceChannelWaitSeconds": null,
+      "sourcePreflightSeconds": null,
+      "sourcePreflightServiceSeconds": null,
+      "sourcePreflightChannelWaitSeconds": null,
+      "logicalBytes": null,
+      "archiveBytes": {
+        "samples": 1,
+        "median": 367883152.0,
+        "minimum": 367883152.0,
+        "maximum": 367883152.0
+      },
+      "workspaceBytes": {
+        "samples": 1,
+        "median": 633054582.0,
+        "minimum": 633054582.0,
+        "maximum": 633054582.0
+      },
+      "archiveToWorkspaceRatio": {
+        "samples": 1,
+        "median": 0.5811239069429878,
+        "minimum": 0.5811239069429878,
+        "maximum": 0.5811239069429878
+      },
+      "effectiveWorkspaceBytesPerSecond": {
+        "samples": 1,
+        "median": 20811555.651732583,
+        "minimum": 20811555.651732583,
+        "maximum": 20811555.651732583
+      },
+      "files": {
+        "samples": 1,
+        "median": 73.0,
+        "minimum": 73.0,
+        "maximum": 73.0
+      },
+      "effectiveArchiveBytesPerSecond": {
+        "samples": 1,
+        "median": 12094092.529896256,
+        "minimum": 12094092.529896256,
+        "maximum": 12094092.529896256
+      },
+      "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+    },
+    {
+      "strategy": "gateway",
+      "sourceClass": "e2-medium",
+      "targetClass": "hpc",
+      "phase": "archive-validation",
+      "seconds": {
+        "samples": 1,
+        "median": 3.350000627,
+        "minimum": 3.350000627,
+        "maximum": 3.350000627
+      },
+      "secondsBases": [
+        "combined-phase-wall-includes-unseparated-service-queue"
+      ],
+      "pooledArchiveServiceRate": {
+        "samples": 1,
+        "bytes": 367883152,
+        "serviceSeconds": 3.350000627,
+        "bytesPerSecond": 109815845.7150641,
+        "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+      },
+      "pooledWorkspaceServiceRate": {
+        "samples": 1,
+        "bytes": 633054582,
+        "serviceSeconds": 3.350000627,
+        "bytesPerSecond": 188971481.64623314,
+        "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+      },
+      "phaseChannelWaitSeconds": null,
+      "sourceChannelWaitSeconds": null,
+      "sourcePreflightSeconds": null,
+      "sourcePreflightServiceSeconds": null,
+      "sourcePreflightChannelWaitSeconds": null,
+      "logicalBytes": null,
+      "archiveBytes": {
+        "samples": 1,
+        "median": 367883152.0,
+        "minimum": 367883152.0,
+        "maximum": 367883152.0
+      },
+      "workspaceBytes": {
+        "samples": 1,
+        "median": 633054582.0,
+        "minimum": 633054582.0,
+        "maximum": 633054582.0
+      },
+      "archiveToWorkspaceRatio": {
+        "samples": 1,
+        "median": 0.5811239069429878,
+        "minimum": 0.5811239069429878,
+        "maximum": 0.5811239069429878
+      },
+      "effectiveWorkspaceBytesPerSecond": {
+        "samples": 1,
+        "median": 188971481.64623314,
+        "minimum": 188971481.64623314,
+        "maximum": 188971481.64623314
+      },
+      "files": {
+        "samples": 1,
+        "median": 73.0,
+        "minimum": 73.0,
+        "maximum": 73.0
+      },
+      "effectiveArchiveBytesPerSecond": {
+        "samples": 1,
+        "median": 109815845.7150641,
+        "minimum": 109815845.7150641,
+        "maximum": 109815845.7150641
+      },
+      "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+    },
+    {
+      "strategy": "gateway",
+      "sourceClass": "e2-medium",
+      "targetClass": "hpc",
+      "phase": "archive-upload",
+      "seconds": {
+        "samples": 1,
+        "median": 109.214267425,
+        "minimum": 109.214267425,
+        "maximum": 109.214267425
+      },
+      "secondsBases": [
+        "phase-command-execution-excludes-channel-queue"
+      ],
+      "pooledArchiveServiceRate": {
+        "samples": 1,
+        "bytes": 367883152,
+        "serviceSeconds": 109.214267425,
+        "bytesPerSecond": 3368453.2311919224,
+        "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+      },
+      "pooledWorkspaceServiceRate": {
+        "samples": 1,
+        "bytes": 633054582,
+        "serviceSeconds": 109.214267425,
+        "bytesPerSecond": 5796445.802602974,
+        "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+      },
+      "phaseChannelWaitSeconds": {
+        "samples": 1,
+        "median": 2.1416e-05,
+        "minimum": 2.1416e-05,
+        "maximum": 2.1416e-05
+      },
+      "sourceChannelWaitSeconds": null,
+      "sourcePreflightSeconds": null,
+      "sourcePreflightServiceSeconds": null,
+      "sourcePreflightChannelWaitSeconds": null,
+      "logicalBytes": null,
+      "archiveBytes": {
+        "samples": 1,
+        "median": 367883152.0,
+        "minimum": 367883152.0,
+        "maximum": 367883152.0
+      },
+      "workspaceBytes": {
+        "samples": 1,
+        "median": 633054582.0,
+        "minimum": 633054582.0,
+        "maximum": 633054582.0
+      },
+      "archiveToWorkspaceRatio": {
+        "samples": 1,
+        "median": 0.5811239069429878,
+        "minimum": 0.5811239069429878,
+        "maximum": 0.5811239069429878
+      },
+      "effectiveWorkspaceBytesPerSecond": {
+        "samples": 1,
+        "median": 5796445.802602974,
+        "minimum": 5796445.802602974,
+        "maximum": 5796445.802602974
+      },
+      "files": {
+        "samples": 1,
+        "median": 73.0,
+        "minimum": 73.0,
+        "maximum": 73.0
+      },
+      "effectiveArchiveBytesPerSecond": {
+        "samples": 1,
+        "median": 3368453.2311919224,
+        "minimum": 3368453.2311919224,
+        "maximum": 3368453.2311919224
+      },
+      "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+    },
+    {
+      "strategy": "gateway",
+      "sourceClass": "e2-medium",
+      "targetClass": "hpc",
+      "phase": "receiver-verify-and-extract",
+      "seconds": {
+        "samples": 1,
+        "median": 10.328649046,
+        "minimum": 10.328649046,
+        "maximum": 10.328649046
+      },
+      "secondsBases": [
+        "combined-phase-wall-includes-unseparated-service-queue"
+      ],
+      "pooledArchiveServiceRate": {
+        "samples": 1,
+        "bytes": 367883152,
+        "serviceSeconds": 10.328649046,
+        "bytesPerSecond": 35617741.52278617,
+        "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+      },
+      "pooledWorkspaceServiceRate": {
+        "samples": 1,
+        "bytes": 633054582,
+        "serviceSeconds": 10.328649046,
+        "bytesPerSecond": 61291131.02600426,
+        "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+      },
+      "phaseChannelWaitSeconds": null,
+      "sourceChannelWaitSeconds": null,
+      "sourcePreflightSeconds": null,
+      "sourcePreflightServiceSeconds": null,
+      "sourcePreflightChannelWaitSeconds": null,
+      "logicalBytes": null,
+      "archiveBytes": {
+        "samples": 1,
+        "median": 367883152.0,
+        "minimum": 367883152.0,
+        "maximum": 367883152.0
+      },
+      "workspaceBytes": {
+        "samples": 1,
+        "median": 633054582.0,
+        "minimum": 633054582.0,
+        "maximum": 633054582.0
+      },
+      "archiveToWorkspaceRatio": {
+        "samples": 1,
+        "median": 0.5811239069429878,
+        "minimum": 0.5811239069429878,
+        "maximum": 0.5811239069429878
+      },
+      "effectiveWorkspaceBytesPerSecond": {
+        "samples": 1,
+        "median": 61291131.02600426,
+        "minimum": 61291131.02600426,
+        "maximum": 61291131.02600426
+      },
+      "files": {
+        "samples": 1,
+        "median": 73.0,
+        "minimum": 73.0,
+        "maximum": 73.0
+      },
+      "effectiveArchiveBytesPerSecond": {
+        "samples": 1,
+        "median": 35617741.52278617,
+        "minimum": 35617741.52278617,
+        "maximum": 35617741.52278617
+      },
+      "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+    },
+    {
+      "strategy": "direct-runtime",
+      "sourceClass": "e2-medium",
+      "targetClass": "e2-micro",
+      "phase": "peer-reused-source-manifest-check",
+      "seconds": {
+        "samples": 4,
+        "median": 0.66461273,
+        "minimum": 0.495965208,
+        "maximum": 0.82791425
+      },
+      "secondsBases": [
+        "combined-phase-wall-includes-unseparated-service-queue"
+      ],
+      "pooledArchiveServiceRate": {
+        "samples": 4,
+        "bytes": 1022120167,
+        "serviceSeconds": 2.653104918,
+        "bytesPerSecond": 385254333.5415882,
+        "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+      },
+      "pooledWorkspaceServiceRate": {
+        "samples": 4,
+        "bytes": 1658626808,
+        "serviceSeconds": 2.653104918,
+        "bytesPerSecond": 625164424.0478544,
+        "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+      },
+      "phaseChannelWaitSeconds": null,
+      "sourceChannelWaitSeconds": null,
+      "sourcePreflightSeconds": null,
+      "sourcePreflightServiceSeconds": null,
+      "sourcePreflightChannelWaitSeconds": null,
+      "logicalBytes": {
+        "samples": 4,
+        "median": 414996542.0,
+        "minimum": 105027840.0,
+        "maximum": 633054582.0
+      },
+      "archiveBytes": {
+        "samples": 4,
+        "median": 255659943.5,
+        "minimum": 142917128.0,
+        "maximum": 367883152.0
+      },
+      "workspaceBytes": {
+        "samples": 4,
+        "median": 414996542.0,
+        "minimum": 195579142.0,
+        "maximum": 633054582.0
+      },
+      "archiveToWorkspaceRatio": {
+        "samples": 4,
+        "median": 0.6534090518006972,
+        "minimum": 0.5811239069429878,
+        "maximum": 0.7333948473912417
+      },
+      "effectiveWorkspaceBytesPerSecond": {
+        "samples": 4,
+        "median": 579489154.6585486,
+        "minimum": 392106576.9312505,
+        "maximum": 765512906.0901998
+      },
+      "files": {
+        "samples": 4,
+        "median": 60.0,
+        "minimum": 2.0,
+        "maximum": 73.0
+      },
+      "effectiveArchiveBytesPerSecond": {
+        "samples": 4,
+        "median": 366778296.9747619,
+        "minimum": 284549467.35060155,
+        "maximum": 444857850.8024174
+      },
+      "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+    },
+    {
+      "strategy": "direct-runtime",
+      "sourceClass": "e2-medium",
+      "targetClass": "e2-medium",
+      "phase": "peer-authenticated-connectivity-probe",
+      "seconds": {
+        "samples": 1,
+        "median": 4.352586419,
+        "minimum": 4.352586419,
+        "maximum": 4.352586419
+      },
+      "secondsBases": [
+        "combined-phase-wall-includes-unseparated-service-queue"
+      ],
+      "pooledArchiveServiceRate": {
+        "samples": 1,
+        "bytes": 143436735,
+        "serviceSeconds": 4.352586419,
+        "bytesPerSecond": 32954368.091088787,
+        "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+      },
+      "pooledWorkspaceServiceRate": {
+        "samples": 1,
+        "bytes": 195579142,
+        "serviceSeconds": 4.352586419,
+        "bytesPerSecond": 44934005.479191385,
+        "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+      },
+      "phaseChannelWaitSeconds": null,
+      "sourceChannelWaitSeconds": null,
+      "sourcePreflightSeconds": null,
+      "sourcePreflightServiceSeconds": null,
+      "sourcePreflightChannelWaitSeconds": null,
+      "logicalBytes": {
+        "samples": 1,
+        "median": 195579142.0,
+        "minimum": 195579142.0,
+        "maximum": 195579142.0
+      },
+      "archiveBytes": {
+        "samples": 1,
+        "median": 143436735.0,
+        "minimum": 143436735.0,
+        "maximum": 143436735.0
+      },
+      "workspaceBytes": {
+        "samples": 1,
+        "median": 195579142.0,
+        "minimum": 195579142.0,
+        "maximum": 195579142.0
+      },
+      "archiveToWorkspaceRatio": {
+        "samples": 1,
+        "median": 0.7333948473912417,
+        "minimum": 0.7333948473912417,
+        "maximum": 0.7333948473912417
+      },
+      "effectiveWorkspaceBytesPerSecond": {
+        "samples": 1,
+        "median": 44934005.479191385,
+        "minimum": 44934005.479191385,
+        "maximum": 44934005.479191385
+      },
+      "files": {
+        "samples": 1,
+        "median": 47.0,
+        "minimum": 47.0,
+        "maximum": 47.0
+      },
+      "effectiveArchiveBytesPerSecond": {
+        "samples": 1,
+        "median": 32954368.091088787,
+        "minimum": 32954368.091088787,
+        "maximum": 32954368.091088787
+      },
+      "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+    },
+    {
+      "strategy": "direct-runtime",
+      "sourceClass": "e2-medium",
+      "targetClass": "e2-medium",
+      "phase": "peer-snapshot-acquire",
+      "seconds": {
+        "samples": 1,
+        "median": 15.533482091,
+        "minimum": 15.533482091,
+        "maximum": 15.533482091
+      },
+      "secondsBases": [
+        "combined-phase-wall-includes-unseparated-service-queue"
+      ],
+      "pooledArchiveServiceRate": {
+        "samples": 1,
+        "bytes": 143436735,
+        "serviceSeconds": 15.533482091,
+        "bytesPerSecond": 9234036.139463304,
+        "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+      },
+      "pooledWorkspaceServiceRate": {
+        "samples": 1,
+        "bytes": 195579142,
+        "serviceSeconds": 15.533482091,
+        "bytesPerSecond": 12590811.310318973,
+        "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+      },
+      "phaseChannelWaitSeconds": null,
+      "sourceChannelWaitSeconds": null,
+      "sourcePreflightSeconds": null,
+      "sourcePreflightServiceSeconds": null,
+      "sourcePreflightChannelWaitSeconds": null,
+      "logicalBytes": {
+        "samples": 1,
+        "median": 195579142.0,
+        "minimum": 195579142.0,
+        "maximum": 195579142.0
+      },
+      "archiveBytes": {
+        "samples": 1,
+        "median": 143436735.0,
+        "minimum": 143436735.0,
+        "maximum": 143436735.0
+      },
+      "workspaceBytes": {
+        "samples": 1,
+        "median": 195579142.0,
+        "minimum": 195579142.0,
+        "maximum": 195579142.0
+      },
+      "archiveToWorkspaceRatio": {
+        "samples": 1,
+        "median": 0.7333948473912417,
+        "minimum": 0.7333948473912417,
+        "maximum": 0.7333948473912417
+      },
+      "effectiveWorkspaceBytesPerSecond": {
+        "samples": 1,
+        "median": 12590811.310318973,
+        "minimum": 12590811.310318973,
+        "maximum": 12590811.310318973
+      },
+      "files": {
+        "samples": 1,
+        "median": 47.0,
+        "minimum": 47.0,
+        "maximum": 47.0
+      },
+      "effectiveArchiveBytesPerSecond": {
+        "samples": 1,
+        "median": 9234036.139463304,
+        "minimum": 9234036.139463304,
+        "maximum": 9234036.139463304
+      },
+      "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+    },
+    {
+      "strategy": "direct-runtime",
+      "sourceClass": "e2-medium",
+      "targetClass": "e2-medium",
+      "phase": "peer-private-upload",
+      "seconds": {
+        "samples": 1,
+        "median": 5.817277252,
+        "minimum": 5.817277252,
+        "maximum": 5.817277252
+      },
+      "secondsBases": [
+        "combined-phase-wall-includes-unseparated-service-queue"
+      ],
+      "pooledArchiveServiceRate": {
+        "samples": 1,
+        "bytes": 143436735,
+        "serviceSeconds": 5.817277252,
+        "bytesPerSecond": 24657022.312403273,
+        "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+      },
+      "pooledWorkspaceServiceRate": {
+        "samples": 1,
+        "bytes": 195579142,
+        "serviceSeconds": 5.817277252,
+        "bytesPerSecond": 33620392.07135249,
+        "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+      },
+      "phaseChannelWaitSeconds": null,
+      "sourceChannelWaitSeconds": null,
+      "sourcePreflightSeconds": null,
+      "sourcePreflightServiceSeconds": null,
+      "sourcePreflightChannelWaitSeconds": null,
+      "logicalBytes": {
+        "samples": 1,
+        "median": 195579142.0,
+        "minimum": 195579142.0,
+        "maximum": 195579142.0
+      },
+      "archiveBytes": {
+        "samples": 1,
+        "median": 143436735.0,
+        "minimum": 143436735.0,
+        "maximum": 143436735.0
+      },
+      "workspaceBytes": {
+        "samples": 1,
+        "median": 195579142.0,
+        "minimum": 195579142.0,
+        "maximum": 195579142.0
+      },
+      "archiveToWorkspaceRatio": {
+        "samples": 1,
+        "median": 0.7333948473912417,
+        "minimum": 0.7333948473912417,
+        "maximum": 0.7333948473912417
+      },
+      "effectiveWorkspaceBytesPerSecond": {
+        "samples": 1,
+        "median": 33620392.07135249,
+        "minimum": 33620392.07135249,
+        "maximum": 33620392.07135249
+      },
+      "files": {
+        "samples": 1,
+        "median": 47.0,
+        "minimum": 47.0,
+        "maximum": 47.0
+      },
+      "effectiveArchiveBytesPerSecond": {
+        "samples": 1,
+        "median": 24657022.312403273,
+        "minimum": 24657022.312403273,
+        "maximum": 24657022.312403273
+      },
+      "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+    },
+    {
+      "strategy": "direct-runtime",
+      "sourceClass": "e2-medium",
+      "targetClass": "e2-medium",
+      "phase": "peer-receiver-verify-and-extract",
+      "seconds": {
+        "samples": 1,
+        "median": 5.928769003,
+        "minimum": 5.928769003,
+        "maximum": 5.928769003
+      },
+      "secondsBases": [
+        "combined-phase-wall-includes-unseparated-service-queue"
+      ],
+      "pooledArchiveServiceRate": {
+        "samples": 1,
+        "bytes": 143436735,
+        "serviceSeconds": 5.928769003,
+        "bytesPerSecond": 24193341.809643783,
+        "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+      },
+      "pooledWorkspaceServiceRate": {
+        "samples": 1,
+        "bytes": 195579142,
+        "serviceSeconds": 5.928769003,
+        "bytesPerSecond": 32988153.510625146,
+        "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+      },
+      "phaseChannelWaitSeconds": null,
+      "sourceChannelWaitSeconds": null,
+      "sourcePreflightSeconds": null,
+      "sourcePreflightServiceSeconds": null,
+      "sourcePreflightChannelWaitSeconds": null,
+      "logicalBytes": {
+        "samples": 1,
+        "median": 195579142.0,
+        "minimum": 195579142.0,
+        "maximum": 195579142.0
+      },
+      "archiveBytes": {
+        "samples": 1,
+        "median": 143436735.0,
+        "minimum": 143436735.0,
+        "maximum": 143436735.0
+      },
+      "workspaceBytes": {
+        "samples": 1,
+        "median": 195579142.0,
+        "minimum": 195579142.0,
+        "maximum": 195579142.0
+      },
+      "archiveToWorkspaceRatio": {
+        "samples": 1,
+        "median": 0.7333948473912417,
+        "minimum": 0.7333948473912417,
+        "maximum": 0.7333948473912417
+      },
+      "effectiveWorkspaceBytesPerSecond": {
+        "samples": 1,
+        "median": 32988153.510625146,
+        "minimum": 32988153.510625146,
+        "maximum": 32988153.510625146
+      },
+      "files": {
+        "samples": 1,
+        "median": 47.0,
+        "minimum": 47.0,
+        "maximum": 47.0
+      },
+      "effectiveArchiveBytesPerSecond": {
+        "samples": 1,
+        "median": 24193341.809643783,
+        "minimum": 24193341.809643783,
+        "maximum": 24193341.809643783
+      },
+      "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+    }
+  ],
+  "consumerMergeObservations": [
+    {
+      "activityFamily": "madd",
+      "resourceClass": "e2-micro",
+      "mergeSeconds": {
+        "samples": 3,
+        "median": 236.587417607,
+        "minimum": 66.450399947,
+        "maximum": 243.573326361
+      },
+      "checkSeconds": {
+        "samples": 3,
+        "median": 142.49716386900036,
+        "minimum": 25.46066779800003,
+        "maximum": 145.75149784399946
+      },
+      "copySeconds": {
+        "samples": 3,
+        "median": 53.56884224699934,
+        "minimum": 33.81956537900078,
+        "maximum": 63.3139910280006
+      },
+      "verifySeconds": {
+        "samples": 3,
+        "median": 35.92816998099988,
+        "minimum": 6.668966102999548,
+        "maximum": 37.1964132789999
+      }
+    },
+    {
+      "activityFamily": "mbackground",
+      "resourceClass": "e2-medium",
+      "mergeSeconds": {
+        "samples": 2,
+        "median": 4.83583319,
+        "minimum": 4.176778294,
+        "maximum": 5.494888086
+      },
+      "checkSeconds": {
+        "samples": 2,
+        "median": 1.6694268080004804,
+        "minimum": 1.6326302810002744,
+        "maximum": 1.7062233350006863
+      },
+      "copySeconds": {
+        "samples": 2,
+        "median": 2.1372344224996596,
+        "minimum": 1.4865193229998113,
+        "maximum": 2.787949521999508
+      },
+      "verifySeconds": {
+        "samples": 2,
+        "median": 0.5077693425000689,
+        "minimum": 0.5032371529996453,
+        "maximum": 0.5123015320004924
+      }
+    },
+    {
+      "activityFamily": "mbackground",
+      "resourceClass": "e2-micro",
+      "mergeSeconds": {
+        "samples": 8,
+        "median": 19.92376553,
+        "minimum": 19.626282426,
+        "maximum": 138.21304698
+      },
+      "checkSeconds": {
+        "samples": 8,
+        "median": 5.024046718499903,
+        "minimum": 4.7745690230003675,
+        "maximum": 53.48430508499996
+      },
+      "copySeconds": {
+        "samples": 8,
+        "median": 10.670739221000076,
+        "minimum": 10.32359564699982,
+        "maximum": 40.23239413300007
+      },
+      "verifySeconds": {
+        "samples": 8,
+        "median": 3.8808005935002257,
+        "minimum": 3.5650197659997502,
+        "maximum": 44.77779699300004
+      }
+    },
+    {
+      "activityFamily": "mbackground",
+      "resourceClass": "hpc",
+      "mergeSeconds": {
+        "samples": 2,
+        "median": 22.751472198000002,
+        "minimum": 21.729738135,
+        "maximum": 23.773206261
+      },
+      "checkSeconds": {
+        "samples": 2,
+        "median": 9.362968396861106,
+        "minimum": 8.317466377280653,
+        "maximum": 10.40847041644156
+      },
+      "copySeconds": {
+        "samples": 2,
+        "median": 5.138671131338924,
+        "minimum": 4.891942439600825,
+        "maximum": 5.385399823077023
+      },
+      "verifySeconds": {
+        "samples": 2,
+        "median": 7.284067759755999,
+        "minimum": 7.006542180664837,
+        "maximum": 7.56159333884716
+      }
+    },
+    {
+      "activityFamily": "mbgmodel",
+      "resourceClass": "e2-micro",
+      "mergeSeconds": {
+        "samples": 2,
+        "median": 16.8738145285,
+        "minimum": 16.747609883,
+        "maximum": 17.000019174
+      },
+      "checkSeconds": {
+        "samples": 2,
+        "median": 3.261755618000052,
+        "minimum": 2.698455793999983,
+        "maximum": 3.825055442000121
+      },
+      "copySeconds": {
+        "samples": 2,
+        "median": 9.35986830599984,
+        "minimum": 9.022188792999941,
+        "maximum": 9.697547818999738
+      },
+      "verifySeconds": {
+        "samples": 2,
+        "median": 3.6908348800000113,
+        "minimum": 3.6229606209999474,
+        "maximum": 3.758709139000075
+      }
+    },
+    {
+      "activityFamily": "mbgmodel",
+      "resourceClass": "e2-medium",
+      "mergeSeconds": {
+        "samples": 1,
+        "median": 3.603590835,
+        "minimum": 3.603590835,
+        "maximum": 3.603590835
+      },
+      "checkSeconds": {
+        "samples": 1,
+        "median": 0.5051906540002165,
+        "minimum": 0.5051906540002165,
+        "maximum": 0.5051906540002165
+      },
+      "copySeconds": {
+        "samples": 1,
+        "median": 2.142047676000402,
+        "minimum": 2.142047676000402,
+        "maximum": 2.142047676000402
+      },
+      "verifySeconds": {
+        "samples": 1,
+        "median": 0.4960838049992162,
+        "minimum": 0.4960838049992162,
+        "maximum": 0.4960838049992162
+      }
+    },
+    {
+      "activityFamily": "mconcatfit",
+      "resourceClass": "hpc",
+      "mergeSeconds": {
+        "samples": 1,
+        "median": 51.168297815,
+        "minimum": 51.168297815,
+        "maximum": 51.168297815
+      },
+      "checkSeconds": {
+        "samples": 1,
+        "median": 29.774229486472905,
+        "minimum": 29.774229486472905,
+        "maximum": 29.774229486472905
+      },
+      "copySeconds": {
+        "samples": 1,
+        "median": 10.907653647474945,
+        "minimum": 10.907653647474945,
+        "maximum": 10.907653647474945
+      },
+      "verifySeconds": {
+        "samples": 1,
+        "median": 9.319769462570548,
+        "minimum": 9.319769462570548,
+        "maximum": 9.319769462570548
+      }
+    },
+    {
+      "activityFamily": "mconcatfit",
+      "resourceClass": "e2-micro",
+      "mergeSeconds": {
+        "samples": 2,
+        "median": 129.158736309,
+        "minimum": 114.001598677,
+        "maximum": 144.315873941
+      },
+      "checkSeconds": {
+        "samples": 2,
+        "median": 65.35185085299986,
+        "minimum": 64.67154081999979,
+        "maximum": 66.03216088599993
+      },
+      "copySeconds": {
+        "samples": 2,
+        "median": 33.53280334749991,
+        "minimum": 26.555731558999923,
+        "maximum": 40.50987513599989
+      },
+      "verifySeconds": {
+        "samples": 2,
+        "median": 29.360318618000065,
+        "minimum": 22.22765749600012,
+        "maximum": 36.49297974000001
+      }
+    },
+    {
+      "activityFamily": "mdifffit",
+      "resourceClass": "e2-micro",
+      "mergeSeconds": {
+        "samples": 14,
+        "median": 8.3427407115,
+        "minimum": 5.830948001,
+        "maximum": 38.347655976
+      },
+      "checkSeconds": {
+        "samples": 14,
+        "median": 2.511359688500079,
+        "minimum": 1.1038579400000117,
+        "maximum": 15.438960124000005
+      },
+      "copySeconds": {
+        "samples": 14,
+        "median": 4.124673134000005,
+        "minimum": 2.378768721999677,
+        "maximum": 13.515580894999857
+      },
+      "verifySeconds": {
+        "samples": 14,
+        "median": 1.6997197335000465,
+        "minimum": 1.0764374750000059,
+        "maximum": 13.448123979999764
+      }
+    },
+    {
+      "activityFamily": "mdifffit",
+      "resourceClass": "hpc",
+      "mergeSeconds": {
+        "samples": 3,
+        "median": 7.47857792,
+        "minimum": 6.511636503,
+        "maximum": 10.95796063
+      },
+      "checkSeconds": {
+        "samples": 3,
+        "median": 1.7308137826621532,
+        "minimum": 1.710929460823536,
+        "maximum": 3.6601696284487844
+      },
+      "copySeconds": {
+        "samples": 3,
+        "median": 2.0938274255022407,
+        "minimum": 1.2903437670320272,
+        "maximum": 2.483007412403822
+      },
+      "verifySeconds": {
+        "samples": 3,
+        "median": 2.644647597335279,
+        "minimum": 2.5150117529556155,
+        "maximum": 2.732031609863043
+      }
+    },
+    {
+      "activityFamily": "mdifffit",
+      "resourceClass": "e2-medium",
+      "mergeSeconds": {
+        "samples": 1,
+        "median": 3.536212793,
+        "minimum": 3.536212793,
+        "maximum": 3.536212793
+      },
+      "checkSeconds": {
+        "samples": 1,
+        "median": 0.7207421489999888,
+        "minimum": 0.7207421489999888,
+        "maximum": 0.7207421489999888
+      },
+      "copySeconds": {
+        "samples": 1,
+        "median": 1.7899585740000248,
+        "minimum": 1.7899585740000248,
+        "maximum": 1.7899585740000248
+      },
+      "verifySeconds": {
+        "samples": 1,
+        "median": 0.5052870060000032,
+        "minimum": 0.5052870060000032,
+        "maximum": 0.5052870060000032
+      }
+    },
+    {
+      "activityFamily": "mimgtbl",
+      "resourceClass": "e2-micro",
+      "mergeSeconds": {
+        "samples": 3,
+        "median": 53.028995149,
+        "minimum": 52.357549732,
+        "maximum": 131.204556309
+      },
+      "checkSeconds": {
+        "samples": 3,
+        "median": 18.724648188000174,
+        "minimum": 18.695452503000524,
+        "maximum": 55.52439420599967
+      },
+      "copySeconds": {
+        "samples": 3,
+        "median": 27.288482144000227,
+        "minimum": 27.0868461150003,
+        "maximum": 57.700238978000016
+      },
+      "verifySeconds": {
+        "samples": 3,
+        "median": 6.4975390220006375,
+        "minimum": 6.045547994999652,
+        "maximum": 16.76125427399984
+      }
+    },
+    {
+      "activityFamily": "mviewer",
+      "resourceClass": "e2-medium",
+      "mergeSeconds": {
+        "samples": 2,
+        "median": 30.185459264000002,
+        "minimum": 7.251629086,
+        "maximum": 53.119289442
+      },
+      "checkSeconds": {
+        "samples": 2,
+        "median": 4.712208465500225,
+        "minimum": 0.8757597130006616,
+        "maximum": 8.54865721799979
+      },
+      "copySeconds": {
+        "samples": 2,
+        "median": 17.59759918700047,
+        "minimum": 5.020064412000465,
+        "maximum": 30.175133962000473
+      },
+      "verifySeconds": {
+        "samples": 2,
+        "median": 7.402032238000174,
+        "minimum": 0.8792642919997888,
+        "maximum": 13.92480018400056
+      }
+    },
+    {
+      "activityFamily": "mviewer",
+      "resourceClass": "e2-micro",
+      "mergeSeconds": {
+        "samples": 2,
+        "median": 42.396445477,
+        "minimum": 30.327887263,
+        "maximum": 54.465003691
+      },
+      "checkSeconds": {
+        "samples": 2,
+        "median": 7.072915739999644,
+        "minimum": 6.825928993999696,
+        "maximum": 7.319902485999592
+      },
+      "copySeconds": {
+        "samples": 2,
+        "median": 16.937191215999974,
+        "minimum": 16.770350947000225,
+        "maximum": 17.104031484999723
+      },
+      "verifySeconds": {
+        "samples": 2,
+        "median": 17.893067211000016,
+        "minimum": 6.250859729000695,
+        "maximum": 29.535274692999337
+      }
+    }
+  ],
+  "mergeRateObservations": [
+    {
+      "targetClass": "e2-micro",
+      "source": "baseline:montage-docker-image-real-20261010-v2",
+      "observations": {
+        "checkSecondsPerInputByte": {
+          "samples": 34,
+          "median": 6.35527429607893e-09,
+          "minimum": 2.8968348057689955e-09,
+          "maximum": 7.236672806194324e-08
+        },
+        "copySecondsPerUniqueByte": {
+          "samples": 34,
+          "median": 1.699528122472209e-08,
+          "minimum": 7.844377436225745e-09,
+          "maximum": 6.452023672950758e-08
+        },
+        "verifySecondsPerUniqueByte": {
+          "samples": 34,
+          "median": 6.138832298139974e-09,
+          "minimum": 3.5569571742792556e-09,
+          "maximum": 7.073291666499625e-08
+        }
+      },
+      "commandOverheadSeconds": null,
+      "channelWaitSeconds": null
+    },
+    {
+      "targetClass": "e2-medium",
+      "source": "baseline:montage-docker-image-real-20261010-v2",
+      "observations": {
+        "checkSecondsPerInputByte": {
+          "samples": 6,
+          "median": 1.912526350228284e-09,
+          "minimum": 7.876752557337657e-10,
+          "maximum": 2.5742072137899076e-09
+        },
+        "copySecondsPerUniqueByte": {
+          "samples": 6,
+          "median": 4.454356662161575e-09,
+          "minimum": 2.3675786107344793e-09,
+          "maximum": 9.610568101437293e-09
+        },
+        "verifySecondsPerUniqueByte": {
+          "samples": 6,
+          "median": 8.04424495753747e-10,
+          "minimum": 7.83635464283875e-10,
+          "maximum": 4.434950997591924e-09
+        }
+      },
+      "commandOverheadSeconds": null,
+      "channelWaitSeconds": null
+    },
+    {
+      "targetClass": "hpc",
+      "source": "baseline:montage-docker-image-real-20261010-v2",
+      "observations": {
+        "checkSecondsPerInputByte": {
+          "samples": 6,
+          "median": 9.649068875587286e-09,
+          "minimum": 5.653559042397685e-09,
+          "maximum": 1.5362090273490482e-08
+        },
+        "copySecondsPerUniqueByte": {
+          "samples": 6,
+          "median": 7.94870229763006e-09,
+          "minimum": 6.085461673088312e-09,
+          "maximum": 1.718957664580683e-08
+        },
+        "verifySecondsPerUniqueByte": {
+          "samples": 6,
+          "median": 1.1464509411470224e-08,
+          "minimum": 8.721156347585568e-09,
+          "maximum": 1.4687200077643863e-08
+        }
+      },
+      "commandOverheadSeconds": null,
+      "channelWaitSeconds": null
+    }
+  ],
+  "limitations": [
+    "Single baseline; ranges are observations, not confidence intervals.",
+    "Do not replay per-activity durations or total makespan as a holdout prediction.",
+    "No destination cache hit or shared-storage route may be assumed without evidence.",
+    "Workspace manifests and topology-specific contention are required before applying these observations.",
+    "Compute samples are contention-conditioned; do not apply interference slowdown a second time."
+  ]
+}

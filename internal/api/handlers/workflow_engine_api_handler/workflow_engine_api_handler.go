@@ -33,6 +33,7 @@ import (
 	domainevents "github.com/UFFeScience/akoflow/internal/domain/events"
 	domaininstance "github.com/UFFeScience/akoflow/internal/domain/instance"
 	domainqueue "github.com/UFFeScience/akoflow/internal/domain/queue"
+	"github.com/UFFeScience/akoflow/internal/domain/storagebudget"
 	cloudcredential "github.com/UFFeScience/akoflow/internal/infrastructure/credentials/cloud"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/credentials/sshkey"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/credentials/token"
@@ -46,7 +47,7 @@ const maxRequestBodyBytes = 32 << 20
 type ExecutionQuery interface {
 	FindRun(context.Context, string) (*domain.ExecutionRun, error)
 	ListRuns(context.Context) ([]domain.ExecutionRun, error)
-	ListRunsPage(context.Context, int, int, string, string, string) (domain.ExecutionRunPage, error)
+	ListRunsPage(context.Context, int, int, string, string, string, ...string) (domain.ExecutionRunPage, error)
 	ListTasks(context.Context, string) ([]domain.TaskExecution, error)
 	ListTransfers(context.Context, string) ([]domain.DataTransfer, error)
 	ListHandles(context.Context, string) ([]domain.ActivityHandle, error)
@@ -1082,86 +1083,14 @@ func (h *Handler) Search(w http.ResponseWriter, r *http.Request) {
 			results = append(results, item)
 		}
 	}
-	if types["workflow"] {
-		items, err := h.workflows.List(r.Context())
-		if err != nil {
-			writeError(w, http.StatusInternalServerError, err)
-			return
-		}
-		for _, item := range items {
-			add(SearchResult{Type: "workflow", ID: item.ID, Title: item.Name, Subtitle: item.Namespace, Path: "/workflows/" + url.PathEscape(item.ID)}, item.ID, item.ExternalID, item.Name, item.Namespace)
-		}
+	if !h.searchExecutionRecords(w, r, types, add) {
+		return
 	}
-	if types["execution"] {
-		items, err := h.executions.ListRuns(r.Context())
-		if err != nil {
-			writeError(w, http.StatusInternalServerError, err)
-			return
-		}
-		for _, item := range items {
-			add(SearchResult{Type: "execution", ID: item.ID, Title: firstNonEmpty(item.Title, item.ID), Subtitle: firstNonEmpty(item.FailureReason, item.ResourceID, item.RuntimeID), Status: string(item.Status), Path: "/executions/" + url.PathEscape(item.ID)}, item.ID, item.Title, item.ResourceID, item.RuntimeID, item.FailureReason, string(item.Status))
-		}
+	if !h.searchInfrastructureRecords(w, r, types, add) {
+		return
 	}
-	if types["artifact"] {
-		items, err := h.data.ListArtifacts(r.Context(), false)
-		if err != nil {
-			writeError(w, http.StatusInternalServerError, err)
-			return
-		}
-		for _, item := range items {
-			add(SearchResult{Type: "artifact", ID: item.ID, Title: firstNonEmpty(item.Name, item.ID), Subtitle: item.Version, Path: "/artifacts/" + url.PathEscape(item.ID)}, item.ID, item.Name, item.Version)
-		}
-	}
-	if types["environment"] {
-		items, err := h.environments.List(r.Context())
-		if err != nil {
-			writeError(w, http.StatusInternalServerError, err)
-			return
-		}
-		for _, item := range items {
-			value := item.Environment
-			add(SearchResult{Type: "environment", ID: value.ID, Title: value.Name, Subtitle: value.Description, Status: string(value.Status), Path: "/environments/" + url.PathEscape(value.ID)}, value.ID, value.Name, value.Description, string(value.Status))
-		}
-	}
-	if types["resource"] {
-		items, err := h.resources.List(r.Context())
-		if err != nil {
-			writeError(w, http.StatusInternalServerError, err)
-			return
-		}
-		for _, item := range items {
-			add(SearchResult{Type: "resource", ID: item.ID, Title: item.Name, Subtitle: string(item.Type), Path: "/resources/" + url.PathEscape(item.ID)}, item.ID, item.Name, item.ProviderID, item.Region, item.Zone, string(item.Type), item.EnvironmentVersionID)
-		}
-	}
-	if types["plan"] {
-		items, err := h.plans.List(r.Context())
-		if err != nil {
-			writeError(w, http.StatusInternalServerError, err)
-			return
-		}
-		for _, item := range items {
-			add(SearchResult{Type: "plan", ID: item.ID, Title: item.ID, Subtitle: item.Algorithm, Path: "/plans/" + url.PathEscape(item.ID)}, item.ID, item.Algorithm, item.Objective, item.WorkflowVersionID, item.ExecutionScopeID)
-		}
-	}
-	if types["scope"] {
-		items, err := h.scopes.ListScopes(r.Context())
-		if err != nil {
-			writeError(w, http.StatusInternalServerError, err)
-			return
-		}
-		for _, item := range items {
-			add(SearchResult{Type: "scope", ID: item.ID, Title: item.Name, Subtitle: item.NetworkTopologyID, Path: "/execution-scopes/" + url.PathEscape(item.ID)}, item.ID, item.Name, item.NetworkTopologyID, strings.Join(item.EnvironmentVersionIDs, " "))
-		}
-	}
-	if types["materialization"] {
-		items, err := h.data.ListArtifactMaterializations(r.Context(), "")
-		if err != nil {
-			writeError(w, http.StatusInternalServerError, err)
-			return
-		}
-		for _, item := range items {
-			add(SearchResult{Type: "materialization", ID: item.ID, Title: item.VariantID, Subtitle: firstNonEmpty(item.DestinationPath, item.ResourceID), Status: string(item.Status), Path: "/materializations?runId=" + url.QueryEscape(item.RunID)}, item.ID, item.VariantID, item.Digest, item.ResourceID, item.RunID, item.ActivityID, item.DestinationPath, string(item.Status))
-		}
+	if !h.searchPlanningRecords(w, r, types, add) {
+		return
 	}
 	sort.SliceStable(results, func(i, j int) bool { return results[i].Score > results[j].Score })
 	if len(results) > limit {
@@ -1211,11 +1140,11 @@ func firstNonEmpty(values ...string) string {
 }
 
 func (h *Handler) ListExecutions(w http.ResponseWriter, r *http.Request) {
-	if r.URL.Query().Has("page") || r.URL.Query().Has("pageSize") {
+	if r.URL.Query().Has("page") || r.URL.Query().Has("pageSize") || r.URL.Query().Has("workflowVersionId") {
 		page := positiveInteger(r.URL.Query().Get("page"), 1)
 		pageSize := positiveInteger(r.URL.Query().Get("pageSize"), 20)
 		result, err := h.executions.ListRunsPage(r.Context(), page, pageSize,
-			r.URL.Query().Get("kind"), r.URL.Query().Get("mode"), r.URL.Query().Get("status"))
+			r.URL.Query().Get("kind"), r.URL.Query().Get("mode"), r.URL.Query().Get("status"), r.URL.Query().Get("workflowVersionId"))
 		if err != nil {
 			writeError(w, http.StatusInternalServerError, err)
 			return
@@ -1225,7 +1154,8 @@ func (h *Handler) ListExecutions(w http.ResponseWriter, r *http.Request) {
 			items = append(items, map[string]any{"run": run})
 		}
 		writeJSON(w, http.StatusOK, map[string]any{"items": items, "page": result.Page,
-			"pageSize": result.PageSize, "total": result.Total, "hasNext": result.HasNext})
+			"pageSize": result.PageSize, "total": result.Total, "hasNext": result.HasNext,
+			"workflowVersionId": r.URL.Query().Get("workflowVersionId")})
 		return
 	}
 	runs, err := h.executions.ListRuns(r.Context())
@@ -1349,41 +1279,51 @@ func (h *Handler) GetExecution(w http.ResponseWriter, r *http.Request) {
 	if h.cloudOperations != nil {
 		response["infrastructureRuns"] = infrastructureRuns
 	}
+	billing, billingErr := h.executionCloudBilling(r.Context(), activityAttempts, operations)
+	if billingErr != nil {
+		writeError(w, http.StatusInternalServerError, billingErr)
+		return
+	}
+	response["cloudBilling"] = billing
 	response["timeline"] = applicationexecution.BuildTimeline(*run, tasks, transfers, operations)
-	if h.data != nil {
-		if operationEvents, ok := h.data.(WorkflowOperationEventQuery); ok {
-			events, eventsErr := operationEvents.ListWorkflowOperationEvents(r.Context(), run.ID)
-			if eventsErr != nil {
-				writeError(w, http.StatusInternalServerError, eventsErr)
-				return
-			}
-			response["operationEvents"] = events
-		}
-		instances, dataErr := h.data.ListInstances(r.Context(), run.ID)
-		if dataErr != nil {
-			writeError(w, http.StatusInternalServerError, dataErr)
-			return
-		}
-		locations, locationErr := h.data.ListLocations(r.Context(), run.ID)
-		if locationErr != nil {
-			writeError(w, http.StatusInternalServerError, locationErr)
-			return
-		}
-		response["dataObjects"], response["dataLocations"] = instances, locations
-		materializations, materializationErr := h.data.ListArtifactMaterializations(r.Context(), run.ID)
-		if materializationErr != nil {
-			writeError(w, http.StatusInternalServerError, materializationErr)
-			return
-		}
-		response["artifactMaterializations"] = materializations
-		transferRuns, transferErr := h.data.ListArtifactTransferRuns(r.Context(), run.ID)
-		if transferErr != nil {
-			writeError(w, http.StatusInternalServerError, transferErr)
-			return
-		}
-		response["artifactTransferRuns"] = transferRuns
+	if err := h.addExecutionData(r.Context(), run.ID, response); err != nil {
+		writeError(w, http.StatusInternalServerError, err)
+		return
 	}
 	writeJSON(w, http.StatusOK, response)
+}
+
+func (h *Handler) addExecutionData(ctx context.Context, runID string, response map[string]any) error {
+	if h.data == nil {
+		return nil
+	}
+	if operationEvents, ok := h.data.(WorkflowOperationEventQuery); ok {
+		events, err := operationEvents.ListWorkflowOperationEvents(ctx, runID)
+		if err != nil {
+			return err
+		}
+		response["operationEvents"] = events
+	}
+	instances, err := h.data.ListInstances(ctx, runID)
+	if err != nil {
+		return err
+	}
+	locations, err := h.data.ListLocations(ctx, runID)
+	if err != nil {
+		return err
+	}
+	response["dataObjects"], response["dataLocations"] = instances, locations
+	materializations, err := h.data.ListArtifactMaterializations(ctx, runID)
+	if err != nil {
+		return err
+	}
+	response["artifactMaterializations"] = materializations
+	transfers, err := h.data.ListArtifactTransferRuns(ctx, runID)
+	if err != nil {
+		return err
+	}
+	response["artifactTransferRuns"] = transfers
+	return nil
 }
 
 func latestTaskAttempts(tasks []domain.TaskExecution) []domain.TaskExecution {
@@ -1637,7 +1577,19 @@ func (h *Handler) RegisterDockerArtifact(w http.ResponseWriter, r *http.Request)
 	}
 	sum := sha256.Sum256([]byte("docker://" + image))
 	digest := "sha256:" + hex.EncodeToString(sum[:])
-	build := domain.ArtifactBuild{ID: fmt.Sprintf("build-%d", now), ArtifactVersionID: version.ID, SourceType: "docker-image", ContextDigest: digest, RecipePath: image, RecipeDigest: digest, TargetFormat: "sif", TargetOS: "linux", TargetArchitecture: input.Architecture, BuildArguments: "{}", CacheKey: "docker-image:" + digest + ":" + version.ID}
+	build := domain.ArtifactBuild{
+		ID:                 fmt.Sprintf("build-%d", now),
+		ArtifactVersionID:  version.ID,
+		SourceType:         "docker-image",
+		ContextDigest:      digest,
+		RecipePath:         image,
+		RecipeDigest:       digest,
+		TargetFormat:       "sif",
+		TargetOS:           "linux",
+		TargetArchitecture: input.Architecture,
+		BuildArguments:     "{}",
+		CacheKey:           "docker-image:" + digest + ":" + version.ID,
+	}
 	if err := h.data.SaveArtifactBuild(r.Context(), build); err != nil {
 		writeError(w, http.StatusUnprocessableEntity, fmt.Errorf("create Docker artifact build: %w", err))
 		return
@@ -1932,32 +1884,9 @@ func (h *Handler) CreateCloudCapacityTarget(w http.ResponseWriter, r *http.Reque
 	if strings.TrimSpace(value.ID) == "" {
 		value.ID = "cloud-capacity-" + uuid.NewString()
 	}
-	if value.Provider == "gcp" && h.cloudCatalog != nil {
-		catalog, err := h.cloudCatalog.Cached(r.Context(), value.EnvironmentID)
-		if err != nil {
-			writeError(w, http.StatusUnprocessableEntity, fmt.Errorf("load cloud pricing catalog: %w", err))
-			return
-		}
-		if catalog != nil {
-			if value.Configuration == nil {
-				value.Configuration = make(map[string]any)
-			}
-			for _, machine := range catalog.Machines {
-				if machine.ProviderTypeID == value.ProviderMachineType && machine.PricePerHour > 0 {
-					value.Configuration["pricePerHour"] = machine.PricePerHour
-					value.Configuration["priceCurrency"] = machine.PriceCurrency
-					value.Configuration["priceSource"] = machine.PriceSource
-					break
-				}
-			}
-			diskType, _ := value.Configuration["diskType"].(string)
-			for _, disk := range catalog.Disks {
-				if disk.ProviderTypeID == diskType && disk.PricePerGiBMonth > 0 {
-					value.Configuration["diskPricePerGiBMonth"] = disk.PricePerGiBMonth
-					break
-				}
-			}
-		}
+	if err := h.enrichCapacityTargetPricing(r.Context(), &value); err != nil {
+		writeError(w, http.StatusUnprocessableEntity, err)
+		return
 	}
 	value.Enabled = true
 	if err := h.cloud.CreateCapacityTarget(r.Context(), value); err != nil {
@@ -1995,7 +1924,13 @@ func (h *Handler) CreateCloudCapacityTarget(w http.ResponseWriter, r *http.Reque
 			"capacityTargetId": value.ID, "providerMachineType": value.ProviderMachineType, "maximumInstances": value.MaximumInstances,
 			"lifecyclePolicy": value.LifecyclePolicy, "provisioningMode": value.ProvisioningMode,
 			"diskPricePerGiBMonth": configurationFloat64(value.Configuration, "diskPricePerGiBMonth"),
+			"priceCurrency":        value.Configuration["priceCurrency"],
+			"priceSource":          value.Configuration["priceSource"],
 		},
+	}
+	resource.Metadata["pricingStatus"] = "estimated"
+	if resource.PricePerSecond <= 0 || (resource.StorageBytes > 0 && configurationFloat64(value.Configuration, "diskPricePerGiBMonth") <= 0) {
+		resource.Metadata["pricingStatus"] = "incomplete"
 	}
 	if err := h.resources.Upsert(r.Context(), resource); err != nil {
 		writeError(w, http.StatusUnprocessableEntity, err)
@@ -2008,6 +1943,38 @@ func (h *Handler) CreateCloudCapacityTarget(w http.ResponseWriter, r *http.Reque
 		return
 	}
 	writeJSON(w, http.StatusCreated, value)
+}
+
+func (h *Handler) enrichCapacityTargetPricing(ctx context.Context, target *domain.CloudCapacityTarget) error {
+	if target.Provider != "gcp" || h.cloudCatalog == nil {
+		return nil
+	}
+	catalog, err := h.cloudCatalog.Cached(ctx, target.EnvironmentID)
+	if err != nil {
+		return fmt.Errorf("load cloud pricing catalog: %w", err)
+	}
+	if catalog == nil {
+		return nil
+	}
+	if target.Configuration == nil {
+		target.Configuration = make(map[string]any)
+	}
+	for _, machine := range catalog.Machines {
+		if machine.ProviderTypeID == target.ProviderMachineType && machine.PricePerHour > 0 {
+			target.Configuration["pricePerHour"] = machine.PricePerHour
+			target.Configuration["priceCurrency"] = machine.PriceCurrency
+			target.Configuration["priceSource"] = machine.PriceSource
+			break
+		}
+	}
+	diskType, _ := target.Configuration["diskType"].(string)
+	for _, disk := range catalog.Disks {
+		if disk.ProviderTypeID == diskType && disk.PricePerGiBMonth > 0 {
+			target.Configuration["diskPricePerGiBMonth"] = disk.PricePerGiBMonth
+			break
+		}
+	}
+	return nil
 }
 
 func (h *Handler) DeleteCloudCapacityTarget(w http.ResponseWriter, r *http.Request) {
@@ -2180,6 +2147,19 @@ func (h *Handler) enqueueExistingCloudInstanceOperation(w http.ResponseWriter, r
 }
 
 func (h *Handler) enqueueCloudOperation(w http.ResponseWriter, r *http.Request, kind, environmentID, instanceID, targetID string, request domain.CloudProvisionRequest) {
+	if kind == "provision" && strings.TrimSpace(request.InstanceID) != "" {
+		requestedID := strings.TrimSpace(request.InstanceID)
+		if instanceID != "" && instanceID != requestedID {
+			writeError(w, http.StatusUnprocessableEntity, fmt.Errorf("conflicting cloud instance identities"))
+			return
+		}
+		instance, err := h.cloud.FindProvisionedInstance(r.Context(), requestedID)
+		if err != nil || instance == nil || instance.EnvironmentID != environmentID || instance.CapacityTargetID != targetID {
+			writeError(w, http.StatusUnprocessableEntity, fmt.Errorf("requested cloud instance does not belong to target and environment"))
+			return
+		}
+		instanceID = requestedID
+	}
 	operations, err := h.cloudOperations.ListCloudOperations(r.Context())
 	if err != nil {
 		writeError(w, http.StatusInternalServerError, err)
@@ -2202,8 +2182,8 @@ func (h *Handler) enqueueCloudOperation(w http.ResponseWriter, r *http.Request, 
 		writeError(w, http.StatusConflict, fmt.Errorf("cloud resource already has an active %s run", existing.Kind))
 		return
 	}
-	if kind == "provision" && instanceID == "" {
-		instanceID = "cloud-instance-" + uuid.NewString()
+	if kind == "provision" {
+		instanceID = provisionOperationInstanceID(instanceID, request.InstanceID)
 		request.InstanceID = instanceID
 	}
 	operation := domain.CloudOperationRun{ID: "cloud-run-" + uuid.NewString(), Kind: kind,
@@ -2232,9 +2212,55 @@ func (h *Handler) enqueueCloudOperation(w http.ResponseWriter, r *http.Request, 
 	writeJSON(w, http.StatusAccepted, operation)
 }
 
+func provisionOperationInstanceID(instanceID, requestedID string) string {
+	if instanceID != "" {
+		return instanceID
+	}
+	if requestedID = strings.TrimSpace(requestedID); requestedID != "" {
+		return requestedID
+	}
+	return "cloud-instance-" + uuid.NewString()
+}
+
 func (h *Handler) ListCloudOperations(w http.ResponseWriter, r *http.Request) {
 	values, err := h.cloudOperations.ListCloudOperations(r.Context())
 	writeList(w, values, err)
+}
+
+// ReconcileOrphanCloudOperation never cancels a queued or leased job. It only
+// terminalizes an unpublished operation whose owning workflow has stopped.
+func (h *Handler) ReconcileOrphanCloudOperation(w http.ResponseWriter, r *http.Request) {
+	q, ok := h.queue.(ExecutionRecoveryQueueStore)
+	if !ok || h.cloudOperations == nil || h.executions == nil {
+		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("orphan reconciliation unavailable"))
+		return
+	}
+	op, err := h.cloudOperations.FindCloudOperation(r.Context(), r.PathValue("operationId"))
+	if err != nil || op == nil {
+		writeError(w, http.StatusNotFound, fmt.Errorf("cloud operation not found"))
+		return
+	}
+	if op.Status != "queued" || op.StartedAt != nil || op.ExecutionRunID == "" {
+		writeError(w, http.StatusConflict, fmt.Errorf("operation is not an unstarted workflow operation"))
+		return
+	}
+	job, err := q.FindLatestByAggregate(r.Context(), "cloud_operation", op.ID, eventloop.CloudOperationEventType(op.Kind))
+	if err != nil || job != nil {
+		writeError(w, http.StatusConflict, fmt.Errorf("operation has a queue job or queue lookup failed"))
+		return
+	}
+	run, err := h.executions.FindRun(r.Context(), op.ExecutionRunID)
+	if err != nil || run == nil || (run.Status != domain.ExecutionRunFailed && run.Status != domain.ExecutionRunCancelled && run.Status != domain.ExecutionRunCompleted) {
+		writeError(w, http.StatusConflict, fmt.Errorf("owning workflow is not terminal"))
+		return
+	}
+	now := time.Now().UTC()
+	op.Status, op.Phase, op.FailureReason, op.FinishedAt = "cancelled", "orphan-reconciled", "Unpublished operation reconciled after terminal workflow", &now
+	if err := h.cloudOperations.UpdateCloudOperation(r.Context(), *op); err != nil {
+		writeError(w, http.StatusInternalServerError, err)
+		return
+	}
+	writeJSON(w, http.StatusOK, op)
 }
 
 func (h *Handler) GetCloudOperation(w http.ResponseWriter, r *http.Request) {
@@ -2464,6 +2490,45 @@ func (h *Handler) CreatePlanningSession(w http.ResponseWriter, r *http.Request) 
 	if !decode(w, r, &session) {
 		return
 	}
+	if observe, _ := session.Configuration["observeWorkspaceStorageBudgets"].(bool); observe {
+		if h.resources == nil || h.scopes == nil {
+			writeError(w, http.StatusServiceUnavailable, fmt.Errorf("resource inventory unavailable for quota observations"))
+			return
+		}
+		resources, err := h.resources.List(r.Context())
+		if err != nil {
+			writeError(w, http.StatusUnprocessableEntity, err)
+			return
+		}
+		scope, err := h.scopes.FindScope(r.Context(), session.ExecutionScopeID)
+		if err != nil || scope == nil {
+			writeError(w, http.StatusUnprocessableEntity, fmt.Errorf("execution scope unavailable for quota observations"))
+			return
+		}
+		allowed := map[string]bool{}
+		for _, id := range scope.EnvironmentVersionIDs {
+			allowed[id] = true
+		}
+		selected := []domain.Resource{}
+		for _, resource := range resources {
+			if allowed[resource.EnvironmentVersionID] {
+				selected = append(selected, resource)
+			}
+		}
+		resources = selected
+		request := ports.ExecutionRequest{Resources: resources, Workflow: domain.WorkflowVersion{Activities: []domain.Activity{{Metadata: map[string]any{"workspaceProjection": true}}}}}
+		if err := h.resolveWorkspaceHomes(r.Context(), &request); err != nil {
+			writeError(w, http.StatusUnprocessableEntity, err)
+			return
+		}
+		snapshots := map[string]any{}
+		for _, resource := range request.Resources {
+			if budget := resource.Metadata["workspaceStorageBudget"]; budget != nil {
+				snapshots[resource.ID] = budget
+			}
+		}
+		session.Configuration["workspaceStorageBudgetSnapshot"] = snapshots
+	}
 	created, err := h.planning.Create(r.Context(), session)
 	if err != nil {
 		writeError(w, http.StatusUnprocessableEntity, err)
@@ -2576,6 +2641,23 @@ func (h *Handler) CreateExecution(w http.ResponseWriter, r *http.Request) {
 	if !decode(w, r, &request) {
 		return
 	}
+	if err := h.resolveWorkspaceHomes(r.Context(), &request); err != nil {
+		writeError(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+	storageResources, overrideErr := preflightStorageResources(request)
+	if overrideErr != nil {
+		writeError(w, http.StatusUnprocessableEntity, overrideErr)
+		return
+	}
+	storageTimings := []storagebudget.Timing{}
+	for _, assignment := range request.Plan.Assignments {
+		storageTimings = append(storageTimings, storagebudget.Timing{ActivityID: assignment.ActivityID, ResourceID: assignment.ResourceID, Start: assignment.PredictedStartAt, Finish: assignment.PredictedFinishAt})
+	}
+	if _, _, err := storagebudget.CheckScheduled(request.Workflow, storageResources, storageTimings); err != nil {
+		writeError(w, http.StatusUnprocessableEntity, err)
+		return
+	}
 	if err := h.resolveBuildPreparations(r.Context(), &request); err != nil {
 		writeError(w, http.StatusUnprocessableEntity, err)
 		return
@@ -2603,6 +2685,7 @@ func (h *Handler) CreateExecution(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	job.AggregateType, job.AggregateID = "execution_run", request.Run.ID
+	configureExecutionJobRetries(&job, request.Run.Mode)
 	job.IdempotencyKey = "execution-run:" + request.Run.ID
 	stored, err := h.events.Publish(r.Context(), job)
 	if err != nil {
@@ -2717,6 +2800,18 @@ func (h *Handler) executionRecoveryPreview(ctx context.Context, runID string) (e
 		return executionRecoveryPreview{}, err
 	}
 	preview := executionRecoveryPreview{RunID: runID, Recoverable: run.Status == domain.ExecutionRunFailed || run.Status == domain.ExecutionRunCancelled}
+	// A terminal task is not proof that an earlier external job has stopped.
+	// Inspect every handle, including superseded attempts, before recovery.
+	handles, err := h.executions.ListHandles(ctx, runID)
+	if err != nil {
+		return executionRecoveryPreview{}, err
+	}
+	for _, handle := range handles {
+		if handle.Status == domain.HandleStarting || handle.Status == domain.HandleRunning {
+			preview.Recoverable = false
+			preview.CleanupPending = append(preview.CleanupPending, handle.ActivityID)
+		}
+	}
 	latest := latestTaskAttempts(tasks)
 	latestByActivity := make(map[string]domain.TaskExecution, len(latest))
 	reusable := make(map[string]bool, len(latest))
@@ -2746,37 +2841,8 @@ func (h *Handler) executionRecoveryPreview(ctx context.Context, runID string) (e
 			}
 		}
 	}
-	if recoveryQueue, ok := h.queue.(ExecutionRecoveryQueueStore); ok {
-		original, requestErr := recoveryQueue.FindLatestByAggregate(ctx, "execution_run", runID, eventloop.EventExecutionRunRequested)
-		if requestErr != nil {
-			return executionRecoveryPreview{}, requestErr
-		}
-		if original != nil {
-			var request ports.ExecutionRequest
-			if json.Unmarshal(original.Payload, &request) == nil {
-				for _, activity := range request.Workflow.Activities {
-					if _, observed := latestByActivity[activity.ID]; !observed {
-						interrupted[activity.ID] = true
-					}
-				}
-				changed := true
-				for changed {
-					changed = false
-					for _, activity := range request.Workflow.Activities {
-						if reusable[activity.ID] {
-							continue
-						}
-						for _, producerID := range recoveryProducerIDs(request.Workflow, activity.ID) {
-							if reusable[producerID] && !available[producerID] {
-								delete(reusable, producerID)
-								interrupted[producerID] = true
-								changed = true
-							}
-						}
-					}
-				}
-			}
-		}
+	if err := h.reconcileRecoveryPreview(ctx, runID, latestByActivity, reusable, available, interrupted); err != nil {
+		return executionRecoveryPreview{}, err
 	}
 	for activityID := range reusable {
 		preview.Reusable = append(preview.Reusable, activityID)
@@ -2860,6 +2926,10 @@ func (h *Handler) RecoverExecution(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	request.Recovery = &ports.ExecutionRecovery{Mode: input.Mode, ReuseActivityIDs: preview.Reusable}
+	if err := h.resolveWorkspaceHomes(r.Context(), &request); err != nil {
+		writeError(w, http.StatusUnprocessableEntity, err)
+		return
+	}
 	request.Recovery.RetryActivityIDs = append(append([]string{}, preview.Failed...), preview.Interrupted...)
 	payload, err := json.Marshal(request)
 	if err != nil {
@@ -2876,6 +2946,7 @@ func (h *Handler) RecoverExecution(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	job.AggregateType, job.AggregateID = "execution_run", runID
+	configureExecutionJobRetries(&job, request.Run.Mode)
 	job.IdempotencyKey = fmt.Sprintf("execution-recovery:%s:%d", runID, time.Now().UTC().UnixNano())
 	stored, err := h.events.Publish(r.Context(), job)
 	if err != nil {
@@ -3154,4 +3225,166 @@ func writeError(w http.ResponseWriter, status int, err error) {
 		message = err.Error()
 	}
 	writeJSON(w, status, map[string]string{"error": message})
+}
+
+func (h *Handler) searchExecutionRecords(w http.ResponseWriter, r *http.Request, types map[string]bool, add func(SearchResult, ...string)) bool {
+	if types["workflow"] {
+		items, err := h.workflows.List(r.Context())
+		if err != nil {
+			writeError(w, http.StatusInternalServerError, err)
+			return false
+		}
+		for _, item := range items {
+			add(SearchResult{Type: "workflow", ID: item.ID, Title: item.Name, Subtitle: item.Namespace, Path: "/workflows/" + url.PathEscape(item.ID)}, item.ID, item.ExternalID, item.Name, item.Namespace)
+		}
+	}
+	if types["execution"] {
+		items, err := h.executions.ListRuns(r.Context())
+		if err != nil {
+			writeError(w, http.StatusInternalServerError, err)
+			return false
+		}
+		for _, item := range items {
+			add(SearchResult{
+				Type:     "execution",
+				ID:       item.ID,
+				Title:    firstNonEmpty(item.Title, item.ID),
+				Subtitle: firstNonEmpty(item.FailureReason, item.ResourceID, item.RuntimeID),
+				Status:   string(item.Status),
+				Path:     "/executions/" + url.PathEscape(item.ID),
+			}, item.ID, item.Title, item.ResourceID, item.RuntimeID, item.FailureReason, string(item.Status))
+		}
+	}
+	if types["artifact"] {
+		items, err := h.data.ListArtifacts(r.Context(), false)
+		if err != nil {
+			writeError(w, http.StatusInternalServerError, err)
+			return false
+		}
+		for _, item := range items {
+			add(SearchResult{Type: "artifact", ID: item.ID, Title: firstNonEmpty(item.Name, item.ID), Subtitle: item.Version, Path: "/artifacts/" + url.PathEscape(item.ID)}, item.ID, item.Name, item.Version)
+		}
+	}
+	return true
+}
+
+func (h *Handler) searchInfrastructureRecords(w http.ResponseWriter, r *http.Request, types map[string]bool, add func(SearchResult, ...string)) bool {
+	if types["environment"] {
+		items, err := h.environments.List(r.Context())
+		if err != nil {
+			writeError(w, http.StatusInternalServerError, err)
+			return false
+		}
+		for _, item := range items {
+			value := item.Environment
+			add(SearchResult{
+				Type:     "environment",
+				ID:       value.ID,
+				Title:    value.Name,
+				Subtitle: value.Description,
+				Status:   string(value.Status),
+				Path:     "/environments/" + url.PathEscape(value.ID),
+			}, value.ID, value.Name, value.Description, string(value.Status))
+		}
+	}
+	if types["resource"] {
+		items, err := h.resources.List(r.Context())
+		if err != nil {
+			writeError(w, http.StatusInternalServerError, err)
+			return false
+		}
+		for _, item := range items {
+			add(SearchResult{
+				Type:     "resource",
+				ID:       item.ID,
+				Title:    item.Name,
+				Subtitle: string(item.Type),
+				Path:     "/resources/" + url.PathEscape(item.ID),
+			}, item.ID, item.Name, item.ProviderID, item.Region, item.Zone, string(item.Type), item.EnvironmentVersionID)
+		}
+	}
+	return true
+}
+
+func (h *Handler) searchPlanningRecords(w http.ResponseWriter, r *http.Request, types map[string]bool, add func(SearchResult, ...string)) bool {
+	if types["plan"] {
+		items, err := h.plans.List(r.Context())
+		if err != nil {
+			writeError(w, http.StatusInternalServerError, err)
+			return false
+		}
+		for _, item := range items {
+			add(SearchResult{Type: "plan", ID: item.ID, Title: item.ID, Subtitle: item.Algorithm, Path: "/plans/" + url.PathEscape(item.ID)}, item.ID, item.Algorithm, item.Objective, item.WorkflowVersionID, item.ExecutionScopeID)
+		}
+	}
+	if types["scope"] {
+		items, err := h.scopes.ListScopes(r.Context())
+		if err != nil {
+			writeError(w, http.StatusInternalServerError, err)
+			return false
+		}
+		for _, item := range items {
+			add(SearchResult{
+				Type:     "scope",
+				ID:       item.ID,
+				Title:    item.Name,
+				Subtitle: item.NetworkTopologyID,
+				Path:     "/execution-scopes/" + url.PathEscape(item.ID),
+			}, item.ID, item.Name, item.NetworkTopologyID, strings.Join(item.EnvironmentVersionIDs, " "))
+		}
+	}
+	if types["materialization"] {
+		items, err := h.data.ListArtifactMaterializations(r.Context(), "")
+		if err != nil {
+			writeError(w, http.StatusInternalServerError, err)
+			return false
+		}
+		for _, item := range items {
+			add(SearchResult{
+				Type:     "materialization",
+				ID:       item.ID,
+				Title:    item.VariantID,
+				Subtitle: firstNonEmpty(item.DestinationPath, item.ResourceID),
+				Status:   string(item.Status),
+				Path:     "/materializations?runId=" + url.QueryEscape(item.RunID),
+			}, item.ID, item.VariantID, item.Digest, item.ResourceID, item.RunID, item.ActivityID, item.DestinationPath, string(item.Status))
+		}
+	}
+	return true
+}
+
+func (h *Handler) reconcileRecoveryPreview(ctx context.Context, runID string, latestByActivity map[string]domain.TaskExecution, reusable, available, interrupted map[string]bool) error {
+	if recoveryQueue, ok := h.queue.(ExecutionRecoveryQueueStore); ok {
+		original, requestErr := recoveryQueue.FindLatestByAggregate(ctx, "execution_run", runID, eventloop.EventExecutionRunRequested)
+		if requestErr != nil {
+			return requestErr
+		}
+		if original != nil {
+			var request ports.ExecutionRequest
+			if json.Unmarshal(original.Payload, &request) == nil {
+				for _, activity := range request.Workflow.Activities {
+					if _, observed := latestByActivity[activity.ID]; !observed {
+						interrupted[activity.ID] = true
+					}
+				}
+				changed := true
+				for changed {
+					changed = false
+					for _, activity := range request.Workflow.Activities {
+						if reusable[activity.ID] {
+							continue
+						}
+						for _, producerID := range recoveryProducerIDs(request.Workflow, activity.ID) {
+							if reusable[producerID] && !available[producerID] {
+								delete(reusable, producerID)
+								interrupted[producerID] = true
+								changed = true
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	return nil
 }

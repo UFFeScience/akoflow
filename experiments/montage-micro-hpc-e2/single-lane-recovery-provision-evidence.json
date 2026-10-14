@@ -1,0 +1,21 @@
+{
+  "runId": "montage-micro-hpc-e2-real-20261008-single-lane-v1",
+  "status": "partial_running_measurement",
+  "source": "Daemon API operation timestamps and allowlisted provisioning log milestones",
+  "resourceId": "montage-gcp-fog-e2-micro-02",
+  "generationContext": "Replacement generation during recovery; not the initial provisioning observation",
+  "provisionElapsedSeconds": 1135.695667,
+  "sshReadinessSeconds": 7.869,
+  "configurationPlaybookSeconds": 1076.721,
+  "dockerValidationSeconds": 2.750,
+  "workspaceValidationSeconds": 1.614,
+  "configurationValidated": true,
+  "inference": "The configuration playbook accounts for approximately 95 percent of this provisioning interval. This delay is infrastructure preparation, not workspace transfer or scientific compute.",
+  "diagnosticIssue": "AKO-124",
+  "limitations": [
+    "Per-task playbook durations are unavailable; do not attribute all configuration time to Docker installation.",
+    "Live-output telemetry is committed locally but was not applied to this operation.",
+    "A recovered run cannot be presented as an uninterrupted makespan benchmark.",
+    "This is one generation observation, not a final workflow performance result."
+  ]
+}

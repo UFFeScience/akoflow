@@ -1,0 +1,26 @@
+{
+  "issue": "AKO-130",
+  "runId": "montage-micro-hpc-e2-real-20261008-single-lane-v1",
+  "consumerActivity": "mdifffitid0000009",
+  "strategy": "gateway",
+  "destinationResource": "plafrim-execution-ssh-node-diablo03",
+  "dependencies": [
+    {
+      "producerActivity": "mprojectid0000002",
+      "packAndReceiveSeconds": 12.142290673,
+      "archiveUploadSeconds": 161.00987145,
+      "receiverVerifyExtractSeconds": 5.710891961
+    },
+    {
+      "producerActivity": "mprojectid0000004",
+      "packAndReceiveSeconds": 19.536244426,
+      "archiveUploadSeconds": 168.933765369,
+      "receiverVerifyExtractSeconds": 4.677060627
+    }
+  ],
+  "jointPreparationSeconds": 198.513253549,
+  "jointMergeSeconds": 11.517878255,
+  "interpretation": "Upload phase is dominant but includes SSH channel acquisition, rsync execution and retry waits. Current evidence does not isolate network throughput or prove SSH contention caused the delay.",
+  "action": "Run safely cancelled with 30 reusable activities. Introduced separate channel-wait and rsync-execution measurements without changing transport security, concurrency limits, whole-workspace contract or execution barriers.",
+  "limitation": "Joint preparation and merge values are shared across dependencies; count each only once. Instrumentation requires deployment and real measurement before selecting a performance fix."
+}

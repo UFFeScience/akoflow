@@ -1,0 +1,21 @@
+{
+  "materializationModelVersion": 1,
+  "materializationRelayResourceId": "relay",
+  "runId": "materialization-test",
+  "planId": "materialization-plan",
+  "tasks": [
+    {"id":"a","assignmentId":"a","resourceId":"cloud-a","flops":1000000000},
+    {"id":"c","assignmentId":"c","resourceId":"hpc","flops":5000000000},
+    {"id":"b","assignmentId":"b","resourceId":"cloud-b","flops":1000000000,"preparationSeconds":2}
+  ],
+  "dependencies": [
+    {"producerId":"a","consumerId":"b","bytes":200,"networkBytes":100,"strategy":"direct-runtime",
+     "stages":[{"name":"peer","sourceResourceId":"cloud-a","targetResourceId":"cloud-b","bytes":100,"effectiveBytesPerSecond":100}]},
+    {"producerId":"c","consumerId":"b","bytes":200,"networkBytes":200,"relayNetworkBytes":200,"strategy":"gateway",
+     "stages":[
+       {"name":"relay-pack-and-receive","sourceResourceId":"hpc","targetResourceId":"relay","bytes":100,"effectiveBytesPerSecond":100,"afterSeconds":1},
+       {"name":"relay-upload-and-extract","sourceResourceId":"relay","targetResourceId":"cloud-b","bytes":100,"effectiveBytesPerSecond":100,"afterSeconds":2}
+     ]}
+  ],
+  "resourceLaneOrders": []
+}

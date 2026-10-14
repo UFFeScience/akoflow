@@ -3,6 +3,7 @@ package transfer
 import (
 	"context"
 	"errors"
+	"fmt"
 	"sync"
 	"sync/atomic"
 	"testing"
@@ -21,11 +22,13 @@ func TestVerifiedArtifactCacheCoalescesConcurrentMaterializations(t *testing.T) 
 	results := make(chan bool, 8)
 	errorsFound := make(chan error, 8)
 	var group sync.WaitGroup
-	for range 8 {
+	for node := range 8 {
 		group.Add(1)
 		go func() {
 			defer group.Done()
-			shared, err := cache.Do(context.Background(), endpoint, "artifact.sif", "sha256:digest", func() error {
+			nodeEndpoint := endpoint
+			nodeEndpoint.ResourceID = fmt.Sprintf("scheduler-node-%d", node)
+			shared, err := cache.Do(context.Background(), nodeEndpoint, "artifact.sif", "sha256:digest", func() error {
 				if calls.Add(1) == 1 {
 					close(started)
 				}
@@ -81,6 +84,24 @@ func TestVerifiedArtifactCacheReleasesFailedMaterialization(t *testing.T) {
 	})
 	if err != nil || shared || calls != 1 {
 		t.Fatalf("retry shared=%v calls=%d err=%v", shared, calls, err)
+	}
+}
+
+func TestVerifiedArtifactCacheSharesSSHArtifactAcrossSchedulerNodes(t *testing.T) {
+	cache := &VerifiedArtifactCache{}
+	first := domain.TransferEndpoint{URI: "ssh://cluster/artifacts", ConnectionID: "cluster", ResourceID: "diablo03", RuntimeID: "slurm"}
+	second := first
+	second.ResourceID = "bora001"
+	cache.Remember(first, "artifact.sif", "sha256:digest")
+	shared, err := cache.Do(context.Background(), second, "artifact.sif", "sha256:digest", func() error {
+		return errors.New("must not write the shared partial file again")
+	})
+	if err != nil || !shared {
+		t.Fatalf("shared=%v err=%v", shared, err)
+	}
+	second.CloudInstanceID = "different-vm"
+	if cache.Has(second, "artifact.sif", "sha256:digest") {
+		t.Fatal("different VMs must not share verification")
 	}
 }
 

@@ -1,0 +1,32 @@
+{
+  "issue": "AKO-158",
+  "role": "exploratory-effective-wall-profile-fit-not-independent-validation",
+  "referenceRunId": "montage-prism-transfer-real-20261011-v2",
+  "wholeWorkspaceVolumesUsed": true,
+  "newRealSubmitted": false,
+  "previousPlanSeconds": 3720.168973798004,
+  "previousSimulationSeconds": 3825.5614337389516,
+  "newPlanSeconds": 4615.267278717876,
+  "newSimulationSeconds": 4648.1042131221075,
+  "fixedPlacementSimulationSeconds": 4309.4108525254105,
+  "completedSimulationTasks": 58,
+  "profileSamples": { "hpcToCloudRelay": 42, "cloudToCloudPeer": 17 },
+  "dominantDependency": {
+    "previousPredictedSeconds": 288.8601371575005,
+    "newPredictedSeconds": 636.8082884753348,
+    "observedSeconds": 1294.134133049,
+    "newDurationErrorPercent": -50.79271365982715,
+    "predictedNetworkBytes": 618568774,
+    "observedNetworkBytes": 596317206
+  },
+  "fixedPlacementActivityWallWithin20Percent": { "previous": 19, "new": 13, "comparable": 56 },
+  "accepted": false,
+  "limitations": [
+    "Uniform effective rates by route do not explain concurrency-conditioned dominant transfers.",
+    "Unknown SSH/cache waiting and CPU/IO contention remain in wall coefficients; rates are not queue-free network bandwidth.",
+    "Explicit SSH groups are disabled in this sensitivity to avoid adding admission twice; simulated network sharing can still overlap observed sharing.",
+    "Logical output bytes are not whole workspace bytes; calibration uses preserved source workspace sizeBytes.",
+    "Replanned placement is slower than frozen-placement native simulation; planner optimality is not established.",
+    "A longer makespan alone does not prove a more faithful model; the per-activity gate worsened."
+  ]
+}

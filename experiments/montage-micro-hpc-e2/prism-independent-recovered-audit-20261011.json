@@ -1,0 +1,30 @@
+{
+  "runId": "montage-prism-transfer-real-20261011-v2",
+  "status": "completed",
+  "distinctLatestActivities": 58,
+  "currentFailedActivities": 0,
+  "activeHandles": 0,
+  "transferFinishedAfterLatestConsumerStartViolations": 0,
+  "product": {
+    "filename": "mosaic-color.png",
+    "bytes": 4920451,
+    "width": 1800,
+    "height": 1800,
+    "sha256": "63fa4d8447274bdb8a44f6be8cf5a23c0a2f0baa479bd2ae1ec3b541df4e19f2",
+    "verification": "read-only daemon console API stat, SHA-256 and file signature"
+  },
+  "forecast": {
+    "prismMakespanSeconds": 3127.9222412902786,
+    "simgridMakespanSeconds": 3163.497678841343,
+    "frozenBeforeOriginalRun": true
+  },
+  "predictionValidated": false,
+  "reason": "Original attempt failed at 56/58; completion required code change and recovery. Recovered run cannot validate independent makespan.",
+  "cleanupComplete": false,
+  "remainingWork": [
+    "Export and checksum final products before destroying their VM disks.",
+    "Confirm all cloud operations terminal and no HPC jobs residual.",
+    "Measure preparation and artifact observation separately; consume evidenced services in both PRISM and SimGrid.",
+    "Freeze a new forecast and validate against another fresh independent real execution."
+  ]
+}

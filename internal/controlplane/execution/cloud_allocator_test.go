@@ -2,6 +2,7 @@ package execution
 
 import (
 	"context"
+	"strings"
 	"sync"
 	"testing"
 	"time"
@@ -83,6 +84,32 @@ type allocatorQueue struct {
 	jobs  []domainqueue.Job
 }
 
+type deduplicatingAllocatorQueue struct {
+	ports.QueueStore
+	store *allocatorStore
+}
+
+func (q deduplicatingAllocatorQueue) Publish(_ context.Context, job domainqueue.Job) (domainqueue.Job, error) {
+	// Simulate another caller winning between List and Publish.
+	q.store.operations["canonical"] = domain.CloudOperationRun{ID: "canonical", Kind: "start", Status: "completed", InstanceID: "vm", ExecutionRunID: "run", CapacityTargetID: "target"}
+	job.AggregateID = "canonical"
+	return job, nil
+}
+
+func TestQueuedCloudAllocatorReturnsCanonicalDeduplicatedOperation(t *testing.T) {
+	store := &allocatorStore{operations: map[string]domain.CloudOperationRun{}}
+	a := QueuedCloudAllocator{Cloud: store, Operations: store, Queue: deduplicatingAllocatorQueue{store: store}}
+	op, err := a.findOrCreate(context.Background(), "run", "activity", domain.CloudCapacityTarget{ID: "target"}, "start", "vm")
+	if err != nil || op.ID != "canonical" {
+		t.Fatalf("op=%+v err=%v", op, err)
+	}
+	for id, value := range store.operations {
+		if id != "canonical" && (value.Status != "cancelled" || value.Phase != "deduplicated" || value.FinishedAt == nil) {
+			t.Fatalf("orphan left live: %+v", value)
+		}
+	}
+}
+
 func (q *allocatorQueue) Publish(_ context.Context, job domainqueue.Job) (domainqueue.Job, error) {
 	q.jobs = append(q.jobs, job)
 	go func() {
@@ -90,6 +117,9 @@ func (q *allocatorQueue) Publish(_ context.Context, job domainqueue.Job) (domain
 		q.store.mu.Lock()
 		defer q.store.mu.Unlock()
 		for id, operation := range q.store.operations {
+			if operation.Status != "queued" {
+				continue
+			}
 			operation.Status, operation.InstanceID = "completed", operation.Request.InstanceID
 			q.store.operations[id] = operation
 			status := "ready"
@@ -102,6 +132,31 @@ func (q *allocatorQueue) Publish(_ context.Context, job domainqueue.Job) (domain
 		}
 	}()
 	return job, nil
+}
+
+func TestQueuedCloudAllocatorReplacesDestroyedProvisionGeneration(t *testing.T) {
+	for _, status := range []string{"completed", "failed", "cancelled"} {
+		t.Run(status, func(t *testing.T) {
+			store := &allocatorStore{
+				operations: map[string]domain.CloudOperationRun{"old-operation": {ID: "old-operation", Kind: "provision", Status: status, ExecutionRunID: "run", CapacityTargetID: "target", InstanceID: "old-vm"}},
+				instances:  map[string]domain.CloudProvisionedInstance{"old-vm": {ID: "old-vm", CapacityTargetID: "target", EnvironmentID: "environment", Status: "destroyed"}},
+			}
+			queue := &allocatorQueue{store: store}
+			allocator := QueuedCloudAllocator{Cloud: store, Operations: store, Queue: queue, PollInterval: time.Millisecond}
+			target := domain.CloudCapacityTarget{ID: "target", EnvironmentID: "environment"}
+			if err := allocator.Prewarm(context.Background(), "run", "activity", target); err != nil {
+				t.Fatal(err)
+			}
+			instance, err := allocator.Allocate(context.Background(), "run", "activity", target)
+			if err != nil || instance.ID == "old-vm" || instance.Status != "ready" || len(queue.jobs) != 1 {
+				t.Fatalf("obsolete allocation reused or duplicated: instance=%+v err=%v jobs=%d", instance, err, len(queue.jobs))
+			}
+			old, _ := store.FindProvisionedInstance(context.Background(), "old-vm")
+			if old.Status != "destroyed" {
+				t.Fatal("old instance history mutated")
+			}
+		})
+	}
 }
 
 func TestQueuedCloudAllocatorAssociatesDurableOperationWithActivity(t *testing.T) {
@@ -179,6 +234,33 @@ func TestQueuedCloudAllocatorStartsAndValidatesStoppedInstance(t *testing.T) {
 	}
 	if !kinds["start"] || !kinds["validate"] {
 		t.Fatalf("operation kinds=%#v", kinds)
+	}
+}
+
+func TestRecoveryStartsExactProducerAfterLaterStop(t *testing.T) {
+	now := time.Now().UTC()
+	store := &allocatorStore{operations: map[string]domain.CloudOperationRun{
+		"old-start":  {ID: "old-start", Kind: "start", Status: "completed", InstanceID: "producer", ExecutionRunID: "run", CapacityTargetID: "target", CreatedAt: now.Add(-time.Hour)},
+		"stop-cycle": {ID: "stop-cycle", Kind: "stop", Status: "completed", InstanceID: "producer", CreatedAt: now},
+	}, instances: map[string]domain.CloudProvisionedInstance{
+		"producer": {ID: "producer", CapacityTargetID: "target", EnvironmentID: "environment", Status: "stopped"},
+		"other":    {ID: "other", CapacityTargetID: "target", EnvironmentID: "environment", Status: "ready"},
+	}, targets: map[string]domain.CloudCapacityTarget{"target": {ID: "target", EnvironmentID: "environment"}}}
+	queue := &allocatorQueue{store: store}
+	a := QueuedCloudAllocator{Cloud: store, Operations: store, Queue: queue, PollInterval: time.Millisecond}
+	if err := a.ReadyRecoveryInstance(context.Background(), "run", "activity", "producer"); err != nil {
+		t.Fatal(err)
+	}
+	if len(queue.jobs) != 2 {
+		t.Fatalf("expected exact start and validation, got %d", len(queue.jobs))
+	}
+	for _, job := range queue.jobs {
+		if !strings.Contains(job.IdempotencyKey, ":after-stop:stop-cycle") {
+			t.Fatalf("stale idempotency cycle: %s", job.IdempotencyKey)
+		}
+	}
+	if err := a.ReadyRecoveryInstance(context.Background(), "run", "activity", "missing"); err == nil {
+		t.Fatal("missing producer replaced")
 	}
 }
 

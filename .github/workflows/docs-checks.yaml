@@ -54,6 +54,8 @@ jobs:
         run: npm ci --prefix docs
       - name: Type-check documentation code
         run: npm run typecheck --prefix docs
+      - name: Test API handler contract extraction
+        run: npm run test:api-generator --prefix docs
       - name: Build the documentation site
         run: npm run build --prefix docs
       - name: Verify repository-owned documentation links

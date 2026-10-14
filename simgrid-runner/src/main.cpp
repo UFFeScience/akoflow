@@ -4,6 +4,7 @@
 #include <cmath>
 #include <fstream>
 #include <iostream>
+#include <limits>
 #include <map>
 #include <set>
 #include <stdexcept>
@@ -30,6 +31,13 @@ struct TaskModel {
   double price_per_second = 0;
   double flops            = 0;
   double overhead_seconds = 0;
+  double preparation_seconds = 0;
+  double admission_seconds = 0;
+	 double publication_seconds = 0;
+  std::string preparation_service_group;
+  int preparation_service_slots = 0;
+  double preparation_started_at = 0;
+  double preparation_finished_at = 0;
   double started_at       = 0;
   double compute_started_at = 0;
   double compute_finished_at = 0;
@@ -93,6 +101,22 @@ static InterferenceModel create_interference(const json& input)
   return interference;
 }
 
+struct TransferStage {
+  std::string service_group;
+  int service_slots = 0;
+  double service_queued_at = 0;
+  double service_wait_seconds = 0;
+  std::string name;
+  std::string source;
+  std::string target;
+  long long bytes = 0;
+  double rate = 0;
+  double before_seconds = 0;
+  double after_seconds = 0;
+  double started_at = 0;
+  double finished_at = 0;
+};
+
 struct TransferModel {
   std::string producer_id;
   std::string consumer_id;
@@ -102,6 +126,10 @@ struct TransferModel {
   double price_per_byte = 0;
   double started_at     = 0;
   double finished_at    = 0;
+  std::string strategy;
+  long long network_bytes = 0;
+  long long relay_network_bytes = 0;
+  std::vector<TransferStage> stages;
 };
 
 static Arguments parse_arguments(int argc, char** argv)
@@ -154,6 +182,17 @@ static std::map<std::string, TaskModel> create_tasks(sg4::Engine& engine, const 
     engine.host_by_name(task.resource_id);
     task.flops = std::max(0.0, value.at("flops").get<double>());
     task.overhead_seconds = std::max(0.0, value.value("overheadSeconds", 0.0));
+    task.preparation_seconds = value.value("preparationSeconds", 0.0);
+    task.admission_seconds = value.value("admissionSeconds", 0.0);
+    if (!std::isfinite(task.admission_seconds) || task.admission_seconds < 0)
+      throw std::runtime_error("invalid external admission delay");
+	 task.publication_seconds = value.value("publicationSeconds",0.0);
+	 if (!std::isfinite(task.publication_seconds) || task.publication_seconds < 0)
+	   throw std::runtime_error("invalid publication service");
+    task.preparation_service_group = value.value("preparationServiceGroupId", "");
+    task.preparation_service_slots = value.value("preparationServiceSlots", 0);
+    if (!std::isfinite(task.preparation_seconds) || task.preparation_seconds < 0)
+      throw std::runtime_error("invalid consumer preparation duration");
     if (!tasks.emplace(task.id, task).second)
       throw std::runtime_error("duplicate task: " + task.id);
   }
@@ -169,7 +208,9 @@ static std::vector<TransferModel> create_transfers(const json& input, const std:
     auto& producer                = tasks.at(producer_id);
     auto& consumer                = tasks.at(consumer_id);
     const long long bytes         = value.value("bytes", 0LL);
-    if (bytes <= 0 || producer.resource_id == consumer.resource_id)
+    if (bytes < 0)
+      throw std::runtime_error("negative dependency bytes");
+    if ((bytes == 0 && !value.contains("stages")) || producer.resource_id == consumer.resource_id)
       continue;
     TransferModel transfer;
     transfer.producer_id       = producer_id;
@@ -178,6 +219,57 @@ static std::vector<TransferModel> create_transfers(const json& input, const std:
     transfer.target_resource_id = consumer.resource_id;
     transfer.bytes              = bytes;
     transfer.price_per_byte     = value.value("pricePerByte", 0.0);
+    transfer.strategy = value.value("strategy", "");
+    transfer.network_bytes = value.value("networkBytes",input.value("materializationModelVersion",0)>0 ? 0LL : bytes);
+    transfer.relay_network_bytes = value.value("relayNetworkBytes", 0LL);
+    for (const auto& stage_value : value.value("stages", json::array())) {
+      TransferStage stage;
+      stage.service_group = stage_value.value("serviceGroupId", "");
+      stage.service_slots = stage_value.value("serviceSlots", 0);
+      stage.name = stage_value.at("name").get<std::string>();
+      stage.source = stage_value.at("sourceResourceId").get<std::string>();
+      stage.target = stage_value.at("targetResourceId").get<std::string>();
+      stage.bytes = stage_value.value("bytes", 0LL);
+      stage.rate = stage_value.value("effectiveBytesPerSecond", 0.0);
+      stage.before_seconds = stage_value.value("beforeSeconds", 0.0);
+      stage.after_seconds = stage_value.value("afterSeconds", 0.0);
+      if (stage.bytes < 0 || !std::isfinite(stage.rate) || stage.rate < 0 ||
+          (stage.bytes > 0 && stage.rate <= 0) || !std::isfinite(stage.before_seconds) ||
+          stage.before_seconds < 0 || !std::isfinite(stage.after_seconds) || stage.after_seconds < 0)
+        throw std::runtime_error("invalid materialization stage");
+      transfer.stages.push_back(stage);
+    }
+    if (input.value("materializationModelVersion", 0) > 0 && transfer.stages.empty())
+      throw std::runtime_error("materialization dependency lacks stages");
+    if (!transfer.stages.empty()) {
+      if (transfer.stages.front().source != producer.resource_id || transfer.stages.back().target != consumer.resource_id)
+        throw std::runtime_error("materialization stages do not match dependency endpoints");
+      long long network_bytes = 0;
+      for (size_t index=0; index<transfer.stages.size(); ++index) {
+        if (index>0 && transfer.stages[index-1].target != transfer.stages[index].source)
+          throw std::runtime_error("materialization stages are not contiguous");
+        if (transfer.stages[index].bytes > std::numeric_limits<long long>::max()-network_bytes)
+          throw std::runtime_error("materialization network bytes overflow");
+        network_bytes += transfer.stages[index].bytes;
+      }
+      if (network_bytes != transfer.network_bytes)
+        throw std::runtime_error("materialization network byte count differs from stages");
+      if (transfer.strategy == "gateway") {
+        const auto relay=input.value("materializationRelayResourceId",std::string{});
+        if (relay.empty() || transfer.stages.size()!=2 || transfer.stages[0].target != relay || transfer.stages[1].source != relay || transfer.relay_network_bytes != network_bytes)
+          throw std::runtime_error("gateway materialization must use both relay hops");
+      } else if (transfer.strategy == "direct-runtime") {
+        const bool receiver_stage = transfer.stages.size()==2 && transfer.stages[1].bytes==0 &&
+            transfer.stages[1].source==consumer.resource_id && transfer.stages[1].target==consumer.resource_id;
+        if ((transfer.stages.size()!=1 && !receiver_stage) || transfer.relay_network_bytes!=0)
+          throw std::runtime_error("invalid peer/shared materialization stages");
+      } else if (transfer.strategy == "shared-storage") {
+        if (transfer.stages.size()!=1 || transfer.relay_network_bytes!=0 || network_bytes!=0)
+          throw std::runtime_error("invalid peer/shared materialization stages");
+      } else {
+        throw std::runtime_error("unsupported materialization strategy");
+      }
+    }
     transfers.push_back(transfer);
   }
   return transfers;
@@ -195,17 +287,52 @@ static void run_simulation(sg4::Engine& engine, const json& input,
                            const InterferenceModel& interference)
 {
   const auto run_id = input.at("runId").get<std::string>();
+  std::map<std::string, sg4::SemaphorePtr> service_pools;
+  std::map<std::string, int> service_capacities;
+  auto register_service = [&](const std::string& group, int slots) {
+    if (group.empty()) {
+      if (slots != 0) throw std::runtime_error("service capacity without group");
+      return;
+    }
+    if (slots < 1) throw std::runtime_error("invalid service capacity");
+    auto existing = service_capacities.find(group);
+    if (existing != service_capacities.end() && existing->second != slots)
+      throw std::runtime_error("conflicting shared service capacities");
+    if (existing == service_capacities.end()) {
+      service_capacities[group] = slots;
+      service_pools[group] = sg4::Semaphore::create(slots);
+    }
+  };
+  for (const auto& [id, task] : tasks)
+    register_service(task.preparation_service_group, task.preparation_service_slots);
+  for (const auto& transfer : transfers)
+    for (const auto& stage : transfer.stages)
+      register_service(stage.service_group, stage.service_slots);
   std::map<std::string, std::vector<std::pair<std::string, std::string>>> incoming_dependencies;
   std::map<std::string, std::vector<std::string>> outgoing_dependency_signals;
+  std::map<std::string, std::vector<std::string>> outgoing_consumers;
   std::map<std::string, std::vector<std::string>> incoming_lanes;
   std::map<std::string, std::vector<std::string>> outgoing_lanes;
   std::map<std::string, std::set<std::string>> active_by_resource;
+  std::set<std::pair<std::string,std::string>> data_edges;
+  std::map<std::string,int> remaining_producers;
+  std::map<std::string,int> inbound_flow_count;
+  std::map<std::string,sg4::SemaphorePtr> preparation_gates;
+  const bool materialization_enabled = input.value("materializationModelVersion",0) > 0;
+  for (const auto& transfer : transfers) {
+    data_edges.insert({transfer.producer_id,transfer.consumer_id});
+    inbound_flow_count[transfer.consumer_id]++;
+  }
 
   for (const auto& dependency : input.at("dependencies")) {
     const auto producer = dependency.at("producerId").get<std::string>();
     const auto consumer = dependency.at("consumerId").get<std::string>();
     incoming_dependencies[consumer].push_back({producer, mailbox_name(run_id, "data", producer, consumer)});
     outgoing_dependency_signals[producer].push_back(mailbox_name(run_id, "ready", producer, consumer));
+    outgoing_consumers[producer].push_back(consumer);
+    remaining_producers[consumer]++;
+    if (materialization_enabled && preparation_gates.count(consumer)==0)
+      preparation_gates[consumer] = sg4::Semaphore::create(0);
   }
   for (const auto& order : input.at("resourceLaneOrders")) {
     const auto predecessor = order.at("predecessorId").get<std::string>();
@@ -218,11 +345,54 @@ static void run_simulation(sg4::Engine& engine, const json& input,
   for (auto& transfer : transfers) {
     auto* transfer_model = &transfer;
     auto* source_host = engine.host_by_name(transfer.source_resource_id);
-    sg4::Actor::create("transfer-" + transfer.producer_id + "-" + transfer.consumer_id, source_host,
-                       [transfer_model, run_id]() {
+    engine.add_actor("transfer-" + transfer.producer_id + "-" + transfer.consumer_id, source_host,
+                       [transfer_model, run_id, &engine, &preparation_gates, &service_pools, materialization_enabled]() {
       sg4::Mailbox::by_name(mailbox_name(run_id, "ready", transfer_model->producer_id,
                                          transfer_model->consumer_id))->get<void>();
+      if (materialization_enabled)
+        preparation_gates.at(transfer_model->consumer_id)->acquire();
       transfer_model->started_at = sg4::Engine::get_clock();
+      if (!transfer_model->stages.empty()) {
+        for (size_t stage_index=0; stage_index<transfer_model->stages.size(); ++stage_index) {
+          auto& stage=transfer_model->stages[stage_index];
+          stage.service_queued_at = sg4::Engine::get_clock();
+          if (!stage.service_group.empty()) service_pools.at(stage.service_group)->acquire();
+          stage.service_wait_seconds = sg4::Engine::get_clock() - stage.service_queued_at;
+          stage.started_at = sg4::Engine::get_clock();
+          if (stage.bytes > 0) {
+            auto* stage_model=&stage;
+            const auto channel=mailbox_name(run_id,"stage-"+std::to_string(stage_index),transfer_model->producer_id,transfer_model->consumer_id);
+            auto receiver=engine.add_actor("receive-"+channel,engine.host_by_name(stage.target),[stage_model,channel]() {
+              sg4::Mailbox::by_name(channel)->get<void>();
+              if (stage_model->after_seconds > 0)
+                sg4::this_actor::sleep_for(stage_model->after_seconds);
+            });
+            auto sender=engine.add_actor("send-"+channel,engine.host_by_name(stage.source),[stage_model,channel]() {
+              if (stage_model->before_seconds > 0)
+                sg4::this_actor::sleep_for(stage_model->before_seconds);
+              auto communication=sg4::Mailbox::by_name(channel)->put_init(&mailbox_token,stage_model->bytes);
+              communication->set_rate(stage_model->rate);
+              communication->wait();
+            });
+            sender->join();
+            receiver->join();
+          } else {
+            if (stage.before_seconds+stage.after_seconds > 0)
+              sg4::this_actor::sleep_for(stage.before_seconds+stage.after_seconds);
+          }
+          stage.finished_at = sg4::Engine::get_clock();
+          if (!stage.service_group.empty()) service_pools.at(stage.service_group)->release();
+        }
+        transfer_model->finished_at = sg4::Engine::get_clock();
+        // Notify on the destination host after all stages. This zero-byte
+        // control message does not send the payload a third time via relay.
+        auto notification = engine.add_actor("prepared-"+transfer_model->producer_id+"-"+transfer_model->consumer_id,
+            engine.host_by_name(transfer_model->target_resource_id),[transfer_model,run_id]() {
+          sg4::Mailbox::by_name(mailbox_name(run_id,"data",transfer_model->producer_id,transfer_model->consumer_id))->put(&mailbox_token,0);
+        });
+        notification->join();
+        return;
+      }
       sg4::Mailbox::by_name(mailbox_name(run_id, "data", transfer_model->producer_id,
                                          transfer_model->consumer_id))
           ->put(&mailbox_token, transfer_model->bytes);
@@ -233,27 +403,38 @@ static void run_simulation(sg4::Engine& engine, const json& input,
   for (auto& [id, task] : tasks) {
     auto* task_model = &task;
     auto* host = engine.host_by_name(task.resource_id);
-    sg4::Actor::create("task-" + id, host,
+    engine.add_actor("task-" + id, host,
                        [task_model, id, &incoming_dependencies, &outgoing_dependency_signals,
                         &incoming_lanes, &outgoing_lanes, &tasks, &active_by_resource,
-                        &interference, run_id]() {
+                        &interference, &data_edges, &remaining_producers, &inbound_flow_count,
+                        &preparation_gates, &service_pools, &outgoing_consumers, materialization_enabled, run_id]() {
       const auto& dependencies = incoming_dependencies[id];
       std::vector<void*> received_payloads(dependencies.size(), nullptr);
       std::vector<sg4::CommPtr> incoming_transfers;
       incoming_transfers.reserve(dependencies.size());
       for (size_t index = 0; index < dependencies.size(); ++index) {
         const auto& [producer_id, mailbox] = dependencies[index];
-        if (tasks.at(producer_id).resource_id != task_model->resource_id)
+        if (data_edges.count({producer_id,id}) > 0)
           incoming_transfers.push_back(sg4::Mailbox::by_name(mailbox)->get_async(&received_payloads[index]));
       }
       for (const auto& [producer_id, mailbox] : dependencies) {
-        if (tasks.at(producer_id).resource_id == task_model->resource_id)
+        if (data_edges.count({producer_id,id}) == 0)
           sg4::Mailbox::by_name(mailbox_name(run_id, "ready", producer_id, id))->get<void>();
       }
       for (const auto& transfer : incoming_transfers)
         transfer->wait();
       for (const auto& mailbox : incoming_lanes[id])
         sg4::Mailbox::by_name(mailbox)->get<void>();
+      task_model->preparation_started_at = sg4::Engine::get_clock();
+      if (task_model->preparation_seconds > 0 && !task_model->preparation_service_group.empty())
+        service_pools.at(task_model->preparation_service_group)->acquire();
+      if (task_model->preparation_seconds > 0)
+        sg4::this_actor::sleep_for(task_model->preparation_seconds);
+      if (task_model->preparation_seconds > 0 && !task_model->preparation_service_group.empty())
+        service_pools.at(task_model->preparation_service_group)->release();
+      task_model->preparation_finished_at = sg4::Engine::get_clock();
+      if (task_model->admission_seconds > 0)
+        sg4::this_actor::sleep_for(task_model->admission_seconds);
       task_model->started_at = sg4::Engine::get_clock();
       if (task_model->overhead_seconds > 0)
         sg4::this_actor::sleep_for(task_model->overhead_seconds);
@@ -334,7 +515,17 @@ static void run_simulation(sg4::Engine& engine, const json& input,
       }
       active_by_resource[task_model->resource_id].erase(id);
       task_model->compute_finished_at = sg4::Engine::get_clock();
+	  if (task_model->publication_seconds > 0)
+	    sg4::this_actor::sleep_for(task_model->publication_seconds);
       task_model->finished_at = sg4::Engine::get_clock();
+      if (materialization_enabled) {
+        for (const auto& consumer : outgoing_consumers[id]) {
+          if (--remaining_producers[consumer] == 0) {
+            for (int flow = 0; flow < inbound_flow_count[consumer]; ++flow)
+              preparation_gates.at(consumer)->release();
+          }
+        }
+      }
       for (const auto& mailbox : outgoing_dependency_signals[id])
 		sg4::Mailbox::by_name(mailbox)->put_init(&mailbox_token, 0)->detach();
       for (const auto& mailbox : outgoing_lanes[id])
@@ -436,10 +627,17 @@ static json build_result(const json& input, const std::map<std::string, TaskMode
         {"id", input.at("runId").get<std::string>() + ":" + id},
         {"executionRunId", input.at("runId")}, {"planAssignmentId", task.assignment_id},
         {"activityId", id}, {"plannedResourceId", task.resource_id}, {"allocatedResourceId", task.resource_id},
-        {"attempt", 1}, {"status", "completed"}, {"readyAt", ready}, {"dataReadyAt", ready},
+        {"attempt", 1}, {"status", "completed"}, {"readyAt", ready},
+        {"dataReadyAt",input.value("materializationModelVersion",0)>0 ? task.preparation_finished_at : ready},
         {"queuedAt", ready}, {"startedAt", start}, {"finishedAt", finish},
         {"runtimeSeconds", duration}, {"queueSeconds", queued}, {"transferSeconds", inbound_transfer[id]},
         {"interferenceSeconds", task.interference_seconds}, {"overheadSeconds", task.overhead_seconds}, {"cost", costs.at(id)},
+        {"metadata", {{"workspacePublicationSeconds",task.publication_seconds},{"workspacePreparationSeconds",task.preparation_seconds},
+                      {"externalAdmissionSeconds",task.admission_seconds},
+                      {"workspaceMaterializationModelSource",input.value("materializationModelSource",std::string{})},
+                      {"workspaceRouteReadyAt",ready},
+                      {"workspacePreparationStartedAt",task.preparation_started_at},
+                      {"workspacePreparationFinishedAt",task.preparation_finished_at}}},
     });
   }
   for (const auto& transfer : transfers) {
@@ -449,12 +647,20 @@ static json build_result(const json& input, const std::map<std::string, TaskMode
     const double cost = static_cast<double>(transfer.bytes) * transfer.price_per_byte;
     transfer_seconds += duration;
     total_cost += cost;
+    json phases=json::array();
+    for (const auto& stage : transfer.stages)
+      phases.push_back({{"name",stage.name},{"startedAt",stage.started_at},{"finishedAt",stage.finished_at},{"durationSeconds",stage.finished_at-stage.started_at},
+                       {"serviceGroupId",stage.service_group},{"serviceSlots",stage.service_slots},
+                       {"serviceQueuedAt",stage.service_queued_at},{"serviceWaitSeconds",stage.service_wait_seconds}});
     result["transfers"].push_back({
         {"id", input.at("runId").get<std::string>() + ":" + transfer.producer_id + ":" + transfer.consumer_id},
         {"executionRunId", input.at("runId")}, {"producerActivityId", transfer.producer_id},
         {"consumerActivityId", transfer.consumer_id}, {"sourceResourceId", transfer.source_resource_id},
         {"targetResourceId", transfer.target_resource_id}, {"bytes", transfer.bytes},
         {"startedAt", start}, {"finishedAt", finish}, {"durationSeconds", duration}, {"cost", cost},
+        {"strategy",transfer.strategy},{"logicalBytes",transfer.bytes},{"networkBytes",transfer.network_bytes},
+        {"route",{{"strategy",transfer.strategy},{"phases",phases},{"serverNetworkBytes",transfer.relay_network_bytes},
+                  {"reason",transfer.stages.empty() ? "legacy edge-volume model" : "frozen materialization phase model"}}},
     });
   }
   const double deadline = input.value("deadlineSeconds", 0.0);
@@ -474,8 +680,14 @@ static json build_result(const json& input, const std::map<std::string, TaskMode
 int main(int argc, char** argv)
 {
   try {
+    if (argc==2 && std::string(argv[1])=="--capabilities") {
+      std::cout << json({{"workspaceMaterializationModelVersion",1},{"workspaceMaterializationModelMaxVersion",2},{"bulkServicePoolModelVersion",1},{"runtimeAdmissionModelVersion",1}}).dump() << '\n';
+      return 0;
+    }
     const Arguments arguments = parse_arguments(argc, argv);
     const json input           = read_json(arguments.input);
+    if (input.value("materializationModelVersion",0) != 0 && input.value("materializationModelVersion",0) != 1 && input.value("materializationModelVersion",0) != 2)
+      throw std::runtime_error("unsupported materialization model version");
     sg4::Engine engine(&argc, argv);
     engine.load_platform(arguments.platform);
     const auto hosts = engine.get_all_hosts();

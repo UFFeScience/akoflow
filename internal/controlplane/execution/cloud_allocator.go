@@ -27,6 +27,42 @@ type CloudStopper interface {
 	Stop(context.Context, string, map[string]domain.RuntimeAllocation) error
 }
 
+type CloudRecoveryReadier interface {
+	ReadyRecoveryInstance(context.Context, string, string, string) error
+}
+
+// Recovery must not replace a stopped producer with another generation: its
+// completed outputs belong to this exact disk and instance.
+func (a QueuedCloudAllocator) ReadyRecoveryInstance(ctx context.Context, runID, activityID, instanceID string) error {
+	instance, err := a.Cloud.FindProvisionedInstance(ctx, instanceID)
+	if err != nil {
+		return err
+	}
+	if instance == nil || (instance.Status != "ready" && instance.Status != "stopped") {
+		return fmt.Errorf("recovery producer instance %q is unavailable", instanceID)
+	}
+	if instance.Status == "ready" {
+		return nil
+	}
+	target, err := a.Cloud.FindCapacityTarget(ctx, instance.CapacityTargetID)
+	if err != nil {
+		return err
+	}
+	if target == nil || target.EnvironmentID != instance.EnvironmentID {
+		return fmt.Errorf("recovery producer instance %q has invalid capacity target", instanceID)
+	}
+	for _, kind := range []string{"start", "validate"} {
+		op, err := a.findOrCreate(ctx, runID, activityID, *target, kind, instanceID)
+		if err != nil {
+			return err
+		}
+		if _, err := a.wait(ctx, op); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 // QueuedCloudAllocator is the execution-to-infrastructure boundary. It never
 // invokes Terraform itself: it persists an operation, publishes a durable
 // message, then waits for the infrastructure worker to settle it.
@@ -105,8 +141,14 @@ func (a QueuedCloudAllocator) wait(ctx context.Context, operation domain.CloudOp
 		return domain.CloudProvisionedInstance{}, err
 	}
 	instance, err := a.Cloud.FindProvisionedInstance(ctx, stored.InstanceID)
-	if err != nil || instance == nil || instance.Status != "ready" {
-		return domain.CloudProvisionedInstance{}, fmt.Errorf("cloud allocation %q completed without a ready instance: %w", stored.ID, err)
+	if err != nil {
+		return domain.CloudProvisionedInstance{}, fmt.Errorf("inspect cloud allocation %q: %w", stored.ID, err)
+	}
+	if instance == nil {
+		return domain.CloudProvisionedInstance{}, fmt.Errorf("cloud allocation %q completed but instance %q is missing", stored.ID, stored.InstanceID)
+	}
+	if instance.Status != "ready" {
+		return domain.CloudProvisionedInstance{}, fmt.Errorf("cloud allocation %q completed but instance %q has status %q", stored.ID, instance.ID, instance.Status)
 	}
 	return *instance, nil
 }
@@ -145,17 +187,46 @@ func (a QueuedCloudAllocator) findOrCreate(ctx context.Context, executionRunID, 
 	if err != nil {
 		return domain.CloudOperationRun{}, err
 	}
+	// Start/validation idempotency is scoped to a stop/start cycle, not the
+	// lifetime of the workflow. A completed start before a later stop is history.
+	cycle := cloudAllocationCycle(operations, kind, instanceID)
 	// Several ready activities can share one capacity target. Reuse its
 	// infrastructure operation so each activity does not request another VM.
 	for _, operation := range operations {
 		if operation.Kind == kind && operation.ExecutionRunID == executionRunID && operation.CapacityTargetID == target.ID && (instanceID == "" || operation.InstanceID == instanceID) {
+			if cycle.ID != "" && operation.CreatedAt.Before(cycle.CreatedAt) {
+				continue
+			}
+			if kind == "provision" && (operation.Status == "completed" || operation.Status == "failed" || operation.Status == "cancelled") {
+				instance, inspectErr := a.Cloud.FindProvisionedInstance(ctx, operation.InstanceID)
+				if inspectErr != nil {
+					return domain.CloudOperationRun{}, inspectErr
+				}
+				// An old provision command is not capacity after its VM has
+				// been destroyed. Preserve history and create a new generation.
+				if instance == nil || instance.Status == "destroyed" {
+					continue
+				}
+			}
 			return operation, nil
 		}
 	}
 	if kind == "provision" && instanceID == "" {
 		instanceID = "cloud-instance-" + uuid.NewString()
 	}
-	operation := domain.CloudOperationRun{ID: "cloud-run-" + uuid.NewString(), Kind: kind, Status: "queued", Phase: "queued", EnvironmentID: target.EnvironmentID, CapacityTargetID: target.ID, InstanceID: instanceID, ExecutionRunID: executionRunID, ActivityID: activityID, Request: domain.CloudProvisionRequest{CapacityTargetID: target.ID, InstanceID: instanceID}, CreatedAt: time.Now().UTC()}
+	operation := domain.CloudOperationRun{
+		ID:               "cloud-run-" + uuid.NewString(),
+		Kind:             kind,
+		Status:           "queued",
+		Phase:            "queued",
+		EnvironmentID:    target.EnvironmentID,
+		CapacityTargetID: target.ID,
+		InstanceID:       instanceID,
+		ExecutionRunID:   executionRunID,
+		ActivityID:       activityID,
+		Request:          domain.CloudProvisionRequest{CapacityTargetID: target.ID, InstanceID: instanceID},
+		CreatedAt:        time.Now().UTC(),
+	}
 	if err := a.Operations.CreateCloudOperation(ctx, operation); err != nil {
 		return domain.CloudOperationRun{}, err
 	}
@@ -164,16 +235,37 @@ func (a QueuedCloudAllocator) findOrCreate(ctx context.Context, executionRunID, 
 	if err == nil {
 		job.AggregateType, job.AggregateID = "cloud_operation", operation.ID
 		job.IdempotencyKey = "cloud-allocation:" + executionRunID + ":" + target.ID + ":" + instanceID + ":" + kind
+		if cycle.ID != "" {
+			job.IdempotencyKey += ":after-stop:" + cycle.ID
+		}
 		job.Priority, job.MaxAttempts = 100, 3
-		_, err = a.Queue.Publish(ctx, job)
+		var published domainqueue.Job
+		published, err = a.Queue.Publish(ctx, job)
+		if err == nil && published.AggregateID != "" && published.AggregateID != operation.ID {
+			return a.canonicalAllocation(ctx, operation, published.AggregateID)
+		}
 	}
 	if err != nil {
 		now := time.Now().UTC()
 		operation.Status, operation.Phase, operation.FailureReason, operation.FinishedAt = "failed", "failed", err.Error(), &now
-		_ = a.Operations.UpdateCloudOperation(ctx, operation)
+		_ = a.Operations.UpdateCloudOperation(context.WithoutCancel(ctx), operation)
 		return operation, err
 	}
 	return operation, nil
+}
+
+func cloudAllocationCycle(operations []domain.CloudOperationRun, kind, instanceID string) domain.CloudOperationRun {
+	var cycle domain.CloudOperationRun
+	if kind != "start" && kind != "validate" {
+		return cycle
+	}
+	for _, candidate := range operations {
+		if candidate.Kind == "stop" && candidate.Status == "completed" && candidate.InstanceID == instanceID &&
+			(cycle.ID == "" || candidate.CreatedAt.After(cycle.CreatedAt)) {
+			cycle = candidate
+		}
+	}
+	return cycle
 }
 
 func (a QueuedCloudAllocator) Release(ctx context.Context, executionRunID string, allocations map[string]domain.RuntimeAllocation, failed bool) error {
@@ -216,7 +308,18 @@ func (a QueuedCloudAllocator) Release(ctx context.Context, executionRunID string
 		if kind == "" {
 			continue
 		}
-		operation := domain.CloudOperationRun{ID: "cloud-run-" + uuid.NewString(), Kind: kind, Status: "queued", Phase: "queued", EnvironmentID: instance.EnvironmentID, CapacityTargetID: instance.CapacityTargetID, InstanceID: instance.ID, ExecutionRunID: executionRunID, ActivityID: activityID, CreatedAt: time.Now().UTC()}
+		operation := domain.CloudOperationRun{
+			ID:               "cloud-run-" + uuid.NewString(),
+			Kind:             kind,
+			Status:           "queued",
+			Phase:            "queued",
+			EnvironmentID:    instance.EnvironmentID,
+			CapacityTargetID: instance.CapacityTargetID,
+			InstanceID:       instance.ID,
+			ExecutionRunID:   executionRunID,
+			ActivityID:       activityID,
+			CreatedAt:        time.Now().UTC(),
+		}
 		if err := a.Operations.CreateCloudOperation(ctx, operation); err != nil {
 			return err
 		}
@@ -286,4 +389,22 @@ func (a QueuedCloudAllocator) Stop(ctx context.Context, executionRunID string, a
 		}
 	}
 	return nil
+}
+
+func (a QueuedCloudAllocator) canonicalAllocation(ctx context.Context, operation domain.CloudOperationRun, canonicalID string) (domain.CloudOperationRun, error) {
+	canonical, lookupErr := a.Operations.FindCloudOperation(ctx, canonicalID)
+	if lookupErr != nil || canonical == nil {
+		cause := fmt.Errorf("resolve canonical cloud operation %q: %v", canonicalID, lookupErr)
+		now := time.Now().UTC()
+		operation.Status, operation.Phase, operation.FailureReason, operation.FinishedAt = "failed", "failed", cause.Error(), &now
+		_ = a.Operations.UpdateCloudOperation(context.WithoutCancel(ctx), operation)
+		return operation, cause
+	} else {
+		now := time.Now().UTC()
+		operation.Status, operation.Phase, operation.FailureReason, operation.FinishedAt = "cancelled", "deduplicated", "Superseded by cloud operation "+canonical.ID, &now
+		if updateErr := a.Operations.UpdateCloudOperation(context.WithoutCancel(ctx), operation); updateErr != nil {
+			return operation, updateErr
+		}
+		return *canonical, nil
+	}
 }

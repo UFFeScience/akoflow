@@ -1,0 +1,182 @@
+{
+  "schemaVersion": 1,
+  "source": "montage-docker-image-real-20261010-v2:sha256:migration-fixture-digest",
+  "relayResourceId": "montage-relay-controller",
+  "resources": {
+    "montage-relay-controller": {
+      "class": "relay",
+      "domain": "relay"
+    },
+    "montage-gcp-e2-medium-1": {
+      "class": "e2-medium",
+      "domain": "cloud"
+    },
+    "montage-gcp-e2-medium-2": {
+      "class": "e2-medium",
+      "domain": "cloud"
+    },
+    "montage-gcp-fog-e2-micro-01": {
+      "class": "e2-micro",
+      "domain": "cloud"
+    },
+    "montage-gcp-fog-e2-micro-02": {
+      "class": "e2-micro",
+      "domain": "cloud"
+    },
+    "montage-gcp-fog-e2-micro-03": {
+      "class": "e2-micro",
+      "domain": "cloud"
+    },
+    "montage-gcp-fog-e2-micro-04": {
+      "class": "e2-micro",
+      "domain": "cloud"
+    },
+    "montage-gcp-fog-e2-micro-05": {
+      "class": "e2-micro",
+      "domain": "cloud"
+    },
+    "montage-gcp-fog-e2-micro-06": {
+      "class": "e2-micro",
+      "domain": "cloud"
+    },
+    "montage-gcp-fog-e2-micro-07": {
+      "class": "e2-micro",
+      "domain": "cloud"
+    },
+    "montage-gcp-fog-e2-micro-08": {
+      "class": "e2-micro",
+      "domain": "cloud"
+    },
+    "montage-gcp-fog-e2-micro-09": {
+      "class": "e2-micro",
+      "domain": "cloud"
+    },
+    "montage-gcp-fog-e2-micro-10": {
+      "class": "e2-micro",
+      "domain": "cloud"
+    },
+    "plafrim-execution-ssh-node-bora001": {
+      "class": "hpc",
+      "domain": "hpc"
+    },
+    "plafrim-execution-ssh-node-diablo03": {
+      "class": "hpc",
+      "domain": "hpc"
+    }
+  },
+  "profiles": [
+    {
+      "strategy": "direct-runtime",
+      "sourceClass": "e2-medium",
+      "targetClass": "e2-micro",
+      "source": "montage-docker-image-real-20261010-v2:sha256:migration-fixture-digest",
+      "samples": 20,
+      "archiveToWorkspaceRatio": 0.7256941966584066,
+      "uploadArchiveBytesPerSecond": 23050729.775595132,
+      "probeSeconds": 2.4162210225000003,
+      "snapshotSecondsPerByte": 2.6154549488643507e-08,
+      "receiverSecondsPerByte": 9.357275158963007e-08
+    },
+    {
+      "strategy": "direct-runtime",
+      "sourceClass": "e2-micro",
+      "targetClass": "e2-micro",
+      "source": "montage-docker-image-real-20261010-v2:sha256:migration-fixture-digest",
+      "samples": 45,
+      "archiveToWorkspaceRatio": 0.578327721631775,
+      "uploadArchiveBytesPerSecond": 10611098.204649296,
+      "probeSeconds": 2.444578959,
+      "snapshotSecondsPerByte": 2.0032458250178902e-07,
+      "receiverSecondsPerByte": 9.084165001243439e-08
+    },
+    {
+      "strategy": "gateway",
+      "sourceClass": "hpc",
+      "targetClass": "e2-micro",
+      "source": "montage-docker-image-real-20261010-v2:sha256:migration-fixture-digest",
+      "samples": 11,
+      "archiveToWorkspaceRatio": 0.5736604862310096,
+      "uploadArchiveBytesPerSecond": 6771283.566111343,
+      "ingressArchiveBytesPerSecond": 4865384.828445642,
+      "ingressIncludesSourcePreparation": true,
+      "validationSecondsPerByte": 5.315855248831829e-09,
+      "receiverSecondsPerByte": 1.1075930311647432e-07
+    },
+    {
+      "strategy": "direct-runtime",
+      "sourceClass": "e2-micro",
+      "targetClass": "e2-medium",
+      "source": "montage-docker-image-real-20261010-v2:sha256:migration-fixture-digest",
+      "samples": 7,
+      "archiveToWorkspaceRatio": 0.5616915015784198,
+      "uploadArchiveBytesPerSecond": 12913048.979721189,
+      "probeSeconds": 3.238551043,
+      "snapshotSecondsPerByte": 2.1656552738215494e-07,
+      "receiverSecondsPerByte": 1.0452033444602787e-08
+    },
+    {
+      "strategy": "gateway",
+      "sourceClass": "e2-micro",
+      "targetClass": "hpc",
+      "source": "montage-docker-image-real-20261010-v2:sha256:migration-fixture-digest",
+      "samples": 10,
+      "archiveToWorkspaceRatio": 0.6522022259028002,
+      "uploadArchiveBytesPerSecond": 2091245.5079801935,
+      "ingressArchiveBytesPerSecond": 3345916.154261665,
+      "ingressIncludesSourcePreparation": true,
+      "validationSecondsPerByte": 5.530047221003427e-09,
+      "receiverSecondsPerByte": 2.158963850339391e-08
+    },
+    {
+      "strategy": "gateway",
+      "sourceClass": "e2-medium",
+      "targetClass": "hpc",
+      "source": "montage-docker-image-real-20261010-v2:sha256:migration-fixture-digest",
+      "samples": 1,
+      "archiveToWorkspaceRatio": 0.5811239069429878,
+      "uploadArchiveBytesPerSecond": 3368453.2311919224,
+      "ingressArchiveBytesPerSecond": 12094092.529896256,
+      "ingressIncludesSourcePreparation": true,
+      "validationSecondsPerByte": 5.291803775302269e-09,
+      "receiverSecondsPerByte": 1.631557426433729e-08
+    },
+    {
+      "strategy": "direct-runtime",
+      "sourceClass": "e2-medium",
+      "targetClass": "e2-medium",
+      "source": "montage-docker-image-real-20261010-v2:sha256:migration-fixture-digest",
+      "samples": 1,
+      "archiveToWorkspaceRatio": 0.7333948473912417,
+      "uploadArchiveBytesPerSecond": 24657022.312403273,
+      "probeSeconds": 4.352586419,
+      "snapshotSecondsPerByte": 7.94229994679085e-08,
+      "receiverSecondsPerByte": 3.0313912528566057e-08
+    }
+  ],
+  "mergeProfiles": [
+    {
+      "targetClass": "e2-micro",
+      "source": "montage-docker-image-real-20261010-v2:sha256:migration-fixture-digest",
+      "samples": 34,
+      "checkSecondsPerInputByte": 6.35527429607893e-09,
+      "copySecondsPerUniqueByte": 1.699528122472209e-08,
+      "verifySecondsPerUniqueByte": 6.138832298139974e-09
+    },
+    {
+      "targetClass": "e2-medium",
+      "source": "montage-docker-image-real-20261010-v2:sha256:migration-fixture-digest",
+      "samples": 6,
+      "checkSecondsPerInputByte": 1.912526350228284e-09,
+      "copySecondsPerUniqueByte": 4.454356662161575e-09,
+      "verifySecondsPerUniqueByte": 8.04424495753747e-10
+    },
+    {
+      "targetClass": "hpc",
+      "source": "montage-docker-image-real-20261010-v2:sha256:migration-fixture-digest",
+      "samples": 6,
+      "checkSecondsPerInputByte": 9.649068875587286e-09,
+      "copySecondsPerUniqueByte": 7.94870229763006e-09,
+      "verifySecondsPerUniqueByte": 1.1464509411470224e-08
+    }
+  ]
+}

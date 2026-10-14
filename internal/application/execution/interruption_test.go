@@ -33,11 +33,31 @@ func (f *interruptionStoreFake) SaveTask(_ context.Context, task domain.TaskExec
 type interruptionStopperFake struct {
 	called bool
 	err    error
+	ids    []string
 }
 
-func (f *interruptionStopperFake) Stop(context.Context, string, domain.ExecutionMode) error {
+func (f *interruptionStopperFake) Stop(_ context.Context, id string, _ domain.ExecutionMode) error {
 	f.called = true
+	f.ids = append(f.ids, id)
 	return f.err
+}
+
+func TestInterruptStopsEveryActiveAttemptIgnoringCompletedHistory(t *testing.T) {
+	store := &interruptionStoreFake{
+		run:  &domain.ExecutionRun{ID: "run", Status: domain.ExecutionRunFailed, Mode: domain.ExecutionModeReal},
+		task: domain.TaskExecution{ActivityID: "activity", Status: domain.TaskCancelled},
+		handles: []domain.ActivityHandle{
+			{ID: "old", ActivityID: "activity", Status: domain.HandleCompleted},
+			{ID: "attempt-2", ActivityID: "activity", Status: domain.HandleRunning},
+			{ID: "attempt-3", ActivityID: "activity", Status: domain.HandleStarting},
+			{ID: "other", ActivityID: "other", Status: domain.HandleRunning},
+		},
+	}
+	stopper := &interruptionStopperFake{}
+	_, err := (Interrupter{Store: store, Stopper: stopper}).Interrupt(context.Background(), "run", "activity")
+	if err != nil || len(stopper.ids) != 2 || stopper.ids[0] != "attempt-2" || stopper.ids[1] != "attempt-3" {
+		t.Fatalf("stopped=%v err=%v", stopper.ids, err)
+	}
 }
 
 func TestInterruptStopsRuntimeBeforeReleasingTask(t *testing.T) {
@@ -63,6 +83,19 @@ func TestInterruptKeepsTaskActiveWhenRuntimeStopFails(t *testing.T) {
 	_, err := (Interrupter{Store: store, Stopper: stopper}).Interrupt(context.Background(), "run", "activity")
 	if err == nil || !strings.Contains(err.Error(), "SSH unavailable") || store.saved != nil {
 		t.Fatalf("unexpected interruption result: err=%v saved=%+v", err, store.saved)
+	}
+}
+
+func TestInterruptStopsHandleEvenWhenTaskWasAlreadyCancelled(t *testing.T) {
+	store := &interruptionStoreFake{
+		run:     &domain.ExecutionRun{ID: "run", Status: domain.ExecutionRunFailed, Mode: domain.ExecutionModeReal},
+		task:    domain.TaskExecution{ID: "task", ActivityID: "activity", Status: domain.TaskCancelled},
+		handles: []domain.ActivityHandle{{ID: "run:activity", ActivityID: "activity", Status: domain.HandleStarting}},
+	}
+	stopper := &interruptionStopperFake{}
+	_, err := (Interrupter{Store: store, Stopper: stopper}).Interrupt(context.Background(), "run", "activity")
+	if err != nil || !stopper.called {
+		t.Fatalf("stop called=%v err=%v", stopper.called, err)
 	}
 }
 

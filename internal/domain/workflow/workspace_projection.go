@@ -1,0 +1,280 @@
+package workflow
+
+import (
+	"encoding/json"
+	"fmt"
+	"math"
+	"path"
+	"strings"
+)
+
+// WorkspaceProjection describes expected files, not observed future execution.
+// Inputs are staged before execution; Outputs replace paths after execution.
+// ContentID can be a calibrated symbolic identity when an output hash is unknown.
+type WorkspaceProjection struct {
+	Contract     string          `json:"contract"`
+	Source       string          `json:"source"`
+	Inputs       []ProjectedFile `json:"inputs,omitempty"`
+	Outputs      []ProjectedFile `json:"outputs,omitempty"`
+	RemovedPaths []string        `json:"removedPaths,omitempty"`
+	// A measured pre-prune snapshot can be larger than the exported manifest.
+	TerminalObservationBytes *int64 `json:"terminalObservationBytes,omitempty"`
+	PublicationCleanupBytes  *int64 `json:"publicationCleanupBytes,omitempty"`
+	// Runtime packaging can put additional files into a cloud workspace while
+	// an HPC image reads those files outside the exported workspace. Inputs is
+	// the conservative search default; a complete assignment selects a variant.
+	InputsByResourceType map[string][]ProjectedFile `json:"inputsByResourceType,omitempty"`
+}
+
+type ProjectedFile struct {
+	Path      string `json:"path"`
+	SizeBytes int64  `json:"sizeBytes"`
+	ContentID string `json:"contentId"`
+}
+
+type WorkspaceProjectionVolumes struct {
+	PreExecutionBytes        int64 `json:"preExecutionBytes"`
+	CreatedOutputBytes       int64 `json:"createdOutputBytes"`
+	InputTotalBytes          int64 `json:"inputTotalBytes"`
+	InputUniqueBytes         int64 `json:"inputUniqueBytes"`
+	InputFiles               int   `json:"inputFiles"`
+	OutputBytes              int64 `json:"outputBytes"`
+	OutputFiles              int   `json:"outputFiles"`
+	TerminalObservationBytes int64 `json:"terminalObservationBytes"`
+	PublicationCleanupBytes  int64 `json:"publicationCleanupBytes"`
+}
+
+// ProjectWorkspaceDependencies preserves legacy edge semantics unless an
+// explicit whole-workspace model is supplied. Partial models fail closed: a
+// missing producer manifest must not silently turn into zero transfer bytes.
+// This pure transformation is shared by planning and both simulation adapters.
+func ProjectWorkspaceDependencies(version WorkflowVersion) (WorkflowVersion, error) {
+	return ProjectWorkspaceDependenciesForResourceTypes(version, nil)
+}
+
+func ProjectWorkspaceDependenciesForResourceTypes(version WorkflowVersion, resourceTypes map[string]string) (WorkflowVersion, error) {
+	enabled := false
+	for _, activity := range version.Activities {
+		if activity.Metadata["workspaceProjection"] != nil {
+			enabled = true
+		}
+	}
+	if !enabled {
+		return version, nil
+	}
+	models, err := loadWorkspaceProjectionModels(version, resourceTypes)
+	if err != nil {
+		return version, err
+	}
+	preds := map[string][]string{}
+	for _, edge := range version.Dependencies {
+		if _, ok := models[edge.ActivityID]; !ok {
+			return version, fmt.Errorf("unknown consumer %q", edge.ActivityID)
+		}
+		if _, ok := models[edge.DependsOnActivityID]; !ok {
+			return version, fmt.Errorf("unknown producer %q", edge.DependsOnActivityID)
+		}
+		preds[edge.ActivityID] = append(preds[edge.ActivityID], edge.DependsOnActivityID)
+	}
+	manifests := map[string]map[string]ProjectedFile{}
+	volumes := map[string]WorkspaceProjectionVolumes{}
+	for len(manifests) < len(models) {
+		progress := false
+		for _, activity := range version.Activities {
+			if _, done := manifests[activity.ID]; done {
+				continue
+			}
+			ready := true
+			for _, producer := range preds[activity.ID] {
+				if _, done := manifests[producer]; !done {
+					ready = false
+				}
+			}
+			if !ready {
+				continue
+			}
+			manifest, volume, err := projectActivityWorkspace(activity.ID, models[activity.ID], preds[activity.ID], manifests)
+			if err != nil {
+				return version, err
+			}
+			manifests[activity.ID], volumes[activity.ID] = manifest, volume
+			progress = true
+		}
+		if !progress {
+			return version, fmt.Errorf("workspace projection dependency cycle")
+		}
+	}
+	// Each dependency transfers the producer's complete workspace, even when
+	// siblings inherit identical paths. Merge deduplication is a separate cost;
+	// this must not assume a destination cache or skip a route optimistically.
+	version.DataDependencies = make([]ActivityDataDependency, 0, len(version.Dependencies))
+	for _, edge := range version.Dependencies {
+		var bytes int64
+		for _, file := range manifests[edge.DependsOnActivityID] {
+			if file.SizeBytes > math.MaxInt64-bytes {
+				return version, fmt.Errorf("workspace size overflow for %q", edge.DependsOnActivityID)
+			}
+			bytes += file.SizeBytes
+		}
+		version.DataDependencies = append(version.DataDependencies, ActivityDataDependency{ProducerActivityID: edge.DependsOnActivityID, ConsumerActivityID: edge.ActivityID, LogicalName: "whole-workspace-v1", SizeBytes: bytes})
+	}
+	version.Activities = append([]Activity(nil), version.Activities...)
+	for index := range version.Activities {
+		metadata := map[string]any{}
+		for key, value := range version.Activities[index].Metadata {
+			metadata[key] = value
+		}
+		metadata["workspaceProjectionVolumes"] = volumes[version.Activities[index].ID]
+		version.Activities[index].Metadata = metadata
+	}
+	return version, nil
+}
+
+func loadWorkspaceProjectionModels(version WorkflowVersion, resourceTypes map[string]string) (map[string]WorkspaceProjection, error) {
+	models := map[string]WorkspaceProjection{}
+	for _, activity := range version.Activities {
+		raw := activity.Metadata["workspaceProjection"]
+		if raw == nil {
+			return nil, fmt.Errorf("workspace projection missing for activity %q", activity.ID)
+		}
+		encoded, err := json.Marshal(raw)
+		if err != nil {
+			return nil, err
+		}
+		var model WorkspaceProjection
+		if err = json.Unmarshal(encoded, &model); err != nil {
+			return nil, fmt.Errorf("workspace projection %q: %w", activity.ID, err)
+		}
+		if model.Contract != "whole-workspace-v1" || strings.TrimSpace(model.Source) == "" {
+			return nil, fmt.Errorf("workspace projection %q requires whole-workspace-v1 and provenance", activity.ID)
+		}
+		if model.TerminalObservationBytes != nil && *model.TerminalObservationBytes < 0 {
+			return nil, fmt.Errorf("negative terminal observation bytes for %q", activity.ID)
+		}
+		if model.PublicationCleanupBytes != nil && *model.PublicationCleanupBytes < 0 {
+			return nil, fmt.Errorf("negative publication cleanup bytes for %q", activity.ID)
+		}
+		if resourceTypes != nil && len(model.InputsByResourceType) > 0 {
+			resourceType, exists := resourceTypes[activity.ID]
+			if !exists {
+				return nil, fmt.Errorf("workspace projection resource type missing for %q", activity.ID)
+			}
+			inputs, exists := model.InputsByResourceType[resourceType]
+			if !exists {
+				return nil, fmt.Errorf("workspace projection has no %q runtime inputs for %q", resourceType, activity.ID)
+			}
+			model.Inputs = inputs
+		}
+		if _, exists := models[activity.ID]; exists {
+			return nil, fmt.Errorf("duplicate activity %q", activity.ID)
+		}
+		models[activity.ID] = model
+	}
+	return models, nil
+}
+
+func mergeProjectedFile(manifest map[string]ProjectedFile, activityID string, file ProjectedFile, replace bool) error {
+	if file.Path == "" || strings.ContainsRune(
+		file.Path,
+		'\x00',
+	) || path.IsAbs(
+		file.Path,
+	) || path.Clean(
+		file.Path,
+	) != file.Path || file.Path == "." || file.Path == ".." || strings.HasPrefix(
+		file.Path,
+		"../",
+	) || strings.Contains(
+		file.Path,
+		"\\",
+	) || file.SizeBytes < 0 || file.ContentID == "" {
+		return fmt.Errorf("invalid projected file %q in %q", file.Path, activityID)
+	}
+	if previous, exists := manifest[file.Path]; exists && !replace && (previous.ContentID != file.ContentID || previous.SizeBytes != file.SizeBytes) {
+		return fmt.Errorf("projected workspace conflict in %q at %q", activityID, file.Path)
+	}
+	manifest[file.Path] = file
+	return nil
+}
+
+func finalizeProjectedWorkspace(activityID string, model WorkspaceProjection, manifest map[string]ProjectedFile, volume *WorkspaceProjectionVolumes) error {
+	merge := func(file ProjectedFile, replace bool) error {
+		return mergeProjectedFile(manifest, activityID, file, replace)
+	}
+	for _, removed := range model.RemovedPaths {
+		if _, exists := manifest[removed]; !exists {
+			return fmt.Errorf("removed path %q absent in %q", removed, activityID)
+		}
+		delete(manifest, removed)
+	}
+	outputPaths := map[string]bool{}
+	for _, file := range model.Outputs {
+		if file.SizeBytes > math.MaxInt64-volume.CreatedOutputBytes || file.SizeBytes < 0 {
+			return fmt.Errorf("workspace created output size overflow for %q", activityID)
+		}
+		volume.CreatedOutputBytes += file.SizeBytes
+		if outputPaths[file.Path] {
+			return fmt.Errorf("duplicate projected output %q in %q", file.Path, activityID)
+		}
+		outputPaths[file.Path] = true
+		if err := merge(file, true); err != nil {
+			return err
+		}
+	}
+	for _, file := range manifest {
+		if file.SizeBytes > math.MaxInt64-volume.OutputBytes {
+			return fmt.Errorf("workspace output size overflow for %q", activityID)
+		}
+		volume.OutputBytes += file.SizeBytes
+	}
+	volume.OutputFiles = len(manifest)
+	volume.TerminalObservationBytes = volume.OutputBytes
+	if model.PublicationCleanupBytes != nil {
+		volume.PublicationCleanupBytes = *model.PublicationCleanupBytes
+	}
+	if model.TerminalObservationBytes != nil {
+		volume.TerminalObservationBytes = *model.TerminalObservationBytes
+	}
+	return nil
+}
+
+func projectActivityWorkspace(activityID string, model WorkspaceProjection, parents []string, manifests map[string]map[string]ProjectedFile) (map[string]ProjectedFile, WorkspaceProjectionVolumes, error) {
+	manifest := map[string]ProjectedFile{}
+	volume := WorkspaceProjectionVolumes{}
+	merge := func(file ProjectedFile, replace bool) error {
+		return mergeProjectedFile(manifest, activityID, file, replace)
+	}
+	for _, producer := range parents {
+		for _, file := range manifests[producer] {
+			if file.SizeBytes > math.MaxInt64-volume.InputTotalBytes {
+				return nil, WorkspaceProjectionVolumes{}, fmt.Errorf("workspace input size overflow for %q", activityID)
+			}
+			volume.InputTotalBytes += file.SizeBytes
+			if err := merge(file, false); err != nil {
+				return nil, WorkspaceProjectionVolumes{}, err
+			}
+		}
+	}
+	for _, file := range manifest {
+		if file.SizeBytes > math.MaxInt64-volume.InputUniqueBytes {
+			return nil, WorkspaceProjectionVolumes{}, fmt.Errorf("workspace input union overflow for %q", activityID)
+		}
+		volume.InputUniqueBytes += file.SizeBytes
+	}
+	volume.InputFiles = len(manifest)
+	for _, file := range model.Inputs {
+		if err := merge(file, false); err != nil {
+			return nil, WorkspaceProjectionVolumes{}, err
+		}
+	}
+	for _, file := range manifest {
+		if file.SizeBytes > math.MaxInt64-volume.PreExecutionBytes {
+			return nil, WorkspaceProjectionVolumes{}, fmt.Errorf("workspace preparation size overflow for %q", activityID)
+		}
+		volume.PreExecutionBytes += file.SizeBytes
+	}
+	if err := finalizeProjectedWorkspace(activityID, model, manifest, &volume); err != nil {
+		return nil, WorkspaceProjectionVolumes{}, err
+	}
+	return manifest, volume, nil
+}

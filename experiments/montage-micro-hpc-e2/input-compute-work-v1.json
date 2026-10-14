@@ -1,0 +1,142 @@
+{
+  "schemaVersion": 1,
+  "sourceImageSHA256": "8f3fc1a46239f5f83a03a0e2e99c06647a85c6e896c944884d27086c518e071d",
+  "basis": "immutable-input-FITS-header",
+  "inputs": [
+    {
+      "path": "poss2ukstu_blue_001_001.fits",
+      "contentId": "sha256:d2b2629d7de19ab483807a7231e75023bbdf4a47905115026fb5898407ddbc14",
+      "compressedBytes": 9655401,
+      "band": "blue",
+      "unit": "input-megapixels",
+      "computeWorkUnits": 6.418616,
+      "naxis1": 2531,
+      "naxis2": 2536,
+      "bitpix": 16
+    },
+    {
+      "path": "poss2ukstu_blue_001_002.fits",
+      "contentId": "sha256:500ec211d0e638e50dc911a1dd81b075c11223d3067410086210948b48481883",
+      "compressedBytes": 8587351,
+      "band": "blue",
+      "unit": "input-megapixels",
+      "computeWorkUnits": 6.418616,
+      "naxis1": 2531,
+      "naxis2": 2536,
+      "bitpix": 16
+    },
+    {
+      "path": "poss2ukstu_blue_002_001.fits",
+      "contentId": "sha256:083ce09fec7f05cafa9d8809c529011c8f9e11151c21c4b7547accd6def7dda0",
+      "compressedBytes": 8814262,
+      "band": "blue",
+      "unit": "input-megapixels",
+      "computeWorkUnits": 6.418616,
+      "naxis1": 2531,
+      "naxis2": 2536,
+      "bitpix": 16
+    },
+    {
+      "path": "poss2ukstu_blue_002_002.fits",
+      "contentId": "sha256:34ebeb66332efc704e88f07215ada93a79c5150b841c968c2a15953bc96a9247",
+      "compressedBytes": 8238776,
+      "band": "blue",
+      "unit": "input-megapixels",
+      "computeWorkUnits": 6.418616,
+      "naxis1": 2531,
+      "naxis2": 2536,
+      "bitpix": 16
+    },
+    {
+      "path": "poss2ukstu_ir_001_001.fits",
+      "contentId": "sha256:93401b425358b80a604d82648f8e0f396acae2cd67fa3f70956b07b2a87c5d21",
+      "compressedBytes": 7327980,
+      "band": "ir",
+      "unit": "input-megapixels",
+      "computeWorkUnits": 6.418616,
+      "naxis1": 2531,
+      "naxis2": 2536,
+      "bitpix": 16
+    },
+    {
+      "path": "poss2ukstu_ir_001_002.fits",
+      "contentId": "sha256:b65cddc600c6f13a2538127f945a18b3baa4b16904b9e74563c69ebd2558226f",
+      "compressedBytes": 7167256,
+      "band": "ir",
+      "unit": "input-megapixels",
+      "computeWorkUnits": 6.418616,
+      "naxis1": 2531,
+      "naxis2": 2536,
+      "bitpix": 16
+    },
+    {
+      "path": "poss2ukstu_ir_002_001.fits",
+      "contentId": "sha256:ef004bd622f6bd6594b914faa538aff8104f33234c0494b60daf65efa887fb97",
+      "compressedBytes": 7217490,
+      "band": "ir",
+      "unit": "input-megapixels",
+      "computeWorkUnits": 6.418616,
+      "naxis1": 2531,
+      "naxis2": 2536,
+      "bitpix": 16
+    },
+    {
+      "path": "poss2ukstu_ir_002_002.fits",
+      "contentId": "sha256:b0382772a213784cac08b5d0a2dd2f4017c04de6327c592e8ef7e16631b61c7f",
+      "compressedBytes": 7120717,
+      "band": "ir",
+      "unit": "input-megapixels",
+      "computeWorkUnits": 6.418616,
+      "naxis1": 2531,
+      "naxis2": 2536,
+      "bitpix": 16
+    },
+    {
+      "path": "poss2ukstu_red_001_001.fits",
+      "contentId": "sha256:7f0bc89a03f6657cd7e352c2eee72465910b79bc7a22b0efffa60f23a873611d",
+      "compressedBytes": 6900714,
+      "band": "red",
+      "unit": "input-megapixels",
+      "computeWorkUnits": 6.418616,
+      "naxis1": 2531,
+      "naxis2": 2536,
+      "bitpix": 16
+    },
+    {
+      "path": "poss2ukstu_red_001_002.fits",
+      "contentId": "sha256:ba2004aeeec3dbe5848f92c1b822c5d8346ac3e734f269174f44a96742fb3944",
+      "compressedBytes": 6494409,
+      "band": "red",
+      "unit": "input-megapixels",
+      "computeWorkUnits": 6.418616,
+      "naxis1": 2531,
+      "naxis2": 2536,
+      "bitpix": 16
+    },
+    {
+      "path": "poss2ukstu_red_002_001.fits",
+      "contentId": "sha256:e8d0aa4a8b4659b43a63df37a189872e39e2b3b2179ee0ecdabf43c0c7683fb1",
+      "compressedBytes": 6570387,
+      "band": "red",
+      "unit": "input-megapixels",
+      "computeWorkUnits": 6.418616,
+      "naxis1": 2531,
+      "naxis2": 2536,
+      "bitpix": 16
+    },
+    {
+      "path": "poss2ukstu_red_002_002.fits",
+      "contentId": "sha256:54546b64cceb235d5691077a279400d46336f06c698c345215c848ae0b98778e",
+      "compressedBytes": 6376872,
+      "band": "red",
+      "unit": "input-megapixels",
+      "computeWorkUnits": 6.418616,
+      "naxis1": 2531,
+      "naxis2": 2536,
+      "bitpix": 16
+    }
+  ],
+  "limitations": [
+    "Pixel count is input work, not measured CPU service demand; band and hardware may need separate calibrated coefficients."
+  ]
+}

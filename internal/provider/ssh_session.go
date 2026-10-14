@@ -14,6 +14,7 @@ import (
 
 const defaultSSHControlPersistSeconds = 180
 const SSHChannelLimit = 4
+const SSHBulkChannelLimit = SSHChannelLimit - 1
 
 // SSHSessionKey contains every setting that changes the effective SSH
 // transport. Its digest is safe to use as a Unix socket name and does not
@@ -32,14 +33,16 @@ type SSHSessionKey struct {
 }
 
 type sshSessionManager struct {
-	mu       sync.Mutex
-	locks    map[string]*sync.Mutex
-	channels map[string]chan struct{}
+	mu           sync.Mutex
+	locks        map[string]*sync.Mutex
+	channels     map[string]chan struct{}
+	bulkChannels map[string]chan struct{}
 }
 
 var sharedSSHSessions = sshSessionManager{
-	locks:    make(map[string]*sync.Mutex),
-	channels: make(map[string]chan struct{}),
+	locks:        make(map[string]*sync.Mutex),
+	channels:     make(map[string]chan struct{}),
+	bulkChannels: make(map[string]chan struct{}),
 }
 
 // AcquireSSHChannel reserves one remote command session on a multiplexed SSH
@@ -58,6 +61,34 @@ func AcquireSSHChannel(ctx context.Context, controlPath string) (func(), error) 
 	case <-ctx.Done():
 		return nil, ctx.Err()
 	}
+}
+
+// AcquireSSHBulkChannel keeps one of the existing session slots available for
+// runtime inspection and control commands. It never increases server load or
+// opens a separate transport to evade the shared session limit.
+func AcquireSSHBulkChannel(ctx context.Context, controlPath string) (func(), error) {
+	if strings.TrimSpace(controlPath) == "" {
+		return func() {}, nil
+	}
+	sharedSSHSessions.mu.Lock()
+	queue := sharedSSHSessions.bulkChannels[controlPath]
+	if queue == nil {
+		queue = make(chan struct{}, SSHBulkChannelLimit)
+		sharedSSHSessions.bulkChannels[controlPath] = queue
+	}
+	sharedSSHSessions.mu.Unlock()
+	select {
+	case queue <- struct{}{}:
+	case <-ctx.Done():
+		return nil, ctx.Err()
+	}
+	release, err := AcquireSSHChannel(ctx, controlPath)
+	if err != nil {
+		<-queue
+		return nil, err
+	}
+	var once sync.Once
+	return func() { once.Do(func() { release(); <-queue }) }, nil
 }
 
 func (m *sshSessionManager) channelQueue(path string) chan struct{} {

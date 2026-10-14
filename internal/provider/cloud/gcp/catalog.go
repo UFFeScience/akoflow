@@ -27,6 +27,14 @@ const (
 	billingEndpoint = "https://cloudbilling.googleapis.com/v1/services/6F81-5844-456A/skus"
 )
 
+type APIError struct {
+	StatusCode int
+	Status     string
+	Body       string
+}
+
+func (e *APIError) Error() string { return fmt.Sprintf("GCP API returned %s: %s", e.Status, e.Body) }
+
 type Catalog struct {
 	client          *http.Client
 	computeEndpoint string
@@ -202,7 +210,18 @@ func applyPrices(skus []billingSKU, result *domain.CloudCatalog) {
 		if price == nil || (price.core == 0 && price.memory == 0) {
 			continue
 		}
-		machine.PricePerHour = price.core*float64(machine.VCPU) + price.memory*(float64(machine.MemoryMiB)/1024)
+		billableCPU := float64(machine.VCPU)
+		// Shared-core E2 exposes two guest CPUs but bills its fractional
+		// sustained allocation, not both guest CPUs as dedicated cores.
+		switch machine.ProviderTypeID {
+		case "e2-micro":
+			billableCPU = 0.25
+		case "e2-small":
+			billableCPU = 0.5
+		case "e2-medium":
+			billableCPU = 1
+		}
+		machine.PricePerHour = price.core*billableCPU + price.memory*(float64(machine.MemoryMiB)/1024)
 		machine.PricePerMinute = machine.PricePerHour / 60
 		machine.PriceCurrency = "USD"
 		machine.PriceSource = "gcp-public-catalog"
@@ -248,13 +267,23 @@ func skuUnitPrice(sku billingSKU) (float64, string) {
 	if len(rates) == 0 {
 		return 0, ""
 	}
-	price := rates[0].UnitPrice
-	units, _ := strconv.ParseFloat(price.Units, 64)
-	return units + float64(price.Nanos)/1e9, price.CurrencyCode
+	// Standard PD can start with a free-tier allowance. A zero first tier
+	// is not an unlimited free disk: estimate the first paid marginal tier.
+	for _, rate := range rates {
+		price := rate.UnitPrice
+		units, _ := strconv.ParseFloat(price.Units, 64)
+		value := units + float64(price.Nanos)/1e9
+		if value > 0 {
+			return value, price.CurrencyCode
+		}
+	}
+	return 0, rates[0].UnitPrice.CurrencyCode
 }
 
 func diskSKUDescription(diskType, description string) bool {
-	if !strings.Contains(description, "capacity") || strings.Contains(description, "snapshot") {
+	// Capacity targets use zonal PD boot disks. Regional replicas, Extreme
+	// PD and Hyperdisk have distinct rates despite matching broad keywords.
+	if !strings.Contains(description, "capacity") || strings.Contains(description, "snapshot") || strings.Contains(description, "regional") || strings.Contains(description, "extreme") || strings.Contains(description, "hyperdisk") {
 		return false
 	}
 	switch diskType {
@@ -336,7 +365,7 @@ func (c *Catalog) get(ctx context.Context, token, endpoint string, output any) e
 	defer response.Body.Close()
 	data, _ := io.ReadAll(io.LimitReader(response.Body, 64<<20))
 	if response.StatusCode/100 != 2 {
-		return fmt.Errorf("GCP API returned %s: %s", response.Status, strings.TrimSpace(string(data)))
+		return &APIError{StatusCode: response.StatusCode, Status: response.Status, Body: strings.TrimSpace(string(data))}
 	}
 	if err := json.Unmarshal(data, output); err != nil {
 		return fmt.Errorf("decode GCP response: %w", err)

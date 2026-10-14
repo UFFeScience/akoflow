@@ -1,0 +1,22 @@
+{
+ "issue":"AKO-168",
+ "newRealSubmitted":false,
+ "daemonRestarted":false,
+ "schemaContract":{"legacyMaterializationVersion":1,"calibratedStageVersion":2,"requiredAdmissionVersion":1},
+ "productionExecutorVerification":{
+  "hpc":{"activities":58,"plannedSeconds":1164.2299096115516,"verifiedNativeSeconds":1164.2299096115516,"capabilityAndTraceAcknowledgementPassed":true},
+  "mediumPrepared":{"activities":58,"vmCount":1,"executionLanes":1,"plannedSeconds":10869.913425723089,"verifiedNativeSeconds":10869.913425723089,"historicalComputeOnlyCostUSD":0.10116782415760676,"realAuthorized":false,"realSubmitted":false,"remaining":"User approval, current pricing, lifecycle/disk cost and physical preflight required."}
+ },
+ "legacyRunnerProbe":{"workspaceMaterializationModelVersion":1,"bulkServicePoolModelVersion":1,"runtimeAdmissionModelVersion":null},
+ "legacyNativeExecutionRejectedBeforeSimulation":true,
+ "currentlyDeployedRunnerStageUpgradeApplied":false,
+ "coverageAudit":{
+  "cleanWholeRunReferences":["montage-docker-image-real-20261010-v2","montage-clean-real-20261011-v1","montage-prism-all-hpc-real-20261011-v2"],
+  "e2MediumCleanReferenceCount":1,
+  "e2MediumCleanReferenceAlreadyUsedForTraining":true,
+  "e2MediumIndependentCleanHoldoutAvailable":false,
+  "recoveredCloudReferencesExcludedFromCleanMakespanValidation":true
+ },
+ "goalComplete":false,
+ "remaining":["Independent medium validation requires explicit authorization for a new real run.","New runner and Go model must be applied together at a safe point before API-based stage-calibrated simulation.","Dominant preparation/publication residuals remain despite aggregate HPC/mixed cases meeting tolerance."]
+}

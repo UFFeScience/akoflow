@@ -21,6 +21,27 @@ type materializationCatalogStub struct {
 	err              error
 }
 
+type checksumConnectorStub struct {
+	ports.TransferConnector
+	called bool
+}
+
+func (*checksumConnectorStub) Exists(context.Context, domain.TransferEndpoint, string) (bool, error) {
+	return true, nil
+}
+func (s *checksumConnectorStub) VerifyDigest(context.Context, domain.TransferEndpoint, string, string) (bool, error) {
+	s.called = true
+	return true, nil
+}
+
+func TestVerifyUsesRemoteChecksumWithoutOpeningContent(t *testing.T) {
+	connector := &checksumConnectorStub{}
+	ok, err := (Materializer{}).verify(context.Background(), connector, domain.TransferEndpoint{}, "artifact", "sha256:expected")
+	if err != nil || !ok || !connector.called {
+		t.Fatalf("ok=%v called=%v err=%v", ok, connector.called, err)
+	}
+}
+
 type sessionFilesystem struct {
 	infra.LocalFilesystem
 	begins int

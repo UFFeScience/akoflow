@@ -2,6 +2,7 @@ package slurm
 
 import (
 	"context"
+	"crypto/sha256"
 	"encoding/base64"
 	"fmt"
 	"os"
@@ -12,18 +13,20 @@ import (
 	"sync"
 	"time"
 
+	"github.com/UFFeScience/akoflow/internal/application/ports"
 	"github.com/UFFeScience/akoflow/internal/domain"
 	runtimecommon "github.com/UFFeScience/akoflow/internal/provider"
 )
 
 type Adapter struct {
-	executor        runtimecommon.CommandExecutor
-	partition       string
-	scriptDirectory string
-	submitFromStdin bool
-	directMu        sync.RWMutex
-	directResults   map[string]directResult
-	directCancels   map[string]context.CancelFunc
+	executor             runtimecommon.CommandExecutor
+	partition            string
+	scriptDirectory      string
+	submitFromStdin      bool
+	eligibleNodeFallback bool
+	directMu             sync.RWMutex
+	directResults        map[string]directResult
+	directCancels        map[string]context.CancelFunc
 }
 
 type directResult struct {
@@ -39,6 +42,8 @@ type Config struct {
 	// the script stays with the engine while sbatch receives its contents on the
 	// remote login node's stdin.
 	SubmitFromStdin bool
+	// EligibleNodeFallback is opt-in and keeps the original node's feature set.
+	EligibleNodeFallback bool
 }
 
 func New(executor runtimecommon.CommandExecutor, partition string) *Adapter {
@@ -47,7 +52,7 @@ func New(executor runtimecommon.CommandExecutor, partition string) *Adapter {
 
 func NewWithConfig(executor runtimecommon.CommandExecutor, config Config) *Adapter {
 	return &Adapter{executor: executor, partition: config.Partition,
-		scriptDirectory: config.ScriptDirectory, submitFromStdin: config.SubmitFromStdin,
+		scriptDirectory: config.ScriptDirectory, submitFromStdin: config.SubmitFromStdin, eligibleNodeFallback: config.EligibleNodeFallback,
 		directResults: make(map[string]directResult), directCancels: make(map[string]context.CancelFunc)}
 }
 
@@ -68,20 +73,34 @@ func (a *Adapter) Start(ctx context.Context, execution domain.ActivityExecutionC
 	if a.executor == nil {
 		return domain.ActivityHandle{}, fmt.Errorf("slurm command executor is required")
 	}
-	partition, node := a.partition, ""
-	if execution.Resource.Type == domain.ResourceHPCPartition && execution.Resource.ProviderID != "" {
-		partition = execution.Resource.ProviderID
-	}
-	if execution.Resource.Type == domain.ResourceHPCMachine && execution.Resource.ProviderID != "" {
-		node = execution.Resource.ProviderID
-	}
+	partition, node := slurmPlacement(a.partition, execution.Resource)
 	activity := execution.Activity
 	if activity.Command.WorkingDirectory == "" {
 		activity.Command.WorkingDirectory = slurmArtifactRoot(execution.Run.ID, activity.ID)
 	}
+	plannedNode := node
+	fallbackFeatures := ""
+	fallbackExcluded := ""
+	if a.eligibleNodeFallback && node != "" {
+		var err error
+		node, fallbackFeatures, fallbackExcluded, err = a.eligibleNodes(ctx, partition, node, execution.Resource)
+		if err != nil {
+			return domain.ActivityHandle{}, err
+		}
+	}
 	script, err := batchScript(execution.Run.ID, activity, partition, node)
 	if err != nil {
 		return domain.ActivityHandle{}, err
+	}
+	// Bind reconciliation to this exact run/activity/attempt, never an activity
+	// name shared by another run. The bounded hash also fits Slurm name limits.
+	jobName := fmt.Sprintf("akoflow-%x", sha256.Sum256([]byte(execution.HandleID())))
+	script = strings.Replace(script, "#SBATCH --job-name="+shellToken("akoflow-"+activity.ID), "#SBATCH --job-name="+jobName, 1)
+	if a.eligibleNodeFallback && plannedNode != "" {
+		script, err = a.applyEligibleNodeGuard(ctx, execution, activity, script, plannedNode, node, partition, fallbackFeatures, fallbackExcluded)
+		if err != nil {
+			return domain.ActivityHandle{}, err
+		}
 	}
 	scriptPath, err := a.saveScript(execution.Run.ID, activity.ID, ".sbatch", script)
 	if err != nil {
@@ -99,11 +118,11 @@ func (a *Adapter) Start(ctx context.Context, execution domain.ActivityExecutionC
 	}
 	output, err := a.executor.Run(ctx, "sbatch", arguments, input)
 	if err != nil {
-		return domain.ActivityHandle{}, err
+		return domain.ActivityHandle{}, a.reconcileSubmission(ctx, jobName, err)
 	}
 	jobID, err := parseJobID(output)
 	if err != nil {
-		return domain.ActivityHandle{}, err
+		return domain.ActivityHandle{}, a.reconcileSubmission(ctx, jobName, err)
 	}
 	submittedAt := runtimecommon.UnixSeconds(time.Now())
 	return domain.ActivityHandle{ID: runtimecommon.NewID("activity"), RunID: execution.Run.ID,
@@ -111,11 +130,42 @@ func (a *Adapter) Start(ctx context.Context, execution domain.ActivityExecutionC
 		RuntimeID: execution.RuntimeID, ExternalID: jobID,
 		Status: domain.HandleStarting, StartedAt: submittedAt,
 		Metadata: map[string]any{"executionTarget": string(domain.ExecutionTargetBatch), "scriptPath": scriptPath,
+			"plannedNode": plannedNode, "eligibleNodes": node, "partition": partition, "eligibleNodeFallback": a.eligibleNodeFallback,
 			"logPath":                   slurmLogPath(execution.Run.ID, activity.ID, jobID),
 			"sentinelPath":              slurmSentinelPath(execution.Run.ID, activity.ID, jobID),
 			"metricsPath":               slurmSentinelPath(execution.Run.ID, activity.ID, jobID) + ".metrics.tsv",
 			domain.TimingSubmittedAt:    submittedAt,
 			"artifactObservationDriver": "filesystem-diff", "artifactObservationRoot": activity.Command.WorkingDirectory}}, nil
+}
+
+func slurmPlacement(defaultPartition string, resource domain.Resource) (string, string) {
+	partition, node := defaultPartition, ""
+	if resource.Type == domain.ResourceHPCPartition && resource.ProviderID != "" {
+		partition = resource.ProviderID
+	}
+	if resource.Type == domain.ResourceHPCMachine && resource.ProviderID != "" {
+		node = resource.ProviderID
+	}
+	return partition, node
+}
+
+// An SSH failure does not prove sbatch failed remotely. Cancel only jobs whose
+// exact attempt-bound name matches, using a fresh bounded context even when
+// the workflow context was cancelled. Never resubmit an uncertain submission.
+func (a *Adapter) reconcileSubmission(ctx context.Context, jobName string, cause error) error {
+	cleanup, cancel := context.WithTimeout(context.WithoutCancel(ctx), 30*time.Second)
+	defer cancel()
+	jobs, err := a.matchingSubmissionJobs(cleanup, jobName)
+	if err != nil {
+		return uncertainSubmission(jobName, fmt.Errorf("submission outcome uncertain; reconciliation unavailable: %v; original: %w", err, cause))
+	}
+	if len(jobs) > 0 {
+		if _, err := a.executor.Run(cleanup, "scancel", jobs, nil); err != nil {
+			return uncertainSubmission(jobName, fmt.Errorf("submission outcome uncertain; cancellation failed: %v; original: %w", err, cause))
+		}
+		return uncertainSubmission(jobName, fmt.Errorf("submission failed; cancellation of %d exact-attempt jobs is not yet confirmed: %w", len(jobs), cause))
+	}
+	return fmt.Errorf("submission failed; exact-attempt reconciliation requested cancellation of %d jobs: %w", len(jobs), cause)
 }
 
 func validatePreparation(execution domain.ActivityExecutionContext) error {
@@ -144,9 +194,17 @@ func parseJobID(output []byte) (string, error) {
 }
 
 func (a *Adapter) Inspect(ctx context.Context, handle domain.ActivityHandle) (domain.ActivityHandle, error) {
+	if pending, _ := handle.Metadata[ports.RuntimeReconciliationPending].(bool); pending {
+		handle.Status = domain.HandleStarting
+		return handle, nil
+	}
 	if handle.Metadata["executionTarget"] == string(domain.ExecutionTargetDirect) {
 		return a.inspectDirect(handle), nil
 	}
+	// Observation is read-only. A stuck accounting service or transport must
+	// not hold the supervisor's entire inspection batch indefinitely.
+	ctx, cancel := context.WithTimeout(ctx, 30*time.Second)
+	defer cancel()
 	output, err := a.executor.Run(ctx, "sh", []string{"-s", "--",
 		metadataString(handle, "logPath"), metadataString(handle, "metricsPath"),
 		metadataString(handle, "sentinelPath"), handle.ExternalID}, []byte(slurmInspectionScript))
@@ -186,10 +244,14 @@ func (a *Adapter) Inspect(ctx context.Context, handle domain.ActivityHandle) (do
 
 const slurmInspectionScript = `
 encode_file() { [ -n "$2" ] && [ -f "$2" ] && base64 < "$2" | tr -d '\n'; }
-encode_command() { shift; "$@" 2>/dev/null | base64 | tr -d '\n' || true; }
+encode_command() { shift; if command -v timeout >/dev/null 2>&1; then timeout 5 "$@" 2>/dev/null | base64 | tr -d '\n' || true; fi; }
 printf 'LOG='; encode_file LOG "$1"; printf '\n'
 printf 'METRICS='; encode_file METRICS "$2"; printf '\n'
 printf 'SENTINEL='; encode_file SENTINEL "$3"; printf '\n'
+if [ -f "$3" ] && grep -q '^publication_complete=1$' "$3" && grep -Eq '^state=(completed|failed)$' "$3"; then
+    printf 'SACCT=\nSQUEUE=\nSCONTROL=\n'
+    exit 0
+fi
 printf 'SACCT='; encode_command SACCT sacct -j "$4" --noheader --parsable2 --format=State,ExitCode; printf '\n'
 printf 'SQUEUE='; encode_command SQUEUE squeue --noheader --jobs "$4" --format=%T; printf '\n'
 printf 'SCONTROL='; encode_command SCONTROL scontrol show job "$4" --oneliner; printf '\n'
@@ -474,6 +536,9 @@ func slurmControlState(payload string) string {
 }
 
 func (a *Adapter) Stop(ctx context.Context, handle domain.ActivityHandle) error {
+	if pending, _ := handle.Metadata[ports.RuntimeReconciliationPending].(bool); pending {
+		return a.stopUncertainSubmission(ctx, handle)
+	}
 	if handle.Metadata["executionTarget"] == string(domain.ExecutionTargetDirect) {
 		a.directMu.Lock()
 		cancel := a.directCancels[handle.ID]
@@ -502,7 +567,7 @@ func (a *Adapter) startDirect(ctx context.Context, execution domain.ActivityExec
 		return domain.ActivityHandle{}, err
 	}
 	startedAt := runtimecommon.UnixSeconds(time.Now())
-	handle := domain.ActivityHandle{ID: execution.Run.ID + ":" + activity.ID, RunID: execution.Run.ID,
+	handle := domain.ActivityHandle{ID: execution.HandleID(), RunID: execution.Run.ID,
 		ActivityID: activity.ID, ResourceID: execution.Resource.ID, RuntimeID: execution.RuntimeID,
 		Status: domain.HandleRunning, StartedAt: startedAt, Metadata: map[string]any{
 			"executionTarget": string(domain.ExecutionTargetDirect), "slurmSubmission": "login-node",
@@ -576,29 +641,7 @@ func batchScript(runID string, activity domain.Activity, partition, node string)
 		return "", fmt.Errorf("activity entrypoint is required")
 	}
 	var script strings.Builder
-	script.WriteString("#!/bin/sh\n")
-	script.WriteString("#SBATCH --job-name=")
-	script.WriteString(shellToken("akoflow-" + activity.ID))
-	script.WriteByte('\n')
-	script.WriteString("#SBATCH --output=")
-	script.WriteString(slurmLogPath(runID, activity.ID, "%j"))
-	script.WriteByte('\n')
-	if partition != "" {
-		script.WriteString("#SBATCH --partition=")
-		script.WriteString(shellToken(partition))
-		script.WriteByte('\n')
-	}
-	if node != "" {
-		script.WriteString("#SBATCH --nodelist=")
-		script.WriteString(shellToken(node))
-		script.WriteByte('\n')
-	}
-	if activity.Resources.CPU > 0 {
-		script.WriteString(fmt.Sprintf("#SBATCH --cpus-per-task=%d\n", int(activity.Resources.CPU+0.999)))
-	}
-	if activity.Resources.MemoryBytes > 0 {
-		script.WriteString(fmt.Sprintf("#SBATCH --mem=%dM\n", (activity.Resources.MemoryBytes+(1<<20)-1)/(1<<20)))
-	}
+	writeBatchDirectives(&script, runID, activity, partition, node)
 	sentinelPrefix := slurmSentinelPrefix(runID, activity.ID)
 	// Keep the sentinel in the submission directory. The activity command may
 	// change into its workspace, and a relative sentinel path would otherwise
@@ -633,7 +676,8 @@ for file do relative=${file#"$root"/}; size=$(wc -c < "$file") || exit 1; checks
 	script.WriteString("finished_at=$(date +%s.%N); { printf 'state=%s\\nexit_code=%s\\nstarted_at=%s\\nfinished_at=%s\\nallocated_node=%s\\ncontainer_started_at=%s\\nartifact_root=%s\\n' \"$state\" \"$code\" \"$started_at\" \"$finished_at\" \"$allocated_node\" \"$container_started_at\" \"$artifact_root\"; ")
 	script.WriteString("while IFS= read -r entry; do printf 'initial=%s\\n' \"$entry\"; done < \"$artifact_before\"; ")
 	script.WriteString("while IFS= read -r entry; do printf 'final=%s\\n' \"$entry\"; done < \"$artifact_after\"; ")
-	script.WriteString("} > \"$sentinel\" || true; rm -f \"$artifact_before\" \"$artifact_after\" \"$container_start_marker\" \"$seed_links\" \"$seed_list\"; exit \"$code\"; }\n")
+	// Publish the complete manifest atomically before readers skip accounting.
+	script.WriteString("printf 'publication_complete=1\\n'; } > \"${sentinel}.publishing.$$\" && mv -f -- \"${sentinel}.publishing.$$\" \"$sentinel\"; rm -f \"${sentinel}.publishing.$$\" \"$artifact_before\" \"$artifact_after\" \"$container_start_marker\" \"$seed_links\" \"$seed_list\"; exit \"$code\"; }\n")
 	script.WriteString("trap finish EXIT\nset -eu\n")
 	image, err := slurmExecutable(activity.Command)
 	if err != nil {
@@ -784,3 +828,64 @@ func shellToken(value string) string {
 	}, value)
 }
 func shellQuote(value string) string { return "'" + strings.ReplaceAll(value, "'", "'\"'\"'") + "'" }
+
+func (a *Adapter) applyEligibleNodeGuard(ctx context.Context, execution domain.ActivityExecutionContext, activity domain.Activity, script, plannedNode, node, partition, fallbackFeatures, fallbackExcluded string) (string, error) {
+	// Slurm's nodelist requests every listed node; it is not an alternatives
+	// list. Use feature constraints and exactly one node, then validate the
+	// allocated node against the verified eligible inventory before execution.
+	script = strings.Replace(script, "#SBATCH --nodelist="+node+"\n", "#SBATCH --nodes=1\n#SBATCH --constraint="+strings.ReplaceAll(fallbackFeatures, ",", "&")+"\n", 1)
+	// Feature matching alone admits nodes rejected by capacity/state checks.
+	// Exclude the inventory complement so Slurm cannot allocate such a node
+	// and fail the strict eligibility guard after the job has already started.
+	if fallbackExcluded != "" {
+		script = strings.Replace(script, "#SBATCH --nodes=1\n", "#SBATCH --nodes=1\n#SBATCH --exclude="+fallbackExcluded+"\n", 1)
+	}
+	// Fail closed on the allocated node before creating a missing workspace
+	// or invoking the activity. The marker proves shared filesystem access.
+	marker := filepath.Join(activity.Command.WorkingDirectory, ".akoflow-placement-"+shellToken(execution.HandleID()))
+	proof := runtimecommon.NewID("placement")
+	check := "set -eu\nmkdir -p -- " + shellQuote(activity.Command.WorkingDirectory) + "\ntest -d " + shellQuote(activity.Command.WorkingDirectory) + " || { echo 'Fallback workspace directory unavailable' >&2; exit 70; }\nprintf '%s' " + shellQuote(proof) + " > " + shellQuote(marker) + "\n"
+	if _, err := a.executor.Run(ctx, "sh", []string{"-s"}, []byte(check)); err != nil {
+		return "", fmt.Errorf("prepare fallback workspace proof: %w", err)
+	}
+	guard := "set -eu\ncase \"$(hostname -s)\" in " + strings.ReplaceAll(node, ",", "|") + ") ;; *) echo '[AKOFLOW ERROR] allocated fallback node is not eligible'; exit 70 ;; esac\n[ \"$(cat " + shellQuote(marker) + ")\" = " + shellQuote(proof) + " ] || { echo '[AKOFLOW ERROR] fallback workspace is not accessible'; exit 70; }\n"
+	image, _ := slurmExecutable(activity.Command)
+	if image != "" {
+		guard += "test -r " + shellQuote(image) + "\ncommand -v apptainer >/dev/null || command -v singularity >/dev/null\n"
+	}
+	guard += "printf '[AKOFLOW INFO] Eligible-node fallback: planned=%s allocated=%s partition=%s workspace verified\\n' " + shellQuote(plannedNode) + " \"$(hostname -s)\" " + shellQuote(partition) + "\n"
+	guard += "rm -f -- " + shellQuote(marker) + "\n"
+	script = strings.Replace(script, "trap finish EXIT\nset -eu\n", "trap finish EXIT\nset -eu\n"+guard, 1)
+	return script, nil
+}
+
+func writeBatchDirectives(script *strings.Builder, runID string, activity domain.Activity, partition, node string) {
+	script.WriteString("#!/bin/sh\n")
+	script.WriteString("#SBATCH --job-name=")
+	script.WriteString(shellToken("akoflow-" + activity.ID))
+	script.WriteByte('\n')
+	script.WriteString("#SBATCH --output=")
+	script.WriteString(slurmLogPath(runID, activity.ID, "%j"))
+	script.WriteByte('\n')
+	if partition != "" {
+		script.WriteString("#SBATCH --partition=")
+		script.WriteString(shellToken(partition))
+		script.WriteByte('\n')
+	}
+	if node != "" {
+		script.WriteString("#SBATCH --nodelist=")
+		for index, candidate := range strings.Split(node, ",") {
+			if index > 0 {
+				script.WriteByte(',')
+			}
+			script.WriteString(shellToken(candidate))
+		}
+		script.WriteByte('\n')
+	}
+	if activity.Resources.CPU > 0 {
+		script.WriteString(fmt.Sprintf("#SBATCH --cpus-per-task=%d\n", int(activity.Resources.CPU+0.999)))
+	}
+	if activity.Resources.MemoryBytes > 0 {
+		script.WriteString(fmt.Sprintf("#SBATCH --mem=%dM\n", (activity.Resources.MemoryBytes+(1<<20)-1)/(1<<20)))
+	}
+}

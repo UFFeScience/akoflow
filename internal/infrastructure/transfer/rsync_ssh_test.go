@@ -3,15 +3,139 @@ package transfer
 import (
 	"bytes"
 	"context"
+	"fmt"
 	"io"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"reflect"
 	"strings"
+	"sync"
 	"testing"
+	"time"
 
 	"github.com/UFFeScience/akoflow/internal/domain"
+	"github.com/UFFeScience/akoflow/internal/provider"
+	"golang.org/x/crypto/ssh"
 )
+
+func TestConcurrentDirectCredentialRevocationPreservesUnrelatedKeys(t *testing.T) {
+	if _, err := exec.LookPath("flock"); err != nil {
+		t.Skip("worker credential integration requires Linux flock; run this test in the worker-compatible container")
+	}
+	directory := t.TempDir()
+	if strings.ContainsAny(directory, " '\"\n\t") {
+		t.Fatal("fixture path must be shell-safe")
+	}
+	publicKey, _, err := ephemeralSSHKey()
+	if err != nil {
+		t.Fatal(err)
+	}
+	lines := []string{"unrelated-user-key", "unrelated-transfer-token-suffix"}
+	var revoked []string
+	for i := 0; i < 8; i++ {
+		line, err := scopedDirectAuthorizedKey(publicKey, fmt.Sprintf("transfer-%d", i), "cat > /tmp/private-archive", time.Now().Add(time.Minute))
+		if err != nil {
+			t.Fatal(err)
+		}
+		lines = append(lines, line)
+		revoked = append(revoked, line)
+	}
+	keys := filepath.Join(directory, "authorized_keys")
+	if err := os.WriteFile(keys, []byte(strings.Join(lines, "\n")+"\n"), 0600); err != nil {
+		t.Fatal(err)
+	}
+	var wait sync.WaitGroup
+	for _, line := range revoked {
+		wait.Add(1)
+		go func(line string) {
+			defer wait.Done()
+			command := strings.ReplaceAll(directCredentialRemovalCommand(line), "~/.ssh", directory)
+			if output, err := exec.Command("sh", "-c", command).CombinedOutput(); err != nil {
+				t.Errorf("revoke: %v %s", err, output)
+			}
+		}(line)
+	}
+	wait.Wait()
+	content, err := os.ReadFile(keys)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if string(content) != strings.Join(lines[:2], "\n")+"\n" {
+		t.Fatalf("unrelated keys lost or credentials retained: %s", content)
+	}
+	info, err := os.Stat(keys)
+	if err != nil || info.Mode().Perm() != 0600 {
+		t.Fatal("unsafe final authorized_keys permissions")
+	}
+}
+
+func TestShellQuotingRoundTripsThroughNestedPOSIXCommands(t *testing.T) {
+	for _, value := range []string{"", "plain", "worker's file", "'\"$HOME; $(false)\nsecond line", "back\\slash"} {
+		for _, nested := range []bool{false, true} {
+			command := "printf '%s' " + shell(value)
+			if nested {
+				command = "sh -c " + shell(command)
+			}
+			output, err := exec.Command("sh", "-c", command).CombinedOutput()
+			if err != nil || string(output) != value {
+				t.Fatalf("nested=%v roundtrip failed: %v %q", nested, err, output)
+			}
+		}
+	}
+}
+
+func TestEphemeralTransferKeyIsReadableByOpenSSH(t *testing.T) {
+	keygen, err := exec.LookPath("ssh-keygen")
+	if err != nil {
+		t.Fatal("OpenSSH is required for transfer credential integration")
+	}
+	publicKey, privateKey, err := ephemeralSSHKey()
+	if err != nil {
+		t.Fatal(err)
+	}
+	path := filepath.Join(t.TempDir(), "identity")
+	if err := os.WriteFile(path, privateKey, 0600); err != nil {
+		t.Fatal(err)
+	}
+	output, err := exec.Command(keygen, "-y", "-f", path).CombinedOutput()
+	if err != nil {
+		t.Fatalf("OpenSSH cannot load ephemeral identity: %v %s", err, output)
+	}
+	expected, _, _, _, expectedErr := ssh.ParseAuthorizedKey(publicKey)
+	actual, _, _, _, actualErr := ssh.ParseAuthorizedKey(output)
+	if expectedErr != nil || actualErr != nil || !bytes.Equal(expected.Marshal(), actual.Marshal()) {
+		t.Fatal("OpenSSH identity does not match installed authorization")
+	}
+}
+
+func TestDirectCredentialIsForcedAndExpiring(t *testing.T) {
+	publicKey, _, err := ephemeralSSHKey()
+	if err != nil {
+		t.Fatal(err)
+	}
+	command := "cat > '/tmp/preparation/archive'"
+	line, err := scopedDirectAuthorizedKey(publicKey, "transfer-token", command, time.Date(2026, 10, 8, 9, 0, 0, 0, time.UTC))
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, comment, options, rest, err := ssh.ParseAuthorizedKey([]byte(line))
+	if err != nil || len(rest) != 0 || comment != "transfer-token" {
+		t.Fatalf("invalid authorized key syntax: %v", err)
+	}
+	if !reflect.DeepEqual(options, []string{"restrict", `command="cat > '/tmp/preparation/archive'"`, `expiry-time="20261008090000Z"`}) {
+		t.Fatalf("authorization must not allow arbitrary commands: %#v", options)
+	}
+	for _, invalid := range []string{"", "cat > file\nother-command", "cat\x00"} {
+		if _, err := scopedDirectAuthorizedKey(publicKey, "token", invalid, time.Now()); err == nil {
+			t.Fatal("unsafe forced command accepted")
+		}
+	}
+	remove := directCredentialRemovalCommand(line)
+	if !strings.Contains(remove, "flock") || !strings.Contains(remove, "grep -F -x -v") || !strings.Contains(remove, "chmod 600") {
+		t.Fatal("revocation must serialize exact-line removal and preserve permissions")
+	}
+}
 
 func installFakeSSH(t *testing.T) {
 	t.Helper()
@@ -20,6 +144,9 @@ func installFakeSSH(t *testing.T) {
 command=""
 for argument in "$@"; do command="$argument"; done
 case "$command" in
+  *"sha256sum --"*checksum-error*) echo 'checksum unavailable' >&2; exit 2 ;;
+  *"sha256sum --"*) printf '%064d  artifact\n' 0; exit 0 ;;
+  *"cat >"*upload-rejected*) echo 'remote filesystem quota exceeded' >&2; exit 23 ;;
   *missing*) exit 1 ;;
   *transport-error*) echo 'remote unavailable' >&2; exit 2 ;;
   *"cat --"*|*"tail -c"*) printf payload; exit 0 ;;
@@ -69,8 +196,30 @@ func TestSSHTargetAndArguments(t *testing.T) {
 			t.Fatalf("args=%q missing %q", joined, expected)
 		}
 	}
-	if shell("a'b") != `'a'\"'\"'b'` || !reflect.DeepEqual(sshArgs(domain.TransferEndpoint{}), []string{}) {
+	if shell("a'b") != `'a'"'"'b'` || !reflect.DeepEqual(sshArgs(domain.TransferEndpoint{}), []string{"-o", "BatchMode=yes", "-o", "ConnectionAttempts=1", "-o", "ConnectTimeout=10"}) {
 		t.Fatalf("SSH helper output mismatch: shell=%q args=%#v", shell("a'b"), sshArgs(domain.TransferEndpoint{}))
+	}
+}
+
+func TestTransferSharesCanonicalConnectionSession(t *testing.T) {
+	t.Setenv("AKOFLOW_SSH_CONTROL_DIRECTORY", t.TempDir())
+	endpoint := domain.TransferEndpoint{
+		ConnectionID: "cloud-connection-instance-a",
+		URI:          "ssh://worker@example.test/workspace?port=22&identityFile=/keys/id&knownHostsFile=/known&hostKeyAlias=instance-a",
+	}
+	_, expected, err := provider.SSHMultiplexArguments(provider.SSHSessionKey{
+		ConnectionID: endpoint.ConnectionID, Username: "worker", Host: "example.test", Port: 22,
+		IdentityFile: "/keys/id", KnownHostsFile: "/known", HostKeyAlias: "instance-a",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if actual := sshControlPath(sshArgs(endpoint)); actual != expected {
+		t.Fatalf("transfer session %q differs from canonical connection session %q", actual, expected)
+	}
+	endpoint.ConnectionID = "cloud-connection-instance-b"
+	if actual := sshControlPath(sshArgs(endpoint)); actual == expected {
+		t.Fatal("distinct connections must retain distinct channel limits")
 	}
 }
 
@@ -109,6 +258,51 @@ func TestRsyncSSHCommandLifecycle(t *testing.T) {
 	}
 	if err := connector.Commit(context.Background(), endpoint, "partial", "final"); err != nil {
 		t.Fatal(err)
+	}
+}
+
+func TestSSHUploadPreservesEarlyExitDiagnostic(t *testing.T) {
+	installFakeSSH(t)
+	err := (RsyncSSH{}).Put(context.Background(), sshTestEndpoint(), "upload-rejected", bytes.NewReader(bytes.Repeat([]byte("x"), 1024*1024)), 0)
+	if err == nil || !strings.Contains(err.Error(), "remote filesystem quota exceeded") || !strings.Contains(err.Error(), "exit status 23") {
+		t.Fatalf("remote upload diagnostic lost: %v", err)
+	}
+}
+
+func TestSSHRemoteChecksumMatchAndMismatch(t *testing.T) {
+	installFakeSSH(t)
+	connector := RsyncSSH{}
+	for _, tc := range []struct {
+		digest  string
+		matches bool
+	}{
+		{"sha256:" + strings.Repeat("0", 64), true},
+		{"sha256:" + strings.Repeat("1", 64), false},
+	} {
+		matches, err := connector.VerifyDigest(context.Background(), sshTestEndpoint(), "present", tc.digest)
+		if err != nil || matches != tc.matches {
+			t.Fatalf("matches=%v expected=%v err=%v", matches, tc.matches, err)
+		}
+	}
+	if _, err := connector.VerifyDigest(context.Background(), sshTestEndpoint(), "checksum-error", strings.Repeat("0", 64)); err == nil || !strings.Contains(err.Error(), "checksum unavailable") {
+		t.Fatalf("checksum failure lost: %v", err)
+	}
+}
+
+func TestTransferSSHConnectionIsBounded(t *testing.T) {
+	args := strings.Join(sshArgs(sshTestEndpoint()), " ")
+	for _, option := range []string{"BatchMode=yes", "ConnectionAttempts=1", "ConnectTimeout=10"} {
+		if !strings.Contains(args, option) {
+			t.Fatalf("missing %s in %s", option, args)
+		}
+	}
+	command, release, err := queuedSSHCommand(context.Background(), domain.TransferEndpoint{}, []string{"host", "true"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer release()
+	if command.WaitDelay <= 0 {
+		t.Fatal("pipe cleanup is unbounded")
 	}
 }
 

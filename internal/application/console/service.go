@@ -160,6 +160,10 @@ func (s *CommandController) resolveCloudConnection(
 		if !connectable || !targetIDs[instance.CapacityTargetID] || address == "" {
 			continue
 		}
+		alias, knownHosts, err := instance.VerifiedSSHTrust()
+		if err != nil {
+			return connection, err
+		}
 		return domain.EnvironmentConnection{
 			ID: connection.ID + "-" + instance.ID, EnvironmentID: connection.EnvironmentID,
 			Name: instance.Name, Type: domain.ConnectionSSH, Endpoint: address,
@@ -169,7 +173,7 @@ func (s *CommandController) resolveCloudConnection(
 				// Public cloud addresses are routinely reused by a different VM. Key the
 				// trust record by Akoflow's immutable instance id instead of that address,
 				// so SSH still verifies the host without colliding with a former tenant.
-				"hostKeyAlias": instance.ID,
+				"hostKeyAlias": alias, "knownHostsFile": knownHosts, "strictHostKeyChecking": true,
 			},
 		}, nil
 	}

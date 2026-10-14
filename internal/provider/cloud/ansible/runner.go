@@ -5,9 +5,11 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"time"
 
@@ -80,15 +82,15 @@ func (r Runner) runPlaybook(ctx context.Context, workspace string, spec ports.Ma
 		binary = "ansible-playbook"
 	}
 	arguments := []string{"-i", spec.Address + ",", "-u", spec.SSHUser, "--private-key", keyPath, "--extra-vars", "@" + variablesPath, playbookPath}
+	if spec.KnownHostsFile != "" && spec.HostKeyAlias != "" {
+		arguments = append(arguments, "--ssh-common-args", "-o StrictHostKeyChecking=yes -o HostKeyAlgorithms=ssh-ed25519 -o UserKnownHostsFile="+strconv.Quote(spec.KnownHostsFile)+" -o HostKeyAlias="+strconv.Quote(spec.HostKeyAlias))
+	}
 	playbookStartedAt := time.Now().UTC()
 	writeProvisionLog(logFile, "applying %s", filepath.Base(playbookPath))
 	_ = logFile.Sync()
-	output, err := r.execute(ctx, workspace, append([]string{binary}, arguments...)...)
-	if len(output) > 0 {
-		_, _ = logFile.Write(output)
-		if output[len(output)-1] != '\n' {
-			_, _ = logFile.WriteString("\n")
-		}
+	output, err := r.execute(ctx, workspace, logFile, append([]string{binary}, arguments...)...)
+	if len(output) > 0 && output[len(output)-1] != '\n' {
+		_, _ = logFile.WriteString("\n")
 	}
 	if err != nil {
 		writeProvisionLog(logFile, "failed after %.3fs: %v", time.Since(playbookStartedAt).Seconds(), err)
@@ -100,16 +102,24 @@ func (r Runner) runPlaybook(ctx context.Context, workspace string, spec ports.Ma
 	return nil
 }
 
-func (r Runner) execute(ctx context.Context, workspace string, commandAndArguments ...string) ([]byte, error) {
+func (r Runner) execute(ctx context.Context, workspace string, logFile io.Writer, commandAndArguments ...string) ([]byte, error) {
+	environment := append(os.Environ(), "ANSIBLE_HOST_KEY_CHECKING=False", "PYTHONUNBUFFERED=1")
 	if r.Execute != nil {
-		return r.Execute(ctx, workspace, append(os.Environ(), "ANSIBLE_HOST_KEY_CHECKING=False"), commandAndArguments...)
+		output, err := r.Execute(ctx, workspace, environment, commandAndArguments...)
+		if _, writeErr := logFile.Write(output); err == nil {
+			err = writeErr
+		}
+		return output, err
 	}
 	command := exec.CommandContext(ctx, commandAndArguments[0], commandAndArguments[1:]...)
 	command.Dir = workspace
-	command.Env = append(os.Environ(), "ANSIBLE_HOST_KEY_CHECKING=False")
+	command.Env = environment
 	var output bytes.Buffer
-	command.Stdout = &output
-	command.Stderr = &output
+	// Both streams share one writer, so os/exec serializes writes. Keep the
+	// existing failure diagnostics while publishing progress before process exit.
+	writer := io.MultiWriter(logFile, &output)
+	command.Stdout = writer
+	command.Stderr = writer
 	err := command.Run()
 	return output.Bytes(), err
 }
@@ -193,6 +203,26 @@ func runCheck(ctx context.Context, spec ports.MachineConfigurationSpec, keyPath,
 		"-o", "BatchMode=yes", "-o", "StrictHostKeyChecking=no",
 		"-o", "UserKnownHostsFile=/dev/null", "-o", "ConnectTimeout=10",
 		"-i", keyPath, spec.SSHUser + "@" + spec.Address, command,
+	}
+	if spec.KnownHostsFile != "" && spec.HostKeyAlias != "" {
+		arguments = []string{
+			"-o",
+			"BatchMode=yes",
+			"-o",
+			"StrictHostKeyChecking=yes",
+			"-o",
+			"HostKeyAlgorithms=ssh-ed25519",
+			"-o",
+			"UserKnownHostsFile=" + spec.KnownHostsFile,
+			"-o",
+			"HostKeyAlias=" + spec.HostKeyAlias,
+			"-o",
+			"ConnectTimeout=10",
+			"-i",
+			keyPath,
+			spec.SSHUser + "@" + spec.Address,
+			command,
+		}
 	}
 	output, err := exec.CommandContext(ctx, "ssh", arguments...).CombinedOutput()
 	if err != nil {

@@ -1,0 +1,28 @@
+{
+ "issue":"AKO-167",
+ "mode":"offline-fixed-placement-native-SimGrid-holdout",
+ "trainingRun":"montage-prism-all-hpc-real-20261011-v1",
+ "holdoutRun":"montage-prism-all-hpc-real-20261011-v2",
+ "trainingSamples":34,
+ "admissionSecondsMedian":17.318344116210938,
+ "admissionSource":"native handle submittedAt to startedAt; single-attempt completed samples only; noncausal timestamp samples excluded",
+ "plannedMakespanSeconds":1164.2299096115516,
+ "simulatedMakespanSeconds":1164.2299096115516,
+ "holdoutMakespanSeconds":1296.0180189609528,
+ "realAbovePlannedPercentApprox":11.32,
+ "activityWallWithin20Percent":31,
+ "activityCount":58,
+ "medianActivityWallErrorPercent":14.901861081330308,
+ "maximumActivityWallErrorPercent":59.05136490848852,
+ "nativeFixture":{"preparationSeconds":4,"admissionSeconds":7,"runtimeOverheadSeconds":2,"computeSeconds":3,"publicationSeconds":5,"makespanSeconds":21},
+ "newRealSubmitted":false,
+ "daemonRestarted":false,
+ "goalComplete":false,
+ "limitations":[
+  "Current mixed cloud/HPC holdout already meets aggregate tolerance, but stage residuals remain and e2-medium lacks clean independent makespan holdout.",
+  "Admission profile represents measured external wall latency, not CPU work and not a guarantee of future Slurm queue time.",
+  "Runtime identity is matched explicitly; absent native submission telemetry does not inherit the Slurm delay.",
+  "Three gateway fallback dependencies in observed HPC holdout are not represented by the internal-route baseline.",
+  "Preparation/publication fits still include unidentified polling/admission effects; remaining service isolation needs stronger telemetry."
+ ]
+}

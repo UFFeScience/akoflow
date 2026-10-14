@@ -12,6 +12,7 @@ import (
 
 	"github.com/UFFeScience/akoflow/internal/application/ports"
 	"github.com/UFFeScience/akoflow/internal/domain"
+	"github.com/UFFeScience/akoflow/internal/domain/materializationmodel"
 	"github.com/UFFeScience/akoflow/internal/provider"
 )
 
@@ -62,7 +63,49 @@ func (e *ProcessExecutor) Execute(ctx context.Context, request ports.ExecutionRe
 		return domain.ExecutionTrace{}, err
 	}
 	defer e.release()
+	preparationModel, err := materializationmodel.Decode(request.NetworkTopology.Metadata)
+	if err != nil {
+		return domain.ExecutionTrace{}, err
+	}
+	if err := e.checkPreparationCapabilities(ctx, request, preparationModel); err != nil {
+		return domain.ExecutionTrace{}, err
+	}
+	return e.executeBundle(ctx, request, preparationModel)
+}
 
+func (e *ProcessExecutor) checkPreparationCapabilities(ctx context.Context, request ports.ExecutionRequest, preparationModel *materializationmodel.Model) error {
+	if preparationModel != nil {
+		probeCtx, cancel := context.WithTimeout(ctx, 10*time.Second)
+		payload, probeErr := e.commands.Run(probeCtx, e.config.BinaryPath, []string{"--capabilities"}, nil)
+		cancel()
+		var capabilities struct {
+			Version            int `json:"workspaceMaterializationModelVersion"`
+			MaxVersion         int `json:"workspaceMaterializationModelMaxVersion"`
+			BulkServiceVersion int `json:"bulkServicePoolModelVersion"`
+			AdmissionVersion   int `json:"runtimeAdmissionModelVersion"`
+		}
+		if probeErr != nil || json.Unmarshal(payload, &capabilities) != nil || (capabilities.Version != preparationModel.SchemaVersion && capabilities.MaxVersion < preparationModel.SchemaVersion) {
+			return fmt.Errorf("SimGrid runner does not confirm workspace materialization model version %d", preparationModel.SchemaVersion)
+		}
+		for _, resource := range preparationModel.Resources {
+			if resource.BulkServiceGroupID != "" && capabilities.BulkServiceVersion != 1 {
+				return fmt.Errorf("SimGrid runner does not confirm bulk service pool model version 1")
+			}
+		}
+		for _, a := range request.Plan.Assignments {
+			delay, err := preparationModel.AdmissionSeconds(a.ResourceID)
+			if err != nil {
+				return err
+			}
+			if delay > 0 && capabilities.AdmissionVersion != 1 {
+				return fmt.Errorf("SimGrid runner does not confirm runtime admission model version 1")
+			}
+		}
+	}
+	return nil
+}
+
+func (e *ProcessExecutor) executeBundle(ctx context.Context, request ports.ExecutionRequest, preparationModel *materializationmodel.Model) (domain.ExecutionTrace, error) {
 	bundle, err := e.createBundle(request)
 	if err != nil {
 		return domain.ExecutionTrace{}, err
@@ -87,7 +130,20 @@ func (e *ProcessExecutor) Execute(ctx context.Context, request ports.ExecutionRe
 	if trace.RunID != request.Run.ID || trace.PlanID != request.Plan.ID {
 		return domain.ExecutionTrace{}, fmt.Errorf("SimGrid returned trace for run %q and plan %q", trace.RunID, trace.PlanID)
 	}
+	if err := validateAdmissionTrace(request, preparationModel, trace); err != nil {
+		return domain.ExecutionTrace{}, err
+	}
 	trace.Mode, trace.Predicted = request.Run.Mode, request.Plan.Predicted
+	normalizeWorkspaceQueue(&trace)
+	applyCloudLifecycleCosts(trace.Tasks, request.Resources, request.Plan.LifecycleActions)
+	trace.Executed.Cost = 0
+	for _, task := range trace.Tasks {
+		trace.Executed.Cost += task.Cost
+	}
+	for _, transfer := range trace.Transfers {
+		trace.Executed.Cost += transfer.Cost
+	}
+	trace.Executed.Feasible = (request.Plan.DeadlineSeconds <= 0 || trace.Executed.MakespanSeconds <= request.Plan.DeadlineSeconds) && (request.Plan.Budget <= 0 || trace.Executed.Cost <= request.Plan.Budget)
 	return trace, nil
 }
 

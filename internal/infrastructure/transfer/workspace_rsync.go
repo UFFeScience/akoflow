@@ -22,7 +22,9 @@ import (
 // In particular, no predecessor is allowed to overwrite a different file from
 // another predecessor or an already populated successor workspace.
 type WorkspaceRsync struct {
-	Resolver interface {
+	// Parallelism bounds independent preparations; merge remains a single barrier.
+	Parallelism int
+	Resolver    interface {
 		ResolveTransferEndpoint(context.Context, domain.TransferLocation) (domain.TransferEndpoint, error)
 	}
 }
@@ -62,7 +64,11 @@ func (s WorkspaceRsync) Sync(ctx context.Context, plans []domain.DataTransferPla
 		return fail(err)
 	}
 	if direct {
-		return syncRemoteWorkspaceDirect(ctx, plans, sources, destination, runs)
+		result, syncErr := s.syncDependencyRoutes(ctx, plans, sources, destination, runs)
+		if syncErr != nil {
+			return fail(syncErr)
+		}
+		return result, nil
 	}
 	root, err := os.MkdirTemp("", "akoflow-workspace-sync-")
 	if err != nil {
@@ -100,10 +106,9 @@ func (s WorkspaceRsync) directRemoteEndpoints(ctx context.Context, plans []domai
 			return nil, destination, false, fmt.Errorf("resolve producer %q: %w", plan.ProducerActivityID, resolveErr)
 		}
 		sources[index] = source
-		if !sameSSHWorkspaceEndpoint(source, destination) {
-			return sources, destination, false, nil
-		}
 	}
+	// Remote merge can combine independently prepared network snapshots with
+	// proven shared-filesystem sources; a mixed origin never downgrades all routes.
 	return sources, destination, true, nil
 }
 
@@ -133,7 +138,33 @@ func syncRemoteWorkspaceDirect(ctx context.Context, plans []domain.DataTransferP
 		sourcePaths[index] = sourcePath
 	}
 	script := remoteWorkspaceScript(sourcePaths, destinationPath)
-	output, err := runSSHCombinedOutput(ctx, destination, append(sshArgs(destination), host, "bash -s"), strings.NewReader(script))
+	mergeStart := time.Now()
+	command, release, err := queuedSSHCommand(ctx, destination, append(sshArgs(destination), host, "bash -s"))
+	admittedAt := time.Now()
+	var output []byte
+	if err == nil {
+		command.Stdin = strings.NewReader(script)
+		output, err = command.CombinedOutput()
+		release()
+	}
+	mergeEnd := time.Now()
+	for i := range runs {
+		runs[i].Route.MergeSSHChannelWaitSeconds = admittedAt.Sub(mergeStart).Seconds()
+		if command != nil {
+			runs[i].Route.MergeExecutionSeconds = mergeEnd.Sub(admittedAt).Seconds()
+		}
+		runs[i].Route.MergeCheckSeconds = remoteMergeSeconds(string(output), "CHECK")
+		runs[i].Route.MergeCopySeconds = remoteMergeSeconds(string(output), "COPY")
+		runs[i].Route.MergeVerifySeconds = remoteMergeSeconds(string(output), "VERIFY")
+		// Residual command wall time includes transport/remote startup and
+		// untimed script work; it is not network throughput or service queue.
+		runs[i].Route.MergeCommandOverheadSeconds = max(0, runs[i].Route.MergeExecutionSeconds-
+			runs[i].Route.MergeCheckSeconds-runs[i].Route.MergeCopySeconds-runs[i].Route.MergeVerifySeconds)
+		runs[i].Route.Phases = append(runs[i].Route.Phases, domain.TransferPhase{
+			Name: "shared-conflict-check-copy-and-verify", StartedAt: float64(mergeStart.UnixNano()) / 1e9,
+			FinishedAt: float64(mergeEnd.UnixNano()) / 1e9, DurationSeconds: mergeEnd.Sub(mergeStart).Seconds(), Failed: err != nil,
+		})
+	}
 	if err != nil {
 		return runs, fmt.Errorf("direct remote workspace sync: %w: %s", err, strings.TrimSpace(string(output)))
 	}
@@ -152,41 +183,6 @@ func syncRemoteWorkspaceDirect(ctx context.Context, plans []domain.DataTransferP
 		runs[index].Status = domain.TransferCompleted
 	}
 	return runs, nil
-}
-
-func remoteWorkspaceScript(sources []string, destination string) string {
-	var script strings.Builder
-	script.WriteString("set -euo pipefail\n")
-	script.WriteString("workspace_manifest=$(mktemp -d); trap 'rm -rf -- \"$workspace_manifest\"' EXIT\n")
-	script.WriteString(
-		"check_tree() { local root=$1 label=$2 file rel digest key previous origin; " +
-			"while IFS= read -r -d '' file; do rel=${file#\"$root\"/}; " +
-			"digest=$(sha256sum -- \"$file\"); digest=${digest%% *}; " +
-			"key=$(printf '%s' \"$rel\" | sha256sum); key=${key%% *}; " +
-			"if [[ -f $workspace_manifest/$key.digest ]]; then " +
-			"previous=$(cat \"$workspace_manifest/$key.digest\"); " +
-			"if [[ $previous != \"$digest\" ]]; then " +
-			"origin=$(cat \"$workspace_manifest/$key.origin\"); " +
-			"echo \"workspace content conflict at $rel between $origin and $label\" >&2; exit 44; fi; " +
-			"else printf '%s' \"$digest\" >\"$workspace_manifest/$key.digest\"; " +
-			"printf '%s' \"$label\" >\"$workspace_manifest/$key.origin\"; fi; " +
-			"done < <(find \"$root\" -type f -print0); }\n",
-	)
-	script.WriteString("destination=" + shell(destination) + "\n")
-	script.WriteString("mkdir -p -- \"$destination\"\n")
-	script.WriteString("link=$(find \"$destination\" -type l -print -quit); test -z \"$link\" || { echo \"destination workspace contains symlink: $link\" >&2; exit 41; }\n")
-	script.WriteString("check_tree \"$destination\" destination\n")
-	for _, source := range sources {
-		script.WriteString("test -d " + shell(source) + " || { echo " + shell("source workspace disappeared: "+source) + " >&2; exit 42; }\n")
-		script.WriteString("link=$(find " + shell(source) + " -type l -print -quit); test -z \"$link\" || { echo \"source workspace contains symlink: $link\" >&2; exit 43; }\n")
-		script.WriteString("check_tree " + shell(source) + " " + shell(source) + "\n")
-	}
-	for index, source := range sources {
-		script.WriteString(fmt.Sprintf("echo __AKOFLOW_WORKSPACE_BEGIN_%d__\n", index))
-		script.WriteString("rsync --ignore-existing -r --checksum --stats --out-format='%i %n' --no-perms --no-owner --no-group --no-times -- " + shell(filepath.Clean(source)+"/") + " " + shell(filepath.Clean(destination)+"/") + "\n")
-		script.WriteString(fmt.Sprintf("echo __AKOFLOW_WORKSPACE_END_%d__\n", index))
-	}
-	return script.String()
 }
 
 func remoteWorkspaceStats(output string, index int) string {
@@ -219,11 +215,9 @@ func (s WorkspaceRsync) stageProducers(ctx context.Context, plans []domain.DataT
 		}
 		stages[i] = stage
 		stats, err := syncDirectory(ctx, source, domain.TransferEndpoint{URI: (&url.URL{Scheme: "file", Path: stage}).String()}, false)
+		recordWorkspaceRsyncStats(&runs[i], stats, strings.HasPrefix(source.URI, "ssh://"))
 		if err != nil {
 			return nil, nil, fmt.Errorf("stage producer %q: %w", plan.ProducerActivityID, err)
-		}
-		if strings.HasPrefix(source.URI, "ssh://") {
-			runs[i].NetworkBytes += stats.bytes
 		}
 		ingress[i] = stats
 		if err := inspectWorkspace(stage, seen); err != nil {
@@ -240,6 +234,7 @@ func publishWorkspace(ctx context.Context, plans []domain.DataTransferPlan, stag
 			return fmt.Errorf("producer %q: %w", plans[i].ProducerActivityID, err)
 		}
 		stats, copyErr := syncDirectory(ctx, source, destination, true)
+		recordWorkspaceRsyncStats(&runs[i], stats, strings.HasPrefix(destination.URI, "ssh://"))
 		if copyErr != nil {
 			return fmt.Errorf("publish producer %q: %w", plans[i].ProducerActivityID, copyErr)
 		}
@@ -253,9 +248,6 @@ func publishWorkspace(ctx context.Context, plans []domain.DataTransferPlan, stag
 			runs[i].FilesTransferred = ingress[i].files
 		}
 		runs[i].Route.FilesTransferred = runs[i].FilesTransferred
-		if strings.HasPrefix(destination.URI, "ssh://") {
-			runs[i].NetworkBytes += stats.bytes
-		}
 		runs[i].FinishedAt = float64(time.Now().UnixNano()) / 1e9
 		runs[i].DurationSeconds = max(0, runs[i].FinishedAt-runs[i].StartedAt)
 		runs[i].Status = domain.TransferCompleted
@@ -298,7 +290,14 @@ func inspectWorkspace(root string, seen map[string][32]byte) error {
 	})
 }
 
-type rsyncStats struct{ bytes, fileBytes, files int64 }
+type rsyncStats struct {
+	bytes, fileBytes, files int64
+	retries                 int
+	lastRetryError          string
+	networkBytesIncomplete  bool
+	channelWaitSeconds      float64
+	executionSeconds        float64
+}
 
 func syncDirectory(ctx context.Context, source, destination domain.TransferEndpoint, ignoreExisting bool) (rsyncStats, error) {
 	args, err := rsyncArgs(source, destination)
@@ -308,16 +307,23 @@ func syncDirectory(ctx context.Context, source, destination domain.TransferEndpo
 	if ignoreExisting {
 		args = append([]string{"--ignore-existing"}, args...)
 	}
+	waitStarted := time.Now()
 	release, err := acquireRsyncSSHChannel(ctx, source, destination)
+	waitSeconds := time.Since(waitStarted).Seconds()
 	if err != nil {
-		return rsyncStats{}, err
+		return rsyncStats{channelWaitSeconds: waitSeconds}, err
 	}
 	defer release()
-	output, err := exec.CommandContext(ctx, "rsync", args...).CombinedOutput()
-	if err != nil {
-		return rsyncStats{}, fmt.Errorf("rsync: %w: %s", err, strings.TrimSpace(string(output)))
-	}
-	return parseRsyncStats(string(output), strings.HasPrefix(destination.URI, "ssh://")), nil
+	var executionSeconds float64
+	stats, err := retryWorkspaceRsync(ctx, time.Second, strings.HasPrefix(destination.URI, "ssh://"), func() ([]byte, error) {
+		started := time.Now()
+		output, copyErr := exec.CommandContext(ctx, "rsync", args...).CombinedOutput()
+		executionSeconds += time.Since(started).Seconds()
+		return output, copyErr
+	})
+	stats.channelWaitSeconds = waitSeconds
+	stats.executionSeconds = executionSeconds
+	return stats, err
 }
 
 func rsyncArgs(source, destination domain.TransferEndpoint) ([]string, error) {
@@ -342,7 +348,7 @@ func rsyncArgs(source, destination domain.TransferEndpoint) ([]string, error) {
 		// shell. Newer rsync versions otherwise treat shell quotes as literal
 		// characters in the path.
 		args = append(args, "--secluded-args")
-		ssh := []string{"ssh", "-o", "BatchMode=yes"}
+		ssh := []string{"ssh"}
 		ssh = append(ssh, sshArgs(remote)...)
 		for i := range ssh {
 			ssh[i] = rsyncRemoteShellArgument(ssh[i])
@@ -409,6 +415,10 @@ func makeWorkspaceDirectory(ctx context.Context, endpoint domain.TransferEndpoin
 }
 
 func rejectWorkspaceSymlinks(ctx context.Context, endpoint domain.TransferEndpoint) error {
+	return rejectWorkspaceSymlinksWithWait(ctx, endpoint, nil)
+}
+
+func rejectWorkspaceSymlinksWithWait(ctx context.Context, endpoint domain.TransferEndpoint, channelWait *float64) error {
 	u, err := url.Parse(endpoint.URI)
 	if err != nil {
 		return err
@@ -431,7 +441,11 @@ func rejectWorkspaceSymlinks(ctx context.Context, endpoint domain.TransferEndpoi
 	if err != nil {
 		return err
 	}
+	waitStarted := time.Now()
 	command, release, err := queuedSSHCommand(ctx, endpoint, append(sshArgs(endpoint), host, "find "+shell(path)+" -type l -print -quit"))
+	if channelWait != nil {
+		*channelWait = time.Since(waitStarted).Seconds()
+	}
 	if err != nil {
 		return err
 	}

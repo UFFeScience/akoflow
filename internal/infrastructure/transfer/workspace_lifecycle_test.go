@@ -14,6 +14,49 @@ import (
 	"github.com/UFFeScience/akoflow/internal/domain"
 )
 
+type workspaceEndpointResolverStub struct {
+	location domain.TransferLocation
+}
+
+func TestPruneCommandScopesCloudPrivilegeToCanonicalVerifiedInputs(t *testing.T) {
+	workspace := domain.ActivityWorkspace{ID: "workspace-run-1-activity-1", RunID: "run-1", ActivityID: "activity-1", Driver: "cloud-ssh"}
+	command := workspacePruneCommand("/akoflow/workspace/runs/run-1/activity-1", workspace)
+	for _, required := range []string{"realpath --", "non-canonical workspace input", "sha256sum", "sudo -n rm -f --"} {
+		if !strings.Contains(command, required) {
+			t.Fatalf("missing pruning guard %q", required)
+		}
+	}
+	if strings.Index(command, "sha256sum") > strings.Index(command, "sudo -n rm") {
+		t.Fatal("privileged removal precedes content verification")
+	}
+	workspace.Driver = "ssh"
+	if strings.Contains(workspacePruneCommand("/home/user/run-1/activity-1", workspace), "sudo") {
+		t.Fatal("non-cloud pruning escalated privileges")
+	}
+}
+
+func (stub *workspaceEndpointResolverStub) ResolveTransferEndpoint(_ context.Context, location domain.TransferLocation) (domain.TransferEndpoint, error) {
+	stub.location = location
+	return domain.TransferEndpoint{URI: "ssh://worker/" + strings.TrimPrefix(location.URI, "file://")}, nil
+}
+
+func TestWorkspaceEndpointCarriesPersistedCloudInstanceAllocation(t *testing.T) {
+	resolver := &workspaceEndpointResolverStub{}
+	manager := ActivityWorkspaceManager{Resolver: resolver}
+	workspace := domain.ActivityWorkspace{
+		ID: "workspace-run-1-activity-1", RunID: "run-1", ActivityID: "activity-1",
+		ResourceID: "capacity-1", RuntimeID: "cloud-runtime", ConnectionID: "cloud-connection",
+		URI:           "ssh://cloud-connection/akoflow/workspace/runs/run-1/activity-1?cloudInstanceId=instance-1",
+		ExecutionPath: "/akoflow/workspace/runs/run-1/activity-1",
+	}
+	if _, _, err := manager.endpoint(context.Background(), workspace); err != nil {
+		t.Fatal(err)
+	}
+	if resolver.location.CloudInstanceID != "instance-1" {
+		t.Fatalf("cloud instance allocation was lost: %+v", resolver.location)
+	}
+}
+
 func TestLocalWorkspaceLifecycleRequiresOwnershipMarker(t *testing.T) {
 	root := t.TempDir()
 	path := filepath.Join(root, "run-1", "activity-1")
@@ -127,6 +170,10 @@ func digestForTest(value []byte) string {
 
 func TestWorkspacePruneShellCommandRemovesOnlyVerifiedInputs(t *testing.T) {
 	root := t.TempDir()
+	root, err := filepath.EvalSymlinks(root)
+	if err != nil {
+		t.Fatal(err)
+	}
 	path := filepath.Join(root, "run-1", "activity-1")
 	workspace := domain.ActivityWorkspace{ID: "workspace-run-1-activity-1", RunID: "run-1",
 		ActivityID: "activity-1", ExecutionPath: path}
@@ -161,5 +208,18 @@ func TestWorkspacePruneShellCommandRemovesOnlyVerifiedInputs(t *testing.T) {
 	}
 	if content, err := os.ReadFile(filepath.Join(path, "output.fits")); err != nil || string(content) != string(output) {
 		t.Fatalf("output changed: %q %v", content, err)
+	}
+}
+func TestInspectRemoteWorkspaceSeparatesSSHWarningsFromUsage(t *testing.T) {
+	installWorkspaceSSHCheck(t, "2 106346880\n", "mux_client_request_session: session request failed: Session open refused by peer\nControlSocket already exists, disabling multiplexing\n", 0)
+	m := ActivityWorkspaceManager{Resolver: &workspaceEndpointResolverStub{}}
+	w := domain.ActivityWorkspace{ID: "workspace-run-1-activity-1", RunID: "run-1", ActivityID: "activity-1", ConnectionID: "ssh", URI: "ssh://worker/home/user/run-1/activity-1", ExecutionPath: "/home/user/run-1/activity-1"}
+	u, err := m.Inspect(context.Background(), w)
+	if err != nil || u.FileCount != 2 || u.SizeBytes != 106346880 {
+		t.Fatalf("usage=%+v err=%v", u, err)
+	}
+	installWorkspaceSSHCheck(t, "2 106346880\n", "remote failure\n", 1)
+	if _, err = m.Inspect(context.Background(), w); err == nil {
+		t.Fatal("nonzero SSH exit was accepted")
 	}
 }

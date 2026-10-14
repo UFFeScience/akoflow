@@ -1,5 +1,19 @@
 # AkôFlow repository guidance
 
+## Auxiliary tooling language
+
+- Use Go for repository tooling, scientific analysis, calibration, data exports, and their tests.
+- Do not introduce new Ruby scripts or require Ruby to run these tools. Maintain or migrate existing functionality in Go while preserving scientific contracts, provenance, and safety checks.
+- This is the user's persistent repository preference; do not replace Go tooling with Ruby in future work.
+
+## Contribution workflow
+
+- Every repository change follows `ISSUE -> BRANCH -> PR`.
+- Create or identify the GitHub issue before implementation.
+- Create a dedicated branch linked to that issue; do not implement directly on `main`.
+- Open a pull request from that branch and link it to the issue.
+- Do not bypass this sequence unless the user explicitly instructs otherwise for a specific change.
+
 ## Documentation diagrams
 
 - Use Mermaid for architecture, lifecycle, hierarchy, relationship, state, and flow diagrams in the documentation.

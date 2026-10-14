@@ -1,0 +1,5772 @@
+{
+  "schema_version": 1,
+  "run_id": "montage-micro-hpc-e2-real-20261008-relay-fresh-v1",
+  "attempt_history": "multiple_attempts",
+  "audit": {
+    "expected_count": 58,
+    "missing": [],
+    "unexpected": [],
+    "not_completed": [],
+    "incomplete_transfer_count": 0,
+    "barrier_violation_count": 0,
+    "unreleased_lease_count": 0,
+    "single_lane_micro_overlap_count": 0,
+    "missing_dependency_route_count": 0,
+    "cross_cloud_hpc_non_relay_count": 0
+  },
+  "plan": {
+    "makespanSeconds": 3617.9382322026677,
+    "cost": 0
+  },
+  "plan_assignment_compute_work_seconds": 27568.49476684796,
+  "plan_assignment_transfer_work_seconds": 30.488017932813136,
+  "simulation": {
+    "makespanSeconds": 3617.4981106317523,
+    "cost": 0,
+    "breakdown": {
+      "computeSeconds": 27557.975652713318,
+      "transferSeconds": 39.960353403544104,
+      "queueSeconds": 5162.8883215401875,
+      "interferenceSeconds": 3339.975652713315,
+      "overheadSeconds": 0
+    },
+    "transferredBytes": 880135168
+  },
+  "real_api_reported": {
+    "makespanSeconds": 7796.457294225693,
+    "cost": 0,
+    "breakdown": {
+      "computeSeconds": 13131.177605390549,
+      "transferSeconds": 1895.0516393184662,
+      "queueSeconds": 16026.768799304962,
+      "interferenceSeconds": 0,
+      "overheadSeconds": 35.79461359977722
+    },
+    "transferredBytes": 4249956208
+  },
+  "real_api_run_timestamp_wall_seconds": 589,
+  "real_network_bytes_from_routes": 33564916733,
+  "transfer_route_count": 122,
+  "dependency_route_count": 114,
+  "cross_cloud_hpc_relay_count": 24,
+  "relay_server_network_bytes": 10486984513,
+  "routes": [
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000015",
+      "producer_activity_id": null,
+      "strategy": "use-existing",
+      "duration_seconds": 6.314751386642456,
+      "logical_bytes": 340992000,
+      "network_bytes": null,
+      "relay_server_network_bytes": null,
+      "archive_bytes": null,
+      "files": null,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": []
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000051",
+      "producer_activity_id": null,
+      "strategy": "use-existing",
+      "duration_seconds": 0.011451482772827148,
+      "logical_bytes": 340992000,
+      "network_bytes": null,
+      "relay_server_network_bytes": null,
+      "archive_bytes": null,
+      "files": null,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": []
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mconcatfitid0000011",
+      "producer_activity_id": null,
+      "strategy": "use-existing",
+      "duration_seconds": 0.006067752838134766,
+      "logical_bytes": 340992000,
+      "network_bytes": null,
+      "relay_server_network_bytes": null,
+      "archive_bytes": null,
+      "files": null,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": []
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000009",
+      "producer_activity_id": null,
+      "strategy": "use-existing",
+      "duration_seconds": 0.00992894172668457,
+      "logical_bytes": 340992000,
+      "network_bytes": null,
+      "relay_server_network_bytes": null,
+      "archive_bytes": null,
+      "files": null,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": []
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000045",
+      "producer_activity_id": null,
+      "strategy": "use-existing",
+      "duration_seconds": 0.009818792343139648,
+      "logical_bytes": 340992000,
+      "network_bytes": null,
+      "relay_server_network_bytes": null,
+      "archive_bytes": null,
+      "files": null,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": []
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000046",
+      "producer_activity_id": null,
+      "strategy": "use-existing",
+      "duration_seconds": 0.018524885177612305,
+      "logical_bytes": 340992000,
+      "network_bytes": null,
+      "relay_server_network_bytes": null,
+      "archive_bytes": null,
+      "files": null,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": []
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mprojectid0000039",
+      "producer_activity_id": null,
+      "strategy": "use-existing",
+      "duration_seconds": 0.007843494415283203,
+      "logical_bytes": 340992000,
+      "network_bytes": null,
+      "relay_server_network_bytes": null,
+      "archive_bytes": null,
+      "files": null,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": []
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mprojectid0000040",
+      "producer_activity_id": null,
+      "strategy": "use-existing",
+      "duration_seconds": 0.028724193572998047,
+      "logical_bytes": 340992000,
+      "network_bytes": null,
+      "relay_server_network_bytes": null,
+      "archive_bytes": null,
+      "files": null,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": []
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-maddid0000018",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000013",
+      "strategy": "direct-runtime",
+      "duration_seconds": 614.3309240341187,
+      "logical_bytes": 741210108,
+      "network_bytes": 426472193,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 426472193,
+      "files": 75,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 2.696555709
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 37.448481474
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 6.94946617
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 18.766858259
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 409.363066935
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 204.970025468
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-maddid0000018",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000014",
+      "strategy": "direct-runtime",
+      "duration_seconds": 614.3319420814514,
+      "logical_bytes": 106387200,
+      "network_bytes": 426365774,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 426365774,
+      "files": 2,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 2.500666335
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 50.899191981
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 20.743827926
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 60.205929361
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 409.363066935
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 204.970025468
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-maddid0000018",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000015",
+      "strategy": "gateway",
+      "duration_seconds": 614.331832408905,
+      "logical_bytes": 106346880,
+      "network_bytes": 853046040,
+      "relay_server_network_bytes": 853046040,
+      "archive_bytes": 426470897,
+      "files": 2,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": 0.000020542,
+      "rsync_execution_seconds": 292.919092466,
+      "phases": [
+        {
+          "name": "pack-and-receive",
+          "durationSeconds": 60.018909777
+        },
+        {
+          "name": "archive-validation",
+          "durationSeconds": 3.698325752
+        },
+        {
+          "name": "archive-upload",
+          "durationSeconds": 292.919378758
+        },
+        {
+          "name": "receiver-verify-and-extract",
+          "durationSeconds": 12.03831084
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 409.363066935
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 204.970025468
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-maddid0000018",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000016",
+      "strategy": "direct-runtime",
+      "duration_seconds": 614.3317084312439,
+      "logical_bytes": 106387200,
+      "network_bytes": 426441434,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 426441434,
+      "files": 2,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 2.473411293
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 45.564087729
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 22.229222218
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 39.22544881
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 409.363066935
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 204.970025468
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-maddid0000018",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mimgtblid0000017",
+      "strategy": "direct-runtime",
+      "duration_seconds": 614.33243227005,
+      "logical_bytes": 2606,
+      "network_bytes": 596550583,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 596550583,
+      "files": 1,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 3.6179640429999997
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 357.677977746
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 25.054433636
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 21.229282217
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 409.363066935
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 204.970025468
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-maddid0000037",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000032",
+      "strategy": "direct-runtime",
+      "duration_seconds": 654.819329738617,
+      "logical_bytes": 733301626,
+      "network_bytes": 419527742,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 419527742,
+      "files": 75,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 2.516659502
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 46.013634438
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 19.305967884
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 21.343756676
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 420.8945164
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 233.922758107
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-maddid0000037",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000033",
+      "strategy": "direct-runtime",
+      "duration_seconds": 654.8196921348572,
+      "logical_bytes": 105154560,
+      "network_bytes": 419115000,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 419115000,
+      "files": 2,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 2.446660876
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 119.17582193
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 42.504151228
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 14.729308424
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 420.8945164
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 233.922758107
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-maddid0000037",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000034",
+      "strategy": "direct-runtime",
+      "duration_seconds": 654.8194923400879,
+      "logical_bytes": 105073920,
+      "network_bytes": 419370513,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 419370513,
+      "files": 2,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 2.520697252
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 32.50288139
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 6.674080961
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 16.306726674
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 420.8945164
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 233.922758107
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-maddid0000037",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000035",
+      "strategy": "direct-runtime",
+      "duration_seconds": 654.8190784454346,
+      "logical_bytes": 105154560,
+      "network_bytes": 419166529,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 419166529,
+      "files": 2,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 2.524931501
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 178.179390457
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 26.112237095
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 76.306967326
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 420.8945164
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 233.922758107
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-maddid0000037",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mimgtblid0000036",
+      "strategy": "direct-runtime",
+      "duration_seconds": 654.8197107315063,
+      "logical_bytes": 2600,
+      "network_bytes": 587421724,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 587421724,
+      "files": 1,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 2.810051793
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 323.932901273
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 29.651184096
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 62.718283861
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 420.8945164
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 233.922758107
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-maddid0000056",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000051",
+      "strategy": "gateway",
+      "duration_seconds": 902.0535116195679,
+      "logical_bytes": 739148022,
+      "network_bytes": 848131317,
+      "relay_server_network_bytes": 848131317,
+      "archive_bytes": 424013836,
+      "files": 75,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": 0.000376458,
+      "rsync_execution_seconds": 474.442208257,
+      "phases": [
+        {
+          "name": "pack-and-receive",
+          "durationSeconds": 51.371051149
+        },
+        {
+          "name": "archive-validation",
+          "durationSeconds": 3.561882168
+        },
+        {
+          "name": "archive-upload",
+          "durationSeconds": 474.442923382
+        },
+        {
+          "name": "receiver-verify-and-extract",
+          "durationSeconds": 88.708711374
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 619.040034573
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 283.013860171
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-maddid0000056",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000052",
+      "strategy": "direct-runtime",
+      "duration_seconds": 902.05379986763,
+      "logical_bytes": 106058880,
+      "network_bytes": 423790974,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 423790974,
+      "files": 2,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 10.223374338
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 44.109440396
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 21.498305218
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 202.924363633
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 619.040034573
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 283.013860171
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-maddid0000056",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000053",
+      "strategy": "direct-runtime",
+      "duration_seconds": 902.0536737442017,
+      "logical_bytes": 106058880,
+      "network_bytes": 424020474,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 424020474,
+      "files": 2,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 9.641296587
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 58.485955777
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 18.600893676
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 250.215288947
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 619.040034573
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 283.013860171
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-maddid0000056",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000054",
+      "strategy": "direct-runtime",
+      "duration_seconds": 902.053548336029,
+      "logical_bytes": 106058880,
+      "network_bytes": 423858028,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 423858028,
+      "files": 2,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 10.256114838
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 47.370554147
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 21.86901251
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 236.300084024
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 619.040034573
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 283.013860171
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-maddid0000056",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mimgtblid0000055",
+      "strategy": "direct-runtime",
+      "duration_seconds": 902.0540244579315,
+      "logical_bytes": 2594,
+      "network_bytes": 591910948,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 591910948,
+      "files": 1,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 9.887461463
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 223.604156602
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 105.39849838
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 182.637080417
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 619.040034573
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 283.013860171
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000013",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mbgmodelid0000012",
+      "strategy": "direct-runtime",
+      "duration_seconds": 281.8709681034088,
+      "logical_bytes": 634782588,
+      "network_bytes": 369736839,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 369736839,
+      "files": 73,
+      "snapshot_reused": true,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 2.5062835850000003
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 137.434823522
+        },
+        {
+          "name": "peer-reused-source-manifest-check",
+          "durationSeconds": 45.145640854
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 69.861771365
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 13.195819923
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 270.108200332
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 11.762270089
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000013",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mprojectid0000001",
+      "strategy": "runtime-local",
+      "duration_seconds": 282.7809317111969,
+      "logical_bytes": null,
+      "network_bytes": null,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": null,
+      "files": null,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 270.108200332
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 11.762270089
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000014",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mbgmodelid0000012",
+      "strategy": "direct-runtime",
+      "duration_seconds": 280.3702085018158,
+      "logical_bytes": 634782588,
+      "network_bytes": 369736839,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 369736839,
+      "files": 73,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 2.494062876
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 137.438620897
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 107.01930309
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 10.862254088
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 260.111651953
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 20.258116134
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000014",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mprojectid0000002",
+      "strategy": "runtime-local",
+      "duration_seconds": 281.28264021873474,
+      "logical_bytes": null,
+      "network_bytes": null,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": null,
+      "files": null,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 260.111651953
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 20.258116134
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000015",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mbgmodelid0000012",
+      "strategy": "gateway",
+      "duration_seconds": 763.6487035751343,
+      "logical_bytes": null,
+      "network_bytes": 739564074,
+      "relay_server_network_bytes": 739564074,
+      "archive_bytes": 369736839,
+      "files": 73,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": 0.000057458,
+      "rsync_execution_seconds": 527.983878574,
+      "phases": [
+        {
+          "name": "pack-and-receive",
+          "durationSeconds": 195.534266548
+        },
+        {
+          "name": "archive-validation",
+          "durationSeconds": 3.1084487100000002
+        },
+        {
+          "name": "archive-upload",
+          "durationSeconds": 527.985381533
+        },
+        {
+          "name": "receiver-verify-and-extract",
+          "durationSeconds": 10.658598546
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 743.329154213
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 20.317531426
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000015",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mprojectid0000003",
+      "strategy": "gateway",
+      "duration_seconds": 763.6494445800781,
+      "logical_bytes": null,
+      "network_bytes": 290209799,
+      "relay_server_network_bytes": 290209799,
+      "archive_bytes": 145087125,
+      "files": null,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": 0.00002875,
+      "rsync_execution_seconds": 194.006008338,
+      "phases": [
+        {
+          "name": "pack-and-receive",
+          "durationSeconds": 14.903157007
+        },
+        {
+          "name": "archive-validation",
+          "durationSeconds": 1.030943
+        },
+        {
+          "name": "archive-upload",
+          "durationSeconds": 194.006319797
+        },
+        {
+          "name": "receiver-verify-and-extract",
+          "durationSeconds": 12.091310714
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 743.329154213
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 20.317531426
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000016",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mbgmodelid0000012",
+      "strategy": "runtime-local",
+      "duration_seconds": 180.0232071876526,
+      "logical_bytes": 634782588,
+      "network_bytes": null,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": null,
+      "files": 73,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 31.269985598
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 147.835616818
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000016",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mprojectid0000004",
+      "strategy": "direct-runtime",
+      "duration_seconds": 179.1061429977417,
+      "logical_bytes": null,
+      "network_bytes": 144937261,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 144937261,
+      "files": null,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 2.443690084
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 11.954264714
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 5.994418211
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 8.82620892
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 31.269985598
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 147.835616818
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000032",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mbgmodelid0000031",
+      "strategy": "direct-runtime",
+      "duration_seconds": 271.62722158432007,
+      "logical_bytes": 628187386,
+      "network_bytes": 363248071,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 363248071,
+      "files": 73,
+      "snapshot_reused": true,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 2.545101501
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 147.840374401
+        },
+        {
+          "name": "peer-reused-source-manifest-check",
+          "durationSeconds": 47.780492271
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 40.679319519
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 11.011978505
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 251.763697781
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 19.862637800999998
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000032",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mprojectid0000020",
+      "strategy": "runtime-local",
+      "duration_seconds": 275.13195848464966,
+      "logical_bytes": null,
+      "network_bytes": null,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": null,
+      "files": null,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 251.763697781
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 19.862637800999998
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000033",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mbgmodelid0000031",
+      "strategy": "direct-runtime",
+      "duration_seconds": 295.60314750671387,
+      "logical_bytes": 628187386,
+      "network_bytes": 363248071,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 363248071,
+      "files": 73,
+      "snapshot_reused": true,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 2.509992001
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 147.793062151
+        },
+        {
+          "name": "peer-reused-source-manifest-check",
+          "durationSeconds": 47.780213396
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 61.861914362
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 12.537392381
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 274.3637555
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 21.238856801
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000033",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mprojectid0000021",
+      "strategy": "runtime-local",
+      "duration_seconds": 299.08795189857483,
+      "logical_bytes": null,
+      "network_bytes": null,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": null,
+      "files": null,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 274.3637555
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 21.238856801
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000034",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mbgmodelid0000031",
+      "strategy": "direct-runtime",
+      "duration_seconds": 270.89739298820496,
+      "logical_bytes": 628187386,
+      "network_bytes": 363248071,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 363248071,
+      "files": 73,
+      "snapshot_reused": true,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 2.405920127
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 150.576803527
+        },
+        {
+          "name": "peer-reused-source-manifest-check",
+          "durationSeconds": 47.785550646
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 46.422484272
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 13.256668464
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 262.366893245
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 8.529488046
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000034",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mprojectid0000022",
+      "strategy": "runtime-local",
+      "duration_seconds": 271.7986271381378,
+      "logical_bytes": null,
+      "network_bytes": null,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": null,
+      "files": null,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 262.366893245
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 8.529488046
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000035",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mbgmodelid0000031",
+      "strategy": "direct-runtime",
+      "duration_seconds": 276.56462240219116,
+      "logical_bytes": 628187386,
+      "network_bytes": 363248071,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 363248071,
+      "files": 73,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 2.431771626
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 150.865991319
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 88.959894791
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 12.587019047
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 256.668754117
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 19.895121884
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000035",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mprojectid0000023",
+      "strategy": "direct-runtime",
+      "duration_seconds": 276.564759016037,
+      "logical_bytes": null,
+      "network_bytes": 143228071,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 143228071,
+      "files": null,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 2.434955335
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 11.160557672
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 4.112578418
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 3.936012127
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 256.668754117
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 19.895121884
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000051",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mbgmodelid0000050",
+      "strategy": "gateway",
+      "duration_seconds": 414.72493290901184,
+      "logical_bytes": null,
+      "network_bytes": 735942728,
+      "relay_server_network_bytes": 735942728,
+      "archive_bytes": 367926386,
+      "files": 73,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": 0.000044917,
+      "rsync_execution_seconds": 345.63816745,
+      "phases": [
+        {
+          "name": "pack-and-receive",
+          "durationSeconds": 30.36157214
+        },
+        {
+          "name": "archive-validation",
+          "durationSeconds": 2.827200667
+        },
+        {
+          "name": "archive-upload",
+          "durationSeconds": 345.638546908
+        },
+        {
+          "name": "receiver-verify-and-extract",
+          "durationSeconds": 10.649182378999999
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 396.479874348
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 18.244609717
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000051",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mprojectid0000039",
+      "strategy": "direct-runtime",
+      "duration_seconds": 581.4172084331512,
+      "logical_bytes": null,
+      "network_bytes": null,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": null,
+      "files": null,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 396.479874348
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 18.244609717
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000052",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mbgmodelid0000050",
+      "strategy": "direct-runtime",
+      "duration_seconds": 260.8665964603424,
+      "logical_bytes": 633129462,
+      "network_bytes": 367926386,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 367926386,
+      "files": 73,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 3.353854793
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 31.299148931
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 5.727737628
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 10.765665588
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 241.653465194
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 19.212322008
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000052",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mprojectid0000040",
+      "strategy": "gateway",
+      "duration_seconds": 260.866628408432,
+      "logical_bytes": null,
+      "network_bytes": 106265672,
+      "relay_server_network_bytes": 106265672,
+      "archive_bytes": 53126285,
+      "files": null,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": 0.000042416,
+      "rsync_execution_seconds": 26.534619095,
+      "phases": [
+        {
+          "name": "pack-and-receive",
+          "durationSeconds": 212.08486393
+        },
+        {
+          "name": "archive-validation",
+          "durationSeconds": 0.477033
+        },
+        {
+          "name": "archive-upload",
+          "durationSeconds": 26.535173387
+        },
+        {
+          "name": "receiver-verify-and-extract",
+          "durationSeconds": 1.6406673760000001
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 241.653465194
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 19.212322008
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000053",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mbgmodelid0000050",
+      "strategy": "direct-runtime",
+      "duration_seconds": 270.9440813064575,
+      "logical_bytes": 633129462,
+      "network_bytes": 367926386,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 367926386,
+      "files": 73,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 2.547835418
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 28.500759888
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 6.590586378
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 87.578910415
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 127.217878267
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 143.72586194
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000053",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mprojectid0000041",
+      "strategy": "runtime-local",
+      "duration_seconds": 271.9007866382599,
+      "logical_bytes": null,
+      "network_bytes": null,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": null,
+      "files": null,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 127.217878267
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 143.72586194
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000054",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mbgmodelid0000050",
+      "strategy": "direct-runtime",
+      "duration_seconds": 75.03178119659424,
+      "logical_bytes": 633129462,
+      "network_bytes": 367926386,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 367926386,
+      "files": 73,
+      "snapshot_reused": true,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 2.619575251
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 29.854826721
+        },
+        {
+          "name": "peer-reused-source-manifest-check",
+          "durationSeconds": 2.8302050850000002
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 5.970946169
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 12.265419547
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 55.324760233
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 19.706502426
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000054",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mprojectid0000042",
+      "strategy": "direct-runtime",
+      "duration_seconds": 75.0317952632904,
+      "logical_bytes": null,
+      "network_bytes": 144466623,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 144466623,
+      "files": null,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 2.620175126
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 14.725870298
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 4.08022071
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 3.448457293
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 55.324760233
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 19.706502426
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mbgmodelid0000012",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mconcatfitid0000011",
+      "strategy": "gateway",
+      "duration_seconds": 607.9305422306061,
+      "logical_bytes": 634782312,
+      "network_bytes": 739568420,
+      "relay_server_network_bytes": 739568420,
+      "archive_bytes": 369739011,
+      "files": 72,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": 0.000017833,
+      "rsync_execution_seconds": 323.392784192,
+      "phases": [
+        {
+          "name": "pack-and-receive",
+          "durationSeconds": 251.858159615
+        },
+        {
+          "name": "archive-validation",
+          "durationSeconds": 2.896204918
+        },
+        {
+          "name": "archive-upload",
+          "durationSeconds": 323.392935567
+        },
+        {
+          "name": "receiver-verify-and-extract",
+          "durationSeconds": 9.082637671
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 590.19212673
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 17.727275007
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mbgmodelid0000031",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mconcatfitid0000030",
+      "strategy": "direct-runtime",
+      "duration_seconds": 265.28645491600037,
+      "logical_bytes": 628187110,
+      "network_bytes": 363247666,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 363247666,
+      "files": 72,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 3.388611168
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 218.511741725
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 13.554433756
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 10.899791713
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 248.196333155
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 17.0898088
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mbgmodelid0000050",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mconcatfitid0000049",
+      "strategy": "direct-runtime",
+      "duration_seconds": 63.65419936180115,
+      "logical_bytes": 633129186,
+      "network_bytes": 367926467,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 367926467,
+      "files": 72,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 2.506786876
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 30.149714014
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 12.088991463
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 10.528675172
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 57.083123277
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 6.572613712
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mconcatfitid0000011",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000005",
+      "strategy": "gateway",
+      "duration_seconds": 652.6848080158234,
+      "logical_bytes": null,
+      "network_bytes": 426557260,
+      "relay_server_network_bytes": 426557260,
+      "archive_bytes": 213252535,
+      "files": 52,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": 0.000008834,
+      "rsync_execution_seconds": 264.14142033,
+      "phases": [
+        {
+          "name": "pack-and-receive",
+          "durationSeconds": 20.572842218
+        },
+        {
+          "name": "archive-validation",
+          "durationSeconds": 1.6265003340000002
+        },
+        {
+          "name": "archive-upload",
+          "durationSeconds": 264.141550914
+        },
+        {
+          "name": "receiver-verify-and-extract",
+          "durationSeconds": 9.367313213
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 616.375398324
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 36.308577057
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mconcatfitid0000011",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000006",
+      "strategy": "gateway",
+      "duration_seconds": 652.6848516464233,
+      "logical_bytes": null,
+      "network_bytes": 429294254,
+      "relay_server_network_bytes": 429294254,
+      "archive_bytes": 214620864,
+      "files": 5,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": 0.000034042,
+      "rsync_execution_seconds": 277.566261002,
+      "phases": [
+        {
+          "name": "pack-and-receive",
+          "durationSeconds": 29.942551139
+        },
+        {
+          "name": "archive-validation",
+          "durationSeconds": 1.620963709
+        },
+        {
+          "name": "archive-upload",
+          "durationSeconds": 277.56659746
+        },
+        {
+          "name": "receiver-verify-and-extract",
+          "durationSeconds": 7.650653212
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 616.375398324
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 36.308577057
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mconcatfitid0000011",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000007",
+      "strategy": "gateway",
+      "duration_seconds": 652.6844909191132,
+      "logical_bytes": null,
+      "network_bytes": 405546200,
+      "relay_server_network_bytes": 405546200,
+      "archive_bytes": 202748285,
+      "files": 5,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": 0.000018083,
+      "rsync_execution_seconds": 196.576118173,
+      "phases": [
+        {
+          "name": "pack-and-receive",
+          "durationSeconds": 16.749759466
+        },
+        {
+          "name": "archive-validation",
+          "durationSeconds": 1.609920126
+        },
+        {
+          "name": "archive-upload",
+          "durationSeconds": 196.576329132
+        },
+        {
+          "name": "receiver-verify-and-extract",
+          "durationSeconds": 45.573716979
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 616.375398324
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 36.308577057
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mconcatfitid0000011",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000008",
+      "strategy": "gateway",
+      "duration_seconds": 652.6846537590027,
+      "logical_bytes": null,
+      "network_bytes": 407475944,
+      "relay_server_network_bytes": 407475944,
+      "archive_bytes": 203713041,
+      "files": 3,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": 0.000010292,
+      "rsync_execution_seconds": 229.566732314,
+      "phases": [
+        {
+          "name": "pack-and-receive",
+          "durationSeconds": 19.614414426
+        },
+        {
+          "name": "archive-validation",
+          "durationSeconds": 1.5673055420000002
+        },
+        {
+          "name": "archive-upload",
+          "durationSeconds": 229.566848481
+        },
+        {
+          "name": "receiver-verify-and-extract",
+          "durationSeconds": 15.611233216
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 616.375398324
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 36.308577057
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mconcatfitid0000011",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000009",
+      "strategy": "direct-runtime",
+      "duration_seconds": 656.0008978843689,
+      "logical_bytes": null,
+      "network_bytes": null,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": null,
+      "files": 3,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 616.375398324
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 36.308577057
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mconcatfitid0000011",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000010",
+      "strategy": "gateway",
+      "duration_seconds": 652.6853134632111,
+      "logical_bytes": null,
+      "network_bytes": 419956542,
+      "relay_server_network_bytes": 419956542,
+      "archive_bytes": 209952576,
+      "files": 3,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": 2.454666543,
+      "rsync_execution_seconds": 385.457718426,
+      "phases": [
+        {
+          "name": "pack-and-receive",
+          "durationSeconds": 67.47242174
+        },
+        {
+          "name": "archive-validation",
+          "durationSeconds": 1.629782542
+        },
+        {
+          "name": "archive-upload",
+          "durationSeconds": 387.912780802
+        },
+        {
+          "name": "receiver-verify-and-extract",
+          "durationSeconds": 6.578137294
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 616.375398324
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 36.308577057
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mconcatfitid0000030",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000024",
+      "strategy": "runtime-local",
+      "duration_seconds": 185.99872636795044,
+      "logical_bytes": 331918633,
+      "network_bytes": null,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": null,
+      "files": 52,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 149.304178902
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 35.7947211
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mconcatfitid0000030",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000025",
+      "strategy": "direct-runtime",
+      "duration_seconds": 185.0986704826355,
+      "logical_bytes": 136224289,
+      "network_bytes": 211411738,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 211411738,
+      "files": 5,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 4.435207252
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 17.009688424
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 7.854852628
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 16.729584383
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 149.304178902
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 35.7947211
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mconcatfitid0000030",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000026",
+      "strategy": "direct-runtime",
+      "duration_seconds": 185.09843158721924,
+      "logical_bytes": 114307483,
+      "network_bytes": 199485248,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 199485248,
+      "files": 5,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 4.518207252
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 16.956187217
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 7.09634467
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 12.655428547
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 149.304178902
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 35.7947211
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mconcatfitid0000030",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000027",
+      "strategy": "direct-runtime",
+      "duration_seconds": 185.09855437278748,
+      "logical_bytes": 9187481,
+      "network_bytes": 200618813,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 200618813,
+      "files": 3,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 4.485541419
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 14.122754631
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 4.9466358360000005
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 13.123740756
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 149.304178902
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 35.7947211
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mconcatfitid0000030",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000028",
+      "strategy": "direct-runtime",
+      "duration_seconds": 185.09829258918762,
+      "logical_bytes": 18288283,
+      "network_bytes": 205320505,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 205320505,
+      "files": 3,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 4.198965294
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 126.463010976
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 10.03860888
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 6.52149171
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 149.304178902
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 35.7947211
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mconcatfitid0000030",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000029",
+      "strategy": "direct-runtime",
+      "duration_seconds": 185.09922909736633,
+      "logical_bytes": 18259484,
+      "network_bytes": 206564380,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 206564380,
+      "files": 3,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 4.75086746
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 15.706082966
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 5.086773127
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 14.25090909
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 149.304178902
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 35.7947211
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mconcatfitid0000049",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000043",
+      "strategy": "direct-runtime",
+      "duration_seconds": 204.2971155643463,
+      "logical_bytes": 334124710,
+      "network_bytes": 212132039,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 212132039,
+      "files": 52,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 2.490275001
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 17.092995882
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 6.81153317
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 15.706527631
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 170.594113411
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 33.70487864
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mconcatfitid0000049",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000044",
+      "strategy": "runtime-local",
+      "duration_seconds": 205.23656487464905,
+      "logical_bytes": 137623968,
+      "network_bytes": null,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": null,
+      "files": 5,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 170.594113411
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 33.70487864
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mconcatfitid0000049",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000045",
+      "strategy": "gateway",
+      "duration_seconds": 204.2967972755432,
+      "logical_bytes": 115303963,
+      "network_bytes": 403025892,
+      "relay_server_network_bytes": 403025892,
+      "archive_bytes": 201488287,
+      "files": 5,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": 0.000006791,
+      "rsync_execution_seconds": 105.87002484,
+      "phases": [
+        {
+          "name": "pack-and-receive",
+          "durationSeconds": 54.969837733
+        },
+        {
+          "name": "archive-validation",
+          "durationSeconds": 1.5398483760000001
+        },
+        {
+          "name": "archive-upload",
+          "durationSeconds": 105.870139965
+        },
+        {
+          "name": "receiver-verify-and-extract",
+          "durationSeconds": 7.276137629
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 170.594113411
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 33.70487864
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mconcatfitid0000049",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000046",
+      "strategy": "gateway",
+      "duration_seconds": 204.29700016975403,
+      "logical_bytes": 9256599,
+      "network_bytes": 405335430,
+      "relay_server_network_bytes": 405335430,
+      "archive_bytes": 202642912,
+      "files": 3,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": 0.0000065,
+      "rsync_execution_seconds": 105.792789132,
+      "phases": [
+        {
+          "name": "pack-and-receive",
+          "durationSeconds": 54.545440774
+        },
+        {
+          "name": "archive-validation",
+          "durationSeconds": 1.5712100420000001
+        },
+        {
+          "name": "archive-upload",
+          "durationSeconds": 105.792921506
+        },
+        {
+          "name": "receiver-verify-and-extract",
+          "durationSeconds": 7.358542878
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 170.594113411
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 33.70487864
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mconcatfitid0000049",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000047",
+      "strategy": "direct-runtime",
+      "duration_seconds": 204.29672813415527,
+      "logical_bytes": 18403484,
+      "network_bytes": 207598133,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 207598133,
+      "files": 3,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 2.494544043
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 15.630427632
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 6.473384461
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 16.003756132
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 170.594113411
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 33.70487864
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mconcatfitid0000049",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000048",
+      "strategy": "direct-runtime",
+      "duration_seconds": 204.2974681854248,
+      "logical_bytes": 18415005,
+      "network_bytes": 208932402,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 208932402,
+      "files": 3,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 3.313721168
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 16.817563299
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 7.050127379
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 16.135577382
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 170.594113411
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 33.70487864
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000005",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mprojectid0000001",
+      "strategy": "direct-runtime",
+      "duration_seconds": 66.46953964233398,
+      "logical_bytes": 196978822,
+      "network_bytes": 142938003,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 142938003,
+      "files": 47,
+      "snapshot_reused": true,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 2.478756876
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 0.000057917
+        },
+        {
+          "name": "peer-reused-source-manifest-check",
+          "durationSeconds": 1.098315792
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 3.476758044
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 3.563936794
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 57.534868151
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 8.935036004
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000005",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mprojectid0000002",
+      "strategy": "direct-runtime",
+      "duration_seconds": 66.46959853172302,
+      "logical_bytes": 106387200,
+      "network_bytes": 143717245,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 143717245,
+      "files": 2,
+      "snapshot_reused": true,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 10.243664213
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 0.000197667
+        },
+        {
+          "name": "peer-reused-source-manifest-check",
+          "durationSeconds": 12.98712063
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 19.996901009
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 4.055138418
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 57.534868151
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 8.935036004
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000006",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mprojectid0000001",
+      "strategy": "direct-runtime",
+      "duration_seconds": 62.52905774116516,
+      "logical_bytes": 196978822,
+      "network_bytes": 142938003,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 142938003,
+      "files": 47,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 2.442025668
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 10.219660338
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 3.91963696
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 6.087234836
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 27.384603138
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 35.14418639
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000006",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mprojectid0000003",
+      "strategy": "direct-runtime",
+      "duration_seconds": 62.52943420410156,
+      "logical_bytes": 106346880,
+      "network_bytes": 145087125,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 145087125,
+      "files": 2,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 2.449628918
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 10.493874089
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 3.857341085
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 6.519990336
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 27.384603138
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 35.14418639
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000007",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mprojectid0000001",
+      "strategy": "direct-runtime",
+      "duration_seconds": 187.4970350265503,
+      "logical_bytes": 196978822,
+      "network_bytes": 142938003,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 142938003,
+      "files": 47,
+      "snapshot_reused": true,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 2.62780175
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 0.00005
+        },
+        {
+          "name": "peer-reused-source-manifest-check",
+          "durationSeconds": 1.82465575
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 3.724145585
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 3.630290044
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 178.471809789
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 9.025138212
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000007",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mprojectid0000004",
+      "strategy": "direct-runtime",
+      "duration_seconds": 187.49725008010864,
+      "logical_bytes": 106387200,
+      "network_bytes": 144937261,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 144937261,
+      "files": 2,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 6.252224127
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 146.270671565
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 19.499906801
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 4.06608696
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 178.471809789
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 9.025138212
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000008",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mprojectid0000002",
+      "strategy": "direct-runtime",
+      "duration_seconds": 116.37553095817566,
+      "logical_bytes": 196938502,
+      "network_bytes": 143717245,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 143717245,
+      "files": 47,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 2.995029627
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 71.209413491
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 23.997694719
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 6.046395295
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 106.084877298
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 10.290322213
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000008",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mprojectid0000003",
+      "strategy": "runtime-local",
+      "duration_seconds": 117.272714138031,
+      "logical_bytes": 106346880,
+      "network_bytes": null,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": null,
+      "files": 2,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 106.084877298
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 10.290322213
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000009",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mprojectid0000002",
+      "strategy": "gateway",
+      "duration_seconds": 504.94350481033325,
+      "logical_bytes": null,
+      "network_bytes": 287469704,
+      "relay_server_network_bytes": 287469704,
+      "archive_bytes": 143717245,
+      "files": 47,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": 0.000034375,
+      "rsync_execution_seconds": 365.254483834,
+      "phases": [
+        {
+          "name": "pack-and-receive",
+          "durationSeconds": 108.49965109
+        },
+        {
+          "name": "archive-validation",
+          "durationSeconds": 1.197743334
+        },
+        {
+          "name": "archive-upload",
+          "durationSeconds": 365.254826834
+        },
+        {
+          "name": "receiver-verify-and-extract",
+          "durationSeconds": 5.329628627
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 492.625308808
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 12.317526589
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000009",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mprojectid0000004",
+      "strategy": "gateway",
+      "duration_seconds": 504.94351077079773,
+      "logical_bytes": null,
+      "network_bytes": 289910040,
+      "relay_server_network_bytes": 289910040,
+      "archive_bytes": 144937261,
+      "files": 2,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": 3.832110626,
+      "rsync_execution_seconds": 115.047871345,
+      "phases": [
+        {
+          "name": "pack-and-receive",
+          "durationSeconds": 158.986707946
+        },
+        {
+          "name": "archive-validation",
+          "durationSeconds": 1.030272084
+        },
+        {
+          "name": "archive-upload",
+          "durationSeconds": 118.880372471
+        },
+        {
+          "name": "receiver-verify-and-extract",
+          "durationSeconds": 4.736107752
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 492.625308808
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 12.317526589
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000010",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mprojectid0000003",
+      "strategy": "direct-runtime",
+      "duration_seconds": 145.28475213050842,
+      "logical_bytes": 196898182,
+      "network_bytes": 145087125,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 145087125,
+      "files": 47,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 2.4933886259999998
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 13.373688048
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 6.486026753
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 3.573951667
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 136.770193771
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 8.514610588
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000010",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mprojectid0000004",
+      "strategy": "direct-runtime",
+      "duration_seconds": 145.2849087715149,
+      "logical_bytes": 106387200,
+      "network_bytes": 144937261,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 144937261,
+      "files": 2,
+      "snapshot_reused": true,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 7.491883629
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 0.000164083
+        },
+        {
+          "name": "peer-reused-source-manifest-check",
+          "durationSeconds": 14.997653799
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 18.483972508
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 4.598530169
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 136.770193771
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 8.514610588
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000024",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mprojectid0000020",
+      "strategy": "direct-runtime",
+      "duration_seconds": 133.22930908203125,
+      "logical_bytes": 195665542,
+      "network_bytes": 141396213,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 141396213,
+      "files": 47,
+      "snapshot_reused": true,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 3.313380252
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 0.000138625
+        },
+        {
+          "name": "peer-reused-source-manifest-check",
+          "durationSeconds": 1.02851725
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 3.862005626
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 4.102986002
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 126.530978517
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 6.69817192
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000024",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mprojectid0000021",
+      "strategy": "direct-runtime",
+      "duration_seconds": 133.229474067688,
+      "logical_bytes": 105154560,
+      "network_bytes": 142297171,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 142297171,
+      "files": 2,
+      "snapshot_reused": true,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 6.7468419189999995
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 80.758853245
+        },
+        {
+          "name": "peer-reused-source-manifest-check",
+          "durationSeconds": 14.244988632
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 18.235347342
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 4.013915044
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 126.530978517
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 6.69817192
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000025",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mprojectid0000020",
+      "strategy": "runtime-local",
+      "duration_seconds": 35.70151400566101,
+      "logical_bytes": 195665542,
+      "network_bytes": null,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": null,
+      "files": 47,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 23.791440219
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 11.014713296
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000025",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mprojectid0000022",
+      "strategy": "direct-runtime",
+      "duration_seconds": 34.805907249450684,
+      "logical_bytes": 105073920,
+      "network_bytes": 143458908,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 143458908,
+      "files": 2,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 2.398061667
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 9.89596313
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 3.6887702940000002
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 4.035141335
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 23.791440219
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 11.014713296
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000026",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mprojectid0000020",
+      "strategy": "direct-runtime",
+      "duration_seconds": 84.30387496948242,
+      "logical_bytes": 195665542,
+      "network_bytes": 141396213,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 141396213,
+      "files": 47,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 3.625618794
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 10.052187712
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 4.074194877
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 29.065164388
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 50.655918857
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 33.648178473
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000026",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mprojectid0000023",
+      "strategy": "direct-runtime",
+      "duration_seconds": 84.30418920516968,
+      "logical_bytes": 105154560,
+      "network_bytes": 143228071,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 143228071,
+      "files": 2,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 3.62268521
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 10.396417754
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 4.498511627
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 30.318646014
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 50.655918857
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 33.648178473
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000027",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mprojectid0000021",
+      "strategy": "direct-runtime",
+      "duration_seconds": 143.87353658676147,
+      "logical_bytes": 195705862,
+      "network_bytes": 142297171,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 142297171,
+      "files": 47,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 3.6050648770000002
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 107.41510084
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 19.735992301
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 4.094739502
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 136.929768104
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 6.943490004
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000027",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mprojectid0000022",
+      "strategy": "direct-runtime",
+      "duration_seconds": 143.87355995178223,
+      "logical_bytes": 105073920,
+      "network_bytes": 143458908,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 143458908,
+      "files": 2,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 3.605970585
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 9.965538712
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 3.901776836
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 3.746274419
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 136.929768104
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 6.943490004
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000028",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mprojectid0000021",
+      "strategy": "runtime-local",
+      "duration_seconds": 140.04533123970032,
+      "logical_bytes": 195705862,
+      "network_bytes": null,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": null,
+      "files": 47,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 66.412851905
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 72.725267992
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000028",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mprojectid0000023",
+      "strategy": "direct-runtime",
+      "duration_seconds": 139.13855051994324,
+      "logical_bytes": 105154560,
+      "network_bytes": 143228071,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 143228071,
+      "files": 2,
+      "snapshot_reused": true,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 2.423773084
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 0.000123208
+        },
+        {
+          "name": "peer-reused-source-manifest-check",
+          "durationSeconds": 1.001709667
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 13.590817505
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 47.200062897
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 66.412851905
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 72.725267992
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000029",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mprojectid0000022",
+      "strategy": "direct-runtime",
+      "duration_seconds": 41.417306900024414,
+      "logical_bytes": 195625222,
+      "network_bytes": 143458908,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 143458908,
+      "files": 47,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 4.92303071
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 11.760180881
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 5.286655794
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 8.700003503
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 32.434681389
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 8.983081629
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000029",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mprojectid0000023",
+      "strategy": "runtime-local",
+      "duration_seconds": 42.36921787261963,
+      "logical_bytes": 105154560,
+      "network_bytes": null,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": null,
+      "files": 2,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 32.434681389
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 8.983081629
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000043",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mprojectid0000039",
+      "strategy": "gateway",
+      "duration_seconds": 75.43630909919739,
+      "logical_bytes": 106018560,
+      "network_bytes": 103997681,
+      "relay_server_network_bytes": 103997681,
+      "archive_bytes": 51992430,
+      "files": 2,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": 0.000007875,
+      "rsync_execution_seconds": 48.899691022,
+      "phases": [
+        {
+          "name": "pack-and-receive",
+          "durationSeconds": 18.246992883
+        },
+        {
+          "name": "archive-validation",
+          "durationSeconds": 0.507384292
+        },
+        {
+          "name": "archive-upload",
+          "durationSeconds": 48.899877147
+        },
+        {
+          "name": "receiver-verify-and-extract",
+          "durationSeconds": 1.838642917
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 71.865525409
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 3.575245252
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000043",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mprojectid0000040",
+      "strategy": "gateway",
+      "duration_seconds": 75.4400897026062,
+      "logical_bytes": 106058880,
+      "network_bytes": 106265672,
+      "relay_server_network_bytes": 106265672,
+      "archive_bytes": 53126285,
+      "files": 2,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": 0.000021375,
+      "rsync_execution_seconds": 49.835328232,
+      "phases": [
+        {
+          "name": "pack-and-receive",
+          "durationSeconds": 18.632541717
+        },
+        {
+          "name": "archive-validation",
+          "durationSeconds": 0.491476625
+        },
+        {
+          "name": "archive-upload",
+          "durationSeconds": 49.835570481
+        },
+        {
+          "name": "receiver-verify-and-extract",
+          "durationSeconds": 1.9972432100000002
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 71.865525409
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 3.575245252
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000044",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mprojectid0000039",
+      "strategy": "gateway",
+      "duration_seconds": 173.40080380439758,
+      "logical_bytes": 106018560,
+      "network_bytes": 103997681,
+      "relay_server_network_bytes": 103997681,
+      "archive_bytes": 51992430,
+      "files": 2,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": 0.00135175,
+      "rsync_execution_seconds": 10.743058006,
+      "phases": [
+        {
+          "name": "pack-and-receive",
+          "durationSeconds": 153.051702361
+        },
+        {
+          "name": "archive-validation",
+          "durationSeconds": 0.480600958
+        },
+        {
+          "name": "archive-upload",
+          "durationSeconds": 10.744751547
+        },
+        {
+          "name": "receiver-verify-and-extract",
+          "durationSeconds": 1.6235946669999999
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 166.81424291
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 6.586628378
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000044",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mprojectid0000041",
+      "strategy": "direct-runtime",
+      "duration_seconds": 173.40082049369812,
+      "logical_bytes": 196610182,
+      "network_bytes": 144488542,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 144488542,
+      "files": 47,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 3.373361751
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 9.953354088
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 3.9217513349999997
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 4.008268418
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 166.81424291
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 6.586628378
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000045",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mprojectid0000039",
+      "strategy": "direct-runtime",
+      "duration_seconds": 103.09657859802246,
+      "logical_bytes": null,
+      "network_bytes": null,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": null,
+      "files": 2,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 92.808933792
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 8.27773367
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000045",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mprojectid0000042",
+      "strategy": "gateway",
+      "duration_seconds": 101.08658576011658,
+      "logical_bytes": null,
+      "network_bytes": 288968644,
+      "relay_server_network_bytes": 288968644,
+      "archive_bytes": 144466623,
+      "files": 47,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": 0.000033959,
+      "rsync_execution_seconds": 73.086553783,
+      "phases": [
+        {
+          "name": "pack-and-receive",
+          "durationSeconds": 12.459985255
+        },
+        {
+          "name": "archive-validation",
+          "durationSeconds": 1.3071645840000001
+        },
+        {
+          "name": "archive-upload",
+          "durationSeconds": 73.086863575
+        },
+        {
+          "name": "receiver-verify-and-extract",
+          "durationSeconds": 3.8476616679999998
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 92.808933792
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 8.27773367
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000046",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mprojectid0000040",
+      "strategy": "direct-runtime",
+      "duration_seconds": 403.96275639533997,
+      "logical_bytes": null,
+      "network_bytes": null,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": null,
+      "files": 2,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 391.325458929
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 10.55416438
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000046",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mprojectid0000041",
+      "strategy": "gateway",
+      "duration_seconds": 401.8796820640564,
+      "logical_bytes": null,
+      "network_bytes": 289012490,
+      "relay_server_network_bytes": 289012490,
+      "archive_bytes": 144488542,
+      "files": 47,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": 0.000020291,
+      "rsync_execution_seconds": 79.466218078,
+      "phases": [
+        {
+          "name": "pack-and-receive",
+          "durationSeconds": 80.713093746
+        },
+        {
+          "name": "archive-validation",
+          "durationSeconds": 1.190307292
+        },
+        {
+          "name": "archive-upload",
+          "durationSeconds": 79.466464203
+        },
+        {
+          "name": "receiver-verify-and-extract",
+          "durationSeconds": 5.151668711
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 391.325458929
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 10.55416438
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000047",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mprojectid0000040",
+      "strategy": "gateway",
+      "duration_seconds": 202.5039165019989,
+      "logical_bytes": 106058880,
+      "network_bytes": 106265672,
+      "relay_server_network_bytes": 106265672,
+      "archive_bytes": 53126285,
+      "files": 2,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": 0.000017459,
+      "rsync_execution_seconds": 28.753494637,
+      "phases": [
+        {
+          "name": "pack-and-receive",
+          "durationSeconds": 12.364945089
+        },
+        {
+          "name": "archive-validation",
+          "durationSeconds": 0.499485209
+        },
+        {
+          "name": "archive-upload",
+          "durationSeconds": 28.753710596
+        },
+        {
+          "name": "receiver-verify-and-extract",
+          "durationSeconds": 35.494144433
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 161.79732924
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 40.70646006
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000047",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mprojectid0000042",
+      "strategy": "direct-runtime",
+      "duration_seconds": 202.50408005714417,
+      "logical_bytes": 196610182,
+      "network_bytes": 144466623,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 144466623,
+      "files": 47,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 5.00336296
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 9.647498963
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 20.311715717
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 81.177289579
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 161.79732924
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 40.70646006
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000048",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mprojectid0000041",
+      "strategy": "runtime-local",
+      "duration_seconds": 111.15899515151978,
+      "logical_bytes": 196610182,
+      "network_bytes": null,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": null,
+      "files": 47,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 74.835036493
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 35.222976348
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000048",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mprojectid0000042",
+      "strategy": "direct-runtime",
+      "duration_seconds": 110.05774259567261,
+      "logical_bytes": 106058880,
+      "network_bytes": 144466623,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 144466623,
+      "files": 2,
+      "snapshot_reused": true,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 4.7559595439999995
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 0.000165792
+        },
+        {
+          "name": "peer-reused-source-manifest-check",
+          "durationSeconds": 1.037282126
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 18.9088933
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 47.941839564
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 74.835036493
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 35.222976348
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mimgtblid0000017",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000013",
+      "strategy": "direct-runtime",
+      "duration_seconds": 449.87063813209534,
+      "logical_bytes": 741210108,
+      "network_bytes": 426472193,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 426472193,
+      "files": 75,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 2.3781523350000002
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 33.650547057
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 7.208194753
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 20.133394884
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 395.404969888
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 54.476385108
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mimgtblid0000017",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000014",
+      "strategy": "direct-runtime",
+      "duration_seconds": 449.8704171180725,
+      "logical_bytes": 106387200,
+      "network_bytes": 426365774,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 426365774,
+      "files": 2,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 2.38744196
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 49.507386231
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 13.321296298
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 67.807544613
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 395.404969888
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 54.476385108
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mimgtblid0000017",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000015",
+      "strategy": "gateway",
+      "duration_seconds": 449.87037992477417,
+      "logical_bytes": 106346880,
+      "network_bytes": 853046040,
+      "relay_server_network_bytes": 853046040,
+      "archive_bytes": 426470897,
+      "files": 2,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": 0.000061666,
+      "rsync_execution_seconds": 314.184302975,
+      "phases": [
+        {
+          "name": "pack-and-receive",
+          "durationSeconds": 66.654863947
+        },
+        {
+          "name": "archive-validation",
+          "durationSeconds": 3.369466502
+        },
+        {
+          "name": "archive-upload",
+          "durationSeconds": 314.184784976
+        },
+        {
+          "name": "receiver-verify-and-extract",
+          "durationSeconds": 10.215388921
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 395.404969888
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 54.476385108
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mimgtblid0000017",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000016",
+      "strategy": "direct-runtime",
+      "duration_seconds": 449.87099862098694,
+      "logical_bytes": 106387200,
+      "network_bytes": 426441434,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 426441434,
+      "files": 2,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 2.372991293
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 50.36258394
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 14.69739659
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 68.218247489
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 395.404969888
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 54.476385108
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mimgtblid0000036",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000032",
+      "strategy": "direct-runtime",
+      "duration_seconds": 573.1349940299988,
+      "logical_bytes": 733301626,
+      "network_bytes": 419527742,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 419527742,
+      "files": 75,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 4.002438336
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 140.357959274
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 21.684435051
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 14.060131382
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 336.609416195
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 236.51497886
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mimgtblid0000036",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000033",
+      "strategy": "direct-runtime",
+      "duration_seconds": 573.1349549293518,
+      "logical_bytes": 105154560,
+      "network_bytes": 419115000,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 419115000,
+      "files": 2,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 4.608344211
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 291.091687759
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 24.891700427
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 14.203071464
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 336.609416195
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 236.51497886
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mimgtblid0000036",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000034",
+      "strategy": "direct-runtime",
+      "duration_seconds": 573.1349215507507,
+      "logical_bytes": 105073920,
+      "network_bytes": 419370513,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 419370513,
+      "files": 2,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 4.310183836
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 39.163348185
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 6.414093087
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 12.904189506
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 336.609416195
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 236.51497886
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mimgtblid0000036",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000035",
+      "strategy": "direct-runtime",
+      "duration_seconds": 573.1351981163025,
+      "logical_bytes": 105154560,
+      "network_bytes": 419166529,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 419166529,
+      "files": 2,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 4.319766835
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 230.391706272
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 37.482240226
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 14.475958923
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 336.609416195
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 236.51497886
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mimgtblid0000055",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000051",
+      "strategy": "gateway",
+      "duration_seconds": 975.9899892807007,
+      "logical_bytes": 739148022,
+      "network_bytes": 848131317,
+      "relay_server_network_bytes": 848131317,
+      "archive_bytes": 424013836,
+      "files": 75,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": 0.000046625,
+      "rsync_execution_seconds": 491.515547849,
+      "phases": [
+        {
+          "name": "pack-and-receive",
+          "durationSeconds": 378.095518257
+        },
+        {
+          "name": "archive-validation",
+          "durationSeconds": 3.405897751
+        },
+        {
+          "name": "archive-upload",
+          "durationSeconds": 491.515959849
+        },
+        {
+          "name": "receiver-verify-and-extract",
+          "durationSeconds": 12.142094631
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 886.529509405
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 89.456599624
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mimgtblid0000055",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000052",
+      "strategy": "direct-runtime",
+      "duration_seconds": 975.98965716362,
+      "logical_bytes": 106058880,
+      "network_bytes": 423790974,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 423790974,
+      "files": 2,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 2.495530709
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 43.728164937
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 40.80043531
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 148.20256036
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 886.529509405
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 89.456599624
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mimgtblid0000055",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000053",
+      "strategy": "direct-runtime",
+      "duration_seconds": 975.9895095825195,
+      "logical_bytes": 106058880,
+      "network_bytes": 424020474,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 424020474,
+      "files": 2,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 2.499964127
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 179.482691833
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 55.021037859
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 161.990992491
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 886.529509405
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 89.456599624
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mimgtblid0000055",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000054",
+      "strategy": "direct-runtime",
+      "duration_seconds": 975.9902129173279,
+      "logical_bytes": 106058880,
+      "network_bytes": 423858028,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 423858028,
+      "files": 2,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 2.795197876
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 221.685793893
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 49.487928023
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 156.254224862
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 886.529509405
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 89.456599624
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mviewerid0000019",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-maddid0000018",
+      "strategy": "direct-runtime",
+      "duration_seconds": 489.5976278781891,
+      "logical_bytes": 1112179754,
+      "network_bytes": 624696001,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 624696001,
+      "files": 84,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 2.392070375
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 381.551461925
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 63.248959779
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 23.551734302
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 472.592960508
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 17.00389159
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mviewerid0000038",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-maddid0000037",
+      "strategy": "direct-runtime",
+      "duration_seconds": 496.11766481399536,
+      "logical_bytes": 1100533026,
+      "network_bytes": 615384081,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 615384081,
+      "files": 84,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 2.535010085
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 369.179075709
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 28.475871305
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 28.424556805
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 430.455847529
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 65.67194503
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mviewerid0000057",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-maddid0000056",
+      "strategy": "direct-runtime",
+      "duration_seconds": 356.57969522476196,
+      "logical_bytes": 1109173016,
+      "network_bytes": 619789160,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 619789160,
+      "files": 84,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 2.411485834
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 242.299948401
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 56.499335151
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 21.550417926
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 324.924833689
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 31.655269014
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mviewerid0000058",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-maddid0000018",
+      "strategy": "direct-runtime",
+      "duration_seconds": 512.8238842487335,
+      "logical_bytes": 1112179754,
+      "network_bytes": 624696001,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 624696001,
+      "files": 84,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 2.635526543
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 372.048713043
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 49.851714648
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 26.797397262
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 453.112882288
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 59.711382235
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mviewerid0000058",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-maddid0000037",
+      "strategy": "direct-runtime",
+      "duration_seconds": 512.8238472938538,
+      "logical_bytes": 1009981724,
+      "network_bytes": 615384081,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 615384081,
+      "files": 39,
+      "snapshot_reused": null,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 2.626107168
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 363.566953039
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 51.233791774
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 28.567688346
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 453.112882288
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 59.711382235
+        }
+      ]
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mviewerid0000058",
+      "producer_activity_id": "montage-58-fog-hpc-e2-20261006-maddid0000056",
+      "strategy": "direct-runtime",
+      "duration_seconds": 512.824212551117,
+      "logical_bytes": 1018621714,
+      "network_bytes": 619789160,
+      "relay_server_network_bytes": 0,
+      "archive_bytes": 619789160,
+      "files": 39,
+      "snapshot_reused": true,
+      "ssh_channel_wait_seconds": null,
+      "rsync_execution_seconds": null,
+      "phases": [
+        {
+          "name": "peer-authenticated-connectivity-probe",
+          "durationSeconds": 2.4875807930000002
+        },
+        {
+          "name": "peer-snapshot-acquire",
+          "durationSeconds": 241.861008609
+        },
+        {
+          "name": "peer-reused-source-manifest-check",
+          "durationSeconds": 69.006215656
+        },
+        {
+          "name": "peer-private-upload",
+          "durationSeconds": 32.397370556
+        },
+        {
+          "name": "peer-receiver-verify-and-extract",
+          "durationSeconds": 17.812518174
+        },
+        {
+          "name": "shared-preparation-barrier",
+          "durationSeconds": 453.112882288
+        },
+        {
+          "name": "shared-conflict-check-copy-and-verify",
+          "durationSeconds": 59.711382235
+        }
+      ]
+    }
+  ],
+  "shared_preparations": [
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-maddid0000018",
+      "barrier_seconds": 409.363066935,
+      "merge_seconds": 204.970025468,
+      "merge_check_seconds": 104.40285946900076,
+      "merge_copy_seconds": 63.35295432800012,
+      "merge_verify_seconds": 36.6612788880002
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-maddid0000037",
+      "barrier_seconds": 420.8945164,
+      "merge_seconds": 233.922758107,
+      "merge_check_seconds": 136.61670997599958,
+      "merge_copy_seconds": 55.04701536900029,
+      "merge_verify_seconds": 41.70437811000011
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-maddid0000056",
+      "barrier_seconds": 619.040034573,
+      "merge_seconds": 283.013860171,
+      "merge_check_seconds": 180.43556642900057,
+      "merge_copy_seconds": 55.05433872699996,
+      "merge_verify_seconds": 46.694435960999726
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000013",
+      "barrier_seconds": 270.108200332,
+      "merge_seconds": 11.762270089,
+      "merge_check_seconds": 5.486503027999788,
+      "merge_copy_seconds": 3.552520055000059,
+      "merge_verify_seconds": 2.1664215890004925
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000014",
+      "barrier_seconds": 260.111651953,
+      "merge_seconds": 20.258116134,
+      "merge_check_seconds": 5.184462961000463,
+      "merge_copy_seconds": 10.599890837000203,
+      "merge_verify_seconds": 3.962181805
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000015",
+      "barrier_seconds": 743.329154213,
+      "merge_seconds": 20.317531426,
+      "merge_check_seconds": 7.821334353648126,
+      "merge_copy_seconds": 5.807759420014918,
+      "merge_verify_seconds": 5.693534042686224
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000016",
+      "barrier_seconds": 31.269985598,
+      "merge_seconds": 147.835616818,
+      "merge_check_seconds": 61.76992534500005,
+      "merge_copy_seconds": 43.9681134829998,
+      "merge_verify_seconds": 37.762985756000035
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000032",
+      "barrier_seconds": 251.763697781,
+      "merge_seconds": 19.862637800999998,
+      "merge_check_seconds": 5.1073565540000345,
+      "merge_copy_seconds": 10.127387417000136,
+      "merge_verify_seconds": 4.0069172550001895
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000033",
+      "barrier_seconds": 274.3637555,
+      "merge_seconds": 21.238856801,
+      "merge_check_seconds": 6.001633186000163,
+      "merge_copy_seconds": 10.238027299999885,
+      "merge_verify_seconds": 4.398234144000071
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000034",
+      "barrier_seconds": 262.366893245,
+      "merge_seconds": 8.529488046,
+      "merge_check_seconds": 3.3208714380002675,
+      "merge_copy_seconds": 2.373866808999992,
+      "merge_verify_seconds": 2.3390101660002074
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000035",
+      "barrier_seconds": 256.668754117,
+      "merge_seconds": 19.895121884,
+      "merge_check_seconds": 5.111687399999937,
+      "merge_copy_seconds": 10.590446376999807,
+      "merge_verify_seconds": 3.6762618950001524
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000051",
+      "barrier_seconds": 396.479874348,
+      "merge_seconds": 18.244609717,
+      "merge_check_seconds": 6.96128227096051,
+      "merge_copy_seconds": 4.972433067858219,
+      "merge_verify_seconds": 5.125589379109442
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000052",
+      "barrier_seconds": 241.653465194,
+      "merge_seconds": 19.212322008,
+      "merge_check_seconds": 4.720261811,
+      "merge_copy_seconds": 10.241356709999991,
+      "merge_verify_seconds": 3.6985617479999746
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000053",
+      "barrier_seconds": 127.217878267,
+      "merge_seconds": 143.72586194,
+      "merge_check_seconds": 63.98408541500021,
+      "merge_copy_seconds": 41.50971212700006,
+      "merge_verify_seconds": 36.26938559099972
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000054",
+      "barrier_seconds": 55.324760233,
+      "merge_seconds": 19.706502426,
+      "merge_check_seconds": 5.005632080999931,
+      "merge_copy_seconds": 10.394144000999859,
+      "merge_verify_seconds": 3.7874770620001073
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mbgmodelid0000012",
+      "barrier_seconds": 590.19212673,
+      "merge_seconds": 17.727275007,
+      "merge_check_seconds": 3.7636981350001406,
+      "merge_copy_seconds": 9.591068649000135,
+      "merge_verify_seconds": 3.8570948420001514
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mbgmodelid0000031",
+      "barrier_seconds": 248.196333155,
+      "merge_seconds": 17.0898088,
+      "merge_check_seconds": 3.7757816530001946,
+      "merge_copy_seconds": 9.017431609999676,
+      "merge_verify_seconds": 3.681647571999747
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mbgmodelid0000050",
+      "barrier_seconds": 57.083123277,
+      "merge_seconds": 6.572613712,
+      "merge_check_seconds": 2.1952739789999214,
+      "merge_copy_seconds": 1.654390784000043,
+      "merge_verify_seconds": 2.235217118000037
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mconcatfitid0000011",
+      "barrier_seconds": 616.375398324,
+      "merge_seconds": 36.308577057,
+      "merge_check_seconds": 19.713207182474434,
+      "merge_copy_seconds": 8.11883544549346,
+      "merge_verify_seconds": 6.6765945460647345
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mconcatfitid0000030",
+      "barrier_seconds": 149.304178902,
+      "merge_seconds": 35.7947211,
+      "merge_check_seconds": 13.769190284000047,
+      "merge_copy_seconds": 17.622240934000047,
+      "merge_verify_seconds": 3.8217569079999976
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mconcatfitid0000049",
+      "barrier_seconds": 170.594113411,
+      "merge_seconds": 33.70487864,
+      "merge_check_seconds": 12.323312722999958,
+      "merge_copy_seconds": 17.040445356000077,
+      "merge_verify_seconds": 3.7904755990000467
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000005",
+      "barrier_seconds": 57.534868151,
+      "merge_seconds": 8.935036004,
+      "merge_check_seconds": 2.5486268370000005,
+      "merge_copy_seconds": 4.054626322999994,
+      "merge_verify_seconds": 1.7719136200000065
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000006",
+      "barrier_seconds": 27.384603138,
+      "merge_seconds": 35.14418639,
+      "merge_check_seconds": 13.304883715000003,
+      "merge_copy_seconds": 8.263048659000006,
+      "merge_verify_seconds": 12.961258418
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000007",
+      "barrier_seconds": 178.471809789,
+      "merge_seconds": 9.025138212,
+      "merge_check_seconds": 2.433638842999926,
+      "merge_copy_seconds": 4.427479200000107,
+      "merge_verify_seconds": 1.6703503870000986
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000008",
+      "barrier_seconds": 106.084877298,
+      "merge_seconds": 10.290322213,
+      "merge_check_seconds": 2.4767447499998525,
+      "merge_copy_seconds": 4.589167368999824,
+      "merge_verify_seconds": 2.686420623999993
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000009",
+      "barrier_seconds": 492.625308808,
+      "merge_seconds": 12.317526589,
+      "merge_check_seconds": 4.003067781217396,
+      "merge_copy_seconds": 2.5864740572869778,
+      "merge_verify_seconds": 4.037082724273205
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000010",
+      "barrier_seconds": 136.770193771,
+      "merge_seconds": 8.514610588,
+      "merge_check_seconds": 2.3380270459999792,
+      "merge_copy_seconds": 4.057291421000002,
+      "merge_verify_seconds": 1.607678925000016
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000024",
+      "barrier_seconds": 126.530978517,
+      "merge_seconds": 6.69817192,
+      "merge_check_seconds": 1.788572815000009,
+      "merge_copy_seconds": 2.941448582000021,
+      "merge_verify_seconds": 1.4724969700000088
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000025",
+      "barrier_seconds": 23.791440219,
+      "merge_seconds": 11.014713296,
+      "merge_check_seconds": 2.3786062209999272,
+      "merge_copy_seconds": 3.5944330539998646,
+      "merge_verify_seconds": 4.525038675000133
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000026",
+      "barrier_seconds": 50.655918857,
+      "merge_seconds": 33.648178473,
+      "merge_check_seconds": 13.589566594000019,
+      "merge_copy_seconds": 7.7564536109999835,
+      "merge_verify_seconds": 11.505252552999991
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000027",
+      "barrier_seconds": 136.929768104,
+      "merge_seconds": 6.943490004,
+      "merge_check_seconds": 1.5983100620001096,
+      "merge_copy_seconds": 3.012553146999835,
+      "merge_verify_seconds": 1.3373702659998798
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000028",
+      "barrier_seconds": 66.412851905,
+      "merge_seconds": 72.725267992,
+      "merge_check_seconds": 31.009929966000072,
+      "merge_copy_seconds": 15.483342659000073,
+      "merge_verify_seconds": 24.76224385100022
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000029",
+      "barrier_seconds": 32.434681389,
+      "merge_seconds": 8.983081629,
+      "merge_check_seconds": 3.8248352260000047,
+      "merge_copy_seconds": 1.7281099329999279,
+      "merge_verify_seconds": 2.820531891000087
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000043",
+      "barrier_seconds": 71.865525409,
+      "merge_seconds": 3.575245252,
+      "merge_check_seconds": 0.693428566999998,
+      "merge_copy_seconds": 1.7207255590000017,
+      "merge_verify_seconds": 0.6838429230000003
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000044",
+      "barrier_seconds": 166.81424291,
+      "merge_seconds": 6.586628378,
+      "merge_check_seconds": 1.7346229369999833,
+      "merge_copy_seconds": 2.7410267939999926,
+      "merge_verify_seconds": 1.5872935680000069
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000045",
+      "barrier_seconds": 92.808933792,
+      "merge_seconds": 8.27773367,
+      "merge_check_seconds": 2.257804854772985,
+      "merge_copy_seconds": 2.1391556449234486,
+      "merge_verify_seconds": 2.9420743314549327
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000046",
+      "barrier_seconds": 391.325458929,
+      "merge_seconds": 10.55416438,
+      "merge_check_seconds": 1.8772381376475096,
+      "merge_copy_seconds": 2.296949239447713,
+      "merge_verify_seconds": 3.096043976955116
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000047",
+      "barrier_seconds": 161.79732924,
+      "merge_seconds": 40.70646006,
+      "merge_check_seconds": 16.786035868,
+      "merge_copy_seconds": 12.482960667000043,
+      "merge_verify_seconds": 9.981046372000037
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000048",
+      "barrier_seconds": 74.835036493,
+      "merge_seconds": 35.222976348,
+      "merge_check_seconds": 14.506336318999956,
+      "merge_copy_seconds": 9.039638048999905,
+      "merge_verify_seconds": 10.219984688000068
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mimgtblid0000017",
+      "barrier_seconds": 395.404969888,
+      "merge_seconds": 54.476385108,
+      "merge_check_seconds": 18.960385158999998,
+      "merge_copy_seconds": 28.01598616299998,
+      "merge_verify_seconds": 6.9480845240000235
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mimgtblid0000036",
+      "barrier_seconds": 336.609416195,
+      "merge_seconds": 236.51497886,
+      "merge_check_seconds": 59.98474574200009,
+      "merge_copy_seconds": 99.47461752399977,
+      "merge_verify_seconds": 76.27340309400006
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mimgtblid0000055",
+      "barrier_seconds": 886.529509405,
+      "merge_seconds": 89.456599624,
+      "merge_check_seconds": 22.531136283000706,
+      "merge_copy_seconds": 27.73135644500053,
+      "merge_verify_seconds": 38.61186166399966
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mviewerid0000019",
+      "barrier_seconds": 472.592960508,
+      "merge_seconds": 17.00389159,
+      "merge_check_seconds": 6.863229503000184,
+      "merge_copy_seconds": 5.7328069579998555,
+      "merge_verify_seconds": 3.802742183999726
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mviewerid0000038",
+      "barrier_seconds": 430.455847529,
+      "merge_seconds": 65.67194503,
+      "merge_check_seconds": 9.1708560510001,
+      "merge_copy_seconds": 16.714276274999975,
+      "merge_verify_seconds": 39.025672160999875
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mviewerid0000057",
+      "barrier_seconds": 324.924833689,
+      "merge_seconds": 31.655269014,
+      "merge_check_seconds": 7.015984723999281,
+      "merge_copy_seconds": 17.19763509999939,
+      "merge_verify_seconds": 6.89889297100035
+    },
+    {
+      "consumer_activity_id": "montage-58-fog-hpc-e2-20261006-mviewerid0000058",
+      "barrier_seconds": 453.112882288,
+      "merge_seconds": 59.711382235,
+      "merge_check_seconds": 15.396912143999543,
+      "merge_copy_seconds": 25.130958781000118,
+      "merge_verify_seconds": 18.612263287000133
+    }
+  ],
+  "activities": [
+    {
+      "activity_id": "montage-58-fog-hpc-e2-20261006-maddid0000018",
+      "resource_id": "montage-gcp-fog-e2-micro-10",
+      "attempt": 1,
+      "planned_compute_seconds": 36,
+      "planned_transfer_seconds": 3.1248689280014332,
+      "observed_runtime_seconds": 7.952651023864746,
+      "validated_handle_runtime_seconds": 7.952651023864746,
+      "terminal_observation_delay_seconds": 1.5457541942596436,
+      "preparation_elapsed_seconds": 614.33243227005,
+      "overlapping_transfer_work_seconds": 3071.658839225769,
+      "launch_wait_seconds": 33.0821852684021,
+      "queue_seconds": 652.3926000595093,
+      "network_bytes": 2728876024
+    },
+    {
+      "activity_id": "montage-58-fog-hpc-e2-20261006-maddid0000037",
+      "resource_id": "montage-gcp-fog-e2-micro-10",
+      "attempt": 2,
+      "planned_compute_seconds": 36,
+      "planned_transfer_seconds": 1.2850327680016562,
+      "observed_runtime_seconds": 7.94272518157959,
+      "validated_handle_runtime_seconds": 7.94272518157959,
+      "terminal_observation_delay_seconds": 1.3128626346588135,
+      "preparation_elapsed_seconds": 654.8197107315063,
+      "overlapping_transfer_work_seconds": 3274.097303390503,
+      "launch_wait_seconds": 30.340030431747437,
+      "queue_seconds": 685.8661358356476,
+      "network_bytes": 2264601508
+    },
+    {
+      "activity_id": "montage-58-fog-hpc-e2-20261006-maddid0000056",
+      "resource_id": "montage-gcp-fog-e2-micro-06",
+      "attempt": 1,
+      "planned_compute_seconds": 8,
+      "planned_transfer_seconds": 2.964032768000834,
+      "observed_runtime_seconds": 8.43309736251831,
+      "validated_handle_runtime_seconds": 8.43309736251831,
+      "terminal_observation_delay_seconds": 1.6200916767120361,
+      "preparation_elapsed_seconds": 902.0540244579315,
+      "overlapping_transfer_work_seconds": 4510.26855802536,
+      "launch_wait_seconds": 40.454829692840576,
+      "queue_seconds": 1221.6100583076477,
+      "network_bytes": 2711711741
+    },
+    {
+      "activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000013",
+      "resource_id": "montage-gcp-e2-medium-2",
+      "attempt": 2,
+      "planned_compute_seconds": 1,
+      "planned_transfer_seconds": 0.0010655360001692316,
+      "observed_runtime_seconds": 1.0969316959381104,
+      "validated_handle_runtime_seconds": 1.0969316959381104,
+      "terminal_observation_delay_seconds": 5.2375288009643555,
+      "preparation_elapsed_seconds": 282.7809317111969,
+      "overlapping_transfer_work_seconds": 564.6518998146057,
+      "launch_wait_seconds": 9.430667638778687,
+      "queue_seconds": 292.29327869415283,
+      "network_bytes": 369736839
+    },
+    {
+      "activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000014",
+      "resource_id": "montage-gcp-fog-e2-micro-04",
+      "attempt": 2,
+      "planned_compute_seconds": 4,
+      "planned_transfer_seconds": 0.0010655360001692316,
+      "observed_runtime_seconds": 2.4231278896331787,
+      "validated_handle_runtime_seconds": 2.4231278896331787,
+      "terminal_observation_delay_seconds": 1.1674253940582275,
+      "preparation_elapsed_seconds": 281.28264021873474,
+      "overlapping_transfer_work_seconds": 561.6528487205505,
+      "launch_wait_seconds": 8.141331195831299,
+      "queue_seconds": 289.4915339946747,
+      "network_bytes": 369736839
+    },
+    {
+      "activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000015",
+      "resource_id": "plafrim-execution-ssh-node-bora001",
+      "attempt": 2,
+      "planned_compute_seconds": 1,
+      "planned_transfer_seconds": 0.6411638399999902,
+      "observed_runtime_seconds": 3.896073818206787,
+      "validated_handle_runtime_seconds": null,
+      "terminal_observation_delay_seconds": null,
+      "preparation_elapsed_seconds": 771.440446138382,
+      "overlapping_transfer_work_seconds": 1533.6128995418549,
+      "launch_wait_seconds": 9.15446424484253,
+      "queue_seconds": 3.746631622314453,
+      "network_bytes": 1029773873
+    },
+    {
+      "activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000016",
+      "resource_id": "montage-gcp-fog-e2-micro-05",
+      "attempt": 2,
+      "planned_compute_seconds": 4,
+      "planned_transfer_seconds": 0.29466666666712626,
+      "observed_runtime_seconds": 10.693037271499634,
+      "validated_handle_runtime_seconds": 10.693037271499634,
+      "terminal_observation_delay_seconds": 1.557462215423584,
+      "preparation_elapsed_seconds": 180.0232071876526,
+      "overlapping_transfer_work_seconds": 359.1293501853943,
+      "launch_wait_seconds": 69.75866556167603,
+      "queue_seconds": 249.86078023910522,
+      "network_bytes": 144937261
+    },
+    {
+      "activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000032",
+      "resource_id": "montage-gcp-fog-e2-micro-08",
+      "attempt": 1,
+      "planned_compute_seconds": 36,
+      "planned_transfer_seconds": 0.0011310720001347363,
+      "observed_runtime_seconds": 1.186690092086792,
+      "validated_handle_runtime_seconds": 1.186690092086792,
+      "terminal_observation_delay_seconds": 1.2275409698486328,
+      "preparation_elapsed_seconds": 275.13195848464966,
+      "overlapping_transfer_work_seconds": 546.7591800689697,
+      "launch_wait_seconds": 8.144700765609741,
+      "queue_seconds": 283.3310601711273,
+      "network_bytes": 363248071
+    },
+    {
+      "activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000033",
+      "resource_id": "montage-gcp-fog-e2-micro-02",
+      "attempt": 1,
+      "planned_compute_seconds": 100,
+      "planned_transfer_seconds": 0.0011310720001347363,
+      "observed_runtime_seconds": 2.5079245567321777,
+      "validated_handle_runtime_seconds": 2.5079245567321777,
+      "terminal_observation_delay_seconds": 1.138282060623169,
+      "preparation_elapsed_seconds": 299.08795189857483,
+      "overlapping_transfer_work_seconds": 594.6910994052887,
+      "launch_wait_seconds": 10.515694379806519,
+      "queue_seconds": 309.67597794532776,
+      "network_bytes": 363248071
+    },
+    {
+      "activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000034",
+      "resource_id": "montage-gcp-e2-medium-1",
+      "attempt": 1,
+      "planned_compute_seconds": 23,
+      "planned_transfer_seconds": 0.0011310720001347363,
+      "observed_runtime_seconds": 0.7834560871124268,
+      "validated_handle_runtime_seconds": 0.7834560871124268,
+      "terminal_observation_delay_seconds": 1.13071870803833,
+      "preparation_elapsed_seconds": 271.7986271381378,
+      "overlapping_transfer_work_seconds": 542.6960201263428,
+      "launch_wait_seconds": 6.934953212738037,
+      "queue_seconds": 278.78053975105286,
+      "network_bytes": 363248071
+    },
+    {
+      "activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000035",
+      "resource_id": "montage-gcp-fog-e2-micro-09",
+      "attempt": 1,
+      "planned_compute_seconds": 36,
+      "planned_transfer_seconds": 0.24213107200012018,
+      "observed_runtime_seconds": 1.0729665756225586,
+      "validated_handle_runtime_seconds": 1.0729665756225586,
+      "terminal_observation_delay_seconds": 2.045548915863037,
+      "preparation_elapsed_seconds": 276.564759016037,
+      "overlapping_transfer_work_seconds": 553.1293814182281,
+      "launch_wait_seconds": 11.012932062149048,
+      "queue_seconds": 288.2181205749512,
+      "network_bytes": 506476142
+    },
+    {
+      "activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000051",
+      "resource_id": "plafrim-execution-ssh-node-diablo03",
+      "attempt": 1,
+      "planned_compute_seconds": 16,
+      "planned_transfer_seconds": 0.080163839999841,
+      "observed_runtime_seconds": 2.615283489227295,
+      "validated_handle_runtime_seconds": null,
+      "terminal_observation_delay_seconds": null,
+      "preparation_elapsed_seconds": 581.4387257099152,
+      "overlapping_transfer_work_seconds": 996.1535928249359,
+      "launch_wait_seconds": 6.941134214401245,
+      "queue_seconds": 0.8256244659423828,
+      "network_bytes": 735942728
+    },
+    {
+      "activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000052",
+      "resource_id": "montage-gcp-fog-e2-micro-01",
+      "attempt": 1,
+      "planned_compute_seconds": 36,
+      "planned_transfer_seconds": 1.2810983040001247,
+      "observed_runtime_seconds": 2.353093385696411,
+      "validated_handle_runtime_seconds": 2.353093385696411,
+      "terminal_observation_delay_seconds": 1.2755682468414307,
+      "preparation_elapsed_seconds": 260.866628408432,
+      "overlapping_transfer_work_seconds": 521.7332248687744,
+      "launch_wait_seconds": 14.253580808639526,
+      "queue_seconds": 275.75964641571045,
+      "network_bytes": 474192058
+    },
+    {
+      "activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000053",
+      "resource_id": "montage-gcp-fog-e2-micro-09",
+      "attempt": 1,
+      "planned_compute_seconds": 48,
+      "planned_transfer_seconds": 0.001098304000151984,
+      "observed_runtime_seconds": 10.19669795036316,
+      "validated_handle_runtime_seconds": 10.19669795036316,
+      "terminal_observation_delay_seconds": 1.819373607635498,
+      "preparation_elapsed_seconds": 271.9007866382599,
+      "overlapping_transfer_work_seconds": 542.8448679447174,
+      "launch_wait_seconds": 44.01043939590454,
+      "queue_seconds": 551.1394593715668,
+      "network_bytes": 367926386
+    },
+    {
+      "activity_id": "montage-58-fog-hpc-e2-20261006-mbackgroundid0000054",
+      "resource_id": "montage-gcp-fog-e2-micro-03",
+      "attempt": 1,
+      "planned_compute_seconds": 48,
+      "planned_transfer_seconds": 0.29576497066727825,
+      "observed_runtime_seconds": 0.9560744762420654,
+      "validated_handle_runtime_seconds": 0.9560744762420654,
+      "terminal_observation_delay_seconds": 1.2141711711883545,
+      "preparation_elapsed_seconds": 75.0317952632904,
+      "overlapping_transfer_work_seconds": 150.06357645988464,
+      "launch_wait_seconds": 8.148884773254395,
+      "queue_seconds": 85.98558163642883,
+      "network_bytes": 512393009
+    },
+    {
+      "activity_id": "montage-58-fog-hpc-e2-20261006-mbgmodelid0000012",
+      "resource_id": "montage-gcp-fog-e2-micro-05",
+      "attempt": 1,
+      "planned_compute_seconds": 36,
+      "planned_transfer_seconds": 0.080163839999841,
+      "observed_runtime_seconds": 0.6130115985870361,
+      "validated_handle_runtime_seconds": 0.6130115985870361,
+      "terminal_observation_delay_seconds": 22.618241548538208,
+      "preparation_elapsed_seconds": 607.9305422306061,
+      "overlapping_transfer_work_seconds": 607.9305422306061,
+      "launch_wait_seconds": 9.507911682128906,
+      "queue_seconds": 618.0661466121674,
+      "network_bytes": 739568420
+    },
+    {
+      "activity_id": "montage-58-fog-hpc-e2-20261006-mbgmodelid0000031",
+      "resource_id": "montage-gcp-fog-e2-micro-04",
+      "attempt": 1,
+      "planned_compute_seconds": 28,
+      "planned_transfer_seconds": 0.0010327680001864792,
+      "observed_runtime_seconds": 0.5788273811340332,
+      "validated_handle_runtime_seconds": 0.5788273811340332,
+      "terminal_observation_delay_seconds": 1.125159502029419,
+      "preparation_elapsed_seconds": 265.28645491600037,
+      "overlapping_transfer_work_seconds": 265.28645491600037,
+      "launch_wait_seconds": 6.942858934402466,
+      "queue_seconds": 272.8460326194763,
+      "network_bytes": 363247666
+    },
+    {
+      "activity_id": "montage-58-fog-hpc-e2-20261006-mbgmodelid0000050",
+      "resource_id": "montage-gcp-e2-medium-1",
+      "attempt": 1,
+      "planned_compute_seconds": 20,
+      "planned_transfer_seconds": 0.0010327680001864792,
+      "observed_runtime_seconds": 0.6775872707366943,
+      "validated_handle_runtime_seconds": 0.6775872707366943,
+      "terminal_observation_delay_seconds": 1.002912998199463,
+      "preparation_elapsed_seconds": 63.65419936180115,
+      "overlapping_transfer_work_seconds": 63.65419936180115,
+      "launch_wait_seconds": 9.041228294372559,
+      "queue_seconds": 76.65943002700806,
+      "network_bytes": 367926467
+    },
+    {
+      "activity_id": "montage-58-fog-hpc-e2-20261006-mconcatfitid0000011",
+      "resource_id": "plafrim-execution-ssh-node-bora001",
+      "attempt": 1,
+      "planned_compute_seconds": 17,
+      "planned_transfer_seconds": 0.40215015679905264,
+      "observed_runtime_seconds": 2.7550485134124756,
+      "validated_handle_runtime_seconds": null,
+      "terminal_observation_delay_seconds": null,
+      "preparation_elapsed_seconds": 656.0198519229889,
+      "overlapping_transfer_work_seconds": 3919.4310834407806,
+      "launch_wait_seconds": 46.325281858444214,
+      "queue_seconds": 0.22789573669433594,
+      "network_bytes": 2088830200
+    },
+    {
+      "activity_id": "montage-58-fog-hpc-e2-20261006-mconcatfitid0000030",
+      "resource_id": "montage-gcp-fog-e2-micro-01",
+      "attempt": 1,
+      "planned_compute_seconds": 36,
+      "planned_transfer_seconds": 0.005163840000705022,
+      "observed_runtime_seconds": 0.22596335411071777,
+      "validated_handle_runtime_seconds": 0.22596335411071777,
+      "terminal_observation_delay_seconds": 0.5108873844146729,
+      "preparation_elapsed_seconds": 185.99872636795044,
+      "overlapping_transfer_work_seconds": 1111.4919044971466,
+      "launch_wait_seconds": 12.075294494628906,
+      "queue_seconds": 198.1125295162201,
+      "network_bytes": 1023400684
+    },
+    {
+      "activity_id": "montage-58-fog-hpc-e2-20261006-mconcatfitid0000049",
+      "resource_id": "montage-gcp-fog-e2-micro-07",
+      "attempt": 1,
+      "planned_compute_seconds": 20,
+      "planned_transfer_seconds": 0.16342598400024144,
+      "observed_runtime_seconds": 0.21471381187438965,
+      "validated_handle_runtime_seconds": 0.21471381187438965,
+      "terminal_observation_delay_seconds": 0.55808424949646,
+      "preparation_elapsed_seconds": 205.23656487464905,
+      "overlapping_transfer_work_seconds": 1226.7216742038727,
+      "launch_wait_seconds": 148.63358426094055,
+      "queue_seconds": 353.89586639404297,
+      "network_bytes": 1437023896
+    },
+    {
+      "activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000005",
+      "resource_id": "montage-gcp-fog-e2-micro-01",
+      "attempt": 1,
+      "planned_compute_seconds": 120,
+      "planned_transfer_seconds": 0.44249999999988177,
+      "observed_runtime_seconds": 2.447896718978882,
+      "validated_handle_runtime_seconds": 2.447896718978882,
+      "terminal_observation_delay_seconds": 2.098862648010254,
+      "preparation_elapsed_seconds": 66.46959853172302,
+      "overlapping_transfer_work_seconds": 132.939138174057,
+      "launch_wait_seconds": 4.859830379486084,
+      "queue_seconds": 143.45088624954224,
+      "network_bytes": 286655248
+    },
+    {
+      "activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000006",
+      "resource_id": "montage-gcp-fog-e2-micro-06",
+      "attempt": 1,
+      "planned_compute_seconds": 112,
+      "planned_transfer_seconds": 0.44250000000010914,
+      "observed_runtime_seconds": 27.200522899627686,
+      "validated_handle_runtime_seconds": 27.200522899627686,
+      "terminal_observation_delay_seconds": 3.40519642829895,
+      "preparation_elapsed_seconds": 62.52943420410156,
+      "overlapping_transfer_work_seconds": 125.05849194526672,
+      "launch_wait_seconds": 20.623772859573364,
+      "queue_seconds": 145.49950337409973,
+      "network_bytes": 288025128
+    },
+    {
+      "activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000007",
+      "resource_id": "montage-gcp-fog-e2-micro-05",
+      "attempt": 1,
+      "planned_compute_seconds": 96,
+      "planned_transfer_seconds": 0.5356666666671117,
+      "observed_runtime_seconds": 0.982825756072998,
+      "validated_handle_runtime_seconds": 0.982825756072998,
+      "terminal_observation_delay_seconds": 0.7109932899475098,
+      "preparation_elapsed_seconds": 187.49725008010864,
+      "overlapping_transfer_work_seconds": 374.99428510665894,
+      "launch_wait_seconds": 5.051562547683716,
+      "queue_seconds": 198.82776308059692,
+      "network_bytes": 287875264
+    },
+    {
+      "activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000008",
+      "resource_id": "montage-gcp-fog-e2-micro-03",
+      "attempt": 1,
+      "planned_compute_seconds": 36,
+      "planned_transfer_seconds": 0.20149999999989632,
+      "observed_runtime_seconds": 0.8271548748016357,
+      "validated_handle_runtime_seconds": 0.8271548748016357,
+      "terminal_observation_delay_seconds": 9.954599380493164,
+      "preparation_elapsed_seconds": 117.272714138031,
+      "overlapping_transfer_work_seconds": 233.64824509620667,
+      "launch_wait_seconds": 5.0572474002838135,
+      "queue_seconds": 125.50041651725769,
+      "network_bytes": 143717245
+    },
+    {
+      "activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000009",
+      "resource_id": "plafrim-execution-ssh-node-diablo03",
+      "attempt": 1,
+      "planned_compute_seconds": 11,
+      "planned_transfer_seconds": 1.202000000000453,
+      "observed_runtime_seconds": 2.1502537727355957,
+      "validated_handle_runtime_seconds": null,
+      "terminal_observation_delay_seconds": null,
+      "preparation_elapsed_seconds": 506.4503540992737,
+      "overlapping_transfer_work_seconds": 1009.8969445228577,
+      "launch_wait_seconds": 7.573828220367432,
+      "queue_seconds": 0.45148396492004395,
+      "network_bytes": 577379744
+    },
+    {
+      "activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000010",
+      "resource_id": "montage-gcp-fog-e2-micro-07",
+      "attempt": 1,
+      "planned_compute_seconds": 96,
+      "planned_transfer_seconds": 0.49616666666724996,
+      "observed_runtime_seconds": 1.3688268661499023,
+      "validated_handle_runtime_seconds": 1.3688268661499023,
+      "terminal_observation_delay_seconds": 3.930633306503296,
+      "preparation_elapsed_seconds": 145.2849087715149,
+      "overlapping_transfer_work_seconds": 290.5696609020233,
+      "launch_wait_seconds": 6.074968099594116,
+      "queue_seconds": 222.5801088809967,
+      "network_bytes": 290024386
+    },
+    {
+      "activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000024",
+      "resource_id": "montage-gcp-fog-e2-micro-01",
+      "attempt": 1,
+      "planned_compute_seconds": 64,
+      "planned_transfer_seconds": 0.3220000000001164,
+      "observed_runtime_seconds": 1.9339656829833984,
+      "validated_handle_runtime_seconds": 1.9339656829833984,
+      "terminal_observation_delay_seconds": 2.4974417686462402,
+      "preparation_elapsed_seconds": 133.229474067688,
+      "overlapping_transfer_work_seconds": 266.45878314971924,
+      "launch_wait_seconds": 5.215738296508789,
+      "queue_seconds": 164.30715894699097,
+      "network_bytes": 283693384
+    },
+    {
+      "activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000025",
+      "resource_id": "montage-gcp-fog-e2-micro-08",
+      "attempt": 1,
+      "planned_compute_seconds": 80,
+      "planned_transfer_seconds": 0.24099999999998545,
+      "observed_runtime_seconds": 17.59670615196228,
+      "validated_handle_runtime_seconds": 17.59670615196228,
+      "terminal_observation_delay_seconds": 5.580717086791992,
+      "preparation_elapsed_seconds": 35.70151400566101,
+      "overlapping_transfer_work_seconds": 70.5074212551117,
+      "launch_wait_seconds": 11.353219747543335,
+      "queue_seconds": 57.561424016952515,
+      "network_bytes": 143458908
+    },
+    {
+      "activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000026",
+      "resource_id": "montage-gcp-fog-e2-micro-06",
+      "attempt": 1,
+      "planned_compute_seconds": 64,
+      "planned_transfer_seconds": 0.40200000000004366,
+      "observed_runtime_seconds": 12.29628849029541,
+      "validated_handle_runtime_seconds": 12.29628849029541,
+      "terminal_observation_delay_seconds": 2.450336456298828,
+      "preparation_elapsed_seconds": 84.30418920516968,
+      "overlapping_transfer_work_seconds": 168.6080641746521,
+      "launch_wait_seconds": 13.897461414337158,
+      "queue_seconds": 249.9475975036621,
+      "network_bytes": 284624284
+    },
+    {
+      "activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000027",
+      "resource_id": "montage-gcp-fog-e2-micro-04",
+      "attempt": 1,
+      "planned_compute_seconds": 60,
+      "planned_transfer_seconds": 0.40200000000004366,
+      "observed_runtime_seconds": 0.8316574096679688,
+      "validated_handle_runtime_seconds": 0.8316574096679688,
+      "terminal_observation_delay_seconds": 0.8443078994750977,
+      "preparation_elapsed_seconds": 143.87355995178223,
+      "overlapping_transfer_work_seconds": 287.7470965385437,
+      "launch_wait_seconds": 4.75709867477417,
+      "queue_seconds": 151.59686160087585,
+      "network_bytes": 285756079
+    },
+    {
+      "activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000028",
+      "resource_id": "montage-gcp-fog-e2-micro-02",
+      "attempt": 1,
+      "planned_compute_seconds": 79.99999999999977,
+      "planned_transfer_seconds": 0.24099999999998545,
+      "observed_runtime_seconds": 15.397364139556885,
+      "validated_handle_runtime_seconds": 15.397364139556885,
+      "terminal_observation_delay_seconds": 1.623500108718872,
+      "preparation_elapsed_seconds": 140.04533123970032,
+      "overlapping_transfer_work_seconds": 279.18388175964355,
+      "launch_wait_seconds": 19.72241735458374,
+      "queue_seconds": 162.13104033470154,
+      "network_bytes": 143228071
+    },
+    {
+      "activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000029",
+      "resource_id": "montage-gcp-e2-medium-2",
+      "attempt": 1,
+      "planned_compute_seconds": 13,
+      "planned_transfer_seconds": 0.24099999999998545,
+      "observed_runtime_seconds": 8.676194667816162,
+      "validated_handle_runtime_seconds": 8.676194667816162,
+      "terminal_observation_delay_seconds": 3.5752487182617188,
+      "preparation_elapsed_seconds": 42.36921787261963,
+      "overlapping_transfer_work_seconds": 83.78652477264404,
+      "launch_wait_seconds": 10.466334342956543,
+      "queue_seconds": 58.178486824035645,
+      "network_bytes": 143458908
+    },
+    {
+      "activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000043",
+      "resource_id": "montage-gcp-fog-e2-micro-05",
+      "attempt": 1,
+      "planned_compute_seconds": 44,
+      "planned_transfer_seconds": 2.1599999999998545,
+      "observed_runtime_seconds": 4.034695863723755,
+      "validated_handle_runtime_seconds": 4.034695863723755,
+      "terminal_observation_delay_seconds": 0.8480274677276611,
+      "preparation_elapsed_seconds": 75.4400897026062,
+      "overlapping_transfer_work_seconds": 150.8763988018036,
+      "launch_wait_seconds": 5.511667728424072,
+      "queue_seconds": 140.9136393070221,
+      "network_bytes": 210263353
+    },
+    {
+      "activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000044",
+      "resource_id": "montage-gcp-fog-e2-micro-07",
+      "attempt": 1,
+      "planned_compute_seconds": 44,
+      "planned_transfer_seconds": 0.9620000000002165,
+      "observed_runtime_seconds": 2.248190402984619,
+      "validated_handle_runtime_seconds": 2.248190402984619,
+      "terminal_observation_delay_seconds": 1.1198883056640625,
+      "preparation_elapsed_seconds": 173.40082049369812,
+      "overlapping_transfer_work_seconds": 346.8016242980957,
+      "launch_wait_seconds": 5.880494832992554,
+      "queue_seconds": 380.23929047584534,
+      "network_bytes": 248486223
+    },
+    {
+      "activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000045",
+      "resource_id": "plafrim-execution-ssh-node-diablo03",
+      "attempt": 1,
+      "planned_compute_seconds": 16,
+      "planned_transfer_seconds": 0.6410000000005311,
+      "observed_runtime_seconds": 1.7191390991210938,
+      "validated_handle_runtime_seconds": null,
+      "terminal_observation_delay_seconds": null,
+      "preparation_elapsed_seconds": 103.11808204650879,
+      "overlapping_transfer_work_seconds": 204.19298315048218,
+      "launch_wait_seconds": 4.590351581573486,
+      "queue_seconds": 0.3003077507019043,
+      "network_bytes": 288968644
+    },
+    {
+      "activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000046",
+      "resource_id": "plafrim-execution-ssh-node-bora001",
+      "attempt": 1,
+      "planned_compute_seconds": 14,
+      "planned_transfer_seconds": 0.4810000000002219,
+      "observed_runtime_seconds": 2.307098865509033,
+      "validated_handle_runtime_seconds": null,
+      "terminal_observation_delay_seconds": null,
+      "preparation_elapsed_seconds": 403.99042654037476,
+      "overlapping_transfer_work_seconds": 805.860963344574,
+      "launch_wait_seconds": 15.983623027801514,
+      "queue_seconds": 0.7625946998596191,
+      "network_bytes": 289012490
+    },
+    {
+      "activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000047",
+      "resource_id": "montage-gcp-fog-e2-micro-10",
+      "attempt": 1,
+      "planned_compute_seconds": 56,
+      "planned_transfer_seconds": 1.574666666667099,
+      "observed_runtime_seconds": 12.452471733093262,
+      "validated_handle_runtime_seconds": 12.452471733093262,
+      "terminal_observation_delay_seconds": 9.807345628738403,
+      "preparation_elapsed_seconds": 202.50408005714417,
+      "overlapping_transfer_work_seconds": 405.00799655914307,
+      "launch_wait_seconds": 11.684876441955566,
+      "queue_seconds": 1324.1596858501434,
+      "network_bytes": 250732295
+    },
+    {
+      "activity_id": "montage-58-fog-hpc-e2-20261006-mdifffitid0000048",
+      "resource_id": "montage-gcp-fog-e2-micro-09",
+      "attempt": 1,
+      "planned_compute_seconds": 76,
+      "planned_transfer_seconds": 0.29466666666712626,
+      "observed_runtime_seconds": 12.960306882858276,
+      "validated_handle_runtime_seconds": 12.960306882858276,
+      "terminal_observation_delay_seconds": 1.5392072200775146,
+      "preparation_elapsed_seconds": 111.15899515151978,
+      "overlapping_transfer_work_seconds": 221.21673774719238,
+      "launch_wait_seconds": 12.4910147190094,
+      "queue_seconds": 127.10087728500366,
+      "network_bytes": 144466623
+    },
+    {
+      "activity_id": "montage-58-fog-hpc-e2-20261006-mimgtblid0000017",
+      "resource_id": "montage-gcp-fog-e2-micro-07",
+      "attempt": 1,
+      "planned_compute_seconds": 88,
+      "planned_transfer_seconds": 3.1238361600012468,
+      "observed_runtime_seconds": 4.462711572647095,
+      "validated_handle_runtime_seconds": 4.462711572647095,
+      "terminal_observation_delay_seconds": 1.361527681350708,
+      "preparation_elapsed_seconds": 449.87099862098694,
+      "overlapping_transfer_work_seconds": 1799.482433795929,
+      "launch_wait_seconds": 13.905594825744629,
+      "queue_seconds": 466.47415947914124,
+      "network_bytes": 2132325441
+    },
+    {
+      "activity_id": "montage-58-fog-hpc-e2-20261006-mimgtblid0000036",
+      "resource_id": "montage-gcp-fog-e2-micro-03",
+      "attempt": 1,
+      "planned_compute_seconds": 100,
+      "planned_transfer_seconds": 1.2840000000014697,
+      "observed_runtime_seconds": 3.456937313079834,
+      "validated_handle_runtime_seconds": 3.456937313079834,
+      "terminal_observation_delay_seconds": 1.3075461387634277,
+      "preparation_elapsed_seconds": 573.1351981163025,
+      "overlapping_transfer_work_seconds": 2292.540068626404,
+      "launch_wait_seconds": 81.0121717453003,
+      "queue_seconds": 654.7839007377625,
+      "network_bytes": 1677179784
+    },
+    {
+      "activity_id": "montage-58-fog-hpc-e2-20261006-mimgtblid0000055",
+      "resource_id": "montage-gcp-fog-e2-micro-02",
+      "attempt": 2,
+      "planned_compute_seconds": 36,
+      "planned_transfer_seconds": 2.9630000000006476,
+      "observed_runtime_seconds": 2.939439296722412,
+      "validated_handle_runtime_seconds": 2.939439296722412,
+      "terminal_observation_delay_seconds": 1.8218133449554443,
+      "preparation_elapsed_seconds": 975.9902129173279,
+      "overlapping_transfer_work_seconds": 3903.959368944168,
+      "launch_wait_seconds": 60.21223521232605,
+      "queue_seconds": 1036.8853514194489,
+      "network_bytes": 2119800793
+    },
+    {
+      "activity_id": "montage-58-fog-hpc-e2-20261006-mprojectid0000001",
+      "resource_id": "montage-gcp-e2-medium-2",
+      "attempt": 1,
+      "planned_compute_seconds": 2509.0870506376314,
+      "planned_transfer_seconds": 0,
+      "observed_runtime_seconds": 626.2200429439545,
+      "validated_handle_runtime_seconds": 626.2200429439545,
+      "terminal_observation_delay_seconds": 2.493950366973877,
+      "preparation_elapsed_seconds": null,
+      "overlapping_transfer_work_seconds": null,
+      "launch_wait_seconds": null,
+      "queue_seconds": 136.95378637313843,
+      "network_bytes": 0
+    },
+    {
+      "activity_id": "montage-58-fog-hpc-e2-20261006-mprojectid0000002",
+      "resource_id": "montage-gcp-fog-e2-micro-04",
+      "attempt": 1,
+      "planned_compute_seconds": 1656,
+      "planned_transfer_seconds": 0,
+      "observed_runtime_seconds": 1598.1546354293823,
+      "validated_handle_runtime_seconds": 1598.1546354293823,
+      "terminal_observation_delay_seconds": 4.127002000808716,
+      "preparation_elapsed_seconds": null,
+      "overlapping_transfer_work_seconds": null,
+      "launch_wait_seconds": null,
+      "queue_seconds": 127.45114874839783,
+      "network_bytes": 0
+    },
+    {
+      "activity_id": "montage-58-fog-hpc-e2-20261006-mprojectid0000003",
+      "resource_id": "montage-gcp-fog-e2-micro-03",
+      "attempt": 1,
+      "planned_compute_seconds": 2200,
+      "planned_transfer_seconds": 0,
+      "observed_runtime_seconds": 1567.5464174747467,
+      "validated_handle_runtime_seconds": 1567.5464174747467,
+      "terminal_observation_delay_seconds": 3.6765007972717285,
+      "preparation_elapsed_seconds": null,
+      "overlapping_transfer_work_seconds": null,
+      "launch_wait_seconds": null,
+      "queue_seconds": 103.76896691322327,
+      "network_bytes": 0
+    },
+    {
+      "activity_id": "montage-58-fog-hpc-e2-20261006-mprojectid0000004",
+      "resource_id": "montage-gcp-fog-e2-micro-10",
+      "attempt": 1,
+      "planned_compute_seconds": 3296,
+      "planned_transfer_seconds": 0,
+      "observed_runtime_seconds": 1629.2610213756561,
+      "validated_handle_runtime_seconds": 1629.2610213756561,
+      "terminal_observation_delay_seconds": 2.117905855178833,
+      "preparation_elapsed_seconds": null,
+      "overlapping_transfer_work_seconds": null,
+      "launch_wait_seconds": null,
+      "queue_seconds": 121.09256625175476,
+      "network_bytes": 0
+    },
+    {
+      "activity_id": "montage-58-fog-hpc-e2-20261006-mprojectid0000020",
+      "resource_id": "montage-gcp-fog-e2-micro-08",
+      "attempt": 1,
+      "planned_compute_seconds": 2112,
+      "planned_transfer_seconds": 0,
+      "observed_runtime_seconds": 1591.4156937599182,
+      "validated_handle_runtime_seconds": 1591.4156937599182,
+      "terminal_observation_delay_seconds": 1.9995102882385254,
+      "preparation_elapsed_seconds": null,
+      "overlapping_transfer_work_seconds": null,
+      "launch_wait_seconds": null,
+      "queue_seconds": 122.06359219551086,
+      "network_bytes": 0
+    },
+    {
+      "activity_id": "montage-58-fog-hpc-e2-20261006-mprojectid0000021",
+      "resource_id": "montage-gcp-fog-e2-micro-02",
+      "attempt": 1,
+      "planned_compute_seconds": 1444,
+      "planned_transfer_seconds": 0,
+      "observed_runtime_seconds": 1808.3638439178467,
+      "validated_handle_runtime_seconds": 1808.3638439178467,
+      "terminal_observation_delay_seconds": 3.2913191318511963,
+      "preparation_elapsed_seconds": null,
+      "overlapping_transfer_work_seconds": null,
+      "launch_wait_seconds": null,
+      "queue_seconds": 116.37402749061584,
+      "network_bytes": 0
+    },
+    {
+      "activity_id": "montage-58-fog-hpc-e2-20261006-mprojectid0000022",
+      "resource_id": "montage-gcp-e2-medium-1",
+      "attempt": 1,
+      "planned_compute_seconds": 1953.1603327863493,
+      "planned_transfer_seconds": 0,
+      "observed_runtime_seconds": 527.7171688079834,
+      "validated_handle_runtime_seconds": 527.7171688079834,
+      "terminal_observation_delay_seconds": 0.7628450393676758,
+      "preparation_elapsed_seconds": null,
+      "overlapping_transfer_work_seconds": null,
+      "launch_wait_seconds": null,
+      "queue_seconds": 122.17907047271729,
+      "network_bytes": 0
+    },
+    {
+      "activity_id": "montage-58-fog-hpc-e2-20261006-mprojectid0000023",
+      "resource_id": "montage-gcp-e2-medium-2",
+      "attempt": 1,
+      "planned_compute_seconds": 1974.0870506376316,
+      "planned_transfer_seconds": 0,
+      "observed_runtime_seconds": 469.87716364860535,
+      "validated_handle_runtime_seconds": 469.87716364860535,
+      "terminal_observation_delay_seconds": 1.5030717849731445,
+      "preparation_elapsed_seconds": null,
+      "overlapping_transfer_work_seconds": null,
+      "launch_wait_seconds": null,
+      "queue_seconds": 136.99560546875,
+      "network_bytes": 0
+    },
+    {
+      "activity_id": "montage-58-fog-hpc-e2-20261006-mprojectid0000039",
+      "resource_id": "plafrim-execution-ssh-node-diablo03",
+      "attempt": 1,
+      "planned_compute_seconds": 1540,
+      "planned_transfer_seconds": 0,
+      "observed_runtime_seconds": 435.39326882362366,
+      "validated_handle_runtime_seconds": null,
+      "terminal_observation_delay_seconds": null,
+      "preparation_elapsed_seconds": 0.007843494415283203,
+      "overlapping_transfer_work_seconds": 0.007843494415283203,
+      "launch_wait_seconds": 5.185002326965332,
+      "queue_seconds": 2.2521579265594482,
+      "network_bytes": 0
+    },
+    {
+      "activity_id": "montage-58-fog-hpc-e2-20261006-mprojectid0000040",
+      "resource_id": "plafrim-execution-ssh-node-bora001",
+      "attempt": 1,
+      "planned_compute_seconds": 1537,
+      "planned_transfer_seconds": 0,
+      "observed_runtime_seconds": 428.0586898326874,
+      "validated_handle_runtime_seconds": null,
+      "terminal_observation_delay_seconds": null,
+      "preparation_elapsed_seconds": 0.028724193572998047,
+      "overlapping_transfer_work_seconds": 0.028724193572998047,
+      "launch_wait_seconds": 5.3885817527771,
+      "queue_seconds": 1.9199984073638916,
+      "network_bytes": 0
+    },
+    {
+      "activity_id": "montage-58-fog-hpc-e2-20261006-mprojectid0000041",
+      "resource_id": "montage-gcp-fog-e2-micro-09",
+      "attempt": 1,
+      "planned_compute_seconds": 3012,
+      "planned_transfer_seconds": 0,
+      "observed_runtime_seconds": 1655.5500555038452,
+      "validated_handle_runtime_seconds": 1655.5500555038452,
+      "terminal_observation_delay_seconds": 2.816364049911499,
+      "preparation_elapsed_seconds": null,
+      "overlapping_transfer_work_seconds": null,
+      "launch_wait_seconds": null,
+      "queue_seconds": 136.28686261177063,
+      "network_bytes": 0
+    },
+    {
+      "activity_id": "montage-58-fog-hpc-e2-20261006-mprojectid0000042",
+      "resource_id": "montage-gcp-e2-medium-1",
+      "attempt": 1,
+      "planned_compute_seconds": 2379.1603327863495,
+      "planned_transfer_seconds": 0,
+      "observed_runtime_seconds": 530.1431140899658,
+      "validated_handle_runtime_seconds": 530.1431140899658,
+      "terminal_observation_delay_seconds": 4.37717342376709,
+      "preparation_elapsed_seconds": null,
+      "overlapping_transfer_work_seconds": null,
+      "launch_wait_seconds": null,
+      "queue_seconds": 122.03553557395935,
+      "network_bytes": 0
+    },
+    {
+      "activity_id": "montage-58-fog-hpc-e2-20261006-mviewerid0000019",
+      "resource_id": "montage-gcp-e2-medium-1",
+      "attempt": 1,
+      "planned_compute_seconds": 17,
+      "planned_transfer_seconds": 0.1610000000000582,
+      "observed_runtime_seconds": 2.4861814975738525,
+      "validated_handle_runtime_seconds": 2.4861814975738525,
+      "terminal_observation_delay_seconds": 0.9068527221679688,
+      "preparation_elapsed_seconds": 489.5976278781891,
+      "overlapping_transfer_work_seconds": 489.5976278781891,
+      "launch_wait_seconds": 8.551166534423828,
+      "queue_seconds": 501.0140976905823,
+      "network_bytes": 624696001
+    },
+    {
+      "activity_id": "montage-58-fog-hpc-e2-20261006-mviewerid0000038",
+      "resource_id": "montage-gcp-fog-e2-micro-06",
+      "attempt": 1,
+      "planned_compute_seconds": 32,
+      "planned_transfer_seconds": 0.1610000000000582,
+      "observed_runtime_seconds": 26.953650951385498,
+      "validated_handle_runtime_seconds": 26.953650951385498,
+      "terminal_observation_delay_seconds": 1.5477750301361084,
+      "preparation_elapsed_seconds": 496.11766481399536,
+      "overlapping_transfer_work_seconds": 496.11766481399536,
+      "launch_wait_seconds": 55.2406165599823,
+      "queue_seconds": 554.2020151615143,
+      "network_bytes": 615384081
+    },
+    {
+      "activity_id": "montage-58-fog-hpc-e2-20261006-mviewerid0000057",
+      "resource_id": "montage-gcp-fog-e2-micro-08",
+      "attempt": 2,
+      "planned_compute_seconds": 4,
+      "planned_transfer_seconds": 0.1610000000000582,
+      "observed_runtime_seconds": 21.950023651123047,
+      "validated_handle_runtime_seconds": 21.950023651123047,
+      "terminal_observation_delay_seconds": 3.141009569168091,
+      "preparation_elapsed_seconds": 356.57969522476196,
+      "overlapping_transfer_work_seconds": 356.57969522476196,
+      "launch_wait_seconds": 21.604023694992065,
+      "queue_seconds": 380.9324095249176,
+      "network_bytes": 619789160
+    },
+    {
+      "activity_id": "montage-58-fog-hpc-e2-20261006-mviewerid0000058",
+      "resource_id": "montage-gcp-e2-medium-2",
+      "attempt": 2,
+      "planned_compute_seconds": 7,
+      "planned_transfer_seconds": 0.4830000000001746,
+      "observed_runtime_seconds": 4.621002435684204,
+      "validated_handle_runtime_seconds": 4.621002435684204,
+      "terminal_observation_delay_seconds": 0.4313650131225586,
+      "preparation_elapsed_seconds": 512.824212551117,
+      "overlapping_transfer_work_seconds": 1538.4719440937042,
+      "launch_wait_seconds": 24.893104076385498,
+      "queue_seconds": 540.8094902038574,
+      "network_bytes": 1859869242
+    }
+  ],
+  "limitations": [
+    "Multiple attempts: performance can be contaminated by recovery.",
+    "Runtime finish semantics depend on the driver; observation delay is exported only for exact-attempt handles with validated terminal timestamps.",
+    "API aggregate counters can contain older attempts; audit uses latest distinct IDs.",
+    "Transfer work is summed overlapping route time, not wall-clock preparation.",
+    "Plan assignment work sums are not makespan; API timestamp wall and recovered makespan can differ.",
+    "Cost zero is uncalibrated, not free cloud execution.",
+    "e2-medium interference extrapolated to HPC/micro; micro speedup 0.25 is approximate.",
+    "Whole-workspace real traffic differs from estimated plan edge volumes.",
+    "Zero reported interference does not prove absence of physical contention."
+  ],
+  "product": {
+    "filename": "mosaic-color.png",
+    "bytes": 4920343,
+    "sha256": "0f75c2e811e89ac56ae44784fa22e4e01368abf19a10cbe59a77bd19446fdf4a"
+  },
+  "cleanup": {
+    "cloud_instances_destroyed": 12,
+    "non_destroyed_inventory_count": 0,
+    "active_cloud_operations": 0,
+    "hpc_squeue_jobs": 0,
+    "final_product_export_verified": true,
+    "gcp_managed_instances_residual_count": 0,
+    "gcp_managed_disks_residual_count": 0,
+    "gcp_this_run_firewalls_residual_count": 0,
+    "unrelated_older_managed_firewall_count": 3
+  }
+}

@@ -305,7 +305,15 @@ func (r *Repository) RenewLease(ctx context.Context, id, owner string, expiresAt
 	if err != nil {
 		return err
 	}
-	return requireOne(result, "renew queue job lease")
+	if err := requireOne(result, "renew queue job lease"); err != nil {
+		var status, lastError string
+		var sameOwner bool
+		if diagnosticErr := r.db.QueryRowContext(ctx, `SELECT status, lease_owner = ?, last_error FROM queue_jobs WHERE id = ?`, owner, id).Scan(&status, &sameOwner, &lastError); diagnosticErr != nil {
+			return fmt.Errorf("%w; lease state unavailable: %v", err, diagnosticErr)
+		}
+		return fmt.Errorf("%w; status=%s ownerMatches=%t lastError=%q", err, status, sameOwner, lastError)
+	}
+	return nil
 }
 
 func (r *Repository) Retry(ctx context.Context, id, owner string, cause error, availableAt time.Time) error {
@@ -341,8 +349,15 @@ func (r *Repository) CancelByAggregate(ctx context.Context, aggregateType, aggre
 }
 
 func (r *Repository) ReleaseExpired(ctx context.Context, now time.Time) (int64, error) {
-	result, err := r.db.ExecContext(ctx, `UPDATE queue_jobs SET status='pending', lease_owner='', lease_expires_at=NULL,
-		available_at=? WHERE status='leased' AND lease_expires_at <= ?`, now, now)
+	now = now.UTC()
+	result, err := r.db.ExecContext(ctx, `UPDATE queue_jobs SET
+		status=CASE WHEN attempts >= max_attempts THEN 'failed' ELSE 'pending' END,
+		lease_owner='', lease_expires_at=NULL,
+		completed_at=CASE WHEN attempts >= max_attempts THEN ? ELSE NULL END,
+		last_error=CASE WHEN attempts >= max_attempts
+			THEN 'queue lease expired after maximum attempts; explicit recovery required'
+			ELSE 'queue lease expired; handler ownership lost' END,
+		available_at=? WHERE status='leased' AND lease_expires_at <= ?`, now, now, now)
 	if err != nil {
 		return 0, err
 	}

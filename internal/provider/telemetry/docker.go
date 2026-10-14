@@ -13,6 +13,19 @@ import (
 
 const dockerSampleInterval = 10 * time.Second
 
+func dockerAttempt(handle domain.ActivityHandle) int {
+	if attempt := int(number(handle.Metadata["executionAttempt"])); attempt > 0 {
+		return attempt
+	}
+	// Persisted legacy handles already carry the authoritative attempt suffix.
+	if _, suffix, ok := strings.Cut(handle.ID, ":attempt-"); ok {
+		if attempt, err := strconv.Atoi(suffix); err == nil && attempt > 0 {
+			return attempt
+		}
+	}
+	return 1
+}
+
 // DockerRunner is satisfied by both local and SSH-backed command executors.
 type DockerRunner func(context.Context, string, []string, []byte) ([]byte, error)
 
@@ -46,7 +59,7 @@ func ObserveDocker(ctx context.Context, handle *domain.ActivityHandle, container
 		cpuSeconds += observed.cpuCores * math.Max(0, now-previousAt)
 	}
 	handle.Metrics = []domain.ActivityMetricSample{{RunID: handle.RunID, ActivityID: handle.ActivityID,
-		Attempt: 1, ObservedAt: now, CPUSeconds: cpuSeconds, MemoryBytes: observed.memoryBytes,
+		Attempt: dockerAttempt(*handle), ObservedAt: now, CPUSeconds: cpuSeconds, MemoryBytes: observed.memoryBytes,
 		ReadBytes: observed.readBytes, WriteBytes: observed.writeBytes,
 		Source: "docker-stats-estimated-cpu", Scope: "container"}}
 	handle.Metadata["dockerMetricObservedAt"] = now

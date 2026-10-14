@@ -1,0 +1,47 @@
+{
+  "issue": "AKO-156",
+  "runId": "montage-prism-transfer-real-20261011-v2",
+  "forecastFrozenBeforeRun": true,
+  "independentRunCompletedWithoutRecovery": false,
+  "predictionAccepted": false,
+  "observations": [
+    {
+      "consumer": "mViewer38",
+      "attemptRole": "original",
+      "predictedDependencySeconds": 299.64458030969763,
+      "observedPreparationBarrierSeconds": 250.79265328,
+      "snapshotAcquireSeconds": 180.206241124,
+      "uploadSeconds": 41.190142059,
+      "receiverSeconds": 25.143159386
+    },
+    {
+      "consumer": "mViewer57",
+      "attemptRole": "original-interrupted-during-merge",
+      "predictedDependencySeconds": 302.08458283221216,
+      "observedPreparationBarrierSeconds": 518.800038942,
+      "snapshotAcquireSeconds": 439.081100283,
+      "uploadSeconds": 56.271185525,
+      "receiverSeconds": 19.305561591
+    },
+    {
+      "consumer": "mViewer57",
+      "attemptRole": "recovery-after-AKO-155",
+      "observedPreparationBarrierSeconds": 423.142513732,
+      "snapshotAcquireSeconds": 215.496415805,
+      "sourceManifestCheckSeconds": 70.065198658,
+      "snapshotReused": true,
+      "uploadSeconds": 44.300248394,
+      "receiverSeconds": 87.093432582,
+      "receiverSSHChannelWaitSeconds": 0.000046458,
+      "mergeSeconds": 49.722276564
+    }
+  ],
+  "limitations": [
+    "Preparation barrier is elapsed time, not a sum of parallel phases.",
+    "Snapshot acquisition includes build or waiting for a shared build; it is not exclusive service.",
+    "Receiver wall time may contain resource contention, even when SSH admission wait is negligible.",
+    "Recovery observations cannot validate independent full-run makespan.",
+    "No runtime speedup claim is justified by the extraction code change alone.",
+    "Original frozen forecasts must not be overwritten or refitted as validation results."
+  ]
+}

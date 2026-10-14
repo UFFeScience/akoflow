@@ -1,10 +1,12 @@
 package algorithms
 
 import (
+	"encoding/json"
 	"math"
 	"math/bits"
 
 	"github.com/UFFeScience/akoflow/internal/domain"
+	domainworkflow "github.com/UFFeScience/akoflow/internal/domain/workflow"
 )
 
 type compactPRISMState struct {
@@ -46,7 +48,8 @@ type compactPRISMFanInDependency struct {
 }
 
 type compactPRISMFanIn struct {
-	dependencies []compactPRISMFanInDependency
+	activityOrdinal int
+	dependencies    []compactPRISMFanInDependency
 }
 
 func initialCompactPRISMState(search compactPRISMContext) compactPRISMState {
@@ -194,16 +197,17 @@ func compactPRISMPlacePreparedAlternatives(
 		contention,
 		prepared,
 	)
-	start := math.Max(transfer.readyAt, coreRoot.bestValue)
-	order := compactPRISMIntLookup(state.coreOrder, coreOrdinal)
-	boot := 0.0
-	if order == 0 {
-		boot = resource.resource.BootOverheadSeconds
-		start += boot
+	if search.materializationModel != nil && math.IsInf(transfer.readyAt, 1) {
+		return nil
 	}
+	start, order, boot := compactPRISMPlacementStart(state, resource, coreOrdinal, transfer.readyAt, coreRoot.bestValue)
 	container := resource.resource.ContainerOverhead
 	start += container
 	baseRuntime := search.durations[activityOrdinal][resourceOrdinal]
+	publication, valid := compactPRISMPublicationSeconds(search, activityOrdinal, resource.resource.ID)
+	if !valid {
+		return nil
+	}
 	factor, waitUntil := compactPRISMInterferenceDecision(
 		search, state, activityOrdinal, resourceOrdinal, start, baseRuntime,
 	)
@@ -220,6 +224,7 @@ func compactPRISMPlacePreparedAlternatives(
 		boot,
 		container,
 	)
+	immediate.finishAt += publication
 	children := []compactPRISMState{compactPRISMCommitPlacement(
 		search,
 		state,
@@ -242,11 +247,36 @@ func compactPRISMPlacePreparedAlternatives(
 		search.activities[activityOrdinal].Priority, transfer, delayedStart,
 		baseRuntime*delayedFactor, boot, container,
 	)
+	delayed.finishAt += publication
 	children = append(children, compactPRISMCommitPlacement(
 		search, state, transfer.state, activityOrdinal, resourceOrdinal,
 		coreOrdinal, sequence, delayed,
 	))
 	return children
+}
+
+func compactPRISMPlacementStart(state compactPRISMState, resource compactPRISMResource, coreOrdinal int, readyAt, availableAt float64) (float64, int, float64) {
+	start := math.Max(readyAt, availableAt)
+	order := compactPRISMIntLookup(state.coreOrder, coreOrdinal)
+	boot := 0.0
+	if order == 0 {
+		boot = resource.resource.BootOverheadSeconds
+		start += boot
+	}
+	return start, order, boot
+}
+
+func compactPRISMPublicationSeconds(search compactPRISMContext, activityOrdinal int, resourceID string) (float64, bool) {
+	if search.materializationModel == nil {
+		return 0, true
+	}
+	var volume domainworkflow.WorkspaceProjectionVolumes
+	encoded, err := json.Marshal(search.activities[activityOrdinal].Metadata["workspaceProjectionVolumes"])
+	if err != nil || json.Unmarshal(encoded, &volume) != nil {
+		return 0, false
+	}
+	publication, err := search.materializationModel.PublicationSeconds(resourceID, volume.TerminalObservationBytes, volume.PublicationCleanupBytes)
+	return publication, err == nil
 }
 
 func compactPRISMInterferenceDecision(
@@ -323,7 +353,7 @@ func compactPRISMInterferenceDecision(
 		priority = 1
 	}
 	totalPriority += priority
-	cores := math.Max(1, float64(search.resources[resourceOrdinal].resource.CPUCores))
+	cores := float64(search.resources[resourceOrdinal].resource.SchedulingCPUCores())
 	return math.Max(1, totalPriority/(cores*priority)), start
 }
 
@@ -334,7 +364,8 @@ func compactPRISMPrepareFanIn(
 ) compactPRISMFanIn {
 	predecessors := search.predecessors[activityOrdinal]
 	prepared := compactPRISMFanIn{
-		dependencies: make([]compactPRISMFanInDependency, 0, len(predecessors)),
+		activityOrdinal: activityOrdinal,
+		dependencies:    make([]compactPRISMFanInDependency, 0, len(predecessors)),
 	}
 	for _, dependency := range predecessors {
 		assignment, exists := compactPRISMAssignmentChunkLookup(
@@ -375,6 +406,9 @@ func compactPRISMResolvePreparedTransfers(
 	contention bool,
 	prepared compactPRISMFanIn,
 ) compactPRISMTransferResult {
+	if search.materializationModel != nil {
+		return compactPRISMResolveMaterializedFanIn(search, state, resourceID, contention, prepared)
+	}
 	result := compactPRISMTransferResult{state: state}
 	var networkBatch *compactPRISMNetworkBatch
 	if contention {

@@ -1,0 +1,31 @@
+{
+  "issue": "AKO-158",
+  "implementationCommit": "c633b8f",
+  "role": "instrumentation-readiness-not-model-validation",
+  "deploymentSafePoint": {
+    "activeExecutionRuns": 0,
+    "activeCloudOperations": 0
+  },
+  "sourceSnapshotDiagnostics": [
+    "snapshotBuildSshWaitSeconds",
+    "snapshotBuildCommandSeconds",
+    "snapshotBuildServiceSeconds",
+    "snapshotBuildCpuSeconds"
+  ],
+  "receiverDiagnostics": [
+    "peerReceiverServiceSeconds",
+    "peerReceiverCpuSeconds"
+  ],
+  "nativePublicationFixture": {
+    "taskCount": 3,
+    "makespanSeconds": 15,
+    "appliedDaemonBinaryVerified": true
+  },
+  "hpcConnectionHealth": "online",
+  "limitations": [
+    "Remote wall time excludes local SSH admission and handshake but includes source scheduling and IO contention.",
+    "CPU time measures child user plus system consumption, not exclusive CPU occupancy or queue-free wall service.",
+    "Cached snapshot measurements refer to the original shared build and must not be charged again per consumer.",
+    "These measurements have not yet been collected in a new real run. The dominant transfer residual gate remains unsatisfied."
+  ]
+}

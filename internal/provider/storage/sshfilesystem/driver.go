@@ -26,6 +26,12 @@ type ConnectionStore interface {
 type Driver struct {
 	connections ConnectionStore
 	executor    provider.CommandExecutor
+	cloud       ports.CloudConfigurationStore
+}
+
+func (d *Driver) WithCloudStore(store ports.CloudConfigurationStore) *Driver {
+	d.cloud = store
+	return d
 }
 
 func New(connections ConnectionStore, executor provider.CommandExecutor) *Driver {
@@ -142,6 +148,23 @@ func (d *Driver) Write(ctx context.Context, storage domain.StorageResource, valu
 	return err
 }
 
+// ArchiveDirectory packs within the verified source filesystem, avoiding one
+// SSH round trip per file. It publishes only a validated, nonempty archive.
+func (d *Driver) ArchiveDirectory(ctx context.Context, storage domain.StorageResource, value string) (string, error) {
+	if storage.ReadOnly {
+		return "", fmt.Errorf("storage is read-only")
+	}
+	root, relative, err := browseRoot(storage, value)
+	if err != nil || relative == "" {
+		return "", fmt.Errorf("archive requires a bounded subdirectory")
+	}
+	_, err = d.run(ctx, storage, archiveScript, root, relative)
+	if err != nil {
+		return "", err
+	}
+	return relative + ".tar.gz", nil
+}
+
 func (d *Driver) run(ctx context.Context, storage domain.StorageResource, script string, root, relative string) ([]byte, error) {
 	return d.runInput(ctx, storage, script, nil, root, relative)
 }
@@ -158,10 +181,34 @@ func (d *Driver) runInput(ctx context.Context, storage domain.StorageResource, s
 	// remote command through a shell, so this avoids a second round of parsing
 	// for function declarations, quotes, and newlines in the fixed program.
 	program := base64.StdEncoding.EncodeToString([]byte(prefix + "\n" + script))
-	return exec.Run(ctx, "sh", []string{"-c", "printf %s " + program + " | base64 -d | sh"}, input)
+	// Decode the program into the command argument, not the child's stdin:
+	// writeScript must receive the caller's binary payload on stdin.
+	return exec.Run(ctx, "sh", []string{"-c", "sh -c \"$(printf %s " + program + " | base64 -d)\""}, input)
 }
 
 func (d *Driver) connectionExecutor(ctx context.Context, storage domain.StorageResource) (provider.CommandExecutor, error) {
+	if instanceID := metadataString(storage.Metadata, "cloudInstanceId"); instanceID != "" {
+		if d.cloud == nil {
+			return nil, fmt.Errorf("cloud storage identity resolver is unavailable")
+		}
+		instance, err := d.cloud.FindProvisionedInstance(ctx, instanceID)
+		if err != nil || instance == nil || instance.Status != "ready" {
+			return nil, fmt.Errorf("cloud storage instance is not ready")
+		}
+		alias, knownHosts, err := instance.VerifiedSSHTrust()
+		if err != nil {
+			return nil, fmt.Errorf("cloud storage trust: %w", err)
+		}
+		connection := domain.EnvironmentConnection{
+			ID: instance.ID, Type: domain.ConnectionSSH, Endpoint: instance.PublicAddress,
+			Username: instance.SSHUsername, CredentialRef: instance.SSHCredentialRef,
+			Configuration: map[string]any{"port": 22, "hostKeyAlias": alias, "knownHostsFile": knownHosts, "strictHostKeyChecking": true},
+		}
+		if connection.Endpoint == "" {
+			return nil, fmt.Errorf("cloud storage has no relay-accessible address")
+		}
+		return provider.NewSSHCommandExecutor(d.executor, connection), nil
+	}
 	if d.connections == nil {
 		return nil, fmt.Errorf("SSH storage connection store is required")
 	}
@@ -296,5 +343,15 @@ case "$parent" in "$root"|"$root"/*) ;; *) exit 4;; esac
 target="$parent/$(basename -- "$candidate")"
 tmp="$target.akoflow-copy-part"
 cat > "$tmp" && mv -f -- "$tmp" "$target"`
+
+const archiveScript = commonScript + "\n" + `safe_existing || exit 3
+test -d "$candidate" || exit 5
+test -z "$(find "$candidate" -type l -print -quit)" || exit 6
+target="$candidate.tar.gz"
+tmp=$(mktemp "$target.part.XXXXXXXX") || exit 7
+trap 'rm -f -- "$tmp"' EXIT HUP INT TERM
+tar -C "$root" -czf "$tmp" -- "$rel" || exit 8
+test -s "$tmp" && gzip -t "$tmp" && tar -tzf "$tmp" >/dev/null || exit 9
+mv -f -- "$tmp" "$target"`
 
 var _ ports.StorageBrowser = (*Driver)(nil)

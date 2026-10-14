@@ -6,6 +6,7 @@ import (
 	"sort"
 
 	"github.com/UFFeScience/akoflow/internal/domain"
+	domainworkflow "github.com/UFFeScience/akoflow/internal/domain/workflow"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/plugins/planning"
 )
 
@@ -18,6 +19,11 @@ func NewSimulationExecutor() *SimulationExecutor {
 }
 
 func (e *SimulationExecutor) Execute(ctx context.Context, request Request) (domain.ExecutionTrace, error) {
+	projected, err := domainworkflow.ProjectWorkspaceDependenciesForResourceTypes(request.Workflow, assignedResourceTypes(request))
+	if err != nil {
+		return domain.ExecutionTrace{}, fmt.Errorf("project workspace dependencies: %w", err)
+	}
+	request.Workflow = projected
 	if request.Run.Mode != domain.ExecutionModeSimulation {
 		return domain.ExecutionTrace{}, fmt.Errorf("simulation executor cannot execute mode %q", request.Run.Mode)
 	}
@@ -36,6 +42,18 @@ func (e *SimulationExecutor) Execute(ctx context.Context, request Request) (doma
 		return domain.ExecutionTrace{}, err
 	}
 	return buildTrace(request, completed, transfers), nil
+}
+
+func assignedResourceTypes(request Request) map[string]string {
+	resources := map[string]string{}
+	for _, resource := range request.Resources {
+		resources[resource.ID] = string(resource.Type)
+	}
+	assigned := map[string]string{}
+	for _, assignment := range request.Plan.Assignments {
+		assigned[assignment.ActivityID] = resources[assignment.ResourceID]
+	}
+	return assigned
 }
 
 type indexedRequest struct {
@@ -196,6 +214,7 @@ func buildTrace(
 		tasks = append(tasks, task)
 	}
 	applyResourceActiveCosts(tasks, request.Resources)
+	applyCloudLifecycleCosts(tasks, request.Resources, request.Plan.LifecycleActions)
 	for _, task := range tasks {
 		metrics.MakespanSeconds = max(metrics.MakespanSeconds, task.FinishedAt)
 		metrics.ComputeSeconds += task.RuntimeSeconds
@@ -276,11 +295,14 @@ func allCompleted(ids []string, completed map[string]domain.TaskExecution) bool 
 }
 
 func resolveRuntime(activity domain.Activity, assignment domain.PlanAssignment, resource domain.Resource, profiles map[string]domain.ActivityResourceProfile) float64 {
+	if profile, ok := profiles[activity.ActivityTypeID+"\x00"+resource.ID]; ok && profile.UsesWorkUnits() {
+		return profile.RuntimeFor(activity)
+	}
 	if base, ok := numberMetadata(activity.Metadata, "baseRuntimeSeconds"); ok && resource.ComputeSpeedup > 0 {
 		return base / resource.ComputeSpeedup
 	}
 	if profile, ok := profiles[activity.ActivityTypeID+"\x00"+resource.ID]; ok {
-		return profile.RuntimeSeconds
+		return profile.RuntimeFor(activity)
 	}
 	// Interference-aware planning stores a slowed predicted duration. Execution
 	// must start from the resource-specific clean runtime and let the execution

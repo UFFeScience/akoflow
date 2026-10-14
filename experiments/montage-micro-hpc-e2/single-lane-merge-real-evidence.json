@@ -1,0 +1,24 @@
+{
+  "issue": "AKO-131",
+  "implementationCommit": "d891da1",
+  "executionRunId": "montage-micro-hpc-e2-real-20261008-single-lane-v1",
+  "activity": "mbgmodelid0000031",
+  "attempt": 2,
+  "status": "completed",
+  "workspaceStrategy": "direct-runtime",
+  "wholeWorkspace": true,
+  "mergeCheckSeconds": 3.9360992620000275,
+  "mergeCopySeconds": 9.166654937000033,
+  "mergeVerifySeconds": 3.7432944340000063,
+  "transferDurationSeconds": 118.86065554618835,
+  "transferFinishedAt": 1791458100.0528774,
+  "consumerStartedAt": 1791458107.9347284,
+  "consumerFinishedAt": 1791458108.5117002,
+  "transferBeforeConsumer": true,
+  "limitations": [
+    "One completed activity proves real execution and the transfer barrier, not full workflow completion.",
+    "This workspace differs from mConcatFit30; comparison with its prior 159.8218-second merge is not a controlled speedup measurement.",
+    "Transfer duration includes preparation beyond the three merge stages.",
+    "Recovery-contaminated run; not an uninterrupted scientific benchmark."
+  ]
+}

@@ -1,6 +1,7 @@
 import { mkdir, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { extractFunctionBody } from "./go-function-body.mjs";
 
 const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const docsDirectory = path.resolve(scriptDirectory, "..");
@@ -70,14 +71,8 @@ const groupMetadata = {
     "/docs/guides/workflows/executions",
     "workflow runs and results",
   ],
-  Artifacts: [
-    "/docs/guides/data/artifacts",
-    "choose an artifact task",
-  ],
-  Provenance: [
-    "/docs/guides/data/provenance",
-    "scientific provenance",
-  ],
+  Artifacts: ["/docs/guides/data/artifacts", "choose an artifact task"],
+  Provenance: ["/docs/guides/data/provenance", "scientific provenance"],
   Console: [
     "/docs/guides/operations/interactive-console",
     "interactive console sessions and commands",
@@ -87,8 +82,12 @@ const groupMetadata = {
 };
 
 const queryDescriptions = {
-  async: "Set to `true` to start cloud catalog discovery in the background and return `202 Accepted` immediately. Repeat requests while it is running do not start another discovery.",
-  attempt: "Select the activity execution attempt whose metric samples or summary should be returned. Defaults to the first attempt.",
+  workflowVersionId:
+    "Filter execution runs by saved plan workflow version before pagination and total counting. Supplying this filter selects the paginated response, even without page/pageSize.",
+  async:
+    "Set to `true` to start cloud catalog discovery in the background and return `202 Accepted` immediately. Repeat requests while it is running do not start another discovery.",
+  attempt:
+    "Select the activity execution attempt whose metric samples or summary should be returned. Defaults to the first attempt.",
   connectionId: "Limit results to this environment connection.",
   cursor: "Opaque cursor returned by the preceding page.",
   depth: "Maximum lineage traversal depth.",
@@ -111,7 +110,8 @@ const queryDescriptions = {
   q: "Free-text search query.",
   resourceId: "Limit results to this resource.",
   runId: "Limit results to this run.",
-  selectable: "Set to `true` to list only artifact versions with a verified, available executable representation for workflow selection.",
+  selectable:
+    "Set to `true` to list only artifact versions with a verified, available executable representation for workflow selection.",
   sessionId: "Limit results to this session.",
   sortField: "Entity field used to order results.",
   sortOrder: "Sort direction for the selected field.",
@@ -142,28 +142,64 @@ const delegatedSuccessStatuses = {
 // Checked response shapes cover map values and ambiguous Go type names that
 // cannot be inferred safely from a handler's outer return type alone.
 const checkedResponseShapes = {
+  WorkspaceStorageBudget: {
+    example: {
+      storageId: "storage-id",
+      availableBytes: 1073741824,
+      observedAt: "2026-01-01T00:00:00Z",
+      source: "adapter-observed-quota",
+    },
+    note: "The adapter returns an effective storage quota observation, not an assumption from nominal filesystem capacity. Inspect its storage identity, observation time, source and available bytes before using it for planning.",
+  },
+  PreserveCancelledCloudWorkspaces: {
+    example: {
+      status: "preserved",
+      archive: `storage/preserved-workspaces/${"0".repeat(64)}.tar.gz`,
+      sha256: "0".repeat(64),
+      workspaceIds: ["workspace-id"],
+      instanceId: "cloud-instance-id",
+    },
+    note: "This is an illustrative response shape, not evidence of a preserved archive. The real archive filename is its verified SHA-256, and workspace IDs identify only the matching retained generation. Source files and VMs are not deleted by this route.",
+  },
   CreateExecution: {
     example: {
-      id: "queue-job-id", category: "execution", eventType: "execution.run.requested",
-      aggregateType: "execution_run", aggregateId: "run-id", status: "pending",
-      priority: 0, availableAt: "2026-01-01T00:00:00Z", attempts: 0,
-      maxAttempts: 5, idempotencyKey: "execution-run:run-id",
+      id: "queue-job-id",
+      category: "execution",
+      eventType: "execution.run.requested",
+      aggregateType: "execution_run",
+      aggregateId: "run-id",
+      status: "pending",
+      priority: 0,
+      availableAt: "2026-01-01T00:00:00Z",
+      attempts: 0,
+      maxAttempts: 5,
+      idempotencyKey: "execution-run:run-id",
       createdAt: "2026-01-01T00:00:00Z",
     },
     note: "This is the queue job for a new request, not the execution-run record. `id` identifies the job; `aggregateId` matches the submitted `run.id`. Queue status may advance while the daemon works, and optional lease/completion fields appear later. A run is saved only after the worker validates the request.",
   },
   ListAuditEvents: {
-    example: [{
-      id: "audit-event-id", eventType: "connection.health.checked",
-      environmentId: "environment-id", connectionId: "connection-id",
-      outcome: "succeeded", summary: "Connection is healthy",
-      occurredAt: "2026-01-01T00:00:00Z",
-    }],
+    example: [
+      {
+        id: "audit-event-id",
+        eventType: "connection.health.checked",
+        environmentId: "environment-id",
+        connectionId: "connection-id",
+        outcome: "succeeded",
+        summary: "Connection is healthy",
+        occurredAt: "2026-01-01T00:00:00Z",
+      },
+    ],
     note: "This is one connection-health event. The list can be empty; current emitters record connection checks, resource discovery, and console actions, not every operation in AkôFlow.",
   },
   RegisterDockerArtifact: {
     example: {
-      artifact: { id: "artifact-version-...", artifactId: "busybox", version: "1.36", scope: "system" },
+      artifact: {
+        id: "artifact-version-...",
+        artifactId: "busybox",
+        version: "1.36",
+        scope: "system",
+      },
       build: {
         id: "build-...",
         artifactVersionId: "artifact-version-...",
@@ -180,7 +216,13 @@ const checkedResponseShapes = {
     },
   },
   ValidateCloudCredential: {
-    example: { valid: true, provider: "gcp", project: "project-id", region: "region", catalogStatus: "not_discovered" },
+    example: {
+      valid: true,
+      provider: "gcp",
+      project: "project-id",
+      region: "region",
+      catalogStatus: "not_discovered",
+    },
     note: "A `200 OK` response verifies authentication and access to the Compute Engine project. It does not discover machines, images, disks, or prices. Save the environment and refresh its cloud catalog separately.",
   },
   TestEnvironmentConnection: {
@@ -198,7 +240,13 @@ const checkedResponseShapes = {
         status: "completed",
         makespanSeconds: 12.4,
         cost: 0,
-        breakdown: { computeSeconds: 12.4, transferSeconds: 0, queueSeconds: 0, interferenceSeconds: 0, overheadSeconds: 0 },
+        breakdown: {
+          computeSeconds: 12.4,
+          transferSeconds: 0,
+          queueSeconds: 0,
+          interferenceSeconds: 0,
+          overheadSeconds: 0,
+        },
         transferredBytes: 0,
         kind: "workflow",
       },
@@ -212,34 +260,81 @@ const checkedResponseShapes = {
   ListExecutions: {
     type: "JSON array or paginated object",
     example: null,
-    note: "Without `page` or `pageSize`, the response is an array of `{ \"run\": ... }` items. Supplying either pagination parameter returns `{ \"items\": [...], \"page\": number, \"pageSize\": number, \"total\": number, \"hasNext\": boolean }`.",
+    note: 'Without `page`, `pageSize` or `workflowVersionId`, the response is an array of `{ "run": ... }` items. Supplying any of these parameters returns `{ "items": [...], "page": number, "pageSize": number, "total": number, "hasNext": boolean, "workflowVersionId": string }`. The workflow filter is applied before pagination and total counting; unrelated workflow runs and standalone commands are excluded.',
   },
   Search: { example: { query: "string", results: [], total: 0 } },
   ActivateArchiveInstance: {
-    example: { instance: { id: "default", name: "Default instance", source: "local", status: "active", readOnly: false, credentialsSet: true }, restarting: false },
+    example: {
+      instance: {
+        id: "default",
+        name: "Default instance",
+        source: "local",
+        status: "active",
+        readOnly: false,
+        credentialsSet: true,
+      },
+      restarting: false,
+    },
     note: "`instance.status` is `active` after selection. `restarting` reports whether this server can trigger its own restart; when it is `false`, restart the daemon manually. An imported snapshot has `readOnly: true` instead of the default instance's `false`.",
   },
   GetPlanningSession: {
     example: {
       session: {
-        id: "session-id", workflowVersionId: "workflow-version-id", executionScopeId: "scope-id",
-        networkTopologyId: "topology-id", status: "completed", algorithms: [{ id: "heft" }],
-        progress: 1, candidateCount: 1, createdAt: "2026-01-01T00:00:00Z",
+        id: "session-id",
+        workflowVersionId: "workflow-version-id",
+        executionScopeId: "scope-id",
+        networkTopologyId: "topology-id",
+        status: "completed",
+        algorithms: [{ id: "heft" }],
+        progress: 1,
+        candidateCount: 1,
+        createdAt: "2026-01-01T00:00:00Z",
       },
-      algorithmRuns: [{
-        id: "algorithm-run-id", planningSessionId: "session-id", algorithm: "heft", objective: "time",
-        status: "completed", progress: 1, candidateCount: 1,
-        estimate: { durationSeconds: 0.1, expandedStates: 1, activityCount: 1, dependencyCount: 0, compatibleResources: 1, confidence: "calibrated" },
-      }],
+      algorithmRuns: [
+        {
+          id: "algorithm-run-id",
+          planningSessionId: "session-id",
+          algorithm: "heft",
+          objective: "time",
+          status: "completed",
+          progress: 1,
+          candidateCount: 1,
+          estimate: {
+            durationSeconds: 0.1,
+            expandedStates: 1,
+            activityCount: 1,
+            dependencyCount: 0,
+            compatibleResources: 1,
+            confidence: "calibrated",
+          },
+        },
+      ],
     },
     note: "The response pairs the saved session with its algorithm runs. `selectedCandidateId` and `selectedPlanId` appear only after selection; a completed session may have neither. The estimate describes predicted planning work, not execution time.",
   },
   GetProvenanceSchema: {
-    example: { items: [{ name: "execution_runs", columns: [{ name: "id", type: "text" }, { name: "status", type: "text" }] }] },
+    example: {
+      items: [
+        {
+          name: "execution_runs",
+          columns: [
+            { name: "id", type: "text" },
+            { name: "status", type: "text" },
+          ],
+        },
+      ],
+    },
     note: "This shows two columns from one safe table. The response lists all queryable tables and unblocked columns in the connected database; inspect it before writing a read-only SQL query.",
   },
   QueryProvenanceSQL: {
-    example: { columns: [{ name: "id", type: "text" }], items: [], page: 1, pageSize: 50, truncated: false, elapsedMilliseconds: 0 },
+    example: {
+      columns: [{ name: "id", type: "text" }],
+      items: [],
+      page: 1,
+      pageSize: 50,
+      truncated: false,
+      elapsedMilliseconds: 0,
+    },
     note: "This shows an empty result for a query selecting `id`. `columns` follows the submitted SELECT list, and each item uses those column names. Pagination and elapsed time vary by query.",
   },
   ExplainProvenanceSQL: {
@@ -276,83 +371,159 @@ const runnableSimulationRequests = {
 // These notes come from handler calls and the credential/operation services,
 // not from JSON tags alone. Keep them scoped to fields the service validates.
 const verifiedRequestNotes = {
-  "POST /akoflow-api/execution-runs/": "`202 Accepted` publishes a queue job. The returned `id` is the job ID, while `aggregateId` is the submitted `run.id`. The worker validates the request before saving a run; `GET /execution-runs/{runId}/` can return `404` until then, or remain `404` if validation fails. Use the original `run.id` to read the run, and do not treat the queue job's status as the run's status. Repeating the same `run.id` returns the existing idempotent job rather than creating a second one.",
-  "POST /akoflow-api/execution-runs/{runId}/cancel/": "No JSON body is required. The run must exist and the instance must be writable. AkôFlow interrupts unfinished activities, cancels queued execution work, marks the run cancelled, and returns the updated run with `200 OK`. Cancelling an already-cancelled run is idempotent and also returns `200`; an unknown run returns `404`.",
-  "POST /akoflow-api/execution-runs/{runId}/recovery/": "The run must be failed or cancelled and its original queued execution request must still be available. Send `mode` as `continue` or `retry_failures`; omission defaults to `continue`. AkôFlow reuses completed activities whose workspaces remain available, queues the remaining activities, and returns the recovery job plus preview with `202 Accepted`. Inspect the run until it reaches a terminal status.",
-  "POST /akoflow-api/execution-runs/{runId}/activities/{activityId}/interrupt/": "No JSON body is required. The instance must be writable and the activity must belong to an interruptible active execution. Success returns the updated task with `200 OK`; an unavailable interrupter returns `503`, while an activity that cannot be interrupted returns `409`.",
-  "POST /akoflow-api/environments/": "The response echoes the submitted definition. The repository saves the environment, version, inventory, storage, and connections, but ignores `connectionChecks` and `connectorBindings` if they appear in the body. Read `GET /environments/{environmentId}/` for saved IDs and separately recorded connection checks. See the [environment YAML reference](/docs/reference/environment-yaml).",
-  "GET /akoflow-api/environments/": "Each item is a saved environment definition. `connectionChecks` can include recent health records for its connections; these were recorded separately from the environment YAML. The repository does not populate `connectorBindings` from a submitted definition.",
-  "GET /akoflow-api/environments/{environmentId}/": "Returns the saved definition, including IDs filled from the enclosing environment/version. `connectionChecks` comes from recent connection-health records, not from the submitted YAML. The repository does not populate `connectorBindings` from that document.",
-  "POST /akoflow-api/schedule-plans/": "Returns the saved `plan`. If `plan.networkTopologyId` is empty, the server fills it from `networkTopology.id`. Submitted predictions are saved without recalculation.",
-  "GET /akoflow-api/environments/{environmentId}/cloud-catalog/": "Returns the last synchronized catalog; this GET does not call the provider. Before the first successful refresh it returns `404`. Read catalog warnings as well as machine, image, and disk choices; missing price data does not make a machine free.",
-  "GET /akoflow-api/environments/{environmentId}/cloud-capacity-targets/": "Returns enabled targets for this environment, ordered by name. Deleting a target disables its record, so it disappears from this list without erasing historical operations or instances that used it.",
-  "GET /akoflow-api/environments/{environmentId}/cloud-instances/": "Returns this environment's saved instances newest first, including records marked destroyed. Inspect each instance's `status` and `destroyedAt` rather than treating the list length as the number of active VMs.",
-  "GET /akoflow-api/cloud-operations/": "Returns all saved cloud operations, newest first, as an array. This route has no environment filter; use the returned `environmentId` and `capacityTargetId` to find your operation, then open its detail and events.",
-  "GET /akoflow-api/cloud-operations/{operationId}/": "Returns the current operation or `404` for an unknown ID. `queued` and `running` are not final outcomes. A `failureReason` may appear while an operation is queued for a retry; rely on a terminal `completed`, `failed`, or `cancelled` status and inspect events for details.",
-  "GET /akoflow-api/cloud-operations/{operationId}/events/": "Returns stored events in sequence order, or `404` for an unknown operation. The server may add parsed provider-log events before returning this list. An `operation.failed` event can describe a retry; check the operation's current status before treating it as a final failure.",
-  "GET /akoflow-api/cloud-instances/{instanceId}/provisioning-log/": "Use a saved cloud instance ID, not a cloud operation ID. An unknown instance returns `404`. Before Terraform has written a log file, this route can return `200 OK` with a waiting message in `log`; follow the cloud operation status and events for the outcome.",
-  "GET /": "This health route is at the daemon root, outside `/akoflow-api/`. With the API URL from the [API access tutorial](/docs/tutorials/api-access), the cURL command removes that prefix and requests `/`. A healthy daemon returns plain text `ok`; this check does not verify Docker, BuildKit, or a workflow runtime. Use [preflight](/docs/api/endpoints/instance/get-preflight) for those local capability checks.",
-  "GET /akoflow-api/preflight/": "The response has `server`, `docker`, and `buildkit` objects, each with `available` and `message`. `server.available` is true when this route responds, but the Docker and BuildKit checks can be false while HTTP still returns `200 OK`. Inspect their individual values before running a local workflow. The checks run in the daemon process, not in your browser or shell.",
-  "GET /akoflow-api/console-sessions/{sessionId}/stream/": "Open this URL with a WebSocket client after creating a console session. A successful upgrade returns `101 Switching Protocols` and carries terminal input and output over the socket; it is not a JSON response. An unknown session returns `404`. See the [interactive console guide](/docs/guides/operations/interactive-console) for session lifecycle.",
-  "POST /akoflow-api/provenance/sql/": "Send a read-only `sql` query using `SELECT` or `WITH`; `parameters` supplies optional named values, and `page`/`pageSize` control results (at most 200 rows per page). Use `GET /provenance/sql/schema/` to see allowed tables and columns. The service enforces a 10-second timeout and rejects writes or restricted fields with `400`; an unavailable explorer returns `503`. See [provenance SQL guide](/docs/guides/data/provenance#query-with-read-only-sql).",
-  "POST /akoflow-api/provenance/sql/explain/": "Send the same `sql` and optional named `parameters` as the read-only SQL route. This runs `EXPLAIN QUERY PLAN` for a permitted `SELECT` or `WITH` statement and returns plan rows, not the query's data rows. It uses the same read-only table/column restrictions and 10-second timeout; invalid SQL returns `400` and an unavailable explorer returns `503`.",
-  "PUT /akoflow-api/instance/": "Send the complete current instance object with non-empty `id` and `name`; this route saves the supplied object, so preserve existing identity and metadata when changing one field. `transferBufferBytes` accepts 5–64 MiB; `0` selects the 8 MiB default. The [instance guide](/docs/guides/operations/instance-management#inspect-the-active-identity) reads the current object before updating it.",
-  "PUT /akoflow-api/environments/{environmentId}/": "Read `GET /environments/{environmentId}/` before editing and send a complete environment definition; `environment.id` must match the path ID. The response echoes the submitted definition, while the repository ignores `connectionChecks` and `connectorBindings` in it. Replacement returns `404` when the environment does not exist and can return `422` when references prevent replacing its inventory. Use new environment and version IDs for revised inventory already used by scopes or plans; see the [environment YAML reference](/docs/reference/environment-yaml#compatibility-and-common-failures).",
-  "POST /akoflow-api/instance-activations/{instanceId}/": "Use `default` to return to the writable instance or an ID returned by `POST /instances/import/` to open a read-only snapshot. See [instance management](/docs/guides/operations/instance-management#import-and-open-a-read-only-snapshot) for the switching procedure.",
-  "POST /akoflow-api/instances/import/": "Send a ZIP archive as the request body with `Content-Type: application/zip`, not JSON. The archive must be a compatible AkôFlow export with its redaction marker, valid database checksum and schema, no symbolic links, at most 100,000 entries, at most 8 GiB compressed and 64 GiB expanded. Success returns `201 Created` with the new read-only snapshot `id`; import does not replace the active instance. See [instance management](/docs/guides/operations/instance-management#import-and-open-a-read-only-snapshot).",
-  "PUT /akoflow-api/user-preferences/{clientId}/": "The path `clientId` must be 8–128 characters and overrides any body `clientId`. Send `theme` as `light` or `dark`; `animationsEnabled` is optional and defaults to false when omitted. The route saves preferences for this client profile and returns the stored record with `200 OK`; invalid ID or theme returns `422`. See [Personal preferences](/docs/guides/operations/personal-preferences).",
-  "POST /akoflow-api/factory-reset/": "No JSON body is required. This permanently clears user catalog/database records while retaining the schema and system instance identity; the server also removes managed Kubernetes token files. Success is `204 No Content`. The database reset runs before token-directory cleanup, so a `422` from that cleanup can arrive after the catalog has already been cleared. Export a snapshot first; see [instance management](/docs/guides/operations/instance-management#factory-reset).",
-  "PUT /akoflow-api/environment-connections/{connectionId}/": "Read the current connection in `GET /environments/{environmentId}/`, then send its complete object with the changed fields. Its `id` must match the path and `environmentId` must be non-empty. The route inserts a new connection or replaces saved fields, and returns the submitted object without running a health check. See the [HPC connection guide](/docs/guides/infrastructure/hpc-slurm#1-create-the-ssh-credential-and-proxy-aware-connection).",
-  "POST /akoflow-api/environment-connections/{connectionId}/health/": "Checks a saved connection and records a health result. Inspect the returned `status` and `message`: an unreachable target returns `200 OK` with `status: offline` when the probe itself completed. The environment status is updated to `connected` or `unreachable`.",
-  "POST /akoflow-api/environment-connections/{connectionId}/discover/": "Discovers through a saved connection and returns a `snapshots` array. The connection needs a configured discovery driver and bound resources; missing prerequisites return `422`. A successful request records observed inventory but does not reserve a scheduler allocation or guarantee that every site resource was found.",
-  "POST /akoflow-api/workflow-definitions/import/": "This compatibility route uses the same portable YAML/JSON importer as `POST /workflow-definitions/`. Supply `name`, `spec.namespace`, and activities with valid dependencies and execution or simulation fields. The [workflow specification](/docs/internal/workflow-spec) defines the authoring format; a duplicate normalized workflow ID returns `422`.",
-  "POST /akoflow-api/workflow-definition-actions/duplicate/{workflowId}/": "Send a non-empty new `name`; `namespace` is optional and otherwise inherited. The source workflow must exist. AkôFlow generates new workflow and activity IDs from the new name and returns the independent definition with `201 Created`; an ID collision or invalid name returns `422`.",
-  "POST /akoflow-api/planning-sessions/{sessionId}/candidates/{candidateId}/select/": "The candidate must belong to this session and be feasible. No JSON body is required. A successful selection returns the saved schedule plan with `201 Created` and records the selected IDs on the session. The API permits selecting before the session completes; wait for final ranking unless choosing an early candidate intentionally.",
-  "POST /akoflow-api/planning-sessions/{sessionId}/cancel/": "No JSON body is required. Cancelling a queued or running session marks its algorithm runs and session as cancelled and requests cancellation of active work; success returns `204 No Content`. Cancelling an already-cancelled session also returns `204`. A missing, completed, or failed session returns `409 Conflict`, not `404`.",
-  "POST /akoflow-api/environments/{environmentId}/cloud-catalog/refresh/": "Discovers the catalog using the saved cloud connection. Without `async`, returns the catalog with `200 OK` or an error with `422`. With `async=true`, returns `202 Accepted` immediately and runs discovery in the background. Repeated async requests for the same environment while discovery is active do not start another job. `GET /environments/{environmentId}/cloud-catalog/` returns `404` until a catalog has been synchronized. This is not a VM provisioning request.",
+  "POST /akoflow-api/cloud-operations/{operationId}/reconcile-orphan/":
+    "No JSON body is required. Only an unstarted queued workflow operation with no queue job can be reconciled; its owning workflow must already be completed, failed or cancelled. The server marks that orphan operation cancelled and returns it with `200 OK`. Unknown operations return `404`; an active, published or otherwise ineligible operation returns `409`. This route does not cancel an active infrastructure job.",
+  "POST /akoflow-api/execution-runs/{runId}/preserve-cloud-workspaces/":
+    "Supply `downloadId`, `instanceId` and the actual `sha256` of a ready archive for `runs/{runId}.tar.gz` in `cloud-workspace:{instanceId}`. The run must be cancelled and every handle terminal. The server requires matching run/generation identity, an unpinned retained workspace set, and both source and relay checksum validation before releasing preserved workspace leases. It copies the verified archive to daemon-local storage; it does not remove source files or VMs. No standalone request is supplied because these values must come from your verified recovery evidence.",
+  "POST /akoflow-api/execution-runs/":
+    "`202 Accepted` publishes a queue job. The returned `id` is the job ID, while `aggregateId` is the submitted `run.id`. The worker validates the request before saving a run; `GET /execution-runs/{runId}/` can return `404` until then, or remain `404` if validation fails. Use the original `run.id` to read the run, and do not treat the queue job's status as the run's status. Repeating the same `run.id` returns the existing idempotent job rather than creating a second one.",
+  "POST /akoflow-api/execution-runs/{runId}/cancel/":
+    "No JSON body is required. The run must exist and the instance must be writable. AkôFlow interrupts unfinished activities, cancels queued execution work, marks the run cancelled, and returns the updated run with `200 OK`. Cancelling an already-cancelled run is idempotent and also returns `200`; an unknown run returns `404`.",
+  "POST /akoflow-api/execution-runs/{runId}/recovery/":
+    "The run must be failed or cancelled and its original queued execution request must still be available. Send `mode` as `continue` or `retry_failures`; omission defaults to `continue`. AkôFlow reuses completed activities whose workspaces remain available, queues the remaining activities, and returns the recovery job plus preview with `202 Accepted`. Inspect the run until it reaches a terminal status.",
+  "POST /akoflow-api/execution-runs/{runId}/activities/{activityId}/interrupt/":
+    "No JSON body is required. The instance must be writable and the activity must belong to an interruptible active execution. Success returns the updated task with `200 OK`; an unavailable interrupter returns `503`, while an activity that cannot be interrupted returns `409`.",
+  "POST /akoflow-api/environments/":
+    "The response echoes the submitted definition. The repository saves the environment, version, inventory, storage, and connections, but ignores `connectionChecks` and `connectorBindings` if they appear in the body. Read `GET /environments/{environmentId}/` for saved IDs and separately recorded connection checks. See the [environment YAML reference](/docs/reference/environment-yaml).",
+  "GET /akoflow-api/environments/":
+    "Each item is a saved environment definition. `connectionChecks` can include recent health records for its connections; these were recorded separately from the environment YAML. The repository does not populate `connectorBindings` from a submitted definition.",
+  "GET /akoflow-api/environments/{environmentId}/":
+    "Returns the saved definition, including IDs filled from the enclosing environment/version. `connectionChecks` comes from recent connection-health records, not from the submitted YAML. The repository does not populate `connectorBindings` from that document.",
+  "POST /akoflow-api/schedule-plans/":
+    "Returns the saved `plan`. If `plan.networkTopologyId` is empty, the server fills it from `networkTopology.id`. Submitted predictions are saved without recalculation.",
+  "GET /akoflow-api/environments/{environmentId}/cloud-catalog/":
+    "Returns the last synchronized catalog; this GET does not call the provider. Before the first successful refresh it returns `404`. Read catalog warnings as well as machine, image, and disk choices; missing price data does not make a machine free.",
+  "GET /akoflow-api/environments/{environmentId}/cloud-capacity-targets/":
+    "Returns enabled targets for this environment, ordered by name. Deleting a target disables its record, so it disappears from this list without erasing historical operations or instances that used it.",
+  "GET /akoflow-api/environments/{environmentId}/cloud-instances/":
+    "Returns this environment's saved instances newest first, including records marked destroyed. Inspect each instance's `status` and `destroyedAt` rather than treating the list length as the number of active VMs.",
+  "GET /akoflow-api/cloud-operations/":
+    "Returns all saved cloud operations, newest first, as an array. This route has no environment filter; use the returned `environmentId` and `capacityTargetId` to find your operation, then open its detail and events.",
+  "GET /akoflow-api/cloud-operations/{operationId}/":
+    "Returns the current operation or `404` for an unknown ID. `queued` and `running` are not final outcomes. A `failureReason` may appear while an operation is queued for a retry; rely on a terminal `completed`, `failed`, or `cancelled` status and inspect events for details.",
+  "GET /akoflow-api/cloud-operations/{operationId}/events/":
+    "Returns stored events in sequence order, or `404` for an unknown operation. The server may add parsed provider-log events before returning this list. An `operation.failed` event can describe a retry; check the operation's current status before treating it as a final failure.",
+  "GET /akoflow-api/cloud-instances/{instanceId}/provisioning-log/":
+    "Use a saved cloud instance ID, not a cloud operation ID. An unknown instance returns `404`. Before Terraform has written a log file, this route can return `200 OK` with a waiting message in `log`; follow the cloud operation status and events for the outcome.",
+  "GET /":
+    "This health route is at the daemon root, outside `/akoflow-api/`. With the API URL from the [API access tutorial](/docs/tutorials/api-access), the cURL command removes that prefix and requests `/`. A healthy daemon returns plain text `ok`; this check does not verify Docker, BuildKit, or a workflow runtime. Use [preflight](/docs/api/endpoints/instance/get-preflight) for those local capability checks.",
+  "GET /akoflow-api/preflight/":
+    "The response has `server`, `docker`, and `buildkit` objects, each with `available` and `message`. `server.available` is true when this route responds, but the Docker and BuildKit checks can be false while HTTP still returns `200 OK`. Inspect their individual values before running a local workflow. The checks run in the daemon process, not in your browser or shell.",
+  "GET /akoflow-api/console-sessions/{sessionId}/stream/":
+    "Open this URL with a WebSocket client after creating a console session. A successful upgrade returns `101 Switching Protocols` and carries terminal input and output over the socket; it is not a JSON response. An unknown session returns `404`. See the [interactive console guide](/docs/guides/operations/interactive-console) for session lifecycle.",
+  "POST /akoflow-api/provenance/sql/":
+    "Send a read-only `sql` query using `SELECT` or `WITH`; `parameters` supplies optional named values, and `page`/`pageSize` control results (at most 200 rows per page). Use `GET /provenance/sql/schema/` to see allowed tables and columns. The service enforces a 10-second timeout and rejects writes or restricted fields with `400`; an unavailable explorer returns `503`. See [provenance SQL guide](/docs/guides/data/provenance#query-with-read-only-sql).",
+  "POST /akoflow-api/provenance/sql/explain/":
+    "Send the same `sql` and optional named `parameters` as the read-only SQL route. This runs `EXPLAIN QUERY PLAN` for a permitted `SELECT` or `WITH` statement and returns plan rows, not the query's data rows. It uses the same read-only table/column restrictions and 10-second timeout; invalid SQL returns `400` and an unavailable explorer returns `503`.",
+  "PUT /akoflow-api/instance/":
+    "Send the complete current instance object with non-empty `id` and `name`; this route saves the supplied object, so preserve existing identity and metadata when changing one field. `transferBufferBytes` accepts 5–64 MiB; `0` selects the 8 MiB default. The [instance guide](/docs/guides/operations/instance-management#inspect-the-active-identity) reads the current object before updating it.",
+  "PUT /akoflow-api/environments/{environmentId}/":
+    "Read `GET /environments/{environmentId}/` before editing and send a complete environment definition; `environment.id` must match the path ID. The response echoes the submitted definition, while the repository ignores `connectionChecks` and `connectorBindings` in it. Replacement returns `404` when the environment does not exist and can return `422` when references prevent replacing its inventory. Use new environment and version IDs for revised inventory already used by scopes or plans; see the [environment YAML reference](/docs/reference/environment-yaml#compatibility-and-common-failures).",
+  "POST /akoflow-api/instance-activations/{instanceId}/":
+    "Use `default` to return to the writable instance or an ID returned by `POST /instances/import/` to open a read-only snapshot. See [instance management](/docs/guides/operations/instance-management#import-and-open-a-read-only-snapshot) for the switching procedure.",
+  "POST /akoflow-api/instances/import/":
+    "Send a ZIP archive as the request body with `Content-Type: application/zip`, not JSON. The archive must be a compatible AkôFlow export with its redaction marker, valid database checksum and schema, no symbolic links, at most 100,000 entries, at most 8 GiB compressed and 64 GiB expanded. Success returns `201 Created` with the new read-only snapshot `id`; import does not replace the active instance. See [instance management](/docs/guides/operations/instance-management#import-and-open-a-read-only-snapshot).",
+  "PUT /akoflow-api/user-preferences/{clientId}/":
+    "The path `clientId` must be 8–128 characters and overrides any body `clientId`. Send `theme` as `light` or `dark`; `animationsEnabled` is optional and defaults to false when omitted. The route saves preferences for this client profile and returns the stored record with `200 OK`; invalid ID or theme returns `422`. See [Personal preferences](/docs/guides/operations/personal-preferences).",
+  "POST /akoflow-api/factory-reset/":
+    "No JSON body is required. This permanently clears user catalog/database records while retaining the schema and system instance identity; the server also removes managed Kubernetes token files. Success is `204 No Content`. The database reset runs before token-directory cleanup, so a `422` from that cleanup can arrive after the catalog has already been cleared. Export a snapshot first; see [instance management](/docs/guides/operations/instance-management#factory-reset).",
+  "PUT /akoflow-api/environment-connections/{connectionId}/":
+    "Read the current connection in `GET /environments/{environmentId}/`, then send its complete object with the changed fields. Its `id` must match the path and `environmentId` must be non-empty. The route inserts a new connection or replaces saved fields, and returns the submitted object without running a health check. See the [HPC connection guide](/docs/guides/infrastructure/hpc-slurm#1-create-the-ssh-credential-and-proxy-aware-connection).",
+  "POST /akoflow-api/environment-connections/{connectionId}/health/":
+    "Checks a saved connection and records a health result. Inspect the returned `status` and `message`: an unreachable target returns `200 OK` with `status: offline` when the probe itself completed. The environment status is updated to `connected` or `unreachable`.",
+  "POST /akoflow-api/environment-connections/{connectionId}/discover/":
+    "Discovers through a saved connection and returns a `snapshots` array. The connection needs a configured discovery driver and bound resources; missing prerequisites return `422`. A successful request records observed inventory but does not reserve a scheduler allocation or guarantee that every site resource was found.",
+  "POST /akoflow-api/workflow-definitions/import/":
+    "This compatibility route uses the same portable YAML/JSON importer as `POST /workflow-definitions/`. Supply `name`, `spec.namespace`, and activities with valid dependencies and execution or simulation fields. The [workflow specification](/docs/internal/workflow-spec) defines the authoring format; a duplicate normalized workflow ID returns `422`.",
+  "POST /akoflow-api/workflow-definition-actions/duplicate/{workflowId}/":
+    "Send a non-empty new `name`; `namespace` is optional and otherwise inherited. The source workflow must exist. AkôFlow generates new workflow and activity IDs from the new name and returns the independent definition with `201 Created`; an ID collision or invalid name returns `422`.",
+  "POST /akoflow-api/planning-sessions/{sessionId}/candidates/{candidateId}/select/":
+    "The candidate must belong to this session and be feasible. No JSON body is required. A successful selection returns the saved schedule plan with `201 Created` and records the selected IDs on the session. The API permits selecting before the session completes; wait for final ranking unless choosing an early candidate intentionally.",
+  "POST /akoflow-api/planning-sessions/{sessionId}/cancel/":
+    "No JSON body is required. Cancelling a queued or running session marks its algorithm runs and session as cancelled and requests cancellation of active work; success returns `204 No Content`. Cancelling an already-cancelled session also returns `204`. A missing, completed, or failed session returns `409 Conflict`, not `404`.",
+  "POST /akoflow-api/environments/{environmentId}/cloud-catalog/refresh/":
+    "Discovers the catalog using the saved cloud connection. Without `async`, returns the catalog with `200 OK` or an error with `422`. With `async=true`, returns `202 Accepted` immediately and runs discovery in the background. Repeated async requests for the same environment while discovery is active do not start another job. `GET /environments/{environmentId}/cloud-catalog/` returns `404` until a catalog has been synchronized. This is not a VM provisioning request.",
   "POST /akoflow-api/environments/{environmentId}/cloud-capacity-targets/": [
     "Use an existing cloud environment with a cloud runtime. Send `name`, `providerMachineType`, and `imageReference`. The server supplies an omitted `id`, sets `environmentId` from the path, and enables the target.",
     "Choose the provider-specific region, image, machine type, and network policy using the [GCP guide](/docs/guides/infrastructure/gcp). Set `configuration.projectId` to the validated project; Terraform reads it from the target, not the connection. The built-in worker requires `amd64`. Set `fixedZone` if needed; otherwise Terraform uses the first active zone in the region. The stored `zonePolicy` does not affect that choice. Set approved `configuration.sshSourceRanges` before provisioning; otherwise the Terraform target defaults SSH ingress to `0.0.0.0/0`.",
     "This route creates a schedulable capacity resource, not a VM. If it returns `422`, inspect the target list before retrying: the target can be saved before resource binding fails.",
   ].join("\n\n"),
-  "DELETE /akoflow-api/cloud-capacity-targets/{targetId}/": "No body is required. An active provisioned instance using this target blocks removal with `409 Conflict`; destroy it first. Success returns `204 No Content`, disables and renames the target record, and marks its capacity resource unschedulable. A missing or already-disabled target returns `404`. This does not itself destroy a VM.",
-  "POST /akoflow-api/cloud-instances/{instanceId}/configure/": "No JSON body is required. The instance ID must exist (`404` otherwise). This returns a queued cloud operation with `202 Accepted`; inspect its status and events before treating configuration as complete. The worker needs a public address and the target's machine-configuration versions; missing prerequisites can fail asynchronously. Repeating the same active action returns its existing operation; a different active action on the instance returns `409`.",
-  "POST /akoflow-api/cloud-instances/{instanceId}/destroy/": "No JSON body is required. The instance ID must exist (`404` otherwise). `202 Accepted` queues destruction; inspect the operation until it completes or fails before assuming the VM is gone. A lifecycle safety check can block destruction after acceptance. The same active action returns its existing operation; another active action on this instance returns `409`.",
-  "POST /akoflow-api/cloud-instances/{instanceId}/start/": "No JSON body is required. The instance ID must exist (`404` otherwise). `202 Accepted` queues a start operation; the worker accepts a stopped instance and treats an already-ready instance as a no-op. Other states can fail asynchronously. A repeated active start returns the existing operation; a different active action returns `409`.",
-  "POST /akoflow-api/cloud-instances/{instanceId}/stop/": "No JSON body is required. The instance ID must exist (`404` otherwise). `202 Accepted` queues a stop operation; the worker accepts a ready instance and treats an already-stopped instance as a no-op. Other states or lifecycle safety checks can fail after acceptance. A repeated active stop returns the existing operation; a different active action returns `409`.",
-  "POST /akoflow-api/cloud-instances/{instanceId}/validate/": "No JSON body is required. The instance ID must exist (`404` otherwise). `202 Accepted` queues validation against the target's configured checks; it does not by itself provision, configure, start, or stop the instance. Inspect the operation status and events for the result. A repeated active validation returns the existing operation; a different active action returns `409`.",
-  "DELETE /akoflow-api/environments/{environmentId}/": "No body is required. The environment must exist (`404` otherwise) and must not be referenced by an execution scope, network topology, schedule plan, execution data or transfers, console activity, or simulation scenario (`422` if referenced). Success returns `204 No Content` and removes its saved versions, inventory, and connections. Inspect dependencies before deleting; see [environments](/docs/guides/infrastructure/environments).",
-  "DELETE /akoflow-api/storages/{storageId}/entries/": "Pass the entry path as a URL query parameter, for example `?path=/approved/root/file.txt`; there is no JSON body. The storage must be registered, writable, and usable, and the path must be allowed by its adapter. Success returns `204 No Content`; adapter or policy errors return `422`. This removes the entry rather than merely deleting its catalog record.",
-  "POST /akoflow-api/resources/": "The example adds an inventory-only resource to the SimGrid environment from the [first-run tutorial](/docs/guides/workflows/first-run); that environment version must already exist. Use a unique `id`: reusing one updates the resource and still returns `201 Created`. This route does not create a runtime binding, so the example is not a runnable planning resource. Add an enabled binding through a complete environment definition before selecting it in a plan.",
-  "DELETE /akoflow-api/execution-scopes/{scopeId}/": "No body is required. A missing scope returns `404`; a scope referenced by a saved schedule plan cannot be deleted and returns `422`. Success returns `204 No Content`. Inspect plans before deleting a scope used by planning or execution.",
-  "DELETE /akoflow-api/console-sessions/{sessionId}/": "No body is required. Close a session when its terminal work is finished; the route returns `204 No Content` on success and `404` for an unknown session. Closing the Desktop detail page alone does not close a daemon-owned session. See the [interactive console guide](/docs/guides/operations/interactive-console).",
-  "POST /akoflow-api/ssh-keys/": "The tested example creates a new key. Choose an unused `id`: 1–64 ASCII letters, digits, `_`, or `-`, starting with a letter or digit. `comment` is optional. The daemon needs `ssh-keygen`.",
-  "POST /akoflow-api/ssh-keys/import/": "Send a unique `id` and your own `privateKey` as a JSON string. The ID follows the same SSH key ID rule; the key must be a non-empty OpenSSH private key that `ssh-keygen -y` can read. The response returns public metadata, not the private key. No example key is supplied because its bytes must come from your credential store.",
-  "POST /akoflow-api/kubernetes-tokens/": "Send an `id` and your own non-empty `token` as JSON strings. The ID must be 1–63 lowercase letters, digits, or hyphens, starting with a letter or digit. The response returns a `credentialRef`; it does not echo the token. Supply the token from your cluster's credential process.",
-  "POST /akoflow-api/cloud-credentials/": "Send `id`, `provider`, and `credential` with your actual provider credential. The ID follows the Kubernetes credential ID rule; `provider` must be `gcp`, `aws`, or `azure`, and `credential` must be valid JSON. Saving a credential does not validate provider access or make every provider operation available. The response returns a `credentialRef`.",
-  "POST /akoflow-api/environments/{environmentId}/cloud-instances/": "Send a `capacityTargetId` for a target in this environment. `name` and `sshUsername` are optional; the server generates an `instanceId` when omitted. `202 Accepted` means the operation was queued. Target ownership, connection, and credential checks run later, as does VM provisioning. Inspect the returned operation's status, failure reason, and events; an active provision for the same target returns the existing operation. Follow the [GCP guide](/docs/guides/infrastructure/gcp) for account-specific setup.",
-  "POST /akoflow-api/environments/{environmentId}/cloud-provisioning/": "This compatibility route accepts the same `capacityTargetId` request as [Provision Cloud Instance](/docs/api/endpoints/cloud/post-environments-environmentid-cloud-instances). It queues the same operation and returns `202 Accepted`; target, environment, credential, and provider failures can appear later in its status and events. Wait for completion before treating the VM as ready.",
-  "POST /akoflow-api/planning-sessions/": "Required: `id`, an existing `workflowVersionId`, `executionScopeId`, and `networkTopologyId`, plus at least one `algorithms` entry. Each algorithm ID must appear in `GET /planning-algorithms/`; duplicate IDs are rejected. The server sets status and timestamps. The example IDs require the SimGrid environment, scope, topology, and workflow to be registered first.",
-  "POST /akoflow-api/schedule-plans/import/": "Send a JSON object with a complete `plan`. Use a unique plan `id`, unique assignment IDs with matching `planId` values, and unique lifecycle action IDs with matching `schedulePlanId` and `dependsOn` references. Its workflow version, execution scope, topology, and resources must already exist. The server sets `source` to `imported`, checks the schedule against those saved records, and returns `422` if it is invalid. It saves the supplied predicted metrics without recalculating them. See the [saved-plan import example](/docs/guides/workflows/planning#import-a-saved-plan); a body filled with placeholder IDs would not pass validation.",
-  "POST /akoflow-api/storages/{storageId}/promote-data/": "Replace the example `path` with an existing file within the selected storage's approved root. `id` is optional; the server generates one when omitted. `workflowVersionId`, `runId`, and `activityId` are optional associations and should identify real records when supplied. The [storage guide](/docs/guides/infrastructure/storage) shows the browsing step.",
-  "POST /akoflow-api/storages/{storageId}/promote-artifact/": "Replace the example `path` with an existing `.sif` file within the selected storage's approved root. `id`, `name`, `version`, and `scope` have server defaults. The [storage guide](/docs/guides/infrastructure/storage) shows the browsing step; no file is uploaded or moved.",
-  "POST /akoflow-api/storages/{storageId}/downloads/": "Replace the example `path` with an existing file within the selected storage's approved browse root; directories require the archive route. `id` is optional. The response is a ready download record, not a frozen copy: `GET /storage-downloads/{downloadId}/content/` opens the path when you fetch it. See [Browse and manage storage](/docs/guides/infrastructure/storage) for download and checksum steps.",
-  "POST /akoflow-api/storages/{storageId}/checksum/": "Replace the example `path` with an existing file within the selected storage's approved browse root. The server reads the file and returns a `sha256:`-prefixed checksum; it does not queue a background job.",
-  "POST /akoflow-api/storages/{storageId}/copies/": "Replace the example `path` with a file in the source storage and `destinationStorageId` with a registered, writable storage ID. `id` is optional. The copy runs in the background at the same path in the destination. Inspect `GET /storage-downloads/{downloadId}/` until its status is `completed` or `failed`; `202 Accepted` does not mean the bytes have arrived.",
-  "POST /akoflow-api/storages/{storageId}/archives/": "Replace the example `path` with an existing directory in a writable storage. `id` is optional. AkôFlow writes a `.tar.gz` beside that directory and returns a queued record. Inspect `GET /storage-downloads/{downloadId}/` until its status is `ready` or `failed`; only a ready archive can be streamed through the download content route.",
-  "POST /akoflow-api/storages/{storageId}/index-runs/": "Indexing must be enabled for this registered storage. Use a unique `id` in place of the example or omit it for a generated ID. The current service completes the bounded scan before responding; the returned record is `completed` or the request fails. The `202 Accepted` status does not mean this scan continues in the background.",
-  "POST /akoflow-api/build-contexts/": "To upload bytes, send multipart form data with file field `context`. The JSON form only records metadata for bytes already in the artifact store; it requires `digest`, `storageUri`, and positive `sizeBytes`. A browser-local path is not a server build context.",
-  "POST /akoflow-api/artifact-builds/": "Upload the build context first and use its returned digest as `contextDigest`; `artifactVersionId` must identify a saved artifact version. Required fields are `id`, `artifactVersionId`, `contextDigest`, `recipeDigest`, and `cacheKey`. An existing cache key returns that build with `200 OK`; a new specification returns `201 Created`. Creating a specification does not start a build run. See [Build an executable](/docs/guides/data/build-executable) for the simpler Docker-image path.",
-  "POST /akoflow-api/artifacts/docker/": "Required: `artifactId`, `version`, and a Docker image reference without whitespace. `architecture` defaults to `amd64`. This registers a version and build specification; it does not pull the image or create a SIF yet. Use `build.id` from the response in `POST /artifact-builds/{buildId}/runs/` to start conversion. The build run returns a separate ID.",
-  "POST /akoflow-api/artifact-builds/{buildId}/runs/": "`buildId` must identify an existing build specification. This request starts a build run and returns its record with `202 Accepted`; inspect `GET /build-runs/{runId}/` for its outcome. The request has no JSON body.",
-  "POST /akoflow-api/artifact-materializations/": "This endpoint stores a caller-supplied record; it does not copy or verify artifact bytes. Supply a distinct `id`, existing `variantId` and `resourceId`, the variant's `sha256:` digest, `destinationPath`, and a truthful `status`. The database checks references and digest format but does not prove the bytes exist at the destination. If supplied, `environmentId` must be the environment **version** ID, despite the field name. Use [Inspect artifact locations](/docs/guides/data/artifact-locations) to inspect evidence recorded by execution.",
-  "POST /akoflow-api/console-sessions/": "Replace the example `resourceId` with a saved resource that has a connected interactive runtime; `actorId` is optional. A successful request starts the terminal and returns a `connected` session. Resolution or startup failure returns `422`, not a successful session record. Use the [console guide](/docs/guides/operations/interactive-console) for streaming and closure.",
-  "POST /akoflow-api/console-commands/": "Replace the example `resourceId` with a saved resource that supports one-shot commands. `resourceId` and `command` are required; `timeoutSeconds` defaults to 30 and cannot exceed 3600. The request waits for the runner and returns a command record. A runner failure can return `201 Created` with `status: failed`; inspect `status`, `exitCode`, and `failure` instead of treating HTTP status as command success.",
-  "POST /akoflow-api/connection-tests/": "The example tests the local server. For SSH, agent, or Kubernetes, send the connection fields and credentials required by that type instead. This route tests the supplied connection without saving it. It returns `200 OK` with `healthy` and `message`; `healthy: false` means the probe failed even though the HTTP request succeeded. Cloud connections are not handled here.",
-  "POST /akoflow-api/machine-configuration-validations/": "Send `playbookYaml` containing the Ansible playbook text. Valid input returns `200 OK` with `valid: true` and a content hash; invalid input returns `422` with `valid: false` and errors. This validates structure only and does not run a playbook or provision a machine.",
-  "POST /akoflow-api/machine-configurations/": "`name` is required. `id` is optional and generated when omitted. The server sets `ownership: user` and `enabled: true`. Create a version separately; this request does not validate or execute a playbook.",
-  "POST /akoflow-api/machine-configurations/{configurationId}/versions/": "Create the configuration first, then use its returned ID as `configurationId` (the preceding example uses `example-machine-setup`). The path ID overrides any body `machineConfigurationId`. Send a positive `version` and valid `playbookYaml`; `id` is optional and `status` defaults to `draft`. The response is the stored configuration with its versions, not just the new version.",
-  "POST /akoflow-api/cloud-credentials/validate/": "Send `provider`, your actual provider `credential` JSON, and the project/region fields required by that provider. This route performs a live catalog discovery and does not save the credential. The current server registers only a GCP catalog adapter; AWS or Azure validation returns `422` as unsupported even though those credential records can be stored. No generic credential body can establish access; use the [GCP guide](/docs/guides/infrastructure/gcp) for the current provider path.",
+  "DELETE /akoflow-api/cloud-capacity-targets/{targetId}/":
+    "No body is required. An active provisioned instance using this target blocks removal with `409 Conflict`; destroy it first. Success returns `204 No Content`, disables and renames the target record, and marks its capacity resource unschedulable. A missing or already-disabled target returns `404`. This does not itself destroy a VM.",
+  "POST /akoflow-api/cloud-instances/{instanceId}/configure/":
+    "No JSON body is required. The instance ID must exist (`404` otherwise). This returns a queued cloud operation with `202 Accepted`; inspect its status and events before treating configuration as complete. The worker needs a public address and the target's machine-configuration versions; missing prerequisites can fail asynchronously. Repeating the same active action returns its existing operation; a different active action on the instance returns `409`.",
+  "POST /akoflow-api/cloud-instances/{instanceId}/destroy/":
+    "No JSON body is required. The instance ID must exist (`404` otherwise). `202 Accepted` queues destruction; inspect the operation until it completes or fails before assuming the VM is gone. A lifecycle safety check can block destruction after acceptance. The same active action returns its existing operation; another active action on this instance returns `409`.",
+  "POST /akoflow-api/cloud-instances/{instanceId}/start/":
+    "No JSON body is required. The instance ID must exist (`404` otherwise). `202 Accepted` queues a start operation; the worker accepts a stopped instance and treats an already-ready instance as a no-op. Other states can fail asynchronously. A repeated active start returns the existing operation; a different active action returns `409`.",
+  "POST /akoflow-api/cloud-instances/{instanceId}/stop/":
+    "No JSON body is required. The instance ID must exist (`404` otherwise). `202 Accepted` queues a stop operation; the worker accepts a ready instance and treats an already-stopped instance as a no-op. Other states or lifecycle safety checks can fail after acceptance. A repeated active stop returns the existing operation; a different active action returns `409`.",
+  "POST /akoflow-api/cloud-instances/{instanceId}/validate/":
+    "No JSON body is required. The instance ID must exist (`404` otherwise). `202 Accepted` queues validation against the target's configured checks; it does not by itself provision, configure, start, or stop the instance. Inspect the operation status and events for the result. A repeated active validation returns the existing operation; a different active action returns `409`.",
+  "DELETE /akoflow-api/environments/{environmentId}/":
+    "No body is required. The environment must exist (`404` otherwise) and must not be referenced by an execution scope, network topology, schedule plan, execution data or transfers, console activity, or simulation scenario (`422` if referenced). Success returns `204 No Content` and removes its saved versions, inventory, and connections. Inspect dependencies before deleting; see [environments](/docs/guides/infrastructure/environments).",
+  "DELETE /akoflow-api/storages/{storageId}/entries/":
+    "Pass the entry path as a URL query parameter, for example `?path=/approved/root/file.txt`; there is no JSON body. The storage must be registered, writable, and usable, and the path must be allowed by its adapter. Success returns `204 No Content`; adapter or policy errors return `422`. This removes the entry rather than merely deleting its catalog record.",
+  "POST /akoflow-api/resources/":
+    "The example adds an inventory-only resource to the SimGrid environment from the [first-run tutorial](/docs/guides/workflows/first-run); that environment version must already exist. Use a unique `id`: reusing one updates the resource and still returns `201 Created`. This route does not create a runtime binding, so the example is not a runnable planning resource. Add an enabled binding through a complete environment definition before selecting it in a plan.",
+  "DELETE /akoflow-api/execution-scopes/{scopeId}/":
+    "No body is required. A missing scope returns `404`; a scope referenced by a saved schedule plan cannot be deleted and returns `422`. Success returns `204 No Content`. Inspect plans before deleting a scope used by planning or execution.",
+  "DELETE /akoflow-api/console-sessions/{sessionId}/":
+    "No body is required. Close a session when its terminal work is finished; the route returns `204 No Content` on success and `404` for an unknown session. Closing the Desktop detail page alone does not close a daemon-owned session. See the [interactive console guide](/docs/guides/operations/interactive-console).",
+  "POST /akoflow-api/ssh-keys/":
+    "The tested example creates a new key. Choose an unused `id`: 1–64 ASCII letters, digits, `_`, or `-`, starting with a letter or digit. `comment` is optional. The daemon needs `ssh-keygen`.",
+  "POST /akoflow-api/ssh-keys/import/":
+    "Send a unique `id` and your own `privateKey` as a JSON string. The ID follows the same SSH key ID rule; the key must be a non-empty OpenSSH private key that `ssh-keygen -y` can read. The response returns public metadata, not the private key. No example key is supplied because its bytes must come from your credential store.",
+  "POST /akoflow-api/kubernetes-tokens/":
+    "Send an `id` and your own non-empty `token` as JSON strings. The ID must be 1–63 lowercase letters, digits, or hyphens, starting with a letter or digit. The response returns a `credentialRef`; it does not echo the token. Supply the token from your cluster's credential process.",
+  "POST /akoflow-api/cloud-credentials/":
+    "Send `id`, `provider`, and `credential` with your actual provider credential. The ID follows the Kubernetes credential ID rule; `provider` must be `gcp`, `aws`, or `azure`, and `credential` must be valid JSON. Saving a credential does not validate provider access or make every provider operation available. The response returns a `credentialRef`.",
+  "POST /akoflow-api/environments/{environmentId}/cloud-instances/":
+    "Send a `capacityTargetId` for a target in this environment. `name` and `sshUsername` are optional; the server generates an `instanceId` when omitted. `202 Accepted` means the operation was queued. Target ownership, connection, and credential checks run later, as does VM provisioning. Inspect the returned operation's status, failure reason, and events; an active provision for the same target returns the existing operation. Follow the [GCP guide](/docs/guides/infrastructure/gcp) for account-specific setup.",
+  "POST /akoflow-api/environments/{environmentId}/cloud-provisioning/":
+    "This compatibility route accepts the same `capacityTargetId` request as [Provision Cloud Instance](/docs/api/endpoints/cloud/post-environments-environmentid-cloud-instances). It queues the same operation and returns `202 Accepted`; target, environment, credential, and provider failures can appear later in its status and events. Wait for completion before treating the VM as ready.",
+  "POST /akoflow-api/planning-sessions/":
+    "Required: `id`, an existing `workflowVersionId`, `executionScopeId`, and `networkTopologyId`, plus at least one `algorithms` entry. Each algorithm ID must appear in `GET /planning-algorithms/`; duplicate IDs are rejected. The server sets status and timestamps. The example IDs require the SimGrid environment, scope, topology, and workflow to be registered first.",
+  "POST /akoflow-api/schedule-plans/import/":
+    "Send a JSON object with a complete `plan`. Use a unique plan `id`, unique assignment IDs with matching `planId` values, and unique lifecycle action IDs with matching `schedulePlanId` and `dependsOn` references. Its workflow version, execution scope, topology, and resources must already exist. The server sets `source` to `imported`, checks the schedule against those saved records, and returns `422` if it is invalid. It saves the supplied predicted metrics without recalculating them. See the [saved-plan import example](/docs/guides/workflows/planning#import-a-saved-plan); a body filled with placeholder IDs would not pass validation.",
+  "POST /akoflow-api/storages/{storageId}/promote-data/":
+    "Replace the example `path` with an existing file within the selected storage's approved root. `id` is optional; the server generates one when omitted. `workflowVersionId`, `runId`, and `activityId` are optional associations and should identify real records when supplied. The [storage guide](/docs/guides/infrastructure/storage) shows the browsing step.",
+  "POST /akoflow-api/storages/{storageId}/promote-artifact/":
+    "Replace the example `path` with an existing `.sif` file within the selected storage's approved root. `id`, `name`, `version`, and `scope` have server defaults. The [storage guide](/docs/guides/infrastructure/storage) shows the browsing step; no file is uploaded or moved.",
+  "POST /akoflow-api/storages/{storageId}/downloads/":
+    "Replace the example `path` with an existing file within the selected storage's approved browse root; directories require the archive route. `id` is optional. The response is a ready download record, not a frozen copy: `GET /storage-downloads/{downloadId}/content/` opens the path when you fetch it. See [Browse and manage storage](/docs/guides/infrastructure/storage) for download and checksum steps.",
+  "POST /akoflow-api/storages/{storageId}/checksum/":
+    "Replace the example `path` with an existing file within the selected storage's approved browse root. The server reads the file and returns a `sha256:`-prefixed checksum; it does not queue a background job.",
+  "POST /akoflow-api/storages/{storageId}/copies/":
+    "Replace the example `path` with a file in the source storage and `destinationStorageId` with a registered, writable storage ID. `id` is optional. The copy runs in the background at the same path in the destination. Inspect `GET /storage-downloads/{downloadId}/` until its status is `completed` or `failed`; `202 Accepted` does not mean the bytes have arrived.",
+  "POST /akoflow-api/storages/{storageId}/archives/":
+    "Replace the example `path` with an existing directory in a writable storage. `id` is optional. AkôFlow writes a `.tar.gz` beside that directory and returns a queued record. Inspect `GET /storage-downloads/{downloadId}/` until its status is `ready` or `failed`; only a ready archive can be streamed through the download content route.",
+  "POST /akoflow-api/storages/{storageId}/index-runs/":
+    "Indexing must be enabled for this registered storage. Use a unique `id` in place of the example or omit it for a generated ID. The current service completes the bounded scan before responding; the returned record is `completed` or the request fails. The `202 Accepted` status does not mean this scan continues in the background.",
+  "POST /akoflow-api/build-contexts/":
+    "To upload bytes, send multipart form data with file field `context`. The JSON form only records metadata for bytes already in the artifact store; it requires `digest`, `storageUri`, and positive `sizeBytes`. A browser-local path is not a server build context.",
+  "POST /akoflow-api/artifact-builds/":
+    "Upload the build context first and use its returned digest as `contextDigest`; `artifactVersionId` must identify a saved artifact version. Required fields are `id`, `artifactVersionId`, `contextDigest`, `recipeDigest`, and `cacheKey`. An existing cache key returns that build with `200 OK`; a new specification returns `201 Created`. Creating a specification does not start a build run. See [Build an executable](/docs/guides/data/build-executable) for the simpler Docker-image path.",
+  "POST /akoflow-api/artifacts/docker/":
+    "Required: `artifactId`, `version`, and a Docker image reference without whitespace. `architecture` defaults to `amd64`. This registers a version and build specification; it does not pull the image or create a SIF yet. Use `build.id` from the response in `POST /artifact-builds/{buildId}/runs/` to start conversion. The build run returns a separate ID.",
+  "POST /akoflow-api/artifact-builds/{buildId}/runs/":
+    "`buildId` must identify an existing build specification. This request starts a build run and returns its record with `202 Accepted`; inspect `GET /build-runs/{runId}/` for its outcome. The request has no JSON body.",
+  "POST /akoflow-api/artifact-materializations/":
+    "This endpoint stores a caller-supplied record; it does not copy or verify artifact bytes. Supply a distinct `id`, existing `variantId` and `resourceId`, the variant's `sha256:` digest, `destinationPath`, and a truthful `status`. The database checks references and digest format but does not prove the bytes exist at the destination. If supplied, `environmentId` must be the environment **version** ID, despite the field name. Use [Inspect artifact locations](/docs/guides/data/artifact-locations) to inspect evidence recorded by execution.",
+  "POST /akoflow-api/console-sessions/":
+    "Replace the example `resourceId` with a saved resource that has a connected interactive runtime; `actorId` is optional. A successful request starts the terminal and returns a `connected` session. Resolution or startup failure returns `422`, not a successful session record. Use the [console guide](/docs/guides/operations/interactive-console) for streaming and closure.",
+  "POST /akoflow-api/console-commands/":
+    "Replace the example `resourceId` with a saved resource that supports one-shot commands. `resourceId` and `command` are required; `timeoutSeconds` defaults to 30 and cannot exceed 3600. The request waits for the runner and returns a command record. A runner failure can return `201 Created` with `status: failed`; inspect `status`, `exitCode`, and `failure` instead of treating HTTP status as command success.",
+  "POST /akoflow-api/connection-tests/":
+    "The example tests the local server. For SSH, agent, or Kubernetes, send the connection fields and credentials required by that type instead. This route tests the supplied connection without saving it. It returns `200 OK` with `healthy` and `message`; `healthy: false` means the probe failed even though the HTTP request succeeded. Cloud connections are not handled here.",
+  "POST /akoflow-api/machine-configuration-validations/":
+    "Send `playbookYaml` containing the Ansible playbook text. Valid input returns `200 OK` with `valid: true` and a content hash; invalid input returns `422` with `valid: false` and errors. This validates structure only and does not run a playbook or provision a machine.",
+  "POST /akoflow-api/machine-configurations/":
+    "`name` is required. `id` is optional and generated when omitted. The server sets `ownership: user` and `enabled: true`. Create a version separately; this request does not validate or execute a playbook.",
+  "POST /akoflow-api/machine-configurations/{configurationId}/versions/":
+    "Create the configuration first, then use its returned ID as `configurationId` (the preceding example uses `example-machine-setup`). The path ID overrides any body `machineConfigurationId`. Send a positive `version` and valid `playbookYaml`; `id` is optional and `status` defaults to `draft`. The response is the stored configuration with its versions, not just the new version.",
+  "POST /akoflow-api/cloud-credentials/validate/":
+    "Send `provider`, your actual provider `credential` JSON, and the project/region fields required by that provider. This route performs a live catalog discovery and does not save the credential. The current server registers only a GCP catalog adapter; AWS or Azure validation returns `422` as unsupported even though those credential records can be stored. No generic credential body can establish access; use the [GCP guide](/docs/guides/infrastructure/gcp) for the current provider path.",
 };
 
 const verifiedRequestExamples = {
@@ -421,7 +592,8 @@ const verifiedRequestExamples = {
     architecture: "amd64",
   },
   "POST /akoflow-api/machine-configuration-validations/": {
-    playbookYaml: "- hosts: all\n  tasks:\n    - ansible.builtin.debug:\n        msg: ready\n",
+    playbookYaml:
+      "- hosts: all\n  tasks:\n    - ansible.builtin.debug:\n        msg: ready\n",
   },
   "POST /akoflow-api/machine-configurations/": {
     id: "example-machine-setup",
@@ -429,7 +601,8 @@ const verifiedRequestExamples = {
   },
   "POST /akoflow-api/machine-configurations/{configurationId}/versions/": {
     version: 1,
-    playbookYaml: "- hosts: all\n  tasks:\n    - ansible.builtin.debug:\n        msg: ready\n",
+    playbookYaml:
+      "- hosts: all\n  tasks:\n    - ansible.builtin.debug:\n        msg: ready\n",
   },
   "POST /akoflow-api/provenance/sql/": {
     sql: "SELECT id, status FROM execution_runs WHERE status = :status",
@@ -451,6 +624,7 @@ const verifiedRequestExamples = {
 };
 
 const requestWithoutStandaloneExample = new Set([
+  "POST /akoflow-api/execution-runs/{runId}/preserve-cloud-workspaces/",
   "POST /akoflow-api/schedule-plans/import/",
   "POST /akoflow-api/environments/{environmentId}/cloud-capacity-targets/",
   "POST /akoflow-api/environments/{environmentId}/cloud-instances/",
@@ -501,21 +675,6 @@ function extractParameters(routePath) {
 
 function replaceParameters(routePath) {
   return routePath.replace(/\{([^}]+)\}/g, (_, name) => `<${name}>`);
-}
-
-function extractFunctionBody(source, handler) {
-  const match = new RegExp(
-    `func (?:\\(h \\*Handler\\) )?${handler}\\([^\\n]*\\) \\{`,
-  ).exec(source);
-  if (!match) return "";
-  const start = match.index + match[0].length;
-  let depth = 1;
-  for (let index = start; index < source.length; index += 1) {
-    if (source[index] === "{") depth += 1;
-    if (source[index] === "}" && --depth === 0)
-      return source.slice(start, index);
-  }
-  return "";
 }
 
 function extractQueryParameters(body) {
@@ -605,7 +764,10 @@ function buildStructIndex(sources) {
         const existing = index.get(match[1]);
         // Distinct packages can use the same short type name. Never borrow
         // one package's fields for an unrelated request.
-        if (existing === null || (existing && JSON.stringify(existing) !== JSON.stringify(fields))) {
+        if (
+          existing === null ||
+          (existing && JSON.stringify(existing) !== JSON.stringify(fields))
+        ) {
           index.set(match[1], null);
         } else if (!existing) {
           index.set(match[1], fields);
@@ -613,7 +775,12 @@ function buildStructIndex(sources) {
         if (packageName) {
           const key = `${packageName}.${match[1]}`;
           const known = qualified.get(key);
-          qualified.set(key, known && JSON.stringify(known) !== JSON.stringify(fields) ? null : fields);
+          qualified.set(
+            key,
+            known && JSON.stringify(known) !== JSON.stringify(fields)
+              ? null
+              : fields,
+          );
         }
       }
     }
@@ -627,10 +794,13 @@ function buildStructIndex(sources) {
     // A domain alias must not replace a concrete type with the same name in
     // another package (for example console.Request vs simgrid.Request).
     if (index.has(alias)) continue;
-    const fields = target.includes(".") ? qualified.get(target) : index.get(target);
+    const fields = target.includes(".")
+      ? qualified.get(target)
+      : index.get(target);
     if (fields !== undefined) index.set(alias, fields);
   }
-  for (const [qualifiedName, fields] of qualified) index.set(qualifiedName, fields);
+  for (const [qualifiedName, fields] of qualified)
+    index.set(qualifiedName, fields);
   return index;
 }
 
@@ -691,10 +861,18 @@ function extractHandlerFieldTypes(handlerSource) {
 function sampleValue(typeName, structIndex, depth = 0) {
   const clean = typeName.replace(/^\*+/, "").trim();
   if (/^\[\]/.test(clean)) {
-    const item = sampleValue(clean.replace(/^\[\]/, ""), structIndex, depth + 1);
+    const item = sampleValue(
+      clean.replace(/^\[\]/, ""),
+      structIndex,
+      depth + 1,
+    );
     // An unknown or depth-limited item would render as [{}], which looks
     // like a real row without documenting any of its fields.
-    return item === null || (item && typeof item === "object" && !Array.isArray(item) && Object.keys(item).length === 0)
+    return item === null ||
+      (item &&
+        typeof item === "object" &&
+        !Array.isArray(item) &&
+        Object.keys(item).length === 0)
       ? []
       : [item];
   }
@@ -898,7 +1076,8 @@ function endpointDocument(endpoint, position) {
       ? `## Runnable SimGrid request\n\nUse [\`akoflow-examples/simulation/workflow.yaml\`](https://github.com/UFFeScience/akoflow-examples/blob/main/simulation/workflow.yaml) **instead of** the create-workflow request in the [first-run tutorial](/docs/guides/workflows/first-run). Keep the other five requests in order so their referenced IDs exist. Do not submit the same workflow through both routes.\n\n`
       : `## Runnable SimGrid request\n\nThe [first-run tutorial](/docs/guides/workflows/first-run) submits [\`akoflow-examples/simulation/${runnableFile}\`](https://github.com/UFFeScience/akoflow-examples/blob/main/simulation/${runnableFile}) in a six-request sequence. Follow that order so referenced IDs exist.\n\n`
     : "";
-  const verifiedNote = verifiedRequestNotes[`${endpoint.method} ${endpoint.path}`];
+  const verifiedNote =
+    verifiedRequestNotes[`${endpoint.method} ${endpoint.path}`];
   const verifiedSection = verifiedNote
     ? `## Handler-checked behavior\n\n${verifiedNote}\n\n`
     : "";
@@ -907,10 +1086,11 @@ function endpointDocument(endpoint, position) {
     ? `## Response shape\n\n${checkedResponseNote}\n\n`
     : "";
   const requestExample =
-    runnableFile || requestWithoutStandaloneExample.has(`${endpoint.method} ${endpoint.path}`)
+    runnableFile ||
+    requestWithoutStandaloneExample.has(`${endpoint.method} ${endpoint.path}`)
       ? null
-      : verifiedRequestExamples[`${endpoint.method} ${endpoint.path}`] ??
-        endpoint.request?.example;
+      : (verifiedRequestExamples[`${endpoint.method} ${endpoint.path}`] ??
+        endpoint.request?.example);
   return `---
 title: ${JSON.stringify(title)}
 sidebar_label: ${JSON.stringify(`${endpoint.method} ${relativePath}`)}
@@ -953,6 +1133,9 @@ See the [${endpoint.group} guide](${groupMetadata[endpoint.group][0]}) for relat
 
 const source = await readFile(routerFile, "utf8");
 const handlerSource = await readFile(handlerFile, "utf8");
+const completeHandlerSource = (
+  await collectGoSources(path.dirname(handlerFile))
+).join("\n");
 const goSources = await collectGoSources(sourceRoot);
 const structIndex = buildStructIndex(goSources);
 const returnTypeIndex = buildReturnTypeIndex(goSources);
@@ -965,7 +1148,7 @@ for (const match of source.matchAll(routePattern)) {
   const [, method, routePath, handler] = match;
   const group = groupFor(routePath);
   const handlerBody = extractFunctionBody(
-    `${handlerSource}\n${source}`,
+    `${completeHandlerSource}\n${source}`,
     handler,
   );
   const title =
@@ -976,15 +1159,31 @@ for (const match of source.matchAll(routePattern)) {
     description: endpointDescription(endpoint),
     queryParameters: extractQueryParameters(handlerBody),
     successStatuses:
-      delegatedSuccessStatuses[handler] ?? extractSuccessStatuses(handlerBody, handler),
+      delegatedSuccessStatuses[handler] ??
+      extractSuccessStatuses(handlerBody, handler),
     guide: groupMetadata[group][0],
   };
-  const request = handler === "SaveBuildContext"
-    ? { type: "uploaded build context", example: null, mediaType: "multipart/form-data", fileName: "context.tar.gz", multipartField: "context" }
-    : handler === "ImportArchiveInstance"
-    ? { type: "ZIP instance archive (maximum 8 GiB)", example: null, mediaType: "application/zip", fileName: "instance.zip" }
-    : extractRequestContract(handlerBody, structIndex);
-  if ((handler === "CreateEnvironment" || handler === "ReplaceEnvironment") && request?.example) {
+  const request =
+    handler === "SaveBuildContext"
+      ? {
+          type: "uploaded build context",
+          example: null,
+          mediaType: "multipart/form-data",
+          fileName: "context.tar.gz",
+          multipartField: "context",
+        }
+      : handler === "ImportArchiveInstance"
+        ? {
+            type: "ZIP instance archive (maximum 8 GiB)",
+            example: null,
+            mediaType: "application/zip",
+            fileName: "instance.zip",
+          }
+        : extractRequestContract(handlerBody, structIndex);
+  if (
+    (handler === "CreateEnvironment" || handler === "ReplaceEnvironment") &&
+    request?.example
+  ) {
     delete request.example.connectionChecks;
     delete request.example.connectorBindings;
   }
@@ -999,8 +1198,17 @@ for (const match of source.matchAll(routePattern)) {
     ),
     ...(checkedResponseShapes[handler] || {}),
   };
-  if (["ListEnvironments", "CreateEnvironment", "GetEnvironment", "ReplaceEnvironment"].includes(handler)) {
-    const definitions = Array.isArray(response.example) ? response.example : [response.example];
+  if (
+    [
+      "ListEnvironments",
+      "CreateEnvironment",
+      "GetEnvironment",
+      "ReplaceEnvironment",
+    ].includes(handler)
+  ) {
+    const definitions = Array.isArray(response.example)
+      ? response.example
+      : [response.example];
     for (const definition of definitions) {
       if (!definition || typeof definition !== "object") continue;
       delete definition.connectorBindings;
@@ -1021,22 +1229,29 @@ if (endpoints.length === 0) {
   throw new Error(`No API routes found in ${routerFile}`);
 }
 
-const undocumentedQueryParameters = [...new Set(endpoints.flatMap((endpoint) => endpoint.queryParameters))]
-  .filter((name) => !queryDescriptions[name]);
+const undocumentedQueryParameters = [
+  ...new Set(endpoints.flatMap((endpoint) => endpoint.queryParameters)),
+].filter((name) => !queryDescriptions[name]);
 if (undocumentedQueryParameters.length > 0) {
-  throw new Error(`Query parameters need descriptions: ${undocumentedQueryParameters.join(", ")}`);
+  throw new Error(
+    `Query parameters need descriptions: ${undocumentedQueryParameters.join(", ")}`,
+  );
 }
 
 const missingCheckedResponses = Object.keys(checkedResponseShapes).filter(
   (handler) => !endpoints.some((endpoint) => endpoint.handler === handler),
 );
 if (missingCheckedResponses.length > 0) {
-  throw new Error(`Checked response handlers are missing from the router: ${missingCheckedResponses.join(", ")}`);
+  throw new Error(
+    `Checked response handlers are missing from the router: ${missingCheckedResponses.join(", ")}`,
+  );
 }
 
 for (const endpoint of endpoints) {
   if (/(?:^|\.)[A-Za-z0-9_]*Request$/.test(endpoint.response.type)) {
-    throw new Error(`Request type used as a response for ${endpoint.method} ${endpoint.path}: ${endpoint.response.type}`);
+    throw new Error(
+      `Request type used as a response for ${endpoint.method} ${endpoint.path}: ${endpoint.response.type}`,
+    );
   }
 }
 
@@ -1044,7 +1259,12 @@ function syntheticPlaceholderPath(value, path = "$") {
   if (value === null) return path;
   if (Array.isArray(value)) {
     for (const [index, item] of value.entries()) {
-      if (item && typeof item === "object" && !Array.isArray(item) && Object.keys(item).length === 0)
+      if (
+        item &&
+        typeof item === "object" &&
+        !Array.isArray(item) &&
+        Object.keys(item).length === 0
+      )
         return `${path}[${index}]`;
       const found = syntheticPlaceholderPath(item, `${path}[${index}]`);
       if (found) return found;
@@ -1061,23 +1281,37 @@ function syntheticPlaceholderPath(value, path = "$") {
 for (const endpoint of endpoints) {
   const invalidPath = syntheticPlaceholderPath(endpoint.response.example ?? {});
   if (invalidPath)
-    throw new Error(`Ambiguous placeholder in ${endpoint.method} ${endpoint.path} response example at ${invalidPath}`);
-  const invalidRequestPath = syntheticPlaceholderPath(endpoint.request?.example ?? {});
+    throw new Error(
+      `Ambiguous placeholder in ${endpoint.method} ${endpoint.path} response example at ${invalidPath}`,
+    );
+  const invalidRequestPath = syntheticPlaceholderPath(
+    endpoint.request?.example ?? {},
+  );
   if (invalidRequestPath)
-    throw new Error(`Ambiguous placeholder in ${endpoint.method} ${endpoint.path} request example at ${invalidRequestPath}`);
+    throw new Error(
+      `Ambiguous placeholder in ${endpoint.method} ${endpoint.path} request example at ${invalidRequestPath}`,
+    );
 }
 
 const staleCheckedNotes = Object.keys(verifiedRequestNotes).filter(
-  (route) => !endpoints.some((endpoint) => route === `${endpoint.method} ${endpoint.path}`),
+  (route) =>
+    !endpoints.some(
+      (endpoint) => route === `${endpoint.method} ${endpoint.path}`,
+    ),
 );
 if (staleCheckedNotes.length > 0) {
-  throw new Error(`Handler-checked notes refer to missing routes: ${staleCheckedNotes.join(", ")}`);
+  throw new Error(
+    `Handler-checked notes refer to missing routes: ${staleCheckedNotes.join(", ")}`,
+  );
 }
 
 const undocumentedMutations = endpoints
   .filter((endpoint) => endpoint.method !== "GET")
   .map((endpoint) => `${endpoint.method} ${endpoint.path}`)
-  .filter((route) => !verifiedRequestNotes[route] && !runnableSimulationRequests[route]);
+  .filter(
+    (route) =>
+      !verifiedRequestNotes[route] && !runnableSimulationRequests[route],
+  );
 if (undocumentedMutations.length > 0) {
   throw new Error(
     `Mutating API routes need handler-checked notes or a runnable request: ${undocumentedMutations.join(", ")}`,

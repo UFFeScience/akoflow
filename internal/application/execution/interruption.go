@@ -51,28 +51,37 @@ func (s Interrupter) Interrupt(ctx context.Context, runID, activityID string) (*
 	if task == nil {
 		return nil, fmt.Errorf("activity %q has no execution record in run %q", activityID, runID)
 	}
-	if task.Status == domain.TaskCancelled {
-		return task, nil
-	}
-	if task.Status == domain.TaskCompleted || task.Status == domain.TaskFailed {
-		return nil, fmt.Errorf("activity %q is already %s", activityID, task.Status)
-	}
 	handles, err := s.Store.ListHandles(ctx, runID)
 	if err != nil {
 		return nil, err
 	}
 	var handle *domain.ActivityHandle
+	stopped := false
 	for index := range handles {
 		if handles[index].ActivityID == activityID {
 			handle = &handles[index]
-			break
+			if handle.Status == domain.HandleStarting || handle.Status == domain.HandleRunning {
+				if err := s.Stopper.Stop(ctx, handle.ID, run.Mode); err != nil {
+					return nil, fmt.Errorf("stop activity %q handle %q on its runtime: %w", activityID, handle.ID, err)
+				}
+				stopped = true
+			}
 		}
 	}
+	if task.Status == domain.TaskCompleted || task.Status == domain.TaskFailed {
+		if stopped {
+			return task, nil
+		}
+		return nil, fmt.Errorf("activity %q is already %s", activityID, task.Status)
+	}
 	if handle == nil {
+		if task.Status == domain.TaskCancelled {
+			return task, nil
+		}
 		if run.Status == domain.ExecutionRunRunning {
 			return nil, fmt.Errorf("activity %q has no runtime handle while the run is active; wait for the scheduler before interrupting", activityID)
 		}
-	} else {
+	} else if !stopped {
 		switch handle.Status {
 		case domain.HandleStarting, domain.HandleRunning:
 			if err := s.Stopper.Stop(ctx, handle.ID, run.Mode); err != nil {
@@ -81,6 +90,9 @@ func (s Interrupter) Interrupt(ctx context.Context, runID, activityID string) (*
 		case domain.HandleStopped:
 			// A prior request stopped the runtime; reconcile the task record.
 		default:
+			if task.Status == domain.TaskCancelled && (handle.Status == domain.HandleCompleted || handle.Status == domain.HandleFailed) {
+				return task, nil
+			}
 			return nil, fmt.Errorf("activity %q has a %s runtime handle; inspect it before interrupting", activityID, handle.Status)
 		}
 	}

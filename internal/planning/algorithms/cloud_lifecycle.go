@@ -22,6 +22,7 @@ func addCloudLifecycle(plan *domain.SchedulePlan, request domain.PlanningRequest
 	for resourceID, assignments := range byResource {
 		resource := resources[resourceID]
 		first, last, runtimeCost := math.MaxFloat64, 0.0, 0.0
+		activeStart := math.MaxFloat64
 		activityIDs := make([]string, 0, len(assignments))
 		for _, assignment := range assignments {
 			activityIDs = append(activityIDs, assignment.ID)
@@ -32,6 +33,8 @@ func addCloudLifecycle(plan *domain.SchedulePlan, request domain.PlanningRequest
 				last = assignment.PredictedFinishAt
 			}
 			runtimeCost += assignment.PredictedRuntimeSeconds * resource.PricePerSecond
+			preparation := metadataNumber(assignment.Metadata, "workspacePreparationSeconds") + metadataNumber(assignment.Metadata, "bootOverheadSeconds") + metadataNumber(assignment.Metadata, "containerOverheadSeconds")
+			activeStart = math.Min(activeStart, math.Max(0, assignment.PredictedStartAt-preparation))
 		}
 		provision := metadataSeconds(resource.Metadata, "terraformSeconds", 40)
 		sshWait := metadataSeconds(resource.Metadata, "sshWaitSeconds", 20)
@@ -51,7 +54,14 @@ func addCloudLifecycle(plan *domain.SchedulePlan, request domain.PlanningRequest
 		vmCost := activeSeconds * resource.PricePerSecond
 		diskGiB := float64(resource.StorageBytes) / float64(1<<30)
 		diskCost := diskGiB * metadataNumber(resource.Metadata, "diskPricePerGiBMonth") * activeSeconds / (730 * 3600)
-		plan.Predicted.Cost += math.Max(0, vmCost-runtimeCost) + diskCost
+		// PRISM already bills idle intervals inside the active resource window.
+		// Replace that window, rather than adding idle a second time. Legacy
+		// schedulers still charge task runtimes and keep their original basis.
+		baseCost := runtimeCost
+		if plan.Metadata["costModel"] == "resource-active-window" {
+			baseCost = math.Max(0, last-activeStart) * resource.PricePerSecond
+		}
+		plan.Predicted.Cost += vmCost - baseCost + diskCost
 		if plan.Metadata == nil {
 			plan.Metadata = map[string]any{}
 		}

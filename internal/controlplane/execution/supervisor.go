@@ -3,6 +3,7 @@ package execution
 import (
 	"context"
 	"crypto/sha256"
+	"errors"
 	"fmt"
 	"net/url"
 	"os"
@@ -50,6 +51,7 @@ type Supervisor struct {
 	activities ActivityController
 	simulation ports.PlanExecutor
 	config     Config
+	activeRuns sync.Map
 }
 
 type startResult struct {
@@ -82,6 +84,10 @@ func New(executions ports.ExecutionStore, activities ActivityController, simulat
 }
 
 func (s *Supervisor) Execute(ctx context.Context, request ports.ExecutionRequest) (trace domain.ExecutionTrace, err error) {
+	if _, active := s.activeRuns.LoadOrStore(request.Run.ID, struct{}{}); active {
+		return domain.ExecutionTrace{}, fmt.Errorf("execution run %q already has an active supervisor; duplicate command rejected", request.Run.ID)
+	}
+	defer s.activeRuns.Delete(request.Run.ID)
 	if request.RuntimeAllocations == nil {
 		request.RuntimeAllocations = make(map[string]domain.RuntimeAllocation)
 	}
@@ -93,12 +99,12 @@ func (s *Supervisor) Execute(ctx context.Context, request ports.ExecutionRequest
 	if err := s.executions.CreateRun(ctx, request.Run); err != nil {
 		return domain.ExecutionTrace{}, fmt.Errorf("create execution run: %w", err)
 	}
-	if request.Recovery != nil {
-		if recoverErr := s.RecoverWorkspaces(ctx); recoverErr != nil {
-			return domain.ExecutionTrace{}, fmt.Errorf("reconcile workspaces before recovery: %w", recoverErr)
-		}
-	}
 	defer func() {
+		if errors.Is(err, context.Canceled) {
+			if cause := context.Cause(ctx); cause != nil && !errors.Is(cause, context.Canceled) {
+				err = fmt.Errorf("%w; cancellation cause: %v", err, cause)
+			}
+		}
 		if request.Run.Mode != domain.ExecutionModeSimulation && request.Run.Mode != domain.ExecutionModeInteractive {
 			// Lifecycle cleanup belongs to the infrastructure result, not the
 			// scientific result. Release records its own failed instance status;
@@ -136,12 +142,27 @@ func (s *Supervisor) releaseCloud(ctx context.Context, request ports.ExecutionRe
 	if s.config.CloudAllocator != nil {
 		allocations := request.RuntimeAllocations
 		retained := 0
+		if failed {
+			if store := s.workspaceStore(); store != nil {
+				workspaces, err := store.ListWorkspaces(ctx, request.Run.ID)
+				if err != nil {
+					return 0, fmt.Errorf("inspect producer workspaces before cloud cleanup: %w", err)
+				}
+				leases, err := store.ListWorkspaceLeases(ctx, request.Run.ID)
+				if err != nil {
+					return 0, fmt.Errorf("inspect producer leases before cloud cleanup: %w", err)
+				}
+				allocations, retained = retainCloudSourcesWithWorkspaceLeases(allocations, workspaces, leases)
+			}
+		}
 		if failed && s.config.Data != nil {
 			locations, err := s.config.Data.ListLocations(ctx, request.Run.ID)
 			if err != nil {
 				return 0, fmt.Errorf("inspect ephemeral outputs before cloud cleanup: %w", err)
 			}
-			allocations, retained = retainCloudSourcesWithEphemeralOutputs(allocations, locations)
+			var additional int
+			allocations, additional = retainCloudSourcesWithEphemeralOutputs(allocations, locations)
+			retained += additional
 		}
 		if !failed {
 			if stopper, ok := s.config.CloudAllocator.(CloudStopper); ok {
@@ -185,6 +206,34 @@ func (s *Supervisor) releaseCloud(ctx context.Context, request ports.ExecutionRe
 	return 0, nil
 }
 
+func retainCloudSourcesWithWorkspaceLeases(allocations map[string]domain.RuntimeAllocation, workspaces []domain.ActivityWorkspace, leases []domain.WorkspaceLease) (map[string]domain.RuntimeAllocation, int) {
+	needed := make(map[string]bool)
+	for _, lease := range leases {
+		if !lease.Released {
+			needed[lease.WorkspaceID] = true
+		}
+	}
+	protected := make(map[string]bool)
+	for _, workspace := range workspaces {
+		if workspace.State == domain.WorkspaceReleased || !needed[workspace.ID] {
+			continue
+		}
+		uri, err := url.Parse(workspace.URI)
+		if err == nil {
+			if id := uri.Query().Get("cloudInstanceId"); id != "" {
+				protected[id] = true
+			}
+		}
+	}
+	remaining := make(map[string]domain.RuntimeAllocation)
+	for activity, allocation := range allocations {
+		if !protected[allocation.CloudInstanceID] {
+			remaining[activity] = allocation
+		}
+	}
+	return remaining, len(protected)
+}
+
 func retainCloudSourcesWithEphemeralOutputs(allocations map[string]domain.RuntimeAllocation, locations []domain.DataLocation) (map[string]domain.RuntimeAllocation, int) {
 	protectedResources := make(map[string]bool)
 	for _, location := range locations {
@@ -207,7 +256,7 @@ func retainCloudSourcesWithEphemeralOutputs(allocations map[string]domain.Runtim
 	return remaining, len(protectedInstances)
 }
 
-func (s *Supervisor) executeActivities(ctx context.Context, request ports.ExecutionRequest) (domain.ExecutionTrace, error) {
+func (s *Supervisor) executeActivities(ctx context.Context, request ports.ExecutionRequest) (trace domain.ExecutionTrace, executionErr error) {
 	if request.RuntimeAllocations == nil {
 		request.RuntimeAllocations = make(map[string]domain.RuntimeAllocation)
 	}
@@ -226,57 +275,75 @@ func (s *Supervisor) executeActivities(ctx context.Context, request ports.Execut
 	tasks := make(map[string]domain.TaskExecution)
 	attempts := make(map[string]int)
 	if request.Recovery != nil {
-		reader, ok := s.executions.(interface {
-			ListTasks(context.Context, string) ([]domain.TaskExecution, error)
-		})
-		if !ok {
-			return domain.ExecutionTrace{}, fmt.Errorf("execution repository does not support recovery")
-		}
-		previous, loadErr := reader.ListTasks(ctx, request.Run.ID)
-		if loadErr != nil {
-			return domain.ExecutionTrace{}, fmt.Errorf("load prior activity attempts: %w", loadErr)
-		}
-		reusable := make(map[string]bool, len(request.Recovery.ReuseActivityIDs))
-		for _, activityID := range request.Recovery.ReuseActivityIDs {
-			reusable[activityID] = true
-		}
-		latest := make(map[string]domain.TaskExecution)
-		for _, task := range previous {
-			if task.Attempt > attempts[task.ActivityID] {
-				attempts[task.ActivityID] = task.Attempt
-				latest[task.ActivityID] = task
-			}
-		}
-		if store := s.workspaceStore(); store != nil {
-			workspaces, workspaceErr := store.ListWorkspaces(ctx, request.Run.ID)
-			if workspaceErr != nil {
-				return domain.ExecutionTrace{}, fmt.Errorf("load prior activity workspaces: %w", workspaceErr)
-			}
-			available := make(map[string]bool, len(workspaces))
-			for _, workspace := range workspaces {
-				available[workspace.ActivityID] = workspace.State != domain.WorkspaceReleased && workspace.State != domain.WorkspaceFailed
-			}
-			reconcileReusableWorkspaces(activities, predecessors, reusable, available)
-		}
-		for _, task := range latest {
-			if task.Status == domain.TaskCompleted && reusable[task.ActivityID] {
-				tasks[task.ActivityID], completed[task.ActivityID] = task, task
-			}
+		if err := s.restoreActivityAttempts(ctx, request, activities, predecessors, completed, tasks, attempts); err != nil {
+			return domain.ExecutionTrace{}, err
 		}
 	}
 	transfers := make([]domain.DataTransfer, 0)
-	type allocationResult struct {
-		activityID string
-		allocation domain.RuntimeAllocation
-		err        error
-	}
 	allocationResults := make(chan allocationResult, len(activities))
 	pendingAllocations := make(map[string]bool)
 	readyAllocations := make(map[string]domain.RuntimeAllocation)
 	stoppingInstances := make(map[string]bool)
+	idleStops := newIdleCloudStops(ctx)
+	defer idleStops.close()
+	startCtx, cancelStarts := context.WithCancel(ctx)
+	startResults := make(chan startResult, len(activities))
+	pendingStarts := make(map[string]bool)
+	var startWorkers sync.WaitGroup
+	consumeStart := func(result startResult) error {
+		delete(pendingStarts, result.activityID)
+		return s.applyStartResult(ctx, request, result, running, completed, tasks, &transfers)
+	}
+	// Join preparation workers before the caller releases cloud allocations.
+	// A Start that succeeds concurrently with cancellation still belongs to us.
+	defer func() {
+		cancelStarts()
+		startWorkers.Wait()
+		cleanupCtx, cancel := context.WithTimeout(context.WithoutCancel(ctx), 60*time.Second)
+		defer cancel()
+		for len(pendingAllocations) > 0 {
+			result := <-allocationResults
+			delete(pendingAllocations, result.activityID)
+			if result.allocation.ResourceID != "" {
+				request.RuntimeAllocations[result.activityID] = result.allocation
+			}
+		}
+		for len(pendingStarts) > 0 {
+			result := <-startResults
+			delete(pendingStarts, result.activityID)
+			if err := s.applyStartResult(cleanupCtx, request, result, running, completed, tasks, &transfers); executionErr == nil && err != nil {
+				executionErr = err
+			}
+		}
+		if executionErr != nil {
+			s.cancelRunningActivities(cleanupCtx, request.Run.Mode, running, tasks, executionErr)
+		}
+	}()
+	consumeAllocation := func(result allocationResult) error {
+		delete(pendingAllocations, result.activityID)
+		if result.err != nil {
+			failure := fmt.Errorf("allocate runtime for activity %q: %w", result.activityID, result.err)
+			assignment := assignments[result.activityID]
+			resource := resources[assignment.ResourceID]
+			_ = s.recordStartFailure(ctx, request.Run.ID, result.activityID, assignment, resource, selectRuntime(request, assignment), tasks[result.activityID].Attempt, failure)
+			return failure
+		}
+		readyAllocations[result.activityID] = result.allocation
+		return nil
+	}
 
 	for len(completed) < len(activities) {
 		if err := ctx.Err(); err != nil {
+			return domain.ExecutionTrace{}, err
+		}
+		for len(startResults) > 0 {
+			if err := consumeStart(<-startResults); err != nil {
+				return domain.ExecutionTrace{}, err
+			}
+		}
+		// Admit all completed allocations before launching a batch. Waiting for
+		// one runtime Start must not serialize other already-ready cloud hosts.
+		if err := drainReadyAllocations(allocationResults, consumeAllocation); err != nil {
 			return domain.ExecutionTrace{}, err
 		}
 		if err := s.inspectRunning(ctx, request.Run.Mode, request.Workflow, request.Run.ID, running, completed, tasks); err != nil {
@@ -289,49 +356,11 @@ func (s *Supervisor) executeActivities(ctx context.Context, request ports.Execut
 		admitted := plannedReadyActivities(
 			ready, assignments, pendingAllocations,
 		)
-		for _, activityID := range ready {
-			queueReason := "awaiting assigned runtime"
-			if queued, exists := tasks[activityID]; exists {
-				if queued.Metadata["queueReason"] != queueReason {
-					if queued.Metadata == nil {
-						queued.Metadata = make(map[string]any)
-					}
-					queued.Metadata["queueReason"] = queueReason
-					if err := s.executions.SaveTask(ctx, queued); err != nil {
-						return domain.ExecutionTrace{}, fmt.Errorf("update queue for activity %q: %w", activityID, err)
-					}
-					tasks[activityID] = queued
-				}
-				continue
-			}
-			now := unixNow()
-			assignment := assignments[activityID]
-			attempt := attempts[activityID] + 1
-			queued := domain.TaskExecution{
-				ID: taskExecutionID(request.Run.ID, activityID, attempt), ExecutionRunID: request.Run.ID,
-				PlanAssignmentID: assignment.ID, ActivityID: activityID,
-				PlannedResourceID: assignment.ResourceID, Attempt: attempt,
-				Status: domain.TaskQueued, ReadyAt: now, QueuedAt: now,
-				Metadata: map[string]any{"queueReason": queueReason},
-			}
-			if err := s.executions.SaveTask(ctx, queued); err != nil {
-				return domain.ExecutionTrace{}, fmt.Errorf("queue activity %q: %w", activityID, err)
-			}
-			tasks[activityID] = queued
+		admitted = restrictedCapacityReady(admitted, assignments, resources, tasks, pendingAllocations)
+		if err := s.queueReadyActivities(ctx, request, ready, assignments, tasks, attempts); err != nil {
+			return domain.ExecutionTrace{}, err
 		}
-		candidates := make([]string, 0)
-		immediate := make([]string, 0)
-		for _, activityID := range admitted {
-			if runtimeDriver(request, activityID) != domain.RuntimeDriverCloud {
-				immediate = append(immediate, activityID)
-				continue
-			}
-			if _, allocated := readyAllocations[activityID]; allocated {
-				immediate = append(immediate, activityID)
-				continue
-			}
-			candidates = append(candidates, activityID)
-		}
+		candidates, immediate := partitionReadyAllocations(request, admitted, readyAllocations)
 		if err := s.prewarmReadyCloud(ctx, request, candidates, assignments, resources); err != nil {
 			return domain.ExecutionTrace{}, fmt.Errorf("prewarm cloud capacity: %w", err)
 		}
@@ -339,43 +368,77 @@ func (s *Supervisor) executeActivities(ctx context.Context, request ports.Execut
 			assignment := assignments[activityID]
 			resource := resources[assignment.ResourceID]
 			pendingAllocations[activityID] = true
+			allocationRequest := request
+			allocationRequest.RuntimeAllocations = cloneRuntimeAllocations(request.RuntimeAllocations)
+			startWorkers.Add(1)
 			go func(activityID string, assignment domain.PlanAssignment, resource domain.Resource) {
-				allocation, err := s.ensureRuntimeAllocation(ctx, request, activityID, assignment, resource)
+				defer startWorkers.Done()
+				allocation, err := s.ensureRuntimeAllocation(startCtx, allocationRequest, activityID, assignment, resource)
 				allocationResults <- allocationResult{activityID: activityID, allocation: allocation, err: err}
 			}(activityID, assignment, resource)
 		}
-		if err := s.startReadyActivities(
-			ctx, request, immediate, activities, assignments, resources,
-			running, completed, tasks, &transfers, readyAllocations,
-		); err != nil {
-			return domain.ExecutionTrace{}, err
-		}
 		for _, activityID := range immediate {
+			if len(pendingStarts) >= readyActivityConcurrency {
+				break
+			}
+			task := tasks[activityID]
+			task.Status = domain.TaskPreparing
+			if task.Metadata == nil {
+				task.Metadata = make(map[string]any)
+			}
+			task.Metadata["queueReason"] = "synchronizing predecessor workspaces and preparing runtime"
+			if err := s.executions.SaveTask(ctx, task); err != nil {
+				return domain.ExecutionTrace{}, fmt.Errorf("mark activity %q preparing: %w", activityID, err)
+			}
+			tasks[activityID] = task
+			startRequest := request
+			startRequest.RuntimeAllocations = cloneRuntimeAllocations(request.RuntimeAllocations)
+			allocated := cloneRuntimeAllocations(readyAllocations)
+			pendingStarts[activityID] = true
+			startWorkers.Add(1)
+			go func(activityID string, attempt int) {
+				defer startWorkers.Done()
+				startResults <- s.startReadyActivity(startCtx, startRequest, activityID, attempt, activities, assignments, resources, allocated)
+			}(activityID, task.Attempt)
 			delete(readyAllocations, activityID)
 		}
-		s.stopIdleCloud(ctx, request, completed, tasks, stoppingInstances)
-		if len(running) == 0 && len(pendingAllocations) == 0 && len(immediate) == 0 && len(completed) < len(activities) {
+		s.scheduleIdleCloudStops(request, completed, tasks, stoppingInstances, idleStops)
+		if len(running) == 0 && len(pendingStarts) == 0 && len(pendingAllocations) == 0 && len(immediate) == 0 && len(completed) < len(activities) {
 			return domain.ExecutionTrace{}, fmt.Errorf("execution cannot progress: dependency cycle or incomplete plan")
 		}
-		if len(running) > 0 || len(pendingAllocations) > 0 {
+		if len(running) > 0 || len(pendingStarts) > 0 || len(pendingAllocations) > 0 {
 			select {
 			case <-ctx.Done():
 				return domain.ExecutionTrace{}, ctx.Err()
-			case result := <-allocationResults:
-				delete(pendingAllocations, result.activityID)
-				if result.err != nil {
-					failure := fmt.Errorf("allocate runtime for activity %q: %w", result.activityID, result.err)
-					assignment := assignments[result.activityID]
-					resource := resources[assignment.ResourceID]
-					_ = s.recordStartFailure(ctx, request.Run.ID, result.activityID, assignment, resource, selectRuntime(request, assignment), tasks[result.activityID].Attempt, failure)
-					return domain.ExecutionTrace{}, failure
+			case result := <-startResults:
+				if err := consumeStart(result); err != nil {
+					return domain.ExecutionTrace{}, err
 				}
-				readyAllocations[result.activityID] = result.allocation
+			case result := <-allocationResults:
+				if err := consumeAllocation(result); err != nil {
+					return domain.ExecutionTrace{}, err
+				}
 			case <-time.After(s.config.PollInterval):
 			}
 		}
 	}
 	return completedTrace(request, tasks, transfers), nil
+}
+
+func partitionReadyAllocations(request ports.ExecutionRequest, admitted []string, readyAllocations map[string]domain.RuntimeAllocation) ([]string, []string) {
+	candidates, immediate := make([]string, 0), make([]string, 0)
+	for _, activityID := range admitted {
+		if runtimeDriver(request, activityID) != domain.RuntimeDriverCloud {
+			immediate = append(immediate, activityID)
+			continue
+		}
+		if _, allocated := readyAllocations[activityID]; allocated {
+			immediate = append(immediate, activityID)
+			continue
+		}
+		candidates = append(candidates, activityID)
+	}
+	return candidates, immediate
 }
 
 func reconcileReusableWorkspaces(
@@ -573,6 +636,8 @@ func (s *Supervisor) cancelRunningActivities(
 	tasks map[string]domain.TaskExecution,
 	cause error,
 ) {
+	cleanupCtx, cancel := context.WithTimeout(context.WithoutCancel(ctx), 60*time.Second)
+	defer cancel()
 	type stopResult struct {
 		activityID string
 		err        error
@@ -586,7 +651,7 @@ func (s *Supervisor) cancelRunningActivities(
 			defer group.Done()
 			semaphore <- struct{}{}
 			defer func() { <-semaphore }()
-			results <- stopResult{activityID: activityID, err: s.activities.Stop(ctx, handleID, mode)}
+			results <- stopResult{activityID: activityID, err: s.activities.Stop(cleanupCtx, handleID, mode)}
 		}(activityID, handle.ID)
 	}
 	group.Wait()
@@ -649,75 +714,49 @@ func validateExpectedOutputInstances(activityID string, values []string, instanc
 	return nil
 }
 
-func (s *Supervisor) startReadyActivities(
+func (s *Supervisor) applyStartResult(
 	ctx context.Context,
 	request ports.ExecutionRequest,
-	ready []string,
-	activities map[string]domain.Activity,
-	assignments map[string]domain.PlanAssignment,
-	resources map[string]domain.Resource,
+	result startResult,
 	running map[string]domain.ActivityHandle,
 	completed map[string]domain.TaskExecution,
 	tasks map[string]domain.TaskExecution,
 	transfers *[]domain.DataTransfer,
-	readyAllocations map[string]domain.RuntimeAllocation,
 ) error {
-	results := make([]startResult, len(ready))
-	semaphore := make(chan struct{}, readyActivityConcurrency)
-	var group sync.WaitGroup
-	for _, activityID := range ready {
-		task, exists := tasks[activityID]
-		if !exists {
-			continue
-		}
-		task.Status = domain.TaskPreparing
-		if task.Metadata == nil {
-			task.Metadata = make(map[string]any)
-		}
-		task.Metadata["queueReason"] = "synchronizing predecessor workspaces and preparing runtime"
-		if err := s.executions.SaveTask(ctx, task); err != nil {
-			return fmt.Errorf("mark activity %q preparing: %w", activityID, err)
-		}
-		tasks[activityID] = task
-	}
-	for index, activityID := range ready {
-		group.Add(1)
-		go func(index int, activityID string) {
-			defer group.Done()
-			semaphore <- struct{}{}
-			defer func() { <-semaphore }()
-			results[index] = s.startReadyActivity(ctx, request, activityID, activities, assignments, resources, readyAllocations)
-		}(index, activityID)
-	}
-	group.Wait()
-	for _, result := range results {
-		activityID := result.activityID
-		if result.err != nil {
-			attempt := tasks[activityID].Attempt
-			_ = s.recordStartFailure(ctx, request.Run.ID, activityID, result.assignment, result.resource, selectRuntime(request, result.assignment), attempt, result.err)
-			return result.err
-		}
+	activityID := result.activityID
+	if result.allocation.ResourceID != "" {
 		request.RuntimeAllocations[activityID] = result.allocation
-		*transfers = append(*transfers, result.transfers...)
-		queued := tasks[activityID]
-		task := newRunningTask(request.Run.ID, activityID, result.assignment, result.resource, result.allocation, result.handle, queued.Attempt, result.readyAt, result.preparation)
-		if queued.Attempt > 0 {
-			task.ReadyAt = queued.ReadyAt
-			task.QueuedAt = queued.QueuedAt
-			task.QueueSeconds = maxFloat(0, task.StartedAt-queued.QueuedAt)
+	}
+	if result.err != nil {
+		attempt := tasks[activityID].Attempt
+		if result.handle.Metadata[ports.RuntimeReconciliationPending] == true {
+			running[activityID] = result.handle
 		}
-		tasks[activityID], running[activityID] = task, result.handle
-		if result.handle.Status == domain.HandleCompleted {
-			completeTask(&task, result.handle)
-			if err := s.sealWorkspace(ctx, request.Run.ID, activityID, result.handle.Artifacts); err != nil {
-				return fmt.Errorf("seal workspace for activity %q: %w", activityID, err)
-			}
-			tasks[activityID], completed[activityID] = task, task
-			delete(running, activityID)
+		if err := s.recordStartFailure(ctx, request.Run.ID, activityID, result.assignment, result.resource, selectRuntime(request, result.assignment), attempt, result.err); err != nil {
+			return fmt.Errorf("record startup failure: %v: %w", err, result.err)
 		}
-		if err := s.executions.SaveTask(ctx, task); err != nil {
-			return err
+		return result.err
+	}
+	request.RuntimeAllocations[activityID] = result.allocation
+	*transfers = append(*transfers, result.transfers...)
+	queued := tasks[activityID]
+	task := newRunningTask(request.Run.ID, activityID, result.assignment, result.resource, result.allocation, result.handle, queued.Attempt, result.readyAt, result.preparation)
+	if queued.Attempt > 0 {
+		task.ReadyAt = queued.ReadyAt
+		task.QueuedAt = queued.QueuedAt
+		task.QueueSeconds = maxFloat(0, task.StartedAt-queued.QueuedAt)
+	}
+	tasks[activityID], running[activityID] = task, result.handle
+	if result.handle.Status == domain.HandleCompleted {
+		completeTask(&task, result.handle)
+		if err := s.sealWorkspace(ctx, request.Run.ID, activityID, result.handle.Artifacts); err != nil {
+			return fmt.Errorf("seal workspace for activity %q: %w", activityID, err)
 		}
+		tasks[activityID], completed[activityID] = task, task
+		delete(running, activityID)
+	}
+	if err := s.executions.SaveTask(ctx, task); err != nil {
+		return err
 	}
 	return nil
 }
@@ -726,6 +765,7 @@ func (s *Supervisor) startReadyActivity(
 	ctx context.Context,
 	request ports.ExecutionRequest,
 	activityID string,
+	attempt int,
 	activities map[string]domain.Activity,
 	assignments map[string]domain.PlanAssignment,
 	resources map[string]domain.Resource,
@@ -774,14 +814,16 @@ func (s *Supervisor) startReadyActivity(
 		result.err = fmt.Errorf("activity %q has an executable reference but no preparation requirement", activityID)
 		return result
 	}
-	if err := s.activateWorkspace(ctx, request.Run.ID, activityID); err != nil {
+	if err := s.activateWorkspace(ctx, request.Run.ID, activityID, allocation); err != nil {
 		result.err = fmt.Errorf("activate workspace for activity %q: %w", activityID, err)
 		return result
 	}
 	handle, err := s.activities.Start(ctx, domain.ActivityExecutionContext{
-		Run: request.Run, Workflow: request.Workflow, Activity: activity, Assignment: assignment,
+		Attempt: attempt,
+		Run:     request.Run, Workflow: request.Workflow, Activity: activity, Assignment: assignment,
 		Resource: resource, RuntimeID: selectRuntime(request, assignment), Allocation: allocation, Preparation: result.preparation,
 	})
+	result.handle = handle
 	if err != nil {
 		result.err = err
 		return result
@@ -910,6 +952,13 @@ func (s *Supervisor) addWorkspacePreparation(
 		source, sourceErr := workspaceSourceForActivity(*request, producerID)
 		if sourceErr != nil {
 			return sourceErr
+		}
+		if store := s.workspaceStore(); store != nil {
+			workspace, err := store.FindWorkspace(ctx, "workspace-"+request.Run.ID+"-"+producerID)
+			if err != nil {
+				return fmt.Errorf("read producer snapshot identity: %w", err)
+			}
+			source.WorkspaceSnapshotID, source.WorkspaceSnapshotEntries = sealedWorkspaceSnapshot(workspace, source.CloudInstanceID)
 		}
 		requirement.WorkspaceTransfers = append(requirement.WorkspaceTransfers, domain.DataTransferPlan{
 			ID:                 fmt.Sprintf("transfer-workspace-%s-%s-%d", request.Run.ID, activityID, index),
@@ -1196,10 +1245,7 @@ func transferObservations(
 		// Artifact stores are not execution resources in the current transfer
 		// schema. Attribute ingress to the selected resource until the schema
 		// includes a storage endpoint dimension.
-		bytes := observation.NetworkBytes
-		if bytes <= 0 {
-			bytes = observation.TransferredBytes
-		}
+		bytes := observedNetworkBytes(observation)
 		transfers = append(transfers, domain.DataTransfer{
 			ID:                 runID + ":" + activityID + ":" + observation.ID,
 			ExecutionRunID:     runID,
@@ -1207,16 +1253,18 @@ func transferObservations(
 			ConsumerActivityID: activityID,
 			SourceResourceID:   sourceResourceID,
 			TargetResourceID:   targetResourceID,
-			Bytes:              observation.TransferredBytes,
-			StartedAt:          observation.StartedAt,
-			FinishedAt:         observation.FinishedAt,
-			DurationSeconds:    maxFloat(0, observation.FinishedAt-observation.StartedAt),
-			Cost:               transferPrice(topology, sourceResourceID, targetResourceID) * float64(bytes),
-			Strategy:           observation.Strategy,
-			Route:              observation.Route,
-			LogicalBytes:       observation.LogicalBytes,
-			NetworkBytes:       observation.NetworkBytes,
-			FilesTransferred:   observation.FilesTransferred,
+			// Comparable with native SimGrid: physical traffic, not the
+			// uncompressed filesystem copy work retained in LogicalBytes.
+			Bytes:            bytes,
+			StartedAt:        observation.StartedAt,
+			FinishedAt:       observation.FinishedAt,
+			DurationSeconds:  maxFloat(0, observation.FinishedAt-observation.StartedAt),
+			Cost:             transferPrice(topology, sourceResourceID, targetResourceID) * float64(bytes),
+			Strategy:         observation.Strategy,
+			Route:            observation.Route,
+			LogicalBytes:     observation.LogicalBytes,
+			NetworkBytes:     observation.NetworkBytes,
+			FilesTransferred: observation.FilesTransferred,
 		})
 	}
 	return transfers
@@ -1244,8 +1292,9 @@ func (s *Supervisor) recordStartFailure(
 ) error {
 	now := float64(time.Now().UnixNano()) / float64(time.Second)
 	message := "start activity: " + err.Error()
+	handleID := (domain.ActivityExecutionContext{Run: domain.ExecutionRun{ID: runID}, Activity: domain.Activity{ID: activityID}, Attempt: attempt}).HandleID()
 	handle := domain.ActivityHandle{
-		ID:         runID + ":" + activityID,
+		ID:         handleID,
 		RunID:      runID,
 		ActivityID: activityID,
 		ResourceID: resource.ID,
@@ -1255,6 +1304,14 @@ func (s *Supervisor) recordStartFailure(
 		FinishedAt: now,
 		Failure:    message, Log: "[AKOFLOW ERROR] " + message + "\n",
 	}
+	var uncertain ports.RuntimeReconciliationFailure
+	if errors.As(err, &uncertain) {
+		handle.Status, handle.FinishedAt = domain.HandleStarting, 0
+		handle.Metadata = uncertain.RuntimeReconciliationMetadata()
+		handle.Metadata[ports.RuntimeReconciliationPending] = true
+	}
+	ctx, cancel := context.WithTimeout(context.WithoutCancel(ctx), 30*time.Second)
+	defer cancel()
 	if saveErr := s.executions.Save(ctx, handle); saveErr != nil {
 		return saveErr
 	}
@@ -1316,7 +1373,7 @@ func newRunningTask(
 		var preparationStartedAt, preparationFinishedAt float64
 		for _, transfer := range preparation.TransferRuns {
 			task.TransferSeconds += maxFloat(0, transfer.FinishedAt-transfer.StartedAt)
-			task.TransferBytes += transfer.TransferredBytes
+			task.TransferBytes += observedNetworkBytes(transfer)
 			if transfer.StartedAt > 0 && (preparationStartedAt == 0 || transfer.StartedAt < preparationStartedAt) {
 				preparationStartedAt = transfer.StartedAt
 			}
@@ -1358,6 +1415,23 @@ func completeTask(task *domain.TaskExecution, handle domain.ActivityHandle) {
 }
 
 func applyHandleTiming(task *domain.TaskExecution, handle domain.ActivityHandle) {
+	// Publish bounded timing evidence, not observation paths or file manifests.
+	// These diagnostics overlap launch wait and must not be added to it again.
+	for _, key := range []string{
+		"remoteWorkspacePrepareSeconds", "remoteWorkspaceSnapshotSeconds",
+		"remoteWorkspaceSnapshotServiceSeconds",
+		"remoteContainerLaunchSeconds", "remoteInitialTelemetrySeconds",
+		"remoteArtifactObservationStartedAt", "remoteArtifactObservationFinishedAt",
+		"remoteArtifactObservationSeconds", "remoteArtifactsReadyAt", "terminalObservedAt",
+		"remoteArtifactObservationServiceSeconds",
+	} {
+		if value, ok := metadataFloat(handle.Metadata, key); ok && value >= 0 {
+			if task.Metadata == nil {
+				task.Metadata = map[string]any{}
+			}
+			task.Metadata[key] = value
+		}
+	}
 	if submittedAt, ok := metadataFloat(handle.Metadata, domain.TimingSubmittedAt); ok {
 		task.QueuedAt = submittedAt
 		task.QueueSeconds = maxFloat(0, handle.StartedAt-submittedAt)
@@ -1408,7 +1482,19 @@ func validateRequest(request ports.ExecutionRequest) error {
 	if len(request.Plan.Assignments) != len(request.Workflow.Activities) {
 		return fmt.Errorf("plan must assign every activity exactly once")
 	}
+	resources := indexResources(request.Resources)
+	lanes := make(map[string]map[string]bool)
 	for _, assignment := range request.Plan.Assignments {
+		resource := resources[assignment.ResourceID]
+		if resource.ExecutionTarget != domain.ExecutionTargetBatch && resource.CPUCapacity > 0 && resource.CPUCapacity < float64(resource.CPUCores) && assignment.CoreID != "" {
+			if lanes[resource.ID] == nil {
+				lanes[resource.ID] = make(map[string]bool)
+			}
+			lanes[resource.ID][assignment.CoreID] = true
+			if len(lanes[resource.ID]) > resource.SchedulingCPUCores() {
+				return fmt.Errorf("plan exceeds explicit CPU capacity for resource %q: %d lanes, capacity %d", resource.ID, len(lanes[resource.ID]), resource.SchedulingCPUCores())
+			}
+		}
 		if selectRuntime(request, assignment) == "" {
 			return fmt.Errorf("resource %q has no enabled runtime for %q mode",
 				assignment.ResourceID, request.Run.Mode)
@@ -1551,4 +1637,108 @@ func maxFloat(a, b float64) float64 {
 		return a
 	}
 	return b
+}
+
+func (s *Supervisor) restoreActivityAttempts(
+	ctx context.Context, request ports.ExecutionRequest,
+	activities map[string]domain.Activity, predecessors map[string][]string,
+	completed, tasks map[string]domain.TaskExecution, attempts map[string]int,
+) error {
+	reader, ok := s.executions.(interface {
+		ListTasks(context.Context, string) ([]domain.TaskExecution, error)
+	})
+	if !ok {
+		return fmt.Errorf("execution repository does not support recovery")
+	}
+	previous, loadErr := reader.ListTasks(ctx, request.Run.ID)
+	if loadErr != nil {
+		return fmt.Errorf("load prior activity attempts: %w", loadErr)
+	}
+	reusable := make(map[string]bool, len(request.Recovery.ReuseActivityIDs))
+	for _, activityID := range request.Recovery.ReuseActivityIDs {
+		reusable[activityID] = true
+	}
+	latest := make(map[string]domain.TaskExecution)
+	for _, task := range previous {
+		if task.Attempt > attempts[task.ActivityID] {
+			attempts[task.ActivityID] = task.Attempt
+			latest[task.ActivityID] = task
+		}
+	}
+	if store := s.workspaceStore(); store != nil {
+		workspaces, workspaceErr := store.ListWorkspaces(ctx, request.Run.ID)
+		if workspaceErr != nil {
+			return fmt.Errorf("load prior activity workspaces: %w", workspaceErr)
+		}
+		available := make(map[string]bool, len(workspaces))
+		for _, workspace := range workspaces {
+			available[workspace.ActivityID] = workspace.State != domain.WorkspaceReleased && workspace.State != domain.WorkspaceFailed
+			if reusable[workspace.ActivityID] && available[workspace.ActivityID] && s.config.Workspaces != nil {
+				allocation := recoveredAllocation(latest[workspace.ActivityID])
+				if allocation.CloudInstanceID != "" {
+					if readier, ok := s.config.CloudAllocator.(CloudRecoveryReadier); ok {
+						if err := readier.ReadyRecoveryInstance(ctx, request.Run.ID, workspace.ActivityID, allocation.CloudInstanceID); err != nil {
+							return fmt.Errorf("ready recovery producer: %w", err)
+						}
+					}
+				}
+				if err := bindWorkspaceAllocation(&workspace, recoveredAllocation(latest[workspace.ActivityID])); err != nil {
+					return err
+				}
+				if err := store.SaveWorkspace(ctx, workspace); err != nil {
+					return err
+				}
+				usage, inspectErr := s.config.Workspaces.Inspect(ctx, workspace)
+				if inspectErr != nil {
+					return fmt.Errorf("inspect recovery workspace %q: %w", workspace.ID, inspectErr)
+				}
+				available[workspace.ActivityID] = recoveryWorkspacePresent(workspace, usage)
+			}
+		}
+		reconcileReusableWorkspaces(activities, predecessors, reusable, available)
+		if err := restoreRecoveryWorkspaceLeases(ctx, store, request.Run.ID, reusable); err != nil {
+			return err
+		}
+	}
+	for _, task := range latest {
+		if task.Status == domain.TaskCompleted && reusable[task.ActivityID] {
+			tasks[task.ActivityID], completed[task.ActivityID] = task, task
+			request.RuntimeAllocations[task.ActivityID] = recoveredAllocation(task)
+		}
+	}
+	return nil
+}
+
+func (s *Supervisor) queueReadyActivities(ctx context.Context, request ports.ExecutionRequest, ready []string, assignments map[string]domain.PlanAssignment, tasks map[string]domain.TaskExecution, attempts map[string]int) error {
+	for _, activityID := range ready {
+		queueReason := "awaiting assigned runtime"
+		if queued, exists := tasks[activityID]; exists {
+			if queued.Metadata["queueReason"] != queueReason {
+				if queued.Metadata == nil {
+					queued.Metadata = make(map[string]any)
+				}
+				queued.Metadata["queueReason"] = queueReason
+				if err := s.executions.SaveTask(ctx, queued); err != nil {
+					return fmt.Errorf("update queue for activity %q: %w", activityID, err)
+				}
+				tasks[activityID] = queued
+			}
+			continue
+		}
+		now := unixNow()
+		assignment := assignments[activityID]
+		attempt := attempts[activityID] + 1
+		queued := domain.TaskExecution{
+			ID: taskExecutionID(request.Run.ID, activityID, attempt), ExecutionRunID: request.Run.ID,
+			PlanAssignmentID: assignment.ID, ActivityID: activityID,
+			PlannedResourceID: assignment.ResourceID, Attempt: attempt,
+			Status: domain.TaskQueued, ReadyAt: now, QueuedAt: now,
+			Metadata: map[string]any{"queueReason": queueReason},
+		}
+		if err := s.executions.SaveTask(ctx, queued); err != nil {
+			return fmt.Errorf("queue activity %q: %w", activityID, err)
+		}
+		tasks[activityID] = queued
+	}
+	return nil
 }

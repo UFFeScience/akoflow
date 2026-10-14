@@ -23,6 +23,9 @@ func (r ConsoleRunner) RunConsoleCommand(ctx context.Context, connection domain.
 	if connection.Type == domain.ConnectionSSH {
 		executor = runtimecommon.NewSSHCommandExecutor(executor, connection)
 	}
+	if direct, _ := connection.Configuration["skipSchedulerCheck"].(bool); direct {
+		resource.ExecutionTarget = domain.ExecutionTargetDirect
+	}
 	script := consoleScript(resource, command)
 	output, err := executor.Run(ctx, "/bin/sh", []string{"-s"}, []byte(script))
 	if err != nil {

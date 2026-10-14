@@ -35,3 +35,28 @@ func plannedReadyActivities(
 	}
 	return eligible
 }
+
+// Preserve intentional overcommit for unrestricted legacy resources. Cloud VMs
+// honor explicit capacity even when it equals the physical core count; other
+// resources honor an explicit reduction of the physical lane capacity.
+func restrictedCapacityReady(ready []string, assignments map[string]domain.PlanAssignment, resources map[string]domain.Resource, tasks map[string]domain.TaskExecution, pending map[string]bool) []string {
+	occupied := make(map[string]int)
+	for id, task := range tasks {
+		if task.Status == domain.TaskPreparing || task.Status == domain.TaskRunning || pending[id] {
+			occupied[assignments[id].ResourceID]++
+		}
+	}
+	eligible := make([]string, 0, len(ready))
+	for _, id := range ready {
+		resourceID := assignments[id].ResourceID
+		r := resources[resourceID]
+		if r.CPUCapacity > 0 && (r.Type == domain.ResourceCloudVM || r.CPUCapacity < float64(r.CPUCores)) {
+			if occupied[resourceID] >= r.SchedulingCPUCores() {
+				continue
+			}
+			occupied[resourceID]++
+		}
+		eligible = append(eligible, id)
+	}
+	return eligible
+}

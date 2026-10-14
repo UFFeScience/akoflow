@@ -1,14 +1,15 @@
 package transfer
 
 import (
+	"bytes"
 	"context"
 	"crypto/ed25519"
 	"crypto/rand"
-	"crypto/x509"
 	"encoding/pem"
 	"fmt"
 	"io"
 	"net/url"
+	"os"
 	"os/exec"
 	"path/filepath"
 	"strconv"
@@ -54,7 +55,7 @@ func sshTarget(e domain.TransferEndpoint, name string) (string, string, error) {
 	return host, full, nil
 }
 func sshArgs(e domain.TransferEndpoint) []string {
-	args := []string{}
+	args := []string{"-o", "BatchMode=yes", "-o", "ConnectionAttempts=1", "-o", "ConnectTimeout=10"}
 	identity, knownHosts, proxy, alias := "", "", "", ""
 	extraOptions := e.Configuration["sshOptions"]
 	port, forward := 0, false
@@ -67,6 +68,9 @@ func sshArgs(e domain.TransferEndpoint) []string {
 	}
 	if uri, err := url.Parse(e.URI); err == nil && uri.Scheme == "ssh" && uri.Host != "" {
 		query := uri.Query()
+		if strict, _ := strconv.ParseBool(query.Get("strictHostKeyChecking")); strict {
+			args = append(args, "-o", "HostKeyAlgorithms=ssh-ed25519")
+		}
 		if queryIdentity := query.Get("identityFile"); queryIdentity != "" {
 			identity = queryIdentity
 			args = append(args, "-i", queryIdentity)
@@ -104,6 +108,9 @@ func sshArgs(e domain.TransferEndpoint) []string {
 		if connectionID == "" {
 			connectionID = query.Get("connectionId")
 		}
+		if connectionID == "" {
+			connectionID = e.ConnectionID
+		}
 		multiplex, _, err := provider.SSHMultiplexArguments(provider.SSHSessionKey{
 			ConnectionID: connectionID, Username: username, Host: uri.Hostname(), Port: port,
 			IdentityFile: identity, ProxyCommand: proxy, KnownHostsFile: knownHosts,
@@ -121,7 +128,9 @@ func (RsyncSSH) Exists(ctx context.Context, e domain.TransferEndpoint, name stri
 		return false, err
 	}
 	args := append(sshArgs(e), host, "test -f "+shell(path))
-	output, err := runSSHCombinedOutput(ctx, e, args, nil)
+	output, err := retrySSHRead(ctx, time.Second, func() ([]byte, error) {
+		return runSSHCombinedOutput(ctx, e, args, nil)
+	})
 	if err == nil {
 		return true, nil
 	}
@@ -181,6 +190,26 @@ func waitSSHCommand(command *exec.Cmd) error {
 		return nil
 	}
 }
+
+// VerifyDigest avoids downloading an intact artifact just to validate its cache.
+func (RsyncSSH) VerifyDigest(ctx context.Context, e domain.TransferEndpoint, name, expected string) (bool, error) {
+	host, path, err := sshTarget(e, name)
+	if err != nil {
+		return false, err
+	}
+	output, err := retrySSHRead(ctx, time.Second, func() ([]byte, error) {
+		return runSSHCombinedOutput(ctx, e, append(sshArgs(e), host, "sha256sum -- "+shell(path)), nil)
+	})
+	if err != nil {
+		return false, fmt.Errorf("verify SSH artifact checksum: %w: %s", err, strings.TrimSpace(string(output)))
+	}
+	fields := strings.Fields(string(output))
+	if len(fields) < 2 || len(fields[0]) != 64 {
+		return false, fmt.Errorf("invalid remote SHA-256 response")
+	}
+	return fields[0] == strings.TrimPrefix(expected, "sha256:"), nil
+}
+
 func (connector RsyncSSH) Put(ctx context.Context, e domain.TransferEndpoint, name string, input io.Reader, offset int64) error {
 	host, path, err := sshTarget(e, name)
 	if err != nil {
@@ -211,7 +240,7 @@ func (connector RsyncSSH) Put(ctx context.Context, e domain.TransferEndpoint, na
 	closeErr := stdin.Close()
 	waitErr := cmd.Wait()
 	if copyErr != nil {
-		return fmt.Errorf("stream to SSH staging: %w", copyErr)
+		return fmt.Errorf("stream to SSH staging: %w (SSH exit: %v): %s", copyErr, waitErr, strings.TrimSpace(stderr.String()))
 	}
 	if closeErr != nil {
 		return fmt.Errorf("close SSH stream: %w", closeErr)
@@ -231,8 +260,11 @@ func (RsyncSSH) Commit(ctx context.Context, e domain.TransferEndpoint, partial, 
 		return err
 	}
 	args := append(sshArgs(e), host, "mkdir -p -- "+shell(filepath.Dir(f))+" && mv -- "+shell(p)+" "+shell(f))
-	_, err = runSSHCombinedOutput(ctx, e, args, nil)
-	return err
+	output, err := runSSHCombinedOutput(ctx, e, args, nil)
+	if err != nil {
+		return fmt.Errorf("commit SSH artifact: %w: %s", err, strings.TrimSpace(string(output)))
+	}
+	return nil
 }
 
 // TransferRoute keeps payload bytes on the runtime side. For different VMs a
@@ -269,28 +301,31 @@ func (RsyncSSH) TransferRoute(ctx context.Context, strategy domain.TransferStrat
 		}
 		identity := destination.Configuration["directIdentityFile"]
 		knownHosts := destination.Configuration["directKnownHostsFile"]
+		writeCommand := "mkdir -p -- " + shell(filepath.Dir(destinationPath)) + " && cat > " + shell(destinationPath)
+		if offset > 0 {
+			writeCommand = fmt.Sprintf("test $(wc -c < %s) -eq %d && cat >> %s", shell(destinationPath), offset, shell(destinationPath))
+		}
 		cleanup := func() {}
 		if identity == "" || knownHosts == "" {
-			identity, knownHosts, cleanup, err = prepareDirectCredential(ctx, source, destination)
+			identity, knownHosts, cleanup, err = prepareDirectCredential(ctx, source, destination, writeCommand)
 			if err != nil {
 				return 0, err
 			}
 			defer cleanup()
 		}
-		remoteSSH := []string{"ssh", "-i", shell(identity), "-o", "BatchMode=yes", "-o", "IdentitiesOnly=yes"}
+		remoteSSH := []string{"ssh", "-F", "/dev/null", "-i", shell(identity), "-o", "BatchMode=yes", "-o", "IdentitiesOnly=yes", "-o", "ForwardAgent=no", "-o", "ConnectTimeout=10", "-o", "ServerAliveInterval=5", "-o", "ServerAliveCountMax=2"}
 		remoteSSH = append(remoteSSH, "-o", shell("UserKnownHostsFile="+knownHosts), "-o", "StrictHostKeyChecking=yes")
+		if uri, parseErr := url.Parse(destination.URI); parseErr == nil && uri.Query().Get("strictHostKeyChecking") == "true" {
+			remoteSSH = append(remoteSSH, "-o", "HostKeyAlgorithms=ssh-ed25519", "-o", shell("HostKeyAlias="+uri.Query().Get("hostKeyAlias")))
+		}
 		if uri, parseErr := url.Parse(destination.URI); parseErr == nil && uri.Port() != "" {
 			remoteSSH = append(remoteSSH, "-p", shell(uri.Port()))
-		}
-		writeCommand := "mkdir -p -- " + shell(filepath.Dir(destinationPath)) + " && cat > " + shell(destinationPath)
-		if offset > 0 {
-			writeCommand = fmt.Sprintf("test $(wc -c < %s) -eq %d && cat >> %s", shell(destinationPath), offset, shell(destinationPath))
 		}
 		readCommand := "cat -- " + shell(sourcePath)
 		if offset > 0 {
 			readCommand = fmt.Sprintf("tail -c +%d -- %s", offset+1, shell(sourcePath))
 		}
-		remoteCommand = readCommand + " | " + strings.Join(remoteSSH, " ") + " " + shell(destinationHost) + " " + shell(writeCommand)
+		remoteCommand = "bash -o pipefail -c " + shell(readCommand+" | "+strings.Join(remoteSSH, " ")+" "+shell(destinationHost)+" "+shell(writeCommand))
 		output, runErr := runSSHCombinedOutput(ctx, source, append(sshArgs(source), sourceHost, remoteCommand), nil)
 		if runErr != nil {
 			return 0, fmt.Errorf("stream directly between cloud instances: %w: %s", runErr, strings.TrimSpace(string(output)))
@@ -309,12 +344,16 @@ func destinationUserHost(endpoint domain.TransferEndpoint, address string) strin
 	return address
 }
 
-func prepareDirectCredential(ctx context.Context, source, destination domain.TransferEndpoint) (string, string, func(), error) {
+func prepareDirectCredential(ctx context.Context, source, destination domain.TransferEndpoint, forcedCommand string) (string, string, func(), error) {
 	publicKey, privateKey, err := ephemeralSSHKey()
 	if err != nil {
 		return "", "", func() {}, err
 	}
-	token := fmt.Sprintf("akoflow-transfer-%d", time.Now().UnixNano())
+	var nonce [16]byte
+	if _, err := rand.Read(nonce[:]); err != nil {
+		return "", "", func() {}, fmt.Errorf("generate transfer credential identity: %w", err)
+	}
+	token := fmt.Sprintf("akoflow-transfer-%x", nonce)
 	identity := "/tmp/" + token
 	knownHosts := identity + ".known_hosts"
 	destinationHost, _, err := sshTarget(destination, "")
@@ -325,15 +364,18 @@ func prepareDirectCredential(ctx context.Context, source, destination domain.Tra
 	if err != nil {
 		return "", "", func() {}, err
 	}
-	authorizedLine := "no-agent-forwarding,no-port-forwarding,no-X11-forwarding,no-pty " + strings.TrimSpace(string(publicKey)) + " " + token
-	installDestination := "umask 077; mkdir -p ~/.ssh; touch ~/.ssh/authorized_keys; printf '%s\\n' " + shell(authorizedLine) + " >> ~/.ssh/authorized_keys"
+	authorizedLine, err := scopedDirectAuthorizedKey(publicKey, token, forcedCommand, time.Now().Add(30*time.Minute))
+	if err != nil {
+		return "", "", func() {}, err
+	}
+	installDestination := "umask 077; mkdir -p ~/.ssh; touch ~/.ssh/authorized_keys; flock ~/.ssh/.akoflow-transfer-lock sh -c " + shell("printf '%s\\n' "+shell(authorizedLine)+" >> ~/.ssh/authorized_keys")
 	if output, installErr := runSSHCombinedOutput(ctx, destination, append(sshArgs(destination), destinationHost, installDestination), nil); installErr != nil {
 		return "", "", func() {}, fmt.Errorf("install temporary destination credential: %w: %s", installErr, strings.TrimSpace(string(output)))
 	}
 	cleanup := func() {
 		cleanupCtx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 		defer cancel()
-		removeDestination := "grep -v -- " + shell(token) + " ~/.ssh/authorized_keys > ~/.ssh/authorized_keys.akoflow && mv ~/.ssh/authorized_keys.akoflow ~/.ssh/authorized_keys"
+		removeDestination := directCredentialRemovalCommand(authorizedLine)
 		_, _ = runSSHCombinedOutput(cleanupCtx, destination, append(sshArgs(destination), destinationHost, removeDestination), nil)
 		_, _ = runSSHCombinedOutput(cleanupCtx, source, append(sshArgs(source), sourceHost, "rm -f -- "+shell(identity)+" "+shell(knownHosts)), nil)
 	}
@@ -351,12 +393,51 @@ func prepareDirectCredential(ctx context.Context, source, destination domain.Tra
 	if port == "" {
 		port = "22"
 	}
+	if destinationURL.Query().Get("strictHostKeyChecking") == "true" {
+		pinned, readErr := os.ReadFile(destinationURL.Query().Get("knownHostsFile"))
+		if readErr != nil || len(pinned) == 0 {
+			cleanup()
+			return "", "", func() {}, fmt.Errorf("read verified direct destination host key: %v", readErr)
+		}
+		if writeErr := runSSHInput(ctx, source, sourceHost, "umask 077; cat > "+shell(knownHosts), pinned); writeErr != nil {
+			cleanup()
+			return "", "", func() {}, fmt.Errorf("install verified direct destination host key: %w", writeErr)
+		}
+		return identity, knownHosts, cleanup, nil
+	}
 	scan := "ssh-keyscan -p " + shell(port) + " -- " + shell(directAddress) + " > " + shell(knownHosts)
 	if output, scanErr := runSSHCombinedOutput(ctx, source, append(sshArgs(source), sourceHost, scan), nil); scanErr != nil {
 		cleanup()
 		return "", "", func() {}, fmt.Errorf("capture direct destination host key: %w: %s", scanErr, strings.TrimSpace(string(output)))
 	}
 	return identity, knownHosts, cleanup, nil
+}
+
+func scopedDirectAuthorizedKey(publicKey []byte, token, forcedCommand string, expires time.Time) (string, error) {
+	key, _, _, rest, err := ssh.ParseAuthorizedKey(publicKey)
+	if err != nil || key.Type() != "ssh-ed25519" || len(
+		strings.TrimSpace(string(rest)),
+	) != 0 || strings.TrimSpace(
+		forcedCommand,
+	) == "" || token == "" || strings.ContainsAny(
+		forcedCommand,
+		"\r\n\x00",
+	) || strings.ContainsAny(
+		token,
+		" \t\r\n\x00",
+	) {
+		return "", fmt.Errorf("invalid scoped direct transfer authorization")
+	}
+	return "restrict,command=" + strconv.Quote(forcedCommand) + ",expiry-time=" + strconv.Quote(expires.UTC().Format("20060102150405Z")) + " " + strings.TrimSpace(string(ssh.MarshalAuthorizedKey(key))) + " " + token, nil
+}
+
+// Serialize append/revocation across simultaneous transfers. Remove the exact
+// authorization, not every line containing a substring, and keep user keys.
+func directCredentialRemovalCommand(authorizedLine string) string {
+	remove := "umask 077; tmp=$(mktemp ~/.ssh/.akoflow-keys-XXXXXX); trap 'rm -f -- \"$tmp\"' EXIT; " +
+		"grep -F -x -v -- " + shell(authorizedLine) + " ~/.ssh/authorized_keys > \"$tmp\" || test \"$?\" -eq 1; " +
+		"chmod 600 \"$tmp\"; mv -- \"$tmp\" ~/.ssh/authorized_keys"
+	return "flock ~/.ssh/.akoflow-transfer-lock sh -c " + shell("set -eu; "+remove)
 }
 
 func ephemeralSSHKey() ([]byte, []byte, error) {
@@ -368,11 +449,11 @@ func ephemeralSSHKey() ([]byte, []byte, error) {
 	if err != nil {
 		return nil, nil, fmt.Errorf("encode temporary transfer public key: %w", err)
 	}
-	encodedPrivate, err := x509.MarshalPKCS8PrivateKey(private)
+	encodedPrivate, err := ssh.MarshalPrivateKey(private, "temporary-workspace-transfer")
 	if err != nil {
 		return nil, nil, fmt.Errorf("encode temporary transfer private key: %w", err)
 	}
-	return ssh.MarshalAuthorizedKey(sshPublic), pem.EncodeToMemory(&pem.Block{Type: "PRIVATE KEY", Bytes: encodedPrivate}), nil
+	return ssh.MarshalAuthorizedKey(sshPublic), pem.EncodeToMemory(encodedPrivate), nil
 }
 
 func runSSHInput(ctx context.Context, endpoint domain.TransferEndpoint, host, command string, input []byte) error {
@@ -384,11 +465,13 @@ func runSSHInput(ctx context.Context, endpoint domain.TransferEndpoint, host, co
 }
 
 func queuedSSHCommand(ctx context.Context, endpoint domain.TransferEndpoint, args []string) (*exec.Cmd, func(), error) {
-	release, err := provider.AcquireSSHChannel(ctx, sshControlPath(args))
+	release, err := provider.AcquireSSHBulkChannel(ctx, sshControlPath(args))
 	if err != nil {
 		return nil, nil, fmt.Errorf("wait for SSH channel: %w", err)
 	}
-	return exec.CommandContext(ctx, "ssh", args...), release, nil
+	command := exec.CommandContext(ctx, "ssh", args...)
+	command.WaitDelay = 5 * time.Second
+	return command, release, nil
 }
 
 func runSSHCombinedOutput(ctx context.Context, endpoint domain.TransferEndpoint, args []string, input io.Reader) ([]byte, error) {
@@ -399,6 +482,67 @@ func runSSHCombinedOutput(ctx context.Context, endpoint domain.TransferEndpoint,
 	defer release()
 	command.Stdin = input
 	return command.CombinedOutput()
+}
+
+// runSSHStdout keeps transport diagnostics out of machine-readable responses.
+func runSSHStdout(ctx context.Context, endpoint domain.TransferEndpoint, args []string, input io.Reader) ([]byte, error) {
+	return runSSHStdoutMeasured(ctx, endpoint, args, input, nil, nil)
+}
+
+func runSSHStdoutMeasured(ctx context.Context, endpoint domain.TransferEndpoint, args []string, input io.Reader, wait, execution *float64) ([]byte, error) {
+	queuedAt := time.Now()
+	command, release, err := queuedSSHCommand(ctx, endpoint, args)
+	if wait != nil {
+		*wait += time.Since(queuedAt).Seconds()
+	}
+	if err != nil {
+		return nil, err
+	}
+	defer release()
+	var stdout, stderr bytes.Buffer
+	command.Stdin = input
+	command.Stdout = &stdout
+	command.Stderr = &stderr
+	startedAt := time.Now()
+	err = command.Run()
+	if execution != nil {
+		*execution += time.Since(startedAt).Seconds()
+	}
+	if err != nil {
+		return stdout.Bytes(), fmt.Errorf("ssh command: %w: %s", err, strings.TrimSpace(stderr.String()))
+	}
+	return stdout.Bytes(), nil
+}
+
+// runSSHProtocol exposes only bounded failure categories, never remote stderr.
+// Successful machine-readable stdout remains separate from transport diagnostics.
+func runSSHProtocol(ctx context.Context, endpoint domain.TransferEndpoint, args []string) ([]byte, error) {
+	return runSSHProtocolMeasured(ctx, endpoint, args, nil, nil)
+}
+
+func runSSHProtocolMeasured(ctx context.Context, endpoint domain.TransferEndpoint, args []string, wait, execution *float64) ([]byte, error) {
+	output, err := runSSHStdoutMeasured(ctx, endpoint, args, nil, wait, execution)
+	if err == nil {
+		return output, nil
+	}
+	category := peerProbeFailureCategory(err)
+	message := strings.ToLower(err.Error())
+	for _, diagnostic := range []struct{ text, category string }{
+		{"connection closed", "connection_closed"},
+		{"connection reset", "connection_reset"},
+		{"broken pipe", "broken_pipe"},
+		{"no space left", "disk_full"},
+		{"sealed snapshot", "manifest_validation_failed"},
+	} {
+		if strings.Contains(message, diagnostic.text) {
+			category = diagnostic.category
+			break
+		}
+	}
+	if ctx.Err() != nil {
+		return nil, fmt.Errorf("SSH protocol failure [%s]: %w", category, ctx.Err())
+	}
+	return nil, fmt.Errorf("SSH protocol failure [%s]", category)
 }
 
 func sshControlPath(args []string) string {
@@ -416,4 +560,4 @@ type readCloser struct {
 }
 
 func (r readCloser) Close() error { return r.close() }
-func shell(v string) string       { return "'" + strings.ReplaceAll(v, "'", "'\\\"'\\\"'") + "'" }
+func shell(v string) string       { return "'" + strings.ReplaceAll(v, "'", "'\"'\"'") + "'" }

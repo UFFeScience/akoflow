@@ -37,57 +37,7 @@ func compare(observed, simulated Object, role string, model Object) Object {
 	for _, a := range rows(observed["activities"]) {
 		resources[str(a["activity_id"])] = a["resource_id"]
 	}
-	resultRows := []any{}
-	mismatch := 0
-	for _, r := range rows(get(observed, "routes")) {
-		if r["producer_activity_id"] == nil {
-			continue
-		}
-		producer, consumer := str(r["producer_activity_id"]), str(r["consumer_activity_id"])
-		estimate := obj(predicted[producer+"\x00"+consumer])
-		service, local := 0.0, resources[producer] == resources[consumer] && num(r["network_bytes"]) == 0
-		for _, p := range rows(get(r, "phases")) {
-			if !strings.HasPrefix(str(p["name"]), "shared-") {
-				service += num(get(p, "durationSeconds"))
-				local = false
-			}
-		}
-		if r["strategy"] == "runtime-local" {
-			service = 0
-		}
-		canonical := r["strategy"]
-		if local {
-			canonical = "runtime-local"
-		}
-		strategy := "runtime-local"
-		duration, network, wait := 0.0, 0.0, 0.0
-		var percent any
-		if len(estimate) > 0 {
-			strategy = str(get(estimate, "strategy"))
-			duration = num(get(estimate, "durationSeconds"))
-			network = num(estimate["networkBytes"])
-			percent = errorPercent(duration, service)
-			for _, p := range rows(get(obj(get(estimate, "route")), "phases")) {
-				wait += num(p["serviceWaitSeconds"])
-			}
-		}
-		if canonical != strategy {
-			mismatch++
-		}
-		resultRows = append(resultRows, Object{
-			"producer":                       producer,
-			"consumer":                       consumer,
-			"observedStrategy":               canonical,
-			"executorStrategy":               r["strategy"],
-			"predictedStrategy":              strategy,
-			"observedNetworkBytes":           num(r["network_bytes"]),
-			"predictedNetworkBytes":          network,
-			"observedDependencyPhaseSeconds": service,
-			"predictedDependencySeconds":     duration,
-			"durationErrorPercent":           percent,
-			"predictedServiceWaitSeconds":    wait,
-		})
-	}
+	resultRows, mismatch := compareDependencyRoutes(observed, predicted, resources)
 	makespan, real := num(get(obj(get(simulated, "executed")), "makespanSeconds")), num(get(obj(get(observed, "real_api_reported")), "makespanSeconds"))
 	percent := errorPercent(makespan, real)
 	dominant := append([]any{}, resultRows...)
@@ -279,6 +229,83 @@ func supplementSource(c, diagnostic Object, d string) Object {
 		"queueNotAddedToService":   true,
 	}
 	updated["auxiliarySourceServiceEvidence"] = evidence
+	merges := auxiliaryHPCMergeSamples(completed, manifests, snapshots)
+	check(len(merges) > 0, "Queue-free auxiliary HPC merge service missing")
+	var merge Object
+	for _, m := range rows(get(updated, "mergeRateObservations")) {
+		if m["targetClass"] == "hpc" {
+			merge = m
+			break
+		}
+	}
+	check(merge != nil, "Primary HPC merge reference missing")
+	rates := Object{}
+	for _, key := range []string{"checkSecondsPerInputByte", "copySecondsPerUniqueByte", "verifySecondsPerUniqueByte"} {
+		rates[key] = summary(vals(merges, key))
+	}
+	merge["observations"] = rates
+	merge["commandOverheadSeconds"] = summary(vals(merges, "overhead"))
+	merge["channelWaitSeconds"] = summary(vals(merges, "wait"))
+	evidence["completedHPCMergeSamples"] = len(merges)
+	return updated
+}
+
+func compareDependencyRoutes(observed, predicted, resources Object) ([]any, int) {
+	resultRows := []any{}
+	mismatch := 0
+	for _, r := range rows(get(observed, "routes")) {
+		if r["producer_activity_id"] == nil {
+			continue
+		}
+		producer, consumer := str(r["producer_activity_id"]), str(r["consumer_activity_id"])
+		estimate := obj(predicted[producer+"\x00"+consumer])
+		service, local := 0.0, resources[producer] == resources[consumer] && num(r["network_bytes"]) == 0
+		for _, p := range rows(get(r, "phases")) {
+			if !strings.HasPrefix(str(p["name"]), "shared-") {
+				service += num(get(p, "durationSeconds"))
+				local = false
+			}
+		}
+		if r["strategy"] == "runtime-local" {
+			service = 0
+		}
+		canonical := r["strategy"]
+		if local {
+			canonical = "runtime-local"
+		}
+		strategy := "runtime-local"
+		duration, network, wait := 0.0, 0.0, 0.0
+		var percent any
+		if len(estimate) > 0 {
+			strategy = str(get(estimate, "strategy"))
+			duration = num(get(estimate, "durationSeconds"))
+			network = num(estimate["networkBytes"])
+			percent = errorPercent(duration, service)
+			for _, p := range rows(get(obj(get(estimate, "route")), "phases")) {
+				wait += num(p["serviceWaitSeconds"])
+			}
+		}
+		if canonical != strategy {
+			mismatch++
+		}
+		resultRows = append(resultRows, Object{
+			"producer":                       producer,
+			"consumer":                       consumer,
+			"observedStrategy":               canonical,
+			"executorStrategy":               r["strategy"],
+			"predictedStrategy":              strategy,
+			"observedNetworkBytes":           num(r["network_bytes"]),
+			"predictedNetworkBytes":          network,
+			"observedDependencyPhaseSeconds": service,
+			"predictedDependencySeconds":     duration,
+			"durationErrorPercent":           percent,
+			"predictedServiceWaitSeconds":    wait,
+		})
+	}
+	return resultRows, mismatch
+}
+
+func auxiliaryHPCMergeSamples(completed []Object, manifests, snapshots Object) []Object {
 	merges := []Object{}
 	for _, g := range groups(completed, "consumerActivityId") {
 		consumer := g.key[0]
@@ -317,22 +344,5 @@ func supplementSource(c, diagnostic Object, d string) Object {
 			"wait":                       r["mergeSshChannelWaitSeconds"],
 		})
 	}
-	check(len(merges) > 0, "Queue-free auxiliary HPC merge service missing")
-	var merge Object
-	for _, m := range rows(get(updated, "mergeRateObservations")) {
-		if m["targetClass"] == "hpc" {
-			merge = m
-			break
-		}
-	}
-	check(merge != nil, "Primary HPC merge reference missing")
-	rates := Object{}
-	for _, key := range []string{"checkSecondsPerInputByte", "copySecondsPerUniqueByte", "verifySecondsPerUniqueByte"} {
-		rates[key] = summary(vals(merges, key))
-	}
-	merge["observations"] = rates
-	merge["commandOverheadSeconds"] = summary(vals(merges, "overhead"))
-	merge["channelWaitSeconds"] = summary(vals(merges, "wait"))
-	evidence["completedHPCMergeSamples"] = len(merges)
-	return updated
+	return merges
 }

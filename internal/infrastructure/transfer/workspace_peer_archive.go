@@ -54,61 +54,13 @@ func preparePeerWorkspaceArchive(ctx context.Context, source, destination domain
 	if _, err := runSSHCombinedOutput(ctx, source, append(sshArgs(source), sourceHost, "umask 077; touch -- "+shell(filepath.Join(root, "probe"))), nil); err != nil {
 		return true, err
 	}
-	probeCtx, cancel := context.WithTimeout(ctx, 45*time.Second)
-	probeErr := measureWorkspacePhase(run, "peer-authenticated-connectivity-probe", func() error {
-		_, err := (RsyncSSH{}).TransferRoute(probeCtx, domain.TransferDirectRuntime, archiveSource, destination, "probe", "peer-probe", 0)
-		return err
-	})
-	cancel()
-	if probeErr != nil {
-		run.Route.PeerProbeFailure = peerProbeFailureCategory(probeErr)
-		cleanupCtx, release := context.WithTimeout(context.WithoutCancel(ctx), 30*time.Second)
-		_, cleanupErr := runSSHCombinedOutput(cleanupCtx, destination, append(sshArgs(destination), targetHost, "rm -f -- "+shell(filepath.Join(target, "peer-probe"))), nil)
-		release()
-		if cleanupErr != nil {
-			return true, fmt.Errorf("clean failed peer probe: %w", cleanupErr)
-		}
-		if ctx.Err() != nil {
-			return true, ctx.Err()
-		}
-		run.Route.Fallback = domain.TransferGateway
-		run.Route.Reason = "private peer authentication/connectivity not proven; gateway fallback"
-		return false, nil
+	if ready, err := probePeerWorkspaceConnectivity(ctx, archiveSource, destination, targetHost, target, run); !ready || err != nil {
+		return ready, err
 	}
 	if err := rejectWorkspaceSymlinks(ctx, source); err != nil {
 		return true, err
 	}
-	var snapshot *peerSnapshot
-	var release func()
-	err = measureWorkspacePhase(run, "peer-snapshot-acquire", func() error {
-		var reused bool
-		var acquireErr error
-		acquireStarted := time.Now()
-		snapshot, reused, release, acquireErr = sharedPeerSnapshots.acquire(ctx, peerSnapshotKey(source), func(buildCtx context.Context) (*peerSnapshot, error) {
-			return buildPeerSnapshot(buildCtx, source)
-		})
-		run.Route.SnapshotReused = reused
-		if acquireErr == nil && snapshot != nil {
-			run.Route.SnapshotBuildWallSeconds = snapshot.buildWallSeconds
-			waitSeconds, commandSeconds := snapshot.buildSSHWaitSeconds, snapshot.buildCommandSeconds
-			run.Route.SnapshotBuildSSHWaitSeconds = &waitSeconds
-			run.Route.SnapshotBuildCommandSeconds = &commandSeconds
-			if snapshot.serviceTiming != nil {
-				serviceSeconds, cpuSeconds := snapshot.serviceTiming.WallSeconds, snapshot.serviceTiming.CPUSeconds
-				run.Route.SnapshotBuildServiceSeconds = &serviceSeconds
-				run.Route.SnapshotBuildCPUSeconds = &cpuSeconds
-			}
-			wait := time.Since(acquireStarted).Seconds()
-			if !reused {
-				wait -= snapshot.buildWallSeconds
-			}
-			if wait < 0 {
-				wait = 0
-			}
-			run.Route.SnapshotAcquireWaitSeconds = wait
-		}
-		return acquireErr
-	})
+	snapshot, release, err := acquirePeerWorkspaceSnapshot(ctx, source, run)
 	if err != nil {
 		return true, err
 	}
@@ -130,29 +82,7 @@ func preparePeerWorkspaceArchive(ctx context.Context, source, destination domain
 		return true, err
 	}
 	run.NetworkBytes = snapshot.size
-	command := "python3 -c " + shell(peerArchiveVerifyScript) + " " + shell(filepath.Join(target, "peer-workspace.tar.gz")) + " " + shell(target) + " " + shell(snapshot.digest)
-	command = "python3 -c " + shell(peerSnapshotTimingScript) + " " + shell(command)
-	var receiverWait, receiverCommand float64
-	err = measureWorkspacePhase(run, "peer-receiver-verify-and-extract", func() error {
-		var commandErr error
-		output, commandErr = runSSHProtocolMeasured(ctx, destination, append(sshArgs(destination), targetHost, command), &receiverWait, &receiverCommand)
-		return commandErr
-	})
-	phase := &run.Route.Phases[len(run.Route.Phases)-1]
-	phase.SSHChannelWaitSeconds = &receiverWait
-	phase.ExecutionSeconds = &receiverCommand
-	if err != nil {
-		return true, fmt.Errorf("verify private peer archive: %w: %s", err, strings.TrimSpace(string(output)))
-	}
-	if len(strings.TrimSpace(string(output))) > 0 {
-		timing, timingErr := parsePeerSnapshotServiceTiming(strings.TrimSpace(string(output)))
-		if timingErr != nil {
-			return true, timingErr
-		}
-		run.Route.PeerReceiverServiceSeconds = &timing.WallSeconds
-		run.Route.PeerReceiverCPUSeconds = &timing.CPUSeconds
-	}
-	return true, rejectWorkspaceSymlinks(ctx, destination)
+	return true, receivePeerWorkspaceArchive(ctx, destination, targetHost, target, snapshot, run)
 }
 
 // Persist only bounded categories: SSH stderr may contain addresses, paths or
@@ -228,3 +158,93 @@ with tarfile.open(archive, mode='r|gz') as tar:
 os.unlink(archive)
 os.unlink(os.path.join(root, 'peer-probe'))
 `
+
+func acquirePeerWorkspaceSnapshot(ctx context.Context, source domain.TransferEndpoint, run *domain.DataTransferRun) (*peerSnapshot, func(), error) {
+	var snapshot *peerSnapshot
+	var release func()
+	err := measureWorkspacePhase(run, "peer-snapshot-acquire", func() error {
+		var reused bool
+		var acquireErr error
+		acquireStarted := time.Now()
+		snapshot, reused, release, acquireErr = sharedPeerSnapshots.acquire(ctx, peerSnapshotKey(source), func(buildCtx context.Context) (*peerSnapshot, error) {
+			return buildPeerSnapshot(buildCtx, source)
+		})
+		run.Route.SnapshotReused = reused
+		if acquireErr == nil && snapshot != nil {
+			run.Route.SnapshotBuildWallSeconds = snapshot.buildWallSeconds
+			waitSeconds, commandSeconds := snapshot.buildSSHWaitSeconds, snapshot.buildCommandSeconds
+			run.Route.SnapshotBuildSSHWaitSeconds = &waitSeconds
+			run.Route.SnapshotBuildCommandSeconds = &commandSeconds
+			if snapshot.serviceTiming != nil {
+				serviceSeconds, cpuSeconds := snapshot.serviceTiming.WallSeconds, snapshot.serviceTiming.CPUSeconds
+				run.Route.SnapshotBuildServiceSeconds = &serviceSeconds
+				run.Route.SnapshotBuildCPUSeconds = &cpuSeconds
+			}
+			wait := time.Since(acquireStarted).Seconds()
+			if !reused {
+				wait -= snapshot.buildWallSeconds
+			}
+			if wait < 0 {
+				wait = 0
+			}
+			run.Route.SnapshotAcquireWaitSeconds = wait
+		}
+		return acquireErr
+	})
+	if err != nil {
+		return nil, nil, err
+	}
+	return snapshot, release, nil
+}
+
+func receivePeerWorkspaceArchive(ctx context.Context, destination domain.TransferEndpoint, targetHost, target string, snapshot *peerSnapshot, run *domain.DataTransferRun) error {
+	var output []byte
+	command := "python3 -c " + shell(peerArchiveVerifyScript) + " " + shell(filepath.Join(target, "peer-workspace.tar.gz")) + " " + shell(target) + " " + shell(snapshot.digest)
+	command = "python3 -c " + shell(peerSnapshotTimingScript) + " " + shell(command)
+	var receiverWait, receiverCommand float64
+	err := measureWorkspacePhase(run, "peer-receiver-verify-and-extract", func() error {
+		var commandErr error
+		output, commandErr = runSSHProtocolMeasured(ctx, destination, append(sshArgs(destination), targetHost, command), &receiverWait, &receiverCommand)
+		return commandErr
+	})
+	phase := &run.Route.Phases[len(run.Route.Phases)-1]
+	phase.SSHChannelWaitSeconds = &receiverWait
+	phase.ExecutionSeconds = &receiverCommand
+	if err != nil {
+		return fmt.Errorf("verify private peer archive: %w: %s", err, strings.TrimSpace(string(output)))
+	}
+	if len(strings.TrimSpace(string(output))) > 0 {
+		timing, timingErr := parsePeerSnapshotServiceTiming(strings.TrimSpace(string(output)))
+		if timingErr != nil {
+			return timingErr
+		}
+		run.Route.PeerReceiverServiceSeconds = &timing.WallSeconds
+		run.Route.PeerReceiverCPUSeconds = &timing.CPUSeconds
+	}
+	return rejectWorkspaceSymlinks(ctx, destination)
+}
+
+func probePeerWorkspaceConnectivity(ctx context.Context, archiveSource, destination domain.TransferEndpoint, targetHost, target string, run *domain.DataTransferRun) (bool, error) {
+	probeCtx, cancel := context.WithTimeout(ctx, 45*time.Second)
+	probeErr := measureWorkspacePhase(run, "peer-authenticated-connectivity-probe", func() error {
+		_, err := (RsyncSSH{}).TransferRoute(probeCtx, domain.TransferDirectRuntime, archiveSource, destination, "probe", "peer-probe", 0)
+		return err
+	})
+	cancel()
+	if probeErr != nil {
+		run.Route.PeerProbeFailure = peerProbeFailureCategory(probeErr)
+		cleanupCtx, release := context.WithTimeout(context.WithoutCancel(ctx), 30*time.Second)
+		_, cleanupErr := runSSHCombinedOutput(cleanupCtx, destination, append(sshArgs(destination), targetHost, "rm -f -- "+shell(filepath.Join(target, "peer-probe"))), nil)
+		release()
+		if cleanupErr != nil {
+			return true, fmt.Errorf("clean failed peer probe: %w", cleanupErr)
+		}
+		if ctx.Err() != nil {
+			return true, ctx.Err()
+		}
+		run.Route.Fallback = domain.TransferGateway
+		run.Route.Reason = "private peer authentication/connectivity not proven; gateway fallback"
+		return false, nil
+	}
+	return true, nil
+}

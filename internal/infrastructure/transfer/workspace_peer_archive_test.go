@@ -97,37 +97,7 @@ func TestPeerArchiveVerifiesBeforeExtraction(t *testing.T) {
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			root := t.TempDir()
-			archive := filepath.Join(root, "peer-workspace.tar.gz")
-			f, err := os.Create(archive)
-			if err != nil {
-				t.Fatal(err)
-			}
-			gz := gzip.NewWriter(f)
-			writer := tar.NewWriter(gz)
-			for _, header := range tc.headers {
-				if err := writer.WriteHeader(header); err != nil {
-					t.Fatal(err)
-				}
-				if header.Size > 0 {
-					if _, err := writer.Write([]byte("x")); err != nil {
-						t.Fatal(err)
-					}
-				}
-			}
-			if err := writer.Close(); err != nil {
-				t.Fatal(err)
-			}
-			if err := gz.Close(); err != nil {
-				t.Fatal(err)
-			}
-			if err := f.Close(); err != nil {
-				t.Fatal(err)
-			}
-			data, err := os.ReadFile(archive)
-			if err != nil {
-				t.Fatal(err)
-			}
-			digest := fmt.Sprintf("%x", sha256.Sum256(data))
+			archive, digest := writePeerArchiveFixture(t, root, tc.headers)
 			if tc.wrongHash {
 				digest = fmt.Sprintf("%064d", 0)
 			}
@@ -168,4 +138,40 @@ tarfile.TarFile.extractfile = streaming_extractfile
 			}
 		})
 	}
+}
+
+func writePeerArchiveFixture(t *testing.T, root string, headers []*tar.Header) (string, string) {
+	t.Helper()
+	archive := filepath.Join(root, "peer-workspace.tar.gz")
+	f, err := os.Create(archive)
+	if err != nil {
+		t.Fatal(err)
+	}
+	gz := gzip.NewWriter(f)
+	writer := tar.NewWriter(gz)
+	for _, header := range headers {
+		if err := writer.WriteHeader(header); err != nil {
+			t.Fatal(err)
+		}
+		if header.Size > 0 {
+			if _, err := writer.Write([]byte("x")); err != nil {
+				t.Fatal(err)
+			}
+		}
+	}
+	if err := writer.Close(); err != nil {
+		t.Fatal(err)
+	}
+	if err := gz.Close(); err != nil {
+		t.Fatal(err)
+	}
+	if err := f.Close(); err != nil {
+		t.Fatal(err)
+	}
+	data, err := os.ReadFile(archive)
+	if err != nil {
+		t.Fatal(err)
+	}
+	digest := fmt.Sprintf("%x", sha256.Sum256(data))
+	return archive, digest
 }

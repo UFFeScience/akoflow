@@ -200,27 +200,13 @@ func compactPRISMPlacePreparedAlternatives(
 	if search.materializationModel != nil && math.IsInf(transfer.readyAt, 1) {
 		return nil
 	}
-	start := math.Max(transfer.readyAt, coreRoot.bestValue)
-	order := compactPRISMIntLookup(state.coreOrder, coreOrdinal)
-	boot := 0.0
-	if order == 0 {
-		boot = resource.resource.BootOverheadSeconds
-		start += boot
-	}
+	start, order, boot := compactPRISMPlacementStart(state, resource, coreOrdinal, transfer.readyAt, coreRoot.bestValue)
 	container := resource.resource.ContainerOverhead
 	start += container
 	baseRuntime := search.durations[activityOrdinal][resourceOrdinal]
-	publication := 0.0
-	if search.materializationModel != nil {
-		var volume domainworkflow.WorkspaceProjectionVolumes
-		encoded, err := json.Marshal(search.activities[activityOrdinal].Metadata["workspaceProjectionVolumes"])
-		if err != nil || json.Unmarshal(encoded, &volume) != nil {
-			return nil
-		}
-		publication, err = search.materializationModel.PublicationSeconds(resource.resource.ID, volume.TerminalObservationBytes, volume.PublicationCleanupBytes)
-		if err != nil {
-			return nil
-		}
+	publication, valid := compactPRISMPublicationSeconds(search, activityOrdinal, resource.resource.ID)
+	if !valid {
+		return nil
 	}
 	factor, waitUntil := compactPRISMInterferenceDecision(
 		search, state, activityOrdinal, resourceOrdinal, start, baseRuntime,
@@ -267,6 +253,30 @@ func compactPRISMPlacePreparedAlternatives(
 		coreOrdinal, sequence, delayed,
 	))
 	return children
+}
+
+func compactPRISMPlacementStart(state compactPRISMState, resource compactPRISMResource, coreOrdinal int, readyAt, availableAt float64) (float64, int, float64) {
+	start := math.Max(readyAt, availableAt)
+	order := compactPRISMIntLookup(state.coreOrder, coreOrdinal)
+	boot := 0.0
+	if order == 0 {
+		boot = resource.resource.BootOverheadSeconds
+		start += boot
+	}
+	return start, order, boot
+}
+
+func compactPRISMPublicationSeconds(search compactPRISMContext, activityOrdinal int, resourceID string) (float64, bool) {
+	if search.materializationModel == nil {
+		return 0, true
+	}
+	var volume domainworkflow.WorkspaceProjectionVolumes
+	encoded, err := json.Marshal(search.activities[activityOrdinal].Metadata["workspaceProjectionVolumes"])
+	if err != nil || json.Unmarshal(encoded, &volume) != nil {
+		return 0, false
+	}
+	publication, err := search.materializationModel.PublicationSeconds(resourceID, volume.TerminalObservationBytes, volume.PublicationCleanupBytes)
+	return publication, err == nil
 }
 
 func compactPRISMInterferenceDecision(

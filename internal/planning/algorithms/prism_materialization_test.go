@@ -12,52 +12,7 @@ import (
 // Same causal fixture as the native mixed-origin test: roots finish at 1/5,
 // peer ends at 6, relay legs at 7/10, merge ends at 12, consumer at 13.
 func TestPRISMMaterializationMatchesNativeMixedOriginBarrier(t *testing.T) {
-	model := materializationmodel.Model{SchemaVersion: 1, Source: "measured-fixture", RelayResourceID: "relay",
-		Resources: map[string]materializationmodel.Resource{
-			"peer": {Class: "micro", Domain: "cloud"}, "target": {Class: "micro", Domain: "cloud"},
-			"hpc": {Class: "hpc", Domain: "hpc"}, "relay": {Class: "relay", Domain: "relay"},
-		},
-		Profiles: []materializationmodel.Profile{
-			{Strategy: "direct-runtime", SourceClass: "micro", TargetClass: "micro", Source: "fixture", Samples: 1, ArchiveToWorkspaceRatio: 1, UploadArchiveBytesPerSecond: 100},
-			{
-				Strategy:                         "gateway",
-				SourceClass:                      "hpc",
-				TargetClass:                      "micro",
-				Source:                           "fixture",
-				Samples:                          1,
-				ArchiveToWorkspaceRatio:          1,
-				IngressArchiveBytesPerSecond:     100,
-				UploadArchiveBytesPerSecond:      100,
-				IngressIncludesSourcePreparation: true,
-				ValidationSecondsPerByte:         .01,
-				ReceiverSecondsPerByte:           .02,
-			},
-		}, MergeProfiles: []materializationmodel.MergeProfile{{TargetClass: "micro", Source: "fixture", Samples: 1, CheckSecondsPerInputByte: .01}},
-	}
-	activities := []domain.Activity{planningActivity("a", 1), planningActivity("c", 5), planningActivity("b", 1)}
-	for index := range activities {
-		projection := domainworkflow.WorkspaceProjection{Contract: "whole-workspace-v1", Source: "fixture"}
-		if index < 2 {
-			projection.Outputs = []domainworkflow.ProjectedFile{{Path: activities[index].ID, SizeBytes: 100, ContentID: activities[index].ID}}
-		}
-		activities[index].Metadata = map[string]any{"workspaceProjection": projection}
-	}
-	request := domain.PlanningRequest{
-		Workflow:        domain.WorkflowVersion{Activities: activities, Dependencies: []domain.ActivityDependency{{ActivityID: "b", DependsOnActivityID: "a"}, {ActivityID: "b", DependsOnActivityID: "c"}}},
-		ExecutionScope:  domain.ExecutionScope{EnvironmentVersionIDs: []string{"environment"}},
-		Resources:       []domain.Resource{planningResource("peer", 1, 1, 0), planningResource("hpc", 1, 1, 0), planningResource("target", 1, 1, 0), planningResource("relay", 1, 1, 0)},
-		NetworkTopology: domain.NetworkTopology{Metadata: map[string]any{"workspaceMaterializationModel": model}},
-	}
-	for index, pair := range [][2]string{{"peer", "target"}, {"hpc", "relay"}, {"relay", "target"}} {
-		request.NetworkTopology.Links = append(request.NetworkTopology.Links, domain.NetworkLink{
-			ID:                     string(rune('a' + index)),
-			SourceResourceID:       pair[0],
-			TargetResourceID:       pair[1],
-			BandwidthBitsPerSecond: 8e9,
-			SharingPolicy:          "SHARED",
-			PricePerByte:           .001,
-		})
-	}
+	model, request := mixedOriginPRISMFixture()
 	search, err := newCompactPRISMContext(request, nil)
 	if err != nil {
 		t.Fatal(err)
@@ -76,52 +31,7 @@ func TestPRISMMaterializationMatchesNativeMixedOriginBarrier(t *testing.T) {
 			t.Fatalf("incorrect consumer barrier: %+v", assignment)
 		}
 	}
-	model.PublicationProfiles = []materializationmodel.PublicationProfile{{TargetClass: "micro", Source: "queue-free-fixture", Samples: 1, ScanSecondsPerWorkspaceByte: .01}}
-	request.NetworkTopology.Metadata["workspaceMaterializationModel"] = model
-	publicationSearch, err := newCompactPRISMContext(request, nil)
-	if err != nil {
-		t.Fatal(err)
-	}
-	published, err := evaluateCompleteCompactPRISMState(publicationSearch, compactPRISMStateFromEvaluation(compactPRISMState{}, assignments, 0, 0))
-	if err != nil {
-		t.Fatal(err)
-	}
-	if math.Abs(published.makespan-15) > 1e-8 {
-		t.Fatalf("publication barrier expected 15, got %g", published.makespan)
-	}
-	targetResource := model.Resources["target"]
-	targetResource.ExecutionRuntimeID = "fixture-runtime"
-	model.Resources["target"] = targetResource
-	model.AdmissionProfiles = []materializationmodel.AdmissionProfile{{TargetClass: "micro", RuntimeID: "fixture-runtime", Source: "native-submit-fixture", Samples: 1, FixedSeconds: 7}}
-	model.SchemaVersion = 2
-	request.NetworkTopology.Metadata["workspaceMaterializationModel"] = model
-	admissionSearch, err := newCompactPRISMContext(request, nil)
-	if err != nil {
-		t.Fatal(err)
-	}
-	admitted, err := evaluateCompleteCompactPRISMState(admissionSearch, compactPRISMStateFromEvaluation(compactPRISMState{}, assignments, 0, 0))
-	if err != nil {
-		t.Fatal(err)
-	}
-	if math.Abs(admitted.makespan-22) > 1e-8 {
-		t.Fatalf("admission+publication parity expected22, got%g", admitted.makespan)
-	}
-	model.AdmissionProfiles = nil
-	model.PublicationProfiles = nil
-	model.InputObservationProfiles = []materializationmodel.InputObservationProfile{{TargetClass: "micro", Source: "queue-free-fixture", Samples: 1, SecondsPerUniqueByte: .1}}
-	request.NetworkTopology.Metadata["workspaceMaterializationModel"] = model
-	observedSearch, err := newCompactPRISMContext(request, nil)
-	if err != nil {
-		t.Fatal(err)
-	}
-	observed, err := evaluateCompleteCompactPRISMState(observedSearch, compactPRISMStateFromEvaluation(compactPRISMState{}, assignments, 0, 0))
-	if err != nil {
-		t.Fatal(err)
-	}
-	if math.Abs(observed.makespan-33) > 1e-8 {
-		t.Fatalf("input union observation must add 20 seconds once, got %g", observed.makespan)
-	}
-	model.InputObservationProfiles = nil
+	model, request = assertPRISMPublicationAdmissionObservation(t, model, request, assignments)
 	// Independently measured 2s source preparation is charged before ingress,
 	// not as extra network bytes or a second observed queue.
 	model.Profiles[1].IngressIncludesSourcePreparation = false
@@ -223,4 +133,105 @@ func TestPRISMSixSourceFanInUsesTwoBulkServiceWaves(t *testing.T) {
 	if math.Abs(evaluated.makespan-30) > 1e-8 {
 		t.Fatalf("expected six serial roots plus two waves, merge and compute: 30s; got %g", evaluated.makespan)
 	}
+}
+
+func mixedOriginPRISMFixture() (materializationmodel.Model, domain.PlanningRequest) {
+	model := materializationmodel.Model{SchemaVersion: 1, Source: "measured-fixture", RelayResourceID: "relay",
+		Resources: map[string]materializationmodel.Resource{
+			"peer": {Class: "micro", Domain: "cloud"}, "target": {Class: "micro", Domain: "cloud"},
+			"hpc": {Class: "hpc", Domain: "hpc"}, "relay": {Class: "relay", Domain: "relay"},
+		},
+		Profiles: []materializationmodel.Profile{
+			{Strategy: "direct-runtime", SourceClass: "micro", TargetClass: "micro", Source: "fixture", Samples: 1, ArchiveToWorkspaceRatio: 1, UploadArchiveBytesPerSecond: 100},
+			{
+				Strategy:                         "gateway",
+				SourceClass:                      "hpc",
+				TargetClass:                      "micro",
+				Source:                           "fixture",
+				Samples:                          1,
+				ArchiveToWorkspaceRatio:          1,
+				IngressArchiveBytesPerSecond:     100,
+				UploadArchiveBytesPerSecond:      100,
+				IngressIncludesSourcePreparation: true,
+				ValidationSecondsPerByte:         .01,
+				ReceiverSecondsPerByte:           .02,
+			},
+		}, MergeProfiles: []materializationmodel.MergeProfile{{TargetClass: "micro", Source: "fixture", Samples: 1, CheckSecondsPerInputByte: .01}},
+	}
+	activities := []domain.Activity{planningActivity("a", 1), planningActivity("c", 5), planningActivity("b", 1)}
+	for index := range activities {
+		projection := domainworkflow.WorkspaceProjection{Contract: "whole-workspace-v1", Source: "fixture"}
+		if index < 2 {
+			projection.Outputs = []domainworkflow.ProjectedFile{{Path: activities[index].ID, SizeBytes: 100, ContentID: activities[index].ID}}
+		}
+		activities[index].Metadata = map[string]any{"workspaceProjection": projection}
+	}
+	request := domain.PlanningRequest{
+		Workflow:        domain.WorkflowVersion{Activities: activities, Dependencies: []domain.ActivityDependency{{ActivityID: "b", DependsOnActivityID: "a"}, {ActivityID: "b", DependsOnActivityID: "c"}}},
+		ExecutionScope:  domain.ExecutionScope{EnvironmentVersionIDs: []string{"environment"}},
+		Resources:       []domain.Resource{planningResource("peer", 1, 1, 0), planningResource("hpc", 1, 1, 0), planningResource("target", 1, 1, 0), planningResource("relay", 1, 1, 0)},
+		NetworkTopology: domain.NetworkTopology{Metadata: map[string]any{"workspaceMaterializationModel": model}},
+	}
+	for index, pair := range [][2]string{{"peer", "target"}, {"hpc", "relay"}, {"relay", "target"}} {
+		request.NetworkTopology.Links = append(request.NetworkTopology.Links, domain.NetworkLink{
+			ID:                     string(rune('a' + index)),
+			SourceResourceID:       pair[0],
+			TargetResourceID:       pair[1],
+			BandwidthBitsPerSecond: 8e9,
+			SharingPolicy:          "SHARED",
+			PricePerByte:           .001,
+		})
+	}
+	return model, request
+}
+
+func assertPRISMPublicationAdmissionObservation(t *testing.T, model materializationmodel.Model, request domain.PlanningRequest, assignments []domain.PlanAssignment) (materializationmodel.Model, domain.PlanningRequest) {
+	t.Helper()
+	model.PublicationProfiles = []materializationmodel.PublicationProfile{{TargetClass: "micro", Source: "queue-free-fixture", Samples: 1, ScanSecondsPerWorkspaceByte: .01}}
+	request.NetworkTopology.Metadata["workspaceMaterializationModel"] = model
+	publicationSearch, err := newCompactPRISMContext(request, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	published, err := evaluateCompleteCompactPRISMState(publicationSearch, compactPRISMStateFromEvaluation(compactPRISMState{}, assignments, 0, 0))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if math.Abs(published.makespan-15) > 1e-8 {
+		t.Fatalf("publication barrier expected 15, got %g", published.makespan)
+	}
+	targetResource := model.Resources["target"]
+	targetResource.ExecutionRuntimeID = "fixture-runtime"
+	model.Resources["target"] = targetResource
+	model.AdmissionProfiles = []materializationmodel.AdmissionProfile{{TargetClass: "micro", RuntimeID: "fixture-runtime", Source: "native-submit-fixture", Samples: 1, FixedSeconds: 7}}
+	model.SchemaVersion = 2
+	request.NetworkTopology.Metadata["workspaceMaterializationModel"] = model
+	admissionSearch, err := newCompactPRISMContext(request, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	admitted, err := evaluateCompleteCompactPRISMState(admissionSearch, compactPRISMStateFromEvaluation(compactPRISMState{}, assignments, 0, 0))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if math.Abs(admitted.makespan-22) > 1e-8 {
+		t.Fatalf("admission+publication parity expected22, got%g", admitted.makespan)
+	}
+	model.AdmissionProfiles = nil
+	model.PublicationProfiles = nil
+	model.InputObservationProfiles = []materializationmodel.InputObservationProfile{{TargetClass: "micro", Source: "queue-free-fixture", Samples: 1, SecondsPerUniqueByte: .1}}
+	request.NetworkTopology.Metadata["workspaceMaterializationModel"] = model
+	observedSearch, err := newCompactPRISMContext(request, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	observed, err := evaluateCompleteCompactPRISMState(observedSearch, compactPRISMStateFromEvaluation(compactPRISMState{}, assignments, 0, 0))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if math.Abs(observed.makespan-33) > 1e-8 {
+		t.Fatalf("input union observation must add 20 seconds once, got %g", observed.makespan)
+	}
+	model.InputObservationProfiles = nil
+	return model, request
 }

@@ -54,49 +54,7 @@ func prepareClassHoldout(template, calibration Object, target, runID, planID str
 	profiles, err := workflow.CompleteSpeedupProfiles(typed.Workflow.Activities, typed.Resources, typed.ActivityProfiles)
 	check(err == nil, "cannot complete compute estimates")
 	out["ActivityProfiles"] = profiles
-	nodes := map[string]bool{}
-	indegree := map[string]int{}
-	successors := map[string][]string{}
-	edges := map[string]bool{}
-	for _, a := range typed.Workflow.Activities {
-		nodes[a.ID] = true
-		indegree[a.ID] = 0
-	}
-	add := func(parent, child string) {
-		check(nodes[parent] && nodes[child], "unknown dependency")
-		key := parent + "\x00" + child
-		if !edges[key] {
-			edges[key] = true
-			indegree[child]++
-			successors[parent] = append(successors[parent], child)
-		}
-	}
-	for _, d := range typed.Workflow.Dependencies {
-		add(d.DependsOnActivityID, d.ActivityID)
-	}
-	for _, d := range typed.Workflow.DataDependencies {
-		add(d.ProducerActivityID, d.ConsumerActivityID)
-	}
-	ordered := []string{}
-	ready := []string{}
-	for id, n := range indegree {
-		if n == 0 {
-			ready = append(ready, id)
-		}
-	}
-	for len(ready) > 0 {
-		sort.Strings(ready)
-		id := ready[0]
-		ready = ready[1:]
-		ordered = append(ordered, id)
-		for _, child := range successors[id] {
-			indegree[child]--
-			if indegree[child] == 0 {
-				ready = append(ready, child)
-			}
-		}
-	}
-	check(len(ordered) == len(nodes), "cyclic workflow cannot be serialized")
+	ordered := orderedHoldoutActivities(typed.Workflow)
 	assignments := []any{}
 	for i, id := range ordered {
 		assignments = append(assignments, Object{"id": planID + "-" + id, "planId": planID, "activityId": id, "resourceId": target, "coreId": target + "-core-1", "orderOnResource": i, "metadata": Object{"containerOverheadSeconds": fixed}})
@@ -124,4 +82,51 @@ func prepareClassHoldout(template, calibration Object, target, runID, planID str
 	out["Run"] = Object{"id": runID, "schedulePlanId": planID, "mode": "simulation", "seed": 1}
 	out["RuntimeAllocations"] = Object{}
 	return out
+}
+
+func orderedHoldoutActivities(version workflow.WorkflowVersion) []string {
+	nodes := map[string]bool{}
+	indegree := map[string]int{}
+	successors := map[string][]string{}
+	edges := map[string]bool{}
+	for _, a := range version.Activities {
+		nodes[a.ID] = true
+		indegree[a.ID] = 0
+	}
+	add := func(parent, child string) {
+		check(nodes[parent] && nodes[child], "unknown dependency")
+		key := parent + "\x00" + child
+		if !edges[key] {
+			edges[key] = true
+			indegree[child]++
+			successors[parent] = append(successors[parent], child)
+		}
+	}
+	for _, d := range version.Dependencies {
+		add(d.DependsOnActivityID, d.ActivityID)
+	}
+	for _, d := range version.DataDependencies {
+		add(d.ProducerActivityID, d.ConsumerActivityID)
+	}
+	ordered := []string{}
+	ready := []string{}
+	for id, n := range indegree {
+		if n == 0 {
+			ready = append(ready, id)
+		}
+	}
+	for len(ready) > 0 {
+		sort.Strings(ready)
+		id := ready[0]
+		ready = ready[1:]
+		ordered = append(ordered, id)
+		for _, child := range successors[id] {
+			indegree[child]--
+			if indegree[child] == 0 {
+				ready = append(ready, child)
+			}
+		}
+	}
+	check(len(ordered) == len(nodes), "cyclic workflow cannot be serialized")
+	return ordered
 }

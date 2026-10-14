@@ -30,6 +30,50 @@ func prepareRequests(args []string) {
 	workflow := obj(get(baseline, "workflow"))
 	sourceActivities := rows(get(workflow, "activities"))
 	check(len(sourceActivities) == 58, "Expected complete Montage58")
+	activities := measuredWorkflowImportActivities(sourceActivities, workflow, p, compute, workflowName)
+	save("workflow-import", Object{"name": workflowName, "spec": Object{"namespace": "montage-measured-20261011", "activities": activities}})
+	relay := Object{
+		"id":                   get(materialization, "relayResourceId"),
+		"environmentVersionId": get(obj(get(gcp, "version")), "id"),
+		"name":                 "Existing Akoflow relay controller (model-only, not schedulable)",
+		"type":                 "local_machine",
+		"cpuCores":             8,
+		"cpuCapacity":          8,
+		"memoryBytes":          int64(8) * 1024 * 1024 * 1024,
+		"computeSpeedup":       1,
+		"schedulable":          false,
+		"metadata":             Object{"modelOnly": true, "role": "transfer-relay", "provision": false},
+	}
+	save("relay-resource", relay)
+	prepareMeasuredNetwork(network, materialization, relay, revision)
+	scope["id"] = "montage-reference-scope-20261011-" + revision
+	scope["networkTopologyId"] = network["id"]
+	network["executionScopeId"] = scope["id"]
+	save("scope", scope)
+	save("network", network)
+	units := "reference-work-v1"
+	if p["activityComputeWork"] != nil {
+		units = "compute-work-v1"
+	}
+	save("planning-session", Object{
+		"id":                envDefault("MONTAGE_PLANNING_ID", "montage-reference-planning-20261011-v2"),
+		"workflowVersionId": workflowName + "-v1",
+		"executionScopeId":  scope["id"],
+		"networkTopologyId": network["id"],
+		"algorithms":        []any{Object{"id": "prism-time", "configuration": Object{"requireMeasuredProfiles": true}}},
+		"configuration": Object{
+			"calibrationSource":                         compute["source"],
+			"observeWorkspaceStorageBudgets":            true,
+			"activityProfileSnapshot":                   compute["activityProfiles"],
+			"requireMeasuredProfiles":                   true,
+			"computeCalibrationUnits":                   units,
+			"computeCalibrationIncludesPhysicalSharing": true,
+			"additionalPairwiseSlowdown":                "not-applied-to-contention-conditioned-wall-profiles",
+		},
+	})
+}
+
+func measuredWorkflowImportActivities(sourceActivities []Object, workflow, p, compute Object, workflowName string) []any {
 	names := Object{}
 	for _, a := range sourceActivities {
 		names[str(a["id"])] = get(a, "name")
@@ -90,20 +134,10 @@ func prepareRequests(args []string) {
 			"resourceSelector":  selector,
 		})
 	}
-	save("workflow-import", Object{"name": workflowName, "spec": Object{"namespace": "montage-measured-20261011", "activities": activities}})
-	relay := Object{
-		"id":                   get(materialization, "relayResourceId"),
-		"environmentVersionId": get(obj(get(gcp, "version")), "id"),
-		"name":                 "Existing Akoflow relay controller (model-only, not schedulable)",
-		"type":                 "local_machine",
-		"cpuCores":             8,
-		"cpuCapacity":          8,
-		"memoryBytes":          int64(8) * 1024 * 1024 * 1024,
-		"computeSpeedup":       1,
-		"schedulable":          false,
-		"metadata":             Object{"modelOnly": true, "role": "transfer-relay", "provision": false},
-	}
-	save("relay-resource", relay)
+	return activities
+}
+
+func prepareMeasuredNetwork(network, materialization, relay Object, revision string) {
 	network["id"] = "montage-reference-network-20261011-" + revision
 	network["name"] = "Measured workspace materialization with explicit controller relay"
 	meta := obj(network["metadata"])
@@ -137,29 +171,4 @@ func prepareRequests(args []string) {
 		})
 	}
 	network["links"] = links
-	scope["id"] = "montage-reference-scope-20261011-" + revision
-	scope["networkTopologyId"] = network["id"]
-	network["executionScopeId"] = scope["id"]
-	save("scope", scope)
-	save("network", network)
-	units := "reference-work-v1"
-	if p["activityComputeWork"] != nil {
-		units = "compute-work-v1"
-	}
-	save("planning-session", Object{
-		"id":                envDefault("MONTAGE_PLANNING_ID", "montage-reference-planning-20261011-v2"),
-		"workflowVersionId": workflowName + "-v1",
-		"executionScopeId":  scope["id"],
-		"networkTopologyId": network["id"],
-		"algorithms":        []any{Object{"id": "prism-time", "configuration": Object{"requireMeasuredProfiles": true}}},
-		"configuration": Object{
-			"calibrationSource":                         compute["source"],
-			"observeWorkspaceStorageBudgets":            true,
-			"activityProfileSnapshot":                   compute["activityProfiles"],
-			"requireMeasuredProfiles":                   true,
-			"computeCalibrationUnits":                   units,
-			"computeCalibrationIncludesPhysicalSharing": true,
-			"additionalPairwiseSlowdown":                "not-applied-to-contention-conditioned-wall-profiles",
-		},
-	})
 }

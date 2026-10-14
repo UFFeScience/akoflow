@@ -28,14 +28,7 @@ func TestScopedPeerCredentialAuthenticatesWithOpenSSHServer(t *testing.T) {
 		t.Fatal(err)
 	}
 	t.Cleanup(func() { os.RemoveAll(root) })
-	write := func(name string, content []byte) string {
-		t.Helper()
-		path := filepath.Join(root, name)
-		if err := os.WriteFile(path, content, 0600); err != nil {
-			t.Fatal(err)
-		}
-		return path
-	}
+	write := peerSSHFixtureWriter(t, root)
 	hostPublic, hostPrivate, err := ephemeralSSHKey()
 	if err != nil {
 		t.Fatal(err)
@@ -76,6 +69,43 @@ func TestScopedPeerCredentialAuthenticatesWithOpenSSHServer(t *testing.T) {
 	}
 	defer func() { server.Process.Kill(); server.Wait() }()
 	address := fmt.Sprintf("127.0.0.1:%d", port)
+	awaitLoopbackSSHServer(t, address)
+	knownHosts := write("known_hosts", []byte("integration-host "+strings.TrimSpace(string(hostPublic))+"\n"))
+	current, err := user.Current()
+	if err != nil {
+		t.Fatal(err)
+	}
+	args := scopedLoopbackSSHArguments(port, clientKey, knownHosts, current.Username)
+	output, err := exec.Command("ssh", args...).CombinedOutput()
+	if err != nil || string(output) != "AUTHORIZED" {
+		serverLog, _ := os.ReadFile(filepath.Join(root, "server-log"))
+		t.Fatalf("scoped authorization rejected or command not forced: %v %s; server: %s", err, output, serverLog)
+	}
+	expired, err := scopedDirectAuthorizedKey(clientPublic, "integration-token", "printf '%s' AUTHORIZED", time.Now().Add(-time.Minute))
+	if err != nil {
+		t.Fatal(err)
+	}
+	write("authorized_keys", []byte(expired+"\n"))
+	output, err = exec.Command("ssh", args...).CombinedOutput()
+	if err == nil || !strings.Contains(string(output), "Permission denied") {
+		t.Fatalf("expired authorization must be rejected: %v %s", err, output)
+	}
+}
+
+func peerSSHFixtureWriter(t *testing.T, root string) func(string, []byte) string {
+	t.Helper()
+	return func(name string, content []byte) string {
+		t.Helper()
+		path := filepath.Join(root, name)
+		if err := os.WriteFile(path, content, 0600); err != nil {
+			t.Fatal(err)
+		}
+		return path
+	}
+}
+
+func awaitLoopbackSSHServer(t *testing.T, address string) {
+	t.Helper()
 	deadline := time.Now().Add(5 * time.Second)
 	for {
 		conn, err := net.DialTimeout("tcp", address, 100*time.Millisecond)
@@ -88,12 +118,10 @@ func TestScopedPeerCredentialAuthenticatesWithOpenSSHServer(t *testing.T) {
 		}
 		time.Sleep(10 * time.Millisecond)
 	}
-	knownHosts := write("known_hosts", []byte("integration-host "+strings.TrimSpace(string(hostPublic))+"\n"))
-	current, err := user.Current()
-	if err != nil {
-		t.Fatal(err)
-	}
-	args := []string{
+}
+
+func scopedLoopbackSSHArguments(port int, clientKey, knownHosts, username string) []string {
+	return []string{
 		"-F",
 		"/dev/null",
 		"-p",
@@ -112,21 +140,7 @@ func TestScopedPeerCredentialAuthenticatesWithOpenSSHServer(t *testing.T) {
 		"UserKnownHostsFile=" + knownHosts,
 		"-o",
 		"ConnectTimeout=3",
-		current.Username + "@127.0.0.1",
+		username + "@127.0.0.1",
 		"printf '%s' UNAUTHORIZED",
-	}
-	output, err := exec.Command("ssh", args...).CombinedOutput()
-	if err != nil || string(output) != "AUTHORIZED" {
-		serverLog, _ := os.ReadFile(filepath.Join(root, "server-log"))
-		t.Fatalf("scoped authorization rejected or command not forced: %v %s; server: %s", err, output, serverLog)
-	}
-	expired, err := scopedDirectAuthorizedKey(clientPublic, "integration-token", "printf '%s' AUTHORIZED", time.Now().Add(-time.Minute))
-	if err != nil {
-		t.Fatal(err)
-	}
-	write("authorized_keys", []byte(expired+"\n"))
-	output, err = exec.Command("ssh", args...).CombinedOutput()
-	if err == nil || !strings.Contains(string(output), "Permission denied") {
-		t.Fatalf("expired authorization must be rejected: %v %s", err, output)
 	}
 }

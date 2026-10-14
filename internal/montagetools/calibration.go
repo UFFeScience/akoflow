@@ -22,148 +22,9 @@ func calibration(data Object, d string, projection Object) Object {
 	activities := rows(data["activities"])
 	indexed := index(data["activities"], "activity_id")
 	work := obj(projection["activityComputeWork"])
-	computeRows := []Object{}
-	for _, a := range activities {
-		p := family(str(a["activity_id"]))
-		if len(work) > 0 {
-			p = str(get(obj(get(work, str(a["activity_id"]))), "activityFamily"))
-		}
-		r := clone(a)
-		r["family"] = p
-		r["class"] = resourceClass(str(a["resource_id"]))
-		computeRows = append(computeRows, r)
-	}
-	compute := []any{}
-	for _, g := range groups(computeRows, "family", "class") {
-		times, normalized := []any{}, []any{}
-		fallback := 0
-		for _, a := range g.rows {
-			runtime := a["validated_handle_runtime_seconds"]
-			if runtime == nil {
-				runtime = get(a, "observed_runtime_seconds")
-				fallback++
-			}
-			times = append(times, runtime)
-			if projection != nil {
-				reference := num(get(obj(get(projection, "activityReferenceDurations")), str(a["activity_id"])))
-				if len(work) > 0 {
-					reference = num(get(obj(get(work, str(a["activity_id"]))), "computeWorkUnits"))
-				}
-				check(reference > 0, "Invalid reference work")
-				normalized = append(normalized, num(runtime)/reference)
-			}
-		}
-		compute = append(compute, Object{
-			"activityFamily":                g.key[0],
-			"resourceClass":                 g.key[1],
-			"runtimeSeconds":                summary(times),
-			"taskRuntimeFallbackSamples":    fallback,
-			"wallSecondsPerReferenceSecond": summary(normalized),
-			"interpretation":                "observed wall runtime; includes physical sharing, not clean CPU service demand",
-		})
-	}
-	phases := []Object{}
-	for _, r := range rows(get(data, "routes")) {
-		if r["producer_activity_id"] == nil {
-			continue
-		}
-		producer := str(r["producer_activity_id"])
-		source := obj(get(indexed, producer))
-		target := obj(get(indexed, str(r["consumer_activity_id"])))
-		for _, p := range rows(get(r, "phases")) {
-			name := str(get(p, "name"))
-			if strings.HasPrefix(name, "shared-") {
-				continue
-			}
-			seconds := get(p, "durationSeconds")
-			basis := "combined-phase-wall-includes-unseparated-service-queue"
-			var phaseWait, sourceWait any
-			measured := name == "pack-and-receive" && r["source_pack_execution_seconds"] != nil
-			if measured {
-				seconds = r["source_pack_execution_seconds"]
-				sourceWait = num(r["source_pack_ssh_channel_wait_seconds"])
-				basis = "source-command-execution-excludes-channel-queue"
-			}
-			if name == "archive-upload" && r["rsync_execution_seconds"] != nil {
-				seconds = r["rsync_execution_seconds"]
-				phaseWait = num(r["ssh_channel_wait_seconds"])
-				basis = "phase-command-execution-excludes-channel-queue"
-			}
-			if p["executionSeconds"] != nil {
-				seconds = p["executionSeconds"]
-				phaseWait = num(p["sshChannelWaitSeconds"])
-				basis = "phase-command-execution-excludes-channel-queue"
-			}
-			var workspace, preflightWait any
-			if projection != nil {
-				workspace = get(obj(get(projection, "observedProducerWorkspaceBytes")), producer)
-			}
-			if r["source_pack_preflight_service_seconds"] != nil {
-				preflightWait = num(r["source_pack_preflight_ssh_channel_wait_seconds"])
-			}
-			phases = append(phases, Object{
-				"strategy":                          get(r, "strategy"),
-				"sourceClass":                       resourceClass(str(source["resource_id"])),
-				"targetClass":                       resourceClass(str(target["resource_id"])),
-				"phase":                             name,
-				"seconds":                           seconds,
-				"secondsBasis":                      basis,
-				"phaseChannelWaitSeconds":           phaseWait,
-				"sourceChannelWaitSeconds":          sourceWait,
-				"sourcePreflightServiceSeconds":     r["source_pack_preflight_service_seconds"],
-				"sourcePreflightChannelWaitSeconds": preflightWait,
-				"sourcePreflightSeconds":            r["source_pack_preflight_seconds"],
-				"logicalBytes":                      r["logical_bytes"],
-				"archiveBytes":                      r["archive_bytes"],
-				"files":                             r["files"],
-				"workspaceBytes":                    workspace,
-			})
-		}
-	}
-	observations := []any{}
-	for _, g := range groups(phases, "strategy", "sourceClass", "targetClass", "phase") {
-		bases := Object{}
-		ratio, workspaceRate, archiveRate := []any{}, []any{}, []any{}
-		for _, p := range g.rows {
-			bases[str(p["secondsBasis"])] = true
-			if p["archiveBytes"] != nil && num(p["workspaceBytes"]) > 0 {
-				ratio = append(ratio, num(p["archiveBytes"])/num(p["workspaceBytes"]))
-			}
-			if num(p["seconds"]) > 0 {
-				if p["workspaceBytes"] != nil {
-					workspaceRate = append(workspaceRate, num(p["workspaceBytes"])/num(p["seconds"]))
-				}
-				if p["archiveBytes"] != nil {
-					archiveRate = append(archiveRate, num(p["archiveBytes"])/num(p["seconds"]))
-				}
-			}
-		}
-		row := Object{
-			"strategy":                         g.key[0],
-			"sourceClass":                      g.key[1],
-			"targetClass":                      g.key[2],
-			"phase":                            g.key[3],
-			"seconds":                          summary(vals(g.rows, "seconds")),
-			"secondsBases":                     list(sortedKeys(bases)...),
-			"pooledArchiveServiceRate":         pooledRate(g.rows, "archiveBytes"),
-			"pooledWorkspaceServiceRate":       pooledRate(g.rows, "workspaceBytes"),
-			"phaseChannelWaitSeconds":          summary(vals(g.rows, "phaseChannelWaitSeconds")),
-			"archiveToWorkspaceRatio":          summary(ratio),
-			"effectiveWorkspaceBytesPerSecond": summary(workspaceRate),
-			"effectiveArchiveBytesPerSecond":   summary(archiveRate),
-			"interpretation":                   "concurrency-conditioned effective phase rates; not isolated link bandwidth",
-		}
-		for _, k := range []string{"sourceChannelWaitSeconds", "sourcePreflightSeconds", "sourcePreflightServiceSeconds", "sourcePreflightChannelWaitSeconds"} {
-			row[k] = nil
-			if g.key[3] == "pack-and-receive" {
-				row[k] = summary(vals(g.rows, k))
-			}
-		}
-		for _, k := range []string{"logicalBytes", "archiveBytes", "workspaceBytes", "files"} {
-			row[k] = summary(vals(g.rows, k))
-		}
-		observations = append(observations, row)
-	}
+	compute := calibrateComputeObservations(activities, work, projection)
+	phases := calibrationPhaseSamples(data, indexed, projection)
+	observations := calibratePhaseObservations(phases)
 	mergeRows := []Object{}
 	for _, p := range rows(get(data, "shared_preparations")) {
 		r := clone(p)
@@ -235,4 +96,158 @@ func calibration(data Object, d string, projection Object) Object {
 			"Compute samples are contention-conditioned; do not apply interference slowdown a second time.",
 		),
 	}
+}
+
+func calibrateComputeObservations(activities []Object, work, projection Object) []any {
+	computeRows := []Object{}
+	for _, a := range activities {
+		p := family(str(a["activity_id"]))
+		if len(work) > 0 {
+			p = str(get(obj(get(work, str(a["activity_id"]))), "activityFamily"))
+		}
+		r := clone(a)
+		r["family"] = p
+		r["class"] = resourceClass(str(a["resource_id"]))
+		computeRows = append(computeRows, r)
+	}
+	compute := []any{}
+	for _, g := range groups(computeRows, "family", "class") {
+		times, normalized := []any{}, []any{}
+		fallback := 0
+		for _, a := range g.rows {
+			runtime := a["validated_handle_runtime_seconds"]
+			if runtime == nil {
+				runtime = get(a, "observed_runtime_seconds")
+				fallback++
+			}
+			times = append(times, runtime)
+			if projection != nil {
+				reference := num(get(obj(get(projection, "activityReferenceDurations")), str(a["activity_id"])))
+				if len(work) > 0 {
+					reference = num(get(obj(get(work, str(a["activity_id"]))), "computeWorkUnits"))
+				}
+				check(reference > 0, "Invalid reference work")
+				normalized = append(normalized, num(runtime)/reference)
+			}
+		}
+		compute = append(compute, Object{
+			"activityFamily":                g.key[0],
+			"resourceClass":                 g.key[1],
+			"runtimeSeconds":                summary(times),
+			"taskRuntimeFallbackSamples":    fallback,
+			"wallSecondsPerReferenceSecond": summary(normalized),
+			"interpretation":                "observed wall runtime; includes physical sharing, not clean CPU service demand",
+		})
+	}
+	return compute
+}
+
+func calibrationPhaseSamples(data, indexed, projection Object) []Object {
+	phases := []Object{}
+	for _, r := range rows(get(data, "routes")) {
+		if r["producer_activity_id"] == nil {
+			continue
+		}
+		producer := str(r["producer_activity_id"])
+		source := obj(get(indexed, producer))
+		target := obj(get(indexed, str(r["consumer_activity_id"])))
+		for _, p := range rows(get(r, "phases")) {
+			name := str(get(p, "name"))
+			if strings.HasPrefix(name, "shared-") {
+				continue
+			}
+			seconds := get(p, "durationSeconds")
+			basis := "combined-phase-wall-includes-unseparated-service-queue"
+			var phaseWait, sourceWait any
+			measured := name == "pack-and-receive" && r["source_pack_execution_seconds"] != nil
+			if measured {
+				seconds = r["source_pack_execution_seconds"]
+				sourceWait = num(r["source_pack_ssh_channel_wait_seconds"])
+				basis = "source-command-execution-excludes-channel-queue"
+			}
+			if name == "archive-upload" && r["rsync_execution_seconds"] != nil {
+				seconds = r["rsync_execution_seconds"]
+				phaseWait = num(r["ssh_channel_wait_seconds"])
+				basis = "phase-command-execution-excludes-channel-queue"
+			}
+			if p["executionSeconds"] != nil {
+				seconds = p["executionSeconds"]
+				phaseWait = num(p["sshChannelWaitSeconds"])
+				basis = "phase-command-execution-excludes-channel-queue"
+			}
+			var workspace, preflightWait any
+			if projection != nil {
+				workspace = get(obj(get(projection, "observedProducerWorkspaceBytes")), producer)
+			}
+			if r["source_pack_preflight_service_seconds"] != nil {
+				preflightWait = num(r["source_pack_preflight_ssh_channel_wait_seconds"])
+			}
+			phases = append(phases, Object{
+				"strategy":                          get(r, "strategy"),
+				"sourceClass":                       resourceClass(str(source["resource_id"])),
+				"targetClass":                       resourceClass(str(target["resource_id"])),
+				"phase":                             name,
+				"seconds":                           seconds,
+				"secondsBasis":                      basis,
+				"phaseChannelWaitSeconds":           phaseWait,
+				"sourceChannelWaitSeconds":          sourceWait,
+				"sourcePreflightServiceSeconds":     r["source_pack_preflight_service_seconds"],
+				"sourcePreflightChannelWaitSeconds": preflightWait,
+				"sourcePreflightSeconds":            r["source_pack_preflight_seconds"],
+				"logicalBytes":                      r["logical_bytes"],
+				"archiveBytes":                      r["archive_bytes"],
+				"files":                             r["files"],
+				"workspaceBytes":                    workspace,
+			})
+		}
+	}
+	return phases
+}
+
+func calibratePhaseObservations(phases []Object) []any {
+	observations := []any{}
+	for _, g := range groups(phases, "strategy", "sourceClass", "targetClass", "phase") {
+		bases := Object{}
+		ratio, workspaceRate, archiveRate := []any{}, []any{}, []any{}
+		for _, p := range g.rows {
+			bases[str(p["secondsBasis"])] = true
+			if p["archiveBytes"] != nil && num(p["workspaceBytes"]) > 0 {
+				ratio = append(ratio, num(p["archiveBytes"])/num(p["workspaceBytes"]))
+			}
+			if num(p["seconds"]) > 0 {
+				if p["workspaceBytes"] != nil {
+					workspaceRate = append(workspaceRate, num(p["workspaceBytes"])/num(p["seconds"]))
+				}
+				if p["archiveBytes"] != nil {
+					archiveRate = append(archiveRate, num(p["archiveBytes"])/num(p["seconds"]))
+				}
+			}
+		}
+		row := Object{
+			"strategy":                         g.key[0],
+			"sourceClass":                      g.key[1],
+			"targetClass":                      g.key[2],
+			"phase":                            g.key[3],
+			"seconds":                          summary(vals(g.rows, "seconds")),
+			"secondsBases":                     list(sortedKeys(bases)...),
+			"pooledArchiveServiceRate":         pooledRate(g.rows, "archiveBytes"),
+			"pooledWorkspaceServiceRate":       pooledRate(g.rows, "workspaceBytes"),
+			"phaseChannelWaitSeconds":          summary(vals(g.rows, "phaseChannelWaitSeconds")),
+			"archiveToWorkspaceRatio":          summary(ratio),
+			"effectiveWorkspaceBytesPerSecond": summary(workspaceRate),
+			"effectiveArchiveBytesPerSecond":   summary(archiveRate),
+			"interpretation":                   "concurrency-conditioned effective phase rates; not isolated link bandwidth",
+		}
+		for _, k := range []string{"sourceChannelWaitSeconds", "sourcePreflightSeconds", "sourcePreflightServiceSeconds", "sourcePreflightChannelWaitSeconds"} {
+			row[k] = nil
+			if g.key[3] == "pack-and-receive" {
+				row[k] = summary(vals(g.rows, k))
+			}
+		}
+		for _, k := range []string{"logicalBytes", "archiveBytes", "workspaceBytes", "files"} {
+			row[k] = summary(vals(g.rows, k))
+		}
+		observations = append(observations, row)
+	}
+	return observations
 }

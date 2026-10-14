@@ -36,15 +36,7 @@ func runtimeReferenceCoverage(references []Object) Object {
 			completed++
 			runtimeID, _ := t["runtimeId"].(string)
 			resource, _ := t["allocatedResourceId"].(string)
-			class := "unclassified"
-			switch {
-			case strings.Contains(resource, "fog-e2-micro"):
-				class = "e2-micro"
-			case strings.Contains(resource, "e2-medium"):
-				class = "e2-medium"
-			case strings.Contains(resource, "bora") || strings.Contains(resource, "diablo"):
-				class = "hpc"
-			}
+			class := referenceResourceClass(resource)
 			key := runtimeID + "/" + class
 			if groups[key] == nil {
 				groups[key] = Object{"runtimeId": runtimeID, "resourceClass": class, "completedActivities": 0, "singleHandleActivities": 0, "scanTelemetrySamples": 0, "nativeAdmissionSamples": 0}
@@ -91,5 +83,18 @@ func runtimeReferenceCoverage(references []Object) Object {
 			"Recovered references may supply single-attempt stage samples but not a clean whole-run makespan.",
 			"Unknown resources remain explicitly unclassified rather than receiving borrowed coefficients.",
 		),
+	}
+}
+
+func referenceResourceClass(resource string) string {
+	switch {
+	case strings.Contains(resource, "fog-e2-micro"):
+		return "e2-micro"
+	case strings.Contains(resource, "e2-medium"):
+		return "e2-medium"
+	case strings.Contains(resource, "bora") || strings.Contains(resource, "diablo"):
+		return "hpc"
+	default:
+		return "unclassified"
 	}
 }

@@ -77,45 +77,10 @@ func Check(version workflow.WorkflowVersion, resources []resource.Resource, assi
 }
 
 func check(version workflow.WorkflowVersion, resources []resource.Resource, assignments map[string]string, timings map[string]Timing) ([]Reservation, []string, error) {
-	byID := map[string]resource.Resource{}
-	types := map[string]string{}
-	budgets := map[string]Snapshot{}
-	for _, r := range resources {
-		byID[r.ID] = r
+	byID, types, budgets, missingIDs, err := storageBudgetSnapshots(resources, assignments)
+	if err != nil {
+		return nil, nil, err
 	}
-	missing := map[string]bool{}
-	for activity, id := range assignments {
-		r, ok := byID[id]
-		if !ok {
-			return nil, nil, fmt.Errorf("storage budget: unknown resource %s", id)
-		}
-		types[activity] = string(r.Type)
-		raw := r.Metadata["workspaceStorageBudget"]
-		if raw == nil {
-			missing[id] = true
-			continue
-		}
-		payload, err := json.Marshal(raw)
-		if err != nil {
-			return nil, nil, err
-		}
-		var b Snapshot
-		if err := json.Unmarshal(payload, &b); err != nil {
-			return nil, nil, fmt.Errorf("storage budget %s: %w", id, err)
-		}
-		if b.StorageID == "" || b.Source == "" || b.ObservedAt.IsZero() || b.AvailableBytes < 0 {
-			return nil, nil, fmt.Errorf("storage budget %s requires storage identity, source, observation and nonnegative available bytes", id)
-		}
-		if previous, ok := budgets[b.StorageID]; ok && previous != b {
-			return nil, nil, fmt.Errorf("inconsistent quota snapshots for shared storage %s", b.StorageID)
-		}
-		budgets[b.StorageID] = b
-	}
-	missingIDs := []string{}
-	for id := range missing {
-		missingIDs = append(missingIDs, id)
-	}
-	sort.Strings(missingIDs)
 	if len(budgets) == 0 {
 		return nil, missingIDs, nil
 	}
@@ -138,120 +103,16 @@ func check(version workflow.WorkflowVersion, resources []resource.Resource, assi
 	if err != nil {
 		return nil, missingIDs, err
 	}
-	reserved := map[string]int64{}
 	edges := append([]workflow.ActivityDependency(nil), version.Dependencies...)
 	for _, d := range version.DataDependencies {
 		edges = append(edges, workflow.ActivityDependency{ActivityID: d.ConsumerActivityID, DependsOnActivityID: d.ProducerActivityID})
 	}
-	type event struct {
-		at    float64
-		bytes int64
+	reserved, events, err := reserveProjectedStorage(projected, byID, assignments, timings, edges)
+	if err != nil {
+		return nil, missingIDs, err
 	}
-	events := map[string][]event{}
-	for _, activity := range projected.Activities {
-		r := byID[assignments[activity.ID]]
-		if r.Metadata["workspaceStorageBudget"] == nil {
-			continue
-		}
-		payload, _ := json.Marshal(r.Metadata["workspaceStorageBudget"])
-		var b Snapshot
-		_ = json.Unmarshal(payload, &b)
-		var volume workflow.WorkspaceProjectionVolumes
-		if activity.Metadata["workspaceProjectionVolumes"] == nil {
-			return nil, missingIDs, fmt.Errorf("storage budget needs whole-workspace projection for %s", activity.ID)
-		}
-		payload, err := json.Marshal(activity.Metadata["workspaceProjectionVolumes"])
-		if err != nil {
-			return nil, missingIDs, err
-		}
-		if err = json.Unmarshal(payload, &volume); err != nil {
-			return nil, missingIDs, err
-		}
-		// Both archive and received/extracted inputs may coexist with the merged
-		// consumer and producer workspaces. Never account the same quota per node.
-		workspaceBytes := int64(0)
-		for _, bytes := range []int64{volume.PreExecutionBytes, volume.CreatedOutputBytes} {
-			if bytes < 0 || bytes > math.MaxInt64-workspaceBytes {
-				return nil, missingIDs, fmt.Errorf("storage reservation overflow")
-			}
-			workspaceBytes += bytes
-		}
-		bytesToReserve := []int64{workspaceBytes, volume.InputTotalBytes, volume.InputTotalBytes}
-		if timings != nil {
-			// Start preparation at the earliest predecessor completion (or zero
-			// for roots), conservatively before the consumer command starts.
-			begin, end, hasParent, hasConsumer := float64(0), timings[activity.ID].Finish, false, false
-			for _, d := range edges {
-				if d.ActivityID == activity.ID {
-					parent, ok := timings[d.DependsOnActivityID]
-					if !ok || parent.Finish > timings[activity.ID].Start {
-						return nil, missingIDs, fmt.Errorf("noncausal storage schedule for %s", activity.ID)
-					}
-					if !hasParent || parent.Finish < begin {
-						begin = parent.Finish
-					}
-					hasParent = true
-				}
-				if d.DependsOnActivityID == activity.ID {
-					consumer, ok := timings[d.ActivityID]
-					if !ok {
-						return nil, missingIDs, fmt.Errorf("missing storage consumer %s", d.ActivityID)
-					}
-					end = math.Max(end, consumer.Start)
-					hasConsumer = true
-				}
-			}
-			rolling, _ := r.Metadata["workspaceStorageLifecycle"].(string)
-			if rolling == "consumer-barrier-v1" {
-				// Runtime removes preparation scratch before successful preparation
-				// returns, then releases producer leases before starting commands.
-				// Keep scratch until the command barrier conservatively; leaves are
-				// retained from creation, not incorrectly allocated at run time zero.
-				events[b.StorageID] = append(events[b.StorageID], event{begin, workspaceBytes})
-				if hasConsumer {
-					events[b.StorageID] = append(events[b.StorageID], event{end, -workspaceBytes})
-				}
-				for _, staging := range bytesToReserve[1:] {
-					if staging < 0 {
-						return nil, missingIDs, fmt.Errorf("negative staging reservation")
-					}
-					events[b.StorageID] = append(events[b.StorageID], event{begin, staging}, event{timings[activity.ID].Start, -staging})
-				}
-				bytesToReserve = nil
-			} else if hasConsumer {
-				events[b.StorageID] = append(events[b.StorageID], event{begin, workspaceBytes}, event{end, -workspaceBytes})
-				bytesToReserve = bytesToReserve[1:]
-			}
-			// Leaves remain retained; no final-product pruning/export assumed.
-		}
-		for _, bytes := range bytesToReserve {
-			if bytes < 0 || bytes > math.MaxInt64-reserved[b.StorageID] {
-				return nil, missingIDs, fmt.Errorf("storage reservation overflow")
-			}
-			reserved[b.StorageID] += bytes
-		}
-	}
-	for id, list := range events {
-		sort.Slice(list, func(i, j int) bool {
-			if list[i].at == list[j].at {
-				return list[i].bytes > list[j].bytes
-			}
-			return list[i].at < list[j].at
-		})
-		current, peak := reserved[id], reserved[id]
-		for _, e := range list {
-			if e.bytes > 0 && e.bytes > math.MaxInt64-current {
-				return nil, missingIDs, fmt.Errorf("storage reservation overflow")
-			}
-			current += e.bytes
-			if current < 0 {
-				return nil, missingIDs, fmt.Errorf("negative storage reservation")
-			}
-			if current > peak {
-				peak = current
-			}
-		}
-		reserved[id] = peak
+	if err := accumulateStoragePeaks(reserved, events); err != nil {
+		return nil, missingIDs, err
 	}
 	ids := []string{}
 	for id := range budgets {
@@ -269,4 +130,183 @@ func check(version workflow.WorkflowVersion, resources []resource.Resource, assi
 		}
 	}
 	return result, missingIDs, nil
+}
+
+func storageBudgetSnapshots(resources []resource.Resource, assignments map[string]string) (map[string]resource.Resource, map[string]string, map[string]Snapshot, []string, error) {
+	byID := map[string]resource.Resource{}
+	types := map[string]string{}
+	budgets := map[string]Snapshot{}
+	for _, r := range resources {
+		byID[r.ID] = r
+	}
+	missing := map[string]bool{}
+	for activity, id := range assignments {
+		r, ok := byID[id]
+		if !ok {
+			return nil, nil, nil, nil, fmt.Errorf("storage budget: unknown resource %s", id)
+		}
+		types[activity] = string(r.Type)
+		raw := r.Metadata["workspaceStorageBudget"]
+		if raw == nil {
+			missing[id] = true
+			continue
+		}
+		payload, err := json.Marshal(raw)
+		if err != nil {
+			return nil, nil, nil, nil, err
+		}
+		var b Snapshot
+		if err := json.Unmarshal(payload, &b); err != nil {
+			return nil, nil, nil, nil, fmt.Errorf("storage budget %s: %w", id, err)
+		}
+		if b.StorageID == "" || b.Source == "" || b.ObservedAt.IsZero() || b.AvailableBytes < 0 {
+			return nil, nil, nil, nil, fmt.Errorf("storage budget %s requires storage identity, source, observation and nonnegative available bytes", id)
+		}
+		if previous, ok := budgets[b.StorageID]; ok && previous != b {
+			return nil, nil, nil, nil, fmt.Errorf("inconsistent quota snapshots for shared storage %s", b.StorageID)
+		}
+		budgets[b.StorageID] = b
+	}
+	missingIDs := []string{}
+	for id := range missing {
+		missingIDs = append(missingIDs, id)
+	}
+	sort.Strings(missingIDs)
+	return byID, types, budgets, missingIDs, nil
+}
+
+type storageReservationEvent struct {
+	at    float64
+	bytes int64
+}
+
+func addTimedStorageReservation(
+	activityID string, r resource.Resource, b Snapshot,
+	workspaceBytes int64, bytesToReserve []int64, timings map[string]Timing,
+	edges []workflow.ActivityDependency, storageReservationEvents map[string][]storageReservationEvent,
+) ([]int64, error) {
+	// Start preparation at the earliest predecessor completion (or zero
+	// for roots), conservatively before the consumer command starts.
+	begin, end, hasParent, hasConsumer := float64(0), timings[activityID].Finish, false, false
+	for _, d := range edges {
+		if d.ActivityID == activityID {
+			parent, ok := timings[d.DependsOnActivityID]
+			if !ok || parent.Finish > timings[activityID].Start {
+				return nil, fmt.Errorf("noncausal storage schedule for %s", activityID)
+			}
+			if !hasParent || parent.Finish < begin {
+				begin = parent.Finish
+			}
+			hasParent = true
+		}
+		if d.DependsOnActivityID == activityID {
+			consumer, ok := timings[d.ActivityID]
+			if !ok {
+				return nil, fmt.Errorf("missing storage consumer %s", d.ActivityID)
+			}
+			end = math.Max(end, consumer.Start)
+			hasConsumer = true
+		}
+	}
+	rolling, _ := r.Metadata["workspaceStorageLifecycle"].(string)
+	if rolling == "consumer-barrier-v1" {
+		// Runtime removes preparation scratch before successful preparation
+		// returns, then releases producer leases before starting commands.
+		// Keep scratch until the command barrier conservatively; leaves are
+		// retained from creation, not incorrectly allocated at run time zero.
+		storageReservationEvents[b.StorageID] = append(storageReservationEvents[b.StorageID], storageReservationEvent{begin, workspaceBytes})
+		if hasConsumer {
+			storageReservationEvents[b.StorageID] = append(storageReservationEvents[b.StorageID], storageReservationEvent{end, -workspaceBytes})
+		}
+		for _, staging := range bytesToReserve[1:] {
+			if staging < 0 {
+				return nil, fmt.Errorf("negative staging reservation")
+			}
+			storageReservationEvents[b.StorageID] = append(storageReservationEvents[b.StorageID], storageReservationEvent{begin, staging}, storageReservationEvent{timings[activityID].Start, -staging})
+		}
+		bytesToReserve = nil
+	} else if hasConsumer {
+		storageReservationEvents[b.StorageID] = append(storageReservationEvents[b.StorageID], storageReservationEvent{begin, workspaceBytes}, storageReservationEvent{end, -workspaceBytes})
+		bytesToReserve = bytesToReserve[1:]
+	}
+	// Leaves remain retained; no final-product pruning/export assumed.
+	return bytesToReserve, nil
+}
+
+func reserveProjectedStorage(
+	projected workflow.WorkflowVersion, byID map[string]resource.Resource,
+	assignments map[string]string, timings map[string]Timing, edges []workflow.ActivityDependency,
+) (map[string]int64, map[string][]storageReservationEvent, error) {
+	reserved := map[string]int64{}
+	storageReservationEvents := map[string][]storageReservationEvent{}
+	for _, activity := range projected.Activities {
+		r := byID[assignments[activity.ID]]
+		if r.Metadata["workspaceStorageBudget"] == nil {
+			continue
+		}
+		payload, _ := json.Marshal(r.Metadata["workspaceStorageBudget"])
+		var b Snapshot
+		_ = json.Unmarshal(payload, &b)
+		var volume workflow.WorkspaceProjectionVolumes
+		if activity.Metadata["workspaceProjectionVolumes"] == nil {
+			return nil, nil, fmt.Errorf("storage budget needs whole-workspace projection for %s", activity.ID)
+		}
+		payload, err := json.Marshal(activity.Metadata["workspaceProjectionVolumes"])
+		if err != nil {
+			return nil, nil, err
+		}
+		if err = json.Unmarshal(payload, &volume); err != nil {
+			return nil, nil, err
+		}
+		// Both archive and received/extracted inputs may coexist with the merged
+		// consumer and producer workspaces. Never account the same quota per node.
+		workspaceBytes := int64(0)
+		for _, bytes := range []int64{volume.PreExecutionBytes, volume.CreatedOutputBytes} {
+			if bytes < 0 || bytes > math.MaxInt64-workspaceBytes {
+				return nil, nil, fmt.Errorf("storage reservation overflow")
+			}
+			workspaceBytes += bytes
+		}
+		bytesToReserve := []int64{workspaceBytes, volume.InputTotalBytes, volume.InputTotalBytes}
+		if timings != nil {
+			var timingErr error
+			bytesToReserve, timingErr = addTimedStorageReservation(activity.ID, r, b, workspaceBytes, bytesToReserve, timings, edges, storageReservationEvents)
+			if timingErr != nil {
+				return nil, nil, timingErr
+			}
+		}
+		for _, bytes := range bytesToReserve {
+			if bytes < 0 || bytes > math.MaxInt64-reserved[b.StorageID] {
+				return nil, nil, fmt.Errorf("storage reservation overflow")
+			}
+			reserved[b.StorageID] += bytes
+		}
+	}
+	return reserved, storageReservationEvents, nil
+}
+
+func accumulateStoragePeaks(reserved map[string]int64, events map[string][]storageReservationEvent) error {
+	for id, list := range events {
+		sort.Slice(list, func(i, j int) bool {
+			if list[i].at == list[j].at {
+				return list[i].bytes > list[j].bytes
+			}
+			return list[i].at < list[j].at
+		})
+		current, peak := reserved[id], reserved[id]
+		for _, e := range list {
+			if e.bytes > 0 && e.bytes > math.MaxInt64-current {
+				return fmt.Errorf("storage reservation overflow")
+			}
+			current += e.bytes
+			if current < 0 {
+				return fmt.Errorf("negative storage reservation")
+			}
+			if current > peak {
+				peak = current
+			}
+		}
+		reserved[id] = peak
+	}
+	return nil
 }

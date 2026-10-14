@@ -182,81 +182,25 @@ func evaluateCompleteCompactPRISMState(
 	if len(assignments) != len(search.activities) {
 		return state, nil
 	}
-	resourceByID := make(map[string]domain.Resource, len(search.resources))
-	storageResources := make([]domain.Resource, 0, len(search.resources))
-	for _, resource := range search.resources {
-		resourceByID[resource.resource.ID] = resource.resource
-		storageResources = append(storageResources, resource.resource)
-	}
-	tasks := make([]prismEvaluationTask, len(search.activities))
-	assignmentOrdinal := make(map[string]int, len(assignments))
-	for _, assignment := range assignments {
-		assignment.Metadata = clonePRISMEvaluationMetadata(assignment.Metadata)
-		ordinal, exists := search.activityOrdinal[assignment.ActivityID]
-		if !exists {
-			return state, fmt.Errorf("evaluate PRISM candidate: unknown activity %q", assignment.ActivityID)
-		}
-		resource, exists := resourceByID[assignment.ResourceID]
-		if !exists {
-			return state, fmt.Errorf("evaluate PRISM candidate: unknown resource %q", assignment.ResourceID)
-		}
-		tasks[ordinal] = prismEvaluationTask{assignment: assignment, resource: resource, baseRuntime: search.durations[ordinal][compactPRISMResourceOrdinal(search, resource.ID)], slowdown: 1}
-		assignmentOrdinal[assignment.ActivityID] = ordinal
-	}
-	outgoing := make([][]prismEvaluationDependency, len(tasks))
-	assignedTypes := map[string]string{}
-	for _, assignment := range assignments {
-		assignedTypes[assignment.ActivityID] = string(resourceByID[assignment.ResourceID].Type)
-	}
-	projectedWorkflow, err := domainworkflow.ProjectWorkspaceDependenciesForResourceTypes(search.request.Workflow, assignedTypes)
+	inputs, err := buildPRISMCandidateInputs(search, assignments)
 	if err != nil {
-		return state, fmt.Errorf("evaluate PRISM workspace projection: %w", err)
+		return state, err
+	}
+	resourceByID, storageResources := inputs.resourceByID, inputs.storageResources
+	tasks, assignmentOrdinal := inputs.tasks, inputs.assignmentOrdinal
+	outgoing := make([][]prismEvaluationDependency, len(tasks))
+	projectedWorkflow, err := projectPRISMCandidateWorkspaces(search, assignments, resourceByID)
+	if err != nil {
+		return state, err
 	}
 	data := dataBytes(projectedWorkflow)
 	preparationModel, err := materializationmodel.Decode(search.request.NetworkTopology.Metadata)
 	if err != nil {
 		return state, err
 	}
-	servicePools := map[string]*prismServicePool{}
-	if preparationModel != nil {
-		for _, r := range preparationModel.Resources {
-			if r.BulkServiceGroupID != "" {
-				servicePools[r.BulkServiceGroupID] = &prismServicePool{slots: r.BulkServiceSlots}
-			}
-		}
-		for _, activity := range projectedWorkflow.Activities {
-			ordinal := assignmentOrdinal[activity.ID]
-			var volume domainworkflow.WorkspaceProjectionVolumes
-			if activity.Metadata["workspaceProjectionVolumes"] == nil {
-				return state, fmt.Errorf("materialized candidate requires workspace volumes for %s", activity.ID)
-			}
-			payload, marshalErr := json.Marshal(activity.Metadata["workspaceProjectionVolumes"])
-			if marshalErr != nil {
-				return state, marshalErr
-			}
-			if err = json.Unmarshal(payload, &volume); err != nil {
-				return state, err
-			}
-			tasks[ordinal].preparationSeconds, err = preparationModel.PreparationSeconds(tasks[ordinal].resource.ID, volume.InputTotalBytes, volume.InputUniqueBytes)
-			if err != nil {
-				return state, err
-			}
-			tasks[ordinal].publicationSeconds, err = preparationModel.PublicationSeconds(tasks[ordinal].resource.ID, volume.TerminalObservationBytes, volume.PublicationCleanupBytes)
-			tasks[ordinal].preparationGroup = preparationModel.Resources[tasks[ordinal].resource.ID].BulkServiceGroupID
-			if err != nil {
-				return state, err
-			}
-			tasks[ordinal].admissionSeconds, err = preparationModel.AdmissionSeconds(tasks[ordinal].resource.ID)
-			if err != nil {
-				return state, err
-			}
-			if tasks[ordinal].assignment.Metadata == nil {
-				tasks[ordinal].assignment.Metadata = map[string]any{}
-			}
-			tasks[ordinal].assignment.Metadata["workspaceMaterializationModelSource"] = preparationModel.Source
-			tasks[ordinal].assignment.Metadata["workspaceMaterializationModelVersion"] = preparationModel.SchemaVersion
-			tasks[ordinal].assignment.Metadata["workspacePublicationSeconds"] = tasks[ordinal].publicationSeconds
-		}
+	servicePools, err := configurePRISMMaterialization(tasks, assignmentOrdinal, projectedWorkflow, preparationModel)
+	if err != nil {
+		return state, err
 	}
 	type incomingDependency struct {
 		producer int
@@ -277,26 +221,7 @@ func evaluateCompleteCompactPRISMState(
 	for index := range tasks {
 		remainingProducers[index] = tasks[index].remainingInputs
 	}
-	laneSuccessor := make([]int, len(tasks))
-	for index := range laneSuccessor {
-		laneSuccessor[index] = -1
-		tasks[index].laneReady = true
-	}
-	byLane := make(map[string][]int)
-	for ordinal, task := range tasks {
-		lane := task.assignment.ResourceID + "\x00" + task.assignment.CoreID + "\x00" + task.assignment.SlotID
-		byLane[lane] = append(byLane[lane], ordinal)
-	}
-	for _, lane := range byLane {
-		sort.Slice(lane, func(left, right int) bool {
-			return tasks[lane[left]].assignment.OrderOnResource <
-				tasks[lane[right]].assignment.OrderOnResource
-		})
-		for index := 1; index < len(lane); index++ {
-			tasks[lane[index]].laneReady = false
-			laneSuccessor[lane[index-1]] = lane[index]
-		}
-	}
+	laneSuccessor := initializePRISMLanes(tasks)
 
 	clock := 0.0
 	completed := 0
@@ -317,26 +242,11 @@ func evaluateCompleteCompactPRISMState(
 	transferCost := 0.0
 
 	for completed < len(tasks) {
-		for i := range flows {
-			flow := &flows[i]
-			if !flow.active || len(flow.stages) == 0 || flow.stageInitialized {
-				continue
-			}
-			stage := flow.stages[flow.stageIndex]
-			if pool := servicePools[stage.ServiceGroupID]; pool != nil {
-				if pool.used >= pool.slots {
-					continue
-				}
-				pool.used++
-				flow.serviceHeld = true
-			}
-			cost, err := prismInitializeMaterializationStage(flow, search.router, clock)
-			if err != nil {
-				return state, err
-			}
-			transferCost += cost
-			flow.stageInitialized = true
+		stageCost, err := initializePRISMFlowStages(flows, servicePools, search.router, clock)
+		if err != nil {
+			return state, err
 		}
+		transferCost += stageCost
 		started := prismStartReadyTasks(search, tasks, readyTasks, taskEvents, clock, resourceStart, resourceFinish, resourceUsed, activeByResource, servicePools)
 		if completed == len(tasks) {
 			break
@@ -352,18 +262,7 @@ func evaluateCompleteCompactPRISMState(
 			}
 			return state, fmt.Errorf("evaluate PRISM candidate: execution cannot progress")
 		}
-		delta := math.Max(0, nextAt-clock)
-		for index := range flows {
-			if flows[index].active && flows[index].payloadAt <= clock {
-				flows[index].remaining = math.Max(0, flows[index].remaining-rates[index]*delta)
-				// At large simulated timestamps, a sub-nanosecond completion
-				// increment can round back to the current clock. Snap that final
-				// fraction to zero so the event loop always makes progress.
-				if rates[index] > 0 && flows[index].remaining/rates[index] <= 1e-9 {
-					flows[index].remaining = 0
-				}
-			}
-		}
+		advancePRISMFlowPayloads(flows, rates, clock, nextAt)
 		clock = nextAt
 
 		for taskEvents.Len() > 0 && (*taskEvents)[0].finishAt <= clock+1e-9 {
@@ -457,61 +356,28 @@ func evaluateCompleteCompactPRISMState(
 				})
 			}
 		}
-		for index := range flows {
-			if !flows[index].active || (len(flows[index].stages) > 0 && !flows[index].stageInitialized) || flows[index].payloadAt > clock+1e-9 || flows[index].remaining > 1e-6 {
-				continue
-			}
-			if len(flows[index].stages) > 0 {
-				flow := &flows[index]
-				if !flow.postStage {
-					flow.postStage = true
-					flow.payloadAt = clock + flow.stages[flow.stageIndex].AfterSeconds
-					if flow.payloadAt > clock+1e-9 {
-						continue
-					}
-				}
-				if flow.serviceHeld {
-					servicePools[flow.stages[flow.stageIndex].ServiceGroupID].used--
-					flow.serviceHeld = false
-				}
-				flow.stageIndex++
-				flow.stageInitialized = false
-				if flow.stageIndex < len(flow.stages) {
-					continue
-				}
-			}
-			flows[index].active = false
-			prismSatisfyEvaluationInput(
-				&tasks[flows[index].consumer],
-				clock,
-				clock-flows[index].startedAt,
-			)
-			prismQueueEvaluationTaskIfReady(tasks, readyTasks, flows[index].consumer)
-		}
-		// Only active transfers affect future bandwidth allocation. Keeping every
-		// completed flow made each later event rescan the entire dependency
-		// history, turning large DAG evaluation into quadratic work.
-		activeFlows := flows[:0]
-		for _, flow := range flows {
-			if flow.active {
-				activeFlows = append(activeFlows, flow)
-			}
-		}
-		flows = activeFlows
+		flows = completePRISMFlowStages(flows, tasks, readyTasks, servicePools, clock)
 	}
 
-	timings := make([]storagebudget.Timing, 0, len(tasks))
-	for _, task := range tasks {
-		a := task.assignment
-		timings = append(timings, storagebudget.Timing{ActivityID: a.ActivityID, ResourceID: a.ResourceID, Start: a.PredictedStartAt, Finish: a.PredictedFinishAt})
-	}
-	if _, _, err := storagebudget.CheckScheduled(search.request.Workflow, storageResources, timings); err != nil {
-		return state, fmt.Errorf("evaluate PRISM storage budget: %w", err)
+	if err := checkPRISMCandidateStorage(search.request.Workflow, storageResources, tasks); err != nil {
+		return state, err
 	}
 	return compactPRISMFinishEvaluation(
 		state, assignments, assignmentOrdinal, tasks, resourceByID,
 		resourceStart, resourceFinish, clock, transferCost,
 	), nil
+}
+
+func checkPRISMCandidateStorage(workflow domainworkflow.WorkflowVersion, resources []domain.Resource, tasks []prismEvaluationTask) error {
+	timings := make([]storagebudget.Timing, 0, len(tasks))
+	for _, task := range tasks {
+		a := task.assignment
+		timings = append(timings, storagebudget.Timing{ActivityID: a.ActivityID, ResourceID: a.ResourceID, Start: a.PredictedStartAt, Finish: a.PredictedFinishAt})
+	}
+	if _, _, err := storagebudget.CheckScheduled(workflow, resources, timings); err != nil {
+		return fmt.Errorf("evaluate PRISM storage budget: %w", err)
+	}
+	return nil
 }
 
 func compactPRISMFinishEvaluation(
@@ -894,4 +760,202 @@ func compactPRISMStateFromEvaluation(
 	state.projectedMakespan = makespan
 	state.projectedCost = cost
 	return state
+}
+
+func configurePRISMMaterialization(tasks []prismEvaluationTask, assignmentOrdinal map[string]int, workflow domainworkflow.WorkflowVersion, preparationModel *materializationmodel.Model) (map[string]*prismServicePool, error) {
+	var err error
+	servicePools := map[string]*prismServicePool{}
+	if preparationModel != nil {
+		for _, r := range preparationModel.Resources {
+			if r.BulkServiceGroupID != "" {
+				servicePools[r.BulkServiceGroupID] = &prismServicePool{slots: r.BulkServiceSlots}
+			}
+		}
+		for _, activity := range workflow.Activities {
+			ordinal := assignmentOrdinal[activity.ID]
+			var volume domainworkflow.WorkspaceProjectionVolumes
+			if activity.Metadata["workspaceProjectionVolumes"] == nil {
+				return nil, fmt.Errorf("materialized candidate requires workspace volumes for %s", activity.ID)
+			}
+			payload, marshalErr := json.Marshal(activity.Metadata["workspaceProjectionVolumes"])
+			if marshalErr != nil {
+				return nil, marshalErr
+			}
+			if err = json.Unmarshal(payload, &volume); err != nil {
+				return nil, err
+			}
+			tasks[ordinal].preparationSeconds, err = preparationModel.PreparationSeconds(tasks[ordinal].resource.ID, volume.InputTotalBytes, volume.InputUniqueBytes)
+			if err != nil {
+				return nil, err
+			}
+			tasks[ordinal].publicationSeconds, err = preparationModel.PublicationSeconds(tasks[ordinal].resource.ID, volume.TerminalObservationBytes, volume.PublicationCleanupBytes)
+			tasks[ordinal].preparationGroup = preparationModel.Resources[tasks[ordinal].resource.ID].BulkServiceGroupID
+			if err != nil {
+				return nil, err
+			}
+			tasks[ordinal].admissionSeconds, err = preparationModel.AdmissionSeconds(tasks[ordinal].resource.ID)
+			if err != nil {
+				return nil, err
+			}
+			if tasks[ordinal].assignment.Metadata == nil {
+				tasks[ordinal].assignment.Metadata = map[string]any{}
+			}
+			tasks[ordinal].assignment.Metadata["workspaceMaterializationModelSource"] = preparationModel.Source
+			tasks[ordinal].assignment.Metadata["workspaceMaterializationModelVersion"] = preparationModel.SchemaVersion
+			tasks[ordinal].assignment.Metadata["workspacePublicationSeconds"] = tasks[ordinal].publicationSeconds
+		}
+	}
+	return servicePools, nil
+}
+
+func initializePRISMLanes(tasks []prismEvaluationTask) []int {
+	laneSuccessor := make([]int, len(tasks))
+	for index := range laneSuccessor {
+		laneSuccessor[index] = -1
+		tasks[index].laneReady = true
+	}
+	byLane := make(map[string][]int)
+	for ordinal, task := range tasks {
+		lane := task.assignment.ResourceID + "\x00" + task.assignment.CoreID + "\x00" + task.assignment.SlotID
+		byLane[lane] = append(byLane[lane], ordinal)
+	}
+	for _, lane := range byLane {
+		sort.Slice(lane, func(left, right int) bool {
+			return tasks[lane[left]].assignment.OrderOnResource <
+				tasks[lane[right]].assignment.OrderOnResource
+		})
+		for index := 1; index < len(lane); index++ {
+			tasks[lane[index]].laneReady = false
+			laneSuccessor[lane[index-1]] = lane[index]
+		}
+	}
+	return laneSuccessor
+}
+
+func initializePRISMFlowStages(flows []prismEvaluationFlow, servicePools map[string]*prismServicePool, router compactPRISMRouter, clock float64) (float64, error) {
+	totalCost := 0.0
+	for i := range flows {
+		flow := &flows[i]
+		if !flow.active || len(flow.stages) == 0 || flow.stageInitialized {
+			continue
+		}
+		stage := flow.stages[flow.stageIndex]
+		if pool := servicePools[stage.ServiceGroupID]; pool != nil {
+			if pool.used >= pool.slots {
+				continue
+			}
+			pool.used++
+			flow.serviceHeld = true
+		}
+		cost, err := prismInitializeMaterializationStage(flow, router, clock)
+		if err != nil {
+			return 0, err
+		}
+		totalCost += cost
+		flow.stageInitialized = true
+	}
+	return totalCost, nil
+}
+
+func advancePRISMFlowPayloads(flows []prismEvaluationFlow, rates []float64, clock, nextAt float64) {
+	delta := math.Max(0, nextAt-clock)
+	for index := range flows {
+		if flows[index].active && flows[index].payloadAt <= clock {
+			flows[index].remaining = math.Max(0, flows[index].remaining-rates[index]*delta)
+			// At large simulated timestamps, a sub-nanosecond completion
+			// increment can round back to the current clock. Snap that final
+			// fraction to zero so the event loop always makes progress.
+			if rates[index] > 0 && flows[index].remaining/rates[index] <= 1e-9 {
+				flows[index].remaining = 0
+			}
+		}
+	}
+}
+
+func completePRISMFlowStages(flows []prismEvaluationFlow, tasks []prismEvaluationTask, readyTasks *prismEvaluationReadyQueue, servicePools map[string]*prismServicePool, clock float64) []prismEvaluationFlow {
+	for index := range flows {
+		if !flows[index].active || (len(flows[index].stages) > 0 && !flows[index].stageInitialized) || flows[index].payloadAt > clock+1e-9 || flows[index].remaining > 1e-6 {
+			continue
+		}
+		if len(flows[index].stages) > 0 {
+			flow := &flows[index]
+			if !flow.postStage {
+				flow.postStage = true
+				flow.payloadAt = clock + flow.stages[flow.stageIndex].AfterSeconds
+				if flow.payloadAt > clock+1e-9 {
+					continue
+				}
+			}
+			if flow.serviceHeld {
+				servicePools[flow.stages[flow.stageIndex].ServiceGroupID].used--
+				flow.serviceHeld = false
+			}
+			flow.stageIndex++
+			flow.stageInitialized = false
+			if flow.stageIndex < len(flow.stages) {
+				continue
+			}
+		}
+		flows[index].active = false
+		prismSatisfyEvaluationInput(
+			&tasks[flows[index].consumer],
+			clock,
+			clock-flows[index].startedAt,
+		)
+		prismQueueEvaluationTaskIfReady(tasks, readyTasks, flows[index].consumer)
+	}
+	// Only active transfers affect future bandwidth allocation. Keeping every
+	// completed flow made each later event rescan the entire dependency
+	// history, turning large DAG evaluation into quadratic work.
+	activeFlows := flows[:0]
+	for _, flow := range flows {
+		if flow.active {
+			activeFlows = append(activeFlows, flow)
+		}
+	}
+	return activeFlows
+}
+
+type prismCandidateInputs struct {
+	resourceByID      map[string]domain.Resource
+	storageResources  []domain.Resource
+	tasks             []prismEvaluationTask
+	assignmentOrdinal map[string]int
+}
+
+func buildPRISMCandidateInputs(search compactPRISMContext, assignments []domain.PlanAssignment) (prismCandidateInputs, error) {
+	resourceByID := make(map[string]domain.Resource, len(search.resources))
+	storageResources := make([]domain.Resource, 0, len(search.resources))
+	for _, resource := range search.resources {
+		resourceByID[resource.resource.ID] = resource.resource
+		storageResources = append(storageResources, resource.resource)
+	}
+	tasks := make([]prismEvaluationTask, len(search.activities))
+	assignmentOrdinal := make(map[string]int, len(assignments))
+	for _, assignment := range assignments {
+		assignment.Metadata = clonePRISMEvaluationMetadata(assignment.Metadata)
+		ordinal, exists := search.activityOrdinal[assignment.ActivityID]
+		if !exists {
+			return prismCandidateInputs{}, fmt.Errorf("evaluate PRISM candidate: unknown activity %q", assignment.ActivityID)
+		}
+		resource, exists := resourceByID[assignment.ResourceID]
+		if !exists {
+			return prismCandidateInputs{}, fmt.Errorf("evaluate PRISM candidate: unknown resource %q", assignment.ResourceID)
+		}
+		tasks[ordinal] = prismEvaluationTask{assignment: assignment, resource: resource, baseRuntime: search.durations[ordinal][compactPRISMResourceOrdinal(search, resource.ID)], slowdown: 1}
+		assignmentOrdinal[assignment.ActivityID] = ordinal
+	}
+	return prismCandidateInputs{resourceByID: resourceByID, storageResources: storageResources, tasks: tasks, assignmentOrdinal: assignmentOrdinal}, nil
+}
+
+func projectPRISMCandidateWorkspaces(search compactPRISMContext, assignments []domain.PlanAssignment, resourceByID map[string]domain.Resource) (domainworkflow.WorkflowVersion, error) {
+	assignedTypes := map[string]string{}
+	for _, assignment := range assignments {
+		assignedTypes[assignment.ActivityID] = string(resourceByID[assignment.ResourceID].Type)
+	}
+	projectedWorkflow, err := domainworkflow.ProjectWorkspaceDependenciesForResourceTypes(search.request.Workflow, assignedTypes)
+	if err != nil {
+		return domainworkflow.WorkflowVersion{}, fmt.Errorf("evaluate PRISM workspace projection: %w", err)
+	}
+	return projectedWorkflow, nil
 }

@@ -170,15 +170,9 @@ func (s WorkspaceRsync) syncDependencyRoutes(ctx context.Context, plans []domain
 			runs[i].Route.Reason = "network rsync from local producer to remote merge preparation"
 		}
 		if remoteRoot == "" {
-			output, createErr := runSSHCombinedOutput(ctx, destination, append(sshArgs(destination), host,
-				"mktemp -d -- "+shell(filepath.Join(filepath.Dir(target), ".akoflow-merge-XXXXXX"))), nil)
-			if createErr != nil {
-				return runs, fmt.Errorf("prepare remote merge: %w", createErr)
-			}
-			remoteRoot = strings.TrimSpace(string(output))
-			if !filepath.IsAbs(remoteRoot) || filepath.Dir(remoteRoot) != filepath.Dir(target) || !strings.HasPrefix(filepath.Base(remoteRoot), ".akoflow-merge-") {
-				remoteRoot = ""
-				return runs, fmt.Errorf("invalid remote preparation directory")
+			remoteRoot, err = createRemoteMergeDirectory(ctx, destination, host, target)
+			if err != nil {
+				return runs, err
 			}
 		}
 		remoteURL, _ := url.Parse(destination.URI)
@@ -193,36 +187,77 @@ func (s WorkspaceRsync) syncDependencyRoutes(ctx context.Context, plans []domain
 		if proofs[i] != "" {
 			return nil
 		}
-		start := float64(time.Now().UnixNano()) / 1e9
-		runs[i].StartedAt = start
-		runs[i].Route.PreparationStartedAt = start
-		runs[i].Route.Packaging = "tar-gzip"
-		usedPeer, err := preparePeerWorkspaceArchive(ctx, sources[i], prepared[i], &runs[i])
-		if usedPeer && err == nil {
-			privatePeers[i] = true
-			preparedURL, _ := url.Parse(prepared[i].URI)
-			preparedURL.Path = filepath.Join(preparedURL.Path, "contents")
-			prepared[i].URI = preparedURL.String()
-		} else if !usedPeer && err == nil {
-			err = relayWorkspaceArchive(ctx, sources[i], prepared[i], &runs[i])
-		}
-		end := float64(time.Now().UnixNano()) / 1e9
-		runs[i].Route.PreparationFinishedAt = end
-		runs[i].Route.PreparationSeconds = end - start
+		peer, err := prepareDependencyArchive(ctx, sources[i], &prepared[i], &runs[i])
+		privatePeers[i] = peer
 		network[i].bytes = runs[i].NetworkBytes
 		return err
 	}); err != nil {
 		return runs, err
 	}
 	barrierEnd := time.Now()
-	for i := range runs {
-		runs[i].Route.Phases = append(runs[i].Route.Phases, domain.TransferPhase{
-			Name: "shared-preparation-barrier", StartedAt: float64(barrierStart.UnixNano()) / 1e9,
-			FinishedAt: float64(barrierEnd.UnixNano()) / 1e9, DurationSeconds: barrierEnd.Sub(barrierStart).Seconds(),
-		})
-	}
+	recordSharedPreparationBarrier(runs, barrierStart, barrierEnd)
 	// Validate all paths/content together before any successor publication.
 	result, err := syncRemoteWorkspaceDirect(ctx, plans, prepared, destination, runs)
+	annotateDependencyRoutes(sources, proofs, localCloud, privatePeers, network, result)
+	return result, err
+}
+
+func createRemoteMergeDirectory(ctx context.Context, destination domain.TransferEndpoint, host, target string) (string, error) {
+	output, err := runSSHCombinedOutput(ctx, destination, append(sshArgs(destination), host,
+		"mktemp -d -- "+shell(filepath.Join(filepath.Dir(target), ".akoflow-merge-XXXXXX"))), nil)
+	if err != nil {
+		return "", fmt.Errorf("prepare remote merge: %w", err)
+	}
+	root := strings.TrimSpace(string(output))
+	if !filepath.IsAbs(root) || filepath.Dir(root) != filepath.Dir(target) || !strings.HasPrefix(filepath.Base(root), ".akoflow-merge-") {
+		return "", fmt.Errorf("invalid remote preparation directory")
+	}
+	return root, nil
+}
+
+func recordSharedPreparationBarrier(runs []domain.DataTransferRun, start, end time.Time) {
+	for i := range runs {
+		runs[i].Route.Phases = append(runs[i].Route.Phases, domain.TransferPhase{
+			Name: "shared-preparation-barrier", StartedAt: float64(start.UnixNano()) / 1e9,
+			FinishedAt: float64(end.UnixNano()) / 1e9, DurationSeconds: end.Sub(start).Seconds(),
+		})
+	}
+}
+
+// Route evidence must never serialize SSH credentials or URI query options.
+func workspaceRouteAddress(raw string) string {
+	address, err := url.Parse(raw)
+	if err != nil {
+		return ""
+	}
+	address.User = nil
+	address.RawQuery = ""
+	address.Fragment = ""
+	return address.String()
+}
+
+func prepareDependencyArchive(ctx context.Context, source domain.TransferEndpoint, prepared *domain.TransferEndpoint, run *domain.DataTransferRun) (bool, error) {
+	peer := false
+	start := float64(time.Now().UnixNano()) / 1e9
+	(*run).StartedAt = start
+	(*run).Route.PreparationStartedAt = start
+	(*run).Route.Packaging = "tar-gzip"
+	usedPeer, err := preparePeerWorkspaceArchive(ctx, source, (*prepared), &(*run))
+	if usedPeer && err == nil {
+		peer = true
+		preparedURL, _ := url.Parse((*prepared).URI)
+		preparedURL.Path = filepath.Join(preparedURL.Path, "contents")
+		(*prepared).URI = preparedURL.String()
+	} else if !usedPeer && err == nil {
+		err = relayWorkspaceArchive(ctx, source, (*prepared), &(*run))
+	}
+	end := float64(time.Now().UnixNano()) / 1e9
+	(*run).Route.PreparationFinishedAt = end
+	(*run).Route.PreparationSeconds = end - start
+	return peer, err
+}
+
+func annotateDependencyRoutes(sources []domain.TransferEndpoint, proofs []string, localCloud, privatePeers []bool, network []rsyncStats, result []domain.DataTransferRun) {
 	for i := range result {
 		result[i].NetworkBytes = network[i].bytes
 		result[i].Route.FilesTransferred = result[i].FilesTransferred
@@ -251,17 +286,4 @@ func (s WorkspaceRsync) syncDependencyRoutes(ctx context.Context, plans []domain
 			}
 		}
 	}
-	return result, err
-}
-
-// Route evidence must never serialize SSH credentials or URI query options.
-func workspaceRouteAddress(raw string) string {
-	address, err := url.Parse(raw)
-	if err != nil {
-		return ""
-	}
-	address.User = nil
-	address.RawQuery = ""
-	address.Fragment = ""
-	return address.String()
 }

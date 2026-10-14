@@ -191,6 +191,82 @@ func TestMixedWorkspaceRoutesConflictAndRecovery(t *testing.T) {
 }
 
 func testMixedWorkspaceRoutesConflictAndRecovery(t *testing.T, sameCloud bool) {
+	fixture := newMixedRouteFixture(t, sameCloud)
+	root, hpc, fog, target := fixture.root, fixture.hpc, fixture.fog, fixture.target
+	write, plans := fixture.write, fixture.plans
+	syncer := WorkspaceRsync{Resolver: directWorkspaceEndpointResolver{}}
+	runs, err := syncer.Sync(context.Background(), plans)
+	if err != nil {
+		t.Fatal(err)
+	}
+	assertMixedRouteEvidence(t, sameCloud, runs)
+	for _, name := range []string{"hpc.fits", "fog.fits", "fog2.fits"} {
+		if _, err := os.Stat(filepath.Join(target, name)); err != nil {
+			t.Fatal(err)
+		}
+	}
+	// Consumer mutation must not modify producer data (no hardlinks).
+	write(filepath.Join(target, "hpc.fits"), "consumer mutation")
+	content, _ := os.ReadFile(filepath.Join(hpc, "hpc.fits"))
+	if string(content) != "HPC" {
+		t.Fatal("producer mutated")
+	}
+	if _, err := syncer.Sync(context.Background(), plans); err == nil {
+		t.Fatal("conflict accepted")
+	}
+	write(filepath.Join(target, "hpc.fits"), "HPC")
+	runs, err = syncer.Sync(context.Background(), plans)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if runs[0].FilesTransferred != 0 || runs[1].FilesTransferred != 0 {
+		t.Fatalf("valid destination recopied: %+v", runs)
+	}
+	// An interrupted network route must not release the merge barrier. A retry
+	// preserves producer data and reuses files already validated at destination.
+	write(filepath.Join(fog, "after-interruption"), "new")
+	t.Setenv("AKOFLOW_TEST_FAIL_ONCE", filepath.Join(root, "failure-injected"))
+	failed, err := syncer.Sync(context.Background(), plans)
+	if err == nil || failed[1].Status != domain.TransferFailed || failed[1].Error == "" {
+		t.Fatalf("interruption not recorded: runs=%+v err=%v", failed, err)
+	}
+	if _, err := os.Stat(filepath.Join(target, "after-interruption")); !os.IsNotExist(err) {
+		t.Fatal("published after failed network preparation")
+	}
+	runs, err = syncer.Sync(context.Background(), plans)
+	if err != nil || runs[0].FilesTransferred != 0 || runs[1].FilesTransferred != 1 {
+		t.Fatalf("recovery did not reuse valid publication: runs=%+v err=%v", runs, err)
+	}
+	if content, err := os.ReadFile(filepath.Join(fog, "after-interruption")); err != nil || string(content) != "new" {
+		t.Fatal("producer data lost during recovery")
+	}
+	// A conflict between mixed producers blocks publication of a new file.
+	write(filepath.Join(hpc, "collision"), "one")
+	write(filepath.Join(fog, "collision"), "two")
+	write(filepath.Join(fog, "not-published"), "new")
+	if _, err := syncer.Sync(context.Background(), plans); err == nil {
+		t.Fatal("mixed conflict accepted")
+	}
+	if _, err := os.Stat(filepath.Join(target, "not-published")); !os.IsNotExist(err) {
+		t.Fatal("published before aggregate validation")
+	}
+}
+
+func TestWorkspaceRouteAddressRedactsCredentials(t *testing.T) {
+	got := workspaceRouteAddress("ssh://user:secret@hpc.test/workspace?identityFile=/secret/key#secret")
+	if got != "ssh://hpc.test/workspace" {
+		t.Fatalf("unsafe route address: %q", got)
+	}
+}
+
+type mixedRouteFixture struct {
+	root, hpc, fog, target string
+	write                  func(string, string)
+	plans                  []domain.DataTransferPlan
+}
+
+func newMixedRouteFixture(t *testing.T, sameCloud bool) mixedRouteFixture {
+	t.Helper()
 	realRsync, err := exec.LookPath("rsync")
 	if err != nil {
 		t.Skip("rsync unavailable")
@@ -251,11 +327,11 @@ func testMixedWorkspaceRoutesConflictAndRecovery(t *testing.T, sameCloud bool) {
 		}
 		plans[0].Source.CloudInstanceID = "verified-instance"
 	}
-	syncer := WorkspaceRsync{Resolver: directWorkspaceEndpointResolver{}}
-	runs, err := syncer.Sync(context.Background(), plans)
-	if err != nil {
-		t.Fatal(err)
-	}
+	return mixedRouteFixture{root: root, hpc: hpc, fog: fog, target: target, write: write, plans: plans}
+}
+
+func assertMixedRouteEvidence(t *testing.T, sameCloud bool, runs []domain.DataTransferRun) {
+	t.Helper()
 	expectedReason, expectedFS, expectedMount := "verified shared", "nfs", "server:/fixture"
 	if sameCloud {
 		expectedReason, expectedFS, expectedMount = "verified same concrete cloud", "ext2/ext3", "/dev/sda"
@@ -279,62 +355,5 @@ func testMixedWorkspaceRoutesConflictAndRecovery(t *testing.T, sameCloud bool) {
 	}
 	if runs[0].Route.SharedFilesystem != expectedFS || !strings.Contains(runs[0].Route.SharedFilesystemID, expectedMount) || runs[1].Route.SharedFilesystem != "" || runs[0].Route.FilesTransferred != runs[0].FilesTransferred {
 		t.Fatalf("missing or incorrect route evidence: %+v", runs)
-	}
-	for _, name := range []string{"hpc.fits", "fog.fits", "fog2.fits"} {
-		if _, err := os.Stat(filepath.Join(target, name)); err != nil {
-			t.Fatal(err)
-		}
-	}
-	// Consumer mutation must not modify producer data (no hardlinks).
-	write(filepath.Join(target, "hpc.fits"), "consumer mutation")
-	content, _ := os.ReadFile(filepath.Join(hpc, "hpc.fits"))
-	if string(content) != "HPC" {
-		t.Fatal("producer mutated")
-	}
-	if _, err := syncer.Sync(context.Background(), plans); err == nil {
-		t.Fatal("conflict accepted")
-	}
-	write(filepath.Join(target, "hpc.fits"), "HPC")
-	runs, err = syncer.Sync(context.Background(), plans)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if runs[0].FilesTransferred != 0 || runs[1].FilesTransferred != 0 {
-		t.Fatalf("valid destination recopied: %+v", runs)
-	}
-	// An interrupted network route must not release the merge barrier. A retry
-	// preserves producer data and reuses files already validated at destination.
-	write(filepath.Join(fog, "after-interruption"), "new")
-	t.Setenv("AKOFLOW_TEST_FAIL_ONCE", filepath.Join(root, "failure-injected"))
-	failed, err := syncer.Sync(context.Background(), plans)
-	if err == nil || failed[1].Status != domain.TransferFailed || failed[1].Error == "" {
-		t.Fatalf("interruption not recorded: runs=%+v err=%v", failed, err)
-	}
-	if _, err := os.Stat(filepath.Join(target, "after-interruption")); !os.IsNotExist(err) {
-		t.Fatal("published after failed network preparation")
-	}
-	runs, err = syncer.Sync(context.Background(), plans)
-	if err != nil || runs[0].FilesTransferred != 0 || runs[1].FilesTransferred != 1 {
-		t.Fatalf("recovery did not reuse valid publication: runs=%+v err=%v", runs, err)
-	}
-	if content, err := os.ReadFile(filepath.Join(fog, "after-interruption")); err != nil || string(content) != "new" {
-		t.Fatal("producer data lost during recovery")
-	}
-	// A conflict between mixed producers blocks publication of a new file.
-	write(filepath.Join(hpc, "collision"), "one")
-	write(filepath.Join(fog, "collision"), "two")
-	write(filepath.Join(fog, "not-published"), "new")
-	if _, err := syncer.Sync(context.Background(), plans); err == nil {
-		t.Fatal("mixed conflict accepted")
-	}
-	if _, err := os.Stat(filepath.Join(target, "not-published")); !os.IsNotExist(err) {
-		t.Fatal("published before aggregate validation")
-	}
-}
-
-func TestWorkspaceRouteAddressRedactsCredentials(t *testing.T) {
-	got := workspaceRouteAddress("ssh://user:secret@hpc.test/workspace?identityFile=/secret/key#secret")
-	if got != "ssh://hpc.test/workspace" {
-		t.Fatalf("unsafe route address: %q", got)
 	}
 }

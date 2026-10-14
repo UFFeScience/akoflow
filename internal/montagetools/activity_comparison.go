@@ -35,6 +35,39 @@ func compareActivityTimes(request, real, simulation Object) Object {
 	for _, h := range rows(real["handles"]) {
 		handles[str(h["activityId"])]++
 	}
+	results, computeErrors, wallErrors := compareMatchedActivities(real, plan, sim, logicalReady, completed, handles)
+	sort.Slice(results, func(i, j int) bool { return str(obj(results[i])["activityId"]) < str(obj(results[j])["activityId"]) })
+	within := func(values []any) int {
+		n := 0
+		for _, v := range values {
+			if num(v) <= 20 {
+				n++
+			}
+		}
+		return n
+	}
+	return Object{
+		"referenceRunId":                       obj(real["run"])["id"],
+		"role":                                 "per-activity-historical-comparison-not-independent-validation",
+		"activityCount":                        len(results),
+		"singleAttemptComparableCount":         len(computeErrors),
+		"samePlacementWallComparableCount":     len(wallErrors),
+		"computeWithin20PercentCount":          within(computeErrors),
+		"readyToPublishedWithin20PercentCount": within(wallErrors),
+		"absoluteComputeErrorPercent":          summary(computeErrors),
+		"absoluteReadyToPublishedErrorPercent": summary(wallErrors),
+		"activities":                           results,
+		"limitations": list(
+			"Queue overlaps preparation; these counters must not be added.",
+			"Transfer work sums parallel dependencies and is not consumer elapsed time.",
+			"Ready-to-published includes preparation, lane waiting, launch, compute and publication, but not time before readiness.",
+			"Recovered activities are excluded from single-attempt wall comparisons.",
+			"Publication and input-observation coefficients were fitted on this reference; their agreement is in-sample, not independent validation.",
+		),
+	}
+}
+
+func compareMatchedActivities(real Object, plan, sim map[string]Object, logicalReady, completed map[string]float64, handles map[string]int) ([]any, []any, []any) {
 	results := []any{}
 	var computeErrors, wallErrors []any
 	for _, activity := range rows(real["activities"]) {
@@ -80,33 +113,5 @@ func compareActivityTimes(request, real, simulation Object) Object {
 		}
 		results = append(results, record)
 	}
-	sort.Slice(results, func(i, j int) bool { return str(obj(results[i])["activityId"]) < str(obj(results[j])["activityId"]) })
-	within := func(values []any) int {
-		n := 0
-		for _, v := range values {
-			if num(v) <= 20 {
-				n++
-			}
-		}
-		return n
-	}
-	return Object{
-		"referenceRunId":                       obj(real["run"])["id"],
-		"role":                                 "per-activity-historical-comparison-not-independent-validation",
-		"activityCount":                        len(results),
-		"singleAttemptComparableCount":         len(computeErrors),
-		"samePlacementWallComparableCount":     len(wallErrors),
-		"computeWithin20PercentCount":          within(computeErrors),
-		"readyToPublishedWithin20PercentCount": within(wallErrors),
-		"absoluteComputeErrorPercent":          summary(computeErrors),
-		"absoluteReadyToPublishedErrorPercent": summary(wallErrors),
-		"activities":                           results,
-		"limitations": list(
-			"Queue overlaps preparation; these counters must not be added.",
-			"Transfer work sums parallel dependencies and is not consumer elapsed time.",
-			"Ready-to-published includes preparation, lane waiting, launch, compute and publication, but not time before readiness.",
-			"Recovered activities are excluded from single-attempt wall comparisons.",
-			"Publication and input-observation coefficients were fitted on this reference; their agreement is in-sample, not independent validation.",
-		),
-	}
+	return results, computeErrors, wallErrors
 }

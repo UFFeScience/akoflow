@@ -7,6 +7,55 @@ import "strings"
 func transferWallSensitivity(request, real Object, provenance string) Object {
 	request = clone(request)
 	check(obj(real["run"])["status"] == "completed", "completed transfer reference required")
+	groups := transferWallReferenceGroups(real)
+	metadata := obj(obj(request["NetworkTopology"])["metadata"])
+	model := obj(metadata["workspaceMaterializationModel"])
+	updated := []any{}
+	for _, profile := range rows(model["profiles"]) {
+		key := str(profile["strategy"]) + "/" + str(profile["sourceClass"]) + "/" + str(profile["targetClass"])
+		g := groups[key]
+		if g == nil {
+			continue
+		}
+		profile["archiveToWorkspaceRatio"] = num(g["archive"]) / num(g["workspace"])
+		profile["uploadArchiveBytesPerSecond"] = num(g["archive"]) / num(g["upload"])
+		profile["receiverSecondsPerByte"] = num(g["receiver"]) / num(g["workspace"])
+		profile["source"], profile["samples"] = "exploratory-effective-transfer-wall:"+provenance, int(num(g["samples"]))
+		if profile["strategy"] == "direct-runtime" {
+			profile["probeSeconds"] = num(g["probe"]) / num(g["samples"])
+			profile["snapshotSecondsPerByte"] = num(g["snapshot"]) / num(g["workspace"])
+		} else {
+			check(num(g["ingress"]) > 0, "gateway ingress phase missing")
+			profile["ingressArchiveBytesPerSecond"] = num(g["archive"]) / num(g["ingress"])
+			profile["validationSecondsPerByte"] = num(g["validation"]) / num(g["workspace"])
+		}
+		updated = append(updated, clone(profile))
+	}
+	check(len(updated) > 0, "no comparable measured route profiles")
+	// Wall samples may contain unobserved admission; do not put another SSH
+	// semaphore queue on top of their effective durations in this sensitivity.
+	for _, value := range obj(model["resources"]) {
+		resource := obj(value)
+		delete(resource, "bulkServiceGroupId")
+		delete(resource, "bulkServiceSlots")
+		delete(resource, "bulkServiceSource")
+	}
+	metadata["transferWallSensitivity"] = Object{
+		"referenceSHA256": provenance,
+		"profiles":        updated,
+		"role":            "effective-wall-route-sensitivity-not-independent-validation",
+		"limitations": list(
+			"Unknown SSH/cache waiting and CPU/IO contention remain in effective wall coefficients.",
+			"Explicit SSH admission groups are disabled for this offline sensitivity to avoid adding another queue on wall-fit samples.",
+			"Network sharing remains simulated; upload wall samples may already contain sharing, so double-counting risk is not eliminated.",
+			"Shared merge is retained once per consumer, not replicated per predecessor.",
+			"No real execution is authorized or submitted.",
+		),
+	}
+	return request
+}
+
+func transferWallReferenceGroups(real Object) map[string]Object {
 	latest := map[string]Object{}
 	workspaceBytes := map[string]float64{}
 	for _, workspace := range rows(real["workspaces"]) {
@@ -71,49 +120,5 @@ func transferWallSensitivity(request, real Object, provenance string) Object {
 			g[name] = num(g[name]) + value
 		}
 	}
-	metadata := obj(obj(request["NetworkTopology"])["metadata"])
-	model := obj(metadata["workspaceMaterializationModel"])
-	updated := []any{}
-	for _, profile := range rows(model["profiles"]) {
-		key := str(profile["strategy"]) + "/" + str(profile["sourceClass"]) + "/" + str(profile["targetClass"])
-		g := groups[key]
-		if g == nil {
-			continue
-		}
-		profile["archiveToWorkspaceRatio"] = num(g["archive"]) / num(g["workspace"])
-		profile["uploadArchiveBytesPerSecond"] = num(g["archive"]) / num(g["upload"])
-		profile["receiverSecondsPerByte"] = num(g["receiver"]) / num(g["workspace"])
-		profile["source"], profile["samples"] = "exploratory-effective-transfer-wall:"+provenance, int(num(g["samples"]))
-		if profile["strategy"] == "direct-runtime" {
-			profile["probeSeconds"] = num(g["probe"]) / num(g["samples"])
-			profile["snapshotSecondsPerByte"] = num(g["snapshot"]) / num(g["workspace"])
-		} else {
-			check(num(g["ingress"]) > 0, "gateway ingress phase missing")
-			profile["ingressArchiveBytesPerSecond"] = num(g["archive"]) / num(g["ingress"])
-			profile["validationSecondsPerByte"] = num(g["validation"]) / num(g["workspace"])
-		}
-		updated = append(updated, clone(profile))
-	}
-	check(len(updated) > 0, "no comparable measured route profiles")
-	// Wall samples may contain unobserved admission; do not put another SSH
-	// semaphore queue on top of their effective durations in this sensitivity.
-	for _, value := range obj(model["resources"]) {
-		resource := obj(value)
-		delete(resource, "bulkServiceGroupId")
-		delete(resource, "bulkServiceSlots")
-		delete(resource, "bulkServiceSource")
-	}
-	metadata["transferWallSensitivity"] = Object{
-		"referenceSHA256": provenance,
-		"profiles":        updated,
-		"role":            "effective-wall-route-sensitivity-not-independent-validation",
-		"limitations": list(
-			"Unknown SSH/cache waiting and CPU/IO contention remain in effective wall coefficients.",
-			"Explicit SSH admission groups are disabled for this offline sensitivity to avoid adding another queue on wall-fit samples.",
-			"Network sharing remains simulated; upload wall samples may already contain sharing, so double-counting risk is not eliminated.",
-			"Shared merge is retained once per consumer, not replicated per predecessor.",
-			"No real execution is authorized or submitted.",
-		),
-	}
-	return request
+	return groups
 }

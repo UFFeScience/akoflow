@@ -139,6 +139,44 @@ func TestRepositoryReturnsNilForMissingRecords(t *testing.T) {
 	}
 }
 
+func TestListRunsPageFiltersWorkflowBeforePagination(t *testing.T) {
+	repository := setup(t)
+	ctx := context.Background()
+	for _, query := range []string{
+		`INSERT INTO workflow_versions(id, workflow_id, version, definition_hash) VALUES ('other-version', 'workflow', 2, 'other')`,
+		`INSERT INTO schedule_plans(id, workflow_version_id, execution_scope_id, source, algorithm) VALUES ('other-plan', 'other-version', 'scope', 'plugin', 'test')`,
+	} {
+		if _, err := repository.db.ExecContext(ctx, query); err != nil {
+			t.Fatal(err)
+		}
+	}
+	for _, run := range []domain.ExecutionRun{
+		{ID: "a", SchedulePlanID: "plan", Mode: domain.ExecutionModeReal, Status: domain.ExecutionRunCompleted},
+		{ID: "b", SchedulePlanID: "plan", Mode: domain.ExecutionModeReal, Status: domain.ExecutionRunCompleted},
+		{ID: "z-unrelated", SchedulePlanID: "other-plan", Mode: domain.ExecutionModeReal, Status: domain.ExecutionRunCompleted},
+	} {
+		if err := repository.CreateRun(ctx, run); err != nil {
+			t.Fatal(err)
+		}
+	}
+	first, err := repository.ListRunsPage(ctx, 1, 1, "", "", "", "workflow-version")
+	if err != nil || first.Total != 2 || !first.HasNext || len(first.Items) != 1 || first.Items[0].ID != "b" {
+		t.Fatalf("first=%+v err=%v", first, err)
+	}
+	second, err := repository.ListRunsPage(ctx, 2, 1, "", "", "", "workflow-version")
+	if err != nil || second.HasNext || len(second.Items) != 1 || second.Items[0].ID != "a" {
+		t.Fatalf("second=%+v err=%v", second, err)
+	}
+	empty, err := repository.ListRunsPage(ctx, 1, 20, "", "", "", "missing")
+	if err != nil || empty.Total != 0 || len(empty.Items) != 0 || empty.HasNext {
+		t.Fatalf("empty=%+v err=%v", empty, err)
+	}
+	standalone, err := repository.ListRunsPage(ctx, 1, 20, "standalone", "", "", "workflow-version")
+	if err != nil || standalone.Total != 0 {
+		t.Fatalf("standalone=%+v err=%v", standalone, err)
+	}
+}
+
 func TestListRunsPageCombinesWorkflowInteractiveAndStandaloneRuns(t *testing.T) {
 	repository := setup(t)
 	ctx := context.Background()

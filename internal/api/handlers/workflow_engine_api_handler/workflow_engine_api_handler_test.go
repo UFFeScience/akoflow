@@ -3,6 +3,7 @@ package workflow_engine_api_handler
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"errors"
 	"net/http"
 	"net/http/httptest"
@@ -93,11 +94,12 @@ func (s validatorStub) Validate(domain.SchedulePlan, domain.WorkflowVersion, []d
 }
 
 type executionQueryStub struct {
-	run       *domain.ExecutionRun
-	tasks     []domain.TaskExecution
-	transfers []domain.DataTransfer
-	handles   []domain.ActivityHandle
-	events    []domainevents.Event
+	pageWorkflowVersion *string
+	run                 *domain.ExecutionRun
+	tasks               []domain.TaskExecution
+	transfers           []domain.DataTransfer
+	handles             []domain.ActivityHandle
+	events              []domainevents.Event
 }
 
 type executionCommandStub struct{}
@@ -143,9 +145,27 @@ func (s executionQueryStub) ListRuns(context.Context) ([]domain.ExecutionRun, er
 	}
 	return []domain.ExecutionRun{*s.run}, nil
 }
-func (s executionQueryStub) ListRunsPage(_ context.Context, page, pageSize int, _, _, _ string) (domain.ExecutionRunPage, error) {
+func (s executionQueryStub) ListRunsPage(_ context.Context, page, pageSize int, _, _, _ string, versions ...string) (domain.ExecutionRunPage, error) {
+	if s.pageWorkflowVersion != nil && len(versions) > 0 {
+		*s.pageWorkflowVersion = versions[0]
+	}
 	items, _ := s.ListRuns(context.Background())
 	return domain.ExecutionRunPage{Items: items, Page: page, PageSize: pageSize, Total: len(items)}, nil
+}
+
+func TestListExecutionsPassesWorkflowFilterToPagedQuery(t *testing.T) {
+	version := ""
+	handler := newTestHandler()
+	handler.executions = executionQueryStub{pageWorkflowVersion: &version}
+	recorder := httptest.NewRecorder()
+	handler.ListExecutions(recorder, httptest.NewRequest(http.MethodGet,
+		"/execution-runs/?workflowVersionId=workflow-v1&page=2&pageSize=20", nil))
+	require.Equal(t, http.StatusOK, recorder.Code)
+	require.Equal(t, "workflow-v1", version)
+	var response map[string]any
+	require.NoError(t, json.Unmarshal(recorder.Body.Bytes(), &response))
+	require.Equal(t, "workflow-v1", response["workflowVersionId"])
+	require.Equal(t, float64(2), response["page"])
 }
 func (s executionQueryStub) ListTasks(context.Context, string) ([]domain.TaskExecution, error) {
 	return s.tasks, nil

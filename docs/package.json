@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "generate:api": "node scripts/generate-api-reference.mjs",
+    "test:api-generator": "node --test scripts/go-function-body.test.mjs",
     "capture:media": "node scripts/capture-interface-media.mjs",
     "prestart": "npm run generate:api",
     "prebuild": "npm run generate:api",

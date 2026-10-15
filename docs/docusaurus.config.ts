@@ -7,21 +7,18 @@ const config: Config = {
   tagline: "Open Source Engine for Containerized Scientific Workflows",
   favicon: "img/brand/akoflow-macos.png",
 
-  // GitHub Pages is the deployment origin. The public proxy exposes the
-  // documentation at this canonical root, so generated links and assets must
-  // not retain the GitHub Pages repository prefix.
-  url: "https://akoflow.com",
-  baseUrl: "/",
+  // The public domain redirects to the institutional proxy, which serves the
+  // Pages build under /akoflow/. Assets and client routes must retain it.
+  url: "https://uffescience.ic.uff.br",
+  baseUrl: "/akoflow/",
 
-  // GitHub Pages and the institutional proxy expose this build under /akoflow/, while its assets
-  // are built for the public root domain. Redirect direct Pages visits before
-  // the app loads so navigation works there as well.
+  // Preserve deep links when visiting the deployment origin directly.
   headTags: [
     {
       tagName: "script",
       attributes: {},
       innerHTML:
-        "if (['uffescience.github.io', 'uffescience.ic.uff.br'].includes(location.hostname) && (location.pathname === '/akoflow' || location.pathname.startsWith('/akoflow/'))) { location.replace('https://akoflow.com' + (location.pathname.slice('/akoflow'.length) || '/') + location.search + location.hash); }",
+        "if (location.hostname === 'uffescience.github.io' && (location.pathname === '/akoflow' || location.pathname.startsWith('/akoflow/'))) { location.replace('https://uffescience.ic.uff.br' + location.pathname + location.search + location.hash); }",
     },
   ],
 

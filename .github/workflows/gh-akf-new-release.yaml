@@ -8,12 +8,17 @@ on:
         required: true
         type: string
         default: v1.0.10
+      runtime_artifact_run:
+        description: Optional completed tagged-push run whose successful runtime archives can be reused.
+        required: false
+        type: string
   push:
     tags:
       - "v*.*.*"
 
 permissions:
   contents: write
+  actions: read
 
 env:
   AKOFLOW_RELEASE_TAG: ${{ inputs.release_tag || github.ref_name }}
@@ -68,10 +73,44 @@ jobs:
         with:
           ref: refs/tags/${{ env.AKOFLOW_RELEASE_TAG }}
 
+      - name: Verify runtime artifact provenance
+        id: reuse
+        if: inputs.runtime_artifact_run != ''
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          AKOFLOW_RUNTIME_RUN: ${{ inputs.runtime_artifact_run }}
+          AKOFLOW_RUNTIME_ARCH: ${{ matrix.arch }}
+        run: |
+          set -euo pipefail
+          if ! [[ "$AKOFLOW_RUNTIME_RUN" =~ ^[0-9]+$ ]]; then
+            echo "Runtime artifact run must be numeric." >&2
+            exit 1
+          fi
+          source_sha=$(git rev-parse HEAD)
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$AKOFLOW_RUNTIME_RUN" |
+            jq --exit-status --arg sha "$source_sha" --arg repo "$GITHUB_REPOSITORY" --arg tag "$AKOFLOW_RELEASE_TAG" \
+              '.head_sha == $sha and .status == "completed" and .event == "push" and .head_branch == $tag and .head_repository.full_name == $repo' >/dev/null
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$AKOFLOW_RUNTIME_RUN/jobs" |
+            jq --exit-status --arg name "Build runtime archives ($AKOFLOW_RUNTIME_ARCH)" \
+              '[.jobs[] | select(.name == $name and .conclusion == "success")] | length == 1' >/dev/null
+          echo "enabled=true" >> "$GITHUB_OUTPUT"
+
+      - name: Download verified runtime archives
+        if: steps.reuse.outputs.enabled == 'true'
+        uses: actions/download-artifact@v5
+        with:
+          name: runtime-${{ matrix.arch }}
+          run-id: ${{ inputs.runtime_artifact_run }}
+          github-token: ${{ github.token }}
+          path: /tmp
+
       - name: Set up Docker Buildx
+        if: steps.reuse.outputs.enabled != 'true'
         uses: docker/setup-buildx-action@v3
 
       - name: Build daemon archive
+        if: steps.reuse.outputs.enabled != 'true'
         uses: docker/build-push-action@v6
         with:
           context: .
@@ -86,6 +125,7 @@ jobs:
           cache-to: type=gha,mode=max,scope=runtime-daemon-${{ matrix.arch }}
 
       - name: Build BuildKit archive
+        if: steps.reuse.outputs.enabled != 'true'
         uses: docker/build-push-action@v6
         with:
           context: .
@@ -100,6 +140,7 @@ jobs:
           cache-to: type=gha,mode=max,scope=runtime-buildkit-${{ matrix.arch }}
 
       - name: Create runtime checksums
+        if: steps.reuse.outputs.enabled != 'true'
         shell: bash
         run: |
           set -euo pipefail
@@ -108,6 +149,12 @@ jobs:
             "akoflow-daemon-${AKOFLOW_RELEASE_TAG}-linux-${{ matrix.arch }}.tar" \
             "akoflow-buildkit-${AKOFLOW_RELEASE_TAG}-linux-${{ matrix.arch }}.tar" \
             > "akoflow-runtime-${AKOFLOW_RELEASE_TAG}-linux-${{ matrix.arch }}.sha256"
+
+      - name: Verify runtime archive checksums
+        shell: bash
+        run: |
+          cd /tmp
+          sha256sum --check "akoflow-runtime-${AKOFLOW_RELEASE_TAG}-linux-${{ matrix.arch }}.sha256"
 
       - name: Upload runtime archives
         uses: actions/upload-artifact@v5

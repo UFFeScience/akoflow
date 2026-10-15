@@ -67,6 +67,13 @@ gh workflow run gh-akf-new-release.yaml \
   --field release_tag=v1.0.10
 ```
 
+The optional `runtime_artifact_run` input can reuse successful runtime archives
+from a completed tagged-push run only when its repository, tag, source SHA and
+architecture job all match. Downloaded archives are checked against their
+SHA-256 manifests before upload. Desktop packages are always rebuilt and their
+updater metadata verified; a failed publication does not justify reusing an
+unverified installer.
+
 Windows NSIS and portable executables use distinct `setup` and `portable`
 filenames. Before upload, the Go `release-assets-check` command verifies updater
 manifest versions, local filenames, sizes, SHA-512 values and legacy metadata

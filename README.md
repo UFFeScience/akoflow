@@ -55,6 +55,33 @@ workflows, and distributed computing.
 
 <a href="https://github.com/UFFeScience/akoflow/graphs/contributors"><img src="https://contrib.rocks/image?repo=UFFeScience/akoflow" alt="AkôFlow contributor avatars" /></a>
 
+## Maintainer release packaging
+
+Create the matching version tag in the Desktop repository before triggering the
+backend release workflow. Application and runtime builds check out the frozen
+source tag; packaging fixes can rebuild an existing draft without moving tags:
+
+```sh
+gh workflow run gh-akf-new-release.yaml \
+  --repo UFFeScience/akoflow --ref main \
+  --field release_tag=v1.0.10
+```
+
+The optional `runtime_artifact_run` input can reuse successful runtime archives
+from a completed tagged-push run only when its repository, tag, source SHA and
+architecture job all match. Downloaded archives are checked against their
+SHA-256 manifests before upload. Desktop packages are always rebuilt and their
+updater metadata verified; a failed publication does not justify reusing an
+unverified installer.
+
+Windows NSIS and portable executables use distinct `setup` and `portable`
+filenames. Before upload, the Go `release-assets-check` command verifies updater
+manifest versions, local filenames, sizes, SHA-512 values and legacy metadata
+against the actual packages. The workflow creates a draft, not a public release.
+Review successful checks, runtime checksums, package contents and screenshot
+provenance before publishing the draft. Do not move an existing source tag to
+hide a packaging correction.
+
 ## Cite AkôFlow
 
 If AkôFlow contributes to your research, please cite:

@@ -1,6 +1,13 @@
 name: Publish GitHub release
 
 on:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: Existing frozen source tag to package; never moves a tag.
+        required: true
+        type: string
+        default: v1.0.10
   push:
     tags:
       - "v*.*.*"
@@ -8,8 +15,11 @@ on:
 permissions:
   contents: write
 
+env:
+  AKOFLOW_RELEASE_TAG: ${{ inputs.release_tag || github.ref_name }}
+
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ inputs.release_tag || github.ref_name }}
   cancel-in-progress: true
 
 jobs:
@@ -17,8 +27,17 @@ jobs:
     name: Test daemon
     runs-on: ubuntu-latest
     steps:
+      - name: Validate frozen release tag
+        shell: bash
+        run: |
+          if ! [[ "$AKOFLOW_RELEASE_TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+([-.+][0-9A-Za-z.-]+)?$ ]]; then
+            echo "A semantic version source tag is required." >&2
+            exit 1
+          fi
       - name: Checkout source
         uses: actions/checkout@v6
+        with:
+          ref: refs/tags/${{ env.AKOFLOW_RELEASE_TAG }}
 
       - name: Set up Go
         uses: actions/setup-go@v6
@@ -46,6 +65,8 @@ jobs:
     steps:
       - name: Checkout source
         uses: actions/checkout@v6
+        with:
+          ref: refs/tags/${{ env.AKOFLOW_RELEASE_TAG }}
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -57,10 +78,10 @@ jobs:
           file: releases/dockerfiles/server.Dockerfile
           platforms: ${{ matrix.platform }}
           push: false
-          tags: akoflow/daemon:${{ github.ref_name }}
-          outputs: type=docker,dest=/tmp/akoflow-daemon-${{ github.ref_name }}-linux-${{ matrix.arch }}.tar
+          tags: akoflow/daemon:${{ env.AKOFLOW_RELEASE_TAG }}
+          outputs: type=docker,dest=/tmp/akoflow-daemon-${{ env.AKOFLOW_RELEASE_TAG }}-linux-${{ matrix.arch }}.tar
           build-args: |
-            AKOFLOW_VERSION=${{ github.ref_name }}
+            AKOFLOW_VERSION=${{ env.AKOFLOW_RELEASE_TAG }}
           cache-from: type=gha,scope=runtime-daemon-${{ matrix.arch }}
           cache-to: type=gha,mode=max,scope=runtime-daemon-${{ matrix.arch }}
 
@@ -71,10 +92,10 @@ jobs:
           file: releases/dockerfiles/buildkit.Dockerfile
           platforms: ${{ matrix.platform }}
           push: false
-          tags: akoflow/buildkit:${{ github.ref_name }}
-          outputs: type=docker,dest=/tmp/akoflow-buildkit-${{ github.ref_name }}-linux-${{ matrix.arch }}.tar
+          tags: akoflow/buildkit:${{ env.AKOFLOW_RELEASE_TAG }}
+          outputs: type=docker,dest=/tmp/akoflow-buildkit-${{ env.AKOFLOW_RELEASE_TAG }}-linux-${{ matrix.arch }}.tar
           build-args: |
-            AKOFLOW_VERSION=${{ github.ref_name }}
+            AKOFLOW_VERSION=${{ env.AKOFLOW_RELEASE_TAG }}
           cache-from: type=gha,scope=runtime-buildkit-${{ matrix.arch }}
           cache-to: type=gha,mode=max,scope=runtime-buildkit-${{ matrix.arch }}
 
@@ -84,18 +105,18 @@ jobs:
           set -euo pipefail
           cd /tmp
           sha256sum \
-            "akoflow-daemon-${GITHUB_REF_NAME}-linux-${{ matrix.arch }}.tar" \
-            "akoflow-buildkit-${GITHUB_REF_NAME}-linux-${{ matrix.arch }}.tar" \
-            > "akoflow-runtime-${GITHUB_REF_NAME}-linux-${{ matrix.arch }}.sha256"
+            "akoflow-daemon-${AKOFLOW_RELEASE_TAG}-linux-${{ matrix.arch }}.tar" \
+            "akoflow-buildkit-${AKOFLOW_RELEASE_TAG}-linux-${{ matrix.arch }}.tar" \
+            > "akoflow-runtime-${AKOFLOW_RELEASE_TAG}-linux-${{ matrix.arch }}.sha256"
 
       - name: Upload runtime archives
         uses: actions/upload-artifact@v5
         with:
           name: runtime-${{ matrix.arch }}
           path: |
-            /tmp/akoflow-daemon-${{ github.ref_name }}-linux-${{ matrix.arch }}.tar
-            /tmp/akoflow-buildkit-${{ github.ref_name }}-linux-${{ matrix.arch }}.tar
-            /tmp/akoflow-runtime-${{ github.ref_name }}-linux-${{ matrix.arch }}.sha256
+            /tmp/akoflow-daemon-${{ env.AKOFLOW_RELEASE_TAG }}-linux-${{ matrix.arch }}.tar
+            /tmp/akoflow-buildkit-${{ env.AKOFLOW_RELEASE_TAG }}-linux-${{ matrix.arch }}.tar
+            /tmp/akoflow-runtime-${{ env.AKOFLOW_RELEASE_TAG }}-linux-${{ matrix.arch }}.sha256
           if-no-files-found: error
 
   desktop:
@@ -114,7 +135,7 @@ jobs:
             # fail while producing the universal macOS package.
             signing: none
           - runner: windows-latest
-            command: npx electron-builder --win --x64 --publish never
+            command: npx electron-builder --win --x64 --publish never --config.nsis.artifactName='Akoflow-Desktop-${version}-win-${arch}-setup.${ext}' --config.portable.artifactName='Akoflow-Desktop-${version}-win-${arch}-portable.${ext}'
             artifact: windows-x64
             signing: windows
           - runner: ubuntu-latest
@@ -127,11 +148,23 @@ jobs:
         uses: actions/checkout@v6
         with:
           repository: UFFeScience/akoflow-desktop
-          # Desktop releases intentionally package the current frontend main.
-          ref: main
+          # Application source is immutable; packaging overrides are explicit.
+          ref: refs/tags/${{ env.AKOFLOW_RELEASE_TAG }}
           # GITHUB_TOKEN is scoped to this repository and cannot read the
           # private desktop repository. Use a fine-grained cross-repo token.
           token: ${{ secrets.DESKTOP_REPOSITORY_TOKEN }}
+
+      - name: Checkout release verification tools
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.sha }}
+          path: .release-tools
+
+      - name: Set up Go verification tools
+        uses: actions/setup-go@v6
+        with:
+          go-version-file: .release-tools/go.mod
+          cache: false
 
       - name: Set up Node.js
         uses: actions/setup-node@v6
@@ -144,9 +177,9 @@ jobs:
         id: version
         shell: bash
         run: |
-          version="${GITHUB_REF_NAME#v}"
+          version="${AKOFLOW_RELEASE_TAG#v}"
           if ! [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+([-.+][0-9A-Za-z.-]+)?$ ]]; then
-            echo "Release tag must be a semantic version prefixed with v; received: $GITHUB_REF_NAME" >&2
+            echo "Release tag must be a semantic version prefixed with v." >&2
             exit 1
           fi
           echo "value=$version" >> "$GITHUB_OUTPUT"
@@ -179,6 +212,11 @@ jobs:
             fi
           done
 
+      - name: Verify updater manifests against distributed files
+        working-directory: .release-tools
+        shell: bash
+        run: go run ./cmd/release-assets-check --dir "$GITHUB_WORKSPACE/release" --version "$AKOFLOW_RELEASE_TAG"
+
       - name: Upload desktop package
         uses: actions/upload-artifact@v5
         with:
@@ -194,7 +232,7 @@ jobs:
           if-no-files-found: error
 
   release:
-    name: Create GitHub release
+    name: Create verified GitHub release draft
     needs: [runtime-assets, desktop]
     runs-on: ubuntu-latest
     steps:
@@ -234,8 +272,10 @@ jobs:
       - name: Create AkôFlow release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ env.AKOFLOW_RELEASE_TAG }}
+          draft: true
           generate_release_notes: true
-          prerelease: ${{ contains(github.ref_name, '-') }}
+          prerelease: ${{ contains(env.AKOFLOW_RELEASE_TAG, '-') }}
           files: release-assets/*
           body: |
             ## Install AkôFlow Desktop
@@ -246,4 +286,4 @@ jobs:
             - **Windows:** run the x64 portable `.exe` asset without an installation wizard.
             - **Linux:** run the x64 `.AppImage` after `chmod +x`, or install the `.deb` with `sudo apt install ./Akoflow-Desktop-*.deb`.
 
-            The matching source is the Git tag `${{ github.ref_name }}`. The runtime Docker archives in this release are loaded locally by Desktop; AkôFlow does not publish daemon or BuildKit packages to a container registry.
+            The application source is the frozen Git tag `${{ env.AKOFLOW_RELEASE_TAG }}`. Windows packaging uses distinct `setup` and `portable` filenames and all updater SHA512 manifests are verified before upload. The runtime Docker archives in this release are loaded locally by Desktop; AkôFlow does not publish daemon or BuildKit packages to a container registry. This draft must be reviewed before publication.

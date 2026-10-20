@@ -1,0 +1,22 @@
+{
+  "mode": "contract-fixture",
+  "dependencyWaves": [
+    [
+      "load-teacher"
+    ],
+    [
+      "soft-labels"
+    ],
+    [
+      "train-student"
+    ],
+    [
+      "quality",
+      "latency"
+    ],
+    [
+      "publish"
+    ]
+  ],
+  "completedActivities": 6
+}

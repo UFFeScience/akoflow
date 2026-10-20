@@ -1,0 +1,25 @@
+{
+  "mode": "contract-fixture",
+  "dependencyWaves": [
+    [
+      "ingest-documents"
+    ],
+    [
+      "ocr",
+      "native-text"
+    ],
+    [
+      "classify"
+    ],
+    [
+      "extract-fields"
+    ],
+    [
+      "validate-schema"
+    ],
+    [
+      "publish"
+    ]
+  ],
+  "completedActivities": 7
+}

@@ -1,0 +1,23 @@
+{
+  "mode": "contract-fixture",
+  "dependencyWaves": [
+    [
+      "prepare-input"
+    ],
+    [
+      "predict-a",
+      "predict-b",
+      "predict-c"
+    ],
+    [
+      "combine"
+    ],
+    [
+      "evaluate"
+    ],
+    [
+      "publish"
+    ]
+  ],
+  "completedActivities": 7
+}

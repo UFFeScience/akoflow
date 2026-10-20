@@ -1,0 +1,10 @@
+{
+  "showcase": "surrogate-model",
+  "digest": "63f269c498af3bef8ae1fbc4923d016b726be5733d8de36fdf08dabffc350041",
+  "stages": [
+    "simulation-n"
+  ],
+  "status": "success",
+  "validationMode": "contract-fixture",
+  "stage": "simulation-n"
+}

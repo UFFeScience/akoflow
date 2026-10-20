@@ -1,0 +1,10 @@
+{
+  "showcase": "computer-vision",
+  "digest": "341bcc09316a93566539680057fc815783fbaf93e15ee94609e4e7c4adef665a",
+  "stages": [
+    "package-model"
+  ],
+  "status": "success",
+  "validationMode": "contract-fixture",
+  "stage": "package-model"
+}

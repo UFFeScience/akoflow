@@ -1,0 +1,12 @@
+{
+  "showcase": "local-rag-factory",
+  "status": "success",
+  "artifacts": [
+    "documents.json",
+    "chunks.json",
+    "index.json",
+    "retrieval.json",
+    "answers.json",
+    "evaluation.json"
+  ]
+}

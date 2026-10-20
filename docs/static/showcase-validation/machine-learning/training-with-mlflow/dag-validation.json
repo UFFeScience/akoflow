@@ -1,0 +1,22 @@
+{
+  "mode": "contract-fixture",
+  "dependencyWaves": [
+    [
+      "ingest-data"
+    ],
+    [
+      "validate"
+    ],
+    [
+      "train"
+    ],
+    [
+      "evaluate"
+    ],
+    [
+      "register-model",
+      "log-mlflow-run"
+    ]
+  ],
+  "completedActivities": 6
+}

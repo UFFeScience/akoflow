@@ -1,0 +1,140 @@
+{
+  "date": "2026-10-20",
+  "results": [
+    {
+      "path": "scientific-ai/ai-assisted-analysis",
+      "status": "passed",
+      "output": "validated ai-assisted-analysis"
+    },
+    {
+      "path": "scientific-ai/experiment-feedback-loop",
+      "status": "passed",
+      "output": "validated experiment-feedback-loop"
+    },
+    {
+      "path": "scientific-ai/surrogate-model",
+      "status": "passed",
+      "output": "validated surrogate-model"
+    },
+    {
+      "path": "machine-learning/anomaly-detection",
+      "status": "passed",
+      "output": "validated anomaly-detection"
+    },
+    {
+      "path": "machine-learning/batch-inference",
+      "status": "passed",
+      "output": "validated batch-inference"
+    },
+    {
+      "path": "machine-learning/computer-vision",
+      "status": "passed",
+      "output": "validated computer-vision"
+    },
+    {
+      "path": "machine-learning/hyperparameter-search",
+      "status": "passed",
+      "output": "validated hyperparameter-search"
+    },
+    {
+      "path": "machine-learning/inference-benchmark",
+      "status": "passed",
+      "output": "validated inference-benchmark"
+    },
+    {
+      "path": "machine-learning/infrastructure-selection",
+      "status": "passed",
+      "output": "validated infrastructure-selection"
+    },
+    {
+      "path": "machine-learning/lora-fine-tuning",
+      "status": "passed",
+      "output": "validated lora-fine-tuning"
+    },
+    {
+      "path": "machine-learning/model-comparison",
+      "status": "passed",
+      "output": "validated model-comparison"
+    },
+    {
+      "path": "machine-learning/model-conversion",
+      "status": "passed",
+      "output": "validated model-conversion"
+    },
+    {
+      "path": "machine-learning/model-distillation",
+      "status": "passed",
+      "output": "validated model-distillation"
+    },
+    {
+      "path": "machine-learning/model-ensemble",
+      "status": "passed",
+      "output": "validated model-ensemble"
+    },
+    {
+      "path": "machine-learning/training-with-mlflow",
+      "status": "passed",
+      "output": "validated training-with-mlflow"
+    },
+    {
+      "path": "generative-ai/audio-transcription",
+      "status": "passed",
+      "output": "validated audio-transcription"
+    },
+    {
+      "path": "generative-ai/document-extraction",
+      "status": "passed",
+      "output": "validated document-extraction"
+    },
+    {
+      "path": "generative-ai/local-rag",
+      "status": "passed",
+      "output": "validated local-rag-factory"
+    },
+    {
+      "path": "generative-ai/rag-indexing",
+      "status": "passed",
+      "output": "validated rag-indexing"
+    },
+    {
+      "path": "generative-ai/synthetic-dataset",
+      "status": "passed",
+      "output": "validated synthetic-dataset"
+    },
+    {
+      "path": "generative-ai/video-studio",
+      "status": "passed",
+      "output": "validated ai-video-studio"
+    },
+    {
+      "path": "agentic-workflows/bounded-agent",
+      "status": "passed",
+      "output": "validated bounded-agent"
+    },
+    {
+      "path": "agentic-workflows/multi-agent-review",
+      "status": "passed",
+      "output": "validated multi-agent-review"
+    },
+    {
+      "path": "agentic-workflows/supervised-tool-loop",
+      "status": "passed",
+      "output": "validated supervised-tool-loop"
+    },
+    {
+      "path": "document-ai/document-intelligence",
+      "status": "passed",
+      "output": "validated document-intelligence"
+    },
+    {
+      "path": "media/video-intelligence",
+      "status": "passed",
+      "output": "validated video-intelligence"
+    },
+    {
+      "path": "rendering/blender-render-farm",
+      "status": "passed",
+      "output": "validated blender-render-farm"
+    }
+  ]
+}

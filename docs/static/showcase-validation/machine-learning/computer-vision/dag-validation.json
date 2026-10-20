@@ -1,0 +1,24 @@
+{
+  "mode": "contract-fixture",
+  "dependencyWaves": [
+    [
+      "collect-images"
+    ],
+    [
+      "import-labels"
+    ],
+    [
+      "augment"
+    ],
+    [
+      "train-detector"
+    ],
+    [
+      "evaluate"
+    ],
+    [
+      "package-model"
+    ]
+  ],
+  "completedActivities": 6
+}

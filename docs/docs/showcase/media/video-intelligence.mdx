@@ -3,18 +3,35 @@ title: Video Intelligence
 description: Generate, inspect, segment, and summarize a reproducible offline test video.
 ---
 
-import {WorkflowDag, WorkflowPatternDetails} from '@site/src/components/WorkflowShowcase';
+import {
+  WorkflowDag,
+  WorkflowPatternDetails,
+} from "@site/src/components/WorkflowShowcase";
 
 # Video Intelligence
 
 The workflow creates a known three-scene video, inspects its streams, extracts scene thumbnails, measures audio, and assembles a searchable timeline. The known input makes scene and duration assertions deterministic while still exercising real FFmpeg processing in the OCI image.
 
-<WorkflowDag title="Video Intelligence" stages={['prepare',['probe','scenes','audio'],'timeline','report']} />
+<WorkflowDag
+  title="Video Intelligence"
+  stages={["prepare", ["probe", "scenes", "audio"], "timeline", "report"]}
+/>
 
 <WorkflowPatternDetails
-  inputs={['Generated three-scene audiovisual fixture']}
-  outputs={['Source video metadata','Scene thumbnails','Audio measurements','Timestamped timeline','Artifact manifest']}
-  evidence={['Stream codecs and dimensions','Observed duration','Scene count','Audio level method']}
+  inputs={["Generated three-scene audiovisual fixture"]}
+  outputs={[
+    "Source video metadata",
+    "Scene thumbnails",
+    "Audio measurements",
+    "Timestamped timeline",
+    "Artifact manifest",
+  ]}
+  evidence={[
+    "Stream codecs and dimensions",
+    "Observed duration",
+    "Scene count",
+    "Audio level method",
+  ]}
 />
 
 ## Run locally
@@ -29,3 +46,6 @@ Minimal hosts use a deterministic portable fixture. The container installs FFmpe
 
 [Open the source bundle](https://github.com/UFFeScience/akoflow-examples/tree/main/media/video-intelligence) · [Workflow YAML](https://raw.githubusercontent.com/UFFeScience/akoflow-examples/main/media/video-intelligence/workflow.yaml)
 
+## Local validation evidence
+
+[Validated output manifest](/showcase-validation/media/video-intelligence/manifest.json). This host smoke run does not verify deployment through the daemon. Updated Desktop activity captures are still pending.

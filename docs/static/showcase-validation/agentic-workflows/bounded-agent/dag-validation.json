@@ -1,0 +1,19 @@
+{
+  "mode": "contract-fixture",
+  "dependencyWaves": [
+    [
+      "prepare-objective"
+    ],
+    [
+      "agent-loop"
+    ],
+    [
+      "validate-output"
+    ],
+    [
+      "publish-result",
+      "store-trace"
+    ]
+  ],
+  "completedActivities": 5
+}

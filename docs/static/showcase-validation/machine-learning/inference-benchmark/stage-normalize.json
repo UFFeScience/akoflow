@@ -1,0 +1,10 @@
+{
+  "showcase": "inference-benchmark",
+  "digest": "3cefea59227f2468615f7170eae78698601c5297264a679b3f6527d0b669244b",
+  "stages": [
+    "normalize"
+  ],
+  "status": "success",
+  "validationMode": "contract-fixture",
+  "stage": "normalize"
+}

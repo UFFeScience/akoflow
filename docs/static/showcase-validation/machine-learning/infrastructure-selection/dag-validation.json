@@ -1,0 +1,23 @@
+{
+  "mode": "contract-fixture",
+  "dependencyWaves": [
+    [
+      "profile-workload"
+    ],
+    [
+      "local-gpu",
+      "hpc",
+      "cloud"
+    ],
+    [
+      "compare-plans"
+    ],
+    [
+      "select-scope"
+    ],
+    [
+      "train"
+    ]
+  ],
+  "completedActivities": 7
+}

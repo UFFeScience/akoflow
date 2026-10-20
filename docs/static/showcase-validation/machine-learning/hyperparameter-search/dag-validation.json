@@ -1,0 +1,20 @@
+{
+  "mode": "contract-fixture",
+  "dependencyWaves": [
+    [
+      "prepare-dataset"
+    ],
+    [
+      "trial-1",
+      "trial-2",
+      "trial-n"
+    ],
+    [
+      "compare-trials"
+    ],
+    [
+      "register-best"
+    ]
+  ],
+  "completedActivities": 6
+}

@@ -1,0 +1,10 @@
+{
+  "showcase": "synthetic-dataset",
+  "digest": "8fee82f4cb82bbc3bf481ea7f9ea1cf3ff82caffdd6e62a2ea66efcbe18f0000",
+  "stages": [
+    "deduplicate"
+  ],
+  "status": "success",
+  "validationMode": "contract-fixture",
+  "stage": "deduplicate"
+}

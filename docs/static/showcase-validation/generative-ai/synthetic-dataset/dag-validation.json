@@ -1,0 +1,26 @@
+{
+  "mode": "contract-fixture",
+  "dependencyWaves": [
+    [
+      "define-schema"
+    ],
+    [
+      "batch-a",
+      "batch-b",
+      "batch-n"
+    ],
+    [
+      "filter"
+    ],
+    [
+      "deduplicate"
+    ],
+    [
+      "quality-review"
+    ],
+    [
+      "publish"
+    ]
+  ],
+  "completedActivities": 8
+}

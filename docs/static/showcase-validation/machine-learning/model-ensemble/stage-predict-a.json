@@ -1,0 +1,10 @@
+{
+  "showcase": "model-ensemble",
+  "digest": "7fa33800cda5058f6c729017b85616b44e214947f7f2d3acd666fc0592bf5f74",
+  "stages": [
+    "predict-a"
+  ],
+  "status": "success",
+  "validationMode": "contract-fixture",
+  "stage": "predict-a"
+}

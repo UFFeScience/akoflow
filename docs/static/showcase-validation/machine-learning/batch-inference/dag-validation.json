@@ -1,0 +1,23 @@
+{
+  "mode": "contract-fixture",
+  "dependencyWaves": [
+    [
+      "load-model"
+    ],
+    [
+      "partition-input"
+    ],
+    [
+      "infer-shard-a",
+      "infer-shard-b",
+      "infer-shard-n"
+    ],
+    [
+      "merge-predictions"
+    ],
+    [
+      "publish"
+    ]
+  ],
+  "completedActivities": 7
+}

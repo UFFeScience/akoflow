@@ -1,0 +1,10 @@
+{
+  "showcase": "model-comparison",
+  "digest": "13a73ec7c3f7e14488f158c92267085d0cb6199218723bd74bd1d003fc80fedb",
+  "stages": [
+    "evaluate-b"
+  ],
+  "status": "success",
+  "validationMode": "contract-fixture",
+  "stage": "evaluate-b"
+}

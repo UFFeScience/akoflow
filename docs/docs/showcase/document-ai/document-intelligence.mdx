@@ -3,18 +3,36 @@ title: Document Intelligence
 description: Extract and reconcile auditable procurement records from an offline document corpus.
 ---
 
-import {WorkflowDag, WorkflowPatternDetails} from '@site/src/components/WorkflowShowcase';
+import {
+  WorkflowDag,
+  WorkflowPatternDetails,
+} from "@site/src/components/WorkflowShowcase";
 
 # Document Intelligence
 
 This example processes synthetic invoices and a purchase order through explicit ingestion, classification, extraction, reconciliation, and reporting activities. It verifies totals and duplicate invoice identifiers rather than stopping after text extraction.
 
-<WorkflowDag title="Document Intelligence" stages={['ingest','classify','extract','reconcile','report']} />
+<WorkflowDag
+  title="Document Intelligence"
+  stages={["ingest", "classify", "extract", "reconcile", "report"]}
+/>
 
 <WorkflowPatternDetails
-  inputs={['Versioned semi-structured invoices','Purchase-order fixture']}
-  outputs={['Document inventory','Classifications','Extracted fields and line items','Reconciliation JSON and CSV','Aggregate report']}
-  evidence={['Source hashes','Document-to-record mapping','Balance checks','Duplicate checks','Gross total']}
+  inputs={["Versioned semi-structured invoices", "Purchase-order fixture"]}
+  outputs={[
+    "Document inventory",
+    "Classifications",
+    "Extracted fields and line items",
+    "Reconciliation JSON and CSV",
+    "Aggregate report",
+  ]}
+  evidence={[
+    "Source hashes",
+    "Document-to-record mapping",
+    "Balance checks",
+    "Duplicate checks",
+    "Gross total",
+  ]}
 />
 
 ## Run locally
@@ -29,3 +47,6 @@ The fixture is intentionally small and private-data-free. Replace `data/document
 
 [Open the source bundle](https://github.com/UFFeScience/akoflow-examples/tree/main/document-ai/document-intelligence) · [Workflow YAML](https://raw.githubusercontent.com/UFFeScience/akoflow-examples/main/document-ai/document-intelligence/workflow.yaml)
 
+## Local validation evidence
+
+[Validated output manifest](/showcase-validation/document-ai/document-intelligence/manifest.json). This host smoke run does not verify deployment through the daemon. Updated Desktop activity captures are still pending.

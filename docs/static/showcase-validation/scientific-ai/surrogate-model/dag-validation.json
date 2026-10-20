@@ -1,0 +1,25 @@
+{
+  "mode": "contract-fixture",
+  "dependencyWaves": [
+    [
+      "design-samples"
+    ],
+    [
+      "simulation-a",
+      "simulation-n"
+    ],
+    [
+      "assemble-dataset"
+    ],
+    [
+      "train-surrogate"
+    ],
+    [
+      "validate"
+    ],
+    [
+      "publish"
+    ]
+  ],
+  "completedActivities": 7
+}

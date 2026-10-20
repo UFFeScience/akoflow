@@ -1,0 +1,22 @@
+{
+  "mode": "contract-fixture",
+  "dependencyWaves": [
+    [
+      "fetch-base-model"
+    ],
+    [
+      "prepare-examples"
+    ],
+    [
+      "fine-tune-adapters"
+    ],
+    [
+      "evaluate"
+    ],
+    [
+      "publish-adapter",
+      "record-lineage"
+    ]
+  ],
+  "completedActivities": 6
+}

@@ -1,0 +1,10 @@
+{
+  "showcase": "infrastructure-selection",
+  "digest": "2d3204fcf3cabd8209080462bf1f40dde64db02b43896f7e179aa02be468b7c1",
+  "stages": [
+    "cloud"
+  ],
+  "status": "success",
+  "validationMode": "contract-fixture",
+  "stage": "cloud"
+}

@@ -1,0 +1,20 @@
+{
+  "mode": "contract-fixture",
+  "dependencyWaves": [
+    [
+      "freeze-evaluation-set"
+    ],
+    [
+      "evaluate-a",
+      "evaluate-b",
+      "evaluate-c"
+    ],
+    [
+      "compare-metrics"
+    ],
+    [
+      "approve-candidate"
+    ]
+  ],
+  "completedActivities": 6
+}

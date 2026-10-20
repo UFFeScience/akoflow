@@ -1,0 +1,11 @@
+{
+  "showcase": "ai-video-studio",
+  "status": "success",
+  "artifacts": [
+    "storyboard.json",
+    "frames.json",
+    "narration.wav",
+    "final.mp4",
+    "quality-report.json"
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "mode": "contract-fixture",
+  "dependencyWaves": [
+    [
+      "collect-documents"
+    ],
+    [
+      "clean"
+    ],
+    [
+      "chunk"
+    ],
+    [
+      "embed"
+    ],
+    [
+      "build-index"
+    ],
+    [
+      "retrieval-tests",
+      "answer-tests"
+    ],
+    [
+      "publish"
+    ]
+  ],
+  "completedActivities": 8
+}

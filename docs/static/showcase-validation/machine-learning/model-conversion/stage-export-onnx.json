@@ -1,0 +1,10 @@
+{
+  "showcase": "model-conversion",
+  "digest": "a42d914a6a8a096bd283147d03fbe5aa642e69fd0edb04ab36aab77d20612c4d",
+  "stages": [
+    "export-onnx"
+  ],
+  "status": "success",
+  "validationMode": "contract-fixture",
+  "stage": "export-onnx"
+}

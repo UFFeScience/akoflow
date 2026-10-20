@@ -1,0 +1,24 @@
+{
+  "mode": "contract-fixture",
+  "dependencyWaves": [
+    [
+      "observations"
+    ],
+    [
+      "update-model"
+    ],
+    [
+      "propose-experiments"
+    ],
+    [
+      "safety-check"
+    ],
+    [
+      "run-experiments"
+    ],
+    [
+      "record-observations"
+    ]
+  ],
+  "completedActivities": 6
+}

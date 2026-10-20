@@ -1,0 +1,11 @@
+{
+  "showcase": "video-intelligence",
+  "status": "success",
+  "artifacts": [
+    "source.mp4",
+    "probe.json",
+    "scenes.json",
+    "audio.json",
+    "timeline.json"
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "mode": "contract-fixture",
+  "dependencyWaves": [
+    [
+      "build-context"
+    ],
+    [
+      "propose-action"
+    ],
+    [
+      "policy-check"
+    ],
+    [
+      "human-approval"
+    ],
+    [
+      "execute-tool"
+    ],
+    [
+      "verify"
+    ]
+  ],
+  "completedActivities": 6
+}

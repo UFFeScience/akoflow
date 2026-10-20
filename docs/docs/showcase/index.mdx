@@ -4,7 +4,7 @@ sidebar_label: Overview
 description: Executable AkôFlow examples for AI, documents, media, rendering, and scientific workflows.
 ---
 
-import WorkflowCatalog from '@site/src/components/WorkflowCatalog';
+import WorkflowCatalog from "@site/src/components/WorkflowCatalog";
 
 # Showcases
 
@@ -14,16 +14,21 @@ The complete Dockerfiles, Python programs, generators, input fixtures, runners, 
 
 ## Choose a category
 
+- **Scientific Workflows** — AI-assisted analysis, surrogate models, and experiment feedback loops.
+
 - **Machine Learning** — training, tuning, inference, evaluation, conversion, vision, ensembles, and infrastructure selection.
 - **Generative AI** — retrieval, synthetic data, audio transcription, document extraction, and offline video creation.
 - **Document AI** — classification, structured extraction, and reconciliation.
 - **Media intelligence** — reproducible video inspection, segmentation, audio analysis, and timelines.
 - **Rendering** — procedural scenes, parallel frame shards, and animation composition.
 - **Agentic workflows** — bounded agents, supervised tool use, and multi-agent review.
-- **Scientific AI** — AI-assisted analysis, surrogate models, and experiment feedback loops.
 
 <WorkflowCatalog />
 
 ## Validation model
 
+The 22 AI pattern bundles are **contract fixtures**: they validate activity names, dependencies, scheduling waves, and generated artifact contracts. They do not train models, contact MLflow, or execute hosted AI services. The five domain pipelines perform local data processing. A successful fixture run must not be presented as a verified deployment of the corresponding model.
+
 Every source bundle is exercised by the centralized examples CI. The regression fixture verifies its declared local inputs and outputs; provider-specific execution on HPC, Kubernetes, or cloud infrastructure still depends on the environment and permissions described by the corresponding infrastructure guide.
+
+[Validation results for all 27 showcases](/showcase-validation/summary.json) (2026-10-20). These are local smoke and contract checks; daemon runs and per-activity Desktop screenshots remain pending.

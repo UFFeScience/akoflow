@@ -1,0 +1,10 @@
+{
+  "showcase": "bounded-agent",
+  "digest": "aa4c808bc18a07f6a5076a5ef7091eb497537a4b218f41e3cd4fc41bdd93c13a",
+  "stages": [
+    "store-trace"
+  ],
+  "status": "success",
+  "validationMode": "contract-fixture",
+  "stage": "store-trace"
+}

@@ -1,0 +1,10 @@
+{
+  "showcase": "document-extraction",
+  "digest": "a7bbc287e7889ccce9cb63d5c83007ffb32f06451abcd541cad8c57b77904068",
+  "stages": [
+    "native-text"
+  ],
+  "status": "success",
+  "validationMode": "contract-fixture",
+  "stage": "native-text"
+}

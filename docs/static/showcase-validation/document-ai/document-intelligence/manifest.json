@@ -1,0 +1,12 @@
+{
+  "showcase": "document-intelligence",
+  "status": "success",
+  "artifacts": [
+    "ingested.json",
+    "classified.json",
+    "extracted.json",
+    "reconciliation.json",
+    "invoice-summary.csv",
+    "report.json"
+  ]
+}

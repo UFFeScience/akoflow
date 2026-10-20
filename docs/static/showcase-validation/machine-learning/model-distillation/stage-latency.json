@@ -1,0 +1,10 @@
+{
+  "showcase": "model-distillation",
+  "digest": "e5e063c949ecae67c526fb67fd67b39202b7bed3c74e1573f504095795918889",
+  "stages": [
+    "latency"
+  ],
+  "status": "success",
+  "validationMode": "contract-fixture",
+  "stage": "latency"
+}

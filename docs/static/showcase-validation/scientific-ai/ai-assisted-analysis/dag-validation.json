@@ -1,0 +1,25 @@
+{
+  "mode": "contract-fixture",
+  "dependencyWaves": [
+    [
+      "prepare-experiment"
+    ],
+    [
+      "simulation"
+    ],
+    [
+      "measurements"
+    ],
+    [
+      "statistics",
+      "ai-interpretation"
+    ],
+    [
+      "validate"
+    ],
+    [
+      "report"
+    ]
+  ],
+  "completedActivities": 7
+}

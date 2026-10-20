@@ -1,0 +1,25 @@
+{
+  "mode": "contract-fixture",
+  "dependencyWaves": [
+    [
+      "ingest-audio"
+    ],
+    [
+      "segment"
+    ],
+    [
+      "segment-1",
+      "segment-n"
+    ],
+    [
+      "merge-transcript"
+    ],
+    [
+      "summarize"
+    ],
+    [
+      "publish"
+    ]
+  ],
+  "completedActivities": 7
+}

@@ -1,0 +1,10 @@
+{
+  "showcase": "anomaly-detection",
+  "digest": "72e5ff5eb92eaf12e86b2e551adcf791634b94a6908735c549ea6ea4ea8bf798",
+  "stages": [
+    "build-features"
+  ],
+  "status": "success",
+  "validationMode": "contract-fixture",
+  "stage": "build-features"
+}

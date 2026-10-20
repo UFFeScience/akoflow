@@ -1,0 +1,10 @@
+{
+  "showcase": "supervised-tool-loop",
+  "digest": "1ba60abf7c87a575523604f02f59eab6424b01eee5fcd07e0a69fd79a9f702c0",
+  "stages": [
+    "propose-action"
+  ],
+  "status": "success",
+  "validationMode": "contract-fixture",
+  "stage": "propose-action"
+}

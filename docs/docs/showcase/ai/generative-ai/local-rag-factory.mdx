@@ -3,18 +3,35 @@ title: Local RAG Factory
 description: Build and evaluate a network-free retrieval pipeline over a versioned local corpus.
 ---
 
-import {WorkflowDag, WorkflowPatternDetails} from '@site/src/components/WorkflowShowcase';
+import {
+  WorkflowDag,
+  WorkflowPatternDetails,
+} from "@site/src/components/WorkflowShowcase";
 
 # Local RAG Factory
 
 The workflow normalizes a local Markdown corpus, creates chunks, builds a hashed TF-IDF index, retrieves evidence, generates extractive answers with citations, and evaluates grounding. Its deterministic implementation makes retrieval behavior inspectable before an optional Ollama adapter is introduced.
 
-<WorkflowDag title="Local RAG Factory" stages={['ingest','chunk','index','retrieve','answer','evaluate']} />
+<WorkflowDag
+  title="Local RAG Factory"
+  stages={["ingest", "chunk", "index", "retrieve", "answer", "evaluate"]}
+/>
 
 <WorkflowPatternDetails
-  inputs={['Versioned Markdown corpus','Questions with expected evidence']}
-  outputs={['Normalized documents and chunks','Vector index','Ranked retrieval results','Cited answers','Grounded-accuracy report']}
-  evidence={['Document SHA-256 values','Chunk identifiers','Retrieval scores','Answer citations and evaluation result']}
+  inputs={["Versioned Markdown corpus", "Questions with expected evidence"]}
+  outputs={[
+    "Normalized documents and chunks",
+    "Vector index",
+    "Ranked retrieval results",
+    "Cited answers",
+    "Grounded-accuracy report",
+  ]}
+  evidence={[
+    "Document SHA-256 values",
+    "Chunk identifiers",
+    "Retrieval scores",
+    "Answer citations and evaluation result",
+  ]}
 />
 
 ## Run locally
@@ -29,3 +46,6 @@ Execution is offline and uses only Python's standard library. The activity bound
 
 [Open the source bundle](https://github.com/UFFeScience/akoflow-examples/tree/main/generative-ai/local-rag) · [Workflow YAML](https://raw.githubusercontent.com/UFFeScience/akoflow-examples/main/generative-ai/local-rag/workflow.yaml)
 
+## Local validation evidence
+
+[Validated output manifest](/showcase-validation/generative-ai/local-rag/manifest.json). This host smoke run does not verify deployment through the daemon. Updated Desktop activity captures are still pending.

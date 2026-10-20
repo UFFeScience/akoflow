@@ -1,0 +1,10 @@
+{
+  "showcase": "multi-agent-review",
+  "digest": "8763669539a44fb4f93b0f3887774a9be55e4e9886c7993c8f1de842329586aa",
+  "stages": [
+    "code"
+  ],
+  "status": "success",
+  "validationMode": "contract-fixture",
+  "stage": "code"
+}

@@ -1,0 +1,10 @@
+{
+  "showcase": "hyperparameter-search",
+  "digest": "cee885f97aa6ed9a1a82ee0413f306a866bb410d716bf0ae33fa327349b2b070",
+  "stages": [
+    "trial-2"
+  ],
+  "status": "success",
+  "validationMode": "contract-fixture",
+  "stage": "trial-2"
+}

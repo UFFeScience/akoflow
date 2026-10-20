@@ -1,0 +1,23 @@
+{
+  "mode": "contract-fixture",
+  "dependencyWaves": [
+    [
+      "shared-context"
+    ],
+    [
+      "research",
+      "code",
+      "domain"
+    ],
+    [
+      "critic-review"
+    ],
+    [
+      "synthesize"
+    ],
+    [
+      "publish-evidence"
+    ]
+  ],
+  "completedActivities": 7
+}

@@ -1,0 +1,10 @@
+{
+  "showcase": "blender-render-farm",
+  "status": "success",
+  "artifacts": [
+    "render-plan.json",
+    "scene.blend",
+    "animation.mp4",
+    "render-report.json"
+  ]
+}

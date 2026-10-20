@@ -1,0 +1,10 @@
+{
+  "showcase": "batch-inference",
+  "digest": "84c42f54cee3e6be23d5208291e22dbdd5f0c8bc419373e0215f515544890a69",
+  "stages": [
+    "merge-predictions"
+  ],
+  "status": "success",
+  "validationMode": "contract-fixture",
+  "stage": "merge-predictions"
+}

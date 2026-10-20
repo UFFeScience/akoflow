@@ -1,0 +1,10 @@
+{
+  "showcase": "experiment-feedback-loop",
+  "digest": "68dd124b4119dc2b14023a5feb08ed9a961edde8643255f13d11578ff810c34b",
+  "stages": [
+    "propose-experiments"
+  ],
+  "status": "success",
+  "validationMode": "contract-fixture",
+  "stage": "propose-experiments"
+}

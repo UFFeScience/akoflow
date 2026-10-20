@@ -1,0 +1,20 @@
+{
+  "mode": "contract-fixture",
+  "dependencyWaves": [
+    [
+      "freeze-inputs"
+    ],
+    [
+      "cpu",
+      "gpu",
+      "edge"
+    ],
+    [
+      "normalize"
+    ],
+    [
+      "compare-cost-and-latency"
+    ]
+  ],
+  "completedActivities": 6
+}

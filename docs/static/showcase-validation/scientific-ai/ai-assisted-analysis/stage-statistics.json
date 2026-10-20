@@ -1,0 +1,10 @@
+{
+  "showcase": "ai-assisted-analysis",
+  "digest": "b64e12e0f3d5228b5895f9426ef60611adf9c7626ffcd02baddf6f7454447f3c",
+  "stages": [
+    "statistics"
+  ],
+  "status": "success",
+  "validationMode": "contract-fixture",
+  "stage": "statistics"
+}

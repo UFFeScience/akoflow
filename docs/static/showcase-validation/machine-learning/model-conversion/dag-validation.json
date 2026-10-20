@@ -1,0 +1,23 @@
+{
+  "mode": "contract-fixture",
+  "dependencyWaves": [
+    [
+      "load-model"
+    ],
+    [
+      "export-onnx",
+      "export-torchscript"
+    ],
+    [
+      "quantize-cpu",
+      "quantize-gpu"
+    ],
+    [
+      "validate-outputs"
+    ],
+    [
+      "publish-variants"
+    ]
+  ],
+  "completedActivities": 7
+}

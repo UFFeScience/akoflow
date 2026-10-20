@@ -1,0 +1,10 @@
+{
+  "showcase": "rag-indexing",
+  "digest": "57712f0c41388a8e86b39350cde078764a3b5c8a0c691e8759144b96eceaacba",
+  "stages": [
+    "embed"
+  ],
+  "status": "success",
+  "validationMode": "contract-fixture",
+  "stage": "embed"
+}

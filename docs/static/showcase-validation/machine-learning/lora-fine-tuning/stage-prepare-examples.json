@@ -1,0 +1,10 @@
+{
+  "showcase": "lora-fine-tuning",
+  "digest": "d0bee0340572aff3c62c489546b1833ba17a2e2dd01c910719fadd2d5d9057c8",
+  "stages": [
+    "prepare-examples"
+  ],
+  "status": "success",
+  "validationMode": "contract-fixture",
+  "stage": "prepare-examples"
+}

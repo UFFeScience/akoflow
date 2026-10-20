@@ -1,0 +1,10 @@
+{
+  "showcase": "training-with-mlflow",
+  "digest": "d61175004ab34b052f3f8a7a273ec470205334ef58e85c4aa924979f726f0d89",
+  "stages": [
+    "train"
+  ],
+  "status": "success",
+  "validationMode": "contract-fixture",
+  "stage": "train"
+}

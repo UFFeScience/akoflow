@@ -3,17 +3,23 @@ title: Audio transcription and summarization
 description: Transcribe segments concurrently, restore chronology, and produce a traceable summary.
 ---
 
-import {AIWorkflowPattern} from '@site/src/components/WorkflowShowcase';
+import { AIWorkflowPattern } from "@site/src/components/WorkflowShowcase";
 
 # Audio transcription and summarization
 
 <AIWorkflowPattern
   title="Audio transcription and summarization"
   summary="Transcribe segments concurrently, restore chronology, and produce a traceable summary."
-  stages={["ingest audio","segment",["transcribe segment 1","transcribe segment N"],"merge transcript","summarize","publish"]}
-  inputs={["Audio","Language settings","Model versions"]}
-  outputs={["Segment text","Transcript","Summary"]}
-  evidence={["Segment timestamps","Confidence","Summary prompt"]}
+  stages={[
+    "ingest-audio",
+    "segment",
+    ["segment-1", "segment-n"],
+    "merge-transcript",
+    "summarize",
+    "publish",
+  ]}
+  inputs={["Audio", "Language settings", "Model versions"]}
+  outputs={["Segment text", "Transcript", "Summary"]}
+  evidence={["Segment timestamps", "Confidence", "Summary prompt"]}
   execution="Overlap segment boundaries where needed and reconcile speaker identity during merge. Different stages may target GPU and CPU resources."
 />
-

@@ -1,0 +1,556 @@
+{
+  "/docs/showcase/ai/machine-learning/training-with-mlflow": {
+    "title": "Training with MLflow",
+    "examplePath": "machine-learning/training-with-mlflow",
+    "stages": [
+      ["ingest-data"],
+      ["validate"],
+      ["train"],
+      ["evaluate"],
+      ["register-model", "log-mlflow-run"]
+    ],
+    "dependencies": {
+      "ingest-data": [],
+      "validate": ["ingest-data"],
+      "train": ["validate"],
+      "evaluate": ["train"],
+      "register-model": ["evaluate"],
+      "log-mlflow-run": ["evaluate"]
+    },
+    "validationMode": "contract-fixture"
+  },
+  "/docs/showcase/ai/machine-learning/hyperparameter-search": {
+    "title": "Hyperparameter search",
+    "examplePath": "machine-learning/hyperparameter-search",
+    "stages": [
+      ["prepare-dataset"],
+      ["trial-1", "trial-2", "trial-n"],
+      ["compare-trials"],
+      ["register-best"]
+    ],
+    "dependencies": {
+      "prepare-dataset": [],
+      "trial-1": ["prepare-dataset"],
+      "trial-2": ["prepare-dataset"],
+      "trial-n": ["prepare-dataset"],
+      "compare-trials": ["trial-1", "trial-2", "trial-n"],
+      "register-best": ["compare-trials"]
+    },
+    "validationMode": "contract-fixture"
+  },
+  "/docs/showcase/ai/machine-learning/lora-fine-tuning": {
+    "title": "LoRA fine-tuning",
+    "examplePath": "machine-learning/lora-fine-tuning",
+    "stages": [
+      ["fetch-base-model"],
+      ["prepare-examples"],
+      ["fine-tune-adapters"],
+      ["evaluate"],
+      ["publish-adapter", "record-lineage"]
+    ],
+    "dependencies": {
+      "fetch-base-model": [],
+      "prepare-examples": ["fetch-base-model"],
+      "fine-tune-adapters": ["prepare-examples"],
+      "evaluate": ["fine-tune-adapters"],
+      "publish-adapter": ["evaluate"],
+      "record-lineage": ["evaluate"]
+    },
+    "validationMode": "contract-fixture"
+  },
+  "/docs/showcase/ai/machine-learning/batch-inference": {
+    "title": "Batch inference",
+    "examplePath": "machine-learning/batch-inference",
+    "stages": [
+      ["load-model"],
+      ["partition-input"],
+      ["infer-shard-a", "infer-shard-b", "infer-shard-n"],
+      ["merge-predictions"],
+      ["publish"]
+    ],
+    "dependencies": {
+      "load-model": [],
+      "partition-input": ["load-model"],
+      "infer-shard-a": ["partition-input"],
+      "infer-shard-b": ["partition-input"],
+      "infer-shard-n": ["partition-input"],
+      "merge-predictions": ["infer-shard-a", "infer-shard-b", "infer-shard-n"],
+      "publish": ["merge-predictions"]
+    },
+    "validationMode": "contract-fixture"
+  },
+  "/docs/showcase/ai/machine-learning/model-comparison": {
+    "title": "Comparative model evaluation",
+    "examplePath": "machine-learning/model-comparison",
+    "stages": [
+      ["freeze-evaluation-set"],
+      ["evaluate-a", "evaluate-b", "evaluate-c"],
+      ["compare-metrics"],
+      ["approve-candidate"]
+    ],
+    "dependencies": {
+      "freeze-evaluation-set": [],
+      "evaluate-a": ["freeze-evaluation-set"],
+      "evaluate-b": ["freeze-evaluation-set"],
+      "evaluate-c": ["freeze-evaluation-set"],
+      "compare-metrics": ["evaluate-a", "evaluate-b", "evaluate-c"],
+      "approve-candidate": ["compare-metrics"]
+    },
+    "validationMode": "contract-fixture"
+  },
+  "/docs/showcase/ai/machine-learning/model-conversion": {
+    "title": "Model conversion and quantization",
+    "examplePath": "machine-learning/model-conversion",
+    "stages": [
+      ["load-model"],
+      ["export-onnx", "export-torchscript"],
+      ["quantize-cpu", "quantize-gpu"],
+      ["validate-outputs"],
+      ["publish-variants"]
+    ],
+    "dependencies": {
+      "load-model": [],
+      "export-onnx": ["load-model"],
+      "export-torchscript": ["load-model"],
+      "quantize-cpu": ["export-onnx", "export-torchscript"],
+      "quantize-gpu": ["export-onnx", "export-torchscript"],
+      "validate-outputs": ["quantize-cpu", "quantize-gpu"],
+      "publish-variants": ["validate-outputs"]
+    },
+    "validationMode": "contract-fixture"
+  },
+  "/docs/showcase/ai/machine-learning/computer-vision": {
+    "title": "Computer vision training",
+    "examplePath": "machine-learning/computer-vision",
+    "stages": [
+      ["collect-images"],
+      ["import-labels"],
+      ["augment"],
+      ["train-detector"],
+      ["evaluate"],
+      ["package-model"]
+    ],
+    "dependencies": {
+      "collect-images": [],
+      "import-labels": ["collect-images"],
+      "augment": ["import-labels"],
+      "train-detector": ["augment"],
+      "evaluate": ["train-detector"],
+      "package-model": ["evaluate"]
+    },
+    "validationMode": "contract-fixture"
+  },
+  "/docs/showcase/ai/machine-learning/anomaly-detection": {
+    "title": "Anomaly detection",
+    "examplePath": "machine-learning/anomaly-detection",
+    "stages": [
+      ["collect-signals"],
+      ["build-features"],
+      ["train-detector"],
+      ["score-validation"],
+      ["choose-threshold"],
+      ["publish"]
+    ],
+    "dependencies": {
+      "collect-signals": [],
+      "build-features": ["collect-signals"],
+      "train-detector": ["build-features"],
+      "score-validation": ["train-detector"],
+      "choose-threshold": ["score-validation"],
+      "publish": ["choose-threshold"]
+    },
+    "validationMode": "contract-fixture"
+  },
+  "/docs/showcase/ai/machine-learning/model-ensemble": {
+    "title": "Model ensemble",
+    "examplePath": "machine-learning/model-ensemble",
+    "stages": [
+      ["prepare-input"],
+      ["predict-a", "predict-b", "predict-c"],
+      ["combine"],
+      ["evaluate"],
+      ["publish"]
+    ],
+    "dependencies": {
+      "prepare-input": [],
+      "predict-a": ["prepare-input"],
+      "predict-b": ["prepare-input"],
+      "predict-c": ["prepare-input"],
+      "combine": ["predict-a", "predict-b", "predict-c"],
+      "evaluate": ["combine"],
+      "publish": ["evaluate"]
+    },
+    "validationMode": "contract-fixture"
+  },
+  "/docs/showcase/ai/machine-learning/model-distillation": {
+    "title": "Model distillation",
+    "examplePath": "machine-learning/model-distillation",
+    "stages": [
+      ["load-teacher"],
+      ["soft-labels"],
+      ["train-student"],
+      ["quality", "latency"],
+      ["publish"]
+    ],
+    "dependencies": {
+      "load-teacher": [],
+      "soft-labels": ["load-teacher"],
+      "train-student": ["soft-labels"],
+      "quality": ["train-student"],
+      "latency": ["train-student"],
+      "publish": ["quality", "latency"]
+    },
+    "validationMode": "contract-fixture"
+  },
+  "/docs/showcase/ai/machine-learning/inference-benchmark": {
+    "title": "Inference benchmark",
+    "examplePath": "machine-learning/inference-benchmark",
+    "stages": [
+      ["freeze-inputs"],
+      ["cpu", "gpu", "edge"],
+      ["normalize"],
+      ["compare-cost-and-latency"]
+    ],
+    "dependencies": {
+      "freeze-inputs": [],
+      "cpu": ["freeze-inputs"],
+      "gpu": ["freeze-inputs"],
+      "edge": ["freeze-inputs"],
+      "normalize": ["cpu", "gpu", "edge"],
+      "compare-cost-and-latency": ["normalize"]
+    },
+    "validationMode": "contract-fixture"
+  },
+  "/docs/showcase/ai/machine-learning/infrastructure-selection": {
+    "title": "Infrastructure selection for training",
+    "examplePath": "machine-learning/infrastructure-selection",
+    "stages": [
+      ["profile-workload"],
+      ["local-gpu", "hpc", "cloud"],
+      ["compare-plans"],
+      ["select-scope"],
+      ["train"]
+    ],
+    "dependencies": {
+      "profile-workload": [],
+      "local-gpu": ["profile-workload"],
+      "hpc": ["profile-workload"],
+      "cloud": ["profile-workload"],
+      "compare-plans": ["local-gpu", "hpc", "cloud"],
+      "select-scope": ["compare-plans"],
+      "train": ["select-scope"]
+    },
+    "validationMode": "contract-fixture"
+  },
+  "/docs/showcase/ai/generative-ai/rag-indexing": {
+    "title": "RAG index construction and evaluation",
+    "examplePath": "generative-ai/rag-indexing",
+    "stages": [
+      ["collect-documents"],
+      ["clean"],
+      ["chunk"],
+      ["embed"],
+      ["build-index"],
+      ["retrieval-tests", "answer-tests"],
+      ["publish"]
+    ],
+    "dependencies": {
+      "collect-documents": [],
+      "clean": ["collect-documents"],
+      "chunk": ["clean"],
+      "embed": ["chunk"],
+      "build-index": ["embed"],
+      "retrieval-tests": ["build-index"],
+      "answer-tests": ["build-index"],
+      "publish": ["retrieval-tests", "answer-tests"]
+    },
+    "validationMode": "contract-fixture"
+  },
+  "/docs/showcase/ai/generative-ai/synthetic-dataset": {
+    "title": "Synthetic dataset generation",
+    "examplePath": "generative-ai/synthetic-dataset",
+    "stages": [
+      ["define-schema"],
+      ["batch-a", "batch-b", "batch-n"],
+      ["filter"],
+      ["deduplicate"],
+      ["quality-review"],
+      ["publish"]
+    ],
+    "dependencies": {
+      "define-schema": [],
+      "batch-a": ["define-schema"],
+      "batch-b": ["define-schema"],
+      "batch-n": ["define-schema"],
+      "filter": ["batch-a", "batch-b", "batch-n"],
+      "deduplicate": ["filter"],
+      "quality-review": ["deduplicate"],
+      "publish": ["quality-review"]
+    },
+    "validationMode": "contract-fixture"
+  },
+  "/docs/showcase/ai/generative-ai/audio-transcription": {
+    "title": "Audio transcription and summarization",
+    "examplePath": "generative-ai/audio-transcription",
+    "stages": [
+      ["ingest-audio"],
+      ["segment"],
+      ["segment-1", "segment-n"],
+      ["merge-transcript"],
+      ["summarize"],
+      ["publish"]
+    ],
+    "dependencies": {
+      "ingest-audio": [],
+      "segment": ["ingest-audio"],
+      "segment-1": ["segment"],
+      "segment-n": ["segment"],
+      "merge-transcript": ["segment-1", "segment-n"],
+      "summarize": ["merge-transcript"],
+      "publish": ["summarize"]
+    },
+    "validationMode": "contract-fixture"
+  },
+  "/docs/showcase/ai/generative-ai/document-extraction": {
+    "title": "OCR and document extraction",
+    "examplePath": "generative-ai/document-extraction",
+    "stages": [
+      ["ingest-documents"],
+      ["ocr", "native-text"],
+      ["classify"],
+      ["extract-fields"],
+      ["validate-schema"],
+      ["publish"]
+    ],
+    "dependencies": {
+      "ingest-documents": [],
+      "ocr": ["ingest-documents"],
+      "native-text": ["ingest-documents"],
+      "classify": ["ocr", "native-text"],
+      "extract-fields": ["classify"],
+      "validate-schema": ["extract-fields"],
+      "publish": ["validate-schema"]
+    },
+    "validationMode": "contract-fixture"
+  },
+  "/docs/showcase/ai/agentic-workflows/bounded-agent": {
+    "title": "Encapsulated agent task",
+    "examplePath": "agentic-workflows/bounded-agent",
+    "stages": [
+      ["prepare-objective"],
+      ["agent-loop"],
+      ["validate-output"],
+      ["publish-result", "store-trace"]
+    ],
+    "dependencies": {
+      "prepare-objective": [],
+      "agent-loop": ["prepare-objective"],
+      "validate-output": ["agent-loop"],
+      "publish-result": ["validate-output"],
+      "store-trace": ["validate-output"]
+    },
+    "validationMode": "contract-fixture"
+  },
+  "/docs/showcase/ai/agentic-workflows/supervised-tool-loop": {
+    "title": "Supervised tool loop",
+    "examplePath": "agentic-workflows/supervised-tool-loop",
+    "stages": [
+      ["build-context"],
+      ["propose-action"],
+      ["policy-check"],
+      ["human-approval"],
+      ["execute-tool"],
+      ["verify"]
+    ],
+    "dependencies": {
+      "build-context": [],
+      "propose-action": ["build-context"],
+      "policy-check": ["propose-action"],
+      "human-approval": ["policy-check"],
+      "execute-tool": ["human-approval"],
+      "verify": ["execute-tool"]
+    },
+    "validationMode": "contract-fixture"
+  },
+  "/docs/showcase/ai/agentic-workflows/multi-agent-review": {
+    "title": "Multi-agent review",
+    "examplePath": "agentic-workflows/multi-agent-review",
+    "stages": [
+      ["shared-context"],
+      ["research", "code", "domain"],
+      ["critic-review"],
+      ["synthesize"],
+      ["publish-evidence"]
+    ],
+    "dependencies": {
+      "shared-context": [],
+      "research": ["shared-context"],
+      "code": ["shared-context"],
+      "domain": ["shared-context"],
+      "critic-review": ["research", "code", "domain"],
+      "synthesize": ["critic-review"],
+      "publish-evidence": ["synthesize"]
+    },
+    "validationMode": "contract-fixture"
+  },
+  "/docs/showcase/ai/scientific-ai/ai-assisted-analysis": {
+    "title": "Scientific pipeline with AI interpretation",
+    "examplePath": "scientific-ai/ai-assisted-analysis",
+    "stages": [
+      ["prepare-experiment"],
+      ["simulation"],
+      ["measurements"],
+      ["statistics", "ai-interpretation"],
+      ["validate"],
+      ["report"]
+    ],
+    "dependencies": {
+      "prepare-experiment": [],
+      "simulation": ["prepare-experiment"],
+      "measurements": ["simulation"],
+      "statistics": ["measurements"],
+      "ai-interpretation": ["measurements"],
+      "validate": ["statistics", "ai-interpretation"],
+      "report": ["validate"]
+    },
+    "validationMode": "contract-fixture"
+  },
+  "/docs/showcase/ai/scientific-ai/surrogate-model": {
+    "title": "Surrogate model construction",
+    "examplePath": "scientific-ai/surrogate-model",
+    "stages": [
+      ["design-samples"],
+      ["simulation-a", "simulation-n"],
+      ["assemble-dataset"],
+      ["train-surrogate"],
+      ["validate"],
+      ["publish"]
+    ],
+    "dependencies": {
+      "design-samples": [],
+      "simulation-a": ["design-samples"],
+      "simulation-n": ["design-samples"],
+      "assemble-dataset": ["simulation-a", "simulation-n"],
+      "train-surrogate": ["assemble-dataset"],
+      "validate": ["train-surrogate"],
+      "publish": ["validate"]
+    },
+    "validationMode": "contract-fixture"
+  },
+  "/docs/showcase/ai/scientific-ai/experiment-feedback-loop": {
+    "title": "Model-guided experiment cycle",
+    "examplePath": "scientific-ai/experiment-feedback-loop",
+    "stages": [
+      ["observations"],
+      ["update-model"],
+      ["propose-experiments"],
+      ["safety-check"],
+      ["run-experiments"],
+      ["record-observations"]
+    ],
+    "dependencies": {
+      "observations": [],
+      "update-model": ["observations"],
+      "propose-experiments": ["update-model"],
+      "safety-check": ["propose-experiments"],
+      "run-experiments": ["safety-check"],
+      "record-observations": ["run-experiments"]
+    },
+    "validationMode": "contract-fixture"
+  },
+  "/docs/showcase/ai/generative-ai/ai-video-studio": {
+    "title": "AI Video Studio",
+    "examplePath": "generative-ai/video-studio",
+    "stages": [
+      ["storyboard"],
+      ["scenes", "narration"],
+      ["compose"],
+      ["quality-control"]
+    ],
+    "dependencies": {
+      "storyboard": [],
+      "scenes": ["storyboard"],
+      "narration": ["storyboard"],
+      "compose": ["scenes", "narration"],
+      "quality-control": ["compose"]
+    },
+    "validationMode": "local-pipeline"
+  },
+  "/docs/showcase/ai/generative-ai/local-rag-factory": {
+    "title": "Local RAG Factory",
+    "examplePath": "generative-ai/local-rag",
+    "stages": [
+      ["ingest"],
+      ["chunk"],
+      ["index"],
+      ["retrieve"],
+      ["answer"],
+      ["evaluate"]
+    ],
+    "dependencies": {
+      "ingest": [],
+      "chunk": ["ingest"],
+      "index": ["chunk"],
+      "retrieve": ["index"],
+      "answer": ["retrieve"],
+      "evaluate": ["answer"]
+    },
+    "validationMode": "local-pipeline"
+  },
+  "/docs/showcase/document-ai/document-intelligence": {
+    "title": "Document Intelligence",
+    "examplePath": "document-ai/document-intelligence",
+    "stages": [
+      ["ingest"],
+      ["classify"],
+      ["extract"],
+      ["reconcile"],
+      ["report"]
+    ],
+    "dependencies": {
+      "ingest": [],
+      "classify": ["ingest"],
+      "extract": ["classify"],
+      "reconcile": ["extract"],
+      "report": ["reconcile"]
+    },
+    "validationMode": "local-pipeline"
+  },
+  "/docs/showcase/media/video-intelligence": {
+    "title": "Video Intelligence",
+    "examplePath": "media/video-intelligence",
+    "stages": [
+      ["prepare"],
+      ["probe", "scenes", "audio"],
+      ["timeline"],
+      ["report"]
+    ],
+    "dependencies": {
+      "prepare": [],
+      "probe": ["prepare"],
+      "scenes": ["prepare"],
+      "audio": ["prepare"],
+      "timeline": ["probe", "scenes", "audio"],
+      "report": ["timeline"]
+    },
+    "validationMode": "local-pipeline"
+  },
+  "/docs/showcase/rendering/blender-render-farm": {
+    "title": "Blender Render Farm",
+    "examplePath": "rendering/blender-render-farm",
+    "stages": [
+      ["setup"],
+      ["render-even", "render-odd"],
+      ["compose"],
+      ["verify"]
+    ],
+    "dependencies": {
+      "setup": [],
+      "render-even": ["setup"],
+      "render-odd": ["setup"],
+      "compose": ["render-even", "render-odd"],
+      "verify": ["compose"]
+    },
+    "validationMode": "local-pipeline"
+  }
+}

@@ -194,6 +194,7 @@ func NewMux(workflowEngine *workflow_engine_api_handler.Handler) *http.ServeMux 
 func registerExecutionRoutes(mux *http.ServeMux, workflowEngine *workflow_engine_api_handler.Handler) {
 	mux.HandleFunc("POST /akoflow-api/execution-runs/", http_config.KernelHandler(workflowEngine.CreateExecution))
 	mux.HandleFunc("GET /akoflow-api/execution-runs/", http_config.KernelHandler(workflowEngine.ListExecutions))
+	mux.HandleFunc("GET /akoflow-api/generated-data/", http_config.KernelHandler(workflowEngine.ListGeneratedData))
 	mux.HandleFunc("GET /akoflow-api/execution-runs/{runId}/", http_config.KernelHandler(workflowEngine.GetExecution))
 	mux.HandleFunc("POST /akoflow-api/execution-runs/{runId}/cancel/", http_config.KernelHandler(workflowEngine.CancelExecution))
 	mux.HandleFunc("GET /akoflow-api/execution-runs/{runId}/recovery/", http_config.KernelHandler(workflowEngine.GetExecutionRecovery))

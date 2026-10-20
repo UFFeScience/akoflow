@@ -74,6 +74,11 @@ type ExecutionRun struct {
 	ConnectionID           string                 `json:"connectionId,omitempty"`
 	ActorID                string                 `json:"actorId,omitempty"`
 	Command                string                 `json:"command,omitempty"`
+	WorkflowID             string                 `json:"workflowId,omitempty"`
+	WorkflowVersionID      string                 `json:"workflowVersionId,omitempty"`
+	WorkflowName           string                 `json:"workflowName,omitempty"`
+	ResourceName           string                 `json:"resourceName,omitempty"`
+	EnvironmentNames       []string               `json:"environmentNames,omitempty"`
 	StartedAt              *time.Time             `json:"startedAt,omitempty"`
 	FinishedAt             *time.Time             `json:"finishedAt,omitempty"`
 }

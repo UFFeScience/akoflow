@@ -210,7 +210,7 @@ func (r *Repository) ResumeRun(ctx context.Context, id string) error {
 }
 
 func (r *Repository) FindRun(ctx context.Context, id string) (*domain.ExecutionRun, error) {
-	run, err := scanRunFeed(r.db.QueryRowContext(ctx, `SELECT * FROM (`+runFeedSelect+`) WHERE id=?`, id))
+	run, err := scanRunFeed(r.db.QueryRowContext(ctx, runFeedPageQuery(`SELECT * FROM (`+runFeedSelect+`) WHERE id=?`), id))
 	if err == sql.ErrNoRows {
 		return nil, nil
 	}
@@ -239,13 +239,22 @@ func (r *Repository) ListRunsPage(ctx context.Context, page, pageSize int, kind,
 		conditions += "schedule_plan_id IN (SELECT id FROM schedule_plans WHERE workflow_version_id=?)"
 		arguments = append(arguments, strings.TrimSpace(workflowVersionIDs[0]))
 	}
+	if len(workflowVersionIDs) > 1 && strings.TrimSpace(workflowVersionIDs[1]) != "" {
+		if conditions == "" {
+			conditions = " WHERE "
+		} else {
+			conditions += " AND "
+		}
+		conditions += "schedule_plan_id=?"
+		arguments = append(arguments, strings.TrimSpace(workflowVersionIDs[1]))
+	}
 	filteredFeed := `SELECT * FROM (` + runFeedSelect + `)` + conditions
 	var total int
 	if err := r.db.QueryRowContext(ctx, `SELECT COUNT(*) FROM (`+filteredFeed+`)`, arguments...).Scan(&total); err != nil {
 		return domain.ExecutionRunPage{}, err
 	}
 	pageArguments := append(append([]any{}, arguments...), pageSize, (page-1)*pageSize)
-	rows, err := r.db.QueryContext(ctx, filteredFeed+` ORDER BY started_at DESC, id DESC LIMIT ? OFFSET ?`, pageArguments...)
+	rows, err := r.db.QueryContext(ctx, runFeedPageQuery(filteredFeed+` ORDER BY started_at DESC, id DESC LIMIT ? OFFSET ?`), pageArguments...)
 	if err != nil {
 		return domain.ExecutionRunPage{}, err
 	}
@@ -280,26 +289,25 @@ func runFeedFilters(kind, mode, status string) (string, []any) {
 }
 
 const runFeedSelect = `
+	SELECT id, schedule_plan_id, 'workflow' AS kind, mode, status, started_at FROM execution_runs
+	UNION ALL
+	SELECT id, '', 'interactive', 'interactive',
+		CASE status WHEN 'connected' THEN 'running' WHEN 'closed' THEN 'completed' WHEN 'failed' THEN 'failed' ELSE 'created' END,
+		COALESCE(connected_at, created_at) FROM console_sessions
+	UNION ALL
+	SELECT id, '', 'standalone', 'real', status, started_at FROM console_commands`
+
+const runFeedDetailsSelect = `
 	SELECT e.id, e.schedule_plan_id, e.mode, e.seed, e.status, e.environment_snapshot_id,
 		e.makespan_seconds, e.cost, e.failure_reason,
-		COALESCE(t.activity_count, 0), COALESCE(t.completed_count, 0),
-		COALESCE(t.compute_seconds, 0), COALESCE(d.transfer_seconds, 0),
-		COALESCE(t.queue_seconds, 0), COALESCE(t.interference_seconds, 0),
-		COALESCE(t.overhead_seconds, 0), COALESCE(d.transferred_bytes, 0),
+		0 AS activity_count, 0 AS completed_count,
+		0 AS compute_seconds, 0 AS transfer_seconds,
+		0 AS queue_seconds, 0 AS interference_seconds,
+		0 AS overhead_seconds, 0 AS transferred_bytes,
 		'workflow' AS kind, e.id AS title, '' AS resource_id, '' AS runtime_id,
 		'' AS connection_id, '' AS actor_id, '' AS command, e.started_at, e.finished_at
 	FROM execution_runs e
-	LEFT JOIN (
-		SELECT execution_run_id, COUNT(*) AS activity_count,
-			SUM(CASE WHEN status='completed' THEN 1 ELSE 0 END) AS completed_count,
-			SUM(runtime_seconds) AS compute_seconds, SUM(queue_seconds) AS queue_seconds,
-			SUM(interference_seconds) AS interference_seconds, SUM(overhead_seconds) AS overhead_seconds
-		FROM task_executions GROUP BY execution_run_id
-	) t ON t.execution_run_id=e.id
-	LEFT JOIN (
-		SELECT execution_run_id, SUM(duration_seconds) AS transfer_seconds, SUM(bytes) AS transferred_bytes
-		FROM data_transfer_observations GROUP BY execution_run_id
-	) d ON d.execution_run_id=e.id
+	WHERE e.id IN (SELECT id FROM selected_keys WHERE kind='workflow')
 	UNION ALL
 	SELECT s.id, '', 'interactive', 0,
 		CASE s.status WHEN 'connected' THEN 'running' WHEN 'closed' THEN 'completed' WHEN 'failed' THEN 'failed' ELSE 'created' END,
@@ -307,25 +315,32 @@ const runFeedSelect = `
 		'interactive', 'Interactive session', s.resource_id, s.runtime_id, s.connection_id, s.actor_id, '',
 		COALESCE(s.connected_at, s.created_at), s.finished_at
 	FROM console_sessions s
+	WHERE s.id IN (SELECT id FROM selected_keys WHERE kind='interactive')
 	UNION ALL
 	SELECT c.id, '', 'real', 0, c.status, '', 0, 0, c.failure, 1,
 		CASE WHEN c.status='completed' THEN 1 ELSE 0 END, 0, 0, 0, 0, 0, 0,
 		'standalone', 'Standalone command', c.resource_id, c.runtime_id, c.connection_id, c.actor_id, c.command_text,
 		c.started_at, c.finished_at
-	FROM console_commands c`
+	FROM console_commands c
+	WHERE c.id IN (SELECT id FROM selected_keys WHERE kind='standalone')`
 
 func scanRunFeed(scanner interface{ Scan(...any) error }) (*domain.ExecutionRun, error) {
 	var run domain.ExecutionRun
 	var startedAt, finishedAt sql.NullTime
+	var environmentNames string
 	err := scanner.Scan(&run.ID, &run.SchedulePlanID, &run.Mode, &run.Seed, &run.Status,
 		&run.EnvironmentSnapshotID, &run.MakespanSeconds, &run.Cost, &run.FailureReason,
 		&run.ActivityCount, &run.CompletedActivityCount, &run.Breakdown.ComputeSeconds,
 		&run.Breakdown.TransferSeconds, &run.Breakdown.QueueSeconds,
 		&run.Breakdown.InterferenceSeconds, &run.Breakdown.OverheadSeconds, &run.TransferredBytes,
 		&run.Kind, &run.Title, &run.ResourceID, &run.RuntimeID, &run.ConnectionID, &run.ActorID,
-		&run.Command, &startedAt, &finishedAt)
+		&run.Command, &startedAt, &finishedAt, &run.WorkflowID, &run.WorkflowVersionID,
+		&run.WorkflowName, &run.ResourceName, &environmentNames)
 	if err != nil {
 		return nil, err
+	}
+	if err := json.Unmarshal([]byte(environmentNames), &run.EnvironmentNames); err != nil {
+		return nil, fmt.Errorf("decode execution environment names: %w", err)
 	}
 	if startedAt.Valid {
 		run.StartedAt = &startedAt.Time

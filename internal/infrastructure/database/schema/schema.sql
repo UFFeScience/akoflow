@@ -339,6 +339,11 @@ CREATE TABLE execution_runs (
 		failure_reason TEXT NOT NULL DEFAULT '',
 		created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 	);
+CREATE INDEX execution_runs_started_idx ON execution_runs(started_at DESC, id DESC);
+CREATE INDEX execution_runs_plan_idx ON execution_runs(schedule_plan_id);
+CREATE INDEX schedule_plans_workflow_idx ON schedule_plans(workflow_version_id);
+CREATE INDEX schedule_plan_assignments_plan_idx ON schedule_plan_assignments(schedule_plan_id);
+CREATE INDEX activity_definitions_workflow_idx ON activity_definitions(workflow_version_id);
 CREATE TABLE task_executions (
 		id TEXT PRIMARY KEY,
 		execution_run_id TEXT NOT NULL REFERENCES execution_runs(id),
@@ -394,6 +399,7 @@ CREATE TABLE activity_handles (
 		metadata TEXT NOT NULL DEFAULT '{}',
 		updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 	);
+CREATE INDEX activity_handles_run_idx ON activity_handles(execution_run_id, activity_id);
 CREATE TABLE data_objects (
 	id TEXT PRIMARY KEY,
 	workflow_version_id TEXT REFERENCES workflow_versions(id),
@@ -418,6 +424,7 @@ CREATE TABLE data_object_instances (
 		created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 		UNIQUE(execution_run_id, producer_activity_id, attempt, relative_path)
 	);
+CREATE INDEX data_object_instances_created_idx ON data_object_instances(created_at DESC, id DESC);
 CREATE TABLE storage_resources (
 		id TEXT PRIMARY KEY,
 		environment_version_id TEXT NOT NULL REFERENCES environment_versions(id),
@@ -463,6 +470,7 @@ CREATE TABLE data_locations (
 		metadata TEXT NOT NULL DEFAULT '{}',
 		UNIQUE(data_object_instance_id, uri)
 	);
+CREATE INDEX data_locations_object_idx ON data_locations(data_object_instance_id);
 CREATE TABLE data_transfer_observations (
 		id TEXT PRIMARY KEY,
 		execution_run_id TEXT NOT NULL REFERENCES execution_runs(id),
@@ -480,6 +488,7 @@ CREATE TABLE data_transfer_observations (
 		cost REAL NOT NULL DEFAULT 0,
 		metadata TEXT NOT NULL DEFAULT '{}'
 	);
+CREATE INDEX data_transfer_observations_run_idx ON data_transfer_observations(execution_run_id);
 CREATE TABLE queue_jobs (
 		id TEXT PRIMARY KEY,
 		category TEXT NOT NULL,
@@ -724,6 +733,7 @@ CREATE TABLE console_commands (
 	finished_at DATETIME
 );
 CREATE INDEX console_commands_created_idx ON console_commands(created_at DESC);
+CREATE INDEX console_commands_feed_idx ON console_commands(started_at DESC, id DESC, status);
 CREATE INDEX console_commands_resource_idx ON console_commands(resource_id, created_at DESC);
 
 CREATE TABLE console_sessions (
@@ -740,6 +750,7 @@ CREATE TABLE console_sessions (
     finished_at DATETIME
 );
 CREATE INDEX console_sessions_created_idx ON console_sessions(created_at DESC);
+CREATE INDEX console_sessions_feed_idx ON console_sessions(COALESCE(connected_at, created_at) DESC, id DESC, status);
 
 CREATE TABLE console_session_logs (
     id INTEGER PRIMARY KEY AUTOINCREMENT,

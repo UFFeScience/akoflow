@@ -1022,6 +1022,18 @@ func (h *Handler) ListNetworkTopologies(w http.ResponseWriter, r *http.Request) 
 }
 
 func (h *Handler) ListWorkflows(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Query().Get("view") == "catalog" {
+		catalog, ok := h.workflows.(interface {
+			ListCatalog(context.Context) ([]domain.WorkflowCatalogEntry, error)
+		})
+		if !ok {
+			writeError(w, http.StatusNotImplemented, fmt.Errorf("workflow catalog summaries are unavailable"))
+			return
+		}
+		items, err := catalog.ListCatalog(r.Context())
+		writeList(w, items, err)
+		return
+	}
 	items, err := h.workflows.List(r.Context())
 	writeList(w, items, err)
 }
@@ -1055,6 +1067,15 @@ func (h *Handler) ExportWorkflow(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) ListPlans(w http.ResponseWriter, r *http.Request) {
+	if versionID := r.URL.Query().Get("workflowVersionId"); versionID != "" {
+		if query, ok := h.plans.(interface {
+			ListForWorkflow(context.Context, string) ([]domain.SchedulePlan, error)
+		}); ok {
+			items, err := query.ListForWorkflow(r.Context(), versionID)
+			writeList(w, items, err)
+			return
+		}
+	}
 	items, err := h.plans.List(r.Context())
 	writeList(w, items, err)
 }
@@ -1140,11 +1161,11 @@ func firstNonEmpty(values ...string) string {
 }
 
 func (h *Handler) ListExecutions(w http.ResponseWriter, r *http.Request) {
-	if r.URL.Query().Has("page") || r.URL.Query().Has("pageSize") || r.URL.Query().Has("workflowVersionId") {
+	if r.URL.Query().Has("page") || r.URL.Query().Has("pageSize") || r.URL.Query().Has("workflowVersionId") || r.URL.Query().Has("schedulePlanId") {
 		page := positiveInteger(r.URL.Query().Get("page"), 1)
 		pageSize := positiveInteger(r.URL.Query().Get("pageSize"), 20)
 		result, err := h.executions.ListRunsPage(r.Context(), page, pageSize,
-			r.URL.Query().Get("kind"), r.URL.Query().Get("mode"), r.URL.Query().Get("status"), r.URL.Query().Get("workflowVersionId"))
+			r.URL.Query().Get("kind"), r.URL.Query().Get("mode"), r.URL.Query().Get("status"), r.URL.Query().Get("workflowVersionId"), r.URL.Query().Get("schedulePlanId"))
 		if err != nil {
 			writeError(w, http.StatusInternalServerError, err)
 			return

@@ -19,7 +19,7 @@ import { AIWorkflowPattern } from "@site/src/components/WorkflowShowcase";
     "publish",
   ]}
   inputs={["Schema and policy", "Source examples", "Generator model"]}
-  outputs={["Raw batches", "Validated dataset", "Quality report"]}
+  outputs={["synthetic-dataset.jsonl", "quality-report.json"]}
   evidence={["Prompt and model", "Filter reasons", "Review decisions"]}
   execution="Use queued external jobs for rate-limited generation. Stable record identities prevent duplicates after retries."
 />

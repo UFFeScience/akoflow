@@ -1,0 +1,2505 @@
+{
+  "activityCount": 6,
+  "completedActivityCount": 6,
+  "image": "ghcr.io/uffescience/akoflow-examples/local-rag-factory:v1",
+  "imageId": "sha256:60b37a43cbda117dc0b57d461632713f426e004d4cee4f4c2e3c5cf2efb23d2d",
+  "planId": "local-rag-factory-local-0df2d611a0-manual-plan-20261020t182115",
+  "projection": {
+    "activities": [
+      {
+        "activityId": "local-rag-factory-local-0df2d611a0-ingest",
+        "allocatedResourceId": "local-rag-factory-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+        "finishedAt": 1792520475.90999,
+        "id": "local-rag-factory-local-0df2d611a0-run-20261020t182115:local-rag-factory-local-0df2d611a0-ingest",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "pricePerSecond": 0,
+          "runtimeId": "local-rag-factory-local"
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "local-rag-factory-local-0df2d611a0-manual-plan-20261020t182115-local-rag-factory-local-0df2d611a0-ingest",
+        "plannedResourceId": "local-rag-factory-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792520475.6465387,
+        "readyAt": 1792520475.6465387,
+        "runtimeId": "local-rag-factory-local",
+        "runtimeSeconds": 0.08507680892944336,
+        "startedAt": 1792520475.8249133,
+        "status": "completed",
+        "transferBytes": 0,
+        "transferSeconds": 0
+      },
+      {
+        "activityId": "local-rag-factory-local-0df2d611a0-chunk",
+        "allocatedResourceId": "local-rag-factory-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+        "finishedAt": 1792520477.3249586,
+        "id": "local-rag-factory-local-0df2d611a0-run-20261020t182115:local-rag-factory-local-0df2d611a0-chunk",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1598520278930664,
+          "preparationFinishedAt": 1792520477.0843618,
+          "preparationStartedAt": 1792520476.9191933,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0012047290802001953,
+          "runtimeId": "local-rag-factory-local",
+          "transferElapsedSeconds": 0.16516852378845215,
+          "transferWorkSeconds": 0.16516852378845215
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "local-rag-factory-local-0df2d611a0-manual-plan-20261020t182115-local-rag-factory-local-0df2d611a0-chunk",
+        "plannedResourceId": "local-rag-factory-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792520476.9160323,
+        "readyAt": 1792520476.9160323,
+        "runtimeId": "local-rag-factory-local",
+        "runtimeSeconds": 0.08074474334716797,
+        "startedAt": 1792520477.2442138,
+        "status": "completed",
+        "transferBytes": 1132,
+        "transferSeconds": 0.16516852378845215
+      },
+      {
+        "activityId": "local-rag-factory-local-0df2d611a0-index",
+        "allocatedResourceId": "local-rag-factory-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+        "finishedAt": 1792520479.3468802,
+        "id": "local-rag-factory-local-0df2d611a0-run-20261020t182115:local-rag-factory-local-0df2d611a0-index",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1400012969970703,
+          "preparationFinishedAt": 1792520479.127833,
+          "preparationStartedAt": 1792520478.933414,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0014295578002929688,
+          "runtimeId": "local-rag-factory-local",
+          "transferElapsedSeconds": 0.19441890716552734,
+          "transferWorkSeconds": 0.19441890716552734
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "local-rag-factory-local-0df2d611a0-manual-plan-20261020t182115-local-rag-factory-local-0df2d611a0-index",
+        "plannedResourceId": "local-rag-factory-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792520478.9293907,
+        "readyAt": 1792520478.9293907,
+        "runtimeId": "local-rag-factory-local",
+        "runtimeSeconds": 0.07904601097106934,
+        "startedAt": 1792520479.2678342,
+        "status": "completed",
+        "transferBytes": 2318,
+        "transferSeconds": 0.19441890716552734
+      },
+      {
+        "activityId": "local-rag-factory-local-0df2d611a0-retrieve",
+        "allocatedResourceId": "local-rag-factory-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+        "finishedAt": 1792520481.4376273,
+        "id": "local-rag-factory-local-0df2d611a0-run-20261020t182115:local-rag-factory-local-0df2d611a0-retrieve",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.17662549018859863,
+          "preparationFinishedAt": 1792520481.1779814,
+          "preparationStartedAt": 1792520480.9947016,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0015411376953125,
+          "runtimeId": "local-rag-factory-local",
+          "transferElapsedSeconds": 0.18327975273132324,
+          "transferWorkSeconds": 0.18327975273132324
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "local-rag-factory-local-0df2d611a0-manual-plan-20261020t182115-local-rag-factory-local-0df2d611a0-retrieve",
+        "plannedResourceId": "local-rag-factory-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792520480.9902716,
+        "readyAt": 1792520480.9902716,
+        "runtimeId": "local-rag-factory-local",
+        "runtimeSeconds": 0.08302044868469238,
+        "startedAt": 1792520481.3546069,
+        "status": "completed",
+        "transferBytes": 6987,
+        "transferSeconds": 0.18327975273132324
+      },
+      {
+        "activityId": "local-rag-factory-local-0df2d611a0-answer",
+        "allocatedResourceId": "local-rag-factory-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+        "finishedAt": 1792520483.4551609,
+        "id": "local-rag-factory-local-0df2d611a0-run-20261020t182115:local-rag-factory-local-0df2d611a0-answer",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1975255012512207,
+          "preparationFinishedAt": 1792520483.1598396,
+          "preparationStartedAt": 1792520482.9723108,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0010170936584472656,
+          "runtimeId": "local-rag-factory-local",
+          "transferElapsedSeconds": 0.1875288486480713,
+          "transferWorkSeconds": 0.1875288486480713
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "local-rag-factory-local-0df2d611a0-manual-plan-20261020t182115-local-rag-factory-local-0df2d611a0-answer",
+        "plannedResourceId": "local-rag-factory-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792520482.9693308,
+        "readyAt": 1792520482.9693308,
+        "runtimeId": "local-rag-factory-local",
+        "runtimeSeconds": 0.09779572486877441,
+        "startedAt": 1792520483.3573651,
+        "status": "completed",
+        "transferBytes": 8032,
+        "transferSeconds": 0.1875288486480713
+      },
+      {
+        "activityId": "local-rag-factory-local-0df2d611a0-evaluate",
+        "allocatedResourceId": "local-rag-factory-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+        "finishedAt": 1792520485.4506912,
+        "id": "local-rag-factory-local-0df2d611a0-run-20261020t182115:local-rag-factory-local-0df2d611a0-evaluate",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.15699195861816406,
+          "preparationFinishedAt": 1792520485.1873016,
+          "preparationStartedAt": 1792520485.020569,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0036368370056152344,
+          "runtimeId": "local-rag-factory-local",
+          "transferElapsedSeconds": 0.1667325496673584,
+          "transferWorkSeconds": 0.1667325496673584
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "local-rag-factory-local-0df2d611a0-manual-plan-20261020t182115-local-rag-factory-local-0df2d611a0-evaluate",
+        "plannedResourceId": "local-rag-factory-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792520485.0023963,
+        "readyAt": 1792520485.0023963,
+        "runtimeId": "local-rag-factory-local",
+        "runtimeSeconds": 0.10639762878417969,
+        "startedAt": 1792520485.3442936,
+        "status": "completed",
+        "transferBytes": 8720,
+        "transferSeconds": 0.1667325496673584
+      }
+    ],
+    "activityAttempts": [
+      {
+        "activityId": "local-rag-factory-local-0df2d611a0-ingest",
+        "allocatedResourceId": "local-rag-factory-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+        "finishedAt": 1792520475.90999,
+        "id": "local-rag-factory-local-0df2d611a0-run-20261020t182115:local-rag-factory-local-0df2d611a0-ingest",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "pricePerSecond": 0,
+          "runtimeId": "local-rag-factory-local"
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "local-rag-factory-local-0df2d611a0-manual-plan-20261020t182115-local-rag-factory-local-0df2d611a0-ingest",
+        "plannedResourceId": "local-rag-factory-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792520475.6465387,
+        "readyAt": 1792520475.6465387,
+        "runtimeId": "local-rag-factory-local",
+        "runtimeSeconds": 0.08507680892944336,
+        "startedAt": 1792520475.8249133,
+        "status": "completed",
+        "transferBytes": 0,
+        "transferSeconds": 0
+      },
+      {
+        "activityId": "local-rag-factory-local-0df2d611a0-chunk",
+        "allocatedResourceId": "local-rag-factory-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+        "finishedAt": 1792520477.3249586,
+        "id": "local-rag-factory-local-0df2d611a0-run-20261020t182115:local-rag-factory-local-0df2d611a0-chunk",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1598520278930664,
+          "preparationFinishedAt": 1792520477.0843618,
+          "preparationStartedAt": 1792520476.9191933,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0012047290802001953,
+          "runtimeId": "local-rag-factory-local",
+          "transferElapsedSeconds": 0.16516852378845215,
+          "transferWorkSeconds": 0.16516852378845215
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "local-rag-factory-local-0df2d611a0-manual-plan-20261020t182115-local-rag-factory-local-0df2d611a0-chunk",
+        "plannedResourceId": "local-rag-factory-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792520476.9160323,
+        "readyAt": 1792520476.9160323,
+        "runtimeId": "local-rag-factory-local",
+        "runtimeSeconds": 0.08074474334716797,
+        "startedAt": 1792520477.2442138,
+        "status": "completed",
+        "transferBytes": 1132,
+        "transferSeconds": 0.16516852378845215
+      },
+      {
+        "activityId": "local-rag-factory-local-0df2d611a0-index",
+        "allocatedResourceId": "local-rag-factory-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+        "finishedAt": 1792520479.3468802,
+        "id": "local-rag-factory-local-0df2d611a0-run-20261020t182115:local-rag-factory-local-0df2d611a0-index",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1400012969970703,
+          "preparationFinishedAt": 1792520479.127833,
+          "preparationStartedAt": 1792520478.933414,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0014295578002929688,
+          "runtimeId": "local-rag-factory-local",
+          "transferElapsedSeconds": 0.19441890716552734,
+          "transferWorkSeconds": 0.19441890716552734
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "local-rag-factory-local-0df2d611a0-manual-plan-20261020t182115-local-rag-factory-local-0df2d611a0-index",
+        "plannedResourceId": "local-rag-factory-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792520478.9293907,
+        "readyAt": 1792520478.9293907,
+        "runtimeId": "local-rag-factory-local",
+        "runtimeSeconds": 0.07904601097106934,
+        "startedAt": 1792520479.2678342,
+        "status": "completed",
+        "transferBytes": 2318,
+        "transferSeconds": 0.19441890716552734
+      },
+      {
+        "activityId": "local-rag-factory-local-0df2d611a0-retrieve",
+        "allocatedResourceId": "local-rag-factory-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+        "finishedAt": 1792520481.4376273,
+        "id": "local-rag-factory-local-0df2d611a0-run-20261020t182115:local-rag-factory-local-0df2d611a0-retrieve",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.17662549018859863,
+          "preparationFinishedAt": 1792520481.1779814,
+          "preparationStartedAt": 1792520480.9947016,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0015411376953125,
+          "runtimeId": "local-rag-factory-local",
+          "transferElapsedSeconds": 0.18327975273132324,
+          "transferWorkSeconds": 0.18327975273132324
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "local-rag-factory-local-0df2d611a0-manual-plan-20261020t182115-local-rag-factory-local-0df2d611a0-retrieve",
+        "plannedResourceId": "local-rag-factory-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792520480.9902716,
+        "readyAt": 1792520480.9902716,
+        "runtimeId": "local-rag-factory-local",
+        "runtimeSeconds": 0.08302044868469238,
+        "startedAt": 1792520481.3546069,
+        "status": "completed",
+        "transferBytes": 6987,
+        "transferSeconds": 0.18327975273132324
+      },
+      {
+        "activityId": "local-rag-factory-local-0df2d611a0-answer",
+        "allocatedResourceId": "local-rag-factory-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+        "finishedAt": 1792520483.4551609,
+        "id": "local-rag-factory-local-0df2d611a0-run-20261020t182115:local-rag-factory-local-0df2d611a0-answer",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1975255012512207,
+          "preparationFinishedAt": 1792520483.1598396,
+          "preparationStartedAt": 1792520482.9723108,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0010170936584472656,
+          "runtimeId": "local-rag-factory-local",
+          "transferElapsedSeconds": 0.1875288486480713,
+          "transferWorkSeconds": 0.1875288486480713
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "local-rag-factory-local-0df2d611a0-manual-plan-20261020t182115-local-rag-factory-local-0df2d611a0-answer",
+        "plannedResourceId": "local-rag-factory-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792520482.9693308,
+        "readyAt": 1792520482.9693308,
+        "runtimeId": "local-rag-factory-local",
+        "runtimeSeconds": 0.09779572486877441,
+        "startedAt": 1792520483.3573651,
+        "status": "completed",
+        "transferBytes": 8032,
+        "transferSeconds": 0.1875288486480713
+      },
+      {
+        "activityId": "local-rag-factory-local-0df2d611a0-evaluate",
+        "allocatedResourceId": "local-rag-factory-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+        "finishedAt": 1792520485.4506912,
+        "id": "local-rag-factory-local-0df2d611a0-run-20261020t182115:local-rag-factory-local-0df2d611a0-evaluate",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.15699195861816406,
+          "preparationFinishedAt": 1792520485.1873016,
+          "preparationStartedAt": 1792520485.020569,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0036368370056152344,
+          "runtimeId": "local-rag-factory-local",
+          "transferElapsedSeconds": 0.1667325496673584,
+          "transferWorkSeconds": 0.1667325496673584
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "local-rag-factory-local-0df2d611a0-manual-plan-20261020t182115-local-rag-factory-local-0df2d611a0-evaluate",
+        "plannedResourceId": "local-rag-factory-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792520485.0023963,
+        "readyAt": 1792520485.0023963,
+        "runtimeId": "local-rag-factory-local",
+        "runtimeSeconds": 0.10639762878417969,
+        "startedAt": 1792520485.3442936,
+        "status": "completed",
+        "transferBytes": 8720,
+        "transferSeconds": 0.1667325496673584
+      }
+    ],
+    "artifactMaterializations": null,
+    "artifactTransferRuns": [
+      {
+        "activityId": "local-rag-factory-local-0df2d611a0-answer",
+        "durationSeconds": 0.1875288486480713,
+        "executionRunId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+        "filesTransferred": 4,
+        "finishedAt": 1792520483.1598396,
+        "id": "transfer-workspace-local-rag-factory-local-0df2d611a0-run-20261020t182115-local-rag-factory-local-0df2d611a0-answer-0",
+        "logicalBytes": 8032,
+        "planId": "transfer-workspace-local-rag-factory-local-0df2d611a0-run-20261020t182115-local-rag-factory-local-0df2d611a0-answer-0",
+        "route": {
+          "consumerActivityId": "local-rag-factory-local-0df2d611a0-answer",
+          "filesTransferred": 4,
+          "producerActivityId": "local-rag-factory-local-0df2d611a0-retrieve",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.090693917,
+          "sourceEnvironmentId": "local-rag-factory-v1",
+          "sourceResourceId": "local-rag-factory-local-docker",
+          "sshChannelWaitSeconds": 4.58e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "local-rag-factory-v1",
+          "targetResourceId": "local-rag-factory-local-docker"
+        },
+        "startedAt": 1792520482.9723108,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 8032
+      },
+      {
+        "activityId": "local-rag-factory-local-0df2d611a0-chunk",
+        "durationSeconds": 0.16516852378845215,
+        "executionRunId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+        "filesTransferred": 1,
+        "finishedAt": 1792520477.0843618,
+        "id": "transfer-workspace-local-rag-factory-local-0df2d611a0-run-20261020t182115-local-rag-factory-local-0df2d611a0-chunk-0",
+        "logicalBytes": 1132,
+        "planId": "transfer-workspace-local-rag-factory-local-0df2d611a0-run-20261020t182115-local-rag-factory-local-0df2d611a0-chunk-0",
+        "route": {
+          "consumerActivityId": "local-rag-factory-local-0df2d611a0-chunk",
+          "filesTransferred": 1,
+          "producerActivityId": "local-rag-factory-local-0df2d611a0-ingest",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.09200304100000001,
+          "sourceEnvironmentId": "local-rag-factory-v1",
+          "sourceResourceId": "local-rag-factory-local-docker",
+          "sshChannelWaitSeconds": 3.75e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "local-rag-factory-v1",
+          "targetResourceId": "local-rag-factory-local-docker"
+        },
+        "startedAt": 1792520476.9191933,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 1132
+      },
+      {
+        "activityId": "local-rag-factory-local-0df2d611a0-evaluate",
+        "durationSeconds": 0.1667325496673584,
+        "executionRunId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+        "filesTransferred": 5,
+        "finishedAt": 1792520485.1873016,
+        "id": "transfer-workspace-local-rag-factory-local-0df2d611a0-run-20261020t182115-local-rag-factory-local-0df2d611a0-evaluate-0",
+        "logicalBytes": 8720,
+        "planId": "transfer-workspace-local-rag-factory-local-0df2d611a0-run-20261020t182115-local-rag-factory-local-0df2d611a0-evaluate-0",
+        "route": {
+          "consumerActivityId": "local-rag-factory-local-0df2d611a0-evaluate",
+          "filesTransferred": 5,
+          "producerActivityId": "local-rag-factory-local-0df2d611a0-answer",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.090320918,
+          "sourceEnvironmentId": "local-rag-factory-v1",
+          "sourceResourceId": "local-rag-factory-local-docker",
+          "sshChannelWaitSeconds": 2.91e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "local-rag-factory-v1",
+          "targetResourceId": "local-rag-factory-local-docker"
+        },
+        "startedAt": 1792520485.020569,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 8720
+      },
+      {
+        "activityId": "local-rag-factory-local-0df2d611a0-index",
+        "durationSeconds": 0.19441890716552734,
+        "executionRunId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+        "filesTransferred": 2,
+        "finishedAt": 1792520479.127833,
+        "id": "transfer-workspace-local-rag-factory-local-0df2d611a0-run-20261020t182115-local-rag-factory-local-0df2d611a0-index-0",
+        "logicalBytes": 2318,
+        "planId": "transfer-workspace-local-rag-factory-local-0df2d611a0-run-20261020t182115-local-rag-factory-local-0df2d611a0-index-0",
+        "route": {
+          "consumerActivityId": "local-rag-factory-local-0df2d611a0-index",
+          "filesTransferred": 2,
+          "producerActivityId": "local-rag-factory-local-0df2d611a0-chunk",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.095814626,
+          "sourceEnvironmentId": "local-rag-factory-v1",
+          "sourceResourceId": "local-rag-factory-local-docker",
+          "sshChannelWaitSeconds": 4.58e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "local-rag-factory-v1",
+          "targetResourceId": "local-rag-factory-local-docker"
+        },
+        "startedAt": 1792520478.933414,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 2318
+      },
+      {
+        "activityId": "local-rag-factory-local-0df2d611a0-retrieve",
+        "durationSeconds": 0.18327975273132324,
+        "executionRunId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+        "filesTransferred": 3,
+        "finishedAt": 1792520481.1779814,
+        "id": "transfer-workspace-local-rag-factory-local-0df2d611a0-run-20261020t182115-local-rag-factory-local-0df2d611a0-retrieve-0",
+        "logicalBytes": 6987,
+        "planId": "transfer-workspace-local-rag-factory-local-0df2d611a0-run-20261020t182115-local-rag-factory-local-0df2d611a0-retrieve-0",
+        "route": {
+          "consumerActivityId": "local-rag-factory-local-0df2d611a0-retrieve",
+          "filesTransferred": 3,
+          "producerActivityId": "local-rag-factory-local-0df2d611a0-index",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.094210291,
+          "sourceEnvironmentId": "local-rag-factory-v1",
+          "sourceResourceId": "local-rag-factory-local-docker",
+          "sshChannelWaitSeconds": 5.43e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "local-rag-factory-v1",
+          "targetResourceId": "local-rag-factory-local-docker"
+        },
+        "startedAt": 1792520480.9947016,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 6987
+      }
+    ],
+    "cloudBilling": {
+      "asOf": "2026-10-20T18:21:26.964237552Z",
+      "costBasis": "VM compute and boot-disk lifecycle at on-demand marginal rates; not a provider invoice",
+      "estimatedCost": 0,
+      "excludedCosts": [
+        "network-egress",
+        "public-ipv4",
+        "image-storage",
+        "discounts-and-tax"
+      ],
+      "instances": [],
+      "knownCost": 0,
+      "status": "estimated"
+    },
+    "dataLocations": [
+      {
+        "dataObjectInstanceId": "66fe936f8653c3b6af90a733963a6c1a",
+        "executionRunId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+        "id": "d4ddd79a4c675068b12b36f8c16465c1",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "local-rag-factory-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "2b72ff1d2ad4d78a4d3bf190583a71d6",
+        "uri": "file:///akoflow/workspace/runs/local-rag-factory-local-0df2d611a0-run-20261020t182115/local-rag-factory-local-0df2d611a0-answer/answers.json"
+      },
+      {
+        "dataObjectInstanceId": "e2f9b63560036c3f2123885c1e2e3950",
+        "executionRunId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+        "id": "aed72be2c4188d0084fd53fed1f8381a",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "local-rag-factory-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "2b72ff1d2ad4d78a4d3bf190583a71d6",
+        "uri": "file:///akoflow/workspace/runs/local-rag-factory-local-0df2d611a0-run-20261020t182115/local-rag-factory-local-0df2d611a0-chunk/chunks.json"
+      },
+      {
+        "dataObjectInstanceId": "cde35b854b17a1bef5a793bd516de36e",
+        "executionRunId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+        "id": "2451dc06497d632ae2c5bca6d475e026",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "local-rag-factory-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "2b72ff1d2ad4d78a4d3bf190583a71d6",
+        "uri": "file:///akoflow/workspace/runs/local-rag-factory-local-0df2d611a0-run-20261020t182115/local-rag-factory-local-0df2d611a0-evaluate/evaluation.json"
+      },
+      {
+        "dataObjectInstanceId": "6bd0ae8215caf0ddec8a51032c828fae",
+        "executionRunId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+        "id": "3bc77b7d2c30a5be1e62e363a7f4c769",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "local-rag-factory-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "2b72ff1d2ad4d78a4d3bf190583a71d6",
+        "uri": "file:///akoflow/workspace/runs/local-rag-factory-local-0df2d611a0-run-20261020t182115/local-rag-factory-local-0df2d611a0-evaluate/manifest.json"
+      },
+      {
+        "dataObjectInstanceId": "43d11692415470aafa36a4f05f1d4eec",
+        "executionRunId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+        "id": "14a58eab8c01a05b56988f47ef8af3d0",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "local-rag-factory-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "2b72ff1d2ad4d78a4d3bf190583a71d6",
+        "uri": "file:///akoflow/workspace/runs/local-rag-factory-local-0df2d611a0-run-20261020t182115/local-rag-factory-local-0df2d611a0-index/index.json"
+      },
+      {
+        "dataObjectInstanceId": "7eef47d9a91b2112fc60ed71034e1c25",
+        "executionRunId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+        "id": "8e4e2c6cb96ed8e832423f944f07ccd0",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "local-rag-factory-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "2b72ff1d2ad4d78a4d3bf190583a71d6",
+        "uri": "file:///akoflow/workspace/runs/local-rag-factory-local-0df2d611a0-run-20261020t182115/local-rag-factory-local-0df2d611a0-ingest/documents.json"
+      },
+      {
+        "dataObjectInstanceId": "d71905e7e1aedca037f94da8061599f0",
+        "executionRunId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+        "id": "02482079aba1c51ee7ba12d4a0ce156b",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "local-rag-factory-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "2b72ff1d2ad4d78a4d3bf190583a71d6",
+        "uri": "file:///akoflow/workspace/runs/local-rag-factory-local-0df2d611a0-run-20261020t182115/local-rag-factory-local-0df2d611a0-retrieve/retrieval.json"
+      }
+    ],
+    "dataObjects": [
+      {
+        "attempt": 1,
+        "checksum": "sha256:db2c7894495c73787cac776b85e7ba6f60adae6bd40f5a78f01a05c27a9ed0f7",
+        "dataObjectId": "180f1bbbd34a6dd1a5c37f7a9c0b01b2",
+        "discovered": true,
+        "executionRunId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+        "id": "66fe936f8653c3b6af90a733963a6c1a",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "local-rag-factory-local-0df2d611a0-answer",
+        "relativePath": "answers.json",
+        "sizeBytes": 688
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:a26026a0886141a5363f64f3d650a257e690331af1f287dd41ecd0889d111cc3",
+        "dataObjectId": "3f18b53a48d20b9c302f6c55700fceb8",
+        "discovered": true,
+        "executionRunId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+        "id": "e2f9b63560036c3f2123885c1e2e3950",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "local-rag-factory-local-0df2d611a0-chunk",
+        "relativePath": "chunks.json",
+        "sizeBytes": 1186
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:a2e457b53564c07abc7d4160f1adaf1845273fdcf903f874d51518e823f7eb8e",
+        "dataObjectId": "f4a2c0429b8419c9aa1992f29a329b8c",
+        "discovered": true,
+        "executionRunId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+        "id": "cde35b854b17a1bef5a793bd516de36e",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "local-rag-factory-local-0df2d611a0-evaluate",
+        "relativePath": "evaluation.json",
+        "sizeBytes": 49
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:a8d4a6b2a4a8eb566f413700e36154d8a2bb9c27681a9e30fe9f97e7524493e0",
+        "dataObjectId": "3844989499f6e2ba9bf06f80f35905c8",
+        "discovered": true,
+        "executionRunId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+        "id": "6bd0ae8215caf0ddec8a51032c828fae",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "local-rag-factory-local-0df2d611a0-evaluate",
+        "relativePath": "manifest.json",
+        "sizeBytes": 206
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:1fedb810279c6c8be4b246cc45d545474bdd62543adf4117834b485a62ca7c23",
+        "dataObjectId": "505ac3204bb88c06ccf0b4552e461977",
+        "discovered": true,
+        "executionRunId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+        "id": "43d11692415470aafa36a4f05f1d4eec",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "local-rag-factory-local-0df2d611a0-index",
+        "relativePath": "index.json",
+        "sizeBytes": 4669
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:2fe522c4fe6f40c5a767ad0fd3d1fed0198199978ca53c1d7b3de42bb822f68b",
+        "dataObjectId": "3020e3ffbd2333709baed5d63ab1a49f",
+        "discovered": true,
+        "executionRunId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+        "id": "7eef47d9a91b2112fc60ed71034e1c25",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "local-rag-factory-local-0df2d611a0-ingest",
+        "relativePath": "documents.json",
+        "sizeBytes": 1132
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:92f964d9c460e4e5974a9151de001b2889017029cd078b50e1f6bf308008a93a",
+        "dataObjectId": "ff8564bb38953d32c21702122640a38e",
+        "discovered": true,
+        "executionRunId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+        "id": "d71905e7e1aedca037f94da8061599f0",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "local-rag-factory-local-0df2d611a0-retrieve",
+        "relativePath": "retrieval.json",
+        "sizeBytes": 1045
+      }
+    ],
+    "dataTransfers": [
+      {
+        "bytes": 1132,
+        "consumerActivityId": "local-rag-factory-local-0df2d611a0-chunk",
+        "cost": 0,
+        "durationSeconds": 0.16516852378845215,
+        "executionRunId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+        "finishedAt": 1792520477.0843618,
+        "id": "local-rag-factory-local-0df2d611a0-run-20261020t182115:local-rag-factory-local-0df2d611a0-chunk:transfer-workspace-local-rag-factory-local-0df2d611a0-run-20261020t182115-local-rag-factory-local-0df2d611a0-chunk-0",
+        "logicalBytes": 1132,
+        "producerActivityId": "local-rag-factory-local-0df2d611a0-ingest",
+        "route": {
+          "consumerActivityId": "local-rag-factory-local-0df2d611a0-chunk",
+          "filesTransferred": 1,
+          "producerActivityId": "local-rag-factory-local-0df2d611a0-ingest",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.09200304100000001,
+          "sourceEnvironmentId": "local-rag-factory-v1",
+          "sourceResourceId": "local-rag-factory-local-docker",
+          "sshChannelWaitSeconds": 3.75e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "local-rag-factory-v1",
+          "targetResourceId": "local-rag-factory-local-docker"
+        },
+        "sourceResourceId": "local-rag-factory-local-docker",
+        "startedAt": 1792520476.9191933,
+        "strategy": "gateway",
+        "targetResourceId": "local-rag-factory-local-docker"
+      },
+      {
+        "bytes": 2318,
+        "consumerActivityId": "local-rag-factory-local-0df2d611a0-index",
+        "cost": 0,
+        "durationSeconds": 0.19441890716552734,
+        "executionRunId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+        "finishedAt": 1792520479.127833,
+        "id": "local-rag-factory-local-0df2d611a0-run-20261020t182115:local-rag-factory-local-0df2d611a0-index:transfer-workspace-local-rag-factory-local-0df2d611a0-run-20261020t182115-local-rag-factory-local-0df2d611a0-index-0",
+        "logicalBytes": 2318,
+        "producerActivityId": "local-rag-factory-local-0df2d611a0-chunk",
+        "route": {
+          "consumerActivityId": "local-rag-factory-local-0df2d611a0-index",
+          "filesTransferred": 2,
+          "producerActivityId": "local-rag-factory-local-0df2d611a0-chunk",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.095814626,
+          "sourceEnvironmentId": "local-rag-factory-v1",
+          "sourceResourceId": "local-rag-factory-local-docker",
+          "sshChannelWaitSeconds": 4.58e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "local-rag-factory-v1",
+          "targetResourceId": "local-rag-factory-local-docker"
+        },
+        "sourceResourceId": "local-rag-factory-local-docker",
+        "startedAt": 1792520478.933414,
+        "strategy": "gateway",
+        "targetResourceId": "local-rag-factory-local-docker"
+      },
+      {
+        "bytes": 6987,
+        "consumerActivityId": "local-rag-factory-local-0df2d611a0-retrieve",
+        "cost": 0,
+        "durationSeconds": 0.18327975273132324,
+        "executionRunId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+        "finishedAt": 1792520481.1779814,
+        "id": "local-rag-factory-local-0df2d611a0-run-20261020t182115:local-rag-factory-local-0df2d611a0-retrieve:transfer-workspace-local-rag-factory-local-0df2d611a0-run-20261020t182115-local-rag-factory-local-0df2d611a0-retrieve-0",
+        "logicalBytes": 6987,
+        "producerActivityId": "local-rag-factory-local-0df2d611a0-index",
+        "route": {
+          "consumerActivityId": "local-rag-factory-local-0df2d611a0-retrieve",
+          "filesTransferred": 3,
+          "producerActivityId": "local-rag-factory-local-0df2d611a0-index",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.094210291,
+          "sourceEnvironmentId": "local-rag-factory-v1",
+          "sourceResourceId": "local-rag-factory-local-docker",
+          "sshChannelWaitSeconds": 5.43e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "local-rag-factory-v1",
+          "targetResourceId": "local-rag-factory-local-docker"
+        },
+        "sourceResourceId": "local-rag-factory-local-docker",
+        "startedAt": 1792520480.9947016,
+        "strategy": "gateway",
+        "targetResourceId": "local-rag-factory-local-docker"
+      },
+      {
+        "bytes": 8032,
+        "consumerActivityId": "local-rag-factory-local-0df2d611a0-answer",
+        "cost": 0,
+        "durationSeconds": 0.1875288486480713,
+        "executionRunId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+        "finishedAt": 1792520483.1598396,
+        "id": "local-rag-factory-local-0df2d611a0-run-20261020t182115:local-rag-factory-local-0df2d611a0-answer:transfer-workspace-local-rag-factory-local-0df2d611a0-run-20261020t182115-local-rag-factory-local-0df2d611a0-answer-0",
+        "logicalBytes": 8032,
+        "producerActivityId": "local-rag-factory-local-0df2d611a0-retrieve",
+        "route": {
+          "consumerActivityId": "local-rag-factory-local-0df2d611a0-answer",
+          "filesTransferred": 4,
+          "producerActivityId": "local-rag-factory-local-0df2d611a0-retrieve",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.090693917,
+          "sourceEnvironmentId": "local-rag-factory-v1",
+          "sourceResourceId": "local-rag-factory-local-docker",
+          "sshChannelWaitSeconds": 4.58e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "local-rag-factory-v1",
+          "targetResourceId": "local-rag-factory-local-docker"
+        },
+        "sourceResourceId": "local-rag-factory-local-docker",
+        "startedAt": 1792520482.9723108,
+        "strategy": "gateway",
+        "targetResourceId": "local-rag-factory-local-docker"
+      },
+      {
+        "bytes": 8720,
+        "consumerActivityId": "local-rag-factory-local-0df2d611a0-evaluate",
+        "cost": 0,
+        "durationSeconds": 0.1667325496673584,
+        "executionRunId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+        "finishedAt": 1792520485.1873016,
+        "id": "local-rag-factory-local-0df2d611a0-run-20261020t182115:local-rag-factory-local-0df2d611a0-evaluate:transfer-workspace-local-rag-factory-local-0df2d611a0-run-20261020t182115-local-rag-factory-local-0df2d611a0-evaluate-0",
+        "logicalBytes": 8720,
+        "producerActivityId": "local-rag-factory-local-0df2d611a0-answer",
+        "route": {
+          "consumerActivityId": "local-rag-factory-local-0df2d611a0-evaluate",
+          "filesTransferred": 5,
+          "producerActivityId": "local-rag-factory-local-0df2d611a0-answer",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.090320918,
+          "sourceEnvironmentId": "local-rag-factory-v1",
+          "sourceResourceId": "local-rag-factory-local-docker",
+          "sshChannelWaitSeconds": 2.91e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "local-rag-factory-v1",
+          "targetResourceId": "local-rag-factory-local-docker"
+        },
+        "sourceResourceId": "local-rag-factory-local-docker",
+        "startedAt": 1792520485.020569,
+        "strategy": "gateway",
+        "targetResourceId": "local-rag-factory-local-docker"
+      }
+    ],
+    "events": [
+      {
+        "aggregateId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+        "aggregateType": "execution_run",
+        "eventType": "execution.run.started",
+        "id": "34413be11e2569fba8a088c21acdbbc6",
+        "occurredAt": "2026-10-20T18:21:15.609045089Z",
+        "payload": {
+          "mode": "real",
+          "schedulePlanId": "local-rag-factory-local-0df2d611a0-manual-plan-20261020t182115"
+        }
+      },
+      {
+        "aggregateId": "local-rag-factory-local-0df2d611a0-run-20261020t182115:local-rag-factory-local-0df2d611a0-ingest",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "a4d16375a53a06bae7a7165cfdd40bec",
+        "occurredAt": "2026-10-20T18:21:16.851045923Z",
+        "payload": {
+          "activityId": "local-rag-factory-local-0df2d611a0-ingest",
+          "executionRunId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "local-rag-factory-local-0df2d611a0-run-20261020t182115:local-rag-factory-local-0df2d611a0-ingest",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "d637875008167a6ee58894ab7d68bee3",
+        "occurredAt": "2026-10-20T18:21:16.913944881Z",
+        "payload": {
+          "activityId": "local-rag-factory-local-0df2d611a0-ingest",
+          "executionRunId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+          "failureReason": "",
+          "runtimeSeconds": 0.08507680892944336,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "local-rag-factory-local-0df2d611a0-run-20261020t182115:local-rag-factory-local-0df2d611a0-chunk",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "db0c5eb19edd054699e5abbadd6dbdf3",
+        "occurredAt": "2026-10-20T18:21:18.864369632Z",
+        "payload": {
+          "activityId": "local-rag-factory-local-0df2d611a0-chunk",
+          "executionRunId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "local-rag-factory-local-0df2d611a0-run-20261020t182115:local-rag-factory-local-0df2d611a0-chunk",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "54a32ca330ad946f675f43f85e0cb34d",
+        "occurredAt": "2026-10-20T18:21:18.927758424Z",
+        "payload": {
+          "activityId": "local-rag-factory-local-0df2d611a0-chunk",
+          "executionRunId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+          "failureReason": "",
+          "runtimeSeconds": 0.08074474334716797,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "local-rag-factory-local-0df2d611a0-run-20261020t182115:local-rag-factory-local-0df2d611a0-index",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "01670d1a869238fb54792fb29d6f0679",
+        "occurredAt": "2026-10-20T18:21:20.862430924Z",
+        "payload": {
+          "activityId": "local-rag-factory-local-0df2d611a0-index",
+          "executionRunId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "local-rag-factory-local-0df2d611a0-run-20261020t182115:local-rag-factory-local-0df2d611a0-index",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "2c8104b9e4eabc5e6a9531d594d09a30",
+        "occurredAt": "2026-10-20T18:21:20.987192091Z",
+        "payload": {
+          "activityId": "local-rag-factory-local-0df2d611a0-index",
+          "executionRunId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+          "failureReason": "",
+          "runtimeSeconds": 0.07904601097106934,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "local-rag-factory-local-0df2d611a0-run-20261020t182115:local-rag-factory-local-0df2d611a0-retrieve",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "458274ab4770b54b5d015e4de2f8f5cb",
+        "occurredAt": "2026-10-20T18:21:22.875935134Z",
+        "payload": {
+          "activityId": "local-rag-factory-local-0df2d611a0-retrieve",
+          "executionRunId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "local-rag-factory-local-0df2d611a0-run-20261020t182115:local-rag-factory-local-0df2d611a0-retrieve",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "f497bca140ae290a390f61acc17f193a",
+        "occurredAt": "2026-10-20T18:21:22.967718884Z",
+        "payload": {
+          "activityId": "local-rag-factory-local-0df2d611a0-retrieve",
+          "executionRunId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+          "failureReason": "",
+          "runtimeSeconds": 0.08302044868469238,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "local-rag-factory-local-0df2d611a0-run-20261020t182115:local-rag-factory-local-0df2d611a0-answer",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "1b81b86a1e24dbf990f9687da4f9fdde",
+        "occurredAt": "2026-10-20T18:21:24.909748051Z",
+        "payload": {
+          "activityId": "local-rag-factory-local-0df2d611a0-answer",
+          "executionRunId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "local-rag-factory-local-0df2d611a0-run-20261020t182115:local-rag-factory-local-0df2d611a0-answer",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "bea7e1dd2ae69a378737d7c01244d365",
+        "occurredAt": "2026-10-20T18:21:24.99990701Z",
+        "payload": {
+          "activityId": "local-rag-factory-local-0df2d611a0-answer",
+          "executionRunId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+          "failureReason": "",
+          "runtimeSeconds": 0.09779572486877441,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "local-rag-factory-local-0df2d611a0-run-20261020t182115:local-rag-factory-local-0df2d611a0-evaluate",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "9eb15ccc563ebeb5d49eaef99fdc2075",
+        "occurredAt": "2026-10-20T18:21:26.881061427Z",
+        "payload": {
+          "activityId": "local-rag-factory-local-0df2d611a0-evaluate",
+          "executionRunId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "local-rag-factory-local-0df2d611a0-run-20261020t182115:local-rag-factory-local-0df2d611a0-evaluate",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "c90c0752fc8985eb6da75473d3f1505c",
+        "occurredAt": "2026-10-20T18:21:26.938117011Z",
+        "payload": {
+          "activityId": "local-rag-factory-local-0df2d611a0-evaluate",
+          "executionRunId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+          "failureReason": "",
+          "runtimeSeconds": 0.10639762878417969,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+        "aggregateType": "execution_run",
+        "eventType": "execution.run.completed",
+        "id": "3ab4081b2fe42d442403d71532553f7e",
+        "occurredAt": "2026-10-20T18:21:26.941639927Z",
+        "payload": {
+          "cost": 0,
+          "makespanSeconds": 9.625777959823608
+        }
+      }
+    ],
+    "handles": [
+      {
+        "activityId": "local-rag-factory-local-0df2d611a0-answer",
+        "artifacts": {
+          "activityId": "local-rag-factory-local-0df2d611a0-answer",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:db2c7894495c73787cac776b85e7ba6f60adae6bd40f5a78f01a05c27a9ed0f7",
+              "modifiedUnixNano": 1792520483449621000,
+              "path": "answers.json",
+              "sizeBytes": 688
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:db2c7894495c73787cac776b85e7ba6f60adae6bd40f5a78f01a05c27a9ed0f7",
+              "modifiedUnixNano": 1792520483449621000,
+              "path": "answers.json",
+              "sizeBytes": 688
+            },
+            {
+              "checksum": "sha256:a26026a0886141a5363f64f3d650a257e690331af1f287dd41ecd0889d111cc3",
+              "modifiedUnixNano": 1792520483115621000,
+              "path": "chunks.json",
+              "sizeBytes": 1186
+            },
+            {
+              "checksum": "sha256:2fe522c4fe6f40c5a767ad0fd3d1fed0198199978ca53c1d7b3de42bb822f68b",
+              "modifiedUnixNano": 1792520483115621000,
+              "path": "documents.json",
+              "sizeBytes": 1132
+            },
+            {
+              "checksum": "sha256:1fedb810279c6c8be4b246cc45d545474bdd62543adf4117834b485a62ca7c23",
+              "modifiedUnixNano": 1792520483115621000,
+              "path": "index.json",
+              "sizeBytes": 4669
+            },
+            {
+              "checksum": "sha256:92f964d9c460e4e5974a9151de001b2889017029cd078b50e1f6bf308008a93a",
+              "modifiedUnixNano": 1792520483115621000,
+              "path": "retrieval.json",
+              "sizeBytes": 1045
+            }
+          ],
+          "finishedAt": 1792520483.4551609,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:a26026a0886141a5363f64f3d650a257e690331af1f287dd41ecd0889d111cc3",
+              "modifiedUnixNano": 1792520483115621000,
+              "path": "chunks.json",
+              "sizeBytes": 1186
+            },
+            {
+              "checksum": "sha256:2fe522c4fe6f40c5a767ad0fd3d1fed0198199978ca53c1d7b3de42bb822f68b",
+              "modifiedUnixNano": 1792520483115621000,
+              "path": "documents.json",
+              "sizeBytes": 1132
+            },
+            {
+              "checksum": "sha256:1fedb810279c6c8be4b246cc45d545474bdd62543adf4117834b485a62ca7c23",
+              "modifiedUnixNano": 1792520483115621000,
+              "path": "index.json",
+              "sizeBytes": 4669
+            },
+            {
+              "checksum": "sha256:92f964d9c460e4e5974a9151de001b2889017029cd078b50e1f6bf308008a93a",
+              "modifiedUnixNano": 1792520483115621000,
+              "path": "retrieval.json",
+              "sizeBytes": 1045
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.09779572486877441,
+              "finishedAt": 1792520483.4551609,
+              "phase": "execution",
+              "startedAt": 1792520483.3573651,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/local-rag-factory-local-0df2d611a0-run-20261020t182115/local-rag-factory-local-0df2d611a0-answer",
+          "runId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+          "runtime": "local-rag-factory-local",
+          "schemaVersion": 1,
+          "startedAt": 1792520483.3573651,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 5,
+            "initialFiles": 4,
+            "modifiedFiles": 0,
+            "outputBytes": 688
+          }
+        },
+        "exitCode": 0,
+        "externalId": "3b498e065e54e9f401a3e16a7a3cd7d1a07b96882fbdb2f1c3e322f0cff720d1",
+        "finishedAt": 1792520483.4551609,
+        "id": "local-rag-factory-local-0df2d611a0-run-20261020t182115:local-rag-factory-local-0df2d611a0-answer",
+        "log": "[AKOFLOW INFO] Activity started on runtime local-rag-factory-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/local-rag-factory-local-0df2d611a0-run-20261020t182115/local-rag-factory-local-0df2d611a0-answer",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792520483.357369,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-local-rag-factory-local-0df2d611a0-run-20261020t182115-local-rag-factory-local-0df2d611a0-answer",
+          "submittedAt": 1792520483.3573651
+        },
+        "resourceId": "local-rag-factory-local-docker",
+        "runId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+        "runtimeId": "local-rag-factory-local",
+        "startedAt": 1792520483.3573651,
+        "status": "completed"
+      },
+      {
+        "activityId": "local-rag-factory-local-0df2d611a0-chunk",
+        "artifacts": {
+          "activityId": "local-rag-factory-local-0df2d611a0-chunk",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:a26026a0886141a5363f64f3d650a257e690331af1f287dd41ecd0889d111cc3",
+              "modifiedUnixNano": 1792520477319621000,
+              "path": "chunks.json",
+              "sizeBytes": 1186
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:a26026a0886141a5363f64f3d650a257e690331af1f287dd41ecd0889d111cc3",
+              "modifiedUnixNano": 1792520477319621000,
+              "path": "chunks.json",
+              "sizeBytes": 1186
+            },
+            {
+              "checksum": "sha256:2fe522c4fe6f40c5a767ad0fd3d1fed0198199978ca53c1d7b3de42bb822f68b",
+              "modifiedUnixNano": 1792520477039621000,
+              "path": "documents.json",
+              "sizeBytes": 1132
+            }
+          ],
+          "finishedAt": 1792520477.3249586,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:2fe522c4fe6f40c5a767ad0fd3d1fed0198199978ca53c1d7b3de42bb822f68b",
+              "modifiedUnixNano": 1792520477039621000,
+              "path": "documents.json",
+              "sizeBytes": 1132
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.08074474334716797,
+              "finishedAt": 1792520477.3249586,
+              "phase": "execution",
+              "startedAt": 1792520477.2442138,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/local-rag-factory-local-0df2d611a0-run-20261020t182115/local-rag-factory-local-0df2d611a0-chunk",
+          "runId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+          "runtime": "local-rag-factory-local",
+          "schemaVersion": 1,
+          "startedAt": 1792520477.2442138,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 2,
+            "initialFiles": 1,
+            "modifiedFiles": 0,
+            "outputBytes": 1186
+          }
+        },
+        "exitCode": 0,
+        "externalId": "3d9edc22401a6645f1c23253fc4e75afa1984ea505b2c09e03efd373c5708259",
+        "finishedAt": 1792520477.3249586,
+        "id": "local-rag-factory-local-0df2d611a0-run-20261020t182115:local-rag-factory-local-0df2d611a0-chunk",
+        "log": "[AKOFLOW INFO] Activity started on runtime local-rag-factory-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/local-rag-factory-local-0df2d611a0-run-20261020t182115/local-rag-factory-local-0df2d611a0-chunk",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792520477.2442214,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-local-rag-factory-local-0df2d611a0-run-20261020t182115-local-rag-factory-local-0df2d611a0-chunk",
+          "submittedAt": 1792520477.2442138
+        },
+        "resourceId": "local-rag-factory-local-docker",
+        "runId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+        "runtimeId": "local-rag-factory-local",
+        "startedAt": 1792520477.2442138,
+        "status": "completed"
+      },
+      {
+        "activityId": "local-rag-factory-local-0df2d611a0-evaluate",
+        "artifacts": {
+          "activityId": "local-rag-factory-local-0df2d611a0-evaluate",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:a2e457b53564c07abc7d4160f1adaf1845273fdcf903f874d51518e823f7eb8e",
+              "modifiedUnixNano": 1792520485445621000,
+              "path": "evaluation.json",
+              "sizeBytes": 49
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:a8d4a6b2a4a8eb566f413700e36154d8a2bb9c27681a9e30fe9f97e7524493e0",
+              "modifiedUnixNano": 1792520485445621000,
+              "path": "manifest.json",
+              "sizeBytes": 206
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:db2c7894495c73787cac776b85e7ba6f60adae6bd40f5a78f01a05c27a9ed0f7",
+              "modifiedUnixNano": 1792520485143621000,
+              "path": "answers.json",
+              "sizeBytes": 688
+            },
+            {
+              "checksum": "sha256:a26026a0886141a5363f64f3d650a257e690331af1f287dd41ecd0889d111cc3",
+              "modifiedUnixNano": 1792520485143621000,
+              "path": "chunks.json",
+              "sizeBytes": 1186
+            },
+            {
+              "checksum": "sha256:2fe522c4fe6f40c5a767ad0fd3d1fed0198199978ca53c1d7b3de42bb822f68b",
+              "modifiedUnixNano": 1792520485143621000,
+              "path": "documents.json",
+              "sizeBytes": 1132
+            },
+            {
+              "checksum": "sha256:a2e457b53564c07abc7d4160f1adaf1845273fdcf903f874d51518e823f7eb8e",
+              "modifiedUnixNano": 1792520485445621000,
+              "path": "evaluation.json",
+              "sizeBytes": 49
+            },
+            {
+              "checksum": "sha256:1fedb810279c6c8be4b246cc45d545474bdd62543adf4117834b485a62ca7c23",
+              "modifiedUnixNano": 1792520485143621000,
+              "path": "index.json",
+              "sizeBytes": 4669
+            },
+            {
+              "checksum": "sha256:a8d4a6b2a4a8eb566f413700e36154d8a2bb9c27681a9e30fe9f97e7524493e0",
+              "modifiedUnixNano": 1792520485445621000,
+              "path": "manifest.json",
+              "sizeBytes": 206
+            },
+            {
+              "checksum": "sha256:92f964d9c460e4e5974a9151de001b2889017029cd078b50e1f6bf308008a93a",
+              "modifiedUnixNano": 1792520485143621000,
+              "path": "retrieval.json",
+              "sizeBytes": 1045
+            }
+          ],
+          "finishedAt": 1792520485.4506912,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:db2c7894495c73787cac776b85e7ba6f60adae6bd40f5a78f01a05c27a9ed0f7",
+              "modifiedUnixNano": 1792520485143621000,
+              "path": "answers.json",
+              "sizeBytes": 688
+            },
+            {
+              "checksum": "sha256:a26026a0886141a5363f64f3d650a257e690331af1f287dd41ecd0889d111cc3",
+              "modifiedUnixNano": 1792520485143621000,
+              "path": "chunks.json",
+              "sizeBytes": 1186
+            },
+            {
+              "checksum": "sha256:2fe522c4fe6f40c5a767ad0fd3d1fed0198199978ca53c1d7b3de42bb822f68b",
+              "modifiedUnixNano": 1792520485143621000,
+              "path": "documents.json",
+              "sizeBytes": 1132
+            },
+            {
+              "checksum": "sha256:1fedb810279c6c8be4b246cc45d545474bdd62543adf4117834b485a62ca7c23",
+              "modifiedUnixNano": 1792520485143621000,
+              "path": "index.json",
+              "sizeBytes": 4669
+            },
+            {
+              "checksum": "sha256:92f964d9c460e4e5974a9151de001b2889017029cd078b50e1f6bf308008a93a",
+              "modifiedUnixNano": 1792520485143621000,
+              "path": "retrieval.json",
+              "sizeBytes": 1045
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.10639762878417969,
+              "finishedAt": 1792520485.4506912,
+              "phase": "execution",
+              "startedAt": 1792520485.3442936,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/local-rag-factory-local-0df2d611a0-run-20261020t182115/local-rag-factory-local-0df2d611a0-evaluate",
+          "runId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+          "runtime": "local-rag-factory-local",
+          "schemaVersion": 1,
+          "startedAt": 1792520485.3442936,
+          "summary": {
+            "createdFiles": 2,
+            "deletedFiles": 0,
+            "finalFiles": 7,
+            "initialFiles": 5,
+            "modifiedFiles": 0,
+            "outputBytes": 255
+          }
+        },
+        "exitCode": 0,
+        "externalId": "678f2be3fa5c1c7883829f215f2794d42c36f034a7bbab9b13a27935219af9b8",
+        "finishedAt": 1792520485.4506912,
+        "id": "local-rag-factory-local-0df2d611a0-run-20261020t182115:local-rag-factory-local-0df2d611a0-evaluate",
+        "log": "[AKOFLOW INFO] Activity started on runtime local-rag-factory-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/local-rag-factory-local-0df2d611a0-run-20261020t182115/local-rag-factory-local-0df2d611a0-evaluate",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792520485.3442976,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-local-rag-factory-local-0df2d611a0-run-20261020t182115-local-rag-factory-local-0df2d611a0-evaluate",
+          "submittedAt": 1792520485.3442936
+        },
+        "resourceId": "local-rag-factory-local-docker",
+        "runId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+        "runtimeId": "local-rag-factory-local",
+        "startedAt": 1792520485.3442936,
+        "status": "completed"
+      },
+      {
+        "activityId": "local-rag-factory-local-0df2d611a0-index",
+        "artifacts": {
+          "activityId": "local-rag-factory-local-0df2d611a0-index",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:1fedb810279c6c8be4b246cc45d545474bdd62543adf4117834b485a62ca7c23",
+              "modifiedUnixNano": 1792520479341621000,
+              "path": "index.json",
+              "sizeBytes": 4669
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:a26026a0886141a5363f64f3d650a257e690331af1f287dd41ecd0889d111cc3",
+              "modifiedUnixNano": 1792520479084621000,
+              "path": "chunks.json",
+              "sizeBytes": 1186
+            },
+            {
+              "checksum": "sha256:2fe522c4fe6f40c5a767ad0fd3d1fed0198199978ca53c1d7b3de42bb822f68b",
+              "modifiedUnixNano": 1792520479084621000,
+              "path": "documents.json",
+              "sizeBytes": 1132
+            },
+            {
+              "checksum": "sha256:1fedb810279c6c8be4b246cc45d545474bdd62543adf4117834b485a62ca7c23",
+              "modifiedUnixNano": 1792520479341621000,
+              "path": "index.json",
+              "sizeBytes": 4669
+            }
+          ],
+          "finishedAt": 1792520479.3468802,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:a26026a0886141a5363f64f3d650a257e690331af1f287dd41ecd0889d111cc3",
+              "modifiedUnixNano": 1792520479084621000,
+              "path": "chunks.json",
+              "sizeBytes": 1186
+            },
+            {
+              "checksum": "sha256:2fe522c4fe6f40c5a767ad0fd3d1fed0198199978ca53c1d7b3de42bb822f68b",
+              "modifiedUnixNano": 1792520479084621000,
+              "path": "documents.json",
+              "sizeBytes": 1132
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.07904601097106934,
+              "finishedAt": 1792520479.3468802,
+              "phase": "execution",
+              "startedAt": 1792520479.2678342,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/local-rag-factory-local-0df2d611a0-run-20261020t182115/local-rag-factory-local-0df2d611a0-index",
+          "runId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+          "runtime": "local-rag-factory-local",
+          "schemaVersion": 1,
+          "startedAt": 1792520479.2678342,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 3,
+            "initialFiles": 2,
+            "modifiedFiles": 0,
+            "outputBytes": 4669
+          }
+        },
+        "exitCode": 0,
+        "externalId": "965544f74b42268f2abffe4172825a490285c78e1882db2822dd5efa5a9d9752",
+        "finishedAt": 1792520479.3468802,
+        "id": "local-rag-factory-local-0df2d611a0-run-20261020t182115:local-rag-factory-local-0df2d611a0-index",
+        "log": "[AKOFLOW INFO] Activity started on runtime local-rag-factory-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/local-rag-factory-local-0df2d611a0-run-20261020t182115/local-rag-factory-local-0df2d611a0-index",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792520479.267839,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-local-rag-factory-local-0df2d611a0-run-20261020t182115-local-rag-factory-local-0df2d611a0-index",
+          "submittedAt": 1792520479.2678342
+        },
+        "resourceId": "local-rag-factory-local-docker",
+        "runId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+        "runtimeId": "local-rag-factory-local",
+        "startedAt": 1792520479.2678342,
+        "status": "completed"
+      },
+      {
+        "activityId": "local-rag-factory-local-0df2d611a0-ingest",
+        "artifacts": {
+          "activityId": "local-rag-factory-local-0df2d611a0-ingest",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:2fe522c4fe6f40c5a767ad0fd3d1fed0198199978ca53c1d7b3de42bb822f68b",
+              "modifiedUnixNano": 1792520475903621000,
+              "path": "documents.json",
+              "sizeBytes": 1132
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:2fe522c4fe6f40c5a767ad0fd3d1fed0198199978ca53c1d7b3de42bb822f68b",
+              "modifiedUnixNano": 1792520475903621000,
+              "path": "documents.json",
+              "sizeBytes": 1132
+            }
+          ],
+          "finishedAt": 1792520475.90999,
+          "phases": [
+            {
+              "durationSeconds": 0.08507680892944336,
+              "finishedAt": 1792520475.90999,
+              "phase": "execution",
+              "startedAt": 1792520475.8249133,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/local-rag-factory-local-0df2d611a0-run-20261020t182115/local-rag-factory-local-0df2d611a0-ingest",
+          "runId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+          "runtime": "local-rag-factory-local",
+          "schemaVersion": 1,
+          "startedAt": 1792520475.8249133,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 1,
+            "initialFiles": 0,
+            "modifiedFiles": 0,
+            "outputBytes": 1132
+          }
+        },
+        "exitCode": 0,
+        "externalId": "b28ea5d316ddf1ed600f65cf6bdf6002abb17b224d06cc590c89d78a1f472779",
+        "finishedAt": 1792520475.90999,
+        "id": "local-rag-factory-local-0df2d611a0-run-20261020t182115:local-rag-factory-local-0df2d611a0-ingest",
+        "log": "[AKOFLOW INFO] Activity started on runtime local-rag-factory-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/local-rag-factory-local-0df2d611a0-run-20261020t182115/local-rag-factory-local-0df2d611a0-ingest",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792520475.8249183,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-local-rag-factory-local-0df2d611a0-run-20261020t182115-local-rag-factory-local-0df2d611a0-ingest",
+          "submittedAt": 1792520475.8249133
+        },
+        "resourceId": "local-rag-factory-local-docker",
+        "runId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+        "runtimeId": "local-rag-factory-local",
+        "startedAt": 1792520475.8249133,
+        "status": "completed"
+      },
+      {
+        "activityId": "local-rag-factory-local-0df2d611a0-retrieve",
+        "artifacts": {
+          "activityId": "local-rag-factory-local-0df2d611a0-retrieve",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:92f964d9c460e4e5974a9151de001b2889017029cd078b50e1f6bf308008a93a",
+              "modifiedUnixNano": 1792520481432621000,
+              "path": "retrieval.json",
+              "sizeBytes": 1045
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:a26026a0886141a5363f64f3d650a257e690331af1f287dd41ecd0889d111cc3",
+              "modifiedUnixNano": 1792520481130621000,
+              "path": "chunks.json",
+              "sizeBytes": 1186
+            },
+            {
+              "checksum": "sha256:2fe522c4fe6f40c5a767ad0fd3d1fed0198199978ca53c1d7b3de42bb822f68b",
+              "modifiedUnixNano": 1792520481131621000,
+              "path": "documents.json",
+              "sizeBytes": 1132
+            },
+            {
+              "checksum": "sha256:1fedb810279c6c8be4b246cc45d545474bdd62543adf4117834b485a62ca7c23",
+              "modifiedUnixNano": 1792520481131621000,
+              "path": "index.json",
+              "sizeBytes": 4669
+            },
+            {
+              "checksum": "sha256:92f964d9c460e4e5974a9151de001b2889017029cd078b50e1f6bf308008a93a",
+              "modifiedUnixNano": 1792520481432621000,
+              "path": "retrieval.json",
+              "sizeBytes": 1045
+            }
+          ],
+          "finishedAt": 1792520481.4376273,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:a26026a0886141a5363f64f3d650a257e690331af1f287dd41ecd0889d111cc3",
+              "modifiedUnixNano": 1792520481130621000,
+              "path": "chunks.json",
+              "sizeBytes": 1186
+            },
+            {
+              "checksum": "sha256:2fe522c4fe6f40c5a767ad0fd3d1fed0198199978ca53c1d7b3de42bb822f68b",
+              "modifiedUnixNano": 1792520481131621000,
+              "path": "documents.json",
+              "sizeBytes": 1132
+            },
+            {
+              "checksum": "sha256:1fedb810279c6c8be4b246cc45d545474bdd62543adf4117834b485a62ca7c23",
+              "modifiedUnixNano": 1792520481131621000,
+              "path": "index.json",
+              "sizeBytes": 4669
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.08302044868469238,
+              "finishedAt": 1792520481.4376273,
+              "phase": "execution",
+              "startedAt": 1792520481.3546069,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/local-rag-factory-local-0df2d611a0-run-20261020t182115/local-rag-factory-local-0df2d611a0-retrieve",
+          "runId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+          "runtime": "local-rag-factory-local",
+          "schemaVersion": 1,
+          "startedAt": 1792520481.3546069,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 4,
+            "initialFiles": 3,
+            "modifiedFiles": 0,
+            "outputBytes": 1045
+          }
+        },
+        "exitCode": 0,
+        "externalId": "465e9361a1f9528cecf4dcf6b0f1275eb45f865457c91771de93cf9ad4027fb4",
+        "finishedAt": 1792520481.4376273,
+        "id": "local-rag-factory-local-0df2d611a0-run-20261020t182115:local-rag-factory-local-0df2d611a0-retrieve",
+        "log": "[AKOFLOW INFO] Activity started on runtime local-rag-factory-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/local-rag-factory-local-0df2d611a0-run-20261020t182115/local-rag-factory-local-0df2d611a0-retrieve",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792520481.3546097,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-local-rag-factory-local-0df2d611a0-run-20261020t182115-local-rag-factory-local-0df2d611a0-retrieve",
+          "submittedAt": 1792520481.3546069
+        },
+        "resourceId": "local-rag-factory-local-docker",
+        "runId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+        "runtimeId": "local-rag-factory-local",
+        "startedAt": 1792520481.3546069,
+        "status": "completed"
+      }
+    ],
+    "infrastructureRuns": [],
+    "operationEvents": [],
+    "run": {
+      "activityCount": 6,
+      "breakdown": {
+        "computeSeconds": 0.5320813655853271,
+        "interferenceSeconds": 0,
+        "overheadSeconds": 0,
+        "queueSeconds": 0,
+        "transferSeconds": 0.8971285820007324
+      },
+      "completedActivityCount": 6,
+      "cost": 0,
+      "finishedAt": "2026-10-20T18:21:26Z",
+      "id": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+      "kind": "workflow",
+      "makespanSeconds": 9.625777959823608,
+      "mode": "real",
+      "schedulePlanId": "local-rag-factory-local-0df2d611a0-manual-plan-20261020t182115",
+      "seed": 0,
+      "startedAt": "2026-10-20T18:21:15Z",
+      "status": "completed",
+      "title": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+      "transferredBytes": 27189
+    },
+    "timeline": {
+      "computeMakespanSeconds": 9.625777959823608,
+      "coveredWallSeconds": 2.4713478088378906,
+      "finishedAt": 1792520486,
+      "phases": [
+        {
+          "activityId": "local-rag-factory-local-0df2d611a0-ingest",
+          "category": "resource-queue",
+          "durationSeconds": 0.1783745288848877,
+          "finishedAt": 1792520475.8249133,
+          "id": "local-rag-factory-local-0df2d611a0-run-20261020t182115:local-rag-factory-local-0df2d611a0-ingest:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792520475.6465387,
+          "status": "completed"
+        },
+        {
+          "activityId": "local-rag-factory-local-0df2d611a0-ingest",
+          "category": "runtime",
+          "durationSeconds": 0.08507680892944336,
+          "finishedAt": 1792520475.90999,
+          "id": "local-rag-factory-local-0df2d611a0-run-20261020t182115:local-rag-factory-local-0df2d611a0-ingest:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792520475.8249133,
+          "status": "completed"
+        },
+        {
+          "activityId": "local-rag-factory-local-0df2d611a0-chunk",
+          "category": "resource-queue",
+          "durationSeconds": 0.0031609535217285156,
+          "finishedAt": 1792520476.9191933,
+          "id": "local-rag-factory-local-0df2d611a0-run-20261020t182115:local-rag-factory-local-0df2d611a0-chunk:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792520476.9160323,
+          "status": "completed"
+        },
+        {
+          "activityId": "local-rag-factory-local-0df2d611a0-chunk",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.16516852378845215,
+          "finishedAt": 1792520477.0843618,
+          "id": "local-rag-factory-local-0df2d611a0-run-20261020t182115:local-rag-factory-local-0df2d611a0-chunk:transfer-workspace-local-rag-factory-local-0df2d611a0-run-20261020t182115-local-rag-factory-local-0df2d611a0-chunk-0",
+          "source": "transfer-observation",
+          "startedAt": 1792520476.9191933,
+          "status": "completed",
+          "transferId": "local-rag-factory-local-0df2d611a0-run-20261020t182115:local-rag-factory-local-0df2d611a0-chunk:transfer-workspace-local-rag-factory-local-0df2d611a0-run-20261020t182115-local-rag-factory-local-0df2d611a0-chunk-0"
+        },
+        {
+          "activityId": "local-rag-factory-local-0df2d611a0-chunk",
+          "category": "launch",
+          "durationSeconds": 0.1598520278930664,
+          "finishedAt": 1792520477.2442138,
+          "id": "local-rag-factory-local-0df2d611a0-run-20261020t182115:local-rag-factory-local-0df2d611a0-chunk:launch",
+          "source": "task-metadata",
+          "startedAt": 1792520477.0843618,
+          "status": "completed"
+        },
+        {
+          "activityId": "local-rag-factory-local-0df2d611a0-chunk",
+          "category": "runtime",
+          "durationSeconds": 0.08074474334716797,
+          "finishedAt": 1792520477.3249586,
+          "id": "local-rag-factory-local-0df2d611a0-run-20261020t182115:local-rag-factory-local-0df2d611a0-chunk:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792520477.2442138,
+          "status": "completed"
+        },
+        {
+          "activityId": "local-rag-factory-local-0df2d611a0-index",
+          "category": "resource-queue",
+          "durationSeconds": 0.004023313522338867,
+          "finishedAt": 1792520478.933414,
+          "id": "local-rag-factory-local-0df2d611a0-run-20261020t182115:local-rag-factory-local-0df2d611a0-index:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792520478.9293907,
+          "status": "completed"
+        },
+        {
+          "activityId": "local-rag-factory-local-0df2d611a0-index",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.19441890716552734,
+          "finishedAt": 1792520479.127833,
+          "id": "local-rag-factory-local-0df2d611a0-run-20261020t182115:local-rag-factory-local-0df2d611a0-index:transfer-workspace-local-rag-factory-local-0df2d611a0-run-20261020t182115-local-rag-factory-local-0df2d611a0-index-0",
+          "source": "transfer-observation",
+          "startedAt": 1792520478.933414,
+          "status": "completed",
+          "transferId": "local-rag-factory-local-0df2d611a0-run-20261020t182115:local-rag-factory-local-0df2d611a0-index:transfer-workspace-local-rag-factory-local-0df2d611a0-run-20261020t182115-local-rag-factory-local-0df2d611a0-index-0"
+        },
+        {
+          "activityId": "local-rag-factory-local-0df2d611a0-index",
+          "category": "launch",
+          "durationSeconds": 0.1400012969970703,
+          "finishedAt": 1792520479.2678342,
+          "id": "local-rag-factory-local-0df2d611a0-run-20261020t182115:local-rag-factory-local-0df2d611a0-index:launch",
+          "source": "task-metadata",
+          "startedAt": 1792520479.127833,
+          "status": "completed"
+        },
+        {
+          "activityId": "local-rag-factory-local-0df2d611a0-index",
+          "category": "runtime",
+          "durationSeconds": 0.07904601097106934,
+          "finishedAt": 1792520479.3468802,
+          "id": "local-rag-factory-local-0df2d611a0-run-20261020t182115:local-rag-factory-local-0df2d611a0-index:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792520479.2678342,
+          "status": "completed"
+        },
+        {
+          "activityId": "local-rag-factory-local-0df2d611a0-retrieve",
+          "category": "resource-queue",
+          "durationSeconds": 0.004430055618286133,
+          "finishedAt": 1792520480.9947016,
+          "id": "local-rag-factory-local-0df2d611a0-run-20261020t182115:local-rag-factory-local-0df2d611a0-retrieve:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792520480.9902716,
+          "status": "completed"
+        },
+        {
+          "activityId": "local-rag-factory-local-0df2d611a0-retrieve",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.18327975273132324,
+          "finishedAt": 1792520481.1779814,
+          "id": "local-rag-factory-local-0df2d611a0-run-20261020t182115:local-rag-factory-local-0df2d611a0-retrieve:transfer-workspace-local-rag-factory-local-0df2d611a0-run-20261020t182115-local-rag-factory-local-0df2d611a0-retrieve-0",
+          "source": "transfer-observation",
+          "startedAt": 1792520480.9947016,
+          "status": "completed",
+          "transferId": "local-rag-factory-local-0df2d611a0-run-20261020t182115:local-rag-factory-local-0df2d611a0-retrieve:transfer-workspace-local-rag-factory-local-0df2d611a0-run-20261020t182115-local-rag-factory-local-0df2d611a0-retrieve-0"
+        },
+        {
+          "activityId": "local-rag-factory-local-0df2d611a0-retrieve",
+          "category": "launch",
+          "durationSeconds": 0.17662549018859863,
+          "finishedAt": 1792520481.3546069,
+          "id": "local-rag-factory-local-0df2d611a0-run-20261020t182115:local-rag-factory-local-0df2d611a0-retrieve:launch",
+          "source": "task-metadata",
+          "startedAt": 1792520481.1779814,
+          "status": "completed"
+        },
+        {
+          "activityId": "local-rag-factory-local-0df2d611a0-retrieve",
+          "category": "runtime",
+          "durationSeconds": 0.08302044868469238,
+          "finishedAt": 1792520481.4376273,
+          "id": "local-rag-factory-local-0df2d611a0-run-20261020t182115:local-rag-factory-local-0df2d611a0-retrieve:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792520481.3546069,
+          "status": "completed"
+        },
+        {
+          "activityId": "local-rag-factory-local-0df2d611a0-answer",
+          "category": "resource-queue",
+          "durationSeconds": 0.0029799938201904297,
+          "finishedAt": 1792520482.9723108,
+          "id": "local-rag-factory-local-0df2d611a0-run-20261020t182115:local-rag-factory-local-0df2d611a0-answer:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792520482.9693308,
+          "status": "completed"
+        },
+        {
+          "activityId": "local-rag-factory-local-0df2d611a0-answer",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.1875288486480713,
+          "finishedAt": 1792520483.1598396,
+          "id": "local-rag-factory-local-0df2d611a0-run-20261020t182115:local-rag-factory-local-0df2d611a0-answer:transfer-workspace-local-rag-factory-local-0df2d611a0-run-20261020t182115-local-rag-factory-local-0df2d611a0-answer-0",
+          "source": "transfer-observation",
+          "startedAt": 1792520482.9723108,
+          "status": "completed",
+          "transferId": "local-rag-factory-local-0df2d611a0-run-20261020t182115:local-rag-factory-local-0df2d611a0-answer:transfer-workspace-local-rag-factory-local-0df2d611a0-run-20261020t182115-local-rag-factory-local-0df2d611a0-answer-0"
+        },
+        {
+          "activityId": "local-rag-factory-local-0df2d611a0-answer",
+          "category": "launch",
+          "durationSeconds": 0.1975255012512207,
+          "finishedAt": 1792520483.3573651,
+          "id": "local-rag-factory-local-0df2d611a0-run-20261020t182115:local-rag-factory-local-0df2d611a0-answer:launch",
+          "source": "task-metadata",
+          "startedAt": 1792520483.1598396,
+          "status": "completed"
+        },
+        {
+          "activityId": "local-rag-factory-local-0df2d611a0-answer",
+          "category": "runtime",
+          "durationSeconds": 0.09779572486877441,
+          "finishedAt": 1792520483.4551609,
+          "id": "local-rag-factory-local-0df2d611a0-run-20261020t182115:local-rag-factory-local-0df2d611a0-answer:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792520483.3573651,
+          "status": "completed"
+        },
+        {
+          "activityId": "local-rag-factory-local-0df2d611a0-evaluate",
+          "category": "resource-queue",
+          "durationSeconds": 0.018172740936279297,
+          "finishedAt": 1792520485.020569,
+          "id": "local-rag-factory-local-0df2d611a0-run-20261020t182115:local-rag-factory-local-0df2d611a0-evaluate:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792520485.0023963,
+          "status": "completed"
+        },
+        {
+          "activityId": "local-rag-factory-local-0df2d611a0-evaluate",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.1667325496673584,
+          "finishedAt": 1792520485.1873016,
+          "id": "local-rag-factory-local-0df2d611a0-run-20261020t182115:local-rag-factory-local-0df2d611a0-evaluate:transfer-workspace-local-rag-factory-local-0df2d611a0-run-20261020t182115-local-rag-factory-local-0df2d611a0-evaluate-0",
+          "source": "transfer-observation",
+          "startedAt": 1792520485.020569,
+          "status": "completed",
+          "transferId": "local-rag-factory-local-0df2d611a0-run-20261020t182115:local-rag-factory-local-0df2d611a0-evaluate:transfer-workspace-local-rag-factory-local-0df2d611a0-run-20261020t182115-local-rag-factory-local-0df2d611a0-evaluate-0"
+        },
+        {
+          "activityId": "local-rag-factory-local-0df2d611a0-evaluate",
+          "category": "launch",
+          "durationSeconds": 0.15699195861816406,
+          "finishedAt": 1792520485.3442936,
+          "id": "local-rag-factory-local-0df2d611a0-run-20261020t182115:local-rag-factory-local-0df2d611a0-evaluate:launch",
+          "source": "task-metadata",
+          "startedAt": 1792520485.1873016,
+          "status": "completed"
+        },
+        {
+          "activityId": "local-rag-factory-local-0df2d611a0-evaluate",
+          "category": "runtime",
+          "durationSeconds": 0.10639762878417969,
+          "finishedAt": 1792520485.4506912,
+          "id": "local-rag-factory-local-0df2d611a0-run-20261020t182115:local-rag-factory-local-0df2d611a0-evaluate:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792520485.3442936,
+          "status": "completed"
+        }
+      ],
+      "startedAt": 1792520475,
+      "totals": {
+        "destroySeconds": 0,
+        "executablePreparationSeconds": 0,
+        "launchSeconds": 0.8309962749481201,
+        "provisionSeconds": 0,
+        "resourceQueueSeconds": 0.21114158630371094,
+        "runtimeSeconds": 0.5320813655853271,
+        "startSeconds": 0,
+        "stopSeconds": 0,
+        "validationSeconds": 0,
+        "workspaceTransferSeconds": 0.8971285820007324
+      },
+      "unclassifiedWallSeconds": 8.52865219116211,
+      "wallSeconds": 11
+    },
+    "workspaceLeases": [
+      {
+        "consumerActivityId": "local-rag-factory-local-0df2d611a0-evaluate",
+        "id": "workspace-lease-local-rag-factory-local-0df2d611a0-run-20261020t182115-local-rag-factory-local-0df2d611a0-answer-local-rag-factory-local-0df2d611a0-evaluate",
+        "producerActivityId": "local-rag-factory-local-0df2d611a0-answer",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T18:21:25.189151802Z",
+        "runId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+        "workspaceId": "workspace-local-rag-factory-local-0df2d611a0-run-20261020t182115-local-rag-factory-local-0df2d611a0-answer"
+      },
+      {
+        "consumerActivityId": "local-rag-factory-local-0df2d611a0-index",
+        "id": "workspace-lease-local-rag-factory-local-0df2d611a0-run-20261020t182115-local-rag-factory-local-0df2d611a0-chunk-local-rag-factory-local-0df2d611a0-index",
+        "producerActivityId": "local-rag-factory-local-0df2d611a0-chunk",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T18:21:19.132129924Z",
+        "runId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+        "workspaceId": "workspace-local-rag-factory-local-0df2d611a0-run-20261020t182115-local-rag-factory-local-0df2d611a0-chunk"
+      },
+      {
+        "consumerActivityId": "local-rag-factory-local-0df2d611a0-retrieve",
+        "id": "workspace-lease-local-rag-factory-local-0df2d611a0-run-20261020t182115-local-rag-factory-local-0df2d611a0-index-local-rag-factory-local-0df2d611a0-retrieve",
+        "producerActivityId": "local-rag-factory-local-0df2d611a0-index",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T18:21:21.179537341Z",
+        "runId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+        "workspaceId": "workspace-local-rag-factory-local-0df2d611a0-run-20261020t182115-local-rag-factory-local-0df2d611a0-index"
+      },
+      {
+        "consumerActivityId": "local-rag-factory-local-0df2d611a0-chunk",
+        "id": "workspace-lease-local-rag-factory-local-0df2d611a0-run-20261020t182115-local-rag-factory-local-0df2d611a0-ingest-local-rag-factory-local-0df2d611a0-chunk",
+        "producerActivityId": "local-rag-factory-local-0df2d611a0-ingest",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T18:21:17.085988131Z",
+        "runId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+        "workspaceId": "workspace-local-rag-factory-local-0df2d611a0-run-20261020t182115-local-rag-factory-local-0df2d611a0-ingest"
+      },
+      {
+        "consumerActivityId": "local-rag-factory-local-0df2d611a0-answer",
+        "id": "workspace-lease-local-rag-factory-local-0df2d611a0-run-20261020t182115-local-rag-factory-local-0df2d611a0-retrieve-local-rag-factory-local-0df2d611a0-answer",
+        "producerActivityId": "local-rag-factory-local-0df2d611a0-retrieve",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T18:21:23.161922426Z",
+        "runId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+        "workspaceId": "workspace-local-rag-factory-local-0df2d611a0-run-20261020t182115-local-rag-factory-local-0df2d611a0-retrieve"
+      }
+    ],
+    "workspaces": [
+      {
+        "activityId": "local-rag-factory-local-0df2d611a0-answer",
+        "createdAt": "2026-10-20T18:21:15.61121588Z",
+        "driver": "local",
+        "environmentId": "local-rag-factory-v1",
+        "executionPath": "/akoflow/workspace/runs/local-rag-factory-local-0df2d611a0-run-20261020t182115/local-rag-factory-local-0df2d611a0-answer",
+        "fileCount": 5,
+        "id": "workspace-local-rag-factory-local-0df2d611a0-run-20261020t182115-local-rag-factory-local-0df2d611a0-answer",
+        "inputBytes": 8032,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:db2c7894495c73787cac776b85e7ba6f60adae6bd40f5a78f01a05c27a9ed0f7",
+              "path": "answers.json",
+              "sizeBytes": 688
+            },
+            {
+              "digest": "sha256:a26026a0886141a5363f64f3d650a257e690331af1f287dd41ecd0889d111cc3",
+              "path": "chunks.json",
+              "sizeBytes": 1186
+            },
+            {
+              "digest": "sha256:2fe522c4fe6f40c5a767ad0fd3d1fed0198199978ca53c1d7b3de42bb822f68b",
+              "path": "documents.json",
+              "sizeBytes": 1132
+            },
+            {
+              "digest": "sha256:1fedb810279c6c8be4b246cc45d545474bdd62543adf4117834b485a62ca7c23",
+              "path": "index.json",
+              "sizeBytes": 4669
+            },
+            {
+              "digest": "sha256:92f964d9c460e4e5974a9151de001b2889017029cd078b50e1f6bf308008a93a",
+              "path": "retrieval.json",
+              "sizeBytes": 1045
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:a26026a0886141a5363f64f3d650a257e690331af1f287dd41ecd0889d111cc3",
+              "path": "chunks.json",
+              "sizeBytes": 1186
+            },
+            {
+              "digest": "sha256:2fe522c4fe6f40c5a767ad0fd3d1fed0198199978ca53c1d7b3de42bb822f68b",
+              "path": "documents.json",
+              "sizeBytes": 1132
+            },
+            {
+              "digest": "sha256:1fedb810279c6c8be4b246cc45d545474bdd62543adf4117834b485a62ca7c23",
+              "path": "index.json",
+              "sizeBytes": 4669
+            },
+            {
+              "digest": "sha256:92f964d9c460e4e5974a9151de001b2889017029cd078b50e1f6bf308008a93a",
+              "path": "retrieval.json",
+              "sizeBytes": 1045
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:a26026a0886141a5363f64f3d650a257e690331af1f287dd41ecd0889d111cc3",
+              "path": "chunks.json",
+              "sizeBytes": 1186
+            },
+            {
+              "digest": "sha256:2fe522c4fe6f40c5a767ad0fd3d1fed0198199978ca53c1d7b3de42bb822f68b",
+              "path": "documents.json",
+              "sizeBytes": 1132
+            },
+            {
+              "digest": "sha256:1fedb810279c6c8be4b246cc45d545474bdd62543adf4117834b485a62ca7c23",
+              "path": "index.json",
+              "sizeBytes": 4669
+            },
+            {
+              "digest": "sha256:92f964d9c460e4e5974a9151de001b2889017029cd078b50e1f6bf308008a93a",
+              "path": "retrieval.json",
+              "sizeBytes": 1045
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:db2c7894495c73787cac776b85e7ba6f60adae6bd40f5a78f01a05c27a9ed0f7",
+              "path": "answers.json",
+              "sizeBytes": 688
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/local-rag-factory-local-0df2d611a0-run-20261020t182115/local-rag-factory-local-0df2d611a0-answer",
+        "outputBytes": 688,
+        "pinned": false,
+        "reclaimedBytes": 8720,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T18:21:25.193789718Z",
+        "resourceId": "local-rag-factory-local-docker",
+        "retention": "intermediate",
+        "runId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+        "runtimeId": "local-rag-factory-local",
+        "sealedAt": "2026-10-20T18:21:24.994738176Z",
+        "sizeBytes": 8720,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/local-rag-factory-local-0df2d611a0-run-20261020t182115/local-rag-factory-local-0df2d611a0-answer"
+      },
+      {
+        "activityId": "local-rag-factory-local-0df2d611a0-chunk",
+        "createdAt": "2026-10-20T18:21:15.61121588Z",
+        "driver": "local",
+        "environmentId": "local-rag-factory-v1",
+        "executionPath": "/akoflow/workspace/runs/local-rag-factory-local-0df2d611a0-run-20261020t182115/local-rag-factory-local-0df2d611a0-chunk",
+        "fileCount": 2,
+        "id": "workspace-local-rag-factory-local-0df2d611a0-run-20261020t182115-local-rag-factory-local-0df2d611a0-chunk",
+        "inputBytes": 1132,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:a26026a0886141a5363f64f3d650a257e690331af1f287dd41ecd0889d111cc3",
+              "path": "chunks.json",
+              "sizeBytes": 1186
+            },
+            {
+              "digest": "sha256:2fe522c4fe6f40c5a767ad0fd3d1fed0198199978ca53c1d7b3de42bb822f68b",
+              "path": "documents.json",
+              "sizeBytes": 1132
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:2fe522c4fe6f40c5a767ad0fd3d1fed0198199978ca53c1d7b3de42bb822f68b",
+              "path": "documents.json",
+              "sizeBytes": 1132
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:2fe522c4fe6f40c5a767ad0fd3d1fed0198199978ca53c1d7b3de42bb822f68b",
+              "path": "documents.json",
+              "sizeBytes": 1132
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:a26026a0886141a5363f64f3d650a257e690331af1f287dd41ecd0889d111cc3",
+              "path": "chunks.json",
+              "sizeBytes": 1186
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/local-rag-factory-local-0df2d611a0-run-20261020t182115/local-rag-factory-local-0df2d611a0-chunk",
+        "outputBytes": 1186,
+        "pinned": false,
+        "reclaimedBytes": 2318,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T18:21:19.13945459Z",
+        "resourceId": "local-rag-factory-local-docker",
+        "retention": "intermediate",
+        "runId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+        "runtimeId": "local-rag-factory-local",
+        "sealedAt": "2026-10-20T18:21:18.925465507Z",
+        "sizeBytes": 2318,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/local-rag-factory-local-0df2d611a0-run-20261020t182115/local-rag-factory-local-0df2d611a0-chunk"
+      },
+      {
+        "activityId": "local-rag-factory-local-0df2d611a0-evaluate",
+        "createdAt": "2026-10-20T18:21:15.61121588Z",
+        "driver": "local",
+        "environmentId": "local-rag-factory-v1",
+        "executionPath": "/akoflow/workspace/runs/local-rag-factory-local-0df2d611a0-run-20261020t182115/local-rag-factory-local-0df2d611a0-evaluate",
+        "fileCount": 2,
+        "id": "workspace-local-rag-factory-local-0df2d611a0-run-20261020t182115-local-rag-factory-local-0df2d611a0-evaluate",
+        "inputBytes": 8720,
+        "isFinal": true,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:db2c7894495c73787cac776b85e7ba6f60adae6bd40f5a78f01a05c27a9ed0f7",
+              "path": "answers.json",
+              "sizeBytes": 688
+            },
+            {
+              "digest": "sha256:a26026a0886141a5363f64f3d650a257e690331af1f287dd41ecd0889d111cc3",
+              "path": "chunks.json",
+              "sizeBytes": 1186
+            },
+            {
+              "digest": "sha256:2fe522c4fe6f40c5a767ad0fd3d1fed0198199978ca53c1d7b3de42bb822f68b",
+              "path": "documents.json",
+              "sizeBytes": 1132
+            },
+            {
+              "digest": "sha256:a2e457b53564c07abc7d4160f1adaf1845273fdcf903f874d51518e823f7eb8e",
+              "path": "evaluation.json",
+              "sizeBytes": 49
+            },
+            {
+              "digest": "sha256:1fedb810279c6c8be4b246cc45d545474bdd62543adf4117834b485a62ca7c23",
+              "path": "index.json",
+              "sizeBytes": 4669
+            },
+            {
+              "digest": "sha256:a8d4a6b2a4a8eb566f413700e36154d8a2bb9c27681a9e30fe9f97e7524493e0",
+              "path": "manifest.json",
+              "sizeBytes": 206
+            },
+            {
+              "digest": "sha256:92f964d9c460e4e5974a9151de001b2889017029cd078b50e1f6bf308008a93a",
+              "path": "retrieval.json",
+              "sizeBytes": 1045
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:db2c7894495c73787cac776b85e7ba6f60adae6bd40f5a78f01a05c27a9ed0f7",
+              "path": "answers.json",
+              "sizeBytes": 688
+            },
+            {
+              "digest": "sha256:a26026a0886141a5363f64f3d650a257e690331af1f287dd41ecd0889d111cc3",
+              "path": "chunks.json",
+              "sizeBytes": 1186
+            },
+            {
+              "digest": "sha256:2fe522c4fe6f40c5a767ad0fd3d1fed0198199978ca53c1d7b3de42bb822f68b",
+              "path": "documents.json",
+              "sizeBytes": 1132
+            },
+            {
+              "digest": "sha256:1fedb810279c6c8be4b246cc45d545474bdd62543adf4117834b485a62ca7c23",
+              "path": "index.json",
+              "sizeBytes": 4669
+            },
+            {
+              "digest": "sha256:92f964d9c460e4e5974a9151de001b2889017029cd078b50e1f6bf308008a93a",
+              "path": "retrieval.json",
+              "sizeBytes": 1045
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:db2c7894495c73787cac776b85e7ba6f60adae6bd40f5a78f01a05c27a9ed0f7",
+              "path": "answers.json",
+              "sizeBytes": 688
+            },
+            {
+              "digest": "sha256:a26026a0886141a5363f64f3d650a257e690331af1f287dd41ecd0889d111cc3",
+              "path": "chunks.json",
+              "sizeBytes": 1186
+            },
+            {
+              "digest": "sha256:2fe522c4fe6f40c5a767ad0fd3d1fed0198199978ca53c1d7b3de42bb822f68b",
+              "path": "documents.json",
+              "sizeBytes": 1132
+            },
+            {
+              "digest": "sha256:1fedb810279c6c8be4b246cc45d545474bdd62543adf4117834b485a62ca7c23",
+              "path": "index.json",
+              "sizeBytes": 4669
+            },
+            {
+              "digest": "sha256:92f964d9c460e4e5974a9151de001b2889017029cd078b50e1f6bf308008a93a",
+              "path": "retrieval.json",
+              "sizeBytes": 1045
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:a2e457b53564c07abc7d4160f1adaf1845273fdcf903f874d51518e823f7eb8e",
+              "path": "evaluation.json",
+              "sizeBytes": 49
+            },
+            {
+              "digest": "sha256:a8d4a6b2a4a8eb566f413700e36154d8a2bb9c27681a9e30fe9f97e7524493e0",
+              "path": "manifest.json",
+              "sizeBytes": 206
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/local-rag-factory-local-0df2d611a0-run-20261020t182115/local-rag-factory-local-0df2d611a0-evaluate",
+        "outputBytes": 255,
+        "pinned": false,
+        "reclaimedBytes": 8720,
+        "releaseReason": "inherited inputs pruned",
+        "resourceId": "local-rag-factory-local-docker",
+        "retention": "final",
+        "runId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+        "runtimeId": "local-rag-factory-local",
+        "sealedAt": "2026-10-20T18:21:26.934305969Z",
+        "sizeBytes": 255,
+        "state": "sealed",
+        "uri": "file:///akoflow/workspace/runs/local-rag-factory-local-0df2d611a0-run-20261020t182115/local-rag-factory-local-0df2d611a0-evaluate"
+      },
+      {
+        "activityId": "local-rag-factory-local-0df2d611a0-index",
+        "createdAt": "2026-10-20T18:21:15.61121588Z",
+        "driver": "local",
+        "environmentId": "local-rag-factory-v1",
+        "executionPath": "/akoflow/workspace/runs/local-rag-factory-local-0df2d611a0-run-20261020t182115/local-rag-factory-local-0df2d611a0-index",
+        "fileCount": 3,
+        "id": "workspace-local-rag-factory-local-0df2d611a0-run-20261020t182115-local-rag-factory-local-0df2d611a0-index",
+        "inputBytes": 2318,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:a26026a0886141a5363f64f3d650a257e690331af1f287dd41ecd0889d111cc3",
+              "path": "chunks.json",
+              "sizeBytes": 1186
+            },
+            {
+              "digest": "sha256:2fe522c4fe6f40c5a767ad0fd3d1fed0198199978ca53c1d7b3de42bb822f68b",
+              "path": "documents.json",
+              "sizeBytes": 1132
+            },
+            {
+              "digest": "sha256:1fedb810279c6c8be4b246cc45d545474bdd62543adf4117834b485a62ca7c23",
+              "path": "index.json",
+              "sizeBytes": 4669
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:a26026a0886141a5363f64f3d650a257e690331af1f287dd41ecd0889d111cc3",
+              "path": "chunks.json",
+              "sizeBytes": 1186
+            },
+            {
+              "digest": "sha256:2fe522c4fe6f40c5a767ad0fd3d1fed0198199978ca53c1d7b3de42bb822f68b",
+              "path": "documents.json",
+              "sizeBytes": 1132
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:a26026a0886141a5363f64f3d650a257e690331af1f287dd41ecd0889d111cc3",
+              "path": "chunks.json",
+              "sizeBytes": 1186
+            },
+            {
+              "digest": "sha256:2fe522c4fe6f40c5a767ad0fd3d1fed0198199978ca53c1d7b3de42bb822f68b",
+              "path": "documents.json",
+              "sizeBytes": 1132
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:1fedb810279c6c8be4b246cc45d545474bdd62543adf4117834b485a62ca7c23",
+              "path": "index.json",
+              "sizeBytes": 4669
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/local-rag-factory-local-0df2d611a0-run-20261020t182115/local-rag-factory-local-0df2d611a0-index",
+        "outputBytes": 4669,
+        "pinned": false,
+        "reclaimedBytes": 6987,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T18:21:21.184961675Z",
+        "resourceId": "local-rag-factory-local-docker",
+        "retention": "intermediate",
+        "runId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+        "runtimeId": "local-rag-factory-local",
+        "sealedAt": "2026-10-20T18:21:20.984372675Z",
+        "sizeBytes": 6987,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/local-rag-factory-local-0df2d611a0-run-20261020t182115/local-rag-factory-local-0df2d611a0-index"
+      },
+      {
+        "activityId": "local-rag-factory-local-0df2d611a0-ingest",
+        "createdAt": "2026-10-20T18:21:15.61121588Z",
+        "driver": "local",
+        "environmentId": "local-rag-factory-v1",
+        "executionPath": "/akoflow/workspace/runs/local-rag-factory-local-0df2d611a0-run-20261020t182115/local-rag-factory-local-0df2d611a0-ingest",
+        "fileCount": 1,
+        "id": "workspace-local-rag-factory-local-0df2d611a0-run-20261020t182115-local-rag-factory-local-0df2d611a0-ingest",
+        "inputBytes": 0,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:2fe522c4fe6f40c5a767ad0fd3d1fed0198199978ca53c1d7b3de42bb822f68b",
+              "path": "documents.json",
+              "sizeBytes": 1132
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:2fe522c4fe6f40c5a767ad0fd3d1fed0198199978ca53c1d7b3de42bb822f68b",
+              "path": "documents.json",
+              "sizeBytes": 1132
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/local-rag-factory-local-0df2d611a0-run-20261020t182115/local-rag-factory-local-0df2d611a0-ingest",
+        "outputBytes": 1132,
+        "pinned": false,
+        "reclaimedBytes": 1132,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T18:21:17.090543839Z",
+        "resourceId": "local-rag-factory-local-docker",
+        "retention": "intermediate",
+        "runId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+        "runtimeId": "local-rag-factory-local",
+        "sealedAt": "2026-10-20T18:21:16.911208631Z",
+        "sizeBytes": 1132,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/local-rag-factory-local-0df2d611a0-run-20261020t182115/local-rag-factory-local-0df2d611a0-ingest"
+      },
+      {
+        "activityId": "local-rag-factory-local-0df2d611a0-retrieve",
+        "createdAt": "2026-10-20T18:21:15.61121588Z",
+        "driver": "local",
+        "environmentId": "local-rag-factory-v1",
+        "executionPath": "/akoflow/workspace/runs/local-rag-factory-local-0df2d611a0-run-20261020t182115/local-rag-factory-local-0df2d611a0-retrieve",
+        "fileCount": 4,
+        "id": "workspace-local-rag-factory-local-0df2d611a0-run-20261020t182115-local-rag-factory-local-0df2d611a0-retrieve",
+        "inputBytes": 6987,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:a26026a0886141a5363f64f3d650a257e690331af1f287dd41ecd0889d111cc3",
+              "path": "chunks.json",
+              "sizeBytes": 1186
+            },
+            {
+              "digest": "sha256:2fe522c4fe6f40c5a767ad0fd3d1fed0198199978ca53c1d7b3de42bb822f68b",
+              "path": "documents.json",
+              "sizeBytes": 1132
+            },
+            {
+              "digest": "sha256:1fedb810279c6c8be4b246cc45d545474bdd62543adf4117834b485a62ca7c23",
+              "path": "index.json",
+              "sizeBytes": 4669
+            },
+            {
+              "digest": "sha256:92f964d9c460e4e5974a9151de001b2889017029cd078b50e1f6bf308008a93a",
+              "path": "retrieval.json",
+              "sizeBytes": 1045
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:a26026a0886141a5363f64f3d650a257e690331af1f287dd41ecd0889d111cc3",
+              "path": "chunks.json",
+              "sizeBytes": 1186
+            },
+            {
+              "digest": "sha256:2fe522c4fe6f40c5a767ad0fd3d1fed0198199978ca53c1d7b3de42bb822f68b",
+              "path": "documents.json",
+              "sizeBytes": 1132
+            },
+            {
+              "digest": "sha256:1fedb810279c6c8be4b246cc45d545474bdd62543adf4117834b485a62ca7c23",
+              "path": "index.json",
+              "sizeBytes": 4669
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:a26026a0886141a5363f64f3d650a257e690331af1f287dd41ecd0889d111cc3",
+              "path": "chunks.json",
+              "sizeBytes": 1186
+            },
+            {
+              "digest": "sha256:2fe522c4fe6f40c5a767ad0fd3d1fed0198199978ca53c1d7b3de42bb822f68b",
+              "path": "documents.json",
+              "sizeBytes": 1132
+            },
+            {
+              "digest": "sha256:1fedb810279c6c8be4b246cc45d545474bdd62543adf4117834b485a62ca7c23",
+              "path": "index.json",
+              "sizeBytes": 4669
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:92f964d9c460e4e5974a9151de001b2889017029cd078b50e1f6bf308008a93a",
+              "path": "retrieval.json",
+              "sizeBytes": 1045
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/local-rag-factory-local-0df2d611a0-run-20261020t182115/local-rag-factory-local-0df2d611a0-retrieve",
+        "outputBytes": 1045,
+        "pinned": false,
+        "reclaimedBytes": 8032,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T18:21:23.165548217Z",
+        "resourceId": "local-rag-factory-local-docker",
+        "retention": "intermediate",
+        "runId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+        "runtimeId": "local-rag-factory-local",
+        "sealedAt": "2026-10-20T18:21:22.964982051Z",
+        "sizeBytes": 8032,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/local-rag-factory-local-0df2d611a0-run-20261020t182115/local-rag-factory-local-0df2d611a0-retrieve"
+      }
+    ]
+  },
+  "runId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+  "status": "completed",
+  "workflowId": "local-rag-factory-local-0df2d611a0"
+}

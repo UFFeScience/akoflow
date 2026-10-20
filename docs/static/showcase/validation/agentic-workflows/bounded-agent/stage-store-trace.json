@@ -1,10 +1,33 @@
 {
-  "showcase": "bounded-agent",
-  "digest": "aa4c808bc18a07f6a5076a5ef7091eb497537a4b218f41e3cd4fc41bdd93c13a",
-  "stages": [
-    "store-trace"
+  "dependencies": [
+    "validate-output"
   ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:47.475338Z",
+  "finishedAtUnixNs": 1792523567470412000,
+  "inputDigest": "dbcda11a2ed684a5173f537c9ae17d10529006b4fe53195dbfac5400dbd43784",
+  "result": {
+    "trace": [
+      {
+        "output": {
+          "count": 8,
+          "mean": 16.5
+        },
+        "tool": "measure"
+      },
+      {
+        "output": {
+          "maximum": 23,
+          "minimum": 11
+        },
+        "tool": "detect-extremes"
+      }
+    ]
+  },
+  "showcase": "bounded-agent",
+  "stage": "store-trace",
+  "startedAt": "2026-10-20T19:12:47.428994Z",
+  "startedAtUnixNs": 1792523567470178000,
   "status": "success",
-  "validationMode": "contract-fixture",
-  "stage": "store-trace"
+  "validationMode": "local-workload"
 }

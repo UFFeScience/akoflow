@@ -1,5 +1,9 @@
 {
-  "mode": "contract-fixture",
+  "artifactSha256": {
+    "review.json": "edafb24fe307ed24887fd58ae44e5a7f7c77e332af4a76320d9b4ba103a5115a",
+    "synthesis.md": "d8aac3c63130faac33ee09420e33f8c2c6f4b45b8ec276733f3c843a4e1a88ac"
+  },
+  "completedActivities": 7,
   "dependencyWaves": [
     [
       "shared-context"
@@ -19,5 +23,7 @@
       "publish-evidence"
     ]
   ],
-  "completedActivities": 7
+  "executionMode": "local-process",
+  "mode": "local-workload",
+  "schedulingPolicy": "ready activities with bounded concurrency"
 }

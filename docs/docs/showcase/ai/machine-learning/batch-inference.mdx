@@ -18,7 +18,7 @@ import { AIWorkflowPattern } from "@site/src/components/WorkflowShowcase";
     "publish",
   ]}
   inputs={["Approved model", "Input dataset", "Inference configuration"]}
-  outputs={["Prediction shards", "Merged predictions", "Completeness report"]}
+  outputs={["predictions.jsonl", "batch-summary.json"]}
   evidence={["Shard boundaries", "Model digest", "Per-shard logs"]}
   execution="Place shards according to memory, accelerator availability, and data locality. The merge stage must detect missing shards."
 />

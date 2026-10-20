@@ -1,10 +1,119 @@
 {
-  "showcase": "batch-inference",
-  "digest": "84c42f54cee3e6be23d5208291e22dbdd5f0c8bc419373e0215f515544890a69",
-  "stages": [
-    "infer-shard-b"
+  "dependencies": [
+    "partition-input"
   ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:38.300358Z",
+  "finishedAtUnixNs": 1792523558295144000,
+  "inputDigest": "70550d9845fe9f8e849594d196afda135aca8d4bbe87291ffa91eb0c6a10b058",
+  "result": {
+    "predictions": [
+      {
+        "index": 1,
+        "input": -2.9,
+        "prediction": -6.257744560345185
+      },
+      {
+        "index": 4,
+        "input": -2.6,
+        "prediction": -5.5379751587841675
+      },
+      {
+        "index": 7,
+        "input": -2.3,
+        "prediction": -4.818205757223148
+      },
+      {
+        "index": 10,
+        "input": -2,
+        "prediction": -4.09843635566213
+      },
+      {
+        "index": 13,
+        "input": -1.7,
+        "prediction": -3.378666954101112
+      },
+      {
+        "index": 16,
+        "input": -1.4,
+        "prediction": -2.6588975525400933
+      },
+      {
+        "index": 19,
+        "input": -1.1,
+        "prediction": -1.9391281509790756
+      },
+      {
+        "index": 22,
+        "input": -0.8,
+        "prediction": -1.219358749418057
+      },
+      {
+        "index": 25,
+        "input": -0.5,
+        "prediction": -0.4995893478570387
+      },
+      {
+        "index": 28,
+        "input": -0.2,
+        "prediction": 0.22018005370397964
+      },
+      {
+        "index": 31,
+        "input": 0.1,
+        "prediction": 0.9399494552649981
+      },
+      {
+        "index": 34,
+        "input": 0.4,
+        "prediction": 1.6597188568260166
+      },
+      {
+        "index": 37,
+        "input": 0.7,
+        "prediction": 2.3794882583870347
+      },
+      {
+        "index": 40,
+        "input": 1,
+        "prediction": 3.0992576599480532
+      },
+      {
+        "index": 43,
+        "input": 1.3,
+        "prediction": 3.819027061509072
+      },
+      {
+        "index": 46,
+        "input": 1.6,
+        "prediction": 4.53879646307009
+      },
+      {
+        "index": 49,
+        "input": 1.9,
+        "prediction": 5.258565864631108
+      },
+      {
+        "index": 52,
+        "input": 2.2,
+        "prediction": 5.978335266192127
+      },
+      {
+        "index": 55,
+        "input": 2.5,
+        "prediction": 6.698104667753145
+      },
+      {
+        "index": 58,
+        "input": 2.8,
+        "prediction": 7.417874069314163
+      }
+    ]
+  },
+  "showcase": "batch-inference",
+  "stage": "infer-shard-b",
+  "startedAt": "2026-10-20T19:12:38.25069Z",
+  "startedAtUnixNs": 1792523558295021000,
   "status": "success",
-  "validationMode": "contract-fixture",
-  "stage": "infer-shard-b"
+  "validationMode": "local-workload"
 }

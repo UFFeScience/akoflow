@@ -1,5 +1,13 @@
 {
-  "mode": "contract-fixture",
+  "artifactSha256": {
+    "metrics.json": "affc08aaf27b78332c1606617d53176d23f9bd657d19b3defe96d78bb1d01fda",
+    "mlflow-run.json": "79768de15a73532e312e5df4ba07d938b07ecdb5588bf65ca01f53cb69b5d2f1",
+    "mlflow.db": "e3eff2ee1900588c48f1f5bb18222d72878e9a39cca01461b2752fa456ef9219",
+    "model.pkl": "1007173c15042e83d0cecd4caac8dc84905739e62e9d91e9e9f9a2568a2b7c1f",
+    "registry.json": "1c97c2f4c7e7fdbde2ff12462e818f06e41d5da73f5dcb8a196a9d919d6c01c7",
+    "report.html": "50d70a9690c9a8ef4435c3288f5b0d465be9602733baef4ef04e3be18e668af2"
+  },
+  "completedActivities": 6,
   "dependencyWaves": [
     [
       "ingest-data"
@@ -18,5 +26,7 @@
       "log-mlflow-run"
     ]
   ],
-  "completedActivities": 6
+  "executionMode": "local-process",
+  "mode": "local-workload",
+  "schedulingPolicy": "ready activities with bounded concurrency"
 }

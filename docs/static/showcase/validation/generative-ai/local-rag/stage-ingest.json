@@ -1,0 +1,13 @@
+{
+  "dependencies": [],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T18:30:54.069556Z",
+  "result": {
+    "commandCompleted": true,
+    "stdout": ""
+  },
+  "showcase": "local-rag-factory",
+  "stage": "ingest",
+  "startedAt": "2026-10-20T18:30:54.031919Z",
+  "status": "success"
+}

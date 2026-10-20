@@ -1,5 +1,12 @@
 {
-  "mode": "contract-fixture",
+  "artifactSha256": {
+    "model-fp16.bin": "7048b37101a3033c1059ea43579e39a159515545427bd0665986ca6a100a7147",
+    "model-int8.json": "19dfef1b5b1c26d96209057b7c2a254ade24a7e7ab3f73cb87f55de2d09e6334",
+    "model.onnx": "33e3564c24027428cc979d833ca013f6aef3b86aebb5b1710d5bccd00f869ff5",
+    "model.torchscript.pt": "5b200ff9000a265859a47e3d734e5ead91c30797191506568b102104d6d83e0e",
+    "validation.json": "cf64adf55bcdebf19110d8d2e8244b6000bbf9fce3b2410574e0fdd1a1277db4"
+  },
+  "completedActivities": 7,
   "dependencyWaves": [
     [
       "load-model"
@@ -19,5 +26,7 @@
       "publish-variants"
     ]
   ],
-  "completedActivities": 7
+  "executionMode": "local-process",
+  "mode": "local-workload",
+  "schedulingPolicy": "ready activities with bounded concurrency"
 }

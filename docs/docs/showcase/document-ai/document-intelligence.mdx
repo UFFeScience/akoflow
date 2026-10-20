@@ -3,6 +3,10 @@ title: Document Intelligence
 description: Extract and reconcile auditable procurement records from an offline document corpus.
 ---
 
+import WorkflowExecutionEvidence from "@site/src/components/WorkflowExecutionEvidence";
+
+import WorkflowLocalRun from "@site/src/components/WorkflowLocalRun";
+
 import {
   WorkflowDag,
   WorkflowPatternDetails,
@@ -35,18 +39,9 @@ This example processes synthetic invoices and a purchase order through explicit 
   ]}
 />
 
-## Run locally
+<WorkflowLocalRun examplePath="document-ai/document-intelligence" />
 
-```bash
-git clone https://github.com/UFFeScience/akoflow-examples.git
-cd akoflow-examples/document-ai/document-intelligence
-./run.sh
-```
-
-The fixture is intentionally small and private-data-free. Replace `data/documents` with a larger local corpus while preserving the same artifact contract.
-
-[Open the source bundle](https://github.com/UFFeScience/akoflow-examples/tree/main/document-ai/document-intelligence) · [Workflow YAML](https://raw.githubusercontent.com/UFFeScience/akoflow-examples/main/document-ai/document-intelligence/workflow.yaml)
-
-## Local validation evidence
-
-[Validated output manifest](/showcase/validation/document-ai/document-intelligence/manifest.json). This host smoke run does not verify deployment through the daemon. Updated Desktop activity captures are still pending.
+<WorkflowExecutionEvidence
+  title="Document Intelligence"
+  examplePath="document-ai/document-intelligence"
+/>

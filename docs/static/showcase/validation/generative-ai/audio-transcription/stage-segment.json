@@ -1,10 +1,23 @@
 {
-  "showcase": "audio-transcription",
-  "digest": "9783a40cdec93c2fdd3baabd363a88d1efb85703e36128c3a3d589f89853c104",
-  "stages": [
-    "segment"
+  "dependencies": [
+    "ingest-audio"
   ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:45.840483Z",
+  "finishedAtUnixNs": 1792523565835769000,
+  "inputDigest": "9951b56e42169a516ac779ddc3c7c60da5f6ede6732bb1ea93bd1011b1366067",
+  "result": {
+    "rate": 8000,
+    "samplesPerToken": 640,
+    "segments": [
+      "segment-1.wav",
+      "segment-n.wav"
+    ]
+  },
+  "showcase": "audio-transcription",
+  "stage": "segment",
+  "startedAt": "2026-10-20T19:12:45.79353Z",
+  "startedAtUnixNs": 1792523565835156000,
   "status": "success",
-  "validationMode": "contract-fixture",
-  "stage": "segment"
+  "validationMode": "local-workload"
 }

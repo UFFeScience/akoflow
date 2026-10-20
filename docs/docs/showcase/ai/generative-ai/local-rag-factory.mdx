@@ -3,6 +3,10 @@ title: Local RAG Factory
 description: Build and evaluate a network-free retrieval pipeline over a versioned local corpus.
 ---
 
+import WorkflowExecutionEvidence from "@site/src/components/WorkflowExecutionEvidence";
+
+import WorkflowLocalRun from "@site/src/components/WorkflowLocalRun";
+
 import {
   WorkflowDag,
   WorkflowPatternDetails,
@@ -34,18 +38,9 @@ The workflow normalizes a local Markdown corpus, creates chunks, builds a hashed
   ]}
 />
 
-## Run locally
+<WorkflowLocalRun examplePath="generative-ai/local-rag" />
 
-```bash
-git clone https://github.com/UFFeScience/akoflow-examples.git
-cd akoflow-examples/generative-ai/local-rag
-./run.sh
-```
-
-Execution is offline and uses only Python's standard library. The activity boundaries remain suitable for replacing the deterministic answer stage with a local Ollama model.
-
-[Open the source bundle](https://github.com/UFFeScience/akoflow-examples/tree/main/generative-ai/local-rag) · [Workflow YAML](https://raw.githubusercontent.com/UFFeScience/akoflow-examples/main/generative-ai/local-rag/workflow.yaml)
-
-## Local validation evidence
-
-[Validated output manifest](/showcase/validation/generative-ai/local-rag/manifest.json). This host smoke run does not verify deployment through the daemon. Updated Desktop activity captures are still pending.
+<WorkflowExecutionEvidence
+  title="Local RAG Factory"
+  examplePath="generative-ai/local-rag"
+/>

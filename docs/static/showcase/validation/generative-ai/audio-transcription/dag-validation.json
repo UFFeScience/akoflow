@@ -1,5 +1,9 @@
 {
-  "mode": "contract-fixture",
+  "artifactSha256": {
+    "summary.md": "689122270303fadd8d78b21a88297bfb962e44ad4b1f1f8d16c0a02e9e92586d",
+    "transcript.txt": "68802bc43347d2bc2995ff6c6b0b26494a85ee8acb087f82500326f2967f8a4f"
+  },
+  "completedActivities": 7,
   "dependencyWaves": [
     [
       "ingest-audio"
@@ -21,5 +25,7 @@
       "publish"
     ]
   ],
-  "completedActivities": 7
+  "executionMode": "local-process",
+  "mode": "local-workload",
+  "schedulingPolicy": "ready activities with bounded concurrency"
 }

@@ -1,5 +1,10 @@
 {
-  "mode": "contract-fixture",
+  "artifactSha256": {
+    "adapter.bin": "5f072908cf4aecfdeb968d36f3f7ea23e05341a21eb47e9ca03de560bab93df6",
+    "evaluation.json": "5dd705d10810d4f34fb229cb213ada791ce14cd51d6568458736536734969e73",
+    "lineage.json": "69205180b7a4d43b576a31ed2d0b0602f68afec251e2620bed268ad7f4cd7f0b"
+  },
+  "completedActivities": 6,
   "dependencyWaves": [
     [
       "fetch-base-model"
@@ -18,5 +23,7 @@
       "record-lineage"
     ]
   ],
-  "completedActivities": 6
+  "executionMode": "local-process",
+  "mode": "local-workload",
+  "schedulingPolicy": "ready activities with bounded concurrency"
 }

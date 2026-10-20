@@ -1,10 +1,21 @@
 {
-  "showcase": "document-extraction",
-  "digest": "a7bbc287e7889ccce9cb63d5c83007ffb32f06451abcd541cad8c57b77904068",
-  "stages": [
-    "validate-schema"
+  "dependencies": [
+    "extract-fields"
   ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:46.354949Z",
+  "finishedAtUnixNs": 1792523566349733000,
+  "inputDigest": "523128ebbdc73d926815d3ba4204fd1d7608cf694a252317c065a1749f173143",
+  "result": {
+    "amount": 42,
+    "currency": "BRL",
+    "customer": "Ada Lovelace",
+    "invoiceId": "123"
+  },
+  "showcase": "document-extraction",
+  "stage": "validate-schema",
+  "startedAt": "2026-10-20T19:12:46.309035Z",
+  "startedAtUnixNs": 1792523566349641000,
   "status": "success",
-  "validationMode": "contract-fixture",
-  "stage": "validate-schema"
+  "validationMode": "local-workload"
 }

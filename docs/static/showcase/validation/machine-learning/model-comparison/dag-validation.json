@@ -1,5 +1,9 @@
 {
-  "mode": "contract-fixture",
+  "artifactSha256": {
+    "comparison.csv": "b52237feb5aa6e53d51038fe8eb119a62f779a81dfaf67f77fe81ff849540f36",
+    "report.html": "bd8182495c254a6f550dd0da634a814abf7842a07aa7739f54606237110e26b8"
+  },
+  "completedActivities": 6,
   "dependencyWaves": [
     [
       "freeze-evaluation-set"
@@ -16,5 +20,7 @@
       "approve-candidate"
     ]
   ],
-  "completedActivities": 6
+  "executionMode": "local-process",
+  "mode": "local-workload",
+  "schedulingPolicy": "ready activities with bounded concurrency"
 }

@@ -1,0 +1,3636 @@
+{
+  "activityCount": 7,
+  "completedActivityCount": 7,
+  "image": "ghcr.io/uffescience/akoflow-examples/showcase-document-extraction:local-b94cc98bfb12897b",
+  "imageId": "sha256:b94cc98bfb12897b69b7fa3bf19ef17aea6b551b2496d792ccf39ba1a2a4d1f5",
+  "observedAt": "2026-10-20T19:13:43Z",
+  "planId": "showcase-document-extraction-local-7d5ef3028c-manual-plan-20261020t191332.046548000",
+  "projection": {
+    "activities": [
+      {
+        "activityId": "showcase-document-extraction-local-7d5ef3028c-ingest-documents",
+        "allocatedResourceId": "showcase-document-extraction-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "finishedAt": 1792523612.357674,
+        "id": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-ingest-documents",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "pricePerSecond": 0,
+          "runtimeId": "showcase-document-extraction-local"
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-document-extraction-local-7d5ef3028c-manual-plan-20261020t191332.046548000-showcase-document-extraction-local-7d5ef3028c-ingest-documents",
+        "plannedResourceId": "showcase-document-extraction-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523612.1386504,
+        "readyAt": 1792523612.1386504,
+        "runtimeId": "showcase-document-extraction-local",
+        "runtimeSeconds": 0.10593962669372559,
+        "startedAt": 1792523612.2517343,
+        "status": "completed",
+        "transferBytes": 0,
+        "transferSeconds": 0
+      },
+      {
+        "activityId": "showcase-document-extraction-local-7d5ef3028c-native-text",
+        "allocatedResourceId": "showcase-document-extraction-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "finishedAt": 1792523613.8072584,
+        "id": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-native-text",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.17481470108032227,
+          "preparationFinishedAt": 1792523613.5206265,
+          "preparationStartedAt": 1792523613.3792894,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0030481815338134766,
+          "runtimeId": "showcase-document-extraction-local",
+          "transferElapsedSeconds": 0.14133715629577637,
+          "transferWorkSeconds": 0.14133715629577637
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-document-extraction-local-7d5ef3028c-manual-plan-20261020t191332.046548000-showcase-document-extraction-local-7d5ef3028c-native-text",
+        "plannedResourceId": "showcase-document-extraction-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523613.370679,
+        "readyAt": 1792523613.370679,
+        "runtimeId": "showcase-document-extraction-local",
+        "runtimeSeconds": 0.1118171215057373,
+        "startedAt": 1792523613.6954412,
+        "status": "completed",
+        "transferBytes": 700,
+        "transferSeconds": 0.14133715629577637
+      },
+      {
+        "activityId": "showcase-document-extraction-local-7d5ef3028c-ocr",
+        "allocatedResourceId": "showcase-document-extraction-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "finishedAt": 1792523613.8129313,
+        "id": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-ocr",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.18328189849853516,
+          "preparationFinishedAt": 1792523613.5169873,
+          "preparationStartedAt": 1792523613.3774438,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0022003650665283203,
+          "runtimeId": "showcase-document-extraction-local",
+          "transferElapsedSeconds": 0.1395435333251953,
+          "transferWorkSeconds": 0.1395435333251953
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-document-extraction-local-7d5ef3028c-manual-plan-20261020t191332.046548000-showcase-document-extraction-local-7d5ef3028c-ocr",
+        "plannedResourceId": "showcase-document-extraction-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523613.371931,
+        "readyAt": 1792523613.371931,
+        "runtimeId": "showcase-document-extraction-local",
+        "runtimeSeconds": 0.11266207695007324,
+        "startedAt": 1792523613.7002692,
+        "status": "completed",
+        "transferBytes": 700,
+        "transferSeconds": 0.1395435333251953
+      },
+      {
+        "activityId": "showcase-document-extraction-local-7d5ef3028c-classify",
+        "allocatedResourceId": "showcase-document-extraction-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "finishedAt": 1792523616.0293872,
+        "id": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-classify",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.17098164558410645,
+          "preparationFinishedAt": 1792523615.7427547,
+          "preparationStartedAt": 1792523615.4034398,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0024199485778808594,
+          "runtimeId": "showcase-document-extraction-local",
+          "transferElapsedSeconds": 0.33931493759155273,
+          "transferWorkSeconds": 0.575737714767456
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-document-extraction-local-7d5ef3028c-manual-plan-20261020t191332.046548000-showcase-document-extraction-local-7d5ef3028c-classify",
+        "plannedResourceId": "showcase-document-extraction-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523615.398971,
+        "readyAt": 1792523615.398971,
+        "runtimeId": "showcase-document-extraction-local",
+        "runtimeSeconds": 0.11565089225769043,
+        "startedAt": 1792523615.9137363,
+        "status": "completed",
+        "transferBytes": 1571,
+        "transferSeconds": 0.575737714767456
+      },
+      {
+        "activityId": "showcase-document-extraction-local-7d5ef3028c-extract-fields",
+        "allocatedResourceId": "showcase-document-extraction-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "finishedAt": 1792523617.7933989,
+        "id": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-extract-fields",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.14360713958740234,
+          "preparationFinishedAt": 1792523617.5432591,
+          "preparationStartedAt": 1792523617.356899,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0008955001831054688,
+          "runtimeId": "showcase-document-extraction-local",
+          "transferElapsedSeconds": 0.18636012077331543,
+          "transferWorkSeconds": 0.18636012077331543
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-document-extraction-local-7d5ef3028c-manual-plan-20261020t191332.046548000-showcase-document-extraction-local-7d5ef3028c-extract-fields",
+        "plannedResourceId": "showcase-document-extraction-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523617.3542469,
+        "readyAt": 1792523617.3542469,
+        "runtimeId": "showcase-document-extraction-local",
+        "runtimeSeconds": 0.10653257369995117,
+        "startedAt": 1792523617.6868663,
+        "status": "completed",
+        "transferBytes": 2048,
+        "transferSeconds": 0.18636012077331543
+      },
+      {
+        "activityId": "showcase-document-extraction-local-7d5ef3028c-validate-schema",
+        "allocatedResourceId": "showcase-document-extraction-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "finishedAt": 1792523619.792709,
+        "id": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-validate-schema",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.13741230964660645,
+          "preparationFinishedAt": 1792523619.5512087,
+          "preparationStartedAt": 1792523619.3798974,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0012519359588623047,
+          "runtimeId": "showcase-document-extraction-local",
+          "transferElapsedSeconds": 0.1713113784790039,
+          "transferWorkSeconds": 0.1713113784790039
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-document-extraction-local-7d5ef3028c-manual-plan-20261020t191332.046548000-showcase-document-extraction-local-7d5ef3028c-validate-schema",
+        "plannedResourceId": "showcase-document-extraction-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523619.376544,
+        "readyAt": 1792523619.376544,
+        "runtimeId": "showcase-document-extraction-local",
+        "runtimeSeconds": 0.10408806800842285,
+        "startedAt": 1792523619.688621,
+        "status": "completed",
+        "transferBytes": 2503,
+        "transferSeconds": 0.1713113784790039
+      },
+      {
+        "activityId": "showcase-document-extraction-local-7d5ef3028c-publish",
+        "allocatedResourceId": "showcase-document-extraction-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "finishedAt": 1792523621.821124,
+        "id": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-publish",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.14117908477783203,
+          "preparationFinishedAt": 1792523621.5725474,
+          "preparationStartedAt": 1792523621.3848279,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0014200210571289062,
+          "runtimeId": "showcase-document-extraction-local",
+          "transferElapsedSeconds": 0.18771958351135254,
+          "transferWorkSeconds": 0.18771958351135254
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-document-extraction-local-7d5ef3028c-manual-plan-20261020t191332.046548000-showcase-document-extraction-local-7d5ef3028c-publish",
+        "plannedResourceId": "showcase-document-extraction-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523621.3814662,
+        "readyAt": 1792523621.3814662,
+        "runtimeId": "showcase-document-extraction-local",
+        "runtimeSeconds": 0.10739755630493164,
+        "startedAt": 1792523621.7137265,
+        "status": "completed",
+        "transferBytes": 2965,
+        "transferSeconds": 0.18771958351135254
+      }
+    ],
+    "activityAttempts": [
+      {
+        "activityId": "showcase-document-extraction-local-7d5ef3028c-ingest-documents",
+        "allocatedResourceId": "showcase-document-extraction-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "finishedAt": 1792523612.357674,
+        "id": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-ingest-documents",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "pricePerSecond": 0,
+          "runtimeId": "showcase-document-extraction-local"
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-document-extraction-local-7d5ef3028c-manual-plan-20261020t191332.046548000-showcase-document-extraction-local-7d5ef3028c-ingest-documents",
+        "plannedResourceId": "showcase-document-extraction-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523612.1386504,
+        "readyAt": 1792523612.1386504,
+        "runtimeId": "showcase-document-extraction-local",
+        "runtimeSeconds": 0.10593962669372559,
+        "startedAt": 1792523612.2517343,
+        "status": "completed",
+        "transferBytes": 0,
+        "transferSeconds": 0
+      },
+      {
+        "activityId": "showcase-document-extraction-local-7d5ef3028c-native-text",
+        "allocatedResourceId": "showcase-document-extraction-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "finishedAt": 1792523613.8072584,
+        "id": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-native-text",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.17481470108032227,
+          "preparationFinishedAt": 1792523613.5206265,
+          "preparationStartedAt": 1792523613.3792894,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0030481815338134766,
+          "runtimeId": "showcase-document-extraction-local",
+          "transferElapsedSeconds": 0.14133715629577637,
+          "transferWorkSeconds": 0.14133715629577637
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-document-extraction-local-7d5ef3028c-manual-plan-20261020t191332.046548000-showcase-document-extraction-local-7d5ef3028c-native-text",
+        "plannedResourceId": "showcase-document-extraction-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523613.370679,
+        "readyAt": 1792523613.370679,
+        "runtimeId": "showcase-document-extraction-local",
+        "runtimeSeconds": 0.1118171215057373,
+        "startedAt": 1792523613.6954412,
+        "status": "completed",
+        "transferBytes": 700,
+        "transferSeconds": 0.14133715629577637
+      },
+      {
+        "activityId": "showcase-document-extraction-local-7d5ef3028c-ocr",
+        "allocatedResourceId": "showcase-document-extraction-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "finishedAt": 1792523613.8129313,
+        "id": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-ocr",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.18328189849853516,
+          "preparationFinishedAt": 1792523613.5169873,
+          "preparationStartedAt": 1792523613.3774438,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0022003650665283203,
+          "runtimeId": "showcase-document-extraction-local",
+          "transferElapsedSeconds": 0.1395435333251953,
+          "transferWorkSeconds": 0.1395435333251953
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-document-extraction-local-7d5ef3028c-manual-plan-20261020t191332.046548000-showcase-document-extraction-local-7d5ef3028c-ocr",
+        "plannedResourceId": "showcase-document-extraction-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523613.371931,
+        "readyAt": 1792523613.371931,
+        "runtimeId": "showcase-document-extraction-local",
+        "runtimeSeconds": 0.11266207695007324,
+        "startedAt": 1792523613.7002692,
+        "status": "completed",
+        "transferBytes": 700,
+        "transferSeconds": 0.1395435333251953
+      },
+      {
+        "activityId": "showcase-document-extraction-local-7d5ef3028c-classify",
+        "allocatedResourceId": "showcase-document-extraction-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "finishedAt": 1792523616.0293872,
+        "id": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-classify",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.17098164558410645,
+          "preparationFinishedAt": 1792523615.7427547,
+          "preparationStartedAt": 1792523615.4034398,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0024199485778808594,
+          "runtimeId": "showcase-document-extraction-local",
+          "transferElapsedSeconds": 0.33931493759155273,
+          "transferWorkSeconds": 0.575737714767456
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-document-extraction-local-7d5ef3028c-manual-plan-20261020t191332.046548000-showcase-document-extraction-local-7d5ef3028c-classify",
+        "plannedResourceId": "showcase-document-extraction-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523615.398971,
+        "readyAt": 1792523615.398971,
+        "runtimeId": "showcase-document-extraction-local",
+        "runtimeSeconds": 0.11565089225769043,
+        "startedAt": 1792523615.9137363,
+        "status": "completed",
+        "transferBytes": 1571,
+        "transferSeconds": 0.575737714767456
+      },
+      {
+        "activityId": "showcase-document-extraction-local-7d5ef3028c-extract-fields",
+        "allocatedResourceId": "showcase-document-extraction-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "finishedAt": 1792523617.7933989,
+        "id": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-extract-fields",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.14360713958740234,
+          "preparationFinishedAt": 1792523617.5432591,
+          "preparationStartedAt": 1792523617.356899,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0008955001831054688,
+          "runtimeId": "showcase-document-extraction-local",
+          "transferElapsedSeconds": 0.18636012077331543,
+          "transferWorkSeconds": 0.18636012077331543
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-document-extraction-local-7d5ef3028c-manual-plan-20261020t191332.046548000-showcase-document-extraction-local-7d5ef3028c-extract-fields",
+        "plannedResourceId": "showcase-document-extraction-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523617.3542469,
+        "readyAt": 1792523617.3542469,
+        "runtimeId": "showcase-document-extraction-local",
+        "runtimeSeconds": 0.10653257369995117,
+        "startedAt": 1792523617.6868663,
+        "status": "completed",
+        "transferBytes": 2048,
+        "transferSeconds": 0.18636012077331543
+      },
+      {
+        "activityId": "showcase-document-extraction-local-7d5ef3028c-validate-schema",
+        "allocatedResourceId": "showcase-document-extraction-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "finishedAt": 1792523619.792709,
+        "id": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-validate-schema",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.13741230964660645,
+          "preparationFinishedAt": 1792523619.5512087,
+          "preparationStartedAt": 1792523619.3798974,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0012519359588623047,
+          "runtimeId": "showcase-document-extraction-local",
+          "transferElapsedSeconds": 0.1713113784790039,
+          "transferWorkSeconds": 0.1713113784790039
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-document-extraction-local-7d5ef3028c-manual-plan-20261020t191332.046548000-showcase-document-extraction-local-7d5ef3028c-validate-schema",
+        "plannedResourceId": "showcase-document-extraction-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523619.376544,
+        "readyAt": 1792523619.376544,
+        "runtimeId": "showcase-document-extraction-local",
+        "runtimeSeconds": 0.10408806800842285,
+        "startedAt": 1792523619.688621,
+        "status": "completed",
+        "transferBytes": 2503,
+        "transferSeconds": 0.1713113784790039
+      },
+      {
+        "activityId": "showcase-document-extraction-local-7d5ef3028c-publish",
+        "allocatedResourceId": "showcase-document-extraction-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "finishedAt": 1792523621.821124,
+        "id": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-publish",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.14117908477783203,
+          "preparationFinishedAt": 1792523621.5725474,
+          "preparationStartedAt": 1792523621.3848279,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0014200210571289062,
+          "runtimeId": "showcase-document-extraction-local",
+          "transferElapsedSeconds": 0.18771958351135254,
+          "transferWorkSeconds": 0.18771958351135254
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-document-extraction-local-7d5ef3028c-manual-plan-20261020t191332.046548000-showcase-document-extraction-local-7d5ef3028c-publish",
+        "plannedResourceId": "showcase-document-extraction-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523621.3814662,
+        "readyAt": 1792523621.3814662,
+        "runtimeId": "showcase-document-extraction-local",
+        "runtimeSeconds": 0.10739755630493164,
+        "startedAt": 1792523621.7137265,
+        "status": "completed",
+        "transferBytes": 2965,
+        "transferSeconds": 0.18771958351135254
+      }
+    ],
+    "artifactMaterializations": null,
+    "artifactTransferRuns": [
+      {
+        "activityId": "showcase-document-extraction-local-7d5ef3028c-classify",
+        "durationSeconds": 0.23642277717590332,
+        "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "filesTransferred": 5,
+        "finishedAt": 1792523615.6398625,
+        "id": "transfer-workspace-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-classify-0",
+        "logicalBytes": 1146,
+        "planId": "transfer-workspace-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-classify-0",
+        "route": {
+          "consumerActivityId": "showcase-document-extraction-local-7d5ef3028c-classify",
+          "filesTransferred": 5,
+          "producerActivityId": "showcase-document-extraction-local-7d5ef3028c-ocr",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.097331625,
+          "sourceEnvironmentId": "showcase-document-extraction-v1",
+          "sourceResourceId": "showcase-document-extraction-local-docker",
+          "sshChannelWaitSeconds": 3.74e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-document-extraction-v1",
+          "targetResourceId": "showcase-document-extraction-local-docker"
+        },
+        "startedAt": 1792523615.4034398,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 1146
+      },
+      {
+        "activityId": "showcase-document-extraction-local-7d5ef3028c-classify",
+        "durationSeconds": 0.33931493759155273,
+        "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "filesTransferred": 1,
+        "finishedAt": 1792523615.7427547,
+        "id": "transfer-workspace-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-classify-1",
+        "logicalBytes": 1125,
+        "planId": "transfer-workspace-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-classify-1",
+        "route": {
+          "consumerActivityId": "showcase-document-extraction-local-7d5ef3028c-classify",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-document-extraction-local-7d5ef3028c-native-text",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.074774459,
+          "sourceEnvironmentId": "showcase-document-extraction-v1",
+          "sourceResourceId": "showcase-document-extraction-local-docker",
+          "sshChannelWaitSeconds": 2.5e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-document-extraction-v1",
+          "targetResourceId": "showcase-document-extraction-local-docker"
+        },
+        "startedAt": 1792523615.4034398,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 425
+      },
+      {
+        "activityId": "showcase-document-extraction-local-7d5ef3028c-extract-fields",
+        "durationSeconds": 0.18636012077331543,
+        "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "filesTransferred": 7,
+        "finishedAt": 1792523617.5432591,
+        "id": "transfer-workspace-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-extract-fields-0",
+        "logicalBytes": 2048,
+        "planId": "transfer-workspace-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-extract-fields-0",
+        "route": {
+          "consumerActivityId": "showcase-document-extraction-local-7d5ef3028c-extract-fields",
+          "filesTransferred": 7,
+          "producerActivityId": "showcase-document-extraction-local-7d5ef3028c-classify",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.093086791,
+          "sourceEnvironmentId": "showcase-document-extraction-v1",
+          "sourceResourceId": "showcase-document-extraction-local-docker",
+          "sshChannelWaitSeconds": 6.669999999999999e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-document-extraction-v1",
+          "targetResourceId": "showcase-document-extraction-local-docker"
+        },
+        "startedAt": 1792523617.356899,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 2048
+      },
+      {
+        "activityId": "showcase-document-extraction-local-7d5ef3028c-native-text",
+        "durationSeconds": 0.14133715629577637,
+        "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "filesTransferred": 3,
+        "finishedAt": 1792523613.5206265,
+        "id": "transfer-workspace-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-native-text-0",
+        "logicalBytes": 700,
+        "planId": "transfer-workspace-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-native-text-0",
+        "route": {
+          "consumerActivityId": "showcase-document-extraction-local-7d5ef3028c-native-text",
+          "filesTransferred": 3,
+          "producerActivityId": "showcase-document-extraction-local-7d5ef3028c-ingest-documents",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.093185501,
+          "sourceEnvironmentId": "showcase-document-extraction-v1",
+          "sourceResourceId": "showcase-document-extraction-local-docker",
+          "sshChannelWaitSeconds": 3.76e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-document-extraction-v1",
+          "targetResourceId": "showcase-document-extraction-local-docker"
+        },
+        "startedAt": 1792523613.3792894,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 700
+      },
+      {
+        "activityId": "showcase-document-extraction-local-7d5ef3028c-ocr",
+        "durationSeconds": 0.1395435333251953,
+        "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "filesTransferred": 3,
+        "finishedAt": 1792523613.5169873,
+        "id": "transfer-workspace-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-ocr-0",
+        "logicalBytes": 700,
+        "planId": "transfer-workspace-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-ocr-0",
+        "route": {
+          "consumerActivityId": "showcase-document-extraction-local-7d5ef3028c-ocr",
+          "filesTransferred": 3,
+          "producerActivityId": "showcase-document-extraction-local-7d5ef3028c-ingest-documents",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.069397459,
+          "sourceEnvironmentId": "showcase-document-extraction-v1",
+          "sourceResourceId": "showcase-document-extraction-local-docker",
+          "sshChannelWaitSeconds": 4.58e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-document-extraction-v1",
+          "targetResourceId": "showcase-document-extraction-local-docker"
+        },
+        "startedAt": 1792523613.3774438,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 700
+      },
+      {
+        "activityId": "showcase-document-extraction-local-7d5ef3028c-publish",
+        "durationSeconds": 0.18771958351135254,
+        "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "filesTransferred": 9,
+        "finishedAt": 1792523621.5725474,
+        "id": "transfer-workspace-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-publish-0",
+        "logicalBytes": 2965,
+        "planId": "transfer-workspace-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-publish-0",
+        "route": {
+          "consumerActivityId": "showcase-document-extraction-local-7d5ef3028c-publish",
+          "filesTransferred": 9,
+          "producerActivityId": "showcase-document-extraction-local-7d5ef3028c-validate-schema",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.093945501,
+          "sourceEnvironmentId": "showcase-document-extraction-v1",
+          "sourceResourceId": "showcase-document-extraction-local-docker",
+          "sshChannelWaitSeconds": 5.84e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-document-extraction-v1",
+          "targetResourceId": "showcase-document-extraction-local-docker"
+        },
+        "startedAt": 1792523621.3848279,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 2965
+      },
+      {
+        "activityId": "showcase-document-extraction-local-7d5ef3028c-validate-schema",
+        "durationSeconds": 0.1713113784790039,
+        "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "filesTransferred": 8,
+        "finishedAt": 1792523619.5512087,
+        "id": "transfer-workspace-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-validate-schema-0",
+        "logicalBytes": 2503,
+        "planId": "transfer-workspace-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-validate-schema-0",
+        "route": {
+          "consumerActivityId": "showcase-document-extraction-local-7d5ef3028c-validate-schema",
+          "filesTransferred": 8,
+          "producerActivityId": "showcase-document-extraction-local-7d5ef3028c-extract-fields",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.09380825000000001,
+          "sourceEnvironmentId": "showcase-document-extraction-v1",
+          "sourceResourceId": "showcase-document-extraction-local-docker",
+          "sshChannelWaitSeconds": 4.58e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-document-extraction-v1",
+          "targetResourceId": "showcase-document-extraction-local-docker"
+        },
+        "startedAt": 1792523619.3798974,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 2503
+      }
+    ],
+    "cloudBilling": {
+      "asOf": "2026-10-20T19:13:43.468138337Z",
+      "costBasis": "VM compute and boot-disk lifecycle at on-demand marginal rates; not a provider invoice",
+      "estimatedCost": 0,
+      "excludedCosts": [
+        "network-egress",
+        "public-ipv4",
+        "image-storage",
+        "discounts-and-tax"
+      ],
+      "instances": [],
+      "knownCost": 0,
+      "status": "estimated"
+    },
+    "dataLocations": [
+      {
+        "dataObjectInstanceId": "1260276e6a80ea1110f9e51d6ac1a5c8",
+        "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "id": "e33e0aae0ad08250a0d3e955d6adc675",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-document-extraction-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "92f50461fd000eed3409d83180feca90",
+        "uri": "file:///akoflow/workspace/runs/showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000/showcase-document-extraction-local-7d5ef3028c-classify/stage-classify.json"
+      },
+      {
+        "dataObjectInstanceId": "00c9e6a3ef75f09a0900e454e4be86f7",
+        "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "id": "fcc10061c77a9ed4f5be9264d7ef9e79",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-document-extraction-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "92f50461fd000eed3409d83180feca90",
+        "uri": "file:///akoflow/workspace/runs/showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000/showcase-document-extraction-local-7d5ef3028c-extract-fields/stage-extract-fields.json"
+      },
+      {
+        "dataObjectInstanceId": "bd4a983e62e66394620a6b1f40a6fc4a",
+        "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "id": "bbb159f2753084c2ecb9a098d3ea902f",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-document-extraction-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "92f50461fd000eed3409d83180feca90",
+        "uri": "file:///akoflow/workspace/runs/showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000/showcase-document-extraction-local-7d5ef3028c-ingest-documents/native.txt"
+      },
+      {
+        "dataObjectInstanceId": "f8ccef2617e677c5ea747ca9785c05fa",
+        "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "id": "19f6de25f5f55abaa3455a23ccd4207c",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-document-extraction-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "92f50461fd000eed3409d83180feca90",
+        "uri": "file:///akoflow/workspace/runs/showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000/showcase-document-extraction-local-7d5ef3028c-ingest-documents/scan.pbm"
+      },
+      {
+        "dataObjectInstanceId": "98dde387293152f8557bb9796fb05cca",
+        "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "id": "38dadebd4a433a18943edc50284c5cf9",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-document-extraction-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "92f50461fd000eed3409d83180feca90",
+        "uri": "file:///akoflow/workspace/runs/showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000/showcase-document-extraction-local-7d5ef3028c-ingest-documents/stage-ingest-documents.json"
+      },
+      {
+        "dataObjectInstanceId": "ea84846db0da376857c803b95dee2e72",
+        "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "id": "45ae2996e3ce8c6b54ddf29190b85d4f",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-document-extraction-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "92f50461fd000eed3409d83180feca90",
+        "uri": "file:///akoflow/workspace/runs/showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000/showcase-document-extraction-local-7d5ef3028c-native-text/stage-native-text.json"
+      },
+      {
+        "dataObjectInstanceId": "4bd15c9a4d989f4815fac60d9789ff6f",
+        "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "id": "55ad2e00d796c0a1f60294540aec35ab",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-document-extraction-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "92f50461fd000eed3409d83180feca90",
+        "uri": "file:///akoflow/workspace/runs/showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000/showcase-document-extraction-local-7d5ef3028c-ocr/ocr.txt"
+      },
+      {
+        "dataObjectInstanceId": "b2202a1476f3a7245d66690c4edbf7e0",
+        "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "id": "97cbc4b9277e09d64a3c81a161d123e1",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-document-extraction-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "92f50461fd000eed3409d83180feca90",
+        "uri": "file:///akoflow/workspace/runs/showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000/showcase-document-extraction-local-7d5ef3028c-ocr/stage-ocr.json"
+      },
+      {
+        "dataObjectInstanceId": "e01f19212cc5d81a9c986c8951a34dec",
+        "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "id": "ebe07be07545f610fd8290ad1b743735",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-document-extraction-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "92f50461fd000eed3409d83180feca90",
+        "uri": "file:///akoflow/workspace/runs/showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000/showcase-document-extraction-local-7d5ef3028c-publish/extraction.json"
+      },
+      {
+        "dataObjectInstanceId": "ed7667d326b3ee01d83067cd35765e73",
+        "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "id": "f877eef457f52910beafa377f10e31c0",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-document-extraction-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "92f50461fd000eed3409d83180feca90",
+        "uri": "file:///akoflow/workspace/runs/showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000/showcase-document-extraction-local-7d5ef3028c-publish/stage-publish.json"
+      },
+      {
+        "dataObjectInstanceId": "c18e953c063be59d994a6927c8610b3f",
+        "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "id": "136667046cc63194e20acea8f23c1337",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-document-extraction-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "92f50461fd000eed3409d83180feca90",
+        "uri": "file:///akoflow/workspace/runs/showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000/showcase-document-extraction-local-7d5ef3028c-validate-schema/stage-validate-schema.json"
+      }
+    ],
+    "dataObjects": [
+      {
+        "attempt": 1,
+        "checksum": "sha256:c6c3851c05d37afb8a0d2692873bfba989513f49f2ea75ab1511562680414f26",
+        "dataObjectId": "ca8ee65842ce60db2866f8f11ab7a370",
+        "discovered": true,
+        "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "id": "1260276e6a80ea1110f9e51d6ac1a5c8",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-document-extraction-local-7d5ef3028c-classify",
+        "relativePath": "stage-classify.json",
+        "sizeBytes": 477
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:a4d3eb151bee1a5cb4053327c6ee5cc882e691f006e86ad14f961449945b948d",
+        "dataObjectId": "a39f3bc70967ca8b7de955f73a1e45b9",
+        "discovered": true,
+        "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "id": "00c9e6a3ef75f09a0900e454e4be86f7",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-document-extraction-local-7d5ef3028c-extract-fields",
+        "relativePath": "stage-extract-fields.json",
+        "sizeBytes": 455
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:0dfa4403c40b0dfe87a89ffca90990681cddec51c9fdf1b07a7c5b02ffa1bfee",
+        "dataObjectId": "903dada19dbc5363f869fb6f4d823abe",
+        "discovered": true,
+        "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "id": "bd4a983e62e66394620a6b1f40a6fc4a",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-document-extraction-local-7d5ef3028c-ingest-documents",
+        "relativePath": "native.txt",
+        "sizeBytes": 47
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:d946dd2cd092a3184a51029662a4e2ca0d0e9341ef13c377feb6f66a3ee6445a",
+        "dataObjectId": "e0e9cd0ed013bb0275c93b47b6060a00",
+        "discovered": true,
+        "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "id": "f8ccef2617e677c5ea747ca9785c05fa",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-document-extraction-local-7d5ef3028c-ingest-documents",
+        "relativePath": "scan.pbm",
+        "sizeBytes": 238
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:423b25bb89667abe7cee02f5faed01a47768b44a33fe771b9abedf2062510b71",
+        "dataObjectId": "fed0f4f071e3351328ace938d9d3886b",
+        "discovered": true,
+        "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "id": "98dde387293152f8557bb9796fb05cca",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-document-extraction-local-7d5ef3028c-ingest-documents",
+        "relativePath": "stage-ingest-documents.json",
+        "sizeBytes": 415
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:c0706e3971e450b84e7083cc59e29fc421ba4dfd70a36c70248e066711c27d70",
+        "dataObjectId": "f0c53d9228e899a733b63015d264c954",
+        "discovered": true,
+        "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "id": "ea84846db0da376857c803b95dee2e72",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-document-extraction-local-7d5ef3028c-native-text",
+        "relativePath": "stage-native-text.json",
+        "sizeBytes": 425
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:189977b6cd18fa81d3459e3eb904d99585f96db722e49c001a0808cdae75dea8",
+        "dataObjectId": "b701f92ec67eb40ba8b6a9b32ba5b86d",
+        "discovered": true,
+        "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "id": "4bd15c9a4d989f4815fac60d9789ff6f",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-document-extraction-local-7d5ef3028c-ocr",
+        "relativePath": "ocr.txt",
+        "sizeBytes": 7
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:aa46aabdbd8d35edaf28801629d5f9e01fcd260b78f72e8d94fe06a0b302b9cf",
+        "dataObjectId": "c209a1cf704423ea7dd6b3e51dd43513",
+        "discovered": true,
+        "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "id": "b2202a1476f3a7245d66690c4edbf7e0",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-document-extraction-local-7d5ef3028c-ocr",
+        "relativePath": "stage-ocr.json",
+        "sizeBytes": 439
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:d3e0084df12c227da788f9dd68ecd16c5b10cbf472c6cf814f4b21fdf9bda31e",
+        "dataObjectId": "334008dc9b3ca7a695259b7485e3d28a",
+        "discovered": true,
+        "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "id": "e01f19212cc5d81a9c986c8951a34dec",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-document-extraction-local-7d5ef3028c-publish",
+        "relativePath": "extraction.json",
+        "sizeBytes": 92
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:1ebe6e7b5ef2e080a69345e344a06089df13e21c4c2a85af5dafcef70810e6a2",
+        "dataObjectId": "6c15e861bc01d8286561733c1dd679f3",
+        "discovered": true,
+        "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "id": "ed7667d326b3ee01d83067cd35765e73",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-document-extraction-local-7d5ef3028c-publish",
+        "relativePath": "stage-publish.json",
+        "sizeBytes": 455
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:4caad05c66ebe9bbdb7c7b82f2bdcdbd0bac42779d6f2dbeebe6bd723e6a0a4e",
+        "dataObjectId": "08e97038fc6f8f70686729ed245636d8",
+        "discovered": true,
+        "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "id": "c18e953c063be59d994a6927c8610b3f",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-document-extraction-local-7d5ef3028c-validate-schema",
+        "relativePath": "stage-validate-schema.json",
+        "sizeBytes": 462
+      }
+    ],
+    "dataTransfers": [
+      {
+        "bytes": 700,
+        "consumerActivityId": "showcase-document-extraction-local-7d5ef3028c-ocr",
+        "cost": 0,
+        "durationSeconds": 0.1395435333251953,
+        "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "finishedAt": 1792523613.5169873,
+        "id": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-ocr:transfer-workspace-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-ocr-0",
+        "logicalBytes": 700,
+        "producerActivityId": "showcase-document-extraction-local-7d5ef3028c-ingest-documents",
+        "route": {
+          "consumerActivityId": "showcase-document-extraction-local-7d5ef3028c-ocr",
+          "filesTransferred": 3,
+          "producerActivityId": "showcase-document-extraction-local-7d5ef3028c-ingest-documents",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.069397459,
+          "sourceEnvironmentId": "showcase-document-extraction-v1",
+          "sourceResourceId": "showcase-document-extraction-local-docker",
+          "sshChannelWaitSeconds": 4.58e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-document-extraction-v1",
+          "targetResourceId": "showcase-document-extraction-local-docker"
+        },
+        "sourceResourceId": "showcase-document-extraction-local-docker",
+        "startedAt": 1792523613.3774438,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-document-extraction-local-docker"
+      },
+      {
+        "bytes": 700,
+        "consumerActivityId": "showcase-document-extraction-local-7d5ef3028c-native-text",
+        "cost": 0,
+        "durationSeconds": 0.14133715629577637,
+        "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "finishedAt": 1792523613.5206265,
+        "id": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-native-text:transfer-workspace-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-native-text-0",
+        "logicalBytes": 700,
+        "producerActivityId": "showcase-document-extraction-local-7d5ef3028c-ingest-documents",
+        "route": {
+          "consumerActivityId": "showcase-document-extraction-local-7d5ef3028c-native-text",
+          "filesTransferred": 3,
+          "producerActivityId": "showcase-document-extraction-local-7d5ef3028c-ingest-documents",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.093185501,
+          "sourceEnvironmentId": "showcase-document-extraction-v1",
+          "sourceResourceId": "showcase-document-extraction-local-docker",
+          "sshChannelWaitSeconds": 3.76e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-document-extraction-v1",
+          "targetResourceId": "showcase-document-extraction-local-docker"
+        },
+        "sourceResourceId": "showcase-document-extraction-local-docker",
+        "startedAt": 1792523613.3792894,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-document-extraction-local-docker"
+      },
+      {
+        "bytes": 425,
+        "consumerActivityId": "showcase-document-extraction-local-7d5ef3028c-classify",
+        "cost": 0,
+        "durationSeconds": 0.33931493759155273,
+        "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "finishedAt": 1792523615.7427547,
+        "id": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-classify:transfer-workspace-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-classify-1",
+        "logicalBytes": 1125,
+        "producerActivityId": "showcase-document-extraction-local-7d5ef3028c-native-text",
+        "route": {
+          "consumerActivityId": "showcase-document-extraction-local-7d5ef3028c-classify",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-document-extraction-local-7d5ef3028c-native-text",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.074774459,
+          "sourceEnvironmentId": "showcase-document-extraction-v1",
+          "sourceResourceId": "showcase-document-extraction-local-docker",
+          "sshChannelWaitSeconds": 2.5e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-document-extraction-v1",
+          "targetResourceId": "showcase-document-extraction-local-docker"
+        },
+        "sourceResourceId": "showcase-document-extraction-local-docker",
+        "startedAt": 1792523615.4034398,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-document-extraction-local-docker"
+      },
+      {
+        "bytes": 1146,
+        "consumerActivityId": "showcase-document-extraction-local-7d5ef3028c-classify",
+        "cost": 0,
+        "durationSeconds": 0.23642277717590332,
+        "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "finishedAt": 1792523615.6398625,
+        "id": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-classify:transfer-workspace-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-classify-0",
+        "logicalBytes": 1146,
+        "producerActivityId": "showcase-document-extraction-local-7d5ef3028c-ocr",
+        "route": {
+          "consumerActivityId": "showcase-document-extraction-local-7d5ef3028c-classify",
+          "filesTransferred": 5,
+          "producerActivityId": "showcase-document-extraction-local-7d5ef3028c-ocr",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.097331625,
+          "sourceEnvironmentId": "showcase-document-extraction-v1",
+          "sourceResourceId": "showcase-document-extraction-local-docker",
+          "sshChannelWaitSeconds": 3.74e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-document-extraction-v1",
+          "targetResourceId": "showcase-document-extraction-local-docker"
+        },
+        "sourceResourceId": "showcase-document-extraction-local-docker",
+        "startedAt": 1792523615.4034398,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-document-extraction-local-docker"
+      },
+      {
+        "bytes": 2048,
+        "consumerActivityId": "showcase-document-extraction-local-7d5ef3028c-extract-fields",
+        "cost": 0,
+        "durationSeconds": 0.18636012077331543,
+        "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "finishedAt": 1792523617.5432591,
+        "id": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-extract-fields:transfer-workspace-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-extract-fields-0",
+        "logicalBytes": 2048,
+        "producerActivityId": "showcase-document-extraction-local-7d5ef3028c-classify",
+        "route": {
+          "consumerActivityId": "showcase-document-extraction-local-7d5ef3028c-extract-fields",
+          "filesTransferred": 7,
+          "producerActivityId": "showcase-document-extraction-local-7d5ef3028c-classify",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.093086791,
+          "sourceEnvironmentId": "showcase-document-extraction-v1",
+          "sourceResourceId": "showcase-document-extraction-local-docker",
+          "sshChannelWaitSeconds": 6.669999999999999e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-document-extraction-v1",
+          "targetResourceId": "showcase-document-extraction-local-docker"
+        },
+        "sourceResourceId": "showcase-document-extraction-local-docker",
+        "startedAt": 1792523617.356899,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-document-extraction-local-docker"
+      },
+      {
+        "bytes": 2503,
+        "consumerActivityId": "showcase-document-extraction-local-7d5ef3028c-validate-schema",
+        "cost": 0,
+        "durationSeconds": 0.1713113784790039,
+        "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "finishedAt": 1792523619.5512087,
+        "id": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-validate-schema:transfer-workspace-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-validate-schema-0",
+        "logicalBytes": 2503,
+        "producerActivityId": "showcase-document-extraction-local-7d5ef3028c-extract-fields",
+        "route": {
+          "consumerActivityId": "showcase-document-extraction-local-7d5ef3028c-validate-schema",
+          "filesTransferred": 8,
+          "producerActivityId": "showcase-document-extraction-local-7d5ef3028c-extract-fields",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.09380825000000001,
+          "sourceEnvironmentId": "showcase-document-extraction-v1",
+          "sourceResourceId": "showcase-document-extraction-local-docker",
+          "sshChannelWaitSeconds": 4.58e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-document-extraction-v1",
+          "targetResourceId": "showcase-document-extraction-local-docker"
+        },
+        "sourceResourceId": "showcase-document-extraction-local-docker",
+        "startedAt": 1792523619.3798974,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-document-extraction-local-docker"
+      },
+      {
+        "bytes": 2965,
+        "consumerActivityId": "showcase-document-extraction-local-7d5ef3028c-publish",
+        "cost": 0,
+        "durationSeconds": 0.18771958351135254,
+        "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "finishedAt": 1792523621.5725474,
+        "id": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-publish:transfer-workspace-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-publish-0",
+        "logicalBytes": 2965,
+        "producerActivityId": "showcase-document-extraction-local-7d5ef3028c-validate-schema",
+        "route": {
+          "consumerActivityId": "showcase-document-extraction-local-7d5ef3028c-publish",
+          "filesTransferred": 9,
+          "producerActivityId": "showcase-document-extraction-local-7d5ef3028c-validate-schema",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.093945501,
+          "sourceEnvironmentId": "showcase-document-extraction-v1",
+          "sourceResourceId": "showcase-document-extraction-local-docker",
+          "sshChannelWaitSeconds": 5.84e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-document-extraction-v1",
+          "targetResourceId": "showcase-document-extraction-local-docker"
+        },
+        "sourceResourceId": "showcase-document-extraction-local-docker",
+        "startedAt": 1792523621.3848279,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-document-extraction-local-docker"
+      }
+    ],
+    "events": [
+      {
+        "aggregateId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "aggregateType": "execution_run",
+        "eventType": "execution.run.started",
+        "id": "61cd4e1ac81adab2cf48409e22f9aa55",
+        "occurredAt": "2026-10-20T19:13:32.113027013Z",
+        "payload": {
+          "mode": "real",
+          "schedulePlanId": "showcase-document-extraction-local-7d5ef3028c-manual-plan-20261020t191332.046548000"
+        }
+      },
+      {
+        "aggregateId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-ingest-documents",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "f08730aba988d0d4cc8c6fb110a1a960",
+        "occurredAt": "2026-10-20T19:13:33.28286918Z",
+        "payload": {
+          "activityId": "showcase-document-extraction-local-7d5ef3028c-ingest-documents",
+          "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-ingest-documents",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "dc34df00523b3ca328e33ca7b20b5f06",
+        "occurredAt": "2026-10-20T19:13:33.369211638Z",
+        "payload": {
+          "activityId": "showcase-document-extraction-local-7d5ef3028c-ingest-documents",
+          "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+          "failureReason": "",
+          "runtimeSeconds": 0.10593962669372559,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-ocr",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "8b33bc414725dd11ca3560384371b674",
+        "occurredAt": "2026-10-20T19:13:35.288903958Z",
+        "payload": {
+          "activityId": "showcase-document-extraction-local-7d5ef3028c-ocr",
+          "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-native-text",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "0caa4ec06157bf35cf49d3cd98b3ca92",
+        "occurredAt": "2026-10-20T19:13:35.294576417Z",
+        "payload": {
+          "activityId": "showcase-document-extraction-local-7d5ef3028c-native-text",
+          "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-native-text",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "215d3dac7b06a7538a3905d2ff83d453",
+        "occurredAt": "2026-10-20T19:13:35.39412375Z",
+        "payload": {
+          "activityId": "showcase-document-extraction-local-7d5ef3028c-native-text",
+          "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+          "failureReason": "",
+          "runtimeSeconds": 0.1118171215057373,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-ocr",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "e0c5d81ee209f104537ac0802f751be0",
+        "occurredAt": "2026-10-20T19:13:35.397267917Z",
+        "payload": {
+          "activityId": "showcase-document-extraction-local-7d5ef3028c-ocr",
+          "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+          "failureReason": "",
+          "runtimeSeconds": 0.11266207695007324,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-classify",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "4b5fa9ef9b1437391dd2a0342e1ef40f",
+        "occurredAt": "2026-10-20T19:13:37.286198168Z",
+        "payload": {
+          "activityId": "showcase-document-extraction-local-7d5ef3028c-classify",
+          "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-classify",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "271a3e942bfd9dc10fcaa2ac3c68c569",
+        "occurredAt": "2026-10-20T19:13:37.352259209Z",
+        "payload": {
+          "activityId": "showcase-document-extraction-local-7d5ef3028c-classify",
+          "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+          "failureReason": "",
+          "runtimeSeconds": 0.11565089225769043,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-extract-fields",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "3052f19338b68f51ac68b5d132246114",
+        "occurredAt": "2026-10-20T19:13:39.29651496Z",
+        "payload": {
+          "activityId": "showcase-document-extraction-local-7d5ef3028c-extract-fields",
+          "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-extract-fields",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "2f460ad9c3eb17b23f50fa01f7e4a84e",
+        "occurredAt": "2026-10-20T19:13:39.374412669Z",
+        "payload": {
+          "activityId": "showcase-document-extraction-local-7d5ef3028c-extract-fields",
+          "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+          "failureReason": "",
+          "runtimeSeconds": 0.10653257369995117,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-validate-schema",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "2393cfb6e717b00663267c8d3cc112a7",
+        "occurredAt": "2026-10-20T19:13:41.303959086Z",
+        "payload": {
+          "activityId": "showcase-document-extraction-local-7d5ef3028c-validate-schema",
+          "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-validate-schema",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "cfbe7a44ad792dc63441fe6224b51e28",
+        "occurredAt": "2026-10-20T19:13:41.379472211Z",
+        "payload": {
+          "activityId": "showcase-document-extraction-local-7d5ef3028c-validate-schema",
+          "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+          "failureReason": "",
+          "runtimeSeconds": 0.10408806800842285,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-publish",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "5461a65cc525a8cf342a40416937d4ea",
+        "occurredAt": "2026-10-20T19:13:43.310235671Z",
+        "payload": {
+          "activityId": "showcase-document-extraction-local-7d5ef3028c-publish",
+          "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-publish",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "82323da60c40a97caaf5962d948aadb4",
+        "occurredAt": "2026-10-20T19:13:43.398187337Z",
+        "payload": {
+          "activityId": "showcase-document-extraction-local-7d5ef3028c-publish",
+          "executionRunId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+          "failureReason": "",
+          "runtimeSeconds": 0.10739755630493164,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "aggregateType": "execution_run",
+        "eventType": "execution.run.completed",
+        "id": "174cc93eead44d298863d7ddc772179d",
+        "occurredAt": "2026-10-20T19:13:43.401944254Z",
+        "payload": {
+          "cost": 0,
+          "makespanSeconds": 9.569389820098877
+        }
+      }
+    ],
+    "handles": [
+      {
+        "activityId": "showcase-document-extraction-local-7d5ef3028c-classify",
+        "artifacts": {
+          "activityId": "showcase-document-extraction-local-7d5ef3028c-classify",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:c6c3851c05d37afb8a0d2692873bfba989513f49f2ea75ab1511562680414f26",
+              "modifiedUnixNano": 1792523616022814000,
+              "path": "stage-classify.json",
+              "sizeBytes": 477
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:0dfa4403c40b0dfe87a89ffca90990681cddec51c9fdf1b07a7c5b02ffa1bfee",
+              "modifiedUnixNano": 1792523615595814000,
+              "path": "native.txt",
+              "sizeBytes": 47
+            },
+            {
+              "checksum": "sha256:189977b6cd18fa81d3459e3eb904d99585f96db722e49c001a0808cdae75dea8",
+              "modifiedUnixNano": 1792523615595814000,
+              "path": "ocr.txt",
+              "sizeBytes": 7
+            },
+            {
+              "checksum": "sha256:d946dd2cd092a3184a51029662a4e2ca0d0e9341ef13c377feb6f66a3ee6445a",
+              "modifiedUnixNano": 1792523615595814000,
+              "path": "scan.pbm",
+              "sizeBytes": 238
+            },
+            {
+              "checksum": "sha256:c6c3851c05d37afb8a0d2692873bfba989513f49f2ea75ab1511562680414f26",
+              "modifiedUnixNano": 1792523616022814000,
+              "path": "stage-classify.json",
+              "sizeBytes": 477
+            },
+            {
+              "checksum": "sha256:423b25bb89667abe7cee02f5faed01a47768b44a33fe771b9abedf2062510b71",
+              "modifiedUnixNano": 1792523615595814000,
+              "path": "stage-ingest-documents.json",
+              "sizeBytes": 415
+            },
+            {
+              "checksum": "sha256:c0706e3971e450b84e7083cc59e29fc421ba4dfd70a36c70248e066711c27d70",
+              "modifiedUnixNano": 1792523615716814000,
+              "path": "stage-native-text.json",
+              "sizeBytes": 425
+            },
+            {
+              "checksum": "sha256:aa46aabdbd8d35edaf28801629d5f9e01fcd260b78f72e8d94fe06a0b302b9cf",
+              "modifiedUnixNano": 1792523615595814000,
+              "path": "stage-ocr.json",
+              "sizeBytes": 439
+            }
+          ],
+          "finishedAt": 1792523616.0293872,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:0dfa4403c40b0dfe87a89ffca90990681cddec51c9fdf1b07a7c5b02ffa1bfee",
+              "modifiedUnixNano": 1792523615595814000,
+              "path": "native.txt",
+              "sizeBytes": 47
+            },
+            {
+              "checksum": "sha256:189977b6cd18fa81d3459e3eb904d99585f96db722e49c001a0808cdae75dea8",
+              "modifiedUnixNano": 1792523615595814000,
+              "path": "ocr.txt",
+              "sizeBytes": 7
+            },
+            {
+              "checksum": "sha256:d946dd2cd092a3184a51029662a4e2ca0d0e9341ef13c377feb6f66a3ee6445a",
+              "modifiedUnixNano": 1792523615595814000,
+              "path": "scan.pbm",
+              "sizeBytes": 238
+            },
+            {
+              "checksum": "sha256:423b25bb89667abe7cee02f5faed01a47768b44a33fe771b9abedf2062510b71",
+              "modifiedUnixNano": 1792523615595814000,
+              "path": "stage-ingest-documents.json",
+              "sizeBytes": 415
+            },
+            {
+              "checksum": "sha256:c0706e3971e450b84e7083cc59e29fc421ba4dfd70a36c70248e066711c27d70",
+              "modifiedUnixNano": 1792523615716814000,
+              "path": "stage-native-text.json",
+              "sizeBytes": 425
+            },
+            {
+              "checksum": "sha256:aa46aabdbd8d35edaf28801629d5f9e01fcd260b78f72e8d94fe06a0b302b9cf",
+              "modifiedUnixNano": 1792523615595814000,
+              "path": "stage-ocr.json",
+              "sizeBytes": 439
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.11565089225769043,
+              "finishedAt": 1792523616.0293872,
+              "phase": "execution",
+              "startedAt": 1792523615.9137363,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000/showcase-document-extraction-local-7d5ef3028c-classify",
+          "runId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+          "runtime": "showcase-document-extraction-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523615.9137363,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 7,
+            "initialFiles": 6,
+            "modifiedFiles": 0,
+            "outputBytes": 477
+          }
+        },
+        "exitCode": 0,
+        "externalId": "978811598a19f99179e0d346c2431e1678ccb822f4ca12b3cff68dd57be21f27",
+        "finishedAt": 1792523616.0293872,
+        "id": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-classify",
+        "log": "{\"activity\": \"classify\", \"status\": \"success\", \"resultKeys\": [\"kind\", \"digits\", \"native\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-document-extraction-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000/showcase-document-extraction-local-7d5ef3028c-classify",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523615.9137416,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-classify",
+          "submittedAt": 1792523615.9137363
+        },
+        "resourceId": "showcase-document-extraction-local-docker",
+        "runId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "runtimeId": "showcase-document-extraction-local",
+        "startedAt": 1792523615.9137363,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-document-extraction-local-7d5ef3028c-extract-fields",
+        "artifacts": {
+          "activityId": "showcase-document-extraction-local-7d5ef3028c-extract-fields",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:a4d3eb151bee1a5cb4053327c6ee5cc882e691f006e86ad14f961449945b948d",
+              "modifiedUnixNano": 1792523617787814000,
+              "path": "stage-extract-fields.json",
+              "sizeBytes": 455
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:0dfa4403c40b0dfe87a89ffca90990681cddec51c9fdf1b07a7c5b02ffa1bfee",
+              "modifiedUnixNano": 1792523617498814000,
+              "path": "native.txt",
+              "sizeBytes": 47
+            },
+            {
+              "checksum": "sha256:189977b6cd18fa81d3459e3eb904d99585f96db722e49c001a0808cdae75dea8",
+              "modifiedUnixNano": 1792523617498814000,
+              "path": "ocr.txt",
+              "sizeBytes": 7
+            },
+            {
+              "checksum": "sha256:d946dd2cd092a3184a51029662a4e2ca0d0e9341ef13c377feb6f66a3ee6445a",
+              "modifiedUnixNano": 1792523617498814000,
+              "path": "scan.pbm",
+              "sizeBytes": 238
+            },
+            {
+              "checksum": "sha256:c6c3851c05d37afb8a0d2692873bfba989513f49f2ea75ab1511562680414f26",
+              "modifiedUnixNano": 1792523617498814000,
+              "path": "stage-classify.json",
+              "sizeBytes": 477
+            },
+            {
+              "checksum": "sha256:a4d3eb151bee1a5cb4053327c6ee5cc882e691f006e86ad14f961449945b948d",
+              "modifiedUnixNano": 1792523617787814000,
+              "path": "stage-extract-fields.json",
+              "sizeBytes": 455
+            },
+            {
+              "checksum": "sha256:423b25bb89667abe7cee02f5faed01a47768b44a33fe771b9abedf2062510b71",
+              "modifiedUnixNano": 1792523617498814000,
+              "path": "stage-ingest-documents.json",
+              "sizeBytes": 415
+            },
+            {
+              "checksum": "sha256:c0706e3971e450b84e7083cc59e29fc421ba4dfd70a36c70248e066711c27d70",
+              "modifiedUnixNano": 1792523617498814000,
+              "path": "stage-native-text.json",
+              "sizeBytes": 425
+            },
+            {
+              "checksum": "sha256:aa46aabdbd8d35edaf28801629d5f9e01fcd260b78f72e8d94fe06a0b302b9cf",
+              "modifiedUnixNano": 1792523617498814000,
+              "path": "stage-ocr.json",
+              "sizeBytes": 439
+            }
+          ],
+          "finishedAt": 1792523617.7933989,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:0dfa4403c40b0dfe87a89ffca90990681cddec51c9fdf1b07a7c5b02ffa1bfee",
+              "modifiedUnixNano": 1792523617498814000,
+              "path": "native.txt",
+              "sizeBytes": 47
+            },
+            {
+              "checksum": "sha256:189977b6cd18fa81d3459e3eb904d99585f96db722e49c001a0808cdae75dea8",
+              "modifiedUnixNano": 1792523617498814000,
+              "path": "ocr.txt",
+              "sizeBytes": 7
+            },
+            {
+              "checksum": "sha256:d946dd2cd092a3184a51029662a4e2ca0d0e9341ef13c377feb6f66a3ee6445a",
+              "modifiedUnixNano": 1792523617498814000,
+              "path": "scan.pbm",
+              "sizeBytes": 238
+            },
+            {
+              "checksum": "sha256:c6c3851c05d37afb8a0d2692873bfba989513f49f2ea75ab1511562680414f26",
+              "modifiedUnixNano": 1792523617498814000,
+              "path": "stage-classify.json",
+              "sizeBytes": 477
+            },
+            {
+              "checksum": "sha256:423b25bb89667abe7cee02f5faed01a47768b44a33fe771b9abedf2062510b71",
+              "modifiedUnixNano": 1792523617498814000,
+              "path": "stage-ingest-documents.json",
+              "sizeBytes": 415
+            },
+            {
+              "checksum": "sha256:c0706e3971e450b84e7083cc59e29fc421ba4dfd70a36c70248e066711c27d70",
+              "modifiedUnixNano": 1792523617498814000,
+              "path": "stage-native-text.json",
+              "sizeBytes": 425
+            },
+            {
+              "checksum": "sha256:aa46aabdbd8d35edaf28801629d5f9e01fcd260b78f72e8d94fe06a0b302b9cf",
+              "modifiedUnixNano": 1792523617498814000,
+              "path": "stage-ocr.json",
+              "sizeBytes": 439
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.10653257369995117,
+              "finishedAt": 1792523617.7933989,
+              "phase": "execution",
+              "startedAt": 1792523617.6868663,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000/showcase-document-extraction-local-7d5ef3028c-extract-fields",
+          "runId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+          "runtime": "showcase-document-extraction-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523617.6868663,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 8,
+            "initialFiles": 7,
+            "modifiedFiles": 0,
+            "outputBytes": 455
+          }
+        },
+        "exitCode": 0,
+        "externalId": "a605dd7b3d0cb19860d35174386134253f8b57dd109b4927e9051a881f0aa265",
+        "finishedAt": 1792523617.7933989,
+        "id": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-extract-fields",
+        "log": "{\"activity\": \"extract-fields\", \"status\": \"success\", \"resultKeys\": [\"invoiceId\", \"amount\", \"currency\", \"customer\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-document-extraction-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000/showcase-document-extraction-local-7d5ef3028c-extract-fields",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523617.686879,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-extract-fields",
+          "submittedAt": 1792523617.6868663
+        },
+        "resourceId": "showcase-document-extraction-local-docker",
+        "runId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "runtimeId": "showcase-document-extraction-local",
+        "startedAt": 1792523617.6868663,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-document-extraction-local-7d5ef3028c-ingest-documents",
+        "artifacts": {
+          "activityId": "showcase-document-extraction-local-7d5ef3028c-ingest-documents",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:0dfa4403c40b0dfe87a89ffca90990681cddec51c9fdf1b07a7c5b02ffa1bfee",
+              "modifiedUnixNano": 1792523612352619000,
+              "path": "native.txt",
+              "sizeBytes": 47
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:d946dd2cd092a3184a51029662a4e2ca0d0e9341ef13c377feb6f66a3ee6445a",
+              "modifiedUnixNano": 1792523612352619000,
+              "path": "scan.pbm",
+              "sizeBytes": 238
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:423b25bb89667abe7cee02f5faed01a47768b44a33fe771b9abedf2062510b71",
+              "modifiedUnixNano": 1792523612352619000,
+              "path": "stage-ingest-documents.json",
+              "sizeBytes": 415
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:0dfa4403c40b0dfe87a89ffca90990681cddec51c9fdf1b07a7c5b02ffa1bfee",
+              "modifiedUnixNano": 1792523612352619000,
+              "path": "native.txt",
+              "sizeBytes": 47
+            },
+            {
+              "checksum": "sha256:d946dd2cd092a3184a51029662a4e2ca0d0e9341ef13c377feb6f66a3ee6445a",
+              "modifiedUnixNano": 1792523612352619000,
+              "path": "scan.pbm",
+              "sizeBytes": 238
+            },
+            {
+              "checksum": "sha256:423b25bb89667abe7cee02f5faed01a47768b44a33fe771b9abedf2062510b71",
+              "modifiedUnixNano": 1792523612352619000,
+              "path": "stage-ingest-documents.json",
+              "sizeBytes": 415
+            }
+          ],
+          "finishedAt": 1792523612.357674,
+          "phases": [
+            {
+              "durationSeconds": 0.10593962669372559,
+              "finishedAt": 1792523612.357674,
+              "phase": "execution",
+              "startedAt": 1792523612.2517343,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000/showcase-document-extraction-local-7d5ef3028c-ingest-documents",
+          "runId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+          "runtime": "showcase-document-extraction-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523612.2517343,
+          "summary": {
+            "createdFiles": 3,
+            "deletedFiles": 0,
+            "finalFiles": 3,
+            "initialFiles": 0,
+            "modifiedFiles": 0,
+            "outputBytes": 700
+          }
+        },
+        "exitCode": 0,
+        "externalId": "e7f7088c69964ee5abfccd6a7277f1096731852c5cd57c39fdd07b258df3bde7",
+        "finishedAt": 1792523612.357674,
+        "id": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-ingest-documents",
+        "log": "{\"activity\": \"ingest-documents\", \"status\": \"success\", \"resultKeys\": [\"scan\", \"native\", \"digitCount\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-document-extraction-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000/showcase-document-extraction-local-7d5ef3028c-ingest-documents",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523612.251747,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-ingest-documents",
+          "submittedAt": 1792523612.2517343
+        },
+        "resourceId": "showcase-document-extraction-local-docker",
+        "runId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "runtimeId": "showcase-document-extraction-local",
+        "startedAt": 1792523612.2517343,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-document-extraction-local-7d5ef3028c-native-text",
+        "artifacts": {
+          "activityId": "showcase-document-extraction-local-7d5ef3028c-native-text",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:c0706e3971e450b84e7083cc59e29fc421ba4dfd70a36c70248e066711c27d70",
+              "modifiedUnixNano": 1792523613801619000,
+              "path": "stage-native-text.json",
+              "sizeBytes": 425
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:0dfa4403c40b0dfe87a89ffca90990681cddec51c9fdf1b07a7c5b02ffa1bfee",
+              "modifiedUnixNano": 1792523613474619100,
+              "path": "native.txt",
+              "sizeBytes": 47
+            },
+            {
+              "checksum": "sha256:d946dd2cd092a3184a51029662a4e2ca0d0e9341ef13c377feb6f66a3ee6445a",
+              "modifiedUnixNano": 1792523613474619100,
+              "path": "scan.pbm",
+              "sizeBytes": 238
+            },
+            {
+              "checksum": "sha256:423b25bb89667abe7cee02f5faed01a47768b44a33fe771b9abedf2062510b71",
+              "modifiedUnixNano": 1792523613474619100,
+              "path": "stage-ingest-documents.json",
+              "sizeBytes": 415
+            },
+            {
+              "checksum": "sha256:c0706e3971e450b84e7083cc59e29fc421ba4dfd70a36c70248e066711c27d70",
+              "modifiedUnixNano": 1792523613801619000,
+              "path": "stage-native-text.json",
+              "sizeBytes": 425
+            }
+          ],
+          "finishedAt": 1792523613.8072584,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:0dfa4403c40b0dfe87a89ffca90990681cddec51c9fdf1b07a7c5b02ffa1bfee",
+              "modifiedUnixNano": 1792523613474619100,
+              "path": "native.txt",
+              "sizeBytes": 47
+            },
+            {
+              "checksum": "sha256:d946dd2cd092a3184a51029662a4e2ca0d0e9341ef13c377feb6f66a3ee6445a",
+              "modifiedUnixNano": 1792523613474619100,
+              "path": "scan.pbm",
+              "sizeBytes": 238
+            },
+            {
+              "checksum": "sha256:423b25bb89667abe7cee02f5faed01a47768b44a33fe771b9abedf2062510b71",
+              "modifiedUnixNano": 1792523613474619100,
+              "path": "stage-ingest-documents.json",
+              "sizeBytes": 415
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.1118171215057373,
+              "finishedAt": 1792523613.8072584,
+              "phase": "execution",
+              "startedAt": 1792523613.6954412,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000/showcase-document-extraction-local-7d5ef3028c-native-text",
+          "runId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+          "runtime": "showcase-document-extraction-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523613.6954412,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 4,
+            "initialFiles": 3,
+            "modifiedFiles": 0,
+            "outputBytes": 425
+          }
+        },
+        "exitCode": 0,
+        "externalId": "1b366a7f258247034a773653261b3b2ea8f76b1f4d236de9acf2f34ce58029cf",
+        "finishedAt": 1792523613.8072584,
+        "id": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-native-text",
+        "log": "{\"activity\": \"native-text\", \"status\": \"success\", \"resultKeys\": [\"text\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-document-extraction-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000/showcase-document-extraction-local-7d5ef3028c-native-text",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523613.6954494,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-native-text",
+          "submittedAt": 1792523613.6954412
+        },
+        "resourceId": "showcase-document-extraction-local-docker",
+        "runId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "runtimeId": "showcase-document-extraction-local",
+        "startedAt": 1792523613.6954412,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-document-extraction-local-7d5ef3028c-ocr",
+        "artifacts": {
+          "activityId": "showcase-document-extraction-local-7d5ef3028c-ocr",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:189977b6cd18fa81d3459e3eb904d99585f96db722e49c001a0808cdae75dea8",
+              "modifiedUnixNano": 1792523613804619000,
+              "path": "ocr.txt",
+              "sizeBytes": 7
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:aa46aabdbd8d35edaf28801629d5f9e01fcd260b78f72e8d94fe06a0b302b9cf",
+              "modifiedUnixNano": 1792523613804619000,
+              "path": "stage-ocr.json",
+              "sizeBytes": 439
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:0dfa4403c40b0dfe87a89ffca90990681cddec51c9fdf1b07a7c5b02ffa1bfee",
+              "modifiedUnixNano": 1792523613473619000,
+              "path": "native.txt",
+              "sizeBytes": 47
+            },
+            {
+              "checksum": "sha256:189977b6cd18fa81d3459e3eb904d99585f96db722e49c001a0808cdae75dea8",
+              "modifiedUnixNano": 1792523613804619000,
+              "path": "ocr.txt",
+              "sizeBytes": 7
+            },
+            {
+              "checksum": "sha256:d946dd2cd092a3184a51029662a4e2ca0d0e9341ef13c377feb6f66a3ee6445a",
+              "modifiedUnixNano": 1792523613473619000,
+              "path": "scan.pbm",
+              "sizeBytes": 238
+            },
+            {
+              "checksum": "sha256:423b25bb89667abe7cee02f5faed01a47768b44a33fe771b9abedf2062510b71",
+              "modifiedUnixNano": 1792523613473619000,
+              "path": "stage-ingest-documents.json",
+              "sizeBytes": 415
+            },
+            {
+              "checksum": "sha256:aa46aabdbd8d35edaf28801629d5f9e01fcd260b78f72e8d94fe06a0b302b9cf",
+              "modifiedUnixNano": 1792523613804619000,
+              "path": "stage-ocr.json",
+              "sizeBytes": 439
+            }
+          ],
+          "finishedAt": 1792523613.8129313,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:0dfa4403c40b0dfe87a89ffca90990681cddec51c9fdf1b07a7c5b02ffa1bfee",
+              "modifiedUnixNano": 1792523613473619000,
+              "path": "native.txt",
+              "sizeBytes": 47
+            },
+            {
+              "checksum": "sha256:d946dd2cd092a3184a51029662a4e2ca0d0e9341ef13c377feb6f66a3ee6445a",
+              "modifiedUnixNano": 1792523613473619000,
+              "path": "scan.pbm",
+              "sizeBytes": 238
+            },
+            {
+              "checksum": "sha256:423b25bb89667abe7cee02f5faed01a47768b44a33fe771b9abedf2062510b71",
+              "modifiedUnixNano": 1792523613473619000,
+              "path": "stage-ingest-documents.json",
+              "sizeBytes": 415
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.11266207695007324,
+              "finishedAt": 1792523613.8129313,
+              "phase": "execution",
+              "startedAt": 1792523613.7002692,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000/showcase-document-extraction-local-7d5ef3028c-ocr",
+          "runId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+          "runtime": "showcase-document-extraction-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523613.7002692,
+          "summary": {
+            "createdFiles": 2,
+            "deletedFiles": 0,
+            "finalFiles": 5,
+            "initialFiles": 3,
+            "modifiedFiles": 0,
+            "outputBytes": 446
+          }
+        },
+        "exitCode": 0,
+        "externalId": "819ada5dacb019a1ffd3132fbf87367924dcdb96cb02d46e3c7f233334292a3e",
+        "finishedAt": 1792523613.8129313,
+        "id": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-ocr",
+        "log": "{\"activity\": \"ocr\", \"status\": \"success\", \"resultKeys\": [\"digits\", \"method\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-document-extraction-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000/showcase-document-extraction-local-7d5ef3028c-ocr",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523613.7002738,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-ocr",
+          "submittedAt": 1792523613.7002692
+        },
+        "resourceId": "showcase-document-extraction-local-docker",
+        "runId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "runtimeId": "showcase-document-extraction-local",
+        "startedAt": 1792523613.7002692,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-document-extraction-local-7d5ef3028c-publish",
+        "artifacts": {
+          "activityId": "showcase-document-extraction-local-7d5ef3028c-publish",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:d3e0084df12c227da788f9dd68ecd16c5b10cbf472c6cf814f4b21fdf9bda31e",
+              "modifiedUnixNano": 1792523621814814000,
+              "path": "extraction.json",
+              "sizeBytes": 92
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:1ebe6e7b5ef2e080a69345e344a06089df13e21c4c2a85af5dafcef70810e6a2",
+              "modifiedUnixNano": 1792523621814814000,
+              "path": "stage-publish.json",
+              "sizeBytes": 455
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:d3e0084df12c227da788f9dd68ecd16c5b10cbf472c6cf814f4b21fdf9bda31e",
+              "modifiedUnixNano": 1792523621814814000,
+              "path": "extraction.json",
+              "sizeBytes": 92
+            },
+            {
+              "checksum": "sha256:0dfa4403c40b0dfe87a89ffca90990681cddec51c9fdf1b07a7c5b02ffa1bfee",
+              "modifiedUnixNano": 1792523621524814000,
+              "path": "native.txt",
+              "sizeBytes": 47
+            },
+            {
+              "checksum": "sha256:189977b6cd18fa81d3459e3eb904d99585f96db722e49c001a0808cdae75dea8",
+              "modifiedUnixNano": 1792523621524814000,
+              "path": "ocr.txt",
+              "sizeBytes": 7
+            },
+            {
+              "checksum": "sha256:d946dd2cd092a3184a51029662a4e2ca0d0e9341ef13c377feb6f66a3ee6445a",
+              "modifiedUnixNano": 1792523621524814000,
+              "path": "scan.pbm",
+              "sizeBytes": 238
+            },
+            {
+              "checksum": "sha256:c6c3851c05d37afb8a0d2692873bfba989513f49f2ea75ab1511562680414f26",
+              "modifiedUnixNano": 1792523621524814000,
+              "path": "stage-classify.json",
+              "sizeBytes": 477
+            },
+            {
+              "checksum": "sha256:a4d3eb151bee1a5cb4053327c6ee5cc882e691f006e86ad14f961449945b948d",
+              "modifiedUnixNano": 1792523621524814000,
+              "path": "stage-extract-fields.json",
+              "sizeBytes": 455
+            },
+            {
+              "checksum": "sha256:423b25bb89667abe7cee02f5faed01a47768b44a33fe771b9abedf2062510b71",
+              "modifiedUnixNano": 1792523621524814000,
+              "path": "stage-ingest-documents.json",
+              "sizeBytes": 415
+            },
+            {
+              "checksum": "sha256:c0706e3971e450b84e7083cc59e29fc421ba4dfd70a36c70248e066711c27d70",
+              "modifiedUnixNano": 1792523621524814000,
+              "path": "stage-native-text.json",
+              "sizeBytes": 425
+            },
+            {
+              "checksum": "sha256:aa46aabdbd8d35edaf28801629d5f9e01fcd260b78f72e8d94fe06a0b302b9cf",
+              "modifiedUnixNano": 1792523621524814000,
+              "path": "stage-ocr.json",
+              "sizeBytes": 439
+            },
+            {
+              "checksum": "sha256:1ebe6e7b5ef2e080a69345e344a06089df13e21c4c2a85af5dafcef70810e6a2",
+              "modifiedUnixNano": 1792523621814814000,
+              "path": "stage-publish.json",
+              "sizeBytes": 455
+            },
+            {
+              "checksum": "sha256:4caad05c66ebe9bbdb7c7b82f2bdcdbd0bac42779d6f2dbeebe6bd723e6a0a4e",
+              "modifiedUnixNano": 1792523621524814000,
+              "path": "stage-validate-schema.json",
+              "sizeBytes": 462
+            }
+          ],
+          "finishedAt": 1792523621.821124,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:0dfa4403c40b0dfe87a89ffca90990681cddec51c9fdf1b07a7c5b02ffa1bfee",
+              "modifiedUnixNano": 1792523621524814000,
+              "path": "native.txt",
+              "sizeBytes": 47
+            },
+            {
+              "checksum": "sha256:189977b6cd18fa81d3459e3eb904d99585f96db722e49c001a0808cdae75dea8",
+              "modifiedUnixNano": 1792523621524814000,
+              "path": "ocr.txt",
+              "sizeBytes": 7
+            },
+            {
+              "checksum": "sha256:d946dd2cd092a3184a51029662a4e2ca0d0e9341ef13c377feb6f66a3ee6445a",
+              "modifiedUnixNano": 1792523621524814000,
+              "path": "scan.pbm",
+              "sizeBytes": 238
+            },
+            {
+              "checksum": "sha256:c6c3851c05d37afb8a0d2692873bfba989513f49f2ea75ab1511562680414f26",
+              "modifiedUnixNano": 1792523621524814000,
+              "path": "stage-classify.json",
+              "sizeBytes": 477
+            },
+            {
+              "checksum": "sha256:a4d3eb151bee1a5cb4053327c6ee5cc882e691f006e86ad14f961449945b948d",
+              "modifiedUnixNano": 1792523621524814000,
+              "path": "stage-extract-fields.json",
+              "sizeBytes": 455
+            },
+            {
+              "checksum": "sha256:423b25bb89667abe7cee02f5faed01a47768b44a33fe771b9abedf2062510b71",
+              "modifiedUnixNano": 1792523621524814000,
+              "path": "stage-ingest-documents.json",
+              "sizeBytes": 415
+            },
+            {
+              "checksum": "sha256:c0706e3971e450b84e7083cc59e29fc421ba4dfd70a36c70248e066711c27d70",
+              "modifiedUnixNano": 1792523621524814000,
+              "path": "stage-native-text.json",
+              "sizeBytes": 425
+            },
+            {
+              "checksum": "sha256:aa46aabdbd8d35edaf28801629d5f9e01fcd260b78f72e8d94fe06a0b302b9cf",
+              "modifiedUnixNano": 1792523621524814000,
+              "path": "stage-ocr.json",
+              "sizeBytes": 439
+            },
+            {
+              "checksum": "sha256:4caad05c66ebe9bbdb7c7b82f2bdcdbd0bac42779d6f2dbeebe6bd723e6a0a4e",
+              "modifiedUnixNano": 1792523621524814000,
+              "path": "stage-validate-schema.json",
+              "sizeBytes": 462
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.10739755630493164,
+              "finishedAt": 1792523621.821124,
+              "phase": "execution",
+              "startedAt": 1792523621.7137265,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000/showcase-document-extraction-local-7d5ef3028c-publish",
+          "runId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+          "runtime": "showcase-document-extraction-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523621.7137265,
+          "summary": {
+            "createdFiles": 2,
+            "deletedFiles": 0,
+            "finalFiles": 11,
+            "initialFiles": 9,
+            "modifiedFiles": 0,
+            "outputBytes": 547
+          }
+        },
+        "exitCode": 0,
+        "externalId": "dde0cc4aa16d9abdcd5339cdf2fde9bd818f1c180b7ae61407eb933e0ce5f39c",
+        "finishedAt": 1792523621.821124,
+        "id": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-publish",
+        "log": "{\"activity\": \"publish\", \"status\": \"success\", \"resultKeys\": [\"invoiceId\", \"amount\", \"currency\", \"customer\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-document-extraction-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000/showcase-document-extraction-local-7d5ef3028c-publish",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523621.7137344,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-publish",
+          "submittedAt": 1792523621.7137265
+        },
+        "resourceId": "showcase-document-extraction-local-docker",
+        "runId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "runtimeId": "showcase-document-extraction-local",
+        "startedAt": 1792523621.7137265,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-document-extraction-local-7d5ef3028c-validate-schema",
+        "artifacts": {
+          "activityId": "showcase-document-extraction-local-7d5ef3028c-validate-schema",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:4caad05c66ebe9bbdb7c7b82f2bdcdbd0bac42779d6f2dbeebe6bd723e6a0a4e",
+              "modifiedUnixNano": 1792523619785814000,
+              "path": "stage-validate-schema.json",
+              "sizeBytes": 462
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:0dfa4403c40b0dfe87a89ffca90990681cddec51c9fdf1b07a7c5b02ffa1bfee",
+              "modifiedUnixNano": 1792523619507814000,
+              "path": "native.txt",
+              "sizeBytes": 47
+            },
+            {
+              "checksum": "sha256:189977b6cd18fa81d3459e3eb904d99585f96db722e49c001a0808cdae75dea8",
+              "modifiedUnixNano": 1792523619507814000,
+              "path": "ocr.txt",
+              "sizeBytes": 7
+            },
+            {
+              "checksum": "sha256:d946dd2cd092a3184a51029662a4e2ca0d0e9341ef13c377feb6f66a3ee6445a",
+              "modifiedUnixNano": 1792523619507814000,
+              "path": "scan.pbm",
+              "sizeBytes": 238
+            },
+            {
+              "checksum": "sha256:c6c3851c05d37afb8a0d2692873bfba989513f49f2ea75ab1511562680414f26",
+              "modifiedUnixNano": 1792523619507814000,
+              "path": "stage-classify.json",
+              "sizeBytes": 477
+            },
+            {
+              "checksum": "sha256:a4d3eb151bee1a5cb4053327c6ee5cc882e691f006e86ad14f961449945b948d",
+              "modifiedUnixNano": 1792523619507814000,
+              "path": "stage-extract-fields.json",
+              "sizeBytes": 455
+            },
+            {
+              "checksum": "sha256:423b25bb89667abe7cee02f5faed01a47768b44a33fe771b9abedf2062510b71",
+              "modifiedUnixNano": 1792523619507814000,
+              "path": "stage-ingest-documents.json",
+              "sizeBytes": 415
+            },
+            {
+              "checksum": "sha256:c0706e3971e450b84e7083cc59e29fc421ba4dfd70a36c70248e066711c27d70",
+              "modifiedUnixNano": 1792523619507814000,
+              "path": "stage-native-text.json",
+              "sizeBytes": 425
+            },
+            {
+              "checksum": "sha256:aa46aabdbd8d35edaf28801629d5f9e01fcd260b78f72e8d94fe06a0b302b9cf",
+              "modifiedUnixNano": 1792523619507814000,
+              "path": "stage-ocr.json",
+              "sizeBytes": 439
+            },
+            {
+              "checksum": "sha256:4caad05c66ebe9bbdb7c7b82f2bdcdbd0bac42779d6f2dbeebe6bd723e6a0a4e",
+              "modifiedUnixNano": 1792523619785814000,
+              "path": "stage-validate-schema.json",
+              "sizeBytes": 462
+            }
+          ],
+          "finishedAt": 1792523619.792709,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:0dfa4403c40b0dfe87a89ffca90990681cddec51c9fdf1b07a7c5b02ffa1bfee",
+              "modifiedUnixNano": 1792523619507814000,
+              "path": "native.txt",
+              "sizeBytes": 47
+            },
+            {
+              "checksum": "sha256:189977b6cd18fa81d3459e3eb904d99585f96db722e49c001a0808cdae75dea8",
+              "modifiedUnixNano": 1792523619507814000,
+              "path": "ocr.txt",
+              "sizeBytes": 7
+            },
+            {
+              "checksum": "sha256:d946dd2cd092a3184a51029662a4e2ca0d0e9341ef13c377feb6f66a3ee6445a",
+              "modifiedUnixNano": 1792523619507814000,
+              "path": "scan.pbm",
+              "sizeBytes": 238
+            },
+            {
+              "checksum": "sha256:c6c3851c05d37afb8a0d2692873bfba989513f49f2ea75ab1511562680414f26",
+              "modifiedUnixNano": 1792523619507814000,
+              "path": "stage-classify.json",
+              "sizeBytes": 477
+            },
+            {
+              "checksum": "sha256:a4d3eb151bee1a5cb4053327c6ee5cc882e691f006e86ad14f961449945b948d",
+              "modifiedUnixNano": 1792523619507814000,
+              "path": "stage-extract-fields.json",
+              "sizeBytes": 455
+            },
+            {
+              "checksum": "sha256:423b25bb89667abe7cee02f5faed01a47768b44a33fe771b9abedf2062510b71",
+              "modifiedUnixNano": 1792523619507814000,
+              "path": "stage-ingest-documents.json",
+              "sizeBytes": 415
+            },
+            {
+              "checksum": "sha256:c0706e3971e450b84e7083cc59e29fc421ba4dfd70a36c70248e066711c27d70",
+              "modifiedUnixNano": 1792523619507814000,
+              "path": "stage-native-text.json",
+              "sizeBytes": 425
+            },
+            {
+              "checksum": "sha256:aa46aabdbd8d35edaf28801629d5f9e01fcd260b78f72e8d94fe06a0b302b9cf",
+              "modifiedUnixNano": 1792523619507814000,
+              "path": "stage-ocr.json",
+              "sizeBytes": 439
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.10408806800842285,
+              "finishedAt": 1792523619.792709,
+              "phase": "execution",
+              "startedAt": 1792523619.688621,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000/showcase-document-extraction-local-7d5ef3028c-validate-schema",
+          "runId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+          "runtime": "showcase-document-extraction-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523619.688621,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 9,
+            "initialFiles": 8,
+            "modifiedFiles": 0,
+            "outputBytes": 462
+          }
+        },
+        "exitCode": 0,
+        "externalId": "0ad83406d02b9b8a4f5f639334aea2c95298f9209d6e8ff12f8d37d1282cecfd",
+        "finishedAt": 1792523619.792709,
+        "id": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-validate-schema",
+        "log": "{\"activity\": \"validate-schema\", \"status\": \"success\", \"resultKeys\": [\"invoiceId\", \"amount\", \"currency\", \"customer\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-document-extraction-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000/showcase-document-extraction-local-7d5ef3028c-validate-schema",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523619.6886277,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-validate-schema",
+          "submittedAt": 1792523619.688621
+        },
+        "resourceId": "showcase-document-extraction-local-docker",
+        "runId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "runtimeId": "showcase-document-extraction-local",
+        "startedAt": 1792523619.688621,
+        "status": "completed"
+      }
+    ],
+    "infrastructureRuns": [],
+    "operationEvents": [],
+    "run": {
+      "activityCount": 7,
+      "breakdown": {
+        "computeSeconds": 0.7640879154205322,
+        "interferenceSeconds": 0,
+        "overheadSeconds": 0,
+        "queueSeconds": 0,
+        "transferSeconds": 1.4020094871520996
+      },
+      "completedActivityCount": 7,
+      "cost": 0,
+      "finishedAt": "2026-10-20T19:13:43Z",
+      "id": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+      "kind": "workflow",
+      "makespanSeconds": 9.569389820098877,
+      "mode": "real",
+      "schedulePlanId": "showcase-document-extraction-local-7d5ef3028c-manual-plan-20261020t191332.046548000",
+      "seed": 0,
+      "startedAt": "2026-10-20T19:13:32Z",
+      "status": "completed",
+      "title": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+      "transferredBytes": 10487
+    },
+    "timeline": {
+      "computeMakespanSeconds": 9.569389820098877,
+      "coveredWallSeconds": 2.586667060852051,
+      "finishedAt": 1792523623,
+      "phases": [
+        {
+          "activityId": "showcase-document-extraction-local-7d5ef3028c-ingest-documents",
+          "category": "resource-queue",
+          "durationSeconds": 0.1130838394165039,
+          "finishedAt": 1792523612.2517343,
+          "id": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-ingest-documents:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523612.1386504,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-document-extraction-local-7d5ef3028c-ingest-documents",
+          "category": "runtime",
+          "durationSeconds": 0.10593962669372559,
+          "finishedAt": 1792523612.357674,
+          "id": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-ingest-documents:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523612.2517343,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-document-extraction-local-7d5ef3028c-native-text",
+          "category": "resource-queue",
+          "durationSeconds": 0.00861048698425293,
+          "finishedAt": 1792523613.3792894,
+          "id": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-native-text:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523613.370679,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-document-extraction-local-7d5ef3028c-ocr",
+          "category": "resource-queue",
+          "durationSeconds": 0.005512714385986328,
+          "finishedAt": 1792523613.3774438,
+          "id": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-ocr:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523613.371931,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-document-extraction-local-7d5ef3028c-ocr",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.1395435333251953,
+          "finishedAt": 1792523613.5169873,
+          "id": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-ocr:transfer-workspace-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-ocr-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523613.3774438,
+          "status": "completed",
+          "transferId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-ocr:transfer-workspace-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-ocr-0"
+        },
+        {
+          "activityId": "showcase-document-extraction-local-7d5ef3028c-native-text",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.14133715629577637,
+          "finishedAt": 1792523613.5206265,
+          "id": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-native-text:transfer-workspace-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-native-text-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523613.3792894,
+          "status": "completed",
+          "transferId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-native-text:transfer-workspace-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-native-text-0"
+        },
+        {
+          "activityId": "showcase-document-extraction-local-7d5ef3028c-ocr",
+          "category": "launch",
+          "durationSeconds": 0.18328189849853516,
+          "finishedAt": 1792523613.7002692,
+          "id": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-ocr:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523613.5169873,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-document-extraction-local-7d5ef3028c-native-text",
+          "category": "launch",
+          "durationSeconds": 0.17481470108032227,
+          "finishedAt": 1792523613.6954412,
+          "id": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-native-text:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523613.5206265,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-document-extraction-local-7d5ef3028c-native-text",
+          "category": "runtime",
+          "durationSeconds": 0.1118171215057373,
+          "finishedAt": 1792523613.8072584,
+          "id": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-native-text:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523613.6954412,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-document-extraction-local-7d5ef3028c-ocr",
+          "category": "runtime",
+          "durationSeconds": 0.11266207695007324,
+          "finishedAt": 1792523613.8129313,
+          "id": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-ocr:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523613.7002692,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-document-extraction-local-7d5ef3028c-classify",
+          "category": "resource-queue",
+          "durationSeconds": 0.004468679428100586,
+          "finishedAt": 1792523615.4034398,
+          "id": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-classify:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523615.398971,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-document-extraction-local-7d5ef3028c-classify",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.23642277717590332,
+          "finishedAt": 1792523615.6398625,
+          "id": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-classify:transfer-workspace-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-classify-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523615.4034398,
+          "status": "completed",
+          "transferId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-classify:transfer-workspace-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-classify-0"
+        },
+        {
+          "activityId": "showcase-document-extraction-local-7d5ef3028c-classify",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.33931493759155273,
+          "finishedAt": 1792523615.7427547,
+          "id": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-classify:transfer-workspace-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-classify-1",
+          "source": "transfer-observation",
+          "startedAt": 1792523615.4034398,
+          "status": "completed",
+          "transferId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-classify:transfer-workspace-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-classify-1"
+        },
+        {
+          "activityId": "showcase-document-extraction-local-7d5ef3028c-classify",
+          "category": "launch",
+          "durationSeconds": 0.17098164558410645,
+          "finishedAt": 1792523615.9137363,
+          "id": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-classify:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523615.7427547,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-document-extraction-local-7d5ef3028c-classify",
+          "category": "runtime",
+          "durationSeconds": 0.11565089225769043,
+          "finishedAt": 1792523616.0293872,
+          "id": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-classify:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523615.9137363,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-document-extraction-local-7d5ef3028c-extract-fields",
+          "category": "resource-queue",
+          "durationSeconds": 0.0026521682739257812,
+          "finishedAt": 1792523617.356899,
+          "id": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-extract-fields:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523617.3542469,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-document-extraction-local-7d5ef3028c-extract-fields",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.18636012077331543,
+          "finishedAt": 1792523617.5432591,
+          "id": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-extract-fields:transfer-workspace-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-extract-fields-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523617.356899,
+          "status": "completed",
+          "transferId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-extract-fields:transfer-workspace-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-extract-fields-0"
+        },
+        {
+          "activityId": "showcase-document-extraction-local-7d5ef3028c-extract-fields",
+          "category": "launch",
+          "durationSeconds": 0.14360713958740234,
+          "finishedAt": 1792523617.6868663,
+          "id": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-extract-fields:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523617.5432591,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-document-extraction-local-7d5ef3028c-extract-fields",
+          "category": "runtime",
+          "durationSeconds": 0.10653257369995117,
+          "finishedAt": 1792523617.7933989,
+          "id": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-extract-fields:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523617.6868663,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-document-extraction-local-7d5ef3028c-validate-schema",
+          "category": "resource-queue",
+          "durationSeconds": 0.0033533573150634766,
+          "finishedAt": 1792523619.3798974,
+          "id": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-validate-schema:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523619.376544,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-document-extraction-local-7d5ef3028c-validate-schema",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.1713113784790039,
+          "finishedAt": 1792523619.5512087,
+          "id": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-validate-schema:transfer-workspace-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-validate-schema-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523619.3798974,
+          "status": "completed",
+          "transferId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-validate-schema:transfer-workspace-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-validate-schema-0"
+        },
+        {
+          "activityId": "showcase-document-extraction-local-7d5ef3028c-validate-schema",
+          "category": "launch",
+          "durationSeconds": 0.13741230964660645,
+          "finishedAt": 1792523619.688621,
+          "id": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-validate-schema:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523619.5512087,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-document-extraction-local-7d5ef3028c-validate-schema",
+          "category": "runtime",
+          "durationSeconds": 0.10408806800842285,
+          "finishedAt": 1792523619.792709,
+          "id": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-validate-schema:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523619.688621,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-document-extraction-local-7d5ef3028c-publish",
+          "category": "resource-queue",
+          "durationSeconds": 0.0033617019653320312,
+          "finishedAt": 1792523621.3848279,
+          "id": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-publish:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523621.3814662,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-document-extraction-local-7d5ef3028c-publish",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.18771958351135254,
+          "finishedAt": 1792523621.5725474,
+          "id": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-publish:transfer-workspace-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-publish-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523621.3848279,
+          "status": "completed",
+          "transferId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-publish:transfer-workspace-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-publish-0"
+        },
+        {
+          "activityId": "showcase-document-extraction-local-7d5ef3028c-publish",
+          "category": "launch",
+          "durationSeconds": 0.14117908477783203,
+          "finishedAt": 1792523621.7137265,
+          "id": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-publish:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523621.5725474,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-document-extraction-local-7d5ef3028c-publish",
+          "category": "runtime",
+          "durationSeconds": 0.10739755630493164,
+          "finishedAt": 1792523621.821124,
+          "id": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000:showcase-document-extraction-local-7d5ef3028c-publish:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523621.7137265,
+          "status": "completed"
+        }
+      ],
+      "startedAt": 1792523612,
+      "totals": {
+        "destroySeconds": 0,
+        "executablePreparationSeconds": 0,
+        "launchSeconds": 0.9512767791748047,
+        "provisionSeconds": 0,
+        "resourceQueueSeconds": 0.14104294776916504,
+        "runtimeSeconds": 0.7640879154205322,
+        "startSeconds": 0,
+        "stopSeconds": 0,
+        "validationSeconds": 0,
+        "workspaceTransferSeconds": 1.4020094871520996
+      },
+      "unclassifiedWallSeconds": 8.41333293914795,
+      "wallSeconds": 11
+    },
+    "workspaceLeases": [
+      {
+        "consumerActivityId": "showcase-document-extraction-local-7d5ef3028c-extract-fields",
+        "id": "workspace-lease-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-classify-showcase-document-extraction-local-7d5ef3028c-extract-fields",
+        "producerActivityId": "showcase-document-extraction-local-7d5ef3028c-classify",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:13:37.546639834Z",
+        "runId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "workspaceId": "workspace-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-classify"
+      },
+      {
+        "consumerActivityId": "showcase-document-extraction-local-7d5ef3028c-validate-schema",
+        "id": "workspace-lease-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-extract-fields-showcase-document-extraction-local-7d5ef3028c-validate-schema",
+        "producerActivityId": "showcase-document-extraction-local-7d5ef3028c-extract-fields",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:13:39.555023752Z",
+        "runId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "workspaceId": "workspace-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-extract-fields"
+      },
+      {
+        "consumerActivityId": "showcase-document-extraction-local-7d5ef3028c-native-text",
+        "id": "workspace-lease-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-ingest-documents-showcase-document-extraction-local-7d5ef3028c-native-text",
+        "producerActivityId": "showcase-document-extraction-local-7d5ef3028c-ingest-documents",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:13:33.524704597Z",
+        "runId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "workspaceId": "workspace-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-ingest-documents"
+      },
+      {
+        "consumerActivityId": "showcase-document-extraction-local-7d5ef3028c-ocr",
+        "id": "workspace-lease-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-ingest-documents-showcase-document-extraction-local-7d5ef3028c-ocr",
+        "producerActivityId": "showcase-document-extraction-local-7d5ef3028c-ingest-documents",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:13:33.52078018Z",
+        "runId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "workspaceId": "workspace-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-ingest-documents"
+      },
+      {
+        "consumerActivityId": "showcase-document-extraction-local-7d5ef3028c-classify",
+        "id": "workspace-lease-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-native-text-showcase-document-extraction-local-7d5ef3028c-classify",
+        "producerActivityId": "showcase-document-extraction-local-7d5ef3028c-native-text",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:13:35.748607875Z",
+        "runId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "workspaceId": "workspace-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-native-text"
+      },
+      {
+        "consumerActivityId": "showcase-document-extraction-local-7d5ef3028c-classify",
+        "id": "workspace-lease-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-ocr-showcase-document-extraction-local-7d5ef3028c-classify",
+        "producerActivityId": "showcase-document-extraction-local-7d5ef3028c-ocr",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:13:35.748607875Z",
+        "runId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "workspaceId": "workspace-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-ocr"
+      },
+      {
+        "consumerActivityId": "showcase-document-extraction-local-7d5ef3028c-publish",
+        "id": "workspace-lease-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-validate-schema-showcase-document-extraction-local-7d5ef3028c-publish",
+        "producerActivityId": "showcase-document-extraction-local-7d5ef3028c-validate-schema",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:13:41.576918295Z",
+        "runId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "workspaceId": "workspace-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-validate-schema"
+      }
+    ],
+    "workspaces": [
+      {
+        "activityId": "showcase-document-extraction-local-7d5ef3028c-classify",
+        "createdAt": "2026-10-20T19:13:32.116905555Z",
+        "driver": "local",
+        "environmentId": "showcase-document-extraction-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000/showcase-document-extraction-local-7d5ef3028c-classify",
+        "fileCount": 7,
+        "id": "workspace-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-classify",
+        "inputBytes": 1571,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:0dfa4403c40b0dfe87a89ffca90990681cddec51c9fdf1b07a7c5b02ffa1bfee",
+              "path": "native.txt",
+              "sizeBytes": 47
+            },
+            {
+              "digest": "sha256:189977b6cd18fa81d3459e3eb904d99585f96db722e49c001a0808cdae75dea8",
+              "path": "ocr.txt",
+              "sizeBytes": 7
+            },
+            {
+              "digest": "sha256:d946dd2cd092a3184a51029662a4e2ca0d0e9341ef13c377feb6f66a3ee6445a",
+              "path": "scan.pbm",
+              "sizeBytes": 238
+            },
+            {
+              "digest": "sha256:c6c3851c05d37afb8a0d2692873bfba989513f49f2ea75ab1511562680414f26",
+              "path": "stage-classify.json",
+              "sizeBytes": 477
+            },
+            {
+              "digest": "sha256:423b25bb89667abe7cee02f5faed01a47768b44a33fe771b9abedf2062510b71",
+              "path": "stage-ingest-documents.json",
+              "sizeBytes": 415
+            },
+            {
+              "digest": "sha256:c0706e3971e450b84e7083cc59e29fc421ba4dfd70a36c70248e066711c27d70",
+              "path": "stage-native-text.json",
+              "sizeBytes": 425
+            },
+            {
+              "digest": "sha256:aa46aabdbd8d35edaf28801629d5f9e01fcd260b78f72e8d94fe06a0b302b9cf",
+              "path": "stage-ocr.json",
+              "sizeBytes": 439
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:0dfa4403c40b0dfe87a89ffca90990681cddec51c9fdf1b07a7c5b02ffa1bfee",
+              "path": "native.txt",
+              "sizeBytes": 47
+            },
+            {
+              "digest": "sha256:189977b6cd18fa81d3459e3eb904d99585f96db722e49c001a0808cdae75dea8",
+              "path": "ocr.txt",
+              "sizeBytes": 7
+            },
+            {
+              "digest": "sha256:d946dd2cd092a3184a51029662a4e2ca0d0e9341ef13c377feb6f66a3ee6445a",
+              "path": "scan.pbm",
+              "sizeBytes": 238
+            },
+            {
+              "digest": "sha256:423b25bb89667abe7cee02f5faed01a47768b44a33fe771b9abedf2062510b71",
+              "path": "stage-ingest-documents.json",
+              "sizeBytes": 415
+            },
+            {
+              "digest": "sha256:c0706e3971e450b84e7083cc59e29fc421ba4dfd70a36c70248e066711c27d70",
+              "path": "stage-native-text.json",
+              "sizeBytes": 425
+            },
+            {
+              "digest": "sha256:aa46aabdbd8d35edaf28801629d5f9e01fcd260b78f72e8d94fe06a0b302b9cf",
+              "path": "stage-ocr.json",
+              "sizeBytes": 439
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:0dfa4403c40b0dfe87a89ffca90990681cddec51c9fdf1b07a7c5b02ffa1bfee",
+              "path": "native.txt",
+              "sizeBytes": 47
+            },
+            {
+              "digest": "sha256:189977b6cd18fa81d3459e3eb904d99585f96db722e49c001a0808cdae75dea8",
+              "path": "ocr.txt",
+              "sizeBytes": 7
+            },
+            {
+              "digest": "sha256:d946dd2cd092a3184a51029662a4e2ca0d0e9341ef13c377feb6f66a3ee6445a",
+              "path": "scan.pbm",
+              "sizeBytes": 238
+            },
+            {
+              "digest": "sha256:423b25bb89667abe7cee02f5faed01a47768b44a33fe771b9abedf2062510b71",
+              "path": "stage-ingest-documents.json",
+              "sizeBytes": 415
+            },
+            {
+              "digest": "sha256:c0706e3971e450b84e7083cc59e29fc421ba4dfd70a36c70248e066711c27d70",
+              "path": "stage-native-text.json",
+              "sizeBytes": 425
+            },
+            {
+              "digest": "sha256:aa46aabdbd8d35edaf28801629d5f9e01fcd260b78f72e8d94fe06a0b302b9cf",
+              "path": "stage-ocr.json",
+              "sizeBytes": 439
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:c6c3851c05d37afb8a0d2692873bfba989513f49f2ea75ab1511562680414f26",
+              "path": "stage-classify.json",
+              "sizeBytes": 477
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000/showcase-document-extraction-local-7d5ef3028c-classify",
+        "outputBytes": 477,
+        "pinned": false,
+        "reclaimedBytes": 2048,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:13:37.554316834Z",
+        "resourceId": "showcase-document-extraction-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "runtimeId": "showcase-document-extraction-local",
+        "sealedAt": "2026-10-20T19:13:37.348301793Z",
+        "sizeBytes": 2048,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000/showcase-document-extraction-local-7d5ef3028c-classify"
+      },
+      {
+        "activityId": "showcase-document-extraction-local-7d5ef3028c-extract-fields",
+        "createdAt": "2026-10-20T19:13:32.116905555Z",
+        "driver": "local",
+        "environmentId": "showcase-document-extraction-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000/showcase-document-extraction-local-7d5ef3028c-extract-fields",
+        "fileCount": 8,
+        "id": "workspace-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-extract-fields",
+        "inputBytes": 2048,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:0dfa4403c40b0dfe87a89ffca90990681cddec51c9fdf1b07a7c5b02ffa1bfee",
+              "path": "native.txt",
+              "sizeBytes": 47
+            },
+            {
+              "digest": "sha256:189977b6cd18fa81d3459e3eb904d99585f96db722e49c001a0808cdae75dea8",
+              "path": "ocr.txt",
+              "sizeBytes": 7
+            },
+            {
+              "digest": "sha256:d946dd2cd092a3184a51029662a4e2ca0d0e9341ef13c377feb6f66a3ee6445a",
+              "path": "scan.pbm",
+              "sizeBytes": 238
+            },
+            {
+              "digest": "sha256:c6c3851c05d37afb8a0d2692873bfba989513f49f2ea75ab1511562680414f26",
+              "path": "stage-classify.json",
+              "sizeBytes": 477
+            },
+            {
+              "digest": "sha256:a4d3eb151bee1a5cb4053327c6ee5cc882e691f006e86ad14f961449945b948d",
+              "path": "stage-extract-fields.json",
+              "sizeBytes": 455
+            },
+            {
+              "digest": "sha256:423b25bb89667abe7cee02f5faed01a47768b44a33fe771b9abedf2062510b71",
+              "path": "stage-ingest-documents.json",
+              "sizeBytes": 415
+            },
+            {
+              "digest": "sha256:c0706e3971e450b84e7083cc59e29fc421ba4dfd70a36c70248e066711c27d70",
+              "path": "stage-native-text.json",
+              "sizeBytes": 425
+            },
+            {
+              "digest": "sha256:aa46aabdbd8d35edaf28801629d5f9e01fcd260b78f72e8d94fe06a0b302b9cf",
+              "path": "stage-ocr.json",
+              "sizeBytes": 439
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:0dfa4403c40b0dfe87a89ffca90990681cddec51c9fdf1b07a7c5b02ffa1bfee",
+              "path": "native.txt",
+              "sizeBytes": 47
+            },
+            {
+              "digest": "sha256:189977b6cd18fa81d3459e3eb904d99585f96db722e49c001a0808cdae75dea8",
+              "path": "ocr.txt",
+              "sizeBytes": 7
+            },
+            {
+              "digest": "sha256:d946dd2cd092a3184a51029662a4e2ca0d0e9341ef13c377feb6f66a3ee6445a",
+              "path": "scan.pbm",
+              "sizeBytes": 238
+            },
+            {
+              "digest": "sha256:c6c3851c05d37afb8a0d2692873bfba989513f49f2ea75ab1511562680414f26",
+              "path": "stage-classify.json",
+              "sizeBytes": 477
+            },
+            {
+              "digest": "sha256:423b25bb89667abe7cee02f5faed01a47768b44a33fe771b9abedf2062510b71",
+              "path": "stage-ingest-documents.json",
+              "sizeBytes": 415
+            },
+            {
+              "digest": "sha256:c0706e3971e450b84e7083cc59e29fc421ba4dfd70a36c70248e066711c27d70",
+              "path": "stage-native-text.json",
+              "sizeBytes": 425
+            },
+            {
+              "digest": "sha256:aa46aabdbd8d35edaf28801629d5f9e01fcd260b78f72e8d94fe06a0b302b9cf",
+              "path": "stage-ocr.json",
+              "sizeBytes": 439
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:0dfa4403c40b0dfe87a89ffca90990681cddec51c9fdf1b07a7c5b02ffa1bfee",
+              "path": "native.txt",
+              "sizeBytes": 47
+            },
+            {
+              "digest": "sha256:189977b6cd18fa81d3459e3eb904d99585f96db722e49c001a0808cdae75dea8",
+              "path": "ocr.txt",
+              "sizeBytes": 7
+            },
+            {
+              "digest": "sha256:d946dd2cd092a3184a51029662a4e2ca0d0e9341ef13c377feb6f66a3ee6445a",
+              "path": "scan.pbm",
+              "sizeBytes": 238
+            },
+            {
+              "digest": "sha256:c6c3851c05d37afb8a0d2692873bfba989513f49f2ea75ab1511562680414f26",
+              "path": "stage-classify.json",
+              "sizeBytes": 477
+            },
+            {
+              "digest": "sha256:423b25bb89667abe7cee02f5faed01a47768b44a33fe771b9abedf2062510b71",
+              "path": "stage-ingest-documents.json",
+              "sizeBytes": 415
+            },
+            {
+              "digest": "sha256:c0706e3971e450b84e7083cc59e29fc421ba4dfd70a36c70248e066711c27d70",
+              "path": "stage-native-text.json",
+              "sizeBytes": 425
+            },
+            {
+              "digest": "sha256:aa46aabdbd8d35edaf28801629d5f9e01fcd260b78f72e8d94fe06a0b302b9cf",
+              "path": "stage-ocr.json",
+              "sizeBytes": 439
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:a4d3eb151bee1a5cb4053327c6ee5cc882e691f006e86ad14f961449945b948d",
+              "path": "stage-extract-fields.json",
+              "sizeBytes": 455
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000/showcase-document-extraction-local-7d5ef3028c-extract-fields",
+        "outputBytes": 455,
+        "pinned": false,
+        "reclaimedBytes": 2503,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:13:39.562105835Z",
+        "resourceId": "showcase-document-extraction-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "runtimeId": "showcase-document-extraction-local",
+        "sealedAt": "2026-10-20T19:13:39.371831377Z",
+        "sizeBytes": 2503,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000/showcase-document-extraction-local-7d5ef3028c-extract-fields"
+      },
+      {
+        "activityId": "showcase-document-extraction-local-7d5ef3028c-ingest-documents",
+        "createdAt": "2026-10-20T19:13:32.116905555Z",
+        "driver": "local",
+        "environmentId": "showcase-document-extraction-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000/showcase-document-extraction-local-7d5ef3028c-ingest-documents",
+        "fileCount": 3,
+        "id": "workspace-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-ingest-documents",
+        "inputBytes": 0,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:0dfa4403c40b0dfe87a89ffca90990681cddec51c9fdf1b07a7c5b02ffa1bfee",
+              "path": "native.txt",
+              "sizeBytes": 47
+            },
+            {
+              "digest": "sha256:d946dd2cd092a3184a51029662a4e2ca0d0e9341ef13c377feb6f66a3ee6445a",
+              "path": "scan.pbm",
+              "sizeBytes": 238
+            },
+            {
+              "digest": "sha256:423b25bb89667abe7cee02f5faed01a47768b44a33fe771b9abedf2062510b71",
+              "path": "stage-ingest-documents.json",
+              "sizeBytes": 415
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:0dfa4403c40b0dfe87a89ffca90990681cddec51c9fdf1b07a7c5b02ffa1bfee",
+              "path": "native.txt",
+              "sizeBytes": 47
+            },
+            {
+              "digest": "sha256:d946dd2cd092a3184a51029662a4e2ca0d0e9341ef13c377feb6f66a3ee6445a",
+              "path": "scan.pbm",
+              "sizeBytes": 238
+            },
+            {
+              "digest": "sha256:423b25bb89667abe7cee02f5faed01a47768b44a33fe771b9abedf2062510b71",
+              "path": "stage-ingest-documents.json",
+              "sizeBytes": 415
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000/showcase-document-extraction-local-7d5ef3028c-ingest-documents",
+        "outputBytes": 700,
+        "pinned": false,
+        "reclaimedBytes": 0,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:13:33.53355143Z",
+        "resourceId": "showcase-document-extraction-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "runtimeId": "showcase-document-extraction-local",
+        "sealedAt": "2026-10-20T19:13:33.366558763Z",
+        "sizeBytes": 700,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000/showcase-document-extraction-local-7d5ef3028c-ingest-documents"
+      },
+      {
+        "activityId": "showcase-document-extraction-local-7d5ef3028c-native-text",
+        "createdAt": "2026-10-20T19:13:32.116905555Z",
+        "driver": "local",
+        "environmentId": "showcase-document-extraction-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000/showcase-document-extraction-local-7d5ef3028c-native-text",
+        "fileCount": 4,
+        "id": "workspace-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-native-text",
+        "inputBytes": 700,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:0dfa4403c40b0dfe87a89ffca90990681cddec51c9fdf1b07a7c5b02ffa1bfee",
+              "path": "native.txt",
+              "sizeBytes": 47
+            },
+            {
+              "digest": "sha256:d946dd2cd092a3184a51029662a4e2ca0d0e9341ef13c377feb6f66a3ee6445a",
+              "path": "scan.pbm",
+              "sizeBytes": 238
+            },
+            {
+              "digest": "sha256:423b25bb89667abe7cee02f5faed01a47768b44a33fe771b9abedf2062510b71",
+              "path": "stage-ingest-documents.json",
+              "sizeBytes": 415
+            },
+            {
+              "digest": "sha256:c0706e3971e450b84e7083cc59e29fc421ba4dfd70a36c70248e066711c27d70",
+              "path": "stage-native-text.json",
+              "sizeBytes": 425
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:0dfa4403c40b0dfe87a89ffca90990681cddec51c9fdf1b07a7c5b02ffa1bfee",
+              "path": "native.txt",
+              "sizeBytes": 47
+            },
+            {
+              "digest": "sha256:d946dd2cd092a3184a51029662a4e2ca0d0e9341ef13c377feb6f66a3ee6445a",
+              "path": "scan.pbm",
+              "sizeBytes": 238
+            },
+            {
+              "digest": "sha256:423b25bb89667abe7cee02f5faed01a47768b44a33fe771b9abedf2062510b71",
+              "path": "stage-ingest-documents.json",
+              "sizeBytes": 415
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:0dfa4403c40b0dfe87a89ffca90990681cddec51c9fdf1b07a7c5b02ffa1bfee",
+              "path": "native.txt",
+              "sizeBytes": 47
+            },
+            {
+              "digest": "sha256:d946dd2cd092a3184a51029662a4e2ca0d0e9341ef13c377feb6f66a3ee6445a",
+              "path": "scan.pbm",
+              "sizeBytes": 238
+            },
+            {
+              "digest": "sha256:423b25bb89667abe7cee02f5faed01a47768b44a33fe771b9abedf2062510b71",
+              "path": "stage-ingest-documents.json",
+              "sizeBytes": 415
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:c0706e3971e450b84e7083cc59e29fc421ba4dfd70a36c70248e066711c27d70",
+              "path": "stage-native-text.json",
+              "sizeBytes": 425
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000/showcase-document-extraction-local-7d5ef3028c-native-text",
+        "outputBytes": 425,
+        "pinned": false,
+        "reclaimedBytes": 1125,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:13:35.757642834Z",
+        "resourceId": "showcase-document-extraction-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "runtimeId": "showcase-document-extraction-local",
+        "sealedAt": "2026-10-20T19:13:35.390215333Z",
+        "sizeBytes": 1125,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000/showcase-document-extraction-local-7d5ef3028c-native-text"
+      },
+      {
+        "activityId": "showcase-document-extraction-local-7d5ef3028c-ocr",
+        "createdAt": "2026-10-20T19:13:32.116905555Z",
+        "driver": "local",
+        "environmentId": "showcase-document-extraction-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000/showcase-document-extraction-local-7d5ef3028c-ocr",
+        "fileCount": 5,
+        "id": "workspace-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-ocr",
+        "inputBytes": 700,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:0dfa4403c40b0dfe87a89ffca90990681cddec51c9fdf1b07a7c5b02ffa1bfee",
+              "path": "native.txt",
+              "sizeBytes": 47
+            },
+            {
+              "digest": "sha256:189977b6cd18fa81d3459e3eb904d99585f96db722e49c001a0808cdae75dea8",
+              "path": "ocr.txt",
+              "sizeBytes": 7
+            },
+            {
+              "digest": "sha256:d946dd2cd092a3184a51029662a4e2ca0d0e9341ef13c377feb6f66a3ee6445a",
+              "path": "scan.pbm",
+              "sizeBytes": 238
+            },
+            {
+              "digest": "sha256:423b25bb89667abe7cee02f5faed01a47768b44a33fe771b9abedf2062510b71",
+              "path": "stage-ingest-documents.json",
+              "sizeBytes": 415
+            },
+            {
+              "digest": "sha256:aa46aabdbd8d35edaf28801629d5f9e01fcd260b78f72e8d94fe06a0b302b9cf",
+              "path": "stage-ocr.json",
+              "sizeBytes": 439
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:0dfa4403c40b0dfe87a89ffca90990681cddec51c9fdf1b07a7c5b02ffa1bfee",
+              "path": "native.txt",
+              "sizeBytes": 47
+            },
+            {
+              "digest": "sha256:d946dd2cd092a3184a51029662a4e2ca0d0e9341ef13c377feb6f66a3ee6445a",
+              "path": "scan.pbm",
+              "sizeBytes": 238
+            },
+            {
+              "digest": "sha256:423b25bb89667abe7cee02f5faed01a47768b44a33fe771b9abedf2062510b71",
+              "path": "stage-ingest-documents.json",
+              "sizeBytes": 415
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:0dfa4403c40b0dfe87a89ffca90990681cddec51c9fdf1b07a7c5b02ffa1bfee",
+              "path": "native.txt",
+              "sizeBytes": 47
+            },
+            {
+              "digest": "sha256:d946dd2cd092a3184a51029662a4e2ca0d0e9341ef13c377feb6f66a3ee6445a",
+              "path": "scan.pbm",
+              "sizeBytes": 238
+            },
+            {
+              "digest": "sha256:423b25bb89667abe7cee02f5faed01a47768b44a33fe771b9abedf2062510b71",
+              "path": "stage-ingest-documents.json",
+              "sizeBytes": 415
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:189977b6cd18fa81d3459e3eb904d99585f96db722e49c001a0808cdae75dea8",
+              "path": "ocr.txt",
+              "sizeBytes": 7
+            },
+            {
+              "digest": "sha256:aa46aabdbd8d35edaf28801629d5f9e01fcd260b78f72e8d94fe06a0b302b9cf",
+              "path": "stage-ocr.json",
+              "sizeBytes": 439
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000/showcase-document-extraction-local-7d5ef3028c-ocr",
+        "outputBytes": 446,
+        "pinned": false,
+        "reclaimedBytes": 1146,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:13:35.764711417Z",
+        "resourceId": "showcase-document-extraction-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "runtimeId": "showcase-document-extraction-local",
+        "sealedAt": "2026-10-20T19:13:35.395548917Z",
+        "sizeBytes": 1146,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000/showcase-document-extraction-local-7d5ef3028c-ocr"
+      },
+      {
+        "activityId": "showcase-document-extraction-local-7d5ef3028c-publish",
+        "createdAt": "2026-10-20T19:13:32.116905555Z",
+        "driver": "local",
+        "environmentId": "showcase-document-extraction-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000/showcase-document-extraction-local-7d5ef3028c-publish",
+        "fileCount": 2,
+        "id": "workspace-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-publish",
+        "inputBytes": 2965,
+        "isFinal": true,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:d3e0084df12c227da788f9dd68ecd16c5b10cbf472c6cf814f4b21fdf9bda31e",
+              "path": "extraction.json",
+              "sizeBytes": 92
+            },
+            {
+              "digest": "sha256:0dfa4403c40b0dfe87a89ffca90990681cddec51c9fdf1b07a7c5b02ffa1bfee",
+              "path": "native.txt",
+              "sizeBytes": 47
+            },
+            {
+              "digest": "sha256:189977b6cd18fa81d3459e3eb904d99585f96db722e49c001a0808cdae75dea8",
+              "path": "ocr.txt",
+              "sizeBytes": 7
+            },
+            {
+              "digest": "sha256:d946dd2cd092a3184a51029662a4e2ca0d0e9341ef13c377feb6f66a3ee6445a",
+              "path": "scan.pbm",
+              "sizeBytes": 238
+            },
+            {
+              "digest": "sha256:c6c3851c05d37afb8a0d2692873bfba989513f49f2ea75ab1511562680414f26",
+              "path": "stage-classify.json",
+              "sizeBytes": 477
+            },
+            {
+              "digest": "sha256:a4d3eb151bee1a5cb4053327c6ee5cc882e691f006e86ad14f961449945b948d",
+              "path": "stage-extract-fields.json",
+              "sizeBytes": 455
+            },
+            {
+              "digest": "sha256:423b25bb89667abe7cee02f5faed01a47768b44a33fe771b9abedf2062510b71",
+              "path": "stage-ingest-documents.json",
+              "sizeBytes": 415
+            },
+            {
+              "digest": "sha256:c0706e3971e450b84e7083cc59e29fc421ba4dfd70a36c70248e066711c27d70",
+              "path": "stage-native-text.json",
+              "sizeBytes": 425
+            },
+            {
+              "digest": "sha256:aa46aabdbd8d35edaf28801629d5f9e01fcd260b78f72e8d94fe06a0b302b9cf",
+              "path": "stage-ocr.json",
+              "sizeBytes": 439
+            },
+            {
+              "digest": "sha256:1ebe6e7b5ef2e080a69345e344a06089df13e21c4c2a85af5dafcef70810e6a2",
+              "path": "stage-publish.json",
+              "sizeBytes": 455
+            },
+            {
+              "digest": "sha256:4caad05c66ebe9bbdb7c7b82f2bdcdbd0bac42779d6f2dbeebe6bd723e6a0a4e",
+              "path": "stage-validate-schema.json",
+              "sizeBytes": 462
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:0dfa4403c40b0dfe87a89ffca90990681cddec51c9fdf1b07a7c5b02ffa1bfee",
+              "path": "native.txt",
+              "sizeBytes": 47
+            },
+            {
+              "digest": "sha256:189977b6cd18fa81d3459e3eb904d99585f96db722e49c001a0808cdae75dea8",
+              "path": "ocr.txt",
+              "sizeBytes": 7
+            },
+            {
+              "digest": "sha256:d946dd2cd092a3184a51029662a4e2ca0d0e9341ef13c377feb6f66a3ee6445a",
+              "path": "scan.pbm",
+              "sizeBytes": 238
+            },
+            {
+              "digest": "sha256:c6c3851c05d37afb8a0d2692873bfba989513f49f2ea75ab1511562680414f26",
+              "path": "stage-classify.json",
+              "sizeBytes": 477
+            },
+            {
+              "digest": "sha256:a4d3eb151bee1a5cb4053327c6ee5cc882e691f006e86ad14f961449945b948d",
+              "path": "stage-extract-fields.json",
+              "sizeBytes": 455
+            },
+            {
+              "digest": "sha256:423b25bb89667abe7cee02f5faed01a47768b44a33fe771b9abedf2062510b71",
+              "path": "stage-ingest-documents.json",
+              "sizeBytes": 415
+            },
+            {
+              "digest": "sha256:c0706e3971e450b84e7083cc59e29fc421ba4dfd70a36c70248e066711c27d70",
+              "path": "stage-native-text.json",
+              "sizeBytes": 425
+            },
+            {
+              "digest": "sha256:aa46aabdbd8d35edaf28801629d5f9e01fcd260b78f72e8d94fe06a0b302b9cf",
+              "path": "stage-ocr.json",
+              "sizeBytes": 439
+            },
+            {
+              "digest": "sha256:4caad05c66ebe9bbdb7c7b82f2bdcdbd0bac42779d6f2dbeebe6bd723e6a0a4e",
+              "path": "stage-validate-schema.json",
+              "sizeBytes": 462
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:0dfa4403c40b0dfe87a89ffca90990681cddec51c9fdf1b07a7c5b02ffa1bfee",
+              "path": "native.txt",
+              "sizeBytes": 47
+            },
+            {
+              "digest": "sha256:189977b6cd18fa81d3459e3eb904d99585f96db722e49c001a0808cdae75dea8",
+              "path": "ocr.txt",
+              "sizeBytes": 7
+            },
+            {
+              "digest": "sha256:d946dd2cd092a3184a51029662a4e2ca0d0e9341ef13c377feb6f66a3ee6445a",
+              "path": "scan.pbm",
+              "sizeBytes": 238
+            },
+            {
+              "digest": "sha256:c6c3851c05d37afb8a0d2692873bfba989513f49f2ea75ab1511562680414f26",
+              "path": "stage-classify.json",
+              "sizeBytes": 477
+            },
+            {
+              "digest": "sha256:a4d3eb151bee1a5cb4053327c6ee5cc882e691f006e86ad14f961449945b948d",
+              "path": "stage-extract-fields.json",
+              "sizeBytes": 455
+            },
+            {
+              "digest": "sha256:423b25bb89667abe7cee02f5faed01a47768b44a33fe771b9abedf2062510b71",
+              "path": "stage-ingest-documents.json",
+              "sizeBytes": 415
+            },
+            {
+              "digest": "sha256:c0706e3971e450b84e7083cc59e29fc421ba4dfd70a36c70248e066711c27d70",
+              "path": "stage-native-text.json",
+              "sizeBytes": 425
+            },
+            {
+              "digest": "sha256:aa46aabdbd8d35edaf28801629d5f9e01fcd260b78f72e8d94fe06a0b302b9cf",
+              "path": "stage-ocr.json",
+              "sizeBytes": 439
+            },
+            {
+              "digest": "sha256:4caad05c66ebe9bbdb7c7b82f2bdcdbd0bac42779d6f2dbeebe6bd723e6a0a4e",
+              "path": "stage-validate-schema.json",
+              "sizeBytes": 462
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:d3e0084df12c227da788f9dd68ecd16c5b10cbf472c6cf814f4b21fdf9bda31e",
+              "path": "extraction.json",
+              "sizeBytes": 92
+            },
+            {
+              "digest": "sha256:1ebe6e7b5ef2e080a69345e344a06089df13e21c4c2a85af5dafcef70810e6a2",
+              "path": "stage-publish.json",
+              "sizeBytes": 455
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000/showcase-document-extraction-local-7d5ef3028c-publish",
+        "outputBytes": 547,
+        "pinned": false,
+        "reclaimedBytes": 2965,
+        "releaseReason": "inherited inputs pruned",
+        "resourceId": "showcase-document-extraction-local-docker",
+        "retention": "final",
+        "runId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "runtimeId": "showcase-document-extraction-local",
+        "sealedAt": "2026-10-20T19:13:43.394285004Z",
+        "sizeBytes": 547,
+        "state": "sealed",
+        "uri": "file:///akoflow/workspace/runs/showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000/showcase-document-extraction-local-7d5ef3028c-publish"
+      },
+      {
+        "activityId": "showcase-document-extraction-local-7d5ef3028c-validate-schema",
+        "createdAt": "2026-10-20T19:13:32.116905555Z",
+        "driver": "local",
+        "environmentId": "showcase-document-extraction-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000/showcase-document-extraction-local-7d5ef3028c-validate-schema",
+        "fileCount": 9,
+        "id": "workspace-showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000-showcase-document-extraction-local-7d5ef3028c-validate-schema",
+        "inputBytes": 2503,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:0dfa4403c40b0dfe87a89ffca90990681cddec51c9fdf1b07a7c5b02ffa1bfee",
+              "path": "native.txt",
+              "sizeBytes": 47
+            },
+            {
+              "digest": "sha256:189977b6cd18fa81d3459e3eb904d99585f96db722e49c001a0808cdae75dea8",
+              "path": "ocr.txt",
+              "sizeBytes": 7
+            },
+            {
+              "digest": "sha256:d946dd2cd092a3184a51029662a4e2ca0d0e9341ef13c377feb6f66a3ee6445a",
+              "path": "scan.pbm",
+              "sizeBytes": 238
+            },
+            {
+              "digest": "sha256:c6c3851c05d37afb8a0d2692873bfba989513f49f2ea75ab1511562680414f26",
+              "path": "stage-classify.json",
+              "sizeBytes": 477
+            },
+            {
+              "digest": "sha256:a4d3eb151bee1a5cb4053327c6ee5cc882e691f006e86ad14f961449945b948d",
+              "path": "stage-extract-fields.json",
+              "sizeBytes": 455
+            },
+            {
+              "digest": "sha256:423b25bb89667abe7cee02f5faed01a47768b44a33fe771b9abedf2062510b71",
+              "path": "stage-ingest-documents.json",
+              "sizeBytes": 415
+            },
+            {
+              "digest": "sha256:c0706e3971e450b84e7083cc59e29fc421ba4dfd70a36c70248e066711c27d70",
+              "path": "stage-native-text.json",
+              "sizeBytes": 425
+            },
+            {
+              "digest": "sha256:aa46aabdbd8d35edaf28801629d5f9e01fcd260b78f72e8d94fe06a0b302b9cf",
+              "path": "stage-ocr.json",
+              "sizeBytes": 439
+            },
+            {
+              "digest": "sha256:4caad05c66ebe9bbdb7c7b82f2bdcdbd0bac42779d6f2dbeebe6bd723e6a0a4e",
+              "path": "stage-validate-schema.json",
+              "sizeBytes": 462
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:0dfa4403c40b0dfe87a89ffca90990681cddec51c9fdf1b07a7c5b02ffa1bfee",
+              "path": "native.txt",
+              "sizeBytes": 47
+            },
+            {
+              "digest": "sha256:189977b6cd18fa81d3459e3eb904d99585f96db722e49c001a0808cdae75dea8",
+              "path": "ocr.txt",
+              "sizeBytes": 7
+            },
+            {
+              "digest": "sha256:d946dd2cd092a3184a51029662a4e2ca0d0e9341ef13c377feb6f66a3ee6445a",
+              "path": "scan.pbm",
+              "sizeBytes": 238
+            },
+            {
+              "digest": "sha256:c6c3851c05d37afb8a0d2692873bfba989513f49f2ea75ab1511562680414f26",
+              "path": "stage-classify.json",
+              "sizeBytes": 477
+            },
+            {
+              "digest": "sha256:a4d3eb151bee1a5cb4053327c6ee5cc882e691f006e86ad14f961449945b948d",
+              "path": "stage-extract-fields.json",
+              "sizeBytes": 455
+            },
+            {
+              "digest": "sha256:423b25bb89667abe7cee02f5faed01a47768b44a33fe771b9abedf2062510b71",
+              "path": "stage-ingest-documents.json",
+              "sizeBytes": 415
+            },
+            {
+              "digest": "sha256:c0706e3971e450b84e7083cc59e29fc421ba4dfd70a36c70248e066711c27d70",
+              "path": "stage-native-text.json",
+              "sizeBytes": 425
+            },
+            {
+              "digest": "sha256:aa46aabdbd8d35edaf28801629d5f9e01fcd260b78f72e8d94fe06a0b302b9cf",
+              "path": "stage-ocr.json",
+              "sizeBytes": 439
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:0dfa4403c40b0dfe87a89ffca90990681cddec51c9fdf1b07a7c5b02ffa1bfee",
+              "path": "native.txt",
+              "sizeBytes": 47
+            },
+            {
+              "digest": "sha256:189977b6cd18fa81d3459e3eb904d99585f96db722e49c001a0808cdae75dea8",
+              "path": "ocr.txt",
+              "sizeBytes": 7
+            },
+            {
+              "digest": "sha256:d946dd2cd092a3184a51029662a4e2ca0d0e9341ef13c377feb6f66a3ee6445a",
+              "path": "scan.pbm",
+              "sizeBytes": 238
+            },
+            {
+              "digest": "sha256:c6c3851c05d37afb8a0d2692873bfba989513f49f2ea75ab1511562680414f26",
+              "path": "stage-classify.json",
+              "sizeBytes": 477
+            },
+            {
+              "digest": "sha256:a4d3eb151bee1a5cb4053327c6ee5cc882e691f006e86ad14f961449945b948d",
+              "path": "stage-extract-fields.json",
+              "sizeBytes": 455
+            },
+            {
+              "digest": "sha256:423b25bb89667abe7cee02f5faed01a47768b44a33fe771b9abedf2062510b71",
+              "path": "stage-ingest-documents.json",
+              "sizeBytes": 415
+            },
+            {
+              "digest": "sha256:c0706e3971e450b84e7083cc59e29fc421ba4dfd70a36c70248e066711c27d70",
+              "path": "stage-native-text.json",
+              "sizeBytes": 425
+            },
+            {
+              "digest": "sha256:aa46aabdbd8d35edaf28801629d5f9e01fcd260b78f72e8d94fe06a0b302b9cf",
+              "path": "stage-ocr.json",
+              "sizeBytes": 439
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:4caad05c66ebe9bbdb7c7b82f2bdcdbd0bac42779d6f2dbeebe6bd723e6a0a4e",
+              "path": "stage-validate-schema.json",
+              "sizeBytes": 462
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000/showcase-document-extraction-local-7d5ef3028c-validate-schema",
+        "outputBytes": 462,
+        "pinned": false,
+        "reclaimedBytes": 2965,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:13:41.58340242Z",
+        "resourceId": "showcase-document-extraction-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+        "runtimeId": "showcase-document-extraction-local",
+        "sealedAt": "2026-10-20T19:13:41.37662092Z",
+        "sizeBytes": 2965,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000/showcase-document-extraction-local-7d5ef3028c-validate-schema"
+      }
+    ]
+  },
+  "runId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+  "status": "completed",
+  "workflowId": "showcase-document-extraction-local-7d5ef3028c"
+}

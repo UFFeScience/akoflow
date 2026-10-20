@@ -1,10 +1,20 @@
 {
-  "showcase": "multi-agent-review",
-  "digest": "8763669539a44fb4f93b0f3887774a9be55e4e9886c7993c8f1de842329586aa",
-  "stages": [
-    "code"
+  "dependencies": [
+    "shared-context"
   ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:47.667762Z",
+  "finishedAtUnixNs": 1792523567662389000,
+  "inputDigest": "515725fca7c650aa18f2c2af0438ac3160938890c432b1b81a828a2f831d7567",
+  "result": {
+    "allFinite": true,
+    "recomputedMean": 8,
+    "role": "code"
+  },
+  "showcase": "multi-agent-review",
+  "stage": "code",
+  "startedAt": "2026-10-20T19:12:47.620183Z",
+  "startedAtUnixNs": 1792523567662284000,
   "status": "success",
-  "validationMode": "contract-fixture",
-  "stage": "code"
+  "validationMode": "local-workload"
 }

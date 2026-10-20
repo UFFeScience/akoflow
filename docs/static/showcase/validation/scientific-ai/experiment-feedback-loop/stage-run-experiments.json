@@ -1,10 +1,58 @@
 {
-  "showcase": "experiment-feedback-loop",
-  "digest": "68dd124b4119dc2b14023a5feb08ed9a961edde8643255f13d11578ff810c34b",
-  "stages": [
-    "run-experiments"
+  "dependencies": [
+    "safety-check"
   ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:37.280712Z",
+  "finishedAtUnixNs": 1792523557276309000,
+  "inputDigest": "d9e556a6b7304fafafd5cdc8b9d8c75513300c069a561242c39fb50c6e5313bb",
+  "result": {
+    "prior": [
+      [
+        0,
+        5.159999999999999
+      ],
+      [
+        0.5,
+        7.109999999999999
+      ],
+      [
+        1,
+        8.559999999999999
+      ],
+      [
+        3,
+        9.36
+      ],
+      [
+        4,
+        6.760000000000001
+      ]
+    ],
+    "proposals": [
+      2.1000000000000014,
+      2.2000000000000015,
+      2.3000000000000016
+    ],
+    "results": [
+      [
+        2.1000000000000014,
+        9.99
+      ],
+      [
+        2.2000000000000015,
+        10
+      ],
+      [
+        2.3000000000000016,
+        9.99
+      ]
+    ]
+  },
+  "showcase": "experiment-feedback-loop",
+  "stage": "run-experiments",
+  "startedAt": "2026-10-20T19:12:37.238111Z",
+  "startedAtUnixNs": 1792523557276228000,
   "status": "success",
-  "validationMode": "contract-fixture",
-  "stage": "run-experiments"
+  "validationMode": "local-workload"
 }

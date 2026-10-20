@@ -1,10 +1,20 @@
 {
-  "showcase": "anomaly-detection",
-  "digest": "72e5ff5eb92eaf12e86b2e551adcf791634b94a6908735c549ea6ea4ea8bf798",
-  "stages": [
-    "publish"
+  "dependencies": [
+    "choose-threshold"
   ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:38.064922Z",
+  "finishedAtUnixNs": 1792523558059534000,
+  "inputDigest": "faf961cc37f1944b3186c2b067dbbe4377fae878b18036bdf01a4b9475abeb94",
+  "result": {
+    "detected": 3,
+    "f1": 1,
+    "threshold": 2
+  },
+  "showcase": "anomaly-detection",
+  "stage": "publish",
+  "startedAt": "2026-10-20T19:12:38.019354Z",
+  "startedAtUnixNs": 1792523558059186000,
   "status": "success",
-  "validationMode": "contract-fixture",
-  "stage": "publish"
+  "validationMode": "local-workload"
 }

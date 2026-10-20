@@ -297,10 +297,15 @@ const sections: Section[] = [
     ],
   },
   {
-    title: "Scientific AI",
+    title: "Scientific Workflows",
     description:
       "Executable simulation, analysis, surrogate-model, and experiment-feedback workflows.",
     examples: [
+      {
+        title: "Montage 050 locally",
+        href: "/docs/showcase/scientific-workflows/montage-050",
+        stages: [],
+      },
       {
         title: "Scientific pipeline with AI interpretation",
         href: "/docs/showcase/ai/scientific-ai/ai-assisted-analysis",
@@ -347,14 +352,14 @@ export default function WorkflowCatalog(): React.JSX.Element {
       {[...sections]
         .sort(
           (a, b) =>
-            Number(b.title === "Scientific AI") -
-            Number(a.title === "Scientific AI"),
+            Number(b.title === "Scientific Workflows") -
+            Number(a.title === "Scientific Workflows"),
         )
         .map((section) => (
           <section key={section.title} className={styles.section}>
             <div className={styles.sectionHeading}>
               <h2>
-                {section.title === "Scientific AI"
+                {section.title === "Scientific Workflows"
                   ? "Scientific Workflows"
                   : section.title}
               </h2>

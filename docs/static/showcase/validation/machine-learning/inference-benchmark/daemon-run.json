@@ -1,0 +1,2626 @@
+{
+  "activityCount": 6,
+  "completedActivityCount": 6,
+  "image": "ghcr.io/uffescience/akoflow-examples/showcase-inference-benchmark:local-3f2531ca913c4ff4",
+  "imageId": "sha256:3f2531ca913c4ff45b9624374084e12f7b9929ed95512aa0fb1f3ffb7acbd579",
+  "observedAt": "2026-10-20T19:10:12Z",
+  "planId": "showcase-inference-benchmark-local-7d8f10cfda-manual-plan-20261020t191004.373444000",
+  "projection": {
+    "activities": [
+      {
+        "activityId": "showcase-inference-benchmark-local-7d8f10cfda-freeze-inputs",
+        "allocatedResourceId": "showcase-inference-benchmark-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "finishedAt": 1792523404.8615441,
+        "id": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-freeze-inputs",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "pricePerSecond": 0,
+          "runtimeId": "showcase-inference-benchmark-local"
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-inference-benchmark-local-7d8f10cfda-manual-plan-20261020t191004.373444000-showcase-inference-benchmark-local-7d8f10cfda-freeze-inputs",
+        "plannedResourceId": "showcase-inference-benchmark-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523404.6332994,
+        "readyAt": 1792523404.6332994,
+        "runtimeId": "showcase-inference-benchmark-local",
+        "runtimeSeconds": 0.10933852195739746,
+        "startedAt": 1792523404.7522056,
+        "status": "completed",
+        "transferBytes": 0,
+        "transferSeconds": 0
+      },
+      {
+        "activityId": "showcase-inference-benchmark-local-7d8f10cfda-cpu",
+        "allocatedResourceId": "showcase-inference-benchmark-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "finishedAt": 1792523406.3637214,
+        "id": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-cpu",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.19863224029541016,
+          "preparationFinishedAt": 1792523406.0435848,
+          "preparationStartedAt": 1792523405.8631773,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.001968860626220703,
+          "runtimeId": "showcase-inference-benchmark-local",
+          "transferElapsedSeconds": 0.18040752410888672,
+          "transferWorkSeconds": 0.18040752410888672
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-inference-benchmark-local-7d8f10cfda-manual-plan-20261020t191004.373444000-showcase-inference-benchmark-local-7d8f10cfda-cpu",
+        "plannedResourceId": "showcase-inference-benchmark-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523405.8555856,
+        "readyAt": 1792523405.8555856,
+        "runtimeId": "showcase-inference-benchmark-local",
+        "runtimeSeconds": 0.12150430679321289,
+        "startedAt": 1792523406.242217,
+        "status": "completed",
+        "transferBytes": 12351,
+        "transferSeconds": 0.18040752410888672
+      },
+      {
+        "activityId": "showcase-inference-benchmark-local-7d8f10cfda-gpu",
+        "allocatedResourceId": "showcase-inference-benchmark-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "finishedAt": 1792523406.371926,
+        "id": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-gpu",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.20844244956970215,
+          "preparationFinishedAt": 1792523406.041535,
+          "preparationStartedAt": 1792523405.8649127,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0027441978454589844,
+          "runtimeId": "showcase-inference-benchmark-local",
+          "transferElapsedSeconds": 0.1766221523284912,
+          "transferWorkSeconds": 0.1766221523284912
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-inference-benchmark-local-7d8f10cfda-manual-plan-20261020t191004.373444000-showcase-inference-benchmark-local-7d8f10cfda-gpu",
+        "plannedResourceId": "showcase-inference-benchmark-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523405.8586082,
+        "readyAt": 1792523405.8586082,
+        "runtimeId": "showcase-inference-benchmark-local",
+        "runtimeSeconds": 0.1219487190246582,
+        "startedAt": 1792523406.2499774,
+        "status": "completed",
+        "transferBytes": 12351,
+        "transferSeconds": 0.1766221523284912
+      },
+      {
+        "activityId": "showcase-inference-benchmark-local-7d8f10cfda-edge",
+        "allocatedResourceId": "showcase-inference-benchmark-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "finishedAt": 1792523406.3817446,
+        "id": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-edge",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.2158222198486328,
+          "preparationFinishedAt": 1792523406.0445158,
+          "preparationStartedAt": 1792523405.8680246,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0016095638275146484,
+          "runtimeId": "showcase-inference-benchmark-local",
+          "transferElapsedSeconds": 0.17649126052856445,
+          "transferWorkSeconds": 0.17649126052856445
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-inference-benchmark-local-7d8f10cfda-manual-plan-20261020t191004.373444000-showcase-inference-benchmark-local-7d8f10cfda-edge",
+        "plannedResourceId": "showcase-inference-benchmark-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523405.8572698,
+        "readyAt": 1792523405.8572698,
+        "runtimeId": "showcase-inference-benchmark-local",
+        "runtimeSeconds": 0.12140655517578125,
+        "startedAt": 1792523406.260338,
+        "status": "completed",
+        "transferBytes": 12351,
+        "transferSeconds": 0.17649126052856445
+      },
+      {
+        "activityId": "showcase-inference-benchmark-local-7d8f10cfda-normalize",
+        "allocatedResourceId": "showcase-inference-benchmark-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "finishedAt": 1792523408.7815669,
+        "id": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-normalize",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.17901134490966797,
+          "preparationFinishedAt": 1792523408.4946005,
+          "preparationStartedAt": 1792523407.9534466,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.004624843597412109,
+          "runtimeId": "showcase-inference-benchmark-local",
+          "transferElapsedSeconds": 0.5411539077758789,
+          "transferWorkSeconds": 1.2222061157226562
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-inference-benchmark-local-7d8f10cfda-manual-plan-20261020t191004.373444000-showcase-inference-benchmark-local-7d8f10cfda-normalize",
+        "plannedResourceId": "showcase-inference-benchmark-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523407.946155,
+        "readyAt": 1792523407.946155,
+        "runtimeId": "showcase-inference-benchmark-local",
+        "runtimeSeconds": 0.1079549789428711,
+        "startedAt": 1792523408.6736119,
+        "status": "completed",
+        "transferBytes": 13942,
+        "transferSeconds": 1.2222061157226562
+      },
+      {
+        "activityId": "showcase-inference-benchmark-local-7d8f10cfda-compare-cost-and-latency",
+        "allocatedResourceId": "showcase-inference-benchmark-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "finishedAt": 1792523410.302092,
+        "id": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-compare-cost-and-latency",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.14786529541015625,
+          "preparationFinishedAt": 1792523410.042432,
+          "preparationStartedAt": 1792523409.859648,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0018787384033203125,
+          "runtimeId": "showcase-inference-benchmark-local",
+          "transferElapsedSeconds": 0.1827840805053711,
+          "transferWorkSeconds": 0.1827840805053711
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-inference-benchmark-local-7d8f10cfda-manual-plan-20261020t191004.373444000-showcase-inference-benchmark-local-7d8f10cfda-compare-cost-and-latency",
+        "plannedResourceId": "showcase-inference-benchmark-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523409.85582,
+        "readyAt": 1792523409.85582,
+        "runtimeId": "showcase-inference-benchmark-local",
+        "runtimeSeconds": 0.11179471015930176,
+        "startedAt": 1792523410.1902974,
+        "status": "completed",
+        "transferBytes": 15129,
+        "transferSeconds": 0.1827840805053711
+      }
+    ],
+    "activityAttempts": [
+      {
+        "activityId": "showcase-inference-benchmark-local-7d8f10cfda-freeze-inputs",
+        "allocatedResourceId": "showcase-inference-benchmark-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "finishedAt": 1792523404.8615441,
+        "id": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-freeze-inputs",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "pricePerSecond": 0,
+          "runtimeId": "showcase-inference-benchmark-local"
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-inference-benchmark-local-7d8f10cfda-manual-plan-20261020t191004.373444000-showcase-inference-benchmark-local-7d8f10cfda-freeze-inputs",
+        "plannedResourceId": "showcase-inference-benchmark-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523404.6332994,
+        "readyAt": 1792523404.6332994,
+        "runtimeId": "showcase-inference-benchmark-local",
+        "runtimeSeconds": 0.10933852195739746,
+        "startedAt": 1792523404.7522056,
+        "status": "completed",
+        "transferBytes": 0,
+        "transferSeconds": 0
+      },
+      {
+        "activityId": "showcase-inference-benchmark-local-7d8f10cfda-cpu",
+        "allocatedResourceId": "showcase-inference-benchmark-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "finishedAt": 1792523406.3637214,
+        "id": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-cpu",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.19863224029541016,
+          "preparationFinishedAt": 1792523406.0435848,
+          "preparationStartedAt": 1792523405.8631773,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.001968860626220703,
+          "runtimeId": "showcase-inference-benchmark-local",
+          "transferElapsedSeconds": 0.18040752410888672,
+          "transferWorkSeconds": 0.18040752410888672
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-inference-benchmark-local-7d8f10cfda-manual-plan-20261020t191004.373444000-showcase-inference-benchmark-local-7d8f10cfda-cpu",
+        "plannedResourceId": "showcase-inference-benchmark-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523405.8555856,
+        "readyAt": 1792523405.8555856,
+        "runtimeId": "showcase-inference-benchmark-local",
+        "runtimeSeconds": 0.12150430679321289,
+        "startedAt": 1792523406.242217,
+        "status": "completed",
+        "transferBytes": 12351,
+        "transferSeconds": 0.18040752410888672
+      },
+      {
+        "activityId": "showcase-inference-benchmark-local-7d8f10cfda-gpu",
+        "allocatedResourceId": "showcase-inference-benchmark-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "finishedAt": 1792523406.371926,
+        "id": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-gpu",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.20844244956970215,
+          "preparationFinishedAt": 1792523406.041535,
+          "preparationStartedAt": 1792523405.8649127,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0027441978454589844,
+          "runtimeId": "showcase-inference-benchmark-local",
+          "transferElapsedSeconds": 0.1766221523284912,
+          "transferWorkSeconds": 0.1766221523284912
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-inference-benchmark-local-7d8f10cfda-manual-plan-20261020t191004.373444000-showcase-inference-benchmark-local-7d8f10cfda-gpu",
+        "plannedResourceId": "showcase-inference-benchmark-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523405.8586082,
+        "readyAt": 1792523405.8586082,
+        "runtimeId": "showcase-inference-benchmark-local",
+        "runtimeSeconds": 0.1219487190246582,
+        "startedAt": 1792523406.2499774,
+        "status": "completed",
+        "transferBytes": 12351,
+        "transferSeconds": 0.1766221523284912
+      },
+      {
+        "activityId": "showcase-inference-benchmark-local-7d8f10cfda-edge",
+        "allocatedResourceId": "showcase-inference-benchmark-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "finishedAt": 1792523406.3817446,
+        "id": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-edge",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.2158222198486328,
+          "preparationFinishedAt": 1792523406.0445158,
+          "preparationStartedAt": 1792523405.8680246,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0016095638275146484,
+          "runtimeId": "showcase-inference-benchmark-local",
+          "transferElapsedSeconds": 0.17649126052856445,
+          "transferWorkSeconds": 0.17649126052856445
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-inference-benchmark-local-7d8f10cfda-manual-plan-20261020t191004.373444000-showcase-inference-benchmark-local-7d8f10cfda-edge",
+        "plannedResourceId": "showcase-inference-benchmark-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523405.8572698,
+        "readyAt": 1792523405.8572698,
+        "runtimeId": "showcase-inference-benchmark-local",
+        "runtimeSeconds": 0.12140655517578125,
+        "startedAt": 1792523406.260338,
+        "status": "completed",
+        "transferBytes": 12351,
+        "transferSeconds": 0.17649126052856445
+      },
+      {
+        "activityId": "showcase-inference-benchmark-local-7d8f10cfda-normalize",
+        "allocatedResourceId": "showcase-inference-benchmark-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "finishedAt": 1792523408.7815669,
+        "id": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-normalize",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.17901134490966797,
+          "preparationFinishedAt": 1792523408.4946005,
+          "preparationStartedAt": 1792523407.9534466,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.004624843597412109,
+          "runtimeId": "showcase-inference-benchmark-local",
+          "transferElapsedSeconds": 0.5411539077758789,
+          "transferWorkSeconds": 1.2222061157226562
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-inference-benchmark-local-7d8f10cfda-manual-plan-20261020t191004.373444000-showcase-inference-benchmark-local-7d8f10cfda-normalize",
+        "plannedResourceId": "showcase-inference-benchmark-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523407.946155,
+        "readyAt": 1792523407.946155,
+        "runtimeId": "showcase-inference-benchmark-local",
+        "runtimeSeconds": 0.1079549789428711,
+        "startedAt": 1792523408.6736119,
+        "status": "completed",
+        "transferBytes": 13942,
+        "transferSeconds": 1.2222061157226562
+      },
+      {
+        "activityId": "showcase-inference-benchmark-local-7d8f10cfda-compare-cost-and-latency",
+        "allocatedResourceId": "showcase-inference-benchmark-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "finishedAt": 1792523410.302092,
+        "id": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-compare-cost-and-latency",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.14786529541015625,
+          "preparationFinishedAt": 1792523410.042432,
+          "preparationStartedAt": 1792523409.859648,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0018787384033203125,
+          "runtimeId": "showcase-inference-benchmark-local",
+          "transferElapsedSeconds": 0.1827840805053711,
+          "transferWorkSeconds": 0.1827840805053711
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-inference-benchmark-local-7d8f10cfda-manual-plan-20261020t191004.373444000-showcase-inference-benchmark-local-7d8f10cfda-compare-cost-and-latency",
+        "plannedResourceId": "showcase-inference-benchmark-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523409.85582,
+        "readyAt": 1792523409.85582,
+        "runtimeId": "showcase-inference-benchmark-local",
+        "runtimeSeconds": 0.11179471015930176,
+        "startedAt": 1792523410.1902974,
+        "status": "completed",
+        "transferBytes": 15129,
+        "transferSeconds": 0.1827840805053711
+      }
+    ],
+    "artifactMaterializations": null,
+    "artifactTransferRuns": [
+      {
+        "activityId": "showcase-inference-benchmark-local-7d8f10cfda-compare-cost-and-latency",
+        "durationSeconds": 0.1827840805053711,
+        "executionRunId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "filesTransferred": 5,
+        "finishedAt": 1792523410.042432,
+        "id": "transfer-workspace-showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000-showcase-inference-benchmark-local-7d8f10cfda-compare-cost-and-latency-0",
+        "logicalBytes": 15129,
+        "planId": "transfer-workspace-showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000-showcase-inference-benchmark-local-7d8f10cfda-compare-cost-and-latency-0",
+        "route": {
+          "consumerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-compare-cost-and-latency",
+          "filesTransferred": 5,
+          "producerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-normalize",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.092018666,
+          "sourceEnvironmentId": "showcase-inference-benchmark-v1",
+          "sourceResourceId": "showcase-inference-benchmark-local-docker",
+          "sshChannelWaitSeconds": 7.5e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-inference-benchmark-v1",
+          "targetResourceId": "showcase-inference-benchmark-local-docker"
+        },
+        "startedAt": 1792523409.859648,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 15129
+      },
+      {
+        "activityId": "showcase-inference-benchmark-local-7d8f10cfda-cpu",
+        "durationSeconds": 0.18040752410888672,
+        "executionRunId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "filesTransferred": 1,
+        "finishedAt": 1792523406.0435848,
+        "id": "transfer-workspace-showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000-showcase-inference-benchmark-local-7d8f10cfda-cpu-0",
+        "logicalBytes": 12351,
+        "planId": "transfer-workspace-showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000-showcase-inference-benchmark-local-7d8f10cfda-cpu-0",
+        "route": {
+          "consumerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-cpu",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-freeze-inputs",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.091629041,
+          "sourceEnvironmentId": "showcase-inference-benchmark-v1",
+          "sourceResourceId": "showcase-inference-benchmark-local-docker",
+          "sshChannelWaitSeconds": 4.17e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-inference-benchmark-v1",
+          "targetResourceId": "showcase-inference-benchmark-local-docker"
+        },
+        "startedAt": 1792523405.8631773,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 12351
+      },
+      {
+        "activityId": "showcase-inference-benchmark-local-7d8f10cfda-edge",
+        "durationSeconds": 0.17649126052856445,
+        "executionRunId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "filesTransferred": 1,
+        "finishedAt": 1792523406.0445158,
+        "id": "transfer-workspace-showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000-showcase-inference-benchmark-local-7d8f10cfda-edge-0",
+        "logicalBytes": 12351,
+        "planId": "transfer-workspace-showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000-showcase-inference-benchmark-local-7d8f10cfda-edge-0",
+        "route": {
+          "consumerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-edge",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-freeze-inputs",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.087879417,
+          "sourceEnvironmentId": "showcase-inference-benchmark-v1",
+          "sourceResourceId": "showcase-inference-benchmark-local-docker",
+          "sshChannelWaitSeconds": 4.16e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-inference-benchmark-v1",
+          "targetResourceId": "showcase-inference-benchmark-local-docker"
+        },
+        "startedAt": 1792523405.8680246,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 12351
+      },
+      {
+        "activityId": "showcase-inference-benchmark-local-7d8f10cfda-gpu",
+        "durationSeconds": 0.1766221523284912,
+        "executionRunId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "filesTransferred": 1,
+        "finishedAt": 1792523406.041535,
+        "id": "transfer-workspace-showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000-showcase-inference-benchmark-local-7d8f10cfda-gpu-0",
+        "logicalBytes": 12351,
+        "planId": "transfer-workspace-showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000-showcase-inference-benchmark-local-7d8f10cfda-gpu-0",
+        "route": {
+          "consumerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-gpu",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-freeze-inputs",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.08853941600000001,
+          "sourceEnvironmentId": "showcase-inference-benchmark-v1",
+          "sourceResourceId": "showcase-inference-benchmark-local-docker",
+          "sshChannelWaitSeconds": 3.75e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-inference-benchmark-v1",
+          "targetResourceId": "showcase-inference-benchmark-local-docker"
+        },
+        "startedAt": 1792523405.8649127,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 12351
+      },
+      {
+        "activityId": "showcase-inference-benchmark-local-7d8f10cfda-normalize",
+        "durationSeconds": 0.2703559398651123,
+        "executionRunId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "filesTransferred": 2,
+        "finishedAt": 1792523408.2238026,
+        "id": "transfer-workspace-showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000-showcase-inference-benchmark-local-7d8f10cfda-normalize-0",
+        "logicalBytes": 12881,
+        "planId": "transfer-workspace-showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000-showcase-inference-benchmark-local-7d8f10cfda-normalize-0",
+        "route": {
+          "consumerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-normalize",
+          "filesTransferred": 2,
+          "producerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-cpu",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.075768667,
+          "sourceEnvironmentId": "showcase-inference-benchmark-v1",
+          "sourceResourceId": "showcase-inference-benchmark-local-docker",
+          "sshChannelWaitSeconds": 6.660000000000001e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-inference-benchmark-v1",
+          "targetResourceId": "showcase-inference-benchmark-local-docker"
+        },
+        "startedAt": 1792523407.9534466,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 12881
+      },
+      {
+        "activityId": "showcase-inference-benchmark-local-7d8f10cfda-normalize",
+        "durationSeconds": 0.41069626808166504,
+        "executionRunId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "filesTransferred": 1,
+        "finishedAt": 1792523408.364143,
+        "id": "transfer-workspace-showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000-showcase-inference-benchmark-local-7d8f10cfda-normalize-1",
+        "logicalBytes": 12881,
+        "planId": "transfer-workspace-showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000-showcase-inference-benchmark-local-7d8f10cfda-normalize-1",
+        "route": {
+          "consumerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-normalize",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-gpu",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.097797042,
+          "sourceEnvironmentId": "showcase-inference-benchmark-v1",
+          "sourceResourceId": "showcase-inference-benchmark-local-docker",
+          "sshChannelWaitSeconds": 4.59e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-inference-benchmark-v1",
+          "targetResourceId": "showcase-inference-benchmark-local-docker"
+        },
+        "startedAt": 1792523407.9534466,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 530
+      },
+      {
+        "activityId": "showcase-inference-benchmark-local-7d8f10cfda-normalize",
+        "durationSeconds": 0.5411539077758789,
+        "executionRunId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "filesTransferred": 1,
+        "finishedAt": 1792523408.4946005,
+        "id": "transfer-workspace-showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000-showcase-inference-benchmark-local-7d8f10cfda-normalize-2",
+        "logicalBytes": 12882,
+        "planId": "transfer-workspace-showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000-showcase-inference-benchmark-local-7d8f10cfda-normalize-2",
+        "route": {
+          "consumerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-normalize",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-edge",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.09599845900000001,
+          "sourceEnvironmentId": "showcase-inference-benchmark-v1",
+          "sourceResourceId": "showcase-inference-benchmark-local-docker",
+          "sshChannelWaitSeconds": 3.33e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-inference-benchmark-v1",
+          "targetResourceId": "showcase-inference-benchmark-local-docker"
+        },
+        "startedAt": 1792523407.9534466,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 531
+      }
+    ],
+    "cloudBilling": {
+      "asOf": "2026-10-20T19:10:12.67199467Z",
+      "costBasis": "VM compute and boot-disk lifecycle at on-demand marginal rates; not a provider invoice",
+      "estimatedCost": 0,
+      "excludedCosts": [
+        "network-egress",
+        "public-ipv4",
+        "image-storage",
+        "discounts-and-tax"
+      ],
+      "instances": [],
+      "knownCost": 0,
+      "status": "estimated"
+    },
+    "dataLocations": [
+      {
+        "dataObjectInstanceId": "86a90c9633b459dd93a211a6dabac7cc",
+        "executionRunId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "id": "861aa0779c418ee6eb5e79e48d957aff",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-inference-benchmark-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "c79b46509f7d623a7538e892b0baf93d",
+        "uri": "file:///akoflow/workspace/runs/showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000/showcase-inference-benchmark-local-7d8f10cfda-compare-cost-and-latency/benchmark.csv"
+      },
+      {
+        "dataObjectInstanceId": "6ea4bedc2bda0d12e7bd557f9303ed84",
+        "executionRunId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "id": "b09472011484fecd287a9ff1fd51681d",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-inference-benchmark-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "c79b46509f7d623a7538e892b0baf93d",
+        "uri": "file:///akoflow/workspace/runs/showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000/showcase-inference-benchmark-local-7d8f10cfda-compare-cost-and-latency/report.html"
+      },
+      {
+        "dataObjectInstanceId": "c41b1d718d7be1e4c4e597fac7d91ff4",
+        "executionRunId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "id": "b3c97cdb47babcfbbfb73ba9210b474c",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-inference-benchmark-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "c79b46509f7d623a7538e892b0baf93d",
+        "uri": "file:///akoflow/workspace/runs/showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000/showcase-inference-benchmark-local-7d8f10cfda-compare-cost-and-latency/stage-compare-cost-and-latency.json"
+      },
+      {
+        "dataObjectInstanceId": "e103b628e799a125f79f993c08e76ba7",
+        "executionRunId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "id": "07ff657ce89513ac36a89bb836c691be",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-inference-benchmark-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "c79b46509f7d623a7538e892b0baf93d",
+        "uri": "file:///akoflow/workspace/runs/showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000/showcase-inference-benchmark-local-7d8f10cfda-cpu/stage-cpu.json"
+      },
+      {
+        "dataObjectInstanceId": "0c1195743e3878ab7147708f0db1958c",
+        "executionRunId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "id": "22067a2fac6f0bd1d7b43cb2df1464d4",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-inference-benchmark-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "c79b46509f7d623a7538e892b0baf93d",
+        "uri": "file:///akoflow/workspace/runs/showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000/showcase-inference-benchmark-local-7d8f10cfda-edge/stage-edge.json"
+      },
+      {
+        "dataObjectInstanceId": "1f7fc98fd0595a6d962bd3b556658acc",
+        "executionRunId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "id": "8f4a72426a9f60ce1c69b7ba786a51f9",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-inference-benchmark-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "c79b46509f7d623a7538e892b0baf93d",
+        "uri": "file:///akoflow/workspace/runs/showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000/showcase-inference-benchmark-local-7d8f10cfda-freeze-inputs/stage-freeze-inputs.json"
+      },
+      {
+        "dataObjectInstanceId": "c4aae2034b71ef5bbfe4183785d7f8b2",
+        "executionRunId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "id": "c2315670568f04dacd5962ac92d605d2",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-inference-benchmark-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "c79b46509f7d623a7538e892b0baf93d",
+        "uri": "file:///akoflow/workspace/runs/showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000/showcase-inference-benchmark-local-7d8f10cfda-gpu/stage-gpu.json"
+      },
+      {
+        "dataObjectInstanceId": "f2bd424407136c3b4f471ea5b4716fdc",
+        "executionRunId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "id": "7b97b8ed0721f979a162a132c83b8bf4",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-inference-benchmark-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "c79b46509f7d623a7538e892b0baf93d",
+        "uri": "file:///akoflow/workspace/runs/showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000/showcase-inference-benchmark-local-7d8f10cfda-normalize/stage-normalize.json"
+      }
+    ],
+    "dataObjects": [
+      {
+        "attempt": 1,
+        "checksum": "sha256:ef26d0bf5c77739bc70fe3c01a6653797842234dfaf05dc68fb001302da9ab2b",
+        "dataObjectId": "4cbf07792c6b1298068aec696ca9bda2",
+        "discovered": true,
+        "executionRunId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "id": "86a90c9633b459dd93a211a6dabac7cc",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-compare-cost-and-latency",
+        "relativePath": "benchmark.csv",
+        "sizeBytes": 298
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:3879b52fb943ef36ff37b69f47d01c1a3a20288322f6fc6e8a173ea800b53e8f",
+        "dataObjectId": "b02ae2828ebfe17c79d2a97aa8d09b97",
+        "discovered": true,
+        "executionRunId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "id": "6ea4bedc2bda0d12e7bd557f9303ed84",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-compare-cost-and-latency",
+        "relativePath": "report.html",
+        "sizeBytes": 1163
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:637443a27905dead962022725fc4a914c82d820e0065b99fd698914344e0fa84",
+        "dataObjectId": "c64ca3b087031ddadfaa3a8f0827929a",
+        "discovered": true,
+        "executionRunId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "id": "c41b1d718d7be1e4c4e597fac7d91ff4",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-compare-cost-and-latency",
+        "relativePath": "stage-compare-cost-and-latency.json",
+        "sizeBytes": 1244
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:a32d275e8c368c2b9cc3d437dca12c71e43f0e23a80808a8ab87f42628ec8efa",
+        "dataObjectId": "bd98e7b1e00a851896d80622f4bafcfc",
+        "discovered": true,
+        "executionRunId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "id": "e103b628e799a125f79f993c08e76ba7",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-cpu",
+        "relativePath": "stage-cpu.json",
+        "sizeBytes": 530
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:aaffa993177913d5d5e84044ee439f20aaf388738bd01f9312923d74ec893de7",
+        "dataObjectId": "b1194df7c6a7d839361a2c87aae8c28b",
+        "discovered": true,
+        "executionRunId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "id": "0c1195743e3878ab7147708f0db1958c",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-edge",
+        "relativePath": "stage-edge.json",
+        "sizeBytes": 531
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:8bbb66e5aa9874b4d8bdb85a4343aa09273f5e57f64da70a457fec437bde2b5f",
+        "dataObjectId": "a0fc2f5ff0abb9736ebd0232b4f03f29",
+        "discovered": true,
+        "executionRunId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "id": "1f7fc98fd0595a6d962bd3b556658acc",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-freeze-inputs",
+        "relativePath": "stage-freeze-inputs.json",
+        "sizeBytes": 12351
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:7d54efda16cfe1790a59e45d016ce1719a0a85413de6be7d73171894fded1967",
+        "dataObjectId": "29e7f07d9ba603bdbf90df5b029fd134",
+        "discovered": true,
+        "executionRunId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "id": "c4aae2034b71ef5bbfe4183785d7f8b2",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-gpu",
+        "relativePath": "stage-gpu.json",
+        "sizeBytes": 530
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:7cec215be591f67ee71fb5f79d194fb90f86abbe0519b3da338822d0b3a921f9",
+        "dataObjectId": "32b0e190f6859b53e4d3792196faa047",
+        "discovered": true,
+        "executionRunId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "id": "f2bd424407136c3b4f471ea5b4716fdc",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-normalize",
+        "relativePath": "stage-normalize.json",
+        "sizeBytes": 1187
+      }
+    ],
+    "dataTransfers": [
+      {
+        "bytes": 12351,
+        "consumerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-cpu",
+        "cost": 0,
+        "durationSeconds": 0.18040752410888672,
+        "executionRunId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "finishedAt": 1792523406.0435848,
+        "id": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-cpu:transfer-workspace-showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000-showcase-inference-benchmark-local-7d8f10cfda-cpu-0",
+        "logicalBytes": 12351,
+        "producerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-freeze-inputs",
+        "route": {
+          "consumerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-cpu",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-freeze-inputs",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.091629041,
+          "sourceEnvironmentId": "showcase-inference-benchmark-v1",
+          "sourceResourceId": "showcase-inference-benchmark-local-docker",
+          "sshChannelWaitSeconds": 4.17e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-inference-benchmark-v1",
+          "targetResourceId": "showcase-inference-benchmark-local-docker"
+        },
+        "sourceResourceId": "showcase-inference-benchmark-local-docker",
+        "startedAt": 1792523405.8631773,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-inference-benchmark-local-docker"
+      },
+      {
+        "bytes": 12351,
+        "consumerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-gpu",
+        "cost": 0,
+        "durationSeconds": 0.1766221523284912,
+        "executionRunId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "finishedAt": 1792523406.041535,
+        "id": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-gpu:transfer-workspace-showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000-showcase-inference-benchmark-local-7d8f10cfda-gpu-0",
+        "logicalBytes": 12351,
+        "producerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-freeze-inputs",
+        "route": {
+          "consumerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-gpu",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-freeze-inputs",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.08853941600000001,
+          "sourceEnvironmentId": "showcase-inference-benchmark-v1",
+          "sourceResourceId": "showcase-inference-benchmark-local-docker",
+          "sshChannelWaitSeconds": 3.75e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-inference-benchmark-v1",
+          "targetResourceId": "showcase-inference-benchmark-local-docker"
+        },
+        "sourceResourceId": "showcase-inference-benchmark-local-docker",
+        "startedAt": 1792523405.8649127,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-inference-benchmark-local-docker"
+      },
+      {
+        "bytes": 12351,
+        "consumerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-edge",
+        "cost": 0,
+        "durationSeconds": 0.17649126052856445,
+        "executionRunId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "finishedAt": 1792523406.0445158,
+        "id": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-edge:transfer-workspace-showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000-showcase-inference-benchmark-local-7d8f10cfda-edge-0",
+        "logicalBytes": 12351,
+        "producerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-freeze-inputs",
+        "route": {
+          "consumerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-edge",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-freeze-inputs",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.087879417,
+          "sourceEnvironmentId": "showcase-inference-benchmark-v1",
+          "sourceResourceId": "showcase-inference-benchmark-local-docker",
+          "sshChannelWaitSeconds": 4.16e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-inference-benchmark-v1",
+          "targetResourceId": "showcase-inference-benchmark-local-docker"
+        },
+        "sourceResourceId": "showcase-inference-benchmark-local-docker",
+        "startedAt": 1792523405.8680246,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-inference-benchmark-local-docker"
+      },
+      {
+        "bytes": 12881,
+        "consumerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-normalize",
+        "cost": 0,
+        "durationSeconds": 0.2703559398651123,
+        "executionRunId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "finishedAt": 1792523408.2238026,
+        "id": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-normalize:transfer-workspace-showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000-showcase-inference-benchmark-local-7d8f10cfda-normalize-0",
+        "logicalBytes": 12881,
+        "producerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-cpu",
+        "route": {
+          "consumerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-normalize",
+          "filesTransferred": 2,
+          "producerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-cpu",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.075768667,
+          "sourceEnvironmentId": "showcase-inference-benchmark-v1",
+          "sourceResourceId": "showcase-inference-benchmark-local-docker",
+          "sshChannelWaitSeconds": 6.660000000000001e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-inference-benchmark-v1",
+          "targetResourceId": "showcase-inference-benchmark-local-docker"
+        },
+        "sourceResourceId": "showcase-inference-benchmark-local-docker",
+        "startedAt": 1792523407.9534466,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-inference-benchmark-local-docker"
+      },
+      {
+        "bytes": 531,
+        "consumerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-normalize",
+        "cost": 0,
+        "durationSeconds": 0.5411539077758789,
+        "executionRunId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "finishedAt": 1792523408.4946005,
+        "id": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-normalize:transfer-workspace-showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000-showcase-inference-benchmark-local-7d8f10cfda-normalize-2",
+        "logicalBytes": 12882,
+        "producerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-edge",
+        "route": {
+          "consumerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-normalize",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-edge",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.09599845900000001,
+          "sourceEnvironmentId": "showcase-inference-benchmark-v1",
+          "sourceResourceId": "showcase-inference-benchmark-local-docker",
+          "sshChannelWaitSeconds": 3.33e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-inference-benchmark-v1",
+          "targetResourceId": "showcase-inference-benchmark-local-docker"
+        },
+        "sourceResourceId": "showcase-inference-benchmark-local-docker",
+        "startedAt": 1792523407.9534466,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-inference-benchmark-local-docker"
+      },
+      {
+        "bytes": 530,
+        "consumerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-normalize",
+        "cost": 0,
+        "durationSeconds": 0.41069626808166504,
+        "executionRunId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "finishedAt": 1792523408.364143,
+        "id": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-normalize:transfer-workspace-showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000-showcase-inference-benchmark-local-7d8f10cfda-normalize-1",
+        "logicalBytes": 12881,
+        "producerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-gpu",
+        "route": {
+          "consumerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-normalize",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-gpu",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.097797042,
+          "sourceEnvironmentId": "showcase-inference-benchmark-v1",
+          "sourceResourceId": "showcase-inference-benchmark-local-docker",
+          "sshChannelWaitSeconds": 4.59e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-inference-benchmark-v1",
+          "targetResourceId": "showcase-inference-benchmark-local-docker"
+        },
+        "sourceResourceId": "showcase-inference-benchmark-local-docker",
+        "startedAt": 1792523407.9534466,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-inference-benchmark-local-docker"
+      },
+      {
+        "bytes": 15129,
+        "consumerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-compare-cost-and-latency",
+        "cost": 0,
+        "durationSeconds": 0.1827840805053711,
+        "executionRunId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "finishedAt": 1792523410.042432,
+        "id": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-compare-cost-and-latency:transfer-workspace-showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000-showcase-inference-benchmark-local-7d8f10cfda-compare-cost-and-latency-0",
+        "logicalBytes": 15129,
+        "producerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-normalize",
+        "route": {
+          "consumerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-compare-cost-and-latency",
+          "filesTransferred": 5,
+          "producerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-normalize",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.092018666,
+          "sourceEnvironmentId": "showcase-inference-benchmark-v1",
+          "sourceResourceId": "showcase-inference-benchmark-local-docker",
+          "sshChannelWaitSeconds": 7.5e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-inference-benchmark-v1",
+          "targetResourceId": "showcase-inference-benchmark-local-docker"
+        },
+        "sourceResourceId": "showcase-inference-benchmark-local-docker",
+        "startedAt": 1792523409.859648,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-inference-benchmark-local-docker"
+      }
+    ],
+    "events": [
+      {
+        "aggregateId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "aggregateType": "execution_run",
+        "eventType": "execution.run.started",
+        "id": "6f93a4974d8cf238e157b4a4a75751b2",
+        "occurredAt": "2026-10-20T19:10:04.607489958Z",
+        "payload": {
+          "mode": "real",
+          "schedulePlanId": "showcase-inference-benchmark-local-7d8f10cfda-manual-plan-20261020t191004.373444000"
+        }
+      },
+      {
+        "aggregateId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-freeze-inputs",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "46a9491bc811f21bc86556858b707a55",
+        "occurredAt": "2026-10-20T19:10:05.780401625Z",
+        "payload": {
+          "activityId": "showcase-inference-benchmark-local-7d8f10cfda-freeze-inputs",
+          "executionRunId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-freeze-inputs",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "a9bab0bac204f2dd9a4fa456c16aeaae",
+        "occurredAt": "2026-10-20T19:10:05.85347675Z",
+        "payload": {
+          "activityId": "showcase-inference-benchmark-local-7d8f10cfda-freeze-inputs",
+          "executionRunId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+          "failureReason": "",
+          "runtimeSeconds": 0.10933852195739746,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-gpu",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "f7946fb989edf0e6d305dbed271ee1c3",
+        "occurredAt": "2026-10-20T19:10:07.791327001Z",
+        "payload": {
+          "activityId": "showcase-inference-benchmark-local-7d8f10cfda-gpu",
+          "executionRunId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-cpu",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "e8684e4922639a4106afac532bb63f43",
+        "occurredAt": "2026-10-20T19:10:07.796870418Z",
+        "payload": {
+          "activityId": "showcase-inference-benchmark-local-7d8f10cfda-cpu",
+          "executionRunId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-edge",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "d063212b7a55aa36c8db6abd8a53fedd",
+        "occurredAt": "2026-10-20T19:10:07.799958168Z",
+        "payload": {
+          "activityId": "showcase-inference-benchmark-local-7d8f10cfda-edge",
+          "executionRunId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-gpu",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "d73da15a827067b5128143dc849c09bb",
+        "occurredAt": "2026-10-20T19:10:07.932270376Z",
+        "payload": {
+          "activityId": "showcase-inference-benchmark-local-7d8f10cfda-gpu",
+          "executionRunId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+          "failureReason": "",
+          "runtimeSeconds": 0.1219487190246582,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-edge",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "4453fd571ccd17d6f33b8949b6b38d5e",
+        "occurredAt": "2026-10-20T19:10:07.939322376Z",
+        "payload": {
+          "activityId": "showcase-inference-benchmark-local-7d8f10cfda-edge",
+          "executionRunId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+          "failureReason": "",
+          "runtimeSeconds": 0.12140655517578125,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-cpu",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "b1aa8462871baf0d42e2f9f7605931b7",
+        "occurredAt": "2026-10-20T19:10:07.944008793Z",
+        "payload": {
+          "activityId": "showcase-inference-benchmark-local-7d8f10cfda-cpu",
+          "executionRunId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+          "failureReason": "",
+          "runtimeSeconds": 0.12150430679321289,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-normalize",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "53eacc7e3ce11699f179b11a3bf4b609",
+        "occurredAt": "2026-10-20T19:10:09.788619377Z",
+        "payload": {
+          "activityId": "showcase-inference-benchmark-local-7d8f10cfda-normalize",
+          "executionRunId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-normalize",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "0fc237c52dc73a02830b3e915b652909",
+        "occurredAt": "2026-10-20T19:10:09.854346127Z",
+        "payload": {
+          "activityId": "showcase-inference-benchmark-local-7d8f10cfda-normalize",
+          "executionRunId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+          "failureReason": "",
+          "runtimeSeconds": 0.1079549789428711,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-compare-cost-and-latency",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "612607419fdca9c69b14928ac32e71bf",
+        "occurredAt": "2026-10-20T19:10:11.798944212Z",
+        "payload": {
+          "activityId": "showcase-inference-benchmark-local-7d8f10cfda-compare-cost-and-latency",
+          "executionRunId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-compare-cost-and-latency",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "251efdc8fb2bfd64a1372a68de981612",
+        "occurredAt": "2026-10-20T19:10:11.88090542Z",
+        "payload": {
+          "activityId": "showcase-inference-benchmark-local-7d8f10cfda-compare-cost-and-latency",
+          "executionRunId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+          "failureReason": "",
+          "runtimeSeconds": 0.11179471015930176,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "aggregateType": "execution_run",
+        "eventType": "execution.run.completed",
+        "id": "13d63b8ca6afed5ff50ba0b7a21967d7",
+        "occurredAt": "2026-10-20T19:10:11.885020545Z",
+        "payload": {
+          "cost": 0,
+          "makespanSeconds": 5.549886465072632
+        }
+      }
+    ],
+    "handles": [
+      {
+        "activityId": "showcase-inference-benchmark-local-7d8f10cfda-compare-cost-and-latency",
+        "artifacts": {
+          "activityId": "showcase-inference-benchmark-local-7d8f10cfda-compare-cost-and-latency",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:ef26d0bf5c77739bc70fe3c01a6653797842234dfaf05dc68fb001302da9ab2b",
+              "modifiedUnixNano": 1792523410295219000,
+              "path": "benchmark.csv",
+              "sizeBytes": 298
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:3879b52fb943ef36ff37b69f47d01c1a3a20288322f6fc6e8a173ea800b53e8f",
+              "modifiedUnixNano": 1792523410295219000,
+              "path": "report.html",
+              "sizeBytes": 1163
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:637443a27905dead962022725fc4a914c82d820e0065b99fd698914344e0fa84",
+              "modifiedUnixNano": 1792523410295219000,
+              "path": "stage-compare-cost-and-latency.json",
+              "sizeBytes": 1244
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:ef26d0bf5c77739bc70fe3c01a6653797842234dfaf05dc68fb001302da9ab2b",
+              "modifiedUnixNano": 1792523410295219000,
+              "path": "benchmark.csv",
+              "sizeBytes": 298
+            },
+            {
+              "checksum": "sha256:3879b52fb943ef36ff37b69f47d01c1a3a20288322f6fc6e8a173ea800b53e8f",
+              "modifiedUnixNano": 1792523410295219000,
+              "path": "report.html",
+              "sizeBytes": 1163
+            },
+            {
+              "checksum": "sha256:637443a27905dead962022725fc4a914c82d820e0065b99fd698914344e0fa84",
+              "modifiedUnixNano": 1792523410295219000,
+              "path": "stage-compare-cost-and-latency.json",
+              "sizeBytes": 1244
+            },
+            {
+              "checksum": "sha256:a32d275e8c368c2b9cc3d437dca12c71e43f0e23a80808a8ab87f42628ec8efa",
+              "modifiedUnixNano": 1792523409997219000,
+              "path": "stage-cpu.json",
+              "sizeBytes": 530
+            },
+            {
+              "checksum": "sha256:aaffa993177913d5d5e84044ee439f20aaf388738bd01f9312923d74ec893de7",
+              "modifiedUnixNano": 1792523409997219000,
+              "path": "stage-edge.json",
+              "sizeBytes": 531
+            },
+            {
+              "checksum": "sha256:8bbb66e5aa9874b4d8bdb85a4343aa09273f5e57f64da70a457fec437bde2b5f",
+              "modifiedUnixNano": 1792523409997219000,
+              "path": "stage-freeze-inputs.json",
+              "sizeBytes": 12351
+            },
+            {
+              "checksum": "sha256:7d54efda16cfe1790a59e45d016ce1719a0a85413de6be7d73171894fded1967",
+              "modifiedUnixNano": 1792523409997219000,
+              "path": "stage-gpu.json",
+              "sizeBytes": 530
+            },
+            {
+              "checksum": "sha256:7cec215be591f67ee71fb5f79d194fb90f86abbe0519b3da338822d0b3a921f9",
+              "modifiedUnixNano": 1792523409997219000,
+              "path": "stage-normalize.json",
+              "sizeBytes": 1187
+            }
+          ],
+          "finishedAt": 1792523410.302092,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:a32d275e8c368c2b9cc3d437dca12c71e43f0e23a80808a8ab87f42628ec8efa",
+              "modifiedUnixNano": 1792523409997219000,
+              "path": "stage-cpu.json",
+              "sizeBytes": 530
+            },
+            {
+              "checksum": "sha256:aaffa993177913d5d5e84044ee439f20aaf388738bd01f9312923d74ec893de7",
+              "modifiedUnixNano": 1792523409997219000,
+              "path": "stage-edge.json",
+              "sizeBytes": 531
+            },
+            {
+              "checksum": "sha256:8bbb66e5aa9874b4d8bdb85a4343aa09273f5e57f64da70a457fec437bde2b5f",
+              "modifiedUnixNano": 1792523409997219000,
+              "path": "stage-freeze-inputs.json",
+              "sizeBytes": 12351
+            },
+            {
+              "checksum": "sha256:7d54efda16cfe1790a59e45d016ce1719a0a85413de6be7d73171894fded1967",
+              "modifiedUnixNano": 1792523409997219000,
+              "path": "stage-gpu.json",
+              "sizeBytes": 530
+            },
+            {
+              "checksum": "sha256:7cec215be591f67ee71fb5f79d194fb90f86abbe0519b3da338822d0b3a921f9",
+              "modifiedUnixNano": 1792523409997219000,
+              "path": "stage-normalize.json",
+              "sizeBytes": 1187
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.11179471015930176,
+              "finishedAt": 1792523410.302092,
+              "phase": "execution",
+              "startedAt": 1792523410.1902974,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000/showcase-inference-benchmark-local-7d8f10cfda-compare-cost-and-latency",
+          "runId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+          "runtime": "showcase-inference-benchmark-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523410.1902974,
+          "summary": {
+            "createdFiles": 3,
+            "deletedFiles": 0,
+            "finalFiles": 8,
+            "initialFiles": 5,
+            "modifiedFiles": 0,
+            "outputBytes": 2705
+          }
+        },
+        "exitCode": 0,
+        "externalId": "ba4f155a4ef7fe1c1d9ce4fd50f842b72bd8b50ecc71f11e81d3a982b6c97139",
+        "finishedAt": 1792523410.302092,
+        "id": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-compare-cost-and-latency",
+        "log": "{\"activity\": \"compare-cost-and-latency\", \"status\": \"success\", \"resultKeys\": [\"measurements\", \"note\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-inference-benchmark-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000/showcase-inference-benchmark-local-7d8f10cfda-compare-cost-and-latency",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523410.1903024,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000-showcase-inference-benchmark-local-7d8f10cfda-compare-cost-and-latency",
+          "submittedAt": 1792523410.1902974
+        },
+        "resourceId": "showcase-inference-benchmark-local-docker",
+        "runId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "runtimeId": "showcase-inference-benchmark-local",
+        "startedAt": 1792523410.1902974,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-inference-benchmark-local-7d8f10cfda-cpu",
+        "artifacts": {
+          "activityId": "showcase-inference-benchmark-local-7d8f10cfda-cpu",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:a32d275e8c368c2b9cc3d437dca12c71e43f0e23a80808a8ab87f42628ec8efa",
+              "modifiedUnixNano": 1792523406357219000,
+              "path": "stage-cpu.json",
+              "sizeBytes": 530
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:a32d275e8c368c2b9cc3d437dca12c71e43f0e23a80808a8ab87f42628ec8efa",
+              "modifiedUnixNano": 1792523406357219000,
+              "path": "stage-cpu.json",
+              "sizeBytes": 530
+            },
+            {
+              "checksum": "sha256:8bbb66e5aa9874b4d8bdb85a4343aa09273f5e57f64da70a457fec437bde2b5f",
+              "modifiedUnixNano": 1792523405997219000,
+              "path": "stage-freeze-inputs.json",
+              "sizeBytes": 12351
+            }
+          ],
+          "finishedAt": 1792523406.3637214,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:8bbb66e5aa9874b4d8bdb85a4343aa09273f5e57f64da70a457fec437bde2b5f",
+              "modifiedUnixNano": 1792523405997219000,
+              "path": "stage-freeze-inputs.json",
+              "sizeBytes": 12351
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.12150430679321289,
+              "finishedAt": 1792523406.3637214,
+              "phase": "execution",
+              "startedAt": 1792523406.242217,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000/showcase-inference-benchmark-local-7d8f10cfda-cpu",
+          "runId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+          "runtime": "showcase-inference-benchmark-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523406.242217,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 2,
+            "initialFiles": 1,
+            "modifiedFiles": 0,
+            "outputBytes": 530
+          }
+        },
+        "exitCode": 0,
+        "externalId": "57b6f7bd94b244ed071a4273f1241d74469ebd7c3470a3a843f2190251bb6e23",
+        "finishedAt": 1792523406.3637214,
+        "id": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-cpu",
+        "log": "{\"activity\": \"cpu\", \"status\": \"success\", \"resultKeys\": [\"target\", \"hardware\", \"batchSize\", \"elapsedNanoseconds\", \"predictions\", \"checksum\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-inference-benchmark-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000/showcase-inference-benchmark-local-7d8f10cfda-cpu",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523406.2422287,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000-showcase-inference-benchmark-local-7d8f10cfda-cpu",
+          "submittedAt": 1792523406.242217
+        },
+        "resourceId": "showcase-inference-benchmark-local-docker",
+        "runId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "runtimeId": "showcase-inference-benchmark-local",
+        "startedAt": 1792523406.242217,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-inference-benchmark-local-7d8f10cfda-edge",
+        "artifacts": {
+          "activityId": "showcase-inference-benchmark-local-7d8f10cfda-edge",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:aaffa993177913d5d5e84044ee439f20aaf388738bd01f9312923d74ec893de7",
+              "modifiedUnixNano": 1792523406375219000,
+              "path": "stage-edge.json",
+              "sizeBytes": 531
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:aaffa993177913d5d5e84044ee439f20aaf388738bd01f9312923d74ec893de7",
+              "modifiedUnixNano": 1792523406375219000,
+              "path": "stage-edge.json",
+              "sizeBytes": 531
+            },
+            {
+              "checksum": "sha256:8bbb66e5aa9874b4d8bdb85a4343aa09273f5e57f64da70a457fec437bde2b5f",
+              "modifiedUnixNano": 1792523406001219000,
+              "path": "stage-freeze-inputs.json",
+              "sizeBytes": 12351
+            }
+          ],
+          "finishedAt": 1792523406.3817446,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:8bbb66e5aa9874b4d8bdb85a4343aa09273f5e57f64da70a457fec437bde2b5f",
+              "modifiedUnixNano": 1792523406001219000,
+              "path": "stage-freeze-inputs.json",
+              "sizeBytes": 12351
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.12140655517578125,
+              "finishedAt": 1792523406.3817446,
+              "phase": "execution",
+              "startedAt": 1792523406.260338,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000/showcase-inference-benchmark-local-7d8f10cfda-edge",
+          "runId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+          "runtime": "showcase-inference-benchmark-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523406.260338,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 2,
+            "initialFiles": 1,
+            "modifiedFiles": 0,
+            "outputBytes": 531
+          }
+        },
+        "exitCode": 0,
+        "externalId": "811834865f86e4831afe62feaa90769980415b1c43978bcc40338244a80826aa",
+        "finishedAt": 1792523406.3817446,
+        "id": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-edge",
+        "log": "{\"activity\": \"edge\", \"status\": \"success\", \"resultKeys\": [\"target\", \"hardware\", \"batchSize\", \"elapsedNanoseconds\", \"predictions\", \"checksum\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-inference-benchmark-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000/showcase-inference-benchmark-local-7d8f10cfda-edge",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523406.2603433,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000-showcase-inference-benchmark-local-7d8f10cfda-edge",
+          "submittedAt": 1792523406.260338
+        },
+        "resourceId": "showcase-inference-benchmark-local-docker",
+        "runId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "runtimeId": "showcase-inference-benchmark-local",
+        "startedAt": 1792523406.260338,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-inference-benchmark-local-7d8f10cfda-freeze-inputs",
+        "artifacts": {
+          "activityId": "showcase-inference-benchmark-local-7d8f10cfda-freeze-inputs",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:8bbb66e5aa9874b4d8bdb85a4343aa09273f5e57f64da70a457fec437bde2b5f",
+              "modifiedUnixNano": 1792523404855219000,
+              "path": "stage-freeze-inputs.json",
+              "sizeBytes": 12351
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:8bbb66e5aa9874b4d8bdb85a4343aa09273f5e57f64da70a457fec437bde2b5f",
+              "modifiedUnixNano": 1792523404855219000,
+              "path": "stage-freeze-inputs.json",
+              "sizeBytes": 12351
+            }
+          ],
+          "finishedAt": 1792523404.8615441,
+          "phases": [
+            {
+              "durationSeconds": 0.10933852195739746,
+              "finishedAt": 1792523404.8615441,
+              "phase": "execution",
+              "startedAt": 1792523404.7522056,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000/showcase-inference-benchmark-local-7d8f10cfda-freeze-inputs",
+          "runId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+          "runtime": "showcase-inference-benchmark-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523404.7522056,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 1,
+            "initialFiles": 0,
+            "modifiedFiles": 0,
+            "outputBytes": 12351
+          }
+        },
+        "exitCode": 0,
+        "externalId": "8912417a1859c9ff6c04d7bd1105ffa2e2bc10c85ce5c0224ac9576d7c28c792",
+        "finishedAt": 1792523404.8615441,
+        "id": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-freeze-inputs",
+        "log": "{\"activity\": \"freeze-inputs\", \"status\": \"success\", \"resultKeys\": [\"model\", \"inputs\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-inference-benchmark-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000/showcase-inference-benchmark-local-7d8f10cfda-freeze-inputs",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523404.7522268,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000-showcase-inference-benchmark-local-7d8f10cfda-freeze-inputs",
+          "submittedAt": 1792523404.7522056
+        },
+        "resourceId": "showcase-inference-benchmark-local-docker",
+        "runId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "runtimeId": "showcase-inference-benchmark-local",
+        "startedAt": 1792523404.7522056,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-inference-benchmark-local-7d8f10cfda-gpu",
+        "artifacts": {
+          "activityId": "showcase-inference-benchmark-local-7d8f10cfda-gpu",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:7d54efda16cfe1790a59e45d016ce1719a0a85413de6be7d73171894fded1967",
+              "modifiedUnixNano": 1792523406366219000,
+              "path": "stage-gpu.json",
+              "sizeBytes": 530
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:8bbb66e5aa9874b4d8bdb85a4343aa09273f5e57f64da70a457fec437bde2b5f",
+              "modifiedUnixNano": 1792523405998219000,
+              "path": "stage-freeze-inputs.json",
+              "sizeBytes": 12351
+            },
+            {
+              "checksum": "sha256:7d54efda16cfe1790a59e45d016ce1719a0a85413de6be7d73171894fded1967",
+              "modifiedUnixNano": 1792523406366219000,
+              "path": "stage-gpu.json",
+              "sizeBytes": 530
+            }
+          ],
+          "finishedAt": 1792523406.371926,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:8bbb66e5aa9874b4d8bdb85a4343aa09273f5e57f64da70a457fec437bde2b5f",
+              "modifiedUnixNano": 1792523405998219000,
+              "path": "stage-freeze-inputs.json",
+              "sizeBytes": 12351
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.1219487190246582,
+              "finishedAt": 1792523406.371926,
+              "phase": "execution",
+              "startedAt": 1792523406.2499774,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000/showcase-inference-benchmark-local-7d8f10cfda-gpu",
+          "runId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+          "runtime": "showcase-inference-benchmark-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523406.2499774,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 2,
+            "initialFiles": 1,
+            "modifiedFiles": 0,
+            "outputBytes": 530
+          }
+        },
+        "exitCode": 0,
+        "externalId": "ba07da2c5d95baf8f14d5662b3e550e15128c90481bb935d256e13461e761422",
+        "finishedAt": 1792523406.371926,
+        "id": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-gpu",
+        "log": "{\"activity\": \"gpu\", \"status\": \"success\", \"resultKeys\": [\"target\", \"hardware\", \"batchSize\", \"elapsedNanoseconds\", \"predictions\", \"checksum\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-inference-benchmark-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000/showcase-inference-benchmark-local-7d8f10cfda-gpu",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523406.2499838,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000-showcase-inference-benchmark-local-7d8f10cfda-gpu",
+          "submittedAt": 1792523406.2499774
+        },
+        "resourceId": "showcase-inference-benchmark-local-docker",
+        "runId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "runtimeId": "showcase-inference-benchmark-local",
+        "startedAt": 1792523406.2499774,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-inference-benchmark-local-7d8f10cfda-normalize",
+        "artifacts": {
+          "activityId": "showcase-inference-benchmark-local-7d8f10cfda-normalize",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:7cec215be591f67ee71fb5f79d194fb90f86abbe0519b3da338822d0b3a921f9",
+              "modifiedUnixNano": 1792523408775219000,
+              "path": "stage-normalize.json",
+              "sizeBytes": 1187
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:a32d275e8c368c2b9cc3d437dca12c71e43f0e23a80808a8ab87f42628ec8efa",
+              "modifiedUnixNano": 1792523408200219000,
+              "path": "stage-cpu.json",
+              "sizeBytes": 530
+            },
+            {
+              "checksum": "sha256:aaffa993177913d5d5e84044ee439f20aaf388738bd01f9312923d74ec893de7",
+              "modifiedUnixNano": 1792523408449219000,
+              "path": "stage-edge.json",
+              "sizeBytes": 531
+            },
+            {
+              "checksum": "sha256:8bbb66e5aa9874b4d8bdb85a4343aa09273f5e57f64da70a457fec437bde2b5f",
+              "modifiedUnixNano": 1792523408200219000,
+              "path": "stage-freeze-inputs.json",
+              "sizeBytes": 12351
+            },
+            {
+              "checksum": "sha256:7d54efda16cfe1790a59e45d016ce1719a0a85413de6be7d73171894fded1967",
+              "modifiedUnixNano": 1792523408317219000,
+              "path": "stage-gpu.json",
+              "sizeBytes": 530
+            },
+            {
+              "checksum": "sha256:7cec215be591f67ee71fb5f79d194fb90f86abbe0519b3da338822d0b3a921f9",
+              "modifiedUnixNano": 1792523408775219000,
+              "path": "stage-normalize.json",
+              "sizeBytes": 1187
+            }
+          ],
+          "finishedAt": 1792523408.7815669,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:a32d275e8c368c2b9cc3d437dca12c71e43f0e23a80808a8ab87f42628ec8efa",
+              "modifiedUnixNano": 1792523408200219000,
+              "path": "stage-cpu.json",
+              "sizeBytes": 530
+            },
+            {
+              "checksum": "sha256:aaffa993177913d5d5e84044ee439f20aaf388738bd01f9312923d74ec893de7",
+              "modifiedUnixNano": 1792523408449219000,
+              "path": "stage-edge.json",
+              "sizeBytes": 531
+            },
+            {
+              "checksum": "sha256:8bbb66e5aa9874b4d8bdb85a4343aa09273f5e57f64da70a457fec437bde2b5f",
+              "modifiedUnixNano": 1792523408200219000,
+              "path": "stage-freeze-inputs.json",
+              "sizeBytes": 12351
+            },
+            {
+              "checksum": "sha256:7d54efda16cfe1790a59e45d016ce1719a0a85413de6be7d73171894fded1967",
+              "modifiedUnixNano": 1792523408317219000,
+              "path": "stage-gpu.json",
+              "sizeBytes": 530
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.1079549789428711,
+              "finishedAt": 1792523408.7815669,
+              "phase": "execution",
+              "startedAt": 1792523408.6736119,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000/showcase-inference-benchmark-local-7d8f10cfda-normalize",
+          "runId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+          "runtime": "showcase-inference-benchmark-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523408.6736119,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 5,
+            "initialFiles": 4,
+            "modifiedFiles": 0,
+            "outputBytes": 1187
+          }
+        },
+        "exitCode": 0,
+        "externalId": "7ed6d7921e027baa56114760c6c8d1c39b448af2315b5758af9e70f73be8b93d",
+        "finishedAt": 1792523408.7815669,
+        "id": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-normalize",
+        "log": "{\"activity\": \"normalize\", \"status\": \"success\", \"resultKeys\": [\"measurements\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-inference-benchmark-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000/showcase-inference-benchmark-local-7d8f10cfda-normalize",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523408.6736212,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000-showcase-inference-benchmark-local-7d8f10cfda-normalize",
+          "submittedAt": 1792523408.6736119
+        },
+        "resourceId": "showcase-inference-benchmark-local-docker",
+        "runId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "runtimeId": "showcase-inference-benchmark-local",
+        "startedAt": 1792523408.6736119,
+        "status": "completed"
+      }
+    ],
+    "infrastructureRuns": [],
+    "operationEvents": [],
+    "run": {
+      "activityCount": 6,
+      "breakdown": {
+        "computeSeconds": 0.6939477920532227,
+        "interferenceSeconds": 0,
+        "overheadSeconds": 0,
+        "queueSeconds": 0,
+        "transferSeconds": 1.9385111331939697
+      },
+      "completedActivityCount": 6,
+      "cost": 0,
+      "finishedAt": "2026-10-20T19:10:11Z",
+      "id": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+      "kind": "workflow",
+      "makespanSeconds": 5.549886465072632,
+      "mode": "real",
+      "schedulePlanId": "showcase-inference-benchmark-local-7d8f10cfda-manual-plan-20261020t191004.373444000",
+      "seed": 0,
+      "startedAt": "2026-10-20T19:10:04Z",
+      "status": "completed",
+      "title": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+      "transferredBytes": 66124
+    },
+    "timeline": {
+      "computeMakespanSeconds": 5.549886465072632,
+      "coveredWallSeconds": 2.03608775138855,
+      "finishedAt": 1792523411,
+      "phases": [
+        {
+          "activityId": "showcase-inference-benchmark-local-7d8f10cfda-freeze-inputs",
+          "category": "resource-queue",
+          "durationSeconds": 0.11890625953674316,
+          "finishedAt": 1792523404.7522056,
+          "id": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-freeze-inputs:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523404.6332994,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-inference-benchmark-local-7d8f10cfda-freeze-inputs",
+          "category": "runtime",
+          "durationSeconds": 0.10933852195739746,
+          "finishedAt": 1792523404.8615441,
+          "id": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-freeze-inputs:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523404.7522056,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-inference-benchmark-local-7d8f10cfda-cpu",
+          "category": "resource-queue",
+          "durationSeconds": 0.007591724395751953,
+          "finishedAt": 1792523405.8631773,
+          "id": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-cpu:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523405.8555856,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-inference-benchmark-local-7d8f10cfda-edge",
+          "category": "resource-queue",
+          "durationSeconds": 0.010754823684692383,
+          "finishedAt": 1792523405.8680246,
+          "id": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-edge:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523405.8572698,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-inference-benchmark-local-7d8f10cfda-gpu",
+          "category": "resource-queue",
+          "durationSeconds": 0.006304502487182617,
+          "finishedAt": 1792523405.8649127,
+          "id": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-gpu:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523405.8586082,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-inference-benchmark-local-7d8f10cfda-cpu",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.18040752410888672,
+          "finishedAt": 1792523406.0435848,
+          "id": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-cpu:transfer-workspace-showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000-showcase-inference-benchmark-local-7d8f10cfda-cpu-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523405.8631773,
+          "status": "completed",
+          "transferId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-cpu:transfer-workspace-showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000-showcase-inference-benchmark-local-7d8f10cfda-cpu-0"
+        },
+        {
+          "activityId": "showcase-inference-benchmark-local-7d8f10cfda-gpu",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.1766221523284912,
+          "finishedAt": 1792523406.041535,
+          "id": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-gpu:transfer-workspace-showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000-showcase-inference-benchmark-local-7d8f10cfda-gpu-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523405.8649127,
+          "status": "completed",
+          "transferId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-gpu:transfer-workspace-showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000-showcase-inference-benchmark-local-7d8f10cfda-gpu-0"
+        },
+        {
+          "activityId": "showcase-inference-benchmark-local-7d8f10cfda-edge",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.17649126052856445,
+          "finishedAt": 1792523406.0445158,
+          "id": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-edge:transfer-workspace-showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000-showcase-inference-benchmark-local-7d8f10cfda-edge-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523405.8680246,
+          "status": "completed",
+          "transferId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-edge:transfer-workspace-showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000-showcase-inference-benchmark-local-7d8f10cfda-edge-0"
+        },
+        {
+          "activityId": "showcase-inference-benchmark-local-7d8f10cfda-gpu",
+          "category": "launch",
+          "durationSeconds": 0.20844244956970215,
+          "finishedAt": 1792523406.2499774,
+          "id": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-gpu:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523406.041535,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-inference-benchmark-local-7d8f10cfda-cpu",
+          "category": "launch",
+          "durationSeconds": 0.19863224029541016,
+          "finishedAt": 1792523406.242217,
+          "id": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-cpu:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523406.0435848,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-inference-benchmark-local-7d8f10cfda-edge",
+          "category": "launch",
+          "durationSeconds": 0.2158222198486328,
+          "finishedAt": 1792523406.260338,
+          "id": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-edge:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523406.0445158,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-inference-benchmark-local-7d8f10cfda-cpu",
+          "category": "runtime",
+          "durationSeconds": 0.12150430679321289,
+          "finishedAt": 1792523406.3637214,
+          "id": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-cpu:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523406.242217,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-inference-benchmark-local-7d8f10cfda-gpu",
+          "category": "runtime",
+          "durationSeconds": 0.1219487190246582,
+          "finishedAt": 1792523406.371926,
+          "id": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-gpu:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523406.2499774,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-inference-benchmark-local-7d8f10cfda-edge",
+          "category": "runtime",
+          "durationSeconds": 0.12140655517578125,
+          "finishedAt": 1792523406.3817446,
+          "id": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-edge:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523406.260338,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-inference-benchmark-local-7d8f10cfda-normalize",
+          "category": "resource-queue",
+          "durationSeconds": 0.007291555404663086,
+          "finishedAt": 1792523407.9534466,
+          "id": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-normalize:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523407.946155,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-inference-benchmark-local-7d8f10cfda-normalize",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.2703559398651123,
+          "finishedAt": 1792523408.2238026,
+          "id": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-normalize:transfer-workspace-showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000-showcase-inference-benchmark-local-7d8f10cfda-normalize-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523407.9534466,
+          "status": "completed",
+          "transferId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-normalize:transfer-workspace-showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000-showcase-inference-benchmark-local-7d8f10cfda-normalize-0"
+        },
+        {
+          "activityId": "showcase-inference-benchmark-local-7d8f10cfda-normalize",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.41069626808166504,
+          "finishedAt": 1792523408.364143,
+          "id": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-normalize:transfer-workspace-showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000-showcase-inference-benchmark-local-7d8f10cfda-normalize-1",
+          "source": "transfer-observation",
+          "startedAt": 1792523407.9534466,
+          "status": "completed",
+          "transferId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-normalize:transfer-workspace-showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000-showcase-inference-benchmark-local-7d8f10cfda-normalize-1"
+        },
+        {
+          "activityId": "showcase-inference-benchmark-local-7d8f10cfda-normalize",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.5411539077758789,
+          "finishedAt": 1792523408.4946005,
+          "id": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-normalize:transfer-workspace-showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000-showcase-inference-benchmark-local-7d8f10cfda-normalize-2",
+          "source": "transfer-observation",
+          "startedAt": 1792523407.9534466,
+          "status": "completed",
+          "transferId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-normalize:transfer-workspace-showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000-showcase-inference-benchmark-local-7d8f10cfda-normalize-2"
+        },
+        {
+          "activityId": "showcase-inference-benchmark-local-7d8f10cfda-normalize",
+          "category": "launch",
+          "durationSeconds": 0.17901134490966797,
+          "finishedAt": 1792523408.6736119,
+          "id": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-normalize:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523408.4946005,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-inference-benchmark-local-7d8f10cfda-normalize",
+          "category": "runtime",
+          "durationSeconds": 0.1079549789428711,
+          "finishedAt": 1792523408.7815669,
+          "id": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-normalize:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523408.6736119,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-inference-benchmark-local-7d8f10cfda-compare-cost-and-latency",
+          "category": "resource-queue",
+          "durationSeconds": 0.0038280487060546875,
+          "finishedAt": 1792523409.859648,
+          "id": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-compare-cost-and-latency:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523409.85582,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-inference-benchmark-local-7d8f10cfda-compare-cost-and-latency",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.1827840805053711,
+          "finishedAt": 1792523410.042432,
+          "id": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-compare-cost-and-latency:transfer-workspace-showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000-showcase-inference-benchmark-local-7d8f10cfda-compare-cost-and-latency-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523409.859648,
+          "status": "completed",
+          "transferId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-compare-cost-and-latency:transfer-workspace-showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000-showcase-inference-benchmark-local-7d8f10cfda-compare-cost-and-latency-0"
+        },
+        {
+          "activityId": "showcase-inference-benchmark-local-7d8f10cfda-compare-cost-and-latency",
+          "category": "launch",
+          "durationSeconds": 0.14786529541015625,
+          "finishedAt": 1792523410.1902974,
+          "id": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-compare-cost-and-latency:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523410.042432,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-inference-benchmark-local-7d8f10cfda-compare-cost-and-latency",
+          "category": "runtime",
+          "durationSeconds": 0.11179471015930176,
+          "finishedAt": 1792523410.302092,
+          "id": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000:showcase-inference-benchmark-local-7d8f10cfda-compare-cost-and-latency:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523410.1902974,
+          "status": "completed"
+        }
+      ],
+      "startedAt": 1792523404,
+      "totals": {
+        "destroySeconds": 0,
+        "executablePreparationSeconds": 0,
+        "launchSeconds": 0.9497735500335693,
+        "provisionSeconds": 0,
+        "resourceQueueSeconds": 0.1546769142150879,
+        "runtimeSeconds": 0.6939477920532227,
+        "startSeconds": 0,
+        "stopSeconds": 0,
+        "validationSeconds": 0,
+        "workspaceTransferSeconds": 1.9385111331939697
+      },
+      "unclassifiedWallSeconds": 4.96391224861145,
+      "wallSeconds": 7
+    },
+    "workspaceLeases": [
+      {
+        "consumerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-normalize",
+        "id": "workspace-lease-showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000-showcase-inference-benchmark-local-7d8f10cfda-cpu-showcase-inference-benchmark-local-7d8f10cfda-normalize",
+        "producerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-cpu",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:10:08.503989918Z",
+        "runId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "workspaceId": "workspace-showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000-showcase-inference-benchmark-local-7d8f10cfda-cpu"
+      },
+      {
+        "consumerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-normalize",
+        "id": "workspace-lease-showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000-showcase-inference-benchmark-local-7d8f10cfda-edge-showcase-inference-benchmark-local-7d8f10cfda-normalize",
+        "producerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-edge",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:10:08.503989918Z",
+        "runId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "workspaceId": "workspace-showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000-showcase-inference-benchmark-local-7d8f10cfda-edge"
+      },
+      {
+        "consumerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-cpu",
+        "id": "workspace-lease-showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000-showcase-inference-benchmark-local-7d8f10cfda-freeze-inputs-showcase-inference-benchmark-local-7d8f10cfda-cpu",
+        "producerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-freeze-inputs",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:10:06.047230209Z",
+        "runId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "workspaceId": "workspace-showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000-showcase-inference-benchmark-local-7d8f10cfda-freeze-inputs"
+      },
+      {
+        "consumerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-edge",
+        "id": "workspace-lease-showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000-showcase-inference-benchmark-local-7d8f10cfda-freeze-inputs-showcase-inference-benchmark-local-7d8f10cfda-edge",
+        "producerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-freeze-inputs",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:10:06.047344625Z",
+        "runId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "workspaceId": "workspace-showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000-showcase-inference-benchmark-local-7d8f10cfda-freeze-inputs"
+      },
+      {
+        "consumerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-gpu",
+        "id": "workspace-lease-showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000-showcase-inference-benchmark-local-7d8f10cfda-freeze-inputs-showcase-inference-benchmark-local-7d8f10cfda-gpu",
+        "producerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-freeze-inputs",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:10:06.047437167Z",
+        "runId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "workspaceId": "workspace-showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000-showcase-inference-benchmark-local-7d8f10cfda-freeze-inputs"
+      },
+      {
+        "consumerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-normalize",
+        "id": "workspace-lease-showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000-showcase-inference-benchmark-local-7d8f10cfda-gpu-showcase-inference-benchmark-local-7d8f10cfda-normalize",
+        "producerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-gpu",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:10:08.503989918Z",
+        "runId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "workspaceId": "workspace-showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000-showcase-inference-benchmark-local-7d8f10cfda-gpu"
+      },
+      {
+        "consumerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-compare-cost-and-latency",
+        "id": "workspace-lease-showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000-showcase-inference-benchmark-local-7d8f10cfda-normalize-showcase-inference-benchmark-local-7d8f10cfda-compare-cost-and-latency",
+        "producerActivityId": "showcase-inference-benchmark-local-7d8f10cfda-normalize",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:10:10.046486252Z",
+        "runId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "workspaceId": "workspace-showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000-showcase-inference-benchmark-local-7d8f10cfda-normalize"
+      }
+    ],
+    "workspaces": [
+      {
+        "activityId": "showcase-inference-benchmark-local-7d8f10cfda-compare-cost-and-latency",
+        "createdAt": "2026-10-20T19:10:04.610079666Z",
+        "driver": "local",
+        "environmentId": "showcase-inference-benchmark-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000/showcase-inference-benchmark-local-7d8f10cfda-compare-cost-and-latency",
+        "fileCount": 3,
+        "id": "workspace-showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000-showcase-inference-benchmark-local-7d8f10cfda-compare-cost-and-latency",
+        "inputBytes": 15129,
+        "isFinal": true,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:ef26d0bf5c77739bc70fe3c01a6653797842234dfaf05dc68fb001302da9ab2b",
+              "path": "benchmark.csv",
+              "sizeBytes": 298
+            },
+            {
+              "digest": "sha256:3879b52fb943ef36ff37b69f47d01c1a3a20288322f6fc6e8a173ea800b53e8f",
+              "path": "report.html",
+              "sizeBytes": 1163
+            },
+            {
+              "digest": "sha256:637443a27905dead962022725fc4a914c82d820e0065b99fd698914344e0fa84",
+              "path": "stage-compare-cost-and-latency.json",
+              "sizeBytes": 1244
+            },
+            {
+              "digest": "sha256:a32d275e8c368c2b9cc3d437dca12c71e43f0e23a80808a8ab87f42628ec8efa",
+              "path": "stage-cpu.json",
+              "sizeBytes": 530
+            },
+            {
+              "digest": "sha256:aaffa993177913d5d5e84044ee439f20aaf388738bd01f9312923d74ec893de7",
+              "path": "stage-edge.json",
+              "sizeBytes": 531
+            },
+            {
+              "digest": "sha256:8bbb66e5aa9874b4d8bdb85a4343aa09273f5e57f64da70a457fec437bde2b5f",
+              "path": "stage-freeze-inputs.json",
+              "sizeBytes": 12351
+            },
+            {
+              "digest": "sha256:7d54efda16cfe1790a59e45d016ce1719a0a85413de6be7d73171894fded1967",
+              "path": "stage-gpu.json",
+              "sizeBytes": 530
+            },
+            {
+              "digest": "sha256:7cec215be591f67ee71fb5f79d194fb90f86abbe0519b3da338822d0b3a921f9",
+              "path": "stage-normalize.json",
+              "sizeBytes": 1187
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:a32d275e8c368c2b9cc3d437dca12c71e43f0e23a80808a8ab87f42628ec8efa",
+              "path": "stage-cpu.json",
+              "sizeBytes": 530
+            },
+            {
+              "digest": "sha256:aaffa993177913d5d5e84044ee439f20aaf388738bd01f9312923d74ec893de7",
+              "path": "stage-edge.json",
+              "sizeBytes": 531
+            },
+            {
+              "digest": "sha256:8bbb66e5aa9874b4d8bdb85a4343aa09273f5e57f64da70a457fec437bde2b5f",
+              "path": "stage-freeze-inputs.json",
+              "sizeBytes": 12351
+            },
+            {
+              "digest": "sha256:7d54efda16cfe1790a59e45d016ce1719a0a85413de6be7d73171894fded1967",
+              "path": "stage-gpu.json",
+              "sizeBytes": 530
+            },
+            {
+              "digest": "sha256:7cec215be591f67ee71fb5f79d194fb90f86abbe0519b3da338822d0b3a921f9",
+              "path": "stage-normalize.json",
+              "sizeBytes": 1187
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:a32d275e8c368c2b9cc3d437dca12c71e43f0e23a80808a8ab87f42628ec8efa",
+              "path": "stage-cpu.json",
+              "sizeBytes": 530
+            },
+            {
+              "digest": "sha256:aaffa993177913d5d5e84044ee439f20aaf388738bd01f9312923d74ec893de7",
+              "path": "stage-edge.json",
+              "sizeBytes": 531
+            },
+            {
+              "digest": "sha256:8bbb66e5aa9874b4d8bdb85a4343aa09273f5e57f64da70a457fec437bde2b5f",
+              "path": "stage-freeze-inputs.json",
+              "sizeBytes": 12351
+            },
+            {
+              "digest": "sha256:7d54efda16cfe1790a59e45d016ce1719a0a85413de6be7d73171894fded1967",
+              "path": "stage-gpu.json",
+              "sizeBytes": 530
+            },
+            {
+              "digest": "sha256:7cec215be591f67ee71fb5f79d194fb90f86abbe0519b3da338822d0b3a921f9",
+              "path": "stage-normalize.json",
+              "sizeBytes": 1187
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:ef26d0bf5c77739bc70fe3c01a6653797842234dfaf05dc68fb001302da9ab2b",
+              "path": "benchmark.csv",
+              "sizeBytes": 298
+            },
+            {
+              "digest": "sha256:3879b52fb943ef36ff37b69f47d01c1a3a20288322f6fc6e8a173ea800b53e8f",
+              "path": "report.html",
+              "sizeBytes": 1163
+            },
+            {
+              "digest": "sha256:637443a27905dead962022725fc4a914c82d820e0065b99fd698914344e0fa84",
+              "path": "stage-compare-cost-and-latency.json",
+              "sizeBytes": 1244
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000/showcase-inference-benchmark-local-7d8f10cfda-compare-cost-and-latency",
+        "outputBytes": 2705,
+        "pinned": false,
+        "reclaimedBytes": 15129,
+        "releaseReason": "inherited inputs pruned",
+        "resourceId": "showcase-inference-benchmark-local-docker",
+        "retention": "final",
+        "runId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "runtimeId": "showcase-inference-benchmark-local",
+        "sealedAt": "2026-10-20T19:10:11.871845087Z",
+        "sizeBytes": 2705,
+        "state": "sealed",
+        "uri": "file:///akoflow/workspace/runs/showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000/showcase-inference-benchmark-local-7d8f10cfda-compare-cost-and-latency"
+      },
+      {
+        "activityId": "showcase-inference-benchmark-local-7d8f10cfda-cpu",
+        "createdAt": "2026-10-20T19:10:04.610079666Z",
+        "driver": "local",
+        "environmentId": "showcase-inference-benchmark-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000/showcase-inference-benchmark-local-7d8f10cfda-cpu",
+        "fileCount": 2,
+        "id": "workspace-showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000-showcase-inference-benchmark-local-7d8f10cfda-cpu",
+        "inputBytes": 12351,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:a32d275e8c368c2b9cc3d437dca12c71e43f0e23a80808a8ab87f42628ec8efa",
+              "path": "stage-cpu.json",
+              "sizeBytes": 530
+            },
+            {
+              "digest": "sha256:8bbb66e5aa9874b4d8bdb85a4343aa09273f5e57f64da70a457fec437bde2b5f",
+              "path": "stage-freeze-inputs.json",
+              "sizeBytes": 12351
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:8bbb66e5aa9874b4d8bdb85a4343aa09273f5e57f64da70a457fec437bde2b5f",
+              "path": "stage-freeze-inputs.json",
+              "sizeBytes": 12351
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:8bbb66e5aa9874b4d8bdb85a4343aa09273f5e57f64da70a457fec437bde2b5f",
+              "path": "stage-freeze-inputs.json",
+              "sizeBytes": 12351
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:a32d275e8c368c2b9cc3d437dca12c71e43f0e23a80808a8ab87f42628ec8efa",
+              "path": "stage-cpu.json",
+              "sizeBytes": 530
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000/showcase-inference-benchmark-local-7d8f10cfda-cpu",
+        "outputBytes": 530,
+        "pinned": false,
+        "reclaimedBytes": 12881,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:10:08.513349793Z",
+        "resourceId": "showcase-inference-benchmark-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "runtimeId": "showcase-inference-benchmark-local",
+        "sealedAt": "2026-10-20T19:10:07.942183251Z",
+        "sizeBytes": 12881,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000/showcase-inference-benchmark-local-7d8f10cfda-cpu"
+      },
+      {
+        "activityId": "showcase-inference-benchmark-local-7d8f10cfda-edge",
+        "createdAt": "2026-10-20T19:10:04.610079666Z",
+        "driver": "local",
+        "environmentId": "showcase-inference-benchmark-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000/showcase-inference-benchmark-local-7d8f10cfda-edge",
+        "fileCount": 2,
+        "id": "workspace-showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000-showcase-inference-benchmark-local-7d8f10cfda-edge",
+        "inputBytes": 12351,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:aaffa993177913d5d5e84044ee439f20aaf388738bd01f9312923d74ec893de7",
+              "path": "stage-edge.json",
+              "sizeBytes": 531
+            },
+            {
+              "digest": "sha256:8bbb66e5aa9874b4d8bdb85a4343aa09273f5e57f64da70a457fec437bde2b5f",
+              "path": "stage-freeze-inputs.json",
+              "sizeBytes": 12351
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:8bbb66e5aa9874b4d8bdb85a4343aa09273f5e57f64da70a457fec437bde2b5f",
+              "path": "stage-freeze-inputs.json",
+              "sizeBytes": 12351
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:8bbb66e5aa9874b4d8bdb85a4343aa09273f5e57f64da70a457fec437bde2b5f",
+              "path": "stage-freeze-inputs.json",
+              "sizeBytes": 12351
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:aaffa993177913d5d5e84044ee439f20aaf388738bd01f9312923d74ec893de7",
+              "path": "stage-edge.json",
+              "sizeBytes": 531
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000/showcase-inference-benchmark-local-7d8f10cfda-edge",
+        "outputBytes": 531,
+        "pinned": false,
+        "reclaimedBytes": 12882,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:10:08.534072585Z",
+        "resourceId": "showcase-inference-benchmark-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "runtimeId": "showcase-inference-benchmark-local",
+        "sealedAt": "2026-10-20T19:10:07.93594246Z",
+        "sizeBytes": 12882,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000/showcase-inference-benchmark-local-7d8f10cfda-edge"
+      },
+      {
+        "activityId": "showcase-inference-benchmark-local-7d8f10cfda-freeze-inputs",
+        "createdAt": "2026-10-20T19:10:04.610079666Z",
+        "driver": "local",
+        "environmentId": "showcase-inference-benchmark-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000/showcase-inference-benchmark-local-7d8f10cfda-freeze-inputs",
+        "fileCount": 1,
+        "id": "workspace-showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000-showcase-inference-benchmark-local-7d8f10cfda-freeze-inputs",
+        "inputBytes": 0,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:8bbb66e5aa9874b4d8bdb85a4343aa09273f5e57f64da70a457fec437bde2b5f",
+              "path": "stage-freeze-inputs.json",
+              "sizeBytes": 12351
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:8bbb66e5aa9874b4d8bdb85a4343aa09273f5e57f64da70a457fec437bde2b5f",
+              "path": "stage-freeze-inputs.json",
+              "sizeBytes": 12351
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000/showcase-inference-benchmark-local-7d8f10cfda-freeze-inputs",
+        "outputBytes": 12351,
+        "pinned": false,
+        "reclaimedBytes": 0,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:10:06.060007959Z",
+        "resourceId": "showcase-inference-benchmark-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "runtimeId": "showcase-inference-benchmark-local",
+        "sealedAt": "2026-10-20T19:10:05.850736459Z",
+        "sizeBytes": 12351,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000/showcase-inference-benchmark-local-7d8f10cfda-freeze-inputs"
+      },
+      {
+        "activityId": "showcase-inference-benchmark-local-7d8f10cfda-gpu",
+        "createdAt": "2026-10-20T19:10:04.610079666Z",
+        "driver": "local",
+        "environmentId": "showcase-inference-benchmark-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000/showcase-inference-benchmark-local-7d8f10cfda-gpu",
+        "fileCount": 2,
+        "id": "workspace-showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000-showcase-inference-benchmark-local-7d8f10cfda-gpu",
+        "inputBytes": 12351,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:8bbb66e5aa9874b4d8bdb85a4343aa09273f5e57f64da70a457fec437bde2b5f",
+              "path": "stage-freeze-inputs.json",
+              "sizeBytes": 12351
+            },
+            {
+              "digest": "sha256:7d54efda16cfe1790a59e45d016ce1719a0a85413de6be7d73171894fded1967",
+              "path": "stage-gpu.json",
+              "sizeBytes": 530
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:8bbb66e5aa9874b4d8bdb85a4343aa09273f5e57f64da70a457fec437bde2b5f",
+              "path": "stage-freeze-inputs.json",
+              "sizeBytes": 12351
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:8bbb66e5aa9874b4d8bdb85a4343aa09273f5e57f64da70a457fec437bde2b5f",
+              "path": "stage-freeze-inputs.json",
+              "sizeBytes": 12351
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:7d54efda16cfe1790a59e45d016ce1719a0a85413de6be7d73171894fded1967",
+              "path": "stage-gpu.json",
+              "sizeBytes": 530
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000/showcase-inference-benchmark-local-7d8f10cfda-gpu",
+        "outputBytes": 530,
+        "pinned": false,
+        "reclaimedBytes": 12881,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:10:08.547781335Z",
+        "resourceId": "showcase-inference-benchmark-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "runtimeId": "showcase-inference-benchmark-local",
+        "sealedAt": "2026-10-20T19:10:07.925920918Z",
+        "sizeBytes": 12881,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000/showcase-inference-benchmark-local-7d8f10cfda-gpu"
+      },
+      {
+        "activityId": "showcase-inference-benchmark-local-7d8f10cfda-normalize",
+        "createdAt": "2026-10-20T19:10:04.610079666Z",
+        "driver": "local",
+        "environmentId": "showcase-inference-benchmark-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000/showcase-inference-benchmark-local-7d8f10cfda-normalize",
+        "fileCount": 5,
+        "id": "workspace-showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000-showcase-inference-benchmark-local-7d8f10cfda-normalize",
+        "inputBytes": 13942,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:a32d275e8c368c2b9cc3d437dca12c71e43f0e23a80808a8ab87f42628ec8efa",
+              "path": "stage-cpu.json",
+              "sizeBytes": 530
+            },
+            {
+              "digest": "sha256:aaffa993177913d5d5e84044ee439f20aaf388738bd01f9312923d74ec893de7",
+              "path": "stage-edge.json",
+              "sizeBytes": 531
+            },
+            {
+              "digest": "sha256:8bbb66e5aa9874b4d8bdb85a4343aa09273f5e57f64da70a457fec437bde2b5f",
+              "path": "stage-freeze-inputs.json",
+              "sizeBytes": 12351
+            },
+            {
+              "digest": "sha256:7d54efda16cfe1790a59e45d016ce1719a0a85413de6be7d73171894fded1967",
+              "path": "stage-gpu.json",
+              "sizeBytes": 530
+            },
+            {
+              "digest": "sha256:7cec215be591f67ee71fb5f79d194fb90f86abbe0519b3da338822d0b3a921f9",
+              "path": "stage-normalize.json",
+              "sizeBytes": 1187
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:a32d275e8c368c2b9cc3d437dca12c71e43f0e23a80808a8ab87f42628ec8efa",
+              "path": "stage-cpu.json",
+              "sizeBytes": 530
+            },
+            {
+              "digest": "sha256:aaffa993177913d5d5e84044ee439f20aaf388738bd01f9312923d74ec893de7",
+              "path": "stage-edge.json",
+              "sizeBytes": 531
+            },
+            {
+              "digest": "sha256:8bbb66e5aa9874b4d8bdb85a4343aa09273f5e57f64da70a457fec437bde2b5f",
+              "path": "stage-freeze-inputs.json",
+              "sizeBytes": 12351
+            },
+            {
+              "digest": "sha256:7d54efda16cfe1790a59e45d016ce1719a0a85413de6be7d73171894fded1967",
+              "path": "stage-gpu.json",
+              "sizeBytes": 530
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:a32d275e8c368c2b9cc3d437dca12c71e43f0e23a80808a8ab87f42628ec8efa",
+              "path": "stage-cpu.json",
+              "sizeBytes": 530
+            },
+            {
+              "digest": "sha256:aaffa993177913d5d5e84044ee439f20aaf388738bd01f9312923d74ec893de7",
+              "path": "stage-edge.json",
+              "sizeBytes": 531
+            },
+            {
+              "digest": "sha256:8bbb66e5aa9874b4d8bdb85a4343aa09273f5e57f64da70a457fec437bde2b5f",
+              "path": "stage-freeze-inputs.json",
+              "sizeBytes": 12351
+            },
+            {
+              "digest": "sha256:7d54efda16cfe1790a59e45d016ce1719a0a85413de6be7d73171894fded1967",
+              "path": "stage-gpu.json",
+              "sizeBytes": 530
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:7cec215be591f67ee71fb5f79d194fb90f86abbe0519b3da338822d0b3a921f9",
+              "path": "stage-normalize.json",
+              "sizeBytes": 1187
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000/showcase-inference-benchmark-local-7d8f10cfda-normalize",
+        "outputBytes": 1187,
+        "pinned": false,
+        "reclaimedBytes": 15129,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:10:10.053723377Z",
+        "resourceId": "showcase-inference-benchmark-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+        "runtimeId": "showcase-inference-benchmark-local",
+        "sealedAt": "2026-10-20T19:10:09.851534211Z",
+        "sizeBytes": 15129,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000/showcase-inference-benchmark-local-7d8f10cfda-normalize"
+      }
+    ]
+  },
+  "runId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+  "status": "completed",
+  "workflowId": "showcase-inference-benchmark-local-7d8f10cfda"
+}

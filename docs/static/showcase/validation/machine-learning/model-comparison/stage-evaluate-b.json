@@ -1,10 +1,23 @@
 {
-  "showcase": "model-comparison",
-  "digest": "13a73ec7c3f7e14488f158c92267085d0cb6199218723bd74bd1d003fc80fedb",
-  "stages": [
-    "evaluate-b"
+  "dependencies": [
+    "freeze-evaluation-set"
   ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:40.189638Z",
+  "finishedAtUnixNs": 1792523560184431000,
+  "inputDigest": "016f3c6d6a67162389ea58397f22ac1ef026f65bf12d01dc745afb4b74d438ec",
+  "result": {
+    "candidate": "evaluate-b",
+    "model": {
+      "bias": 0.5979228959234429,
+      "weight": 0
+    },
+    "rmse": 2.8330527350587267
+  },
+  "showcase": "model-comparison",
+  "stage": "evaluate-b",
+  "startedAt": "2026-10-20T19:12:40.140271Z",
+  "startedAtUnixNs": 1792523560184244000,
   "status": "success",
-  "validationMode": "contract-fixture",
-  "stage": "evaluate-b"
+  "validationMode": "local-workload"
 }

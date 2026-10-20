@@ -1,0 +1,2555 @@
+{
+  "activityCount": 6,
+  "completedActivityCount": 6,
+  "image": "ghcr.io/uffescience/akoflow-examples/showcase-anomaly-detection:local-cebc1b91654b91e1",
+  "imageId": "sha256:cebc1b91654b91e15c6861b1a945181bf35158cc38331487e71612f8def9e1c3",
+  "observedAt": "2026-10-20T19:09:30Z",
+  "planId": "showcase-anomaly-detection-local-aeca41545d-manual-plan-20261020t190918.293541000",
+  "projection": {
+    "activities": [
+      {
+        "activityId": "showcase-anomaly-detection-local-aeca41545d-collect-signals",
+        "allocatedResourceId": "showcase-anomaly-detection-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+        "finishedAt": 1792523358.8673549,
+        "id": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000:showcase-anomaly-detection-local-aeca41545d-collect-signals",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "pricePerSecond": 0,
+          "runtimeId": "showcase-anomaly-detection-local"
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-anomaly-detection-local-aeca41545d-manual-plan-20261020t190918.293541000-showcase-anomaly-detection-local-aeca41545d-collect-signals",
+        "plannedResourceId": "showcase-anomaly-detection-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523358.6331522,
+        "readyAt": 1792523358.6331522,
+        "runtimeId": "showcase-anomaly-detection-local",
+        "runtimeSeconds": 0.10968923568725586,
+        "startedAt": 1792523358.7576656,
+        "status": "completed",
+        "transferBytes": 0,
+        "transferSeconds": 0
+      },
+      {
+        "activityId": "showcase-anomaly-detection-local-aeca41545d-build-features",
+        "allocatedResourceId": "showcase-anomaly-detection-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+        "finishedAt": 1792523360.2278295,
+        "id": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000:showcase-anomaly-detection-local-aeca41545d-build-features",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1263744831085205,
+          "preparationFinishedAt": 1792523359.9966972,
+          "preparationStartedAt": 1792523359.8535798,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0009474754333496094,
+          "runtimeId": "showcase-anomaly-detection-local",
+          "transferElapsedSeconds": 0.14311742782592773,
+          "transferWorkSeconds": 0.14311742782592773
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-anomaly-detection-local-aeca41545d-manual-plan-20261020t190918.293541000-showcase-anomaly-detection-local-aeca41545d-build-features",
+        "plannedResourceId": "showcase-anomaly-detection-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523359.8505802,
+        "readyAt": 1792523359.8505802,
+        "runtimeId": "showcase-anomaly-detection-local",
+        "runtimeSeconds": 0.10475778579711914,
+        "startedAt": 1792523360.1230717,
+        "status": "completed",
+        "transferBytes": 1668,
+        "transferSeconds": 0.14311742782592773
+      },
+      {
+        "activityId": "showcase-anomaly-detection-local-aeca41545d-train-detector",
+        "allocatedResourceId": "showcase-anomaly-detection-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+        "finishedAt": 1792523362.301748,
+        "id": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000:showcase-anomaly-detection-local-aeca41545d-train-detector",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.13327455520629883,
+          "preparationFinishedAt": 1792523362.057774,
+          "preparationStartedAt": 1792523361.8664763,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0011107921600341797,
+          "runtimeId": "showcase-anomaly-detection-local",
+          "transferElapsedSeconds": 0.1912977695465088,
+          "transferWorkSeconds": 0.1912977695465088
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-anomaly-detection-local-aeca41545d-manual-plan-20261020t190918.293541000-showcase-anomaly-detection-local-aeca41545d-train-detector",
+        "plannedResourceId": "showcase-anomaly-detection-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523361.8635662,
+        "readyAt": 1792523361.8635662,
+        "runtimeId": "showcase-anomaly-detection-local",
+        "runtimeSeconds": 0.11069941520690918,
+        "startedAt": 1792523362.1910486,
+        "status": "completed",
+        "transferBytes": 3547,
+        "transferSeconds": 0.1912977695465088
+      },
+      {
+        "activityId": "showcase-anomaly-detection-local-aeca41545d-score-validation",
+        "allocatedResourceId": "showcase-anomaly-detection-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+        "finishedAt": 1792523364.2330444,
+        "id": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000:showcase-anomaly-detection-local-aeca41545d-score-validation",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.12899279594421387,
+          "preparationFinishedAt": 1792523363.9914029,
+          "preparationStartedAt": 1792523363.8712492,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0010440349578857422,
+          "runtimeId": "showcase-anomaly-detection-local",
+          "transferElapsedSeconds": 0.12015366554260254,
+          "transferWorkSeconds": 0.12015366554260254
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-anomaly-detection-local-aeca41545d-manual-plan-20261020t190918.293541000-showcase-anomaly-detection-local-aeca41545d-score-validation",
+        "plannedResourceId": "showcase-anomaly-detection-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523363.8677082,
+        "readyAt": 1792523363.8677082,
+        "runtimeId": "showcase-anomaly-detection-local",
+        "runtimeSeconds": 0.11264872550964355,
+        "startedAt": 1792523364.1203957,
+        "status": "completed",
+        "transferBytes": 4346,
+        "transferSeconds": 0.12015366554260254
+      },
+      {
+        "activityId": "showcase-anomaly-detection-local-aeca41545d-choose-threshold",
+        "allocatedResourceId": "showcase-anomaly-detection-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+        "finishedAt": 1792523366.2877843,
+        "id": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000:showcase-anomaly-detection-local-aeca41545d-choose-threshold",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1346111297607422,
+          "preparationFinishedAt": 1792523366.0460396,
+          "preparationStartedAt": 1792523365.8797195,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.001050710678100586,
+          "runtimeId": "showcase-anomaly-detection-local",
+          "transferElapsedSeconds": 0.1663200855255127,
+          "transferWorkSeconds": 0.1663200855255127
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-anomaly-detection-local-aeca41545d-manual-plan-20261020t190918.293541000-showcase-anomaly-detection-local-aeca41545d-choose-threshold",
+        "plannedResourceId": "showcase-anomaly-detection-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523365.8768344,
+        "readyAt": 1792523365.8768344,
+        "runtimeId": "showcase-anomaly-detection-local",
+        "runtimeSeconds": 0.10713362693786621,
+        "startedAt": 1792523366.1806507,
+        "status": "completed",
+        "transferBytes": 5485,
+        "transferSeconds": 0.1663200855255127
+      },
+      {
+        "activityId": "showcase-anomaly-detection-local-aeca41545d-publish",
+        "allocatedResourceId": "showcase-anomaly-detection-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+        "finishedAt": 1792523368.4242318,
+        "id": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000:showcase-anomaly-detection-local-aeca41545d-publish",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.14640235900878906,
+          "preparationFinishedAt": 1792523368.1684942,
+          "preparationStartedAt": 1792523367.8955517,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0009367465972900391,
+          "runtimeId": "showcase-anomaly-detection-local",
+          "transferElapsedSeconds": 0.27294254302978516,
+          "transferWorkSeconds": 0.27294254302978516
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-anomaly-detection-local-aeca41545d-manual-plan-20261020t190918.293541000-showcase-anomaly-detection-local-aeca41545d-publish",
+        "plannedResourceId": "showcase-anomaly-detection-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523367.8922946,
+        "readyAt": 1792523367.8922946,
+        "runtimeId": "showcase-anomaly-detection-local",
+        "runtimeSeconds": 0.10933518409729004,
+        "startedAt": 1792523368.3148966,
+        "status": "completed",
+        "transferBytes": 6685,
+        "transferSeconds": 0.27294254302978516
+      }
+    ],
+    "activityAttempts": [
+      {
+        "activityId": "showcase-anomaly-detection-local-aeca41545d-collect-signals",
+        "allocatedResourceId": "showcase-anomaly-detection-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+        "finishedAt": 1792523358.8673549,
+        "id": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000:showcase-anomaly-detection-local-aeca41545d-collect-signals",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "pricePerSecond": 0,
+          "runtimeId": "showcase-anomaly-detection-local"
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-anomaly-detection-local-aeca41545d-manual-plan-20261020t190918.293541000-showcase-anomaly-detection-local-aeca41545d-collect-signals",
+        "plannedResourceId": "showcase-anomaly-detection-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523358.6331522,
+        "readyAt": 1792523358.6331522,
+        "runtimeId": "showcase-anomaly-detection-local",
+        "runtimeSeconds": 0.10968923568725586,
+        "startedAt": 1792523358.7576656,
+        "status": "completed",
+        "transferBytes": 0,
+        "transferSeconds": 0
+      },
+      {
+        "activityId": "showcase-anomaly-detection-local-aeca41545d-build-features",
+        "allocatedResourceId": "showcase-anomaly-detection-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+        "finishedAt": 1792523360.2278295,
+        "id": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000:showcase-anomaly-detection-local-aeca41545d-build-features",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1263744831085205,
+          "preparationFinishedAt": 1792523359.9966972,
+          "preparationStartedAt": 1792523359.8535798,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0009474754333496094,
+          "runtimeId": "showcase-anomaly-detection-local",
+          "transferElapsedSeconds": 0.14311742782592773,
+          "transferWorkSeconds": 0.14311742782592773
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-anomaly-detection-local-aeca41545d-manual-plan-20261020t190918.293541000-showcase-anomaly-detection-local-aeca41545d-build-features",
+        "plannedResourceId": "showcase-anomaly-detection-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523359.8505802,
+        "readyAt": 1792523359.8505802,
+        "runtimeId": "showcase-anomaly-detection-local",
+        "runtimeSeconds": 0.10475778579711914,
+        "startedAt": 1792523360.1230717,
+        "status": "completed",
+        "transferBytes": 1668,
+        "transferSeconds": 0.14311742782592773
+      },
+      {
+        "activityId": "showcase-anomaly-detection-local-aeca41545d-train-detector",
+        "allocatedResourceId": "showcase-anomaly-detection-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+        "finishedAt": 1792523362.301748,
+        "id": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000:showcase-anomaly-detection-local-aeca41545d-train-detector",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.13327455520629883,
+          "preparationFinishedAt": 1792523362.057774,
+          "preparationStartedAt": 1792523361.8664763,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0011107921600341797,
+          "runtimeId": "showcase-anomaly-detection-local",
+          "transferElapsedSeconds": 0.1912977695465088,
+          "transferWorkSeconds": 0.1912977695465088
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-anomaly-detection-local-aeca41545d-manual-plan-20261020t190918.293541000-showcase-anomaly-detection-local-aeca41545d-train-detector",
+        "plannedResourceId": "showcase-anomaly-detection-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523361.8635662,
+        "readyAt": 1792523361.8635662,
+        "runtimeId": "showcase-anomaly-detection-local",
+        "runtimeSeconds": 0.11069941520690918,
+        "startedAt": 1792523362.1910486,
+        "status": "completed",
+        "transferBytes": 3547,
+        "transferSeconds": 0.1912977695465088
+      },
+      {
+        "activityId": "showcase-anomaly-detection-local-aeca41545d-score-validation",
+        "allocatedResourceId": "showcase-anomaly-detection-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+        "finishedAt": 1792523364.2330444,
+        "id": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000:showcase-anomaly-detection-local-aeca41545d-score-validation",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.12899279594421387,
+          "preparationFinishedAt": 1792523363.9914029,
+          "preparationStartedAt": 1792523363.8712492,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0010440349578857422,
+          "runtimeId": "showcase-anomaly-detection-local",
+          "transferElapsedSeconds": 0.12015366554260254,
+          "transferWorkSeconds": 0.12015366554260254
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-anomaly-detection-local-aeca41545d-manual-plan-20261020t190918.293541000-showcase-anomaly-detection-local-aeca41545d-score-validation",
+        "plannedResourceId": "showcase-anomaly-detection-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523363.8677082,
+        "readyAt": 1792523363.8677082,
+        "runtimeId": "showcase-anomaly-detection-local",
+        "runtimeSeconds": 0.11264872550964355,
+        "startedAt": 1792523364.1203957,
+        "status": "completed",
+        "transferBytes": 4346,
+        "transferSeconds": 0.12015366554260254
+      },
+      {
+        "activityId": "showcase-anomaly-detection-local-aeca41545d-choose-threshold",
+        "allocatedResourceId": "showcase-anomaly-detection-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+        "finishedAt": 1792523366.2877843,
+        "id": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000:showcase-anomaly-detection-local-aeca41545d-choose-threshold",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1346111297607422,
+          "preparationFinishedAt": 1792523366.0460396,
+          "preparationStartedAt": 1792523365.8797195,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.001050710678100586,
+          "runtimeId": "showcase-anomaly-detection-local",
+          "transferElapsedSeconds": 0.1663200855255127,
+          "transferWorkSeconds": 0.1663200855255127
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-anomaly-detection-local-aeca41545d-manual-plan-20261020t190918.293541000-showcase-anomaly-detection-local-aeca41545d-choose-threshold",
+        "plannedResourceId": "showcase-anomaly-detection-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523365.8768344,
+        "readyAt": 1792523365.8768344,
+        "runtimeId": "showcase-anomaly-detection-local",
+        "runtimeSeconds": 0.10713362693786621,
+        "startedAt": 1792523366.1806507,
+        "status": "completed",
+        "transferBytes": 5485,
+        "transferSeconds": 0.1663200855255127
+      },
+      {
+        "activityId": "showcase-anomaly-detection-local-aeca41545d-publish",
+        "allocatedResourceId": "showcase-anomaly-detection-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+        "finishedAt": 1792523368.4242318,
+        "id": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000:showcase-anomaly-detection-local-aeca41545d-publish",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.14640235900878906,
+          "preparationFinishedAt": 1792523368.1684942,
+          "preparationStartedAt": 1792523367.8955517,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0009367465972900391,
+          "runtimeId": "showcase-anomaly-detection-local",
+          "transferElapsedSeconds": 0.27294254302978516,
+          "transferWorkSeconds": 0.27294254302978516
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-anomaly-detection-local-aeca41545d-manual-plan-20261020t190918.293541000-showcase-anomaly-detection-local-aeca41545d-publish",
+        "plannedResourceId": "showcase-anomaly-detection-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523367.8922946,
+        "readyAt": 1792523367.8922946,
+        "runtimeId": "showcase-anomaly-detection-local",
+        "runtimeSeconds": 0.10933518409729004,
+        "startedAt": 1792523368.3148966,
+        "status": "completed",
+        "transferBytes": 6685,
+        "transferSeconds": 0.27294254302978516
+      }
+    ],
+    "artifactMaterializations": null,
+    "artifactTransferRuns": [
+      {
+        "activityId": "showcase-anomaly-detection-local-aeca41545d-build-features",
+        "durationSeconds": 0.14311742782592773,
+        "executionRunId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+        "filesTransferred": 1,
+        "finishedAt": 1792523359.9966972,
+        "id": "transfer-workspace-showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000-showcase-anomaly-detection-local-aeca41545d-build-features-0",
+        "logicalBytes": 1668,
+        "planId": "transfer-workspace-showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000-showcase-anomaly-detection-local-aeca41545d-build-features-0",
+        "route": {
+          "consumerActivityId": "showcase-anomaly-detection-local-aeca41545d-build-features",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-anomaly-detection-local-aeca41545d-collect-signals",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.092904334,
+          "sourceEnvironmentId": "showcase-anomaly-detection-v1",
+          "sourceResourceId": "showcase-anomaly-detection-local-docker",
+          "sshChannelWaitSeconds": 4.58e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-anomaly-detection-v1",
+          "targetResourceId": "showcase-anomaly-detection-local-docker"
+        },
+        "startedAt": 1792523359.8535798,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 1668
+      },
+      {
+        "activityId": "showcase-anomaly-detection-local-aeca41545d-choose-threshold",
+        "durationSeconds": 0.1663200855255127,
+        "executionRunId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+        "filesTransferred": 4,
+        "finishedAt": 1792523366.0460396,
+        "id": "transfer-workspace-showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000-showcase-anomaly-detection-local-aeca41545d-choose-threshold-0",
+        "logicalBytes": 5485,
+        "planId": "transfer-workspace-showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000-showcase-anomaly-detection-local-aeca41545d-choose-threshold-0",
+        "route": {
+          "consumerActivityId": "showcase-anomaly-detection-local-aeca41545d-choose-threshold",
+          "filesTransferred": 4,
+          "producerActivityId": "showcase-anomaly-detection-local-aeca41545d-score-validation",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.07203812500000001,
+          "sourceEnvironmentId": "showcase-anomaly-detection-v1",
+          "sourceResourceId": "showcase-anomaly-detection-local-docker",
+          "sshChannelWaitSeconds": 6.249999999999999e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-anomaly-detection-v1",
+          "targetResourceId": "showcase-anomaly-detection-local-docker"
+        },
+        "startedAt": 1792523365.8797195,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 5485
+      },
+      {
+        "activityId": "showcase-anomaly-detection-local-aeca41545d-publish",
+        "durationSeconds": 0.27294254302978516,
+        "executionRunId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+        "filesTransferred": 5,
+        "finishedAt": 1792523368.1684942,
+        "id": "transfer-workspace-showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000-showcase-anomaly-detection-local-aeca41545d-publish-0",
+        "logicalBytes": 6685,
+        "planId": "transfer-workspace-showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000-showcase-anomaly-detection-local-aeca41545d-publish-0",
+        "route": {
+          "consumerActivityId": "showcase-anomaly-detection-local-aeca41545d-publish",
+          "filesTransferred": 5,
+          "producerActivityId": "showcase-anomaly-detection-local-aeca41545d-choose-threshold",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.17518775,
+          "sourceEnvironmentId": "showcase-anomaly-detection-v1",
+          "sourceResourceId": "showcase-anomaly-detection-local-docker",
+          "sshChannelWaitSeconds": 5.83e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-anomaly-detection-v1",
+          "targetResourceId": "showcase-anomaly-detection-local-docker"
+        },
+        "startedAt": 1792523367.8955517,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 6685
+      },
+      {
+        "activityId": "showcase-anomaly-detection-local-aeca41545d-score-validation",
+        "durationSeconds": 0.12015366554260254,
+        "executionRunId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+        "filesTransferred": 3,
+        "finishedAt": 1792523363.9914029,
+        "id": "transfer-workspace-showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000-showcase-anomaly-detection-local-aeca41545d-score-validation-0",
+        "logicalBytes": 4346,
+        "planId": "transfer-workspace-showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000-showcase-anomaly-detection-local-aeca41545d-score-validation-0",
+        "route": {
+          "consumerActivityId": "showcase-anomaly-detection-local-aeca41545d-score-validation",
+          "filesTransferred": 3,
+          "producerActivityId": "showcase-anomaly-detection-local-aeca41545d-train-detector",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.070720333,
+          "sourceEnvironmentId": "showcase-anomaly-detection-v1",
+          "sourceResourceId": "showcase-anomaly-detection-local-docker",
+          "sshChannelWaitSeconds": 5.420000000000001e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-anomaly-detection-v1",
+          "targetResourceId": "showcase-anomaly-detection-local-docker"
+        },
+        "startedAt": 1792523363.8712492,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 4346
+      },
+      {
+        "activityId": "showcase-anomaly-detection-local-aeca41545d-train-detector",
+        "durationSeconds": 0.1912977695465088,
+        "executionRunId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+        "filesTransferred": 2,
+        "finishedAt": 1792523362.057774,
+        "id": "transfer-workspace-showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000-showcase-anomaly-detection-local-aeca41545d-train-detector-0",
+        "logicalBytes": 3547,
+        "planId": "transfer-workspace-showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000-showcase-anomaly-detection-local-aeca41545d-train-detector-0",
+        "route": {
+          "consumerActivityId": "showcase-anomaly-detection-local-aeca41545d-train-detector",
+          "filesTransferred": 2,
+          "producerActivityId": "showcase-anomaly-detection-local-aeca41545d-build-features",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.09888295799999999,
+          "sourceEnvironmentId": "showcase-anomaly-detection-v1",
+          "sourceResourceId": "showcase-anomaly-detection-local-docker",
+          "sshChannelWaitSeconds": 5e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-anomaly-detection-v1",
+          "targetResourceId": "showcase-anomaly-detection-local-docker"
+        },
+        "startedAt": 1792523361.8664763,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 3547
+      }
+    ],
+    "cloudBilling": {
+      "asOf": "2026-10-20T19:09:30.652308512Z",
+      "costBasis": "VM compute and boot-disk lifecycle at on-demand marginal rates; not a provider invoice",
+      "estimatedCost": 0,
+      "excludedCosts": [
+        "network-egress",
+        "public-ipv4",
+        "image-storage",
+        "discounts-and-tax"
+      ],
+      "instances": [],
+      "knownCost": 0,
+      "status": "estimated"
+    },
+    "dataLocations": [
+      {
+        "dataObjectInstanceId": "6b2fc286bed5d9a96437760f553e1c53",
+        "executionRunId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+        "id": "726a04ece5d8157c48d2feb9433c44c7",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-anomaly-detection-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "9d7e3d069906d5f876de1bd11ce76bb7",
+        "uri": "file:///akoflow/workspace/runs/showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000/showcase-anomaly-detection-local-aeca41545d-build-features/stage-build-features.json"
+      },
+      {
+        "dataObjectInstanceId": "7b00867f51d4694592b84fe4d49d83ea",
+        "executionRunId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+        "id": "bb580f20eb4cfffd8a3341fe64878e09",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-anomaly-detection-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "9d7e3d069906d5f876de1bd11ce76bb7",
+        "uri": "file:///akoflow/workspace/runs/showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000/showcase-anomaly-detection-local-aeca41545d-choose-threshold/stage-choose-threshold.json"
+      },
+      {
+        "dataObjectInstanceId": "21e3a2b5e663067f39808320a7b9455a",
+        "executionRunId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+        "id": "6eeadff344da2153e47c088e50f1018b",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-anomaly-detection-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "9d7e3d069906d5f876de1bd11ce76bb7",
+        "uri": "file:///akoflow/workspace/runs/showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000/showcase-anomaly-detection-local-aeca41545d-collect-signals/stage-collect-signals.json"
+      },
+      {
+        "dataObjectInstanceId": "44bf89af5f14615cf390b037180ff5c6",
+        "executionRunId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+        "id": "02f0d0da4fe066b49b1a66a38186e548",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-anomaly-detection-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "9d7e3d069906d5f876de1bd11ce76bb7",
+        "uri": "file:///akoflow/workspace/runs/showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000/showcase-anomaly-detection-local-aeca41545d-publish/anomalies.json"
+      },
+      {
+        "dataObjectInstanceId": "e13fb0c0c097a8b52ce95cdcbaea5b03",
+        "executionRunId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+        "id": "9e9f39ced6e16acac277bf041dffbc59",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-anomaly-detection-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "9d7e3d069906d5f876de1bd11ce76bb7",
+        "uri": "file:///akoflow/workspace/runs/showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000/showcase-anomaly-detection-local-aeca41545d-publish/metrics.json"
+      },
+      {
+        "dataObjectInstanceId": "0fe12cf28ab11673052dc6e4ca2fb892",
+        "executionRunId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+        "id": "c0f2161e52c1e3cd9508f4802ee38f5c",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-anomaly-detection-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "9d7e3d069906d5f876de1bd11ce76bb7",
+        "uri": "file:///akoflow/workspace/runs/showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000/showcase-anomaly-detection-local-aeca41545d-publish/stage-publish.json"
+      },
+      {
+        "dataObjectInstanceId": "200a81b1b1fb31720a36ff7d1f0cbf8a",
+        "executionRunId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+        "id": "34489c598587499656b706a11565b77c",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-anomaly-detection-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "9d7e3d069906d5f876de1bd11ce76bb7",
+        "uri": "file:///akoflow/workspace/runs/showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000/showcase-anomaly-detection-local-aeca41545d-score-validation/stage-score-validation.json"
+      },
+      {
+        "dataObjectInstanceId": "696304beb5d2c1f2a4eacd5ed19678bd",
+        "executionRunId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+        "id": "2ce8162703f590d7a842eb42d1b47c13",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-anomaly-detection-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "9d7e3d069906d5f876de1bd11ce76bb7",
+        "uri": "file:///akoflow/workspace/runs/showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000/showcase-anomaly-detection-local-aeca41545d-train-detector/stage-train-detector.json"
+      }
+    ],
+    "dataObjects": [
+      {
+        "attempt": 1,
+        "checksum": "sha256:d2b10880428e6ef8f2adfda486798a8933ce00c5758da0584ac2dd1be7c285ff",
+        "dataObjectId": "d93b30d6e21315218d6a96038f68225c",
+        "discovered": true,
+        "executionRunId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+        "id": "6b2fc286bed5d9a96437760f553e1c53",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-anomaly-detection-local-aeca41545d-build-features",
+        "relativePath": "stage-build-features.json",
+        "sizeBytes": 1879
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:791fe55e14937a0bd68a41a0ddebe0781a73915ec5607ef941ccb77155b1b5da",
+        "dataObjectId": "28c327373b504c250fb7d5cbdc396fce",
+        "discovered": true,
+        "executionRunId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+        "id": "7b00867f51d4694592b84fe4d49d83ea",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-anomaly-detection-local-aeca41545d-choose-threshold",
+        "relativePath": "stage-choose-threshold.json",
+        "sizeBytes": 1200
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:57947918e7ce37231300e1e152bebc65be59344275ea3078556716b3945bc958",
+        "dataObjectId": "fb1d5de0042106aedd45c61c1379fcc3",
+        "discovered": true,
+        "executionRunId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+        "id": "21e3a2b5e663067f39808320a7b9455a",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-anomaly-detection-local-aeca41545d-collect-signals",
+        "relativePath": "stage-collect-signals.json",
+        "sizeBytes": 1668
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:b663dadb105d03ebf39ee29affd1dd617bc36334e158142284fd115dc07016ea",
+        "dataObjectId": "dd8766ee5d50eae269ef5b19cbddb37e",
+        "discovered": true,
+        "executionRunId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+        "id": "44bf89af5f14615cf390b037180ff5c6",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-anomaly-detection-local-aeca41545d-publish",
+        "relativePath": "anomalies.json",
+        "sizeBytes": 290
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:86752fcf166f945b9e06b17b7128a3ea70babac7f6e7c1406c393b6c18fe7fec",
+        "dataObjectId": "35456e9f32b87ec832d8700525db1b1c",
+        "discovered": true,
+        "executionRunId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+        "id": "e13fb0c0c097a8b52ce95cdcbaea5b03",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-anomaly-detection-local-aeca41545d-publish",
+        "relativePath": "metrics.json",
+        "sizeBytes": 34
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:994ab2f84bc3d3c053b393ec1bf95a3aa9081fcade9727a15b4d14d205622e44",
+        "dataObjectId": "65c2c85cc6f77cfecc6e7d736b9851f2",
+        "discovered": true,
+        "executionRunId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+        "id": "0fe12cf28ab11673052dc6e4ca2fb892",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-anomaly-detection-local-aeca41545d-publish",
+        "relativePath": "stage-publish.json",
+        "sizeBytes": 411
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:7fb96ae178a20f52fb0eae273f2e1de086f960d43a177bb79ce49e7b146e57c2",
+        "dataObjectId": "3457cce950a3339384d658e0eb6874ea",
+        "discovered": true,
+        "executionRunId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+        "id": "200a81b1b1fb31720a36ff7d1f0cbf8a",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-anomaly-detection-local-aeca41545d-score-validation",
+        "relativePath": "stage-score-validation.json",
+        "sizeBytes": 1139
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:33c8d1e02512279154f2ab9a000a8b5fd340015c6265ea424009038765695a8b",
+        "dataObjectId": "4d2abae1536123483b6504dcb84d8150",
+        "discovered": true,
+        "executionRunId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+        "id": "696304beb5d2c1f2a4eacd5ed19678bd",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-anomaly-detection-local-aeca41545d-train-detector",
+        "relativePath": "stage-train-detector.json",
+        "sizeBytes": 799
+      }
+    ],
+    "dataTransfers": [
+      {
+        "bytes": 1668,
+        "consumerActivityId": "showcase-anomaly-detection-local-aeca41545d-build-features",
+        "cost": 0,
+        "durationSeconds": 0.14311742782592773,
+        "executionRunId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+        "finishedAt": 1792523359.9966972,
+        "id": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000:showcase-anomaly-detection-local-aeca41545d-build-features:transfer-workspace-showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000-showcase-anomaly-detection-local-aeca41545d-build-features-0",
+        "logicalBytes": 1668,
+        "producerActivityId": "showcase-anomaly-detection-local-aeca41545d-collect-signals",
+        "route": {
+          "consumerActivityId": "showcase-anomaly-detection-local-aeca41545d-build-features",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-anomaly-detection-local-aeca41545d-collect-signals",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.092904334,
+          "sourceEnvironmentId": "showcase-anomaly-detection-v1",
+          "sourceResourceId": "showcase-anomaly-detection-local-docker",
+          "sshChannelWaitSeconds": 4.58e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-anomaly-detection-v1",
+          "targetResourceId": "showcase-anomaly-detection-local-docker"
+        },
+        "sourceResourceId": "showcase-anomaly-detection-local-docker",
+        "startedAt": 1792523359.8535798,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-anomaly-detection-local-docker"
+      },
+      {
+        "bytes": 3547,
+        "consumerActivityId": "showcase-anomaly-detection-local-aeca41545d-train-detector",
+        "cost": 0,
+        "durationSeconds": 0.1912977695465088,
+        "executionRunId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+        "finishedAt": 1792523362.057774,
+        "id": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000:showcase-anomaly-detection-local-aeca41545d-train-detector:transfer-workspace-showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000-showcase-anomaly-detection-local-aeca41545d-train-detector-0",
+        "logicalBytes": 3547,
+        "producerActivityId": "showcase-anomaly-detection-local-aeca41545d-build-features",
+        "route": {
+          "consumerActivityId": "showcase-anomaly-detection-local-aeca41545d-train-detector",
+          "filesTransferred": 2,
+          "producerActivityId": "showcase-anomaly-detection-local-aeca41545d-build-features",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.09888295799999999,
+          "sourceEnvironmentId": "showcase-anomaly-detection-v1",
+          "sourceResourceId": "showcase-anomaly-detection-local-docker",
+          "sshChannelWaitSeconds": 5e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-anomaly-detection-v1",
+          "targetResourceId": "showcase-anomaly-detection-local-docker"
+        },
+        "sourceResourceId": "showcase-anomaly-detection-local-docker",
+        "startedAt": 1792523361.8664763,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-anomaly-detection-local-docker"
+      },
+      {
+        "bytes": 4346,
+        "consumerActivityId": "showcase-anomaly-detection-local-aeca41545d-score-validation",
+        "cost": 0,
+        "durationSeconds": 0.12015366554260254,
+        "executionRunId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+        "finishedAt": 1792523363.9914029,
+        "id": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000:showcase-anomaly-detection-local-aeca41545d-score-validation:transfer-workspace-showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000-showcase-anomaly-detection-local-aeca41545d-score-validation-0",
+        "logicalBytes": 4346,
+        "producerActivityId": "showcase-anomaly-detection-local-aeca41545d-train-detector",
+        "route": {
+          "consumerActivityId": "showcase-anomaly-detection-local-aeca41545d-score-validation",
+          "filesTransferred": 3,
+          "producerActivityId": "showcase-anomaly-detection-local-aeca41545d-train-detector",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.070720333,
+          "sourceEnvironmentId": "showcase-anomaly-detection-v1",
+          "sourceResourceId": "showcase-anomaly-detection-local-docker",
+          "sshChannelWaitSeconds": 5.420000000000001e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-anomaly-detection-v1",
+          "targetResourceId": "showcase-anomaly-detection-local-docker"
+        },
+        "sourceResourceId": "showcase-anomaly-detection-local-docker",
+        "startedAt": 1792523363.8712492,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-anomaly-detection-local-docker"
+      },
+      {
+        "bytes": 5485,
+        "consumerActivityId": "showcase-anomaly-detection-local-aeca41545d-choose-threshold",
+        "cost": 0,
+        "durationSeconds": 0.1663200855255127,
+        "executionRunId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+        "finishedAt": 1792523366.0460396,
+        "id": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000:showcase-anomaly-detection-local-aeca41545d-choose-threshold:transfer-workspace-showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000-showcase-anomaly-detection-local-aeca41545d-choose-threshold-0",
+        "logicalBytes": 5485,
+        "producerActivityId": "showcase-anomaly-detection-local-aeca41545d-score-validation",
+        "route": {
+          "consumerActivityId": "showcase-anomaly-detection-local-aeca41545d-choose-threshold",
+          "filesTransferred": 4,
+          "producerActivityId": "showcase-anomaly-detection-local-aeca41545d-score-validation",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.07203812500000001,
+          "sourceEnvironmentId": "showcase-anomaly-detection-v1",
+          "sourceResourceId": "showcase-anomaly-detection-local-docker",
+          "sshChannelWaitSeconds": 6.249999999999999e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-anomaly-detection-v1",
+          "targetResourceId": "showcase-anomaly-detection-local-docker"
+        },
+        "sourceResourceId": "showcase-anomaly-detection-local-docker",
+        "startedAt": 1792523365.8797195,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-anomaly-detection-local-docker"
+      },
+      {
+        "bytes": 6685,
+        "consumerActivityId": "showcase-anomaly-detection-local-aeca41545d-publish",
+        "cost": 0,
+        "durationSeconds": 0.27294254302978516,
+        "executionRunId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+        "finishedAt": 1792523368.1684942,
+        "id": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000:showcase-anomaly-detection-local-aeca41545d-publish:transfer-workspace-showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000-showcase-anomaly-detection-local-aeca41545d-publish-0",
+        "logicalBytes": 6685,
+        "producerActivityId": "showcase-anomaly-detection-local-aeca41545d-choose-threshold",
+        "route": {
+          "consumerActivityId": "showcase-anomaly-detection-local-aeca41545d-publish",
+          "filesTransferred": 5,
+          "producerActivityId": "showcase-anomaly-detection-local-aeca41545d-choose-threshold",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.17518775,
+          "sourceEnvironmentId": "showcase-anomaly-detection-v1",
+          "sourceResourceId": "showcase-anomaly-detection-local-docker",
+          "sshChannelWaitSeconds": 5.83e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-anomaly-detection-v1",
+          "targetResourceId": "showcase-anomaly-detection-local-docker"
+        },
+        "sourceResourceId": "showcase-anomaly-detection-local-docker",
+        "startedAt": 1792523367.8955517,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-anomaly-detection-local-docker"
+      }
+    ],
+    "events": [
+      {
+        "aggregateId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+        "aggregateType": "execution_run",
+        "eventType": "execution.run.started",
+        "id": "f27c6e74c6dd842fce0d31f2d173f955",
+        "occurredAt": "2026-10-20T19:09:18.615358298Z",
+        "payload": {
+          "mode": "real",
+          "schedulePlanId": "showcase-anomaly-detection-local-aeca41545d-manual-plan-20261020t190918.293541000"
+        }
+      },
+      {
+        "aggregateId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000:showcase-anomaly-detection-local-aeca41545d-collect-signals",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "3fda80f31329fa0b2201326f79b90d26",
+        "occurredAt": "2026-10-20T19:09:19.786182424Z",
+        "payload": {
+          "activityId": "showcase-anomaly-detection-local-aeca41545d-collect-signals",
+          "executionRunId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000:showcase-anomaly-detection-local-aeca41545d-collect-signals",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "e523eabd8133fa66a7f13673fa970b6f",
+        "occurredAt": "2026-10-20T19:09:19.848822174Z",
+        "payload": {
+          "activityId": "showcase-anomaly-detection-local-aeca41545d-collect-signals",
+          "executionRunId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+          "failureReason": "",
+          "runtimeSeconds": 0.10968923568725586,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000:showcase-anomaly-detection-local-aeca41545d-build-features",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "adf766b9ff70bf42f70f178a90a46939",
+        "occurredAt": "2026-10-20T19:09:21.796399258Z",
+        "payload": {
+          "activityId": "showcase-anomaly-detection-local-aeca41545d-build-features",
+          "executionRunId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000:showcase-anomaly-detection-local-aeca41545d-build-features",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "3c96a874690f7582370c66e4b7761bad",
+        "occurredAt": "2026-10-20T19:09:21.861365133Z",
+        "payload": {
+          "activityId": "showcase-anomaly-detection-local-aeca41545d-build-features",
+          "executionRunId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+          "failureReason": "",
+          "runtimeSeconds": 0.10475778579711914,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000:showcase-anomaly-detection-local-aeca41545d-train-detector",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "a4058340f10309681dac7cf92d2fd101",
+        "occurredAt": "2026-10-20T19:09:23.800714301Z",
+        "payload": {
+          "activityId": "showcase-anomaly-detection-local-aeca41545d-train-detector",
+          "executionRunId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000:showcase-anomaly-detection-local-aeca41545d-train-detector",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "7dec7739eafb7bab0a69979aecf67dbb",
+        "occurredAt": "2026-10-20T19:09:23.865151592Z",
+        "payload": {
+          "activityId": "showcase-anomaly-detection-local-aeca41545d-train-detector",
+          "executionRunId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+          "failureReason": "",
+          "runtimeSeconds": 0.11069941520690918,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000:showcase-anomaly-detection-local-aeca41545d-score-validation",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "009238f91fb1f3dca1e4f30d57244a55",
+        "occurredAt": "2026-10-20T19:09:25.807415093Z",
+        "payload": {
+          "activityId": "showcase-anomaly-detection-local-aeca41545d-score-validation",
+          "executionRunId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000:showcase-anomaly-detection-local-aeca41545d-score-validation",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "d62964391a0f7400c10bd98ed1b3dbff",
+        "occurredAt": "2026-10-20T19:09:25.874661968Z",
+        "payload": {
+          "activityId": "showcase-anomaly-detection-local-aeca41545d-score-validation",
+          "executionRunId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+          "failureReason": "",
+          "runtimeSeconds": 0.11264872550964355,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000:showcase-anomaly-detection-local-aeca41545d-choose-threshold",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "448d354a317a5e532a44d52bb167637f",
+        "occurredAt": "2026-10-20T19:09:27.811422219Z",
+        "payload": {
+          "activityId": "showcase-anomaly-detection-local-aeca41545d-choose-threshold",
+          "executionRunId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000:showcase-anomaly-detection-local-aeca41545d-choose-threshold",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "062b3e80111f12d92f11f837ca4baa6b",
+        "occurredAt": "2026-10-20T19:09:27.890955469Z",
+        "payload": {
+          "activityId": "showcase-anomaly-detection-local-aeca41545d-choose-threshold",
+          "executionRunId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+          "failureReason": "",
+          "runtimeSeconds": 0.10713362693786621,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000:showcase-anomaly-detection-local-aeca41545d-publish",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "b421ea9548ed4003fd20fdafca47ab01",
+        "occurredAt": "2026-10-20T19:09:29.815519512Z",
+        "payload": {
+          "activityId": "showcase-anomaly-detection-local-aeca41545d-publish",
+          "executionRunId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000:showcase-anomaly-detection-local-aeca41545d-publish",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "24e10708627079dedbe10ae60f22bdf9",
+        "occurredAt": "2026-10-20T19:09:29.903635887Z",
+        "payload": {
+          "activityId": "showcase-anomaly-detection-local-aeca41545d-publish",
+          "executionRunId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+          "failureReason": "",
+          "runtimeSeconds": 0.10933518409729004,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+        "aggregateType": "execution_run",
+        "eventType": "execution.run.completed",
+        "id": "eb3acb228a6ba7773443aa80e1f62a30",
+        "occurredAt": "2026-10-20T19:09:29.907350803Z",
+        "payload": {
+          "cost": 0,
+          "makespanSeconds": 9.666566133499146
+        }
+      }
+    ],
+    "handles": [
+      {
+        "activityId": "showcase-anomaly-detection-local-aeca41545d-build-features",
+        "artifacts": {
+          "activityId": "showcase-anomaly-detection-local-aeca41545d-build-features",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:d2b10880428e6ef8f2adfda486798a8933ce00c5758da0584ac2dd1be7c285ff",
+              "modifiedUnixNano": 1792523360222414000,
+              "path": "stage-build-features.json",
+              "sizeBytes": 1879
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:d2b10880428e6ef8f2adfda486798a8933ce00c5758da0584ac2dd1be7c285ff",
+              "modifiedUnixNano": 1792523360222414000,
+              "path": "stage-build-features.json",
+              "sizeBytes": 1879
+            },
+            {
+              "checksum": "sha256:57947918e7ce37231300e1e152bebc65be59344275ea3078556716b3945bc958",
+              "modifiedUnixNano": 1792523359953414000,
+              "path": "stage-collect-signals.json",
+              "sizeBytes": 1668
+            }
+          ],
+          "finishedAt": 1792523360.2278295,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:57947918e7ce37231300e1e152bebc65be59344275ea3078556716b3945bc958",
+              "modifiedUnixNano": 1792523359953414000,
+              "path": "stage-collect-signals.json",
+              "sizeBytes": 1668
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.10475778579711914,
+              "finishedAt": 1792523360.2278295,
+              "phase": "execution",
+              "startedAt": 1792523360.1230717,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000/showcase-anomaly-detection-local-aeca41545d-build-features",
+          "runId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+          "runtime": "showcase-anomaly-detection-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523360.1230717,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 2,
+            "initialFiles": 1,
+            "modifiedFiles": 0,
+            "outputBytes": 1879
+          }
+        },
+        "exitCode": 0,
+        "externalId": "49c966c39b3155f303a69542da49c692a0fa40201a3e3b2ca62644c08498680f",
+        "finishedAt": 1792523360.2278295,
+        "id": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000:showcase-anomaly-detection-local-aeca41545d-build-features",
+        "log": "{\"activity\": \"build-features\", \"status\": \"success\", \"resultKeys\": [\"normal\", \"validation\", \"feature\", \"nominal\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-anomaly-detection-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000/showcase-anomaly-detection-local-aeca41545d-build-features",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523360.1230776,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000-showcase-anomaly-detection-local-aeca41545d-build-features",
+          "submittedAt": 1792523360.1230717
+        },
+        "resourceId": "showcase-anomaly-detection-local-docker",
+        "runId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+        "runtimeId": "showcase-anomaly-detection-local",
+        "startedAt": 1792523360.1230717,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-anomaly-detection-local-aeca41545d-choose-threshold",
+        "artifacts": {
+          "activityId": "showcase-anomaly-detection-local-aeca41545d-choose-threshold",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:791fe55e14937a0bd68a41a0ddebe0781a73915ec5607ef941ccb77155b1b5da",
+              "modifiedUnixNano": 1792523366282414000,
+              "path": "stage-choose-threshold.json",
+              "sizeBytes": 1200
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:d2b10880428e6ef8f2adfda486798a8933ce00c5758da0584ac2dd1be7c285ff",
+              "modifiedUnixNano": 1792523366022414000,
+              "path": "stage-build-features.json",
+              "sizeBytes": 1879
+            },
+            {
+              "checksum": "sha256:791fe55e14937a0bd68a41a0ddebe0781a73915ec5607ef941ccb77155b1b5da",
+              "modifiedUnixNano": 1792523366282414000,
+              "path": "stage-choose-threshold.json",
+              "sizeBytes": 1200
+            },
+            {
+              "checksum": "sha256:57947918e7ce37231300e1e152bebc65be59344275ea3078556716b3945bc958",
+              "modifiedUnixNano": 1792523366022414000,
+              "path": "stage-collect-signals.json",
+              "sizeBytes": 1668
+            },
+            {
+              "checksum": "sha256:7fb96ae178a20f52fb0eae273f2e1de086f960d43a177bb79ce49e7b146e57c2",
+              "modifiedUnixNano": 1792523366022414000,
+              "path": "stage-score-validation.json",
+              "sizeBytes": 1139
+            },
+            {
+              "checksum": "sha256:33c8d1e02512279154f2ab9a000a8b5fd340015c6265ea424009038765695a8b",
+              "modifiedUnixNano": 1792523366022414000,
+              "path": "stage-train-detector.json",
+              "sizeBytes": 799
+            }
+          ],
+          "finishedAt": 1792523366.2877843,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:d2b10880428e6ef8f2adfda486798a8933ce00c5758da0584ac2dd1be7c285ff",
+              "modifiedUnixNano": 1792523366022414000,
+              "path": "stage-build-features.json",
+              "sizeBytes": 1879
+            },
+            {
+              "checksum": "sha256:57947918e7ce37231300e1e152bebc65be59344275ea3078556716b3945bc958",
+              "modifiedUnixNano": 1792523366022414000,
+              "path": "stage-collect-signals.json",
+              "sizeBytes": 1668
+            },
+            {
+              "checksum": "sha256:7fb96ae178a20f52fb0eae273f2e1de086f960d43a177bb79ce49e7b146e57c2",
+              "modifiedUnixNano": 1792523366022414000,
+              "path": "stage-score-validation.json",
+              "sizeBytes": 1139
+            },
+            {
+              "checksum": "sha256:33c8d1e02512279154f2ab9a000a8b5fd340015c6265ea424009038765695a8b",
+              "modifiedUnixNano": 1792523366022414000,
+              "path": "stage-train-detector.json",
+              "sizeBytes": 799
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.10713362693786621,
+              "finishedAt": 1792523366.2877843,
+              "phase": "execution",
+              "startedAt": 1792523366.1806507,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000/showcase-anomaly-detection-local-aeca41545d-choose-threshold",
+          "runId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+          "runtime": "showcase-anomaly-detection-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523366.1806507,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 5,
+            "initialFiles": 4,
+            "modifiedFiles": 0,
+            "outputBytes": 1200
+          }
+        },
+        "exitCode": 0,
+        "externalId": "2e201f0f5b90a55633c66aa9a9c129bf5c96d9fc7e32bcb8324b4472c4001943",
+        "finishedAt": 1792523366.2877843,
+        "id": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000:showcase-anomaly-detection-local-aeca41545d-choose-threshold",
+        "log": "{\"activity\": \"choose-threshold\", \"status\": \"success\", \"resultKeys\": [\"model\", \"scored\", \"best\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-anomaly-detection-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000/showcase-anomaly-detection-local-aeca41545d-choose-threshold",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523366.180656,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000-showcase-anomaly-detection-local-aeca41545d-choose-threshold",
+          "submittedAt": 1792523366.1806507
+        },
+        "resourceId": "showcase-anomaly-detection-local-docker",
+        "runId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+        "runtimeId": "showcase-anomaly-detection-local",
+        "startedAt": 1792523366.1806507,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-anomaly-detection-local-aeca41545d-collect-signals",
+        "artifacts": {
+          "activityId": "showcase-anomaly-detection-local-aeca41545d-collect-signals",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:57947918e7ce37231300e1e152bebc65be59344275ea3078556716b3945bc958",
+              "modifiedUnixNano": 1792523358861414000,
+              "path": "stage-collect-signals.json",
+              "sizeBytes": 1668
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:57947918e7ce37231300e1e152bebc65be59344275ea3078556716b3945bc958",
+              "modifiedUnixNano": 1792523358861414000,
+              "path": "stage-collect-signals.json",
+              "sizeBytes": 1668
+            }
+          ],
+          "finishedAt": 1792523358.8673549,
+          "phases": [
+            {
+              "durationSeconds": 0.10968923568725586,
+              "finishedAt": 1792523358.8673549,
+              "phase": "execution",
+              "startedAt": 1792523358.7576656,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000/showcase-anomaly-detection-local-aeca41545d-collect-signals",
+          "runId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+          "runtime": "showcase-anomaly-detection-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523358.7576656,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 1,
+            "initialFiles": 0,
+            "modifiedFiles": 0,
+            "outputBytes": 1668
+          }
+        },
+        "exitCode": 0,
+        "externalId": "0fad4952b07b5ea50bceb102adc55c015bb2aaf53da03af5043423ef1a160fbd",
+        "finishedAt": 1792523358.8673549,
+        "id": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000:showcase-anomaly-detection-local-aeca41545d-collect-signals",
+        "log": "{\"activity\": \"collect-signals\", \"status\": \"success\", \"resultKeys\": [\"normal\", \"validation\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-anomaly-detection-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000/showcase-anomaly-detection-local-aeca41545d-collect-signals",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523358.7576742,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000-showcase-anomaly-detection-local-aeca41545d-collect-signals",
+          "submittedAt": 1792523358.7576656
+        },
+        "resourceId": "showcase-anomaly-detection-local-docker",
+        "runId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+        "runtimeId": "showcase-anomaly-detection-local",
+        "startedAt": 1792523358.7576656,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-anomaly-detection-local-aeca41545d-publish",
+        "artifacts": {
+          "activityId": "showcase-anomaly-detection-local-aeca41545d-publish",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:b663dadb105d03ebf39ee29affd1dd617bc36334e158142284fd115dc07016ea",
+              "modifiedUnixNano": 1792523368417414000,
+              "path": "anomalies.json",
+              "sizeBytes": 290
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:86752fcf166f945b9e06b17b7128a3ea70babac7f6e7c1406c393b6c18fe7fec",
+              "modifiedUnixNano": 1792523368417414000,
+              "path": "metrics.json",
+              "sizeBytes": 34
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:994ab2f84bc3d3c053b393ec1bf95a3aa9081fcade9727a15b4d14d205622e44",
+              "modifiedUnixNano": 1792523368418414000,
+              "path": "stage-publish.json",
+              "sizeBytes": 411
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:b663dadb105d03ebf39ee29affd1dd617bc36334e158142284fd115dc07016ea",
+              "modifiedUnixNano": 1792523368417414000,
+              "path": "anomalies.json",
+              "sizeBytes": 290
+            },
+            {
+              "checksum": "sha256:86752fcf166f945b9e06b17b7128a3ea70babac7f6e7c1406c393b6c18fe7fec",
+              "modifiedUnixNano": 1792523368417414000,
+              "path": "metrics.json",
+              "sizeBytes": 34
+            },
+            {
+              "checksum": "sha256:d2b10880428e6ef8f2adfda486798a8933ce00c5758da0584ac2dd1be7c285ff",
+              "modifiedUnixNano": 1792523368123414000,
+              "path": "stage-build-features.json",
+              "sizeBytes": 1879
+            },
+            {
+              "checksum": "sha256:791fe55e14937a0bd68a41a0ddebe0781a73915ec5607ef941ccb77155b1b5da",
+              "modifiedUnixNano": 1792523368123414000,
+              "path": "stage-choose-threshold.json",
+              "sizeBytes": 1200
+            },
+            {
+              "checksum": "sha256:57947918e7ce37231300e1e152bebc65be59344275ea3078556716b3945bc958",
+              "modifiedUnixNano": 1792523368123414000,
+              "path": "stage-collect-signals.json",
+              "sizeBytes": 1668
+            },
+            {
+              "checksum": "sha256:994ab2f84bc3d3c053b393ec1bf95a3aa9081fcade9727a15b4d14d205622e44",
+              "modifiedUnixNano": 1792523368418414000,
+              "path": "stage-publish.json",
+              "sizeBytes": 411
+            },
+            {
+              "checksum": "sha256:7fb96ae178a20f52fb0eae273f2e1de086f960d43a177bb79ce49e7b146e57c2",
+              "modifiedUnixNano": 1792523368124414000,
+              "path": "stage-score-validation.json",
+              "sizeBytes": 1139
+            },
+            {
+              "checksum": "sha256:33c8d1e02512279154f2ab9a000a8b5fd340015c6265ea424009038765695a8b",
+              "modifiedUnixNano": 1792523368124414000,
+              "path": "stage-train-detector.json",
+              "sizeBytes": 799
+            }
+          ],
+          "finishedAt": 1792523368.4242318,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:d2b10880428e6ef8f2adfda486798a8933ce00c5758da0584ac2dd1be7c285ff",
+              "modifiedUnixNano": 1792523368123414000,
+              "path": "stage-build-features.json",
+              "sizeBytes": 1879
+            },
+            {
+              "checksum": "sha256:791fe55e14937a0bd68a41a0ddebe0781a73915ec5607ef941ccb77155b1b5da",
+              "modifiedUnixNano": 1792523368123414000,
+              "path": "stage-choose-threshold.json",
+              "sizeBytes": 1200
+            },
+            {
+              "checksum": "sha256:57947918e7ce37231300e1e152bebc65be59344275ea3078556716b3945bc958",
+              "modifiedUnixNano": 1792523368123414000,
+              "path": "stage-collect-signals.json",
+              "sizeBytes": 1668
+            },
+            {
+              "checksum": "sha256:7fb96ae178a20f52fb0eae273f2e1de086f960d43a177bb79ce49e7b146e57c2",
+              "modifiedUnixNano": 1792523368124414000,
+              "path": "stage-score-validation.json",
+              "sizeBytes": 1139
+            },
+            {
+              "checksum": "sha256:33c8d1e02512279154f2ab9a000a8b5fd340015c6265ea424009038765695a8b",
+              "modifiedUnixNano": 1792523368124414000,
+              "path": "stage-train-detector.json",
+              "sizeBytes": 799
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.10933518409729004,
+              "finishedAt": 1792523368.4242318,
+              "phase": "execution",
+              "startedAt": 1792523368.3148966,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000/showcase-anomaly-detection-local-aeca41545d-publish",
+          "runId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+          "runtime": "showcase-anomaly-detection-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523368.3148966,
+          "summary": {
+            "createdFiles": 3,
+            "deletedFiles": 0,
+            "finalFiles": 8,
+            "initialFiles": 5,
+            "modifiedFiles": 0,
+            "outputBytes": 735
+          }
+        },
+        "exitCode": 0,
+        "externalId": "e38c984e039771343eda9f6aaf868bbaf81bb0c0615abe2bdab1f99b22412b48",
+        "finishedAt": 1792523368.4242318,
+        "id": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000:showcase-anomaly-detection-local-aeca41545d-publish",
+        "log": "{\"activity\": \"publish\", \"status\": \"success\", \"resultKeys\": [\"detected\", \"threshold\", \"f1\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-anomaly-detection-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000/showcase-anomaly-detection-local-aeca41545d-publish",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523368.3149035,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000-showcase-anomaly-detection-local-aeca41545d-publish",
+          "submittedAt": 1792523368.3148966
+        },
+        "resourceId": "showcase-anomaly-detection-local-docker",
+        "runId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+        "runtimeId": "showcase-anomaly-detection-local",
+        "startedAt": 1792523368.3148966,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-anomaly-detection-local-aeca41545d-score-validation",
+        "artifacts": {
+          "activityId": "showcase-anomaly-detection-local-aeca41545d-score-validation",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:7fb96ae178a20f52fb0eae273f2e1de086f960d43a177bb79ce49e7b146e57c2",
+              "modifiedUnixNano": 1792523364226414000,
+              "path": "stage-score-validation.json",
+              "sizeBytes": 1139
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:d2b10880428e6ef8f2adfda486798a8933ce00c5758da0584ac2dd1be7c285ff",
+              "modifiedUnixNano": 1792523363968414000,
+              "path": "stage-build-features.json",
+              "sizeBytes": 1879
+            },
+            {
+              "checksum": "sha256:57947918e7ce37231300e1e152bebc65be59344275ea3078556716b3945bc958",
+              "modifiedUnixNano": 1792523363968414000,
+              "path": "stage-collect-signals.json",
+              "sizeBytes": 1668
+            },
+            {
+              "checksum": "sha256:7fb96ae178a20f52fb0eae273f2e1de086f960d43a177bb79ce49e7b146e57c2",
+              "modifiedUnixNano": 1792523364226414000,
+              "path": "stage-score-validation.json",
+              "sizeBytes": 1139
+            },
+            {
+              "checksum": "sha256:33c8d1e02512279154f2ab9a000a8b5fd340015c6265ea424009038765695a8b",
+              "modifiedUnixNano": 1792523363968414000,
+              "path": "stage-train-detector.json",
+              "sizeBytes": 799
+            }
+          ],
+          "finishedAt": 1792523364.2330444,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:d2b10880428e6ef8f2adfda486798a8933ce00c5758da0584ac2dd1be7c285ff",
+              "modifiedUnixNano": 1792523363968414000,
+              "path": "stage-build-features.json",
+              "sizeBytes": 1879
+            },
+            {
+              "checksum": "sha256:57947918e7ce37231300e1e152bebc65be59344275ea3078556716b3945bc958",
+              "modifiedUnixNano": 1792523363968414000,
+              "path": "stage-collect-signals.json",
+              "sizeBytes": 1668
+            },
+            {
+              "checksum": "sha256:33c8d1e02512279154f2ab9a000a8b5fd340015c6265ea424009038765695a8b",
+              "modifiedUnixNano": 1792523363968414000,
+              "path": "stage-train-detector.json",
+              "sizeBytes": 799
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.11264872550964355,
+              "finishedAt": 1792523364.2330444,
+              "phase": "execution",
+              "startedAt": 1792523364.1203957,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000/showcase-anomaly-detection-local-aeca41545d-score-validation",
+          "runId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+          "runtime": "showcase-anomaly-detection-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523364.1203957,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 4,
+            "initialFiles": 3,
+            "modifiedFiles": 0,
+            "outputBytes": 1139
+          }
+        },
+        "exitCode": 0,
+        "externalId": "bb626e697aeb228ff7960d5806f9d5d627bc0b9c0ec64504f051f4403c2041ab",
+        "finishedAt": 1792523364.2330444,
+        "id": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000:showcase-anomaly-detection-local-aeca41545d-score-validation",
+        "log": "{\"activity\": \"score-validation\", \"status\": \"success\", \"resultKeys\": [\"model\", \"scored\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-anomaly-detection-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000/showcase-anomaly-detection-local-aeca41545d-score-validation",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523364.1204004,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000-showcase-anomaly-detection-local-aeca41545d-score-validation",
+          "submittedAt": 1792523364.1203957
+        },
+        "resourceId": "showcase-anomaly-detection-local-docker",
+        "runId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+        "runtimeId": "showcase-anomaly-detection-local",
+        "startedAt": 1792523364.1203957,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-anomaly-detection-local-aeca41545d-train-detector",
+        "artifacts": {
+          "activityId": "showcase-anomaly-detection-local-aeca41545d-train-detector",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:33c8d1e02512279154f2ab9a000a8b5fd340015c6265ea424009038765695a8b",
+              "modifiedUnixNano": 1792523362295414000,
+              "path": "stage-train-detector.json",
+              "sizeBytes": 799
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:d2b10880428e6ef8f2adfda486798a8933ce00c5758da0584ac2dd1be7c285ff",
+              "modifiedUnixNano": 1792523362011414000,
+              "path": "stage-build-features.json",
+              "sizeBytes": 1879
+            },
+            {
+              "checksum": "sha256:57947918e7ce37231300e1e152bebc65be59344275ea3078556716b3945bc958",
+              "modifiedUnixNano": 1792523362011414000,
+              "path": "stage-collect-signals.json",
+              "sizeBytes": 1668
+            },
+            {
+              "checksum": "sha256:33c8d1e02512279154f2ab9a000a8b5fd340015c6265ea424009038765695a8b",
+              "modifiedUnixNano": 1792523362295414000,
+              "path": "stage-train-detector.json",
+              "sizeBytes": 799
+            }
+          ],
+          "finishedAt": 1792523362.301748,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:d2b10880428e6ef8f2adfda486798a8933ce00c5758da0584ac2dd1be7c285ff",
+              "modifiedUnixNano": 1792523362011414000,
+              "path": "stage-build-features.json",
+              "sizeBytes": 1879
+            },
+            {
+              "checksum": "sha256:57947918e7ce37231300e1e152bebc65be59344275ea3078556716b3945bc958",
+              "modifiedUnixNano": 1792523362011414000,
+              "path": "stage-collect-signals.json",
+              "sizeBytes": 1668
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.11069941520690918,
+              "finishedAt": 1792523362.301748,
+              "phase": "execution",
+              "startedAt": 1792523362.1910486,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000/showcase-anomaly-detection-local-aeca41545d-train-detector",
+          "runId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+          "runtime": "showcase-anomaly-detection-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523362.1910486,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 3,
+            "initialFiles": 2,
+            "modifiedFiles": 0,
+            "outputBytes": 799
+          }
+        },
+        "exitCode": 0,
+        "externalId": "55258baffe3c584e65871ba4cc25b9daecb4634d805312d7087be0edcd9b13e6",
+        "finishedAt": 1792523362.301748,
+        "id": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000:showcase-anomaly-detection-local-aeca41545d-train-detector",
+        "log": "{\"activity\": \"train-detector\", \"status\": \"success\", \"resultKeys\": [\"model\", \"validation\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-anomaly-detection-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000/showcase-anomaly-detection-local-aeca41545d-train-detector",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523362.1910546,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000-showcase-anomaly-detection-local-aeca41545d-train-detector",
+          "submittedAt": 1792523362.1910486
+        },
+        "resourceId": "showcase-anomaly-detection-local-docker",
+        "runId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+        "runtimeId": "showcase-anomaly-detection-local",
+        "startedAt": 1792523362.1910486,
+        "status": "completed"
+      }
+    ],
+    "infrastructureRuns": [],
+    "operationEvents": [],
+    "run": {
+      "activityCount": 6,
+      "breakdown": {
+        "computeSeconds": 0.654263973236084,
+        "interferenceSeconds": 0,
+        "overheadSeconds": 0,
+        "queueSeconds": 0,
+        "transferSeconds": 0.8938314914703369
+      },
+      "completedActivityCount": 6,
+      "cost": 0,
+      "finishedAt": "2026-10-20T19:09:29Z",
+      "id": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+      "kind": "workflow",
+      "makespanSeconds": 9.666566133499146,
+      "mode": "real",
+      "schedulePlanId": "showcase-anomaly-detection-local-aeca41545d-manual-plan-20261020t190918.293541000",
+      "seed": 0,
+      "startedAt": "2026-10-20T19:09:18Z",
+      "status": "completed",
+      "title": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+      "transferredBytes": 21731
+    },
+    "timeline": {
+      "computeMakespanSeconds": 9.666566133499146,
+      "coveredWallSeconds": 2.3578569889068604,
+      "finishedAt": 1792523369,
+      "phases": [
+        {
+          "activityId": "showcase-anomaly-detection-local-aeca41545d-collect-signals",
+          "category": "resource-queue",
+          "durationSeconds": 0.12451338768005371,
+          "finishedAt": 1792523358.7576656,
+          "id": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000:showcase-anomaly-detection-local-aeca41545d-collect-signals:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523358.6331522,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-anomaly-detection-local-aeca41545d-collect-signals",
+          "category": "runtime",
+          "durationSeconds": 0.10968923568725586,
+          "finishedAt": 1792523358.8673549,
+          "id": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000:showcase-anomaly-detection-local-aeca41545d-collect-signals:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523358.7576656,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-anomaly-detection-local-aeca41545d-build-features",
+          "category": "resource-queue",
+          "durationSeconds": 0.002999544143676758,
+          "finishedAt": 1792523359.8535798,
+          "id": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000:showcase-anomaly-detection-local-aeca41545d-build-features:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523359.8505802,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-anomaly-detection-local-aeca41545d-build-features",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.14311742782592773,
+          "finishedAt": 1792523359.9966972,
+          "id": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000:showcase-anomaly-detection-local-aeca41545d-build-features:transfer-workspace-showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000-showcase-anomaly-detection-local-aeca41545d-build-features-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523359.8535798,
+          "status": "completed",
+          "transferId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000:showcase-anomaly-detection-local-aeca41545d-build-features:transfer-workspace-showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000-showcase-anomaly-detection-local-aeca41545d-build-features-0"
+        },
+        {
+          "activityId": "showcase-anomaly-detection-local-aeca41545d-build-features",
+          "category": "launch",
+          "durationSeconds": 0.1263744831085205,
+          "finishedAt": 1792523360.1230717,
+          "id": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000:showcase-anomaly-detection-local-aeca41545d-build-features:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523359.9966972,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-anomaly-detection-local-aeca41545d-build-features",
+          "category": "runtime",
+          "durationSeconds": 0.10475778579711914,
+          "finishedAt": 1792523360.2278295,
+          "id": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000:showcase-anomaly-detection-local-aeca41545d-build-features:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523360.1230717,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-anomaly-detection-local-aeca41545d-train-detector",
+          "category": "resource-queue",
+          "durationSeconds": 0.002910137176513672,
+          "finishedAt": 1792523361.8664763,
+          "id": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000:showcase-anomaly-detection-local-aeca41545d-train-detector:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523361.8635662,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-anomaly-detection-local-aeca41545d-train-detector",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.1912977695465088,
+          "finishedAt": 1792523362.057774,
+          "id": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000:showcase-anomaly-detection-local-aeca41545d-train-detector:transfer-workspace-showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000-showcase-anomaly-detection-local-aeca41545d-train-detector-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523361.8664763,
+          "status": "completed",
+          "transferId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000:showcase-anomaly-detection-local-aeca41545d-train-detector:transfer-workspace-showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000-showcase-anomaly-detection-local-aeca41545d-train-detector-0"
+        },
+        {
+          "activityId": "showcase-anomaly-detection-local-aeca41545d-train-detector",
+          "category": "launch",
+          "durationSeconds": 0.13327455520629883,
+          "finishedAt": 1792523362.1910486,
+          "id": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000:showcase-anomaly-detection-local-aeca41545d-train-detector:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523362.057774,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-anomaly-detection-local-aeca41545d-train-detector",
+          "category": "runtime",
+          "durationSeconds": 0.11069941520690918,
+          "finishedAt": 1792523362.301748,
+          "id": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000:showcase-anomaly-detection-local-aeca41545d-train-detector:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523362.1910486,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-anomaly-detection-local-aeca41545d-score-validation",
+          "category": "resource-queue",
+          "durationSeconds": 0.0035409927368164062,
+          "finishedAt": 1792523363.8712492,
+          "id": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000:showcase-anomaly-detection-local-aeca41545d-score-validation:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523363.8677082,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-anomaly-detection-local-aeca41545d-score-validation",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.12015366554260254,
+          "finishedAt": 1792523363.9914029,
+          "id": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000:showcase-anomaly-detection-local-aeca41545d-score-validation:transfer-workspace-showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000-showcase-anomaly-detection-local-aeca41545d-score-validation-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523363.8712492,
+          "status": "completed",
+          "transferId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000:showcase-anomaly-detection-local-aeca41545d-score-validation:transfer-workspace-showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000-showcase-anomaly-detection-local-aeca41545d-score-validation-0"
+        },
+        {
+          "activityId": "showcase-anomaly-detection-local-aeca41545d-score-validation",
+          "category": "launch",
+          "durationSeconds": 0.12899279594421387,
+          "finishedAt": 1792523364.1203957,
+          "id": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000:showcase-anomaly-detection-local-aeca41545d-score-validation:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523363.9914029,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-anomaly-detection-local-aeca41545d-score-validation",
+          "category": "runtime",
+          "durationSeconds": 0.11264872550964355,
+          "finishedAt": 1792523364.2330444,
+          "id": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000:showcase-anomaly-detection-local-aeca41545d-score-validation:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523364.1203957,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-anomaly-detection-local-aeca41545d-choose-threshold",
+          "category": "resource-queue",
+          "durationSeconds": 0.002885103225708008,
+          "finishedAt": 1792523365.8797195,
+          "id": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000:showcase-anomaly-detection-local-aeca41545d-choose-threshold:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523365.8768344,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-anomaly-detection-local-aeca41545d-choose-threshold",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.1663200855255127,
+          "finishedAt": 1792523366.0460396,
+          "id": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000:showcase-anomaly-detection-local-aeca41545d-choose-threshold:transfer-workspace-showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000-showcase-anomaly-detection-local-aeca41545d-choose-threshold-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523365.8797195,
+          "status": "completed",
+          "transferId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000:showcase-anomaly-detection-local-aeca41545d-choose-threshold:transfer-workspace-showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000-showcase-anomaly-detection-local-aeca41545d-choose-threshold-0"
+        },
+        {
+          "activityId": "showcase-anomaly-detection-local-aeca41545d-choose-threshold",
+          "category": "launch",
+          "durationSeconds": 0.1346111297607422,
+          "finishedAt": 1792523366.1806507,
+          "id": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000:showcase-anomaly-detection-local-aeca41545d-choose-threshold:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523366.0460396,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-anomaly-detection-local-aeca41545d-choose-threshold",
+          "category": "runtime",
+          "durationSeconds": 0.10713362693786621,
+          "finishedAt": 1792523366.2877843,
+          "id": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000:showcase-anomaly-detection-local-aeca41545d-choose-threshold:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523366.1806507,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-anomaly-detection-local-aeca41545d-publish",
+          "category": "resource-queue",
+          "durationSeconds": 0.0032570362091064453,
+          "finishedAt": 1792523367.8955517,
+          "id": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000:showcase-anomaly-detection-local-aeca41545d-publish:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523367.8922946,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-anomaly-detection-local-aeca41545d-publish",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.27294254302978516,
+          "finishedAt": 1792523368.1684942,
+          "id": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000:showcase-anomaly-detection-local-aeca41545d-publish:transfer-workspace-showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000-showcase-anomaly-detection-local-aeca41545d-publish-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523367.8955517,
+          "status": "completed",
+          "transferId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000:showcase-anomaly-detection-local-aeca41545d-publish:transfer-workspace-showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000-showcase-anomaly-detection-local-aeca41545d-publish-0"
+        },
+        {
+          "activityId": "showcase-anomaly-detection-local-aeca41545d-publish",
+          "category": "launch",
+          "durationSeconds": 0.14640235900878906,
+          "finishedAt": 1792523368.3148966,
+          "id": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000:showcase-anomaly-detection-local-aeca41545d-publish:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523368.1684942,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-anomaly-detection-local-aeca41545d-publish",
+          "category": "runtime",
+          "durationSeconds": 0.10933518409729004,
+          "finishedAt": 1792523368.4242318,
+          "id": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000:showcase-anomaly-detection-local-aeca41545d-publish:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523368.3148966,
+          "status": "completed"
+        }
+      ],
+      "startedAt": 1792523358,
+      "totals": {
+        "destroySeconds": 0,
+        "executablePreparationSeconds": 0,
+        "launchSeconds": 0.6696553230285645,
+        "provisionSeconds": 0,
+        "resourceQueueSeconds": 0.140106201171875,
+        "runtimeSeconds": 0.654263973236084,
+        "startSeconds": 0,
+        "stopSeconds": 0,
+        "validationSeconds": 0,
+        "workspaceTransferSeconds": 0.8938314914703369
+      },
+      "unclassifiedWallSeconds": 8.64214301109314,
+      "wallSeconds": 11
+    },
+    "workspaceLeases": [
+      {
+        "consumerActivityId": "showcase-anomaly-detection-local-aeca41545d-train-detector",
+        "id": "workspace-lease-showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000-showcase-anomaly-detection-local-aeca41545d-build-features-showcase-anomaly-detection-local-aeca41545d-train-detector",
+        "producerActivityId": "showcase-anomaly-detection-local-aeca41545d-build-features",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:09:22.061627466Z",
+        "runId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+        "workspaceId": "workspace-showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000-showcase-anomaly-detection-local-aeca41545d-build-features"
+      },
+      {
+        "consumerActivityId": "showcase-anomaly-detection-local-aeca41545d-publish",
+        "id": "workspace-lease-showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000-showcase-anomaly-detection-local-aeca41545d-choose-threshold-showcase-anomaly-detection-local-aeca41545d-publish",
+        "producerActivityId": "showcase-anomaly-detection-local-aeca41545d-choose-threshold",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:09:28.171039594Z",
+        "runId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+        "workspaceId": "workspace-showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000-showcase-anomaly-detection-local-aeca41545d-choose-threshold"
+      },
+      {
+        "consumerActivityId": "showcase-anomaly-detection-local-aeca41545d-build-features",
+        "id": "workspace-lease-showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000-showcase-anomaly-detection-local-aeca41545d-collect-signals-showcase-anomaly-detection-local-aeca41545d-build-features",
+        "producerActivityId": "showcase-anomaly-detection-local-aeca41545d-collect-signals",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:09:19.99968134Z",
+        "runId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+        "workspaceId": "workspace-showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000-showcase-anomaly-detection-local-aeca41545d-collect-signals"
+      },
+      {
+        "consumerActivityId": "showcase-anomaly-detection-local-aeca41545d-choose-threshold",
+        "id": "workspace-lease-showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000-showcase-anomaly-detection-local-aeca41545d-score-validation-showcase-anomaly-detection-local-aeca41545d-choose-threshold",
+        "producerActivityId": "showcase-anomaly-detection-local-aeca41545d-score-validation",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:09:26.049148218Z",
+        "runId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+        "workspaceId": "workspace-showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000-showcase-anomaly-detection-local-aeca41545d-score-validation"
+      },
+      {
+        "consumerActivityId": "showcase-anomaly-detection-local-aeca41545d-score-validation",
+        "id": "workspace-lease-showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000-showcase-anomaly-detection-local-aeca41545d-train-detector-showcase-anomaly-detection-local-aeca41545d-score-validation",
+        "producerActivityId": "showcase-anomaly-detection-local-aeca41545d-train-detector",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:09:23.994343634Z",
+        "runId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+        "workspaceId": "workspace-showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000-showcase-anomaly-detection-local-aeca41545d-train-detector"
+      }
+    ],
+    "workspaces": [
+      {
+        "activityId": "showcase-anomaly-detection-local-aeca41545d-build-features",
+        "createdAt": "2026-10-20T19:09:18.617160381Z",
+        "driver": "local",
+        "environmentId": "showcase-anomaly-detection-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000/showcase-anomaly-detection-local-aeca41545d-build-features",
+        "fileCount": 2,
+        "id": "workspace-showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000-showcase-anomaly-detection-local-aeca41545d-build-features",
+        "inputBytes": 1668,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:d2b10880428e6ef8f2adfda486798a8933ce00c5758da0584ac2dd1be7c285ff",
+              "path": "stage-build-features.json",
+              "sizeBytes": 1879
+            },
+            {
+              "digest": "sha256:57947918e7ce37231300e1e152bebc65be59344275ea3078556716b3945bc958",
+              "path": "stage-collect-signals.json",
+              "sizeBytes": 1668
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:57947918e7ce37231300e1e152bebc65be59344275ea3078556716b3945bc958",
+              "path": "stage-collect-signals.json",
+              "sizeBytes": 1668
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:57947918e7ce37231300e1e152bebc65be59344275ea3078556716b3945bc958",
+              "path": "stage-collect-signals.json",
+              "sizeBytes": 1668
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:d2b10880428e6ef8f2adfda486798a8933ce00c5758da0584ac2dd1be7c285ff",
+              "path": "stage-build-features.json",
+              "sizeBytes": 1879
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000/showcase-anomaly-detection-local-aeca41545d-build-features",
+        "outputBytes": 1879,
+        "pinned": false,
+        "reclaimedBytes": 3547,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:09:22.068610966Z",
+        "resourceId": "showcase-anomaly-detection-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+        "runtimeId": "showcase-anomaly-detection-local",
+        "sealedAt": "2026-10-20T19:09:21.858734425Z",
+        "sizeBytes": 3547,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000/showcase-anomaly-detection-local-aeca41545d-build-features"
+      },
+      {
+        "activityId": "showcase-anomaly-detection-local-aeca41545d-choose-threshold",
+        "createdAt": "2026-10-20T19:09:18.617160381Z",
+        "driver": "local",
+        "environmentId": "showcase-anomaly-detection-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000/showcase-anomaly-detection-local-aeca41545d-choose-threshold",
+        "fileCount": 5,
+        "id": "workspace-showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000-showcase-anomaly-detection-local-aeca41545d-choose-threshold",
+        "inputBytes": 5485,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:d2b10880428e6ef8f2adfda486798a8933ce00c5758da0584ac2dd1be7c285ff",
+              "path": "stage-build-features.json",
+              "sizeBytes": 1879
+            },
+            {
+              "digest": "sha256:791fe55e14937a0bd68a41a0ddebe0781a73915ec5607ef941ccb77155b1b5da",
+              "path": "stage-choose-threshold.json",
+              "sizeBytes": 1200
+            },
+            {
+              "digest": "sha256:57947918e7ce37231300e1e152bebc65be59344275ea3078556716b3945bc958",
+              "path": "stage-collect-signals.json",
+              "sizeBytes": 1668
+            },
+            {
+              "digest": "sha256:7fb96ae178a20f52fb0eae273f2e1de086f960d43a177bb79ce49e7b146e57c2",
+              "path": "stage-score-validation.json",
+              "sizeBytes": 1139
+            },
+            {
+              "digest": "sha256:33c8d1e02512279154f2ab9a000a8b5fd340015c6265ea424009038765695a8b",
+              "path": "stage-train-detector.json",
+              "sizeBytes": 799
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:d2b10880428e6ef8f2adfda486798a8933ce00c5758da0584ac2dd1be7c285ff",
+              "path": "stage-build-features.json",
+              "sizeBytes": 1879
+            },
+            {
+              "digest": "sha256:57947918e7ce37231300e1e152bebc65be59344275ea3078556716b3945bc958",
+              "path": "stage-collect-signals.json",
+              "sizeBytes": 1668
+            },
+            {
+              "digest": "sha256:7fb96ae178a20f52fb0eae273f2e1de086f960d43a177bb79ce49e7b146e57c2",
+              "path": "stage-score-validation.json",
+              "sizeBytes": 1139
+            },
+            {
+              "digest": "sha256:33c8d1e02512279154f2ab9a000a8b5fd340015c6265ea424009038765695a8b",
+              "path": "stage-train-detector.json",
+              "sizeBytes": 799
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:d2b10880428e6ef8f2adfda486798a8933ce00c5758da0584ac2dd1be7c285ff",
+              "path": "stage-build-features.json",
+              "sizeBytes": 1879
+            },
+            {
+              "digest": "sha256:57947918e7ce37231300e1e152bebc65be59344275ea3078556716b3945bc958",
+              "path": "stage-collect-signals.json",
+              "sizeBytes": 1668
+            },
+            {
+              "digest": "sha256:7fb96ae178a20f52fb0eae273f2e1de086f960d43a177bb79ce49e7b146e57c2",
+              "path": "stage-score-validation.json",
+              "sizeBytes": 1139
+            },
+            {
+              "digest": "sha256:33c8d1e02512279154f2ab9a000a8b5fd340015c6265ea424009038765695a8b",
+              "path": "stage-train-detector.json",
+              "sizeBytes": 799
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:791fe55e14937a0bd68a41a0ddebe0781a73915ec5607ef941ccb77155b1b5da",
+              "path": "stage-choose-threshold.json",
+              "sizeBytes": 1200
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000/showcase-anomaly-detection-local-aeca41545d-choose-threshold",
+        "outputBytes": 1200,
+        "pinned": false,
+        "reclaimedBytes": 6685,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:09:28.175750969Z",
+        "resourceId": "showcase-anomaly-detection-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+        "runtimeId": "showcase-anomaly-detection-local",
+        "sealedAt": "2026-10-20T19:09:27.888562344Z",
+        "sizeBytes": 6685,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000/showcase-anomaly-detection-local-aeca41545d-choose-threshold"
+      },
+      {
+        "activityId": "showcase-anomaly-detection-local-aeca41545d-collect-signals",
+        "createdAt": "2026-10-20T19:09:18.617160381Z",
+        "driver": "local",
+        "environmentId": "showcase-anomaly-detection-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000/showcase-anomaly-detection-local-aeca41545d-collect-signals",
+        "fileCount": 1,
+        "id": "workspace-showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000-showcase-anomaly-detection-local-aeca41545d-collect-signals",
+        "inputBytes": 0,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:57947918e7ce37231300e1e152bebc65be59344275ea3078556716b3945bc958",
+              "path": "stage-collect-signals.json",
+              "sizeBytes": 1668
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:57947918e7ce37231300e1e152bebc65be59344275ea3078556716b3945bc958",
+              "path": "stage-collect-signals.json",
+              "sizeBytes": 1668
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000/showcase-anomaly-detection-local-aeca41545d-collect-signals",
+        "outputBytes": 1668,
+        "pinned": false,
+        "reclaimedBytes": 1668,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:09:20.006271132Z",
+        "resourceId": "showcase-anomaly-detection-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+        "runtimeId": "showcase-anomaly-detection-local",
+        "sealedAt": "2026-10-20T19:09:19.846334799Z",
+        "sizeBytes": 1668,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000/showcase-anomaly-detection-local-aeca41545d-collect-signals"
+      },
+      {
+        "activityId": "showcase-anomaly-detection-local-aeca41545d-publish",
+        "createdAt": "2026-10-20T19:09:18.617160381Z",
+        "driver": "local",
+        "environmentId": "showcase-anomaly-detection-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000/showcase-anomaly-detection-local-aeca41545d-publish",
+        "fileCount": 3,
+        "id": "workspace-showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000-showcase-anomaly-detection-local-aeca41545d-publish",
+        "inputBytes": 6685,
+        "isFinal": true,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:b663dadb105d03ebf39ee29affd1dd617bc36334e158142284fd115dc07016ea",
+              "path": "anomalies.json",
+              "sizeBytes": 290
+            },
+            {
+              "digest": "sha256:86752fcf166f945b9e06b17b7128a3ea70babac7f6e7c1406c393b6c18fe7fec",
+              "path": "metrics.json",
+              "sizeBytes": 34
+            },
+            {
+              "digest": "sha256:d2b10880428e6ef8f2adfda486798a8933ce00c5758da0584ac2dd1be7c285ff",
+              "path": "stage-build-features.json",
+              "sizeBytes": 1879
+            },
+            {
+              "digest": "sha256:791fe55e14937a0bd68a41a0ddebe0781a73915ec5607ef941ccb77155b1b5da",
+              "path": "stage-choose-threshold.json",
+              "sizeBytes": 1200
+            },
+            {
+              "digest": "sha256:57947918e7ce37231300e1e152bebc65be59344275ea3078556716b3945bc958",
+              "path": "stage-collect-signals.json",
+              "sizeBytes": 1668
+            },
+            {
+              "digest": "sha256:994ab2f84bc3d3c053b393ec1bf95a3aa9081fcade9727a15b4d14d205622e44",
+              "path": "stage-publish.json",
+              "sizeBytes": 411
+            },
+            {
+              "digest": "sha256:7fb96ae178a20f52fb0eae273f2e1de086f960d43a177bb79ce49e7b146e57c2",
+              "path": "stage-score-validation.json",
+              "sizeBytes": 1139
+            },
+            {
+              "digest": "sha256:33c8d1e02512279154f2ab9a000a8b5fd340015c6265ea424009038765695a8b",
+              "path": "stage-train-detector.json",
+              "sizeBytes": 799
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:d2b10880428e6ef8f2adfda486798a8933ce00c5758da0584ac2dd1be7c285ff",
+              "path": "stage-build-features.json",
+              "sizeBytes": 1879
+            },
+            {
+              "digest": "sha256:791fe55e14937a0bd68a41a0ddebe0781a73915ec5607ef941ccb77155b1b5da",
+              "path": "stage-choose-threshold.json",
+              "sizeBytes": 1200
+            },
+            {
+              "digest": "sha256:57947918e7ce37231300e1e152bebc65be59344275ea3078556716b3945bc958",
+              "path": "stage-collect-signals.json",
+              "sizeBytes": 1668
+            },
+            {
+              "digest": "sha256:7fb96ae178a20f52fb0eae273f2e1de086f960d43a177bb79ce49e7b146e57c2",
+              "path": "stage-score-validation.json",
+              "sizeBytes": 1139
+            },
+            {
+              "digest": "sha256:33c8d1e02512279154f2ab9a000a8b5fd340015c6265ea424009038765695a8b",
+              "path": "stage-train-detector.json",
+              "sizeBytes": 799
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:d2b10880428e6ef8f2adfda486798a8933ce00c5758da0584ac2dd1be7c285ff",
+              "path": "stage-build-features.json",
+              "sizeBytes": 1879
+            },
+            {
+              "digest": "sha256:791fe55e14937a0bd68a41a0ddebe0781a73915ec5607ef941ccb77155b1b5da",
+              "path": "stage-choose-threshold.json",
+              "sizeBytes": 1200
+            },
+            {
+              "digest": "sha256:57947918e7ce37231300e1e152bebc65be59344275ea3078556716b3945bc958",
+              "path": "stage-collect-signals.json",
+              "sizeBytes": 1668
+            },
+            {
+              "digest": "sha256:7fb96ae178a20f52fb0eae273f2e1de086f960d43a177bb79ce49e7b146e57c2",
+              "path": "stage-score-validation.json",
+              "sizeBytes": 1139
+            },
+            {
+              "digest": "sha256:33c8d1e02512279154f2ab9a000a8b5fd340015c6265ea424009038765695a8b",
+              "path": "stage-train-detector.json",
+              "sizeBytes": 799
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:b663dadb105d03ebf39ee29affd1dd617bc36334e158142284fd115dc07016ea",
+              "path": "anomalies.json",
+              "sizeBytes": 290
+            },
+            {
+              "digest": "sha256:86752fcf166f945b9e06b17b7128a3ea70babac7f6e7c1406c393b6c18fe7fec",
+              "path": "metrics.json",
+              "sizeBytes": 34
+            },
+            {
+              "digest": "sha256:994ab2f84bc3d3c053b393ec1bf95a3aa9081fcade9727a15b4d14d205622e44",
+              "path": "stage-publish.json",
+              "sizeBytes": 411
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000/showcase-anomaly-detection-local-aeca41545d-publish",
+        "outputBytes": 735,
+        "pinned": false,
+        "reclaimedBytes": 6685,
+        "releaseReason": "inherited inputs pruned",
+        "resourceId": "showcase-anomaly-detection-local-docker",
+        "retention": "final",
+        "runId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+        "runtimeId": "showcase-anomaly-detection-local",
+        "sealedAt": "2026-10-20T19:09:29.900097887Z",
+        "sizeBytes": 735,
+        "state": "sealed",
+        "uri": "file:///akoflow/workspace/runs/showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000/showcase-anomaly-detection-local-aeca41545d-publish"
+      },
+      {
+        "activityId": "showcase-anomaly-detection-local-aeca41545d-score-validation",
+        "createdAt": "2026-10-20T19:09:18.617160381Z",
+        "driver": "local",
+        "environmentId": "showcase-anomaly-detection-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000/showcase-anomaly-detection-local-aeca41545d-score-validation",
+        "fileCount": 4,
+        "id": "workspace-showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000-showcase-anomaly-detection-local-aeca41545d-score-validation",
+        "inputBytes": 4346,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:d2b10880428e6ef8f2adfda486798a8933ce00c5758da0584ac2dd1be7c285ff",
+              "path": "stage-build-features.json",
+              "sizeBytes": 1879
+            },
+            {
+              "digest": "sha256:57947918e7ce37231300e1e152bebc65be59344275ea3078556716b3945bc958",
+              "path": "stage-collect-signals.json",
+              "sizeBytes": 1668
+            },
+            {
+              "digest": "sha256:7fb96ae178a20f52fb0eae273f2e1de086f960d43a177bb79ce49e7b146e57c2",
+              "path": "stage-score-validation.json",
+              "sizeBytes": 1139
+            },
+            {
+              "digest": "sha256:33c8d1e02512279154f2ab9a000a8b5fd340015c6265ea424009038765695a8b",
+              "path": "stage-train-detector.json",
+              "sizeBytes": 799
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:d2b10880428e6ef8f2adfda486798a8933ce00c5758da0584ac2dd1be7c285ff",
+              "path": "stage-build-features.json",
+              "sizeBytes": 1879
+            },
+            {
+              "digest": "sha256:57947918e7ce37231300e1e152bebc65be59344275ea3078556716b3945bc958",
+              "path": "stage-collect-signals.json",
+              "sizeBytes": 1668
+            },
+            {
+              "digest": "sha256:33c8d1e02512279154f2ab9a000a8b5fd340015c6265ea424009038765695a8b",
+              "path": "stage-train-detector.json",
+              "sizeBytes": 799
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:d2b10880428e6ef8f2adfda486798a8933ce00c5758da0584ac2dd1be7c285ff",
+              "path": "stage-build-features.json",
+              "sizeBytes": 1879
+            },
+            {
+              "digest": "sha256:57947918e7ce37231300e1e152bebc65be59344275ea3078556716b3945bc958",
+              "path": "stage-collect-signals.json",
+              "sizeBytes": 1668
+            },
+            {
+              "digest": "sha256:33c8d1e02512279154f2ab9a000a8b5fd340015c6265ea424009038765695a8b",
+              "path": "stage-train-detector.json",
+              "sizeBytes": 799
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:7fb96ae178a20f52fb0eae273f2e1de086f960d43a177bb79ce49e7b146e57c2",
+              "path": "stage-score-validation.json",
+              "sizeBytes": 1139
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000/showcase-anomaly-detection-local-aeca41545d-score-validation",
+        "outputBytes": 1139,
+        "pinned": false,
+        "reclaimedBytes": 5485,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:09:26.055180427Z",
+        "resourceId": "showcase-anomaly-detection-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+        "runtimeId": "showcase-anomaly-detection-local",
+        "sealedAt": "2026-10-20T19:09:25.871699802Z",
+        "sizeBytes": 5485,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000/showcase-anomaly-detection-local-aeca41545d-score-validation"
+      },
+      {
+        "activityId": "showcase-anomaly-detection-local-aeca41545d-train-detector",
+        "createdAt": "2026-10-20T19:09:18.617160381Z",
+        "driver": "local",
+        "environmentId": "showcase-anomaly-detection-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000/showcase-anomaly-detection-local-aeca41545d-train-detector",
+        "fileCount": 3,
+        "id": "workspace-showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000-showcase-anomaly-detection-local-aeca41545d-train-detector",
+        "inputBytes": 3547,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:d2b10880428e6ef8f2adfda486798a8933ce00c5758da0584ac2dd1be7c285ff",
+              "path": "stage-build-features.json",
+              "sizeBytes": 1879
+            },
+            {
+              "digest": "sha256:57947918e7ce37231300e1e152bebc65be59344275ea3078556716b3945bc958",
+              "path": "stage-collect-signals.json",
+              "sizeBytes": 1668
+            },
+            {
+              "digest": "sha256:33c8d1e02512279154f2ab9a000a8b5fd340015c6265ea424009038765695a8b",
+              "path": "stage-train-detector.json",
+              "sizeBytes": 799
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:d2b10880428e6ef8f2adfda486798a8933ce00c5758da0584ac2dd1be7c285ff",
+              "path": "stage-build-features.json",
+              "sizeBytes": 1879
+            },
+            {
+              "digest": "sha256:57947918e7ce37231300e1e152bebc65be59344275ea3078556716b3945bc958",
+              "path": "stage-collect-signals.json",
+              "sizeBytes": 1668
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:d2b10880428e6ef8f2adfda486798a8933ce00c5758da0584ac2dd1be7c285ff",
+              "path": "stage-build-features.json",
+              "sizeBytes": 1879
+            },
+            {
+              "digest": "sha256:57947918e7ce37231300e1e152bebc65be59344275ea3078556716b3945bc958",
+              "path": "stage-collect-signals.json",
+              "sizeBytes": 1668
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:33c8d1e02512279154f2ab9a000a8b5fd340015c6265ea424009038765695a8b",
+              "path": "stage-train-detector.json",
+              "sizeBytes": 799
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000/showcase-anomaly-detection-local-aeca41545d-train-detector",
+        "outputBytes": 799,
+        "pinned": false,
+        "reclaimedBytes": 4346,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:09:24.000303134Z",
+        "resourceId": "showcase-anomaly-detection-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+        "runtimeId": "showcase-anomaly-detection-local",
+        "sealedAt": "2026-10-20T19:09:23.861954676Z",
+        "sizeBytes": 4346,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000/showcase-anomaly-detection-local-aeca41545d-train-detector"
+      }
+    ]
+  },
+  "runId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+  "status": "completed",
+  "workflowId": "showcase-anomaly-detection-local-aeca41545d"
+}

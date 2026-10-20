@@ -17,7 +17,7 @@ import { AIWorkflowPattern } from "@site/src/components/WorkflowShowcase";
     ["publish-result", "store-trace"],
   ]}
   inputs={["Objective and context", "Tool allowlist", "Iteration limits"]}
-  outputs={["Validated result", "Tool outputs", "Agent trace"]}
+  outputs={["answer.json", "validation.json", "trace.json"]}
   evidence={["Prompt and model", "Tool calls", "Cost and validation"]}
   execution="Apply timeout, cancellation, restricted credentials, and idempotency to any external side effect."
 />

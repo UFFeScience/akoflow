@@ -1,0 +1,3716 @@
+{
+  "activityCount": 8,
+  "completedActivityCount": 8,
+  "image": "ghcr.io/uffescience/akoflow-examples/showcase-rag-indexing:local-7d9dd7dc3e57911d",
+  "imageId": "sha256:7d9dd7dc3e57911d4c87ff2cbcd8e70fb94f42d89593606aeafd90456c416873",
+  "observedAt": "2026-10-20T19:13:58Z",
+  "planId": "showcase-rag-indexing-local-51e75cdbe9-manual-plan-20261020t191344.205131000",
+  "projection": {
+    "activities": [
+      {
+        "activityId": "showcase-rag-indexing-local-51e75cdbe9-collect-documents",
+        "allocatedResourceId": "showcase-rag-indexing-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "finishedAt": 1792523624.9047532,
+        "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-collect-documents",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "pricePerSecond": 0,
+          "runtimeId": "showcase-rag-indexing-local"
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-rag-indexing-local-51e75cdbe9-manual-plan-20261020t191344.205131000-showcase-rag-indexing-local-51e75cdbe9-collect-documents",
+        "plannedResourceId": "showcase-rag-indexing-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523624.6606133,
+        "readyAt": 1792523624.6606133,
+        "runtimeId": "showcase-rag-indexing-local",
+        "runtimeSeconds": 0.11546778678894043,
+        "startedAt": 1792523624.7892854,
+        "status": "completed",
+        "transferBytes": 0,
+        "transferSeconds": 0
+      },
+      {
+        "activityId": "showcase-rag-indexing-local-51e75cdbe9-clean",
+        "allocatedResourceId": "showcase-rag-indexing-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "finishedAt": 1792523626.2666042,
+        "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-clean",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.11984658241271973,
+          "preparationFinishedAt": 1792523626.0408313,
+          "preparationStartedAt": 1792523625.8811398,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0011608600616455078,
+          "runtimeId": "showcase-rag-indexing-local",
+          "transferElapsedSeconds": 0.15969157218933105,
+          "transferWorkSeconds": 0.15969157218933105
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-rag-indexing-local-51e75cdbe9-manual-plan-20261020t191344.205131000-showcase-rag-indexing-local-51e75cdbe9-clean",
+        "plannedResourceId": "showcase-rag-indexing-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523625.8779094,
+        "readyAt": 1792523625.8779094,
+        "runtimeId": "showcase-rag-indexing-local",
+        "runtimeSeconds": 0.1059262752532959,
+        "startedAt": 1792523626.160678,
+        "status": "completed",
+        "transferBytes": 904,
+        "transferSeconds": 0.15969157218933105
+      },
+      {
+        "activityId": "showcase-rag-indexing-local-51e75cdbe9-chunk",
+        "allocatedResourceId": "showcase-rag-indexing-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "finishedAt": 1792523628.2914724,
+        "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-chunk",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.13539600372314453,
+          "preparationFinishedAt": 1792523628.0412521,
+          "preparationStartedAt": 1792523627.8810985,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.001567840576171875,
+          "runtimeId": "showcase-rag-indexing-local",
+          "transferElapsedSeconds": 0.16015362739562988,
+          "transferWorkSeconds": 0.16015362739562988
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-rag-indexing-local-51e75cdbe9-manual-plan-20261020t191344.205131000-showcase-rag-indexing-local-51e75cdbe9-chunk",
+        "plannedResourceId": "showcase-rag-indexing-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523627.8778403,
+        "readyAt": 1792523627.8778403,
+        "runtimeId": "showcase-rag-indexing-local",
+        "runtimeSeconds": 0.11482429504394531,
+        "startedAt": 1792523628.1766481,
+        "status": "completed",
+        "transferBytes": 1823,
+        "transferSeconds": 0.16015362739562988
+      },
+      {
+        "activityId": "showcase-rag-indexing-local-51e75cdbe9-embed",
+        "allocatedResourceId": "showcase-rag-indexing-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "finishedAt": 1792523630.279399,
+        "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-embed",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1407177448272705,
+          "preparationFinishedAt": 1792523630.024,
+          "preparationStartedAt": 1792523629.8843348,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0009834766387939453,
+          "runtimeId": "showcase-rag-indexing-local",
+          "transferElapsedSeconds": 0.1396651268005371,
+          "transferWorkSeconds": 0.1396651268005371
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-rag-indexing-local-51e75cdbe9-manual-plan-20261020t191344.205131000-showcase-rag-indexing-local-51e75cdbe9-embed",
+        "plannedResourceId": "showcase-rag-indexing-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523629.8816044,
+        "readyAt": 1792523629.8816044,
+        "runtimeId": "showcase-rag-indexing-local",
+        "runtimeSeconds": 0.11468124389648438,
+        "startedAt": 1792523630.1647177,
+        "status": "completed",
+        "transferBytes": 2942,
+        "transferSeconds": 0.1396651268005371
+      },
+      {
+        "activityId": "showcase-rag-indexing-local-51e75cdbe9-build-index",
+        "allocatedResourceId": "showcase-rag-indexing-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "finishedAt": 1792523632.3110752,
+        "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-build-index",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.13054966926574707,
+          "preparationFinishedAt": 1792523632.0689602,
+          "preparationStartedAt": 1792523631.8984199,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.001729726791381836,
+          "runtimeId": "showcase-rag-indexing-local",
+          "transferElapsedSeconds": 0.17054033279418945,
+          "transferWorkSeconds": 0.17054033279418945
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-rag-indexing-local-51e75cdbe9-manual-plan-20261020t191344.205131000-showcase-rag-indexing-local-51e75cdbe9-build-index",
+        "plannedResourceId": "showcase-rag-indexing-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523631.8941815,
+        "readyAt": 1792523631.8941815,
+        "runtimeId": "showcase-rag-indexing-local",
+        "runtimeSeconds": 0.11156535148620605,
+        "startedAt": 1792523632.1995099,
+        "status": "completed",
+        "transferBytes": 10858,
+        "transferSeconds": 0.17054033279418945
+      },
+      {
+        "activityId": "showcase-rag-indexing-local-51e75cdbe9-retrieval-tests",
+        "allocatedResourceId": "showcase-rag-indexing-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "finishedAt": 1792523634.3415082,
+        "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-retrieval-tests",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1578073501586914,
+          "preparationFinishedAt": 1792523634.0711498,
+          "preparationStartedAt": 1792523633.908363,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0021867752075195312,
+          "runtimeId": "showcase-rag-indexing-local",
+          "transferElapsedSeconds": 0.16278672218322754,
+          "transferWorkSeconds": 0.16278672218322754
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-rag-indexing-local-51e75cdbe9-manual-plan-20261020t191344.205131000-showcase-rag-indexing-local-51e75cdbe9-retrieval-tests",
+        "plannedResourceId": "showcase-rag-indexing-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523633.9041722,
+        "readyAt": 1792523633.9041722,
+        "runtimeId": "showcase-rag-indexing-local",
+        "runtimeSeconds": 0.11255097389221191,
+        "startedAt": 1792523634.2289572,
+        "status": "completed",
+        "transferBytes": 25570,
+        "transferSeconds": 0.16278672218322754
+      },
+      {
+        "activityId": "showcase-rag-indexing-local-51e75cdbe9-answer-tests",
+        "allocatedResourceId": "showcase-rag-indexing-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "finishedAt": 1792523634.3457186,
+        "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-answer-tests",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.14297890663146973,
+          "preparationFinishedAt": 1792523634.093248,
+          "preparationStartedAt": 1792523633.9106832,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.003425121307373047,
+          "runtimeId": "showcase-rag-indexing-local",
+          "transferElapsedSeconds": 0.18256473541259766,
+          "transferWorkSeconds": 0.18256473541259766
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-rag-indexing-local-51e75cdbe9-manual-plan-20261020t191344.205131000-showcase-rag-indexing-local-51e75cdbe9-answer-tests",
+        "plannedResourceId": "showcase-rag-indexing-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523633.903073,
+        "readyAt": 1792523633.903073,
+        "runtimeId": "showcase-rag-indexing-local",
+        "runtimeSeconds": 0.10949182510375977,
+        "startedAt": 1792523634.2362268,
+        "status": "completed",
+        "transferBytes": 25570,
+        "transferSeconds": 0.18256473541259766
+      },
+      {
+        "activityId": "showcase-rag-indexing-local-51e75cdbe9-publish",
+        "allocatedResourceId": "showcase-rag-indexing-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "finishedAt": 1792523636.719951,
+        "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-publish",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.22155213356018066,
+          "preparationFinishedAt": 1792523636.3825,
+          "preparationStartedAt": 1792523636.0249884,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0028319358825683594,
+          "runtimeId": "showcase-rag-indexing-local",
+          "transferElapsedSeconds": 0.3575115203857422,
+          "transferWorkSeconds": 0.5723450183868408
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-rag-indexing-local-51e75cdbe9-manual-plan-20261020t191344.205131000-showcase-rag-indexing-local-51e75cdbe9-publish",
+        "plannedResourceId": "showcase-rag-indexing-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523636.0198956,
+        "readyAt": 1792523636.0198956,
+        "runtimeId": "showcase-rag-indexing-local",
+        "runtimeSeconds": 0.11589884757995605,
+        "startedAt": 1792523636.604052,
+        "status": "completed",
+        "transferBytes": 28073,
+        "transferSeconds": 0.5723450183868408
+      }
+    ],
+    "activityAttempts": [
+      {
+        "activityId": "showcase-rag-indexing-local-51e75cdbe9-collect-documents",
+        "allocatedResourceId": "showcase-rag-indexing-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "finishedAt": 1792523624.9047532,
+        "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-collect-documents",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "pricePerSecond": 0,
+          "runtimeId": "showcase-rag-indexing-local"
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-rag-indexing-local-51e75cdbe9-manual-plan-20261020t191344.205131000-showcase-rag-indexing-local-51e75cdbe9-collect-documents",
+        "plannedResourceId": "showcase-rag-indexing-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523624.6606133,
+        "readyAt": 1792523624.6606133,
+        "runtimeId": "showcase-rag-indexing-local",
+        "runtimeSeconds": 0.11546778678894043,
+        "startedAt": 1792523624.7892854,
+        "status": "completed",
+        "transferBytes": 0,
+        "transferSeconds": 0
+      },
+      {
+        "activityId": "showcase-rag-indexing-local-51e75cdbe9-clean",
+        "allocatedResourceId": "showcase-rag-indexing-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "finishedAt": 1792523626.2666042,
+        "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-clean",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.11984658241271973,
+          "preparationFinishedAt": 1792523626.0408313,
+          "preparationStartedAt": 1792523625.8811398,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0011608600616455078,
+          "runtimeId": "showcase-rag-indexing-local",
+          "transferElapsedSeconds": 0.15969157218933105,
+          "transferWorkSeconds": 0.15969157218933105
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-rag-indexing-local-51e75cdbe9-manual-plan-20261020t191344.205131000-showcase-rag-indexing-local-51e75cdbe9-clean",
+        "plannedResourceId": "showcase-rag-indexing-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523625.8779094,
+        "readyAt": 1792523625.8779094,
+        "runtimeId": "showcase-rag-indexing-local",
+        "runtimeSeconds": 0.1059262752532959,
+        "startedAt": 1792523626.160678,
+        "status": "completed",
+        "transferBytes": 904,
+        "transferSeconds": 0.15969157218933105
+      },
+      {
+        "activityId": "showcase-rag-indexing-local-51e75cdbe9-chunk",
+        "allocatedResourceId": "showcase-rag-indexing-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "finishedAt": 1792523628.2914724,
+        "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-chunk",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.13539600372314453,
+          "preparationFinishedAt": 1792523628.0412521,
+          "preparationStartedAt": 1792523627.8810985,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.001567840576171875,
+          "runtimeId": "showcase-rag-indexing-local",
+          "transferElapsedSeconds": 0.16015362739562988,
+          "transferWorkSeconds": 0.16015362739562988
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-rag-indexing-local-51e75cdbe9-manual-plan-20261020t191344.205131000-showcase-rag-indexing-local-51e75cdbe9-chunk",
+        "plannedResourceId": "showcase-rag-indexing-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523627.8778403,
+        "readyAt": 1792523627.8778403,
+        "runtimeId": "showcase-rag-indexing-local",
+        "runtimeSeconds": 0.11482429504394531,
+        "startedAt": 1792523628.1766481,
+        "status": "completed",
+        "transferBytes": 1823,
+        "transferSeconds": 0.16015362739562988
+      },
+      {
+        "activityId": "showcase-rag-indexing-local-51e75cdbe9-embed",
+        "allocatedResourceId": "showcase-rag-indexing-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "finishedAt": 1792523630.279399,
+        "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-embed",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1407177448272705,
+          "preparationFinishedAt": 1792523630.024,
+          "preparationStartedAt": 1792523629.8843348,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0009834766387939453,
+          "runtimeId": "showcase-rag-indexing-local",
+          "transferElapsedSeconds": 0.1396651268005371,
+          "transferWorkSeconds": 0.1396651268005371
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-rag-indexing-local-51e75cdbe9-manual-plan-20261020t191344.205131000-showcase-rag-indexing-local-51e75cdbe9-embed",
+        "plannedResourceId": "showcase-rag-indexing-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523629.8816044,
+        "readyAt": 1792523629.8816044,
+        "runtimeId": "showcase-rag-indexing-local",
+        "runtimeSeconds": 0.11468124389648438,
+        "startedAt": 1792523630.1647177,
+        "status": "completed",
+        "transferBytes": 2942,
+        "transferSeconds": 0.1396651268005371
+      },
+      {
+        "activityId": "showcase-rag-indexing-local-51e75cdbe9-build-index",
+        "allocatedResourceId": "showcase-rag-indexing-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "finishedAt": 1792523632.3110752,
+        "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-build-index",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.13054966926574707,
+          "preparationFinishedAt": 1792523632.0689602,
+          "preparationStartedAt": 1792523631.8984199,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.001729726791381836,
+          "runtimeId": "showcase-rag-indexing-local",
+          "transferElapsedSeconds": 0.17054033279418945,
+          "transferWorkSeconds": 0.17054033279418945
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-rag-indexing-local-51e75cdbe9-manual-plan-20261020t191344.205131000-showcase-rag-indexing-local-51e75cdbe9-build-index",
+        "plannedResourceId": "showcase-rag-indexing-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523631.8941815,
+        "readyAt": 1792523631.8941815,
+        "runtimeId": "showcase-rag-indexing-local",
+        "runtimeSeconds": 0.11156535148620605,
+        "startedAt": 1792523632.1995099,
+        "status": "completed",
+        "transferBytes": 10858,
+        "transferSeconds": 0.17054033279418945
+      },
+      {
+        "activityId": "showcase-rag-indexing-local-51e75cdbe9-retrieval-tests",
+        "allocatedResourceId": "showcase-rag-indexing-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "finishedAt": 1792523634.3415082,
+        "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-retrieval-tests",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1578073501586914,
+          "preparationFinishedAt": 1792523634.0711498,
+          "preparationStartedAt": 1792523633.908363,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0021867752075195312,
+          "runtimeId": "showcase-rag-indexing-local",
+          "transferElapsedSeconds": 0.16278672218322754,
+          "transferWorkSeconds": 0.16278672218322754
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-rag-indexing-local-51e75cdbe9-manual-plan-20261020t191344.205131000-showcase-rag-indexing-local-51e75cdbe9-retrieval-tests",
+        "plannedResourceId": "showcase-rag-indexing-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523633.9041722,
+        "readyAt": 1792523633.9041722,
+        "runtimeId": "showcase-rag-indexing-local",
+        "runtimeSeconds": 0.11255097389221191,
+        "startedAt": 1792523634.2289572,
+        "status": "completed",
+        "transferBytes": 25570,
+        "transferSeconds": 0.16278672218322754
+      },
+      {
+        "activityId": "showcase-rag-indexing-local-51e75cdbe9-answer-tests",
+        "allocatedResourceId": "showcase-rag-indexing-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "finishedAt": 1792523634.3457186,
+        "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-answer-tests",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.14297890663146973,
+          "preparationFinishedAt": 1792523634.093248,
+          "preparationStartedAt": 1792523633.9106832,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.003425121307373047,
+          "runtimeId": "showcase-rag-indexing-local",
+          "transferElapsedSeconds": 0.18256473541259766,
+          "transferWorkSeconds": 0.18256473541259766
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-rag-indexing-local-51e75cdbe9-manual-plan-20261020t191344.205131000-showcase-rag-indexing-local-51e75cdbe9-answer-tests",
+        "plannedResourceId": "showcase-rag-indexing-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523633.903073,
+        "readyAt": 1792523633.903073,
+        "runtimeId": "showcase-rag-indexing-local",
+        "runtimeSeconds": 0.10949182510375977,
+        "startedAt": 1792523634.2362268,
+        "status": "completed",
+        "transferBytes": 25570,
+        "transferSeconds": 0.18256473541259766
+      },
+      {
+        "activityId": "showcase-rag-indexing-local-51e75cdbe9-publish",
+        "allocatedResourceId": "showcase-rag-indexing-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "finishedAt": 1792523636.719951,
+        "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-publish",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.22155213356018066,
+          "preparationFinishedAt": 1792523636.3825,
+          "preparationStartedAt": 1792523636.0249884,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0028319358825683594,
+          "runtimeId": "showcase-rag-indexing-local",
+          "transferElapsedSeconds": 0.3575115203857422,
+          "transferWorkSeconds": 0.5723450183868408
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-rag-indexing-local-51e75cdbe9-manual-plan-20261020t191344.205131000-showcase-rag-indexing-local-51e75cdbe9-publish",
+        "plannedResourceId": "showcase-rag-indexing-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523636.0198956,
+        "readyAt": 1792523636.0198956,
+        "runtimeId": "showcase-rag-indexing-local",
+        "runtimeSeconds": 0.11589884757995605,
+        "startedAt": 1792523636.604052,
+        "status": "completed",
+        "transferBytes": 28073,
+        "transferSeconds": 0.5723450183868408
+      }
+    ],
+    "artifactMaterializations": null,
+    "artifactTransferRuns": [
+      {
+        "activityId": "showcase-rag-indexing-local-51e75cdbe9-answer-tests",
+        "durationSeconds": 0.18256473541259766,
+        "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "filesTransferred": 6,
+        "finishedAt": 1792523634.093248,
+        "id": "transfer-workspace-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-answer-tests-0",
+        "logicalBytes": 25570,
+        "planId": "transfer-workspace-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-answer-tests-0",
+        "route": {
+          "consumerActivityId": "showcase-rag-indexing-local-51e75cdbe9-answer-tests",
+          "filesTransferred": 6,
+          "producerActivityId": "showcase-rag-indexing-local-51e75cdbe9-build-index",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.090818709,
+          "sourceEnvironmentId": "showcase-rag-indexing-v1",
+          "sourceResourceId": "showcase-rag-indexing-local-docker",
+          "sshChannelWaitSeconds": 5.84e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-rag-indexing-v1",
+          "targetResourceId": "showcase-rag-indexing-local-docker"
+        },
+        "startedAt": 1792523633.9106832,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 25570
+      },
+      {
+        "activityId": "showcase-rag-indexing-local-51e75cdbe9-build-index",
+        "durationSeconds": 0.17054033279418945,
+        "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "filesTransferred": 4,
+        "finishedAt": 1792523632.0689602,
+        "id": "transfer-workspace-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-build-index-0",
+        "logicalBytes": 10858,
+        "planId": "transfer-workspace-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-build-index-0",
+        "route": {
+          "consumerActivityId": "showcase-rag-indexing-local-51e75cdbe9-build-index",
+          "filesTransferred": 4,
+          "producerActivityId": "showcase-rag-indexing-local-51e75cdbe9-embed",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.09737204099999999,
+          "sourceEnvironmentId": "showcase-rag-indexing-v1",
+          "sourceResourceId": "showcase-rag-indexing-local-docker",
+          "sshChannelWaitSeconds": 2.51e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-rag-indexing-v1",
+          "targetResourceId": "showcase-rag-indexing-local-docker"
+        },
+        "startedAt": 1792523631.8984199,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 10858
+      },
+      {
+        "activityId": "showcase-rag-indexing-local-51e75cdbe9-chunk",
+        "durationSeconds": 0.16015362739562988,
+        "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "filesTransferred": 2,
+        "finishedAt": 1792523628.0412521,
+        "id": "transfer-workspace-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-chunk-0",
+        "logicalBytes": 1823,
+        "planId": "transfer-workspace-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-chunk-0",
+        "route": {
+          "consumerActivityId": "showcase-rag-indexing-local-51e75cdbe9-chunk",
+          "filesTransferred": 2,
+          "producerActivityId": "showcase-rag-indexing-local-51e75cdbe9-clean",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.088543792,
+          "sourceEnvironmentId": "showcase-rag-indexing-v1",
+          "sourceResourceId": "showcase-rag-indexing-local-docker",
+          "sshChannelWaitSeconds": 3.3300000000000003e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-rag-indexing-v1",
+          "targetResourceId": "showcase-rag-indexing-local-docker"
+        },
+        "startedAt": 1792523627.8810985,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 1823
+      },
+      {
+        "activityId": "showcase-rag-indexing-local-51e75cdbe9-clean",
+        "durationSeconds": 0.15969157218933105,
+        "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "filesTransferred": 1,
+        "finishedAt": 1792523626.0408313,
+        "id": "transfer-workspace-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-clean-0",
+        "logicalBytes": 904,
+        "planId": "transfer-workspace-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-clean-0",
+        "route": {
+          "consumerActivityId": "showcase-rag-indexing-local-51e75cdbe9-clean",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-rag-indexing-local-51e75cdbe9-collect-documents",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.090716584,
+          "sourceEnvironmentId": "showcase-rag-indexing-v1",
+          "sourceResourceId": "showcase-rag-indexing-local-docker",
+          "sshChannelWaitSeconds": 5.41e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-rag-indexing-v1",
+          "targetResourceId": "showcase-rag-indexing-local-docker"
+        },
+        "startedAt": 1792523625.8811398,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 904
+      },
+      {
+        "activityId": "showcase-rag-indexing-local-51e75cdbe9-embed",
+        "durationSeconds": 0.1396651268005371,
+        "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "filesTransferred": 3,
+        "finishedAt": 1792523630.024,
+        "id": "transfer-workspace-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-embed-0",
+        "logicalBytes": 2942,
+        "planId": "transfer-workspace-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-embed-0",
+        "route": {
+          "consumerActivityId": "showcase-rag-indexing-local-51e75cdbe9-embed",
+          "filesTransferred": 3,
+          "producerActivityId": "showcase-rag-indexing-local-51e75cdbe9-chunk",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.070054583,
+          "sourceEnvironmentId": "showcase-rag-indexing-v1",
+          "sourceResourceId": "showcase-rag-indexing-local-docker",
+          "sshChannelWaitSeconds": 4.5899999999999997e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-rag-indexing-v1",
+          "targetResourceId": "showcase-rag-indexing-local-docker"
+        },
+        "startedAt": 1792523629.8843348,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 2942
+      },
+      {
+        "activityId": "showcase-rag-indexing-local-51e75cdbe9-publish",
+        "durationSeconds": 0.21483349800109863,
+        "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "filesTransferred": 7,
+        "finishedAt": 1792523636.239822,
+        "id": "transfer-workspace-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-publish-0",
+        "logicalBytes": 26823,
+        "planId": "transfer-workspace-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-publish-0",
+        "route": {
+          "consumerActivityId": "showcase-rag-indexing-local-51e75cdbe9-publish",
+          "filesTransferred": 7,
+          "producerActivityId": "showcase-rag-indexing-local-51e75cdbe9-retrieval-tests",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.074044876,
+          "sourceEnvironmentId": "showcase-rag-indexing-v1",
+          "sourceResourceId": "showcase-rag-indexing-local-docker",
+          "sshChannelWaitSeconds": 4.17e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-rag-indexing-v1",
+          "targetResourceId": "showcase-rag-indexing-local-docker"
+        },
+        "startedAt": 1792523636.0249884,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 26823
+      },
+      {
+        "activityId": "showcase-rag-indexing-local-51e75cdbe9-publish",
+        "durationSeconds": 0.3575115203857422,
+        "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "filesTransferred": 1,
+        "finishedAt": 1792523636.3825,
+        "id": "transfer-workspace-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-publish-1",
+        "logicalBytes": 26820,
+        "planId": "transfer-workspace-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-publish-1",
+        "route": {
+          "consumerActivityId": "showcase-rag-indexing-local-51e75cdbe9-publish",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-rag-indexing-local-51e75cdbe9-answer-tests",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.09090754200000001,
+          "sourceEnvironmentId": "showcase-rag-indexing-v1",
+          "sourceResourceId": "showcase-rag-indexing-local-docker",
+          "sshChannelWaitSeconds": 4.5899999999999997e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-rag-indexing-v1",
+          "targetResourceId": "showcase-rag-indexing-local-docker"
+        },
+        "startedAt": 1792523636.0249884,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 1250
+      },
+      {
+        "activityId": "showcase-rag-indexing-local-51e75cdbe9-retrieval-tests",
+        "durationSeconds": 0.16278672218322754,
+        "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "filesTransferred": 6,
+        "finishedAt": 1792523634.0711498,
+        "id": "transfer-workspace-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-retrieval-tests-0",
+        "logicalBytes": 25570,
+        "planId": "transfer-workspace-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-retrieval-tests-0",
+        "route": {
+          "consumerActivityId": "showcase-rag-indexing-local-51e75cdbe9-retrieval-tests",
+          "filesTransferred": 6,
+          "producerActivityId": "showcase-rag-indexing-local-51e75cdbe9-build-index",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.070327584,
+          "sourceEnvironmentId": "showcase-rag-indexing-v1",
+          "sourceResourceId": "showcase-rag-indexing-local-docker",
+          "sshChannelWaitSeconds": 4.5899999999999997e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-rag-indexing-v1",
+          "targetResourceId": "showcase-rag-indexing-local-docker"
+        },
+        "startedAt": 1792523633.908363,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 25570
+      }
+    ],
+    "cloudBilling": {
+      "asOf": "2026-10-20T19:13:58.638029803Z",
+      "costBasis": "VM compute and boot-disk lifecycle at on-demand marginal rates; not a provider invoice",
+      "estimatedCost": 0,
+      "excludedCosts": [
+        "network-egress",
+        "public-ipv4",
+        "image-storage",
+        "discounts-and-tax"
+      ],
+      "instances": [],
+      "knownCost": 0,
+      "status": "estimated"
+    },
+    "dataLocations": [
+      {
+        "dataObjectInstanceId": "7f7f6c2c63e62c26525ec4063e5cc4a9",
+        "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "id": "1d3ea421b290509c2d38f9a35c4964cf",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-rag-indexing-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "01c2c5083e23c170e53de4d3c7e4be86",
+        "uri": "file:///akoflow/workspace/runs/showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000/showcase-rag-indexing-local-51e75cdbe9-answer-tests/stage-answer-tests.json"
+      },
+      {
+        "dataObjectInstanceId": "7f20f226dac4e618d161aa2f365f06e2",
+        "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "id": "55c81e946af893723a0d3592e4564a10",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-rag-indexing-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "01c2c5083e23c170e53de4d3c7e4be86",
+        "uri": "file:///akoflow/workspace/runs/showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000/showcase-rag-indexing-local-51e75cdbe9-build-index/index.json"
+      },
+      {
+        "dataObjectInstanceId": "ce00e1aba417fd4b00c2a3260a811f68",
+        "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "id": "8b17de5f711553af9810582fcd14caf5",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-rag-indexing-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "01c2c5083e23c170e53de4d3c7e4be86",
+        "uri": "file:///akoflow/workspace/runs/showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000/showcase-rag-indexing-local-51e75cdbe9-build-index/stage-build-index.json"
+      },
+      {
+        "dataObjectInstanceId": "410ec14aef33caf2f813e8c90c5e9a52",
+        "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "id": "168420225d554078032e91f9e255cf04",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-rag-indexing-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "01c2c5083e23c170e53de4d3c7e4be86",
+        "uri": "file:///akoflow/workspace/runs/showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000/showcase-rag-indexing-local-51e75cdbe9-chunk/stage-chunk.json"
+      },
+      {
+        "dataObjectInstanceId": "bc2bcbf51dec0131daf77bd451567e5d",
+        "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "id": "be771f7db0bbfe6d70c449e080b81a3b",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-rag-indexing-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "01c2c5083e23c170e53de4d3c7e4be86",
+        "uri": "file:///akoflow/workspace/runs/showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000/showcase-rag-indexing-local-51e75cdbe9-clean/stage-clean.json"
+      },
+      {
+        "dataObjectInstanceId": "c8b71e604d57083567052d57794df674",
+        "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "id": "50ea27743da2a1ccd2eec6632f165eec",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-rag-indexing-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "01c2c5083e23c170e53de4d3c7e4be86",
+        "uri": "file:///akoflow/workspace/runs/showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000/showcase-rag-indexing-local-51e75cdbe9-collect-documents/stage-collect-documents.json"
+      },
+      {
+        "dataObjectInstanceId": "ccb50e1285fd46b2404af98eb82d56c8",
+        "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "id": "ebb3a70cb7aa9b054a359700a8e517e5",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-rag-indexing-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "01c2c5083e23c170e53de4d3c7e4be86",
+        "uri": "file:///akoflow/workspace/runs/showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000/showcase-rag-indexing-local-51e75cdbe9-embed/stage-embed.json"
+      },
+      {
+        "dataObjectInstanceId": "50c8847e64b9ab6fda2a7663bd3c659d",
+        "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "id": "ea0647e071384d7886492c8b0aefcb54",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-rag-indexing-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "01c2c5083e23c170e53de4d3c7e4be86",
+        "uri": "file:///akoflow/workspace/runs/showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000/showcase-rag-indexing-local-51e75cdbe9-publish/evaluation.json"
+      },
+      {
+        "dataObjectInstanceId": "ea5a48739ceaf5ea8d363d4e4e398659",
+        "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "id": "750ccca4127c128d4b1e40d2771503c8",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-rag-indexing-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "01c2c5083e23c170e53de4d3c7e4be86",
+        "uri": "file:///akoflow/workspace/runs/showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000/showcase-rag-indexing-local-51e75cdbe9-publish/stage-publish.json"
+      },
+      {
+        "dataObjectInstanceId": "a1d22dd7bfb8c7371ffed8acd27a630c",
+        "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "id": "da1ec5a09b9d43f1eee5a007c85dae10",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-rag-indexing-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "01c2c5083e23c170e53de4d3c7e4be86",
+        "uri": "file:///akoflow/workspace/runs/showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000/showcase-rag-indexing-local-51e75cdbe9-retrieval-tests/stage-retrieval-tests.json"
+      }
+    ],
+    "dataObjects": [
+      {
+        "attempt": 1,
+        "checksum": "sha256:5e7ba06629733421ceb30a4651d82958cbb9ce059a1e5c67ea9862b6d6fb7904",
+        "dataObjectId": "7750e1a7a9cfc4ff0237d4ec0a77ebc4",
+        "discovered": true,
+        "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "id": "7f7f6c2c63e62c26525ec4063e5cc4a9",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-rag-indexing-local-51e75cdbe9-answer-tests",
+        "relativePath": "stage-answer-tests.json",
+        "sizeBytes": 1250
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:fe872785bf12bcae87543b3d183ad06193e44b49d4d78dcbad2a5ac015e2d066",
+        "dataObjectId": "73335b587a688fcb9cb536f91dba89e9",
+        "discovered": true,
+        "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "id": "7f20f226dac4e618d161aa2f365f06e2",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-rag-indexing-local-51e75cdbe9-build-index",
+        "relativePath": "index.json",
+        "sizeBytes": 6790
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:a9f6c652f0daf4e9104b52fb132c98c6e23939097d3a24dd75615d1775f4d747",
+        "dataObjectId": "7eb311960c98ad38180ca21aa683f802",
+        "discovered": true,
+        "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "id": "ce00e1aba417fd4b00c2a3260a811f68",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-rag-indexing-local-51e75cdbe9-build-index",
+        "relativePath": "stage-build-index.json",
+        "sizeBytes": 7922
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:7e0a4d74d268927c3b7f983d7fb715eb000cc803c4f63b9edf15562e034d5355",
+        "dataObjectId": "a9a7db71d24f9b6a96ec53b03b3ab58e",
+        "discovered": true,
+        "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "id": "410ec14aef33caf2f813e8c90c5e9a52",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-rag-indexing-local-51e75cdbe9-chunk",
+        "relativePath": "stage-chunk.json",
+        "sizeBytes": 1119
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:61aa4cca1c71b55b976cb7fe20b5d6623a5aa12c3b43128d4e4c0f0a952b1605",
+        "dataObjectId": "20a3abf0d8aa0c93396d7ac4502ed9d6",
+        "discovered": true,
+        "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "id": "bc2bcbf51dec0131daf77bd451567e5d",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-rag-indexing-local-51e75cdbe9-clean",
+        "relativePath": "stage-clean.json",
+        "sizeBytes": 919
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:45871bb9e97ea4edf18512beab217a431a261e65b4c1eae8dbeebb1a8a840721",
+        "dataObjectId": "8663372567450d9884bd715b92305bd7",
+        "discovered": true,
+        "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "id": "c8b71e604d57083567052d57794df674",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-rag-indexing-local-51e75cdbe9-collect-documents",
+        "relativePath": "stage-collect-documents.json",
+        "sizeBytes": 904
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:fa9291be3d9c6b49a989cde216aa8ff94f51a6f4d66c5cd6b413eb09bdaf75d1",
+        "dataObjectId": "57731cf45b67649e7670d5f7a2bfcce3",
+        "discovered": true,
+        "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "id": "ccb50e1285fd46b2404af98eb82d56c8",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-rag-indexing-local-51e75cdbe9-embed",
+        "relativePath": "stage-embed.json",
+        "sizeBytes": 7916
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:2ce8eacb19cabfe32b59e7950067f0584f8c11aa5978e72a87120d136ff4e430",
+        "dataObjectId": "b831586705e520bf0884851384ba4a04",
+        "discovered": true,
+        "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "id": "50c8847e64b9ab6fda2a7663bd3c659d",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-rag-indexing-local-51e75cdbe9-publish",
+        "relativePath": "evaluation.json",
+        "sizeBytes": 1911
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:9c48a32305af949ffbc364377847b0c159c8a1c3c6866397ece0cd04e2e67d6b",
+        "dataObjectId": "dc69a3d435f75fe00bcef610776e905d",
+        "discovered": true,
+        "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "id": "ea5a48739ceaf5ea8d363d4e4e398659",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-rag-indexing-local-51e75cdbe9-publish",
+        "relativePath": "stage-publish.json",
+        "sizeBytes": 2413
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:657c36cb03a90457dcacfcbe7065c8a2300d1bb3ec38d5ce354e912b346b8a4f",
+        "dataObjectId": "b6e93be54037deae71bc8beaae5d9736",
+        "discovered": true,
+        "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "id": "a1d22dd7bfb8c7371ffed8acd27a630c",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-rag-indexing-local-51e75cdbe9-retrieval-tests",
+        "relativePath": "stage-retrieval-tests.json",
+        "sizeBytes": 1253
+      }
+    ],
+    "dataTransfers": [
+      {
+        "bytes": 904,
+        "consumerActivityId": "showcase-rag-indexing-local-51e75cdbe9-clean",
+        "cost": 0,
+        "durationSeconds": 0.15969157218933105,
+        "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "finishedAt": 1792523626.0408313,
+        "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-clean:transfer-workspace-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-clean-0",
+        "logicalBytes": 904,
+        "producerActivityId": "showcase-rag-indexing-local-51e75cdbe9-collect-documents",
+        "route": {
+          "consumerActivityId": "showcase-rag-indexing-local-51e75cdbe9-clean",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-rag-indexing-local-51e75cdbe9-collect-documents",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.090716584,
+          "sourceEnvironmentId": "showcase-rag-indexing-v1",
+          "sourceResourceId": "showcase-rag-indexing-local-docker",
+          "sshChannelWaitSeconds": 5.41e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-rag-indexing-v1",
+          "targetResourceId": "showcase-rag-indexing-local-docker"
+        },
+        "sourceResourceId": "showcase-rag-indexing-local-docker",
+        "startedAt": 1792523625.8811398,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-rag-indexing-local-docker"
+      },
+      {
+        "bytes": 1823,
+        "consumerActivityId": "showcase-rag-indexing-local-51e75cdbe9-chunk",
+        "cost": 0,
+        "durationSeconds": 0.16015362739562988,
+        "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "finishedAt": 1792523628.0412521,
+        "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-chunk:transfer-workspace-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-chunk-0",
+        "logicalBytes": 1823,
+        "producerActivityId": "showcase-rag-indexing-local-51e75cdbe9-clean",
+        "route": {
+          "consumerActivityId": "showcase-rag-indexing-local-51e75cdbe9-chunk",
+          "filesTransferred": 2,
+          "producerActivityId": "showcase-rag-indexing-local-51e75cdbe9-clean",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.088543792,
+          "sourceEnvironmentId": "showcase-rag-indexing-v1",
+          "sourceResourceId": "showcase-rag-indexing-local-docker",
+          "sshChannelWaitSeconds": 3.3300000000000003e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-rag-indexing-v1",
+          "targetResourceId": "showcase-rag-indexing-local-docker"
+        },
+        "sourceResourceId": "showcase-rag-indexing-local-docker",
+        "startedAt": 1792523627.8810985,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-rag-indexing-local-docker"
+      },
+      {
+        "bytes": 2942,
+        "consumerActivityId": "showcase-rag-indexing-local-51e75cdbe9-embed",
+        "cost": 0,
+        "durationSeconds": 0.1396651268005371,
+        "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "finishedAt": 1792523630.024,
+        "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-embed:transfer-workspace-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-embed-0",
+        "logicalBytes": 2942,
+        "producerActivityId": "showcase-rag-indexing-local-51e75cdbe9-chunk",
+        "route": {
+          "consumerActivityId": "showcase-rag-indexing-local-51e75cdbe9-embed",
+          "filesTransferred": 3,
+          "producerActivityId": "showcase-rag-indexing-local-51e75cdbe9-chunk",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.070054583,
+          "sourceEnvironmentId": "showcase-rag-indexing-v1",
+          "sourceResourceId": "showcase-rag-indexing-local-docker",
+          "sshChannelWaitSeconds": 4.5899999999999997e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-rag-indexing-v1",
+          "targetResourceId": "showcase-rag-indexing-local-docker"
+        },
+        "sourceResourceId": "showcase-rag-indexing-local-docker",
+        "startedAt": 1792523629.8843348,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-rag-indexing-local-docker"
+      },
+      {
+        "bytes": 10858,
+        "consumerActivityId": "showcase-rag-indexing-local-51e75cdbe9-build-index",
+        "cost": 0,
+        "durationSeconds": 0.17054033279418945,
+        "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "finishedAt": 1792523632.0689602,
+        "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-build-index:transfer-workspace-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-build-index-0",
+        "logicalBytes": 10858,
+        "producerActivityId": "showcase-rag-indexing-local-51e75cdbe9-embed",
+        "route": {
+          "consumerActivityId": "showcase-rag-indexing-local-51e75cdbe9-build-index",
+          "filesTransferred": 4,
+          "producerActivityId": "showcase-rag-indexing-local-51e75cdbe9-embed",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.09737204099999999,
+          "sourceEnvironmentId": "showcase-rag-indexing-v1",
+          "sourceResourceId": "showcase-rag-indexing-local-docker",
+          "sshChannelWaitSeconds": 2.51e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-rag-indexing-v1",
+          "targetResourceId": "showcase-rag-indexing-local-docker"
+        },
+        "sourceResourceId": "showcase-rag-indexing-local-docker",
+        "startedAt": 1792523631.8984199,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-rag-indexing-local-docker"
+      },
+      {
+        "bytes": 25570,
+        "consumerActivityId": "showcase-rag-indexing-local-51e75cdbe9-retrieval-tests",
+        "cost": 0,
+        "durationSeconds": 0.16278672218322754,
+        "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "finishedAt": 1792523634.0711498,
+        "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-retrieval-tests:transfer-workspace-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-retrieval-tests-0",
+        "logicalBytes": 25570,
+        "producerActivityId": "showcase-rag-indexing-local-51e75cdbe9-build-index",
+        "route": {
+          "consumerActivityId": "showcase-rag-indexing-local-51e75cdbe9-retrieval-tests",
+          "filesTransferred": 6,
+          "producerActivityId": "showcase-rag-indexing-local-51e75cdbe9-build-index",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.070327584,
+          "sourceEnvironmentId": "showcase-rag-indexing-v1",
+          "sourceResourceId": "showcase-rag-indexing-local-docker",
+          "sshChannelWaitSeconds": 4.5899999999999997e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-rag-indexing-v1",
+          "targetResourceId": "showcase-rag-indexing-local-docker"
+        },
+        "sourceResourceId": "showcase-rag-indexing-local-docker",
+        "startedAt": 1792523633.908363,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-rag-indexing-local-docker"
+      },
+      {
+        "bytes": 25570,
+        "consumerActivityId": "showcase-rag-indexing-local-51e75cdbe9-answer-tests",
+        "cost": 0,
+        "durationSeconds": 0.18256473541259766,
+        "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "finishedAt": 1792523634.093248,
+        "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-answer-tests:transfer-workspace-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-answer-tests-0",
+        "logicalBytes": 25570,
+        "producerActivityId": "showcase-rag-indexing-local-51e75cdbe9-build-index",
+        "route": {
+          "consumerActivityId": "showcase-rag-indexing-local-51e75cdbe9-answer-tests",
+          "filesTransferred": 6,
+          "producerActivityId": "showcase-rag-indexing-local-51e75cdbe9-build-index",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.090818709,
+          "sourceEnvironmentId": "showcase-rag-indexing-v1",
+          "sourceResourceId": "showcase-rag-indexing-local-docker",
+          "sshChannelWaitSeconds": 5.84e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-rag-indexing-v1",
+          "targetResourceId": "showcase-rag-indexing-local-docker"
+        },
+        "sourceResourceId": "showcase-rag-indexing-local-docker",
+        "startedAt": 1792523633.9106832,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-rag-indexing-local-docker"
+      },
+      {
+        "bytes": 1250,
+        "consumerActivityId": "showcase-rag-indexing-local-51e75cdbe9-publish",
+        "cost": 0,
+        "durationSeconds": 0.3575115203857422,
+        "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "finishedAt": 1792523636.3825,
+        "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-publish:transfer-workspace-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-publish-1",
+        "logicalBytes": 26820,
+        "producerActivityId": "showcase-rag-indexing-local-51e75cdbe9-answer-tests",
+        "route": {
+          "consumerActivityId": "showcase-rag-indexing-local-51e75cdbe9-publish",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-rag-indexing-local-51e75cdbe9-answer-tests",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.09090754200000001,
+          "sourceEnvironmentId": "showcase-rag-indexing-v1",
+          "sourceResourceId": "showcase-rag-indexing-local-docker",
+          "sshChannelWaitSeconds": 4.5899999999999997e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-rag-indexing-v1",
+          "targetResourceId": "showcase-rag-indexing-local-docker"
+        },
+        "sourceResourceId": "showcase-rag-indexing-local-docker",
+        "startedAt": 1792523636.0249884,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-rag-indexing-local-docker"
+      },
+      {
+        "bytes": 26823,
+        "consumerActivityId": "showcase-rag-indexing-local-51e75cdbe9-publish",
+        "cost": 0,
+        "durationSeconds": 0.21483349800109863,
+        "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "finishedAt": 1792523636.239822,
+        "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-publish:transfer-workspace-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-publish-0",
+        "logicalBytes": 26823,
+        "producerActivityId": "showcase-rag-indexing-local-51e75cdbe9-retrieval-tests",
+        "route": {
+          "consumerActivityId": "showcase-rag-indexing-local-51e75cdbe9-publish",
+          "filesTransferred": 7,
+          "producerActivityId": "showcase-rag-indexing-local-51e75cdbe9-retrieval-tests",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.074044876,
+          "sourceEnvironmentId": "showcase-rag-indexing-v1",
+          "sourceResourceId": "showcase-rag-indexing-local-docker",
+          "sshChannelWaitSeconds": 4.17e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-rag-indexing-v1",
+          "targetResourceId": "showcase-rag-indexing-local-docker"
+        },
+        "sourceResourceId": "showcase-rag-indexing-local-docker",
+        "startedAt": 1792523636.0249884,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-rag-indexing-local-docker"
+      }
+    ],
+    "events": [
+      {
+        "aggregateId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "aggregateType": "execution_run",
+        "eventType": "execution.run.started",
+        "id": "bd4bc87344ff1e6d2a048fbe0dec77b1",
+        "occurredAt": "2026-10-20T19:13:44.618083838Z",
+        "payload": {
+          "mode": "real",
+          "schedulePlanId": "showcase-rag-indexing-local-51e75cdbe9-manual-plan-20261020t191344.205131000"
+        }
+      },
+      {
+        "aggregateId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-collect-documents",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "d6c138dd15df5b3e9024f3d9c5461eb2",
+        "occurredAt": "2026-10-20T19:13:45.812477213Z",
+        "payload": {
+          "activityId": "showcase-rag-indexing-local-51e75cdbe9-collect-documents",
+          "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-collect-documents",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "e68eefc14ee69cb588cd25b27a4cca02",
+        "occurredAt": "2026-10-20T19:13:45.876265505Z",
+        "payload": {
+          "activityId": "showcase-rag-indexing-local-51e75cdbe9-collect-documents",
+          "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+          "failureReason": "",
+          "runtimeSeconds": 0.11546778678894043,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-clean",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "78b9eea581b214580b0804fa16619f41",
+        "occurredAt": "2026-10-20T19:13:47.815370089Z",
+        "payload": {
+          "activityId": "showcase-rag-indexing-local-51e75cdbe9-clean",
+          "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-clean",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "6bd066a1135eb060bb34101e734050e6",
+        "occurredAt": "2026-10-20T19:13:47.876418923Z",
+        "payload": {
+          "activityId": "showcase-rag-indexing-local-51e75cdbe9-clean",
+          "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+          "failureReason": "",
+          "runtimeSeconds": 0.1059262752532959,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-chunk",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "ec82efb7dc543da39f8da2efe7562369",
+        "occurredAt": "2026-10-20T19:13:49.819203757Z",
+        "payload": {
+          "activityId": "showcase-rag-indexing-local-51e75cdbe9-chunk",
+          "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-chunk",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "2dce88d55ff0d29d37722b833a338792",
+        "occurredAt": "2026-10-20T19:13:49.879615215Z",
+        "payload": {
+          "activityId": "showcase-rag-indexing-local-51e75cdbe9-chunk",
+          "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+          "failureReason": "",
+          "runtimeSeconds": 0.11482429504394531,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-embed",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "8889352f95035d56281707c1bf2a2286",
+        "occurredAt": "2026-10-20T19:13:51.828113175Z",
+        "payload": {
+          "activityId": "showcase-rag-indexing-local-51e75cdbe9-embed",
+          "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-embed",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "0fac4c7cf101117d7a12754d837acba4",
+        "occurredAt": "2026-10-20T19:13:51.891660633Z",
+        "payload": {
+          "activityId": "showcase-rag-indexing-local-51e75cdbe9-embed",
+          "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+          "failureReason": "",
+          "runtimeSeconds": 0.11468124389648438,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-build-index",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "721b070bd5216d1495a3ebd3c2e3582d",
+        "occurredAt": "2026-10-20T19:13:53.836326176Z",
+        "payload": {
+          "activityId": "showcase-rag-indexing-local-51e75cdbe9-build-index",
+          "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-build-index",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "0495fd3165ed906a150969d28a4f3a92",
+        "occurredAt": "2026-10-20T19:13:53.900725717Z",
+        "payload": {
+          "activityId": "showcase-rag-indexing-local-51e75cdbe9-build-index",
+          "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+          "failureReason": "",
+          "runtimeSeconds": 0.11156535148620605,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-retrieval-tests",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "5abd76839d4a0521d2e324ad7ef00e53",
+        "occurredAt": "2026-10-20T19:13:55.836661677Z",
+        "payload": {
+          "activityId": "showcase-rag-indexing-local-51e75cdbe9-retrieval-tests",
+          "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-answer-tests",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "7a5ddfe9ea96b5b1c0c1983d16583c6f",
+        "occurredAt": "2026-10-20T19:13:55.840766593Z",
+        "payload": {
+          "activityId": "showcase-rag-indexing-local-51e75cdbe9-answer-tests",
+          "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-retrieval-tests",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "2413b7ec64eb650cc90edd9da2898562",
+        "occurredAt": "2026-10-20T19:13:56.01382201Z",
+        "payload": {
+          "activityId": "showcase-rag-indexing-local-51e75cdbe9-retrieval-tests",
+          "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+          "failureReason": "",
+          "runtimeSeconds": 0.11255097389221191,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-answer-tests",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "4ed932f3ccac6a80123bf51289d97395",
+        "occurredAt": "2026-10-20T19:13:56.017414302Z",
+        "payload": {
+          "activityId": "showcase-rag-indexing-local-51e75cdbe9-answer-tests",
+          "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+          "failureReason": "",
+          "runtimeSeconds": 0.10949182510375977,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-publish",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "3c4cf3d852eb7cf6d80da4ad0fa461cf",
+        "occurredAt": "2026-10-20T19:13:57.837479469Z",
+        "payload": {
+          "activityId": "showcase-rag-indexing-local-51e75cdbe9-publish",
+          "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-publish",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "9b801a1d37d50ff051a5ada9c8451f27",
+        "occurredAt": "2026-10-20T19:13:57.984942344Z",
+        "payload": {
+          "activityId": "showcase-rag-indexing-local-51e75cdbe9-publish",
+          "executionRunId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+          "failureReason": "",
+          "runtimeSeconds": 0.11589884757995605,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "aggregateType": "execution_run",
+        "eventType": "execution.run.completed",
+        "id": "3e414e48577110bc300ffdd45f4e1fd4",
+        "occurredAt": "2026-10-20T19:13:57.987871219Z",
+        "payload": {
+          "cost": 0,
+          "makespanSeconds": 11.930665493011475
+        }
+      }
+    ],
+    "handles": [
+      {
+        "activityId": "showcase-rag-indexing-local-51e75cdbe9-answer-tests",
+        "artifacts": {
+          "activityId": "showcase-rag-indexing-local-51e75cdbe9-answer-tests",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:5e7ba06629733421ceb30a4651d82958cbb9ce059a1e5c67ea9862b6d6fb7904",
+              "modifiedUnixNano": 1792523634339814000,
+              "path": "stage-answer-tests.json",
+              "sizeBytes": 1250
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:fe872785bf12bcae87543b3d183ad06193e44b49d4d78dcbad2a5ac015e2d066",
+              "modifiedUnixNano": 1792523634048814000,
+              "path": "index.json",
+              "sizeBytes": 6790
+            },
+            {
+              "checksum": "sha256:5e7ba06629733421ceb30a4651d82958cbb9ce059a1e5c67ea9862b6d6fb7904",
+              "modifiedUnixNano": 1792523634339814000,
+              "path": "stage-answer-tests.json",
+              "sizeBytes": 1250
+            },
+            {
+              "checksum": "sha256:a9f6c652f0daf4e9104b52fb132c98c6e23939097d3a24dd75615d1775f4d747",
+              "modifiedUnixNano": 1792523634048814000,
+              "path": "stage-build-index.json",
+              "sizeBytes": 7922
+            },
+            {
+              "checksum": "sha256:7e0a4d74d268927c3b7f983d7fb715eb000cc803c4f63b9edf15562e034d5355",
+              "modifiedUnixNano": 1792523634048814000,
+              "path": "stage-chunk.json",
+              "sizeBytes": 1119
+            },
+            {
+              "checksum": "sha256:61aa4cca1c71b55b976cb7fe20b5d6623a5aa12c3b43128d4e4c0f0a952b1605",
+              "modifiedUnixNano": 1792523634048814000,
+              "path": "stage-clean.json",
+              "sizeBytes": 919
+            },
+            {
+              "checksum": "sha256:45871bb9e97ea4edf18512beab217a431a261e65b4c1eae8dbeebb1a8a840721",
+              "modifiedUnixNano": 1792523634048814000,
+              "path": "stage-collect-documents.json",
+              "sizeBytes": 904
+            },
+            {
+              "checksum": "sha256:fa9291be3d9c6b49a989cde216aa8ff94f51a6f4d66c5cd6b413eb09bdaf75d1",
+              "modifiedUnixNano": 1792523634048814000,
+              "path": "stage-embed.json",
+              "sizeBytes": 7916
+            }
+          ],
+          "finishedAt": 1792523634.3457186,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:fe872785bf12bcae87543b3d183ad06193e44b49d4d78dcbad2a5ac015e2d066",
+              "modifiedUnixNano": 1792523634048814000,
+              "path": "index.json",
+              "sizeBytes": 6790
+            },
+            {
+              "checksum": "sha256:a9f6c652f0daf4e9104b52fb132c98c6e23939097d3a24dd75615d1775f4d747",
+              "modifiedUnixNano": 1792523634048814000,
+              "path": "stage-build-index.json",
+              "sizeBytes": 7922
+            },
+            {
+              "checksum": "sha256:7e0a4d74d268927c3b7f983d7fb715eb000cc803c4f63b9edf15562e034d5355",
+              "modifiedUnixNano": 1792523634048814000,
+              "path": "stage-chunk.json",
+              "sizeBytes": 1119
+            },
+            {
+              "checksum": "sha256:61aa4cca1c71b55b976cb7fe20b5d6623a5aa12c3b43128d4e4c0f0a952b1605",
+              "modifiedUnixNano": 1792523634048814000,
+              "path": "stage-clean.json",
+              "sizeBytes": 919
+            },
+            {
+              "checksum": "sha256:45871bb9e97ea4edf18512beab217a431a261e65b4c1eae8dbeebb1a8a840721",
+              "modifiedUnixNano": 1792523634048814000,
+              "path": "stage-collect-documents.json",
+              "sizeBytes": 904
+            },
+            {
+              "checksum": "sha256:fa9291be3d9c6b49a989cde216aa8ff94f51a6f4d66c5cd6b413eb09bdaf75d1",
+              "modifiedUnixNano": 1792523634048814000,
+              "path": "stage-embed.json",
+              "sizeBytes": 7916
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.10949182510375977,
+              "finishedAt": 1792523634.3457186,
+              "phase": "execution",
+              "startedAt": 1792523634.2362268,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000/showcase-rag-indexing-local-51e75cdbe9-answer-tests",
+          "runId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+          "runtime": "showcase-rag-indexing-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523634.2362268,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 7,
+            "initialFiles": 6,
+            "modifiedFiles": 0,
+            "outputBytes": 1250
+          }
+        },
+        "exitCode": 0,
+        "externalId": "126a7126a8b0d9c4531d13305213697b9529d56070263c692e3e92ee570a9998",
+        "finishedAt": 1792523634.3457186,
+        "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-answer-tests",
+        "log": "{\"activity\": \"answer-tests\", \"status\": \"success\", \"resultKeys\": [\"tests\", \"passed\", \"total\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-rag-indexing-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000/showcase-rag-indexing-local-51e75cdbe9-answer-tests",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523634.2362313,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-answer-tests",
+          "submittedAt": 1792523634.2362268
+        },
+        "resourceId": "showcase-rag-indexing-local-docker",
+        "runId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "runtimeId": "showcase-rag-indexing-local",
+        "startedAt": 1792523634.2362268,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-rag-indexing-local-51e75cdbe9-build-index",
+        "artifacts": {
+          "activityId": "showcase-rag-indexing-local-51e75cdbe9-build-index",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:fe872785bf12bcae87543b3d183ad06193e44b49d4d78dcbad2a5ac015e2d066",
+              "modifiedUnixNano": 1792523632304814000,
+              "path": "index.json",
+              "sizeBytes": 6790
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:a9f6c652f0daf4e9104b52fb132c98c6e23939097d3a24dd75615d1775f4d747",
+              "modifiedUnixNano": 1792523632304814000,
+              "path": "stage-build-index.json",
+              "sizeBytes": 7922
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:fe872785bf12bcae87543b3d183ad06193e44b49d4d78dcbad2a5ac015e2d066",
+              "modifiedUnixNano": 1792523632304814000,
+              "path": "index.json",
+              "sizeBytes": 6790
+            },
+            {
+              "checksum": "sha256:a9f6c652f0daf4e9104b52fb132c98c6e23939097d3a24dd75615d1775f4d747",
+              "modifiedUnixNano": 1792523632304814000,
+              "path": "stage-build-index.json",
+              "sizeBytes": 7922
+            },
+            {
+              "checksum": "sha256:7e0a4d74d268927c3b7f983d7fb715eb000cc803c4f63b9edf15562e034d5355",
+              "modifiedUnixNano": 1792523632023814000,
+              "path": "stage-chunk.json",
+              "sizeBytes": 1119
+            },
+            {
+              "checksum": "sha256:61aa4cca1c71b55b976cb7fe20b5d6623a5aa12c3b43128d4e4c0f0a952b1605",
+              "modifiedUnixNano": 1792523632023814000,
+              "path": "stage-clean.json",
+              "sizeBytes": 919
+            },
+            {
+              "checksum": "sha256:45871bb9e97ea4edf18512beab217a431a261e65b4c1eae8dbeebb1a8a840721",
+              "modifiedUnixNano": 1792523632023814000,
+              "path": "stage-collect-documents.json",
+              "sizeBytes": 904
+            },
+            {
+              "checksum": "sha256:fa9291be3d9c6b49a989cde216aa8ff94f51a6f4d66c5cd6b413eb09bdaf75d1",
+              "modifiedUnixNano": 1792523632023814000,
+              "path": "stage-embed.json",
+              "sizeBytes": 7916
+            }
+          ],
+          "finishedAt": 1792523632.3110752,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:7e0a4d74d268927c3b7f983d7fb715eb000cc803c4f63b9edf15562e034d5355",
+              "modifiedUnixNano": 1792523632023814000,
+              "path": "stage-chunk.json",
+              "sizeBytes": 1119
+            },
+            {
+              "checksum": "sha256:61aa4cca1c71b55b976cb7fe20b5d6623a5aa12c3b43128d4e4c0f0a952b1605",
+              "modifiedUnixNano": 1792523632023814000,
+              "path": "stage-clean.json",
+              "sizeBytes": 919
+            },
+            {
+              "checksum": "sha256:45871bb9e97ea4edf18512beab217a431a261e65b4c1eae8dbeebb1a8a840721",
+              "modifiedUnixNano": 1792523632023814000,
+              "path": "stage-collect-documents.json",
+              "sizeBytes": 904
+            },
+            {
+              "checksum": "sha256:fa9291be3d9c6b49a989cde216aa8ff94f51a6f4d66c5cd6b413eb09bdaf75d1",
+              "modifiedUnixNano": 1792523632023814000,
+              "path": "stage-embed.json",
+              "sizeBytes": 7916
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.11156535148620605,
+              "finishedAt": 1792523632.3110752,
+              "phase": "execution",
+              "startedAt": 1792523632.1995099,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000/showcase-rag-indexing-local-51e75cdbe9-build-index",
+          "runId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+          "runtime": "showcase-rag-indexing-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523632.1995099,
+          "summary": {
+            "createdFiles": 2,
+            "deletedFiles": 0,
+            "finalFiles": 6,
+            "initialFiles": 4,
+            "modifiedFiles": 0,
+            "outputBytes": 14712
+          }
+        },
+        "exitCode": 0,
+        "externalId": "5717d2f048d6f92ceba5c4bb8cec38367d09179d5e53caa09a2256ee2d89ffe9",
+        "finishedAt": 1792523632.3110752,
+        "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-build-index",
+        "log": "{\"activity\": \"build-index\", \"status\": \"success\", \"resultKeys\": [\"vocabulary\", \"idf\", \"chunks\", \"method\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-rag-indexing-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000/showcase-rag-indexing-local-51e75cdbe9-build-index",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523632.1995175,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-build-index",
+          "submittedAt": 1792523632.1995099
+        },
+        "resourceId": "showcase-rag-indexing-local-docker",
+        "runId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "runtimeId": "showcase-rag-indexing-local",
+        "startedAt": 1792523632.1995099,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-rag-indexing-local-51e75cdbe9-chunk",
+        "artifacts": {
+          "activityId": "showcase-rag-indexing-local-51e75cdbe9-chunk",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:7e0a4d74d268927c3b7f983d7fb715eb000cc803c4f63b9edf15562e034d5355",
+              "modifiedUnixNano": 1792523628284814000,
+              "path": "stage-chunk.json",
+              "sizeBytes": 1119
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:7e0a4d74d268927c3b7f983d7fb715eb000cc803c4f63b9edf15562e034d5355",
+              "modifiedUnixNano": 1792523628284814000,
+              "path": "stage-chunk.json",
+              "sizeBytes": 1119
+            },
+            {
+              "checksum": "sha256:61aa4cca1c71b55b976cb7fe20b5d6623a5aa12c3b43128d4e4c0f0a952b1605",
+              "modifiedUnixNano": 1792523627997814000,
+              "path": "stage-clean.json",
+              "sizeBytes": 919
+            },
+            {
+              "checksum": "sha256:45871bb9e97ea4edf18512beab217a431a261e65b4c1eae8dbeebb1a8a840721",
+              "modifiedUnixNano": 1792523627997814000,
+              "path": "stage-collect-documents.json",
+              "sizeBytes": 904
+            }
+          ],
+          "finishedAt": 1792523628.2914724,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:61aa4cca1c71b55b976cb7fe20b5d6623a5aa12c3b43128d4e4c0f0a952b1605",
+              "modifiedUnixNano": 1792523627997814000,
+              "path": "stage-clean.json",
+              "sizeBytes": 919
+            },
+            {
+              "checksum": "sha256:45871bb9e97ea4edf18512beab217a431a261e65b4c1eae8dbeebb1a8a840721",
+              "modifiedUnixNano": 1792523627997814000,
+              "path": "stage-collect-documents.json",
+              "sizeBytes": 904
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.11482429504394531,
+              "finishedAt": 1792523628.2914724,
+              "phase": "execution",
+              "startedAt": 1792523628.1766481,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000/showcase-rag-indexing-local-51e75cdbe9-chunk",
+          "runId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+          "runtime": "showcase-rag-indexing-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523628.1766481,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 3,
+            "initialFiles": 2,
+            "modifiedFiles": 0,
+            "outputBytes": 1119
+          }
+        },
+        "exitCode": 0,
+        "externalId": "af7d08207eeca33053c834ca5538a1f8c4dbf709d1d10b3b41db43697ff64fc1",
+        "finishedAt": 1792523628.2914724,
+        "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-chunk",
+        "log": "{\"activity\": \"chunk\", \"status\": \"success\", \"resultKeys\": [\"chunks\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-rag-indexing-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000/showcase-rag-indexing-local-51e75cdbe9-chunk",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523628.176653,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-chunk",
+          "submittedAt": 1792523628.1766481
+        },
+        "resourceId": "showcase-rag-indexing-local-docker",
+        "runId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "runtimeId": "showcase-rag-indexing-local",
+        "startedAt": 1792523628.1766481,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-rag-indexing-local-51e75cdbe9-clean",
+        "artifacts": {
+          "activityId": "showcase-rag-indexing-local-51e75cdbe9-clean",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:61aa4cca1c71b55b976cb7fe20b5d6623a5aa12c3b43128d4e4c0f0a952b1605",
+              "modifiedUnixNano": 1792523626260814000,
+              "path": "stage-clean.json",
+              "sizeBytes": 919
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:61aa4cca1c71b55b976cb7fe20b5d6623a5aa12c3b43128d4e4c0f0a952b1605",
+              "modifiedUnixNano": 1792523626260814000,
+              "path": "stage-clean.json",
+              "sizeBytes": 919
+            },
+            {
+              "checksum": "sha256:45871bb9e97ea4edf18512beab217a431a261e65b4c1eae8dbeebb1a8a840721",
+              "modifiedUnixNano": 1792523625994814000,
+              "path": "stage-collect-documents.json",
+              "sizeBytes": 904
+            }
+          ],
+          "finishedAt": 1792523626.2666042,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:45871bb9e97ea4edf18512beab217a431a261e65b4c1eae8dbeebb1a8a840721",
+              "modifiedUnixNano": 1792523625994814000,
+              "path": "stage-collect-documents.json",
+              "sizeBytes": 904
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.1059262752532959,
+              "finishedAt": 1792523626.2666042,
+              "phase": "execution",
+              "startedAt": 1792523626.160678,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000/showcase-rag-indexing-local-51e75cdbe9-clean",
+          "runId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+          "runtime": "showcase-rag-indexing-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523626.160678,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 2,
+            "initialFiles": 1,
+            "modifiedFiles": 0,
+            "outputBytes": 919
+          }
+        },
+        "exitCode": 0,
+        "externalId": "73174316eb6605d7d06929faa2ccdfda05cd2684a7cb1f7a5e1264733632e2a6",
+        "finishedAt": 1792523626.2666042,
+        "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-clean",
+        "log": "{\"activity\": \"clean\", \"status\": \"success\", \"resultKeys\": [\"documents\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-rag-indexing-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000/showcase-rag-indexing-local-51e75cdbe9-clean",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523626.160683,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-clean",
+          "submittedAt": 1792523626.160678
+        },
+        "resourceId": "showcase-rag-indexing-local-docker",
+        "runId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "runtimeId": "showcase-rag-indexing-local",
+        "startedAt": 1792523626.160678,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-rag-indexing-local-51e75cdbe9-collect-documents",
+        "artifacts": {
+          "activityId": "showcase-rag-indexing-local-51e75cdbe9-collect-documents",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:45871bb9e97ea4edf18512beab217a431a261e65b4c1eae8dbeebb1a8a840721",
+              "modifiedUnixNano": 1792523624898814000,
+              "path": "stage-collect-documents.json",
+              "sizeBytes": 904
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:45871bb9e97ea4edf18512beab217a431a261e65b4c1eae8dbeebb1a8a840721",
+              "modifiedUnixNano": 1792523624898814000,
+              "path": "stage-collect-documents.json",
+              "sizeBytes": 904
+            }
+          ],
+          "finishedAt": 1792523624.9047532,
+          "phases": [
+            {
+              "durationSeconds": 0.11546778678894043,
+              "finishedAt": 1792523624.9047532,
+              "phase": "execution",
+              "startedAt": 1792523624.7892854,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000/showcase-rag-indexing-local-51e75cdbe9-collect-documents",
+          "runId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+          "runtime": "showcase-rag-indexing-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523624.7892854,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 1,
+            "initialFiles": 0,
+            "modifiedFiles": 0,
+            "outputBytes": 904
+          }
+        },
+        "exitCode": 0,
+        "externalId": "21ca649abfb9840cd61c4f906ba07c56408a56c111716a8294196afeaa454e8a",
+        "finishedAt": 1792523624.9047532,
+        "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-collect-documents",
+        "log": "{\"activity\": \"collect-documents\", \"status\": \"success\", \"resultKeys\": [\"documents\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-rag-indexing-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000/showcase-rag-indexing-local-51e75cdbe9-collect-documents",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523624.789291,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-collect-documents",
+          "submittedAt": 1792523624.7892854
+        },
+        "resourceId": "showcase-rag-indexing-local-docker",
+        "runId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "runtimeId": "showcase-rag-indexing-local",
+        "startedAt": 1792523624.7892854,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-rag-indexing-local-51e75cdbe9-embed",
+        "artifacts": {
+          "activityId": "showcase-rag-indexing-local-51e75cdbe9-embed",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:fa9291be3d9c6b49a989cde216aa8ff94f51a6f4d66c5cd6b413eb09bdaf75d1",
+              "modifiedUnixNano": 1792523630270814000,
+              "path": "stage-embed.json",
+              "sizeBytes": 7916
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:7e0a4d74d268927c3b7f983d7fb715eb000cc803c4f63b9edf15562e034d5355",
+              "modifiedUnixNano": 1792523629978814000,
+              "path": "stage-chunk.json",
+              "sizeBytes": 1119
+            },
+            {
+              "checksum": "sha256:61aa4cca1c71b55b976cb7fe20b5d6623a5aa12c3b43128d4e4c0f0a952b1605",
+              "modifiedUnixNano": 1792523629978814000,
+              "path": "stage-clean.json",
+              "sizeBytes": 919
+            },
+            {
+              "checksum": "sha256:45871bb9e97ea4edf18512beab217a431a261e65b4c1eae8dbeebb1a8a840721",
+              "modifiedUnixNano": 1792523629978814000,
+              "path": "stage-collect-documents.json",
+              "sizeBytes": 904
+            },
+            {
+              "checksum": "sha256:fa9291be3d9c6b49a989cde216aa8ff94f51a6f4d66c5cd6b413eb09bdaf75d1",
+              "modifiedUnixNano": 1792523630270814000,
+              "path": "stage-embed.json",
+              "sizeBytes": 7916
+            }
+          ],
+          "finishedAt": 1792523630.279399,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:7e0a4d74d268927c3b7f983d7fb715eb000cc803c4f63b9edf15562e034d5355",
+              "modifiedUnixNano": 1792523629978814000,
+              "path": "stage-chunk.json",
+              "sizeBytes": 1119
+            },
+            {
+              "checksum": "sha256:61aa4cca1c71b55b976cb7fe20b5d6623a5aa12c3b43128d4e4c0f0a952b1605",
+              "modifiedUnixNano": 1792523629978814000,
+              "path": "stage-clean.json",
+              "sizeBytes": 919
+            },
+            {
+              "checksum": "sha256:45871bb9e97ea4edf18512beab217a431a261e65b4c1eae8dbeebb1a8a840721",
+              "modifiedUnixNano": 1792523629978814000,
+              "path": "stage-collect-documents.json",
+              "sizeBytes": 904
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.11468124389648438,
+              "finishedAt": 1792523630.279399,
+              "phase": "execution",
+              "startedAt": 1792523630.1647177,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000/showcase-rag-indexing-local-51e75cdbe9-embed",
+          "runId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+          "runtime": "showcase-rag-indexing-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523630.1647177,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 4,
+            "initialFiles": 3,
+            "modifiedFiles": 0,
+            "outputBytes": 7916
+          }
+        },
+        "exitCode": 0,
+        "externalId": "edd0342f22b43a15eacabb1c06c713ff3d481d39fb679b5ba6d8f9686afe9521",
+        "finishedAt": 1792523630.279399,
+        "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-embed",
+        "log": "{\"activity\": \"embed\", \"status\": \"success\", \"resultKeys\": [\"vocabulary\", \"idf\", \"chunks\", \"method\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-rag-indexing-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000/showcase-rag-indexing-local-51e75cdbe9-embed",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523630.164728,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-embed",
+          "submittedAt": 1792523630.1647177
+        },
+        "resourceId": "showcase-rag-indexing-local-docker",
+        "runId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "runtimeId": "showcase-rag-indexing-local",
+        "startedAt": 1792523630.1647177,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-rag-indexing-local-51e75cdbe9-publish",
+        "artifacts": {
+          "activityId": "showcase-rag-indexing-local-51e75cdbe9-publish",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:2ce8eacb19cabfe32b59e7950067f0584f8c11aa5978e72a87120d136ff4e430",
+              "modifiedUnixNano": 1792523636713814000,
+              "path": "evaluation.json",
+              "sizeBytes": 1911
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:9c48a32305af949ffbc364377847b0c159c8a1c3c6866397ece0cd04e2e67d6b",
+              "modifiedUnixNano": 1792523636713814000,
+              "path": "stage-publish.json",
+              "sizeBytes": 2413
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:2ce8eacb19cabfe32b59e7950067f0584f8c11aa5978e72a87120d136ff4e430",
+              "modifiedUnixNano": 1792523636713814000,
+              "path": "evaluation.json",
+              "sizeBytes": 1911
+            },
+            {
+              "checksum": "sha256:fe872785bf12bcae87543b3d183ad06193e44b49d4d78dcbad2a5ac015e2d066",
+              "modifiedUnixNano": 1792523636192814000,
+              "path": "index.json",
+              "sizeBytes": 6790
+            },
+            {
+              "checksum": "sha256:5e7ba06629733421ceb30a4651d82958cbb9ce059a1e5c67ea9862b6d6fb7904",
+              "modifiedUnixNano": 1792523636338814000,
+              "path": "stage-answer-tests.json",
+              "sizeBytes": 1250
+            },
+            {
+              "checksum": "sha256:a9f6c652f0daf4e9104b52fb132c98c6e23939097d3a24dd75615d1775f4d747",
+              "modifiedUnixNano": 1792523636192814000,
+              "path": "stage-build-index.json",
+              "sizeBytes": 7922
+            },
+            {
+              "checksum": "sha256:7e0a4d74d268927c3b7f983d7fb715eb000cc803c4f63b9edf15562e034d5355",
+              "modifiedUnixNano": 1792523636192814000,
+              "path": "stage-chunk.json",
+              "sizeBytes": 1119
+            },
+            {
+              "checksum": "sha256:61aa4cca1c71b55b976cb7fe20b5d6623a5aa12c3b43128d4e4c0f0a952b1605",
+              "modifiedUnixNano": 1792523636192814000,
+              "path": "stage-clean.json",
+              "sizeBytes": 919
+            },
+            {
+              "checksum": "sha256:45871bb9e97ea4edf18512beab217a431a261e65b4c1eae8dbeebb1a8a840721",
+              "modifiedUnixNano": 1792523636192814000,
+              "path": "stage-collect-documents.json",
+              "sizeBytes": 904
+            },
+            {
+              "checksum": "sha256:fa9291be3d9c6b49a989cde216aa8ff94f51a6f4d66c5cd6b413eb09bdaf75d1",
+              "modifiedUnixNano": 1792523636192814000,
+              "path": "stage-embed.json",
+              "sizeBytes": 7916
+            },
+            {
+              "checksum": "sha256:9c48a32305af949ffbc364377847b0c159c8a1c3c6866397ece0cd04e2e67d6b",
+              "modifiedUnixNano": 1792523636713814000,
+              "path": "stage-publish.json",
+              "sizeBytes": 2413
+            },
+            {
+              "checksum": "sha256:657c36cb03a90457dcacfcbe7065c8a2300d1bb3ec38d5ce354e912b346b8a4f",
+              "modifiedUnixNano": 1792523636192814000,
+              "path": "stage-retrieval-tests.json",
+              "sizeBytes": 1253
+            }
+          ],
+          "finishedAt": 1792523636.719951,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:fe872785bf12bcae87543b3d183ad06193e44b49d4d78dcbad2a5ac015e2d066",
+              "modifiedUnixNano": 1792523636192814000,
+              "path": "index.json",
+              "sizeBytes": 6790
+            },
+            {
+              "checksum": "sha256:5e7ba06629733421ceb30a4651d82958cbb9ce059a1e5c67ea9862b6d6fb7904",
+              "modifiedUnixNano": 1792523636338814000,
+              "path": "stage-answer-tests.json",
+              "sizeBytes": 1250
+            },
+            {
+              "checksum": "sha256:a9f6c652f0daf4e9104b52fb132c98c6e23939097d3a24dd75615d1775f4d747",
+              "modifiedUnixNano": 1792523636192814000,
+              "path": "stage-build-index.json",
+              "sizeBytes": 7922
+            },
+            {
+              "checksum": "sha256:7e0a4d74d268927c3b7f983d7fb715eb000cc803c4f63b9edf15562e034d5355",
+              "modifiedUnixNano": 1792523636192814000,
+              "path": "stage-chunk.json",
+              "sizeBytes": 1119
+            },
+            {
+              "checksum": "sha256:61aa4cca1c71b55b976cb7fe20b5d6623a5aa12c3b43128d4e4c0f0a952b1605",
+              "modifiedUnixNano": 1792523636192814000,
+              "path": "stage-clean.json",
+              "sizeBytes": 919
+            },
+            {
+              "checksum": "sha256:45871bb9e97ea4edf18512beab217a431a261e65b4c1eae8dbeebb1a8a840721",
+              "modifiedUnixNano": 1792523636192814000,
+              "path": "stage-collect-documents.json",
+              "sizeBytes": 904
+            },
+            {
+              "checksum": "sha256:fa9291be3d9c6b49a989cde216aa8ff94f51a6f4d66c5cd6b413eb09bdaf75d1",
+              "modifiedUnixNano": 1792523636192814000,
+              "path": "stage-embed.json",
+              "sizeBytes": 7916
+            },
+            {
+              "checksum": "sha256:657c36cb03a90457dcacfcbe7065c8a2300d1bb3ec38d5ce354e912b346b8a4f",
+              "modifiedUnixNano": 1792523636192814000,
+              "path": "stage-retrieval-tests.json",
+              "sizeBytes": 1253
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.11589884757995605,
+              "finishedAt": 1792523636.719951,
+              "phase": "execution",
+              "startedAt": 1792523636.604052,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000/showcase-rag-indexing-local-51e75cdbe9-publish",
+          "runId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+          "runtime": "showcase-rag-indexing-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523636.604052,
+          "summary": {
+            "createdFiles": 2,
+            "deletedFiles": 0,
+            "finalFiles": 10,
+            "initialFiles": 8,
+            "modifiedFiles": 0,
+            "outputBytes": 4324
+          }
+        },
+        "exitCode": 0,
+        "externalId": "c541f5854bd17404a57a1c2bca07b823708cb515fabd1ce9560338a788c0f451",
+        "finishedAt": 1792523636.719951,
+        "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-publish",
+        "log": "{\"activity\": \"publish\", \"status\": \"success\", \"resultKeys\": [\"retrieval\", \"answers\", \"answerMethod\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-rag-indexing-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000/showcase-rag-indexing-local-51e75cdbe9-publish",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523636.6040542,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-publish",
+          "submittedAt": 1792523636.604052
+        },
+        "resourceId": "showcase-rag-indexing-local-docker",
+        "runId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "runtimeId": "showcase-rag-indexing-local",
+        "startedAt": 1792523636.604052,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-rag-indexing-local-51e75cdbe9-retrieval-tests",
+        "artifacts": {
+          "activityId": "showcase-rag-indexing-local-51e75cdbe9-retrieval-tests",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:657c36cb03a90457dcacfcbe7065c8a2300d1bb3ec38d5ce354e912b346b8a4f",
+              "modifiedUnixNano": 1792523634333814000,
+              "path": "stage-retrieval-tests.json",
+              "sizeBytes": 1253
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:fe872785bf12bcae87543b3d183ad06193e44b49d4d78dcbad2a5ac015e2d066",
+              "modifiedUnixNano": 1792523634026814000,
+              "path": "index.json",
+              "sizeBytes": 6790
+            },
+            {
+              "checksum": "sha256:a9f6c652f0daf4e9104b52fb132c98c6e23939097d3a24dd75615d1775f4d747",
+              "modifiedUnixNano": 1792523634026814000,
+              "path": "stage-build-index.json",
+              "sizeBytes": 7922
+            },
+            {
+              "checksum": "sha256:7e0a4d74d268927c3b7f983d7fb715eb000cc803c4f63b9edf15562e034d5355",
+              "modifiedUnixNano": 1792523634026814000,
+              "path": "stage-chunk.json",
+              "sizeBytes": 1119
+            },
+            {
+              "checksum": "sha256:61aa4cca1c71b55b976cb7fe20b5d6623a5aa12c3b43128d4e4c0f0a952b1605",
+              "modifiedUnixNano": 1792523634026814000,
+              "path": "stage-clean.json",
+              "sizeBytes": 919
+            },
+            {
+              "checksum": "sha256:45871bb9e97ea4edf18512beab217a431a261e65b4c1eae8dbeebb1a8a840721",
+              "modifiedUnixNano": 1792523634026814000,
+              "path": "stage-collect-documents.json",
+              "sizeBytes": 904
+            },
+            {
+              "checksum": "sha256:fa9291be3d9c6b49a989cde216aa8ff94f51a6f4d66c5cd6b413eb09bdaf75d1",
+              "modifiedUnixNano": 1792523634026814000,
+              "path": "stage-embed.json",
+              "sizeBytes": 7916
+            },
+            {
+              "checksum": "sha256:657c36cb03a90457dcacfcbe7065c8a2300d1bb3ec38d5ce354e912b346b8a4f",
+              "modifiedUnixNano": 1792523634333814000,
+              "path": "stage-retrieval-tests.json",
+              "sizeBytes": 1253
+            }
+          ],
+          "finishedAt": 1792523634.3415082,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:fe872785bf12bcae87543b3d183ad06193e44b49d4d78dcbad2a5ac015e2d066",
+              "modifiedUnixNano": 1792523634026814000,
+              "path": "index.json",
+              "sizeBytes": 6790
+            },
+            {
+              "checksum": "sha256:a9f6c652f0daf4e9104b52fb132c98c6e23939097d3a24dd75615d1775f4d747",
+              "modifiedUnixNano": 1792523634026814000,
+              "path": "stage-build-index.json",
+              "sizeBytes": 7922
+            },
+            {
+              "checksum": "sha256:7e0a4d74d268927c3b7f983d7fb715eb000cc803c4f63b9edf15562e034d5355",
+              "modifiedUnixNano": 1792523634026814000,
+              "path": "stage-chunk.json",
+              "sizeBytes": 1119
+            },
+            {
+              "checksum": "sha256:61aa4cca1c71b55b976cb7fe20b5d6623a5aa12c3b43128d4e4c0f0a952b1605",
+              "modifiedUnixNano": 1792523634026814000,
+              "path": "stage-clean.json",
+              "sizeBytes": 919
+            },
+            {
+              "checksum": "sha256:45871bb9e97ea4edf18512beab217a431a261e65b4c1eae8dbeebb1a8a840721",
+              "modifiedUnixNano": 1792523634026814000,
+              "path": "stage-collect-documents.json",
+              "sizeBytes": 904
+            },
+            {
+              "checksum": "sha256:fa9291be3d9c6b49a989cde216aa8ff94f51a6f4d66c5cd6b413eb09bdaf75d1",
+              "modifiedUnixNano": 1792523634026814000,
+              "path": "stage-embed.json",
+              "sizeBytes": 7916
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.11255097389221191,
+              "finishedAt": 1792523634.3415082,
+              "phase": "execution",
+              "startedAt": 1792523634.2289572,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000/showcase-rag-indexing-local-51e75cdbe9-retrieval-tests",
+          "runId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+          "runtime": "showcase-rag-indexing-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523634.2289572,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 7,
+            "initialFiles": 6,
+            "modifiedFiles": 0,
+            "outputBytes": 1253
+          }
+        },
+        "exitCode": 0,
+        "externalId": "50054fff21b5a0644a72350bb85a3948541bae88881a74c86ebe3af0f13a70d8",
+        "finishedAt": 1792523634.3415082,
+        "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-retrieval-tests",
+        "log": "{\"activity\": \"retrieval-tests\", \"status\": \"success\", \"resultKeys\": [\"tests\", \"passed\", \"total\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-rag-indexing-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000/showcase-rag-indexing-local-51e75cdbe9-retrieval-tests",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523634.2289662,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-retrieval-tests",
+          "submittedAt": 1792523634.2289572
+        },
+        "resourceId": "showcase-rag-indexing-local-docker",
+        "runId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "runtimeId": "showcase-rag-indexing-local",
+        "startedAt": 1792523634.2289572,
+        "status": "completed"
+      }
+    ],
+    "infrastructureRuns": [],
+    "operationEvents": [],
+    "run": {
+      "activityCount": 8,
+      "breakdown": {
+        "computeSeconds": 0.9004065990447998,
+        "interferenceSeconds": 0,
+        "overheadSeconds": 0,
+        "queueSeconds": 0,
+        "transferSeconds": 1.5477471351623535
+      },
+      "completedActivityCount": 8,
+      "cost": 0,
+      "finishedAt": "2026-10-20T19:13:57Z",
+      "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+      "kind": "workflow",
+      "makespanSeconds": 11.930665493011475,
+      "mode": "real",
+      "schedulePlanId": "showcase-rag-indexing-local-51e75cdbe9-manual-plan-20261020t191344.205131000",
+      "seed": 0,
+      "startedAt": "2026-10-20T19:13:44Z",
+      "status": "completed",
+      "title": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+      "transferredBytes": 95740
+    },
+    "timeline": {
+      "computeMakespanSeconds": 11.930665493011475,
+      "coveredWallSeconds": 3.0038559436798096,
+      "finishedAt": 1792523637,
+      "phases": [
+        {
+          "activityId": "showcase-rag-indexing-local-51e75cdbe9-collect-documents",
+          "category": "resource-queue",
+          "durationSeconds": 0.12867212295532227,
+          "finishedAt": 1792523624.7892854,
+          "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-collect-documents:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523624.6606133,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-rag-indexing-local-51e75cdbe9-collect-documents",
+          "category": "runtime",
+          "durationSeconds": 0.11546778678894043,
+          "finishedAt": 1792523624.9047532,
+          "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-collect-documents:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523624.7892854,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-rag-indexing-local-51e75cdbe9-clean",
+          "category": "resource-queue",
+          "durationSeconds": 0.0032303333282470703,
+          "finishedAt": 1792523625.8811398,
+          "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-clean:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523625.8779094,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-rag-indexing-local-51e75cdbe9-clean",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.15969157218933105,
+          "finishedAt": 1792523626.0408313,
+          "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-clean:transfer-workspace-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-clean-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523625.8811398,
+          "status": "completed",
+          "transferId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-clean:transfer-workspace-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-clean-0"
+        },
+        {
+          "activityId": "showcase-rag-indexing-local-51e75cdbe9-clean",
+          "category": "launch",
+          "durationSeconds": 0.11984658241271973,
+          "finishedAt": 1792523626.160678,
+          "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-clean:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523626.0408313,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-rag-indexing-local-51e75cdbe9-clean",
+          "category": "runtime",
+          "durationSeconds": 0.1059262752532959,
+          "finishedAt": 1792523626.2666042,
+          "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-clean:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523626.160678,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-rag-indexing-local-51e75cdbe9-chunk",
+          "category": "resource-queue",
+          "durationSeconds": 0.003258228302001953,
+          "finishedAt": 1792523627.8810985,
+          "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-chunk:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523627.8778403,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-rag-indexing-local-51e75cdbe9-chunk",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.16015362739562988,
+          "finishedAt": 1792523628.0412521,
+          "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-chunk:transfer-workspace-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-chunk-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523627.8810985,
+          "status": "completed",
+          "transferId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-chunk:transfer-workspace-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-chunk-0"
+        },
+        {
+          "activityId": "showcase-rag-indexing-local-51e75cdbe9-chunk",
+          "category": "launch",
+          "durationSeconds": 0.13539600372314453,
+          "finishedAt": 1792523628.1766481,
+          "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-chunk:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523628.0412521,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-rag-indexing-local-51e75cdbe9-chunk",
+          "category": "runtime",
+          "durationSeconds": 0.11482429504394531,
+          "finishedAt": 1792523628.2914724,
+          "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-chunk:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523628.1766481,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-rag-indexing-local-51e75cdbe9-embed",
+          "category": "resource-queue",
+          "durationSeconds": 0.0027303695678710938,
+          "finishedAt": 1792523629.8843348,
+          "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-embed:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523629.8816044,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-rag-indexing-local-51e75cdbe9-embed",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.1396651268005371,
+          "finishedAt": 1792523630.024,
+          "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-embed:transfer-workspace-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-embed-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523629.8843348,
+          "status": "completed",
+          "transferId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-embed:transfer-workspace-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-embed-0"
+        },
+        {
+          "activityId": "showcase-rag-indexing-local-51e75cdbe9-embed",
+          "category": "launch",
+          "durationSeconds": 0.1407177448272705,
+          "finishedAt": 1792523630.1647177,
+          "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-embed:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523630.024,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-rag-indexing-local-51e75cdbe9-embed",
+          "category": "runtime",
+          "durationSeconds": 0.11468124389648438,
+          "finishedAt": 1792523630.279399,
+          "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-embed:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523630.1647177,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-rag-indexing-local-51e75cdbe9-build-index",
+          "category": "resource-queue",
+          "durationSeconds": 0.0042383670806884766,
+          "finishedAt": 1792523631.8984199,
+          "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-build-index:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523631.8941815,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-rag-indexing-local-51e75cdbe9-build-index",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.17054033279418945,
+          "finishedAt": 1792523632.0689602,
+          "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-build-index:transfer-workspace-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-build-index-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523631.8984199,
+          "status": "completed",
+          "transferId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-build-index:transfer-workspace-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-build-index-0"
+        },
+        {
+          "activityId": "showcase-rag-indexing-local-51e75cdbe9-build-index",
+          "category": "launch",
+          "durationSeconds": 0.13054966926574707,
+          "finishedAt": 1792523632.1995099,
+          "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-build-index:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523632.0689602,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-rag-indexing-local-51e75cdbe9-build-index",
+          "category": "runtime",
+          "durationSeconds": 0.11156535148620605,
+          "finishedAt": 1792523632.3110752,
+          "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-build-index:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523632.1995099,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-rag-indexing-local-51e75cdbe9-answer-tests",
+          "category": "resource-queue",
+          "durationSeconds": 0.0076100826263427734,
+          "finishedAt": 1792523633.9106832,
+          "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-answer-tests:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523633.903073,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-rag-indexing-local-51e75cdbe9-retrieval-tests",
+          "category": "resource-queue",
+          "durationSeconds": 0.004190921783447266,
+          "finishedAt": 1792523633.908363,
+          "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-retrieval-tests:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523633.9041722,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-rag-indexing-local-51e75cdbe9-retrieval-tests",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.16278672218322754,
+          "finishedAt": 1792523634.0711498,
+          "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-retrieval-tests:transfer-workspace-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-retrieval-tests-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523633.908363,
+          "status": "completed",
+          "transferId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-retrieval-tests:transfer-workspace-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-retrieval-tests-0"
+        },
+        {
+          "activityId": "showcase-rag-indexing-local-51e75cdbe9-answer-tests",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.18256473541259766,
+          "finishedAt": 1792523634.093248,
+          "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-answer-tests:transfer-workspace-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-answer-tests-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523633.9106832,
+          "status": "completed",
+          "transferId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-answer-tests:transfer-workspace-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-answer-tests-0"
+        },
+        {
+          "activityId": "showcase-rag-indexing-local-51e75cdbe9-retrieval-tests",
+          "category": "launch",
+          "durationSeconds": 0.1578073501586914,
+          "finishedAt": 1792523634.2289572,
+          "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-retrieval-tests:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523634.0711498,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-rag-indexing-local-51e75cdbe9-answer-tests",
+          "category": "launch",
+          "durationSeconds": 0.14297890663146973,
+          "finishedAt": 1792523634.2362268,
+          "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-answer-tests:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523634.093248,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-rag-indexing-local-51e75cdbe9-retrieval-tests",
+          "category": "runtime",
+          "durationSeconds": 0.11255097389221191,
+          "finishedAt": 1792523634.3415082,
+          "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-retrieval-tests:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523634.2289572,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-rag-indexing-local-51e75cdbe9-answer-tests",
+          "category": "runtime",
+          "durationSeconds": 0.10949182510375977,
+          "finishedAt": 1792523634.3457186,
+          "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-answer-tests:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523634.2362268,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-rag-indexing-local-51e75cdbe9-publish",
+          "category": "resource-queue",
+          "durationSeconds": 0.0050928592681884766,
+          "finishedAt": 1792523636.0249884,
+          "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-publish:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523636.0198956,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-rag-indexing-local-51e75cdbe9-publish",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.21483349800109863,
+          "finishedAt": 1792523636.239822,
+          "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-publish:transfer-workspace-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-publish-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523636.0249884,
+          "status": "completed",
+          "transferId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-publish:transfer-workspace-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-publish-0"
+        },
+        {
+          "activityId": "showcase-rag-indexing-local-51e75cdbe9-publish",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.3575115203857422,
+          "finishedAt": 1792523636.3825,
+          "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-publish:transfer-workspace-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-publish-1",
+          "source": "transfer-observation",
+          "startedAt": 1792523636.0249884,
+          "status": "completed",
+          "transferId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-publish:transfer-workspace-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-publish-1"
+        },
+        {
+          "activityId": "showcase-rag-indexing-local-51e75cdbe9-publish",
+          "category": "launch",
+          "durationSeconds": 0.22155213356018066,
+          "finishedAt": 1792523636.604052,
+          "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-publish:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523636.3825,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-rag-indexing-local-51e75cdbe9-publish",
+          "category": "runtime",
+          "durationSeconds": 0.11589884757995605,
+          "finishedAt": 1792523636.719951,
+          "id": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000:showcase-rag-indexing-local-51e75cdbe9-publish:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523636.604052,
+          "status": "completed"
+        }
+      ],
+      "startedAt": 1792523624,
+      "totals": {
+        "destroySeconds": 0,
+        "executablePreparationSeconds": 0,
+        "launchSeconds": 1.0488483905792236,
+        "provisionSeconds": 0,
+        "resourceQueueSeconds": 0.15902328491210938,
+        "runtimeSeconds": 0.9004065990447998,
+        "startSeconds": 0,
+        "stopSeconds": 0,
+        "validationSeconds": 0,
+        "workspaceTransferSeconds": 1.5477471351623535
+      },
+      "unclassifiedWallSeconds": 9.99614405632019,
+      "wallSeconds": 13
+    },
+    "workspaceLeases": [
+      {
+        "consumerActivityId": "showcase-rag-indexing-local-51e75cdbe9-publish",
+        "id": "workspace-lease-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-answer-tests-showcase-rag-indexing-local-51e75cdbe9-publish",
+        "producerActivityId": "showcase-rag-indexing-local-51e75cdbe9-answer-tests",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:13:56.385056427Z",
+        "runId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "workspaceId": "workspace-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-answer-tests"
+      },
+      {
+        "consumerActivityId": "showcase-rag-indexing-local-51e75cdbe9-answer-tests",
+        "id": "workspace-lease-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-build-index-showcase-rag-indexing-local-51e75cdbe9-answer-tests",
+        "producerActivityId": "showcase-rag-indexing-local-51e75cdbe9-build-index",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:13:54.094837801Z",
+        "runId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "workspaceId": "workspace-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-build-index"
+      },
+      {
+        "consumerActivityId": "showcase-rag-indexing-local-51e75cdbe9-retrieval-tests",
+        "id": "workspace-lease-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-build-index-showcase-rag-indexing-local-51e75cdbe9-retrieval-tests",
+        "producerActivityId": "showcase-rag-indexing-local-51e75cdbe9-build-index",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:13:54.074000176Z",
+        "runId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "workspaceId": "workspace-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-build-index"
+      },
+      {
+        "consumerActivityId": "showcase-rag-indexing-local-51e75cdbe9-embed",
+        "id": "workspace-lease-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-chunk-showcase-rag-indexing-local-51e75cdbe9-embed",
+        "producerActivityId": "showcase-rag-indexing-local-51e75cdbe9-chunk",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:13:50.02581409Z",
+        "runId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "workspaceId": "workspace-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-chunk"
+      },
+      {
+        "consumerActivityId": "showcase-rag-indexing-local-51e75cdbe9-chunk",
+        "id": "workspace-lease-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-clean-showcase-rag-indexing-local-51e75cdbe9-chunk",
+        "producerActivityId": "showcase-rag-indexing-local-51e75cdbe9-clean",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:13:48.042942173Z",
+        "runId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "workspaceId": "workspace-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-clean"
+      },
+      {
+        "consumerActivityId": "showcase-rag-indexing-local-51e75cdbe9-clean",
+        "id": "workspace-lease-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-collect-documents-showcase-rag-indexing-local-51e75cdbe9-clean",
+        "producerActivityId": "showcase-rag-indexing-local-51e75cdbe9-collect-documents",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:13:46.042514839Z",
+        "runId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "workspaceId": "workspace-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-collect-documents"
+      },
+      {
+        "consumerActivityId": "showcase-rag-indexing-local-51e75cdbe9-build-index",
+        "id": "workspace-lease-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-embed-showcase-rag-indexing-local-51e75cdbe9-build-index",
+        "producerActivityId": "showcase-rag-indexing-local-51e75cdbe9-embed",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:13:52.071970175Z",
+        "runId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "workspaceId": "workspace-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-embed"
+      },
+      {
+        "consumerActivityId": "showcase-rag-indexing-local-51e75cdbe9-publish",
+        "id": "workspace-lease-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-retrieval-tests-showcase-rag-indexing-local-51e75cdbe9-publish",
+        "producerActivityId": "showcase-rag-indexing-local-51e75cdbe9-retrieval-tests",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:13:56.385056427Z",
+        "runId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "workspaceId": "workspace-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-retrieval-tests"
+      }
+    ],
+    "workspaces": [
+      {
+        "activityId": "showcase-rag-indexing-local-51e75cdbe9-answer-tests",
+        "createdAt": "2026-10-20T19:13:44.623785213Z",
+        "driver": "local",
+        "environmentId": "showcase-rag-indexing-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000/showcase-rag-indexing-local-51e75cdbe9-answer-tests",
+        "fileCount": 7,
+        "id": "workspace-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-answer-tests",
+        "inputBytes": 25570,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:fe872785bf12bcae87543b3d183ad06193e44b49d4d78dcbad2a5ac015e2d066",
+              "path": "index.json",
+              "sizeBytes": 6790
+            },
+            {
+              "digest": "sha256:5e7ba06629733421ceb30a4651d82958cbb9ce059a1e5c67ea9862b6d6fb7904",
+              "path": "stage-answer-tests.json",
+              "sizeBytes": 1250
+            },
+            {
+              "digest": "sha256:a9f6c652f0daf4e9104b52fb132c98c6e23939097d3a24dd75615d1775f4d747",
+              "path": "stage-build-index.json",
+              "sizeBytes": 7922
+            },
+            {
+              "digest": "sha256:7e0a4d74d268927c3b7f983d7fb715eb000cc803c4f63b9edf15562e034d5355",
+              "path": "stage-chunk.json",
+              "sizeBytes": 1119
+            },
+            {
+              "digest": "sha256:61aa4cca1c71b55b976cb7fe20b5d6623a5aa12c3b43128d4e4c0f0a952b1605",
+              "path": "stage-clean.json",
+              "sizeBytes": 919
+            },
+            {
+              "digest": "sha256:45871bb9e97ea4edf18512beab217a431a261e65b4c1eae8dbeebb1a8a840721",
+              "path": "stage-collect-documents.json",
+              "sizeBytes": 904
+            },
+            {
+              "digest": "sha256:fa9291be3d9c6b49a989cde216aa8ff94f51a6f4d66c5cd6b413eb09bdaf75d1",
+              "path": "stage-embed.json",
+              "sizeBytes": 7916
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:fe872785bf12bcae87543b3d183ad06193e44b49d4d78dcbad2a5ac015e2d066",
+              "path": "index.json",
+              "sizeBytes": 6790
+            },
+            {
+              "digest": "sha256:a9f6c652f0daf4e9104b52fb132c98c6e23939097d3a24dd75615d1775f4d747",
+              "path": "stage-build-index.json",
+              "sizeBytes": 7922
+            },
+            {
+              "digest": "sha256:7e0a4d74d268927c3b7f983d7fb715eb000cc803c4f63b9edf15562e034d5355",
+              "path": "stage-chunk.json",
+              "sizeBytes": 1119
+            },
+            {
+              "digest": "sha256:61aa4cca1c71b55b976cb7fe20b5d6623a5aa12c3b43128d4e4c0f0a952b1605",
+              "path": "stage-clean.json",
+              "sizeBytes": 919
+            },
+            {
+              "digest": "sha256:45871bb9e97ea4edf18512beab217a431a261e65b4c1eae8dbeebb1a8a840721",
+              "path": "stage-collect-documents.json",
+              "sizeBytes": 904
+            },
+            {
+              "digest": "sha256:fa9291be3d9c6b49a989cde216aa8ff94f51a6f4d66c5cd6b413eb09bdaf75d1",
+              "path": "stage-embed.json",
+              "sizeBytes": 7916
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:fe872785bf12bcae87543b3d183ad06193e44b49d4d78dcbad2a5ac015e2d066",
+              "path": "index.json",
+              "sizeBytes": 6790
+            },
+            {
+              "digest": "sha256:a9f6c652f0daf4e9104b52fb132c98c6e23939097d3a24dd75615d1775f4d747",
+              "path": "stage-build-index.json",
+              "sizeBytes": 7922
+            },
+            {
+              "digest": "sha256:7e0a4d74d268927c3b7f983d7fb715eb000cc803c4f63b9edf15562e034d5355",
+              "path": "stage-chunk.json",
+              "sizeBytes": 1119
+            },
+            {
+              "digest": "sha256:61aa4cca1c71b55b976cb7fe20b5d6623a5aa12c3b43128d4e4c0f0a952b1605",
+              "path": "stage-clean.json",
+              "sizeBytes": 919
+            },
+            {
+              "digest": "sha256:45871bb9e97ea4edf18512beab217a431a261e65b4c1eae8dbeebb1a8a840721",
+              "path": "stage-collect-documents.json",
+              "sizeBytes": 904
+            },
+            {
+              "digest": "sha256:fa9291be3d9c6b49a989cde216aa8ff94f51a6f4d66c5cd6b413eb09bdaf75d1",
+              "path": "stage-embed.json",
+              "sizeBytes": 7916
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:5e7ba06629733421ceb30a4651d82958cbb9ce059a1e5c67ea9862b6d6fb7904",
+              "path": "stage-answer-tests.json",
+              "sizeBytes": 1250
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000/showcase-rag-indexing-local-51e75cdbe9-answer-tests",
+        "outputBytes": 1250,
+        "pinned": false,
+        "reclaimedBytes": 26820,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:13:56.389061218Z",
+        "resourceId": "showcase-rag-indexing-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "runtimeId": "showcase-rag-indexing-local",
+        "sealedAt": "2026-10-20T19:13:56.015527677Z",
+        "sizeBytes": 26820,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000/showcase-rag-indexing-local-51e75cdbe9-answer-tests"
+      },
+      {
+        "activityId": "showcase-rag-indexing-local-51e75cdbe9-build-index",
+        "createdAt": "2026-10-20T19:13:44.623785213Z",
+        "driver": "local",
+        "environmentId": "showcase-rag-indexing-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000/showcase-rag-indexing-local-51e75cdbe9-build-index",
+        "fileCount": 6,
+        "id": "workspace-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-build-index",
+        "inputBytes": 10858,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:fe872785bf12bcae87543b3d183ad06193e44b49d4d78dcbad2a5ac015e2d066",
+              "path": "index.json",
+              "sizeBytes": 6790
+            },
+            {
+              "digest": "sha256:a9f6c652f0daf4e9104b52fb132c98c6e23939097d3a24dd75615d1775f4d747",
+              "path": "stage-build-index.json",
+              "sizeBytes": 7922
+            },
+            {
+              "digest": "sha256:7e0a4d74d268927c3b7f983d7fb715eb000cc803c4f63b9edf15562e034d5355",
+              "path": "stage-chunk.json",
+              "sizeBytes": 1119
+            },
+            {
+              "digest": "sha256:61aa4cca1c71b55b976cb7fe20b5d6623a5aa12c3b43128d4e4c0f0a952b1605",
+              "path": "stage-clean.json",
+              "sizeBytes": 919
+            },
+            {
+              "digest": "sha256:45871bb9e97ea4edf18512beab217a431a261e65b4c1eae8dbeebb1a8a840721",
+              "path": "stage-collect-documents.json",
+              "sizeBytes": 904
+            },
+            {
+              "digest": "sha256:fa9291be3d9c6b49a989cde216aa8ff94f51a6f4d66c5cd6b413eb09bdaf75d1",
+              "path": "stage-embed.json",
+              "sizeBytes": 7916
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:7e0a4d74d268927c3b7f983d7fb715eb000cc803c4f63b9edf15562e034d5355",
+              "path": "stage-chunk.json",
+              "sizeBytes": 1119
+            },
+            {
+              "digest": "sha256:61aa4cca1c71b55b976cb7fe20b5d6623a5aa12c3b43128d4e4c0f0a952b1605",
+              "path": "stage-clean.json",
+              "sizeBytes": 919
+            },
+            {
+              "digest": "sha256:45871bb9e97ea4edf18512beab217a431a261e65b4c1eae8dbeebb1a8a840721",
+              "path": "stage-collect-documents.json",
+              "sizeBytes": 904
+            },
+            {
+              "digest": "sha256:fa9291be3d9c6b49a989cde216aa8ff94f51a6f4d66c5cd6b413eb09bdaf75d1",
+              "path": "stage-embed.json",
+              "sizeBytes": 7916
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:7e0a4d74d268927c3b7f983d7fb715eb000cc803c4f63b9edf15562e034d5355",
+              "path": "stage-chunk.json",
+              "sizeBytes": 1119
+            },
+            {
+              "digest": "sha256:61aa4cca1c71b55b976cb7fe20b5d6623a5aa12c3b43128d4e4c0f0a952b1605",
+              "path": "stage-clean.json",
+              "sizeBytes": 919
+            },
+            {
+              "digest": "sha256:45871bb9e97ea4edf18512beab217a431a261e65b4c1eae8dbeebb1a8a840721",
+              "path": "stage-collect-documents.json",
+              "sizeBytes": 904
+            },
+            {
+              "digest": "sha256:fa9291be3d9c6b49a989cde216aa8ff94f51a6f4d66c5cd6b413eb09bdaf75d1",
+              "path": "stage-embed.json",
+              "sizeBytes": 7916
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:fe872785bf12bcae87543b3d183ad06193e44b49d4d78dcbad2a5ac015e2d066",
+              "path": "index.json",
+              "sizeBytes": 6790
+            },
+            {
+              "digest": "sha256:a9f6c652f0daf4e9104b52fb132c98c6e23939097d3a24dd75615d1775f4d747",
+              "path": "stage-build-index.json",
+              "sizeBytes": 7922
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000/showcase-rag-indexing-local-51e75cdbe9-build-index",
+        "outputBytes": 14712,
+        "pinned": false,
+        "reclaimedBytes": 25570,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:13:54.098641926Z",
+        "resourceId": "showcase-rag-indexing-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "runtimeId": "showcase-rag-indexing-local",
+        "sealedAt": "2026-10-20T19:13:53.898490384Z",
+        "sizeBytes": 25570,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000/showcase-rag-indexing-local-51e75cdbe9-build-index"
+      },
+      {
+        "activityId": "showcase-rag-indexing-local-51e75cdbe9-chunk",
+        "createdAt": "2026-10-20T19:13:44.623785213Z",
+        "driver": "local",
+        "environmentId": "showcase-rag-indexing-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000/showcase-rag-indexing-local-51e75cdbe9-chunk",
+        "fileCount": 3,
+        "id": "workspace-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-chunk",
+        "inputBytes": 1823,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:7e0a4d74d268927c3b7f983d7fb715eb000cc803c4f63b9edf15562e034d5355",
+              "path": "stage-chunk.json",
+              "sizeBytes": 1119
+            },
+            {
+              "digest": "sha256:61aa4cca1c71b55b976cb7fe20b5d6623a5aa12c3b43128d4e4c0f0a952b1605",
+              "path": "stage-clean.json",
+              "sizeBytes": 919
+            },
+            {
+              "digest": "sha256:45871bb9e97ea4edf18512beab217a431a261e65b4c1eae8dbeebb1a8a840721",
+              "path": "stage-collect-documents.json",
+              "sizeBytes": 904
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:61aa4cca1c71b55b976cb7fe20b5d6623a5aa12c3b43128d4e4c0f0a952b1605",
+              "path": "stage-clean.json",
+              "sizeBytes": 919
+            },
+            {
+              "digest": "sha256:45871bb9e97ea4edf18512beab217a431a261e65b4c1eae8dbeebb1a8a840721",
+              "path": "stage-collect-documents.json",
+              "sizeBytes": 904
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:61aa4cca1c71b55b976cb7fe20b5d6623a5aa12c3b43128d4e4c0f0a952b1605",
+              "path": "stage-clean.json",
+              "sizeBytes": 919
+            },
+            {
+              "digest": "sha256:45871bb9e97ea4edf18512beab217a431a261e65b4c1eae8dbeebb1a8a840721",
+              "path": "stage-collect-documents.json",
+              "sizeBytes": 904
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:7e0a4d74d268927c3b7f983d7fb715eb000cc803c4f63b9edf15562e034d5355",
+              "path": "stage-chunk.json",
+              "sizeBytes": 1119
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000/showcase-rag-indexing-local-51e75cdbe9-chunk",
+        "outputBytes": 1119,
+        "pinned": false,
+        "reclaimedBytes": 2942,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:13:50.029947049Z",
+        "resourceId": "showcase-rag-indexing-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "runtimeId": "showcase-rag-indexing-local",
+        "sealedAt": "2026-10-20T19:13:49.876818924Z",
+        "sizeBytes": 2942,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000/showcase-rag-indexing-local-51e75cdbe9-chunk"
+      },
+      {
+        "activityId": "showcase-rag-indexing-local-51e75cdbe9-clean",
+        "createdAt": "2026-10-20T19:13:44.623785213Z",
+        "driver": "local",
+        "environmentId": "showcase-rag-indexing-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000/showcase-rag-indexing-local-51e75cdbe9-clean",
+        "fileCount": 2,
+        "id": "workspace-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-clean",
+        "inputBytes": 904,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:61aa4cca1c71b55b976cb7fe20b5d6623a5aa12c3b43128d4e4c0f0a952b1605",
+              "path": "stage-clean.json",
+              "sizeBytes": 919
+            },
+            {
+              "digest": "sha256:45871bb9e97ea4edf18512beab217a431a261e65b4c1eae8dbeebb1a8a840721",
+              "path": "stage-collect-documents.json",
+              "sizeBytes": 904
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:45871bb9e97ea4edf18512beab217a431a261e65b4c1eae8dbeebb1a8a840721",
+              "path": "stage-collect-documents.json",
+              "sizeBytes": 904
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:45871bb9e97ea4edf18512beab217a431a261e65b4c1eae8dbeebb1a8a840721",
+              "path": "stage-collect-documents.json",
+              "sizeBytes": 904
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:61aa4cca1c71b55b976cb7fe20b5d6623a5aa12c3b43128d4e4c0f0a952b1605",
+              "path": "stage-clean.json",
+              "sizeBytes": 919
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000/showcase-rag-indexing-local-51e75cdbe9-clean",
+        "outputBytes": 919,
+        "pinned": false,
+        "reclaimedBytes": 1823,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:13:48.046746923Z",
+        "resourceId": "showcase-rag-indexing-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "runtimeId": "showcase-rag-indexing-local",
+        "sealedAt": "2026-10-20T19:13:47.873856589Z",
+        "sizeBytes": 1823,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000/showcase-rag-indexing-local-51e75cdbe9-clean"
+      },
+      {
+        "activityId": "showcase-rag-indexing-local-51e75cdbe9-collect-documents",
+        "createdAt": "2026-10-20T19:13:44.623785213Z",
+        "driver": "local",
+        "environmentId": "showcase-rag-indexing-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000/showcase-rag-indexing-local-51e75cdbe9-collect-documents",
+        "fileCount": 1,
+        "id": "workspace-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-collect-documents",
+        "inputBytes": 0,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:45871bb9e97ea4edf18512beab217a431a261e65b4c1eae8dbeebb1a8a840721",
+              "path": "stage-collect-documents.json",
+              "sizeBytes": 904
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:45871bb9e97ea4edf18512beab217a431a261e65b4c1eae8dbeebb1a8a840721",
+              "path": "stage-collect-documents.json",
+              "sizeBytes": 904
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000/showcase-rag-indexing-local-51e75cdbe9-collect-documents",
+        "outputBytes": 904,
+        "pinned": false,
+        "reclaimedBytes": 904,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:13:46.04621388Z",
+        "resourceId": "showcase-rag-indexing-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "runtimeId": "showcase-rag-indexing-local",
+        "sealedAt": "2026-10-20T19:13:45.873526755Z",
+        "sizeBytes": 904,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000/showcase-rag-indexing-local-51e75cdbe9-collect-documents"
+      },
+      {
+        "activityId": "showcase-rag-indexing-local-51e75cdbe9-embed",
+        "createdAt": "2026-10-20T19:13:44.623785213Z",
+        "driver": "local",
+        "environmentId": "showcase-rag-indexing-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000/showcase-rag-indexing-local-51e75cdbe9-embed",
+        "fileCount": 4,
+        "id": "workspace-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-embed",
+        "inputBytes": 2942,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:7e0a4d74d268927c3b7f983d7fb715eb000cc803c4f63b9edf15562e034d5355",
+              "path": "stage-chunk.json",
+              "sizeBytes": 1119
+            },
+            {
+              "digest": "sha256:61aa4cca1c71b55b976cb7fe20b5d6623a5aa12c3b43128d4e4c0f0a952b1605",
+              "path": "stage-clean.json",
+              "sizeBytes": 919
+            },
+            {
+              "digest": "sha256:45871bb9e97ea4edf18512beab217a431a261e65b4c1eae8dbeebb1a8a840721",
+              "path": "stage-collect-documents.json",
+              "sizeBytes": 904
+            },
+            {
+              "digest": "sha256:fa9291be3d9c6b49a989cde216aa8ff94f51a6f4d66c5cd6b413eb09bdaf75d1",
+              "path": "stage-embed.json",
+              "sizeBytes": 7916
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:7e0a4d74d268927c3b7f983d7fb715eb000cc803c4f63b9edf15562e034d5355",
+              "path": "stage-chunk.json",
+              "sizeBytes": 1119
+            },
+            {
+              "digest": "sha256:61aa4cca1c71b55b976cb7fe20b5d6623a5aa12c3b43128d4e4c0f0a952b1605",
+              "path": "stage-clean.json",
+              "sizeBytes": 919
+            },
+            {
+              "digest": "sha256:45871bb9e97ea4edf18512beab217a431a261e65b4c1eae8dbeebb1a8a840721",
+              "path": "stage-collect-documents.json",
+              "sizeBytes": 904
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:7e0a4d74d268927c3b7f983d7fb715eb000cc803c4f63b9edf15562e034d5355",
+              "path": "stage-chunk.json",
+              "sizeBytes": 1119
+            },
+            {
+              "digest": "sha256:61aa4cca1c71b55b976cb7fe20b5d6623a5aa12c3b43128d4e4c0f0a952b1605",
+              "path": "stage-clean.json",
+              "sizeBytes": 919
+            },
+            {
+              "digest": "sha256:45871bb9e97ea4edf18512beab217a431a261e65b4c1eae8dbeebb1a8a840721",
+              "path": "stage-collect-documents.json",
+              "sizeBytes": 904
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:fa9291be3d9c6b49a989cde216aa8ff94f51a6f4d66c5cd6b413eb09bdaf75d1",
+              "path": "stage-embed.json",
+              "sizeBytes": 7916
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000/showcase-rag-indexing-local-51e75cdbe9-embed",
+        "outputBytes": 7916,
+        "pinned": false,
+        "reclaimedBytes": 10858,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:13:52.0781273Z",
+        "resourceId": "showcase-rag-indexing-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "runtimeId": "showcase-rag-indexing-local",
+        "sealedAt": "2026-10-20T19:13:51.888007216Z",
+        "sizeBytes": 10858,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000/showcase-rag-indexing-local-51e75cdbe9-embed"
+      },
+      {
+        "activityId": "showcase-rag-indexing-local-51e75cdbe9-publish",
+        "createdAt": "2026-10-20T19:13:44.623785213Z",
+        "driver": "local",
+        "environmentId": "showcase-rag-indexing-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000/showcase-rag-indexing-local-51e75cdbe9-publish",
+        "fileCount": 2,
+        "id": "workspace-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-publish",
+        "inputBytes": 28073,
+        "isFinal": true,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:2ce8eacb19cabfe32b59e7950067f0584f8c11aa5978e72a87120d136ff4e430",
+              "path": "evaluation.json",
+              "sizeBytes": 1911
+            },
+            {
+              "digest": "sha256:fe872785bf12bcae87543b3d183ad06193e44b49d4d78dcbad2a5ac015e2d066",
+              "path": "index.json",
+              "sizeBytes": 6790
+            },
+            {
+              "digest": "sha256:5e7ba06629733421ceb30a4651d82958cbb9ce059a1e5c67ea9862b6d6fb7904",
+              "path": "stage-answer-tests.json",
+              "sizeBytes": 1250
+            },
+            {
+              "digest": "sha256:a9f6c652f0daf4e9104b52fb132c98c6e23939097d3a24dd75615d1775f4d747",
+              "path": "stage-build-index.json",
+              "sizeBytes": 7922
+            },
+            {
+              "digest": "sha256:7e0a4d74d268927c3b7f983d7fb715eb000cc803c4f63b9edf15562e034d5355",
+              "path": "stage-chunk.json",
+              "sizeBytes": 1119
+            },
+            {
+              "digest": "sha256:61aa4cca1c71b55b976cb7fe20b5d6623a5aa12c3b43128d4e4c0f0a952b1605",
+              "path": "stage-clean.json",
+              "sizeBytes": 919
+            },
+            {
+              "digest": "sha256:45871bb9e97ea4edf18512beab217a431a261e65b4c1eae8dbeebb1a8a840721",
+              "path": "stage-collect-documents.json",
+              "sizeBytes": 904
+            },
+            {
+              "digest": "sha256:fa9291be3d9c6b49a989cde216aa8ff94f51a6f4d66c5cd6b413eb09bdaf75d1",
+              "path": "stage-embed.json",
+              "sizeBytes": 7916
+            },
+            {
+              "digest": "sha256:9c48a32305af949ffbc364377847b0c159c8a1c3c6866397ece0cd04e2e67d6b",
+              "path": "stage-publish.json",
+              "sizeBytes": 2413
+            },
+            {
+              "digest": "sha256:657c36cb03a90457dcacfcbe7065c8a2300d1bb3ec38d5ce354e912b346b8a4f",
+              "path": "stage-retrieval-tests.json",
+              "sizeBytes": 1253
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:fe872785bf12bcae87543b3d183ad06193e44b49d4d78dcbad2a5ac015e2d066",
+              "path": "index.json",
+              "sizeBytes": 6790
+            },
+            {
+              "digest": "sha256:5e7ba06629733421ceb30a4651d82958cbb9ce059a1e5c67ea9862b6d6fb7904",
+              "path": "stage-answer-tests.json",
+              "sizeBytes": 1250
+            },
+            {
+              "digest": "sha256:a9f6c652f0daf4e9104b52fb132c98c6e23939097d3a24dd75615d1775f4d747",
+              "path": "stage-build-index.json",
+              "sizeBytes": 7922
+            },
+            {
+              "digest": "sha256:7e0a4d74d268927c3b7f983d7fb715eb000cc803c4f63b9edf15562e034d5355",
+              "path": "stage-chunk.json",
+              "sizeBytes": 1119
+            },
+            {
+              "digest": "sha256:61aa4cca1c71b55b976cb7fe20b5d6623a5aa12c3b43128d4e4c0f0a952b1605",
+              "path": "stage-clean.json",
+              "sizeBytes": 919
+            },
+            {
+              "digest": "sha256:45871bb9e97ea4edf18512beab217a431a261e65b4c1eae8dbeebb1a8a840721",
+              "path": "stage-collect-documents.json",
+              "sizeBytes": 904
+            },
+            {
+              "digest": "sha256:fa9291be3d9c6b49a989cde216aa8ff94f51a6f4d66c5cd6b413eb09bdaf75d1",
+              "path": "stage-embed.json",
+              "sizeBytes": 7916
+            },
+            {
+              "digest": "sha256:657c36cb03a90457dcacfcbe7065c8a2300d1bb3ec38d5ce354e912b346b8a4f",
+              "path": "stage-retrieval-tests.json",
+              "sizeBytes": 1253
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:fe872785bf12bcae87543b3d183ad06193e44b49d4d78dcbad2a5ac015e2d066",
+              "path": "index.json",
+              "sizeBytes": 6790
+            },
+            {
+              "digest": "sha256:5e7ba06629733421ceb30a4651d82958cbb9ce059a1e5c67ea9862b6d6fb7904",
+              "path": "stage-answer-tests.json",
+              "sizeBytes": 1250
+            },
+            {
+              "digest": "sha256:a9f6c652f0daf4e9104b52fb132c98c6e23939097d3a24dd75615d1775f4d747",
+              "path": "stage-build-index.json",
+              "sizeBytes": 7922
+            },
+            {
+              "digest": "sha256:7e0a4d74d268927c3b7f983d7fb715eb000cc803c4f63b9edf15562e034d5355",
+              "path": "stage-chunk.json",
+              "sizeBytes": 1119
+            },
+            {
+              "digest": "sha256:61aa4cca1c71b55b976cb7fe20b5d6623a5aa12c3b43128d4e4c0f0a952b1605",
+              "path": "stage-clean.json",
+              "sizeBytes": 919
+            },
+            {
+              "digest": "sha256:45871bb9e97ea4edf18512beab217a431a261e65b4c1eae8dbeebb1a8a840721",
+              "path": "stage-collect-documents.json",
+              "sizeBytes": 904
+            },
+            {
+              "digest": "sha256:fa9291be3d9c6b49a989cde216aa8ff94f51a6f4d66c5cd6b413eb09bdaf75d1",
+              "path": "stage-embed.json",
+              "sizeBytes": 7916
+            },
+            {
+              "digest": "sha256:657c36cb03a90457dcacfcbe7065c8a2300d1bb3ec38d5ce354e912b346b8a4f",
+              "path": "stage-retrieval-tests.json",
+              "sizeBytes": 1253
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:2ce8eacb19cabfe32b59e7950067f0584f8c11aa5978e72a87120d136ff4e430",
+              "path": "evaluation.json",
+              "sizeBytes": 1911
+            },
+            {
+              "digest": "sha256:9c48a32305af949ffbc364377847b0c159c8a1c3c6866397ece0cd04e2e67d6b",
+              "path": "stage-publish.json",
+              "sizeBytes": 2413
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000/showcase-rag-indexing-local-51e75cdbe9-publish",
+        "outputBytes": 4324,
+        "pinned": false,
+        "reclaimedBytes": 28073,
+        "releaseReason": "inherited inputs pruned",
+        "resourceId": "showcase-rag-indexing-local-docker",
+        "retention": "final",
+        "runId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "runtimeId": "showcase-rag-indexing-local",
+        "sealedAt": "2026-10-20T19:13:57.980069094Z",
+        "sizeBytes": 4324,
+        "state": "sealed",
+        "uri": "file:///akoflow/workspace/runs/showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000/showcase-rag-indexing-local-51e75cdbe9-publish"
+      },
+      {
+        "activityId": "showcase-rag-indexing-local-51e75cdbe9-retrieval-tests",
+        "createdAt": "2026-10-20T19:13:44.623785213Z",
+        "driver": "local",
+        "environmentId": "showcase-rag-indexing-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000/showcase-rag-indexing-local-51e75cdbe9-retrieval-tests",
+        "fileCount": 7,
+        "id": "workspace-showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000-showcase-rag-indexing-local-51e75cdbe9-retrieval-tests",
+        "inputBytes": 25570,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:fe872785bf12bcae87543b3d183ad06193e44b49d4d78dcbad2a5ac015e2d066",
+              "path": "index.json",
+              "sizeBytes": 6790
+            },
+            {
+              "digest": "sha256:a9f6c652f0daf4e9104b52fb132c98c6e23939097d3a24dd75615d1775f4d747",
+              "path": "stage-build-index.json",
+              "sizeBytes": 7922
+            },
+            {
+              "digest": "sha256:7e0a4d74d268927c3b7f983d7fb715eb000cc803c4f63b9edf15562e034d5355",
+              "path": "stage-chunk.json",
+              "sizeBytes": 1119
+            },
+            {
+              "digest": "sha256:61aa4cca1c71b55b976cb7fe20b5d6623a5aa12c3b43128d4e4c0f0a952b1605",
+              "path": "stage-clean.json",
+              "sizeBytes": 919
+            },
+            {
+              "digest": "sha256:45871bb9e97ea4edf18512beab217a431a261e65b4c1eae8dbeebb1a8a840721",
+              "path": "stage-collect-documents.json",
+              "sizeBytes": 904
+            },
+            {
+              "digest": "sha256:fa9291be3d9c6b49a989cde216aa8ff94f51a6f4d66c5cd6b413eb09bdaf75d1",
+              "path": "stage-embed.json",
+              "sizeBytes": 7916
+            },
+            {
+              "digest": "sha256:657c36cb03a90457dcacfcbe7065c8a2300d1bb3ec38d5ce354e912b346b8a4f",
+              "path": "stage-retrieval-tests.json",
+              "sizeBytes": 1253
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:fe872785bf12bcae87543b3d183ad06193e44b49d4d78dcbad2a5ac015e2d066",
+              "path": "index.json",
+              "sizeBytes": 6790
+            },
+            {
+              "digest": "sha256:a9f6c652f0daf4e9104b52fb132c98c6e23939097d3a24dd75615d1775f4d747",
+              "path": "stage-build-index.json",
+              "sizeBytes": 7922
+            },
+            {
+              "digest": "sha256:7e0a4d74d268927c3b7f983d7fb715eb000cc803c4f63b9edf15562e034d5355",
+              "path": "stage-chunk.json",
+              "sizeBytes": 1119
+            },
+            {
+              "digest": "sha256:61aa4cca1c71b55b976cb7fe20b5d6623a5aa12c3b43128d4e4c0f0a952b1605",
+              "path": "stage-clean.json",
+              "sizeBytes": 919
+            },
+            {
+              "digest": "sha256:45871bb9e97ea4edf18512beab217a431a261e65b4c1eae8dbeebb1a8a840721",
+              "path": "stage-collect-documents.json",
+              "sizeBytes": 904
+            },
+            {
+              "digest": "sha256:fa9291be3d9c6b49a989cde216aa8ff94f51a6f4d66c5cd6b413eb09bdaf75d1",
+              "path": "stage-embed.json",
+              "sizeBytes": 7916
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:fe872785bf12bcae87543b3d183ad06193e44b49d4d78dcbad2a5ac015e2d066",
+              "path": "index.json",
+              "sizeBytes": 6790
+            },
+            {
+              "digest": "sha256:a9f6c652f0daf4e9104b52fb132c98c6e23939097d3a24dd75615d1775f4d747",
+              "path": "stage-build-index.json",
+              "sizeBytes": 7922
+            },
+            {
+              "digest": "sha256:7e0a4d74d268927c3b7f983d7fb715eb000cc803c4f63b9edf15562e034d5355",
+              "path": "stage-chunk.json",
+              "sizeBytes": 1119
+            },
+            {
+              "digest": "sha256:61aa4cca1c71b55b976cb7fe20b5d6623a5aa12c3b43128d4e4c0f0a952b1605",
+              "path": "stage-clean.json",
+              "sizeBytes": 919
+            },
+            {
+              "digest": "sha256:45871bb9e97ea4edf18512beab217a431a261e65b4c1eae8dbeebb1a8a840721",
+              "path": "stage-collect-documents.json",
+              "sizeBytes": 904
+            },
+            {
+              "digest": "sha256:fa9291be3d9c6b49a989cde216aa8ff94f51a6f4d66c5cd6b413eb09bdaf75d1",
+              "path": "stage-embed.json",
+              "sizeBytes": 7916
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:657c36cb03a90457dcacfcbe7065c8a2300d1bb3ec38d5ce354e912b346b8a4f",
+              "path": "stage-retrieval-tests.json",
+              "sizeBytes": 1253
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000/showcase-rag-indexing-local-51e75cdbe9-retrieval-tests",
+        "outputBytes": 1253,
+        "pinned": false,
+        "reclaimedBytes": 26823,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:13:56.396531927Z",
+        "resourceId": "showcase-rag-indexing-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+        "runtimeId": "showcase-rag-indexing-local",
+        "sealedAt": "2026-10-20T19:13:56.009896218Z",
+        "sizeBytes": 26823,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000/showcase-rag-indexing-local-51e75cdbe9-retrieval-tests"
+      }
+    ]
+  },
+  "runId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+  "status": "completed",
+  "workflowId": "showcase-rag-indexing-local-51e75cdbe9"
+}

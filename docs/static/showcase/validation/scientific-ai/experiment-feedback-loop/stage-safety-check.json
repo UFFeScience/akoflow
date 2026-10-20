@@ -1,10 +1,51 @@
 {
-  "showcase": "experiment-feedback-loop",
-  "digest": "68dd124b4119dc2b14023a5feb08ed9a961edde8643255f13d11578ff810c34b",
-  "stages": [
-    "safety-check"
+  "dependencies": [
+    "propose-experiments"
   ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:37.237842Z",
+  "finishedAtUnixNs": 1792523557233048000,
+  "inputDigest": "d9e556a6b7304fafafd5cdc8b9d8c75513300c069a561242c39fb50c6e5313bb",
+  "result": {
+    "model": {
+      "coefficients": [
+        5.160000000000007,
+        4.399999999999978,
+        -0.9999999999999944
+      ],
+      "observations": [
+        [
+          0,
+          5.159999999999999
+        ],
+        [
+          0.5,
+          7.109999999999999
+        ],
+        [
+          1,
+          8.559999999999999
+        ],
+        [
+          3,
+          9.36
+        ],
+        [
+          4,
+          6.760000000000001
+        ]
+      ]
+    },
+    "proposals": [
+      2.1000000000000014,
+      2.2000000000000015,
+      2.3000000000000016
+    ]
+  },
+  "showcase": "experiment-feedback-loop",
+  "stage": "safety-check",
+  "startedAt": "2026-10-20T19:12:37.193897Z",
+  "startedAtUnixNs": 1792523557232954000,
   "status": "success",
-  "validationMode": "contract-fixture",
-  "stage": "safety-check"
+  "validationMode": "local-workload"
 }

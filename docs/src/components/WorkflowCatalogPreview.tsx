@@ -8,13 +8,21 @@ export default function WorkflowCatalogPreview({
   stages: Stage[];
   title: string;
 }) {
+  const activityCount = stages.flat().length;
+  const previewStages: Stage[] =
+    activityCount > 12
+      ? stages.map((stage, index) => {
+          const names = Array.isArray(stage) ? stage : [stage];
+          return `${names.length} activities · layer ${index + 1}`;
+        })
+      : stages;
   return (
     <div
       className={styles.preview}
       role="img"
       aria-label={`${title}: ${stages.map((stage) => (Array.isArray(stage) ? stage.join(" and ") : stage)).join(" then ")}`}
     >
-      {stages.map((stage, index) => (
+      {previewStages.map((stage, index) => (
         <React.Fragment key={`${title}-${index}`}>
           {index > 0 && (
             <span className={styles.arrow} aria-hidden="true">

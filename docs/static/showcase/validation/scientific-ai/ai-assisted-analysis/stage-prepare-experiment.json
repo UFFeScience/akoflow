@@ -1,10 +1,19 @@
 {
+  "dependencies": [],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:36.729516Z",
+  "finishedAtUnixNs": 1792523556724962000,
+  "inputDigest": "256171cdcd8b1c0f8453428c02766cf87da844ff176e3f2b717502d0fd4d4072",
+  "result": {
+    "decay": 0.3,
+    "initial": 10,
+    "step": 0.05,
+    "steps": 80
+  },
   "showcase": "ai-assisted-analysis",
-  "digest": "b64e12e0f3d5228b5895f9426ef60611adf9c7626ffcd02baddf6f7454447f3c",
-  "stages": [
-    "prepare-experiment"
-  ],
+  "stage": "prepare-experiment",
+  "startedAt": "2026-10-20T19:12:36.666984Z",
+  "startedAtUnixNs": 1792523556724959000,
   "status": "success",
-  "validationMode": "contract-fixture",
-  "stage": "prepare-experiment"
+  "validationMode": "local-workload"
 }

@@ -1,10 +1,20 @@
 {
-  "showcase": "computer-vision",
-  "digest": "341bcc09316a93566539680057fc815783fbaf93e15ee94609e4e7c4adef665a",
-  "stages": [
-    "package-model"
+  "dependencies": [
+    "evaluate"
   ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:38.760215Z",
+  "finishedAtUnixNs": 1792523558755260000,
+  "inputDigest": "cb99c0411a2c922c69e59884a24d448cd8d09e52abf7f16a54194b9d5c13e981",
+  "result": {
+    "accuracy": 1,
+    "dataset": "bundled geometric-pattern images (not CIFAR-10)",
+    "testImages": 12
+  },
+  "showcase": "computer-vision",
+  "stage": "package-model",
+  "startedAt": "2026-10-20T19:12:38.714293Z",
+  "startedAtUnixNs": 1792523558754955000,
   "status": "success",
-  "validationMode": "contract-fixture",
-  "stage": "package-model"
+  "validationMode": "local-workload"
 }

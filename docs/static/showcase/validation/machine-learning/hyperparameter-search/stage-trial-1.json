@@ -1,10 +1,25 @@
 {
-  "showcase": "hyperparameter-search",
-  "digest": "cee885f97aa6ed9a1a82ee0413f306a866bb410d716bf0ae33fa327349b2b070",
-  "stages": [
-    "trial-1"
+  "dependencies": [
+    "prepare-dataset"
   ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:38.952896Z",
+  "finishedAtUnixNs": 1792523558947807000,
+  "inputDigest": "3f9f767aff2cdcd7d7c4c21897033272eaa951cb64b1207311f4717b805a2033",
+  "result": {
+    "candidate": "trial-1",
+    "epochs": 20,
+    "learningRate": 0.005,
+    "model": {
+      "bias": 0.11119687766104941,
+      "weight": 0.5813231332989116
+    },
+    "rmse": 2.242030916803757
+  },
+  "showcase": "hyperparameter-search",
+  "stage": "trial-1",
+  "startedAt": "2026-10-20T19:12:38.902921Z",
+  "startedAtUnixNs": 1792523558946924000,
   "status": "success",
-  "validationMode": "contract-fixture",
-  "stage": "trial-1"
+  "validationMode": "local-workload"
 }

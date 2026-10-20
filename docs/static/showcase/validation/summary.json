@@ -1,140 +1,229 @@
 {
-  "date": "2026-10-20",
   "results": [
     {
-      "path": "scientific-ai/ai-assisted-analysis",
-      "status": "passed",
-      "output": "validated ai-assisted-analysis"
-    },
-    {
-      "path": "scientific-ai/experiment-feedback-loop",
-      "status": "passed",
-      "output": "validated experiment-feedback-loop"
-    },
-    {
-      "path": "scientific-ai/surrogate-model",
-      "status": "passed",
-      "output": "validated surrogate-model"
-    },
-    {
-      "path": "machine-learning/anomaly-detection",
-      "status": "passed",
-      "output": "validated anomaly-detection"
-    },
-    {
-      "path": "machine-learning/batch-inference",
-      "status": "passed",
-      "output": "validated batch-inference"
-    },
-    {
-      "path": "machine-learning/computer-vision",
-      "status": "passed",
-      "output": "validated computer-vision"
-    },
-    {
+      "activities": 6,
+      "declaredActivities": 6,
+      "executionMode": "local-process",
       "path": "machine-learning/hyperparameter-search",
-      "status": "passed",
-      "output": "validated hyperparameter-search"
+      "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+      "status": "passed"
     },
     {
-      "path": "machine-learning/inference-benchmark",
-      "status": "passed",
-      "output": "validated inference-benchmark"
-    },
-    {
-      "path": "machine-learning/infrastructure-selection",
-      "status": "passed",
-      "output": "validated infrastructure-selection"
-    },
-    {
-      "path": "machine-learning/lora-fine-tuning",
-      "status": "passed",
-      "output": "validated lora-fine-tuning"
-    },
-    {
-      "path": "machine-learning/model-comparison",
-      "status": "passed",
-      "output": "validated model-comparison"
-    },
-    {
+      "activities": 7,
+      "declaredActivities": 7,
+      "executionMode": "local-process",
       "path": "machine-learning/model-conversion",
-      "status": "passed",
-      "output": "validated model-conversion"
+      "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+      "status": "passed"
     },
     {
-      "path": "machine-learning/model-distillation",
-      "status": "passed",
-      "output": "validated model-distillation"
+      "activities": 6,
+      "declaredActivities": 6,
+      "executionMode": "local-process",
+      "path": "scientific-ai/experiment-feedback-loop",
+      "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+      "status": "passed"
     },
     {
-      "path": "machine-learning/model-ensemble",
-      "status": "passed",
-      "output": "validated model-ensemble"
-    },
-    {
-      "path": "machine-learning/training-with-mlflow",
-      "status": "passed",
-      "output": "validated training-with-mlflow"
-    },
-    {
-      "path": "generative-ai/audio-transcription",
-      "status": "passed",
-      "output": "validated audio-transcription"
-    },
-    {
+      "activities": 7,
+      "declaredActivities": 7,
+      "executionMode": "local-process",
       "path": "generative-ai/document-extraction",
-      "status": "passed",
-      "output": "validated document-extraction"
+      "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+      "status": "passed"
     },
     {
-      "path": "generative-ai/local-rag",
-      "status": "passed",
-      "output": "validated local-rag-factory"
+      "activities": 6,
+      "declaredActivities": 6,
+      "executionMode": "local-process",
+      "path": "machine-learning/anomaly-detection",
+      "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+      "status": "passed"
     },
     {
-      "path": "generative-ai/rag-indexing",
-      "status": "passed",
-      "output": "validated rag-indexing"
+      "activities": 6,
+      "declaredActivities": 6,
+      "executionMode": "local-process",
+      "path": "machine-learning/inference-benchmark",
+      "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+      "status": "passed"
     },
     {
-      "path": "generative-ai/synthetic-dataset",
-      "status": "passed",
-      "output": "validated synthetic-dataset"
+      "activities": 6,
+      "declaredActivities": 6,
+      "executionMode": "local-process",
+      "path": "machine-learning/model-comparison",
+      "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+      "status": "passed"
     },
     {
-      "path": "generative-ai/video-studio",
-      "status": "passed",
-      "output": "validated ai-video-studio"
+      "activities": 7,
+      "declaredActivities": 7,
+      "executionMode": "local-process",
+      "path": "machine-learning/model-ensemble",
+      "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+      "status": "passed"
     },
     {
-      "path": "agentic-workflows/bounded-agent",
-      "status": "passed",
-      "output": "validated bounded-agent"
+      "activities": 6,
+      "declaredActivities": 6,
+      "executionMode": "local-process",
+      "path": "machine-learning/training-with-mlflow",
+      "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+      "status": "passed"
     },
     {
-      "path": "agentic-workflows/multi-agent-review",
-      "status": "passed",
-      "output": "validated multi-agent-review"
-    },
-    {
-      "path": "agentic-workflows/supervised-tool-loop",
-      "status": "passed",
-      "output": "validated supervised-tool-loop"
-    },
-    {
-      "path": "document-ai/document-intelligence",
-      "status": "passed",
-      "output": "validated document-intelligence"
-    },
-    {
+      "activities": 6,
+      "declaredActivities": 6,
+      "executionMode": "local-process",
       "path": "media/video-intelligence",
-      "status": "passed",
-      "output": "validated video-intelligence"
+      "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+      "status": "passed"
     },
     {
+      "activities": 0,
+      "declaredActivities": 58,
+      "executionMode": "daemon-local-docker",
+      "path": "scientific-workflows/montage-050",
+      "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+      "status": "running"
+    },
+    {
+      "activities": 5,
+      "declaredActivities": 5,
+      "executionMode": "local-process",
+      "path": "agentic-workflows/bounded-agent",
+      "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+      "status": "passed"
+    },
+    {
+      "activities": 7,
+      "declaredActivities": 7,
+      "executionMode": "local-process",
+      "path": "generative-ai/audio-transcription",
+      "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+      "status": "passed"
+    },
+    {
+      "activities": 6,
+      "declaredActivities": 6,
+      "executionMode": "local-process",
+      "path": "machine-learning/lora-fine-tuning",
+      "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+      "status": "passed"
+    },
+    {
+      "activities": 6,
+      "declaredActivities": 6,
+      "executionMode": "local-process",
+      "path": "machine-learning/model-distillation",
+      "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+      "status": "passed"
+    },
+    {
+      "activities": 7,
+      "declaredActivities": 7,
+      "executionMode": "local-process",
+      "path": "scientific-ai/surrogate-model",
+      "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+      "status": "passed"
+    },
+    {
+      "activities": 5,
+      "declaredActivities": 5,
+      "executionMode": "local-container",
       "path": "rendering/blender-render-farm",
-      "status": "passed",
-      "output": "validated blender-render-farm"
+      "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+      "status": "passed"
+    },
+    {
+      "activities": 6,
+      "declaredActivities": 6,
+      "executionMode": "local-process",
+      "path": "agentic-workflows/supervised-tool-loop",
+      "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+      "status": "passed"
+    },
+    {
+      "activities": 5,
+      "declaredActivities": 5,
+      "executionMode": "local-process",
+      "path": "generative-ai/video-studio",
+      "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+      "status": "passed"
+    },
+    {
+      "activities": 6,
+      "declaredActivities": 6,
+      "executionMode": "local-process",
+      "path": "machine-learning/computer-vision",
+      "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+      "status": "passed"
+    },
+    {
+      "activities": 7,
+      "declaredActivities": 7,
+      "executionMode": "local-process",
+      "path": "machine-learning/infrastructure-selection",
+      "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+      "status": "passed"
+    },
+    {
+      "activities": 7,
+      "declaredActivities": 7,
+      "executionMode": "local-process",
+      "path": "scientific-ai/ai-assisted-analysis",
+      "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+      "status": "passed"
+    },
+    {
+      "activities": 5,
+      "declaredActivities": 5,
+      "executionMode": "local-process",
+      "path": "document-ai/document-intelligence",
+      "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+      "status": "passed"
+    },
+    {
+      "activities": 7,
+      "declaredActivities": 7,
+      "executionMode": "local-process",
+      "path": "agentic-workflows/multi-agent-review",
+      "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+      "status": "passed"
+    },
+    {
+      "activities": 6,
+      "declaredActivities": 6,
+      "executionMode": "local-process",
+      "path": "generative-ai/local-rag",
+      "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+      "status": "passed"
+    },
+    {
+      "activities": 8,
+      "declaredActivities": 8,
+      "executionMode": "local-process",
+      "path": "generative-ai/rag-indexing",
+      "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+      "status": "passed"
+    },
+    {
+      "activities": 8,
+      "declaredActivities": 8,
+      "executionMode": "local-process",
+      "path": "generative-ai/synthetic-dataset",
+      "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+      "status": "passed"
+    },
+    {
+      "activities": 7,
+      "declaredActivities": 7,
+      "executionMode": "local-process",
+      "path": "machine-learning/batch-inference",
+      "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+      "status": "passed"
     }
-  ]
+  ],
+  "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4"
 }

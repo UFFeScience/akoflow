@@ -18,7 +18,7 @@ import { AIWorkflowPattern } from "@site/src/components/WorkflowShowcase";
     "publish-evidence",
   ]}
   inputs={["Shared brief", "Role definitions", "Source policy"]}
-  outputs={["Specialist findings", "Critique", "Final result"]}
+  outputs={["synthesis.md", "review.json"]}
   evidence={["Context version", "Per-role traces", "Accepted claims"]}
   execution="Synthesis waits for terminal specialist states or an explicit partial-result policy. Models and resources may differ by role."
 />

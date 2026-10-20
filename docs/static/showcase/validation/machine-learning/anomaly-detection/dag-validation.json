@@ -1,5 +1,9 @@
 {
-  "mode": "contract-fixture",
+  "artifactSha256": {
+    "anomalies.json": "f0a80120353b3f07439dcf87bcf1cc492c21888fa3b80d041e8b8c2773f85622",
+    "metrics.json": "11d98c8b9ec798f4d33d4c7a287f2c664a027fbbfd524ab8a5aaa0a0070305d0"
+  },
+  "completedActivities": 6,
   "dependencyWaves": [
     [
       "collect-signals"
@@ -20,5 +24,7 @@
       "publish"
     ]
   ],
-  "completedActivities": 6
+  "executionMode": "local-process",
+  "mode": "local-workload",
+  "schedulingPolicy": "ready activities with bounded concurrency"
 }

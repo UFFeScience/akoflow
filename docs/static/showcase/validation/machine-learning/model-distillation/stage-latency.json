@@ -1,10 +1,20 @@
 {
-  "showcase": "model-distillation",
-  "digest": "e5e063c949ecae67c526fb67fd67b39202b7bed3c74e1573f504095795918889",
-  "stages": [
-    "latency"
+  "dependencies": [
+    "train-student"
   ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:43.371961Z",
+  "finishedAtUnixNs": 1792523563366974000,
+  "inputDigest": "75dc55a6c6545bcde9fd6c272e4b0f2b3ca18c17c8d0452f6bffa555d3a2635b",
+  "result": {
+    "checksum": 2137.8684078125907,
+    "hardware": "local CPU",
+    "studentNanosecondsPerPrediction": 42.98780487804878
+  },
+  "showcase": "model-distillation",
+  "stage": "latency",
+  "startedAt": "2026-10-20T19:12:43.327398Z",
+  "startedAtUnixNs": 1792523563366703000,
   "status": "success",
-  "validationMode": "contract-fixture",
-  "stage": "latency"
+  "validationMode": "local-workload"
 }

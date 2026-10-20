@@ -1,5 +1,9 @@
 {
-  "mode": "contract-fixture",
+  "artifactSha256": {
+    "quality-report.json": "eb4e5928f6d0f20346e3971e3dbb45271ae069e37feca3efd279f4a3cd82b840",
+    "synthetic-dataset.jsonl": "3fbe28753e4814dfa6807cb4bb0dc735a5cde892e1382416dde57cc137eef626"
+  },
+  "completedActivities": 8,
   "dependencyWaves": [
     [
       "define-schema"
@@ -22,5 +26,7 @@
       "publish"
     ]
   ],
-  "completedActivities": 8
+  "executionMode": "local-process",
+  "mode": "local-workload",
+  "schedulingPolicy": "ready activities with bounded concurrency"
 }

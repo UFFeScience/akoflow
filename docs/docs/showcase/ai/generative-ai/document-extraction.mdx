@@ -19,7 +19,7 @@ import { AIWorkflowPattern } from "@site/src/components/WorkflowShowcase";
     "publish",
   ]}
   inputs={["Documents", "Extraction schema", "OCR model"]}
-  outputs={["Page text", "Structured records", "Validation report"]}
+  outputs={["extraction.json", "ocr.txt"]}
   evidence={["Page coordinates", "Confidence", "Validation failures"]}
   execution="Route pages according to text-layer quality and retain coordinates linking every field to source evidence."
 />

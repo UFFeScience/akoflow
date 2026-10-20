@@ -1,5 +1,9 @@
 {
-  "mode": "contract-fixture",
+  "artifactSha256": {
+    "best-model.pkl": "260eaac700844ec358b80fc9f9289ec534ed3814f2367d4d77596de0e60bb37a",
+    "leaderboard.csv": "14e59a3ef33dab2f5246dadc2107a57005a202d14c622c49c21a0c53db7b4cba"
+  },
+  "completedActivities": 6,
   "dependencyWaves": [
     [
       "prepare-dataset"
@@ -16,5 +20,7 @@
       "register-best"
     ]
   ],
-  "completedActivities": 6
+  "executionMode": "local-process",
+  "mode": "local-workload",
+  "schedulingPolicy": "ready activities with bounded concurrency"
 }

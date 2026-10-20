@@ -1,10 +1,29 @@
 {
-  "showcase": "model-conversion",
-  "digest": "a42d914a6a8a096bd283147d03fbe5aa642e69fd0edb04ab36aab77d20612c4d",
-  "stages": [
-    "publish-variants"
+  "dependencies": [
+    "validate-outputs"
   ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:43.102241Z",
+  "finishedAtUnixNs": 1792523563097377000,
+  "inputDigest": "faba78f3138d9a7d2d99f264e7adfaffde414a063a5db1dd31ada1d7c270b52c",
+  "result": {
+    "formats": [
+      "ONNX",
+      "TorchScript",
+      "int8 JSON coefficients",
+      "IEEE float16 coefficients"
+    ],
+    "validatedVariants": {
+      "float16": 0.00029687500000008527,
+      "int8": 1.5401840247619702e-7,
+      "onnx": 0,
+      "torchscript": 0
+    }
+  },
+  "showcase": "model-conversion",
+  "stage": "publish-variants",
+  "startedAt": "2026-10-20T19:12:43.057781Z",
+  "startedAtUnixNs": 1792523563097286000,
   "status": "success",
-  "validationMode": "contract-fixture",
-  "stage": "publish-variants"
+  "validationMode": "local-workload"
 }

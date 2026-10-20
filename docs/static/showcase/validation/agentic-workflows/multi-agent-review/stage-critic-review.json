@@ -1,10 +1,37 @@
 {
-  "showcase": "multi-agent-review",
-  "digest": "8763669539a44fb4f93b0f3887774a9be55e4e9886c7993c8f1de842329586aa",
-  "stages": [
-    "critic-review"
+  "dependencies": [
+    "research",
+    "code",
+    "domain"
   ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:47.714636Z",
+  "finishedAtUnixNs": 1792523567709462000,
+  "inputDigest": "515725fca7c650aa18f2c2af0438ac3160938890c432b1b81a828a2f831d7567",
+  "result": {
+    "claimAccepted": false,
+    "code": {
+      "allFinite": true,
+      "recomputedMean": 8,
+      "role": "code"
+    },
+    "correctedMean": 8,
+    "domain": {
+      "claimedMean": 7,
+      "role": "domain",
+      "withinBounds": true
+    },
+    "research": {
+      "mean": 8,
+      "observations": 6,
+      "role": "research",
+      "stdev": 3.7416573867739413
+    }
+  },
+  "showcase": "multi-agent-review",
+  "stage": "critic-review",
+  "startedAt": "2026-10-20T19:12:47.668413Z",
+  "startedAtUnixNs": 1792523567709287000,
   "status": "success",
-  "validationMode": "contract-fixture",
-  "stage": "critic-review"
+  "validationMode": "local-workload"
 }

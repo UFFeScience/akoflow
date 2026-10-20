@@ -28,6 +28,7 @@ const sidebars: SidebarsConfig = {
               label: "Scientific Workflows",
               collapsed: true,
               items: [
+                "showcase/scientific-workflows/montage-050",
                 "showcase/ai/scientific-ai/ai-assisted-analysis",
                 "showcase/ai/scientific-ai/surrogate-model",
                 "showcase/ai/scientific-ai/experiment-feedback-loop",

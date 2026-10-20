@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import styles from "./ExpandableImage.module.css";
-import contracts from "../data/showcase-contracts.json";
+import { findShowcase } from "../data/showcase-contracts";
 import Mermaid from "@theme/Mermaid";
 
 type Stage = string | string[];
@@ -19,9 +19,7 @@ export default function WorkflowDag({
   function closeDiagram() {
     dialog.current?.close();
   }
-  const contract = Object.values(contracts).find(
-    (item) => item.title === title,
-  );
+  const contract = findShowcase(title);
   const groups = (contract?.stages ?? stages).map((stage) =>
     Array.isArray(stage) ? stage : [stage],
   );
@@ -30,17 +28,26 @@ export default function WorkflowDag({
     "classDef activity fill:#ffffff,stroke:#151515,color:#151515,rx:8,ry:8",
     "linkStyle default stroke:#151515,stroke-width:2px,color:#151515",
   ];
+  const nodeIds = new Map<string, string>();
   groups.forEach((group, index) => {
     group.forEach((name, node) => {
       const label = name.replaceAll('"', "&quot;");
+      nodeIds.set(name, `n${index}_${node}`);
       lines.push(`n${index}_${node}["${label}"]:::activity`);
-      if (index > 0) {
+      if (!contract && index > 0) {
         groups[index - 1].forEach((_, previous) => {
           lines.push(`n${index - 1}_${previous} --> n${index}_${node}`);
         });
       }
     });
   });
+  if (contract) {
+    for (const [name, dependencies] of Object.entries(contract.dependencies)) {
+      for (const parent of dependencies) {
+        lines.push(`${nodeIds.get(parent)} --> ${nodeIds.get(name)}`);
+      }
+    }
+  }
   return (
     <figure aria-label={`${title} activity DAG`}>
       <button

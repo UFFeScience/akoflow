@@ -1,10 +1,25 @@
 {
-  "showcase": "ai-assisted-analysis",
-  "digest": "b64e12e0f3d5228b5895f9426ef60611adf9c7626ffcd02baddf6f7454447f3c",
-  "stages": [
-    "statistics"
+  "dependencies": [
+    "measurements"
   ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:36.870987Z",
+  "finishedAtUnixNs": 1792523556866307000,
+  "inputDigest": "256171cdcd8b1c0f8453428c02766cf87da844ff176e3f2b717502d0fd4d4072",
+  "result": {
+    "count": 81,
+    "final": {
+      "analytic": 3.0119421191220215,
+      "concentration": 2.9846845658843164,
+      "time": 4
+    },
+    "maxError": 0.027764358726491523,
+    "meanAbsoluteError": 0.02114631256079474
+  },
+  "showcase": "ai-assisted-analysis",
+  "stage": "statistics",
+  "startedAt": "2026-10-20T19:12:36.824131Z",
+  "startedAtUnixNs": 1792523556866095000,
   "status": "success",
-  "validationMode": "contract-fixture",
-  "stage": "statistics"
+  "validationMode": "local-workload"
 }

@@ -1,5 +1,9 @@
 {
-  "mode": "contract-fixture",
+  "artifactSha256": {
+    "extraction.json": "83dd90914f11fba93c7a7f46764ac44b546f9c0e1bb33262322e0c410f92f1f1",
+    "ocr.txt": "189977b6cd18fa81d3459e3eb904d99585f96db722e49c001a0808cdae75dea8"
+  },
+  "completedActivities": 7,
   "dependencyWaves": [
     [
       "ingest-documents"
@@ -21,5 +25,7 @@
       "publish"
     ]
   ],
-  "completedActivities": 7
+  "executionMode": "local-process",
+  "mode": "local-workload",
+  "schedulingPolicy": "ready activities with bounded concurrency"
 }

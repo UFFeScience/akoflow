@@ -1,10 +1,21 @@
 {
-  "showcase": "infrastructure-selection",
-  "digest": "2d3204fcf3cabd8209080462bf1f40dde64db02b43896f7e179aa02be468b7c1",
-  "stages": [
-    "hpc"
+  "dependencies": [
+    "profile-workload"
   ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:39.521125Z",
+  "finishedAtUnixNs": 1792523559516169000,
+  "inputDigest": "3b6c90c515d07dd702b174871b89a1cbb33fec6f216fcd854ae98bcff90589e0",
+  "result": {
+    "basis": "declared assumptions and one measured local CPU fit",
+    "candidate": "hpc",
+    "estimatedCost": 0.0300000223855,
+    "estimatedSeconds": 30.0000223855
+  },
+  "showcase": "infrastructure-selection",
+  "stage": "hpc",
+  "startedAt": "2026-10-20T19:12:39.475798Z",
+  "startedAtUnixNs": 1792523559516080000,
   "status": "success",
-  "validationMode": "contract-fixture",
-  "stage": "hpc"
+  "validationMode": "local-workload"
 }

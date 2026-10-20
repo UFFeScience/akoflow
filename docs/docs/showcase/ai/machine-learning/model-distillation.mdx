@@ -18,7 +18,7 @@ import { AIWorkflowPattern } from "@site/src/components/WorkflowShowcase";
     "publish",
   ]}
   inputs={["Teacher model", "Examples", "Student architecture"]}
-  outputs={["Soft labels", "Student model", "Quality and latency reports"]}
+  outputs={["student.pkl", "distillation-report.json"]}
   evidence={["Teacher revision", "Generated targets", "Benchmark hardware"]}
   execution="Cache generated labels and run latency tests on the intended deployment class rather than the training host."
 />

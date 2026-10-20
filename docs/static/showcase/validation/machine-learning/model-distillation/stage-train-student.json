@@ -1,10 +1,21 @@
 {
-  "showcase": "model-distillation",
-  "digest": "e5e063c949ecae67c526fb67fd67b39202b7bed3c74e1573f504095795918889",
-  "stages": [
-    "train-student"
+  "dependencies": [
+    "soft-labels"
   ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:43.327115Z",
+  "finishedAtUnixNs": 1792523563322575000,
+  "inputDigest": "75dc55a6c6545bcde9fd6c272e4b0f2b3ca18c17c8d0452f6bffa555d3a2635b",
+  "result": {
+    "model": {
+      "bias": 0.5214313189786813,
+      "weight": 0.3179631955647674
+    }
+  },
+  "showcase": "model-distillation",
+  "stage": "train-student",
+  "startedAt": "2026-10-20T19:12:43.283376Z",
+  "startedAtUnixNs": 1792523563322376000,
   "status": "success",
-  "validationMode": "contract-fixture",
-  "stage": "train-student"
+  "validationMode": "local-workload"
 }

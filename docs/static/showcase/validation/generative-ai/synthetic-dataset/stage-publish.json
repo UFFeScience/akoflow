@@ -1,10 +1,21 @@
 {
-  "showcase": "synthetic-dataset",
-  "digest": "8fee82f4cb82bbc3bf481ea7f9ea1cf3ff82caffdd6e62a2ea66efcbe18f0000",
-  "stages": [
-    "publish"
+  "dependencies": [
+    "quality-review"
   ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:47.198694Z",
+  "finishedAtUnixNs": 1792523567193835000,
+  "inputDigest": "ec4272675a69cc249ca6d7c4cbdbbf88a70e359195687a12746e96cb203085d3",
+  "result": {
+    "duplicatesRemoved": 2,
+    "rows": 28,
+    "schemaRejected": 3,
+    "topics": 3
+  },
+  "showcase": "synthetic-dataset",
+  "stage": "publish",
+  "startedAt": "2026-10-20T19:12:47.154379Z",
+  "startedAtUnixNs": 1792523567193316000,
   "status": "success",
-  "validationMode": "contract-fixture",
-  "stage": "publish"
+  "validationMode": "local-workload"
 }

@@ -1,10 +1,21 @@
 {
-  "showcase": "surrogate-model",
-  "digest": "63f269c498af3bef8ae1fbc4923d016b726be5733d8de36fdf08dabffc350041",
-  "stages": [
-    "publish"
+  "dependencies": [
+    "validate"
   ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:37.691757Z",
+  "finishedAtUnixNs": 1792523557686625000,
+  "inputDigest": "90d6620cbe1a14afe12d0118826cc1eda9f880115e074a239e7a1906ab832d58",
+  "result": {
+    "heldOutSamples": 19,
+    "maxError": 0.00020426630009195978,
+    "meanError": 0.00007120065799367057,
+    "modelSamples": 32
+  },
+  "showcase": "surrogate-model",
+  "stage": "publish",
+  "startedAt": "2026-10-20T19:12:37.645454Z",
+  "startedAtUnixNs": 1792523557685939000,
   "status": "success",
-  "validationMode": "contract-fixture",
-  "stage": "publish"
+  "validationMode": "local-workload"
 }

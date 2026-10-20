@@ -19,7 +19,7 @@ import { AIWorkflowPattern } from "@site/src/components/WorkflowShowcase";
     "verify",
   ]}
   inputs={["Goal and state", "Policies", "Tool credentials"]}
-  outputs={["Verified change", "Decision record", "Execution evidence"]}
+  outputs={["execution.json", "verification.json"]}
   evidence={["Proposal revisions", "Approver", "Idempotency key"]}
   execution="This pattern requires durable pause and resume. A daemon restart must not execute an approved action twice."
 />

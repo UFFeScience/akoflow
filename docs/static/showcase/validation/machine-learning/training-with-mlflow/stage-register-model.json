@@ -1,10 +1,24 @@
 {
-  "showcase": "training-with-mlflow",
-  "digest": "d61175004ab34b052f3f8a7a273ec470205334ef58e85c4aa924979f726f0d89",
-  "stages": [
-    "register-model"
+  "dependencies": [
+    "evaluate"
   ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:44.069735Z",
+  "finishedAtUnixNs": 1792523564065254000,
+  "inputDigest": "016f3c6d6a67162389ea58397f22ac1ef026f65bf12d01dc745afb4b74d438ec",
+  "result": {
+    "artifact": "model.pkl",
+    "metrics": {
+      "heldOutSamples": 24,
+      "rmse": 0.0211140956600391
+    },
+    "model": "local-linear-regression",
+    "version": "1007173c15042e83d0cecd4caac8dc84905739e62e9d91e9e9f9a2568a2b7c1f"
+  },
+  "showcase": "training-with-mlflow",
+  "stage": "register-model",
+  "startedAt": "2026-10-20T19:12:44.02542Z",
+  "startedAtUnixNs": 1792523564064957000,
   "status": "success",
-  "validationMode": "contract-fixture",
-  "stage": "register-model"
+  "validationMode": "local-workload"
 }

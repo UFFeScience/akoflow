@@ -1,10 +1,25 @@
 {
+  "dependencies": [],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:47.619713Z",
+  "finishedAtUnixNs": 1792523567614429000,
+  "inputDigest": "515725fca7c650aa18f2c2af0438ac3160938890c432b1b81a828a2f831d7567",
+  "result": {
+    "claimedMean": 7,
+    "measurements": [
+      3,
+      5,
+      7,
+      9,
+      11,
+      13
+    ],
+    "tolerance": 0.000001
+  },
   "showcase": "multi-agent-review",
-  "digest": "8763669539a44fb4f93b0f3887774a9be55e4e9886c7993c8f1de842329586aa",
-  "stages": [
-    "shared-context"
-  ],
+  "stage": "shared-context",
+  "startedAt": "2026-10-20T19:12:47.572806Z",
+  "startedAtUnixNs": 1792523567614427000,
   "status": "success",
-  "validationMode": "contract-fixture",
-  "stage": "shared-context"
+  "validationMode": "local-workload"
 }

@@ -1,10 +1,21 @@
 {
-  "showcase": "ai-assisted-analysis",
-  "digest": "b64e12e0f3d5228b5895f9426ef60611adf9c7626ffcd02baddf6f7454447f3c",
-  "stages": [
-    "ai-interpretation"
+  "dependencies": [
+    "measurements"
   ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:36.870307Z",
+  "finishedAtUnixNs": 1792523556865664000,
+  "inputDigest": "256171cdcd8b1c0f8453428c02766cf87da844ff176e3f2b717502d0fd4d4072",
+  "result": {
+    "fittedDecayRate": 0.30227275620096333,
+    "halfLife": 2.2931182726210118,
+    "interpretation": "Observed decay rate 0.302273; concentration decreases with time. The fitted half-life is 2.2931 time units.",
+    "method": "log-linear regression"
+  },
+  "showcase": "ai-assisted-analysis",
+  "stage": "ai-interpretation",
+  "startedAt": "2026-10-20T19:12:36.824129Z",
+  "startedAtUnixNs": 1792523556865386000,
   "status": "success",
-  "validationMode": "contract-fixture",
-  "stage": "ai-interpretation"
+  "validationMode": "local-workload"
 }

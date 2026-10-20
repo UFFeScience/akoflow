@@ -1,5 +1,9 @@
 {
-  "mode": "contract-fixture",
+  "artifactSha256": {
+    "model.pkl": "7318593cd9221187b06bbf7a14e3cba2c9c40cada1cd3de7bb41e46aa3731f2a",
+    "vision-metrics.json": "910c2d990c0b77b91a9837e90009ac9d1baa68558a165396a65ee636a2e8055f"
+  },
+  "completedActivities": 6,
   "dependencyWaves": [
     [
       "collect-images"
@@ -20,5 +24,7 @@
       "package-model"
     ]
   ],
-  "completedActivities": 6
+  "executionMode": "local-process",
+  "mode": "local-workload",
+  "schedulingPolicy": "ready activities with bounded concurrency"
 }

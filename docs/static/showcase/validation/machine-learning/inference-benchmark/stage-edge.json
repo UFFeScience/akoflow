@@ -1,10 +1,23 @@
 {
-  "showcase": "inference-benchmark",
-  "digest": "3cefea59227f2468615f7170eae78698601c5297264a679b3f6527d0b669244b",
-  "stages": [
-    "edge"
+  "dependencies": [
+    "freeze-inputs"
   ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:39.249011Z",
+  "finishedAtUnixNs": 1792523559243242000,
+  "inputDigest": "58e626d314ac00b2f102e04c0553c59ee3a1dbc85dd759cab43b3d26e401726d",
+  "result": {
+    "batchSize": 4,
+    "checksum": 126841.86857402284,
+    "elapsedNanoseconds": 1072000,
+    "hardware": "CPU portable profile",
+    "predictions": 10000,
+    "target": "edge"
+  },
+  "showcase": "inference-benchmark",
+  "stage": "edge",
+  "startedAt": "2026-10-20T19:12:39.201145Z",
+  "startedAtUnixNs": 1792523559241977000,
   "status": "success",
-  "validationMode": "contract-fixture",
-  "stage": "edge"
+  "validationMode": "local-workload"
 }

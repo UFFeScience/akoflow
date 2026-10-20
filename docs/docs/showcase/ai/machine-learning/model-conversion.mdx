@@ -18,7 +18,13 @@ import { AIWorkflowPattern } from "@site/src/components/WorkflowShowcase";
     "publish-variants",
   ]}
   inputs={["Canonical model", "Target formats", "Tolerance policy"]}
-  outputs={["Optimized variants", "Compatibility report", "Registry entries"]}
+  outputs={[
+    "model.onnx",
+    "model.torchscript.pt",
+    "model-int8.json",
+    "model-fp16.bin",
+    "validation.json",
+  ]}
   evidence={["Converter versions", "Calibration data", "Target hardware"]}
   execution="Conversion branches can use different images. Validate optimized artifacts on representative target hardware before publication."
 />

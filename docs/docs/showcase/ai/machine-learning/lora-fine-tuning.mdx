@@ -18,7 +18,7 @@ import { AIWorkflowPattern } from "@site/src/components/WorkflowShowcase";
     ["publish-adapter", "record-lineage"],
   ]}
   inputs={["Base-model revision", "Instruction dataset", "LoRA configuration"]}
-  outputs={["Adapter weights", "Evaluation report", "Published version"]}
+  outputs={["adapter.bin", "evaluation.json", "lineage.json"]}
   evidence={[
     "Model and dataset revisions",
     "GPU/runtime profile",

@@ -1,10 +1,44 @@
 {
-  "showcase": "infrastructure-selection",
-  "digest": "2d3204fcf3cabd8209080462bf1f40dde64db02b43896f7e179aa02be468b7c1",
-  "stages": [
-    "select-scope"
+  "dependencies": [
+    "compare-plans"
   ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:39.609179Z",
+  "finishedAtUnixNs": 1792523559604826000,
+  "inputDigest": "3b6c90c515d07dd702b174871b89a1cbb33fec6f216fcd854ae98bcff90589e0",
+  "result": {
+    "candidates": [
+      {
+        "basis": "declared assumptions and one measured local CPU fit",
+        "candidate": "local-gpu",
+        "estimatedCost": 0,
+        "estimatedSeconds": 0.000044771
+      },
+      {
+        "basis": "declared assumptions and one measured local CPU fit",
+        "candidate": "hpc",
+        "estimatedCost": 0.0300000223855,
+        "estimatedSeconds": 30.0000223855
+      },
+      {
+        "basis": "declared assumptions and one measured local CPU fit",
+        "candidate": "cloud",
+        "estimatedCost": 0.04000005969466667,
+        "estimatedSeconds": 20.000029847333334
+      }
+    ],
+    "executionScope": "local CPU smoke profile",
+    "selected": {
+      "basis": "declared assumptions and one measured local CPU fit",
+      "candidate": "local-gpu",
+      "estimatedCost": 0,
+      "estimatedSeconds": 0.000044771
+    }
+  },
+  "showcase": "infrastructure-selection",
+  "stage": "select-scope",
+  "startedAt": "2026-10-20T19:12:39.565398Z",
+  "startedAtUnixNs": 1792523559604732000,
   "status": "success",
-  "validationMode": "contract-fixture",
-  "stage": "select-scope"
+  "validationMode": "local-workload"
 }

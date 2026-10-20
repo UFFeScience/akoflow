@@ -19,7 +19,7 @@ import { AIWorkflowPattern } from "@site/src/components/WorkflowShowcase";
     "publish",
   ]}
   inputs={["Simulator", "Parameter space", "Sampling policy"]}
-  outputs={["Simulation dataset", "Surrogate", "Validity report"]}
+  outputs={["surrogate.pkl", "validation.json"]}
   evidence={["Simulator version", "Samples", "Error by region"]}
   execution="Run simulations as HPC jobs and training on suitable accelerators. Preserve failed simulations and validity boundaries."
 />

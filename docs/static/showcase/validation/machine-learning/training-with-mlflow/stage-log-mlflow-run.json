@@ -1,10 +1,23 @@
 {
-  "showcase": "training-with-mlflow",
-  "digest": "d61175004ab34b052f3f8a7a273ec470205334ef58e85c4aa924979f726f0d89",
-  "stages": [
-    "log-mlflow-run"
+  "dependencies": [
+    "evaluate"
   ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:45.645863Z",
+  "finishedAtUnixNs": 1792523565383969000,
+  "inputDigest": "016f3c6d6a67162389ea58397f22ac1ef026f65bf12d01dc745afb4b74d438ec",
+  "result": {
+    "metrics": {
+      "rmse": 0.0211140956600391
+    },
+    "runId": "f873eb045f474e26becbc7015c5e84be",
+    "status": "FINISHED",
+    "trackingStore": "mlflow.db"
+  },
+  "showcase": "training-with-mlflow",
+  "stage": "log-mlflow-run",
+  "startedAt": "2026-10-20T19:12:44.025418Z",
+  "startedAtUnixNs": 1792523564064838000,
   "status": "success",
-  "validationMode": "contract-fixture",
-  "stage": "log-mlflow-run"
+  "validationMode": "local-workload"
 }

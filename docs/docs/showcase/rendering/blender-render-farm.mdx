@@ -3,6 +3,10 @@ title: Blender Render Farm
 description: Render disjoint frame shards concurrently and compose a validated animation.
 ---
 
+import WorkflowExecutionEvidence from "@site/src/components/WorkflowExecutionEvidence";
+
+import WorkflowLocalRun from "@site/src/components/WorkflowLocalRun";
+
 import {
   WorkflowDag,
   WorkflowPatternDetails,
@@ -33,18 +37,9 @@ This example creates a procedural Blender scene, divides frames into even and od
   ]}
 />
 
-## Run locally
+<WorkflowLocalRun examplePath="rendering/blender-render-farm" />
 
-```bash
-git clone https://github.com/UFFeScience/akoflow-examples.git
-cd akoflow-examples/rendering/blender-render-farm
-./run.sh
-```
-
-The OCI image contains Blender and FFmpeg. A deterministic CPU software-render fixture keeps validation possible on minimal CI machines; set `AKOFLOW_REQUIRE_BLENDER=1` when Blender execution is mandatory.
-
-[Open the source bundle](https://github.com/UFFeScience/akoflow-examples/tree/main/rendering/blender-render-farm) · [Workflow YAML](https://raw.githubusercontent.com/UFFeScience/akoflow-examples/main/rendering/blender-render-farm/workflow.yaml)
-
-## Local validation evidence
-
-[Validated output manifest](/showcase/validation/rendering/blender-render-farm/manifest.json). This host smoke run does not verify deployment through the daemon. Updated Desktop activity captures are still pending.
+<WorkflowExecutionEvidence
+  title="Blender Render Farm"
+  examplePath="rendering/blender-render-farm"
+/>

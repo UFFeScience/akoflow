@@ -1,338 +1,4 @@
 {
-  "/docs/showcase/ai/machine-learning/training-with-mlflow": {
-    "title": "Training with MLflow",
-    "examplePath": "machine-learning/training-with-mlflow",
-    "stages": [
-      ["ingest-data"],
-      ["validate"],
-      ["train"],
-      ["evaluate"],
-      ["register-model", "log-mlflow-run"]
-    ],
-    "dependencies": {
-      "ingest-data": [],
-      "validate": ["ingest-data"],
-      "train": ["validate"],
-      "evaluate": ["train"],
-      "register-model": ["evaluate"],
-      "log-mlflow-run": ["evaluate"]
-    },
-    "validationMode": "contract-fixture"
-  },
-  "/docs/showcase/ai/machine-learning/hyperparameter-search": {
-    "title": "Hyperparameter search",
-    "examplePath": "machine-learning/hyperparameter-search",
-    "stages": [
-      ["prepare-dataset"],
-      ["trial-1", "trial-2", "trial-n"],
-      ["compare-trials"],
-      ["register-best"]
-    ],
-    "dependencies": {
-      "prepare-dataset": [],
-      "trial-1": ["prepare-dataset"],
-      "trial-2": ["prepare-dataset"],
-      "trial-n": ["prepare-dataset"],
-      "compare-trials": ["trial-1", "trial-2", "trial-n"],
-      "register-best": ["compare-trials"]
-    },
-    "validationMode": "contract-fixture"
-  },
-  "/docs/showcase/ai/machine-learning/lora-fine-tuning": {
-    "title": "LoRA fine-tuning",
-    "examplePath": "machine-learning/lora-fine-tuning",
-    "stages": [
-      ["fetch-base-model"],
-      ["prepare-examples"],
-      ["fine-tune-adapters"],
-      ["evaluate"],
-      ["publish-adapter", "record-lineage"]
-    ],
-    "dependencies": {
-      "fetch-base-model": [],
-      "prepare-examples": ["fetch-base-model"],
-      "fine-tune-adapters": ["prepare-examples"],
-      "evaluate": ["fine-tune-adapters"],
-      "publish-adapter": ["evaluate"],
-      "record-lineage": ["evaluate"]
-    },
-    "validationMode": "contract-fixture"
-  },
-  "/docs/showcase/ai/machine-learning/batch-inference": {
-    "title": "Batch inference",
-    "examplePath": "machine-learning/batch-inference",
-    "stages": [
-      ["load-model"],
-      ["partition-input"],
-      ["infer-shard-a", "infer-shard-b", "infer-shard-n"],
-      ["merge-predictions"],
-      ["publish"]
-    ],
-    "dependencies": {
-      "load-model": [],
-      "partition-input": ["load-model"],
-      "infer-shard-a": ["partition-input"],
-      "infer-shard-b": ["partition-input"],
-      "infer-shard-n": ["partition-input"],
-      "merge-predictions": ["infer-shard-a", "infer-shard-b", "infer-shard-n"],
-      "publish": ["merge-predictions"]
-    },
-    "validationMode": "contract-fixture"
-  },
-  "/docs/showcase/ai/machine-learning/model-comparison": {
-    "title": "Comparative model evaluation",
-    "examplePath": "machine-learning/model-comparison",
-    "stages": [
-      ["freeze-evaluation-set"],
-      ["evaluate-a", "evaluate-b", "evaluate-c"],
-      ["compare-metrics"],
-      ["approve-candidate"]
-    ],
-    "dependencies": {
-      "freeze-evaluation-set": [],
-      "evaluate-a": ["freeze-evaluation-set"],
-      "evaluate-b": ["freeze-evaluation-set"],
-      "evaluate-c": ["freeze-evaluation-set"],
-      "compare-metrics": ["evaluate-a", "evaluate-b", "evaluate-c"],
-      "approve-candidate": ["compare-metrics"]
-    },
-    "validationMode": "contract-fixture"
-  },
-  "/docs/showcase/ai/machine-learning/model-conversion": {
-    "title": "Model conversion and quantization",
-    "examplePath": "machine-learning/model-conversion",
-    "stages": [
-      ["load-model"],
-      ["export-onnx", "export-torchscript"],
-      ["quantize-cpu", "quantize-gpu"],
-      ["validate-outputs"],
-      ["publish-variants"]
-    ],
-    "dependencies": {
-      "load-model": [],
-      "export-onnx": ["load-model"],
-      "export-torchscript": ["load-model"],
-      "quantize-cpu": ["export-onnx", "export-torchscript"],
-      "quantize-gpu": ["export-onnx", "export-torchscript"],
-      "validate-outputs": ["quantize-cpu", "quantize-gpu"],
-      "publish-variants": ["validate-outputs"]
-    },
-    "validationMode": "contract-fixture"
-  },
-  "/docs/showcase/ai/machine-learning/computer-vision": {
-    "title": "Computer vision training",
-    "examplePath": "machine-learning/computer-vision",
-    "stages": [
-      ["collect-images"],
-      ["import-labels"],
-      ["augment"],
-      ["train-detector"],
-      ["evaluate"],
-      ["package-model"]
-    ],
-    "dependencies": {
-      "collect-images": [],
-      "import-labels": ["collect-images"],
-      "augment": ["import-labels"],
-      "train-detector": ["augment"],
-      "evaluate": ["train-detector"],
-      "package-model": ["evaluate"]
-    },
-    "validationMode": "contract-fixture"
-  },
-  "/docs/showcase/ai/machine-learning/anomaly-detection": {
-    "title": "Anomaly detection",
-    "examplePath": "machine-learning/anomaly-detection",
-    "stages": [
-      ["collect-signals"],
-      ["build-features"],
-      ["train-detector"],
-      ["score-validation"],
-      ["choose-threshold"],
-      ["publish"]
-    ],
-    "dependencies": {
-      "collect-signals": [],
-      "build-features": ["collect-signals"],
-      "train-detector": ["build-features"],
-      "score-validation": ["train-detector"],
-      "choose-threshold": ["score-validation"],
-      "publish": ["choose-threshold"]
-    },
-    "validationMode": "contract-fixture"
-  },
-  "/docs/showcase/ai/machine-learning/model-ensemble": {
-    "title": "Model ensemble",
-    "examplePath": "machine-learning/model-ensemble",
-    "stages": [
-      ["prepare-input"],
-      ["predict-a", "predict-b", "predict-c"],
-      ["combine"],
-      ["evaluate"],
-      ["publish"]
-    ],
-    "dependencies": {
-      "prepare-input": [],
-      "predict-a": ["prepare-input"],
-      "predict-b": ["prepare-input"],
-      "predict-c": ["prepare-input"],
-      "combine": ["predict-a", "predict-b", "predict-c"],
-      "evaluate": ["combine"],
-      "publish": ["evaluate"]
-    },
-    "validationMode": "contract-fixture"
-  },
-  "/docs/showcase/ai/machine-learning/model-distillation": {
-    "title": "Model distillation",
-    "examplePath": "machine-learning/model-distillation",
-    "stages": [
-      ["load-teacher"],
-      ["soft-labels"],
-      ["train-student"],
-      ["quality", "latency"],
-      ["publish"]
-    ],
-    "dependencies": {
-      "load-teacher": [],
-      "soft-labels": ["load-teacher"],
-      "train-student": ["soft-labels"],
-      "quality": ["train-student"],
-      "latency": ["train-student"],
-      "publish": ["quality", "latency"]
-    },
-    "validationMode": "contract-fixture"
-  },
-  "/docs/showcase/ai/machine-learning/inference-benchmark": {
-    "title": "Inference benchmark",
-    "examplePath": "machine-learning/inference-benchmark",
-    "stages": [
-      ["freeze-inputs"],
-      ["cpu", "gpu", "edge"],
-      ["normalize"],
-      ["compare-cost-and-latency"]
-    ],
-    "dependencies": {
-      "freeze-inputs": [],
-      "cpu": ["freeze-inputs"],
-      "gpu": ["freeze-inputs"],
-      "edge": ["freeze-inputs"],
-      "normalize": ["cpu", "gpu", "edge"],
-      "compare-cost-and-latency": ["normalize"]
-    },
-    "validationMode": "contract-fixture"
-  },
-  "/docs/showcase/ai/machine-learning/infrastructure-selection": {
-    "title": "Infrastructure selection for training",
-    "examplePath": "machine-learning/infrastructure-selection",
-    "stages": [
-      ["profile-workload"],
-      ["local-gpu", "hpc", "cloud"],
-      ["compare-plans"],
-      ["select-scope"],
-      ["train"]
-    ],
-    "dependencies": {
-      "profile-workload": [],
-      "local-gpu": ["profile-workload"],
-      "hpc": ["profile-workload"],
-      "cloud": ["profile-workload"],
-      "compare-plans": ["local-gpu", "hpc", "cloud"],
-      "select-scope": ["compare-plans"],
-      "train": ["select-scope"]
-    },
-    "validationMode": "contract-fixture"
-  },
-  "/docs/showcase/ai/generative-ai/rag-indexing": {
-    "title": "RAG index construction and evaluation",
-    "examplePath": "generative-ai/rag-indexing",
-    "stages": [
-      ["collect-documents"],
-      ["clean"],
-      ["chunk"],
-      ["embed"],
-      ["build-index"],
-      ["retrieval-tests", "answer-tests"],
-      ["publish"]
-    ],
-    "dependencies": {
-      "collect-documents": [],
-      "clean": ["collect-documents"],
-      "chunk": ["clean"],
-      "embed": ["chunk"],
-      "build-index": ["embed"],
-      "retrieval-tests": ["build-index"],
-      "answer-tests": ["build-index"],
-      "publish": ["retrieval-tests", "answer-tests"]
-    },
-    "validationMode": "contract-fixture"
-  },
-  "/docs/showcase/ai/generative-ai/synthetic-dataset": {
-    "title": "Synthetic dataset generation",
-    "examplePath": "generative-ai/synthetic-dataset",
-    "stages": [
-      ["define-schema"],
-      ["batch-a", "batch-b", "batch-n"],
-      ["filter"],
-      ["deduplicate"],
-      ["quality-review"],
-      ["publish"]
-    ],
-    "dependencies": {
-      "define-schema": [],
-      "batch-a": ["define-schema"],
-      "batch-b": ["define-schema"],
-      "batch-n": ["define-schema"],
-      "filter": ["batch-a", "batch-b", "batch-n"],
-      "deduplicate": ["filter"],
-      "quality-review": ["deduplicate"],
-      "publish": ["quality-review"]
-    },
-    "validationMode": "contract-fixture"
-  },
-  "/docs/showcase/ai/generative-ai/audio-transcription": {
-    "title": "Audio transcription and summarization",
-    "examplePath": "generative-ai/audio-transcription",
-    "stages": [
-      ["ingest-audio"],
-      ["segment"],
-      ["segment-1", "segment-n"],
-      ["merge-transcript"],
-      ["summarize"],
-      ["publish"]
-    ],
-    "dependencies": {
-      "ingest-audio": [],
-      "segment": ["ingest-audio"],
-      "segment-1": ["segment"],
-      "segment-n": ["segment"],
-      "merge-transcript": ["segment-1", "segment-n"],
-      "summarize": ["merge-transcript"],
-      "publish": ["summarize"]
-    },
-    "validationMode": "contract-fixture"
-  },
-  "/docs/showcase/ai/generative-ai/document-extraction": {
-    "title": "OCR and document extraction",
-    "examplePath": "generative-ai/document-extraction",
-    "stages": [
-      ["ingest-documents"],
-      ["ocr", "native-text"],
-      ["classify"],
-      ["extract-fields"],
-      ["validate-schema"],
-      ["publish"]
-    ],
-    "dependencies": {
-      "ingest-documents": [],
-      "ocr": ["ingest-documents"],
-      "native-text": ["ingest-documents"],
-      "classify": ["ocr", "native-text"],
-      "extract-fields": ["classify"],
-      "validate-schema": ["extract-fields"],
-      "publish": ["validate-schema"]
-    },
-    "validationMode": "contract-fixture"
-  },
   "/docs/showcase/ai/agentic-workflows/bounded-agent": {
     "title": "Encapsulated agent task",
     "examplePath": "agentic-workflows/bounded-agent",
@@ -343,13 +9,86 @@
       ["publish-result", "store-trace"]
     ],
     "dependencies": {
-      "prepare-objective": [],
       "agent-loop": ["prepare-objective"],
-      "validate-output": ["agent-loop"],
+      "prepare-objective": [],
       "publish-result": ["validate-output"],
-      "store-trace": ["validate-output"]
+      "store-trace": ["validate-output"],
+      "validate-output": ["agent-loop"]
     },
-    "validationMode": "contract-fixture"
+    "validationMode": "local-workload",
+    "localProfile": "Run a bounded finite-state agent over an allowlist of local numeric tools, verify the measured answer against the source observations, and independently publish the answer and complete tool trace. The smoke profile uses deterministic tool selection, not an external LLM.",
+    "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+    "requirements": [],
+    "artifacts": ["answer.json", "validation.json", "trace.json"],
+    "executionMode": "local-process",
+    "validationStatus": "passed",
+    "screenshots": {
+      "agent-loop": "/showcase/evidence/agentic-workflows/bounded-agent/agent-loop.png",
+      "prepare-objective": "/showcase/evidence/agentic-workflows/bounded-agent/prepare-objective.png",
+      "publish-result": "/showcase/evidence/agentic-workflows/bounded-agent/publish-result.png",
+      "store-trace": "/showcase/evidence/agentic-workflows/bounded-agent/store-trace.png",
+      "validate-output": "/showcase/evidence/agentic-workflows/bounded-agent/validate-output.png",
+      "workflow": "/showcase/evidence/agentic-workflows/bounded-agent/workflow.png"
+    },
+    "daemon": {
+      "activityCount": 5,
+      "completedActivityCount": 5,
+      "image": "ghcr.io/uffescience/akoflow-examples/showcase-bounded-agent:local-ee8f8db4df791b16",
+      "imageId": "sha256:ee8f8db4df791b16467a174d5aa54399597785cf2ab9d390967e00be01f62f34",
+      "observedAt": "2026-10-20T19:14:21Z",
+      "planId": "showcase-bounded-agent-local-4f5eb97ca7-manual-plan-20261020t191412.777507000",
+      "runId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+      "status": "completed",
+      "workflowId": "showcase-bounded-agent-local-4f5eb97ca7"
+    }
+  },
+  "/docs/showcase/ai/agentic-workflows/multi-agent-review": {
+    "title": "Multi-agent review",
+    "examplePath": "agentic-workflows/multi-agent-review",
+    "stages": [
+      ["shared-context"],
+      ["research", "code", "domain"],
+      ["critic-review"],
+      ["synthesize"],
+      ["publish-evidence"]
+    ],
+    "dependencies": {
+      "code": ["shared-context"],
+      "critic-review": ["research", "code", "domain"],
+      "domain": ["shared-context"],
+      "publish-evidence": ["synthesize"],
+      "research": ["shared-context"],
+      "shared-context": [],
+      "synthesize": ["critic-review"]
+    },
+    "validationMode": "local-workload",
+    "localProfile": "Run three independent local reviewer programs in parallel: statistical review, independent numeric recomputation, and domain-bound checks. A critic checks agreement and accepts or corrects a supplied mean before the synthesis is published. The reviewers are deterministic programs rather than hosted LLM agents.",
+    "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+    "requirements": [],
+    "artifacts": ["synthesis.md", "review.json"],
+    "executionMode": "local-process",
+    "validationStatus": "passed",
+    "screenshots": {
+      "code": "/showcase/evidence/agentic-workflows/multi-agent-review/code.png",
+      "critic-review": "/showcase/evidence/agentic-workflows/multi-agent-review/critic-review.png",
+      "domain": "/showcase/evidence/agentic-workflows/multi-agent-review/domain.png",
+      "publish-evidence": "/showcase/evidence/agentic-workflows/multi-agent-review/publish-evidence.png",
+      "research": "/showcase/evidence/agentic-workflows/multi-agent-review/research.png",
+      "shared-context": "/showcase/evidence/agentic-workflows/multi-agent-review/shared-context.png",
+      "synthesize": "/showcase/evidence/agentic-workflows/multi-agent-review/synthesize.png",
+      "workflow": "/showcase/evidence/agentic-workflows/multi-agent-review/workflow.png"
+    },
+    "daemon": {
+      "activityCount": 7,
+      "completedActivityCount": 7,
+      "image": "ghcr.io/uffescience/akoflow-examples/showcase-multi-agent-review:local-1420294cfb9bb88e",
+      "imageId": "sha256:1420294cfb9bb88edaa5fbe83b0416addd46f7a0fc575e67bf68cbc15cda7d52",
+      "observedAt": "2026-10-20T19:14:32Z",
+      "planId": "showcase-multi-agent-review-local-bc9322e8eb-manual-plan-20261020t191421.882509000",
+      "runId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+      "status": "completed",
+      "workflowId": "showcase-multi-agent-review-local-bc9322e8eb"
+    }
   },
   "/docs/showcase/ai/agentic-workflows/supervised-tool-loop": {
     "title": "Supervised tool loop",
@@ -364,34 +103,919 @@
     ],
     "dependencies": {
       "build-context": [],
-      "propose-action": ["build-context"],
-      "policy-check": ["propose-action"],
-      "human-approval": ["policy-check"],
       "execute-tool": ["human-approval"],
+      "human-approval": ["policy-check"],
+      "policy-check": ["propose-action"],
+      "propose-action": ["build-context"],
       "verify": ["execute-tool"]
     },
-    "validationMode": "contract-fixture"
+    "validationMode": "local-workload",
+    "localProfile": "Propose a sandboxed summary-writing action, enforce an allowlist, replay a clearly identified approval fixture, execute the local tool, and verify its output and digest. Set AKOFLOW_APPROVAL_FILE to supply an explicit approval record; the bundled approval is only for this smoke example.",
+    "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+    "requirements": [],
+    "artifacts": ["execution.json", "verification.json"],
+    "executionMode": "local-process",
+    "validationStatus": "passed",
+    "screenshots": {
+      "build-context": "/showcase/evidence/agentic-workflows/supervised-tool-loop/build-context.png",
+      "execute-tool": "/showcase/evidence/agentic-workflows/supervised-tool-loop/execute-tool.png",
+      "human-approval": "/showcase/evidence/agentic-workflows/supervised-tool-loop/human-approval.png",
+      "policy-check": "/showcase/evidence/agentic-workflows/supervised-tool-loop/policy-check.png",
+      "propose-action": "/showcase/evidence/agentic-workflows/supervised-tool-loop/propose-action.png",
+      "verify": "/showcase/evidence/agentic-workflows/supervised-tool-loop/verify.png",
+      "workflow": "/showcase/evidence/agentic-workflows/supervised-tool-loop/workflow.png"
+    },
+    "daemon": {
+      "activityCount": 6,
+      "completedActivityCount": 6,
+      "image": "ghcr.io/uffescience/akoflow-examples/showcase-supervised-tool-loop:local-faa1a1363139f086",
+      "imageId": "sha256:faa1a1363139f086370f8c8dd82ff92a2cceaae180e7979c8549e0210351ee79",
+      "observedAt": "2026-10-20T19:14:45Z",
+      "planId": "showcase-supervised-tool-loop-local-1fb7664e1c-manual-plan-20261020t191433.215428000",
+      "runId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+      "status": "completed",
+      "workflowId": "showcase-supervised-tool-loop-local-1fb7664e1c"
+    }
   },
-  "/docs/showcase/ai/agentic-workflows/multi-agent-review": {
-    "title": "Multi-agent review",
-    "examplePath": "agentic-workflows/multi-agent-review",
+  "/docs/showcase/ai/generative-ai/ai-video-studio": {
+    "title": "AI Video Studio",
+    "examplePath": "generative-ai/video-studio",
     "stages": [
-      ["shared-context"],
-      ["research", "code", "domain"],
-      ["critic-review"],
-      ["synthesize"],
-      ["publish-evidence"]
+      ["storyboard"],
+      ["scenes", "narration"],
+      ["compose"],
+      ["quality-control"]
     ],
     "dependencies": {
-      "shared-context": [],
-      "research": ["shared-context"],
-      "code": ["shared-context"],
-      "domain": ["shared-context"],
-      "critic-review": ["research", "code", "domain"],
-      "synthesize": ["critic-review"],
-      "publish-evidence": ["synthesize"]
+      "compose": ["scenes", "narration"],
+      "narration": ["storyboard"],
+      "quality-control": ["compose"],
+      "scenes": ["storyboard"],
+      "storyboard": []
     },
-    "validationMode": "contract-fixture"
+    "validationMode": "local-pipeline",
+    "localProfile": "Create a storyboard, procedural scene frames, generated narration audio, and a video from a versioned local brief. FFmpeg is used when available on the host; the supplied Docker image includes it. The portable fallback writes a valid YUV4MPEG stream rather than pretending to have produced an MP4.",
+    "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+    "requirements": [],
+    "artifacts": [
+      "storyboard.json",
+      "frames.json",
+      "narration.wav",
+      "final.mp4",
+      "quality-report.json"
+    ],
+    "executionMode": "local-process",
+    "validationStatus": "passed",
+    "screenshots": {
+      "compose": "/showcase/evidence/generative-ai/video-studio/compose.png",
+      "narration": "/showcase/evidence/generative-ai/video-studio/narration.png",
+      "quality-control": "/showcase/evidence/generative-ai/video-studio/quality-control.png",
+      "scenes": "/showcase/evidence/generative-ai/video-studio/scenes.png",
+      "storyboard": "/showcase/evidence/generative-ai/video-studio/storyboard.png",
+      "workflow": "/showcase/evidence/generative-ai/video-studio/workflow.png"
+    },
+    "daemon": {
+      "activityCount": 5,
+      "completedActivityCount": 5,
+      "image": "ghcr.io/uffescience/akoflow-examples/ai-video-studio:v1",
+      "imageId": "sha256:a3b0b618839f049cde4646db1af99501eb1007a096fd31dce5af9130ed99edd3",
+      "observedAt": null,
+      "planId": "ai-video-studio-local-964ed917a8-manual-plan-20261020t182540",
+      "runId": "ai-video-studio-local-964ed917a8-run-20261020t182540",
+      "status": "completed",
+      "workflowId": "ai-video-studio-local-964ed917a8"
+    }
+  },
+  "/docs/showcase/ai/generative-ai/audio-transcription": {
+    "title": "Audio transcription and summarization",
+    "examplePath": "generative-ai/audio-transcription",
+    "stages": [
+      ["ingest-audio"],
+      ["segment"],
+      ["segment-1", "segment-n"],
+      ["merge-transcript"],
+      ["summarize"],
+      ["publish"]
+    ],
+    "dependencies": {
+      "ingest-audio": [],
+      "merge-transcript": ["segment-1", "segment-n"],
+      "publish": ["summarize"],
+      "segment": ["ingest-audio"],
+      "segment-1": ["segment"],
+      "segment-n": ["segment"],
+      "summarize": ["merge-transcript"]
+    },
+    "validationMode": "local-workload",
+    "localProfile": "Create a real PCM WAV from a bundled synthetic tone vocabulary, split it into two audio segments, decode tone frequencies independently, merge the decoded words, and produce a frequency-based summary. This tiny offline recognizer is an audio-processing teaching profile; it does not perform natural-speech recognition.",
+    "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+    "requirements": [],
+    "artifacts": ["transcript.txt", "summary.md"],
+    "executionMode": "local-process",
+    "validationStatus": "passed",
+    "screenshots": {
+      "ingest-audio": "/showcase/evidence/generative-ai/audio-transcription/ingest-audio.png",
+      "merge-transcript": "/showcase/evidence/generative-ai/audio-transcription/merge-transcript.png",
+      "publish": "/showcase/evidence/generative-ai/audio-transcription/publish.png",
+      "segment": "/showcase/evidence/generative-ai/audio-transcription/segment.png",
+      "segment-1": "/showcase/evidence/generative-ai/audio-transcription/segment-1.png",
+      "segment-n": "/showcase/evidence/generative-ai/audio-transcription/segment-n.png",
+      "summarize": "/showcase/evidence/generative-ai/audio-transcription/summarize.png",
+      "workflow": "/showcase/evidence/generative-ai/audio-transcription/workflow.png"
+    },
+    "daemon": {
+      "activityCount": 7,
+      "completedActivityCount": 7,
+      "image": "ghcr.io/uffescience/akoflow-examples/showcase-audio-transcription:local-ee0e5997e9c4ec28",
+      "imageId": "sha256:ee0e5997e9c4ec28f947a15dfde5d0395773cfc3bdd98020e44498b17b6f76cc",
+      "observedAt": "2026-10-20T19:13:31Z",
+      "planId": "showcase-audio-transcription-local-a18bfb861c-manual-plan-20261020t191318.732334000",
+      "runId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+      "status": "completed",
+      "workflowId": "showcase-audio-transcription-local-a18bfb861c"
+    }
+  },
+  "/docs/showcase/ai/generative-ai/document-extraction": {
+    "title": "OCR and document extraction",
+    "examplePath": "generative-ai/document-extraction",
+    "stages": [
+      ["ingest-documents"],
+      ["ocr", "native-text"],
+      ["classify"],
+      ["extract-fields"],
+      ["validate-schema"],
+      ["publish"]
+    ],
+    "dependencies": {
+      "classify": ["ocr", "native-text"],
+      "extract-fields": ["classify"],
+      "ingest-documents": [],
+      "native-text": ["ingest-documents"],
+      "ocr": ["ingest-documents"],
+      "publish": ["validate-schema"],
+      "validate-schema": ["extract-fields"]
+    },
+    "validationMode": "local-workload",
+    "localProfile": "Rasterize bundled invoice digits to a PBM scan, recognize those pixels with a digit-template OCR algorithm, read native text in a parallel branch, classify the invoice, extract fields, and validate the result against its source. This portable OCR profile covers the bundled digit alphabet.",
+    "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+    "requirements": [],
+    "artifacts": ["extraction.json", "ocr.txt"],
+    "executionMode": "local-process",
+    "validationStatus": "passed",
+    "screenshots": {
+      "classify": "/showcase/evidence/generative-ai/document-extraction/classify.png",
+      "extract-fields": "/showcase/evidence/generative-ai/document-extraction/extract-fields.png",
+      "ingest-documents": "/showcase/evidence/generative-ai/document-extraction/ingest-documents.png",
+      "native-text": "/showcase/evidence/generative-ai/document-extraction/native-text.png",
+      "ocr": "/showcase/evidence/generative-ai/document-extraction/ocr.png",
+      "publish": "/showcase/evidence/generative-ai/document-extraction/publish.png",
+      "validate-schema": "/showcase/evidence/generative-ai/document-extraction/validate-schema.png",
+      "workflow": "/showcase/evidence/generative-ai/document-extraction/workflow.png"
+    },
+    "daemon": {
+      "activityCount": 7,
+      "completedActivityCount": 7,
+      "image": "ghcr.io/uffescience/akoflow-examples/showcase-document-extraction:local-b94cc98bfb12897b",
+      "imageId": "sha256:b94cc98bfb12897b69b7fa3bf19ef17aea6b551b2496d792ccf39ba1a2a4d1f5",
+      "observedAt": "2026-10-20T19:13:43Z",
+      "planId": "showcase-document-extraction-local-7d5ef3028c-manual-plan-20261020t191332.046548000",
+      "runId": "showcase-document-extraction-local-7d5ef3028c-run-20261020t191332.049535000",
+      "status": "completed",
+      "workflowId": "showcase-document-extraction-local-7d5ef3028c"
+    }
+  },
+  "/docs/showcase/ai/generative-ai/local-rag-factory": {
+    "title": "Local RAG Factory",
+    "examplePath": "generative-ai/local-rag",
+    "stages": [
+      ["ingest"],
+      ["chunk"],
+      ["index"],
+      ["retrieve"],
+      ["answer"],
+      ["evaluate"]
+    ],
+    "dependencies": {
+      "answer": ["retrieve"],
+      "chunk": ["ingest"],
+      "evaluate": ["answer"],
+      "index": ["chunk"],
+      "ingest": [],
+      "retrieve": ["index"]
+    },
+    "validationMode": "local-pipeline",
+    "localProfile": "Build a local lexical retrieval index over the bundled text corpus, answer questions by retrieving source evidence, and check the answers against versioned known-answer tests. No hosted embedding or LLM service is required.",
+    "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+    "requirements": [],
+    "artifacts": [
+      "documents.json",
+      "chunks.json",
+      "index.json",
+      "retrieval.json",
+      "answers.json",
+      "evaluation.json"
+    ],
+    "executionMode": "local-process",
+    "validationStatus": "passed",
+    "screenshots": {
+      "answer": "/showcase/evidence/generative-ai/local-rag/answer.png",
+      "chunk": "/showcase/evidence/generative-ai/local-rag/chunk.png",
+      "evaluate": "/showcase/evidence/generative-ai/local-rag/evaluate.png",
+      "index": "/showcase/evidence/generative-ai/local-rag/index.png",
+      "ingest": "/showcase/evidence/generative-ai/local-rag/ingest.png",
+      "retrieve": "/showcase/evidence/generative-ai/local-rag/retrieve.png",
+      "workflow": "/showcase/evidence/generative-ai/local-rag/workflow.png"
+    },
+    "daemon": {
+      "activityCount": 6,
+      "completedActivityCount": 6,
+      "image": "ghcr.io/uffescience/akoflow-examples/local-rag-factory:v1",
+      "imageId": "sha256:60b37a43cbda117dc0b57d461632713f426e004d4cee4f4c2e3c5cf2efb23d2d",
+      "observedAt": null,
+      "planId": "local-rag-factory-local-0df2d611a0-manual-plan-20261020t182115",
+      "runId": "local-rag-factory-local-0df2d611a0-run-20261020t182115",
+      "status": "completed",
+      "workflowId": "local-rag-factory-local-0df2d611a0"
+    }
+  },
+  "/docs/showcase/ai/generative-ai/rag-indexing": {
+    "title": "RAG index construction and evaluation",
+    "examplePath": "generative-ai/rag-indexing",
+    "stages": [
+      ["collect-documents"],
+      ["clean"],
+      ["chunk"],
+      ["embed"],
+      ["build-index"],
+      ["retrieval-tests", "answer-tests"],
+      ["publish"]
+    ],
+    "dependencies": {
+      "answer-tests": ["build-index"],
+      "build-index": ["embed"],
+      "chunk": ["clean"],
+      "clean": ["collect-documents"],
+      "collect-documents": [],
+      "embed": ["chunk"],
+      "publish": ["retrieval-tests", "answer-tests"],
+      "retrieval-tests": ["build-index"]
+    },
+    "validationMode": "local-workload",
+    "localProfile": "Clean and chunk a bundled document corpus, compute normalized TF-IDF vectors, build a portable JSON search index, and run retrieval and extractive-answer checks in parallel. This CPU profile uses lexical embeddings and source quotations, not a hosted embedding model or a generative LLM.",
+    "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+    "requirements": [],
+    "artifacts": ["index.json", "evaluation.json"],
+    "executionMode": "local-process",
+    "validationStatus": "passed",
+    "screenshots": {
+      "answer-tests": "/showcase/evidence/generative-ai/rag-indexing/answer-tests.png",
+      "build-index": "/showcase/evidence/generative-ai/rag-indexing/build-index.png",
+      "chunk": "/showcase/evidence/generative-ai/rag-indexing/chunk.png",
+      "clean": "/showcase/evidence/generative-ai/rag-indexing/clean.png",
+      "collect-documents": "/showcase/evidence/generative-ai/rag-indexing/collect-documents.png",
+      "embed": "/showcase/evidence/generative-ai/rag-indexing/embed.png",
+      "publish": "/showcase/evidence/generative-ai/rag-indexing/publish.png",
+      "retrieval-tests": "/showcase/evidence/generative-ai/rag-indexing/retrieval-tests.png",
+      "workflow": "/showcase/evidence/generative-ai/rag-indexing/workflow.png"
+    },
+    "daemon": {
+      "activityCount": 8,
+      "completedActivityCount": 8,
+      "image": "ghcr.io/uffescience/akoflow-examples/showcase-rag-indexing:local-7d9dd7dc3e57911d",
+      "imageId": "sha256:7d9dd7dc3e57911d4c87ff2cbcd8e70fb94f42d89593606aeafd90456c416873",
+      "observedAt": "2026-10-20T19:13:58Z",
+      "planId": "showcase-rag-indexing-local-51e75cdbe9-manual-plan-20261020t191344.205131000",
+      "runId": "showcase-rag-indexing-local-51e75cdbe9-run-20261020t191344.209329000",
+      "status": "completed",
+      "workflowId": "showcase-rag-indexing-local-51e75cdbe9"
+    }
+  },
+  "/docs/showcase/ai/generative-ai/synthetic-dataset": {
+    "title": "Synthetic dataset generation",
+    "examplePath": "generative-ai/synthetic-dataset",
+    "stages": [
+      ["define-schema"],
+      ["batch-a", "batch-b", "batch-n"],
+      ["filter"],
+      ["deduplicate"],
+      ["quality-review"],
+      ["publish"]
+    ],
+    "dependencies": {
+      "batch-a": ["define-schema"],
+      "batch-b": ["define-schema"],
+      "batch-n": ["define-schema"],
+      "deduplicate": ["filter"],
+      "define-schema": [],
+      "filter": ["batch-a", "batch-b", "batch-n"],
+      "publish": ["quality-review"],
+      "quality-review": ["deduplicate"]
+    },
+    "validationMode": "local-workload",
+    "localProfile": "Generate structured question/answer examples from versioned topic templates in three parallel batches, reject invalid rows, remove overlapping questions, verify topic coverage, and publish JSON Lines plus a quality report. The portable generator is template-based and requires no LLM.",
+    "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+    "requirements": [],
+    "artifacts": ["synthetic-dataset.jsonl", "quality-report.json"],
+    "executionMode": "local-process",
+    "validationStatus": "passed",
+    "screenshots": {
+      "batch-a": "/showcase/evidence/generative-ai/synthetic-dataset/batch-a.png",
+      "batch-b": "/showcase/evidence/generative-ai/synthetic-dataset/batch-b.png",
+      "batch-n": "/showcase/evidence/generative-ai/synthetic-dataset/batch-n.png",
+      "deduplicate": "/showcase/evidence/generative-ai/synthetic-dataset/deduplicate.png",
+      "define-schema": "/showcase/evidence/generative-ai/synthetic-dataset/define-schema.png",
+      "filter": "/showcase/evidence/generative-ai/synthetic-dataset/filter.png",
+      "publish": "/showcase/evidence/generative-ai/synthetic-dataset/publish.png",
+      "quality-review": "/showcase/evidence/generative-ai/synthetic-dataset/quality-review.png",
+      "workflow": "/showcase/evidence/generative-ai/synthetic-dataset/workflow.png"
+    },
+    "daemon": {
+      "activityCount": 8,
+      "completedActivityCount": 8,
+      "image": "ghcr.io/uffescience/akoflow-examples/showcase-synthetic-dataset:local-de6e028ea20a3556",
+      "imageId": "sha256:de6e028ea20a3556be7a9651e06ce0430769e07d937078c448849645a8e7bde8",
+      "observedAt": "2026-10-20T19:14:12Z",
+      "planId": "showcase-synthetic-dataset-local-de72f7c33c-manual-plan-20261020t191359.732838000",
+      "runId": "showcase-synthetic-dataset-local-de72f7c33c-run-20261020t191359.740409000",
+      "status": "completed",
+      "workflowId": "showcase-synthetic-dataset-local-de72f7c33c"
+    }
+  },
+  "/docs/showcase/ai/machine-learning/anomaly-detection": {
+    "title": "Anomaly detection",
+    "examplePath": "machine-learning/anomaly-detection",
+    "stages": [
+      ["collect-signals"],
+      ["build-features"],
+      ["train-detector"],
+      ["score-validation"],
+      ["choose-threshold"],
+      ["publish"]
+    ],
+    "dependencies": {
+      "build-features": ["collect-signals"],
+      "choose-threshold": ["score-validation"],
+      "collect-signals": [],
+      "publish": ["choose-threshold"],
+      "score-validation": ["train-detector"],
+      "train-detector": ["build-features"]
+    },
+    "validationMode": "local-workload",
+    "localProfile": "Fit a Gaussian sensor baseline, score held-out normal and anomalous signals, select a threshold by measured F1, and publish the detected anomalies and calibration metrics.",
+    "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+    "requirements": [],
+    "artifacts": ["anomalies.json", "metrics.json"],
+    "executionMode": "local-process",
+    "validationStatus": "passed",
+    "screenshots": {
+      "build-features": "/showcase/evidence/machine-learning/anomaly-detection/build-features.png",
+      "choose-threshold": "/showcase/evidence/machine-learning/anomaly-detection/choose-threshold.png",
+      "collect-signals": "/showcase/evidence/machine-learning/anomaly-detection/collect-signals.png",
+      "publish": "/showcase/evidence/machine-learning/anomaly-detection/publish.png",
+      "score-validation": "/showcase/evidence/machine-learning/anomaly-detection/score-validation.png",
+      "train-detector": "/showcase/evidence/machine-learning/anomaly-detection/train-detector.png",
+      "workflow": "/showcase/evidence/machine-learning/anomaly-detection/workflow.png"
+    },
+    "daemon": {
+      "activityCount": 6,
+      "completedActivityCount": 6,
+      "image": "ghcr.io/uffescience/akoflow-examples/showcase-anomaly-detection:local-cebc1b91654b91e1",
+      "imageId": "sha256:cebc1b91654b91e15c6861b1a945181bf35158cc38331487e71612f8def9e1c3",
+      "observedAt": "2026-10-20T19:09:30Z",
+      "planId": "showcase-anomaly-detection-local-aeca41545d-manual-plan-20261020t190918.293541000",
+      "runId": "showcase-anomaly-detection-local-aeca41545d-run-20261020t190918.297019000",
+      "status": "completed",
+      "workflowId": "showcase-anomaly-detection-local-aeca41545d"
+    }
+  },
+  "/docs/showcase/ai/machine-learning/batch-inference": {
+    "title": "Batch inference",
+    "examplePath": "machine-learning/batch-inference",
+    "stages": [
+      ["load-model"],
+      ["partition-input"],
+      ["infer-shard-a", "infer-shard-b", "infer-shard-n"],
+      ["merge-predictions"],
+      ["publish"]
+    ],
+    "dependencies": {
+      "infer-shard-a": ["partition-input"],
+      "infer-shard-b": ["partition-input"],
+      "infer-shard-n": ["partition-input"],
+      "load-model": [],
+      "merge-predictions": ["infer-shard-a", "infer-shard-b", "infer-shard-n"],
+      "partition-input": ["load-model"],
+      "publish": ["merge-predictions"]
+    },
+    "validationMode": "local-workload",
+    "localProfile": "Train/load a small numeric model, split versioned input values into three disjoint shards, execute real inference in parallel, validate that the merged indices have no gaps or duplicates, and publish predictions as JSON Lines.",
+    "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+    "requirements": [],
+    "artifacts": ["predictions.jsonl", "batch-summary.json"],
+    "executionMode": "local-process",
+    "validationStatus": "passed",
+    "screenshots": {
+      "infer-shard-a": "/showcase/evidence/machine-learning/batch-inference/infer-shard-a.png",
+      "infer-shard-b": "/showcase/evidence/machine-learning/batch-inference/infer-shard-b.png",
+      "infer-shard-n": "/showcase/evidence/machine-learning/batch-inference/infer-shard-n.png",
+      "load-model": "/showcase/evidence/machine-learning/batch-inference/load-model.png",
+      "merge-predictions": "/showcase/evidence/machine-learning/batch-inference/merge-predictions.png",
+      "partition-input": "/showcase/evidence/machine-learning/batch-inference/partition-input.png",
+      "publish": "/showcase/evidence/machine-learning/batch-inference/publish.png",
+      "workflow": "/showcase/evidence/machine-learning/batch-inference/workflow.png"
+    },
+    "daemon": {
+      "activityCount": 7,
+      "completedActivityCount": 7,
+      "image": "ghcr.io/uffescience/akoflow-examples/showcase-batch-inference:local-bf08445da17789e2",
+      "imageId": "sha256:bf08445da17789e2ef4cff4795178131e305d8263a0af516780b18a6ec3fba24",
+      "observedAt": "2026-10-20T19:09:41Z",
+      "planId": "showcase-batch-inference-local-db2bb7c2e2-manual-plan-20261020t190931.407428000",
+      "runId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+      "status": "completed",
+      "workflowId": "showcase-batch-inference-local-db2bb7c2e2"
+    }
+  },
+  "/docs/showcase/ai/machine-learning/computer-vision": {
+    "title": "Computer vision training",
+    "examplePath": "machine-learning/computer-vision",
+    "stages": [
+      ["collect-images"],
+      ["import-labels"],
+      ["augment"],
+      ["train-detector"],
+      ["evaluate"],
+      ["package-model"]
+    ],
+    "dependencies": {
+      "augment": ["import-labels"],
+      "collect-images": [],
+      "evaluate": ["train-detector"],
+      "import-labels": ["collect-images"],
+      "package-model": ["evaluate"],
+      "train-detector": ["augment"]
+    },
+    "validationMode": "local-workload",
+    "localProfile": "Generate seeded noisy 8×8 geometric-pattern images from the bundled input specification, validate labels, augment only training images, learn class centroids, and evaluate classification on held-out images. This small offline dataset is not CIFAR-10.",
+    "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+    "requirements": [],
+    "artifacts": ["vision-metrics.json", "model.pkl"],
+    "executionMode": "local-process",
+    "validationStatus": "passed",
+    "screenshots": {
+      "augment": "/showcase/evidence/machine-learning/computer-vision/augment.png",
+      "collect-images": "/showcase/evidence/machine-learning/computer-vision/collect-images.png",
+      "evaluate": "/showcase/evidence/machine-learning/computer-vision/evaluate.png",
+      "import-labels": "/showcase/evidence/machine-learning/computer-vision/import-labels.png",
+      "package-model": "/showcase/evidence/machine-learning/computer-vision/package-model.png",
+      "train-detector": "/showcase/evidence/machine-learning/computer-vision/train-detector.png",
+      "workflow": "/showcase/evidence/machine-learning/computer-vision/workflow.png"
+    },
+    "daemon": {
+      "activityCount": 6,
+      "completedActivityCount": 6,
+      "image": "ghcr.io/uffescience/akoflow-examples/showcase-computer-vision:local-5ae230ade335bec1",
+      "imageId": "sha256:5ae230ade335bec12791e0017113bb770b37c07afb887eb51952644853fb237b",
+      "observedAt": "2026-10-20T19:09:54Z",
+      "planId": "showcase-computer-vision-local-6db51a739c-manual-plan-20261020t190942.320293000",
+      "runId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+      "status": "completed",
+      "workflowId": "showcase-computer-vision-local-6db51a739c"
+    }
+  },
+  "/docs/showcase/ai/machine-learning/hyperparameter-search": {
+    "title": "Hyperparameter search",
+    "examplePath": "machine-learning/hyperparameter-search",
+    "stages": [
+      ["prepare-dataset"],
+      ["trial-1", "trial-2", "trial-n"],
+      ["compare-trials"],
+      ["register-best"]
+    ],
+    "dependencies": {
+      "compare-trials": ["trial-1", "trial-2", "trial-n"],
+      "prepare-dataset": [],
+      "register-best": ["compare-trials"],
+      "trial-1": ["prepare-dataset"],
+      "trial-2": ["prepare-dataset"],
+      "trial-n": ["prepare-dataset"]
+    },
+    "validationMode": "local-workload",
+    "localProfile": "Train three independent gradient-descent regressors with different learning rates and epoch budgets, rank their measured held-out errors, and publish the best learned model and leaderboard.",
+    "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+    "requirements": [],
+    "artifacts": ["leaderboard.csv", "best-model.pkl"],
+    "executionMode": "local-process",
+    "validationStatus": "passed",
+    "screenshots": {
+      "compare-trials": "/showcase/evidence/machine-learning/hyperparameter-search/compare-trials.png",
+      "prepare-dataset": "/showcase/evidence/machine-learning/hyperparameter-search/prepare-dataset.png",
+      "register-best": "/showcase/evidence/machine-learning/hyperparameter-search/register-best.png",
+      "trial-1": "/showcase/evidence/machine-learning/hyperparameter-search/trial-1.png",
+      "trial-2": "/showcase/evidence/machine-learning/hyperparameter-search/trial-2.png",
+      "trial-n": "/showcase/evidence/machine-learning/hyperparameter-search/trial-n.png",
+      "workflow": "/showcase/evidence/machine-learning/hyperparameter-search/workflow.png"
+    },
+    "daemon": {
+      "activityCount": 6,
+      "completedActivityCount": 6,
+      "image": "ghcr.io/uffescience/akoflow-examples/showcase-hyperparameter-search:local-2b1f1374f335029b",
+      "imageId": "sha256:2b1f1374f335029bba22b46c1a57b0bc3c835236bc55f9cfb7721e0edb3845c9",
+      "observedAt": "2026-10-20T19:10:03Z",
+      "planId": "showcase-hyperparameter-search-local-b881811497-manual-plan-20261020t190955.469894000",
+      "runId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+      "status": "completed",
+      "workflowId": "showcase-hyperparameter-search-local-b881811497"
+    }
+  },
+  "/docs/showcase/ai/machine-learning/inference-benchmark": {
+    "title": "Inference benchmark",
+    "examplePath": "machine-learning/inference-benchmark",
+    "stages": [
+      ["freeze-inputs"],
+      ["cpu", "gpu", "edge"],
+      ["normalize"],
+      ["compare-cost-and-latency"]
+    ],
+    "dependencies": {
+      "compare-cost-and-latency": ["normalize"],
+      "cpu": ["freeze-inputs"],
+      "edge": ["freeze-inputs"],
+      "freeze-inputs": [],
+      "gpu": ["freeze-inputs"],
+      "normalize": ["cpu", "gpu", "edge"]
+    },
+    "validationMode": "local-workload",
+    "localProfile": "Measure actual local CPU inference with three batching profiles and verify identical predictions. The branches named CPU, GPU, and edge use CPU fallback batching in the portable profile; no GPU/edge hardware performance or cloud billing is claimed.",
+    "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+    "requirements": [],
+    "artifacts": ["benchmark.csv", "report.html"],
+    "executionMode": "local-process",
+    "validationStatus": "passed",
+    "screenshots": {
+      "compare-cost-and-latency": "/showcase/evidence/machine-learning/inference-benchmark/compare-cost-and-latency.png",
+      "cpu": "/showcase/evidence/machine-learning/inference-benchmark/cpu.png",
+      "edge": "/showcase/evidence/machine-learning/inference-benchmark/edge.png",
+      "freeze-inputs": "/showcase/evidence/machine-learning/inference-benchmark/freeze-inputs.png",
+      "gpu": "/showcase/evidence/machine-learning/inference-benchmark/gpu.png",
+      "normalize": "/showcase/evidence/machine-learning/inference-benchmark/normalize.png",
+      "workflow": "/showcase/evidence/machine-learning/inference-benchmark/workflow.png"
+    },
+    "daemon": {
+      "activityCount": 6,
+      "completedActivityCount": 6,
+      "image": "ghcr.io/uffescience/akoflow-examples/showcase-inference-benchmark:local-3f2531ca913c4ff4",
+      "imageId": "sha256:3f2531ca913c4ff45b9624374084e12f7b9929ed95512aa0fb1f3ffb7acbd579",
+      "observedAt": "2026-10-20T19:10:12Z",
+      "planId": "showcase-inference-benchmark-local-7d8f10cfda-manual-plan-20261020t191004.373444000",
+      "runId": "showcase-inference-benchmark-local-7d8f10cfda-run-20261020t191004.383307000",
+      "status": "completed",
+      "workflowId": "showcase-inference-benchmark-local-7d8f10cfda"
+    }
+  },
+  "/docs/showcase/ai/machine-learning/infrastructure-selection": {
+    "title": "Infrastructure selection for training",
+    "examplePath": "machine-learning/infrastructure-selection",
+    "stages": [
+      ["profile-workload"],
+      ["local-gpu", "hpc", "cloud"],
+      ["compare-plans"],
+      ["select-scope"],
+      ["train"]
+    ],
+    "dependencies": {
+      "cloud": ["profile-workload"],
+      "compare-plans": ["local-gpu", "hpc", "cloud"],
+      "hpc": ["profile-workload"],
+      "local-gpu": ["profile-workload"],
+      "profile-workload": [],
+      "select-scope": ["compare-plans"],
+      "train": ["select-scope"]
+    },
+    "validationMode": "local-workload",
+    "localProfile": "Measure a local CPU model fit, compare three infrastructure plans using explicitly declared speed/startup/price assumptions, select a plan, and train the final model locally. This smoke example provisions no infrastructure and reports estimates separately from measured error.",
+    "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+    "requirements": [],
+    "artifacts": ["decision.json", "cost-comparison.csv"],
+    "executionMode": "local-process",
+    "validationStatus": "passed",
+    "screenshots": {
+      "cloud": "/showcase/evidence/machine-learning/infrastructure-selection/cloud.png",
+      "compare-plans": "/showcase/evidence/machine-learning/infrastructure-selection/compare-plans.png",
+      "hpc": "/showcase/evidence/machine-learning/infrastructure-selection/hpc.png",
+      "local-gpu": "/showcase/evidence/machine-learning/infrastructure-selection/local-gpu.png",
+      "profile-workload": "/showcase/evidence/machine-learning/infrastructure-selection/profile-workload.png",
+      "select-scope": "/showcase/evidence/machine-learning/infrastructure-selection/select-scope.png",
+      "train": "/showcase/evidence/machine-learning/infrastructure-selection/train.png",
+      "workflow": "/showcase/evidence/machine-learning/infrastructure-selection/workflow.png"
+    },
+    "daemon": {
+      "activityCount": 7,
+      "completedActivityCount": 7,
+      "image": "ghcr.io/uffescience/akoflow-examples/showcase-infrastructure-selection:local-e2309626ebd50488",
+      "imageId": "sha256:e2309626ebd50488a596e89cd649a9fbab8726944c3a315d98ecf4feeb3ccdaf",
+      "observedAt": "2026-10-20T19:10:23Z",
+      "planId": "showcase-infrastructure-selection-local-a206990755-manual-plan-20261020t191013.326119000",
+      "runId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+      "status": "completed",
+      "workflowId": "showcase-infrastructure-selection-local-a206990755"
+    }
+  },
+  "/docs/showcase/ai/machine-learning/lora-fine-tuning": {
+    "title": "LoRA fine-tuning",
+    "examplePath": "machine-learning/lora-fine-tuning",
+    "stages": [
+      ["fetch-base-model"],
+      ["prepare-examples"],
+      ["fine-tune-adapters"],
+      ["evaluate"],
+      ["publish-adapter", "record-lineage"]
+    ],
+    "dependencies": {
+      "evaluate": ["fine-tune-adapters"],
+      "fetch-base-model": [],
+      "fine-tune-adapters": ["prepare-examples"],
+      "prepare-examples": ["fetch-base-model"],
+      "publish-adapter": ["evaluate"],
+      "record-lineage": ["evaluate"]
+    },
+    "validationMode": "local-workload",
+    "localProfile": "Freeze a bundled 2×2 base matrix and learn a rank-one additive adapter with gradient descent. Validate loss reduction, publish the adapter weights, and record dataset/base lineage in a parallel branch. This CPU teaching model does not download or fine-tune an LLM.",
+    "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+    "requirements": [],
+    "artifacts": ["adapter.bin", "evaluation.json", "lineage.json"],
+    "executionMode": "local-process",
+    "validationStatus": "passed",
+    "screenshots": {
+      "evaluate": "/showcase/evidence/machine-learning/lora-fine-tuning/evaluate.png",
+      "fetch-base-model": "/showcase/evidence/machine-learning/lora-fine-tuning/fetch-base-model.png",
+      "fine-tune-adapters": "/showcase/evidence/machine-learning/lora-fine-tuning/fine-tune-adapters.png",
+      "prepare-examples": "/showcase/evidence/machine-learning/lora-fine-tuning/prepare-examples.png",
+      "publish-adapter": "/showcase/evidence/machine-learning/lora-fine-tuning/publish-adapter.png",
+      "record-lineage": "/showcase/evidence/machine-learning/lora-fine-tuning/record-lineage.png",
+      "workflow": "/showcase/evidence/machine-learning/lora-fine-tuning/workflow.png"
+    },
+    "daemon": {
+      "activityCount": 6,
+      "completedActivityCount": 6,
+      "image": "ghcr.io/uffescience/akoflow-examples/showcase-lora-fine-tuning:local-3390bedec77f6a55",
+      "imageId": "sha256:3390bedec77f6a55617da6ad689fb076e2cad9558565141c113af94b1458a245",
+      "observedAt": "2026-10-20T19:10:34Z",
+      "planId": "showcase-lora-fine-tuning-local-2accb78860-manual-plan-20261020t191024.389646000",
+      "runId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+      "status": "completed",
+      "workflowId": "showcase-lora-fine-tuning-local-2accb78860"
+    }
+  },
+  "/docs/showcase/ai/machine-learning/model-comparison": {
+    "title": "Comparative model evaluation",
+    "examplePath": "machine-learning/model-comparison",
+    "stages": [
+      ["freeze-evaluation-set"],
+      ["evaluate-a", "evaluate-b", "evaluate-c"],
+      ["compare-metrics"],
+      ["approve-candidate"]
+    ],
+    "dependencies": {
+      "approve-candidate": ["compare-metrics"],
+      "compare-metrics": ["evaluate-a", "evaluate-b", "evaluate-c"],
+      "evaluate-a": ["freeze-evaluation-set"],
+      "evaluate-b": ["freeze-evaluation-set"],
+      "evaluate-c": ["freeze-evaluation-set"],
+      "freeze-evaluation-set": []
+    },
+    "validationMode": "local-workload",
+    "localProfile": "Evaluate an ordinary-least-squares model, a mean baseline, and a limited-budget gradient-descent model on the same held-out rows, rank their errors, and approve only a candidate that passes the declared accuracy threshold.",
+    "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+    "requirements": [],
+    "artifacts": ["comparison.csv", "report.html"],
+    "executionMode": "local-process",
+    "validationStatus": "passed",
+    "screenshots": {
+      "approve-candidate": "/showcase/evidence/machine-learning/model-comparison/approve-candidate.png",
+      "compare-metrics": "/showcase/evidence/machine-learning/model-comparison/compare-metrics.png",
+      "evaluate-a": "/showcase/evidence/machine-learning/model-comparison/evaluate-a.png",
+      "evaluate-b": "/showcase/evidence/machine-learning/model-comparison/evaluate-b.png",
+      "evaluate-c": "/showcase/evidence/machine-learning/model-comparison/evaluate-c.png",
+      "freeze-evaluation-set": "/showcase/evidence/machine-learning/model-comparison/freeze-evaluation-set.png",
+      "workflow": "/showcase/evidence/machine-learning/model-comparison/workflow.png"
+    },
+    "daemon": {
+      "activityCount": 6,
+      "completedActivityCount": 6,
+      "image": "ghcr.io/uffescience/akoflow-examples/showcase-model-comparison:local-21d35b55500c7d0d",
+      "imageId": "sha256:21d35b55500c7d0db834ac5601d27a5143d1ec70af1a3b8bed6c01f778932e7e",
+      "observedAt": "2026-10-20T19:10:43Z",
+      "planId": "showcase-model-comparison-local-8c91f9619e-manual-plan-20261020t191035.549636000",
+      "runId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+      "status": "completed",
+      "workflowId": "showcase-model-comparison-local-8c91f9619e"
+    }
+  },
+  "/docs/showcase/ai/machine-learning/model-conversion": {
+    "title": "Model conversion and quantization",
+    "examplePath": "machine-learning/model-conversion",
+    "stages": [
+      ["load-model"],
+      ["export-onnx", "export-torchscript"],
+      ["quantize-cpu", "quantize-gpu"],
+      ["validate-outputs"],
+      ["publish-variants"]
+    ],
+    "dependencies": {
+      "export-onnx": ["load-model"],
+      "export-torchscript": ["load-model"],
+      "load-model": [],
+      "publish-variants": ["validate-outputs"],
+      "quantize-cpu": ["export-onnx", "export-torchscript"],
+      "quantize-gpu": ["export-onnx", "export-torchscript"],
+      "validate-outputs": ["quantize-cpu", "quantize-gpu"]
+    },
+    "validationMode": "local-workload",
+    "localProfile": "Export a learned affine model as real ONNX and TorchScript files, generate int8 and IEEE float16 coefficient representations in parallel, reload both executable formats, and compare their numeric outputs against the original model. The float16 branch runs on CPU and does not build or claim a TensorRT engine.",
+    "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+    "requirements": ["numpy==2.5.4", "onnx==1.23.2", "torch==2.14.1"],
+    "artifacts": [
+      "model.onnx",
+      "model.torchscript.pt",
+      "model-int8.json",
+      "model-fp16.bin",
+      "validation.json"
+    ],
+    "executionMode": "local-process",
+    "validationStatus": "passed",
+    "screenshots": {
+      "export-onnx": "/showcase/evidence/machine-learning/model-conversion/export-onnx.png",
+      "export-torchscript": "/showcase/evidence/machine-learning/model-conversion/export-torchscript.png",
+      "load-model": "/showcase/evidence/machine-learning/model-conversion/load-model.png",
+      "publish-variants": "/showcase/evidence/machine-learning/model-conversion/publish-variants.png",
+      "quantize-cpu": "/showcase/evidence/machine-learning/model-conversion/quantize-cpu.png",
+      "quantize-gpu": "/showcase/evidence/machine-learning/model-conversion/quantize-gpu.png",
+      "validate-outputs": "/showcase/evidence/machine-learning/model-conversion/validate-outputs.png",
+      "workflow": "/showcase/evidence/machine-learning/model-conversion/workflow.png"
+    },
+    "daemon": {
+      "activityCount": 7,
+      "completedActivityCount": 7,
+      "image": "ghcr.io/uffescience/akoflow-examples/showcase-model-conversion:local-723ff3698b6f79aa",
+      "imageId": "sha256:723ff3698b6f79aa777b8941b8390b44f1804f71fdc6a8ca68a7ed722edf3c02",
+      "observedAt": "2026-10-20T19:11:38Z",
+      "planId": "showcase-model-conversion-local-f22e706408-manual-plan-20261020t191128.221185000",
+      "runId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+      "status": "completed",
+      "workflowId": "showcase-model-conversion-local-f22e706408"
+    }
+  },
+  "/docs/showcase/ai/machine-learning/model-distillation": {
+    "title": "Model distillation",
+    "examplePath": "machine-learning/model-distillation",
+    "stages": [
+      ["load-teacher"],
+      ["soft-labels"],
+      ["train-student"],
+      ["quality", "latency"],
+      ["publish"]
+    ],
+    "dependencies": {
+      "latency": ["train-student"],
+      "load-teacher": [],
+      "publish": ["quality", "latency"],
+      "quality": ["train-student"],
+      "soft-labels": ["load-teacher"],
+      "train-student": ["soft-labels"]
+    },
+    "validationMode": "local-workload",
+    "localProfile": "Generate soft labels with a local sigmoid teacher, fit a cheaper affine student, evaluate it against held-out teacher predictions, and measure actual CPU prediction latency in a parallel branch.",
+    "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+    "requirements": [],
+    "artifacts": ["student.pkl", "distillation-report.json"],
+    "executionMode": "local-process",
+    "validationStatus": "passed",
+    "screenshots": {
+      "latency": "/showcase/evidence/machine-learning/model-distillation/latency.png",
+      "load-teacher": "/showcase/evidence/machine-learning/model-distillation/load-teacher.png",
+      "publish": "/showcase/evidence/machine-learning/model-distillation/publish.png",
+      "quality": "/showcase/evidence/machine-learning/model-distillation/quality.png",
+      "soft-labels": "/showcase/evidence/machine-learning/model-distillation/soft-labels.png",
+      "train-student": "/showcase/evidence/machine-learning/model-distillation/train-student.png",
+      "workflow": "/showcase/evidence/machine-learning/model-distillation/workflow.png"
+    },
+    "daemon": {
+      "activityCount": 6,
+      "completedActivityCount": 6,
+      "image": "ghcr.io/uffescience/akoflow-examples/showcase-model-distillation:local-6fe8b3cede6c45d6",
+      "imageId": "sha256:6fe8b3cede6c45d63fc9c749d4e3ef5c96fd73fae46c7aacd860596c16187438",
+      "observedAt": "2026-10-20T19:11:50Z",
+      "planId": "showcase-model-distillation-local-89ee6b6444-manual-plan-20261020t191140.466308000",
+      "runId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+      "status": "completed",
+      "workflowId": "showcase-model-distillation-local-89ee6b6444"
+    }
+  },
+  "/docs/showcase/ai/machine-learning/model-ensemble": {
+    "title": "Model ensemble",
+    "examplePath": "machine-learning/model-ensemble",
+    "stages": [
+      ["prepare-input"],
+      ["predict-a", "predict-b", "predict-c"],
+      ["combine"],
+      ["evaluate"],
+      ["publish"]
+    ],
+    "dependencies": {
+      "combine": ["predict-a", "predict-b", "predict-c"],
+      "evaluate": ["combine"],
+      "predict-a": ["prepare-input"],
+      "predict-b": ["prepare-input"],
+      "predict-c": ["prepare-input"],
+      "prepare-input": [],
+      "publish": ["evaluate"]
+    },
+    "validationMode": "local-workload",
+    "localProfile": "Train three regressors on different data subsets in independent activities, combine their held-out predictions with a mean ensemble, validate RMSE, and publish the learned ensemble.",
+    "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+    "requirements": [],
+    "artifacts": ["ensemble.pkl", "metrics.json"],
+    "executionMode": "local-process",
+    "validationStatus": "passed",
+    "screenshots": {
+      "combine": "/showcase/evidence/machine-learning/model-ensemble/combine.png",
+      "evaluate": "/showcase/evidence/machine-learning/model-ensemble/evaluate.png",
+      "predict-a": "/showcase/evidence/machine-learning/model-ensemble/predict-a.png",
+      "predict-b": "/showcase/evidence/machine-learning/model-ensemble/predict-b.png",
+      "predict-c": "/showcase/evidence/machine-learning/model-ensemble/predict-c.png",
+      "prepare-input": "/showcase/evidence/machine-learning/model-ensemble/prepare-input.png",
+      "publish": "/showcase/evidence/machine-learning/model-ensemble/publish.png",
+      "workflow": "/showcase/evidence/machine-learning/model-ensemble/workflow.png"
+    },
+    "daemon": {
+      "activityCount": 7,
+      "completedActivityCount": 7,
+      "image": "ghcr.io/uffescience/akoflow-examples/showcase-model-ensemble:local-f697a92241279de0",
+      "imageId": "sha256:f697a92241279de0401056d5c61e3cd8278663753f63bf2d1a15fc528e897fa8",
+      "observedAt": "2026-10-20T19:12:02Z",
+      "planId": "showcase-model-ensemble-local-68ef5b0c9f-manual-plan-20261020t191151.790863000",
+      "runId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+      "status": "completed",
+      "workflowId": "showcase-model-ensemble-local-68ef5b0c9f"
+    }
+  },
+  "/docs/showcase/ai/machine-learning/training-with-mlflow": {
+    "title": "Training with MLflow",
+    "examplePath": "machine-learning/training-with-mlflow",
+    "stages": [
+      ["ingest-data"],
+      ["validate"],
+      ["train"],
+      ["evaluate"],
+      ["register-model", "log-mlflow-run"]
+    ],
+    "dependencies": {
+      "evaluate": ["train"],
+      "ingest-data": [],
+      "log-mlflow-run": ["evaluate"],
+      "register-model": ["evaluate"],
+      "train": ["validate"],
+      "validate": ["ingest-data"]
+    },
+    "validationMode": "local-workload",
+    "localProfile": "Fit a linear regression on bundled measurements, evaluate held-out rows, publish a content-addressed local model registry entry, and independently log parameters, metrics, and the model artifact through the real MLflow SDK to a local SQLite tracking store. No hosted MLflow server is needed.",
+    "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+    "requirements": [
+      "mlflow-skinny==3.17.1",
+      "sqlalchemy==2.1.5",
+      "alembic==1.20.0"
+    ],
+    "artifacts": [
+      "model.pkl",
+      "metrics.json",
+      "report.html",
+      "registry.json",
+      "mlflow-run.json",
+      "mlflow.db"
+    ],
+    "executionMode": "local-process",
+    "validationStatus": "passed",
+    "screenshots": {
+      "evaluate": "/showcase/evidence/machine-learning/training-with-mlflow/evaluate.png",
+      "ingest-data": "/showcase/evidence/machine-learning/training-with-mlflow/ingest-data.png",
+      "log-mlflow-run": "/showcase/evidence/machine-learning/training-with-mlflow/log-mlflow-run.png",
+      "register-model": "/showcase/evidence/machine-learning/training-with-mlflow/register-model.png",
+      "train": "/showcase/evidence/machine-learning/training-with-mlflow/train.png",
+      "validate": "/showcase/evidence/machine-learning/training-with-mlflow/validate.png",
+      "workflow": "/showcase/evidence/machine-learning/training-with-mlflow/workflow.png"
+    },
+    "daemon": {
+      "activityCount": 6,
+      "completedActivityCount": 6,
+      "image": "ghcr.io/uffescience/akoflow-examples/showcase-training-with-mlflow:local-15903c29132e7968",
+      "imageId": "sha256:15903c29132e79681ae2964a94664bc1d8aec9cb3ee32d3a3d82ad62a4ef66c8",
+      "observedAt": "2026-10-20T19:13:15Z",
+      "planId": "showcase-training-with-mlflow-local-48fb3dd5e7-manual-plan-20261020t191305.433100000",
+      "runId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+      "status": "completed",
+      "workflowId": "showcase-training-with-mlflow-local-48fb3dd5e7"
+    }
   },
   "/docs/showcase/ai/scientific-ai/ai-assisted-analysis": {
     "title": "Scientific pipeline with AI interpretation",
@@ -405,37 +1029,42 @@
       ["report"]
     ],
     "dependencies": {
-      "prepare-experiment": [],
-      "simulation": ["prepare-experiment"],
-      "measurements": ["simulation"],
-      "statistics": ["measurements"],
       "ai-interpretation": ["measurements"],
-      "validate": ["statistics", "ai-interpretation"],
-      "report": ["validate"]
+      "measurements": ["simulation"],
+      "prepare-experiment": [],
+      "report": ["validate"],
+      "simulation": ["prepare-experiment"],
+      "statistics": ["measurements"],
+      "validate": ["statistics", "ai-interpretation"]
     },
-    "validationMode": "contract-fixture"
-  },
-  "/docs/showcase/ai/scientific-ai/surrogate-model": {
-    "title": "Surrogate model construction",
-    "examplePath": "scientific-ai/surrogate-model",
-    "stages": [
-      ["design-samples"],
-      ["simulation-a", "simulation-n"],
-      ["assemble-dataset"],
-      ["train-surrogate"],
-      ["validate"],
-      ["publish"]
-    ],
-    "dependencies": {
-      "design-samples": [],
-      "simulation-a": ["design-samples"],
-      "simulation-n": ["design-samples"],
-      "assemble-dataset": ["simulation-a", "simulation-n"],
-      "train-surrogate": ["assemble-dataset"],
-      "validate": ["train-surrogate"],
-      "publish": ["validate"]
+    "validationMode": "local-workload",
+    "localProfile": "Integrate a first-order decay equation, compare numerical measurements with the analytic solution, independently infer the decay rate using log-linear regression, and validate both branches before publishing a report. The smoke profile uses a small numerical experiment and a fitted regression model; it does not call a hosted LLM.",
+    "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+    "requirements": [],
+    "artifacts": ["analysis.json", "interpretation.md"],
+    "executionMode": "local-process",
+    "validationStatus": "passed",
+    "screenshots": {
+      "ai-interpretation": "/showcase/evidence/scientific-ai/ai-assisted-analysis/ai-interpretation.png",
+      "measurements": "/showcase/evidence/scientific-ai/ai-assisted-analysis/measurements.png",
+      "prepare-experiment": "/showcase/evidence/scientific-ai/ai-assisted-analysis/prepare-experiment.png",
+      "report": "/showcase/evidence/scientific-ai/ai-assisted-analysis/report.png",
+      "simulation": "/showcase/evidence/scientific-ai/ai-assisted-analysis/simulation.png",
+      "statistics": "/showcase/evidence/scientific-ai/ai-assisted-analysis/statistics.png",
+      "validate": "/showcase/evidence/scientific-ai/ai-assisted-analysis/validate.png",
+      "workflow": "/showcase/evidence/scientific-ai/ai-assisted-analysis/workflow.png"
     },
-    "validationMode": "contract-fixture"
+    "daemon": {
+      "activityCount": 7,
+      "completedActivityCount": 7,
+      "image": "ghcr.io/uffescience/akoflow-examples/showcase-ai-assisted-analysis:local-d074857f9399f4fd",
+      "imageId": "sha256:d074857f9399f4fdeb7344c3d7555a971b756f2d6c5bfbfec95ebf14ece233e2",
+      "observedAt": "2026-10-20T19:08:51Z",
+      "planId": "showcase-ai-assisted-analysis-local-6ec20be3c8-manual-plan-20261020t190838.811067000",
+      "runId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+      "status": "completed",
+      "workflowId": "showcase-ai-assisted-analysis-local-6ec20be3c8"
+    }
   },
   "/docs/showcase/ai/scientific-ai/experiment-feedback-loop": {
     "title": "Model-guided experiment cycle",
@@ -450,52 +1079,88 @@
     ],
     "dependencies": {
       "observations": [],
-      "update-model": ["observations"],
       "propose-experiments": ["update-model"],
-      "safety-check": ["propose-experiments"],
+      "record-observations": ["run-experiments"],
       "run-experiments": ["safety-check"],
-      "record-observations": ["run-experiments"]
+      "safety-check": ["propose-experiments"],
+      "update-model": ["observations"]
     },
-    "validationMode": "contract-fixture"
+    "validationMode": "local-workload",
+    "localProfile": "Fit a quadratic response model from local observations, propose a new experiment batch, enforce parameter limits, execute the proposed experiments, and verify that the measured optimum improves on the original observations. This is a numerical closed loop, not a hardware experiment.",
+    "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+    "requirements": [],
+    "artifacts": ["next-batch.json", "feedback-report.json"],
+    "executionMode": "local-process",
+    "validationStatus": "passed",
+    "screenshots": {
+      "observations": "/showcase/evidence/scientific-ai/experiment-feedback-loop/observations.png",
+      "propose-experiments": "/showcase/evidence/scientific-ai/experiment-feedback-loop/propose-experiments.png",
+      "record-observations": "/showcase/evidence/scientific-ai/experiment-feedback-loop/record-observations.png",
+      "run-experiments": "/showcase/evidence/scientific-ai/experiment-feedback-loop/run-experiments.png",
+      "safety-check": "/showcase/evidence/scientific-ai/experiment-feedback-loop/safety-check.png",
+      "update-model": "/showcase/evidence/scientific-ai/experiment-feedback-loop/update-model.png",
+      "workflow": "/showcase/evidence/scientific-ai/experiment-feedback-loop/workflow.png"
+    },
+    "daemon": {
+      "activityCount": 6,
+      "completedActivityCount": 6,
+      "image": "ghcr.io/uffescience/akoflow-examples/showcase-experiment-feedback-loop:local-7870585bb0d877eb",
+      "imageId": "sha256:7870585bb0d877eb8a1530949f774112264cf9a40015fa989c64ee81a8136cd9",
+      "observedAt": "2026-10-20T19:09:04Z",
+      "planId": "showcase-experiment-feedback-loop-local-4ea0522b9c-manual-plan-20261020t190852.238831000",
+      "runId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+      "status": "completed",
+      "workflowId": "showcase-experiment-feedback-loop-local-4ea0522b9c"
+    }
   },
-  "/docs/showcase/ai/generative-ai/ai-video-studio": {
-    "title": "AI Video Studio",
-    "examplePath": "generative-ai/video-studio",
+  "/docs/showcase/ai/scientific-ai/surrogate-model": {
+    "title": "Surrogate model construction",
+    "examplePath": "scientific-ai/surrogate-model",
     "stages": [
-      ["storyboard"],
-      ["scenes", "narration"],
-      ["compose"],
-      ["quality-control"]
+      ["design-samples"],
+      ["simulation-a", "simulation-n"],
+      ["assemble-dataset"],
+      ["train-surrogate"],
+      ["validate"],
+      ["publish"]
     ],
     "dependencies": {
-      "storyboard": [],
-      "scenes": ["storyboard"],
-      "narration": ["storyboard"],
-      "compose": ["scenes", "narration"],
-      "quality-control": ["compose"]
+      "assemble-dataset": ["simulation-a", "simulation-n"],
+      "design-samples": [],
+      "publish": ["validate"],
+      "simulation-a": ["design-samples"],
+      "simulation-n": ["design-samples"],
+      "train-surrogate": ["assemble-dataset"],
+      "validate": ["train-surrogate"]
     },
-    "validationMode": "local-pipeline"
-  },
-  "/docs/showcase/ai/generative-ai/local-rag-factory": {
-    "title": "Local RAG Factory",
-    "examplePath": "generative-ai/local-rag",
-    "stages": [
-      ["ingest"],
-      ["chunk"],
-      ["index"],
-      ["retrieve"],
-      ["answer"],
-      ["evaluate"]
-    ],
-    "dependencies": {
-      "ingest": [],
-      "chunk": ["ingest"],
-      "index": ["chunk"],
-      "retrieve": ["index"],
-      "answer": ["retrieve"],
-      "evaluate": ["answer"]
+    "validationMode": "local-workload",
+    "localProfile": "Evaluate a damped-response integral in two independent simulation shards, assemble the samples, fit a piecewise-linear surrogate, and validate it against held-out numerical evaluations. All computation runs locally on the CPU.",
+    "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+    "requirements": [],
+    "artifacts": ["surrogate.pkl", "validation.json"],
+    "executionMode": "local-process",
+    "validationStatus": "passed",
+    "screenshots": {
+      "assemble-dataset": "/showcase/evidence/scientific-ai/surrogate-model/assemble-dataset.png",
+      "design-samples": "/showcase/evidence/scientific-ai/surrogate-model/design-samples.png",
+      "publish": "/showcase/evidence/scientific-ai/surrogate-model/publish.png",
+      "simulation-a": "/showcase/evidence/scientific-ai/surrogate-model/simulation-a.png",
+      "simulation-n": "/showcase/evidence/scientific-ai/surrogate-model/simulation-n.png",
+      "train-surrogate": "/showcase/evidence/scientific-ai/surrogate-model/train-surrogate.png",
+      "validate": "/showcase/evidence/scientific-ai/surrogate-model/validate.png",
+      "workflow": "/showcase/evidence/scientific-ai/surrogate-model/workflow.png"
     },
-    "validationMode": "local-pipeline"
+    "daemon": {
+      "activityCount": 7,
+      "completedActivityCount": 7,
+      "image": "ghcr.io/uffescience/akoflow-examples/showcase-surrogate-model:local-53b8cdcb4231bec1",
+      "imageId": "sha256:53b8cdcb4231bec1ab88516be7c27637d832f6ecb7794d3884b50be5529ea9e5",
+      "observedAt": "2026-10-20T19:09:17Z",
+      "planId": "showcase-surrogate-model-local-a18299f701-manual-plan-20261020t190905.260770000",
+      "runId": "showcase-surrogate-model-local-a18299f701-run-20261020t190905.264745000",
+      "status": "completed",
+      "workflowId": "showcase-surrogate-model-local-a18299f701"
+    }
   },
   "/docs/showcase/document-ai/document-intelligence": {
     "title": "Document Intelligence",
@@ -508,13 +1173,45 @@
       ["report"]
     ],
     "dependencies": {
-      "ingest": [],
       "classify": ["ingest"],
       "extract": ["classify"],
+      "ingest": [],
       "reconcile": ["extract"],
       "report": ["reconcile"]
     },
-    "validationMode": "local-pipeline"
+    "validationMode": "local-pipeline",
+    "localProfile": "Read the bundled business documents, classify them, extract structured fields, reconcile invoice lines, and publish a checked report. Every stage performs local data processing and passes its files to the next activity.",
+    "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+    "requirements": [],
+    "artifacts": [
+      "ingested.json",
+      "classified.json",
+      "extracted.json",
+      "reconciliation.json",
+      "invoice-summary.csv",
+      "report.json"
+    ],
+    "executionMode": "local-process",
+    "validationStatus": "passed",
+    "screenshots": {
+      "classify": "/showcase/evidence/document-ai/document-intelligence/classify.png",
+      "extract": "/showcase/evidence/document-ai/document-intelligence/extract.png",
+      "ingest": "/showcase/evidence/document-ai/document-intelligence/ingest.png",
+      "reconcile": "/showcase/evidence/document-ai/document-intelligence/reconcile.png",
+      "report": "/showcase/evidence/document-ai/document-intelligence/report.png",
+      "workflow": "/showcase/evidence/document-ai/document-intelligence/workflow.png"
+    },
+    "daemon": {
+      "activityCount": 5,
+      "completedActivityCount": 5,
+      "image": "ghcr.io/uffescience/akoflow-examples/document-intelligence:v1",
+      "imageId": "sha256:185883e22354895a1a7be4706f4d9b0ffe382547a9a55ea0911a906698050b1f",
+      "observedAt": null,
+      "planId": "document-intelligence-local-cf7251f56a-manual-plan-20261020t182628",
+      "runId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+      "status": "completed",
+      "workflowId": "document-intelligence-local-cf7251f56a"
+    }
   },
   "/docs/showcase/media/video-intelligence": {
     "title": "Video Intelligence",
@@ -526,14 +1223,46 @@
       ["report"]
     ],
     "dependencies": {
+      "audio": ["prepare"],
       "prepare": [],
       "probe": ["prepare"],
+      "report": ["timeline"],
       "scenes": ["prepare"],
-      "audio": ["prepare"],
-      "timeline": ["probe", "scenes", "audio"],
-      "report": ["timeline"]
+      "timeline": ["probe", "scenes", "audio"]
     },
-    "validationMode": "local-pipeline"
+    "validationMode": "local-pipeline",
+    "localProfile": "Generate a three-scene video, independently inspect container metadata, scene boundaries, and audio, merge the measurements into a timeline, and publish a validated report. The supplied Docker image uses FFmpeg for the actual video analysis.",
+    "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+    "requirements": [],
+    "artifacts": [
+      "source.mp4",
+      "probe.json",
+      "scenes.json",
+      "audio.json",
+      "timeline.json"
+    ],
+    "executionMode": "local-process",
+    "validationStatus": "passed",
+    "screenshots": {
+      "audio": "/showcase/evidence/media/video-intelligence/audio.png",
+      "prepare": "/showcase/evidence/media/video-intelligence/prepare.png",
+      "probe": "/showcase/evidence/media/video-intelligence/probe.png",
+      "report": "/showcase/evidence/media/video-intelligence/report.png",
+      "scenes": "/showcase/evidence/media/video-intelligence/scenes.png",
+      "timeline": "/showcase/evidence/media/video-intelligence/timeline.png",
+      "workflow": "/showcase/evidence/media/video-intelligence/workflow.png"
+    },
+    "daemon": {
+      "activityCount": 6,
+      "completedActivityCount": 6,
+      "image": "ghcr.io/uffescience/akoflow-examples/video-intelligence:v1",
+      "imageId": "sha256:9a17f6f4661eb6e751c27bda9ada09ed7ff0126fbd2e82291f25523692aa3223",
+      "observedAt": null,
+      "planId": "video-intelligence-local-bb3cf6fa14-manual-plan-20261020t182639",
+      "runId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+      "status": "completed",
+      "workflowId": "video-intelligence-local-bb3cf6fa14"
+    }
   },
   "/docs/showcase/rendering/blender-render-farm": {
     "title": "Blender Render Farm",
@@ -545,12 +1274,249 @@
       ["verify"]
     ],
     "dependencies": {
-      "setup": [],
+      "compose": ["render-even", "render-odd"],
       "render-even": ["setup"],
       "render-odd": ["setup"],
-      "compose": ["render-even", "render-odd"],
+      "setup": [],
       "verify": ["compose"]
     },
-    "validationMode": "local-pipeline"
+    "validationMode": "local-pipeline",
+    "localProfile": "Build a real Blender scene, render even and odd frames in parallel using Cycles on the CPU, compose an MP4, and verify all six frames. The default command uses Docker, so the host does not need a Blender installation. No JSON file is represented as a .blend file.",
+    "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+    "requirements": [],
+    "artifacts": [
+      "render-plan.json",
+      "scene.blend",
+      "animation.mp4",
+      "render-report.json"
+    ],
+    "executionMode": "local-container",
+    "validationStatus": "passed",
+    "screenshots": {
+      "compose": "/showcase/evidence/rendering/blender-render-farm/compose.png",
+      "render-even": "/showcase/evidence/rendering/blender-render-farm/render-even.png",
+      "render-odd": "/showcase/evidence/rendering/blender-render-farm/render-odd.png",
+      "setup": "/showcase/evidence/rendering/blender-render-farm/setup.png",
+      "verify": "/showcase/evidence/rendering/blender-render-farm/verify.png",
+      "workflow": "/showcase/evidence/rendering/blender-render-farm/workflow.png"
+    },
+    "daemon": {
+      "activityCount": 5,
+      "completedActivityCount": 5,
+      "image": "ghcr.io/uffescience/akoflow-examples/blender-render-farm:v1",
+      "imageId": "sha256:12a47cf91b78efbb6c52ce12625179a85197517b95af5f9d32f97982594d09c0",
+      "observedAt": null,
+      "planId": "blender-render-farm-local-c7b71b395d-manual-plan-20261020t182650",
+      "runId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+      "status": "completed",
+      "workflowId": "blender-render-farm-local-c7b71b395d"
+    }
+  },
+  "/docs/showcase/scientific-workflows/montage-050": {
+    "title": "Montage 050 locally",
+    "examplePath": "scientific-workflows/montage-050",
+    "stages": [
+      [
+        "mprojectid0000001",
+        "mprojectid0000002",
+        "mprojectid0000003",
+        "mprojectid0000004",
+        "mprojectid0000020",
+        "mprojectid0000021",
+        "mprojectid0000022",
+        "mprojectid0000023",
+        "mprojectid0000039",
+        "mprojectid0000040",
+        "mprojectid0000041",
+        "mprojectid0000042"
+      ],
+      [
+        "mdifffitid0000005",
+        "mdifffitid0000006",
+        "mdifffitid0000007",
+        "mdifffitid0000008",
+        "mdifffitid0000009",
+        "mdifffitid0000010",
+        "mdifffitid0000024",
+        "mdifffitid0000025",
+        "mdifffitid0000026",
+        "mdifffitid0000027",
+        "mdifffitid0000028",
+        "mdifffitid0000029",
+        "mdifffitid0000043",
+        "mdifffitid0000044",
+        "mdifffitid0000045",
+        "mdifffitid0000046",
+        "mdifffitid0000047",
+        "mdifffitid0000048"
+      ],
+      ["mconcatfitid0000011", "mconcatfitid0000030", "mconcatfitid0000049"],
+      ["mbgmodelid0000012", "mbgmodelid0000031", "mbgmodelid0000050"],
+      [
+        "mbackgroundid0000013",
+        "mbackgroundid0000014",
+        "mbackgroundid0000015",
+        "mbackgroundid0000016",
+        "mbackgroundid0000032",
+        "mbackgroundid0000033",
+        "mbackgroundid0000034",
+        "mbackgroundid0000035",
+        "mbackgroundid0000051",
+        "mbackgroundid0000052",
+        "mbackgroundid0000053",
+        "mbackgroundid0000054"
+      ],
+      ["mimgtblid0000017", "mimgtblid0000036", "mimgtblid0000055"],
+      ["maddid0000018", "maddid0000037", "maddid0000056"],
+      [
+        "mviewerid0000019",
+        "mviewerid0000038",
+        "mviewerid0000057",
+        "mviewerid0000058"
+      ]
+    ],
+    "dependencies": {
+      "maddid0000018": [
+        "mbackgroundid0000013",
+        "mbackgroundid0000014",
+        "mbackgroundid0000015",
+        "mbackgroundid0000016",
+        "mimgtblid0000017"
+      ],
+      "maddid0000037": [
+        "mbackgroundid0000032",
+        "mbackgroundid0000033",
+        "mbackgroundid0000034",
+        "mbackgroundid0000035",
+        "mimgtblid0000036"
+      ],
+      "maddid0000056": [
+        "mbackgroundid0000051",
+        "mbackgroundid0000052",
+        "mbackgroundid0000053",
+        "mbackgroundid0000054",
+        "mimgtblid0000055"
+      ],
+      "mbackgroundid0000013": ["mprojectid0000001", "mbgmodelid0000012"],
+      "mbackgroundid0000014": ["mprojectid0000002", "mbgmodelid0000012"],
+      "mbackgroundid0000015": ["mprojectid0000003", "mbgmodelid0000012"],
+      "mbackgroundid0000016": ["mprojectid0000004", "mbgmodelid0000012"],
+      "mbackgroundid0000032": ["mprojectid0000020", "mbgmodelid0000031"],
+      "mbackgroundid0000033": ["mprojectid0000021", "mbgmodelid0000031"],
+      "mbackgroundid0000034": ["mprojectid0000022", "mbgmodelid0000031"],
+      "mbackgroundid0000035": ["mprojectid0000023", "mbgmodelid0000031"],
+      "mbackgroundid0000051": ["mprojectid0000039", "mbgmodelid0000050"],
+      "mbackgroundid0000052": ["mprojectid0000040", "mbgmodelid0000050"],
+      "mbackgroundid0000053": ["mprojectid0000041", "mbgmodelid0000050"],
+      "mbackgroundid0000054": ["mprojectid0000042", "mbgmodelid0000050"],
+      "mbgmodelid0000012": ["mconcatfitid0000011"],
+      "mbgmodelid0000031": ["mconcatfitid0000030"],
+      "mbgmodelid0000050": ["mconcatfitid0000049"],
+      "mconcatfitid0000011": [
+        "mdifffitid0000005",
+        "mdifffitid0000006",
+        "mdifffitid0000007",
+        "mdifffitid0000008",
+        "mdifffitid0000009",
+        "mdifffitid0000010"
+      ],
+      "mconcatfitid0000030": [
+        "mdifffitid0000024",
+        "mdifffitid0000025",
+        "mdifffitid0000026",
+        "mdifffitid0000027",
+        "mdifffitid0000028",
+        "mdifffitid0000029"
+      ],
+      "mconcatfitid0000049": [
+        "mdifffitid0000043",
+        "mdifffitid0000044",
+        "mdifffitid0000045",
+        "mdifffitid0000046",
+        "mdifffitid0000047",
+        "mdifffitid0000048"
+      ],
+      "mdifffitid0000005": ["mprojectid0000001", "mprojectid0000002"],
+      "mdifffitid0000006": ["mprojectid0000001", "mprojectid0000003"],
+      "mdifffitid0000007": ["mprojectid0000001", "mprojectid0000004"],
+      "mdifffitid0000008": ["mprojectid0000002", "mprojectid0000003"],
+      "mdifffitid0000009": ["mprojectid0000002", "mprojectid0000004"],
+      "mdifffitid0000010": ["mprojectid0000003", "mprojectid0000004"],
+      "mdifffitid0000024": ["mprojectid0000020", "mprojectid0000021"],
+      "mdifffitid0000025": ["mprojectid0000020", "mprojectid0000022"],
+      "mdifffitid0000026": ["mprojectid0000020", "mprojectid0000023"],
+      "mdifffitid0000027": ["mprojectid0000021", "mprojectid0000022"],
+      "mdifffitid0000028": ["mprojectid0000021", "mprojectid0000023"],
+      "mdifffitid0000029": ["mprojectid0000022", "mprojectid0000023"],
+      "mdifffitid0000043": ["mprojectid0000039", "mprojectid0000040"],
+      "mdifffitid0000044": ["mprojectid0000039", "mprojectid0000041"],
+      "mdifffitid0000045": ["mprojectid0000039", "mprojectid0000042"],
+      "mdifffitid0000046": ["mprojectid0000040", "mprojectid0000041"],
+      "mdifffitid0000047": ["mprojectid0000040", "mprojectid0000042"],
+      "mdifffitid0000048": ["mprojectid0000041", "mprojectid0000042"],
+      "mimgtblid0000017": [
+        "mbackgroundid0000013",
+        "mbackgroundid0000014",
+        "mbackgroundid0000015",
+        "mbackgroundid0000016"
+      ],
+      "mimgtblid0000036": [
+        "mbackgroundid0000032",
+        "mbackgroundid0000033",
+        "mbackgroundid0000034",
+        "mbackgroundid0000035"
+      ],
+      "mimgtblid0000055": [
+        "mbackgroundid0000051",
+        "mbackgroundid0000052",
+        "mbackgroundid0000053",
+        "mbackgroundid0000054"
+      ],
+      "mprojectid0000001": [],
+      "mprojectid0000002": [],
+      "mprojectid0000003": [],
+      "mprojectid0000004": [],
+      "mprojectid0000020": [],
+      "mprojectid0000021": [],
+      "mprojectid0000022": [],
+      "mprojectid0000023": [],
+      "mprojectid0000039": [],
+      "mprojectid0000040": [],
+      "mprojectid0000041": [],
+      "mprojectid0000042": [],
+      "mviewerid0000019": ["maddid0000018"],
+      "mviewerid0000038": ["maddid0000037"],
+      "mviewerid0000057": ["maddid0000056"],
+      "mviewerid0000058": ["maddid0000018", "maddid0000037", "maddid0000056"]
+    },
+    "validationMode": "local-workload",
+    "localProfile": "Run all 58 original Montage 050d activities locally, using the immutable amd64 image and its twelve bundled FITS observations. The default uses two CPU slots, preserves the 138 named file handoffs, creates three calibrated astronomical mosaics and a color preview, and provisions no cloud machines. This is a long-running scientific workload; on Apple Silicon Docker uses amd64 emulation.",
+    "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+    "requirements": [],
+    "artifacts": [
+      "1-mosaic.fits",
+      "2-mosaic.fits",
+      "3-mosaic.fits",
+      "1-mosaic.png",
+      "2-mosaic.png",
+      "3-mosaic.png",
+      "mosaic-color.png"
+    ],
+    "executionMode": "daemon-local-docker",
+    "validationStatus": "running",
+    "screenshots": {
+      "workflow": "/showcase/evidence/scientific-workflows/montage-050/workflow.png"
+    },
+    "daemon": {
+      "activityCount": 58,
+      "completedActivityCount": 0,
+      "image": "ghcr.io/uffescience/akoflow-examples/montage-050-local:local-e93f234c8783ea13",
+      "imageId": "sha256:e93f234c8783ea13da8ec0912c8efdef8a1955787635eed6a1e969e367051d2f",
+      "observedAt": "2026-10-20T19:31:09.497Z",
+      "planId": "montage-050-local-local-4f5b7d857b-manual-plan-20261020t193048.863696000",
+      "runId": "montage-050-local-local-4f5b7d857b-run-20261020t193048.874693000",
+      "status": "running",
+      "workflowId": "montage-050-local-local-4f5b7d857b"
+    }
   }
 }

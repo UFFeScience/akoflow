@@ -1,10 +1,62 @@
 {
-  "showcase": "anomaly-detection",
-  "digest": "72e5ff5eb92eaf12e86b2e551adcf791634b94a6908735c549ea6ea4ea8bf798",
-  "stages": [
-    "choose-threshold"
+  "dependencies": [
+    "score-validation"
   ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:38.019056Z",
+  "finishedAtUnixNs": 1792523558014542000,
+  "inputDigest": "faf961cc37f1944b3186c2b067dbbe4377fae878b18036bdf01a4b9475abeb94",
+  "result": {
+    "best": {
+      "f1": 1,
+      "threshold": 2
+    },
+    "model": {
+      "mean": 0.0008643909319737908,
+      "std": 0.2125943333512216
+    },
+    "scored": [
+      {
+        "label": 0,
+        "score": 0.004065917084185649,
+        "value": 10
+      },
+      {
+        "label": 0,
+        "score": 0.46631350659872234,
+        "value": 10.1
+      },
+      {
+        "label": 0,
+        "score": 0.9448247644500016,
+        "value": 9.8
+      },
+      {
+        "label": 0,
+        "score": 1.4070723539645469,
+        "value": 10.3
+      },
+      {
+        "label": 1,
+        "score": 9.403522556574007,
+        "value": 12
+      },
+      {
+        "label": 1,
+        "score": 9.41165439074238,
+        "value": 8
+      },
+      {
+        "label": 1,
+        "score": 14.107316793403104,
+        "value": 13
+      }
+    ]
+  },
+  "showcase": "anomaly-detection",
+  "stage": "choose-threshold",
+  "startedAt": "2026-10-20T19:12:37.973731Z",
+  "startedAtUnixNs": 1792523558014426000,
   "status": "success",
-  "validationMode": "contract-fixture",
-  "stage": "choose-threshold"
+  "validationMode": "local-workload"
 }

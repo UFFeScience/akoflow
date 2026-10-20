@@ -1,10 +1,25 @@
 {
-  "showcase": "model-comparison",
-  "digest": "13a73ec7c3f7e14488f158c92267085d0cb6199218723bd74bd1d003fc80fedb",
-  "stages": [
-    "approve-candidate"
+  "dependencies": [
+    "compare-metrics"
   ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:40.278803Z",
+  "finishedAtUnixNs": 1792523560274452000,
+  "inputDigest": "016f3c6d6a67162389ea58397f22ac1ef026f65bf12d01dc745afb4b74d438ec",
+  "result": {
+    "approved": {
+      "candidate": "evaluate-a",
+      "model": {
+        "bias": 0.7000638860082544,
+        "weight": 2.4003132669930687
+      },
+      "rmse": 0.0211140956600391
+    }
+  },
+  "showcase": "model-comparison",
+  "stage": "approve-candidate",
+  "startedAt": "2026-10-20T19:12:40.235317Z",
+  "startedAtUnixNs": 1792523560274096000,
   "status": "success",
-  "validationMode": "contract-fixture",
-  "stage": "approve-candidate"
+  "validationMode": "local-workload"
 }

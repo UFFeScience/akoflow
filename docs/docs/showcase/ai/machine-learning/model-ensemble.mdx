@@ -18,7 +18,7 @@ import { AIWorkflowPattern } from "@site/src/components/WorkflowShowcase";
     "publish",
   ]}
   inputs={["Input dataset", "Component models", "Aggregation policy"]}
-  outputs={["Component predictions", "Ensemble output", "Evaluation"]}
+  outputs={["ensemble.pkl", "metrics.json"]}
   evidence={["Component versions", "Aggregation weights", "Per-model logs"]}
   execution="Components may run in different environments. Transfer predictions when co-locating incompatible frameworks is more expensive."
 />

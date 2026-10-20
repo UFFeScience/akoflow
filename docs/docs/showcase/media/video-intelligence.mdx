@@ -3,6 +3,10 @@ title: Video Intelligence
 description: Generate, inspect, segment, and summarize a reproducible offline test video.
 ---
 
+import WorkflowExecutionEvidence from "@site/src/components/WorkflowExecutionEvidence";
+
+import WorkflowLocalRun from "@site/src/components/WorkflowLocalRun";
+
 import {
   WorkflowDag,
   WorkflowPatternDetails,
@@ -34,18 +38,9 @@ The workflow creates a known three-scene video, inspects its streams, extracts s
   ]}
 />
 
-## Run locally
+<WorkflowLocalRun examplePath="media/video-intelligence" />
 
-```bash
-git clone https://github.com/UFFeScience/akoflow-examples.git
-cd akoflow-examples/media/video-intelligence
-./run.sh
-```
-
-Minimal hosts use a deterministic portable fixture. The container installs FFmpeg and FFprobe and performs the complete media path.
-
-[Open the source bundle](https://github.com/UFFeScience/akoflow-examples/tree/main/media/video-intelligence) · [Workflow YAML](https://raw.githubusercontent.com/UFFeScience/akoflow-examples/main/media/video-intelligence/workflow.yaml)
-
-## Local validation evidence
-
-[Validated output manifest](/showcase/validation/media/video-intelligence/manifest.json). This host smoke run does not verify deployment through the daemon. Updated Desktop activity captures are still pending.
+<WorkflowExecutionEvidence
+  title="Video Intelligence"
+  examplePath="media/video-intelligence"
+/>

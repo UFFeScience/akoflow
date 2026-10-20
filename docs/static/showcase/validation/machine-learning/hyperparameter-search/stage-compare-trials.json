@@ -1,10 +1,61 @@
 {
-  "showcase": "hyperparameter-search",
-  "digest": "cee885f97aa6ed9a1a82ee0413f306a866bb410d716bf0ae33fa327349b2b070",
-  "stages": [
-    "compare-trials"
+  "dependencies": [
+    "trial-1",
+    "trial-2",
+    "trial-n"
   ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:39.009841Z",
+  "finishedAtUnixNs": 1792523559004960000,
+  "inputDigest": "3f9f767aff2cdcd7d7c4c21897033272eaa951cb64b1207311f4717b805a2033",
+  "result": {
+    "best": {
+      "candidate": "trial-n",
+      "epochs": 300,
+      "learningRate": 0.06,
+      "model": {
+        "bias": 0.7000638860082541,
+        "weight": 2.400313266993068
+      },
+      "rmse": 0.02111409566003897
+    },
+    "trials": [
+      {
+        "candidate": "trial-n",
+        "epochs": 300,
+        "learningRate": 0.06,
+        "model": {
+          "bias": 0.7000638860082541,
+          "weight": 2.400313266993068
+        },
+        "rmse": 0.02111409566003897
+      },
+      {
+        "candidate": "trial-2",
+        "epochs": 100,
+        "learningRate": 0.02,
+        "model": {
+          "bias": 0.6845610578453946,
+          "weight": 2.391170034338695
+        },
+        "rmse": 0.02751510083846412
+      },
+      {
+        "candidate": "trial-1",
+        "epochs": 20,
+        "learningRate": 0.005,
+        "model": {
+          "bias": 0.11119687766104941,
+          "weight": 0.5813231332989116
+        },
+        "rmse": 2.242030916803757
+      }
+    ]
+  },
+  "showcase": "hyperparameter-search",
+  "stage": "compare-trials",
+  "startedAt": "2026-10-20T19:12:38.963147Z",
+  "startedAtUnixNs": 1792523559004501000,
   "status": "success",
-  "validationMode": "contract-fixture",
-  "stage": "compare-trials"
+  "validationMode": "local-workload"
 }

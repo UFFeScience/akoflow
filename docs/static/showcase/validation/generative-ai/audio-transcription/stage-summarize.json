@@ -1,10 +1,31 @@
 {
-  "showcase": "audio-transcription",
-  "digest": "9783a40cdec93c2fdd3baabd363a88d1efb85703e36128c3a3d589f89853c104",
-  "stages": [
-    "summarize"
+  "dependencies": [
+    "merge-transcript"
   ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:45.981027Z",
+  "finishedAtUnixNs": 1792523565976389000,
+  "inputDigest": "9951b56e42169a516ac779ddc3c7c60da5f6ede6732bb1ea93bd1011b1366067",
+  "result": {
+    "counts": {
+      "data": 2,
+      "ready": 2,
+      "science": 2
+    },
+    "summary": "The 6 decoded tone words cover data (2), ready (2), science (2).",
+    "tokens": [
+      "science",
+      "data",
+      "ready",
+      "data",
+      "science",
+      "ready"
+    ]
+  },
+  "showcase": "audio-transcription",
+  "stage": "summarize",
+  "startedAt": "2026-10-20T19:12:45.935305Z",
+  "startedAtUnixNs": 1792523565976313000,
   "status": "success",
-  "validationMode": "contract-fixture",
-  "stage": "summarize"
+  "validationMode": "local-workload"
 }

@@ -18,7 +18,7 @@ import { AIWorkflowPattern } from "@site/src/components/WorkflowShowcase";
     "train",
   ]}
   inputs={["Workflow profile", "Execution scopes", "Budget and deadline"]}
-  outputs={["Candidate plans", "Selection record", "Observed run"]}
+  outputs={["decision.json", "cost-comparison.csv"]}
   evidence={["Planner version", "Predictions", "Plan-versus-observed error"]}
   execution="Evaluate candidates with frozen inputs and one common model. Queue planning experiments so concurrent load does not distort evidence."
 />

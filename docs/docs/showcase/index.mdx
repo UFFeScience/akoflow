@@ -8,13 +8,13 @@ import WorkflowCatalog from "@site/src/components/WorkflowCatalog";
 
 # Showcases
 
-Explore 27 executable workflows organized by technical domain. Each page explains the workflow DAG, activity responsibilities, inputs, outputs, provenance, and execution considerations without embedding implementation code in the documentation.
+Explore 28 executable workflows organized by technical domain. Each page explains the workflow DAG, activity responsibilities, inputs, outputs, provenance, and execution considerations without embedding implementation code in the documentation.
 
 The complete Dockerfiles, Python programs, generators, input fixtures, runners, and validators are maintained separately in [`UFFeScience/akoflow-examples`](https://github.com/UFFeScience/akoflow-examples). A single source-bundle link on each page connects the explanation to its versioned implementation.
 
 ## Choose a category
 
-- **Scientific Workflows** — AI-assisted analysis, surrogate models, and experiment feedback loops.
+- **Scientific Workflows** — the full Montage 050d astronomical mosaic, numerical analysis, surrogate models, and experiment feedback loops.
 
 - **Machine Learning** — training, tuning, inference, evaluation, conversion, vision, ensembles, and infrastructure selection.
 - **Generative AI** — retrieval, synthetic data, audio transcription, document extraction, and offline video creation.
@@ -27,8 +27,10 @@ The complete Dockerfiles, Python programs, generators, input fixtures, runners, 
 
 ## Validation model
 
-The 22 AI pattern bundles are **contract fixtures**: they validate activity names, dependencies, scheduling waves, and generated artifact contracts. They do not train models, contact MLflow, or execute hosted AI services. The five domain pipelines perform local data processing. A successful fixture run must not be presented as a verified deployment of the corresponding model.
+Each page includes a copyable local command, its prerequisites, a precise description of the portable workload, and its expected output files. The 27 small examples execute real CPU computations and have both standalone local validation and completed Docker-backed daemon runs. The evidence includes all 171 activity captures and the 27 observed DAGs, with links to their measured results and execution records.
 
-Every source bundle is exercised by the centralized examples CI. The regression fixture verifies its declared local inputs and outputs; provider-specific execution on HPC, Kubernetes, or cloud infrastructure still depends on the environment and permissions described by the corresponding infrastructure guide.
+The local profiles are deliberately small and explicit: for example, geometric images instead of CIFAR-10, a rank-one adapter on a tiny matrix instead of an LLM, TF-IDF retrieval instead of hosted embeddings, and a synthetic tone vocabulary instead of natural-speech recognition. GPU, edge, and infrastructure comparison profiles distinguish CPU measurements from declared placement assumptions. The training example uses the actual MLflow SDK and a local SQLite tracking store.
 
-[Validation results for all 27 showcases](/showcase/validation/summary.json) (2026-10-20). These are local smoke and contract checks; daemon runs and per-activity Desktop screenshots remain pending.
+Montage 050 is the full 58-activity scientific workflow and uses the pinned original image. Its image and command contract are verified separately from its long-running execution. A started run is shown as running until its final files are validated.
+
+[Read the verification records for the complete catalog](/showcase/validation/summary.json). Provider-specific execution on HPC, Kubernetes, or cloud infrastructure still requires the environment described by the corresponding infrastructure guide.

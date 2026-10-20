@@ -5,3 +5,4 @@ export { default as WorkflowDiagram } from "./WorkflowDiagram";
 export { default as ShowcaseGrid } from "./ShowcaseGrid";
 export { default as ShowcaseCard } from "./ShowcaseCard";
 export { default as FileList } from "./FileList";
+export { default as WorkflowLocalRun } from "./WorkflowLocalRun";

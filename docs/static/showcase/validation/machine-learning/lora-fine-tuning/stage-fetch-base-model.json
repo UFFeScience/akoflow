@@ -1,10 +1,27 @@
 {
+  "dependencies": [],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:39.800159Z",
+  "finishedAtUnixNs": 1792523559795521000,
+  "inputDigest": "3d810a4233efa806bfaa7d1e21a57826a7cb67f6f2b8aeed7547aa3dc787e200",
+  "result": {
+    "rank": 1,
+    "source": "bundled 2x2 base matrix",
+    "weights": [
+      [
+        1,
+        0
+      ],
+      [
+        0,
+        1
+      ]
+    ]
+  },
   "showcase": "lora-fine-tuning",
-  "digest": "d0bee0340572aff3c62c489546b1833ba17a2e2dd01c910719fadd2d5d9057c8",
-  "stages": [
-    "fetch-base-model"
-  ],
+  "stage": "fetch-base-model",
+  "startedAt": "2026-10-20T19:12:39.753087Z",
+  "startedAtUnixNs": 1792523559795519000,
   "status": "success",
-  "validationMode": "contract-fixture",
-  "stage": "fetch-base-model"
+  "validationMode": "local-workload"
 }

@@ -20,7 +20,7 @@ import { AIWorkflowPattern } from "@site/src/components/WorkflowShowcase";
     "publish",
   ]}
   inputs={["Source collection", "Chunking policy", "Model revisions"]}
-  outputs={["Index snapshot", "Evaluation reports", "Source manifest"]}
+  outputs={["index.json", "evaluation.json"]}
   evidence={["Source revisions", "Chunk identifiers", "Prompts and models"]}
   execution="Fan out document processing and embedding. Treat the vector database as a service while retaining immutable index evidence."
 />

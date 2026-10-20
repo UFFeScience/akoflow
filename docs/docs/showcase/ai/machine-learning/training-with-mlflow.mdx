@@ -18,11 +18,18 @@ import { AIWorkflowPattern } from "@site/src/components/WorkflowShowcase";
     ["register-model", "log-mlflow-run"],
   ]}
   inputs={["Versioned dataset", "Training configuration", "Runtime image"]}
-  outputs={["Model artifact", "Evaluation report", "MLflow run"]}
+  outputs={[
+    "model.pkl",
+    "metrics.json",
+    "report.html",
+    "registry.json",
+    "mlflow-run.json",
+    "mlflow.db",
+  ]}
   evidence={[
     "Dataset and code digests",
     "Parameters and metrics",
     "Resource placement",
   ]}
-  execution="Use GPU capacity for training and CPU capacity for validation or registration. MLflow remains an external service; AkôFlow records the activity that communicates with it."
+  execution="The CPU profile trains an ordinary-least-squares model. After evaluation, register-model publishes a local content-addressed registry entry while log-mlflow-run logs the same model and metrics through the MLflow SDK to SQLite. These final activities have independent outputs and may run in parallel. If a production registry entry needs an MLflow run ID or model URI, add a dependency from registration to the logging activity instead."
 />

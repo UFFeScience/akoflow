@@ -15,7 +15,7 @@ export default function WorkflowExecutionEvidence({
   title: string;
   examplePath: string;
 }) {
-  const evidenceBase = useBaseUrl(`/showcase-validation/${examplePath}`);
+  const evidenceBase = useBaseUrl(`/showcase/validation/${examplePath}`);
   const contract = (Object.values(contracts) as Contract[]).find(
     (item) => item.examplePath === examplePath,
   );

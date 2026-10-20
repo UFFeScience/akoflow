@@ -34,7 +34,9 @@ func TestCatalogCountsAllRunsButReturnsThreeHeadersForLatestVersion(t *testing.T
 		t.Fatalf("empty workflow: %+v", entries)
 	}
 	e := entries[1]
-	if e.Version.ID != "v2" || e.PlanCount != 2 || e.RunCount != 5 || e.CompletedRunCount != 3 || e.ObservedCost != 10 || len(e.RecentRuns) != 3 || e.RecentRuns[0].Run.ID != "r4" || e.RecentRuns[2].Run.ID != "r2" || e.LatestExecutionAt != e.RecentRuns[0].Run.StartedAt.UnixMilli() {
+	if e.Version.ID != "v2" || e.PlanCount != 2 || e.RunCount != 5 || e.CompletedRunCount != 3 ||
+		e.ObservedCost != 10 || len(e.RecentRuns) != 3 || e.RecentRuns[0].Run.ID != "r4" ||
+		e.RecentRuns[2].Run.ID != "r2" || e.LatestExecutionAt != e.RecentRuns[0].Run.StartedAt.UnixMilli() {
 		t.Fatalf("incorrect catalog summary: %+v", e)
 	}
 }

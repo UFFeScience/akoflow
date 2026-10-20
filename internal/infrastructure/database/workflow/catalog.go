@@ -15,6 +15,14 @@ const latestVersions = `SELECT v.id, v.workflow_id, v.version, v.definition_hash
 // ListCatalog returns counts and three recent headers per workflow in two
 // queries, independent of the number of definitions or history pages.
 func (r *Repository) ListCatalog(ctx context.Context) ([]domain.WorkflowCatalogEntry, error) {
+	entries, err := r.listCatalogHeaders(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return r.withRecentCatalogRuns(ctx, entries)
+}
+
+func (r *Repository) listCatalogHeaders(ctx context.Context) ([]domain.WorkflowCatalogEntry, error) {
 	rows, err := r.db.QueryContext(ctx, `WITH latest AS (`+latestVersions+`),
 	plan_counts AS (SELECT workflow_version_id, COUNT(*) AS count FROM schedule_plans GROUP BY workflow_version_id),
 	activity_counts AS (SELECT workflow_version_id, COUNT(*) AS count FROM activity_definitions GROUP BY workflow_version_id),
@@ -37,7 +45,6 @@ func (r *Repository) ListCatalog(ctx context.Context) ([]domain.WorkflowCatalogE
 		return nil, err
 	}
 	entries := make([]domain.WorkflowCatalogEntry, 0)
-	byVersion := make(map[string]int)
 	for rows.Next() {
 		var entry domain.WorkflowCatalogEntry
 		if err := rows.Scan(&entry.ID, &entry.ExternalID, &entry.Name, &entry.Namespace,
@@ -49,13 +56,20 @@ func (r *Repository) ListCatalog(ctx context.Context) ([]domain.WorkflowCatalogE
 		}
 		entry.Version.WorkflowID = entry.ID
 		entry.RecentRuns = make([]domain.WorkflowCatalogRun, 0)
-		byVersion[entry.Version.ID] = len(entries)
 		entries = append(entries, entry)
 	}
 	err = rows.Err()
 	rows.Close()
 	if err != nil {
 		return nil, err
+	}
+	return entries, nil
+}
+
+func (r *Repository) withRecentCatalogRuns(ctx context.Context, entries []domain.WorkflowCatalogEntry) ([]domain.WorkflowCatalogEntry, error) {
+	byVersion := make(map[string]int, len(entries))
+	for index, entry := range entries {
+		byVersion[entry.Version.ID] = index
 	}
 	// Rank only cheap run headers; task and transfer aggregates are not used by
 	// the collapsed catalog and must never be computed for its entire history.

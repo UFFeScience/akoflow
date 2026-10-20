@@ -13,7 +13,9 @@ func TestGeneratedDataPageCountsLocationsWithoutDuplicatingObjects(t *testing.T)
 		t.Fatal(err)
 	}
 	for i := 0; i < 3; i++ {
-		if _, err := r.db.Exec(`INSERT INTO data_object_instances(id,data_object_id,execution_run_id,producer_activity_id,relative_path,size_bytes) VALUES (?,'data','run','activity',?,42)`, fmt.Sprintf("i%d", i), fmt.Sprintf("file%d", i)); err != nil {
+		if _, err := r.db.Exec(`INSERT INTO data_object_instances(
+			id,data_object_id,execution_run_id,producer_activity_id,relative_path,size_bytes)
+			VALUES (?,'data','run','activity',?,42)`, fmt.Sprintf("i%d", i), fmt.Sprintf("file%d", i)); err != nil {
 			t.Fatal(err)
 		}
 	}

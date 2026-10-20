@@ -1,6 +1,7 @@
-import React from 'react';
-import {useColorMode} from '@docusaurus/theme-common';
-import useBaseUrl from '@docusaurus/useBaseUrl';
+import React from "react";
+import ExpandableImage from "./ExpandableImage";
+import { useColorMode } from "@docusaurus/theme-common";
+import useBaseUrl from "@docusaurus/useBaseUrl";
 
 type Callout = {
   number: number;
@@ -24,9 +25,9 @@ export default function AnnotatedScreenshot({
   caption,
   callouts = [],
 }: AnnotatedScreenshotProps) {
-  const {colorMode} = useColorMode();
-  const activeSrc = colorMode === 'dark' && darkSrc ? darkSrc : src;
-  const resolvedSrc = useBaseUrl(activeSrc ?? '');
+  const { colorMode } = useColorMode();
+  const activeSrc = colorMode === "dark" && darkSrc ? darkSrc : src;
+  const resolvedSrc = useBaseUrl(activeSrc ?? "");
 
   if (!activeSrc) {
     return (
@@ -40,14 +41,16 @@ export default function AnnotatedScreenshot({
   return (
     <figure className="akoflow-annotated-screenshot">
       <div className="akoflow-annotated-screenshot__image">
-        <img src={resolvedSrc} alt={alt} loading="lazy" />
+        <ExpandableImage src={resolvedSrc} alt={alt} loading="lazy" />
         {callouts
-          .filter((callout) => callout.x !== undefined && callout.y !== undefined)
+          .filter(
+            (callout) => callout.x !== undefined && callout.y !== undefined,
+          )
           .map((callout) => (
             <span
               key={callout.number}
               className="akoflow-annotated-screenshot__marker"
-              style={{left: `${callout.x}%`, top: `${callout.y}%`}}
+              style={{ left: `${callout.x}%`, top: `${callout.y}%` }}
               aria-hidden="true"
             >
               {callout.number}

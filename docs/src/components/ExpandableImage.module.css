@@ -1,0 +1,55 @@
+.thumbnail {
+  display: block;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  cursor: zoom-in;
+  max-width: 100%;
+}
+.thumbnail img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+.dialog {
+  width: 96vw;
+  max-width: 96vw;
+  max-height: 94vh;
+  padding: 3.5rem 1rem 1rem;
+  border: 1px solid #151515;
+  border-radius: 12px;
+  background: #fff;
+  color: #151515;
+  overflow: auto;
+}
+.dialog::backdrop {
+  background: rgb(0 0 0 / 75%);
+}
+.dialog img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  max-height: 78vh;
+  object-fit: contain;
+  margin: auto;
+}
+.close {
+  position: absolute;
+  top: 0.75rem;
+  right: 1rem;
+  cursor: pointer;
+}
+.original {
+  position: absolute;
+  top: 0.75rem;
+  left: 1rem;
+}
+
+.largeDiagram {
+  width: 100%;
+}
+.largeDiagram svg {
+  width: 100%;
+  max-width: none !important;
+  height: auto;
+}

@@ -1,0 +1,26 @@
+{
+  "artifactSha256": {
+    "benchmark.csv": "ac375f923b8617fcc9c75572ed88f207b79d3beba656c6f7909d587d5bd5f434",
+    "report.html": "6299cff340a241c709834ee1b5f61979813b516403510de7b2c4f386f309a4ba"
+  },
+  "completedActivities": 6,
+  "dependencyWaves": [
+    [
+      "freeze-inputs"
+    ],
+    [
+      "cpu",
+      "gpu",
+      "edge"
+    ],
+    [
+      "normalize"
+    ],
+    [
+      "compare-cost-and-latency"
+    ]
+  ],
+  "executionMode": "local-process",
+  "mode": "local-workload",
+  "schedulingPolicy": "ready activities with bounded concurrency"
+}

@@ -1,0 +1,22 @@
+{
+  "artifacts": [
+    "decision.json",
+    "cost-comparison.csv"
+  ],
+  "sha256": {
+    "cost-comparison.csv": "c3274b7dc129773337ec6581843bdea15ec137b12d75f0ab9846502a15883cc4",
+    "decision.json": "a6cc22e7c7a1ce90eb72c373212ea2e224456c6e65e52f2b6db0864c23d51f1d"
+  },
+  "showcase": "infrastructure-selection",
+  "stages": [
+    "profile-workload",
+    "local-gpu",
+    "hpc",
+    "cloud",
+    "compare-plans",
+    "select-scope",
+    "train"
+  ],
+  "status": "success",
+  "validationMode": "local-workload"
+}

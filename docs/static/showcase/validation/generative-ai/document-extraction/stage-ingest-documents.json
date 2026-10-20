@@ -1,0 +1,18 @@
+{
+  "dependencies": [],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:46.170576Z",
+  "finishedAtUnixNs": 1792523566165752000,
+  "inputDigest": "523128ebbdc73d926815d3ba4204fd1d7608cf694a252317c065a1749f173143",
+  "result": {
+    "digitCount": 6,
+    "native": "native.txt",
+    "scan": "scan.pbm"
+  },
+  "showcase": "document-extraction",
+  "stage": "ingest-documents",
+  "startedAt": "2026-10-20T19:12:46.124378Z",
+  "startedAtUnixNs": 1792523566165488000,
+  "status": "success",
+  "validationMode": "local-workload"
+}

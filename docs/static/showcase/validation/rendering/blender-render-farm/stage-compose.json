@@ -1,0 +1,16 @@
+{
+  "dependencies": [
+    "render-even",
+    "render-odd"
+  ],
+  "executionMode": "local-container",
+  "finishedAt": "2026-10-20T19:23:24.014435Z",
+  "result": {
+    "commandCompleted": true,
+    "stdout": ""
+  },
+  "showcase": "blender-render-farm",
+  "stage": "compose",
+  "startedAt": "2026-10-20T19:23:23.772026Z",
+  "status": "success"
+}

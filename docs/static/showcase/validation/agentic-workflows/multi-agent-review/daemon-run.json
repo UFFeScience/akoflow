@@ -1,0 +1,3128 @@
+{
+  "activityCount": 7,
+  "completedActivityCount": 7,
+  "image": "ghcr.io/uffescience/akoflow-examples/showcase-multi-agent-review:local-1420294cfb9bb88e",
+  "imageId": "sha256:1420294cfb9bb88edaa5fbe83b0416addd46f7a0fc575e67bf68cbc15cda7d52",
+  "observedAt": "2026-10-20T19:14:32Z",
+  "planId": "showcase-multi-agent-review-local-bc9322e8eb-manual-plan-20261020t191421.882509000",
+  "projection": {
+    "activities": [
+      {
+        "activityId": "showcase-multi-agent-review-local-bc9322e8eb-shared-context",
+        "allocatedResourceId": "showcase-multi-agent-review-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "finishedAt": 1792523662.485302,
+        "id": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-shared-context",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "pricePerSecond": 0,
+          "runtimeId": "showcase-multi-agent-review-local"
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-multi-agent-review-local-bc9322e8eb-manual-plan-20261020t191421.882509000-showcase-multi-agent-review-local-bc9322e8eb-shared-context",
+        "plannedResourceId": "showcase-multi-agent-review-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523662.1917183,
+        "readyAt": 1792523662.1917183,
+        "runtimeId": "showcase-multi-agent-review-local",
+        "runtimeSeconds": 0.12026524543762207,
+        "startedAt": 1792523662.3650367,
+        "status": "completed",
+        "transferBytes": 0,
+        "transferSeconds": 0
+      },
+      {
+        "activityId": "showcase-multi-agent-review-local-bc9322e8eb-domain",
+        "allocatedResourceId": "showcase-multi-agent-review-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "finishedAt": 1792523664.0948293,
+        "id": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-domain",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.29742908477783203,
+          "preparationFinishedAt": 1792523663.6557748,
+          "preparationStartedAt": 1792523663.4732227,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.005560159683227539,
+          "runtimeId": "showcase-multi-agent-review-local",
+          "transferElapsedSeconds": 0.18255209922790527,
+          "transferWorkSeconds": 0.18255209922790527
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-multi-agent-review-local-bc9322e8eb-manual-plan-20261020t191421.882509000-showcase-multi-agent-review-local-bc9322e8eb-domain",
+        "plannedResourceId": "showcase-multi-agent-review-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523663.4620543,
+        "readyAt": 1792523663.4620543,
+        "runtimeId": "showcase-multi-agent-review-local",
+        "runtimeSeconds": 0.14162540435791016,
+        "startedAt": 1792523663.953204,
+        "status": "completed",
+        "transferBytes": 469,
+        "transferSeconds": 0.18255209922790527
+      },
+      {
+        "activityId": "showcase-multi-agent-review-local-bc9322e8eb-code",
+        "allocatedResourceId": "showcase-multi-agent-review-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "finishedAt": 1792523664.1161313,
+        "id": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-code",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.3199465274810791,
+          "preparationFinishedAt": 1792523663.6522052,
+          "preparationStartedAt": 1792523663.4711192,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0043222904205322266,
+          "runtimeId": "showcase-multi-agent-review-local",
+          "transferElapsedSeconds": 0.18108606338500977,
+          "transferWorkSeconds": 0.18108606338500977
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-multi-agent-review-local-bc9322e8eb-manual-plan-20261020t191421.882509000-showcase-multi-agent-review-local-bc9322e8eb-code",
+        "plannedResourceId": "showcase-multi-agent-review-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523663.4607887,
+        "readyAt": 1792523663.4607887,
+        "runtimeId": "showcase-multi-agent-review-local",
+        "runtimeSeconds": 0.14397954940795898,
+        "startedAt": 1792523663.9721518,
+        "status": "completed",
+        "transferBytes": 469,
+        "transferSeconds": 0.18108606338500977
+      },
+      {
+        "activityId": "showcase-multi-agent-review-local-bc9322e8eb-research",
+        "allocatedResourceId": "showcase-multi-agent-review-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "finishedAt": 1792523664.1266892,
+        "id": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-research",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.33586931228637695,
+          "preparationFinishedAt": 1792523663.652184,
+          "preparationStartedAt": 1792523663.4693637,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.003444194793701172,
+          "runtimeId": "showcase-multi-agent-review-local",
+          "transferElapsedSeconds": 0.18282032012939453,
+          "transferWorkSeconds": 0.18282032012939453
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-multi-agent-review-local-bc9322e8eb-manual-plan-20261020t191421.882509000-showcase-multi-agent-review-local-bc9322e8eb-research",
+        "plannedResourceId": "showcase-multi-agent-review-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523663.463305,
+        "readyAt": 1792523663.463305,
+        "runtimeId": "showcase-multi-agent-review-local",
+        "runtimeSeconds": 0.13863587379455566,
+        "startedAt": 1792523663.9880533,
+        "status": "completed",
+        "transferBytes": 469,
+        "transferSeconds": 0.18282032012939453
+      },
+      {
+        "activityId": "showcase-multi-agent-review-local-bc9322e8eb-critic-review",
+        "allocatedResourceId": "showcase-multi-agent-review-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "finishedAt": 1792523666.3404512,
+        "id": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-critic-review",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.14463448524475098,
+          "preparationFinishedAt": 1792523666.0850213,
+          "preparationStartedAt": 1792523665.5766237,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.004583120346069336,
+          "runtimeId": "showcase-multi-agent-review-local",
+          "transferElapsedSeconds": 0.5083975791931152,
+          "transferWorkSeconds": 1.129837989807129
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-multi-agent-review-local-bc9322e8eb-manual-plan-20261020t191421.882509000-showcase-multi-agent-review-local-bc9322e8eb-critic-review",
+        "plannedResourceId": "showcase-multi-agent-review-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523665.570052,
+        "readyAt": 1792523665.570052,
+        "runtimeId": "showcase-multi-agent-review-local",
+        "runtimeSeconds": 0.11079549789428711,
+        "startedAt": 1792523666.2296557,
+        "status": "completed",
+        "transferBytes": 1769,
+        "transferSeconds": 1.129837989807129
+      },
+      {
+        "activityId": "showcase-multi-agent-review-local-bc9322e8eb-synthesize",
+        "allocatedResourceId": "showcase-multi-agent-review-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "finishedAt": 1792523667.9154894,
+        "id": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-synthesize",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.13422918319702148,
+          "preparationFinishedAt": 1792523667.674718,
+          "preparationStartedAt": 1792523667.5071645,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0012636184692382812,
+          "runtimeId": "showcase-multi-agent-review-local",
+          "transferElapsedSeconds": 0.16755342483520508,
+          "transferWorkSeconds": 0.16755342483520508
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-multi-agent-review-local-bc9322e8eb-manual-plan-20261020t191421.882509000-showcase-multi-agent-review-local-bc9322e8eb-synthesize",
+        "plannedResourceId": "showcase-multi-agent-review-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523667.5032938,
+        "readyAt": 1792523667.5032938,
+        "runtimeId": "showcase-multi-agent-review-local",
+        "runtimeSeconds": 0.10654234886169434,
+        "startedAt": 1792523667.808947,
+        "status": "completed",
+        "transferBytes": 2524,
+        "transferSeconds": 0.16755342483520508
+      },
+      {
+        "activityId": "showcase-multi-agent-review-local-bc9322e8eb-publish-evidence",
+        "allocatedResourceId": "showcase-multi-agent-review-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "finishedAt": 1792523669.901864,
+        "id": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-publish-evidence",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.13328194618225098,
+          "preparationFinishedAt": 1792523669.6628544,
+          "preparationStartedAt": 1792523669.5161698,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0016903877258300781,
+          "runtimeId": "showcase-multi-agent-review-local",
+          "transferElapsedSeconds": 0.1466846466064453,
+          "transferWorkSeconds": 0.1466846466064453
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-multi-agent-review-local-bc9322e8eb-manual-plan-20261020t191421.882509000-showcase-multi-agent-review-local-bc9322e8eb-publish-evidence",
+        "plannedResourceId": "showcase-multi-agent-review-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523669.5124233,
+        "readyAt": 1792523669.5124233,
+        "runtimeId": "showcase-multi-agent-review-local",
+        "runtimeSeconds": 0.1057276725769043,
+        "startedAt": 1792523669.7961364,
+        "status": "completed",
+        "transferBytes": 3549,
+        "transferSeconds": 0.1466846466064453
+      }
+    ],
+    "activityAttempts": [
+      {
+        "activityId": "showcase-multi-agent-review-local-bc9322e8eb-shared-context",
+        "allocatedResourceId": "showcase-multi-agent-review-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "finishedAt": 1792523662.485302,
+        "id": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-shared-context",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "pricePerSecond": 0,
+          "runtimeId": "showcase-multi-agent-review-local"
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-multi-agent-review-local-bc9322e8eb-manual-plan-20261020t191421.882509000-showcase-multi-agent-review-local-bc9322e8eb-shared-context",
+        "plannedResourceId": "showcase-multi-agent-review-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523662.1917183,
+        "readyAt": 1792523662.1917183,
+        "runtimeId": "showcase-multi-agent-review-local",
+        "runtimeSeconds": 0.12026524543762207,
+        "startedAt": 1792523662.3650367,
+        "status": "completed",
+        "transferBytes": 0,
+        "transferSeconds": 0
+      },
+      {
+        "activityId": "showcase-multi-agent-review-local-bc9322e8eb-domain",
+        "allocatedResourceId": "showcase-multi-agent-review-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "finishedAt": 1792523664.0948293,
+        "id": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-domain",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.29742908477783203,
+          "preparationFinishedAt": 1792523663.6557748,
+          "preparationStartedAt": 1792523663.4732227,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.005560159683227539,
+          "runtimeId": "showcase-multi-agent-review-local",
+          "transferElapsedSeconds": 0.18255209922790527,
+          "transferWorkSeconds": 0.18255209922790527
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-multi-agent-review-local-bc9322e8eb-manual-plan-20261020t191421.882509000-showcase-multi-agent-review-local-bc9322e8eb-domain",
+        "plannedResourceId": "showcase-multi-agent-review-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523663.4620543,
+        "readyAt": 1792523663.4620543,
+        "runtimeId": "showcase-multi-agent-review-local",
+        "runtimeSeconds": 0.14162540435791016,
+        "startedAt": 1792523663.953204,
+        "status": "completed",
+        "transferBytes": 469,
+        "transferSeconds": 0.18255209922790527
+      },
+      {
+        "activityId": "showcase-multi-agent-review-local-bc9322e8eb-code",
+        "allocatedResourceId": "showcase-multi-agent-review-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "finishedAt": 1792523664.1161313,
+        "id": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-code",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.3199465274810791,
+          "preparationFinishedAt": 1792523663.6522052,
+          "preparationStartedAt": 1792523663.4711192,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0043222904205322266,
+          "runtimeId": "showcase-multi-agent-review-local",
+          "transferElapsedSeconds": 0.18108606338500977,
+          "transferWorkSeconds": 0.18108606338500977
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-multi-agent-review-local-bc9322e8eb-manual-plan-20261020t191421.882509000-showcase-multi-agent-review-local-bc9322e8eb-code",
+        "plannedResourceId": "showcase-multi-agent-review-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523663.4607887,
+        "readyAt": 1792523663.4607887,
+        "runtimeId": "showcase-multi-agent-review-local",
+        "runtimeSeconds": 0.14397954940795898,
+        "startedAt": 1792523663.9721518,
+        "status": "completed",
+        "transferBytes": 469,
+        "transferSeconds": 0.18108606338500977
+      },
+      {
+        "activityId": "showcase-multi-agent-review-local-bc9322e8eb-research",
+        "allocatedResourceId": "showcase-multi-agent-review-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "finishedAt": 1792523664.1266892,
+        "id": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-research",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.33586931228637695,
+          "preparationFinishedAt": 1792523663.652184,
+          "preparationStartedAt": 1792523663.4693637,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.003444194793701172,
+          "runtimeId": "showcase-multi-agent-review-local",
+          "transferElapsedSeconds": 0.18282032012939453,
+          "transferWorkSeconds": 0.18282032012939453
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-multi-agent-review-local-bc9322e8eb-manual-plan-20261020t191421.882509000-showcase-multi-agent-review-local-bc9322e8eb-research",
+        "plannedResourceId": "showcase-multi-agent-review-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523663.463305,
+        "readyAt": 1792523663.463305,
+        "runtimeId": "showcase-multi-agent-review-local",
+        "runtimeSeconds": 0.13863587379455566,
+        "startedAt": 1792523663.9880533,
+        "status": "completed",
+        "transferBytes": 469,
+        "transferSeconds": 0.18282032012939453
+      },
+      {
+        "activityId": "showcase-multi-agent-review-local-bc9322e8eb-critic-review",
+        "allocatedResourceId": "showcase-multi-agent-review-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "finishedAt": 1792523666.3404512,
+        "id": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-critic-review",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.14463448524475098,
+          "preparationFinishedAt": 1792523666.0850213,
+          "preparationStartedAt": 1792523665.5766237,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.004583120346069336,
+          "runtimeId": "showcase-multi-agent-review-local",
+          "transferElapsedSeconds": 0.5083975791931152,
+          "transferWorkSeconds": 1.129837989807129
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-multi-agent-review-local-bc9322e8eb-manual-plan-20261020t191421.882509000-showcase-multi-agent-review-local-bc9322e8eb-critic-review",
+        "plannedResourceId": "showcase-multi-agent-review-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523665.570052,
+        "readyAt": 1792523665.570052,
+        "runtimeId": "showcase-multi-agent-review-local",
+        "runtimeSeconds": 0.11079549789428711,
+        "startedAt": 1792523666.2296557,
+        "status": "completed",
+        "transferBytes": 1769,
+        "transferSeconds": 1.129837989807129
+      },
+      {
+        "activityId": "showcase-multi-agent-review-local-bc9322e8eb-synthesize",
+        "allocatedResourceId": "showcase-multi-agent-review-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "finishedAt": 1792523667.9154894,
+        "id": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-synthesize",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.13422918319702148,
+          "preparationFinishedAt": 1792523667.674718,
+          "preparationStartedAt": 1792523667.5071645,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0012636184692382812,
+          "runtimeId": "showcase-multi-agent-review-local",
+          "transferElapsedSeconds": 0.16755342483520508,
+          "transferWorkSeconds": 0.16755342483520508
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-multi-agent-review-local-bc9322e8eb-manual-plan-20261020t191421.882509000-showcase-multi-agent-review-local-bc9322e8eb-synthesize",
+        "plannedResourceId": "showcase-multi-agent-review-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523667.5032938,
+        "readyAt": 1792523667.5032938,
+        "runtimeId": "showcase-multi-agent-review-local",
+        "runtimeSeconds": 0.10654234886169434,
+        "startedAt": 1792523667.808947,
+        "status": "completed",
+        "transferBytes": 2524,
+        "transferSeconds": 0.16755342483520508
+      },
+      {
+        "activityId": "showcase-multi-agent-review-local-bc9322e8eb-publish-evidence",
+        "allocatedResourceId": "showcase-multi-agent-review-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "finishedAt": 1792523669.901864,
+        "id": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-publish-evidence",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.13328194618225098,
+          "preparationFinishedAt": 1792523669.6628544,
+          "preparationStartedAt": 1792523669.5161698,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0016903877258300781,
+          "runtimeId": "showcase-multi-agent-review-local",
+          "transferElapsedSeconds": 0.1466846466064453,
+          "transferWorkSeconds": 0.1466846466064453
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-multi-agent-review-local-bc9322e8eb-manual-plan-20261020t191421.882509000-showcase-multi-agent-review-local-bc9322e8eb-publish-evidence",
+        "plannedResourceId": "showcase-multi-agent-review-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523669.5124233,
+        "readyAt": 1792523669.5124233,
+        "runtimeId": "showcase-multi-agent-review-local",
+        "runtimeSeconds": 0.1057276725769043,
+        "startedAt": 1792523669.7961364,
+        "status": "completed",
+        "transferBytes": 3549,
+        "transferSeconds": 0.1466846466064453
+      }
+    ],
+    "artifactMaterializations": null,
+    "artifactTransferRuns": [
+      {
+        "activityId": "showcase-multi-agent-review-local-bc9322e8eb-code",
+        "durationSeconds": 0.18108606338500977,
+        "executionRunId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "filesTransferred": 1,
+        "finishedAt": 1792523663.6522052,
+        "id": "transfer-workspace-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-code-0",
+        "logicalBytes": 469,
+        "planId": "transfer-workspace-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-code-0",
+        "route": {
+          "consumerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-code",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-shared-context",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.088955,
+          "sourceEnvironmentId": "showcase-multi-agent-review-v1",
+          "sourceResourceId": "showcase-multi-agent-review-local-docker",
+          "sshChannelWaitSeconds": 3.3300000000000003e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-multi-agent-review-v1",
+          "targetResourceId": "showcase-multi-agent-review-local-docker"
+        },
+        "startedAt": 1792523663.4711192,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 469
+      },
+      {
+        "activityId": "showcase-multi-agent-review-local-bc9322e8eb-critic-review",
+        "durationSeconds": 0.25905632972717285,
+        "executionRunId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "filesTransferred": 2,
+        "finishedAt": 1792523665.83568,
+        "id": "transfer-workspace-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-critic-review-0",
+        "logicalBytes": 921,
+        "planId": "transfer-workspace-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-critic-review-0",
+        "route": {
+          "consumerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-critic-review",
+          "filesTransferred": 2,
+          "producerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-research",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.09303070799999999,
+          "sourceEnvironmentId": "showcase-multi-agent-review-v1",
+          "sourceResourceId": "showcase-multi-agent-review-local-docker",
+          "sshChannelWaitSeconds": 5.42e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-multi-agent-review-v1",
+          "targetResourceId": "showcase-multi-agent-review-local-docker"
+        },
+        "startedAt": 1792523665.5766237,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 921
+      },
+      {
+        "activityId": "showcase-multi-agent-review-local-bc9322e8eb-critic-review",
+        "durationSeconds": 0.3623840808868408,
+        "executionRunId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "filesTransferred": 1,
+        "finishedAt": 1792523665.9390078,
+        "id": "transfer-workspace-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-critic-review-1",
+        "logicalBytes": 892,
+        "planId": "transfer-workspace-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-critic-review-1",
+        "route": {
+          "consumerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-critic-review",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-code",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.073919625,
+          "sourceEnvironmentId": "showcase-multi-agent-review-v1",
+          "sourceResourceId": "showcase-multi-agent-review-local-docker",
+          "sshChannelWaitSeconds": 2.5e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-multi-agent-review-v1",
+          "targetResourceId": "showcase-multi-agent-review-local-docker"
+        },
+        "startedAt": 1792523665.5766237,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 423
+      },
+      {
+        "activityId": "showcase-multi-agent-review-local-bc9322e8eb-critic-review",
+        "durationSeconds": 0.5083975791931152,
+        "executionRunId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "filesTransferred": 1,
+        "finishedAt": 1792523666.0850213,
+        "id": "transfer-workspace-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-critic-review-2",
+        "logicalBytes": 894,
+        "planId": "transfer-workspace-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-critic-review-2",
+        "route": {
+          "consumerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-critic-review",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-domain",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.09356558400000001,
+          "sourceEnvironmentId": "showcase-multi-agent-review-v1",
+          "sourceResourceId": "showcase-multi-agent-review-local-docker",
+          "sshChannelWaitSeconds": 4.58e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-multi-agent-review-v1",
+          "targetResourceId": "showcase-multi-agent-review-local-docker"
+        },
+        "startedAt": 1792523665.5766237,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 425
+      },
+      {
+        "activityId": "showcase-multi-agent-review-local-bc9322e8eb-domain",
+        "durationSeconds": 0.18255209922790527,
+        "executionRunId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "filesTransferred": 1,
+        "finishedAt": 1792523663.6557748,
+        "id": "transfer-workspace-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-domain-0",
+        "logicalBytes": 469,
+        "planId": "transfer-workspace-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-domain-0",
+        "route": {
+          "consumerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-domain",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-shared-context",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.092518,
+          "sourceEnvironmentId": "showcase-multi-agent-review-v1",
+          "sourceResourceId": "showcase-multi-agent-review-local-docker",
+          "sshChannelWaitSeconds": 3.75e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-multi-agent-review-v1",
+          "targetResourceId": "showcase-multi-agent-review-local-docker"
+        },
+        "startedAt": 1792523663.4732227,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 469
+      },
+      {
+        "activityId": "showcase-multi-agent-review-local-bc9322e8eb-publish-evidence",
+        "durationSeconds": 0.1466846466064453,
+        "executionRunId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "filesTransferred": 6,
+        "finishedAt": 1792523669.6628544,
+        "id": "transfer-workspace-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-publish-evidence-0",
+        "logicalBytes": 3549,
+        "planId": "transfer-workspace-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-publish-evidence-0",
+        "route": {
+          "consumerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-publish-evidence",
+          "filesTransferred": 6,
+          "producerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-synthesize",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.093702626,
+          "sourceEnvironmentId": "showcase-multi-agent-review-v1",
+          "sourceResourceId": "showcase-multi-agent-review-local-docker",
+          "sshChannelWaitSeconds": 3.3300000000000003e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-multi-agent-review-v1",
+          "targetResourceId": "showcase-multi-agent-review-local-docker"
+        },
+        "startedAt": 1792523669.5161698,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 3549
+      },
+      {
+        "activityId": "showcase-multi-agent-review-local-bc9322e8eb-research",
+        "durationSeconds": 0.18282032012939453,
+        "executionRunId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "filesTransferred": 1,
+        "finishedAt": 1792523663.652184,
+        "id": "transfer-workspace-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-research-0",
+        "logicalBytes": 469,
+        "planId": "transfer-workspace-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-research-0",
+        "route": {
+          "consumerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-research",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-shared-context",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.091122458,
+          "sourceEnvironmentId": "showcase-multi-agent-review-v1",
+          "sourceResourceId": "showcase-multi-agent-review-local-docker",
+          "sshChannelWaitSeconds": 3.33e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-multi-agent-review-v1",
+          "targetResourceId": "showcase-multi-agent-review-local-docker"
+        },
+        "startedAt": 1792523663.4693637,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 469
+      },
+      {
+        "activityId": "showcase-multi-agent-review-local-bc9322e8eb-synthesize",
+        "durationSeconds": 0.16755342483520508,
+        "executionRunId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "filesTransferred": 5,
+        "finishedAt": 1792523667.674718,
+        "id": "transfer-workspace-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-synthesize-0",
+        "logicalBytes": 2524,
+        "planId": "transfer-workspace-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-synthesize-0",
+        "route": {
+          "consumerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-synthesize",
+          "filesTransferred": 5,
+          "producerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-critic-review",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.095572625,
+          "sourceEnvironmentId": "showcase-multi-agent-review-v1",
+          "sourceResourceId": "showcase-multi-agent-review-local-docker",
+          "sshChannelWaitSeconds": 5.84e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-multi-agent-review-v1",
+          "targetResourceId": "showcase-multi-agent-review-local-docker"
+        },
+        "startedAt": 1792523667.5071645,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 2524
+      }
+    ],
+    "cloudBilling": {
+      "asOf": "2026-10-20T19:14:32.209066346Z",
+      "costBasis": "VM compute and boot-disk lifecycle at on-demand marginal rates; not a provider invoice",
+      "estimatedCost": 0,
+      "excludedCosts": [
+        "network-egress",
+        "public-ipv4",
+        "image-storage",
+        "discounts-and-tax"
+      ],
+      "instances": [],
+      "knownCost": 0,
+      "status": "estimated"
+    },
+    "dataLocations": [
+      {
+        "dataObjectInstanceId": "48473f69f16e451e4fddf952545dd63f",
+        "executionRunId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "id": "5418b0306233196415b302e0cba8cab3",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-multi-agent-review-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "565e08f103c6898dbc3b3960a24a338c",
+        "uri": "file:///akoflow/workspace/runs/showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000/showcase-multi-agent-review-local-bc9322e8eb-code/stage-code.json"
+      },
+      {
+        "dataObjectInstanceId": "5194fcdaeeb129a55e39d80f1d08eba2",
+        "executionRunId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "id": "ac8e800afd2911ddb09c9cc240fef3f6",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-multi-agent-review-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "565e08f103c6898dbc3b3960a24a338c",
+        "uri": "file:///akoflow/workspace/runs/showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000/showcase-multi-agent-review-local-bc9322e8eb-critic-review/stage-critic-review.json"
+      },
+      {
+        "dataObjectInstanceId": "40eafe574a4ec57823a7281f385e13c4",
+        "executionRunId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "id": "08a735be6ae882a185c02b5ad97eea23",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-multi-agent-review-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "565e08f103c6898dbc3b3960a24a338c",
+        "uri": "file:///akoflow/workspace/runs/showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000/showcase-multi-agent-review-local-bc9322e8eb-domain/stage-domain.json"
+      },
+      {
+        "dataObjectInstanceId": "6532b63891eee81c5182bc957c88009b",
+        "executionRunId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "id": "07399cb3d0e021731b06e2726014d8bb",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-multi-agent-review-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "565e08f103c6898dbc3b3960a24a338c",
+        "uri": "file:///akoflow/workspace/runs/showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000/showcase-multi-agent-review-local-bc9322e8eb-publish-evidence/review.json"
+      },
+      {
+        "dataObjectInstanceId": "66b78b59836650b681a58def77a94b0b",
+        "executionRunId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "id": "e2360ba727f357f215d284c4a938162b",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-multi-agent-review-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "565e08f103c6898dbc3b3960a24a338c",
+        "uri": "file:///akoflow/workspace/runs/showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000/showcase-multi-agent-review-local-bc9322e8eb-publish-evidence/stage-publish-evidence.json"
+      },
+      {
+        "dataObjectInstanceId": "7fb5f0a8f52af31cbb19f4f92c973bc9",
+        "executionRunId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "id": "b0ca18f154b082c68c4c8d022e4db6c0",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-multi-agent-review-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "565e08f103c6898dbc3b3960a24a338c",
+        "uri": "file:///akoflow/workspace/runs/showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000/showcase-multi-agent-review-local-bc9322e8eb-publish-evidence/synthesis.md"
+      },
+      {
+        "dataObjectInstanceId": "65416be661d0108b0d7738f057d2139d",
+        "executionRunId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "id": "f701172ad23d10c0191b52c43a63e845",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-multi-agent-review-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "565e08f103c6898dbc3b3960a24a338c",
+        "uri": "file:///akoflow/workspace/runs/showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000/showcase-multi-agent-review-local-bc9322e8eb-research/stage-research.json"
+      },
+      {
+        "dataObjectInstanceId": "8b67d3b81faed098e02d78671965b4ff",
+        "executionRunId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "id": "e466a3c064bb55fdeaaffeffd0af0b74",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-multi-agent-review-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "565e08f103c6898dbc3b3960a24a338c",
+        "uri": "file:///akoflow/workspace/runs/showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000/showcase-multi-agent-review-local-bc9322e8eb-shared-context/stage-shared-context.json"
+      },
+      {
+        "dataObjectInstanceId": "78842b9014c7c4a3d067299115744b7d",
+        "executionRunId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "id": "b3a7df600623928a0ed3c8410d4f6a92",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-multi-agent-review-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "565e08f103c6898dbc3b3960a24a338c",
+        "uri": "file:///akoflow/workspace/runs/showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000/showcase-multi-agent-review-local-bc9322e8eb-synthesize/stage-synthesize.json"
+      }
+    ],
+    "dataObjects": [
+      {
+        "attempt": 1,
+        "checksum": "sha256:94d13b4d73f284de60bf73c9c5e6865882ac30bf0b71f0e6040b887c5aa1255b",
+        "dataObjectId": "a3db5a83002d56925ada418b10046391",
+        "discovered": true,
+        "executionRunId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "id": "48473f69f16e451e4fddf952545dd63f",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-code",
+        "relativePath": "stage-code.json",
+        "sizeBytes": 423
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:843b9a12c6c8bfde864f973e7246e3cf48993f39587d917393be80d7aceceb05",
+        "dataObjectId": "5fe261e10c49406b0dabc601d5811687",
+        "discovered": true,
+        "executionRunId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "id": "5194fcdaeeb129a55e39d80f1d08eba2",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-critic-review",
+        "relativePath": "stage-critic-review.json",
+        "sizeBytes": 755
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:06050f72fb0319d8a67df16059df36291f783e6c82e2dbf33a93a20f61ac3245",
+        "dataObjectId": "89ea5e56f5d2584987b36c2c40e93f8c",
+        "discovered": true,
+        "executionRunId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "id": "40eafe574a4ec57823a7281f385e13c4",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-domain",
+        "relativePath": "stage-domain.json",
+        "sizeBytes": 425
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:78696b975bd67e8d98f3f01b6663fc8ccc3803b07a7bddca1e3874ec95d3f014",
+        "dataObjectId": "104517ce4cd040cc3b01b4e5541f8286",
+        "discovered": true,
+        "executionRunId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "id": "6532b63891eee81c5182bc957c88009b",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-publish-evidence",
+        "relativePath": "review.json",
+        "sizeBytes": 340
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:3dbf80d0e6e35306c4341203ffd913330b8c1e187ac086f84cc7db7e22afe121",
+        "dataObjectId": "0a838f6e22fc177525701ba9de78b0af",
+        "discovered": true,
+        "executionRunId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "id": "66b78b59836650b681a58def77a94b0b",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-publish-evidence",
+        "relativePath": "stage-publish-evidence.json",
+        "sizeBytes": 413
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:d8aac3c63130faac33ee09420e33f8c2c6f4b45b8ec276733f3c843a4e1a88ac",
+        "dataObjectId": "a170d3cad1c0ad2121e905d6b1e83331",
+        "discovered": true,
+        "executionRunId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "id": "7fb5f0a8f52af31cbb19f4f92c973bc9",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-publish-evidence",
+        "relativePath": "synthesis.md",
+        "sizeBytes": 157
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:b17829f914391b4a4a5171f6ee53ef36a72a68b328a1d91c72230dbccf38c45e",
+        "dataObjectId": "447a12cf4d07646f1d3e05c16f9fc86f",
+        "discovered": true,
+        "executionRunId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "id": "65416be661d0108b0d7738f057d2139d",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-research",
+        "relativePath": "stage-research.json",
+        "sizeBytes": 452
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:24fbd63efb96296ce6c3ecf05f7c83e5653e44787e485312a91fa9e215de4218",
+        "dataObjectId": "8c4d467f71304dc8ba7881d94da78ae8",
+        "discovered": true,
+        "executionRunId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "id": "8b67d3b81faed098e02d78671965b4ff",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-shared-context",
+        "relativePath": "stage-shared-context.json",
+        "sizeBytes": 469
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:7df59db04594bd677909226d80c5dbbf044d1b57b49d32d2704b419aa7144fcf",
+        "dataObjectId": "6f58b1927f2cd05b4e4b732f67b9184b",
+        "discovered": true,
+        "executionRunId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "id": "78842b9014c7c4a3d067299115744b7d",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-synthesize",
+        "relativePath": "stage-synthesize.json",
+        "sizeBytes": 1025
+      }
+    ],
+    "dataTransfers": [
+      {
+        "bytes": 469,
+        "consumerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-research",
+        "cost": 0,
+        "durationSeconds": 0.18282032012939453,
+        "executionRunId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "finishedAt": 1792523663.652184,
+        "id": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-research:transfer-workspace-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-research-0",
+        "logicalBytes": 469,
+        "producerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-shared-context",
+        "route": {
+          "consumerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-research",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-shared-context",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.091122458,
+          "sourceEnvironmentId": "showcase-multi-agent-review-v1",
+          "sourceResourceId": "showcase-multi-agent-review-local-docker",
+          "sshChannelWaitSeconds": 3.33e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-multi-agent-review-v1",
+          "targetResourceId": "showcase-multi-agent-review-local-docker"
+        },
+        "sourceResourceId": "showcase-multi-agent-review-local-docker",
+        "startedAt": 1792523663.4693637,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-multi-agent-review-local-docker"
+      },
+      {
+        "bytes": 469,
+        "consumerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-code",
+        "cost": 0,
+        "durationSeconds": 0.18108606338500977,
+        "executionRunId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "finishedAt": 1792523663.6522052,
+        "id": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-code:transfer-workspace-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-code-0",
+        "logicalBytes": 469,
+        "producerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-shared-context",
+        "route": {
+          "consumerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-code",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-shared-context",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.088955,
+          "sourceEnvironmentId": "showcase-multi-agent-review-v1",
+          "sourceResourceId": "showcase-multi-agent-review-local-docker",
+          "sshChannelWaitSeconds": 3.3300000000000003e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-multi-agent-review-v1",
+          "targetResourceId": "showcase-multi-agent-review-local-docker"
+        },
+        "sourceResourceId": "showcase-multi-agent-review-local-docker",
+        "startedAt": 1792523663.4711192,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-multi-agent-review-local-docker"
+      },
+      {
+        "bytes": 469,
+        "consumerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-domain",
+        "cost": 0,
+        "durationSeconds": 0.18255209922790527,
+        "executionRunId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "finishedAt": 1792523663.6557748,
+        "id": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-domain:transfer-workspace-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-domain-0",
+        "logicalBytes": 469,
+        "producerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-shared-context",
+        "route": {
+          "consumerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-domain",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-shared-context",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.092518,
+          "sourceEnvironmentId": "showcase-multi-agent-review-v1",
+          "sourceResourceId": "showcase-multi-agent-review-local-docker",
+          "sshChannelWaitSeconds": 3.75e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-multi-agent-review-v1",
+          "targetResourceId": "showcase-multi-agent-review-local-docker"
+        },
+        "sourceResourceId": "showcase-multi-agent-review-local-docker",
+        "startedAt": 1792523663.4732227,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-multi-agent-review-local-docker"
+      },
+      {
+        "bytes": 423,
+        "consumerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-critic-review",
+        "cost": 0,
+        "durationSeconds": 0.3623840808868408,
+        "executionRunId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "finishedAt": 1792523665.9390078,
+        "id": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-critic-review:transfer-workspace-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-critic-review-1",
+        "logicalBytes": 892,
+        "producerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-code",
+        "route": {
+          "consumerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-critic-review",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-code",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.073919625,
+          "sourceEnvironmentId": "showcase-multi-agent-review-v1",
+          "sourceResourceId": "showcase-multi-agent-review-local-docker",
+          "sshChannelWaitSeconds": 2.5e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-multi-agent-review-v1",
+          "targetResourceId": "showcase-multi-agent-review-local-docker"
+        },
+        "sourceResourceId": "showcase-multi-agent-review-local-docker",
+        "startedAt": 1792523665.5766237,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-multi-agent-review-local-docker"
+      },
+      {
+        "bytes": 425,
+        "consumerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-critic-review",
+        "cost": 0,
+        "durationSeconds": 0.5083975791931152,
+        "executionRunId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "finishedAt": 1792523666.0850213,
+        "id": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-critic-review:transfer-workspace-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-critic-review-2",
+        "logicalBytes": 894,
+        "producerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-domain",
+        "route": {
+          "consumerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-critic-review",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-domain",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.09356558400000001,
+          "sourceEnvironmentId": "showcase-multi-agent-review-v1",
+          "sourceResourceId": "showcase-multi-agent-review-local-docker",
+          "sshChannelWaitSeconds": 4.58e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-multi-agent-review-v1",
+          "targetResourceId": "showcase-multi-agent-review-local-docker"
+        },
+        "sourceResourceId": "showcase-multi-agent-review-local-docker",
+        "startedAt": 1792523665.5766237,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-multi-agent-review-local-docker"
+      },
+      {
+        "bytes": 921,
+        "consumerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-critic-review",
+        "cost": 0,
+        "durationSeconds": 0.25905632972717285,
+        "executionRunId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "finishedAt": 1792523665.83568,
+        "id": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-critic-review:transfer-workspace-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-critic-review-0",
+        "logicalBytes": 921,
+        "producerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-research",
+        "route": {
+          "consumerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-critic-review",
+          "filesTransferred": 2,
+          "producerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-research",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.09303070799999999,
+          "sourceEnvironmentId": "showcase-multi-agent-review-v1",
+          "sourceResourceId": "showcase-multi-agent-review-local-docker",
+          "sshChannelWaitSeconds": 5.42e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-multi-agent-review-v1",
+          "targetResourceId": "showcase-multi-agent-review-local-docker"
+        },
+        "sourceResourceId": "showcase-multi-agent-review-local-docker",
+        "startedAt": 1792523665.5766237,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-multi-agent-review-local-docker"
+      },
+      {
+        "bytes": 2524,
+        "consumerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-synthesize",
+        "cost": 0,
+        "durationSeconds": 0.16755342483520508,
+        "executionRunId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "finishedAt": 1792523667.674718,
+        "id": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-synthesize:transfer-workspace-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-synthesize-0",
+        "logicalBytes": 2524,
+        "producerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-critic-review",
+        "route": {
+          "consumerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-synthesize",
+          "filesTransferred": 5,
+          "producerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-critic-review",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.095572625,
+          "sourceEnvironmentId": "showcase-multi-agent-review-v1",
+          "sourceResourceId": "showcase-multi-agent-review-local-docker",
+          "sshChannelWaitSeconds": 5.84e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-multi-agent-review-v1",
+          "targetResourceId": "showcase-multi-agent-review-local-docker"
+        },
+        "sourceResourceId": "showcase-multi-agent-review-local-docker",
+        "startedAt": 1792523667.5071645,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-multi-agent-review-local-docker"
+      },
+      {
+        "bytes": 3549,
+        "consumerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-publish-evidence",
+        "cost": 0,
+        "durationSeconds": 0.1466846466064453,
+        "executionRunId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "finishedAt": 1792523669.6628544,
+        "id": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-publish-evidence:transfer-workspace-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-publish-evidence-0",
+        "logicalBytes": 3549,
+        "producerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-synthesize",
+        "route": {
+          "consumerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-publish-evidence",
+          "filesTransferred": 6,
+          "producerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-synthesize",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.093702626,
+          "sourceEnvironmentId": "showcase-multi-agent-review-v1",
+          "sourceResourceId": "showcase-multi-agent-review-local-docker",
+          "sshChannelWaitSeconds": 3.3300000000000003e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-multi-agent-review-v1",
+          "targetResourceId": "showcase-multi-agent-review-local-docker"
+        },
+        "sourceResourceId": "showcase-multi-agent-review-local-docker",
+        "startedAt": 1792523669.5161698,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-multi-agent-review-local-docker"
+      }
+    ],
+    "events": [
+      {
+        "aggregateId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "aggregateType": "execution_run",
+        "eventType": "execution.run.started",
+        "id": "bff4c4b8f70ef01b7fcfa8f3889bbd8c",
+        "occurredAt": "2026-10-20T19:14:22.1058753Z",
+        "payload": {
+          "mode": "real",
+          "schedulePlanId": "showcase-multi-agent-review-local-bc9322e8eb-manual-plan-20261020t191421.882509000"
+        }
+      },
+      {
+        "aggregateId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-shared-context",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "f032ee22c8a8f842c20820cd596bcd9d",
+        "occurredAt": "2026-10-20T19:14:23.388627175Z",
+        "payload": {
+          "activityId": "showcase-multi-agent-review-local-bc9322e8eb-shared-context",
+          "executionRunId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-shared-context",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "a50958ff9d3c38bd6ade99c617fbd2b0",
+        "occurredAt": "2026-10-20T19:14:23.459470384Z",
+        "payload": {
+          "activityId": "showcase-multi-agent-review-local-bc9322e8eb-shared-context",
+          "executionRunId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+          "failureReason": "",
+          "runtimeSeconds": 0.12026524543762207,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-code",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "0a55a6d1bb3124d7edc6babb06cb8aca",
+        "occurredAt": "2026-10-20T19:14:25.403354343Z",
+        "payload": {
+          "activityId": "showcase-multi-agent-review-local-bc9322e8eb-code",
+          "executionRunId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-domain",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "39b32462328fa9083f2aee26f14e5774",
+        "occurredAt": "2026-10-20T19:14:25.407130093Z",
+        "payload": {
+          "activityId": "showcase-multi-agent-review-local-bc9322e8eb-domain",
+          "executionRunId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-research",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "67f3d62b5e705fa61e7411331ff9efa5",
+        "occurredAt": "2026-10-20T19:14:25.409908218Z",
+        "payload": {
+          "activityId": "showcase-multi-agent-review-local-bc9322e8eb-research",
+          "executionRunId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-domain",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "77f22cfe6a068a0676f1774869d08bdd",
+        "occurredAt": "2026-10-20T19:14:25.558120635Z",
+        "payload": {
+          "activityId": "showcase-multi-agent-review-local-bc9322e8eb-domain",
+          "executionRunId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+          "failureReason": "",
+          "runtimeSeconds": 0.14162540435791016,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-code",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "212b0de95fc281add45e446bbca1d45a",
+        "occurredAt": "2026-10-20T19:14:25.562899343Z",
+        "payload": {
+          "activityId": "showcase-multi-agent-review-local-bc9322e8eb-code",
+          "executionRunId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+          "failureReason": "",
+          "runtimeSeconds": 0.14397954940795898,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-research",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "9d9e49f4e6cf25afaf49b2a89bb1da60",
+        "occurredAt": "2026-10-20T19:14:25.56811501Z",
+        "payload": {
+          "activityId": "showcase-multi-agent-review-local-bc9322e8eb-research",
+          "executionRunId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+          "failureReason": "",
+          "runtimeSeconds": 0.13863587379455566,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-critic-review",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "ba20cc27e7f11e776d00e73beaec9cc0",
+        "occurredAt": "2026-10-20T19:14:27.440359886Z",
+        "payload": {
+          "activityId": "showcase-multi-agent-review-local-bc9322e8eb-critic-review",
+          "executionRunId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-critic-review",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "e02c543ac07a8c89d2c47f32686186e6",
+        "occurredAt": "2026-10-20T19:14:27.501853886Z",
+        "payload": {
+          "activityId": "showcase-multi-agent-review-local-bc9322e8eb-critic-review",
+          "executionRunId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+          "failureReason": "",
+          "runtimeSeconds": 0.11079549789428711,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-synthesize",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "2474cbfb34c4ffcab6d901d316fd42a9",
+        "occurredAt": "2026-10-20T19:14:29.448230095Z",
+        "payload": {
+          "activityId": "showcase-multi-agent-review-local-bc9322e8eb-synthesize",
+          "executionRunId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-synthesize",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "15f02d5328a65f077097ab36d973da8d",
+        "occurredAt": "2026-10-20T19:14:29.510664345Z",
+        "payload": {
+          "activityId": "showcase-multi-agent-review-local-bc9322e8eb-synthesize",
+          "executionRunId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+          "failureReason": "",
+          "runtimeSeconds": 0.10654234886169434,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-publish-evidence",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "cdc368a395000e3dc0a088e07c90cf33",
+        "occurredAt": "2026-10-20T19:14:31.457091346Z",
+        "payload": {
+          "activityId": "showcase-multi-agent-review-local-bc9322e8eb-publish-evidence",
+          "executionRunId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-publish-evidence",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "390dee9b0ab18007e293cb9ba3e12b3f",
+        "occurredAt": "2026-10-20T19:14:31.543041846Z",
+        "payload": {
+          "activityId": "showcase-multi-agent-review-local-bc9322e8eb-publish-evidence",
+          "executionRunId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+          "failureReason": "",
+          "runtimeSeconds": 0.1057276725769043,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "aggregateType": "execution_run",
+        "eventType": "execution.run.completed",
+        "id": "0d458f5e883ce2646293df2ba84e7951",
+        "occurredAt": "2026-10-20T19:14:31.546312596Z",
+        "payload": {
+          "cost": 0,
+          "makespanSeconds": 7.536827325820923
+        }
+      }
+    ],
+    "handles": [
+      {
+        "activityId": "showcase-multi-agent-review-local-bc9322e8eb-code",
+        "artifacts": {
+          "activityId": "showcase-multi-agent-review-local-bc9322e8eb-code",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:94d13b4d73f284de60bf73c9c5e6865882ac30bf0b71f0e6040b887c5aa1255b",
+              "modifiedUnixNano": 1792523664110521000,
+              "path": "stage-code.json",
+              "sizeBytes": 423
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:94d13b4d73f284de60bf73c9c5e6865882ac30bf0b71f0e6040b887c5aa1255b",
+              "modifiedUnixNano": 1792523664110521000,
+              "path": "stage-code.json",
+              "sizeBytes": 423
+            },
+            {
+              "checksum": "sha256:24fbd63efb96296ce6c3ecf05f7c83e5653e44787e485312a91fa9e215de4218",
+              "modifiedUnixNano": 1792523663608521000,
+              "path": "stage-shared-context.json",
+              "sizeBytes": 469
+            }
+          ],
+          "finishedAt": 1792523664.1161313,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:24fbd63efb96296ce6c3ecf05f7c83e5653e44787e485312a91fa9e215de4218",
+              "modifiedUnixNano": 1792523663608521000,
+              "path": "stage-shared-context.json",
+              "sizeBytes": 469
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.14397954940795898,
+              "finishedAt": 1792523664.1161313,
+              "phase": "execution",
+              "startedAt": 1792523663.9721518,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000/showcase-multi-agent-review-local-bc9322e8eb-code",
+          "runId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+          "runtime": "showcase-multi-agent-review-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523663.9721518,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 2,
+            "initialFiles": 1,
+            "modifiedFiles": 0,
+            "outputBytes": 423
+          }
+        },
+        "exitCode": 0,
+        "externalId": "e7ded4bec66b5172e237a4ac17c8e85866fd31fff643ad8a30dd03ed20d338ea",
+        "finishedAt": 1792523664.1161313,
+        "id": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-code",
+        "log": "{\"activity\": \"code\", \"status\": \"success\", \"resultKeys\": [\"role\", \"recomputedMean\", \"allFinite\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-multi-agent-review-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000/showcase-multi-agent-review-local-bc9322e8eb-code",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523663.9721591,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-code",
+          "submittedAt": 1792523663.9721518
+        },
+        "resourceId": "showcase-multi-agent-review-local-docker",
+        "runId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "runtimeId": "showcase-multi-agent-review-local",
+        "startedAt": 1792523663.9721518,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-multi-agent-review-local-bc9322e8eb-critic-review",
+        "artifacts": {
+          "activityId": "showcase-multi-agent-review-local-bc9322e8eb-critic-review",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:843b9a12c6c8bfde864f973e7246e3cf48993f39587d917393be80d7aceceb05",
+              "modifiedUnixNano": 1792523666334521000,
+              "path": "stage-critic-review.json",
+              "sizeBytes": 755
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:94d13b4d73f284de60bf73c9c5e6865882ac30bf0b71f0e6040b887c5aa1255b",
+              "modifiedUnixNano": 1792523665914521000,
+              "path": "stage-code.json",
+              "sizeBytes": 423
+            },
+            {
+              "checksum": "sha256:843b9a12c6c8bfde864f973e7246e3cf48993f39587d917393be80d7aceceb05",
+              "modifiedUnixNano": 1792523666334521000,
+              "path": "stage-critic-review.json",
+              "sizeBytes": 755
+            },
+            {
+              "checksum": "sha256:06050f72fb0319d8a67df16059df36291f783e6c82e2dbf33a93a20f61ac3245",
+              "modifiedUnixNano": 1792523666041521000,
+              "path": "stage-domain.json",
+              "sizeBytes": 425
+            },
+            {
+              "checksum": "sha256:b17829f914391b4a4a5171f6ee53ef36a72a68b328a1d91c72230dbccf38c45e",
+              "modifiedUnixNano": 1792523665789521000,
+              "path": "stage-research.json",
+              "sizeBytes": 452
+            },
+            {
+              "checksum": "sha256:24fbd63efb96296ce6c3ecf05f7c83e5653e44787e485312a91fa9e215de4218",
+              "modifiedUnixNano": 1792523665789521000,
+              "path": "stage-shared-context.json",
+              "sizeBytes": 469
+            }
+          ],
+          "finishedAt": 1792523666.3404512,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:94d13b4d73f284de60bf73c9c5e6865882ac30bf0b71f0e6040b887c5aa1255b",
+              "modifiedUnixNano": 1792523665914521000,
+              "path": "stage-code.json",
+              "sizeBytes": 423
+            },
+            {
+              "checksum": "sha256:06050f72fb0319d8a67df16059df36291f783e6c82e2dbf33a93a20f61ac3245",
+              "modifiedUnixNano": 1792523666041521000,
+              "path": "stage-domain.json",
+              "sizeBytes": 425
+            },
+            {
+              "checksum": "sha256:b17829f914391b4a4a5171f6ee53ef36a72a68b328a1d91c72230dbccf38c45e",
+              "modifiedUnixNano": 1792523665789521000,
+              "path": "stage-research.json",
+              "sizeBytes": 452
+            },
+            {
+              "checksum": "sha256:24fbd63efb96296ce6c3ecf05f7c83e5653e44787e485312a91fa9e215de4218",
+              "modifiedUnixNano": 1792523665789521000,
+              "path": "stage-shared-context.json",
+              "sizeBytes": 469
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.11079549789428711,
+              "finishedAt": 1792523666.3404512,
+              "phase": "execution",
+              "startedAt": 1792523666.2296557,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000/showcase-multi-agent-review-local-bc9322e8eb-critic-review",
+          "runId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+          "runtime": "showcase-multi-agent-review-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523666.2296557,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 5,
+            "initialFiles": 4,
+            "modifiedFiles": 0,
+            "outputBytes": 755
+          }
+        },
+        "exitCode": 0,
+        "externalId": "05f78d4afe980ec41afe2c3706d613c70620fedb9beb75cb15279bad88b0810b",
+        "finishedAt": 1792523666.3404512,
+        "id": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-critic-review",
+        "log": "{\"activity\": \"critic-review\", \"status\": \"success\", \"resultKeys\": [\"research\", \"code\", \"domain\", \"claimAccepted\", \"correctedMean\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-multi-agent-review-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000/showcase-multi-agent-review-local-bc9322e8eb-critic-review",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523666.2296605,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-critic-review",
+          "submittedAt": 1792523666.2296557
+        },
+        "resourceId": "showcase-multi-agent-review-local-docker",
+        "runId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "runtimeId": "showcase-multi-agent-review-local",
+        "startedAt": 1792523666.2296557,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-multi-agent-review-local-bc9322e8eb-domain",
+        "artifacts": {
+          "activityId": "showcase-multi-agent-review-local-bc9322e8eb-domain",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:06050f72fb0319d8a67df16059df36291f783e6c82e2dbf33a93a20f61ac3245",
+              "modifiedUnixNano": 1792523664087521000,
+              "path": "stage-domain.json",
+              "sizeBytes": 425
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:06050f72fb0319d8a67df16059df36291f783e6c82e2dbf33a93a20f61ac3245",
+              "modifiedUnixNano": 1792523664087521000,
+              "path": "stage-domain.json",
+              "sizeBytes": 425
+            },
+            {
+              "checksum": "sha256:24fbd63efb96296ce6c3ecf05f7c83e5653e44787e485312a91fa9e215de4218",
+              "modifiedUnixNano": 1792523663609521000,
+              "path": "stage-shared-context.json",
+              "sizeBytes": 469
+            }
+          ],
+          "finishedAt": 1792523664.0948293,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:24fbd63efb96296ce6c3ecf05f7c83e5653e44787e485312a91fa9e215de4218",
+              "modifiedUnixNano": 1792523663609521000,
+              "path": "stage-shared-context.json",
+              "sizeBytes": 469
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.14162540435791016,
+              "finishedAt": 1792523664.0948293,
+              "phase": "execution",
+              "startedAt": 1792523663.953204,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000/showcase-multi-agent-review-local-bc9322e8eb-domain",
+          "runId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+          "runtime": "showcase-multi-agent-review-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523663.953204,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 2,
+            "initialFiles": 1,
+            "modifiedFiles": 0,
+            "outputBytes": 425
+          }
+        },
+        "exitCode": 0,
+        "externalId": "69bae7af251714818c7bbd1f87618e4f16f103b5358e0ec133f2efa6116e1b0a",
+        "finishedAt": 1792523664.0948293,
+        "id": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-domain",
+        "log": "{\"activity\": \"domain\", \"status\": \"success\", \"resultKeys\": [\"role\", \"withinBounds\", \"claimedMean\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-multi-agent-review-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000/showcase-multi-agent-review-local-bc9322e8eb-domain",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523663.9532123,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-domain",
+          "submittedAt": 1792523663.953204
+        },
+        "resourceId": "showcase-multi-agent-review-local-docker",
+        "runId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "runtimeId": "showcase-multi-agent-review-local",
+        "startedAt": 1792523663.953204,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-multi-agent-review-local-bc9322e8eb-publish-evidence",
+        "artifacts": {
+          "activityId": "showcase-multi-agent-review-local-bc9322e8eb-publish-evidence",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:78696b975bd67e8d98f3f01b6663fc8ccc3803b07a7bddca1e3874ec95d3f014",
+              "modifiedUnixNano": 1792523669896521000,
+              "path": "review.json",
+              "sizeBytes": 340
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:3dbf80d0e6e35306c4341203ffd913330b8c1e187ac086f84cc7db7e22afe121",
+              "modifiedUnixNano": 1792523669896521000,
+              "path": "stage-publish-evidence.json",
+              "sizeBytes": 413
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:d8aac3c63130faac33ee09420e33f8c2c6f4b45b8ec276733f3c843a4e1a88ac",
+              "modifiedUnixNano": 1792523669896521000,
+              "path": "synthesis.md",
+              "sizeBytes": 157
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:78696b975bd67e8d98f3f01b6663fc8ccc3803b07a7bddca1e3874ec95d3f014",
+              "modifiedUnixNano": 1792523669896521000,
+              "path": "review.json",
+              "sizeBytes": 340
+            },
+            {
+              "checksum": "sha256:94d13b4d73f284de60bf73c9c5e6865882ac30bf0b71f0e6040b887c5aa1255b",
+              "modifiedUnixNano": 1792523669615521000,
+              "path": "stage-code.json",
+              "sizeBytes": 423
+            },
+            {
+              "checksum": "sha256:843b9a12c6c8bfde864f973e7246e3cf48993f39587d917393be80d7aceceb05",
+              "modifiedUnixNano": 1792523669615521000,
+              "path": "stage-critic-review.json",
+              "sizeBytes": 755
+            },
+            {
+              "checksum": "sha256:06050f72fb0319d8a67df16059df36291f783e6c82e2dbf33a93a20f61ac3245",
+              "modifiedUnixNano": 1792523669615521000,
+              "path": "stage-domain.json",
+              "sizeBytes": 425
+            },
+            {
+              "checksum": "sha256:3dbf80d0e6e35306c4341203ffd913330b8c1e187ac086f84cc7db7e22afe121",
+              "modifiedUnixNano": 1792523669896521000,
+              "path": "stage-publish-evidence.json",
+              "sizeBytes": 413
+            },
+            {
+              "checksum": "sha256:b17829f914391b4a4a5171f6ee53ef36a72a68b328a1d91c72230dbccf38c45e",
+              "modifiedUnixNano": 1792523669615521000,
+              "path": "stage-research.json",
+              "sizeBytes": 452
+            },
+            {
+              "checksum": "sha256:24fbd63efb96296ce6c3ecf05f7c83e5653e44787e485312a91fa9e215de4218",
+              "modifiedUnixNano": 1792523669615521000,
+              "path": "stage-shared-context.json",
+              "sizeBytes": 469
+            },
+            {
+              "checksum": "sha256:7df59db04594bd677909226d80c5dbbf044d1b57b49d32d2704b419aa7144fcf",
+              "modifiedUnixNano": 1792523669615521000,
+              "path": "stage-synthesize.json",
+              "sizeBytes": 1025
+            },
+            {
+              "checksum": "sha256:d8aac3c63130faac33ee09420e33f8c2c6f4b45b8ec276733f3c843a4e1a88ac",
+              "modifiedUnixNano": 1792523669896521000,
+              "path": "synthesis.md",
+              "sizeBytes": 157
+            }
+          ],
+          "finishedAt": 1792523669.901864,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:94d13b4d73f284de60bf73c9c5e6865882ac30bf0b71f0e6040b887c5aa1255b",
+              "modifiedUnixNano": 1792523669615521000,
+              "path": "stage-code.json",
+              "sizeBytes": 423
+            },
+            {
+              "checksum": "sha256:843b9a12c6c8bfde864f973e7246e3cf48993f39587d917393be80d7aceceb05",
+              "modifiedUnixNano": 1792523669615521000,
+              "path": "stage-critic-review.json",
+              "sizeBytes": 755
+            },
+            {
+              "checksum": "sha256:06050f72fb0319d8a67df16059df36291f783e6c82e2dbf33a93a20f61ac3245",
+              "modifiedUnixNano": 1792523669615521000,
+              "path": "stage-domain.json",
+              "sizeBytes": 425
+            },
+            {
+              "checksum": "sha256:b17829f914391b4a4a5171f6ee53ef36a72a68b328a1d91c72230dbccf38c45e",
+              "modifiedUnixNano": 1792523669615521000,
+              "path": "stage-research.json",
+              "sizeBytes": 452
+            },
+            {
+              "checksum": "sha256:24fbd63efb96296ce6c3ecf05f7c83e5653e44787e485312a91fa9e215de4218",
+              "modifiedUnixNano": 1792523669615521000,
+              "path": "stage-shared-context.json",
+              "sizeBytes": 469
+            },
+            {
+              "checksum": "sha256:7df59db04594bd677909226d80c5dbbf044d1b57b49d32d2704b419aa7144fcf",
+              "modifiedUnixNano": 1792523669615521000,
+              "path": "stage-synthesize.json",
+              "sizeBytes": 1025
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.1057276725769043,
+              "finishedAt": 1792523669.901864,
+              "phase": "execution",
+              "startedAt": 1792523669.7961364,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000/showcase-multi-agent-review-local-bc9322e8eb-publish-evidence",
+          "runId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+          "runtime": "showcase-multi-agent-review-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523669.7961364,
+          "summary": {
+            "createdFiles": 3,
+            "deletedFiles": 0,
+            "finalFiles": 9,
+            "initialFiles": 6,
+            "modifiedFiles": 0,
+            "outputBytes": 910
+          }
+        },
+        "exitCode": 0,
+        "externalId": "11d6aeaf2b432f34661057cb54d815b8bd09826ebe90253e9fa0e650b8bdb9c0",
+        "finishedAt": 1792523669.901864,
+        "id": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-publish-evidence",
+        "log": "{\"activity\": \"publish-evidence\", \"status\": \"success\", \"resultKeys\": [\"claimAccepted\", \"correctedMean\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-multi-agent-review-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000/showcase-multi-agent-review-local-bc9322e8eb-publish-evidence",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523669.7961419,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-publish-evidence",
+          "submittedAt": 1792523669.7961364
+        },
+        "resourceId": "showcase-multi-agent-review-local-docker",
+        "runId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "runtimeId": "showcase-multi-agent-review-local",
+        "startedAt": 1792523669.7961364,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-multi-agent-review-local-bc9322e8eb-research",
+        "artifacts": {
+          "activityId": "showcase-multi-agent-review-local-bc9322e8eb-research",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:b17829f914391b4a4a5171f6ee53ef36a72a68b328a1d91c72230dbccf38c45e",
+              "modifiedUnixNano": 1792523664119521000,
+              "path": "stage-research.json",
+              "sizeBytes": 452
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:b17829f914391b4a4a5171f6ee53ef36a72a68b328a1d91c72230dbccf38c45e",
+              "modifiedUnixNano": 1792523664119521000,
+              "path": "stage-research.json",
+              "sizeBytes": 452
+            },
+            {
+              "checksum": "sha256:24fbd63efb96296ce6c3ecf05f7c83e5653e44787e485312a91fa9e215de4218",
+              "modifiedUnixNano": 1792523663608521000,
+              "path": "stage-shared-context.json",
+              "sizeBytes": 469
+            }
+          ],
+          "finishedAt": 1792523664.1266892,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:24fbd63efb96296ce6c3ecf05f7c83e5653e44787e485312a91fa9e215de4218",
+              "modifiedUnixNano": 1792523663608521000,
+              "path": "stage-shared-context.json",
+              "sizeBytes": 469
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.13863587379455566,
+              "finishedAt": 1792523664.1266892,
+              "phase": "execution",
+              "startedAt": 1792523663.9880533,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000/showcase-multi-agent-review-local-bc9322e8eb-research",
+          "runId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+          "runtime": "showcase-multi-agent-review-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523663.9880533,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 2,
+            "initialFiles": 1,
+            "modifiedFiles": 0,
+            "outputBytes": 452
+          }
+        },
+        "exitCode": 0,
+        "externalId": "8f4ce4939788e385ca71744a7100547a88628ac89dff3a5b3c4c18fce934a398",
+        "finishedAt": 1792523664.1266892,
+        "id": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-research",
+        "log": "{\"activity\": \"research\", \"status\": \"success\", \"resultKeys\": [\"role\", \"observations\", \"mean\", \"stdev\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-multi-agent-review-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000/showcase-multi-agent-review-local-bc9322e8eb-research",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523663.9880629,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-research",
+          "submittedAt": 1792523663.9880533
+        },
+        "resourceId": "showcase-multi-agent-review-local-docker",
+        "runId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "runtimeId": "showcase-multi-agent-review-local",
+        "startedAt": 1792523663.9880533,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-multi-agent-review-local-bc9322e8eb-shared-context",
+        "artifacts": {
+          "activityId": "showcase-multi-agent-review-local-bc9322e8eb-shared-context",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:24fbd63efb96296ce6c3ecf05f7c83e5653e44787e485312a91fa9e215de4218",
+              "modifiedUnixNano": 1792523662479521000,
+              "path": "stage-shared-context.json",
+              "sizeBytes": 469
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:24fbd63efb96296ce6c3ecf05f7c83e5653e44787e485312a91fa9e215de4218",
+              "modifiedUnixNano": 1792523662479521000,
+              "path": "stage-shared-context.json",
+              "sizeBytes": 469
+            }
+          ],
+          "finishedAt": 1792523662.485302,
+          "phases": [
+            {
+              "durationSeconds": 0.12026524543762207,
+              "finishedAt": 1792523662.485302,
+              "phase": "execution",
+              "startedAt": 1792523662.3650367,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000/showcase-multi-agent-review-local-bc9322e8eb-shared-context",
+          "runId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+          "runtime": "showcase-multi-agent-review-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523662.3650367,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 1,
+            "initialFiles": 0,
+            "modifiedFiles": 0,
+            "outputBytes": 469
+          }
+        },
+        "exitCode": 0,
+        "externalId": "4aa166068d995da0ccb1a266688622a7c935bf58c037cbc3831dec94900c802a",
+        "finishedAt": 1792523662.485302,
+        "id": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-shared-context",
+        "log": "{\"activity\": \"shared-context\", \"status\": \"success\", \"resultKeys\": [\"measurements\", \"claimedMean\", \"tolerance\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-multi-agent-review-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000/showcase-multi-agent-review-local-bc9322e8eb-shared-context",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523662.365044,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-shared-context",
+          "submittedAt": 1792523662.3650367
+        },
+        "resourceId": "showcase-multi-agent-review-local-docker",
+        "runId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "runtimeId": "showcase-multi-agent-review-local",
+        "startedAt": 1792523662.3650367,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-multi-agent-review-local-bc9322e8eb-synthesize",
+        "artifacts": {
+          "activityId": "showcase-multi-agent-review-local-bc9322e8eb-synthesize",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:7df59db04594bd677909226d80c5dbbf044d1b57b49d32d2704b419aa7144fcf",
+              "modifiedUnixNano": 1792523667909521000,
+              "path": "stage-synthesize.json",
+              "sizeBytes": 1025
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:94d13b4d73f284de60bf73c9c5e6865882ac30bf0b71f0e6040b887c5aa1255b",
+              "modifiedUnixNano": 1792523667632521000,
+              "path": "stage-code.json",
+              "sizeBytes": 423
+            },
+            {
+              "checksum": "sha256:843b9a12c6c8bfde864f973e7246e3cf48993f39587d917393be80d7aceceb05",
+              "modifiedUnixNano": 1792523667632521000,
+              "path": "stage-critic-review.json",
+              "sizeBytes": 755
+            },
+            {
+              "checksum": "sha256:06050f72fb0319d8a67df16059df36291f783e6c82e2dbf33a93a20f61ac3245",
+              "modifiedUnixNano": 1792523667632521000,
+              "path": "stage-domain.json",
+              "sizeBytes": 425
+            },
+            {
+              "checksum": "sha256:b17829f914391b4a4a5171f6ee53ef36a72a68b328a1d91c72230dbccf38c45e",
+              "modifiedUnixNano": 1792523667632521000,
+              "path": "stage-research.json",
+              "sizeBytes": 452
+            },
+            {
+              "checksum": "sha256:24fbd63efb96296ce6c3ecf05f7c83e5653e44787e485312a91fa9e215de4218",
+              "modifiedUnixNano": 1792523667632521000,
+              "path": "stage-shared-context.json",
+              "sizeBytes": 469
+            },
+            {
+              "checksum": "sha256:7df59db04594bd677909226d80c5dbbf044d1b57b49d32d2704b419aa7144fcf",
+              "modifiedUnixNano": 1792523667909521000,
+              "path": "stage-synthesize.json",
+              "sizeBytes": 1025
+            }
+          ],
+          "finishedAt": 1792523667.9154894,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:94d13b4d73f284de60bf73c9c5e6865882ac30bf0b71f0e6040b887c5aa1255b",
+              "modifiedUnixNano": 1792523667632521000,
+              "path": "stage-code.json",
+              "sizeBytes": 423
+            },
+            {
+              "checksum": "sha256:843b9a12c6c8bfde864f973e7246e3cf48993f39587d917393be80d7aceceb05",
+              "modifiedUnixNano": 1792523667632521000,
+              "path": "stage-critic-review.json",
+              "sizeBytes": 755
+            },
+            {
+              "checksum": "sha256:06050f72fb0319d8a67df16059df36291f783e6c82e2dbf33a93a20f61ac3245",
+              "modifiedUnixNano": 1792523667632521000,
+              "path": "stage-domain.json",
+              "sizeBytes": 425
+            },
+            {
+              "checksum": "sha256:b17829f914391b4a4a5171f6ee53ef36a72a68b328a1d91c72230dbccf38c45e",
+              "modifiedUnixNano": 1792523667632521000,
+              "path": "stage-research.json",
+              "sizeBytes": 452
+            },
+            {
+              "checksum": "sha256:24fbd63efb96296ce6c3ecf05f7c83e5653e44787e485312a91fa9e215de4218",
+              "modifiedUnixNano": 1792523667632521000,
+              "path": "stage-shared-context.json",
+              "sizeBytes": 469
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.10654234886169434,
+              "finishedAt": 1792523667.9154894,
+              "phase": "execution",
+              "startedAt": 1792523667.808947,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000/showcase-multi-agent-review-local-bc9322e8eb-synthesize",
+          "runId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+          "runtime": "showcase-multi-agent-review-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523667.808947,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 6,
+            "initialFiles": 5,
+            "modifiedFiles": 0,
+            "outputBytes": 1025
+          }
+        },
+        "exitCode": 0,
+        "externalId": "5b04091349275d787ad84eca384c0ad07e5379c948c882742f0a450f3b9e40cd",
+        "finishedAt": 1792523667.9154894,
+        "id": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-synthesize",
+        "log": "{\"activity\": \"synthesize\", \"status\": \"success\", \"resultKeys\": [\"review\", \"synthesis\", \"agents\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-multi-agent-review-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000/showcase-multi-agent-review-local-bc9322e8eb-synthesize",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523667.808952,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-synthesize",
+          "submittedAt": 1792523667.808947
+        },
+        "resourceId": "showcase-multi-agent-review-local-docker",
+        "runId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "runtimeId": "showcase-multi-agent-review-local",
+        "startedAt": 1792523667.808947,
+        "status": "completed"
+      }
+    ],
+    "infrastructureRuns": [],
+    "operationEvents": [],
+    "run": {
+      "activityCount": 7,
+      "breakdown": {
+        "computeSeconds": 0.8675715923309326,
+        "interferenceSeconds": 0,
+        "overheadSeconds": 0,
+        "queueSeconds": 0,
+        "transferSeconds": 1.9905345439910889
+      },
+      "completedActivityCount": 7,
+      "cost": 0,
+      "finishedAt": "2026-10-20T19:14:31Z",
+      "id": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+      "kind": "workflow",
+      "makespanSeconds": 7.536827325820923,
+      "mode": "real",
+      "schedulePlanId": "showcase-multi-agent-review-local-bc9322e8eb-manual-plan-20261020t191421.882509000",
+      "seed": 0,
+      "startedAt": "2026-10-20T19:14:22Z",
+      "status": "completed",
+      "title": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+      "transferredBytes": 9249
+    },
+    "timeline": {
+      "computeMakespanSeconds": 7.536827325820923,
+      "coveredWallSeconds": 2.531519889831543,
+      "finishedAt": 1792523671,
+      "phases": [
+        {
+          "activityId": "showcase-multi-agent-review-local-bc9322e8eb-shared-context",
+          "category": "resource-queue",
+          "durationSeconds": 0.17331838607788086,
+          "finishedAt": 1792523662.3650367,
+          "id": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-shared-context:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523662.1917183,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-multi-agent-review-local-bc9322e8eb-shared-context",
+          "category": "runtime",
+          "durationSeconds": 0.12026524543762207,
+          "finishedAt": 1792523662.485302,
+          "id": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-shared-context:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523662.3650367,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-multi-agent-review-local-bc9322e8eb-code",
+          "category": "resource-queue",
+          "durationSeconds": 0.010330438613891602,
+          "finishedAt": 1792523663.4711192,
+          "id": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-code:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523663.4607887,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-multi-agent-review-local-bc9322e8eb-domain",
+          "category": "resource-queue",
+          "durationSeconds": 0.011168479919433594,
+          "finishedAt": 1792523663.4732227,
+          "id": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-domain:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523663.4620543,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-multi-agent-review-local-bc9322e8eb-research",
+          "category": "resource-queue",
+          "durationSeconds": 0.006058692932128906,
+          "finishedAt": 1792523663.4693637,
+          "id": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-research:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523663.463305,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-multi-agent-review-local-bc9322e8eb-research",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.18282032012939453,
+          "finishedAt": 1792523663.652184,
+          "id": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-research:transfer-workspace-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-research-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523663.4693637,
+          "status": "completed",
+          "transferId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-research:transfer-workspace-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-research-0"
+        },
+        {
+          "activityId": "showcase-multi-agent-review-local-bc9322e8eb-code",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.18108606338500977,
+          "finishedAt": 1792523663.6522052,
+          "id": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-code:transfer-workspace-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-code-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523663.4711192,
+          "status": "completed",
+          "transferId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-code:transfer-workspace-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-code-0"
+        },
+        {
+          "activityId": "showcase-multi-agent-review-local-bc9322e8eb-domain",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.18255209922790527,
+          "finishedAt": 1792523663.6557748,
+          "id": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-domain:transfer-workspace-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-domain-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523663.4732227,
+          "status": "completed",
+          "transferId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-domain:transfer-workspace-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-domain-0"
+        },
+        {
+          "activityId": "showcase-multi-agent-review-local-bc9322e8eb-research",
+          "category": "launch",
+          "durationSeconds": 0.33586931228637695,
+          "finishedAt": 1792523663.9880533,
+          "id": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-research:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523663.652184,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-multi-agent-review-local-bc9322e8eb-code",
+          "category": "launch",
+          "durationSeconds": 0.3199465274810791,
+          "finishedAt": 1792523663.9721518,
+          "id": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-code:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523663.6522052,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-multi-agent-review-local-bc9322e8eb-domain",
+          "category": "launch",
+          "durationSeconds": 0.29742908477783203,
+          "finishedAt": 1792523663.953204,
+          "id": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-domain:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523663.6557748,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-multi-agent-review-local-bc9322e8eb-domain",
+          "category": "runtime",
+          "durationSeconds": 0.14162540435791016,
+          "finishedAt": 1792523664.0948293,
+          "id": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-domain:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523663.953204,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-multi-agent-review-local-bc9322e8eb-code",
+          "category": "runtime",
+          "durationSeconds": 0.14397954940795898,
+          "finishedAt": 1792523664.1161313,
+          "id": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-code:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523663.9721518,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-multi-agent-review-local-bc9322e8eb-research",
+          "category": "runtime",
+          "durationSeconds": 0.13863587379455566,
+          "finishedAt": 1792523664.1266892,
+          "id": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-research:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523663.9880533,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-multi-agent-review-local-bc9322e8eb-critic-review",
+          "category": "resource-queue",
+          "durationSeconds": 0.006571769714355469,
+          "finishedAt": 1792523665.5766237,
+          "id": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-critic-review:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523665.570052,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-multi-agent-review-local-bc9322e8eb-critic-review",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.25905632972717285,
+          "finishedAt": 1792523665.83568,
+          "id": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-critic-review:transfer-workspace-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-critic-review-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523665.5766237,
+          "status": "completed",
+          "transferId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-critic-review:transfer-workspace-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-critic-review-0"
+        },
+        {
+          "activityId": "showcase-multi-agent-review-local-bc9322e8eb-critic-review",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.3623840808868408,
+          "finishedAt": 1792523665.9390078,
+          "id": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-critic-review:transfer-workspace-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-critic-review-1",
+          "source": "transfer-observation",
+          "startedAt": 1792523665.5766237,
+          "status": "completed",
+          "transferId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-critic-review:transfer-workspace-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-critic-review-1"
+        },
+        {
+          "activityId": "showcase-multi-agent-review-local-bc9322e8eb-critic-review",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.5083975791931152,
+          "finishedAt": 1792523666.0850213,
+          "id": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-critic-review:transfer-workspace-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-critic-review-2",
+          "source": "transfer-observation",
+          "startedAt": 1792523665.5766237,
+          "status": "completed",
+          "transferId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-critic-review:transfer-workspace-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-critic-review-2"
+        },
+        {
+          "activityId": "showcase-multi-agent-review-local-bc9322e8eb-critic-review",
+          "category": "launch",
+          "durationSeconds": 0.14463448524475098,
+          "finishedAt": 1792523666.2296557,
+          "id": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-critic-review:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523666.0850213,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-multi-agent-review-local-bc9322e8eb-critic-review",
+          "category": "runtime",
+          "durationSeconds": 0.11079549789428711,
+          "finishedAt": 1792523666.3404512,
+          "id": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-critic-review:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523666.2296557,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-multi-agent-review-local-bc9322e8eb-synthesize",
+          "category": "resource-queue",
+          "durationSeconds": 0.003870725631713867,
+          "finishedAt": 1792523667.5071645,
+          "id": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-synthesize:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523667.5032938,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-multi-agent-review-local-bc9322e8eb-synthesize",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.16755342483520508,
+          "finishedAt": 1792523667.674718,
+          "id": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-synthesize:transfer-workspace-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-synthesize-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523667.5071645,
+          "status": "completed",
+          "transferId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-synthesize:transfer-workspace-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-synthesize-0"
+        },
+        {
+          "activityId": "showcase-multi-agent-review-local-bc9322e8eb-synthesize",
+          "category": "launch",
+          "durationSeconds": 0.13422918319702148,
+          "finishedAt": 1792523667.808947,
+          "id": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-synthesize:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523667.674718,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-multi-agent-review-local-bc9322e8eb-synthesize",
+          "category": "runtime",
+          "durationSeconds": 0.10654234886169434,
+          "finishedAt": 1792523667.9154894,
+          "id": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-synthesize:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523667.808947,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-multi-agent-review-local-bc9322e8eb-publish-evidence",
+          "category": "resource-queue",
+          "durationSeconds": 0.003746509552001953,
+          "finishedAt": 1792523669.5161698,
+          "id": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-publish-evidence:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523669.5124233,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-multi-agent-review-local-bc9322e8eb-publish-evidence",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.1466846466064453,
+          "finishedAt": 1792523669.6628544,
+          "id": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-publish-evidence:transfer-workspace-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-publish-evidence-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523669.5161698,
+          "status": "completed",
+          "transferId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-publish-evidence:transfer-workspace-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-publish-evidence-0"
+        },
+        {
+          "activityId": "showcase-multi-agent-review-local-bc9322e8eb-publish-evidence",
+          "category": "launch",
+          "durationSeconds": 0.13328194618225098,
+          "finishedAt": 1792523669.7961364,
+          "id": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-publish-evidence:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523669.6628544,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-multi-agent-review-local-bc9322e8eb-publish-evidence",
+          "category": "runtime",
+          "durationSeconds": 0.1057276725769043,
+          "finishedAt": 1792523669.901864,
+          "id": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000:showcase-multi-agent-review-local-bc9322e8eb-publish-evidence:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523669.7961364,
+          "status": "completed"
+        }
+      ],
+      "startedAt": 1792523662,
+      "totals": {
+        "destroySeconds": 0,
+        "executablePreparationSeconds": 0,
+        "launchSeconds": 1.3653905391693115,
+        "provisionSeconds": 0,
+        "resourceQueueSeconds": 0.21506500244140625,
+        "runtimeSeconds": 0.8675715923309326,
+        "startSeconds": 0,
+        "stopSeconds": 0,
+        "validationSeconds": 0,
+        "workspaceTransferSeconds": 1.9905345439910889
+      },
+      "unclassifiedWallSeconds": 6.468480110168457,
+      "wallSeconds": 9
+    },
+    "workspaceLeases": [
+      {
+        "consumerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-critic-review",
+        "id": "workspace-lease-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-code-showcase-multi-agent-review-local-bc9322e8eb-critic-review",
+        "producerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-code",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:14:26.090337052Z",
+        "runId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "workspaceId": "workspace-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-code"
+      },
+      {
+        "consumerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-synthesize",
+        "id": "workspace-lease-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-critic-review-showcase-multi-agent-review-local-bc9322e8eb-synthesize",
+        "producerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-critic-review",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:14:27.678447136Z",
+        "runId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "workspaceId": "workspace-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-critic-review"
+      },
+      {
+        "consumerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-critic-review",
+        "id": "workspace-lease-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-domain-showcase-multi-agent-review-local-bc9322e8eb-critic-review",
+        "producerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-domain",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:14:26.090337052Z",
+        "runId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "workspaceId": "workspace-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-domain"
+      },
+      {
+        "consumerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-critic-review",
+        "id": "workspace-lease-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-research-showcase-multi-agent-review-local-bc9322e8eb-critic-review",
+        "producerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-research",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:14:26.090337052Z",
+        "runId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "workspaceId": "workspace-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-research"
+      },
+      {
+        "consumerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-code",
+        "id": "workspace-lease-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-shared-context-showcase-multi-agent-review-local-bc9322e8eb-code",
+        "producerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-shared-context",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:14:23.658256342Z",
+        "runId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "workspaceId": "workspace-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-shared-context"
+      },
+      {
+        "consumerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-domain",
+        "id": "workspace-lease-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-shared-context-showcase-multi-agent-review-local-bc9322e8eb-domain",
+        "producerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-shared-context",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:14:23.658199009Z",
+        "runId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "workspaceId": "workspace-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-shared-context"
+      },
+      {
+        "consumerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-research",
+        "id": "workspace-lease-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-shared-context-showcase-multi-agent-review-local-bc9322e8eb-research",
+        "producerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-shared-context",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:14:23.658134925Z",
+        "runId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "workspaceId": "workspace-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-shared-context"
+      },
+      {
+        "consumerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-publish-evidence",
+        "id": "workspace-lease-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-synthesize-showcase-multi-agent-review-local-bc9322e8eb-publish-evidence",
+        "producerActivityId": "showcase-multi-agent-review-local-bc9322e8eb-synthesize",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:14:29.665222303Z",
+        "runId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "workspaceId": "workspace-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-synthesize"
+      }
+    ],
+    "workspaces": [
+      {
+        "activityId": "showcase-multi-agent-review-local-bc9322e8eb-code",
+        "createdAt": "2026-10-20T19:14:22.107366591Z",
+        "driver": "local",
+        "environmentId": "showcase-multi-agent-review-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000/showcase-multi-agent-review-local-bc9322e8eb-code",
+        "fileCount": 2,
+        "id": "workspace-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-code",
+        "inputBytes": 469,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:94d13b4d73f284de60bf73c9c5e6865882ac30bf0b71f0e6040b887c5aa1255b",
+              "path": "stage-code.json",
+              "sizeBytes": 423
+            },
+            {
+              "digest": "sha256:24fbd63efb96296ce6c3ecf05f7c83e5653e44787e485312a91fa9e215de4218",
+              "path": "stage-shared-context.json",
+              "sizeBytes": 469
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:24fbd63efb96296ce6c3ecf05f7c83e5653e44787e485312a91fa9e215de4218",
+              "path": "stage-shared-context.json",
+              "sizeBytes": 469
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:24fbd63efb96296ce6c3ecf05f7c83e5653e44787e485312a91fa9e215de4218",
+              "path": "stage-shared-context.json",
+              "sizeBytes": 469
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:94d13b4d73f284de60bf73c9c5e6865882ac30bf0b71f0e6040b887c5aa1255b",
+              "path": "stage-code.json",
+              "sizeBytes": 423
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000/showcase-multi-agent-review-local-bc9322e8eb-code",
+        "outputBytes": 423,
+        "pinned": false,
+        "reclaimedBytes": 892,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:14:26.095572218Z",
+        "resourceId": "showcase-multi-agent-review-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "runtimeId": "showcase-multi-agent-review-local",
+        "sealedAt": "2026-10-20T19:14:25.560763385Z",
+        "sizeBytes": 892,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000/showcase-multi-agent-review-local-bc9322e8eb-code"
+      },
+      {
+        "activityId": "showcase-multi-agent-review-local-bc9322e8eb-critic-review",
+        "createdAt": "2026-10-20T19:14:22.107366591Z",
+        "driver": "local",
+        "environmentId": "showcase-multi-agent-review-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000/showcase-multi-agent-review-local-bc9322e8eb-critic-review",
+        "fileCount": 5,
+        "id": "workspace-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-critic-review",
+        "inputBytes": 1769,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:94d13b4d73f284de60bf73c9c5e6865882ac30bf0b71f0e6040b887c5aa1255b",
+              "path": "stage-code.json",
+              "sizeBytes": 423
+            },
+            {
+              "digest": "sha256:843b9a12c6c8bfde864f973e7246e3cf48993f39587d917393be80d7aceceb05",
+              "path": "stage-critic-review.json",
+              "sizeBytes": 755
+            },
+            {
+              "digest": "sha256:06050f72fb0319d8a67df16059df36291f783e6c82e2dbf33a93a20f61ac3245",
+              "path": "stage-domain.json",
+              "sizeBytes": 425
+            },
+            {
+              "digest": "sha256:b17829f914391b4a4a5171f6ee53ef36a72a68b328a1d91c72230dbccf38c45e",
+              "path": "stage-research.json",
+              "sizeBytes": 452
+            },
+            {
+              "digest": "sha256:24fbd63efb96296ce6c3ecf05f7c83e5653e44787e485312a91fa9e215de4218",
+              "path": "stage-shared-context.json",
+              "sizeBytes": 469
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:94d13b4d73f284de60bf73c9c5e6865882ac30bf0b71f0e6040b887c5aa1255b",
+              "path": "stage-code.json",
+              "sizeBytes": 423
+            },
+            {
+              "digest": "sha256:06050f72fb0319d8a67df16059df36291f783e6c82e2dbf33a93a20f61ac3245",
+              "path": "stage-domain.json",
+              "sizeBytes": 425
+            },
+            {
+              "digest": "sha256:b17829f914391b4a4a5171f6ee53ef36a72a68b328a1d91c72230dbccf38c45e",
+              "path": "stage-research.json",
+              "sizeBytes": 452
+            },
+            {
+              "digest": "sha256:24fbd63efb96296ce6c3ecf05f7c83e5653e44787e485312a91fa9e215de4218",
+              "path": "stage-shared-context.json",
+              "sizeBytes": 469
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:94d13b4d73f284de60bf73c9c5e6865882ac30bf0b71f0e6040b887c5aa1255b",
+              "path": "stage-code.json",
+              "sizeBytes": 423
+            },
+            {
+              "digest": "sha256:06050f72fb0319d8a67df16059df36291f783e6c82e2dbf33a93a20f61ac3245",
+              "path": "stage-domain.json",
+              "sizeBytes": 425
+            },
+            {
+              "digest": "sha256:b17829f914391b4a4a5171f6ee53ef36a72a68b328a1d91c72230dbccf38c45e",
+              "path": "stage-research.json",
+              "sizeBytes": 452
+            },
+            {
+              "digest": "sha256:24fbd63efb96296ce6c3ecf05f7c83e5653e44787e485312a91fa9e215de4218",
+              "path": "stage-shared-context.json",
+              "sizeBytes": 469
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:843b9a12c6c8bfde864f973e7246e3cf48993f39587d917393be80d7aceceb05",
+              "path": "stage-critic-review.json",
+              "sizeBytes": 755
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000/showcase-multi-agent-review-local-bc9322e8eb-critic-review",
+        "outputBytes": 755,
+        "pinned": false,
+        "reclaimedBytes": 2524,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:14:27.682307427Z",
+        "resourceId": "showcase-multi-agent-review-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "runtimeId": "showcase-multi-agent-review-local",
+        "sealedAt": "2026-10-20T19:14:27.498636427Z",
+        "sizeBytes": 2524,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000/showcase-multi-agent-review-local-bc9322e8eb-critic-review"
+      },
+      {
+        "activityId": "showcase-multi-agent-review-local-bc9322e8eb-domain",
+        "createdAt": "2026-10-20T19:14:22.107366591Z",
+        "driver": "local",
+        "environmentId": "showcase-multi-agent-review-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000/showcase-multi-agent-review-local-bc9322e8eb-domain",
+        "fileCount": 2,
+        "id": "workspace-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-domain",
+        "inputBytes": 469,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:06050f72fb0319d8a67df16059df36291f783e6c82e2dbf33a93a20f61ac3245",
+              "path": "stage-domain.json",
+              "sizeBytes": 425
+            },
+            {
+              "digest": "sha256:24fbd63efb96296ce6c3ecf05f7c83e5653e44787e485312a91fa9e215de4218",
+              "path": "stage-shared-context.json",
+              "sizeBytes": 469
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:24fbd63efb96296ce6c3ecf05f7c83e5653e44787e485312a91fa9e215de4218",
+              "path": "stage-shared-context.json",
+              "sizeBytes": 469
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:24fbd63efb96296ce6c3ecf05f7c83e5653e44787e485312a91fa9e215de4218",
+              "path": "stage-shared-context.json",
+              "sizeBytes": 469
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:06050f72fb0319d8a67df16059df36291f783e6c82e2dbf33a93a20f61ac3245",
+              "path": "stage-domain.json",
+              "sizeBytes": 425
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000/showcase-multi-agent-review-local-bc9322e8eb-domain",
+        "outputBytes": 425,
+        "pinned": false,
+        "reclaimedBytes": 894,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:14:26.101461427Z",
+        "resourceId": "showcase-multi-agent-review-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "runtimeId": "showcase-multi-agent-review-local",
+        "sealedAt": "2026-10-20T19:14:25.553451593Z",
+        "sizeBytes": 894,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000/showcase-multi-agent-review-local-bc9322e8eb-domain"
+      },
+      {
+        "activityId": "showcase-multi-agent-review-local-bc9322e8eb-publish-evidence",
+        "createdAt": "2026-10-20T19:14:22.107366591Z",
+        "driver": "local",
+        "environmentId": "showcase-multi-agent-review-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000/showcase-multi-agent-review-local-bc9322e8eb-publish-evidence",
+        "fileCount": 3,
+        "id": "workspace-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-publish-evidence",
+        "inputBytes": 3549,
+        "isFinal": true,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:78696b975bd67e8d98f3f01b6663fc8ccc3803b07a7bddca1e3874ec95d3f014",
+              "path": "review.json",
+              "sizeBytes": 340
+            },
+            {
+              "digest": "sha256:94d13b4d73f284de60bf73c9c5e6865882ac30bf0b71f0e6040b887c5aa1255b",
+              "path": "stage-code.json",
+              "sizeBytes": 423
+            },
+            {
+              "digest": "sha256:843b9a12c6c8bfde864f973e7246e3cf48993f39587d917393be80d7aceceb05",
+              "path": "stage-critic-review.json",
+              "sizeBytes": 755
+            },
+            {
+              "digest": "sha256:06050f72fb0319d8a67df16059df36291f783e6c82e2dbf33a93a20f61ac3245",
+              "path": "stage-domain.json",
+              "sizeBytes": 425
+            },
+            {
+              "digest": "sha256:3dbf80d0e6e35306c4341203ffd913330b8c1e187ac086f84cc7db7e22afe121",
+              "path": "stage-publish-evidence.json",
+              "sizeBytes": 413
+            },
+            {
+              "digest": "sha256:b17829f914391b4a4a5171f6ee53ef36a72a68b328a1d91c72230dbccf38c45e",
+              "path": "stage-research.json",
+              "sizeBytes": 452
+            },
+            {
+              "digest": "sha256:24fbd63efb96296ce6c3ecf05f7c83e5653e44787e485312a91fa9e215de4218",
+              "path": "stage-shared-context.json",
+              "sizeBytes": 469
+            },
+            {
+              "digest": "sha256:7df59db04594bd677909226d80c5dbbf044d1b57b49d32d2704b419aa7144fcf",
+              "path": "stage-synthesize.json",
+              "sizeBytes": 1025
+            },
+            {
+              "digest": "sha256:d8aac3c63130faac33ee09420e33f8c2c6f4b45b8ec276733f3c843a4e1a88ac",
+              "path": "synthesis.md",
+              "sizeBytes": 157
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:94d13b4d73f284de60bf73c9c5e6865882ac30bf0b71f0e6040b887c5aa1255b",
+              "path": "stage-code.json",
+              "sizeBytes": 423
+            },
+            {
+              "digest": "sha256:843b9a12c6c8bfde864f973e7246e3cf48993f39587d917393be80d7aceceb05",
+              "path": "stage-critic-review.json",
+              "sizeBytes": 755
+            },
+            {
+              "digest": "sha256:06050f72fb0319d8a67df16059df36291f783e6c82e2dbf33a93a20f61ac3245",
+              "path": "stage-domain.json",
+              "sizeBytes": 425
+            },
+            {
+              "digest": "sha256:b17829f914391b4a4a5171f6ee53ef36a72a68b328a1d91c72230dbccf38c45e",
+              "path": "stage-research.json",
+              "sizeBytes": 452
+            },
+            {
+              "digest": "sha256:24fbd63efb96296ce6c3ecf05f7c83e5653e44787e485312a91fa9e215de4218",
+              "path": "stage-shared-context.json",
+              "sizeBytes": 469
+            },
+            {
+              "digest": "sha256:7df59db04594bd677909226d80c5dbbf044d1b57b49d32d2704b419aa7144fcf",
+              "path": "stage-synthesize.json",
+              "sizeBytes": 1025
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:94d13b4d73f284de60bf73c9c5e6865882ac30bf0b71f0e6040b887c5aa1255b",
+              "path": "stage-code.json",
+              "sizeBytes": 423
+            },
+            {
+              "digest": "sha256:843b9a12c6c8bfde864f973e7246e3cf48993f39587d917393be80d7aceceb05",
+              "path": "stage-critic-review.json",
+              "sizeBytes": 755
+            },
+            {
+              "digest": "sha256:06050f72fb0319d8a67df16059df36291f783e6c82e2dbf33a93a20f61ac3245",
+              "path": "stage-domain.json",
+              "sizeBytes": 425
+            },
+            {
+              "digest": "sha256:b17829f914391b4a4a5171f6ee53ef36a72a68b328a1d91c72230dbccf38c45e",
+              "path": "stage-research.json",
+              "sizeBytes": 452
+            },
+            {
+              "digest": "sha256:24fbd63efb96296ce6c3ecf05f7c83e5653e44787e485312a91fa9e215de4218",
+              "path": "stage-shared-context.json",
+              "sizeBytes": 469
+            },
+            {
+              "digest": "sha256:7df59db04594bd677909226d80c5dbbf044d1b57b49d32d2704b419aa7144fcf",
+              "path": "stage-synthesize.json",
+              "sizeBytes": 1025
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:78696b975bd67e8d98f3f01b6663fc8ccc3803b07a7bddca1e3874ec95d3f014",
+              "path": "review.json",
+              "sizeBytes": 340
+            },
+            {
+              "digest": "sha256:3dbf80d0e6e35306c4341203ffd913330b8c1e187ac086f84cc7db7e22afe121",
+              "path": "stage-publish-evidence.json",
+              "sizeBytes": 413
+            },
+            {
+              "digest": "sha256:d8aac3c63130faac33ee09420e33f8c2c6f4b45b8ec276733f3c843a4e1a88ac",
+              "path": "synthesis.md",
+              "sizeBytes": 157
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000/showcase-multi-agent-review-local-bc9322e8eb-publish-evidence",
+        "outputBytes": 910,
+        "pinned": false,
+        "reclaimedBytes": 3549,
+        "releaseReason": "inherited inputs pruned",
+        "resourceId": "showcase-multi-agent-review-local-docker",
+        "retention": "final",
+        "runId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "runtimeId": "showcase-multi-agent-review-local",
+        "sealedAt": "2026-10-20T19:14:31.538014388Z",
+        "sizeBytes": 910,
+        "state": "sealed",
+        "uri": "file:///akoflow/workspace/runs/showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000/showcase-multi-agent-review-local-bc9322e8eb-publish-evidence"
+      },
+      {
+        "activityId": "showcase-multi-agent-review-local-bc9322e8eb-research",
+        "createdAt": "2026-10-20T19:14:22.107366591Z",
+        "driver": "local",
+        "environmentId": "showcase-multi-agent-review-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000/showcase-multi-agent-review-local-bc9322e8eb-research",
+        "fileCount": 2,
+        "id": "workspace-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-research",
+        "inputBytes": 469,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:b17829f914391b4a4a5171f6ee53ef36a72a68b328a1d91c72230dbccf38c45e",
+              "path": "stage-research.json",
+              "sizeBytes": 452
+            },
+            {
+              "digest": "sha256:24fbd63efb96296ce6c3ecf05f7c83e5653e44787e485312a91fa9e215de4218",
+              "path": "stage-shared-context.json",
+              "sizeBytes": 469
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:24fbd63efb96296ce6c3ecf05f7c83e5653e44787e485312a91fa9e215de4218",
+              "path": "stage-shared-context.json",
+              "sizeBytes": 469
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:24fbd63efb96296ce6c3ecf05f7c83e5653e44787e485312a91fa9e215de4218",
+              "path": "stage-shared-context.json",
+              "sizeBytes": 469
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:b17829f914391b4a4a5171f6ee53ef36a72a68b328a1d91c72230dbccf38c45e",
+              "path": "stage-research.json",
+              "sizeBytes": 452
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000/showcase-multi-agent-review-local-bc9322e8eb-research",
+        "outputBytes": 452,
+        "pinned": false,
+        "reclaimedBytes": 921,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:14:26.107337093Z",
+        "resourceId": "showcase-multi-agent-review-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "runtimeId": "showcase-multi-agent-review-local",
+        "sealedAt": "2026-10-20T19:14:25.56543076Z",
+        "sizeBytes": 921,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000/showcase-multi-agent-review-local-bc9322e8eb-research"
+      },
+      {
+        "activityId": "showcase-multi-agent-review-local-bc9322e8eb-shared-context",
+        "createdAt": "2026-10-20T19:14:22.107366591Z",
+        "driver": "local",
+        "environmentId": "showcase-multi-agent-review-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000/showcase-multi-agent-review-local-bc9322e8eb-shared-context",
+        "fileCount": 1,
+        "id": "workspace-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-shared-context",
+        "inputBytes": 0,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:24fbd63efb96296ce6c3ecf05f7c83e5653e44787e485312a91fa9e215de4218",
+              "path": "stage-shared-context.json",
+              "sizeBytes": 469
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:24fbd63efb96296ce6c3ecf05f7c83e5653e44787e485312a91fa9e215de4218",
+              "path": "stage-shared-context.json",
+              "sizeBytes": 469
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000/showcase-multi-agent-review-local-bc9322e8eb-shared-context",
+        "outputBytes": 469,
+        "pinned": false,
+        "reclaimedBytes": 469,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:14:23.669510675Z",
+        "resourceId": "showcase-multi-agent-review-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "runtimeId": "showcase-multi-agent-review-local",
+        "sealedAt": "2026-10-20T19:14:23.456267884Z",
+        "sizeBytes": 469,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000/showcase-multi-agent-review-local-bc9322e8eb-shared-context"
+      },
+      {
+        "activityId": "showcase-multi-agent-review-local-bc9322e8eb-synthesize",
+        "createdAt": "2026-10-20T19:14:22.107366591Z",
+        "driver": "local",
+        "environmentId": "showcase-multi-agent-review-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000/showcase-multi-agent-review-local-bc9322e8eb-synthesize",
+        "fileCount": 6,
+        "id": "workspace-showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000-showcase-multi-agent-review-local-bc9322e8eb-synthesize",
+        "inputBytes": 2524,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:94d13b4d73f284de60bf73c9c5e6865882ac30bf0b71f0e6040b887c5aa1255b",
+              "path": "stage-code.json",
+              "sizeBytes": 423
+            },
+            {
+              "digest": "sha256:843b9a12c6c8bfde864f973e7246e3cf48993f39587d917393be80d7aceceb05",
+              "path": "stage-critic-review.json",
+              "sizeBytes": 755
+            },
+            {
+              "digest": "sha256:06050f72fb0319d8a67df16059df36291f783e6c82e2dbf33a93a20f61ac3245",
+              "path": "stage-domain.json",
+              "sizeBytes": 425
+            },
+            {
+              "digest": "sha256:b17829f914391b4a4a5171f6ee53ef36a72a68b328a1d91c72230dbccf38c45e",
+              "path": "stage-research.json",
+              "sizeBytes": 452
+            },
+            {
+              "digest": "sha256:24fbd63efb96296ce6c3ecf05f7c83e5653e44787e485312a91fa9e215de4218",
+              "path": "stage-shared-context.json",
+              "sizeBytes": 469
+            },
+            {
+              "digest": "sha256:7df59db04594bd677909226d80c5dbbf044d1b57b49d32d2704b419aa7144fcf",
+              "path": "stage-synthesize.json",
+              "sizeBytes": 1025
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:94d13b4d73f284de60bf73c9c5e6865882ac30bf0b71f0e6040b887c5aa1255b",
+              "path": "stage-code.json",
+              "sizeBytes": 423
+            },
+            {
+              "digest": "sha256:843b9a12c6c8bfde864f973e7246e3cf48993f39587d917393be80d7aceceb05",
+              "path": "stage-critic-review.json",
+              "sizeBytes": 755
+            },
+            {
+              "digest": "sha256:06050f72fb0319d8a67df16059df36291f783e6c82e2dbf33a93a20f61ac3245",
+              "path": "stage-domain.json",
+              "sizeBytes": 425
+            },
+            {
+              "digest": "sha256:b17829f914391b4a4a5171f6ee53ef36a72a68b328a1d91c72230dbccf38c45e",
+              "path": "stage-research.json",
+              "sizeBytes": 452
+            },
+            {
+              "digest": "sha256:24fbd63efb96296ce6c3ecf05f7c83e5653e44787e485312a91fa9e215de4218",
+              "path": "stage-shared-context.json",
+              "sizeBytes": 469
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:94d13b4d73f284de60bf73c9c5e6865882ac30bf0b71f0e6040b887c5aa1255b",
+              "path": "stage-code.json",
+              "sizeBytes": 423
+            },
+            {
+              "digest": "sha256:843b9a12c6c8bfde864f973e7246e3cf48993f39587d917393be80d7aceceb05",
+              "path": "stage-critic-review.json",
+              "sizeBytes": 755
+            },
+            {
+              "digest": "sha256:06050f72fb0319d8a67df16059df36291f783e6c82e2dbf33a93a20f61ac3245",
+              "path": "stage-domain.json",
+              "sizeBytes": 425
+            },
+            {
+              "digest": "sha256:b17829f914391b4a4a5171f6ee53ef36a72a68b328a1d91c72230dbccf38c45e",
+              "path": "stage-research.json",
+              "sizeBytes": 452
+            },
+            {
+              "digest": "sha256:24fbd63efb96296ce6c3ecf05f7c83e5653e44787e485312a91fa9e215de4218",
+              "path": "stage-shared-context.json",
+              "sizeBytes": 469
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:7df59db04594bd677909226d80c5dbbf044d1b57b49d32d2704b419aa7144fcf",
+              "path": "stage-synthesize.json",
+              "sizeBytes": 1025
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000/showcase-multi-agent-review-local-bc9322e8eb-synthesize",
+        "outputBytes": 1025,
+        "pinned": false,
+        "reclaimedBytes": 3549,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:14:29.670328137Z",
+        "resourceId": "showcase-multi-agent-review-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+        "runtimeId": "showcase-multi-agent-review-local",
+        "sealedAt": "2026-10-20T19:14:29.508065637Z",
+        "sizeBytes": 3549,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000/showcase-multi-agent-review-local-bc9322e8eb-synthesize"
+      }
+    ]
+  },
+  "runId": "showcase-multi-agent-review-local-bc9322e8eb-run-20261020t191421.886742000",
+  "status": "completed",
+  "workflowId": "showcase-multi-agent-review-local-bc9322e8eb"
+}

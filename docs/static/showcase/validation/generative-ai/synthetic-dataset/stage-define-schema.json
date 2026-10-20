@@ -1,0 +1,36 @@
+{
+  "dependencies": [],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:46.973818Z",
+  "finishedAtUnixNs": 1792523566968691000,
+  "inputDigest": "ec4272675a69cc249ca6d7c4cbdbbf88a70e359195687a12746e96cb203085d3",
+  "result": {
+    "minimumAnswerWords": 3,
+    "required": [
+      "id",
+      "topic",
+      "question",
+      "answer"
+    ],
+    "topics": [
+      {
+        "explanation": "Activities become ready after their declared dependencies complete.",
+        "name": "DAG scheduling"
+      },
+      {
+        "explanation": "Published files move from producing activities to downstream consumers.",
+        "name": "artifact transfer"
+      },
+      {
+        "explanation": "Held-out measurements test model predictions against unseen target values.",
+        "name": "model evaluation"
+      }
+    ]
+  },
+  "showcase": "synthetic-dataset",
+  "stage": "define-schema",
+  "startedAt": "2026-10-20T19:12:46.928182Z",
+  "startedAtUnixNs": 1792523566968690000,
+  "status": "success",
+  "validationMode": "local-workload"
+}

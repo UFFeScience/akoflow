@@ -1,0 +1,20 @@
+{
+  "dependencies": [
+    "merge-predictions"
+  ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:38.386654Z",
+  "finishedAtUnixNs": 1792523558382285000,
+  "inputDigest": "70550d9845fe9f8e849594d196afda135aca8d4bbe87291ffa91eb0c6a10b058",
+  "result": {
+    "maximum": 7.897720337021509,
+    "minimum": -6.497667694198858,
+    "rows": 61
+  },
+  "showcase": "batch-inference",
+  "stage": "publish",
+  "startedAt": "2026-10-20T19:12:38.344139Z",
+  "startedAtUnixNs": 1792523558381835000,
+  "status": "success",
+  "validationMode": "local-workload"
+}

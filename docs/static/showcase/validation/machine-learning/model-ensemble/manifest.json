@@ -1,0 +1,22 @@
+{
+  "artifacts": [
+    "ensemble.pkl",
+    "metrics.json"
+  ],
+  "sha256": {
+    "ensemble.pkl": "e25c79e64ca60aab1f0335a79bd9d350e386a2bf4efffe376154544886200544",
+    "metrics.json": "2536ac93ee457d3143d3dc9b324aeec11574fcdd0fcf8bee2a3b9e527309c09a"
+  },
+  "showcase": "model-ensemble",
+  "stages": [
+    "prepare-input",
+    "predict-a",
+    "predict-b",
+    "predict-c",
+    "combine",
+    "evaluate",
+    "publish"
+  ],
+  "status": "success",
+  "validationMode": "local-workload"
+}

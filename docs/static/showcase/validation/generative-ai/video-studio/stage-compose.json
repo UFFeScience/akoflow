@@ -1,0 +1,16 @@
+{
+  "dependencies": [
+    "scenes",
+    "narration"
+  ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T18:30:59.130966Z",
+  "result": {
+    "commandCompleted": true,
+    "stdout": ""
+  },
+  "showcase": "ai-video-studio",
+  "stage": "compose",
+  "startedAt": "2026-10-20T18:30:58.867865Z",
+  "status": "success"
+}

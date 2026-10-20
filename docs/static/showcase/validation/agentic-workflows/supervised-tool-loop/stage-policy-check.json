@@ -1,0 +1,27 @@
+{
+  "dependencies": [
+    "propose-action"
+  ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:48.032902Z",
+  "finishedAtUnixNs": 1792523568028103000,
+  "inputDigest": "459833c5049d21156be01d5408e8c8469de8e146c32632722c428b8f7492aca1",
+  "result": {
+    "policyPassed": true,
+    "proposal": {
+      "action": "write-summary-to-outputs",
+      "content": {
+        "count": 5,
+        "mean": 6,
+        "sum": 30
+      },
+      "file": "tool-result.json"
+    }
+  },
+  "showcase": "supervised-tool-loop",
+  "stage": "policy-check",
+  "startedAt": "2026-10-20T19:12:47.989728Z",
+  "startedAtUnixNs": 1792523568028005000,
+  "status": "success",
+  "validationMode": "local-workload"
+}

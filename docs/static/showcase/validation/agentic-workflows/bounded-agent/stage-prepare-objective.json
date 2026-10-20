@@ -1,0 +1,27 @@
+{
+  "dependencies": [],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:47.338809Z",
+  "finishedAtUnixNs": 1792523567334038000,
+  "inputDigest": "dbcda11a2ed684a5173f537c9ae17d10529006b4fe53195dbfac5400dbd43784",
+  "result": {
+    "maxSteps": 3,
+    "objective": "Summarize the versioned numeric observations.",
+    "values": [
+      12,
+      15,
+      19,
+      14,
+      17,
+      23,
+      11,
+      21
+    ]
+  },
+  "showcase": "bounded-agent",
+  "stage": "prepare-objective",
+  "startedAt": "2026-10-20T19:12:47.293633Z",
+  "startedAtUnixNs": 1792523567334036000,
+  "status": "success",
+  "validationMode": "local-workload"
+}

@@ -1,0 +1,33 @@
+{
+  "artifactSha256": {
+    "answers.json": "db2c7894495c73787cac776b85e7ba6f60adae6bd40f5a78f01a05c27a9ed0f7",
+    "chunks.json": "a26026a0886141a5363f64f3d650a257e690331af1f287dd41ecd0889d111cc3",
+    "documents.json": "2fe522c4fe6f40c5a767ad0fd3d1fed0198199978ca53c1d7b3de42bb822f68b",
+    "evaluation.json": "a2e457b53564c07abc7d4160f1adaf1845273fdcf903f874d51518e823f7eb8e",
+    "index.json": "1fedb810279c6c8be4b246cc45d545474bdd62543adf4117834b485a62ca7c23",
+    "retrieval.json": "92f964d9c460e4e5974a9151de001b2889017029cd078b50e1f6bf308008a93a"
+  },
+  "completedActivities": 6,
+  "dependencyWaves": [
+    [
+      "ingest"
+    ],
+    [
+      "chunk"
+    ],
+    [
+      "index"
+    ],
+    [
+      "retrieve"
+    ],
+    [
+      "answer"
+    ],
+    [
+      "evaluate"
+    ]
+  ],
+  "executionMode": "local-process",
+  "mode": "local-pipeline"
+}

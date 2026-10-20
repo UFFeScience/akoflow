@@ -1,0 +1,189 @@
+{
+  "dependencies": [
+    "filter"
+  ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:47.110064Z",
+  "finishedAtUnixNs": 1792523567105604000,
+  "inputDigest": "ec4272675a69cc249ca6d7c4cbdbbf88a70e359195687a12746e96cb203085d3",
+  "result": {
+    "duplicatesRemoved": 2,
+    "records": [
+      {
+        "answer": "Activities become ready after their declared dependencies complete.",
+        "id": "0-0",
+        "question": "How does DAG scheduling work in example 0?",
+        "topic": "DAG scheduling"
+      },
+      {
+        "answer": "Published files move from producing activities to downstream consumers.",
+        "id": "0-1",
+        "question": "How does artifact transfer work in example 1?",
+        "topic": "artifact transfer"
+      },
+      {
+        "answer": "Held-out measurements test model predictions against unseen target values.",
+        "id": "0-2",
+        "question": "How does model evaluation work in example 2?",
+        "topic": "model evaluation"
+      },
+      {
+        "answer": "Activities become ready after their declared dependencies complete.",
+        "id": "0-3",
+        "question": "How does DAG scheduling work in example 3?",
+        "topic": "DAG scheduling"
+      },
+      {
+        "answer": "Published files move from producing activities to downstream consumers.",
+        "id": "0-4",
+        "question": "How does artifact transfer work in example 4?",
+        "topic": "artifact transfer"
+      },
+      {
+        "answer": "Held-out measurements test model predictions against unseen target values.",
+        "id": "0-5",
+        "question": "How does model evaluation work in example 5?",
+        "topic": "model evaluation"
+      },
+      {
+        "answer": "Activities become ready after their declared dependencies complete.",
+        "id": "0-6",
+        "question": "How does DAG scheduling work in example 6?",
+        "topic": "DAG scheduling"
+      },
+      {
+        "answer": "Published files move from producing activities to downstream consumers.",
+        "id": "0-7",
+        "question": "How does artifact transfer work in example 7?",
+        "topic": "artifact transfer"
+      },
+      {
+        "answer": "Held-out measurements test model predictions against unseen target values.",
+        "id": "0-8",
+        "question": "How does model evaluation work in example 8?",
+        "topic": "model evaluation"
+      },
+      {
+        "answer": "Activities become ready after their declared dependencies complete.",
+        "id": "shared",
+        "question": "Shared review question",
+        "topic": "DAG scheduling"
+      },
+      {
+        "answer": "Published files move from producing activities to downstream consumers.",
+        "id": "1-0",
+        "question": "How does artifact transfer work in example 0?",
+        "topic": "artifact transfer"
+      },
+      {
+        "answer": "Held-out measurements test model predictions against unseen target values.",
+        "id": "1-1",
+        "question": "How does model evaluation work in example 1?",
+        "topic": "model evaluation"
+      },
+      {
+        "answer": "Activities become ready after their declared dependencies complete.",
+        "id": "1-2",
+        "question": "How does DAG scheduling work in example 2?",
+        "topic": "DAG scheduling"
+      },
+      {
+        "answer": "Published files move from producing activities to downstream consumers.",
+        "id": "1-3",
+        "question": "How does artifact transfer work in example 3?",
+        "topic": "artifact transfer"
+      },
+      {
+        "answer": "Held-out measurements test model predictions against unseen target values.",
+        "id": "1-4",
+        "question": "How does model evaluation work in example 4?",
+        "topic": "model evaluation"
+      },
+      {
+        "answer": "Activities become ready after their declared dependencies complete.",
+        "id": "1-5",
+        "question": "How does DAG scheduling work in example 5?",
+        "topic": "DAG scheduling"
+      },
+      {
+        "answer": "Published files move from producing activities to downstream consumers.",
+        "id": "1-6",
+        "question": "How does artifact transfer work in example 6?",
+        "topic": "artifact transfer"
+      },
+      {
+        "answer": "Held-out measurements test model predictions against unseen target values.",
+        "id": "1-7",
+        "question": "How does model evaluation work in example 7?",
+        "topic": "model evaluation"
+      },
+      {
+        "answer": "Activities become ready after their declared dependencies complete.",
+        "id": "1-8",
+        "question": "How does DAG scheduling work in example 8?",
+        "topic": "DAG scheduling"
+      },
+      {
+        "answer": "Held-out measurements test model predictions against unseen target values.",
+        "id": "2-0",
+        "question": "How does model evaluation work in example 0?",
+        "topic": "model evaluation"
+      },
+      {
+        "answer": "Activities become ready after their declared dependencies complete.",
+        "id": "2-1",
+        "question": "How does DAG scheduling work in example 1?",
+        "topic": "DAG scheduling"
+      },
+      {
+        "answer": "Published files move from producing activities to downstream consumers.",
+        "id": "2-2",
+        "question": "How does artifact transfer work in example 2?",
+        "topic": "artifact transfer"
+      },
+      {
+        "answer": "Held-out measurements test model predictions against unseen target values.",
+        "id": "2-3",
+        "question": "How does model evaluation work in example 3?",
+        "topic": "model evaluation"
+      },
+      {
+        "answer": "Activities become ready after their declared dependencies complete.",
+        "id": "2-4",
+        "question": "How does DAG scheduling work in example 4?",
+        "topic": "DAG scheduling"
+      },
+      {
+        "answer": "Published files move from producing activities to downstream consumers.",
+        "id": "2-5",
+        "question": "How does artifact transfer work in example 5?",
+        "topic": "artifact transfer"
+      },
+      {
+        "answer": "Held-out measurements test model predictions against unseen target values.",
+        "id": "2-6",
+        "question": "How does model evaluation work in example 6?",
+        "topic": "model evaluation"
+      },
+      {
+        "answer": "Activities become ready after their declared dependencies complete.",
+        "id": "2-7",
+        "question": "How does DAG scheduling work in example 7?",
+        "topic": "DAG scheduling"
+      },
+      {
+        "answer": "Published files move from producing activities to downstream consumers.",
+        "id": "2-8",
+        "question": "How does artifact transfer work in example 8?",
+        "topic": "artifact transfer"
+      }
+    ],
+    "rejected": 3
+  },
+  "showcase": "synthetic-dataset",
+  "stage": "deduplicate",
+  "startedAt": "2026-10-20T19:12:47.066068Z",
+  "startedAtUnixNs": 1792523567105458000,
+  "status": "success",
+  "validationMode": "local-workload"
+}

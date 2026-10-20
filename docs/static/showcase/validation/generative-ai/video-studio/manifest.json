@@ -1,0 +1,26 @@
+{
+  "artifacts": [
+    "storyboard.json",
+    "frames.json",
+    "narration.wav",
+    "final.mp4",
+    "quality-report.json"
+  ],
+  "sha256": {
+    "final.mp4": "c929991b7ab8b4182f986de1e048e3f00339374f751a3d275010ac63542d791d",
+    "frames.json": "ce119efef64c987777f2350d46ed538d076ee5c9f9ef640c9d3e5d8529516756",
+    "narration.wav": "2b25de4175846c80b0776db32fa2c3d7f39aa5831195a86e24d32405f21610b0",
+    "quality-report.json": "8a1c7c5b57f8c1c2c8b431d4bf51a29cfaf0ca95d09c57a6fe3a5da5b2afe4f6",
+    "storyboard.json": "89ae35518af0fb865adcbfa4381fa56550655986974bf97d475d0b4681d440f8"
+  },
+  "showcase": "ai-video-studio",
+  "stages": [
+    "storyboard",
+    "scenes",
+    "narration",
+    "compose",
+    "quality-control"
+  ],
+  "status": "success",
+  "validationMode": "local-pipeline"
+}

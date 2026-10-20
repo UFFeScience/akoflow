@@ -1,0 +1,28 @@
+{
+  "artifacts": [
+    "ingested.json",
+    "classified.json",
+    "extracted.json",
+    "reconciliation.json",
+    "invoice-summary.csv",
+    "report.json"
+  ],
+  "sha256": {
+    "classified.json": "5d54c6e03a942160fc6843edaf79968f5628fcb8a692da5ede47cedb5b2b5b81",
+    "extracted.json": "96bb4ccc6aaa6035bfadc0fa583495d81a7ff57c6ea384e47afc930a156caf3d",
+    "ingested.json": "4304af29c1e9fb9d724634d69a6a42c4d350916f26dd299d1969eb1efde2265b",
+    "invoice-summary.csv": "a7f6534944a524795b5a6ff9ce1aa62f8c79844c3d791b67ea617c7800aadf7d",
+    "reconciliation.json": "51b4dbb4db617e4c42acbb11cbec44cd2f7da456a444cf4e38e12507fd5f9187",
+    "report.json": "c1c9450a2c9f625bedad76ad88b119408a341574c262fc31c0e845c1fbd4f8b4"
+  },
+  "showcase": "document-intelligence",
+  "stages": [
+    "ingest",
+    "classify",
+    "extract",
+    "reconcile",
+    "report"
+  ],
+  "status": "success",
+  "validationMode": "local-pipeline"
+}

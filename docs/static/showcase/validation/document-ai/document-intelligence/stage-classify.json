@@ -1,0 +1,15 @@
+{
+  "dependencies": [
+    "ingest"
+  ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T18:31:00.301481Z",
+  "result": {
+    "commandCompleted": true,
+    "stdout": ""
+  },
+  "showcase": "document-intelligence",
+  "stage": "classify",
+  "startedAt": "2026-10-20T18:31:00.267317Z",
+  "status": "success"
+}

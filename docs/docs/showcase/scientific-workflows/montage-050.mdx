@@ -1,0 +1,33 @@
+---
+title: Montage 050 locally
+description: Execute all 58 original Montage 050d activities with local Docker, including their 138 named file handoffs.
+---
+
+import WorkflowLocalRun from "@site/src/components/WorkflowLocalRun";
+import WorkflowDag from "@site/src/components/WorkflowDag";
+import WorkflowExecutionEvidence from "@site/src/components/WorkflowExecutionEvidence";
+
+# Montage 050 locally
+
+Create astronomical mosaics from the twelve FITS observations bundled in the original Montage 050d image. This local variant preserves every original command and file dependency. Two CPU slots run the workflow without GCP machines, Kubernetes, or an HPC account.
+
+<WorkflowLocalRun examplePath="scientific-workflows/montage-050" />
+
+## Complete activity DAG
+
+The diagram uses the exact 58 activity definitions and their persisted dependencies. Each color band has its own projection, difference fitting, background model, correction, image table, and mosaic chain. The final color preview joins the three FITS mosaics. Independent activities become ready after their own prerequisites complete; there is no extra barrier across color bands.
+
+<WorkflowDag title="Montage 050 locally" stages={[]} />
+
+## Inputs and outputs
+
+The immutable upstream image contains 87 MiB of source FITS data, region headers, tables, and native Montage executables. The local command produces three 1800 × 1800 FITS mosaics, three monochrome PNG previews, a color preview, an output manifest, and one execution record per activity.
+
+This is the full scientific workload. It can take substantially longer than the small CPU examples, especially under amd64 emulation on Apple Silicon. Preparation and CI validate the image, twelve source observations, all 58 native commands, and 138 file handoffs. That preparation check does not execute the full workload or certify final mosaic outputs.
+
+Run `./validate.sh` after the standalone workflow finishes. It checks that all 58 activity records completed, parses FITS image dimensions, and decodes PNG headers. The historical duration profiles inherited from the source workflow were measured on another CPU and are not local timing measurements.
+
+<WorkflowExecutionEvidence
+  title="Montage 050 locally"
+  examplePath="scientific-workflows/montage-050"
+/>

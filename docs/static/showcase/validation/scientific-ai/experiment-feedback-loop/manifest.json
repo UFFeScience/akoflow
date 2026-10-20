@@ -1,0 +1,21 @@
+{
+  "artifacts": [
+    "next-batch.json",
+    "feedback-report.json"
+  ],
+  "sha256": {
+    "feedback-report.json": "b72da6838e52fbcbebade596589416aad8c0b0e7be104c9f63fb91a788cf1baf",
+    "next-batch.json": "e4047c0acffa389df22ed3046073951298c473d9c08ea44fcf93b1ab62d38610"
+  },
+  "showcase": "experiment-feedback-loop",
+  "stages": [
+    "observations",
+    "update-model",
+    "propose-experiments",
+    "safety-check",
+    "run-experiments",
+    "record-observations"
+  ],
+  "status": "success",
+  "validationMode": "local-workload"
+}

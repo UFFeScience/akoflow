@@ -1,0 +1,13 @@
+{
+  "dependencies": [],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T18:30:55.182264Z",
+  "result": {
+    "commandCompleted": true,
+    "stdout": ""
+  },
+  "showcase": "ai-video-studio",
+  "stage": "storyboard",
+  "startedAt": "2026-10-20T18:30:55.141846Z",
+  "status": "success"
+}

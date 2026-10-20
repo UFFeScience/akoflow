@@ -1,0 +1,20 @@
+{
+  "dependencies": [
+    "evaluate"
+  ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:39.998344Z",
+  "finishedAtUnixNs": 1792523559993570000,
+  "inputDigest": "3d810a4233efa806bfaa7d1e21a57826a7cb67f6f2b8aeed7547aa3dc787e200",
+  "result": {
+    "baseDigest": "96e2842b61378b276457934f786303cbfc11a17102c65dd5bc9d51d975d21e79",
+    "datasetDigest": "600e63166471c636b3e9c2f9a3005ba991d6939b563a0fc48419ad988e9f91e4",
+    "method": "rank-one additive adapter with gradient descent"
+  },
+  "showcase": "lora-fine-tuning",
+  "stage": "record-lineage",
+  "startedAt": "2026-10-20T19:12:39.952582Z",
+  "startedAtUnixNs": 1792523559993355000,
+  "status": "success",
+  "validationMode": "local-workload"
+}

@@ -1,0 +1,31 @@
+{
+  "dependencies": [
+    "collect-documents"
+  ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:46.596231Z",
+  "finishedAtUnixNs": 1792523566590748000,
+  "inputDigest": "23df4fad9044d17f0db6a2d73a6cd0020efd7db35729ca15965e3f8ba52ac1c2",
+  "result": {
+    "documents": [
+      {
+        "id": "akoflow",
+        "text": "Akoflow schedules activities using a directed acyclic graph. Each activity publishes artifacts for downstream dependencies."
+      },
+      {
+        "id": "mlflow",
+        "text": "MLflow records experiment parameters and metrics. A local SQLite tracking store preserves model run evidence."
+      },
+      {
+        "id": "montage",
+        "text": "Montage creates astronomical image mosaics from FITS observations. Projection and background correction precede the final mosaic."
+      }
+    ]
+  },
+  "showcase": "rag-indexing",
+  "stage": "clean",
+  "startedAt": "2026-10-20T19:12:46.550264Z",
+  "startedAtUnixNs": 1792523566590631000,
+  "status": "success",
+  "validationMode": "local-workload"
+}

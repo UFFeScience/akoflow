@@ -1,0 +1,25 @@
+{
+  "dependencies": [
+    "prepare-dataset"
+  ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:38.962955Z",
+  "finishedAtUnixNs": 1792523558957448000,
+  "inputDigest": "3f9f767aff2cdcd7d7c4c21897033272eaa951cb64b1207311f4717b805a2033",
+  "result": {
+    "candidate": "trial-n",
+    "epochs": 300,
+    "learningRate": 0.06,
+    "model": {
+      "bias": 0.7000638860082541,
+      "weight": 2.400313266993068
+    },
+    "rmse": 0.02111409566003897
+  },
+  "showcase": "hyperparameter-search",
+  "stage": "trial-n",
+  "startedAt": "2026-10-20T19:12:38.902919Z",
+  "startedAtUnixNs": 1792523558946881000,
+  "status": "success",
+  "validationMode": "local-workload"
+}

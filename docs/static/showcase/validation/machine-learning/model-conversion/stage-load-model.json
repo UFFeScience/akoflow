@@ -1,0 +1,26 @@
+{
+  "dependencies": [],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:40.415008Z",
+  "finishedAtUnixNs": 1792523560410398000,
+  "inputDigest": "faba78f3138d9a7d2d99f264e7adfaffde414a063a5db1dd31ada1d7c270b52c",
+  "result": {
+    "bias": 0.713,
+    "inputs": [
+      -2,
+      -1,
+      0,
+      0.2,
+      1,
+      2,
+      3
+    ],
+    "weight": 2.371
+  },
+  "showcase": "model-conversion",
+  "stage": "load-model",
+  "startedAt": "2026-10-20T19:12:40.369751Z",
+  "startedAtUnixNs": 1792523560410396000,
+  "status": "success",
+  "validationMode": "local-workload"
+}

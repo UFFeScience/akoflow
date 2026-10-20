@@ -39,11 +39,16 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - name: Resolve the documented examples revision
+        id: examples-revision
+        run: |
+          revision=$(jq -r '[.[] | .sourceCommit // empty] | unique | if length > 1 then error("documentation references more than one examples revision") else .[0] // "main" end' docs/src/data/showcase-contracts.json)
+          echo "revision=$revision" >> "$GITHUB_OUTPUT"
       - name: Checkout examples
         uses: actions/checkout@v4
         with:
           repository: UFFeScience/akoflow-examples
-          ref: ${{ github.event.client_payload.source_sha || 'main' }}
+          ref: ${{ steps.examples-revision.outputs.revision }}
           path: .external/akoflow-examples
       - uses: actions/setup-node@v4
         with:

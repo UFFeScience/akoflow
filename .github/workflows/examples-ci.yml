@@ -42,54 +42,15 @@ jobs:
         with:
           repository: UFFeScience/akoflow-examples
           ref: ${{ inputs.examples_ref }}
-      - name: Verify runtime-owned showcase execution
-        shell: bash
-        run: |
-          mapfile -t workflows < <(
-            find machine-learning generative-ai agentic-workflows scientific-ai \
-              -mindepth 2 -maxdepth 2 -type f -name workflow.yaml | sort
-          )
-          if [ "${#workflows[@]}" -eq 0 ]; then
-            echo "No showcase workflow documents were found" >&2
-            exit 1
-          fi
-          if grep --line-number --fixed-strings "docker run" "${workflows[@]}"; then
-            echo "Showcases must not start containers; AkôFlow owns OCI image execution" >&2
-            exit 1
-          fi
-          for workflow in "${workflows[@]}"; do
-            grep --quiet --extended-regexp '^[[:space:]]+image:[[:space:]]+[^[:space:]]+' "$workflow" || {
-              echo "$workflow does not declare its OCI image" >&2
-              exit 1
-            }
-            grep --quiet --extended-regexp '^[[:space:]]+command:[[:space:]]*$' "$workflow" || {
-              echo "$workflow does not declare structured activity commands" >&2
-              exit 1
-            }
-          done
-      - name: Build showcase matrix
+      - uses: actions/setup-go@v5
+        with:
+          go-version: stable
+          cache: false
+      - name: Build and validate the complete showcase matrix
         id: catalog
         shell: bash
         run: |
-          mapfile -t showcases < <(
-            find machine-learning generative-ai agentic-workflows scientific-ai \
-              -mindepth 3 -maxdepth 3 -type f -path '*/docker/Dockerfile' -printf '%h\n' |
-              sed 's#^./##; s#/docker$##' |
-              sort
-          )
-          if [ "${#showcases[@]}" -eq 0 ]; then
-            echo "No runnable showcases were found" >&2
-            exit 1
-          fi
-          for showcase in "${showcases[@]}"; do
-            if [ ! -x "$showcase/run.sh" ] || [ ! -f "$showcase/workflow.yaml" ]; then
-              echo "Malformed runnable showcase: $showcase" >&2
-              exit 1
-            fi
-          done
-          matrix=$(jq --compact-output --null-input --args \
-            '$ARGS.positional | map(split("/") | {category: .[0], showcase: .[1]})' \
-            "${showcases[@]}")
+          matrix=$(go run ./tools/catalog)
           echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
 
   experiment-tools:
@@ -121,7 +82,22 @@ jobs:
         with:
           repository: UFFeScience/akoflow-examples
           ref: ${{ inputs.examples_ref }}
-      - name: Execute regression fixture
+      - uses: actions/setup-go@v5
+        with:
+          go-version: stable
+          cache: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Prepare local workload dependencies
+        working-directory: ${{ matrix.category }}/${{ matrix.showcase }}
+        run: ./prepare.sh
+      - name: Validate the long scientific image and command contract
+        if: matrix.validation == 'image-and-contract'
+        working-directory: ${{ matrix.category }}/${{ matrix.showcase }}
+        run: ./validate.sh -definition
+      - name: Execute local workload and validate artifacts
+        if: matrix.validation == 'full'
         working-directory: ${{ matrix.category }}/${{ matrix.showcase }}
         run: ./run.sh
       - name: Authenticate with GHCR
@@ -138,6 +114,4 @@ jobs:
           file: ${{ matrix.category }}/${{ matrix.showcase }}/docker/Dockerfile
           push: ${{ inputs.publish }}
           tags: |
-            ghcr.io/uffescience/akoflow-examples/showcase-${{ matrix.showcase }}:latest
-            ghcr.io/uffescience/akoflow-examples/showcase-${{ matrix.showcase }}:v1
-            ghcr.io/uffescience/akoflow-examples/showcase-${{ matrix.showcase }}:v1.0.0
+            ${{ matrix.image }}

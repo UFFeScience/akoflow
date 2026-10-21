@@ -1034,6 +1034,10 @@ func (h *Handler) ListNetworkTopologies(w http.ResponseWriter, r *http.Request) 
 }
 
 func (h *Handler) ListWorkflows(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Query().Get("view") == "options" {
+		h.listWorkflowOptions(w, r)
+		return
+	}
 	if r.URL.Query().Get("view") == "catalog" {
 		catalog, ok := h.workflows.(interface {
 			ListCatalog(context.Context) ([]domain.WorkflowCatalogEntry, error)

@@ -13,6 +13,18 @@ type environmentSummaryQuery interface {
 	ListSummaries(context.Context, string, string) ([]domain.EnvironmentDefinition, error)
 }
 
+func (h *Handler) listWorkflowOptions(w http.ResponseWriter, r *http.Request) {
+	query, ok := h.workflows.(interface {
+		ListHeaders(context.Context) ([]domain.WorkflowDefinition, error)
+	})
+	if !ok {
+		writeError(w, http.StatusNotImplemented, fmt.Errorf("workflow options unavailable"))
+		return
+	}
+	items, err := query.ListHeaders(r.Context())
+	writeList(w, items, err)
+}
+
 func (h *Handler) countEnvironments(w http.ResponseWriter, r *http.Request) {
 	query, ok := h.environments.(interface {
 		Count(context.Context) (int, error)

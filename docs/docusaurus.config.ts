@@ -5,7 +5,7 @@ import type * as Preset from "@docusaurus/preset-classic";
 const config: Config = {
   title: "AkôFlow",
   tagline: "Open Source Engine for Containerized Scientific Workflows",
-  favicon: "img/brand/akoflow-macos.png",
+  favicon: "img/brand/akoflow-logo.png",
 
   // The public domain redirects to the institutional proxy, which serves the
   // Pages build under /akoflow/. Assets and client routes must retain it.
@@ -48,9 +48,9 @@ const config: Config = {
           routeBasePath: "docs",
         },
         blog: {
-          blogTitle: "Inside AkôFlow",
+          blogTitle: "AkôFlow Blog",
           blogDescription:
-            "Scientific workflows, practical experiments, and the ideas behind AkôFlow.",
+            "Tutorials, experiments, and results from the AkôFlow project.",
           showReadingTime: true,
           postsPerPage: "ALL",
           blogSidebarCount: 0,
@@ -192,8 +192,8 @@ const config: Config = {
       hideOnScroll: false,
       logo: {
         alt: "AkôFlow application logo",
-        src: "img/brand/akoflow-macos.png",
-        srcDark: "img/brand/akoflow-macos.png",
+        src: "img/brand/akoflow-logo.png",
+        srcDark: "img/brand/akoflow-logo.png",
       },
       items: [
         {

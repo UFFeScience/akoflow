@@ -45,6 +45,24 @@ Three operations explain much of the computation:
 
 Here, twelve input FITS observations feed three image-band branches. Each branch produces a FITS mosaic and a monochrome preview; a final activity combines the three mosaics into the color preview.
 
+## Which Montage example and which public data?
+
+This example is **Montage 050**, preserved in the original image as `050d`. The identifier names the workload configuration; it does **not** mean that the graph contains 50 activities. Section 4.1 and Table 1 of the [AkôFlow paper, SBBD 2024](https://doi.org/10.5753/sbbd.2024.241126), describe the smaller “0.5” configuration with the same inventory used here: 12 projections, 18 overlap fits, and 58 activity executions in total. The paper also evaluates a larger “1.0” configuration with 472 executions. This walkthrough uses the smaller one. The bundled FITS header templates define its actual output footprint and pixel grid.
+
+The inputs are **real, publicly accessible astronomical survey images**, rather than generated test pictures. Their names identify the **POSS2/UKSTU** survey products distributed through the [Digitized Sky Survey (DSS) archive at IRSA](https://irsa.ipac.caltech.edu/data/DSS/). DSS digitizes photographic survey plates from the Palomar and UK Schmidt telescopes; IRSA provides image access and links to the originating STScI archive. The [IRSA dataset summary](https://irsa.ipac.caltech.edu/docs/irsaviewer_datasets.html) documents that survey lineage. Public access does not remove the archive's attribution and copyright requirements; retain the DSS/STScI and original survey acknowledgments when reusing the images.
+
+The pinned bundle contains four input tiles in each of three survey bands:
+
+| Branch | Source filename family   | Source band   | FITS mosaic     | Display channel in the final PNG |
+| ------ | ------------------------ | ------------- | --------------- | -------------------------------- |
+| `1`    | `poss2ukstu_blue_*.fits` | Blue          | `1-mosaic.fits` | Blue                             |
+| `2`    | `poss2ukstu_red_*.fits`  | Red           | `2-mosaic.fits` | Green                            |
+| `3`    | `poss2ukstu_ir_*.fits`   | Near infrared | `3-mosaic.fits` | Red                              |
+
+That is **12 FITS inputs**, approximately 87 MiB in the image's input seed. The RGB assignment is a visualization choice: the red survey band is displayed in green, and the infrared band in red. Read the scientific FITS products and their headers when interpreting measurements; PNG colors alone do not identify an observing wavelength.
+
+The exact command and file inventory is available in the [pinned `workflow.yaml`](https://github.com/UFFeScience/akoflow-examples/blob/d890c3171e3661890305b763b8fc3ede48bb61b4/scientific-workflows/montage-050/workflow.yaml). Keeping that revision and the container digest identifies the packaged input set used for reproduction. Acquiring a fresh cutout from the public archive may select different pixels or preprocessing, so it is a new input set to record explicitly.
+
 ## Inside the 58-activity graph
 
 The local bundle preserves the original commands, activity names, and **138 named file handoffs**. Its activity inventory is:
@@ -68,6 +86,161 @@ The diagram below comes from the local example's activity and dependency contrac
 Independent projections and overlap operations can run concurrently after their own inputs are ready. Background modeling introduces a convergence point within each band. The final color preview waits for its three mosaic inputs. There is no extra global barrier forcing an unrelated band to wait at every stage.
 
 This is why the DAG matters: it encodes scientific dependencies. A scheduler can choose where ready work runs, but cannot skip an input merely to make the graph appear more parallel. The [Montage parallelization guide](https://irsa.ipac.caltech.edu/Montage/docs/grid.html) explains the relationship between independent image operations and background-model convergence.
+
+## What each activity does, and what its parameters mean
+
+The scientific design follows Jacob et al., [_Montage: a grid portal and software toolkit for science-grade astronomical image mosaicking_](https://arxiv.org/abs/1005.4454), especially its toolkit components and workflow discussion. Reprojection aligns the pixel grids; overlap fitting supplies evidence for background adjustments; corrected images are then coadded. The sections below combine that explanation with the module manuals and the **actual arguments in this example**.
+
+An activity type, such as `mProject`, can have several executions in the graph. Here, the same processing chain repeats for three bands. The examples below show the first band unless noted otherwise. They run inside an activity workspace after AkôFlow has staged the declared inputs; copying one command into an empty directory is not a complete reproduction.
+
+### `mProject`: put one observation on the common sky grid
+
+```bash
+mProject -X poss2ukstu_blue_001_001.fits pposs2ukstu_blue_001_001.fits region-oversized.hdr
+```
+
+Each of the **12 executions** reprojects one observation. It maps input pixels through sky coordinates onto the requested output grid, accounting for pixel overlap rather than merely resizing a picture. Its outputs include the projected FITS image and an accompanying `_area.fits` coverage image.
+
+| Parameter                       | Meaning in this example                                                                                                                                                 |
+| ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `-X`                            | Expand the template region as necessary to retain the input image's extent.                                                                                             |
+| `poss2ukstu_blue_001_001.fits`  | Input observation.                                                                                                                                                      |
+| `pposs2ukstu_blue_001_001.fits` | Projected output; the `p` prefix is this workflow's naming convention.                                                                                                  |
+| `region-oversized.hdr`          | FITS header template defining the working grid, coordinate projection, reference coordinates, and pixel scale. It is used before the final mosaic footprint is applied. |
+
+These tasks have no predecessor activities and can start independently when execution slots are available. See the [official `mProject` manual](https://irsa.ipac.caltech.edu/Montage/docs/mProject.html).
+
+### `mDiffFit`: measure how two projected images disagree
+
+```bash
+mDiffFit -d -s 1-fit.000001.000002.txt pposs2ukstu_blue_001_001.fits pposs2ukstu_blue_001_002.fits 1-diff.000001.000002.fits region-oversized.hdr
+```
+
+The **18 executions** compare overlapping pairs: six pairs among the four images in each band. `mDiffFit` combines image differencing (`mDiff`) with a plane fit (`mFitplane`). It measures relative background offsets and gradients that the next stages need.
+
+| Parameter                             | Meaning in this example                                               |
+| ------------------------------------- | --------------------------------------------------------------------- |
+| `-d`                                  | Enable diagnostic output.                                             |
+| `-s 1-fit.000001.000002.txt`          | Write the structured fit/status result for this pair to a named file. |
+| The two `pposs2ukstu_…fits` arguments | Projected images to compare; both projection tasks must finish first. |
+| `1-diff.000001.000002.fits`           | Difference-image path used by the combined operation.                 |
+| `region-oversized.hdr`                | Shared working-grid template.                                         |
+
+Different pairs can run concurrently after their respective inputs arrive. See the [Montage grid-tool description](https://irsa.ipac.caltech.edu/Montage/docs/gridtools.html) and [`mDiffFit` implementation and command interface](https://github.com/Caltech-IPAC/Montage/blob/main/grid/Pegasus/mDiffFit.c).
+
+### `mConcatFit`: gather the pairwise measurements
+
+```bash
+mConcatFit 1-stat.tbl 1-fits.tbl .
+```
+
+There are **three executions**, one per band. Each gathers the individual overlap-fit records into the table required by background modeling. It combines **fit parameters**, not image pixels.
+
+| Parameter    | Meaning in this example                                                    |
+| ------------ | -------------------------------------------------------------------------- |
+| `1-stat.tbl` | Input table identifying the fit-result files to collect.                   |
+| `1-fits.tbl` | Output table of pairwise fit measurements.                                 |
+| `.`          | Directory containing those staged fit-result files: the current workspace. |
+
+This task waits for the band's six `mDiffFit` executions. The [grid-tool guide](https://irsa.ipac.caltech.edu/Montage/docs/gridtools.html) explains why independently generated fit records need this merge; the [`mConcatFit` source](https://github.com/Caltech-IPAC/Montage/blob/main/grid/Pegasus/mConcatFit.c) documents its three positional arguments.
+
+### `mBgModel`: solve a consistent background model for the band
+
+```bash
+mBgModel -i 100000 1-images.tbl 1-fits.tbl 1-corrections.tbl
+```
+
+The **three executions** use the overlap measurements together to find per-image background corrections. A global solution within each band avoids treating each seam as an unrelated adjustment. The result is a correction table; the image pixels are changed by the following activity.
+
+| Parameter           | Meaning in this example                                                                                                                                          |
+| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `-i 100000`         | Iteration count requested by this versioned workload's modeling command; it is not a timeout or CPU allocation. Preserve it when reproducing the pinned example. |
+| `1-images.tbl`      | Input image metadata and identifiers.                                                                                                                            |
+| `1-fits.tbl`        | Aggregated measurements from `mConcatFit`.                                                                                                                       |
+| `1-corrections.tbl` | Output coefficients for correcting each image's background.                                                                                                      |
+
+This is a convergence point for each band. Other bands can progress independently. The [official `mBgModel` manual](https://irsa.ipac.caltech.edu/Montage/docs/mBgModel.html) explains the solver and its arguments; documented iteration limits can differ from the packaged command, so the pinned image remains the reference for this reproduction.
+
+### `mBackground`: apply the correction to one projected image
+
+```bash
+mBackground -t pposs2ukstu_blue_001_001.fits cposs2ukstu_blue_001_001.fits 1-projected.tbl 1-corrections.tbl
+```
+
+Each of the **12 executions** subtracts the fitted background plane from one projected image. In the module's model, the plane has the form `A*x + B*y + C`. This matches relative backgrounds while retaining the image for coaddition; it is not a command to remove every astronomical source or all diffuse emission.
+
+| Parameter                       | Meaning in this example                                                                                                           |
+| ------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `-t`                            | Table mode: obtain the image's correction coefficients from the supplied tables rather than three explicit coefficient arguments. |
+| `pposs2ukstu_blue_001_001.fits` | Projected input image.                                                                                                            |
+| `cposs2ukstu_blue_001_001.fits` | Background-corrected output; `c` is the workflow's naming convention.                                                             |
+| `1-projected.tbl`               | Metadata table used to identify the projected image.                                                                              |
+| `1-corrections.tbl`             | Per-image corrections produced by `mBgModel`.                                                                                     |
+
+Corrections for different images can run concurrently once their band model and projected inputs are ready. See the [official `mBackground` manual](https://irsa.ipac.caltech.edu/Montage/docs/mBackground.html).
+
+### `mImgtbl`: describe the corrected files for the coaddition step
+
+```bash
+mImgtbl . -t 1-corrected.tbl 1-updated-corrected.tbl
+```
+
+The **three executions** read FITS headers and create metadata tables. Those tables describe image geometry and file identity so that coaddition can place the corrected inputs correctly. This stage produces metadata, not another mosaic.
+
+| Parameter                 | Meaning in this example                                                                                   |
+| ------------------------- | --------------------------------------------------------------------------------------------------------- |
+| `.`                       | Directory in which to read the corrected FITS files.                                                      |
+| `-t 1-corrected.tbl`      | Restrict processing to the images named in this input list, rather than every FITS file in the workspace. |
+| `1-updated-corrected.tbl` | Output table with the corrected files' header metadata.                                                   |
+
+Each task waits for its band's four corrected images. The [official `mImgtbl` manual](https://irsa.ipac.caltech.edu/Montage/docs/mImgtbl.html) documents the table fields and selection option.
+
+### `mAdd`: coadd the corrected observations into one FITS mosaic
+
+```bash
+mAdd -e 1-updated-corrected.tbl region.hdr 1-mosaic.fits
+```
+
+The **three executions** create one scientific mosaic per band from the corrected, aligned images. Coaddition combines contributions where pixels overlap; it is not concatenation of files or an RGB operation. Montage also produces an area/coverage mosaic.
+
+| Parameter                 | Meaning in this example                                                                                                         |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| `-e`                      | Use the exact dimensions in the final header template instead of shrinking the mosaic to the data's bounding region.            |
+| `1-updated-corrected.tbl` | Metadata table selecting the images to coadd.                                                                                   |
+| `region.hdr`              | Final mosaic template, as distinct from the oversized working template used earlier. The recorded output is 1800 × 1800 pixels. |
+| `1-mosaic.fits`           | Output scientific mosaic for this band.                                                                                         |
+
+No averaging-mode override (`-a`) is supplied in this command. The [official `mAdd` manual](https://irsa.ipac.caltech.edu/Montage/docs/mAdd.html) describes the coaddition modes and area-image behavior.
+
+### `mViewer`: turn scientific mosaics into viewable PNGs
+
+The first **three executions** render one preview per band:
+
+```bash
+mViewer -ct 1 -gray 1-mosaic.fits -1s max gaussian -png 1-mosaic.png
+```
+
+| Parameter             | Meaning in this example                                                                   |
+| --------------------- | ----------------------------------------------------------------------------------------- |
+| `-ct 1`               | Select color-table index 1 for the single-band display.                                   |
+| `-gray 1-mosaic.fits` | Read one FITS image for single-band rendering.                                            |
+| `-1s max`             | Set the display range using a sigma-based lower bound and the maximum as the upper bound. |
+| `gaussian`            | Use Gaussian histogram-based stretching for display.                                      |
+| `-png 1-mosaic.png`   | Write the rendered PNG.                                                                   |
+
+The **fourth execution** builds the color preview after all three `mAdd` tasks finish:
+
+```bash
+mViewer -red 3-mosaic.fits -0.5s max gaussian-log -green 2-mosaic.fits -0.5s max gaussian-log -blue 1-mosaic.fits -0.5s max gaussian-log -png mosaic-color.png
+```
+
+Here, `-red`, `-green`, and `-blue` assign FITS mosaics to display channels. Each receives its own `-0.5s max` range and `gaussian-log` stretch. `-png` names the final output. These choices control visualization, not the calibrated FITS pixel values.
+
+The [official `mViewer` examples](https://github.com/Caltech-IPAC/Montage/blob/main/man/docs/mViewer.html) describe these interfaces. Berriman and Good's [visualization paper](https://arxiv.org/abs/1702.02593) explains the scientific visualization context. The three single-band previews and the color preview are sibling consumers of the FITS mosaics: the color task does not need to wait for the preview PNGs.
+
+### Scientific parameters and execution settings are different
+
+The command arguments above determine image processing and file products. The YAML also supplies AkôFlow settings such as `cpuLimit: 1000m` (one CPU), `memoryLimit: 1Gi`, the selected runtime, and `dependsOn`. Those govern execution placement, limits, and readiness; they are not flags passed to Montage. `workspaceSeedPath` identifies the packaged seed, while historical `simulation.durationSeconds` values support planning and do not measure a new real execution.
 
 ## Reproduce the workload locally
 

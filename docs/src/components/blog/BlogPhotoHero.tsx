@@ -17,12 +17,19 @@ export default function BlogPhotoHero({
 }) {
   return (
     <div className={styles.photoHero}>
-      <ExpandableImage src={src} alt={alt} />
+      <ExpandableImage
+        src={src}
+        alt={alt}
+        loading="eager"
+        fetchPriority="high"
+      />
       <div className={styles.photoHeroText}>
         <p className={styles.eyebrow}>{category}</p>
         <h1>{title}</h1>
         <p>{description}</p>
-        <span>Click the mosaic to explore the full image ↗</span>
+        <a className={styles.readStory} href="#article-content">
+          Read the story <span aria-hidden="true">↓</span>
+        </a>
       </div>
     </div>
   );

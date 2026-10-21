@@ -53,3 +53,11 @@
     transition: none;
   }
 }
+
+/* Inline commands share the link's animated ink instead of an opaque code chip. */
+.link code {
+  color: inherit;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}

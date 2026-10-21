@@ -1,0 +1,69 @@
+.brands {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 32px;
+  padding: 8px 0 36px;
+  margin-bottom: 32px;
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+}
+.product {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  color: var(--ifm-heading-color);
+}
+.product:hover {
+  color: var(--ifm-heading-color);
+  text-decoration: none;
+}
+.product strong {
+  display: block;
+  font-size: 28px;
+  letter-spacing: -0.04em;
+}
+.product > span > span {
+  font-size: 13px;
+  color: var(--ifm-color-emphasis-600);
+}
+.institutions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px;
+}
+.institution {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  color: var(--ifm-footer-link-color);
+  font-size: 12px;
+  text-align: center;
+}
+.logoSurface {
+  display: grid;
+  place-items: center;
+  width: 176px;
+  height: 128px;
+  padding: 4px 8px;
+  border-radius: 8px;
+  background: #fff;
+}
+.logoSurface img {
+  display: block;
+  width: 160px;
+  height: 120px;
+  object-fit: contain;
+}
+@media (max-width: 650px) {
+  .brands {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .institutions {
+    width: 100%;
+    justify-content: flex-start;
+    gap: 24px;
+  }
+}

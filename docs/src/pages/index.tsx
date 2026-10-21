@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "@docusaurus/Link";
+import useBaseUrl from "@docusaurus/useBaseUrl";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import Layout from "@theme/Layout";
 import BackgroundGraph from "../components/BackgroundGraph";
@@ -58,7 +59,7 @@ export default function Home(): React.JSX.Element {
         <BackgroundGraph />
 
         <img
-          src="/img/brand/akoflow-macos.png"
+          src={useBaseUrl("/img/brand/akoflow-logo.png")}
           alt="AkôFlow"
           className={styles.logo}
         />
@@ -102,23 +103,6 @@ export default function Home(): React.JSX.Element {
           <Link to="/docs/getting-started" className={styles.btnPrimary}>
             Get Started
           </Link>
-          <Link to="/docs/guides/interface-tour" className={styles.btnGhost}>
-            Interface tour
-          </Link>
-          <Link
-            to="/blog/montage-050-from-observations-to-a-mosaic"
-            className={styles.btnGhost}
-          >
-            Montage: science and results
-          </Link>
-          <a
-            href="https://github.com/UFFeScience/akoflow"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.btnGhost}
-          >
-            GitHub
-          </a>
         </div>
       </main>
     </Layout>

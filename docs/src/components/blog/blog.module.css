@@ -356,15 +356,87 @@
   }
 }
 
+/* Photograph covers open edge to edge; reading width remains constrained below. */
+.articleLayout:has(.photoHero) {
+  display: block;
+  max-width: none;
+  padding: 0 0 90px;
+}
+.articleLayout:has(.photoHero) :global(.markdown) {
+  width: calc(100% - 44px);
+}
+.photoArticleHeader {
+  position: relative;
+}
+.photoArticleHeader .topline {
+  position: absolute;
+  inset: 24px max(24px, calc((100% - 1120px) / 2)) auto;
+  z-index: 4;
+  margin: 0;
+  color: #fff;
+}
+.photoArticleHeader .topline a {
+  color: #fff;
+}
+.photoArticleHeader .themeSwitch {
+  border-color: #ffffff55;
+  background: #151515d9;
+}
+.photoArticleHeader .themeSwitch button {
+  color: #e5e5e5;
+  background: transparent;
+}
+.photoArticleHeader .themeSwitch button[aria-pressed="true"] {
+  color: #151515;
+  background: #fff;
+}
+.photoArticleHeader .byline {
+  max-width: 740px;
+  width: calc(100% - 44px);
+  margin: 0 auto 36px;
+  padding-top: 24px;
+  scroll-margin-top: calc(var(--ifm-navbar-height) + 24px);
+}
+.articleLayout:has(.photoHero) .toc {
+  position: absolute;
+  top: calc(100svh + 60px);
+  right: max(24px, calc((100% - 1200px) / 2));
+  width: 180px;
+  margin: 0;
+}
 .photoHero {
   position: relative;
-  height: 620px;
-  border-radius: 14px;
+  isolation: isolate;
+  display: grid;
+  min-height: calc(100vh - var(--ifm-navbar-height));
+  min-height: calc(100svh - var(--ifm-navbar-height));
   overflow: hidden;
   background: #050505;
-  margin-bottom: 25px;
+}
+.photoHero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    90deg,
+    #000000e0 0%,
+    #00000099 58%,
+    #00000040 100%
+  );
+  pointer-events: none;
+}
+.photoHero::after {
+  content: "";
+  position: absolute;
+  inset: 78% 0 0;
+  z-index: 2;
+  background: linear-gradient(transparent, var(--ifm-background-color));
+  pointer-events: none;
 }
 .photoHero > button {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   border: 0;
@@ -378,51 +450,94 @@
   border-radius: 0;
 }
 .photoHeroText {
-  position: absolute;
-  inset: 0;
+  position: relative;
+  z-index: 3;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
-  padding: 44px;
-  background: linear-gradient(
-    180deg,
-    transparent 15%,
-    #00000055 45%,
-    #000000e8 100%
-  );
+  justify-content: center;
+  align-items: flex-start;
+  padding: 130px max(24px, calc((100vw - 1120px) / 2)) 170px;
   color: #fff;
   pointer-events: none;
 }
 .photoHeroText h1 {
   color: #fff;
-  font-size: clamp(36px, 4.4vw, 60px);
-  margin: 14px 0 18px;
+  font-size: clamp(44px, 7vw, 100px);
+  max-width: 900px;
+  margin: 20px 0 24px;
+  text-wrap: balance;
 }
 .photoHeroText > p:not(.eyebrow) {
-  font-size: 17px;
+  font-size: clamp(17px, 1.6vw, 21px);
   line-height: 1.6;
-  max-width: 620px;
+  max-width: 650px;
   color: #ededed;
 }
-.photoHeroText > span {
-  font-size: 11px;
-  color: #d0d0d0;
+.readStory {
+  display: inline-flex;
+  align-items: center;
+  gap: 24px;
+  margin-top: 20px;
+  padding: 12px 0;
+  color: #fff;
+  font-size: 13px;
+  pointer-events: auto;
+}
+.readStory:hover {
+  color: #fff;
+}
+.readStory span {
+  font-size: 22px;
 }
 .photoCard img {
   object-fit: cover;
   padding: 0;
 }
-@media (max-width: 650px) {
-  .photoHero {
-    height: 580px;
+:global(html:has([data-blog-link-highlights])) {
+  scroll-behavior: smooth;
+}
+@media (prefers-reduced-motion: reduce) {
+  :global(html:has([data-blog-link-highlights])) {
+    scroll-behavior: auto;
   }
+}
+@media (max-width: 1200px) {
+  .articleLayout:has(.photoHero) .toc {
+    display: none;
+  }
+}
+@media (max-width: 650px) {
   .photoHeroText {
-    padding: 25px;
+    padding: 115px 24px 140px;
   }
   .photoHeroText h1 {
-    font-size: 39px;
+    font-size: clamp(40px, 10vw, 60px);
   }
-  .photoHeroText > p:not(.eyebrow) {
-    font-size: 15px;
-  }
+}
+
+.byline {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.authorPortrait {
+  display: block;
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 1px solid var(--ifm-color-emphasis-300);
+}
+.bylineContent {
+  min-width: 0;
+  line-height: 1.6;
+}
+.bylineContent > div + div {
+  margin-top: 3px;
+}
+
+.photoArticleHeader .articleCover {
+  max-width: 740px;
+  width: calc(100% - 44px);
+  margin: 0 auto 45px;
 }

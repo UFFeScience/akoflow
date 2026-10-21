@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import Layout from "@theme/Layout";
-import Link from "@docusaurus/Link";
 import type { Props } from "@theme/BlogListPage";
 import BlogBackdrop from "@site/src/components/blog/BlogBackdrop";
 import BlogLinkHighlights from "@site/src/components/blog/BlogLinkHighlights";
@@ -38,20 +37,14 @@ export default function BlogListPage({ items, metadata }: Props) {
         <div className={styles.content}>
           <header className={styles.intro}>
             <div className={styles.topline}>
-              <span className={styles.eyebrow}>THE AKÔFLOW BLOG</span>
+              <span className={styles.eyebrow}>SCIENTIFIC WORKFLOWS</span>
               <BlogThemeSwitch />
             </div>
             <h1>
-              Ideas into
-              <br />
-              <span>experiments.</span>
+              AkôFlow <span>Blog</span>
             </h1>
-            <p>
-              Inside scientific workflows. From the first DAG to the evidence
-              behind every run.
-            </p>
+            <p>Tutorials, experiments, and results from the AkôFlow project.</p>
             <div className={styles.introFooter}>
-              <span>RESEARCH. BUILD. REPRODUCE.</span>
               <span>↓ Explore the stories</span>
             </div>
           </header>
@@ -99,17 +92,6 @@ export default function BlogListPage({ items, metadata }: Props) {
               </div>
             )}
           </section>
-          <aside className={styles.next}>
-            <span className={styles.eyebrow}>FROM THE LAB</span>
-            <h2>A sky made of workflows.</h2>
-            <p>
-              Explore the Montage mosaic, its 58-activity workflow, and the
-              evidence from a completed execution.{" "}
-              <Link to="/blog/montage-050-from-observations-to-a-mosaic">
-                Read the Montage field note ↗
-              </Link>
-            </p>
-          </aside>
         </div>
       </main>
     </Layout>

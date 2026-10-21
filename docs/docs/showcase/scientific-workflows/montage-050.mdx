@@ -13,6 +13,10 @@ Create astronomical mosaics from the twelve FITS observations bundled in the ori
 
 <WorkflowLocalRun examplePath="scientific-workflows/montage-050" />
 
+## The mosaic and the experiment
+
+Read [Montage 050: a sky made of workflows](/blog/montage-050-from-observations-to-a-mosaic) for the full-size astronomical mosaic, scientific background, the local reproduction path, and audited results from a completed hybrid execution. The article identifies the provenance of that image separately from this local run's status.
+
 ## Complete activity DAG
 
 The diagram uses the exact 58 activity definitions and their persisted dependencies. Each color band has its own projection, difference fitting, background model, correction, image table, and mosaic chain. The final color preview joins the three FITS mosaics. Independent activities become ready after their own prerequisites complete; there is no extra barrier across color bands.

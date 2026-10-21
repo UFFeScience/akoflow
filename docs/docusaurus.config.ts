@@ -47,7 +47,16 @@ const config: Config = {
           editUrl: "https://github.com/UFFeScience/akoflow/tree/main/docs/",
           routeBasePath: "docs",
         },
-        blog: false,
+        blog: {
+          blogTitle: "Inside AkôFlow",
+          blogDescription:
+            "Scientific workflows, practical experiments, and the ideas behind AkôFlow.",
+          showReadingTime: true,
+          postsPerPage: "ALL",
+          blogSidebarCount: 0,
+          onInlineTags: "ignore",
+          onUntruncatedBlogPosts: "ignore",
+        },
         theme: {
           customCss: "./src/css/custom.css",
         },
@@ -127,7 +136,8 @@ const config: Config = {
           clusterBkg: "#f2f2f2",
           clusterBorder: "#151515",
           edgeLabelBackground: "#ffffff",
-          fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, sans-serif",
+          fontFamily:
+            "system-ui, -apple-system, BlinkMacSystemFont, sans-serif",
           fontSize: "15px",
         },
         themeCSS: `
@@ -201,6 +211,7 @@ const config: Config = {
           position: "left",
           label: "API Reference",
         },
+        { to: "/blog", position: "left", label: "Blog" },
         {
           href: "https://github.com/UFFeScience/akoflow",
           label: "GitHub",

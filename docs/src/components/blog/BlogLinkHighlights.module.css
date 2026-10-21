@@ -1,0 +1,55 @@
+@property --blog-link-progress {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 0%;
+}
+
+.link {
+  --blog-link-fill: #000;
+  --blog-link-ink: #fff;
+  --blog-link-base: #000;
+  --blog-link-progress: 0%;
+  color: transparent !important;
+  background-image:
+    linear-gradient(
+      to right,
+      var(--blog-link-ink) 0 var(--blog-link-progress),
+      var(--blog-link-base) var(--blog-link-progress) 100%
+    ),
+    linear-gradient(var(--blog-link-fill), var(--blog-link-fill));
+  background-size:
+    100% 100%,
+    var(--blog-link-progress) 100%;
+  background-repeat: no-repeat;
+  background-clip: text, border-box;
+  -webkit-background-clip: text, border-box;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  padding: 0.08em 0.16em;
+  border-radius: 2px;
+  text-decoration: none !important;
+  transition-property: --blog-link-progress;
+  transition-duration: 850ms;
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+:global([data-theme="dark"]) .link {
+  --blog-link-fill: #fff;
+  --blog-link-ink: #000;
+  --blog-link-base: #fff;
+}
+
+.painted {
+  --blog-link-progress: 100%;
+}
+
+.link:focus-visible {
+  outline: 2px solid var(--blog-link-base);
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .link {
+    transition: none;
+  }
+}

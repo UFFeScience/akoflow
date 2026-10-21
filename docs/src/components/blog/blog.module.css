@@ -1,0 +1,428 @@
+.shell {
+  --journal-muted: #687078;
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  background: var(--ifm-background-color);
+  min-height: 75vh;
+}
+:global([data-theme="dark"]) .shell {
+  --journal-muted: #a0a5ab;
+}
+.backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+  opacity: 0.18;
+}
+.backdrop svg {
+  width: 100%;
+  height: 1100px;
+  fill: var(--ifm-background-color);
+  stroke: var(--ifm-color-emphasis-600);
+  stroke-width: 1;
+}
+.backdrop path {
+  fill: none;
+  stroke-dasharray: 6 8;
+}
+.backdrop g circle:last-child {
+  fill: var(--ifm-color-emphasis-600);
+  stroke: none;
+}
+.content {
+  max-width: 1200px;
+  margin: auto;
+  padding: 0 44px 100px;
+}
+.intro {
+  padding: 42px 0 30px;
+}
+.topline {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: center;
+  margin-bottom: 55px;
+}
+.eyebrow {
+  font: 500 11px/1.5 var(--ifm-font-family-monospace);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.intro h1 {
+  font-size: clamp(58px, 8vw, 112px);
+  line-height: 0.98;
+  letter-spacing: -0.065em;
+  font-weight: 550;
+  margin: 0 0 28px;
+}
+.intro h1 span {
+  color: var(--journal-muted);
+}
+.intro > p {
+  font-size: 18px;
+  line-height: 1.65;
+  max-width: 480px;
+  color: var(--journal-muted);
+}
+.introFooter {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  font: 10px var(--ifm-font-family-monospace);
+  letter-spacing: 0.08em;
+  margin-top: 62px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--ifm-color-emphasis-300);
+}
+.themeSwitch {
+  display: flex;
+  padding: 3px;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 30px;
+  background: var(--ifm-background-color);
+}
+.themeSwitch button,
+.filters button {
+  border: 0;
+  cursor: pointer;
+  color: var(--journal-muted);
+  background: transparent;
+  border-radius: 24px;
+  padding: 8px 14px;
+  font: inherit;
+  font-size: 12px;
+}
+.themeSwitch button[aria-pressed="true"],
+.filters button[aria-pressed="true"] {
+  background: var(--ifm-font-color-base);
+  color: var(--ifm-background-color);
+}
+.filterRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: center;
+  margin-top: 16px;
+}
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.filterRow input {
+  border: 1px solid var(--ifm-color-emphasis-300);
+  background: var(--ifm-background-color);
+  color: var(--ifm-font-color-base);
+  border-radius: 7px;
+  padding: 11px 14px;
+  font: inherit;
+  width: 235px;
+}
+.resultCount {
+  font: 11px var(--ifm-font-family-monospace);
+  color: var(--journal-muted);
+  margin: 24px 0 16px;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 30px;
+}
+.card {
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--ifm-background-color);
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+}
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px #00000010;
+}
+.cardImage {
+  display: block;
+  aspect-ratio: 1.75;
+  background: var(--ifm-color-emphasis-100);
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid var(--ifm-color-emphasis-300);
+}
+.cardImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 24px;
+}
+.cardImage span {
+  position: absolute;
+  bottom: 12px;
+  left: 18px;
+  font: 9px var(--ifm-font-family-monospace);
+  letter-spacing: 0.1em;
+  padding: 4px 7px;
+  background: var(--ifm-background-color);
+  color: var(--journal-muted);
+}
+.cardBody {
+  padding: 26px;
+}
+.cardBody h2 {
+  font-size: 27px;
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+  margin: 12px 0;
+}
+.cardBody h2 a {
+  color: var(--ifm-font-color-base);
+}
+.cardBody > p:not(.eyebrow) {
+  color: var(--journal-muted);
+  font-size: 14px;
+}
+.cardMeta {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 12px;
+  padding-top: 24px;
+  color: var(--journal-muted);
+}
+.cardMeta a {
+  font-weight: 600;
+}
+.next {
+  margin-top: 65px;
+  padding-top: 28px;
+  border-top: 1px solid var(--ifm-color-emphasis-300);
+  max-width: 680px;
+}
+.next h2 {
+  font-size: 32px;
+  letter-spacing: -0.04em;
+}
+.next p:last-child {
+  color: var(--journal-muted);
+}
+.empty {
+  border: 1px dashed var(--ifm-color-emphasis-300);
+  padding: 45px;
+  border-radius: 12px;
+}
+.empty button {
+  cursor: pointer;
+  padding: 8px 15px;
+  border-radius: 6px;
+  background: var(--ifm-font-color-base);
+  color: var(--ifm-background-color);
+  border: none;
+}
+.articleLayout {
+  max-width: 1200px;
+  margin: auto;
+  padding: 35px 44px 90px;
+  display: grid;
+  grid-template-columns: minmax(0, 860px) 180px;
+  gap: 40px;
+}
+.articleLayout main {
+  min-width: 0;
+}
+.articleLayout :global(.markdown) {
+  max-width: 740px;
+  margin: auto;
+  font-size: 16px;
+  line-height: 1.85;
+}
+.articleLayout :global(.markdown h2) {
+  font-size: 29px;
+  letter-spacing: -0.035em;
+  margin-top: 2.3em;
+}
+.articleLayout :global(.markdown h3) {
+  margin-top: 2em;
+}
+.articleLayout :global(.markdown pre) {
+  font-size: 12px;
+  line-height: 1.65;
+}
+.articleHeader .topline {
+  margin-bottom: 55px;
+  font-size: 13px;
+}
+.articleHeader h1 {
+  font-size: clamp(38px, 4.8vw, 66px);
+  letter-spacing: -0.055em;
+  line-height: 1.06;
+  margin: 15px 0 22px;
+  max-width: 840px;
+}
+.dek {
+  color: var(--journal-muted);
+  font-size: 19px;
+  line-height: 1.65;
+  max-width: 690px;
+}
+.byline {
+  color: var(--journal-muted);
+  font-size: 12px;
+  margin: 25px 0 30px;
+}
+.articleCover {
+  margin: 0 0 45px;
+  padding: 22px;
+  border-radius: 12px;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  background: var(--ifm-color-emphasis-100);
+}
+.articleCover img {
+  width: 100%;
+  border-radius: 6px;
+}
+.toc {
+  margin-top: 340px;
+  font-size: 12px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    transition: none;
+  }
+}
+@media (max-width: 996px) {
+  .articleLayout {
+    display: block;
+    max-width: 900px;
+  }
+  .toc {
+    display: none;
+  }
+}
+@media (max-width: 650px) {
+  .content {
+    padding: 0 22px 55px;
+  }
+  .intro {
+    padding-top: 25px;
+  }
+  .topline {
+    margin-bottom: 50px;
+    gap: 8px;
+  }
+  .eyebrow {
+    font-size: 9px;
+  }
+  .themeSwitch button {
+    padding: 7px 10px;
+    font-size: 11px;
+  }
+  .intro h1 {
+    font-size: 62px;
+  }
+  .introFooter {
+    margin-top: 40px;
+    font-size: 8px;
+  }
+  .filterRow {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .filterRow input {
+    width: 100%;
+  }
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .articleLayout {
+    padding: 25px 22px 60px;
+  }
+  .articleHeader .topline {
+    margin-bottom: 45px;
+  }
+  .articleCover {
+    padding: 8px;
+    margin-left: -10px;
+    margin-right: -10px;
+  }
+  .articleLayout :global(.markdown) {
+    font-size: 15px;
+  }
+  .dek {
+    font-size: 17px;
+  }
+}
+
+.photoHero {
+  position: relative;
+  height: 620px;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #050505;
+  margin-bottom: 25px;
+}
+.photoHero > button {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+}
+.photoHero > button img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0;
+}
+.photoHeroText {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 44px;
+  background: linear-gradient(
+    180deg,
+    transparent 15%,
+    #00000055 45%,
+    #000000e8 100%
+  );
+  color: #fff;
+  pointer-events: none;
+}
+.photoHeroText h1 {
+  color: #fff;
+  font-size: clamp(36px, 4.4vw, 60px);
+  margin: 14px 0 18px;
+}
+.photoHeroText > p:not(.eyebrow) {
+  font-size: 17px;
+  line-height: 1.6;
+  max-width: 620px;
+  color: #ededed;
+}
+.photoHeroText > span {
+  font-size: 11px;
+  color: #d0d0d0;
+}
+.photoCard img {
+  object-fit: cover;
+  padding: 0;
+}
+@media (max-width: 650px) {
+  .photoHero {
+    height: 580px;
+  }
+  .photoHeroText {
+    padding: 25px;
+  }
+  .photoHeroText h1 {
+    font-size: 39px;
+  }
+  .photoHeroText > p:not(.eyebrow) {
+    font-size: 15px;
+  }
+}

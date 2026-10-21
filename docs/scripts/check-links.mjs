@@ -61,7 +61,10 @@ function documentationRoute(file, frontMatter) {
       ? ""
       : filePath;
   const path = frontMatter.slug ?? `/${defaultPath}`;
-  return `/docs${path === "/" ? "/" : path.replace(/\/$/, "")}`.replace(/\/$/, "") || "/docs";
+  return (
+    `/docs${path === "/" ? "/" : path.replace(/\/$/, "")}`.replace(/\/$/, "") ||
+    "/docs"
+  );
 }
 
 const documentationFiles = walk(contentDirectory).filter((file) =>
@@ -69,18 +72,28 @@ const documentationFiles = walk(contentDirectory).filter((file) =>
 );
 const routes = new Set();
 for (const file of documentationFiles) {
-  routes.add(documentationRoute(file, parseFrontMatter(readFileSync(file, "utf8"))));
+  routes.add(
+    documentationRoute(file, parseFrontMatter(readFileSync(file, "utf8"))),
+  );
 }
 
 function report(sourceFile, target, reason) {
-  localErrors.push(`${relative(repositoryDirectory, sourceFile)} → ${target}: ${reason}`);
+  localErrors.push(
+    `${relative(repositoryDirectory, sourceFile)} → ${target}: ${reason}`,
+  );
 }
 
 function candidateDocumentationFiles(path) {
   const candidates = [path];
   if (!extname(path)) {
-    candidates.push(...documentationExtensions.map((extension) => `${path}${extension}`));
-    candidates.push(...documentationExtensions.map((extension) => join(path, `index${extension}`)));
+    candidates.push(
+      ...documentationExtensions.map((extension) => `${path}${extension}`),
+    );
+    candidates.push(
+      ...documentationExtensions.map((extension) =>
+        join(path, `index${extension}`),
+      ),
+    );
   }
   return candidates;
 }
@@ -101,7 +114,12 @@ function checkRepositoryPath(
 
 function checkTarget(sourceFile, rawTarget, sourceIsShowcase) {
   const target = cleanTarget(rawTarget);
-  if (!target || target.startsWith("#") || /^(mailto:|tel:|data:|javascript:)/i.test(target)) return;
+  if (
+    !target ||
+    target.startsWith("#") ||
+    /^(mailto:|tel:|data:|javascript:)/i.test(target)
+  )
+    return;
 
   const showcaseExample = target.match(
     /^https:\/\/(?:raw\.githubusercontent\.com\/UFFeScience\/akoflow-examples\/main\/|github\.com\/UFFeScience\/akoflow-examples\/(?:blob|tree)\/main\/)(.+)$/,
@@ -124,24 +142,56 @@ function checkTarget(sourceFile, rawTarget, sourceIsShowcase) {
 
   checkedLinks += 1;
   if (target.startsWith("@site/static/")) {
-    checkRepositoryPath(sourceFile, target, resolve(staticDirectory, target.slice("@site/static/".length)), "Static asset");
+    checkRepositoryPath(
+      sourceFile,
+      target,
+      resolve(staticDirectory, target.slice("@site/static/".length)),
+      "Static asset",
+    );
     return;
   }
 
-  if (target.startsWith("/img/") || target.startsWith("/media/") || target.startsWith("/downloads/") || target.startsWith("/showcase/")) {
-    checkRepositoryPath(sourceFile, target, resolve(staticDirectory, target.slice(1)), "Static asset");
+  if (
+    target.startsWith("/img/") ||
+    target.startsWith("/media/") ||
+    target.startsWith("/downloads/") ||
+    target.startsWith("/showcase/")
+  ) {
+    checkRepositoryPath(
+      sourceFile,
+      target,
+      resolve(staticDirectory, target.slice(1)),
+      "Static asset",
+    );
+    return;
+  }
+
+  if (target.startsWith("/blog/")) {
+    if (!routes.has(target.replace(/\/$/, "")))
+      report(sourceFile, target, "Blog route does not exist");
     return;
   }
 
   if (target.startsWith("/docs/") || target.startsWith("/akoflow/docs/")) {
-    const route = target.replace(/^\/akoflow/, "").replace(/\/$/, "") || "/docs";
-    if (!routes.has(route)) report(sourceFile, target, "Documentation route does not exist");
+    const route =
+      target.replace(/^\/akoflow/, "").replace(/\/$/, "") || "/docs";
+    if (!routes.has(route))
+      report(sourceFile, target, "Documentation route does not exist");
     return;
   }
 
   const localPath = resolve(dirname(sourceFile), target);
-  if (candidateDocumentationFiles(localPath).some((candidate) => existsSync(candidate) && inside(contentDirectory, candidate))) {
-    report(sourceFile, target, "Use an absolute /docs/ route; relative documentation links can navigate to the wrong client-side route");
+  if (
+    candidateDocumentationFiles(localPath).some(
+      (candidate) =>
+        existsSync(candidate) && inside(contentDirectory, candidate),
+    )
+  ) {
+    report(
+      sourceFile,
+      target,
+      "Use an absolute /docs/ route; relative documentation links can navigate to the wrong client-side route",
+    );
     return;
   }
 
@@ -153,25 +203,51 @@ function checkTarget(sourceFile, rawTarget, sourceIsShowcase) {
   report(sourceFile, target, "Documentation target does not exist");
 }
 
-for (const sourceFile of documentationFiles) {
+const blogFiles = walk(join(docsDirectory, "blog")).filter((file) =>
+  documentationExtensions.includes(extname(file)),
+);
+
+for (const file of blogFiles) {
+  const slug = parseFrontMatter(readFileSync(file, "utf8")).slug;
+  if (slug) routes.add(`/blog/${slug}`);
+}
+
+for (const sourceFile of [...documentationFiles, ...blogFiles]) {
   const source = readFileSync(sourceFile, "utf8");
-  const sourceIsShowcase = inside(join(contentDirectory, "showcase"), sourceFile);
+  const sourceIsShowcase = inside(
+    join(contentDirectory, "showcase"),
+    sourceFile,
+  );
   const targets = new Set();
-  for (const match of source.matchAll(/!?\[[^\]]*\]\(([^)]+)\)/g)) targets.add(match[1]);
-  for (const match of source.matchAll(/<(?:a|img)\b[^>]+(?:href|src)=["']([^"']+)["']/gi)) targets.add(match[1]);
-  for (const match of source.matchAll(/require\(['"](@site\/static\/[^'"]+)['"]\)/g)) targets.add(match[1]);
+  const coverImage = parseFrontMatter(source).image;
+  if (coverImage) targets.add(coverImage);
+  for (const match of source.matchAll(/!?\[[^\]]*\]\(([^)]+)\)/g))
+    targets.add(match[1]);
+  for (const match of source.matchAll(
+    /<(?:a|img)\b[^>]+(?:href|src)=["']([^"']+)["']/gi,
+  ))
+    targets.add(match[1]);
+  for (const match of source.matchAll(
+    /require\(['"](@site\/static\/[^'"]+)['"]\)/g,
+  ))
+    targets.add(match[1]);
   if (sourceFile.endsWith("interface-screens.mdx")) {
     for (const match of source.matchAll(/\bpath:\s*'([^']+\.png)'/g)) {
       targets.add(`/img/interface/${match[1]}`);
     }
   }
-  for (const target of targets) checkTarget(sourceFile, target, sourceIsShowcase);
+  for (const target of targets)
+    checkTarget(sourceFile, target, sourceIsShowcase);
 }
 
 if (localErrors.length > 0) {
-  console.error(`Documentation link check failed with ${localErrors.length} issue(s):`);
+  console.error(
+    `Documentation link check failed with ${localErrors.length} issue(s):`,
+  );
   for (const error of localErrors) console.error(`- ${error}`);
   process.exitCode = 1;
 } else {
-  console.log(`Documentation links verified: ${checkedLinks} local route/asset link(s) and ${checkedShowcaseDownloads} Showcase download(s).`);
+  console.log(
+    `Documentation links verified: ${checkedLinks} local route/asset link(s) and ${checkedShowcaseDownloads} Showcase download(s).`,
+  );
 }

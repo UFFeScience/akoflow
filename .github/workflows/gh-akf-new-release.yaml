@@ -7,7 +7,7 @@ on:
         description: Existing frozen source tag to package; never moves a tag.
         required: true
         type: string
-        default: v1.0.10
+        default: v1.0.11
       runtime_artifact_run:
         description: Optional completed tagged-push run whose successful runtime archives can be reused.
         required: false

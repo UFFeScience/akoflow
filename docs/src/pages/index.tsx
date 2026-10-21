@@ -35,10 +35,7 @@ function DesktopCard() {
         Native client for macOS, Windows, and Linux, distributed through
         versioned GitHub Releases.
       </p>
-      <Link
-        to="/docs/downloads"
-        className={styles.downloadBtn}
-      >
+      <Link to="/docs/downloads" className={styles.downloadBtn}>
         <DownloadIcon />
         Download AkôFlow Desktop
       </Link>
@@ -85,8 +82,8 @@ export default function Home(): React.JSX.Element {
         </h1>
 
         <p className={styles.subheadline}>
-          Define a scientific workflow, choose where it runs, compare plans,
-          and inspect the results and provenance. Start with a local simulation;
+          Define a scientific workflow, choose where it runs, compare plans, and
+          inspect the results and provenance. Start with a local simulation;
           connected environments require their own setup.
         </p>
 
@@ -107,6 +104,12 @@ export default function Home(): React.JSX.Element {
           </Link>
           <Link to="/docs/guides/interface-tour" className={styles.btnGhost}>
             Interface tour
+          </Link>
+          <Link
+            to="/blog/montage-050-from-observations-to-a-mosaic"
+            className={styles.btnGhost}
+          >
+            Montage: science and results
           </Link>
           <a
             href="https://github.com/UFFeScience/akoflow"

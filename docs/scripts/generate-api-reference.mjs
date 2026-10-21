@@ -106,6 +106,8 @@ const queryDescriptions = {
   outcome: "Limit results to this audit outcome.",
   page: "One-based result page.",
   pageSize: "Number of results per page.",
+  schedulePlanId: "Limit execution history to this schedule plan.",
+  view: "Read model to return. Execution views include monitor, status, activity, logs, events, and data; catalog endpoints also expose options, summary, inventory, or count views.",
   path: "Path inside the selected storage root.",
   q: "Free-text search query.",
   resourceId: "Limit results to this resource.",

@@ -1,0 +1,192 @@
+---
+slug: montage-050-from-observations-to-a-mosaic
+authors: [ovvesley, llms]
+title: "Montage 050: a sky made of workflows"
+description: Twelve observations, 58 activities, one astronomical mosaic. Explore the science, reproduce the local workflow, and read the evidence behind a completed experiment.
+image: /img/blog/montage-050/mosaic-color.png
+cover_alt: The 1800 by 1800 pixel color mosaic produced by the completed AkôFlow Montage hybrid experiment.
+cover_style: photograph
+tags: [Scientific workflows, Astronomy, Experiments]
+---
+
+import WorkflowDag from "@site/src/components/WorkflowDag";
+
+The stars in the opening image are the output of a scientific computation. Before the color mosaic existed, individual observations had to be reprojected, their overlaps compared, their backgrounds reconciled, and their pixels combined. AkôFlow coordinates those steps as a workflow and keeps the execution evidence alongside the result.
+
+This field note follows **Montage 050**, a 58-activity astronomy workflow. We will look at what the activities do, how to reproduce the local example, and what an existing completed experiment tells us about planning and execution.
+
+<!-- truncate -->
+
+## Start with the image—and its provenance
+
+The cover is the actual **1800 × 1800** color preview from run `montage-docker-image-real-20261010-v2`. It is a recorded product of a completed hybrid GCP/HPC experiment. Click it to enlarge the image, or [open the original PNG](/img/blog/montage-050/mosaic-color.png).
+
+That experiment and the local reproduction described below use different execution environments. The cover and historical timings establish what the completed hybrid run produced; they are not a claim that the two-slot local example finished in the same time.
+
+The preserved PNG is 4,920,451 bytes. Its SHA-256 is:
+
+```text
+63fa4d8447274bdb8a44f6be8cf5a23c0a2f0baa479bd2ae1ec3b541df4e19f2
+```
+
+The image copied into this site matches that checksum. You can download the [observed result summary](/downloads/blog/montage-050/observed-results.json) to connect the picture to the run, activity counts, timings, and audit checks.
+
+## What Montage does for astronomy
+
+A sky survey records many images rather than a single photograph of an entire region. Those images may use different pixel grids and have different background levels. Simply placing them next to each other would leave misalignment and visible seams.
+
+[Montage, developed at IPAC](https://www.ipac.caltech.edu/project/montage), combines astronomical images while preserving positional and calibration fidelity. Its building blocks operate on FITS files, the scientific image products in this workflow. The color PNG is a visualization of the resulting mosaics; retain the FITS products for scientific analysis.
+
+Three operations explain much of the computation:
+
+- **Reprojection:** map observations onto a common output grid. The [mProject documentation](https://irsa.ipac.caltech.edu/Montage/docs/mProject.html) describes the input image, header template, reprojected image, and accompanying area image.
+- **Background matching:** measure overlap differences and solve for consistent corrections. [mBgModel](https://irsa.ipac.caltech.edu/Montage/docs/mBgModel.html) uses the fitted differences to estimate a global set of adjustments.
+- **Coaddition:** combine corrected observations into mosaics. The [Montage module guide](https://irsa.ipac.caltech.edu/Montage/docs/how.html) describes the tools for metadata generation, reprojection, background correction, and mosaicking.
+
+Here, twelve input FITS observations feed three image-band branches. Each branch produces a FITS mosaic and a monochrome preview; a final activity combines the three mosaics into the color preview.
+
+## Inside the 58-activity graph
+
+The local bundle preserves the original commands, activity names, and **138 named file handoffs**. Its activity inventory is:
+
+| Native command | Activities | Responsibility                                          |
+| -------------- | ---------: | ------------------------------------------------------- |
+| `mProject`     |         12 | Reproject the input observations                        |
+| `mDiffFit`     |         18 | Compare overlaps and fit their differences              |
+| `mConcatFit`   |          3 | Assemble fit results for each band                      |
+| `mBgModel`     |          3 | Solve each band's background corrections                |
+| `mBackground`  |         12 | Apply corrections to the projected observations         |
+| `mImgtbl`      |          3 | Build metadata tables for corrected images              |
+| `mAdd`         |          3 | Coadd the three FITS mosaics                            |
+| `mViewer`      |          4 | Produce three monochrome previews and one color preview |
+| **Total**      |     **58** |                                                         |
+
+The diagram below comes from the local example's activity and dependency contract. Enlarge it to follow individual edges.
+
+<WorkflowDag title="Montage 050 locally" stages={[]} />
+
+Independent projections and overlap operations can run concurrently after their own inputs are ready. Background modeling introduces a convergence point within each band. The final color preview waits for its three mosaic inputs. There is no extra global barrier forcing an unrelated band to wait at every stage.
+
+This is why the DAG matters: it encodes scientific dependencies. A scheduler can choose where ready work runs, but cannot skip an input merely to make the graph appear more parallel. The [Montage parallelization guide](https://irsa.ipac.caltech.edu/Montage/docs/grid.html) explains the relationship between independent image operations and background-model convergence.
+
+## Reproduce the workload locally
+
+If this is your first AkôFlow experiment, begin with [the Desktop walkthrough](/blog/from-a-dag-to-your-first-run). It teaches definitions, environments, scopes, plans, and runs with a tiny local workload.
+
+The full Montage bundle adds a command-line preparation and execution path. Have **Git, Go 1.23 or newer, and Docker with linux/amd64 support** available. Keep at least **15 GiB** of free disk for the image and intermediate workspaces. Retention and concurrency affect the peak requirement. Apple Silicon runs this amd64 workload through emulation and may take substantially longer.
+
+### 1. Get the versioned example
+
+```bash
+git clone https://github.com/UFFeScience/akoflow-examples.git
+cd akoflow-examples
+git checkout --detach d890c3171e3661890305b763b8fc3ede48bb61b4
+cd scientific-workflows/montage-050
+```
+
+Pinning the checkout makes this walkthrough refer to a specific example revision. The [bundle README](https://github.com/UFFeScience/akoflow-examples/blob/d890c3171e3661890305b763b8fc3ede48bb61b4/scientific-workflows/montage-050/README.md) documents its requirements and commands.
+
+The bundle contains `workflow.yaml`, `environment.yaml`, `scope.yaml`, and `topology.yaml`, plus preparation, execution, and validation scripts. The workflow retains historical simulation durations as model inputs. Use the provided runner or daemon helper for the real workload; importing that source YAML alone is not the complete real-execution setup.
+
+### 2. Prepare the image and inputs
+
+```bash
+./prepare.sh
+```
+
+Preparation obtains the pinned image and Go dependencies, and checks the command/input contract. The image includes approximately 87 MiB of source FITS data, region headers, lookup tables, and the native Montage tools. There is no need to locate twelve observations manually.
+
+The upstream image is pinned by digest:
+
+```text
+ovvesley/akoflow-wf-montage@sha256:26b060b83b990557ea86ab40503cc8f17ab6016b5973e7e6f9201100a96440c9
+```
+
+Preparation success establishes that the inputs and commands are available. It does not mean all scientific activities have executed.
+
+### 3. Execute the complete local DAG
+
+```bash
+./run.sh
+```
+
+The standalone runner uses **two CPU slots** by default. Each activity becomes eligible once its dependencies finish and a slot is available. It copies the bundled input seed, executes the native commands with network access disabled, and writes activity observations under `outputs/`.
+
+This path provisions no cloud machines and needs no remote HPC account. It is a substantial scientific workload: allow it to finish rather than interpreting a slow projection as a completed run.
+
+### 4. Validate and open the products
+
+```bash
+./validate.sh
+```
+
+Inspect the final files in `outputs/`:
+
+| Product                                           | What it gives you                       |
+| ------------------------------------------------- | --------------------------------------- |
+| `1-mosaic.fits`, `2-mosaic.fits`, `3-mosaic.fits` | Three 1800 × 1800 scientific mosaics    |
+| `1-mosaic.png`, `2-mosaic.png`, `3-mosaic.png`    | Monochrome visual previews              |
+| `mosaic-color.png`                                | Combined color preview                  |
+| `manifest.json`                                   | Generated artifacts and SHA-256 digests |
+| `dag-validation.json`                             | Dependency-wave validation              |
+| `stage-<activity>.json`                           | Per-activity observations               |
+
+The validator checks all 58 activity records, FITS dimensions, and PNG headers. A successful manifest is published only after the workflow and final-file checks pass. Merely finding one intermediate image is insufficient to declare the experiment complete.
+
+### Inspect a daemon-managed run in Desktop
+
+The bundle also supports a daemon helper that registers the local environment, builds the declared image, and submits the 58 activities to the engine. This advanced path requires a daemon whose API address and token you manage; follow [API connection setup](/docs/tutorials/api-access). The graphical Desktop installation keeps its internal credentials managed by its proxy—do not assume that it exposes a shell token.
+
+From the example directory, with that daemon connection configured:
+
+```bash
+go run ../../tools/daemon-local -root ../.. -example scientific-workflows/montage-050 -wait=false
+```
+
+The command prints the submitted run ID and returns while execution continues. Connect Desktop to that same instance and open the run. Inspect its activity DAG, file handoffs, logs, and completion status. The daemon owns execution and transfers; the standalone runner's `outputs/` directory belongs to the separate standalone path.
+
+## What the completed hybrid experiment observed
+
+The following results come from the preserved completion record for **`montage-docker-image-real-20261010-v2`**, dated by that run's identity. Its topology comprised ten GCP `e2-micro` instances, two `e2-medium` instances, and eight HPC activity assignments. This is a historical experiment, not the local two-slot configuration above.
+
+| Evidence                                              | Recorded result |
+| ----------------------------------------------------- | --------------: |
+| Completed activities                                  |         58 / 58 |
+| Failed activities                                     |               0 |
+| Successful runtime handles                            |              58 |
+| Missing dependency routes                             |               0 |
+| Transfer-barrier violations                           |               0 |
+| Unreleased consumer leases                            |               0 |
+| Overlapping activities on single-lane micro instances |               0 |
+| Final PNG dimensions                                  |     1800 × 1800 |
+
+The preserved record also distinguishes three timing scopes:
+
+| Timing                      |  Seconds | Approximately |
+| --------------------------- | -------: | ------------: |
+| Planned makespan            | 3,617.94 |      60.3 min |
+| SimGrid makespan            | 3,617.50 |      60.3 min |
+| Real API-reported makespan  | 6,924.25 |     115.4 min |
+| Run timestamp wall interval | 6,949.00 |     115.8 min |
+
+The real API-reported makespan was about **1.91× the planned estimate**. That is an observation from this run, not a general slowdown factor. Close agreement between the plan and simulation did not establish that the real distributed execution would match either prediction.
+
+The accompanying results record identifies whole-workspace traffic and different planned edge volumes as a comparability limit. Summed transfer or compute work can overlap across activities and is not the same as wall-clock makespan. Likewise, a zero reported interference value cannot establish that physical contention was absent.
+
+The recorded cloud compute-and-boot-disk lifecycle estimate was **USD 0.3532** at the experiment's list rates. It excludes network egress, public IPv4, reusable image storage, discounts, and tax, and assigns no calibrated monetary tariff to HPC. It is an estimate, not a provider invoice or a current price quote. Other cost fields in the JSON use different task/window scopes and should not be treated as equivalent bills.
+
+[Download the result summary and its limitations](/downloads/blog/montage-050/observed-results.json). The repository preserves the original [completion record](https://github.com/UFFeScience/akoflow/blob/main/experiments/montage-micro-hpc-e2/docker-image-real-v2-completion.json) and [detailed results](https://github.com/UFFeScience/akoflow/blob/main/experiments/montage-micro-hpc-e2/docker-image-real-v2-results.json).
+
+## What is—and is not—verified for the local bundle
+
+The checked-in local image contract was validated on **2026-10-20**: twelve FITS inputs, 58 activities, and 138 named handoffs. That record explicitly states `fullExecutionPerformed: false`. Its separate daemon snapshot recorded a running workflow with zero completed activities at capture time. These are historical snapshots; neither establishes the current state of another instance.
+
+The completed hybrid run supplies the mosaic and the results in this article. To claim a completed reproduction on your machine, retain your own successful validator output, activity records, and output manifest. The [local showcase page](/docs/showcase/scientific-workflows/montage-050) links the checked-in contract and daemon evidence.
+
+## Keep the experiment with the picture
+
+The mosaic is the visible result, but the research artifact includes more: input identity, native commands, the dependency graph, resource assignments, file transfers, and output digests. Together, they explain how the image was produced and where a later execution differs.
+
+AkôFlow's original paper provides the research context: Ferreira et al., **AkôFlow: um Middleware para execução de Workflows científicos em múltiplos ambientes conteinerizados**, SBBD 2024, pp. 27–39. [Read the publication](https://doi.org/10.5753/sbbd.2024.241126).
+
+Continue with the [complete local example](/docs/showcase/scientific-workflows/montage-050), the [Desktop first experiment](/blog/from-a-dag-to-your-first-run), or [planning alternatives](/docs/guides/workflows/planning). When comparing placements, preserve the scientific workload and change the execution environment deliberately, so the measurements remain interpretable.

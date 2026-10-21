@@ -1278,6 +1278,10 @@ func (h *Handler) GetExecution(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusNotFound, nil)
 		return
 	}
+	if h.executionReadView(w, r, run) {
+		return
+	}
+	monitor := r.URL.Query().Get("view") == "monitor" && run.SchedulePlanID != ""
 	tasks, err := h.executions.ListTasks(r.Context(), run.ID)
 	if err != nil {
 		writeError(w, http.StatusInternalServerError, err)
@@ -1290,12 +1294,12 @@ func (h *Handler) GetExecution(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusInternalServerError, err)
 		return
 	}
-	handles, err := h.executions.ListHandles(r.Context(), run.ID)
+	handles, err := h.executionHandles(r.Context(), run.ID, "", !monitor)
 	if err != nil {
 		writeError(w, http.StatusInternalServerError, err)
 		return
 	}
-	events, err := h.executions.ListEvents(r.Context(), run.ID)
+	events, err := h.executionEvents(r.Context(), run.ID, !monitor)
 	if err != nil {
 		writeError(w, http.StatusInternalServerError, err)
 		return
@@ -1304,11 +1308,11 @@ func (h *Handler) GetExecution(w http.ResponseWriter, r *http.Request) {
 		"run": run, "activities": tasks, "dataTransfers": transfers,
 		"activityAttempts": activityAttempts, "handles": handles, "events": events,
 	}
-	if err := h.addExecutionWorkspaces(r.Context(), run.ID, response); err != nil {
+	if err := h.addMonitorWorkspaces(r.Context(), run.ID, response, monitor); err != nil {
 		writeError(w, http.StatusInternalServerError, err)
 		return
 	}
-	operations, infrastructureRuns, infrastructureErr := h.executionInfrastructure(r.Context(), run.ID)
+	operations, infrastructureRuns, infrastructureErr := h.executionInfrastructure(r.Context(), run.ID, monitor)
 	if infrastructureErr != nil {
 		writeError(w, http.StatusInternalServerError, infrastructureErr)
 		return
@@ -1323,38 +1327,29 @@ func (h *Handler) GetExecution(w http.ResponseWriter, r *http.Request) {
 	}
 	response["cloudBilling"] = billing
 	response["timeline"] = applicationexecution.BuildTimeline(*run, tasks, transfers, operations)
-	if err := h.addExecutionData(r.Context(), run.ID, response); err != nil {
+	if err := h.addExecutionData(r.Context(), run.ID, response, monitor); err != nil {
 		writeError(w, http.StatusInternalServerError, err)
 		return
 	}
 	writeJSON(w, http.StatusOK, response)
 }
 
-func (h *Handler) addExecutionData(ctx context.Context, runID string, response map[string]any) error {
+func (h *Handler) addExecutionData(ctx context.Context, runID string, response map[string]any, monitor bool) error {
 	if h.data == nil {
 		return nil
 	}
-	if operationEvents, ok := h.data.(WorkflowOperationEventQuery); ok {
+	if operationEvents, ok := h.data.(WorkflowOperationEventQuery); ok && !monitor {
 		events, err := operationEvents.ListWorkflowOperationEvents(ctx, runID)
 		if err != nil {
 			return err
 		}
 		response["operationEvents"] = events
 	}
-	instances, err := h.data.ListInstances(ctx, runID)
-	if err != nil {
-		return err
+	if !monitor {
+		if err := h.addExecutionFileCatalog(ctx, runID, response); err != nil {
+			return err
+		}
 	}
-	locations, err := h.data.ListLocations(ctx, runID)
-	if err != nil {
-		return err
-	}
-	response["dataObjects"], response["dataLocations"] = instances, locations
-	materializations, err := h.data.ListArtifactMaterializations(ctx, runID)
-	if err != nil {
-		return err
-	}
-	response["artifactMaterializations"] = materializations
 	transfers, err := h.data.ListArtifactTransferRuns(ctx, runID)
 	if err != nil {
 		return err
@@ -1465,10 +1460,10 @@ func (h *Handler) GetActivityMetricSummary(w http.ResponseWriter, r *http.Reques
 	writeJSON(w, http.StatusOK, item)
 }
 
-func (h *Handler) infrastructureRuns(ctx context.Context, operations []domain.CloudOperationRun) ([]map[string]any, error) {
+func (h *Handler) infrastructureRuns(ctx context.Context, operations []domain.CloudOperationRun, monitor bool) ([]map[string]any, error) {
 	result := make([]map[string]any, 0)
 	for _, operation := range operations {
-		events, eventErr := h.cloudOperations.ListCloudOperationEvents(ctx, operation.ID)
+		events, eventErr := h.infrastructureEvents(ctx, operation.ID, monitor)
 		if eventErr != nil {
 			return nil, eventErr
 		}
@@ -1480,7 +1475,7 @@ func (h *Handler) infrastructureRuns(ctx context.Context, operations []domain.Cl
 	return result, nil
 }
 
-func (h *Handler) executionInfrastructure(ctx context.Context, runID string) ([]domain.CloudOperationRun, []map[string]any, error) {
+func (h *Handler) executionInfrastructure(ctx context.Context, runID string, monitor bool) ([]domain.CloudOperationRun, []map[string]any, error) {
 	if h.cloudOperations == nil {
 		return []domain.CloudOperationRun{}, nil, nil
 	}
@@ -1489,7 +1484,7 @@ func (h *Handler) executionInfrastructure(ctx context.Context, runID string) ([]
 		if err != nil {
 			return nil, nil, err
 		}
-		runs, err := h.infrastructureRuns(ctx, operations)
+		runs, err := h.infrastructureRuns(ctx, operations, monitor)
 		return operations, runs, err
 	}
 	all, err := h.cloudOperations.ListCloudOperations(ctx)
@@ -1502,7 +1497,7 @@ func (h *Handler) executionInfrastructure(ctx context.Context, runID string) ([]
 			operations = append(operations, operation)
 		}
 	}
-	runs, err := h.infrastructureRuns(ctx, operations)
+	runs, err := h.infrastructureRuns(ctx, operations, monitor)
 	return operations, runs, err
 }
 
@@ -2268,6 +2263,10 @@ func provisionOperationInstanceID(instanceID, requestedID string) string {
 }
 
 func (h *Handler) ListCloudOperations(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Query().Has("page") {
+		h.listCloudOperationsPage(w, r)
+		return
+	}
 	if len(r.URL.Query()) > 0 {
 		h.listFilteredCloudOperations(w, r)
 		return

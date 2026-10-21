@@ -5,5 +5,7 @@ type CloudOperationFilter struct {
 	InstanceID       string
 	CapacityTargetID string
 	ExecutionRunID   string
+	Status           string
+	Offset           int
 	Limit            int
 }

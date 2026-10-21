@@ -602,23 +602,13 @@ func (r *Repository) ListCloudOperations(ctx context.Context) ([]domain.CloudOpe
 }
 
 func (r *Repository) ListCloudOperationsFiltered(ctx context.Context, filter domain.CloudOperationFilter) ([]domain.CloudOperationRun, error) {
-	conditions := []string{"1=1"}
-	args := []any{}
-	for _, field := range []struct{ column, value string }{
-		{"environment_id", filter.EnvironmentID}, {"instance_id", filter.InstanceID},
-		{"capacity_target_id", filter.CapacityTargetID}, {"execution_run_id", filter.ExecutionRunID},
-	} {
-		if field.value != "" {
-			conditions = append(conditions, field.column+"=?")
-			args = append(args, field.value)
-		}
-	}
+	conditions, args := cloudOperationConditions(filter)
 	query := `SELECT id,kind,status,environment_id,capacity_target_id,
 		instance_id,execution_run_id,activity_id,phase,request,failure_reason,created_at,started_at,finished_at
 		FROM cloud_operation_runs WHERE ` + strings.Join(conditions, " AND ") + ` ORDER BY created_at DESC,id DESC`
 	if filter.Limit > 0 {
-		query += ` LIMIT ?`
-		args = append(args, filter.Limit)
+		query += ` LIMIT ? OFFSET ?`
+		args = append(args, filter.Limit, max(0, filter.Offset))
 	}
 	rows, err := r.db.QueryContext(ctx, query, args...)
 	if err != nil {
@@ -634,6 +624,27 @@ func (r *Repository) ListCloudOperationsFiltered(ctx context.Context, filter dom
 		values = append(values, *value)
 	}
 	return values, rows.Err()
+}
+
+func cloudOperationConditions(filter domain.CloudOperationFilter) ([]string, []any) {
+	conditions, args := []string{"1=1"}, []any{}
+	for _, field := range []struct{ column, value string }{
+		{"environment_id", filter.EnvironmentID}, {"instance_id", filter.InstanceID},
+		{"capacity_target_id", filter.CapacityTargetID}, {"execution_run_id", filter.ExecutionRunID}, {"status", filter.Status},
+	} {
+		if field.value != "" && field.value != "all" {
+			conditions = append(conditions, field.column+"=?")
+			args = append(args, field.value)
+		}
+	}
+	return conditions, args
+}
+
+func (r *Repository) CountCloudOperations(ctx context.Context, filter domain.CloudOperationFilter) (int, error) {
+	conditions, args := cloudOperationConditions(filter)
+	var count int
+	err := r.db.QueryRowContext(ctx, `SELECT COUNT(*) FROM cloud_operation_runs WHERE `+strings.Join(conditions, " AND "), args...).Scan(&count)
+	return count, err
 }
 
 func scanCloudOperation(scan scanner) (*domain.CloudOperationRun, error) {

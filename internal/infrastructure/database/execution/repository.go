@@ -352,6 +352,10 @@ func scanRunFeed(scanner interface{ Scan(...any) error }) (*domain.ExecutionRun,
 }
 
 func (r *Repository) ListTasks(ctx context.Context, runID string) ([]domain.TaskExecution, error) {
+	return r.ListTasksForActivity(ctx, runID, "")
+}
+
+func (r *Repository) ListTasksForActivity(ctx context.Context, runID, activityID string) ([]domain.TaskExecution, error) {
 	rows, err := r.db.QueryContext(ctx, `SELECT t.id, t.execution_run_id, t.plan_assignment_id,
 		t.activity_id, t.planned_resource_id, COALESCE(t.allocated_resource_id, ''), t.attempt,
 		CASE WHEN t.status='running' AND h.id IS NOT NULL THEN 'failed' ELSE t.status END,
@@ -364,7 +368,7 @@ func (r *Repository) ListTasks(ctx context.Context, runID string) ([]domain.Task
 		FROM task_executions t
 		LEFT JOIN activity_handles h ON h.execution_run_id=t.execution_run_id
 			AND h.activity_id=t.activity_id AND h.id=t.id AND h.status IN ('failed', 'stopped')
-		WHERE t.execution_run_id=? ORDER BY t.started_at, t.activity_id`, runID)
+		WHERE t.execution_run_id=? AND (?='' OR t.activity_id=?) ORDER BY t.started_at, t.activity_id`, runID, activityID, activityID)
 	if err != nil {
 		return nil, err
 	}
@@ -426,10 +430,29 @@ func (r *Repository) ListTransfers(ctx context.Context, runID string) ([]domain.
 }
 
 func (r *Repository) ListEvents(ctx context.Context, runID string) ([]domainevents.Event, error) {
+	return r.listEventsWindow(ctx, runID, -1, 0)
+}
+
+func (r *Repository) ListEventsPage(ctx context.Context, runID string, page, size int) ([]domainevents.Event, bool, error) {
+	if page < 1 {
+		page = 1
+	}
+	if size < 1 || size > 200 {
+		size = 100
+	}
+	events, err := r.listEventsWindow(ctx, runID, size+1, (page-1)*size)
+	more := len(events) > size
+	if more {
+		events = events[:size]
+	}
+	return events, more, err
+}
+
+func (r *Repository) listEventsWindow(ctx context.Context, runID string, limit, offset int) ([]domainevents.Event, error) {
 	rows, err := r.db.QueryContext(ctx, `SELECT payload FROM domain_events
 		WHERE (aggregate_type='execution_run' AND aggregate_id=?)
 		OR (aggregate_type='activity_execution' AND json_extract(payload, '$.payload.executionRunId')=?)
-		ORDER BY occurred_at, rowid`, runID, runID)
+		ORDER BY occurred_at, rowid LIMIT ? OFFSET ?`, runID, runID, limit, offset)
 	if err != nil {
 		return nil, err
 	}
@@ -488,10 +511,30 @@ func (r *Repository) Find(ctx context.Context, id string) (*domain.ActivityHandl
 }
 
 func (r *Repository) ListHandles(ctx context.Context, runID string) ([]domain.ActivityHandle, error) {
+	return r.ListHandlesView(ctx, runID, "", true)
+}
+
+// ListHandlesView omits potentially large output and manifests from monitor reads.
+func (r *Repository) ListHandlesView(ctx context.Context, runID, activityID string, output bool) ([]domain.ActivityHandle, error) {
+	return r.listHandlesView(ctx, runID, activityID, output, output)
+}
+
+func (r *Repository) ListProcessHandles(ctx context.Context, runID string) ([]domain.ActivityHandle, error) {
+	return r.listHandlesView(ctx, runID, "", true, false)
+}
+
+func (r *Repository) listHandlesView(ctx context.Context, runID, activityID string, output, manifests bool) ([]domain.ActivityHandle, error) {
+	logColumn, artifactsColumn := "''", "'null'"
+	if output {
+		logColumn = "log"
+	}
+	if manifests {
+		artifactsColumn = "artifacts"
+	}
 	rows, err := r.db.QueryContext(ctx, `SELECT id, execution_run_id, activity_id,
 		resource_id, runtime_id, external_id, status, endpoints, started_at,
-		finished_at, exit_code, failure, log, artifacts, metadata FROM activity_handles
-		WHERE execution_run_id=? ORDER BY activity_id`, runID)
+		finished_at, exit_code, failure, `+logColumn+`, `+artifactsColumn+`, metadata FROM activity_handles
+		WHERE execution_run_id=? AND (?='' OR activity_id=?) ORDER BY activity_id`, runID, activityID, activityID)
 	if err != nil {
 		return nil, err
 	}

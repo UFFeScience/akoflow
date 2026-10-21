@@ -38,6 +38,14 @@ func TestCloudOperationsFilterBeforeLimitWithStableOrdering(t *testing.T) {
 	if err != nil || len(filtered) != 1 || filtered[0].ID != "b" {
 		t.Fatalf("latest=%+v %v", filtered, err)
 	}
+	filtered, err = r.ListCloudOperationsFiltered(ctx, domain.CloudOperationFilter{Status: "completed", Limit: 1, Offset: 1})
+	if err != nil || len(filtered) != 1 || filtered[0].ID != "a" {
+		t.Fatalf("second page=%+v %v", filtered, err)
+	}
+	count, err := r.CountCloudOperations(ctx, domain.CloudOperationFilter{Status: "completed", Limit: 1, Offset: 1})
+	if err != nil || count != 2 {
+		t.Fatalf("filtered total=%d %v", count, err)
+	}
 	filtered, err = r.ListCloudOperationsFiltered(ctx, domain.CloudOperationFilter{EnvironmentID: "env", InstanceID: "unrelated"})
 	if err != nil || len(filtered) != 0 {
 		t.Fatalf("filters not combined: %+v %v", filtered, err)

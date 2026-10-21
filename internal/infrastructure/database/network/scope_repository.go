@@ -92,31 +92,29 @@ func (r *Repository) FindScope(ctx context.Context, id string) (*domain.Executio
 }
 
 func (r *Repository) ListScopes(ctx context.Context) ([]domain.ExecutionScope, error) {
-	rows, err := r.db.QueryContext(ctx, `SELECT id FROM execution_scopes ORDER BY name`)
+	rows, err := r.db.QueryContext(ctx, `SELECT s.id,s.name,COALESCE(s.network_topology_id,''),s.metadata,
+		(SELECT json_group_array(environment_version_id) FROM (
+			SELECT environment_version_id FROM execution_scope_environments
+			WHERE execution_scope_id=s.id ORDER BY environment_version_id))
+		FROM execution_scopes s ORDER BY s.name,s.id`)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var ids []string
+	scopes := make([]domain.ExecutionScope, 0)
 	for rows.Next() {
-		var id string
-		if err := rows.Scan(&id); err != nil {
+		var scope domain.ExecutionScope
+		var metadata, versions string
+		if err := rows.Scan(&scope.ID, &scope.Name, &scope.NetworkTopologyID, &metadata, &versions); err != nil {
 			return nil, err
 		}
-		ids = append(ids, id)
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	scopes := make([]domain.ExecutionScope, 0, len(ids))
-	for _, id := range ids {
-		scope, err := r.FindScope(ctx, id)
-		if err != nil {
+		if err := json.Unmarshal([]byte(metadata), &scope.Metadata); err != nil {
 			return nil, err
 		}
-		if scope != nil {
-			scopes = append(scopes, *scope)
+		if err := json.Unmarshal([]byte(versions), &scope.EnvironmentVersionIDs); err != nil {
+			return nil, err
 		}
+		scopes = append(scopes, scope)
 	}
-	return scopes, nil
+	return scopes, rows.Err()
 }

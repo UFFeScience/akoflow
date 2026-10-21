@@ -92,33 +92,34 @@ func (r *Repository) Find(ctx context.Context, id string) (*domain.NetworkTopolo
 }
 
 func (r *Repository) List(ctx context.Context) ([]domain.NetworkTopology, error) {
-	rows, err := r.db.QueryContext(ctx, `SELECT id FROM network_topologies ORDER BY name, version DESC`)
+	rows, err := r.db.QueryContext(ctx, `SELECT t.id,t.name,t.version,t.execution_scope_id,t.metadata,
+		(SELECT json_group_array(json_object('id',id,'topologyId',topology_id,
+			'sourceResourceId',source_resource_id,'targetResourceId',target_resource_id,
+			'bandwidthBitsPerSecond',bandwidth_bits_per_second,'latencySeconds',latency_seconds,
+			'pricePerByte',price_per_byte,'bidirectional',json(CASE WHEN bidirectional THEN 'true' ELSE 'false' END),
+			'sharingPolicy',sharing_policy,'maxConcurrentTransfers',max_concurrent_transfers,'metadata',json(metadata)))
+		 FROM (SELECT * FROM network_links WHERE topology_id=t.id ORDER BY id))
+		FROM network_topologies t ORDER BY t.name,t.version DESC,t.id`)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var ids []string
+	topologies := make([]domain.NetworkTopology, 0)
 	for rows.Next() {
-		var id string
-		if err := rows.Scan(&id); err != nil {
+		var topology domain.NetworkTopology
+		var metadata, links string
+		if err := rows.Scan(&topology.ID, &topology.Name, &topology.Version, &topology.ExecutionScopeID, &metadata, &links); err != nil {
 			return nil, err
 		}
-		ids = append(ids, id)
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	topologies := make([]domain.NetworkTopology, 0, len(ids))
-	for _, id := range ids {
-		topology, err := r.Find(ctx, id)
-		if err != nil {
+		if err := json.Unmarshal([]byte(metadata), &topology.Metadata); err != nil {
 			return nil, err
 		}
-		if topology != nil {
-			topologies = append(topologies, *topology)
+		if err := json.Unmarshal([]byte(links), &topology.Links); err != nil {
+			return nil, err
 		}
+		topologies = append(topologies, topology)
 	}
-	return topologies, nil
+	return topologies, rows.Err()
 }
 
 func validate(topology domain.NetworkTopology) error {

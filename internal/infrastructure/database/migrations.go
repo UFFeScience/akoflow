@@ -10,6 +10,7 @@ import (
 const schemaBeforeActivityWorkspaces = "a961b02a2f2cd9adce4e78b2af1ad3428f1a37540af9890c738ac7a7f6799a17"
 const schemaWithActivityWorkspaces = "4d9f0a40c2f6dc40941cacb0fc9ab6f547cd2447cd61ac0c11522434f3b256c8"
 const schemaWithWorkflowOperationEvents = "7babdb5a0b9b80ede464fe6f364d60437cd33b85917651b09acb6b9806955352"
+const schemaWithRunFeedIndexes = "2361bba3c44288e038ce3a46b7d32e325b359da71a112607af28ecc6af0e2359"
 
 func applyMigrations(ctx context.Context, db *sql.DB) error {
 	var checksum string
@@ -29,7 +30,12 @@ func applyMigrations(ctx context.Context, db *sql.DB) error {
 			}
 			checksum = schemaWithWorkflowOperationEvents
 		case schemaWithWorkflowOperationEvents:
-			if err := applyMigration(ctx, db, runFeedIndexesSQL, schemaChecksum(), "index execution feeds and relationships"); err != nil {
+			if err := applyMigration(ctx, db, runFeedIndexesSQL, schemaWithRunFeedIndexes, "index execution feeds and relationships"); err != nil {
+				return err
+			}
+			checksum = schemaWithRunFeedIndexes
+		case schemaWithRunFeedIndexes:
+			if err := applyMigration(ctx, db, catalogReadIndexesSQL, schemaChecksum(), "index scoped catalog reads"); err != nil {
 				return err
 			}
 			checksum = schemaChecksum()
@@ -39,6 +45,13 @@ func applyMigrations(ctx context.Context, db *sql.DB) error {
 	}
 	return nil
 }
+
+const catalogReadIndexesSQL = `
+CREATE INDEX cloud_operations_instance_idx ON cloud_operation_runs(instance_id,created_at DESC,id DESC);
+CREATE INDEX cloud_operations_environment_idx ON cloud_operation_runs(environment_id,created_at DESC,id DESC);
+CREATE INDEX cloud_operations_target_idx ON cloud_operation_runs(capacity_target_id,created_at DESC,id DESC);
+CREATE INDEX cloud_operations_execution_idx ON cloud_operation_runs(execution_run_id,created_at DESC,id DESC);
+`
 
 const runFeedIndexesSQL = `
 CREATE INDEX execution_runs_started_idx ON execution_runs(started_at DESC, id DESC);

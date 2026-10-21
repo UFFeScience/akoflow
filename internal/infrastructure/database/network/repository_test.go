@@ -42,6 +42,7 @@ func TestRepositoryPersistsFederatedTopology(t *testing.T) {
 	values, err := repository.List(context.Background())
 	require.NoError(t, err)
 	require.Len(t, values, 1)
+	require.Equal(t, *stored, values[0])
 	missing, err := repository.Find(context.Background(), "missing")
 	require.NoError(t, err)
 	require.Nil(t, missing)

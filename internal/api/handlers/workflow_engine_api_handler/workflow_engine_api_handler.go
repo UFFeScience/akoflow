@@ -980,6 +980,18 @@ func (h *Handler) SaveUserPreferences(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) ListEnvironments(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Query().Get("view") == "count" {
+		h.countEnvironments(w, r)
+		return
+	}
+	if r.URL.Query().Get("view") == "inventory" {
+		h.listResourceInventory(w, r)
+		return
+	}
+	if r.URL.Query().Get("view") == "summary" {
+		h.listEnvironmentSummaries(w, r)
+		return
+	}
 	items, err := h.environments.List(r.Context())
 	writeList(w, items, err)
 }
@@ -1467,6 +1479,14 @@ func (h *Handler) infrastructureRuns(ctx context.Context, operations []domain.Cl
 func (h *Handler) executionInfrastructure(ctx context.Context, runID string) ([]domain.CloudOperationRun, []map[string]any, error) {
 	if h.cloudOperations == nil {
 		return []domain.CloudOperationRun{}, nil, nil
+	}
+	if query, ok := h.cloudOperations.(filteredCloudOperations); ok {
+		operations, err := query.ListCloudOperationsFiltered(ctx, domain.CloudOperationFilter{ExecutionRunID: runID})
+		if err != nil {
+			return nil, nil, err
+		}
+		runs, err := h.infrastructureRuns(ctx, operations)
+		return operations, runs, err
 	}
 	all, err := h.cloudOperations.ListCloudOperations(ctx)
 	if err != nil {
@@ -2244,6 +2264,10 @@ func provisionOperationInstanceID(instanceID, requestedID string) string {
 }
 
 func (h *Handler) ListCloudOperations(w http.ResponseWriter, r *http.Request) {
+	if len(r.URL.Query()) > 0 {
+		h.listFilteredCloudOperations(w, r)
+		return
+	}
 	values, err := h.cloudOperations.ListCloudOperations(r.Context())
 	writeList(w, values, err)
 }

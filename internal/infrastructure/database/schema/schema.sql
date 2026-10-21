@@ -618,6 +618,10 @@ CREATE TABLE cloud_operation_runs (
 	finished_at DATETIME
 );
 CREATE INDEX cloud_operation_runs_created_idx ON cloud_operation_runs(created_at DESC);
+CREATE INDEX cloud_operations_instance_idx ON cloud_operation_runs(instance_id,created_at DESC,id DESC);
+CREATE INDEX cloud_operations_environment_idx ON cloud_operation_runs(environment_id,created_at DESC,id DESC);
+CREATE INDEX cloud_operations_target_idx ON cloud_operation_runs(capacity_target_id,created_at DESC,id DESC);
+CREATE INDEX cloud_operations_execution_idx ON cloud_operation_runs(execution_run_id,created_at DESC,id DESC);
 CREATE TABLE cloud_operation_events (
 	operation_id TEXT NOT NULL REFERENCES cloud_operation_runs(id) ON DELETE CASCADE,
 	sequence INTEGER NOT NULL,

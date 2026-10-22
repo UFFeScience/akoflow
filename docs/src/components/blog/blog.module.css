@@ -434,7 +434,7 @@
   background: linear-gradient(transparent, var(--ifm-background-color));
   pointer-events: none;
 }
-.photoHero > button {
+.photoHero > img {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -442,12 +442,8 @@
   border: 0;
   border-radius: 0;
   padding: 0;
-}
-.photoHero > button img {
-  width: 100%;
-  height: 100%;
   object-fit: cover;
-  border-radius: 0;
+  pointer-events: none;
 }
 .photoHeroText {
   position: relative;
@@ -458,7 +454,7 @@
   align-items: flex-start;
   padding: 130px max(24px, calc((100vw - 1120px) / 2)) 170px;
   color: #fff;
-  pointer-events: none;
+  user-select: text;
 }
 .photoHeroText h1 {
   color: #fff;

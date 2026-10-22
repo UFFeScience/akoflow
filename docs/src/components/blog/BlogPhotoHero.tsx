@@ -1,5 +1,4 @@
 import React from "react";
-import ExpandableImage from "../ExpandableImage";
 import styles from "./blog.module.css";
 
 export default function BlogPhotoHero({
@@ -17,11 +16,12 @@ export default function BlogPhotoHero({
 }) {
   return (
     <div className={styles.photoHero}>
-      <ExpandableImage
+      <img
         src={src}
         alt={alt}
         loading="eager"
         fetchPriority="high"
+        draggable={false}
       />
       <div className={styles.photoHeroText}>
         <p className={styles.eyebrow}>{category}</p>

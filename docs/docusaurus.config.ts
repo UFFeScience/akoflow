@@ -1,6 +1,7 @@
 import { themes as prismThemes } from "prism-react-renderer";
 import type { Config } from "@docusaurus/types";
 import type * as Preset from "@docusaurus/preset-classic";
+import { publicSiteUrl } from "./src/utils/publicSiteUrl";
 
 const config: Config = {
   title: "AkôFlow",
@@ -43,6 +44,15 @@ const config: Config = {
       "classic",
       {
         debug: false,
+        sitemap: {
+          async createSitemapItems({ defaultCreateSitemapItems, ...params }) {
+            const items = await defaultCreateSitemapItems(params);
+            return items.map((item) => ({
+              ...item,
+              url: publicSiteUrl(item.url),
+            }));
+          },
+        },
         docs: {
           sidebarPath: "./sidebars.ts",
           editUrl: "https://github.com/UFFeScience/akoflow/tree/main/docs/",

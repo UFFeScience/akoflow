@@ -7,18 +7,19 @@ const config: Config = {
   tagline: "Open Source Engine for Containerized Scientific Workflows",
   favicon: "img/brand/akoflow-logo.png",
 
-  // The public domain redirects to the institutional proxy, which serves the
-  // Pages build under /akoflow/. Assets and client routes must retain it.
+  // The public domain proxies this deployment and rewrites its base paths.
+  // Keep the build prefix required by the institutional and Pages origins.
   url: "https://uffescience.ic.uff.br",
   baseUrl: "/akoflow/",
 
-  // Preserve deep links when visiting the deployment origin directly.
+  // Redirect legacy origins before hydration. Build the prefix from path
+  // segments: the public proxy rewrites literal base-path strings in HTML.
   headTags: [
     {
       tagName: "script",
       attributes: {},
       innerHTML:
-        "if (location.hostname === 'uffescience.github.io' && (location.pathname === '/akoflow' || location.pathname.startsWith('/akoflow/'))) { location.replace('https://uffescience.ic.uff.br' + location.pathname + location.search + location.hash); }",
+        "if (['uffescience.ic.uff.br', 'uffescience.github.io'].includes(location.hostname)) { var segments = location.pathname.split('/'); if (segments[1] === 'akoflow') { location.replace('https://akoflow.com/' + segments.slice(2).join('/') + location.search + location.hash); } }",
     },
   ],
 
@@ -188,7 +189,7 @@ const config: Config = {
       respectPrefersColorScheme: true,
     },
     navbar: {
-      title: "AkôFlow Docs",
+      title: "AkôFlow",
       hideOnScroll: false,
       logo: {
         alt: "AkôFlow application logo",

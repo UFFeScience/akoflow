@@ -189,7 +189,7 @@ const config: Config = {
       respectPrefersColorScheme: true,
     },
     navbar: {
-      title: "AkôFlow Docs",
+      title: "AkôFlow",
       hideOnScroll: false,
       logo: {
         alt: "AkôFlow application logo",

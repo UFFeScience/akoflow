@@ -12,6 +12,8 @@ import (
 	"regexp"
 	"sort"
 	"time"
+
+	"github.com/UFFeScience/akoflow/internal/planning/algorithms"
 )
 
 type apiClient struct{ base string }
@@ -113,7 +115,11 @@ func campaign(action, base, dir, kind, mode string, attempt int, campaignID stri
 			return e
 		}
 		if !client.exists("/planning-sessions/" + session + "/") {
-			if e := client.call("POST", "/planning-sessions/", obj{"id": session, "workflowVersionId": "montage-independent-work-v1-v1", "executionScopeId": "fig8-" + kind + "-scope", "networkTopologyId": "fig8-" + kind + "-network", "algorithms": []obj{{"id": algorithm, "configuration": obj{"candidateCount": 25}}}}, nil); e != nil {
+			configuration := obj{"candidateCount": 25}
+			if algorithm == "prism-time" {
+				configuration = algorithms.NewPRISMTime().Descriptor().Defaults
+			}
+			if e := client.call("POST", "/planning-sessions/", obj{"id": session, "workflowVersionId": "montage-independent-work-v1-v1", "executionScopeId": "fig8-" + kind + "-scope", "networkTopologyId": "fig8-" + kind + "-network", "algorithms": []obj{{"id": algorithm, "configuration": configuration}}}, nil); e != nil {
 				return e
 			}
 		}

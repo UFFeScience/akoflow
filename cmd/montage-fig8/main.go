@@ -215,6 +215,7 @@ func main() {
 	algorithm := flag.String("algorithm", "heft", "heft or moheft")
 	objective := flag.String("objective", "time", "Pareto endpoint: time or cost")
 	attempt := flag.Int("attempt", 1, "explicit fresh execution attempt; never resumes scientific tasks")
+	matrixRetryEntry := flag.String("matrix-retry-entry", "", "explicit failed matrix entry to rerun, for example moheft-time/medium; requires --attempt > 1")
 	campaignID := flag.String("campaign-id", "fig8-heft-20261031-home-v1", "unique campaign identifier")
 	acceptQuotaEstimate := flag.Bool("accept-hpc-quota-estimate", false, "explicitly authorized per-run HPC conservative quota override; OS quota remains enforced")
 	sourcePath := flag.String("source", "storage/montage-runtime-stage-calibration-20261011/medium-independent-prepared-v1/request.json", "frozen scientific execution input")
@@ -240,7 +241,7 @@ func main() {
 		if *mode != "real" {
 			panic("matrix requires explicit --mode real")
 		}
-		must(matrix(*base, *output, *acceptQuotaEstimate))
+		must(matrix(*base, *output, *acceptQuotaEstimate, *matrixRetryEntry, *attempt))
 		return
 	}
 	if *action == "signature" {

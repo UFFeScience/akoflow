@@ -8,7 +8,10 @@ import (
 
 // matrix runs unique physical plans sequentially; it never invents independent
 // observations for duplicate plans. Every record keeps its real source run.
-func matrix(base, root string, acceptQuota bool) error {
+func matrix(base, root string, acceptQuota bool, retryEntry string, retryAttempt int) error {
+	if err := validateMatrixRetry(retryEntry, retryAttempt); err != nil {
+		return err
+	}
 	client := apiClient{base}
 	records := []obj{}
 	observations := map[string]string{}
@@ -38,9 +41,22 @@ func matrix(base, root string, acceptQuota bool) error {
 			runID, reused := observations[signature]
 			if !reused {
 				runID = spec.prefix + "-" + kind + "-real"
+				attempt := 1
+				if spec.dir+"/"+kind == retryEntry {
+					var previous obj
+					if err := client.call("GET", "/execution-runs/"+runID+"/?view=status", nil, &previous); err != nil {
+						return err
+					}
+					prior := previous["run"].(map[string]any)
+					if prior["status"] != "failed" && prior["status"] != "cancelled" {
+						return fmt.Errorf("explicit matrix retry requires a terminal failed or cancelled original run: %s", runID)
+					}
+					attempt = retryAttempt
+					runID = fmt.Sprintf("%s-attempt%d", runID, attempt)
+				}
 				done := make(chan error, 1)
 				go func() {
-					done <- campaign("run", base, dir, kind, "real", 1, spec.prefix, acceptQuota, spec.algorithm, spec.objective)
+					done <- campaign("run", base, dir, kind, "real", attempt, spec.prefix, acceptQuota, spec.algorithm, spec.objective)
 				}()
 				ticker := time.NewTicker(15 * time.Second)
 				running := true
@@ -108,6 +124,26 @@ func matrix(base, root string, acceptQuota bool) error {
 		}
 	}
 	return nil
+}
+
+func validateMatrixRetry(entry string, attempt int) error {
+	if entry == "" {
+		if attempt != 1 {
+			return fmt.Errorf("matrix --attempt requires one explicit --matrix-retry-entry")
+		}
+		return nil
+	}
+	if attempt < 2 {
+		return fmt.Errorf("matrix retry requires --attempt greater than one")
+	}
+	for _, algorithm := range []string{"heft", "moheft-time", "moheft-cost"} {
+		for _, environment := range []string{"micro", "medium"} {
+			if entry == algorithm+"/"+environment {
+				return nil
+			}
+		}
+	}
+	return fmt.Errorf("unknown matrix retry entry %q; HPC shared observations cannot be independently retried", entry)
 }
 
 func cleanupMatrixCloud(client apiClient, runID string, terminal bool) error {

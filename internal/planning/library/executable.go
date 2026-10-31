@@ -5,8 +5,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"go/parser"
-	"go/token"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -38,10 +36,7 @@ func (s *Service) compile(ctx context.Context, p Package) (string, error) {
 	if err = os.MkdirAll(dir, 0700); err != nil {
 		return "", err
 	}
-	userSource := p.Source
-	if _, err := parser.ParseFile(token.NewFileSet(), "algorithm.go", userSource, parser.PackageClauseOnly); err != nil {
-		userSource = "package main\n" + userSource
-	}
+	userSource, _ := sourceUnit(p.Source)
 	for name, source := range map[string]string{"contract.go": Contract, "runner.go": runner, "algorithm.go": userSource} {
 		if err = os.WriteFile(filepath.Join(dir, name), []byte(source), 0600); err != nil {
 			return "", err

@@ -50,3 +50,11 @@ The editor also accepts just the `Schedule` function (and optional import
 statements); the daemon supplies `package main` when omitted. Revision payloads
 are preserved in `scheduler_plugin_revisions`. Candidate plans record the active
 revision and source hash in `algorithmVersion` for later reproducibility.
+
+`POST /akoflow-api/scheduling-algorithms/validate/` accepts `source` and optional
+`compile: true`. It parses Go and checks the Schedule signature, returning
+structured line/column diagnostics and gofmt output. Compiler validation uses a
+temporary directory, removes it afterward, and never saves, registers or executes
+an algorithm. Positions account for an implicit package declaration when users
+paste only a function. The desktop checks syntax after an editing pause; explicit
+type checks compile against the same contract used by installed plugins.

@@ -79,3 +79,23 @@ func (h *Handler) SaveSchedulerPlugin(w http.ResponseWriter, r *http.Request) {
 	}
 	writeJSON(w, status, saved)
 }
+
+func (h *Handler) ValidateSchedulerSource(w http.ResponseWriter, r *http.Request) {
+	if h.readOnly {
+		writeError(w, http.StatusForbidden, fmt.Errorf("instance is read-only"))
+		return
+	}
+	var request struct {
+		Source  string `json:"source"`
+		Compile bool   `json:"compile"`
+	}
+	if !decode(w, r, &request) {
+		return
+	}
+	result, err := library.Validate(r.Context(), request.Source, request.Compile)
+	if err != nil {
+		writeError(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+	writeJSON(w, http.StatusOK, result)
+}

@@ -26,6 +26,7 @@ type Workflow struct {
 type Activity struct {
  ID string ` + "`json:\"id\"`" + `
  Name string ` + "`json:\"name\"`" + `
+ ActivityTypeID string
  Resources Requirements ` + "`json:\"resources\"`" + `
  Simulation *Simulation ` + "`json:\"simulation\"`" + `
  Metadata map[string]any ` + "`json:\"metadata\"`" + `
@@ -33,9 +34,9 @@ type Activity struct {
 type Requirements struct { CPU float64; MemoryBytes int64; StorageBytes int64 }
 type Simulation struct { Model string; DurationSeconds float64; FLOPs float64; Parameters map[string]any }
 type Dependency struct { ActivityID string; DependsOnActivityID string }
-type Scope struct { ID string }
+type Scope struct { ID string; EnvironmentVersionIDs []string }
 type Resource struct {
- ID string; Name string; Type string; ProviderID string; Tier string; Region string; CPUCores int; CPUCapacity float64; MemoryBytes int64; StorageBytes int64
+ ID string; Name string; EnvironmentVersionID string; ExecutionTarget string; BootOverheadSeconds float64; ContainerOverheadSeconds float64; Type string; ProviderID string; Tier string; Region string; CPUCores int; CPUCapacity float64; MemoryBytes int64; StorageBytes int64
  Metadata map[string]any
  ComputeSpeedup float64; PricePerSecond float64; Schedulable bool
 }

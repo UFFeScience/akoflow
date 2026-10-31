@@ -19,6 +19,7 @@ import (
 )
 
 type Package struct {
+	Defaults       map[string]any    `json:"defaults,omitempty"`
 	SchemaVersion  string            `json:"schemaVersion"`
 	ID             string            `json:"id"`
 	Name           string            `json:"name"`
@@ -106,7 +107,7 @@ func New(ctx context.Context, db *sql.DB, registry *algorithms.Registry, root st
 	return s, nil
 }
 func descriptor(p Package) ports.SchedulerDescriptor {
-	return ports.SchedulerDescriptor{ID: p.ID, Name: p.Name, Description: p.Description, Objective: p.Objective, Multiple: p.Multiple, Origin: "plugin"}
+	return ports.SchedulerDescriptor{ID: p.ID, Name: p.Name, Description: p.Description, Objective: p.Objective, Multiple: p.Multiple, Defaults: p.Defaults, Origin: "plugin"}
 }
 func native(id string) bool { return id == "heft" || id == "prism-time" || id == "prism-cost" }
 func (s *Service) List(ctx context.Context) ([]Package, error) {
@@ -179,8 +180,8 @@ func (s *Service) Save(ctx context.Context, p Package) (*Package, error) {
 	if !identifier.MatchString(p.ID) || p.Name == "" || len(p.Source) == 0 || len(p.Source) > 512*1024 {
 		return nil, fmt.Errorf("id, name and Go source (up to 512 KiB) are required")
 	}
-	if p.Objective != "time" && p.Objective != "cost" {
-		return nil, fmt.Errorf("objective must be time or cost")
+	if p.Objective != "time" && p.Objective != "cost" && p.Objective != "pareto" {
+		return nil, fmt.Errorf("objective must be time, cost or pareto")
 	}
 	old, err := s.Get(ctx, p.ID)
 	if err != nil && err != sql.ErrNoRows {

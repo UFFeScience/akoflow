@@ -38,6 +38,7 @@ import (
 	"github.com/UFFeScience/akoflow/internal/infrastructure/credentials/sshkey"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/credentials/token"
 	planningalgorithms "github.com/UFFeScience/akoflow/internal/planning/algorithms"
+	"github.com/UFFeScience/akoflow/internal/planning/library"
 	"github.com/google/uuid"
 	"gopkg.in/yaml.v3"
 )
@@ -168,6 +169,7 @@ type Dependencies struct {
 }
 
 type Handler struct {
+	algorithmLibrary    *library.Service
 	environments        ports.EnvironmentCatalog
 	workflows           ports.WorkflowStore
 	plans               ports.PlanStore

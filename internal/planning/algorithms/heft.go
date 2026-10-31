@@ -30,7 +30,7 @@ type heftPlacement struct {
 }
 
 func (HEFT) Descriptor() ports.SchedulerDescriptor {
-	return ports.SchedulerDescriptor{ID: "heft", Name: "HEFT", Objective: "time", Multiple: false, Description: "Classic heterogeneous earliest-finish-time baseline."}
+	return ports.SchedulerDescriptor{ID: "heft", Origin: "native", Name: "HEFT", Objective: "time", Multiple: false, Description: "Classic heterogeneous earliest-finish-time baseline."}
 }
 
 func (HEFT) Schedule(ctx context.Context, request domain.PlanningRequest, _ map[string]any, progress ports.ProgressReporter, sink ports.CandidateSink) error {

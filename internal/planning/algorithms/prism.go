@@ -23,7 +23,7 @@ func (p PRISM) Descriptor() ports.SchedulerDescriptor {
 		description = "PRISM-CC options ranked exclusively by predicted cost."
 	}
 	return ports.SchedulerDescriptor{
-		ID: id, Name: name, Objective: p.Objective, Multiple: true,
+		ID: id, Name: name, Origin: "native", Exclusive: true, Objective: p.Objective, Multiple: true,
 		Description: description,
 		Defaults: map[string]any{
 			"beamWidth": 120, "optionCount": 25, "readyBranchLimit": 3,

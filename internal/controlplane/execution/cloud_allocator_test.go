@@ -295,12 +295,14 @@ func TestQueuedCloudAllocatorStopPreservesInstanceAndIsIdempotent(t *testing.T) 
 
 func TestQueuedCloudAllocatorStopAfterIdleInstanceDestruction(t *testing.T) {
 	store := &allocatorStore{instances: map[string]domain.CloudProvisionedInstance{
-		"vm": {ID: "vm", Status: "destroyed"},
+		"vm":       {ID: "vm", Status: "destroyed"},
+		"removing": {ID: "removing", Status: "destroying"},
 	}}
 	queue := &allocatorQueue{store: store}
 	allocator := QueuedCloudAllocator{Cloud: store, Operations: store, Queue: queue}
 	err := allocator.Stop(context.Background(), "run", map[string]domain.RuntimeAllocation{
 		"activity": {CloudInstanceID: "vm"},
+		"other":    {CloudInstanceID: "removing"},
 	})
 	if err != nil || len(queue.jobs) != 0 {
 		t.Fatalf("already destroyed instance must need no stop: err=%v jobs=%v", err, queue.jobs)

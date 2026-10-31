@@ -221,6 +221,21 @@ func main() {
 	workspaceRoot := flag.String("workspace-root", "", "verified shared HPC workspace root; quota remains checked")
 	supplement := flag.String("transfer-profiles", "", "JSON array of evidenced missing transfer routes; existing profiles remain unchanged")
 	flag.Parse()
+	if *action == "run-all" {
+		if *mode != "real" {
+			fmt.Fprintln(os.Stderr, "run-all requires explicit --mode real")
+			os.Exit(1)
+		}
+		for _, caseName := range []string{"hpc", "micro", "medium"} {
+			err := campaign("run", *base, *output, caseName, *mode, *attempt, *campaignID, *acceptQuotaEstimate)
+			_ = comparison(*base, *output, *campaignID)
+			if err != nil {
+				fmt.Fprintln(os.Stderr, err)
+				os.Exit(1)
+			}
+		}
+		return
+	}
 	if *action == "report" {
 		if e := comparison(*base, *output, *campaignID); e != nil {
 			fmt.Fprintln(os.Stderr, e)

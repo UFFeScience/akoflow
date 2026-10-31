@@ -21,6 +21,11 @@ planning. Connection checks must succeed before registration. This tool never
 resets the database, changes gcloud's active account, embeds credentials, or
 registers connection secret values in environment definitions.
 
+After all three simulations are complete, `--action run-all --mode real` executes
+the real cases sequentially and refreshes the comparison after each case. It can
+monitor an already submitted first case. It stops on failure and does not start
+the next case or silently recover failed activities.
+
 The cases use Diablo03 with 64 lanes; Diablo03 with one lane plus ten e2-micro
 workers with one lane each; and Diablo03 with one lane plus two e2-medium workers
 with two lanes each. Logical resources and runtimes are isolated by case; the

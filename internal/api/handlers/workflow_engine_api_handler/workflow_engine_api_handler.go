@@ -1947,6 +1947,11 @@ func (h *Handler) CreateCloudCapacityTarget(w http.ResponseWriter, r *http.Reque
 		return
 	}
 	value.Enabled = true
+	capacity, capacityErr := targetSchedulingCapacity(value)
+	if capacityErr != nil {
+		writeError(w, http.StatusUnprocessableEntity, capacityErr)
+		return
+	}
 	if err := h.cloud.CreateCapacityTarget(r.Context(), value); err != nil {
 		writeError(w, http.StatusUnprocessableEntity, err)
 		return
@@ -1972,7 +1977,7 @@ func (h *Handler) CreateCloudCapacityTarget(w http.ResponseWriter, r *http.Reque
 		ExecutionTarget: domain.ExecutionTargetProvisioned, Type: domain.ResourceCloudVM,
 		Name: value.Name, ProviderID: value.ID, Tier: "cloud",
 		Region: value.Region, Zone: value.FixedZone, Architecture: value.Architecture,
-		CPUCores: value.VCPU, CPUCapacity: float64(value.VCPU),
+		CPUCores: value.VCPU, CPUCapacity: capacity,
 		MemoryBytes:    value.MemoryMiB << 20,
 		StorageBytes:   configurationInt64(value.Configuration, "diskSizeGiB") << 30,
 		ComputeSpeedup: 1,

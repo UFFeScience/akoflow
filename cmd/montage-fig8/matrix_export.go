@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"time"
 )
 
 // Export raw seconds and explicit cost bases; forecast cost functions are not
@@ -17,7 +18,14 @@ func exportMatrix(root string, records []obj) error {
 	}
 	defer file.Close()
 	w := csv.NewWriter(file)
-	header := []string{"environment", "algorithm", "objective", "plan_id", "simulation_run_id", "real_run_id", "shared_real_observation", "physical_signature", "planned_makespan_seconds", "simulated_makespan_seconds", "real_makespan_seconds", "planned_cost_usd", "planned_cost_basis", "simulation_cost_usd", "real_run_cost_usd", "cloud_lifecycle_estimated_cost_usd", "cloud_lifecycle_cost_status", "completed_activities"}
+	header := []string{
+		"environment", "algorithm", "objective", "plan_id", "simulation_run_id", "real_run_id",
+		"shared_real_observation", "physical_signature", "planned_makespan_seconds",
+		"simulated_makespan_seconds", "real_makespan_seconds", "planned_cost_usd",
+		"planned_cost_basis", "simulation_cost_usd", "real_run_cost_usd",
+		"cloud_lifecycle_estimated_cost_usd", "cloud_lifecycle_cost_status", "completed_activities",
+		"algorithm_version", "real_wall_seconds",
+	}
 	if err = w.Write(header); err != nil {
 		return err
 	}
@@ -37,11 +45,38 @@ func exportMatrix(root string, records []obj) error {
 		if record["algorithm"] == "moheft" {
 			basis = "original-task-additive"
 		}
-		row := []string{fmt.Sprint(record["environment"]), fmt.Sprint(record["algorithm"]), fmt.Sprint(record["objective"]), fmt.Sprint(plan["id"]), fmt.Sprint(simulation["id"]), fmt.Sprint(record["realRunId"]), fmt.Sprint(record["sharedObservation"]), fmt.Sprint(record["physicalSignature"]), num(prediction["makespanSeconds"]), num(simulation["makespanSeconds"]), num(real["makespanSeconds"]), num(prediction["cost"]), basis, num(simulation["cost"]), num(real["cost"]), num(billing["estimatedCost"]), fmt.Sprint(billing["status"]), num(real["completedActivityCount"])}
+		wall, err := realWallSeconds(real)
+		if err != nil {
+			return err
+		}
+		row := []string{
+			fmt.Sprint(record["environment"]), fmt.Sprint(record["algorithm"]), fmt.Sprint(record["objective"]),
+			fmt.Sprint(plan["id"]), fmt.Sprint(simulation["id"]), fmt.Sprint(record["realRunId"]),
+			fmt.Sprint(record["sharedObservation"]), fmt.Sprint(record["physicalSignature"]),
+			num(prediction["makespanSeconds"]), num(simulation["makespanSeconds"]), num(real["makespanSeconds"]),
+			num(prediction["cost"]), basis, num(simulation["cost"]), num(real["cost"]),
+			num(billing["estimatedCost"]), fmt.Sprint(billing["status"]), num(real["completedActivityCount"]),
+			fmt.Sprint(plan["algorithmVersion"]), num(wall),
+		}
 		if err = w.Write(row); err != nil {
 			return err
 		}
 	}
 	w.Flush()
 	return w.Error()
+}
+
+func realWallSeconds(run obj) (float64, error) {
+	start, err := time.Parse(time.RFC3339Nano, fmt.Sprint(run["startedAt"]))
+	if err != nil {
+		return 0, fmt.Errorf("real start timestamp: %w", err)
+	}
+	finish, err := time.Parse(time.RFC3339Nano, fmt.Sprint(run["finishedAt"]))
+	if err != nil {
+		return 0, fmt.Errorf("real finish timestamp: %w", err)
+	}
+	if finish.Before(start) {
+		return 0, fmt.Errorf("real finish precedes start")
+	}
+	return finish.Sub(start).Seconds(), nil
 }

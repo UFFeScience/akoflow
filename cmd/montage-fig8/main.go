@@ -208,7 +208,7 @@ func build(source ports.ExecutionRequest, hpc, cloud domain.EnvironmentDefinitio
 	return env, request, result
 }
 func main() {
-	action := flag.String("action", "prepare", "prepare, plan, run, run-all, matrix, signature or report")
+	action := flag.String("action", "prepare", "prepare, plan, run, run-all, matrix, matrix-export, signature or report")
 	base := flag.String("api", "http://127.0.0.1:5173/akoflow-api", "daemon API")
 	kind := flag.String("case", "hpc", "hpc, micro or medium")
 	mode := flag.String("mode", "", "simulation or real; required for run")
@@ -223,6 +223,12 @@ func main() {
 	workspaceRoot := flag.String("workspace-root", "", "verified shared HPC workspace root; quota remains checked")
 	supplement := flag.String("transfer-profiles", "", "JSON array of evidenced missing transfer routes; existing profiles remain unchanged")
 	flag.Parse()
+	if *action == "matrix-export" {
+		var records []obj
+		read(filepath.Join(*output, "matrix-results.json"), &records)
+		must(exportMatrix(*output, records))
+		return
+	}
 	if *action == "matrix" {
 		if *mode != "real" {
 			panic("matrix requires explicit --mode real")

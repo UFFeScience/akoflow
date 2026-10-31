@@ -161,3 +161,39 @@ go run experiments/prism-medium-diagnostic-20261031/phases.go
 
 Saídas: `phase-ledger.json` e `phase-ledger.log` em
 `outputs/prism-medium-investigation-20261031/`. O script não inicia execuções.
+
+## Correção posterior: ordem do plano obrigatória
+
+Após confirmação do contrato pelo usuário, a ordem por recurso/núcleo/slot
+passou a ser obrigatória no executor real e interativo. Uma atividade só
+é admitida depois de concluídas suas dependências de dados e sua
+predecessora na sequência planejada. Sequências distintas continuam
+independentes, sujeitas às capacidades do recurso.
+
+A construção dessas precedências agora é compartilhada entre executor,
+SimGrid e avaliador PRISM (`internal/domain/planning/lanes.go`). A ordem
+não representa fixação física de um núcleo do sistema operacional nem
+promessa de começar no segundo previsto. Ela preserva a sequência causal
+do plano quando as durações reais variam. Empates legados em
+OrderOnResource mantêm a ordem persistida dos assignments.
+
+Planos que criam ciclos entre sequência por núcleo e dependências do
+workflow são rejeitados antes da criação do run ou uso de infraestrutura.
+As precedências de sequência não se tornam relações de propriedade de
+artefatos nem exigências de arquivos na recuperação.
+
+Os testes antigos que exigiam ultrapassar tarefas bloqueadas foram
+substituídos por verificações de conclusão da predecessora antes do início
+da sucessora. Os testes de partida paralela usam sequências explicitamente
+distintas. Foram aprovados testes completos de planejamento de domínio,
+executor, provider SimGrid e algoritmos, além de `go test -race` no
+executor e domínio de planejamento. O replay congelado manteve exatamente
+3003.8829210098506 s como previsão.
+
+Isso corrige o contrato para novas execuções com o binário atualizado.
+Os 5256.823834 s antigos continuam sendo uma observação do executor
+anterior, que não impunha essa ordem. Não podem ser reinterpretados como
+validação da execução estrita do PRISM. Nenhum resultado físico foi
+substituído, nenhuma infraestrutura foi criada e o daemon não foi
+reiniciado nesta correção. A precisão de transferências e computação
+continua sendo uma questão distinta a validar.

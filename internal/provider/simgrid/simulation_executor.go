@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 	"math"
-	"sort"
 
 	"github.com/UFFeScience/akoflow/internal/domain"
+	domainplanning "github.com/UFFeScience/akoflow/internal/domain/planning"
 	domainworkflow "github.com/UFFeScience/akoflow/internal/domain/workflow"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/plugins/planning"
 )
@@ -92,17 +92,7 @@ func indexRequest(request Request) indexedRequest {
 		key := dependency.ProducerActivityID + "\x00" + dependency.ConsumerActivityID
 		model.dataBytes[key] += dependency.SizeBytes
 	}
-	byLane := make(map[string][]domain.PlanAssignment)
-	for _, assignment := range request.Plan.Assignments {
-		lane := assignment.ResourceID + "\x00" + assignment.CoreID + "\x00" + assignment.SlotID
-		byLane[lane] = append(byLane[lane], assignment)
-	}
-	for _, lane := range byLane {
-		sort.Slice(lane, func(i, j int) bool { return lane[i].OrderOnResource < lane[j].OrderOnResource })
-		for i := 1; i < len(lane); i++ {
-			model.lanePrevious[lane[i].ActivityID] = lane[i-1].ActivityID
-		}
-	}
+	model.lanePrevious = domainplanning.LanePredecessors(request.Plan.Assignments)
 	return model
 }
 

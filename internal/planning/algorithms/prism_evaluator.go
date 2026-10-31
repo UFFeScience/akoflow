@@ -8,11 +8,11 @@ import (
 	"fmt"
 	"math"
 	"runtime"
-	"sort"
 	"sync"
 
 	"github.com/UFFeScience/akoflow/internal/domain"
 	"github.com/UFFeScience/akoflow/internal/domain/materializationmodel"
+	domainplanning "github.com/UFFeScience/akoflow/internal/domain/planning"
 	"github.com/UFFeScience/akoflow/internal/domain/storagebudget"
 	domainworkflow "github.com/UFFeScience/akoflow/internal/domain/workflow"
 )
@@ -814,20 +814,16 @@ func initializePRISMLanes(tasks []prismEvaluationTask) []int {
 		laneSuccessor[index] = -1
 		tasks[index].laneReady = true
 	}
-	byLane := make(map[string][]int)
+	assignments := make([]domain.PlanAssignment, len(tasks))
+	byID := make(map[string]int, len(tasks))
 	for ordinal, task := range tasks {
-		lane := task.assignment.ResourceID + "\x00" + task.assignment.CoreID + "\x00" + task.assignment.SlotID
-		byLane[lane] = append(byLane[lane], ordinal)
+		assignments[ordinal] = task.assignment
+		byID[task.assignment.ActivityID] = ordinal
 	}
-	for _, lane := range byLane {
-		sort.Slice(lane, func(left, right int) bool {
-			return tasks[lane[left]].assignment.OrderOnResource <
-				tasks[lane[right]].assignment.OrderOnResource
-		})
-		for index := 1; index < len(lane); index++ {
-			tasks[lane[index]].laneReady = false
-			laneSuccessor[lane[index-1]] = lane[index]
-		}
+	for successor, predecessor := range domainplanning.LanePredecessors(assignments) {
+		index, previous := byID[successor], byID[predecessor]
+		tasks[index].laneReady = false
+		laneSuccessor[previous] = index
 	}
 	return laneSuccessor
 }

@@ -16,6 +16,7 @@ import (
 
 	"github.com/UFFeScience/akoflow/internal/application/ports"
 	"github.com/UFFeScience/akoflow/internal/domain"
+	domainplanning "github.com/UFFeScience/akoflow/internal/domain/planning"
 )
 
 const (
@@ -278,6 +279,10 @@ func (s *Supervisor) executeActivities(ctx context.Context, request ports.Execut
 		if err := s.restoreActivityAttempts(ctx, request, activities, predecessors, completed, tasks, attempts); err != nil {
 			return domain.ExecutionTrace{}, err
 		}
+	}
+	// Lane barriers govern dispatch, not artifact ownership or recovery inputs.
+	for successor, predecessor := range domainplanning.LanePredecessors(request.Plan.Assignments) {
+		predecessors[successor] = append(predecessors[successor], predecessor)
 	}
 	transfers := make([]domain.DataTransfer, 0)
 	allocationResults := make(chan allocationResult, len(activities))
@@ -1481,6 +1486,9 @@ func validateRequest(request ports.ExecutionRequest) error {
 	}
 	if len(request.Plan.Assignments) != len(request.Workflow.Activities) {
 		return fmt.Errorf("plan must assign every activity exactly once")
+	}
+	if err := validatePlannedPrecedence(request); err != nil {
+		return err
 	}
 	resources := indexResources(request.Resources)
 	lanes := make(map[string]map[string]bool)

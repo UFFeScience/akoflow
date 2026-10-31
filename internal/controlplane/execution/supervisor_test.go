@@ -552,11 +552,11 @@ func TestInspectRunningPersistsFailureAndCancelsPeers(t *testing.T) {
 	}
 }
 
-func TestSupervisorStartsIndependentActivitiesDespitePlanOrder(t *testing.T) {
+func TestSupervisorWaitsForCompletionInPlannedLane(t *testing.T) {
 	request := requestFixture(domain.ExecutionModeReal)
 	request.Workflow.Dependencies = nil
 	request.Plan.Assignments[1].OrderOnResource = 1
-	controller := &activityControllerFake{}
+	controller := &plannedCompletionController{required: map[string]string{"b": "a"}}
 	store := &executionStoreFake{}
 	service, err := New(store, controller, &planExecutorFake{}, Config{PollInterval: time.Microsecond})
 	if err != nil {
@@ -572,14 +572,9 @@ func TestSupervisorStartsIndependentActivitiesDespitePlanOrder(t *testing.T) {
 	if len(controller.started) != 2 || !started["a"] || !started["b"] {
 		t.Fatalf("start order=%v", controller.started)
 	}
-	for _, task := range store.tasks {
-		if task.ActivityID == "b" && task.Metadata["queueReason"] == "waiting for previous activity in planned lane" {
-			t.Fatal("plan order must not become a dependency")
-		}
-	}
 }
 
-func TestSupervisorStartsReadyActivityAheadOfBlockedPlanOrder(t *testing.T) {
+func TestSupervisorWaitsBehindBlockedPlanOrder(t *testing.T) {
 	request := requestFixture(domain.ExecutionModeReal)
 	producer := request.Workflow.Activities[0]
 	producer.ID, producer.Name = "c", "c"
@@ -595,7 +590,7 @@ func TestSupervisorStartsReadyActivityAheadOfBlockedPlanOrder(t *testing.T) {
 	request.RuntimeBindings = append(request.RuntimeBindings, domain.ResourceRuntimeBinding{
 		ResourceID: "other", RuntimeID: "local", Enabled: true,
 	})
-	controller := &dependencyCompletionController{}
+	controller := &plannedCompletionController{required: map[string]string{"a": "c", "b": "a"}}
 	service, err := New(&executionStoreFake{}, controller, &planExecutorFake{}, Config{
 		PollInterval: time.Microsecond,
 	})

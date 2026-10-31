@@ -25,6 +25,9 @@ After all three simulations are complete, `--action run-all --mode real` execute
 the real cases sequentially and refreshes the comparison after each case. It can
 monitor an already submitted first case. It stops on failure and does not start
 the next case or silently recover failed activities.
+For a worker inside the daemon container, use `--api
+http://127.0.0.1:8080/akoflow-api`; authentication reads `AKOFLOW_API_TOKEN` from
+the server environment without embedding it in commands or output files.
 
 The cases use Diablo03 with 64 lanes; Diablo03 with one lane plus ten e2-micro
 workers with one lane each; and Diablo03 with one lane plus two e2-medium workers

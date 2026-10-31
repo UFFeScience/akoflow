@@ -28,6 +28,9 @@ func (c apiClient) call(method, path string, v any, out any) error {
 		return e
 	}
 	req.Header.Set("Content-Type", "application/json")
+	if token := os.Getenv("AKOFLOW_API_TOKEN"); token != "" {
+		req.Header.Set("Authorization", "Bearer "+token)
+	}
 	res, e := (&http.Client{Timeout: 120 * time.Second}).Do(req)
 	if e != nil {
 		return e
@@ -46,7 +49,14 @@ func (c apiClient) call(method, path string, v any, out any) error {
 	return nil
 }
 func (c apiClient) exists(path string) bool {
-	r, e := http.Get(c.base + path)
+	req, e := http.NewRequest("GET", c.base+path, nil)
+	if e != nil {
+		return false
+	}
+	if token := os.Getenv("AKOFLOW_API_TOKEN"); token != "" {
+		req.Header.Set("Authorization", "Bearer "+token)
+	}
+	r, e := (&http.Client{Timeout: 120 * time.Second}).Do(req)
 	if e != nil {
 		return false
 	}

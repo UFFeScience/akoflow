@@ -14,11 +14,15 @@ func TestRealExecutionRequiresSimulationAndNoActivePhysicalPeer(t *testing.T) {
 		simulation, active, allowed bool
 	}{{"ready", true, false, true}, {"shared node busy", true, true, false}, {"simulation missing", false, false, false}} {
 		t.Run(tc.name, func(t *testing.T) {
+			t.Setenv("AKOFLOW_API_TOKEN", "test-only-token")
 			dir := t.TempDir()
 			save(filepath.Join(dir, "hpc-request.json"), obj{"Resources": []obj{{"type": "hpc_machine", "metadata": obj{}}}})
 			save(filepath.Join(dir, "hpc-plan.json"), obj{"id": "frozen-plan"})
 			posted := false
 			server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				if r.Header.Get("Authorization") != "Bearer test-only-token" {
+					t.Error("missing daemon authorization")
+				}
 				w.Header().Set("Content-Type", "application/json")
 				switch {
 				case r.Method == "GET" && r.URL.Path == "/execution-runs/":

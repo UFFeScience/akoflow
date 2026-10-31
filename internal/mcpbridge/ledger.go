@@ -86,6 +86,17 @@ func (l *ledger) begin(id, fingerprint string) (*mcp.CallToolResult, error) {
 	if err = json.Unmarshal(raw, &previous); err != nil {
 		return nil, errors.New("invalid saved request receipt")
 	}
+	var wire struct {
+		StructuredContent json.RawMessage `json:"structuredContent"`
+	}
+	if err = json.Unmarshal(raw, &wire); err != nil {
+		return nil, err
+	}
+	if len(wire.StructuredContent) > 0 {
+		if err = decodeNumberJSON(wire.StructuredContent, &previous.StructuredContent); err != nil {
+			return nil, err
+		}
+	}
 	return &previous, nil
 }
 

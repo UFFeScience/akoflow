@@ -52,7 +52,7 @@ func (b *Bridge) response(ctx context.Context, response *http.Response, tool str
 			return failure("could not read response")
 		}
 		var value any
-		if !isJSON || json.Unmarshal(data, &value) != nil {
+		if !isJSON || decodeNumberJSON(data, &value) != nil {
 			value = string(data)
 		}
 		return output(map[string]any{"status": response.StatusCode, "data": value, "truncated": false}, response.StatusCode >= 300)
@@ -190,4 +190,10 @@ func keepLineEnding(data []byte, atEOF bool) (int, []byte, error) {
 		return len(data), data, nil
 	}
 	return 0, nil, nil
+}
+
+func decodeNumberJSON(data []byte, value any) error {
+	decoder := json.NewDecoder(bytes.NewReader(data))
+	decoder.UseNumber()
+	return decoder.Decode(value)
 }

@@ -348,3 +348,26 @@ func TestAdminPreparationRequiresImmutableUpload(t *testing.T) {
 		t.Fatal("sealed upload could not be prepared")
 	}
 }
+
+func TestLargeIntegersSurviveDaemonResponsesAndReceiptReplay(t *testing.T) {
+	const integer = "9007199254740993"
+	bridge := testBridge(t, Write, func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		w.Write([]byte(`{"count":9007199254740993}`))
+	})
+	op := findOperation(t, "create_execution")
+	args := json.RawMessage(`{"requestId":"precise-integer","body":{}}`)
+	for range 2 {
+		result := bridge.call(context.Background(), op, args)
+		if result.IsError {
+			t.Fatal("integer response failed")
+		}
+		data, _ := json.Marshal(result.StructuredContent)
+		if !strings.Contains(string(data), integer) {
+			t.Fatalf("structured integer was rounded: %s", data)
+		}
+		if !strings.Contains(result.Content[0].(*mcp.TextContent).Text, integer) {
+			t.Fatal("text integer was rounded")
+		}
+	}
+}

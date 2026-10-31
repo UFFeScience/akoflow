@@ -112,6 +112,10 @@ func exportMatchedMedium(base, root, prefix string) error {
 	if err := exportMatrix(dir, records); err != nil {
 		return err
 	}
+	allRecords := append(clone(original), records[len(records)-1])
+	if err := exportExecutionCSV(filepath.Join(root, "all-execution-results.csv"), allRecords); err != nil {
+		return err
+	}
 	save(filepath.Join(dir, "matched-engine-audit.json"), obj{"engineAuditPassed": true, "logicalEntries": 4, "sameScientificExecutionInputs": true, "scope": "completed daemon plans/runs/handles, seed, submitted scientific inputs and complete associated VM/disk lifecycle estimates; independent provider and remote-storage cleanup audits remain required"})
 	return nil
 }

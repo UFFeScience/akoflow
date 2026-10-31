@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/csv"
+	"math"
 	"os"
 	"path/filepath"
 	"testing"
@@ -42,6 +43,26 @@ func TestExportPreservesTransferUnitsAndMissingValues(t *testing.T) {
 	} {
 		if fields[field] != expected {
 			t.Fatalf("%s = %q, expected %q", field, fields[field], expected)
+		}
+	}
+}
+
+func TestSimulationErrorUsesObservedDenominatorAndSignedDelta(t *testing.T) {
+	for _, tc := range []struct {
+		simulated, observed  any
+		delta, absoluteError string
+	}{
+		{80., 100., "20", "20"},
+		{120., 100., "-20", "20"},
+		{100., 100., "0", "0"},
+		{nil, 100., "", ""},
+		{100., 0., "", ""},
+		{math.NaN(), 100., "", ""},
+		{100., math.Inf(1), "", ""},
+	} {
+		delta, absoluteError := simulationErrorMetrics(tc.simulated, tc.observed)
+		if delta != tc.delta || absoluteError != tc.absoluteError {
+			t.Fatalf("simulation=%v real=%v: delta=%s error=%s", tc.simulated, tc.observed, delta, absoluteError)
 		}
 	}
 }

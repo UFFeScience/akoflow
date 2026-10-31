@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/csv"
 	"fmt"
+	"math"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -12,7 +13,11 @@ import (
 // Export raw seconds and explicit cost bases; forecast cost functions are not
 // interchangeable with provider-lifecycle estimates or invoices.
 func exportMatrix(root string, records []obj) error {
-	file, err := os.Create(filepath.Join(root, "matrix-results.csv"))
+	return exportExecutionCSV(filepath.Join(root, "matrix-results.csv"), records)
+}
+
+func exportExecutionCSV(path string, records []obj) error {
+	file, err := os.Create(path)
 	if err != nil {
 		return err
 	}
@@ -27,6 +32,7 @@ func exportMatrix(root string, records []obj) error {
 		"algorithm_version", "real_wall_seconds",
 		"simulation_transferred_bytes", "real_transferred_bytes",
 		"simulation_transfer_work_seconds", "real_transfer_work_seconds",
+		"real_minus_simulated_seconds", "simulation_absolute_error_percent",
 	}
 	if err = w.Write(header); err != nil {
 		return err
@@ -56,6 +62,7 @@ func exportMatrix(root string, records []obj) error {
 		if err != nil {
 			return err
 		}
+		delta, absoluteError := simulationErrorMetrics(simulation["makespanSeconds"], real["makespanSeconds"])
 		row := []string{
 			fmt.Sprint(record["environment"]), fmt.Sprint(record["algorithm"]), fmt.Sprint(record["objective"]),
 			fmt.Sprint(plan["id"]), fmt.Sprint(simulation["id"]), fmt.Sprint(record["realRunId"]),
@@ -66,6 +73,7 @@ func exportMatrix(root string, records []obj) error {
 			fmt.Sprint(plan["algorithmVersion"]), num(wall),
 			num(simulation["transferredBytes"]), num(real["transferredBytes"]),
 			num(simBreakdown["transferSeconds"]), num(realBreakdown["transferSeconds"]),
+			delta, absoluteError,
 		}
 		if err = w.Write(row); err != nil {
 			return err
@@ -73,6 +81,18 @@ func exportMatrix(root string, records []obj) error {
 	}
 	w.Flush()
 	return w.Error()
+}
+
+// The observed real makespan is the denominator. A positive delta means that
+// simulation underestimated the deployment; missing/invalid inputs stay blank.
+func simulationErrorMetrics(simulated, observed any) (string, string) {
+	sim, simOK := simulated.(float64)
+	real, realOK := observed.(float64)
+	if !simOK || !realOK || sim <= 0 || real <= 0 || math.IsNaN(sim) || math.IsNaN(real) || math.IsInf(sim, 0) || math.IsInf(real, 0) {
+		return "", ""
+	}
+	delta := real - sim
+	return strconv.FormatFloat(delta, 'g', -1, 64), strconv.FormatFloat(100*math.Abs(delta)/real, 'g', -1, 64)
 }
 
 func realWallSeconds(run obj) (float64, error) {

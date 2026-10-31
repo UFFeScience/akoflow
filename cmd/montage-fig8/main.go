@@ -208,7 +208,7 @@ func build(source ports.ExecutionRequest, hpc, cloud domain.EnvironmentDefinitio
 	return env, request, result
 }
 func main() {
-	action := flag.String("action", "prepare", "prepare, plan, run, run-observed, run-all, matrix, matrix-export, matrix-audit, signature or report")
+	action := flag.String("action", "prepare", "prepare, plan, run, run-observed, run-all, matrix, matrix-export, matrix-audit, matched-medium-export, execution-table-export, signature or report")
 	base := flag.String("api", "http://127.0.0.1:5173/akoflow-api", "daemon API")
 	kind := flag.String("case", "hpc", "hpc, micro or medium")
 	mode := flag.String("mode", "", "simulation or real; required for run")
@@ -223,7 +223,12 @@ func main() {
 	ip := flag.String("ssh-ip", "", "current daemon public IPv4 address")
 	workspaceRoot := flag.String("workspace-root", "", "verified shared HPC workspace root; quota remains checked")
 	supplement := flag.String("transfer-profiles", "", "JSON array of evidenced missing transfer routes; existing profiles remain unchanged")
+	historicalResults := flag.String("historical-results", "", "historical Real.csv for the separate execution-table cohort")
 	flag.Parse()
+	if *action == "execution-table-export" {
+		must(exportExecutionTable(*output, *historicalResults))
+		return
+	}
 	if *action == "matched-medium-export" {
 		must(exportMatchedMedium(*base, *output, *campaignID))
 		return

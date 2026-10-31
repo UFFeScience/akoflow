@@ -530,3 +530,20 @@ func TestConnectionProberChecksSlurmThroughSSH(t *testing.T) {
 		t.Fatalf("health=%+v command=%s", health, executor.name)
 	}
 }
+
+func TestBatchRootWorkspaceUsesSelectedSharedFilesystem(t *testing.T) {
+	executor := &executorFake{output: []byte("12345\n")}
+	adapter := NewWithConfig(executor, Config{ScriptDirectory: t.TempDir(), SubmitFromStdin: true})
+	execution := domain.ActivityExecutionContext{Run: domain.ExecutionRun{ID: "run"}, Activity: domain.Activity{ID: "root", Command: domain.ActivityCommand{Entrypoint: "true"}}, Resource: domain.Resource{ID: "diablo", Metadata: map[string]any{"homeDirectory": "/beegfs/scientist"}}}
+	handle, e := adapter.Start(context.Background(), execution)
+	if e != nil {
+		t.Fatal(e)
+	}
+	want := "/beegfs/scientist/akoflow-workspaces/run/root"
+	if handle.Metadata["artifactObservationRoot"] != want {
+		t.Fatalf("root=%v", handle.Metadata["artifactObservationRoot"])
+	}
+	if !strings.Contains(string(executor.input), want) {
+		t.Fatalf("batch script does not use selected workspace: %s", executor.input)
+	}
+}

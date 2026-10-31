@@ -55,6 +55,7 @@ LABEL org.opencontainers.image.title="AkôFlow Daemon" \
 ENV AKOFLOW_SERVER_VERSION=${AKOFLOW_VERSION} \
     AKOFLOW_HTTP_ADDRESS=0.0.0.0:8080 \
     AKOFLOW_DATABASE_PATH=/var/lib/akoflow/database.db \
+    AKOFLOW_MCP_STATE_DIRECTORY=/var/lib/akoflow/mcp \
     AKOFLOW_ARTIFACT_STORE_ROOT=/var/lib/akoflow/artifacts \
     AKOFLOW_SIMGRID_WORKSPACE=/var/lib/akoflow/simgrid \
     AKOFLOW_BUILDCTL=buildctl \

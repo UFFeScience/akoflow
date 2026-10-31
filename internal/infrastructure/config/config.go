@@ -8,7 +8,12 @@ import (
 )
 
 type Settings struct {
-	HTTPAddress string
+	MCPEnabled        bool
+	MCPToken          string
+	MCPPermissions    string
+	MCPStateDirectory string
+	MCPAllowedOrigins []string
+	HTTPAddress       string
 	// APIToken is required for non-loopback API listeners. It is deliberately
 	// not generated at startup: an operator must be able to distribute it.
 	APIToken                       string
@@ -57,6 +62,15 @@ func Load() Settings {
 		SimGridReferenceFLOPS:    1e9,
 		ArtifactStoreRoot:        "storage/artifacts",
 		BuildContextMaxBytes:     512 << 20,
+	}
+	settings.MCPEnabled = os.Getenv("AKOFLOW_MCP_ENABLED") == "true"
+	settings.MCPToken = os.Getenv("AKOFLOW_MCP_TOKEN")
+	settings.MCPPermissions = os.Getenv("AKOFLOW_MCP_PERMISSIONS")
+	settings.MCPStateDirectory = os.Getenv("AKOFLOW_MCP_STATE_DIRECTORY")
+	for _, origin := range strings.Split(os.Getenv("AKOFLOW_MCP_ALLOWED_ORIGINS"), ",") {
+		if origin = strings.TrimSpace(origin); origin != "" {
+			settings.MCPAllowedOrigins = append(settings.MCPAllowedOrigins, origin)
+		}
 	}
 	loadBuild(&settings)
 	loadServer(&settings)

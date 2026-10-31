@@ -176,6 +176,7 @@ const sidebars: SidebarsConfig = {
       collapsed: false,
       items: [
         "reference/api-overview",
+        "reference/mcp",
         "reference/environment-yaml",
         "reference/execution-scopes-and-topologies",
         "reference/planning-and-execution-states",

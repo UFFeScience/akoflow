@@ -11,6 +11,17 @@ services:
       # Override both values in .env for any shared or production deployment.
       AKOFLOW_API_TOKEN: ${AKOFLOW_API_TOKEN:-akoflow-development-token}
       AKOFLOW_API_ALLOWED_ORIGINS: ${AKOFLOW_API_ALLOWED_ORIGINS:-http://localhost:5173,http://127.0.0.1:5173}
+
+      AKOFLOW_MCP_ENABLED: ${AKOFLOW_MCP_ENABLED:-false}
+      AKOFLOW_MCP_TOKEN: ${AKOFLOW_MCP_TOKEN:-}
+      AKOFLOW_MCP_PERMISSIONS: ${AKOFLOW_MCP_PERMISSIONS:-read}
+      AKOFLOW_MCP_STATE_DIRECTORY: ${AKOFLOW_MCP_STATE_DIRECTORY:-/var/lib/akoflow/mcp}
+      AKOFLOW_MCP_ALLOWED_ORIGINS: ${AKOFLOW_MCP_ALLOWED_ORIGINS:-}
+      AKOFLOW_MCP_PUBLIC_URL: ${AKOFLOW_MCP_PUBLIC_URL:-}
+      AKOFLOW_MCP_OAUTH_ISSUER: ${AKOFLOW_MCP_OAUTH_ISSUER:-}
+      AKOFLOW_MCP_OAUTH_INTROSPECTION_URL: ${AKOFLOW_MCP_OAUTH_INTROSPECTION_URL:-}
+      AKOFLOW_MCP_OAUTH_CLIENT_ID: ${AKOFLOW_MCP_OAUTH_CLIENT_ID:-}
+      AKOFLOW_MCP_OAUTH_CLIENT_SECRET: ${AKOFLOW_MCP_OAUTH_CLIENT_SECRET:-}
       AKOFLOW_ARTIFACT_STORE_ROOT: /var/lib/akoflow/artifacts
       AKOFLOW_LOCAL_WORKSPACE_ROOT: /akoflow/workspace
       AKOFLOW_LOCAL_WORKSPACE_VOLUME: akoflow-workspaces
@@ -21,10 +32,10 @@ services:
       # guarantees as a native Linux filesystem. DELETE keeps the development
       # catalog durable while large workflow definitions are imported.
       AKOFLOW_SQLITE_JOURNAL_MODE: ${AKOFLOW_SQLITE_JOURNAL_MODE:-DELETE}
-      AKOFLOW_RESTART_ON_INSTANCE_SWITCH: 'true'
+      AKOFLOW_RESTART_ON_INSTANCE_SWITCH: "true"
       # Development uses one canonical bootstrap instead of accumulating
       # migrations. A schema change recreates the local catalog from scratch.
-      AKOFLOW_RECREATE_DATABASE_ON_SCHEMA_CHANGE: 'true'
+      AKOFLOW_RECREATE_DATABASE_ON_SCHEMA_CHANGE: "true"
       AKOFLOW_KIND_TOKEN: ${AKOFLOW_KIND_TOKEN:-}
       # Interactive terminals are enabled only for the local control-plane
       # deployment. The runner still uses each environment's SSH credentials
@@ -36,6 +47,7 @@ services:
       - go-module-cache:/go/pkg/mod
       - go-build-cache:/root/.cache/go-build
       - artifact-store:/var/lib/akoflow/artifacts
+      - mcp-state:/var/lib/akoflow/mcp
       - local-workspaces:/akoflow/workspace
       # Plans, preparation state and execution history need to survive a
       # release container recreation. This starts as a clean database volume.
@@ -66,6 +78,7 @@ services:
       - artifact-store:/var/lib/akoflow/artifacts
     privileged: true
 volumes:
+  mcp-state:
   local-workspaces:
     name: akoflow-workspaces
   artifact-store:

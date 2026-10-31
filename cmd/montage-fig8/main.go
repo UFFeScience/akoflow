@@ -212,6 +212,8 @@ func main() {
 	base := flag.String("api", "http://127.0.0.1:5173/akoflow-api", "daemon API")
 	kind := flag.String("case", "hpc", "hpc, micro or medium")
 	mode := flag.String("mode", "", "simulation or real; required for run")
+	algorithm := flag.String("algorithm", "heft", "heft or moheft")
+	objective := flag.String("objective", "time", "Pareto endpoint: time or cost")
 	attempt := flag.Int("attempt", 1, "explicit fresh execution attempt; never resumes scientific tasks")
 	campaignID := flag.String("campaign-id", "fig8-heft-20261031-home-v1", "unique campaign identifier")
 	acceptQuotaEstimate := flag.Bool("accept-hpc-quota-estimate", false, "explicitly authorized per-run HPC conservative quota override; OS quota remains enforced")
@@ -227,7 +229,7 @@ func main() {
 			os.Exit(1)
 		}
 		for _, caseName := range []string{"hpc", "micro", "medium"} {
-			err := campaign("run", *base, *output, caseName, *mode, *attempt, *campaignID, *acceptQuotaEstimate)
+			err := campaign("run", *base, *output, caseName, *mode, *attempt, *campaignID, *acceptQuotaEstimate, *algorithm, *objective)
 			_ = comparison(*base, *output, *campaignID)
 			if err != nil {
 				fmt.Fprintln(os.Stderr, err)
@@ -244,7 +246,7 @@ func main() {
 		return
 	}
 	if *action != "prepare" {
-		if e := campaign(*action, *base, *output, *kind, *mode, *attempt, *campaignID, *acceptQuotaEstimate); e != nil {
+		if e := campaign(*action, *base, *output, *kind, *mode, *attempt, *campaignID, *acceptQuotaEstimate, *algorithm, *objective); e != nil {
 			fmt.Fprintln(os.Stderr, e)
 			os.Exit(1)
 		}

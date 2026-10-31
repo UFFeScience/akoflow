@@ -58,10 +58,31 @@ func TestRealExecutionRequiresSimulationAndNoActivePhysicalPeer(t *testing.T) {
 				}
 			}))
 			defer server.Close()
-			e := campaign("run", server.URL, dir, "hpc", "real", 1, "test", true)
+			e := campaign("run", server.URL, dir, "hpc", "real", 1, "test", true, "heft", "time")
 			if (e == nil) != tc.allowed || posted != tc.allowed {
 				t.Fatalf("err=%v posted=%v allowed=%v", e, posted, tc.allowed)
 			}
 		})
+	}
+}
+
+func TestParetoEndpointsAndFrozenCalibration(t *testing.T) {
+	candidates := []obj{{"id": "a", "feasible": true, "predicted": obj{"makespanSeconds": 10., "cost": 2.}}, {"id": "b", "feasible": true, "predicted": obj{"makespanSeconds": 20., "cost": 1.}}}
+	timePlan, e := chooseCandidate(candidates, "moheft", "time")
+	if e != nil || timePlan["id"] != "a" {
+		t.Fatal(timePlan, e)
+	}
+	costPlan, e := chooseCandidate(candidates, "moheft", "cost")
+	if e != nil || costPlan["id"] != "b" {
+		t.Fatal(costPlan, e)
+	}
+	expected := []any{obj{"id": "worker", "cpuCores": 2., "containerOverheadSeconds": 5.48}}
+	actual := []any{obj{"id": "worker", "cpuCores": 2., "containerOverheadSeconds": 0.}}
+	if e := comparePlanningResources(expected, actual); e == nil {
+		t.Fatal("lost calibration accepted")
+	}
+	actual[0].(map[string]any)["containerOverheadSeconds"] = 5.48
+	if e := comparePlanningResources(expected, actual); e != nil {
+		t.Fatal(e)
 	}
 }

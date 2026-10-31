@@ -5,10 +5,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"math"
 	"net/http"
 	"os"
 	"path/filepath"
 	"regexp"
+	"sort"
 	"time"
 )
 
@@ -82,7 +84,13 @@ func (c apiClient) wait(path, field string, limit time.Duration) (obj, error) {
 	}
 	return nil, fmt.Errorf("deadline exceeded: %s; execution may still be running", path)
 }
-func campaign(action, base, dir, kind, mode string, attempt int, campaignID string, acceptQuotaEstimate bool) error {
+func campaign(action, base, dir, kind, mode string, attempt int, campaignID string, acceptQuotaEstimate bool, algorithm, objective string) error {
+	if algorithm != "heft" && algorithm != "moheft" {
+		return fmt.Errorf("algorithm must be heft or moheft")
+	}
+	if objective != "time" && objective != "cost" {
+		return fmt.Errorf("objective must be time or cost")
+	}
 	if kind != "hpc" && kind != "micro" && kind != "medium" {
 		return fmt.Errorf("case must be hpc, micro or medium")
 	}
@@ -94,8 +102,15 @@ func campaign(action, base, dir, kind, mode string, attempt int, campaignID stri
 	var request obj
 	read(filepath.Join(dir, kind+"-request.json"), &request)
 	if action == "plan" {
+		var inventory obj
+		if e := client.call("GET", "/environments/fig8-"+kind+"/", nil, &inventory); e != nil {
+			return e
+		}
+		if e := comparePlanningResources(request["Resources"].([]any), inventory["resources"].([]any)); e != nil {
+			return e
+		}
 		if !client.exists("/planning-sessions/" + session + "/") {
-			if e := client.call("POST", "/planning-sessions/", obj{"id": session, "workflowVersionId": "montage-independent-work-v1-v1", "executionScopeId": "fig8-" + kind + "-scope", "networkTopologyId": "fig8-" + kind + "-network", "algorithms": []obj{{"id": "heft"}}}, nil); e != nil {
+			if e := client.call("POST", "/planning-sessions/", obj{"id": session, "workflowVersionId": "montage-independent-work-v1-v1", "executionScopeId": "fig8-" + kind + "-scope", "networkTopologyId": "fig8-" + kind + "-network", "algorithms": []obj{{"id": algorithm, "configuration": obj{"candidateCount": 25}}}}, nil); e != nil {
 				return e
 			}
 		}
@@ -109,24 +124,16 @@ func campaign(action, base, dir, kind, mode string, attempt int, campaignID stri
 			return e
 		}
 		save(filepath.Join(dir, kind+"-candidates.json"), candidates)
-		var chosen obj
-		for _, candidate := range candidates {
-			if candidate["feasible"] == true {
-				if chosen != nil {
-					return fmt.Errorf("HEFT returned multiple feasible candidates")
-				}
-				chosen = candidate
-			}
-		}
-		if chosen == nil {
-			return fmt.Errorf("HEFT returned no feasible candidate; inspect %s", kind+"-candidates.json")
+		chosen, e := chooseCandidate(candidates, algorithm, objective)
+		if e != nil {
+			return e
 		}
 		var plan obj
 		if e = client.call("POST", "/planning-sessions/"+session+"/candidates/"+chosen["id"].(string)+"/select/", obj{}, &plan); e != nil {
 			return e
 		}
 		save(filepath.Join(dir, kind+"-plan.json"), plan)
-		fmt.Printf("%s HEFT frozen: %v\n", kind, plan["predicted"])
+		fmt.Printf("%s %s/%s frozen: %v\n", kind, algorithm, objective, plan["predicted"])
 		return nil
 	}
 	if action != "run" || mode != "simulation" && mode != "real" {
@@ -191,4 +198,60 @@ func campaign(action, base, dir, kind, mode string, attempt int, campaignID stri
 		fmt.Printf("Completed %s: %v\n", runID, result["run"])
 	}
 	return e
+}
+
+func comparePlanningResources(expected, actual []any) error {
+	byID := map[string]obj{}
+	for _, raw := range actual {
+		r := raw.(map[string]any)
+		byID[r["id"].(string)] = r
+	}
+	for _, raw := range expected {
+		r := raw.(map[string]any)
+		stored, ok := byID[r["id"].(string)]
+		if !ok {
+			return fmt.Errorf("planning inventory lacks %v", r["id"])
+		}
+		for _, field := range []string{"cpuCores", "cpuCapacity", "memoryBytes", "storageBytes", "computeSpeedup", "bootOverheadSeconds", "containerOverheadSeconds", "pricePerSecond"} {
+			a, _ := r[field].(float64)
+			b, _ := stored[field].(float64)
+			if math.Abs(a-b) > 1e-12*math.Max(1, math.Max(math.Abs(a), math.Abs(b))) {
+				return fmt.Errorf("frozen execution/planning inventory mismatch for %v.%s: %v versus %v", r["id"], field, a, b)
+			}
+		}
+	}
+	return nil
+}
+
+func chooseCandidate(candidates []obj, algorithm, objective string) (obj, error) {
+	pool := []obj{}
+	for _, candidate := range candidates {
+		if candidate["feasible"] == true {
+			pool = append(pool, candidate)
+		}
+	}
+	if len(pool) == 0 {
+		return nil, fmt.Errorf("%s returned no feasible candidate", algorithm)
+	}
+	if algorithm == "heft" && len(pool) != 1 {
+		return nil, fmt.Errorf("HEFT returned multiple feasible candidates")
+	}
+	metric, other := "makespanSeconds", "cost"
+	if objective == "cost" {
+		metric, other = other, metric
+	}
+	sort.SliceStable(pool, func(i, j int) bool {
+		p := pool[i]["predicted"].(map[string]any)
+		q := pool[j]["predicted"].(map[string]any)
+		a, b := p[metric].(float64), q[metric].(float64)
+		if a != b {
+			return a < b
+		}
+		a, b = p[other].(float64), q[other].(float64)
+		if a != b {
+			return a < b
+		}
+		return fmt.Sprint(pool[i]["id"]) < fmt.Sprint(pool[j]["id"])
+	})
+	return pool[0], nil
 }

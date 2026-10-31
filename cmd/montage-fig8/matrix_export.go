@@ -49,6 +49,9 @@ func exportMatrix(root string, records []obj) error {
 		if record["algorithm"] == "moheft" {
 			basis = "original-task-additive"
 		}
+		if explicit, ok := record["plannedCostBasis"].(string); ok && explicit != "" {
+			basis = explicit
+		}
 		wall, err := realWallSeconds(real)
 		if err != nil {
 			return err

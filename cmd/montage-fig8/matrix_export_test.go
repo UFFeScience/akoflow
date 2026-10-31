@@ -10,8 +10,9 @@ import (
 func TestExportPreservesTransferUnitsAndMissingValues(t *testing.T) {
 	dir := t.TempDir()
 	record := obj{
-		"plan":       obj{"id": "plan", "predicted": obj{}},
-		"simulation": obj{"transferredBytes": 100., "breakdown": obj{"transferSeconds": 4.5}},
+		"plannedCostBasis": "resource-active-window",
+		"plan":             obj{"id": "plan", "predicted": obj{}},
+		"simulation":       obj{"transferredBytes": 100., "breakdown": obj{"transferSeconds": 4.5}},
 		"real": obj{
 			"startedAt": "2026-10-31T00:00:00Z", "finishedAt": "2026-10-31T00:00:10Z",
 			"transferredBytes": 0., "breakdown": obj{"transferSeconds": 12.5},
@@ -34,6 +35,7 @@ func TestExportPreservesTransferUnitsAndMissingValues(t *testing.T) {
 		fields[name] = rows[1][i]
 	}
 	for field, expected := range map[string]string{
+		"planned_cost_basis":           "resource-active-window",
 		"simulation_transferred_bytes": "100", "real_transferred_bytes": "0",
 		"simulation_transfer_work_seconds": "4.5", "real_transfer_work_seconds": "12.5",
 		"real_wall_seconds": "10", "real_makespan_seconds": "",

@@ -224,6 +224,10 @@ func main() {
 	workspaceRoot := flag.String("workspace-root", "", "verified shared HPC workspace root; quota remains checked")
 	supplement := flag.String("transfer-profiles", "", "JSON array of evidenced missing transfer routes; existing profiles remain unchanged")
 	flag.Parse()
+	if *action == "matched-medium-export" {
+		must(exportMatchedMedium(*base, *output, *campaignID))
+		return
+	}
 	if *action == "run-observed" {
 		if *mode != "real" {
 			panic("run-observed requires explicit --mode real")

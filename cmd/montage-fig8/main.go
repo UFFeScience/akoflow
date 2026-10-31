@@ -223,6 +223,19 @@ func main() {
 	workspaceRoot := flag.String("workspace-root", "", "verified shared HPC workspace root; quota remains checked")
 	supplement := flag.String("transfer-profiles", "", "JSON array of evidenced missing transfer routes; existing profiles remain unchanged")
 	flag.Parse()
+	if *action == "signature" {
+		var request, plan obj
+		read(filepath.Join(*output, *kind+"-request.json"), &request)
+		read(filepath.Join(*output, *kind+"-plan.json"), &plan)
+		signature, e := physicalSignature(request, plan)
+		if e != nil {
+			fmt.Fprintln(os.Stderr, e)
+			os.Exit(1)
+		}
+		save(filepath.Join(*output, *kind+"-signature.json"), obj{"signature": signature, "definition": "complete frozen inputs plus allocation, lane order and timing; excluding scheduler labels and predicted cost"})
+		fmt.Println(signature)
+		return
+	}
 	if *action == "run-all" {
 		if *mode != "real" {
 			fmt.Fprintln(os.Stderr, "run-all requires explicit --mode real")

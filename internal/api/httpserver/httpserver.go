@@ -222,25 +222,16 @@ func Serve(ctx context.Context, address string, workflowEngine *workflow_engine_
 func ServeSecure(ctx context.Context, address string, workflowEngine *workflow_engine_api_handler.Handler, security SecurityOptions) error {
 	var handler http.Handler = AllowCORSFor(SecureAPI(readOnlyAPI(NewMux(workflowEngine), workflowEngine), security), security.AllowedOrigins)
 	settings := config.Load()
-	if settings.MCPEnabled {
-		mcpHandler, closeMCP, err := newMCPHandler(address, security, settings)
-		if err != nil {
-			return err
-		}
-		defer closeMCP()
-		apiHandler := handler
-		handler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			if r.URL.Path == "/mcp" || strings.HasPrefix(r.URL.Path, "/.well-known/oauth-protected-resource") {
-				mcpHandler.ServeHTTP(w, r)
-				return
-			}
-			apiHandler.ServeHTTP(w, r)
-		})
+	handler, closeMCP, err := managedMCPRoutes(handler, address, security, settings)
+	if err != nil {
+		return err
 	}
+	defer closeMCP()
+
 	server := &http.Server{Addr: address, Handler: handler, ReadHeaderTimeout: 10 * time.Second, IdleTimeout: 60 * time.Second}
 	shutdownDone := make(chan struct{})
 	go func() { shutdownWhenCanceled(ctx, server); close(shutdownDone) }()
-	err := server.ListenAndServe()
+	err = server.ListenAndServe()
 	if errors.Is(err, http.ErrServerClosed) {
 		<-shutdownDone
 		return nil

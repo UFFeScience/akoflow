@@ -27,9 +27,11 @@ func physicalSignature(request, plan obj) (string, error) {
 		}
 	}
 	assignments := []obj{}
+	physicalIDs := map[string]string{}
 	items, _ := plan["assignments"].([]any)
 	for _, raw := range items {
 		a := raw.(map[string]any)
+		physicalIDs[fmt.Sprint(a["id"])] = fmt.Sprint(a["activityId"])
 		r := resources[fmt.Sprint(a["resourceId"])]
 		m, _ := a["metadata"].(map[string]any)
 		v := obj{}
@@ -56,7 +58,37 @@ func physicalSignature(request, plan obj) (string, error) {
 	sort.Slice(assignments, func(i, j int) bool {
 		return fmt.Sprint(assignments[i]["activityId"]) < fmt.Sprint(assignments[j]["activityId"])
 	})
-	b, e := json.Marshal(obj{"inputs": input, "assignments": assignments, "seed": 1})
+	actions, _ := plan["lifecycleActions"].([]any)
+	for _, raw := range actions {
+		a := raw.(map[string]any)
+		physicalIDs[fmt.Sprint(a["id"])] = fmt.Sprint(a["capacityTargetId"]) + ":" + fmt.Sprint(a["action"])
+	}
+	lifecycle := []obj{}
+	for _, raw := range actions {
+		a := raw.(map[string]any)
+		v := obj{}
+		for _, k := range []string{"action", "capacityTargetId", "earliestStart", "expectedDuration", "metadata"} {
+			v[k] = a[k]
+		}
+		dependencies := []string{}
+		rawDependencies, _ := a["dependsOn"].([]any)
+		for _, id := range rawDependencies {
+			key := fmt.Sprint(id)
+			if mapped, ok := physicalIDs[key]; ok {
+				key = mapped
+			}
+			dependencies = append(dependencies, key)
+		}
+		sort.Strings(dependencies)
+		v["dependsOn"] = dependencies
+		lifecycle = append(lifecycle, v)
+	}
+	sort.Slice(lifecycle, func(i, j int) bool {
+		a, _ := json.Marshal(lifecycle[i])
+		b, _ := json.Marshal(lifecycle[j])
+		return string(a) < string(b)
+	})
+	b, e := json.Marshal(obj{"inputs": input, "assignments": assignments, "lifecycle": lifecycle, "seed": 1})
 	if e != nil {
 		return "", e
 	}

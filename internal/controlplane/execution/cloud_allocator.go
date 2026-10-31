@@ -355,7 +355,7 @@ func (a QueuedCloudAllocator) Stop(ctx context.Context, executionRunID string, a
 		if instance == nil {
 			return fmt.Errorf("cloud stop instance %q was not found", allocation.CloudInstanceID)
 		}
-		if instance.Status == "stopped" {
+		if instance.Status == "stopped" || instance.Status == "destroyed" {
 			continue
 		}
 		if instance.Status != "ready" {

@@ -4,7 +4,6 @@ import (
 	"crypto/sha256"
 	"encoding/json"
 	"fmt"
-	"math"
 	"sort"
 )
 
@@ -52,11 +51,6 @@ func physicalSignature(request, plan obj) (string, error) {
 		v["resourceAvailableAtSeconds"] = value("resourceAvailableAtSeconds", 0.)
 		v["containerOverheadSeconds"] = value("containerOverheadSeconds", r["containerOverheadSeconds"])
 		v["expectedDurationSeconds"] = value("expectedDurationSeconds", a["predictedRuntimeSeconds"])
-		for k, x := range v {
-			if n, ok := x.(float64); ok {
-				v[k] = math.Round(n*1e9) / 1e9
-			}
-		}
 		assignments = append(assignments, v)
 	}
 	sort.Slice(assignments, func(i, j int) bool {

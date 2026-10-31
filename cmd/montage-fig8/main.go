@@ -1,5 +1,5 @@
-// montage-fig8 prepares isolated Figure 8 infrastructure snapshots.
-// It does not delete infrastructure or submit paid executions.
+// montage-fig8 prepares and evaluates Figure 8 infrastructure snapshots.
+// Real executions and owned cloud teardown require an explicit --mode real.
 package main
 
 import (
@@ -208,7 +208,7 @@ func build(source ports.ExecutionRequest, hpc, cloud domain.EnvironmentDefinitio
 	return env, request, result
 }
 func main() {
-	action := flag.String("action", "prepare", "prepare, plan or run")
+	action := flag.String("action", "prepare", "prepare, plan, run, run-all, matrix, signature or report")
 	base := flag.String("api", "http://127.0.0.1:5173/akoflow-api", "daemon API")
 	kind := flag.String("case", "hpc", "hpc, micro or medium")
 	mode := flag.String("mode", "", "simulation or real; required for run")

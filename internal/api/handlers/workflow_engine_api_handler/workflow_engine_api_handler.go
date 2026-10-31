@@ -37,6 +37,7 @@ import (
 	cloudcredential "github.com/UFFeScience/akoflow/internal/infrastructure/credentials/cloud"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/credentials/sshkey"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/credentials/token"
+	"github.com/UFFeScience/akoflow/internal/infrastructure/dockerhub"
 	planningalgorithms "github.com/UFFeScience/akoflow/internal/planning/algorithms"
 	"github.com/google/uuid"
 	"gopkg.in/yaml.v3"
@@ -122,10 +123,11 @@ type PlanningOrchestrator interface {
 }
 
 type DockerArtifactRequest struct {
-	ArtifactID   string `json:"artifactId"`
-	Version      string `json:"version"`
-	Image        string `json:"image"`
-	Architecture string `json:"architecture"`
+	DockerHub    *dockerhub.Selection `json:"dockerHub,omitempty"`
+	ArtifactID   string               `json:"artifactId"`
+	Version      string               `json:"version"`
+	Image        string               `json:"image"`
+	Architecture string               `json:"architecture"`
 }
 
 type Dependencies struct {
@@ -168,6 +170,7 @@ type Dependencies struct {
 }
 
 type Handler struct {
+	dockerHub           *dockerhub.Client
 	environments        ports.EnvironmentCatalog
 	workflows           ports.WorkflowStore
 	plans               ports.PlanStore
@@ -225,6 +228,7 @@ func New(dependencies Dependencies) (*Handler, error) {
 		return nil, fmt.Errorf("workflow API dependencies are required")
 	}
 	return &Handler{
+		dockerHub:    dockerhub.New(),
 		environments: dependencies.Environments, workflows: dependencies.Workflows,
 		plans: dependencies.Plans, events: dependencies.Events,
 		validator: dependencies.Validator, executions: dependencies.Executions,
@@ -1601,13 +1605,25 @@ func (h *Handler) RegisterDockerArtifact(w http.ResponseWriter, r *http.Request)
 	}
 	input.ArtifactID = strings.TrimSpace(input.ArtifactID)
 	input.Version = strings.TrimSpace(input.Version)
+	if input.Architecture == "" {
+		input.Architecture = "amd64"
+	}
+	if input.DockerHub != nil {
+		if h.dockerHub == nil {
+			writeError(w, 503, fmt.Errorf("Docker Hub is unavailable"))
+			return
+		}
+		image, err := h.dockerHub.Resolve(r.Context(), *input.DockerHub, input.Architecture)
+		if err != nil {
+			writeDockerHubError(w, err)
+			return
+		}
+		input.Image = image
+	}
 	image := strings.TrimPrefix(strings.TrimSpace(input.Image), "docker://")
 	if input.ArtifactID == "" || input.Version == "" || image == "" || strings.ContainsAny(image, " \t\n\r") {
 		writeError(w, http.StatusUnprocessableEntity, fmt.Errorf("artifactId, version and a valid Docker image are required"))
 		return
-	}
-	if input.Architecture == "" {
-		input.Architecture = "amd64"
 	}
 	now := time.Now().UTC().UnixNano()
 	version := domain.ArtifactVersion{ID: fmt.Sprintf("artifact-version-%d", now), ArtifactID: input.ArtifactID, Version: input.Version, Scope: domain.CatalogScope("system")}

@@ -155,6 +155,10 @@ func commitHEFTPlacement(
 	sequence int,
 	placement heftPlacement,
 ) {
+	boot := 0.0
+	if state.coreOrder[placement.core] == 0 {
+		boot = placement.resource.BootOverheadSeconds
+	}
 	assignment := domain.PlanAssignment{
 		ID: fmt.Sprintf(
 			"assignment-%d-%s-%s",
@@ -177,6 +181,10 @@ func commitHEFTPlacement(
 			"scheduleBasis":           "algorithm",
 			"expectedDurationSeconds": placement.runtime,
 		},
+	}
+	if placement.resource.BootOverheadSeconds > 0 || placement.resource.ContainerOverhead > 0 {
+		assignment.Metadata["bootOverheadSeconds"] = boot
+		assignment.Metadata["containerOverheadSeconds"] = placement.resource.ContainerOverhead
 	}
 	state.assignments = append(state.assignments, assignment)
 	state.byActivity[activity.ID] = assignment

@@ -3,6 +3,7 @@ package simgrid
 import (
 	"context"
 	"fmt"
+	"math"
 	"sort"
 
 	"github.com/UFFeScience/akoflow/internal/domain"
@@ -140,7 +141,11 @@ func simulate(
 			if previous != "" {
 				resourceReadyAt = completed[previous].FinishedAt
 			}
-			start := max(dataReadyAt, resourceReadyAt)
+			availableAt, err := assignmentResourceAvailableAt(assignment)
+			if err != nil {
+				return nil, nil, err
+			}
+			start := max(max(dataReadyAt, resourceReadyAt), availableAt)
 			runtimeSeconds := resolveRuntime(activity, assignment, resource, model.profiles)
 			overhead := resolveAssignmentOverhead(assignment, resource)
 			finish := start + runtimeSeconds + overhead
@@ -401,4 +406,17 @@ func min(a, b float64) float64 {
 		return a
 	}
 	return b
+}
+
+// An absolute initial availability is separate from per-task runtime overhead.
+// Descendants reaching the resource after boot must not pay startup again.
+func assignmentResourceAvailableAt(a domain.PlanAssignment) (float64, error) {
+	if _, exists := a.Metadata["resourceAvailableAtSeconds"]; !exists {
+		return 0, nil
+	}
+	value, ok := numberMetadata(a.Metadata, "resourceAvailableAtSeconds")
+	if !ok || math.IsNaN(value) || math.IsInf(value, 0) || value < 0 {
+		return 0, fmt.Errorf("assignment %s has invalid initial resource availability", a.ID)
+	}
+	return value, nil
 }

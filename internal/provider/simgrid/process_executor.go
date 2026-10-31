@@ -133,6 +133,20 @@ func (e *ProcessExecutor) executeBundle(ctx context.Context, request ports.Execu
 	if err := validateAdmissionTrace(request, preparationModel, trace); err != nil {
 		return domain.ExecutionTrace{}, err
 	}
+	availabilityByActivity := make(map[string]domain.PlanAssignment, len(request.Plan.Assignments))
+	for _, assignment := range request.Plan.Assignments {
+		availabilityByActivity[assignment.ActivityID] = assignment
+	}
+	for _, task := range trace.Tasks {
+		assignment := availabilityByActivity[task.ActivityID]
+		availableAt, err := assignmentResourceAvailableAt(assignment)
+		if err != nil {
+			return domain.ExecutionTrace{}, err
+		}
+		if task.StartedAt+1e-9 < availableAt {
+			return domain.ExecutionTrace{}, fmt.Errorf("SimGrid runner ignored initial resource availability for %s", task.ActivityID)
+		}
+	}
 	trace.Mode, trace.Predicted = request.Run.Mode, request.Plan.Predicted
 	normalizeWorkspaceQueue(&trace)
 	applyCloudLifecycleCosts(trace.Tasks, request.Resources, request.Plan.LifecycleActions)

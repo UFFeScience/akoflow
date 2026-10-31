@@ -25,18 +25,19 @@ type runnerInput struct {
 }
 
 type runnerTask struct {
-	ID                        string  `json:"id"`
-	ActivityTypeID            string  `json:"activityTypeId"`
-	AssignmentID              string  `json:"assignmentId"`
-	ResourceID                string  `json:"resourceId"`
-	FLOPs                     float64 `json:"flops"`
-	OverheadSeconds           float64 `json:"overheadSeconds"`
-	PricePerSecond            float64 `json:"pricePerSecond"`
-	PreparationSeconds        float64 `json:"preparationSeconds,omitempty"`
-	PublicationSeconds        float64 `json:"publicationSeconds,omitempty"`
-	AdmissionSeconds          float64 `json:"admissionSeconds,omitempty"`
-	PreparationServiceGroupID string  `json:"preparationServiceGroupId,omitempty"`
-	PreparationServiceSlots   int     `json:"preparationServiceSlots,omitempty"`
+	ResourceAvailableAtSeconds float64 `json:"resourceAvailableAtSeconds,omitempty"`
+	ID                         string  `json:"id"`
+	ActivityTypeID             string  `json:"activityTypeId"`
+	AssignmentID               string  `json:"assignmentId"`
+	ResourceID                 string  `json:"resourceId"`
+	FLOPs                      float64 `json:"flops"`
+	OverheadSeconds            float64 `json:"overheadSeconds"`
+	PricePerSecond             float64 `json:"pricePerSecond"`
+	PreparationSeconds         float64 `json:"preparationSeconds,omitempty"`
+	PublicationSeconds         float64 `json:"publicationSeconds,omitempty"`
+	AdmissionSeconds           float64 `json:"admissionSeconds,omitempty"`
+	PreparationServiceGroupID  string  `json:"preparationServiceGroupId,omitempty"`
+	PreparationServiceSlots    int     `json:"preparationServiceSlots,omitempty"`
 }
 
 type runnerDependency struct {
@@ -152,6 +153,10 @@ func buildRunnerTasks(request ports.ExecutionRequest, referenceFLOPS float64, mo
 		}
 		flops := activityFLOPS(activity)
 		overhead := resolveAssignmentOverhead(assignment, resource)
+		availableAt, err := assignmentResourceAvailableAt(assignment)
+		if err != nil {
+			return nil, err
+		}
 		if flops <= 0 {
 			runtimeSeconds := resolveRuntime(activity, assignment, resource, model.profiles)
 			flops = runtimeSeconds * resourceFLOPS(resource, referenceFLOPS)
@@ -190,7 +195,7 @@ func buildRunnerTasks(request ports.ExecutionRequest, referenceFLOPS float64, mo
 		tasks = append(tasks, runnerTask{
 			ID: activity.ID, ActivityTypeID: activity.ActivityTypeID,
 			AssignmentID: assignment.ID, ResourceID: resource.ID,
-			FLOPs: flops, OverheadSeconds: overhead,
+			FLOPs: flops, OverheadSeconds: overhead, ResourceAvailableAtSeconds: availableAt,
 			PricePerSecond:            resource.PricePerSecond,
 			PreparationSeconds:        preparationSeconds,
 			PublicationSeconds:        publicationSeconds,

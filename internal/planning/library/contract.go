@@ -53,6 +53,7 @@ type Plan struct {
 }
 type Metrics struct { MakespanSeconds float64; Cost float64; Feasible bool }
 type Assignment struct {
+ Metadata map[string]any
  ID string; PlanID string; ActivityID string; ResourceID string; CoreID string
  OrderOnResource int; Priority int
  PredictedReadyAt float64; PredictedStartAt float64; PredictedFinishAt float64

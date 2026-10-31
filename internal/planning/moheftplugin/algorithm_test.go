@@ -83,6 +83,9 @@ func TestCompiledPluginUsesRegistryAndCoordinatorContract(t *testing.T) {
 		t.Fatalf("plans=%d", len(sink.plans))
 	}
 	plan := sink.plans[0]
+	if _, ok := plan.Assignments[0].Metadata["resourceAvailableAtSeconds"]; !ok {
+		t.Fatal("plugin assignment metadata lost across JSON contract")
+	}
 	if err = validator.NewValidator().Validate(plan, request.Workflow, request.Resources, request.ExecutionScope, request.NetworkTopology); err != nil {
 		t.Fatal(err)
 	}
@@ -95,6 +98,7 @@ func TestCompiledPluginUsesRegistryAndCoordinatorContract(t *testing.T) {
 const operatorTests = `package main
 import("testing";"encoding/json";"math";"fmt")
 func fixture()Input{return Input{Request:Request{Workflow:Workflow{ID:"wf",Activities:[]Activity{{ID:"a",Resources:Requirements{CPU:1},Simulation:&Simulation{DurationSeconds:10}}}},Resources:[]Resource{{ID:"fast",EnvironmentVersionID:"env",CPUCores:1,CPUCapacity:1,MemoryBytes:100,ComputeSpeedup:2,PricePerSecond:10,Schedulable:true},{ID:"cheap",EnvironmentVersionID:"env",CPUCores:1,CPUCapacity:1,MemoryBytes:100,ComputeSpeedup:1,PricePerSecond:1,Schedulable:true}},ExecutionScope:Scope{ID:"scope",EnvironmentVersionIDs:[]string{"env"}}},Configuration:map[string]any{"candidateCount":float64(25)}}}
+func TestBootContract(t *testing.T){in:=fixture();in.Request.Resources=in.Request.Resources[:1];in.Request.Resources[0].BootOverheadSeconds=12;in.Request.Resources[0].ContainerOverheadSeconds=2;in.Request.Workflow.Activities=append(in.Request.Workflow.Activities,Activity{ID:"b",Simulation:&Simulation{DurationSeconds:10}});in.Request.Workflow.Dependencies=[]Dependency{{ActivityID:"b",DependsOnActivityID:"a"}};plans,e:=Schedule(in);if e!=nil{t.Fatal(e)};p:=plans[0];if p.Predicted.MakespanSeconds!=26{t.Fatal(p.Predicted)};for _,a:=range p.Assignments{if a.Metadata["bootOverheadSeconds"]!=float64(0)||a.Metadata["resourceAvailableAtSeconds"]!=float64(12)||a.Metadata["containerOverheadSeconds"]!=float64(2){t.Fatal(a.Metadata)}}}
 func TestDeclaredZeroWork(t *testing.T){in:=fixture();in.Request.Workflow.Activities[0].Simulation.DurationSeconds=0;plans,e:=Schedule(in);if e!=nil{t.Fatal(e)};for _,p:=range plans{if p.Predicted.MakespanSeconds!=0||p.Predicted.Cost!=0{t.Fatal(p.Predicted)}}}
 func TestAnalyticTimeCostFront(t *testing.T){plans,e:=Schedule(fixture());if e!=nil{t.Fatal(e)};if len(plans)!=2{t.Fatalf("front=%d",len(plans))};found:=map[string]bool{};for _,p:=range plans{found[fmt.Sprintf("%.0f/%.0f",p.Predicted.MakespanSeconds,p.Predicted.Cost)]=true};if !found["5/50"]||!found["10/10"]{t.Fatal(found)}}
 func TestDominatedPartialSchedulesRemoved(t *testing.T){front:=moSelect([]moState{{makespan:1,cost:2},{makespan:2,cost:3},{makespan:3,cost:1}},10);if len(front)!=2{t.Fatal(front)}}

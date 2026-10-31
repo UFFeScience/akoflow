@@ -223,6 +223,13 @@ func main() {
 	workspaceRoot := flag.String("workspace-root", "", "verified shared HPC workspace root; quota remains checked")
 	supplement := flag.String("transfer-profiles", "", "JSON array of evidenced missing transfer routes; existing profiles remain unchanged")
 	flag.Parse()
+	if *action == "matrix" {
+		if *mode != "real" {
+			panic("matrix requires explicit --mode real")
+		}
+		must(matrix(*base, *output, *acceptQuotaEstimate))
+		return
+	}
 	if *action == "signature" {
 		var request, plan obj
 		read(filepath.Join(*output, *kind+"-request.json"), &request)

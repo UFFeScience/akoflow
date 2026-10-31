@@ -10,9 +10,9 @@ import (
 
 func TestRealExecutionRequiresSimulationAndNoActivePhysicalPeer(t *testing.T) {
 	for _, tc := range []struct {
-		name                        string
+		name, algorithm             string
 		simulation, active, allowed bool
-	}{{"ready", true, false, true}, {"shared node busy", true, true, false}, {"simulation missing", false, false, false}} {
+	}{{"ready", "heft", true, false, true}, {"shared node busy", "heft", true, true, false}, {"simulation missing", "heft", false, false, false}, {"PRISM ready", "prism-time", true, false, true}, {"PRISM shared node busy", "prism-time", true, true, false}, {"PRISM simulation missing", "prism-time", false, false, false}} {
 		t.Run(tc.name, func(t *testing.T) {
 			t.Setenv("AKOFLOW_API_TOKEN", "test-only-token")
 			dir := t.TempDir()
@@ -58,7 +58,7 @@ func TestRealExecutionRequiresSimulationAndNoActivePhysicalPeer(t *testing.T) {
 				}
 			}))
 			defer server.Close()
-			e := campaign("run", server.URL, dir, "hpc", "real", 1, "test", true, "heft", "time")
+			e := campaign("run", server.URL, dir, "hpc", "real", 1, "test", true, tc.algorithm, "time")
 			if (e == nil) != tc.allowed || posted != tc.allowed {
 				t.Fatalf("err=%v posted=%v allowed=%v", e, posted, tc.allowed)
 			}

@@ -212,7 +212,7 @@ func main() {
 	base := flag.String("api", "http://127.0.0.1:5173/akoflow-api", "daemon API")
 	kind := flag.String("case", "hpc", "hpc, micro or medium")
 	mode := flag.String("mode", "", "simulation or real; required for run")
-	algorithm := flag.String("algorithm", "heft", "heft or moheft")
+	algorithm := flag.String("algorithm", "heft", "heft, moheft or prism-time")
 	objective := flag.String("objective", "time", "Pareto endpoint: time or cost")
 	attempt := flag.Int("attempt", 1, "explicit fresh execution attempt; never resumes scientific tasks")
 	matrixRetryEntry := flag.String("matrix-retry-entry", "", "explicit failed matrix entry to rerun, for example moheft-time/medium; requires --attempt > 1")

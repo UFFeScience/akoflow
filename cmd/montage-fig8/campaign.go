@@ -85,8 +85,11 @@ func (c apiClient) wait(path, field string, limit time.Duration) (obj, error) {
 	return nil, fmt.Errorf("deadline exceeded: %s; execution may still be running", path)
 }
 func campaign(action, base, dir, kind, mode string, attempt int, campaignID string, acceptQuotaEstimate bool, algorithm, objective string) error {
-	if algorithm != "heft" && algorithm != "moheft" {
-		return fmt.Errorf("algorithm must be heft or moheft")
+	if algorithm != "heft" && algorithm != "moheft" && algorithm != "prism-time" {
+		return fmt.Errorf("algorithm must be heft, moheft or prism-time")
+	}
+	if algorithm == "prism-time" && objective != "time" {
+		return fmt.Errorf("prism-time requires the time objective")
 	}
 	if objective != "time" && objective != "cost" {
 		return fmt.Errorf("objective must be time or cost")

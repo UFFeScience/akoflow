@@ -41,7 +41,11 @@ func TestHEFTReproducesPublishedTenTaskSchedule(t *testing.T) {
 	for _, a := range plan.Assignments {
 		order = append(order, a.ActivityID)
 	}
-	require.Equal(t, []string{"n01", "n03", "n04", "n02", "n05", "n06", "n09", "n07", "n08", "n10"}, order)
+	// n3 and n4 both have rank 80. The paper permits random tie-breaking;
+	// either order is valid and yields the same published processor schedule.
+	require.Equal(t, "n01", order[0])
+	require.ElementsMatch(t, []string{"n03", "n04"}, order[1:3])
+	require.Equal(t, []string{"n02", "n05", "n06", "n09", "n07", "n08", "n10"}, order[3:])
 	expected := []struct {
 		processor     string
 		start, finish float64

@@ -465,7 +465,7 @@ func (m *moModel) place(s moState, task, resource int) (moState, bool) {
 	// Paper Eq. 4: CPU seconds + storage-time + remote ingress/egress. Bandwidth link tariffs do not replace the paper's ingress/egress prices.
 	billed := runtime + transferTotal
 	ownCost := billed*r.PricePerSecond + float64(m.tasks[task].Resources.StorageBytes)*billed*moPrice(r.Metadata, "storagePricePerByteSecond") + ingress
-	record := &moRecord{resource: resource, assignment: Assignment{Metadata: map[string]any{"bootOverheadSeconds": float64(0), "resourceAvailableAtSeconds": r.BootOverheadSeconds, "containerOverheadSeconds": r.ContainerOverheadSeconds}, ActivityID: m.tasks[task].ID, ResourceID: r.ID, CoreID: fmt.Sprintf("%s-core-%d", r.ID, lane+1), PredictedReadyAt: ready, PredictedStartAt: start, PredictedFinishAt: finish, PredictedRuntimeSeconds: runtime, PredictedTransferSeconds: transferTotal, PredictedCost: ownCost + egress}}
+	record := &moRecord{resource: resource, assignment: Assignment{Metadata: map[string]any{"bootOverheadSeconds": float64(0), "resourceAvailableAtSeconds": r.BootOverheadSeconds, "containerOverheadSeconds": r.ContainerOverheadSeconds}, ActivityID: m.tasks[task].ID, Priority: m.tasks[task].Priority, ResourceID: r.ID, CoreID: fmt.Sprintf("%s-core-%d", r.ID, lane+1), PredictedReadyAt: ready, PredictedStartAt: start, PredictedFinishAt: finish, PredictedRuntimeSeconds: runtime, PredictedTransferSeconds: transferTotal, PredictedCost: ownCost + egress}}
 	out := s
 	out.blocks = append([]*moBlock(nil), s.blocks...)
 	block := &moBlock{}

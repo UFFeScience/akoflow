@@ -70,7 +70,7 @@ func TestCompiledPluginUsesRegistryAndCoordinatorContract(t *testing.T) {
 		t.Fatalf("save=%+v err=%v", saved, err)
 	}
 	resource := domain.Resource{ID: "cpu", EnvironmentVersionID: "env-v1", CPUCores: 1, CPUCapacity: 1, MemoryBytes: 1024, ComputeSpeedup: 1, Schedulable: true}
-	request := domain.PlanningRequest{Workflow: domain.WorkflowVersion{ID: "workflow-v1", Activities: []domain.Activity{{ID: "a", Name: "A", Resources: domain.ActivityResources{CPU: 1}, Simulation: &domain.ActivitySimulation{DurationSeconds: 3}}}}, Resources: []domain.Resource{resource}, ExecutionScope: domain.ExecutionScope{ID: "scope", EnvironmentVersionIDs: []string{"env-v1"}}, NetworkTopology: domain.NetworkTopology{ID: "network", ExecutionScopeID: "scope"}}
+	request := domain.PlanningRequest{Workflow: domain.WorkflowVersion{ID: "workflow-v1", Activities: []domain.Activity{{ID: "a", Name: "A", Priority: 7, Resources: domain.ActivityResources{CPU: 1}, Simulation: &domain.ActivitySimulation{DurationSeconds: 3}}}}, Resources: []domain.Resource{resource}, ExecutionScope: domain.ExecutionScope{ID: "scope", EnvironmentVersionIDs: []string{"env-v1"}}, NetworkTopology: domain.NetworkTopology{ID: "network", ExecutionScopeID: "scope"}}
 	plugin, ok := registry.Find("moheft")
 	if !ok {
 		t.Fatal("plugin not registered")
@@ -83,6 +83,9 @@ func TestCompiledPluginUsesRegistryAndCoordinatorContract(t *testing.T) {
 		t.Fatalf("plans=%d", len(sink.plans))
 	}
 	plan := sink.plans[0]
+	if plan.Assignments[0].Priority != 7 {
+		t.Fatal("workflow dispatch priority lost across plugin contract")
+	}
 	if _, ok := plan.Assignments[0].Metadata["resourceAvailableAtSeconds"]; !ok {
 		t.Fatal("plugin assignment metadata lost across JSON contract")
 	}

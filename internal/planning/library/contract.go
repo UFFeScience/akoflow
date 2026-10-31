@@ -27,6 +27,7 @@ type Activity struct {
  ID string ` + "`json:\"id\"`" + `
  Name string ` + "`json:\"name\"`" + `
  ActivityTypeID string
+ Priority int
  Resources Requirements ` + "`json:\"resources\"`" + `
  Simulation *Simulation ` + "`json:\"simulation\"`" + `
  Metadata map[string]any ` + "`json:\"metadata\"`" + `

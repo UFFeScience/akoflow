@@ -12,11 +12,7 @@ func TestHEFTEmitsOnlyTheBootItPlanned(t *testing.T) {
 		placement := evaluateHEFTPlacement(state, resource, "cpu-core-1", 0, 0, 3)
 		commitHEFTPlacement(&state, domain.Activity{ID: string(rune('a' + i))}, i, placement)
 		assignment := state.assignments[i]
-		boot := 0.0
-		if i == 0 {
-			boot = 12
-		}
-		if assignment.Metadata["bootOverheadSeconds"] != boot || assignment.Metadata["containerOverheadSeconds"] != float64(2) {
+		if assignment.Metadata["bootOverheadSeconds"] != 0.0 || assignment.Metadata["resourceAvailableAtSeconds"] != 12.0 || assignment.Metadata["containerOverheadSeconds"] != float64(2) {
 			t.Fatal(assignment.Metadata)
 		}
 	}

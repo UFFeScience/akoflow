@@ -101,6 +101,9 @@ func matrix(base, root string, acceptQuota bool) error {
 			observations[signature] = runID
 			observationDirectories[signature] = sourceDir
 			save(filepath.Join(root, "matrix-results.json"), records)
+			if err := exportMatrix(root, records); err != nil {
+				return err
+			}
 			fmt.Printf("Verified %s/%s: %s shared=%v\n", spec.dir, kind, runID, reused)
 		}
 	}

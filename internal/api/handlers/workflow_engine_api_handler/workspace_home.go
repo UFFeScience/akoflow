@@ -49,6 +49,12 @@ func (h *Handler) resolveWorkspaceHomes(ctx context.Context, request *ports.Exec
 		if err != nil {
 			return err
 		}
+		if selected, _ := resource.Metadata["workspaceStorageId"].(string); selected != "" {
+			home, homeStorageID, err = selectedWorkspaceRoot(definition, connectionID, selected)
+			if err != nil {
+				return err
+			}
+		}
 		if home != "" {
 			metadata := make(map[string]any, len(resource.Metadata)+1)
 			for key, value := range resource.Metadata {
@@ -70,6 +76,22 @@ func (h *Handler) resolveWorkspaceHomes(ctx context.Context, request *ports.Exec
 		}
 	}
 	return nil
+}
+
+// An explicit workspace is a catalog storage owned by the same connection.
+// Its quota is observed normally; selecting scratch never disables preflight.
+func selectedWorkspaceRoot(definition *domain.EnvironmentDefinition, connectionID, storageID string) (string, string, error) {
+	for _, storage := range definition.Storages {
+		if storage.ID != storageID {
+			continue
+		}
+		owner, _ := storage.Metadata["connectionId"].(string)
+		if owner != connectionID || storage.ReadOnly || !path.IsAbs(storage.Endpoint) || path.Clean(storage.Endpoint) == "/" {
+			return "", "", fmt.Errorf("workspace storage %q is not a writable absolute root of connection %q", storageID, connectionID)
+		}
+		return storage.Endpoint, storage.ID, nil
+	}
+	return "", "", fmt.Errorf("workspace storage %q unavailable in the resource environment", storageID)
 }
 
 // A home is eligible only when the same catalog connection discovers a Slurm

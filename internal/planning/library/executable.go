@@ -12,6 +12,7 @@ import (
 
 	"github.com/UFFeScience/akoflow/internal/application/ports"
 	"github.com/UFFeScience/akoflow/internal/domain"
+	"github.com/UFFeScience/akoflow/internal/planning/algorithms"
 )
 
 type boundedOutput struct {
@@ -102,6 +103,9 @@ func (e *executable) Schedule(ctx context.Context, request domain.PlanningReques
 		plan.Algorithm = e.descriptor.ID
 		plan.AlgorithmVersion = fmt.Sprintf("%d:%s", e.revision, e.sourceHash)
 		plan.Objective = e.descriptor.Objective
+		if plan.Metadata["costModel"] == "moheft-task-additive" {
+			algorithms.EnrichCloudLifecycle(&plan, request.Resources)
+		}
 		if err = sink.Emit(ctx, plan); err != nil {
 			return err
 		}

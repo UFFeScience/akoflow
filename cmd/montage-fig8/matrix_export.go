@@ -25,6 +25,8 @@ func exportMatrix(root string, records []obj) error {
 		"planned_cost_basis", "simulation_cost_usd", "real_run_cost_usd",
 		"cloud_lifecycle_estimated_cost_usd", "cloud_lifecycle_cost_status", "completed_activities",
 		"algorithm_version", "real_wall_seconds",
+		"simulation_transferred_bytes", "real_transferred_bytes",
+		"simulation_transfer_work_seconds", "real_transfer_work_seconds",
 	}
 	if err = w.Write(header); err != nil {
 		return err
@@ -40,6 +42,8 @@ func exportMatrix(root string, records []obj) error {
 		prediction := plan["predicted"].(map[string]any)
 		simulation := record["simulation"].(map[string]any)
 		real := record["real"].(map[string]any)
+		simBreakdown, _ := simulation["breakdown"].(map[string]any)
+		realBreakdown, _ := real["breakdown"].(map[string]any)
 		billing, _ := record["cloudBilling"].(map[string]any)
 		basis := "vm-forecast"
 		if record["algorithm"] == "moheft" {
@@ -57,6 +61,8 @@ func exportMatrix(root string, records []obj) error {
 			num(prediction["cost"]), basis, num(simulation["cost"]), num(real["cost"]),
 			num(billing["estimatedCost"]), fmt.Sprint(billing["status"]), num(real["completedActivityCount"]),
 			fmt.Sprint(plan["algorithmVersion"]), num(wall),
+			num(simulation["transferredBytes"]), num(real["transferredBytes"]),
+			num(simBreakdown["transferSeconds"]), num(realBreakdown["transferSeconds"]),
 		}
 		if err = w.Write(row); err != nil {
 			return err

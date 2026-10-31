@@ -22,3 +22,18 @@ func TestCloudTargetPreservesExplicitSchedulingCapacity(t *testing.T) {
 		require.Error(t, e)
 	}
 }
+
+func TestTargetRegistrationPreservesCalibrationOnlyForSameShape(t *testing.T) {
+	old := domain.Resource{ID: "r", EnvironmentVersionID: "env", CPUCores: 2, MemoryBytes: 4096, ComputeSpeedup: .25, BootOverheadSeconds: 90, ContainerOverhead: 5.48, Metadata: map[string]any{"providerMachineType": "e2-medium", "calibrationSource": "observed", "priceSource": "old"}}
+	target := domain.Resource{ID: "r", EnvironmentVersionID: "env", CPUCores: 2, MemoryBytes: 4096, ComputeSpeedup: 1, Metadata: map[string]any{"providerMachineType": "e2-medium", "priceSource": "current"}}
+	preserveTargetCalibration(&target, []domain.Resource{old})
+	require.Equal(t, 5.48, target.ContainerOverhead)
+	require.Equal(t, 90., target.BootOverheadSeconds)
+	require.Equal(t, .25, target.ComputeSpeedup)
+	require.Equal(t, "observed", target.Metadata["calibrationSource"])
+	require.Equal(t, "current", target.Metadata["priceSource"])
+	target.MemoryBytes = 8192
+	target.ContainerOverhead = 0
+	preserveTargetCalibration(&target, []domain.Resource{old})
+	require.Zero(t, target.ContainerOverhead)
+}

@@ -18,3 +18,25 @@ func targetSchedulingCapacity(target domain.CloudCapacityTarget) (float64, error
 	}
 	return value, nil
 }
+
+// Re-registering an unchanged physical target must not erase measured speed or
+// launch overheads. A changed machine shape requires fresh calibration.
+func preserveTargetCalibration(target *domain.Resource, existing []domain.Resource) {
+	for _, old := range existing {
+		if old.ID != target.ID || old.EnvironmentVersionID != target.EnvironmentVersionID || old.CPUCores != target.CPUCores || old.MemoryBytes != target.MemoryBytes || old.Metadata["providerMachineType"] != target.Metadata["providerMachineType"] {
+			continue
+		}
+		target.ComputeSpeedup = old.ComputeSpeedup
+		target.BootOverheadSeconds = old.BootOverheadSeconds
+		target.ContainerOverhead = old.ContainerOverhead
+		metadata := map[string]any{}
+		for k, v := range old.Metadata {
+			metadata[k] = v
+		}
+		for k, v := range target.Metadata {
+			metadata[k] = v
+		}
+		target.Metadata = metadata
+		return
+	}
+}

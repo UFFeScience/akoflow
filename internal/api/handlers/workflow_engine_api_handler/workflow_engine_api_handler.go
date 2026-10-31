@@ -1992,6 +1992,7 @@ func (h *Handler) CreateCloudCapacityTarget(w http.ResponseWriter, r *http.Reque
 		},
 	}
 	resource.Metadata["pricingStatus"] = "estimated"
+	preserveTargetCalibration(&resource, definition.Resources)
 	if resource.PricePerSecond <= 0 || (resource.StorageBytes > 0 && configurationFloat64(value.Configuration, "diskPricePerGiBMonth") <= 0) {
 		resource.Metadata["pricingStatus"] = "incomplete"
 	}

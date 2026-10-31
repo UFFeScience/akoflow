@@ -86,6 +86,47 @@ func (c apiClient) wait(path, field string, limit time.Duration) (obj, error) {
 	}
 	return nil, fmt.Errorf("deadline exceeded: %s; execution may still be running", path)
 }
+
+// observeRealCampaign applies the matrix's consumer-safe cloud teardown to a
+// single follow-up run. An observation error never authorizes terminal cleanup.
+func observeRealCampaign(base, dir, kind string, attempt int, campaignID string, acceptQuota bool, algorithm, objective string) error {
+	client := apiClient{base}
+	runID := campaignID + "-" + kind + "-real"
+	if attempt > 1 {
+		runID = fmt.Sprintf("%s-attempt%d", runID, attempt)
+	}
+	done := make(chan error, 1)
+	go func() {
+		done <- campaign("run", base, dir, kind, "real", attempt, campaignID, acceptQuota, algorithm, objective)
+	}()
+	ticker := time.NewTicker(15 * time.Second)
+	defer ticker.Stop()
+	for {
+		select {
+		case err := <-done:
+			if err != nil {
+				return err
+			}
+			deadline := time.Now().Add(20 * time.Minute)
+			for {
+				err := cleanupMatrixCloud(client, runID, true)
+				if err == nil {
+					return nil
+				}
+				if time.Now().After(deadline) {
+					return err
+				}
+				fmt.Println("Waiting for cloud teardown:", err)
+				time.Sleep(10 * time.Second)
+			}
+		case <-ticker.C:
+			if err := cleanupMatrixCloud(client, runID, false); err != nil {
+				fmt.Println("Cleanup pending:", err)
+			}
+		}
+	}
+}
+
 func campaign(action, base, dir, kind, mode string, attempt int, campaignID string, acceptQuotaEstimate bool, algorithm, objective string) error {
 	if algorithm != "heft" && algorithm != "moheft" && algorithm != "prism-time" {
 		return fmt.Errorf("algorithm must be heft, moheft or prism-time")

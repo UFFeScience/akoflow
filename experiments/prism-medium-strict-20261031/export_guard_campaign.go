@@ -99,8 +99,8 @@ func scientificRequest(path string) map[string]any {
 }
 
 func main() {
-	if len(os.Args) != 3 {
-		panic("usage: export_guard_campaign.go ROOT DEPLOYMENTS_JSON")
+	if len(os.Args) < 3 || len(os.Args) > 4 || (len(os.Args) == 4 && os.Args[3] != "--require-independent") {
+		panic("usage: export_guard_campaign.go ROOT DEPLOYMENTS_JSON [--require-independent]")
 	}
 	root := os.Args[1]
 	var manifest []manifestRow
@@ -110,6 +110,17 @@ func main() {
 	}
 	var sources map[string]deployment
 	read(os.Args[2], &sources)
+	if len(os.Args) == 4 {
+		seen := map[string]bool{}
+		for _, m := range manifest {
+			key := m.Algorithm + "-" + m.Environment
+			source, exists := sources[key]
+			if !exists || source.RunID == "" || source.Historical || seen[source.RunID] {
+				panic("independent real run required for " + key)
+			}
+			seen[source.RunID] = true
+		}
+	}
 	var replays map[string]replay
 	read(filepath.Join(root, "simulation-replays.json"), &replays)
 	rows := []obj{}

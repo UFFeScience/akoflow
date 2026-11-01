@@ -78,8 +78,12 @@ func main() {
 	})
 	save(filepath.Join(os.Args[2], "candidates.json"), s.plans)
 	r.Plan = s.plans[0]
-	r.Plan.ID = "prism-time-medium-replanned-20261101"
-	r.Run.ID = "prism-time-medium-replanned-20261101-simulation"
+	r.Plan.ID = filepath.Base(os.Args[2]) + "-plan"
+	for i := range r.Plan.Assignments {
+		r.Plan.Assignments[i].PlanID = r.Plan.ID
+		r.Plan.Assignments[i].ID = r.Plan.ID + "-" + r.Plan.Assignments[i].ActivityID
+	}
+	r.Run.ID = filepath.Base(os.Args[2]) + "-simulation"
 	r.Run.Mode = "simulation"
 	save(filepath.Join(os.Args[2], "selected-plan.json"), r.Plan)
 	save(filepath.Join(os.Args[2], "simulation-request.json"), r)

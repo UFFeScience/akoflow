@@ -2,12 +2,14 @@ package algorithms
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"math"
 	"sort"
 
 	"github.com/UFFeScience/akoflow/internal/application/ports"
 	"github.com/UFFeScience/akoflow/internal/domain"
+	"github.com/UFFeScience/akoflow/internal/domain/storagebudget"
 )
 
 type PRISM struct{ Objective string }
@@ -17,7 +19,7 @@ func NewPRISMCost() PRISM { return PRISM{Objective: "cost"} }
 
 func (p PRISM) Descriptor() ports.SchedulerDescriptor {
 	id, name := "prism-time", "PRISM Time"
-	description := "PRISM-CC options ranked exclusively by predicted makespan."
+	description := "PRISM-CC options ranked by predicted makespan, including an eligible native HEFT baseline."
 	if p.Objective == "cost" {
 		id, name = "prism-cost", "PRISM Cost"
 		description = "PRISM-CC options ranked exclusively by predicted cost."
@@ -64,6 +66,23 @@ func (p PRISM) Schedule(
 	if err != nil {
 		return fmt.Errorf("evaluate PRISM candidates with shared network: %w", err)
 	}
+	baselineIncluded := false
+	baselineMakespan := 0.0
+	baselineUnavailable := ""
+	if p.Objective == "time" {
+		baseline, baselineErr := compactPRISMHEFTAnchor(ctx, search)
+		if baselineErr != nil {
+			var quota *storagebudget.InsufficientQuota
+			if !errors.Is(baselineErr, errPRISMHEFTBaselineIneligible) && !errors.As(baselineErr, &quota) {
+				return fmt.Errorf("evaluate native HEFT baseline: %w", baselineErr)
+			}
+			baselineUnavailable = baselineErr.Error()
+		} else {
+			states = append(states, baseline)
+			baselineIncluded = true
+			baselineMakespan = baseline.makespan
+		}
+	}
 	optionCount := intOption(configuration, "optionCount", 25, 1, 1000)
 	states = selectCompleteCompactPRISMOptions(
 		states,
@@ -74,6 +93,22 @@ func (p PRISM) Schedule(
 	for index, state := range states {
 		id := fmt.Sprintf("%s-candidate-%d", p.Descriptor().ID, index+1)
 		plan := compactPRISMPlan(id, p.Descriptor().ID, p.Objective, request, search, state)
+		if p.Objective == "time" {
+			plan.AlgorithmVersion = "4"
+			origin := state.candidateOrigin
+			if origin == "" {
+				origin = "prism-search"
+			}
+			plan.Metadata["candidateOrigin"] = origin
+			plan.Metadata["selectionPolicy"] = "minimum common evaluation including eligible native HEFT baseline"
+			plan.Metadata["heftBaselineIncluded"] = baselineIncluded
+			if baselineIncluded {
+				plan.Metadata["heftBaselineEvaluatedMakespanSeconds"] = baselineMakespan
+			}
+			if baselineUnavailable != "" {
+				plan.Metadata["heftBaselineUnavailable"] = baselineUnavailable
+			}
+		}
 		if err := sink.Emit(ctx, plan); err != nil {
 			return err
 		}

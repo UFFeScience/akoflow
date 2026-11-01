@@ -1,5 +1,9 @@
 # Montage 58 — six independent Figure 8 executions
 
+Figure 8 now uses explicitly shared representative observations from
+`../figure8-shared-summary/`. This directory preserves the six independent
+measured executions and their original provenance unchanged.
+
 All six algorithm/configuration pairs now have distinct physical execution IDs. Two additional deployments replace the previously shared observations: MOHEFT-TIME/HPC and HEFT/HPC+medium. The original four physical executions and all historical observations remain preserved. No plan, simulation, calibration, network model or input was refitted or changed.
 
 | Environment | Algorithm | Planned (s) | Simulated (s) | Real (s) | Absolute simulation error |

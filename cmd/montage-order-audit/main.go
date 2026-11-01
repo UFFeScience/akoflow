@@ -27,6 +27,7 @@ type monitor struct {
 	Events     []event                `json:"events"`
 }
 type report struct {
+	AuditVersion                                                                                 int       `json:"auditVersion"`
 	At                                                                                           time.Time `json:"at"`
 	RunID                                                                                        string    `json:"runId"`
 	Status                                                                                       string    `json:"status"`
@@ -36,7 +37,7 @@ type report struct {
 }
 
 func audit(plan domain.SchedulePlan, workflow domain.WorkflowVersion, trace monitor) report {
-	r := report{At: time.Now().UTC(), RunID: trace.Run.ID, Status: string(trace.Run.Status), Planned: len(plan.Assignments), Violations: []string{}}
+	r := report{AuditVersion: 2, At: time.Now().UTC(), RunID: trace.Run.ID, Status: string(trace.Run.Status), Planned: len(plan.Assignments), Violations: []string{}}
 	if trace.Run.SchedulePlanID != plan.ID {
 		r.Violations = append(r.Violations, "executed plan ID differs from frozen plan")
 	}
@@ -67,7 +68,13 @@ func audit(plan domain.SchedulePlan, workflow domain.WorkflowVersion, trace moni
 			r.Violations = append(r.Violations, "unplanned activity: "+a.ActivityID)
 			continue
 		}
-		if a.AllocatedResourceID != "" && a.AllocatedResourceID != b.ResourceID {
+		if b.ID == "" || a.PlanAssignmentID != b.ID {
+			r.Violations = append(r.Violations, "assignment identity mismatch: "+a.ActivityID)
+		}
+		if a.PlannedResourceID != b.ResourceID {
+			r.Violations = append(r.Violations, "planned resource mismatch: "+a.ActivityID)
+		}
+		if (a.StartedAt > 0 || a.AllocatedResourceID != "") && a.AllocatedResourceID != b.ResourceID {
 			r.Violations = append(r.Violations, "resource mismatch: "+a.ActivityID)
 		}
 		switch a.Status {

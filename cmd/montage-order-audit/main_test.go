@@ -7,8 +7,8 @@ import (
 )
 
 func auditFixture() (domain.SchedulePlan, domain.WorkflowVersion, monitor) {
-	plan := domain.SchedulePlan{ID: "p", Assignments: []domain.PlanAssignment{{ActivityID: "a", ResourceID: "r", CoreID: "c"}, {ActivityID: "b", ResourceID: "r", CoreID: "c", OrderOnResource: 1}}}
-	trace := monitor{Run: domain.ExecutionRun{ID: "run", SchedulePlanID: "p", Status: domain.ExecutionRunCompleted}, Activities: []domain.TaskExecution{{ActivityID: "a", AllocatedResourceID: "r", StartedAt: 1, Status: domain.TaskCompleted}, {ActivityID: "b", AllocatedResourceID: "r", StartedAt: 3, Status: domain.TaskCompleted}}}
+	plan := domain.SchedulePlan{ID: "p", Assignments: []domain.PlanAssignment{{ID: "p-a", ActivityID: "a", ResourceID: "r", CoreID: "c"}, {ID: "p-b", ActivityID: "b", ResourceID: "r", CoreID: "c", OrderOnResource: 1}}}
+	trace := monitor{Run: domain.ExecutionRun{ID: "run", SchedulePlanID: "p", Status: domain.ExecutionRunCompleted}, Activities: []domain.TaskExecution{{PlanAssignmentID: "p-a", PlannedResourceID: "r", ActivityID: "a", AllocatedResourceID: "r", StartedAt: 1, Status: domain.TaskCompleted}, {PlanAssignmentID: "p-b", PlannedResourceID: "r", ActivityID: "b", AllocatedResourceID: "r", StartedAt: 3, Status: domain.TaskCompleted}}}
 	for _, v := range []struct {
 		kind, id string
 		second   int64
@@ -61,5 +61,24 @@ func TestAuditAcceptsStrictLaneCompletion(t *testing.T) {
 	r := audit(p, w, m)
 	if !r.Complete || r.VerifiedRelations != 1 {
 		t.Fatalf("%+v", r)
+	}
+}
+
+func TestAuditRejectsMissingOrChangedAssignmentEvidence(t *testing.T) {
+	for _, name := range []string{"assignment", "planned-resource", "allocation"} {
+		t.Run(name, func(t *testing.T) {
+			p, w, m := auditFixture()
+			switch name {
+			case "assignment":
+				m.Activities[1].PlanAssignmentID = "another-plan-assignment"
+			case "planned-resource":
+				m.Activities[1].PlannedResourceID = ""
+			case "allocation":
+				m.Activities[1].AllocatedResourceID = ""
+			}
+			if r := audit(p, w, m); r.Complete || len(r.Violations) != 1 {
+				t.Fatalf("%+v", r)
+			}
+		})
 	}
 }

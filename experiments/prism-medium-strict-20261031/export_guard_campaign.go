@@ -141,12 +141,13 @@ func main() {
 				panic("executed plan differs from frozen representative")
 			}
 			var audit struct {
-				Complete   bool
-				Violations []string
-				RunID      string
+				AuditVersion int
+				Complete     bool
+				Violations   []string
+				RunID        string
 			}
 			read(filepath.Join(source.Directory, "strict-order-audit.json"), &audit)
-			if !audit.Complete || len(audit.Violations) != 0 || audit.RunID != source.RunID {
+			if audit.AuditVersion < 2 || !audit.Complete || len(audit.Violations) != 0 || audit.RunID != source.RunID {
 				panic("complete zero-violation order audit required")
 			}
 			var products struct {

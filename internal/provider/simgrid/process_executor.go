@@ -13,6 +13,7 @@ import (
 	"github.com/UFFeScience/akoflow/internal/application/ports"
 	"github.com/UFFeScience/akoflow/internal/domain"
 	"github.com/UFFeScience/akoflow/internal/domain/materializationmodel"
+	domainplanning "github.com/UFFeScience/akoflow/internal/domain/planning"
 	"github.com/UFFeScience/akoflow/internal/provider"
 )
 
@@ -83,6 +84,7 @@ func (e *ProcessExecutor) checkPreparationCapabilities(ctx context.Context, requ
 			MaxVersion         int `json:"workspaceMaterializationModelMaxVersion"`
 			BulkServiceVersion int `json:"bulkServicePoolModelVersion"`
 			AdmissionVersion   int `json:"runtimeAdmissionModelVersion"`
+			LaneBarrierVersion int `json:"preparationLaneBarrierVersion"`
 		}
 		if probeErr != nil || json.Unmarshal(payload, &capabilities) != nil || (capabilities.Version != preparationModel.SchemaVersion && capabilities.MaxVersion < preparationModel.SchemaVersion) {
 			return fmt.Errorf("SimGrid runner does not confirm workspace materialization model version %d", preparationModel.SchemaVersion)
@@ -91,6 +93,9 @@ func (e *ProcessExecutor) checkPreparationCapabilities(ctx context.Context, requ
 			if resource.BulkServiceGroupID != "" && capabilities.BulkServiceVersion != 1 {
 				return fmt.Errorf("SimGrid runner does not confirm bulk service pool model version 1")
 			}
+		}
+		if len(domainplanning.LanePredecessors(request.Plan.Assignments)) > 0 && capabilities.LaneBarrierVersion != 1 {
+			return fmt.Errorf("SimGrid runner does not confirm preparation lane barrier version 1")
 		}
 		for _, a := range request.Plan.Assignments {
 			delay, err := preparationModel.AdmissionSeconds(a.ResourceID)

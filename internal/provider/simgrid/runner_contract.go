@@ -11,6 +11,7 @@ import (
 )
 
 type runnerInput struct {
+	PreparationLaneBarrierVersion  int                        `json:"preparationLaneBarrierVersion,omitempty"`
 	MaterializationModelVersion    int                        `json:"materializationModelVersion,omitempty"`
 	MaterializationRelayResourceID string                     `json:"materializationRelayResourceId,omitempty"`
 	MaterializationModelSource     string                     `json:"materializationModelSource,omitempty"`
@@ -73,6 +74,7 @@ func buildRunnerInput(request ports.ExecutionRequest, referenceFLOPS float64) ([
 		DeadlineSeconds: request.Plan.DeadlineSeconds, Budget: request.Plan.Budget,
 	}
 	if preparationModel != nil {
+		input.PreparationLaneBarrierVersion = 1
 		input.MaterializationModelVersion = preparationModel.SchemaVersion
 		input.MaterializationRelayResourceID = preparationModel.RelayResourceID
 		input.MaterializationModelSource = preparationModel.Source

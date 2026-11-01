@@ -317,6 +317,8 @@ static void run_simulation(sg4::Engine& engine, const json& input,
   std::map<std::string, std::vector<std::string>> outgoing_consumers;
   std::map<std::string, std::vector<std::string>> incoming_lanes;
   std::map<std::string, std::vector<std::string>> outgoing_lanes;
+  std::map<std::string, std::vector<std::string>> outgoing_lane_consumers;
+  std::map<std::string,sg4::SemaphorePtr> lane_preparation_gates;
   std::map<std::string, std::set<std::string>> active_by_resource;
   std::set<std::pair<std::string,std::string>> data_edges;
   std::map<std::string,int> remaining_producers;
@@ -344,17 +346,21 @@ static void run_simulation(sg4::Engine& engine, const json& input,
     const auto mailbox     = mailbox_name(run_id, "lane", predecessor, successor);
     incoming_lanes[successor].push_back(mailbox);
     outgoing_lanes[predecessor].push_back(mailbox);
+    outgoing_lane_consumers[predecessor].push_back(successor);
+    lane_preparation_gates[successor] = sg4::Semaphore::create(0);
   }
 
   for (auto& transfer : transfers) {
     auto* transfer_model = &transfer;
     auto* source_host = engine.host_by_name(transfer.source_resource_id);
     engine.add_actor("transfer-" + transfer.producer_id + "-" + transfer.consumer_id, source_host,
-                       [transfer_model, run_id, &engine, &preparation_gates, &service_pools, materialization_enabled]() {
+                       [transfer_model, run_id, &engine, &preparation_gates, &lane_preparation_gates, &service_pools, materialization_enabled]() {
       sg4::Mailbox::by_name(mailbox_name(run_id, "ready", transfer_model->producer_id,
                                          transfer_model->consumer_id))->get<void>();
       if (materialization_enabled)
         preparation_gates.at(transfer_model->consumer_id)->acquire();
+      if (materialization_enabled && lane_preparation_gates.count(transfer_model->consumer_id))
+        lane_preparation_gates.at(transfer_model->consumer_id)->acquire();
       transfer_model->started_at = sg4::Engine::get_clock();
       if (!transfer_model->stages.empty()) {
         for (size_t stage_index=0; stage_index<transfer_model->stages.size(); ++stage_index) {
@@ -411,7 +417,8 @@ static void run_simulation(sg4::Engine& engine, const json& input,
                        [task_model, id, &incoming_dependencies, &outgoing_dependency_signals,
                         &incoming_lanes, &outgoing_lanes, &tasks, &active_by_resource,
                         &interference, &data_edges, &remaining_producers, &inbound_flow_count,
-                        &preparation_gates, &service_pools, &outgoing_consumers, materialization_enabled, run_id]() {
+                        &preparation_gates, &lane_preparation_gates, &outgoing_lane_consumers,
+                        &service_pools, &outgoing_consumers, materialization_enabled, run_id]() {
       const auto& dependencies = incoming_dependencies[id];
       std::vector<void*> received_payloads(dependencies.size(), nullptr);
       std::vector<sg4::CommPtr> incoming_transfers;
@@ -536,6 +543,11 @@ static void run_simulation(sg4::Engine& engine, const json& input,
 		sg4::Mailbox::by_name(mailbox)->put_init(&mailbox_token, 0)->detach();
       for (const auto& mailbox : outgoing_lanes[id])
 		sg4::Mailbox::by_name(mailbox)->put_init(&mailbox_token, 0)->detach();
+      if (materialization_enabled) {
+        for (const auto& consumer : outgoing_lane_consumers[id])
+          for (int flow = 0; flow < inbound_flow_count[consumer]; ++flow)
+            lane_preparation_gates.at(consumer)->release();
+      }
     });
   }
   engine.run();
@@ -687,7 +699,7 @@ int main(int argc, char** argv)
 {
   try {
     if (argc==2 && std::string(argv[1])=="--capabilities") {
-      std::cout << json({{"workspaceMaterializationModelVersion",1},{"workspaceMaterializationModelMaxVersion",2},{"bulkServicePoolModelVersion",1},{"runtimeAdmissionModelVersion",1}}).dump() << '\n';
+      std::cout << json({{"workspaceMaterializationModelVersion",1},{"workspaceMaterializationModelMaxVersion",2},{"bulkServicePoolModelVersion",1},{"runtimeAdmissionModelVersion",1},{"preparationLaneBarrierVersion",1}}).dump() << '\n';
       return 0;
     }
     const Arguments arguments = parse_arguments(argc, argv);

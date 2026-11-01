@@ -99,6 +99,7 @@ type prismEvaluationFlow struct {
 	rateLimit        float64
 	stageInitialized bool
 	serviceHeld      bool
+	admitted         bool
 }
 
 type prismServicePool struct{ slots, used int }
@@ -242,7 +243,7 @@ func evaluateCompleteCompactPRISMState(
 	transferCost := 0.0
 
 	for completed < len(tasks) {
-		stageCost, err := initializePRISMFlowStages(flows, servicePools, search.router, clock)
+		stageCost, err := initializePRISMFlowStages(flows, tasks, servicePools, search.router, clock)
 		if err != nil {
 			return state, err
 		}
@@ -828,12 +829,19 @@ func initializePRISMLanes(tasks []prismEvaluationTask) []int {
 	return laneSuccessor
 }
 
-func initializePRISMFlowStages(flows []prismEvaluationFlow, servicePools map[string]*prismServicePool, router compactPRISMRouter, clock float64) (float64, error) {
+func initializePRISMFlowStages(flows []prismEvaluationFlow, tasks []prismEvaluationTask, servicePools map[string]*prismServicePool, router compactPRISMRouter, clock float64) (float64, error) {
 	totalCost := 0.0
 	for i := range flows {
 		flow := &flows[i]
 		if !flow.active || len(flow.stages) == 0 || flow.stageInitialized {
 			continue
+		}
+		if !tasks[flow.consumer].laneReady {
+			continue
+		}
+		if !flow.admitted {
+			flow.startedAt = clock
+			flow.admitted = true
 		}
 		stage := flow.stages[flow.stageIndex]
 		if pool := servicePools[stage.ServiceGroupID]; pool != nil {

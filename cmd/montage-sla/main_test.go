@@ -82,6 +82,27 @@ func TestNativeAuditRejectsWrongAssignmentsAndBrokenLaneOrder(t *testing.T) {
 		})
 	}
 }
+
+func TestNativeAuditRejectsBrokenDataOnlyPrecedence(t *testing.T) {
+	workflow := domain.WorkflowVersion{
+		Activities:       []domain.Activity{{ID: "producer"}, {ID: "consumer"}},
+		DataDependencies: []domain.ActivityDataDependency{{ProducerActivityID: "producer", ConsumerActivityID: "consumer", LogicalName: "input.fits", SizeBytes: 500}},
+	}
+	plan := domain.SchedulePlan{ID: "p", Assignments: []domain.PlanAssignment{
+		{ID: "a", ActivityID: "producer", ResourceID: "r1", CoreID: "c1"},
+		{ID: "b", ActivityID: "consumer", ResourceID: "r2", CoreID: "c2"},
+	}}
+	trace := domain.ExecutionTrace{PlanID: "p", Tasks: []domain.TaskExecution{
+		{ActivityID: "producer", PlanAssignmentID: "a", Status: domain.TaskCompleted, PlannedResourceID: "r1", AllocatedResourceID: "r1", FinishedAt: 2},
+		{ActivityID: "consumer", PlanAssignmentID: "b", Status: domain.TaskCompleted, PlannedResourceID: "r2", AllocatedResourceID: "r2", StartedAt: 1, FinishedAt: 3},
+	}}
+	defer func() {
+		if recover() == nil {
+			t.Fatal("data consumer started before its producer completed")
+		}
+	}()
+	auditTrace(plan, trace, workflow)
+}
 func TestSchedulerConfigurationIsNotMisreportedAsPRISMDefaults(t *testing.T) {
 	c := &campaign{config: config{Beam: 20}}
 	if len(c.schedulerConfiguration("heft", false)) != 0 {

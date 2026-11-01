@@ -93,6 +93,9 @@ func auditTrace(plan domain.SchedulePlan, trace domain.ExecutionTrace, workflow 
 	for _, d := range workflow.Dependencies {
 		check(d.ActivityID, d.DependsOnActivityID)
 	}
+	for _, d := range workflow.DataDependencies {
+		check(d.ConsumerActivityID, d.ProducerActivityID)
+	}
 	for to, from := range domainplanning.LanePredecessors(plan.Assignments) {
 		check(to, from)
 	}

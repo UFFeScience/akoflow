@@ -30,6 +30,7 @@ func (p PRISM) Descriptor() ports.SchedulerDescriptor {
 		Defaults: map[string]any{
 			"beamWidth": 120, "optionCount": 25, "readyBranchLimit": 3,
 			"interferenceAware": true,
+			"slaAware":          true,
 		},
 	}
 }
@@ -42,6 +43,21 @@ func (p PRISM) Schedule(
 	sink ports.CandidateSink,
 ) error {
 	searchRequest := request
+	selectionRequest := request
+	slaAware := true
+	if raw, exists := configuration["slaAware"]; exists {
+		value, valid := raw.(bool)
+		if !valid {
+			return fmt.Errorf("slaAware must be a boolean")
+		}
+		slaAware = value
+	}
+	if !slaAware {
+		// Ablate only SLA-guided pruning and final filtering. Keep the original
+		// limits on emitted plans so their predicted feasibility stays honest.
+		searchRequest.DeadlineSeconds, searchRequest.Budget = 0, 0
+		selectionRequest.DeadlineSeconds, selectionRequest.Budget = 0, 0
+	}
 	if request.InterferenceKnowledge != nil {
 		searchRequest.Interference = request.InterferenceKnowledge
 	}
@@ -88,11 +104,12 @@ func (p PRISM) Schedule(
 		states,
 		optionCount,
 		p.Objective,
-		request,
+		selectionRequest,
 	)
 	for index, state := range states {
 		id := fmt.Sprintf("%s-candidate-%d", p.Descriptor().ID, index+1)
 		plan := compactPRISMPlan(id, p.Descriptor().ID, p.Objective, request, search, state)
+		plan.Metadata["slaAware"] = slaAware
 		if p.Objective == "time" {
 			plan.AlgorithmVersion = "4"
 			origin := state.candidateOrigin

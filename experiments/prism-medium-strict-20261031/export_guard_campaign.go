@@ -13,6 +13,7 @@ import (
 	"path/filepath"
 	"reflect"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/UFFeScience/akoflow/internal/domain"
@@ -71,9 +72,11 @@ func span(tasks []domain.TaskExecution, native bool) float64 {
 }
 
 type realTrace struct {
-	Run        domain.ExecutionRun
-	Activities []domain.TaskExecution
-	Handles    []domain.ActivityHandle
+	Run                      domain.ExecutionRun
+	Activities               []domain.TaskExecution
+	Handles                  []domain.ActivityHandle
+	DataTransfers            []domain.DataTransfer
+	ArtifactMaterializations []domain.ArtifactMaterialization
 }
 type manifestRow struct{ Algorithm, Environment, Group, InputSHA, PlanSHA, NativeSHA, PlanningSHA string }
 type deployment struct{ Directory, RunID, Submitted string }
@@ -164,6 +167,24 @@ func main() {
 		for _, task := range native.Tasks {
 			simulatedBytes += task.TransferBytes
 		}
+		var simulatedNetwork, realNetwork, executableNetwork int64
+		for _, transfer := range native.Transfers {
+			simulatedNetwork += transfer.NetworkBytes
+		}
+		for _, transfer := range real.DataTransfers {
+			executable := false
+			for _, artifact := range real.ArtifactMaterializations {
+				if strings.HasSuffix(transfer.ID, ":transfer-"+artifact.ID) {
+					executable = true
+					break
+				}
+			}
+			if executable {
+				executableNetwork += transfer.NetworkBytes
+			} else {
+				realNetwork += transfer.NetworkBytes
+			}
+		}
 		if p <= 0 || s <= 0 || r <= 0 {
 			panic("invalid makespan")
 		}
@@ -181,7 +202,10 @@ func main() {
 			"simulation_signed_error_percent": 100 * (s - r) / r, "range_seconds": hi - lo, "range_percent_of_planned": 100 * (hi - lo) / p,
 			"planned_cost_usd": plan.Predicted.Cost, "simulated_cost_usd": native.Executed.Cost, "real_cost_usd": real.Run.Cost,
 			"simulated_transfer_bytes": simulatedBytes, "real_transfer_bytes": real.Run.TransferredBytes,
-			"simulated_transfer_seconds": native.Executed.TransferSeconds, "real_transfer_seconds": real.Run.Breakdown.TransferSeconds,
+			"simulated_workflow_network_bytes_reported": simulatedNetwork, "real_workflow_network_bytes_reported": realNetwork,
+			"real_executable_network_bytes_reported": executableNetwork,
+			"transfer_basis":                         "runtime/model counters, not packet capture; workflow network counters exclude executable materialization; aggregate transfer_bytes fields retain original counters",
+			"simulated_transfer_seconds":             native.Executed.TransferSeconds, "real_transfer_seconds": real.Run.Breakdown.TransferSeconds,
 			"cost_basis":  "scheduler/execution estimates using frozen resource prices; execution cost includes observed allocation idle/disk costs; not a cloud invoice",
 			"real_run_id": real.Run.ID, "plan_id": plan.ID, "simulation_run_id": native.RunID, "shared_real_group": m.Group, "historical_real_protocol": historical,
 			"real_status": "completed", "boundary": "first activity start (before launch overhead) to final process completion; excludes initial preparation/admission and final workspace publication",
@@ -198,6 +222,7 @@ func main() {
 	w := csv.NewWriter(f)
 	columns := []string{"environment", "algorithm", "algorithm_version", "candidate_origin", "planned_makespan_seconds", "simulated_makespan_seconds", "real_makespan_seconds", "planned_absolute_error_percent", "simulation_absolute_error_percent", "simulation_signed_error_percent", "range_seconds", "range_percent_of_planned", "planned_cost_usd", "simulated_cost_usd", "real_cost_usd", "real_run_id", "shared_real_group", "historical_real_protocol", "plan_id", "simulation_run_id", "planned_original_end_clock_seconds", "simulated_original_end_clock_seconds", "real_run_wall_seconds", "boundary", "real_trace_source", "real_trace_sha256", "submitted_request_sha256", "input_sha256", "plan_sha256", "planning_sha256", "native_trace_sha256"}
 	columns = append(columns, "simulated_transfer_bytes", "real_transfer_bytes", "simulated_transfer_seconds", "real_transfer_seconds", "cost_basis")
+	columns = append(columns, "simulated_workflow_network_bytes_reported", "real_workflow_network_bytes_reported", "real_executable_network_bytes_reported", "transfer_basis")
 	must(w.Write(columns))
 	for _, r := range rows {
 		line := []string{}

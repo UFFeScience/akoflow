@@ -50,3 +50,11 @@ predictions and wall duration in separate CSV/JSON fields. Report absolute
 prediction error as `100 * abs(prediction - real) / real`. The gray interval is
 only the minimum and maximum of the three observations; its annotation is
 `max - min` and `100 * (max - min) / planned`, never a confidence interval.
+
+Transfer exports separate workflow network counters from executable
+materialization, using the recorded artifact IDs. They also retain the
+engine's original aggregate byte/time counters. These are model/runtime
+counters, not packet capture: a same-filesystem operation may report zero
+network bytes while still spending time preparing its workspace. Costs use the
+frozen resource prices and retain scheduler/execution estimates separately;
+they must not be described as provider invoices.

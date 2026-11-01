@@ -58,13 +58,30 @@ func TestPRISMSLAOffReproducesUnconstrainedSearchForBothObjectives(t *testing.T)
 			}
 			for i := range a.plans {
 				if !reflect.DeepEqual(a.plans[i].Assignments, b.plans[i].Assignments) || a.plans[i].Predicted.MakespanSeconds != b.plans[i].Predicted.MakespanSeconds || a.plans[i].Predicted.Cost != b.plans[i].Predicted.Cost {
-					t.Fatal("ablation changed unconstrained scheduling behavior")
+					t.Fatal("ablation changed unconstrained scheduling decisions or forecast")
 				}
 				if a.plans[i].Predicted.Feasible {
 					t.Fatal("infeasible original deadline was silently removed")
 				}
 			}
 		})
+	}
+}
+
+func TestPRISMTiedCandidatesRemainDeterministic(t *testing.T) {
+	r := slaAblationFixture()
+	r.DeadlineSeconds, r.Budget = 0, 0
+	var expected []domain.SchedulePlan
+	for repeat := 0; repeat < 30; repeat++ {
+		out := &testSink{}
+		if err := NewPRISMTime().Schedule(context.Background(), r, map[string]any{"beamWidth": 20}, nil, out); err != nil {
+			t.Fatal(err)
+		}
+		if repeat == 0 {
+			expected = out.plans
+		} else if !reflect.DeepEqual(expected, out.plans) {
+			t.Fatal("tied native-HEFT/search origins or assignments changed between identical runs")
+		}
 	}
 }
 

@@ -8,6 +8,17 @@ Run inside the development container, where the native SimGrid runner is install
 go run ./cmd/montage-sla --action all
 ```
 
+The current output root defaults to `outputs/montage6448-sla-20261101-v2`.
+The provisional v1 cohort is preserved but excluded: it exposed a preexisting
+map-order tie in PRISM. Canonical signature ordering now resolves tied candidates
+identically in both conditions, without changing their objective scores.
+
+After completion, run `--action verify` in the same container. This reads back
+all 287 native traces (seven references plus 280 scenario replays), rather than
+merely counting output files. Run `--action render` on the host to generate the
+two PGFPlots sources and paired ablation table from the version 2 audit; compile
+those sources with the local LaTeX toolchain.
+
 The workflow, seven S1–S7 paper environments, profiles, directed network,
 resource prices and overheads are frozen from the prior paper request snapshots.
 All seven workflow hashes must match. Planner/model source hashes and the native
@@ -21,7 +32,7 @@ otherwise B_0 is the positive fresh S4 HEFT cost. Zero-cost HPC scopes remain
 in the seven-environment aggregate and are explicitly labeled non-informative
 for relative monetary discrimination. No resource price is invented or changed.
 
-Margins are0.8,0.9,1.0,1.1,1.2. In the time panel D=margin*T_H and B=B_0;
+Margins are 0.8,0.9,1.0,1.1,1.2. In the time panel D=margin*T_H and B=B_0;
 in the cost panel D=T_H and B=margin*B_0. Native HEFT is the same baseline
 mapping, assessed against each limit. The main comparison has210 rows:
 7 environments *5 margins *2 panels *3 methods (PRISM,HEFT,MOHEFT).

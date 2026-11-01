@@ -67,6 +67,16 @@ func selectPlan(plans []domain.SchedulePlan, objective string, d, b float64, fil
 func (c *campaign) configuration(aware bool) map[string]any {
 	return map[string]any{"beamWidth": c.Beam, "optionCount": 25, "readyBranchLimit": 3, "interferenceAware": true, "slaAware": aware}
 }
+
+func (c *campaign) schedulerConfiguration(algorithm string, aware bool) map[string]any {
+	if algorithm == "heft" {
+		return map[string]any{}
+	}
+	if strings.HasPrefix(algorithm, "moheft-") {
+		return map[string]any{"candidateCount": 25}
+	}
+	return c.configuration(aware)
+}
 func (c *campaign) cached(ctx context.Context, s scenario, key string, scheduler ports.Scheduler, configuration map[string]any) ([]domain.SchedulePlan, float64) {
 	dir := filepath.Join(c.Root, "planner-cache", s.ID, key)
 	path := filepath.Join(dir, "plans.json")
@@ -209,7 +219,7 @@ func (c *campaign) run(ctx context.Context) {
 						must(e)
 						scores = append(scores, candidateScore{ID: p.ID, SHA: digest(encoded), Predicted: p.Predicted, Eligible: within(p.Predicted.MakespanSeconds, d) && within(p.Predicted.Cost, b)})
 					}
-					save(filepath.Join(c.Root, "cases", key, "candidate-selection.json"), map[string]any{"configuration": c.configuration(aware), "objective": panel, "selected_original_id": selected.ID, "eligible_count": eligible, "candidate_count": len(plans), "filter_predicted_sla": actual != "heft" && (aware || strings.HasPrefix(actual, "moheft-")), "selected_before_native_replay": true, "candidates": scores})
+					save(filepath.Join(c.Root, "cases", key, "candidate-selection.json"), map[string]any{"configuration": c.schedulerConfiguration(actual, aware), "objective": panel, "selected_original_id": selected.ID, "eligible_count": eligible, "candidate_count": len(plans), "filter_predicted_sla": actual != "heft" && (aware || strings.HasPrefix(actual, "moheft-")), "selected_before_native_replay": true, "candidates": scores})
 					save(filepath.Join(c.Root, "progress.json"), map[string]any{"completed": completed, "expected": 280, "case": key, "phase": "native-simulation", "at": time.Now().UTC()})
 					r := c.execute(ctx, s, panel, actual, aware, margin, d, b, selected, len(plans), eligible, bestEffort, planningSeconds)
 					r.BudgetReference = budgetReference

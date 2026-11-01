@@ -213,12 +213,16 @@ func (c *campaign) baseline(ctx context.Context, s scenario) result {
 }
 func main() {
 	var c config
-	flag.StringVar(&c.Root, "output", "outputs/montage6448-sla-20261101", "private campaign directory")
+	flag.StringVar(&c.Root, "output", "outputs/montage6448-sla-20261101-v2", "private campaign directory")
 	flag.StringVar(&c.Source, "source", "outputs/moheft-paper-campaign/montage-6448", "frozen paper execution requests")
 	flag.StringVar(&c.Binary, "simgrid-binary", "/usr/local/bin/akoflow-simgrid-runner", "native local SimGrid runner")
 	flag.StringVar(&c.Action, "action", "all", "baselines, campaign, verify, or all")
 	flag.IntVar(&c.Beam, "beam-width", 20, "fixed PRISM beam width for all paired conditions")
 	flag.Parse()
+	if c.Action == "render" {
+		renderPlots(c.Root)
+		return
+	}
 	x := prepare(c)
 	ctx := context.Background()
 	switch c.Action {

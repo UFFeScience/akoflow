@@ -122,8 +122,12 @@ func main() {
 	api := flag.String("api", "http://127.0.0.1:5173/akoflow-api", "read-only API")
 	run := flag.String("run", "", "run ID")
 	dir := flag.String("output", "outputs/prism-time-medium-strict-20261031", "existing campaign directory")
+	kind := flag.String("case", "medium", "hpc or medium frozen input prefix")
 	once := flag.Bool("once", false, "one snapshot")
 	flag.Parse()
+	if *kind != "hpc" && *kind != "medium" {
+		panic("case must be hpc or medium")
+	}
 	must := func(e error) {
 		if e != nil {
 			panic(e)
@@ -131,10 +135,10 @@ func main() {
 	}
 	var plan domain.SchedulePlan
 	var request struct{ Workflow domain.WorkflowVersion }
-	b, e := os.ReadFile(filepath.Join(*dir, "medium-plan.json"))
+	b, e := os.ReadFile(filepath.Join(*dir, *kind+"-plan.json"))
 	must(e)
 	must(json.Unmarshal(b, &plan))
-	b, e = os.ReadFile(filepath.Join(*dir, "medium-request.json"))
+	b, e = os.ReadFile(filepath.Join(*dir, *kind+"-request.json"))
 	must(e)
 	must(json.Unmarshal(b, &request))
 	client := http.Client{Timeout: 20 * time.Second}

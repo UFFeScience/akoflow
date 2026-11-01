@@ -25,3 +25,9 @@
 - Prefer one Mermaid source in the Markdown or MDX page. Do not maintain a duplicate SVG and Mermaid version of the same diagram.
 - Keep labels short, preserve meaningful arrow direction, and verify the rendered diagram at desktop and narrow widths.
 - Use a static SVG only when Mermaid cannot express the visual faithfully, such as a branded illustration or a precise quantitative graphic. Document the exception next to the source.
+
+## Branch naming
+
+- Name every branch exactly `AKO-<ISSUE_ID>`, for example `AKO-199` for issue #199.
+- Never use the `codex/` prefix or append descriptive suffixes.
+- Identify the issue before creating a branch. If one issue spans multiple repositories, use the same branch name in each repository.

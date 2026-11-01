@@ -1,0 +1,9 @@
+{
+  "cleaned": true,
+  "ownedDaemonScriptRootAbsent": true,
+  "ownedJobsAbsent": true,
+  "ownedWorkspaceRootAbsent": true,
+  "productsArchiveSHA256": "84285d670e41ff87060ff2c5385519c82a32e483d95a0ca02cb5efa353f61f78",
+  "productsVerified": 3,
+  "runId": "prism-time-medium-strict-20261031-v1-medium-real"
+}

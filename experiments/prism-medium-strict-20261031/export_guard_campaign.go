@@ -225,6 +225,10 @@ func main() {
 		}
 		lo, hi := math.Min(p, math.Min(s, r)), math.Max(p, math.Max(s, r))
 		version := plan.AlgorithmVersion
+		relationship := "exact selected plan"
+		if plan.ID != real.Run.SchedulePlanID {
+			relationship = "shared real observation of proved equivalent placement and lane order"
+		}
 		wall := 0.0
 		if real.Run.StartedAt != nil && real.Run.FinishedAt != nil {
 			wall = real.Run.FinishedAt.Sub(*real.Run.StartedAt).Seconds()
@@ -243,6 +247,7 @@ func main() {
 			"simulated_transfer_seconds":             native.Executed.TransferSeconds, "real_transfer_seconds": real.Run.Breakdown.TransferSeconds,
 			"cost_basis":  "scheduler/execution estimates using frozen resource prices; execution cost includes observed allocation idle/disk costs; not a cloud invoice",
 			"real_run_id": real.Run.ID, "plan_id": plan.ID, "simulation_run_id": simulation.Run.ID, "frozen_native_run_id": native.RunID, "shared_real_group": m.Group, "historical_real_protocol": historical,
+			"executed_plan_id": real.Run.SchedulePlanID, "real_plan_relationship": relationship,
 			"simulation_replay_source": replayed.Result, "simulation_replay_sha256": replaySHA,
 			"real_status": "completed", "boundary": "first activity start (before launch overhead) to final process completion; excludes initial preparation/admission and final workspace publication",
 			"cohort":            "frozen calibrated input; physical deployments shared only within audited equivalence groups",
@@ -260,6 +265,7 @@ func main() {
 	columns = append(columns, "simulated_transfer_bytes", "real_transfer_bytes", "simulated_transfer_seconds", "real_transfer_seconds", "cost_basis")
 	columns = append(columns, "simulated_workflow_network_bytes_reported", "real_workflow_network_bytes_reported", "real_executable_network_bytes_reported", "transfer_basis")
 	columns = append(columns, "frozen_native_run_id", "simulation_replay_source", "simulation_replay_sha256")
+	columns = append(columns, "executed_plan_id", "real_plan_relationship")
 	must(w.Write(columns))
 	for _, r := range rows {
 		line := []string{}

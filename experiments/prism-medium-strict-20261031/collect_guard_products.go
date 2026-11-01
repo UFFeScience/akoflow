@@ -33,6 +33,37 @@ func must(e error) {
 var client = &http.Client{Timeout: 90 * time.Second}
 var apiBase = "http://127.0.0.1:5173/akoflow-api"
 
+func durableProduct(path string, data []byte) error {
+	parent := filepath.Dir(path)
+	if err := os.MkdirAll(parent, 0700); err != nil {
+		return err
+	}
+	f, err := os.CreateTemp(parent, ".export-*.partial")
+	if err != nil {
+		return err
+	}
+	defer os.Remove(f.Name())
+	if _, err = f.Write(data); err == nil {
+		err = f.Sync()
+	}
+	closeErr := f.Close()
+	if err != nil {
+		return err
+	}
+	if closeErr != nil {
+		return closeErr
+	}
+	if err = os.Rename(f.Name(), path); err != nil {
+		return err
+	}
+	dir, err := os.Open(parent)
+	if err != nil {
+		return err
+	}
+	defer dir.Close()
+	return dir.Sync()
+}
+
 func call(method, path string, input any, output any) error {
 	var b []byte
 	var e error
@@ -235,8 +266,7 @@ func main() {
 			if _, e = png.DecodeConfig(bytes.NewReader(data)); e != nil {
 				panic(e)
 			}
-			must(os.MkdirAll(filepath.Dir(target), 0700))
-			must(os.WriteFile(target, data, 0600))
+			must(durableProduct(target, data))
 			if store != nil {
 				lease := registered[w.ActivityID]
 				now := time.Now().UTC()

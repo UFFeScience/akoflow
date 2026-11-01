@@ -69,6 +69,7 @@ func main() {
 	}
 	differences := []map[string]any{}
 	resources, cores, orders, priorities := 0, 0, 0, 0
+	slots := 0
 	coreForward, coreReverse := map[string]string{}, map[string]string{}
 	corePermutation := true
 	for _, n := range next.Assignments {
@@ -77,6 +78,10 @@ func main() {
 			panic("workflow activity mismatch")
 		}
 		r, c, q, p := physical(o.ResourceID) != physical(n.ResourceID), physical(o.CoreID) != physical(n.CoreID), o.OrderOnResource != n.OrderOnResource, o.Priority != n.Priority
+		slotChanged := o.SlotID != n.SlotID
+		if slotChanged {
+			slots++
+		}
 		oldCore, newCore := physical(o.ResourceID)+":"+physical(o.CoreID), physical(n.ResourceID)+":"+physical(n.CoreID)
 		if prior, ok := coreForward[oldCore]; ok && prior != newCore {
 			corePermutation = false
@@ -97,13 +102,15 @@ func main() {
 		if p {
 			priorities++
 		}
-		if r || c || q || p {
+		if r || c || q || p || slotChanged {
 			differences = append(differences, map[string]any{"activity": n.ActivityID, "oldResource": physical(o.ResourceID), "newResource": physical(n.ResourceID), "oldCore": physical(o.CoreID), "newCore": physical(n.CoreID), "oldOrder": o.OrderOnResource, "newOrder": n.OrderOnResource, "priorityChanged": p})
 		}
 	}
 	sort.Slice(differences, func(i, j int) bool { return differences[i]["activity"].(string) < differences[j]["activity"].(string) })
 	sameLanes := reflect.DeepEqual(domainplanning.LanePredecessors(old.Plan.Assignments), domainplanning.LanePredecessors(next.Assignments))
 	result := map[string]any{"realRunId": real.Run.ID, "realSeconds": real.Run.MakespanSeconds, "oldRequestSHA256": oldHash, "newPlanSHA256": newHash, "realTraceSHA256": realHash, "changedResource": resources, "changedCore": cores, "changedOrder": orders, "changedPriority": priorities, "changedActivities": len(differences), "sameExecutablePlan": len(differences) == 0, "coreRelabelingIsBijection": corePermutation, "sameLanePrecedences": sameLanes, "equivalentUpToIdenticalCoreLabels": resources == 0 && priorities == 0 && sameLanes && corePermutation, "differences": differences}
+	result["changedSlot"] = slots
+	result["equivalentUpToIdenticalCoreLabels"] = resources == 0 && priorities == 0 && slots == 0 && sameLanes && corePermutation
 	b, err := json.MarshalIndent(result, "", "  ")
 	check(err)
 	fmt.Println(string(b))

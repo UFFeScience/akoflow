@@ -71,6 +71,13 @@ func (c *campaign) auditStored(r result, base result) int {
 	var p domain.SchedulePlan
 	var trace, native domain.ExecutionTrace
 	load(r.PlanPath, &p)
+	expectedAlgorithm := r.Algorithm
+	if strings.HasPrefix(expectedAlgorithm, "moheft-") {
+		expectedAlgorithm = "moheft"
+	}
+	if p.Algorithm != expectedAlgorithm || p.AlgorithmVersion == "" {
+		panic("selected plan algorithm/version differs from the scenario")
+	}
 	load(r.TracePath, &trace)
 	load(r.NativePath, &native)
 	if p.ID != r.PlanID || trace.RunID != r.RunID || trace.Mode != domain.ExecutionModeSimulation || trace.PlanID != p.ID || native.RunID != r.RunID || native.PlanID != p.ID || !within(math.Abs(native.Executed.MakespanSeconds-trace.Executed.MakespanSeconds), 1e-6) || !reflect.DeepEqual(trace.Executed, r.Simulated) || !reflect.DeepEqual(p.Predicted, r.Predicted) || scheduleHash(p) != r.ScheduleSHA {
@@ -101,16 +108,7 @@ func (c *campaign) auditStored(r result, base result) int {
 	expectedConfiguration := c.schedulerConfiguration(r.Algorithm, r.SLAAware)
 	corrections := 0
 	if !equalJSON(raw["configuration"], expectedConfiguration) {
-		initial := strings.TrimSuffix(selectionPath, ".json") + ".initial.json"
-		if _, e := os.Stat(initial); os.IsNotExist(e) {
-			b, e := os.ReadFile(selectionPath)
-			must(e)
-			must(os.WriteFile(initial, b, 0600))
-		}
-		raw["configuration_record_correction"] = "Bookkeeping correction: initial runner reported PRISM defaults for HEFT/MOHEFT; actual invocations used HEFT nil configuration or MOHEFT candidateCount25. Scientific selection, plans and native traces unchanged."
-		raw["configuration"] = expectedConfiguration
-		save(selectionPath, raw)
-		corrections = 1
+		panic("recorded scheduler configuration differs from the frozen protocol")
 	}
 	encoded, e := json.Marshal(raw)
 	must(e)
@@ -364,8 +362,12 @@ func writeCSV(path string, rows []result) {
 	defer f.Close()
 	w := csv.NewWriter(f)
 	columns := []string{"id", "environment", "panel", "algorithm", "sla_aware", "margin", "deadline_seconds", "budget_usd", "budget_reference", "budget_informative", "predicted_seconds", "predicted_cost", "simulated_seconds", "simulated_cost", "predicted_sla_met", "deadline_met", "budget_met", "sla_met", "best_effort", "candidate_count", "eligible_candidates", "schedule_sha256", "plan_id", "run_id", "plan_path", "plan_sha256", "trace_path", "trace_sha256", "native_path", "native_sha256", "input_sha256", "model_sha256", "simgrid_binary_sha256", "planning_wall_seconds", "simulation_wall_seconds", "completed_activities", "verified_relations", "candidate_origin"}
+	columns = append(columns, "algorithm_version", "predicted_cost_basis", "simulated_cost_basis")
 	must(w.Write(columns))
 	str := func(v any) string {
+		if v == nil {
+			return ""
+		}
 		if n, ok := v.(float64); ok {
 			return strconv.FormatFloat(n, 'g', 17, 64)
 		}
@@ -373,6 +375,16 @@ func writeCSV(path string, rows []result) {
 	}
 	for _, r := range rows {
 		values := []any{r.ID, r.Environment, r.Panel, r.Algorithm, r.SLAAware, r.Margin, r.Deadline, r.Budget, r.BudgetReference, r.BudgetInformative, r.Predicted.MakespanSeconds, r.Predicted.Cost, r.Simulated.MakespanSeconds, r.Simulated.Cost, r.PredictionSaysFeasible, r.DeadlineMet, r.BudgetMet, r.SLAMet, r.BestEffort, r.CandidateCount, r.EligibleCandidates, r.ScheduleSHA, r.PlanID, r.RunID, r.PlanPath, r.PlanSHA, r.TracePath, r.TraceSHA, r.NativePath, r.NativeSHA, r.InputSHA, r.ModelSHA, r.BinarySHA, r.PlanningSeconds, r.SimulationSeconds, r.Completed, r.VerifiedRelations, r.CandidateOrigin}
+		var nativeInfo struct {
+			Version  string         `json:"algorithmVersion"`
+			Metadata map[string]any `json:"metadata"`
+		}
+		load(r.PlanPath, &nativeInfo)
+		basis := nativeInfo.Metadata["costModel"]
+		if basis == nil {
+			basis = "native scheduler forecast with lifecycle enrichment"
+		}
+		values = append(values, nativeInfo.Version, basis, "common native SimGrid VM lifecycle compute/disk plus modeled network tariffs")
 		line := []string{}
 		for _, v := range values {
 			line = append(line, str(v))

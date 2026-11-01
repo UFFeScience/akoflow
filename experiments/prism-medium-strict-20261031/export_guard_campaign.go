@@ -139,7 +139,15 @@ func main() {
 		if read(filepath.Join(capsule, "request.json"), &raw) != m.InputSHA || read(filepath.Join(capsule, "planning-request.json"), &raw) != m.PlanningSHA {
 			panic("frozen inputs changed")
 		}
-		source, ok := sources[m.Group]
+		// Prefer a separately executed observation of this exact algorithm's
+		// capsule. Fall back to an explicitly audited equivalence group only
+		// for the preserved earlier campaign.
+		representativeKey := m.Algorithm + "-" + m.Environment
+		source, ok := sources[representativeKey]
+		if !ok {
+			representativeKey = m.Group
+			source, ok = sources[representativeKey]
+		}
 		if !ok {
 			panic("missing real deployment " + m.Group)
 		}
@@ -171,11 +179,11 @@ func main() {
 			}
 		} else {
 			var representative domain.SchedulePlan
-			read(filepath.Join(root, "frozen", m.Group, "plan.json"), &representative)
+			read(filepath.Join(root, "frozen", representativeKey, "plan.json"), &representative)
 			if !reflect.DeepEqual(submitted.Plan, representative) || real.Run.SchedulePlanID != representative.ID {
 				panic("executed plan differs from frozen representative")
 			}
-			if !reflect.DeepEqual(scientificRequest(filepath.Join(root, "frozen", m.Group, "request.json")), scientificRequest(source.Submitted)) {
+			if !reflect.DeepEqual(scientificRequest(filepath.Join(root, "frozen", representativeKey, "request.json")), scientificRequest(source.Submitted)) {
 				panic("real scientific inputs differ from the frozen representative")
 			}
 			var audit struct {
@@ -226,8 +234,10 @@ func main() {
 		lo, hi := math.Min(p, math.Min(s, r)), math.Max(p, math.Max(s, r))
 		version := plan.AlgorithmVersion
 		relationship := "exact selected plan"
+		sharedGroup := ""
 		if plan.ID != real.Run.SchedulePlanID {
 			relationship = "shared real observation of proved equivalent placement and lane order"
+			sharedGroup = m.Group
 		}
 		wall := 0.0
 		if real.Run.StartedAt != nil && real.Run.FinishedAt != nil {
@@ -246,11 +256,11 @@ func main() {
 			"transfer_basis":                         "runtime/model counters, not packet capture; workflow network counters exclude executable materialization; aggregate transfer_bytes fields retain original counters",
 			"simulated_transfer_seconds":             native.Executed.TransferSeconds, "real_transfer_seconds": real.Run.Breakdown.TransferSeconds,
 			"cost_basis":  "scheduler/execution estimates using frozen resource prices; execution cost includes observed allocation idle/disk costs; not a cloud invoice",
-			"real_run_id": real.Run.ID, "plan_id": plan.ID, "simulation_run_id": simulation.Run.ID, "frozen_native_run_id": native.RunID, "shared_real_group": m.Group, "historical_real_protocol": historical,
+			"real_run_id": real.Run.ID, "plan_id": plan.ID, "simulation_run_id": simulation.Run.ID, "frozen_native_run_id": native.RunID, "shared_real_group": sharedGroup, "historical_real_protocol": historical,
 			"executed_plan_id": real.Run.SchedulePlanID, "real_plan_relationship": relationship,
 			"simulation_replay_source": replayed.Result, "simulation_replay_sha256": replaySHA,
 			"real_status": "completed", "boundary": "first activity start (before launch overhead) to final process completion; excludes initial preparation/admission and final workspace publication",
-			"cohort":            "frozen calibrated input; physical deployments shared only within audited equivalence groups",
+			"cohort":            "frozen calibrated input; observation provenance specified by real run and executed plan identities",
 			"real_trace_source": realPath, "real_trace_sha256": realSHA, "submitted_request_source": source.Submitted, "submitted_request_sha256": submittedSHA,
 			"input_sha256": m.InputSHA, "plan_sha256": m.PlanSHA, "planning_sha256": m.PlanningSHA, "native_trace_sha256": m.NativeSHA,
 			"real_plan_audit": filepath.Join(source.Directory, "strict-order-audit.json"), "exported_at": time.Now().UTC().Format(time.RFC3339),

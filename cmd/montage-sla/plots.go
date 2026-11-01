@@ -81,5 +81,78 @@ func renderPlots(root string) {
 	}
 	table.WriteString("\\bottomrule\n\\end{tabular}\n\\end{table}\n")
 	must(os.WriteFile(filepath.Join(dir, "montage6448-sla-ablation-table.tex"), []byte(table.String()), 0600))
+	renderPaperSection(dir, summary, paired)
 	logf("generated two monochrome graph sources and paired ablation table from complete audited results")
+}
+
+// Derive the prose from the same audited aggregates as the bars and table.
+func renderPaperSection(dir string, summary []aggregate, paired []ablation) {
+	totals := map[string]aggregate{}
+	for _, a := range summary {
+		key := a.Panel + "/" + a.Algorithm
+		t := totals[key]
+		t.N += a.N
+		t.Met += a.Met
+		t.MonetaryN += a.MonetaryN
+		t.MonetaryMet += a.MonetaryMet
+		t.FalseFeasible += a.FalseFeasible
+		totals[key] = t
+	}
+	var tex strings.Builder
+	tex.WriteString(`% Generated from complete audited Montage 6448 SLA results.
+\textcolor{magenta}{Figure~\ref{fig:eval_sla} separates deadline and budget sensitivity for Montage 6448.
+Each bar counts environments meeting both limits, including unsuccessful best-effort schedules in the denominator.
+The limits are local to each environment's fresh HEFT reference; these results replace the earlier cross-workflow SLA aggregate.}
+
+\begin{figure*}[pos=!t]
+\centering
+\includegraphics[width=0.49\textwidth]{figs/fig-sla-montage6448-time.pdf}\hfill
+\includegraphics[width=0.49\textwidth]{figs/fig-sla-montage6448-cost.pdf}
+\caption{\textcolor{magenta}{Joint SLA compliance for Montage 6448 in S1--S7 (counts above bars, out of seven).
+(a) Deadline $D=\alpha T_H$, with budget $B_0$ fixed: PRISM-TIME, HEFT, and MOHEFT-TIME.
+(b) Budget $B=\alpha B_0$, with deadline $T_H$ fixed: PRISM-COST, HEFT, and MOHEFT-COST.
+Margins are relative to each environment's simulated HEFT reference.
+S1 and S2 have no charged resources and use S4's positive HEFT cost as budget reference; their deadline guard still applies.
+These are deterministic environment counts, not repeated-run success probabilities.}}
+\label{fig:eval_sla}
+\end{figure*}
+
+`)
+	for _, panel := range []string{"time", "cost"} {
+		p, h, m := totals[panel+"/prism-"+panel], totals[panel+"/heft"], totals[panel+"/moheft-"+panel]
+		if p.N != 35 || h.N != 35 || m.N != 35 || p.MonetaryN != 25 {
+			panic("incorrect paper totals")
+		}
+		fmt.Fprintf(&tex, "\\textcolor{magenta}{Across the 35 environment--margin conditions in the %s comparison, PRISM-%s meets both limits in %d cases, HEFT in %d, and MOHEFT-%s in %d.\nWithin the five environments with positive HEFT charges (25 conditions), the corresponding counts are %d, %d, and %d.}\n\n", panel, strings.ToUpper(panel), p.Met, h.Met, strings.ToUpper(panel), m.Met, p.MonetaryMet, h.MonetaryMet, m.MonetaryMet)
+	}
+	tex.WriteString(`\textcolor{magenta}{HEFT's deadline curve is determined by construction: its reference schedule cannot meet a deadline below its own simulated makespan and meets it at zero or positive margin.
+The two zero-charge cluster environments cannot discriminate relative monetary savings, so their contribution to the budget panel must be read with the fixed deadline guard.
+The positive-charge subset is reported separately rather than assigning synthetic cluster prices.}
+
+\input{sections/montage6448-sla-ablation-table}
+
+`)
+	for _, panel := range []string{"time", "cost"} {
+		var a ablation
+		for _, p := range paired {
+			if p.Panel == panel {
+				a.N += p.N
+				a.OnOnly += p.OnOnly
+				a.OffOnly += p.OffOnly
+				a.Both += p.Both
+				a.Neither += p.Neither
+				a.DifferentSchedules += p.DifferentSchedules
+			}
+		}
+		if a.N != 35 {
+			panic("incorrect paired paper totals")
+		}
+		fmt.Fprintf(&tex, "\\textcolor{magenta}{For PRISM-%s, the paired SLA ablation changes the selected schedule in %d of 35 conditions. SLA-on alone meets both limits in %d conditions, SLA-off alone in %d, both in %d, and neither in %d (Table~\\ref{tab:montage_sla_ablation}).}\n\n", strings.ToUpper(panel), a.DifferentSchedules, a.OnOnly, a.OffOnly, a.Both, a.Neither)
+	}
+	tex.WriteString(`\textcolor{magenta}{The ablation isolates constraint-guided search and selection within the retained candidate set; it is not a claim of global feasibility or optimality.
+Native predicted feasibility can disagree with replayed compliance, including for MOHEFT's task-additive cost forecast versus common VM-lifecycle billing.
+The outcome therefore measures whether the selected schedule meets the limits in the shared simulator, not whether its planner declares it feasible.
+The scope is one workflow and seven frozen environment models; the counts do not establish statistical superiority across workflows or validate real execution.}
+`)
+	must(os.WriteFile(filepath.Join(dir, "montage6448-sla-results.tex"), []byte(tex.String()), 0600))
 }

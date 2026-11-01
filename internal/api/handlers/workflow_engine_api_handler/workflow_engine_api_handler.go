@@ -3140,6 +3140,9 @@ func (h *Handler) resolveBuildPreparations(ctx context.Context, request *ports.E
 			if err != nil {
 				return err
 			}
+			if !required {
+				return fmt.Errorf("activity %q requires a completed SIF build for OCI image %q before Slurm execution", activity.ID, activity.Command.Executable.Source.Reference)
+			}
 		}
 		if !required {
 			continue

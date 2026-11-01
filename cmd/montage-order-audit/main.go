@@ -104,7 +104,9 @@ func audit(plan domain.SchedulePlan, workflow domain.WorkflowVersion, trace moni
 		physicalSeen[handle.ActivityID] = true
 		planned, _ := handle.Metadata["plannedNode"].(string)
 		allocated, _ := handle.Metadata["allocatedNode"].(string)
-		if allocated == "" && handle.Status == domain.HandleStarting {
+		// Native status and node metadata can arrive in successive inspections.
+		// Missing evidence is pending, never proof of placement on another node.
+		if allocated == "" {
 			r.PhysicalNodesPending++
 			continue
 		}

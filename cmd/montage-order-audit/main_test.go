@@ -73,6 +73,10 @@ func TestAuditRejectsPhysicalNodeFallback(t *testing.T) {
 	if r := audit(p, w, m); !r.Complete || r.PhysicalNodesVerified != 2 {
 		t.Fatalf("matching physical nodes: %+v", r)
 	}
+	m.Handles[1].Metadata["allocatedNode"] = ""
+	if r := audit(p, w, m); r.Complete || r.PhysicalNodesPending != 1 || len(r.Violations) != 0 {
+		t.Fatalf("pending native inspection classified as mismatch: %+v", r)
+	}
 	m.Handles[1].Metadata["allocatedNode"] = "diablo04"
 	if r := audit(p, w, m); r.Complete || len(r.Violations) != 1 {
 		t.Fatalf("fallback accepted: %+v", r)

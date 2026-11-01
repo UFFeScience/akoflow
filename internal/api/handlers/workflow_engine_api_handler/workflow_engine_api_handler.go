@@ -433,6 +433,25 @@ func (h *Handler) FactoryReset(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("factory reset is unavailable"))
 		return
 	}
+	if h.readOnly {
+		writeError(w, http.StatusForbidden, fmt.Errorf("archived instances cannot be reset"))
+		return
+	}
+	if h.executions == nil {
+		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("execution state unavailable; reset refused"))
+		return
+	}
+	runs, err := h.executions.ListRuns(r.Context())
+	if err != nil {
+		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("cannot verify idle execution state: %w", err))
+		return
+	}
+	for _, run := range runs {
+		if run.Status == domain.ExecutionRunCreated || run.Status == domain.ExecutionRunRunning {
+			writeError(w, http.StatusConflict, fmt.Errorf("execution %q is %s; stop it before resetting", run.ID, run.Status))
+			return
+		}
+	}
 	if err := h.factoryReset(r.Context()); err != nil {
 		writeError(w, http.StatusUnprocessableEntity, err)
 		return

@@ -306,7 +306,7 @@ func TestInstancePreferencesEnvironmentReplacementAndReset(t *testing.T) {
 	definition := domain.EnvironmentDefinition{Environment: domain.Environment{ID: "environment", Name: "Environment"}}
 	environments := &environmentCatalogRichStub{found: &definition}
 	reset := false
-	h := &Handler{instance: instance, environments: environments, factoryReset: func(context.Context) error { reset = true; return nil }}
+	h := &Handler{instance: instance, environments: environments, executions: executionQueryStub{}, factoryReset: func(context.Context) error { reset = true; return nil }}
 	tests := []struct {
 		name, method, body string
 		values             map[string]string
@@ -760,6 +760,7 @@ func TestBuildCacheMissingContextAndResetFailures(t *testing.T) {
 		t.Fatalf("missing build=%d", response.Code)
 	}
 	h.factoryReset = func(context.Context) error { return fmt.Errorf("reset failed") }
+	h.executions = executionQueryStub{}
 	if response := callHandler(t, http.MethodPost, "/", "", nil, h.FactoryReset); response.Code != 422 {
 		t.Fatalf("reset=%d", response.Code)
 	}

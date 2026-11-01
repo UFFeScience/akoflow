@@ -1,6 +1,6 @@
 //go:build ignore
 
-// Compare scientific PNG products across the four fresh physical deployments.
+// Compare scientific PNG products across the selected physical deployments.
 package main
 
 import (
@@ -13,6 +13,7 @@ import (
 	"math"
 	"os"
 	"path/filepath"
+	"sort"
 )
 
 func must(e error) {
@@ -28,12 +29,41 @@ func load(p string) (image.Image, string) {
 	return im, fmt.Sprintf("sha256:%x", sha256.Sum256(b))
 }
 func main() {
-	if len(os.Args) != 2 {
-		panic("ROOT")
+	if len(os.Args) < 2 || len(os.Args) > 3 {
+		panic("ROOT [DEPLOYMENTS_JSON]")
 	}
 	root := os.Args[1]
+	directories := map[string]string{}
+	baselineDirectory := filepath.Join(root, "heft-hpc")
+	groups := []string{"prism-hpc-real", "prism-heft-medium", "moheft-medium"}
+	for _, group := range groups {
+		directories[group] = filepath.Join(root, group)
+	}
+	if len(os.Args) == 3 {
+		var sources map[string]struct{ Directory, RunID string }
+		b, e := os.ReadFile(os.Args[2])
+		must(e)
+		must(json.Unmarshal(b, &sources))
+		if len(sources) != 6 || sources["heft-hpc"].Directory == "" {
+			panic("six independent deployment sources required")
+		}
+		baselineDirectory = sources["heft-hpc"].Directory
+		groups = nil
+		seen := map[string]bool{}
+		for key, source := range sources {
+			if source.RunID == "" || seen[source.RunID] {
+				panic("distinct real runs required for product crosscheck")
+			}
+			seen[source.RunID] = true
+			directories[key] = source.Directory
+			if key != "heft-hpc" {
+				groups = append(groups, key)
+			}
+		}
+		sort.Strings(groups)
+	}
 	baseline := map[string]string{}
-	files, e := filepath.Glob(filepath.Join(root, "heft-hpc/final-products/*/*.png"))
+	files, e := filepath.Glob(filepath.Join(baselineDirectory, "final-products/*/*.png"))
 	must(e)
 	if len(files) != 4 {
 		panic("four baseline PNGs required")
@@ -42,8 +72,8 @@ func main() {
 		baseline[filepath.Base(p)] = p
 	}
 	rows := []map[string]any{}
-	for _, group := range []string{"prism-hpc-real", "prism-heft-medium", "moheft-medium"} {
-		files, e := filepath.Glob(filepath.Join(root, group, "final-products/*/*.png"))
+	for _, group := range groups {
+		files, e := filepath.Glob(filepath.Join(directories[group], "final-products/*/*.png"))
 		must(e)
 		if len(files) != 4 {
 			panic("four PNGs required for " + group)
@@ -87,5 +117,5 @@ func main() {
 	b, e := json.MarshalIndent(rows, "", "  ")
 	must(e)
 	must(os.WriteFile(filepath.Join(root, "final-products-crosscheck.json"), b, 0600))
-	fmt.Println("Compared twelve PNG pairs against HPC reference")
+	fmt.Printf("Compared %d PNG pairs against HPC reference\n", len(rows))
 }

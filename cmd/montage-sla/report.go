@@ -260,6 +260,11 @@ func (c *campaign) verify() {
 	}
 	writeCSV(filepath.Join(c.Root, "comparison.csv"), mainRows)
 	writeCSV(filepath.Join(c.Root, "ablation.csv"), ablationRows)
+	baselineRows := make([]result, 0, len(scenarios))
+	for _, s := range scenarios {
+		baselineRows = append(baselineRows, baselines[s.ID])
+	}
+	writeCSV(filepath.Join(c.Root, "baselines.csv"), baselineRows)
 	save(filepath.Join(c.Root, "coverage-audit.json"), map[string]any{"audit_version": 2, "complete": true, "main_cases": main, "additional_sla_off_cases": off, "native_simulations": len(rows), "native_baselines": 7, "activities_each": 6448, "all_native_tasks_checked": (len(rows) + 7) * 6448, "exact_grid": true, "all_assignments_and_precedences_checked": true, "all_input_model_plan_native_hashes_checked": true, "pre_simulation_candidate_policy_checked": true, "unchanged_sla_off_schedules_checked": true, "paired_ablation_inputs_and_limits_checked": true, "metadata_configuration_corrections": corrections, "simulation_only": true})
 	logf("verified exact grid main=%d off=%d; all%d native task traces audited", main, off, (len(rows)+7)*6448)
 }

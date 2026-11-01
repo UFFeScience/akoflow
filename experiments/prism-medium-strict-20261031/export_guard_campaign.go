@@ -80,6 +80,20 @@ type realTrace struct {
 }
 type manifestRow struct{ Algorithm, Environment, Group, InputSHA, PlanSHA, NativeSHA, PlanningSHA string }
 type deployment struct{ Directory, RunID, Submitted string }
+type replay struct{ Result, Submitted string }
+
+func scientificRequest(path string) map[string]any {
+	var request map[string]any
+	read(path, &request)
+	delete(request, "Run")
+	for _, value := range request["Resources"].([]any) {
+		resource := value.(map[string]any)
+		if metadata, ok := resource["metadata"].(map[string]any); ok {
+			delete(metadata, "workspaceStorageQuotaOverride")
+		}
+	}
+	return request
+}
 
 func main() {
 	if len(os.Args) != 3 {
@@ -93,6 +107,8 @@ func main() {
 	}
 	var sources map[string]deployment
 	read(os.Args[2], &sources)
+	var replays map[string]replay
+	read(filepath.Join(root, "simulation-replays.json"), &replays)
 	rows := []obj{}
 	for _, m := range manifest {
 		capsule := filepath.Join(root, "frozen", m.Algorithm+"-"+m.Environment)
@@ -103,6 +119,18 @@ func main() {
 		var native domain.ExecutionTrace
 		if read(filepath.Join(capsule, "native-result.json"), &native) != m.NativeSHA {
 			panic("simulation changed after freeze")
+		}
+		replayed, ok := replays[m.Algorithm+"-"+m.Environment]
+		if !ok {
+			panic("missing catalog simulation replay")
+		}
+		var simulation struct{ Run domain.ExecutionRun }
+		replaySHA := read(replayed.Result, &simulation)
+		if simulation.Run.Status != domain.ExecutionRunCompleted || simulation.Run.CompletedActivityCount != 58 || simulation.Run.SchedulePlanID != plan.ID || math.Abs(simulation.Run.MakespanSeconds-native.Executed.MakespanSeconds) > 1e-7 {
+			panic("catalog simulation does not reproduce the frozen native result")
+		}
+		if !reflect.DeepEqual(scientificRequest(filepath.Join(capsule, "request.json")), scientificRequest(replayed.Submitted)) {
+			panic("catalog simulation input differs from the frozen capsule")
 		}
 		var raw any
 		if read(filepath.Join(capsule, "request.json"), &raw) != m.InputSHA || read(filepath.Join(capsule, "planning-request.json"), &raw) != m.PlanningSHA {
@@ -142,6 +170,9 @@ func main() {
 			read(filepath.Join(root, "frozen", m.Group, "plan.json"), &representative)
 			if !reflect.DeepEqual(submitted.Plan, representative) || real.Run.SchedulePlanID != representative.ID {
 				panic("executed plan differs from frozen representative")
+			}
+			if !reflect.DeepEqual(scientificRequest(filepath.Join(root, "frozen", m.Group, "request.json")), scientificRequest(source.Submitted)) {
+				panic("real scientific inputs differ from the frozen representative")
 			}
 			var audit struct {
 				AuditVersion int
@@ -207,7 +238,8 @@ func main() {
 			"transfer_basis":                         "runtime/model counters, not packet capture; workflow network counters exclude executable materialization; aggregate transfer_bytes fields retain original counters",
 			"simulated_transfer_seconds":             native.Executed.TransferSeconds, "real_transfer_seconds": real.Run.Breakdown.TransferSeconds,
 			"cost_basis":  "scheduler/execution estimates using frozen resource prices; execution cost includes observed allocation idle/disk costs; not a cloud invoice",
-			"real_run_id": real.Run.ID, "plan_id": plan.ID, "simulation_run_id": native.RunID, "shared_real_group": m.Group, "historical_real_protocol": historical,
+			"real_run_id": real.Run.ID, "plan_id": plan.ID, "simulation_run_id": simulation.Run.ID, "frozen_native_run_id": native.RunID, "shared_real_group": m.Group, "historical_real_protocol": historical,
+			"simulation_replay_source": replayed.Result, "simulation_replay_sha256": replaySHA,
 			"real_status": "completed", "boundary": "first activity start (before launch overhead) to final process completion; excludes initial preparation/admission and final workspace publication",
 			"cohort":            "frozen calibrated input; three fresh distinct deployments and one equivalent historical HPC deployment",
 			"real_trace_source": realPath, "real_trace_sha256": realSHA, "submitted_request_source": source.Submitted, "submitted_request_sha256": submittedSHA,
@@ -223,6 +255,7 @@ func main() {
 	columns := []string{"environment", "algorithm", "algorithm_version", "candidate_origin", "planned_makespan_seconds", "simulated_makespan_seconds", "real_makespan_seconds", "planned_absolute_error_percent", "simulation_absolute_error_percent", "simulation_signed_error_percent", "range_seconds", "range_percent_of_planned", "planned_cost_usd", "simulated_cost_usd", "real_cost_usd", "real_run_id", "shared_real_group", "historical_real_protocol", "plan_id", "simulation_run_id", "planned_original_end_clock_seconds", "simulated_original_end_clock_seconds", "real_run_wall_seconds", "boundary", "real_trace_source", "real_trace_sha256", "submitted_request_sha256", "input_sha256", "plan_sha256", "planning_sha256", "native_trace_sha256"}
 	columns = append(columns, "simulated_transfer_bytes", "real_transfer_bytes", "simulated_transfer_seconds", "real_transfer_seconds", "cost_basis")
 	columns = append(columns, "simulated_workflow_network_bytes_reported", "real_workflow_network_bytes_reported", "real_executable_network_bytes_reported", "transfer_basis")
+	columns = append(columns, "frozen_native_run_id", "simulation_replay_source", "simulation_replay_sha256")
 	must(w.Write(columns))
 	for _, r := range rows {
 		line := []string{}

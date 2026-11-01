@@ -34,3 +34,19 @@ The operational SQLite path is isolated and schema recreation disabled. A
 catalog recovery must preserve the original backup and its checksum. Recovery
 of a historical catalog does not restore newer execution rows: use their raw
 exports as historical evidence without inventing replacement completed runs.
+
+Export with `export_guard_campaign.go ROOT DEPLOYMENTS_JSON` only after all
+three fresh deployments pass the final order and product audits. The source map
+uses frozen equivalence-group keys and explicit run/request paths. A historical
+PRISM HPC source additionally requires its zero-resource/slot/order-change
+proof. The exporter rejects incomplete runs, changed capsules, mismatched plan
+IDs and real durations inconsistent with their 58 completed task timestamps.
+
+The plotted common duration is first activity start before launch overhead to
+final process completion. For scheduler assignments remove fixed launch
+components from compute-start timestamps; remove modeled final workspace
+publication from native finish timestamps. Retain the original end-clock
+predictions and wall duration in separate CSV/JSON fields. Report absolute
+prediction error as `100 * abs(prediction - real) / real`. The gray interval is
+only the minimum and maximum of the three observations; its annotation is
+`max - min` and `100 * (max - min) / planned`, never a confidence interval.

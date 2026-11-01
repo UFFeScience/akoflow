@@ -64,6 +64,25 @@ func TestAuditAcceptsStrictLaneCompletion(t *testing.T) {
 	}
 }
 
+func TestAuditRejectsPhysicalNodeFallback(t *testing.T) {
+	p, w, m := auditFixture()
+	m.PhysicalNodes = map[string]string{"r": "diablo03"}
+	for _, id := range []string{"a", "b"} {
+		m.Handles = append(m.Handles, domain.ActivityHandle{ActivityID: id, Status: domain.HandleCompleted, Metadata: map[string]any{"plannedNode": "diablo03", "allocatedNode": "diablo03"}})
+	}
+	if r := audit(p, w, m); !r.Complete || r.PhysicalNodesVerified != 2 {
+		t.Fatalf("matching physical nodes: %+v", r)
+	}
+	m.Handles[1].Metadata["allocatedNode"] = "diablo04"
+	if r := audit(p, w, m); r.Complete || len(r.Violations) != 1 {
+		t.Fatalf("fallback accepted: %+v", r)
+	}
+	m.Handles = m.Handles[:1]
+	if r := audit(p, w, m); r.Complete || len(r.Violations) != 1 {
+		t.Fatalf("missing node evidence accepted: %+v", r)
+	}
+}
+
 func TestAuditRejectsMissingOrChangedAssignmentEvidence(t *testing.T) {
 	for _, name := range []string{"assignment", "planned-resource", "allocation"} {
 		t.Run(name, func(t *testing.T) {

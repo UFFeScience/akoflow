@@ -22,11 +22,14 @@ type event struct {
 	} `json:"payload"`
 }
 type monitor struct {
-	Run        domain.ExecutionRun    `json:"run"`
-	Activities []domain.TaskExecution `json:"activities"`
-	Events     []event                `json:"events"`
+	Run           domain.ExecutionRun     `json:"run"`
+	Activities    []domain.TaskExecution  `json:"activities"`
+	Events        []event                 `json:"events"`
+	Handles       []domain.ActivityHandle `json:"handles"`
+	PhysicalNodes map[string]string       `json:"-"`
 }
 type report struct {
+	PhysicalNodesVerified, PhysicalNodesPending                                                  int
 	AuditVersion                                                                                 int       `json:"auditVersion"`
 	At                                                                                           time.Time `json:"at"`
 	RunID                                                                                        string    `json:"runId"`
@@ -37,7 +40,7 @@ type report struct {
 }
 
 func audit(plan domain.SchedulePlan, workflow domain.WorkflowVersion, trace monitor) report {
-	r := report{AuditVersion: 2, At: time.Now().UTC(), RunID: trace.Run.ID, Status: string(trace.Run.Status), Planned: len(plan.Assignments), Violations: []string{}}
+	r := report{AuditVersion: 3, At: time.Now().UTC(), RunID: trace.Run.ID, Status: string(trace.Run.Status), Planned: len(plan.Assignments), Violations: []string{}}
 	if trace.Run.SchedulePlanID != plan.ID {
 		r.Violations = append(r.Violations, "executed plan ID differs from frozen plan")
 	}
@@ -91,6 +94,31 @@ func audit(plan domain.SchedulePlan, workflow domain.WorkflowVersion, trace moni
 			r.Started++
 		}
 	}
+	physicalSeen := map[string]bool{}
+	for _, handle := range trace.Handles {
+		binding, exists := bindings[handle.ActivityID]
+		expected := trace.PhysicalNodes[binding.ResourceID]
+		if !exists || expected == "" {
+			continue
+		}
+		physicalSeen[handle.ActivityID] = true
+		planned, _ := handle.Metadata["plannedNode"].(string)
+		allocated, _ := handle.Metadata["allocatedNode"].(string)
+		if allocated == "" && handle.Status == domain.HandleStarting {
+			r.PhysicalNodesPending++
+			continue
+		}
+		if planned != expected || allocated != expected {
+			r.Violations = append(r.Violations, "physical node mismatch: "+handle.ActivityID+" expected "+expected+" allocated "+allocated)
+		} else {
+			r.PhysicalNodesVerified++
+		}
+	}
+	for _, task := range trace.Activities {
+		if task.Status == domain.TaskCompleted && trace.PhysicalNodes[bindings[task.ActivityID].ResourceID] != "" && !physicalSeen[task.ActivityID] {
+			r.Violations = append(r.Violations, "missing physical node evidence: "+task.ActivityID)
+		}
+	}
 	relations := map[string]map[string]bool{}
 	add := func(to, from string) {
 		if relations[to] == nil {
@@ -122,7 +150,7 @@ func audit(plan domain.SchedulePlan, workflow domain.WorkflowVersion, trace moni
 			}
 		}
 	}
-	r.Complete = r.Status == "completed" && r.Completed == r.Planned && r.Started == r.Planned && len(starts) == r.Planned && len(ends) == r.Planned && r.PendingRelations == 0 && r.Failed == 0 && len(r.Violations) == 0
+	r.Complete = r.Status == "completed" && r.Completed == r.Planned && r.Started == r.Planned && len(starts) == r.Planned && len(ends) == r.Planned && r.PendingRelations == 0 && r.PhysicalNodesPending == 0 && r.Failed == 0 && len(r.Violations) == 0
 	return r
 }
 func main() {
@@ -131,7 +159,11 @@ func main() {
 	dir := flag.String("output", "outputs/prism-time-medium-strict-20261031", "existing campaign directory")
 	kind := flag.String("case", "medium", "hpc or medium frozen input prefix")
 	once := flag.Bool("once", false, "one snapshot")
+	snapshot := flag.String("snapshot", "", "audit a preserved monitor JSON; requires --once")
 	flag.Parse()
+	if *snapshot != "" && !*once {
+		panic("preserved snapshot audit requires --once")
+	}
 	if *kind != "hpc" && *kind != "medium" {
 		panic("case must be hpc or medium")
 	}
@@ -141,27 +173,47 @@ func main() {
 		}
 	}
 	var plan domain.SchedulePlan
-	var request struct{ Workflow domain.WorkflowVersion }
+	var request struct {
+		Workflow  domain.WorkflowVersion
+		Resources []domain.Resource
+	}
 	b, e := os.ReadFile(filepath.Join(*dir, *kind+"-plan.json"))
 	must(e)
 	must(json.Unmarshal(b, &plan))
 	b, e = os.ReadFile(filepath.Join(*dir, *kind+"-request.json"))
 	must(e)
 	must(json.Unmarshal(b, &request))
+	physicalNodes := map[string]string{}
+	for _, resource := range request.Resources {
+		if resource.Type == domain.ResourceHPCMachine {
+			node, _ := resource.Metadata["name"].(string)
+			if node == "" {
+				panic("HPC resource has no frozen physical node identity")
+			}
+			physicalNodes[resource.ID] = node
+		}
+	}
 	client := http.Client{Timeout: 20 * time.Second}
 	completedPending := 0
 	for {
-		response, e := client.Get(*api + "/execution-runs/" + *run + "/monitor/")
-		must(e)
-		if response.StatusCode != 200 {
-			response.Body.Close()
-			panic(fmt.Sprintf("monitor HTTP %d", response.StatusCode))
-		}
 		var raw json.RawMessage
-		must(json.NewDecoder(response.Body).Decode(&raw))
-		response.Body.Close()
+		if *snapshot != "" {
+			data, err := os.ReadFile(*snapshot)
+			must(err)
+			raw = data
+		} else {
+			response, err := client.Get(*api + "/execution-runs/" + *run + "/monitor/")
+			must(err)
+			if response.StatusCode != 200 {
+				response.Body.Close()
+				panic(fmt.Sprintf("monitor HTTP %d", response.StatusCode))
+			}
+			must(json.NewDecoder(response.Body).Decode(&raw))
+			response.Body.Close()
+		}
 		var trace monitor
 		must(json.Unmarshal(raw, &trace))
+		trace.PhysicalNodes = physicalNodes
 		if trace.Run.ID != *run {
 			panic("monitor returned a different run ID")
 		}

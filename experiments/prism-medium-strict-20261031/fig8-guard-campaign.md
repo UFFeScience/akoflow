@@ -58,3 +58,11 @@ counters, not packet capture: a same-filesystem operation may report zero
 network bytes while still spending time preparing its workspace. Costs use the
 frozen resource prices and retain scheduler/execution estimates separately;
 they must not be described as provider invoices.
+
+Historical logical equivalence alone is insufficient for reuse. Audit version3
+also checks every HPC handle's observed node against the frozen physical node.
+The historical PRISM HPC run used Diablo04 for one activity through eligible-
+node fallback, so its1144.38s result remains separate. The final campaign needs
+four fresh physical deployments, sharing only HEFT/MOHEFT in HPC and
+PRISM/HEFT in medium. Use `--once --snapshot PATH` to audit a preserved complete
+trace without replacing it with later mutable catalog projections.

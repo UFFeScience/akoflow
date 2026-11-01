@@ -1,6 +1,6 @@
 //go:build ignore
 
-// Compare scientific PNG products across the three fresh physical deployments.
+// Compare scientific PNG products across the four fresh physical deployments.
 package main
 
 import (
@@ -42,7 +42,7 @@ func main() {
 		baseline[filepath.Base(p)] = p
 	}
 	rows := []map[string]any{}
-	for _, group := range []string{"prism-heft-medium", "moheft-medium"} {
+	for _, group := range []string{"prism-hpc-real", "prism-heft-medium", "moheft-medium"} {
 		files, e := filepath.Glob(filepath.Join(root, group, "final-products/*/*.png"))
 		must(e)
 		if len(files) != 4 {
@@ -87,5 +87,5 @@ func main() {
 	b, e := json.MarshalIndent(rows, "", "  ")
 	must(e)
 	must(os.WriteFile(filepath.Join(root, "final-products-crosscheck.json"), b, 0600))
-	fmt.Println("Compared eight PNG pairs against HPC reference")
+	fmt.Println("Compared twelve PNG pairs against HPC reference")
 }

@@ -79,7 +79,10 @@ type realTrace struct {
 	ArtifactMaterializations []domain.ArtifactMaterialization
 }
 type manifestRow struct{ Algorithm, Environment, Group, InputSHA, PlanSHA, NativeSHA, PlanningSHA string }
-type deployment struct{ Directory, RunID, Submitted string }
+type deployment struct {
+	Directory, RunID, Submitted string
+	Historical                  bool
+}
 type replay struct{ Result, Submitted string }
 
 func scientificRequest(path string) map[string]any {
@@ -142,7 +145,7 @@ func main() {
 		}
 		var real realTrace
 		realPath := filepath.Join(source.Directory, "strict-live-monitor.json")
-		historical := m.Group == "prism-time-hpc"
+		historical := source.Historical
 		if historical {
 			realPath = filepath.Join(source.Directory, "real-results.json")
 		}
@@ -160,9 +163,10 @@ func main() {
 			var proof struct {
 				Equivalent                                 bool `json:"equivalentUpToIdenticalCoreLabels"`
 				ChangedResource, ChangedSlot, ChangedOrder int
+				EligibleHistoricalReal                     bool `json:"eligibleHistoricalReal"`
 			}
 			read(filepath.Join(root, "historical-prism-hpc-equivalence.json"), &proof)
-			if !proof.Equivalent || proof.ChangedResource != 0 || proof.ChangedSlot != 0 || proof.ChangedOrder != 0 {
+			if !proof.Equivalent || !proof.EligibleHistoricalReal || proof.ChangedResource != 0 || proof.ChangedSlot != 0 || proof.ChangedOrder != 0 {
 				panic("historical equivalence not proved")
 			}
 		} else {
@@ -181,7 +185,7 @@ func main() {
 				RunID        string
 			}
 			read(filepath.Join(source.Directory, "strict-order-audit.json"), &audit)
-			if audit.AuditVersion < 2 || !audit.Complete || len(audit.Violations) != 0 || audit.RunID != source.RunID {
+			if audit.AuditVersion < 3 || !audit.Complete || len(audit.Violations) != 0 || audit.RunID != source.RunID {
 				panic("complete zero-violation order audit required")
 			}
 			var products struct {
@@ -241,7 +245,7 @@ func main() {
 			"real_run_id": real.Run.ID, "plan_id": plan.ID, "simulation_run_id": simulation.Run.ID, "frozen_native_run_id": native.RunID, "shared_real_group": m.Group, "historical_real_protocol": historical,
 			"simulation_replay_source": replayed.Result, "simulation_replay_sha256": replaySHA,
 			"real_status": "completed", "boundary": "first activity start (before launch overhead) to final process completion; excludes initial preparation/admission and final workspace publication",
-			"cohort":            "frozen calibrated input; three fresh distinct deployments and one equivalent historical HPC deployment",
+			"cohort":            "frozen calibrated input; physical deployments shared only within audited equivalence groups",
 			"real_trace_source": realPath, "real_trace_sha256": realSHA, "submitted_request_source": source.Submitted, "submitted_request_sha256": submittedSHA,
 			"input_sha256": m.InputSHA, "plan_sha256": m.PlanSHA, "planning_sha256": m.PlanningSHA, "native_trace_sha256": m.NativeSHA,
 			"real_plan_audit": filepath.Join(source.Directory, "strict-order-audit.json"), "exported_at": time.Now().UTC().Format(time.RFC3339),

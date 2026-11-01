@@ -14,6 +14,7 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
+	"strings"
 )
 
 func must(e error) {
@@ -34,6 +35,7 @@ func main() {
 	}
 	root := os.Args[1]
 	directories := map[string]string{}
+	mediumDirectory := ""
 	baselineDirectory := filepath.Join(root, "heft-hpc")
 	groups := []string{"prism-hpc-real", "prism-heft-medium", "moheft-medium"}
 	for _, group := range groups {
@@ -48,6 +50,7 @@ func main() {
 			panic("six independent deployment sources required")
 		}
 		baselineDirectory = sources["heft-hpc"].Directory
+		mediumDirectory = sources["prism-time-medium"].Directory
 		groups = nil
 		seen := map[string]bool{}
 		for key, source := range sources {
@@ -61,6 +64,11 @@ func main() {
 			}
 		}
 		sort.Strings(groups)
+		for _, algorithm := range []string{"heft", "moheft"} {
+			group := "within-medium/" + algorithm
+			groups = append(groups, group)
+			directories[group] = sources[algorithm+"-medium"].Directory
+		}
 	}
 	baseline := map[string]string{}
 	files, e := filepath.Glob(filepath.Join(baselineDirectory, "final-products/*/*.png"))
@@ -71,6 +79,17 @@ func main() {
 	for _, p := range files {
 		baseline[filepath.Base(p)] = p
 	}
+	mediumBaseline := map[string]string{}
+	if mediumDirectory != "" {
+		files, e := filepath.Glob(filepath.Join(mediumDirectory, "final-products/*/*.png"))
+		must(e)
+		if len(files) != 4 {
+			panic("four medium reference PNGs required")
+		}
+		for _, p := range files {
+			mediumBaseline[filepath.Base(p)] = p
+		}
+	}
 	rows := []map[string]any{}
 	for _, group := range groups {
 		files, e := filepath.Glob(filepath.Join(directories[group], "final-products/*/*.png"))
@@ -79,7 +98,11 @@ func main() {
 			panic("four PNGs required for " + group)
 		}
 		for _, p := range files {
-			reference, ok := baseline[filepath.Base(p)]
+			references := baseline
+			if strings.HasPrefix(group, "within-medium/") {
+				references = mediumBaseline
+			}
+			reference, ok := references[filepath.Base(p)]
 			if !ok {
 				panic("unexpected final product")
 			}
@@ -117,5 +140,5 @@ func main() {
 	b, e := json.MarshalIndent(rows, "", "  ")
 	must(e)
 	must(os.WriteFile(filepath.Join(root, "final-products-crosscheck.json"), b, 0600))
-	fmt.Printf("Compared %d PNG pairs against HPC reference\n", len(rows))
+	fmt.Printf("Compared %d PNG pairs; includes independent within-medium comparisons when supplied\n", len(rows))
 }

@@ -1,61 +1,35 @@
-# Montage58: frozen Figure8 replay,2026-11-01
+# Montage 58 — six independent Figure 8 executions
 
-Six algorithm/configuration rows use four fresh physical deployments. Inputs,
-calibration and native simulations were frozen before observing these replays.
-No new outcome was used to refit the forecasts. All runs completed58 activities
-without activity recovery. Durations are seconds.
+All six algorithm/configuration pairs now have distinct physical execution IDs. Two additional deployments replace the previously shared observations: MOHEFT-TIME/HPC and HEFT/HPC+medium. The original four physical executions and all historical observations remain preserved. No plan, simulation, calibration, network model or input was refitted or changed.
 
-| Environment | Algorithm | Planned | Simulated | Real | Absolute simulation error |
+| Environment | Algorithm | Planned (s) | Simulated (s) | Real (s) | Absolute simulation error |
 |---|---|---:|---:|---:|---:|
-| HPC | PRISM-TIME |975.33|975.33|1174.07|16.93%|
-| HPC | HEFT |585.02|1436.36|1608.76|10.72%|
-| HPC | MOHEFT-TIME |585.02|1436.36|1608.76|10.72%|
-| HPC+medium | PRISM-TIME |4168.83|4180.99|3353.96|24.66%|
-| HPC+medium | HEFT |1791.42|4180.99|3353.96|24.66%|
-| HPC+medium | MOHEFT-TIME |1845.23|4954.23|4054.02|22.21%|
+| HPC | PRISM-TIME | 975.33 | 975.33 | 1174.07 | 16.93% |
+| HPC | HEFT | 585.02 | 1436.36 | 1608.76 | 10.72% |
+| HPC | MOHEFT-TIME | 585.02 | 1436.36 | 1261.64 | 13.85% |
+| HPC + medium | PRISM-TIME | 4168.83 | 4180.99 | 3353.96 | 24.66% |
+| HPC + medium | HEFT | 1791.42 | 4180.99 | 3173.32 | 31.75% |
+| HPC + medium | MOHEFT-TIME | 1845.23 | 4954.23 | 4054.02 | 22.21% |
 
-Errors are100*abs(simulated-real)/real. All durations span first activity start
-before launch overhead through final process completion; initial preparation/
-admission and final workspace publication are excluded. Original model end
-clocks and run wall durations remain in CSV/JSON. The plot range is descriptive:
-max(P,S,R)-min(P,S,R),with percentage100*range/P,not a confidence interval.
+Errors are 100 *abs(simulated-real)/real. All plotted times use the common boundary from first activity start, before launch overhead, through final process completion; initial preparation/admission and final workspace publication are excluded. Original model end clocks and run wall durations remain in CSV/JSON. The gray plot range is max(P,S,R)-min(P,S,R), with 100 *range/P; it is descriptive, not a confidence interval.
 
-HEFT/MOHEFT share the identical logical placement/lane graph in HPC. PRISM v4
-selected its native HEFT anchor in medium,so PRISM/HEFT share that deployment.
-Explicit plan IDs,executed representative IDs,relationship labels,run IDs,
-request/plan/native hashes and simulation-replay identities are exported.
-Planned values preserve each algorithm's own estimate; simulation uses the
-same frozen operational runtime-stage model for every plan. Near P/S agreement
-does not imply accurate real prediction; residual errors remain material.
+HEFT and MOHEFT-TIME retain equivalent HPC placement/lane graphs. In medium, PRISM-TIME selected its native HEFT candidate. These equivalent plans were nevertheless executed independently, so different real times do not establish an algorithmic scheduling advantage. Each method retains its own planned estimate; all simulations use the same frozen operational model. Six single deployments do not establish statistical superiority.
 
-| Physical deployment | Real run | Verified HPC nodes | Verified precedence relations |
-|---|---|---:|---:|
-| HPC HEFT/MOHEFT |fig8-guard-heft-shared-20261101-v2-hpc-real-attempt3|58|134|
-| HPC PRISM |fig8-guard-prism-time-fresh-20261101-v1-hpc-real|58|114|
-| Medium PRISM/HEFT |fig8-guard-prism-heft-shared-20261101-v1-medium-real|4|147|
-| Medium MOHEFT |fig8-guard-moheft-time-20261101-v1-medium-real|7|154|
+| Case | Real execution ID |
+|---|---|
+| prism-time/hpc | fig8-guard-prism-time-fresh-20261101-v1-hpc-real |
+| heft/hpc | fig8-guard-heft-shared-20261101-v2-hpc-real-attempt3 |
+| moheft/hpc | fig8-independent-moheft-time-20261101-v1-hpc-real |
+| prism-time/medium | fig8-guard-prism-heft-shared-20261101-v1-medium-real |
+| heft/medium | fig8-independent-heft-time-20261101-v1-medium-real |
+| moheft/medium | fig8-guard-moheft-time-20261101-v1-medium-real |
 
-All final v3 audits have zero assignment,node or ordering violations.
-Historical PRISM HPC1144.38s is preserved separately: its native trace includes
-Diablo04 fallback for one activity and its request snapshot carries a different
-plan ID. The recovered historical medium4143.89s is also separate. Failed
-initial infrastructure attempts are recorded in excluded-attempts.json; an
-observer-only restart for a pending node inspection is documented separately.
+Earlier IDs containing the word `shared` retain their original historical names; each is used by only one row in the final independent comparison.
 
-Each fresh deployment has four final PNGs verified by size,SHA256 and PNG
-parsing,complete task logs,all58 task telemetry exports,and archived Slurm
-scripts/job evidence. Products are byte-identical across algorithms within each
-environment. Cross-environment pixel differences are quantified in the supplied
-crosscheck; no assertion of bitwise equality across configurations is made.
+All six executions completed 58/58 without activity recovery and passed final v3 assignment, physical HPC node and precedence audits. Four final PNGs and 58 activity telemetry exports per execution were preserved, together with native job files and Slurm scripts. Product differences are quantified in final-products-crosscheck.json.
 
-Both medium deployments' two owned VMs,boot disks and firewall rules were
-verified absent in full provider inventories. Sixteen temporary credential
-files were removed across the four VM generations. Owned HPC roots/home job
-files were removed only after preservation and empty squeue. Permanent inputs,
-images,network and base credentials remain. No real executions remain active.
+Owned cloud VMs, boot disks, firewall rules, temporary credentials and HPC/local script directories were removed only after evidence preservation and terminal-state verification. Permanent data, images and base credentials remain. Cleanup proofs and raw evidence are under outputs/fig8-independent-real-20261101/ and the four original directories referenced in deployments.json.
 
-Raw evidence and cleanup proofs are under outputs/fig8-guard-real-20261101/.
-The dedicated operational catalog is storage/fig8-guard-20261101/database.db;
-automatic schema recreation is disabled and reset is refused during execution.
-Paper data mirror these CSV/JSON files; Figure8 is rendered from that mirror.
-Single deployments do not establish statistical superiority.
+The two observer-only startup corrections are documented separately; neither restarted an activity or altered a scientific execution. Historical 1144.38s and recovered 4143.89s observations remain excluded from this frozen cohort.
+
+PNG crosscheck: all HPC products are byte-identical. Within medium, the independent HEFT replay differs from PRISM-TIME in at most 0.105% of pixels; maximum 8-bit channel difference 22 and maximum channel RMSE 0.08736. MOHEFT/PRISM products remain byte-identical in medium. These measured differences are preserved without assigning an unverified cause.

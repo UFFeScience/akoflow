@@ -3,9 +3,10 @@ package simgrid
 import (
 	"context"
 	"fmt"
-	"sort"
+	"math"
 
 	"github.com/UFFeScience/akoflow/internal/domain"
+	domainplanning "github.com/UFFeScience/akoflow/internal/domain/planning"
 	domainworkflow "github.com/UFFeScience/akoflow/internal/domain/workflow"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/plugins/planning"
 )
@@ -91,17 +92,7 @@ func indexRequest(request Request) indexedRequest {
 		key := dependency.ProducerActivityID + "\x00" + dependency.ConsumerActivityID
 		model.dataBytes[key] += dependency.SizeBytes
 	}
-	byLane := make(map[string][]domain.PlanAssignment)
-	for _, assignment := range request.Plan.Assignments {
-		lane := assignment.ResourceID + "\x00" + assignment.CoreID + "\x00" + assignment.SlotID
-		byLane[lane] = append(byLane[lane], assignment)
-	}
-	for _, lane := range byLane {
-		sort.Slice(lane, func(i, j int) bool { return lane[i].OrderOnResource < lane[j].OrderOnResource })
-		for i := 1; i < len(lane); i++ {
-			model.lanePrevious[lane[i].ActivityID] = lane[i-1].ActivityID
-		}
-	}
+	model.lanePrevious = domainplanning.LanePredecessors(request.Plan.Assignments)
 	return model
 }
 
@@ -140,7 +131,11 @@ func simulate(
 			if previous != "" {
 				resourceReadyAt = completed[previous].FinishedAt
 			}
-			start := max(dataReadyAt, resourceReadyAt)
+			availableAt, err := assignmentResourceAvailableAt(assignment)
+			if err != nil {
+				return nil, nil, err
+			}
+			start := max(max(dataReadyAt, resourceReadyAt), availableAt)
 			runtimeSeconds := resolveRuntime(activity, assignment, resource, model.profiles)
 			overhead := resolveAssignmentOverhead(assignment, resource)
 			finish := start + runtimeSeconds + overhead
@@ -401,4 +396,17 @@ func min(a, b float64) float64 {
 		return a
 	}
 	return b
+}
+
+// An absolute initial availability is separate from per-task runtime overhead.
+// Descendants reaching the resource after boot must not pay startup again.
+func assignmentResourceAvailableAt(a domain.PlanAssignment) (float64, error) {
+	if _, exists := a.Metadata["resourceAvailableAtSeconds"]; !exists {
+		return 0, nil
+	}
+	value, ok := numberMetadata(a.Metadata, "resourceAvailableAtSeconds")
+	if !ok || math.IsNaN(value) || math.IsInf(value, 0) || value < 0 {
+		return 0, fmt.Errorf("assignment %s has invalid initial resource availability", a.ID)
+	}
+	return value, nil
 }

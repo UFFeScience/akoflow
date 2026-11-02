@@ -266,7 +266,11 @@ func (m *moModel) place(s moState, task, resource int) (moState, bool) {
 	billed := runtime + transferTotal
 	ownCost := billed*r.PricePerSecond + float64(m.tasks[task].Resources.StorageBytes)*billed*moPrice(r.Metadata, "storagePricePerByteSecond") + ingress
 	record := &moRecord{resource: resource,
-		assignment: Assignment{ActivityID: m.tasks[task].ID,
+		assignment: Assignment{Metadata: map[string]any{"bootOverheadSeconds": float64(0),
+			"resourceAvailableAtSeconds": r.BootOverheadSeconds,
+			"containerOverheadSeconds":   r.ContainerOverheadSeconds},
+			ActivityID: m.tasks[task].ID,
+			Priority:   m.tasks[task].Priority,
 			ResourceID: r.ID,
 			CoreID: fmt.Sprintf("%s-core-%d",
 				r.ID,

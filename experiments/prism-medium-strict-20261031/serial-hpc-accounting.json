@@ -1,0 +1,30 @@
+{
+  "computeDifferenceSeconds": 30.53587090969063,
+  "nonComputeDifferenceSeconds": 2175.1642166560887,
+  "note": "Exact elapsed-time accounting on the single HPC lane covering first and last workflow activities. Non-compute includes transfer/preparation, data readiness, Slurm, launch, observation and polling; this does not isolate causal link service or sum parallel transfer work.",
+  "realMinusSimulatedSeconds": 2205.700087565779,
+  "simulated": {
+    "allNonComputeSeconds": 1209.991351705194,
+    "computeSeconds": 1797.1467393636706,
+    "hpcActivityCount": 30,
+    "identityResidualSeconds": 0,
+    "interTaskGapSeconds": 1209.991351705194,
+    "logicalCore": "fig8-medium-plafrim-execution-ssh-node-diablo03-core-1",
+    "makespanSeconds": 3007.1380910688645,
+    "otherTaskWallSeconds": 0,
+    "passed": true,
+    "reconstructedSeconds": 3007.1380910688645
+  },
+  "strictReal": {
+    "allNonComputeSeconds": 3385.1555683612823,
+    "computeSeconds": 1827.6826102733612,
+    "hpcActivityCount": 30,
+    "identityResidualSeconds": 0,
+    "interTaskGapSeconds": 3133.415446281433,
+    "logicalCore": "fig8-medium-plafrim-execution-ssh-node-diablo03-core-1",
+    "makespanSeconds": 5212.838178634644,
+    "otherTaskWallSeconds": 251.74012207984924,
+    "passed": true,
+    "reconstructedSeconds": 5212.838178634644
+  }
+}

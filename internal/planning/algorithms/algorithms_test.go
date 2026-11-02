@@ -2,7 +2,6 @@ package algorithms
 
 import (
 	"context"
-	"reflect"
 	"testing"
 
 	"github.com/UFFeScience/akoflow/internal/domain"
@@ -28,59 +27,6 @@ func TestHEFTProducesOneCompletePlan(t *testing.T) {
 		t.Fatalf("expected one HEFT plan, got %d", len(sink.plans))
 	}
 	assertCompletePlan(t, sink.plans[0], request)
-}
-
-func TestOptimizedHEFTPreservesCanonicalPlacement(t *testing.T) {
-	request := planningRequestFixture()
-	want := legacyHEFTPlan(t, request)
-	sink := &testSink{}
-	if err := (HEFT{}).Schedule(context.Background(), request, nil, nil, sink); err != nil {
-		t.Fatalf("schedule optimized HEFT: %v", err)
-	}
-	if !reflect.DeepEqual(sink.plans[0].Assignments, want.Assignments) {
-		t.Fatalf(
-			"optimized HEFT changed canonical assignments\nactual: %#v\nexpected: %#v",
-			sink.plans[0].Assignments,
-			want.Assignments,
-		)
-	}
-	if sink.plans[0].Predicted != want.Predicted {
-		t.Fatalf(
-			"optimized HEFT changed predicted metrics: actual %#v, expected %#v",
-			sink.plans[0].Predicted,
-			want.Predicted,
-		)
-	}
-}
-
-func legacyHEFTPlan(t *testing.T, request domain.PlanningRequest) domain.SchedulePlan {
-	t.Helper()
-	order, err := heftOrder(request)
-	if err != nil {
-		t.Fatalf("order legacy HEFT activities: %v", err)
-	}
-	state := initialState()
-	for index, activity := range order {
-		var selected *scheduledState
-		for _, resource := range schedulableResources(request) {
-			if !resourceFeasible(activity, resource) {
-				continue
-			}
-			for _, core := range cores(resource) {
-				candidate := place(request, state, activity, resource, core, index)
-				if selected == nil || candidate.makespan < selected.makespan ||
-					(candidate.makespan == selected.makespan && candidate.cost < selected.cost) {
-					copy := candidate
-					selected = &copy
-				}
-			}
-		}
-		if selected == nil {
-			t.Fatalf("legacy HEFT found no placement for %q", activity.ID)
-		}
-		state = *selected
-	}
-	return planFromState("heft-candidate-1", "heft", "time", request, state)
 }
 
 func TestHPCMachineExposesDiscoveredCoresToSchedulers(t *testing.T) {

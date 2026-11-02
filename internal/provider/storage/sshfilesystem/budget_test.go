@@ -59,3 +59,42 @@ func TestWorkspaceBudgetHasBoundedReadOnlySSHAndStableAccountIdentity(t *testing
 	_, err = driver.WorkspaceBudget(context.Background(), storage, "../../etc")
 	require.Error(t, err)
 }
+
+func TestBeeGFSRequiresExactUserAndGroupLimits(t *testing.T) {
+	prefix := strings.Split(quotaFixture, "__AKO_QUOTA__")[0]
+	fixture := prefix + "__AKO_QUOTA__\n__AKO_BEE_QUOTA__ 12345\nname,id,size,hard,files,hard\nuser,12345,1000,100000,0,unlimited\n__AKO_BEE_QUOTA__ 50\ngroup,50,500,unlimited,0,unlimited\n__AKO_END__\n"
+	bytes, _, _, e := parseWorkspaceBudget(fixture)
+	require.NoError(t, e)
+	require.Equal(t, int64(96*1024), bytes)
+	limited := strings.Replace(fixture, "group,50,500,unlimited", "group,50,500,5000", 1)
+	bytes, _, _, e = parseWorkspaceBudget(limited)
+	require.NoError(t, e)
+	require.Equal(t, int64(4*1024), bytes)
+	for _, bad := range []string{strings.Replace(fixture,
+		"group,50,500,unlimited",
+		"group,51,500,unlimited",
+		1),
+		strings.Replace(fixture,
+			"1000,100000",
+			"1000,unknown",
+			1),
+		strings.Replace(fixture,
+			"__AKO_END__",
+			"",
+			1),
+		strings.Replace(fixture,
+			"__AKO_BEE_QUOTA__ 50",
+			"user,12345,0,200000,0,unlimited\n__AKO_BEE_QUOTA__ 50",
+			1)} {
+		_, _, _, e = parseWorkspaceBudget(bad)
+		require.Error(t, e)
+	}
+}
+
+func TestBeeGFSExhaustedQuotaDoesNotBecomeUnlimited(t *testing.T) {
+	prefix := strings.Split(quotaFixture, "__AKO_QUOTA__")[0]
+	input := prefix + "__AKO_QUOTA__\n__AKO_BEE_QUOTA__ 12345\nuser,12345,100,100,0,unlimited\n__AKO_BEE_QUOTA__ 50\ngroup,50,0,unlimited,0,unlimited\n__AKO_END__\n"
+	bytes, _, _, e := parseWorkspaceBudget(input)
+	require.NoError(t, e)
+	require.Zero(t, bytes)
+}

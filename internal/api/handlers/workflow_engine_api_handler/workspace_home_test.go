@@ -71,3 +71,22 @@ func TestResolveWorkspaceBudgetRefreshesAndSharesExactObservation(t *testing.T) 
 	require.Equal(t, request.Resources[0].Metadata["workspaceStorageBudget"], request.Resources[1].Metadata["workspaceStorageBudget"])
 	require.Equal(t, int64(180*1024), request.Resources[0].Metadata["workspaceStorageBudget"].(storagebudget.Snapshot).AvailableBytes)
 }
+
+func TestSelectedWorkspaceRootRejectsForeignAndUnsafeStorage(t *testing.T) {
+	d := domain.EnvironmentDefinition{Storages: []domain.StorageResource{{ID: "scratch", Endpoint: "/beegfs/user", Metadata: map[string]any{"connectionId": "ssh"}}}}
+	root, id, e := selectedWorkspaceRoot(&d, "ssh", "scratch")
+	require.NoError(t, e)
+	require.Equal(t, "/beegfs/user", root)
+	require.Equal(t, "scratch", id)
+	_, _, e = selectedWorkspaceRoot(&d, "foreign", "scratch")
+	require.Error(t, e)
+	_, _, e = selectedWorkspaceRoot(&d, "ssh", "missing")
+	require.Error(t, e)
+	d.Storages[0].ReadOnly = true
+	_, _, e = selectedWorkspaceRoot(&d, "ssh", "scratch")
+	require.Error(t, e)
+	d.Storages[0].ReadOnly = false
+	d.Storages[0].Endpoint = "/"
+	_, _, e = selectedWorkspaceRoot(&d, "ssh", "scratch")
+	require.Error(t, e)
+}

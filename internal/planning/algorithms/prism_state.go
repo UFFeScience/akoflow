@@ -10,6 +10,7 @@ import (
 )
 
 type compactPRISMState struct {
+	candidateOrigin      string
 	assignmentTrace      *compactPRISMAssignmentTrace
 	assignmentChunks     [][]compactPRISMAssignment
 	evaluatedAssignments []domain.PlanAssignment

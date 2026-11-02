@@ -1,6 +1,8 @@
 package algorithms
 
 import (
+	"context"
+	"errors"
 	"fmt"
 	"math"
 
@@ -15,46 +17,43 @@ type prismPredictionBreakdown struct {
 	ContainerSeconds float64
 }
 
-func compactPRISMHEFTAnchor(
-	search compactPRISMContext,
-) (compactPRISMState, error) {
-	order, err := heftOrder(search.request)
-	if err != nil {
+var errPRISMHEFTBaselineIneligible = errors.New("native HEFT placement violates PRISM placement eligibility")
+
+type prismHEFTSink struct{ plans []domain.SchedulePlan }
+
+func (s *prismHEFTSink) Emit(_ context.Context, plan domain.SchedulePlan) error {
+	s.plans = append(s.plans, plan)
+	return nil
+}
+
+// Use the actual native insertion HEFT output, not a HEFT-like greedy PRISM
+// placement. Keep it out of beam pruning and evaluate it with the same final
+// model as the surviving PRISM candidates.
+func compactPRISMHEFTAnchor(ctx context.Context, search compactPRISMContext) (compactPRISMState, error) {
+	sink := &prismHEFTSink{}
+	if err := (HEFT{}).Schedule(ctx, search.heftRequest, nil, nil, sink); err != nil {
 		return compactPRISMState{}, err
 	}
-	state := initialCompactPRISMState(search)
-	for sequence, activity := range order {
-		activityOrdinal, exists := search.activityOrdinal[activity.ID]
-		if !exists {
-			return compactPRISMState{}, fmt.Errorf("unknown activity %q", activity.ID)
-		}
-		var selected *compactPRISMState
-		for resourceOrdinal := range search.resources {
-			if !search.feasible[activityOrdinal][resourceOrdinal] {
-				continue
-			}
-			candidate := compactPRISMPlace(
-				search,
-				state,
-				activityOrdinal,
-				resourceOrdinal,
-				sequence,
-				true,
-			)
-			if selected == nil || compactPRISMCompleteLess(candidate, *selected, "time") {
-				copy := candidate
-				selected = &copy
-			}
-		}
-		if selected == nil {
-			return compactPRISMState{}, fmt.Errorf(
-				"no feasible resource for activity %q",
-				activity.ID,
-			)
-		}
-		state = *selected
+	if len(sink.plans) != 1 {
+		return compactPRISMState{}, fmt.Errorf("native HEFT emitted %d plans", len(sink.plans))
 	}
-	return state, nil
+	state := compactPRISMState{
+		evaluatedAssignments: sink.plans[0].Assignments,
+		candidateOrigin:      "heft-baseline",
+		signature:            extendScheduleSignature(14695981039346656037, "native-heft-baseline"),
+	}
+	for _, a := range state.evaluatedAssignments {
+		activity, ok := search.activityOrdinal[a.ActivityID]
+		if !ok {
+			return compactPRISMState{}, errPRISMHEFTBaselineIneligible
+		}
+		resource := compactPRISMResourceOrdinal(search, a.ResourceID)
+		if resource < 0 || resource >= len(search.resources) || search.resources[resource].resource.ID != a.ResourceID || !search.feasible[activity][resource] {
+			return compactPRISMState{}, errPRISMHEFTBaselineIneligible
+		}
+		state.signature = extendScheduleSignature(state.signature, a.ActivityID, a.ResourceID, a.CoreID, a.SlotID, fmt.Sprint(a.OrderOnResource))
+	}
+	return evaluateCompleteCompactPRISMState(search, state)
 }
 
 func compactPRISMPlan(

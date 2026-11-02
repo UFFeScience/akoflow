@@ -73,6 +73,7 @@ func TestCompiledPluginUsesRegistryAndCoordinatorContract(t *testing.T) {
 	request := domain.PlanningRequest{Workflow: domain.WorkflowVersion{ID: "workflow-v1",
 		Activities: []domain.Activity{{ID: "a",
 			Name:       "A",
+			Priority:   7,
 			Resources:  domain.ActivityResources{CPU: 1},
 			Simulation: &domain.ActivitySimulation{DurationSeconds: 3}}}},
 		Resources: []domain.Resource{resource},
@@ -92,6 +93,12 @@ func TestCompiledPluginUsesRegistryAndCoordinatorContract(t *testing.T) {
 		t.Fatalf("plans=%d", len(sink.plans))
 	}
 	plan := sink.plans[0]
+	if plan.Assignments[0].Priority != 7 {
+		t.Fatal("workflow dispatch priority lost across plugin contract")
+	}
+	if _, ok := plan.Assignments[0].Metadata["resourceAvailableAtSeconds"]; !ok {
+		t.Fatal("plugin assignment metadata lost across JSON contract")
+	}
 	if err = validator.NewValidator().Validate(plan, request.Workflow, request.Resources, request.ExecutionScope, request.NetworkTopology); err != nil {
 		t.Fatal(err)
 	}
@@ -112,34 +119,54 @@ import (
 
 func fixture() Input {
 	return Input{Request: Request{Workflow: Workflow{ID: "wf",
-		Activities: []Activity{{ID: "a",
-			Resources:  Requirements{CPU: 1},
-			Simulation: &Simulation{DurationSeconds: 10}}}},
-		Resources: []Resource{{ID: "fast",
-			EnvironmentVersionID: "env",
-			CPUCores:             1,
-			CPUCapacity:          1,
-			MemoryBytes:          100,
-			ComputeSpeedup:       2,
-			PricePerSecond:       10,
-			Schedulable:          true},
-			{ID: "cheap",
-				EnvironmentVersionID: "env",
-				CPUCores:             1,
-				CPUCapacity:          1,
-				MemoryBytes:          100,
-				ComputeSpeedup:       1,
-				PricePerSecond:       1,
-				Schedulable:          true}},
-		ExecutionScope: Scope{ID: "scope",
-			EnvironmentVersionIDs: []string{"env"}}},
-		Configuration: map[string]any{"candidateCount": float64(25)}}
+ Activities: []Activity{{ID: "a",
+ Resources: Requirements{CPU: 1},
+ Simulation: &Simulation{DurationSeconds: 10}}}},
+ Resources: []Resource{{ID: "fast",
+ EnvironmentVersionID: "env",
+ CPUCores: 1,
+ CPUCapacity: 1,
+ MemoryBytes: 100,
+ ComputeSpeedup: 2,
+ PricePerSecond: 10,
+ Schedulable: true},
+ {ID: "cheap",
+ EnvironmentVersionID: "env",
+ CPUCores: 1,
+ CPUCapacity: 1,
+ MemoryBytes: 100,
+ ComputeSpeedup: 1,
+ PricePerSecond: 1,
+ Schedulable: true}},
+ ExecutionScope: Scope{ID: "scope",
+ EnvironmentVersionIDs: []string{"env"}}},
+ Configuration: map[string]any{"candidateCount": float64(25)}}
+}
+func TestBootContract(t *testing.T) {
+	in := fixture()
+	in.Request.Resources = in.Request.Resources[:1]
+	in.Request.Resources[0].BootOverheadSeconds = 12
+	in.Request.Resources[0].ContainerOverheadSeconds = 2
+	in.Request.Workflow.Activities = append(in.Request.Workflow.Activities, Activity{ID: "b", Simulation: &Simulation{DurationSeconds: 10}})
+	in.Request.Workflow.Dependencies = []Dependency{{ActivityID: "b", DependsOnActivityID: "a"}}
+	plans, e := Schedule(in)
+	if e != nil {
+		t.Fatal(e)
+	}
+	p := plans[0]
+	if p.Predicted.MakespanSeconds != 26 {
+		t.Fatal(p.Predicted)
+	}
+	for _, a := range p.Assignments {
+		if a.Metadata["bootOverheadSeconds"] != float64(0) || a.Metadata["resourceAvailableAtSeconds"] != float64(12) || a.Metadata["containerOverheadSeconds"] != float64(2) {
+			t.Fatal(a.Metadata)
+		}
+	}
 }
 func TestDeclaredZeroWork(t *testing.T) {
 	in := fixture()
 	in.Request.Workflow.Activities[0].Simulation.DurationSeconds = 0
-	plans,
-		e := Schedule(in)
+	plans, e := Schedule(in)
 	if e != nil {
 		t.Fatal(e)
 	}
@@ -150,20 +177,16 @@ func TestDeclaredZeroWork(t *testing.T) {
 	}
 }
 func TestAnalyticTimeCostFront(t *testing.T) {
-	plans,
-		e := Schedule(fixture())
+	plans, e := Schedule(fixture())
 	if e != nil {
 		t.Fatal(e)
 	}
 	if len(plans) != 2 {
-		t.Fatalf("front=%d",
-			len(plans))
+		t.Fatalf("front=%d", len(plans))
 	}
 	found := map[string]bool{}
 	for _, p := range plans {
-		found[fmt.Sprintf("%.0f/%.0f",
-			p.Predicted.MakespanSeconds,
-			p.Predicted.Cost)] = true
+		found[fmt.Sprintf("%.0f/%.0f", p.Predicted.MakespanSeconds, p.Predicted.Cost)] = true
 	}
 	if !found["5/50"] || !found["10/10"] {
 		t.Fatal(found)
@@ -176,23 +199,11 @@ func TestDominatedPartialSchedulesRemoved(t *testing.T) {
 	}
 }
 func TestCrowdingKeepsEndpointsAndBounds(t *testing.T) {
-	front := moSelect([]moState{{makespan: 1,
-		cost: 9},
-		{makespan: 2,
-			cost: 6},
-		{makespan: 3,
-			cost: 4},
-		{makespan: 4,
-			cost: 3},
-		{makespan: 5,
-			cost: 1}},
-		3)
+	front := moSelect([]moState{{makespan: 1, cost: 9}, {makespan: 2, cost: 6}, {makespan: 3, cost: 4}, {makespan: 4, cost: 3}, {makespan: 5, cost: 1}}, 3)
 	if len(front) != 3 {
 		t.Fatal(front)
 	}
-	a,
-		b := false,
-		false
+	a, b := false, false
 	for _, p := range front {
 		a = a || p.makespan == 1
 		b = b || p.cost == 1
@@ -209,22 +220,15 @@ func TestEqualObjectiveMappingsNotCollapsed(t *testing.T) {
 }
 func TestTwoTaskChainMatchesEnumeratedFront(t *testing.T) {
 	in := fixture()
-	in.Request.Workflow.Activities = append(in.Request.Workflow.Activities,
-		Activity{ID: "b",
-			Resources:  Requirements{CPU: 1},
-			Simulation: &Simulation{DurationSeconds: 10}})
-	in.Request.Workflow.Dependencies = []Dependency{{ActivityID: "b",
-		DependsOnActivityID: "a"}}
-	plans,
-		e := Schedule(in)
+	in.Request.Workflow.Activities = append(in.Request.Workflow.Activities, Activity{ID: "b", Resources: Requirements{CPU: 1}, Simulation: &Simulation{DurationSeconds: 10}})
+	in.Request.Workflow.Dependencies = []Dependency{{ActivityID: "b", DependsOnActivityID: "a"}}
+	plans, e := Schedule(in)
 	if e != nil {
 		t.Fatal(e)
 	}
 	found := map[string]bool{}
 	for _, p := range plans {
-		found[fmt.Sprintf("%.0f/%.0f",
-			p.Predicted.MakespanSeconds,
-			p.Predicted.Cost)] = true
+		found[fmt.Sprintf("%.0f/%.0f", p.Predicted.MakespanSeconds, p.Predicted.Cost)] = true
 	}
 	if len(found) != 3 || !found["10/100"] || !found["15/60"] || !found["20/20"] {
 		t.Fatal(found)
@@ -232,24 +236,17 @@ func TestTwoTaskChainMatchesEnumeratedFront(t *testing.T) {
 }
 func TestTopologicalRankAndCycleRejection(t *testing.T) {
 	in := fixture()
-	in.Request.Workflow.Activities = append(in.Request.Workflow.Activities,
-		Activity{ID: "b",
-			Simulation: &Simulation{DurationSeconds: 1}})
-	in.Request.Workflow.Dependencies = []Dependency{{ActivityID: "b",
-		DependsOnActivityID: "a"}}
-	m,
-		e := newMOModel(in)
+	in.Request.Workflow.Activities = append(in.Request.Workflow.Activities, Activity{ID: "b", Simulation: &Simulation{DurationSeconds: 1}})
+	in.Request.Workflow.Dependencies = []Dependency{{ActivityID: "b", DependsOnActivityID: "a"}}
+	m, e := newMOModel(in)
 	if e != nil {
 		t.Fatal(e)
 	}
 	if m.tasks[m.order[0]].ID != "a" {
 		t.Fatal(m.order)
 	}
-	in.Request.Workflow.Dependencies = append(in.Request.Workflow.Dependencies,
-		Dependency{ActivityID: "a",
-			DependsOnActivityID: "b"})
-	if _,
-		e = Schedule(in); e == nil {
+	in.Request.Workflow.Dependencies = append(in.Request.Workflow.Dependencies, Dependency{ActivityID: "a", DependsOnActivityID: "b"})
+	if _, e = Schedule(in); e == nil {
 		t.Fatal("cycle accepted")
 	}
 }
@@ -257,18 +254,13 @@ func TestInsertionUsesExistingIdleGap(t *testing.T) {
 	in := fixture()
 	in.Request.Resources = in.Request.Resources[:1]
 	in.Request.Workflow.Activities[0].Simulation.DurationSeconds = 2
-	m,
-		e := newMOModel(in)
+	m, e := newMOModel(in)
 	if e != nil {
 		t.Fatal(e)
 	}
 	s := m.empty()
-	s.slots[0][0] = []moInterval{{start: 10,
-		finish: 12}}
-	next,
-		ok := m.place(s,
-		0,
-		0)
+	s.slots[0][0] = []moInterval{{start: 10, finish: 12}}
+	next, ok := m.place(s, 0, 0)
 	if !ok || next.get(0).assignment.PredictedStartAt != 0 {
 		t.Fatal("idle gap ignored")
 	}
@@ -283,13 +275,8 @@ func TestMemoryAdmissionAcrossCPULanes(t *testing.T) {
 	in.Request.Resources[0].CPUCapacity = 2
 	in.Request.Resources[0].MemoryBytes = 10
 	in.Request.Workflow.Activities[0].Resources.MemoryBytes = 10
-	in.Request.Workflow.Activities = append(in.Request.Workflow.Activities,
-		Activity{ID: "b",
-			Resources: Requirements{CPU: 1,
-				MemoryBytes: 10},
-			Simulation: &Simulation{DurationSeconds: 10}})
-	plans,
-		e := Schedule(in)
+	in.Request.Workflow.Activities = append(in.Request.Workflow.Activities, Activity{ID: "b", Resources: Requirements{CPU: 1, MemoryBytes: 10}, Simulation: &Simulation{DurationSeconds: 10}})
+	plans, e := Schedule(in)
 	if e != nil {
 		t.Fatal(e)
 	}
@@ -301,8 +288,7 @@ func TestLimitsOnlyMarkFeasibility(t *testing.T) {
 	in := fixture()
 	in.Request.Budget = 1
 	in.Request.DeadlineSeconds = 1
-	plans,
-		e := Schedule(in)
+	plans, e := Schedule(in)
 	if e != nil {
 		t.Fatal(e)
 	}
@@ -313,9 +299,7 @@ func TestLimitsOnlyMarkFeasibility(t *testing.T) {
 	}
 }
 func TestUnknownWorkAndMultiLaneAreRejected(t *testing.T) {
-	for _, mode := range []string{"unknown",
-		"multi",
-		"memory"} {
+	for _, mode := range []string{"unknown", "multi", "memory"} {
 		in := fixture()
 		if mode == "unknown" {
 			in.Request.Workflow.Activities[0].Simulation = nil
@@ -324,115 +308,63 @@ func TestUnknownWorkAndMultiLaneAreRejected(t *testing.T) {
 		} else {
 			in.Request.Workflow.Activities[0].Resources.MemoryBytes = 1000
 		}
-		if _,
-			e := Schedule(in); e == nil {
-			t.Fatal("unsupported input accepted",
-				mode)
+		if _, e := Schedule(in); e == nil {
+			t.Fatal("unsupported input accepted", mode)
 		}
 	}
 }
 func TestDirectedTransfersAndPriceTerms(t *testing.T) {
 	in := fixture()
 	in.Request.Resources[0].Metadata = map[string]any{"egressPricePerByte": float64(3)}
-	in.Request.Resources[1].Metadata = map[string]any{"ingressPricePerByte": float64(2),
-		"storagePricePerByteSecond": float64(1)}
-	in.Request.Workflow.Activities = append(in.Request.Workflow.Activities,
-		Activity{ID: "b",
-			Resources: Requirements{CPU: 1,
-				StorageBytes: 2},
-			Simulation: &Simulation{DurationSeconds: 2}})
-	in.Request.Workflow.Dependencies = []Dependency{{ActivityID: "b",
-		DependsOnActivityID: "a"}}
-	raw,
-		_ := json.Marshal(moData{ProducerActivityID: "a",
-		ConsumerActivityID: "b",
-		SizeBytes:          10})
+	in.Request.Resources[1].Metadata = map[string]any{"ingressPricePerByte": float64(2), "storagePricePerByteSecond": float64(1)}
+	in.Request.Workflow.Activities = append(in.Request.Workflow.Activities, Activity{ID: "b", Resources: Requirements{CPU: 1, StorageBytes: 2}, Simulation: &Simulation{DurationSeconds: 2}})
+	in.Request.Workflow.Dependencies = []Dependency{{ActivityID: "b", DependsOnActivityID: "a"}}
+	raw, _ := json.Marshal(moData{ProducerActivityID: "a", ConsumerActivityID: "b", SizeBytes: 10})
 	in.Request.Workflow.DataDependencies = []json.RawMessage{raw}
 	in.Request.NetworkTopology = json.RawMessage("{\"links\":[{\"sourceResourceId\":\"fast\",\"targetResourceId\":\"cheap\",\"bandwidthBitsPerSecond\":80}]} ")
-	m,
-		e := newMOModel(in)
+	m, e := newMOModel(in)
 	if e != nil {
 		t.Fatal(e)
 	}
-	fast,
-		cheap := 0,
-		1
+	fast, cheap := 0, 1
 	if m.resources[0].ID == "cheap" {
-		fast,
-			cheap = 1,
-			0
+		fast, cheap = 1, 0
 	}
-	s,
-		ok := m.place(m.empty(),
-		0,
-		fast)
+	s, ok := m.place(m.empty(), 0, fast)
 	if !ok {
 		t.Fatal("parent")
 	}
-	s,
-		ok = m.place(s,
-		1,
-		cheap)
+	s, ok = m.place(s, 1, cheap)
 	if !ok {
 		t.Fatal("child")
 	}
-	p := m.plan(s,
-		0)
+	p := m.plan(s, 0)
 	if math.Abs(p.Predicted.Cost-109) > 1e-9 {
-		t.Fatal("price terms differ",
-			p.Predicted.Cost)
+		t.Fatal("price terms differ", p.Predicted.Cost)
 	}
 	sum := 0.0
 	for _, a := range p.Assignments {
 		sum += a.PredictedCost
 	}
 	if sum != p.Predicted.Cost {
-		t.Fatal("assignment costs do not sum",
-			sum,
-			p.Predicted.Cost)
+		t.Fatal("assignment costs do not sum", sum, p.Predicted.Cost)
 	}
-	if _,
-		ok = m.transfer("cheap",
-		"fast",
-		10); ok {
+	if _, ok = m.transfer("cheap", "fast", 10); ok {
 		t.Fatal("missing reverse link treated as free")
 	}
 }
 func TestPaperMaximumTransferTiming(t *testing.T) {
 	in := fixture()
-	in.Request.Resources = append(in.Request.Resources,
-		Resource{ID: "target",
-			EnvironmentVersionID: "env",
-			CPUCores:             1,
-			CPUCapacity:          1,
-			MemoryBytes:          100,
-			ComputeSpeedup:       1,
-			Schedulable:          true})
-	in.Request.Workflow.Activities = []Activity{{ID: "a",
-		Simulation: &Simulation{DurationSeconds: 1}},
-		{ID: "b",
-			Simulation: &Simulation{DurationSeconds: 1}},
-		{ID: "c",
-			Simulation: &Simulation{DurationSeconds: 1}}}
-	in.Request.Workflow.Dependencies = []Dependency{{ActivityID: "c",
-		DependsOnActivityID: "a"},
-		{ActivityID: "c",
-			DependsOnActivityID: "b"}}
-	for _, d := range []moData{{"a",
-		"c",
-		1},
-		{"b",
-			"c",
-			100}} {
-		raw,
-			_ := json.Marshal(d)
-		in.Request.Workflow.DataDependencies = append(in.Request.Workflow.DataDependencies,
-			raw)
+	in.Request.Resources = append(in.Request.Resources, Resource{ID: "target", EnvironmentVersionID: "env", CPUCores: 1, CPUCapacity: 1, MemoryBytes: 100, ComputeSpeedup: 1, Schedulable: true})
+	in.Request.Workflow.Activities = []Activity{{ID: "a", Simulation: &Simulation{DurationSeconds: 1}}, {ID: "b", Simulation: &Simulation{DurationSeconds: 1}}, {ID: "c", Simulation: &Simulation{DurationSeconds: 1}}}
+	in.Request.Workflow.Dependencies = []Dependency{{ActivityID: "c", DependsOnActivityID: "a"}, {ActivityID: "c", DependsOnActivityID: "b"}}
+	for _, d := range []moData{{"a", "c", 1}, {"b", "c", 100}} {
+		raw, _ := json.Marshal(d)
+		in.Request.Workflow.DataDependencies = append(in.Request.Workflow.DataDependencies, raw)
 	}
 	in.Request.NetworkTopology = json.RawMessage("{\"links\":[{\"sourceResourceId\":\"fast\",\"targetResourceId\":\"target\",\"bandwidthBitsPerSecond\":8}," +
  "{\"sourceResourceId\":\"cheap\",\"targetResourceId\":\"target\",\"bandwidthBitsPerSecond\":8}]}")
-	m,
-		e := newMOModel(in)
+	m, e := newMOModel(in)
 	if e != nil {
 		t.Fatal(e)
 	}
@@ -446,48 +378,29 @@ func TestPaperMaximumTransferTiming(t *testing.T) {
 		}
 		panic(id)
 	}
-	s.blocks[0][0] = &moRecord{resource: find("fast"),
-		assignment: Assignment{PredictedFinishAt: 100}}
-	s.blocks[0][1] = &moRecord{resource: find("cheap"),
-		assignment: Assignment{PredictedFinishAt: 1}}
-	next,
-		ok := m.place(s,
-		2,
-		find("target"))
+	s.blocks[0][0] = &moRecord{resource: find("fast"), assignment: Assignment{PredictedFinishAt: 100}}
+	s.blocks[0][1] = &moRecord{resource: find("cheap"), assignment: Assignment{PredictedFinishAt: 1}}
+	next, ok := m.place(s, 2, find("target"))
 	if !ok || next.get(2).assignment.PredictedFinishAt != 201 {
-		t.Fatal("paper Eqs 1-2 were replaced by pairwise ready-time",
-			next.get(2))
+		t.Fatal("paper Eqs 1-2 were replaced by pairwise ready-time", next.get(2))
 	}
 }
 func TestFlatCrowdingAndDeterminism(t *testing.T) {
 	in := fixture()
-	a,
-		e := Schedule(in)
+	a, e := Schedule(in)
 	if e != nil {
 		t.Fatal(e)
 	}
-	b,
-		e := Schedule(in)
+	b, e := Schedule(in)
 	if e != nil {
 		t.Fatal(e)
 	}
-	x,
-		_ := json.Marshal(a)
-	y,
-		_ := json.Marshal(b)
+	x, _ := json.Marshal(a)
+	y, _ := json.Marshal(b)
 	if string(x) != string(y) {
 		t.Fatal("nondeterministic output")
 	}
-	front := moSelect([]moState{{makespan: 1,
-		cost:      1,
-		signature: 3},
-		{makespan: 1,
-			cost:      1,
-			signature: 2},
-		{makespan: 1,
-			cost:      1,
-			signature: 1}},
-		2)
+	front := moSelect([]moState{{makespan: 1, cost: 1, signature: 3}, {makespan: 1, cost: 1, signature: 2}, {makespan: 1, cost: 1, signature: 1}}, 2)
 	if len(front) != 2 || front[0].signature != 1 {
 		t.Fatal(front)
 	}
@@ -495,16 +408,14 @@ func TestFlatCrowdingAndDeterminism(t *testing.T) {
 func TestCandidateCountAndReferenceWorkProfile(t *testing.T) {
 	in := fixture()
 	in.Configuration["candidateCount"] = float64(0)
-	if _,
-		e := Schedule(in); e == nil {
+	if _, e := Schedule(in); e == nil {
 		t.Fatal("invalid K")
 	}
 	in = fixture()
 	in.Request.Workflow.Activities[0].ActivityTypeID = "type"
 	raw := json.RawMessage("{\"activityTypeId\":\"type\",\"resourceId\":\"fast\",\"runtimeSeconds\":0.25,\"modelVersion\":\"reference-work-v1\"}")
 	in.Request.ActivityProfiles = []json.RawMessage{raw}
-	m,
-		e := newMOModel(in)
+	m, e := newMOModel(in)
 	if e != nil {
 		t.Fatal(e)
 	}

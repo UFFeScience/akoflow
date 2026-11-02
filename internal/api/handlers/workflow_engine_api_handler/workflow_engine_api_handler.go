@@ -37,6 +37,7 @@ import (
 	cloudcredential "github.com/UFFeScience/akoflow/internal/infrastructure/credentials/cloud"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/credentials/sshkey"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/credentials/token"
+	"github.com/UFFeScience/akoflow/internal/infrastructure/dockerhub"
 	planningalgorithms "github.com/UFFeScience/akoflow/internal/planning/algorithms"
 	"github.com/UFFeScience/akoflow/internal/planning/library"
 	"github.com/google/uuid"
@@ -123,10 +124,11 @@ type PlanningOrchestrator interface {
 }
 
 type DockerArtifactRequest struct {
-	ArtifactID   string `json:"artifactId"`
-	Version      string `json:"version"`
-	Image        string `json:"image"`
-	Architecture string `json:"architecture"`
+	DockerHub    *dockerhub.Selection `json:"dockerHub,omitempty"`
+	ArtifactID   string               `json:"artifactId"`
+	Version      string               `json:"version"`
+	Image        string               `json:"image"`
+	Architecture string               `json:"architecture"`
 }
 
 type Dependencies struct {
@@ -169,6 +171,7 @@ type Dependencies struct {
 }
 
 type Handler struct {
+	dockerHub           *dockerhub.Client
 	algorithmLibrary    *library.Catalog
 	environments        ports.EnvironmentCatalog
 	workflows           ports.WorkflowStore
@@ -227,6 +230,7 @@ func New(dependencies Dependencies) (*Handler, error) {
 		return nil, fmt.Errorf("workflow API dependencies are required")
 	}
 	return &Handler{
+		dockerHub:    dockerhub.New(),
 		environments: dependencies.Environments, workflows: dependencies.Workflows,
 		plans: dependencies.Plans, events: dependencies.Events,
 		validator: dependencies.Validator, executions: dependencies.Executions,
@@ -428,6 +432,25 @@ func (h *Handler) FactoryReset(w http.ResponseWriter, r *http.Request) {
 	if h.factoryReset == nil {
 		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("factory reset is unavailable"))
 		return
+	}
+	if h.readOnly {
+		writeError(w, http.StatusForbidden, fmt.Errorf("archived instances cannot be reset"))
+		return
+	}
+	if h.executions == nil {
+		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("execution state unavailable; reset refused"))
+		return
+	}
+	runs, err := h.executions.ListRuns(r.Context())
+	if err != nil {
+		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("cannot verify idle execution state: %w", err))
+		return
+	}
+	for _, run := range runs {
+		if run.Status == domain.ExecutionRunCreated || run.Status == domain.ExecutionRunRunning {
+			writeError(w, http.StatusConflict, fmt.Errorf("execution %q is %s; stop it before resetting", run.ID, run.Status))
+			return
+		}
 	}
 	if err := h.factoryReset(r.Context()); err != nil {
 		writeError(w, http.StatusUnprocessableEntity, err)
@@ -1603,13 +1626,25 @@ func (h *Handler) RegisterDockerArtifact(w http.ResponseWriter, r *http.Request)
 	}
 	input.ArtifactID = strings.TrimSpace(input.ArtifactID)
 	input.Version = strings.TrimSpace(input.Version)
+	if input.Architecture == "" {
+		input.Architecture = "amd64"
+	}
+	if input.DockerHub != nil {
+		if h.dockerHub == nil {
+			writeError(w, 503, fmt.Errorf("Docker Hub is unavailable"))
+			return
+		}
+		image, err := h.dockerHub.Resolve(r.Context(), *input.DockerHub, input.Architecture)
+		if err != nil {
+			writeDockerHubError(w, err)
+			return
+		}
+		input.Image = image
+	}
 	image := strings.TrimPrefix(strings.TrimSpace(input.Image), "docker://")
 	if input.ArtifactID == "" || input.Version == "" || image == "" || strings.ContainsAny(image, " \t\n\r") {
 		writeError(w, http.StatusUnprocessableEntity, fmt.Errorf("artifactId, version and a valid Docker image are required"))
 		return
-	}
-	if input.Architecture == "" {
-		input.Architecture = "amd64"
 	}
 	now := time.Now().UTC().UnixNano()
 	version := domain.ArtifactVersion{ID: fmt.Sprintf("artifact-version-%d", now), ArtifactID: input.ArtifactID, Version: input.Version, Scope: domain.CatalogScope("system")}
@@ -1931,6 +1966,11 @@ func (h *Handler) CreateCloudCapacityTarget(w http.ResponseWriter, r *http.Reque
 		return
 	}
 	value.Enabled = true
+	capacity, capacityErr := targetSchedulingCapacity(value)
+	if capacityErr != nil {
+		writeError(w, http.StatusUnprocessableEntity, capacityErr)
+		return
+	}
 	if err := h.cloud.CreateCapacityTarget(r.Context(), value); err != nil {
 		writeError(w, http.StatusUnprocessableEntity, err)
 		return
@@ -1956,7 +1996,7 @@ func (h *Handler) CreateCloudCapacityTarget(w http.ResponseWriter, r *http.Reque
 		ExecutionTarget: domain.ExecutionTargetProvisioned, Type: domain.ResourceCloudVM,
 		Name: value.Name, ProviderID: value.ID, Tier: "cloud",
 		Region: value.Region, Zone: value.FixedZone, Architecture: value.Architecture,
-		CPUCores: value.VCPU, CPUCapacity: float64(value.VCPU),
+		CPUCores: value.VCPU, CPUCapacity: capacity,
 		MemoryBytes:    value.MemoryMiB << 20,
 		StorageBytes:   configurationInt64(value.Configuration, "diskSizeGiB") << 30,
 		ComputeSpeedup: 1,
@@ -1971,6 +2011,7 @@ func (h *Handler) CreateCloudCapacityTarget(w http.ResponseWriter, r *http.Reque
 		},
 	}
 	resource.Metadata["pricingStatus"] = "estimated"
+	preserveTargetCalibration(&resource, definition.Resources)
 	if resource.PricePerSecond <= 0 || (resource.StorageBytes > 0 && configurationFloat64(value.Configuration, "diskPricePerGiBMonth") <= 0) {
 		resource.Metadata["pricingStatus"] = "incomplete"
 	}
@@ -3050,19 +3091,9 @@ func (h *Handler) resolveBuildPreparations(ctx context.Context, request *ports.E
 			return fmt.Errorf("build activity %q has unknown resource %q", activity.ID, assignment.ResourceID)
 		}
 		if activity.Command.Executable.Source.Type == domain.ExecutableSourceCatalog && executionRuntimeDriver(*request, assignment) == domain.RuntimeDriverKubernetes {
-			catalog, ok := any(h.data).(applicationbuild.CatalogOCIReference)
-			if !ok {
-				return fmt.Errorf("artifact catalog OCI resolver is unavailable")
-			}
-			ref := activity.Command.Executable.Source.ArtifactRef
-			if ref == nil {
-				return fmt.Errorf("activity %q catalog executable has no artifact reference", activity.ID)
-			}
-			image, err := applicationbuild.OCIReferenceForCatalog(ctx, catalog, ref.ID, ref.Version, resource.Architecture)
-			if err != nil {
+			if err := h.resolveCatalogImage(ctx, activity, resource, &request.Workflow.Activities[index].Command.Image); err != nil {
 				return err
 			}
-			request.Workflow.Activities[index].Command.Image = image
 			continue
 		}
 		var requirement domain.PreparationRequirement
@@ -3098,6 +3129,9 @@ func (h *Handler) resolveBuildPreparations(ctx context.Context, request *ports.E
 			requirement, required, err = resolver.PreparationForDockerImage(ctx, activity.Command.Executable.Source.Reference, activity.ID, resource, "")
 			if err != nil {
 				return err
+			}
+			if !required {
+				return fmt.Errorf("activity %q requires a completed SIF build for OCI image %q before Slurm execution", activity.ID, activity.Command.Executable.Source.Reference)
 			}
 		}
 		if !required {
@@ -3436,5 +3470,22 @@ func (h *Handler) reconcileRecoveryPreview(ctx context.Context, runID string, la
 			}
 		}
 	}
+	return nil
+}
+
+func (h *Handler) resolveCatalogImage(ctx context.Context, activity domain.Activity, resource domain.Resource, imageTarget *string) error {
+	catalog, ok := any(h.data).(applicationbuild.CatalogOCIReference)
+	if !ok {
+		return fmt.Errorf("artifact catalog OCI resolver is unavailable")
+	}
+	ref := activity.Command.Executable.Source.ArtifactRef
+	if ref == nil {
+		return fmt.Errorf("activity %q catalog executable has no artifact reference", activity.ID)
+	}
+	image, err := applicationbuild.OCIReferenceForCatalog(ctx, catalog, ref.ID, ref.Version, resource.Architecture)
+	if err != nil {
+		return err
+	}
+	*imageTarget = image
 	return nil
 }

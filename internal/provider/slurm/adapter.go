@@ -77,6 +77,9 @@ func (a *Adapter) Start(ctx context.Context, execution domain.ActivityExecutionC
 	activity := execution.Activity
 	if activity.Command.WorkingDirectory == "" {
 		activity.Command.WorkingDirectory = slurmArtifactRoot(execution.Run.ID, activity.ID)
+		if root, _ := execution.Resource.Metadata["homeDirectory"].(string); filepath.IsAbs(root) {
+			activity.Command.WorkingDirectory = filepath.Join(root, activity.Command.WorkingDirectory)
+		}
 	}
 	plannedNode := node
 	fallbackFeatures := ""

@@ -408,6 +408,10 @@ func dedupeCompactPRISMStates(
 	for _, state := range bySignature {
 		unique = append(unique, state)
 	}
+	// Stable objective sorting must not inherit Go map iteration order when
+	// candidates tie. A canonical signature order keeps repeated planning and
+	// controlled ablations reproducible without changing objective scores.
+	sort.Slice(unique, func(i, j int) bool { return unique[i].signature < unique[j].signature })
 	return unique
 }
 

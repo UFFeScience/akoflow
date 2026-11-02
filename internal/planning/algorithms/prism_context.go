@@ -23,6 +23,7 @@ type compactPRISMResource struct {
 }
 
 type compactPRISMContext struct {
+	heftRequest              domain.PlanningRequest
 	materializationModel     *materializationmodel.Model
 	requireMeasuredProfiles  bool
 	request                  domain.PlanningRequest
@@ -51,6 +52,7 @@ func newCompactPRISMContext(
 	request domain.PlanningRequest,
 	configuration map[string]any,
 ) (compactPRISMContext, error) {
+	heftRequest := request
 	projected, projectionErr := domainworkflow.ProjectWorkspaceDependencies(request.Workflow)
 	if projectionErr != nil {
 		return compactPRISMContext{}, projectionErr
@@ -91,6 +93,7 @@ func newCompactPRISMContext(
 		return ranked[i].ID < ranked[j].ID
 	})
 	search := compactPRISMContext{
+		heftRequest:          heftRequest,
 		materializationModel: materialization,
 		request:              request,
 		activities:           ranked,

@@ -23,13 +23,20 @@ func (v HostVerifier) Verify(ctx context.Context, connection domain.EnvironmentC
 	waitCtx, cancel := context.WithTimeout(ctx, 90*time.Second)
 	defer cancel()
 	identity, err := waitForHostKey(waitCtx, 5*time.Second, func(ctx context.Context) (HostIdentity, error) {
-		return v.Catalog.VerifyHostIdentity(ctx, credential, configString(connection.Configuration, "projectId"), zone, instance.Name, instance.ProviderID)
+		return v.Catalog.VerifyHostIdentity(ctx, credential, configString(connection.Configuration, "projectId"), zone, providerInstanceName(instance), instance.ProviderID)
 	})
 	if err != nil {
 		return ports.CloudHostTrust{}, err
 	}
 	alias, path, err := identity.Enroll(v.Root, instance.ID)
 	return ports.CloudHostTrust{Alias: alias, KnownHostsFile: path}, err
+}
+
+func providerInstanceName(instance domain.CloudProvisionedInstance) string {
+	if name, _ := instance.TerraformOutput["instance_name"].(string); name != "" {
+		return name
+	}
+	return instance.Name // Compatibility with snapshots preceding this output.
 }
 
 func waitForHostKey(ctx context.Context, interval time.Duration, read func(context.Context) (HostIdentity, error)) (HostIdentity, error) {

@@ -82,6 +82,8 @@ const groupMetadata = {
 };
 
 const queryDescriptions = {
+  repository:
+    "Docker Hub repository, including its namespace (for example library/python).",
   workflowVersionId:
     "Filter execution runs by saved plan workflow version before pagination and total counting. Supplying this filter selects the paginated response, even without page/pageSize.",
   async:

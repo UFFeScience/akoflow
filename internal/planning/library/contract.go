@@ -27,6 +27,7 @@ type Activity struct {
  ID string ` + "`json:\"id\"`" + `
  Name string ` + "`json:\"name\"`" + `
  ActivityTypeID string
+ Priority int
  Resources Requirements ` + "`json:\"resources\"`" + `
  Simulation *Simulation ` + "`json:\"simulation\"`" + `
  Metadata map[string]any ` + "`json:\"metadata\"`" + `
@@ -56,6 +57,7 @@ type Plan struct {
 }
 type Metrics struct { MakespanSeconds float64; Cost float64; Feasible bool }
 type Assignment struct {
+ Metadata map[string]any
  ID string; PlanID string; ActivityID string; ResourceID string; CoreID string
  OrderOnResource int; Priority int
  PredictedReadyAt float64; PredictedStartAt float64; PredictedFinishAt float64

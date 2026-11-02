@@ -10,3 +10,14 @@ releases/bin
 *.db
 *.sqlite
 *.log
+
+# Local experiment outputs and development/build artifacts are not daemon inputs.
+outputs
+.akoflow
+experiments
+other-algorithms
+docs/build
+docs/.docusaurus
+coverage.out
+coverage-summary.txt
+**/.DS_Store

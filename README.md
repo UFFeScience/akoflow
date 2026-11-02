@@ -29,6 +29,7 @@ the result.
 | Install Desktop | [Download AkôFlow](https://github.com/UFFeScience/akoflow/releases/latest) |
 | Run a SimGrid example | [First workflow](https://akoflow.com/docs/guides/workflows/first-run) |
 | Explore examples | [Workflow Showcase](https://akoflow.com/docs/showcase/) |
+| Control AkôFlow through MCP | [MCP clients and configuration](https://akoflow.com/docs/reference/mcp) |
 | Use the API | [API reference](https://akoflow.com/docs/reference/api-overview) |
 
 ## Desktop requirements

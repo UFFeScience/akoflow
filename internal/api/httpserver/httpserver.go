@@ -292,7 +292,6 @@ func newMCPHandler(address string, security SecurityOptions, settings config.Set
 	}
 	return handler, func() { bridge.Close() }, nil
 }
-
 func registerConsoleRoutes(mux *http.ServeMux, workflowEngine *workflow_engine_api_handler.Handler) {
 	mux.HandleFunc("GET /akoflow-api/console-commands/", http_config.KernelHandler(workflowEngine.ListConsoleCommands))
 	mux.HandleFunc("POST /akoflow-api/console-commands/", http_config.KernelHandler(workflowEngine.ExecuteConsoleCommand))

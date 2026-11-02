@@ -2603,6 +2603,7 @@ func (h *Handler) CreateExecution(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	job.AggregateType, job.AggregateID = "execution_run", request.Run.ID
+	configureExecutionJobRetries(&job, request.Run.Mode)
 	job.IdempotencyKey = "execution-run:" + request.Run.ID
 	stored, err := h.events.Publish(r.Context(), job)
 	if err != nil {
@@ -2876,6 +2877,7 @@ func (h *Handler) RecoverExecution(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	job.AggregateType, job.AggregateID = "execution_run", runID
+	configureExecutionJobRetries(&job, request.Run.Mode)
 	job.IdempotencyKey = fmt.Sprintf("execution-recovery:%s:%d", runID, time.Now().UTC().UnixNano())
 	stored, err := h.events.Publish(r.Context(), job)
 	if err != nil {

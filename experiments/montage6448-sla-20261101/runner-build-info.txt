@@ -1,0 +1,18 @@
+outputs/montage6448-sla-20261101/campaign-v2-linux: go1.25.14
+	path	github.com/UFFeScience/akoflow/cmd/montage-sla
+	mod	github.com/UFFeScience/akoflow	v1.0.12-0.20261101223424-2d8d97aae4b9+dirty	
+	dep	github.com/mattn/go-sqlite3	v1.14.22	h1:2gZY6PC6kBnID23Tichd1K+Z0oS6nE/XwU+Vz/5o4kU=
+	build	-buildmode=exe
+	build	-compiler=gc
+	build	CGO_ENABLED=1
+	build	CGO_CFLAGS=
+	build	CGO_CPPFLAGS=
+	build	CGO_CXXFLAGS=
+	build	CGO_LDFLAGS=
+	build	GOARCH=arm64
+	build	GOOS=linux
+	build	GOARM64=v8.0
+	build	vcs=git
+	build	vcs.revision=2d8d97aae4b9b15f7a7e19711101037f0372f8bf
+	build	vcs.time=2026-11-01T22:34:24Z
+	build	vcs.modified=true

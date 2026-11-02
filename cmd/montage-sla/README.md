@@ -65,3 +65,12 @@ assignment,workflow-precedence and lane-precedence checks. The figure denominato
 is seven environments,not stochastic repetitions. Main plots are descriptive
 sensitivity curves,not confidence intervals. No simulation outcome refits the
 frozen models or thresholds. Existing paper data and results remain separate.
+
+`baselines.csv` exports the seven unconstrained reference replays; its zero
+deadline and budget mean no imposed SLA, not zero allowed runtime or spending.
+The main figure uses only `comparison.csv`; `ablation.csv` contains the paired
+on/off observations. Full native bundles remain in the private output root.
+`schedule_sha256` canonicalizes plan identifiers and removes objective, limits,
+aggregate prediction and plan metadata, but retains assignment forecasts and
+lifecycle actions. Consequently the `different_schedules` aggregate counts
+selected-plan signature changes, not necessarily distinct physical mappings.

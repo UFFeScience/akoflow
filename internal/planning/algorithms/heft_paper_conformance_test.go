@@ -83,7 +83,13 @@ func TestHEFTPersistsChronologicalOrderAfterGapInsertion(t *testing.T) {
 		a, b float64
 	}{{"parent", 10, 1000}, {"late", 1000, 1}, {"tail", 1000, 1000}, {"gap", 1000, 5}} {
 		r.Workflow.Activities = append(r.Workflow.Activities, domain.Activity{ID: row.id, ActivityTypeID: row.id, Resources: domain.ActivityResources{CPU: 1}})
-		r.ActivityProfiles = append(r.ActivityProfiles, domain.ActivityResourceProfile{ActivityTypeID: row.id, ResourceID: "p1", RuntimeSeconds: row.a}, domain.ActivityResourceProfile{ActivityTypeID: row.id, ResourceID: "p2", RuntimeSeconds: row.b})
+		r.ActivityProfiles = append(r.ActivityProfiles,
+			domain.ActivityResourceProfile{ActivityTypeID: row.id,
+				ResourceID:     "p1",
+				RuntimeSeconds: row.a},
+			domain.ActivityResourceProfile{ActivityTypeID: row.id,
+				ResourceID:     "p2",
+				RuntimeSeconds: row.b})
 	}
 	r.Workflow.Dependencies = []domain.ActivityDependency{{ActivityID: "late", DependsOnActivityID: "parent"}, {ActivityID: "tail", DependsOnActivityID: "late"}}
 	sink := &testSink{}

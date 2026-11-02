@@ -39,7 +39,7 @@ type Package struct {
 	UpdatedAt      string            `json:"updatedAt,omitempty"`
 }
 
-type Service struct {
+type Catalog struct {
 	db       *sql.DB
 	registry *algorithms.Registry
 	root     string
@@ -47,10 +47,14 @@ type Service struct {
 	readOnly bool
 }
 
-func New(ctx context.Context, db *sql.DB, registry *algorithms.Registry, root string, readOnly bool) (*Service, error) {
-	s := &Service{db: db, registry: registry, root: root, readOnly: readOnly}
+func New(ctx context.Context, db *sql.DB, registry *algorithms.Registry, root string, readOnly bool) (*Catalog, error) {
+	s := &Catalog{db: db, registry: registry, root: root, readOnly: readOnly}
 	if !readOnly {
-		_, err := db.ExecContext(ctx, `CREATE TABLE IF NOT EXISTS scheduler_plugin_sources (id TEXT PRIMARY KEY, payload TEXT NOT NULL, active_payload TEXT NOT NULL DEFAULT ''); CREATE TABLE IF NOT EXISTS scheduler_plugin_revisions (id TEXT NOT NULL, revision INTEGER NOT NULL, payload TEXT NOT NULL, PRIMARY KEY(id,revision))`)
+		_,
+			err := db.ExecContext(ctx,
+			`CREATE TABLE IF NOT EXISTS scheduler_plugin_sources (id TEXT PRIMARY KEY, payload TEXT NOT NULL, active_payload TEXT NOT`+
+				` NULL DEFAULT ''); CREATE TABLE IF NOT EXISTS scheduler_plugin_revisions (id TEXT NOT NULL, revision INTEGER NOT NULL, p`+
+				`ayload TEXT NOT NULL, PRIMARY KEY(id,revision))`)
 		if err != nil {
 			return nil, err
 		}
@@ -110,13 +114,25 @@ func descriptor(p Package) ports.SchedulerDescriptor {
 	return ports.SchedulerDescriptor{ID: p.ID, Name: p.Name, Description: p.Description, Objective: p.Objective, Multiple: p.Multiple, Defaults: p.Defaults, Origin: "plugin"}
 }
 func native(id string) bool { return id == "heft" || id == "prism-time" || id == "prism-cost" }
-func (s *Service) List(ctx context.Context) ([]Package, error) {
+func (s *Catalog) List(ctx context.Context) ([]Package, error) {
 	out := []Package{}
 	for _, d := range s.registry.List() {
 		if !native(d.ID) {
 			continue
 		}
-		out = append(out, Package{SchemaVersion: "akoflow.scheduler/v1", ID: d.ID, Name: d.Name, Description: d.Description, Objective: d.Objective, Multiple: d.Multiple, Origin: "native", Exclusive: d.ID != "heft", Status: "ready", Revision: 1, ActiveRevision: 1, Documentation: nativeDocs(d.ID)})
+		out = append(out,
+			Package{SchemaVersion: "akoflow.scheduler/v1",
+				ID:             d.ID,
+				Name:           d.Name,
+				Description:    d.Description,
+				Objective:      d.Objective,
+				Multiple:       d.Multiple,
+				Origin:         "native",
+				Exclusive:      d.ID != "heft",
+				Status:         "ready",
+				Revision:       1,
+				ActiveRevision: 1,
+				Documentation:  nativeDocs(d.ID)})
 	}
 	rows, err := s.db.QueryContext(ctx, `SELECT payload FROM scheduler_plugin_sources ORDER BY id`)
 	if err != nil {
@@ -141,7 +157,7 @@ func (s *Service) List(ctx context.Context) ([]Package, error) {
 	sort.Slice(out, func(i, j int) bool { return out[i].Name < out[j].Name })
 	return out, rows.Err()
 }
-func (s *Service) Get(ctx context.Context, id string) (*Package, error) {
+func (s *Catalog) Get(ctx context.Context, id string) (*Package, error) {
 	if native(id) {
 		list, err := s.List(ctx)
 		if err != nil {
@@ -165,7 +181,7 @@ func (s *Service) Get(ctx context.Context, id string) (*Package, error) {
 
 var identifier = regexp.MustCompile(`^[a-z][a-z0-9-]{1,63}$`)
 
-func (s *Service) Save(ctx context.Context, p Package) (*Package, error) {
+func (s *Catalog) Save(ctx context.Context, p Package) (*Package, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	if s.readOnly {
@@ -222,7 +238,7 @@ func (s *Service) Save(ctx context.Context, p Package) (*Package, error) {
 	s.registry.SetPlugin(&executable{descriptor: descriptor(p), binary: binary, revision: p.ActiveRevision, sourceHash: p.SourceHash})
 	return &p, nil
 }
-func (s *Service) persist(ctx context.Context, p Package, activate bool) error {
+func (s *Catalog) persist(ctx context.Context, p Package, activate bool) error {
 	raw, err := json.Marshal(p)
 	if err != nil {
 		return err
@@ -236,7 +252,14 @@ func (s *Service) persist(ctx context.Context, p Package, activate bool) error {
 		return err
 	}
 	defer tx.Rollback()
-	_, err = tx.ExecContext(ctx, `INSERT INTO scheduler_plugin_sources(id,payload,active_payload) VALUES(?,?,?) ON CONFLICT(id) DO UPDATE SET payload=excluded.payload,active_payload=CASE WHEN excluded.active_payload='' THEN scheduler_plugin_sources.active_payload ELSE excluded.active_payload END`, p.ID, string(raw), active)
+	_,
+		err = tx.ExecContext(ctx,
+		`INSERT INTO scheduler_plugin_sources(id,payload,active_payload) VALUES(?,?,?) ON CONFLICT(id) DO UPDATE SET payload=excl`+
+			`uded.payload,active_payload=CASE WHEN excluded.active_payload='' THEN scheduler_plugin_sources.active_payload ELSE exclu`+
+			`ded.active_payload END`,
+		p.ID,
+		string(raw),
+		active)
 	if err != nil {
 		return err
 	}
@@ -247,15 +270,24 @@ func (s *Service) persist(ctx context.Context, p Package, activate bool) error {
 	err = tx.Commit()
 	return err
 }
-func (s *Service) binary(p Package) string {
+func (s *Catalog) binary(p Package) string {
 	return filepath.Join(s.root, p.ID, p.SourceHash, "scheduler")
 }
 func nativeDocs(id string) string {
 	if id == "heft" {
-		return "HEFT ranks the workflow DAG by upward rank, then places each activity at its earliest feasible finish time across heterogeneous resources and CPU cores. It produces one baseline plan. It considers computation and data transfer estimates. Unlike PRISM, it does not use the session interference matrix during planning. The returned plan is validated against the same frozen workflow and resource scope."
+		return "HEFT ranks the workflow DAG by upward rank, then places each activity at its earliest feasible finish time across heterogeneous re" +
+			"sources and CPU cores. It produces one baseline plan. It considers computation and data transfer estimates. Unlike PRISM, it does " +
+			"not use the session interference matrix during planning. The returned plan is validated against the same frozen workflow and resou" +
+			"rce scope."
 	}
 	if id == "prism-cost" {
-		return "PRISM Cost is an AkôFlow-exclusive PRISM-CC scheduler. It explores alternative placements with beam search and ranks candidate plans exclusively by predicted financial cost. It models heterogeneous compute, shared network transfers, cloud lifecycle and optional activity interference. optionCount controls retained plans; beamWidth controls the search frontier. The search is heuristic and does not guarantee a global optimum."
+		return "PRISM Cost is an Ak\u00f4Flow-exclusive PRISM-CC scheduler. It explores alternative placements with beam search and ranks candidate pla" +
+			"ns exclusively by predicted financial cost. It models heterogeneous compute, shared network transfers, cloud lifecycle and optiona" +
+			"l activity interference. optionCount controls retained plans; beamWidth controls the search frontier. The search is heuristic and " +
+			"does not guarantee a global optimum."
 	}
-	return "PRISM Time is an AkôFlow-exclusive PRISM-CC scheduler. It explores alternative placements with beam search and ranks candidate plans exclusively by predicted makespan. It models heterogeneous compute, shared network transfers, cloud lifecycle and optional activity interference. optionCount controls retained plans; beamWidth controls the search frontier. The search is heuristic and does not guarantee a global optimum."
+	return "PRISM Time is an Ak\u00f4Flow-exclusive PRISM-CC scheduler. It explores alternative placements with beam search and ranks candidate pla" +
+		"ns exclusively by predicted makespan. It models heterogeneous compute, shared network transfers, cloud lifecycle and optional acti" +
+		"vity interference. optionCount controls retained plans; beamWidth controls the search frontier. The search is heuristic and does n" +
+		"ot guarantee a global optimum."
 }

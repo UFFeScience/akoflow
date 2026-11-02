@@ -100,12 +100,16 @@ func Validate(ctx context.Context, source string, compile bool) (Validation, err
 	if !compile {
 		return result, nil
 	}
+	return compileValidation(ctx, source, offset, result)
+}
+
+func compileValidation(ctx context.Context, source string, offset int, result Validation) (Validation, error) {
 	root, err := os.MkdirTemp("", "akoflow-syntax-check-")
 	if err != nil {
 		return result, err
 	}
 	defer os.RemoveAll(root)
-	service := &Service{root: root}
+	service := &Catalog{root: root}
 	_, err = service.compile(ctx, Package{ID: "validation", SourceHash: "current", Source: source})
 	if err != nil {
 		result.Valid = false

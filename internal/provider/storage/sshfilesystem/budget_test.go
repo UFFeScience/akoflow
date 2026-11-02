@@ -70,7 +70,22 @@ func TestBeeGFSRequiresExactUserAndGroupLimits(t *testing.T) {
 	bytes, _, _, e = parseWorkspaceBudget(limited)
 	require.NoError(t, e)
 	require.Equal(t, int64(4*1024), bytes)
-	for _, bad := range []string{strings.Replace(fixture, "group,50,500,unlimited", "group,51,500,unlimited", 1), strings.Replace(fixture, "1000,100000", "1000,unknown", 1), strings.Replace(fixture, "__AKO_END__", "", 1), strings.Replace(fixture, "__AKO_BEE_QUOTA__ 50", "user,12345,0,200000,0,unlimited\n__AKO_BEE_QUOTA__ 50", 1)} {
+	for _, bad := range []string{strings.Replace(fixture,
+		"group,50,500,unlimited",
+		"group,51,500,unlimited",
+		1),
+		strings.Replace(fixture,
+			"1000,100000",
+			"1000,unknown",
+			1),
+		strings.Replace(fixture,
+			"__AKO_END__",
+			"",
+			1),
+		strings.Replace(fixture,
+			"__AKO_BEE_QUOTA__ 50",
+			"user,12345,0,200000,0,unlimited\n__AKO_BEE_QUOTA__ 50",
+			1)} {
 		_, _, _, e = parseWorkspaceBudget(bad)
 		require.Error(t, e)
 	}

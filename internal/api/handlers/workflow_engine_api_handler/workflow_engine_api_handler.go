@@ -172,7 +172,7 @@ type Dependencies struct {
 
 type Handler struct {
 	dockerHub           *dockerhub.Client
-	algorithmLibrary    *library.Service
+	algorithmLibrary    *library.Catalog
 	environments        ports.EnvironmentCatalog
 	workflows           ports.WorkflowStore
 	plans               ports.PlanStore
@@ -3091,19 +3091,9 @@ func (h *Handler) resolveBuildPreparations(ctx context.Context, request *ports.E
 			return fmt.Errorf("build activity %q has unknown resource %q", activity.ID, assignment.ResourceID)
 		}
 		if activity.Command.Executable.Source.Type == domain.ExecutableSourceCatalog && executionRuntimeDriver(*request, assignment) == domain.RuntimeDriverKubernetes {
-			catalog, ok := any(h.data).(applicationbuild.CatalogOCIReference)
-			if !ok {
-				return fmt.Errorf("artifact catalog OCI resolver is unavailable")
-			}
-			ref := activity.Command.Executable.Source.ArtifactRef
-			if ref == nil {
-				return fmt.Errorf("activity %q catalog executable has no artifact reference", activity.ID)
-			}
-			image, err := applicationbuild.OCIReferenceForCatalog(ctx, catalog, ref.ID, ref.Version, resource.Architecture)
-			if err != nil {
+			if err := h.resolveCatalogImage(ctx, activity, resource, &request.Workflow.Activities[index].Command.Image); err != nil {
 				return err
 			}
-			request.Workflow.Activities[index].Command.Image = image
 			continue
 		}
 		var requirement domain.PreparationRequirement
@@ -3480,5 +3470,22 @@ func (h *Handler) reconcileRecoveryPreview(ctx context.Context, runID string, la
 			}
 		}
 	}
+	return nil
+}
+
+func (h *Handler) resolveCatalogImage(ctx context.Context, activity domain.Activity, resource domain.Resource, imageTarget *string) error {
+	catalog, ok := any(h.data).(applicationbuild.CatalogOCIReference)
+	if !ok {
+		return fmt.Errorf("artifact catalog OCI resolver is unavailable")
+	}
+	ref := activity.Command.Executable.Source.ArtifactRef
+	if ref == nil {
+		return fmt.Errorf("activity %q catalog executable has no artifact reference", activity.ID)
+	}
+	image, err := applicationbuild.OCIReferenceForCatalog(ctx, catalog, ref.ID, ref.Version, resource.Architecture)
+	if err != nil {
+		return err
+	}
+	*imageTarget = image
 	return nil
 }

@@ -1,0 +1,111 @@
+package main
+
+import (
+	"encoding/csv"
+	"fmt"
+	"math"
+	"os"
+	"path/filepath"
+	"strconv"
+	"time"
+)
+
+// Export raw seconds and explicit cost bases; forecast cost functions are not
+// interchangeable with provider-lifecycle estimates or invoices.
+func exportMatrix(root string, records []obj) error {
+	return exportExecutionCSV(filepath.Join(root, "matrix-results.csv"), records)
+}
+
+func exportExecutionCSV(path string, records []obj) error {
+	file, err := os.Create(path)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+	w := csv.NewWriter(file)
+	header := []string{
+		"environment", "algorithm", "objective", "plan_id", "simulation_run_id", "real_run_id",
+		"shared_real_observation", "physical_signature", "planned_makespan_seconds",
+		"simulated_makespan_seconds", "real_makespan_seconds", "planned_cost_usd",
+		"planned_cost_basis", "simulation_cost_usd", "real_run_cost_usd",
+		"cloud_lifecycle_estimated_cost_usd", "cloud_lifecycle_cost_status", "completed_activities",
+		"algorithm_version", "real_wall_seconds",
+		"simulation_transferred_bytes", "real_transferred_bytes",
+		"simulation_transfer_work_seconds", "real_transfer_work_seconds",
+		"real_minus_simulated_seconds", "simulation_absolute_error_percent",
+	}
+	if err = w.Write(header); err != nil {
+		return err
+	}
+	num := func(v any) string {
+		if f, ok := v.(float64); ok {
+			return strconv.FormatFloat(f, 'g', -1, 64)
+		}
+		return ""
+	}
+	for _, record := range records {
+		plan := record["plan"].(map[string]any)
+		prediction := plan["predicted"].(map[string]any)
+		simulation := record["simulation"].(map[string]any)
+		real := record["real"].(map[string]any)
+		simBreakdown, _ := simulation["breakdown"].(map[string]any)
+		realBreakdown, _ := real["breakdown"].(map[string]any)
+		billing, _ := record["cloudBilling"].(map[string]any)
+		basis := "vm-forecast"
+		if record["algorithm"] == "moheft" {
+			basis = "original-task-additive"
+		}
+		if explicit, ok := record["plannedCostBasis"].(string); ok && explicit != "" {
+			basis = explicit
+		}
+		wall, err := realWallSeconds(real)
+		if err != nil {
+			return err
+		}
+		delta, absoluteError := simulationErrorMetrics(simulation["makespanSeconds"], real["makespanSeconds"])
+		row := []string{
+			fmt.Sprint(record["environment"]), fmt.Sprint(record["algorithm"]), fmt.Sprint(record["objective"]),
+			fmt.Sprint(plan["id"]), fmt.Sprint(simulation["id"]), fmt.Sprint(record["realRunId"]),
+			fmt.Sprint(record["sharedObservation"]), fmt.Sprint(record["physicalSignature"]),
+			num(prediction["makespanSeconds"]), num(simulation["makespanSeconds"]), num(real["makespanSeconds"]),
+			num(prediction["cost"]), basis, num(simulation["cost"]), num(real["cost"]),
+			num(billing["estimatedCost"]), fmt.Sprint(billing["status"]), num(real["completedActivityCount"]),
+			fmt.Sprint(plan["algorithmVersion"]), num(wall),
+			num(simulation["transferredBytes"]), num(real["transferredBytes"]),
+			num(simBreakdown["transferSeconds"]), num(realBreakdown["transferSeconds"]),
+			delta, absoluteError,
+		}
+		if err = w.Write(row); err != nil {
+			return err
+		}
+	}
+	w.Flush()
+	return w.Error()
+}
+
+// The observed real makespan is the denominator. A positive delta means that
+// simulation underestimated the deployment; missing/invalid inputs stay blank.
+func simulationErrorMetrics(simulated, observed any) (string, string) {
+	sim, simOK := simulated.(float64)
+	real, realOK := observed.(float64)
+	if !simOK || !realOK || sim <= 0 || real <= 0 || math.IsNaN(sim) || math.IsNaN(real) || math.IsInf(sim, 0) || math.IsInf(real, 0) {
+		return "", ""
+	}
+	delta := real - sim
+	return strconv.FormatFloat(delta, 'g', -1, 64), strconv.FormatFloat(100*math.Abs(delta)/real, 'g', -1, 64)
+}
+
+func realWallSeconds(run obj) (float64, error) {
+	start, err := time.Parse(time.RFC3339Nano, fmt.Sprint(run["startedAt"]))
+	if err != nil {
+		return 0, fmt.Errorf("real start timestamp: %w", err)
+	}
+	finish, err := time.Parse(time.RFC3339Nano, fmt.Sprint(run["finishedAt"]))
+	if err != nil {
+		return 0, fmt.Errorf("real finish timestamp: %w", err)
+	}
+	if finish.Before(start) {
+		return 0, fmt.Errorf("real finish precedes start")
+	}
+	return finish.Sub(start).Seconds(), nil
+}

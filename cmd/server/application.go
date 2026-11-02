@@ -4,6 +4,9 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"github.com/UFFeScience/akoflow/internal/infrastructure/instancearchive"
+	"github.com/UFFeScience/akoflow/internal/planning/library"
+	"path/filepath"
 
 	"github.com/UFFeScience/akoflow/internal/api/handlers/workflow_engine_api_handler"
 	"github.com/UFFeScience/akoflow/internal/api/httpserver"
@@ -65,6 +68,10 @@ func newApplication(ctx context.Context, settings config.Settings, log *logger.L
 	if err != nil {
 		return fail(err)
 	}
+	algorithmLibrary, err := library.New(ctx, storage.database, registry, filepath.Join(filepath.Dir(instancearchive.ResolveDatabasePath()), "scheduler-plugins"), storage.readOnly)
+	if err != nil {
+		return fail(err)
+	}
 	planningService := &applicationplanning.Coordinator{
 		Store: storage.plans, Plans: storage.plans, Workflows: storage.workflows,
 		Environments: storage.environments, Resources: storage.resources,
@@ -114,6 +121,7 @@ func newApplication(ctx context.Context, settings config.Settings, log *logger.L
 	if err != nil {
 		return fail(err)
 	}
+	api.WithAlgorithmLibrary(algorithmLibrary)
 	return &application{
 		settings: settings, log: log, database: storage.database, analytics: storage.analytics,
 		api: api, eventLoop: loop,

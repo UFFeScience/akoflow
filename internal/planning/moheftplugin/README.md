@@ -1,0 +1,19 @@
+MOHEFT — Multi-Objective Heterogeneous Earliest Finish Time
+
+Reference: Juan J. Durillo, Hamid Mohammadi Fard and Radu Prodan, “MOHEFT: A Multi-Objective List-based Method for Workflow Scheduling”, CloudCom 2012, pp. 185–192. DOI: 10.1109/CloudCom.2012.6427573.
+
+Algorithm 2: process activities in B-rank/upward-rank order, expand every retained partial mapping on every feasible resource, remove Pareto-dominated partial schedules, and retain at most K using normalized NSGA-II crowding distance. Endpoints of each nonconstant objective receive infinite crowding distance. Equal-objective mappings remain distinct because their future transfer costs may differ. No weighted sum or PRISM search is substituted. K is candidateCount (default 25, accepted range 1–1000).
+
+Integration model, explicitly distinguished from the paper's simplified equations:
+- The search procedure is MOHEFT. The AkôFlow adapter additionally honors CPU-lane availability (with gap insertion), scope membership, selectors, CPU/memory feasibility, boot and container overheads. Activities requiring more than one lane are rejected rather than scheduled incorrectly.
+- Execution receives the same cloud lifecycle enrichment as native plans, while the original task-additive forecast is preserved.
+- Initial machine boot is exported as absolute resourceAvailableAtSeconds, with explicit zero per-task boot overhead and the declared container overhead. Waiting past initial availability does not restart boot on descendants.
+- Timing takes the maximum predecessor finish plus the maximum incoming transfer (paper Eqs. 1–2), then inserts the computation into the earliest feasible CPU-lane gap. Communication uses directed fixed-bandwidth links plus their explicit latency; missing links invalidate cross-resource placements. There is no interference-aware correction, shared-link contention model, or implicit zero-latency connection.
+- Runtime uses activity/resource profiles when available, including reference-work-v1 and compute-work-v1; otherwise, measured reference duration divided by computeSpeedup. Missing/invalid work estimates are rejected.
+- The financial objective follows paper Eqs. 4–5: task execution/transfer duration × resource price, plus declared storage footprint × duration × storage price, plus remote ingress/egress. Optional resource metadata prices are storagePricePerByteSecond, ingressPricePerByte and egressPricePerByte (all per byte, with decimal units). Unspecified prices are zero. Explicit link PricePerByte tariffs are not substituted for the paper's ingress/egress model.
+- This is task-additive paper pricing, not the VM active-window/provisioning billing used by PRISM. The cost model is recorded as moheft-task-additive in each plan. Absolute predicted costs must not be treated as an identical-billing scientific comparison against PRISM. This integration does not claim to reproduce the paper's GridSim experiments or its numerical results.
+- Deadline and budget do not alter the MOHEFT search. Final plans are marked feasible/infeasible against the supplied limits. This heuristic does not guarantee a globally optimal Pareto frontier.
+
+The plugin includes the complete implementation and only standard-library imports. The code can be inspected, edited and exported through Scheduling algorithms. It is not native and is not marked AkôFlow-exclusive.
+
+BDHEFT from Scientific Reports 15:19505 (2025), DOI: 10.1038/s41598-025-02654-z, is deliberately not implemented: the supplied publication has contradictory resource-selection rules (Eq. 37 vs. Algorithm 2 step 18) and heterogeneity formulas (Eqs. 10/12) whose unsquared deviations sum to zero. An authoritative clarification or reference implementation is required before installing an algorithm under that name.

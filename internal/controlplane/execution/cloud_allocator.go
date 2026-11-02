@@ -355,7 +355,9 @@ func (a QueuedCloudAllocator) Stop(ctx context.Context, executionRunID string, a
 		if instance == nil {
 			return fmt.Errorf("cloud stop instance %q was not found", allocation.CloudInstanceID)
 		}
-		if instance.Status == "stopped" {
+		// A later teardown owner may already be removing an idle instance.
+		// Do not enqueue a competing stop while its destruction is in progress.
+		if instance.Status == "stopped" || instance.Status == "destroying" || instance.Status == "destroyed" {
 			continue
 		}
 		if instance.Status != "ready" {
@@ -384,7 +386,7 @@ func (a QueuedCloudAllocator) Stop(ctx context.Context, executionRunID string, a
 		if err != nil {
 			return err
 		}
-		if stopped == nil || stopped.Status != "stopped" {
+		if stopped == nil || (stopped.Status != "stopped" && stopped.Status != "destroying" && stopped.Status != "destroyed") {
 			return fmt.Errorf("cloud stop %q completed without stopping instance %q", operation.ID, instance.ID)
 		}
 	}

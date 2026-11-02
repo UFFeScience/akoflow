@@ -54,3 +54,18 @@ func (r *Registry) List() []ports.SchedulerDescriptor {
 	sort.Slice(items, func(i, j int) bool { return items[i].ID < items[j].ID })
 	return items
 }
+
+// SetPlugin atomically replaces only user-installed schedulers. Existing runs
+// retain their scheduler value and immutable compiled executable.
+func (r *Registry) SetPlugin(scheduler ports.Scheduler) {
+	if scheduler == nil {
+		return
+	}
+	id := scheduler.Descriptor().ID
+	if id == "heft" || id == "prism-time" || id == "prism-cost" || id == "" {
+		return
+	}
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	r.schedulers[id] = scheduler
+}

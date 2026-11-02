@@ -39,6 +39,7 @@ import (
 	"github.com/UFFeScience/akoflow/internal/infrastructure/credentials/token"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/dockerhub"
 	planningalgorithms "github.com/UFFeScience/akoflow/internal/planning/algorithms"
+	"github.com/UFFeScience/akoflow/internal/planning/library"
 	"github.com/google/uuid"
 	"gopkg.in/yaml.v3"
 )
@@ -171,6 +172,7 @@ type Dependencies struct {
 
 type Handler struct {
 	dockerHub           *dockerhub.Client
+	algorithmLibrary    *library.Service
 	environments        ports.EnvironmentCatalog
 	workflows           ports.WorkflowStore
 	plans               ports.PlanStore
@@ -430,6 +432,25 @@ func (h *Handler) FactoryReset(w http.ResponseWriter, r *http.Request) {
 	if h.factoryReset == nil {
 		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("factory reset is unavailable"))
 		return
+	}
+	if h.readOnly {
+		writeError(w, http.StatusForbidden, fmt.Errorf("archived instances cannot be reset"))
+		return
+	}
+	if h.executions == nil {
+		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("execution state unavailable; reset refused"))
+		return
+	}
+	runs, err := h.executions.ListRuns(r.Context())
+	if err != nil {
+		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("cannot verify idle execution state: %w", err))
+		return
+	}
+	for _, run := range runs {
+		if run.Status == domain.ExecutionRunCreated || run.Status == domain.ExecutionRunRunning {
+			writeError(w, http.StatusConflict, fmt.Errorf("execution %q is %s; stop it before resetting", run.ID, run.Status))
+			return
+		}
 	}
 	if err := h.factoryReset(r.Context()); err != nil {
 		writeError(w, http.StatusUnprocessableEntity, err)
@@ -1945,6 +1966,11 @@ func (h *Handler) CreateCloudCapacityTarget(w http.ResponseWriter, r *http.Reque
 		return
 	}
 	value.Enabled = true
+	capacity, capacityErr := targetSchedulingCapacity(value)
+	if capacityErr != nil {
+		writeError(w, http.StatusUnprocessableEntity, capacityErr)
+		return
+	}
 	if err := h.cloud.CreateCapacityTarget(r.Context(), value); err != nil {
 		writeError(w, http.StatusUnprocessableEntity, err)
 		return
@@ -1970,7 +1996,7 @@ func (h *Handler) CreateCloudCapacityTarget(w http.ResponseWriter, r *http.Reque
 		ExecutionTarget: domain.ExecutionTargetProvisioned, Type: domain.ResourceCloudVM,
 		Name: value.Name, ProviderID: value.ID, Tier: "cloud",
 		Region: value.Region, Zone: value.FixedZone, Architecture: value.Architecture,
-		CPUCores: value.VCPU, CPUCapacity: float64(value.VCPU),
+		CPUCores: value.VCPU, CPUCapacity: capacity,
 		MemoryBytes:    value.MemoryMiB << 20,
 		StorageBytes:   configurationInt64(value.Configuration, "diskSizeGiB") << 30,
 		ComputeSpeedup: 1,
@@ -1985,6 +2011,7 @@ func (h *Handler) CreateCloudCapacityTarget(w http.ResponseWriter, r *http.Reque
 		},
 	}
 	resource.Metadata["pricingStatus"] = "estimated"
+	preserveTargetCalibration(&resource, definition.Resources)
 	if resource.PricePerSecond <= 0 || (resource.StorageBytes > 0 && configurationFloat64(value.Configuration, "diskPricePerGiBMonth") <= 0) {
 		resource.Metadata["pricingStatus"] = "incomplete"
 	}
@@ -3112,6 +3139,9 @@ func (h *Handler) resolveBuildPreparations(ctx context.Context, request *ports.E
 			requirement, required, err = resolver.PreparationForDockerImage(ctx, activity.Command.Executable.Source.Reference, activity.ID, resource, "")
 			if err != nil {
 				return err
+			}
+			if !required {
+				return fmt.Errorf("activity %q requires a completed SIF build for OCI image %q before Slurm execution", activity.ID, activity.Command.Executable.Source.Reference)
 			}
 		}
 		if !required {

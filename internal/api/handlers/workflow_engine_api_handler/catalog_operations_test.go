@@ -306,7 +306,7 @@ func TestInstancePreferencesEnvironmentReplacementAndReset(t *testing.T) {
 	definition := domain.EnvironmentDefinition{Environment: domain.Environment{ID: "environment", Name: "Environment"}}
 	environments := &environmentCatalogRichStub{found: &definition}
 	reset := false
-	h := &Handler{instance: instance, environments: environments, factoryReset: func(context.Context) error { reset = true; return nil }}
+	h := &Handler{instance: instance, environments: environments, executions: executionQueryStub{}, factoryReset: func(context.Context) error { reset = true; return nil }}
 	tests := []struct {
 		name, method, body string
 		values             map[string]string
@@ -578,6 +578,26 @@ func TestResolveBuildPreparationsReportsInvalidAssignmentsAndReferences(t *testi
 	}
 }
 
+func TestResolveBuildPreparationsRejectsMissingSlurmImageBeforeSubmission(t *testing.T) {
+	h := &Handler{data: &dataCatalogRichStub{}}
+	request := ports.ExecutionRequest{
+		Run: domain.ExecutionRun{Mode: domain.ExecutionModeReal},
+		Workflow: domain.WorkflowVersion{Activities: []domain.Activity{{
+			ID: "missing-image",
+			Command: domain.ActivityCommand{Executable: &domain.ExecutableReference{
+				Source: domain.ExecutableSource{Type: domain.ExecutableSourceOCI, Reference: "registry.example/tool@sha256:missing"},
+			}},
+		}}},
+		Plan:            domain.SchedulePlan{Assignments: []domain.PlanAssignment{{ActivityID: "missing-image", ResourceID: "hpc"}}},
+		Resources:       []domain.Resource{{ID: "hpc", Architecture: "amd64"}},
+		Runtimes:        []domain.EnvironmentRuntime{{ID: "slurm", Driver: domain.RuntimeDriverSlurm, Mode: domain.RuntimeModeExecution}},
+		RuntimeBindings: []domain.ResourceRuntimeBinding{{ResourceID: "hpc", RuntimeID: "slurm", Enabled: true}},
+	}
+	if err := h.resolveBuildPreparations(context.Background(), &request); err == nil || !strings.Contains(err.Error(), "requires a completed SIF build") {
+		t.Fatalf("missing build error=%v", err)
+	}
+}
+
 func TestExecutionDetailIncludesDataPlaneObservations(t *testing.T) {
 	run := domain.ExecutionRun{ID: "run"}
 	data := &dataCatalogRichStub{instances: []domain.DataObjectInstance{{ID: "object"}}, dataLocations: []domain.DataLocation{{ID: "data-location"}}, materializations: []domain.ArtifactMaterialization{{ID: "materialization"}}, transferRuns: []domain.DataTransferRun{{ID: "transfer-run"}}}
@@ -760,6 +780,7 @@ func TestBuildCacheMissingContextAndResetFailures(t *testing.T) {
 		t.Fatalf("missing build=%d", response.Code)
 	}
 	h.factoryReset = func(context.Context) error { return fmt.Errorf("reset failed") }
+	h.executions = executionQueryStub{}
 	if response := callHandler(t, http.MethodPost, "/", "", nil, h.FactoryReset); response.Code != 422 {
 		t.Fatalf("reset=%d", response.Code)
 	}

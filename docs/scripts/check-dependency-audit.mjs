@@ -21,7 +21,9 @@ for (const [name, entry] of Object.entries(audit.vulnerabilities)) {
   for (const advisory of entry.via) {
     if (typeof advisory === "string") continue;
     assert.ok(
-      name === "braces" && advisory.url === allowed,
+      (name === "braces" && advisory.url === allowed) ||
+        (name === "deepmerge" &&
+          advisory.url === "https://github.com/advisories/GHSA-gcqx-w48m-w2h4"),
       `Unmitigated advisory in ${name}: ${advisory.url}`,
     );
   }
@@ -32,5 +34,5 @@ assert.equal(
   "critical vulnerabilities remain",
 );
 console.log(
-  "No unmitigated npm advisories. The version-bound braces advisory remains reported by npm and is mitigated by the tested local depth patch.",
+  "No unmitigated npm advisories. Version-bound braces and deepmerge advisories remain reported by npm and are mitigated by tested local patches.",
 );

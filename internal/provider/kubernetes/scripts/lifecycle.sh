@@ -61,12 +61,32 @@ sample_metrics() {
 if [ -f "$metric_root/cpu.stat" ] && [ -f "$metric_root/memory.current" ]; then
   sample_metrics
   (
+    # A sampler must not inherit the activity workspace cleanup trap.
+    trap - EXIT
+    metric_sleep_pid=''
+    stop_sampler() {
+      trap '' HUP INT TERM
+      if [ -n "$metric_sleep_pid" ]; then
+        kill "$metric_sleep_pid" 2>/dev/null || true
+        wait "$metric_sleep_pid" 2>/dev/null || true
+      fi
+      exit 0
+    }
+    trap stop_sampler HUP INT TERM
+    : > "$state_dir/metrics.ready" || exit 0
     while :; do
-      sleep "$metric_interval"
+      sleep "$metric_interval" &
+      metric_sleep_pid=$!
+      wait "$metric_sleep_pid" || break
+      metric_sleep_pid=''
       sample_metrics
     done
   ) 2>/dev/null &
   metric_pid=$!
+  # Even an instant activity must not signal the child before its trap exists.
+  while [ ! -f "$state_dir/metrics.ready" ] && kill -0 "$metric_pid" 2>/dev/null; do
+    sleep 0.01
+  done
 fi
 
 "$@"

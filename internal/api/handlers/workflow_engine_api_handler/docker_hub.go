@@ -33,12 +33,12 @@ func dockerHubPage(r *http.Request) (int, error) {
 }
 func (h *Handler) SearchDockerHub(w http.ResponseWriter, r *http.Request) {
 	if h.dockerHub == nil {
-		writeError(w, 503, fmt.Errorf("Docker Hub is unavailable"))
+		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("Docker Hub is unavailable"))
 		return
 	}
 	page, err := dockerHubPage(r)
 	if err != nil {
-		writeError(w, 400, err)
+		writeError(w, http.StatusBadRequest, err)
 		return
 	}
 	result, err := h.dockerHub.Search(r.Context(), r.URL.Query().Get("q"), page)
@@ -46,16 +46,16 @@ func (h *Handler) SearchDockerHub(w http.ResponseWriter, r *http.Request) {
 		writeDockerHubError(w, err)
 		return
 	}
-	writeJSON(w, 200, result)
+	writeJSON(w, http.StatusOK, result)
 }
 func (h *Handler) DockerHubTags(w http.ResponseWriter, r *http.Request) {
 	if h.dockerHub == nil {
-		writeError(w, 503, fmt.Errorf("Docker Hub is unavailable"))
+		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("Docker Hub is unavailable"))
 		return
 	}
 	page, err := dockerHubPage(r)
 	if err != nil {
-		writeError(w, 400, err)
+		writeError(w, http.StatusBadRequest, err)
 		return
 	}
 	result, err := h.dockerHub.Tags(r.Context(), r.URL.Query().Get("repository"), r.URL.Query().Get("q"), page)
@@ -63,5 +63,5 @@ func (h *Handler) DockerHubTags(w http.ResponseWriter, r *http.Request) {
 		writeDockerHubError(w, err)
 		return
 	}
-	writeJSON(w, 200, result)
+	writeJSON(w, http.StatusOK, result)
 }

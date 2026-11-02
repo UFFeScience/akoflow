@@ -42,7 +42,9 @@ func TestTagsFilterUnsupportedImagesAndUsePagination(t *testing.T) {
 		if r.URL.Path != "/v2/namespaces/library/repositories/python/tags" || r.URL.Query().Get("page") != "2" || r.URL.Query().Get("name") != "3.12" {
 			t.Errorf("URL %s", r.URL)
 		}
-		_, _ = w.Write([]byte(`{"next":null,"results":[{"name":"3.12","images":[{"os":"linux","architecture":"amd64","digest":"sha256:` + strings.Repeat("a", 64) + `"},{"os":"unknown","architecture":"unknown"}]},{"name":"windows","images":[{"os":"windows","architecture":"amd64"}]}]}`))
+		_,
+			_ = w.Write([]byte(`{"next":null,"results":[{"name":"3.12","images":[{"os":"linux","architecture":"amd64","digest":"sha256:` + strings.Repeat("a",
+			64) + `"},{"os":"unknown","architecture":"unknown"}]},{"name":"windows","images":[{"os":"windows","architecture":"amd64"}]}]}`))
 	})
 	page, err := client.Tags(context.Background(), "python", "3.12", 2)
 	if err != nil || len(page.Results) != 1 || len(page.Results[0].Images) != 1 || page.HasMore {

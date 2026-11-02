@@ -1,13 +1,18 @@
-# AkoFlow internal architecture
+# AkôFlow internal architecture
 
-The server and worker follow dependency-oriented boundaries:
+The daemon follows dependency-oriented boundaries:
 
 - `domain`: workflow, environment, resource, planning and execution concepts.
 - `application`: use-case services and provider-independent ports.
-- `infrastructure`: SQLite persistence, planning plugins and Kubernetes, Slurm and SSH adapters.
-- `execution`: orchestration, lifecycle, real-runtime and simulation behavior.
+- `controlplane`: execution supervision, event processing and coordination.
+- `planning`: scheduling algorithms, scheduler library contracts and reviewed plugins.
+- `provider`: local, cloud, Kubernetes, Slurm, transfer, storage and simulation adapters.
+- `infrastructure`: persistence, configuration, credentials and plugin infrastructure.
 - `api`: HTTP handlers, transport requests and responses.
+- `mcpbridge` and `mcpcontrol`: MCP transport, tool catalog and connection management.
+- `cli`: command-line API integration.
 
-`cmd/server` and `cmd/worker` are composition roots. Domain packages must not
-import application, infrastructure, execution or API packages. New external
-integrations implement a port and stay under `infrastructure`.
+`cmd/server` composes the daemon. `cmd/akoflow` is the API client entry point.
+Domain packages must not import application services, infrastructure, providers,
+control-plane orchestration or transport code. External adapters implement the
+ports consumed by application services.

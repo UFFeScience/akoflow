@@ -8,7 +8,7 @@ import (
 )
 
 func TestWorkspaceProjectionReconstructsAuditedMontageBaseline(t *testing.T) {
-	payload, err := os.ReadFile("../../../experiments/montage-micro-hpc-e2/workspace-projection-v2.json")
+	payload, err := os.ReadFile("testdata/workspace-projection-v2.json")
 	require.NoError(t, err)
 	var evidence struct {
 		ActivityModels map[string]WorkspaceProjection `json:"activityModels"`

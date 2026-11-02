@@ -56,7 +56,7 @@ func TestFixedStageServiceIsCommonAndClassScoped(t *testing.T) {
 }
 
 func TestFrozenMontageMeasuredModelDecodesAndRejectsUnobservedPair(t *testing.T) {
-	payload, err := os.ReadFile("../../../experiments/montage-micro-hpc-e2/materialization-model-v2.json")
+	payload, err := os.ReadFile("testdata/materialization-model-v2.json")
 	require.NoError(t, err)
 	var model Model
 	require.NoError(t, json.Unmarshal(payload, &model))

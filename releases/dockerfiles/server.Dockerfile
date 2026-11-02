@@ -23,7 +23,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends gcc libsqlite3-
  && rm -rf /var/lib/apt/lists/*
 COPY go.mod go.sum ./
 RUN go mod download
-COPY . .
+COPY cmd/server ./cmd/server
+COPY internal ./internal
 RUN go build -o /output/akoflow-server ./cmd/server
 
 FROM moby/buildkit:${BUILDKIT_VERSION} AS buildkit-client

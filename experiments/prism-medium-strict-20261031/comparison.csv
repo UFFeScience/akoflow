@@ -1,3 +1,0 @@
-cohort,run_id,planned_seconds,simulated_seconds,real_seconds,simulation_absolute_error_percent_real_denominator,real_transferred_bytes,real_transfer_work_seconds_not_elapsed,cloud_lifecycle_estimated_usd
-previous-flexible-order,fig8-prism-time-matched-20261031-v1-medium-real,3003.882921010,3007.138091069,5256.823833942,42.795532320,8232240005.000000000,11784.479794025,0.103345813
-strict-planned-order,prism-time-medium-strict-20261031-v1-medium-real,3003.882921010,3007.138091069,5212.838178635,42.312844020,8233037026.000000000,9506.622248411,0.101562073

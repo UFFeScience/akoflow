@@ -18,7 +18,7 @@ For each placement, a matching activity-resource profile supplies the base durat
 
 | Scheduler | Candidate search | Primary final ordering | Important modeled behavior |
 |---|---|---|---|
-| HEFT | One deterministic topological placement pass ordered by its upward rank | Predicted makespan, then predicted cost | Per-core availability, direct matching topology-link transfer, boot/container overhead |
+| HEFT | One deterministic topological placement pass ordered by its upward rank | Earliest activity finish, then cost for equal finishes | Per-core gap insertion, direct matching topology-link transfer, boot/container overhead |
 | PRISM Time | Beam search over ready activities and feasible resource/core placements; complete states are re-evaluated | Predicted makespan, then transfer time, network cost, used resources, and cost | Routed transfers, active-flow sharing, resource active-window cost, optional CPU interference, queue and frozen overhead metadata |
 | PRISM Cost | The same PRISM search and complete-state re-evaluation | Predicted cost, then network cost, transfer time, used resources, makespan, and queue | The same PRISM model, ranked exclusively for cost |
 
@@ -26,7 +26,7 @@ Later values break ties. PRISM retains some alternatives for the other objective
 
 ## Ranking work before placement
 
-HEFT ranks activities by estimated work remaining, then tests feasible resources and cores for each activity. It chooses the earliest predicted finish, using cost to break ties.
+HEFT ranks activities by mean computation and communication costs along the remaining path, then tests feasible resources and cores for each activity. It inserts the activity into the earliest available gap that respects its dependencies and chooses the earliest activity finish, using cost only to break equal-finish ties. The implementation is checked against the published ten-task example of Topcuoglu et al. (2002), including all processor assignments and its makespan of 80. Multiple cores are independent execution lanes within a physical resource; communication within that resource remains zero. Boot is an absolute initial availability and container overhead occupies the lane before computation.
 
 PRISM's rank also includes estimated communication over topology routes. It can explore several ready activities and placements at once. Beam width and ready-branch limit cap the search; their defaults are 120 and 3. Raising them considers more alternatives but takes more planning work. The session estimate reports expected expanded states and duration before PRISM starts.
 

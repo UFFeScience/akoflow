@@ -8,11 +8,11 @@ import (
 	"fmt"
 	"math"
 	"runtime"
-	"sort"
 	"sync"
 
 	"github.com/UFFeScience/akoflow/internal/domain"
 	"github.com/UFFeScience/akoflow/internal/domain/materializationmodel"
+	domainplanning "github.com/UFFeScience/akoflow/internal/domain/planning"
 	"github.com/UFFeScience/akoflow/internal/domain/storagebudget"
 	domainworkflow "github.com/UFFeScience/akoflow/internal/domain/workflow"
 )
@@ -99,6 +99,7 @@ type prismEvaluationFlow struct {
 	rateLimit        float64
 	stageInitialized bool
 	serviceHeld      bool
+	admitted         bool
 }
 
 type prismServicePool struct{ slots, used int }
@@ -242,7 +243,7 @@ func evaluateCompleteCompactPRISMState(
 	transferCost := 0.0
 
 	for completed < len(tasks) {
-		stageCost, err := initializePRISMFlowStages(flows, servicePools, search.router, clock)
+		stageCost, err := initializePRISMFlowStages(flows, tasks, servicePools, search.router, clock)
 		if err != nil {
 			return state, err
 		}
@@ -814,30 +815,33 @@ func initializePRISMLanes(tasks []prismEvaluationTask) []int {
 		laneSuccessor[index] = -1
 		tasks[index].laneReady = true
 	}
-	byLane := make(map[string][]int)
+	assignments := make([]domain.PlanAssignment, len(tasks))
+	byID := make(map[string]int, len(tasks))
 	for ordinal, task := range tasks {
-		lane := task.assignment.ResourceID + "\x00" + task.assignment.CoreID + "\x00" + task.assignment.SlotID
-		byLane[lane] = append(byLane[lane], ordinal)
+		assignments[ordinal] = task.assignment
+		byID[task.assignment.ActivityID] = ordinal
 	}
-	for _, lane := range byLane {
-		sort.Slice(lane, func(left, right int) bool {
-			return tasks[lane[left]].assignment.OrderOnResource <
-				tasks[lane[right]].assignment.OrderOnResource
-		})
-		for index := 1; index < len(lane); index++ {
-			tasks[lane[index]].laneReady = false
-			laneSuccessor[lane[index-1]] = lane[index]
-		}
+	for successor, predecessor := range domainplanning.LanePredecessors(assignments) {
+		index, previous := byID[successor], byID[predecessor]
+		tasks[index].laneReady = false
+		laneSuccessor[previous] = index
 	}
 	return laneSuccessor
 }
 
-func initializePRISMFlowStages(flows []prismEvaluationFlow, servicePools map[string]*prismServicePool, router compactPRISMRouter, clock float64) (float64, error) {
+func initializePRISMFlowStages(flows []prismEvaluationFlow, tasks []prismEvaluationTask, servicePools map[string]*prismServicePool, router compactPRISMRouter, clock float64) (float64, error) {
 	totalCost := 0.0
 	for i := range flows {
 		flow := &flows[i]
 		if !flow.active || len(flow.stages) == 0 || flow.stageInitialized {
 			continue
+		}
+		if !tasks[flow.consumer].laneReady {
+			continue
+		}
+		if !flow.admitted {
+			flow.startedAt = clock
+			flow.admitted = true
 		}
 		stage := flow.stages[flow.stageIndex]
 		if pool := servicePools[stage.ServiceGroupID]; pool != nil {

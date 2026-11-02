@@ -55,6 +55,8 @@ type CandidateSink interface {
 }
 
 type SchedulerDescriptor struct {
+	Origin      string         `json:"origin,omitempty"`
+	Exclusive   bool           `json:"exclusive,omitempty"`
 	ID          string         `json:"id"`
 	Name        string         `json:"name"`
 	Objective   string         `json:"objective"`

@@ -76,7 +76,12 @@ func EnrichCloudLifecycle(plan *domain.SchedulePlan, resources []domain.Resource
 	if len(plan.LifecycleActions) > 0 {
 		return
 	}
+	original := plan.Predicted
 	addCloudLifecycle(plan, domain.PlanningRequest{Resources: resources})
+	// Lifecycle actions describe execution; do not replace an explicitly declared paper cost objective.
+	if plan.Metadata["costModel"] == "moheft-task-additive" {
+		plan.Predicted = original
+	}
 }
 
 func metadataSeconds(values map[string]any, key string, fallback float64) float64 {

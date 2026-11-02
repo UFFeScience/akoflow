@@ -50,6 +50,8 @@ func TestStartFailureStillOwnsAndStopsConcurrentLateHandle(t *testing.T) {
 	request.Workflow.Dependencies = nil
 	request.Workflow.Activities[1].ID = "slow"
 	request.Plan.Assignments[1].ActivityID = "slow"
+	request.Plan.Assignments[0].CoreID = "lane-a"
+	request.Plan.Assignments[1].CoreID = "lane-slow"
 	c := &independentStartController{slowEntered: make(chan struct{}), releaseSlow: make(chan struct{}), successor: make(chan struct{}), lateHandle: true, failFast: true}
 	s, _ := New(&executionStoreFake{}, c, &planExecutorFake{}, Config{PollInterval: time.Millisecond})
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
@@ -69,7 +71,7 @@ func TestIndependentStartPublishesSuccessorWhilePeerStartIsBlocked(t *testing.T)
 	slow := request.Workflow.Activities[0]
 	slow.ID = "slow"
 	request.Workflow.Activities = append(request.Workflow.Activities, slow)
-	request.Plan.Assignments = append(request.Plan.Assignments, domain.PlanAssignment{ID: "ps", ActivityID: "slow", ResourceID: "r"})
+	request.Plan.Assignments = append(request.Plan.Assignments, domain.PlanAssignment{ID: "ps", ActivityID: "slow", ResourceID: "r", CoreID: "lane-slow"})
 	c := &independentStartController{slowEntered: make(chan struct{}), releaseSlow: make(chan struct{}), successor: make(chan struct{})}
 	s, _ := New(&executionStoreFake{}, c, &planExecutorFake{}, Config{PollInterval: time.Millisecond})
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)

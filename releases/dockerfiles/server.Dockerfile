@@ -80,6 +80,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
  && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
+# User scheduler functions compile on the daemon using the same toolchain.
+COPY --from=go-builder /usr/local/go /usr/local/go
+ENV PATH="/usr/local/go/bin:${PATH}"
 COPY --from=go-builder /output/akoflow-server /usr/local/bin/akoflow-server
 COPY --from=buildkit-client /usr/bin/buildctl /usr/local/bin/buildctl
 COPY --from=terraform-client /bin/terraform /usr/local/bin/terraform

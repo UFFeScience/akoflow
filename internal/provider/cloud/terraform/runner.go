@@ -514,6 +514,7 @@ output "public_ip" { value = google_compute_instance.worker.network_interface[0]
 output "private_ip" { value = google_compute_instance.worker.network_interface[0].network_ip }
 output "network_domain" { value = "${var.project}:${var.region}:${var.network}:${var.subnetwork}" }
 output "zone" { value = google_compute_instance.worker.zone }
+output "instance_name" { value = google_compute_instance.worker.name }
 output "disk_name" { value = google_compute_instance.worker.boot_disk[0].source }
 output "disk_size_gib" { value = var.disk_size_gib }
 `

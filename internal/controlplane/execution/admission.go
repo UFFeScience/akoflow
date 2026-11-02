@@ -6,7 +6,7 @@ import (
 	"github.com/UFFeScience/akoflow/internal/domain"
 )
 
-// Plan order is a scheduling preference, never an extra dependency edge.
+// Ready activities have already passed both workflow and planned-lane barriers.
 func plannedReadyActivities(
 	ready []string,
 	assignments map[string]domain.PlanAssignment,

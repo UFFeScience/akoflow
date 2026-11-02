@@ -5003,6 +5003,17 @@
     "description": "discover environment connection. POST /akoflow-api/environment-connections/{connectionId}/discover/. Uses the daemon API and its domain validation."
   },
   {
+    "name": "docker_hub_tags",
+    "method": "GET",
+    "path": "/akoflow-api/docker-hub/tags/",
+    "handler": "DockerHubTags",
+    "description": "docker hub tags. GET /akoflow-api/docker-hub/tags/. Uses the daemon API and its domain validation.",
+    "query": [
+      "q",
+      "repository"
+    ]
+  },
+  {
     "name": "duplicate_workflow",
     "method": "POST",
     "path": "/akoflow-api/workflow-definition-actions/duplicate/{workflowId}/",
@@ -5292,6 +5303,13 @@
     "path": "/akoflow-api/resources/{resourceId}/snapshot/",
     "handler": "GetResourceSnapshot",
     "description": "get resource snapshot. GET /akoflow-api/resources/{resourceId}/snapshot/. Uses the daemon API and its domain validation."
+  },
+  {
+    "name": "get_scheduler_library",
+    "method": "GET",
+    "path": "/akoflow-api/scheduling-algorithms/{algorithmId}/",
+    "handler": "GetSchedulerLibrary",
+    "description": "get scheduler library. GET /akoflow-api/scheduling-algorithms/{algorithmId}/. Uses the daemon API and its domain validation."
   },
   {
     "name": "get_user_preferences",
@@ -5751,6 +5769,13 @@
     "description": "list resources. GET /akoflow-api/resources/. Uses the daemon API and its domain validation."
   },
   {
+    "name": "list_scheduler_library",
+    "method": "GET",
+    "path": "/akoflow-api/scheduling-algorithms/",
+    "handler": "ListSchedulerLibrary",
+    "description": "list scheduler library. GET /akoflow-api/scheduling-algorithms/. Uses the daemon API and its domain validation."
+  },
+  {
     "name": "list_ssh_keys",
     "method": "GET",
     "path": "/akoflow-api/ssh-keys/",
@@ -5978,6 +6003,24 @@
         },
         "artifactId": {
           "type": "string"
+        },
+        "dockerHub": {
+          "anyOf": [
+            {
+              "properties": {
+                "repository": {
+                  "type": "string"
+                },
+                "tag": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ]
         },
         "image": {
           "type": "string"
@@ -6755,6 +6798,146 @@
     }
   },
   {
+    "name": "save_scheduler_plugin",
+    "method": "POST",
+    "path": "/akoflow-api/scheduling-algorithms/",
+    "handler": "SaveSchedulerPlugin",
+    "description": "save scheduler plugin. POST /akoflow-api/scheduling-algorithms/. Uses the daemon API and its domain validation.",
+    "body": {
+      "properties": {
+        "activeRevision": {
+          "type": "integer"
+        },
+        "compileError": {
+          "type": "string"
+        },
+        "defaults": {
+          "additionalProperties": {},
+          "type": "object"
+        },
+        "description": {
+          "type": "string"
+        },
+        "documentation": {
+          "type": "string"
+        },
+        "exclusive": {
+          "type": "boolean"
+        },
+        "files": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "type": "object"
+        },
+        "id": {
+          "type": "string"
+        },
+        "multiple": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
+        },
+        "objective": {
+          "type": "string"
+        },
+        "origin": {
+          "type": "string"
+        },
+        "revision": {
+          "type": "integer"
+        },
+        "schemaVersion": {
+          "type": "string"
+        },
+        "source": {
+          "type": "string"
+        },
+        "sourceHash": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "updatedAt": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  },
+  {
+    "name": "save_scheduler_plugin_compat",
+    "method": "PUT",
+    "path": "/akoflow-api/scheduling-algorithms/{algorithmId}/",
+    "handler": "SaveSchedulerPlugin",
+    "description": "save scheduler plugin. PUT /akoflow-api/scheduling-algorithms/{algorithmId}/. Uses the daemon API and its domain validation.",
+    "body": {
+      "properties": {
+        "activeRevision": {
+          "type": "integer"
+        },
+        "compileError": {
+          "type": "string"
+        },
+        "defaults": {
+          "additionalProperties": {},
+          "type": "object"
+        },
+        "description": {
+          "type": "string"
+        },
+        "documentation": {
+          "type": "string"
+        },
+        "exclusive": {
+          "type": "boolean"
+        },
+        "files": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "type": "object"
+        },
+        "id": {
+          "type": "string"
+        },
+        "multiple": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
+        },
+        "objective": {
+          "type": "string"
+        },
+        "origin": {
+          "type": "string"
+        },
+        "revision": {
+          "type": "integer"
+        },
+        "schemaVersion": {
+          "type": "string"
+        },
+        "source": {
+          "type": "string"
+        },
+        "sourceHash": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "updatedAt": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  },
+  {
     "name": "save_user_preferences",
     "method": "PUT",
     "path": "/akoflow-api/user-preferences/{clientId}/",
@@ -6780,6 +6963,13 @@
     }
   },
   {
+    "name": "scheduler_template",
+    "method": "GET",
+    "path": "/akoflow-api/scheduling-algorithms/template/",
+    "handler": "SchedulerTemplate",
+    "description": "scheduler template. GET /akoflow-api/scheduling-algorithms/template/. Uses the daemon API and its domain validation."
+  },
+  {
     "name": "search",
     "method": "GET",
     "path": "/akoflow-api/search/",
@@ -6789,6 +6979,16 @@
       "limit",
       "q",
       "types"
+    ]
+  },
+  {
+    "name": "search_docker_hub",
+    "method": "GET",
+    "path": "/akoflow-api/docker-hub/search/",
+    "handler": "SearchDockerHub",
+    "description": "search docker hub. GET /akoflow-api/docker-hub/search/. Uses the daemon API and its domain validation.",
+    "query": [
+      "q"
     ]
   },
   {
@@ -7026,6 +7226,24 @@
     "body": {
       "properties": {
         "playbookYaml": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  },
+  {
+    "name": "validate_scheduler_source",
+    "method": "POST",
+    "path": "/akoflow-api/scheduling-algorithms/validate/",
+    "handler": "ValidateSchedulerSource",
+    "description": "validate scheduler source. POST /akoflow-api/scheduling-algorithms/validate/. Uses the daemon API and its domain validation.",
+    "body": {
+      "properties": {
+        "compile": {
+          "type": "boolean"
+        },
+        "source": {
           "type": "string"
         }
       },

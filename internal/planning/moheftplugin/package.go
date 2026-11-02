@@ -26,5 +26,15 @@ func Package() (library.Package, error) {
 	if err != nil {
 		return library.Package{}, err
 	}
-	return library.Package{SchemaVersion: "akoflow.scheduler/v1", ID: "moheft", Name: "MOHEFT", Description: "Pareto list scheduling for completion time and financial cost (Durillo et al., 2012).", Objective: "pareto", Multiple: true, Origin: "plugin", Defaults: map[string]any{"candidateCount": 25}, Source: string(source), Documentation: string(docs)}, nil
+	return library.Package{SchemaVersion: "akoflow.scheduler/v1",
+			ID:            "moheft",
+			Name:          "MOHEFT",
+			Description:   "Pareto list scheduling for completion time and financial cost (Durillo et al., 2012).",
+			Objective:     "pareto",
+			Multiple:      true,
+			Origin:        "plugin",
+			Defaults:      map[string]any{"candidateCount": 25},
+			Source:        string(source),
+			Documentation: string(docs)},
+		nil
 }

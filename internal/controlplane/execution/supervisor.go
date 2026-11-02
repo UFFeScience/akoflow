@@ -280,10 +280,8 @@ func (s *Supervisor) executeActivities(ctx context.Context, request ports.Execut
 			return domain.ExecutionTrace{}, err
 		}
 	}
-	// Lane barriers govern dispatch, not artifact ownership or recovery inputs.
-	for successor, predecessor := range domainplanning.LanePredecessors(request.Plan.Assignments) {
-		predecessors[successor] = append(predecessors[successor], predecessor)
-	}
+	appendLanePredecessors(request.Plan.Assignments, predecessors)
+
 	transfers := make([]domain.DataTransfer, 0)
 	allocationResults := make(chan allocationResult, len(activities))
 	pendingAllocations := make(map[string]bool)
@@ -1749,4 +1747,11 @@ func (s *Supervisor) queueReadyActivities(ctx context.Context, request ports.Exe
 		tasks[activityID] = queued
 	}
 	return nil
+}
+
+func appendLanePredecessors(assignments []domain.PlanAssignment, predecessors map[string][]string) {
+	// Lane barriers govern dispatch, not artifact ownership or recovery inputs.
+	for successor, predecessor := range domainplanning.LanePredecessors(assignments) {
+		predecessors[successor] = append(predecessors[successor], predecessor)
+	}
 }

@@ -117,184 +117,14 @@ func newMOModel(input Input) (*moModel, error) {
 	if len(m.tasks) == 0 {
 		return nil, fmt.Errorf("workflow has no activities")
 	}
-	allowed := map[string]bool{}
-	for _, id := range input.Request.ExecutionScope.EnvironmentVersionIDs {
-		allowed[id] = true
+	if err := m.loadResources(); err != nil {
+		return nil, err
 	}
-	for _, r := range input.Request.Resources {
-		if r.Type == "batch_queue" || r.Type == "hpc_partition" || r.Type == "slurm_reservation" {
-			continue
-		}
-		if !r.Schedulable || !allowed[r.EnvironmentVersionID] {
-			continue
-		}
-		if r.ID == "" || r.CPUCores < 1 || !moFinite(r.CPUCapacity) || r.CPUCapacity <= 0 || r.MemoryBytes < 0 {
-			return nil, fmt.Errorf("resource %s has invalid CPU/memory capacity", r.ID)
-		}
-		if !moFinite(r.ComputeSpeedup) || r.ComputeSpeedup <= 0 || !moFinite(r.PricePerSecond) || r.PricePerSecond < 0 {
-			return nil, fmt.Errorf("resource %q requires positive computeSpeedup and nonnegative pricePerSecond", r.ID)
-		}
-		if r.BootOverheadSeconds < 0 || !moFinite(r.BootOverheadSeconds) || r.ContainerOverheadSeconds < 0 || !moFinite(r.ContainerOverheadSeconds) {
-			return nil, fmt.Errorf("invalid overhead for %s", r.ID)
-		}
-		for _, key := range []string{"storagePricePerByteSecond", "ingressPricePerByte", "egressPricePerByte"} {
-			if raw, ok := r.Metadata[key]; ok {
-				number, valid := raw.(float64)
-				if !valid || !moFinite(number) || number < 0 {
-					return nil, fmt.Errorf("invalid price %s on %s", key, r.ID)
-				}
-			}
-		}
-		m.resources = append(m.resources, r)
+	if err := m.loadGraph(); err != nil {
+		return nil, err
 	}
-	sort.Slice(m.resources, func(i, j int) bool { return m.resources[i].ID < m.resources[j].ID })
-	if len(m.resources) == 0 {
-		return nil, fmt.Errorf("scope has no schedulable resources")
-	}
-	index := map[string]int{}
-	m.index = index
-	for i, a := range m.tasks {
-		if a.ID == "" {
-			return nil, fmt.Errorf("activity id is required")
-		}
-		if _, ok := index[a.ID]; ok {
-			return nil, fmt.Errorf("duplicate activity %q", a.ID)
-		}
-		if a.Resources.MemoryBytes < 0 || a.Resources.StorageBytes < 0 {
-			return nil, fmt.Errorf("negative resource requirement on %s", a.ID)
-		}
-		index[a.ID] = i
-		if !moFinite(a.Resources.CPU) || a.Resources.CPU < 0 || a.Resources.CPU > 1 {
-			return nil, fmt.Errorf("MOHEFT plugin requires single-lane activities; %q requests %g CPUs", a.ID, a.Resources.CPU)
-		}
-	}
-	var topology struct {
-		ID    string
-		Links []moLink
-	}
-	if len(input.Request.NetworkTopology) > 0 {
-		if err := json.Unmarshal(input.Request.NetworkTopology, &topology); err != nil {
-			return nil, fmt.Errorf("network topology: %w", err)
-		}
-	}
-	m.topologyID = topology.ID
-	for _, l := range topology.Links {
-		if !moFinite(l.BandwidthBitsPerSecond) || l.BandwidthBitsPerSecond <= 0 || !moFinite(l.LatencySeconds) || l.LatencySeconds < 0 || !moFinite(l.PricePerByte) || l.PricePerByte < 0 {
-			return nil, fmt.Errorf("invalid network link %s -> %s", l.SourceResourceID, l.TargetResourceID)
-		}
-		m.links[[2]string{l.SourceResourceID, l.TargetResourceID}] = l
-		if l.Bidirectional {
-			m.links[[2]string{l.TargetResourceID, l.SourceResourceID}] = l
-		}
-	}
-	edges := map[[2]int]int64{}
-	for _, d := range input.Request.Workflow.Dependencies {
-		child, cok := index[d.ActivityID]
-		parent, pok := index[d.DependsOnActivityID]
-		if !cok || !pok || parent == child {
-			return nil, fmt.Errorf("invalid workflow dependency")
-		}
-		edges[[2]int{parent, child}] = 0
-	}
-	for _, raw := range input.Request.Workflow.DataDependencies {
-		var d moData
-		if err := json.Unmarshal(raw, &d); err != nil {
-			return nil, err
-		}
-		parent, pok := index[d.ProducerActivityID]
-		child, cok := index[d.ConsumerActivityID]
-		if !pok || !cok || parent == child || d.SizeBytes < 0 {
-			return nil, fmt.Errorf("invalid data dependency")
-		}
-		key := [2]int{parent, child}
-		if _, ok := edges[key]; !ok {
-			return nil, fmt.Errorf("data edge must have a matching precedence dependency")
-		}
-		if d.SizeBytes > math.MaxInt64-edges[key] {
-			return nil, fmt.Errorf("data size overflow")
-		}
-		edges[key] += d.SizeBytes
-	}
-	m.parents = make([][]moEdge, len(m.tasks))
-	m.children = make([][]moEdge, len(m.tasks))
-	for key, size := range edges {
-		m.parents[key[1]] = append(m.parents[key[1]], moEdge{key[0], size})
-		m.children[key[0]] = append(m.children[key[0]], moEdge{key[1], size})
-	}
-	for i := range m.tasks {
-		sort.Slice(m.parents[i], func(a, b int) bool { return m.tasks[m.parents[i][a].task].ID < m.tasks[m.parents[i][b].task].ID })
-		sort.Slice(m.children[i], func(a, b int) bool { return m.tasks[m.children[i][a].task].ID < m.tasks[m.children[i][b].task].ID })
-	}
-	profiles := []moProfile{}
-	for _, raw := range input.Request.ActivityProfiles {
-		var p moProfile
-		if err := json.Unmarshal(raw, &p); err != nil {
-			return nil, err
-		}
-		profiles = append(profiles, p)
-	}
-	m.runtimes = make([][]float64, len(m.tasks))
-	m.lanes = make([]int, len(m.resources))
-	for r, resource := range m.resources {
-		count := resource.CPUCores
-		if count < 1 {
-			count = 1
-		}
-		if resource.CPUCapacity > 0 && resource.CPUCapacity < float64(count) {
-			count = max(1, int(math.Floor(resource.CPUCapacity)))
-		}
-		if count > 65536 {
-			return nil, fmt.Errorf("resource has too many CPU lanes")
-		}
-		m.lanes[r] = count
-	}
-	m.memoryCheck = make([]bool, len(m.resources))
-	for r, resource := range m.resources {
-		maxMemory := int64(0)
-		for task, a := range m.tasks {
-			if m.fits(task, r) && a.Resources.MemoryBytes > maxMemory {
-				maxMemory = a.Resources.MemoryBytes
-			}
-		}
-		m.memoryCheck[r] = maxMemory > resource.MemoryBytes/int64(m.lanes[r])
-	}
-	for i, a := range m.tasks {
-		base := 0.0
-		hasEstimate := a.Simulation != nil
-		if a.Simulation != nil {
-			base = a.Simulation.DurationSeconds
-		}
-		if !moFinite(base) || base < 0 {
-			return nil, fmt.Errorf("invalid duration for %q", a.ID)
-		}
-		m.runtimes[i] = make([]float64, len(m.resources))
-		for j, r := range m.resources {
-			hasEstimate := hasEstimate
-			seconds := base / r.ComputeSpeedup
-			for _, p := range profiles {
-				if p.ActivityTypeID == a.ActivityTypeID && p.ResourceID == r.ID && p.RuntimeSeconds > 0 {
-					hasEstimate = true
-					seconds = p.RuntimeSeconds
-					if p.ModelVersion == "reference-work-v1" {
-						if a.Simulation == nil {
-							return nil, fmt.Errorf("reference-work profile requires declared work for %s", a.ID)
-						}
-						seconds *= base
-					} else if p.ModelVersion == "compute-work-v1" {
-						work, known := a.Metadata["computeWorkUnits"].(float64)
-						if !known || !moFinite(work) || work < 0 {
-							return nil, fmt.Errorf("compute-work profile requires declared work for %s", a.ID)
-						}
-						seconds *= work
-					}
-					break
-				}
-			}
-			if !hasEstimate || !moFinite(seconds) || seconds < 0 {
-				return nil, fmt.Errorf("invalid runtime for %s on %s", a.ID, r.ID)
-			}
-			m.runtimes[i][j] = seconds
-		}
+	if err := m.loadRuntimes(); err != nil {
+		return nil, err
 	}
 	order, err := m.rankOrder()
 	if err != nil {
@@ -430,42 +260,27 @@ func (m *moModel) place(s moState, task, resource int) (moState, bool) {
 	// Paper Eqs. 1-2 use the maximum transfer, after the latest predecessor.
 	ready := parentFinish + transferTotal
 	runtime := m.runtimes[task][resource]
-	lane, start := 0, math.Inf(1)
-	for i, slots := range s.slots[resource] {
-		available := math.Max(ready, r.BootOverheadSeconds)
-		for _, slot := range slots {
-			if available+r.ContainerOverheadSeconds+runtime <= slot.start {
-				break
-			}
-			if available < slot.finish {
-				available = slot.finish
-			}
-		}
-		for m.memoryCheck[resource] {
-			retry := moMemoryReady(s.memory[resource], available, available+r.ContainerOverheadSeconds+runtime, m.tasks[task].Resources.MemoryBytes, r.MemoryBytes)
-			if retry <= available {
-				break
-			}
-			available = retry
-			for _, slot := range slots {
-				if available+r.ContainerOverheadSeconds+runtime <= slot.start {
-					break
-				}
-				if available < slot.finish {
-					available = slot.finish
-				}
-			}
-		}
-		candidate := available + r.ContainerOverheadSeconds
-		if candidate < start {
-			lane, start = i, candidate
-		}
-	}
+	lane, start := m.selectLane(s, task, resource, ready, runtime)
 	finish := start + runtime
 	// Paper Eq. 4: CPU seconds + storage-time + remote ingress/egress. Bandwidth link tariffs do not replace the paper's ingress/egress prices.
 	billed := runtime + transferTotal
 	ownCost := billed*r.PricePerSecond + float64(m.tasks[task].Resources.StorageBytes)*billed*moPrice(r.Metadata, "storagePricePerByteSecond") + ingress
-	record := &moRecord{resource: resource, assignment: Assignment{Metadata: map[string]any{"bootOverheadSeconds": float64(0), "resourceAvailableAtSeconds": r.BootOverheadSeconds, "containerOverheadSeconds": r.ContainerOverheadSeconds}, ActivityID: m.tasks[task].ID, Priority: m.tasks[task].Priority, ResourceID: r.ID, CoreID: fmt.Sprintf("%s-core-%d", r.ID, lane+1), PredictedReadyAt: ready, PredictedStartAt: start, PredictedFinishAt: finish, PredictedRuntimeSeconds: runtime, PredictedTransferSeconds: transferTotal, PredictedCost: ownCost + egress}}
+	record := &moRecord{resource: resource,
+		assignment: Assignment{Metadata: map[string]any{"bootOverheadSeconds": float64(0),
+			"resourceAvailableAtSeconds": r.BootOverheadSeconds,
+			"containerOverheadSeconds":   r.ContainerOverheadSeconds},
+			ActivityID: m.tasks[task].ID,
+			Priority:   m.tasks[task].Priority,
+			ResourceID: r.ID,
+			CoreID: fmt.Sprintf("%s-core-%d",
+				r.ID,
+				lane+1),
+			PredictedReadyAt:         ready,
+			PredictedStartAt:         start,
+			PredictedFinishAt:        finish,
+			PredictedRuntimeSeconds:  runtime,
+			PredictedTransferSeconds: transferTotal,
+			PredictedCost:            ownCost + egress}}
 	out := s
 	out.blocks = append([]*moBlock(nil), s.blocks...)
 	block := &moBlock{}
@@ -513,7 +328,22 @@ func (m *moModel) plan(s moState, index int) Plan {
 		}
 	}
 	feasible := (m.input.Request.DeadlineSeconds <= 0 || s.makespan <= m.input.Request.DeadlineSeconds) && (m.input.Request.Budget <= 0 || s.cost <= m.input.Request.Budget)
-	return Plan{ID: id, WorkflowVersionID: m.input.Request.Workflow.ID, ExecutionScopeID: m.input.Request.ExecutionScope.ID, NetworkTopologyID: m.topologyID, Algorithm: "moheft", Objective: "pareto", DeadlineSeconds: m.input.Request.DeadlineSeconds, Budget: m.input.Request.Budget, Predicted: Metrics{MakespanSeconds: s.makespan, Cost: s.cost, Feasible: feasible}, Assignments: assignments, Metadata: map[string]any{"algorithmReference": "doi:10.1109/CloudCom.2012.6427573", "costModel": "moheft-task-additive", "timingModel": "akoflow-cpu-lanes-fixed-link", "interferenceAware": false}}
+	return Plan{ID: id,
+		WorkflowVersionID: m.input.Request.Workflow.ID,
+		ExecutionScopeID:  m.input.Request.ExecutionScope.ID,
+		NetworkTopologyID: m.topologyID,
+		Algorithm:         "moheft",
+		Objective:         "pareto",
+		DeadlineSeconds:   m.input.Request.DeadlineSeconds,
+		Budget:            m.input.Request.Budget,
+		Predicted: Metrics{MakespanSeconds: s.makespan,
+			Cost:     s.cost,
+			Feasible: feasible},
+		Assignments: assignments,
+		Metadata: map[string]any{"algorithmReference": "doi:10.1109/CloudCom.2012.6427573",
+			"costModel":         "moheft-task-additive",
+			"timingModel":       "akoflow-cpu-lanes-fixed-link",
+			"interferenceAware": false}}
 }
 func moFinite(v float64) bool { return !math.IsNaN(v) && !math.IsInf(v, 0) }
 func moPrice(metadata map[string]any, key string) float64 {
@@ -644,4 +474,248 @@ func (m *moModel) finalTaskCost(s moState, id string) float64 {
 		}
 	}
 	return cost
+}
+
+func (m *moModel) loadResources() error {
+	allowed := map[string]bool{}
+	for _, id := range m.input.Request.ExecutionScope.EnvironmentVersionIDs {
+		allowed[id] = true
+	}
+	for _, r := range m.input.Request.Resources {
+		if r.Type == "batch_queue" || r.Type == "hpc_partition" || r.Type == "slurm_reservation" {
+			continue
+		}
+		if !r.Schedulable || !allowed[r.EnvironmentVersionID] {
+			continue
+		}
+		if r.ID == "" || r.CPUCores < 1 || !moFinite(r.CPUCapacity) || r.CPUCapacity <= 0 || r.MemoryBytes < 0 {
+			return fmt.Errorf("resource %s has invalid CPU/memory capacity", r.ID)
+		}
+		if !moFinite(r.ComputeSpeedup) || r.ComputeSpeedup <= 0 || !moFinite(r.PricePerSecond) || r.PricePerSecond < 0 {
+			return fmt.Errorf("resource %q requires positive computeSpeedup and nonnegative pricePerSecond", r.ID)
+		}
+		if r.BootOverheadSeconds < 0 || !moFinite(r.BootOverheadSeconds) || r.ContainerOverheadSeconds < 0 || !moFinite(r.ContainerOverheadSeconds) {
+			return fmt.Errorf("invalid overhead for %s", r.ID)
+		}
+		for _, key := range []string{"storagePricePerByteSecond", "ingressPricePerByte", "egressPricePerByte"} {
+			if raw, ok := r.Metadata[key]; ok {
+				number, valid := raw.(float64)
+				if !valid || !moFinite(number) || number < 0 {
+					return fmt.Errorf("invalid price %s on %s", key, r.ID)
+				}
+			}
+		}
+		m.resources = append(m.resources, r)
+	}
+	sort.Slice(m.resources, func(i, j int) bool { return m.resources[i].ID < m.resources[j].ID })
+	if len(m.resources) == 0 {
+		return fmt.Errorf("scope has no schedulable resources")
+	}
+
+	return nil
+}
+
+func (m *moModel) loadGraph() error {
+	index := map[string]int{}
+	m.index = index
+	for i, a := range m.tasks {
+		if a.ID == "" {
+			return fmt.Errorf("activity id is required")
+		}
+		if _, ok := index[a.ID]; ok {
+			return fmt.Errorf("duplicate activity %q", a.ID)
+		}
+		if a.Resources.MemoryBytes < 0 || a.Resources.StorageBytes < 0 {
+			return fmt.Errorf("negative resource requirement on %s", a.ID)
+		}
+		index[a.ID] = i
+		if !moFinite(a.Resources.CPU) || a.Resources.CPU < 0 || a.Resources.CPU > 1 {
+			return fmt.Errorf("MOHEFT plugin requires single-lane activities; %q requests %g CPUs", a.ID, a.Resources.CPU)
+		}
+	}
+	var topology struct {
+		ID    string
+		Links []moLink
+	}
+	if len(m.input.Request.NetworkTopology) > 0 {
+		if err := json.Unmarshal(m.input.Request.NetworkTopology, &topology); err != nil {
+			return fmt.Errorf("network topology: %w", err)
+		}
+	}
+	m.topologyID = topology.ID
+	for _, l := range topology.Links {
+		if !moFinite(l.BandwidthBitsPerSecond) || l.BandwidthBitsPerSecond <= 0 || !moFinite(l.LatencySeconds) || l.LatencySeconds < 0 || !moFinite(l.PricePerByte) || l.PricePerByte < 0 {
+			return fmt.Errorf("invalid network link %s -> %s", l.SourceResourceID, l.TargetResourceID)
+		}
+		m.links[[2]string{l.SourceResourceID, l.TargetResourceID}] = l
+		if l.Bidirectional {
+			m.links[[2]string{l.TargetResourceID, l.SourceResourceID}] = l
+		}
+	}
+
+	return m.loadDependencies()
+}
+
+func (m *moModel) loadDependencies() error {
+	edges := map[[2]int]int64{}
+	for _, d := range m.input.Request.Workflow.Dependencies {
+		child, cok := m.index[d.ActivityID]
+		parent, pok := m.index[d.DependsOnActivityID]
+		if !cok || !pok || parent == child {
+			return fmt.Errorf("invalid workflow dependency")
+		}
+		edges[[2]int{parent, child}] = 0
+	}
+	for _, raw := range m.input.Request.Workflow.DataDependencies {
+		var d moData
+		if err := json.Unmarshal(raw, &d); err != nil {
+			return err
+		}
+		parent, pok := m.index[d.ProducerActivityID]
+		child, cok := m.index[d.ConsumerActivityID]
+		if !pok || !cok || parent == child || d.SizeBytes < 0 {
+			return fmt.Errorf("invalid data dependency")
+		}
+		key := [2]int{parent, child}
+		if _, ok := edges[key]; !ok {
+			return fmt.Errorf("data edge must have a matching precedence dependency")
+		}
+		if d.SizeBytes > math.MaxInt64-edges[key] {
+			return fmt.Errorf("data size overflow")
+		}
+		edges[key] += d.SizeBytes
+	}
+	m.parents = make([][]moEdge, len(m.tasks))
+	m.children = make([][]moEdge, len(m.tasks))
+	for key, size := range edges {
+		m.parents[key[1]] = append(m.parents[key[1]], moEdge{key[0], size})
+		m.children[key[0]] = append(m.children[key[0]], moEdge{key[1], size})
+	}
+	for i := range m.tasks {
+		sort.Slice(m.parents[i], func(a, b int) bool { return m.tasks[m.parents[i][a].task].ID < m.tasks[m.parents[i][b].task].ID })
+		sort.Slice(m.children[i], func(a, b int) bool { return m.tasks[m.children[i][a].task].ID < m.tasks[m.children[i][b].task].ID })
+	}
+
+	return nil
+}
+
+func (m *moModel) loadCapacity() error {
+	m.runtimes = make([][]float64, len(m.tasks))
+	m.lanes = make([]int, len(m.resources))
+	for r, resource := range m.resources {
+		count := resource.CPUCores
+		if count < 1 {
+			count = 1
+		}
+		if resource.CPUCapacity > 0 && resource.CPUCapacity < float64(count) {
+			count = max(1, int(math.Floor(resource.CPUCapacity)))
+		}
+		if count > 65536 {
+			return fmt.Errorf("resource has too many CPU lanes")
+		}
+		m.lanes[r] = count
+	}
+	m.memoryCheck = make([]bool, len(m.resources))
+	for r, resource := range m.resources {
+		maxMemory := int64(0)
+		for task, a := range m.tasks {
+			if m.fits(task, r) && a.Resources.MemoryBytes > maxMemory {
+				maxMemory = a.Resources.MemoryBytes
+			}
+		}
+		m.memoryCheck[r] = maxMemory > resource.MemoryBytes/int64(m.lanes[r])
+	}
+
+	return nil
+}
+
+func (m *moModel) loadRuntimes() error {
+	if err := m.loadCapacity(); err != nil {
+		return err
+	}
+	profiles := []moProfile{}
+	for _, raw := range m.input.Request.ActivityProfiles {
+		var p moProfile
+		if err := json.Unmarshal(raw, &p); err != nil {
+			return err
+		}
+		profiles = append(profiles, p)
+	}
+	for i, a := range m.tasks {
+		base := 0.0
+		hasEstimate := a.Simulation != nil
+		if a.Simulation != nil {
+			base = a.Simulation.DurationSeconds
+		}
+		if !moFinite(base) || base < 0 {
+			return fmt.Errorf("invalid duration for %q", a.ID)
+		}
+		m.runtimes[i] = make([]float64, len(m.resources))
+		for j, r := range m.resources {
+			hasEstimate := hasEstimate
+			seconds := base / r.ComputeSpeedup
+			for _, p := range profiles {
+				if p.ActivityTypeID == a.ActivityTypeID && p.ResourceID == r.ID && p.RuntimeSeconds > 0 {
+					hasEstimate = true
+					seconds = p.RuntimeSeconds
+					if p.ModelVersion == "reference-work-v1" {
+						if a.Simulation == nil {
+							return fmt.Errorf("reference-work profile requires declared work for %s", a.ID)
+						}
+						seconds *= base
+					} else if p.ModelVersion == "compute-work-v1" {
+						work, known := a.Metadata["computeWorkUnits"].(float64)
+						if !known || !moFinite(work) || work < 0 {
+							return fmt.Errorf("compute-work profile requires declared work for %s", a.ID)
+						}
+						seconds *= work
+					}
+					break
+				}
+			}
+			if !hasEstimate || !moFinite(seconds) || seconds < 0 {
+				return fmt.Errorf("invalid runtime for %s on %s", a.ID, r.ID)
+			}
+			m.runtimes[i][j] = seconds
+		}
+	}
+
+	return nil
+}
+
+func (m *moModel) selectLane(s moState, task, resource int, ready, runtime float64) (int, float64) {
+	r := m.resources[resource]
+	lane, start := 0, math.Inf(1)
+	for i, slots := range s.slots[resource] {
+		available := math.Max(ready, r.BootOverheadSeconds)
+		for _, slot := range slots {
+			if available+r.ContainerOverheadSeconds+runtime <= slot.start {
+				break
+			}
+			if available < slot.finish {
+				available = slot.finish
+			}
+		}
+		for m.memoryCheck[resource] {
+			retry := moMemoryReady(s.memory[resource], available, available+r.ContainerOverheadSeconds+runtime, m.tasks[task].Resources.MemoryBytes, r.MemoryBytes)
+			if retry <= available {
+				break
+			}
+			available = retry
+			for _, slot := range slots {
+				if available+r.ContainerOverheadSeconds+runtime <= slot.start {
+					break
+				}
+				if available < slot.finish {
+					available = slot.finish
+				}
+			}
+		}
+		candidate := available + r.ContainerOverheadSeconds
+		if candidate < start {
+			lane, start = i, candidate
+		}
+	}
+
+	return lane, start
 }

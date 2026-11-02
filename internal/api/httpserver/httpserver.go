@@ -166,6 +166,7 @@ func NewMux(workflowEngine *workflow_engine_api_handler.Handler) *http.ServeMux 
 	mux.HandleFunc("GET /akoflow-api/execution-scopes/", http_config.KernelHandler(workflowEngine.ListExecutionScopes))
 	mux.HandleFunc("GET /akoflow-api/execution-scopes/{scopeId}/", http_config.KernelHandler(workflowEngine.GetExecutionScope))
 	mux.HandleFunc("DELETE /akoflow-api/execution-scopes/{scopeId}/", http_config.KernelHandler(workflowEngine.DeleteExecutionScope))
+	mux.HandleFunc("POST /akoflow-api/shell-command-validations/", http_config.KernelHandler(workflowEngine.ValidateShellCommand))
 	mux.HandleFunc("POST /akoflow-api/workflow-definitions/", http_config.KernelHandler(workflowEngine.CreateWorkflow))
 	mux.HandleFunc("POST /akoflow-api/workflow-definitions/import/", http_config.KernelHandler(workflowEngine.CreateWorkflow))
 	mux.HandleFunc("GET /akoflow-api/workflow-definitions/", http_config.KernelHandler(workflowEngine.ListWorkflows))
